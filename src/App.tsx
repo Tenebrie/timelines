@@ -1,22 +1,14 @@
-import './App.css'
+import React from 'react'
 
-import Button from '@mui/material/Button'
-import React, { useState } from 'react'
+import { HomePage } from './components/HomePage'
+import { GlobalContextProvider } from './context/GlobalContext'
 
 function App() {
-	const [test, setTest] = useState<number>(0)
-
-	const onClick = () => {
-		setTest(test + 1)
-	}
-
 	return (
 		<div className="App">
-			<span>Learn React</span>
-			{test}
-			<Button variant="contained" onClick={onClick}>
-				Bump test
-			</Button>
+			<GlobalContextProvider>
+				<HomePage />
+			</GlobalContextProvider>
 		</div>
 	)
 }

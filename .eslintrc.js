@@ -5,8 +5,7 @@ module.exports = {
 		node: true,
 	},
 	parser: '@typescript-eslint/parser',
-	extends: ["react-app",
-	"react-app/jest", 'plugin:@typescript-eslint/recommended', 'prettier', 'plugin:prettier/recommended'],
+	extends: ['react-app', 'react-app/jest', 'plugin:@typescript-eslint/recommended', 'prettier', 'plugin:prettier/recommended'],
 	plugins: ['simple-import-sort', 'unused-imports'],
 	globals: {
 		Atomics: 'readonly',
