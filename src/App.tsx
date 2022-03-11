@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import logo from './logo.svg'
+import './App.css'
+import styled from 'styled-components'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const [test, setTest] = useState<number>(0)
+
+	const onClick = () => {
+		setTest(test + 1)
+	}
+
+	const MyButton = styled.button`
+		border-radius: 16px;
+	`
+
+	return (
+		<div className="App">
+			{test}
+			<MyButton onClick={onClick}>Bump test</MyButton>
+		</div>
+	)
 }
 
-export default App;
+export default App
