@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import logo from './logo.svg'
 import './App.css'
-import styled from 'styled-components'
+
+import Button from '@mui/material/Button'
+import React, { useState } from 'react'
 
 function App() {
 	const [test, setTest] = useState<number>(0)
@@ -10,14 +10,13 @@ function App() {
 		setTest(test + 1)
 	}
 
-	const MyButton = styled.button`
-		border-radius: 16px;
-	`
-
 	return (
 		<div className="App">
+			<span>Learn React</span>
 			{test}
-			<MyButton onClick={onClick}>Bump test</MyButton>
+			<Button variant="contained" onClick={onClick}>
+				Bump test
+			</Button>
 		</div>
 	)
 }
