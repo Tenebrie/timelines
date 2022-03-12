@@ -1,8 +1,6 @@
-import { Button } from '@mui/material'
-import React, { useContext } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
-import { GlobalContext } from '../context/GlobalContext'
 import { Sidebar } from './sidebar/Sidebar'
 import { Timeline } from './timeline/Timeline'
 
@@ -18,16 +16,10 @@ const HomePageContainer = styled.div`
 `
 
 export const HomePage = () => {
-	const globalContext = useContext(GlobalContext)
-
 	return (
 		<HomePageContainer>
 			<Timeline />
 			<Sidebar />
-			{globalContext.counter}
-			<Button variant="contained" onClick={globalContext.bumpCounter}>
-				Bump
-			</Button>
 		</HomePageContainer>
 	)
 }
