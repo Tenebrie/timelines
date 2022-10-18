@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { HomePage } from './components/HomePage'
-import { GlobalContextProvider } from './context/GlobalContext'
+import { Home } from './app/features/home/Home'
 
 const Container = styled.div`
 	display: flex;
@@ -15,11 +14,9 @@ const Container = styled.div`
 function App() {
 	return (
 		<div className="App">
-			<GlobalContextProvider>
-				<Container>
-					<HomePage />
-				</Container>
-			</GlobalContextProvider>
+			<Container>
+				<Home />
+			</Container>
 		</div>
 	)
 }

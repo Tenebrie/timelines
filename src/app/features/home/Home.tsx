@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Sidebar } from './sidebar/Sidebar'
-import { Timeline } from './timeline/Timeline'
+import { Timeline } from '../world/components/Timeline/Timeline'
+import { Sidebar } from './components/sidebar/Sidebar'
 
 const HomePageContainer = styled.div`
 	display: flex;
@@ -15,7 +15,7 @@ const HomePageContainer = styled.div`
 	flex-direction: column;
 `
 
-export const HomePage = () => {
+export const Home = () => {
 	return (
 		<HomePageContainer>
 			<Timeline />

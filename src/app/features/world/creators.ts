@@ -1,16 +1,13 @@
 import { v4 as uuidv4 } from 'uuid'
 
-export type StoryEvent = {
-	id: string
-	name: string
-	timestamp: number
-}
+import { StoryEvent } from './types'
 
-export const createStoryEvent = (
+export const makeStoryEvent = (
 	base: Partial<StoryEvent> & Pick<StoryEvent, 'name' | 'timestamp'>
 ): StoryEvent => {
 	return {
 		id: uuidv4(),
+		description: '',
 		...base,
 	}
 }

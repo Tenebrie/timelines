@@ -5,7 +5,13 @@ module.exports = {
 		node: true,
 	},
 	parser: '@typescript-eslint/parser',
-	extends: ['react-app', 'react-app/jest', 'plugin:@typescript-eslint/recommended', 'prettier', 'plugin:prettier/recommended'],
+	extends: [
+		'react-app',
+		'react-app/jest',
+		'plugin:@typescript-eslint/recommended',
+		'prettier',
+		'plugin:prettier/recommended',
+	],
 	plugins: ['simple-import-sort', 'unused-imports'],
 	globals: {
 		Atomics: 'readonly',
@@ -37,6 +43,9 @@ module.exports = {
 		'simple-import-sort/imports': 'error',
 		'simple-import-sort/exports': 'error',
 		'unused-imports/no-unused-imports': 'error',
-		'unused-imports/no-unused-vars': ['warn', { vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' }],
+		'unused-imports/no-unused-vars': [
+			'warn',
+			{ vars: 'all', varsIgnorePattern: '^_', args: 'after-used', argsIgnorePattern: '^_' },
+		],
 	},
-}
+};

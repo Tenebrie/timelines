@@ -1,12 +1,13 @@
-import React, { MouseEvent, useContext, useState, WheelEvent } from 'react'
+import React, { MouseEvent, useState, WheelEvent } from 'react'
+import { useSelector } from 'react-redux'
 
-import { GlobalContext } from '../../context/GlobalContext'
-import { clamp } from '../../utils/utils'
+import clampToRange from '../../../../utils/clampToRange'
+import { getWorldState } from '../../selectors'
 import { TimelineEvent } from '../TimelineEvent/TimelineEvent'
 import { TimelineAnchorLine, TimelineContainer } from './styles'
 
 export const Timeline = () => {
-	const { storyEvents } = useContext(GlobalContext)
+	const { events: storyEvents } = useSelector(getWorldState)
 
 	const [scale, setScale] = useState(1)
 	const [scroll, setScroll] = useState(0)
@@ -17,7 +18,7 @@ export const Timeline = () => {
 	const onWheel = (event: WheelEvent<HTMLDivElement>) => {
 		const delta = event.deltaY
 
-		const newSteps = clamp(1, scaleSteps - delta, 10000)
+		const newSteps = clampToRange(1, scaleSteps - delta, 10000)
 		const newScale = 1 + Math.pow(newSteps / 500, 2)
 
 		const scaledMouseX = (mousePos.x - scroll) / scale
@@ -57,8 +58,8 @@ export const Timeline = () => {
 			onWheel={onWheel}
 		>
 			<TimelineAnchorLine />
-			{storyEvents.map((event, index) => (
-				<TimelineEvent key={event.id} event={event} index={index} scale={scale} offset={scroll} />
+			{storyEvents.map((event) => (
+				<TimelineEvent key={event.id} event={event} scale={scale} offset={scroll} />
 			))}
 		</TimelineContainer>
 	)

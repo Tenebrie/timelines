@@ -1,33 +1,32 @@
 import { Button, TextField } from '@mui/material'
-import React, { useContext, useState } from 'react'
-import styled from 'styled-components'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 
-import { GlobalContext } from '../../context/GlobalContext'
-
-const SidebarContainer = styled.div`
-	padding: 8px;
-	background: rgba(200, 200, 255, 1);
-	gap: 8px;
-	display: flex;
-`
+import { makeStoryEvent } from '../../../world/creators'
+import { worldSlice } from '../../../world/reducer'
+import { SidebarContainer } from './styles'
 
 export const Sidebar = () => {
 	const [name, setName] = useState('')
 	const [timestamp, setTimestamp] = useState(0)
 
-	const { addStoryEvent } = useContext(GlobalContext)
+	const dispatch = useDispatch()
+	const { createEvent } = worldSlice.actions
 
 	const onAddEvent = () => {
-		console.log(name)
-		console.log(timestamp)
-		addStoryEvent({
-			name,
-			timestamp,
-		})
+		dispatch(
+			createEvent(
+				makeStoryEvent({
+					name,
+					timestamp,
+				})
+			)
+		)
 
 		setName('')
 		setTimestamp(0)
 	}
+
 	return (
 		<SidebarContainer>
 			<TextField
