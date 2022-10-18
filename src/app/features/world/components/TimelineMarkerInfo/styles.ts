@@ -7,7 +7,7 @@ export const MarkerContainer = styled.div`
 	justify-content: center;
 	width: 250px;
 	margin-left: -125px;
-	top: 32px;
+	bottom: 52px;
 `
 
 export const MarkerLabel = styled.div`

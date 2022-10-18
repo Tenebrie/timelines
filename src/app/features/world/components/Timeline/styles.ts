@@ -5,7 +5,6 @@ export const TimelineContainer = styled.div`
 	width: 100%;
 	height: 256px;
 	background: #1c4572;
-	border-radius: 16px;
 	overflow: hidden;
 	user-select: none;
 `
@@ -13,7 +12,34 @@ export const TimelineContainer = styled.div`
 export const TimelineAnchorLine = styled.div`
 	position: absolute;
 	width: 100%;
-	height: 2px;
+	height: 1px;
 	top: 50%;
-	background: black;
+	background: gray;
+`
+
+export const Divider = styled.div.attrs<{ offset: number; height: number }>((props) => ({
+	style: {
+		// left: `${props.offset}px`,
+		transform: `translateX(${props.offset}px)`,
+		height: `${8 * props.height}px`,
+	},
+}))<{ offset: number; height: number }>`
+	position: absolute;
+	background: gray;
+	width: 1px;
+	bottom: 0;
+	pointer-events: none;
+	left: 0;
+`
+
+export const MousePointer = styled.div.attrs<{ offset: number }>((props) => ({
+	style: {
+		transform: `translateX(${props.offset}px)`,
+	},
+}))<{ offset: number }>`
+	left: 0;
+	position: absolute;
+	background: gray;
+	width: 1px;
+	height: 100%;
 `

@@ -1,22 +1,18 @@
-import React from 'react'
-
 import { StoryEvent } from '../../types'
 import { TimelineMarkerInfo } from '../TimelineMarkerInfo/TimelineMarkerInfo'
-import { StoryEventMarkerOdd, StoryEventMarkerPointOdd } from './styles'
+import { Marker } from './styles'
 
 type Props = {
 	event: StoryEvent
 	offset: number
-	scale: number
 }
 
-export const TimelineEvent = ({ event, offset, scale }: Props) => {
-	const calculatedOffset = Math.floor(event.timestamp * scale + offset)
+export const TimelineEvent = ({ event, offset }: Props) => {
+	const calculatedOffset = Math.floor(event.timestamp + offset)
 
 	return (
-		<StoryEventMarkerOdd offset={calculatedOffset}>
-			<StoryEventMarkerPointOdd />
+		<Marker offset={calculatedOffset}>
 			<TimelineMarkerInfo event={event} />
-		</StoryEventMarkerOdd>
+		</Marker>
 	)
 }

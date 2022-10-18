@@ -7,7 +7,6 @@ import { Sidebar } from './components/sidebar/Sidebar'
 const HomePageContainer = styled.div`
 	display: flex;
 	width: 100%;
-	max-width: 1600px;
 	height: 100%;
 	align-items: center;
 	justify-content: center;
