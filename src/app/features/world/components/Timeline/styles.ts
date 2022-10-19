@@ -5,7 +5,6 @@ export const TimelineContainer = styled.div`
 	width: 100%;
 	height: 256px;
 	background: #1c4572;
-	overflow: hidden;
 	user-select: none;
 `
 
@@ -19,7 +18,6 @@ export const TimelineAnchorLine = styled.div`
 
 export const Divider = styled.div.attrs<{ offset: number; height: number }>((props) => ({
 	style: {
-		// left: `${props.offset}px`,
 		transform: `translateX(${props.offset}px)`,
 		height: `${8 * props.height}px`,
 	},

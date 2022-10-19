@@ -1,17 +1,15 @@
-import React, { MouseEvent, ReactElement } from 'react'
+import React, { MouseEvent } from 'react'
 
 import { ModalBody, ModalContainer } from './styles'
 
 type Props = {
-	visible: boolean
-	children: ReactElement | ReactElement[]
+	visible?: boolean
+	children: JSX.Element | JSX.Element[] | null | undefined
 	onClose: () => void
 }
 
 const Modal = ({ visible, children, onClose }: Props) => {
-	if (!visible) {
-		return <div />
-	}
+	const isModalVisible = visible === undefined || visible
 
 	const onContainerClick = () => {
 		onClose()
@@ -22,7 +20,7 @@ const Modal = ({ visible, children, onClose }: Props) => {
 	}
 
 	return (
-		<ModalContainer onClick={onContainerClick}>
+		<ModalContainer className={isModalVisible ? 'visible' : ''} onClick={onContainerClick}>
 			<ModalBody onClick={onBodyClick}>{children}</ModalBody>
 		</ModalContainer>
 	)

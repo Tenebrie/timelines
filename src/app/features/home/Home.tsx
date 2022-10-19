@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import EventEditorModal from '../world/components/EventEditorModal/EventEditorModal'
 import { Timeline } from '../world/components/Timeline/Timeline'
 import { Sidebar } from './components/sidebar/Sidebar'
 
@@ -19,6 +20,7 @@ export const Home = () => {
 		<HomePageContainer>
 			<Timeline />
 			<Sidebar />
+			<EventEditorModal />
 		</HomePageContainer>
 	)
 }

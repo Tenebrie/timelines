@@ -1,45 +1,35 @@
 import { TextField } from '@mui/material'
-import { useDispatch } from 'react-redux'
 
-import { worldSlice } from '../../reducer'
 import { StoryEvent } from '../../types'
 import { EventEditorContainer } from './styles'
 
 type Props = {
 	event: StoryEvent
+	onUpdate: (event: StoryEvent) => void
 }
 
-export const EventEditor = ({ event }: Props) => {
-	const dispatch = useDispatch()
-	const { updateEvent } = worldSlice.actions
-
+export const EventEditor = ({ event, onUpdate }: Props) => {
 	const { name, timestamp, description } = event
 
 	const onNameChange = (value: string) => {
-		dispatch(
-			updateEvent({
-				...event,
-				name: value,
-			})
-		)
+		onUpdate({
+			...event,
+			name: value,
+		})
 	}
 
 	const onTimestampChange = (value: number) => {
-		dispatch(
-			updateEvent({
-				...event,
-				timestamp: value,
-			})
-		)
+		onUpdate({
+			...event,
+			timestamp: value,
+		})
 	}
 
 	const onDescriptionChange = (value: string) => {
-		dispatch(
-			updateEvent({
-				...event,
-				description: value,
-			})
-		)
+		onUpdate({
+			...event,
+			description: value,
+		})
 	}
 
 	return (

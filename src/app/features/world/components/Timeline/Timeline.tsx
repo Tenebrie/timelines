@@ -1,20 +1,15 @@
-import React, { MouseEvent, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { MouseEvent, useRef, useState } from 'react'
 
-import { getWorldState } from '../../selectors'
-import { TimelineEvent } from '../TimelineEvent/TimelineEvent'
+import { TimelineEventGroup } from '../TimelineEventGroup/TimelineEventGroup'
+import useEventGroups from './hooks/useEventGroups'
 import { TimelineContainer } from './styles'
 import TimelineAnchor from './TimelineAnchor'
 
 export const Timeline = () => {
-	const { events: storyEvents } = useSelector(getWorldState)
+	const eventGroups = useEventGroups()
 
-	const [scroll, setScroll] = useState(0)
-
-	const [showMousePointer, setShowMousePointer] = useState(false)
+	const [scroll, setScroll] = useState(150)
 	const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
-	const [pointerPos, setPointerPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
-
 	const [isDragging, setDragging] = useState(false)
 	const onMouseDown = () => {
 		setDragging(true)
@@ -24,22 +19,7 @@ export const Timeline = () => {
 		setDragging(false)
 	}
 
-	const onMouseEnter = () => {
-		setShowMousePointer(true)
-	}
-
-	const onMouseLeave = () => {
-		onMouseUp()
-		setShowMousePointer(false)
-	}
-
 	const onMouseMove = (event: MouseEvent<HTMLDivElement>) => {
-		// console.log(event.currentTarget)
-		// const boundingRect = event.currentTarget.getBoundingClientRect()
-		// const newPos = { x: event.screenX - boundingRect.left, y: event.screenY - boundingRect.top }
-
-		// debouncedMove(event.currentTarget, event.screenX, event.screenY)
-
 		const boundingRect = event.currentTarget.getBoundingClientRect()
 		const newPos = { x: event.screenX - boundingRect.left, y: event.screenY - boundingRect.top }
 
@@ -56,13 +36,12 @@ export const Timeline = () => {
 			ref={containerRef}
 			onMouseDown={onMouseDown}
 			onMouseUp={onMouseUp}
-			onMouseEnter={onMouseEnter}
-			onMouseLeave={onMouseLeave}
+			onMouseLeave={onMouseUp}
 			onMouseMove={onMouseMove}
 		>
 			<TimelineAnchor offset={scroll} />
-			{storyEvents.map((event) => (
-				<TimelineEvent key={event.id} event={event} offset={scroll} />
+			{eventGroups.map((group) => (
+				<TimelineEventGroup key={group.timestamp} eventGroup={group} scroll={scroll} />
 			))}
 		</TimelineContainer>
 	)

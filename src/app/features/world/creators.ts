@@ -7,6 +7,7 @@ export const makeStoryEvent = (
 ): StoryEvent => {
 	return {
 		id: uuidv4(),
+		type: 'other',
 		description: '',
 		...base,
 	}
