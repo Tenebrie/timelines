@@ -11,7 +11,7 @@ const HomePageContainer = styled.div`
 	height: 100%;
 	align-items: center;
 	justify-content: center;
-	gap: 12px;
+	gap: 64px;
 	flex-direction: column;
 `
 

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { worldSlice } from '../../../../reducer'
-import { StoryEvent, StoryEventBundle } from '../../../../types'
+import { worldSlice } from '../../../../../../reducer'
+import { StoryEvent, StoryEventBundle } from '../../../../../../types'
 import { Label, LabelContainer, Marker } from './styles'
 
 type Props = {

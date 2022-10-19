@@ -1,9 +1,9 @@
 import { MouseEvent, useRef, useState } from 'react'
 
-import { TimelineEventGroup } from '../TimelineEventGroup/TimelineEventGroup'
+import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
+import { TimelineEventGroup } from './components/TimelineEventGroup/TimelineEventGroup'
 import useEventGroups from './hooks/useEventGroups'
 import { TimelineContainer } from './styles'
-import TimelineAnchor from './TimelineAnchor'
 
 export const Timeline = () => {
 	const eventGroups = useEventGroups()

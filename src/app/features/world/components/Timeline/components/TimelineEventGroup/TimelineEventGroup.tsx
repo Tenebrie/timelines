@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { StoryEventGroup } from '../../types'
+import { StoryEventGroup } from '../../../../types'
 import { TimelineEvent } from './components/TimelineEvent/TimelineEvent'
 import { Group } from './styles'
 
