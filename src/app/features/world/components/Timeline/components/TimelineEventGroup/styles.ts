@@ -12,4 +12,5 @@ export const Group = styled.div.attrs<{ position: number }>((props) => ({
 	padding: 5px;
 	margin-left: -30px;
 	margin-bottom: 80px;
+	transition: left 0.3s;
 `

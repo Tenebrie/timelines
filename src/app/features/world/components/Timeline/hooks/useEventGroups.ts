@@ -6,7 +6,7 @@ import { StoryEvent, StoryEventBundle, StoryEventGroup } from '../../../types'
 const GROUP_DISTANCE = 75
 const EVENTS_PER_GROUP = 5
 
-const useEventGroups = () => {
+const useEventGroups = (pixelsPerTime: number) => {
 	const { events } = useSelector(getWorldState)
 	const eventGroups: StoryEventGroup[] = []
 
@@ -21,7 +21,7 @@ const useEventGroups = () => {
 			}))
 			.sort((a, b) => a.distance - b.distance)[0]
 
-		if (!closestExistingGroup || closestExistingGroup.distance >= GROUP_DISTANCE) {
+		if (!closestExistingGroup || closestExistingGroup.distance >= GROUP_DISTANCE * pixelsPerTime) {
 			const newEventGroup = {
 				events: [event],
 				timestamp: event.timestamp,

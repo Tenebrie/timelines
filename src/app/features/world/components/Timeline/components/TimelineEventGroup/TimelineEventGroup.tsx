@@ -7,12 +7,13 @@ import { Group } from './styles'
 type Props = {
 	eventGroup: StoryEventGroup
 	scroll: number
+	pixelsPerTime: number
 }
 
-export const TimelineEventGroup = ({ eventGroup, scroll }: Props) => {
+export const TimelineEventGroup = ({ eventGroup, scroll, pixelsPerTime }: Props) => {
 	const [isExpanded, setIsExpanded] = useState(false)
 
-	const position = Math.floor(eventGroup.timestamp) + scroll
+	const position = Math.floor(eventGroup.timestamp) / pixelsPerTime + scroll
 
 	const onMouseEnter = () => {
 		setIsExpanded(true)

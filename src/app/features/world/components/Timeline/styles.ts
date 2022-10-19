@@ -6,4 +6,5 @@ export const TimelineContainer = styled.div`
 	height: 256px;
 	background: #1c4572;
 	user-select: none;
+	overflow-x: clip;
 `
