@@ -12,5 +12,10 @@ export const Group = styled.div.attrs<{ position: number }>((props) => ({
 	padding: 5px;
 	margin-left: -30px;
 	margin-bottom: 80px;
-	transition: left 0.3s;
+	opacity: 0;
+	transition: opacity 0.3s;
+
+	&.visible {
+		opacity: 1;
+	}
 `

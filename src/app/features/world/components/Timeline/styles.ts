@@ -7,4 +7,10 @@ export const TimelineContainer = styled.div`
 	background: #1c4572;
 	user-select: none;
 	overflow-x: clip;
+
+	cursor: grab;
+
+	&:active {
+		cursor: grabbing;
+	}
 `

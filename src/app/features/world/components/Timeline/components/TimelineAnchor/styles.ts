@@ -8,7 +8,6 @@ export const TimelineAnchorContainer = styled.div.attrs<{ offset: number }>((pro
 	position: absolute;
 	width: fit-content;
 	bottom: 0;
-	/* transition: transform 0.3s; */
 `
 
 export const DividerContainer = styled.div.attrs<{ offset: number }>((props) => ({
@@ -27,11 +26,12 @@ export const DividerContainer = styled.div.attrs<{ offset: number }>((props) => 
 	}
 `
 
-export const Divider = styled.div.attrs<{ height: number }>((props) => ({
+export const Divider = styled.div.attrs<{ color: string; height: number }>((props) => ({
 	style: {
+		backgroundColor: props.color,
 		height: `${8 * props.height}px`,
 	},
-}))<{ height: number }>`
+}))<{ color: string; height: number }>`
 	position: absolute;
 	background: gray;
 	width: 1px;
@@ -45,7 +45,7 @@ export const DividerLabel = styled.div`
 	align-items: center;
 	justify-content: center;
 	opacity: 0;
-	/* transition: opacity 0.3s; */
+	white-space: pre;
 
 	&.visible {
 		opacity: 1;

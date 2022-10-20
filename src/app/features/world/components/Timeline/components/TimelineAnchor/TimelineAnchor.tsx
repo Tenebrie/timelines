@@ -1,34 +1,35 @@
+import { useSelector } from 'react-redux'
+
+import { getTimelinePreferences } from '../../../../../preferences/selectors'
 import { TimelineAnchorContainer } from './styles'
-import { TimelineAnchorDivider } from './TimelineAnchorDivider'
-import { TimelineConstants } from './TimelineConstants'
+import { TimelineAnchorLine } from './TimelineAnchorLine'
 
 type Props = {
-	offset: number
-	pixelsPerTime: number
-	labelMultiplier: number
-	fadingOut: boolean
+	visible: boolean
+	scroll: number
+	timePerPixel: number
+	scaleLevel: number
 }
 
-export const TimelineAnchor = ({ offset, pixelsPerTime, labelMultiplier, fadingOut }: Props) => {
-	const dividersToRender = Math.ceil(
-		Math.ceil(
-			((window.screen.width / TimelineConstants.TimePerDivider) * labelMultiplier * pixelsPerTime) / 50
-		) * 50
-	)
+export const TimelineAnchor = ({ scroll, timePerPixel, scaleLevel, visible }: Props) => {
+	const { pixelsPerLine } = useSelector(getTimelinePreferences)
 
-	const dividers = Array(dividersToRender).fill(null)
+	const lineCount = Math.ceil(((window.screen.width / pixelsPerLine) * scaleLevel * timePerPixel) / 50) * 50
+
+	const dividers = Array(lineCount).fill(null)
 
 	return (
-		<TimelineAnchorContainer offset={offset}>
+		<TimelineAnchorContainer offset={scroll}>
 			{dividers.map((_, index) => (
-				<TimelineAnchorDivider
+				<TimelineAnchorLine
 					key={`${index}`}
-					offset={offset}
 					index={index}
-					dividersToRender={dividersToRender}
-					pixelsPerTime={pixelsPerTime}
-					labelMultiplier={labelMultiplier}
-					visible={!fadingOut}
+					visible={visible}
+					lineCount={lineCount}
+					pixelsPerLine={pixelsPerLine}
+					timePerPixel={timePerPixel}
+					scaleLevel={scaleLevel}
+					timelineScroll={scroll}
 				/>
 			))}
 		</TimelineAnchorContainer>

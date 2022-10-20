@@ -8,12 +8,13 @@ import useEventGroups from './hooks/useEventGroups'
 import { TimelineContainer } from './styles'
 
 export const Timeline = () => {
-	const [scaleScroll, setScaleScroll] = useState(0)
-	const [pixelsPerTime, setPixelsPerTime] = useState(1)
-	const [labelMultiplier, setLabelMultiplier] = useState(1)
-	const [isFadingOut, setIsFadingOut] = useState(false)
+	const [timePerPixel, setTimePerPixel] = useState(1)
+	const [scaleLevel, setScaleLevel] = useState(1)
+	const [isSwitchingScale, setIsSwitchingScale] = useState(false)
 
 	const [scroll, setScroll] = useState(150)
+	const [scaleScroll, setScaleScroll] = useState(0)
+
 	const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 	const [isDragging, setDragging] = useState(false)
 	const onMouseDown = () => {
@@ -26,7 +27,7 @@ export const Timeline = () => {
 
 	const onMouseMove = (event: MouseEvent<HTMLDivElement>) => {
 		const boundingRect = event.currentTarget.getBoundingClientRect()
-		const newPos = { x: event.screenX - boundingRect.left, y: event.screenY - boundingRect.top }
+		const newPos = { x: event.clientX - boundingRect.left, y: event.clientY - boundingRect.top }
 
 		if (isDragging) {
 			setScroll(scroll + newPos.x - mousePos.x)
@@ -37,48 +38,61 @@ export const Timeline = () => {
 	const onWheel = useCallback(
 		(event: WheelEvent) => {
 			event.preventDefault()
-			const delta = event.deltaY > 0 ? 100 : event.deltaY < 0 ? -100 : 0
-			const newScaleScroll = clampToRange(-300, scaleScroll + delta, 1100)
-			const newPixelsPerTime = Math.pow(2, newScaleScroll / 100)
 
-			const newLabelMultiplier = rangeMap(newPixelsPerTime, [
-				['[0; 4)', 1],
-				['[4; 128)', 0.025],
-				['[128; 2048]', 0.000625],
-			])
-
-			if (newLabelMultiplier === null) {
+			if (isSwitchingScale) {
 				return
 			}
 
-			setIsFadingOut(true)
-			setTimeout(() => {
-				setPixelsPerTime(newPixelsPerTime)
-				setScaleScroll(newScaleScroll)
-				setLabelMultiplier(newLabelMultiplier)
+			const delta = event.deltaY > 0 ? 100 : event.deltaY < 0 ? -100 : 0
+			const newScaleScroll = clampToRange(-300, scaleScroll + delta, 1000)
+			const newTimePerPixel = Math.pow(2, newScaleScroll / 100)
 
-				const ratio = pixelsPerTime / newPixelsPerTime
-				const midValue = (mousePos.x - scroll) * pixelsPerTime
+			// const newLabelMultiplier = rangeMap(newPixelsPerTime, [
+			// 	['[0; 4)', 1],
+			// 	['[4; 128)', 0.025],
+			// 	['[128; 2048]', 0.000625],
+			// ])
+
+			const newScaleLevel = rangeMap(newTimePerPixel, [
+				['[0; 4)', 1],
+				['[4; 32)', 0.1],
+				['[32; 256)', 0.01],
+				['[256; 2048]', 0.001],
+			])
+
+			if (newScaleLevel === null) {
+				return
+			}
+
+			setIsSwitchingScale(true)
+			setTimeout(() => {
+				setTimePerPixel(newTimePerPixel)
+				setScaleScroll(newScaleScroll)
+				setScaleLevel(newScaleLevel)
+
+				const ratio = timePerPixel / newTimePerPixel
+				const midValue = (mousePos.x - scroll) * timePerPixel
 				if (ratio > 1) {
-					setScroll(Math.round(scroll - midValue / 2 / newPixelsPerTime))
+					setScroll(Math.round(scroll - midValue / 2 / newTimePerPixel))
 				} else if (ratio < 1) {
-					setScroll(Math.round(scroll + midValue / newPixelsPerTime))
+					setScroll(Math.round(scroll + midValue / newTimePerPixel))
 				}
 				setTimeout(() => {
-					setIsFadingOut(false)
+					setIsSwitchingScale(false)
 				})
 			}, 300)
 		},
 		[
 			mousePos,
-			pixelsPerTime,
+			timePerPixel,
 			setScroll,
 			scroll,
 			scaleScroll,
-			setPixelsPerTime,
+			setTimePerPixel,
 			setScaleScroll,
-			setLabelMultiplier,
-			setIsFadingOut,
+			setScaleLevel,
+			isSwitchingScale,
+			setIsSwitchingScale,
 		]
 	)
 
@@ -93,7 +107,7 @@ export const Timeline = () => {
 		}
 	}, [onWheel, containerRef])
 
-	const eventGroups = useEventGroups(pixelsPerTime)
+	const eventGroups = useEventGroups(timePerPixel)
 
 	return (
 		<TimelineContainer
@@ -104,17 +118,18 @@ export const Timeline = () => {
 			onMouseMove={onMouseMove}
 		>
 			<TimelineAnchor
-				offset={scroll}
-				pixelsPerTime={pixelsPerTime}
-				labelMultiplier={labelMultiplier}
-				fadingOut={isFadingOut}
+				visible={!isSwitchingScale}
+				scroll={scroll}
+				timePerPixel={timePerPixel}
+				scaleLevel={scaleLevel}
 			/>
 			{eventGroups.map((group) => (
 				<TimelineEventGroup
 					key={group.timestamp}
-					eventGroup={group}
+					visible={!isSwitchingScale}
 					scroll={scroll}
-					pixelsPerTime={pixelsPerTime}
+					eventGroup={group}
+					pixelsPerTime={timePerPixel}
 				/>
 			))}
 		</TimelineContainer>

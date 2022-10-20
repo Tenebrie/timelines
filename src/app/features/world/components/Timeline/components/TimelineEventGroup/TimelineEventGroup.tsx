@@ -8,9 +8,10 @@ type Props = {
 	eventGroup: StoryEventGroup
 	scroll: number
 	pixelsPerTime: number
+	visible: boolean
 }
 
-export const TimelineEventGroup = ({ eventGroup, scroll, pixelsPerTime }: Props) => {
+export const TimelineEventGroup = ({ eventGroup, scroll, pixelsPerTime, visible }: Props) => {
 	const [isExpanded, setIsExpanded] = useState(false)
 
 	const position = Math.floor(eventGroup.timestamp) / pixelsPerTime + scroll
@@ -24,7 +25,12 @@ export const TimelineEventGroup = ({ eventGroup, scroll, pixelsPerTime }: Props)
 	}
 
 	return (
-		<Group position={position} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+		<Group
+			position={position}
+			onMouseEnter={onMouseEnter}
+			onMouseLeave={onMouseLeave}
+			className={visible ? 'visible' : ''}
+		>
 			{eventGroup.events.map((event, index) => (
 				<TimelineEvent key={event.id} event={event} groupIndex={index} expanded={isExpanded} />
 			))}

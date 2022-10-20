@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import worldSlice from './features/world/reducer'
+import preferencesReducer from './features/preferences/reducer'
+import worldReducer from './features/world/reducer'
 
 export const store = configureStore({
 	reducer: {
-		world: worldSlice,
+		world: worldReducer,
+		preferences: preferencesReducer,
 	},
 })
 
