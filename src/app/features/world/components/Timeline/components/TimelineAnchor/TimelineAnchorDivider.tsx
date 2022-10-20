@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { memo } from 'react'
 
 import { Divider, DividerContainer, DividerLabel } from './styles'
 import { TimelineConstants } from './TimelineConstants'
@@ -9,6 +9,7 @@ type Props = {
 	dividersToRender: number
 	pixelsPerTime: number
 	labelMultiplier: number
+	visible: boolean
 }
 
 const getTimelineAnchorSize = (dividersToRender: number, labelMultiplier: number) =>
@@ -34,9 +35,8 @@ const TimelineAnchorDividerRaw = ({
 	dividersToRender,
 	pixelsPerTime,
 	labelMultiplier,
+	visible,
 }: Props) => {
-	const [lastDisplayedLabel, setLastDisplayedLabel] = useState<string | null>(null)
-
 	const labelDisplayed =
 		index % 50 === 0 ||
 		(labelMultiplier === 0.000625 && pixelsPerTime === 1024 && index % 25 === 0) ||
@@ -67,7 +67,7 @@ const TimelineAnchorDividerRaw = ({
 	)
 
 	return (
-		<DividerContainer key={index} offset={dividerOffset}>
+		<DividerContainer key={index} offset={dividerOffset} className={visible ? 'visible' : ''}>
 			{index % 5 === 0 && (
 				<DividerLabel className={labelDisplayed ? 'visible' : ''}>
 					{((index + dividersToRender * loopIndex) * TimelineConstants.TimePerDivider) / labelMultiplier}
@@ -83,5 +83,6 @@ export const TimelineAnchorDivider = memo(
 	(a, b) =>
 		getLoop(a.index, a.offset, a.dividersToRender, a.pixelsPerTime, a.labelMultiplier) ===
 			getLoop(b.index, b.offset, b.dividersToRender, b.pixelsPerTime, b.labelMultiplier) &&
-		a.pixelsPerTime === b.pixelsPerTime
+		a.pixelsPerTime === b.pixelsPerTime &&
+		a.visible === b.visible
 )

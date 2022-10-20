@@ -6,26 +6,29 @@ type Props = {
 	offset: number
 	pixelsPerTime: number
 	labelMultiplier: number
+	fadingOut: boolean
 }
 
-export const TimelineAnchor = ({ offset, pixelsPerTime, labelMultiplier }: Props) => {
+export const TimelineAnchor = ({ offset, pixelsPerTime, labelMultiplier, fadingOut }: Props) => {
 	const dividersToRender = Math.ceil(
 		Math.ceil(
 			((window.screen.width / TimelineConstants.TimePerDivider) * labelMultiplier * pixelsPerTime) / 50
 		) * 50
 	)
+
 	const dividers = Array(dividersToRender).fill(null)
 
 	return (
 		<TimelineAnchorContainer offset={offset}>
 			{dividers.map((_, index) => (
 				<TimelineAnchorDivider
-					key={index}
+					key={`${index}`}
 					offset={offset}
 					index={index}
 					dividersToRender={dividersToRender}
 					pixelsPerTime={pixelsPerTime}
 					labelMultiplier={labelMultiplier}
+					visible={!fadingOut}
 				/>
 			))}
 		</TimelineAnchorContainer>

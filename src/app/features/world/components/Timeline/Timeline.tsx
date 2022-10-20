@@ -11,6 +11,7 @@ export const Timeline = () => {
 	const [scaleScroll, setScaleScroll] = useState(0)
 	const [pixelsPerTime, setPixelsPerTime] = useState(1)
 	const [labelMultiplier, setLabelMultiplier] = useState(1)
+	const [isFadingOut, setIsFadingOut] = useState(false)
 
 	const [scroll, setScroll] = useState(150)
 	const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
@@ -50,17 +51,23 @@ export const Timeline = () => {
 				return
 			}
 
-			setPixelsPerTime(newPixelsPerTime)
-			setScaleScroll(newScaleScroll)
-			setLabelMultiplier(newLabelMultiplier)
+			setIsFadingOut(true)
+			setTimeout(() => {
+				setPixelsPerTime(newPixelsPerTime)
+				setScaleScroll(newScaleScroll)
+				setLabelMultiplier(newLabelMultiplier)
 
-			const ratio = pixelsPerTime / newPixelsPerTime
-			const midValue = (mousePos.x - scroll) * pixelsPerTime
-			if (ratio > 1) {
-				setScroll(Math.round(scroll - midValue / 2 / newPixelsPerTime))
-			} else if (ratio < 1) {
-				setScroll(Math.round(scroll + midValue / newPixelsPerTime))
-			}
+				const ratio = pixelsPerTime / newPixelsPerTime
+				const midValue = (mousePos.x - scroll) * pixelsPerTime
+				if (ratio > 1) {
+					setScroll(Math.round(scroll - midValue / 2 / newPixelsPerTime))
+				} else if (ratio < 1) {
+					setScroll(Math.round(scroll + midValue / newPixelsPerTime))
+				}
+				setTimeout(() => {
+					setIsFadingOut(false)
+				})
+			}, 300)
 		},
 		[
 			mousePos,
@@ -71,6 +78,7 @@ export const Timeline = () => {
 			setPixelsPerTime,
 			setScaleScroll,
 			setLabelMultiplier,
+			setIsFadingOut,
 		]
 	)
 
@@ -95,7 +103,12 @@ export const Timeline = () => {
 			onMouseLeave={onMouseUp}
 			onMouseMove={onMouseMove}
 		>
-			<TimelineAnchor offset={scroll} pixelsPerTime={pixelsPerTime} labelMultiplier={labelMultiplier} />
+			<TimelineAnchor
+				offset={scroll}
+				pixelsPerTime={pixelsPerTime}
+				labelMultiplier={labelMultiplier}
+				fadingOut={isFadingOut}
+			/>
 			{eventGroups.map((group) => (
 				<TimelineEventGroup
 					key={group.timestamp}
