@@ -1,35 +1,43 @@
 import { TextField } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { worldSlice } from '../../reducer'
+import { useWorldRouter } from '../../router'
+import { getEventEditorState } from '../../selectors'
 import { StoryEvent } from '../../types'
 import { EventEditorContainer } from './styles'
 
-type Props = {
-	event: StoryEvent
-	onUpdate: (event: StoryEvent) => void
-}
+export const EventEditor = () => {
+	const { event } = useSelector(getEventEditorState)
 
-export const EventEditor = ({ event, onUpdate }: Props) => {
+	const dispatch = useDispatch()
+	const { setEditorEvent, flushEditorEvent } = worldSlice.actions
+
+	const { navigateToRoot } = useWorldRouter()
+
+	if (!event) {
+		navigateToRoot()
+		return <></>
+	}
+
 	const { name, timestamp, description } = event
 
-	const onNameChange = (value: string) => {
-		onUpdate({
-			...event,
-			name: value,
-		})
+	const updateEvent = (delta: Partial<StoryEvent>) => {
+		dispatch(
+			setEditorEvent({
+				...event,
+				...delta,
+			})
+		)
 	}
 
-	const onTimestampChange = (value: number) => {
-		onUpdate({
-			...event,
-			timestamp: value,
-		})
-	}
+	const onNameChange = (value: string) => updateEvent({ name: value })
+	const onTimestampChange = (value: number) => updateEvent({ timestamp: value })
+	const onDescriptionChange = (value: string) => updateEvent({ description: value })
 
-	const onDescriptionChange = (value: string) => {
-		onUpdate({
-			...event,
-			description: value,
-		})
+	const onSave = () => {
+		dispatch(flushEditorEvent())
+		navigateToRoot()
 	}
 
 	return (
@@ -47,6 +55,7 @@ export const EventEditor = ({ event, onUpdate }: Props) => {
 				variant="filled"
 				rows={10}
 			/>
+			<button onClick={onSave}>Save</button>
 		</EventEditorContainer>
 	)
 }

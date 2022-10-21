@@ -33,22 +33,18 @@ export const worldSlice = createSlice({
 			state.name = payload
 		},
 
-		/* Outliner */
-		setSelectedOutlinerTime: (state, { payload }: PayloadAction<number | null>) => {
-			state.outliner.selectedTime = payload
-		},
-
 		/* World events */
 		createEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
 			state.events = state.events.concat(payload)
 		},
 
-		/* Event editor */
-		setEditorEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
-			state.eventEditor.event = payload
+		/* Outliner */
+		setSelectedOutlinerTime: (state, { payload }: PayloadAction<number | null>) => {
+			state.outliner.selectedTime = payload
 		},
 
-		updateEditorEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
+		/* Event editor */
+		setEditorEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
 			state.eventEditor.event = payload
 		},
 

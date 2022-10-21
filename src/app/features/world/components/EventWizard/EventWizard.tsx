@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Modal from '../../../../../ui-lib/components/Modal/Modal'
 import { makeStoryEvent } from '../../creators'
 import { worldSlice } from '../../reducer'
+import { useWorldRouter } from '../../router'
 import { getEventWizardState } from '../../selectors'
 
 export const EventWizard = () => {
@@ -11,6 +12,8 @@ export const EventWizard = () => {
 
 	const dispatch = useDispatch()
 	const { createEvent, closeEventWizard } = worldSlice.actions
+
+	const { navigateToEventEditor } = useWorldRouter()
 
 	const [name, setName] = useState('')
 
@@ -23,15 +26,13 @@ export const EventWizard = () => {
 	}, [isOpen])
 
 	const onConfirm = () => {
-		dispatch(
-			createEvent(
-				makeStoryEvent({
-					name,
-					timestamp,
-				})
-			)
-		)
+		const newEvent = makeStoryEvent({
+			name,
+			timestamp,
+		})
+		dispatch(createEvent(newEvent))
 		dispatch(closeEventWizard())
+		navigateToEventEditor(newEvent)
 	}
 
 	return (

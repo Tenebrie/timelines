@@ -1,7 +1,6 @@
 import React from 'react'
+import { Outlet } from 'react-router-dom'
 import styled from 'styled-components'
-
-import { Home } from './app/features/home/Home'
 
 const Container = styled.div`
 	display: flex;
@@ -15,7 +14,7 @@ function App() {
 	return (
 		<div className="App">
 			<Container>
-				<Home />
+				<Outlet />
 			</Container>
 		</div>
 	)

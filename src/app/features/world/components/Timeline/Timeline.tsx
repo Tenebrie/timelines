@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { worldSlice } from '../../reducer'
+import { useWorldRouter } from '../../router'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { TimelineEventGroup } from './components/TimelineEventGroup/TimelineEventGroup'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
@@ -15,12 +16,14 @@ export const Timeline = () => {
 
 	const containerRef = useRef<HTMLDivElement | null>(null)
 
+	const { navigateToOutliner } = useWorldRouter()
+
 	const { scroll, timePerPixel, scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
 		containerRef,
 		defaultScroll: 150,
 		maximumScroll: 500,
 		scaleLimits: [-3, 10],
-		onSelectTime: (time) => dispatch(setSelectedOutlinerTime(time)),
+		onSelectTime: (time) => navigateToOutliner(time),
 	})
 	const eventGroups = useEventGroups(timePerPixel)
 

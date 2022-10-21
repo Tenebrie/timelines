@@ -2,8 +2,8 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useWorldTime } from '../../../time/hooks/useWorldTime'
 import { worldSlice } from '../../reducer'
+import { useWorldRouter } from '../../router'
 import { getWorldOutlinerState, getWorldState } from '../../selectors'
-import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmptyState'
 import { OutlinerContainer } from './styles'
 
 export const Outliner = () => {
@@ -14,8 +14,11 @@ export const Outliner = () => {
 	const dispatch = useDispatch()
 	const { openEventWizard } = worldSlice.actions
 
+	const { navigateToRoot } = useWorldRouter()
+
 	if (selectedTime === null) {
-		return <OutlinerEmptyState />
+		navigateToRoot()
+		return <></>
 	}
 
 	const applicableEvents = events.filter((event) => event.timestamp <= selectedTime)

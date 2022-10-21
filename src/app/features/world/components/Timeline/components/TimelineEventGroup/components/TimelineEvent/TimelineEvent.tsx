@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 
-import { worldSlice } from '../../../../../../reducer'
+import { useWorldRouter } from '../../../../../../router'
 import { StoryEvent, StoryEventBundle } from '../../../../../../types'
 import { Label, LabelContainer, Marker } from './styles'
 
@@ -14,15 +13,14 @@ type Props = {
 export const TimelineEvent = ({ event, groupIndex, expanded }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
-	const dispatch = useDispatch()
-	const { setEditorEvent } = worldSlice.actions
+	const { navigateToEventEditor } = useWorldRouter()
 
 	const onClick = () => {
 		if (event.type === 'bundle') {
 			return
 		}
 
-		dispatch(setEditorEvent(event))
+		navigateToEventEditor(event)
 	}
 
 	const onMouseEnter = () => {
