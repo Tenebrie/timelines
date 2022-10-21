@@ -6,11 +6,23 @@ import { StoryEvent } from './types'
 
 const initialState = {
 	name: '' as string,
-	editorEvent: null as StoryEvent | null,
 	events: [
 		makeStoryEvent({ name: 'First event name', timestamp: 0 }),
 		makeStoryEvent({ name: 'Second event name', timestamp: 0 }),
 	] as StoryEvent[],
+
+	outliner: {
+		selectedTime: null as number | null,
+	},
+
+	eventEditor: {
+		event: null as StoryEvent | null,
+	},
+
+	eventWizard: {
+		isOpen: false as boolean,
+		timestamp: 0 as number,
+	},
 }
 
 export const worldSlice = createSlice({
@@ -21,36 +33,51 @@ export const worldSlice = createSlice({
 			state.name = payload
 		},
 
+		/* Outliner */
+		setSelectedOutlinerTime: (state, { payload }: PayloadAction<number | null>) => {
+			state.outliner.selectedTime = payload
+		},
+
+		/* World events */
+		createEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
+			state.events = state.events.concat(payload)
+		},
+
+		/* Event editor */
 		setEditorEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
-			state.editorEvent = payload
+			state.eventEditor.event = payload
+		},
+
+		updateEditorEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
+			state.eventEditor.event = payload
 		},
 
 		flushEditorEvent: (state) => {
-			const editorEvent = state.editorEvent
+			const editorEvent = state.eventEditor.event
 			if (!editorEvent) {
 				return
 			}
 
 			state.events = state.events.filter((event) => event.id !== editorEvent.id)
 			state.events = state.events.concat(editorEvent)
-			state.editorEvent = null
+			state.eventEditor.event = null
 		},
 
 		clearEditorEvent: (state) => {
-			state.editorEvent = null
+			state.eventEditor.event = null
 		},
 
-		createEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
-			state.events = state.events.concat(payload)
+		/* Event wizard */
+		openEventWizard: (state, { payload }: PayloadAction<{ timestamp: number }>) => {
+			state.eventWizard.isOpen = true
+			state.eventWizard.timestamp = payload.timestamp
 		},
 
-		updateEditorEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
-			state.editorEvent = payload
+		closeEventWizard: (state) => {
+			state.eventWizard.isOpen = false
 		},
 	},
 })
 
 export type TimelineState = typeof initialState
-// export const { createEvent, updateEvent } = worldSlice.actions;
-
 export default worldSlice.reducer

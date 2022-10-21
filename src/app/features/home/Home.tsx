@@ -1,9 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import EventEditorModal from '../world/components/EventEditorModal/EventEditorModal'
-import { Timeline } from '../world/components/Timeline/Timeline'
-import { Sidebar } from './components/sidebar/Sidebar'
+import { World } from '../world/World'
 
 const HomePageContainer = styled.div`
 	display: flex;
@@ -18,9 +16,7 @@ const HomePageContainer = styled.div`
 export const Home = () => {
 	return (
 		<HomePageContainer>
-			<Timeline />
-			<Sidebar />
-			<EventEditorModal />
+			<World />
 		</HomePageContainer>
 	)
 }

@@ -6,16 +6,27 @@ import { rangeMap } from '../../../../../utils/rangeMap'
 type Props = {
 	containerRef: React.MutableRefObject<HTMLDivElement | null>
 	defaultScroll: number
+	maximumScroll: number
 	scaleLimits: [number, number]
+	onSelectTime: (time: number) => void
 }
 
-export const useTimelineNavigation = ({ containerRef, defaultScroll, scaleLimits }: Props) => {
+export const useTimelineNavigation = ({
+	containerRef,
+	defaultScroll,
+	maximumScroll,
+	scaleLimits,
+	onSelectTime,
+}: Props) => {
 	// Scroll
 	const [scroll, setScroll] = useState(defaultScroll)
+	const [overscroll, setOverscroll] = useState(0)
 	const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 	const [isDragging, setDragging] = useState(false)
+	const [canClick, setCanClick] = useState(true)
 	const onMouseDown = useCallback(() => {
 		setDragging(true)
+		setCanClick(true)
 	}, [])
 
 	const onMouseUp = useCallback(() => {
@@ -28,31 +39,30 @@ export const useTimelineNavigation = ({ containerRef, defaultScroll, scaleLimits
 			const newPos = { x: event.clientX - boundingRect.left, y: event.clientY - boundingRect.top }
 
 			if (isDragging) {
-				setScroll(scroll + newPos.x - mousePos.x)
+				const newScroll = scroll + newPos.x - mousePos.x + overscroll
+				if (newScroll > maximumScroll) {
+					setScroll(maximumScroll)
+					setOverscroll(newScroll - maximumScroll)
+				} else {
+					setScroll(newScroll)
+					setOverscroll(0)
+				}
+				setCanClick(false)
 			}
 			setMousePos(newPos)
 		},
-		[isDragging, mousePos.x, scroll]
+		[isDragging, maximumScroll, mousePos.x, overscroll, scroll]
 	)
 
 	useEffect(() => {
-		const container = containerRef.current
-		if (!container) {
+		if (isDragging) {
 			return
 		}
-
-		container.addEventListener('mousedown', onMouseDown)
-		container.addEventListener('mousemove', onMouseMove)
-		container.addEventListener('mouseup', onMouseUp)
-		container.addEventListener('mouseleave', onMouseUp)
-
-		return () => {
-			container.removeEventListener('mousedown', onMouseDown)
-			container.removeEventListener('mousemove', onMouseMove)
-			container.removeEventListener('mouseup', onMouseUp)
-			container.removeEventListener('mouseleave', onMouseUp)
-		}
-	}, [onMouseDown, onMouseUp, onMouseMove, containerRef])
+		const interval = window.setInterval(() => {
+			setOverscroll((overscroll) => overscroll * 0.9)
+		}, 5)
+		return () => window.clearInterval(interval)
+	}, [isDragging])
 
 	// Zoom
 	const [timePerPixel, setTimePerPixel] = useState(1)
@@ -111,7 +121,7 @@ export const useTimelineNavigation = ({ containerRef, defaultScroll, scaleLimits
 			return
 		}
 
-		setScroll(currentScroll)
+		setScroll(Math.min(currentScroll, maximumScroll))
 		setScaleLevel(newScaleLevel)
 		setScaleScroll(currentScaleScroll)
 		setTimePerPixel(currentTimePerPixel)
@@ -120,6 +130,7 @@ export const useTimelineNavigation = ({ containerRef, defaultScroll, scaleLimits
 			setIsSwitchingScale(false)
 		})
 	}, [
+		maximumScroll,
 		mousePos.x,
 		readyToSwitchScale,
 		scaleLimits,
@@ -152,21 +163,50 @@ export const useTimelineNavigation = ({ containerRef, defaultScroll, scaleLimits
 		[scaleLimits, scaleScroll, scaleSwitchesToDo, switchingScaleTimeout]
 	)
 
+	// Click
+	const onClick = useCallback(
+		(event: MouseEvent) => {
+			if (!canClick) {
+				return
+			}
+
+			const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
+			const point = { x: event.clientX - boundingRect.left, y: event.clientY - boundingRect.top }
+
+			const roundToX = 10 / timePerPixel / scaleLevel
+			const selectedTime = Math.round((point.x - scroll) / roundToX) * roundToX * timePerPixel
+
+			onSelectTime(selectedTime)
+		},
+		[canClick, onSelectTime, scaleLevel, scroll, timePerPixel]
+	)
+
+	// Mouse events
 	useEffect(() => {
 		const container = containerRef.current
 		if (!container) {
 			return
 		}
 
+		container.addEventListener('click', onClick)
+		container.addEventListener('mousedown', onMouseDown)
+		container.addEventListener('mousemove', onMouseMove)
+		container.addEventListener('mouseup', onMouseUp)
+		container.addEventListener('mouseleave', onMouseUp)
 		container.addEventListener('wheel', onWheel)
 
 		return () => {
+			container.removeEventListener('click', onClick)
+			container.removeEventListener('mousedown', onMouseDown)
+			container.removeEventListener('mousemove', onMouseMove)
+			container.removeEventListener('mouseup', onMouseUp)
+			container.removeEventListener('mouseleave', onMouseUp)
 			container.removeEventListener('wheel', onWheel)
 		}
-	}, [onWheel, containerRef])
+	}, [containerRef, onClick, onMouseDown, onMouseMove, onMouseUp, onWheel])
 
 	return {
-		scroll,
+		scroll: scroll + Math.pow(overscroll, 0.85),
 		timePerPixel,
 		scaleLevel,
 		targetScaleIndex: targetScale,
