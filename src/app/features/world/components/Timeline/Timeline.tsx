@@ -8,12 +8,7 @@ import useEventGroups from './hooks/useEventGroups'
 import { TimelineContainer } from './styles'
 
 export const Timeline = () => {
-	const [timePerPixel, setTimePerPixel] = useState(1)
-	const [scaleLevel, setScaleLevel] = useState(1)
-	const [isSwitchingScale, setIsSwitchingScale] = useState(false)
-
-	const [scroll, setScroll] = useState(150)
-	const [scaleScroll, setScaleScroll] = useState(0)
+	const containerRef = useRef<HTMLDivElement | null>(null)
 
 	const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 	const [isDragging, setDragging] = useState(false)
@@ -35,68 +30,101 @@ export const Timeline = () => {
 		setMousePos(newPos)
 	}
 
+	const [timePerPixel, setTimePerPixel] = useState(1)
+	const [scaleLevel, setScaleLevel] = useState(1)
+	const [isSwitchingScale, setIsSwitchingScale] = useState(false)
+
+	const [readyToSwitchScale, setReadyToSwitchScale] = useState(false)
+	const [scaleSwitchesToDo, setScaleSwitchesToDo] = useState(0)
+	const [switchingScaleTimeout, setSwitchingScaleTimeout] = useState<number | null>(null)
+
+	const [scroll, setScroll] = useState(150)
+	const [scaleScroll, setScaleScroll] = useState(0)
+
+	const scaleLimits = [-3, 10]
+
+	useEffect(() => {
+		if (!readyToSwitchScale) {
+			return
+		}
+
+		setScaleSwitchesToDo(0)
+		setReadyToSwitchScale(false)
+
+		let currentScroll = scroll
+		let currentScaleScroll = scaleScroll
+		let currentTimePerPixel = timePerPixel
+
+		for (let i = 0; i < Math.abs(scaleSwitchesToDo); i++) {
+			const newScaleScroll = clampToRange(
+				scaleLimits[0] * 100,
+				currentScaleScroll + 100 * Math.sign(scaleSwitchesToDo),
+				scaleLimits[1] * 100
+			)
+			const newTimePerPixel = Math.pow(2, newScaleScroll / 100)
+
+			const ratio = currentTimePerPixel / newTimePerPixel
+			const midValue = (mousePos.x - currentScroll) * currentTimePerPixel
+
+			if (ratio > 1) {
+				currentScroll = Math.round(currentScroll - midValue / 2 / newTimePerPixel)
+			} else if (ratio < 1) {
+				currentScroll = Math.round(currentScroll + midValue / newTimePerPixel)
+			}
+
+			currentScaleScroll = newScaleScroll
+			currentTimePerPixel = newTimePerPixel
+		}
+
+		const newScaleLevel = rangeMap(currentTimePerPixel, [
+			['[0; 4)', 1],
+			['[4; 32)', 0.1],
+			['[32; 256)', 0.01],
+			['[256; 2048]', 0.001],
+		])
+
+		if (newScaleLevel === null) {
+			return
+		}
+
+		setScroll(currentScroll)
+		setScaleLevel(newScaleLevel)
+		setScaleScroll(currentScaleScroll)
+		setTimePerPixel(currentTimePerPixel)
+
+		setTimeout(() => {
+			setIsSwitchingScale(false)
+		})
+	}, [mousePos.x, readyToSwitchScale, scaleScroll, scaleSwitchesToDo, scroll, timePerPixel])
+
 	const onWheel = useCallback(
 		(event: WheelEvent) => {
 			event.preventDefault()
 
-			if (isSwitchingScale) {
-				return
-			}
-
-			const delta = event.deltaY > 0 ? 100 : event.deltaY < 0 ? -100 : 0
-			const newScaleScroll = clampToRange(-300, scaleScroll + delta, 1000)
-			const newTimePerPixel = Math.pow(2, newScaleScroll / 100)
-
-			// const newLabelMultiplier = rangeMap(newPixelsPerTime, [
-			// 	['[0; 4)', 1],
-			// 	['[4; 128)', 0.025],
-			// 	['[128; 2048]', 0.000625],
-			// ])
-
-			const newScaleLevel = rangeMap(newTimePerPixel, [
-				['[0; 4)', 1],
-				['[4; 32)', 0.1],
-				['[32; 256)', 0.01],
-				['[256; 2048]', 0.001],
-			])
-
-			if (newScaleLevel === null) {
-				return
-			}
-
+			const newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(event.deltaY)
+			setScaleSwitchesToDo(newScaleSwitchesToDo)
 			setIsSwitchingScale(true)
-			setTimeout(() => {
-				setTimePerPixel(newTimePerPixel)
-				setScaleScroll(newScaleScroll)
-				setScaleLevel(newScaleLevel)
 
-				const ratio = timePerPixel / newTimePerPixel
-				const midValue = (mousePos.x - scroll) * timePerPixel
-				if (ratio > 1) {
-					setScroll(Math.round(scroll - midValue / 2 / newTimePerPixel))
-				} else if (ratio < 1) {
-					setScroll(Math.round(scroll + midValue / newTimePerPixel))
-				}
-				setTimeout(() => {
-					setIsSwitchingScale(false)
-				})
+			if (switchingScaleTimeout !== null) {
+				window.clearTimeout(switchingScaleTimeout)
+			}
+
+			const targetScale = clampToRange(
+				scaleLimits[0],
+				scaleScroll / 100 + newScaleSwitchesToDo,
+				scaleLimits[1]
+			)
+			console.log(targetScale)
+			// setTargetScaleLabel()
+
+			const timeout = window.setTimeout(() => {
+				setReadyToSwitchScale(true)
+				setSwitchingScaleTimeout(null)
 			}, 300)
+			setSwitchingScaleTimeout(timeout)
 		},
-		[
-			mousePos,
-			timePerPixel,
-			setScroll,
-			scroll,
-			scaleScroll,
-			setTimePerPixel,
-			setScaleScroll,
-			setScaleLevel,
-			isSwitchingScale,
-			setIsSwitchingScale,
-		]
+		[scaleSwitchesToDo, switchingScaleTimeout]
 	)
-
-	const containerRef = useRef<HTMLDivElement | null>(null)
 
 	useEffect(() => {
 		const ref = containerRef.current
