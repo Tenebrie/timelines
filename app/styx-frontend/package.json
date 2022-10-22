@@ -1,0 +1,71 @@
+{
+	"name": "timelines",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"@emotion/react": "^11.8.2",
+		"@emotion/styled": "^11.8.1",
+		"@mui/icons-material": "^5.10.9",
+		"@mui/material": "^5.5.0",
+		"@reduxjs/toolkit": "^1.8.6",
+		"@testing-library/jest-dom": "^5.14.1",
+		"@testing-library/react": "^13.4.0",
+		"@testing-library/user-event": "^14.4.3",
+		"@types/jest": "^29.2.0",
+		"@types/node": "^18.11.2",
+		"@types/react": "^18.0.21",
+		"@types/react-dom": "^18.0.6",
+		"@types/styled-components": "^5.1.24",
+		"@types/use-global-hook": "^0.1.5",
+		"@types/uuid": "^8.3.4",
+		"lodash.debounce": "^4.0.8",
+		"lodash.throttle": "^4.1.1",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-redux": "^8.0.4",
+		"react-router-dom": "^6.4.2",
+		"react-router-typesafe-routes": "^0.5.0",
+		"react-scripts": "5.0.1",
+		"styled-components": "^5",
+		"typescript": "^4.4.2",
+		"use-global-hook": "^0.3.0",
+		"uuid": "^9.0.0",
+		"web-vitals": "^3.0.3"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject",
+		"lint": "eslint src/",
+		"lint-fix": "eslint src/ --fix"
+	},
+	"browserslist": {
+		"production": [
+			">0.2%",
+			"not dead",
+			"not op_mini all"
+		],
+		"development": [
+			"last 1 chrome version",
+			"last 1 firefox version",
+			"last 1 safari version"
+		]
+	},
+	"devDependencies": {
+		"@types/lodash.debounce": "^4.0.7",
+		"@types/lodash.throttle": "^4.1.7",
+		"@typescript-eslint/eslint-plugin": "^5.14.0",
+		"@typescript-eslint/parser": "^5.14.0",
+		"eslint": "^8.10.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-prettier": "^4.0.0",
+		"eslint-plugin-react": "^7.29.3",
+		"eslint-plugin-simple-import-sort": "^8.0.0",
+		"eslint-plugin-unused-imports": "^2.0.0",
+		"prettier": "2.7.1"
+	},
+	"resolutions": {
+		"styled-components": "^5"
+	}
+}

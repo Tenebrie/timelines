@@ -250,7 +250,7 @@ export const useTimelineNavigation = ({
 			container.removeEventListener('mouseleave', onMouseUp)
 			container.removeEventListener('wheel', onWheel)
 		}
-	}, [containerRef, onClick, onMouseDown, onMouseMove, onMouseUp, onWheel])
+	}, [containerRef, onClick, onMouseDown, onMouseMove, onMouseUp, onTimelineClick, onWheel])
 
 	return {
 		scroll: scroll + Math.pow(overscroll, 0.85),

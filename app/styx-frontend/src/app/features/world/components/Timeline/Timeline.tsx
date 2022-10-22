@@ -18,7 +18,7 @@ export const Timeline = () => {
 	const { selectedTime } = useSelector(getWorldOutlinerState)
 
 	const dispatch = useDispatch()
-	const { openEventWizard, setSelectedOutlinerTime } = worldSlice.actions
+	const { openEventWizard } = worldSlice.actions
 
 	const { navigateToRoot, navigateToOutliner } = useWorldRouter()
 

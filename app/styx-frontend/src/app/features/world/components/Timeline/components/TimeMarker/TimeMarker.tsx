@@ -7,7 +7,7 @@ type Props = {
 	mode: 'mouse' | 'outliner'
 }
 
-export const TimeMarker = ({ timestamp, scroll, timePerPixel, mode }: Props) => {
+export const TimeMarker = ({ timestamp, scroll, timePerPixel }: Props) => {
 	const offset = Math.round(timestamp / timePerPixel) + scroll
 	return <Container offset={offset} />
 }
