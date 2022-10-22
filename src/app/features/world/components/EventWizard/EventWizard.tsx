@@ -19,7 +19,7 @@ export const EventWizard = () => {
 	const { isOpen, timestamp } = useSelector(getEventWizardState)
 
 	const dispatch = useDispatch()
-	const { createWorldEvent: createEvent, closeEventWizard } = worldSlice.actions
+	const { createWorldEvent, closeEventWizard } = worldSlice.actions
 
 	const { timeToLabel } = useWorldTime()
 	const { navigateToEventEditor } = useWorldRouter()
@@ -38,6 +38,10 @@ export const EventWizard = () => {
 	}, [isOpen])
 
 	const onConfirm = () => {
+		if (!isOpen) {
+			return
+		}
+
 		if (!name.trim()) {
 			setNameValidationError("Field can't be empty")
 			return
@@ -47,7 +51,7 @@ export const EventWizard = () => {
 			name: name.trim(),
 			timestamp,
 		})
-		dispatch(createEvent(newEvent))
+		dispatch(createWorldEvent(newEvent))
 		dispatch(closeEventWizard())
 		navigateToEventEditor(newEvent)
 	}

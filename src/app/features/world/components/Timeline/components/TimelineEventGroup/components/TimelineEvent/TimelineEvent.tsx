@@ -1,8 +1,9 @@
 import { MouseEvent, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { worldSlice } from '../../../../../../reducer'
 import { useWorldRouter } from '../../../../../../router'
+import { getEventEditorState } from '../../../../../../selectors'
 import { StoryEvent, StoryEventBundle } from '../../../../../../types'
 import { Label, LabelContainer, Marker } from './styles'
 
@@ -15,19 +16,26 @@ type Props = {
 export const TimelineEvent = ({ event, groupIndex, expanded }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
+	const { eventId: editorEventId } = useSelector(getEventEditorState)
+
 	const dispatch = useDispatch()
 	const { hoverEventMarker, unhoverEventMarker } = worldSlice.actions
 
-	const { navigateToEventEditor } = useWorldRouter()
+	const { navigateToRoot, navigateToEventEditor } = useWorldRouter()
 
 	const onClick = (clickEvent: MouseEvent<HTMLDivElement>) => {
+		clickEvent.stopPropagation()
+		clickEvent.preventDefault()
+
 		if (event.type === 'bundle') {
 			return
 		}
 
-		clickEvent.stopPropagation()
-		clickEvent.preventDefault()
-		navigateToEventEditor(event)
+		if (editorEventId === event.id) {
+			navigateToRoot()
+		} else {
+			navigateToEventEditor(event)
+		}
 	}
 
 	const onMouseEnter = () => {
@@ -45,7 +53,9 @@ export const TimelineEvent = ({ event, groupIndex, expanded }: Props) => {
 			onClick={onClick}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
-			className={groupIndex > 0 && expanded ? 'expanded' : ''}
+			className={`${groupIndex > 0 && expanded ? 'expanded' : ''} ${
+				event.id === editorEventId ? 'selected' : ''
+			}`}
 		>
 			{isInfoVisible && (
 				<LabelContainer>

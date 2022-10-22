@@ -1,5 +1,5 @@
-import { Add } from '@mui/icons-material'
-import { Button, IconButton, TextField } from '@mui/material'
+import { Add, Delete, Save } from '@mui/icons-material'
+import { Button, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -7,11 +7,17 @@ import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getEventEditorState } from '../../selectors'
 import { StoryEvent, WorldStatement } from '../../types'
-import { IssuedStatementCard } from './components/IssuedStatementCard/IssuedStatementCard'
+import { IssuedStatementCard } from '../StatementCards/IssuedStatementCard/IssuedStatementCard'
+import { RevokedStatementCard } from '../StatementCards/RevokedStatementCard/RevokedStatementCard'
 import { IssuedStatementWizard } from './components/IssuedStatementWizard/IssuedStatementWizard'
-import { RevokedStatementCard } from './components/RevokedStatementCard/RevokedStatementCard'
 import { RevokedStatementWizard } from './components/RevokedStatementWizard/RevokedStatementWizard'
-import { EventEditorContainer } from './styles'
+import {
+	BasicInputs,
+	EventEditorContainer,
+	EventEditorWrapper,
+	StatementsContainer,
+	StatementsUnit,
+} from './styles'
 
 export const EventEditor = () => {
 	const [issuedStatementWizardOpen, setIssuedStatementWizardOpen] = useState(false)
@@ -20,12 +26,12 @@ export const EventEditor = () => {
 	const { event } = useSelector(getEventEditorState)
 
 	const dispatch = useDispatch()
-	const { updateWorldEvent } = worldSlice.actions
+	const { updateWorldEvent, deleteWorldEvent } = worldSlice.actions
 
-	const { navigateToRoot } = useWorldRouter()
+	const { navigateToRoot, navigateToDefaultRoute } = useWorldRouter()
 
 	if (!event) {
-		navigateToRoot()
+		navigateToDefaultRoute()
 		return <></>
 	}
 
@@ -70,59 +76,83 @@ export const EventEditor = () => {
 		navigateToRoot()
 	}
 
+	const onDelete = () => {
+		dispatch(deleteWorldEvent(event.id))
+		navigateToRoot()
+	}
+
 	return (
-		<EventEditorContainer>
-			<TextField label="Name" value={name} onChange={(e) => onNameChange(e.target.value)} variant="filled" />
-			<TextField
-				label="Timestamp"
-				value={timestamp}
-				onChange={(e) => onTimestampChange(Number(e.target.value))}
-				variant="filled"
-				type={'number'}
-			/>
-			<TextField
-				label="Description"
-				value={description}
-				onChange={(e) => onDescriptionChange(e.target.value)}
-				variant="filled"
-				rows={10}
-			/>
-			<div>
-				<div>Add card actions:</div>
-				{addedWorldCards.map((card) => (
-					<IssuedStatementCard
-						key={card.id}
-						card={card}
-						onDelete={() => onRemoveIssuedWorldStatement(card.id)}
+		<EventEditorWrapper>
+			<EventEditorContainer>
+				<BasicInputs>
+					<TextField
+						label="Name"
+						value={name}
+						onChange={(e) => onNameChange(e.target.value)}
+						variant="filled"
 					/>
-				))}
-				<IconButton onClick={() => setIssuedStatementWizardOpen(true)}>
-					<Add />
-				</IconButton>
-			</div>
-			<div>
-				<div>Remove card actions:</div>
-				{removedWorldCardIds.map((card) => (
-					<RevokedStatementCard key={card} id={card} onDelete={() => onRemoveRevokedWorldStatement(card)} />
-				))}
-				<IconButton onClick={() => setRevokedStatementWizardOpen(true)}>
-					<Add />
-				</IconButton>
-			</div>
-			<Button onClick={onSave} variant="outlined">
-				Save
-			</Button>
-			<IssuedStatementWizard
-				open={issuedStatementWizardOpen}
-				onCreate={onIssueWorldStatement}
-				onClose={() => setIssuedStatementWizardOpen(false)}
-			/>
-			<RevokedStatementWizard
-				editorEvent={event}
-				open={revokedStatementWizardOpen}
-				onCreate={onRevokeWorldStatement}
-				onClose={() => setRevokedStatementWizardOpen(false)}
-			/>
-		</EventEditorContainer>
+					<TextField
+						label="Timestamp"
+						value={timestamp}
+						onChange={(e) => onTimestampChange(Number(e.target.value))}
+						variant="filled"
+						type={'number'}
+					/>
+					<TextField
+						label="Description"
+						value={description}
+						onChange={(e) => onDescriptionChange(e.target.value)}
+						variant="filled"
+						rows={10}
+					/>
+				</BasicInputs>
+				<StatementsContainer>
+					<StatementsUnit>
+						<Typography variant="h5">Issued statements:</Typography>
+						{addedWorldCards.map((card) => (
+							<IssuedStatementCard
+								key={card.id}
+								mode="editor"
+								card={card}
+								onDelete={() => onRemoveIssuedWorldStatement(card.id)}
+							/>
+						))}
+						<Button onClick={() => setIssuedStatementWizardOpen(true)}>
+							<Add /> Add
+						</Button>
+					</StatementsUnit>
+					<StatementsUnit>
+						<Typography variant="h5">Revoked statements:</Typography>
+						{removedWorldCardIds.map((card) => (
+							<RevokedStatementCard
+								key={card}
+								id={card}
+								onDelete={() => onRemoveRevokedWorldStatement(card)}
+							/>
+						))}
+						<Button onClick={() => setRevokedStatementWizardOpen(true)}>
+							<Add /> Add
+						</Button>
+					</StatementsUnit>
+				</StatementsContainer>
+				<Button onClick={onSave} variant="outlined">
+					<Save /> Save
+				</Button>
+				<Button variant="outlined" onClick={onDelete}>
+					<Delete /> Delete
+				</Button>
+				<IssuedStatementWizard
+					open={issuedStatementWizardOpen}
+					onCreate={onIssueWorldStatement}
+					onClose={() => setIssuedStatementWizardOpen(false)}
+				/>
+				<RevokedStatementWizard
+					editorEvent={event}
+					open={revokedStatementWizardOpen}
+					onCreate={onRevokeWorldStatement}
+					onClose={() => setRevokedStatementWizardOpen(false)}
+				/>
+			</EventEditorContainer>
+		</EventEditorWrapper>
 	)
 }

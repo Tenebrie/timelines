@@ -19,6 +19,10 @@ export const Marker = styled.div`
 	&.expanded {
 		margin-bottom: 0;
 	}
+
+	&.selected {
+		filter: drop-shadow(0px 0px 8px purple);
+	}
 `
 
 export const LabelContainer = styled.div`

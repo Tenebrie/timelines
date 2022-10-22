@@ -38,23 +38,32 @@ export const useWorldRouter = () => {
 	const { navigateTo } = useBaseRouter(worldRoutes)
 
 	const dispatch = useDispatch()
-	const { setSelectedOutlinerTime, setEditorEvent } = worldSlice.actions
+	const { setSelectedOutlinerTime, setEditorEvent, clearEditorEvent } = worldSlice.actions
 
-	const navigateToRoot = () => {
+	const navigateToDefaultRoute = async () => {
 		navigateTo('/')
+	}
+
+	const navigateToRoot = async () => {
+		navigateTo('/')
+		dispatch(clearEditorEvent())
+		dispatch(setSelectedOutlinerTime(null))
 	}
 
 	const navigateToOutliner = (timestamp: number) => {
 		dispatch(setSelectedOutlinerTime(timestamp))
 		navigateTo(worldRoutes.outliner)
+		dispatch(clearEditorEvent())
 	}
 
 	const navigateToEventEditor = (event: StoryEvent) => {
 		dispatch(setEditorEvent(event))
 		navigateTo(worldRoutes.eventEditor)
+		dispatch(setSelectedOutlinerTime(null))
 	}
 
 	return {
+		navigateToDefaultRoute,
 		navigateToRoot,
 		navigateToOutliner,
 		navigateToEventEditor,

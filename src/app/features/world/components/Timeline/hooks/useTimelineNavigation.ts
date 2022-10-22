@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { Position } from '../../../../../../types/Position'
 import clampToRange from '../../../../../utils/clampToRange'
 import { rangeMap } from '../../../../../utils/rangeMap'
 import { getWorldState } from '../../../selectors'
@@ -10,7 +11,8 @@ type Props = {
 	defaultScroll: number
 	maximumScroll: number
 	scaleLimits: [number, number]
-	onSelectTime: (time: number) => void
+	onClick: (time: number) => void
+	onDoubleClick: (time: number) => void
 }
 
 export const useTimelineNavigation = ({
@@ -18,30 +20,44 @@ export const useTimelineNavigation = ({
 	defaultScroll,
 	maximumScroll,
 	scaleLimits,
-	onSelectTime,
+	onClick,
+	onDoubleClick,
 }: Props) => {
 	// Scroll
 	const [scroll, setScroll] = useState(defaultScroll)
 	const [overscroll, setOverscroll] = useState(0)
-	const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
+	const [draggingFrom, setDraggingFrom] = useState<Position | null>(null)
+	const [mousePos, setMousePos] = useState<Position>({ x: 0, y: 0 })
 	const [isDragging, setDragging] = useState(false)
 	const [canClick, setCanClick] = useState(true)
 
 	const { hoveredEventMarkers } = useSelector(getWorldState)
 
-	const onMouseDown = useCallback(() => {
-		setDragging(true)
+	const onMouseDown = useCallback((event: MouseEvent) => {
+		const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
+		const newPos = { x: event.clientX - boundingRect.left, y: event.clientY - boundingRect.top }
 		setCanClick(true)
+		setDraggingFrom(newPos)
 	}, [])
 
 	const onMouseUp = useCallback(() => {
 		setDragging(false)
+		setDraggingFrom(null)
 	}, [])
 
 	const onMouseMove = useCallback(
 		(event: MouseEvent) => {
 			const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
 			const newPos = { x: event.clientX - boundingRect.left, y: event.clientY - boundingRect.top }
+
+			if (draggingFrom !== null) {
+				/* If the mouse moved less than N pixels, do not start dragging */
+				/* Makes clicking feel more responsive with accidental mouse movements */
+				const dist = Math.abs(newPos.x - draggingFrom.x)
+				if (dist >= 5) {
+					setDragging(true)
+				}
+			}
 
 			if (isDragging) {
 				const newScroll = scroll + newPos.x - mousePos.x + overscroll
@@ -56,7 +72,7 @@ export const useTimelineNavigation = ({
 			}
 			setMousePos(newPos)
 		},
-		[isDragging, maximumScroll, mousePos.x, overscroll, scroll]
+		[draggingFrom, isDragging, maximumScroll, mousePos.x, overscroll, scroll]
 	)
 
 	useEffect(() => {
@@ -169,9 +185,10 @@ export const useTimelineNavigation = ({
 	)
 
 	// Click
-	const onClick = useCallback(
+	const [lastClickPos, setLastClickPos] = useState<number | null>(null)
+	const [lastClickTime, setLastClickTime] = useState<number | null>(null)
+	const onTimelineClick = useCallback(
 		(event: MouseEvent) => {
-			console.log(hoveredEventMarkers)
 			if (!canClick || hoveredEventMarkers.length > 0) {
 				return
 			}
@@ -182,9 +199,33 @@ export const useTimelineNavigation = ({
 			const roundToX = 10 / timePerPixel / scaleLevel
 			const selectedTime = Math.round((point.x - scroll) / roundToX) * roundToX * timePerPixel
 
-			onSelectTime(selectedTime)
+			const currentTime = Date.now()
+			if (
+				lastClickTime === null ||
+				lastClickPos === null ||
+				currentTime - lastClickTime > 500 ||
+				Math.abs(point.x - lastClickPos) > 5
+			) {
+				onClick(selectedTime)
+				setLastClickPos(point.x)
+				setLastClickTime(currentTime)
+			} else {
+				onDoubleClick(selectedTime)
+				setLastClickPos(null)
+				setLastClickTime(null)
+			}
 		},
-		[canClick, hoveredEventMarkers, onSelectTime, scaleLevel, scroll, timePerPixel]
+		[
+			canClick,
+			hoveredEventMarkers.length,
+			lastClickPos,
+			lastClickTime,
+			onClick,
+			onDoubleClick,
+			scaleLevel,
+			scroll,
+			timePerPixel,
+		]
 	)
 
 	// Mouse events
@@ -194,7 +235,7 @@ export const useTimelineNavigation = ({
 			return
 		}
 
-		container.addEventListener('click', onClick)
+		container.addEventListener('click', onTimelineClick)
 		container.addEventListener('mousedown', onMouseDown)
 		container.addEventListener('mousemove', onMouseMove)
 		container.addEventListener('mouseup', onMouseUp)
@@ -202,7 +243,7 @@ export const useTimelineNavigation = ({
 		container.addEventListener('wheel', onWheel)
 
 		return () => {
-			container.removeEventListener('click', onClick)
+			container.removeEventListener('click', onTimelineClick)
 			container.removeEventListener('mousedown', onMouseDown)
 			container.removeEventListener('mousemove', onMouseMove)
 			container.removeEventListener('mouseup', onMouseUp)

@@ -1,15 +1,11 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { makeStoryEvent } from './creators'
 import { StoryEvent, StoryEventBundle } from './types'
 
 const initialState = {
 	name: '' as string,
-	events: [
-		makeStoryEvent({ name: 'First event name', timestamp: 0 }),
-		makeStoryEvent({ name: 'Second event name', timestamp: 0 }),
-	] as StoryEvent[],
+	events: [] as StoryEvent[],
 
 	hoveredEventMarkers: [] as (StoryEvent | StoryEventBundle)[],
 
@@ -43,6 +39,10 @@ export const worldSlice = createSlice({
 		updateWorldEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
 			state.events = state.events.filter((event) => event.id !== payload.id)
 			state.events = state.events.concat(payload)
+		},
+
+		deleteWorldEvent: (state, { payload }: PayloadAction<string>) => {
+			state.events = state.events.filter((event) => event.id !== payload)
 		},
 
 		hoverEventMarker: (state, { payload }: PayloadAction<StoryEvent | StoryEventBundle>) => {

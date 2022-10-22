@@ -1,7 +1,8 @@
 import { Add } from '@mui/icons-material'
-import { Button, TextField } from '@mui/material'
+import { Button, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
 
+import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import Modal from '../../../../../../../ui-lib/components/Modal/Modal'
 import { ModalHeader } from '../../../../../../../ui-lib/components/Modal/styles'
 import { makeWorldStoryCard } from '../../../../creators'
@@ -27,18 +28,32 @@ export const IssuedStatementWizard = ({ open, onCreate, onClose }: Props) => {
 	}, [open])
 
 	const onConfirmClick = () => {
+		if (!open) {
+			return
+		}
 		onCreate(
 			makeWorldStoryCard({
 				name,
 				text,
 			})
 		)
+		onClose()
 	}
+
+	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
+		onConfirmClick()
+	})
 
 	return (
 		<Modal visible={open} onClose={onClose}>
 			<ModalHeader>New Issued Statement</ModalHeader>
-			<TextField label="Name" type="text" value={name} onChange={(event) => setName(event.target.value)} />
+			<TextField
+				label="Name"
+				type="text"
+				value={name}
+				onChange={(event) => setName(event.target.value)}
+				autoFocus
+			/>
 			<TextField
 				value={text}
 				onChange={(e) => setText(e.target.value)}
@@ -47,9 +62,11 @@ export const IssuedStatementWizard = ({ open, onCreate, onClose }: Props) => {
 				multiline
 				minRows={3}
 			/>
-			<Button variant="outlined" onClick={onConfirmClick}>
-				<Add /> Create
-			</Button>
+			<Tooltip title={shortcutLabel} arrow placement="top">
+				<Button variant="outlined" onClick={onConfirmClick}>
+					<Add /> Create
+				</Button>
+			</Tooltip>
 		</Modal>
 	)
 }
