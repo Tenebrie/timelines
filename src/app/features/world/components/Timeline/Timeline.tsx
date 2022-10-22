@@ -1,7 +1,5 @@
 import { useRef } from 'react'
-import { useDispatch } from 'react-redux'
 
-import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { TimelineEventGroup } from './components/TimelineEventGroup/TimelineEventGroup'
@@ -11,9 +9,6 @@ import { useTimelineNavigation } from './hooks/useTimelineNavigation'
 import { TimelineContainer, TimelineWrapper } from './styles'
 
 export const Timeline = () => {
-	const dispatch = useDispatch()
-	const { setSelectedOutlinerTime } = worldSlice.actions
-
 	const containerRef = useRef<HTMLDivElement | null>(null)
 
 	const { navigateToOutliner } = useWorldRouter()

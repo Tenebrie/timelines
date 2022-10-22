@@ -1,6 +1,6 @@
 import React, { MouseEvent, useCallback, useEffect, useRef } from 'react'
 
-import { ModalBody, ModalContainer } from './styles'
+import { ModalContainer, ModalWrapper } from './styles'
 
 type Props = {
 	visible?: boolean
@@ -39,11 +39,11 @@ const Modal = ({ visible, children, onClose }: Props) => {
 	}, [onEscapeKey])
 
 	return (
-		<ModalContainer className={isModalVisible ? 'visible' : ''} onClick={onContainerClick}>
-			<ModalBody ref={bodyRef} onClick={onBodyClick}>
+		<ModalWrapper className={isModalVisible ? 'visible' : ''} onClick={onContainerClick}>
+			<ModalContainer ref={bodyRef} onClick={onBodyClick}>
 				{children}
-			</ModalBody>
-		</ModalContainer>
+			</ModalContainer>
+		</ModalWrapper>
 	)
 }
 

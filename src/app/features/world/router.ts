@@ -1,32 +1,57 @@
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { worldSlice } from './reducer'
 import { StoryEvent } from './types'
 
-export const worldRoutes = {
-	outliner: '/outliner',
-	eventEditor: '/editor',
-}
+const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
+	const [navigationTarget, setNavigationTarget] = useState<string | null>(null)
 
-export const useWorldRouter = () => {
-	const dispatch = useDispatch()
-	const { setSelectedOutlinerTime, setEditorEvent } = worldSlice.actions
+	const navigateTo = (target: typeof routes[keyof typeof routes]) => {
+		if (navigationTarget !== target) {
+			setNavigationTarget(target)
+		}
+	}
 
 	const navigate = useNavigate()
 
+	useEffect(() => {
+		if (navigationTarget !== null) {
+			navigate(navigationTarget)
+			setNavigationTarget(null)
+		}
+	}, [navigate, navigationTarget])
+
+	return {
+		navigateTo,
+	}
+}
+
+export const worldRoutes = {
+	root: '/',
+	outliner: '/outliner',
+	eventEditor: '/editor',
+} as const
+
+export const useWorldRouter = () => {
+	const { navigateTo } = useBaseRouter(worldRoutes)
+
+	const dispatch = useDispatch()
+	const { setSelectedOutlinerTime, setEditorEvent } = worldSlice.actions
+
 	const navigateToRoot = () => {
-		navigate('/')
+		navigateTo('/')
 	}
 
 	const navigateToOutliner = (timestamp: number) => {
 		dispatch(setSelectedOutlinerTime(timestamp))
-		navigate(worldRoutes.outliner)
+		navigateTo(worldRoutes.outliner)
 	}
 
 	const navigateToEventEditor = (event: StoryEvent) => {
 		dispatch(setEditorEvent(event))
-		navigate(worldRoutes.eventEditor)
+		navigateTo(worldRoutes.eventEditor)
 	}
 
 	return {

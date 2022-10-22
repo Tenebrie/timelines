@@ -6,6 +6,8 @@ export type StoryEvent = {
 	name: string
 	timestamp: number
 	description: string
+	issuedWorldStatements: WorldStatement[]
+	revokedWorldStatements: string[]
 }
 
 export type StoryEventBundle = {
@@ -19,4 +21,10 @@ export type StoryEventBundle = {
 export type StoryEventGroup = {
 	events: (StoryEvent | StoryEventBundle)[]
 	timestamp: number
+}
+
+export type WorldStatement = {
+	id: string
+	name: string
+	text: string
 }

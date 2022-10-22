@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import clampToRange from '../../../../../utils/clampToRange'
 import { rangeMap } from '../../../../../utils/rangeMap'
+import { getWorldState } from '../../../selectors'
 
 type Props = {
 	containerRef: React.MutableRefObject<HTMLDivElement | null>
@@ -24,6 +26,9 @@ export const useTimelineNavigation = ({
 	const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 	const [isDragging, setDragging] = useState(false)
 	const [canClick, setCanClick] = useState(true)
+
+	const { hoveredEventMarkers } = useSelector(getWorldState)
+
 	const onMouseDown = useCallback(() => {
 		setDragging(true)
 		setCanClick(true)
@@ -166,7 +171,8 @@ export const useTimelineNavigation = ({
 	// Click
 	const onClick = useCallback(
 		(event: MouseEvent) => {
-			if (!canClick) {
+			console.log(hoveredEventMarkers)
+			if (!canClick || hoveredEventMarkers.length > 0) {
 				return
 			}
 
@@ -178,7 +184,7 @@ export const useTimelineNavigation = ({
 
 			onSelectTime(selectedTime)
 		},
-		[canClick, onSelectTime, scaleLevel, scroll, timePerPixel]
+		[canClick, hoveredEventMarkers, onSelectTime, scaleLevel, scroll, timePerPixel]
 	)
 
 	// Mouse events

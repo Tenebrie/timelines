@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const ModalContainer = styled.div`
+export const ModalWrapper = styled.div`
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -22,9 +22,18 @@ export const ModalContainer = styled.div`
 	}
 `
 
-export const ModalBody = styled.div`
+export const ModalContainer = styled.div`
 	padding: 32px 64px;
 	min-width: 768px;
-	background: white;
+	background: #0d2d50;
 	border-radius: 4px;
+	display: flex;
+	gap: 16px;
+	flex-direction: column;
+`
+
+export const ModalHeader = styled.h2`
+	margin: none;
+	padding: none;
+	font-family: 'Roboto';
 `

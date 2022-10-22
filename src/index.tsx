@@ -1,5 +1,6 @@
 import './index.css'
 
+import { createTheme, ThemeProvider } from '@mui/material'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
@@ -12,11 +13,19 @@ import { router } from './router/router'
 const container = document.getElementById('root')
 const root = createRoot(container!)
 
+const darkTheme = createTheme({
+	palette: {
+		mode: 'dark',
+	},
+})
+
 root.render(
 	<React.StrictMode>
-		<Provider store={store}>
-			<RouterProvider router={router} />
-		</Provider>
+		<ThemeProvider theme={darkTheme}>
+			<Provider store={store}>
+				<RouterProvider router={router} />
+			</Provider>
+		</ThemeProvider>
 	</React.StrictMode>
 )
 
