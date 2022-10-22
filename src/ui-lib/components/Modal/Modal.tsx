@@ -1,4 +1,4 @@
-import React, { MouseEvent, useCallback, useEffect, useRef } from 'react'
+import React, { MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { ModalContainer, ModalWrapper } from './styles'
 
@@ -10,7 +10,10 @@ type Props = {
 
 const Modal = ({ visible, children, onClose }: Props) => {
 	const bodyRef = useRef<HTMLDivElement | null>(null)
-	const isModalVisible = visible === undefined || visible
+
+	const isModalVisible = useMemo(() => visible === undefined || visible, [visible])
+	const [isModalRendered, setIsModalRendered] = useState(false)
+	const [modalRenderTimeout, setModalRenderTimeout] = useState<number | null>(null)
 
 	const onContainerClick = () => {
 		onClose()
@@ -38,10 +41,28 @@ const Modal = ({ visible, children, onClose }: Props) => {
 		return () => document.removeEventListener('keydown', onEscapeKey)
 	}, [onEscapeKey])
 
+	useEffect(() => {
+		if (isModalVisible && !isModalRendered) {
+			setIsModalRendered(true)
+			if (modalRenderTimeout) {
+				window.clearTimeout(modalRenderTimeout)
+			}
+		}
+	}, [isModalRendered, isModalVisible, modalRenderTimeout])
+
+	useEffect(() => {
+		if (!isModalVisible && isModalRendered) {
+			const timeout = window.setTimeout(() => {
+				setIsModalRendered(false)
+			}, 300)
+			setModalRenderTimeout(timeout)
+		}
+	}, [isModalRendered, isModalVisible])
+
 	return (
 		<ModalWrapper className={isModalVisible ? 'visible' : ''} onClick={onContainerClick}>
 			<ModalContainer ref={bodyRef} onClick={onBodyClick}>
-				{children}
+				{isModalRendered && children}
 			</ModalContainer>
 		</ModalWrapper>
 	)

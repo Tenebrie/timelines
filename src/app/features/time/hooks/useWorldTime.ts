@@ -1,5 +1,5 @@
 export const useWorldTime = () => {
-	const timeToLabel = (time: number, includeTime: boolean) => {
+	const timeToLabel = (time: number, includeTime = true) => {
 		const timeInDay = 1000
 		const timeInHour = 1000 / 25
 		const timeInMinute = 1000 / 25 / 60

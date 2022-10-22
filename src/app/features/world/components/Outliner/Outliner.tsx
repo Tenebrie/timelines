@@ -1,3 +1,4 @@
+import { Button } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useWorldTime } from '../../../time/hooks/useWorldTime'
@@ -31,7 +32,9 @@ export const Outliner = () => {
 		<OutlinerContainer>
 			<div>{timeToLabel(selectedTime, true)}</div>
 			<div>Applicable events: {applicableEvents.length}</div>
-			<button onClick={onCreateEvent}>Create event here</button>
+			<Button variant="outlined" onClick={onCreateEvent}>
+				Create event here
+			</Button>
 		</OutlinerContainer>
 	)
 }

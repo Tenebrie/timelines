@@ -18,7 +18,7 @@ const initialState = {
 	},
 
 	eventEditor: {
-		event: null as StoryEvent | null,
+		eventId: null as string | null,
 	},
 
 	eventWizard: {
@@ -36,7 +36,12 @@ export const worldSlice = createSlice({
 		},
 
 		/* World events */
-		createEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
+		createWorldEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
+			state.events = state.events.concat(payload)
+		},
+
+		updateWorldEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
+			state.events = state.events.filter((event) => event.id !== payload.id)
 			state.events = state.events.concat(payload)
 		},
 
@@ -55,22 +60,11 @@ export const worldSlice = createSlice({
 
 		/* Event editor */
 		setEditorEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
-			state.eventEditor.event = payload
-		},
-
-		flushEditorEvent: (state) => {
-			const editorEvent = state.eventEditor.event
-			if (!editorEvent) {
-				return
-			}
-
-			state.events = state.events.filter((event) => event.id !== editorEvent.id)
-			state.events = state.events.concat(editorEvent)
-			state.eventEditor.event = null
+			state.eventEditor.eventId = payload.id
 		},
 
 		clearEditorEvent: (state) => {
-			state.eventEditor.event = null
+			state.eventEditor.eventId = null
 		},
 
 		/* Event wizard */

@@ -20,7 +20,7 @@ export const EventEditor = () => {
 	const { event } = useSelector(getEventEditorState)
 
 	const dispatch = useDispatch()
-	const { setEditorEvent, flushEditorEvent } = worldSlice.actions
+	const { updateWorldEvent } = worldSlice.actions
 
 	const { navigateToRoot } = useWorldRouter()
 
@@ -29,9 +29,9 @@ export const EventEditor = () => {
 		return <></>
 	}
 
-	const updateEvent = (delta: Partial<StoryEvent>) => {
+	const updateEditorEvent = (delta: Partial<StoryEvent>) => {
 		dispatch(
-			setEditorEvent({
+			updateWorldEvent({
 				...event,
 				...delta,
 			})
@@ -46,28 +46,27 @@ export const EventEditor = () => {
 		revokedWorldStatements: removedWorldCardIds,
 	} = event
 
-	const onNameChange = (value: string) => updateEvent({ name: value })
-	const onTimestampChange = (value: number) => updateEvent({ timestamp: value })
-	const onDescriptionChange = (value: string) => updateEvent({ description: value })
+	const onNameChange = (value: string) => updateEditorEvent({ name: value })
+	const onTimestampChange = (value: number) => updateEditorEvent({ timestamp: value })
+	const onDescriptionChange = (value: string) => updateEditorEvent({ description: value })
 	const onIssueWorldStatement = (statement: WorldStatement) =>
-		updateEvent({
+		updateEditorEvent({
 			issuedWorldStatements: addedWorldCards.concat(statement),
 		})
 	const onRemoveIssuedWorldStatement = (id: string) =>
-		updateEvent({
+		updateEditorEvent({
 			issuedWorldStatements: addedWorldCards.filter((card) => card.id !== id),
 		})
 	const onRevokeWorldStatement = (id: string) =>
-		updateEvent({
+		updateEditorEvent({
 			revokedWorldStatements: removedWorldCardIds.concat(id),
 		})
 	const onRemoveRevokedWorldStatement = (id: string) =>
-		updateEvent({
+		updateEditorEvent({
 			revokedWorldStatements: removedWorldCardIds.filter((card) => card !== id),
 		})
 
 	const onSave = () => {
-		dispatch(flushEditorEvent())
 		navigateToRoot()
 	}
 

@@ -11,7 +11,7 @@ export const Sidebar = () => {
 	const [timestamp, setTimestamp] = useState(0)
 
 	const dispatch = useDispatch()
-	const { createEvent } = worldSlice.actions
+	const { createWorldEvent: createEvent } = worldSlice.actions
 
 	const onAddEvent = () => {
 		dispatch(
