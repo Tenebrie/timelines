@@ -27,7 +27,7 @@ services:
             NODE_ENV: development
             DATABASE_URL: postgres://docker:docker@postgres:5432/db
         depends_on:
-            - postgres
+            - rhea-postgres
         ports:
             - 3000:3000
         command: yarn start:dev
@@ -37,7 +37,7 @@ services:
             - ./app/shared/src:/app/shared/src:cached
         tty: true
         restart: "no"
-    postgres:
+    rhea-postgres:
         image: postgres:11.5-alpine
         environment:
             POSTGRES_USER: docker

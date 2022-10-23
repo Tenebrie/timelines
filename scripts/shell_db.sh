@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker exec -it $(docker ps -aqf "name=postgres") psql -Udocker db
+docker exec -it $(docker ps -aqf "name=rhea-db") psql -Udocker db
