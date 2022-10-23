@@ -14,12 +14,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install --yes msttcorefonts
 WORKDIR /app/rhea
 
 ADD ./app/styx-frontend /app/styx
-ADD ./services/gaia /app/services/gaia
-ADD ./shared /app/shared
-COPY .eslintrc.js /app/rhea
-COPY .eslintrc.js /app/shared
-COPY .prettierrc.js /app/rhea
-COPY .prettierrc.js /app/shared
+ADD ./app/rhea-backend /app/rhea
+ADD ./app/shared /app/shared
 RUN yarn
 
 EXPOSE 3000

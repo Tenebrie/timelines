@@ -33,13 +33,14 @@
 		"web-vitals": "^3.0.3"
 	},
 	"scripts": {
-		"start": "react-scripts start",
+		"start": "PORT=8080 react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"lint": "eslint src/",
 		"lint-fix": "eslint src/ --fix"
 	},
+	"proxy": "http://localhost:3000",
 	"browserslist": {
 		"production": [
 			">0.2%",
@@ -53,6 +54,7 @@
 		]
 	},
 	"devDependencies": {
+		"@rtk-query/codegen-openapi": "^1.0.0",
 		"@types/lodash.debounce": "^4.0.7",
 		"@types/lodash.throttle": "^4.1.7",
 		"@typescript-eslint/eslint-plugin": "^5.14.0",
@@ -63,7 +65,8 @@
 		"eslint-plugin-react": "^7.29.3",
 		"eslint-plugin-simple-import-sort": "^8.0.0",
 		"eslint-plugin-unused-imports": "^2.0.0",
-		"prettier": "2.7.1"
+		"prettier": "2.7.1",
+		"ts-node": "^10.9.1"
 	},
 	"resolutions": {
 		"styled-components": "^5"

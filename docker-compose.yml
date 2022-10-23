@@ -21,7 +21,7 @@ services:
     rhea:
         build:
             context: ./
-            dockerfile: ./app/rhea-monolith/Dockerfile
+            dockerfile: ./app/rhea-backend/Dockerfile
         working_dir: /app/rhea
         environment:
             NODE_ENV: development
@@ -30,10 +30,10 @@ services:
             - postgres
         ports:
             - 3000:3000
-        command: yarn serve
+        command: yarn start:dev
         volumes:
-            - ./app/public:/app/styx/public:cached
-            - ./app/rhea/src:/app/rhea/src:cached
+            - ./app/styx-frontend/public:/app/styx/public:cached
+            - ./app/rhea-backend/src:/app/rhea/src:cached
             - ./app/shared/src:/app/shared/src:cached
         tty: true
         restart: "no"
