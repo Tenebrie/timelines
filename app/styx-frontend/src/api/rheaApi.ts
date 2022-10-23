@@ -1,49 +1,47 @@
 import { baseApi as api } from './baseApi'
 const injectedRtkApi = api.injectEndpoints({
 	endpoints: (build) => ({
-		appControllerGetHello: build.query<AppControllerGetHelloApiResponse, AppControllerGetHelloApiArg>({
-			query: () => ({ url: `/` }),
+		authControllerRegister: build.mutation<AuthControllerRegisterApiResponse, AuthControllerRegisterApiArg>({
+			query: (queryArg) => ({ url: `/auth`, method: 'POST', body: queryArg.registerDto }),
 		}),
-		appControllerGetTestData: build.query<
-			AppControllerGetTestDataApiResponse,
-			AppControllerGetTestDataApiArg
+		authControllerLogin: build.mutation<AuthControllerLoginApiResponse, AuthControllerLoginApiArg>({
+			query: (queryArg) => ({ url: `/auth/login`, method: 'POST', body: queryArg.loginDto }),
+		}),
+		userControllerGetProfile: build.query<
+			UserControllerGetProfileApiResponse,
+			UserControllerGetProfileApiArg
 		>({
-			query: () => ({ url: `/test/data` }),
-		}),
-		userControllerGetUser: build.query<UserControllerGetUserApiResponse, UserControllerGetUserApiArg>({
-			query: () => ({ url: `/user` }),
-		}),
-		userControllerGetTestData: build.query<
-			UserControllerGetTestDataApiResponse,
-			UserControllerGetTestDataApiArg
-		>({
-			query: (queryArg) => ({ url: `/user/${queryArg.id}` }),
+			query: () => ({ url: `/user/profile` }),
 		}),
 	}),
 	overrideExisting: false,
 })
 export { injectedRtkApi as rheaApi }
-export type AppControllerGetHelloApiResponse = unknown
-export type AppControllerGetHelloApiArg = void
-export type AppControllerGetTestDataApiResponse = unknown
-export type AppControllerGetTestDataApiArg = void
-export type UserControllerGetUserApiResponse = unknown
-export type UserControllerGetUserApiArg = void
-export type UserControllerGetTestDataApiResponse = /** status 200  */ Cat
-export type UserControllerGetTestDataApiArg = {
-	id: number
+export type AuthControllerRegisterApiResponse = /** status 201  */ AccessTokenDto
+export type AuthControllerRegisterApiArg = {
+	registerDto: RegisterDto
 }
-export type Cat = {
-	age: number
-	breed: string
+export type AuthControllerLoginApiResponse = /** status 201  */ AccessTokenDto
+export type AuthControllerLoginApiArg = {
+	loginDto: LoginDto
+}
+export type UserControllerGetProfileApiResponse = unknown
+export type UserControllerGetProfileApiArg = void
+export type AccessTokenDto = {
+	accessToken: string
+}
+export type RegisterDto = {
+	email: string
+	username: string
+	password: string
+}
+export type LoginDto = {
+	email: string
+	password: string
 }
 export const {
-	useAppControllerGetHelloQuery,
-	useLazyAppControllerGetHelloQuery,
-	useAppControllerGetTestDataQuery,
-	useLazyAppControllerGetTestDataQuery,
-	useUserControllerGetUserQuery,
-	useLazyUserControllerGetUserQuery,
-	useUserControllerGetTestDataQuery,
-	useLazyUserControllerGetTestDataQuery,
+	useAuthControllerRegisterMutation,
+	useAuthControllerLoginMutation,
+	useUserControllerGetProfileQuery,
+	useLazyUserControllerGetProfileQuery,
 } = injectedRtkApi

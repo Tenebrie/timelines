@@ -1,22 +1,14 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common'
-import { ApiResponse } from '@nestjs/swagger'
-import { Cat } from './cat.entity'
+import { Controller, Get, Request, Post, UseGuards, Body, UnauthorizedException } from '@nestjs/common'
+import { JwtAuthGuard } from '../auth/strategies/jwt/jwt-auth.guard'
+import { AuthService } from '../auth/auth.service'
 
+@JwtAuthGuard()
 @Controller('/user')
 export class UserController {
-	@Get('/')
-	getUser(): string {
-		return 'This is the user, trust me'
-	}
+	constructor(private authService: AuthService) {}
 
-	@Get('/:id')
-	@ApiResponse({
-		status: 200,
-		type: Cat,
-	})
-	getTestData(@Param('id', new ParseIntPipe()) id: number): Cat {
-		const cat = new Cat()
-		cat.age = id
-		return cat
+	@Get('/profile')
+	getProfile(@Request() req) {
+		return req.user
 	}
 }
