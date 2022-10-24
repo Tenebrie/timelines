@@ -3,7 +3,6 @@ import { useRequestBody } from '../framework'
 import { BadRequestError, UnauthorizedError } from '../framework/errors/HttpError'
 import { TokenService } from '../services/TokenService'
 import { Router } from '../framework/Router'
-import { RemoveFirstFromTuple, SplitStringBy, Substring } from '../framework/TypeUtils'
 import { useRequestParams } from '../framework/useRequestParams'
 
 const router = new Router()
@@ -50,14 +49,9 @@ router.post('/auth/login', async (ctx) => {
 	}
 })
 
-router.get('/auth/:name/:param', async (ctx) => {
-	const params = useRequestParams(ctx, {
-		name: (val: string) => !!val,
-		param: (val: number) => Number(val),
-	})
-
+router.get('/profile', async (ctx) => {
 	ctx.body = {
-		params,
+		params: 'test',
 	}
 })
 

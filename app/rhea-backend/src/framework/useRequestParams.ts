@@ -11,13 +11,14 @@ type RemoveLeadingColon<S extends string> = S['length'] extends 0 ? never : Spli
 
 export const useRequestParams = <
 	ParamsT extends string[],
-	ValidatorsT extends Record<RemoveLeadingColon<ParamsT[number]>, (val: string | number) => any>
+	ValidatorsT extends Record<
+		RemoveLeadingColon<ParamsT[number]>,
+		(val: string | number | { a: number }) => any
+	>
 >(
 	ctx: ParameterizedContext & { parsedPathParams: ParamsT },
 	validators: ValidatorsT
 ): ValidatedData<ValidatorsT> => {
-	console.log(ctx.params)
-
 	const params = ctx.params
 	const expectedParams = Object.keys(validators)
 

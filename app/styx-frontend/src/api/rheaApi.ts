@@ -1,47 +1,49 @@
 import { baseApi as api } from './baseApi'
 const injectedRtkApi = api.injectEndpoints({
 	endpoints: (build) => ({
-		authControllerRegister: build.mutation<AuthControllerRegisterApiResponse, AuthControllerRegisterApiArg>({
-			query: (queryArg) => ({ url: `/auth`, method: 'POST', body: queryArg.registerDto }),
+		postAuth: build.mutation<PostAuthApiResponse, PostAuthApiArg>({
+			query: (queryArg) => ({ url: `/auth`, method: 'POST', body: queryArg.body }),
 		}),
-		authControllerLogin: build.mutation<AuthControllerLoginApiResponse, AuthControllerLoginApiArg>({
-			query: (queryArg) => ({ url: `/auth/login`, method: 'POST', body: queryArg.loginDto }),
+		postAuthLogin: build.mutation<PostAuthLoginApiResponse, PostAuthLoginApiArg>({
+			query: (queryArg) => ({ url: `/auth/login`, method: 'POST', body: queryArg.body }),
 		}),
-		userControllerGetProfile: build.query<
-			UserControllerGetProfileApiResponse,
-			UserControllerGetProfileApiArg
+		getAuthByUsernameAndBadpassword: build.query<
+			GetAuthByUsernameAndBadpasswordApiResponse,
+			GetAuthByUsernameAndBadpasswordApiArg
 		>({
-			query: () => ({ url: `/user/profile` }),
+			query: (queryArg) => ({ url: `/auth/${queryArg.username}/${queryArg.badpassword}` }),
 		}),
 	}),
 	overrideExisting: false,
 })
 export { injectedRtkApi as rheaApi }
-export type AuthControllerRegisterApiResponse = /** status 201  */ AccessTokenDto
-export type AuthControllerRegisterApiArg = {
-	registerDto: RegisterDto
+export type PostAuthApiResponse = unknown
+export type PostAuthApiArg = {
+	body: {
+		email?: string
+		username?: string
+		password?: string
+	}
 }
-export type AuthControllerLoginApiResponse = /** status 201  */ AccessTokenDto
-export type AuthControllerLoginApiArg = {
-	loginDto: LoginDto
+export type PostAuthLoginApiResponse = unknown
+export type PostAuthLoginApiArg = {
+	body: {
+		email?: string
+		password?: string
+	}
 }
-export type UserControllerGetProfileApiResponse = unknown
-export type UserControllerGetProfileApiArg = void
-export type AccessTokenDto = {
-	accessToken: string
+export type GetAuthByUsernameAndBadpasswordApiResponse = unknown
+export type GetAuthByUsernameAndBadpasswordApiArg = {
+	username: Username
+	badpassword: Badpassword
 }
-export type RegisterDto = {
-	email: string
-	username: string
-	password: string
-}
-export type LoginDto = {
-	email: string
-	password: string
+export type Username = string
+export type Badpassword = {
+	a?: number
 }
 export const {
-	useAuthControllerRegisterMutation,
-	useAuthControllerLoginMutation,
-	useUserControllerGetProfileQuery,
-	useLazyUserControllerGetProfileQuery,
+	usePostAuthMutation,
+	usePostAuthLoginMutation,
+	useGetAuthByUsernameAndBadpasswordQuery,
+	useLazyGetAuthByUsernameAndBadpasswordQuery,
 } = injectedRtkApi
