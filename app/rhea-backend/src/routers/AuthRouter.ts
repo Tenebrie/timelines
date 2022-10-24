@@ -1,8 +1,10 @@
-import * as Router from '@koa/router'
 import { UserService } from '../services/UserService'
 import { useRequestBody } from '../framework'
 import { BadRequestError, UnauthorizedError } from '../framework/errors/HttpError'
 import { TokenService } from '../services/TokenService'
+import { Router } from '../framework/Router'
+import { RemoveFirstFromTuple, SplitStringBy, Substring } from '../framework/TypeUtils'
+import { useRequestParams } from '../framework/useRequestParams'
 
 const router = new Router()
 
@@ -24,6 +26,10 @@ router.post('/auth', async (ctx) => {
 	ctx.body = {
 		accessToken: token,
 	}
+
+	return {
+		a: 'asd',
+	}
 })
 
 router.post('/auth/login', async (ctx) => {
@@ -41,6 +47,17 @@ router.post('/auth/login', async (ctx) => {
 
 	ctx.body = {
 		accessToken: token,
+	}
+})
+
+router.get('/auth/:name/:param', async (ctx) => {
+	const params = useRequestParams(ctx, {
+		name: (val: string) => !!val,
+		param: (val: number) => Number(val),
+	})
+
+	ctx.body = {
+		params,
 	}
 })
 

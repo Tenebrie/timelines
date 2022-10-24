@@ -28,4 +28,4 @@ app
 	.use(AuthRouter.allowedMethods())
 
 app.listen(3000)
-console.log('[RHEA] Server up')
+console.info('[RHEA] Server up')

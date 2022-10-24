@@ -7,7 +7,7 @@ export const UserService = {
 		return prisma.user.findFirst({
 			where: {
 				email,
-			}
+			},
 		})
 	},
 
