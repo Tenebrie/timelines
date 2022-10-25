@@ -3,8 +3,25 @@ import { AuthRouter } from './routers/AuthRouter'
 import * as bodyParser from 'koa-bodyparser'
 import { BaseHttpError } from './framework/errors/HttpError'
 import { SwaggerRouter } from './framework/magic/SwaggerGenerator'
+import { useApiInfo } from './framework/useApiInfo'
 
 const app = new Koa()
+
+useApiInfo({
+	title: 'Timelines Rhea',
+	description: 'This is a description field',
+	termsOfService: 'https://example.com',
+	contact: {
+		name: 'Tenebrie',
+		url: 'https://github.com/tenebrie',
+		email: 'tianara@tenebrie.com',
+	},
+	license: {
+		name: 'MIT',
+		url: 'https://example.com',
+	},
+	version: '1.0.0',
+})
 
 app
 	.use(async (ctx, next) => {
