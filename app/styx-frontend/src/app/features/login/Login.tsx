@@ -1,7 +1,60 @@
-import { useAuthControllerRegisterMutation } from '../../../api/rheaApi'
+import { Button, TextField } from '@mui/material'
+import { useState } from 'react'
+
+import { useCreateAccountMutation, usePostLoginMutation } from '../../../api/rheaApi'
 
 export const Login = () => {
-	const [doRegister] = useAuthControllerRegisterMutation()
+	const [email, setEmail] = useState('')
+	const [username, setUsername] = useState('')
+	const [password, setPassword] = useState('')
 
-	return <div>Test</div>
+	const [createAccount] = useCreateAccountMutation()
+	const [login] = usePostLoginMutation()
+
+	const onRegister = async () => {
+		const response = await createAccount({
+			body: {
+				email,
+				username,
+				password,
+			},
+		})
+		console.log(response)
+	}
+
+	const onLogin = async () => {
+		const response = await login({
+			body: {
+				email,
+				password,
+			},
+		})
+		console.log(response)
+	}
+
+	return (
+		<div>
+			<TextField
+				label="Email"
+				type="text"
+				value={email}
+				onChange={(event) => setEmail(event.target.value)}
+				autoFocus
+			/>
+			<TextField
+				label="Username"
+				type="text"
+				value={username}
+				onChange={(event) => setUsername(event.target.value)}
+			/>
+			<TextField
+				label="Password"
+				type="password"
+				value={password}
+				onChange={(event) => setPassword(event.target.value)}
+			/>
+			<Button onClick={onRegister}>Register</Button>
+			<Button onClick={onLogin}>Login</Button>
+		</div>
+	)
 }

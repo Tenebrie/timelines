@@ -1,9 +1,10 @@
 import { UserService } from '../services/UserService'
 import { useRequestBody } from '../framework'
-import { BadRequestError, UnauthorizedError } from '../framework/errors/HttpError'
+import { BadRequestError, UnauthorizedError, ValidationError } from '../framework/errors/HttpError'
 import { TokenService } from '../services/TokenService'
 import { Router } from '../framework/Router'
 import { useApiDocs } from '../framework/useApiDocs'
+import { NonEmptyString } from '../framework/validators/Validators'
 
 const router = new Router()
 
@@ -15,9 +16,9 @@ router.post('/auth', async (ctx) => {
 	})
 
 	const body = useRequestBody(ctx, {
-		email: (val: string) => !!val,
-		username: (val: string) => !!val,
-		password: (val: string) => !!val,
+		email: NonEmptyString,
+		username: NonEmptyString,
+		password: NonEmptyString,
 	})
 
 	const existingUser = await UserService.findByEmail(body.email)
@@ -38,15 +39,14 @@ router.post('/auth', async (ctx) => {
 })
 
 router.post('/auth/login', async (ctx) => {
-	// useApiDocs({
-	// 	name: 'postLogin',
-	// 	summary: 'Login endpoint',
-	// 	description: 'Exchanges user credentials for a JWT token',
-	// })
-
+	useApiDocs({
+		name: 'postLogin',
+		summary: 'Login endpoint',
+		description: 'Exchanges user credentials for a JWT token',
+	})
 	const body = useRequestBody(ctx, {
-		email: (val: string) => !!val,
-		password: (val: string) => !!val,
+		email: NonEmptyString,
+		password: NonEmptyString,
 	})
 
 	const user = await UserService.login(body.email, body.password)
@@ -64,6 +64,18 @@ router.post('/auth/login', async (ctx) => {
 router.get('/profile', async (ctx) => {
 	ctx.body = {
 		params: 'test',
+	}
+
+	throw new ValidationError('Message')
+
+	if (Math.random() <= 0.5) {
+		return {
+			myVal: 121,
+		}
+	}
+
+	return {
+		myVal: '12121',
 	}
 })
 

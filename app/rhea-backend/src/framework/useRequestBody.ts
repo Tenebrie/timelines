@@ -19,6 +19,17 @@ export const useRequestBody = <ValidatorsT extends Record<string, (val: any) => 
 		throw new ValidationError(`Missing body params: ${missingParams.map((param) => `'${param}'`).join(', ')}`)
 	}
 
+	const invalidParams = expectedParams.filter((param) => {
+		const validator = validators[param]
+		const paramValue = body[param] as string
+		const validationResult = validator(paramValue)
+		return validationResult !== undefined && !validationResult
+	})
+
+	if (invalidParams.length > 0) {
+		throw new ValidationError(`Invalid body params: ${invalidParams.map((param) => `'${param}'`).join(', ')}`)
+	}
+
 	const returnValue = {}
 	expectedParams.forEach((param) => {
 		returnValue[param] = body[param]

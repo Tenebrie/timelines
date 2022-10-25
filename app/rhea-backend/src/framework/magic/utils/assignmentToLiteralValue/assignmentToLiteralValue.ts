@@ -48,11 +48,7 @@ export const assignmentToLiteralValue = (
 	if (objectLiteralNode) {
 		return {
 			name: wrapWithQuotes(identifier.getText()),
-			value: syntaxListToValues(
-				objectLiteralNode.getFirstChildByKind(SyntaxKind.SyntaxList),
-				{ quotes: true },
-				depth + 1
-			),
+			value: syntaxListToValues(objectLiteralNode.getFirstChildByKind(SyntaxKind.SyntaxList), depth + 1),
 		}
 	}
 
@@ -79,4 +75,17 @@ export const assignmentToLiteralValue = (
 		name: wrapWithQuotes(identifier.getText()),
 		value: `"Unable to find a literal value: Unsupported node"`,
 	}
+}
+
+export const resolveLiteralValue = (node: Node, depth = 0): string => {
+	const kind = node.getKind()
+	if (kind === SyntaxKind.StringLiteral || SyntaxKind.NoSubstitutionTemplateLiteral) {
+		return wrapWithQuotes(node.getText())
+	}
+
+	// if (kind === SyntaxKind.ObjectLiteralExpression) {
+	// 	return syntaxListToValues(node.getFirstChildByKind(SyntaxKind.SyntaxList), { quotes: true }, depth + 1)
+	// }
+
+	return 'Unable to find literal value'
 }

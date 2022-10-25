@@ -5,35 +5,57 @@ import { ExtractedRequestParams } from './TypeUtils'
 export class Router<StateT = Koa.DefaultState, ContextT = Koa.DefaultContext> {
 	public koaRouter: KoaRouter = new KoaRouter()
 
-	use(...middleware: Array<KoaRouter.Middleware<StateT, ContextT>>): KoaRouter<StateT, ContextT> {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
+	public use(...middleware: Array<KoaRouter.Middleware<StateT, ContextT>>) {
 		return this.koaRouter.use(...middleware)
 	}
 
-	get<P extends string>(
+	public get<P extends string>(
 		path: P,
-		...middleware: Array<KoaRouter.Middleware<StateT, ContextT & ExtractedRequestParams<P>>>
-	): KoaRouter<StateT, ContextT> & ExtractedRequestParams<P> {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		return this.koaRouter.get(path, ...middleware)
+		callback: KoaRouter.Middleware<StateT, ContextT & ExtractedRequestParams<P>>
+	) {
+		return this.koaRouter.get(path, callback)
 	}
 
-	post<P extends string>(
+	public post<P extends string>(
 		path: P,
-		...middleware: Array<KoaRouter.Middleware<StateT, ContextT & ExtractedRequestParams<P>>>
-	): KoaRouter<StateT, ContextT & ExtractedRequestParams<P>> {
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		return this.koaRouter.post(path, ...middleware)
+		callback: KoaRouter.Middleware<StateT, ContextT & ExtractedRequestParams<P>>
+	) {
+		return this.koaRouter.post(path, callback)
 	}
 
-	routes() {
+	public put<P extends string>(
+		path: P,
+		callback: KoaRouter.Middleware<StateT, ContextT & ExtractedRequestParams<P>>
+	) {
+		return this.koaRouter.put(path, callback)
+	}
+
+	public delete<P extends string>(
+		path: P,
+		callback: KoaRouter.Middleware<StateT, ContextT & ExtractedRequestParams<P>>
+	) {
+		return this.koaRouter.delete(path, callback)
+	}
+
+	public del<P extends string>(
+		path: P,
+		callback: KoaRouter.Middleware<StateT, ContextT & ExtractedRequestParams<P>>
+	) {
+		return this.koaRouter.del(path, callback)
+	}
+
+	public patch<P extends string>(
+		path: P,
+		callback: KoaRouter.Middleware<StateT, ContextT & ExtractedRequestParams<P>>
+	) {
+		return this.koaRouter.patch(path, callback)
+	}
+
+	public routes() {
 		return this.koaRouter.routes()
 	}
 
-	allowedMethods() {
+	public allowedMethods() {
 		return this.koaRouter.allowedMethods()
 	}
 }

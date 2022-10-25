@@ -1,6 +1,9 @@
 import { Node } from 'ts-morph'
 import { SyntaxKind, SyntaxList } from 'typescript'
-import { assignmentToLiteralValue } from '../assignmentToLiteralValue/assignmentToLiteralValue'
+import {
+	assignmentToLiteralValue,
+	resolveLiteralValue,
+} from '../assignmentToLiteralValue/assignmentToLiteralValue'
 import { unwrapQuotes } from '../unwrapQuotes/unwrapQuotes'
 
 type ReturnValue = {
@@ -8,16 +11,21 @@ type ReturnValue = {
 	value: string | ReturnValue[]
 }
 
-export const syntaxListToValues = (
-	node: Node<SyntaxList>,
-	{ quotes }: { quotes: boolean },
-	depth = 0
-): ReturnValue[] => {
+export const syntaxListToValues = (node: Node<SyntaxList>, depth = 0): ReturnValue[] => {
 	const identifier = node.getFirstChildByKind(SyntaxKind.Identifier)
 	try {
 		const values = node
 			.getChildren()
 			.map((child) => {
+				const stringLiteralNode = child.asKind(SyntaxKind.StringLiteral)
+				if (stringLiteralNode) {
+					const literalValue = resolveLiteralValue(stringLiteralNode)
+					return {
+						name: identifier?.getText() || 'anonymousLiteral',
+						value: typeof literalValue === 'string' ? unwrapQuotes(literalValue) : literalValue,
+					}
+				}
+
 				const propertyAssignmentNode = child.asKind(SyntaxKind.PropertyAssignment)
 				if (propertyAssignmentNode) {
 					const literalValue = assignmentToLiteralValue(propertyAssignmentNode)
@@ -30,7 +38,7 @@ export const syntaxListToValues = (
 
 				const syntaxListNode = child.asKind(SyntaxKind.SyntaxList)
 				if (syntaxListNode) {
-					const syntaxListValues = syntaxListToValues(syntaxListNode, { quotes }, depth + 1)
+					const syntaxListValues = syntaxListToValues(syntaxListNode, depth + 1)
 					return {
 						name: identifier?.getText() || 'anonymousObject',
 						value: syntaxListValues,

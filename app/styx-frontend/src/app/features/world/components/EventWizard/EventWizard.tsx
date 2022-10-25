@@ -3,7 +3,6 @@ import { Button, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useUserControllerGetTestDataQuery } from '../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
 import Modal from '../../../../../ui-lib/components/Modal/Modal'
 import { ModalHeader } from '../../../../../ui-lib/components/Modal/styles'
@@ -61,17 +60,8 @@ export const EventWizard = () => {
 		onConfirm()
 	})
 
-	const { data: backendData, isFetching } = useUserControllerGetTestDataQuery({
-		id: 512,
-	})
-	console.log(backendData)
-	console.log(isFetching)
-
 	return (
 		<Modal visible={isOpen} onClose={() => dispatch(closeEventWizard())}>
-			<span>
-				Test: {isFetching} {JSON.stringify(backendData)}
-			</span>
 			<ModalHeader>Create new event</ModalHeader>
 			<TextField label="Timestamp" type="text" value={timeToLabel(timestamp)} disabled />
 			<TextField

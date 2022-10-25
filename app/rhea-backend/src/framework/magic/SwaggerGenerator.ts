@@ -1,12 +1,12 @@
 import * as path from 'path'
-import { Project, Node } from 'ts-morph'
-import { SyntaxKind, SyntaxList } from 'typescript'
+import { printNode, Project } from 'ts-morph'
+import { SyntaxKind } from 'typescript'
+import { errorNameToReason, errorNameToStatusCode } from '../errors/HttpError'
 import { Router } from '../Router'
 import { ApiInfo } from '../useApiInfo'
 import { footprintOfTypeWithoutFormatting } from './footprintOfType'
-import { assignmentToLiteralValue } from './utils/assignmentToLiteralValue/assignmentToLiteralValue'
+import { debugNodeChildren, debugNode, debugNodes } from './utils/printers/printers'
 import { syntaxListToValues } from './utils/syntaxListToValues/syntaxListToValues'
-import { unwrapQuotes } from './utils/unwrapQuotes/unwrapQuotes'
 
 const project = new Project()
 const sourceFilePaths = [path.resolve('./src/index.ts'), path.resolve('./src/routers/AuthRouter.ts')]
@@ -35,6 +35,10 @@ const endpointData: Record<
 			name: string
 			signature: string | Record<string, string>
 		}[]
+		responses: {
+			status: number
+			signature: any
+		}[]
 	}
 > = {}
 
@@ -47,13 +51,8 @@ sourceFiles.forEach((sourceFile) =>
 				.getChildAtIndex(2)
 
 			const params = syntaxListToValues(
-				targetNode.getChildAtIndex(0).getFirstChildByKind(SyntaxKind.SyntaxList),
-				{
-					quotes: false,
-				}
+				targetNode.getChildAtIndex(0).getFirstChildByKind(SyntaxKind.SyntaxList)
 			)
-
-			console.log(params)
 
 			const allowedValues = ['title', 'description', 'termsOfService', 'contact', 'license', 'version']
 			const deepValues = ['contact', 'license']
@@ -94,6 +93,7 @@ sourceFiles.forEach((sourceFile) =>
 				method: endpointMethod as 'GET' | 'POST',
 				params: [],
 				body: [],
+				responses: [],
 			}
 
 			// API documentation
@@ -104,8 +104,7 @@ sourceFiles.forEach((sourceFile) =>
 					.getChildAtIndex(2)
 
 				const params = syntaxListToValues(
-					targetNode.getChildAtIndex(0).getFirstChildByKind(SyntaxKind.SyntaxList),
-					{ quotes: false }
+					targetNode.getChildAtIndex(0).getFirstChildByKind(SyntaxKind.SyntaxList)
 				)
 
 				const allowedValues = ['name', 'summary', 'description']
@@ -168,6 +167,76 @@ sourceFiles.forEach((sourceFile) =>
 			} catch (err) {
 				// Tis fine
 			}
+
+			// Request response
+			try {
+				const stripPromise = (val: string) => {
+					const trimmedVal = val.trim()
+					if (!trimmedVal || !trimmedVal.startsWith('Promise')) {
+						return trimmedVal
+					}
+					return trimmedVal.substring(8, trimmedVal.length - 1)
+				}
+
+				const returnType = footprintOfTypeWithoutFormatting({
+					node,
+					type: node
+						.getFirstChildByKind(SyntaxKind.CallExpression)
+						.getFirstChildByKind(SyntaxKind.SyntaxList)
+						.getFirstChildByKind(SyntaxKind.ArrowFunction)
+						.getReturnType(),
+				})
+
+				const allReturnTypes = stripPromise(returnType)
+					.split('|')
+					.map((type) => type.trim())
+					.map((type) => JSON.parse(type) as Record<string, any>)
+
+				const throwStatements = node.getDescendantsOfKind(SyntaxKind.ThrowStatement).map((st) => {
+					const identifier = st
+						?.getFirstChildByKind(SyntaxKind.NewExpression)
+						?.getFirstChildByKind(SyntaxKind.Identifier)
+
+					const message = syntaxListToValues(
+						st?.getFirstChildByKind(SyntaxKind.NewExpression)?.getFirstChildByKind(SyntaxKind.SyntaxList)
+					)
+
+					return {
+						name: identifier.getText(),
+						message: message[0].value,
+					}
+				})
+
+				const responses: {
+					status: number
+					signature: any
+				}[] = []
+
+				allReturnTypes.forEach((type) => {
+					responses.push({
+						status: 200,
+						signature: type,
+					})
+				})
+
+				throwStatements.forEach((thr) => {
+					responses.push({
+						status: errorNameToStatusCode(thr.name),
+						signature: {
+							status: errorNameToStatusCode(thr.name),
+							reason: errorNameToReason(thr.name),
+							message: thr.message,
+						},
+					})
+				})
+
+				endpointData[endpointName] = {
+					...endpointData[endpointName],
+					responses,
+				}
+			} catch (err) {
+				console.error(err)
+			}
 		}
 	})
 )
@@ -190,6 +259,39 @@ type PathDefinition = {
 	responses: any
 }
 
+const getSchema = (
+	value:
+		| string
+		| Record<string, any>
+		| {
+				name: string
+				signature: string | Record<string, string>
+		  }[]
+) => {
+	if (typeof value === 'object' && !Array.isArray(value)) {
+		const shuffledValues = []
+		for (const propName in value) {
+			const propValue = value[propName]
+			shuffledValues.push({
+				name: propName,
+				signature: propValue,
+			})
+		}
+		return {
+			type: 'object',
+			properties: paramsToSchema(shuffledValues),
+		}
+	}
+
+	if (typeof value === 'object' && Array.isArray(value)) {
+		return paramsToSchema(value)
+	}
+
+	return {
+		type: 'string',
+	}
+}
+
 const paramsToSchema = (
 	params: {
 		name: string
@@ -201,7 +303,16 @@ const paramsToSchema = (
 	params.forEach((param) => {
 		if (typeof param.signature === 'string') {
 			schemas[param.name] = {
-				type: param.signature,
+				type: 'string',
+				example: param.signature,
+			}
+			return
+		}
+
+		if (typeof param.signature === 'number') {
+			schemas[param.name] = {
+				type: 'number',
+				example: param.signature,
 			}
 			return
 		}
@@ -209,9 +320,7 @@ const paramsToSchema = (
 		const properties = {}
 		for (const paramKey in param.signature) {
 			const paramValue = param.signature[paramKey]
-			properties[paramKey] = {
-				type: paramValue,
-			}
+			properties[paramKey] = getSchema(paramValue)
 		}
 
 		schemas[param.name] = {
@@ -261,11 +370,20 @@ router.get('/api-json', (ctx) => {
 								},
 							},
 					  },
-			responses: {
-				'200': {
-					description: '',
-				},
-			},
+			responses: endpoint.responses.reduce(
+				(spec, response) => ({
+					...spec,
+					[String(response.status)]: {
+						description: 'No description',
+						content: {
+							'application/json': {
+								schema: getSchema(response.signature),
+							},
+						},
+					},
+				}),
+				{}
+			),
 		}
 
 		const path = key
@@ -314,9 +432,9 @@ router.get('/api-json', (ctx) => {
 	ctx.body = spec
 })
 
-console.info('[RHEA] Gathered OpenAPI data:', {
-	...openApiData,
-	endpoints: endpointData,
-})
+// console.info('[RHEA] Gathered OpenAPI data:', {
+// 	...openApiData,
+// 	endpoints: endpointData,
+// })
 
 export const SwaggerRouter = router

@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 
 import App from '../App'
+import { Login } from '../app/features/login/Login'
 import { EventEditor } from '../app/features/world/components/EventEditor/EventEditor'
 import { OutlinerEmptyState } from '../app/features/world/components/Outliner/components/OutlinerEmptyState/OutlinerEmptyState'
 import { Outliner } from '../app/features/world/components/Outliner/Outliner'
@@ -29,6 +30,10 @@ export const router = createBrowserRouter([
 						element: <EventEditor />,
 					},
 				],
+			},
+			{
+				path: '/login',
+				element: <Login />,
 			},
 		],
 	},

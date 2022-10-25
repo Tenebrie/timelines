@@ -32,3 +32,19 @@ export class UnauthorizedError extends BaseHttpError {
 		super(StatusCodes.UNAUTHORIZED, message)
 	}
 }
+
+export const errorNameToStatusCode = (name: string): number => {
+	switch (name) {
+		case 'ValidationError':
+			return StatusCodes.BAD_REQUEST
+		case 'BadRequestError':
+			return StatusCodes.BAD_REQUEST
+		case 'UnauthorizedError':
+			return StatusCodes.UNAUTHORIZED
+	}
+	return StatusCodes.INTERNAL_SERVER_ERROR
+}
+
+export const errorNameToReason = (name: string): string => {
+	return getReasonPhrase(errorNameToStatusCode(name) || 500)
+}
