@@ -19,6 +19,9 @@ export const Login = () => {
 				password,
 			},
 		})
+		if ('error' in response) {
+			return
+		}
 		console.log(response)
 	}
 

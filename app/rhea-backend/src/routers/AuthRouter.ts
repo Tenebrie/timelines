@@ -33,50 +33,56 @@ router.post('/auth', async (ctx) => {
 		accessToken: token,
 	}
 
+	if (Math.random() <= 0.5) {
+		return {
+			b: 'qqq',
+		}
+	}
+
 	return {
 		a: 'asd',
 	}
 })
 
-router.post('/auth/login', async (ctx) => {
-	useApiDocs({
-		name: 'postLogin',
-		summary: 'Login endpoint',
-		description: 'Exchanges user credentials for a JWT token',
-	})
-	const body = useRequestBody(ctx, {
-		email: NonEmptyString,
-		password: NonEmptyString,
-	})
+// router.post('/auth/login', async (ctx) => {
+// 	useApiDocs({
+// 		name: 'postLogin',
+// 		summary: 'Login endpoint',
+// 		description: 'Exchanges user credentials for a JWT token',
+// 	})
+// 	const body = useRequestBody(ctx, {
+// 		email: NonEmptyString,
+// 		password: NonEmptyString,
+// 	})
 
-	const user = await UserService.login(body.email, body.password)
-	if (!user) {
-		throw new UnauthorizedError('Email or password do not match')
-	}
+// 	const user = await UserService.login(body.email, body.password)
+// 	if (!user) {
+// 		throw new UnauthorizedError('Email or password do not match')
+// 	}
 
-	const token = TokenService.generateJwtToken(user)
+// 	const token = TokenService.generateJwtToken(user)
 
-	ctx.body = {
-		accessToken: token,
-	}
-})
+// 	ctx.body = {
+// 		accessToken: token,
+// 	}
+// })
 
-router.get('/profile', async (ctx) => {
-	ctx.body = {
-		params: 'test',
-	}
+// router.get('/profile', async (ctx) => {
+// 	ctx.body = {
+// 		params: 'test',
+// 	}
 
-	throw new ValidationError('Message')
+// 	throw new ValidationError('Message')
 
-	if (Math.random() <= 0.5) {
-		return {
-			myVal: 121,
-		}
-	}
+// 	if (Math.random() <= 0.5) {
+// 		return {
+// 			myVal: 121,
+// 		}
+// 	}
 
-	return {
-		myVal: '12121',
-	}
-})
+// 	return {
+// 		myVal: '12121',
+// 	}
+// })
 
 export const AuthRouter = router

@@ -1,12 +1,12 @@
 import * as path from 'path'
-import { printNode, Project } from 'ts-morph'
+import { Project } from 'ts-morph'
 import { SyntaxKind } from 'typescript'
 import { errorNameToReason, errorNameToStatusCode } from '../errors/HttpError'
 import { Router } from '../Router'
 import { ApiInfo } from '../useApiInfo'
 import { footprintOfTypeWithoutFormatting } from './footprintOfType'
-import { debugNodeChildren, debugNode, debugNodes } from './utils/printers/printers'
 import { syntaxListToValues } from './utils/syntaxListToValues/syntaxListToValues'
+import * as util from 'util'
 
 const project = new Project()
 const sourceFilePaths = [path.resolve('./src/index.ts'), path.resolve('./src/routers/AuthRouter.ts')]
@@ -188,6 +188,7 @@ sourceFiles.forEach((sourceFile) =>
 				})
 
 				const allReturnTypes = stripPromise(returnType)
+					.replace(/[?]/g, '')
 					.split('|')
 					.map((type) => type.trim())
 					.map((type) => JSON.parse(type) as Record<string, any>)
@@ -218,6 +219,8 @@ sourceFiles.forEach((sourceFile) =>
 						signature: type,
 					})
 				})
+
+				console.log(responses)
 
 				throwStatements.forEach((thr) => {
 					responses.push({
@@ -301,6 +304,10 @@ const paramsToSchema = (
 	const schemas = {}
 
 	params.forEach((param) => {
+		if (param.signature === 'undefined') {
+			return
+		}
+
 		if (typeof param.signature === 'string') {
 			schemas[param.name] = {
 				type: 'string',
@@ -344,6 +351,26 @@ router.get('/api-json', (ctx) => {
 	for (const key in endpointData) {
 		const endpoint = endpointData[key]
 
+		const responses = {}
+		endpoint.responses.forEach((response) => {
+			const status = String(response.status)
+
+			const existingSchemas = responses[status]
+				? responses[status]['content']['application/json']['schema']['oneOf']
+				: []
+
+			responses[status] = {
+				description: 'No description',
+				content: {
+					'application/json': {
+						schema: {
+							oneOf: [...existingSchemas, getSchema(response.signature)],
+						},
+					},
+				},
+			}
+		})
+
 		const definition: PathDefinition = {
 			operationId: endpoint.name,
 			summary: endpoint.summary,
@@ -370,20 +397,7 @@ router.get('/api-json', (ctx) => {
 								},
 							},
 					  },
-			responses: endpoint.responses.reduce(
-				(spec, response) => ({
-					...spec,
-					[String(response.status)]: {
-						description: 'No description',
-						content: {
-							'application/json': {
-								schema: getSchema(response.signature),
-							},
-						},
-					},
-				}),
-				{}
-			),
+			responses: responses,
 		}
 
 		const path = key
@@ -432,9 +446,15 @@ router.get('/api-json', (ctx) => {
 	ctx.body = spec
 })
 
-// console.info('[RHEA] Gathered OpenAPI data:', {
-// 	...openApiData,
-// 	endpoints: endpointData,
-// })
+// console.info(
+// 	'[RHEA] Gathered OpenAPI data:',
+// 	util.inspect(
+// 		{
+// 			...openApiData,
+// 			endpoints: endpointData,
+// 		},
+// 		{ showHidden: false, depth: null, colors: true }
+// 	)
+// )
 
 export const SwaggerRouter = router
