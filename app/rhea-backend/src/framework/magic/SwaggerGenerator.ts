@@ -15,6 +15,10 @@ project.resolveSourceFileDependencies()
 
 const sourceFiles = sourceFilePaths.map((filePath) => project.getSourceFileOrThrow(filePath))
 
+const pathToName = (path: string): string => {
+	return path.replace(/\//g, '').replace(/:/g, '')
+}
+
 const openApiData: ApiInfo = {
 	title: 'Default Title',
 	version: '1.0.0',
@@ -34,6 +38,7 @@ const endpointData: Record<
 		body: {
 			name: string
 			signature: string | Record<string, string>
+			required: boolean
 		}[]
 		responses: {
 			status: number
@@ -158,6 +163,7 @@ sourceFiles.forEach((sourceFile) =>
 				const body: typeof endpointData[string]['body'] = Object.keys(jsonBody).map((key) => ({
 					name: key,
 					signature: jsonBody[key],
+					required: true,
 				}))
 
 				endpointData[endpointName] = {
@@ -220,8 +226,6 @@ sourceFiles.forEach((sourceFile) =>
 					})
 				})
 
-				console.log(responses)
-
 				throwStatements.forEach((thr) => {
 					responses.push({
 						status: errorNameToStatusCode(thr.name),
@@ -283,6 +287,7 @@ const getSchema = (
 		return {
 			type: 'object',
 			properties: paramsToSchema(shuffledValues),
+			required: shuffledValues.filter((value) => value.signature !== 'undefined').map((value) => value.name),
 		}
 	}
 
@@ -295,6 +300,37 @@ const getSchema = (
 	}
 }
 
+const singleParamToSchema = (param: { name: string; signature: string | Record<string, string> }) => {
+	if (param.signature === 'undefined') {
+		return
+	}
+
+	if (typeof param.signature === 'string') {
+		return {
+			type: 'string',
+			example: param.signature,
+		}
+	}
+
+	if (typeof param.signature === 'number') {
+		return {
+			type: 'number',
+			example: param.signature,
+		}
+	}
+
+	const properties = {}
+	for (const paramKey in param.signature) {
+		const paramValue = param.signature[paramKey]
+		properties[paramKey] = getSchema(paramValue)
+	}
+
+	return {
+		type: 'object',
+		properties: properties,
+	}
+}
+
 const paramsToSchema = (
 	params: {
 		name: string
@@ -304,36 +340,7 @@ const paramsToSchema = (
 	const schemas = {}
 
 	params.forEach((param) => {
-		if (param.signature === 'undefined') {
-			return
-		}
-
-		if (typeof param.signature === 'string') {
-			schemas[param.name] = {
-				type: 'string',
-				example: param.signature,
-			}
-			return
-		}
-
-		if (typeof param.signature === 'number') {
-			schemas[param.name] = {
-				type: 'number',
-				example: param.signature,
-			}
-			return
-		}
-
-		const properties = {}
-		for (const paramKey in param.signature) {
-			const paramValue = param.signature[paramKey]
-			properties[paramKey] = getSchema(paramValue)
-		}
-
-		schemas[param.name] = {
-			type: 'object',
-			properties: properties,
-		}
+		schemas[param.name] = singleParamToSchema(param)
 	})
 
 	return schemas
@@ -380,9 +387,7 @@ router.get('/api-json', (ctx) => {
 				in: 'path',
 				description: '',
 				required: true,
-				schema: {
-					$ref: `#/components/schemas/${param.name}`,
-				},
+				schema: singleParamToSchema(param),
 			})),
 			requestBody:
 				endpoint.body.length === 0
@@ -393,6 +398,10 @@ router.get('/api-json', (ctx) => {
 									schema: {
 										type: 'object',
 										properties: paramsToSchema(endpoint.body),
+										required: endpoint.body
+											.filter((value) => value.signature !== 'undefined')
+											.filter((value) => value.required)
+											.map((value) => value.name),
 									},
 								},
 							},
@@ -421,10 +430,11 @@ router.get('/api-json', (ctx) => {
 	for (const key in endpointData) {
 		const endpoint = endpointData[key]
 
-		const schema = paramsToSchema(endpoint.params)
 		schemas = {
 			...schemas,
-			...schema,
+			[pathToName(key)]: {
+				...paramsToSchema(endpoint.params),
+			},
 		}
 	}
 
@@ -439,22 +449,19 @@ router.get('/api-json', (ctx) => {
 			version: openApiData.version,
 		},
 		paths: paths,
-		components: {
-			schemas: schemas,
-		},
 	}
-	ctx.body = spec
+	return spec
 })
 
-// console.info(
-// 	'[RHEA] Gathered OpenAPI data:',
-// 	util.inspect(
-// 		{
-// 			...openApiData,
-// 			endpoints: endpointData,
-// 		},
-// 		{ showHidden: false, depth: null, colors: true }
-// 	)
-// )
+console.info(
+	'[RHEA] Gathered OpenAPI data:',
+	util.inspect(
+		{
+			...openApiData,
+			endpoints: endpointData,
+		},
+		{ showHidden: false, depth: null, colors: true }
+	)
+)
 
 export const SwaggerRouter = router

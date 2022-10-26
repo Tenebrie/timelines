@@ -22,7 +22,7 @@ export const Login = () => {
 		if ('error' in response) {
 			return
 		}
-		console.log(response)
+		console.log(response.data.accessToken)
 	}
 
 	const onLogin = async () => {
