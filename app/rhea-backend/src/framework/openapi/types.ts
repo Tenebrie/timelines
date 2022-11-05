@@ -14,25 +14,23 @@ export type PathDefinition = {
 	responses: any
 }
 
-export type EndpointData = Record<
-	string,
-	{
-		method: 'GET' | 'POST'
-		name?: string
-		summary?: string
-		description?: string
-		params: {
-			name: string
-			signature: string | Record<string, string>
-		}[]
-		body: {
-			name: string
-			signature: string | Record<string, string>
-			required: boolean
-		}[]
-		responses: {
-			status: number
-			signature: any
-		}[]
-	}
->
+export type EndpointData = {
+	method: 'GET' | 'POST'
+	path: string
+	name?: string
+	summary?: string
+	description?: string
+	params: {
+		name: string
+		signature: string | Record<string, string>
+	}[]
+	body: {
+		name: string
+		signature: string | Record<string, string>
+		required: boolean
+	}[]
+	responses: {
+		status: number
+		signature: string | Record<string, string>
+	}[]
+}

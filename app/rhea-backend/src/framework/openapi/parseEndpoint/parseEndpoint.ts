@@ -2,6 +2,7 @@ import { errorNameToReason, errorNameToStatusCode } from '../../errors/HttpError
 import { SyntaxKind, ts, Node } from 'ts-morph'
 import { footprintOfTypeWithoutFormatting } from '../utils/footprintOfType'
 import { syntaxListToValues } from '../utils/syntaxListToValues/syntaxListToValues'
+import { EndpointData } from '../types'
 
 export const parseEndpoint = (node: Node<ts.Node>) => {
 	const endpointMethod = node
@@ -11,18 +12,11 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 		.toUpperCase()
 
 	const endpointText = node.getFirstDescendantByKind(SyntaxKind.StringLiteral)?.getText() ?? ''
-	const endpointName = endpointText.substring(1, endpointText.length - 1)
+	const endpointPath = endpointText.substring(1, endpointText.length - 1)
 
-	const endpointData: {
-		method: 'GET' | 'POST'
-		params: any[]
-		body: any[]
-		responses: any[]
-		name: string | undefined
-		summary: string | undefined
-		description: string | undefined
-	} = {
+	const endpointData: EndpointData = {
 		method: endpointMethod as 'GET' | 'POST',
+		path: endpointPath,
 		params: [],
 		body: [],
 		responses: [],
@@ -144,6 +138,9 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 			type: returnTypeTwo,
 		})
 
+		console.log('Here')
+		console.log(stripPromise(returnType))
+
 		const allReturnTypes = stripPromise(returnType)
 			.replace(/[?]/g, '')
 			.split('|')
@@ -199,8 +196,5 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 		console.error('Error', err)
 	}
 
-	return {
-		name: endpointName,
-		data: endpointData,
-	}
+	return endpointData
 }

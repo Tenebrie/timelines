@@ -40,6 +40,7 @@ router.post('/auth/login', async (ctx) => {
 		summary: 'Login endpoint',
 		description: 'Exchanges user credentials for a JWT token',
 	})
+
 	const body = useRequestBody(ctx, {
 		email: EmailString,
 		password: NonEmptyString,

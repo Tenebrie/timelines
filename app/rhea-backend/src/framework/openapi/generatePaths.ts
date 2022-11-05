@@ -1,7 +1,7 @@
 import { EndpointData, PathDefinition } from './types'
 import { getSchema, paramsToSchema, singleParamToSchema } from './utils/getSchema/getSchema'
 
-export const generatePaths = (endpointData: EndpointData) => {
+export const generatePaths = (endpoints: EndpointData[]) => {
 	const paths: Record<
 		string,
 		{
@@ -10,9 +10,7 @@ export const generatePaths = (endpointData: EndpointData) => {
 		}
 	> = {}
 
-	for (const key in endpointData) {
-		const endpoint = endpointData[key]
-
+	endpoints.forEach((endpoint) => {
 		const responses = {}
 		endpoint.responses.forEach((response) => {
 			const status = String(response.status)
@@ -64,7 +62,7 @@ export const generatePaths = (endpointData: EndpointData) => {
 			responses: responses,
 		}
 
-		const path = key
+		const path = endpoint.path
 			.split('/')
 			.map((param) => {
 				if (param.startsWith(':')) {
@@ -75,10 +73,10 @@ export const generatePaths = (endpointData: EndpointData) => {
 			.join('/')
 
 		paths[path] = {
-			...paths[key],
+			...paths[endpoint.path],
 			[endpoint.method.toLowerCase()]: definition,
 		}
-	}
+	})
 
 	return paths
 }
