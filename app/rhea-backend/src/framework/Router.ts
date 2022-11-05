@@ -7,6 +7,7 @@ export class Router<StateT = Koa.DefaultState, ContextT = Koa.DefaultContext> {
 	public koaRouter: KoaRouter = new KoaRouter()
 
 	public use(...middleware: Array<KoaRouter.Middleware<StateT, ContextT>>) {
+		// @ts-ignore
 		return this.koaRouter.use(...middleware)
 	}
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ParameterizedContext } from 'koa'
 
 import { ValidationError } from '../framework/errors/HttpError'
@@ -21,6 +22,7 @@ export const useRequestBody = <ValidatorsT extends Record<string, (val: any) => 
 
 	const invalidParams = expectedParams.filter((param) => {
 		const validator = validators[param]
+		// @ts-ignore
 		const paramValue = body[param] as string
 		const validationResult = validator(paramValue)
 		return validationResult !== undefined && !validationResult
@@ -32,6 +34,7 @@ export const useRequestBody = <ValidatorsT extends Record<string, (val: any) => 
 
 	const returnValue = {}
 	expectedParams.forEach((param) => {
+		// @ts-ignore
 		returnValue[param] = body[param]
 	})
 

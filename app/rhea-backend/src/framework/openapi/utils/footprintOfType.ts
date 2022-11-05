@@ -1,4 +1,4 @@
-import { Project, Type, Symbol, SymbolFlags, Signature, Node, TypeFormatFlags } from 'ts-morph'
+import { Type, Symbol, SymbolFlags, Signature, Node } from 'ts-morph'
 
 function isPrimitive(type: Type) {
 	if (type.isString()) {

@@ -48,9 +48,11 @@ export const syntaxListToValues = (node: Node<SyntaxList>, depth = 0): ReturnVal
 				return null
 			})
 			.filter((child) => !!child)
+			.map((child) => child as ReturnValue)
 
 		return values
 	} catch (err) {
 		console.error(err)
 	}
+	return []
 }

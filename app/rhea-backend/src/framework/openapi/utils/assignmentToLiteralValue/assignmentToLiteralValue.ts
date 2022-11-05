@@ -46,17 +46,26 @@ export const assignmentToLiteralValue = (
 
 	const objectLiteralNode = node.getFirstChildByKind(SyntaxKind.ObjectLiteralExpression)
 	if (objectLiteralNode) {
+		const syntaxListNode = objectLiteralNode.getFirstChildByKind(SyntaxKind.SyntaxList)
+		if (!syntaxListNode) {
+			throw new Error('error')
+		}
 		return {
 			name: wrapWithQuotes(identifier.getText()),
-			value: syntaxListToValues(objectLiteralNode.getFirstChildByKind(SyntaxKind.SyntaxList), depth + 1),
+			value: syntaxListToValues(syntaxListNode, depth + 1),
 		}
 	}
 
 	const implParentNode = node
 		.getLastChildByKind(SyntaxKind.Identifier)
-		.getImplementations()[0]
-		.getNode()
+		?.getImplementations()[0]
+		?.getNode()
 		.getParent()
+
+	if (!implParentNode) {
+		throw new Error('error')
+	}
+
 	const implementationNode =
 		implParentNode.asKind(SyntaxKind.PropertyAssignment) ||
 		implParentNode.asKind(SyntaxKind.VariableDeclaration)

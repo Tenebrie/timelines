@@ -2,12 +2,12 @@ import Koa from 'koa'
 import { AuthRouter } from './routers/AuthRouter'
 import * as bodyParser from 'koa-bodyparser'
 import { BaseHttpError } from './framework/errors/HttpError'
-import { SwaggerRouter } from './framework/magic/SwaggerGenerator'
-import { useApiInfo } from './framework/useApiInfo'
+import { SwaggerRouter } from './framework/openapi/OpenApiRouter'
+import { useApiHeader } from './framework/useApiHeader'
 
 const app = new Koa()
 
-useApiInfo({
+useApiHeader({
 	title: 'Timelines Rhea',
 	description: 'This is a description field',
 	termsOfService: 'https://example.com',

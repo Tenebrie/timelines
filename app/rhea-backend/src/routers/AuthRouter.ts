@@ -3,13 +3,13 @@ import { useRequestBody } from '../framework'
 import { BadRequestError, UnauthorizedError, ValidationError } from '../framework/errors/HttpError'
 import { TokenService } from '../services/TokenService'
 import { Router } from '../framework/Router'
-import { useApiDocs } from '../framework/useApiDocs'
+import { useApiEndpoint } from '../framework/useApiEndpoint'
 import { EmailString, NonEmptyString } from '../framework/validators/Validators'
 
 const router = new Router()
 
 router.post('/auth', async (ctx) => {
-	useApiDocs({
+	useApiEndpoint({
 		name: 'createAccount',
 		summary: 'Registration endpoint',
 		description: 'Creates a new user account with provided credentials',
@@ -35,7 +35,7 @@ router.post('/auth', async (ctx) => {
 })
 
 router.post('/auth/login', async (ctx) => {
-	useApiDocs({
+	useApiEndpoint({
 		name: 'postLogin',
 		summary: 'Login endpoint',
 		description: 'Exchanges user credentials for a JWT token',

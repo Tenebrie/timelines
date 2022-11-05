@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ParameterizedContext } from 'koa'
 
 import { ValidationError } from './errors/HttpError'
@@ -11,10 +12,8 @@ type RemoveLeadingColon<S extends string> = S['length'] extends 0 ? never : Spli
 
 export const useRequestParams = <
 	ParamsT extends string[],
-	ValidatorsT extends Record<
-		RemoveLeadingColon<ParamsT[number]>,
-		(val: string | number | { a: number }) => any
-	>
+	// @ts-ignore
+	ValidatorsT extends Record<RemoveLeadingColon<ParamsT[number]>, (val: any) => any>
 >(
 	ctx: ParameterizedContext & { parsedPathParams: ParamsT },
 	validators: ValidatorsT
