@@ -6,7 +6,7 @@ import { OpenApiManager } from '../OpenApiManager'
 import { analyzeSourceFile } from './analyzeSourceFIle'
 
 const project = new Project()
-const sourceFilePaths = [path.resolve('./src/index.ts'), path.resolve('./src/routers/AuthRouter.ts')]
+const sourceFilePaths = [path.resolve('./src/index.ts'), path.resolve('./src/routers/UserRouter.ts')]
 project.addSourceFilesAtPaths(sourceFilePaths)
 project.resolveSourceFileDependencies()
 
@@ -35,5 +35,13 @@ router.get('/api-json', () => {
 
 	return spec
 })
+
+const openApiManager = OpenApiManager.getInstance()
+
+const docsHeader = openApiManager.getHeader()
+
+const sourceFiles = sourceFilePaths.map((filePath) => project.getSourceFileOrThrow(filePath))
+const endpoints = sourceFiles.flatMap((sourceFile) => analyzeSourceFile(sourceFile))
+// console.log(JSON.stringify(generatePaths(endpoints)))
 
 export const SwaggerRouter = router

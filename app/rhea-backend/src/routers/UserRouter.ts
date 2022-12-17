@@ -1,5 +1,5 @@
 import { useRequestParams } from '../framework/useRequestParams'
-import { NonEmptyString } from '../framework/validators/Validators'
+import { NonEmptyString, StringWithFiveCharactersOrMore } from '../framework/validators/Validators'
 import { useRequestBody } from '../framework'
 import { Router } from '../framework/Router'
 import { useApiEndpoint } from '../framework/useApiEndpoint'
@@ -19,16 +19,30 @@ router.post('/users', (ctx) => {
 		password: NonEmptyString,
 	})
 
+	body.password
+
 	return body
 })
 
-router.get('/user/:userId', (ctx) => {
+const Validator = (left: any, right: (v: string) => any) => {
+	return right(left)
+}
+
+router.get('/user/:userId/:username?', (ctx) => {
 	const params = useRequestParams(ctx, {
-		userId: NonEmptyString,
+		userId: StringWithFiveCharactersOrMore,
+		username: (val: { foo: string; bar: string }) =>
+			Validator(val, (v) => 'foo' in JSON.parse(v) && 'bar' in JSON.parse(v)),
 	})
 
+	params.userId
+	params.username
+
+	params.username
+
 	return {
-		username: 'test',
+		userId: params.userId,
+		username: params.username ?? 'Undefined',
 	}
 })
 

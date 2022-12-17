@@ -7,7 +7,9 @@ type ValidatedData<T extends Record<string, (val: any) => any>> = {
 	[K in keyof T]: Parameters<T[K]>[0]
 }
 
-export const useRequestBody = <ValidatorsT extends Record<string, (val: any) => any>>(
+export const useRequestBody = <
+	ValidatorsT extends Record<string, ((val: any) => any) | ((val?: any) => any)>
+>(
 	ctx: ParameterizedContext,
 	validators: ValidatorsT
 ): ValidatedData<ValidatorsT> => {

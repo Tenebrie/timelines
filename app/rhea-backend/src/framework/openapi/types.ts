@@ -22,7 +22,7 @@ export type EndpointData = {
 	description?: string
 	params: {
 		name: string
-		signature: string | Record<string, string>
+		signature: string
 	}[]
 	body: {
 		name: string
