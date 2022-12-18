@@ -4,7 +4,7 @@ import * as bodyParser from 'koa-bodyparser'
 import { BaseHttpError } from './framework/errors/HttpError'
 import { SwaggerRouter } from './framework/openapi/OpenApiRouter'
 import { useApiHeader } from './framework/useApiHeader'
-import { UserRouter } from './routers/UserRouter'
+import { myKoaRouter, UserRouter } from './routers/UserRouter'
 
 const app = new Koa()
 
@@ -47,6 +47,8 @@ app
 	.use(AuthRouter.allowedMethods())
 	.use(UserRouter.routes())
 	.use(UserRouter.allowedMethods())
+	.use(myKoaRouter.routes())
+	.use(myKoaRouter.allowedMethods())
 	.use(SwaggerRouter.routes())
 
 app.listen(3000)

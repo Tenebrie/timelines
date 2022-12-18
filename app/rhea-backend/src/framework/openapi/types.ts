@@ -21,11 +21,17 @@ export type EndpointData = {
 	summary?: string
 	description?: string
 	params: {
-		name: string
+		identifier: string
 		signature: string
+		optional: boolean
+	}[]
+	query: {
+		identifier: string
+		signature: string
+		optional: boolean
 	}[]
 	body: {
-		name: string
+		identifier: string
 		signature: string | Record<string, string>
 		required: boolean
 	}[]

@@ -36,7 +36,7 @@ export const generatePaths = (endpoints: EndpointData[]) => {
 			summary: endpoint.summary,
 			description: endpoint.description ?? '',
 			parameters: endpoint.params.map((param) => ({
-				name: param.name,
+				name: param.identifier,
 				in: 'path',
 				description: '',
 				required: true,
@@ -54,7 +54,7 @@ export const generatePaths = (endpoints: EndpointData[]) => {
 										required: endpoint.body
 											.filter((value) => value.signature !== 'undefined')
 											.filter((value) => value.required)
-											.map((value) => value.name),
+											.map((value) => value.identifier),
 									},
 								},
 							},

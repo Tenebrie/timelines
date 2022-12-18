@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ParameterizedContext } from 'koa'
 
 import { ValidationError } from './errors/HttpError'
 import { SplitStringBy } from './TypeUtils'
+import { Validator } from './validators/Validators'
 
-type Please<T, B extends string> = B extends `${string}?` ? T | undefined : T
+type CheckIfOptional<T, B extends string> = B extends `${string}?` ? T | undefined : T
 
 type ValidatedData<
 	ParamsT extends string[],
@@ -15,10 +15,10 @@ type ValidatedData<
 			callback: ValidatorsT[CleanUpPathParam<ParamsT[K]>]
 		}
 	},
-	ValidatorsT extends Record<TestTemplate[number]['cleaned'], (val: any) => any>
+	ValidatorsT extends Record<TestTemplate[number]['cleaned'], Omit<Validator<any>, 'optional'>>
 > = {
-	[K in keyof TestTemplate as K extends `${number}` ? TestTemplate[K]['cleaned'] : never]: Please<
-		Parameters<TestTemplate[K]['callback']>[0],
+	[K in keyof TestTemplate as K extends `${number}` ? TestTemplate[K]['cleaned'] : never]: CheckIfOptional<
+		ReturnType<TestTemplate[K]['callback']['rehydrate']>,
 		TestTemplate[K]['original']
 	>
 }
@@ -38,7 +38,7 @@ export const useRequestParams = <
 			callback: ValidatorsT[CleanUpPathParam<ParamsT[K]>]
 		}
 	},
-	ValidatorsT extends Record<CleanUpPathParam<ParamsT[number]>, (val: any) => any>
+	ValidatorsT extends Record<CleanUpPathParam<ParamsT[number]>, Omit<Validator<any>, 'optional'>>
 >(
 	ctx: ParameterizedContext & { parsedPathParams: ParamsT },
 	validators: ValidatorsT
@@ -46,23 +46,44 @@ export const useRequestParams = <
 	const params = ctx.params
 	const expectedParams = Object.keys(validators)
 
-	const failedValidations = expectedParams.filter((param) => {
+	const validationResults = expectedParams.map((paramName) => {
+		const paramValue = params[paramName] as string
+
+		// Param is optional and is not provided - skip validation
+		if (paramValue === undefined) {
+			return { paramName, validated: true }
+		}
+
 		try {
-			return params[param] !== undefined && !validators[param](params[param])
+			const validatorObject = validators[paramName] as Omit<Validator<any>, 'optional'>
+			const prevalidatorSuccess = !validatorObject.prevalidate || validatorObject.prevalidate(paramValue)
+			const rehydratedValue = validatorObject.rehydrate(paramValue)
+			const validatorSuccess = !validatorObject.validate || validatorObject.validate(rehydratedValue)
+			return {
+				paramName,
+				validated: prevalidatorSuccess && validatorSuccess,
+				rehydratedValue,
+			}
 		} catch (error) {
-			return true
+			return { paramName, validated: false }
 		}
 	})
 
+	const failedValidations = validationResults.filter((result) => !result.validated)
+
 	if (failedValidations.length > 0) {
 		throw new ValidationError(
-			`Failed route param validation: ${failedValidations.map((param) => `'${param}'`).join(', ')}`
+			`Failed route param validation: ${failedValidations
+				.map((result) => `'${result.paramName}'`)
+				.join(', ')}`
 		)
 	}
 
+	const successfulValidations = validationResults.filter((result) => result.validated)
+
 	const returnValue = {}
-	expectedParams.forEach((param) => {
-		returnValue[param] = params[param]
+	successfulValidations.forEach((result) => {
+		returnValue[result.paramName] = result.rehydratedValue
 	})
 
 	return returnValue as ValidatedData<ParamsT, TestTemplate, ValidatorsT>

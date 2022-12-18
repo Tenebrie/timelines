@@ -9,21 +9,23 @@ export const getSchema = (
 ) => {
 	if (typeof value === 'object' && !Array.isArray(value)) {
 		const shuffledValues: {
-			name: string
+			identifier: string
 			signature: any
 		}[] = []
 
 		for (const propName in value) {
 			const propValue = value[propName]
 			shuffledValues.push({
-				name: propName,
+				identifier: propName,
 				signature: propValue,
 			})
 		}
 		return {
 			type: 'object',
 			properties: paramsToSchema(shuffledValues),
-			required: shuffledValues.filter((value) => value.signature !== 'undefined').map((value) => value.name),
+			required: shuffledValues
+				.filter((value) => value.signature !== 'undefined')
+				.map((value) => value.identifier),
 		}
 	}
 
@@ -36,7 +38,10 @@ export const getSchema = (
 	}
 }
 
-export const singleParamToSchema = (param: { name: string; signature: string | Record<string, string> }) => {
+export const singleParamToSchema = (param: {
+	identifier: string
+	signature: string | Record<string, string>
+}) => {
 	if (param.signature === 'undefined') {
 		return
 	}
@@ -69,14 +74,14 @@ export const singleParamToSchema = (param: { name: string; signature: string | R
 
 export const paramsToSchema = (
 	params: {
-		name: string
+		identifier: string
 		signature: string | Record<string, string>
 	}[]
 ) => {
 	const schemas = {}
 
 	params.forEach((param) => {
-		schemas[param.name] = singleParamToSchema(param)
+		schemas[param.identifier] = singleParamToSchema(param)
 	})
 
 	return schemas

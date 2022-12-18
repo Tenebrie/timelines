@@ -1,20 +1,18 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { errorNameToReason, errorNameToStatusCode } from '../../errors/HttpError'
 import { SyntaxKind, ts, Node } from 'ts-morph'
-import { footprintOfTypeWithoutFormatting } from '../utils/footprintOfType'
-import { syntaxListToValues } from '../utils/syntaxListToValues/syntaxListToValues'
 import { EndpointData } from '../types'
-import { debugNode, debugNodes } from '../utils/printers/printers'
-import { findNodeImplementation, getShapeOfObjectLiteral } from './nodeParsers'
+import { debugNode, debugNodes, debugObject } from '../utils/printers/printers'
+import { findNodeImplementation, getShapeOfValidatorLiteral, getValuesOfObjectLiteral } from './nodeParsers'
 
 export const parseEndpoint = (node: Node<ts.Node>) => {
 	const endpointMethod = node
-		.getFirstDescendantByKind(SyntaxKind.PropertyAccessExpression)
-		?.getText()
+		.getFirstDescendantByKind(SyntaxKind.PropertyAccessExpression)!
+		.getText()
 		.split('.')[1]
 		.toUpperCase()
 
-	const endpointText = node.getFirstDescendantByKind(SyntaxKind.StringLiteral)?.getText() ?? ''
+	const endpointText = node.getFirstDescendantByKind(SyntaxKind.StringLiteral)!.getText() ?? ''
 	const endpointPath = endpointText.substring(1, endpointText.length - 1)
 	console.log(endpointPath)
 
@@ -22,6 +20,7 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 		method: endpointMethod as 'GET' | 'POST',
 		path: endpointPath,
 		params: [],
+		query: [],
 		body: [],
 		responses: [],
 		name: undefined,
@@ -33,7 +32,10 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 
 	// API documentation
 	try {
-		parseApiDocumentation(endpointData, node)
+		const entries = parseApiDocumentation(node)
+		entries.forEach((param) => {
+			endpointData[param.identifier] = param.value
+		})
 	} catch (err) {
 		console.error('Error', err)
 	}
@@ -41,6 +43,16 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 	// Request params
 	try {
 		endpointData.params = parseRequestParams(node, endpointPath)
+		debugObject(endpointData.params)
+	} catch (err) {
+		warningData.push((err as Error).message)
+		console.error('Error', err)
+	}
+
+	// Request query
+	try {
+		endpointData.query = parseRequestQuery(node)
+		debugObject(endpointData.query)
 	} catch (err) {
 		warningData.push((err as Error).message)
 		console.error('Error', err)
@@ -91,8 +103,6 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 		// 	node,
 		// 	type: returnTypeTwo,
 		// })
-		// // console.log('Here')
-		// // console.log(stripPromise(returnType))
 		// const allReturnTypes = stripPromise(returnType)
 		// 	.replace(/[?]/g, '')
 		// 	.split('|')
@@ -142,27 +152,20 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 	return endpointData
 }
 
-const parseApiDocumentation = (endpointData: EndpointData, node: Node<ts.Node>) => {
+const parseApiDocumentation = (node: Node<ts.Node>) => {
 	const hookNode = node.getFirstDescendant((subnode) => subnode.getText() === 'useApiEndpoint')
-
 	if (hookNode) {
-		const targetNode = hookNode.getFirstAncestorByKind(SyntaxKind.CallExpression)?.getChildAtIndex(2)
+		const paramNode = hookNode.getParent()!.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
+		const valueNode = findNodeImplementation(paramNode.getLastChild()!)
 
-		const syntaxListNode = targetNode?.getChildAtIndex(0).getFirstChildByKind(SyntaxKind.SyntaxList)
-		if (!syntaxListNode) {
-			throw new Error('error')
+		if (!valueNode.isKind(SyntaxKind.ObjectLiteralExpression)) {
+			throw new Error('Non-literal type used in useApiEndpoint')
 		}
 
-		const params = syntaxListToValues(syntaxListNode)
-
-		const allowedValues = ['name', 'summary', 'description']
-		allowedValues.forEach((prop) => {
-			const matchingParam = params.find((param) => param.name === prop)
-			if (matchingParam) {
-				endpointData[prop] = matchingParam.value
-			}
-		})
+		const objectLiteral = valueNode.asKind(SyntaxKind.ObjectLiteralExpression)!
+		return getValuesOfObjectLiteral(objectLiteral).filter((param) => param.value !== null)
 	}
+	return []
 }
 
 const parseRequestParams = (node: Node<ts.Node>, endpointPath: string): EndpointData['params'] => {
@@ -184,12 +187,34 @@ const parseRequestParams = (node: Node<ts.Node>, endpointPath: string): Endpoint
 			}))
 
 		const objectLiteral = valueNode.asKind(SyntaxKind.ObjectLiteralExpression)!
-		return getShapeOfObjectLiteral(objectLiteral)
+		return getShapeOfValidatorLiteral(objectLiteral)
 			.filter((param) => param.shape !== null)
 			.map((param) => ({
-				name: param.identifier,
+				identifier: param.identifier,
 				signature: param.shape as string,
-				required: !declaredParams.some((declared) => declared.name === param.identifier && declared.optional),
+				optional: declaredParams.some((declared) => declared.name === param.identifier && declared.optional),
+			}))
+	}
+	return []
+}
+
+const parseRequestQuery = (node: Node<ts.Node>): EndpointData['query'] => {
+	const hookNode = node.getFirstDescendant((subnode) => subnode.getText() === 'useRequestQuery')
+	if (hookNode) {
+		const paramNode = hookNode.getParent()!.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
+		const valueNode = findNodeImplementation(paramNode.getLastChild()!)
+
+		if (!valueNode.isKind(SyntaxKind.ObjectLiteralExpression)) {
+			throw new Error('Non-literal type used in useRequestParams')
+		}
+
+		const objectLiteral = valueNode.asKind(SyntaxKind.ObjectLiteralExpression)!
+		return getShapeOfValidatorLiteral(objectLiteral)
+			.filter((param) => param.shape !== null)
+			.map((param) => ({
+				identifier: param.identifier,
+				signature: param.shape as string,
+				optional: param.optional,
 			}))
 	}
 	return []

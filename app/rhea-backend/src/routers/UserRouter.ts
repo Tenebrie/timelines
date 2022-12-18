@@ -1,48 +1,91 @@
 import { useRequestParams } from '../framework/useRequestParams'
-import { NonEmptyString, StringWithFiveCharactersOrMore } from '../framework/validators/Validators'
+import {
+	BooleanValidator,
+	FooBarObjectValidator,
+	NonEmptyString,
+	NumberValidator,
+	OptionalParam,
+	RequestParam,
+	RequiredParam,
+	StringValidator,
+	StringWithFiveCharactersOrMore,
+	Validator,
+} from '../framework/validators/Validators'
 import { useRequestBody } from '../framework'
 import { Router } from '../framework/Router'
+import * as KoaRouter from '@koa/router'
 import { useApiEndpoint } from '../framework/useApiEndpoint'
+import { useRequestQuery } from '../framework/useRequestQuery'
+
+export const myKoaRouter = new KoaRouter()
 
 const router = new Router()
 
-router.post('/users', (ctx) => {
-	useApiEndpoint({
-		name: 'createUser',
-		description: 'Creates a user',
-		summary: 'Short summary',
-	})
-
-	const body = useRequestBody(ctx, {
-		email: NonEmptyString,
-		username: NonEmptyString,
-		password: NonEmptyString,
-	})
-
-	body.password
-
-	return body
-})
-
-const Validator = (left: any, right: (v: string) => any) => {
-	return right(left)
+const myFunction = (a: number) => {
+	return a + 2
 }
 
-router.get('/user/:userId/:username?', (ctx) => {
+myFunction(7)
+
+router.get('/cards/:cardName', (ctx) => {
 	const params = useRequestParams(ctx, {
-		userId: StringWithFiveCharactersOrMore,
-		username: (val: { foo: string; bar: string }) =>
-			Validator(val, (v) => 'foo' in JSON.parse(v) && 'bar' in JSON.parse(v)),
+		cardName: NumberValidator,
+	})
+
+	if (params.cardName === undefined) {
+		Math.pow(1, 2)
+	} else {
+		Math.pow(params.cardName, 2)
+	}
+
+	return {
+		value: '123',
+		cardName: params.cardName,
+	}
+})
+
+// router.post('/users', (ctx) => {
+// 	useApiEndpoint({
+// 		name: 'createUser',
+// 		description: 'Creates a user',
+// 		summary: 'Short summary',
+// 	})
+
+// 	const body = useRequestBody(ctx, {
+// 		email: NonEmptyString,
+// 		username: NonEmptyString,
+// 		password: NonEmptyString,
+// 	})
+
+// 	body.password
+
+// 	return body
+// })
+
+router.get('/user/:userId/:username', (ctx) => {
+	const params = useRequestParams(ctx, {
+		username: BooleanValidator,
+		userId: StringValidator,
 	})
 
 	params.userId
-	params.username
 
-	params.username
+	const query = useRequestQuery(ctx, {
+		addDragons: RequiredParam({
+			prevalidate: (v) => v === '0' || v === '1',
+			rehydrate: (v) => v === '1',
+		}),
+		addGriffins: {
+			prevalidate: (v) => v === '0' || v === '1',
+			rehydrate: (v) => v === '1',
+			validate: (v) => v === true,
+			optional: true,
+		},
+		addBloopers: OptionalParam(BooleanValidator),
+	})
 
 	return {
-		userId: params.userId,
-		username: params.username ?? 'Undefined',
+		addDragons: 'q',
 	}
 })
 

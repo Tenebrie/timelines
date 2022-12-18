@@ -42,6 +42,5 @@ const docsHeader = openApiManager.getHeader()
 
 const sourceFiles = sourceFilePaths.map((filePath) => project.getSourceFileOrThrow(filePath))
 const endpoints = sourceFiles.flatMap((sourceFile) => analyzeSourceFile(sourceFile))
-// console.log(JSON.stringify(generatePaths(endpoints)))
 
 export const SwaggerRouter = router
