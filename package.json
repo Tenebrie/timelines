@@ -5,10 +5,8 @@
 	"description": "",
 	"main": "dist/services/gaia/app.js",
 	"subPackages": [
-		"client",
-		"services/gaia",
-		"services/overmind",
-		"shared"
+		"app/styx-frontend",
+		"app/rhea-backend/"
 	],
 	"scripts": {
 		"prepare": "husky install",
@@ -16,7 +14,7 @@
 		"build": "sh scripts/build.sh",
 		"start": "node dist/services/gaia/src/app.js",
 		"docker": "yarn docker:start",
-		"docker:start": "node scripts/docker_validate && docker-compose up",
+		"docker:start": "docker-compose up",
 		"docker:recreate": "node scripts/docker_validate && docker-compose up --force-recreate",
 		"docker:clean": "docker container kill $(docker ps -q)",
 		"docker:rebuild": "docker-compose build client && docker-compose build gaia && docker-compose build overmind",
@@ -53,7 +51,7 @@
 		"*.(ts|vue|json)": "yarn eslint --fix"
 	},
 	"engines": {
-		"node": "14.x"
+		"node": "16.x"
 	},
 	"author": "Tenebrie",
 	"bugs": {

@@ -46,7 +46,7 @@ router.get('/user/userId/username', (ctx) => {
 	})
 
 	const query = useRequestQuery(ctx, {
-		addDragons: OptionalParam({
+		addDragons: RequiredParam({
 			prevalidate: (v) => v === '0' || v === '1',
 			rehydrate: (v) => v === '1',
 		}),
@@ -58,6 +58,8 @@ router.get('/user/userId/username', (ctx) => {
 		},
 		addBloopers: OptionalParam(BooleanValidator),
 	})
+
+	query.addBloopers
 
 	return {
 		addDragons: query.addDragons,

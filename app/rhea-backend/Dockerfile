@@ -15,7 +15,6 @@ WORKDIR /app/rhea
 
 ADD ./app/styx-frontend /app/styx
 ADD ./app/rhea-backend /app/rhea
-ADD ./app/shared /app/shared
 RUN yarn
 
 EXPOSE 3000

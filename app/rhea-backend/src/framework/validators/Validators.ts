@@ -49,11 +49,10 @@ export const FooBarObjectValidator: Validator<{ foo: string; bar: string }> = {
 	validate: (v) => v.foo.length > 2 && v.bar.length > 2,
 	optional: false,
 }
-export const BooleanValidator: Validator<boolean> = {
+export const BooleanValidator = RequiredParam({
 	prevalidate: (v) => v === '0' || v === '1' || v === 'false' || v === 'true',
 	rehydrate: (v) => v === '1' || v === 'true',
-	optional: false,
-}
+})
 export const StringValidator: Validator<string> = {
 	rehydrate: (v) => v,
 	optional: false,

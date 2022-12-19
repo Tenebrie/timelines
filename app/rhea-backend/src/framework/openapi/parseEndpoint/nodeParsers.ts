@@ -203,6 +203,10 @@ const getValidatorPropertyShape = (innerLiteralNode: Node): ShapeOfType['shape']
 			return getValidatorPropertyShape(thingyNode)
 		}
 
+		if (callExpressionArgument.getKind() === SyntaxKind.CallExpression) {
+			return getValidatorPropertyShape(callExpressionArgument)
+		}
+
 		return 'unknown'
 	}
 
