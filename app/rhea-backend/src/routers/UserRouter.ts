@@ -21,29 +21,6 @@ export const myKoaRouter = new KoaRouter()
 
 const router = new Router()
 
-const myFunction = (a: number) => {
-	return a + 2
-}
-
-myFunction(7)
-
-router.get('/cards/:cardName', (ctx) => {
-	const params = useRequestParams(ctx, {
-		cardName: NumberValidator,
-	})
-
-	if (params.cardName === undefined) {
-		Math.pow(1, 2)
-	} else {
-		Math.pow(params.cardName, 2)
-	}
-
-	return {
-		value: '123',
-		cardName: params.cardName,
-	}
-})
-
 // router.post('/users', (ctx) => {
 // 	useApiEndpoint({
 // 		name: 'createUser',
@@ -62,16 +39,14 @@ router.get('/cards/:cardName', (ctx) => {
 // 	return body
 // })
 
-router.get('/user/:userId/:username', (ctx) => {
+router.get('/user/userId/username', (ctx) => {
 	const params = useRequestParams(ctx, {
 		username: BooleanValidator,
 		userId: StringValidator,
 	})
 
-	params.userId
-
 	const query = useRequestQuery(ctx, {
-		addDragons: RequiredParam({
+		addDragons: OptionalParam({
 			prevalidate: (v) => v === '0' || v === '1',
 			rehydrate: (v) => v === '1',
 		}),
@@ -85,7 +60,9 @@ router.get('/user/:userId/:username', (ctx) => {
 	})
 
 	return {
-		addDragons: 'q',
+		addDragons: query.addDragons,
+		addGriffins: query.addGriffins,
+		addBloopers: query.addBloopers,
 	}
 })
 

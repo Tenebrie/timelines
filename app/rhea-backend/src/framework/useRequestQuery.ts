@@ -4,10 +4,10 @@ import { ParameterizedContext } from 'koa'
 import { ValidationError } from './errors/HttpError'
 import { Validator } from './validators/Validators'
 
-type CheckIfOptionaal<T, B extends boolean | undefined> = B extends false ? T : T | undefined
+type CheckIfOptional<T, B extends boolean | undefined> = B extends false ? T : T | undefined
 
 type ValidatedData<T extends Record<string, Validator<any>>> = {
-	[K in keyof T]: CheckIfOptionaal<ReturnType<T[K]['rehydrate']>, T[K]['optional']>
+	[K in keyof T]: CheckIfOptional<ReturnType<T[K]['rehydrate']>, T[K]['optional']>
 }
 
 export const useRequestQuery = <ValidatorsT extends Record<string, Validator<any>>>(

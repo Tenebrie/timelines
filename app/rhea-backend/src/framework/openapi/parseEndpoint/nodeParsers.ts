@@ -171,6 +171,15 @@ const getValidatorPropertyShape = (innerLiteralNode: Node): ShapeOfType['shape']
 		return getTypeReferenceShape(childTypeReferenceNode)
 	}
 
+	// `RequiredParam<...>` inline call expression
+	if (innerLiteralNode.getParent()!.getChildrenOfKind(SyntaxKind.SyntaxList).length >= 2) {
+		const typeNode = innerLiteralNode
+			.getParent()!
+			.getFirstChildByKind(SyntaxKind.SyntaxList)!
+			.getFirstChildByKind(SyntaxKind.TypeLiteral)!
+		return getRecursiveNodeShape(typeNode)
+	}
+
 	// `RequestParam | RequiredParam | OptionalParam` call expression
 	const childCallExpressionNode = innerLiteralNode.getParent()!.getFirstChildByKind(SyntaxKind.CallExpression)
 	if (childCallExpressionNode) {
