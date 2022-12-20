@@ -15,7 +15,6 @@ export const useRequestObjectBody = <ValidatorsT extends Record<string, Validato
 	validators: ValidatorsT
 ): ValidatedData<ValidatorsT> => {
 	const providedParams = ctx.request.body || {}
-	console.log(ctx.request.body)
 	const expectedParams = Object.keys(validators)
 
 	const missingParams = expectedParams.filter(

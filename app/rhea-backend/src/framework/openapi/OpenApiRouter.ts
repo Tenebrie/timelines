@@ -5,10 +5,14 @@ import { generatePaths } from './generatePaths'
 import { OpenApiManager } from '../OpenApiManager'
 import { analyzeSourceFile } from './analyzeSourceFIle'
 
-const project = new Project()
-const sourceFilePaths = [path.resolve('./src/index.ts'), path.resolve('./src/routers/UserRouter.ts')]
-project.addSourceFilesAtPaths(sourceFilePaths)
-project.resolveSourceFileDependencies()
+const project = new Project({
+	tsConfigFilePath: path.resolve('./tsconfig.json'),
+})
+const sourceFilePaths = [
+	path.resolve('./src/index.ts'),
+	path.resolve('./src/routers/UserRouter.ts'),
+	path.resolve('./src/framework/openapi/OpenApiRouter.ts'),
+]
 
 const router = new Router()
 

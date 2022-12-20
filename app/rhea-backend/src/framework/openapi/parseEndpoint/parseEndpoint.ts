@@ -5,6 +5,7 @@ import { EndpointData } from '../types'
 import { debugNode, debugNodes, debugObject } from '../utils/printers/printers'
 import {
 	findNodeImplementation,
+	getProperTypeShape,
 	getShapeOfValidatorLiteral,
 	getValidatorPropertyOptionality,
 	getValidatorPropertyShape,
@@ -22,7 +23,6 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 
 	const endpointText = node.getFirstDescendantByKind(SyntaxKind.StringLiteral)!.getText() ?? ''
 	const endpointPath = endpointText.substring(1, endpointText.length - 1)
-	console.log(endpointPath)
 
 	const endpointData: EndpointData = {
 		method: endpointMethod as 'GET' | 'POST',
@@ -46,13 +46,13 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 			endpointData[param.identifier] = param.value
 		})
 	} catch (err) {
+		warningData.push((err as Error).message)
 		console.error('Error', err)
 	}
 
 	// Request params
 	try {
 		endpointData.params = parseRequestParams(node, endpointPath)
-		debugObject(endpointData.params)
 	} catch (err) {
 		warningData.push((err as Error).message)
 		console.error('Error', err)
@@ -61,7 +61,6 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 	// Request query
 	try {
 		endpointData.query = parseRequestObjectInput(node, 'useRequestQuery')
-		// debugObject(endpointData.query)
 	} catch (err) {
 		warningData.push((err as Error).message)
 		console.error('Error', err)
@@ -72,7 +71,6 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 		const parsedBody = parseRequestRawBody(node)
 		if (parsedBody) {
 			endpointData.rawBody = parsedBody
-			debugObject(endpointData.rawBody)
 		}
 	} catch (err) {
 		warningData.push((err as Error).message)
@@ -85,7 +83,6 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 			parseRequestObjectInput(node, 'useRequestJsonBody'),
 			parseRequestObjectInput(node, 'useRequestFormBody'),
 		].flat()
-		debugObject(endpointData.objectBody)
 	} catch (err) {
 		warningData.push((err as Error).message)
 		console.error('Error', err)
@@ -93,67 +90,8 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 
 	// Request response
 	try {
-		// const stripPromise = (val: string) => {
-		// 	const trimmedVal = val.trim()
-		// 	if (!trimmedVal || !trimmedVal.startsWith('Promise')) {
-		// 		return trimmedVal
-		// 	}
-		// 	return trimmedVal.substring(8, trimmedVal.length - 1)
-		// }
-		// const returnTypeTwo = node
-		// 	.getFirstChildByKind(SyntaxKind.CallExpression)
-		// 	?.getFirstChildByKind(SyntaxKind.SyntaxList)
-		// 	?.getFirstChildByKind(SyntaxKind.ArrowFunction)
-		// 	?.getReturnType()
-		// if (!returnTypeTwo) {
-		// 	throw new Error('error')
-		// }
-		// const returnType = footprintOfTypeWithoutFormatting({
-		// 	node,
-		// 	type: returnTypeTwo,
-		// })
-		// const allReturnTypes = stripPromise(returnType)
-		// 	.replace(/[?]/g, '')
-		// 	.split('|')
-		// 	.map((type) => type.trim())
-		// 	.map((type) => JSON.parse(type) as Record<string, any>)
-		// const throwStatements = node.getDescendantsOfKind(SyntaxKind.ThrowStatement).map((st) => {
-		// 	const identifier = st
-		// 		?.getFirstChildByKind(SyntaxKind.NewExpression)
-		// 		?.getFirstChildByKind(SyntaxKind.Identifier)
-		// 	const syntaxListNode = st
-		// 		?.getFirstChildByKind(SyntaxKind.NewExpression)
-		// 		?.getFirstChildByKind(SyntaxKind.SyntaxList)
-		// 	if (!identifier || !syntaxListNode) {
-		// 		throw new Error('error')
-		// 	}
-		// 	const message = syntaxListToValues(syntaxListNode)
-		// 	return {
-		// 		name: identifier.getText(),
-		// 		message: message[0].value,
-		// 	}
-		// })
-		// const responses: {
-		// 	status: number
-		// 	signature: any
-		// }[] = []
-		// allReturnTypes.forEach((type) => {
-		// 	responses.push({
-		// 		status: 200,
-		// 		signature: type,
-		// 	})
-		// })
-		// throwStatements.forEach((thr) => {
-		// 	responses.push({
-		// 		status: errorNameToStatusCode(thr.name),
-		// 		signature: {
-		// 			status: errorNameToStatusCode(thr.name),
-		// 			reason: errorNameToReason(thr.name),
-		// 			message: thr.message,
-		// 		},
-		// 	})
-		// })
-		// endpointData.responses = responses
+		endpointData.responses = parseRequestResponse(node)
+		// debugObject(endpointData.responses)
 	} catch (err) {
 		console.error('Error', err)
 	}
@@ -262,4 +200,35 @@ const parseRequestObjectInput = (
 			signature: param.shape as string,
 			optional: param.optional,
 		}))
+}
+
+const parseRequestResponse = (node: Node<ts.Node>): EndpointData['responses'] => {
+	const implementationNode = node
+		.getFirstChildByKind(SyntaxKind.CallExpression)!
+		.getFirstChildByKind(SyntaxKind.SyntaxList)!
+		.getFirstChildByKind(SyntaxKind.ArrowFunction)!
+	const returnType = implementationNode.getReturnType()
+
+	const actualType = (() => {
+		if (returnType.getText().startsWith('Promise')) {
+			return returnType.getTypeArguments()[0]
+		}
+		return returnType
+	})()
+
+	const responseType = getProperTypeShape(actualType, node)
+
+	if (typeof responseType === 'string') {
+		return [
+			{
+				status: 200,
+				signature: responseType,
+			},
+		]
+	}
+
+	return responseType.map((type) => ({
+		status: 200,
+		signature: type,
+	}))
 }

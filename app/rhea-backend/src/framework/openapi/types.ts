@@ -1,4 +1,4 @@
-import { ShapeOfType } from './parseEndpoint/types'
+import { ShapeOfProperty, ShapeOfType } from './parseEndpoint/types'
 
 type PathParam = {
 	name: string
@@ -8,9 +8,9 @@ type PathParam = {
 }
 
 export type PathDefinition = {
-	summary: string | undefined
+	summary?: string
 	description: string
-	operationId: string | undefined
+	operationId?: string
 	parameters: PathParam[]
 	requestBody: any
 	responses: any
@@ -43,6 +43,6 @@ export type EndpointData = {
 	}[]
 	responses: {
 		status: number
-		signature: string | Record<string, string>
+		signature: string | ShapeOfType | ShapeOfType[]
 	}[]
 }

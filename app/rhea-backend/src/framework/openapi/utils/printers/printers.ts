@@ -35,8 +35,12 @@ export const debugNodeChildren = (node: Node) => {
 	console.info(values)
 }
 
-export const debugObject = (object: Record<any, any>) => {
+export const debugObject = (object: Record<any, any> | any) => {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const util = require('util')
-	console.log(util.inspect(object, { showHidden: false, depth: null, colors: true }))
+	if (typeof object === 'object') {
+		console.log(util.inspect(object, { showHidden: false, depth: null, colors: true }))
+	} else {
+		console.log(object)
+	}
 }

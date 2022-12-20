@@ -4,15 +4,14 @@ import {
 	ts,
 	Node,
 	TypeReferenceNode,
-	TypeLiteralNode,
-	StringLiteral,
 	PropertySignature,
 	PropertyAssignment,
-	ArrowFunction,
 	Type,
+	PropertyAccessExpression,
+	ShorthandPropertyAssignment,
 } from 'ts-morph'
 import { debugNode, debugNodes } from '../utils/printers/printers'
-import { ShapeOfType } from './types'
+import { ShapeOfProperty, ShapeOfType } from './types'
 
 const isNullableUnionNode = (unionTypeNode: Node<ts.UnionTypeNode>) => {
 	const syntaxListNode = unionTypeNode.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
@@ -29,34 +28,11 @@ const isNullableUnionNode = (unionTypeNode: Node<ts.UnionTypeNode>) => {
 	return literalTypeNodes.some((node) => node.getText() === 'null')
 }
 
-const getShapeOfValidatedParam = (arrowFunctionNode: Node<ts.ArrowFunction>) => {
-	/**
-	 * Look at the first parameter in the list (we're expecting a single-param syntax list). Then, look at the last child to determine shape.
-	 * If the second child of the parameter node is a question mark token, assume this parameter is optional.
-	 */
-	const syntaxListNode = arrowFunctionNode.getFirstDescendantByKind(SyntaxKind.SyntaxList)
-	const firstParamNode = syntaxListNode?.getFirstDescendantByKind(SyntaxKind.Parameter)
-
-	const isOptional = firstParamNode?.getChildAtIndex(1)?.isKind(SyntaxKind.QuestionToken)
-
-	const paramTypeNode = firstParamNode!.getLastChild()!
-	switch (paramTypeNode.getKind()) {
-		case SyntaxKind.StringKeyword:
-			return { shape: 'string', optional: isOptional }
-		case SyntaxKind.NumberKeyword:
-			return { shape: 'number', optional: isOptional }
-		case SyntaxKind.UnionType:
-			return {
-				shape: 'string',
-				optional: isOptional || isNullableUnionNode(paramTypeNode.asKind(SyntaxKind.UnionType)!),
-			}
-		default:
-			return { shape: 'unknown', optional: isOptional }
-	}
-}
-
 export const findNodeImplementation = (node: Node): Node => {
 	if (node.getKind() === SyntaxKind.Identifier) {
+		if (!node.asKind(SyntaxKind.Identifier)!.getImplementations()[0]) {
+			throw new Error('No implementation available')
+		}
 		const implementation = node.asKind(SyntaxKind.Identifier)!.getImplementations()[0].getNode().getParent()!
 		const assignmentValueNode = implementation.getLastChild()!
 		return findNodeImplementation(assignmentValueNode)
@@ -66,7 +42,12 @@ export const findNodeImplementation = (node: Node): Node => {
 }
 
 export const findPropertyAssignmentValueNode = (
-	node: PropertyAssignment | TypeReferenceNode | PropertySignature
+	node:
+		| PropertyAssignment
+		| TypeReferenceNode
+		| PropertySignature
+		| PropertyAccessExpression
+		| ShorthandPropertyAssignment
 ): Node => {
 	const identifierChildren = node.getChildrenOfKind(SyntaxKind.Identifier)
 	if (identifierChildren.length === 2) {
@@ -88,28 +69,42 @@ export const getTypeReferenceShape = (node: TypeReferenceNode): ShapeOfType['sha
 export const getRecursiveNodeShape = (nodeOrReference: Node): ShapeOfType['shape'] => {
 	const node = findNodeImplementation(nodeOrReference)
 
+	// Literal type
+	const literalNode = node.asKind(SyntaxKind.LiteralType)
+	if (literalNode) {
+		if (literalNode.getFirstChildByKind(SyntaxKind.TrueKeyword)) {
+			return 'true'
+		}
+		if (literalNode.getFirstChildByKind(SyntaxKind.FalseKeyword)) {
+			return 'false'
+		}
+	}
+
 	// Boolean literal
-	const booleanLiteralChildNode = node.asKind(SyntaxKind.BooleanKeyword)
-	if (booleanLiteralChildNode) {
+	const booleanLiteralNode =
+		node.asKind(SyntaxKind.BooleanKeyword) ||
+		node.asKind(SyntaxKind.TrueKeyword) ||
+		node.asKind(SyntaxKind.FalseKeyword)
+	if (booleanLiteralNode) {
 		return 'boolean'
 	}
 
 	// String literal
-	const stringLiteralChildNode = node.asKind(SyntaxKind.StringKeyword)
-	if (stringLiteralChildNode) {
+	const stringLiteralNode = node.asKind(SyntaxKind.StringKeyword) || node.asKind(SyntaxKind.StringLiteral)
+	if (stringLiteralNode) {
 		return 'string'
 	}
 
 	// Number literal
-	const numberLiteralChildNode = node.asKind(SyntaxKind.NumberKeyword)
-	if (numberLiteralChildNode) {
+	const numberLiteralNode = node.asKind(SyntaxKind.NumberKeyword) || node.asKind(SyntaxKind.NumericLiteral)
+	if (numberLiteralNode) {
 		return 'number'
 	}
 
 	// Type literal
-	const typeLiteralChildNode = node.asKind(SyntaxKind.TypeLiteral)
-	if (typeLiteralChildNode) {
-		const properties = typeLiteralChildNode
+	const typeLiteralNode = node.asKind(SyntaxKind.TypeLiteral)
+	if (typeLiteralNode) {
+		const properties = typeLiteralNode
 			.getFirstChildByKind(SyntaxKind.SyntaxList)!
 			.getChildrenOfKind(SyntaxKind.PropertySignature)
 
@@ -117,6 +112,7 @@ export const getRecursiveNodeShape = (nodeOrReference: Node): ShapeOfType['shape
 			const identifier = propNode.getFirstChildByKind(SyntaxKind.Identifier)!
 			const nodeAfterIdentifier = identifier.getNextSibling()!
 			return {
+				role: 'property' as const,
 				identifier: identifier.getText(),
 				shape: getRecursiveNodeShape(findPropertyAssignmentValueNode(propNode)),
 				optional: nodeAfterIdentifier.isKind(SyntaxKind.QuestionToken),
@@ -125,13 +121,83 @@ export const getRecursiveNodeShape = (nodeOrReference: Node): ShapeOfType['shape
 		return propertyShapes
 	}
 
+	// Type reference
+	const typeReferenceNode = node.asKind(SyntaxKind.TypeReference)
+	if (typeReferenceNode) {
+		debugNode(findNodeImplementation(typeReferenceNode.getFirstChild()!))
+		return getRecursiveNodeShape(typeReferenceNode.getFirstChild()!)
+	}
+
+	// Property access expression
+	const propertyAccessNode = node.asKind(SyntaxKind.PropertyAccessExpression)
+	if (propertyAccessNode) {
+		const lastChild = findNodeImplementation(node.getLastChild()!)
+		return getProperTypeShape(lastChild.asKind(SyntaxKind.CallExpression)!.getReturnType(), lastChild)
+	}
+
+	// Union type
+	const unionTypeNode = node.asKind(SyntaxKind.UnionType)
+	if (unionTypeNode) {
+		const children = node
+			.getFirstChild()!
+			.getChildren()
+			.filter((child) => child.getKind() !== SyntaxKind.BarToken)
+		return children.map((child) => ({
+			role: 'union',
+			shape: getRecursiveNodeShape(child),
+			optional: false,
+		}))
+	}
+
+	// Typeof query
+	const typeQueryNode = node.asKind(SyntaxKind.TypeQuery)
+	if (typeQueryNode) {
+		return getRecursiveNodeShape(typeQueryNode.getLastChild()!)
+	}
+
+	// Qualified name
+	const qualifiedNameNode = node.asKind(SyntaxKind.QualifiedName)
+	if (qualifiedNameNode) {
+		return getRecursiveNodeShape(qualifiedNameNode.getLastChild()!)
+	}
+
+	// // Validator call expression
+	// const callExpressionNode = node.asKind(SyntaxKind.CallExpression)
+	// if (callExpressionNode) {
+	// 	debugNode(callExpressionNode)
+	// 	return getValidatorPropertyShape(
+	// 		findNodeImplementation(node.getFirstChildByKind(SyntaxKind.SyntaxList)!.getFirstChild()!)
+	// 	)
+	// }
+
+	// Call expression
+	const callExpressionNode = node.asKind(SyntaxKind.CallExpression)
+	if (callExpressionNode) {
+		return getProperTypeShape(callExpressionNode.getReturnType(), callExpressionNode)
+	}
+
+	// Await expression
+	const awaitExpressionNode = node.asKind(SyntaxKind.AwaitExpression)
+	if (awaitExpressionNode) {
+		// debugNode(awaitExpressionNode)
+		return getRecursiveNodeShape(awaitExpressionNode.getChildAtIndex(1)!)
+	}
+
+	// 'As' Expression
+	const asExpressionNode = node.asKind(SyntaxKind.AsExpression)
+	if (asExpressionNode) {
+		return getRecursiveNodeShape(asExpressionNode.getChildAtIndex(2)!)
+	}
+
+	// debugNode(node)
+
 	// TODO
-	return 'unknown'
+	return 'unknown_1'
 }
 
 export const getShapeOfValidatorLiteral = (
 	objectLiteralNode: Node<ts.ObjectLiteralExpression>
-): ShapeOfType[] => {
+): ShapeOfProperty[] => {
 	const syntaxListNode = objectLiteralNode.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
 	const assignmentNodes = syntaxListNode.getChildrenOfKind(SyntaxKind.PropertyAssignment)!
 
@@ -143,6 +209,7 @@ export const getShapeOfValidatorLiteral = (
 		const innerLiteralNode = findNodeImplementation(assignmentValueNode)
 
 		return {
+			role: 'property' as const,
 			identifier: identifierName,
 			shape: getValidatorPropertyShape(innerLiteralNode),
 			optional: getValidatorPropertyOptionality(innerLiteralNode),
@@ -204,7 +271,7 @@ export const getValidatorPropertyShape = (innerLiteralNode: Node): ShapeOfType['
 			return getValidatorPropertyShape(callExpressionArgument)
 		}
 
-		return 'unknown'
+		return 'unknown_3'
 	}
 
 	// Attempting to infer type from `rehydrate` function
@@ -218,10 +285,10 @@ export const getValidatorPropertyShape = (innerLiteralNode: Node): ShapeOfType['
 		const returnType = findPropertyAssignmentValueNode(rehydratePropertyAssignment)
 			.asKind(SyntaxKind.ArrowFunction)!
 			.getReturnType()
-		return getProperTypeShape(returnType)
+		return getProperTypeShape(returnType, rehydratePropertyAssignment)
 	}
 
-	return 'unknown'
+	return 'unknown_2'
 }
 
 export const getValidatorPropertyOptionality = (node: Node): boolean => {
@@ -254,12 +321,31 @@ export const getValidatorPropertyOptionality = (node: Node): boolean => {
 	})
 }
 
-export const getProperTypeShape = (type: Type): ShapeOfType['shape'] => {
+export const getProperTypeShape = (typeOrPromise: Type, atLocation: Node): ShapeOfType['shape'] => {
+	const type = (() => {
+		if (typeOrPromise.getText().startsWith('Promise')) {
+			return typeOrPromise.getTypeArguments()[0]
+		}
+		return typeOrPromise
+	})()
+
+	if (type.isAny()) {
+		return 'any'
+	}
+
+	if (type.isNull()) {
+		return 'null'
+	}
+
+	if (type.isUndefined()) {
+		return 'undefined'
+	}
+
 	if (type.isBoolean() || type.isBooleanLiteral()) {
 		return 'boolean'
 	}
 
-	if (type.isString() || type.isStringLiteral()) {
+	if (type.isString() || type.isStringLiteral() || type.isTemplateLiteral()) {
 		return 'string'
 	}
 
@@ -267,18 +353,54 @@ export const getProperTypeShape = (type: Type): ShapeOfType['shape'] => {
 		return 'number'
 	}
 
+	if (type.isArray()) {
+		return [
+			{
+				role: 'array' as const,
+				shape: getProperTypeShape(type.getArrayElementType()!, atLocation),
+				optional: false,
+			},
+		]
+	}
+
 	if (type.isObject()) {
 		return type.getProperties().map((prop) => {
-			const valueDeclarationNode = prop.getValueDeclaration()!.asKind(SyntaxKind.PropertySignature)!
-			const shape = getRecursiveNodeShape(findPropertyAssignmentValueNode(valueDeclarationNode))
+			const valueDeclaration = prop.getValueDeclaration()!
+			const valueDeclarationNode =
+				valueDeclaration.asKind(SyntaxKind.PropertySignature) ||
+				valueDeclaration.asKind(SyntaxKind.PropertyAssignment) ||
+				valueDeclaration.asKind(SyntaxKind.ShorthandPropertyAssignment)
+
+			if (!valueDeclarationNode) {
+				return {
+					role: 'property',
+					identifier: prop.getName(),
+					shape: 'unknown_4',
+					optional: false,
+				}
+			}
+
+			const isOptional = !!valueDeclarationNode.getFirstChildByKind(SyntaxKind.QuestionToken)
+
+			const shape = getProperTypeShape(prop.getTypeAtLocation(atLocation), atLocation)
 			return {
+				role: 'property',
 				identifier: prop.getName(),
 				shape: shape,
-				optional: false,
+				optional: isOptional,
 			}
 		})
 	}
-	return 'unknown'
+
+	if (type.isUnion()) {
+		return type.getUnionTypes().map((type) => ({
+			role: 'union',
+			shape: getProperTypeShape(type, atLocation),
+			optional: false,
+		}))
+	}
+
+	return 'unknown_5'
 }
 
 export const getValuesOfObjectLiteral = (objectLiteralNode: Node<ts.ObjectLiteralExpression>) => {
