@@ -1,5 +1,5 @@
 import { UserService } from '../services/UserService'
-import { useRequestBody } from '../framework'
+import { useRequestJsonBody } from '../framework'
 import { BadRequestError, UnauthorizedError, ValidationError } from '../framework/errors/HttpError'
 import { TokenService } from '../services/TokenService'
 import { Router } from '../framework/Router'

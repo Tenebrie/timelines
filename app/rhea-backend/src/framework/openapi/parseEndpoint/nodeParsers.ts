@@ -12,6 +12,7 @@ import {
 	Type,
 } from 'ts-morph'
 import { debugNode, debugNodes } from '../utils/printers/printers'
+import { ShapeOfType } from './types'
 
 const isNullableUnionNode = (unionTypeNode: Node<ts.UnionTypeNode>) => {
 	const syntaxListNode = unionTypeNode.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
@@ -80,12 +81,6 @@ export const findPropertyAssignmentValueNode = (
 	)!
 }
 
-type ShapeOfType = {
-	identifier: string
-	shape: string | ShapeOfType[]
-	optional: boolean
-}
-
 export const getTypeReferenceShape = (node: TypeReferenceNode): ShapeOfType['shape'] => {
 	return getRecursiveNodeShape(node.getFirstChildByKind(SyntaxKind.SyntaxList)!.getFirstChild()!)
 }
@@ -134,7 +129,9 @@ export const getRecursiveNodeShape = (nodeOrReference: Node): ShapeOfType['shape
 	return 'unknown'
 }
 
-export const getShapeOfValidatorLiteral = (objectLiteralNode: Node<ts.ObjectLiteralExpression>) => {
+export const getShapeOfValidatorLiteral = (
+	objectLiteralNode: Node<ts.ObjectLiteralExpression>
+): ShapeOfType[] => {
 	const syntaxListNode = objectLiteralNode.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
 	const assignmentNodes = syntaxListNode.getChildrenOfKind(SyntaxKind.PropertyAssignment)!
 
@@ -148,14 +145,14 @@ export const getShapeOfValidatorLiteral = (objectLiteralNode: Node<ts.ObjectLite
 		return {
 			identifier: identifierName,
 			shape: getValidatorPropertyShape(innerLiteralNode),
-			optional: getValidatorOptionality(innerLiteralNode),
+			optional: getValidatorPropertyOptionality(innerLiteralNode),
 		}
 	})
 
 	return properties || []
 }
 
-const getValidatorPropertyShape = (innerLiteralNode: Node): ShapeOfType['shape'] => {
+export const getValidatorPropertyShape = (innerLiteralNode: Node): ShapeOfType['shape'] => {
 	// Inline definition with `as Validator<...>` clause
 	const inlineValidatorAsExpression = innerLiteralNode
 		.getParent()!
@@ -176,7 +173,7 @@ const getValidatorPropertyShape = (innerLiteralNode: Node): ShapeOfType['shape']
 		const typeNode = innerLiteralNode
 			.getParent()!
 			.getFirstChildByKind(SyntaxKind.SyntaxList)!
-			.getFirstChildByKind(SyntaxKind.TypeLiteral)!
+			.getFirstChild()!
 		return getRecursiveNodeShape(typeNode)
 	}
 
@@ -227,7 +224,7 @@ const getValidatorPropertyShape = (innerLiteralNode: Node): ShapeOfType['shape']
 	return 'unknown'
 }
 
-const getValidatorOptionality = (node: Node): boolean => {
+export const getValidatorPropertyOptionality = (node: Node): boolean => {
 	const callExpressionNode = node.asKind(SyntaxKind.CallExpression)
 	if (callExpressionNode) {
 		const identifierNode = callExpressionNode.getFirstChildByKind(SyntaxKind.Identifier)
@@ -239,7 +236,7 @@ const getValidatorOptionality = (node: Node): boolean => {
 
 		const syntaxListNode = callExpressionNode.getFirstChildByKind(SyntaxKind.SyntaxList)!
 		const literalExpression = findNodeImplementation(syntaxListNode.getFirstChild()!)
-		return getValidatorOptionality(literalExpression)
+		return getValidatorPropertyOptionality(literalExpression)
 	}
 
 	const syntaxListNode = node.getFirstDescendantByKind(SyntaxKind.SyntaxList)!

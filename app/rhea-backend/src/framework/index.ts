@@ -1,1 +1,1 @@
-export * from './useRequestBody'
+export * from './useRequestJsonBody'

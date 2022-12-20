@@ -11,11 +11,12 @@ import {
 	StringWithFiveCharactersOrMore,
 	Validator,
 } from '../framework/validators/Validators'
-import { useRequestBody } from '../framework'
+import { useRequestJsonBody } from '../framework'
 import { Router } from '../framework/Router'
 import * as KoaRouter from '@koa/router'
 import { useApiEndpoint } from '../framework/useApiEndpoint'
 import { useRequestQuery } from '../framework/useRequestQuery'
+import { useRequestTextBody } from '@src/framework/useRequestTextBody'
 
 export const myKoaRouter = new KoaRouter()
 
@@ -39,14 +40,14 @@ const router = new Router()
 // 	return body
 // })
 
-router.get('/user/userId/username', (ctx) => {
+router.post('/user/:userId?/:username?', (ctx) => {
 	const params = useRequestParams(ctx, {
 		username: BooleanValidator,
 		userId: StringValidator,
 	})
 
 	const query = useRequestQuery(ctx, {
-		addDragons: RequiredParam({
+		addDragons: OptionalParam({
 			prevalidate: (v) => v === '0' || v === '1',
 			rehydrate: (v) => v === '1',
 		}),
@@ -59,12 +60,20 @@ router.get('/user/userId/username', (ctx) => {
 		addBloopers: OptionalParam(BooleanValidator),
 	})
 
-	query.addBloopers
+	const otherbody = useRequestTextBody(
+		ctx,
+		RequiredParam({
+			rehydrate: (v) => JSON.parse(v) as { foo: string; bar: string },
+			validate: (v) => !!v.foo && !!v.bar,
+		})
+	)
+	otherbody
 
 	return {
 		addDragons: query.addDragons,
 		addGriffins: query.addGriffins,
 		addBloopers: query.addBloopers,
+		isYes: otherbody,
 	}
 })
 

@@ -1,5 +1,5 @@
 {
-	"name": "state-of-imbalance",
+	"name": "timelines",
 	"version": "0.0.0",
 	"license": "GPL-3.0-or-later",
 	"description": "",
@@ -9,7 +9,6 @@
 		"app/rhea-backend/"
 	],
 	"scripts": {
-		"prepare": "husky install",
 		"postinstall": "subpkg install",
 		"build": "sh scripts/build.sh",
 		"start": "node dist/services/gaia/src/app.js",
@@ -48,7 +47,7 @@
 		"typescript": "^4.0.5"
 	},
 	"lint-staged": {
-		"*.(ts|vue|json)": "yarn eslint --fix"
+		"*.(ts|vue|json)": "eslint --fix"
 	},
 	"engines": {
 		"node": "16.x"

@@ -10,25 +10,25 @@ type ValidatedData<T extends Record<string, Validator<any>>> = {
 	[K in keyof T]: CheckIfOptional<ReturnType<T[K]['rehydrate']>, T[K]['optional']>
 }
 
-export const useRequestQuery = <ValidatorsT extends Record<string, Validator<any>>>(
+export const useRequestJsonBody = <ValidatorsT extends Record<string, Validator<any>>>(
 	ctx: ParameterizedContext,
 	validators: ValidatorsT
 ): ValidatedData<ValidatorsT> => {
-	const query = ctx.query
+	const providedParams = ctx.request.body || {}
+	console.log(ctx.request.body)
+	console.log(ctx.request.rawBody)
 	const expectedParams = Object.keys(validators)
 
 	const missingParams = expectedParams.filter(
-		(paramName) => !query[paramName] && !validators[paramName].optional
+		(paramName) => !providedParams[paramName] && !validators[paramName].optional
 	)
 
 	if (missingParams.length > 0) {
-		throw new ValidationError(
-			`Missing query params: ${missingParams.map((param) => `'${param}'`).join(', ')}`
-		)
+		throw new ValidationError(`Missing body params: ${missingParams.map((param) => `'${param}'`).join(', ')}`)
 	}
 
 	const validationResults = expectedParams.map((paramName) => {
-		const paramValue = query[paramName] as string
+		const paramValue = providedParams[paramName] as string
 
 		// Param is optional and is not provided - skip validation
 		if (paramValue === undefined) {
@@ -54,9 +54,7 @@ export const useRequestQuery = <ValidatorsT extends Record<string, Validator<any
 
 	if (failedValidations.length > 0) {
 		throw new ValidationError(
-			`Failed query param validation: ${failedValidations
-				.map((result) => `'${result.paramName}'`)
-				.join(', ')}`
+			`Failed body param validation: ${failedValidations.map((result) => `'${result.paramName}'`).join(', ')}`
 		)
 	}
 

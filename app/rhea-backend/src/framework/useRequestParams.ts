@@ -4,7 +4,7 @@ import { ValidationError } from './errors/HttpError'
 import { SplitStringBy } from './TypeUtils'
 import { Validator } from './validators/Validators'
 
-type CheckIfOptional<T, B extends string> = B extends `${string}?` ? T | undefined : T
+type CheckIfOptional<T, B> = B extends string ? (B extends `${string}?` ? T | undefined : T) : never
 
 type ValidatedData<
 	ParamsT extends string[],
@@ -25,9 +25,11 @@ type ValidatedData<
 
 type RemoveLeadingColon<S extends string> = S['length'] extends 0 ? never : SplitStringBy<S, ':'>[1]
 type RemoveTrailingQuestion<S extends string> = S['length'] extends 0 ? never : SplitStringBy<S, '?'>[0]
-type CleanUpPathParam<S extends string> = RemoveLeadingColon<RemoveTrailingQuestion<S>> extends string
-	? RemoveLeadingColon<RemoveTrailingQuestion<S>>
-	: ''
+type CleanUpPathParam<S> = S extends string
+	? RemoveLeadingColon<RemoveTrailingQuestion<S>> extends string
+		? RemoveLeadingColon<RemoveTrailingQuestion<S>>
+		: ''
+	: never
 
 export const useRequestParams = <
 	ParamsT extends string[],

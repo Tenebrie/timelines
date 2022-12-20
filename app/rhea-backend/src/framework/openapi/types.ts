@@ -1,3 +1,5 @@
+import { ShapeOfType } from './parseEndpoint/types'
+
 type PathParam = {
 	name: string
 	in: 'query' | 'path'
@@ -22,18 +24,27 @@ export type EndpointData = {
 	description?: string
 	params: {
 		identifier: string
-		signature: string
+		signature: string | ShapeOfType[]
 		optional: boolean
 	}[]
 	query: {
 		identifier: string
-		signature: string
+		signature: string | ShapeOfType[]
 		optional: boolean
 	}[]
-	body: {
+	textBody?: {
+		signature: string | ShapeOfType[]
+		optional: boolean
+	}
+	jsonBody: {
 		identifier: string
-		signature: string | Record<string, string>
-		required: boolean
+		signature: string | ShapeOfType[]
+		optional: boolean
+	}[]
+	formBody: {
+		identifier: string
+		signature: string | ShapeOfType[]
+		optional: boolean
 	}[]
 	responses: {
 		status: number

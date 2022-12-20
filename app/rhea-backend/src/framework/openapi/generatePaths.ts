@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { EndpointData, PathDefinition } from './types'
 import { getSchema, paramsToSchema, singleParamToSchema } from './utils/getSchema/getSchema'
 
@@ -40,20 +41,22 @@ export const generatePaths = (endpoints: EndpointData[]) => {
 				in: 'path',
 				description: '',
 				required: true,
+				// @ts-ignore
 				schema: singleParamToSchema(param),
 			})),
 			requestBody:
-				endpoint.body.length === 0
+				endpoint.jsonBody.length === 0
 					? undefined
 					: {
 							content: {
 								'application/json': {
 									schema: {
 										type: 'object',
+										// @ts-ignore
 										properties: paramsToSchema(endpoint.body),
-										required: endpoint.body
+										required: endpoint.jsonBody
 											.filter((value) => value.signature !== 'undefined')
-											.filter((value) => value.required)
+											.filter((value) => !value.optional)
 											.map((value) => value.identifier),
 									},
 								},
