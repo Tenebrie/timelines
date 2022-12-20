@@ -10,13 +10,12 @@ type ValidatedData<T extends Record<string, Validator<any>>> = {
 	[K in keyof T]: CheckIfOptional<ReturnType<T[K]['rehydrate']>, T[K]['optional']>
 }
 
-export const useRequestJsonBody = <ValidatorsT extends Record<string, Validator<any>>>(
+export const useRequestObjectBody = <ValidatorsT extends Record<string, Validator<any>>>(
 	ctx: ParameterizedContext,
 	validators: ValidatorsT
 ): ValidatedData<ValidatorsT> => {
 	const providedParams = ctx.request.body || {}
 	console.log(ctx.request.body)
-	console.log(ctx.request.rawBody)
 	const expectedParams = Object.keys(validators)
 
 	const missingParams = expectedParams.filter(
@@ -28,7 +27,7 @@ export const useRequestJsonBody = <ValidatorsT extends Record<string, Validator<
 	}
 
 	const validationResults = expectedParams.map((paramName) => {
-		const paramValue = providedParams[paramName] as string
+		const paramValue = providedParams[paramName] as string | number | boolean | object
 
 		// Param is optional and is not provided - skip validation
 		if (paramValue === undefined) {
@@ -36,9 +35,10 @@ export const useRequestJsonBody = <ValidatorsT extends Record<string, Validator<
 		}
 
 		try {
+			const convertedValue = typeof paramValue === 'object' ? JSON.stringify(paramValue) : String(paramValue)
 			const validatorObject = validators[paramName] as Validator<any>
-			const prevalidatorSuccess = !validatorObject.prevalidate || validatorObject.prevalidate(paramValue)
-			const rehydratedValue = validatorObject.rehydrate(paramValue)
+			const prevalidatorSuccess = !validatorObject.prevalidate || validatorObject.prevalidate(convertedValue)
+			const rehydratedValue = validatorObject.rehydrate(convertedValue)
 			const validatorSuccess = !validatorObject.validate || validatorObject.validate(rehydratedValue)
 			return {
 				paramName,
@@ -67,3 +67,6 @@ export const useRequestJsonBody = <ValidatorsT extends Record<string, Validator<
 
 	return returnValue as ValidatedData<ValidatorsT>
 }
+
+export const useRequestJsonBody = useRequestObjectBody
+export const useRequestFormBody = useRequestObjectBody

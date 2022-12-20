@@ -32,16 +32,11 @@ export type EndpointData = {
 		signature: string | ShapeOfType[]
 		optional: boolean
 	}[]
-	textBody?: {
+	rawBody?: {
 		signature: string | ShapeOfType[]
 		optional: boolean
 	}
-	jsonBody: {
-		identifier: string
-		signature: string | ShapeOfType[]
-		optional: boolean
-	}[]
-	formBody: {
+	objectBody: {
 		identifier: string
 		signature: string | ShapeOfType[]
 		optional: boolean

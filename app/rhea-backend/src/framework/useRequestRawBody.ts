@@ -8,7 +8,7 @@ type CheckIfOptional<T, B extends boolean | undefined> = B extends false ? T : T
 
 type ValidatedData<T extends Validator<any>> = CheckIfOptional<ReturnType<T['rehydrate']>, T['optional']>
 
-export const useRequestTextBody = <ValidatorT extends Validator<any>>(
+export const useRequestRawBody = <ValidatorT extends Validator<any>>(
 	ctx: ParameterizedContext,
 	validator: ValidatorT
 ): ValidatedData<ValidatorT> => {
@@ -34,7 +34,7 @@ export const useRequestTextBody = <ValidatorT extends Validator<any>>(
 	})()
 
 	if (!validationResult.validated) {
-		throw new ValidationError('Failed text body validation.')
+		throw new ValidationError('Failed raw body validation.')
 	}
 	return validationResult.rehydratedValue as ValidatedData<ValidatorT>
 }

@@ -6,16 +6,16 @@ type DeepPartial<T> = {
 		: DeepPartial<T[P]>
 }
 
-type ValidatorArg<T> = T extends object ? DeepPartial<T> : T
+export type ValidateArg<T> = T extends object ? DeepPartial<T> : T
 
 export type Validator<T> = {
 	prevalidate?: (v: string) => boolean
 	rehydrate: (v: string) => T
-	validate?: (v: ValidatorArg<T>) => boolean
+	validate?: (v: ValidateArg<T>) => boolean
 	optional: boolean
 }
 
-export const RequestParam = <T>(
+export const PathParam = <T>(
 	validator: Omit<Validator<T>, 'optional'>
 ): Validator<T> & { optional: false } => ({
 	...validator,

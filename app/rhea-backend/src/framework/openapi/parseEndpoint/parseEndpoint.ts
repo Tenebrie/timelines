@@ -10,7 +10,7 @@ import {
 	getValidatorPropertyShape,
 	getValuesOfObjectLiteral,
 } from './nodeParsers'
-import { useRequestJsonBody } from '@src/framework/useRequestJsonBody'
+import { useRequestJsonBody } from '@src/framework/useRequestObjectBody'
 import { getNameOfDeclaration } from 'typescript'
 
 export const parseEndpoint = (node: Node<ts.Node>) => {
@@ -29,9 +29,8 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 		path: endpointPath,
 		params: [],
 		query: [],
-		textBody: undefined,
-		jsonBody: [],
-		formBody: [],
+		rawBody: undefined,
+		objectBody: [],
 		responses: [],
 		name: undefined,
 		summary: undefined,
@@ -53,7 +52,7 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 	// Request params
 	try {
 		endpointData.params = parseRequestParams(node, endpointPath)
-		// debugObject(endpointData.params)
+		debugObject(endpointData.params)
 	} catch (err) {
 		warningData.push((err as Error).message)
 		console.error('Error', err)
@@ -68,19 +67,25 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 		console.error('Error', err)
 	}
 
-	// Request body in text format
+	// Raw request body
 	try {
-		endpointData.textBody = parseRequestTextBody(node)
-		debugObject(endpointData.textBody)
+		const parsedBody = parseRequestRawBody(node)
+		if (parsedBody) {
+			endpointData.rawBody = parsedBody
+			debugObject(endpointData.rawBody)
+		}
 	} catch (err) {
 		warningData.push((err as Error).message)
 		console.error('Error', err)
 	}
 
-	// Request body in JSON format
+	// Object request body
 	try {
-		endpointData.jsonBody = parseRequestObjectInput(node, 'useRequestJsonBody')
-		// debugObject(endpointData.body)
+		endpointData.objectBody = [
+			parseRequestObjectInput(node, 'useRequestJsonBody'),
+			parseRequestObjectInput(node, 'useRequestFormBody'),
+		].flat()
+		debugObject(endpointData.objectBody)
 	} catch (err) {
 		warningData.push((err as Error).message)
 		console.error('Error', err)
@@ -156,7 +161,16 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 	return endpointData
 }
 
-const getHookNode = (endpointNode: Node<ts.Node>, hookName: 'useRequestTextBody') => {
+const getHookNode = (
+	endpointNode: Node<ts.Node>,
+	hookName:
+		| 'useApiEndpoint'
+		| 'useRequestParams'
+		| 'useRequestQuery'
+		| 'useRequestJsonBody'
+		| 'useRequestFormBody'
+		| 'useRequestRawBody'
+) => {
 	const callExpressions = endpointNode.getDescendantsOfKind(SyntaxKind.CallExpression)
 	const matchingCallExpressions = callExpressions.filter((node) => {
 		return node.getFirstChildByKind(SyntaxKind.Identifier)?.getText() === hookName
@@ -165,58 +179,56 @@ const getHookNode = (endpointNode: Node<ts.Node>, hookName: 'useRequestTextBody'
 }
 
 const parseApiDocumentation = (node: Node<ts.Node>) => {
-	const hookNode = node.getFirstDescendant((subnode) => subnode.getText() === 'useApiEndpoint')
-	if (hookNode) {
-		const paramNode = hookNode.getParent()!.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
-		const valueNode = findNodeImplementation(paramNode.getLastChild()!)
-
-		if (!valueNode.isKind(SyntaxKind.ObjectLiteralExpression)) {
-			throw new Error('Non-literal type used in useApiEndpoint')
-		}
-
-		const objectLiteral = valueNode.asKind(SyntaxKind.ObjectLiteralExpression)!
-		return getValuesOfObjectLiteral(objectLiteral).filter((param) => param.value !== null)
+	const hookNode = getHookNode(node, 'useApiEndpoint')
+	if (!hookNode) {
+		return []
 	}
-	return []
+	const paramNode = hookNode.getParent()!.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
+	const valueNode = findNodeImplementation(paramNode.getLastChild()!)
+
+	if (!valueNode.isKind(SyntaxKind.ObjectLiteralExpression)) {
+		throw new Error('Non-literal type used in useApiEndpoint')
+	}
+
+	const objectLiteral = valueNode.asKind(SyntaxKind.ObjectLiteralExpression)!
+	return getValuesOfObjectLiteral(objectLiteral).filter((param) => param.value !== null)
 }
 
 const parseRequestParams = (node: Node<ts.Node>, endpointPath: string): EndpointData['params'] => {
-	const hookNode = node.getFirstDescendant((subnode) => subnode.getText() === 'useRequestParams')
-	if (hookNode) {
-		const paramNode = hookNode.getParent()!.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
-		const valueNode = findNodeImplementation(paramNode.getLastChild()!)
-
-		if (!valueNode.isKind(SyntaxKind.ObjectLiteralExpression)) {
-			throw new Error('Non-literal type used in useRequestParams')
-		}
-
-		const declaredParams = endpointPath
-			.split('/')
-			.filter((segment) => segment.startsWith(':'))
-			.map((segment) => ({
-				name: segment.substring(1).replace(/\?/, ''),
-				optional: segment.includes('?'),
-			}))
-
-		const objectLiteral = valueNode.asKind(SyntaxKind.ObjectLiteralExpression)!
-		return getShapeOfValidatorLiteral(objectLiteral)
-			.filter((param) => param.shape !== null)
-			.map((param) => ({
-				identifier: param.identifier,
-				signature: param.shape as string,
-				optional: declaredParams.some((declared) => declared.name === param.identifier && declared.optional),
-			}))
+	const hookNode = getHookNode(node, 'useRequestParams')
+	if (!hookNode) {
+		return []
 	}
-	return []
+
+	const paramNode = hookNode.getParent()!.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
+	const valueNode = findNodeImplementation(paramNode.getLastChild()!)
+
+	if (!valueNode.isKind(SyntaxKind.ObjectLiteralExpression)) {
+		throw new Error('Non-literal type used in useRequestParams')
+	}
+
+	const declaredParams = endpointPath
+		.split('/')
+		.filter((segment) => segment.startsWith(':'))
+		.map((segment) => ({
+			name: segment.substring(1).replace(/\?/, ''),
+			optional: segment.includes('?'),
+		}))
+
+	const objectLiteral = valueNode.asKind(SyntaxKind.ObjectLiteralExpression)!
+	return getShapeOfValidatorLiteral(objectLiteral)
+		.filter((param) => param.shape !== null)
+		.map((param) => ({
+			identifier: param.identifier,
+			signature: param.shape as string,
+			optional: declaredParams.some((declared) => declared.name === param.identifier && declared.optional),
+		}))
 }
 
-const parseRequestTextBody = (node: Node<ts.Node>): NonNullable<EndpointData['textBody']> => {
-	const hookNode = getHookNode(node, 'useRequestTextBody')
+const parseRequestRawBody = (node: Node<ts.Node>): NonNullable<EndpointData['rawBody']> | null => {
+	const hookNode = getHookNode(node, 'useRequestRawBody')
 	if (!hookNode) {
-		return {
-			signature: 'unknown',
-			optional: false,
-		}
+		return null
 	}
 	const paramNode = hookNode.getParent()!.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
 	const valueNode = findNodeImplementation(paramNode.getLastChild()!)
@@ -230,24 +242,24 @@ const parseRequestTextBody = (node: Node<ts.Node>): NonNullable<EndpointData['te
 const parseRequestObjectInput = (
 	node: Node<ts.Node>,
 	nodeName: 'useRequestQuery' | 'useRequestJsonBody' | 'useRequestFormBody'
-): EndpointData['query'] | EndpointData['jsonBody'] | EndpointData['formBody'] => {
-	const hookNode = node.getFirstDescendant((subnode) => subnode.getText() === nodeName)
-	if (hookNode) {
-		const paramNode = hookNode.getParent()!.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
-		const valueNode = findNodeImplementation(paramNode.getLastChild()!)
-
-		if (!valueNode.isKind(SyntaxKind.ObjectLiteralExpression)) {
-			throw new Error(`Non-literal type used in ${nodeName}`)
-		}
-
-		const objectLiteral = valueNode.asKind(SyntaxKind.ObjectLiteralExpression)!
-		return getShapeOfValidatorLiteral(objectLiteral)
-			.filter((param) => param.shape !== null)
-			.map((param) => ({
-				identifier: param.identifier,
-				signature: param.shape as string,
-				optional: param.optional,
-			}))
+): EndpointData['query'] | EndpointData['objectBody'] => {
+	const hookNode = getHookNode(node, nodeName)
+	if (!hookNode) {
+		return []
 	}
-	return []
+	const paramNode = hookNode.getParent()!.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
+	const valueNode = findNodeImplementation(paramNode.getLastChild()!)
+
+	if (!valueNode.isKind(SyntaxKind.ObjectLiteralExpression)) {
+		throw new Error(`Non-literal type used in ${nodeName}`)
+	}
+
+	const objectLiteral = valueNode.asKind(SyntaxKind.ObjectLiteralExpression)!
+	return getShapeOfValidatorLiteral(objectLiteral)
+		.filter((param) => param.shape !== null)
+		.map((param) => ({
+			identifier: param.identifier,
+			signature: param.shape as string,
+			optional: param.optional,
+		}))
 }

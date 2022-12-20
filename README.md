@@ -1,18 +1,18 @@
 # Framework documentation
 > This section is work-in-progress.
 
-## Hooks
+# Hooks
 > This section is work-in-progress.
 
 ```ts
 const params = useRequestParams(ctx, {...})
 const query = useRequestQuery(ctx, {...})
-const textBody = useRequestTextBody(ctx, {...})
+const rawBody = useRequestRawBody(ctx, {...})
 const jsonBody = useRequestJsonBody(ctx, {...})
 const formBody = useRequestFormBody(ctx, {...})
 ```
 
-## Validators
+# Validators
 > This section is work-in-progress.
 
 Validators are run for every parameter received from the client.
@@ -129,8 +129,7 @@ In many cases, type of the parameter can be inferred from the return value of `r
 useRequestQuery(ctx, {
     fooBar: RequiredParam({
         prevalidate: (v) => v.length > 5,
-        rehydrate: (v) => JSON.parse(v)
-            as { foo: string; bar: string },
+        rehydrate: (v) => JSON.parse(v) as { foo: string; bar: string },
         validate: (v) => !!v.foo && !!v.bar
     }),
 })
@@ -160,4 +159,48 @@ useRequestQuery(ctx, {
         optional: false,
     },
 })
+```
+
+# Path params
+
+Path params have extra binding to the endpoint path. Only the properties mentioned in the path can be used.
+
+```ts
+router.get('/user/:userId', (ctx) => {
+	const params = useRequestParams(ctx, {
+		userId: StringValidator,   // valid
+        username: StringValidator, // 'username' is not a path param
+	})
+
+    params.userId  // type is 'string'
+}
+```
+
+## Optional path params
+
+Following standard Koa way of defining an optional param, a param marked by a question mark is considered optional.
+
+```ts
+router.get('/user/:userId?', (ctx) => {
+	const params = useRequestParams(ctx, {
+		userId: StringValidator,
+	})
+
+    params.userId  // type is 'string | undefined'
+}
+```
+
+## Custom path parameters
+
+As parameter optionaliy is defined in a path, `RequiredParam` and `OptionalParam` will be ignored. To reduce confusion, `PathParam` is available.
+
+```ts
+router.get('/user/:numberId', (ctx) => {
+	useRequestParams(ctx, {
+		numberId: PathParam({
+            rehydrate: (v) => Number(v),
+            validate: (v) => !isNaN(v) && v >= 0 && v <= 100,
+        })
+	})
+}
 ```

@@ -45,7 +45,7 @@ export const generatePaths = (endpoints: EndpointData[]) => {
 				schema: singleParamToSchema(param),
 			})),
 			requestBody:
-				endpoint.jsonBody.length === 0
+				endpoint.objectBody.length === 0
 					? undefined
 					: {
 							content: {
@@ -54,7 +54,7 @@ export const generatePaths = (endpoints: EndpointData[]) => {
 										type: 'object',
 										// @ts-ignore
 										properties: paramsToSchema(endpoint.body),
-										required: endpoint.jsonBody
+										required: endpoint.objectBody
 											.filter((value) => value.signature !== 'undefined')
 											.filter((value) => !value.optional)
 											.map((value) => value.identifier),
