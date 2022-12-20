@@ -66,8 +66,6 @@ router.post('/user/:userId?/:username?', (ctx) => {
 		}),
 	})
 
-	console.log(body)
-
 	return {
 		addDragons: query.addDragons,
 		addGriffins: query.addGriffins,
