@@ -53,6 +53,7 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 	// Request params
 	try {
 		endpointData.params = parseRequestParams(node, endpointPath)
+		debugObject(endpointData.params)
 	} catch (err) {
 		warningData.push((err as Error).message)
 		console.error('Error', err)
@@ -80,6 +81,7 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 	// Object request body
 	try {
 		endpointData.objectBody = [
+			parseRequestObjectInput(node, 'useRequestObjectBody'),
 			parseRequestObjectInput(node, 'useRequestJsonBody'),
 			parseRequestObjectInput(node, 'useRequestFormBody'),
 		].flat()
@@ -105,6 +107,7 @@ const getHookNode = (
 		| 'useApiEndpoint'
 		| 'useRequestParams'
 		| 'useRequestQuery'
+		| 'useRequestObjectBody'
 		| 'useRequestJsonBody'
 		| 'useRequestFormBody'
 		| 'useRequestRawBody'
@@ -179,7 +182,7 @@ const parseRequestRawBody = (node: Node<ts.Node>): NonNullable<EndpointData['raw
 
 const parseRequestObjectInput = (
 	node: Node<ts.Node>,
-	nodeName: 'useRequestQuery' | 'useRequestJsonBody' | 'useRequestFormBody'
+	nodeName: 'useRequestQuery' | 'useRequestObjectBody' | 'useRequestJsonBody' | 'useRequestFormBody'
 ): EndpointData['query'] | EndpointData['objectBody'] => {
 	const hookNode = getHookNode(node, nodeName)
 	if (!hookNode) {
@@ -227,8 +230,26 @@ const parseRequestResponse = (node: Node<ts.Node>): EndpointData['responses'] =>
 		]
 	}
 
-	return responseType.map((type) => ({
-		status: 200,
-		signature: type,
-	}))
+	if (responseType[0].role === 'union') {
+		if (typeof responseType[0].shape === 'string') {
+			return [
+				{
+					status: 200,
+					signature: responseType[0].shape,
+				},
+			]
+		}
+
+		return responseType[0].shape.map((unionEntry) => ({
+			status: 200,
+			signature: unionEntry.shape,
+		}))
+	}
+
+	return [
+		{
+			status: 200,
+			signature: responseType,
+		},
+	]
 }

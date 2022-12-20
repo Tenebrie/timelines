@@ -13,21 +13,6 @@ import {
 import { debugNode, debugNodes } from '../utils/printers/printers'
 import { ShapeOfProperty, ShapeOfType } from './types'
 
-const isNullableUnionNode = (unionTypeNode: Node<ts.UnionTypeNode>) => {
-	const syntaxListNode = unionTypeNode.getFirstDescendantByKind(SyntaxKind.SyntaxList)!
-
-	const undefinedKeywordNodes = syntaxListNode.getChildrenOfKind(SyntaxKind.UndefinedKeyword)
-	if (undefinedKeywordNodes.length > 0) {
-		return true
-	}
-	const nullKeywordNodes = syntaxListNode.getChildrenOfKind(SyntaxKind.NullKeyword)
-	if (nullKeywordNodes.length > 0) {
-		return true
-	}
-	const literalTypeNodes = syntaxListNode.getChildrenOfKind(SyntaxKind.LiteralType)
-	return literalTypeNodes.some((node) => node.getText() === 'null')
-}
-
 export const findNodeImplementation = (node: Node): Node => {
 	if (node.getKind() === SyntaxKind.Identifier) {
 		if (!node.asKind(SyntaxKind.Identifier)!.getImplementations()[0]) {
@@ -68,6 +53,12 @@ export const getTypeReferenceShape = (node: TypeReferenceNode): ShapeOfType['sha
 
 export const getRecursiveNodeShape = (nodeOrReference: Node): ShapeOfType['shape'] => {
 	const node = findNodeImplementation(nodeOrReference)
+
+	// Undefined
+	const undefinedNode = node.asKind(SyntaxKind.UndefinedKeyword)
+	if (undefinedNode) {
+		return 'undefined'
+	}
 
 	// Literal type
 	const literalNode = node.asKind(SyntaxKind.LiteralType)
@@ -110,12 +101,13 @@ export const getRecursiveNodeShape = (nodeOrReference: Node): ShapeOfType['shape
 
 		const propertyShapes = properties.map((propNode) => {
 			const identifier = propNode.getFirstChildByKind(SyntaxKind.Identifier)!
-			const nodeAfterIdentifier = identifier.getNextSibling()!
+			const valueNode = findPropertyAssignmentValueNode(propNode)
+			const questionMarkToken = identifier.getNextSiblingIfKind(SyntaxKind.QuestionToken)
 			return {
 				role: 'property' as const,
 				identifier: identifier.getText(),
-				shape: getRecursiveNodeShape(findPropertyAssignmentValueNode(propNode)),
-				optional: nodeAfterIdentifier.isKind(SyntaxKind.QuestionToken),
+				shape: getRecursiveNodeShape(valueNode),
+				optional: valueNode.getType().isNullable() || !!questionMarkToken,
 			}
 		})
 		return propertyShapes
@@ -124,7 +116,6 @@ export const getRecursiveNodeShape = (nodeOrReference: Node): ShapeOfType['shape
 	// Type reference
 	const typeReferenceNode = node.asKind(SyntaxKind.TypeReference)
 	if (typeReferenceNode) {
-		debugNode(findNodeImplementation(typeReferenceNode.getFirstChild()!))
 		return getRecursiveNodeShape(typeReferenceNode.getFirstChild()!)
 	}
 
@@ -138,15 +129,7 @@ export const getRecursiveNodeShape = (nodeOrReference: Node): ShapeOfType['shape
 	// Union type
 	const unionTypeNode = node.asKind(SyntaxKind.UnionType)
 	if (unionTypeNode) {
-		const children = node
-			.getFirstChild()!
-			.getChildren()
-			.filter((child) => child.getKind() !== SyntaxKind.BarToken)
-		return children.map((child) => ({
-			role: 'union',
-			shape: getRecursiveNodeShape(child),
-			optional: false,
-		}))
+		return getProperTypeShape(unionTypeNode.getType(), node)
 	}
 
 	// Typeof query
@@ -329,6 +312,10 @@ export const getProperTypeShape = (typeOrPromise: Type, atLocation: Node): Shape
 		return typeOrPromise
 	})()
 
+	if (type.getText() === 'void') {
+		return 'void'
+	}
+
 	if (type.isAny()) {
 		return 'any'
 	}
@@ -380,7 +367,9 @@ export const getProperTypeShape = (typeOrPromise: Type, atLocation: Node): Shape
 				}
 			}
 
-			const isOptional = !!valueDeclarationNode.getFirstChildByKind(SyntaxKind.QuestionToken)
+			const isOptional =
+				!!valueDeclarationNode.getFirstChildByKind(SyntaxKind.QuestionToken) ||
+				valueDeclarationNode.getType().isNullable()
 
 			const shape = getProperTypeShape(prop.getTypeAtLocation(atLocation), atLocation)
 			return {
@@ -393,11 +382,27 @@ export const getProperTypeShape = (typeOrPromise: Type, atLocation: Node): Shape
 	}
 
 	if (type.isUnion()) {
-		return type.getUnionTypes().map((type) => ({
-			role: 'union',
+		const unfilteredShapes: ShapeOfType[] = type.getUnionTypes().map((type) => ({
+			role: 'union_entry',
 			shape: getProperTypeShape(type, atLocation),
 			optional: false,
 		}))
+
+		const dedupedShapes = unfilteredShapes.filter(
+			(type, index, arr) => !arr.find((dup, dupIndex) => dup.shape === type.shape && dupIndex > index)
+		)
+		const hasUndefined = dedupedShapes.some((shape) => shape.shape === 'undefined')
+		const shapes = dedupedShapes.filter((shape) => shape.shape !== 'undefined')
+		if (shapes.length === 1) {
+			return shapes[0].shape
+		}
+		return [
+			{
+				role: 'union',
+				shape: shapes,
+				optional: hasUndefined,
+			},
+		]
 	}
 
 	return 'unknown_5'

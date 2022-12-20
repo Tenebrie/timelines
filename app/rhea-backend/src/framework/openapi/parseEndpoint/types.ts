@@ -1,4 +1,4 @@
-export type ShapeOfType = ShapeOfProperty | ShapeOfUnion | ShapeOfArray
+export type ShapeOfType = ShapeOfProperty | ShapeOfUnion | ShapeOfUnionEntry | ShapeOfArray
 
 export type ShapeOfProperty = {
 	role: 'property'
@@ -10,7 +10,13 @@ export type ShapeOfProperty = {
 export type ShapeOfUnion = {
 	role: 'union'
 	shape: string | ShapeOfType[]
-	optional: false
+	optional: boolean
+}
+
+export type ShapeOfUnionEntry = {
+	role: 'union_entry'
+	shape: string | ShapeOfType[]
+	optional: boolean
 }
 
 export type ShapeOfArray = {
