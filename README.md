@@ -21,12 +21,12 @@ Validators are run for every parameter received from the client.
 
 ```ts
 const query = useRequestQuery(ctx, {
-	name: RequiredParam(StringValidator),
-	fooBar: OptionalParam<{ foo: string; bar: string }>({
-		prevalidate: (v) => v.length > 5,
-		rehydrate: (v) => JSON.parse(v),
-		validate: (v) => !!v.foo && !!v.bar
-	}),
+    name: RequiredParam(StringValidator),
+    fooBar: OptionalParam<{ foo: string; bar: string }>({
+        prevalidate: (v) => v.length > 5,
+        rehydrate: (v) => JSON.parse(v),
+        validate: (v) => !!v.foo && !!v.bar
+    }),
 })
 
 query.name   // type is 'string'
@@ -39,9 +39,9 @@ The most common validators are available out-of-the-box.
 
 ```ts
 const query = useRequestQuery(ctx, {
-	myNumber: NumberValidator,
-	myString: StringValidator,
-	myBoolean: BooleanValidator,
+    myNumber: NumberValidator,
+    myString: StringValidator,
+    myBoolean: BooleanValidator,
 })
 
 query.myNumber  // type is 'number'
@@ -52,16 +52,16 @@ query.myBoolean // type is 'boolean'
 ## Required and optional parameters
 ```ts
 const query = useRequestQuery(ctx, {
-	predefinedBool: BooleanValidator,
-	optionalBool: OptionalParam(BooleanValidator),
-	customBool: RequiredParam({
-		prevalidate: (v) => v === '0' || v === '1',
-		rehydrate: (v) => v === '1',
-	}),
-	customOptionalBool: OptionalParam({
-		prevalidate: (v) => v === '0' || v === '1',
-		rehydrate: (v) => v === '1',
-	}),
+    predefinedBool: BooleanValidator,
+    optionalBool: OptionalParam(BooleanValidator),
+    customBool: RequiredParam({
+        prevalidate: (v) => v === '0' || v === '1',
+        rehydrate: (v) => v === '1',
+    }),
+    customOptionalBool: OptionalParam({
+        prevalidate: (v) => v === '0' || v === '1',
+        rehydrate: (v) => v === '1',
+    }),
 })
 
 query.predefinedBool     // type is 'boolean'
@@ -78,18 +78,18 @@ Custom validators are simple objects that can be defined either inline, or elsew
 
 ```ts
 const query = useRequestQuery(ctx, {
-	numberInRange: RequiredParam({
-		rehydrate: (v) => Number(v),
-		validate: (v) => !isNaN(v) && v >= 0 && v <= 100,
-	}),
-	optionalBoolean: OptionalParam({
-		prevalidate: (v) => v === '0' || v === '1',
-		rehydrate: (v) => v === '1',
-	}),
+    numberInRange: RequiredParam({
+        rehydrate: (v) => Number(v),
+        validate: (v) => !isNaN(v) && v >= 0 && v <= 100,
+    }),
+    optionalBoolean: OptionalParam({
+        prevalidate: (v) => v === '0' || v === '1',
+        rehydrate: (v) => v === '1',
+    }),
 })
 
-query.numberInRange // type is 'number'
-query.optionalBoolean // type is 'number | undefined'
+query.numberInRange   // type is 'number'
+query.optionalBoolean // type is 'boolean | undefined'
 ```
 
 ## Anatomy of a validator
@@ -127,12 +127,12 @@ In many cases, type of the parameter can be inferred from the return value of `r
 
 ```ts
 useRequestQuery(ctx, {
-	fooBar: RequiredParam({
-		prevalidate: (v) => v.length > 5,
-		rehydrate: (v) => JSON.parse(v)
-			as { foo: string; bar: string },
-		validate: (v) => !!v.foo && !!v.bar
-	}),
+    fooBar: RequiredParam({
+        prevalidate: (v) => v.length > 5,
+        rehydrate: (v) => JSON.parse(v)
+            as { foo: string; bar: string },
+        validate: (v) => !!v.foo && !!v.bar
+    }),
 })
 ```
 
@@ -140,11 +140,11 @@ Alternatively, the expected type can be mentioned in `RequiredParam`, `OptionalP
 
 ```ts
 useRequestQuery(ctx, {
-	fooBar: RequiredParam<{ foo: string; bar: string }>({
-		prevalidate: (v) => v.length > 5,
-		rehydrate: (v) => JSON.parse(v),
-		validate: (v) => !!v.foo && !!v.bar
-	}),
+    fooBar: RequiredParam<{ foo: string; bar: string }>({
+        prevalidate: (v) => v.length > 5,
+        rehydrate: (v) => JSON.parse(v),
+        validate: (v) => !!v.foo && !!v.bar
+    }),
 })
 ```
 
@@ -154,10 +154,10 @@ While the following is valid code, the type of the parameter can't be inferred a
 
 ```ts
 useRequestQuery(ctx, {
-	myParam: {
-		rehydrate: (v) => Number(v),
-		validate: (v) => v > 0,
-		optional: false,
-	},
+    myParam: {
+        rehydrate: (v) => Number(v),
+        validate: (v) => v > 0,
+        optional: false,
+    },
 })
 ```
