@@ -30,12 +30,12 @@ const router = new Router()
 // })
 
 router.post('/user/:userId?/:username?', (ctx) => {
-	const params = useRequestParams(ctx, {
+	useRequestParams(ctx, {
 		username: BooleanValidator,
 		userId: StringValidator,
 	})
 
-	const query = useRequestQuery(ctx, {
+	useRequestQuery(ctx, {
 		addDragons: OptionalParam(FooBarObjectValidator),
 		addGriffins: OptionalParam({
 			prevalidate: (v) => v === '0' || v === '1',
@@ -45,7 +45,7 @@ router.post('/user/:userId?/:username?', (ctx) => {
 		addBloopers: OptionalParam(BooleanValidator),
 	})
 
-	const body = useRequestRawBody(
+	useRequestRawBody(
 		ctx,
 		OptionalParam<{ foo: string }>({
 			rehydrate: (v) => JSON.parse(v),

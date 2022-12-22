@@ -1,5 +1,4 @@
 import { Router } from '../router/Router'
-import { generatePaths } from './generatePaths'
 import { OpenApiManager } from './manager/OpenApiManager'
 import { generateOpenApiSpec } from './generatorModule/generatorModule'
 import { prepareOpenApiSpec } from './analyzerModule/analyzerModule'
