@@ -1,3 +1,5 @@
+import { EndpointData } from './openapi/types'
+
 type UrlType = `${'http' | 'https'}://${string}.${string}`
 
 export type ApiDocsHeader = {
@@ -19,7 +21,7 @@ export type ApiDocsHeader = {
 export class OpenApiManager {
 	private static instance: OpenApiManager | null = null
 
-	constructor(public apiDocsHeader: ApiDocsHeader) {}
+	constructor(public apiDocsHeader: ApiDocsHeader, public endpoints: EndpointData[]) {}
 
 	public getHeader(): ApiDocsHeader {
 		return this.apiDocsHeader
@@ -29,12 +31,23 @@ export class OpenApiManager {
 		this.apiDocsHeader = docs
 	}
 
+	public getEndpoints() {
+		return this.endpoints
+	}
+
+	public setEndpoints(endpoints: EndpointData[]) {
+		this.endpoints = endpoints
+	}
+
 	public static getInstance() {
 		if (!OpenApiManager.instance) {
-			OpenApiManager.instance = new OpenApiManager({
-				title: 'Default title',
-				version: '1.0.0',
-			})
+			OpenApiManager.instance = new OpenApiManager(
+				{
+					title: 'Default title',
+					version: '1.0.0',
+				},
+				[]
+			)
 		}
 		return OpenApiManager.instance
 	}

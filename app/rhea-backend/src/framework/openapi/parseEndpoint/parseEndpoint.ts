@@ -53,7 +53,6 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 	// Request params
 	try {
 		endpointData.params = parseRequestParams(node, endpointPath)
-		debugObject(endpointData.params)
 	} catch (err) {
 		warningData.push((err as Error).message)
 		console.error('Error', err)
@@ -93,7 +92,6 @@ export const parseEndpoint = (node: Node<ts.Node>) => {
 	// Request response
 	try {
 		endpointData.responses = parseRequestResponse(node)
-		// debugObject(endpointData.responses)
 	} catch (err) {
 		console.error('Error', err)
 	}

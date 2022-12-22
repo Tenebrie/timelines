@@ -1,6 +1,6 @@
 import * as path from 'path'
 import { Project, SourceFile } from 'ts-morph'
-import { analyzeSourceFile } from '../openapi/analyzeSourceFIle'
+import { analyzeSourceFile } from '../openapi/analyzeSourceFile'
 
 describe('OpenApi 3.0 Generator', () => {
 	let dataFile: SourceFile

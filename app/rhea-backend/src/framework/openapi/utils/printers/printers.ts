@@ -39,8 +39,8 @@ export const debugObject = (object: Record<any, any> | any) => {
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const util = require('util')
 	if (typeof object === 'object') {
-		console.log(util.inspect(object, { showHidden: false, depth: null, colors: true }))
+		console.debug(util.inspect(object, { showHidden: false, depth: null, colors: true }))
 	} else {
-		console.log(object)
+		console.debug(object)
 	}
 }
