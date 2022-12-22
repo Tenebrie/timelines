@@ -15,7 +15,7 @@ export const StringWithFiveCharactersOrMore = RequiredParam<string>({
 	rehydrate: (v) => v,
 	validate: (v) => v.length > 5,
 })
-export const FooBarObjectValidator = RequiredParam<{ foo: string; bar: string }>({
+export const FooBarObjectValidator = RequiredParam<{ foo?: string; bar?: string }>({
 	prevalidate: (v) => v.length > 5,
 	rehydrate: (v) => JSON.parse(v),
 	validate: (v) => (v.foo?.length ?? 0) > 2 && (v.bar?.length ?? 0) > 2,

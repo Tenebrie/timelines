@@ -445,6 +445,77 @@ describe('OpenApi Analyzer', () => {
 				])
 				expect(endpoint.responses.length).toEqual(1)
 			})
+
+			it('parses return of query params correctly', () => {
+				const endpoint = getEndpointById('97bb5db8-1871-4c1d-998e-a724c04c5741')
+
+				expect(endpoint.responses[0].status).toEqual(200)
+				expect(endpoint.responses[0].signature).toEqual([
+					{
+						identifier: 'foo',
+						optional: false,
+						role: 'property',
+						shape: 'string',
+					},
+					{
+						identifier: 'bar',
+						optional: true,
+						role: 'property',
+						shape: 'boolean',
+					},
+					{
+						identifier: 'baz',
+						optional: true,
+						role: 'property',
+						shape: 'number',
+					},
+				])
+				expect(endpoint.responses.length).toEqual(1)
+			})
+
+			it('parses return of union type query params correctly', () => {
+				const endpoint = getEndpointById('4188ebf2-eae6-4994-8732-c7f43d4da861')
+
+				expect(endpoint.responses[0].status).toEqual(200)
+				expect(endpoint.responses[0].signature).toEqual([
+					{
+						identifier: 'test',
+						optional: false,
+						role: 'property',
+						shape: 'string',
+					},
+				])
+				expect(endpoint.responses[1].status).toEqual(200)
+				expect(endpoint.responses[1].signature).toEqual([
+					{
+						identifier: 'foo',
+						optional: false,
+						role: 'property',
+						shape: 'string',
+					},
+					{
+						identifier: 'bar',
+						optional: true,
+						role: 'property',
+						shape: 'boolean',
+					},
+					{
+						identifier: 'baz',
+						optional: true,
+						role: 'property',
+						shape: 'number',
+					},
+				])
+				expect(endpoint.responses.length).toEqual(2)
+			})
+
+			it('parses return record type correctly', () => {
+				const endpoint = getEndpointById('32f18a25-2408-46cf-9519-f9a8d855bf84')
+
+				expect(endpoint.responses[0].status).toEqual(200)
+				expect(endpoint.responses[0].signature).toEqual('object')
+				expect(endpoint.responses.length).toEqual(1)
+			})
 		})
 	})
 })

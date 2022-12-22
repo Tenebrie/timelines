@@ -10,7 +10,7 @@ import {
 	PropertyAccessExpression,
 	ShorthandPropertyAssignment,
 } from 'ts-morph'
-import { ShapeOfProperty, ShapeOfType } from './types'
+import { ShapeOfProperty, ShapeOfType, ShapeOfUnionEntry } from './types'
 
 export const findNodeImplementation = (node: Node): Node => {
 	if (node.getKind() === SyntaxKind.Identifier) {
@@ -303,13 +303,17 @@ export const getValidatorPropertyOptionality = (node: Node): boolean => {
 	})
 }
 
+const isPromise = (type: Type) => {
+	const symbol = type.getSymbol()
+	if (!type.isObject() || !symbol) {
+		return false
+	}
+	const args = type.getTypeArguments()
+	return symbol.getName() === 'Promise' && args.length === 1
+}
+
 export const getProperTypeShape = (typeOrPromise: Type, atLocation: Node): ShapeOfType['shape'] => {
-	const type = (() => {
-		if (typeOrPromise.getText().startsWith('Promise')) {
-			return typeOrPromise.getTypeArguments()[0]
-		}
-		return typeOrPromise
-	})()
+	const type = isPromise(typeOrPromise) ? typeOrPromise.getTypeArguments()[0] : typeOrPromise
 
 	if (type.getText() === 'void') {
 		return 'void'
@@ -349,39 +353,47 @@ export const getProperTypeShape = (typeOrPromise: Type, atLocation: Node): Shape
 		]
 	}
 
+	// Record type
+	if (type.isObject() && type.getProperties().length === 0) {
+		return 'object'
+	}
+
 	if (type.isObject()) {
-		return type.getProperties().map((prop) => {
-			const valueDeclaration = prop.getValueDeclaration()!
-			const valueDeclarationNode =
-				valueDeclaration.asKind(SyntaxKind.PropertySignature) ||
-				valueDeclaration.asKind(SyntaxKind.PropertyAssignment) ||
-				valueDeclaration.asKind(SyntaxKind.ShorthandPropertyAssignment)
+		return type
+			.getProperties()
+			.map((prop) => {
+				const valueDeclaration = prop.getValueDeclaration()!
+				const valueDeclarationNode =
+					valueDeclaration.asKind(SyntaxKind.PropertySignature) ||
+					valueDeclaration.asKind(SyntaxKind.PropertyAssignment) ||
+					valueDeclaration.asKind(SyntaxKind.ShorthandPropertyAssignment)
 
-			if (!valueDeclarationNode) {
-				return {
-					role: 'property',
-					identifier: prop.getName(),
-					shape: 'unknown_4',
-					optional: false,
+				if (!valueDeclarationNode) {
+					return {
+						role: 'property' as const,
+						identifier: prop.getName(),
+						shape: 'unknown_4',
+						optional: false,
+					}
 				}
-			}
 
-			const isOptional =
-				!!valueDeclarationNode.getFirstChildByKind(SyntaxKind.QuestionToken) ||
-				valueDeclarationNode.getType().isNullable()
+				const isOptional =
+					!!valueDeclarationNode.getFirstChildByKind(SyntaxKind.QuestionToken) ||
+					valueDeclarationNode.getType().isNullable()
 
-			const shape = getProperTypeShape(prop.getTypeAtLocation(atLocation), atLocation)
-			return {
-				role: 'property',
-				identifier: prop.getName(),
-				shape: shape,
-				optional: isOptional,
-			}
-		})
+				const shape = getProperTypeShape(prop.getTypeAtLocation(atLocation), atLocation)
+				return {
+					role: 'property' as const,
+					identifier: prop.getName(),
+					shape: shape,
+					optional: isOptional,
+				}
+			})
+			.filter((val) => val.shape !== 'undefined')
 	}
 
 	if (type.isUnion()) {
-		const unfilteredShapes: ShapeOfType[] = type.getUnionTypes().map((type) => ({
+		const unfilteredShapes: ShapeOfUnionEntry[] = type.getUnionTypes().map((type) => ({
 			role: 'union_entry',
 			shape: getProperTypeShape(type, atLocation),
 			optional: false,

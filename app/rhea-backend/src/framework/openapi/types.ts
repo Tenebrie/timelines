@@ -4,7 +4,7 @@ type PathParam = {
 	name: string
 	in: 'query' | 'path'
 	description: string
-	required: boolean
+	required: true | false | undefined
 }
 
 export type PathDefinition = {
@@ -43,6 +43,6 @@ export type EndpointData = {
 	}[]
 	responses: {
 		status: number
-		signature: string | ShapeOfType | ShapeOfType[]
+		signature: string | ShapeOfType[]
 	}[]
 }

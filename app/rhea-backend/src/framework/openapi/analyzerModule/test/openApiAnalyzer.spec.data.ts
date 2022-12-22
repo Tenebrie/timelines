@@ -205,3 +205,53 @@ router.get('/test/666b9ed1-62db-447a-80a7-8f35ec50ab02', async () => {
 		foo: 123,
 	}
 })
+
+router.get('/test/97bb5db8-1871-4c1d-998e-a724c04c5741', (ctx) => {
+	const query = useRequestQuery(ctx, {
+		firstParam: RequiredParam({
+			rehydrate: (v) => v,
+		}),
+		secondParam: OptionalParam({
+			rehydrate: (v) => v === '1',
+		}),
+		thirdParam: OptionalParam({
+			rehydrate: (v) => Number(v),
+		}),
+	})
+
+	return {
+		foo: query.firstParam,
+		bar: query.secondParam,
+		baz: query.thirdParam,
+	}
+})
+
+router.get('/test/4188ebf2-eae6-4994-8732-c7f43d4da861', (ctx) => {
+	const query = useRequestQuery(ctx, {
+		firstParam: RequiredParam({
+			rehydrate: (v) => v,
+		}),
+		secondParam: OptionalParam({
+			rehydrate: (v) => v === '1',
+		}),
+		thirdParam: OptionalParam({
+			rehydrate: (v) => Number(v),
+		}),
+	})
+
+	if (Math.random() > 0.5) {
+		return {
+			test: 'value',
+		}
+	}
+
+	return {
+		foo: query.firstParam,
+		bar: query.secondParam,
+		baz: query.thirdParam,
+	}
+})
+
+router.get('/test/32f18a25-2408-46cf-9519-f9a8d855bf84', () => {
+	return {} as Record<string, any>
+})

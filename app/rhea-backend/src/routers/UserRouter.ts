@@ -4,6 +4,7 @@ import {
 	OptionalParam,
 	Router,
 	StringValidator,
+	useRequestJsonBody,
 	useRequestParams,
 	useRequestQuery,
 	useRequestRawBody,
@@ -29,13 +30,13 @@ const router = new Router()
 // 	return body
 // })
 
-router.post('/user/:userId?/:username?', (ctx) => {
+router.post('/user/:userId/:username?', (ctx) => {
 	useRequestParams(ctx, {
 		username: BooleanValidator,
 		userId: StringValidator,
 	})
 
-	useRequestQuery(ctx, {
+	const query = useRequestQuery(ctx, {
 		addDragons: OptionalParam(FooBarObjectValidator),
 		addGriffins: OptionalParam({
 			prevalidate: (v) => v === '0' || v === '1',
@@ -52,25 +53,25 @@ router.post('/user/:userId?/:username?', (ctx) => {
 		})
 	)
 
-	// const body = useRequestJsonBody(ctx, {
-	// 	addDragons: BooleanValidator,
-	// 	addGriffins: OptionalParam<{ foo: string }>({
-	// 		rehydrate: (v) => JSON.parse(v),
-	// 	}),
-	// })
+	useRequestJsonBody(ctx, {
+		addDragons: BooleanValidator,
+		addGriffins: OptionalParam<{ foo: string }>({
+			rehydrate: (v) => JSON.parse(v),
+		}),
+	})
 
-	// if (1 > 2) {
-	// 	return {
-	// 		test: false,
-	// 	}
-	// }
+	if (1 > 2) {
+		return {
+			test: false,
+		}
+	}
 
-	// return {
-	// 	test: true,
-	// 	// addDragons: query.addDragons,
-	// 	// addGriffins: query.addGriffins,
-	// 	// addBloopers: query.addBloopers,
-	// }
+	return {
+		test: true,
+		addDragons: query.addDragons,
+		addGriffins: query.addGriffins,
+		addBloopers: query.addBloopers,
+	}
 })
 
 export const UserRouter = router

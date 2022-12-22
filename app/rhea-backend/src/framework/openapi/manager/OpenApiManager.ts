@@ -18,10 +18,18 @@ export type ApiDocsHeader = {
 	}
 }
 
+export type ApiDocsPreferences = {
+	allowOptionalPathParams: boolean
+}
+
 export class OpenApiManager {
 	private static instance: OpenApiManager | null = null
 
-	constructor(public apiDocsHeader: ApiDocsHeader, public endpoints: EndpointData[]) {}
+	constructor(
+		private apiDocsHeader: ApiDocsHeader,
+		private endpoints: EndpointData[],
+		private preferences: ApiDocsPreferences
+	) {}
 
 	public getHeader(): ApiDocsHeader {
 		return this.apiDocsHeader
@@ -39,6 +47,16 @@ export class OpenApiManager {
 		this.endpoints = endpoints
 	}
 
+	public getPreferences() {
+		return this.preferences
+	}
+
+	public setPreferences(preferences: ApiDocsPreferences) {
+		this.preferences = {
+			...preferences,
+		}
+	}
+
 	public static getInstance() {
 		if (!OpenApiManager.instance) {
 			OpenApiManager.instance = new OpenApiManager(
@@ -46,7 +64,10 @@ export class OpenApiManager {
 					title: 'Default title',
 					version: '1.0.0',
 				},
-				[]
+				[],
+				{
+					allowOptionalPathParams: false,
+				}
 			)
 		}
 		return OpenApiManager.instance

@@ -16,9 +16,7 @@ router.get('/api', () => {
 })
 
 router.get('/api-json', () => {
-	const spec = generateOpenApiSpec()
-
-	return spec
+	return generateOpenApiSpec(OpenApiManager.getInstance())
 })
 
 const paths = ['./src/index.ts', './src/routers/UserRouter.ts', './src/framework/openapi/OpenApiRouter.ts']

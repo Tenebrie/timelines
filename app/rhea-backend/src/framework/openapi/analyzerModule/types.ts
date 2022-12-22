@@ -9,7 +9,7 @@ export type ShapeOfProperty = {
 
 export type ShapeOfUnion = {
 	role: 'union'
-	shape: string | ShapeOfType[]
+	shape: ShapeOfUnionEntry[]
 	optional: boolean
 }
 
