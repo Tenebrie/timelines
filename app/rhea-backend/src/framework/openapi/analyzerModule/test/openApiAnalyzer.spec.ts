@@ -516,6 +516,14 @@ describe('OpenApi Analyzer', () => {
 				expect(endpoint.responses[0].signature).toEqual('object')
 				expect(endpoint.responses.length).toEqual(1)
 			})
+
+			it('parses no-return endpoint correctly correctly', () => {
+				const endpoint = getEndpointById('196f2937-e369-435f-b239-62eaacaa6fbd')
+
+				expect(endpoint.responses[0].status).toEqual(204)
+				expect(endpoint.responses[0].signature).toEqual('void')
+				expect(endpoint.responses.length).toEqual(1)
+			})
 		})
 	})
 })

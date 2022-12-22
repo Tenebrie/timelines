@@ -1,4 +1,5 @@
 import { ShapeOfType } from './analyzerModule/types'
+import { SchemaType } from './generatorModule/getSchema'
 
 type PathParam = {
 	name: string
@@ -13,7 +14,19 @@ export type PathDefinition = {
 	operationId?: string
 	parameters: PathParam[]
 	requestBody: any
-	responses: any
+	responses: Record<
+		string,
+		{
+			description: string
+			content?: {
+				'application/json': {
+					schema: {
+						oneOf: SchemaType[]
+					}
+				}
+			}
+		}
+	>
 }
 
 export type EndpointData = {

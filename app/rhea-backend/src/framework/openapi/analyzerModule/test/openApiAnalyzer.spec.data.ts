@@ -255,3 +255,7 @@ router.get('/test/4188ebf2-eae6-4994-8732-c7f43d4da861', (ctx) => {
 router.get('/test/32f18a25-2408-46cf-9519-f9a8d855bf84', () => {
 	return {} as Record<string, any>
 })
+
+router.get('/test/196f2937-e369-435f-b239-62eaacaa6fbd', () => {
+	/* Empty */
+})

@@ -218,7 +218,7 @@ const parseRequestResponse = (node: Node<ts.Node>): EndpointData['responses'] =>
 	if (typeof responseType === 'string') {
 		return [
 			{
-				status: 200,
+				status: responseType === 'void' ? 204 : 200,
 				signature: responseType,
 			},
 		]

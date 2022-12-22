@@ -68,23 +68,30 @@ export const generatePaths = (endpoints: EndpointData[], preferences: ApiDocsPre
 
 		const requestBody = endpoint.method === 'POST' ? { content: acceptedBodyTypes } : undefined
 
-		const responses = {}
+		const responses: PathDefinition['responses'] = {}
 		endpoint.responses.forEach((response) => {
 			const status = String(response.status)
 
-			const existingSchemas = responses[status]
-				? responses[status]['content']['application/json']['schema']['oneOf']
-				: []
+			const existingSchemas = responses[status]?.['content']?.['application/json']['schema']['oneOf'] ?? []
 
-			responses[status] = {
-				description: '',
-				content: {
+			const responseSchema = getSchema(response.signature)
+			const content = (() => {
+				if ('type' in responseSchema && responseSchema.type === 'void') {
+					return undefined
+				}
+
+				return {
 					'application/json': {
 						schema: {
 							oneOf: [...existingSchemas, getSchema(response.signature)],
 						},
 					},
-				},
+				}
+			})()
+
+			responses[status] = {
+				description: '',
+				content,
 			}
 		})
 

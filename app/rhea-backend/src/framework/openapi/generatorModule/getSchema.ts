@@ -1,6 +1,6 @@
 import { ShapeOfProperty, ShapeOfType, ShapeOfUnion } from '@src/framework/openapi/analyzerModule/types'
 
-type SchemaType =
+export type SchemaType =
 	| { type: string }
 	| { type: string; properties: Record<string, SchemaType>; required: string[] }
 	| { oneOf: SchemaType[] }
