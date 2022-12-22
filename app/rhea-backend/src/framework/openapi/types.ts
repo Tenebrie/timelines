@@ -1,4 +1,4 @@
-import { ShapeOfProperty, ShapeOfType } from './parseEndpoint/types'
+import { ShapeOfType } from './analyzerModule/types'
 
 type PathParam = {
 	name: string

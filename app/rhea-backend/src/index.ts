@@ -2,10 +2,9 @@ import 'module-alias/register'
 import Koa from 'koa'
 import { AuthRouter } from './routers/AuthRouter'
 import * as bodyParser from 'koa-bodyparser'
-import { BaseHttpError } from './framework/errors/HttpError'
 import { SwaggerRouter } from './framework/openapi/OpenApiRouter'
-import { useApiHeader } from './framework/useApiHeader'
 import { UserRouter } from './routers/UserRouter'
+import { HttpErrorHandler, useApiHeader } from './framework'
 
 const app = new Koa()
 
@@ -26,23 +25,7 @@ useApiHeader({
 })
 
 app
-	.use(async (ctx, next) => {
-		try {
-			await next()
-		} catch (err) {
-			if (err instanceof BaseHttpError) {
-				ctx.status = err.status
-				ctx.body = {
-					status: err.status,
-					reason: err.reason,
-					message: err.message,
-				}
-			} else {
-				console.error('Unknown error', err)
-				throw err
-			}
-		}
-	})
+	.use(HttpErrorHandler)
 	.use(
 		bodyParser({
 			enableTypes: ['text', 'json', 'form'],

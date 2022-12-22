@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { ParameterizedContext } from 'koa'
-
-import { ValidationError } from './errors/HttpError'
-import { Validator } from './validators/Validators'
+import { ValidationError } from '../errors/UserFacingErrors'
+import { Validator } from '../validators/types'
 
 type CheckIfOptional<T, B extends boolean | undefined> = B extends false ? T : T | undefined
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import * as Koa from 'koa'
 import * as KoaRouter from '@koa/router'
-import { ExtractedRequestParams } from './TypeUtils'
+import { ExtractedRequestParams } from '../utils/TypeUtils'
 
 export class Router<StateT = Koa.DefaultState, ContextT = Koa.DefaultContext> {
 	public koaRouter: KoaRouter = new KoaRouter()

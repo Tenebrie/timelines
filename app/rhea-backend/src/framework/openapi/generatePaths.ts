@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { EndpointData, PathDefinition } from './types'
-import { getSchema, paramsToSchema, singleParamToSchema } from './utils/getSchema/getSchema'
+import { getSchema, paramsToSchema, singleParamToSchema } from './generatorModule/utils/getSchema/getSchema'
 
 export const generatePaths = (endpoints: EndpointData[]) => {
 	const paths: Record<

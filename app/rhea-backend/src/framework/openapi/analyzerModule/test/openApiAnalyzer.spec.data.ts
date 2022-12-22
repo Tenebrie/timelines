@@ -1,17 +1,15 @@
-import { Router } from '@src/framework/Router'
-import { useApiEndpoint } from '@src/framework/useApiEndpoint'
-import { useRequestParams } from '@src/framework/useRequestParams'
-import { useRequestQuery } from '@src/framework/useRequestQuery'
-import { useRequestRawBody } from '@src/framework/useRequestRawBody'
+import { useApiEndpoint } from '../../../hooks/useApiEndpoint'
 import {
-	BooleanValidator,
-	NumberValidator,
-	OptionalParam,
-	PathParam,
-	RequiredParam,
-	StringValidator,
-} from '@src/framework/validators/Validators'
-import { useRequestFormBody, useRequestJsonBody, useRequestObjectBody } from '../useRequestObjectBody'
+	useRequestObjectBody,
+	useRequestJsonBody,
+	useRequestFormBody,
+} from '../../../hooks/useRequestObjectBody'
+import { useRequestParams } from '../../../hooks/useRequestParams'
+import { useRequestQuery } from '../../../hooks/useRequestQuery'
+import { useRequestRawBody } from '../../../hooks/useRequestRawBody'
+import { Router } from '../../../router/Router'
+import { StringValidator, BooleanValidator, NumberValidator } from '../../../validators/BuiltInValidators'
+import { PathParam, RequiredParam, OptionalParam } from '../../../validators/ParamWrappers'
 
 const router = new Router()
 

@@ -1,4 +1,4 @@
-import { EndpointData } from './openapi/types'
+import { EndpointData } from '../types'
 
 type UrlType = `${'http' | 'https'}://${string}.${string}`
 

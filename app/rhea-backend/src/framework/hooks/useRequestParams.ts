@@ -1,8 +1,7 @@
 import { ParameterizedContext } from 'koa'
-
-import { ValidationError } from './errors/HttpError'
-import { SplitStringBy } from './TypeUtils'
-import { Validator } from './validators/Validators'
+import { ValidationError } from '../errors/UserFacingErrors'
+import { SplitStringBy } from '../utils/TypeUtils'
+import { Validator } from '../validators/types'
 
 type CheckIfOptional<T, B> = B extends string ? (B extends `${string}?` ? T | undefined : T) : never
 

@@ -1,10 +1,14 @@
 import { UserService } from '../services/UserService'
-import { useRequestJsonBody } from '../framework'
-import { BadRequestError, UnauthorizedError } from '../framework/errors/HttpError'
 import { TokenService } from '../services/TokenService'
-import { Router } from '../framework/Router'
-import { useApiEndpoint } from '../framework/useApiEndpoint'
-import { EmailString, NonEmptyString } from '../framework/validators/Validators'
+import {
+	BadRequestError,
+	EmailString,
+	NonEmptyString,
+	Router,
+	UnauthorizedError,
+	useApiEndpoint,
+	useRequestJsonBody,
+} from '@src/framework'
 
 const router = new Router()
 

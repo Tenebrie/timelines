@@ -1,8 +1,8 @@
 import * as path from 'path'
 import { Project, SourceFile } from 'ts-morph'
-import { analyzeSourceFile } from '../openapi/analyzeSourceFile'
+import { analyzeSourceFile } from '../analyzerModule'
 
-describe('OpenApi 3.0 Generator', () => {
+describe('OpenApi Analyzer', () => {
 	let dataFile: SourceFile
 
 	beforeAll(() => {
@@ -10,7 +10,7 @@ describe('OpenApi 3.0 Generator', () => {
 			tsConfigFilePath: path.resolve('./tsconfig.json'),
 		})
 
-		const sourceFile = project.getSourceFile('openApi.spec.data.ts')
+		const sourceFile = project.getSourceFile('openApiAnalyzer.spec.data.ts')
 		if (!sourceFile) {
 			throw new Error('Where file?')
 		}

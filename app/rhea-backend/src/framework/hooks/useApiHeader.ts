@@ -1,4 +1,4 @@
-import { ApiDocsHeader, OpenApiManager } from './OpenApiManager'
+import { ApiDocsHeader, OpenApiManager } from '../openapi/manager/OpenApiManager'
 
 export const useApiHeader = (docs: ApiDocsHeader) => {
 	const openApiManager = OpenApiManager.getInstance()

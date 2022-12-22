@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { errorNameToReason, errorNameToStatusCode } from '../../errors/HttpError'
 import { SyntaxKind, ts, Node } from 'ts-morph'
 import { EndpointData } from '../types'
-import { debugNode, debugNodes, debugObject } from '../utils/printers/printers'
 import {
 	findNodeImplementation,
 	getProperTypeShape,
@@ -11,8 +9,6 @@ import {
 	getValidatorPropertyShape,
 	getValuesOfObjectLiteral,
 } from './nodeParsers'
-import { useRequestJsonBody } from '@src/framework/useRequestObjectBody'
-import { getNameOfDeclaration } from 'typescript'
 
 export const parseEndpoint = (node: Node<ts.Node>) => {
 	const endpointMethod = node

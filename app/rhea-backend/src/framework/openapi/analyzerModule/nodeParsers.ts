@@ -10,7 +10,6 @@ import {
 	PropertyAccessExpression,
 	ShorthandPropertyAssignment,
 } from 'ts-morph'
-import { debugNode, debugNodes } from '../utils/printers/printers'
 import { ShapeOfProperty, ShapeOfType } from './types'
 
 export const findNodeImplementation = (node: Node): Node => {

@@ -1,18 +1,8 @@
-import * as path from 'path'
-import { Project } from 'ts-morph'
-import { Router } from '../Router'
+import { Router } from '../router/Router'
 import { generatePaths } from './generatePaths'
-import { OpenApiManager } from '../OpenApiManager'
-import { analyzeSourceFile } from './analyzeSourceFile'
-
-const project = new Project({
-	tsConfigFilePath: path.resolve('./tsconfig.json'),
-})
-const sourceFilePaths = [
-	path.resolve('./src/index.ts'),
-	path.resolve('./src/routers/UserRouter.ts'),
-	path.resolve('./src/framework/openapi/OpenApiRouter.ts'),
-]
+import { OpenApiManager } from './manager/OpenApiManager'
+import { generateOpenApiSpec } from './generatorModule/generatorModule'
+import { prepareOpenApiSpec } from './analyzerModule/analyzerModule'
 
 const router = new Router()
 
@@ -27,35 +17,12 @@ router.get('/api', () => {
 })
 
 router.get('/api-json', () => {
-	const openApiManager = OpenApiManager.getInstance()
-
-	const header = openApiManager.getHeader()
-	const endpoints = openApiManager.getEndpoints()
-
-	const spec = {
-		openapi: '3.0.0',
-		info: {
-			title: header.title,
-			description: header.description,
-			termsOfService: header.termsOfService,
-			contact: header.contact,
-			license: header.license,
-			version: header.version,
-		},
-		paths: generatePaths(endpoints),
-	}
+	const spec = generateOpenApiSpec()
 
 	return spec
 })
 
-const openApiManager = OpenApiManager.getInstance()
-
-const docsHeader = openApiManager.getHeader()
-
-const sourceFiles = sourceFilePaths.map((filePath) => project.getSourceFileOrThrow(filePath))
-const endpoints = sourceFiles.flatMap((sourceFile) => analyzeSourceFile(sourceFile))
-
-openApiManager.setHeader(docsHeader)
-openApiManager.setEndpoints(endpoints)
+const paths = ['./src/index.ts', './src/routers/UserRouter.ts', './src/framework/openapi/OpenApiRouter.ts']
+prepareOpenApiSpec('./tsconfig.json', paths)
 
 export const SwaggerRouter = router
