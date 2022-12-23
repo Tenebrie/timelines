@@ -1,3 +1,4 @@
+import { Router } from '@src/framework/router/Router'
 import { EndpointData } from '../types'
 
 type UrlType = `${'http' | 'https'}://${string}.${string}`
@@ -25,11 +26,23 @@ export type ApiDocsPreferences = {
 export class OpenApiManager {
 	private static instance: OpenApiManager | null = null
 
+	private isInitialized = false
+	private registeredRouters: Router[] = []
+
 	constructor(
 		private apiDocsHeader: ApiDocsHeader,
 		private endpoints: EndpointData[],
 		private preferences: ApiDocsPreferences
 	) {}
+
+	public isReady(): boolean {
+		return this.isInitialized
+	}
+
+	public initialize(endpoints: EndpointData[]) {
+		this.endpoints = endpoints
+		this.isInitialized = true
+	}
 
 	public getHeader(): ApiDocsHeader {
 		return this.apiDocsHeader
@@ -43,10 +56,6 @@ export class OpenApiManager {
 		return this.endpoints
 	}
 
-	public setEndpoints(endpoints: EndpointData[]) {
-		this.endpoints = endpoints
-	}
-
 	public getPreferences() {
 		return this.preferences
 	}
@@ -55,6 +64,14 @@ export class OpenApiManager {
 		this.preferences = {
 			...preferences,
 		}
+	}
+
+	public getRouters(): readonly Router[] {
+		return this.registeredRouters
+	}
+
+	public registerRouter(router: Router<any, any>) {
+		this.registeredRouters.push(router)
 	}
 
 	public static getInstance() {

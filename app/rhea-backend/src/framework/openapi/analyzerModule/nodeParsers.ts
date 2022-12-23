@@ -312,8 +312,18 @@ const isPromise = (type: Type) => {
 	return symbol.getName() === 'Promise' && args.length === 1
 }
 
-export const getProperTypeShape = (typeOrPromise: Type, atLocation: Node): ShapeOfType['shape'] => {
+export const getProperTypeShape = (
+	typeOrPromise: Type,
+	atLocation: Node,
+	stack: Type[] = []
+): ShapeOfType['shape'] => {
 	const type = isPromise(typeOrPromise) ? typeOrPromise.getTypeArguments()[0] : typeOrPromise
+
+	if (stack.some((previousType) => previousType === type)) {
+		return 'circular'
+	}
+
+	const nextStack = stack.concat(type)
 
 	if (type.getText() === 'void') {
 		return 'void'
@@ -347,15 +357,21 @@ export const getProperTypeShape = (typeOrPromise: Type, atLocation: Node): Shape
 		return [
 			{
 				role: 'array' as const,
-				shape: getProperTypeShape(type.getArrayElementType()!, atLocation),
+				shape: getProperTypeShape(type.getArrayElementType()!, atLocation, nextStack),
 				optional: false,
 			},
 		]
 	}
 
-	// Record type
 	if (type.isObject() && type.getProperties().length === 0) {
-		return 'object'
+		const targetType = type.getAliasTypeArguments()[1]
+		return [
+			{
+				role: 'record' as const,
+				shape: getProperTypeShape(targetType, atLocation, nextStack),
+				optional: false,
+			},
+		]
 	}
 
 	if (type.isObject()) {
@@ -381,7 +397,7 @@ export const getProperTypeShape = (typeOrPromise: Type, atLocation: Node): Shape
 					!!valueDeclarationNode.getFirstChildByKind(SyntaxKind.QuestionToken) ||
 					valueDeclarationNode.getType().isNullable()
 
-				const shape = getProperTypeShape(prop.getTypeAtLocation(atLocation), atLocation)
+				const shape = getProperTypeShape(prop.getTypeAtLocation(atLocation), atLocation, nextStack)
 				return {
 					role: 'property' as const,
 					identifier: prop.getName(),
@@ -395,7 +411,7 @@ export const getProperTypeShape = (typeOrPromise: Type, atLocation: Node): Shape
 	if (type.isUnion()) {
 		const unfilteredShapes: ShapeOfUnionEntry[] = type.getUnionTypes().map((type) => ({
 			role: 'union_entry',
-			shape: getProperTypeShape(type, atLocation),
+			shape: getProperTypeShape(type, atLocation, nextStack),
 			optional: false,
 		}))
 

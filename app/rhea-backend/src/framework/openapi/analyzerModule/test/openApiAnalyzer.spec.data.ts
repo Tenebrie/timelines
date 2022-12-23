@@ -253,9 +253,18 @@ router.get('/test/4188ebf2-eae6-4994-8732-c7f43d4da861', (ctx) => {
 })
 
 router.get('/test/32f18a25-2408-46cf-9519-f9a8d855bf84', () => {
-	return {} as Record<string, any>
+	return {} as Record<string, { foo: string; bar: string }>
 })
 
 router.get('/test/196f2937-e369-435f-b239-62eaacaa6fbd', () => {
 	/* Empty */
+})
+
+router.post('/test/33a0f888-396e-4c4d-b1d9-4cf6600ab88d', () => {
+	type Circular = string | Circular[]
+	return {} as Circular
+})
+
+router.post('/test/e3659429-1a05-4590-a5a6-dc80a30878e6', () => {
+	return ['foo', 'bar']
 })

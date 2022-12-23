@@ -11,17 +11,21 @@ import { OpenApiManager } from '../manager/OpenApiManager'
  * @param sourceFilePaths Array of router source files relative to project root
  */
 export const prepareOpenApiSpec = (tsconfigPath: string, sourceFilePaths: string[]) => {
+	const openApiManager = OpenApiManager.getInstance()
+
+	if (openApiManager.isReady()) {
+		return
+	}
+
 	const project = new Project({
 		tsConfigFilePath: path.resolve(tsconfigPath),
 	})
 	const resolvedSourceFilePaths = sourceFilePaths.map((filepath) => path.resolve(filepath))
 
-	const openApiManager = OpenApiManager.getInstance()
-
 	const sourceFiles = resolvedSourceFilePaths.map((filePath) => project.getSourceFileOrThrow(filePath))
 	const endpoints = sourceFiles.flatMap((sourceFile) => analyzeSourceFile(sourceFile))
 
-	openApiManager.setEndpoints(endpoints)
+	openApiManager.initialize(endpoints)
 }
 
 export const analyzeSourceFile = (sourceFile: SourceFile): EndpointData[] => {

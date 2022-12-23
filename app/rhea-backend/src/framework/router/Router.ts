@@ -2,9 +2,21 @@
 import * as Koa from 'koa'
 import * as KoaRouter from '@koa/router'
 import { ExtractedRequestParams } from '../utils/TypeUtils'
+import { OpenApiManager } from '../openapi/manager/OpenApiManager'
+
+type Props = {
+	skipOpenApiAnalysis: boolean
+}
 
 export class Router<StateT = Koa.DefaultState, ContextT = Koa.DefaultContext> {
 	public koaRouter: KoaRouter = new KoaRouter()
+
+	public constructor(props: Props = { skipOpenApiAnalysis: false }) {
+		if (!props.skipOpenApiAnalysis) {
+			const openApiManager = OpenApiManager.getInstance()
+			openApiManager.registerRouter(this)
+		}
+	}
 
 	public use(...middleware: Array<KoaRouter.Middleware<StateT, ContextT>>) {
 		// @ts-ignore

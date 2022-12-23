@@ -2,9 +2,7 @@ import 'module-alias/register'
 import Koa from 'koa'
 import { AuthRouter } from './routers/AuthRouter'
 import * as bodyParser from 'koa-bodyparser'
-import { SwaggerRouter } from './framework/openapi/OpenApiRouter'
-import { UserRouter } from './routers/UserRouter'
-import { HttpErrorHandler, useApiHeader } from './framework'
+import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from './framework'
 
 const app = new Koa()
 
@@ -33,9 +31,12 @@ app
 	)
 	.use(AuthRouter.routes())
 	.use(AuthRouter.allowedMethods())
-	.use(UserRouter.routes())
-	.use(UserRouter.allowedMethods())
-	.use(SwaggerRouter.routes())
+	.use(
+		initOpenApiEngine({
+			tsconfigPath: './tsconfig.json',
+			sourceFilePaths: ['./src/routers/AuthRouter.ts'],
+		})
+	)
 
 app.listen(3000)
 console.info('[RHEA] Server up')

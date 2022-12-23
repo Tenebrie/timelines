@@ -513,15 +513,60 @@ describe('OpenApi Analyzer', () => {
 				const endpoint = getEndpointById('32f18a25-2408-46cf-9519-f9a8d855bf84')
 
 				expect(endpoint.responses[0].status).toEqual(200)
-				expect(endpoint.responses[0].signature).toEqual('object')
+				expect(endpoint.responses[0].signature).toEqual([
+					{
+						role: 'record',
+						shape: [
+							{
+								identifier: 'foo',
+								optional: false,
+								role: 'property',
+								shape: 'string',
+							},
+							{
+								identifier: 'bar',
+								optional: false,
+								role: 'property',
+								shape: 'string',
+							},
+						],
+						optional: false,
+					},
+				])
 				expect(endpoint.responses.length).toEqual(1)
 			})
 
-			it('parses no-return endpoint correctly correctly', () => {
+			it('parses no-return endpoint correctly', () => {
 				const endpoint = getEndpointById('196f2937-e369-435f-b239-62eaacaa6fbd')
 
 				expect(endpoint.responses[0].status).toEqual(204)
 				expect(endpoint.responses[0].signature).toEqual('void')
+				expect(endpoint.responses.length).toEqual(1)
+			})
+
+			it('parses circular dependency correctly', () => {
+				const endpoint = getEndpointById('33a0f888-396e-4c4d-b1d9-4cf6600ab88d')
+
+				expect(endpoint.responses[0].status).toEqual(200)
+				expect(endpoint.responses[0].signature).toEqual('string')
+				expect(endpoint.responses[1].status).toEqual(200)
+				expect(endpoint.responses[1].signature).toEqual([
+					{ role: 'array', shape: 'circular', optional: false },
+				])
+				expect(endpoint.responses.length).toEqual(2)
+			})
+
+			it('parses array return type correctly', () => {
+				const endpoint = getEndpointById('e3659429-1a05-4590-a5a6-dc80a30878e6')
+
+				expect(endpoint.responses[0].status).toEqual(200)
+				expect(endpoint.responses[0].signature).toEqual([
+					{
+						role: 'array',
+						shape: 'string',
+						optional: false,
+					},
+				])
 				expect(endpoint.responses.length).toEqual(1)
 			})
 		})

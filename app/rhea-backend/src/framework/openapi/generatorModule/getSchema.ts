@@ -1,11 +1,26 @@
-import { ShapeOfProperty, ShapeOfType, ShapeOfUnion } from '@src/framework/openapi/analyzerModule/types'
+import {
+	ShapeOfProperty,
+	ShapeOfRecord,
+	ShapeOfType,
+	ShapeOfUnion,
+} from '@src/framework/openapi/analyzerModule/types'
 
 export type SchemaType =
 	| { type: string }
 	| { type: string; properties: Record<string, SchemaType>; required: string[] }
 	| { oneOf: SchemaType[] }
+	| { type: 'array'; items: SchemaType }
+	| { type: 'object'; additionalProperties: SchemaType }
 
 export const getSchema = (shape: string | ShapeOfType[]): SchemaType => {
+	if (typeof shape === 'string' && shape === 'any') {
+		return generateAny()
+	}
+
+	if (typeof shape === 'string' && shape === 'circular') {
+		return generateAny()
+	}
+
 	if (typeof shape === 'string') {
 		return {
 			type: shape,
@@ -41,7 +56,44 @@ export const getSchema = (shape: string | ShapeOfType[]): SchemaType => {
 		}
 	}
 
+	const isRecord = shape[0].role === 'record'
+	if (isRecord) {
+		const recordShape = shape[0] as ShapeOfRecord
+		return {
+			type: 'object',
+			additionalProperties: getSchema(recordShape.shape),
+		}
+	}
+
+	const isArray = shape[0].role === 'array'
+	if (isArray) {
+		return {
+			type: 'array',
+			items: getSchema(shape[0].shape),
+		}
+	}
+
 	return {
 		type: 'unknown_21',
 	}
 }
+
+const generateAny = () => ({
+	oneOf: [
+		{
+			type: 'string',
+		},
+		{
+			type: 'boolean',
+		},
+		{
+			type: 'number',
+		},
+		{
+			type: 'object',
+		},
+		{
+			type: 'array',
+		},
+	],
+})
