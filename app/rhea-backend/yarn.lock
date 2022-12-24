@@ -5036,6 +5036,19 @@ tarn@^3.0.1:
   resolved "https://registry.yarnpkg.com/tarn/-/tarn-3.0.2.tgz#73b6140fbb881b71559c4f8bfde3d9a4b3d27693"
   integrity sha512-51LAVKUSZSVfI05vjPESNc5vwqqZpbXCsU+/+wxlOrUjk2SnFTt97v9ZgQrD4YmxYW1Px6w2KjaDitCfkvgxMQ==
 
+tenebrie-framework@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/tenebrie-framework/-/tenebrie-framework-0.0.3.tgz#c4492dbbb232f6e3cb29a2de86828e6f8cdfe9b2"
+  integrity sha512-LpnOM5p0BJM7oPxWEnjr+wpBbuMQOQmXNg2qIYNG8cDq2gF9cDYgbZ1i9D91m8hc02eo2CciSPRiPgomRMsTPg==
+  dependencies:
+    "@koa/router" "^12.0.0"
+    http-status-codes "^2.2.0"
+    koa "^2.13.0"
+    koa-bodyparser "^4.3.0"
+    module-alias "^2.2.2"
+    nodemon "^2.0.20"
+    ts-morph "^16.0.0"
+
 terminal-link@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/terminal-link/-/terminal-link-2.1.1.tgz#14a64a27ab3c0df933ea546fba55f2d078edc994"

@@ -4,11 +4,11 @@ import {
 	OptionalParam,
 	Router,
 	StringValidator,
-	useRequestJsonBody,
-	useRequestParams,
-	useRequestQuery,
+	usePathParams,
+	useQueryParams,
+	useRequestBody,
 	useRequestRawBody,
-} from '../framework'
+} from 'tenebrie-framework'
 
 const router = new Router()
 
@@ -31,12 +31,12 @@ const router = new Router()
 // })
 
 router.post('/user/:userId/:username?', (ctx) => {
-	useRequestParams(ctx, {
+	usePathParams(ctx, {
 		username: BooleanValidator,
 		userId: StringValidator,
 	})
 
-	const query = useRequestQuery(ctx, {
+	const query = useQueryParams(ctx, {
 		addDragons: OptionalParam(FooBarObjectValidator),
 		addGriffins: OptionalParam({
 			prevalidate: (v) => v === '0' || v === '1',
@@ -53,7 +53,7 @@ router.post('/user/:userId/:username?', (ctx) => {
 		})
 	)
 
-	useRequestJsonBody(ctx, {
+	useRequestBody(ctx, {
 		addDragons: BooleanValidator,
 		addGriffins: OptionalParam<{ foo: string }>({
 			rehydrate: (v) => JSON.parse(v),
