@@ -1,5 +1,3 @@
-import { UserService } from '../services/UserService'
-import { TokenService } from '../services/TokenService'
 import {
 	BadRequestError,
 	EmailString,
@@ -9,6 +7,9 @@ import {
 	useApiEndpoint,
 	useRequestBody,
 } from 'tenebrie-framework'
+
+import { TokenService } from '../services/TokenService'
+import { UserService } from '../services/UserService'
 
 const router = new Router()
 

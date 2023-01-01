@@ -1,8 +1,11 @@
 import 'module-alias/register'
+
 import Koa from 'koa'
-import { AuthRouter } from './routers/AuthRouter'
 import * as bodyParser from 'koa-bodyparser'
 import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'tenebrie-framework'
+
+import { AuthRouter } from './routers/AuthRouter'
+import { UserRouter } from './routers/UserRouter'
 
 const app = new Koa()
 
@@ -31,6 +34,8 @@ app
 	)
 	.use(AuthRouter.routes())
 	.use(AuthRouter.allowedMethods())
+	.use(UserRouter.routes())
+	.use(UserRouter.allowedMethods())
 	.use(
 		initOpenApiEngine({
 			tsconfigPath: './tsconfig.json',
