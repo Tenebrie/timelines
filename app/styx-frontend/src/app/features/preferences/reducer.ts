@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
 	time: {},
 	timeline: {
-		pixelsPerLine: 10 as number,
+		lineSpacing: 10 as number,
 	},
 }
 
@@ -13,7 +13,7 @@ export const preferencesSlice = createSlice({
 	initialState,
 	reducers: {
 		setPixelsPerLine: (state, { payload }: PayloadAction<number>) => {
-			state.timeline.pixelsPerLine = payload
+			state.timeline.lineSpacing = payload
 		},
 	},
 })

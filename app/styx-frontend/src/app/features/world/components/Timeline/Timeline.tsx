@@ -30,7 +30,7 @@ export const Timeline = () => {
 		}
 	}
 
-	const { scroll, timePerPixel, scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
+	const { scroll, timelineScale, scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
 		containerRef,
 		defaultScroll: 150,
 		maximumScroll: 500,
@@ -38,7 +38,7 @@ export const Timeline = () => {
 		onClick: (time) => onClick(time),
 		onDoubleClick: (time) => dispatch(openEventWizard({ timestamp: time })),
 	})
-	const eventGroups = useEventGroups(timePerPixel)
+	const eventGroups = useEventGroups(timelineScale)
 
 	return (
 		<TimelineWrapper>
@@ -47,11 +47,17 @@ export const Timeline = () => {
 				<TimelineAnchor
 					visible={!isSwitchingScale}
 					scroll={scroll}
-					timePerPixel={timePerPixel}
+					timelineScale={timelineScale}
 					scaleLevel={scaleLevel}
 				/>
 				{selectedTime !== null && (
-					<TimeMarker timestamp={selectedTime} timePerPixel={timePerPixel} scroll={scroll} mode="mouse" />
+					<TimeMarker
+						timestamp={selectedTime}
+						timelineScale={timelineScale}
+						scroll={scroll}
+						mode="mouse"
+						scaleLevel={scaleLevel}
+					/>
 				)}
 				{eventGroups.map((group) => (
 					<TimelineEventGroup
@@ -59,7 +65,7 @@ export const Timeline = () => {
 						visible={!isSwitchingScale}
 						scroll={scroll}
 						eventGroup={group}
-						timePerPixel={timePerPixel}
+						timelineScale={timelineScale}
 					/>
 				))}
 			</TimelineContainer>

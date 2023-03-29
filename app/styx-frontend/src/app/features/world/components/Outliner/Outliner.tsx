@@ -39,7 +39,7 @@ export const Outliner = () => {
 
 	return (
 		<OutlinerContainer>
-			<div>{timeToLabel(selectedTime, true)}</div>
+			<div>{timeToLabel(selectedTime)}</div>
 			<div>
 				<Typography variant="h5">World state:</Typography>
 				<StatementsContainer>

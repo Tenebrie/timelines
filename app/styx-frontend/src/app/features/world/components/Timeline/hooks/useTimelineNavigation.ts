@@ -4,7 +4,9 @@ import { useSelector } from 'react-redux'
 import { Position } from '../../../../../../types/Position'
 import clampToRange from '../../../../../utils/clampToRange'
 import { rangeMap } from '../../../../../utils/rangeMap'
+import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
 import { getWorldState } from '../../../selectors'
+import { ScaleLevel } from '../types'
 
 type Props = {
 	containerRef: React.MutableRefObject<HTMLDivElement | null>
@@ -86,8 +88,8 @@ export const useTimelineNavigation = ({
 	}, [isDragging])
 
 	// Zoom
-	const [timePerPixel, setTimePerPixel] = useState(1)
-	const [scaleLevel, setScaleLevel] = useState(1)
+	const [timelineScale, setTimelineScale] = useState(1)
+	const [scaleLevel, setScaleLevel] = useState<ScaleLevel>('minute')
 	const [isSwitchingScale, setIsSwitchingScale] = useState(false)
 
 	const [readyToSwitchScale, setReadyToSwitchScale] = useState(false)
@@ -97,6 +99,8 @@ export const useTimelineNavigation = ({
 	const [scaleScroll, setScaleScroll] = useState(0)
 
 	const [targetScale, setTargetScale] = useState(0)
+
+	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
 	useEffect(() => {
 		if (!readyToSwitchScale) {
@@ -108,7 +112,7 @@ export const useTimelineNavigation = ({
 
 		let currentScroll = scroll
 		let currentScaleScroll = scaleScroll
-		let currentTimePerPixel = timePerPixel
+		let currentTimePerPixel = scaledTimeToRealTime(timelineScale)
 
 		for (let i = 0; i < Math.abs(scaleSwitchesToDo); i++) {
 			const newScaleScroll = clampToRange(
@@ -131,12 +135,16 @@ export const useTimelineNavigation = ({
 			currentTimePerPixel = newTimePerPixel
 		}
 
-		const newScaleLevel = rangeMap(currentTimePerPixel, [
-			['[0; 4)', 1],
-			['[4; 32)', 0.1],
-			['[32; 256)', 0.01],
-			['[256; 2048]', 0.001],
+		const newScaleLevel = rangeMap<ScaleLevel>(currentTimePerPixel, [
+			['[0; 4)', 'minute'],
+			['[4; 32)', 'hour'],
+			['[32; 256)', 'day'],
+			['[256; 2048]', 'month'],
 		])
+
+		if (currentTimePerPixel > 2) {
+			currentTimePerPixel = Math.max(0.5, (Math.log2(currentTimePerPixel) + 1) % 3)
+		}
 
 		if (newScaleLevel === null) {
 			return
@@ -145,7 +153,7 @@ export const useTimelineNavigation = ({
 		setScroll(Math.min(currentScroll, maximumScroll))
 		setScaleLevel(newScaleLevel)
 		setScaleScroll(currentScaleScroll)
-		setTimePerPixel(currentTimePerPixel)
+		setTimelineScale(currentTimePerPixel)
 
 		setTimeout(() => {
 			setIsSwitchingScale(false)
@@ -157,9 +165,10 @@ export const useTimelineNavigation = ({
 		scaleLimits,
 		scaleScroll,
 		scaleSwitchesToDo,
+		scaledTimeToRealTime,
 		scroll,
 		setScroll,
-		timePerPixel,
+		timelineScale,
 	])
 
 	const onWheel = useCallback(
@@ -196,8 +205,9 @@ export const useTimelineNavigation = ({
 			const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
 			const point = { x: event.clientX - boundingRect.left, y: event.clientY - boundingRect.top }
 
-			const roundToX = 10 / timePerPixel / scaleLevel
-			const selectedTime = Math.round((point.x - scroll) / roundToX) * roundToX * timePerPixel
+			const roundToX = 10 / timelineScale
+			const clickOffset = Math.round((point.x - scroll) / roundToX) * roundToX * timelineScale
+			const selectedTime = scaledTimeToRealTime(clickOffset)
 
 			const currentTime = Date.now()
 			if (
@@ -222,9 +232,8 @@ export const useTimelineNavigation = ({
 			lastClickTime,
 			onClick,
 			onDoubleClick,
-			scaleLevel,
 			scroll,
-			timePerPixel,
+			timelineScale,
 		]
 	)
 
@@ -254,7 +263,7 @@ export const useTimelineNavigation = ({
 
 	return {
 		scroll: scroll + Math.pow(overscroll, 0.85),
-		timePerPixel,
+		timelineScale,
 		scaleLevel,
 		targetScaleIndex: targetScale,
 		isSwitchingScale,

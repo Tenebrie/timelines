@@ -1,20 +1,25 @@
 import { useSelector } from 'react-redux'
 
 import { getTimelinePreferences } from '../../../../../preferences/selectors'
+import { ScaleLevel } from '../../types'
 import { TimelineAnchorContainer } from './styles'
 import { TimelineAnchorLine } from './TimelineAnchorLine'
+
+export const TimelineAnchorPadding = 50 // pixels
 
 type Props = {
 	visible: boolean
 	scroll: number
-	timePerPixel: number
-	scaleLevel: number
+	timelineScale: number
+	scaleLevel: ScaleLevel
 }
 
-export const TimelineAnchor = ({ scroll, timePerPixel, scaleLevel, visible }: Props) => {
-	const { pixelsPerLine } = useSelector(getTimelinePreferences)
+export const TimelineAnchor = ({ scroll, timelineScale, scaleLevel, visible }: Props) => {
+	const { lineSpacing } = useSelector(getTimelinePreferences)
 
-	const lineCount = Math.ceil(((window.screen.width / pixelsPerLine) * scaleLevel * timePerPixel) / 25) * 25
+	const lineCount =
+		Math.ceil((window.screen.width / lineSpacing) * timelineScale) +
+		Math.ceil(TimelineAnchorPadding / lineSpacing) * 2
 
 	const dividers = Array(lineCount).fill(null)
 
@@ -26,8 +31,8 @@ export const TimelineAnchor = ({ scroll, timePerPixel, scaleLevel, visible }: Pr
 					index={index}
 					visible={visible}
 					lineCount={lineCount}
-					pixelsPerLine={pixelsPerLine}
-					timePerPixel={timePerPixel}
+					lineSpacing={lineSpacing}
+					timelineScale={timelineScale}
 					scaleLevel={scaleLevel}
 					timelineScroll={scroll}
 				/>
