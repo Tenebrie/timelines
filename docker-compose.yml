@@ -30,7 +30,7 @@ services:
             - rhea-postgres
         ports:
             - 3000:3000
-        command: yarn start:dev
+        command: yarn start
         volumes:
             - ./app/styx-frontend/public:/app/styx/public:cached
             - ./app/rhea-backend/src:/app/rhea/src:cached

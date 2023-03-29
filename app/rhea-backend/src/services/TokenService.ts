@@ -7,11 +7,17 @@ type TokenPayload = {
 }
 
 export const TokenService = {
+	getSecretKey: () => 'secretkey',
+
 	generateJwtToken: (user: User): string => {
 		const payload: TokenPayload = {
 			id: user.id,
 			email: user.email,
 		}
-		return jwt.sign(payload, 'secretkey')
+		return jwt.sign(payload, TokenService.getSecretKey())
+	},
+
+	decodeJwtToken: (token: string): TokenPayload => {
+		return jwt.verify(token, TokenService.getSecretKey()) as TokenPayload
 	},
 }

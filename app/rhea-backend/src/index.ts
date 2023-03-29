@@ -5,7 +5,7 @@ import * as bodyParser from 'koa-bodyparser'
 import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'tenebrie-framework'
 
 import { AuthRouter } from './routers/AuthRouter'
-import { UserRouter } from './routers/UserRouter'
+import { WorldRouter } from './routers/WorldRouter'
 
 const app = new Koa()
 
@@ -34,12 +34,12 @@ app
 	)
 	.use(AuthRouter.routes())
 	.use(AuthRouter.allowedMethods())
-	.use(UserRouter.routes())
-	.use(UserRouter.allowedMethods())
+	.use(WorldRouter.routes())
+	.use(WorldRouter.allowedMethods())
 	.use(
 		initOpenApiEngine({
 			tsconfigPath: './tsconfig.json',
-			sourceFilePaths: ['./src/routers/AuthRouter.ts'],
+			sourceFilePaths: ['./src/routers/AuthRouter.ts', './src/routers/WorldRouter.ts'],
 		})
 	)
 

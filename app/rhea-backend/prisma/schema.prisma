@@ -11,8 +11,49 @@ datasource db {
 }
 
 model User {
-  id        String  @id @default(uuid()) @unique
-  email     String  @unique
-  username  String
-  password  String
+  id       String  @id @unique @default(uuid())
+  email    String  @unique
+  username String
+  password String
+  worlds   World[]
+}
+
+model World {
+  id     String       @id @unique @default(uuid())
+  name   String
+  events WorldEvent[]
+
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String
+}
+
+enum WorldEventType {
+  SCENE
+  OTHER
+}
+
+model WorldEvent {
+  id String @id @unique @default(uuid())
+
+  type        WorldEventType
+  name        String
+  timestamp   Float
+  description String @default("")
+
+  issuedStatements  WorldStatement[] @relation(name: "StatementsIssuedByEvent")
+  revokedStatements WorldStatement[] @relation(name: "StatementsRevokedByEvent")
+
+  world   World  @relation(fields: [worldId], references: [id])
+  worldId String
+}
+
+model WorldStatement {
+  id    String @id @unique @default(uuid())
+  title String
+  text  String @default("")
+
+  issuedBy         WorldEvent? @relation(name: "StatementsIssuedByEvent", fields: [issuedByEventId], references: [id])
+  revokedBy        WorldEvent? @relation(name: "StatementsRevokedByEvent", fields: [revokedByEventId], references: [id])
+  issuedByEventId  String?
+  revokedByEventId String?
 }

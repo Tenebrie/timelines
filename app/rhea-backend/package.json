@@ -12,11 +12,14 @@
 		"lint": "eslint src/",
 		"lint-fix": "eslint src/ --fix",
 		"test": "jest",
-		"test:watch": "jest --watchAll"
+		"test:watch": "jest --watchAll",
+		"prisma:format": "prisma format",
+		"prisma:generate": "prisma generate",
+		"prisma:migrate:dev": "prisma migrate dev"
 	},
 	"dependencies": {
 		"@koa/router": "^12.0.0",
-		"@prisma/client": "4.5.0",
+		"@prisma/client": "4.12.0",
 		"bcryptjs": "^2.4.3",
 		"chalk": "^4.1.0",
 		"dotenv": "^8.2.0",
@@ -27,7 +30,7 @@
 		"module-alias": "^2.2.2",
 		"nodemon": "^2.0.20",
 		"pg": "^8.8.0",
-		"prisma": "^4.5.0",
+		"prisma": "^4.12.0",
 		"sqlite3": "^5.0.0",
 		"tenebrie-framework": "^0.0.4",
 		"ts-morph": "^16.0.0"

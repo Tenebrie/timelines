@@ -1,7 +1,8 @@
+import { AUTH_COOKIE_NAME } from '@src/auth/UserAuthenticator'
 import {
 	BadRequestError,
-	EmailString,
-	NonEmptyString,
+	EmailValidator,
+	NonEmptyStringValidator,
 	Router,
 	UnauthorizedError,
 	useApiEndpoint,
@@ -21,9 +22,9 @@ router.post('/auth', async (ctx) => {
 	})
 
 	const body = useRequestBody(ctx, {
-		email: EmailString,
-		username: NonEmptyString,
-		password: NonEmptyString,
+		email: EmailValidator,
+		username: NonEmptyStringValidator,
+		password: NonEmptyStringValidator,
 	})
 
 	const existingUser = await UserService.findByEmail(body.email)
@@ -34,9 +35,10 @@ router.post('/auth', async (ctx) => {
 	const user = await UserService.register(body.email, body.username, body.password)
 	const token = TokenService.generateJwtToken(user)
 
-	return {
-		accessToken: token,
-	}
+	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
+		path: '/',
+		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
+	})
 })
 
 router.post('/auth/login', async (ctx) => {
@@ -47,8 +49,8 @@ router.post('/auth/login', async (ctx) => {
 	})
 
 	const body = useRequestBody(ctx, {
-		email: EmailString,
-		password: NonEmptyString,
+		email: EmailValidator,
+		password: NonEmptyStringValidator,
 	})
 
 	const user = await UserService.login(body.email, body.password)
@@ -58,9 +60,10 @@ router.post('/auth/login', async (ctx) => {
 
 	const token = TokenService.generateJwtToken(user)
 
-	return {
-		accessToken: token,
-	}
+	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
+		path: '/',
+		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
+	})
 })
 
 export const AuthRouter = router

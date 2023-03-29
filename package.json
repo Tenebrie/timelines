@@ -17,6 +17,7 @@
 		"docker:recreate": "node scripts/docker_validate && docker-compose up --force-recreate",
 		"docker:clean": "docker container kill $(docker ps -q)",
 		"docker:rebuild": "docker-compose build client && docker-compose build gaia && docker-compose build overmind",
+		"docker:db": "docker-compose up rhea-postgres",
 		"cleanup": "rm -rf dist && (cd client && rm -rf dist) && (cd services/gaia && rm -rf dist && rm -rf coverage)",
 		"test": "(cd client && yarn test) && (cd services/gaia && yarn test)",
 		"test:client": "cd client && yarn test",

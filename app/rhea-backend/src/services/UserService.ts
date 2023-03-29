@@ -1,10 +1,10 @@
-import { PrismaClient, User } from '@prisma/client'
+import { User } from '@prisma/client'
 
-const prisma = new PrismaClient()
+import { dbClient } from './DatabaseClient'
 
 export const UserService = {
 	findByEmail: async (email: string): Promise<User | null> => {
-		return prisma.user.findFirst({
+		return dbClient.user.findFirst({
 			where: {
 				email,
 			},
@@ -12,7 +12,7 @@ export const UserService = {
 	},
 
 	register: async (email: string, username: string, password: string): Promise<User> => {
-		const user = await prisma.user.create({
+		const user = await dbClient.user.create({
 			data: {
 				email,
 				username,
