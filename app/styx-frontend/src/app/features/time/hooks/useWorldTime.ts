@@ -1,8 +1,12 @@
 export const useWorldTime = () => {
+	const pixelsPerHour = 40
+	const hoursInDay = 24
+	const minutesInHour = 60
+
 	const timeToLabel = (time: number, includeTime = true) => {
-		const timeInDay = 1000
-		const timeInHour = 1000 / 25
-		const timeInMinute = 1000 / 25 / 60
+		const timeInDay = pixelsPerHour * hoursInDay
+		const timeInHour = pixelsPerHour
+		const timeInMinute = pixelsPerHour / minutesInHour
 
 		const days = Math.floor(time / timeInDay)
 		const hours = Math.floor((time - days * timeInDay) / timeInHour)
@@ -19,7 +23,12 @@ export const useWorldTime = () => {
 		return `Day ${days}`
 	}
 
+	const getTimelineMultipliers = () => {
+		return {}
+	}
+
 	return {
 		timeToLabel,
+		getTimelineMultipliers,
 	}
 }

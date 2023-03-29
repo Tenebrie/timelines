@@ -22,17 +22,15 @@ export const Login = () => {
 		if ('error' in response) {
 			return
 		}
-		console.log(response.data.accessToken)
 	}
 
 	const onLogin = async () => {
-		const response = await login({
+		await login({
 			body: {
 				email,
 				password,
 			},
 		})
-		console.log(response)
 	}
 
 	return (

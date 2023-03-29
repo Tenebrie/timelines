@@ -33,7 +33,7 @@
 		"web-vitals": "^3.0.3"
 	},
 	"scripts": {
-		"start": "PORT=8080 react-scripts start",
+		"start": "PORT=8080 react-scripts start --max_old_space_size=4096",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",

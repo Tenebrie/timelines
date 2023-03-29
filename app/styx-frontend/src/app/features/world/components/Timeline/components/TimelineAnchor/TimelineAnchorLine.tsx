@@ -46,10 +46,30 @@ type Props = {
 }
 
 const TimelineAnchorLineComponent = (props: Props) => {
-	const { index, lineCount, timePerPixel, pixelsPerLine, scaleLevel, visible, timelineScroll } = props
+	const {
+		index: rawIndex,
+		lineCount,
+		timePerPixel,
+		pixelsPerLine,
+		scaleLevel,
+		visible,
+		timelineScroll,
+	} = props
 
 	const { timeToLabel } = useWorldTime()
 
+	const loopIndex = getLoop({
+		index: rawIndex,
+		lineCount,
+		timePerPixel,
+		pixelsPerLine,
+		scaleLevel,
+		timelineScroll,
+	})
+	const loopOffset = loopIndex * getPixelsPerLoop({ lineCount, scaleLevel, pixelsPerLine })
+	const dividerPosition = Math.round(((rawIndex * pixelsPerLine) / scaleLevel + loopOffset) / timePerPixel)
+
+	const index = rawIndex + loopIndex * lineCount
 	const labelDisplayed =
 		index % 50 === 0 ||
 		(scaleLevel === 0.001 && timePerPixel <= 512 && index % 10 === 0) ||
@@ -57,10 +77,6 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		(scaleLevel === 0.1 && timePerPixel <= 8 && index % 10 === 0) ||
 		(scaleLevel === 1 && timePerPixel <= 0.5 && index % 10 === 0) ||
 		(scaleLevel === 1 && timePerPixel <= 0.25 && index % 5 === 0)
-
-	const loopIndex = getLoop({ index, lineCount, timePerPixel, pixelsPerLine, scaleLevel, timelineScroll })
-	const loopOffset = loopIndex * getPixelsPerLoop({ lineCount, scaleLevel, pixelsPerLine })
-	const dividerPosition = Math.round(((index * pixelsPerLine) / scaleLevel + loopOffset) / timePerPixel)
 
 	const getLineColor = () => {
 		if (index % 10 > 0) {
@@ -74,7 +90,7 @@ const TimelineAnchorLineComponent = (props: Props) => {
 				return '#788'
 			}
 		}
-		const adjustedIndex = (index + loopIndex * lineCount) / scaleLevel
+		const adjustedIndex = index / scaleLevel
 		if (adjustedIndex % 50000 === 0 && scaleLevel <= 0.001) {
 			return '#63ffc8'
 		} else if (adjustedIndex % 5000 === 0 && scaleLevel <= 0.01) {
@@ -101,15 +117,15 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		return 1
 	}
 
-	const lineColor = useMemo(getLineColor, [index, lineCount, scaleLevel, loopIndex])
+	const lineColor = useMemo(getLineColor, [index, scaleLevel])
 	const dividerHeight = useMemo(getDividerHeight, [index])
 
 	const includeTime = timePerPixel * pixelsPerLine * 15 < 1000
 
 	return (
 		<DividerContainer key={index} offset={dividerPosition} className={visible ? 'visible' : ''}>
-			{index % 10 === 0 && (
-				<DividerLabel className={labelDisplayed ? 'visible' : ''}>
+			{labelDisplayed && (
+				<DividerLabel>
 					{timeToLabel(((index + lineCount * loopIndex) * pixelsPerLine) / scaleLevel, includeTime)}
 				</DividerLabel>
 			)}

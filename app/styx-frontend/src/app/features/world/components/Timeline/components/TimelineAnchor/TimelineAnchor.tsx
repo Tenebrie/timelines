@@ -14,7 +14,7 @@ type Props = {
 export const TimelineAnchor = ({ scroll, timePerPixel, scaleLevel, visible }: Props) => {
 	const { pixelsPerLine } = useSelector(getTimelinePreferences)
 
-	const lineCount = Math.ceil(((window.screen.width / pixelsPerLine) * scaleLevel * timePerPixel) / 50) * 50
+	const lineCount = Math.ceil(((window.screen.width / pixelsPerLine) * scaleLevel * timePerPixel) / 25) * 25
 
 	const dividers = Array(lineCount).fill(null)
 
