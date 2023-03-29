@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
-import { useCheckAuthenticationQuery } from '../../../api/rheaApi'
-import { LoadingSpinner } from '../../components/LoadingSpinner'
-import { useAppRouter } from '../world/router'
+import { useCheckAuthenticationQuery } from '../../../../api/rheaApi'
+import { LoadingSpinner } from '../../../components/LoadingSpinner'
+import { useAppRouter } from '../../world/router'
 
 const LimboPageContainer = styled.div`
 	display: flex;
