@@ -28,10 +28,10 @@ export const EventEditor = () => {
 	const dispatch = useDispatch()
 	const { updateWorldEvent, deleteWorldEvent } = worldSlice.actions
 
-	const { navigateToRoot, navigateToDefaultRoute } = useWorldRouter()
+	const { navigateToWorldRoot } = useWorldRouter()
 
 	if (!event) {
-		navigateToDefaultRoute()
+		navigateToWorldRoot()
 		return <></>
 	}
 
@@ -73,12 +73,12 @@ export const EventEditor = () => {
 		})
 
 	const onSave = () => {
-		navigateToRoot()
+		navigateToWorldRoot()
 	}
 
 	const onDelete = () => {
 		dispatch(deleteWorldEvent(event.id))
-		navigateToRoot()
+		navigateToWorldRoot()
 	}
 
 	return (

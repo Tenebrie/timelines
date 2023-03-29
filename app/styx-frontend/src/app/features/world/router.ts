@@ -28,10 +28,39 @@ const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
 	}
 }
 
+export const appRoutes = {
+	home: '/home',
+	login: '/login',
+	register: '/register',
+}
+
+export const useAppRouter = () => {
+	const { navigateTo } = useBaseRouter(appRoutes)
+
+	const navigateToHome = async () => {
+		navigateTo(appRoutes.home)
+	}
+
+	const navigateToLogin = async () => {
+		navigateTo(appRoutes.login)
+	}
+
+	const navigateToRegister = async () => {
+		navigateTo(appRoutes.register)
+	}
+
+	return {
+		navigateToHome,
+		navigateToLogin,
+		navigateToRegister,
+	}
+}
+
 export const worldRoutes = {
-	root: '/',
-	outliner: '/outliner',
-	eventEditor: '/editor',
+	home: '/',
+	root: '/world',
+	outliner: '/world/outliner',
+	eventEditor: '/world/editor',
 } as const
 
 export const useWorldRouter = () => {
@@ -40,12 +69,8 @@ export const useWorldRouter = () => {
 	const dispatch = useDispatch()
 	const { setSelectedOutlinerTime, setEditorEvent, clearEditorEvent } = worldSlice.actions
 
-	const navigateToDefaultRoute = async () => {
-		navigateTo('/')
-	}
-
-	const navigateToRoot = async () => {
-		navigateTo('/')
+	const navigateToWorldRoot = async () => {
+		navigateTo(worldRoutes.root)
 		dispatch(clearEditorEvent())
 		dispatch(setSelectedOutlinerTime(null))
 	}
@@ -63,8 +88,7 @@ export const useWorldRouter = () => {
 	}
 
 	return {
-		navigateToDefaultRoute,
-		navigateToRoot,
+		navigateToWorldRoot,
 		navigateToOutliner,
 		navigateToEventEditor,
 	}

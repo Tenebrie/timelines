@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react'
 
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
-import { OrderedScaleLevels, ScaleLevel } from '../../types'
+import { ScaleLevel } from '../../types'
 import { Divider, DividerContainer, DividerLabel } from './styles'
 import { TimelineAnchorPadding } from './TimelineAnchor'
 
@@ -80,23 +80,23 @@ const TimelineAnchorLineComponent = (props: Props) => {
 
 	const getLineColor = () => {
 		if (index % mediumGroupSize > 0) {
-			if (scaleLevel === 'minute') {
+			if (scaleLevel === 0) {
 				return '#999'
-			} else if (scaleLevel === 'hour') {
+			} else if (scaleLevel === 1) {
 				return '#977'
-			} else if (scaleLevel === 'day') {
+			} else if (scaleLevel === 2) {
 				return '#997'
-			} else if (scaleLevel === 'month') {
+			} else if (scaleLevel === 3) {
 				return '#799'
 			}
 		}
 		const groupColors = ['#63ffc8', '#ffd026', '#ff6363', '#EAADE9', '#E9EAAD']
 		if (index % largeGroupSize === 0) {
-			return groupColors[OrderedScaleLevels.indexOf(scaleLevel) + 1]
+			return groupColors[scaleLevel + 1]
 		} else if (index % mediumGroupSize === 0) {
-			return groupColors[OrderedScaleLevels.indexOf(scaleLevel) - 0]
+			return groupColors[scaleLevel - 0]
 		} else if (index % smallGroupSize === 0) {
-			return groupColors[OrderedScaleLevels.indexOf(scaleLevel) - 1]
+			return groupColors[scaleLevel - 1]
 		}
 
 		return 'gray'

@@ -8,7 +8,7 @@ import {
 	Router,
 	StringValidator,
 	useApiEndpoint,
-	useAuthentication,
+	useAuth,
 	useExposeApiModel,
 	usePathParams,
 	useRequestBody,
@@ -30,7 +30,7 @@ router.get('/worlds', async (ctx) => {
 		description: 'Lists all worlds accessible for the current user.',
 	})
 
-	const user = await useAuthentication(ctx, UserAuthenticator)
+	const user = await useAuth(ctx, UserAuthenticator)
 
 	return await WorldService.listOwnedWorlds({ owner: user })
 })
@@ -41,7 +41,7 @@ router.post('/world', async (ctx) => {
 		description: 'Creates a new world (project).',
 	})
 
-	const user = await useAuthentication(ctx, UserAuthenticator)
+	const user = await useAuth(ctx, UserAuthenticator)
 
 	const params = useRequestBody(ctx, {
 		name: RequiredParam(StringValidator),
@@ -61,7 +61,7 @@ router.get('/world/:worldId', async (ctx) => {
 		description: 'Returns all information about a world.',
 	})
 
-	const user = await useAuthentication(ctx, UserAuthenticator)
+	const user = await useAuth(ctx, UserAuthenticator)
 
 	const { worldId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),
@@ -78,7 +78,7 @@ router.post('/world/:worldId/event', async (ctx) => {
 		description: 'Creates a new world event.',
 	})
 
-	const user = await useAuthentication(ctx, UserAuthenticator)
+	const user = await useAuth(ctx, UserAuthenticator)
 
 	const { worldId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),
@@ -101,7 +101,7 @@ router.post('/world/:worldId/event/:eventId/statement/issue', async (ctx) => {
 		description: 'Creates a new world statement and marks the specified event as the issuer.',
 	})
 
-	const user = await useAuthentication(ctx, UserAuthenticator)
+	const user = await useAuth(ctx, UserAuthenticator)
 
 	const { worldId, eventId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),
@@ -123,7 +123,7 @@ router.post('/world/:worldId/event/:eventId/statement/revoke', async (ctx) => {
 		description: 'Marks the specified event as the revoker for this world statement.',
 	})
 
-	const user = await useAuthentication(ctx, UserAuthenticator)
+	const user = await useAuth(ctx, UserAuthenticator)
 
 	const { worldId, eventId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),

@@ -1,12 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { World } from '../world/World'
-
 const HomePageContainer = styled.div`
 	display: flex;
-	width: 100%;
-	height: 100%;
+	width: 25%;
+	height: 25%;
 	align-items: center;
 	justify-content: center;
 	gap: 64px;
@@ -16,7 +14,7 @@ const HomePageContainer = styled.div`
 export const Home = () => {
 	return (
 		<HomePageContainer>
-			<World />
+			<>You're allowed to the home page!</>
 		</HomePageContainer>
 	)
 }

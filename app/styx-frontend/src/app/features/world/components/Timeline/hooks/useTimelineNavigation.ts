@@ -89,7 +89,7 @@ export const useTimelineNavigation = ({
 
 	// Zoom
 	const [timelineScale, setTimelineScale] = useState(1)
-	const [scaleLevel, setScaleLevel] = useState<ScaleLevel>('minute')
+	const [scaleLevel, setScaleLevel] = useState<ScaleLevel>(0)
 	const [isSwitchingScale, setIsSwitchingScale] = useState(false)
 
 	const [readyToSwitchScale, setReadyToSwitchScale] = useState(false)
@@ -136,10 +136,10 @@ export const useTimelineNavigation = ({
 		}
 
 		const newScaleLevel = rangeMap<ScaleLevel>(currentTimePerPixel, [
-			['[0; 4)', 'minute'],
-			['[4; 32)', 'hour'],
-			['[32; 256)', 'day'],
-			['[256; 2048]', 'month'],
+			['[0; 4)', 0],
+			['[4; 32)', 1],
+			['[32; 256)', 2],
+			['[256; 2048]', 3],
 		])
 
 		if (currentTimePerPixel > 2) {
@@ -232,6 +232,7 @@ export const useTimelineNavigation = ({
 			lastClickTime,
 			onClick,
 			onDoubleClick,
+			scaledTimeToRealTime,
 			scroll,
 			timelineScale,
 		]

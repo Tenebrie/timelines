@@ -49,19 +49,20 @@ export const useWorldTime = () => {
 			(time - years * timeInYear - days * timeInDay - hours * timeInHour) / timeInMinute
 		)
 
-		if (scaleLevel === 'minute' || scaleLevel === 'hour') {
+		if (scaleLevel === 0 || scaleLevel === 1) {
 			return `Year ${years}, Day ${days}, ${String(hours).padStart(2, '0')}:${String(minutes).padStart(
 				2,
 				'0'
 			)}`
-		} else if (scaleLevel === 'day') {
+		} else if (scaleLevel === 2) {
 			return `Year ${years}, Day ${days}`
-		} else if (scaleLevel === 'month') {
-			return `Year ${years}, day ${days}`
+		} else if (scaleLevel === 3) {
+			return `Year ${years}, Day ${days}`
 		}
 	}
 
 	return {
+		daysInYear,
 		hoursInDay,
 		minutesInHour,
 		timeToLabel,

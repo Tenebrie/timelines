@@ -16,10 +16,10 @@ export const Outliner = () => {
 	const dispatch = useDispatch()
 	const { openEventWizard } = worldSlice.actions
 
-	const { navigateToDefaultRoute } = useWorldRouter()
+	const { navigateToWorldRoot } = useWorldRouter()
 
 	if (selectedTime === null) {
-		navigateToDefaultRoute()
+		navigateToWorldRoot()
 		return <></>
 	}
 

@@ -21,7 +21,7 @@ export const TimelineEvent = ({ event, groupIndex, expanded }: Props) => {
 	const dispatch = useDispatch()
 	const { hoverEventMarker, unhoverEventMarker } = worldSlice.actions
 
-	const { navigateToRoot, navigateToEventEditor } = useWorldRouter()
+	const { navigateToWorldRoot, navigateToEventEditor } = useWorldRouter()
 
 	const onClick = (clickEvent: MouseEvent<HTMLDivElement>) => {
 		clickEvent.stopPropagation()
@@ -32,7 +32,7 @@ export const TimelineEvent = ({ event, groupIndex, expanded }: Props) => {
 		}
 
 		if (editorEventId === event.id) {
-			navigateToRoot()
+			navigateToWorldRoot()
 		} else {
 			navigateToEventEditor(event)
 		}

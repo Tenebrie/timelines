@@ -20,11 +20,11 @@ export const Timeline = () => {
 	const dispatch = useDispatch()
 	const { openEventWizard } = worldSlice.actions
 
-	const { navigateToRoot, navigateToOutliner } = useWorldRouter()
+	const { navigateToWorldRoot, navigateToOutliner } = useWorldRouter()
 
 	const onClick = (time: number) => {
 		if (selectedTime === time) {
-			navigateToRoot()
+			navigateToWorldRoot()
 		} else {
 			navigateToOutliner(time)
 		}

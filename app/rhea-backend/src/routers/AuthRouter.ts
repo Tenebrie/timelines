@@ -1,4 +1,4 @@
-import { AUTH_COOKIE_NAME } from '@src/auth/UserAuthenticator'
+import { AUTH_COOKIE_NAME, UserAuthenticator } from '@src/auth/UserAuthenticator'
 import {
 	BadRequestError,
 	EmailValidator,
@@ -6,6 +6,7 @@ import {
 	Router,
 	UnauthorizedError,
 	useApiEndpoint,
+	useOptionalAuth,
 	useRequestBody,
 } from 'tenebrie-framework'
 
@@ -13,6 +14,19 @@ import { TokenService } from '../services/TokenService'
 import { UserService } from '../services/UserService'
 
 const router = new Router()
+
+router.get('/auth', async (ctx) => {
+	useApiEndpoint({
+		name: 'checkAuthentication',
+		description: 'Checks if the user has a valid login credentials',
+	})
+
+	const user = await useOptionalAuth(ctx, UserAuthenticator)
+
+	return {
+		authenticated: !!user,
+	}
+})
 
 router.post('/auth', async (ctx) => {
 	useApiEndpoint({
