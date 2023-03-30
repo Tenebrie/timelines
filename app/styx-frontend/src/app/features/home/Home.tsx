@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import { WorldList } from './components/worldList/WorldList'
+
 const HomePageContainer = styled.div`
 	display: flex;
 	width: 25%;
@@ -14,7 +16,7 @@ const HomePageContainer = styled.div`
 export const Home = () => {
 	return (
 		<HomePageContainer>
-			<>You're allowed to the home page!</>
+			<WorldList />
 		</HomePageContainer>
 	)
 }

@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
 	time: {},
 	timeline: {
-		lineSpacing: 10 as number,
+		lineSpacing: 20 as number,
 	},
 }
 

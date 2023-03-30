@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
@@ -44,6 +44,11 @@ type Props = {
 	visible: boolean
 	// Horizontal scroll of the entire timeline in pixels (offset)
 	timelineScroll: number
+	// An offset added to divider position to counteract number overflow on far scrolling
+	positionNormalizer: number
+	timeToShortLabel: ReturnType<typeof useWorldTime>['timeToShortLabel']
+	scaledTimeToRealTime: ReturnType<typeof useTimelineWorldTime>['scaledTimeToRealTime']
+	getTimelineMultipliers: ReturnType<typeof useTimelineWorldTime>['getTimelineMultipliers']
 }
 
 const TimelineAnchorLineComponent = (props: Props) => {
@@ -55,10 +60,11 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		scaleLevel,
 		visible,
 		timelineScroll,
+		positionNormalizer,
+		timeToShortLabel,
+		scaledTimeToRealTime,
+		getTimelineMultipliers,
 	} = props
-
-	const { timeToShortLabel } = useWorldTime()
-	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel })
 
 	const loopIndex = getLoop({
 		index: rawIndex,
@@ -68,7 +74,8 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		timelineScroll,
 	})
 	const loopOffset = loopIndex * getPixelsPerLoop({ lineCount, lineSpacing })
-	const dividerPosition = Math.round(((rawIndex * lineSpacing) / 1 + loopOffset) / timelineScale)
+	const dividerPosition =
+		Math.round(((rawIndex * lineSpacing) / 1 + loopOffset) / timelineScale) + positionNormalizer
 
 	const { largeGroupSize, mediumGroupSize, smallGroupSize } = getTimelineMultipliers()
 
@@ -78,7 +85,7 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		(timelineScale <= 0.5 && index % mediumGroupSize === 0) ||
 		(timelineScale <= 0.25 && index % smallGroupSize === 0)
 
-	const getLineColor = () => {
+	const getLineColor = useCallback(() => {
 		if (index % mediumGroupSize > 0) {
 			if (scaleLevel === 0) {
 				return '#999'
@@ -100,9 +107,9 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		}
 
 		return 'gray'
-	}
+	}, [index, largeGroupSize, mediumGroupSize, scaleLevel, smallGroupSize])
 
-	const getDividerHeight = () => {
+	const getDividerHeight = useCallback(() => {
 		if (index % largeGroupSize === 0) {
 			return 2.5
 		} else if (index % mediumGroupSize === 0) {
@@ -111,19 +118,13 @@ const TimelineAnchorLineComponent = (props: Props) => {
 			return 1.5
 		}
 		return 1
-	}
+	}, [index, largeGroupSize, mediumGroupSize, smallGroupSize])
 
-	const lineColor = useMemo(getLineColor, [
-		index,
-		largeGroupSize,
-		mediumGroupSize,
-		scaleLevel,
-		smallGroupSize,
-	])
-	const dividerHeight = useMemo(getDividerHeight, [index, largeGroupSize, mediumGroupSize, smallGroupSize])
+	const lineColor = useMemo(getLineColor, [getLineColor])
+	const dividerHeight = useMemo(getDividerHeight, [getDividerHeight])
 
 	return (
-		<DividerContainer key={index} offset={dividerPosition} className={visible ? 'visible' : ''}>
+		<DividerContainer key={rawIndex} offset={dividerPosition} className={visible ? 'visible' : ''}>
 			{labelDisplayed && (
 				<DividerLabel>{timeToShortLabel(scaledTimeToRealTime(index * lineSpacing), scaleLevel)}</DividerLabel>
 			)}
@@ -138,5 +139,6 @@ export const TimelineAnchorLine = memo(
 		getLoop(a) === getLoop(b) &&
 		a.timelineScale === b.timelineScale &&
 		a.visible === b.visible &&
-		a.lineSpacing === b.lineSpacing
+		a.lineSpacing === b.lineSpacing &&
+		a.positionNormalizer === b.positionNormalizer
 )

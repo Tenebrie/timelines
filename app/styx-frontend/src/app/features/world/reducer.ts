@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { StoryEvent, StoryEventBundle } from './types'
 
 const initialState = {
+	id: '' as string,
 	name: '' as string,
 	events: [] as StoryEvent[],
 
@@ -27,6 +28,9 @@ export const worldSlice = createSlice({
 	name: 'world',
 	initialState,
 	reducers: {
+		setId: (state, { payload }: PayloadAction<string>) => {
+			state.id = payload
+		},
 		setName: (state, { payload }: PayloadAction<string>) => {
 			state.name = payload
 		},

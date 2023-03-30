@@ -1,11 +1,15 @@
+import { memo, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getTimelinePreferences } from '../../../../../preferences/selectors'
+import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
+import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { ScaleLevel } from '../../types'
 import { TimelineAnchorContainer } from './styles'
 import { TimelineAnchorLine } from './TimelineAnchorLine'
 
-export const TimelineAnchorPadding = 50 // pixels
+export const TimelineAnchorPadding = 150 // pixels
+export const ResetNumbersAfterEvery = 30000000 // pixels of scrolling
 
 type Props = {
 	visible: boolean
@@ -14,17 +18,19 @@ type Props = {
 	scaleLevel: ScaleLevel
 }
 
-export const TimelineAnchor = ({ scroll, timelineScale, scaleLevel, visible }: Props) => {
+const TimelineAnchorComponent = ({ scroll, timelineScale, scaleLevel, visible }: Props) => {
 	const { lineSpacing } = useSelector(getTimelinePreferences)
+	const { timeToShortLabel } = useWorldTime()
+	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel })
 
 	const lineCount =
 		Math.ceil((window.screen.width / lineSpacing) * timelineScale) +
 		Math.ceil(TimelineAnchorPadding / lineSpacing) * 2
 
-	const dividers = Array(lineCount).fill(null)
+	const dividers = useMemo(() => Array(lineCount).fill(null), [lineCount])
 
 	return (
-		<TimelineAnchorContainer offset={scroll}>
+		<TimelineAnchorContainer offset={scroll % ResetNumbersAfterEvery}>
 			{dividers.map((_, index) => (
 				<TimelineAnchorLine
 					key={`${index}`}
@@ -35,8 +41,16 @@ export const TimelineAnchor = ({ scroll, timelineScale, scaleLevel, visible }: P
 					timelineScale={timelineScale}
 					scaleLevel={scaleLevel}
 					timelineScroll={scroll}
+					timeToShortLabel={timeToShortLabel}
+					scaledTimeToRealTime={scaledTimeToRealTime}
+					getTimelineMultipliers={getTimelineMultipliers}
+					positionNormalizer={
+						Math.floor(Math.abs(scroll) / ResetNumbersAfterEvery) * ResetNumbersAfterEvery * Math.sign(scroll)
+					}
 				/>
 			))}
 		</TimelineAnchorContainer>
 	)
 }
+
+export const TimelineAnchor = memo(TimelineAnchorComponent)
