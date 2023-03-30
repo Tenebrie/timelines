@@ -33,6 +33,14 @@ export const WorldService = {
 		})
 	},
 
+	deleteWorld: async (worldId: string) => {
+		return dbClient.world.delete({
+			where: {
+				id: worldId,
+			},
+		})
+	},
+
 	createWorldEvent: async (worldId: string, data: Pick<WorldEvent, 'name' | 'type' | 'timestamp'>) => {
 		return dbClient.worldEvent.create({
 			data: {

@@ -72,6 +72,23 @@ router.get('/world/:worldId', async (ctx) => {
 	return await WorldService.findWorldDetails(worldId)
 })
 
+router.delete('/world/:worldId', async (ctx) => {
+	useApiEndpoint({
+		name: 'deleteWorld',
+		description: 'Destroys a world owned by the current user.',
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+	})
+
+	await WorldService.checkUserWriteAccess(user, worldId)
+
+	await WorldService.deleteWorld(worldId)
+})
+
 router.post('/world/:worldId/event', async (ctx) => {
 	useApiEndpoint({
 		name: 'createWorldEvent',

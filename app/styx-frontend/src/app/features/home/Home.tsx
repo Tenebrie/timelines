@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { WorldList } from './components/worldList/WorldList'
+import { WorldList } from '../worldList/WorldList'
 
 const HomePageContainer = styled.div`
 	display: flex;

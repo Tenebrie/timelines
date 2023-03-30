@@ -3,6 +3,7 @@ import { KeyboardEvent, useEffect, useState } from 'react'
 
 import { usePostLoginMutation } from '../../../../api/rheaApi'
 import { TenebrieLogo } from '../../../components/TenebrieLogo'
+import { parseApiError } from '../../../utils/parseApiError'
 import { useAppRouter } from '../../world/router'
 
 export const Login = () => {
@@ -35,18 +36,9 @@ export const Login = () => {
 				password,
 			},
 		})
-		if ('error' in response) {
-			const responseData =
-				'data' in response.error
-					? (response.error.data as {
-							status: number
-							message: string
-					  })
-					: {
-							status: 500,
-							message: 'Unknown error',
-					  }
-			setEmailError(responseData.message)
+		const error = parseApiError(response)
+		if (error) {
+			setEmailError(error.message)
 			return
 		}
 		navigateToHome()

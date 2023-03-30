@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
+import { useModalCleanup } from '../../../../../ui-lib/components/Modal'
 import Modal from '../../../../../ui-lib/components/Modal/Modal'
 import { ModalHeader } from '../../../../../ui-lib/components/Modal/styles'
 import { useWorldTime } from '../../../time/hooks/useWorldTime'
@@ -12,7 +13,7 @@ import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getEventWizardState } from '../../selectors'
 
-export const EventWizard = () => {
+export const EventWizardModal = () => {
 	const [name, setName] = useState('')
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
 
@@ -28,14 +29,13 @@ export const EventWizard = () => {
 		setNameValidationError(null)
 	}, [name])
 
-	useEffect(() => {
-		if (!isOpen) {
-			return
-		}
-
-		setName('')
-		setNameValidationError(null)
-	}, [isOpen])
+	useModalCleanup({
+		isOpen,
+		onCleanup: () => {
+			setName('')
+			setNameValidationError(null)
+		},
+	})
 
 	const onConfirm = () => {
 		if (!isOpen) {

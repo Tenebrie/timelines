@@ -1,14 +1,13 @@
 import { useCallback, useMemo } from 'react'
 
 import { ScaleLevel } from '../../world/components/Timeline/types'
-import { useWorldTime } from './useWorldTime'
 
 type Props = {
 	scaleLevel: ScaleLevel
 }
 
 export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
-	const { daysInYear, hoursInDay, minutesInHour } = useWorldTime()
+	// const { daysInYear, hoursInDay, minutesInHour } = useWorldTime()
 
 	const getLevelScalar = useCallback(
 		(forLevel: ScaleLevel = scaleLevel) => {

@@ -2,6 +2,7 @@
 	"name": "styx-frontend",
 	"version": "0.1.0",
 	"private": true,
+	"homepage": "https://tenebrie.github.io/timelines",
 	"dependencies": {
 		"@emotion/react": "^11.8.2",
 		"@emotion/styled": "^11.8.1",
@@ -38,7 +39,8 @@
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"lint": "eslint src/",
-		"lint-fix": "eslint src/ --fix"
+		"lint-fix": "eslint src/ --fix",
+		"openapi": "(cd openapi && ./generate_openapi.sh)"
 	},
 	"lint-staged": {
 		"*.(ts|tsx)": "eslint --fix"

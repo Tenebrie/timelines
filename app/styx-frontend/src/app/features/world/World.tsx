@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom'
 
-import { EventWizard } from './components/EventWizard/EventWizard'
+import { EventWizardModal } from './components/EventWizard/EventWizardModal'
 import { Timeline } from './components/Timeline/Timeline'
 import { WorldContainer } from './styles'
 
@@ -9,7 +9,7 @@ export const World = () => {
 		<WorldContainer>
 			<Outlet />
 			<Timeline />
-			<EventWizard />
+			<EventWizardModal />
 		</WorldContainer>
 	)
 }
