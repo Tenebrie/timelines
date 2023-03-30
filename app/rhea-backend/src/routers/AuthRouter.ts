@@ -26,7 +26,6 @@ router.get('/api/auth', async (ctx) => {
 
 	const user = await useOptionalAuth(ctx, UserAuthenticator)
 
-	console.log('a')
 	return {
 		authenticated: !!user,
 	}
