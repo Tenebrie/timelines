@@ -14,6 +14,7 @@ export const store = configureStore({
 		worldList: worldListReducer,
 		preferences: preferencesReducer,
 	},
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
 })
 
 export type RootState = ReturnType<typeof store.getState>

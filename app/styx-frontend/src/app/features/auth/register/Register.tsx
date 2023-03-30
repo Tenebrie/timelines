@@ -3,7 +3,7 @@ import { KeyboardEvent, useState } from 'react'
 
 import { useCreateAccountMutation } from '../../../../api/rheaApi'
 import { TenebrieLogo } from '../../../components/TenebrieLogo'
-import { parseApiError } from '../../../utils/parseApiError'
+import { parseApiResponse } from '../../../utils/parseApiResponse'
 import { useAppRouter } from '../../world/router'
 
 export const Register = () => {
@@ -42,14 +42,15 @@ export const Register = () => {
 			return
 		}
 
-		const response = await createAccount({
-			body: {
-				email,
-				username,
-				password,
-			},
-		})
-		const error = parseApiError(response)
+		const { error } = parseApiResponse(
+			await createAccount({
+				body: {
+					email,
+					username,
+					password,
+				},
+			})
+		)
 		if (error) {
 			setEmailError(error.message)
 			return

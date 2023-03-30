@@ -15,10 +15,13 @@ import { UserService } from '../services/UserService'
 
 const router = new Router()
 
+const authTag = 'auth'
+
 router.get('/auth', async (ctx) => {
 	useApiEndpoint({
 		name: 'checkAuthentication',
 		description: 'Checks if the user has a valid login credentials',
+		tags: [authTag],
 	})
 
 	const user = await useOptionalAuth(ctx, UserAuthenticator)
@@ -33,6 +36,7 @@ router.post('/auth', async (ctx) => {
 		name: 'createAccount',
 		summary: 'Registration endpoint',
 		description: 'Creates a new user account with provided credentials',
+		tags: [authTag],
 	})
 
 	const body = useRequestBody(ctx, {
@@ -60,6 +64,7 @@ router.post('/auth/login', async (ctx) => {
 		name: 'postLogin',
 		summary: 'Login endpoint',
 		description: 'Exchanges user credentials for a JWT token',
+		tags: [authTag],
 	})
 
 	const body = useRequestBody(ctx, {

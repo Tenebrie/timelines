@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 type Props = {
 	isOpen: boolean
@@ -6,11 +6,14 @@ type Props = {
 }
 
 export const useModalCleanup = ({ isOpen, onCleanup }: Props) => {
+	const previousOpenState = useRef(isOpen)
+
 	useEffect(() => {
-		if (!isOpen) {
+		if (isOpen && !previousOpenState.current) {
+			onCleanup()
+			previousOpenState.current = true
 			return
 		}
-
-		onCleanup()
+		previousOpenState.current = isOpen
 	}, [isOpen, onCleanup])
 }

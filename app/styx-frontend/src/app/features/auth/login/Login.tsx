@@ -3,7 +3,7 @@ import { KeyboardEvent, useEffect, useState } from 'react'
 
 import { usePostLoginMutation } from '../../../../api/rheaApi'
 import { TenebrieLogo } from '../../../components/TenebrieLogo'
-import { parseApiError } from '../../../utils/parseApiError'
+import { parseApiResponse } from '../../../utils/parseApiResponse'
 import { useAppRouter } from '../../world/router'
 
 export const Login = () => {
@@ -30,13 +30,14 @@ export const Login = () => {
 			setPasswordError('Missing password')
 			return
 		}
-		const response = await login({
-			body: {
-				email,
-				password,
-			},
-		})
-		const error = parseApiError(response)
+		const { error } = parseApiResponse(
+			await login({
+				body: {
+					email,
+					password,
+				},
+			})
+		)
 		if (error) {
 			setEmailError(error.message)
 			return

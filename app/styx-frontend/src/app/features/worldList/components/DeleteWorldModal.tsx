@@ -1,22 +1,22 @@
 import { Delete } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 import { Button, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useDeleteWorldMutation, useGetWorldsQuery } from '../../../../api/rheaApi'
+import { useDeleteWorldMutation } from '../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../hooks/useShortcut'
 import Modal, { ModalFooter, useModalCleanup } from '../../../../ui-lib/components/Modal'
 import { ModalHeader } from '../../../../ui-lib/components/Modal/styles'
-import { parseApiError } from '../../../utils/parseApiError'
+import { parseApiResponse } from '../../../utils/parseApiResponse'
 import { worldListSlice } from '../reducer'
 import { getDeleteWorldModalState } from '../selectors'
 
 export const DeleteWorldModal = () => {
 	const { isOpen, worldId, worldName } = useSelector(getDeleteWorldModalState)
 
-	const [confirmDeleteWorld] = useDeleteWorldMutation()
-	const { refetch: refetchWorlds } = useGetWorldsQuery()
+	const [confirmDeleteWorld, { isLoading }] = useDeleteWorldMutation()
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 
 	const dispatch = useDispatch()
@@ -34,16 +34,24 @@ export const DeleteWorldModal = () => {
 			return
 		}
 
-		const response = await confirmDeleteWorld({
-			worldId,
-		})
-		const error = parseApiError(response)
+		const { error } = parseApiResponse(
+			await confirmDeleteWorld({
+				worldId,
+			})
+		)
 		if (error) {
 			setDeletionError(error.message)
 			return
 		}
 
-		refetchWorlds()
+		// refetchWorlds()
+		dispatch(closeDeleteWorldModal())
+	}
+
+	const onClose = () => {
+		if (isLoading) {
+			return
+		}
 		dispatch(closeDeleteWorldModal())
 	}
 
@@ -52,7 +60,7 @@ export const DeleteWorldModal = () => {
 	})
 
 	return (
-		<Modal visible={isOpen} onClose={() => dispatch(closeDeleteWorldModal())}>
+		<Modal visible={isOpen} onClose={onClose}>
 			<ModalHeader>Delete world</ModalHeader>
 			<Stack spacing={2}>
 				<div>
@@ -67,11 +75,20 @@ export const DeleteWorldModal = () => {
 			</Stack>
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">
-					<Button variant="contained" color="error" onClick={onConfirm}>
-						<Delete /> Confirm
-					</Button>
+					<span>
+						<LoadingButton
+							loading={isLoading}
+							variant="contained"
+							color="error"
+							onClick={onConfirm}
+							loadingPosition="start"
+							startIcon={<Delete />}
+						>
+							<span>Confirm</span>
+						</LoadingButton>
+					</span>
 				</Tooltip>
-				<Button variant="outlined" onClick={() => dispatch(closeDeleteWorldModal())}>
+				<Button variant="outlined" onClick={onClose}>
 					Cancel
 				</Button>
 			</ModalFooter>

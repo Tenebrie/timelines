@@ -2,7 +2,7 @@ import { Stack } from '@mui/material'
 import React, { ReactElement } from 'react'
 
 type Props = {
-	children: ReactElement[]
+	children: ReactElement | ReactElement[]
 }
 
 export const ModalFooter = ({ children }: Props) => {

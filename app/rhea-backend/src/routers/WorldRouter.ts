@@ -24,10 +24,13 @@ useExposeApiModel<WorldEventType>()
 useExposeApiModel<WorldEvent>()
 useExposeApiModel<WorldStatement>()
 
+const worldTag = 'world'
+
 router.get('/worlds', async (ctx) => {
 	useApiEndpoint({
 		name: 'getWorlds',
 		description: 'Lists all worlds accessible for the current user.',
+		tags: [worldTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -39,6 +42,7 @@ router.post('/world', async (ctx) => {
 	useApiEndpoint({
 		name: 'createWorld',
 		description: 'Creates a new world (project).',
+		tags: [worldTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -59,6 +63,7 @@ router.get('/world/:worldId', async (ctx) => {
 	useApiEndpoint({
 		name: 'getWorldInfo',
 		description: 'Returns all information about a world.',
+		tags: [worldTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -76,6 +81,7 @@ router.delete('/world/:worldId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteWorld',
 		description: 'Destroys a world owned by the current user.',
+		tags: [worldTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -93,6 +99,7 @@ router.post('/world/:worldId/event', async (ctx) => {
 	useApiEndpoint({
 		name: 'createWorldEvent',
 		description: 'Creates a new world event.',
+		tags: [worldTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -116,6 +123,7 @@ router.post('/world/:worldId/event/:eventId/statement/issue', async (ctx) => {
 	useApiEndpoint({
 		name: 'issueWorldStatement',
 		description: 'Creates a new world statement and marks the specified event as the issuer.',
+		tags: [worldTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -138,6 +146,7 @@ router.post('/world/:worldId/event/:eventId/statement/revoke', async (ctx) => {
 	useApiEndpoint({
 		name: 'revokeWorldStatement',
 		description: 'Marks the specified event as the revoker for this world statement.',
+		tags: [worldTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)

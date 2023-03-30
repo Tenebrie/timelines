@@ -16,7 +16,7 @@ const LimboPageContainer = styled.div`
 
 export const Limbo = () => {
 	const { data } = useCheckAuthenticationQuery()
-	const { navigateToHome, navigateToLogin } = useAppRouter()
+	const { navigateToHomeWithoutHistory, navigateToLoginWithoutHistory } = useAppRouter()
 
 	useEffect(() => {
 		if (!data) {
@@ -24,11 +24,11 @@ export const Limbo = () => {
 		}
 
 		if (data.authenticated) {
-			navigateToHome()
+			navigateToHomeWithoutHistory()
 		} else {
-			navigateToLogin()
+			navigateToLoginWithoutHistory()
 		}
-	}, [data, navigateToHome, navigateToLogin])
+	}, [data, navigateToHomeWithoutHistory, navigateToLoginWithoutHistory])
 
 	return (
 		<LimboPageContainer>

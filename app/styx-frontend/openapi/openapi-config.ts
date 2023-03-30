@@ -7,6 +7,7 @@ const config: ConfigFile = {
 	apiImport: 'baseApi',
 	outputFile: '../src/api/rheaApi.ts',
 	exportName: 'rheaApi',
+	tag: true,
 	hooks: {
 		queries: true,
 		lazyQueries: true,

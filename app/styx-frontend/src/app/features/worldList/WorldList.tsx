@@ -3,33 +3,23 @@ import { Button } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useDispatch } from 'react-redux'
 
-import { useCreateWorldMutation, useGetWorldsQuery } from '../../../api/rheaApi'
-import { LoadingSpinner } from '../../components/LoadingSpinner'
+import { useGetWorldsQuery } from '../../../api/rheaApi'
+import { BlockingSpinner } from '../../components/BlockingSpinner'
 import { useWorldRouter } from '../world/router'
 import { DeleteWorldModal } from './components/DeleteWorldModal'
 import { worldListSlice } from './reducer'
+import { WorldWizardModal } from './WorldWizard/WorldWizardModal'
 
 export const WorldList = () => {
-	const { data, refetch } = useGetWorldsQuery()
-	const [triggerCreateWorld] = useCreateWorldMutation()
+	const { data, isFetching } = useGetWorldsQuery()
 
 	const { navigateToWorldRoot } = useWorldRouter()
 
 	const dispatch = useDispatch()
-	const { openDeleteWorldModal } = worldListSlice.actions
+	const { openWorldWizardModal, openDeleteWorldModal } = worldListSlice.actions
 
 	const onCreate = async () => {
-		const response = await triggerCreateWorld({
-			body: {
-				name: 'Unnamed world',
-			},
-		})
-		if ('error' in response) {
-			return
-		}
-
-		navigateToWorldRoot(response.data.id)
-		refetch()
+		dispatch(openWorldWizardModal())
 	}
 
 	const onLoad = (id: string) => {
@@ -42,24 +32,23 @@ export const WorldList = () => {
 
 	return (
 		<>
-			{!data && <LoadingSpinner />}
 			{!!data && (
-				<Stack spacing={2}>
+				<Stack spacing={1}>
 					{data.map((world) => (
 						<Stack direction="row" justifyContent="space-between" key={world.id}>
-							<Button onClick={() => onLoad(world.id)}>
-								{world.id}: {world.name}
+							<Button fullWidth={true} onClick={() => onLoad(world.id)} style={{ justifyContent: 'start' }}>
+								- {world.name}
 							</Button>
 							<Button onClick={() => onDelete(world)}>
 								<Delete />
 							</Button>
 						</Stack>
 					))}
-					<Button variant="contained" onClick={onCreate}>
-						Create
-					</Button>
+					<Button onClick={onCreate}>Create new...</Button>
 				</Stack>
 			)}
+			<BlockingSpinner visible={isFetching} />
+			<WorldWizardModal />
 			<DeleteWorldModal />
 		</>
 	)
