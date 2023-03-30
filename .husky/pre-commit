@@ -1,4 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npx lint-staged
+(cd app/styx-frontend && yarn lint-staged)
+(cd app/rhea-backend && yarn lint-staged)
+#npx lint-staged

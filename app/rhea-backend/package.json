@@ -17,6 +17,9 @@
 		"prisma:generate": "prisma generate",
 		"prisma:migrate:dev": "prisma migrate dev"
 	},
+	"lint-staged": {
+		"*.(ts)": "eslint --fix"
+	},
 	"dependencies": {
 		"@koa/router": "^12.0.0",
 		"@prisma/client": "4.12.0",
