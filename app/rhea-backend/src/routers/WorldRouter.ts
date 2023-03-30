@@ -26,7 +26,7 @@ useExposeApiModel<WorldStatement>()
 
 const worldTag = 'world'
 
-router.get('/worlds', async (ctx) => {
+router.get('/api/worlds', async (ctx) => {
 	useApiEndpoint({
 		name: 'getWorlds',
 		description: 'Lists all worlds accessible for the current user.',
@@ -38,7 +38,7 @@ router.get('/worlds', async (ctx) => {
 	return await WorldService.listOwnedWorlds({ owner: user })
 })
 
-router.post('/world', async (ctx) => {
+router.post('/api/world', async (ctx) => {
 	useApiEndpoint({
 		name: 'createWorld',
 		description: 'Creates a new world (project).',
@@ -59,7 +59,7 @@ router.post('/world', async (ctx) => {
 	return world
 })
 
-router.get('/world/:worldId', async (ctx) => {
+router.get('/api/world/:worldId', async (ctx) => {
 	useApiEndpoint({
 		name: 'getWorldInfo',
 		description: 'Returns all information about a world.',
@@ -77,7 +77,7 @@ router.get('/world/:worldId', async (ctx) => {
 	return await WorldService.findWorldDetails(worldId)
 })
 
-router.delete('/world/:worldId', async (ctx) => {
+router.delete('/api/world/:worldId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteWorld',
 		description: 'Destroys a world owned by the current user.',
@@ -95,7 +95,7 @@ router.delete('/world/:worldId', async (ctx) => {
 	await WorldService.deleteWorld(worldId)
 })
 
-router.post('/world/:worldId/event', async (ctx) => {
+router.post('/api/world/:worldId/event', async (ctx) => {
 	useApiEndpoint({
 		name: 'createWorldEvent',
 		description: 'Creates a new world event.',
@@ -119,7 +119,7 @@ router.post('/world/:worldId/event', async (ctx) => {
 	return await WorldService.createWorldEvent(worldId, params)
 })
 
-router.post('/world/:worldId/event/:eventId/statement/issue', async (ctx) => {
+router.post('/api/world/:worldId/event/:eventId/statement/issue', async (ctx) => {
 	useApiEndpoint({
 		name: 'issueWorldStatement',
 		description: 'Creates a new world statement and marks the specified event as the issuer.',
@@ -142,7 +142,7 @@ router.post('/world/:worldId/event/:eventId/statement/issue', async (ctx) => {
 	return await WorldService.issueWorldStatement(eventId, params)
 })
 
-router.post('/world/:worldId/event/:eventId/statement/revoke', async (ctx) => {
+router.post('/api/world/:worldId/event/:eventId/statement/revoke', async (ctx) => {
 	useApiEndpoint({
 		name: 'revokeWorldStatement',
 		description: 'Marks the specified event as the revoker for this world statement.',

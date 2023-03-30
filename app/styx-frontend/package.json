@@ -2,7 +2,7 @@
 	"name": "styx-frontend",
 	"version": "0.1.0",
 	"private": true,
-	"homepage": "https://tenebrie.github.io/timelines",
+	"homepage": "https://tenebrie.github.io",
 	"scripts": {
 		"start": "PORT=8080 react-scripts start --max_old_space_size=4096",
 		"build": "react-scripts build",
@@ -15,7 +15,7 @@
 	"lint-staged": {
 		"*.(ts|tsx)": "eslint --fix"
 	},
-	"proxy": "http://localhost:3000",
+	"proxy": "http://rhea:3000",
 	"browserslist": {
 		"production": [
 			">0.2%",

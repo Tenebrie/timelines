@@ -17,7 +17,7 @@ const router = new Router()
 
 const authTag = 'auth'
 
-router.get('/auth', async (ctx) => {
+router.get('/api/auth', async (ctx) => {
 	useApiEndpoint({
 		name: 'checkAuthentication',
 		description: 'Checks if the user has a valid login credentials',
@@ -31,7 +31,7 @@ router.get('/auth', async (ctx) => {
 	}
 })
 
-router.post('/auth', async (ctx) => {
+router.post('/api/auth', async (ctx) => {
 	useApiEndpoint({
 		name: 'createAccount',
 		summary: 'Registration endpoint',
@@ -59,7 +59,7 @@ router.post('/auth', async (ctx) => {
 	})
 })
 
-router.post('/auth/login', async (ctx) => {
+router.post('/api/auth/login', async (ctx) => {
 	useApiEndpoint({
 		name: 'postLogin',
 		summary: 'Login endpoint',
@@ -82,6 +82,20 @@ router.post('/auth/login', async (ctx) => {
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
+	})
+})
+
+router.post('/api/auth/logout', async (ctx) => {
+	useApiEndpoint({
+		name: 'postLogout',
+		summary: 'Logout endpoint',
+		description: "Clears the current user's auth cookie",
+		tags: [authTag],
+	})
+
+	ctx.cookies.set(AUTH_COOKIE_NAME, '', {
+		path: '/',
+		expires: new Date(),
 	})
 })
 

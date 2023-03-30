@@ -33,7 +33,7 @@ export const WorldList = () => {
 	return (
 		<>
 			{!!data && (
-				<Stack spacing={1}>
+				<Stack spacing={1} minWidth={256}>
 					{data.map((world) => (
 						<Stack direction="row" justifyContent="space-between" key={world.id}>
 							<Button fullWidth={true} onClick={() => onLoad(world.id)} style={{ justifyContent: 'start' }}>
@@ -44,7 +44,7 @@ export const WorldList = () => {
 							</Button>
 						</Stack>
 					))}
-					<Button onClick={onCreate}>Create new...</Button>
+					<Button onClick={onCreate}>Create new world...</Button>
 				</Stack>
 			)}
 			<BlockingSpinner visible={isFetching} />

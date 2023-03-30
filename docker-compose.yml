@@ -1,23 +1,23 @@
 version: "3.1"
 services:
-    # styx:
-    #     build:
-    #         context: ./
-    #         dockerfile: ./app/styx-frontend
-    #     working_dir: /app/styx
-    #     environment:
-    #         NODE_ENV: development
-    #     depends_on:
-    #         - rhea
-    #     ports:
-    #         - 8080:8080
-    #     command: bash -c "yarn serve"
-    #     volumes:
-    #         - ./app/styx-frontend/src:/app/styx/src:cached
-    #         - ./app/styx-frontend/public:/app/styx/public:cached
-    #         - ./app/shared/src:/app/shared/src:cached
-    #     tty: true
-    #     restart: "no"
+    styx:
+        build:
+            context: ./
+            dockerfile: ./app/styx-frontend/Dockerfile
+        working_dir: /app/styx
+        environment:
+            NODE_ENV: development
+        depends_on:
+            - rhea
+        ports:
+            - 8080:8080
+        command: bash -c "yarn start"
+        volumes:
+            - ./app/styx-frontend/src:/app/styx/src:cached
+            - ./app/styx-frontend/public:/app/styx/public:cached
+            - ./app/shared/src:/app/shared/src:cached
+        tty: true
+        restart: "no"
     rhea:
         build:
             context: ./
@@ -25,7 +25,7 @@ services:
         working_dir: /app/rhea
         environment:
             NODE_ENV: development
-            DATABASE_URL: postgres://docker:docker@postgres:5432/db
+            DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
         depends_on:
             - rhea-postgres
         ports:
