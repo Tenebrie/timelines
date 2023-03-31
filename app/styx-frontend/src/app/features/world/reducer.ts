@@ -65,6 +65,7 @@ export const worldSlice = createSlice({
 		/* Event editor */
 		setEditorEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
 			state.eventEditor.eventId = payload.id
+			console.log(payload.id)
 		},
 
 		clearEditorEvent: (state) => {

@@ -31,7 +31,6 @@ export const EventEditor = () => {
 	const { navigateToCurrentWorldRoot } = useWorldRouter()
 
 	if (!event) {
-		navigateToCurrentWorldRoot()
 		return <></>
 	}
 

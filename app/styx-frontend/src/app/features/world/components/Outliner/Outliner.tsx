@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useWorldTime } from '../../../time/hooks/useWorldTime'
 import { worldSlice } from '../../reducer'
-import { useWorldRouter } from '../../router'
 import { getWorldOutlinerState, getWorldState } from '../../selectors'
 import { IssuedStatementCard } from '../StatementCards/IssuedStatementCard/IssuedStatementCard'
 import { OutlinerContainer, StatementsContainer, StatementsUnit } from './styles'
@@ -16,10 +15,7 @@ export const Outliner = () => {
 	const dispatch = useDispatch()
 	const { openEventWizard } = worldSlice.actions
 
-	const { navigateToCurrentWorldRoot } = useWorldRouter()
-
 	if (selectedTime === null) {
-		navigateToCurrentWorldRoot()
 		return <></>
 	}
 
