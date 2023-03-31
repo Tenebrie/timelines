@@ -1,5 +1,6 @@
 import { Button, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
+import { Navigate } from 'react-router-dom'
 
 import { useWorldTime } from '../../../time/hooks/useWorldTime'
 import { worldSlice } from '../../reducer'
@@ -16,7 +17,7 @@ export const Outliner = () => {
 	const { openEventWizard } = worldSlice.actions
 
 	if (selectedTime === null) {
-		return <></>
+		return <Navigate to={'/world'} />
 	}
 
 	const issuedCards = events

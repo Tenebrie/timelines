@@ -2,6 +2,7 @@ import { Add, Delete, Save } from '@mui/icons-material'
 import { Button, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Navigate } from 'react-router-dom'
 
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
@@ -31,7 +32,7 @@ export const EventEditor = () => {
 	const { navigateToCurrentWorldRoot } = useWorldRouter()
 
 	if (!event) {
-		return <></>
+		return <Navigate to={'/world'} />
 	}
 
 	const updateEditorEvent = (delta: Partial<StoryEvent>) => {
