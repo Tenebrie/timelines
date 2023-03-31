@@ -1,3 +1,5 @@
+import { GetWorldInfoApiResponse } from '../../../api/rheaApi'
+
 export type StoryEventType = 'scene' | 'other'
 
 export type StoryEvent = {
@@ -28,3 +30,5 @@ export type WorldStatement = {
 	name: string
 	text: string
 }
+
+export type WorldDetails = GetWorldInfoApiResponse

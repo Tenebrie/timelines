@@ -221,8 +221,6 @@ export const useTimelineNavigation = ({
 				setLastClickTime(currentTime)
 			} else {
 				onDoubleClick(selectedTime)
-				setLastClickPos(null)
-				setLastClickTime(null)
 			}
 		},
 		[

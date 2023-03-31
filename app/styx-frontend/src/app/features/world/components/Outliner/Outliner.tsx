@@ -1,24 +1,22 @@
 import { Button, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
-import { Navigate } from 'react-router-dom'
 
 import { useWorldTime } from '../../../time/hooks/useWorldTime'
 import { worldSlice } from '../../reducer'
-import { getWorldOutlinerState, getWorldState } from '../../selectors'
+import { useWorldRouter } from '../../router'
+import { getWorldState } from '../../selectors'
 import { IssuedStatementCard } from '../StatementCards/IssuedStatementCard/IssuedStatementCard'
 import { OutlinerContainer, StatementsContainer, StatementsUnit } from './styles'
 
 export const Outliner = () => {
 	const { events } = useSelector(getWorldState)
-	const { selectedTime } = useSelector(getWorldOutlinerState)
 	const { timeToLabel } = useWorldTime()
+
+	const { outlinerParams } = useWorldRouter()
+	const selectedTime = Number(outlinerParams.timestamp)
 
 	const dispatch = useDispatch()
 	const { openEventWizard } = worldSlice.actions
-
-	if (selectedTime === null) {
-		return <Navigate to={'/world'} />
-	}
 
 	const issuedCards = events
 		.filter((event) => event.timestamp <= selectedTime)

@@ -1,7 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { StoryEvent, StoryEventBundle } from './types'
+import { StoryEvent, StoryEventBundle, WorldDetails } from './types'
 
 const initialState = {
 	id: '' as string,
@@ -9,10 +9,6 @@ const initialState = {
 	events: [] as StoryEvent[],
 
 	hoveredEventMarkers: [] as (StoryEvent | StoryEventBundle)[],
-
-	outliner: {
-		selectedTime: null as number | null,
-	},
 
 	eventEditor: {
 		eventId: null as string | null,
@@ -33,6 +29,10 @@ export const worldSlice = createSlice({
 		},
 		setName: (state, { payload }: PayloadAction<string>) => {
 			state.name = payload
+		},
+		loadWorld: (state, { payload }: PayloadAction<WorldDetails>) => {
+			state.id = payload.id
+			state.name = payload.name
 		},
 
 		/* World events */
@@ -55,11 +55,6 @@ export const worldSlice = createSlice({
 
 		unhoverEventMarker: (state, { payload }: PayloadAction<StoryEvent | StoryEventBundle>) => {
 			state.hoveredEventMarkers = state.hoveredEventMarkers.filter((marker) => marker.id !== payload.id)
-		},
-
-		/* Outliner */
-		setSelectedOutlinerTime: (state, { payload }: PayloadAction<number | null>) => {
-			state.outliner.selectedTime = payload
 		},
 
 		/* Event editor */

@@ -2,11 +2,10 @@ import { Add, Delete, Save } from '@mui/icons-material'
 import { Button, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Navigate } from 'react-router-dom'
 
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
-import { getEventEditorState } from '../../selectors'
+import { getWorldState } from '../../selectors'
 import { StoryEvent, WorldStatement } from '../../types'
 import { IssuedStatementCard } from '../StatementCards/IssuedStatementCard/IssuedStatementCard'
 import { RevokedStatementCard } from '../StatementCards/RevokedStatementCard/RevokedStatementCard'
@@ -24,15 +23,18 @@ export const EventEditor = () => {
 	const [issuedStatementWizardOpen, setIssuedStatementWizardOpen] = useState(false)
 	const [revokedStatementWizardOpen, setRevokedStatementWizardOpen] = useState(false)
 
-	const { event } = useSelector(getEventEditorState)
+	const { events } = useSelector(getWorldState)
 
 	const dispatch = useDispatch()
 	const { updateWorldEvent, deleteWorldEvent } = worldSlice.actions
 
-	const { navigateToCurrentWorldRoot } = useWorldRouter()
+	const { navigateToCurrentWorld, eventEditorParams } = useWorldRouter()
+	const { eventId } = eventEditorParams
+
+	const event = events.find((e) => e.id === eventId)
 
 	if (!event) {
-		return <Navigate to={'/world'} />
+		return <></>
 	}
 
 	const updateEditorEvent = (delta: Partial<StoryEvent>) => {
@@ -73,12 +75,12 @@ export const EventEditor = () => {
 		})
 
 	const onSave = () => {
-		navigateToCurrentWorldRoot()
+		navigateToCurrentWorld()
 	}
 
 	const onDelete = () => {
 		dispatch(deleteWorldEvent(event.id))
-		navigateToCurrentWorldRoot()
+		navigateToCurrentWorld()
 	}
 
 	return (

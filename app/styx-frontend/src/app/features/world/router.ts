@@ -1,27 +1,31 @@
-import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import { worldSlice } from './reducer'
 import { StoryEvent } from './types'
 
 const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
-	const [navigationTarget, setNavigationTarget] = useState<string | null>(null)
+	const navigationTarget = useRef<string | null>(null)
+	const [naviKey, setNaviKey] = useState<number>(0)
 
-	const navigateTo = (target: typeof routes[keyof typeof routes]) => {
-		if (navigationTarget !== target) {
-			setNavigationTarget(target)
+	const navigateTo = (target: typeof routes[keyof typeof routes], args: Record<string, string>) => {
+		const replacedTarget = Object.keys(args).reduce(
+			(total, current) => total.replace(`:${current}`, args[current]),
+			target
+		)
+		if (navigationTarget.current !== replacedTarget) {
+			navigationTarget.current = replacedTarget
+			setNaviKey(naviKey + 1)
 		}
 	}
 
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		if (navigationTarget !== null) {
-			navigate(navigationTarget)
-			setNavigationTarget(null)
+		if (navigationTarget.current !== null) {
+			navigate(navigationTarget.current)
+			navigationTarget.current = null
 		}
-	}, [navigate, navigationTarget])
+	}, [navigate, naviKey])
 
 	return {
 		navigateTo,
@@ -38,7 +42,7 @@ export const useAppRouter = () => {
 	const { navigateTo } = useBaseRouter(appRoutes)
 
 	const navigateToHome = async () => {
-		navigateTo(appRoutes.home)
+		navigateTo(appRoutes.home, {})
 	}
 
 	const navigateToHomeWithoutHistory = async () => {
@@ -47,7 +51,7 @@ export const useAppRouter = () => {
 	}
 
 	const navigateToLogin = async () => {
-		navigateTo(appRoutes.login)
+		navigateTo(appRoutes.login, {})
 	}
 
 	const navigateToLoginWithoutHistory = async () => {
@@ -56,7 +60,7 @@ export const useAppRouter = () => {
 	}
 
 	const navigateToRegister = async () => {
-		navigateTo(appRoutes.register)
+		navigateTo(appRoutes.register, {})
 	}
 
 	return {
@@ -69,44 +73,61 @@ export const useAppRouter = () => {
 }
 
 export const worldRoutes = {
-	home: '/',
-	root: '/world',
-	outliner: '/world/outliner',
-	eventEditor: '/world/editor',
+	root: '/world/:worldId',
+	outliner: '/world/:worldId/outliner/:timestamp',
+	eventEditor: '/world/:worldId/editor/:eventId',
 } as const
 
 export const useWorldRouter = () => {
 	const { navigateTo } = useBaseRouter(worldRoutes)
+	const state = useParams()
 
-	const dispatch = useDispatch()
-	const { setId, setSelectedOutlinerTime, setEditorEvent, clearEditorEvent } = worldSlice.actions
-
-	const navigateToWorldRoot = async (id: string) => {
-		dispatch(setId(id))
-		navigateTo(worldRoutes.root)
+	const worldParams = state as {
+		worldId: string
 	}
 
-	const navigateToCurrentWorldRoot = async () => {
-		navigateTo(worldRoutes.root)
-		dispatch(clearEditorEvent())
-		dispatch(setSelectedOutlinerTime(null))
+	const outlinerParams = state as {
+		worldId: string
+		timestamp: string
+	}
+
+	const eventEditorParams = state as {
+		worldId: string
+		eventId: string
+	}
+
+	const navigateToWorld = async (id: string) => {
+		navigateTo(worldRoutes.root, {
+			worldId: id,
+		})
+	}
+
+	const navigateToCurrentWorld = async () => {
+		navigateTo(worldRoutes.root, {
+			worldId: state['worldId'] || '',
+		})
 	}
 
 	const navigateToOutliner = (timestamp: number) => {
-		dispatch(setSelectedOutlinerTime(timestamp))
-		navigateTo(worldRoutes.outliner)
-		dispatch(clearEditorEvent())
+		navigateTo(worldRoutes.outliner, {
+			worldId: state['worldId'] || '',
+			timestamp: String(timestamp),
+		})
 	}
 
 	const navigateToEventEditor = (event: StoryEvent) => {
-		dispatch(setEditorEvent(event))
-		navigateTo(worldRoutes.eventEditor)
-		dispatch(setSelectedOutlinerTime(null))
+		navigateTo(worldRoutes.eventEditor, {
+			worldId: state['worldId'] || '',
+			eventId: event.id,
+		})
 	}
 
 	return {
-		navigateToWorldRoot,
-		navigateToCurrentWorldRoot,
+		worldParams,
+		outlinerParams,
+		eventEditorParams,
+		navigateToWorld,
+		navigateToCurrentWorld,
 		navigateToOutliner,
 		navigateToEventEditor,
 	}

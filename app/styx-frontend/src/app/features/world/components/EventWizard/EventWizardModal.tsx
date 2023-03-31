@@ -56,7 +56,7 @@ export const EventWizardModal = () => {
 		navigateToEventEditor(newEvent)
 	}
 
-	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
+	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.Enter, () => {
 		onConfirm()
 	})
 

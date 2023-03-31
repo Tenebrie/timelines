@@ -13,7 +13,7 @@ import { WorldWizardModal } from './WorldWizard/WorldWizardModal'
 export const WorldList = () => {
 	const { data, isFetching } = useGetWorldsQuery()
 
-	const { navigateToWorldRoot } = useWorldRouter()
+	const { navigateToWorld: navigateToWorldRoot } = useWorldRouter()
 
 	const dispatch = useDispatch()
 	const { openWorldWizardModal, openDeleteWorldModal } = worldListSlice.actions

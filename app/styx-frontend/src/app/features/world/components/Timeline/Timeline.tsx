@@ -1,9 +1,8 @@
 import { useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
-import { getWorldOutlinerState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { TimelineEventGroup } from './components/TimelineEventGroup/TimelineEventGroup'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
@@ -15,16 +14,27 @@ import { TimelineContainer, TimelineWrapper } from './styles'
 export const Timeline = () => {
 	const containerRef = useRef<HTMLDivElement | null>(null)
 
-	const { selectedTime } = useSelector(getWorldOutlinerState)
-
 	const dispatch = useDispatch()
 	const { openEventWizard } = worldSlice.actions
 
-	const { navigateToCurrentWorldRoot, navigateToOutliner } = useWorldRouter()
+	const {
+		navigateToCurrentWorld: navigateToCurrentWorldRoot,
+		navigateToOutliner,
+		outlinerParams,
+	} = useWorldRouter()
+	const selectedTime = Number(outlinerParams.timestamp)
 
 	const onClick = (time: number) => {
 		if (selectedTime === time) {
 			navigateToCurrentWorldRoot()
+		} else {
+			navigateToOutliner(time)
+		}
+	}
+
+	const onDoubleClick = (time: number) => {
+		if (selectedTime) {
+			dispatch(openEventWizard({ timestamp: time }))
 		} else {
 			navigateToOutliner(time)
 		}
@@ -36,7 +46,7 @@ export const Timeline = () => {
 		maximumScroll: 500,
 		scaleLimits: [-3, 10],
 		onClick: (time) => onClick(time),
-		onDoubleClick: (time) => dispatch(openEventWizard({ timestamp: time })),
+		onDoubleClick: (time) => onDoubleClick(time),
 	})
 	const eventGroups = useEventGroups(timelineScale)
 
@@ -50,7 +60,7 @@ export const Timeline = () => {
 					timelineScale={timelineScale}
 					scaleLevel={scaleLevel}
 				/>
-				{selectedTime !== null && (
+				{!isNaN(selectedTime) && (
 					<TimeMarker
 						timestamp={selectedTime}
 						timelineScale={timelineScale}
@@ -66,6 +76,7 @@ export const Timeline = () => {
 						scroll={scroll}
 						eventGroup={group}
 						timelineScale={timelineScale}
+						scaleLevel={scaleLevel}
 					/>
 				))}
 			</TimelineContainer>

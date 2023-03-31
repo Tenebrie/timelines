@@ -18,7 +18,7 @@ export const WorldWizardModal = () => {
 
 	const { isOpen } = useSelector(getWorldWizardModalState)
 
-	const { navigateToWorldRoot } = useWorldRouter()
+	const { navigateToWorld: navigateToWorldRoot } = useWorldRouter()
 
 	const [createWorld, { isLoading }] = useCreateWorldMutation()
 
