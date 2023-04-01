@@ -32,7 +32,7 @@ export const RevokedStatementCard = ({ id }: Props) => {
 				<Typography variant="h5">{matchingCard?.title || 'Not found'}</Typography>
 				<Typography>{matchingCard?.text || 'Not found'}</Typography>
 			</CardContent>
-			<CardActions>{onDelete && <Button onClick={onDelete}>Delete</Button>}</CardActions>
+			<CardActions>{onDelete && <Button onClick={onDelete}>Unrevoke</Button>}</CardActions>
 		</Card>
 	)
 }

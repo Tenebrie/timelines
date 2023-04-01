@@ -2,24 +2,18 @@ import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { useRevokeWorldStatementMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import { ModalFooter, ModalHeader, useModalCleanup } from '../../../../../../../ui-lib/components/Modal'
 import Modal from '../../../../../../../ui-lib/components/Modal/Modal'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
+import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
-import { getWorldState } from '../../../../selectors'
-import { WorldEvent } from '../../../../types'
+import { getRevokedStatementWizardState, getWorldState } from '../../../../selectors'
 
-type Props = {
-	editorEvent: WorldEvent
-	open: boolean
-	onClose: () => void
-}
-
-export const RevokedStatementWizard = ({ editorEvent, open, onClose }: Props) => {
+export const RevokedStatementWizard = () => {
 	const [id, setId] = useState('')
 
 	const { events: worldEvents } = useSelector(getWorldState)
@@ -27,25 +21,20 @@ export const RevokedStatementWizard = ({ editorEvent, open, onClose }: Props) =>
 	const { eventEditorParams } = useWorldRouter()
 	const [revokeWorldStatement, { isLoading }] = useRevokeWorldStatementMutation()
 
-	const removableCards = worldEvents
-		.filter((event) => event.timestamp < editorEvent.timestamp)
-		.filter((event) => editorEvent.revokedStatements.every((revokedEvent) => revokedEvent.id === event.id))
-		.flatMap((event) =>
-			event.issuedStatements.map((statement) => ({
-				...statement,
-				event,
-			}))
-		)
+	const dispatch = useDispatch()
+	const { closeRevokedStatementWizard } = worldSlice.actions
+
+	const { isOpen } = useSelector(getRevokedStatementWizardState)
 
 	useModalCleanup({
-		isOpen: open,
+		isOpen,
 		onCleanup: () => {
 			setId('')
 		},
 	})
 
 	const onConfirm = async () => {
-		if (!open) {
+		if (!isOpen) {
 			return
 		}
 
@@ -59,15 +48,38 @@ export const RevokedStatementWizard = ({ editorEvent, open, onClose }: Props) =>
 		if (error) {
 			return
 		}
-		onClose()
+		dispatch(closeRevokedStatementWizard())
+	}
+
+	const onCloseAttempt = () => {
+		if (isLoading) {
+			return
+		}
+		dispatch(closeRevokedStatementWizard())
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		onConfirm()
 	})
 
+	const editorEvent = worldEvents.find((event) => event.id === eventEditorParams.eventId)
+
+	if (!editorEvent) {
+		return <></>
+	}
+
+	const removableCards = worldEvents
+		.filter((event) => event.timestamp < editorEvent.timestamp)
+		.filter((event) => editorEvent.revokedStatements.every((revokedEvent) => revokedEvent.id === event.id))
+		.flatMap((event) =>
+			event.issuedStatements.map((statement) => ({
+				...statement,
+				event,
+			}))
+		)
+
 	return (
-		<Modal visible={open} onClose={onClose}>
+		<Modal visible={isOpen} onClose={onCloseAttempt}>
 			<ModalHeader>New Revoked Statement</ModalHeader>
 			<FormControl fullWidth>
 				<InputLabel id="demo-simple-select-label">Statement to revoke</InputLabel>
@@ -98,7 +110,7 @@ export const RevokedStatementWizard = ({ editorEvent, open, onClose }: Props) =>
 						</LoadingButton>
 					</span>
 				</Tooltip>
-				<Button variant="outlined" onClick={onClose}>
+				<Button variant="outlined" onClick={onCloseAttempt}>
 					Cancel
 				</Button>
 			</ModalFooter>

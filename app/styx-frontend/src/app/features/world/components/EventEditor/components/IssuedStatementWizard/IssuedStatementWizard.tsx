@@ -2,6 +2,7 @@ import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, TextField, Tooltip } from '@mui/material'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { useIssueWorldStatementMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
@@ -9,14 +10,11 @@ import { ModalFooter, useModalCleanup } from '../../../../../../../ui-lib/compon
 import Modal from '../../../../../../../ui-lib/components/Modal/Modal'
 import { ModalHeader } from '../../../../../../../ui-lib/components/Modal/styles'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
+import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
+import { getIssuedStatementWizardState } from '../../../../selectors'
 
-type Props = {
-	open: boolean
-	onClose: () => void
-}
-
-export const IssuedStatementWizard = ({ open, onClose }: Props) => {
+export const IssuedStatementWizard = () => {
 	const [title, setTitle] = useState('')
 	const [content, setContent] = useState('')
 	const [titleValidationError, setTitleValidationError] = useState<string | null>(null)
@@ -24,8 +22,13 @@ export const IssuedStatementWizard = ({ open, onClose }: Props) => {
 	const { eventEditorParams } = useWorldRouter()
 	const [issueWorldStatement, { isLoading }] = useIssueWorldStatementMutation()
 
+	const dispatch = useDispatch()
+	const { closeIssuedStatementWizard } = worldSlice.actions
+
+	const { isOpen } = useSelector(getIssuedStatementWizardState)
+
 	useModalCleanup({
-		isOpen: open,
+		isOpen,
 		onCleanup: () => {
 			setTitle('')
 			setContent('')
@@ -33,7 +36,7 @@ export const IssuedStatementWizard = ({ open, onClose }: Props) => {
 	})
 
 	const onConfirm = async () => {
-		if (!open) {
+		if (!isOpen) {
 			return
 		}
 
@@ -51,7 +54,14 @@ export const IssuedStatementWizard = ({ open, onClose }: Props) => {
 			setTitleValidationError(error.message)
 			return
 		}
-		onClose()
+		dispatch(closeIssuedStatementWizard())
+	}
+
+	const onCloseAttempt = () => {
+		if (isLoading) {
+			return
+		}
+		dispatch(closeIssuedStatementWizard())
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
@@ -59,7 +69,7 @@ export const IssuedStatementWizard = ({ open, onClose }: Props) => {
 	})
 
 	return (
-		<Modal visible={open} onClose={onClose}>
+		<Modal visible={isOpen} onClose={onCloseAttempt}>
 			<ModalHeader>New Issued Statement</ModalHeader>
 			<TextField
 				label="Title"
@@ -92,7 +102,7 @@ export const IssuedStatementWizard = ({ open, onClose }: Props) => {
 						</LoadingButton>
 					</span>
 				</Tooltip>
-				<Button variant="outlined" onClick={onClose}>
+				<Button variant="outlined" onClick={onCloseAttempt}>
 					Cancel
 				</Button>
 			</ModalFooter>

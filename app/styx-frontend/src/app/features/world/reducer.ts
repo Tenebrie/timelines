@@ -1,7 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { WorldDetails, WorldEvent, WorldEventBundle } from './types'
+import { WorldDetails, WorldEvent, WorldEventBundle, WorldStatement } from './types'
 
 const initialState = {
 	id: '' as string,
@@ -13,6 +13,19 @@ const initialState = {
 	eventWizard: {
 		isOpen: false as boolean,
 		timestamp: 0 as number,
+	},
+
+	eventEditor: {
+		deleteStatementModal: {
+			isOpen: false as boolean,
+			target: null as WorldStatement | null,
+		},
+		issuedStatementWizard: {
+			isOpen: false as boolean,
+		},
+		revokedStatementWizard: {
+			isOpen: false as boolean,
+		},
 	},
 }
 
@@ -48,6 +61,34 @@ export const worldSlice = createSlice({
 
 		closeEventWizard: (state) => {
 			state.eventWizard.isOpen = false
+		},
+
+		/* Event editor - Delete statement modal */
+		openDeleteStatementModal: (state, { payload }: PayloadAction<WorldStatement>) => {
+			state.eventEditor.deleteStatementModal.isOpen = true
+			state.eventEditor.deleteStatementModal.target = payload
+		},
+
+		closeDeleteStatementModal: (state) => {
+			state.eventEditor.deleteStatementModal.isOpen = false
+		},
+
+		/* Event editor - Issued statement wizard */
+		openIssuedStatementWizard: (state) => {
+			state.eventEditor.issuedStatementWizard.isOpen = true
+		},
+
+		closeIssuedStatementWizard: (state) => {
+			state.eventEditor.issuedStatementWizard.isOpen = false
+		},
+
+		/* Event editor - Revoked statement wizard */
+		openRevokedStatementWizard: (state) => {
+			state.eventEditor.revokedStatementWizard.isOpen = true
+		},
+
+		closeRevokedStatementWizard: (state) => {
+			state.eventEditor.revokedStatementWizard.isOpen = false
 		},
 	},
 })

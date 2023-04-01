@@ -3,6 +3,7 @@ import { LoadingButton } from '@mui/lab'
 import { Button, Tooltip } from '@mui/material'
 import { Stack } from '@mui/system'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { useDeleteWorldStatementMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
@@ -12,20 +13,20 @@ import Modal, {
 	useModalCleanup,
 } from '../../../../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
+import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
+import { getDeleteStatementModalState } from '../../../../selectors'
 
-type Props = {
-	isOpen: boolean
-	onClose: () => void
-	statementId: string
-	statementTitle: string
-}
-
-export const DeleteStatementModal = ({ isOpen, onClose, statementId, statementTitle }: Props) => {
+export const DeleteStatementModal = () => {
 	const [deleteWorldStatement, { isLoading }] = useDeleteWorldStatementMutation()
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 
 	const { worldParams } = useWorldRouter()
+
+	const dispatch = useDispatch()
+	const { closeDeleteStatementModal } = worldSlice.actions
+
+	const { isOpen, target: targetStatement } = useSelector(getDeleteStatementModalState)
 
 	useModalCleanup({
 		isOpen,
@@ -35,14 +36,14 @@ export const DeleteStatementModal = ({ isOpen, onClose, statementId, statementTi
 	})
 
 	const onConfirm = async () => {
-		if (!isOpen) {
+		if (!isOpen || !targetStatement) {
 			return
 		}
 
 		const { error } = parseApiResponse(
 			await deleteWorldStatement({
 				worldId: worldParams.worldId,
-				statementId,
+				statementId: targetStatement.id,
 			})
 		)
 		if (error) {
@@ -50,14 +51,14 @@ export const DeleteStatementModal = ({ isOpen, onClose, statementId, statementTi
 			return
 		}
 
-		onClose()
+		dispatch(closeDeleteStatementModal())
 	}
 
 	const onCloseAttempt = () => {
 		if (isLoading) {
 			return
 		}
-		onClose()
+		dispatch(closeDeleteStatementModal())
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
@@ -69,8 +70,8 @@ export const DeleteStatementModal = ({ isOpen, onClose, statementId, statementTi
 			<ModalHeader>Delete world</ModalHeader>
 			<Stack spacing={2}>
 				<div>
-					Attempting to permanently delete world statement <b>{statementTitle}</b>. It will unlink it from the
-					issuer and revoker as well.
+					Attempting to permanently delete world statement <b>{targetStatement?.title}</b>. It will unlink it
+					from the issuer and revoker as well.
 				</div>
 				<div>This action can't be reverted!</div>
 				{deletionError && (
