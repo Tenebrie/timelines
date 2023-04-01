@@ -20,14 +20,14 @@ export const IssuedStatementCard = ({ card, mode, onDelete }: Props) => {
 	const { timeToLabel } = useWorldTime()
 	const { events } = useSelector(getWorldState)
 	const parentEvent = events.find((event) =>
-		event.issuedWorldStatements.find((statement) => statement.id === card.id)
+		event.issuedStatements.find((statement) => statement.id === card.id)
 	)
 	const timeLabel = timeToLabel(parentEvent?.timestamp || 0)
 
 	return (
 		<Card>
 			<CardContent>
-				<Typography variant="h5">{card.name}</Typography>
+				<Typography variant="h5">{card.title}</Typography>
 				{mode === 'outliner' && (
 					<Typography>
 						[{timeLabel}]: {parentEvent?.name}

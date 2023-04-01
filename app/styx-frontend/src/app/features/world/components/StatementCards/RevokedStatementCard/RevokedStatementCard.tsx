@@ -11,12 +11,12 @@ type Props = {
 export const RevokedStatementCard = ({ id, onDelete }: Props) => {
 	const { events } = useSelector(getWorldState)
 
-	const matchingCard = events.flatMap((event) => event.issuedWorldStatements).find((card) => card.id === id)
+	const matchingCard = events.flatMap((event) => event.issuedStatements).find((card) => card.id === id)
 
 	return (
 		<Card>
 			<CardContent>
-				<Typography variant="h5">{matchingCard?.name || 'Not found'}</Typography>
+				<Typography variant="h5">{matchingCard?.title || 'Not found'}</Typography>
 				<Typography>{matchingCard?.text || 'Not found'}</Typography>
 			</CardContent>
 			<CardActions>{onDelete && <Button onClick={onDelete}>Delete</Button>}</CardActions>

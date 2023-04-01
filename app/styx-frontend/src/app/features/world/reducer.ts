@@ -1,14 +1,14 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { StoryEvent, StoryEventBundle, WorldDetails } from './types'
+import { WorldDetails, WorldEvent, WorldEventBundle } from './types'
 
 const initialState = {
 	id: '' as string,
 	name: '' as string,
-	events: [] as StoryEvent[],
+	events: [] as WorldEvent[],
 
-	hoveredEventMarkers: [] as (StoryEvent | StoryEventBundle)[],
+	hoveredEventMarkers: [] as (WorldEvent | WorldEventBundle)[],
 
 	eventEditor: {
 		eventId: null as string | null,
@@ -36,11 +36,11 @@ export const worldSlice = createSlice({
 		},
 
 		/* World events */
-		createWorldEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
+		createWorldEvent: (state, { payload }: PayloadAction<WorldEvent>) => {
 			state.events = state.events.concat(payload)
 		},
 
-		updateWorldEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
+		updateWorldEvent: (state, { payload }: PayloadAction<WorldEvent>) => {
 			state.events = state.events.filter((event) => event.id !== payload.id)
 			state.events = state.events.concat(payload)
 		},
@@ -49,16 +49,16 @@ export const worldSlice = createSlice({
 			state.events = state.events.filter((event) => event.id !== payload)
 		},
 
-		hoverEventMarker: (state, { payload }: PayloadAction<StoryEvent | StoryEventBundle>) => {
+		hoverEventMarker: (state, { payload }: PayloadAction<WorldEvent | WorldEventBundle>) => {
 			state.hoveredEventMarkers = state.hoveredEventMarkers.concat(payload)
 		},
 
-		unhoverEventMarker: (state, { payload }: PayloadAction<StoryEvent | StoryEventBundle>) => {
+		unhoverEventMarker: (state, { payload }: PayloadAction<WorldEvent | WorldEventBundle>) => {
 			state.hoveredEventMarkers = state.hoveredEventMarkers.filter((marker) => marker.id !== payload.id)
 		},
 
 		/* Event editor */
-		setEditorEvent: (state, { payload }: PayloadAction<StoryEvent>) => {
+		setEditorEvent: (state, { payload }: PayloadAction<WorldEvent>) => {
 			state.eventEditor.eventId = payload.id
 		},
 

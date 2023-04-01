@@ -6,16 +6,16 @@ import { useSelector } from 'react-redux'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import Modal from '../../../../../../../ui-lib/components/Modal/Modal'
 import { getWorldState } from '../../../../selectors'
-import { StoryEvent } from '../../../../types'
+import { WorldEvent, WorldStatement } from '../../../../types'
 
 type Props = {
-	editorEvent: StoryEvent
+	editorEvent: WorldEvent
 	open: boolean
-	onCreate: (id: string) => void
+	onRevoke: (card: WorldStatement) => void
 	onClose: () => void
 }
 
-export const RevokedStatementWizard = ({ editorEvent, open, onCreate, onClose }: Props) => {
+export const RevokedStatementWizard = ({ editorEvent, open, onRevoke, onClose }: Props) => {
 	const [id, setId] = useState('')
 
 	const { events: worldEvents } = useSelector(getWorldState)
@@ -23,7 +23,7 @@ export const RevokedStatementWizard = ({ editorEvent, open, onCreate, onClose }:
 	const removableCards = worldEvents
 		.filter((event) => event.timestamp < editorEvent.timestamp)
 		.flatMap((event) =>
-			event.issuedWorldStatements.map((statement) => ({
+			event.issuedStatements.map((statement) => ({
 				...statement,
 				event,
 			}))
@@ -42,7 +42,7 @@ export const RevokedStatementWizard = ({ editorEvent, open, onCreate, onClose }:
 			return
 		}
 
-		onCreate(id)
+		onRevoke(removableCards.find((card) => card.id === id)!)
 		onClose()
 	}
 
@@ -62,7 +62,7 @@ export const RevokedStatementWizard = ({ editorEvent, open, onCreate, onClose }:
 				>
 					{removableCards.map((card) => (
 						<MenuItem key={card.id} value={card.id}>
-							{card.event.name} / {card.name}
+							{card.event.name} / {card.title}
 						</MenuItem>
 					))}
 				</Select>

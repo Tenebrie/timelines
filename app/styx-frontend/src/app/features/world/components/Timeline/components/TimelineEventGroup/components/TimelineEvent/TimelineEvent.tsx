@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { worldSlice } from '../../../../../../reducer'
 import { useWorldRouter } from '../../../../../../router'
 import { getEventEditorState } from '../../../../../../selectors'
-import { StoryEvent, StoryEventBundle } from '../../../../../../types'
+import { WorldEvent, WorldEventBundle } from '../../../../../../types'
 import { Label, LabelContainer, Marker } from './styles'
 
 type Props = {
-	event: StoryEvent | StoryEventBundle
+	event: WorldEvent | WorldEventBundle
 	groupIndex: number
 	expanded: boolean
 }
@@ -27,7 +27,7 @@ export const TimelineEvent = ({ event, groupIndex, expanded }: Props) => {
 		clickEvent.stopPropagation()
 		clickEvent.preventDefault()
 
-		if (event.type === 'bundle') {
+		if (event.type === 'BUNDLE') {
 			return
 		}
 

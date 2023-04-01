@@ -20,13 +20,15 @@ export const Outliner = () => {
 
 	const issuedCards = events
 		.filter((event) => event.timestamp <= selectedTime)
-		.flatMap((event) => event.issuedWorldStatements)
+		.flatMap((event) => event.issuedStatements)
 
 	const revokedCards = events
 		.filter((event) => event.timestamp <= selectedTime)
-		.flatMap((event) => event.revokedWorldStatements)
+		.flatMap((event) => event.revokedStatements)
 
-	const applicableCards = issuedCards.filter((card) => !revokedCards.some((id) => card.id === id))
+	const applicableCards = issuedCards.filter(
+		(issuedCard) => !revokedCards.some((revokedCard) => issuedCard.id === revokedCard.id)
+	)
 
 	const onCreateEvent = () => {
 		dispatch(openEventWizard({ timestamp: selectedTime }))

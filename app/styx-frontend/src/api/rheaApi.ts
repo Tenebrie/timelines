@@ -89,7 +89,11 @@ export type PostLogoutApiResponse = unknown
 export type PostLogoutApiArg = {
 	body: string
 }
-export type GetWorldsApiResponse = /** status 200  */ World[]
+export type GetWorldsApiResponse = /** status 200  */ {
+	id: string
+	name: string
+	ownerId: string
+}[]
 export type GetWorldsApiArg = void
 export type CreateWorldApiResponse = /** status 200  */ {
 	name: string
@@ -100,7 +104,33 @@ export type CreateWorldApiArg = {
 		name: string
 	}
 }
-export type GetWorldInfoApiResponse = /** status 200  */ World
+export type GetWorldInfoApiResponse = /** status 200  */ {
+	id: string
+	name: string
+	ownerId: string
+	events: {
+		id: string
+		type: 'SCENE' | 'OTHER'
+		name: string
+		timestamp: number
+		description: string
+		worldId: string
+		issuedStatements: {
+			id: string
+			title: string
+			text: string
+			issuedByEventId?: string
+			revokedByEventId?: string
+		}[]
+		revokedStatements: {
+			id: string
+			title: string
+			text: string
+			issuedByEventId?: string
+			revokedByEventId?: string
+		}[]
+	}[]
+}
 export type GetWorldInfoApiArg = {
 	/** Any string value */
 	worldId: string
@@ -118,7 +148,7 @@ export type CreateWorldEventApiArg = {
 	worldId: string
 	body: {
 		name: string
-		type: WorldEventType
+		type: 'SCENE' | 'OTHER'
 		timestamp: number
 	}
 }
@@ -134,7 +164,13 @@ export type IssueWorldStatementApiArg = {
 		title: string
 	}
 }
-export type RevokeWorldStatementApiResponse = /** status 200  */ WorldStatement
+export type RevokeWorldStatementApiResponse = /** status 200  */ {
+	id: string
+	title: string
+	text: string
+	issuedByEventId?: string
+	revokedByEventId?: string
+}
 export type RevokeWorldStatementApiArg = {
 	/** Any string value */
 	worldId: string
@@ -143,19 +179,6 @@ export type RevokeWorldStatementApiArg = {
 	body: {
 		statementId: string
 	}
-}
-export type World = {
-	id: string
-	name: string
-	ownerId: string
-}
-export type WorldEventType = 'SCENE' | 'OTHER'
-export type WorldStatement = {
-	id: string
-	title: string
-	text: string
-	issuedByEventId?: string
-	revokedByEventId?: string
 }
 export const {
 	useCheckAuthenticationQuery,

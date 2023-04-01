@@ -33,7 +33,7 @@ export const IssuedStatementWizard = ({ open, onCreate, onClose }: Props) => {
 		}
 		onCreate(
 			makeWorldStoryCard({
-				name,
+				title: name,
 				text,
 			})
 		)

@@ -1,4 +1,3 @@
-import { User, World, WorldEvent, WorldEventType, WorldStatement } from '@prisma/client'
 import { UserAuthenticator } from '@src/auth/UserAuthenticator'
 import { WorldService } from '@src/services/WorldService'
 import {
@@ -9,7 +8,6 @@ import {
 	StringValidator,
 	useApiEndpoint,
 	useAuth,
-	useExposeApiModel,
 	usePathParams,
 	useRequestBody,
 } from 'tenebrie-framework'
@@ -17,12 +15,6 @@ import {
 import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
 
 const router = new Router()
-
-useExposeApiModel<User>()
-useExposeApiModel<World>()
-useExposeApiModel<WorldEventType>()
-useExposeApiModel<WorldEvent>()
-useExposeApiModel<WorldStatement>()
 
 const worldTag = 'world'
 

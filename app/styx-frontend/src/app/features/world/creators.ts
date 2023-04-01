@@ -1,20 +1,21 @@
 import { v4 as uuidv4 } from 'uuid'
 
-import { StoryEvent, WorldStatement } from './types'
+import { WorldEvent, WorldStatement } from './types'
 
 export const makeStoryEvent = (
-	base: Partial<StoryEvent> & Pick<StoryEvent, 'name' | 'timestamp'>
-): StoryEvent => ({
+	base: Partial<WorldEvent> & Pick<WorldEvent, 'name' | 'timestamp'>
+): WorldEvent => ({
 	id: uuidv4(),
-	type: 'other',
+	type: 'OTHER',
 	description: '',
-	issuedWorldStatements: [],
-	revokedWorldStatements: [],
+	issuedStatements: [],
+	revokedStatements: [],
+	worldId: '',
 	...base,
 })
 
 export const makeWorldStoryCard = (
-	base: Partial<WorldStatement> & Pick<WorldStatement, 'name' | 'text'>
+	base: Partial<WorldStatement> & Pick<WorldStatement, 'title' | 'text'>
 ): WorldStatement => ({
 	id: uuidv4(),
 	...base,

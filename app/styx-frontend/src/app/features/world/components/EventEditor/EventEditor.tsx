@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
-import { StoryEvent, WorldStatement } from '../../types'
+import { WorldEvent, WorldStatement } from '../../types'
 import { IssuedStatementCard } from '../StatementCards/IssuedStatementCard/IssuedStatementCard'
 import { RevokedStatementCard } from '../StatementCards/RevokedStatementCard/RevokedStatementCard'
 import { IssuedStatementWizard } from './components/IssuedStatementWizard/IssuedStatementWizard'
@@ -34,10 +34,10 @@ export const EventEditor = () => {
 	const event = events.find((e) => e.id === eventId)
 
 	if (!event) {
-		return <></>
+		return <EventEditorWrapper></EventEditorWrapper>
 	}
 
-	const updateEditorEvent = (delta: Partial<StoryEvent>) => {
+	const updateEditorEvent = (delta: Partial<WorldEvent>) => {
 		dispatch(
 			updateWorldEvent({
 				...event,
@@ -50,8 +50,8 @@ export const EventEditor = () => {
 		name,
 		timestamp,
 		description,
-		issuedWorldStatements: addedWorldCards,
-		revokedWorldStatements: removedWorldCardIds,
+		issuedStatements: addedWorldCards,
+		revokedStatements: removedWorldCards,
 	} = event
 
 	const onNameChange = (value: string) => updateEditorEvent({ name: value })
@@ -59,19 +59,19 @@ export const EventEditor = () => {
 	const onDescriptionChange = (value: string) => updateEditorEvent({ description: value })
 	const onIssueWorldStatement = (statement: WorldStatement) =>
 		updateEditorEvent({
-			issuedWorldStatements: addedWorldCards.concat(statement),
+			issuedStatements: addedWorldCards.concat(statement),
 		})
 	const onRemoveIssuedWorldStatement = (id: string) =>
 		updateEditorEvent({
-			issuedWorldStatements: addedWorldCards.filter((card) => card.id !== id),
+			issuedStatements: addedWorldCards.filter((card) => card.id !== id),
 		})
-	const onRevokeWorldStatement = (id: string) =>
+	const onRevokeWorldStatement = (statement: WorldStatement) =>
 		updateEditorEvent({
-			revokedWorldStatements: removedWorldCardIds.concat(id),
+			revokedStatements: removedWorldCards.concat(statement),
 		})
 	const onRemoveRevokedWorldStatement = (id: string) =>
 		updateEditorEvent({
-			revokedWorldStatements: removedWorldCardIds.filter((card) => card !== id),
+			revokedStatements: removedWorldCards.filter((card) => card.id !== id),
 		})
 
 	const onSave = () => {
@@ -125,11 +125,11 @@ export const EventEditor = () => {
 					</StatementsUnit>
 					<StatementsUnit>
 						<Typography variant="h5">Revoked statements:</Typography>
-						{removedWorldCardIds.map((card) => (
+						{removedWorldCards.map((card) => (
 							<RevokedStatementCard
-								key={card}
-								id={card}
-								onDelete={() => onRemoveRevokedWorldStatement(card)}
+								key={card.id}
+								id={card.id}
+								onDelete={() => onRemoveRevokedWorldStatement(card.id)}
 							/>
 						))}
 						<Button onClick={() => setRevokedStatementWizardOpen(true)}>
@@ -151,7 +151,7 @@ export const EventEditor = () => {
 				<RevokedStatementWizard
 					editorEvent={event}
 					open={revokedStatementWizardOpen}
-					onCreate={onRevokeWorldStatement}
+					onRevoke={onRevokeWorldStatement}
 					onClose={() => setRevokedStatementWizardOpen(false)}
 				/>
 			</EventEditorContainer>

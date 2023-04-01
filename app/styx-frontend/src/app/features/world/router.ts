@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import { StoryEvent } from './types'
+import { WorldEvent } from './types'
 
 const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
 	const navigationTarget = useRef<string | null>(null)
@@ -115,7 +115,7 @@ export const useWorldRouter = () => {
 		})
 	}
 
-	const navigateToEventEditor = (event: StoryEvent) => {
+	const navigateToEventEditor = (event: WorldEvent) => {
 		navigateTo(worldRoutes.eventEditor, {
 			worldId: state['worldId'] || '',
 			eventId: event.id,

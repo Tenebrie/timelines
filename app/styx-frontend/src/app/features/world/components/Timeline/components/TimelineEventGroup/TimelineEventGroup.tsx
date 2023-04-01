@@ -1,13 +1,13 @@
 import { useState } from 'react'
 
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
-import { StoryEventGroup } from '../../../../types'
+import { WorldEventGroup } from '../../../../types'
 import { ScaleLevel } from '../../types'
 import { TimelineEvent } from './components/TimelineEvent/TimelineEvent'
 import { Group } from './styles'
 
 type Props = {
-	eventGroup: StoryEventGroup
+	eventGroup: WorldEventGroup
 	scroll: number
 	timelineScale: number
 	scaleLevel: ScaleLevel

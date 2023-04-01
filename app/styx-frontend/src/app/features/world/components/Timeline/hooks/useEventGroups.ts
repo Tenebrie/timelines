@@ -1,14 +1,14 @@
 import { useSelector } from 'react-redux'
 
 import { getWorldState } from '../../../selectors'
-import { StoryEvent, StoryEventBundle, StoryEventGroup } from '../../../types'
+import { WorldEvent, WorldEventBundle, WorldEventGroup } from '../../../types'
 
 const GROUP_DISTANCE = 75
 const EVENTS_PER_GROUP = 5
 
 const useEventGroups = (pixelsPerTime: number) => {
 	const { events } = useSelector(getWorldState)
-	const eventGroups: StoryEventGroup[] = []
+	const eventGroups: WorldEventGroup[] = []
 
 	const sortedEvents = [...events].sort((a, b) => a.timestamp - b.timestamp)
 
@@ -35,10 +35,10 @@ const useEventGroups = (pixelsPerTime: number) => {
 	eventGroups.forEach((group) => {
 		group.events.sort((a, b) => a.timestamp - b.timestamp || a.name.localeCompare(b.name))
 		if (group.events.length > EVENTS_PER_GROUP) {
-			const eventBundle: StoryEventBundle = {
+			const eventBundle: WorldEventBundle = {
 				id: `bundle-${group.timestamp}-${group.events.length}`,
-				type: 'bundle',
-				events: group.events.slice(EVENTS_PER_GROUP) as StoryEvent[],
+				type: 'BUNDLE',
+				events: group.events.slice(EVENTS_PER_GROUP) as WorldEvent[],
 				timestamp: group.timestamp,
 				name: `${group.events.length - (EVENTS_PER_GROUP - 1)} more events`,
 			}
