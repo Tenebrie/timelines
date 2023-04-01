@@ -46,22 +46,46 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['world'],
 			}),
+			deleteWorldEvent: build.mutation<DeleteWorldEventApiResponse, DeleteWorldEventApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}`,
+					method: 'DELETE',
+				}),
+				invalidatesTags: ['world'],
+			}),
 			issueWorldStatement: build.mutation<IssueWorldStatementApiResponse, IssueWorldStatementApiArg>({
 				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/statement/issue`,
+					url: `/api/world/${queryArg.worldId}/statement`,
 					method: 'POST',
 					body: queryArg.body,
+				}),
+				invalidatesTags: ['world'],
+			}),
+			deleteWorldStatement: build.mutation<DeleteWorldStatementApiResponse, DeleteWorldStatementApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/statement/${queryArg.statementId}`,
+					method: 'DELETE',
 				}),
 				invalidatesTags: ['world'],
 			}),
 			revokeWorldStatement: build.mutation<RevokeWorldStatementApiResponse, RevokeWorldStatementApiArg>({
 				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/statement/revoke`,
+					url: `/api/world/${queryArg.worldId}/statement/${queryArg.statementId}/revoke`,
 					method: 'POST',
 					body: queryArg.body,
 				}),
 				invalidatesTags: ['world'],
 			}),
+			unrevokeWorldStatement: build.mutation<UnrevokeWorldStatementApiResponse, UnrevokeWorldStatementApiArg>(
+				{
+					query: (queryArg) => ({
+						url: `/api/world/${queryArg.worldId}/statement/${queryArg.statementId}/unrevoke`,
+						method: 'POST',
+						body: queryArg.body,
+					}),
+					invalidatesTags: ['world'],
+				}
+			),
 		}),
 		overrideExisting: false,
 	})
@@ -152,17 +176,44 @@ export type CreateWorldEventApiArg = {
 		timestamp: number
 	}
 }
+export type DeleteWorldEventApiResponse = /** status 200  */ {
+	id: string
+	type: 'SCENE' | 'OTHER'
+	name: string
+	timestamp: number
+	description: string
+	worldId: string
+}
+export type DeleteWorldEventApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	eventId: string
+}
 export type IssueWorldStatementApiResponse = /** status 200  */ {
 	id: string
 }
 export type IssueWorldStatementApiArg = {
 	/** Any string value */
 	worldId: string
-	/** Any string value */
-	eventId: string
 	body: {
+		eventId: string
 		title: string
+		content?: string
 	}
+}
+export type DeleteWorldStatementApiResponse = /** status 200  */ {
+	id: string
+	title: string
+	text: string
+	issuedByEventId?: string
+	revokedByEventId?: string
+}
+export type DeleteWorldStatementApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	statementId: string
 }
 export type RevokeWorldStatementApiResponse = /** status 200  */ {
 	id: string
@@ -175,10 +226,24 @@ export type RevokeWorldStatementApiArg = {
 	/** Any string value */
 	worldId: string
 	/** Any string value */
-	eventId: string
+	statementId: string
 	body: {
-		statementId: string
+		eventId: string
 	}
+}
+export type UnrevokeWorldStatementApiResponse = /** status 200  */ {
+	id: string
+	title: string
+	text: string
+	issuedByEventId?: string
+	revokedByEventId?: string
+}
+export type UnrevokeWorldStatementApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	statementId: string
+	body: string
 }
 export const {
 	useCheckAuthenticationQuery,
@@ -193,6 +258,9 @@ export const {
 	useLazyGetWorldInfoQuery,
 	useDeleteWorldMutation,
 	useCreateWorldEventMutation,
+	useDeleteWorldEventMutation,
 	useIssueWorldStatementMutation,
+	useDeleteWorldStatementMutation,
 	useRevokeWorldStatementMutation,
+	useUnrevokeWorldStatementMutation,
 } = injectedRtkApi

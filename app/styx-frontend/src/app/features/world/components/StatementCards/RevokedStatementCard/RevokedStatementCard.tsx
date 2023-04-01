@@ -1,15 +1,28 @@
 import { Button, Card, CardActions, CardContent, Typography } from '@mui/material'
 import { useSelector } from 'react-redux'
 
+import { useUnrevokeWorldStatementMutation } from '../../../../../../api/rheaApi'
+import { useWorldRouter } from '../../../router'
 import { getWorldState } from '../../../selectors'
 
 type Props = {
 	id: string
-	onDelete?: () => void
 }
 
-export const RevokedStatementCard = ({ id, onDelete }: Props) => {
+export const RevokedStatementCard = ({ id }: Props) => {
 	const { events } = useSelector(getWorldState)
+	const { worldParams } = useWorldRouter()
+
+	const [unrevokeWorldStatement, { isLoading }] = useUnrevokeWorldStatementMutation()
+
+	const onDelete = () => {
+		unrevokeWorldStatement({
+			worldId: worldParams.worldId,
+			statementId: id,
+			// TODO: Figure out why this is here
+			body: '',
+		})
+	}
 
 	const matchingCard = events.flatMap((event) => event.issuedStatements).find((card) => card.id === id)
 

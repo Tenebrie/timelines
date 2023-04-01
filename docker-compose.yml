@@ -17,7 +17,7 @@ services:
             - ./app/styx-frontend/public:/app/styx/public:cached
             - ./app/shared/src:/app/shared/src:cached
         tty: true
-        restart: "no"
+        restart: "unless-stopped"
     rhea:
         build:
             context: ./
@@ -36,7 +36,7 @@ services:
             - ./app/rhea-backend/src:/app/rhea/src:cached
             - ./app/shared/src:/app/shared/src:cached
         tty: true
-        restart: "no"
+        restart: "unless-stopped"
     rhea-postgres:
         image: postgres:11.5-alpine
         environment:
@@ -47,6 +47,6 @@ services:
             - 5432:5432
         volumes:
             - rhea-db:/var/lib/postgresql/data/:cached
-        restart: "no"
+        restart: "unless-stopped"
 volumes:
     rhea-db:

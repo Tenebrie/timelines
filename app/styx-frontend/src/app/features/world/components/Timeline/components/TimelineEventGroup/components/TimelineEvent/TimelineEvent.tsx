@@ -1,9 +1,8 @@
 import { MouseEvent, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { worldSlice } from '../../../../../../reducer'
 import { useWorldRouter } from '../../../../../../router'
-import { getEventEditorState } from '../../../../../../selectors'
 import { WorldEvent, WorldEventBundle } from '../../../../../../types'
 import { Label, LabelContainer, Marker } from './styles'
 
@@ -16,7 +15,7 @@ type Props = {
 export const TimelineEvent = ({ event, groupIndex, expanded }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
-	const { eventId: editorEventId } = useSelector(getEventEditorState)
+	const { eventEditorParams } = useWorldRouter()
 
 	const dispatch = useDispatch()
 	const { hoverEventMarker, unhoverEventMarker } = worldSlice.actions
@@ -31,10 +30,10 @@ export const TimelineEvent = ({ event, groupIndex, expanded }: Props) => {
 			return
 		}
 
-		if (editorEventId === event.id) {
+		if (eventEditorParams.eventId === event.id) {
 			navigateToCurrentWorldRoot()
 		} else {
-			navigateToEventEditor(event)
+			navigateToEventEditor(event.id)
 		}
 	}
 
@@ -54,7 +53,7 @@ export const TimelineEvent = ({ event, groupIndex, expanded }: Props) => {
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 			className={`${groupIndex > 0 && expanded ? 'expanded' : ''} ${
-				event.id === editorEventId ? 'selected' : ''
+				event.id === eventEditorParams.eventId ? 'selected' : ''
 			}`}
 		>
 			{isInfoVisible && (

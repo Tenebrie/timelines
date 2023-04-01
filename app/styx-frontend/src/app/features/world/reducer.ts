@@ -10,10 +10,6 @@ const initialState = {
 
 	hoveredEventMarkers: [] as (WorldEvent | WorldEventBundle)[],
 
-	eventEditor: {
-		eventId: null as string | null,
-	},
-
 	eventWizard: {
 		isOpen: false as boolean,
 		timestamp: 0 as number,
@@ -33,20 +29,7 @@ export const worldSlice = createSlice({
 		loadWorld: (state, { payload }: PayloadAction<WorldDetails>) => {
 			state.id = payload.id
 			state.name = payload.name
-		},
-
-		/* World events */
-		createWorldEvent: (state, { payload }: PayloadAction<WorldEvent>) => {
-			state.events = state.events.concat(payload)
-		},
-
-		updateWorldEvent: (state, { payload }: PayloadAction<WorldEvent>) => {
-			state.events = state.events.filter((event) => event.id !== payload.id)
-			state.events = state.events.concat(payload)
-		},
-
-		deleteWorldEvent: (state, { payload }: PayloadAction<string>) => {
-			state.events = state.events.filter((event) => event.id !== payload)
+			state.events = payload.events
 		},
 
 		hoverEventMarker: (state, { payload }: PayloadAction<WorldEvent | WorldEventBundle>) => {
@@ -55,15 +38,6 @@ export const worldSlice = createSlice({
 
 		unhoverEventMarker: (state, { payload }: PayloadAction<WorldEvent | WorldEventBundle>) => {
 			state.hoveredEventMarkers = state.hoveredEventMarkers.filter((marker) => marker.id !== payload.id)
-		},
-
-		/* Event editor */
-		setEditorEvent: (state, { payload }: PayloadAction<WorldEvent>) => {
-			state.eventEditor.eventId = payload.id
-		},
-
-		clearEditorEvent: (state) => {
-			state.eventEditor.eventId = null
 		},
 
 		/* Event wizard */

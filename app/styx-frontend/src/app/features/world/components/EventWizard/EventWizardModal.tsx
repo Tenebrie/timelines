@@ -1,14 +1,15 @@
 import { Add } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 import { Button, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useCreateWorldEventMutation } from '../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
-import { useModalCleanup } from '../../../../../ui-lib/components/Modal'
-import Modal from '../../../../../ui-lib/components/Modal/Modal'
-import { ModalHeader } from '../../../../../ui-lib/components/Modal/styles'
+import Modal, { useModalCleanup } from '../../../../../ui-lib/components/Modal'
+import { ModalFooter, ModalHeader } from '../../../../../ui-lib/components/Modal'
+import { parseApiResponse } from '../../../../utils/parseApiResponse'
 import { useWorldTime } from '../../../time/hooks/useWorldTime'
-import { makeStoryEvent } from '../../creators'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getEventWizardState } from '../../selectors'
@@ -20,10 +21,12 @@ export const EventWizardModal = () => {
 	const { isOpen, timestamp } = useSelector(getEventWizardState)
 
 	const dispatch = useDispatch()
-	const { createWorldEvent, closeEventWizard } = worldSlice.actions
+	const { closeEventWizard } = worldSlice.actions
+
+	const [createWorldEvent, { isLoading }] = useCreateWorldEventMutation()
 
 	const { timeToLabel } = useWorldTime()
-	const { navigateToEventEditor } = useWorldRouter()
+	const { navigateToEventEditor, worldParams } = useWorldRouter()
 
 	useEffect(() => {
 		setNameValidationError(null)
@@ -37,7 +40,7 @@ export const EventWizardModal = () => {
 		},
 	})
 
-	const onConfirm = () => {
+	const onConfirm = async () => {
 		if (!isOpen) {
 			return
 		}
@@ -47,13 +50,23 @@ export const EventWizardModal = () => {
 			return
 		}
 
-		const newEvent = makeStoryEvent({
-			name: name.trim(),
-			timestamp,
-		})
-		dispatch(createWorldEvent(newEvent))
+		const { response, error } = parseApiResponse(
+			await createWorldEvent({
+				worldId: worldParams.worldId,
+				body: {
+					name,
+					type: 'SCENE',
+					timestamp,
+				},
+			})
+		)
+		if (error) {
+			setNameValidationError(error.message)
+			return
+		}
+
 		dispatch(closeEventWizard())
-		navigateToEventEditor(newEvent)
+		navigateToEventEditor(response.id)
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.Enter, () => {
@@ -73,11 +86,24 @@ export const EventWizardModal = () => {
 				helperText={nameValidationError}
 				autoFocus
 			/>
-			<Tooltip title={shortcutLabel} arrow placement="top">
-				<Button variant="outlined" onClick={onConfirm}>
-					<Add /> Create
+			<ModalFooter>
+				<Tooltip title={shortcutLabel} arrow placement="top">
+					<span>
+						<LoadingButton
+							loading={isLoading}
+							variant="contained"
+							onClick={onConfirm}
+							loadingPosition="start"
+							startIcon={<Add />}
+						>
+							<span>Confirm</span>
+						</LoadingButton>
+					</span>
+				</Tooltip>
+				<Button variant="outlined" onClick={() => dispatch(closeEventWizard())}>
+					Cancel
 				</Button>
-			</Tooltip>
+			</ModalFooter>
 		</Modal>
 	)
 }

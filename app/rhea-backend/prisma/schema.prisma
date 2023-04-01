@@ -52,8 +52,8 @@ model WorldStatement {
   title String
   text  String @default("")
 
-  issuedBy         WorldEvent? @relation(name: "StatementsIssuedByEvent", fields: [issuedByEventId], references: [id])
+  issuedBy         WorldEvent @relation(name: "StatementsIssuedByEvent", fields: [issuedByEventId], references: [id])
   revokedBy        WorldEvent? @relation(name: "StatementsRevokedByEvent", fields: [revokedByEventId], references: [id])
-  issuedByEventId  String?
+  issuedByEventId  String
   revokedByEventId String?
 }

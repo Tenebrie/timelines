@@ -1,14 +1,15 @@
 import { Add, Delete, Save } from '@mui/icons-material'
 import { Button, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-import { worldSlice } from '../../reducer'
+import { useDeleteWorldEventMutation } from '../../../../../api/rheaApi'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
 import { WorldEvent, WorldStatement } from '../../types'
 import { IssuedStatementCard } from '../StatementCards/IssuedStatementCard/IssuedStatementCard'
 import { RevokedStatementCard } from '../StatementCards/RevokedStatementCard/RevokedStatementCard'
+import { DeleteStatementModal } from './components/DeleteStatementModal/DeleteStatementModal'
 import { IssuedStatementWizard } from './components/IssuedStatementWizard/IssuedStatementWizard'
 import { RevokedStatementWizard } from './components/RevokedStatementWizard/RevokedStatementWizard'
 import {
@@ -22,11 +23,12 @@ import {
 export const EventEditor = () => {
 	const [issuedStatementWizardOpen, setIssuedStatementWizardOpen] = useState(false)
 	const [revokedStatementWizardOpen, setRevokedStatementWizardOpen] = useState(false)
+	const [deleteStatementModalOpen, setDeleteStatementModalOpen] = useState(false)
+	const [deleteStatementModalTarget, setDeleteStatementModalTarget] = useState<WorldStatement | null>(null)
 
 	const { events } = useSelector(getWorldState)
 
-	const dispatch = useDispatch()
-	const { updateWorldEvent, deleteWorldEvent } = worldSlice.actions
+	const [deleteWorldEvent, { isLoading }] = useDeleteWorldEventMutation()
 
 	const { navigateToCurrentWorld, eventEditorParams } = useWorldRouter()
 	const { eventId } = eventEditorParams
@@ -38,12 +40,7 @@ export const EventEditor = () => {
 	}
 
 	const updateEditorEvent = (delta: Partial<WorldEvent>) => {
-		dispatch(
-			updateWorldEvent({
-				...event,
-				...delta,
-			})
-		)
+		// TODO
 	}
 
 	const {
@@ -57,29 +54,20 @@ export const EventEditor = () => {
 	const onNameChange = (value: string) => updateEditorEvent({ name: value })
 	const onTimestampChange = (value: number) => updateEditorEvent({ timestamp: value })
 	const onDescriptionChange = (value: string) => updateEditorEvent({ description: value })
-	const onIssueWorldStatement = (statement: WorldStatement) =>
-		updateEditorEvent({
-			issuedStatements: addedWorldCards.concat(statement),
-		})
-	const onRemoveIssuedWorldStatement = (id: string) =>
-		updateEditorEvent({
-			issuedStatements: addedWorldCards.filter((card) => card.id !== id),
-		})
-	const onRevokeWorldStatement = (statement: WorldStatement) =>
-		updateEditorEvent({
-			revokedStatements: removedWorldCards.concat(statement),
-		})
-	const onRemoveRevokedWorldStatement = (id: string) =>
-		updateEditorEvent({
-			revokedStatements: removedWorldCards.filter((card) => card.id !== id),
-		})
+	const onDeleteWorldStatement = (target: WorldStatement) => {
+		setDeleteStatementModalTarget(target)
+		setDeleteStatementModalOpen(true)
+	}
 
 	const onSave = () => {
 		navigateToCurrentWorld()
 	}
 
 	const onDelete = () => {
-		dispatch(deleteWorldEvent(event.id))
+		deleteWorldEvent({
+			worldId: eventEditorParams.worldId,
+			eventId: eventEditorParams.eventId,
+		})
 		navigateToCurrentWorld()
 	}
 
@@ -116,7 +104,7 @@ export const EventEditor = () => {
 								key={card.id}
 								mode="editor"
 								card={card}
-								onDelete={() => onRemoveIssuedWorldStatement(card.id)}
+								onDelete={() => onDeleteWorldStatement(card)}
 							/>
 						))}
 						<Button onClick={() => setIssuedStatementWizardOpen(true)}>
@@ -126,11 +114,7 @@ export const EventEditor = () => {
 					<StatementsUnit>
 						<Typography variant="h5">Revoked statements:</Typography>
 						{removedWorldCards.map((card) => (
-							<RevokedStatementCard
-								key={card.id}
-								id={card.id}
-								onDelete={() => onRemoveRevokedWorldStatement(card.id)}
-							/>
+							<RevokedStatementCard key={card.id} id={card.id} />
 						))}
 						<Button onClick={() => setRevokedStatementWizardOpen(true)}>
 							<Add /> Add
@@ -145,15 +129,21 @@ export const EventEditor = () => {
 				</Button>
 				<IssuedStatementWizard
 					open={issuedStatementWizardOpen}
-					onCreate={onIssueWorldStatement}
 					onClose={() => setIssuedStatementWizardOpen(false)}
 				/>
 				<RevokedStatementWizard
 					editorEvent={event}
 					open={revokedStatementWizardOpen}
-					onRevoke={onRevokeWorldStatement}
 					onClose={() => setRevokedStatementWizardOpen(false)}
 				/>
+				{deleteStatementModalTarget && (
+					<DeleteStatementModal
+						isOpen={deleteStatementModalOpen}
+						statementId={deleteStatementModalTarget.id}
+						statementTitle={deleteStatementModalTarget.title}
+						onClose={() => setDeleteStatementModalOpen(false)}
+					/>
+				)}
 			</EventEditorContainer>
 		</EventEditorWrapper>
 	)

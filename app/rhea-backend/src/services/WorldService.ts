@@ -55,14 +55,33 @@ export const WorldService = {
 		})
 	},
 
-	issueWorldStatement: async (eventId: string, data: Pick<WorldStatement, 'title'>) => {
+	deleteWorldEvent: async (eventId: string) => {
+		return dbClient.worldEvent.delete({
+			where: {
+				id: eventId,
+			},
+		})
+	},
+
+	issueWorldStatement: async (
+		data: Pick<WorldStatement, 'title'> & { eventId: string; content?: string }
+	) => {
 		return dbClient.worldStatement.create({
 			data: {
-				issuedByEventId: eventId,
+				issuedByEventId: data.eventId,
 				title: data.title,
+				text: data.content,
 			},
 			select: {
 				id: true,
+			},
+		})
+	},
+
+	deleteWorldStatement: async (statementId: string) => {
+		return dbClient.worldStatement.delete({
+			where: {
+				id: statementId,
 			},
 		})
 	},
@@ -74,6 +93,17 @@ export const WorldService = {
 			},
 			data: {
 				revokedByEventId: eventId,
+			},
+		})
+	},
+
+	unrevokeWorldStatement: async ({ statementId }: { statementId: string }) => {
+		return dbClient.worldStatement.update({
+			where: {
+				id: statementId,
+			},
+			data: {
+				revokedByEventId: null,
 			},
 		})
 	},

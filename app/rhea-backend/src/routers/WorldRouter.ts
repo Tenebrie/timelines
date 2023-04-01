@@ -2,6 +2,7 @@ import { UserAuthenticator } from '@src/auth/UserAuthenticator'
 import { WorldService } from '@src/services/WorldService'
 import {
 	NumberValidator,
+	OptionalParam,
 	PathParam,
 	RequiredParam,
 	Router,
@@ -111,7 +112,26 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 	return await WorldService.createWorldEvent(worldId, params)
 })
 
-router.post('/api/world/:worldId/event/:eventId/statement/issue', async (ctx) => {
+router.delete('/api/world/:worldId/event/:eventId', async (ctx) => {
+	useApiEndpoint({
+		name: 'deleteWorldEvent',
+		description: 'Deletes the target world event.',
+		tags: [worldTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId, eventId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+		eventId: PathParam(StringValidator),
+	})
+
+	await WorldService.checkUserWriteAccess(user, worldId)
+
+	return await WorldService.deleteWorldEvent(eventId)
+})
+
+router.post('/api/world/:worldId/statement', async (ctx) => {
 	useApiEndpoint({
 		name: 'issueWorldStatement',
 		description: 'Creates a new world statement and marks the specified event as the issuer.',
@@ -120,21 +140,41 @@ router.post('/api/world/:worldId/event/:eventId/statement/issue', async (ctx) =>
 
 	const user = await useAuth(ctx, UserAuthenticator)
 
-	const { worldId, eventId } = usePathParams(ctx, {
+	const { worldId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),
-		eventId: PathParam(StringValidator),
 	})
 
 	await WorldService.checkUserWriteAccess(user, worldId)
 
 	const params = useRequestBody(ctx, {
+		eventId: RequiredParam(StringValidator),
 		title: RequiredParam(StringValidator),
+		content: OptionalParam(StringValidator),
 	})
 
-	return await WorldService.issueWorldStatement(eventId, params)
+	return await WorldService.issueWorldStatement(params)
 })
 
-router.post('/api/world/:worldId/event/:eventId/statement/revoke', async (ctx) => {
+router.delete('/api/world/:worldId/statement/:statementId', async (ctx) => {
+	useApiEndpoint({
+		name: 'deleteWorldStatement',
+		description: 'Deletes the target world statement',
+		tags: [worldTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId, statementId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+		statementId: PathParam(StringValidator),
+	})
+
+	await WorldService.checkUserWriteAccess(user, worldId)
+
+	return await WorldService.deleteWorldStatement(statementId)
+})
+
+router.post('/api/world/:worldId/statement/:statementId/revoke', async (ctx) => {
 	useApiEndpoint({
 		name: 'revokeWorldStatement',
 		description: 'Marks the specified event as the revoker for this world statement.',
@@ -143,19 +183,40 @@ router.post('/api/world/:worldId/event/:eventId/statement/revoke', async (ctx) =
 
 	const user = await useAuth(ctx, UserAuthenticator)
 
-	const { worldId, eventId } = usePathParams(ctx, {
+	const { worldId, statementId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),
-		eventId: PathParam(StringValidator),
+		statementId: PathParam(StringValidator),
 	})
 
 	await WorldService.checkUserWriteAccess(user, worldId)
 
-	const { statementId } = useRequestBody(ctx, {
-		statementId: RequiredParam(StringValidator),
+	const { eventId } = useRequestBody(ctx, {
+		eventId: RequiredParam(StringValidator),
 	})
 
 	return await WorldService.revokeWorldStatement({
 		eventId,
+		statementId,
+	})
+})
+
+router.post('/api/world/:worldId/statement/:statementId/unrevoke', async (ctx) => {
+	useApiEndpoint({
+		name: 'unrevokeWorldStatement',
+		description: 'Marks the statement as never revoked.',
+		tags: [worldTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId, statementId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+		statementId: PathParam(StringValidator),
+	})
+
+	await WorldService.checkUserWriteAccess(user, worldId)
+
+	return await WorldService.unrevokeWorldStatement({
 		statementId,
 	})
 })

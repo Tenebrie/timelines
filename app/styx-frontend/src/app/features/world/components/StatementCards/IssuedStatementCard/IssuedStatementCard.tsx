@@ -19,6 +19,7 @@ type Props = { card: WorldStatement } & (
 export const IssuedStatementCard = ({ card, mode, onDelete }: Props) => {
 	const { timeToLabel } = useWorldTime()
 	const { events } = useSelector(getWorldState)
+
 	const parentEvent = events.find((event) =>
 		event.issuedStatements.find((statement) => statement.id === card.id)
 	)
