@@ -70,12 +70,14 @@ export const RevokedStatementWizard = () => {
 
 	const removableCards = worldEvents
 		.filter((event) => event.timestamp < editorEvent.timestamp)
-		.filter((event) => editorEvent.revokedStatements.every((revokedEvent) => revokedEvent.id === event.id))
 		.flatMap((event) =>
 			event.issuedStatements.map((statement) => ({
 				...statement,
 				event,
 			}))
+		)
+		.filter((statement) =>
+			editorEvent.revokedStatements.every((revokedStatement) => revokedStatement.id !== statement.id)
 		)
 
 	return (

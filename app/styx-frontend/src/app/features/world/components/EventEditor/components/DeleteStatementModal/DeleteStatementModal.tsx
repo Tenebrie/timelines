@@ -67,11 +67,11 @@ export const DeleteStatementModal = () => {
 
 	return (
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
-			<ModalHeader>Delete world</ModalHeader>
+			<ModalHeader>Delete Statement</ModalHeader>
 			<Stack spacing={2}>
 				<div>
-					Attempting to permanently delete world statement <b>{targetStatement?.title}</b>. It will unlink it
-					from the issuer and revoker as well.
+					Attempting to permanently delete world statement '<b>{targetStatement?.title}</b>'. It will unlink
+					it from the revoker as well.
 				</div>
 				<div>This action can't be reverted!</div>
 				{deletionError && (
