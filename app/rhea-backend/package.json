@@ -1,25 +1,45 @@
 {
 	"name": "rhea-backend",
 	"version": "0.0.1",
-	"description": "",
-	"author": "",
 	"private": true,
+	"description": "",
 	"license": "UNLICENSED",
+	"author": "",
 	"scripts": {
-		"prod": "node dist/index.js",
-		"start": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' src/index.ts",
 		"build": "tsc -p .",
 		"lint": "eslint src/",
 		"lint-fix": "eslint src/ --fix",
-		"test": "jest",
-		"test:watch": "jest --watchAll",
 		"prisma:format": "prisma format",
 		"prisma:generate": "prisma generate",
 		"prisma:migrate:dev": "prisma migrate dev",
-		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline"
+		"prod": "node dist/index.js",
+		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline",
+		"start": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' src/index.ts",
+		"test": "jest",
+		"test:watch": "jest --watchAll"
 	},
 	"lint-staged": {
 		"*.(ts)": "eslint --fix"
+	},
+	"jest": {
+		"collectCoverageFrom": [
+			"**/*.(t|j)s"
+		],
+		"coverageDirectory": "../coverage",
+		"moduleFileExtensions": [
+			"js",
+			"json",
+			"ts"
+		],
+		"moduleNameMapper": {
+			"^@src(.*)$": "<rootDir>/src$1"
+		},
+		"rootDir": "./",
+		"testEnvironment": "node",
+		"testRegex": ".*\\.spec\\.ts$",
+		"transform": {
+			"^.+\\.(t|j)s$": "ts-jest"
+		}
 	},
 	"dependencies": {
 		"@koa/router": "^12.0.0",
@@ -66,26 +86,6 @@
 		"ts-node-dev": "^1.0.0-pre.58",
 		"tsconfig-paths": "4.1.0",
 		"typescript": "^4.9.4"
-	},
-	"jest": {
-		"moduleFileExtensions": [
-			"js",
-			"json",
-			"ts"
-		],
-		"rootDir": "./",
-		"testRegex": ".*\\.spec\\.ts$",
-		"transform": {
-			"^.+\\.(t|j)s$": "ts-jest"
-		},
-		"collectCoverageFrom": [
-			"**/*.(t|j)s"
-		],
-		"moduleNameMapper": {
-			"^@src(.*)$": "<rootDir>/src$1"
-		},
-		"coverageDirectory": "../coverage",
-		"testEnvironment": "node"
 	},
 	"_moduleAliases": {
 		"@src": "dist"

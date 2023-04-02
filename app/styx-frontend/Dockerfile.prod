@@ -21,9 +21,7 @@ COPY .prettierrc.js /app/styx
 # RUN yarn
 
 WORKDIR /app/styx
-RUN yarn
-RUN yarn build
-RUN yarn prune-build-modules
+RUN yarn && yarn build && yarn prune-build-modules
 
 # Expose server
 EXPOSE 8080

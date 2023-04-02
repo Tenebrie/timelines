@@ -13,7 +13,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install --yes msttcorefonts
 
 WORKDIR /app/rhea
 
-ADD ./app/styx-frontend /app/styx
 ADD ./app/rhea-backend /app/rhea
 RUN yarn
 
