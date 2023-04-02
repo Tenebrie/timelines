@@ -1,5 +1,12 @@
 version: "3.1"
 services:
+    gatekeeper:
+        build:
+            context: ./app/gatekeeper-proxy
+            dockerfile: ./Dockerfile
+        ports:
+            - 80:80
+        command: 
     styx:
         build:
             context: ./
