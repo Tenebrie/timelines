@@ -26,7 +26,6 @@ export const EventDetailsEditor = ({ event }: Props) => {
 	const lastSavedAt = useRef<Date>(new Date(event.updatedAt))
 
 	useEffect(() => {
-		console.log(new Date(event.updatedAt) > lastSavedAt.current)
 		if (new Date(event.updatedAt) > lastSavedAt.current) {
 			setName(event.name)
 			setTimestamp(event.timestamp)
