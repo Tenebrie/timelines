@@ -20,3 +20,8 @@ services:
     rhea-postgres:
 volumes:
     rhea-db:
+        driver: local
+        driver_opts:
+            type: 'none'
+            o: 'bind'
+            device: '/mnt/volume_rhea_postgres/data'

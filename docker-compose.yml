@@ -15,7 +15,6 @@ services:
         volumes:
             - ./app/styx-frontend/src:/app/styx/src:cached
             - ./app/styx-frontend/public:/app/styx/public:cached
-            - ./app/shared/src:/app/shared/src:cached
         tty: true
         restart: on-failure
     rhea:
@@ -34,7 +33,6 @@ services:
         volumes:
             - ./app/styx-frontend/public:/app/styx/public:cached
             - ./app/rhea-backend/src:/app/rhea/src:cached
-            - ./app/shared/src:/app/shared/src:cached
         tty: true
         restart: on-failure
     rhea-postgres:
