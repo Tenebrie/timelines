@@ -4469,10 +4469,10 @@ tar@^6.0.2, tar@^6.1.11, tar@^6.1.2:
     mkdirp "^1.0.3"
     yallist "^4.0.0"
 
-tenebrie-framework@^0.4.6:
-  version "0.4.6"
-  resolved "https://registry.yarnpkg.com/tenebrie-framework/-/tenebrie-framework-0.4.6.tgz#e387cb535ce8e401b8e625e3dca49d2613c4545e"
-  integrity sha512-VHmZ56yeJNMn5dVKh/0zFdYID+W2RUXuXZxkwbHbhFK2wXsCaENqjKJLwtrhjW+fT41lr2JALXTwDzubo017VA==
+tenebrie-framework@^0.4.7:
+  version "0.4.7"
+  resolved "https://registry.yarnpkg.com/tenebrie-framework/-/tenebrie-framework-0.4.7.tgz#90b6ad25c045b81cb817fc89b94ab5ba96edf216"
+  integrity sha512-cqkWXlHKoFOtZDs2PoRJxDHImhnFSpIjUu3LTwryC6wkuEyrydglY9PFnJR1Ew8PPSD7JL6n960QbVb3eY0uyA==
   dependencies:
     http-status-codes "^2.2.0"
     module-alias "^2.2.2"

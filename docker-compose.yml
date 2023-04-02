@@ -4,7 +4,6 @@ services:
         build:
             context: ./
             dockerfile: ./app/styx-frontend/Dockerfile
-        image: localhost:5000/styx
         working_dir: /app/styx
         environment:
             NODE_ENV: development
@@ -23,7 +22,6 @@ services:
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile
-        image: localhost:5000/rhea
         working_dir: /app/rhea
         environment:
             NODE_ENV: development

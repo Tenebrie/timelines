@@ -1,0 +1,22 @@
+version: "3.1"
+services:
+    styx:
+        build:
+            context: ./
+            dockerfile: ./app/styx-frontend/Dockerfile.prod
+        image: localhost:5000/styx
+        environment:
+            NODE_ENV: production
+        command: serve -s build
+    rhea:
+        build:
+            context: ./
+            dockerfile: ./app/rhea-backend/Dockerfile.prod
+        image: localhost:5000/rhea
+        environment:
+            NODE_ENV: production
+            DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
+        command: yarn prod
+    rhea-postgres:
+volumes:
+    rhea-db:
