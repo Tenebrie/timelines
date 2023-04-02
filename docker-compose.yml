@@ -4,35 +4,19 @@ services:
         build:
             context: ./
             dockerfile: ./app/styx-frontend/Dockerfile
-        working_dir: /app/styx
         environment:
             NODE_ENV: development
-        depends_on:
-            - rhea
-        ports:
-            - 8080:8080
-        command: bash -c "yarn start"
-        volumes:
-            - ./app/styx-frontend/src:/app/styx/src:cached
-            - ./app/styx-frontend/public:/app/styx/public:cached
+        command: yarn start
         tty: true
         restart: on-failure
     rhea:
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile
-        working_dir: /app/rhea
         environment:
             NODE_ENV: development
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
-        depends_on:
-            - rhea-postgres
-        ports:
-            - 3000:3000
         command: yarn start
-        volumes:
-            - ./app/styx-frontend/public:/app/styx/public:cached
-            - ./app/rhea-backend/src:/app/rhea/src:cached
         tty: true
         restart: on-failure
     rhea-postgres:

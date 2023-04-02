@@ -1,0 +1,30 @@
+version: "3.1"
+services:
+    styx:
+        working_dir: /app/styx
+        tty: true
+        depends_on:
+            - rhea
+        ports:
+            - 8080:8080
+        volumes:
+            - ./app/styx-frontend/src:/app/styx/src:cached
+            - ./app/styx-frontend/public:/app/styx/public:cached
+    rhea:
+        working_dir: /app/rhea
+        tty: true
+        depends_on:
+            - rhea-postgres
+        ports:
+            - 3000:3000
+        volumes:
+            - ./app/styx-frontend/public:/app/styx/public:cached
+            - ./app/rhea-backend/src:/app/rhea/src:cached
+    rhea-postgres:
+        image: postgres:11.5-alpine
+        environment:
+            POSTGRES_USER: docker
+            POSTGRES_PASSWORD: docker
+            POSTGRES_DB: db
+        ports:
+            - 5432:5432

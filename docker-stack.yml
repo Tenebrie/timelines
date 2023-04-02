@@ -19,5 +19,4 @@ services:
         command: yarn prod
     rhea-postgres:
         volumes:
-            - rhea-db:/mnt/limbo
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached
