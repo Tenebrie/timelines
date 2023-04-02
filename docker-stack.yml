@@ -7,7 +7,7 @@ services:
         image: localhost:5000/styx
         environment:
             NODE_ENV: production
-        command: serve -s build
+        command: yarn serve -s build
     rhea:
         build:
             context: ./
