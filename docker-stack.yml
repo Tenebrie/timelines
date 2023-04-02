@@ -4,6 +4,7 @@ services:
         build:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile
+        image: localhost:5000/gatekeeper
         ports:
             - 80:80
     styx:
