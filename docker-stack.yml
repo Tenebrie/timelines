@@ -17,7 +17,6 @@ services:
             NODE_ENV: production
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
         command: yarn prod
-    rhea-postgres:
 volumes:
     rhea-db:
         driver: local
