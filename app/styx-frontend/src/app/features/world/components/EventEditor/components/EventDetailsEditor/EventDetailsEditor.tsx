@@ -5,12 +5,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useUpdateWorldEventMutation } from '../../../../../../../api/rheaApi'
+import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useIsFirstRender } from '../../../../../../utils/useIsFirstRender'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
 import { WorldEvent } from '../../../../types'
-import { useAutosave } from './useAutosave'
 
 type Props = {
 	event: WorldEvent
@@ -50,6 +50,7 @@ export const EventDetailsEditor = ({ event }: Props) => {
 
 	const {
 		icon: autosaveIcon,
+		color: autosaveColor,
 		autosave,
 		manualSave,
 	} = useAutosave({
@@ -102,6 +103,7 @@ export const EventDetailsEditor = ({ event }: Props) => {
 					variant="outlined"
 					onClick={manualSave}
 					loadingPosition="start"
+					color={autosaveColor}
 					startIcon={autosaveIcon}
 				>
 					Save
