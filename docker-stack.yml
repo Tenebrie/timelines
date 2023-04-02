@@ -4,14 +4,14 @@ services:
         build:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile
-        image: localhost:5000/gatekeeper
+        image: 127.0.0.1:5000/gatekeeper
         ports:
             - 80:80
     styx:
         build:
             context: ./
             dockerfile: ./app/styx-frontend/Dockerfile.prod
-        image: localhost:5000/styx
+        image: 127.0.0.1:5000/styx
         environment:
             NODE_ENV: production
         command: yarn serve -s build -l 8080
@@ -19,7 +19,7 @@ services:
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile.prod
-        image: localhost:5000/rhea
+        image: 127.0.0.1:5000/rhea
         environment:
             NODE_ENV: production
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
