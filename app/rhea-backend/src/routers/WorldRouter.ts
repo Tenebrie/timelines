@@ -88,6 +88,9 @@ router.delete('/api/world/:worldId', async (ctx) => {
 	await WorldService.deleteWorld(worldId)
 })
 
+/**
+ * World events
+ */
 router.post('/api/world/:worldId/event', async (ctx) => {
 	useApiEndpoint({
 		name: 'createWorldEvent',
@@ -112,6 +115,31 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 	return await WorldService.createWorldEvent(worldId, params)
 })
 
+router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
+	useApiEndpoint({
+		name: 'updateWorldEvent',
+		description: 'Updates the target world event',
+		tags: [worldTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId, eventId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+		eventId: PathParam(StringValidator),
+	})
+
+	await WorldService.checkUserWriteAccess(user, worldId)
+
+	const params = useRequestBody(ctx, {
+		name: OptionalParam(StringValidator),
+		timestamp: OptionalParam(NumberValidator),
+		description: OptionalParam(StringValidator),
+	})
+
+	return await WorldService.updateWorldEvent(eventId, params)
+})
+
 router.delete('/api/world/:worldId/event/:eventId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteWorldEvent',
@@ -131,6 +159,9 @@ router.delete('/api/world/:worldId/event/:eventId', async (ctx) => {
 	return await WorldService.deleteWorldEvent(eventId)
 })
 
+/**
+ * World statements
+ */
 router.post('/api/world/:worldId/statement', async (ctx) => {
 	useApiEndpoint({
 		name: 'issueWorldStatement',

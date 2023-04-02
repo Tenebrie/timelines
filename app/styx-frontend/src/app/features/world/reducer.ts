@@ -16,6 +16,10 @@ const initialState = {
 	},
 
 	eventEditor: {
+		deleteEventModal: {
+			isOpen: false as boolean,
+			target: null as WorldEvent | null,
+		},
 		deleteStatementModal: {
 			isOpen: false as boolean,
 			target: null as WorldStatement | null,
@@ -61,6 +65,16 @@ export const worldSlice = createSlice({
 
 		closeEventWizard: (state) => {
 			state.eventWizard.isOpen = false
+		},
+
+		/* Event editor - Delete event modal */
+		openDeleteEventModal: (state, { payload }: PayloadAction<WorldEvent>) => {
+			state.eventEditor.deleteEventModal.isOpen = true
+			state.eventEditor.deleteEventModal.target = payload
+		},
+
+		closeDeleteEventModal: (state) => {
+			state.eventEditor.deleteEventModal.isOpen = false
 		},
 
 		/* Event editor - Delete statement modal */

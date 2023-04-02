@@ -46,6 +46,14 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['world'],
 			}),
+			updateWorldEvent: build.mutation<UpdateWorldEventApiResponse, UpdateWorldEventApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}`,
+					method: 'PATCH',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['world'],
+			}),
 			deleteWorldEvent: build.mutation<DeleteWorldEventApiResponse, DeleteWorldEventApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}`,
@@ -176,6 +184,25 @@ export type CreateWorldEventApiArg = {
 		timestamp: number
 	}
 }
+export type UpdateWorldEventApiResponse = /** status 200  */ {
+	id: string
+	type: 'SCENE' | 'OTHER'
+	name: string
+	timestamp: number
+	description: string
+	worldId: string
+}
+export type UpdateWorldEventApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	eventId: string
+	body: {
+		name?: string
+		timestamp?: number
+		description?: string
+	}
+}
 export type DeleteWorldEventApiResponse = /** status 200  */ {
 	id: string
 	type: 'SCENE' | 'OTHER'
@@ -258,6 +285,7 @@ export const {
 	useLazyGetWorldInfoQuery,
 	useDeleteWorldMutation,
 	useCreateWorldEventMutation,
+	useUpdateWorldEventMutation,
 	useDeleteWorldEventMutation,
 	useIssueWorldStatementMutation,
 	useDeleteWorldStatementMutation,

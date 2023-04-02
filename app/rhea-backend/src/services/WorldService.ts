@@ -55,6 +55,15 @@ export const WorldService = {
 		})
 	},
 
+	updateWorldEvent: async (eventId: string, data: Partial<WorldEvent>) => {
+		return dbClient.worldEvent.update({
+			where: {
+				id: eventId,
+			},
+			data,
+		})
+	},
+
 	deleteWorldEvent: async (eventId: string) => {
 		return dbClient.worldEvent.delete({
 			where: {

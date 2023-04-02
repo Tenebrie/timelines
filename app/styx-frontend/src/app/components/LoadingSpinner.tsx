@@ -7,6 +7,8 @@ const Container = styled.div`
 	position: relative;
 	width: 100%;
 	height: 100%;
+	max-width: 256px;
+	max-height: 256px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -107,11 +109,11 @@ export const LoadingSpinner = () => {
 	return (
 		<Container className={`${multiSpinny ? 'huge' : ''} ${extraSpinny ? 'wild' : ''}`}>
 			{!multiSpinny && (
-				<MySvg className={colors ? 'hue' : ''} xmlns="http://www.w3.org/2000/svg" viewBox="-170 -170 340 340">
-					<circle cx="5" cy="5" r="80" stroke={colorB} fill={colorB} shapeRendering="optimizeQuality" />
-					<circle cx="5" cy="5" r="68" stroke={colorA} fill={colorA} shapeRendering="optimizeQuality" />
-					<circle cx="5" cy="5" r="55" stroke={colorB} fill={colorB} shapeRendering="optimizeQuality" />
-					<circle cx="5" cy="5" r="43" stroke={colorA} fill={colorA} shapeRendering="optimizeQuality" />
+				<MySvg className={colors ? 'hue' : ''} xmlns="http://www.w3.org/2000/svg" viewBox="-85 -85 170 170">
+					<circle cx="2.5" cy="2.5" r="40" stroke={colorB} fill={colorB} shapeRendering="optimizeQuality" />
+					<circle cx="2.5" cy="2.5" r="34" stroke={colorA} fill={colorA} shapeRendering="optimizeQuality" />
+					<circle cx="2.5" cy="2.5" r="28" stroke={colorB} fill={colorB} shapeRendering="optimizeQuality" />
+					<circle cx="2.5" cy="2.5" r="21.5" stroke={colorA} fill={colorA} shapeRendering="optimizeQuality" />
 				</MySvg>
 			)}
 			{multiSpinny &&
