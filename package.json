@@ -9,8 +9,7 @@
 		"app/rhea-backend/"
 	],
 	"scripts": {
-		"postinstall": "subpkg install",
-		"prepare": "husky install",
+		"postinstall": "subpkg install && husky install",
 		"build": "sh scripts/build.sh",
 		"start": "node dist/services/gaia/src/app.js",
 		"docker": "yarn docker:start",

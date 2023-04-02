@@ -33,12 +33,14 @@ enum WorldEventType {
 }
 
 model WorldEvent {
-  id String @id @unique @default(uuid())
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   type        WorldEventType
   name        String
   timestamp   Float
-  description String @default("")
+  description String         @default("")
 
   issuedStatements  WorldStatement[] @relation(name: "StatementsIssuedByEvent")
   revokedStatements WorldStatement[] @relation(name: "StatementsRevokedByEvent")
@@ -52,7 +54,7 @@ model WorldStatement {
   title String
   text  String @default("")
 
-  issuedBy         WorldEvent @relation(name: "StatementsIssuedByEvent", fields: [issuedByEventId], references: [id])
+  issuedBy         WorldEvent  @relation(name: "StatementsIssuedByEvent", fields: [issuedByEventId], references: [id])
   revokedBy        WorldEvent? @relation(name: "StatementsRevokedByEvent", fields: [revokedByEventId], references: [id])
   issuedByEventId  String
   revokedByEventId String?

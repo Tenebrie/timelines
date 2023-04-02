@@ -21,7 +21,19 @@ export const EventDetailsEditor = ({ event }: Props) => {
 	const [timestamp, setTimestamp] = useState<number>(event.timestamp)
 	const [description, setDescription] = useState<string>(event.description)
 
+	const savingEnabled = useRef<boolean>(true)
 	const lastSaved = useRef<Pick<WorldEvent, 'name' | 'timestamp' | 'description'>>(event)
+	const lastSavedAt = useRef<Date>(new Date(event.updatedAt))
+
+	useEffect(() => {
+		console.log(new Date(event.updatedAt) > lastSavedAt.current)
+		if (new Date(event.updatedAt) > lastSavedAt.current) {
+			setName(event.name)
+			setTimestamp(event.timestamp)
+			setDescription(event.description)
+			savingEnabled.current = false
+		}
+	}, [event])
 
 	const { openDeleteEventModal } = worldSlice.actions
 	const dispatch = useDispatch()
@@ -44,6 +56,7 @@ export const EventDetailsEditor = ({ event }: Props) => {
 				return
 			}
 			lastSaved.current = response
+			lastSavedAt.current = new Date()
 		},
 		[event.id, updateWorldEvent, worldId]
 	)
@@ -65,6 +78,10 @@ export const EventDetailsEditor = ({ event }: Props) => {
 
 	const { isFirstRender } = useIsFirstRender()
 	useEffect(() => {
+		if (!savingEnabled.current) {
+			savingEnabled.current = true
+			return
+		}
 		if (
 			isFirstRender ||
 			(lastSaved.current.name === name &&

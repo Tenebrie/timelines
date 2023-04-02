@@ -1,6 +1,7 @@
 import debounce from 'lodash.debounce'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { useEffectOnce } from '../useEffectOnce'
 import { AutosaveIcon } from './AutosaveIcon'
 import { SavingState } from './types'
 
@@ -10,6 +11,7 @@ type Props = {
 }
 
 export const useAutosave = ({ onSave, isSaving }: Props) => {
+	const savingStateRef = useRef<SavingState>('none')
 	const [savingState, setSavingState] = useState<SavingState>('none')
 	const successTimeoutRef = useRef<number | null>(null)
 
@@ -49,6 +51,7 @@ export const useAutosave = ({ onSave, isSaving }: Props) => {
 	}, [savingState, isSaving])
 
 	useEffect(() => {
+		savingStateRef.current = savingState
 		if (savingState === 'success') {
 			successTimeoutRef.current = window.setTimeout(() => {
 				setSavingState('none')
@@ -64,8 +67,16 @@ export const useAutosave = ({ onSave, isSaving }: Props) => {
 	}, [savingState])
 
 	const renderIcon = useCallback(() => {
-		return <AutosaveIcon savingState={savingState} />
-	}, [savingState])
+		return <AutosaveIcon savingState={savingState} isSaving={isSaving} />
+	}, [isSaving, savingState])
+
+	useEffectOnce(() => {
+		return () => {
+			if (savingStateRef.current === 'debounce') {
+				onSaveRef.current()
+			}
+		}
+	})
 
 	useEffect(() => {
 		setCurrentIcon(renderIcon())
