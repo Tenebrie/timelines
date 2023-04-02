@@ -99,7 +99,7 @@ export const EventDetailsEditor = ({ event }: Props) => {
 
 	return (
 		<Stack spacing={2} direction="column">
-			<TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} disabled />
+			<TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} />
 			<TextField
 				label="Timestamp"
 				value={timestamp}
