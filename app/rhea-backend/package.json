@@ -15,7 +15,8 @@
 		"test:watch": "jest --watchAll",
 		"prisma:format": "prisma format",
 		"prisma:generate": "prisma generate",
-		"prisma:migrate:dev": "prisma migrate dev"
+		"prisma:migrate:dev": "prisma migrate dev",
+		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline"
 	},
 	"lint-staged": {
 		"*.(ts)": "eslint --fix"

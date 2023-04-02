@@ -10,7 +10,8 @@
 		"eject": "react-scripts eject",
 		"lint": "eslint src/",
 		"lint-fix": "eslint src/ --fix",
-		"openapi": "(cd openapi && ./generate_openapi.sh)"
+		"openapi": "(cd openapi && ./generate_openapi.sh)",
+		"prune-build-modules": "rm -rf node_modules"
 	},
 	"lint-staged": {
 		"*.(ts|tsx)": "eslint --fix"

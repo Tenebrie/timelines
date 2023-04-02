@@ -1,0 +1,1 @@
+docker service update --image 127.0.0.1:5000/gatekeeper timelines_gatekeeper

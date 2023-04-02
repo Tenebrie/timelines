@@ -17,5 +17,6 @@ ADD ./app/styx-frontend /app/styx
 ADD ./app/rhea-backend /app/rhea
 RUN yarn
 RUN yarn build
+RUN yarn prune-build-modules
 
 EXPOSE 3000
