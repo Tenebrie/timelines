@@ -38,7 +38,7 @@ export const RevokedStatementWizard = () => {
 			return
 		}
 
-		const { response, error } = parseApiResponse(
+		const { error } = parseApiResponse(
 			await revokeWorldStatement({
 				worldId: eventEditorParams.worldId,
 				statementId: id,

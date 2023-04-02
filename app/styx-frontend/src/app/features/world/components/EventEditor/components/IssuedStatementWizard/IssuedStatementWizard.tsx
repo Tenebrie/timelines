@@ -40,7 +40,7 @@ export const IssuedStatementWizard = () => {
 			return
 		}
 
-		const { response, error } = parseApiResponse(
+		const { error } = parseApiResponse(
 			await issueWorldStatement({
 				worldId: eventEditorParams.worldId,
 				body: {
