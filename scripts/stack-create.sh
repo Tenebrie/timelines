@@ -1,1 +1,1 @@
-docker stack deploy -c docker-compose.common.yml -c docker-stack.yml timelines
+docker stack deploy -c docker-compose.common.yml -c docker-compose.prod.yml timelines

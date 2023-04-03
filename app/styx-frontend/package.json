@@ -2,7 +2,7 @@
 	"name": "styx-frontend",
 	"version": "0.1.0",
 	"private": true,
-	"homepage": "https://tenebrie.github.io",
+	"homepage": "https://timelines.tenebrie.com",
 	"scripts": {
 		"build": "react-scripts build",
 		"eject": "react-scripts eject",
@@ -73,6 +73,5 @@
 		"styled-components": "^5",
 		"typescript": "^5.0.3",
 		"web-vitals": "^3.0.3"
-	},
-	"proxy": "http://rhea:3000"
+	}
 }

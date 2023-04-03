@@ -1,20 +1,23 @@
 version: "3.1"
 services:
     gatekeeper:
-        image: 127.0.0.1:5000/gatekeeper
+        image: tenebrie/timelines-gatekeeper
+        build:
+            context: ./app/gatekeeper-proxy
+            dockerfile: ./Dockerfile.prod
     styx:
+        image: tenebrie/timelines-styx
         build:
             context: ./
             dockerfile: ./app/styx-frontend/Dockerfile.prod
-        image: 127.0.0.1:5000/styx
         environment:
             NODE_ENV: production
         command: yarn serve -s build -l 8080
     rhea:
+        image: tenebrie/timelines-rhea
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile.prod
-        image: 127.0.0.1:5000/rhea
         environment:
             NODE_ENV: production
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public

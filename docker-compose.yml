@@ -1,11 +1,18 @@
 version: "3.1"
 services:
+    gatekeeper:
+        image: tenebrie/timelines-gatekeeper-local
+        build:
+            context: ./app/gatekeeper-proxy
+            dockerfile: ./Dockerfile
     styx:
+        image: tenebrie/timelines-styx-local
         build:
             context: ./
             dockerfile: ./app/styx-frontend/Dockerfile
         environment:
             NODE_ENV: development
+            DANGEROUSLY_DISABLE_HOST_CHECK: true # For React dev server to work behind Gatekeeper
         volumes:
             - ./app/styx-frontend/src:/app/styx/src:cached
             - ./app/styx-frontend/public:/app/styx/public:cached
@@ -13,6 +20,7 @@ services:
         tty: true
         restart: on-failure
     rhea:
+        image: tenebrie/timelines-rhea-local
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile

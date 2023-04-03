@@ -18,15 +18,8 @@
 		"docker:clean": "docker container kill $(docker ps -q)",
 		"docker:build": "docker compose -f docker-compose.common.yml -f docker-compose.yml build",
 		"docker:db": "docker-compose up rhea-postgres",
-		"cleanup": "rm -rf dist && (cd client && rm -rf dist) && (cd services/gaia && rm -rf dist && rm -rf coverage)",
-		"test": "(cd client && yarn test) && (cd services/gaia && yarn test)",
-		"test:client": "cd client && yarn test",
-		"test:client:watch": "cd client && yarn test:watch",
-		"test:gaia": "cd services/gaia && yarn test",
-		"test:gaia:watch": "cd services/gaia && yarn test:watch",
-		"nuke": "yarn cleanup && yarn subpkg nuke && rm -rf node_modules",
-		"lint:client": "(cd client && yarn lint)",
-		"heroku-cleanup": "rm -rf client && rm -rf services && rm -rf shared && rm -rf node_modules"
+		"docker:prod:build": "docker compose -f docker-compose.common.yml -f docker-compose.prod.yml build",
+		"docker:prod:push": "docker push tenebrie/timelines-gatekeeper && docker push tenebrie/timelines-styx && docker push tenebrie/timelines-rhea"
 	},
 	"dependencies": {
 		"@typescript-eslint/eslint-plugin": "^4.7.0",
