@@ -7,7 +7,7 @@ export const Shortcut = {
 	CtrlEnter: 'Ctrl+Enter',
 } as const
 
-export const useShortcut = (shortcut: typeof Shortcut[keyof typeof Shortcut], callback: () => void) => {
+export const useShortcut = (shortcut: (typeof Shortcut)[keyof typeof Shortcut], callback: () => void) => {
 	const defKeys = useMemo(() => shortcut.split('+'), [shortcut])
 	const ctrlKeyNeeded = useMemo(() => defKeys.some((key) => key === 'Ctrl'), [defKeys])
 

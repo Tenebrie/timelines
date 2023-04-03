@@ -1,4 +1,4 @@
-import 'module-alias/register'
+import './registerModuleAlias'
 
 import Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'

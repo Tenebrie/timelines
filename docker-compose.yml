@@ -6,6 +6,9 @@ services:
             dockerfile: ./app/styx-frontend/Dockerfile
         environment:
             NODE_ENV: development
+        volumes:
+            - ./app/styx-frontend/src:/app/styx/src:cached
+            - ./app/styx-frontend/public:/app/styx/public:cached
         command: yarn start
         tty: true
         restart: on-failure
@@ -16,6 +19,9 @@ services:
         environment:
             NODE_ENV: development
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
+        volumes:
+            - ./app/styx-frontend/public:/app/styx/public:cached
+            - ./app/rhea-backend/src:/app/rhea/src:cached
         command: yarn start
         tty: true
         restart: on-failure

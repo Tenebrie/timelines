@@ -5,7 +5,7 @@ const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
 	const navigationTarget = useRef<string | null>(null)
 	const [naviKey, setNaviKey] = useState<number>(0)
 
-	const navigateTo = (target: typeof routes[keyof typeof routes], args: Record<string, string>) => {
+	const navigateTo = (target: (typeof routes)[keyof typeof routes], args: Record<string, string>) => {
 		const replacedTarget = Object.keys(args).reduce(
 			(total, current) => total.replace(`:${current}`, args[current]),
 			target
