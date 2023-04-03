@@ -3,6 +3,7 @@ services:
     gatekeeper:
         ports:
             - 80:80
+            - 443:443
     styx:
         working_dir: /app/styx
         tty: true
