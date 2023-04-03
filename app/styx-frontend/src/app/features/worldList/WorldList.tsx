@@ -1,6 +1,5 @@
 import { Delete } from '@mui/icons-material'
-import { Button } from '@mui/material'
-import { Stack } from '@mui/system'
+import { Button, Stack } from '@mui/material'
 import { useDispatch } from 'react-redux'
 
 import { useGetWorldsQuery } from '../../../api/rheaApi'

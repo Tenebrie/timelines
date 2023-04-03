@@ -1,5 +1,11 @@
 version: "3.1"
 services:
+    gatekeeper:
+        build:
+            context: ./app/gatekeeper-proxy
+            dockerfile: ./Dockerfile
+        ports:
+            - 80:80
     styx:
         working_dir: /app/styx
         tty: true
@@ -28,3 +34,9 @@ services:
             POSTGRES_DB: db
         ports:
             - 5432:5432
+    redis:
+        image: redis:7-alpine
+        ports:
+          - "6379:6379"
+        volumes:
+            - ./redis:/redis
