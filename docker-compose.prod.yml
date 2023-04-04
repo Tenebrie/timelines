@@ -26,7 +26,7 @@ services:
         image: tenebrie/timelines-calliope
         build:
             context: ./
-            dockerfile: ./app/rhea-backend/Dockerfile.prod
+            dockerfile: ./app/calliope-websockets/Dockerfile.prod
         environment:
             NODE_ENV: production
         command: yarn prod

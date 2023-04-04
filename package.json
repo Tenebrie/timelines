@@ -20,7 +20,7 @@
 		"docker:db": "docker-compose up rhea-postgres",
 		"docker:prod": "docker compose -f docker-compose.common.yml -f docker-compose.prod.yml up",
 		"docker:prod:build": "docker compose -f docker-compose.common.yml -f docker-compose.prod.yml build",
-		"docker:prod:push": "docker push tenebrie/timelines-gatekeeper && docker push tenebrie/timelines-styx && docker push tenebrie/timelines-rhea"
+		"docker:prod:push": "docker push tenebrie/timelines-gatekeeper && docker push tenebrie/timelines-styx && docker push tenebrie/timelines-rhea && docker push tenebrie/timelines-calliope"
 	},
 	"dependencies": {
 		"@typescript-eslint/eslint-plugin": "^4.7.0",
