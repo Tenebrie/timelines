@@ -29,7 +29,7 @@ export const RevokedStatementCard = ({ id }: Props) => {
 	return (
 		<Card>
 			<CardContent>
-				<Typography variant="h5">{matchingCard?.title || 'Not found'}</Typography>
+				<Typography variant="h6">{matchingCard?.title || 'Not found'}</Typography>
 				<Typography>{matchingCard?.text || 'Not found'}</Typography>
 			</CardContent>
 			<CardActions>

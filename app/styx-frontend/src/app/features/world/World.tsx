@@ -14,13 +14,15 @@ export const World = () => {
 	useLoadWorldInfo(worldId)
 
 	return (
-		<WorldContainer>
-			<WorldNavigator />
-			<WorldContent>
-				<Outlet />
+		<>
+			<WorldContainer>
+				<WorldNavigator />
+				<WorldContent>
+					<Outlet />
+				</WorldContent>
 				<Timeline />
-			</WorldContent>
+			</WorldContainer>
 			<EventWizardModal />
-		</WorldContainer>
+		</>
 	)
 }

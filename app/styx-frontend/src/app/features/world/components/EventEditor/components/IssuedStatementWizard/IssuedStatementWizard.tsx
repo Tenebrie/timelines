@@ -1,7 +1,7 @@
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, TextField, Tooltip } from '@mui/material'
-import { useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useIssueWorldStatementMutation } from '../../../../../../../api/rheaApi'
@@ -15,6 +15,7 @@ import { useWorldRouter } from '../../../../router'
 import { getIssuedStatementWizardState } from '../../../../selectors'
 
 export const IssuedStatementWizard = () => {
+	const hasEditedTitle = useRef<boolean>(false)
 	const [title, setTitle] = useState('')
 	const [content, setContent] = useState('')
 	const [titleValidationError, setTitleValidationError] = useState<string | null>(null)
@@ -34,6 +35,19 @@ export const IssuedStatementWizard = () => {
 			setContent('')
 		},
 	})
+
+	const onChangeTitle = useCallback((value: string) => {
+		setTitle(value)
+		hasEditedTitle.current = true
+	}, [])
+
+	const onChangeContent = useCallback((value: string) => {
+		if (!hasEditedTitle.current) {
+			const indexOfDot = value.indexOf('.')
+			setTitle(value.substring(0, indexOfDot > 0 ? indexOfDot : value.length))
+		}
+		setContent(value)
+	}, [])
 
 	const onConfirm = async () => {
 		if (!isOpen) {
@@ -72,21 +86,21 @@ export const IssuedStatementWizard = () => {
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
 			<ModalHeader>New Issued Statement</ModalHeader>
 			<TextField
-				label="Title"
-				type="text"
-				value={title}
-				onChange={(event) => setTitle(event.target.value)}
+				value={content}
+				onChange={(e) => onChangeContent(e.target.value)}
+				type={'text'}
+				label="Content"
+				multiline
 				autoFocus
+				minRows={3}
 				error={!!titleValidationError}
 				helperText={titleValidationError}
 			/>
 			<TextField
-				value={content}
-				onChange={(e) => setContent(e.target.value)}
-				type={'text'}
-				label="Content"
-				multiline
-				minRows={3}
+				label="Title"
+				type="text"
+				value={title}
+				onChange={(event) => onChangeTitle(event.target.value)}
 			/>
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">

@@ -1,8 +1,9 @@
 import { Add } from '@mui/icons-material'
-import { Button, Typography } from '@mui/material'
+import { Button, Container, Grid } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { LoadingSpinner } from '../../../../components/LoadingSpinner'
+import { OverlayingLabel } from '../../../../components/OverlayingLabel'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
@@ -13,7 +14,7 @@ import { DeleteStatementModal } from './components/DeleteStatementModal/DeleteSt
 import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetailsEditor'
 import { IssuedStatementWizard } from './components/IssuedStatementWizard/IssuedStatementWizard'
 import { RevokedStatementWizard } from './components/RevokedStatementWizard/RevokedStatementWizard'
-import { EventEditorContainer, EventEditorWrapper, StatementsContainer, StatementsUnit } from './styles'
+import { EventEditorWrapper, StatementsScroller, StatementsUnit } from './styles'
 
 export const EventEditor = () => {
 	const { events } = useSelector(getWorldState)
@@ -37,34 +38,42 @@ export const EventEditor = () => {
 	const { issuedStatements: addedWorldCards, revokedStatements: removedWorldCards } = event
 
 	return (
-		<EventEditorWrapper>
-			<EventEditorContainer>
-				<EventDetailsEditor key={event.id} event={event} />
-				<StatementsContainer>
+		<Container maxWidth="lg" style={{ height: '100%' }}>
+			<Grid container spacing={2} padding={2} columns={{ xs: 12, sm: 12, md: 12 }} height="100%">
+				<Grid item xs={6} md={3} order={{ xs: 1, md: 0 }} style={{ height: '100%' }}>
 					<StatementsUnit>
-						<Typography variant="h5">Issued statements:</Typography>
-						{addedWorldCards.map((card) => (
-							<IssuedStatementCard key={card.id} mode="editor" card={card} />
-						))}
+						<OverlayingLabel>Issued statements</OverlayingLabel>
+						<StatementsScroller>
+							{addedWorldCards.map((card) => (
+								<IssuedStatementCard key={card.id} card={card} />
+							))}
+						</StatementsScroller>
 						<Button onClick={() => dispatch(openIssuedStatementWizard())}>
 							<Add /> Add
 						</Button>
 					</StatementsUnit>
+				</Grid>
+				<Grid item xs={12} md={6} order={{ xs: 0, md: 1 }}>
+					<EventDetailsEditor key={event.id} event={event} />
+				</Grid>
+				<Grid item xs={6} md={3} order={{ xs: 1, md: 2 }} style={{ height: '100%' }}>
 					<StatementsUnit>
-						<Typography variant="h5">Revoked statements:</Typography>
-						{removedWorldCards.map((card) => (
-							<RevokedStatementCard key={card.id} id={card.id} />
-						))}
+						<OverlayingLabel>Revoked statements</OverlayingLabel>
+						<StatementsScroller>
+							{removedWorldCards.map((card) => (
+								<RevokedStatementCard key={card.id} id={card.id} />
+							))}
+						</StatementsScroller>
 						<Button onClick={() => dispatch(openRevokedStatementWizard())}>
 							<Add /> Add
 						</Button>
 					</StatementsUnit>
-				</StatementsContainer>
-				<DeleteEventModal />
-				<DeleteStatementModal />
-				<IssuedStatementWizard />
-				<RevokedStatementWizard />
-			</EventEditorContainer>
-		</EventEditorWrapper>
+				</Grid>
+			</Grid>
+			<DeleteEventModal />
+			<DeleteStatementModal />
+			<IssuedStatementWizard />
+			<RevokedStatementWizard />
+		</Container>
 	)
 }

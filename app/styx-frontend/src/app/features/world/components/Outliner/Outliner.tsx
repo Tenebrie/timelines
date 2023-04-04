@@ -1,12 +1,12 @@
-import { Button, Typography } from '@mui/material'
+import { Button, Container, Grid, Stack } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { OverlayingLabel } from '../../../../components/OverlayingLabel'
 import { useWorldTime } from '../../../time/hooks/useWorldTime'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
-import { IssuedStatementCard } from '../StatementCards/IssuedStatementCard/IssuedStatementCard'
-import { OutlinerContainer, StatementsContainer, StatementsUnit } from './styles'
+import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
 
 export const Outliner = () => {
 	const { events } = useSelector(getWorldState)
@@ -35,21 +35,27 @@ export const Outliner = () => {
 	}
 
 	return (
-		<OutlinerContainer>
-			<div>{timeToLabel(selectedTime)}</div>
-			<div>
-				<Typography variant="h5">World state:</Typography>
-				<StatementsContainer>
-					<StatementsUnit>
-						{applicableCards.map((card) => (
-							<IssuedStatementCard key={card.id} card={card} mode="outliner" />
-						))}
-					</StatementsUnit>
-				</StatementsContainer>
-			</div>
-			<Button variant="outlined" onClick={onCreateEvent}>
-				Create event here
-			</Button>
-		</OutlinerContainer>
+		<Container maxWidth="lg" style={{ height: '100%' }}>
+			<Grid container padding={2} columns={{ xs: 12, sm: 12, md: 12 }} height="100%" direction="column">
+				<Grid item xs={12} md={6} order={{ xs: 0, md: 1 }} height="100%">
+					<OutlinerContainer>
+						<Stack justifyContent="space-between" alignItems="center" direction="row">
+							<div>{timeToLabel(selectedTime)}</div>
+							<Button variant="outlined" onClick={onCreateEvent}>
+								Create event here
+							</Button>
+						</Stack>
+						<StatementsUnit>
+							<OverlayingLabel>World state</OverlayingLabel>
+							<StatementsScroller>
+								{applicableCards.map((card) => (
+									<p key={card.id}>{card.text}</p>
+								))}
+							</StatementsScroller>
+						</StatementsUnit>
+					</OutlinerContainer>
+				</Grid>
+			</Grid>
+		</Container>
 	)
 }

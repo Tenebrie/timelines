@@ -13,8 +13,10 @@ export const useShortcut = (shortcut: (typeof Shortcut)[keyof typeof Shortcut], 
 
 	const onKeyDown = useCallback(
 		(event: KeyboardEvent) => {
+			const isMac =
+				window.navigator.userAgentData?.platform === 'macOS' || window.navigator.platform === 'MacIntel'
 			const key = event.key
-			const ctrlKey = event.ctrlKey
+			const ctrlKey = isMac ? event.metaKey : event.ctrlKey
 
 			if (ctrlKey === ctrlKeyNeeded && key === defKeys[defKeys.length - 1]) {
 				callback()

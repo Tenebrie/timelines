@@ -6,7 +6,6 @@ import { useAppRouter } from '../../router'
 
 const Container = styled.div`
 	width: 100%;
-	min-height: 32px;
 	background: #07121e;
 	box-shadow: 0 4px 2px -2px #214f81;
 `

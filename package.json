@@ -6,7 +6,8 @@
 	"main": "dist/services/gaia/app.js",
 	"subPackages": [
 		"app/styx-frontend",
-		"app/rhea-backend/"
+		"app/rhea-backend",
+		"app/calliope-websockets"
 	],
 	"scripts": {
 		"postinstall": "subpkg install && husky install",
@@ -14,10 +15,7 @@
 		"start": "node dist/services/gaia/src/app.js",
 		"docker": "yarn docker:start",
 		"docker:start": "docker compose -f docker-compose.common.yml -f docker-compose.yml up",
-		"docker:recreate": "node scripts/docker_validate && docker-compose up --force-recreate",
-		"docker:clean": "docker container kill $(docker ps -q)",
 		"docker:build": "docker compose -f docker-compose.common.yml -f docker-compose.yml build",
-		"docker:db": "docker-compose up rhea-postgres",
 		"docker:prod": "docker compose -f docker-compose.common.yml -f docker-compose.prod.yml up",
 		"docker:prod:build": "docker compose -f docker-compose.common.yml -f docker-compose.prod.yml build",
 		"docker:prod:push": "docker push tenebrie/timelines-gatekeeper && docker push tenebrie/timelines-styx && docker push tenebrie/timelines-rhea && docker push tenebrie/timelines-calliope"

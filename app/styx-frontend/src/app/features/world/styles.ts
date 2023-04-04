@@ -1,17 +1,18 @@
 import styled from 'styled-components'
 
 export const WorldContainer = styled.div`
-	width: 100%;
-	height: 100%;
 	display: flex;
 	flex-direction: column;
+	width: 100%;
+	height: 100%;
 `
 
 export const WorldContent = styled.div`
 	width: 100%;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-direction: column;
+	flex-grow: 1;
+	overflow: hidden;
+
+	@media all and (max-width: 900px) {
+		overflow: auto;
+	}
 `
