@@ -1,0 +1,8 @@
+FROM node:16-alpine
+
+WORKDIR /app/calliope
+
+ADD ./app/calliope-websockets /app/calliope
+RUN yarn && yarn build && yarn prune-build-modules
+
+EXPOSE 3000

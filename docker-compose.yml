@@ -28,8 +28,19 @@ services:
             NODE_ENV: development
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
         volumes:
-            - ./app/styx-frontend/public:/app/styx/public:cached
             - ./app/rhea-backend/src:/app/rhea/src:cached
+        command: yarn start
+        tty: true
+        restart: on-failure
+    calliope:
+        image: tenebrie/timelines-calliope-local
+        build:
+            context: ./
+            dockerfile: ./app/calliope-websockets/Dockerfile
+        environment:
+            NODE_ENV: development
+        volumes:
+            - ./app/calliope-websockets/src:/app/calliope/src:cached
         command: yarn start
         tty: true
         restart: on-failure
@@ -45,4 +56,5 @@ services:
             - rhea-db:/var/lib/postgresql/data/:cached
         restart: on-failure
 volumes:
+    redis:
     rhea-db:

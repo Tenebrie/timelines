@@ -22,6 +22,14 @@ services:
             NODE_ENV: production
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
         command: yarn prod
+    calliope:
+        image: tenebrie/timelines-calliope
+        build:
+            context: ./
+            dockerfile: ./app/rhea-backend/Dockerfile.prod
+        environment:
+            NODE_ENV: production
+        command: yarn prod
     rhea-postgres:
         volumes:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached

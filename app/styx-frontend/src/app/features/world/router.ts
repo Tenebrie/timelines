@@ -44,8 +44,7 @@ export const useAppRouter = () => {
 	}
 
 	const navigateToHomeWithoutHistory = async () => {
-		// eslint-disable-next-line no-restricted-globals
-		location.replace(appRoutes.home)
+		window.location.replace(appRoutes.home)
 	}
 
 	const navigateToLogin = async () => {
@@ -53,8 +52,7 @@ export const useAppRouter = () => {
 	}
 
 	const navigateToLoginWithoutHistory = async () => {
-		// eslint-disable-next-line no-restricted-globals
-		location.replace(appRoutes.login)
+		window.location.replace(appRoutes.login)
 	}
 
 	const navigateToRegister = async () => {

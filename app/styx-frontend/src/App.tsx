@@ -2,6 +2,8 @@ import React from 'react'
 import { Outlet } from 'react-router-dom'
 import styled from 'styled-components'
 
+import { useLiveUpdates } from './app/features/liveUpdates/useLiveUpdates'
+
 const Container = styled.div`
 	display: flex;
 	align-items: center;
@@ -11,6 +13,8 @@ const Container = styled.div`
 `
 
 function App() {
+	useLiveUpdates()
+
 	return (
 		<div className="App">
 			<Container>

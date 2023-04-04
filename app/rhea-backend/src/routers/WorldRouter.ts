@@ -1,4 +1,5 @@
 import { UserAuthenticator } from '@src/auth/UserAuthenticator'
+import { RedisService } from '@src/services/RedisService'
 import { WorldService } from '@src/services/WorldService'
 import {
 	NumberValidator,
@@ -86,6 +87,8 @@ router.delete('/api/world/:worldId', async (ctx) => {
 	await WorldService.checkUserWriteAccess(user, worldId)
 
 	await WorldService.deleteWorld(worldId)
+
+	RedisService.notifyAboutWorldUpdate(user, worldId)
 })
 
 /**
@@ -112,7 +115,11 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		timestamp: RequiredParam(NumberValidator),
 	})
 
-	return await WorldService.createWorldEvent(worldId, params)
+	const event = await WorldService.createWorldEvent(worldId, params)
+
+	RedisService.notifyAboutWorldUpdate(user, worldId)
+
+	return event
 })
 
 router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
@@ -137,7 +144,11 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		description: OptionalParam(StringValidator),
 	})
 
-	return await WorldService.updateWorldEvent(eventId, params)
+	const event = await WorldService.updateWorldEvent(eventId, params)
+
+	RedisService.notifyAboutWorldUpdate(user, worldId)
+
+	return event
 })
 
 router.delete('/api/world/:worldId/event/:eventId', async (ctx) => {
@@ -156,7 +167,11 @@ router.delete('/api/world/:worldId/event/:eventId', async (ctx) => {
 
 	await WorldService.checkUserWriteAccess(user, worldId)
 
-	return await WorldService.deleteWorldEvent(eventId)
+	const event = await WorldService.deleteWorldEvent(eventId)
+
+	RedisService.notifyAboutWorldUpdate(user, worldId)
+
+	return event
 })
 
 /**
@@ -183,7 +198,11 @@ router.post('/api/world/:worldId/statement', async (ctx) => {
 		content: OptionalParam(StringValidator),
 	})
 
-	return await WorldService.issueWorldStatement(params)
+	const statement = await WorldService.issueWorldStatement(params)
+
+	RedisService.notifyAboutWorldUpdate(user, worldId)
+
+	return statement
 })
 
 router.delete('/api/world/:worldId/statement/:statementId', async (ctx) => {
@@ -202,7 +221,11 @@ router.delete('/api/world/:worldId/statement/:statementId', async (ctx) => {
 
 	await WorldService.checkUserWriteAccess(user, worldId)
 
-	return await WorldService.deleteWorldStatement(statementId)
+	const statement = await WorldService.deleteWorldStatement(statementId)
+
+	RedisService.notifyAboutWorldUpdate(user, worldId)
+
+	return statement
 })
 
 router.post('/api/world/:worldId/statement/:statementId/revoke', async (ctx) => {
@@ -225,10 +248,14 @@ router.post('/api/world/:worldId/statement/:statementId/revoke', async (ctx) => 
 		eventId: RequiredParam(StringValidator),
 	})
 
-	return await WorldService.revokeWorldStatement({
+	const statement = await WorldService.revokeWorldStatement({
 		eventId,
 		statementId,
 	})
+
+	RedisService.notifyAboutWorldUpdate(user, worldId)
+
+	return statement
 })
 
 router.post('/api/world/:worldId/statement/:statementId/unrevoke', async (ctx) => {
@@ -247,9 +274,13 @@ router.post('/api/world/:worldId/statement/:statementId/unrevoke', async (ctx) =
 
 	await WorldService.checkUserWriteAccess(user, worldId)
 
-	return await WorldService.unrevokeWorldStatement({
+	const statement = await WorldService.unrevokeWorldStatement({
 		statementId,
 	})
+
+	RedisService.notifyAboutWorldUpdate(user, worldId)
+
+	return statement
 })
 
 export const WorldRouter = router

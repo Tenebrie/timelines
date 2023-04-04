@@ -4,20 +4,26 @@ services:
         ports:
             - 80:80
             - 443:443
+        tty: false
     styx:
         working_dir: /app/styx
-        tty: true
         depends_on:
             - rhea
         ports:
             - 8080:8080
     rhea:
         working_dir: /app/rhea
-        tty: true
         depends_on:
             - rhea-postgres
+            - redis
         ports:
             - 3000:3000
+    calliope:
+        working_dir: /app/calliope
+        depends_on:
+            - redis
+        ports:
+            - 3001:3001
     rhea-postgres:
         image: postgres:11.5-alpine
         environment:
@@ -31,4 +37,4 @@ services:
         ports:
           - "6379:6379"
         volumes:
-            - ./redis:/redis
+            - redis:/redis
