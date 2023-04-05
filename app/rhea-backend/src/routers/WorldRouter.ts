@@ -19,13 +19,14 @@ import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
 
 const router = new Router()
 
-const worldTag = 'world'
+const worldListTag = 'worldList'
+const worldDetailsTag = 'worldDetails'
 
 router.get('/api/worlds', async (ctx) => {
 	useApiEndpoint({
 		name: 'getWorlds',
 		description: 'Lists all worlds accessible for the current user.',
-		tags: [worldTag],
+		tags: [worldListTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -37,7 +38,7 @@ router.post('/api/world', async (ctx) => {
 	useApiEndpoint({
 		name: 'createWorld',
 		description: 'Creates a new world (project).',
-		tags: [worldTag],
+		tags: [worldListTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -58,7 +59,7 @@ router.get('/api/world/:worldId', async (ctx) => {
 	useApiEndpoint({
 		name: 'getWorldInfo',
 		description: 'Returns all information about a world.',
-		tags: [worldTag],
+		tags: [worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -76,7 +77,7 @@ router.delete('/api/world/:worldId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteWorld',
 		description: 'Destroys a world owned by the current user.',
-		tags: [worldTag],
+		tags: [worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -99,7 +100,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 	useApiEndpoint({
 		name: 'createWorldEvent',
 		description: 'Creates a new world event.',
-		tags: [worldTag],
+		tags: [worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -127,7 +128,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	useApiEndpoint({
 		name: 'updateWorldEvent',
 		description: 'Updates the target world event',
-		tags: [worldTag],
+		tags: [worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -156,7 +157,7 @@ router.delete('/api/world/:worldId/event/:eventId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteWorldEvent',
 		description: 'Deletes the target world event.',
-		tags: [worldTag],
+		tags: [worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -182,7 +183,7 @@ router.post('/api/world/:worldId/statement', async (ctx) => {
 	useApiEndpoint({
 		name: 'issueWorldStatement',
 		description: 'Creates a new world statement and marks the specified event as the issuer.',
-		tags: [worldTag],
+		tags: [worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -213,7 +214,7 @@ router.delete('/api/world/:worldId/statement/:statementId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteWorldStatement',
 		description: 'Deletes the target world statement',
-		tags: [worldTag],
+		tags: [worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -236,7 +237,7 @@ router.post('/api/world/:worldId/statement/:statementId/revoke', async (ctx) => 
 	useApiEndpoint({
 		name: 'revokeWorldStatement',
 		description: 'Marks the specified event as the revoker for this world statement.',
-		tags: [worldTag],
+		tags: [worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -267,7 +268,7 @@ router.post('/api/world/:worldId/statement/:statementId/unrevoke', async (ctx) =
 	useApiEndpoint({
 		name: 'unrevokeWorldStatement',
 		description: 'Marks the statement as never revoked.',
-		tags: [worldTag],
+		tags: [worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)

@@ -38,3 +38,7 @@ code {
 ::-webkit-scrollbar-thumb:active {
 	background: rgba(255, 255, 255, 0.1);
 }
+
+fieldset {
+    min-width: 0;
+}

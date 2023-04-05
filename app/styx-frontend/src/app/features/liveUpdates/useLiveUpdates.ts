@@ -33,7 +33,7 @@ export const useLiveUpdates = () => {
 				}
 
 				if (new Date(updatedAtRef.current) < new Date(data.timestamp)) {
-					dispatch(rheaApi.util.invalidateTags(['world']))
+					dispatch(rheaApi.util.invalidateTags(['worldDetails']))
 				}
 			}
 		},
@@ -52,7 +52,6 @@ export const useLiveUpdates = () => {
 			const delay = expBackoffDelays[backoffLevel.current] ?? 10000
 			console.info(`[ws] Waiting ${delay}ms before attempting to reconnect...`)
 			setTimeout(() => {
-				console.info('[ws] Attempting to reconnect...')
 				initiateConnection()
 			}, delay)
 		}
@@ -83,7 +82,7 @@ export const useLiveUpdates = () => {
 			}
 
 			socket.onmessage = function (event) {
-				console.info(`[ws] Data received from server: ${event.data}`)
+				// console.info(`[ws] Data received from server: ${event.data}`)
 				processMessage(event.data)
 			}
 

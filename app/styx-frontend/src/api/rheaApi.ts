@@ -1,5 +1,5 @@
 import { baseApi as api } from './baseApi'
-export const addTagTypes = ['auth', 'world'] as const
+export const addTagTypes = ['auth', 'worldList', 'worldDetails'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -24,19 +24,19 @@ const injectedRtkApi = api
 			}),
 			getWorlds: build.query<GetWorldsApiResponse, GetWorldsApiArg>({
 				query: () => ({ url: `/api/worlds` }),
-				providesTags: ['world'],
+				providesTags: ['worldList'],
 			}),
 			createWorld: build.mutation<CreateWorldApiResponse, CreateWorldApiArg>({
 				query: (queryArg) => ({ url: `/api/world`, method: 'POST', body: queryArg.body }),
-				invalidatesTags: ['world'],
+				invalidatesTags: ['worldList'],
 			}),
 			getWorldInfo: build.query<GetWorldInfoApiResponse, GetWorldInfoApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}` }),
-				providesTags: ['world'],
+				providesTags: ['worldDetails'],
 			}),
 			deleteWorld: build.mutation<DeleteWorldApiResponse, DeleteWorldApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}`, method: 'DELETE' }),
-				invalidatesTags: ['world'],
+				invalidatesTags: ['worldDetails'],
 			}),
 			createWorldEvent: build.mutation<CreateWorldEventApiResponse, CreateWorldEventApiArg>({
 				query: (queryArg) => ({
@@ -44,7 +44,7 @@ const injectedRtkApi = api
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['world'],
+				invalidatesTags: ['worldDetails'],
 			}),
 			updateWorldEvent: build.mutation<UpdateWorldEventApiResponse, UpdateWorldEventApiArg>({
 				query: (queryArg) => ({
@@ -52,14 +52,14 @@ const injectedRtkApi = api
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['world'],
+				invalidatesTags: ['worldDetails'],
 			}),
 			deleteWorldEvent: build.mutation<DeleteWorldEventApiResponse, DeleteWorldEventApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}`,
 					method: 'DELETE',
 				}),
-				invalidatesTags: ['world'],
+				invalidatesTags: ['worldDetails'],
 			}),
 			issueWorldStatement: build.mutation<IssueWorldStatementApiResponse, IssueWorldStatementApiArg>({
 				query: (queryArg) => ({
@@ -67,14 +67,14 @@ const injectedRtkApi = api
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['world'],
+				invalidatesTags: ['worldDetails'],
 			}),
 			deleteWorldStatement: build.mutation<DeleteWorldStatementApiResponse, DeleteWorldStatementApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/statement/${queryArg.statementId}`,
 					method: 'DELETE',
 				}),
-				invalidatesTags: ['world'],
+				invalidatesTags: ['worldDetails'],
 			}),
 			revokeWorldStatement: build.mutation<RevokeWorldStatementApiResponse, RevokeWorldStatementApiArg>({
 				query: (queryArg) => ({
@@ -82,7 +82,7 @@ const injectedRtkApi = api
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['world'],
+				invalidatesTags: ['worldDetails'],
 			}),
 			unrevokeWorldStatement: build.mutation<UnrevokeWorldStatementApiResponse, UnrevokeWorldStatementApiArg>(
 				{
@@ -91,7 +91,7 @@ const injectedRtkApi = api
 						method: 'POST',
 						body: queryArg.body,
 					}),
-					invalidatesTags: ['world'],
+					invalidatesTags: ['worldDetails'],
 				}
 			),
 		}),

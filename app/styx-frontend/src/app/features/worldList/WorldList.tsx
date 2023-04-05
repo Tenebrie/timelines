@@ -1,5 +1,5 @@
 import { Delete } from '@mui/icons-material'
-import { Button, Stack } from '@mui/material'
+import { Button, Stack, Typography } from '@mui/material'
 import { useDispatch } from 'react-redux'
 
 import { useGetWorldsQuery } from '../../../api/rheaApi'
@@ -33,6 +33,7 @@ export const WorldList = () => {
 		<>
 			{!!data && (
 				<Stack spacing={1} minWidth={256}>
+					{data.length > 0 && <Typography variant="h6">Your Worlds:</Typography>}
 					{data.map((world) => (
 						<Stack direction="row" justifyContent="space-between" key={world.id}>
 							<Button fullWidth={true} onClick={() => onLoad(world.id)} style={{ justifyContent: 'start' }}>

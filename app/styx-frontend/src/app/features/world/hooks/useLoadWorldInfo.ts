@@ -13,7 +13,6 @@ export const useLoadWorldInfo = (worldId: string) => {
 	const dispatch = useDispatch()
 
 	useEffect(() => {
-		console.log(data)
 		if (!data) {
 			return
 		}
