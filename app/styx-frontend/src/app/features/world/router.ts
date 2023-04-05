@@ -72,6 +72,7 @@ export const worldRoutes = {
 	root: '/world/:worldId',
 	outliner: '/world/:worldId/outliner/:timestamp',
 	eventEditor: '/world/:worldId/editor/:eventId',
+	statementEditor: '/world/:worldId/statement/:statementId',
 } as const
 
 export const useWorldRouter = () => {
@@ -90,6 +91,11 @@ export const useWorldRouter = () => {
 	const eventEditorParams = state as {
 		worldId: string
 		eventId: string
+	}
+
+	const statementEditorParams = state as {
+		worldId: string
+		statementId: string
 	}
 
 	const navigateToWorld = async (id: string) => {
@@ -118,13 +124,22 @@ export const useWorldRouter = () => {
 		})
 	}
 
+	const navigateToStatementEditor = (statementId: string) => {
+		navigateTo(worldRoutes.statementEditor, {
+			worldId: state['worldId'] || '',
+			statementId,
+		})
+	}
+
 	return {
 		worldParams,
 		outlinerParams,
 		eventEditorParams,
+		statementEditorParams,
 		navigateToWorld,
 		navigateToCurrentWorld,
 		navigateToOutliner,
 		navigateToEventEditor,
+		navigateToStatementEditor,
 	}
 }

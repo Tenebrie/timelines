@@ -210,6 +210,34 @@ router.post('/api/world/:worldId/statement', async (ctx) => {
 	return statement
 })
 
+router.patch('/api/world/:worldId/statement/:statementId', async (ctx) => {
+	useApiEndpoint({
+		name: 'updateWorldStatement',
+		description: 'Updates the target world statement',
+		tags: [worldDetailsTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId, statementId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+		statementId: PathParam(StringValidator),
+	})
+
+	await WorldService.checkUserWriteAccess(user, worldId)
+
+	const params = useRequestBody(ctx, {
+		title: OptionalParam(NameStringValidator),
+		text: OptionalParam(StringValidator),
+	})
+
+	const { event, world } = await WorldService.updateWorldStatement({ worldId, statementId, params })
+
+	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+
+	return event
+})
+
 router.delete('/api/world/:worldId/statement/:statementId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteWorldStatement',

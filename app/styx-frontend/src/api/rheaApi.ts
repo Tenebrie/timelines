@@ -69,6 +69,14 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldDetails'],
 			}),
+			updateWorldStatement: build.mutation<UpdateWorldStatementApiResponse, UpdateWorldStatementApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/statement/${queryArg.statementId}`,
+					method: 'PATCH',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldDetails'],
+			}),
 			deleteWorldStatement: build.mutation<DeleteWorldStatementApiResponse, DeleteWorldStatementApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/statement/${queryArg.statementId}`,
@@ -249,6 +257,25 @@ export type IssueWorldStatementApiArg = {
 		content?: string
 	}
 }
+export type UpdateWorldStatementApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	title: string
+	text: string
+	issuedByEventId: string
+	revokedByEventId?: string
+}
+export type UpdateWorldStatementApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	statementId: string
+	body: {
+		title?: string
+		text?: string
+	}
+}
 export type DeleteWorldStatementApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
@@ -314,6 +341,7 @@ export const {
 	useUpdateWorldEventMutation,
 	useDeleteWorldEventMutation,
 	useIssueWorldStatementMutation,
+	useUpdateWorldStatementMutation,
 	useDeleteWorldStatementMutation,
 	useRevokeWorldStatementMutation,
 	useUnrevokeWorldStatementMutation,

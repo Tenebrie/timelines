@@ -6,6 +6,7 @@ import { useWorldTime } from '../../../time/hooks/useWorldTime'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
+import { OutlinerCard } from './components/OutlinerCard/OutlinerCard'
 import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
 
 export const Outliner = () => {
@@ -49,7 +50,7 @@ export const Outliner = () => {
 							<OverlayingLabel>World state</OverlayingLabel>
 							<StatementsScroller>
 								{applicableCards.map((card) => (
-									<p key={card.id}>{card.text}</p>
+									<OutlinerCard key={card.id} card={card} />
 								))}
 							</StatementsScroller>
 						</StatementsUnit>

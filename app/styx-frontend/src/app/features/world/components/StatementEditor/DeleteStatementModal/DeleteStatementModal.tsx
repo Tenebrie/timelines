@@ -4,17 +4,13 @@ import { Button, Stack, Tooltip } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useDeleteWorldStatementMutation } from '../../../../../../../api/rheaApi'
-import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
-import Modal, {
-	ModalFooter,
-	ModalHeader,
-	useModalCleanup,
-} from '../../../../../../../ui-lib/components/Modal'
-import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { worldSlice } from '../../../../reducer'
-import { useWorldRouter } from '../../../../router'
-import { getDeleteStatementModalState } from '../../../../selectors'
+import { useDeleteWorldStatementMutation } from '../../../../../../api/rheaApi'
+import { Shortcut, useShortcut } from '../../../../../../hooks/useShortcut'
+import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '../../../../../../ui-lib/components/Modal'
+import { parseApiResponse } from '../../../../../utils/parseApiResponse'
+import { worldSlice } from '../../../reducer'
+import { useWorldRouter } from '../../../router'
+import { getDeleteStatementModalState } from '../../../selectors'
 
 export const DeleteStatementModal = () => {
 	const [deleteWorldStatement, { isLoading }] = useDeleteWorldStatementMutation()

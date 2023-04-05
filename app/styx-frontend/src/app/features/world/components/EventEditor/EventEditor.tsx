@@ -7,10 +7,8 @@ import { OverlayingLabel } from '../../../../components/OverlayingLabel'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
-import { IssuedStatementCard } from '../StatementCards/IssuedStatementCard/IssuedStatementCard'
-import { RevokedStatementCard } from '../StatementCards/RevokedStatementCard/RevokedStatementCard'
+import { StatementCard } from '../StatementCards/StatementCard/StatementCard'
 import { DeleteEventModal } from './components/DeleteEventModal/DeleteEventModal'
-import { DeleteStatementModal } from './components/DeleteStatementModal/DeleteStatementModal'
 import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetailsEditor'
 import { IssuedStatementWizard } from './components/IssuedStatementWizard/IssuedStatementWizard'
 import { RevokedStatementWizard } from './components/RevokedStatementWizard/RevokedStatementWizard'
@@ -45,7 +43,7 @@ export const EventEditor = () => {
 						<OverlayingLabel>Issued statements</OverlayingLabel>
 						<StatementsScroller>
 							{addedWorldCards.map((card) => (
-								<IssuedStatementCard key={card.id} card={card} />
+								<StatementCard key={card.id} card={card} />
 							))}
 						</StatementsScroller>
 						<Button onClick={() => dispatch(openIssuedStatementWizard())}>
@@ -61,7 +59,7 @@ export const EventEditor = () => {
 						<OverlayingLabel>Revoked statements</OverlayingLabel>
 						<StatementsScroller>
 							{removedWorldCards.map((card) => (
-								<RevokedStatementCard key={card.id} id={card.id} />
+								<StatementCard key={card.id} card={card} />
 							))}
 						</StatementsScroller>
 						<Button onClick={() => dispatch(openRevokedStatementWizard())}>
@@ -71,7 +69,6 @@ export const EventEditor = () => {
 				</Grid>
 			</Grid>
 			<DeleteEventModal />
-			<DeleteStatementModal />
 			<IssuedStatementWizard />
 			<RevokedStatementWizard />
 		</Container>

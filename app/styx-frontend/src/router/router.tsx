@@ -9,6 +9,7 @@ import { Home } from '../app/features/home/Home'
 import { EventEditor } from '../app/features/world/components/EventEditor/EventEditor'
 import { OutlinerEmptyState } from '../app/features/world/components/Outliner/components/OutlinerEmptyState/OutlinerEmptyState'
 import { Outliner } from '../app/features/world/components/Outliner/Outliner'
+import { StatementEditor } from '../app/features/world/components/StatementEditor/StatementEditor'
 import { appRoutes, worldRoutes } from '../app/features/world/router'
 import { World } from '../app/features/world/World'
 
@@ -48,6 +49,10 @@ export const router = createBrowserRouter([
 					{
 						path: worldRoutes.eventEditor,
 						element: <EventEditor />,
+					},
+					{
+						path: worldRoutes.statementEditor,
+						element: <StatementEditor />,
 					},
 				],
 			},

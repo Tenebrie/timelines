@@ -134,6 +134,30 @@ export const WorldService = {
 		}
 	},
 
+	updateWorldStatement: async ({
+		worldId,
+		statementId,
+		params,
+	}: {
+		worldId: string
+		statementId: string
+		params: Partial<WorldStatement>
+	}) => {
+		const [event, world] = await dbClient.$transaction([
+			dbClient.worldStatement.update({
+				where: {
+					id: statementId,
+				},
+				data: params,
+			}),
+			touchWorld(worldId),
+		])
+		return {
+			event,
+			world,
+		}
+	},
+
 	deleteWorldStatement: async ({ worldId, statementId }: { worldId: string; statementId: string }) => {
 		const [statement, world] = await dbClient.$transaction([
 			dbClient.worldStatement.delete({
