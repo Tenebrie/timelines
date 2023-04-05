@@ -1,14 +1,18 @@
 import { useSelector } from 'react-redux'
 
+import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
 import { getWorldState } from '../../../selectors'
 import { WorldEvent, WorldEventBundle, WorldEventGroup } from '../../../types'
+import { ScaleLevel } from '../types'
 
-const GROUP_DISTANCE = 75
+const GROUP_DISTANCE = 15
 const EVENTS_PER_GROUP = 5
 
-const useEventGroups = (pixelsPerTime: number) => {
+const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; scaleLevel: ScaleLevel }) => {
 	const { events } = useSelector(getWorldState)
 	const eventGroups: WorldEventGroup[] = []
+
+	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
 	const sortedEvents = [...events].sort((a, b) => a.timestamp - b.timestamp)
 
@@ -21,7 +25,10 @@ const useEventGroups = (pixelsPerTime: number) => {
 			}))
 			.sort((a, b) => a.distance - b.distance)[0]
 
-		if (!closestExistingGroup || closestExistingGroup.distance >= GROUP_DISTANCE * pixelsPerTime) {
+		if (
+			!closestExistingGroup ||
+			closestExistingGroup.distance >= scaledTimeToRealTime(GROUP_DISTANCE) * timelineScale
+		) {
 			const newEventGroup = {
 				events: [event],
 				timestamp: event.timestamp,

@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import bezier from 'bezier-easing'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { Position } from '../../../../../../types/Position'
@@ -100,7 +101,7 @@ export const useTimelineNavigation = ({
 
 	const [targetScale, setTargetScale] = useState(0)
 
-	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
+	const { realTimeToScaledTime, scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
 	useEffect(() => {
 		if (!readyToSwitchScale) {
@@ -260,11 +261,51 @@ export const useTimelineNavigation = ({
 		}
 	}, [containerRef, onClick, onMouseDown, onMouseMove, onMouseUp, onTimelineClick, onWheel])
 
+	const startedScrollFrom = useRef(0)
+	const desiredScrollTo = useRef(0)
+	const smoothScrollStartedAtTime = useRef(new Date())
+	console.log('rerender')
+	// Outside controls
+	const scrollTo = useCallback(
+		(timestamp: number) => {
+			if (!containerRef.current) {
+				return
+			}
+
+			const easing = bezier(0.5, 0, 0.5, 1)
+			// Empty
+			console.log(`Scrolling to ${timestamp}`)
+			const targetScroll =
+				realTimeToScaledTime(-timestamp / timelineScale) +
+				Math.floor(containerRef.current.getBoundingClientRect().width / 2)
+
+			startedScrollFrom.current = scroll
+			desiredScrollTo.current = targetScroll
+			smoothScrollStartedAtTime.current = new Date()
+
+			const callback = () => {
+				// console.log('callback')
+				const time = Math.min(1, (new Date().getTime() - smoothScrollStartedAtTime.current.getTime()) / 300)
+				const bezierPos = easing(time)
+				setScroll(
+					startedScrollFrom.current + (desiredScrollTo.current - startedScrollFrom.current) * bezierPos
+				)
+				if (time < 1) {
+					requestAnimationFrame(callback)
+				}
+			}
+
+			requestAnimationFrame(callback)
+		},
+		[containerRef, realTimeToScaledTime, scroll, timelineScale]
+	)
+
 	return {
 		scroll: scroll + Math.pow(overscroll, 0.85),
 		timelineScale,
 		scaleLevel,
 		targetScaleIndex: targetScale,
 		isSwitchingScale,
+		scrollTo,
 	}
 }

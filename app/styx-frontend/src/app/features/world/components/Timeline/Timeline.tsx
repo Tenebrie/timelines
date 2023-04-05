@@ -1,8 +1,9 @@
-import { useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
+import { getWorldState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { TimelineEventGroup } from './components/TimelineEventGroup/TimelineEventGroup'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
@@ -14,6 +15,8 @@ import { TimelineContainer, TimelineWrapper } from './styles'
 export const Timeline = () => {
 	const containerRef = useRef<HTMLDivElement | null>(null)
 
+	const { events } = useSelector(getWorldState)
+
 	const dispatch = useDispatch()
 	const { openEventWizard } = worldSlice.actions
 
@@ -21,6 +24,7 @@ export const Timeline = () => {
 		navigateToCurrentWorld: navigateToCurrentWorldRoot,
 		navigateToOutliner,
 		outlinerParams,
+		eventEditorParams,
 	} = useWorldRouter()
 	const selectedTime = Number(outlinerParams.timestamp)
 
@@ -40,15 +44,29 @@ export const Timeline = () => {
 		}
 	}
 
-	const { scroll, timelineScale, scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
-		containerRef,
-		defaultScroll: 150,
-		maximumScroll: 500,
-		scaleLimits: [-3, 10],
-		onClick: (time) => onClick(time),
-		onDoubleClick: (time) => onDoubleClick(time),
-	})
-	const eventGroups = useEventGroups(timelineScale)
+	const { scroll, timelineScale, scaleLevel, targetScaleIndex, isSwitchingScale, scrollTo } =
+		useTimelineNavigation({
+			containerRef,
+			defaultScroll: 150,
+			maximumScroll: 500,
+			scaleLimits: [-3, 10],
+			onClick: (time) => onClick(time),
+			onDoubleClick: (time) => onDoubleClick(time),
+		})
+	const eventGroups = useEventGroups({ timelineScale, scaleLevel })
+
+	const lastSeenEventId = useRef<string | null>(null)
+	useEffect(() => {
+		if (eventEditorParams.eventId && eventEditorParams.eventId !== lastSeenEventId.current) {
+			console.log('rerender')
+			const event = events.find((e) => e.id === eventEditorParams.eventId)
+			if (!event) {
+				return
+			}
+			scrollTo(event.timestamp)
+		}
+		lastSeenEventId.current = eventEditorParams.eventId
+	}, [eventEditorParams, events, scrollTo])
 
 	return (
 		<TimelineWrapper>
