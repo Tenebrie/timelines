@@ -23,7 +23,6 @@ export const initRedisConnection = async () => {
 		}
 
 		const sockets = WebsocketService.findClients(parsedMessage.userId)
-		console.log(sockets.length)
 		sockets.forEach((socket) =>
 			socket.send(
 				JSON.stringify({

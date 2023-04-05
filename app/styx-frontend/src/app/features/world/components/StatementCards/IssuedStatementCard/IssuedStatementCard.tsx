@@ -15,7 +15,9 @@ export const IssuedStatementCard = ({ card }: Props) => {
 	return (
 		<Card>
 			<CardContent>
-				<Typography variant="h6">{card.title}</Typography>
+				<Typography variant="h6" noWrap={true}>
+					{card.title}
+				</Typography>
 				<br />
 				<Typography>{card.text}</Typography>
 			</CardContent>

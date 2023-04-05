@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+import { ScrollbarStyling } from '../../../../styles'
+
 export const OutlinerContainer = styled.div`
 	height: 100%;
 	display: flex;
@@ -35,7 +37,7 @@ export const StatementsUnit = styled.div`
 
 export const StatementsScroller = styled.div`
 	width: 100%;
-	overflow: scroll;
+	overflow-y: auto;
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
@@ -43,4 +45,6 @@ export const StatementsScroller = styled.div`
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
+
+	${ScrollbarStyling}
 `

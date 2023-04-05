@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+import { ScrollbarStyling } from '../../../../styles'
+
 export const EventEditorWrapper = styled.div`
 	width: 100%;
 	height: 100%;
@@ -39,7 +41,7 @@ export const StatementsUnit = styled.div`
 
 export const StatementsScroller = styled.div`
 	width: 100%;
-	overflow: scroll;
+	overflow-y: auto;
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
@@ -47,4 +49,6 @@ export const StatementsScroller = styled.div`
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
+
+	${ScrollbarStyling}
 `

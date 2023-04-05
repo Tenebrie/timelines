@@ -38,7 +38,7 @@ export const EventEditor = () => {
 	const { issuedStatements: addedWorldCards, revokedStatements: removedWorldCards } = event
 
 	return (
-		<Container maxWidth="lg" style={{ height: '100%' }}>
+		<Container maxWidth="xl" style={{ height: '100%' }}>
 			<Grid container spacing={2} padding={2} columns={{ xs: 12, sm: 12, md: 12 }} height="100%">
 				<Grid item xs={6} md={3} order={{ xs: 1, md: 0 }} style={{ height: '100%' }}>
 					<StatementsUnit>
