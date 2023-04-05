@@ -23,7 +23,7 @@ export const OutlinerContainer = styled.div`
 // 	}
 // `
 
-export const StatementsUnit = styled.div`
+export const StatementsUnit = styled.fieldset`
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
@@ -33,6 +33,7 @@ export const StatementsUnit = styled.div`
 	min-height: 256px;
 	height: 100%;
 	position: relative;
+	margin-top: -8.5px;
 `
 
 export const StatementsScroller = styled.div`
