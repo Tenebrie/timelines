@@ -33,9 +33,7 @@ const AUTH_COOKIE_NAME = 'user-jwt-token'
 app.ws.use(
 	route.all('/live', function (ctx: websocketify.MiddlewareContext<Koa.DefaultState>) {
 		const authCookie = ctx.cookies.get(AUTH_COOKIE_NAME)
-		console.log('Connecteeeeeeeeeeeeeeeed!')
 		if (!authCookie) {
-			console.log('no')
 			throw new Error('No cookie provided')
 		}
 
@@ -60,9 +58,6 @@ app.ws.use(
 )
 
 app
-	.use((ctx) => {
-		console.log(ctx)
-	})
 	.use(HttpErrorHandler)
 	.use(
 		bodyParser({

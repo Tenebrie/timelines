@@ -5,11 +5,15 @@ services:
         build:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile.prod
+            platforms:
+                - "linux/amd64"
     styx:
         image: tenebrie/timelines-styx
         build:
             context: ./
             dockerfile: ./app/styx-frontend/Dockerfile.prod
+            platforms:
+                - "linux/amd64"
         environment:
             NODE_ENV: production
         command: yarn serve -s build -l 8080
@@ -18,6 +22,8 @@ services:
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile.prod
+            platforms:
+                - "linux/amd64"
         environment:
             NODE_ENV: production
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
@@ -27,6 +33,8 @@ services:
         build:
             context: ./
             dockerfile: ./app/calliope-websockets/Dockerfile.prod
+            platforms:
+                - "linux/amd64"
         environment:
             NODE_ENV: production
         command: yarn prod

@@ -6,14 +6,31 @@ import { useEffectOnce } from '../../utils/useEffectOnce'
 
 export const useLiveUpdates = () => {
 	const currentWebsocket = useRef<WebSocket>()
+	const heartbeatInterval = useRef<number | null>(null)
 	const dispatch = useDispatch()
 
 	useEffectOnce(() => {
+		if (
+			currentWebsocket.current &&
+			(currentWebsocket.current.readyState === currentWebsocket.current.CONNECTING ||
+				currentWebsocket.current.readyState === currentWebsocket.current.OPEN)
+		) {
+			return
+		}
+
+		if (heartbeatInterval.current !== null) {
+			window.clearInterval(heartbeatInterval.current)
+		}
+
 		const socket = new WebSocket(`ws://${window.location.host}/live`)
 
-		socket.onopen = function (e) {
-			console.log('[open] Connection established')
-			console.log('Sending to server')
+		heartbeatInterval.current = window.setInterval(() => {
+			console.log('poke')
+			socket.send('poke')
+		}, 15000)
+
+		socket.onopen = function () {
+			console.log('[ws] Connection established')
 			socket.send('init')
 		}
 
@@ -25,7 +42,7 @@ export const useLiveUpdates = () => {
 				data: unknown
 			}
 			if (payload.type === 'worldUpdate') {
-				const data = payload.data as {
+				const _data = payload.data as {
 					worldId: string
 					timestamp: string
 				}
@@ -45,7 +62,7 @@ export const useLiveUpdates = () => {
 		}
 
 		socket.onerror = function (error) {
-			console.log(`[error]`)
+			console.log(`[error]`, error)
 		}
 
 		currentWebsocket.current = socket
