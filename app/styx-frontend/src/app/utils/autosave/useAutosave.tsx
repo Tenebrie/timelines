@@ -29,9 +29,12 @@ export const useAutosave = ({ onSave, isSaving }: Props) => {
 	}, [])
 
 	const onManualSave = useCallback(() => {
+		if (isSaving) {
+			return
+		}
 		setSavingState('waiting')
 		onSaveRef.current()
-	}, [])
+	}, [isSaving])
 
 	useEffect(() => {
 		onSaveRef.current = onSave

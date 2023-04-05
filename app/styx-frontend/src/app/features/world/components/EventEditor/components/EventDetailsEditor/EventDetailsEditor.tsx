@@ -1,10 +1,11 @@
 import { Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Button, Stack, TextField } from '@mui/material'
+import { Button, Stack, TextField, Tooltip } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useUpdateWorldEventMutation } from '../../../../../../../api/rheaApi'
+import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useIsFirstRender } from '../../../../../../utils/useIsFirstRender'
@@ -97,9 +98,19 @@ export const EventDetailsEditor = ({ event }: Props) => {
 		dispatch(openDeleteEventModal(event))
 	}, [dispatch, event, openDeleteEventModal])
 
+	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
+		manualSave()
+	})
+
 	return (
 		<Stack spacing={2} direction="column">
-			<TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} />
+			<TextField
+				type="text"
+				label="Name"
+				value={name}
+				onChange={(e) => setName(e.target.value)}
+				inputProps={{ maxLength: 256 }}
+			/>
 			<TextField
 				label="Timestamp"
 				value={timestamp}
@@ -111,19 +122,24 @@ export const EventDetailsEditor = ({ event }: Props) => {
 				value={description}
 				onChange={(e) => setDescription(e.target.value)}
 				minRows={3}
+				maxRows={11}
 				multiline
 			/>
 			<Stack spacing={2} direction="row-reverse">
-				<LoadingButton
-					loading={isSaving}
-					variant="outlined"
-					onClick={manualSave}
-					loadingPosition="start"
-					color={autosaveColor}
-					startIcon={autosaveIcon}
-				>
-					Save
-				</LoadingButton>
+				<Tooltip title={shortcutLabel} arrow placement="top">
+					<span>
+						<LoadingButton
+							loading={isSaving}
+							variant="outlined"
+							onClick={manualSave}
+							loadingPosition="start"
+							color={autosaveColor}
+							startIcon={autosaveIcon}
+						>
+							Save
+						</LoadingButton>
+					</span>
+				</Tooltip>
 				<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
 					Delete
 				</Button>

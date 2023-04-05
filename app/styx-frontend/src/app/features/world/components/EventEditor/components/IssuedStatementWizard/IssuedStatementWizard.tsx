@@ -1,7 +1,7 @@
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, TextField, Tooltip } from '@mui/material'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useIssueWorldStatementMutation } from '../../../../../../../api/rheaApi'
@@ -33,8 +33,13 @@ export const IssuedStatementWizard = () => {
 		onCleanup: () => {
 			setTitle('')
 			setContent('')
+			setTitleValidationError(null)
 		},
 	})
+
+	useEffect(() => {
+		setTitleValidationError(null)
+	}, [title, content])
 
 	const onChangeTitle = useCallback((value: string) => {
 		setTitle(value)
@@ -95,6 +100,7 @@ export const IssuedStatementWizard = () => {
 				minRows={3}
 				error={!!titleValidationError}
 				helperText={titleValidationError}
+				inputProps={{ maxLength: 256 }}
 			/>
 			<TextField
 				label="Title"

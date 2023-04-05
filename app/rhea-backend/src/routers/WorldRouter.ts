@@ -14,6 +14,7 @@ import {
 	useRequestBody,
 } from 'tenebrie-framework'
 
+import { NameStringValidator } from './validators/NameStringValidator'
 import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
 
 const router = new Router()
@@ -110,7 +111,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 	await WorldService.checkUserWriteAccess(user, worldId)
 
 	const params = useRequestBody(ctx, {
-		name: RequiredParam(StringValidator),
+		name: RequiredParam(NameStringValidator),
 		type: RequiredParam(WorldEventTypeValidator),
 		timestamp: RequiredParam(NumberValidator),
 	})
@@ -139,7 +140,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	await WorldService.checkUserWriteAccess(user, worldId)
 
 	const params = useRequestBody(ctx, {
-		name: OptionalParam(StringValidator),
+		name: OptionalParam(NameStringValidator),
 		timestamp: OptionalParam(NumberValidator),
 		description: OptionalParam(StringValidator),
 	})
@@ -194,7 +195,7 @@ router.post('/api/world/:worldId/statement', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		eventId: RequiredParam(StringValidator),
-		title: RequiredParam(StringValidator),
+		title: RequiredParam(NameStringValidator),
 		content: OptionalParam(StringValidator),
 	})
 

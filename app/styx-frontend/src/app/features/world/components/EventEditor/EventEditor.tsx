@@ -53,7 +53,7 @@ export const EventEditor = () => {
 						</Button>
 					</StatementsUnit>
 				</Grid>
-				<Grid item xs={12} md={6} order={{ xs: 0, md: 1 }}>
+				<Grid item xs={12} md={6} order={{ xs: 0, md: 1 }} style={{ maxHeight: '100%' }}>
 					<EventDetailsEditor key={event.id} event={event} />
 				</Grid>
 				<Grid item xs={6} md={3} order={{ xs: 1, md: 2 }} style={{ height: '100%' }}>

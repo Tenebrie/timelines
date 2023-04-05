@@ -15,11 +15,11 @@ export const TimelineContainer = styled.div`
 	border-bottom: 1px solid #112550;
 	height: 192px;
 
-	@media all and (max-width: 1200px) {
+	@media all and (max-height: 1200px) {
 		height: 160px;
 	}
 
-	@media all and (max-width: 900px) {
-		height: 128px;
+	@media all and (max-height: 900px) {
+		height: 137px;
 	}
 `
