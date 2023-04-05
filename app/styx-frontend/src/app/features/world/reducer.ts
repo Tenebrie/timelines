@@ -7,6 +7,8 @@ const initialState = {
 	id: '' as string,
 	name: '' as string,
 	events: [] as WorldEvent[],
+	createdAt: '0',
+	updatedAt: '0',
 
 	hoveredEventMarkers: [] as (WorldEvent | WorldEventBundle)[],
 
@@ -47,6 +49,8 @@ export const worldSlice = createSlice({
 			state.id = payload.id
 			state.name = payload.name
 			state.events = payload.events
+			state.createdAt = payload.createdAt
+			state.updatedAt = payload.updatedAt
 		},
 
 		hoverEventMarker: (state, { payload }: PayloadAction<WorldEvent | WorldEventBundle>) => {

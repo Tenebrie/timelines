@@ -123,6 +123,8 @@ export type PostLogoutApiArg = {
 }
 export type GetWorldsApiResponse = /** status 200  */ {
 	id: string
+	createdAt: string
+	updatedAt: string
 	name: string
 	ownerId: string
 }[]
@@ -138,6 +140,8 @@ export type CreateWorldApiArg = {
 }
 export type GetWorldInfoApiResponse = /** status 200  */ {
 	id: string
+	createdAt: string
+	updatedAt: string
 	name: string
 	ownerId: string
 	events: {
@@ -151,6 +155,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		worldId: string
 		issuedStatements: {
 			id: string
+			createdAt: string
+			updatedAt: string
 			title: string
 			text: string
 			issuedByEventId: string
@@ -158,6 +164,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		}[]
 		revokedStatements: {
 			id: string
+			createdAt: string
+			updatedAt: string
 			title: string
 			text: string
 			issuedByEventId: string
@@ -225,6 +233,12 @@ export type DeleteWorldEventApiArg = {
 }
 export type IssueWorldStatementApiResponse = /** status 200  */ {
 	id: string
+	createdAt: string
+	updatedAt: string
+	title: string
+	text: string
+	issuedByEventId: string
+	revokedByEventId?: string
 }
 export type IssueWorldStatementApiArg = {
 	/** Any string value */
@@ -237,6 +251,8 @@ export type IssueWorldStatementApiArg = {
 }
 export type DeleteWorldStatementApiResponse = /** status 200  */ {
 	id: string
+	createdAt: string
+	updatedAt: string
 	title: string
 	text: string
 	issuedByEventId: string
@@ -250,6 +266,8 @@ export type DeleteWorldStatementApiArg = {
 }
 export type RevokeWorldStatementApiResponse = /** status 200  */ {
 	id: string
+	createdAt: string
+	updatedAt: string
 	title: string
 	text: string
 	issuedByEventId: string
@@ -266,6 +284,8 @@ export type RevokeWorldStatementApiArg = {
 }
 export type UnrevokeWorldStatementApiResponse = /** status 200  */ {
 	id: string
+	createdAt: string
+	updatedAt: string
 	title: string
 	text: string
 	issuedByEventId: string

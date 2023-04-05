@@ -14,11 +14,19 @@ export const initRedisConnection = async () => {
 }
 
 export const RedisService = {
-	notifyAboutWorldUpdate: (user: User, worldId: string) => {
+	notifyAboutWorldUpdate: ({
+		user,
+		worldId,
+		timestamp,
+	}: {
+		user: User
+		worldId: string
+		timestamp: Date
+	}) => {
 		const message = {
 			userId: user.id,
 			worldId,
-			timestamp: new Date().toISOString(),
+			timestamp,
 		}
 		client.publish('worldUpdate', JSON.stringify(message))
 	},

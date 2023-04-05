@@ -3,6 +3,20 @@ import { UnauthorizedError } from 'tenebrie-framework'
 
 import { dbClient } from './DatabaseClient'
 
+const touchWorld = (worldId: string) =>
+	dbClient.world.update({
+		where: {
+			id: worldId,
+		},
+		data: {
+			id: worldId,
+		},
+		select: {
+			id: true,
+			updatedAt: true,
+		},
+	})
+
 export const WorldService = {
 	checkUserReadAccess: async (user: User, worldId: string) => {
 		await WorldService.checkUserWriteAccess(user, worldId)
@@ -42,79 +56,141 @@ export const WorldService = {
 	},
 
 	createWorldEvent: async (worldId: string, data: Pick<WorldEvent, 'name' | 'type' | 'timestamp'>) => {
-		return dbClient.worldEvent.create({
-			data: {
-				worldId,
-				name: data.name,
-				type: data.type,
-				timestamp: data.timestamp,
-			},
-			select: {
-				id: true,
-			},
-		})
+		const [event, world] = await dbClient.$transaction([
+			dbClient.worldEvent.create({
+				data: {
+					worldId,
+					name: data.name,
+					type: data.type,
+					timestamp: data.timestamp,
+				},
+				select: {
+					id: true,
+				},
+			}),
+			touchWorld(worldId),
+		])
+		return {
+			event,
+			world,
+		}
 	},
 
-	updateWorldEvent: async (eventId: string, data: Partial<WorldEvent>) => {
-		return dbClient.worldEvent.update({
-			where: {
-				id: eventId,
-			},
-			data,
-		})
+	updateWorldEvent: async ({
+		worldId,
+		eventId,
+		params,
+	}: {
+		worldId: string
+		eventId: string
+		params: Partial<WorldEvent>
+	}) => {
+		const [event, world] = await dbClient.$transaction([
+			dbClient.worldEvent.update({
+				where: {
+					id: eventId,
+				},
+				data: params,
+			}),
+			touchWorld(worldId),
+		])
+		return {
+			event,
+			world,
+		}
 	},
 
-	deleteWorldEvent: async (eventId: string) => {
-		return dbClient.worldEvent.delete({
-			where: {
-				id: eventId,
-			},
-		})
+	deleteWorldEvent: async ({ worldId, eventId }: { worldId: string; eventId: string }) => {
+		const [event, world] = await dbClient.$transaction([
+			dbClient.worldEvent.delete({
+				where: {
+					id: eventId,
+				},
+			}),
+			touchWorld(worldId),
+		])
+		return {
+			event,
+			world,
+		}
 	},
 
 	issueWorldStatement: async (
-		data: Pick<WorldStatement, 'title'> & { eventId: string; content?: string }
+		data: Pick<WorldStatement, 'title'> & { worldId: string; eventId: string; content?: string }
 	) => {
-		return dbClient.worldStatement.create({
-			data: {
-				issuedByEventId: data.eventId,
-				title: data.title,
-				text: data.content,
-			},
-			select: {
-				id: true,
-			},
-		})
+		const [statement, world] = await dbClient.$transaction([
+			dbClient.worldStatement.create({
+				data: {
+					issuedByEventId: data.eventId,
+					title: data.title,
+					text: data.content,
+				},
+			}),
+			touchWorld(data.worldId),
+		])
+		return {
+			statement,
+			world,
+		}
 	},
 
-	deleteWorldStatement: async (statementId: string) => {
-		return dbClient.worldStatement.delete({
-			where: {
-				id: statementId,
-			},
-		})
+	deleteWorldStatement: async ({ worldId, statementId }: { worldId: string; statementId: string }) => {
+		const [statement, world] = await dbClient.$transaction([
+			dbClient.worldStatement.delete({
+				where: {
+					id: statementId,
+				},
+			}),
+			touchWorld(worldId),
+		])
+		return {
+			statement,
+			world,
+		}
 	},
 
-	revokeWorldStatement: async ({ statementId, eventId }: { statementId: string; eventId: string }) => {
-		return dbClient.worldStatement.update({
-			where: {
-				id: statementId,
-			},
-			data: {
-				revokedByEventId: eventId,
-			},
-		})
+	revokeWorldStatement: async ({
+		worldId,
+		eventId,
+		statementId,
+	}: {
+		worldId: string
+		eventId: string
+		statementId: string
+	}) => {
+		const [statement, world] = await dbClient.$transaction([
+			dbClient.worldStatement.update({
+				where: {
+					id: statementId,
+				},
+				data: {
+					revokedByEventId: eventId,
+				},
+			}),
+			touchWorld(worldId),
+		])
+		return {
+			statement,
+			world,
+		}
 	},
 
-	unrevokeWorldStatement: async ({ statementId }: { statementId: string }) => {
-		return dbClient.worldStatement.update({
-			where: {
-				id: statementId,
-			},
-			data: {
-				revokedByEventId: null,
-			},
-		})
+	unrevokeWorldStatement: async ({ worldId, statementId }: { worldId: string; statementId: string }) => {
+		const [statement, world] = await dbClient.$transaction([
+			dbClient.worldStatement.update({
+				where: {
+					id: statementId,
+				},
+				data: {
+					revokedByEventId: null,
+				},
+			}),
+			touchWorld(worldId),
+		])
+		return {
+			statement,
+			world,
+		}
 	},
 
 	listOwnedWorlds: async (params: { owner: User }) => {

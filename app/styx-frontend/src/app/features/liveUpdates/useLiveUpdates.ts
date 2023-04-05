@@ -1,16 +1,44 @@
-import { useCallback, useMemo, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { rheaApi } from '../../../api/rheaApi'
 import { useEffectOnce } from '../../utils/useEffectOnce'
+import { getWorldState } from '../world/selectors'
 
-const expBackoffDelays = [5, 25, 100, 500, 1000, 2000, 5000]
+const expBackoffDelays = [5, 100, 1000, 5000]
 
 export const useLiveUpdates = () => {
 	const currentWebsocket = useRef<WebSocket>()
 	const heartbeatInterval = useRef<number | null>(null)
 	const backoffLevel = useRef<number>(-1)
+	const updatedAtRef = useRef<string>('0')
 	const dispatch = useDispatch()
+
+	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState)
+
+	useEffect(() => {
+		updatedAtRef.current = currentUpdatedAt
+	}, [currentUpdatedAt])
+
+	const processMessage = useCallback(
+		(message: string) => {
+			const payload = JSON.parse(message) as {
+				type: 'worldUpdate'
+				data: unknown
+			}
+			if (payload.type === 'worldUpdate') {
+				const data = payload.data as {
+					worldId: string
+					timestamp: string
+				}
+
+				if (new Date(updatedAtRef.current) < new Date(data.timestamp)) {
+					dispatch(rheaApi.util.invalidateTags(['world']))
+				}
+			}
+		},
+		[dispatch]
+	)
 
 	const clearHeartbeat = useCallback(() => {
 		if (heartbeatInterval.current !== null) {
@@ -56,19 +84,7 @@ export const useLiveUpdates = () => {
 
 			socket.onmessage = function (event) {
 				console.info(`[ws] Data received from server: ${event.data}`)
-
-				const payload = JSON.parse(event.data) as {
-					type: 'worldUpdate'
-					data: unknown
-				}
-				if (payload.type === 'worldUpdate') {
-					const _data = payload.data as {
-						worldId: string
-						timestamp: string
-					}
-
-					dispatch(rheaApi.util.invalidateTags(['world']))
-				}
+				processMessage(event.data)
 			}
 
 			socket.onclose = function (event) {
@@ -89,8 +105,7 @@ export const useLiveUpdates = () => {
 		}
 
 		return { initiateConnection }
-	}, [clearHeartbeat, dispatch])
-	console.log(currentWebsocket.current)
+	}, [clearHeartbeat, processMessage])
 
 	useEffectOnce(() => initiateConnection())
 }

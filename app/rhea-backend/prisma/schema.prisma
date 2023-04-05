@@ -19,7 +19,10 @@ model User {
 }
 
 model World {
-  id     String       @id @unique @default(uuid())
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
   name   String
   events WorldEvent[]
 
@@ -50,7 +53,10 @@ model WorldEvent {
 }
 
 model WorldStatement {
-  id    String @id @unique @default(uuid())
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
   title String
   text  String @default("")
 
