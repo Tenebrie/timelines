@@ -16,7 +16,7 @@ export const DeleteStatementModal = () => {
 	const [deleteWorldStatement, { isLoading }] = useDeleteWorldStatementMutation()
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 
-	const { worldParams } = useWorldRouter()
+	const { worldParams, navigateToEventEditor } = useWorldRouter()
 
 	const dispatch = useDispatch()
 	const { closeDeleteStatementModal } = worldSlice.actions
@@ -47,6 +47,7 @@ export const DeleteStatementModal = () => {
 		}
 
 		dispatch(closeDeleteStatementModal())
+		navigateToEventEditor(targetStatement.issuedByEventId)
 	}
 
 	const onCloseAttempt = () => {

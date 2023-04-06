@@ -62,7 +62,7 @@ export const WorldWizardModal = () => {
 		navigateToWorldRoot(response.id)
 	}
 
-	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.Enter, () => {
+	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		onConfirm()
 	})
 

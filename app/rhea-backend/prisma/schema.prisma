@@ -61,7 +61,7 @@ model WorldStatement {
   text  String @default("")
 
   issuedBy         WorldEvent  @relation(name: "StatementsIssuedByEvent", fields: [issuedByEventId], references: [id], onDelete: Cascade)
-  revokedBy        WorldEvent? @relation(name: "StatementsRevokedByEvent", fields: [revokedByEventId], references: [id], onDelete: Cascade)
+  revokedBy        WorldEvent? @relation(name: "StatementsRevokedByEvent", fields: [revokedByEventId], references: [id])
   issuedByEventId  String
   revokedByEventId String?
 }

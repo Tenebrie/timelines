@@ -1,4 +1,4 @@
-import React, { MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { ModalContainer, ModalWrapper } from './styles'
 
@@ -14,14 +14,6 @@ const Modal = ({ visible, children, onClose }: Props) => {
 	const isModalVisible = useMemo(() => visible === undefined || visible, [visible])
 	const [isModalRendered, setIsModalRendered] = useState(false)
 	const [modalRenderTimeout, setModalRenderTimeout] = useState<number | null>(null)
-
-	const onContainerClick = () => {
-		onClose()
-	}
-
-	const onBodyClick = (event: MouseEvent<HTMLDivElement>) => {
-		event.stopPropagation()
-	}
 
 	const onEscapeKey = useCallback(
 		(event: KeyboardEvent) => {
@@ -60,10 +52,8 @@ const Modal = ({ visible, children, onClose }: Props) => {
 	}, [isModalRendered, isModalVisible])
 
 	return (
-		<ModalWrapper className={isModalVisible ? 'visible' : ''} onClick={onContainerClick}>
-			<ModalContainer ref={bodyRef} onClick={onBodyClick}>
-				{isModalRendered && children}
-			</ModalContainer>
+		<ModalWrapper className={isModalVisible ? 'visible' : ''}>
+			<ModalContainer ref={bodyRef}>{isModalRendered && children}</ModalContainer>
 		</ModalWrapper>
 	)
 }
