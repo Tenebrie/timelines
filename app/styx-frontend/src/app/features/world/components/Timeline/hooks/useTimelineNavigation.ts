@@ -32,9 +32,11 @@ export const useTimelineNavigation = ({
 	const [isDragging, setDragging] = useState(false)
 	const [canClick, setCanClick] = useState(true)
 
-	const onMouseDown = useCallback((event: MouseEvent) => {
+	const onMouseDown = useCallback((event: MouseEvent | TouchEvent) => {
+		const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
+		const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
 		const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
-		const newPos = { x: event.clientX - boundingRect.left, y: event.clientY - boundingRect.top }
+		const newPos = { x: clientX - boundingRect.left, y: clientY - boundingRect.top }
 		setCanClick(true)
 		setDraggingFrom(newPos)
 		setMousePos(newPos)
@@ -46,9 +48,11 @@ export const useTimelineNavigation = ({
 	}, [])
 
 	const onMouseMove = useCallback(
-		(event: MouseEvent) => {
+		(event: MouseEvent | TouchEvent) => {
 			const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
-			const newPos = { x: event.clientX - boundingRect.left, y: event.clientY - boundingRect.top }
+			const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
+			const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
+			const newPos = { x: clientX - boundingRect.left, y: clientY - boundingRect.top }
 
 			if (draggingFrom !== null) {
 				/* If the mouse moved less than N pixels, do not start dragging */
@@ -247,6 +251,9 @@ export const useTimelineNavigation = ({
 		container.addEventListener('mousedown', onMouseDown)
 		container.addEventListener('mousemove', onMouseMove)
 		container.addEventListener('mouseup', onMouseUp)
+		container.addEventListener('touchstart', onMouseDown)
+		container.addEventListener('touchmove', onMouseMove)
+		container.addEventListener('touchend', onMouseUp)
 		container.addEventListener('mouseleave', onMouseUp)
 		container.addEventListener('wheel', onWheel)
 
@@ -255,6 +262,9 @@ export const useTimelineNavigation = ({
 			container.removeEventListener('mousedown', onMouseDown)
 			container.removeEventListener('mousemove', onMouseMove)
 			container.removeEventListener('mouseup', onMouseUp)
+			container.removeEventListener('touchstart', onMouseDown)
+			container.removeEventListener('touchmove', onMouseMove)
+			container.removeEventListener('touchend', onMouseUp)
 			container.removeEventListener('mouseleave', onMouseUp)
 			container.removeEventListener('wheel', onWheel)
 		}
