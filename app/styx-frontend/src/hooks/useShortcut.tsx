@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react'
 
+import { isMacOS } from '../app/utils/isMacOS'
 import { ShortcutLabel } from './styles'
 
 export const Shortcut = {
@@ -13,10 +14,8 @@ export const useShortcut = (shortcut: (typeof Shortcut)[keyof typeof Shortcut], 
 
 	const onKeyDown = useCallback(
 		(event: KeyboardEvent) => {
-			const isMac =
-				window.navigator.userAgentData?.platform === 'macOS' || window.navigator.platform === 'MacIntel'
 			const key = event.key
-			const ctrlKey = isMac ? event.metaKey : event.ctrlKey
+			const ctrlKey = isMacOS() ? event.metaKey : event.ctrlKey
 
 			if (ctrlKey === ctrlKeyNeeded && key === defKeys[defKeys.length - 1]) {
 				callback()

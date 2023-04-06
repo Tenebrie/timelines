@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { Position } from '../../../../../../types/Position'
 import clampToRange from '../../../../../utils/clampToRange'
+import { isMacOS } from '../../../../../utils/isMacOS'
 import { rangeMap } from '../../../../../utils/rangeMap'
 import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
 import { ScaleLevel } from '../types'
@@ -31,12 +32,16 @@ export const useTimelineNavigation = ({
 	const [mousePos, setMousePos] = useState<Position>({ x: 0, y: 0 })
 	const [isDragging, setDragging] = useState(false)
 	const [canClick, setCanClick] = useState(true)
+	const boundingRectTop = useRef(0)
+	const boundingRectLeft = useRef(0)
 
 	const onMouseDown = useCallback((event: MouseEvent | TouchEvent) => {
 		const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
 		const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
 		const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
-		const newPos = { x: clientX - boundingRect.left, y: clientY - boundingRect.top }
+		boundingRectTop.current = boundingRect.top
+		boundingRectLeft.current = boundingRect.left
+		const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }
 		setCanClick(true)
 		setDraggingFrom(newPos)
 		setMousePos(newPos)
@@ -49,10 +54,9 @@ export const useTimelineNavigation = ({
 
 	const onMouseMove = useCallback(
 		(event: MouseEvent | TouchEvent) => {
-			const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
 			const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
 			const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
-			const newPos = { x: clientX - boundingRect.left, y: clientY - boundingRect.top }
+			const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }
 
 			if (draggingFrom !== null) {
 				/* If the mouse moved less than N pixels, do not start dragging */
@@ -173,14 +177,33 @@ export const useTimelineNavigation = ({
 		timelineScale,
 	])
 
+	const scrollAccumulator = useRef<number>(0)
 	const onWheel = useCallback(
 		(event: WheelEvent) => {
 			event.preventDefault()
+
+			const sensitivity = isMacOS() ? -1 / 75 : 1
+
+			const currentValue = scrollAccumulator.current + event.deltaY * sensitivity
+			if (Math.abs(currentValue) < 1) {
+				scrollAccumulator.current = currentValue
+				return
+			}
+
+			const actualDiff = Math.trunc(currentValue)
+			scrollAccumulator.current -= actualDiff
+
 			const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
-			const newPos = { x: event.clientX - boundingRect.left, y: event.clientY - boundingRect.top }
+			boundingRectTop.current = boundingRect.top
+			boundingRectLeft.current = boundingRect.left
+			const newPos = {
+				x: event.clientX - boundingRectLeft.current,
+				y: event.clientY - boundingRectTop.current,
+			}
+
 			setMousePos(newPos)
 
-			const newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(event.deltaY)
+			const newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(actualDiff)
 			setScaleSwitchesToDo(newScaleSwitchesToDo)
 			setIsSwitchingScale(true)
 			setTargetScale(clampToRange(scaleLimits[0], scaleScroll / 100 + newScaleSwitchesToDo, scaleLimits[1]))
@@ -208,7 +231,12 @@ export const useTimelineNavigation = ({
 			}
 
 			const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
-			const point = { x: event.clientX - boundingRect.left, y: event.clientY - boundingRect.top }
+			boundingRectTop.current = boundingRect.top
+			boundingRectLeft.current = boundingRect.left
+			const point = {
+				x: event.clientX - boundingRectLeft.current,
+				y: event.clientY - boundingRectTop.current,
+			}
 
 			const roundToX = 10 / timelineScale
 			const clickOffset = Math.round((point.x - scroll) / roundToX) * roundToX * timelineScale
@@ -249,23 +277,23 @@ export const useTimelineNavigation = ({
 
 		container.addEventListener('click', onTimelineClick)
 		container.addEventListener('mousedown', onMouseDown)
-		container.addEventListener('mousemove', onMouseMove)
-		container.addEventListener('mouseup', onMouseUp)
+		document.addEventListener('mousemove', onMouseMove)
+		document.addEventListener('mouseup', onMouseUp)
 		container.addEventListener('touchstart', onMouseDown)
 		container.addEventListener('touchmove', onMouseMove)
 		container.addEventListener('touchend', onMouseUp)
-		container.addEventListener('mouseleave', onMouseUp)
+		document.addEventListener('mouseleave', onMouseUp)
 		container.addEventListener('wheel', onWheel)
 
 		return () => {
 			container.removeEventListener('click', onTimelineClick)
 			container.removeEventListener('mousedown', onMouseDown)
-			container.removeEventListener('mousemove', onMouseMove)
-			container.removeEventListener('mouseup', onMouseUp)
+			document.removeEventListener('mousemove', onMouseMove)
+			document.removeEventListener('mouseup', onMouseUp)
 			container.removeEventListener('touchstart', onMouseDown)
 			container.removeEventListener('touchmove', onMouseMove)
 			container.removeEventListener('touchend', onMouseUp)
-			container.removeEventListener('mouseleave', onMouseUp)
+			document.removeEventListener('mouseleave', onMouseUp)
 			container.removeEventListener('wheel', onWheel)
 		}
 	}, [containerRef, onClick, onMouseDown, onMouseMove, onMouseUp, onTimelineClick, onWheel])
