@@ -1,5 +1,5 @@
 import { Add } from '@mui/icons-material'
-import { Button, Container, Grid } from '@mui/material'
+import { Button, Grid } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { LoadingSpinner } from '../../../../components/LoadingSpinner'
@@ -12,7 +12,7 @@ import { DeleteEventModal } from './components/DeleteEventModal/DeleteEventModal
 import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetailsEditor'
 import { IssuedStatementWizard } from './components/IssuedStatementWizard/IssuedStatementWizard'
 import { RevokedStatementWizard } from './components/RevokedStatementWizard/RevokedStatementWizard'
-import { EventEditorWrapper, StatementsScroller, StatementsUnit } from './styles'
+import { EventEditorWrapper, FullHeightContainer, StatementsScroller, StatementsUnit } from './styles'
 
 export const EventEditor = () => {
 	const { events } = useSelector(getWorldState)
@@ -36,7 +36,7 @@ export const EventEditor = () => {
 	const { issuedStatements: addedWorldCards, revokedStatements: removedWorldCards } = event
 
 	return (
-		<Container maxWidth="xl" style={{ height: '100%' }}>
+		<FullHeightContainer maxWidth="xl">
 			<Grid container spacing={2} padding={2} columns={{ xs: 12, sm: 12, md: 12 }} height="100%">
 				<Grid item xs={6} md={3} order={{ xs: 1, md: 0 }} style={{ height: '100%' }}>
 					<StatementsUnit>
@@ -71,6 +71,6 @@ export const EventEditor = () => {
 			<DeleteEventModal />
 			<IssuedStatementWizard />
 			<RevokedStatementWizard />
-		</Container>
+		</FullHeightContainer>
 	)
 }

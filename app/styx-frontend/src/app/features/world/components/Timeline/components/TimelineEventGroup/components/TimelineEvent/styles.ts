@@ -1,3 +1,4 @@
+import { colors } from '@mui/material'
 import styled from 'styled-components'
 
 export type StoryEventMarkerProps = {
@@ -10,18 +11,38 @@ export const Marker = styled.div`
 	width: 50px;
 	height: 50px;
 	border-radius: 50%;
-	background: lightgray;
+	background: rgba(0, 0, 0, 0.7);
 	cursor: pointer;
-	border: 1px solid black;
 	margin-bottom: -35px;
-	transition: margin-bottom 0.3s;
+	transition: margin-bottom 0.3s, background-color 0.3s;
+	background-image: url('/assets/tribe-dryad-01.png');
+	background-origin: content-box;
+	background-size: contain;
+	outline: 2px solid white;
 
 	&.expanded {
-		margin-bottom: 0;
+		margin-bottom: 4px;
 	}
 
 	&.selected {
-		filter: drop-shadow(0px 0px 8px purple);
+		background-color: ${colors.orange[700]};
+	}
+
+	&.elevated {
+		z-index: 1;
+	}
+
+	&.highlighted {
+		background-color: ${colors.deepPurple[700]};
+	}
+
+	&:hover {
+		background-color: ${colors.orange[500]};
+	}
+
+	&:active {
+		z-index: 1;
+		background-color: ${colors.orange[900]};
 	}
 `
 
@@ -42,7 +63,9 @@ export const Label = styled.div`
 	align-items: center;
 	justify-content: center;
 	padding: 8px;
-	background: rgba(100, 100, 150, 1);
+	background: rgba(0, 0, 0, 0.5);
 	border-radius: 8px;
 	font-weight: 600;
+	-webkit-backdrop-filter: blur(8px);
+	backdrop-filter: blur(8px);
 `

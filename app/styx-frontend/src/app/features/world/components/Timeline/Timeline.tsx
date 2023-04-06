@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { worldSlice } from '../../reducer'
@@ -14,6 +14,7 @@ import { TimelineContainer, TimelineWrapper } from './styles'
 
 export const Timeline = () => {
 	const containerRef = useRef<HTMLDivElement | null>(null)
+	const containerWidth = useRef<number>(4096)
 
 	const { events } = useSelector(getWorldState)
 
@@ -28,27 +29,40 @@ export const Timeline = () => {
 	} = useWorldRouter()
 	const selectedTime = Number(outlinerParams.timestamp)
 
-	const onClick = (time: number) => {
-		if (selectedTime === time) {
-			navigateToCurrentWorldRoot()
-		} else {
-			navigateToOutliner(time)
-		}
-	}
+	const onClick = useCallback(
+		(time: number) => {
+			if (selectedTime === time) {
+				navigateToCurrentWorldRoot()
+			} else {
+				navigateToOutliner(time)
+			}
+		},
+		[navigateToCurrentWorldRoot, navigateToOutliner, selectedTime]
+	)
 
-	const onDoubleClick = (time: number) => {
-		if (selectedTime) {
-			dispatch(openEventWizard({ timestamp: time }))
-		} else {
-			navigateToOutliner(time)
+	const onDoubleClick = useCallback(
+		(time: number) => {
+			if (selectedTime) {
+				dispatch(openEventWizard({ timestamp: time }))
+			} else {
+				navigateToOutliner(time)
+			}
+		},
+		[dispatch, navigateToOutliner, openEventWizard, selectedTime]
+	)
+
+	useEffect(() => {
+		if (!containerRef.current) {
+			return
 		}
-	}
+		containerWidth.current = containerRef.current.getBoundingClientRect().width
+	}, [containerRef])
 
 	const { scroll, timelineScale, scaleLevel, targetScaleIndex, isSwitchingScale, scrollTo } =
 		useTimelineNavigation({
 			containerRef,
 			defaultScroll: 150,
-			maximumScroll: 500,
+			maximumScroll: containerWidth.current / 2,
 			scaleLimits: [-3, 10],
 			onClick: (time) => onClick(time),
 			onDoubleClick: (time) => onDoubleClick(time),
@@ -58,7 +72,6 @@ export const Timeline = () => {
 	const lastSeenEventId = useRef<string | null>(null)
 	useEffect(() => {
 		if (eventEditorParams.eventId && eventEditorParams.eventId !== lastSeenEventId.current) {
-			console.log('rerender')
 			const event = events.find((e) => e.id === eventEditorParams.eventId)
 			if (!event) {
 				return
@@ -85,6 +98,7 @@ export const Timeline = () => {
 						scroll={scroll}
 						mode="mouse"
 						scaleLevel={scaleLevel}
+						transitioning={isSwitchingScale}
 					/>
 				)}
 				{eventGroups.map((group) => (
@@ -95,6 +109,7 @@ export const Timeline = () => {
 						eventGroup={group}
 						timelineScale={timelineScale}
 						scaleLevel={scaleLevel}
+						containerWidth={containerWidth.current}
 					/>
 				))}
 			</TimelineContainer>

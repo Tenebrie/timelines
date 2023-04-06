@@ -1,7 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { WorldDetails, WorldEvent, WorldEventBundle, WorldStatement } from './types'
+import { WorldDetails, WorldEvent, WorldStatement } from './types'
 
 const initialState = {
 	id: '' as string,
@@ -9,8 +9,6 @@ const initialState = {
 	events: [] as WorldEvent[],
 	createdAt: '0',
 	updatedAt: '0',
-
-	hoveredEventMarkers: [] as (WorldEvent | WorldEventBundle)[],
 
 	eventWizard: {
 		isOpen: false as boolean,
@@ -51,14 +49,6 @@ export const worldSlice = createSlice({
 			state.events = payload.events
 			state.createdAt = payload.createdAt
 			state.updatedAt = payload.updatedAt
-		},
-
-		hoverEventMarker: (state, { payload }: PayloadAction<WorldEvent | WorldEventBundle>) => {
-			state.hoveredEventMarkers = state.hoveredEventMarkers.concat(payload)
-		},
-
-		unhoverEventMarker: (state, { payload }: PayloadAction<WorldEvent | WorldEventBundle>) => {
-			state.hoveredEventMarkers = state.hoveredEventMarkers.filter((marker) => marker.id !== payload.id)
 		},
 
 		/* Event wizard */

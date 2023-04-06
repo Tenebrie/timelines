@@ -1,12 +1,10 @@
 import bezier from 'bezier-easing'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 
 import { Position } from '../../../../../../types/Position'
 import clampToRange from '../../../../../utils/clampToRange'
 import { rangeMap } from '../../../../../utils/rangeMap'
 import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
-import { getWorldState } from '../../../selectors'
 import { ScaleLevel } from '../types'
 
 type Props = {
@@ -34,13 +32,12 @@ export const useTimelineNavigation = ({
 	const [isDragging, setDragging] = useState(false)
 	const [canClick, setCanClick] = useState(true)
 
-	const { hoveredEventMarkers } = useSelector(getWorldState)
-
 	const onMouseDown = useCallback((event: MouseEvent) => {
 		const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
 		const newPos = { x: event.clientX - boundingRect.left, y: event.clientY - boundingRect.top }
 		setCanClick(true)
 		setDraggingFrom(newPos)
+		setMousePos(newPos)
 	}, [])
 
 	const onMouseUp = useCallback(() => {
@@ -72,8 +69,8 @@ export const useTimelineNavigation = ({
 					setOverscroll(0)
 				}
 				setCanClick(false)
+				setMousePos(newPos)
 			}
-			setMousePos(newPos)
 		},
 		[draggingFrom, isDragging, maximumScroll, mousePos.x, overscroll, scroll]
 	)
@@ -175,6 +172,9 @@ export const useTimelineNavigation = ({
 	const onWheel = useCallback(
 		(event: WheelEvent) => {
 			event.preventDefault()
+			const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
+			const newPos = { x: event.clientX - boundingRect.left, y: event.clientY - boundingRect.top }
+			setMousePos(newPos)
 
 			const newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(event.deltaY)
 			setScaleSwitchesToDo(newScaleSwitchesToDo)
@@ -199,7 +199,7 @@ export const useTimelineNavigation = ({
 	const [lastClickTime, setLastClickTime] = useState<number | null>(null)
 	const onTimelineClick = useCallback(
 		(event: MouseEvent) => {
-			if (!canClick || hoveredEventMarkers.length > 0) {
+			if (!canClick) {
 				return
 			}
 
@@ -226,7 +226,6 @@ export const useTimelineNavigation = ({
 		},
 		[
 			canClick,
-			hoveredEventMarkers.length,
 			lastClickPos,
 			lastClickTime,
 			onClick,
@@ -264,7 +263,6 @@ export const useTimelineNavigation = ({
 	const startedScrollFrom = useRef(0)
 	const desiredScrollTo = useRef(0)
 	const smoothScrollStartedAtTime = useRef(new Date())
-	console.log('rerender')
 	// Outside controls
 	const scrollTo = useCallback(
 		(timestamp: number) => {
@@ -273,8 +271,6 @@ export const useTimelineNavigation = ({
 			}
 
 			const easing = bezier(0.5, 0, 0.5, 1)
-			// Empty
-			console.log(`Scrolling to ${timestamp}`)
 			const targetScroll =
 				realTimeToScaledTime(-timestamp / timelineScale) +
 				Math.floor(containerRef.current.getBoundingClientRect().width / 2)
@@ -284,7 +280,6 @@ export const useTimelineNavigation = ({
 			smoothScrollStartedAtTime.current = new Date()
 
 			const callback = () => {
-				// console.log('callback')
 				const time = Math.min(1, (new Date().getTime() - smoothScrollStartedAtTime.current.getTime()) / 300)
 				const bezierPos = easing(time)
 				setScroll(
@@ -292,6 +287,9 @@ export const useTimelineNavigation = ({
 				)
 				if (time < 1) {
 					requestAnimationFrame(callback)
+				} else {
+					startedScrollFrom.current = 0
+					desiredScrollTo.current = 0
 				}
 			}
 

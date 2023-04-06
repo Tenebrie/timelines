@@ -18,4 +18,8 @@ export const Group = styled.div.attrs<{ position: number }>((props) => ({
 	&.visible {
 		opacity: 1;
 	}
+
+	&.expanded {
+		z-index: 1;
+	}
 `

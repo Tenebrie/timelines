@@ -6,7 +6,6 @@ import { useLiveUpdates } from './app/features/liveUpdates/useLiveUpdates'
 
 const Container = styled.div`
 	display: flex;
-	align-items: center;
 	justify-content: center;
 	width: 100vw;
 	height: 100vh;

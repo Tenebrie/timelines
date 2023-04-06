@@ -1,7 +1,5 @@
-import { MouseEvent, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { memo, MouseEvent, useState } from 'react'
 
-import { worldSlice } from '../../../../../../reducer'
 import { useWorldRouter } from '../../../../../../router'
 import { WorldEvent, WorldEventBundle } from '../../../../../../types'
 import { Label, LabelContainer, Marker } from './styles'
@@ -10,15 +8,13 @@ type Props = {
 	event: WorldEvent | WorldEventBundle
 	groupIndex: number
 	expanded: boolean
+	highlighted: boolean
 }
 
-export const TimelineEvent = ({ event, groupIndex, expanded }: Props) => {
+export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighted }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
 	const { eventEditorParams } = useWorldRouter()
-
-	const dispatch = useDispatch()
-	const { hoverEventMarker, unhoverEventMarker } = worldSlice.actions
 
 	const { navigateToCurrentWorld: navigateToCurrentWorldRoot, navigateToEventEditor } = useWorldRouter()
 
@@ -39,23 +35,18 @@ export const TimelineEvent = ({ event, groupIndex, expanded }: Props) => {
 
 	const onMouseEnter = () => {
 		setIsInfoVisible(true)
-		dispatch(hoverEventMarker(event))
 	}
 
 	const onMouseLeave = () => {
 		setIsInfoVisible(false)
-		dispatch(unhoverEventMarker(event))
 	}
 
+	const className = `${groupIndex > 0 && expanded ? 'expanded' : ''} ${
+		event.id === eventEditorParams.eventId ? 'selected' : ''
+	} ${isInfoVisible ? 'elevated' : ''} ${highlighted ? 'highlighted' : ''}`
+
 	return (
-		<Marker
-			onClick={onClick}
-			onMouseEnter={onMouseEnter}
-			onMouseLeave={onMouseLeave}
-			className={`${groupIndex > 0 && expanded ? 'expanded' : ''} ${
-				event.id === eventEditorParams.eventId ? 'selected' : ''
-			}`}
-		>
+		<Marker onClick={onClick} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className={className}>
 			{isInfoVisible && (
 				<LabelContainer>
 					<Label>{event.name}</Label>
@@ -64,3 +55,5 @@ export const TimelineEvent = ({ event, groupIndex, expanded }: Props) => {
 		</Marker>
 	)
 }
+
+export const TimelineEvent = memo(TimelineEventComponent)

@@ -16,6 +16,7 @@ const container = document.getElementById('root')
 const root = createRoot(container!)
 
 const rollbarConfig: Configuration = {
+	enabled: process.env.NODE_ENV !== 'development',
 	accessToken: 'f426a5264860489095a22b56cc8d8e31',
 	environment: process.env.NODE_ENV,
 	captureUncaught: true,

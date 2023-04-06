@@ -1,3 +1,4 @@
+import { Container } from '@mui/material'
 import styled from 'styled-components'
 
 import { ScrollbarStyling } from '../../../../styles'
@@ -34,10 +35,12 @@ export const StatementsUnit = styled.fieldset`
 	border-radius: 4px;
 	border: 1px solid rgba(255, 255, 255, 0.23);
 	padding: 8px;
-	min-height: 256px;
-	height: 100%;
 	position: relative;
 	margin-top: -8.5px;
+
+	@media all and (min-width: 900px) {
+		height: 100%;
+	}
 `
 
 export const StatementsScroller = styled.div`
@@ -52,4 +55,10 @@ export const StatementsScroller = styled.div`
 	}
 
 	${ScrollbarStyling}
+`
+
+export const FullHeightContainer = styled(Container)`
+	@media all and (min-width: 900px) {
+		height: 100%;
+	}
 `

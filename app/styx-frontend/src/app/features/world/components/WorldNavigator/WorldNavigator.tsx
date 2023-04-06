@@ -1,4 +1,4 @@
-import { ArrowBack } from '@mui/icons-material'
+import { Home } from '@mui/icons-material'
 import { Button } from '@mui/material'
 import styled from 'styled-components'
 
@@ -11,6 +11,7 @@ const Container = styled.div`
 	box-shadow: 0 4px 2px -2px #214f81;
 	display: flex;
 	justify-content: space-between;
+	z-index: 1;
 `
 
 export const WorldNavigator = () => {
@@ -23,7 +24,7 @@ export const WorldNavigator = () => {
 	return (
 		<Container>
 			<Button onClick={onBack}>
-				<ArrowBack /> Back
+				<Home /> Home
 			</Button>
 			<SmallProfile />
 		</Container>

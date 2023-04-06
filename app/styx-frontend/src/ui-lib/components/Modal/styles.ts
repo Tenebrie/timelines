@@ -24,7 +24,8 @@ export const ModalWrapper = styled.div`
 
 export const ModalContainer = styled.div`
 	padding: 32px 64px;
-	min-width: 768px;
+	max-width: 768px;
+	width: 100%;
 	background: #0d2d50;
 	border-radius: 4px;
 	display: flex;

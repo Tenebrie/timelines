@@ -10,4 +10,10 @@ export const Container = styled.div.attrs<{ offset: number }>((props) => ({
 	background: gray;
 	width: 1px;
 	height: 100%;
+	opacity: 1;
+	transition: opacity 0.3s;
+
+	&.hidden {
+		opacity: 0;
+	}
 `

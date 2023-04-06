@@ -8,10 +8,11 @@ type Props = {
 	timelineScale: number
 	mode: 'mouse' | 'outliner'
 	scaleLevel: ScaleLevel
+	transitioning: boolean
 }
 
-export const TimeMarker = ({ timestamp, scroll, timelineScale, scaleLevel }: Props) => {
+export const TimeMarker = ({ timestamp, scroll, timelineScale, scaleLevel, transitioning }: Props) => {
 	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel })
 	const offset = Math.round(realTimeToScaledTime(timestamp / timelineScale)) + scroll
-	return <Container offset={offset} />
+	return <Container offset={offset} className={`${transitioning ? 'hidden' : ''}`} />
 }

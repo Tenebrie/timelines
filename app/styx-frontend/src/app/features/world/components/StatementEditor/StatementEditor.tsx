@@ -1,34 +1,27 @@
 import { Delete, Undo } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Container, Grid, Stack } from '@mui/material'
+import { Grid, Stack } from '@mui/material'
 import { useRef } from 'react'
-import { useSelector } from 'react-redux'
 
 import {
 	useRevokeWorldStatementMutation,
 	useUnrevokeWorldStatementMutation,
 } from '../../../../../api/rheaApi'
+import { useStatementEditorData } from '../../../../../hooks/useStatementEditorData'
 import { LoadingSpinner } from '../../../../components/LoadingSpinner'
 import { OverlayingLabel } from '../../../../components/OverlayingLabel'
 import { parseApiResponse } from '../../../../utils/parseApiResponse'
 import { useWorldRouter } from '../../router'
-import { getWorldState } from '../../selectors'
 import { WorldEvent } from '../../types'
-import { EventEditorWrapper } from '../EventEditor/styles'
+import { EventEditorWrapper, FullHeightContainer } from '../EventEditor/styles'
 import { DeleteStatementModal } from './DeleteStatementModal/DeleteStatementModal'
 import { EventCard } from './EventCard/EventCard'
 import { StatementDetailsEditor } from './StatementDetailsEditor/StatementDetailsEditor'
 import { StatementsUnit } from './styles'
 
 export const StatementEditor = () => {
-	const { events } = useSelector(getWorldState)
-
 	const { statementEditorParams } = useWorldRouter()
-	const { statementId } = statementEditorParams
-
-	const statement = events.flatMap((e) => e.issuedStatements).find((s) => s.id === statementId)
-	const issuedByEvent = events.find((e) => e.id === statement?.issuedByEventId)
-	const revokedByEvent = events.find((e) => e.id === statement?.revokedByEventId)
+	const { statement, issuedByEvent, revokedByEvent } = useStatementEditorData()
 
 	const previouslyRevokedBy = useRef<WorldEvent | null>(null)
 
@@ -81,13 +74,13 @@ export const StatementEditor = () => {
 	}
 
 	return (
-		<Container maxWidth="xl" style={{ height: '100%' }}>
+		<FullHeightContainer maxWidth="xl">
 			<Grid container spacing={2} padding={2} columns={{ xs: 12, sm: 12, md: 12 }} height="100%">
 				<Grid item xs={0} md={1}></Grid>
 				<Grid item xs={12} md={6} style={{ maxHeight: '100%' }}>
 					<StatementDetailsEditor key={statement.id} statement={statement} />
 				</Grid>
-				<Grid item xs={0} md={4}>
+				<Grid item xs={12} md={4}>
 					<Stack spacing={1}>
 						{issuedByEvent && (
 							<StatementsUnit>
@@ -127,6 +120,6 @@ export const StatementEditor = () => {
 				</Grid>
 			</Grid>
 			<DeleteStatementModal />
-		</Container>
+		</FullHeightContainer>
 	)
 }
