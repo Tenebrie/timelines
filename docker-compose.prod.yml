@@ -21,6 +21,8 @@ services:
         environment:
             NODE_ENV: production
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
+        env_file:
+            - /mnt/volume_secrets/keys/jwtSecret.env
         command: yarn prod
     calliope:
         image: tenebrie/timelines-calliope
@@ -29,6 +31,8 @@ services:
             dockerfile: ./app/calliope-websockets/Dockerfile.prod
         environment:
             NODE_ENV: production
+        env_file:
+            - /mnt/volume_secrets/keys/jwtSecret.env
         command: yarn prod
     rhea-postgres:
         volumes:

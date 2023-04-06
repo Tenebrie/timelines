@@ -14,8 +14,8 @@
 		"build": "sh scripts/build.sh",
 		"start": "node dist/services/gaia/src/app.js",
 		"docker": "yarn docker:start",
-		"docker:start": "docker compose -f docker-compose.common.yml -f docker-compose.yml up",
-		"docker:build": "docker compose -f docker-compose.common.yml -f docker-compose.yml build",
+		"docker:start": "docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up",
+		"docker:build": "docker compose -f docker-compose.common.yml -f docker-compose.dev.yml build",
 		"docker:prod": "docker compose -f docker-compose.common.yml -f docker-compose.prod.yml up",
 		"docker:prod:build": "docker compose -f docker-compose.common.yml -f docker-compose.prod.yml build",
 		"docker:prod:push": "docker push tenebrie/timelines-gatekeeper && docker push tenebrie/timelines-styx && docker push tenebrie/timelines-rhea && docker push tenebrie/timelines-calliope"

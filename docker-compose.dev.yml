@@ -1,12 +1,10 @@
 version: "3.1"
 services:
     gatekeeper:
-        image: tenebrie/timelines-gatekeeper-local
         build:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile
     styx:
-        image: tenebrie/timelines-styx-local
         build:
             context: ./
             dockerfile: ./app/styx-frontend/Dockerfile
@@ -20,12 +18,12 @@ services:
         tty: true
         restart: on-failure
     rhea:
-        image: tenebrie/timelines-rhea-local
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile
         environment:
             NODE_ENV: development
+            JWT_SECRET: secretkey
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
         volumes:
             - ./app/rhea-backend/src:/app/rhea/src:cached
@@ -33,12 +31,12 @@ services:
         tty: true
         restart: on-failure
     calliope:
-        image: tenebrie/timelines-calliope-local
         build:
             context: ./
             dockerfile: ./app/calliope-websockets/Dockerfile
         environment:
             NODE_ENV: development
+            JWT_SECRET: secretkey
         volumes:
             - ./app/calliope-websockets/src:/app/calliope/src:cached
         command: yarn start
