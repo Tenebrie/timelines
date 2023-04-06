@@ -30,13 +30,13 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/world`, method: 'POST', body: queryArg.body }),
 				invalidatesTags: ['worldList'],
 			}),
+			deleteWorld: build.mutation<DeleteWorldApiResponse, DeleteWorldApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}`, method: 'DELETE' }),
+				invalidatesTags: ['worldList'],
+			}),
 			getWorldInfo: build.query<GetWorldInfoApiResponse, GetWorldInfoApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}` }),
 				providesTags: ['worldDetails'],
-			}),
-			deleteWorld: build.mutation<DeleteWorldApiResponse, DeleteWorldApiArg>({
-				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}`, method: 'DELETE' }),
-				invalidatesTags: ['worldDetails'],
 			}),
 			createWorldEvent: build.mutation<CreateWorldEventApiResponse, CreateWorldEventApiArg>({
 				query: (queryArg) => ({
@@ -146,6 +146,17 @@ export type CreateWorldApiArg = {
 		name: string
 	}
 }
+export type DeleteWorldApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	ownerId: string
+}
+export type DeleteWorldApiArg = {
+	/** Any string value */
+	worldId: string
+}
 export type GetWorldInfoApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
@@ -182,11 +193,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	}[]
 }
 export type GetWorldInfoApiArg = {
-	/** Any string value */
-	worldId: string
-}
-export type DeleteWorldApiResponse = unknown
-export type DeleteWorldApiArg = {
 	/** Any string value */
 	worldId: string
 }
@@ -334,9 +340,9 @@ export const {
 	useGetWorldsQuery,
 	useLazyGetWorldsQuery,
 	useCreateWorldMutation,
+	useDeleteWorldMutation,
 	useGetWorldInfoQuery,
 	useLazyGetWorldInfoQuery,
-	useDeleteWorldMutation,
 	useCreateWorldEventMutation,
 	useUpdateWorldEventMutation,
 	useDeleteWorldEventMutation,

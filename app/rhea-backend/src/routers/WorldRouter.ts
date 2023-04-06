@@ -55,6 +55,24 @@ router.post('/api/world', async (ctx) => {
 	return world
 })
 
+router.delete('/api/world/:worldId', async (ctx) => {
+	useApiEndpoint({
+		name: 'deleteWorld',
+		description: 'Destroys a world owned by the current user.',
+		tags: [worldListTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+	})
+
+	await WorldService.checkUserWriteAccess(user, worldId)
+
+	return await WorldService.deleteWorld(worldId)
+})
+
 router.get('/api/world/:worldId', async (ctx) => {
 	useApiEndpoint({
 		name: 'getWorldInfo',
@@ -71,26 +89,6 @@ router.get('/api/world/:worldId', async (ctx) => {
 	await WorldService.checkUserReadAccess(user, worldId)
 
 	return await WorldService.findWorldDetails(worldId)
-})
-
-router.delete('/api/world/:worldId', async (ctx) => {
-	useApiEndpoint({
-		name: 'deleteWorld',
-		description: 'Destroys a world owned by the current user.',
-		tags: [worldDetailsTag],
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	const { worldId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-	})
-
-	await WorldService.checkUserWriteAccess(user, worldId)
-
-	const world = await WorldService.deleteWorld(worldId)
-
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
 })
 
 /**
