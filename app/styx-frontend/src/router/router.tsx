@@ -13,7 +13,7 @@ import { WorldEmptyState } from '../app/features/world/components/WorldEmptyStat
 import { appRoutes, worldRoutes } from '../app/features/world/router'
 import { World } from '../app/features/world/World'
 
-export const router = createBrowserRouter([
+export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 	{
 		path: '/',
 		element: <App />,
@@ -62,4 +62,6 @@ export const router = createBrowserRouter([
 			},
 		],
 	},
-])
+]
+
+export const router = createBrowserRouter(routerDefinition)
