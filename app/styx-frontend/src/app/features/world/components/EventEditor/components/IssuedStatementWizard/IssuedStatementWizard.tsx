@@ -34,6 +34,7 @@ export const IssuedStatementWizard = () => {
 			setTitle('')
 			setContent('')
 			setTitleValidationError(null)
+			hasEditedTitle.current = false
 		},
 	})
 
@@ -49,7 +50,14 @@ export const IssuedStatementWizard = () => {
 	const onChangeContent = useCallback((value: string) => {
 		if (!hasEditedTitle.current) {
 			const indexOfDot = value.indexOf('.')
-			setTitle(value.substring(0, indexOfDot > 0 ? indexOfDot : value.length))
+			const indexOfLineBreak = value.indexOf('\n')
+			const lowerIndex =
+				indexOfDot === -1
+					? indexOfLineBreak
+					: indexOfLineBreak === -1
+					? indexOfDot
+					: Math.min(indexOfDot, indexOfLineBreak)
+			setTitle(value.substring(0, lowerIndex > 0 ? lowerIndex : value.length))
 		}
 		setContent(value)
 	}, [])
@@ -106,6 +114,7 @@ export const IssuedStatementWizard = () => {
 				label="Title"
 				type="text"
 				value={title}
+				style={{ color: 'gray' }}
 				onChange={(event) => onChangeTitle(event.target.value)}
 			/>
 			<ModalFooter>

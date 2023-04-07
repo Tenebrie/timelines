@@ -6,6 +6,7 @@ import { useWorldTime } from '../../../time/hooks/useWorldTime'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
+import { EventTutorialModal } from './components/EventTutorialModal/EventTutorialModal'
 import { OutlinerCard } from './components/OutlinerCard/OutlinerCard'
 import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmptyState'
 import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
@@ -53,12 +54,13 @@ export const Outliner = () => {
 								{applicableCards.map((card) => (
 									<OutlinerCard key={card.id} card={card} />
 								))}
-								{applicableCards.length === 0 && <OutlinerEmptyState />}
+								{applicableCards.length === 0 && <OutlinerEmptyState selectedTime={selectedTime} />}
 							</StatementsScroller>
 						</StatementsUnit>
 					</OutlinerContainer>
 				</Grid>
 			</Grid>
+			<EventTutorialModal />
 		</Container>
 	)
 }

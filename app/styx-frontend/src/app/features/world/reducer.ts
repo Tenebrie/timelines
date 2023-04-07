@@ -15,6 +15,12 @@ const initialState = {
 		timestamp: 0 as number,
 	},
 
+	outliner: {
+		eventTutorialModal: {
+			isOpen: false as boolean,
+		},
+	},
+
 	eventEditor: {
 		deleteEventModal: {
 			isOpen: false as boolean,
@@ -59,6 +65,15 @@ export const worldSlice = createSlice({
 
 		closeEventWizard: (state) => {
 			state.eventWizard.isOpen = false
+		},
+
+		/* Outliner - Event tutorial modal */
+		openEventTutorialModal: (state) => {
+			state.outliner.eventTutorialModal.isOpen = true
+		},
+
+		closeEventTutorialModal: (state) => {
+			state.outliner.eventTutorialModal.isOpen = false
 		},
 
 		/* Event editor - Delete event modal */

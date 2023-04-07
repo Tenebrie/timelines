@@ -30,8 +30,6 @@ export const StatementsUnit = styled.fieldset`
 	border-radius: 4px;
 	border: 1px solid rgba(255, 255, 255, 0.23);
 	padding: 8px;
-	min-height: 256px;
-	height: 100%;
 	position: relative;
 	margin-top: -8.5px;
 `
