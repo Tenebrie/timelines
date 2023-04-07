@@ -7,9 +7,9 @@ import { Register } from '../app/features/auth/register/Register'
 import { Spinny } from '../app/features/demo/spinny/Spinny'
 import { Home } from '../app/features/home/Home'
 import { EventEditor } from '../app/features/world/components/EventEditor/EventEditor'
-import { OutlinerEmptyState } from '../app/features/world/components/Outliner/components/OutlinerEmptyState/OutlinerEmptyState'
 import { Outliner } from '../app/features/world/components/Outliner/Outliner'
 import { StatementEditor } from '../app/features/world/components/StatementEditor/StatementEditor'
+import { WorldEmptyState } from '../app/features/world/components/WorldEmptyState/WorldEmptyState'
 import { appRoutes, worldRoutes } from '../app/features/world/router'
 import { World } from '../app/features/world/World'
 
@@ -40,7 +40,7 @@ export const router = createBrowserRouter([
 				children: [
 					{
 						path: worldRoutes.root,
-						element: <OutlinerEmptyState />,
+						element: <WorldEmptyState />,
 					},
 					{
 						path: worldRoutes.outliner,

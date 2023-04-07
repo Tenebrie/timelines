@@ -1,5 +1,6 @@
 import { Button, Link, Stack, TextField } from '@mui/material'
 import { KeyboardEvent, useState } from 'react'
+import { NavLink } from 'react-router-dom'
 
 import { useCreateAccountMutation } from '../../../../api/rheaApi'
 import { TenebrieLogo } from '../../../components/TenebrieLogo'
@@ -109,7 +110,9 @@ export const Register = () => {
 			<Button variant="contained" onClick={onRegister}>
 				Register
 			</Button>
-			<Link href="/login">Already have an account? Login instead</Link>
+			<Link component={NavLink} to="/login">
+				Already have an account? Login instead
+			</Link>
 		</Stack>
 	)
 }

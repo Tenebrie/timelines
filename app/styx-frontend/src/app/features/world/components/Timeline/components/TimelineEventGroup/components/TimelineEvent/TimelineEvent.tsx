@@ -2,6 +2,7 @@ import { memo, MouseEvent, useState } from 'react'
 
 import { useWorldRouter } from '../../../../../../router'
 import { WorldEvent, WorldEventBundle } from '../../../../../../types'
+import { HoveredTimelineEvents } from './HoveredTimelineEvents'
 import { Label, LabelContainer, Marker } from './styles'
 
 type Props = {
@@ -35,10 +36,12 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 
 	const onMouseEnter = () => {
 		setIsInfoVisible(true)
+		HoveredTimelineEvents.hoverEvent(event)
 	}
 
 	const onMouseLeave = () => {
 		setIsInfoVisible(false)
+		HoveredTimelineEvents.unhoverEvent(event)
 	}
 
 	const className = `${groupIndex > 0 && expanded ? 'expanded' : ''} ${

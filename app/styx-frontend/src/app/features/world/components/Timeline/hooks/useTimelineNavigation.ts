@@ -6,6 +6,7 @@ import clampToRange from '../../../../../utils/clampToRange'
 import { isMacOS } from '../../../../../utils/isMacOS'
 import { rangeMap } from '../../../../../utils/rangeMap'
 import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
+import { HoveredTimelineEvents } from '../components/TimelineEventGroup/components/TimelineEvent/HoveredTimelineEvents'
 import { ScaleLevel } from '../types'
 
 type Props = {
@@ -182,7 +183,7 @@ export const useTimelineNavigation = ({
 		(event: WheelEvent) => {
 			event.preventDefault()
 
-			const sensitivity = isMacOS() ? -1 / 75 : 1
+			const sensitivity = isMacOS() ? 1 / 75 : 1
 
 			const currentValue = scrollAccumulator.current + event.deltaY * sensitivity
 			if (Math.abs(currentValue) < 1) {
@@ -226,7 +227,7 @@ export const useTimelineNavigation = ({
 	const [lastClickTime, setLastClickTime] = useState<number | null>(null)
 	const onTimelineClick = useCallback(
 		(event: MouseEvent) => {
-			if (!canClick) {
+			if (!canClick || HoveredTimelineEvents.anyHovered()) {
 				return
 			}
 
@@ -313,9 +314,19 @@ export const useTimelineNavigation = ({
 				realTimeToScaledTime(-timestamp / timelineScale) +
 				Math.floor(containerRef.current.getBoundingClientRect().width / 2)
 
+			const isScrollingAlready =
+				Math.abs(startedScrollFrom.current) > 0 || Math.abs(desiredScrollTo.current) > 0
 			startedScrollFrom.current = scroll
-			desiredScrollTo.current = targetScroll
+			desiredScrollTo.current = Math.min(maximumScroll, targetScroll)
 			smoothScrollStartedAtTime.current = new Date()
+
+			/**
+			 * Already scrolling.
+			 * The existing callback will handle the new target.
+			 */
+			if (isScrollingAlready) {
+				return
+			}
 
 			const callback = () => {
 				const time = Math.min(1, (new Date().getTime() - smoothScrollStartedAtTime.current.getTime()) / 300)

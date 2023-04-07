@@ -7,6 +7,7 @@ import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
 import { OutlinerCard } from './components/OutlinerCard/OutlinerCard'
+import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmptyState'
 import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
 
 export const Outliner = () => {
@@ -52,6 +53,7 @@ export const Outliner = () => {
 								{applicableCards.map((card) => (
 									<OutlinerCard key={card.id} card={card} />
 								))}
+								{applicableCards.length === 0 && <OutlinerEmptyState />}
 							</StatementsScroller>
 						</StatementsUnit>
 					</OutlinerContainer>

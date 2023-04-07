@@ -5,6 +5,7 @@ import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
+import { TimelineEdgeScroll } from './components/TimelineEdgeScroll/TimelineEdgeScroll'
 import { TimelineEventGroup } from './components/TimelineEventGroup/TimelineEventGroup'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
@@ -81,9 +82,19 @@ export const Timeline = () => {
 		lastSeenEventId.current = eventEditorParams.eventId
 	}, [eventEditorParams, events, scrollTo])
 
+	const scrollPageSize = containerWidth.current
+
 	return (
 		<TimelineWrapper>
 			<TimelineContainer ref={containerRef}>
+				<TimelineEdgeScroll
+					side="left"
+					currentScroll={scroll}
+					pageSize={scrollPageSize}
+					timelineScale={timelineScale}
+					scaleLevel={scaleLevel}
+					scrollTo={scrollTo}
+				/>
 				<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
 				<TimelineAnchor
 					visible={!isSwitchingScale}
@@ -112,6 +123,14 @@ export const Timeline = () => {
 						containerWidth={containerWidth.current}
 					/>
 				))}
+				<TimelineEdgeScroll
+					side="right"
+					currentScroll={scroll}
+					pageSize={scrollPageSize}
+					timelineScale={timelineScale}
+					scaleLevel={scaleLevel}
+					scrollTo={scrollTo}
+				/>
 			</TimelineContainer>
 		</TimelineWrapper>
 	)
