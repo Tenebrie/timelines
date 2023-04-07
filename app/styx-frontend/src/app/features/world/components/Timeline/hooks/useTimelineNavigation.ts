@@ -344,7 +344,7 @@ export const useTimelineNavigation = ({
 
 			requestAnimationFrame(callback)
 		},
-		[containerRef, realTimeToScaledTime, scroll, timelineScale]
+		[containerRef, maximumScroll, realTimeToScaledTime, scroll, timelineScale]
 	)
 
 	return {

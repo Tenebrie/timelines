@@ -1,12 +1,12 @@
 version: "3.1"
 services:
     gatekeeper:
-        image: tenebrie/timelines-gatekeeper
+        image: tenebrie/timelines-gatekeeper:${VERSION}
         build:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile.prod
     styx:
-        image: tenebrie/timelines-styx
+        image: tenebrie/timelines-styx:${VERSION}
         build:
             context: ./
             dockerfile: ./app/styx-frontend/Dockerfile.prod
@@ -14,7 +14,7 @@ services:
             NODE_ENV: production
         command: yarn serve -s build -l 8080
     rhea:
-        image: tenebrie/timelines-rhea
+        image: tenebrie/timelines-rhea:${VERSION}
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile.prod
@@ -24,7 +24,7 @@ services:
             JWT_SECRET: ${JWT_SECRET}
         command: yarn prod
     calliope:
-        image: tenebrie/timelines-calliope
+        image: tenebrie/timelines-calliope:${VERSION}
         build:
             context: ./
             dockerfile: ./app/calliope-websockets/Dockerfile.prod

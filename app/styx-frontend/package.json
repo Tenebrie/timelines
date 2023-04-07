@@ -4,6 +4,7 @@
 	"private": true,
 	"homepage": "https://timelines.tenebrie.com",
 	"scripts": {
+		"analyze": "source-map-explorer 'build/static/js/*.js'",
 		"build": "react-scripts build",
 		"eject": "react-scripts eject",
 		"lint": "eslint src/",
@@ -35,7 +36,8 @@
 		"@rollbar/react": "^0.11.1",
 		"bezier-easing": "^2.1.0",
 		"rollbar": "^2.26.1",
-		"serve": "^14.2.0"
+		"serve": "^14.2.0",
+		"source-map-explorer": "^2.5.3"
 	},
 	"devDependencies": {
 		"@emotion/react": "^11.10.6",
