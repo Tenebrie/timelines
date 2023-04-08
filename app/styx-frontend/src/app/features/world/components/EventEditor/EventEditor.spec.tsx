@@ -83,9 +83,60 @@ describe('<EventEditor />', () => {
 		await waitFor(() => expect(hasBeenCalled).toBeTruthy())
 		expect(invocations[0].jsonBody).toEqual({
 			name: 'New title',
+			icon: 'default',
 			description: 'New description',
 			timestamp: 1500,
 		})
+	})
+
+	it('renders provided icon', () => {
+		renderWithProviders(
+			<EventEditor />,
+			getPreloadedState(
+				mockEventModel({
+					id: '2222',
+					name: 'Event title',
+					icon: 'fire',
+					description: 'Amazing event text',
+				})
+			)
+		)
+
+		expect(screen.getByAltText('fire icon')).toBeInTheDocument()
+	})
+
+	it('saves a changed icon', async () => {
+		const { user } = renderWithProviders(
+			<EventEditor />,
+			getPreloadedState(
+				mockEventModel({
+					id: '2222',
+					name: 'Event title',
+					description: 'Amazing event text',
+				})
+			)
+		)
+
+		const { hasBeenCalled, invocations } = mockUpdateWorldEvent(server, {
+			worldId: '1111',
+			eventId: '2222',
+			response: mockEventModel({
+				id: '2222',
+				name: 'New title',
+				description: 'New description',
+			}),
+		})
+
+		await user.click(screen.getByLabelText('Icon'))
+		await user.click(screen.getByAltText('fire icon'))
+		await user.click(screen.getByText('Save'))
+
+		await waitFor(() => expect(hasBeenCalled).toBeTruthy())
+		expect(invocations[0].jsonBody).toEqual(
+			expect.objectContaining({
+				icon: 'fire',
+			})
+		)
 	})
 
 	it('deletes the statement', async () => {
