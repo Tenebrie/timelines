@@ -12,6 +12,7 @@ export type WorldEventBundle = {
 	type: 'BUNDLE'
 	name: string
 	timestamp: number
+	icon: 'bundle'
 }
 
 export type WorldEventGroup = {

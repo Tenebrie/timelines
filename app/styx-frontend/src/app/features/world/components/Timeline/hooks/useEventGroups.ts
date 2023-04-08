@@ -49,6 +49,7 @@ const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; 
 					events: group.events.slice(EVENTS_PER_GROUP) as WorldEvent[],
 					timestamp: group.timestamp,
 					name: `${group.events.length - (EVENTS_PER_GROUP - 1)} more events`,
+					icon: 'bundle',
 				}
 				group.events = group.events.slice(0, EVENTS_PER_GROUP - 1).concat(eventBundle)
 			}

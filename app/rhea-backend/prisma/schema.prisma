@@ -41,6 +41,7 @@ model WorldEvent {
   updatedAt DateTime @updatedAt
 
   type        WorldEventType
+  icon        String @default("default")
   name        String
   timestamp   Float
   description String         @default("")

@@ -165,6 +165,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		type: 'SCENE' | 'OTHER'
+		icon: string
 		name: string
 		timestamp: number
 		description: string
@@ -210,6 +211,7 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	type: 'SCENE' | 'OTHER'
+	icon: string
 	name: string
 	timestamp: number
 	description: string
@@ -231,6 +233,7 @@ export type DeleteWorldEventApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	type: 'SCENE' | 'OTHER'
+	icon: string
 	name: string
 	timestamp: number
 	description: string

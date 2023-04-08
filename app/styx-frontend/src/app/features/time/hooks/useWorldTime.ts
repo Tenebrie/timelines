@@ -7,7 +7,7 @@ import { ScaleLevel } from '../../world/components/Timeline/types'
 export const useWorldTime = () => {
 	const { lineSpacing } = useSelector(getTimelinePreferences)
 
-	const pixelsPerHour = useMemo(() => 4 * lineSpacing, [lineSpacing])
+	const pixelsPerHour = useMemo(() => 6 * lineSpacing, [lineSpacing])
 
 	const daysInYear = useMemo(() => 365.2422, [])
 	const hoursInDay = useMemo(() => 24, [])

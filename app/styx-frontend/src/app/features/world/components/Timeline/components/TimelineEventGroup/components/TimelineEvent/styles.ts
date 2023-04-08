@@ -6,7 +6,7 @@ export type StoryEventMarkerProps = {
 	expanded: boolean
 }
 
-export const Marker = styled.div`
+export const Marker = styled.div<{ iconPath: string }>`
 	position: relative;
 	width: 50px;
 	height: 50px;
@@ -15,7 +15,7 @@ export const Marker = styled.div`
 	cursor: pointer;
 	margin-bottom: -35px;
 	transition: margin-bottom 0.3s, background-color 0.3s;
-	background-image: url('/assets/tribe-dryad-01.png');
+	background-image: url(${(props) => props.iconPath});
 	background-origin: content-box;
 	background-size: contain;
 	outline: 2px solid white;
@@ -29,7 +29,6 @@ export const Marker = styled.div`
 	}
 
 	&.elevated {
-		z-index: 1;
 	}
 
 	&.highlighted {
@@ -41,7 +40,6 @@ export const Marker = styled.div`
 	}
 
 	&:active {
-		z-index: 1;
 		background-color: ${colors.orange[900]};
 	}
 `

@@ -140,6 +140,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		name: OptionalParam(NameStringValidator),
+		icon: OptionalParam(NameStringValidator),
 		timestamp: OptionalParam(NumberValidator),
 		description: OptionalParam(StringValidator),
 	})

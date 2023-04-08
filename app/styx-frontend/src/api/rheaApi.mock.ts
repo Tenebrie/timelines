@@ -170,6 +170,7 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	name: 'Event name',
 	description: 'Event description',
 	type: 'SCENE',
+	icon: 'default',
 	timestamp: 0,
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),

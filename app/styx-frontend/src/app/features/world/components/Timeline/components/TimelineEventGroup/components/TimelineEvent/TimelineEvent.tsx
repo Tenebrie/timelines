@@ -1,5 +1,6 @@
 import { memo, MouseEvent, useState } from 'react'
 
+import { useEventIcons } from '../../../../../../hooks/useEventIcons'
 import { useWorldRouter } from '../../../../../../router'
 import { WorldEvent, WorldEventBundle } from '../../../../../../types'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
@@ -15,9 +16,12 @@ type Props = {
 export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighted }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
-	const { eventEditorParams } = useWorldRouter()
-
-	const { navigateToCurrentWorld: navigateToCurrentWorldRoot, navigateToEventEditor } = useWorldRouter()
+	const {
+		eventEditorParams,
+		navigateToCurrentWorld: navigateToCurrentWorldRoot,
+		navigateToEventEditor,
+	} = useWorldRouter()
+	const { getIconPath } = useEventIcons()
 
 	const onClick = (clickEvent: MouseEvent<HTMLDivElement>) => {
 		clickEvent.stopPropagation()
@@ -49,7 +53,13 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 	} ${isInfoVisible ? 'elevated' : ''} ${highlighted ? 'highlighted' : ''}`
 
 	return (
-		<Marker onClick={onClick} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className={className}>
+		<Marker
+			onClick={onClick}
+			onMouseEnter={onMouseEnter}
+			onMouseLeave={onMouseLeave}
+			className={className}
+			iconPath={getIconPath(event.icon)}
+		>
 			{isInfoVisible && (
 				<LabelContainer>
 					<Label>{event.name}</Label>

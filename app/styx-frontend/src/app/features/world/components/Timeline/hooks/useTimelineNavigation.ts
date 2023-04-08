@@ -185,14 +185,25 @@ export const useTimelineNavigation = ({
 
 			const sensitivity = isMacOS() ? 1 / 75 : 1
 
-			const currentValue = scrollAccumulator.current + event.deltaY * sensitivity
-			if (Math.abs(currentValue) < 1) {
-				scrollAccumulator.current = currentValue
+			const scrollDirection = (() => {
+				if (isMacOS()) {
+					const currentValue = scrollAccumulator.current + event.deltaY * sensitivity
+					if (Math.abs(currentValue) < 1) {
+						console.log('noi', currentValue)
+						scrollAccumulator.current = currentValue
+						return 0
+					}
+
+					const actualDiff = Math.trunc(currentValue)
+					scrollAccumulator.current -= actualDiff
+					return actualDiff
+				}
+				return event.deltaY
+			})()
+
+			if (scrollDirection === 0) {
 				return
 			}
-
-			const actualDiff = Math.trunc(currentValue)
-			scrollAccumulator.current -= actualDiff
 
 			const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
 			boundingRectTop.current = boundingRect.top
@@ -204,10 +215,10 @@ export const useTimelineNavigation = ({
 
 			setMousePos(newPos)
 
-			const newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(actualDiff)
+			const newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(scrollDirection)
 			setScaleSwitchesToDo(newScaleSwitchesToDo)
 			setIsSwitchingScale(true)
-			setTargetScale(clampToRange(scaleLimits[0], scaleScroll + newScaleSwitchesToDo, scaleLimits[1]))
+			setTargetScale(clampToRange(scaleLimits[0], scaleScroll / 100 + newScaleSwitchesToDo, scaleLimits[1]))
 
 			if (switchingScaleTimeout !== null) {
 				window.clearTimeout(switchingScaleTimeout)

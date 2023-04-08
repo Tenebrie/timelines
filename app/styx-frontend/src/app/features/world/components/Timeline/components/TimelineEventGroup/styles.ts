@@ -20,6 +20,6 @@ export const Group = styled.div.attrs<{ position: number }>((props) => ({
 	}
 
 	&.expanded {
-		z-index: 1;
+		z-index: 2;
 	}
 `

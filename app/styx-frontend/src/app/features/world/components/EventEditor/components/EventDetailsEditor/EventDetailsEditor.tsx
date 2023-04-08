@@ -1,6 +1,6 @@
 import { Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Button, Stack, TextField, Tooltip } from '@mui/material'
+import { Button, Grid, Stack, TextField, Tooltip } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -12,6 +12,8 @@ import { useIsFirstRender } from '../../../../../../utils/useIsFirstRender'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
 import { WorldEvent } from '../../../../types'
+import { EventIconDropdown } from '../EventIconDropdown/EventIconDropdown'
+import { EventTimestampField } from '../EventTimestampField/EventTimestampField'
 
 type Props = {
 	event: WorldEvent
@@ -19,16 +21,18 @@ type Props = {
 
 export const EventDetailsEditor = ({ event }: Props) => {
 	const [name, setName] = useState<string>(event.name)
+	const [icon, setIcon] = useState<string>(event.icon)
 	const [timestamp, setTimestamp] = useState<number>(event.timestamp)
 	const [description, setDescription] = useState<string>(event.description)
 
 	const savingEnabled = useRef<boolean>(true)
-	const lastSaved = useRef<Pick<WorldEvent, 'name' | 'timestamp' | 'description'>>(event)
+	const lastSaved = useRef<Pick<WorldEvent, 'name' | 'icon' | 'timestamp' | 'description'>>(event)
 	const lastSavedAt = useRef<Date>(new Date(event.updatedAt))
 
 	useEffect(() => {
 		if (new Date(event.updatedAt) > lastSavedAt.current) {
 			setName(event.name)
+			setIcon(event.icon)
 			setTimestamp(event.timestamp)
 			setDescription(event.description)
 			savingEnabled.current = false
@@ -70,6 +74,7 @@ export const EventDetailsEditor = ({ event }: Props) => {
 		onSave: () =>
 			sendUpdate({
 				name,
+				icon,
 				timestamp,
 				description,
 			}),
@@ -85,6 +90,7 @@ export const EventDetailsEditor = ({ event }: Props) => {
 		if (
 			isFirstRender ||
 			(lastSaved.current.name === name &&
+				lastSaved.current.icon === icon &&
 				lastSaved.current.timestamp === timestamp &&
 				lastSaved.current.description === description)
 		) {
@@ -92,7 +98,7 @@ export const EventDetailsEditor = ({ event }: Props) => {
 		}
 
 		autosave()
-	}, [name, timestamp, description, sendUpdate, isFirstRender, autosave])
+	}, [name, icon, timestamp, description, sendUpdate, isFirstRender, autosave])
 
 	const onDelete = useCallback(() => {
 		dispatch(openDeleteEventModal(event))
@@ -111,12 +117,14 @@ export const EventDetailsEditor = ({ event }: Props) => {
 				onChange={(e) => setName(e.target.value)}
 				inputProps={{ maxLength: 256 }}
 			/>
-			<TextField
-				label="Timestamp"
-				value={timestamp}
-				onChange={(e) => setTimestamp(Number(e.target.value))}
-				type={'number'}
-			/>
+			<Grid container direction="row" gap={2}>
+				<Grid item margin={0} padding={0} flexGrow={1}>
+					<EventTimestampField timestamp={timestamp} onChange={setTimestamp} />
+				</Grid>
+				<Grid item margin={0} padding={0}>
+					<EventIconDropdown icon={icon} onChange={setIcon} />
+				</Grid>
+			</Grid>
 			<TextField
 				label="Description"
 				value={description}
