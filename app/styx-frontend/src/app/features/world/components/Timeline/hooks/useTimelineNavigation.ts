@@ -207,7 +207,7 @@ export const useTimelineNavigation = ({
 			const newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(actualDiff)
 			setScaleSwitchesToDo(newScaleSwitchesToDo)
 			setIsSwitchingScale(true)
-			setTargetScale(clampToRange(scaleLimits[0], scaleScroll / 100 + newScaleSwitchesToDo, scaleLimits[1]))
+			setTargetScale(clampToRange(scaleLimits[0], scaleScroll + newScaleSwitchesToDo, scaleLimits[1]))
 
 			if (switchingScaleTimeout !== null) {
 				window.clearTimeout(switchingScaleTimeout)

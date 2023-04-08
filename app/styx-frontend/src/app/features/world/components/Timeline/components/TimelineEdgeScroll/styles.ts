@@ -10,12 +10,12 @@ export const Container = styled.div`
 
 	&.left {
 		left: 0;
-		cursor: w-resize;
+		cursor: pointer;
 	}
 
 	&.right {
 		right: 0;
-		cursor: e-resize;
+		cursor: pointer;
 	}
 
 	&:hover {
