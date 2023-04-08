@@ -6,16 +6,14 @@ import { createBrowserRouter, MemoryRouter, RouterProvider } from 'react-router-
 
 import { appRoutes } from '../app/features/world/router'
 import { worldRoutes } from '../app/features/world/router'
-import { store } from '../app/store'
+import { generateStore } from '../app/store'
 import { routerDefinition } from '../router/router'
-
-export const mockRouter = createBrowserRouter(routerDefinition)
 
 export const renderWithProviders = (node: ReactNode) => {
 	return {
 		user: userEvent.setup(),
 		...render(
-			<Provider store={store}>
+			<Provider store={generateStore()}>
 				<MemoryRouter>{node}</MemoryRouter>
 			</Provider>
 		),
@@ -32,7 +30,7 @@ export const renderWithRouter = (routeName: keyof typeof appRoutes | keyof typeo
 	return {
 		user: userEvent.setup(),
 		...render(
-			<Provider store={store}>
+			<Provider store={generateStore()}>
 				<RouterProvider router={createBrowserRouter(routerDefinition)} />
 			</Provider>
 		),

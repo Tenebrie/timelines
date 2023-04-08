@@ -2,6 +2,7 @@ import React from 'react'
 import { Outlet } from 'react-router-dom'
 import styled from 'styled-components'
 
+import { useAuthCheck } from './app/features/authCheck/useAuthCheck'
 import { useLiveUpdates } from './app/features/liveUpdates/useLiveUpdates'
 
 const Container = styled.div`
@@ -12,6 +13,7 @@ const Container = styled.div`
 `
 
 function App() {
+	useAuthCheck()
 	useLiveUpdates()
 
 	return (

@@ -57,6 +57,7 @@
 		"@types/react": "^18.0.21",
 		"@types/react-dom": "^18.0.6",
 		"@types/styled-components": "^5.1.24",
+		"@types/uuid": "^9.0.1",
 		"@typescript-eslint/eslint-plugin": "^5.14.0",
 		"@typescript-eslint/parser": "^5.14.0",
 		"eslint": "^8.10.0",
@@ -80,6 +81,7 @@
 		"ts-node": "^10.9.1",
 		"typescript": "^5.0.3",
 		"user-agent-data-types": "^0.3.1",
+		"uuid": "^9.0.0",
 		"web-vitals": "^3.0.3"
 	}
 }

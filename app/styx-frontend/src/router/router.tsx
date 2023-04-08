@@ -19,7 +19,7 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 		element: <App />,
 		children: [
 			{
-				path: '/',
+				path: appRoutes.limbo,
 				element: <Limbo />,
 			},
 			{

@@ -1,17 +1,23 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { NavigateOptions, useNavigate, useParams } from 'react-router-dom'
 
 const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
 	const navigationTarget = useRef<string | null>(null)
+	const navigationTargetParams = useRef<NavigateOptions | undefined>(undefined)
 	const [naviKey, setNaviKey] = useState<number>(0)
 
-	const navigateTo = (target: (typeof routes)[keyof typeof routes], args: Record<string, string>) => {
+	const navigateTo = (
+		target: (typeof routes)[keyof typeof routes],
+		args: Record<string, string>,
+		navigateParams?: NavigateOptions
+	) => {
 		const replacedTarget = Object.keys(args).reduce(
 			(total, current) => total.replace(`:${current}`, args[current]),
 			target
 		)
 		if (navigationTarget.current !== replacedTarget) {
 			navigationTarget.current = replacedTarget
+			navigationTargetParams.current = navigateParams
 			setNaviKey(naviKey + 1)
 		}
 	}
@@ -20,7 +26,7 @@ const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
 
 	useEffect(() => {
 		if (navigationTarget.current !== null) {
-			navigate(navigationTarget.current)
+			navigate(navigationTarget.current, navigationTargetParams.current)
 			navigationTarget.current = null
 		}
 	}, [navigate, naviKey])
@@ -31,6 +37,7 @@ const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
 }
 
 export const appRoutes = {
+	limbo: '/',
 	home: '/home',
 	login: '/login',
 	register: '/register',
@@ -44,7 +51,7 @@ export const useAppRouter = () => {
 	}
 
 	const navigateToHomeWithoutHistory = async () => {
-		window.location.replace(appRoutes.home)
+		navigateTo(appRoutes.home, {}, { replace: true })
 	}
 
 	const navigateToLogin = async () => {
@@ -52,7 +59,7 @@ export const useAppRouter = () => {
 	}
 
 	const navigateToLoginWithoutHistory = async () => {
-		window.location.replace(appRoutes.login)
+		navigateTo(appRoutes.login, {}, { replace: true })
 	}
 
 	const navigateToRegister = async () => {
