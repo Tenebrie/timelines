@@ -1,0 +1,120 @@
+import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
+import { setupServer } from 'msw/lib/node'
+
+import { mockDeleteWorldEvent, mockEventModel, mockUpdateWorldEvent } from '../../../../../api/rheaApi.mock'
+import { renderWithProviders } from '../../../../../jest/renderWithProviders'
+import { initialState } from '../../reducer'
+import { worldRoutes } from '../../router'
+import { mockRouter } from '../../router.mock'
+import { WorldEvent } from '../../types'
+import { EventEditor } from './EventEditor'
+
+const server = setupServer()
+
+describe('<EventEditor />', () => {
+	beforeAll(() => server.listen())
+	afterEach(() => server.resetHandlers())
+	afterAll(() => server.close())
+
+	const getPreloadedState = (event: WorldEvent) => ({
+		preloadedState: {
+			world: {
+				...initialState,
+				events: [event],
+			},
+		},
+	})
+
+	beforeAll(() => {
+		mockRouter(worldRoutes.eventEditor, {
+			worldId: '1111',
+			eventId: '2222',
+		})
+	})
+
+	it('renders the statement data', () => {
+		renderWithProviders(
+			<EventEditor />,
+			getPreloadedState(
+				mockEventModel({
+					id: '2222',
+					name: 'Event title',
+					description: 'Amazing event text',
+				})
+			)
+		)
+
+		expect(screen.getByDisplayValue('Event title')).toBeInTheDocument()
+		expect(screen.getByDisplayValue('Amazing event text')).toBeInTheDocument()
+		expect(screen.getByText('Issued statements')).toBeInTheDocument()
+		expect(screen.getByText('Revoked statements')).toBeInTheDocument()
+	})
+
+	it('sends a save request on save button click', async () => {
+		const { user } = renderWithProviders(
+			<EventEditor />,
+			getPreloadedState(
+				mockEventModel({
+					id: '2222',
+					name: 'Event title',
+					description: 'Amazing event text',
+				})
+			)
+		)
+
+		const { hasBeenCalled, invocations } = mockUpdateWorldEvent(server, {
+			worldId: '1111',
+			eventId: '2222',
+			response: mockEventModel({
+				id: '2222',
+				name: 'New title',
+				description: 'New description',
+			}),
+		})
+
+		await user.clear(screen.getByLabelText('Name'))
+		await user.type(screen.getByLabelText('Name'), 'New title')
+		await user.clear(screen.getByLabelText('Description'))
+		await user.type(screen.getByLabelText('Description'), 'New description')
+		await user.clear(screen.getByLabelText('Timestamp'))
+		await user.type(screen.getByLabelText('Timestamp'), '1500')
+		await user.click(screen.getByText('Save'))
+
+		await waitFor(() => expect(hasBeenCalled).toBeTruthy())
+		expect(invocations[0].jsonBody).toEqual({
+			name: 'New title',
+			description: 'New description',
+			timestamp: 1500,
+		})
+	})
+
+	it('deletes the statement', async () => {
+		const { user } = renderWithProviders(
+			<EventEditor />,
+			getPreloadedState(
+				mockEventModel({
+					id: '2222',
+					name: 'Event title',
+					description: 'Amazing event text',
+				})
+			)
+		)
+
+		const { hasBeenCalled } = mockDeleteWorldEvent(server, {
+			worldId: '1111',
+			eventId: '2222',
+			response: mockEventModel({
+				id: '2222',
+				name: 'Event title',
+				description: 'Amazing event text',
+			}),
+		})
+
+		await user.click(screen.getByText('Delete'))
+		await user.click(screen.getByText('Confirm'))
+
+		expect(screen.getByText('Delete Event')).toBeInTheDocument()
+		await waitForElementToBeRemoved(() => screen.queryByText('Delete Event'))
+		expect(hasBeenCalled).toBeTruthy()
+	})
+})

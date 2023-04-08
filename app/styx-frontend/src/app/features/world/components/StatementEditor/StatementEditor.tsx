@@ -45,8 +45,6 @@ export const StatementEditor = () => {
 			await unrevokeWorldStatement({
 				worldId: statementEditorParams.worldId,
 				statementId: statement.id,
-				// TODO: Figure out why this is here
-				body: '',
 			})
 		)
 		if (error) {

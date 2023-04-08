@@ -1,5 +1,6 @@
-import { GetWorldInfoApiResponse } from '../../../api/rheaApi'
+import { GetWorldInfoApiResponse, GetWorldsApiResponse } from '../../../api/rheaApi'
 
+export type WorldItem = GetWorldsApiResponse[number]
 export type WorldDetails = GetWorldInfoApiResponse
 export type WorldEvent = GetWorldInfoApiResponse['events'][number]
 export type WorldStatement = WorldEvent['issuedStatements'][number]

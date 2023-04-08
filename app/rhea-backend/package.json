@@ -58,7 +58,7 @@
 		"prisma": "^4.12.0",
 		"redis": "^4.6.5",
 		"sqlite3": "^5.0.0",
-		"tenebrie-framework": "^0.4.7",
+		"tenebrie-framework": "^0.4.10",
 		"ts-morph": "^16.0.0"
 	},
 	"devDependencies": {

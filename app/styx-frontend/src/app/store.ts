@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, PreloadedState } from '@reduxjs/toolkit'
 
 import { baseApi } from '../api/baseApi'
 import spinnyReducer from './features/demo/spinny/reducer'
@@ -6,7 +6,7 @@ import preferencesReducer from './features/preferences/reducer'
 import worldReducer from './features/world/reducer'
 import worldListReducer from './features/worldList/reducer'
 
-export const generateStore = () =>
+export const generateStore = ({ preloadedState }: { preloadedState?: PreloadedState<any> } = {}) =>
 	configureStore({
 		reducer: {
 			api: baseApi.reducer,
@@ -16,6 +16,7 @@ export const generateStore = () =>
 			preferences: preferencesReducer,
 		},
 		middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
+		preloadedState,
 	})
 
 export const store = generateStore()

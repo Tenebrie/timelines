@@ -11,11 +11,7 @@ export const SmallProfile = () => {
 	const [logout, { isLoading }] = usePostLogoutMutation()
 
 	const onLogout = async () => {
-		const { error } = parseApiResponse(
-			await logout({
-				body: '',
-			})
-		)
+		const { error } = parseApiResponse(await logout())
 		if (error) {
 			return
 		}

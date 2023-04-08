@@ -6,21 +6,27 @@ import { createBrowserRouter, MemoryRouter, RouterProvider } from 'react-router-
 
 import { appRoutes } from '../app/features/world/router'
 import { worldRoutes } from '../app/features/world/router'
-import { generateStore } from '../app/store'
+import { generateStore, RootState } from '../app/store'
 import { routerDefinition } from '../router/router'
 
-export const renderWithProviders = (node: ReactNode) => {
+export const renderWithProviders = (
+	node: ReactNode,
+	{ preloadedState }: { preloadedState?: Partial<RootState> } = {}
+) => {
 	return {
 		user: userEvent.setup(),
 		...render(
-			<Provider store={generateStore()}>
+			<Provider store={generateStore({ preloadedState })}>
 				<MemoryRouter>{node}</MemoryRouter>
 			</Provider>
 		),
 	}
 }
 
-export const renderWithRouter = (routeName: keyof typeof appRoutes | keyof typeof worldRoutes) => {
+export const renderWithRouter = (
+	routeName: keyof typeof appRoutes | keyof typeof worldRoutes,
+	{ preloadedState }: { preloadedState?: Partial<RootState> } = {}
+) => {
 	const bigRouter = {
 		...appRoutes,
 		...worldRoutes,
@@ -30,7 +36,7 @@ export const renderWithRouter = (routeName: keyof typeof appRoutes | keyof typeo
 	return {
 		user: userEvent.setup(),
 		...render(
-			<Provider store={generateStore()}>
+			<Provider store={generateStore({ preloadedState })}>
 				<RouterProvider router={createBrowserRouter(routerDefinition)} />
 			</Provider>
 		),

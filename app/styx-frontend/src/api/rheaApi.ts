@@ -19,7 +19,7 @@ const injectedRtkApi = api
 				invalidatesTags: ['auth'],
 			}),
 			postLogout: build.mutation<PostLogoutApiResponse, PostLogoutApiArg>({
-				query: (queryArg) => ({ url: `/api/auth/logout`, method: 'POST', body: queryArg.body }),
+				query: () => ({ url: `/api/auth/logout`, method: 'POST' }),
 				invalidatesTags: ['auth'],
 			}),
 			getWorlds: build.query<GetWorldsApiResponse, GetWorldsApiArg>({
@@ -97,7 +97,6 @@ const injectedRtkApi = api
 					query: (queryArg) => ({
 						url: `/api/world/${queryArg.worldId}/statement/${queryArg.statementId}/unrevoke`,
 						method: 'POST',
-						body: queryArg.body,
 					}),
 					invalidatesTags: ['worldDetails'],
 				}
@@ -110,7 +109,7 @@ export type CheckAuthenticationApiResponse = /** status 200  */ {
 	authenticated: boolean
 }
 export type CheckAuthenticationApiArg = void
-export type CreateAccountApiResponse = unknown
+export type CreateAccountApiResponse = /** status 204  */ Blob
 export type CreateAccountApiArg = {
 	body: {
 		email: string
@@ -118,17 +117,15 @@ export type CreateAccountApiArg = {
 		password: string
 	}
 }
-export type PostLoginApiResponse = unknown
+export type PostLoginApiResponse = /** status 204  */ Blob
 export type PostLoginApiArg = {
 	body: {
 		email: string
 		password: string
 	}
 }
-export type PostLogoutApiResponse = unknown
-export type PostLogoutApiArg = {
-	body: string
-}
+export type PostLogoutApiResponse = /** status 204  */ Blob
+export type PostLogoutApiArg = void
 export type GetWorldsApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
@@ -329,7 +326,6 @@ export type UnrevokeWorldStatementApiArg = {
 	worldId: string
 	/** Any string value */
 	statementId: string
-	body: string
 }
 export const {
 	useCheckAuthenticationQuery,

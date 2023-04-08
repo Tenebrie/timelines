@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
 import { NavigateOptions, useNavigate, useParams } from 'react-router-dom'
 
+import { MockedRouter } from './router.mock'
+
 const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
-	const navigationTarget = useRef<string | null>(null)
-	const navigationTargetParams = useRef<NavigateOptions | undefined>(undefined)
-	const [naviKey, setNaviKey] = useState<number>(0)
+	const navigate = useNavigate()
 
 	const navigateTo = (
 		target: (typeof routes)[keyof typeof routes],
@@ -15,21 +14,8 @@ const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
 			(total, current) => total.replace(`:${current}`, args[current]),
 			target
 		)
-		if (navigationTarget.current !== replacedTarget) {
-			navigationTarget.current = replacedTarget
-			navigationTargetParams.current = navigateParams
-			setNaviKey(naviKey + 1)
-		}
+		navigate(replacedTarget, navigateParams)
 	}
-
-	const navigate = useNavigate()
-
-	useEffect(() => {
-		if (navigationTarget.current !== null) {
-			navigate(navigationTarget.current, navigationTargetParams.current)
-			navigationTarget.current = null
-		}
-	}, [navigate, naviKey])
 
 	return {
 		navigateTo,
@@ -41,6 +27,13 @@ export const appRoutes = {
 	home: '/home',
 	login: '/login',
 	register: '/register',
+} as const
+
+export type AppRouteParamMapping = {
+	[appRoutes.limbo]: undefined
+	[appRoutes.home]: undefined
+	[appRoutes.login]: undefined
+	[appRoutes.register]: undefined
 }
 
 export const useAppRouter = () => {
@@ -82,28 +75,38 @@ export const worldRoutes = {
 	statementEditor: '/world/:worldId/statement/:statementId',
 } as const
 
+export type WorldRouteParamMapping = {
+	[worldRoutes.root]: WorldRootParams
+	[worldRoutes.outliner]: WorldOutlinerParams
+	[worldRoutes.eventEditor]: WorldEventEditorParams
+	[worldRoutes.statementEditor]: WorldStatementEditorParams
+}
+export type WorldRootParams = {
+	worldId: string
+}
+export type WorldOutlinerParams = {
+	worldId: string
+	timestamp: string
+}
+export type WorldEventEditorParams = {
+	worldId: string
+	eventId: string
+}
+export type WorldStatementEditorParams = {
+	worldId: string
+	statementId: string
+}
+
 export const useWorldRouter = () => {
 	const { navigateTo } = useBaseRouter(worldRoutes)
-	const state = useParams()
+	const actualParams = useParams()
+	const mockParams = MockedRouter.useParams()
+	const state = MockedRouter.isEnabled ? mockParams : actualParams
 
-	const worldParams = state as {
-		worldId: string
-	}
-
-	const outlinerParams = state as {
-		worldId: string
-		timestamp: string
-	}
-
-	const eventEditorParams = state as {
-		worldId: string
-		eventId: string
-	}
-
-	const statementEditorParams = state as {
-		worldId: string
-		statementId: string
-	}
+	const worldParams = state as WorldRootParams
+	const outlinerParams = state as WorldOutlinerParams
+	const eventEditorParams = state as WorldEventEditorParams
+	const statementEditorParams = state as WorldStatementEditorParams
 
 	const navigateToWorld = async (id: string) => {
 		navigateTo(worldRoutes.root, {
@@ -150,3 +153,9 @@ export const useWorldRouter = () => {
 		navigateToStatementEditor,
 	}
 }
+
+export const allRoutes = {
+	...appRoutes,
+	...worldRoutes,
+}
+export type AllRouteParamMapping = AppRouteParamMapping & WorldRouteParamMapping

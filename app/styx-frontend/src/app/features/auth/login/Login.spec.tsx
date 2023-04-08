@@ -1,7 +1,12 @@
 import { screen, waitFor } from '@testing-library/react'
-import { setupServer } from 'msw/node'
+import { setupServer } from 'msw/lib/node'
 
-import { mockGetWorlds, mockPostLogin } from '../../../../api/rheaApi.mock'
+import {
+	mockAuthenticatedUser,
+	mockGetWorlds,
+	mockNonAuthenticatedUser,
+	mockPostLogin,
+} from '../../../../api/rheaApi.mock'
 import { renderWithProviders, renderWithRouter } from '../../../../jest/renderWithProviders'
 import { appRoutes } from '../../world/router'
 import { Login } from './Login'
@@ -23,6 +28,9 @@ describe('<Login />', () => {
 	})
 
 	describe('with navigation', () => {
+		beforeEach(() => {
+			mockNonAuthenticatedUser(server)
+		})
 		it('renders the login form at the correct path', async () => {
 			renderWithRouter('login')
 
@@ -55,6 +63,7 @@ describe('<Login />', () => {
 		it('is redirected to home on successful login', async () => {
 			const { user } = renderWithRouter('login')
 
+			mockAuthenticatedUser(server)
 			mockPostLogin(server)
 			mockGetWorlds(server, { response: [] })
 

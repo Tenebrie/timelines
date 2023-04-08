@@ -72,7 +72,10 @@ export const useLiveUpdates = () => {
 			const socket = new WebSocket(`${protocol}//${window.location.host}/live`)
 
 			heartbeatInterval.current = window.setInterval(() => {
-				socket.send('poke')
+				if (currentWebsocket.current?.readyState !== WebSocket.OPEN) {
+					return
+				}
+				socket.send('keepalive')
 			}, 15000)
 
 			socket.onopen = function () {

@@ -2,11 +2,17 @@ import { DefaultBodyType, rest } from 'msw'
 import { SetupServer } from 'msw/lib/node'
 import { v4 as getRandomId } from 'uuid'
 
+import { WorldDetails, WorldItem, WorldStatement } from '../app/features/world/types'
+import { WorldEvent } from '../app/features/world/types'
 import {
 	CheckAuthenticationApiResponse,
 	CreateWorldApiResponse,
 	DeleteWorldApiResponse,
+	DeleteWorldEventApiResponse,
+	DeleteWorldStatementApiResponse,
 	GetWorldsApiResponse,
+	UpdateWorldEventApiResponse,
+	UpdateWorldStatementApiResponse,
 } from './rheaApi'
 
 type HttpMethod = keyof typeof rest
@@ -26,7 +32,7 @@ const generateEndpointMock = (
 	let invocations: { jsonBody: any }[] = []
 
 	const handler = rest[method](path, async (req, res, ctx) => {
-		invocations.push({ jsonBody: req.method === 'POST' ? await req.json() : {} })
+		invocations.push({ jsonBody: req.method === 'POST' || req.method === 'PATCH' ? await req.json() : {} })
 
 		const status = (() => {
 			if ('error' in params) {
@@ -57,6 +63,9 @@ const generateEndpointMock = (
 	}
 }
 
+/**
+ * API call mocks
+ */
 export const mockCheckAuthentication = (
 	server: SetupServer,
 	params: MockParams<CheckAuthenticationApiResponse>
@@ -76,6 +85,49 @@ export const mockDeleteWorld = (
 export const mockPostLogin = (server: SetupServer, params: MockParams<undefined> = { response: undefined }) =>
 	generateEndpointMock(server, { method: 'post', path: '/api/auth/login', ...params })
 
+export const mockUpdateWorldEvent = (
+	server: SetupServer,
+	params: { worldId: string; eventId: string } & MockParams<UpdateWorldEventApiResponse>
+) =>
+	generateEndpointMock(server, {
+		method: 'patch',
+		path: `/api/world/${params.worldId}/event/${params.eventId}`,
+		...params,
+	})
+
+export const mockDeleteWorldEvent = (
+	server: SetupServer,
+	params: { worldId: string; eventId: string } & MockParams<DeleteWorldEventApiResponse>
+) =>
+	generateEndpointMock(server, {
+		method: 'delete',
+		path: `/api/world/${params.worldId}/event/${params.eventId}`,
+		...params,
+	})
+
+export const mockUpdateWorldStatement = (
+	server: SetupServer,
+	params: { worldId: string; statementId: string } & MockParams<UpdateWorldStatementApiResponse>
+) =>
+	generateEndpointMock(server, {
+		method: 'patch',
+		path: `/api/world/${params.worldId}/statement/${params.statementId}`,
+		...params,
+	})
+
+export const mockDeleteWorldStatement = (
+	server: SetupServer,
+	params: { worldId: string; statementId: string } & MockParams<DeleteWorldStatementApiResponse>
+) =>
+	generateEndpointMock(server, {
+		method: 'delete',
+		path: `/api/world/${params.worldId}/statement/${params.statementId}`,
+		...params,
+	})
+
+/**
+ * Mock utility functions
+ */
 export const mockAuthenticatedUser = (server: SetupServer) =>
 	mockCheckAuthentication(server, {
 		response: {
@@ -83,16 +135,55 @@ export const mockAuthenticatedUser = (server: SetupServer) =>
 		},
 	})
 
-export const mockWorldModel = ({
-	id,
-	name,
-}: {
-	id?: string
-	name: string
-}): GetWorldsApiResponse[number] => ({
-	id: id ?? getRandomId(),
-	name,
+export const mockNonAuthenticatedUser = (server: SetupServer) =>
+	mockCheckAuthentication(server, {
+		response: {
+			authenticated: false,
+		},
+	})
+
+/**
+ * Mock API models
+ */
+export const mockWorldItemModel = (world: Partial<WorldItem> = {}): WorldItem => ({
+	id: getRandomId(),
+	name: 'World name',
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
 	ownerId: '1111-2222-3333-4444',
+	...world,
+})
+
+export const mockWorldDetailsModel = (world: Partial<WorldDetails> = {}): WorldDetails => ({
+	id: getRandomId(),
+	name: 'World name',
+	createdAt: new Date(0).toISOString(),
+	updatedAt: new Date(0).toISOString(),
+	ownerId: '1111-2222-3333-4444',
+	events: [],
+	...world,
+})
+
+export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent => ({
+	id: getRandomId(),
+	worldId: 'world-1111-2222-3333-4444',
+	name: 'Event name',
+	description: 'Event description',
+	type: 'SCENE',
+	timestamp: 0,
+	createdAt: new Date(0).toISOString(),
+	updatedAt: new Date(0).toISOString(),
+	issuedStatements: [],
+	revokedStatements: [],
+	...statement,
+})
+
+export const mockStatementModel = (statement: Partial<WorldStatement> = {}): WorldStatement => ({
+	id: getRandomId(),
+	title: 'Statement title',
+	text: 'Statement text',
+	createdAt: new Date(0).toISOString(),
+	updatedAt: new Date(0).toISOString(),
+	issuedByEventId: 'event-1111-2222-3333-4444',
+	...statement,
 })

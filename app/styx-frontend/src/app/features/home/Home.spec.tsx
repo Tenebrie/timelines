@@ -7,7 +7,7 @@ import {
 	mockCreateWorld,
 	mockDeleteWorld,
 	mockGetWorlds,
-	mockWorldModel,
+	mockWorldItemModel,
 } from '../../../api/rheaApi.mock'
 import { renderWithProviders, renderWithRouter } from '../../../jest/renderWithProviders'
 import { appRoutes } from '../world/router'
@@ -25,9 +25,9 @@ describe('<Home />', () => {
 
 		mockGetWorlds(server, {
 			response: [
-				mockWorldModel({ name: 'My First World' }),
-				mockWorldModel({ name: 'My Second World' }),
-				mockWorldModel({ name: 'My Third World' }),
+				mockWorldItemModel({ name: 'My First World' }),
+				mockWorldItemModel({ name: 'My Second World' }),
+				mockWorldItemModel({ name: 'My Third World' }),
 			],
 		})
 
@@ -46,7 +46,7 @@ describe('<Home />', () => {
 		expect(screen.getByText('Create world')).toBeInTheDocument()
 
 		server.resetHandlers()
-		const newWorld = mockWorldModel({ name: 'New World' })
+		const newWorld = mockWorldItemModel({ name: 'New World' })
 		const { invocations } = mockCreateWorld(server, {
 			response: newWorld,
 		})
@@ -68,9 +68,9 @@ describe('<Home />', () => {
 		const { user } = renderWithProviders(<Home />)
 
 		const worlds = [
-			mockWorldModel({ name: 'My First World' }),
-			mockWorldModel({ name: 'My Second World' }),
-			mockWorldModel({ name: 'My Third World' }),
+			mockWorldItemModel({ name: 'My First World' }),
+			mockWorldItemModel({ name: 'My Second World' }),
+			mockWorldItemModel({ name: 'My Third World' }),
 		]
 
 		mockGetWorlds(server, { response: worlds })

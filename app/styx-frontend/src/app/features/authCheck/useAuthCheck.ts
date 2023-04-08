@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
 import { useCheckAuthenticationQuery } from '../../../api/rheaApi'
-import { useAppRouter } from '../world/router'
+import { appRoutes, useAppRouter } from '../world/router'
 
 export const useAuthCheck = () => {
 	const { data } = useCheckAuthenticationQuery()
@@ -12,7 +12,11 @@ export const useAuthCheck = () => {
 			return
 		}
 
-		if (!data.authenticated) {
+		if (
+			!data.authenticated &&
+			window.location.pathname !== appRoutes.login &&
+			window.location.pathname !== appRoutes.register
+		) {
 			navigateToLoginWithoutHistory()
 		}
 	}, [data, navigateToLoginWithoutHistory])

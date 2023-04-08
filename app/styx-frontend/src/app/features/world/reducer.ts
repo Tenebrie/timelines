@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 import { WorldDetails, WorldEvent, WorldStatement } from './types'
 
-const initialState = {
+export const initialState = {
 	id: '' as string,
 	name: '' as string,
 	events: [] as WorldEvent[],

@@ -54,7 +54,7 @@
 		"nodemon": "^2.0.20",
 		"pg": "^8.8.0",
 		"redis": "^4.6.5",
-		"tenebrie-framework": "^0.4.7",
+		"tenebrie-framework": "^0.4.10",
 		"ts-morph": "^18.0.0"
 	},
 	"devDependencies": {
