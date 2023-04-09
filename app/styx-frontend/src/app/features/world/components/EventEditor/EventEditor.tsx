@@ -2,7 +2,6 @@ import { Add } from '@mui/icons-material'
 import { Button, Grid } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { LoadingSpinner } from '../../../../components/LoadingSpinner'
 import { OverlayingLabel } from '../../../../components/OverlayingLabel'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
@@ -12,7 +11,7 @@ import { DeleteEventModal } from './components/DeleteEventModal/DeleteEventModal
 import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetailsEditor'
 import { IssuedStatementWizard } from './components/IssuedStatementWizard/IssuedStatementWizard'
 import { RevokedStatementWizard } from './components/RevokedStatementWizard/RevokedStatementWizard'
-import { EventEditorWrapper, FullHeightContainer, StatementsScroller, StatementsUnit } from './styles'
+import { FullHeightContainer, StatementsScroller, StatementsUnit } from './styles'
 
 export const EventEditor = () => {
 	const { events } = useSelector(getWorldState)
@@ -26,11 +25,7 @@ export const EventEditor = () => {
 	const event = events.find((e) => e.id === eventId)
 
 	if (!event) {
-		return (
-			<EventEditorWrapper>
-				<LoadingSpinner />
-			</EventEditorWrapper>
-		)
+		return <></>
 	}
 
 	const { issuedStatements: addedWorldCards, revokedStatements: removedWorldCards } = event

@@ -36,7 +36,12 @@ export const WorldList = () => {
 					{data.length > 0 && <Typography variant="h6">Your Worlds:</Typography>}
 					{data.map((world) => (
 						<Stack direction="row" justifyContent="space-between" key={world.id}>
-							<Button fullWidth={true} onClick={() => onLoad(world.id)} style={{ justifyContent: 'start' }}>
+							<Button
+								fullWidth={true}
+								onClick={() => onLoad(world.id)}
+								style={{ justifyContent: 'start' }}
+								data-hj-suppress
+							>
 								- {world.name}
 							</Button>
 							<Button onClick={() => onDelete(world)}>

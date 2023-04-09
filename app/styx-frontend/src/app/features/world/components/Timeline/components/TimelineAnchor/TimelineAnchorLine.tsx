@@ -22,11 +22,9 @@ const getLoop = ({
 	timelineScale: number
 	timelineScroll: number
 }) =>
-	Math.abs(
-		Math.floor(
-			(index * lineSpacing + timelineScroll * timelineScale + TimelineAnchorPadding) /
-				getPixelsPerLoop({ lineCount, lineSpacing })
-		)
+	-Math.floor(
+		(index * lineSpacing + timelineScroll * timelineScale + TimelineAnchorPadding) /
+			getPixelsPerLoop({ lineCount, lineSpacing })
 	)
 
 type Props = {
@@ -86,7 +84,7 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		(timelineScale <= 0.25 && index % smallGroupSize === 0)
 
 	const getLineColor = useCallback(() => {
-		if (index % mediumGroupSize > 0) {
+		if (Math.abs(index % mediumGroupSize) > 0) {
 			if (scaleLevel === 0) {
 				return '#999'
 			} else if (scaleLevel === 1) {
@@ -97,6 +95,7 @@ const TimelineAnchorLineComponent = (props: Props) => {
 				return '#799'
 			}
 		}
+
 		const groupColors = ['#63ffc8', '#ffd026', '#ff6363', '#EAADE9', '#E9EAAD']
 		if (index % largeGroupSize === 0) {
 			return groupColors[scaleLevel + 1]
@@ -140,5 +139,6 @@ export const TimelineAnchorLine = memo(
 		a.timelineScale === b.timelineScale &&
 		a.visible === b.visible &&
 		a.lineSpacing === b.lineSpacing &&
-		a.positionNormalizer === b.positionNormalizer
+		a.positionNormalizer === b.positionNormalizer &&
+		a.timeToShortLabel === b.timeToShortLabel
 )

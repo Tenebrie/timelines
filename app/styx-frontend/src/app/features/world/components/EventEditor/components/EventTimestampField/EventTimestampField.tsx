@@ -2,10 +2,13 @@ import { FormControl, TextField, Typography } from '@mui/material'
 import styled from 'styled-components'
 
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
+import { WorldCalendarType } from '../../../../types'
 
 type Props = {
 	timestamp: number
 	onChange: (value: number) => void
+	label?: string
+	calendar?: WorldCalendarType
 }
 
 const StyledTextField = styled(TextField)`
@@ -20,16 +23,16 @@ const OverlayingTimestamp = styled(Typography)`
 	bottom: 14px;
 `
 
-export const EventTimestampField = ({ timestamp, onChange }: Props) => {
-	const { timeToLabel } = useWorldTime()
+export const EventTimestampField = ({ timestamp, onChange, label, calendar }: Props) => {
+	const { timeToLabel } = useWorldTime({ calendar })
 	const readableTimestamp = timeToLabel(timestamp)
 	return (
 		<FormControl fullWidth>
 			<StyledTextField
-				label="Timestamp"
+				label={label ? label : 'Timestamp'}
 				value={timestamp}
 				onChange={(e) => onChange(Number(e.target.value))}
-				type={'number'}
+				type="number"
 			/>
 			<OverlayingTimestamp variant="body1">{readableTimestamp}</OverlayingTimestamp>
 		</FormControl>

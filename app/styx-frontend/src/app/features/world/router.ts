@@ -1,5 +1,7 @@
+import { useDispatch } from 'react-redux'
 import { NavigateOptions, useNavigate, useParams } from 'react-router-dom'
 
+import { worldSlice } from './reducer'
 import { MockedRouter } from './router.mock'
 
 const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
@@ -103,12 +105,16 @@ export const useWorldRouter = () => {
 	const mockParams = MockedRouter.useParams()
 	const state = MockedRouter.isEnabled ? mockParams : actualParams
 
+	const { unloadWorld } = worldSlice.actions
+	const dispatch = useDispatch()
+
 	const worldParams = state as WorldRootParams
 	const outlinerParams = state as WorldOutlinerParams
 	const eventEditorParams = state as WorldEventEditorParams
 	const statementEditorParams = state as WorldStatementEditorParams
 
 	const navigateToWorld = async (id: string) => {
+		dispatch(unloadWorld())
 		navigateTo(worldRoutes.root, {
 			worldId: id,
 		})

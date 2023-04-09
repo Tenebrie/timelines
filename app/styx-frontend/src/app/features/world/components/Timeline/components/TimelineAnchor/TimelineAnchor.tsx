@@ -24,7 +24,7 @@ const TimelineAnchorComponent = ({ scroll, timelineScale, scaleLevel, visible }:
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel })
 
 	const lineCount =
-		Math.ceil((window.screen.width / lineSpacing) * timelineScale) +
+		Math.ceil((window.innerWidth / lineSpacing) * timelineScale) +
 		Math.ceil(TimelineAnchorPadding / lineSpacing) * 2
 
 	const dividers = useMemo(() => Array(lineCount).fill(null), [lineCount])

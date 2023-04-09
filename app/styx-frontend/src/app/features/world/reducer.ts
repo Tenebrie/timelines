@@ -1,12 +1,15 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { WorldDetails, WorldEvent, WorldStatement } from './types'
+import { WorldCalendarType, WorldDetails, WorldEvent, WorldStatement } from './types'
 
 export const initialState = {
+	isLoaded: false as boolean,
 	id: '' as string,
 	name: '' as string,
 	events: [] as WorldEvent[],
+	calendar: 'COUNTUP' as WorldCalendarType,
+	timeOrigin: 0,
 	createdAt: '0',
 	updatedAt: '0',
 
@@ -50,11 +53,17 @@ export const worldSlice = createSlice({
 			state.name = payload
 		},
 		loadWorld: (state, { payload }: PayloadAction<WorldDetails>) => {
+			state.isLoaded = true
 			state.id = payload.id
 			state.name = payload.name
 			state.events = payload.events
+			state.calendar = payload.calendar
+			state.timeOrigin = payload.timeOrigin
 			state.createdAt = payload.createdAt
 			state.updatedAt = payload.updatedAt
+		},
+		unloadWorld: (state) => {
+			state.isLoaded = false
 		},
 
 		/* Event wizard */

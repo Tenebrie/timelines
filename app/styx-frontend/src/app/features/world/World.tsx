@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 
+import { BlockingSpinner } from '../../components/BlockingSpinner'
 import { EventWizardModal } from './components/EventWizard/EventWizardModal'
 import { Timeline } from './components/Timeline/Timeline'
 import { WorldNavigator } from './components/WorldNavigator/WorldNavigator'
@@ -11,7 +12,7 @@ export const World = () => {
 	const { worldParams } = useWorldRouter()
 	const { worldId } = worldParams
 
-	useLoadWorldInfo(worldId)
+	const { isLoaded } = useLoadWorldInfo(worldId)
 
 	return (
 		<>
@@ -20,8 +21,9 @@ export const World = () => {
 				<WorldContent>
 					<Outlet />
 				</WorldContent>
-				<Timeline />
+				{isLoaded && <Timeline />}
 			</WorldContainer>
+			<BlockingSpinner visible={!isLoaded} />
 			<EventWizardModal />
 		</>
 	)

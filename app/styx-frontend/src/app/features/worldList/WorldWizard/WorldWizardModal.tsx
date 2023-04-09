@@ -1,6 +1,6 @@
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Button, TextField, Tooltip } from '@mui/material'
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -8,13 +8,20 @@ import { useCreateWorldMutation } from '../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../utils/parseApiResponse'
+import { EventTimestampField } from '../../world/components/EventEditor/components/EventTimestampField/EventTimestampField'
+import { useWorldCalendar } from '../../world/hooks/useWorldCalendar'
 import { useWorldRouter } from '../../world/router'
+import { WorldCalendarType } from '../../world/types'
 import { worldListSlice } from '../reducer'
 import { getWorldWizardModalState } from '../selectors'
 
 export const WorldWizardModal = () => {
 	const [name, setName] = useState('')
+	const [calendar, setCalendar] = useState<WorldCalendarType>('COUNTUP')
+	const [timeOrigin, setTimeOrigin] = useState<number>(0)
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
+
+	const { listAllCalendars } = useWorldCalendar()
 
 	const { isOpen } = useSelector(getWorldWizardModalState)
 
@@ -50,6 +57,8 @@ export const WorldWizardModal = () => {
 			await createWorld({
 				body: {
 					name,
+					calendar,
+					timeOrigin,
 				},
 			})
 		)
@@ -77,6 +86,27 @@ export const WorldWizardModal = () => {
 				error={!!nameValidationError}
 				helperText={nameValidationError}
 				autoFocus
+			/>
+			<FormControl fullWidth>
+				<InputLabel id="world-calendar-label">Calendar</InputLabel>
+				<Select
+					value={calendar}
+					label="Calendar"
+					labelId="world-calendar-label"
+					onChange={(event) => setCalendar(event.target.value as WorldCalendarType)}
+				>
+					{listAllCalendars().map((option) => (
+						<MenuItem key={option.id} value={option.id}>
+							{option.displayName}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+			<EventTimestampField
+				timestamp={timeOrigin}
+				onChange={setTimeOrigin}
+				label="Time Origin"
+				calendar={calendar}
 			/>
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">

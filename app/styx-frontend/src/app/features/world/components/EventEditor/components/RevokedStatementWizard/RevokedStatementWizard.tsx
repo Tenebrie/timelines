@@ -84,12 +84,13 @@ export const RevokedStatementWizard = () => {
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
 			<ModalHeader>New Revoked Statement</ModalHeader>
 			<FormControl fullWidth>
-				<InputLabel id="demo-simple-select-label">Statement to revoke</InputLabel>
+				<InputLabel id="revoked-statement-label">Statement to revoke</InputLabel>
 				<Select
 					value={id}
 					label="Statement to revoke"
-					labelId="demo-simple-select-label"
+					labelId="revoked-statement-label"
 					onChange={(event) => setId(event.target.value)}
+					data-hj-suppress
 				>
 					{removableCards.map((card) => (
 						<MenuItem key={card.id} value={card.id}>

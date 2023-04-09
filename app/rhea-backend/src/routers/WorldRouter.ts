@@ -15,6 +15,7 @@ import {
 } from 'tenebrie-framework'
 
 import { NameStringValidator } from './validators/NameStringValidator'
+import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator'
 import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
 
 const router = new Router()
@@ -45,6 +46,8 @@ router.post('/api/world', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		name: RequiredParam(StringValidator),
+		calendar: OptionalParam(WorldCalendarTypeValidator),
+		timeOrigin: OptionalParam(NumberValidator),
 	})
 
 	const world = await WorldService.createWorld({

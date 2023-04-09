@@ -1,4 +1,4 @@
-import { User, WorldEvent, WorldStatement } from '@prisma/client'
+import { User, WorldCalendarType, WorldEvent, WorldStatement } from '@prisma/client'
 import { UnauthorizedError } from 'tenebrie-framework'
 
 import { dbClient } from './DatabaseClient'
@@ -34,11 +34,18 @@ export const WorldService = {
 		}
 	},
 
-	createWorld: async (params: { owner: User; name: string }) => {
+	createWorld: async (params: {
+		owner: User
+		name: string
+		calendar?: WorldCalendarType
+		timeOrigin?: number
+	}) => {
 		return dbClient.world.create({
 			data: {
 				name: params.name,
 				ownerId: params.owner.id,
+				calendar: params.calendar,
+				timeOrigin: params.timeOrigin,
 			},
 			select: {
 				id: true,

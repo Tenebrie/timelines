@@ -1,6 +1,6 @@
-import type { ConfigFile } from '@rtk-query/codegen-openapi'
+//import type { ConfigFile } from '@rtk-query/codegen-openapi'
 
-const config: ConfigFile = {
+const config = {
 	schemaFile: 'http://localhost:3000/api-json',
 	//apiFile: './src/store/emptyApi.ts',
 	apiFile: '../src/api/baseApi.ts',

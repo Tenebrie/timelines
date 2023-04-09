@@ -9,7 +9,7 @@
 		"eject": "react-scripts eject",
 		"lint": "eslint src/",
 		"lint-fix": "eslint src/ --fix",
-		"openapi": "(cd openapi && ./generate_openapi.sh)",
+		"openapi": "npx @rtk-query/codegen-openapi ./openapi/openapi-config.ts",
 		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline",
 		"start": "PORT=8080 FORCE_COLOR=true react-scripts start --max_old_space_size=4096 | cat",
 		"test": "react-scripts test",

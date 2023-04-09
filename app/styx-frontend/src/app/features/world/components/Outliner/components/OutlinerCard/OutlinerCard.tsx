@@ -21,7 +21,7 @@ export const OutlinerCard = ({ card }: Props) => {
 		<CardWrapper>
 			<CardActionArea onClick={onClick}>
 				<CardContent style={{ padding: '8px 16px' }}>
-					<Typography>{card.text}</Typography>
+					<Typography data-hj-suppress>{card.text}</Typography>
 				</CardContent>
 			</CardActionArea>
 		</CardWrapper>

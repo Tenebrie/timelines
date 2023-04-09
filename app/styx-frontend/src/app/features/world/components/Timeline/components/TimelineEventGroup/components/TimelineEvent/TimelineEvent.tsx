@@ -59,10 +59,11 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 			onMouseLeave={onMouseLeave}
 			className={className}
 			iconPath={getIconPath(event.icon)}
+			data-testid="timeline-event-marker"
 		>
 			{isInfoVisible && (
 				<LabelContainer>
-					<Label>{event.name}</Label>
+					<Label data-hj-suppress>{event.name}</Label>
 				</LabelContainer>
 			)}
 		</Marker>

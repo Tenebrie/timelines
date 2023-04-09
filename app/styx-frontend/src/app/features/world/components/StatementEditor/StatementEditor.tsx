@@ -7,13 +7,12 @@ import {
 	useRevokeWorldStatementMutation,
 	useUnrevokeWorldStatementMutation,
 } from '../../../../../api/rheaApi'
-import { useStatementEditorData } from '../../../../../hooks/useStatementEditorData'
-import { LoadingSpinner } from '../../../../components/LoadingSpinner'
 import { OverlayingLabel } from '../../../../components/OverlayingLabel'
 import { parseApiResponse } from '../../../../utils/parseApiResponse'
+import { useStatementEditorData } from '../../hooks/useStatementEditorData'
 import { useWorldRouter } from '../../router'
 import { WorldEvent } from '../../types'
-import { EventEditorWrapper, FullHeightContainer } from '../EventEditor/styles'
+import { FullHeightContainer } from '../EventEditor/styles'
 import { DeleteStatementModal } from './DeleteStatementModal/DeleteStatementModal'
 import { EventCard } from './EventCard/EventCard'
 import { StatementDetailsEditor } from './StatementDetailsEditor/StatementDetailsEditor'
@@ -29,11 +28,7 @@ export const StatementEditor = () => {
 	const [unrevokeWorldStatement, { isLoading: isUnrevoking }] = useUnrevokeWorldStatementMutation()
 
 	if (!statement) {
-		return (
-			<EventEditorWrapper>
-				<LoadingSpinner />
-			</EventEditorWrapper>
-		)
+		return <></>
 	}
 
 	const onUnrevoke = async () => {

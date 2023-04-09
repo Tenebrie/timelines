@@ -15,9 +15,9 @@ import { TimelineContainer, TimelineWrapper } from './styles'
 
 export const Timeline = () => {
 	const containerRef = useRef<HTMLDivElement | null>(null)
-	const containerWidth = useRef<number>(4096)
+	const containerWidth = useRef<number>(window.innerWidth)
 
-	const { events } = useSelector(getWorldState)
+	const { events, timeOrigin } = useSelector(getWorldState)
 
 	const dispatch = useDispatch()
 	const { openEventWizard } = worldSlice.actions
@@ -62,8 +62,8 @@ export const Timeline = () => {
 	const { scroll, timelineScale, scaleLevel, targetScaleIndex, isSwitchingScale, scrollTo } =
 		useTimelineNavigation({
 			containerRef,
-			defaultScroll: 150,
-			maximumScroll: containerWidth.current / 2,
+			defaultScroll: Math.floor(containerWidth.current / 2) - timeOrigin,
+			maximumScroll: Infinity,
 			scaleLimits: [-3, 10],
 			onClick: (time) => onClick(time),
 			onDoubleClick: (time) => onDoubleClick(time),
