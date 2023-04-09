@@ -63,7 +63,7 @@ export const Timeline = () => {
 		useTimelineNavigation({
 			containerRef,
 			defaultScroll: 150,
-			maximumScroll: containerWidth.current / 2,
+			maximumScroll: Infinity,
 			scaleLimits: [-3, 10],
 			onClick: (time) => onClick(time),
 			onDoubleClick: (time) => onDoubleClick(time),

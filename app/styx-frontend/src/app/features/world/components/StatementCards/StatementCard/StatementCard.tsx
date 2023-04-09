@@ -15,7 +15,7 @@ export const StatementCard = ({ card }: Props) => {
 	return (
 		<Card>
 			<CardActionArea onClick={onClick}>
-				<CardContent>
+				<CardContent data-hj-suppress>
 					<Typography variant="h6" noWrap={true}>
 						{card.title}
 					</Typography>

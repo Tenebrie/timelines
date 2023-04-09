@@ -23,8 +23,10 @@ model World {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  name   String
-  events WorldEvent[]
+  name       String
+  events     WorldEvent[]
+  calendar   WorldCalendarType @default(COUNTUP)
+  timeOrigin Int               @default(0)
 
   owner   User   @relation(fields: [ownerId], references: [id])
   ownerId String
@@ -35,13 +37,18 @@ enum WorldEventType {
   OTHER
 }
 
+enum WorldCalendarType {
+  COUNTUP
+  EARTH
+}
+
 model WorldEvent {
   id        String   @id @unique @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   type        WorldEventType
-  icon        String @default("default")
+  icon        String         @default("default")
   name        String
   timestamp   Float
   description String         @default("")

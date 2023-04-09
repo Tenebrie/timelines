@@ -189,7 +189,6 @@ export const useTimelineNavigation = ({
 				if (isMacOS()) {
 					const currentValue = scrollAccumulator.current + event.deltaY * sensitivity
 					if (Math.abs(currentValue) < 1) {
-						console.log('noi', currentValue)
 						scrollAccumulator.current = currentValue
 						return 0
 					}

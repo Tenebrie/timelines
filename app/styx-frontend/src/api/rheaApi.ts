@@ -131,6 +131,8 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	calendar: 'COUNTUP' | 'EARTH'
+	timeOrigin: number
 	ownerId: string
 }[]
 export type GetWorldsApiArg = void
@@ -148,6 +150,8 @@ export type DeleteWorldApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	calendar: 'COUNTUP' | 'EARTH'
+	timeOrigin: number
 	ownerId: string
 }
 export type DeleteWorldApiArg = {
@@ -159,6 +163,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	calendar: 'COUNTUP' | 'EARTH'
+	timeOrigin: number
 	ownerId: string
 	events: {
 		id: string
@@ -224,6 +230,7 @@ export type UpdateWorldEventApiArg = {
 	eventId: string
 	body: {
 		name?: string
+		icon?: string
 		timestamp?: number
 		description?: string
 	}

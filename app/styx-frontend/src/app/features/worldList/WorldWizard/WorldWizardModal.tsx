@@ -1,6 +1,6 @@
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Button, TextField, Tooltip } from '@mui/material'
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -8,13 +8,19 @@ import { useCreateWorldMutation } from '../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../utils/parseApiResponse'
+import { useWorldCalendar } from '../../world/hooks/useWorldCalendar'
 import { useWorldRouter } from '../../world/router'
+import { WorldCalendarType } from '../../world/types'
 import { worldListSlice } from '../reducer'
 import { getWorldWizardModalState } from '../selectors'
 
 export const WorldWizardModal = () => {
 	const [name, setName] = useState('')
+	const [calendar, setCalendar] = useState<WorldCalendarType>('COUNTUP')
+	const [timeOrigin, setTimeOrigin] = useState(0)
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
+
+	const { listAllCalendars } = useWorldCalendar()
 
 	const { isOpen } = useSelector(getWorldWizardModalState)
 
@@ -72,6 +78,30 @@ export const WorldWizardModal = () => {
 			<TextField
 				label="Name"
 				type="text"
+				value={name}
+				onChange={(event) => setName(event.target.value)}
+				error={!!nameValidationError}
+				helperText={nameValidationError}
+				autoFocus
+			/>
+			<FormControl fullWidth>
+				<InputLabel id="world-calendar-label">Calendar</InputLabel>
+				<Select
+					value={calendar}
+					label="Calendar"
+					labelId="world-calendar-label"
+					onChange={(event) => setCalendar(event.target.value as WorldCalendarType)}
+				>
+					{listAllCalendars().map((option) => (
+						<MenuItem key={option.id} value={option.id}>
+							{option.displayName}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+			<TextField
+				label="Origin Time"
+				type="number"
 				value={name}
 				onChange={(event) => setName(event.target.value)}
 				error={!!nameValidationError}

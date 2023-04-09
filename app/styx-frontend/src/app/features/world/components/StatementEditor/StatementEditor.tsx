@@ -7,10 +7,10 @@ import {
 	useRevokeWorldStatementMutation,
 	useUnrevokeWorldStatementMutation,
 } from '../../../../../api/rheaApi'
-import { useStatementEditorData } from '../../../../../hooks/useStatementEditorData'
 import { LoadingSpinner } from '../../../../components/LoadingSpinner'
 import { OverlayingLabel } from '../../../../components/OverlayingLabel'
 import { parseApiResponse } from '../../../../utils/parseApiResponse'
+import { useStatementEditorData } from '../../hooks/useStatementEditorData'
 import { useWorldRouter } from '../../router'
 import { WorldEvent } from '../../types'
 import { EventEditorWrapper, FullHeightContainer } from '../EventEditor/styles'

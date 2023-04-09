@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-import { useStatementEditorData } from '../../../../../../../hooks/useStatementEditorData'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
+import { useStatementEditorData } from '../../../../hooks/useStatementEditorData'
 import { WorldEventGroup } from '../../../../types'
 import { ScaleLevel } from '../../types'
 import { TimelineEvent } from './components/TimelineEvent/TimelineEvent'

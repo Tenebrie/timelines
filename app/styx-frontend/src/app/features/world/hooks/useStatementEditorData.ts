@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 
-import { useWorldRouter } from '../app/features/world/router'
-import { getWorldState } from '../app/features/world/selectors'
+import { useWorldRouter } from '../router'
+import { getWorldState } from '../selectors'
 
 export const useStatementEditorData = () => {
 	const { events } = useSelector(getWorldState)

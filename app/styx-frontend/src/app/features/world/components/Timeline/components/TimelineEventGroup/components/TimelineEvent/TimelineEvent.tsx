@@ -62,7 +62,7 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 		>
 			{isInfoVisible && (
 				<LabelContainer>
-					<Label>{event.name}</Label>
+					<Label data-hj-suppress>{event.name}</Label>
 				</LabelContainer>
 			)}
 		</Marker>
