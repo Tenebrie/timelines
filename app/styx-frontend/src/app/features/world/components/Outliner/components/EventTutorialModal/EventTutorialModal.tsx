@@ -21,15 +21,17 @@ export const EventTutorialModal = () => {
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
 			<ModalHeader>Event Tutorial</ModalHeader>
 			<Typography variant="body1">
-				In Timelines app, a project (referred to as a "world") contains many events that have associated
-				timestamp, icon, and other metadata. An event describes the moment of something happening, for example
-				"The adventurers have reached the inn" event may happen on Day 1.
+				In Timelines app, a project (referred to as a <b>World</b>) contains many events that have associated
+				timestamp, icon, and other metadata. An <b>Event</b> describes the moment of something happening, for
+				example
+				<i>"The adventurers have reached the inn"</i> event may happen on Day 1.
 			</Typography>
 			<Typography variant="body1">
-				Most events contain a number of "statements". A statement describes the state of the world between
-				event. In an example above, there can be a statement "The adventurers are in the inn". This statement
-				will be in effect until a later event revokes it. For example, event "The adventurers have left the
-				inn" may happen on Day 10, and it should revoke the "The adventurers are in the inn" statement.
+				Most events contain a number of <b>Statements</b>. A statement describes the state of the world
+				between events. In an example above, there can be a statement <i>"The adventurers are in the inn"</i>.
+				This statement will be in effect until a later event revokes it. For example, event{' '}
+				<i>"The adventurers have left the inn"</i> may happen on Day 10, and it should revoke the{' '}
+				<i>"The adventurers are in the inn"</i> statement.
 			</Typography>
 			<Typography variant="body1">
 				The result of the example above will be a world where the adventurers are in the inn between Day 1 and
