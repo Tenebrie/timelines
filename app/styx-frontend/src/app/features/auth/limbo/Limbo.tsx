@@ -2,13 +2,13 @@ import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { useCheckAuthenticationQuery } from '../../../../api/rheaApi'
-import { LoadingSpinner } from '../../../components/LoadingSpinner'
+import { BlockingSpinner } from '../../../components/BlockingSpinner'
 import { useAppRouter } from '../../world/router'
 
 const LimboPageContainer = styled.div`
 	display: flex;
 	width: 25%;
-	height: 25%;
+	height: 100%;
 	align-items: center;
 	justify-content: center;
 	flex-direction: column;
@@ -32,7 +32,7 @@ export const Limbo = () => {
 
 	return (
 		<LimboPageContainer>
-			<LoadingSpinner />
+			<BlockingSpinner visible />
 		</LimboPageContainer>
 	)
 }

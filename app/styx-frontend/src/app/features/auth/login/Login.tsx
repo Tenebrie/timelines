@@ -53,7 +53,7 @@ export const Login = () => {
 	}
 
 	return (
-		<Stack spacing={2}>
+		<Stack spacing={2} justifyContent="center">
 			<Stack alignItems="center">
 				<TenebrieLogo />
 			</Stack>
