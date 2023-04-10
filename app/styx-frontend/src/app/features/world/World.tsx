@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom'
 
 import { BlockingSpinner } from '../../components/BlockingSpinner'
 import { EventWizardModal } from './components/EventWizard/EventWizardModal'
+import { OverviewPanel } from './components/OverviewPanel/OverviewPanel'
 import { Timeline } from './components/Timeline/Timeline'
 import { WorldNavigator } from './components/WorldNavigator/WorldNavigator'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
@@ -16,13 +17,26 @@ export const World = () => {
 
 	return (
 		<>
-			<WorldContainer>
+			<div
+				style={{
+					position: 'relative',
+					width: '100%',
+					height: '100%',
+					display: 'flex',
+					flexDirection: 'column',
+				}}
+			>
 				<WorldNavigator />
-				<WorldContent>
-					<Outlet />
-				</WorldContent>
+				<WorldContainer>
+					<OverviewPanel />
+					<div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+						<WorldContent>
+							<Outlet />
+						</WorldContent>
+					</div>
+				</WorldContainer>
 				{isLoaded && <Timeline />}
-			</WorldContainer>
+			</div>
 			<BlockingSpinner visible={!isLoaded} />
 			<EventWizardModal />
 		</>

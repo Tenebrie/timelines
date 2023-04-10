@@ -5,6 +5,10 @@ import { worldSlice } from './reducer'
 import { MockedRouter } from './router.mock'
 
 const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
+	const actualParams = useParams()
+	const mockParams = MockedRouter.useParams()
+	const state = MockedRouter.isEnabled ? mockParams : actualParams
+
 	const navigate = useNavigate()
 
 	const navigateTo = (
@@ -17,9 +21,13 @@ const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
 			target
 		)
 		navigate(replacedTarget, navigateParams)
+		if (MockedRouter.isEnabled) {
+			MockedRouter.navigations.push({ target: replacedTarget })
+		}
 	}
 
 	return {
+		state,
 		navigateTo,
 	}
 }
@@ -100,10 +108,7 @@ export type WorldStatementEditorParams = {
 }
 
 export const useWorldRouter = () => {
-	const { navigateTo } = useBaseRouter(worldRoutes)
-	const actualParams = useParams()
-	const mockParams = MockedRouter.useParams()
-	const state = MockedRouter.isEnabled ? mockParams : actualParams
+	const { state, navigateTo } = useBaseRouter(worldRoutes)
 
 	const { unloadWorld } = worldSlice.actions
 	const dispatch = useDispatch()
