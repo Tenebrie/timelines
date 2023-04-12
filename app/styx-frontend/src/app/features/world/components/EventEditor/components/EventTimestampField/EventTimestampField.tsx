@@ -24,6 +24,7 @@ const OverlayingTimestamp = styled(Typography)`
 `
 
 export const EventTimestampField = ({ timestamp, onChange, label, calendar }: Props) => {
+	console.log(timestamp)
 	const { timeToLabel } = useWorldTime({ calendar })
 	const readableTimestamp = timeToLabel(timestamp)
 	return (
