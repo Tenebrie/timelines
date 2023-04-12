@@ -109,7 +109,7 @@ export type CheckAuthenticationApiResponse = /** status 200  */ {
 	authenticated: boolean
 }
 export type CheckAuthenticationApiArg = void
-export type CreateAccountApiResponse = /** status 204  */ Blob
+export type CreateAccountApiResponse = unknown
 export type CreateAccountApiArg = {
 	body: {
 		email: string
@@ -117,14 +117,14 @@ export type CreateAccountApiArg = {
 		password: string
 	}
 }
-export type PostLoginApiResponse = /** status 204  */ Blob
+export type PostLoginApiResponse = unknown
 export type PostLoginApiArg = {
 	body: {
 		email: string
 		password: string
 	}
 }
-export type PostLogoutApiResponse = /** status 204  */ Blob
+export type PostLogoutApiResponse = unknown
 export type PostLogoutApiArg = void
 export type GetWorldsApiResponse = /** status 200  */ {
 	id: string
@@ -132,7 +132,7 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	updatedAt: string
 	name: string
 	calendar: 'COUNTUP' | 'EARTH'
-	timeOrigin: number
+	timeOrigin: string
 	ownerId: string
 }[]
 export type GetWorldsApiArg = void
@@ -153,7 +153,7 @@ export type DeleteWorldApiResponse = /** status 200  */ {
 	updatedAt: string
 	name: string
 	calendar: 'COUNTUP' | 'EARTH'
-	timeOrigin: number
+	timeOrigin: string
 	ownerId: string
 }
 export type DeleteWorldApiArg = {
@@ -166,7 +166,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	updatedAt: string
 	name: string
 	calendar: 'COUNTUP' | 'EARTH'
-	timeOrigin: number
+	timeOrigin: string
 	ownerId: string
 	events: {
 		id: string
@@ -175,7 +175,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		type: 'SCENE' | 'OTHER'
 		icon: string
 		name: string
-		timestamp: number
+		timestamp: string
 		description: string
 		worldId: string
 		issuedStatements: {
@@ -211,7 +211,7 @@ export type CreateWorldEventApiArg = {
 	body: {
 		name: string
 		type: 'SCENE' | 'OTHER'
-		timestamp: number
+		timestamp: any
 	}
 }
 export type UpdateWorldEventApiResponse = /** status 200  */ {
@@ -221,7 +221,7 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	type: 'SCENE' | 'OTHER'
 	icon: string
 	name: string
-	timestamp: number
+	timestamp: string
 	description: string
 	worldId: string
 }
@@ -233,7 +233,7 @@ export type UpdateWorldEventApiArg = {
 	body: {
 		name?: string
 		icon?: string
-		timestamp?: number
+		timestamp?: any
 		description?: string
 	}
 }
@@ -244,7 +244,7 @@ export type DeleteWorldEventApiResponse = /** status 200  */ {
 	type: 'SCENE' | 'OTHER'
 	icon: string
 	name: string
-	timestamp: number
+	timestamp: string
 	description: string
 	worldId: string
 }

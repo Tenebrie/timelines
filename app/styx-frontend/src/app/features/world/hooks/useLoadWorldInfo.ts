@@ -20,6 +20,10 @@ export const useLoadWorldInfo = (worldId: string) => {
 			return
 		}
 
+		if (!Number.isFinite(Number(data.timeOrigin))) {
+			throw new Error('Time origin too large!')
+		}
+
 		dispatch(loadWorld(data))
 	}, [data, dispatch, loadWorld])
 

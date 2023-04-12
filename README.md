@@ -4,22 +4,9 @@ Thie readme is WIP
 
 This is a non-binding list of features that I am planning to add to Timelines at some point or another. They are likely sorted by priority, but order of implementation is not guaranteed.
 
-## Calendar v2
+## Time picker
 
-Currently the worlds use what is known as a count-up calendar, starting at day 0 and going up. Calendar v2 introduces an alternative option, using a real-life calendar (timestamp is treated as offset unix time). That means the timeline will match real-life time, and will be suitable for stories that take place in real world (or worlds that use the same exact time).
-
-As part of Calendar v2 effort, events should get a proper time picker.
-
-## Overview
-
-A panel on the left side of the screen (while in World view) that shows the list of entities in the world for quick navigation.
-
-### Included entities
-* **Actors**
-  * Full list of involved actors (after actors are introduced).
-* **Events**
-  * Full list of events in order.
-  * Click any to select the event and navigate over to it in the timeline.
+Event creation/editing should get a proper time picker widget.
 
 ## Collaborative working
 

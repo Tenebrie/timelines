@@ -26,7 +26,7 @@ model World {
   name       String
   events     WorldEvent[]
   calendar   WorldCalendarType @default(COUNTUP)
-  timeOrigin Int               @default(0)
+  timeOrigin BigInt            @default(0)
 
   owner   User   @relation(fields: [ownerId], references: [id])
   ownerId String
@@ -50,7 +50,7 @@ model WorldEvent {
   type        WorldEventType
   icon        String         @default("default")
   name        String
-  timestamp   Float
+  timestamp   BigInt
   description String         @default("")
 
   issuedStatements  WorldStatement[] @relation(name: "StatementsIssuedByEvent")

@@ -58,7 +58,7 @@ export const worldSlice = createSlice({
 			state.name = payload.name
 			state.events = payload.events
 			state.calendar = payload.calendar
-			state.timeOrigin = payload.timeOrigin
+			state.timeOrigin = Number(payload.timeOrigin)
 			state.createdAt = payload.createdAt
 			state.updatedAt = payload.updatedAt
 		},

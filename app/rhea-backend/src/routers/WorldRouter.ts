@@ -2,6 +2,7 @@ import { UserAuthenticator } from '@src/auth/UserAuthenticator'
 import { RedisService } from '@src/services/RedisService'
 import { WorldService } from '@src/services/WorldService'
 import {
+	BigIntValidator,
 	NumberValidator,
 	OptionalParam,
 	PathParam,
@@ -115,7 +116,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		name: RequiredParam(NameStringValidator),
 		type: RequiredParam(WorldEventTypeValidator),
-		timestamp: RequiredParam(NumberValidator),
+		timestamp: RequiredParam(BigIntValidator),
 	})
 
 	const { event, world } = await WorldService.createWorldEvent(worldId, params)
@@ -144,7 +145,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		name: OptionalParam(NameStringValidator),
 		icon: OptionalParam(NameStringValidator),
-		timestamp: OptionalParam(NumberValidator),
+		timestamp: OptionalParam(BigIntValidator),
 		description: OptionalParam(StringValidator),
 	})
 
