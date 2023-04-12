@@ -29,7 +29,7 @@ services:
         ports:
             - 3001:3001
     rhea-postgres:
-        image: postgres:11.5-alpine
+        image: postgres:15-alpine
         environment:
             POSTGRES_USER: docker
             POSTGRES_PASSWORD: docker

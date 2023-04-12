@@ -7,6 +7,8 @@ export const useWorldCalendar = () => {
 		() => [
 			{ id: 'COUNTUP', displayName: 'Count Up Calendar' },
 			{ id: 'EARTH', displayName: 'Earth Calendar' },
+			{ id: 'PF2E', displayName: 'Golarion Calendar (Pathfinder)' },
+			{ id: 'RIMWORLD', displayName: 'Quadrums Calendar (Rimworld)' },
 		],
 		[]
 	)

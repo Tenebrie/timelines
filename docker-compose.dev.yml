@@ -43,7 +43,6 @@ services:
         tty: true
         restart: on-failure
     rhea-postgres:
-        image: postgres:11.5-alpine
         environment:
             POSTGRES_USER: docker
             POSTGRES_PASSWORD: docker

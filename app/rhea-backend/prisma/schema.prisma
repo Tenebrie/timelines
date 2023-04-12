@@ -40,6 +40,8 @@ enum WorldEventType {
 enum WorldCalendarType {
   COUNTUP
   EARTH
+  PF2E
+  RIMWORLD
 }
 
 model WorldEvent {
