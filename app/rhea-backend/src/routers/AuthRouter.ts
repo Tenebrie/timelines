@@ -99,9 +99,4 @@ router.post('/api/auth/logout', async (ctx) => {
 	})
 })
 
-router.get('/api/auth/migrate', async (ctx) => {
-	await UserService.migratePasswords()
-	return 'success'
-})
-
 export const AuthRouter = router

@@ -36,22 +36,4 @@ export const UserService = {
 		}
 		return null
 	},
-
-	migratePasswords: async (): Promise<void> => {
-		const allUsers = await dbClient.user.findMany()
-
-		for (let i = 0; i < allUsers.length; i++) {
-			const user = allUsers[i]
-			const password = await bcrypt.hash(user.password, 8)
-
-			await dbClient.user.update({
-				where: {
-					id: user.id,
-				},
-				data: {
-					password,
-				},
-			})
-		}
-	},
 }
