@@ -59,7 +59,10 @@ export const EventDetailsEditor = ({ event }: Props) => {
 			if (error) {
 				return
 			}
-			lastSaved.current = response
+			lastSaved.current = {
+				...response,
+				timestamp: Number(response.timestamp),
+			}
 			lastSavedAt.current = new Date()
 		},
 		[event.id, updateWorldEvent, worldId]

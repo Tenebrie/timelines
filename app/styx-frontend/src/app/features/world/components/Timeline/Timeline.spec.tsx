@@ -62,7 +62,7 @@ describe('<Timeline />', () => {
 	})
 
 	it('respects the world time origin', async () => {
-		renderWithProviders(<Timeline />, getPreloadedState([], { timeOrigin: 100000 }))
+		renderWithProviders(<Timeline />, getPreloadedState([], { timeOrigin: '100000' }))
 
 		expect(screen.getByText('Year 0, Day 69, 00:00')).toBeInTheDocument()
 		expect(screen.queryByText('Year 0, Day 0, 00:00')).not.toBeInTheDocument()

@@ -1,8 +1,12 @@
 import { GetWorldInfoApiResponse, GetWorldsApiResponse } from '../../../api/rheaApi'
 
 export type WorldItem = GetWorldsApiResponse[number]
-export type WorldDetails = GetWorldInfoApiResponse
-export type WorldEvent = GetWorldInfoApiResponse['events'][number]
+export type WorldDetails = Omit<GetWorldInfoApiResponse, 'events'> & {
+	events: WorldEvent[]
+}
+export type WorldEvent = Omit<GetWorldInfoApiResponse['events'][number], 'timestamp'> & {
+	timestamp: number
+}
 export type WorldStatement = WorldEvent['issuedStatements'][number]
 export type WorldEventType = WorldEvent['type']
 export type WorldCalendarType = WorldDetails['calendar']

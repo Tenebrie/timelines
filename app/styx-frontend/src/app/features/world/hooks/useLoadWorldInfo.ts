@@ -24,7 +24,15 @@ export const useLoadWorldInfo = (worldId: string) => {
 			throw new Error('Time origin too large!')
 		}
 
-		dispatch(loadWorld(data))
+		dispatch(
+			loadWorld({
+				...data,
+				events: data.events.map((e) => ({
+					...e,
+					timestamp: Number(e.timestamp),
+				})),
+			})
+		)
 	}, [data, dispatch, loadWorld])
 
 	return {

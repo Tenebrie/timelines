@@ -149,7 +149,7 @@ export const mockWorldItemModel = (world: Partial<WorldItem> = {}): WorldItem =>
 	id: getRandomId(),
 	name: 'World name',
 	calendar: 'COUNTUP',
-	timeOrigin: 0,
+	timeOrigin: '0',
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
 	ownerId: '1111-2222-3333-4444',

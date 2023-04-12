@@ -9,7 +9,7 @@ export const initialState = {
 	name: '' as string,
 	events: [] as WorldEvent[],
 	calendar: 'COUNTUP' as WorldCalendarType,
-	timeOrigin: 0,
+	timeOrigin: '0',
 	createdAt: '0',
 	updatedAt: '0',
 
@@ -56,9 +56,12 @@ export const worldSlice = createSlice({
 			state.isLoaded = true
 			state.id = payload.id
 			state.name = payload.name
-			state.events = payload.events
+			state.events = payload.events.map((e) => ({
+				...e,
+				timestamp: Number(e.timestamp),
+			}))
 			state.calendar = payload.calendar
-			state.timeOrigin = Number(payload.timeOrigin)
+			state.timeOrigin = payload.timeOrigin
 			state.createdAt = payload.createdAt
 			state.updatedAt = payload.updatedAt
 		},

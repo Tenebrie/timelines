@@ -131,7 +131,7 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendar: 'COUNTUP' | 'EARTH'
+	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
 	timeOrigin: string
 	ownerId: string
 }[]
@@ -143,7 +143,7 @@ export type CreateWorldApiResponse = /** status 200  */ {
 export type CreateWorldApiArg = {
 	body: {
 		name: string
-		calendar?: 'COUNTUP' | 'EARTH'
+		calendar?: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
 		timeOrigin?: number
 	}
 }
@@ -152,7 +152,7 @@ export type DeleteWorldApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendar: 'COUNTUP' | 'EARTH'
+	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
 	timeOrigin: string
 	ownerId: string
 }
@@ -165,7 +165,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendar: 'COUNTUP' | 'EARTH'
+	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
 	timeOrigin: string
 	ownerId: string
 	events: {

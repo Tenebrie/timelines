@@ -73,7 +73,7 @@ export const Timeline = () => {
 	const { scroll, timelineScale, scaleLevel, targetScaleIndex, isSwitchingScale, scrollTo } =
 		useTimelineNavigation({
 			containerRef,
-			defaultScroll: Math.floor(containerWidth.current / 2) - timeOrigin,
+			defaultScroll: Math.floor(containerWidth.current / 2) - Number(timeOrigin),
 			maximumScroll: Infinity,
 			scaleLimits: [-3, 10],
 			onClick: (time) => onClick(time),
