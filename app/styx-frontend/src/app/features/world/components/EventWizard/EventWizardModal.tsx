@@ -9,23 +9,23 @@ import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
 import Modal, { useModalCleanup } from '../../../../../ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '../../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../../utils/parseApiResponse'
-import { useWorldTime } from '../../../time/hooks/useWorldTime'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getEventWizardState } from '../../selectors'
+import { EventTimestampField } from '../EventEditor/components/EventTimestampField/EventTimestampField'
 
 export const EventWizardModal = () => {
-	const [name, setName] = useState('')
-	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
+	const { isOpen, timestamp: initialTimestamp } = useSelector(getEventWizardState)
 
-	const { isOpen, timestamp } = useSelector(getEventWizardState)
+	const [name, setName] = useState('')
+	const [timestamp, setTimestamp] = useState(initialTimestamp)
+	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
 
 	const dispatch = useDispatch()
 	const { closeEventWizard } = worldSlice.actions
 
 	const [createWorldEvent, { isLoading }] = useCreateWorldEventMutation()
 
-	const { timeToLabel } = useWorldTime()
 	const { navigateToEventEditor, worldParams } = useWorldRouter()
 
 	useEffect(() => {
@@ -36,6 +36,7 @@ export const EventWizardModal = () => {
 		isOpen,
 		onCleanup: () => {
 			setName('')
+			setTimestamp(initialTimestamp)
 			setNameValidationError(null)
 		},
 	})
@@ -76,7 +77,6 @@ export const EventWizardModal = () => {
 	return (
 		<Modal visible={isOpen} onClose={() => dispatch(closeEventWizard())}>
 			<ModalHeader>Create new event</ModalHeader>
-			<TextField label="Timestamp" type="text" value={timeToLabel(timestamp)} disabled />
 			<TextField
 				label="Name"
 				type="text"
@@ -85,6 +85,11 @@ export const EventWizardModal = () => {
 				error={!!nameValidationError}
 				helperText={nameValidationError}
 				autoFocus
+			/>
+			<EventTimestampField
+				label="Timestamp"
+				timestamp={timestamp}
+				onChange={(value) => setTimestamp(value)}
 			/>
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">
