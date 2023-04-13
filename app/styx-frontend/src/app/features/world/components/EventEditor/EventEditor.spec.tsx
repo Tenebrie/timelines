@@ -1,7 +1,12 @@
 import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
 import { setupServer } from 'msw/lib/node'
 
-import { mockDeleteWorldEvent, mockEventModel, mockUpdateWorldEvent } from '../../../../../api/rheaApi.mock'
+import {
+	mockApiEventModel,
+	mockDeleteWorldEvent,
+	mockEventModel,
+	mockUpdateWorldEvent,
+} from '../../../../../api/rheaApi.mock'
 import { renderWithProviders } from '../../../../../jest/renderWithProviders'
 import { initialState } from '../../reducer'
 import { worldRoutes } from '../../router'
@@ -65,7 +70,7 @@ describe('<EventEditor />', () => {
 		const { hasBeenCalled, invocations } = mockUpdateWorldEvent(server, {
 			worldId: '1111',
 			eventId: '2222',
-			response: mockEventModel({
+			response: mockApiEventModel({
 				id: '2222',
 				name: 'New title',
 				description: 'New description',
@@ -80,13 +85,14 @@ describe('<EventEditor />', () => {
 		await user.type(screen.getByLabelText('Timestamp'), '1500')
 		await user.click(screen.getByText('Save'))
 
-		await waitFor(() => expect(hasBeenCalled).toBeTruthy())
+		await waitFor(() => expect(hasBeenCalled()).toBeTruthy())
 		expect(invocations[0].jsonBody).toEqual({
 			name: 'New title',
 			icon: 'default',
 			description: 'New description',
 			timestamp: 1500,
 		})
+		expect(invocations.length).toEqual(1)
 	})
 
 	it('renders provided icon', () => {
@@ -120,7 +126,7 @@ describe('<EventEditor />', () => {
 		const { hasBeenCalled, invocations } = mockUpdateWorldEvent(server, {
 			worldId: '1111',
 			eventId: '2222',
-			response: mockEventModel({
+			response: mockApiEventModel({
 				id: '2222',
 				name: 'New title',
 				description: 'New description',
@@ -154,7 +160,7 @@ describe('<EventEditor />', () => {
 		const { hasBeenCalled } = mockDeleteWorldEvent(server, {
 			worldId: '1111',
 			eventId: '2222',
-			response: mockEventModel({
+			response: mockApiEventModel({
 				id: '2222',
 				name: 'Event title',
 				description: 'Amazing event text',

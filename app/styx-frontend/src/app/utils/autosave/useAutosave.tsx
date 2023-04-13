@@ -18,6 +18,9 @@ export const useAutosave = ({ onSave, isSaving }: Props) => {
 	const onSaveRef = useRef<() => void>(onSave)
 	const debouncedAutosave = useRef(
 		debounce(() => {
+			if (savingStateRef.current !== 'debounce') {
+				return
+			}
 			setSavingState('waiting')
 			onSaveRef.current()
 		}, 3000)
@@ -57,6 +60,7 @@ export const useAutosave = ({ onSave, isSaving }: Props) => {
 		savingStateRef.current = savingState
 		if (savingState === 'success') {
 			successTimeoutRef.current = window.setTimeout(() => {
+				console.log('noneupit')
 				setSavingState('none')
 				successTimeoutRef.current = null
 			}, 3000)

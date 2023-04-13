@@ -50,7 +50,7 @@ describe('<Timeline />', () => {
 	it('renders the label for countup calendar world', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([]))
 
-		expect(screen.getByText('Year 0, Day 0, 00:00')).toBeInTheDocument()
+		expect(screen.getByText('Day 0, 00:00')).toBeInTheDocument()
 		expect(screen.queryByText('2023.01.01 00:00')).not.toBeInTheDocument()
 	})
 
@@ -61,10 +61,24 @@ describe('<Timeline />', () => {
 		expect(screen.queryByText('Year 0, Day 0, 00:00')).not.toBeInTheDocument()
 	})
 
+	it('renders the label for pf2e calendar world', async () => {
+		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'PF2E' }))
+
+		expect(screen.getByText('4723.01.01 00:00')).toBeInTheDocument()
+		expect(screen.queryByText('Year 0, Day 0, 00:00')).not.toBeInTheDocument()
+	})
+
+	it('renders the label for rimworld calendar world', async () => {
+		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'RIMWORLD' }))
+
+		expect(screen.getByText('5500.01.01 00:00')).toBeInTheDocument()
+		expect(screen.queryByText('Year 0, Day 0, 00:00')).not.toBeInTheDocument()
+	})
+
 	it('respects the world time origin', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { timeOrigin: '100000' }))
 
-		expect(screen.getByText('Year 0, Day 69, 00:00')).toBeInTheDocument()
+		expect(screen.getByText('Day 69, 00:00')).toBeInTheDocument()
 		expect(screen.queryByText('Year 0, Day 0, 00:00')).not.toBeInTheDocument()
 	})
 })

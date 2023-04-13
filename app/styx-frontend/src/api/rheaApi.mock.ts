@@ -10,6 +10,7 @@ import {
 	DeleteWorldApiResponse,
 	DeleteWorldEventApiResponse,
 	DeleteWorldStatementApiResponse,
+	GetWorldInfoApiResponse,
 	GetWorldsApiResponse,
 	UpdateWorldEventApiResponse,
 	UpdateWorldStatementApiResponse,
@@ -170,6 +171,23 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	type: 'SCENE',
 	icon: 'default',
 	timestamp: 0,
+	createdAt: new Date(0).toISOString(),
+	updatedAt: new Date(0).toISOString(),
+	issuedStatements: [],
+	revokedStatements: [],
+	...statement,
+})
+
+export const mockApiEventModel = (
+	statement: Partial<GetWorldInfoApiResponse['events'][number]> = {}
+): GetWorldInfoApiResponse['events'][number] => ({
+	id: getRandomId(),
+	worldId: 'world-1111-2222-3333-4444',
+	name: 'Event name',
+	description: 'Event description',
+	type: 'SCENE',
+	icon: 'default',
+	timestamp: '0',
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
 	issuedStatements: [],
