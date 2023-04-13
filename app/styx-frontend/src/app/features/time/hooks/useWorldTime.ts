@@ -2,9 +2,9 @@ import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { ScaleLevel } from '../../world/components/Timeline/types'
-import { useWorldCalendar } from '../../world/hooks/useWorldCalendar'
 import { getWorldState } from '../../world/selectors'
 import { WorldCalendarType } from '../../world/types'
+import { useWorldCalendar } from './useWorldCalendar'
 
 type Props = {
 	calendar?: WorldCalendarType
@@ -23,8 +23,17 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 	const { getCalendar } = useWorldCalendar()
 	const calendarDefinition = getCalendar(usedCalendar).definition
 
+	type TimeDefinition = {
+		year: number
+		monthName: string
+		monthIndex: number
+		day: number
+		hour: number
+		minute: number
+	}
+
 	const parseTime = useCallback(
-		(rawTime: number) => {
+		(rawTime: number): TimeDefinition => {
 			const time = rawTime * msPerUnit + calendarDefinition.baseOffset
 			if (usedCalendar === 'EARTH' || usedCalendar === 'PF2E') {
 				const date = new Date(time)
@@ -41,8 +50,8 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				const date = new Date(time)
 
 				const year = date.getUTCFullYear()
-				const hour = String(date.getUTCHours()).padStart(2, '0')
-				const minute = String(date.getUTCMinutes()).padStart(2, '0')
+				const hour = date.getUTCHours()
+				const minute = date.getUTCMinutes()
 
 				const startingYearDate = new Date(time)
 				startingYearDate.setUTCMilliseconds(0)
@@ -57,9 +66,9 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 
 				return {
 					year,
-					monthName: 0,
+					monthName: '???',
 					monthIndex: 0,
-					day,
+					day: day + 1,
 					hour,
 					minute,
 				}
@@ -107,7 +116,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 					year: years,
 					monthName: month.name,
 					monthIndex: month.index,
-					day,
+					day: day + 1,
 					hour: hours,
 					minute: minutes,
 				}
@@ -134,6 +143,51 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 		]
 	)
 
+	const pickerToTimestamp = useCallback(
+		(picker: Omit<TimeDefinition, 'monthName'>) => {
+			const { year, monthIndex, day, hour, minute } = picker
+			if (usedCalendar === 'EARTH' || usedCalendar === 'COUNTUP' || usedCalendar === 'PF2E') {
+				const targetDate = new Date(0)
+				targetDate.setUTCFullYear(year)
+				targetDate.setUTCMonth(monthIndex)
+				targetDate.setUTCDate(day + 1)
+				targetDate.setUTCHours(hour)
+				targetDate.setUTCMinutes(minute)
+				return (targetDate.getTime() - calendarDefinition.baseOffset) / msPerUnit
+			} else if (usedCalendar === 'RIMWORLD') {
+				const inMillisecond = calendarDefinition.units.inMillisecond
+				const inSecond = calendarDefinition.units.inSecond * inMillisecond
+				const inMinute = calendarDefinition.units.inMinute * inSecond
+				const inHour = calendarDefinition.units.inHour * inMinute
+				const inDay = calendarDefinition.units.inDay * inHour
+				const inYear =
+					calendarDefinition.units.months.reduce((total, current) => total + current.days, 0) * inDay
+
+				const monthDays = (() => {
+					if (monthIndex === 0) {
+						return 0
+					}
+					return calendarDefinition.units.months
+						.slice(0, monthIndex)
+						.reduce((total, current) => total + current.days, 0)
+				})()
+
+				return (
+					(inYear * year +
+						inDay * monthDays +
+						inDay * day +
+						inHour * hour +
+						inMinute * minute -
+						calendarDefinition.baseOffset) /
+					msPerUnit
+				)
+			}
+
+			return 100
+		},
+		[calendarDefinition, msPerUnit, usedCalendar]
+	)
+
 	const timeToLabel = useCallback(
 		(rawTime: number) => {
 			const { year, monthName, day, hour, minute } = parseTime(rawTime)
@@ -150,12 +204,12 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 					return `Day ${day}, ${padHours}:${padMinutes}`
 				}
 
-				return `Year ${year}, Day ${day}, ${padHours}:${padMinutes}}`
+				return `Year ${year}, Day ${day}, ${padHours}:${padMinutes}`
 			} else if (usedCalendar === 'RIMWORLD') {
 				const padHours = String(hour).padStart(2, '0')
 				const padMinutes = String(minute).padStart(2, '0')
 
-				return `${year}, ${monthName} ${day + 1}, ${padHours}:${padMinutes}`
+				return `${year}, ${monthName} ${day}, ${padHours}:${padMinutes}`
 			}
 		},
 		[parseTime, usedCalendar]
@@ -180,13 +234,13 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 						return `Day ${day}, ${padHours}:${padMinutes}`
 					}
 
-					return `Year ${year}, Day ${day}, ${padHours}:${padMinutes}}`
+					return `Year ${year}, Day ${day}, ${padHours}:${padMinutes}`
 				}
 
 				return `Year ${year}, Day ${day}`
 			} else if (usedCalendar === 'RIMWORLD') {
 				const padMonth = String(monthIndex + 1).padStart(2, '0')
-				const padDay = String(day + 1).padStart(2, '0')
+				const padDay = String(day).padStart(2, '0')
 				const padHours = String(hour).padStart(2, '0')
 				const padMinutes = String(minute).padStart(2, '0')
 
@@ -200,9 +254,13 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 	)
 
 	return {
+		calendar: usedCalendar,
+		months: calendarDefinition.units.months,
 		daysInYear,
 		hoursInDay,
 		minutesInHour,
+		parseTime,
+		pickerToTimestamp,
 		timeToLabel,
 		timeToShortLabel,
 	}

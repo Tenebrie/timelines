@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ModalContainer, ModalWrapper } from './styles'
 
 type Props = {
-	visible?: boolean
+	visible: boolean
 	children: JSX.Element | JSX.Element[] | null | undefined
 	onClose: () => void
 }

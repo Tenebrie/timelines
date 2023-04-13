@@ -8,8 +8,8 @@ import { useCreateWorldMutation } from '../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../utils/parseApiResponse'
+import { useWorldCalendar } from '../../time/hooks/useWorldCalendar'
 import { EventTimestampField } from '../../world/components/EventEditor/components/EventTimestampField/EventTimestampField'
-import { useWorldCalendar } from '../../world/hooks/useWorldCalendar'
 import { useWorldRouter } from '../../world/router'
 import { WorldCalendarType } from '../../world/types'
 import { worldListSlice } from '../reducer'
@@ -76,56 +76,61 @@ export const WorldWizardModal = () => {
 	})
 
 	return (
-		<Modal visible={isOpen} onClose={() => dispatch(closeWorldWizardModal())}>
-			<ModalHeader>Create world</ModalHeader>
-			<TextField
-				label="Name"
-				type="text"
-				value={name}
-				onChange={(event) => setName(event.target.value)}
-				error={!!nameValidationError}
-				helperText={nameValidationError}
-				autoFocus
-			/>
-			<FormControl fullWidth>
-				<InputLabel id="world-calendar-label">Calendar</InputLabel>
-				<Select
-					value={calendar}
-					label="Calendar"
-					labelId="world-calendar-label"
-					onChange={(event) => setCalendar(event.target.value as WorldCalendarType)}
-				>
-					{listAllCalendars().map((option) => (
-						<MenuItem key={option.id} value={option.id}>
-							{option.displayName}
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl>
-			<EventTimestampField
-				timestamp={timeOrigin}
-				onChange={setTimeOrigin}
-				label="Time Origin"
-				calendar={calendar}
-			/>
-			<ModalFooter>
-				<Tooltip title={shortcutLabel} arrow placement="top">
-					<span>
-						<LoadingButton
-							loading={isLoading}
-							variant="contained"
-							onClick={onConfirm}
-							loadingPosition="start"
-							startIcon={<Add />}
-						>
-							<span>Confirm</span>
-						</LoadingButton>
-					</span>
-				</Tooltip>
-				<Button variant="outlined" onClick={() => dispatch(closeWorldWizardModal())}>
-					Cancel
-				</Button>
-			</ModalFooter>
-		</Modal>
+		<>
+			<Modal visible={isOpen} onClose={() => dispatch(closeWorldWizardModal())}>
+				<ModalHeader>Create world</ModalHeader>
+				<TextField
+					label="Name"
+					type="text"
+					value={name}
+					onChange={(event) => setName(event.target.value)}
+					error={!!nameValidationError}
+					helperText={nameValidationError}
+					autoFocus
+				/>
+				<FormControl fullWidth>
+					<InputLabel id="world-calendar-label">Calendar</InputLabel>
+					<Select
+						value={calendar}
+						label="Calendar"
+						labelId="world-calendar-label"
+						onChange={(event) => {
+							setTimeOrigin(0)
+							setCalendar(event.target.value as WorldCalendarType)
+						}}
+					>
+						{listAllCalendars().map((option) => (
+							<MenuItem key={option.id} value={option.id}>
+								{option.displayName}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+				<EventTimestampField
+					timestamp={timeOrigin}
+					onChange={setTimeOrigin}
+					label="Time Origin"
+					calendar={calendar}
+				/>
+				<ModalFooter>
+					<Tooltip title={shortcutLabel} arrow placement="top">
+						<span>
+							<LoadingButton
+								loading={isLoading}
+								variant="contained"
+								onClick={onConfirm}
+								loadingPosition="start"
+								startIcon={<Add />}
+							>
+								<span>Confirm</span>
+							</LoadingButton>
+						</span>
+					</Tooltip>
+					<Button variant="outlined" onClick={() => dispatch(closeWorldWizardModal())}>
+						Cancel
+					</Button>
+				</ModalFooter>
+			</Modal>
+		</>
 	)
 }

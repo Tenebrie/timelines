@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 
-import { WorldCalendarType } from '../types'
+import { WorldCalendarType } from '../../world/types'
 
 type CalendarDefinition = {
 	baseOffset: number
@@ -50,7 +50,10 @@ export const useWorldCalendar = () => {
 					displayName: 'Count Up Calendar',
 					definition: {
 						baseOffset: -62167219200000,
-						units: defaultUnits,
+						units: {
+							...defaultUnits,
+							months: [],
+						},
 					},
 				},
 				{

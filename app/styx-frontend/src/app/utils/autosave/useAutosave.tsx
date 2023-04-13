@@ -60,7 +60,6 @@ export const useAutosave = ({ onSave, isSaving }: Props) => {
 		savingStateRef.current = savingState
 		if (savingState === 'success') {
 			successTimeoutRef.current = window.setTimeout(() => {
-				console.log('noneupit')
 				setSavingState('none')
 				successTimeoutRef.current = null
 			}, 3000)

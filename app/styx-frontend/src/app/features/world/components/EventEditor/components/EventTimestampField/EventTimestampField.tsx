@@ -1,6 +1,9 @@
-import { FormControl, TextField, Typography } from '@mui/material'
+import { CalendarMonth } from '@mui/icons-material'
+import { Button, FormControl, Stack, TextField, Typography } from '@mui/material'
+import { useState } from 'react'
 import styled from 'styled-components'
 
+import { TimePicker } from '../../../../../time/components/TimePicker'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { WorldCalendarType } from '../../../../types'
 
@@ -13,7 +16,7 @@ type Props = {
 
 const StyledTextField = styled(TextField)`
 	.MuiInputBase-root {
-		padding-bottom: 31px;
+		/* padding-bottom: 31px; */
 	}
 `
 
@@ -24,17 +27,26 @@ const OverlayingTimestamp = styled(Typography)`
 `
 
 export const EventTimestampField = ({ timestamp, onChange, label, calendar }: Props) => {
-	const { timeToLabel } = useWorldTime({ calendar })
+	const [timePickerOpen, setTimePickerOpen] = useState<boolean>(false)
+
+	const { calendar: usedCalendar, timeToLabel } = useWorldTime({ calendar })
 	const readableTimestamp = timeToLabel(timestamp)
 	return (
-		<FormControl fullWidth>
-			<StyledTextField
-				label={label ? label : 'Timestamp'}
-				value={timestamp}
-				onChange={(e) => onChange(Number(e.target.value))}
-				type="number"
+		<Stack direction="column" gap={1}>
+			<Stack direction="row" gap={2}>
+				<FormControl fullWidth>
+					<StyledTextField label={label ? label : 'Timestamp'} value={readableTimestamp} disabled />
+				</FormControl>
+				<Button onClick={() => setTimePickerOpen(!timePickerOpen)}>
+					<CalendarMonth />
+				</Button>
+			</Stack>
+			<TimePicker
+				calendar={usedCalendar}
+				initialTimestamp={timestamp}
+				visible={timePickerOpen}
+				onSetTimestamp={onChange}
 			/>
-			<OverlayingTimestamp variant="body1">{readableTimestamp}</OverlayingTimestamp>
-		</FormControl>
+		</Stack>
 	)
 }
