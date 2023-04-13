@@ -359,7 +359,7 @@ export const useTimelineNavigation = ({
 
 	return {
 		scroll: scroll + Math.pow(overscroll, 0.85),
-		timelineScale,
+		timelineScale: timelineScale * 1,
 		scaleLevel,
 		targetScaleIndex: targetScale,
 		isSwitchingScale,

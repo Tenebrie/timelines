@@ -14,7 +14,6 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 	const { calendar: worldCalendar } = useSelector(getWorldState)
 
 	const msPerUnit = useMemo(() => 60000, []) // Milliseconds per unit
-	const unitsPerMs = useMemo(() => 1 / msPerUnit, [msPerUnit])
 	const daysInYear = useMemo(() => 365.2422, [])
 	const hoursInDay = useMemo(() => 24, [])
 	const minutesInHour = useMemo(() => 60, [])
@@ -137,7 +136,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 
 	const timeToLabel = useCallback(
 		(rawTime: number) => {
-			const { year, monthName, monthIndex, day, hour, minute } = parseTime(rawTime)
+			const { year, monthName, day, hour, minute } = parseTime(rawTime)
 			if (usedCalendar === 'EARTH' || usedCalendar === 'PF2E') {
 				const padHour = String(hour).padStart(2, '0')
 				const padMinute = String(minute).padStart(2, '0')
@@ -164,7 +163,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 
 	const timeToShortLabel = useCallback(
 		(rawTime: number, scaleLevel: ScaleLevel) => {
-			const { year, monthName, monthIndex, day, hour, minute } = parseTime(rawTime)
+			const { year, monthIndex, day, hour, minute } = parseTime(rawTime)
 			if (usedCalendar === 'EARTH' || usedCalendar === 'PF2E') {
 				const padMonth = String(monthIndex).padStart(2, '0')
 				const padDay = String(day).padStart(2, '0')
