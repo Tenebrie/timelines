@@ -4,6 +4,7 @@ import { BlockingSpinner } from '../../components/BlockingSpinner'
 import { EventWizardModal } from './components/EventWizard/EventWizardModal'
 import { OverviewPanel } from './components/OverviewPanel/OverviewPanel'
 import { Timeline } from './components/Timeline/Timeline'
+import { TimelinePlaceholder } from './components/Timeline/TimelinePlaceholder'
 import { WorldNavigator } from './components/WorldNavigator/WorldNavigator'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
 import { useWorldRouter } from './router'
@@ -36,6 +37,7 @@ export const World = () => {
 					</div>
 				</WorldContainer>
 				{isLoaded && <Timeline />}
+				{!isLoaded && <TimelinePlaceholder />}
 			</div>
 			<BlockingSpinner visible={!isLoaded} />
 			<EventWizardModal />

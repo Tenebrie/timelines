@@ -67,6 +67,7 @@ export const worldSlice = createSlice({
 		},
 		unloadWorld: (state) => {
 			state.isLoaded = false
+			state.events = []
 		},
 
 		/* Event wizard */
