@@ -75,7 +75,8 @@ describe('<WorldList />', () => {
 		await user.type(screen.getByLabelText('Name'), 'New World')
 		await user.click(screen.getByLabelText('Calendar'))
 		await user.click(screen.getByText('Earth Calendar'))
-		await user.type(screen.getByLabelText('Time Origin'), '100')
+		await user.click(screen.getByTestId('CalendarMonthIcon'))
+		await user.type(screen.getByLabelText('Minute'), '100')
 		await user.click(screen.getByText('Confirm'))
 
 		await waitFor(() => expect(screen.queryByText('Create world')).not.toBeInTheDocument())

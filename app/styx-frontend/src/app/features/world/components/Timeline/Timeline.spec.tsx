@@ -47,38 +47,41 @@ describe('<Timeline />', () => {
 		expect(screen.queryByTestId('timeline-event-marker')).not.toBeInTheDocument()
 	})
 
-	it('renders the label for countup calendar world', async () => {
+	it('renders the labels for countup calendar world', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([]))
 
-		expect(screen.getByText('Day 0, 00:00')).toBeInTheDocument()
-		expect(screen.queryByText('2023.01.01 00:00')).not.toBeInTheDocument()
+		expect(screen.getByText('18:00')).toBeInTheDocument()
+		expect(screen.getByText('Day 1')).toBeInTheDocument()
+		expect(screen.getByText('06:00')).toBeInTheDocument()
 	})
 
-	it('renders the label for earth calendar world', async () => {
+	it('renders the labels for earth calendar world', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'EARTH' }))
 
-		expect(screen.getByText('2023.01.01 00:00')).toBeInTheDocument()
-		expect(screen.queryByText('Year 0, Day 0, 00:00')).not.toBeInTheDocument()
+		expect(screen.getByText('18:00')).toBeInTheDocument()
+		expect(screen.getByText('Jan 01, 2023')).toBeInTheDocument()
+		expect(screen.getByText('06:00')).toBeInTheDocument()
 	})
 
 	it('renders the label for pf2e calendar world', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'PF2E' }))
 
-		expect(screen.getByText('4723.01.01 00:00')).toBeInTheDocument()
-		expect(screen.queryByText('Year 0, Day 0, 00:00')).not.toBeInTheDocument()
+		expect(screen.getByText('18:00')).toBeInTheDocument()
+		expect(screen.getByText('Abad 01, 4723')).toBeInTheDocument()
+		expect(screen.getByText('06:00')).toBeInTheDocument()
 	})
 
 	it('renders the label for rimworld calendar world', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'RIMWORLD' }))
 
-		expect(screen.getByText('5500.01.01 00:00')).toBeInTheDocument()
-		expect(screen.queryByText('Year 0, Day 0, 00:00')).not.toBeInTheDocument()
+		expect(screen.getByText('18:00')).toBeInTheDocument()
+		expect(screen.getByText('Apr 01, 5500')).toBeInTheDocument()
+		expect(screen.getByText('06:00')).toBeInTheDocument()
 	})
 
 	it('respects the world time origin', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { timeOrigin: '100000' }))
 
-		expect(screen.getByText('Day 69, 00:00')).toBeInTheDocument()
-		expect(screen.queryByText('Year 0, Day 0, 00:00')).not.toBeInTheDocument()
+		expect(screen.getByText('Day 70')).toBeInTheDocument()
 	})
 })

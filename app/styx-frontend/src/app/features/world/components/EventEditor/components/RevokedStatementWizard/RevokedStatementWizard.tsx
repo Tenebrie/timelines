@@ -1,6 +1,6 @@
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Button, FormControl, InputLabel, MenuItem, Select, Tooltip } from '@mui/material'
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -68,6 +68,10 @@ export const RevokedStatementWizard = () => {
 		return <></>
 	}
 
+	const alreadyRevokedStatements = worldEvents
+		.filter((event) => event.timestamp <= editorEvent.timestamp)
+		.flatMap((event) => event.revokedStatements.map((statement) => statement.id))
+
 	const removableCards = worldEvents
 		.filter((event) => event.timestamp < editorEvent.timestamp)
 		.flatMap((event) =>
@@ -76,29 +80,33 @@ export const RevokedStatementWizard = () => {
 				event,
 			}))
 		)
-		.filter((statement) =>
-			editorEvent.revokedStatements.every((revokedStatement) => revokedStatement.id !== statement.id)
-		)
+		.filter((statement) => !alreadyRevokedStatements.includes(statement.id))
 
 	return (
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
-			<ModalHeader>New Revoked Statement</ModalHeader>
-			<FormControl fullWidth>
-				<InputLabel id="revoked-statement-label">Statement to revoke</InputLabel>
-				<Select
-					value={id}
-					label="Statement to revoke"
-					labelId="revoked-statement-label"
-					onChange={(event) => setId(event.target.value)}
-					data-hj-suppress
-				>
-					{removableCards.map((card) => (
-						<MenuItem key={card.id} value={card.id}>
-							{card.event.name} / {card.title}
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl>
+			<ModalHeader>Revoke Statement</ModalHeader>
+
+			{removableCards.length > 0 && (
+				<FormControl fullWidth>
+					<InputLabel id="revoked-statement-label">Statement to revoke</InputLabel>
+					<Select
+						value={id}
+						label="Statement to revoke"
+						labelId="revoked-statement-label"
+						onChange={(event) => setId(event.target.value)}
+						data-hj-suppress
+					>
+						{removableCards.map((card) => (
+							<MenuItem key={card.id} value={card.id}>
+								{card.event.name} / {card.title}
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
+			)}
+			{removableCards.length === 0 && (
+				<TextField label="Statement to revoke" disabled value="No statements available!" />
+			)}
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">
 					<span>

@@ -17,7 +17,7 @@ export const Timeline = () => {
 	const containerRef = useRef<HTMLDivElement | null>(null)
 	const containerWidth = useRef<number>(window.innerWidth)
 
-	const { events, timeOrigin } = useSelector(getWorldState)
+	const { events, timeOrigin, calendar } = useSelector(getWorldState)
 	const statements = useMemo(
 		() =>
 			events.flatMap((event) =>
@@ -74,7 +74,7 @@ export const Timeline = () => {
 		useTimelineNavigation({
 			containerRef,
 			defaultScroll: Math.floor(containerWidth.current / 2) - Number(timeOrigin),
-			maximumScroll: Infinity,
+			maximumScroll: calendar === 'COUNTUP' ? Math.floor(containerWidth.current / 2) : Infinity,
 			scaleLimits: [-3, 10],
 			onClick: (time) => onClick(time),
 			onDoubleClick: (time) => onDoubleClick(time),

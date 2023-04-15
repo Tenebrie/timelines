@@ -9,10 +9,10 @@ import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
 import Modal, { useModalCleanup } from '../../../../../ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '../../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../../utils/parseApiResponse'
+import { TimestampField } from '../../../time/components/TimestampField'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getEventWizardState } from '../../selectors'
-import { EventTimestampField } from '../EventEditor/components/EventTimestampField/EventTimestampField'
 
 export const EventWizardModal = () => {
 	const { isOpen, timestamp: initialTimestamp } = useSelector(getEventWizardState)
@@ -86,11 +86,7 @@ export const EventWizardModal = () => {
 				helperText={nameValidationError}
 				autoFocus
 			/>
-			<EventTimestampField
-				label="Timestamp"
-				timestamp={timestamp}
-				onChange={(value) => setTimestamp(value)}
-			/>
+			<TimestampField label="Timestamp" timestamp={timestamp} onChange={(value) => setTimestamp(value)} />
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">
 					<span>

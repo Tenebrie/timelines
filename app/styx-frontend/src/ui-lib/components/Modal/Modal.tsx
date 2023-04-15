@@ -4,7 +4,7 @@ import { ModalContainer, ModalWrapper } from './styles'
 
 type Props = {
 	visible: boolean
-	children: JSX.Element | JSX.Element[] | null | undefined
+	children: React.ReactNode
 	onClose: () => void
 }
 

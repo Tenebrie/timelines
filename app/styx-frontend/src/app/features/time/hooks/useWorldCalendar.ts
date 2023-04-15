@@ -4,6 +4,7 @@ import { WorldCalendarType } from '../../world/types'
 
 type CalendarDefinition = {
 	baseOffset: number
+	timelineScalar: number
 	units: {
 		inMillisecond: number
 		inSecond: number
@@ -12,6 +13,7 @@ type CalendarDefinition = {
 		inDay: number
 		months: {
 			name: string
+			shortName: string
 			days: number
 		}[]
 	}
@@ -26,18 +28,18 @@ export const useWorldCalendar = () => {
 			inHour: 60,
 			inDay: 24,
 			months: [
-				{ name: 'January', days: 31 },
-				{ name: 'February', days: 28 },
-				{ name: 'March', days: 31 },
-				{ name: 'April', days: 30 },
-				{ name: 'May', days: 31 },
-				{ name: 'June', days: 30 },
-				{ name: 'July', days: 31 },
-				{ name: 'August', days: 31 },
-				{ name: 'September', days: 30 },
-				{ name: 'October', days: 31 },
-				{ name: 'November', days: 30 },
-				{ name: 'December', days: 31 },
+				{ name: 'January', shortName: 'Jan', days: 31 },
+				{ name: 'February', shortName: 'Feb', days: 28 },
+				{ name: 'March', shortName: 'Mar', days: 31 },
+				{ name: 'April', shortName: 'Apr', days: 30 },
+				{ name: 'May', shortName: 'May', days: 31 },
+				{ name: 'June', shortName: 'Jun', days: 30 },
+				{ name: 'July', shortName: 'Jul', days: 31 },
+				{ name: 'August', shortName: 'Aug', days: 31 },
+				{ name: 'September', shortName: 'Sep', days: 30 },
+				{ name: 'October', shortName: 'Oct', days: 31 },
+				{ name: 'November', shortName: 'Nov', days: 30 },
+				{ name: 'December', shortName: 'Dec', days: 31 },
 			],
 		}),
 		[]
@@ -50,6 +52,7 @@ export const useWorldCalendar = () => {
 					displayName: 'Count Up Calendar',
 					definition: {
 						baseOffset: -62167219200000,
+						timelineScalar: 1,
 						units: {
 							...defaultUnits,
 							months: [],
@@ -61,6 +64,7 @@ export const useWorldCalendar = () => {
 					displayName: 'Earth Calendar',
 					definition: {
 						baseOffset: 1672531200000,
+						timelineScalar: 1,
 						units: defaultUnits,
 					},
 				},
@@ -69,21 +73,22 @@ export const useWorldCalendar = () => {
 					displayName: 'Golarion Calendar (Pathfinder)',
 					definition: {
 						baseOffset: 1672531200000 + 85203705600000,
+						timelineScalar: 1,
 						units: {
 							...defaultUnits,
 							months: [
-								{ name: 'Abadius', days: 31 },
-								{ name: 'Calistril', days: 28 },
-								{ name: 'Pharast', days: 31 },
-								{ name: 'Gozran', days: 30 },
-								{ name: 'Desnus', days: 31 },
-								{ name: 'Sarenith', days: 30 },
-								{ name: 'Erastus', days: 31 },
-								{ name: 'Arodus', days: 31 },
-								{ name: 'Rova', days: 30 },
-								{ name: 'Lamashan', days: 31 },
-								{ name: 'Neth', days: 30 },
-								{ name: 'Kuthona', days: 31 },
+								{ name: 'Abadius', shortName: 'Abad', days: 31 },
+								{ name: 'Calistril', shortName: 'Cali', days: 28 },
+								{ name: 'Pharast', shortName: 'Phar', days: 31 },
+								{ name: 'Gozran', shortName: 'Gozn', days: 30 },
+								{ name: 'Desnus', shortName: 'Desn', days: 31 },
+								{ name: 'Sarenith', shortName: 'Sarn', days: 30 },
+								{ name: 'Erastus', shortName: 'Eras', days: 31 },
+								{ name: 'Arodus', shortName: 'Arod', days: 31 },
+								{ name: 'Rova', shortName: 'Rova', days: 30 },
+								{ name: 'Lamashan', shortName: 'Lama', days: 31 },
+								{ name: 'Neth', shortName: 'Neth', days: 30 },
+								{ name: 'Kuthona', shortName: 'Kuth', days: 31 },
 							],
 						},
 					},
@@ -93,13 +98,14 @@ export const useWorldCalendar = () => {
 					displayName: 'Quadrums Calendar (Rimworld)',
 					definition: {
 						baseOffset: 28512000000000,
+						timelineScalar: 1,
 						units: {
 							...defaultUnits,
 							months: [
-								{ name: 'Aprimay', days: 15 },
-								{ name: 'Jugust', days: 15 },
-								{ name: 'Septober', days: 15 },
-								{ name: 'Decembary', days: 15 },
+								{ name: 'Aprimay', shortName: 'Apr', days: 15 },
+								{ name: 'Jugust', shortName: 'Jug', days: 15 },
+								{ name: 'Septober', shortName: 'Sep', days: 15 },
+								{ name: 'Decembary', shortName: 'Dec', days: 15 },
 							],
 						},
 					},

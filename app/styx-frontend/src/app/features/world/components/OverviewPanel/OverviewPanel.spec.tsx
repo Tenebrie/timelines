@@ -58,9 +58,9 @@ describe('<OverviewPanel />', () => {
 
 		const items = screen.getAllByRole('listitem')
 
-		expect(within(items[1]).getByText('Day 1, 01:00')).toBeInTheDocument()
-		expect(within(items[2]).getByText('Day 1, 17:40')).toBeInTheDocument()
-		expect(within(items[3]).getByText('Day 2, 10:20')).toBeInTheDocument()
+		expect(within(items[1]).getByText('Day 2, 01:00')).toBeInTheDocument()
+		expect(within(items[2]).getByText('Day 2, 17:40')).toBeInTheDocument()
+		expect(within(items[3]).getByText('Day 3, 10:20')).toBeInTheDocument()
 	})
 
 	it('sorts provided events based on timestamp', () => {
@@ -163,7 +163,7 @@ describe('<OverviewPanel />', () => {
 
 		const items = screen.getAllByRole('listitem')
 
-		expect(within(items[3]).getByText('Event name @ Day 1, 01:00')).toBeInTheDocument()
+		expect(within(items[3]).getByText('Event name @ Day 2, 01:00')).toBeInTheDocument()
 	})
 
 	it("sorts the provided events according to parent event's timestamps", () => {

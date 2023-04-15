@@ -81,8 +81,8 @@ describe('<EventEditor />', () => {
 		await user.type(screen.getByLabelText('Name'), 'New title')
 		await user.clear(screen.getByLabelText('Description'))
 		await user.type(screen.getByLabelText('Description'), 'New description')
-		await user.clear(screen.getByLabelText('Timestamp'))
-		await user.type(screen.getByLabelText('Timestamp'), '1500')
+		await user.click(screen.getByTestId('CalendarMonthIcon'))
+		await user.type(screen.getByLabelText('Minute'), '1500')
 		await user.click(screen.getByText('Save'))
 
 		await waitFor(() => expect(hasBeenCalled()).toBeTruthy())
@@ -173,5 +173,43 @@ describe('<EventEditor />', () => {
 		expect(screen.getByText('Delete Event')).toBeInTheDocument()
 		await waitForElementToBeRemoved(() => screen.queryByText('Delete Event'))
 		expect(hasBeenCalled).toBeTruthy()
+	})
+
+	it('opens the issued statement wizard', async () => {
+		const { user } = renderWithProviders(
+			<EventEditor />,
+			getPreloadedState(
+				mockEventModel({
+					id: '2222',
+					name: 'Event title',
+					description: 'Amazing event text',
+				})
+			)
+		)
+
+		const addButtons = screen.getAllByTestId('AddIcon')
+
+		await user.click(addButtons[0])
+
+		expect(screen.getByText('Issue Statement')).toBeInTheDocument()
+	})
+
+	it('opens the revoked statement wizard', async () => {
+		const { user } = renderWithProviders(
+			<EventEditor />,
+			getPreloadedState(
+				mockEventModel({
+					id: '2222',
+					name: 'Event title',
+					description: 'Amazing event text',
+				})
+			)
+		)
+
+		const addButtons = screen.getAllByTestId('AddIcon')
+
+		await user.click(addButtons[1])
+
+		expect(screen.getByText('Revoke Statement')).toBeInTheDocument()
 	})
 })

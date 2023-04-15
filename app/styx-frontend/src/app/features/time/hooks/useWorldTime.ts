@@ -26,6 +26,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 	type TimeDefinition = {
 		year: number
 		monthName: string
+		monthNameShort: string
 		monthIndex: number
 		day: number
 		hour: number
@@ -41,7 +42,8 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				return {
 					year: date.getUTCFullYear(),
 					monthName: calendarDefinition.units.months[date.getUTCMonth()].name,
-					monthIndex: date.getUTCMonth() + 1,
+					monthNameShort: calendarDefinition.units.months[date.getUTCMonth()].shortName,
+					monthIndex: date.getUTCMonth(),
 					day: date.getUTCDate(),
 					hour: date.getUTCHours(),
 					minute: date.getUTCMinutes(),
@@ -67,6 +69,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				return {
 					year,
 					monthName: '???',
+					monthNameShort: '???',
 					monthIndex: 0,
 					day: day + 1,
 					hour,
@@ -106,6 +109,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 						day: currentDay,
 						month: {
 							name: 'Unknown',
+							shortName: 'Unk',
 							days: Infinity,
 							index: 0,
 						},
@@ -115,6 +119,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				return {
 					year: years,
 					monthName: month.name,
+					monthNameShort: month.shortName,
 					monthIndex: month.index,
 					day: day + 1,
 					hour: hours,
@@ -124,6 +129,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 			return {
 				year: 0,
 				monthName: '???',
+				monthNameShort: '???',
 				monthIndex: 0,
 				day: 0,
 				hour: 0,
@@ -144,7 +150,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 	)
 
 	const pickerToTimestamp = useCallback(
-		(picker: Omit<TimeDefinition, 'monthName'>) => {
+		(picker: Omit<TimeDefinition, 'monthName' | 'monthNameShort'>) => {
 			const { year, monthIndex, day, hour, minute } = picker
 			if (usedCalendar === 'EARTH' || usedCalendar === 'COUNTUP' || usedCalendar === 'PF2E') {
 				const targetDate = new Date(0)
@@ -216,6 +222,82 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 	)
 
 	const timeToShortLabel = useCallback(
+		(rawTime: number, scaleLevel: ScaleLevel, groupSize: 'large' | 'medium' | 'small') => {
+			const { year, monthIndex, monthName, monthNameShort, day, hour, minute } = parseTime(rawTime)
+			if (usedCalendar === 'EARTH' || usedCalendar === 'PF2E' || usedCalendar === 'RIMWORLD') {
+				const padMonth = String(monthIndex).padStart(2, '0')
+				const padDay = String(day).padStart(2, '0')
+				const padHour = String(hour).padStart(2, '0')
+				const padMinute = String(minute).padStart(2, '0')
+
+				if (groupSize === 'large') {
+					if (scaleLevel === 3) {
+						return `${monthName} ${year}`
+					}
+					return `${monthNameShort} ${padDay}, ${year}`
+				}
+
+				if (groupSize === 'medium') {
+					if (scaleLevel === 0) {
+						return `${padHour}:${padMinute}`
+					} else if (scaleLevel === 1 || scaleLevel === 2) {
+						return `${monthNameShort} ${padDay}`
+					} else if (scaleLevel === 3) {
+						// If months are short, use short month name
+						if (([...calendarDefinition.units.months].sort((a, b) => a.days - b.days)[0]?.days ?? 0) <= 20) {
+							return `${monthNameShort}`
+						}
+						return `${monthName}`
+					}
+				}
+
+				if (groupSize === 'small') {
+					if (scaleLevel === 0) {
+						return `${padHour}:${padMinute}`
+					} else if (scaleLevel === 1) {
+						return `${padHour}:${padMinute}`
+					} else if (scaleLevel === 2) {
+						return `${padDay}`
+					}
+				}
+				return 'No label'
+			} else if (usedCalendar === 'COUNTUP') {
+				const padHours = String(hour).padStart(2, '0')
+				const padMinutes = String(minute).padStart(2, '0')
+
+				if (groupSize === 'large') {
+					if (year === 0) {
+						return `Day ${day}`
+					}
+
+					return `Year ${year}, Day ${day}`
+				}
+
+				if (groupSize === 'medium') {
+					if (scaleLevel === 0) {
+						return `${padHours}:${padMinutes}`
+					} else if (scaleLevel === 1) {
+						if (year === 0) {
+							return `Day ${day}`
+						}
+
+						return `Year ${year}, Day ${day}`
+					}
+				}
+
+				if (groupSize === 'small') {
+					if (scaleLevel === 0 || scaleLevel === 1) {
+						return `${padHours}:${padMinutes}`
+					} else if (scaleLevel === 2) {
+						return `${day}`
+					}
+				}
+			}
+		},
+		[calendarDefinition.units.months, parseTime, usedCalendar]
+	)
+
+	const timeToShortestLabel = useCallback(
 		(rawTime: number, scaleLevel: ScaleLevel) => {
 			const { year, monthIndex, day, hour, minute } = parseTime(rawTime)
 			if (usedCalendar === 'EARTH' || usedCalendar === 'PF2E') {
@@ -224,17 +306,19 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				const padHour = String(hour).padStart(2, '0')
 				const padMinute = String(minute).padStart(2, '0')
 
-				return `${year}.${padMonth}.${padDay} ${padHour}:${padMinute}`
+				if (scaleLevel === 0) {
+					return `${padHour}:${padMinute}`
+				} else if (scaleLevel === 1) {
+					return `${padHour}:${padMinute}`
+				}
+
+				return `${padDay}.${padMonth}`
 			} else if (usedCalendar === 'COUNTUP') {
 				const padHours = String(hour).padStart(2, '0')
 				const padMinutes = String(minute).padStart(2, '0')
 
 				if (scaleLevel === 0 || scaleLevel === 1) {
-					if (year === 0) {
-						return `Day ${day}, ${padHours}:${padMinutes}`
-					}
-
-					return `Year ${year}, Day ${day}, ${padHours}:${padMinutes}`
+					return `${padHours}:${padMinutes}`
 				}
 
 				return `Year ${year}, Day ${day}`
@@ -263,5 +347,6 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 		pickerToTimestamp,
 		timeToLabel,
 		timeToShortLabel,
+		timeToShortestLabel,
 	}
 }

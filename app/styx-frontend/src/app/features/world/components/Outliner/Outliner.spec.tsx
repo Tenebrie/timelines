@@ -82,7 +82,7 @@ describe('<Outliner />', () => {
 	it('renders the label for countup calendar world', async () => {
 		renderWithProviders(<Outliner />, getPreloadedState([mockStatementModel()], { calendar: 'COUNTUP' }))
 
-		expect(screen.getByText('Day 6, 22:40')).toBeInTheDocument()
+		expect(screen.getByText('Day 7, 22:40')).toBeInTheDocument()
 	})
 
 	it('renders the label for earth calendar world', async () => {

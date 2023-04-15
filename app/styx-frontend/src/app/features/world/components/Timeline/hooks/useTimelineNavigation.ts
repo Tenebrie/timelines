@@ -5,6 +5,7 @@ import { Position } from '../../../../../../types/Position'
 import clampToRange from '../../../../../utils/clampToRange'
 import { isMacOS } from '../../../../../utils/isMacOS'
 import { rangeMap } from '../../../../../utils/rangeMap'
+import { useTimelineLevelScalar } from '../../../../time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
 import { HoveredTimelineEvents } from '../components/TimelineEventGroup/components/TimelineEvent/HoveredTimelineEvents'
 import { ScaleLevel } from '../types'
@@ -35,6 +36,8 @@ export const useTimelineNavigation = ({
 	const [canClick, setCanClick] = useState(true)
 	const boundingRectTop = useRef(0)
 	const boundingRectLeft = useRef(0)
+
+	const { getLevelScalar } = useTimelineLevelScalar()
 
 	const onMouseDown = useCallback((event: MouseEvent | TouchEvent) => {
 		const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
@@ -117,9 +120,10 @@ export const useTimelineNavigation = ({
 		setScaleSwitchesToDo(0)
 		setReadyToSwitchScale(false)
 
-		let currentScroll = scroll
 		let currentScaleScroll = scaleScroll
 		let currentTimePerPixel = scaledTimeToRealTime(timelineScale)
+
+		const timestampAtMouse = scaledTimeToRealTime((-scroll + mousePos.x) * timelineScale)
 
 		for (let i = 0; i < Math.abs(scaleSwitchesToDo); i++) {
 			const newScaleScroll = clampToRange(
@@ -127,16 +131,8 @@ export const useTimelineNavigation = ({
 				currentScaleScroll + 100 * Math.sign(scaleSwitchesToDo),
 				scaleLimits[1] * 100
 			)
+
 			const newTimePerPixel = Math.pow(2, newScaleScroll / 100)
-
-			const ratio = currentTimePerPixel / newTimePerPixel
-			const midValue = (mousePos.x - currentScroll) * currentTimePerPixel
-
-			if (ratio > 1) {
-				currentScroll = Math.round(currentScroll - midValue / 2 / newTimePerPixel)
-			} else if (ratio < 1) {
-				currentScroll = Math.round(currentScroll + midValue / newTimePerPixel)
-			}
 
 			currentScaleScroll = newScaleScroll
 			currentTimePerPixel = newTimePerPixel
@@ -149,15 +145,18 @@ export const useTimelineNavigation = ({
 			['[256; 2048]', 3],
 		])
 
-		if (currentTimePerPixel > 2) {
-			currentTimePerPixel = Math.max(0.5, (Math.log2(currentTimePerPixel) + 1) % 3)
-		}
-
 		if (newScaleLevel === null) {
 			return
 		}
 
-		setScroll(Math.min(currentScroll, maximumScroll))
+		if (currentTimePerPixel > 2) {
+			currentTimePerPixel = Math.max(0.5, (Math.log2(currentTimePerPixel) + 1) % 3)
+		}
+
+		const scalar = getLevelScalar(newScaleLevel)
+		const targetScroll = Math.floor(-timestampAtMouse / currentTimePerPixel / scalar + mousePos.x)
+
+		setScroll(Math.min(targetScroll, maximumScroll))
 		setScaleLevel(newScaleLevel)
 		setScaleScroll(currentScaleScroll)
 		setTimelineScale(currentTimePerPixel)
@@ -166,6 +165,7 @@ export const useTimelineNavigation = ({
 			setIsSwitchingScale(false)
 		})
 	}, [
+		getLevelScalar,
 		maximumScroll,
 		mousePos.x,
 		readyToSwitchScale,
@@ -320,9 +320,10 @@ export const useTimelineNavigation = ({
 			}
 
 			const easing = bezier(0.5, 0, 0.5, 1)
-			const targetScroll =
+			const targetScroll = Math.floor(
 				realTimeToScaledTime(-timestamp / timelineScale) +
-				Math.floor(containerRef.current.getBoundingClientRect().width / 2)
+					containerRef.current.getBoundingClientRect().width / 2
+			)
 
 			const isScrollingAlready =
 				Math.abs(startedScrollFrom.current) > 0 || Math.abs(desiredScrollTo.current) > 0

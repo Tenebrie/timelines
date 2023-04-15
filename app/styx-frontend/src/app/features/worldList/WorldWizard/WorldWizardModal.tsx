@@ -8,8 +8,8 @@ import { useCreateWorldMutation } from '../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../utils/parseApiResponse'
+import { TimestampField } from '../../time/components/TimestampField'
 import { useWorldCalendar } from '../../time/hooks/useWorldCalendar'
-import { EventTimestampField } from '../../world/components/EventEditor/components/EventTimestampField/EventTimestampField'
 import { useWorldRouter } from '../../world/router'
 import { WorldCalendarType } from '../../world/types'
 import { worldListSlice } from '../reducer'
@@ -106,7 +106,7 @@ export const WorldWizardModal = () => {
 						))}
 					</Select>
 				</FormControl>
-				<EventTimestampField
+				<TimestampField
 					timestamp={timeOrigin}
 					onChange={setTimeOrigin}
 					label="Time Origin"

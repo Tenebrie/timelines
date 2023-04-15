@@ -97,7 +97,7 @@ export const IssuedStatementWizard = () => {
 
 	return (
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
-			<ModalHeader>New Issued Statement</ModalHeader>
+			<ModalHeader>Issue Statement</ModalHeader>
 			<TextField
 				value={content}
 				onChange={(e) => onChangeContent(e.target.value)}

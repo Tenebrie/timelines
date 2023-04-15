@@ -38,7 +38,7 @@ export const TimePicker = ({ calendar, initialTimestamp, visible, onSetTimestamp
 	const parsedTime = parseTime(initialTimestamp)
 
 	const years = useRef(parsedTime.year)
-	const selectedMonth = useRef(months[0])
+	const selectedMonth = useRef(months[parsedTime.monthIndex])
 	const days = useRef(parsedTime.day)
 	const hours = useRef(parsedTime.hour)
 	const minutes = useRef(parsedTime.minute)
@@ -69,7 +69,7 @@ export const TimePicker = ({ calendar, initialTimestamp, visible, onSetTimestamp
 		oldCalendar.current = calendar
 
 		years.current = parsedTime.year
-		selectedMonth.current = months[0]
+		selectedMonth.current = months[parsedTime.monthIndex]
 		days.current = parsedTime.day
 		hours.current = parsedTime.hour
 		minutes.current = parsedTime.minute

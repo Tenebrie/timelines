@@ -20,7 +20,7 @@ type Props = {
 
 const TimelineAnchorComponent = ({ scroll, timelineScale, scaleLevel, visible }: Props) => {
 	const { lineSpacing } = useSelector(getTimelinePreferences)
-	const { timeToShortLabel } = useWorldTime()
+	const { parseTime, timeToShortLabel } = useWorldTime()
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel })
 
 	const lineCount =
@@ -41,6 +41,7 @@ const TimelineAnchorComponent = ({ scroll, timelineScale, scaleLevel, visible }:
 					timelineScale={timelineScale}
 					scaleLevel={scaleLevel}
 					timelineScroll={scroll}
+					parseTime={parseTime}
 					timeToShortLabel={timeToShortLabel}
 					scaledTimeToRealTime={scaledTimeToRealTime}
 					getTimelineMultipliers={getTimelineMultipliers}

@@ -9,11 +9,11 @@ import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useIsFirstRender } from '../../../../../../utils/useIsFirstRender'
+import { TimestampField } from '../../../../../time/components/TimestampField'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
 import { WorldEvent } from '../../../../types'
 import { EventIconDropdown } from '../EventIconDropdown/EventIconDropdown'
-import { EventTimestampField } from '../EventTimestampField/EventTimestampField'
 
 type Props = {
 	event: WorldEvent
@@ -122,7 +122,7 @@ export const EventDetailsEditor = ({ event }: Props) => {
 			/>
 			<Grid container direction="row" gap={2}>
 				<Grid item margin={0} padding={0} flexGrow={1}>
-					<EventTimestampField timestamp={timestamp} onChange={setTimestamp} />
+					<TimestampField timestamp={timestamp} onChange={setTimestamp} />
 				</Grid>
 				<Grid item margin={0} padding={0}>
 					<EventIconDropdown icon={icon} onChange={setIcon} />
