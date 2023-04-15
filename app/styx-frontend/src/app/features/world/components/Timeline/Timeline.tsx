@@ -54,10 +54,10 @@ export const Timeline = () => {
 
 	const onDoubleClick = useCallback(
 		(time: number) => {
-			if (selectedTime) {
-				dispatch(openEventWizard({ timestamp: time }))
-			} else {
+			if (Number.isNaN(selectedTime)) {
 				navigateToOutliner(time)
+			} else {
+				dispatch(openEventWizard({ timestamp: time }))
 			}
 		},
 		[dispatch, navigateToOutliner, openEventWizard, selectedTime]
