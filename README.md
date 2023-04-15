@@ -39,3 +39,8 @@ An actor will have the basic information associated with them (name, description
 In the far future, calendar should receive a makeover to support completely custom time definitions. A day with different number of hours, a month with different number of days, and completely different labels to go with them.
 
 Basically, a user can create a completely custom definition of their world's time system, and it should be reflected on the timeline.
+
+## The HOWs
+
+The Higher Order Worlds are worlds with a special calendar type that has a much lower time resolution. Instead of 1 minute, it should be 1 year or more. These worlds will also allow the user to link to child projects on the timeline, as events with different event type. Clicking on such event will bring the user over to the target world's page.
+The child world is loosely related to the parent. The "Home" link will be replaced with "Back to parent".

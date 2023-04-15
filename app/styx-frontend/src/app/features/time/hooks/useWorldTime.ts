@@ -217,6 +217,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 
 				return `${year}, ${monthName} ${day}, ${padHours}:${padMinutes}`
 			}
+			return ''
 		},
 		[parseTime, usedCalendar]
 	)

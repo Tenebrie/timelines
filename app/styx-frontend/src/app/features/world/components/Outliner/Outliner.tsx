@@ -23,15 +23,21 @@ export const Outliner = () => {
 
 	const issuedCards = events
 		.filter((event) => event.timestamp <= selectedTime)
-		.flatMap((event) => event.issuedStatements)
+		.flatMap((event) =>
+			event.issuedStatements.map((statement, index) => ({
+				...statement,
+				timestamp: event.timestamp,
+				index,
+			}))
+		)
 
 	const revokedCards = events
 		.filter((event) => event.timestamp <= selectedTime)
 		.flatMap((event) => event.revokedStatements)
 
-	const applicableCards = issuedCards.filter(
-		(issuedCard) => !revokedCards.some((revokedCard) => issuedCard.id === revokedCard.id)
-	)
+	const applicableCards = issuedCards
+		.filter((issuedCard) => !revokedCards.some((revokedCard) => issuedCard.id === revokedCard.id))
+		.sort((a, b) => b.timestamp - a.timestamp || b.index - a.index)
 
 	const onCreateEvent = () => {
 		dispatch(openEventWizard({ timestamp: selectedTime }))
@@ -51,8 +57,8 @@ export const Outliner = () => {
 						<StatementsUnit>
 							<OverlayingLabel>World state</OverlayingLabel>
 							<StatementsScroller>
-								{applicableCards.map((card) => (
-									<OutlinerCard key={card.id} card={card} />
+								{applicableCards.map((card, index) => (
+									<OutlinerCard key={card.id} index={index} card={card} />
 								))}
 								{applicableCards.length === 0 && <OutlinerEmptyState selectedTime={selectedTime} />}
 							</StatementsScroller>

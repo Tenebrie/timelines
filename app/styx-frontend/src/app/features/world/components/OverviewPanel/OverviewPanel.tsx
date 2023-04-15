@@ -1,4 +1,6 @@
-import { Divider, List, ListItemIcon } from '@mui/material'
+import { Clear, Search } from '@mui/icons-material'
+import { Divider, IconButton, InputAdornment, List, ListItemIcon, TextField } from '@mui/material'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { preferencesSlice } from '../../../preferences/reducer'
@@ -12,6 +14,8 @@ import { OverviewSublist } from './OverviewSublist'
 import { StyledListItemButton, StyledListItemText } from './styles'
 
 export const OverviewPanel = () => {
+	const [searchQuery, setSearchQuery] = useState<string>('')
+
 	const { events } = useSelector(getWorldState)
 	const { panelOpen, eventsOpen, eventsReversed, statementsOpen, statementsReversed } =
 		useSelector(getOverviewPreferences)
@@ -24,38 +28,67 @@ export const OverviewPanel = () => {
 		preferencesSlice.actions
 	const dispatch = useDispatch()
 
-	const sortedEvents = [...events].sort((a, b) => a.timestamp - b.timestamp)
-	const statements = sortedEvents.flatMap((event) => event.issuedStatements)
-
 	const eventIdToName = (eventId: string) => events.find((event) => event.id === eventId)?.name ?? 'Unknown'
 	const eventIdToTimeLabel = (eventId: string) =>
 		timeToLabel(events.find((event) => event.id === eventId)?.timestamp ?? 0)
 
-	const renderEvent = (event: WorldEvent) => (
+	const sortedEvents = [...events]
+		.sort((a, b) => a.timestamp - b.timestamp)
+		.map((event) => ({
+			...event,
+			secondary: timeToLabel(event.timestamp),
+		}))
+	const statements = sortedEvents.flatMap((event) =>
+		event.issuedStatements.map((statement) => ({
+			...statement,
+			secondary: `${eventIdToName(statement.issuedByEventId)} @ ${eventIdToTimeLabel(
+				statement.issuedByEventId
+			)}`,
+		}))
+	)
+
+	const renderEvent = (event: WorldEvent & { secondary: string }) => (
 		<StyledListItemButton
+			divider
 			onClick={() => navigateToEventEditor(event.id)}
 			selected={eventEditorParams.eventId === event.id}
 		>
 			<ListItemIcon>
 				<img src={getIconPath(event.icon)} height="24px" alt={`${event.icon} icon`} />
 			</ListItemIcon>
-			<StyledListItemText data-hj-suppress primary={event.name} secondary={timeToLabel(event.timestamp)} />
+			<StyledListItemText data-hj-suppress primary={event.name} secondary={event.secondary} />
 		</StyledListItemButton>
 	)
 
-	const renderStatement = (statement: WorldStatement) => (
+	const renderStatement = (statement: WorldStatement & { secondary: string }) => (
 		<StyledListItemButton
+			divider
 			onClick={() => navigateToStatementEditor(statement.id)}
 			selected={statementEditorParams.statementId === statement.id}
 		>
 			<StyledListItemText
 				data-hj-suppress
 				primary={statement.title}
-				secondary={`${eventIdToName(statement.issuedByEventId)} @ ${eventIdToTimeLabel(
-					statement.issuedByEventId
-				)}`}
+				secondary={statement.secondary}
 			></StyledListItemText>
 		</StyledListItemButton>
+	)
+
+	const lowerCaseSearchQuery = searchQuery.toLowerCase()
+	const displayedEvents = sortedEvents.filter(
+		(entity) =>
+			searchQuery.length <= 2 ||
+			entity.name.toLowerCase().includes(lowerCaseSearchQuery) ||
+			entity.description.toLowerCase().includes(lowerCaseSearchQuery) ||
+			entity.secondary.toLowerCase().includes(lowerCaseSearchQuery)
+	)
+
+	const displayedStatements = statements.filter(
+		(entity) =>
+			searchQuery.length <= 2 ||
+			entity.title.toLowerCase().includes(lowerCaseSearchQuery) ||
+			entity.text.toLowerCase().includes(lowerCaseSearchQuery) ||
+			entity.secondary.toLowerCase().includes(lowerCaseSearchQuery)
 	)
 
 	return (
@@ -72,13 +105,37 @@ export const OverviewPanel = () => {
 				transition: 'margin-left 0.3s',
 				display: 'flex',
 				flexDirection: 'column',
-				gap: '16px',
 			}}
 		>
+			<TextField
+				id="overview-search"
+				value={searchQuery}
+				onChange={(event) => setSearchQuery(event.target.value ?? null)}
+				size="small"
+				placeholder="Search..."
+				InputProps={{
+					startAdornment: (
+						<InputAdornment position="start">
+							<Search />
+						</InputAdornment>
+					),
+					endAdornment: searchQuery && (
+						<InputAdornment position="end">
+							<IconButton
+								onClick={() => {
+									setSearchQuery('')
+								}}
+							>
+								<Clear />
+							</IconButton>
+						</InputAdornment>
+					),
+				}}
+			/>
 			<List dense>
 				<OverviewSublist
-					title="Events"
-					entities={sortedEvents}
+					title={`Events (${displayedEvents.length})`}
+					entities={displayedEvents}
 					open={eventsOpen}
 					reversed={eventsReversed}
 					onToggleOpen={(val) => dispatch(setEventsOpen(val))}
@@ -87,8 +144,8 @@ export const OverviewPanel = () => {
 				/>
 				<Divider />
 				<OverviewSublist
-					title="Statements"
-					entities={statements}
+					title={`Statements (${displayedStatements.length})`}
+					entities={displayedStatements}
 					open={statementsOpen}
 					reversed={statementsReversed}
 					onToggleOpen={(val) => dispatch(setStatementsOpen(val))}

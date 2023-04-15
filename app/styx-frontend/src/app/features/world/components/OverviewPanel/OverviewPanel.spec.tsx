@@ -77,7 +77,7 @@ describe('<OverviewPanel />', () => {
 
 		const items = screen.getAllByRole('listitem')
 
-		expect(within(items[0]).getByText('Events')).toBeInTheDocument()
+		expect(within(items[0]).getByText('Events (3)')).toBeInTheDocument()
 		expect(within(items[1]).getByText('First Event')).toBeInTheDocument()
 		expect(within(items[2]).getByText('Second Event')).toBeInTheDocument()
 		expect(within(items[3]).getByText('Third Event')).toBeInTheDocument()
@@ -99,7 +99,7 @@ describe('<OverviewPanel />', () => {
 
 		const items = screen.getAllByRole('listitem')
 
-		expect(within(items[0]).getByText('Events')).toBeInTheDocument()
+		expect(within(items[0]).getByText('Events (3)')).toBeInTheDocument()
 		expect(within(items[1]).getByText('Third Event')).toBeInTheDocument()
 		expect(within(items[2]).getByText('Second Event')).toBeInTheDocument()
 		expect(within(items[3]).getByText('First Event')).toBeInTheDocument()
@@ -195,7 +195,7 @@ describe('<OverviewPanel />', () => {
 
 		const items = screen.getAllByRole('listitem')
 
-		expect(within(items[3]).getByText('Statements')).toBeInTheDocument()
+		expect(within(items[3]).getByText('Statements (2)')).toBeInTheDocument()
 		expect(within(items[4]).getByText('The First Statement')).toBeInTheDocument()
 		expect(within(items[5]).getByText('The Second Statement')).toBeInTheDocument()
 	})
@@ -231,7 +231,7 @@ describe('<OverviewPanel />', () => {
 
 		const items = screen.getAllByRole('listitem')
 
-		expect(within(items[3]).getByText('Statements')).toBeInTheDocument()
+		expect(within(items[3]).getByText('Statements (2)')).toBeInTheDocument()
 		expect(within(items[4]).getByText('The Second Statement')).toBeInTheDocument()
 		expect(within(items[5]).getByText('The First Statement')).toBeInTheDocument()
 	})
@@ -257,5 +257,114 @@ describe('<OverviewPanel />', () => {
 
 		expect(MockedRouter.navigations.length).toEqual(1)
 		expect(MockedRouter.navigations[0].target).toEqual('/world/1111/statement/statement-3333')
+	})
+
+	it('filters the events based on the search query', async () => {
+		const { user } = renderWithProviders(
+			<OverviewPanel />,
+			getPreloadedState({
+				events: [
+					mockEventModel({
+						name: 'The Second Event',
+						timestamp: 2500,
+						issuedStatements: [
+							mockStatementModel({
+								title: 'The Second Statement',
+							}),
+						],
+					}),
+					mockEventModel({
+						name: 'The First Event',
+						timestamp: 1500,
+						issuedStatements: [
+							mockStatementModel({
+								title: 'The First Statement',
+							}),
+						],
+					}),
+				],
+			})
+		)
+
+		await user.type(screen.getByPlaceholderText('Search...'), 'second event')
+
+		const items = screen.getAllByRole('listitem')
+
+		expect(within(items[0]).getByText('Events (1)')).toBeInTheDocument()
+		expect(within(items[1]).getByText('The Second Event')).toBeInTheDocument()
+	})
+
+	it('filters the statements based on the search query', async () => {
+		const { user } = renderWithProviders(
+			<OverviewPanel />,
+			getPreloadedState({
+				events: [
+					mockEventModel({
+						name: 'The Second Event',
+						timestamp: 2500,
+						issuedStatements: [
+							mockStatementModel({
+								title: 'The Second Statement',
+							}),
+						],
+					}),
+					mockEventModel({
+						name: 'The First Event',
+						timestamp: 1500,
+						issuedStatements: [
+							mockStatementModel({
+								title: 'The First Statement',
+							}),
+						],
+					}),
+				],
+			})
+		)
+
+		await user.type(screen.getByPlaceholderText('Search...'), 'second statement')
+
+		const items = screen.getAllByRole('listitem')
+
+		expect(within(items[1]).getByText('Statements (1)')).toBeInTheDocument()
+		expect(within(items[2]).getByText('The Second Statement')).toBeInTheDocument()
+	})
+
+	it('filters the statements based on secondary search query hit', async () => {
+		const { user } = renderWithProviders(
+			<OverviewPanel />,
+			getPreloadedState({
+				events: [
+					mockEventModel({
+						id: 'second',
+						name: 'The Second Event',
+						timestamp: 2500,
+						issuedStatements: [
+							mockStatementModel({
+								title: 'The Second Statement',
+								issuedByEventId: 'second',
+							}),
+						],
+					}),
+					mockEventModel({
+						id: 'first',
+						name: 'The First Event',
+						timestamp: 1500,
+						issuedStatements: [
+							mockStatementModel({
+								title: 'The First Statement',
+								issuedByEventId: 'first',
+							}),
+						],
+					}),
+				],
+			})
+		)
+
+		await user.type(screen.getByPlaceholderText('Search...'), 'second event')
+
+		const items = screen.getAllByRole('listitem')
+
+		expect(within(items[2]).getByText('Statements (1)')).toBeInTheDocument()
+		expect(within(items[3]).getByText('The Second Statement')).toBeInTheDocument()
 	})
 })

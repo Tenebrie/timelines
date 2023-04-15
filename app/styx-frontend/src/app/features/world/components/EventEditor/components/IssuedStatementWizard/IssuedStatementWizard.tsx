@@ -108,7 +108,6 @@ export const IssuedStatementWizard = () => {
 				minRows={3}
 				error={!!titleValidationError}
 				helperText={titleValidationError}
-				inputProps={{ maxLength: 256 }}
 			/>
 			<TextField
 				label="Title"
@@ -116,6 +115,7 @@ export const IssuedStatementWizard = () => {
 				value={title}
 				style={{ color: 'gray' }}
 				onChange={(event) => onChangeTitle(event.target.value)}
+				inputProps={{ maxLength: 256 }}
 			/>
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">
