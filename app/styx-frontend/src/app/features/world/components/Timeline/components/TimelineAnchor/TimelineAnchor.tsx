@@ -9,7 +9,7 @@ import { TimelineAnchorContainer } from './styles'
 import { TimelineAnchorLine } from './TimelineAnchorLine'
 
 export const TimelineAnchorPadding = 150 // pixels
-export const ResetNumbersAfterEvery = 30000000 // pixels of scrolling
+export const ResetNumbersAfterEvery = 3000000 // pixels of scrolling
 
 type Props = {
 	visible: boolean

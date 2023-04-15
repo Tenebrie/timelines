@@ -4,10 +4,6 @@ Thie readme is WIP
 
 This is a non-binding list of features that I am planning to add to Timelines at some point or another. They are likely sorted by priority, but order of implementation is not guaranteed.
 
-## Time picker
-
-Event creation/editing should get a proper time picker widget.
-
 ## Collaborative working
 
 Currently the system supports collaborative working to a large degree. To make this a properly supported feature, a couple of things need to be added.
