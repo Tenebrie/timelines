@@ -13,30 +13,20 @@ services:
         working_dir: /app/styx
         depends_on:
             - rhea
-        ports:
-            - 8080:8080
     rhea:
         working_dir: /app/rhea
         depends_on:
             - rhea-postgres
             - redis
-        ports:
-            - 3000:3000
     calliope:
         working_dir: /app/calliope
         depends_on:
             - redis
-        ports:
-            - 3001:3001
     rhea-postgres:
         image: postgres:15-alpine
         environment:
             POSTGRES_USER: docker
             POSTGRES_PASSWORD: docker
             POSTGRES_DB: db
-        ports:
-            - 5432:5432
     redis:
         image: redis:7-alpine
-        ports:
-          - "6379:6379"
