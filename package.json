@@ -11,11 +11,10 @@
 	],
 	"scripts": {
 		"postinstall": "subpkg install && husky install",
-		"build": "sh scripts/build.sh",
-		"start": "node dist/services/gaia/src/app.js",
 		"docker": "yarn docker:start",
 		"docker:start": "docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up",
 		"docker:build": "docker compose -f docker-compose.common.yml -f docker-compose.dev.yml build",
+		"docker:update": "./scripts/app-update.sh",
 		"docker:prod:push": "./scripts/docker-prod-push.sh"
 	},
 	"dependencies": {
