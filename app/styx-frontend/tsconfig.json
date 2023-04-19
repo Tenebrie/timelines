@@ -23,5 +23,5 @@
   },
   "include": [
     "src"
-, "src/app/features/time/hooks/useWorldCalendar.ts/feasrc/app/features/world/hooks/useWorldCalendar.tss
+  ]
 }

@@ -1,9 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { rheaApi } from '../../../api/rheaApi'
+import type { CalliopeToWebsocketMessage } from '../../../../../calliope-websockets/src/types/calliopeToWebsocket'
+import {
+	WebsocketToCalliopeChannel,
+	WebsocketToCalliopeMessage,
+} from '../../../../../shared/src/types/websocketToCalliope'
 import { useEffectOnce } from '../../utils/useEffectOnce'
 import { getWorldState } from '../world/selectors'
+import { getMessageReceiver } from './messageReceivers'
 
 const expBackoffDelays = [5, 100, 1000, 5000]
 
@@ -20,30 +25,31 @@ export const useLiveUpdates = () => {
 		updatedAtRef.current = currentUpdatedAt
 	}, [currentUpdatedAt])
 
-	const processMessage = useCallback(
-		(message: string) => {
-			const payload = JSON.parse(message) as {
-				type: 'worldUpdate'
-				data: unknown
-			}
-			if (payload.type === 'worldUpdate') {
-				const data = payload.data as {
-					worldId: string
-					timestamp: string
-				}
+	const { processMessage } = useMemo(() => {
+		const messageReceiver = getMessageReceiver({ dispatch, updatedAtRef })
 
-				if (new Date(updatedAtRef.current) < new Date(data.timestamp)) {
-					dispatch(rheaApi.util.invalidateTags(['worldDetails']))
-				}
-			}
-		},
-		[dispatch]
-	)
+		const processMessage = (message: string) => {
+			const payload = JSON.parse(message) as CalliopeToWebsocketMessage
+			messageReceiver[payload.channel](payload.data)
+		}
+
+		return {
+			processMessage,
+		}
+	}, [dispatch])
 
 	const clearHeartbeat = useCallback(() => {
 		if (heartbeatInterval.current !== null) {
 			window.clearInterval(heartbeatInterval.current)
 		}
+	}, [])
+
+	const send = useCallback((message: WebsocketToCalliopeMessage) => {
+		if (currentWebsocket.current?.readyState !== WebSocket.OPEN) {
+			return
+		}
+
+		currentWebsocket.current.send(JSON.stringify(message))
 	}, [])
 
 	const { initiateConnection } = useMemo(() => {
@@ -72,20 +78,22 @@ export const useLiveUpdates = () => {
 			const socket = new WebSocket(`${protocol}//${window.location.host}/live`)
 
 			heartbeatInterval.current = window.setInterval(() => {
-				if (currentWebsocket.current?.readyState !== WebSocket.OPEN) {
-					return
-				}
-				socket.send('keepalive')
+				send({
+					channel: WebsocketToCalliopeChannel.KEEPALIVE,
+					data: null,
+				})
 			}, 15000)
 
 			socket.onopen = function () {
 				console.info('[ws] Connection established!')
-				socket.send('init')
+				send({
+					channel: WebsocketToCalliopeChannel.INIT,
+					data: null,
+				})
 				backoffLevel.current = -1
 			}
 
 			socket.onmessage = function (event) {
-				// console.info(`[ws] Data received from server: ${event.data}`)
 				processMessage(event.data)
 			}
 
@@ -107,7 +115,11 @@ export const useLiveUpdates = () => {
 		}
 
 		return { initiateConnection }
-	}, [clearHeartbeat, processMessage])
+	}, [clearHeartbeat, processMessage, send])
 
 	useEffectOnce(() => initiateConnection())
+
+	return {
+		send,
+	}
 }

@@ -1,5 +1,7 @@
 import * as WebSocket from 'ws'
 
+import { CalliopeToWebsocketMessage } from '../types/calliopeToWebsocket'
+
 const connectedClients: Record<string, WebSocket[]> = {}
 
 export const WebsocketService = {
@@ -14,5 +16,10 @@ export const WebsocketService = {
 
 	forgetClient: (userId: string, targetSocket: WebSocket) => {
 		connectedClients[userId] = (connectedClients[userId] ?? []).filter((socket) => socket !== targetSocket)
+	},
+
+	sendMessage: (userId: string, message: CalliopeToWebsocketMessage) => {
+		const clients = WebsocketService.findClients(userId)
+		clients.forEach((client) => client.send(JSON.stringify(message)))
 	},
 }

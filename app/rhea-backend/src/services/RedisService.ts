@@ -1,6 +1,11 @@
 import { User } from '@prisma/client'
 import { createClient } from 'redis'
 
+import type {
+	RheaToCalliopeChannel,
+	RheaToCalliopeMessage,
+} from '../../../calliope-websockets/src/types/rheaToCalliope'
+
 const client = createClient({
 	socket: {
 		host: 'redis',
@@ -14,6 +19,10 @@ export const initRedisConnection = async () => {
 }
 
 export const RedisService = {
+	notifyCalliope: (channel: RheaToCalliopeMessage['channel'], message: RheaToCalliopeMessage['data']) => {
+		client.publish(channel, JSON.stringify(message))
+	},
+
 	notifyAboutWorldUpdate: ({
 		user,
 		worldId,
@@ -23,11 +32,10 @@ export const RedisService = {
 		worldId: string
 		timestamp: Date
 	}) => {
-		const message = {
+		RedisService.notifyCalliope('worldUpdate' as RheaToCalliopeChannel, {
 			userId: user.id,
 			worldId,
-			timestamp,
-		}
-		client.publish('worldUpdate', JSON.stringify(message))
+			timestamp: timestamp.toISOString(),
+		})
 	},
 }

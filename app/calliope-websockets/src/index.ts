@@ -4,29 +4,13 @@ import Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
 import * as route from 'koa-route'
 import * as websocketify from 'koa-websocket'
-import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'tenebrie-framework'
+import { WebsocketToCalliopeChannel, WebsocketToCalliopeMessage } from 'src/types/websocketToCalliope'
 
 import { initRedisConnection } from './services/RedisService'
 import { TokenService } from './services/TokenService'
 import { WebsocketService } from './services/WebsocketService'
 
 const app = websocketify(new Koa())
-
-useApiHeader({
-	title: 'Timelines Calliope',
-	description: 'This is a description field',
-	termsOfService: 'https://example.com',
-	contact: {
-		name: 'Tenebrie',
-		url: 'https://github.com/tenebrie',
-		email: 'tianara@tenebrie.com',
-	},
-	license: {
-		name: 'MIT',
-		url: 'https://example.com',
-	},
-	version: '1.0.0',
-})
 
 const AUTH_COOKIE_NAME = 'user-jwt-token'
 
@@ -37,15 +21,19 @@ app.ws.use(
 			throw new Error('No cookie provided')
 		}
 
-		const { id: userId, email: userEmail } = TokenService.decodeJwtToken(authCookie)
+		const { id: userId } = TokenService.decodeJwtToken(authCookie)
 
 		ctx.websocket.on('open', () => {
 			console.log('Client connected!')
 		})
 		ctx.websocket.on('message', (rawMessage) => {
-			const message = String(rawMessage)
-			if (message === 'init') {
-				WebsocketService.registerClient(userId, ctx.websocket)
+			try {
+				const message = JSON.parse(rawMessage.toString()) as WebsocketToCalliopeMessage
+				if (message.channel === WebsocketToCalliopeChannel.INIT) {
+					WebsocketService.registerClient(userId, ctx.websocket)
+				}
+			} catch (err) {
+				console.error('Invalid message from client', err)
 			}
 		})
 		ctx.websocket.on('close', () => {
@@ -57,19 +45,11 @@ app.ws.use(
 	})
 )
 
-app
-	.use(HttpErrorHandler)
-	.use(
-		bodyParser({
-			enableTypes: ['text', 'json', 'form'],
-		})
-	)
-	.use(
-		initOpenApiEngine({
-			tsconfigPath: './tsconfig.json',
-			sourceFilePaths: [],
-		})
-	)
+app.use(
+	bodyParser({
+		enableTypes: ['text', 'json', 'form'],
+	})
+)
 
 initRedisConnection()
 app.listen(3001)
