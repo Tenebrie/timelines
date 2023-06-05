@@ -15,6 +15,7 @@ const SmokeScreen = styled.div`
 	opacity: 0;
 	transition: opacity 0.3s;
 	pointer-events: none;
+	z-index: 1;
 
 	&.visible {
 		opacity: 1;
