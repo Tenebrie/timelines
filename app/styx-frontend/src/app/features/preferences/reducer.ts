@@ -6,6 +6,10 @@ const initialState = {
 	timeline: {
 		lineSpacing: 10 as number,
 	},
+	outliner: {
+		showEmptyEvents: true as boolean,
+		showInactiveStatements: true as boolean,
+	},
 	overview: {
 		panelOpen: true as boolean,
 		eventsOpen: true as boolean,
@@ -22,6 +26,14 @@ export const preferencesSlice = createSlice({
 		/* Timeline */
 		setPixelsPerLine: (state, { payload }: PayloadAction<number>) => {
 			state.timeline.lineSpacing = payload
+		},
+
+		/* Outliner */
+		setShowEmptyEvents: (state, { payload }: PayloadAction<boolean>) => {
+			state.outliner.showEmptyEvents = payload
+		},
+		setShowInactiveStatements: (state, { payload }: PayloadAction<boolean>) => {
+			state.outliner.showInactiveStatements = payload
 		},
 
 		/* Overview */

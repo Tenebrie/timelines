@@ -9,3 +9,4 @@ export const getIssuedStatementWizardState = (state: RootState) =>
 	state.world.eventEditor.issuedStatementWizard
 export const getRevokedStatementWizardState = (state: RootState) =>
 	state.world.eventEditor.revokedStatementWizard
+export const getTimelineState = (state: RootState) => state.world.timeline

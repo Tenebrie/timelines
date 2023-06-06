@@ -14,12 +14,15 @@ describe('<Outliner />', () => {
 			world: {
 				...initialState,
 				isLoaded: true,
-				events: [
-					mockEventModel({
-						timestamp: 0,
-						issuedStatements: statements,
-					}),
-				],
+				events:
+					statements.length > 0
+						? [
+								mockEventModel({
+									timestamp: 0,
+									issuedStatements: statements,
+								}),
+						  ]
+						: [],
 				...worldOptions,
 			},
 		},

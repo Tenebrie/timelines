@@ -36,6 +36,7 @@
 	"dependencies": {
 		"@rollbar/react": "^0.11.1",
 		"bezier-easing": "^2.1.0",
+		"react-transition-group": "^4.4.5",
 		"rollbar": "^2.26.1",
 		"serve": "^14.2.0",
 		"source-map-explorer": "^2.5.3"
@@ -71,6 +72,7 @@
 		"lint-staged": "^13.1.0",
 		"lodash.debounce": "^4.0.8",
 		"lodash.throttle": "^4.1.1",
+		"material-ui-popup-state": "^5.0.9",
 		"msw": "^1.2.1",
 		"prettier": "2.8.7",
 		"react": "^18.2.0",

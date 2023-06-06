@@ -30,7 +30,7 @@ export const Timeline = () => {
 	)
 
 	const dispatch = useDispatch()
-	const { openEventWizard } = worldSlice.actions
+	const { openEventWizard, setTimelineScaleLevel } = worldSlice.actions
 
 	const {
 		navigateToCurrentWorld: navigateToCurrentWorldRoot,
@@ -107,6 +107,10 @@ export const Timeline = () => {
 		}
 		lastSeenStatementId.current = statementEditorParams.statementId
 	}, [statementEditorParams, statements, scrollTo])
+
+	useEffect(() => {
+		dispatch(setTimelineScaleLevel(scaleLevel))
+	}, [dispatch, scaleLevel, setTimelineScaleLevel])
 
 	const scrollPageSize = containerWidth.current
 

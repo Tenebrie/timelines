@@ -1,6 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
+import { ScaleLevel } from './components/Timeline/types'
 import { WorldCalendarType, WorldDetails, WorldEvent, WorldStatement } from './types'
 
 export const initialState = {
@@ -39,6 +40,10 @@ export const initialState = {
 		revokedStatementWizard: {
 			isOpen: false as boolean,
 		},
+	},
+
+	timeline: {
+		scaleLevel: 0 as ScaleLevel,
 	},
 }
 
@@ -126,8 +131,13 @@ export const worldSlice = createSlice({
 		closeRevokedStatementWizard: (state) => {
 			state.eventEditor.revokedStatementWizard.isOpen = false
 		},
+
+		/* Timeline */
+		setTimelineScaleLevel: (state, { payload }: PayloadAction<ScaleLevel>) => {
+			state.timeline.scaleLevel = payload
+		},
 	},
 })
 
-export type TimelineState = typeof initialState
+export type WorldState = typeof initialState
 export default worldSlice.reducer

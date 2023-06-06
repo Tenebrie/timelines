@@ -15,27 +15,33 @@ type Props = {
 
 export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighted }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
+	const [lastClickTimestamp, setLastClickTimestamp] = useState<number>(0)
 
-	const {
-		eventEditorParams,
-		navigateToCurrentWorld: navigateToCurrentWorldRoot,
-		navigateToEventEditor,
-	} = useWorldRouter()
+	const { eventEditorParams, navigateToEventEditor, navigateToOutliner } = useWorldRouter()
 	const { getIconPath } = useEventIcons()
 
 	const onClick = (clickEvent: MouseEvent<HTMLDivElement>) => {
 		clickEvent.stopPropagation()
 		clickEvent.preventDefault()
 
-		if (event.type === 'BUNDLE') {
+		const timestamp = Date.now()
+		setLastClickTimestamp(timestamp)
+
+		if (timestamp - lastClickTimestamp <= 500) {
+			onDoubleClick()
 			return
 		}
 
-		if (eventEditorParams.eventId === event.id) {
-			navigateToCurrentWorldRoot()
-		} else {
-			navigateToEventEditor(event.id)
+		if (event.type === 'BUNDLE') {
+			navigateToOutliner(event.events.sort((a, b) => b.timestamp - a.timestamp)[0].timestamp)
+			return
 		}
+
+		navigateToOutliner(event.timestamp)
+	}
+
+	const onDoubleClick = () => {
+		navigateToEventEditor(event.id)
 	}
 
 	const onMouseEnter = () => {
