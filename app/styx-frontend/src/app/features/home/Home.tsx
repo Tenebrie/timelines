@@ -1,9 +1,17 @@
-import React from 'react'
 import styled from 'styled-components'
 
+import { BaseNavigator } from '../../components/BaseNavigator'
 import { WorldList } from '../worldList/WorldList'
 
 const HomePageContainer = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+`
+
+const WorldListContainer = styled.div`
 	display: flex;
 	width: 25%;
 	height: 100%;
@@ -16,7 +24,10 @@ const HomePageContainer = styled.div`
 export const Home = () => {
 	return (
 		<HomePageContainer>
-			<WorldList />
+			<BaseNavigator />
+			<WorldListContainer>
+				<WorldList />
+			</WorldListContainer>
 		</HomePageContainer>
 	)
 }
