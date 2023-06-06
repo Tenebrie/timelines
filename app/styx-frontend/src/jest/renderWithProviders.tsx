@@ -13,10 +13,12 @@ export const renderWithProviders = (
 	node: ReactNode,
 	{ preloadedState }: { preloadedState?: Partial<RootState> } = {}
 ) => {
+	const store = generateStore({ preloadedState })
 	return {
 		user: userEvent.setup(),
+		store,
 		...render(
-			<Provider store={generateStore({ preloadedState })}>
+			<Provider store={store}>
 				<MemoryRouter>{node}</MemoryRouter>
 			</Provider>
 		),
@@ -33,10 +35,12 @@ export const renderWithRouter = (
 	}
 	const path = bigRouter[routeName]
 	window.history.pushState({}, 'Test page', path)
+	const store = generateStore({ preloadedState })
 	return {
 		user: userEvent.setup(),
+		store,
 		...render(
-			<Provider store={generateStore({ preloadedState })}>
+			<Provider store={store}>
 				<RouterProvider router={createBrowserRouter(routerDefinition)} />
 			</Provider>
 		),

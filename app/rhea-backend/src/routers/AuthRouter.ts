@@ -12,10 +12,11 @@ import {
 
 import { TokenService } from '../services/TokenService'
 import { UserService } from '../services/UserService'
+import { worldDetailsTag, worldListTag } from './WorldRouter'
 
 const router = new Router()
 
-const authTag = 'auth'
+export const authTag = 'auth'
 
 router.get('/api/auth', async (ctx) => {
 	useApiEndpoint({
@@ -26,8 +27,19 @@ router.get('/api/auth', async (ctx) => {
 
 	const user = await useOptionalAuth(ctx, UserAuthenticator)
 
+	if (user) {
+		return {
+			authenticated: true,
+			user: {
+				id: user.id,
+				email: user.email,
+				username: user.username,
+			},
+		}
+	}
+
 	return {
-		authenticated: !!user,
+		authenticated: false,
 	}
 })
 
@@ -36,7 +48,7 @@ router.post('/api/auth', async (ctx) => {
 		name: 'createAccount',
 		summary: 'Registration endpoint',
 		description: 'Creates a new user account with provided credentials',
-		tags: [authTag],
+		tags: [authTag, worldListTag, worldDetailsTag],
 	})
 
 	const body = useRequestBody(ctx, {
@@ -57,6 +69,8 @@ router.post('/api/auth', async (ctx) => {
 		path: '/',
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
 	})
+
+	return user
 })
 
 router.post('/api/auth/login', async (ctx) => {
@@ -64,7 +78,7 @@ router.post('/api/auth/login', async (ctx) => {
 		name: 'postLogin',
 		summary: 'Login endpoint',
 		description: 'Exchanges user credentials for a JWT token',
-		tags: [authTag],
+		tags: [authTag, worldListTag, worldDetailsTag],
 	})
 
 	const body = useRequestBody(ctx, {
@@ -83,6 +97,8 @@ router.post('/api/auth/login', async (ctx) => {
 		path: '/',
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
 	})
+
+	return user
 })
 
 router.post('/api/auth/logout', async (ctx) => {
@@ -90,7 +106,7 @@ router.post('/api/auth/logout', async (ctx) => {
 		name: 'postLogout',
 		summary: 'Logout endpoint',
 		description: "Clears the current user's auth cookie",
-		tags: [authTag],
+		tags: [authTag, worldListTag, worldDetailsTag],
 	})
 
 	ctx.cookies.set(AUTH_COOKIE_NAME, '', {

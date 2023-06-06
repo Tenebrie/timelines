@@ -1,6 +1,7 @@
 import { configureStore, PreloadedState } from '@reduxjs/toolkit'
 
 import { baseApi } from '../api/baseApi'
+import authReducer from './features/auth/reducer'
 import spinnyReducer from './features/demo/spinny/reducer'
 import preferencesReducer from './features/preferences/reducer'
 import worldReducer from './features/world/reducer'
@@ -10,6 +11,7 @@ export const generateStore = ({ preloadedState }: { preloadedState?: PreloadedSt
 	configureStore({
 		reducer: {
 			api: baseApi.reducer,
+			auth: authReducer,
 			spinny: spinnyReducer,
 			world: worldReducer,
 			worldList: worldListReducer,

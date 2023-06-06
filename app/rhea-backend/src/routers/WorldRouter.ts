@@ -21,8 +21,8 @@ import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
 
 const router = new Router()
 
-const worldListTag = 'worldList'
-const worldDetailsTag = 'worldDetails'
+export const worldListTag = 'worldList'
+export const worldDetailsTag = 'worldDetails'
 
 router.get('/api/worlds', async (ctx) => {
 	useApiEndpoint({

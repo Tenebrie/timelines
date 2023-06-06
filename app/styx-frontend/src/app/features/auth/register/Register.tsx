@@ -1,11 +1,17 @@
-import { Button, Link, Stack, TextField } from '@mui/material'
-import { KeyboardEvent, useState } from 'react'
+import { AppRegistrationRounded } from '@mui/icons-material'
+import LoadingButton from '@mui/lab/LoadingButton'
+import { Alert, Collapse, Link, Stack, TextField } from '@mui/material'
+import { KeyboardEvent, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { NavLink } from 'react-router-dom'
+import { TransitionGroup } from 'react-transition-group'
 
 import { useCreateAccountMutation } from '../../../../api/rheaApi'
 import { TenebrieLogo } from '../../../components/TenebrieLogo'
 import { parseApiResponse } from '../../../utils/parseApiResponse'
+import { useErrorState } from '../../../utils/useErrorState'
 import { useAppRouter } from '../../world/router'
+import { authSlice } from '../reducer'
 
 export const Register = () => {
 	const [email, setEmail] = useState('')
@@ -13,37 +19,40 @@ export const Register = () => {
 	const [password, setPassword] = useState('')
 	const [confirmPassword, setConfirmPassword] = useState('')
 
-	const [emailError, setEmailError] = useState('')
-	const [usernameError, setUsernameError] = useState('')
-	const [passwordError, setPasswordError] = useState('')
-	const [confirmPasswordError, setConfirmPasswordError] = useState('')
+	const { error, raiseError, clearError } = useErrorState<{
+		MISSING_EMAIL: string
+		MISSING_USERNAME: string
+		MISSING_PASSWORD: string
+		PASSWORDS_DO_NOT_MATCH: string
+		SERVER_SIDE_ERROR: string
+	}>()
 
 	const { navigateToHome } = useAppRouter()
-	const [createAccount] = useCreateAccountMutation()
+	const [createAccount, { isLoading }] = useCreateAccountMutation()
+
+	const { setUser } = authSlice.actions
+	const dispatch = useDispatch()
 
 	const onRegister = async () => {
 		if (!email) {
-			setEmailError('Missing email')
+			raiseError('MISSING_EMAIL', 'Missing email')
 			return
 		}
 		if (!username) {
-			setUsernameError('Missing username')
+			raiseError('MISSING_USERNAME', 'Missing username')
 			return
 		}
 		if (!password) {
-			setPasswordError('Missing password')
+			raiseError('MISSING_PASSWORD', 'Missing password')
 			return
 		}
-		if (!confirmPassword) {
-			setConfirmPasswordError('Missing password')
-			return
-		}
-		if (password !== confirmPassword) {
-			setConfirmPasswordError('Passwords do not match')
+		if (!confirmPassword || password !== confirmPassword) {
+			raiseError('PASSWORDS_DO_NOT_MATCH', 'Passwords do not match')
 			return
 		}
 
-		const { error } = parseApiResponse(
+		clearError()
+		const { response, error } = parseApiResponse(
 			await createAccount({
 				body: {
 					email,
@@ -53,11 +62,16 @@ export const Register = () => {
 			})
 		)
 		if (error) {
-			setEmailError(error.message)
+			raiseError('SERVER_SIDE_ERROR', error.message)
 			return
 		}
+		dispatch(setUser(response))
 		navigateToHome()
 	}
+
+	useEffect(() => {
+		clearError()
+	}, [email, username, password, confirmPassword, clearError])
 
 	const onEnterKey = (event: KeyboardEvent) => {
 		if (event.key === 'Enter') {
@@ -66,10 +80,17 @@ export const Register = () => {
 	}
 
 	return (
-		<Stack spacing={2} justifyContent="center">
+		<Stack spacing={2} justifyContent="center" width="300px">
 			<Stack alignItems="center">
 				<TenebrieLogo />
 			</Stack>
+			<TransitionGroup>
+				{error && (
+					<Collapse>
+						<Alert severity="error">{error.data}</Alert>
+					</Collapse>
+				)}
+			</TransitionGroup>
 			<TextField
 				label="Email"
 				type="text"
@@ -77,8 +98,7 @@ export const Register = () => {
 				onChange={(event) => setEmail(event.target.value)}
 				autoFocus
 				onKeyDown={onEnterKey}
-				error={!!emailError}
-				helperText={emailError}
+				error={!!error && error.type === 'MISSING_EMAIL'}
 			/>
 			<TextField
 				label="Username"
@@ -86,8 +106,7 @@ export const Register = () => {
 				value={username}
 				onChange={(event) => setUsername(event.target.value)}
 				onKeyDown={onEnterKey}
-				error={!!usernameError}
-				helperText={usernameError}
+				error={!!error && error.type === 'MISSING_USERNAME'}
 			/>
 			<TextField
 				label="Password"
@@ -95,8 +114,7 @@ export const Register = () => {
 				value={password}
 				onChange={(event) => setPassword(event.target.value)}
 				onKeyDown={onEnterKey}
-				error={!!passwordError}
-				helperText={passwordError}
+				error={!!error && (error.type === 'MISSING_PASSWORD' || error.type === 'PASSWORDS_DO_NOT_MATCH')}
 			/>
 			<TextField
 				label="Confirm password"
@@ -104,12 +122,17 @@ export const Register = () => {
 				value={confirmPassword}
 				onChange={(event) => setConfirmPassword(event.target.value)}
 				onKeyDown={onEnterKey}
-				error={!!confirmPasswordError}
-				helperText={confirmPasswordError}
+				error={!!error && error.type === 'PASSWORDS_DO_NOT_MATCH'}
 			/>
-			<Button variant="contained" onClick={onRegister}>
-				Register
-			</Button>
+			<LoadingButton
+				loading={isLoading}
+				variant="contained"
+				onClick={onRegister}
+				loadingPosition="center"
+				startIcon={<AppRegistrationRounded />}
+			>
+				<span>Register</span>
+			</LoadingButton>
 			<Link component={NavLink} to="/login">
 				Already have an account? Login instead
 			</Link>

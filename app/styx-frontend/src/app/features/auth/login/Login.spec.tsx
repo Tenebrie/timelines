@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
 import { setupServer } from 'msw/lib/node'
 
 import {
@@ -50,7 +50,13 @@ describe('<Login />', () => {
 		it('sends login request', async () => {
 			const { user } = renderWithRouter('login')
 
-			const { hasBeenCalled } = mockPostLogin(server)
+			const { hasBeenCalled } = mockPostLogin(server, {
+				response: {
+					id: '1111-2222-3333',
+					email: 'admin@localhost',
+					username: 'admin',
+				},
+			})
 			mockGetWorlds(server, { response: [] })
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
@@ -61,10 +67,16 @@ describe('<Login />', () => {
 		})
 
 		it('is redirected to home on successful login', async () => {
-			const { user } = renderWithRouter('login')
+			const { user, store } = renderWithRouter('login')
 
 			mockAuthenticatedUser(server)
-			mockPostLogin(server)
+			mockPostLogin(server, {
+				response: {
+					id: '1111-2222-3333',
+					email: 'admin@localhost',
+					username: 'admin',
+				},
+			})
 			mockGetWorlds(server, { response: [] })
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
@@ -73,6 +85,29 @@ describe('<Login />', () => {
 			await user.click(screen.getByText('Login'))
 
 			await waitFor(() => expect(window.location.pathname).toEqual(appRoutes.home))
+			expect(store.getState().auth.user).toEqual({
+				id: '1111-2222-3333',
+				email: 'admin@localhost',
+				username: 'admin',
+			})
+		})
+
+		it('prints error when email is missing', async () => {
+			const { user } = renderWithRouter('login')
+
+			await user.type(screen.getByLabelText('Password'), 'securepassword123')
+			await user.click(screen.getByText('Login'))
+
+			expect(await screen.findByText('Missing email')).toBeInTheDocument()
+		})
+
+		it('prints error when password is missing', async () => {
+			const { user } = renderWithRouter('login')
+
+			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
+			await user.click(screen.getByText('Login'))
+
+			expect(await screen.findByText('Missing password')).toBeInTheDocument()
 		})
 
 		it('prints error when login fails', async () => {
@@ -112,6 +147,7 @@ describe('<Login />', () => {
 
 			await user.type(screen.getByLabelText('Email'), '111')
 
+			await waitForElementToBeRemoved(() => screen.queryByText('Password invalid'))
 			expect(screen.queryByText('Password invalid')).not.toBeInTheDocument()
 		})
 	})

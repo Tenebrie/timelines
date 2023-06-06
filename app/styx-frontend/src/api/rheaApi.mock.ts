@@ -6,12 +6,14 @@ import { WorldDetails, WorldItem, WorldStatement } from '../app/features/world/t
 import { WorldEvent } from '../app/features/world/types'
 import {
 	CheckAuthenticationApiResponse,
+	CreateAccountApiResponse,
 	CreateWorldApiResponse,
 	DeleteWorldApiResponse,
 	DeleteWorldEventApiResponse,
 	DeleteWorldStatementApiResponse,
 	GetWorldInfoApiResponse,
 	GetWorldsApiResponse,
+	PostLoginApiResponse,
 	UpdateWorldEventApiResponse,
 	UpdateWorldStatementApiResponse,
 } from './rheaApi'
@@ -83,7 +85,10 @@ export const mockDeleteWorld = (
 	params: { worldId: string } & MockParams<DeleteWorldApiResponse>
 ) => generateEndpointMock(server, { method: 'delete', path: `/api/world/${params.worldId}`, ...params })
 
-export const mockPostLogin = (server: SetupServer, params: MockParams<undefined> = { response: undefined }) =>
+export const mockPostRegister = (server: SetupServer, params: MockParams<CreateAccountApiResponse>) =>
+	generateEndpointMock(server, { method: 'post', path: '/api/auth', ...params })
+
+export const mockPostLogin = (server: SetupServer, params: MockParams<PostLoginApiResponse>) =>
 	generateEndpointMock(server, { method: 'post', path: '/api/auth/login', ...params })
 
 export const mockUpdateWorldEvent = (
@@ -133,6 +138,11 @@ export const mockAuthenticatedUser = (server: SetupServer) =>
 	mockCheckAuthentication(server, {
 		response: {
 			authenticated: true,
+			user: {
+				id: '1111-2222-3333',
+				email: 'admin@localhost',
+				username: 'admin',
+			},
 		},
 	})
 

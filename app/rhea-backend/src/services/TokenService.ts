@@ -14,7 +14,7 @@ export const TokenService = {
 		return process.env.JWT_SECRET
 	},
 
-	generateJwtToken: (user: User): string => {
+	generateJwtToken: (user: Pick<User, 'id' | 'email'>): string => {
 		const payload: TokenPayload = {
 			id: user.id,
 			email: user.email,

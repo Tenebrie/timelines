@@ -12,15 +12,15 @@ const injectedRtkApi = api
 			}),
 			createAccount: build.mutation<CreateAccountApiResponse, CreateAccountApiArg>({
 				query: (queryArg) => ({ url: `/api/auth`, method: 'POST', body: queryArg.body }),
-				invalidatesTags: ['auth'],
+				invalidatesTags: ['auth', 'worldList', 'worldDetails'],
 			}),
 			postLogin: build.mutation<PostLoginApiResponse, PostLoginApiArg>({
 				query: (queryArg) => ({ url: `/api/auth/login`, method: 'POST', body: queryArg.body }),
-				invalidatesTags: ['auth'],
+				invalidatesTags: ['auth', 'worldList', 'worldDetails'],
 			}),
 			postLogout: build.mutation<PostLogoutApiResponse, PostLogoutApiArg>({
 				query: () => ({ url: `/api/auth/logout`, method: 'POST' }),
-				invalidatesTags: ['auth'],
+				invalidatesTags: ['auth', 'worldList', 'worldDetails'],
 			}),
 			getWorlds: build.query<GetWorldsApiResponse, GetWorldsApiArg>({
 				query: () => ({ url: `/api/worlds` }),
@@ -105,11 +105,26 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as rheaApi }
-export type CheckAuthenticationApiResponse = /** status 200  */ {
-	authenticated: boolean
-}
+
+export type CheckAuthenticationApiResponse =
+	/** status 200  */
+	| {
+			authenticated: boolean
+			user: {
+				id: string
+				email: string
+				username: string
+			}
+	  }
+	| {
+			authenticated: boolean
+	  }
 export type CheckAuthenticationApiArg = void
-export type CreateAccountApiResponse = unknown
+export type CreateAccountApiResponse = /** status 200  */ {
+	id: string
+	email: string
+	username: string
+}
 export type CreateAccountApiArg = {
 	body: {
 		email: string
@@ -117,7 +132,11 @@ export type CreateAccountApiArg = {
 		password: string
 	}
 }
-export type PostLoginApiResponse = unknown
+export type PostLoginApiResponse = /** status 200  */ {
+	id: string
+	email: string
+	username: string
+}
 export type PostLoginApiArg = {
 	body: {
 		email: string
@@ -137,8 +156,8 @@ export type GetWorldsApiResponse = /** status 200  */ {
 }[]
 export type GetWorldsApiArg = void
 export type CreateWorldApiResponse = /** status 200  */ {
-	name: string
 	id: string
+	name: string
 }
 export type CreateWorldApiArg = {
 	body: {
