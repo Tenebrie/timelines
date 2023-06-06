@@ -15,13 +15,19 @@ import { StyledListItemButton, StyledListItemText } from './styles'
 
 export const OverviewPanel = () => {
 	const [searchQuery, setSearchQuery] = useState<string>('')
+	const [lastClickTimestamp, setLastClickTimestamp] = useState<number>(0)
 
 	const { events } = useSelector(getWorldState)
 	const { panelOpen, eventsOpen, eventsReversed, statementsOpen, statementsReversed } =
 		useSelector(getOverviewPreferences)
 
-	const { eventEditorParams, statementEditorParams, navigateToEventEditor, navigateToStatementEditor } =
-		useWorldRouter()
+	const {
+		eventEditorParams,
+		statementEditorParams,
+		navigateToOutliner,
+		navigateToEventEditor,
+		navigateToStatementEditor,
+	} = useWorldRouter()
 	const { timeToLabel } = useWorldTime()
 	const { getIconPath } = useEventIcons()
 	const { setEventsOpen, setEventsReversed, setStatementsOpen, setStatementsReversed } =
@@ -50,7 +56,7 @@ export const OverviewPanel = () => {
 	const renderEvent = (event: WorldEvent & { secondary: string }) => (
 		<StyledListItemButton
 			divider
-			onClick={() => navigateToEventEditor(event.id)}
+			onClick={() => moveToEvent(event)}
 			selected={eventEditorParams.eventId === event.id}
 		>
 			<ListItemIcon>
@@ -63,7 +69,7 @@ export const OverviewPanel = () => {
 	const renderStatement = (statement: WorldStatement & { secondary: string }) => (
 		<StyledListItemButton
 			divider
-			onClick={() => navigateToStatementEditor(statement.id)}
+			onClick={() => moveToStatement(statement)}
 			selected={statementEditorParams.statementId === statement.id}
 		>
 			<StyledListItemText
@@ -73,6 +79,32 @@ export const OverviewPanel = () => {
 			></StyledListItemText>
 		</StyledListItemButton>
 	)
+
+	const moveToEvent = (event: WorldEvent) => {
+		const timestamp = Date.now()
+		setLastClickTimestamp(timestamp)
+		if (timestamp - lastClickTimestamp > 500) {
+			navigateToOutliner(event.timestamp)
+		} else {
+			navigateToEventEditor(event.id)
+		}
+	}
+
+	const moveToStatement = (statement: WorldStatement) => {
+		const timestamp = Date.now()
+		setLastClickTimestamp(timestamp)
+
+		const parentEvent = events.find((event) => event.id === statement.issuedByEventId)
+		if (!parentEvent) {
+			return
+		}
+
+		if (timestamp - lastClickTimestamp > 500) {
+			navigateToOutliner(parentEvent.timestamp)
+		} else {
+			navigateToStatementEditor(statement.id)
+		}
+	}
 
 	const lowerCaseSearchQuery = searchQuery.toLowerCase()
 	const displayedEvents = sortedEvents.filter(
