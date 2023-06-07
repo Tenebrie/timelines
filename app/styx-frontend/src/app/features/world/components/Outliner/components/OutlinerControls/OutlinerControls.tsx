@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { preferencesSlice } from '../../../../../preferences/reducer'
 import { getOutlinerPreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
-import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
 import { CreateHerePopover } from '../CreateHerePopover/CreateHerePopover'
 
@@ -16,13 +15,8 @@ export const OutlinerControls = () => {
 	const selectedTime = Number(outlinerParams.timestamp)
 
 	const dispatch = useDispatch()
-	const { openEventWizard } = worldSlice.actions
 	const { showEmptyEvents, showInactiveStatements } = useSelector(getOutlinerPreferences)
 	const { setShowEmptyEvents, setShowInactiveStatements } = preferencesSlice.actions
-
-	const onCreateEvent = () => {
-		dispatch(openEventWizard({ timestamp: selectedTime }))
-	}
 
 	const popupState = usePopupState({ variant: 'popover', popupId: 'outlinerFilters' })
 	const createHerePopupState = usePopupState({ variant: 'popover', popupId: 'createHerePopover' })
