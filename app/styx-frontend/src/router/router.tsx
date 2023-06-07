@@ -6,6 +6,7 @@ import { Login } from '../app/features/auth/login/Login'
 import { Register } from '../app/features/auth/register/Register'
 import { Spinny } from '../app/features/demo/spinny/Spinny'
 import { Home } from '../app/features/home/Home'
+import { ActorEditor } from '../app/features/world/components/ActorEditor/ActorEditor'
 import { EventEditor } from '../app/features/world/components/EventEditor/EventEditor'
 import { Outliner } from '../app/features/world/components/Outliner/Outliner'
 import { StatementEditor } from '../app/features/world/components/StatementEditor/StatementEditor'
@@ -45,6 +46,10 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 					{
 						path: worldRoutes.outliner,
 						element: <Outliner />,
+					},
+					{
+						path: worldRoutes.actorEditor,
+						element: <ActorEditor />,
 					},
 					{
 						path: worldRoutes.eventEditor,

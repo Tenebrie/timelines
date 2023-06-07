@@ -116,9 +116,9 @@ export const Outliner = () => {
 						<StatementsUnit>
 							<OverlayingLabel>World state</OverlayingLabel>
 							<StatementsScroller>
-								<List>
+								<List disablePadding>
 									<TransitionGroup>
-										{visibleEvents.map((event) => (
+										{visibleEvents.map((event, index) => (
 											<Collapse key={event.id}>
 												{renderEvent(event)}
 												<List dense component="div" disablePadding>
@@ -128,7 +128,7 @@ export const Outliner = () => {
 														))}
 													</TransitionGroup>
 												</List>
-												<Divider />
+												{index !== visibleEvents.length - 1 && <Divider />}
 											</Collapse>
 										))}
 									</TransitionGroup>

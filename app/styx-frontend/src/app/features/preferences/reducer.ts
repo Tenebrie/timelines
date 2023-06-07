@@ -12,6 +12,8 @@ const initialState = {
 	},
 	overview: {
 		panelOpen: true as boolean,
+		actorsOpen: true as boolean,
+		actorsReversed: false as boolean,
 		eventsOpen: true as boolean,
 		eventsReversed: false as boolean,
 		statementsOpen: true as boolean,
@@ -38,6 +40,8 @@ export const preferencesSlice = createSlice({
 				state.outliner.showEmptyEvents = !!parsedValue?.outliner?.showEmptyEvents
 				state.outliner.showInactiveStatements = !!parsedValue?.outliner?.showInactiveStatements
 				state.overview.panelOpen = !!parsedValue?.overview?.panelOpen
+				state.overview.actorsOpen = !!parsedValue?.overview?.actorsOpen
+				state.overview.actorsReversed = !!parsedValue?.overview?.actorsReversed
 				state.overview.eventsOpen = !!parsedValue?.overview?.eventsOpen
 				state.overview.eventsReversed = !!parsedValue?.overview?.eventsReversed
 				state.overview.statementsOpen = !!parsedValue?.overview?.statementsOpen
@@ -65,6 +69,14 @@ export const preferencesSlice = createSlice({
 		/* Overview */
 		setPanelOpen: (state, { payload }: PayloadAction<boolean>) => {
 			state.overview.panelOpen = payload
+			saveToLocalStorage(state)
+		},
+		setActorsOpen: (state, { payload }: PayloadAction<boolean>) => {
+			state.overview.actorsOpen = payload
+			saveToLocalStorage(state)
+		},
+		setActorsReversed: (state, { payload }: PayloadAction<boolean>) => {
+			state.overview.actorsReversed = payload
 			saveToLocalStorage(state)
 		},
 		setEventsOpen: (state, { payload }: PayloadAction<boolean>) => {

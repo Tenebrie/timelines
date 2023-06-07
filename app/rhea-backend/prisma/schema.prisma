@@ -24,6 +24,7 @@ model World {
   updatedAt DateTime @default(now()) @updatedAt
 
   name       String
+  actors     Actor[]
   events     WorldEvent[]
   calendar   WorldCalendarType @default(COUNTUP)
   timeOrigin BigInt            @default(0)
@@ -74,4 +75,38 @@ model WorldStatement {
   revokedBy        WorldEvent? @relation(name: "StatementsRevokedByEvent", fields: [revokedByEventId], references: [id])
   issuedByEventId  String
   revokedByEventId String?
+
+  replaces              WorldStatement? @relation(name: "ReplacedStatement", fields: [replacedStatementId], references: [id])
+  replacedBy            WorldStatement? @relation(name: "ReplacedStatement")
+  replacedStatementId   String?         @unique
+  replacedByStatementId String?         @unique
+
+  relatedActors Actor[]
+}
+
+model Actor {
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  name        String
+  title       String @default("")
+  description String @default("")
+
+  statements            WorldStatement[]
+  relationships         ActorRelationship[] @relation(name: "ActorRelationships")
+  receivedRelationships ActorRelationship[] @relation(name: "ReceivedActorRelationships")
+  world                 World               @relation(fields: [worldId], references: [id])
+  worldId               String
+}
+
+model ActorRelationship {
+  originId   String
+  receiverId String
+  origin     Actor  @relation(name: "ActorRelationships", fields: [originId], references: [id])
+  receiver   Actor  @relation(name: "ReceivedActorRelationships", fields: [receiverId], references: [id])
+
+  name String
+
+  @@id([originId, receiverId])
 }

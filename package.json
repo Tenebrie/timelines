@@ -16,7 +16,8 @@
 		"docker:build": "docker compose -f docker-compose.common.yml -f docker-compose.dev.yml build",
 		"docker:install": "./scripts/dev-install.sh",
 		"docker:update": "./scripts/dev-update.sh",
-		"docker:prod:push": "./scripts/docker-prod-push.sh"
+		"docker:prod:push": "./scripts/docker-prod-push.sh",
+		"docker:stop": "docker stop $(docker ps -a -q)"
 	},
 	"dependencies": {
 		"@typescript-eslint/eslint-plugin": "^4.7.0",

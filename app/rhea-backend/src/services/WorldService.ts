@@ -3,7 +3,7 @@ import { UnauthorizedError } from 'tenebrie-framework'
 
 import { dbClient } from './DatabaseClient'
 
-const touchWorld = (worldId: string) =>
+export const touchWorld = (worldId: string) =>
 	dbClient.world.update({
 		where: {
 			id: worldId,
@@ -238,6 +238,17 @@ export const WorldService = {
 				id: worldId,
 			},
 			include: {
+				actors: {
+					include: {
+						statements: {
+							select: {
+								id: true,
+							},
+						},
+						relationships: true,
+						receivedRelationships: true,
+					},
+				},
 				events: {
 					include: {
 						issuedStatements: true,

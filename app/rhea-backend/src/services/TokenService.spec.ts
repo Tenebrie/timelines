@@ -5,8 +5,6 @@ describe('TokenService', () => {
 		const token = TokenService.generateJwtToken({
 			id: '1111-2222-3333-4444',
 			email: 'admin@localhost',
-			username: 'admin',
-			password: 'passwordhash',
 		})
 		expect(token.startsWith('eyJ')).toBeTruthy()
 		expect(token.charAt(36)).toEqual('.')
@@ -16,8 +14,6 @@ describe('TokenService', () => {
 		const token = TokenService.generateJwtToken({
 			id: '1111-2222-3333-4444',
 			email: 'admin@localhost',
-			username: 'admin',
-			password: 'passwordhash',
 		})
 		const result = TokenService.decodeJwtToken(token)
 		expect(result).toEqual(

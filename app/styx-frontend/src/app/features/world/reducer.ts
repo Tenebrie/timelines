@@ -2,17 +2,22 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { ScaleLevel } from './components/Timeline/types'
-import { WorldCalendarType, WorldDetails, WorldEvent, WorldStatement } from './types'
+import { Actor, WorldCalendarType, WorldDetails, WorldEvent, WorldStatement } from './types'
 
 export const initialState = {
 	isLoaded: false as boolean,
 	id: '' as string,
 	name: '' as string,
+	actors: [] as Actor[],
 	events: [] as WorldEvent[],
 	calendar: 'COUNTUP' as WorldCalendarType,
 	timeOrigin: '0',
 	createdAt: '0',
 	updatedAt: '0',
+
+	actorWizard: {
+		isOpen: false as boolean,
+	},
 
 	eventWizard: {
 		isOpen: false as boolean,
@@ -22,6 +27,13 @@ export const initialState = {
 	outliner: {
 		eventTutorialModal: {
 			isOpen: false as boolean,
+		},
+	},
+
+	actorEditor: {
+		deleteActorModal: {
+			isOpen: false as boolean,
+			target: null as Actor | null,
 		},
 	},
 
@@ -61,6 +73,7 @@ export const worldSlice = createSlice({
 			state.isLoaded = true
 			state.id = payload.id
 			state.name = payload.name
+			state.actors = payload.actors
 			state.events = payload.events.map((e) => ({
 				...e,
 				timestamp: Number(e.timestamp),
@@ -73,6 +86,15 @@ export const worldSlice = createSlice({
 		unloadWorld: (state) => {
 			state.isLoaded = false
 			state.events = []
+		},
+
+		/* Actor wizard */
+		openActorWizard: (state) => {
+			state.actorWizard.isOpen = true
+		},
+
+		closeActorWizard: (state) => {
+			state.actorWizard.isOpen = false
 		},
 
 		/* Event wizard */
@@ -92,6 +114,16 @@ export const worldSlice = createSlice({
 
 		closeEventTutorialModal: (state) => {
 			state.outliner.eventTutorialModal.isOpen = false
+		},
+
+		/* Actor editor - Delete actor modal */
+		openDeleteActorModal: (state, { payload }: PayloadAction<Actor>) => {
+			state.actorEditor.deleteActorModal.isOpen = true
+			state.actorEditor.deleteActorModal.target = payload
+		},
+
+		closeDeleteActorModal: (state) => {
+			state.actorEditor.deleteActorModal.isOpen = false
 		},
 
 		/* Event editor - Delete event modal */

@@ -1,43 +1,48 @@
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Button, TextField, Tooltip } from '@mui/material'
+import { Alert, Button, Collapse, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { TransitionGroup } from 'react-transition-group'
 
-import { useCreateWorldEventMutation } from '../../../../../api/rheaApi'
+import { useCreateActorMutation } from '../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
 import Modal, { useModalCleanup } from '../../../../../ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '../../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../../utils/parseApiResponse'
-import { TimestampField } from '../../../time/components/TimestampField'
+import { useErrorState } from '../../../../utils/useErrorState'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
-import { getEventWizardState } from '../../selectors'
+import { getActorWizardState } from '../../selectors'
 
-export const EventWizardModal = () => {
-	const { isOpen, timestamp: initialTimestamp } = useSelector(getEventWizardState)
+export const ActorWizardModal = () => {
+	const { isOpen } = useSelector(getActorWizardState)
 
 	const [name, setName] = useState('')
-	const [timestamp, setTimestamp] = useState(initialTimestamp)
-	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
+	const [title, setTitle] = useState('')
+
+	const { error, raiseError, clearError } = useErrorState<{
+		MISSING_NAME: string
+		SERVER_SIDE_ERROR: string
+	}>()
 
 	const dispatch = useDispatch()
-	const { closeEventWizard } = worldSlice.actions
+	const { closeActorWizard } = worldSlice.actions
 
-	const [createWorldEvent, { isLoading }] = useCreateWorldEventMutation()
+	const [createActor, { isLoading }] = useCreateActorMutation()
 
-	const { navigateToEventEditor, worldParams } = useWorldRouter()
+	const { navigateToActorEditor, worldParams } = useWorldRouter()
 
 	useEffect(() => {
-		setNameValidationError(null)
-	}, [name])
+		clearError()
+	}, [clearError, name, title])
 
 	useModalCleanup({
 		isOpen,
 		onCleanup: () => {
 			setName('')
-			setTimestamp(initialTimestamp)
-			setNameValidationError(null)
+			setTitle('')
+			clearError()
 		},
 	})
 
@@ -47,27 +52,26 @@ export const EventWizardModal = () => {
 		}
 
 		if (!name.trim()) {
-			setNameValidationError("Field can't be empty")
+			raiseError('MISSING_NAME', 'Field can not be empty')
 			return
 		}
 
 		const { response, error } = parseApiResponse(
-			await createWorldEvent({
+			await createActor({
 				worldId: worldParams.worldId,
 				body: {
 					name: name.trim(),
-					type: 'SCENE',
-					timestamp,
+					title: title.trim(),
 				},
 			})
 		)
 		if (error) {
-			setNameValidationError(error.message)
+			raiseError('SERVER_SIDE_ERROR', error.message)
 			return
 		}
 
-		dispatch(closeEventWizard())
-		navigateToEventEditor(response.id)
+		dispatch(closeActorWizard())
+		navigateToActorEditor(response.id)
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
@@ -75,18 +79,29 @@ export const EventWizardModal = () => {
 	})
 
 	return (
-		<Modal visible={isOpen} onClose={() => dispatch(closeEventWizard())}>
-			<ModalHeader>Create new event</ModalHeader>
+		<Modal visible={isOpen} onClose={() => dispatch(closeActorWizard())}>
+			<ModalHeader>Create new actor</ModalHeader>
+			<TransitionGroup>
+				{error && (
+					<Collapse>
+						<Alert severity="error">{error.data}</Alert>
+					</Collapse>
+				)}
+			</TransitionGroup>
 			<TextField
 				label="Name"
 				type="text"
 				value={name}
 				onChange={(event) => setName(event.target.value)}
-				error={!!nameValidationError}
-				helperText={nameValidationError}
+				error={!!error && error.type === 'MISSING_NAME'}
 				autoFocus
 			/>
-			<TimestampField label="Timestamp" timestamp={timestamp} onChange={(value) => setTimestamp(value)} />
+			<TextField
+				label="Title (optional)"
+				type="text"
+				value={title}
+				onChange={(event) => setTitle(event.target.value)}
+			/>
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">
 					<span>
@@ -101,7 +116,7 @@ export const EventWizardModal = () => {
 						</LoadingButton>
 					</span>
 				</Tooltip>
-				<Button variant="outlined" onClick={() => dispatch(closeEventWizard())}>
+				<Button variant="outlined" onClick={() => dispatch(closeActorWizard())}>
 					Cancel
 				</Button>
 			</ModalFooter>

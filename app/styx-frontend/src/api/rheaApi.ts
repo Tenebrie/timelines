@@ -1,11 +1,34 @@
 import { baseApi as api } from './baseApi'
-export const addTagTypes = ['auth', 'worldList', 'worldDetails'] as const
+export const addTagTypes = ['worldDetails', 'auth', 'worldList'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
+			createActor: build.mutation<CreateActorApiResponse, CreateActorApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/actors`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldDetails'],
+			}),
+			updateActor: build.mutation<UpdateActorApiResponse, UpdateActorApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}`,
+					method: 'PATCH',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldDetails'],
+			}),
+			deleteActor: build.mutation<DeleteActorApiResponse, DeleteActorApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}`,
+					method: 'DELETE',
+				}),
+				invalidatesTags: ['worldDetails'],
+			}),
 			checkAuthentication: build.query<CheckAuthenticationApiResponse, CheckAuthenticationApiArg>({
 				query: () => ({ url: `/api/auth` }),
 				providesTags: ['auth'],
@@ -105,7 +128,53 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as rheaApi }
-
+export type CreateActorApiResponse = /** status 200  */ {
+	id: string
+}
+export type CreateActorApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		name: string
+		title?: string
+		description?: string
+	}
+}
+export type UpdateActorApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	title: string
+	description: string
+	worldId: string
+}
+export type UpdateActorApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	actorId: string
+	body: {
+		name?: string
+		title?: string
+		description?: string
+	}
+}
+export type DeleteActorApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	title: string
+	description: string
+	worldId: string
+}
+export type DeleteActorApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	actorId: string
+}
 export type CheckAuthenticationApiResponse =
 	/** status 200  */
 	| {
@@ -156,8 +225,8 @@ export type GetWorldsApiResponse = /** status 200  */ {
 }[]
 export type GetWorldsApiArg = void
 export type CreateWorldApiResponse = /** status 200  */ {
-	id: string
 	name: string
+	id: string
 }
 export type CreateWorldApiArg = {
 	body: {
@@ -187,6 +256,28 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
 	timeOrigin: string
 	ownerId: string
+	actors: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		title: string
+		description: string
+		worldId: string
+		statements: {
+			id: string
+		}[]
+		relationships: {
+			originId: string
+			receiverId: string
+			name: string
+		}[]
+		receivedRelationships: {
+			originId: string
+			receiverId: string
+			name: string
+		}[]
+	}[]
 	events: {
 		id: string
 		createdAt: string
@@ -205,6 +296,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			text: string
 			issuedByEventId: string
 			revokedByEventId?: string
+			replacedStatementId?: string
+			replacedByStatementId?: string
 		}[]
 		revokedStatements: {
 			id: string
@@ -214,6 +307,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			text: string
 			issuedByEventId: string
 			revokedByEventId?: string
+			replacedStatementId?: string
+			replacedByStatementId?: string
 		}[]
 	}[]
 }
@@ -281,6 +376,8 @@ export type IssueWorldStatementApiResponse = /** status 200  */ {
 	text: string
 	issuedByEventId: string
 	revokedByEventId?: string
+	replacedStatementId?: string
+	replacedByStatementId?: string
 }
 export type IssueWorldStatementApiArg = {
 	/** Any string value */
@@ -299,6 +396,8 @@ export type UpdateWorldStatementApiResponse = /** status 200  */ {
 	text: string
 	issuedByEventId: string
 	revokedByEventId?: string
+	replacedStatementId?: string
+	replacedByStatementId?: string
 }
 export type UpdateWorldStatementApiArg = {
 	/** Any string value */
@@ -318,6 +417,8 @@ export type DeleteWorldStatementApiResponse = /** status 200  */ {
 	text: string
 	issuedByEventId: string
 	revokedByEventId?: string
+	replacedStatementId?: string
+	replacedByStatementId?: string
 }
 export type DeleteWorldStatementApiArg = {
 	/** Any string value */
@@ -333,6 +434,8 @@ export type RevokeWorldStatementApiResponse = /** status 200  */ {
 	text: string
 	issuedByEventId: string
 	revokedByEventId?: string
+	replacedStatementId?: string
+	replacedByStatementId?: string
 }
 export type RevokeWorldStatementApiArg = {
 	/** Any string value */
@@ -351,6 +454,8 @@ export type UnrevokeWorldStatementApiResponse = /** status 200  */ {
 	text: string
 	issuedByEventId: string
 	revokedByEventId?: string
+	replacedStatementId?: string
+	replacedByStatementId?: string
 }
 export type UnrevokeWorldStatementApiArg = {
 	/** Any string value */
@@ -359,6 +464,9 @@ export type UnrevokeWorldStatementApiArg = {
 	statementId: string
 }
 export const {
+	useCreateActorMutation,
+	useUpdateActorMutation,
+	useDeleteActorMutation,
 	useCheckAuthenticationQuery,
 	useLazyCheckAuthenticationQuery,
 	useCreateAccountMutation,

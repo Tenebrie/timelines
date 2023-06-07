@@ -29,6 +29,7 @@ services:
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
         volumes:
             - ./app/rhea-backend/src:/app/rhea/src:cached
+            - ./app/rhea-backend/prisma:/app/rhea/prisma:cached
         ports:
             - 3000:3000
         command: yarn start

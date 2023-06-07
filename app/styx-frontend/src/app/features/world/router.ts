@@ -81,6 +81,7 @@ export const useAppRouter = () => {
 export const worldRoutes = {
 	root: '/world/:worldId',
 	outliner: '/world/:worldId/outliner/:timestamp',
+	actorEditor: '/world/:worldId/actor/:actorId',
 	eventEditor: '/world/:worldId/editor/:eventId',
 	statementEditor: '/world/:worldId/statement/:statementId',
 } as const
@@ -97,6 +98,10 @@ export type WorldRootParams = {
 export type WorldOutlinerParams = {
 	worldId: string
 	timestamp: string
+}
+export type ActorEditorParams = {
+	worldId: string
+	actorId: string
 }
 export type WorldEventEditorParams = {
 	worldId: string
@@ -115,6 +120,7 @@ export const useWorldRouter = () => {
 
 	const worldParams = state as WorldRootParams
 	const outlinerParams = state as WorldOutlinerParams
+	const actorEditorParams = state as ActorEditorParams
 	const eventEditorParams = state as WorldEventEditorParams
 	const statementEditorParams = state as WorldStatementEditorParams
 
@@ -138,6 +144,13 @@ export const useWorldRouter = () => {
 		})
 	}
 
+	const navigateToActorEditor = (actorId: string) => {
+		navigateTo(worldRoutes.actorEditor, {
+			worldId: state['worldId'] || '',
+			actorId,
+		})
+	}
+
 	const navigateToEventEditor = (eventId: string) => {
 		navigateTo(worldRoutes.eventEditor, {
 			worldId: state['worldId'] || '',
@@ -155,11 +168,13 @@ export const useWorldRouter = () => {
 	return {
 		worldParams,
 		outlinerParams,
+		actorEditorParams,
 		eventEditorParams,
 		statementEditorParams,
 		navigateToWorld,
 		navigateToCurrentWorld,
 		navigateToOutliner,
+		navigateToActorEditor,
 		navigateToEventEditor,
 		navigateToStatementEditor,
 	}

@@ -1,5 +1,6 @@
 import { GetWorldInfoApiResponse, GetWorldsApiResponse } from '../../../api/rheaApi'
 
+export type Actor = GetWorldInfoApiResponse['actors'][number]
 export type WorldItem = GetWorldsApiResponse[number]
 export type WorldDetails = Omit<GetWorldInfoApiResponse, 'events'> & {
 	events: WorldEvent[]

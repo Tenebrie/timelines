@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom'
 
 import { BlockingSpinner } from '../../components/BlockingSpinner'
+import { ActorWizardModal } from './components/ActorWizard/ActorWizardModal'
 import { EventWizardModal } from './components/EventWizard/EventWizardModal'
 import { OverviewPanel } from './components/OverviewPanel/OverviewPanel'
 import { Timeline } from './components/Timeline/Timeline'
@@ -40,6 +41,7 @@ export const World = () => {
 				{!isLoaded && <TimelinePlaceholder />}
 			</div>
 			<BlockingSpinner visible={!isLoaded} />
+			<ActorWizardModal />
 			<EventWizardModal />
 		</>
 	)
