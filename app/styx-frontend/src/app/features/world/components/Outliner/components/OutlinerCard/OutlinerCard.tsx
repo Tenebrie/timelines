@@ -24,7 +24,7 @@ export const OutlinerCard = ({ card, index }: Props) => {
 		<CardWrapper zebra={index % 2 === 0}>
 			<CardActionArea onClick={onClick}>
 				<CardContent style={{ padding: '8px 16px' }}>
-					<Typography data-hj-suppress>{card.text}</Typography>
+					<Typography data-hj-suppress>{card.content}</Typography>
 				</CardContent>
 			</CardActionArea>
 		</CardWrapper>

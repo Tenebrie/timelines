@@ -1,4 +1,4 @@
-import { User, WorldCalendarType, WorldEvent, WorldStatement } from '@prisma/client'
+import { Actor, User, WorldCalendarType, WorldEvent, WorldStatement } from '@prisma/client'
 import { UnauthorizedError } from 'tenebrie-framework'
 
 import { dbClient } from './DatabaseClient'
@@ -123,14 +123,18 @@ export const WorldService = {
 	},
 
 	issueWorldStatement: async (
-		data: Pick<WorldStatement, 'title'> & { worldId: string; eventId: string; content?: string }
+		data: Pick<WorldStatement, 'content'> &
+			Partial<Pick<WorldStatement, 'title'>> & { worldId: string; eventId: string; relatedActors: Actor[] }
 	) => {
 		const [statement, world] = await dbClient.$transaction([
 			dbClient.worldStatement.create({
 				data: {
 					issuedByEventId: data.eventId,
 					title: data.title,
-					text: data.content,
+					content: data.content,
+					relatedActors: {
+						connect: data.relatedActors.map((actor) => ({ id: actor.id })),
+					},
 				},
 			}),
 			touchWorld(data.worldId),
@@ -240,11 +244,7 @@ export const WorldService = {
 			include: {
 				actors: {
 					include: {
-						statements: {
-							select: {
-								id: true,
-							},
-						},
+						statements: true,
 						relationships: true,
 						receivedRelationships: true,
 					},

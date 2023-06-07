@@ -1,5 +1,6 @@
 import { Add } from '@mui/icons-material'
 import { Button, Grid } from '@mui/material'
+import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { OverlayingLabel } from '../../../../components/OverlayingLabel'
@@ -9,15 +10,17 @@ import { getWorldState } from '../../selectors'
 import { StatementCard } from '../StatementCards/StatementCard/StatementCard'
 import { DeleteEventModal } from './components/DeleteEventModal/DeleteEventModal'
 import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetailsEditor'
+import { StatementTypePopover } from './components/IssuedStatementTypePopover/IssuedStatementTypePopover'
 import { IssuedStatementWizard } from './components/IssuedStatementWizard/IssuedStatementWizard'
 import { RevokedStatementWizard } from './components/RevokedStatementWizard/RevokedStatementWizard'
 import { FullHeightContainer, StatementsScroller, StatementsUnit } from './styles'
 
 export const EventEditor = () => {
 	const { events } = useSelector(getWorldState)
+	const createStatementPopupState = usePopupState({ variant: 'popover', popupId: 'issuedStatementType' })
 
 	const dispatch = useDispatch()
-	const { openIssuedStatementWizard, openRevokedStatementWizard } = worldSlice.actions
+	const { openRevokedStatementWizard } = worldSlice.actions
 
 	const { eventEditorParams } = useWorldRouter()
 	const { eventId } = eventEditorParams
@@ -41,9 +44,10 @@ export const EventEditor = () => {
 								<StatementCard key={card.id} card={card} />
 							))}
 						</StatementsScroller>
-						<Button onClick={() => dispatch(openIssuedStatementWizard())}>
+						<Button {...bindTrigger(createStatementPopupState)}>
 							<Add /> Add
 						</Button>
+						<StatementTypePopover state={createStatementPopupState} />
 					</StatementsUnit>
 				</Grid>
 				<Grid item xs={12} md={6} order={{ xs: 0, md: 1 }} style={{ maxHeight: '100%' }}>

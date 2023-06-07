@@ -16,6 +16,8 @@ describe('<IssuedStatementWizard />', () => {
 					...initialState.eventEditor,
 					issuedStatementWizard: {
 						isOpen: true,
+						mode: 'create' as const,
+						scope: 'world' as const,
 					},
 				},
 				events,

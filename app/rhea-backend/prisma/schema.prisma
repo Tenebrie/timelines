@@ -68,8 +68,8 @@ model WorldStatement {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  title String
-  text  String @default("")
+  content String @map(name: "text")
+  title   String @default("")
 
   issuedBy         WorldEvent  @relation(name: "StatementsIssuedByEvent", fields: [issuedByEventId], references: [id], onDelete: Cascade)
   revokedBy        WorldEvent? @relation(name: "StatementsRevokedByEvent", fields: [revokedByEventId], references: [id])

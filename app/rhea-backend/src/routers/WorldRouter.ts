@@ -199,13 +199,14 @@ router.post('/api/world/:worldId/statement', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		eventId: RequiredParam(StringValidator),
-		title: RequiredParam(NameStringValidator),
-		content: OptionalParam(StringValidator),
+		content: RequiredParam(StringValidator),
+		title: OptionalParam(NameStringValidator),
 	})
 
 	const { statement, world } = await WorldService.issueWorldStatement({
 		...params,
 		worldId,
+		relatedActors: [],
 	})
 
 	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })

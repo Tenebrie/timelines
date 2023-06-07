@@ -1,17 +1,7 @@
-import { Add, Clear, Search } from '@mui/icons-material'
-import {
-	Button,
-	Collapse,
-	Divider,
-	IconButton,
-	InputAdornment,
-	List,
-	ListItemIcon,
-	TextField,
-} from '@mui/material'
+import { Clear, Search } from '@mui/icons-material'
+import { IconButton, InputAdornment, List, ListItemIcon, TextField } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { TransitionGroup } from 'react-transition-group'
 
 import { preferencesSlice } from '../../../preferences/reducer'
 import { getOverviewPreferences } from '../../../preferences/selectors'
@@ -50,7 +40,7 @@ export const OverviewPanel = () => {
 	} = useWorldRouter()
 	const { timeToLabel } = useWorldTime()
 	const { getIconPath } = useEventIcons()
-	const { openActorWizard } = worldSlice.actions
+	const { openActorWizard, openEventWizard } = worldSlice.actions
 	const {
 		setActorsOpen,
 		setActorsReversed,
@@ -82,7 +72,10 @@ export const OverviewPanel = () => {
 
 	const renderActor = (actor: Actor) => (
 		<StyledListItemButton
-			divider
+			divider={
+				(!actorsReversed && actors.indexOf(actor) !== actors.length - 1) ||
+				(actorsReversed && actors.indexOf(actor) !== 0)
+			}
 			onClick={() => navigateToActorEditor(actor.id)}
 			selected={actorEditorParams.actorId === actor.id}
 		>
@@ -92,7 +85,10 @@ export const OverviewPanel = () => {
 
 	const renderEvent = (event: WorldEvent & { secondary: string }) => (
 		<StyledListItemButton
-			divider={sortedEvents.indexOf(event) !== sortedEvents.length - 1}
+			divider={
+				(!eventsReversed && sortedEvents.indexOf(event) !== sortedEvents.length - 1) ||
+				(eventsReversed && sortedEvents.indexOf(event) !== 0)
+			}
 			onClick={() => moveToEvent(event)}
 			selected={eventEditorParams.eventId === event.id}
 		>
@@ -105,7 +101,10 @@ export const OverviewPanel = () => {
 
 	const renderStatement = (statement: WorldStatement & { secondary: string }) => (
 		<StyledListItemButton
-			divider={statements.indexOf(statement) !== statements.length - 1}
+			divider={
+				(!statementsReversed && statements.indexOf(statement) !== statements.length - 1) ||
+				(statementsReversed && statements.indexOf(statement) !== 0)
+			}
 			onClick={() => moveToStatement(statement)}
 			selected={statementEditorParams.statementId === statement.id}
 		>
@@ -162,7 +161,7 @@ export const OverviewPanel = () => {
 		(entity) =>
 			searchQuery.length <= 2 ||
 			entity.title.toLowerCase().includes(lowerCaseSearchQuery) ||
-			entity.text.toLowerCase().includes(lowerCaseSearchQuery) ||
+			entity.content.toLowerCase().includes(lowerCaseSearchQuery) ||
 			entity.secondary.toLowerCase().includes(lowerCaseSearchQuery)
 	)
 
@@ -213,30 +212,21 @@ export const OverviewPanel = () => {
 					entities={displayedActors}
 					open={actorsOpen}
 					reversed={actorsReversed}
+					onAddNew={() => dispatch(openActorWizard())}
 					onToggleOpen={(val) => dispatch(setActorsOpen(val))}
 					onToggleReversed={(val) => dispatch(setActorsReversed(val))}
 					renderEntity={renderActor}
 				/>
-				<TransitionGroup>
-					{actorsOpen && (
-						<Collapse>
-							<Button fullWidth onClick={() => dispatch(openActorWizard())}>
-								<Add /> Create new actor...
-							</Button>
-						</Collapse>
-					)}
-				</TransitionGroup>
-				<Divider />
 				<OverviewSublist
 					title={`Events (${displayedEvents.length})`}
 					entities={displayedEvents}
 					open={eventsOpen}
 					reversed={eventsReversed}
+					onAddNew={() => dispatch(openEventWizard({ timestamp: 0 }))}
 					onToggleOpen={(val) => dispatch(setEventsOpen(val))}
 					onToggleReversed={(val) => dispatch(setEventsReversed(val))}
 					renderEntity={renderEvent}
 				/>
-				<Divider />
 				<OverviewSublist
 					title={`Statements (${displayedStatements.length})`}
 					entities={displayedStatements}

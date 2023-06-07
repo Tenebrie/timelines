@@ -20,7 +20,7 @@ export const StatementCard = ({ card }: Props) => {
 						{card.title}
 					</Typography>
 					<br />
-					<Typography>{card.text}</Typography>
+					<Typography>{card.content}</Typography>
 				</CardContent>
 			</CardActionArea>
 		</Card>

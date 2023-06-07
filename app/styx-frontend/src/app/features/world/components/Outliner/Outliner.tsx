@@ -10,7 +10,7 @@ import { useWorldTime } from '../../../time/hooks/useWorldTime'
 import { useEventIcons } from '../../hooks/useEventIcons'
 import { useWorldRouter } from '../../router'
 import { getTimelineState, getWorldState } from '../../selectors'
-import { WorldEvent, WorldStatement } from '../../types'
+import { Actor, WorldEvent, WorldStatement } from '../../types'
 import { EventTutorialModal } from './components/EventTutorialModal/EventTutorialModal'
 import { OutlinerControls } from './components/OutlinerControls/OutlinerControls'
 import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmptyState'
@@ -24,14 +24,15 @@ import {
 } from './styles'
 
 export const Outliner = () => {
-	const { events } = useSelector(getWorldState)
+	const { actors, events } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
 	const { showEmptyEvents, showInactiveStatements } = useSelector(getOutlinerPreferences)
 	const { timeToLabel } = useWorldTime()
 
 	const { getLevelScalar } = useTimelineLevelScalar()
 
-	const { outlinerParams, navigateToEventEditor, navigateToStatementEditor } = useWorldRouter()
+	const { outlinerParams, navigateToActorEditor, navigateToEventEditor, navigateToStatementEditor } =
+		useWorldRouter()
 	const selectedTime = Number(outlinerParams.timestamp)
 
 	// All issued statements up to this point in timeline
@@ -80,7 +81,24 @@ export const Outliner = () => {
 		)
 		.sort((a, b) => b.timestamp - a.timestamp || b.index - a.index)
 
+	const visibleActors = actors.map((actor) => ({
+		...actor,
+		highlighted: false,
+		statements: actor.statements
+			.map((statement) => ({
+				...statement,
+				active: activeStatements.some((card) => card.id === statement.id),
+			}))
+			.filter((statement) => showInactiveStatements || statement.active),
+	}))
+
 	const { getIconPath } = useEventIcons()
+
+	const renderActor = (actor: Actor & { highlighted: boolean }) => (
+		<StyledListItemButton selected={actor.highlighted} onClick={() => navigateToActorEditor(actor.id)}>
+			<StyledListItemText data-hj-suppress primary={actor.name} secondary={actor.title} />
+		</StyledListItemButton>
+	)
 
 	const renderEvent = (event: WorldEvent & { highlighted: boolean; secondary: string }) => (
 		<StyledListItemButton selected={event.highlighted} onClick={() => navigateToEventEditor(event.id)}>
@@ -100,7 +118,7 @@ export const Outliner = () => {
 			>
 				<ListItemText
 					data-hj-suppress
-					primary={<TrunkatedTypography lines={3}>{statement.text}</TrunkatedTypography>}
+					primary={<TrunkatedTypography lines={3}>{statement.content}</TrunkatedTypography>}
 					style={{ color: statement.active ? 'inherit' : 'gray' }}
 				></ListItemText>
 			</StyledListItemButton>
@@ -118,6 +136,19 @@ export const Outliner = () => {
 							<StatementsScroller>
 								<List disablePadding>
 									<TransitionGroup>
+										{visibleActors.map((actor) => (
+											<Collapse key={actor.id}>
+												{renderActor(actor)}
+												<List dense component="div" disablePadding>
+													<TransitionGroup>
+														{actor.statements.map((statement, index) => (
+															<Collapse key={statement.id}>{renderStatement(statement, index)}</Collapse>
+														))}
+													</TransitionGroup>
+												</List>
+												<Divider />
+											</Collapse>
+										))}
 										{visibleEvents.map((event, index) => (
 											<Collapse key={event.id}>
 												{renderEvent(event)}

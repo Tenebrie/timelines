@@ -1,95 +1,116 @@
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Button, TextField, Tooltip } from '@mui/material'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { Alert, Autocomplete, Button, Collapse, TextField, Tooltip } from '@mui/material'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { TransitionGroup } from 'react-transition-group'
 
-import { useIssueWorldStatementMutation } from '../../../../../../../api/rheaApi'
+import {
+	useIssueActorStatementMutation,
+	useIssueWorldStatementMutation,
+} from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import { ModalFooter, useModalCleanup } from '../../../../../../../ui-lib/components/Modal'
 import Modal from '../../../../../../../ui-lib/components/Modal/Modal'
 import { ModalHeader } from '../../../../../../../ui-lib/components/Modal/styles'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
+import { useErrorState } from '../../../../../../utils/useErrorState'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
-import { getIssuedStatementWizardState } from '../../../../selectors'
+import { getIssuedStatementWizardState, getWorldState } from '../../../../selectors'
+import { Actor } from '../../../../types'
 
 export const IssuedStatementWizard = () => {
-	const hasEditedTitle = useRef<boolean>(false)
 	const [title, setTitle] = useState('')
 	const [content, setContent] = useState('')
-	const [titleValidationError, setTitleValidationError] = useState<string | null>(null)
+	const [selectedActors, setSelectedActors] = useState<Actor[]>([])
 
+	const { error, raiseError, clearError } = useErrorState<{
+		MISSING_CONTENT: string
+		MISSING_ACTORS: string
+		SERVER_SIDE_ERROR: string
+	}>()
+
+	const { actors } = useSelector(getWorldState)
 	const { eventEditorParams } = useWorldRouter()
-	const [issueWorldStatement, { isLoading }] = useIssueWorldStatementMutation()
+	const [issueWorldStatement, { isLoading: isWorldStatementCallLoading }] = useIssueWorldStatementMutation()
+	const [issueActorStatement, { isLoading: isActorStatementCallLoading }] = useIssueActorStatementMutation()
 
 	const dispatch = useDispatch()
 	const { closeIssuedStatementWizard } = worldSlice.actions
 
-	const { isOpen } = useSelector(getIssuedStatementWizardState)
+	const { isOpen, scope } = useSelector(getIssuedStatementWizardState)
 
 	useModalCleanup({
 		isOpen,
 		onCleanup: () => {
 			setTitle('')
 			setContent('')
-			setTitleValidationError(null)
-			hasEditedTitle.current = false
+			setSelectedActors([])
+			clearError()
 		},
 	})
 
 	useEffect(() => {
-		setTitleValidationError(null)
-	}, [title, content])
-
-	const onChangeTitle = useCallback((value: string) => {
-		setTitle(value)
-		hasEditedTitle.current = true
-	}, [])
-
-	const onChangeContent = useCallback((value: string) => {
-		if (!hasEditedTitle.current) {
-			const indexOfDot = value.indexOf('.')
-			const indexOfLineBreak = value.indexOf('\n')
-			const lowerIndex =
-				indexOfDot === -1
-					? indexOfLineBreak
-					: indexOfLineBreak === -1
-					? indexOfDot
-					: Math.min(indexOfDot, indexOfLineBreak)
-			setTitle(value.substring(0, lowerIndex > 0 ? lowerIndex : value.length))
-		}
-		setContent(value)
-	}, [])
+		clearError()
+	}, [title, content, selectedActors, clearError])
 
 	const onConfirm = async () => {
 		if (!isOpen) {
 			return
 		}
 
+		if (content.trim().length < 3) {
+			raiseError('MISSING_CONTENT', 'Content must be at least 3 characters')
+			return
+		}
+
+		if (scope === 'actor' && selectedActors.length === 0) {
+			raiseError('MISSING_ACTORS', 'Actor statements require at least one actor')
+			return
+		}
+
 		const { error } = parseApiResponse(
-			await issueWorldStatement({
-				worldId: eventEditorParams.worldId,
-				body: {
-					title,
-					content,
-					eventId: eventEditorParams.eventId,
-				},
-			})
+			await (() => {
+				if (scope === 'world') {
+					return issueWorldStatement({
+						worldId: eventEditorParams.worldId,
+						body: {
+							title: title.length > 0 ? title : undefined,
+							content,
+							eventId: eventEditorParams.eventId,
+						},
+					})
+				}
+				return issueActorStatement({
+					worldId: eventEditorParams.worldId,
+					body: {
+						title: title.length > 0 ? title : undefined,
+						content,
+						eventId: eventEditorParams.eventId,
+						actorIds: selectedActors.map((actor) => actor.id),
+					},
+				})
+			})()
 		)
 		if (error) {
-			setTitleValidationError(error.message)
+			raiseError('SERVER_SIDE_ERROR', error.message)
 			return
 		}
 		dispatch(closeIssuedStatementWizard())
 	}
 
 	const onCloseAttempt = () => {
-		if (isLoading) {
+		if (isWorldStatementCallLoading || isActorStatementCallLoading) {
 			return
 		}
 		dispatch(closeIssuedStatementWizard())
 	}
+
+	const availableActors = actors.map((actor) => ({
+		...actor,
+		label: `${actor.name}, ${actor.title}`,
+	}))
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		onConfirm()
@@ -98,30 +119,48 @@ export const IssuedStatementWizard = () => {
 	return (
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
 			<ModalHeader>Issue Statement</ModalHeader>
+			<TransitionGroup>
+				{error && (
+					<Collapse>
+						<Alert severity="error">{error.data}</Alert>
+					</Collapse>
+				)}
+			</TransitionGroup>
 			<TextField
 				value={content}
-				onChange={(e) => onChangeContent(e.target.value)}
+				onChange={(e) => setContent(e.target.value)}
 				type={'text'}
 				label="Content"
 				multiline
 				autoFocus
 				minRows={3}
-				error={!!titleValidationError}
-				helperText={titleValidationError}
+				error={!!error && error.type === 'MISSING_CONTENT'}
 			/>
 			<TextField
-				label="Title"
+				label="Title (optional)"
 				type="text"
 				value={title}
 				style={{ color: 'gray' }}
-				onChange={(event) => onChangeTitle(event.target.value)}
+				onChange={(event) => setTitle(event.target.value)}
 				inputProps={{ maxLength: 256 }}
 			/>
+			{scope === 'actor' && (
+				<Autocomplete
+					value={selectedActors}
+					onChange={(_, value) => setSelectedActors(value)}
+					multiple={true}
+					options={availableActors}
+					isOptionEqualToValue={(option, value) => option.id === value.id}
+					renderInput={(params) => (
+						<TextField {...params} label="Actors" error={!!error && error.type === 'MISSING_ACTORS'} />
+					)}
+				/>
+			)}
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">
 					<span>
 						<LoadingButton
-							loading={isLoading}
+							loading={isWorldStatementCallLoading || isActorStatementCallLoading}
 							variant="contained"
 							onClick={onConfirm}
 							loadingPosition="start"

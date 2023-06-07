@@ -48,9 +48,15 @@ export const initialState = {
 		},
 		issuedStatementWizard: {
 			isOpen: false as boolean,
+			mode: 'create' as 'create' | 'replace',
+			scope: 'world' as 'world' | 'actor',
 		},
 		revokedStatementWizard: {
 			isOpen: false as boolean,
+		},
+		issuedActorStatementWizard: {
+			isOpen: false as boolean,
+			actor: null as Actor | null,
 		},
 	},
 
@@ -147,21 +153,40 @@ export const worldSlice = createSlice({
 		},
 
 		/* Event editor - Issued statement wizard */
-		openIssuedStatementWizard: (state) => {
+		openIssuedStatementWizard: (
+			state,
+			{
+				payload,
+			}: PayloadAction<{
+				mode: WorldState['eventEditor']['issuedStatementWizard']['mode']
+				scope: WorldState['eventEditor']['issuedStatementWizard']['scope']
+			}>
+		) => {
 			state.eventEditor.issuedStatementWizard.isOpen = true
+			state.eventEditor.issuedStatementWizard.mode = payload.mode
+			state.eventEditor.issuedStatementWizard.scope = payload.scope
 		},
 
 		closeIssuedStatementWizard: (state) => {
 			state.eventEditor.issuedStatementWizard.isOpen = false
 		},
 
-		/* Event editor - Revoked statement wizard */
+		/* Event editor - Revoked world statement wizard */
 		openRevokedStatementWizard: (state) => {
 			state.eventEditor.revokedStatementWizard.isOpen = true
 		},
 
 		closeRevokedStatementWizard: (state) => {
 			state.eventEditor.revokedStatementWizard.isOpen = false
+		},
+
+		/* Event editor - Issued actor statement wizard */
+		openIssuedActorStatementWizard: (state) => {
+			state.eventEditor.issuedActorStatementWizard.isOpen = true
+		},
+
+		closeIssuedActorStatementWizard: (state) => {
+			state.eventEditor.issuedActorStatementWizard.isOpen = false
 		},
 
 		/* Timeline */

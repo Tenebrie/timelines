@@ -4,6 +4,16 @@ import { dbClient } from './DatabaseClient'
 import { touchWorld } from './WorldService'
 
 export const ActorService = {
+	findActorsByIds: async (actorIds: string[]) => {
+		return dbClient.actor.findMany({
+			where: {
+				id: {
+					in: actorIds,
+				},
+			},
+		})
+	},
+
 	createActor: async (
 		worldId: string,
 		data: Pick<Actor, 'name'> & Partial<Pick<Actor, 'title' | 'description'>>

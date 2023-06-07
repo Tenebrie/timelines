@@ -29,6 +29,14 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldDetails'],
 			}),
+			issueActorStatement: build.mutation<IssueActorStatementApiResponse, IssueActorStatementApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/actor/statement`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldDetails'],
+			}),
 			checkAuthentication: build.query<CheckAuthenticationApiResponse, CheckAuthenticationApiArg>({
 				query: () => ({ url: `/api/auth` }),
 				providesTags: ['auth'],
@@ -175,6 +183,27 @@ export type DeleteActorApiArg = {
 	/** Any string value */
 	actorId: string
 }
+export type IssueActorStatementApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	content: string
+	title: string
+	issuedByEventId: string
+	revokedByEventId?: string
+	replacedStatementId?: string
+	replacedByStatementId?: string
+}
+export type IssueActorStatementApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		eventId: string
+		actorIds: string[]
+		content: string
+		title?: string
+	}
+}
 export type CheckAuthenticationApiResponse =
 	/** status 200  */
 	| {
@@ -266,6 +295,14 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		worldId: string
 		statements: {
 			id: string
+			createdAt: string
+			updatedAt: string
+			content: string
+			title: string
+			issuedByEventId: string
+			revokedByEventId?: string
+			replacedStatementId?: string
+			replacedByStatementId?: string
 		}[]
 		relationships: {
 			originId: string
@@ -292,8 +329,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			id: string
 			createdAt: string
 			updatedAt: string
+			content: string
 			title: string
-			text: string
 			issuedByEventId: string
 			revokedByEventId?: string
 			replacedStatementId?: string
@@ -303,8 +340,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			id: string
 			createdAt: string
 			updatedAt: string
+			content: string
 			title: string
-			text: string
 			issuedByEventId: string
 			revokedByEventId?: string
 			replacedStatementId?: string
@@ -372,8 +409,8 @@ export type IssueWorldStatementApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	content: string
 	title: string
-	text: string
 	issuedByEventId: string
 	revokedByEventId?: string
 	replacedStatementId?: string
@@ -384,16 +421,16 @@ export type IssueWorldStatementApiArg = {
 	worldId: string
 	body: {
 		eventId: string
-		title: string
-		content?: string
+		content: string
+		title?: string
 	}
 }
 export type UpdateWorldStatementApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	content: string
 	title: string
-	text: string
 	issuedByEventId: string
 	revokedByEventId?: string
 	replacedStatementId?: string
@@ -413,8 +450,8 @@ export type DeleteWorldStatementApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	content: string
 	title: string
-	text: string
 	issuedByEventId: string
 	revokedByEventId?: string
 	replacedStatementId?: string
@@ -430,8 +467,8 @@ export type RevokeWorldStatementApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	content: string
 	title: string
-	text: string
 	issuedByEventId: string
 	revokedByEventId?: string
 	replacedStatementId?: string
@@ -450,8 +487,8 @@ export type UnrevokeWorldStatementApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	content: string
 	title: string
-	text: string
 	issuedByEventId: string
 	revokedByEventId?: string
 	replacedStatementId?: string
@@ -467,6 +504,7 @@ export const {
 	useCreateActorMutation,
 	useUpdateActorMutation,
 	useDeleteActorMutation,
+	useIssueActorStatementMutation,
 	useCheckAuthenticationQuery,
 	useLazyCheckAuthenticationQuery,
 	useCreateAccountMutation,

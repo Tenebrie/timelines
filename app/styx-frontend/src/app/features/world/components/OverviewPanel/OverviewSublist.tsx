@@ -1,4 +1,4 @@
-import { Sort } from '@mui/icons-material'
+import { Add, Sort } from '@mui/icons-material'
 import { Collapse, IconButton, List, ListItem, ListItemButton, ListSubheader } from '@mui/material'
 import { MouseEvent, ReactNode } from 'react'
 
@@ -8,6 +8,7 @@ type Props<T> = {
 	title: string
 	open: boolean
 	reversed: boolean
+	onAddNew?: () => void
 	onToggleOpen: (value: boolean) => void
 	onToggleReversed: (value: boolean) => void
 	entities: T[]
@@ -18,11 +19,19 @@ export function OverviewSublist<T extends { id: string }>({
 	title,
 	open,
 	reversed,
+	onAddNew,
 	onToggleOpen,
 	onToggleReversed,
 	entities,
 	renderEntity,
 }: Props<T>) {
+	const onAddClick = (event: MouseEvent) => {
+		event.stopPropagation()
+		if (onAddNew) {
+			onAddNew()
+		}
+	}
+
 	const onSortClick = (event: MouseEvent) => {
 		event.stopPropagation()
 		onToggleOpen(true)
@@ -38,11 +47,18 @@ export function OverviewSublist<T extends { id: string }>({
 				onClick={() => onToggleOpen(!open)}
 				disablePadding
 				disableGutters
-				secondaryAction={[
+				secondaryAction={(onAddNew
+					? [
+							<IconButton key={'add'} onClick={onAddClick}>
+								<Add />
+							</IconButton>,
+					  ]
+					: []
+				).concat([
 					<IconButton key={'sort'} onClick={onSortClick}>
 						<Sort />
 					</IconButton>,
-				]}
+				])}
 			>
 				<ListItemButton>
 					{title} <ExpandIcon rotated={open ? 1 : 0} />

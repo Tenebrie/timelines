@@ -19,16 +19,16 @@ type Props = {
 
 export const StatementDetailsEditor = ({ statement }: Props) => {
 	const [title, setTitle] = useState<string>(statement.title)
-	const [content, setContent] = useState<string>(statement.text)
+	const [content, setContent] = useState<string>(statement.content)
 
 	const savingEnabled = useRef<boolean>(true)
-	const lastSaved = useRef<Pick<WorldStatement, 'title' | 'text'>>(statement)
+	const lastSaved = useRef<Pick<WorldStatement, 'title' | 'content'>>(statement)
 	const lastSavedAt = useRef<Date>(new Date(statement.updatedAt))
 
 	useEffect(() => {
 		if (new Date(statement.updatedAt) > lastSavedAt.current) {
 			setTitle(statement.title)
-			setContent(statement.text)
+			setContent(statement.content)
 			savingEnabled.current = false
 		}
 	}, [statement])
@@ -68,7 +68,7 @@ export const StatementDetailsEditor = ({ statement }: Props) => {
 		onSave: () =>
 			sendUpdate({
 				title,
-				text: content,
+				content,
 			}),
 		isSaving,
 	})
@@ -79,7 +79,7 @@ export const StatementDetailsEditor = ({ statement }: Props) => {
 			savingEnabled.current = true
 			return
 		}
-		if (isFirstRender || (lastSaved.current.title === title && lastSaved.current.text === content)) {
+		if (isFirstRender || (lastSaved.current.title === title && lastSaved.current.content === content)) {
 			return
 		}
 

@@ -8,6 +8,7 @@ import { getOutlinerPreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
+import { CreateHerePopover } from '../CreateHerePopover/CreateHerePopover'
 
 export const OutlinerControls = () => {
 	const { timeToLabel } = useWorldTime()
@@ -23,7 +24,8 @@ export const OutlinerControls = () => {
 		dispatch(openEventWizard({ timestamp: selectedTime }))
 	}
 
-	const popupState = usePopupState({ variant: 'popover', popupId: 'demoMenu' })
+	const popupState = usePopupState({ variant: 'popover', popupId: 'outlinerFilters' })
+	const createHerePopupState = usePopupState({ variant: 'popover', popupId: 'createHerePopover' })
 
 	return (
 		<Stack justifyContent="space-between" alignItems="center" direction="row">
@@ -64,9 +66,10 @@ export const OutlinerControls = () => {
 						</FormGroup>
 					</Stack>
 				</Popover>
-				<Button variant="outlined" onClick={onCreateEvent}>
-					Create event here
+				<Button variant="contained" {...bindTrigger(createHerePopupState)}>
+					Create new
 				</Button>
+				<CreateHerePopover state={createHerePopupState} timestamp={selectedTime} />
 			</Stack>
 		</Stack>
 	)
