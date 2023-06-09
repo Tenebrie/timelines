@@ -19,6 +19,7 @@ import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
 import { getIssuedStatementWizardState, getWorldState } from '../../../../selectors'
 import { Actor } from '../../../../types'
+import { useAutocompleteActorList } from '../../../StatementEditor/ActorSelector/useAutocompleteActorList'
 
 export const IssuedStatementWizard = () => {
 	const [title, setTitle] = useState('')
@@ -107,10 +108,7 @@ export const IssuedStatementWizard = () => {
 		dispatch(closeIssuedStatementWizard())
 	}
 
-	const availableActors = actors.map((actor) => ({
-		...actor,
-		label: `${actor.name}, ${actor.title}`,
-	}))
+	const { actorOptions, renderOption } = useAutocompleteActorList({ actors })
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		onConfirm()
@@ -149,8 +147,10 @@ export const IssuedStatementWizard = () => {
 					value={selectedActors}
 					onChange={(_, value) => setSelectedActors(value)}
 					multiple={true}
-					options={availableActors}
+					options={actorOptions}
 					isOptionEqualToValue={(option, value) => option.id === value.id}
+					autoHighlight
+					renderOption={renderOption}
 					renderInput={(params) => (
 						<TextField {...params} label="Actors" error={!!error && error.type === 'MISSING_ACTORS'} />
 					)}

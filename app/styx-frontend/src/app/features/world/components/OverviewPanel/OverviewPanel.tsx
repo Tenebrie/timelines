@@ -10,7 +10,7 @@ import { useEventIcons } from '../../hooks/useEventIcons'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
-import { Actor, WorldEvent, WorldStatement } from '../../types'
+import { ActorDetails, WorldEvent, WorldStatement } from '../../types'
 import { OverviewSublist } from './OverviewSublist'
 import { StyledListItemButton, StyledListItemText } from './styles'
 
@@ -70,7 +70,7 @@ export const OverviewPanel = () => {
 		}))
 	)
 
-	const renderActor = (actor: Actor) => (
+	const renderActor = (actor: ActorDetails) => (
 		<StyledListItemButton
 			divider={
 				(!actorsReversed && actors.indexOf(actor) !== actors.length - 1) ||

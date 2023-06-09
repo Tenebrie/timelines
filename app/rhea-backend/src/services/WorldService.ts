@@ -152,14 +152,24 @@ export const WorldService = {
 	}: {
 		worldId: string
 		statementId: string
-		params: Partial<WorldStatement>
+		params: Partial<WorldStatement & { relatedActors: Actor[] }>
 	}) => {
 		const [event, world] = await dbClient.$transaction([
 			dbClient.worldStatement.update({
 				where: {
 					id: statementId,
 				},
-				data: params,
+				data: {
+					...params,
+					relatedActors: params.relatedActors
+						? {
+								set: params.relatedActors.map((actor) => ({ id: actor.id })),
+						  }
+						: undefined,
+				},
+				include: {
+					relatedActors: true,
+				},
 			}),
 			touchWorld(worldId),
 		])
@@ -244,14 +254,22 @@ export const WorldService = {
 			include: {
 				actors: {
 					include: {
-						statements: true,
+						statements: {
+							include: {
+								relatedActors: true,
+							},
+						},
 						relationships: true,
 						receivedRelationships: true,
 					},
 				},
 				events: {
 					include: {
-						issuedStatements: true,
+						issuedStatements: {
+							include: {
+								relatedActors: true,
+							},
+						},
 						revokedStatements: true,
 					},
 				},

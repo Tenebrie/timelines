@@ -1,37 +1,51 @@
 import { Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Button, Stack, TextField, Tooltip } from '@mui/material'
+import { Alert, Autocomplete, Button, Collapse, Stack, TextField, Tooltip } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { TransitionGroup } from 'react-transition-group'
 
-import { useUpdateWorldStatementMutation } from '../../../../../../api/rheaApi'
+import { UpdateWorldStatementApiArg, useUpdateWorldStatementMutation } from '../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../hooks/useShortcut'
+import { arraysEqual } from '../../../../../utils/arraysEqual'
 import { useAutosave } from '../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../utils/parseApiResponse'
+import { useErrorState } from '../../../../../utils/useErrorState'
 import { useIsFirstRender } from '../../../../../utils/useIsFirstRender'
 import { worldSlice } from '../../../reducer'
 import { useWorldRouter } from '../../../router'
-import { WorldStatement } from '../../../types'
+import { getWorldState } from '../../../selectors'
+import { Actor, WorldStatement } from '../../../types'
+import { useAutocompleteActorList } from '../ActorSelector/useAutocompleteActorList'
 
 type Props = {
 	statement: WorldStatement
 }
 
 export const StatementDetailsEditor = ({ statement }: Props) => {
+	const { actors } = useSelector(getWorldState)
+	const { actorOptions, renderOption, mapPreselectedActors } = useAutocompleteActorList({ actors })
+
 	const [title, setTitle] = useState<string>(statement.title)
 	const [content, setContent] = useState<string>(statement.content)
+	const [selectedActors, setSelectedActors] = useState<Actor[]>(mapPreselectedActors(statement.relatedActors))
+
+	const { error, raiseError, clearError } = useErrorState<{
+		SAVING_ERROR: string
+	}>()
 
 	const savingEnabled = useRef<boolean>(true)
-	const lastSaved = useRef<Pick<WorldStatement, 'title' | 'content'>>(statement)
+	const lastSaved = useRef<Pick<WorldStatement, 'title' | 'content' | 'relatedActors'>>(statement)
 	const lastSavedAt = useRef<Date>(new Date(statement.updatedAt))
 
 	useEffect(() => {
 		if (new Date(statement.updatedAt) > lastSavedAt.current) {
 			setTitle(statement.title)
 			setContent(statement.content)
+			setSelectedActors(mapPreselectedActors(statement.relatedActors))
 			savingEnabled.current = false
 		}
-	}, [statement])
+	}, [statement, actors, mapPreselectedActors])
 
 	const { openDeleteStatementModal } = worldSlice.actions
 	const dispatch = useDispatch()
@@ -42,7 +56,8 @@ export const StatementDetailsEditor = ({ statement }: Props) => {
 	const { worldId } = eventEditorParams
 
 	const sendUpdate = useCallback(
-		async (delta: Partial<WorldStatement>) => {
+		async (delta: UpdateWorldStatementApiArg['body']) => {
+			clearError()
 			const { response, error } = parseApiResponse(
 				await updateWorldStatement({
 					worldId: worldId,
@@ -51,12 +66,13 @@ export const StatementDetailsEditor = ({ statement }: Props) => {
 				})
 			)
 			if (error) {
+				raiseError('SAVING_ERROR', error.message)
 				return
 			}
 			lastSaved.current = response
 			lastSavedAt.current = new Date()
 		},
-		[statement.id, updateWorldStatement, worldId]
+		[statement.id, updateWorldStatement, worldId, raiseError, clearError]
 	)
 
 	const {
@@ -67,8 +83,9 @@ export const StatementDetailsEditor = ({ statement }: Props) => {
 	} = useAutosave({
 		onSave: () =>
 			sendUpdate({
-				title,
-				content,
+				title: title.trim(),
+				content: content.trim(),
+				relatedActorIds: selectedActors.map((a) => a.id),
 			}),
 		isSaving,
 	})
@@ -79,12 +96,21 @@ export const StatementDetailsEditor = ({ statement }: Props) => {
 			savingEnabled.current = true
 			return
 		}
-		if (isFirstRender || (lastSaved.current.title === title && lastSaved.current.content === content)) {
+		if (
+			isFirstRender ||
+			(lastSaved.current.title === title &&
+				lastSaved.current.content === content &&
+				arraysEqual(lastSaved.current.relatedActors, selectedActors, (a, b) => a.id === b.id))
+		) {
 			return
 		}
 
 		autosave()
-	}, [title, content, sendUpdate, isFirstRender, autosave])
+	}, [title, content, selectedActors, sendUpdate, isFirstRender, autosave])
+
+	useEffect(() => {
+		clearError()
+	}, [title, content, selectedActors, clearError])
 
 	const onDelete = useCallback(() => {
 		dispatch(openDeleteStatementModal(statement))
@@ -95,41 +121,62 @@ export const StatementDetailsEditor = ({ statement }: Props) => {
 	})
 
 	return (
-		<Stack spacing={2} direction="column">
-			<TextField
-				type="text"
-				label="Title"
-				value={title}
-				onChange={(e) => setTitle(e.target.value)}
-				inputProps={{ maxLength: 256 }}
-			/>
-			<TextField
-				label="Content"
-				value={content}
-				onChange={(e) => setContent(e.target.value)}
-				minRows={3}
-				maxRows={11}
-				multiline
-			/>
-			<Stack spacing={2} direction="row-reverse">
-				<Tooltip title={shortcutLabel} arrow placement="top">
-					<span>
-						<LoadingButton
-							loading={isSaving}
-							variant="outlined"
-							onClick={manualSave}
-							loadingPosition="start"
-							color={autosaveColor}
-							startIcon={autosaveIcon}
-						>
-							Save
-						</LoadingButton>
-					</span>
-				</Tooltip>
-				<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
-					Delete
-				</Button>
+		<>
+			<TransitionGroup>
+				{!!error && (
+					<Collapse>
+						<Alert severity="error" style={{ marginBottom: '16px' }}>
+							{error.data}
+						</Alert>
+					</Collapse>
+				)}
+			</TransitionGroup>
+			<Stack spacing={2} direction="column">
+				<TextField
+					label="Content"
+					value={content}
+					onChange={(e) => setContent(e.target.value)}
+					minRows={3}
+					maxRows={11}
+					multiline
+				/>
+				<TextField
+					type="text"
+					label="Title (optional)"
+					value={title}
+					onChange={(e) => setTitle(e.target.value)}
+					inputProps={{ maxLength: 256 }}
+				/>
+				<Autocomplete
+					value={selectedActors}
+					onChange={(_, value) => setSelectedActors(value)}
+					multiple={true}
+					options={actorOptions}
+					isOptionEqualToValue={(option, value) => option.id === value.id}
+					autoHighlight
+					renderOption={renderOption}
+					renderInput={(params) => <TextField {...params} label="Actors" />}
+				/>
+				<Stack spacing={2} direction="row-reverse">
+					<Tooltip title={shortcutLabel} arrow placement="top">
+						<span>
+							<LoadingButton
+								loading={isSaving}
+								variant="outlined"
+								onClick={manualSave}
+								loadingPosition="start"
+								color={autosaveColor}
+								startIcon={autosaveIcon}
+							>
+								Save
+							</LoadingButton>
+						</span>
+					</Tooltip>
+					<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
+						Delete
+					</Button>
+				</Stack>
 			</Stack>
-		</Stack>
+		</>
 	)
 }

@@ -11,10 +11,10 @@ import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useIsFirstRender } from '../../../../../../utils/useIsFirstRender'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
-import { Actor } from '../../../../types'
+import { ActorDetails } from '../../../../types'
 
 type Props = {
-	actor: Actor
+	actor: ActorDetails
 }
 
 export const ActorDetailsEditor = ({ actor }: Props) => {
@@ -23,7 +23,7 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 	const [description, setDescription] = useState<string>(actor.description)
 
 	const savingEnabled = useRef<boolean>(true)
-	const lastSaved = useRef<Pick<Actor, 'name' | 'title' | 'description'>>(actor)
+	const lastSaved = useRef<Pick<ActorDetails, 'name' | 'title' | 'description'>>(actor)
 	const lastSavedAt = useRef<Date>(new Date(actor.updatedAt))
 
 	useEffect(() => {
@@ -44,7 +44,7 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 	const { worldId } = eventEditorParams
 
 	const sendUpdate = useCallback(
-		async (delta: Partial<Actor>) => {
+		async (delta: Partial<ActorDetails>) => {
 			const { response, error } = parseApiResponse(
 				await updateActor({
 					worldId: worldId,

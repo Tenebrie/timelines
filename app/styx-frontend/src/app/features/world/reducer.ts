@@ -2,13 +2,13 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { ScaleLevel } from './components/Timeline/types'
-import { Actor, WorldCalendarType, WorldDetails, WorldEvent, WorldStatement } from './types'
+import { ActorDetails, WorldCalendarType, WorldDetails, WorldEvent, WorldStatement } from './types'
 
 export const initialState = {
 	isLoaded: false as boolean,
 	id: '' as string,
 	name: '' as string,
-	actors: [] as Actor[],
+	actors: [] as ActorDetails[],
 	events: [] as WorldEvent[],
 	calendar: 'COUNTUP' as WorldCalendarType,
 	timeOrigin: '0',
@@ -33,7 +33,7 @@ export const initialState = {
 	actorEditor: {
 		deleteActorModal: {
 			isOpen: false as boolean,
-			target: null as Actor | null,
+			target: null as ActorDetails | null,
 		},
 	},
 
@@ -56,7 +56,7 @@ export const initialState = {
 		},
 		issuedActorStatementWizard: {
 			isOpen: false as boolean,
-			actor: null as Actor | null,
+			actor: null as ActorDetails | null,
 		},
 	},
 
@@ -123,7 +123,7 @@ export const worldSlice = createSlice({
 		},
 
 		/* Actor editor - Delete actor modal */
-		openDeleteActorModal: (state, { payload }: PayloadAction<Actor>) => {
+		openDeleteActorModal: (state, { payload }: PayloadAction<ActorDetails>) => {
 			state.actorEditor.deleteActorModal.isOpen = true
 			state.actorEditor.deleteActorModal.target = payload
 		},

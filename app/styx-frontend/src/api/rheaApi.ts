@@ -303,6 +303,15 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			revokedByEventId?: string
 			replacedStatementId?: string
 			replacedByStatementId?: string
+			relatedActors: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				title: string
+				description: string
+				worldId: string
+			}[]
 		}[]
 		relationships: {
 			originId: string
@@ -335,6 +344,15 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			revokedByEventId?: string
 			replacedStatementId?: string
 			replacedByStatementId?: string
+			relatedActors: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				title: string
+				description: string
+				worldId: string
+			}[]
 		}[]
 		revokedStatements: {
 			id: string
@@ -435,6 +453,15 @@ export type UpdateWorldStatementApiResponse = /** status 200  */ {
 	revokedByEventId?: string
 	replacedStatementId?: string
 	replacedByStatementId?: string
+	relatedActors: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		title: string
+		description: string
+		worldId: string
+	}[]
 }
 export type UpdateWorldStatementApiArg = {
 	/** Any string value */
@@ -442,8 +469,9 @@ export type UpdateWorldStatementApiArg = {
 	/** Any string value */
 	statementId: string
 	body: {
+		relatedActorIds?: string[]
+		content?: string
 		title?: string
-		text?: string
 	}
 }
 export type DeleteWorldStatementApiResponse = /** status 200  */ {

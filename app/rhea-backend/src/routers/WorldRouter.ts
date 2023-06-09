@@ -1,7 +1,9 @@
 import { UserAuthenticator } from '@src/auth/UserAuthenticator'
+import { ActorService } from '@src/services/ActorService'
 import { RedisService } from '@src/services/RedisService'
 import { WorldService } from '@src/services/WorldService'
 import {
+	BadRequestError,
 	BigIntValidator,
 	NumberValidator,
 	OptionalParam,
@@ -16,6 +18,8 @@ import {
 } from 'tenebrie-framework'
 
 import { NameStringValidator } from './validators/NameStringValidator'
+import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
+import { StringArrayValidator } from './validators/StringArrayValidator'
 import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator'
 import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
 
@@ -231,11 +235,27 @@ router.patch('/api/world/:worldId/statement/:statementId', async (ctx) => {
 	await WorldService.checkUserWriteAccess(user, worldId)
 
 	const params = useRequestBody(ctx, {
-		title: OptionalParam(NameStringValidator),
-		text: OptionalParam(StringValidator),
+		relatedActorIds: OptionalParam(StringArrayValidator),
+		content: OptionalParam(StringValidator),
+		title: OptionalParam(OptionalNameStringValidator),
 	})
 
-	const { event, world } = await WorldService.updateWorldStatement({ worldId, statementId, params })
+	const relatedActors = params.relatedActorIds
+		? await ActorService.findActorsByIds(params.relatedActorIds)
+		: []
+	if (params.relatedActorIds && relatedActors.length < params.relatedActorIds.length) {
+		throw new BadRequestError('Invalid actor IDs')
+	}
+
+	const { event, world } = await WorldService.updateWorldStatement({
+		worldId,
+		statementId,
+		params: {
+			title: params.title,
+			content: params.content,
+			relatedActors,
+		},
+	})
 
 	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
 
