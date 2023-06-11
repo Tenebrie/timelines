@@ -1,6 +1,6 @@
 import { Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Button, Stack, TextField, Tooltip } from '@mui/material'
+import { Button, FormControl, InputLabel, Select, Stack, TextField, Tooltip } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -9,9 +9,10 @@ import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useIsFirstRender } from '../../../../../../utils/useIsFirstRender'
+import { useActorColors } from '../../../../hooks/useActorColors'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
-import { ActorDetails } from '../../../../types'
+import { Actor, ActorDetails } from '../../../../types'
 
 type Props = {
 	actor: ActorDetails
@@ -20,10 +21,11 @@ type Props = {
 export const ActorDetailsEditor = ({ actor }: Props) => {
 	const [name, setName] = useState<string>(actor.name)
 	const [title, setTitle] = useState<string>(actor.title)
+	const [color, setColor] = useState<string>(actor.color)
 	const [description, setDescription] = useState<string>(actor.description)
 
 	const savingEnabled = useRef<boolean>(true)
-	const lastSaved = useRef<Pick<ActorDetails, 'name' | 'title' | 'description'>>(actor)
+	const lastSaved = useRef<Actor>(actor)
 	const lastSavedAt = useRef<Date>(new Date(actor.updatedAt))
 
 	useEffect(() => {
@@ -44,7 +46,7 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 	const { worldId } = eventEditorParams
 
 	const sendUpdate = useCallback(
-		async (delta: Partial<ActorDetails>) => {
+		async (delta: Partial<Actor>) => {
 			const { response, error } = parseApiResponse(
 				await updateActor({
 					worldId: worldId,
@@ -71,6 +73,7 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 			sendUpdate({
 				name,
 				title,
+				color,
 				description,
 			}),
 		isSaving,
@@ -86,13 +89,14 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 			isFirstRender ||
 			(lastSaved.current.name === name &&
 				lastSaved.current.title === title &&
+				lastSaved.current.color === color &&
 				lastSaved.current.description === description)
 		) {
 			return
 		}
 
 		autosave()
-	}, [name, title, description, sendUpdate, isFirstRender, autosave])
+	}, [name, title, color, description, sendUpdate, isFirstRender, autosave])
 
 	const onDelete = useCallback(() => {
 		dispatch(openDeleteActorModal(actor))
@@ -101,6 +105,8 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		manualSave()
 	})
+
+	const { getColorOptions, renderOption, renderValue } = useActorColors()
 
 	return (
 		<Stack spacing={2} direction="column">
@@ -118,6 +124,19 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 				onChange={(e) => setTitle(e.target.value)}
 				inputProps={{ maxLength: 256 }}
 			/>
+			<FormControl fullWidth>
+				<InputLabel id="actorColorSelectLabel">Color</InputLabel>
+				<Select
+					MenuProps={{ PaperProps: { sx: { maxHeight: 700 } } }}
+					labelId="actorColorSelectLabel"
+					value={color}
+					onChange={(event) => setColor(event.target.value)}
+					label="Color"
+					renderValue={renderValue}
+				>
+					{getColorOptions().map((option) => renderOption(option))}
+				</Select>
+			</FormControl>
 			<TextField
 				label="Description"
 				value={description}

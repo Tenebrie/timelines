@@ -56,7 +56,7 @@ describe('<StatementEditor />', () => {
 				mockStatementModel({
 					id: '2222',
 					title: 'Statement title',
-					text: 'Amazing statement text',
+					content: 'Amazing statement text',
 					issuedByEventId: 'issuing-event',
 					revokedByEventId: 'revoking-event',
 				})
@@ -80,7 +80,7 @@ describe('<StatementEditor />', () => {
 				mockStatementModel({
 					id: '2222',
 					title: 'Statement title',
-					text: 'Amazing statement text',
+					content: 'Amazing statement text',
 					issuedByEventId: 'issuing-event',
 				})
 			)
@@ -98,7 +98,7 @@ describe('<StatementEditor />', () => {
 				mockStatementModel({
 					id: '2222',
 					title: 'Statement title',
-					text: 'Amazing statement text',
+					content: 'Amazing statement text',
 					issuedByEventId: 'issuing-event',
 				})
 			)
@@ -110,7 +110,7 @@ describe('<StatementEditor />', () => {
 			response: mockStatementModel({
 				id: '2222',
 				title: 'New title',
-				text: 'New description',
+				content: 'New description',
 			}),
 		})
 
@@ -134,7 +134,7 @@ describe('<StatementEditor />', () => {
 				mockStatementModel({
 					id: '2222',
 					title: 'Statement title',
-					text: 'Amazing statement text',
+					content: 'Amazing statement text',
 					issuedByEventId: 'issuing-event',
 				})
 			)
@@ -146,7 +146,7 @@ describe('<StatementEditor />', () => {
 			response: mockStatementModel({
 				id: '2222',
 				title: 'New title',
-				text: 'New description',
+				content: 'New description',
 			}),
 		})
 

@@ -1,6 +1,8 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
+import { Actor } from '../world/types'
+
 const initialState = {
 	time: {},
 	timeline: {
@@ -9,6 +11,7 @@ const initialState = {
 	outliner: {
 		showEmptyEvents: false as boolean,
 		showInactiveStatements: false as boolean,
+		collapsedActors: [] as string[],
 	},
 	overview: {
 		panelOpen: true as boolean,
@@ -39,6 +42,7 @@ export const preferencesSlice = createSlice({
 				const parsedValue = JSON.parse(value) as PreferencesState
 				state.outliner.showEmptyEvents = !!parsedValue?.outliner?.showEmptyEvents
 				state.outliner.showInactiveStatements = !!parsedValue?.outliner?.showInactiveStatements
+				state.outliner.collapsedActors = parsedValue?.outliner?.collapsedActors ?? []
 				state.overview.panelOpen = !!parsedValue?.overview?.panelOpen
 				state.overview.actorsOpen = !!parsedValue?.overview?.actorsOpen
 				state.overview.actorsReversed = !!parsedValue?.overview?.actorsReversed
@@ -63,6 +67,14 @@ export const preferencesSlice = createSlice({
 		},
 		setShowInactiveStatements: (state, { payload }: PayloadAction<boolean>) => {
 			state.outliner.showInactiveStatements = payload
+			saveToLocalStorage(state)
+		},
+		collapseActorInOutliner: (state, { payload }: PayloadAction<Actor>) => {
+			state.outliner.collapsedActors = [...new Set([...state.outliner.collapsedActors, payload.id])]
+			saveToLocalStorage(state)
+		},
+		uncollapseActorInOutliner: (state, { payload }: PayloadAction<Actor>) => {
+			state.outliner.collapsedActors = state.outliner.collapsedActors.filter((id) => id !== payload.id)
 			saveToLocalStorage(state)
 		},
 

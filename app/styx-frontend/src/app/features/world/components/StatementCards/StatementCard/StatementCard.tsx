@@ -3,7 +3,7 @@ import { Card, CardActionArea, CardContent, Typography } from '@mui/material'
 import { useWorldRouter } from '../../../router'
 import { WorldStatement } from '../../../types'
 
-type Props = { card: WorldStatement }
+type Props = { card: Pick<WorldStatement, 'id' | 'title' | 'content'> }
 
 export const StatementCard = ({ card }: Props) => {
 	const { navigateToStatementEditor } = useWorldRouter()

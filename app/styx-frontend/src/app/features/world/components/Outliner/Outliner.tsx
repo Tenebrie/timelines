@@ -1,40 +1,30 @@
-import { Link } from '@mui/icons-material'
-import { Collapse, Container, Divider, Grid, List, ListItemIcon, ListItemText } from '@mui/material'
+import { Collapse, Container, Divider, Grid, List } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { TransitionGroup } from 'react-transition-group'
 
 import { OverlayingLabel } from '../../../../components/OverlayingLabel'
-import { TrunkatedTypography } from '../../../../components/TrunkatedTypography'
 import { getOutlinerPreferences } from '../../../preferences/selectors'
 import { useTimelineLevelScalar } from '../../../time/hooks/useTimelineLevelScalar'
 import { useWorldTime } from '../../../time/hooks/useWorldTime'
-import { useEventIcons } from '../../hooks/useEventIcons'
 import { useWorldRouter } from '../../router'
 import { getTimelineState, getWorldState } from '../../selectors'
-import { ActorDetails, WorldEvent, WorldStatement } from '../../types'
 import { EventTutorialModal } from './components/EventTutorialModal/EventTutorialModal'
 import { OutlinerControls } from './components/OutlinerControls/OutlinerControls'
 import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmptyState'
-import {
-	OutlinerContainer,
-	StatementActorsText,
-	StatementsScroller,
-	StatementsUnit,
-	StyledListItemButton,
-	StyledListItemText,
-	ZebraWrapper,
-} from './styles'
+import { OutlinerActor } from './components/Renderers/OutlinerActor'
+import { OutlinerEvent } from './components/Renderers/OutlinerEvent'
+import { OutlinerStatement } from './components/Renderers/OutlinerStatement'
+import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
 
 export const Outliner = () => {
 	const { actors, events } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
-	const { showEmptyEvents, showInactiveStatements } = useSelector(getOutlinerPreferences)
+	const { showEmptyEvents, showInactiveStatements, collapsedActors } = useSelector(getOutlinerPreferences)
 	const { timeToLabel } = useWorldTime()
 
 	const { getLevelScalar } = useTimelineLevelScalar()
 
-	const { outlinerParams, navigateToActorEditor, navigateToEventEditor, navigateToStatementEditor } =
-		useWorldRouter()
+	const { outlinerParams } = useWorldRouter()
 	const selectedTime = Number(outlinerParams.timestamp)
 
 	// All issued statements up to this point in timeline
@@ -86,6 +76,7 @@ export const Outliner = () => {
 	const visibleActors = actors.map((actor) => ({
 		...actor,
 		highlighted: false,
+		collapsed: collapsedActors.includes(actor.id),
 		statements: actor.statements
 			.map((statement) => ({
 				...statement,
@@ -93,73 +84,6 @@ export const Outliner = () => {
 			}))
 			.filter((statement) => showInactiveStatements || statement.active),
 	}))
-
-	const { getIconPath } = useEventIcons()
-
-	const renderActor = (actor: ActorDetails & { highlighted: boolean }) => (
-		<StyledListItemButton selected={actor.highlighted} onClick={() => navigateToActorEditor(actor.id)}>
-			<StyledListItemText data-hj-suppress primary={actor.name} secondary={actor.title} />
-		</StyledListItemButton>
-	)
-
-	const renderEvent = (event: WorldEvent & { highlighted: boolean; secondary: string }) => (
-		<StyledListItemButton selected={event.highlighted} onClick={() => navigateToEventEditor(event.id)}>
-			<ListItemIcon>
-				<img src={getIconPath(event.icon)} height="24px" alt={`${event.icon} icon`} />
-			</ListItemIcon>
-			<StyledListItemText data-hj-suppress primary={event.name} secondary={event.secondary} />
-		</StyledListItemButton>
-	)
-
-	const renderStatement = (
-		statement: WorldStatement & { active: boolean },
-		actor: ActorDetails | null,
-		index: number
-	) => {
-		const maxActorsDisplayed = 4
-		const linkedActors = (() => {
-			const actors = statement.relatedActors.filter((a) => a.id !== actor?.id)
-			if (actors.length === 0) {
-				return ''
-			} else if (actors.length <= maxActorsDisplayed) {
-				return actors.map((actor) => actor.name).join(' | ')
-			} else {
-				return (
-					actors
-						.slice(0, maxActorsDisplayed - 1)
-						.map((actor) => actor.name)
-						.join(' | ') + ` | (and ${actors.length - maxActorsDisplayed + 1} more...)`
-				)
-			}
-		})()
-		const content = (
-			<>
-				{statement.title.length > 0 && <b>{statement.title}:</b>} {statement.content}
-			</>
-		)
-		return (
-			<ZebraWrapper zebra={index % 2 === 0}>
-				<StyledListItemButton
-					selected={false}
-					sx={{ pl: 4 }}
-					onClick={() => navigateToStatementEditor(statement.id)}
-				>
-					<ListItemText
-						data-hj-suppress
-						primary={<TrunkatedTypography lines={3}>{content}</TrunkatedTypography>}
-						secondary={
-							<TrunkatedTypography lines={3}>
-								<StatementActorsText>
-									{linkedActors.length > 0 ? <Link /> : ''} {linkedActors}
-								</StatementActorsText>
-							</TrunkatedTypography>
-						}
-						style={{ color: statement.active ? 'inherit' : 'gray' }}
-					></ListItemText>
-				</StyledListItemButton>
-			</ZebraWrapper>
-		)
-	}
 
 	return (
 		<Container maxWidth="lg" style={{ height: '100%' }}>
@@ -174,14 +98,19 @@ export const Outliner = () => {
 									<TransitionGroup>
 										{visibleActors.map((actor) => (
 											<Collapse key={actor.id}>
-												{renderActor(actor)}
+												<OutlinerActor actor={actor} collapsed={actor.collapsed} />
 												<List dense component="div" disablePadding>
 													<TransitionGroup>
-														{actor.statements.map((statement, index) => (
-															<Collapse key={statement.id}>
-																{renderStatement(statement, actor, index)}
-															</Collapse>
-														))}
+														{!actor.collapsed &&
+															actor.statements.map((statement, index) => (
+																<Collapse key={statement.id}>
+																	<OutlinerStatement
+																		statement={statement}
+																		owningActor={actor}
+																		index={index}
+																	/>
+																</Collapse>
+															))}
 													</TransitionGroup>
 												</List>
 												<Divider />
@@ -189,12 +118,12 @@ export const Outliner = () => {
 										))}
 										{visibleEvents.map((event, index) => (
 											<Collapse key={event.id}>
-												{renderEvent(event)}
+												<OutlinerEvent event={event} />
 												<List dense component="div" disablePadding>
 													<TransitionGroup>
 														{event.statements.map((statement, index) => (
 															<Collapse key={statement.id}>
-																{renderStatement(statement, null, index)}
+																<OutlinerStatement statement={statement} owningActor={null} index={index} />
 															</Collapse>
 														))}
 													</TransitionGroup>

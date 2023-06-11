@@ -145,6 +145,7 @@ export type CreateActorApiArg = {
 	body: {
 		name: string
 		title?: string
+		color?: string
 		description?: string
 	}
 }
@@ -155,6 +156,7 @@ export type UpdateActorApiResponse = /** status 200  */ {
 	name: string
 	title: string
 	description: string
+	color: string
 	worldId: string
 }
 export type UpdateActorApiArg = {
@@ -165,6 +167,7 @@ export type UpdateActorApiArg = {
 	body: {
 		name?: string
 		title?: string
+		color?: string
 		description?: string
 	}
 }
@@ -175,6 +178,7 @@ export type DeleteActorApiResponse = /** status 200  */ {
 	name: string
 	title: string
 	description: string
+	color: string
 	worldId: string
 }
 export type DeleteActorApiArg = {
@@ -199,7 +203,8 @@ export type IssueActorStatementApiArg = {
 	worldId: string
 	body: {
 		eventId: string
-		actorIds: string[]
+		targetActorIds: string[]
+		mentionedActorIds?: string[]
 		content: string
 		title?: string
 	}
@@ -292,6 +297,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		name: string
 		title: string
 		description: string
+		color: string
 		worldId: string
 		statements: {
 			id: string
@@ -303,13 +309,24 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			revokedByEventId?: string
 			replacedStatementId?: string
 			replacedByStatementId?: string
-			relatedActors: {
+			mentionedActors: {
 				id: string
 				createdAt: string
 				updatedAt: string
 				name: string
 				title: string
 				description: string
+				color: string
+				worldId: string
+			}[]
+			targetActors: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				title: string
+				description: string
+				color: string
 				worldId: string
 			}[]
 		}[]
@@ -344,13 +361,24 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			revokedByEventId?: string
 			replacedStatementId?: string
 			replacedByStatementId?: string
-			relatedActors: {
+			mentionedActors: {
 				id: string
 				createdAt: string
 				updatedAt: string
 				name: string
 				title: string
 				description: string
+				color: string
+				worldId: string
+			}[]
+			targetActors: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				title: string
+				description: string
+				color: string
 				worldId: string
 			}[]
 		}[]
@@ -453,13 +481,24 @@ export type UpdateWorldStatementApiResponse = /** status 200  */ {
 	revokedByEventId?: string
 	replacedStatementId?: string
 	replacedByStatementId?: string
-	relatedActors: {
+	mentionedActors: {
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
 		title: string
 		description: string
+		color: string
+		worldId: string
+	}[]
+	targetActors: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		title: string
+		description: string
+		color: string
 		worldId: string
 	}[]
 }
@@ -469,7 +508,8 @@ export type UpdateWorldStatementApiArg = {
 	/** Any string value */
 	statementId: string
 	body: {
-		relatedActorIds?: string[]
+		targetActorIds?: string[]
+		mentionedActorIds?: string[]
 		content?: string
 		title?: string
 	}

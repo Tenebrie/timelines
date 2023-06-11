@@ -28,21 +28,33 @@ export const StatementDetailsEditor = ({ statement }: Props) => {
 
 	const [title, setTitle] = useState<string>(statement.title)
 	const [content, setContent] = useState<string>(statement.content)
-	const [selectedActors, setSelectedActors] = useState<Actor[]>(mapPreselectedActors(statement.relatedActors))
+	const [selectedActors, setSelectedActors] = useState<Actor[]>(mapPreselectedActors(statement.targetActors))
+	const [mentionedActors, setMentionedActors] = useState<Actor[]>(
+		mapPreselectedActors(statement.mentionedActors)
+	)
+
+	const targetActorOptions = actorOptions.filter(
+		(option) => !mentionedActors.some((actor) => actor.id === option.id)
+	)
+	const mentionedActorOptions = actorOptions.filter(
+		(option) => !selectedActors.some((actor) => actor.id === option.id)
+	)
 
 	const { error, raiseError, clearError } = useErrorState<{
 		SAVING_ERROR: string
 	}>()
 
 	const savingEnabled = useRef<boolean>(true)
-	const lastSaved = useRef<Pick<WorldStatement, 'title' | 'content' | 'relatedActors'>>(statement)
+	const lastSaved =
+		useRef<Pick<WorldStatement, 'title' | 'content' | 'targetActors' | 'mentionedActors'>>(statement)
 	const lastSavedAt = useRef<Date>(new Date(statement.updatedAt))
 
 	useEffect(() => {
 		if (new Date(statement.updatedAt) > lastSavedAt.current) {
 			setTitle(statement.title)
 			setContent(statement.content)
-			setSelectedActors(mapPreselectedActors(statement.relatedActors))
+			setSelectedActors(mapPreselectedActors(statement.targetActors))
+			setMentionedActors(mapPreselectedActors(statement.mentionedActors))
 			savingEnabled.current = false
 		}
 	}, [statement, actors, mapPreselectedActors])
@@ -85,7 +97,8 @@ export const StatementDetailsEditor = ({ statement }: Props) => {
 			sendUpdate({
 				title: title.trim(),
 				content: content.trim(),
-				relatedActorIds: selectedActors.map((a) => a.id),
+				targetActorIds: selectedActors.map((a) => a.id),
+				mentionedActorIds: mentionedActors.map((a) => a.id),
 			}),
 		isSaving,
 	})
@@ -100,13 +113,14 @@ export const StatementDetailsEditor = ({ statement }: Props) => {
 			isFirstRender ||
 			(lastSaved.current.title === title &&
 				lastSaved.current.content === content &&
-				arraysEqual(lastSaved.current.relatedActors, selectedActors, (a, b) => a.id === b.id))
+				arraysEqual(lastSaved.current.targetActors, selectedActors, (a, b) => a.id === b.id) &&
+				arraysEqual(lastSaved.current.mentionedActors, mentionedActors, (a, b) => a.id === b.id))
 		) {
 			return
 		}
 
 		autosave()
-	}, [title, content, selectedActors, sendUpdate, isFirstRender, autosave])
+	}, [title, content, selectedActors, mentionedActors, sendUpdate, isFirstRender, autosave])
 
 	useEffect(() => {
 		clearError()
@@ -151,11 +165,21 @@ export const StatementDetailsEditor = ({ statement }: Props) => {
 					value={selectedActors}
 					onChange={(_, value) => setSelectedActors(value)}
 					multiple={true}
-					options={actorOptions}
+					options={targetActorOptions}
 					isOptionEqualToValue={(option, value) => option.id === value.id}
 					autoHighlight
 					renderOption={renderOption}
 					renderInput={(params) => <TextField {...params} label="Actors" />}
+				/>
+				<Autocomplete
+					value={mentionedActors}
+					onChange={(_, value) => setMentionedActors(value)}
+					multiple={true}
+					options={mentionedActorOptions}
+					isOptionEqualToValue={(option, value) => option.id === value.id}
+					autoHighlight
+					renderOption={renderOption}
+					renderInput={(params) => <TextField {...params} label="Mentioned actors (Optional)" />}
 				/>
 				<Stack spacing={2} direction="row-reverse">
 					<Tooltip title={shortcutLabel} arrow placement="top">

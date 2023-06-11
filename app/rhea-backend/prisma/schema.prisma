@@ -61,6 +61,9 @@ model WorldEvent {
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String
+
+  introducedActors Actor[] @relation(name: "EventIntroducedActors")
+  terminatedActors Actor[] @relation(name: "EventTerminatedActors")
 }
 
 model WorldStatement {
@@ -81,7 +84,8 @@ model WorldStatement {
   replacedStatementId   String?         @unique
   replacedByStatementId String?         @unique
 
-  relatedActors Actor[]
+  targetActors    Actor[] @relation("EventTargetActors")
+  mentionedActors Actor[] @relation("EventMentionedActors")
 }
 
 model Actor {
@@ -92,8 +96,13 @@ model Actor {
   name        String
   title       String @default("")
   description String @default("")
+  color       String @default("")
 
-  statements            WorldStatement[]
+  introducedIn WorldEvent[] @relation(name: "EventIntroducedActors")
+  terminatedIn WorldEvent[] @relation(name: "EventTerminatedActors")
+
+  statements            WorldStatement[]    @relation("EventTargetActors")
+  mentionedIn           WorldStatement[]    @relation("EventMentionedActors")
   relationships         ActorRelationship[] @relation(name: "ActorRelationships")
   receivedRelationships ActorRelationship[] @relation(name: "ReceivedActorRelationships")
   world                 World               @relation(fields: [worldId], references: [id])

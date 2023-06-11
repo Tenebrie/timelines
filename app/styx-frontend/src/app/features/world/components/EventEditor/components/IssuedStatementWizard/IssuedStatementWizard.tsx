@@ -25,6 +25,7 @@ export const IssuedStatementWizard = () => {
 	const [title, setTitle] = useState('')
 	const [content, setContent] = useState('')
 	const [selectedActors, setSelectedActors] = useState<Actor[]>([])
+	const [mentionedActors, setMentionedActors] = useState<Actor[]>([])
 
 	const { error, raiseError, clearError } = useErrorState<{
 		MISSING_CONTENT: string
@@ -48,6 +49,7 @@ export const IssuedStatementWizard = () => {
 			setTitle('')
 			setContent('')
 			setSelectedActors([])
+			setMentionedActors([])
 			clearError()
 		},
 	})
@@ -67,7 +69,7 @@ export const IssuedStatementWizard = () => {
 		}
 
 		if (scope === 'actor' && selectedActors.length === 0) {
-			raiseError('MISSING_ACTORS', 'Actor statements require at least one actor')
+			raiseError('MISSING_ACTORS', 'Actor statements require at least one target actor')
 			return
 		}
 
@@ -77,8 +79,8 @@ export const IssuedStatementWizard = () => {
 					return issueWorldStatement({
 						worldId: eventEditorParams.worldId,
 						body: {
-							title: title.length > 0 ? title : undefined,
-							content,
+							title: title.trim(),
+							content: content.trim(),
 							eventId: eventEditorParams.eventId,
 						},
 					})
@@ -86,10 +88,11 @@ export const IssuedStatementWizard = () => {
 				return issueActorStatement({
 					worldId: eventEditorParams.worldId,
 					body: {
-						title: title.length > 0 ? title : undefined,
-						content,
+						title: title.trim(),
+						content: content.trim(),
 						eventId: eventEditorParams.eventId,
-						actorIds: selectedActors.map((actor) => actor.id),
+						targetActorIds: selectedActors.map((actor) => actor.id),
+						mentionedActorIds: mentionedActors.map((actor) => actor.id),
 					},
 				})
 			})()

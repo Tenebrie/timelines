@@ -124,7 +124,12 @@ export const WorldService = {
 
 	issueWorldStatement: async (
 		data: Pick<WorldStatement, 'content'> &
-			Partial<Pick<WorldStatement, 'title'>> & { worldId: string; eventId: string; relatedActors: Actor[] }
+			Partial<Pick<WorldStatement, 'title'>> & {
+				worldId: string
+				eventId: string
+				targetActors: Actor[]
+				mentionedActors: Actor[]
+			}
 	) => {
 		const [statement, world] = await dbClient.$transaction([
 			dbClient.worldStatement.create({
@@ -132,8 +137,11 @@ export const WorldService = {
 					issuedByEventId: data.eventId,
 					title: data.title,
 					content: data.content,
-					relatedActors: {
-						connect: data.relatedActors.map((actor) => ({ id: actor.id })),
+					targetActors: {
+						connect: data.targetActors.map((actor) => ({ id: actor.id })),
+					},
+					mentionedActors: {
+						connect: data.mentionedActors.map((actor) => ({ id: actor.id })),
 					},
 				},
 			}),
@@ -152,29 +160,37 @@ export const WorldService = {
 	}: {
 		worldId: string
 		statementId: string
-		params: Partial<WorldStatement & { relatedActors: Actor[] }>
+		params: Partial<WorldStatement> & { targetActors: Actor[] | null; mentionedActors: Actor[] | null }
 	}) => {
-		const [event, world] = await dbClient.$transaction([
+		const [statement, world] = await dbClient.$transaction([
 			dbClient.worldStatement.update({
 				where: {
 					id: statementId,
 				},
 				data: {
 					...params,
-					relatedActors: params.relatedActors
-						? {
-								set: params.relatedActors.map((actor) => ({ id: actor.id })),
-						  }
-						: undefined,
+					targetActors:
+						params.targetActors !== null
+							? {
+									set: params.targetActors.map((actor) => ({ id: actor.id })),
+							  }
+							: undefined,
+					mentionedActors:
+						params.mentionedActors !== null
+							? {
+									set: params.mentionedActors.map((actor) => ({ id: actor.id })),
+							  }
+							: undefined,
 				},
 				include: {
-					relatedActors: true,
+					targetActors: true,
+					mentionedActors: true,
 				},
 			}),
 			touchWorld(worldId),
 		])
 		return {
-			event,
+			statement,
 			world,
 		}
 	},
@@ -256,7 +272,8 @@ export const WorldService = {
 					include: {
 						statements: {
 							include: {
-								relatedActors: true,
+								targetActors: true,
+								mentionedActors: true,
 							},
 						},
 						relationships: true,
@@ -267,7 +284,8 @@ export const WorldService = {
 					include: {
 						issuedStatements: {
 							include: {
-								relatedActors: true,
+								targetActors: true,
+								mentionedActors: true,
 							},
 						},
 						revokedStatements: true,

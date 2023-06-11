@@ -39,8 +39,8 @@ describe('<Outliner />', () => {
 		renderWithProviders(
 			<Outliner />,
 			getPreloadedState([
-				mockStatementModel({ text: 'First statement text' }),
-				mockStatementModel({ text: 'Second statement text' }),
+				mockStatementModel({ content: 'First statement text' }),
+				mockStatementModel({ content: 'Second statement text' }),
 			])
 		)
 
@@ -52,8 +52,8 @@ describe('<Outliner />', () => {
 		renderWithProviders(
 			<Outliner />,
 			getPreloadedState([
-				mockStatementModel({ text: 'First statement text' }),
-				mockStatementModel({ text: 'Second statement text' }),
+				mockStatementModel({ content: 'First statement text' }),
+				mockStatementModel({ content: 'Second statement text' }),
 			])
 		)
 
@@ -67,7 +67,7 @@ describe('<Outliner />', () => {
 				events: [
 					mockEventModel({
 						timestamp: 1000000,
-						issuedStatements: [mockStatementModel({ text: 'First statement text' })],
+						issuedStatements: [mockStatementModel({ content: 'First statement text' })],
 					}),
 				],
 			})

@@ -16,7 +16,7 @@ export const ActorService = {
 
 	createActor: async (
 		worldId: string,
-		data: Pick<Actor, 'name'> & Partial<Pick<Actor, 'title' | 'description'>>
+		data: Pick<Actor, 'name'> & Partial<Pick<Actor, 'title' | 'color' | 'description'>>
 	) => {
 		const [actor, world] = await dbClient.$transaction([
 			dbClient.actor.create({
@@ -24,6 +24,7 @@ export const ActorService = {
 					worldId,
 					name: data.name,
 					title: data.title,
+					color: data.color,
 					description: data.description,
 				},
 				select: {
@@ -52,7 +53,12 @@ export const ActorService = {
 				where: {
 					id: actorId,
 				},
-				data: params,
+				data: {
+					name: params.name,
+					title: params.title,
+					color: params.color,
+					description: params.description,
+				},
 			}),
 			touchWorld(worldId),
 		])

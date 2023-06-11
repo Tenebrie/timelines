@@ -170,6 +170,7 @@ export const mockWorldItemModel = (world: Partial<WorldItem> = {}): WorldItem =>
 export const mockWorldDetailsModel = (world: Partial<WorldDetails> = {}): WorldDetails => ({
 	...mockWorldItemModel(),
 	events: [],
+	actors: [],
 	...world,
 })
 
@@ -208,7 +209,9 @@ export const mockApiEventModel = (
 export const mockStatementModel = (statement: Partial<WorldStatement> = {}): WorldStatement => ({
 	id: getRandomId(),
 	title: 'Statement title',
-	text: 'Statement text',
+	content: 'Statement text',
+	targetActors: [],
+	mentionedActors: [],
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
 	issuedByEventId: 'event-1111-2222-3333-4444',

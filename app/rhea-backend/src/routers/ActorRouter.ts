@@ -3,7 +3,6 @@ import { ActorService } from '@src/services/ActorService'
 import { RedisService } from '@src/services/RedisService'
 import { WorldService } from '@src/services/WorldService'
 import {
-	BadRequestError,
 	OptionalParam,
 	PathParam,
 	RequiredParam,
@@ -15,7 +14,9 @@ import {
 	useRequestBody,
 } from 'tenebrie-framework'
 
+import { parseActorList } from './utils/parseActorList'
 import { NameStringValidator } from './validators/NameStringValidator'
+import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
 import { worldDetailsTag } from './WorldRouter'
 
@@ -39,6 +40,7 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		name: RequiredParam(NameStringValidator),
 		title: OptionalParam(NameStringValidator),
+		color: OptionalParam(NameStringValidator),
 		description: OptionalParam(StringValidator),
 	})
 
@@ -68,6 +70,7 @@ router.patch('/api/world/:worldId/actor/:actorId', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		name: OptionalParam(NameStringValidator),
 		title: OptionalParam(NameStringValidator),
+		color: OptionalParam(NameStringValidator),
 		description: OptionalParam(StringValidator),
 	})
 
@@ -121,20 +124,20 @@ router.post('/api/world/:worldId/actor/statement', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		eventId: RequiredParam(StringValidator),
-		actorIds: RequiredParam(StringArrayValidator),
+		targetActorIds: RequiredParam(StringArrayValidator),
+		mentionedActorIds: OptionalParam(StringArrayValidator),
 		content: RequiredParam(StringValidator),
-		title: OptionalParam(NameStringValidator),
+		title: OptionalParam(OptionalNameStringValidator),
 	})
 
-	const relatedActors = await ActorService.findActorsByIds(params.actorIds)
-	if (relatedActors.length < params.actorIds.length) {
-		throw new BadRequestError('Invalid actor IDs')
-	}
+	const targetActors = await parseActorList(params.targetActorIds)
+	const mentionedActors = await parseActorList(params.mentionedActorIds)
 
 	const { statement, world } = await WorldService.issueWorldStatement({
 		...params,
 		worldId,
-		relatedActors,
+		targetActors: targetActors ?? [],
+		mentionedActors: mentionedActors ?? [],
 	})
 
 	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })

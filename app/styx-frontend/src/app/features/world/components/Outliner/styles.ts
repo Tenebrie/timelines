@@ -59,7 +59,11 @@ export const ZebraWrapper = styled.div<{ zebra: boolean }>`
 	background: ${(props) => (props.zebra ? 'rgba(255, 255, 255, 0.03)' : 'none')};
 `
 
-export const StatementActorsText = styled.div`
+export const StatementColoredActor = styled.div`
+	color: purple;
+`
+
+export const StatementActorsText = styled.span`
 	color: teal;
 	align-items: center;
 	display: flex;

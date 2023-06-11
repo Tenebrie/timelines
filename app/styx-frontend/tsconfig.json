@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ES2015",
     "lib": [
       "dom",
       "dom.iterable",
@@ -18,10 +18,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "sourceMap": true,
     "jsx": "react-jsx",
-    "types": ["./node_modules/user-agent-data-types"]
+    "types": [
+      "./node_modules/user-agent-data-types"
+    ]
   },
   "include": [
-    "src"
-, "src/app/features/time/hooks/useWorldCalendar.ts/feasrc/app/features/world/hooks/useWorldCalendar.tss
+    "src",
+  ]
 }

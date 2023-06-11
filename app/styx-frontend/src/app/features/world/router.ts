@@ -89,6 +89,7 @@ export const worldRoutes = {
 export type WorldRouteParamMapping = {
 	[worldRoutes.root]: WorldRootParams
 	[worldRoutes.outliner]: WorldOutlinerParams
+	[worldRoutes.actorEditor]: ActorEditorParams
 	[worldRoutes.eventEditor]: WorldEventEditorParams
 	[worldRoutes.statementEditor]: WorldStatementEditorParams
 }
