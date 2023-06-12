@@ -5,21 +5,16 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { TransitionGroup } from 'react-transition-group'
 
-import {
-	useIssueActorStatementMutation,
-	useIssueWorldStatementMutation,
-} from '../../../../../../../api/rheaApi'
-import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
-import { ModalFooter, useModalCleanup } from '../../../../../../../ui-lib/components/Modal'
-import Modal from '../../../../../../../ui-lib/components/Modal/Modal'
-import { ModalHeader } from '../../../../../../../ui-lib/components/Modal/styles'
-import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { useErrorState } from '../../../../../../utils/useErrorState'
-import { worldSlice } from '../../../../reducer'
-import { useWorldRouter } from '../../../../router'
-import { getIssuedStatementWizardState, getWorldState } from '../../../../selectors'
-import { Actor } from '../../../../types'
-import { useAutocompleteActorList } from '../../../StatementEditor/ActorSelector/useAutocompleteActorList'
+import { useIssueActorStatementMutation, useIssueWorldStatementMutation } from '../../../../../api/rheaApi'
+import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
+import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '../../../../../ui-lib/components/Modal'
+import { parseApiResponse } from '../../../../utils/parseApiResponse'
+import { useErrorState } from '../../../../utils/useErrorState'
+import { worldSlice } from '../../reducer'
+import { useWorldRouter } from '../../router'
+import { getIssuedStatementWizardState, getWorldState } from '../../selectors'
+import { Actor } from '../../types'
+import { useAutocompleteActorList } from '../StatementEditor/ActorSelector/useAutocompleteActorList'
 
 export const IssuedStatementWizard = () => {
 	const [title, setTitle] = useState('')
@@ -35,14 +30,14 @@ export const IssuedStatementWizard = () => {
 	}>()
 
 	const { actors } = useSelector(getWorldState)
-	const { eventEditorParams } = useWorldRouter()
+	const { worldParams } = useWorldRouter()
 	const [issueWorldStatement, { isLoading: isWorldStatementCallLoading }] = useIssueWorldStatementMutation()
 	const [issueActorStatement, { isLoading: isActorStatementCallLoading }] = useIssueActorStatementMutation()
 
 	const dispatch = useDispatch()
 	const { closeIssuedStatementWizard } = worldSlice.actions
 
-	const { isOpen, scope } = useSelector(getIssuedStatementWizardState)
+	const { isOpen, scope, eventId } = useSelector(getIssuedStatementWizardState)
 
 	useModalCleanup({
 		isOpen,
@@ -78,20 +73,20 @@ export const IssuedStatementWizard = () => {
 			await (() => {
 				if (scope === 'world') {
 					return issueWorldStatement({
-						worldId: eventEditorParams.worldId,
+						worldId: worldParams.worldId,
 						body: {
 							title: title.trim(),
 							content: content.trim(),
-							eventId: eventEditorParams.eventId,
+							eventId,
 						},
 					})
 				}
 				return issueActorStatement({
-					worldId: eventEditorParams.worldId,
+					worldId: worldParams.worldId,
 					body: {
 						title: title.trim(),
 						content: content.trim(),
-						eventId: eventEditorParams.eventId,
+						eventId,
 						targetActorIds: selectedActors.map((actor) => actor.id),
 						mentionedActorIds: mentionedActors.map((actor) => actor.id),
 					},

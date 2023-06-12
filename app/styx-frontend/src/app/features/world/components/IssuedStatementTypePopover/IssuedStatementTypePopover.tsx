@@ -3,24 +3,25 @@ import { Divider, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/materi
 import { bindMenu, PopupState } from 'material-ui-popup-state/hooks'
 import { useDispatch } from 'react-redux'
 
-import { worldSlice } from '../../../../reducer'
+import { worldSlice } from '../../reducer'
 
 type Props = {
 	state: PopupState
+	eventId: string
 }
 
-export const StatementTypePopover = ({ state }: Props) => {
+export const StatementTypePopover = ({ state, eventId }: Props) => {
 	const dispatch = useDispatch()
 	const { openIssuedStatementWizard } = worldSlice.actions
 
 	const onWorldStatement = () => {
 		state.close()
-		dispatch(openIssuedStatementWizard({ mode: 'create', scope: 'world' }))
+		dispatch(openIssuedStatementWizard({ mode: 'create', scope: 'world', eventId }))
 	}
 
 	const onActorStatement = () => {
 		state.close()
-		dispatch(openIssuedStatementWizard({ mode: 'create', scope: 'actor' }))
+		dispatch(openIssuedStatementWizard({ mode: 'create', scope: 'actor', eventId }))
 	}
 
 	return (

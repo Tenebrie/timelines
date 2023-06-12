@@ -9,6 +9,7 @@ import { useTimelineLevelScalar } from '../../../time/hooks/useTimelineLevelScal
 import { useWorldTime } from '../../../time/hooks/useWorldTime'
 import { useWorldRouter } from '../../router'
 import { getTimelineState, getWorldState } from '../../selectors'
+import { IssuedStatementWizard } from '../IssuedStatementWizard/IssuedStatementWizard'
 import { ActorRenderer } from '../Renderers/ActorRenderer'
 import { EventRenderer } from '../Renderers/EventRenderer'
 import { StatementRenderer } from '../Renderers/StatementRenderer'
@@ -179,6 +180,7 @@ export const Outliner = () => {
 					</OutlinerContainer>
 				</Grid>
 			</Grid>
+			<IssuedStatementWizard />
 			<EventTutorialModal />
 		</Container>
 	)

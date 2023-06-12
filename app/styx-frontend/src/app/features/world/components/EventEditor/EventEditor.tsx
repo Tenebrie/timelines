@@ -7,11 +7,11 @@ import { OverlayingLabel } from '../../../../components/OverlayingLabel'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
+import { StatementTypePopover } from '../IssuedStatementTypePopover/IssuedStatementTypePopover'
+import { IssuedStatementWizard } from '../IssuedStatementWizard/IssuedStatementWizard'
 import { StatementRenderer } from '../Renderers/StatementRenderer'
 import { DeleteEventModal } from './components/DeleteEventModal/DeleteEventModal'
 import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetailsEditor'
-import { StatementTypePopover } from './components/IssuedStatementTypePopover/IssuedStatementTypePopover'
-import { IssuedStatementWizard } from './components/IssuedStatementWizard/IssuedStatementWizard'
 import { RevokedStatementWizard } from './components/RevokedStatementWizard/RevokedStatementWizard'
 import { FullHeightContainer, StatementsScroller, StatementsUnit } from './styles'
 
@@ -54,7 +54,7 @@ export const EventEditor = () => {
 						<Button {...bindTrigger(createStatementPopupState)}>
 							<Add /> Add
 						</Button>
-						<StatementTypePopover state={createStatementPopupState} />
+						<StatementTypePopover state={createStatementPopupState} eventId={eventId} />
 					</StatementsUnit>
 				</Grid>
 				<Grid item xs={12} md={6} order={{ xs: 0, md: 1 }} style={{ maxHeight: '100%' }}>

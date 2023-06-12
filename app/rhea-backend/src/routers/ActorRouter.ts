@@ -39,7 +39,7 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		name: RequiredParam(NameStringValidator),
-		title: OptionalParam(NameStringValidator),
+		title: OptionalParam(OptionalNameStringValidator),
 		color: OptionalParam(NameStringValidator),
 		description: OptionalParam(StringValidator),
 	})
@@ -69,7 +69,7 @@ router.patch('/api/world/:worldId/actor/:actorId', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		name: OptionalParam(NameStringValidator),
-		title: OptionalParam(NameStringValidator),
+		title: OptionalParam(OptionalNameStringValidator),
 		color: OptionalParam(NameStringValidator),
 		description: OptionalParam(StringValidator),
 	})

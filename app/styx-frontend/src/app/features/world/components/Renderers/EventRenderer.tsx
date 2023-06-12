@@ -1,8 +1,9 @@
-import { Edit } from '@mui/icons-material'
+import { Add, Edit } from '@mui/icons-material'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import cx from 'classnames'
+import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -10,6 +11,7 @@ import { preferencesSlice } from '../../../preferences/reducer'
 import { useEventIcons } from '../../hooks/useEventIcons'
 import { useWorldRouter } from '../../router'
 import { WorldEvent } from '../../types'
+import { StatementTypePopover } from '../IssuedStatementTypePopover/IssuedStatementTypePopover'
 import { StyledListItemButton, StyledListItemText } from '../Outliner/styles'
 import { ShowHideChevron } from './styles'
 
@@ -23,6 +25,7 @@ type Props = {
 export const EventRenderer = ({ event, secondary, highlighted, collapsed }: Props) => {
 	const { navigateToEventEditor } = useWorldRouter()
 	const { getIconPath } = useEventIcons()
+	const createStatementPopupState = usePopupState({ variant: 'popover', popupId: 'issuedStatementType' })
 
 	const dispatch = useDispatch()
 	const { collapseEventInOutliner, uncollapseEventInOutliner } = preferencesSlice.actions
@@ -40,6 +43,9 @@ export const EventRenderer = ({ event, secondary, highlighted, collapsed }: Prop
 			disableGutters
 			disablePadding
 			secondaryAction={[
+				<IconButton key={'add'} {...bindTrigger(createStatementPopupState)}>
+					<Add />
+				</IconButton>,
 				<IconButton key={'edit'} onClick={() => navigateToEventEditor(event.id)}>
 					<Edit />
 				</IconButton>,
@@ -54,6 +60,7 @@ export const EventRenderer = ({ event, secondary, highlighted, collapsed }: Prop
 				</ListItemIcon>
 				<StyledListItemText data-hj-suppress primary={event.name} secondary={secondary} />
 			</StyledListItemButton>
+			<StatementTypePopover state={createStatementPopupState} eventId={event.id} />
 		</ListItem>
 	)
 }

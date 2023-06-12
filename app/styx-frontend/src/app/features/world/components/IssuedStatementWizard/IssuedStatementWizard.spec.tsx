@@ -1,10 +1,10 @@
 import { screen } from '@testing-library/react'
 
-import { renderWithProviders } from '../../../../../../../jest/renderWithProviders'
-import { initialState } from '../../../../reducer'
-import { worldRoutes } from '../../../../router'
-import { mockRouter } from '../../../../router.mock'
-import { WorldEvent } from '../../../../types'
+import { renderWithProviders } from '../../../../../jest/renderWithProviders'
+import { initialState } from '../../reducer'
+import { worldRoutes } from '../../router'
+import { mockRouter } from '../../router.mock'
+import { WorldEvent } from '../../types'
 import { IssuedStatementWizard } from './IssuedStatementWizard'
 
 describe('<IssuedStatementWizard />', () => {
@@ -16,6 +16,7 @@ describe('<IssuedStatementWizard />', () => {
 					...initialState.eventEditor,
 					issuedStatementWizard: {
 						isOpen: true,
+						eventId: 'current',
 						mode: 'create' as const,
 						scope: 'world' as const,
 					},
@@ -26,9 +27,8 @@ describe('<IssuedStatementWizard />', () => {
 	})
 
 	beforeEach(() => {
-		mockRouter(worldRoutes.eventEditor, {
+		mockRouter(worldRoutes.root, {
 			worldId: '1111',
-			eventId: 'current',
 		})
 	})
 

@@ -48,6 +48,7 @@ export const initialState = {
 		},
 		issuedStatementWizard: {
 			isOpen: false as boolean,
+			eventId: '' as string,
 			mode: 'create' as 'create' | 'replace',
 			scope: 'world' as 'world' | 'actor',
 		},
@@ -163,11 +164,13 @@ export const worldSlice = createSlice({
 			{
 				payload,
 			}: PayloadAction<{
+				eventId: string
 				mode: WorldState['eventEditor']['issuedStatementWizard']['mode']
 				scope: WorldState['eventEditor']['issuedStatementWizard']['scope']
 			}>
 		) => {
 			state.eventEditor.issuedStatementWizard.isOpen = true
+			state.eventEditor.issuedStatementWizard.eventId = payload.eventId
 			state.eventEditor.issuedStatementWizard.mode = payload.mode
 			state.eventEditor.issuedStatementWizard.scope = payload.scope
 		},
