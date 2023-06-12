@@ -7,7 +7,7 @@ import { useCallback, useMemo } from 'react'
 export const useActorColors = () => {
 	const availableColors: { value: string; name: string }[] = useMemo(
 		() => [
-			{ value: 'teal', name: 'Teal' },
+			{ value: '#008080', name: 'Teal' },
 			{ value: blueGrey[200], name: 'Blue gray' },
 			{ value: brown[200], name: 'Brown' },
 			{ value: deepPurple[200], name: 'Purple' },

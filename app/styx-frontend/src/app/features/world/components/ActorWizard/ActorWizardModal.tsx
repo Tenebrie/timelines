@@ -1,6 +1,6 @@
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Alert, Button, Collapse, TextField, Tooltip } from '@mui/material'
+import { Alert, Button, Collapse, FormControl, InputLabel, Select, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { TransitionGroup } from 'react-transition-group'
@@ -11,15 +11,18 @@ import Modal, { useModalCleanup } from '../../../../../ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '../../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../../utils/parseApiResponse'
 import { useErrorState } from '../../../../utils/useErrorState'
+import { useActorColors } from '../../hooks/useActorColors'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getActorWizardState } from '../../selectors'
 
 export const ActorWizardModal = () => {
 	const { isOpen } = useSelector(getActorWizardState)
+	const { getColorOptions, renderOption, renderValue } = useActorColors()
 
 	const [name, setName] = useState('')
 	const [title, setTitle] = useState('')
+	const [color, setColor] = useState<string>(getColorOptions()[0].value)
 
 	const { error, raiseError, clearError } = useErrorState<{
 		MISSING_NAME: string
@@ -62,6 +65,7 @@ export const ActorWizardModal = () => {
 				body: {
 					name: name.trim(),
 					title: title.trim(),
+					color: color,
 				},
 			})
 		)
@@ -102,6 +106,19 @@ export const ActorWizardModal = () => {
 				value={title}
 				onChange={(event) => setTitle(event.target.value)}
 			/>
+			<FormControl fullWidth>
+				<InputLabel id="actorColorSelectLabel">Color</InputLabel>
+				<Select
+					MenuProps={{ PaperProps: { sx: { maxHeight: 700 } } }}
+					labelId="actorColorSelectLabel"
+					value={color}
+					onChange={(event) => setColor(event.target.value)}
+					label="Color"
+					renderValue={renderValue}
+				>
+					{getColorOptions().map((option) => renderOption(option))}
+				</Select>
+			</FormControl>
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">
 					<span>

@@ -55,5 +55,5 @@ fieldset {
 }
 
 .MuiMenu-paper {
-	transition: opacity 240ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 350ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
+	transition: opacity 240ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 270ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
 }

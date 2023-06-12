@@ -1,3 +1,4 @@
+import { Edit } from '@mui/icons-material'
 import { Avatar, IconButton, ListItem, ListItemIcon } from '@mui/material'
 import { useDispatch } from 'react-redux'
 
@@ -5,7 +6,6 @@ import { preferencesSlice } from '../../../../../preferences/reducer'
 import { useWorldRouter } from '../../../../router'
 import { ActorDetails } from '../../../../types'
 import { StyledListItemButton, StyledListItemText } from '../../styles'
-import { ShowHideChevron } from './styles'
 
 type Props = {
 	actor: ActorDetails & { highlighted: boolean }
@@ -46,12 +46,12 @@ export const OutlinerActor = ({ actor, collapsed }: Props) => {
 			disableGutters
 			disablePadding
 			secondaryAction={
-				<IconButton sx={{ marginRight: 2 }} onClick={onToggleOpen}>
-					<ShowHideChevron rotated={collapsed ? 1 : 0} />
+				<IconButton sx={{ marginRight: 2 }} onClick={() => navigateToActorEditor(actor.id)}>
+					<Edit />
 				</IconButton>
 			}
 		>
-			<StyledListItemButton selected={actor.highlighted} onClick={() => navigateToActorEditor(actor.id)}>
+			<StyledListItemButton selected={actor.highlighted} onClick={onToggleOpen}>
 				<ListItemIcon>
 					<Avatar sx={{ bgcolor: color }}>{initials}</Avatar>
 				</ListItemIcon>
