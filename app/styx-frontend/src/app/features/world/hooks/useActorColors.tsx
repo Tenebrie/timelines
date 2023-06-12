@@ -58,10 +58,18 @@ export const useActorColors = () => {
 		}))
 	}, [availableColors, renderOption])
 
+	const getColorIndex = useCallback(
+		(colorValue: string) => {
+			return availableColors.findIndex((color) => color.value === colorValue)
+		},
+		[availableColors]
+	)
+
 	return {
 		listAllColors,
 		getColorOptions,
 		renderOption,
 		renderValue,
+		getColorIndex,
 	}
 }

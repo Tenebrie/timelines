@@ -114,8 +114,8 @@ describe('<StatementEditor />', () => {
 			}),
 		})
 
-		await user.clear(screen.getByLabelText('Title'))
-		await user.type(screen.getByLabelText('Title'), 'New title')
+		await user.clear(screen.getByLabelText('Title (optional)'))
+		await user.type(screen.getByLabelText('Title (optional)'), 'New title')
 		await user.clear(screen.getByLabelText('Content'))
 		await user.type(screen.getByLabelText('Content'), 'New description')
 		await user.click(screen.getByText('Save'))
@@ -123,7 +123,9 @@ describe('<StatementEditor />', () => {
 		await waitFor(() => expect(hasBeenCalled).toBeTruthy())
 		expect(invocations[0].jsonBody).toEqual({
 			title: 'New title',
-			text: 'New description',
+			content: 'New description',
+			targetActorIds: [],
+			mentionedActorIds: [],
 		})
 	})
 

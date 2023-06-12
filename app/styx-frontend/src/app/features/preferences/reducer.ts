@@ -1,7 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Actor } from '../world/types'
+import { Actor, WorldEvent } from '../world/types'
 
 const initialState = {
 	time: {},
@@ -12,6 +12,7 @@ const initialState = {
 		showEmptyEvents: false as boolean,
 		showInactiveStatements: false as boolean,
 		collapsedActors: [] as string[],
+		collapsedEvents: [] as string[],
 	},
 	overview: {
 		panelOpen: true as boolean,
@@ -19,8 +20,6 @@ const initialState = {
 		actorsReversed: false as boolean,
 		eventsOpen: true as boolean,
 		eventsReversed: false as boolean,
-		statementsOpen: true as boolean,
-		statementsReversed: false as boolean,
 	},
 }
 
@@ -43,13 +42,12 @@ export const preferencesSlice = createSlice({
 				state.outliner.showEmptyEvents = !!parsedValue?.outliner?.showEmptyEvents
 				state.outliner.showInactiveStatements = !!parsedValue?.outliner?.showInactiveStatements
 				state.outliner.collapsedActors = parsedValue?.outliner?.collapsedActors ?? []
+				state.outliner.collapsedEvents = parsedValue?.outliner?.collapsedEvents ?? []
 				state.overview.panelOpen = !!parsedValue?.overview?.panelOpen
 				state.overview.actorsOpen = !!parsedValue?.overview?.actorsOpen
 				state.overview.actorsReversed = !!parsedValue?.overview?.actorsReversed
 				state.overview.eventsOpen = !!parsedValue?.overview?.eventsOpen
 				state.overview.eventsReversed = !!parsedValue?.overview?.eventsReversed
-				state.overview.statementsOpen = !!parsedValue?.overview?.statementsOpen
-				state.overview.statementsReversed = !!parsedValue?.overview?.statementsReversed
 			} catch (err) {
 				return
 			}
@@ -77,6 +75,14 @@ export const preferencesSlice = createSlice({
 			state.outliner.collapsedActors = state.outliner.collapsedActors.filter((id) => id !== payload.id)
 			saveToLocalStorage(state)
 		},
+		collapseEventInOutliner: (state, { payload }: PayloadAction<WorldEvent>) => {
+			state.outliner.collapsedEvents = [...new Set([...state.outliner.collapsedEvents, payload.id])]
+			saveToLocalStorage(state)
+		},
+		uncollapseEventInOutliner: (state, { payload }: PayloadAction<WorldEvent>) => {
+			state.outliner.collapsedEvents = state.outliner.collapsedEvents.filter((id) => id !== payload.id)
+			saveToLocalStorage(state)
+		},
 
 		/* Overview */
 		setPanelOpen: (state, { payload }: PayloadAction<boolean>) => {
@@ -99,17 +105,10 @@ export const preferencesSlice = createSlice({
 			state.overview.eventsReversed = payload
 			saveToLocalStorage(state)
 		},
-		setStatementsOpen: (state, { payload }: PayloadAction<boolean>) => {
-			state.overview.statementsOpen = payload
-			saveToLocalStorage(state)
-		},
-		setStatementsReversed: (state, { payload }: PayloadAction<boolean>) => {
-			state.overview.statementsReversed = payload
-			saveToLocalStorage(state)
-		},
 	},
 })
 
 export type PreferencesState = typeof initialState
+export const PreferencesInitialState = initialState
 
 export default preferencesSlice.reducer

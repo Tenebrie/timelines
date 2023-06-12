@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react'
+import { Queries, queries, render, renderHook, RenderHookOptions } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ReactNode } from 'react'
 import { Provider } from 'react-redux'
@@ -45,4 +45,28 @@ export const renderWithRouter = (
 			</Provider>
 		),
 	}
+}
+
+export const renderHookWithProviders = <
+	Result,
+	Props,
+	Q extends Queries = typeof queries,
+	Container extends Element | DocumentFragment = HTMLElement,
+	BaseElement extends Element | DocumentFragment = Container
+>(
+	render: (initialProps: Props) => Result,
+	{
+		preloadedState,
+		...options
+	}: RenderHookOptions<Props, Q, Container, BaseElement> & { preloadedState?: Partial<RootState> } = {}
+) => {
+	const store = generateStore({ preloadedState })
+	return renderHook(render, {
+		...options,
+		wrapper: ({ children }) => (
+			<Provider store={store}>
+				<MemoryRouter>{children}</MemoryRouter>
+			</Provider>
+		),
+	})
 }

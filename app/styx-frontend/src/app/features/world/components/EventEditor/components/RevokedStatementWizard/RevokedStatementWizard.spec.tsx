@@ -41,10 +41,8 @@ describe('<RevokedStatementWizard />', () => {
 					timestamp: 100,
 					issuedStatements: [
 						mockStatementModel({
-							title: 'Statement 1',
-						}),
-						mockStatementModel({
-							title: 'Statement 2',
+							title: 'Statement 3 Title',
+							content: 'Statement 3 Content',
 						}),
 					],
 				}),
@@ -54,10 +52,12 @@ describe('<RevokedStatementWizard />', () => {
 					timestamp: 0,
 					issuedStatements: [
 						mockStatementModel({
-							title: 'Statement 1',
+							title: 'Statement 1 Title',
+							content: 'Statement 1 Content',
 						}),
 						mockStatementModel({
-							title: 'Statement 2',
+							title: 'Statement 2 Title',
+							content: 'Statement 2 Content',
 						}),
 					],
 				}),
@@ -70,10 +70,10 @@ describe('<RevokedStatementWizard />', () => {
 
 		await user.click(screen.getByLabelText('Statement to revoke'))
 
-		expect(screen.getByText('Very old event / Statement 1')).toBeInTheDocument()
-		expect(screen.getByText('Very old event / Statement 2')).toBeInTheDocument()
-		expect(screen.getByText('Previous event / Statement 1')).toBeInTheDocument()
-		expect(screen.getByText('Previous event / Statement 2')).toBeInTheDocument()
+		const options = screen.getAllByRole('option').map((a) => a.textContent)
+		expect(options[0]).toContain('Statement 1 Title: Statement 1 Content')
+		expect(options[1]).toContain('Statement 2 Title: Statement 2 Content')
+		expect(options[2]).toContain('Statement 3 Title: Statement 3 Content')
 	})
 
 	it('renders placeholder if no statements are available', async () => {
@@ -101,10 +101,12 @@ describe('<RevokedStatementWizard />', () => {
 					issuedStatements: [
 						mockStatementModel({
 							title: 'Statement 1',
+							content: 'Statement 1 Content',
 						}),
 						mockStatementModel({
 							id: 'revoked',
 							title: 'Statement 2',
+							content: 'Statement 2 Content',
 						}),
 					],
 				}),
@@ -122,8 +124,7 @@ describe('<RevokedStatementWizard />', () => {
 
 		await user.click(screen.getByLabelText('Statement to revoke'))
 
-		expect(screen.getByText('Previous event / Statement 1')).toBeInTheDocument()
-		expect(screen.queryByText('Previous event / Statement 2')).not.toBeInTheDocument()
+		expect(screen.queryByText('Statement 2 Content')).not.toBeInTheDocument()
 	})
 
 	it('does not list statements revoked by the previous event', async () => {
@@ -138,6 +139,7 @@ describe('<RevokedStatementWizard />', () => {
 						mockStatementModel({
 							id: 'revoked',
 							title: 'Statement 1',
+							content: 'Statement 1 Content',
 						}),
 					],
 				}),
@@ -147,7 +149,8 @@ describe('<RevokedStatementWizard />', () => {
 					timestamp: 100,
 					issuedStatements: [
 						mockStatementModel({
-							title: 'Statement 1',
+							title: 'Statement 2',
+							content: 'Statement 2 Content',
 						}),
 					],
 					revokedStatements: [
@@ -165,7 +168,6 @@ describe('<RevokedStatementWizard />', () => {
 
 		await user.click(screen.getByLabelText('Statement to revoke'))
 
-		expect(screen.queryByText('Very old event / Statement 1')).not.toBeInTheDocument()
-		expect(screen.getByText('Previous event / Statement 1')).toBeInTheDocument()
+		expect(screen.queryByText('Statement 1 Content')).not.toBeInTheDocument()
 	})
 })

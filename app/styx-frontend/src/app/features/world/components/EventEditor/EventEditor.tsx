@@ -7,7 +7,7 @@ import { OverlayingLabel } from '../../../../components/OverlayingLabel'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
-import { StatementCard } from '../StatementCards/StatementCard/StatementCard'
+import { StatementRenderer } from '../Renderers/StatementRenderer'
 import { DeleteEventModal } from './components/DeleteEventModal/DeleteEventModal'
 import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetailsEditor'
 import { StatementTypePopover } from './components/IssuedStatementTypePopover/IssuedStatementTypePopover'
@@ -40,8 +40,15 @@ export const EventEditor = () => {
 					<StatementsUnit>
 						<OverlayingLabel>Issued statements</OverlayingLabel>
 						<StatementsScroller>
-							{addedWorldCards.map((card) => (
-								<StatementCard key={card.id} card={card} />
+							{addedWorldCards.map((card, index) => (
+								<StatementRenderer
+									key={card.id}
+									statement={card}
+									active
+									owningActor={null}
+									index={index}
+									short
+								/>
 							))}
 						</StatementsScroller>
 						<Button {...bindTrigger(createStatementPopupState)}>
@@ -57,8 +64,15 @@ export const EventEditor = () => {
 					<StatementsUnit>
 						<OverlayingLabel>Revoked statements</OverlayingLabel>
 						<StatementsScroller>
-							{removedWorldCards.map((card) => (
-								<StatementCard key={card.id} card={card} />
+							{removedWorldCards.map((card, index) => (
+								<StatementRenderer
+									key={card.id}
+									statement={card}
+									active
+									owningActor={null}
+									index={index}
+									short
+								/>
 							))}
 						</StatementsScroller>
 						<Button onClick={() => dispatch(openRevokedStatementWizard())}>

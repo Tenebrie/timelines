@@ -68,4 +68,5 @@ export const StatementActorsText = styled.span`
 	align-items: center;
 	display: flex;
 	gap: 4px;
+	flex-wrap: wrap;
 `

@@ -1,8 +1,7 @@
 import { Grid, Stack } from '@mui/material'
 
-import { OverlayingLabel } from '../../../../components/OverlayingLabel'
-import { StatementsUnit } from '../EventEditor/styles'
 import { ActorDetailsEditor } from './components/ActorDetailsEditor/ActorDetailsEditor'
+import { ActorEvents } from './components/ActorEvents/ActorEvents'
 import { DeleteActorModal } from './components/DeleteActorModal/DeleteActorModal'
 import { useActorEditorTarget } from './hooks/useActorEditorTarget'
 import { FullHeightContainer } from './styles'
@@ -22,10 +21,7 @@ export const ActorEditor = () => {
 				</Grid>
 				<Grid item xs={12} md={6} style={{ height: '100%' }}>
 					<Stack spacing={1}>
-						<StatementsUnit>
-							<OverlayingLabel>Related events</OverlayingLabel>
-							<div>Coming soon!</div>
-						</StatementsUnit>
+						<ActorEvents actor={actor} />
 					</Stack>
 				</Grid>
 			</Grid>

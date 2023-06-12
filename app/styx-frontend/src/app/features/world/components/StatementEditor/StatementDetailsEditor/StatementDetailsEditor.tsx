@@ -17,6 +17,7 @@ import { useWorldRouter } from '../../../router'
 import { getWorldState } from '../../../selectors'
 import { Actor, WorldStatement } from '../../../types'
 import { useAutocompleteActorList } from '../ActorSelector/useAutocompleteActorList'
+import { useMapActorsToOptions } from '../ActorSelector/useMapActorsToOptions'
 
 type Props = {
 	statement: WorldStatement
@@ -24,21 +25,20 @@ type Props = {
 
 export const StatementDetailsEditor = ({ statement }: Props) => {
 	const { actors } = useSelector(getWorldState)
-	const { actorOptions, renderOption, mapPreselectedActors } = useAutocompleteActorList({ actors })
+	const { mapActorsToOptions } = useMapActorsToOptions()
 
 	const [title, setTitle] = useState<string>(statement.title)
 	const [content, setContent] = useState<string>(statement.content)
-	const [selectedActors, setSelectedActors] = useState<Actor[]>(mapPreselectedActors(statement.targetActors))
+	const [selectedActors, setSelectedActors] = useState<Actor[]>(mapActorsToOptions(statement.targetActors))
 	const [mentionedActors, setMentionedActors] = useState<Actor[]>(
-		mapPreselectedActors(statement.mentionedActors)
+		mapActorsToOptions(statement.mentionedActors)
 	)
 
-	const targetActorOptions = actorOptions.filter(
-		(option) => !mentionedActors.some((actor) => actor.id === option.id)
-	)
-	const mentionedActorOptions = actorOptions.filter(
-		(option) => !selectedActors.some((actor) => actor.id === option.id)
-	)
+	const { actorOptions, mentionedActorOptions, renderOption } = useAutocompleteActorList({
+		actors,
+		selectedActors,
+		mentionedActors,
+	})
 
 	const { error, raiseError, clearError } = useErrorState<{
 		SAVING_ERROR: string
@@ -53,11 +53,11 @@ export const StatementDetailsEditor = ({ statement }: Props) => {
 		if (new Date(statement.updatedAt) > lastSavedAt.current) {
 			setTitle(statement.title)
 			setContent(statement.content)
-			setSelectedActors(mapPreselectedActors(statement.targetActors))
-			setMentionedActors(mapPreselectedActors(statement.mentionedActors))
+			setSelectedActors(mapActorsToOptions(statement.targetActors))
+			setMentionedActors(mapActorsToOptions(statement.mentionedActors))
 			savingEnabled.current = false
 		}
-	}, [statement, actors, mapPreselectedActors])
+	}, [statement, actors, mapActorsToOptions])
 
 	const { openDeleteStatementModal } = worldSlice.actions
 	const dispatch = useDispatch()
@@ -165,7 +165,7 @@ export const StatementDetailsEditor = ({ statement }: Props) => {
 					value={selectedActors}
 					onChange={(_, value) => setSelectedActors(value)}
 					multiple={true}
-					options={targetActorOptions}
+					options={actorOptions}
 					isOptionEqualToValue={(option, value) => option.id === value.id}
 					autoHighlight
 					renderOption={renderOption}

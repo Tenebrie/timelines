@@ -2,7 +2,7 @@ import { DefaultBodyType, rest } from 'msw'
 import { SetupServer } from 'msw/lib/node'
 import { v4 as getRandomId } from 'uuid'
 
-import { WorldDetails, WorldItem, WorldStatement } from '../app/features/world/types'
+import { ActorDetails, WorldDetails, WorldItem, WorldStatement } from '../app/features/world/types'
 import { WorldEvent } from '../app/features/world/types'
 import {
 	CheckAuthenticationApiResponse,
@@ -14,6 +14,7 @@ import {
 	GetWorldInfoApiResponse,
 	GetWorldsApiResponse,
 	PostLoginApiResponse,
+	UpdateActorApiResponse,
 	UpdateWorldEventApiResponse,
 	UpdateWorldStatementApiResponse,
 } from './rheaApi'
@@ -90,6 +91,16 @@ export const mockPostRegister = (server: SetupServer, params: MockParams<CreateA
 
 export const mockPostLogin = (server: SetupServer, params: MockParams<PostLoginApiResponse>) =>
 	generateEndpointMock(server, { method: 'post', path: '/api/auth/login', ...params })
+
+export const mockUpdateActor = (
+	server: SetupServer,
+	params: { worldId: string; actorId: string } & MockParams<UpdateActorApiResponse>
+) =>
+	generateEndpointMock(server, {
+		method: 'patch',
+		path: `/api/world/${params.worldId}/actor/${params.actorId}`,
+		...params,
+	})
 
 export const mockUpdateWorldEvent = (
 	server: SetupServer,
@@ -172,6 +183,21 @@ export const mockWorldDetailsModel = (world: Partial<WorldDetails> = {}): WorldD
 	events: [],
 	actors: [],
 	...world,
+})
+
+export const mockActorModel = (actor: Partial<ActorDetails> = {}): ActorDetails => ({
+	id: getRandomId(),
+	worldId: 'world-1111-2222-3333-4444',
+	name: 'Actor name',
+	title: 'Actor title',
+	description: 'Actor description',
+	createdAt: new Date(0).toISOString(),
+	updatedAt: new Date(0).toISOString(),
+	statements: [],
+	color: 'teal',
+	relationships: [],
+	receivedRelationships: [],
+	...actor,
 })
 
 export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent => ({

@@ -75,19 +75,24 @@ export const worldSlice = createSlice({
 		setName: (state, { payload }: PayloadAction<string>) => {
 			state.name = payload
 		},
-		loadWorld: (state, { payload }: PayloadAction<WorldDetails>) => {
+		loadWorld: (state, { payload }: PayloadAction<{ world: WorldDetails; actorColors: string[] }>) => {
+			const world = payload.world
 			state.isLoaded = true
-			state.id = payload.id
-			state.name = payload.name
-			state.actors = payload.actors
-			state.events = payload.events.map((e) => ({
+			state.id = world.id
+			state.name = world.name
+			state.actors = [...world.actors].sort(
+				(a, b) =>
+					payload.actorColors.indexOf(a.color) - payload.actorColors.indexOf(b.color) ||
+					a.name.localeCompare(b.name)
+			)
+			state.events = world.events.map((e) => ({
 				...e,
 				timestamp: Number(e.timestamp),
 			}))
-			state.calendar = payload.calendar
-			state.timeOrigin = payload.timeOrigin
-			state.createdAt = payload.createdAt
-			state.updatedAt = payload.updatedAt
+			state.calendar = world.calendar
+			state.timeOrigin = world.timeOrigin
+			state.createdAt = world.createdAt
+			state.updatedAt = world.updatedAt
 		},
 		unloadWorld: (state) => {
 			state.isLoaded = false
@@ -197,4 +202,5 @@ export const worldSlice = createSlice({
 })
 
 export type WorldState = typeof initialState
+export const worldInitialState = initialState
 export default worldSlice.reducer

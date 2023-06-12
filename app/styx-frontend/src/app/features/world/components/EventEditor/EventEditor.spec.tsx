@@ -190,6 +190,7 @@ describe('<EventEditor />', () => {
 		const addButtons = screen.getAllByTestId('AddIcon')
 
 		await user.click(addButtons[0])
+		await user.click(screen.getByText('World Statement'))
 
 		expect(screen.getByText('Issue Statement')).toBeInTheDocument()
 	})

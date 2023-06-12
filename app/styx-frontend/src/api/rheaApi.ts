@@ -392,6 +392,26 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			revokedByEventId?: string
 			replacedStatementId?: string
 			replacedByStatementId?: string
+			mentionedActors: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				title: string
+				description: string
+				color: string
+				worldId: string
+			}[]
+			targetActors: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				title: string
+				description: string
+				color: string
+				worldId: string
+			}[]
 		}[]
 	}[]
 }

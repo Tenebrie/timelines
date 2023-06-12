@@ -288,7 +288,12 @@ export const WorldService = {
 								mentionedActors: true,
 							},
 						},
-						revokedStatements: true,
+						revokedStatements: {
+							include: {
+								targetActors: true,
+								mentionedActors: true,
+							},
+						},
 					},
 				},
 			},

@@ -32,22 +32,6 @@ describe('<IssuedStatementWizard />', () => {
 		})
 	})
 
-	it('copies entered text into title until a first dot', async () => {
-		const { user } = renderWithProviders(<IssuedStatementWizard />, getPreloadedState([]))
-
-		await user.type(screen.getByLabelText('Content'), 'The title will end here. Stuff will continue.')
-
-		expect(screen.getByLabelText('Title')).toHaveValue('The title will end here')
-	})
-
-	it('copies entered text into title until a line break', async () => {
-		const { user } = renderWithProviders(<IssuedStatementWizard />, getPreloadedState([]))
-
-		await user.type(screen.getByLabelText('Content'), 'The title will end here,\nbut stuff will continue.')
-
-		expect(screen.getByLabelText('Title')).toHaveValue('The title will end here,')
-	})
-
 	it('allows unlimited characters in content field', async () => {
 		const { user } = renderWithProviders(<IssuedStatementWizard />, getPreloadedState([]))
 
@@ -67,8 +51,8 @@ describe('<IssuedStatementWizard />', () => {
 			.fill('ThisIsText')
 			.reduce((total, current) => total + current, '')
 
-		await user.type(screen.getByLabelText('Title'), inputText)
+		await user.type(screen.getByLabelText('Title (optional)'), inputText)
 
-		expect(screen.getByLabelText('Title')).toHaveValue(inputText.substring(0, 256))
+		expect(screen.getByLabelText('Title (optional)')).toHaveValue(inputText.substring(0, 256))
 	})
 })

@@ -12,6 +12,7 @@ import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
 import { getRevokedStatementWizardState, getWorldState } from '../../../../selectors'
+import { StatementVisualRenderer } from '../../../Renderers/StatementVisualRenderer'
 
 export const RevokedStatementWizard = () => {
 	const [id, setId] = useState('')
@@ -74,6 +75,7 @@ export const RevokedStatementWizard = () => {
 
 	const removableCards = worldEvents
 		.filter((event) => event.timestamp < editorEvent.timestamp)
+		.sort((a, b) => a.timestamp - b.timestamp)
 		.flatMap((event) =>
 			event.issuedStatements.map((statement) => ({
 				...statement,
@@ -98,7 +100,7 @@ export const RevokedStatementWizard = () => {
 					>
 						{removableCards.map((card) => (
 							<MenuItem key={card.id} value={card.id}>
-								{card.event.name} / {card.title}
+								<StatementVisualRenderer statement={card} active={true} owningActor={null} />
 							</MenuItem>
 						))}
 					</Select>

@@ -26,6 +26,7 @@ export const IssuedStatementWizard = () => {
 	const [content, setContent] = useState('')
 	const [selectedActors, setSelectedActors] = useState<Actor[]>([])
 	const [mentionedActors, setMentionedActors] = useState<Actor[]>([])
+	const [showAdvanced, setShowAdvanced] = useState<boolean>(false)
 
 	const { error, raiseError, clearError } = useErrorState<{
 		MISSING_CONTENT: string
@@ -111,7 +112,11 @@ export const IssuedStatementWizard = () => {
 		dispatch(closeIssuedStatementWizard())
 	}
 
-	const { actorOptions, renderOption } = useAutocompleteActorList({ actors })
+	const { actorOptions, mentionedActorOptions, renderOption } = useAutocompleteActorList({
+		actors,
+		selectedActors,
+		mentionedActors,
+	})
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		onConfirm()
@@ -146,18 +151,39 @@ export const IssuedStatementWizard = () => {
 				inputProps={{ maxLength: 256 }}
 			/>
 			{scope === 'actor' && (
-				<Autocomplete
-					value={selectedActors}
-					onChange={(_, value) => setSelectedActors(value)}
-					multiple={true}
-					options={actorOptions}
-					isOptionEqualToValue={(option, value) => option.id === value.id}
-					autoHighlight
-					renderOption={renderOption}
-					renderInput={(params) => (
-						<TextField {...params} label="Actors" error={!!error && error.type === 'MISSING_ACTORS'} />
-					)}
-				/>
+				<>
+					<Autocomplete
+						value={selectedActors}
+						onChange={(_, value) => setSelectedActors(value)}
+						multiple={true}
+						options={actorOptions}
+						isOptionEqualToValue={(option, value) => option.id === value.id}
+						autoHighlight
+						renderOption={renderOption}
+						renderInput={(params) => (
+							<TextField {...params} label="Actors" error={!!error && error.type === 'MISSING_ACTORS'} />
+						)}
+					/>
+					<Button variant="text" onClick={() => setShowAdvanced(!showAdvanced)}>
+						{showAdvanced ? 'Hide' : 'Show'} advanced options
+					</Button>
+					<TransitionGroup>
+						{showAdvanced && (
+							<Collapse>
+								<Autocomplete
+									value={mentionedActors}
+									onChange={(_, value) => setMentionedActors(value)}
+									multiple={true}
+									options={mentionedActorOptions}
+									isOptionEqualToValue={(option, value) => option.id === value.id}
+									autoHighlight
+									renderOption={renderOption}
+									renderInput={(params) => <TextField {...params} label="Mentioned actors (Optional)" />}
+								/>
+							</Collapse>
+						)}
+					</TransitionGroup>
+				</>
 			)}
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">

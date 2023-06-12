@@ -36,6 +36,7 @@
 	"dependencies": {
 		"@rollbar/react": "^0.11.1",
 		"bezier-easing": "^2.1.0",
+		"classnames": "^2.3.2",
 		"react-transition-group": "^4.4.5",
 		"rollbar": "^2.26.1",
 		"serve": "^14.2.0",

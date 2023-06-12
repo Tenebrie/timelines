@@ -1,6 +1,7 @@
 import debounce from 'lodash.debounce'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { isRunningInTest } from '../../../jest/isRunningInTest'
 import { useEffectOnce } from '../useEffectOnce'
 import { AutosaveIcon } from './AutosaveIcon'
 import { SavingState } from './types'
@@ -15,6 +16,8 @@ export const useAutosave = ({ onSave, isSaving }: Props) => {
 	const [savingState, setSavingState] = useState<SavingState>('none')
 	const successTimeoutRef = useRef<number | null>(null)
 
+	const autosaveDelay = isRunningInTest() ? 1000 : 3000
+
 	const onSaveRef = useRef<() => void>(onSave)
 	const debouncedAutosave = useRef(
 		debounce(() => {
@@ -23,7 +26,7 @@ export const useAutosave = ({ onSave, isSaving }: Props) => {
 			}
 			setSavingState('waiting')
 			onSaveRef.current()
-		}, 3000)
+		}, autosaveDelay)
 	)
 
 	const onAutosave = useCallback(() => {
