@@ -17,7 +17,7 @@ import { getWorldWizardModalState } from '../selectors'
 
 export const WorldWizardModal = () => {
 	const [name, setName] = useState('')
-	const [calendar, setCalendar] = useState<WorldCalendarType>('COUNTUP')
+	const [calendar, setCalendar] = useState<WorldCalendarType>('EARTH')
 	const [timeOrigin, setTimeOrigin] = useState<number>(0)
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
 
