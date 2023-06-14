@@ -1,7 +1,5 @@
-import { Collapse, Divider, List } from '@mui/material'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { TransitionGroup } from 'react-transition-group'
 
 import { OverlayingLabel } from '../../../../../../components/OverlayingLabel'
 import { getOutlinerPreferences } from '../../../../../preferences/selectors'
@@ -9,9 +7,9 @@ import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { getWorldState } from '../../../../selectors'
 import { Actor } from '../../../../types'
 import { StatementsUnit } from '../../../EventEditor/styles'
-import { EventRenderer } from '../../../Renderers/EventRenderer'
-import { StatementRenderer } from '../../../Renderers/StatementRenderer'
+import { EventWithStatementsRenderer } from '../../../Renderers/EventWithStatementsRenderer'
 import { StatementsScroller } from '../../styles'
+import { ActorEventsEmptyState } from './ActorEventsEmptyState'
 
 type Props = {
 	actor: Actor
@@ -25,13 +23,19 @@ export const ActorEvents = ({ actor }: Props) => {
 	const visibleEvents = events
 		.map((event) => ({
 			...event,
-			timeLabel: timeToLabel(event.timestamp),
+			secondary: timeToLabel(event.timestamp),
+			highlighted: false,
 			collapsed: collapsedEvents.includes(event.id),
-			issuedStatements: event.issuedStatements.filter(
-				(statement) =>
-					statement.targetActors.some((a) => a.id === actor.id) ||
-					statement.mentionedActors.some((a) => a.id === actor.id)
-			),
+			issuedStatements: event.issuedStatements
+				.filter(
+					(statement) =>
+						statement.targetActors.some((a) => a.id === actor.id) ||
+						statement.mentionedActors.some((a) => a.id === actor.id)
+				)
+				.map((statement) => ({
+					...statement,
+					active: true,
+				})),
 		}))
 		.filter((event) => event.issuedStatements.length > 0)
 
@@ -39,33 +43,15 @@ export const ActorEvents = ({ actor }: Props) => {
 		<StatementsUnit>
 			<OverlayingLabel>Related events</OverlayingLabel>
 			<StatementsScroller>
-				{visibleEvents.map((event) => (
-					<React.Fragment key={event.id}>
-						<EventRenderer
-							key={event.id}
-							event={event}
-							highlighted={false}
-							secondary={event.timeLabel}
-							collapsed={event.collapsed}
-						/>
-						<List dense component="div" disablePadding>
-							<TransitionGroup>
-								{!event.collapsed &&
-									event.issuedStatements.map((statement, index) => (
-										<Collapse key={statement.id}>
-											<StatementRenderer
-												statement={statement}
-												active={true}
-												owningActor={null}
-												index={index}
-											/>
-										</Collapse>
-									))}
-							</TransitionGroup>
-						</List>
-						<Divider />
-					</React.Fragment>
+				{visibleEvents.map((event, index) => (
+					<EventWithStatementsRenderer
+						key={event.id}
+						{...event}
+						event={event}
+						divider={index !== visibleEvents.length - 1}
+					/>
 				))}
+				{visibleEvents.length === 0 && <ActorEventsEmptyState />}
 			</StatementsScroller>
 		</StatementsUnit>
 	)

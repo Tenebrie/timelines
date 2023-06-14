@@ -12,11 +12,12 @@ import { ActorAvatar } from './ActorAvatar/ActorAvatar'
 import { ShowHideChevron } from './styles'
 
 type Props = {
-	actor: ActorDetails & { highlighted: boolean }
+	actor: ActorDetails
 	collapsed: boolean
+	highlighted: boolean
 }
 
-export const ActorRenderer = ({ actor, collapsed }: Props) => {
+export const ActorRenderer = ({ actor, collapsed, highlighted }: Props) => {
 	const { navigateToActorEditor } = useWorldRouter()
 
 	const dispatch = useDispatch()
@@ -43,7 +44,7 @@ export const ActorRenderer = ({ actor, collapsed }: Props) => {
 				</IconButton>,
 			]}
 		>
-			<StyledListItemButton selected={actor.highlighted} onClick={onToggleOpen}>
+			<StyledListItemButton selected={highlighted} onClick={onToggleOpen}>
 				<ListItemIcon>
 					<ActorAvatar actor={actor} />
 				</ListItemIcon>

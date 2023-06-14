@@ -62,9 +62,13 @@ export const StatementVisualRenderer = ({ statement, active, owningActor, short 
 	return (
 		<ListItemText
 			data-hj-suppress
-			primary={<TrunkatedTypography lines={3}>{content}</TrunkatedTypography>}
+			primary={
+				<TrunkatedTypography lines={3} sx={{ fontSize: '16px' }}>
+					{content}
+				</TrunkatedTypography>
+			}
 			secondary={
-				<TrunkatedTypography lines={3} component="span">
+				<TrunkatedTypography lines={3} sx={{ fontSize: '0.875rem' }} component="span">
 					<StatementActorsText>
 						{targetActors.length > 0 ? <Link /> : ''} {targetActors}
 						{mentionedActors.length > 0 ? <ArrowRightAlt /> : ''} {mentionedActors}

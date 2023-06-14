@@ -6,9 +6,11 @@ import {
 	mockGetWorlds,
 	mockNonAuthenticatedUser,
 	mockPostLogin,
+	mockUserModel,
 } from '../../../../api/rheaApi.mock'
 import { renderWithProviders, renderWithRouter } from '../../../../jest/renderWithProviders'
 import { appRoutes } from '../../world/router'
+import { authInitialState } from '../reducer'
 import { Login } from './Login'
 
 const server = setupServer()
@@ -25,6 +27,25 @@ describe('<Login />', () => {
 		expect(screen.getByLabelText('Password')).toBeInTheDocument()
 		expect(screen.getByText('Login')).toBeInTheDocument()
 		expect(screen.getByText('Create a new account')).toBeInTheDocument()
+	})
+
+	it("does not render the 'continue to app' alert", async () => {
+		renderWithProviders(<Login />)
+
+		expect(screen.queryByText(/It seems you've already logged in/)).not.toBeInTheDocument()
+	})
+
+	it("if logged in, renders the 'continue to app' alert", async () => {
+		renderWithProviders(<Login />, {
+			preloadedState: {
+				auth: {
+					...authInitialState,
+					user: mockUserModel(),
+				},
+			},
+		})
+
+		expect(screen.getByText(/It seems you've already logged in/)).toBeInTheDocument()
 	})
 
 	describe('with navigation', () => {

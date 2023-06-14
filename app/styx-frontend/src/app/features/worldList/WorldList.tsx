@@ -1,11 +1,13 @@
 import { Delete } from '@mui/icons-material'
-import { Button, Stack, Typography } from '@mui/material'
+import { Button, Container, Stack, Typography } from '@mui/material'
 import { useDispatch } from 'react-redux'
 
 import { useGetWorldsQuery } from '../../../api/rheaApi'
 import { BlockingSpinner } from '../../components/BlockingSpinner'
+import { TrunkatedSpan } from '../../components/TrunkatedTypography'
 import { useWorldRouter } from '../world/router'
 import { DeleteWorldModal } from './components/DeleteWorldModal'
+import { WorldListEmptyState } from './components/WorldListEmptyState'
 import { worldListSlice } from './reducer'
 import { WorldWizardModal } from './WorldWizard/WorldWizardModal'
 
@@ -30,31 +32,34 @@ export const WorldList = () => {
 	}
 
 	return (
-		<>
+		<Container style={{ position: 'relative' }}>
 			{!!data && (
 				<Stack spacing={1} minWidth={256}>
-					{data.length > 0 && <Typography variant="h6">Your Worlds:</Typography>}
+					<Typography variant="h6">Your Worlds:</Typography>
 					{data.map((world) => (
 						<Stack direction="row" justifyContent="space-between" key={world.id}>
 							<Button
 								fullWidth={true}
 								onClick={() => onLoad(world.id)}
-								style={{ justifyContent: 'start' }}
+								style={{ textAlign: 'start', lineBreak: 'anywhere' }}
 								data-hj-suppress
 							>
-								- {world.name}
+								<TrunkatedSpan lines={1} style={{ width: '100%' }}>
+									- {world.name}
+								</TrunkatedSpan>
 							</Button>
 							<Button onClick={() => onDelete(world)}>
 								<Delete />
 							</Button>
 						</Stack>
 					))}
+					{data.length === 0 && <WorldListEmptyState />}
 					<Button onClick={onCreate}>Create new world...</Button>
 				</Stack>
 			)}
 			<BlockingSpinner visible={isFetching} />
 			<WorldWizardModal />
 			<DeleteWorldModal />
-		</>
+		</Container>
 	)
 }

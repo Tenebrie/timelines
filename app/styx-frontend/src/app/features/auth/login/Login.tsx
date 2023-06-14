@@ -11,6 +11,7 @@ import { TenebrieLogo } from '../../../components/TenebrieLogo'
 import { parseApiResponse } from '../../../utils/parseApiResponse'
 import { useErrorState } from '../../../utils/useErrorState'
 import { useAppRouter } from '../../world/router'
+import { AlreadyLoggedInAlert } from '../alreadyLoggedInAlert/AlreadyLoggedInAlert'
 import { authSlice } from '../reducer'
 
 export const Login = () => {
@@ -71,10 +72,13 @@ export const Login = () => {
 			<Stack alignItems="center">
 				<TenebrieLogo />
 			</Stack>
-			<TransitionGroup>
+			<AlreadyLoggedInAlert parentSpacing={2} />
+			<TransitionGroup style={{ marginBottom: -16 }}>
 				{error && (
 					<Collapse>
-						<Alert severity="error">{error.data}</Alert>
+						<Alert style={{ marginBottom: 16 }} severity="error">
+							{error.data}
+						</Alert>
 					</Collapse>
 				)}
 			</TransitionGroup>

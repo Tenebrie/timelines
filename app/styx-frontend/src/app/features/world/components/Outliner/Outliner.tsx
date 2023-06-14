@@ -1,4 +1,4 @@
-import { Collapse, Container, Divider, Grid, List } from '@mui/material'
+import { Collapse, Container, Grid, List } from '@mui/material'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { TransitionGroup } from 'react-transition-group'
@@ -10,9 +10,8 @@ import { useWorldTime } from '../../../time/hooks/useWorldTime'
 import { useWorldRouter } from '../../router'
 import { getTimelineState, getWorldState } from '../../selectors'
 import { IssuedStatementWizard } from '../IssuedStatementWizard/IssuedStatementWizard'
-import { ActorRenderer } from '../Renderers/ActorRenderer'
-import { EventRenderer } from '../Renderers/EventRenderer'
-import { StatementRenderer } from '../Renderers/StatementRenderer'
+import { ActorWithStatementsRenderer } from '../Renderers/ActorWithStatementsRenderer'
+import { EventWithStatementsRenderer } from '../Renderers/EventWithStatementsRenderer'
 import { EventTutorialModal } from './components/EventTutorialModal/EventTutorialModal'
 import { OutlinerControls } from './components/OutlinerControls/OutlinerControls'
 import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmptyState'
@@ -69,7 +68,7 @@ export const Outliner = () => {
 					secondary: timeToLabel(event.timestamp),
 					highlighted: Math.abs(event.timestamp - selectedTime) < highlightWithin,
 					collapsed: collapsedEvents.includes(event.id),
-					statements: event.issuedStatements
+					issuedStatements: event.issuedStatements
 						.map((statement) => ({
 							...statement,
 							active: activeStatements.some((card) => card.id === statement.id),
@@ -79,8 +78,8 @@ export const Outliner = () => {
 				.filter(
 					(event) =>
 						showEmptyEvents ||
-						event.statements.some((statement) => statement.active) ||
-						(event.statements.length > 0 && showInactiveStatements) ||
+						event.issuedStatements.some((statement) => statement.active) ||
+						(event.issuedStatements.length > 0 && showInactiveStatements) ||
 						event.highlighted
 				)
 				.sort((a, b) => b.timestamp - a.timestamp || b.index - a.index),
@@ -123,51 +122,22 @@ export const Outliner = () => {
 							<StatementsScroller>
 								<List disablePadding>
 									<TransitionGroup>
-										{visibleActors.map((actor) => (
+										{visibleActors.map((actor, index) => (
 											<Collapse key={actor.id}>
-												<ActorRenderer actor={actor} collapsed={actor.collapsed} />
-												<List dense component="div" disablePadding>
-													<TransitionGroup>
-														{!actor.collapsed &&
-															actor.statements.map((statement, index) => (
-																<Collapse key={statement.id}>
-																	<StatementRenderer
-																		statement={statement}
-																		active={statement.active}
-																		owningActor={actor}
-																		index={index}
-																	/>
-																</Collapse>
-															))}
-													</TransitionGroup>
-												</List>
-												<Divider />
+												<ActorWithStatementsRenderer
+													{...actor}
+													actor={actor}
+													divider={visibleEvents.length > 0 || index !== visibleActors.length - 1}
+												/>
 											</Collapse>
 										))}
 										{visibleEvents.map((event, index) => (
 											<Collapse key={event.id}>
-												<EventRenderer
+												<EventWithStatementsRenderer
+													{...event}
 													event={event}
-													secondary={event.secondary}
-													highlighted={event.highlighted}
-													collapsed={event.collapsed}
+													divider={index !== visibleEvents.length - 1}
 												/>
-												<List dense component="div" disablePadding>
-													<TransitionGroup>
-														{!event.collapsed &&
-															event.statements.map((statement, index) => (
-																<Collapse key={statement.id}>
-																	<StatementRenderer
-																		statement={statement}
-																		active={statement.active}
-																		owningActor={null}
-																		index={index}
-																	/>
-																</Collapse>
-															))}
-													</TransitionGroup>
-												</List>
-												{index !== visibleEvents.length - 1 && <Divider />}
 											</Collapse>
 										))}
 									</TransitionGroup>

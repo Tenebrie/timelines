@@ -31,6 +31,17 @@ describe('<WorldList />', () => {
 		expect(await screen.findByText('- My First World')).toBeInTheDocument()
 		expect(await screen.findByText('- My Second World')).toBeInTheDocument()
 		expect(await screen.findByText('- My Third World')).toBeInTheDocument()
+		expect(screen.queryByText('Nothing has been created yet!')).not.toBeInTheDocument()
+	})
+
+	it('renders empty state if no worlds are provided', async () => {
+		renderWithProviders(<WorldList />)
+
+		mockGetWorlds(server, {
+			response: [],
+		})
+
+		expect(await screen.findByText('Nothing has been created yet!')).toBeInTheDocument()
 	})
 
 	it('creates a world', async () => {

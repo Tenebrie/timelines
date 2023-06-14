@@ -19,6 +19,10 @@ export const parseApiResponse = <DataT, ErrorT>(
 	}
 
 	const errorData = (error as { data: unknown }).data
+	if (typeof errorData === 'string' && errorData.startsWith('<html>')) {
+		return { response: null, error: { status: 502, message: 'Unable to connect to the server' } }
+	}
+
 	if (typeof errorData === 'string' || typeof errorData === 'number') {
 		return { response: null, error: { status: 500, message: String(errorData) } }
 	}

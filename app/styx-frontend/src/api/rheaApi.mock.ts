@@ -2,6 +2,7 @@ import { DefaultBodyType, rest } from 'msw'
 import { SetupServer } from 'msw/lib/node'
 import { v4 as getRandomId } from 'uuid'
 
+import { User } from '../app/features/auth/reducer'
 import { ActorDetails, WorldDetails, WorldItem, WorldStatement } from '../app/features/world/types'
 import { WorldEvent } from '../app/features/world/types'
 import {
@@ -167,6 +168,13 @@ export const mockNonAuthenticatedUser = (server: SetupServer) =>
 /**
  * Mock API models
  */
+export const mockUserModel = (user: Partial<User> = {}): User => ({
+	id: getRandomId(),
+	email: 'user@localhost',
+	username: 'User',
+	...user,
+})
+
 export const mockWorldItemModel = (world: Partial<WorldItem> = {}): WorldItem => ({
 	id: getRandomId(),
 	name: 'World name',
@@ -194,7 +202,7 @@ export const mockActorModel = (actor: Partial<ActorDetails> = {}): ActorDetails 
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
 	statements: [],
-	color: 'teal',
+	color: '#008080',
 	relationships: [],
 	receivedRelationships: [],
 	...actor,

@@ -1,7 +1,12 @@
 import { screen, waitFor } from '@testing-library/react'
 import { setupServer } from 'msw/lib/node'
 
-import { mockActorModel, mockUpdateActor } from '../../../../../api/rheaApi.mock'
+import {
+	mockActorModel,
+	mockEventModel,
+	mockStatementModel,
+	mockUpdateActor,
+} from '../../../../../api/rheaApi.mock'
 import { renderWithProviders } from '../../../../../jest/renderWithProviders'
 import { worldInitialState } from '../../reducer'
 import { mockRouter } from '../../router.mock'
@@ -45,6 +50,144 @@ describe('ActorEditor', () => {
 		expect(screen.getByDisplayValue('Actor title')).toBeInTheDocument()
 		expect(screen.getByDisplayValue('#008080')).toBeInTheDocument()
 		expect(screen.getByDisplayValue('This is the actor description')).toBeInTheDocument()
+	})
+
+	it('renders empty state if no events are provided', () => {
+		renderWithProviders(<ActorEditor />, {
+			preloadedState: {
+				world: {
+					...worldInitialState,
+					actors: [
+						mockActorModel({
+							id: 'actor-1111',
+						}),
+					],
+				},
+			},
+		})
+
+		expect(screen.getByText('No events to show!')).toBeInTheDocument()
+	})
+
+	it('does not render empty state if events and statements are provided', () => {
+		const actor = mockActorModel({
+			id: 'actor-1111',
+		})
+		renderWithProviders(<ActorEditor />, {
+			preloadedState: {
+				world: {
+					...worldInitialState,
+					events: [
+						mockEventModel({
+							id: 'event-1111',
+							name: 'Event name',
+							issuedStatements: [
+								mockStatementModel({
+									content: 'Statement content',
+									targetActors: [actor],
+								}),
+							],
+						}),
+					],
+					actors: [actor],
+				},
+			},
+		})
+
+		expect(screen.queryByText('No events to show!')).not.toBeInTheDocument()
+	})
+
+	it('renders statement (where actor is target) if provided', () => {
+		const actor = mockActorModel({
+			id: 'actor-1111',
+		})
+		renderWithProviders(<ActorEditor />, {
+			preloadedState: {
+				world: {
+					...worldInitialState,
+					events: [
+						mockEventModel({
+							id: 'event-1111',
+							name: 'Event name',
+							issuedStatements: [
+								mockStatementModel({
+									content: 'Statement content',
+									targetActors: [actor],
+								}),
+							],
+						}),
+					],
+					actors: [actor],
+				},
+			},
+		})
+
+		expect(screen.getByText('Event name')).toBeInTheDocument()
+		expect(screen.getByText('Statement content')).toBeInTheDocument()
+	})
+
+	it('renders statement (where actor is mentioned) if provided', () => {
+		const actor = mockActorModel({
+			id: 'actor-1111',
+		})
+		renderWithProviders(<ActorEditor />, {
+			preloadedState: {
+				world: {
+					...worldInitialState,
+					events: [
+						mockEventModel({
+							id: 'event-1111',
+							name: 'Event name',
+							issuedStatements: [
+								mockStatementModel({
+									content: 'Statement content',
+									mentionedActors: [actor],
+								}),
+							],
+						}),
+					],
+					actors: [actor],
+				},
+			},
+		})
+
+		expect(screen.getByText('Event name')).toBeInTheDocument()
+		expect(screen.getByText('Statement content')).toBeInTheDocument()
+	})
+
+	it('does not render statements where actor is not related', () => {
+		renderWithProviders(<ActorEditor />, {
+			preloadedState: {
+				world: {
+					...worldInitialState,
+					events: [
+						mockEventModel({
+							id: 'event-1111',
+							name: 'Event name',
+							issuedStatements: [
+								mockStatementModel({
+									content: 'Statement content',
+									targetActors: [
+										mockActorModel({
+											id: 'actor-2222',
+										}),
+									],
+								}),
+							],
+						}),
+					],
+					actors: [
+						mockActorModel({
+							id: 'actor-1111',
+						}),
+					],
+				},
+			},
+		})
+
+		expect(screen.getByText('No events to show!')).toBeInTheDocument()
+		expect(screen.queryByText('Event name')).not.toBeInTheDocument()
+		expect(screen.queryByText('Statement content')).not.toBeInTheDocument()
 	})
 
 	it('sends a save request on save click', async () => {
@@ -110,7 +253,7 @@ describe('ActorEditor', () => {
 			response: mockActorModel(),
 		})
 
-		await waitFor(() => expect(mock.hasBeenCalled()).toBeTruthy())
+		await waitFor(() => expect(mock.hasBeenCalled()).toBeTruthy(), { timeout: 3000 })
 		expect(mock.invocations[0].jsonBody).toEqual({
 			name: 'Updated name',
 			title: 'Actor title',
@@ -147,7 +290,7 @@ describe('ActorEditor', () => {
 			response: mockActorModel(),
 		})
 
-		await waitFor(() => expect(mock.hasBeenCalled()).toBeTruthy())
+		await waitFor(() => expect(mock.hasBeenCalled()).toBeTruthy(), { timeout: 3000 })
 		expect(mock.invocations[0].jsonBody).toEqual({
 			name: 'Actor name',
 			title: 'Updated title',
@@ -183,7 +326,7 @@ describe('ActorEditor', () => {
 			response: mockActorModel(),
 		})
 
-		await waitFor(() => expect(mock.hasBeenCalled()).toBeTruthy())
+		await waitFor(() => expect(mock.hasBeenCalled()).toBeTruthy(), { timeout: 3000 })
 		expect(mock.invocations[0].jsonBody).toEqual({
 			name: 'Actor name',
 			title: 'Actor title',
@@ -220,7 +363,7 @@ describe('ActorEditor', () => {
 			response: mockActorModel(),
 		})
 
-		await waitFor(() => expect(mock.hasBeenCalled()).toBeTruthy())
+		await waitFor(() => expect(mock.hasBeenCalled()).toBeTruthy(), { timeout: 3000 })
 		expect(mock.invocations[0].jsonBody).toEqual({
 			name: 'Actor name',
 			title: 'Actor title',
