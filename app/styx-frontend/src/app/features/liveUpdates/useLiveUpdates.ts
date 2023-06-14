@@ -3,15 +3,18 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { rheaApi } from '../../../api/rheaApi'
 import { useEffectOnce } from '../../utils/useEffectOnce'
+import { authSlice } from '../auth/reducer'
 import { getWorldState } from '../world/selectors'
 
-const expBackoffDelays = [5, 100, 1000, 5000]
+const expBackoffDelays = [50, 1000, 10000, 30000]
 
 export const useLiveUpdates = () => {
 	const currentWebsocket = useRef<WebSocket>()
 	const heartbeatInterval = useRef<number | null>(null)
 	const backoffLevel = useRef<number>(-1)
 	const updatedAtRef = useRef<string>('0')
+
+	const { showCalliopeConnectionAlert, hideCalliopeConnectionAlert } = authSlice.actions
 	const dispatch = useDispatch()
 
 	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState)
@@ -80,6 +83,7 @@ export const useLiveUpdates = () => {
 
 			socket.onopen = function () {
 				console.info('[ws] Connection established!')
+				dispatch(hideCalliopeConnectionAlert())
 				socket.send('init')
 				backoffLevel.current = -1
 			}
@@ -95,6 +99,7 @@ export const useLiveUpdates = () => {
 				} else {
 					console.error('[ws] Connection lost. Reconnecting...')
 				}
+				dispatch(showCalliopeConnectionAlert())
 				clearHeartbeat()
 				reconnect()
 			}
@@ -107,7 +112,7 @@ export const useLiveUpdates = () => {
 		}
 
 		return { initiateConnection }
-	}, [clearHeartbeat, processMessage])
+	}, [clearHeartbeat, dispatch, hideCalliopeConnectionAlert, processMessage, showCalliopeConnectionAlert])
 
 	useEffectOnce(() => initiateConnection())
 }

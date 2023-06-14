@@ -69,7 +69,7 @@ describe('<WorldList />', () => {
 		expect(await screen.findByText('- New World')).toBeInTheDocument()
 		expect(invocations[0].jsonBody).toEqual({
 			name: 'New World',
-			calendar: 'COUNTUP',
+			calendar: 'EARTH',
 			timeOrigin: 0,
 		})
 	})
@@ -85,7 +85,7 @@ describe('<WorldList />', () => {
 		await user.click(await screen.findByText('Create new world...'))
 		await user.type(screen.getByLabelText('Name'), 'New World')
 		await user.click(screen.getByLabelText('Calendar'))
-		await user.click(screen.getByText('Earth Calendar'))
+		await user.click(screen.getByText('Count Up Calendar'))
 		await user.click(screen.getByTestId('CalendarMonthIcon'))
 		await user.type(screen.getByLabelText('Minute'), '100')
 		await user.click(screen.getByText('Confirm'))
@@ -93,7 +93,7 @@ describe('<WorldList />', () => {
 		await waitFor(() => expect(screen.queryByText('Create world')).not.toBeInTheDocument())
 		expect(invocations[0].jsonBody).toEqual({
 			name: 'New World',
-			calendar: 'EARTH',
+			calendar: 'COUNTUP',
 			timeOrigin: 100,
 		})
 	})

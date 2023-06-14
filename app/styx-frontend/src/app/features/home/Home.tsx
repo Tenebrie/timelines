@@ -14,7 +14,6 @@ const HomePageContainer = styled.div`
 
 const WorldListContainer = styled.div`
 	display: flex;
-	width: 25%;
 	flex-grow: 1;
 	align-items: center;
 	justify-content: center;
