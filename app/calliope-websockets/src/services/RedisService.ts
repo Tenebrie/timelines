@@ -1,3 +1,4 @@
+import { WORLD_UPDATE_NAME } from '@src/ts-shared/socketdef'
 import { createClient } from 'redis'
 
 import { WebsocketService } from './WebsocketService'
@@ -8,13 +9,13 @@ const client = createClient({
 	},
 })
 
-client.on('error', (err) => console.log('Redis Client Errorq', err))
+client.on('error', (err) => console.error('Redis Client Error', err))
 
 export const initRedisConnection = async () => {
 	await client.connect()
 
-	await client.subscribe('worldUpdate', (message, channel) => {
-		console.log(`Received message ${message} from ${channel}`)
+	await client.subscribe(WORLD_UPDATE_NAME, (message, channel) => {
+		console.info(`Received message ${message} from ${channel}`)
 
 		const parsedMessage = JSON.parse(message) as {
 			userId: string
@@ -26,7 +27,7 @@ export const initRedisConnection = async () => {
 		sockets.forEach((socket) =>
 			socket.send(
 				JSON.stringify({
-					type: 'worldUpdate',
+					type: WORLD_UPDATE_NAME,
 					data: {
 						worldId: parsedMessage.worldId,
 						timestamp: parsedMessage.timestamp,

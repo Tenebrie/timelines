@@ -1,4 +1,5 @@
 import { User } from '@prisma/client'
+import { WORLD_UPDATE_NAME } from '@src/ts-shared/socketdef'
 import { createClient } from 'redis'
 
 const client = createClient({
@@ -28,6 +29,6 @@ export const RedisService = {
 			worldId,
 			timestamp,
 		}
-		client.publish('worldUpdate', JSON.stringify(message))
+		client.publish(WORLD_UPDATE_NAME, JSON.stringify(message))
 	},
 }

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { rheaApi } from '../../../api/rheaApi'
+import { WORLD_UPDATE_NAME } from '../../../ts-shared/socketdef'
 import { useEffectOnce } from '../../utils/useEffectOnce'
 import { authSlice } from '../auth/reducer'
 import { getWorldState } from '../world/selectors'
@@ -26,10 +27,10 @@ export const useLiveUpdates = () => {
 	const processMessage = useCallback(
 		(message: string) => {
 			const payload = JSON.parse(message) as {
-				type: 'worldUpdate'
+				type: typeof WORLD_UPDATE_NAME
 				data: unknown
 			}
-			if (payload.type === 'worldUpdate') {
+			if (payload.type === WORLD_UPDATE_NAME) {
 				const data = payload.data as {
 					worldId: string
 					timestamp: string

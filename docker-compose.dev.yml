@@ -14,6 +14,7 @@ services:
         volumes:
             - ./app/styx-frontend/src:/app/styx/src:cached
             - ./app/styx-frontend/public:/app/styx/public:cached
+            - ./app/ts-shared/src:/app/ts-shared/src:cached
         ports:
             - 8080:8080
         command: yarn start
@@ -30,6 +31,7 @@ services:
         volumes:
             - ./app/rhea-backend/src:/app/rhea/src:cached
             - ./app/rhea-backend/prisma:/app/rhea/prisma:cached
+            - ./app/ts-shared/src:/app/ts-shared/src:cached
         ports:
             - 3000:3000
         command: yarn start
@@ -44,6 +46,7 @@ services:
             JWT_SECRET: secretkey
         volumes:
             - ./app/calliope-websockets/src:/app/calliope/src:cached
+            - ./app/ts-shared/src:/app/ts-shared/src:cached
         ports:
             - 3001:3001
         command: yarn start
