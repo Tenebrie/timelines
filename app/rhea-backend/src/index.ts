@@ -7,7 +7,7 @@ import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'tenebrie-fram
 import { ActorRouter } from './routers/ActorRouter'
 import { AuthRouter } from './routers/AuthRouter'
 import { WorldRouter } from './routers/WorldRouter'
-import { initRedisConnection } from './services/RedisService'
+import { RedisService } from './services/RedisService'
 
 const app = new Koa()
 
@@ -51,6 +51,6 @@ app
 		})
 	)
 
-initRedisConnection()
+RedisService.initRedisConnection()
 app.listen(3000)
 console.info('[RHEA] Server up')

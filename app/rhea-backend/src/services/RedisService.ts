@@ -1,20 +1,30 @@
 import { User } from '@prisma/client'
-import { WORLD_UPDATE_NAME } from '@src/ts-shared/socketdef'
 import { createClient } from 'redis'
 
-const client = createClient({
+import {
+	RedisChannel,
+	RheaToCalliopeMessage,
+	RheaToCalliopeMessageType,
+} from '../ts-shared/RheaToCalliopeMessage'
+
+const rawClient = createClient({
 	socket: {
 		host: 'redis',
 	},
 })
+rawClient.on('error', (err) => console.log('Redis Client Error', err))
 
-client.on('error', (err) => console.log('Redis Client Error', err))
+const makeClient = <T>(channel: RedisChannel) => ({
+	sendMessage: (message: T) => rawClient.publish(channel, JSON.stringify(message)),
+})
 
-export const initRedisConnection = async () => {
-	await client.connect()
-}
+const calliope = makeClient<RheaToCalliopeMessage>(RedisChannel.RHEA_TO_CALLIOPE)
 
 export const RedisService = {
+	initRedisConnection: async () => {
+		await rawClient.connect()
+	},
+
 	notifyAboutWorldUpdate: ({
 		user,
 		worldId,
@@ -24,11 +34,13 @@ export const RedisService = {
 		worldId: string
 		timestamp: Date
 	}) => {
-		const message = {
-			userId: user.id,
-			worldId,
-			timestamp,
-		}
-		client.publish(WORLD_UPDATE_NAME, JSON.stringify(message))
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.WORLD_UPDATED,
+			data: {
+				userId: user.id,
+				worldId,
+				timestamp: timestamp.toISOString(),
+			},
+		})
 	},
 }

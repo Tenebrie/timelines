@@ -7,7 +7,8 @@
 	"subPackages": [
 		"app/styx-frontend",
 		"app/rhea-backend",
-		"app/calliope-websockets"
+		"app/calliope-websockets",
+		"app/ts-shared"
 	],
 	"scripts": {
 		"postinstall": "subpkg install && husky install",

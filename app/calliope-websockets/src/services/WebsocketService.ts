@@ -1,10 +1,24 @@
 import * as WebSocket from 'ws'
 
-const connectedClients: Record<string, WebSocket[]> = {}
+import { CalliopeToClientMessage } from '../ts-shared/CalliopeToClientMessage'
+
+const connectedClients: Record<string, RegisteredClient[]> = {}
+
+type RegisteredClient = {
+	socket: WebSocket
+	sendMessage: (message: CalliopeToClientMessage) => void
+}
 
 export const WebsocketService = {
 	registerClient: (userId: string, socket: WebSocket) => {
-		const sockets = [...(connectedClients[userId] ?? []), socket]
+		const newClient: RegisteredClient = {
+			socket,
+			sendMessage: (message: CalliopeToClientMessage) => {
+				socket.send(JSON.stringify(message))
+			},
+		}
+
+		const sockets = [...(connectedClients[userId] ?? []), newClient]
 		connectedClients[userId] = sockets
 	},
 
@@ -13,6 +27,8 @@ export const WebsocketService = {
 	},
 
 	forgetClient: (userId: string, targetSocket: WebSocket) => {
-		connectedClients[userId] = (connectedClients[userId] ?? []).filter((socket) => socket !== targetSocket)
+		connectedClients[userId] = (connectedClients[userId] ?? []).filter(
+			(client) => client.socket !== targetSocket
+		)
 	},
 }

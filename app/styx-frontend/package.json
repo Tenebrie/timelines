@@ -5,15 +5,15 @@
 	"homepage": "https://timelines.tenebrie.com",
 	"scripts": {
 		"analyze": "source-map-explorer 'build/static/js/*.js'",
-		"build": "react-scripts build",
+		"build": "react-app-rewired build",
 		"eject": "react-scripts eject",
 		"lint": "eslint src/",
 		"lint-fix": "eslint src/ --fix",
 		"openapi": "npx @rtk-query/codegen-openapi ./openapi/openapi-config.js && yarn eslint src/api/rheaApi.ts --fix",
 		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline",
-		"start": "PORT=8080 FORCE_COLOR=true react-scripts start --max_old_space_size=4096 | cat",
-		"test": "react-scripts test",
-		"test:ci": "CI=true react-scripts test"
+		"start": "PORT=8080 FORCE_COLOR=true react-app-rewired start --max_old_space_size=4096 | cat",
+		"test": "react-app-rewired test",
+		"test:ci": "CI=true react-app-rewired test"
 	},
 	"lint-staged": {
 		"*.(ts|tsx)": "eslint --fix"
@@ -63,6 +63,7 @@
 		"@types/uuid": "^9.0.1",
 		"@typescript-eslint/eslint-plugin": "^5.14.0",
 		"@typescript-eslint/parser": "^5.14.0",
+		"customize-cra": "^1.0.0",
 		"eslint": "^8.10.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-config-react-app": "^7.0.1",
@@ -77,6 +78,7 @@
 		"msw": "^1.2.1",
 		"prettier": "2.8.7",
 		"react": "^18.2.0",
+		"react-app-rewired": "^2.2.1",
 		"react-dom": "^18.2.0",
 		"react-redux": "^8.0.4",
 		"react-router-dom": "^6.4.2",

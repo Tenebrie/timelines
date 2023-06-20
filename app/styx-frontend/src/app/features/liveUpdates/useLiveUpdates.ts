@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useCallback, useMemo, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 
-import { rheaApi } from '../../../api/rheaApi'
-import { WORLD_UPDATE_NAME } from '../../../ts-shared/socketdef'
+import { CalliopeToClientMessage } from '../../../ts-shared/CalliopeToClientMessage'
 import { useEffectOnce } from '../../utils/useEffectOnce'
 import { authSlice } from '../auth/reducer'
-import { getWorldState } from '../world/selectors'
+import { useLiveMessageHandlers } from './useLiveMessageHandlers'
 
 const expBackoffDelays = [50, 1000, 10000, 30000]
 
@@ -13,36 +12,11 @@ export const useLiveUpdates = () => {
 	const currentWebsocket = useRef<WebSocket>()
 	const heartbeatInterval = useRef<number | null>(null)
 	const backoffLevel = useRef<number>(-1)
-	const updatedAtRef = useRef<string>('0')
 
 	const { showCalliopeConnectionAlert, hideCalliopeConnectionAlert } = authSlice.actions
 	const dispatch = useDispatch()
 
-	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState)
-
-	useEffect(() => {
-		updatedAtRef.current = currentUpdatedAt
-	}, [currentUpdatedAt])
-
-	const processMessage = useCallback(
-		(message: string) => {
-			const payload = JSON.parse(message) as {
-				type: typeof WORLD_UPDATE_NAME
-				data: unknown
-			}
-			if (payload.type === WORLD_UPDATE_NAME) {
-				const data = payload.data as {
-					worldId: string
-					timestamp: string
-				}
-
-				if (new Date(updatedAtRef.current) < new Date(data.timestamp)) {
-					dispatch(rheaApi.util.invalidateTags(['worldDetails']))
-				}
-			}
-		},
-		[dispatch]
-	)
+	const messageHandlers = useLiveMessageHandlers()
 
 	const clearHeartbeat = useCallback(() => {
 		if (heartbeatInterval.current !== null) {
@@ -90,8 +64,8 @@ export const useLiveUpdates = () => {
 			}
 
 			socket.onmessage = function (event) {
-				// console.info(`[ws] Data received from server: ${event.data}`)
-				processMessage(event.data)
+				const message = JSON.parse(event.data) as CalliopeToClientMessage
+				messageHandlers[message.type](message.data)
 			}
 
 			socket.onclose = function (event) {
@@ -113,7 +87,7 @@ export const useLiveUpdates = () => {
 		}
 
 		return { initiateConnection }
-	}, [clearHeartbeat, dispatch, hideCalliopeConnectionAlert, processMessage, showCalliopeConnectionAlert])
+	}, [clearHeartbeat, dispatch, hideCalliopeConnectionAlert, messageHandlers, showCalliopeConnectionAlert])
 
 	useEffectOnce(() => initiateConnection())
 }
