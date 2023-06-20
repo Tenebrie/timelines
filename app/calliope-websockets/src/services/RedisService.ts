@@ -1,4 +1,5 @@
 import { CalliopeToClientMessageType } from '@src/ts-shared/CalliopeToClientMessage'
+import { RedisChannel } from '@src/ts-shared/RheaToCalliopeMessage'
 import { createClient } from 'redis'
 
 import { WebsocketService } from './WebsocketService'
@@ -14,7 +15,7 @@ client.on('error', (err) => console.error('Redis Client Error', err))
 export const initRedisConnection = async () => {
 	await client.connect()
 
-	await client.subscribe('rhea-to-calliope', (message, channel) => {
+	await client.subscribe(RedisChannel.RHEA_TO_CALLIOPE, (message, channel) => {
 		console.info(`Received message ${message} from ${channel}`)
 
 		const parsedMessage = JSON.parse(message) as {
