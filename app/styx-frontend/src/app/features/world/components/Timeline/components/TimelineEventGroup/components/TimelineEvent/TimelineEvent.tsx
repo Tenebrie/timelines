@@ -51,7 +51,7 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 		clickEvent.stopPropagation()
 		clickEvent.preventDefault()
 
-		triggerClick()
+		triggerClick(clickEvent)
 	}
 
 	const onMouseEnter = () => {

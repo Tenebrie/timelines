@@ -1,4 +1,5 @@
 import { useCallback, useRef } from 'react'
+import { MouseEvent } from 'react'
 
 type Props<ArgsT> = {
 	onClick: (args: ArgsT) => void
@@ -9,19 +10,23 @@ type Props<ArgsT> = {
 export const useDoubleClick = <ArgsT,>({ onClick, onDoubleClick, ignoreDelay }: Props<ArgsT>) => {
 	const singleClickTimeout = useRef<number>(0)
 	const singleClickArguments = useRef<ArgsT>()
-	const lastClickTimestamp = useRef<number>(0)
+	const lastClickTimestampRef = useRef<number>(0)
+	const lastClickTargetRef = useRef<any>(null)
 
 	const onSingleClickTimeout = useCallback(() => {
 		onClick(singleClickArguments.current as ArgsT)
 	}, [onClick])
 
 	const triggerClick = useCallback(
-		(args: ArgsT) => {
+		(event: MouseEvent, args: ArgsT) => {
 			const time = Date.now()
-			const currentTime = lastClickTimestamp.current
-			lastClickTimestamp.current = time
-			if (time - currentTime < 200) {
-				lastClickTimestamp.current = 0
+			const lastClickTime = lastClickTimestampRef.current
+			const lastClickTarget = lastClickTargetRef.current
+			lastClickTimestampRef.current = time
+			lastClickTargetRef.current = event.target
+			if (time - lastClickTime < 200 && lastClickTarget === event.target) {
+				lastClickTimestampRef.current = 0
+				lastClickTargetRef.current = null
 				onDoubleClick(args)
 				window.clearTimeout(singleClickTimeout.current)
 				return

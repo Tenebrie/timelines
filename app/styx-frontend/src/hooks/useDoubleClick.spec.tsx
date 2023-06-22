@@ -1,4 +1,5 @@
 import { act } from '@testing-library/react'
+import { MouseEvent } from 'react'
 
 import { renderHookWithProviders } from '../jest/renderWithProviders'
 import { useDoubleClick } from './useDoubleClick'
@@ -11,6 +12,12 @@ describe('useDoubleClick', () => {
 	afterAll(() => {
 		jest.useRealTimers()
 	})
+
+	const mockMouseEvent = (data: { target?: any } = {}) =>
+		({
+			target: 'div1',
+			...data,
+		} as MouseEvent)
 
 	it('performs a single click after delay only', async () => {
 		const onClickSpy = jest.fn()
@@ -25,7 +32,7 @@ describe('useDoubleClick', () => {
 		const { triggerClick } = result.current
 
 		act(() => {
-			triggerClick()
+			triggerClick(mockMouseEvent())
 		})
 
 		expect(onClickSpy).not.toBeCalled()
@@ -51,7 +58,7 @@ describe('useDoubleClick', () => {
 		const { triggerClick } = result.current
 
 		act(() => {
-			triggerClick()
+			triggerClick(mockMouseEvent())
 		})
 
 		expect(onClickSpy).toBeCalledTimes(1)
@@ -76,8 +83,8 @@ describe('useDoubleClick', () => {
 		const { triggerClick } = result.current
 
 		act(() => {
-			triggerClick()
-			triggerClick()
+			triggerClick(mockMouseEvent())
+			triggerClick(mockMouseEvent())
 		})
 
 		expect(onClickSpy).not.toBeCalled()
@@ -101,7 +108,7 @@ describe('useDoubleClick', () => {
 		const { triggerClick } = result.current
 
 		act(() => {
-			triggerClick({
+			triggerClick(mockMouseEvent(), {
 				foo: 'my value',
 			})
 		})
@@ -126,10 +133,10 @@ describe('useDoubleClick', () => {
 		const { triggerClick } = result.current
 
 		act(() => {
-			triggerClick({
+			triggerClick(mockMouseEvent(), {
 				foo: 'my value',
 			})
-			triggerClick({
+			triggerClick(mockMouseEvent(), {
 				foo: 'my value',
 			})
 		})
@@ -137,5 +144,39 @@ describe('useDoubleClick', () => {
 		expect(onDoubleClickSpy).toBeCalledWith({
 			foo: 'my value',
 		})
+	})
+
+	it('does not trigger double click if targets are different', async () => {
+		const onClickSpy = jest.fn()
+		const onDoubleClickSpy = jest.fn()
+
+		const { result } = renderHookWithProviders(() =>
+			useDoubleClick<{ foo: string }>({
+				onClick: onClickSpy,
+				onDoubleClick: onDoubleClickSpy,
+			})
+		)
+		const { triggerClick } = result.current
+
+		act(() => {
+			triggerClick(
+				mockMouseEvent({
+					target: 'div1',
+				}),
+				{
+					foo: 'my value',
+				}
+			)
+			triggerClick(
+				mockMouseEvent({
+					target: 'div2',
+				}),
+				{
+					foo: 'my value',
+				}
+			)
+		})
+
+		expect(onDoubleClickSpy).not.toHaveBeenCalled()
 	})
 })

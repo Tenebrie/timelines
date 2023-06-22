@@ -43,9 +43,9 @@ export const OutlinerControlsFilter = ({ selectedActors, selectedEvents }: Props
 
 	return (
 		<Typography variant="body2">
-			Showing {actorsString} and {eventsString}.{' '}
+			Selected {actorsString} and {eventsString}.{' '}
 			<Link href="#" onClick={() => onClearFilters()}>
-				Click here to clear filters.
+				Click here to clear selection.
 			</Link>
 		</Typography>
 	)

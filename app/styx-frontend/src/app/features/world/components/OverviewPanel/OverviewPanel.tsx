@@ -23,8 +23,7 @@ export const OverviewPanel = () => {
 	const { panelOpen, actorsOpen, actorsReversed, eventsOpen, eventsReversed } =
 		useSelector(getOverviewPreferences)
 
-	const { actorEditorParams, navigateToOutliner, navigateToActorEditor, navigateToEventEditor } =
-		useWorldRouter()
+	const { navigateToActorEditor, navigateToEventEditor } = useWorldRouter()
 	const { timeToLabel } = useWorldTime()
 	const { getIconPath } = useEventIcons()
 	const {
@@ -52,7 +51,7 @@ export const OverviewPanel = () => {
 					(!actorsReversed && actors.indexOf(actor) !== actors.length - 1) ||
 					(actorsReversed && actors.indexOf(actor) !== 0)
 				}
-				onClick={() => moveToActor(actor)}
+				onClick={(clickEvent) => moveToActor(clickEvent, actor)}
 				selected={selectedActors.includes(actor.id)}
 			>
 				<ListItemIcon>
@@ -70,7 +69,7 @@ export const OverviewPanel = () => {
 					(!eventsReversed && sortedEvents.indexOf(event) !== sortedEvents.length - 1) ||
 					(eventsReversed && sortedEvents.indexOf(event) !== 0)
 				}
-				onClick={() => moveToEvent(event)}
+				onClick={(clickEvent) => moveToEvent(clickEvent, event)}
 				selected={selectedEvents.includes(event.id)}
 			>
 				<ListItemIcon>
