@@ -3,6 +3,10 @@ import { useDispatch } from 'react-redux'
 import { useBaseRouter } from '../../../router/useBaseRouter'
 import { worldSlice } from './reducer'
 
+export enum QueryParams {
+	SELECTED_TIME = 'time',
+}
+
 export const appRoutes = {
 	limbo: '/',
 	home: '/home',
@@ -21,7 +25,13 @@ export const useAppRouter = () => {
 	const { navigateTo } = useBaseRouter(appRoutes)
 
 	const navigateToHome = async () => {
-		navigateTo(appRoutes.home, {}, {})
+		navigateTo(
+			appRoutes.home,
+			{},
+			{
+				[QueryParams.SELECTED_TIME]: null,
+			}
+		)
 	}
 
 	const navigateToHomeWithoutHistory = async () => {
@@ -96,8 +106,10 @@ export const useWorldRouter = () => {
 	const eventEditorParams = state as WorldEventEditorParams
 	const statementEditorParams = state as WorldStatementEditorParams
 
-	const selectedTime = Number(query.get('time') || '0')
-	const selectedTimeOrNull = query.get('time') ? Number(query.get('time')) : null
+	const selectedTime = Number(query.get(QueryParams.SELECTED_TIME) || '0')
+	const selectedTimeOrNull = query.get(QueryParams.SELECTED_TIME)
+		? Number(query.get(QueryParams.SELECTED_TIME))
+		: null
 
 	const navigateToWorld = async (id: string) => {
 		dispatch(unloadWorld())
@@ -106,7 +118,9 @@ export const useWorldRouter = () => {
 			{
 				worldId: id,
 			},
-			{}
+			{
+				[QueryParams.SELECTED_TIME]: null,
+			}
 		)
 	}
 
@@ -117,7 +131,7 @@ export const useWorldRouter = () => {
 				worldId: state['worldId'] || '',
 			},
 			{
-				time: clearSelectedTime ? null : undefined,
+				[QueryParams.SELECTED_TIME]: clearSelectedTime ? null : undefined,
 			}
 		)
 	}
@@ -129,7 +143,7 @@ export const useWorldRouter = () => {
 				worldId: state['worldId'] || '',
 			},
 			{
-				time: String(timestamp),
+				[QueryParams.SELECTED_TIME]: String(timestamp),
 			}
 		)
 	}
@@ -168,7 +182,7 @@ export const useWorldRouter = () => {
 	}
 
 	const unselectTime = () => {
-		setQuery('time', null)
+		setQuery(QueryParams.SELECTED_TIME, null)
 	}
 
 	return {

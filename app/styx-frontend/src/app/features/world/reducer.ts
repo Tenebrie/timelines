@@ -14,6 +14,7 @@ export const initialState = {
 	timeOrigin: '0',
 	createdAt: '0',
 	updatedAt: '0',
+	selectedEvents: [] as string[],
 
 	actorWizard: {
 		isOpen: false as boolean,
@@ -98,6 +99,9 @@ export const worldSlice = createSlice({
 		unloadWorld: (state) => {
 			state.isLoaded = false
 			state.events = []
+		},
+		setSelectedEvents: (state, { payload }: PayloadAction<string[]>) => {
+			state.selectedEvents = payload
 		},
 
 		/* Actor wizard */

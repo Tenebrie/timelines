@@ -28,6 +28,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 		monthName: string
 		monthNameShort: string
 		monthIndex: number
+		monthDay: number
 		day: number
 		hour: number
 		minute: number
@@ -44,11 +45,12 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 					monthName: calendarDefinition.units.months[date.getUTCMonth()].name,
 					monthNameShort: calendarDefinition.units.months[date.getUTCMonth()].shortName,
 					monthIndex: date.getUTCMonth(),
+					monthDay: date.getUTCDate(),
 					day: date.getUTCDate(),
 					hour: date.getUTCHours(),
 					minute: date.getUTCMinutes(),
 				}
-			} else if (usedCalendar === 'COUNTUP') {
+			} else if (usedCalendar === 'COUNTUP' && rawTime >= 0) {
 				const date = new Date(time)
 
 				const year = date.getUTCFullYear()
@@ -68,10 +70,39 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 
 				return {
 					year,
-					monthName: '???',
-					monthNameShort: '???',
-					monthIndex: 0,
+					monthName: calendarDefinition.units.months[date.getUTCMonth()].name,
+					monthNameShort: calendarDefinition.units.months[date.getUTCMonth()].shortName,
+					monthIndex: date.getUTCMonth(),
+					monthDay: date.getUTCDate(),
 					day: day + 1,
+					hour,
+					minute,
+				}
+			} else if (usedCalendar === 'COUNTUP' && rawTime < 0) {
+				const date = new Date(time)
+
+				const year = date.getUTCFullYear() + 1
+				const hour = date.getUTCHours()
+				const minute = date.getUTCMinutes()
+
+				const startingYearDate = new Date(time)
+				startingYearDate.setUTCMilliseconds(0)
+				startingYearDate.setUTCSeconds(0)
+				startingYearDate.setUTCMinutes(0)
+				startingYearDate.setUTCHours(0)
+				startingYearDate.setUTCDate(1)
+				startingYearDate.setUTCMonth(0)
+				const diff = date.getTime() - startingYearDate.getTime()
+				const oneDay = 1000 * 60 * 60 * 24
+				const day = Math.floor(diff / oneDay)
+
+				return {
+					year,
+					monthName: calendarDefinition.units.months[date.getUTCMonth()].name,
+					monthNameShort: calendarDefinition.units.months[date.getUTCMonth()].shortName,
+					monthIndex: date.getUTCMonth(),
+					monthDay: date.getUTCDate(),
+					day: -(365 - day),
 					hour,
 					minute,
 				}
@@ -121,6 +152,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 					monthName: month.name,
 					monthNameShort: month.shortName,
 					monthIndex: month.index,
+					monthDay: day + 1,
 					day: day + 1,
 					hour: hours,
 					minute: minutes,
@@ -131,6 +163,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				monthName: '???',
 				monthNameShort: '???',
 				monthIndex: 0,
+				monthDay: 0,
 				day: 0,
 				hour: 0,
 				minute: 0,
@@ -224,9 +257,8 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 
 	const timeToShortLabel = useCallback(
 		(rawTime: number, scaleLevel: ScaleLevel, groupSize: 'large' | 'medium' | 'small') => {
-			const { year, monthIndex, monthName, monthNameShort, day, hour, minute } = parseTime(rawTime)
+			const { year, monthName, monthNameShort, monthDay, day, hour, minute } = parseTime(rawTime)
 			if (usedCalendar === 'EARTH' || usedCalendar === 'PF2E' || usedCalendar === 'RIMWORLD') {
-				const padMonth = String(monthIndex).padStart(2, '0')
 				const padDay = String(day).padStart(2, '0')
 				const padHour = String(hour).padStart(2, '0')
 				const padMinute = String(minute).padStart(2, '0')
@@ -283,6 +315,8 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 						}
 
 						return `Year ${year}, Day ${day}`
+					} else if (scaleLevel === 2 || scaleLevel === 3) {
+						return `${monthNameShort}`
 					}
 				}
 
@@ -290,6 +324,8 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 					if (scaleLevel === 0 || scaleLevel === 1) {
 						return `${padHours}:${padMinutes}`
 					} else if (scaleLevel === 2) {
+						return `${day}`
+					} else if (scaleLevel === 3) {
 						return `${day}`
 					}
 				}
@@ -318,7 +354,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				const padHours = String(hour).padStart(2, '0')
 				const padMinutes = String(minute).padStart(2, '0')
 
-				if (scaleLevel === 0 || scaleLevel === 1) {
+				if (scaleLevel === 0 || scaleLevel === 1 || scaleLevel === 2 || scaleLevel === 3) {
 					return `${padHours}:${padMinutes}`
 				}
 

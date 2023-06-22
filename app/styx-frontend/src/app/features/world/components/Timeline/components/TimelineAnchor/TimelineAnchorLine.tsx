@@ -94,7 +94,7 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		const parsedTime = parseTime(scaledTimeToRealTime(index * lineSpacing))
 
 		const isStartOfMonth = () => {
-			return parsedTime.day === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
+			return parsedTime.monthDay === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
 		}
 
 		const isStartOfYear = () => {

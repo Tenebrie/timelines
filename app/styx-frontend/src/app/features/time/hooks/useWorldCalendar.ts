@@ -55,7 +55,6 @@ export const useWorldCalendar = () => {
 						timelineScalar: 1,
 						units: {
 							...defaultUnits,
-							months: [],
 						},
 					},
 				},
