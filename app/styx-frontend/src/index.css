@@ -57,3 +57,24 @@ fieldset {
 .MuiMenu-paper {
 	transition: opacity 240ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 270ms cubic-bezier(0.4, 0, 0.2, 1) 0ms !important;
 }
+
+.fade-enter {
+	opacity: 0;
+}
+
+.fade-exit {
+	opacity: 1;
+}
+
+.fade-enter-active {
+	opacity: 1;
+}
+
+.fade-exit-active {
+	opacity: 0;
+}
+
+.fade-enter-active,
+.fade-exit-active {
+	transition: opacity 300ms;
+}

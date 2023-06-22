@@ -1,5 +1,7 @@
-import { Outlet } from 'react-router-dom'
+import { useOutlet } from 'react-router-dom'
+import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { useLocationRef } from '../../../hooks/useLocationRef'
 import { BlockingSpinner } from '../../components/BlockingSpinner'
 import { ActorWizardModal } from './components/ActorWizard/ActorWizardModal'
 import { EventWizardModal } from './components/EventWizard/EventWizardModal'
@@ -17,6 +19,9 @@ export const World = () => {
 
 	const { isLoaded } = useLoadWorldInfo(worldId)
 
+	const currentOutlet = useOutlet()
+	const { key, nodeRef } = useLocationRef()
+
 	return (
 		<>
 			<div
@@ -32,9 +37,11 @@ export const World = () => {
 				<WorldContainer>
 					<OverviewPanel />
 					<div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-						<WorldContent>
-							<Outlet />
-						</WorldContent>
+						<SwitchTransition>
+							<CSSTransition key={key} timeout={300} classNames="fade" unmountOnExit nodeRef={nodeRef}>
+								<WorldContent ref={nodeRef}>{currentOutlet}</WorldContent>
+							</CSSTransition>
+						</SwitchTransition>
 					</div>
 				</WorldContainer>
 				{isLoaded && <Timeline />}
