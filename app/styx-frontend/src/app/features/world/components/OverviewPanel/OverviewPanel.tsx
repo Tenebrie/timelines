@@ -1,5 +1,5 @@
 import { Clear, Search } from '@mui/icons-material'
-import { IconButton, InputAdornment, List, ListItemIcon, TextField } from '@mui/material'
+import { IconButton, InputAdornment, List, ListItem, ListItemIcon, TextField } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -11,7 +11,7 @@ import { useEventIcons } from '../../hooks/useEventIcons'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
-import { ActorDetails, WorldEvent } from '../../types'
+import { Actor, ActorDetails, WorldEvent } from '../../types'
 import { ActorAvatar } from '../Renderers/ActorAvatar/ActorAvatar'
 import { OverviewSublist } from './OverviewSublist'
 import { StyledListItemButton, StyledListItemText } from './styles'
@@ -19,20 +19,22 @@ import { StyledListItemButton, StyledListItemText } from './styles'
 export const OverviewPanel = () => {
 	const [searchQuery, setSearchQuery] = useState<string>('')
 
-	const { actors, events } = useSelector(getWorldState)
+	const { actors, events, selectedActors, selectedEvents } = useSelector(getWorldState)
 	const { panelOpen, actorsOpen, actorsReversed, eventsOpen, eventsReversed } =
 		useSelector(getOverviewPreferences)
 
-	const {
-		actorEditorParams,
-		eventEditorParams,
-		navigateToOutliner,
-		navigateToActorEditor,
-		navigateToEventEditor,
-	} = useWorldRouter()
+	const { actorEditorParams, navigateToOutliner, navigateToActorEditor, navigateToEventEditor } =
+		useWorldRouter()
 	const { timeToLabel } = useWorldTime()
 	const { getIconPath } = useEventIcons()
-	const { openActorWizard, openEventWizard } = worldSlice.actions
+	const {
+		openActorWizard,
+		openEventWizard,
+		addActorToSelection,
+		removeActorFromSelection,
+		addEventToSelection,
+		removeEventFromSelection,
+	} = worldSlice.actions
 	const { setActorsOpen, setActorsReversed, setEventsOpen, setEventsReversed } = preferencesSlice.actions
 	const dispatch = useDispatch()
 
@@ -44,40 +46,69 @@ export const OverviewPanel = () => {
 		}))
 
 	const renderActor = (actor: ActorDetails) => (
-		<StyledListItemButton
-			divider={
-				(!actorsReversed && actors.indexOf(actor) !== actors.length - 1) ||
-				(actorsReversed && actors.indexOf(actor) !== 0)
-			}
-			onClick={() => navigateToActorEditor(actor.id)}
-			selected={actorEditorParams.actorId === actor.id}
-		>
-			<ListItemIcon>
-				<ActorAvatar actor={actor} />
-			</ListItemIcon>
-			<StyledListItemText data-hj-suppress primary={actor.name} secondary={actor.title ?? 'No title'} />
-		</StyledListItemButton>
+		<ListItem key={actor.id} disablePadding role="listitem">
+			<StyledListItemButton
+				divider={
+					(!actorsReversed && actors.indexOf(actor) !== actors.length - 1) ||
+					(actorsReversed && actors.indexOf(actor) !== 0)
+				}
+				onClick={() => moveToActor(actor)}
+				selected={selectedActors.includes(actor.id)}
+			>
+				<ListItemIcon>
+					<ActorAvatar actor={actor} />
+				</ListItemIcon>
+				<StyledListItemText data-hj-suppress primary={actor.name} secondary={actor.title ?? 'No title'} />
+			</StyledListItemButton>
+		</ListItem>
 	)
 
 	const renderEvent = (event: WorldEvent & { secondary: string }) => (
-		<StyledListItemButton
-			divider={
-				(!eventsReversed && sortedEvents.indexOf(event) !== sortedEvents.length - 1) ||
-				(eventsReversed && sortedEvents.indexOf(event) !== 0)
-			}
-			onClick={() => moveToEvent(event)}
-			selected={eventEditorParams.eventId === event.id}
-		>
-			<ListItemIcon>
-				<img src={getIconPath(event.icon)} height="24px" alt={`${event.icon} icon`} />
-			</ListItemIcon>
-			<StyledListItemText data-hj-suppress primary={event.name} secondary={event.secondary} />
-		</StyledListItemButton>
+		<ListItem key={event.id} disablePadding role="listitem">
+			<StyledListItemButton
+				divider={
+					(!eventsReversed && sortedEvents.indexOf(event) !== sortedEvents.length - 1) ||
+					(eventsReversed && sortedEvents.indexOf(event) !== 0)
+				}
+				onClick={() => moveToEvent(event)}
+				selected={selectedEvents.includes(event.id)}
+			>
+				<ListItemIcon>
+					<img src={getIconPath(event.icon)} height="24px" alt={`${event.icon} icon`} />
+				</ListItemIcon>
+				<StyledListItemText data-hj-suppress primary={event.name} secondary={event.secondary} />
+			</StyledListItemButton>
+		</ListItem>
 	)
 
+	const { triggerClick: moveToActor } = useDoubleClick<Actor>({
+		onClick: (actor) => {
+			if (selectedActors.includes(actor.id)) {
+				dispatch(removeActorFromSelection(actor.id))
+			} else {
+				dispatch(addActorToSelection(actor.id))
+			}
+		},
+		onDoubleClick: (actor) => {
+			navigateToActorEditor(actor.id)
+			dispatch(removeActorFromSelection(actor.id))
+		},
+		ignoreDelay: true,
+	})
+
 	const { triggerClick: moveToEvent } = useDoubleClick<WorldEvent>({
-		onClick: (event) => navigateToOutliner(event.timestamp),
-		onDoubleClick: (event) => navigateToEventEditor(event.id),
+		onClick: (event) => {
+			if (selectedEvents.includes(event.id)) {
+				dispatch(removeEventFromSelection(event.id))
+			} else {
+				dispatch(addEventToSelection(event.id))
+			}
+		},
+		onDoubleClick: (event) => {
+			navigateToEventEditor(event.id)
+			dispatch(removeEventFromSelection(event.id))
+		},
+		ignoreDelay: true,
 	})
 
 	const lowerCaseSearchQuery = searchQuery.toLowerCase()
@@ -139,7 +170,7 @@ export const OverviewPanel = () => {
 			/>
 			<List dense>
 				<OverviewSublist
-					title={`Actors (${displayedActors.length})`}
+					title={`Actors (${displayedActors.length}/${actors.length})`}
 					entities={displayedActors}
 					open={actorsOpen}
 					reversed={actorsReversed}
@@ -149,7 +180,7 @@ export const OverviewPanel = () => {
 					renderEntity={renderActor}
 				/>
 				<OverviewSublist
-					title={`Events (${displayedEvents.length})`}
+					title={`Events (${displayedEvents.length}/${events.length})`}
 					entities={displayedEvents}
 					open={eventsOpen}
 					reversed={eventsReversed}

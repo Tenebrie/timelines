@@ -1,8 +1,11 @@
 import { memo, MouseEvent, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { useDoubleClick } from '../../../../../../../../../hooks/useDoubleClick'
 import { useEventIcons } from '../../../../../../hooks/useEventIcons'
+import { worldSlice } from '../../../../../../reducer'
 import { useWorldRouter } from '../../../../../../router'
+import { getWorldState } from '../../../../../../selectors'
 import { WorldEvent, WorldEventBundle } from '../../../../../../types'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
 import { Label, LabelContainer, Marker } from './styles'
@@ -17,6 +20,10 @@ type Props = {
 export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighted }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
+	const dispatch = useDispatch()
+	const { addEventToSelection, removeEventFromSelection } = worldSlice.actions
+
+	const { selectedEvents } = useSelector(getWorldState)
 	const { eventEditorParams, navigateToEventEditor, navigateToOutliner } = useWorldRouter()
 	const { getIconPath } = useEventIcons()
 
@@ -27,9 +34,17 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 				return
 			}
 
-			navigateToOutliner(event.timestamp)
+			if (selectedEvents.includes(event.id)) {
+				dispatch(removeEventFromSelection(event.id))
+			} else {
+				dispatch(addEventToSelection(event.id))
+			}
 		},
-		onDoubleClick: () => navigateToEventEditor(event.id),
+		onDoubleClick: () => {
+			navigateToEventEditor(event.id)
+			dispatch(removeEventFromSelection(event.id))
+		},
+		ignoreDelay: true,
 	})
 
 	const onClick = (clickEvent: MouseEvent<HTMLDivElement>) => {
@@ -49,9 +64,11 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 		HoveredTimelineEvents.unhoverEvent(event)
 	}
 
-	const className = `${groupIndex > 0 && expanded ? 'expanded' : ''} ${
-		event.id === eventEditorParams.eventId ? 'selected' : ''
-	} ${isInfoVisible ? 'elevated' : ''} ${highlighted ? 'highlighted' : ''}`
+	const selected = selectedEvents.includes(event.id)
+
+	const className = `${groupIndex > 0 && expanded ? 'expanded' : ''} ${selected ? 'selected' : ''} ${
+		isInfoVisible ? 'elevated' : ''
+	} ${event.id === eventEditorParams.eventId ? 'edited' : ''} ${highlighted ? 'highlighted' : ''}`
 
 	return (
 		<Marker

@@ -14,6 +14,7 @@ export const initialState = {
 	timeOrigin: '0',
 	createdAt: '0',
 	updatedAt: '0',
+	selectedActors: [] as string[],
 	selectedEvents: [] as string[],
 
 	actorWizard: {
@@ -100,8 +101,27 @@ export const worldSlice = createSlice({
 			state.isLoaded = false
 			state.events = []
 		},
-		setSelectedEvents: (state, { payload }: PayloadAction<string[]>) => {
-			state.selectedEvents = payload
+		addActorToSelection: (state, { payload }: PayloadAction<string>) => {
+			if (state.selectedActors.includes(payload)) {
+				return
+			}
+			state.selectedActors = [...state.selectedActors, payload]
+		},
+		removeActorFromSelection: (state, { payload }: PayloadAction<string>) => {
+			state.selectedActors = state.selectedActors.filter((event) => event !== payload)
+		},
+		addEventToSelection: (state, { payload }: PayloadAction<string>) => {
+			if (state.selectedEvents.includes(payload)) {
+				return
+			}
+			state.selectedEvents = [...state.selectedEvents, payload]
+		},
+		removeEventFromSelection: (state, { payload }: PayloadAction<string>) => {
+			state.selectedEvents = state.selectedEvents.filter((event) => event !== payload)
+		},
+		clearSelections: (state) => {
+			state.selectedActors = []
+			state.selectedEvents = []
 		},
 
 		/* Actor wizard */

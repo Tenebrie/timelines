@@ -18,7 +18,7 @@ import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmpt
 import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
 
 export const Outliner = () => {
-	const { actors, events } = useSelector(getWorldState)
+	const { actors, events, selectedActors, selectedEvents } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
 	const { showEmptyEvents, showInactiveStatements, collapsedActors, collapsedEvents } =
 		useSelector(getOutlinerPreferences)
@@ -60,7 +60,7 @@ export const Outliner = () => {
 	const visibleEvents = useMemo(
 		() =>
 			events
-				.filter((event) => event.timestamp <= selectedTime)
+				.filter((event) => event.timestamp <= selectedTime || selectedEvents.includes(event.id))
 				.map((event, index) => ({
 					...event,
 					index,
@@ -81,33 +81,37 @@ export const Outliner = () => {
 						(event.issuedStatements.length > 0 && showInactiveStatements) ||
 						event.highlighted
 				)
+				.filter((event) => selectedEvents.length === 0 || selectedEvents.includes(event.id))
 				.sort((a, b) => b.timestamp - a.timestamp || b.index - a.index),
 		[
-			activeStatements,
 			events,
+			selectedTime,
+			timeToLabel,
 			highlightWithin,
 			collapsedEvents,
-			selectedTime,
-			showEmptyEvents,
+			activeStatements,
 			showInactiveStatements,
-			timeToLabel,
+			showEmptyEvents,
+			selectedEvents,
 		]
 	)
 
 	const visibleActors = useMemo(
 		() =>
-			actors.map((actor) => ({
-				...actor,
-				highlighted: false,
-				collapsed: collapsedActors.includes(actor.id),
-				statements: actor.statements
-					.map((statement) => ({
-						...statement,
-						active: activeStatements.some((card) => card.id === statement.id),
-					}))
-					.filter((statement) => showInactiveStatements || statement.active),
-			})),
-		[activeStatements, actors, collapsedActors, showInactiveStatements]
+			actors
+				.map((actor) => ({
+					...actor,
+					highlighted: false,
+					collapsed: collapsedActors.includes(actor.id),
+					statements: actor.statements
+						.map((statement) => ({
+							...statement,
+							active: activeStatements.some((card) => card.id === statement.id),
+						}))
+						.filter((statement) => showInactiveStatements || statement.active),
+				}))
+				.filter((actor) => selectedActors.length === 0 || selectedActors.includes(actor.id)),
+		[activeStatements, actors, collapsedActors, showInactiveStatements, selectedActors]
 	)
 
 	return (

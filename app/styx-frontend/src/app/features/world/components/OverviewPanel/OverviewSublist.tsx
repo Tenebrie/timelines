@@ -67,11 +67,7 @@ export function OverviewSublist<T extends { id: string }>({
 
 			<Collapse in={open} timeout="auto" unmountOnExit>
 				<List component="div" disablePadding>
-					{displayedEntities.map((entity) => (
-						<ListItem key={entity.id} disablePadding role="listitem">
-							{renderEntity(entity)}
-						</ListItem>
-					))}
+					{displayedEntities.map((entity) => renderEntity(entity))}
 				</List>
 			</Collapse>
 		</>
