@@ -7,7 +7,6 @@ import { isMacOS } from '../../../../../utils/isMacOS'
 import { rangeMap } from '../../../../../utils/rangeMap'
 import { useTimelineLevelScalar } from '../../../../time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
-import { HoveredTimelineEvents } from '../components/TimelineEventGroup/components/TimelineEvent/HoveredTimelineEvents'
 import { ScaleLevel } from '../types'
 
 type Props = {
@@ -237,7 +236,7 @@ export const useTimelineNavigation = ({
 	const [lastClickTime, setLastClickTime] = useState<number | null>(null)
 	const onTimelineClick = useCallback(
 		(event: MouseEvent) => {
-			if (!canClick || HoveredTimelineEvents.anyHovered()) {
+			if (!canClick || event.target !== containerRef.current) {
 				return
 			}
 
@@ -269,6 +268,7 @@ export const useTimelineNavigation = ({
 		},
 		[
 			canClick,
+			containerRef,
 			lastClickPos,
 			lastClickTime,
 			onClick,

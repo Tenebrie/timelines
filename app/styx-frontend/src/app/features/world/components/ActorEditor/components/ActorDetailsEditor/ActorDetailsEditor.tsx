@@ -1,4 +1,4 @@
-import { Delete } from '@mui/icons-material'
+import { ArrowBack, Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, FormControl, InputLabel, Select, Stack, TextField, Tooltip } from '@mui/material'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -145,23 +145,28 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 				maxRows={11}
 				multiline
 			/>
-			<Stack spacing={2} direction="row-reverse">
-				<Tooltip title={shortcutLabel} arrow placement="top">
-					<span>
-						<LoadingButton
-							loading={isSaving}
-							variant="outlined"
-							onClick={manualSave}
-							loadingPosition="start"
-							color={autosaveColor}
-							startIcon={autosaveIcon}
-						>
-							Save
-						</LoadingButton>
-					</span>
-				</Tooltip>
-				<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
-					Delete
+			<Stack direction="row-reverse" justifyContent="space-between">
+				<Stack spacing={2} direction="row-reverse">
+					<Tooltip title={shortcutLabel} arrow placement="top">
+						<span>
+							<LoadingButton
+								loading={isSaving}
+								variant="outlined"
+								onClick={manualSave}
+								loadingPosition="start"
+								color={autosaveColor}
+								startIcon={autosaveIcon}
+							>
+								Save
+							</LoadingButton>
+						</span>
+					</Tooltip>
+					<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
+						Delete
+					</Button>
+				</Stack>
+				<Button variant="outlined" onClick={() => window.history.back()} startIcon={<ArrowBack />}>
+					Back
 				</Button>
 			</Stack>
 		</Stack>

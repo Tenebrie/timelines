@@ -8,6 +8,7 @@ import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { TimelineEdgeScroll } from './components/TimelineEdgeScroll/TimelineEdgeScroll'
 import { TimelineEventGroup } from './components/TimelineEventGroup/TimelineEventGroup'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
+import { TimelineSelectedLabel } from './components/TimelineSelectedLabel/TimelineSelectedLabel'
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
 import useEventGroups from './hooks/useEventGroups'
 import { useTimelineNavigation } from './hooks/useTimelineNavigation'
@@ -35,32 +36,31 @@ export const Timeline = () => {
 	const {
 		navigateToCurrentWorld: navigateToCurrentWorldRoot,
 		navigateToOutliner,
-		outlinerParams,
+		selectedTimeOrNull,
 		eventEditorParams,
 		statementEditorParams,
 	} = useWorldRouter()
-	const selectedTime = Number(outlinerParams.timestamp)
 
 	const onClick = useCallback(
 		(time: number) => {
-			if (selectedTime === time) {
+			if (selectedTimeOrNull === time) {
 				navigateToCurrentWorldRoot()
 			} else {
 				navigateToOutliner(time)
 			}
 		},
-		[navigateToCurrentWorldRoot, navigateToOutliner, selectedTime]
+		[navigateToCurrentWorldRoot, navigateToOutliner, selectedTimeOrNull]
 	)
 
 	const onDoubleClick = useCallback(
 		(time: number) => {
-			if (Number.isNaN(selectedTime)) {
+			if (Number.isNaN(selectedTimeOrNull)) {
 				navigateToOutliner(time)
 			} else {
 				dispatch(openEventWizard({ timestamp: time }))
 			}
 		},
-		[dispatch, navigateToOutliner, openEventWizard, selectedTime]
+		[dispatch, navigateToOutliner, openEventWizard, selectedTimeOrNull]
 	)
 
 	useEffect(() => {
@@ -132,9 +132,9 @@ export const Timeline = () => {
 					timelineScale={timelineScale}
 					scaleLevel={scaleLevel}
 				/>
-				{!isNaN(selectedTime) && (
+				{selectedTimeOrNull !== null && (
 					<TimeMarker
-						timestamp={selectedTime}
+						timestamp={selectedTimeOrNull}
 						timelineScale={timelineScale}
 						scroll={scroll}
 						mode="mouse"
@@ -153,6 +153,7 @@ export const Timeline = () => {
 						containerWidth={containerWidth.current}
 					/>
 				))}
+				<TimelineSelectedLabel onNavigateToTime={(time) => scrollTo(time)} />
 				<TimelineEdgeScroll
 					side="right"
 					currentScroll={scroll}

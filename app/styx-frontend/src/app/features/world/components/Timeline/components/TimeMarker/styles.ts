@@ -12,6 +12,7 @@ export const Container = styled.div.attrs<{ offset: number }>((props) => ({
 	height: 100%;
 	opacity: 1;
 	transition: opacity 0.3s;
+	pointer-events: none;
 
 	&.hidden {
 		opacity: 0;

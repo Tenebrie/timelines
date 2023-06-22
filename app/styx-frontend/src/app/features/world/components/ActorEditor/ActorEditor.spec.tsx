@@ -8,8 +8,8 @@ import {
 	mockUpdateActor,
 } from '../../../../../api/rheaApi.mock'
 import { renderWithProviders } from '../../../../../jest/renderWithProviders'
+import { mockRouter } from '../../../../../router/router.mock'
 import { worldInitialState } from '../../reducer'
-import { mockRouter } from '../../router.mock'
 import { ActorEditor } from './ActorEditor'
 
 const server = setupServer()

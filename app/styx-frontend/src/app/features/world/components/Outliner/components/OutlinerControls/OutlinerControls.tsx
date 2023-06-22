@@ -11,8 +11,7 @@ import { CreateHerePopover } from '../CreateHerePopover/CreateHerePopover'
 
 export const OutlinerControls = () => {
 	const { timeToLabel } = useWorldTime()
-	const { outlinerParams } = useWorldRouter()
-	const selectedTime = Number(outlinerParams.timestamp)
+	const { selectedTime } = useWorldRouter()
 
 	const dispatch = useDispatch()
 	const { showEmptyEvents, showInactiveStatements } = useSelector(getOutlinerPreferences)

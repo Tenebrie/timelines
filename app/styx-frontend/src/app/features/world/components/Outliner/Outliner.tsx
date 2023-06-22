@@ -26,8 +26,7 @@ export const Outliner = () => {
 
 	const { getLevelScalar } = useTimelineLevelScalar()
 
-	const { outlinerParams } = useWorldRouter()
-	const selectedTime = Number(outlinerParams.timestamp)
+	const { selectedTime } = useWorldRouter()
 
 	// All issued statements up to this point in timeline
 	const issuedStatements = useMemo(

@@ -1,10 +1,10 @@
 import { Params } from 'react-router-dom'
 
-import { AllRouteParamMapping, allRoutes } from './router'
+import { AllRouteParamMapping, allRoutes } from '../app/features/world/router'
 
 export const MockedRouter = {
 	isEnabled: false as boolean,
-	navigations: [] as { target: string }[],
+	navigations: [] as { target: string; path: string; query: [string, string][] }[],
 	useParams: () => ({} as Readonly<Params<string>>),
 }
 

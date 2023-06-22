@@ -1,36 +1,7 @@
 import { useDispatch } from 'react-redux'
-import { NavigateOptions, useNavigate, useParams } from 'react-router-dom'
 
+import { useBaseRouter } from '../../../router/useBaseRouter'
 import { worldSlice } from './reducer'
-import { MockedRouter } from './router.mock'
-
-const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
-	const actualParams = useParams()
-	const mockParams = MockedRouter.useParams()
-	const state = MockedRouter.isEnabled ? mockParams : actualParams
-
-	const navigate = useNavigate()
-
-	const navigateTo = (
-		target: (typeof routes)[keyof typeof routes],
-		args: Record<string, string>,
-		navigateParams?: NavigateOptions
-	) => {
-		const replacedTarget = Object.keys(args).reduce(
-			(total, current) => total.replace(`:${current}`, args[current]),
-			target
-		)
-		navigate(replacedTarget, navigateParams)
-		if (MockedRouter.isEnabled) {
-			MockedRouter.navigations.push({ target: replacedTarget })
-		}
-	}
-
-	return {
-		state,
-		navigateTo,
-	}
-}
 
 export const appRoutes = {
 	limbo: '/',
@@ -50,23 +21,23 @@ export const useAppRouter = () => {
 	const { navigateTo } = useBaseRouter(appRoutes)
 
 	const navigateToHome = async () => {
-		navigateTo(appRoutes.home, {})
+		navigateTo(appRoutes.home, {}, {})
 	}
 
 	const navigateToHomeWithoutHistory = async () => {
-		navigateTo(appRoutes.home, {}, { replace: true })
+		navigateTo(appRoutes.home, {}, {}, { replace: true })
 	}
 
 	const navigateToLogin = async () => {
-		navigateTo(appRoutes.login, {})
+		navigateTo(appRoutes.login, {}, {})
 	}
 
 	const navigateToLoginWithoutHistory = async () => {
-		navigateTo(appRoutes.login, {}, { replace: true })
+		navigateTo(appRoutes.login, {}, {}, { replace: true })
 	}
 
 	const navigateToRegister = async () => {
-		navigateTo(appRoutes.register, {})
+		navigateTo(appRoutes.register, {}, {})
 	}
 
 	return {
@@ -80,7 +51,7 @@ export const useAppRouter = () => {
 
 export const worldRoutes = {
 	root: '/world/:worldId',
-	outliner: '/world/:worldId/outliner/:timestamp',
+	outliner: '/world/:worldId/outliner',
 	actorEditor: '/world/:worldId/actor/:actorId',
 	eventEditor: '/world/:worldId/editor/:eventId',
 	statementEditor: '/world/:worldId/statement/:statementId',
@@ -114,7 +85,7 @@ export type WorldStatementEditorParams = {
 }
 
 export const useWorldRouter = () => {
-	const { state, navigateTo } = useBaseRouter(worldRoutes)
+	const { state, navigateTo, query, setQuery } = useBaseRouter(worldRoutes)
 
 	const { unloadWorld } = worldSlice.actions
 	const dispatch = useDispatch()
@@ -125,45 +96,79 @@ export const useWorldRouter = () => {
 	const eventEditorParams = state as WorldEventEditorParams
 	const statementEditorParams = state as WorldStatementEditorParams
 
+	const selectedTime = Number(query.get('time') || '0')
+	const selectedTimeOrNull = query.get('time') ? Number(query.get('time')) : null
+
 	const navigateToWorld = async (id: string) => {
 		dispatch(unloadWorld())
-		navigateTo(worldRoutes.root, {
-			worldId: id,
-		})
+		navigateTo(
+			worldRoutes.root,
+			{
+				worldId: id,
+			},
+			{}
+		)
 	}
 
-	const navigateToCurrentWorld = async () => {
-		navigateTo(worldRoutes.root, {
-			worldId: state['worldId'] || '',
-		})
+	const navigateToCurrentWorld = async ({ clearSelectedTime }: { clearSelectedTime?: boolean } = {}) => {
+		navigateTo(
+			worldRoutes.root,
+			{
+				worldId: state['worldId'] || '',
+			},
+			{
+				time: clearSelectedTime ? null : undefined,
+			}
+		)
 	}
 
 	const navigateToOutliner = (timestamp: number) => {
-		navigateTo(worldRoutes.outliner, {
-			worldId: state['worldId'] || '',
-			timestamp: String(timestamp),
-		})
+		navigateTo(
+			worldRoutes.outliner,
+			{
+				worldId: state['worldId'] || '',
+			},
+			{
+				time: String(timestamp),
+			}
+		)
 	}
 
 	const navigateToActorEditor = (actorId: string) => {
-		navigateTo(worldRoutes.actorEditor, {
-			worldId: state['worldId'] || '',
-			actorId,
-		})
+		navigateTo(
+			worldRoutes.actorEditor,
+			{
+				worldId: state['worldId'] || '',
+				actorId,
+			},
+			{}
+		)
 	}
 
 	const navigateToEventEditor = (eventId: string) => {
-		navigateTo(worldRoutes.eventEditor, {
-			worldId: state['worldId'] || '',
-			eventId,
-		})
+		navigateTo(
+			worldRoutes.eventEditor,
+			{
+				worldId: state['worldId'] || '',
+				eventId,
+			},
+			{}
+		)
 	}
 
 	const navigateToStatementEditor = (statementId: string) => {
-		navigateTo(worldRoutes.statementEditor, {
-			worldId: state['worldId'] || '',
-			statementId,
-		})
+		navigateTo(
+			worldRoutes.statementEditor,
+			{
+				worldId: state['worldId'] || '',
+				statementId,
+			},
+			{}
+		)
+	}
+
+	const unselectTime = () => {
+		setQuery('time', null)
 	}
 
 	return {
@@ -172,12 +177,15 @@ export const useWorldRouter = () => {
 		actorEditorParams,
 		eventEditorParams,
 		statementEditorParams,
+		selectedTime,
+		selectedTimeOrNull,
 		navigateToWorld,
 		navigateToCurrentWorld,
 		navigateToOutliner,
 		navigateToActorEditor,
 		navigateToEventEditor,
 		navigateToStatementEditor,
+		unselectTime,
 	}
 }
 

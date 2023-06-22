@@ -8,9 +8,9 @@ import {
 	mockUpdateWorldStatement,
 } from '../../../../../api/rheaApi.mock'
 import { renderWithProviders } from '../../../../../jest/renderWithProviders'
+import { mockRouter } from '../../../../../router/router.mock'
 import { initialState } from '../../reducer'
 import { worldRoutes } from '../../router'
-import { mockRouter } from '../../router.mock'
 import { WorldStatement } from '../../types'
 import { StatementEditor } from './StatementEditor'
 

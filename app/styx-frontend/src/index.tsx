@@ -10,7 +10,7 @@ import { Configuration } from 'rollbar'
 
 import { store } from './app/store'
 import reportWebVitals from './reportWebVitals'
-import { router } from './router/router'
+import { router } from './router/routerDefinition'
 
 const container = document.getElementById('root')
 const root = createRoot(container!)
