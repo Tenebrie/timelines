@@ -18,6 +18,13 @@ model User {
   worlds   World[]
 }
 
+enum WorldCalendarType {
+  COUNTUP
+  EARTH
+  PF2E
+  RIMWORLD
+}
+
 model World {
   id        String   @id @unique @default(uuid())
   createdAt DateTime @default(now())
@@ -38,13 +45,6 @@ enum WorldEventType {
   OTHER
 }
 
-enum WorldCalendarType {
-  COUNTUP
-  EARTH
-  PF2E
-  RIMWORLD
-}
-
 model WorldEvent {
   id        String   @id @unique @default(uuid())
   createdAt DateTime @default(now())
@@ -54,38 +54,21 @@ model WorldEvent {
   icon        String         @default("default")
   name        String
   timestamp   BigInt
+  revokedAt   BigInt?
   description String         @default("")
-
-  issuedStatements  WorldStatement[] @relation(name: "StatementsIssuedByEvent")
-  revokedStatements WorldStatement[] @relation(name: "StatementsRevokedByEvent")
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String
 
+  targetActors     Actor[] @relation("EventTargetActors")
+  mentionedActors  Actor[] @relation("EventMentionedActors")
   introducedActors Actor[] @relation(name: "EventIntroducedActors")
   terminatedActors Actor[] @relation(name: "EventTerminatedActors")
-}
 
-model WorldStatement {
-  id        String   @id @unique @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-
-  content String @map(name: "text")
-  title   String @default("")
-
-  issuedBy         WorldEvent  @relation(name: "StatementsIssuedByEvent", fields: [issuedByEventId], references: [id], onDelete: Cascade)
-  revokedBy        WorldEvent? @relation(name: "StatementsRevokedByEvent", fields: [revokedByEventId], references: [id])
-  issuedByEventId  String
-  revokedByEventId String?
-
-  replaces              WorldStatement? @relation(name: "ReplacedStatement", fields: [replacedStatementId], references: [id])
-  replacedBy            WorldStatement? @relation(name: "ReplacedStatement")
-  replacedStatementId   String?         @unique
-  replacedByStatementId String?         @unique
-
-  targetActors    Actor[] @relation("EventTargetActors")
-  mentionedActors Actor[] @relation("EventMentionedActors")
+  replaces          WorldEvent? @relation(name: "ReplacedEvent", fields: [replacedEventId], references: [id])
+  replacedBy        WorldEvent? @relation(name: "ReplacedEvent")
+  replacedEventId   String?     @unique
+  replacedByEventId String?     @unique
 }
 
 model Actor {
@@ -101,8 +84,8 @@ model Actor {
   introducedIn WorldEvent[] @relation(name: "EventIntroducedActors")
   terminatedIn WorldEvent[] @relation(name: "EventTerminatedActors")
 
-  statements            WorldStatement[]    @relation("EventTargetActors")
-  mentionedIn           WorldStatement[]    @relation("EventMentionedActors")
+  statements            WorldEvent[]        @relation("EventTargetActors")
+  mentionedIn           WorldEvent[]        @relation("EventMentionedActors")
   relationships         ActorRelationship[] @relation(name: "ActorRelationships")
   receivedRelationships ActorRelationship[] @relation(name: "ReceivedActorRelationships")
   world                 World               @relation(fields: [worldId], references: [id], onDelete: Cascade)

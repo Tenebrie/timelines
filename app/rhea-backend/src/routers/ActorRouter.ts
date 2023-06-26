@@ -14,10 +14,8 @@ import {
 	useRequestBody,
 } from 'tenebrie-framework'
 
-import { parseActorList } from './utils/parseActorList'
 import { NameStringValidator } from './validators/NameStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
-import { StringArrayValidator } from './validators/StringArrayValidator'
 import { worldDetailsTag } from './WorldRouter'
 
 const router = new Router()
@@ -102,47 +100,6 @@ router.delete('/api/world/:worldId/actor/:actorId', async (ctx) => {
 	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
 
 	return actor
-})
-
-/**
- * Actor statements
- */
-router.post('/api/world/:worldId/actor/statement', async (ctx) => {
-	useApiEndpoint({
-		name: 'issueActorStatement',
-		description: 'Creates a new actor statement and marks the specified event as the issuer.',
-		tags: [worldDetailsTag],
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	const { worldId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-	})
-
-	await WorldService.checkUserWriteAccess(user, worldId)
-
-	const params = useRequestBody(ctx, {
-		eventId: RequiredParam(StringValidator),
-		targetActorIds: RequiredParam(StringArrayValidator),
-		mentionedActorIds: OptionalParam(StringArrayValidator),
-		content: RequiredParam(StringValidator),
-		title: OptionalParam(OptionalNameStringValidator),
-	})
-
-	const targetActors = await parseActorList(params.targetActorIds)
-	const mentionedActors = await parseActorList(params.mentionedActorIds)
-
-	const { statement, world } = await WorldService.issueWorldStatement({
-		...params,
-		worldId,
-		targetActors: targetActors ?? [],
-		mentionedActors: mentionedActors ?? [],
-	})
-
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
-
-	return statement
 })
 
 export const ActorRouter = router

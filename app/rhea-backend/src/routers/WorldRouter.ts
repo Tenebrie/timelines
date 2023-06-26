@@ -16,6 +16,7 @@ import {
 } from 'tenebrie-framework'
 
 import { parseActorList } from './utils/parseActorList'
+import { ContentStringValidator } from './validators/ContentStringValidator'
 import { NameStringValidator } from './validators/NameStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
@@ -117,12 +118,23 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 	await WorldService.checkUserWriteAccess(user, worldId)
 
 	const params = useRequestBody(ctx, {
-		name: RequiredParam(NameStringValidator),
 		type: RequiredParam(WorldEventTypeValidator),
+		name: RequiredParam(NameStringValidator),
+		description: RequiredParam(ContentStringValidator),
 		timestamp: RequiredParam(BigIntValidator),
+		revokedAt: RequiredParam(BigIntValidator),
+		targetActorIds: RequiredParam(StringArrayValidator),
+		mentionedActorIds: RequiredParam(StringArrayValidator),
 	})
 
-	const { event, world } = await WorldService.createWorldEvent(worldId, params)
+	const targetActors = (await parseActorList(params.targetActorIds)) ?? []
+	const mentionedActors = (await parseActorList(params.mentionedActorIds)) ?? []
+
+	const { event, world } = await WorldService.createWorldEvent(worldId, {
+		...params,
+		targetActors,
+		mentionedActors,
+	})
 
 	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
 
@@ -146,13 +158,26 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	await WorldService.checkUserWriteAccess(user, worldId)
 
 	const params = useRequestBody(ctx, {
-		name: OptionalParam(NameStringValidator),
-		icon: OptionalParam(NameStringValidator),
+		name: OptionalParam(OptionalNameStringValidator),
+		icon: OptionalParam(OptionalNameStringValidator),
 		timestamp: OptionalParam(BigIntValidator),
-		description: OptionalParam(StringValidator),
+		description: OptionalParam(ContentStringValidator),
+		targetActorIds: OptionalParam(StringArrayValidator),
+		mentionedActorIds: OptionalParam(StringArrayValidator),
 	})
 
-	const { event, world } = await WorldService.updateWorldEvent({ worldId, eventId, params })
+	const targetActors = await parseActorList(params.targetActorIds)
+	const mentionedActors = await parseActorList(params.mentionedActorIds)
+
+	const { event, world } = await WorldService.updateWorldEvent({
+		worldId,
+		eventId,
+		params: {
+			...params,
+			targetActors,
+			mentionedActors,
+		},
+	})
 
 	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
 
@@ -182,131 +207,30 @@ router.delete('/api/world/:worldId/event/:eventId', async (ctx) => {
 	return event
 })
 
-/**
- * World statements
- */
-router.post('/api/world/:worldId/statement', async (ctx) => {
+router.post('/api/world/:worldId/event/:eventId/revoke', async (ctx) => {
 	useApiEndpoint({
-		name: 'issueWorldStatement',
-		description: 'Creates a new world statement and marks the specified event as the issuer.',
+		name: 'revokeWorldEvent',
+		description: 'Marks the specified event as revoked at specified timestamp.',
 		tags: [worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
 
-	const { worldId } = usePathParams(ctx, {
+	const { worldId, eventId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),
+		eventId: PathParam(StringValidator),
 	})
 
 	await WorldService.checkUserWriteAccess(user, worldId)
 
-	const params = useRequestBody(ctx, {
-		eventId: RequiredParam(StringValidator),
-		content: RequiredParam(StringValidator),
-		title: OptionalParam(OptionalNameStringValidator),
+	const { revokedAt } = useRequestBody(ctx, {
+		revokedAt: RequiredParam(BigIntValidator),
 	})
 
-	const { statement, world } = await WorldService.issueWorldStatement({
-		...params,
-		worldId,
-		targetActors: [],
-		mentionedActors: [],
-	})
-
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
-
-	return statement
-})
-
-router.patch('/api/world/:worldId/statement/:statementId', async (ctx) => {
-	useApiEndpoint({
-		name: 'updateWorldStatement',
-		description: 'Updates the target world statement',
-		tags: [worldDetailsTag],
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	const { worldId, statementId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-		statementId: PathParam(StringValidator),
-	})
-
-	await WorldService.checkUserWriteAccess(user, worldId)
-
-	const params = useRequestBody(ctx, {
-		targetActorIds: OptionalParam(StringArrayValidator),
-		mentionedActorIds: OptionalParam(StringArrayValidator),
-		content: OptionalParam(StringValidator),
-		title: OptionalParam(OptionalNameStringValidator),
-	})
-
-	const targetActors = await parseActorList(params.targetActorIds)
-	const mentionedActors = await parseActorList(params.mentionedActorIds)
-
-	const { statement, world } = await WorldService.updateWorldStatement({
-		worldId,
-		statementId,
-		params: {
-			title: params.title,
-			content: params.content,
-			targetActors,
-			mentionedActors,
-		},
-	})
-
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
-
-	return statement
-})
-
-router.delete('/api/world/:worldId/statement/:statementId', async (ctx) => {
-	useApiEndpoint({
-		name: 'deleteWorldStatement',
-		description: 'Deletes the target world statement',
-		tags: [worldDetailsTag],
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	const { worldId, statementId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-		statementId: PathParam(StringValidator),
-	})
-
-	await WorldService.checkUserWriteAccess(user, worldId)
-
-	const { statement, world } = await WorldService.deleteWorldStatement({ worldId, statementId })
-
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
-
-	return statement
-})
-
-router.post('/api/world/:worldId/statement/:statementId/revoke', async (ctx) => {
-	useApiEndpoint({
-		name: 'revokeWorldStatement',
-		description: 'Marks the specified event as the revoker for this world statement.',
-		tags: [worldDetailsTag],
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	const { worldId, statementId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-		statementId: PathParam(StringValidator),
-	})
-
-	await WorldService.checkUserWriteAccess(user, worldId)
-
-	const { eventId } = useRequestBody(ctx, {
-		eventId: RequiredParam(StringValidator),
-	})
-
-	const { statement, world } = await WorldService.revokeWorldStatement({
+	const { statement, world } = await WorldService.revokeWorldEvent({
 		worldId,
 		eventId,
-		statementId,
+		revokedAt,
 	})
 
 	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
@@ -314,25 +238,25 @@ router.post('/api/world/:worldId/statement/:statementId/revoke', async (ctx) => 
 	return statement
 })
 
-router.post('/api/world/:worldId/statement/:statementId/unrevoke', async (ctx) => {
+router.post('/api/world/:worldId/event/:eventId/unrevoke', async (ctx) => {
 	useApiEndpoint({
-		name: 'unrevokeWorldStatement',
-		description: 'Marks the statement as never revoked.',
+		name: 'unrevokeWorldEvent',
+		description: 'Marks the event as never revoked.',
 		tags: [worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
 
-	const { worldId, statementId } = usePathParams(ctx, {
+	const { worldId, eventId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),
-		statementId: PathParam(StringValidator),
+		eventId: PathParam(StringValidator),
 	})
 
 	await WorldService.checkUserWriteAccess(user, worldId)
 
-	const { statement, world } = await WorldService.unrevokeWorldStatement({
+	const { statement, world } = await WorldService.unrevokeWorldEvent({
 		worldId,
-		statementId,
+		eventId,
 	})
 
 	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
