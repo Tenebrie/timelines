@@ -45,17 +45,26 @@ enum WorldEventType {
   OTHER
 }
 
+enum WorldEventField {
+  RevokedAt
+  CustomName
+  EventIcon
+  TargetActors
+  MentionedActors
+}
+
 model WorldEvent {
   id        String   @id @unique @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   type        WorldEventType
-  icon        String         @default("default")
+  icon        String            @default("default")
   name        String
   timestamp   BigInt
   revokedAt   BigInt?
-  description String         @default("")
+  description String            @default("")
+  extraFields WorldEventField[]
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String

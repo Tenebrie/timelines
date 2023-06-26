@@ -26,3 +26,5 @@ export type WorldEventGroup = {
 	events: (WorldEvent | WorldEventBundle)[]
 	timestamp: number
 }
+
+export type WorldEventModule = WorldEvent['extraFields'][number]

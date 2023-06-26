@@ -1,11 +1,13 @@
-import { ArrowBack, Delete } from '@mui/icons-material'
+import { Add, ArrowBack, Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Autocomplete, Button, Grid, Stack, TextField, Tooltip } from '@mui/material'
+import { Autocomplete, Button, Grid, Stack, TextField, Tooltip, Typography } from '@mui/material'
+import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { UpdateWorldEventApiArg, useUpdateWorldEventMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
+import { OverlayingLabel } from '../../../../../../components/OverlayingLabel'
 import { arraysEqual } from '../../../../../../utils/arraysEqual'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
@@ -14,10 +16,12 @@ import { TimestampField } from '../../../../../time/components/TimestampField'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
-import { Actor, WorldEvent } from '../../../../types'
+import { Actor, WorldEvent, WorldEventModule } from '../../../../types'
 import { useAutocompleteActorList } from '../../../ActorSelector/useAutocompleteActorList'
 import { useMapActorsToOptions } from '../../../ActorSelector/useMapActorsToOptions'
+import { StatementsUnit } from '../../styles'
 import { EventIconDropdown } from '../EventIconDropdown/EventIconDropdown'
+import { NewEventFieldPopup } from './NewEventFieldPopup'
 
 type Props = {
 	event: WorldEvent
@@ -25,12 +29,20 @@ type Props = {
 
 type SavedEvent = Pick<
 	WorldEvent,
-	'name' | 'icon' | 'timestamp' | 'revokedAt' | 'description' | 'targetActors' | 'mentionedActors'
+	| 'extraFields'
+	| 'name'
+	| 'icon'
+	| 'timestamp'
+	| 'revokedAt'
+	| 'description'
+	| 'targetActors'
+	| 'mentionedActors'
 >
 
 export const EventDetailsEditor = ({ event }: Props) => {
 	const { mapActorsToOptions } = useMapActorsToOptions()
 
+	const [modules, setModules] = useState<WorldEventModule[]>(event.extraFields)
 	const [name, setName] = useState<string>(event.name)
 	const [icon, setIcon] = useState<string>(event.icon)
 	const [timestamp, setTimestamp] = useState<number>(event.timestamp)
@@ -52,6 +64,7 @@ export const EventDetailsEditor = ({ event }: Props) => {
 
 	useEffect(() => {
 		if (new Date(event.updatedAt) > lastSavedAt.current) {
+			setModules(event.extraFields)
 			setName(event.name)
 			setIcon(event.icon)
 			setTimestamp(event.timestamp)
@@ -101,6 +114,7 @@ export const EventDetailsEditor = ({ event }: Props) => {
 	} = useAutosave({
 		onSave: () =>
 			sendUpdate({
+				modules,
 				name,
 				icon,
 				timestamp: String(timestamp),
@@ -121,7 +135,8 @@ export const EventDetailsEditor = ({ event }: Props) => {
 		}
 		if (
 			isFirstRender ||
-			(lastSaved.current.name === name &&
+			(arraysEqual(lastSaved.current.extraFields, modules, (a, b) => a === b) &&
+				lastSaved.current.name === name &&
 				lastSaved.current.icon === icon &&
 				lastSaved.current.timestamp === timestamp &&
 				lastSaved.current.revokedAt === revokedAt &&
@@ -134,6 +149,7 @@ export const EventDetailsEditor = ({ event }: Props) => {
 
 		autosave()
 	}, [
+		modules,
 		name,
 		icon,
 		timestamp,
@@ -154,84 +170,123 @@ export const EventDetailsEditor = ({ event }: Props) => {
 		manualSave()
 	})
 
+	const newModulePopupState = usePopupState({ variant: 'popover', popupId: 'modulePopup' })
+
 	return (
-		<Stack spacing={2} direction="column">
-			<TextField
-				type="text"
-				label="Name"
-				value={name}
-				onChange={(e) => setName(e.target.value)}
-				inputProps={{ maxLength: 256 }}
-			/>
-			<Grid container direction="row" gap={2}>
-				<Grid item margin={0} padding={0} flexGrow={1}>
-					<TimestampField label="Issued at" timestamp={timestamp} onChange={setTimestamp} />
-				</Grid>
-				<Grid item margin={0} padding={0} flexGrow={1}>
-					<TimestampField
-						label="Revoked at"
-						timestamp={revokedAt}
-						initialTimestamp={timestamp}
-						onChange={setRevokedAt}
-						clearable
+		<>
+			<Grid item xs={12} md={6} style={{ maxHeight: '100%' }}>
+				<Stack spacing={2} direction="column">
+					<TextField
+						label="Content"
+						value={description}
+						onChange={(e) => setDescription(e.target.value)}
+						minRows={3}
+						maxRows={11}
+						multiline
+						autoFocus
 					/>
-				</Grid>
-				<Grid item margin={0} padding={0}>
-					<EventIconDropdown icon={icon} onChange={setIcon} />
-				</Grid>
-			</Grid>
-			<Autocomplete
-				value={selectedActors}
-				onChange={(_, value) => setSelectedActors(value)}
-				multiple={true}
-				options={actorOptions}
-				isOptionEqualToValue={(option, value) => option.id === value.id}
-				autoHighlight
-				renderOption={renderOption}
-				renderInput={(params) => <TextField {...params} label="Actors" />}
-			/>
-			<Autocomplete
-				value={mentionedActors}
-				onChange={(_, value) => setMentionedActors(value)}
-				multiple={true}
-				options={mentionedActorOptions}
-				isOptionEqualToValue={(option, value) => option.id === value.id}
-				autoHighlight
-				renderOption={renderOption}
-				renderInput={(params) => <TextField {...params} label="Mentioned actors (Optional)" />}
-			/>
-			<TextField
-				label="Description"
-				value={description}
-				onChange={(e) => setDescription(e.target.value)}
-				minRows={3}
-				maxRows={11}
-				multiline
-			/>
-			<Stack direction="row-reverse" justifyContent="space-between">
-				<Stack spacing={2} direction="row-reverse">
-					<Tooltip title={shortcutLabel} arrow placement="top">
-						<span>
-							<LoadingButton
-								loading={isSaving}
-								variant="outlined"
-								onClick={manualSave}
-								loadingPosition="start"
-								color={autosaveColor}
-								startIcon={autosaveIcon}
-							>
-								Save
-							</LoadingButton>
-						</span>
-					</Tooltip>
-					<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
-						Delete
-					</Button>
+					<TimestampField label="Issued at" timestamp={timestamp} onChange={setTimestamp} />
+					<Stack direction="row-reverse" justifyContent="space-between">
+						<Stack spacing={2} direction="row-reverse">
+							<Tooltip title={shortcutLabel} arrow placement="top">
+								<span>
+									<LoadingButton
+										loading={isSaving}
+										variant="outlined"
+										onClick={manualSave}
+										loadingPosition="start"
+										color={autosaveColor}
+										startIcon={autosaveIcon}
+									>
+										Save
+									</LoadingButton>
+								</span>
+							</Tooltip>
+							<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
+								Delete
+							</Button>
+						</Stack>
+						<Button variant="outlined" onClick={() => window.history.back()} startIcon={<ArrowBack />}>
+							Back
+						</Button>
+					</Stack>
 				</Stack>
-				<Button variant="outlined" onClick={() => window.history.back()} startIcon={<ArrowBack />}>
-					Back
-				</Button>
-			</Stack>
-		</Stack>
+			</Grid>
+			<Grid item xs={12} md={6} style={{ height: '100%' }}>
+				<StatementsUnit>
+					<OverlayingLabel>Modules</OverlayingLabel>
+					<Stack gap={2} height="100%">
+						<Stack
+							alignItems="center"
+							justifyContent="center"
+							height={modules.length === 0 ? '100%' : 'unset'}
+							gap={2}
+						>
+							{modules.length === 0 && (
+								<Typography variant="body1" textAlign="center">
+									Missing some fields? You can add them here!
+								</Typography>
+							)}
+							<Button
+								variant="contained"
+								fullWidth={modules.length > 0}
+								startIcon={<Add />}
+								{...bindTrigger(newModulePopupState)}
+							>
+								Add field
+							</Button>
+						</Stack>
+						<NewEventFieldPopup popupState={newModulePopupState} modules={modules} onChange={setModules} />
+						{modules.includes('CustomName') && (
+							<TextField
+								type="text"
+								label="Custom name"
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+								inputProps={{ maxLength: 256 }}
+							/>
+						)}
+						{modules.includes('RevokedAt') && (
+							<TimestampField
+								label="Revoked at"
+								timestamp={revokedAt}
+								initialTimestamp={timestamp}
+								onChange={setRevokedAt}
+								clearable
+							/>
+						)}
+						{modules.includes('EventIcon') && (
+							<Grid item margin={0} padding={0}>
+								<EventIconDropdown icon={icon} onChange={setIcon} />
+							</Grid>
+						)}
+						{modules.includes('TargetActors') && (
+							<Autocomplete
+								value={selectedActors}
+								onChange={(_, value) => setSelectedActors(value)}
+								multiple={true}
+								options={actorOptions}
+								isOptionEqualToValue={(option, value) => option.id === value.id}
+								autoHighlight
+								renderOption={renderOption}
+								renderInput={(params) => <TextField {...params} label="Actors" />}
+							/>
+						)}
+						{modules.includes('MentionedActors') && (
+							<Autocomplete
+								value={mentionedActors}
+								onChange={(_, value) => setMentionedActors(value)}
+								multiple={true}
+								options={mentionedActorOptions}
+								isOptionEqualToValue={(option, value) => option.id === value.id}
+								autoHighlight
+								renderOption={renderOption}
+								renderInput={(params) => <TextField {...params} label="Mentioned actors" />}
+							/>
+						)}
+					</Stack>
+				</StatementsUnit>
+			</Grid>
+		</>
 	)
 }

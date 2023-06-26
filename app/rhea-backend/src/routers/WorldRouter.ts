@@ -23,6 +23,7 @@ import { NameStringValidator } from './validators/NameStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
 import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator'
+import { WorldEventFieldValidator } from './validators/WorldEventFieldValidator'
 import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
 
 const router = new Router()
@@ -160,6 +161,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	await WorldService.checkUserWriteAccess(user, worldId)
 
 	const params = useRequestBody(ctx, {
+		modules: OptionalParam(WorldEventFieldValidator),
 		name: OptionalParam(OptionalNameStringValidator),
 		icon: OptionalParam(OptionalNameStringValidator),
 		timestamp: OptionalParam(BigIntValidator),
@@ -176,6 +178,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		worldId,
 		eventId,
 		params: {
+			extraFields: params.modules,
 			name: params.name,
 			icon: params.icon,
 			timestamp: params.timestamp,
