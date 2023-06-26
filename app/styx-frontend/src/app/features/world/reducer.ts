@@ -2,7 +2,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { ScaleLevel } from './components/Timeline/types'
-import { ActorDetails, WorldCalendarType, WorldDetails, WorldEvent, WorldStatement } from './types'
+import { ActorDetails, WorldCalendarType, WorldDetails, WorldEvent } from './types'
 
 export const initialState = {
 	isLoaded: false as boolean,
@@ -44,16 +44,6 @@ export const initialState = {
 			isOpen: false as boolean,
 			target: null as WorldEvent | null,
 		},
-		deleteStatementModal: {
-			isOpen: false as boolean,
-			target: null as WorldStatement | null,
-		},
-		issuedStatementWizard: {
-			isOpen: false as boolean,
-			eventId: '' as string,
-			mode: 'create' as 'create' | 'replace',
-			scope: 'world' as 'world' | 'actor',
-		},
 		revokedStatementWizard: {
 			isOpen: false as boolean,
 		},
@@ -91,6 +81,7 @@ export const worldSlice = createSlice({
 			state.events = world.events.map((e) => ({
 				...e,
 				timestamp: Number(e.timestamp),
+				revokedAt: e.revokedAt ? Number(e.revokedAt) : undefined,
 			}))
 			state.calendar = world.calendar
 			state.timeOrigin = world.timeOrigin
@@ -170,37 +161,6 @@ export const worldSlice = createSlice({
 
 		closeDeleteEventModal: (state) => {
 			state.eventEditor.deleteEventModal.isOpen = false
-		},
-
-		/* Event editor - Delete statement modal */
-		openDeleteStatementModal: (state, { payload }: PayloadAction<WorldStatement>) => {
-			state.eventEditor.deleteStatementModal.isOpen = true
-			state.eventEditor.deleteStatementModal.target = payload
-		},
-
-		closeDeleteStatementModal: (state) => {
-			state.eventEditor.deleteStatementModal.isOpen = false
-		},
-
-		/* Event editor - Issued statement wizard */
-		openIssuedStatementWizard: (
-			state,
-			{
-				payload,
-			}: PayloadAction<{
-				eventId: string
-				mode: WorldState['eventEditor']['issuedStatementWizard']['mode']
-				scope: WorldState['eventEditor']['issuedStatementWizard']['scope']
-			}>
-		) => {
-			state.eventEditor.issuedStatementWizard.isOpen = true
-			state.eventEditor.issuedStatementWizard.eventId = payload.eventId
-			state.eventEditor.issuedStatementWizard.mode = payload.mode
-			state.eventEditor.issuedStatementWizard.scope = payload.scope
-		},
-
-		closeIssuedStatementWizard: (state) => {
-			state.eventEditor.issuedStatementWizard.isOpen = false
 		},
 
 		/* Event editor - Revoked world statement wizard */

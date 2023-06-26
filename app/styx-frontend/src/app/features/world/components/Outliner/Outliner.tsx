@@ -6,12 +6,10 @@ import { TransitionGroup } from 'react-transition-group'
 import { OverlayingLabel } from '../../../../components/OverlayingLabel'
 import { getOutlinerPreferences } from '../../../preferences/selectors'
 import { useTimelineLevelScalar } from '../../../time/hooks/useTimelineLevelScalar'
-import { useWorldTime } from '../../../time/hooks/useWorldTime'
 import { useWorldRouter } from '../../router'
 import { getTimelineState, getWorldState } from '../../selectors'
-import { IssuedStatementWizard } from '../IssuedStatementWizard/IssuedStatementWizard'
 import { ActorWithStatementsRenderer } from '../Renderers/ActorWithStatementsRenderer'
-import { EventWithStatementsRenderer } from '../Renderers/EventWithStatementsRenderer'
+import { EventWithContentRenderer } from '../Renderers/Event/EventWithContentRenderer'
 import { EventTutorialModal } from './components/EventTutorialModal/EventTutorialModal'
 import { OutlinerControls } from './components/OutlinerControls/OutlinerControls'
 import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmptyState'
@@ -20,40 +18,11 @@ import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
 export const Outliner = () => {
 	const { actors, events, selectedActors, selectedEvents } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
-	const { showEmptyEvents, showInactiveStatements, collapsedActors, collapsedEvents } =
-		useSelector(getOutlinerPreferences)
-	const { timeToLabel } = useWorldTime()
+	const { showInactiveStatements, collapsedActors, collapsedEvents } = useSelector(getOutlinerPreferences)
 
 	const { getLevelScalar } = useTimelineLevelScalar()
 
 	const { selectedTime } = useWorldRouter()
-
-	// All issued statements up to this point in timeline
-	const issuedStatements = useMemo(
-		() =>
-			events
-				.filter((event) => event.timestamp <= selectedTime)
-				.flatMap((event) =>
-					event.issuedStatements.map((statement, index) => ({
-						...statement,
-						timestamp: event.timestamp,
-						index,
-					}))
-				),
-		[events, selectedTime]
-	)
-
-	// All revoked statements up to this point in timeline
-	const revokedStatements = useMemo(
-		() =>
-			events.filter((event) => event.timestamp <= selectedTime).flatMap((event) => event.revokedStatements),
-		[events, selectedTime]
-	)
-
-	// All non-revoked statements up to this point in timeline
-	const activeStatements = issuedStatements.filter(
-		(issuedCard) => !revokedStatements.some((revokedCard) => issuedCard.id === revokedCard.id)
-	)
 
 	// Sorted list of all events visible at this point in outliner
 	const highlightWithin = 10 * getLevelScalar(scaleLevel)
@@ -64,36 +33,14 @@ export const Outliner = () => {
 				.map((event, index) => ({
 					...event,
 					index,
-					secondary: timeToLabel(event.timestamp),
 					highlighted: Math.abs(event.timestamp - selectedTime) < highlightWithin,
 					collapsed: collapsedEvents.includes(event.id),
-					issuedStatements: event.issuedStatements
-						.map((statement) => ({
-							...statement,
-							active: activeStatements.some((card) => card.id === statement.id),
-						}))
-						.filter((statement) => showInactiveStatements || statement.active),
+					active: event.revokedAt === undefined || event.revokedAt > selectedTime,
 				}))
-				.filter(
-					(event) =>
-						showEmptyEvents ||
-						event.issuedStatements.some((statement) => statement.active) ||
-						(event.issuedStatements.length > 0 && showInactiveStatements) ||
-						event.highlighted
-				)
+				.filter((event) => showInactiveStatements || event.highlighted || event.active)
 				.filter((event) => selectedEvents.length === 0 || selectedEvents.includes(event.id))
 				.sort((a, b) => b.timestamp - a.timestamp || b.index - a.index),
-		[
-			events,
-			selectedTime,
-			timeToLabel,
-			highlightWithin,
-			collapsedEvents,
-			activeStatements,
-			showInactiveStatements,
-			showEmptyEvents,
-			selectedEvents,
-		]
+		[events, selectedTime, highlightWithin, collapsedEvents, showInactiveStatements, selectedEvents]
 	)
 
 	const visibleActors = useMemo(
@@ -103,15 +50,10 @@ export const Outliner = () => {
 					...actor,
 					highlighted: false,
 					collapsed: collapsedActors.includes(actor.id),
-					statements: actor.statements
-						.map((statement) => ({
-							...statement,
-							active: activeStatements.some((card) => card.id === statement.id),
-						}))
-						.filter((statement) => showInactiveStatements || statement.active),
+					events: [],
 				}))
 				.filter((actor) => selectedActors.length === 0 || selectedActors.includes(actor.id)),
-		[activeStatements, actors, collapsedActors, showInactiveStatements, selectedActors]
+		[actors, collapsedActors, selectedActors]
 	)
 
 	return (
@@ -136,9 +78,12 @@ export const Outliner = () => {
 										))}
 										{visibleEvents.map((event, index) => (
 											<Collapse key={event.id}>
-												<EventWithStatementsRenderer
+												<EventWithContentRenderer
 													{...event}
 													event={event}
+													owningActor={null}
+													short={false}
+													index={index}
 													divider={index !== visibleEvents.length - 1}
 												/>
 											</Collapse>
@@ -153,7 +98,6 @@ export const Outliner = () => {
 					</OutlinerContainer>
 				</Grid>
 			</Grid>
-			<IssuedStatementWizard />
 			<EventTutorialModal />
 		</Container>
 	)

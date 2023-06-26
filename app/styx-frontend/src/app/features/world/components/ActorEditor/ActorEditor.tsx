@@ -1,4 +1,4 @@
-import { Grid, Stack } from '@mui/material'
+import { Grid } from '@mui/material'
 
 import { ActorDetailsEditor } from './components/ActorDetailsEditor/ActorDetailsEditor'
 import { ActorEvents } from './components/ActorEvents/ActorEvents'
@@ -20,9 +20,7 @@ export const ActorEditor = () => {
 					<ActorDetailsEditor key={actor.id} actor={actor} />
 				</Grid>
 				<Grid item xs={12} md={6} style={{ height: '100%' }}>
-					<Stack spacing={1}>
-						<ActorEvents actor={actor} />
-					</Stack>
+					<ActorEvents actor={actor} />
 				</Grid>
 			</Grid>
 			<DeleteActorModal />

@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { Actor } from '../../../types'
+import { Actor } from '../../types'
 
 export const useMapActorsToOptions = () => {
 	const mapActorsToOptions = useCallback(

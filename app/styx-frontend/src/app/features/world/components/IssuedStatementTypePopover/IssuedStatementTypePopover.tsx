@@ -12,16 +12,16 @@ type Props = {
 
 export const StatementTypePopover = ({ state, eventId }: Props) => {
 	const dispatch = useDispatch()
-	const { openIssuedStatementWizard } = worldSlice.actions
+	const { openEventWizard } = worldSlice.actions
 
 	const onWorldStatement = () => {
 		state.close()
-		dispatch(openIssuedStatementWizard({ mode: 'create', scope: 'world', eventId }))
+		dispatch(openEventWizard({ timestamp: 0 }))
 	}
 
 	const onActorStatement = () => {
 		state.close()
-		dispatch(openIssuedStatementWizard({ mode: 'create', scope: 'actor', eventId }))
+		dispatch(openEventWizard({ timestamp: 0 }))
 	}
 
 	return (

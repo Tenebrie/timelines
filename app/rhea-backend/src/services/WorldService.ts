@@ -126,6 +126,10 @@ export const WorldService = {
 							  }
 							: undefined,
 				},
+				include: {
+					targetActors: true,
+					mentionedActors: true,
+				},
 			}),
 			touchWorld(worldId),
 		])
@@ -220,7 +224,14 @@ export const WorldService = {
 						receivedRelationships: true,
 					},
 				},
-				events: true,
+				events: {
+					include: {
+						targetActors: true,
+						mentionedActors: true,
+						introducedActors: true,
+						terminatedActors: true,
+					},
+				},
 			},
 		})
 	},

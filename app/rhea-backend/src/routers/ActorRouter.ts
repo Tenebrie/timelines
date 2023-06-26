@@ -3,6 +3,7 @@ import { ActorService } from '@src/services/ActorService'
 import { RedisService } from '@src/services/RedisService'
 import { WorldService } from '@src/services/WorldService'
 import {
+	NonEmptyStringValidator,
 	OptionalParam,
 	PathParam,
 	RequiredParam,
@@ -14,6 +15,7 @@ import {
 	useRequestBody,
 } from 'tenebrie-framework'
 
+import { ContentStringValidator } from './validators/ContentStringValidator'
 import { NameStringValidator } from './validators/NameStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { worldDetailsTag } from './WorldRouter'
@@ -39,7 +41,7 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 		name: RequiredParam(NameStringValidator),
 		title: OptionalParam(OptionalNameStringValidator),
 		color: OptionalParam(NameStringValidator),
-		description: OptionalParam(StringValidator),
+		description: OptionalParam(ContentStringValidator),
 	})
 
 	const { actor, world } = await ActorService.createActor(worldId, params)
@@ -69,7 +71,7 @@ router.patch('/api/world/:worldId/actor/:actorId', async (ctx) => {
 		name: OptionalParam(NameStringValidator),
 		title: OptionalParam(OptionalNameStringValidator),
 		color: OptionalParam(NameStringValidator),
-		description: OptionalParam(StringValidator),
+		description: OptionalParam(ContentStringValidator),
 	})
 
 	const { actor, world } = await ActorService.updateActor({ worldId, actorId, params })

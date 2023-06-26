@@ -3,6 +3,8 @@ import { RedisService } from '@src/services/RedisService'
 import { WorldService } from '@src/services/WorldService'
 import {
 	BigIntValidator,
+	NonEmptyStringValidator,
+	NullableBigIntValidator,
 	NumberValidator,
 	OptionalParam,
 	PathParam,
@@ -50,7 +52,7 @@ router.post('/api/world', async (ctx) => {
 	const user = await useAuth(ctx, UserAuthenticator)
 
 	const params = useRequestBody(ctx, {
-		name: RequiredParam(StringValidator),
+		name: RequiredParam(NonEmptyStringValidator),
 		calendar: OptionalParam(WorldCalendarTypeValidator),
 		timeOrigin: OptionalParam(NumberValidator),
 	})
@@ -161,6 +163,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		name: OptionalParam(OptionalNameStringValidator),
 		icon: OptionalParam(OptionalNameStringValidator),
 		timestamp: OptionalParam(BigIntValidator),
+		revokedAt: OptionalParam(NullableBigIntValidator),
 		description: OptionalParam(ContentStringValidator),
 		targetActorIds: OptionalParam(StringArrayValidator),
 		mentionedActorIds: OptionalParam(StringArrayValidator),
@@ -173,7 +176,11 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		worldId,
 		eventId,
 		params: {
-			...params,
+			name: params.name,
+			icon: params.icon,
+			timestamp: params.timestamp,
+			revokedAt: params.revokedAt,
+			description: params.description,
 			targetActors,
 			mentionedActors,
 		},

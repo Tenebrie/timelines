@@ -1,1 +1,1 @@
-export type SavingState = 'none' | 'debounce' | 'waiting' | 'success'
+export type SavingState = 'none' | 'debounce' | 'waiting' | 'success' | 'error'

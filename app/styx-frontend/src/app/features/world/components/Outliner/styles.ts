@@ -64,7 +64,6 @@ export const StatementColoredActor = styled.div`
 `
 
 export const StatementActorsText = styled.span`
-	color: teal;
 	align-items: center;
 	display: flex;
 	gap: 4px;

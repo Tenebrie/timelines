@@ -9,9 +9,10 @@ import { SavingState } from './types'
 type Props = {
 	onSave: () => void
 	isSaving: boolean
+	isError?: boolean
 }
 
-export const useAutosave = ({ onSave, isSaving }: Props) => {
+export const useAutosave = ({ onSave, isSaving, isError }: Props) => {
 	const savingStateRef = useRef<SavingState>('none')
 	const [savingState, setSavingState] = useState<SavingState>('none')
 	const successTimeoutRef = useRef<number | null>(null)
@@ -55,13 +56,13 @@ export const useAutosave = ({ onSave, isSaving }: Props) => {
 
 		if (savingState === 'waiting' && !isSaving && startedWaitingRef.current) {
 			startedWaitingRef.current = false
-			setSavingState('success')
+			setSavingState(isError ? 'error' : 'success')
 		}
-	}, [savingState, isSaving])
+	}, [savingState, isSaving, isError])
 
 	useEffect(() => {
 		savingStateRef.current = savingState
-		if (savingState === 'success') {
+		if (savingState === 'success' || savingState === 'error') {
 			successTimeoutRef.current = window.setTimeout(() => {
 				setSavingState('none')
 				successTimeoutRef.current = null
@@ -87,17 +88,19 @@ export const useAutosave = ({ onSave, isSaving }: Props) => {
 		}
 	})
 
+	const [currentIcon, setCurrentIcon] = useState(renderIcon())
+	const [currentColor, setCurrentColor] = useState<'success' | 'error' | undefined>(undefined)
+
 	useEffect(() => {
 		setCurrentIcon(renderIcon())
-		if (savingState === 'success') {
+		if (isError) {
+			setCurrentColor('error')
+		} else if (savingState === 'success') {
 			setCurrentColor('success')
 		} else {
 			setCurrentColor(undefined)
 		}
-	}, [renderIcon, savingState])
-
-	const [currentIcon, setCurrentIcon] = useState(renderIcon())
-	const [currentColor, setCurrentColor] = useState<'success' | undefined>(undefined)
+	}, [renderIcon, isError, savingState])
 
 	return {
 		icon: currentIcon,

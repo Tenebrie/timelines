@@ -4090,10 +4090,10 @@ supports-preserve-symlinks-flag@^1.0.0:
   resolved "https://registry.yarnpkg.com/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz#6eda4bd344a3c94aea376d4cc31bc77311039e09"
   integrity sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==
 
-tenebrie-framework@^0.4.11:
-  version "0.4.11"
-  resolved "https://registry.yarnpkg.com/tenebrie-framework/-/tenebrie-framework-0.4.11.tgz#51887d9ba77118debbcde64a9db1c593195fd9e7"
-  integrity sha512-3tweBv5fzLAkH+oGlwTm01cJN80A6HSsleDURi98ZhBLAb64eYCfaj6IEHFh1OQ6TmJ1UcDZZ7AxnGivwsObzQ==
+tenebrie-framework@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/tenebrie-framework/-/tenebrie-framework-0.6.3.tgz#fb8adf11006d294e4961d705fef9cdc8b5304b2a"
+  integrity sha512-LCEDEsm2Nv8qMXd4B4iWUMtUuP+BUtJ8jbbqXi1M8kjWAD3pm8LwJO0TFvKYU4tjznPDzGQWPHA5TGq4rmYnzg==
   dependencies:
     http-status-codes "^2.2.0"
     module-alias "^2.2.2"

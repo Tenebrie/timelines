@@ -6,9 +6,6 @@ export const getEventWizardState = (state: RootState) => state.world.eventWizard
 export const getEventTutorialModalState = (state: RootState) => state.world.outliner.eventTutorialModal
 export const getDeleteActorModalState = (state: RootState) => state.world.actorEditor.deleteActorModal
 export const getDeleteEventModalState = (state: RootState) => state.world.eventEditor.deleteEventModal
-export const getDeleteStatementModalState = (state: RootState) => state.world.eventEditor.deleteStatementModal
-export const getIssuedStatementWizardState = (state: RootState) =>
-	state.world.eventEditor.issuedStatementWizard
 export const getRevokedStatementWizardState = (state: RootState) =>
 	state.world.eventEditor.revokedStatementWizard
 export const getIssuedActorStatementWizardState = (state: RootState) =>

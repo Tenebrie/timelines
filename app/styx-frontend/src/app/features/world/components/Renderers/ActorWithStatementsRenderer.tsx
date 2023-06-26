@@ -1,14 +1,14 @@
 import { Collapse, Divider, List } from '@mui/material'
 import { TransitionGroup } from 'react-transition-group'
 
-import { ActorDetails, WorldStatement } from '../../types'
+import { ActorDetails, WorldEvent } from '../../types'
 import { ActorRenderer } from './ActorRenderer'
 import { EmptyStatementListRenderer } from './EmptyStatementListRenderer'
-import { StatementRenderer } from './StatementRenderer'
+import { EventRenderer } from './Event/EventRenderer'
 
 type Props = {
-	actor: ActorDetails & {
-		statements: (WorldStatement & { active: boolean })[]
+	actor: Omit<ActorDetails, 'events'> & {
+		events: (WorldEvent & { active: boolean })[]
 	}
 	highlighted: boolean
 	collapsed: boolean
@@ -22,13 +22,15 @@ export const ActorWithStatementsRenderer = ({ actor, highlighted, collapsed, div
 			<List dense component="div" disablePadding>
 				<TransitionGroup>
 					{!collapsed &&
-						actor.statements.map((statement: Props['actor']['statements'][number], index) => (
-							<Collapse key={statement.id}>
-								<StatementRenderer
-									statement={statement}
-									active={statement.active}
+						actor.events.map((event, index) => (
+							<Collapse key={event.id}>
+								<EventRenderer
+									event={event}
 									owningActor={actor}
 									index={index}
+									highlighted={false}
+									collapsed={false}
+									short={false}
 								/>
 							</Collapse>
 						))}

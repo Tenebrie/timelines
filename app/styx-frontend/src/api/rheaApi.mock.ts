@@ -3,7 +3,7 @@ import { SetupServer } from 'msw/lib/node'
 import { v4 as getRandomId } from 'uuid'
 
 import { User } from '../app/features/auth/reducer'
-import { ActorDetails, WorldDetails, WorldItem, WorldStatement } from '../app/features/world/types'
+import { ActorDetails, WorldDetails, WorldItem } from '../app/features/world/types'
 import { WorldEvent } from '../app/features/world/types'
 import {
 	CheckAuthenticationApiResponse,
@@ -11,13 +11,11 @@ import {
 	CreateWorldApiResponse,
 	DeleteWorldApiResponse,
 	DeleteWorldEventApiResponse,
-	DeleteWorldStatementApiResponse,
 	GetWorldInfoApiResponse,
 	GetWorldsApiResponse,
 	PostLoginApiResponse,
 	UpdateActorApiResponse,
 	UpdateWorldEventApiResponse,
-	UpdateWorldStatementApiResponse,
 } from './rheaApi'
 
 type HttpMethod = keyof typeof rest
@@ -123,26 +121,6 @@ export const mockDeleteWorldEvent = (
 		...params,
 	})
 
-export const mockUpdateWorldStatement = (
-	server: SetupServer,
-	params: { worldId: string; statementId: string } & MockParams<UpdateWorldStatementApiResponse>
-) =>
-	generateEndpointMock(server, {
-		method: 'patch',
-		path: `/api/world/${params.worldId}/statement/${params.statementId}`,
-		...params,
-	})
-
-export const mockDeleteWorldStatement = (
-	server: SetupServer,
-	params: { worldId: string; statementId: string } & MockParams<DeleteWorldStatementApiResponse>
-) =>
-	generateEndpointMock(server, {
-		method: 'delete',
-		path: `/api/world/${params.worldId}/statement/${params.statementId}`,
-		...params,
-	})
-
 /**
  * Mock utility functions
  */
@@ -218,8 +196,10 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	timestamp: 0,
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
-	issuedStatements: [],
-	revokedStatements: [],
+	targetActors: [],
+	mentionedActors: [],
+	introducedActors: [],
+	terminatedActors: [],
 	...statement,
 })
 
@@ -235,19 +215,9 @@ export const mockApiEventModel = (
 	timestamp: '0',
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
-	issuedStatements: [],
-	revokedStatements: [],
-	...statement,
-})
-
-export const mockStatementModel = (statement: Partial<WorldStatement> = {}): WorldStatement => ({
-	id: getRandomId(),
-	title: 'Statement title',
-	content: 'Statement text',
 	targetActors: [],
 	mentionedActors: [],
-	createdAt: new Date(0).toISOString(),
-	updatedAt: new Date(0).toISOString(),
-	issuedByEventId: 'event-1111-2222-3333-4444',
+	introducedActors: [],
+	terminatedActors: [],
 	...statement,
 })

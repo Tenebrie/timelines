@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { worldSlice } from '../../reducer'
@@ -19,16 +19,6 @@ export const Timeline = () => {
 	const containerWidth = useRef<number>(window.innerWidth)
 
 	const { events, timeOrigin, calendar } = useSelector(getWorldState)
-	const statements = useMemo(
-		() =>
-			events.flatMap((event) =>
-				event.issuedStatements.map((statement) => ({
-					...statement,
-					originEvent: event,
-				}))
-			),
-		[events]
-	)
 
 	const dispatch = useDispatch()
 	const { openEventWizard, setTimelineScaleLevel } = worldSlice.actions
@@ -38,7 +28,6 @@ export const Timeline = () => {
 		navigateToOutliner,
 		selectedTimeOrNull,
 		eventEditorParams,
-		statementEditorParams,
 	} = useWorldRouter()
 
 	const onClick = useCallback(
@@ -92,21 +81,6 @@ export const Timeline = () => {
 		}
 		lastSeenEventId.current = eventEditorParams.eventId
 	}, [eventEditorParams, events, scrollTo])
-
-	const lastSeenStatementId = useRef<string | null>(null)
-	useEffect(() => {
-		if (
-			statementEditorParams.statementId &&
-			statementEditorParams.statementId !== lastSeenStatementId.current
-		) {
-			const statement = statements.find((s) => s.id === statementEditorParams.statementId)
-			if (!statement) {
-				return
-			}
-			scrollTo(statement.originEvent.timestamp)
-		}
-		lastSeenStatementId.current = statementEditorParams.statementId
-	}, [statementEditorParams, statements, scrollTo])
 
 	useEffect(() => {
 		dispatch(setTimelineScaleLevel(scaleLevel))

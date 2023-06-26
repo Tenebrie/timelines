@@ -64,7 +64,6 @@ export const worldRoutes = {
 	outliner: '/world/:worldId/outliner',
 	actorEditor: '/world/:worldId/actor/:actorId',
 	eventEditor: '/world/:worldId/editor/:eventId',
-	statementEditor: '/world/:worldId/statement/:statementId',
 } as const
 
 export type WorldRouteParamMapping = {
@@ -72,7 +71,6 @@ export type WorldRouteParamMapping = {
 	[worldRoutes.outliner]: WorldOutlinerParams
 	[worldRoutes.actorEditor]: ActorEditorParams
 	[worldRoutes.eventEditor]: WorldEventEditorParams
-	[worldRoutes.statementEditor]: WorldStatementEditorParams
 }
 export type WorldRootParams = {
 	worldId: string
@@ -89,10 +87,6 @@ export type WorldEventEditorParams = {
 	worldId: string
 	eventId: string
 }
-export type WorldStatementEditorParams = {
-	worldId: string
-	statementId: string
-}
 
 export const useWorldRouter = () => {
 	const { state, navigateTo, query, setQuery } = useBaseRouter(worldRoutes)
@@ -104,7 +98,6 @@ export const useWorldRouter = () => {
 	const outlinerParams = state as WorldOutlinerParams
 	const actorEditorParams = state as ActorEditorParams
 	const eventEditorParams = state as WorldEventEditorParams
-	const statementEditorParams = state as WorldStatementEditorParams
 
 	const selectedTime = Number(query.get(QueryParams.SELECTED_TIME) || '0')
 	const selectedTimeOrNull = query.get(QueryParams.SELECTED_TIME)
@@ -170,17 +163,6 @@ export const useWorldRouter = () => {
 		)
 	}
 
-	const navigateToStatementEditor = (statementId: string) => {
-		navigateTo(
-			worldRoutes.statementEditor,
-			{
-				worldId: state['worldId'] || '',
-				statementId,
-			},
-			{}
-		)
-	}
-
 	const unselectTime = () => {
 		setQuery(QueryParams.SELECTED_TIME, null)
 	}
@@ -190,7 +172,6 @@ export const useWorldRouter = () => {
 		outlinerParams,
 		actorEditorParams,
 		eventEditorParams,
-		statementEditorParams,
 		selectedTime,
 		selectedTimeOrNull,
 		navigateToWorld,
@@ -198,7 +179,6 @@ export const useWorldRouter = () => {
 		navigateToOutliner,
 		navigateToActorEditor,
 		navigateToEventEditor,
-		navigateToStatementEditor,
 		unselectTime,
 	}
 }

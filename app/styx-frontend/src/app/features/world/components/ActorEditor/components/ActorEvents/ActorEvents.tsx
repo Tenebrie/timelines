@@ -4,10 +4,11 @@ import { useSelector } from 'react-redux'
 import { OverlayingLabel } from '../../../../../../components/OverlayingLabel'
 import { getOutlinerPreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
+import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
 import { Actor } from '../../../../types'
 import { StatementsUnit } from '../../../EventEditor/styles'
-import { EventWithStatementsRenderer } from '../../../Renderers/EventWithStatementsRenderer'
+import { EventWithContentRenderer } from '../../../Renderers/Event/EventWithContentRenderer'
 import { StatementsScroller } from '../../styles'
 import { ActorEventsEmptyState } from './ActorEventsEmptyState'
 
@@ -20,34 +21,28 @@ export const ActorEvents = ({ actor }: Props) => {
 	const { timeToLabel } = useWorldTime()
 	const { collapsedEvents } = useSelector(getOutlinerPreferences)
 
-	const visibleEvents = events
-		.map((event) => ({
-			...event,
-			secondary: timeToLabel(event.timestamp),
-			highlighted: false,
-			collapsed: collapsedEvents.includes(event.id),
-			issuedStatements: event.issuedStatements
-				.filter(
-					(statement) =>
-						statement.targetActors.some((a) => a.id === actor.id) ||
-						statement.mentionedActors.some((a) => a.id === actor.id)
-				)
-				.map((statement) => ({
-					...statement,
-					active: true,
-				})),
-		}))
-		.filter((event) => event.issuedStatements.length > 0)
+	const { selectedTime } = useWorldRouter()
+
+	const visibleEvents = events.map((event) => ({
+		...event,
+		secondary: timeToLabel(event.timestamp),
+		highlighted: false,
+		collapsed: collapsedEvents.includes(event.id),
+		active: event.revokedAt === undefined || event.revokedAt > selectedTime,
+	}))
 
 	return (
 		<StatementsUnit>
 			<OverlayingLabel>Related events</OverlayingLabel>
 			<StatementsScroller>
 				{visibleEvents.map((event, index) => (
-					<EventWithStatementsRenderer
+					<EventWithContentRenderer
 						key={event.id}
 						{...event}
 						event={event}
+						owningActor={actor}
+						index={index}
+						short
 						divider={index !== visibleEvents.length - 1}
 					/>
 				))}

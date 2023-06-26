@@ -33,6 +33,7 @@ export const useLoadWorldInfo = (worldId: string) => {
 					events: data.events.map((e) => ({
 						...e,
 						timestamp: Number(e.timestamp),
+						revokedAt: e.revokedAt ? Number(e.revokedAt) : undefined,
 					})),
 				},
 				actorColors: listAllColors().map((color) => color.value),

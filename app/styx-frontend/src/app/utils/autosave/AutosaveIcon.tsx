@@ -1,4 +1,4 @@
-import { Check, MoreHoriz, Save } from '@mui/icons-material'
+import { Check, Error, MoreHoriz, Save } from '@mui/icons-material'
 import styled from 'styled-components'
 
 import { SavingState } from './types'
@@ -35,6 +35,7 @@ export const AutosaveIcon = ({ savingState, isSaving }: Subprops) => {
 			<Save className={`${savingState === 'none' ? 'visible' : ''}`} />
 			<MoreHoriz className={`${savingState === 'debounce' ? 'visible' : ''}`} />
 			<Check className={`${savingState === 'success' || isSaving ? 'visible' : ''}`} />
+			<Error className={`${savingState === 'error' ? 'visible' : ''}`} />
 		</IconContainer>
 	)
 }

@@ -4,7 +4,7 @@ import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip }
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useRevokeWorldStatementMutation } from '../../../../../../../api/rheaApi'
+import { useRevokeWorldEventMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import { ModalFooter, ModalHeader, useModalCleanup } from '../../../../../../../ui-lib/components/Modal'
 import Modal from '../../../../../../../ui-lib/components/Modal/Modal'
@@ -12,15 +12,15 @@ import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
 import { getRevokedStatementWizardState, getWorldState } from '../../../../selectors'
-import { StatementVisualRenderer } from '../../../Renderers/StatementVisualRenderer'
+import { EventRenderer } from '../../../Renderers/Event/EventRenderer'
 
 export const RevokedStatementWizard = () => {
 	const [id, setId] = useState('')
 
 	const { events: worldEvents } = useSelector(getWorldState)
 
-	const { eventEditorParams } = useWorldRouter()
-	const [revokeWorldStatement, { isLoading }] = useRevokeWorldStatementMutation()
+	const { eventEditorParams, selectedTime } = useWorldRouter()
+	const [revokeWorldStatement, { isLoading }] = useRevokeWorldEventMutation()
 
 	const dispatch = useDispatch()
 	const { closeRevokedStatementWizard } = worldSlice.actions
@@ -42,8 +42,8 @@ export const RevokedStatementWizard = () => {
 		const { error } = parseApiResponse(
 			await revokeWorldStatement({
 				worldId: eventEditorParams.worldId,
-				statementId: id,
-				body: { eventId: eventEditorParams.eventId },
+				eventId: id,
+				body: { revokedAt: String(selectedTime) },
 			})
 		)
 		if (error) {
@@ -69,20 +69,9 @@ export const RevokedStatementWizard = () => {
 		return <></>
 	}
 
-	const alreadyRevokedStatements = worldEvents
-		.filter((event) => event.timestamp <= editorEvent.timestamp)
-		.flatMap((event) => event.revokedStatements.map((statement) => statement.id))
-
 	const removableCards = worldEvents
-		.filter((event) => event.timestamp < editorEvent.timestamp)
+		.filter((event) => event.revokedAt === undefined && event.timestamp < editorEvent.timestamp)
 		.sort((a, b) => a.timestamp - b.timestamp)
-		.flatMap((event) =>
-			event.issuedStatements.map((statement) => ({
-				...statement,
-				event,
-			}))
-		)
-		.filter((statement) => !alreadyRevokedStatements.includes(statement.id))
 
 	return (
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
@@ -98,9 +87,16 @@ export const RevokedStatementWizard = () => {
 						onChange={(event) => setId(event.target.value)}
 						data-hj-suppress
 					>
-						{removableCards.map((card) => (
+						{removableCards.map((card, index) => (
 							<MenuItem key={card.id} value={card.id}>
-								<StatementVisualRenderer statement={card} active={true} owningActor={null} />
+								<EventRenderer
+									event={card}
+									owningActor={null}
+									collapsed={false}
+									highlighted={false}
+									index={index}
+									short={true}
+								/>
 							</MenuItem>
 						))}
 					</Select>

@@ -1,6 +1,6 @@
 import { ListItemText, MenuItem } from '@mui/material'
 
-import { Actor } from '../../../types'
+import { Actor } from '../../types'
 
 type Props = {
 	actors: Actor[]

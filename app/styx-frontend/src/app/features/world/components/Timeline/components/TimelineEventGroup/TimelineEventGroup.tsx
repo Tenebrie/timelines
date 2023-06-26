@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
-import { useStatementEditorData } from '../../../../hooks/useStatementEditorData'
 import { WorldEventGroup } from '../../../../types'
 import { ScaleLevel } from '../../types'
 import { TimelineEvent } from './components/TimelineEvent/TimelineEvent'
@@ -27,7 +26,6 @@ export const TimelineEventGroup = ({
 	const [isHovered, setIsHovered] = useState(false)
 
 	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel })
-	const { issuedByEvent, revokedByEvent } = useStatementEditorData()
 
 	const position = realTimeToScaledTime(Math.floor(eventGroup.timestamp) / timelineScale) + scroll
 
@@ -43,9 +41,7 @@ export const TimelineEventGroup = ({
 		setIsHovered(false)
 	}
 
-	const highlightedEvents = eventGroup.events.filter(
-		(event) => event.id === issuedByEvent?.id || event.id === revokedByEvent?.id
-	)
+	const highlightedEvents: any[] = []
 
 	const isExpanded = isHovered || highlightedEvents.length > 0
 

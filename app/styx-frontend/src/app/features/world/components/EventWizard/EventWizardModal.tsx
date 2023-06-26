@@ -55,9 +55,13 @@ export const EventWizardModal = () => {
 			await createWorldEvent({
 				worldId: worldParams.worldId,
 				body: {
-					name: name.trim(),
 					type: 'SCENE',
-					timestamp,
+					name: name.trim(),
+					description: '',
+					targetActorIds: [],
+					mentionedActorIds: [],
+					timestamp: String(timestamp),
+					revokedAt: String(''),
 				},
 			})
 		)
