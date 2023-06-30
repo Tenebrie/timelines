@@ -27,9 +27,18 @@ type Props = {
 	owningActor: Actor | null
 	short: boolean
 	index: number
+	active: boolean
 }
 
-export const EventRenderer = ({ event, highlighted, collapsed, owningActor, short, index }: Props) => {
+export const EventRenderer = ({
+	event,
+	highlighted,
+	collapsed,
+	owningActor,
+	short,
+	index,
+	active,
+}: Props) => {
 	const { navigateToEventEditor } = useWorldRouter()
 	const { getIconPath } = useEventIcons()
 	const maxActorsDisplayed = short ? 2 : 5
@@ -66,7 +75,7 @@ export const EventRenderer = ({ event, highlighted, collapsed, owningActor, shor
 	return (
 		<ZebraWrapper zebra={owningActor !== null && index % 2 === 0}>
 			<ListItem disableGutters disablePadding secondaryAction={secondaryAction}>
-				<StyledListItemButton selected={highlighted} onClick={onToggleOpen}>
+				<StyledListItemButton onClick={onToggleOpen}>
 					<ListItemIcon>
 						<img src={getIconPath(event.icon)} height="24px" alt={`${event.icon} icon`} />
 					</ListItemIcon>
@@ -75,7 +84,7 @@ export const EventRenderer = ({ event, highlighted, collapsed, owningActor, shor
 							paddingRight: 6,
 						}}
 						data-hj-suppress
-						primary={<ShortText>{event.name}</ShortText>}
+						primary={<ShortText inactive={!active}>{event.name}</ShortText>}
 						secondary={
 							<StatementActorsText>
 								{targetActors.length > 0 ? <Link fontSize="small" /> : ''} {targetActors}

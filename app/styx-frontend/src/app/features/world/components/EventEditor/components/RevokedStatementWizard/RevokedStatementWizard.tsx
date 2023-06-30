@@ -96,6 +96,7 @@ export const RevokedStatementWizard = () => {
 									highlighted={false}
 									index={index}
 									short={true}
+									active
 								/>
 							</MenuItem>
 						))}

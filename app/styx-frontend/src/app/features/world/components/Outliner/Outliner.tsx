@@ -18,11 +18,13 @@ import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
 export const Outliner = () => {
 	const { actors, events, selectedActors, selectedEvents } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
-	const { showInactiveStatements, collapsedActors, collapsedEvents } = useSelector(getOutlinerPreferences)
+	const { showOnlySelected, showInactiveStatements, collapsedActors, collapsedEvents } =
+		useSelector(getOutlinerPreferences)
 
 	const { getLevelScalar } = useTimelineLevelScalar()
 
-	const { selectedTime } = useWorldRouter()
+	const { selectedTimeOrNull } = useWorldRouter()
+	const selectedTime = selectedTimeOrNull === null ? Infinity : selectedTimeOrNull
 
 	// Sorted list of all events visible at this point in outliner
 	const highlightWithin = 10 * getLevelScalar(scaleLevel)
@@ -38,9 +40,19 @@ export const Outliner = () => {
 					active: event.revokedAt === undefined || event.revokedAt > selectedTime,
 				}))
 				.filter((event) => showInactiveStatements || event.highlighted || event.active)
-				.filter((event) => selectedEvents.length === 0 || selectedEvents.includes(event.id))
+				.filter(
+					(event) => !showOnlySelected || selectedEvents.length === 0 || selectedEvents.includes(event.id)
+				)
 				.sort((a, b) => b.timestamp - a.timestamp || b.index - a.index),
-		[events, selectedTime, highlightWithin, collapsedEvents, showInactiveStatements, selectedEvents]
+		[
+			events,
+			showOnlySelected,
+			selectedTime,
+			highlightWithin,
+			collapsedEvents,
+			showInactiveStatements,
+			selectedEvents,
+		]
 	)
 
 	const visibleActors = useMemo(
@@ -52,8 +64,10 @@ export const Outliner = () => {
 					collapsed: collapsedActors.includes(actor.id),
 					events: visibleEvents.filter((event) => actor.statements.some((e) => e.id === event.id)),
 				}))
-				.filter((actor) => selectedActors.length === 0 || selectedActors.includes(actor.id)),
-		[visibleEvents, actors, collapsedActors, selectedActors]
+				.filter(
+					(actor) => !showOnlySelected || selectedActors.length === 0 || selectedActors.includes(actor.id)
+				),
+		[actors, collapsedActors, visibleEvents, showOnlySelected, selectedActors]
 	)
 
 	return (

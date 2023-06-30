@@ -9,7 +9,7 @@ const initialState = {
 		lineSpacing: 10 as number,
 	},
 	outliner: {
-		showEmptyEvents: false as boolean,
+		showOnlySelected: false as boolean,
 		showInactiveStatements: false as boolean,
 		collapsedActors: [] as string[],
 		collapsedEvents: [] as string[],
@@ -39,7 +39,7 @@ export const preferencesSlice = createSlice({
 
 			try {
 				const parsedValue = JSON.parse(value) as PreferencesState
-				state.outliner.showEmptyEvents = !!parsedValue?.outliner?.showEmptyEvents
+				state.outliner.showOnlySelected = !!parsedValue?.outliner?.showOnlySelected
 				state.outliner.showInactiveStatements = !!parsedValue?.outliner?.showInactiveStatements
 				state.outliner.collapsedActors = parsedValue?.outliner?.collapsedActors ?? []
 				state.outliner.collapsedEvents = parsedValue?.outliner?.collapsedEvents ?? []
@@ -59,8 +59,8 @@ export const preferencesSlice = createSlice({
 		},
 
 		/* Outliner */
-		setShowEmptyEvents: (state, { payload }: PayloadAction<boolean>) => {
-			state.outliner.showEmptyEvents = payload
+		setShowOnlySelected: (state, { payload }: PayloadAction<boolean>) => {
+			state.outliner.showOnlySelected = payload
 			saveToLocalStorage(state)
 		},
 		setShowInactiveStatements: (state, { payload }: PayloadAction<boolean>) => {

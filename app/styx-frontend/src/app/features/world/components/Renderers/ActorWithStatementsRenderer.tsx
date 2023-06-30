@@ -31,6 +31,7 @@ export const ActorWithStatementsRenderer = ({ actor, highlighted, collapsed, div
 									highlighted={false}
 									collapsed={false}
 									short={false}
+									active={event.active}
 								/>
 							</Collapse>
 						))}

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
@@ -31,10 +32,12 @@ export const Timeline = () => {
 		eventEditorParams,
 	} = useWorldRouter()
 
+	const scrollTimelineTo = useTimelineBusDispatch()
+
 	const onClick = useCallback(
 		(time: number) => {
 			if (selectedTimeOrNull === time) {
-				navigateToCurrentWorldRoot()
+				navigateToCurrentWorldRoot({ clearSelectedTime: true })
 			} else {
 				navigateToOutliner(time)
 			}
@@ -44,13 +47,14 @@ export const Timeline = () => {
 
 	const onDoubleClick = useCallback(
 		(time: number) => {
-			if (Number.isNaN(selectedTimeOrNull)) {
+			if (selectedTimeOrNull === null) {
 				navigateToOutliner(time)
 			} else {
 				navigateToEventCreator()
+				scrollTimelineTo(selectedTimeOrNull)
 			}
 		},
-		[navigateToOutliner, navigateToEventCreator, selectedTimeOrNull]
+		[scrollTimelineTo, navigateToOutliner, navigateToEventCreator, selectedTimeOrNull]
 	)
 
 	useEffect(() => {
@@ -60,15 +64,14 @@ export const Timeline = () => {
 		containerWidth.current = containerRef.current.getBoundingClientRect().width
 	}, [containerRef])
 
-	const { scroll, timelineScale, scaleLevel, targetScaleIndex, isSwitchingScale, scrollTo } =
-		useTimelineNavigation({
-			containerRef,
-			defaultScroll: Math.floor(containerWidth.current / 2) - Number(timeOrigin),
-			maximumScroll: calendar === 'COUNTUP' ? Math.floor(containerWidth.current / 2) : Infinity,
-			scaleLimits: [-3, 10],
-			onClick: (time) => onClick(time),
-			onDoubleClick: (time) => onDoubleClick(time),
-		})
+	const { scroll, timelineScale, scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
+		containerRef,
+		defaultScroll: Math.floor(containerWidth.current / 2) - Number(timeOrigin),
+		maximumScroll: calendar === 'COUNTUP' ? Math.floor(containerWidth.current / 2) : Infinity,
+		scaleLimits: [-3, 10],
+		onClick: (time) => onClick(time),
+		onDoubleClick: (time) => onDoubleClick(time),
+	})
 	const eventGroups = useEventGroups({ timelineScale, scaleLevel })
 
 	const lastSeenEventId = useRef<string | null>(null)
@@ -78,10 +81,10 @@ export const Timeline = () => {
 			if (!event) {
 				return
 			}
-			scrollTo(event.timestamp)
+			scrollTimelineTo(event.timestamp)
 		}
 		lastSeenEventId.current = eventEditorParams.eventId
-	}, [eventEditorParams, events, scrollTo])
+	}, [eventEditorParams, events, scrollTimelineTo])
 
 	useEffect(() => {
 		dispatch(setScaleLevel(scaleLevel))
@@ -98,7 +101,7 @@ export const Timeline = () => {
 					pageSize={scrollPageSize}
 					timelineScale={timelineScale}
 					scaleLevel={scaleLevel}
-					scrollTo={scrollTo}
+					scrollTo={scrollTimelineTo}
 				/>
 				<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
 				<TimelineAnchor
@@ -128,14 +131,14 @@ export const Timeline = () => {
 						containerWidth={containerWidth.current}
 					/>
 				))}
-				<TimelineSelectedLabel onNavigateToTime={(time) => scrollTo(time)} />
+				<TimelineSelectedLabel onNavigateToTime={(time) => scrollTimelineTo(time)} />
 				<TimelineEdgeScroll
 					side="right"
 					currentScroll={scroll}
 					pageSize={scrollPageSize}
 					timelineScale={timelineScale}
 					scaleLevel={scaleLevel}
-					scrollTo={scrollTo}
+					scrollTo={scrollTimelineTo}
 				/>
 			</TimelineContainer>
 		</TimelineWrapper>

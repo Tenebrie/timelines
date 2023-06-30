@@ -2,6 +2,7 @@ import { Button, Grid, Stack, Typography } from '@mui/material'
 import { useDispatch } from 'react-redux'
 
 import { worldSlice } from '../../../../reducer'
+import { useWorldRouter } from '../../../../router'
 
 type Props = {
 	selectedTime: number
@@ -9,10 +10,11 @@ type Props = {
 
 export const OutlinerEmptyState = ({ selectedTime }: Props) => {
 	const dispatch = useDispatch()
-	const { openEventWizard, openEventTutorialModal } = worldSlice.actions
+	const { navigateToEventCreator } = useWorldRouter()
+	const { openEventTutorialModal } = worldSlice.actions
 
 	const onCreateEvent = () => {
-		dispatch(openEventWizard({ timestamp: selectedTime }))
+		navigateToEventCreator()
 	}
 
 	const onShowTutorial = () => {

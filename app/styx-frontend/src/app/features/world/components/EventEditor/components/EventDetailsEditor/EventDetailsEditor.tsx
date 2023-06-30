@@ -68,6 +68,8 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 
 	const { name: evaluatedName } = useEntityName({
 		textSource: description,
+		entityClassName: 'event',
+		timestamp: event.timestamp,
 		customName: name,
 		customNameEnabled,
 		onChange: (value) => {
@@ -90,11 +92,13 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 							inputProps={{ maxLength: 256 }}
 							fullWidth
 						/>
-						<Button onClick={() => setCustomNameEnabled(!customNameEnabled)}>
-							<Stack alignItems="center" justifyContent="center">
-								<Switch size="small" checked={customNameEnabled} style={{ pointerEvents: 'none' }} />
-							</Stack>
-						</Button>
+						<Tooltip title="Use custom event name" arrow placement="top">
+							<Button onClick={() => setCustomNameEnabled(!customNameEnabled)}>
+								<Stack alignItems="center" justifyContent="center">
+									<Switch size="small" checked={customNameEnabled} style={{ pointerEvents: 'none' }} />
+								</Stack>
+							</Button>
+						</Tooltip>
 					</Stack>
 					<TextField
 						label="Content"

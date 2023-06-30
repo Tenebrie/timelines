@@ -35,6 +35,7 @@ export const EventWithContentRenderer = ({
 				owningActor={owningActor}
 				short={short}
 				index={index}
+				active={active}
 			/>
 			<List dense component="div" disablePadding>
 				<TransitionGroup>

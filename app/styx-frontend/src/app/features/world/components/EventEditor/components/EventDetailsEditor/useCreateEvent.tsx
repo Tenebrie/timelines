@@ -19,7 +19,7 @@ export const useCreateEvent = ({ state }: Props) => {
 	const [createWorldEvent, { isLoading, isError }] = useCreateWorldEventMutation()
 
 	const sendRequest = useCallback(async () => {
-		const { response, error } = parseApiResponse(
+		const { error } = parseApiResponse(
 			await createWorldEvent({
 				worldId,
 				body: {

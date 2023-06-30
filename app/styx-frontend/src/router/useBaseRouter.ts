@@ -24,7 +24,7 @@ export const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
 
 		const mappedQuery = (Array.from(currentQuery.entries()) as [string, string | null | undefined][])
 			.filter((entry) => query[entry[0]] === undefined)
-			.concat(Object.entries(query))
+			.concat(Object.entries(query).filter((q) => q[1] !== undefined))
 			.filter((entry) => entry[1] !== null) as [string, string][]
 
 		const search = mappedQuery.map((entry) => `${entry[0]}=${entry[1]}`).join('&')

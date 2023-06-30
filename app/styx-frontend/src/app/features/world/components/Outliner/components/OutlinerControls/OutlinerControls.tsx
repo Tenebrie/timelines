@@ -14,20 +14,25 @@ import { OutlinerControlsFilter } from './OutlinerControlsFilter'
 
 export const OutlinerControls = () => {
 	const { timeToLabel } = useWorldTime()
-	const { selectedTime } = useWorldRouter()
+	const { selectedTimeOrNull } = useWorldRouter()
 
 	const dispatch = useDispatch()
-	const { selectedActors, selectedEvents } = useSelector(getWorldState)
-	const { showEmptyEvents, showInactiveStatements } = useSelector(getOutlinerPreferences)
-	const { setShowEmptyEvents, setShowInactiveStatements } = preferencesSlice.actions
+	const { events, selectedActors, selectedEvents } = useSelector(getWorldState)
+	const { showOnlySelected, showInactiveStatements } = useSelector(getOutlinerPreferences)
+	const { setShowOnlySelected: setShowEmptyEvents, setShowInactiveStatements } = preferencesSlice.actions
 
 	const popupState = usePopupState({ variant: 'popover', popupId: 'outlinerFilters' })
 	const createHerePopupState = usePopupState({ variant: 'popover', popupId: 'createHerePopover' })
 
+	const latestTime = [...events].sort((a, b) => b.timestamp - a.timestamp)[0]?.timestamp ?? 0
+
+	const label =
+		selectedTimeOrNull === null ? `Latest (${timeToLabel(latestTime)})` : timeToLabel(selectedTimeOrNull)
+
 	return (
 		<Stack>
 			<Stack justifyContent="space-between" alignItems="center" direction="row">
-				<div>{timeToLabel(selectedTime)}</div>
+				<div>{label}</div>
 				<Stack direction="row" gap={2}>
 					<Button startIcon={<Filter />} {...bindTrigger(popupState)}>
 						Filters
@@ -51,8 +56,8 @@ export const OutlinerControls = () => {
 									control={
 										<Checkbox onChange={(event) => dispatch(setShowEmptyEvents(event.target.checked))} />
 									}
-									label="Show empty events"
-									checked={showEmptyEvents}
+									label="Show only selected"
+									checked={showOnlySelected}
 								/>
 								<FormControlLabel
 									control={
@@ -60,16 +65,20 @@ export const OutlinerControls = () => {
 											onChange={(event) => dispatch(setShowInactiveStatements(event.target.checked))}
 										/>
 									}
-									label="Show revoked statements"
+									label="Include revoked statements"
 									checked={showInactiveStatements}
 								/>
 							</FormGroup>
 						</Stack>
 					</Popover>
-					<Button variant="contained" {...bindTrigger(createHerePopupState)}>
+					<Button
+						disabled={selectedTimeOrNull === null}
+						variant="contained"
+						{...bindTrigger(createHerePopupState)}
+					>
 						Create new
 					</Button>
-					<CreateHerePopover state={createHerePopupState} timestamp={selectedTime} />
+					<CreateHerePopover state={createHerePopupState} timestamp={selectedTimeOrNull ?? 0} />
 				</Stack>
 			</Stack>
 			<TransitionGroup>
