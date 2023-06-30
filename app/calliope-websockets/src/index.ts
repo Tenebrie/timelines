@@ -73,4 +73,4 @@ app
 
 initRedisConnection()
 app.listen(3001)
-console.info('[CALLIOPE] Server up')
+console.info('Server up')

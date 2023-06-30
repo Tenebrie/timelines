@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
@@ -12,6 +11,7 @@ import { TimelineSelectedLabel } from './components/TimelineSelectedLabel/Timeli
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
 import useEventGroups from './hooks/useEventGroups'
 import { useTimelineNavigation } from './hooks/useTimelineNavigation'
+import { timelineSlice } from './reducer'
 import { TimelineContainer, TimelineWrapper } from './styles'
 
 export const Timeline = () => {
@@ -21,11 +21,12 @@ export const Timeline = () => {
 	const { events, timeOrigin, calendar } = useSelector(getWorldState)
 
 	const dispatch = useDispatch()
-	const { openEventWizard, setTimelineScaleLevel } = worldSlice.actions
+	const { setScaleLevel } = timelineSlice.actions
 
 	const {
 		navigateToCurrentWorld: navigateToCurrentWorldRoot,
 		navigateToOutliner,
+		navigateToEventCreator,
 		selectedTimeOrNull,
 		eventEditorParams,
 	} = useWorldRouter()
@@ -46,10 +47,10 @@ export const Timeline = () => {
 			if (Number.isNaN(selectedTimeOrNull)) {
 				navigateToOutliner(time)
 			} else {
-				dispatch(openEventWizard({ timestamp: time }))
+				navigateToEventCreator()
 			}
 		},
-		[dispatch, navigateToOutliner, openEventWizard, selectedTimeOrNull]
+		[navigateToOutliner, navigateToEventCreator, selectedTimeOrNull]
 	)
 
 	useEffect(() => {
@@ -83,8 +84,8 @@ export const Timeline = () => {
 	}, [eventEditorParams, events, scrollTo])
 
 	useEffect(() => {
-		dispatch(setTimelineScaleLevel(scaleLevel))
-	}, [dispatch, scaleLevel, setTimelineScaleLevel])
+		dispatch(setScaleLevel(scaleLevel))
+	}, [dispatch, scaleLevel, setScaleLevel])
 
 	const scrollPageSize = containerWidth.current
 

@@ -12,12 +12,13 @@
 	],
 	"scripts": {
 		"postinstall": "subpkg install && husky install",
+		"openapi": "./scripts/dev-openapi.sh",
+		"migrate": "./scripts/dev-migrate.sh",
 		"docker": "yarn docker:start",
 		"docker:start": "docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up",
 		"docker:build": "docker compose -f docker-compose.common.yml -f docker-compose.dev.yml build",
 		"docker:install": "./scripts/dev-install.sh",
 		"docker:update": "./scripts/dev-update.sh",
-		"docker:migrate": "./scripts/dev-migrate.sh",
 		"docker:prod:push": "./scripts/docker-prod-push.sh",
 		"docker:stop": "docker stop $(docker ps -a -q)"
 	},

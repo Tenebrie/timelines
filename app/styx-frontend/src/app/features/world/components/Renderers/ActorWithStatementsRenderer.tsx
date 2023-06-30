@@ -34,7 +34,7 @@ export const ActorWithStatementsRenderer = ({ actor, highlighted, collapsed, div
 								/>
 							</Collapse>
 						))}
-					{!collapsed && actor.statements.length === 0 && (
+					{!collapsed && actor.events.length === 0 && (
 						<Collapse>
 							<EmptyStatementListRenderer />
 						</Collapse>

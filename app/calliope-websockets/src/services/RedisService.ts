@@ -10,9 +10,19 @@ const client = createClient({
 	},
 })
 
-client.on('error', (err) => console.error('Redis Client Error', err))
+client.on('connect', () => {
+	console.info('Connection to Redis established!')
+})
+
+client.on('error', (err) => {
+	console.error('Redis Client Error', err)
+	if (!client.isReady) {
+		console.info('Connection to Redis failing, retrying...')
+	}
+})
 
 export const initRedisConnection = async () => {
+	console.info('Connecting to Redis...')
 	await client.connect()
 
 	await client.subscribe(RedisChannel.RHEA_TO_CALLIOPE, (message, channel) => {

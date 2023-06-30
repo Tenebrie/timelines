@@ -3,6 +3,7 @@ import { RedisService } from '@src/services/RedisService'
 import { WorldService } from '@src/services/WorldService'
 import {
 	BigIntValidator,
+	BooleanValidator,
 	NonEmptyStringValidator,
 	NullableBigIntValidator,
 	NumberValidator,
@@ -122,12 +123,15 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		type: RequiredParam(WorldEventTypeValidator),
+		modules: RequiredParam(WorldEventFieldValidator),
 		name: RequiredParam(NameStringValidator),
+		icon: RequiredParam(NameStringValidator),
 		description: RequiredParam(ContentStringValidator),
 		timestamp: RequiredParam(BigIntValidator),
-		revokedAt: RequiredParam(BigIntValidator),
+		revokedAt: RequiredParam(NullableBigIntValidator),
 		targetActorIds: RequiredParam(StringArrayValidator),
 		mentionedActorIds: RequiredParam(StringArrayValidator),
+		customNameEnabled: RequiredParam(BooleanValidator),
 	})
 
 	const targetActors = (await parseActorList(params.targetActorIds)) ?? []
@@ -159,6 +163,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	})
 
 	await WorldService.checkUserWriteAccess(user, worldId)
+	await WorldService.checkEventValidity(eventId)
 
 	const params = useRequestBody(ctx, {
 		modules: OptionalParam(WorldEventFieldValidator),
@@ -169,6 +174,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		description: OptionalParam(ContentStringValidator),
 		targetActorIds: OptionalParam(StringArrayValidator),
 		mentionedActorIds: OptionalParam(StringArrayValidator),
+		customNameEnabled: OptionalParam(BooleanValidator),
 	})
 
 	const targetActors = await parseActorList(params.targetActorIds)
@@ -186,6 +192,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 			description: params.description,
 			targetActors,
 			mentionedActors,
+			customName: params.customNameEnabled,
 		},
 	})
 
@@ -209,6 +216,7 @@ router.delete('/api/world/:worldId/event/:eventId', async (ctx) => {
 	})
 
 	await WorldService.checkUserWriteAccess(user, worldId)
+	await WorldService.checkEventValidity(eventId)
 
 	const { event, world } = await WorldService.deleteWorldEvent({ worldId, eventId })
 
@@ -232,6 +240,7 @@ router.post('/api/world/:worldId/event/:eventId/revoke', async (ctx) => {
 	})
 
 	await WorldService.checkUserWriteAccess(user, worldId)
+	await WorldService.checkEventValidity(eventId)
 
 	const { revokedAt } = useRequestBody(ctx, {
 		revokedAt: RequiredParam(BigIntValidator),
@@ -263,6 +272,7 @@ router.post('/api/world/:worldId/event/:eventId/unrevoke', async (ctx) => {
 	})
 
 	await WorldService.checkUserWriteAccess(user, worldId)
+	await WorldService.checkEventValidity(eventId)
 
 	const { statement, world } = await WorldService.unrevokeWorldEvent({
 		worldId,

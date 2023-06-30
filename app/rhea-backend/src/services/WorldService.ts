@@ -1,5 +1,5 @@
 import { Actor, User, WorldCalendarType, WorldEvent } from '@prisma/client'
-import { UnauthorizedError } from 'tenebrie-framework'
+import { BadRequestError, UnauthorizedError } from 'tenebrie-framework'
 
 import { dbClient } from './DatabaseClient'
 
@@ -34,6 +34,17 @@ export const WorldService = {
 		}
 	},
 
+	checkEventValidity: async (eventId: string) => {
+		const count = await dbClient.worldEvent.count({
+			where: {
+				id: eventId,
+			},
+		})
+		if (count === 0) {
+			throw new BadRequestError('Event does not exist')
+		}
+	},
+
 	createWorld: async (params: {
 		owner: User
 		name: string
@@ -64,7 +75,8 @@ export const WorldService = {
 
 	createWorldEvent: async (
 		worldId: string,
-		data: Pick<WorldEvent, 'type' | 'name' | 'description' | 'timestamp' | 'revokedAt'> & {
+		data: Pick<WorldEvent, 'type' | 'name' | 'description' | 'timestamp' | 'revokedAt' | 'icon'> & {
+			customNameEnabled: boolean
 			targetActors: Actor[]
 			mentionedActors: Actor[]
 		}
@@ -75,6 +87,7 @@ export const WorldService = {
 					worldId,
 					type: data.type,
 					name: data.name,
+					icon: data.icon,
 					description: data.description,
 					timestamp: data.timestamp,
 					revokedAt: data.revokedAt,
@@ -84,6 +97,7 @@ export const WorldService = {
 					mentionedActors: {
 						connect: data.mentionedActors.map((actor) => ({ id: actor.id })),
 					},
+					customName: data.customNameEnabled,
 				},
 				select: {
 					id: true,
@@ -215,9 +229,8 @@ export const WorldService = {
 				actors: {
 					include: {
 						statements: {
-							include: {
-								targetActors: true,
-								mentionedActors: true,
+							select: {
+								id: true,
 							},
 						},
 						relationships: true,

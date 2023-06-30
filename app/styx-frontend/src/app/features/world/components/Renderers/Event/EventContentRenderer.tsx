@@ -1,11 +1,13 @@
 import { ArrowRightAlt, Link } from '@mui/icons-material'
 import { List, ListItem, ListItemText } from '@mui/material'
-import React from 'react'
+import { useCallback } from 'react'
 
 import { TrunkatedTypography } from '../../../../../components/TrunkatedTypography'
 import { useWorldTime } from '../../../../time/hooks/useWorldTime'
+import { useTimelineBusDispatch } from '../../../hooks/useTimelineBus'
 import { Actor, WorldEvent } from '../../../types'
 import { StatementActorsText, StyledListItemButton, ZebraWrapper } from '../../Outliner/styles'
+import { useTimelineScroll } from '../../Timeline/hooks/useTimelineScroll'
 import { useActorsToString } from './useActorsToString'
 
 type Props = {
@@ -22,6 +24,17 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 	const mentionedActors = actorsToString(event.mentionedActors, owningActor, maxActorsDisplayed)
 
 	const { timeToLabel } = useWorldTime()
+	const scrollTimelineTo = useTimelineBusDispatch()
+	const { getScroll: getTimelineScroll } = useTimelineScroll()
+
+	const scrollTimelineToEvent = useCallback(() => {
+		const scroll = getTimelineScroll()
+		if (event.revokedAt && Math.abs(scroll - event.timestamp) <= 5) {
+			scrollTimelineTo(event.revokedAt)
+		} else {
+			scrollTimelineTo(event.timestamp)
+		}
+	}, [event.revokedAt, event.timestamp, scrollTimelineTo, getTimelineScroll])
 
 	const paragraphs = event.description.split('\n').filter((p) => p.trim().length > 0)
 
@@ -41,7 +54,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 			<List disablePadding>
 				<ZebraWrapper zebra>
 					<ListItem disablePadding>
-						<StyledListItemButton>
+						<StyledListItemButton onClick={scrollTimelineToEvent}>
 							<ListItemText
 								data-hj-suppress
 								primary={
@@ -56,7 +69,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 					</ListItem>
 				</ZebraWrapper>
 				{paragraphs.map((p, index) => (
-					<ZebraWrapper zebra={index % 2 === 1}>
+					<ZebraWrapper key={p} zebra={index % 2 === 1}>
 						<ListItem disablePadding>
 							<StyledListItemButton>
 								<ListItemText

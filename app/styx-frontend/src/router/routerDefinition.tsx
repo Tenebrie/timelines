@@ -7,6 +7,7 @@ import { Register } from '../app/features/auth/register/Register'
 import { Spinny } from '../app/features/demo/spinny/Spinny'
 import { Home } from '../app/features/home/Home'
 import { ActorEditor } from '../app/features/world/components/ActorEditor/ActorEditor'
+import { EventCreator } from '../app/features/world/components/EventEditor/CreateEventEditor'
 import { EventEditor } from '../app/features/world/components/EventEditor/EventEditor'
 import { Outliner } from '../app/features/world/components/Outliner/Outliner'
 import { WorldEmptyState } from '../app/features/world/components/WorldEmptyState/WorldEmptyState'
@@ -53,6 +54,10 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 					{
 						path: worldRoutes.eventEditor,
 						element: <EventEditor />,
+					},
+					{
+						path: worldRoutes.eventCreator,
+						element: <EventCreator />,
 					},
 				],
 			},

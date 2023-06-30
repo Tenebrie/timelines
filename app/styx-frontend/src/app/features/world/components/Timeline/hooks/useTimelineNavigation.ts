@@ -1,4 +1,5 @@
 import bezier from 'bezier-easing'
+import { throttle } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { Position } from '../../../../../../types/Position'
@@ -7,7 +8,9 @@ import { isMacOS } from '../../../../../utils/isMacOS'
 import { rangeMap } from '../../../../../utils/rangeMap'
 import { useTimelineLevelScalar } from '../../../../time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
+import { useTimelineBusSubscribe } from '../../../hooks/useTimelineBus'
 import { ScaleLevel } from '../types'
+import { useTimelineScroll } from './useTimelineScroll'
 
 type Props = {
 	containerRef: React.MutableRefObject<HTMLDivElement | null>
@@ -83,7 +86,7 @@ export const useTimelineNavigation = ({
 				setMousePos(newPos)
 			}
 		},
-		[draggingFrom, isDragging, maximumScroll, mousePos.x, overscroll, scroll]
+		[draggingFrom, isDragging, maximumScroll, mousePos.x, overscroll, scroll, setScroll]
 	)
 
 	useEffect(() => {
@@ -355,8 +358,27 @@ export const useTimelineNavigation = ({
 
 			requestAnimationFrame(callback)
 		},
-		[containerRef, maximumScroll, realTimeToScaledTime, scroll, timelineScale]
+		[containerRef, maximumScroll, realTimeToScaledTime, scroll, setScroll, timelineScale]
 	)
+
+	useTimelineBusSubscribe({
+		callback: scrollTo,
+	})
+
+	// Published scroll
+	const { setScroll: setPublicScroll } = useTimelineScroll()
+	const throttledSetPublicScroll = useRef(throttle((val: number) => setPublicScroll(val), 100))
+
+	useEffect(() => {
+		const container = containerRef.current
+		if (!container) {
+			return
+		}
+		const timestamp = -(
+			scaledTimeToRealTime(scroll - container.getBoundingClientRect().width / 2) * timelineScale
+		)
+		throttledSetPublicScroll.current(timestamp)
+	}, [containerRef, scaledTimeToRealTime, scroll, throttledSetPublicScroll, timelineScale])
 
 	return {
 		scroll: scroll + Math.pow(overscroll, 0.85),

@@ -47,7 +47,6 @@ enum WorldEventType {
 
 enum WorldEventField {
   RevokedAt
-  CustomName
   EventIcon
   TargetActors
   MentionedActors
@@ -64,6 +63,7 @@ model WorldEvent {
   timestamp   BigInt
   revokedAt   BigInt?
   description String            @default("")
+  customName  Boolean           @default(false)
   extraFields WorldEventField[]
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)

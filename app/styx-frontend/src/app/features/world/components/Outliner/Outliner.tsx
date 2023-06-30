@@ -50,10 +50,10 @@ export const Outliner = () => {
 					...actor,
 					highlighted: false,
 					collapsed: collapsedActors.includes(actor.id),
-					events: [],
+					events: visibleEvents.filter((event) => actor.statements.some((e) => e.id === event.id)),
 				}))
 				.filter((actor) => selectedActors.length === 0 || selectedActors.includes(actor.id)),
-		[actors, collapsedActors, selectedActors]
+		[visibleEvents, actors, collapsedActors, selectedActors]
 	)
 
 	return (

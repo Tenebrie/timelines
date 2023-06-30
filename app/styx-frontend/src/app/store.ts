@@ -4,6 +4,7 @@ import { baseApi } from '../api/baseApi'
 import authReducer from './features/auth/reducer'
 import spinnyReducer from './features/demo/spinny/reducer'
 import preferencesReducer from './features/preferences/reducer'
+import timelineReducer from './features/world/components/Timeline/reducer'
 import worldReducer from './features/world/reducer'
 import worldListReducer from './features/worldList/reducer'
 
@@ -16,6 +17,7 @@ export const generateStore = ({ preloadedState }: { preloadedState?: PreloadedSt
 			world: worldReducer,
 			worldList: worldListReducer,
 			preferences: preferencesReducer,
+			timeline: timelineReducer,
 		},
 		middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
 		preloadedState,

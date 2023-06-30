@@ -7,9 +7,8 @@ import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
 import { Actor } from '../../../../types'
-import { StatementsUnit } from '../../../EventEditor/styles'
 import { EventWithContentRenderer } from '../../../Renderers/Event/EventWithContentRenderer'
-import { StatementsScroller } from '../../styles'
+import { StatementsScroller, StatementsUnit } from '../../styles'
 import { ActorEventsEmptyState } from './ActorEventsEmptyState'
 
 type Props = {

@@ -34,7 +34,7 @@ export const StatementsUnit = styled.fieldset`
 	gap: 8px;
 	border-radius: 4px;
 	border: 1px solid rgba(255, 255, 255, 0.23);
-	padding: 8px;
+	padding: 8px 16px;
 	position: relative;
 	margin-top: -8.5px;
 

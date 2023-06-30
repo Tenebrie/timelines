@@ -254,7 +254,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			timestamp: string
 			revokedAt?: null | string
 			description: string
-			extraFields: ('RevokedAt' | 'CustomName' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+			customName: boolean
+			extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
 			worldId: string
 			replacedEventId?: null | string
 			replacedByEventId?: null | string
@@ -300,7 +301,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		timestamp: string
 		revokedAt?: null | string
 		description: string
-		extraFields: ('RevokedAt' | 'CustomName' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+		customName: boolean
+		extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
 		worldId: string
 		replacedEventId?: null | string
 		replacedByEventId?: null | string
@@ -358,12 +360,15 @@ export type CreateWorldEventApiArg = {
 	worldId: string
 	body: {
 		type: 'SCENE' | 'OTHER'
+		modules: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
 		name: string
+		icon: string
 		description: string
 		timestamp: string
-		revokedAt: string
+		revokedAt: null | string
 		targetActorIds: string[]
 		mentionedActorIds: string[]
+		customNameEnabled: boolean
 	}
 }
 export type UpdateWorldEventApiResponse = /** status 200  */ {
@@ -376,7 +381,8 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	timestamp: string
 	revokedAt?: null | string
 	description: string
-	extraFields: ('RevokedAt' | 'CustomName' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+	customName: boolean
+	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
 	worldId: string
 	replacedEventId?: null | string
 	replacedByEventId?: null | string
@@ -407,7 +413,7 @@ export type UpdateWorldEventApiArg = {
 	/** Any string value */
 	eventId: string
 	body: {
-		modules?: ('RevokedAt' | 'CustomName' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+		modules?: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
 		name?: string
 		icon?: string
 		timestamp?: string
@@ -415,6 +421,7 @@ export type UpdateWorldEventApiArg = {
 		description?: string
 		targetActorIds?: string[]
 		mentionedActorIds?: string[]
+		customNameEnabled?: boolean
 	}
 }
 export type DeleteWorldEventApiResponse = /** status 200  */ {
@@ -427,7 +434,8 @@ export type DeleteWorldEventApiResponse = /** status 200  */ {
 	timestamp: string
 	revokedAt?: null | string
 	description: string
-	extraFields: ('RevokedAt' | 'CustomName' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+	customName: boolean
+	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
 	worldId: string
 	replacedEventId?: null | string
 	replacedByEventId?: null | string
@@ -448,7 +456,8 @@ export type RevokeWorldEventApiResponse = /** status 200  */ {
 	timestamp: string
 	revokedAt?: null | string
 	description: string
-	extraFields: ('RevokedAt' | 'CustomName' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+	customName: boolean
+	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
 	worldId: string
 	replacedEventId?: null | string
 	replacedByEventId?: null | string
@@ -472,7 +481,8 @@ export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	timestamp: string
 	revokedAt?: null | string
 	description: string
-	extraFields: ('RevokedAt' | 'CustomName' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+	customName: boolean
+	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
 	worldId: string
 	replacedEventId?: null | string
 	replacedByEventId?: null | string
