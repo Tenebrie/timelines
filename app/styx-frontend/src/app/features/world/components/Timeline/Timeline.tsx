@@ -5,6 +5,8 @@ import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
 import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
+import { TimelineContextMenu } from './components/TimelineContextMenu/TimelineContextMenu'
+import { useTimelineContextMenu } from './components/TimelineContextMenu/useTimelineContextMenu'
 import { TimelineEdgeScroll } from './components/TimelineEdgeScroll/TimelineEdgeScroll'
 import { TimelineEventGroup } from './components/TimelineEventGroup/TimelineEventGroup'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
@@ -92,9 +94,15 @@ export const Timeline = () => {
 
 	const scrollPageSize = containerWidth.current
 
+	const { onContextMenu, state: contextMenuState } = useTimelineContextMenu({
+		scroll,
+		scaleLevel,
+		timelineScale,
+	})
+
 	return (
 		<TimelineWrapper>
-			<TimelineContainer ref={containerRef}>
+			<TimelineContainer ref={containerRef} onContextMenu={onContextMenu}>
 				<TimelineEdgeScroll
 					side="left"
 					currentScroll={scroll}
@@ -140,6 +148,7 @@ export const Timeline = () => {
 					scaleLevel={scaleLevel}
 					scrollTo={scrollTimelineTo}
 				/>
+				<TimelineContextMenu state={contextMenuState} />
 			</TimelineContainer>
 		</TimelineWrapper>
 	)

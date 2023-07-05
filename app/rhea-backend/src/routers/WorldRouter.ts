@@ -139,6 +139,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 
 	const { event, world } = await WorldService.createWorldEvent(worldId, {
 		...params,
+		extraFields: params.modules,
 		targetActors,
 		mentionedActors,
 	})

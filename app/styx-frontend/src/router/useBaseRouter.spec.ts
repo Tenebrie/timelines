@@ -151,4 +151,59 @@ describe('useBaseRouter', () => {
 
 		expect(MockedRouter.navigations[1].target).toEqual('/app/test')
 	})
+
+	describe('isLocationEqual', () => {
+		it('matches the correct location', () => {
+			const { result } = renderHookWithProviders(() =>
+				useBaseRouter({
+					app: '/app/:param1/:param2/foo',
+				})
+			)
+
+			act(() => {
+				result.current.navigateTo(
+					'/app/:param1/:param2/foo',
+					{
+						param1: 'foo',
+						param2: 'bar',
+					},
+					{}
+				)
+			})
+
+			expect(result.current.isLocationEqual('/app/:param1/:param2/foo')).toEqual(true)
+		})
+
+		it('does not match the incorrect location', () => {
+			const { result } = renderHookWithProviders(() =>
+				useBaseRouter({
+					app: '/app/:param1/:param2/foo',
+				})
+			)
+
+			expect(result.current.isLocationEqual('/app/:param1/:param2/foo')).toEqual(false)
+		})
+
+		it('does not match the similar location', () => {
+			const { result } = renderHookWithProviders(() =>
+				useBaseRouter({
+					test1: '/app/:param1/:param2/foo',
+					test2: '/app/:param1/:param2/bar',
+				})
+			)
+
+			act(() => {
+				result.current.navigateTo(
+					'/app/:param1/:param2/bar',
+					{
+						param1: '123',
+						param2: '123',
+					},
+					{}
+				)
+			})
+
+			expect(result.current.isLocationEqual('/app/:param1/:param2/foo')).toEqual(false)
+		})
+	})
 })

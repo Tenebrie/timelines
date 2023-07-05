@@ -2,8 +2,9 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
-import { getWorldState } from '../../../selectors'
-import { WorldEvent, WorldEventBundle, WorldEventGroup } from '../../../types'
+import { useWorldRouter, worldRoutes } from '../../../router'
+import { getEventCreatorState, getWorldState } from '../../../selectors'
+import { MarkerType, WorldEvent, WorldEventBundle, WorldEventGroup } from '../../../types'
 import { ScaleLevel } from '../types'
 
 const GROUP_DISTANCE = 35
@@ -11,17 +12,35 @@ const EVENTS_PER_GROUP = 5
 
 const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; scaleLevel: ScaleLevel }) => {
 	const { events } = useSelector(getWorldState)
+	const { ghostEvent } = useSelector(getEventCreatorState)
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
+
+	const { isLocationEqual } = useWorldRouter()
 
 	const eventGroups = useMemo(() => {
 		const eventGroups: WorldEventGroup[] = []
-		const sortedEvents = [...events].sort((a, b) => a.timestamp - b.timestamp)
+		const sortedEvents = events
+			.map((event) => ({ ...event, markerPosition: event.timestamp, markerType: 'issuedAt' as MarkerType }))
+			.concat(
+				events
+					.filter((event) => !!event.revokedAt)
+					.map((event) => ({ ...event, markerPosition: event.revokedAt!, markerType: 'revokedAt' }))
+			)
+			.sort((a, b) => b.markerPosition - a.markerPosition)
+
+		if (ghostEvent && isLocationEqual(worldRoutes.eventCreator)) {
+			sortedEvents.push({
+				...ghostEvent,
+				markerType: 'ghost',
+				markerPosition: ghostEvent.timestamp,
+			})
+		}
 
 		sortedEvents.forEach((event) => {
 			const closestExistingGroup = eventGroups
 				.map((group) => ({
 					...group,
-					distance: Math.abs(group.timestamp - event.timestamp),
+					distance: Math.abs(group.timestamp - event.markerPosition),
 					originalGroup: group,
 				}))
 				.sort((a, b) => a.distance - b.distance)[0]
@@ -32,7 +51,7 @@ const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; 
 			) {
 				const newEventGroup = {
 					events: [event],
-					timestamp: event.timestamp,
+					timestamp: event.markerPosition,
 				}
 				eventGroups.push(newEventGroup)
 			} else {
@@ -45,7 +64,7 @@ const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; 
 			if (group.events.length > EVENTS_PER_GROUP) {
 				const eventBundle: WorldEventBundle = {
 					id: `bundle-${group.timestamp}-${group.events.length}`,
-					type: 'BUNDLE',
+					markerType: 'bundle',
 					events: group.events.slice(EVENTS_PER_GROUP) as WorldEvent[],
 					timestamp: group.timestamp,
 					name: `${group.events.length - (EVENTS_PER_GROUP - 1)} more events`,
@@ -55,7 +74,7 @@ const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; 
 			}
 		})
 		return eventGroups
-	}, [events, scaledTimeToRealTime, timelineScale])
+	}, [events, ghostEvent, isLocationEqual, scaledTimeToRealTime, timelineScale])
 
 	return eventGroups
 }

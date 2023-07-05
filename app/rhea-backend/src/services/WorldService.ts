@@ -1,4 +1,4 @@
-import { Actor, User, WorldCalendarType, WorldEvent } from '@prisma/client'
+import { Actor, User, WorldCalendarType, WorldEvent, WorldEventField } from '@prisma/client'
 import { BadRequestError, UnauthorizedError } from 'tenebrie-framework'
 
 import { dbClient } from './DatabaseClient'
@@ -75,7 +75,10 @@ export const WorldService = {
 
 	createWorldEvent: async (
 		worldId: string,
-		data: Pick<WorldEvent, 'type' | 'name' | 'description' | 'timestamp' | 'revokedAt' | 'icon'> & {
+		data: Pick<
+			WorldEvent,
+			'type' | 'extraFields' | 'name' | 'description' | 'timestamp' | 'revokedAt' | 'icon'
+		> & {
 			customNameEnabled: boolean
 			targetActors: Actor[]
 			mentionedActors: Actor[]
@@ -86,6 +89,7 @@ export const WorldService = {
 				data: {
 					worldId,
 					type: data.type,
+					extraFields: data.extraFields,
 					name: data.name,
 					icon: data.icon,
 					description: data.description,
@@ -177,6 +181,17 @@ export const WorldService = {
 		eventId: string
 		revokedAt: bigint
 	}) => {
+		const event = await dbClient.worldEvent.findFirstOrThrow({
+			where: {
+				id: eventId,
+			},
+			select: {
+				extraFields: true,
+			},
+		})
+		const updatedModules: WorldEventField[] = event.extraFields.includes('RevokedAt')
+			? event.extraFields
+			: [...event.extraFields, 'RevokedAt']
 		const [statement, world] = await dbClient.$transaction([
 			dbClient.worldEvent.update({
 				where: {
@@ -184,6 +199,7 @@ export const WorldService = {
 				},
 				data: {
 					revokedAt,
+					extraFields: updatedModules,
 				},
 			}),
 			touchWorld(worldId),

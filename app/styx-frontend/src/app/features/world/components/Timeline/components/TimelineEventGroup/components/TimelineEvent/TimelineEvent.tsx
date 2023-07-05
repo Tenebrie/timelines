@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { memo, MouseEvent, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -6,12 +7,12 @@ import { useEventIcons } from '../../../../../../hooks/useEventIcons'
 import { worldSlice } from '../../../../../../reducer'
 import { useWorldRouter } from '../../../../../../router'
 import { getWorldState } from '../../../../../../selectors'
-import { WorldEvent, WorldEventBundle } from '../../../../../../types'
+import { WorldEventGroup } from '../../../../../../types'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
 import { Label, LabelContainer, Marker } from './styles'
 
 type Props = {
-	event: WorldEvent | WorldEventBundle
+	event: WorldEventGroup['events'][number]
 	groupIndex: number
 	expanded: boolean
 	highlighted: boolean
@@ -27,9 +28,9 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 	const { eventEditorParams, navigateToEventEditor, navigateToOutliner } = useWorldRouter()
 	const { getIconPath } = useEventIcons()
 
-	const { triggerClick } = useDoubleClick<void>({
-		onClick: () => {
-			if (event.type === 'BUNDLE') {
+	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
+		onClick: ({ multiselect }) => {
+			if (event.markerType === 'bundle') {
 				navigateToOutliner(event.events.sort((a, b) => b.timestamp - a.timestamp)[0].timestamp)
 				return
 			}
@@ -37,7 +38,7 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 			if (selectedEvents.includes(event.id)) {
 				dispatch(removeEventFromSelection(event.id))
 			} else {
-				dispatch(addEventToSelection(event.id))
+				dispatch(addEventToSelection({ id: event.id, multiselect }))
 			}
 		},
 		onDoubleClick: () => {
@@ -51,7 +52,7 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 		clickEvent.stopPropagation()
 		clickEvent.preventDefault()
 
-		triggerClick(clickEvent)
+		triggerClick(clickEvent, { multiselect: clickEvent.ctrlKey })
 	}
 
 	const onMouseEnter = () => {
@@ -66,16 +67,19 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 
 	const selected = selectedEvents.includes(event.id)
 
-	const className = `${groupIndex > 0 && expanded ? 'expanded' : ''} ${selected ? 'selected' : ''} ${
-		isInfoVisible ? 'elevated' : ''
-	} ${event.id === eventEditorParams.eventId ? 'edited' : ''} ${highlighted ? 'highlighted' : ''}`
-
 	return (
 		<Marker
 			onClick={onClick}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
-			className={className}
+			className={classNames({
+				expanded: groupIndex > 0 && expanded,
+				selected,
+				edited: event.id === eventEditorParams.eventId,
+				highlighted,
+				revoked: event.markerType === 'revokedAt',
+				ghost: event.markerType === 'ghost',
+			})}
 			iconPath={getIconPath(event.icon)}
 			data-testid="timeline-event-marker"
 		>
@@ -84,6 +88,7 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 					<Label data-hj-suppress>{event.name}</Label>
 				</LabelContainer>
 			)}
+			<div className="icon" />
 		</Marker>
 	)
 }

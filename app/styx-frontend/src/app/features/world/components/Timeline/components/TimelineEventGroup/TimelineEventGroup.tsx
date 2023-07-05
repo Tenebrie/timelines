@@ -56,7 +56,7 @@ export const TimelineEventGroup = ({
 		>
 			{eventGroup.events.map((event, index) => (
 				<TimelineEvent
-					key={event.id}
+					key={`${event.markerType}-${event.id}`}
 					event={event}
 					groupIndex={index}
 					expanded={isExpanded}

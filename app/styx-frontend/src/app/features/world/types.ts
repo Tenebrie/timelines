@@ -16,14 +16,15 @@ export type WorldCalendarType = WorldDetails['calendar']
 export type WorldEventBundle = {
 	id: string
 	events: WorldEvent[]
-	type: 'BUNDLE'
+	markerType: 'bundle'
 	name: string
 	timestamp: number
 	icon: 'bundle'
 }
 
+export type MarkerType = 'issuedAt' | 'revokedAt' | 'ghost'
 export type WorldEventGroup = {
-	events: (WorldEvent | WorldEventBundle)[]
+	events: ((WorldEvent & { markerPosition: number; markerType: MarkerType }) | WorldEventBundle)[]
 	timestamp: number
 }
 

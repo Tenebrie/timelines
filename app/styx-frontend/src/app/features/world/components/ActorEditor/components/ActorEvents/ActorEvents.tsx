@@ -2,7 +2,6 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { OverlayingLabel } from '../../../../../../components/OverlayingLabel'
-import { getOutlinerPreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
@@ -18,31 +17,30 @@ type Props = {
 export const ActorEvents = ({ actor }: Props) => {
 	const { events } = useSelector(getWorldState)
 	const { timeToLabel } = useWorldTime()
-	const { collapsedEvents } = useSelector(getOutlinerPreferences)
 
 	const { selectedTime } = useWorldRouter()
 
-	const visibleEvents = events.map((event) => ({
-		...event,
-		secondary: timeToLabel(event.timestamp),
-		highlighted: false,
-		collapsed: collapsedEvents.includes(event.id),
-		active: event.revokedAt === undefined || event.revokedAt > selectedTime,
-	}))
+	const visibleEvents = events
+		.filter((event) => event.targetActors.some((targetActor) => targetActor.id === actor.id))
+		.map((event) => ({
+			...event,
+			secondary: timeToLabel(event.timestamp),
+			active: event.revokedAt === undefined || event.revokedAt > selectedTime,
+		}))
 
 	return (
 		<StatementsUnit>
 			<OverlayingLabel>Related events</OverlayingLabel>
 			<StatementsScroller>
-				{visibleEvents.map((event, index) => (
+				{visibleEvents.map((event) => (
 					<EventWithContentRenderer
 						key={event.id}
 						{...event}
 						event={event}
 						owningActor={actor}
-						index={index}
 						short
-						divider={index !== visibleEvents.length - 1}
+						divider
+						actions={['collapse']}
 					/>
 				))}
 				{visibleEvents.length === 0 && <ActorEventsEmptyState />}

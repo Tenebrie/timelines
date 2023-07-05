@@ -7,12 +7,14 @@ export const Container = styled.div.attrs<{ offset: number }>((props) => ({
 }))<{ offset: number }>`
 	top: 0;
 	position: absolute;
-	background: gray;
-	width: 1px;
+	background: white;
+	width: 3px;
+	margin-left: -1px;
 	height: 100%;
 	opacity: 1;
 	transition: opacity 0.3s;
 	pointer-events: none;
+	border-radius: 3px;
 
 	&.hidden {
 		opacity: 0;

@@ -18,8 +18,7 @@ import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
 export const Outliner = () => {
 	const { actors, events, selectedActors, selectedEvents } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
-	const { showOnlySelected, showInactiveStatements, collapsedActors, collapsedEvents } =
-		useSelector(getOutlinerPreferences)
+	const { showOnlySelected, showInactiveStatements, collapsedActors } = useSelector(getOutlinerPreferences)
 
 	const { getLevelScalar } = useTimelineLevelScalar()
 
@@ -36,7 +35,6 @@ export const Outliner = () => {
 					...event,
 					index,
 					highlighted: Math.abs(event.timestamp - selectedTime) < highlightWithin,
-					collapsed: collapsedEvents.includes(event.id),
 					active: event.revokedAt === undefined || event.revokedAt > selectedTime,
 				}))
 				.filter((event) => showInactiveStatements || event.highlighted || event.active)
@@ -44,15 +42,7 @@ export const Outliner = () => {
 					(event) => !showOnlySelected || selectedEvents.length === 0 || selectedEvents.includes(event.id)
 				)
 				.sort((a, b) => b.timestamp - a.timestamp || b.index - a.index),
-		[
-			events,
-			showOnlySelected,
-			selectedTime,
-			highlightWithin,
-			collapsedEvents,
-			showInactiveStatements,
-			selectedEvents,
-		]
+		[events, showOnlySelected, selectedTime, highlightWithin, showInactiveStatements, selectedEvents]
 	)
 
 	const visibleActors = useMemo(
@@ -97,8 +87,8 @@ export const Outliner = () => {
 													event={event}
 													owningActor={null}
 													short={false}
-													index={index}
 													divider={index !== visibleEvents.length - 1}
+													actions={['edit', 'collapse']}
 												/>
 											</Collapse>
 										))}

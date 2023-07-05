@@ -22,16 +22,15 @@ export const ActorWithStatementsRenderer = ({ actor, highlighted, collapsed, div
 			<List dense component="div" disablePadding>
 				<TransitionGroup>
 					{!collapsed &&
-						actor.events.map((event, index) => (
+						actor.events.map((event) => (
 							<Collapse key={event.id}>
 								<EventRenderer
 									event={event}
 									owningActor={actor}
-									index={index}
-									highlighted={false}
 									collapsed={false}
 									short={false}
 									active={event.active}
+									actions={[]}
 								/>
 							</Collapse>
 						))}

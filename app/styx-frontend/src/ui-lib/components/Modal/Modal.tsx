@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { ModalContainer, ModalWrapper } from './styles'
 
@@ -11,7 +11,7 @@ type Props = {
 const Modal = ({ visible, children, onClose }: Props) => {
 	const bodyRef = useRef<HTMLDivElement | null>(null)
 
-	const isModalVisible = useMemo(() => visible === undefined || visible, [visible])
+	const isModalVisible = visible
 	const [isModalRendered, setIsModalRendered] = useState(false)
 	const [modalRenderTimeout, setModalRenderTimeout] = useState<number | null>(null)
 

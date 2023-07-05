@@ -11,36 +11,74 @@ export const Marker = styled.div<{ iconPath: string }>`
 	width: 50px;
 	height: 50px;
 	border-radius: 50%;
-	background: rgba(0, 0, 0, 0.7);
+	background: #0a1929;
 	cursor: pointer;
 	margin-bottom: -35px;
-	transition: margin-bottom 0.3s, background-color 0.3s;
-	background-image: url(${(props) => props.iconPath});
-	background-origin: content-box;
-	background-size: contain;
-	outline: 2px solid white;
+	transition: margin-bottom 0.3s, outline-color 0.3s, background-color 0.3s;
+	outline: 2px solid ${colors.grey[300]};
+
+	.icon {
+		background: ${colors.green[300]};
+		mask-image: url(${(props) => props.iconPath});
+		mask-size: contain;
+		background-origin: content-box;
+		background-size: contain;
+		margin-top: 2px;
+		margin-left: 2px;
+		width: calc(100% - 4px);
+		height: calc(100% - 4px);
+		transition: background-color 0.3s;
+	}
+
+	&.ghost {
+		background-color: rgb(28, 69, 114);
+		pointer-events: none;
+		.icon {
+			opacity: 0.5;
+		}
+	}
 
 	&.expanded {
 		margin-bottom: 4px;
 	}
 
-	&.selected {
-		background-color: ${colors.orange[700]};
+	&:hover {
+		outline-color: ${colors.grey[500]};
+		& > .icon {
+			background: ${colors.green[500]};
+		}
+	}
+	&:active {
+		outline-color: ${colors.grey[700]};
+		& > .icon {
+			background: ${colors.green[700]};
+		}
+	}
+	&.revoked > .icon {
+		background-color: ${colors.red[300]};
+	}
+	&.revoked:hover > .icon {
+		background-color: ${colors.red[500]};
+	}
+	&.revoked:active > .icon {
+		background-color: ${colors.red[700]};
 	}
 
-	&.elevated {
+	&.selected {
+		outline-color: ${colors.amber[300]};
+	}
+	&.selected:hover {
+		outline-color: ${colors.amber[500]};
+	}
+	&.selected:active {
+		outline-color: ${colors.amber[700]};
 	}
 
 	&.highlighted {
-		background-color: ${colors.deepPurple[700]};
+		background-color: rgb(0, 100, 0);
 	}
-
-	&:hover {
-		background-color: ${colors.orange[500]};
-	}
-
-	&:active {
-		background-color: ${colors.orange[900]};
+	&.revoked.highlighted {
+		background-color: rgb(100, 0, 0);
 	}
 `
 

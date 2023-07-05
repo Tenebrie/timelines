@@ -1,6 +1,7 @@
 import { RootState } from '../../store'
 
 export const getWorldState = (state: RootState) => state.world
+export const getEventCreatorState = (state: RootState) => state.world.eventCreator
 export const getActorWizardState = (state: RootState) => state.world.actorWizard
 export const getEventWizardState = (state: RootState) => state.world.eventWizard
 export const getEventTutorialModalState = (state: RootState) => state.world.outliner.eventTutorialModal

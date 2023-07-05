@@ -4,6 +4,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useLocationRef } from '../../../hooks/useLocationRef'
 import { BlockingSpinner } from '../../components/BlockingSpinner'
 import { ActorWizardModal } from './components/ActorWizard/ActorWizardModal'
+import { RevokedStatementWizard } from './components/EventEditor/components/RevokedStatementWizard/RevokedStatementWizard'
 import { EventWizardModal } from './components/EventWizard/EventWizardModal'
 import { OverviewPanel } from './components/OverviewPanel/OverviewPanel'
 import { Timeline } from './components/Timeline/Timeline'
@@ -50,6 +51,7 @@ export const World = () => {
 			<BlockingSpinner visible={!isLoaded} />
 			<ActorWizardModal />
 			<EventWizardModal />
+			<RevokedStatementWizard />
 		</>
 	)
 }

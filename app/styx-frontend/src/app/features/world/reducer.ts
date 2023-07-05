@@ -16,6 +16,10 @@ export const initialState = {
 	selectedActors: [] as string[],
 	selectedEvents: [] as string[],
 
+	eventCreator: {
+		ghostEvent: null as WorldEvent | null,
+	},
+
 	actorWizard: {
 		isOpen: false as boolean,
 	},
@@ -96,11 +100,16 @@ export const worldSlice = createSlice({
 		removeActorFromSelection: (state, { payload }: PayloadAction<string>) => {
 			state.selectedActors = state.selectedActors.filter((event) => event !== payload)
 		},
-		addEventToSelection: (state, { payload }: PayloadAction<string>) => {
-			if (state.selectedEvents.includes(payload)) {
+		addEventToSelection: (state, { payload }: PayloadAction<{ id: string; multiselect: boolean }>) => {
+			if (!payload.multiselect) {
+				state.selectedEvents = [payload.id]
 				return
 			}
-			state.selectedEvents = [...state.selectedEvents, payload]
+
+			if (state.selectedEvents.includes(payload.id)) {
+				return
+			}
+			state.selectedEvents = [...state.selectedEvents, payload.id]
 		},
 		removeEventFromSelection: (state, { payload }: PayloadAction<string>) => {
 			state.selectedEvents = state.selectedEvents.filter((event) => event !== payload)
@@ -108,6 +117,11 @@ export const worldSlice = createSlice({
 		clearSelections: (state) => {
 			state.selectedActors = []
 			state.selectedEvents = []
+		},
+
+		/* Event creator */
+		setEventCreatorGhostEvent: (state, { payload }: PayloadAction<WorldEvent | null>) => {
+			state.eventCreator.ghostEvent = payload
 		},
 
 		/* Actor wizard */

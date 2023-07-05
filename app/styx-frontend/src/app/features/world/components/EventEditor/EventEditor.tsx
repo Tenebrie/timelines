@@ -5,7 +5,6 @@ import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
 import { DeleteEventModal } from './components/DeleteEventModal/DeleteEventModal'
 import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetailsEditor'
-import { RevokedStatementWizard } from './components/RevokedStatementWizard/RevokedStatementWizard'
 import { FullHeightContainer } from './styles'
 
 export const EventEditor = () => {
@@ -25,7 +24,6 @@ export const EventEditor = () => {
 				<EventDetailsEditor event={event} mode="edit" />
 			</Grid>
 			<DeleteEventModal />
-			<RevokedStatementWizard />
 		</FullHeightContainer>
 	)
 }

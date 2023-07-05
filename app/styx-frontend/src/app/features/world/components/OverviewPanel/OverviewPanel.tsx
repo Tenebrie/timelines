@@ -69,7 +69,7 @@ export const OverviewPanel = () => {
 					(!eventsReversed && sortedEvents.indexOf(event) !== sortedEvents.length - 1) ||
 					(eventsReversed && sortedEvents.indexOf(event) !== 0)
 				}
-				onClick={(clickEvent) => moveToEvent(clickEvent, event)}
+				onClick={(clickEvent) => moveToEvent(clickEvent, { event, multiselect: clickEvent.ctrlKey })}
 				selected={selectedEvents.includes(event.id)}
 			>
 				<ListItemIcon>
@@ -95,15 +95,15 @@ export const OverviewPanel = () => {
 		ignoreDelay: true,
 	})
 
-	const { triggerClick: moveToEvent } = useDoubleClick<WorldEvent>({
-		onClick: (event) => {
+	const { triggerClick: moveToEvent } = useDoubleClick<{ event: WorldEvent; multiselect: boolean }>({
+		onClick: ({ event, multiselect }) => {
 			if (selectedEvents.includes(event.id)) {
 				dispatch(removeEventFromSelection(event.id))
 			} else {
-				dispatch(addEventToSelection(event.id))
+				dispatch(addEventToSelection({ id: event.id, multiselect }))
 			}
 		},
-		onDoubleClick: (event) => {
+		onDoubleClick: ({ event }) => {
 			navigateToEventEditor(event.id)
 			dispatch(removeEventFromSelection(event.id))
 		},
