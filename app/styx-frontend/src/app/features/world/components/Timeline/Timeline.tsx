@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useTimelineWorldTime } from '../../../time/hooks/useTimelineWorldTime'
 import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
 import { useWorldRouter } from '../../router'
-import { getWorldState } from '../../selectors'
+import { getTimelineContextMenuState, getWorldState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { TimelineContextMenu } from './components/TimelineContextMenu/TimelineContextMenu'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/useTimelineContextMenu'
@@ -22,6 +23,7 @@ export const Timeline = () => {
 	const containerWidth = useRef<number>(window.innerWidth)
 
 	const { events, timeOrigin, calendar } = useSelector(getWorldState)
+	const contextMenuState = useSelector(getTimelineContextMenuState)
 
 	const dispatch = useDispatch()
 	const { setScaleLevel } = timelineSlice.actions
@@ -94,7 +96,9 @@ export const Timeline = () => {
 
 	const scrollPageSize = containerWidth.current
 
-	const { onContextMenu, state: contextMenuState } = useTimelineContextMenu({
+	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel })
+
+	const { onContextMenu } = useTimelineContextMenu({
 		scroll,
 		scaleLevel,
 		timelineScale,
@@ -135,8 +139,10 @@ export const Timeline = () => {
 						scroll={scroll}
 						eventGroup={group}
 						timelineScale={timelineScale}
-						scaleLevel={scaleLevel}
 						containerWidth={containerWidth.current}
+						eventEditorParams={eventEditorParams}
+						contextMenuState={contextMenuState}
+						realTimeToScaledTime={realTimeToScaledTime}
 					/>
 				))}
 				<TimelineSelectedLabel onNavigateToTime={(time) => scrollTimelineTo(time)} />
@@ -148,7 +154,7 @@ export const Timeline = () => {
 					scaleLevel={scaleLevel}
 					scrollTo={scrollTimelineTo}
 				/>
-				<TimelineContextMenu state={contextMenuState} />
+				<TimelineContextMenu />
 			</TimelineContainer>
 		</TimelineWrapper>
 	)

@@ -2,8 +2,8 @@ import { useState } from 'react'
 
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { useWorldRouter } from '../../../../router'
+import { getTimelineContextMenuState } from '../../../../selectors'
 import { WorldEventGroup } from '../../../../types'
-import { ScaleLevel } from '../../types'
 import { TimelineEvent } from './components/TimelineEvent/TimelineEvent'
 import { Group } from './styles'
 
@@ -11,23 +11,24 @@ type Props = {
 	eventGroup: WorldEventGroup
 	scroll: number
 	timelineScale: number
-	scaleLevel: ScaleLevel
 	visible: boolean
 	containerWidth: number
+	eventEditorParams: ReturnType<typeof useWorldRouter>['eventEditorParams']
+	contextMenuState: ReturnType<typeof getTimelineContextMenuState>
+	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
 export const TimelineEventGroup = ({
 	eventGroup,
 	scroll,
 	timelineScale,
-	scaleLevel,
 	visible,
 	containerWidth,
+	eventEditorParams,
+	contextMenuState,
+	realTimeToScaledTime,
 }: Props) => {
 	const [isHovered, setIsHovered] = useState(false)
-
-	const { eventEditorParams } = useWorldRouter()
-	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel })
 
 	const position = realTimeToScaledTime(Math.floor(eventGroup.timestamp) / timelineScale) + scroll
 
@@ -43,7 +44,11 @@ export const TimelineEventGroup = ({
 		setIsHovered(false)
 	}
 
-	const highlightedEvents = eventGroup.events.filter((event) => eventEditorParams.eventId === event.id)
+	const highlightedEvents = eventGroup.events.filter(
+		(event) =>
+			eventEditorParams.eventId === event.id ||
+			(contextMenuState.isOpen && contextMenuState.selectedEvent?.id === event.id)
+	)
 
 	const isExpanded = isHovered || highlightedEvents.length > 0
 

@@ -1,6 +1,9 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
+import { worldSlice } from '../../../../reducer'
+import { getTimelineContextMenuState } from '../../../../selectors'
 import { ScaleLevel } from '../../types'
 
 type Props = {
@@ -10,17 +13,17 @@ type Props = {
 }
 
 export const useTimelineContextMenu = ({ scroll, timelineScale, scaleLevel }: Props) => {
-	const [open, setOpen] = useState(false)
-	const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
-	const [selectedTime, setSelectedTime] = useState<number>(0)
-
+	const { isOpen } = useSelector(getTimelineContextMenuState)
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
+
+	const dispatch = useDispatch()
+	const { openTimelineContextMenu, closeTimelineContextMenu } = worldSlice.actions
 
 	const onContextMenu = useCallback(
 		(event: React.MouseEvent) => {
 			event.preventDefault()
-			if (open) {
-				setOpen(false)
+			if (isOpen) {
+				dispatch(closeTimelineContextMenu())
 				return
 			}
 
@@ -34,28 +37,29 @@ export const useTimelineContextMenu = ({ scroll, timelineScale, scaleLevel }: Pr
 			const clickOffset = Math.round((point.x - scroll) / roundToX) * roundToX * timelineScale
 			const selectedTime = scaledTimeToRealTime(clickOffset)
 
-			setOpen(true)
-			setMousePos({
-				x: event.clientX + 1,
-				y: event.clientY,
-			})
-			setSelectedTime(selectedTime)
+			dispatch(
+				openTimelineContextMenu({
+					mousePos: {
+						x: event.clientX + 1,
+						y: event.clientY,
+					},
+					selectedTime,
+					selectedEvent: null,
+				})
+			)
 		},
-		[open, scaledTimeToRealTime, scroll, timelineScale]
+		[
+			closeTimelineContextMenu,
+			dispatch,
+			isOpen,
+			openTimelineContextMenu,
+			scaledTimeToRealTime,
+			scroll,
+			timelineScale,
+		]
 	)
-
-	const onClose = useCallback(() => {
-		setOpen(false)
-	}, [])
 
 	return {
 		onContextMenu,
-		onClose,
-		state: {
-			open,
-			mousePos,
-			onClose,
-			selectedTime,
-		},
 	}
 }

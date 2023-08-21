@@ -36,7 +36,8 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 		}
 	}, [event.revokedAt, event.timestamp, scrollTimelineTo, getTimelineScroll])
 
-	const paragraphs = event.description.split('\n').filter((p) => p.trim().length > 0)
+	// const paragraphs = event.description.split('\n').filter((p) => p.trim().length > 0)
+	const paragraphs = [event.description]
 
 	const revokedAtTimestamp = event.revokedAt ? (
 		<>
@@ -80,6 +81,8 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 											sx={{ fontSize: '16px' }}
 											style={{ whiteSpace: 'break-spaces' }}
 										>
+											<b>Content:</b>
+											<br />
 											{p}
 										</TrunkatedTypography>
 									}

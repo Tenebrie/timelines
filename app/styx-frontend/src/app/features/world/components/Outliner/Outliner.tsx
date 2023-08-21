@@ -37,7 +37,7 @@ export const Outliner = () => {
 					highlighted: Math.abs(event.timestamp - selectedTime) < highlightWithin,
 					active: event.revokedAt === undefined || event.revokedAt > selectedTime,
 				}))
-				.filter((event) => showInactiveStatements || event.highlighted || event.active)
+				.filter((event) => showInactiveStatements || event.active)
 				.filter(
 					(event) => !showOnlySelected || selectedEvents.length === 0 || selectedEvents.includes(event.id)
 				)

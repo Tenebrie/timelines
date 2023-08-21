@@ -1,7 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { ActorDetails, WorldCalendarType, WorldDetails, WorldEvent } from './types'
+import { ActorDetails, WorldCalendarType, WorldDetails, WorldEvent, WorldEventOnTimeline } from './types'
 
 export const initialState = {
 	isLoaded: false as boolean,
@@ -29,6 +29,13 @@ export const initialState = {
 		timestamp: 0 as number,
 	},
 
+	timelineContextMenu: {
+		isOpen: false as boolean,
+		selectedTime: 0 as number,
+		selectedEvent: null as WorldEventOnTimeline | null,
+		mousePos: { x: 0, y: 0 } as { x: number; y: number },
+	},
+
 	outliner: {
 		eventTutorialModal: {
 			isOpen: false as boolean,
@@ -49,6 +56,7 @@ export const initialState = {
 		},
 		revokedStatementWizard: {
 			isOpen: false as boolean,
+			preselectedEventId: '' as string,
 		},
 		issuedActorStatementWizard: {
 			isOpen: false as boolean,
@@ -143,6 +151,27 @@ export const worldSlice = createSlice({
 			state.eventWizard.isOpen = false
 		},
 
+		/* Timeline context menu */
+		openTimelineContextMenu: (
+			state,
+			{
+				payload,
+			}: PayloadAction<{
+				selectedTime: number
+				selectedEvent: WorldEventOnTimeline | null
+				mousePos: { x: number; y: number }
+			}>
+		) => {
+			state.timelineContextMenu.isOpen = true
+			state.timelineContextMenu.selectedTime = payload.selectedTime
+			state.timelineContextMenu.selectedEvent = payload.selectedEvent
+			state.timelineContextMenu.mousePos = payload.mousePos
+		},
+
+		closeTimelineContextMenu: (state) => {
+			state.timelineContextMenu.isOpen = false
+		},
+
 		/* Outliner - Event tutorial modal */
 		openEventTutorialModal: (state) => {
 			state.outliner.eventTutorialModal.isOpen = true
@@ -173,8 +202,9 @@ export const worldSlice = createSlice({
 		},
 
 		/* Event editor - Revoked world statement wizard */
-		openRevokedStatementWizard: (state) => {
+		openRevokedStatementWizard: (state, { payload }: PayloadAction<{ preselectedEventId: string }>) => {
 			state.eventEditor.revokedStatementWizard.isOpen = true
+			state.eventEditor.revokedStatementWizard.preselectedEventId = payload.preselectedEventId
 		},
 
 		closeRevokedStatementWizard: (state) => {

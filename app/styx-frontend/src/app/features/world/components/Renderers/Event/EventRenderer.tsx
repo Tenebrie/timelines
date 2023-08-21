@@ -27,12 +27,15 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 	const { collapseEventInOutliner, uncollapseEventInOutliner } = preferencesSlice.actions
 
 	const onToggleOpen = useCallback(() => {
+		if (!actions.includes('collapse')) {
+			return
+		}
 		if (collapsed) {
 			dispatch(uncollapseEventInOutliner(event))
 		} else {
 			dispatch(collapseEventInOutliner(event))
 		}
-	}, [collapseEventInOutliner, collapsed, dispatch, event, uncollapseEventInOutliner])
+	}, [actions, collapseEventInOutliner, collapsed, dispatch, event, uncollapseEventInOutliner])
 
 	const secondaryAction = actions.map((action) => {
 		switch (action) {

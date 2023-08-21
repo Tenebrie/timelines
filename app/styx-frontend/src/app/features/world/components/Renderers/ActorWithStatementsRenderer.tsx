@@ -2,6 +2,7 @@ import { Collapse, Divider, List } from '@mui/material'
 import { TransitionGroup } from 'react-transition-group'
 
 import { ActorDetails, WorldEvent } from '../../types'
+import { ZebraWrapper } from '../Outliner/styles'
 import { ActorRenderer } from './ActorRenderer'
 import { EmptyStatementListRenderer } from './EmptyStatementListRenderer'
 import { EventRenderer } from './Event/EventRenderer'
@@ -22,16 +23,18 @@ export const ActorWithStatementsRenderer = ({ actor, highlighted, collapsed, div
 			<List dense component="div" disablePadding>
 				<TransitionGroup>
 					{!collapsed &&
-						actor.events.map((event) => (
+						actor.events.map((event, index) => (
 							<Collapse key={event.id}>
-								<EventRenderer
-									event={event}
-									owningActor={actor}
-									collapsed={false}
-									short={false}
-									active={event.active}
-									actions={[]}
-								/>
+								<ZebraWrapper zebra={index % 2 === 0}>
+									<EventRenderer
+										event={event}
+										owningActor={actor}
+										collapsed={false}
+										short={false}
+										active={event.active}
+										actions={[]}
+									/>
+								</ZebraWrapper>
 							</Collapse>
 						))}
 					{!collapsed && actor.events.length === 0 && (

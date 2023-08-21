@@ -27,5 +27,6 @@ export type WorldEventGroup = {
 	events: ((WorldEvent & { markerPosition: number; markerType: MarkerType }) | WorldEventBundle)[]
 	timestamp: number
 }
+export type WorldEventOnTimeline = WorldEventGroup['events'][number]
 
 export type WorldEventModule = WorldEvent['extraFields'][number]

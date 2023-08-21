@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useBaseRouter } from '../../../router/useBaseRouter'
@@ -50,9 +51,12 @@ export const useAppRouter = () => {
 		navigateTo(appRoutes.register, {}, {})
 	}
 
-	const isLocationEqual = (route: keyof WorldRouteParamMapping) => {
-		return isBaseLocationEqual(route)
-	}
+	const isLocationEqual = useCallback(
+		(route: keyof WorldRouteParamMapping) => {
+			return isBaseLocationEqual(route)
+		},
+		[isBaseLocationEqual]
+	)
 
 	return {
 		navigateToHome,
@@ -200,9 +204,12 @@ export const useWorldRouter = () => {
 		setQuery(QueryParams.SELECTED_TIME, null)
 	}
 
-	const isLocationEqual = (route: keyof WorldRouteParamMapping) => {
-		return isBaseLocationEqual(route)
-	}
+	const isLocationEqual = useCallback(
+		(route: keyof WorldRouteParamMapping) => {
+			return isBaseLocationEqual(route)
+		},
+		[isBaseLocationEqual]
+	)
 
 	return {
 		worldParams,

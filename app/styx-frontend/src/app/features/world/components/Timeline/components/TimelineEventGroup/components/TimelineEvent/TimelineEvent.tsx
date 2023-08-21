@@ -7,12 +7,12 @@ import { useEventIcons } from '../../../../../../hooks/useEventIcons'
 import { worldSlice } from '../../../../../../reducer'
 import { useWorldRouter } from '../../../../../../router'
 import { getWorldState } from '../../../../../../selectors'
-import { WorldEventGroup } from '../../../../../../types'
+import { WorldEventOnTimeline } from '../../../../../../types'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
 import { Label, LabelContainer, Marker } from './styles'
 
 type Props = {
-	event: WorldEventGroup['events'][number]
+	event: WorldEventOnTimeline
 	groupIndex: number
 	expanded: boolean
 	highlighted: boolean
@@ -22,7 +22,7 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
 	const dispatch = useDispatch()
-	const { addEventToSelection, removeEventFromSelection } = worldSlice.actions
+	const { addEventToSelection, removeEventFromSelection, openTimelineContextMenu } = worldSlice.actions
 
 	const { selectedEvents } = useSelector(getWorldState)
 	const { eventEditorParams, navigateToEventEditor, navigateToOutliner } = useWorldRouter()
@@ -55,6 +55,22 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 		triggerClick(clickEvent, { multiselect: clickEvent.ctrlKey })
 	}
 
+	const onContextMenu = (clickEvent: MouseEvent<HTMLDivElement>) => {
+		clickEvent.stopPropagation()
+		clickEvent.preventDefault()
+
+		dispatch(
+			openTimelineContextMenu({
+				selectedEvent: event,
+				mousePos: {
+					x: clickEvent.clientX + 1,
+					y: clickEvent.clientY,
+				},
+				selectedTime: event.markerType === 'revokedAt' ? (event.revokedAt as number) : event.timestamp,
+			})
+		)
+	}
+
 	const onMouseEnter = () => {
 		setIsInfoVisible(true)
 		HoveredTimelineEvents.hoverEvent(event)
@@ -67,9 +83,19 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 
 	const selected = selectedEvents.includes(event.id)
 
+	const labelType =
+		event.markerType === 'issuedAt' ? (
+			<b style={{ color: 'green' }}>Issue:</b>
+		) : event.markerType === 'revokedAt' ? (
+			<b style={{ color: 'red' }}>Revoke:</b>
+		) : (
+			''
+		)
+
 	return (
 		<Marker
 			onClick={onClick}
+			onContextMenu={onContextMenu}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 			className={classNames({
@@ -85,7 +111,13 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 		>
 			{isInfoVisible && (
 				<LabelContainer>
-					<Label data-hj-suppress>{event.name}</Label>
+					<Label data-hj-suppress>
+						<span>
+							{labelType}
+							{labelType ? ' ' : ''}
+							{event.name}
+						</span>
+					</Label>
 				</LabelContainer>
 			)}
 			<div className="icon" />

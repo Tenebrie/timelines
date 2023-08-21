@@ -18,6 +18,8 @@ import { EventHeaderRenderer } from '../../../Renderers/Event/EventHeaderRendere
 import { EventWithContentRenderer } from '../../../Renderers/Event/EventWithContentRenderer'
 
 export const RevokedStatementWizard = () => {
+	const { isOpen, preselectedEventId } = useSelector(getRevokedStatementWizardState)
+
 	const [id, setId] = useState('')
 	const [inputValue, setInputValue] = useState('')
 
@@ -30,12 +32,15 @@ export const RevokedStatementWizard = () => {
 	const dispatch = useDispatch()
 	const { closeRevokedStatementWizard } = worldSlice.actions
 
-	const { isOpen } = useSelector(getRevokedStatementWizardState)
-
 	useModalCleanup({
 		isOpen,
 		onCleanup: () => {
 			setId('')
+
+			if (preselectedEventId) {
+				setId(preselectedEventId)
+				return
+			}
 
 			if (selectedEvents.length !== 1) {
 				return
