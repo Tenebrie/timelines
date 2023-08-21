@@ -9,6 +9,7 @@ const initialState = {
 		lineSpacing: 10 as number,
 	},
 	outliner: {
+		tabIndex: 0 as number,
 		showOnlySelected: false as boolean,
 		showInactiveStatements: false as boolean,
 		collapsedActors: [] as string[],
@@ -39,6 +40,10 @@ export const preferencesSlice = createSlice({
 
 			try {
 				const parsedValue = JSON.parse(value) as PreferencesState
+				const tabIndexValue = parsedValue?.outliner?.tabIndex
+				if (tabIndexValue) {
+					state.outliner.tabIndex = tabIndexValue
+				}
 				state.outliner.showOnlySelected = !!parsedValue?.outliner?.showOnlySelected
 				state.outliner.showInactiveStatements = !!parsedValue?.outliner?.showInactiveStatements
 				state.outliner.collapsedActors = parsedValue?.outliner?.collapsedActors ?? []
@@ -59,6 +64,10 @@ export const preferencesSlice = createSlice({
 		},
 
 		/* Outliner */
+		setOutlinerTab: (state, { payload }: PayloadAction<number>) => {
+			state.outliner.tabIndex = payload
+			saveToLocalStorage(state)
+		},
 		setShowOnlySelected: (state, { payload }: PayloadAction<boolean>) => {
 			state.outliner.showOnlySelected = payload
 			saveToLocalStorage(state)

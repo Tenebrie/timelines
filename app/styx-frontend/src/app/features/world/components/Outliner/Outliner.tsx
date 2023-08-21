@@ -1,4 +1,4 @@
-import { Collapse, Container, Grid, List } from '@mui/material'
+import { Collapse, Container, Grid, List, Tab, Tabs } from '@mui/material'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { TransitionGroup } from 'react-transition-group'
@@ -6,6 +6,7 @@ import { TransitionGroup } from 'react-transition-group'
 import { OverlayingLabel } from '../../../../components/OverlayingLabel'
 import { getOutlinerPreferences } from '../../../preferences/selectors'
 import { useTimelineLevelScalar } from '../../../time/hooks/useTimelineLevelScalar'
+import { useOutlinerTabs } from '../../hooks/useOutlinerTabs'
 import { useWorldRouter } from '../../router'
 import { getTimelineState, getWorldState } from '../../selectors'
 import { ActorWithStatementsRenderer } from '../Renderers/ActorWithStatementsRenderer'
@@ -41,7 +42,7 @@ export const Outliner = () => {
 				.filter(
 					(event) => !showOnlySelected || selectedEvents.length === 0 || selectedEvents.includes(event.id)
 				)
-				.sort((a, b) => b.timestamp - a.timestamp || b.index - a.index),
+				.sort((a, b) => a.timestamp - b.timestamp || a.index - b.index),
 		[events, showOnlySelected, selectedTime, highlightWithin, showInactiveStatements, selectedEvents]
 	)
 
@@ -60,6 +61,8 @@ export const Outliner = () => {
 		[actors, collapsedActors, visibleEvents, showOnlySelected, selectedActors]
 	)
 
+	const { currentTab, setCurrentTab, actorsVisible, eventsVisible } = useOutlinerTabs()
+
 	return (
 		<Container maxWidth="lg" style={{ height: '100%' }}>
 			<Grid container padding={2} columns={{ xs: 12, sm: 12, md: 12 }} height="100%" direction="column">
@@ -69,29 +72,39 @@ export const Outliner = () => {
 						<StatementsUnit>
 							<OverlayingLabel>World state</OverlayingLabel>
 							<StatementsScroller>
+								<Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
+									<Tab label="All" />
+									<Tab label="Actors" />
+									<Tab label="Events" />
+								</Tabs>
 								<List disablePadding>
 									<TransitionGroup>
-										{visibleActors.map((actor, index) => (
-											<Collapse key={actor.id}>
-												<ActorWithStatementsRenderer
-													{...actor}
-													actor={actor}
-													divider={visibleEvents.length > 0 || index !== visibleActors.length - 1}
-												/>
-											</Collapse>
-										))}
-										{visibleEvents.map((event, index) => (
-											<Collapse key={event.id}>
-												<EventWithContentRenderer
-													{...event}
-													event={event}
-													owningActor={null}
-													short={false}
-													divider={index !== visibleEvents.length - 1}
-													actions={['edit', 'collapse']}
-												/>
-											</Collapse>
-										))}
+										{actorsVisible &&
+											visibleActors.map((actor, index) => (
+												<Collapse key={actor.id}>
+													<ActorWithStatementsRenderer
+														{...actor}
+														actor={actor}
+														divider={
+															(eventsVisible && visibleEvents.length > 0) ||
+															index !== visibleActors.length - 1
+														}
+													/>
+												</Collapse>
+											))}
+										{eventsVisible &&
+											visibleEvents.map((event, index) => (
+												<Collapse key={event.id}>
+													<EventWithContentRenderer
+														{...event}
+														event={event}
+														owningActor={null}
+														short={false}
+														divider={index !== visibleEvents.length - 1}
+														actions={['edit', 'collapse']}
+													/>
+												</Collapse>
+											))}
 									</TransitionGroup>
 								</List>
 								{visibleEvents.length === 0 && actors.length === 0 && (
