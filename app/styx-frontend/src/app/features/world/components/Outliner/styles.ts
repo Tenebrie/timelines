@@ -5,10 +5,11 @@ import styled from 'styled-components'
 import { ScrollbarStyling } from '../../../../styles'
 
 export const OutlinerContainer = styled.div`
-	height: 100%;
+	height: calc(100% - 32px);
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
+	padding: 16px;
 `
 
 export const StatementsUnit = styled.fieldset`
@@ -20,10 +21,12 @@ export const StatementsUnit = styled.fieldset`
 	padding: 8px;
 	position: relative;
 	margin-top: -8.5px;
+	height: 100%;
 `
 
 export const StatementsScroller = styled.div`
 	width: 100%;
+	height: 100%;
 	overflow-y: auto;
 	display: flex;
 	flex-direction: column;

@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { OverlayingLabel } from '../../../../../../components/OverlayingLabel'
+import { getOutlinerPreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
@@ -18,6 +19,8 @@ export const ActorEvents = ({ actor }: Props) => {
 	const { events } = useSelector(getWorldState)
 	const { timeToLabel } = useWorldTime()
 
+	const { collapsedEvents } = useSelector(getOutlinerPreferences)
+
 	const { selectedTime } = useWorldRouter()
 
 	const visibleEvents = events
@@ -25,6 +28,7 @@ export const ActorEvents = ({ actor }: Props) => {
 		.map((event) => ({
 			...event,
 			secondary: timeToLabel(event.timestamp),
+			collapsed: collapsedEvents.includes(event.id),
 			active: event.revokedAt === undefined || event.revokedAt > selectedTime,
 		}))
 

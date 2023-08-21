@@ -1,4 +1,5 @@
 import { Collapse, Divider, List } from '@mui/material'
+import { memo } from 'react'
 import { TransitionGroup } from 'react-transition-group'
 
 import { ActorDetails, WorldEvent } from '../../types'
@@ -16,7 +17,7 @@ type Props = {
 	divider: boolean
 }
 
-export const ActorWithStatementsRenderer = ({ actor, highlighted, collapsed, divider }: Props) => {
+export const ActorWithStatementsRendererComponent = ({ actor, highlighted, collapsed, divider }: Props) => {
 	return (
 		<>
 			<ActorRenderer actor={actor} collapsed={collapsed} highlighted={highlighted} />
@@ -48,3 +49,5 @@ export const ActorWithStatementsRenderer = ({ actor, highlighted, collapsed, div
 		</>
 	)
 }
+
+export const ActorWithStatementsRenderer = memo(ActorWithStatementsRendererComponent)

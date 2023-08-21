@@ -10,6 +10,7 @@ import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import { ModalFooter, ModalHeader, useModalCleanup } from '../../../../../../../ui-lib/components/Modal'
 import Modal from '../../../../../../../ui-lib/components/Modal/Modal'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
+import { getOutlinerPreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
@@ -24,6 +25,7 @@ export const RevokedStatementWizard = () => {
 	const [inputValue, setInputValue] = useState('')
 
 	const { events: worldEvents, selectedEvents } = useSelector(getWorldState)
+	const { collapsedEvents } = useSelector(getOutlinerPreferences)
 
 	const { worldParams, selectedTime } = useWorldRouter()
 	const [revokeWorldStatement, { isLoading }] = useRevokeWorldEventMutation()
@@ -134,6 +136,7 @@ export const RevokedStatementWizard = () => {
 								short
 								active
 								divider={false}
+								collapsed={collapsedEvents.includes(previewOption.card.id)}
 								actions={['collapse']}
 							/>
 						</List>

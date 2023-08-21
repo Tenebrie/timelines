@@ -1,9 +1,7 @@
 import { Collapse, Divider, List } from '@mui/material'
-import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { memo } from 'react'
 import { TransitionGroup } from 'react-transition-group'
 
-import { getOutlinerPreferences } from '../../../../preferences/selectors'
 import { Actor, WorldEvent } from '../../../types'
 import { EventContentRenderer } from './EventContentRenderer'
 import { EventRenderer } from './EventRenderer'
@@ -14,13 +12,19 @@ type Props = {
 	short: boolean
 	active: boolean
 	divider: boolean
+	collapsed: boolean
 	actions: ('edit' | 'collapse')[]
 }
 
-export const EventWithContentRenderer = ({ event, owningActor, short, active, divider, actions }: Props) => {
-	const { collapsedEvents } = useSelector(getOutlinerPreferences)
-	const collapsed = useMemo(() => collapsedEvents.includes(event.id), [collapsedEvents, event])
-
+export const EventWithContentRendererComponent = ({
+	event,
+	owningActor,
+	short,
+	active,
+	divider,
+	collapsed,
+	actions,
+}: Props) => {
 	return (
 		<>
 			<EventRenderer
@@ -44,3 +48,5 @@ export const EventWithContentRenderer = ({ event, owningActor, short, active, di
 		</>
 	)
 }
+
+export const EventWithContentRenderer = memo(EventWithContentRendererComponent)

@@ -1,7 +1,7 @@
-import { Collapse, Container, Grid, List, Tab, Tabs } from '@mui/material'
+import { Container, Tab, Tabs } from '@mui/material'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { TransitionGroup } from 'react-transition-group'
+import { Virtuoso } from 'react-virtuoso'
 
 import { OverlayingLabel } from '../../../../components/OverlayingLabel'
 import { getOutlinerPreferences } from '../../../preferences/selectors'
@@ -19,7 +19,8 @@ import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
 export const Outliner = () => {
 	const { actors, events, selectedActors, selectedEvents } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
-	const { showOnlySelected, showInactiveStatements, collapsedActors } = useSelector(getOutlinerPreferences)
+	const { showOnlySelected, showInactiveStatements, collapsedActors, collapsedEvents } =
+		useSelector(getOutlinerPreferences)
 
 	const { getLevelScalar } = useTimelineLevelScalar()
 
@@ -35,6 +36,7 @@ export const Outliner = () => {
 				.map((event, index) => ({
 					...event,
 					index,
+					collapsed: collapsedEvents.includes(event.id),
 					highlighted: Math.abs(event.timestamp - selectedTime) < highlightWithin,
 					active: event.revokedAt === undefined || event.revokedAt > selectedTime,
 				}))
@@ -43,7 +45,15 @@ export const Outliner = () => {
 					(event) => !showOnlySelected || selectedEvents.length === 0 || selectedEvents.includes(event.id)
 				)
 				.sort((a, b) => a.timestamp - b.timestamp || a.index - b.index),
-		[events, showOnlySelected, selectedTime, highlightWithin, showInactiveStatements, selectedEvents]
+		[
+			events,
+			showOnlySelected,
+			selectedTime,
+			highlightWithin,
+			showInactiveStatements,
+			selectedEvents,
+			collapsedEvents,
+		]
 	)
 
 	const visibleActors = useMemo(
@@ -61,60 +71,70 @@ export const Outliner = () => {
 		[actors, collapsedActors, visibleEvents, showOnlySelected, selectedActors]
 	)
 
+	const eventActions = useMemo<('edit' | 'collapse')[]>(() => ['edit', 'collapse'], [])
 	const { currentTab, setCurrentTab, actorsVisible, eventsVisible } = useOutlinerTabs()
+
+	const renderedActors = actorsVisible ? visibleActors : []
+	const renderedEvents = eventsVisible ? visibleEvents : []
 
 	return (
 		<Container maxWidth="lg" style={{ height: '100%' }}>
-			<Grid container padding={2} columns={{ xs: 12, sm: 12, md: 12 }} height="100%" direction="column">
-				<Grid item xs={12} md={6} order={{ xs: 0, md: 1 }} height="100%">
-					<OutlinerContainer>
-						<OutlinerControls />
-						<StatementsUnit>
-							<OverlayingLabel>World state</OverlayingLabel>
-							<StatementsScroller>
-								<Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
-									<Tab label="All" />
-									<Tab label="Actors" />
-									<Tab label="Events" />
-								</Tabs>
-								<List disablePadding>
-									<TransitionGroup>
-										{actorsVisible &&
-											visibleActors.map((actor, index) => (
-												<Collapse key={actor.id}>
-													<ActorWithStatementsRenderer
-														{...actor}
-														actor={actor}
-														divider={
-															(eventsVisible && visibleEvents.length > 0) ||
-															index !== visibleActors.length - 1
-														}
-													/>
-												</Collapse>
-											))}
-										{eventsVisible &&
-											visibleEvents.map((event, index) => (
-												<Collapse key={event.id}>
-													<EventWithContentRenderer
-														{...event}
-														event={event}
-														owningActor={null}
-														short={false}
-														divider={index !== visibleEvents.length - 1}
-														actions={['edit', 'collapse']}
-													/>
-												</Collapse>
-											))}
-									</TransitionGroup>
-								</List>
-								{visibleEvents.length === 0 && actors.length === 0 && (
-									<OutlinerEmptyState selectedTime={selectedTime} />
-								)}
-							</StatementsScroller>
-						</StatementsUnit>
-					</OutlinerContainer>
-				</Grid>
-			</Grid>
+			<OutlinerContainer>
+				<OutlinerControls />
+				<StatementsUnit>
+					<OverlayingLabel>World state</OverlayingLabel>
+					<StatementsScroller>
+						<Virtuoso
+							style={{ height: '100%' }}
+							totalCount={renderedActors.length + renderedEvents.length + 1}
+							itemContent={(index) => {
+								if (index === 0) {
+									return (
+										<Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
+											<Tab label="All" />
+											<Tab label="Actors" />
+											<Tab label="Events" />
+										</Tabs>
+									)
+								}
+
+								const actorIndex = index - 1
+								if (actorIndex < renderedActors.length) {
+									const actor = renderedActors[actorIndex]
+									return (
+										<ActorWithStatementsRenderer
+											{...actor}
+											actor={actor}
+											divider={
+												(eventsVisible && renderedEvents.length > 0) ||
+												actorIndex !== renderedActors.length - 1
+											}
+										/>
+									)
+								}
+
+								const eventIndex = actorIndex - renderedActors.length
+								if (eventIndex < renderedEvents.length) {
+									const event = renderedEvents[eventIndex]
+									return (
+										<EventWithContentRenderer
+											{...event}
+											event={event}
+											owningActor={null}
+											short={false}
+											divider={eventIndex !== renderedEvents.length - 1}
+											actions={eventActions}
+										/>
+									)
+								}
+							}}
+						/>
+						{renderedEvents.length === 0 && renderedActors.length === 0 && (
+							<OutlinerEmptyState selectedTime={selectedTime} />
+						)}
+					</StatementsScroller>
+				</StatementsUnit>
+			</OutlinerContainer>
 			<EventTutorialModal />
 		</Container>
 	)
