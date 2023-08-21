@@ -76,6 +76,7 @@ export const Outliner = () => {
 
 	const renderedActors = actorsVisible ? visibleActors : []
 	const renderedEvents = eventsVisible ? visibleEvents : []
+	const scrollerVisible = visibleActors.length > 0 || visibleEvents.length > 0
 
 	return (
 		<Container maxWidth="lg" style={{ height: '100%' }}>
@@ -84,54 +85,54 @@ export const Outliner = () => {
 				<StatementsUnit>
 					<OverlayingLabel>World state</OverlayingLabel>
 					<StatementsScroller>
-						<Virtuoso
-							style={{ height: '100%' }}
-							totalCount={renderedActors.length + renderedEvents.length + 1}
-							itemContent={(index) => {
-								if (index === 0) {
-									return (
-										<Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
-											<Tab label="All" />
-											<Tab label="Actors" />
-											<Tab label="Events" />
-										</Tabs>
-									)
-								}
+						{scrollerVisible && (
+							<Virtuoso
+								style={{ height: '100%' }}
+								totalCount={renderedActors.length + renderedEvents.length + 1}
+								itemContent={(index) => {
+									if (index === 0) {
+										return (
+											<Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
+												<Tab label="All" />
+												<Tab label="Actors" />
+												<Tab label="Events" />
+											</Tabs>
+										)
+									}
 
-								const actorIndex = index - 1
-								if (actorIndex < renderedActors.length) {
-									const actor = renderedActors[actorIndex]
-									return (
-										<ActorWithStatementsRenderer
-											{...actor}
-											actor={actor}
-											divider={
-												(eventsVisible && renderedEvents.length > 0) ||
-												actorIndex !== renderedActors.length - 1
-											}
-										/>
-									)
-								}
+									const actorIndex = index - 1
+									if (actorIndex < renderedActors.length) {
+										const actor = renderedActors[actorIndex]
+										return (
+											<ActorWithStatementsRenderer
+												{...actor}
+												actor={actor}
+												divider={
+													(eventsVisible && renderedEvents.length > 0) ||
+													actorIndex !== renderedActors.length - 1
+												}
+											/>
+										)
+									}
 
-								const eventIndex = actorIndex - renderedActors.length
-								if (eventIndex < renderedEvents.length) {
-									const event = renderedEvents[eventIndex]
-									return (
-										<EventWithContentRenderer
-											{...event}
-											event={event}
-											owningActor={null}
-											short={false}
-											divider={eventIndex !== renderedEvents.length - 1}
-											actions={eventActions}
-										/>
-									)
-								}
-							}}
-						/>
-						{renderedEvents.length === 0 && renderedActors.length === 0 && (
-							<OutlinerEmptyState selectedTime={selectedTime} />
+									const eventIndex = actorIndex - renderedActors.length
+									if (eventIndex < renderedEvents.length) {
+										const event = renderedEvents[eventIndex]
+										return (
+											<EventWithContentRenderer
+												{...event}
+												event={event}
+												owningActor={null}
+												short={false}
+												divider={eventIndex !== renderedEvents.length - 1}
+												actions={eventActions}
+											/>
+										)
+									}
+								}}
+							/>
 						)}
+						{!scrollerVisible && <OutlinerEmptyState selectedTime={selectedTime} />}
 					</StatementsScroller>
 				</StatementsUnit>
 			</OutlinerContainer>

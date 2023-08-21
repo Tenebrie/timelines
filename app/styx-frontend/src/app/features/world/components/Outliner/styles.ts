@@ -30,6 +30,7 @@ export const StatementsScroller = styled.div`
 	overflow-y: auto;
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
 	& > * {
 		flex-grow: 0;
 		flex-shrink: 0;
