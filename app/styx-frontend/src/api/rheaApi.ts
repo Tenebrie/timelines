@@ -246,39 +246,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		worldId: string
 		statements: {
 			id: string
-			createdAt: string
-			updatedAt: string
-			type: 'SCENE' | 'OTHER'
-			icon: string
-			name: string
-			timestamp: string
-			revokedAt?: null | string
-			description: string
-			customName: boolean
-			extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
-			worldId: string
-			replacedEventId?: null | string
-			replacedByEventId?: null | string
-			targetActors: {
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				title: string
-				description: string
-				color: string
-				worldId: string
-			}[]
-			mentionedActors: {
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				title: string
-				description: string
-				color: string
-				worldId: string
-			}[]
 		}[]
 		relationships: {
 			originId: string

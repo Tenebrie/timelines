@@ -42,6 +42,9 @@
 			"^.+\\.(t|j)s$": "ts-jest"
 		}
 	},
+	"prisma": {
+		"seed": "ts-node src/prisma/seed.ts"
+	},
 	"dependencies": {
 		"@koa/router": "^12.0.0",
 		"@prisma/client": "4.12.0",

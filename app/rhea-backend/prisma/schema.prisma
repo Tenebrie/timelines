@@ -16,6 +16,13 @@ model User {
   username String
   password String
   worlds   World[]
+  level    UserLevel @default(Free)
+}
+
+enum UserLevel {
+  Free
+  Premium
+  Admin
 }
 
 enum WorldCalendarType {
