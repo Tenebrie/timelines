@@ -24,7 +24,7 @@ export const RevokedStatementWizard = () => {
 	const [id, setId] = useState('')
 	const [inputValue, setInputValue] = useState('')
 
-	const { events: worldEvents, selectedEvents } = useSelector(getWorldState)
+	const { events: worldEvents } = useSelector(getWorldState)
 	const { collapsedEvents } = useSelector(getOutlinerPreferences)
 
 	const { worldParams, selectedTime } = useWorldRouter()
@@ -37,23 +37,12 @@ export const RevokedStatementWizard = () => {
 	useModalCleanup({
 		isOpen,
 		onCleanup: () => {
-			setId('')
-
-			if (preselectedEventId) {
-				setId(preselectedEventId)
+			if (!preselectedEventId) {
+				setId('')
 				return
 			}
 
-			if (selectedEvents.length !== 1) {
-				return
-			}
-
-			const event = worldEvents.find((e) => e.id === selectedEvents[0])
-			if (!event || event.revokedAt) {
-				return
-			}
-
-			setId(event.id)
+			setId(preselectedEventId)
 		},
 	})
 

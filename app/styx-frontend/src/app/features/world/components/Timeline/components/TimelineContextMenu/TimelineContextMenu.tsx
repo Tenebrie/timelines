@@ -1,24 +1,23 @@
-import { Divider, ListItemText, Menu, MenuItem } from '@mui/material'
+import { CircularProgress, Divider, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useUpdateWorldEventMutation } from '../../../../../../../api/rheaApi'
-import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { useTimelineBusDispatch } from '../../../../hooks/useTimelineBus'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
 import { getTimelineContextMenuState, getWorldState } from '../../../../selectors'
+import { useTimelineContextMenuRequests } from './hooks/useTimelineContextMenuRequests'
 
 export const TimelineContextMenu = () => {
 	const { timeToLabel } = useWorldTime()
 	const { id: worldId } = useSelector(getWorldState)
 	const { isOpen, selectedTime, selectedEvent, mousePos } = useSelector(getTimelineContextMenuState)
 
-	const [updateWorldEvent, { isLoading: isUnrevoking }] = useUpdateWorldEventMutation()
-
-	const { navigateToEventCreator, selectTime } = useWorldRouter()
+	const { navigateToEventCreator, selectTime, selectedTime: selectedWorldTime } = useWorldRouter()
 	const scrollTimelineTo = useTimelineBusDispatch()
+
+	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 
 	const dispatch = useDispatch()
 	const { openRevokedStatementWizard, closeTimelineContextMenu, openDeleteEventModal } = worldSlice.actions
@@ -40,33 +39,32 @@ export const TimelineContextMenu = () => {
 		dispatch(openRevokedStatementWizard({ preselectedEventId: '' }))
 	}, [dispatch, onClose, openRevokedStatementWizard, selectTime, selectedTime])
 
-	const onRevokeSelectedEvent = useCallback(() => {
+	const onRevokeSelectedEvent = useCallback(async () => {
 		if (!selectedEvent) {
 			return
 		}
+
+		await revokeEventAt({
+			worldId,
+			eventId: selectedEvent.id,
+			revokedAt: selectedWorldTime,
+		})
+
 		onClose()
-		dispatch(openRevokedStatementWizard({ preselectedEventId: selectedEvent.id }))
-	}, [dispatch, onClose, openRevokedStatementWizard, selectedEvent])
+	}, [onClose, revokeEventAt, selectedEvent, selectedWorldTime, worldId])
 
 	const onUnrevokeSelectedEvent = useCallback(async () => {
 		if (!selectedEvent) {
 			return
 		}
 
-		const { error } = parseApiResponse(
-			await updateWorldEvent({
-				body: {
-					revokedAt: null,
-				},
-				worldId,
-				eventId: selectedEvent.id,
-			})
-		)
-		if (error) {
-			return
-		}
+		await unrevokeEventAt({
+			worldId,
+			eventId: selectedEvent.id,
+		})
+
 		onClose()
-	}, [onClose, selectedEvent, updateWorldEvent, worldId])
+	}, [onClose, selectedEvent, unrevokeEventAt, worldId])
 
 	const onDeleteSelectedEvent = useCallback(() => {
 		onClose()
@@ -91,12 +89,22 @@ export const TimelineContextMenu = () => {
 			)}
 			{selectedEvent && <Divider />}
 			{selectedEvent?.markerType === 'issuedAt' && (
-				<MenuItem onClick={onRevokeSelectedEvent}>
+				<MenuItem onClick={onRevokeSelectedEvent} disabled={isRequestInFlight}>
+					{isRequestInFlight && (
+						<ListItemIcon>
+							<CircularProgress size={24} />
+						</ListItemIcon>
+					)}
 					<ListItemText primary="Revoke this event" />
 				</MenuItem>
 			)}
 			{selectedEvent?.markerType === 'revokedAt' && (
-				<MenuItem onClick={onUnrevokeSelectedEvent} disabled={isUnrevoking}>
+				<MenuItem onClick={onUnrevokeSelectedEvent} disabled={isRequestInFlight}>
+					{isRequestInFlight && (
+						<ListItemIcon>
+							<CircularProgress size={24} />
+						</ListItemIcon>
+					)}
 					<ListItemText primary="Unrevoke this event" />
 				</MenuItem>
 			)}

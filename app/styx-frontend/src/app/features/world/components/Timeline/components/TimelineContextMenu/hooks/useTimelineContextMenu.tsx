@@ -1,10 +1,10 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
-import { worldSlice } from '../../../../reducer'
-import { getTimelineContextMenuState } from '../../../../selectors'
-import { ScaleLevel } from '../../types'
+import { useTimelineWorldTime } from '../../../../../../time/hooks/useTimelineWorldTime'
+import { worldSlice } from '../../../../../reducer'
+import { getTimelineContextMenuState } from '../../../../../selectors'
+import { ScaleLevel } from '../../../types'
 
 type Props = {
 	scroll: number
