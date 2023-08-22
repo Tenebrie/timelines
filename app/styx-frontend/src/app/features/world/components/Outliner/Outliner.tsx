@@ -19,8 +19,7 @@ import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
 export const Outliner = () => {
 	const { actors, events, selectedActors, selectedEvents } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
-	const { showOnlySelected, showInactiveStatements, collapsedActors, collapsedEvents } =
-		useSelector(getOutlinerPreferences)
+	const { showInactiveStatements, collapsedActors, collapsedEvents } = useSelector(getOutlinerPreferences)
 
 	const { getLevelScalar } = useTimelineLevelScalar()
 
@@ -41,34 +40,19 @@ export const Outliner = () => {
 					active: event.revokedAt === undefined || event.revokedAt > selectedTime,
 				}))
 				.filter((event) => showInactiveStatements || event.active)
-				.filter(
-					(event) => !showOnlySelected || selectedEvents.length === 0 || selectedEvents.includes(event.id)
-				)
 				.sort((a, b) => a.timestamp - b.timestamp || a.index - b.index),
-		[
-			events,
-			showOnlySelected,
-			selectedTime,
-			highlightWithin,
-			showInactiveStatements,
-			selectedEvents,
-			collapsedEvents,
-		]
+		[events, selectedTime, highlightWithin, showInactiveStatements, selectedEvents, collapsedEvents]
 	)
 
 	const visibleActors = useMemo(
 		() =>
-			actors
-				.map((actor) => ({
-					...actor,
-					highlighted: false,
-					collapsed: collapsedActors.includes(actor.id),
-					events: visibleEvents.filter((event) => actor.statements.some((e) => e.id === event.id)),
-				}))
-				.filter(
-					(actor) => !showOnlySelected || selectedActors.length === 0 || selectedActors.includes(actor.id)
-				),
-		[actors, collapsedActors, visibleEvents, showOnlySelected, selectedActors]
+			actors.map((actor) => ({
+				...actor,
+				highlighted: false,
+				collapsed: collapsedActors.includes(actor.id),
+				events: visibleEvents.filter((event) => actor.statements.some((e) => e.id === event.id)),
+			})),
+		[actors, collapsedActors, visibleEvents]
 	)
 
 	const eventActions = useMemo<('edit' | 'collapse')[]>(() => ['edit', 'collapse'], [])

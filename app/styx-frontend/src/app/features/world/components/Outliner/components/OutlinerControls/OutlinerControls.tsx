@@ -1,8 +1,7 @@
 import { Filter } from '@mui/icons-material'
-import { Button, Checkbox, Collapse, FormControlLabel, FormGroup, Popover, Stack } from '@mui/material'
+import { Button, Checkbox, FormControlLabel, FormGroup, Popover, Stack } from '@mui/material'
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useDispatch, useSelector } from 'react-redux'
-import { TransitionGroup } from 'react-transition-group'
 
 import { preferencesSlice } from '../../../../../preferences/reducer'
 import { getOutlinerPreferences } from '../../../../../preferences/selectors'
@@ -10,16 +9,15 @@ import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
 import { CreateHerePopover } from '../CreateHerePopover/CreateHerePopover'
-import { OutlinerControlsFilter } from './OutlinerControlsFilter'
 
 export const OutlinerControls = () => {
 	const { timeToLabel } = useWorldTime()
 	const { selectedTimeOrNull } = useWorldRouter()
 
 	const dispatch = useDispatch()
-	const { events, selectedActors, selectedEvents } = useSelector(getWorldState)
-	const { showOnlySelected, showInactiveStatements } = useSelector(getOutlinerPreferences)
-	const { setShowOnlySelected: setShowEmptyEvents, setShowInactiveStatements } = preferencesSlice.actions
+	const { events } = useSelector(getWorldState)
+	const { showInactiveStatements } = useSelector(getOutlinerPreferences)
+	const { setShowInactiveStatements } = preferencesSlice.actions
 
 	const popupState = usePopupState({ variant: 'popover', popupId: 'outlinerFilters' })
 	const createHerePopupState = usePopupState({ variant: 'popover', popupId: 'createHerePopover' })
@@ -54,13 +52,6 @@ export const OutlinerControls = () => {
 							<FormGroup>
 								<FormControlLabel
 									control={
-										<Checkbox onChange={(event) => dispatch(setShowEmptyEvents(event.target.checked))} />
-									}
-									label="Show only selected"
-									checked={showOnlySelected}
-								/>
-								<FormControlLabel
-									control={
 										<Checkbox
 											onChange={(event) => dispatch(setShowInactiveStatements(event.target.checked))}
 										/>
@@ -81,13 +72,6 @@ export const OutlinerControls = () => {
 					<CreateHerePopover state={createHerePopupState} timestamp={selectedTimeOrNull ?? 0} />
 				</Stack>
 			</Stack>
-			<TransitionGroup>
-				{(selectedActors.length > 0 || selectedEvents.length > 0) && (
-					<Collapse>
-						<OutlinerControlsFilter selectedActors={selectedActors} selectedEvents={selectedEvents} />
-					</Collapse>
-				)}
-			</TransitionGroup>
 		</Stack>
 	)
 }
