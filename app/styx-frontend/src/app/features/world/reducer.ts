@@ -99,17 +99,24 @@ export const worldSlice = createSlice({
 			state.isLoaded = false
 			state.events = []
 		},
-		addActorToSelection: (state, { payload }: PayloadAction<string>) => {
-			if (state.selectedActors.includes(payload)) {
+		addActorToSelection: (state, { payload }: PayloadAction<{ id: string; multiselect: boolean }>) => {
+			if (!payload.multiselect) {
+				state.selectedEvents = []
+				state.selectedActors = [payload.id]
 				return
 			}
-			state.selectedActors = [...state.selectedActors, payload]
+
+			if (state.selectedActors.includes(payload.id)) {
+				return
+			}
+			state.selectedActors = [...state.selectedActors, payload.id]
 		},
 		removeActorFromSelection: (state, { payload }: PayloadAction<string>) => {
 			state.selectedActors = state.selectedActors.filter((event) => event !== payload)
 		},
 		addEventToSelection: (state, { payload }: PayloadAction<{ id: string; multiselect: boolean }>) => {
 			if (!payload.multiselect) {
+				state.selectedActors = []
 				state.selectedEvents = [payload.id]
 				return
 			}

@@ -3,6 +3,7 @@ import { memo, MouseEvent, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useDoubleClick } from '../../../../../../../../../hooks/useDoubleClick'
+import { isMultiselectClick } from '../../../../../../../../utils/isMultiselectClick'
 import { useEventIcons } from '../../../../../../hooks/useEventIcons'
 import { worldSlice } from '../../../../../../reducer'
 import { useWorldRouter } from '../../../../../../router'
@@ -52,7 +53,7 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 		clickEvent.stopPropagation()
 		clickEvent.preventDefault()
 
-		triggerClick(clickEvent, { multiselect: clickEvent.ctrlKey })
+		triggerClick(clickEvent, { multiselect: isMultiselectClick(clickEvent) })
 	}
 
 	const onContextMenu = (clickEvent: MouseEvent<HTMLDivElement>) => {

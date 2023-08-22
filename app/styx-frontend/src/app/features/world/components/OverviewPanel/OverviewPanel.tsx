@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useDoubleClick } from '../../../../../hooks/useDoubleClick'
+import { isMultiselectClick } from '../../../../utils/isMultiselectClick'
 import { preferencesSlice } from '../../../preferences/reducer'
 import { getOverviewPreferences } from '../../../preferences/selectors'
 import { useWorldTime } from '../../../time/hooks/useWorldTime'
@@ -51,7 +52,9 @@ export const OverviewPanel = () => {
 					(!actorsReversed && actors.indexOf(actor) !== actors.length - 1) ||
 					(actorsReversed && actors.indexOf(actor) !== 0)
 				}
-				onClick={(clickEvent) => moveToActor(clickEvent, actor)}
+				onClick={(clickEvent) =>
+					moveToActor(clickEvent, { actor, multiselect: isMultiselectClick(clickEvent) })
+				}
 				selected={selectedActors.includes(actor.id)}
 			>
 				<ListItemIcon>
@@ -69,7 +72,9 @@ export const OverviewPanel = () => {
 					(!eventsReversed && sortedEvents.indexOf(event) !== sortedEvents.length - 1) ||
 					(eventsReversed && sortedEvents.indexOf(event) !== 0)
 				}
-				onClick={(clickEvent) => moveToEvent(clickEvent, { event, multiselect: clickEvent.ctrlKey })}
+				onClick={(clickEvent) =>
+					moveToEvent(clickEvent, { event, multiselect: isMultiselectClick(clickEvent) })
+				}
 				selected={selectedEvents.includes(event.id)}
 			>
 				<ListItemIcon>
@@ -80,15 +85,15 @@ export const OverviewPanel = () => {
 		</ListItem>
 	)
 
-	const { triggerClick: moveToActor } = useDoubleClick<Actor>({
-		onClick: (actor) => {
+	const { triggerClick: moveToActor } = useDoubleClick<{ actor: Actor; multiselect: boolean }>({
+		onClick: ({ actor, multiselect }) => {
 			if (selectedActors.includes(actor.id)) {
 				dispatch(removeActorFromSelection(actor.id))
 			} else {
-				dispatch(addActorToSelection(actor.id))
+				dispatch(addActorToSelection({ id: actor.id, multiselect }))
 			}
 		},
-		onDoubleClick: (actor) => {
+		onDoubleClick: ({ actor }) => {
 			navigateToActorEditor(actor.id)
 			dispatch(removeActorFromSelection(actor.id))
 		},
