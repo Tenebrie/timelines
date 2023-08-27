@@ -1,11 +1,12 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { useBaseRouter } from '../../../router/useBaseRouter'
+import { QueryStrategy, useBaseRouter } from '../../../router/useBaseRouter'
 import { worldSlice } from './reducer'
 
 export enum QueryParams {
 	SELECTED_TIME = 'time',
+	EVENT_CREATOR_REPLACED_EVENT = 'replaces',
 }
 
 export const appRoutes = {
@@ -124,6 +125,7 @@ export const useWorldRouter = () => {
 	const selectedTimeOrNull = query.get(QueryParams.SELECTED_TIME)
 		? Number(query.get(QueryParams.SELECTED_TIME))
 		: null
+	const eventCreatorReplacedEventId = query.get(QueryParams.EVENT_CREATOR_REPLACED_EVENT) ?? null
 
 	const navigateToWorld = async (id: string) => {
 		dispatch(unloadWorld())
@@ -132,9 +134,7 @@ export const useWorldRouter = () => {
 			{
 				worldId: id,
 			},
-			{
-				[QueryParams.SELECTED_TIME]: null,
-			}
+			{}
 		)
 	}
 
@@ -145,7 +145,7 @@ export const useWorldRouter = () => {
 				worldId: state['worldId'] || '',
 			},
 			{
-				[QueryParams.SELECTED_TIME]: clearSelectedTime ? null : undefined,
+				[QueryParams.SELECTED_TIME]: clearSelectedTime ? QueryStrategy.Clear : QueryStrategy.Preserve,
 			}
 		)
 	}
@@ -169,7 +169,9 @@ export const useWorldRouter = () => {
 				worldId: state['worldId'] || '',
 				actorId,
 			},
-			{}
+			{
+				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
+			}
 		)
 	}
 
@@ -180,18 +182,26 @@ export const useWorldRouter = () => {
 				worldId: state['worldId'] || '',
 				eventId,
 			},
-			{}
+			{
+				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
+			}
 		)
 	}
 
-	const navigateToEventCreator = ({ selectedTime }: { selectedTime?: number } = {}) => {
+	const navigateToEventCreator = ({
+		selectedTime,
+		replacedEventId,
+	}: { selectedTime?: number; replacedEventId?: string } = {}) => {
 		navigateTo(
 			worldRoutes.eventCreator,
 			{
 				worldId: state['worldId'] || '',
 			},
 			{
-				[QueryParams.SELECTED_TIME]: selectedTime === undefined ? undefined : String(selectedTime),
+				[QueryParams.SELECTED_TIME]:
+					selectedTime === undefined ? QueryStrategy.Preserve : String(selectedTime),
+				[QueryParams.EVENT_CREATOR_REPLACED_EVENT]:
+					replacedEventId === undefined ? QueryStrategy.Preserve : String(replacedEventId),
 			}
 		)
 	}
@@ -228,6 +238,11 @@ export const useWorldRouter = () => {
 		selectTime,
 		unselectTime,
 		isLocationEqual,
+		query: {
+			selectedTime,
+			selectedTimeOrNull,
+			eventCreatorReplacedEventId,
+		},
 	}
 }
 

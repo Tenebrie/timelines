@@ -202,6 +202,8 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	terminatedActors: [],
 	extraFields: [],
 	customName: false,
+	replaces: null,
+	replacedBy: null,
 	...statement,
 })
 
@@ -223,5 +225,7 @@ export const mockApiEventModel = (
 	terminatedActors: [],
 	extraFields: [],
 	customName: false,
+	replaces: null,
+	replacedBy: null,
 	...statement,
 })

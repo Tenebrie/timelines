@@ -1,7 +1,9 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { ActorDetails, WorldCalendarType, WorldDetails, WorldEvent, WorldEventOnTimeline } from './types'
+import { GetWorldInfoApiResponse } from '../../../api/rheaApi'
+import { ingestEvent } from '../../utils/ingestEvent'
+import { ActorDetails, WorldCalendarType, WorldEvent, WorldEventOnTimeline } from './types'
 
 export const initialState = {
 	isLoaded: false as boolean,
@@ -75,7 +77,10 @@ export const worldSlice = createSlice({
 		setName: (state, { payload }: PayloadAction<string>) => {
 			state.name = payload
 		},
-		loadWorld: (state, { payload }: PayloadAction<{ world: WorldDetails; actorColors: string[] }>) => {
+		loadWorld: (
+			state,
+			{ payload }: PayloadAction<{ world: GetWorldInfoApiResponse; actorColors: string[] }>
+		) => {
 			const world = payload.world
 			state.isLoaded = true
 			state.id = world.id
@@ -85,11 +90,7 @@ export const worldSlice = createSlice({
 					payload.actorColors.indexOf(a.color) - payload.actorColors.indexOf(b.color) ||
 					a.name.localeCompare(b.name)
 			)
-			state.events = world.events.map((e) => ({
-				...e,
-				timestamp: Number(e.timestamp),
-				revokedAt: e.revokedAt ? Number(e.revokedAt) : undefined,
-			}))
+			state.events = world.events.map((e) => ingestEvent(e))
 			state.calendar = world.calendar
 			state.timeOrigin = world.timeOrigin
 			state.createdAt = world.createdAt

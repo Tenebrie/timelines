@@ -3,6 +3,11 @@ import { NavigateOptions, useLocation, useNavigate, useParams, useSearchParams }
 
 import { MockedRouter } from './router.mock'
 
+export enum QueryStrategy {
+	Clear,
+	Preserve,
+}
+
 export const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
 	const location = useLocation()
 	const actualParams = useParams()
@@ -19,7 +24,7 @@ export const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
 		(
 			target: (typeof routes)[keyof typeof routes],
 			args: Record<string, string>,
-			query: Record<string, string | null | undefined>,
+			query: Record<string, string | null | undefined | QueryStrategy>,
 			navigateParams?: NavigateOptions
 		) => {
 			const pathname = Object.keys(args).reduce(
@@ -27,9 +32,15 @@ export const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
 				target
 			)
 
-			const mappedQuery = (Array.from(currentQuery.entries()) as [string, string | null | undefined][])
-				.filter((entry) => query[entry[0]] === undefined)
-				.concat(Object.entries(query).filter((q) => q[1] !== undefined))
+			const mappedQuery = (
+				Array.from(currentQuery.entries()) as [string, string | null | undefined | QueryStrategy][]
+			)
+				.filter((entry) => query[entry[0]] === QueryStrategy.Preserve)
+				.concat(
+					Object.entries(query).filter(
+						(q) => q[1] !== undefined && q[1] !== QueryStrategy.Clear && q[1] !== QueryStrategy.Preserve
+					)
+				)
 				.filter((entry) => entry[1] !== null) as [string, string][]
 
 			const search = mappedQuery.map((entry) => `${entry[0]}=${entry[1]}`).join('&')

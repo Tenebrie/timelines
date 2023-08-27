@@ -6,10 +6,24 @@ export type WorldItem = GetWorldsApiResponse[number]
 export type WorldDetails = Omit<GetWorldInfoApiResponse, 'events'> & {
 	events: WorldEvent[]
 }
-export type WorldEvent = Omit<GetWorldInfoApiResponse['events'][number], 'timestamp' | 'revokedAt'> & {
+export type WorldEvent = Omit<
+	GetWorldInfoApiResponse['events'][number],
+	'timestamp' | 'revokedAt' | 'replacedBy' | 'replaces'
+> & {
 	timestamp: number
 	revokedAt?: number
+	replaces:
+		| null
+		| (Omit<NonNullable<GetWorldInfoApiResponse['events'][number]['replaces']>, 'timestamp'> & {
+				timestamp: number
+		  })
+	replacedBy:
+		| null
+		| (Omit<NonNullable<GetWorldInfoApiResponse['events'][number]['replacedBy']>, 'timestamp'> & {
+				timestamp: number
+		  })
 }
+export type WorldEventReplaceLink = WorldEvent['replacedBy']
 export type WorldEventType = WorldEvent['type']
 export type WorldCalendarType = WorldDetails['calendar']
 

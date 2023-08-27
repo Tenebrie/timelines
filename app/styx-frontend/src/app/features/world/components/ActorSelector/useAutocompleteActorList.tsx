@@ -1,6 +1,7 @@
 import { ListItemText, MenuItem } from '@mui/material'
 
 import { Actor } from '../../types'
+import { ActorOption } from './useMapActorsToOptions'
 
 type Props = {
 	actors: Actor[]
@@ -26,7 +27,7 @@ export const useAutocompleteActorList = ({ actors, selectedActors, mentionedActo
 			(actor) => !selectedActors || !selectedActors.some((selectedActor) => selectedActor.id === actor.id)
 		)
 
-	const renderOption = (props: any, option: Actor) => (
+	const renderOption = (props: any, option: ActorOption) => (
 		<MenuItem key={option.id} {...props}>
 			<ListItemText primary={option.name} secondary={option.title} />
 		</MenuItem>

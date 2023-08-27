@@ -57,6 +57,7 @@ enum WorldEventField {
   EventIcon
   TargetActors
   MentionedActors
+  ReplacesEvent
 }
 
 model WorldEvent {

@@ -9,6 +9,7 @@ import { TimestampField } from '../../../../../time/components/TimestampField'
 import { getWorldState } from '../../../../selectors'
 import { WorldEvent } from '../../../../types'
 import { useAutocompleteActorList } from '../../../ActorSelector/useAutocompleteActorList'
+import { useAutocompleteEventList } from '../../../EventSelector/useAutocompleteEventList'
 import { StatementsUnit } from '../../styles'
 import { EventIconDropdown } from '../EventIconDropdown/EventIconDropdown'
 import { EventModulesControls } from './EventModules/EventModulesControls'
@@ -30,6 +31,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		icon,
 		timestamp,
 		revokedAt,
+		replacedEvent,
 		selectedActors,
 		mentionedActors,
 		description,
@@ -38,6 +40,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		setTimestamp,
 		setIcon,
 		setRevokedAt,
+		setReplacedEvent,
 		setSelectedActors,
 		setMentionedActors,
 		setDescription,
@@ -52,11 +55,17 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 	})
 
 	const { actors } = useSelector(getWorldState)
-	const { actorOptions, mentionedActorOptions, renderOption } = useAutocompleteActorList({
+	const {
+		actorOptions,
+		mentionedActorOptions,
+		renderOption: renderActorOption,
+	} = useAutocompleteActorList({
 		actors,
 		selectedActors,
 		mentionedActors,
 	})
+
+	const { eventOptions, renderOption: renderEventOption } = useAutocompleteEventList({ timestamp })
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		if (mode === 'create') {
@@ -158,6 +167,17 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 					<OverlayingLabel>Modules</OverlayingLabel>
 					<Stack gap={2} height="100%">
 						<EventModulesControls modules={modules} state={state} />
+						{modules.includes('ReplacesEvent') && (
+							<Autocomplete
+								value={replacedEvent}
+								onChange={(_, value) => setReplacedEvent(value)}
+								options={eventOptions}
+								isOptionEqualToValue={(option, value) => option.id === value.id}
+								autoHighlight
+								renderOption={renderEventOption}
+								renderInput={(params) => <TextField {...params} label="Event to override" />}
+							/>
+						)}
 						{modules.includes('RevokedAt') && (
 							<TimestampField
 								label="Revoked at"
@@ -180,7 +200,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 								options={actorOptions}
 								isOptionEqualToValue={(option, value) => option.id === value.id}
 								autoHighlight
-								renderOption={renderOption}
+								renderOption={renderActorOption}
 								renderInput={(params) => <TextField {...params} label="Actors" />}
 							/>
 						)}
@@ -192,7 +212,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 								options={mentionedActorOptions}
 								isOptionEqualToValue={(option, value) => option.id === value.id}
 								autoHighlight
-								renderOption={renderOption}
+								renderOption={renderActorOption}
 								renderInput={(params) => <TextField {...params} label="Mentioned actors" />}
 							/>
 						)}

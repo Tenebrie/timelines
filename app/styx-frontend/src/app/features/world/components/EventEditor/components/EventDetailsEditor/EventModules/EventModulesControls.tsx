@@ -29,6 +29,9 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 		(module: WorldEventModule) => {
 			state.setModules(modules.filter((m) => m !== module))
 			switch (module) {
+				case 'ReplacesEvent':
+					state.setReplacedEvent(null)
+					break
 				case 'RevokedAt':
 					state.setRevokedAt(undefined)
 					break

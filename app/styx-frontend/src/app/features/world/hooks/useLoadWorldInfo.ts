@@ -28,14 +28,7 @@ export const useLoadWorldInfo = (worldId: string) => {
 
 		dispatch(
 			loadWorld({
-				world: {
-					...data,
-					events: data.events.map((e) => ({
-						...e,
-						timestamp: Number(e.timestamp),
-						revokedAt: e.revokedAt ? Number(e.revokedAt) : undefined,
-					})),
-				},
+				world: data,
 				actorColors: listAllColors().map((color) => color.value),
 			})
 		)

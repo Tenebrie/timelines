@@ -259,6 +259,20 @@ export const WorldService = {
 						mentionedActors: true,
 						introducedActors: true,
 						terminatedActors: true,
+						replaces: {
+							select: {
+								id: true,
+								name: true,
+								timestamp: true,
+							},
+						},
+						replacedBy: {
+							select: {
+								id: true,
+								name: true,
+								timestamp: true,
+							},
+						},
 					},
 				},
 			},

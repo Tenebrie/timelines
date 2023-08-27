@@ -46,6 +46,14 @@ export const TimelineContextMenu = () => {
 		dispatch(openRevokedStatementWizard({ preselectedEventId: '' }))
 	}, [dispatch, onClose, openRevokedStatementWizard, selectTime, selectedTime])
 
+	const onReplaceSelectedEvent = useCallback(() => {
+		onClose()
+		if (!selectedEvent) {
+			return
+		}
+		navigateToEventCreator({ selectedTime: selectedWorldTime, replacedEventId: selectedEvent.id })
+	}, [navigateToEventCreator, onClose, selectedEvent, selectedWorldTime])
+
 	const onRevokeSelectedEvent = useCallback(async () => {
 		if (!selectedEvent) {
 			return
@@ -95,6 +103,11 @@ export const TimelineContextMenu = () => {
 				</MenuItem>
 			)}
 			{selectedEvent && <Divider />}
+			{selectedEvent && (
+				<MenuItem onClick={onReplaceSelectedEvent} disabled={isRequestInFlight}>
+					<ListItemText primary="Replace this event" />
+				</MenuItem>
+			)}
 			{selectedEvent?.markerType === 'issuedAt' && (
 				<MenuItem onClick={onRevokeSelectedEvent} disabled={isRequestInFlight}>
 					{isRequestInFlight && (
