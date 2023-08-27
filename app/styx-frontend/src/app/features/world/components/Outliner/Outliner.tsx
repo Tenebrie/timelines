@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { Virtuoso } from 'react-virtuoso'
 
 import { OverlayingLabel } from '../../../../components/OverlayingLabel'
-import { getOutlinerPreferences } from '../../../preferences/selectors'
+import { getOutlinerPreferences, getTimelinePreferences } from '../../../preferences/selectors'
 import { useTimelineLevelScalar } from '../../../time/hooks/useTimelineLevelScalar'
 import { useOutlinerTabs } from '../../hooks/useOutlinerTabs'
 import { useWorldRouter } from '../../router'
@@ -19,6 +19,7 @@ import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
 export const Outliner = () => {
 	const { actors, events, selectedActors, selectedEvents } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
+	const { lineSpacing } = useSelector(getTimelinePreferences)
 	const { showInactiveStatements, collapsedActors, collapsedEvents } = useSelector(getOutlinerPreferences)
 
 	const { getLevelScalar } = useTimelineLevelScalar()
@@ -27,7 +28,7 @@ export const Outliner = () => {
 	const selectedTime = selectedTimeOrNull === null ? Infinity : selectedTimeOrNull
 
 	// Sorted list of all events visible at this point in outliner
-	const highlightWithin = 10 * getLevelScalar(scaleLevel)
+	const highlightWithin = lineSpacing * getLevelScalar(scaleLevel)
 	const visibleEvents = useMemo(
 		() =>
 			events

@@ -6,6 +6,7 @@ import { Actor, WorldEvent } from '../world/types'
 const initialState = {
 	time: {},
 	timeline: {
+		useCustomLineSpacing: false as boolean,
 		lineSpacing: 10 as number,
 	},
 	outliner: {
@@ -24,7 +25,18 @@ const initialState = {
 }
 
 const saveToLocalStorage = (state: PreferencesState) => {
-	window.localStorage.setItem('userPreferences/v1', JSON.stringify(state))
+	window.localStorage.setItem(
+		'userPreferences/v1',
+		JSON.stringify({
+			...state,
+			outliner: {
+				...state.outliner,
+				// Do not save collapsed entities into storage as it may grow too large
+				collapsedActors: [],
+				collapsedEvents: [],
+			},
+		})
+	)
 }
 
 export const preferencesSlice = createSlice({
@@ -43,6 +55,8 @@ export const preferencesSlice = createSlice({
 				if (tabIndexValue) {
 					state.outliner.tabIndex = tabIndexValue
 				}
+				state.timeline.useCustomLineSpacing = !!parsedValue?.timeline?.useCustomLineSpacing
+				state.timeline.lineSpacing = parsedValue?.timeline?.lineSpacing ?? 10
 				state.outliner.showInactiveStatements = !!parsedValue?.outliner?.showInactiveStatements
 				state.outliner.collapsedActors = parsedValue?.outliner?.collapsedActors ?? []
 				state.outliner.collapsedEvents = parsedValue?.outliner?.collapsedEvents ?? []
@@ -57,8 +71,16 @@ export const preferencesSlice = createSlice({
 		},
 
 		/* Timeline */
-		setPixelsPerLine: (state, { payload }: PayloadAction<number>) => {
+		setUseCustomTimelineSpacing: (state, { payload }: PayloadAction<boolean>) => {
+			state.timeline.useCustomLineSpacing = payload
+			if (payload === false) {
+				state.timeline.lineSpacing = initialState.timeline.lineSpacing
+			}
+			saveToLocalStorage(state)
+		},
+		setTimelineSpacing: (state, { payload }: PayloadAction<number>) => {
 			state.timeline.lineSpacing = payload
+			saveToLocalStorage(state)
 		},
 
 		/* Outliner */

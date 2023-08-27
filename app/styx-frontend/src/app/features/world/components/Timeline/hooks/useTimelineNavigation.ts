@@ -1,11 +1,13 @@
 import bezier from 'bezier-easing'
 import { throttle } from 'lodash'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { Position } from '../../../../../../types/Position'
 import clampToRange from '../../../../../utils/clampToRange'
 import { isMacOS } from '../../../../../utils/isMacOS'
 import { rangeMap } from '../../../../../utils/rangeMap'
+import { getTimelinePreferences } from '../../../../preferences/selectors'
 import { useTimelineLevelScalar } from '../../../../time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
 import { useTimelineBusSubscribe } from '../../../hooks/useTimelineBus'
@@ -40,6 +42,7 @@ export const useTimelineNavigation = ({
 	const boundingRectLeft = useRef(0)
 
 	const { getLevelScalar } = useTimelineLevelScalar()
+	const { lineSpacing } = useSelector(getTimelinePreferences)
 
 	const onMouseDown = useCallback((event: MouseEvent | TouchEvent) => {
 		const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
@@ -252,7 +255,7 @@ export const useTimelineNavigation = ({
 				y: event.clientY - boundingRectTop.current,
 			}
 
-			const roundToX = 10 / timelineScale
+			const roundToX = lineSpacing / timelineScale
 			const clickOffset = Math.round((point.x - scroll) / roundToX) * roundToX * timelineScale
 			const selectedTime = scaledTimeToRealTime(clickOffset)
 
@@ -275,6 +278,7 @@ export const useTimelineNavigation = ({
 			containerRef,
 			lastClickPos,
 			lastClickTime,
+			lineSpacing,
 			onClick,
 			onDoubleClick,
 			scaledTimeToRealTime,
