@@ -106,7 +106,8 @@ export const useTimelineNavigation = ({
 
 	const [readyToSwitchScale, setReadyToSwitchScale] = useState(false)
 	const [scaleSwitchesToDo, setScaleSwitchesToDo] = useState(0)
-	const [switchingScaleTimeout, setSwitchingScaleTimeout] = useState<number | null>(null)
+	// const [switchingScaleTimeout, setSwitchingScaleTimeout] = useState<number | null>(null)
+	const switchingScaleTimeout = useRef<number | null>(null)
 
 	const [scaleScroll, setScaleScroll] = useState(0)
 
@@ -221,17 +222,17 @@ export const useTimelineNavigation = ({
 			setIsSwitchingScale(true)
 			setTargetScale(clampToRange(scaleLimits[0], scaleScroll / 100 + newScaleSwitchesToDo, scaleLimits[1]))
 
-			if (switchingScaleTimeout !== null) {
-				window.clearTimeout(switchingScaleTimeout)
+			if (switchingScaleTimeout.current !== null) {
+				window.clearTimeout(switchingScaleTimeout.current)
 			}
 
 			const timeout = window.setTimeout(() => {
 				setReadyToSwitchScale(true)
-				setSwitchingScaleTimeout(null)
+				switchingScaleTimeout.current = null
 			}, 300)
-			setSwitchingScaleTimeout(timeout)
+			switchingScaleTimeout.current = timeout
 		},
-		[scaleLimits, scaleScroll, scaleSwitchesToDo, switchingScaleTimeout]
+		[scaleLimits, scaleScroll, scaleSwitchesToDo]
 	)
 
 	// Click

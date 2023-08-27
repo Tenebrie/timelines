@@ -12,7 +12,14 @@ import { useTimelineContextMenuRequests } from './hooks/useTimelineContextMenuRe
 export const TimelineContextMenu = () => {
 	const { timeToLabel } = useWorldTime()
 	const { id: worldId } = useSelector(getWorldState)
-	const { isOpen, selectedTime, selectedEvent, mousePos } = useSelector(getTimelineContextMenuState)
+	const {
+		isOpen,
+		selectedTime,
+		selectedEvent: selectedEventOrBundle,
+		mousePos,
+	} = useSelector(getTimelineContextMenuState)
+
+	const selectedEvent = selectedEventOrBundle?.markerType !== 'bundle' ? selectedEventOrBundle : null
 
 	const { navigateToEventCreator, selectTime, selectedTime: selectedWorldTime } = useWorldRouter()
 	const scrollTimelineTo = useTimelineBusDispatch()
@@ -68,7 +75,7 @@ export const TimelineContextMenu = () => {
 
 	const onDeleteSelectedEvent = useCallback(() => {
 		onClose()
-		if (!selectedEvent || selectedEvent.markerType === 'bundle') {
+		if (!selectedEvent) {
 			return
 		}
 		dispatch(openDeleteEventModal(selectedEvent))
