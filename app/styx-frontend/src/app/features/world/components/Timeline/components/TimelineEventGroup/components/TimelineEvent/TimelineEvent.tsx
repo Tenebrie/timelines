@@ -89,6 +89,8 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 			<b style={{ color: 'green' }}>Issue:</b>
 		) : event.markerType === 'revokedAt' ? (
 			<b style={{ color: 'red' }}>Revoke:</b>
+		) : event.markerType === 'replaceAt' ? (
+			<b style={{ color: 'yellow' }}>Replace:</b>
 		) : (
 			''
 		)
@@ -105,6 +107,7 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 				edited: event.id === eventEditorParams.eventId,
 				highlighted,
 				revoked: event.markerType === 'revokedAt',
+				replace: event.markerType === 'replaceAt',
 				ghost: event.markerType === 'ghost',
 			})}
 			iconPath={getIconPath(event.icon)}

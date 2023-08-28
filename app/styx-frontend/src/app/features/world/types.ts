@@ -36,7 +36,7 @@ export type WorldEventBundle = {
 	icon: 'bundle'
 }
 
-export type MarkerType = 'issuedAt' | 'revokedAt' | 'ghost'
+export type MarkerType = 'issuedAt' | 'replaceAt' | 'revokedAt' | 'ghost'
 export type WorldEventGroup = {
 	events: ((WorldEvent & { markerPosition: number; markerType: MarkerType }) | WorldEventBundle)[]
 	timestamp: number

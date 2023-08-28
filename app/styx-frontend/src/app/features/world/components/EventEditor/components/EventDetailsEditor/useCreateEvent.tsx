@@ -28,6 +28,7 @@ export const useCreateEvent = ({ state }: Props) => {
 					name: state.name,
 					icon: state.icon,
 					timestamp: String(state.timestamp),
+					replacedEventId: state.replacedEvent?.id ?? null,
 					revokedAt: state.revokedAt ? String(state.revokedAt) : null,
 					description: state.description,
 					customNameEnabled: state.customNameEnabled,

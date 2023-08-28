@@ -54,6 +54,15 @@ export const Marker = styled.div<{ iconPath: string }>`
 			background: ${colors.green[700]};
 		}
 	}
+	&.replace > .icon {
+		background-color: ${colors.yellow[300]};
+	}
+	&.replace:hover > .icon {
+		background-color: ${colors.yellow[500]};
+	}
+	&.replace:active > .icon {
+		background-color: ${colors.yellow[700]};
+	}
 	&.revoked > .icon {
 		background-color: ${colors.red[300]};
 	}
@@ -76,6 +85,9 @@ export const Marker = styled.div<{ iconPath: string }>`
 
 	&.highlighted {
 		background-color: rgb(0, 100, 0);
+	}
+	&.replace.highlighted {
+		background-color: rgb(100, 100, 0);
 	}
 	&.revoked.highlighted {
 		background-color: rgb(100, 0, 0);

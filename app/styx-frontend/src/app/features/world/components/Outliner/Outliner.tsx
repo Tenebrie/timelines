@@ -9,6 +9,7 @@ import { useTimelineLevelScalar } from '../../../time/hooks/useTimelineLevelScal
 import { useOutlinerTabs } from '../../hooks/useOutlinerTabs'
 import { useWorldRouter } from '../../router'
 import { getTimelineState, getWorldState } from '../../selectors'
+import { useVisibleEvents } from '../EventSelector/useVisibleEvents'
 import { ActorWithStatementsRenderer } from '../Renderers/ActorWithStatementsRenderer'
 import { EventWithContentRenderer } from '../Renderers/Event/EventWithContentRenderer'
 import { EventTutorialModal } from './components/EventTutorialModal/EventTutorialModal'
@@ -17,10 +18,10 @@ import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmpt
 import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
 
 export const Outliner = () => {
-	const { actors, events, selectedActors, selectedEvents } = useSelector(getWorldState)
+	const { actors, events, selectedEvents } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
 	const { lineSpacing } = useSelector(getTimelinePreferences)
-	const { showInactiveStatements, collapsedActors, collapsedEvents } = useSelector(getOutlinerPreferences)
+	const { showInactiveStatements, expandedActors, expandedEvents } = useSelector(getOutlinerPreferences)
 
 	const { getLevelScalar } = useTimelineLevelScalar()
 
@@ -29,20 +30,24 @@ export const Outliner = () => {
 
 	// Sorted list of all events visible at this point in outliner
 	const highlightWithin = lineSpacing * getLevelScalar(scaleLevel)
+
+	const allVisibleEvents = useVisibleEvents({
+		timestamp: selectedTime,
+		includeInactive: showInactiveStatements,
+	})
+
 	const visibleEvents = useMemo(
 		() =>
-			events
-				.filter((event) => event.timestamp <= selectedTime || selectedEvents.includes(event.id))
+			allVisibleEvents
 				.map((event, index) => ({
 					...event,
 					index,
-					collapsed: collapsedEvents.includes(event.id),
+					collapsed: !expandedEvents.includes(event.id),
 					highlighted: Math.abs(event.timestamp - selectedTime) < highlightWithin,
 					active: event.revokedAt === undefined || event.revokedAt > selectedTime,
 				}))
-				.filter((event) => showInactiveStatements || event.active)
 				.sort((a, b) => a.timestamp - b.timestamp || a.index - b.index),
-		[events, selectedTime, highlightWithin, showInactiveStatements, selectedEvents, collapsedEvents]
+		[expandedEvents, highlightWithin, selectedTime, allVisibleEvents]
 	)
 
 	const visibleActors = useMemo(
@@ -50,10 +55,10 @@ export const Outliner = () => {
 			actors.map((actor) => ({
 				...actor,
 				highlighted: false,
-				collapsed: collapsedActors.includes(actor.id),
+				collapsed: !expandedActors.includes(actor.id),
 				events: visibleEvents.filter((event) => actor.statements.some((e) => e.id === event.id)),
 			})),
-		[actors, collapsedActors, visibleEvents]
+		[actors, expandedActors, visibleEvents]
 	)
 
 	const eventActions = useMemo<('edit' | 'collapse')[]>(() => ['edit', 'collapse'], [])

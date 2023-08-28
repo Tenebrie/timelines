@@ -108,16 +108,17 @@ export const TimelineContextMenu = () => {
 					<ListItemText primary="Replace this event" />
 				</MenuItem>
 			)}
-			{selectedEvent?.markerType === 'issuedAt' && (
-				<MenuItem onClick={onRevokeSelectedEvent} disabled={isRequestInFlight}>
-					{isRequestInFlight && (
-						<ListItemIcon>
-							<CircularProgress size={24} />
-						</ListItemIcon>
-					)}
-					<ListItemText primary="Revoke this event" />
-				</MenuItem>
-			)}
+			{selectedEvent?.markerType === 'issuedAt' ||
+				(selectedEvent?.markerType === 'replaceAt' && (
+					<MenuItem onClick={onRevokeSelectedEvent} disabled={isRequestInFlight}>
+						{isRequestInFlight && (
+							<ListItemIcon>
+								<CircularProgress size={24} />
+							</ListItemIcon>
+						)}
+						<ListItemText primary="Revoke this event" />
+					</MenuItem>
+				))}
 			{selectedEvent?.markerType === 'revokedAt' && (
 				<MenuItem onClick={onUnrevokeSelectedEvent} disabled={isRequestInFlight}>
 					{isRequestInFlight && (

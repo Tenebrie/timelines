@@ -12,8 +12,8 @@ const initialState = {
 	outliner: {
 		tabIndex: 0 as number,
 		showInactiveStatements: false as boolean,
-		collapsedActors: [] as string[],
-		collapsedEvents: [] as string[],
+		expandedActors: [] as string[],
+		expandedEvents: [] as string[],
 	},
 	overview: {
 		panelOpen: true as boolean,
@@ -31,9 +31,9 @@ const saveToLocalStorage = (state: PreferencesState) => {
 			...state,
 			outliner: {
 				...state.outliner,
-				// Do not save collapsed entities into storage as it may grow too large
-				collapsedActors: [],
-				collapsedEvents: [],
+				// Do not save expanded entities into storage as it may grow too large
+				expandedActors: [],
+				expandedEvents: [],
 			},
 		})
 	)
@@ -58,8 +58,8 @@ export const preferencesSlice = createSlice({
 				state.timeline.useCustomLineSpacing = !!parsedValue?.timeline?.useCustomLineSpacing
 				state.timeline.lineSpacing = parsedValue?.timeline?.lineSpacing ?? 10
 				state.outliner.showInactiveStatements = !!parsedValue?.outliner?.showInactiveStatements
-				state.outliner.collapsedActors = parsedValue?.outliner?.collapsedActors ?? []
-				state.outliner.collapsedEvents = parsedValue?.outliner?.collapsedEvents ?? []
+				state.outliner.expandedActors = parsedValue?.outliner?.expandedActors ?? []
+				state.outliner.expandedEvents = parsedValue?.outliner?.expandedEvents ?? []
 				state.overview.panelOpen = !!parsedValue?.overview?.panelOpen
 				state.overview.actorsOpen = !!parsedValue?.overview?.actorsOpen
 				state.overview.actorsReversed = !!parsedValue?.overview?.actorsReversed
@@ -93,19 +93,19 @@ export const preferencesSlice = createSlice({
 			saveToLocalStorage(state)
 		},
 		collapseActorInOutliner: (state, { payload }: PayloadAction<Actor>) => {
-			state.outliner.collapsedActors = [...new Set([...state.outliner.collapsedActors, payload.id])]
+			state.outliner.expandedActors = state.outliner.expandedActors.filter((id) => id !== payload.id)
 			saveToLocalStorage(state)
 		},
 		uncollapseActorInOutliner: (state, { payload }: PayloadAction<Actor>) => {
-			state.outliner.collapsedActors = state.outliner.collapsedActors.filter((id) => id !== payload.id)
+			state.outliner.expandedActors = [...new Set([...state.outliner.expandedActors, payload.id])]
 			saveToLocalStorage(state)
 		},
 		collapseEventInOutliner: (state, { payload }: PayloadAction<WorldEvent>) => {
-			state.outliner.collapsedEvents = [...new Set([...state.outliner.collapsedEvents, payload.id])]
+			state.outliner.expandedEvents = state.outliner.expandedEvents.filter((id) => id !== payload.id)
 			saveToLocalStorage(state)
 		},
 		uncollapseEventInOutliner: (state, { payload }: PayloadAction<WorldEvent>) => {
-			state.outliner.collapsedEvents = state.outliner.collapsedEvents.filter((id) => id !== payload.id)
+			state.outliner.expandedEvents = [...new Set([...state.outliner.expandedEvents, payload.id])]
 			saveToLocalStorage(state)
 		},
 

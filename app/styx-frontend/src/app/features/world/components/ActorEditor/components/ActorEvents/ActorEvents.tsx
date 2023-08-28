@@ -19,7 +19,7 @@ export const ActorEvents = ({ actor }: Props) => {
 	const { events } = useSelector(getWorldState)
 	const { timeToLabel } = useWorldTime()
 
-	const { collapsedEvents } = useSelector(getOutlinerPreferences)
+	const { expandedEvents } = useSelector(getOutlinerPreferences)
 
 	const { selectedTime } = useWorldRouter()
 
@@ -28,7 +28,7 @@ export const ActorEvents = ({ actor }: Props) => {
 		.map((event) => ({
 			...event,
 			secondary: timeToLabel(event.timestamp),
-			collapsed: collapsedEvents.includes(event.id),
+			collapsed: !expandedEvents.includes(event.id),
 			active: event.revokedAt === undefined || event.revokedAt > selectedTime,
 		}))
 

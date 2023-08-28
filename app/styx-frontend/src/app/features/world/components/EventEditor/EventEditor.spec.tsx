@@ -130,6 +130,7 @@ describe('<EventEditor />', () => {
 				id: '2222',
 				name: 'New title',
 				description: 'New description',
+				replaces: null,
 			}),
 		})
 

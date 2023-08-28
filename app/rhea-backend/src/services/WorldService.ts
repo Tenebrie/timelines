@@ -77,7 +77,7 @@ export const WorldService = {
 		worldId: string,
 		data: Pick<
 			WorldEvent,
-			'type' | 'extraFields' | 'name' | 'description' | 'timestamp' | 'revokedAt' | 'icon'
+			'type' | 'extraFields' | 'name' | 'description' | 'timestamp' | 'revokedAt' | 'icon' | 'replacedEventId'
 		> & {
 			customNameEnabled: boolean
 			targetActors: Actor[]
@@ -95,6 +95,7 @@ export const WorldService = {
 					description: data.description,
 					timestamp: data.timestamp,
 					revokedAt: data.revokedAt,
+					replacedEventId: data.replacedEventId,
 					targetActors: {
 						connect: data.targetActors.map((actor) => ({ id: actor.id })),
 					},
@@ -122,7 +123,10 @@ export const WorldService = {
 	}: {
 		worldId: string
 		eventId: string
-		params: Partial<WorldEvent> & { targetActors: Actor[] | null; mentionedActors: Actor[] | null }
+		params: Omit<Partial<WorldEvent>, 'replacedByEventId'> & {
+			targetActors: Actor[] | null
+			mentionedActors: Actor[] | null
+		}
 	}) => {
 		const [event, world] = await dbClient.$transaction([
 			dbClient.worldEvent.update({
@@ -131,6 +135,11 @@ export const WorldService = {
 				},
 				data: {
 					...params,
+					replacedEventId: params.replacedEventId
+						? {
+								set: params.replacedEventId,
+						  }
+						: params.replacedEventId,
 					targetActors:
 						params.targetActors !== null
 							? {
@@ -145,6 +154,13 @@ export const WorldService = {
 							: undefined,
 				},
 				include: {
+					replaces: {
+						select: {
+							id: true,
+							name: true,
+							timestamp: true,
+						},
+					},
 					targetActors: true,
 					mentionedActors: true,
 				},

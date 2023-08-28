@@ -33,5 +33,7 @@ export const useVisibleEvents = ({ timestamp, excludedEvents, includeInactive }:
 		[events, timestamp, excludedEvents, includeInactive]
 	)
 
+	console.log(visibleEvents)
+
 	return visibleEvents
 }

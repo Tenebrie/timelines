@@ -341,6 +341,7 @@ export type CreateWorldEventApiArg = {
 		name: string
 		icon: string
 		description: string
+		replacedEventId: null | string
 		timestamp: string
 		revokedAt: null | string
 		targetActorIds: string[]
@@ -383,6 +384,11 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 		color: string
 		worldId: string
 	}[]
+	replaces: null | {
+		name: string
+		id: string
+		timestamp: string
+	}
 }
 export type UpdateWorldEventApiArg = {
 	/** Any string value */
@@ -396,6 +402,7 @@ export type UpdateWorldEventApiArg = {
 		timestamp?: string
 		revokedAt?: null | string
 		description?: string
+		replacedEventId?: null | string
 		targetActorIds?: string[]
 		mentionedActorIds?: string[]
 		customNameEnabled?: boolean

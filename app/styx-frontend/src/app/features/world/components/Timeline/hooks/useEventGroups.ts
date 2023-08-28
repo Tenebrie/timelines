@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
@@ -17,10 +17,16 @@ const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; 
 
 	const { isLocationEqual } = useWorldRouter()
 
+	const getMarkerType = useCallback(
+		(event: WorldEvent): MarkerType =>
+			event.replaces ? ('replaceAt' as MarkerType) : ('issuedAt' as MarkerType),
+		[]
+	)
+
 	const eventGroups = useMemo(() => {
 		const eventGroups: WorldEventGroup[] = []
 		const sortedEvents = events
-			.map((event) => ({ ...event, markerPosition: event.timestamp, markerType: 'issuedAt' as MarkerType }))
+			.map((event) => ({ ...event, markerPosition: event.timestamp, markerType: getMarkerType(event) }))
 			.concat(
 				events
 					.filter((event) => !!event.revokedAt)

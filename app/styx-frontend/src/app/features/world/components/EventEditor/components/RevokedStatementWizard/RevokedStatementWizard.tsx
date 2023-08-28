@@ -25,7 +25,7 @@ export const RevokedStatementWizard = () => {
 	const [inputValue, setInputValue] = useState('')
 
 	const { events: worldEvents } = useSelector(getWorldState)
-	const { collapsedEvents } = useSelector(getOutlinerPreferences)
+	const { expandedEvents } = useSelector(getOutlinerPreferences)
 
 	const { worldParams, selectedTime } = useWorldRouter()
 	const [revokeWorldStatement, { isLoading }] = useRevokeWorldEventMutation()
@@ -125,7 +125,7 @@ export const RevokedStatementWizard = () => {
 								short
 								active
 								divider={false}
-								collapsed={collapsedEvents.includes(previewOption.card.id)}
+								collapsed={!expandedEvents.includes(previewOption.card.id)}
 								actions={['collapse']}
 							/>
 						</List>

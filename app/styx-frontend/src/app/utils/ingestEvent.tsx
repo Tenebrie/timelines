@@ -11,7 +11,7 @@ export const ingestEvent = (rawEvent: GetWorldInfoApiResponse['events'][number])
 	}
 }
 
-const ingestNestedEvent = (rawEvent: GetWorldInfoApiResponse['events'][number]['replaces']) => {
+export const ingestNestedEvent = (rawEvent: GetWorldInfoApiResponse['events'][number]['replaces']) => {
 	if (rawEvent === null) {
 		return null
 	}
