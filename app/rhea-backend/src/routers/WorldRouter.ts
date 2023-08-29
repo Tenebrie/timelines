@@ -1,12 +1,14 @@
 import { UserAuthenticator } from '@src/auth/UserAuthenticator'
 import { RedisService } from '@src/services/RedisService'
+import { WorldEventDeltaService } from '@src/services/WorldEventDeltaService'
+import { WorldEventService } from '@src/services/WorldEventService'
 import { WorldService } from '@src/services/WorldService'
 import {
+	BadRequestError,
 	BigIntValidator,
 	BooleanValidator,
 	NonEmptyStringValidator,
 	NullableBigIntValidator,
-	NullableStringValidator,
 	NumberValidator,
 	OptionalParam,
 	PathParam,
@@ -138,7 +140,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 	const targetActors = (await parseActorList(params.targetActorIds)) ?? []
 	const mentionedActors = (await parseActorList(params.mentionedActorIds)) ?? []
 
-	const { event, world } = await WorldService.createWorldEvent({
+	const { event, world } = await WorldEventService.createWorldEvent({
 		worldId,
 		eventData: {
 			...params,
@@ -185,7 +187,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	const targetActors = await parseActorList(params.targetActorIds)
 	const mentionedActors = await parseActorList(params.mentionedActorIds)
 
-	const { event, world } = await WorldService.updateWorldEvent({
+	const { event, world } = await WorldEventService.updateWorldEvent({
 		worldId,
 		eventId,
 		params: {
@@ -223,7 +225,7 @@ router.delete('/api/world/:worldId/event/:eventId', async (ctx) => {
 	await WorldService.checkUserWriteAccess(user, worldId)
 	await WorldService.checkEventValidity(eventId)
 
-	const { event, world } = await WorldService.deleteWorldEvent({ worldId, eventId })
+	const { event, world } = await WorldEventService.deleteWorldEvent({ worldId, eventId })
 
 	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
 
@@ -251,7 +253,7 @@ router.post('/api/world/:worldId/event/:eventId/revoke', async (ctx) => {
 		revokedAt: RequiredParam(BigIntValidator),
 	})
 
-	const { statement, world } = await WorldService.revokeWorldEvent({
+	const { statement, world } = await WorldEventService.revokeWorldEvent({
 		worldId,
 		eventId,
 		revokedAt,
@@ -279,7 +281,7 @@ router.post('/api/world/:worldId/event/:eventId/unrevoke', async (ctx) => {
 	await WorldService.checkUserWriteAccess(user, worldId)
 	await WorldService.checkEventValidity(eventId)
 
-	const { statement, world } = await WorldService.unrevokeWorldEvent({
+	const { statement, world } = await WorldEventService.unrevokeWorldEvent({
 		worldId,
 		eventId,
 	})
@@ -287,6 +289,50 @@ router.post('/api/world/:worldId/event/:eventId/unrevoke', async (ctx) => {
 	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
 
 	return statement
+})
+
+/**
+ * World event delta
+ */
+router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
+	useApiEndpoint({
+		name: 'createWorldEventDelta',
+		description: 'Creates a new delta state for given event.',
+		tags: [worldDetailsTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId, eventId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+		eventId: PathParam(StringValidator),
+	})
+
+	await WorldService.checkUserWriteAccess(user, worldId)
+	const event = await WorldEventService.fetchWorldEvent(eventId)
+
+	const params = useRequestBody(ctx, {
+		timestamp: RequiredParam(BigIntValidator),
+		name: RequiredParam(NameStringValidator),
+		description: RequiredParam(ContentStringValidator),
+		customName: RequiredParam(BooleanValidator),
+	})
+
+	if (event.revokedAt && params.timestamp >= event.revokedAt) {
+		throw new BadRequestError('Unable to create a delta state for a revoked event.')
+	}
+
+	const { deltaState, world } = await WorldEventDeltaService.createEventDeltaState({
+		worldId,
+		eventId,
+		data: {
+			...params,
+		},
+	})
+
+	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+
+	return deltaState
 })
 
 export const WorldRouter = router

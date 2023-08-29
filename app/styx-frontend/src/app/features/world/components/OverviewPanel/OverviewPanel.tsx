@@ -1,4 +1,4 @@
-import { Clear, Search } from '@mui/icons-material'
+import { Clear, Search, SubdirectoryArrowRight } from '@mui/icons-material'
 import { IconButton, InputAdornment, List, ListItem, ListItemIcon, TextField } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -65,12 +65,13 @@ export const OverviewPanel = () => {
 		</ListItem>
 	)
 
-	const renderEvent = (event: WorldEvent & { secondary: string }) => (
+	const renderEvent = (event: WorldEvent & { secondary: string }) => [
 		<ListItem key={event.id} disablePadding role="listitem">
 			<StyledListItemButton
 				divider={
 					(!eventsReversed && sortedEvents.indexOf(event) !== sortedEvents.length - 1) ||
-					(eventsReversed && sortedEvents.indexOf(event) !== 0)
+					(eventsReversed && sortedEvents.indexOf(event) !== 0) ||
+					event.deltaStates.length > 0
 				}
 				onClick={(clickEvent) =>
 					moveToEvent(clickEvent, { event, multiselect: isMultiselectClick(clickEvent) })
@@ -82,8 +83,32 @@ export const OverviewPanel = () => {
 				</ListItemIcon>
 				<StyledListItemText data-hj-suppress primary={event.name} secondary={event.secondary} />
 			</StyledListItemButton>
-		</ListItem>
-	)
+		</ListItem>,
+		...event.deltaStates.map((delta, deltaIndex) => (
+			<ListItem key={delta.id} disablePadding role="listitem" sx={{ paddingLeft: 2 }}>
+				<StyledListItemButton
+					divider={
+						(!eventsReversed && sortedEvents.indexOf(event) !== sortedEvents.length - 1) ||
+						(eventsReversed && sortedEvents.indexOf(event) !== 0) ||
+						deltaIndex < event.deltaStates.length - 1
+					}
+					onClick={(clickEvent) =>
+						moveToEvent(clickEvent, { event, multiselect: isMultiselectClick(clickEvent) })
+					}
+					selected={selectedEvents.includes(event.id)}
+				>
+					<ListItemIcon>
+						<SubdirectoryArrowRight />
+					</ListItemIcon>
+					<StyledListItemText
+						data-hj-suppress
+						primary={delta.name}
+						secondary={timeToLabel(delta.timestamp)}
+					/>
+				</StyledListItemButton>
+			</ListItem>
+		)),
+	]
 
 	const { triggerClick: moveToActor } = useDoubleClick<{ actor: Actor; multiselect: boolean }>({
 		onClick: ({ actor, multiselect }) => {

@@ -1,6 +1,7 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
+import { applyEventDelta } from '../../../../../utils/applyEventDelta'
 import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
 import { useWorldRouter, worldRoutes } from '../../../router'
 import { getEventCreatorState, getWorldState } from '../../../selectors'
@@ -17,12 +18,20 @@ const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; 
 
 	const { isLocationEqual } = useWorldRouter()
 
-	const getMarkerType = useCallback((event: WorldEvent): MarkerType => 'issuedAt' as MarkerType, [])
-
 	const eventGroups = useMemo(() => {
 		const eventGroups: WorldEventGroup[] = []
 		const sortedEvents = events
-			.map((event) => ({ ...event, markerPosition: event.timestamp, markerType: getMarkerType(event) }))
+			.map((event) => ({ ...event, markerPosition: event.timestamp, markerType: 'issuedAt' as MarkerType }))
+			.concat(
+				events.flatMap((event) =>
+					event.deltaStates.map((delta) => ({
+						...applyEventDelta({ event, timestamp: delta.timestamp }),
+						id: delta.id,
+						markerPosition: delta.timestamp,
+						markerType: 'replaceAt' as MarkerType,
+					}))
+				)
+			)
 			.concat(
 				events
 					.filter((event) => !!event.revokedAt)
@@ -76,7 +85,7 @@ const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; 
 			}
 		})
 		return eventGroups
-	}, [events, getMarkerType, ghostEvent, isLocationEqual, scaledTimeToRealTime, timelineScale])
+	}, [events, ghostEvent, isLocationEqual, scaledTimeToRealTime, timelineScale])
 
 	return eventGroups
 }

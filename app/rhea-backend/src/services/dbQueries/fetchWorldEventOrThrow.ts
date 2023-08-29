@@ -9,7 +9,7 @@ export const fetchWorldEventOrThrow = async (eventId: string) => {
 		},
 	})
 	if (!event) {
-		throw new BadRequestError(`Unable to find event ${eventId}.`)
+		throw new BadRequestError(`Unable to find event.`)
 	}
 	return event
 }

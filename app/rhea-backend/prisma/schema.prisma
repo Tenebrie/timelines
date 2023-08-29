@@ -93,7 +93,7 @@ model WorldEventDelta {
   customName  Boolean?
 
   worldEventId String
-  worldEvent   WorldEvent @relation(fields: [worldEventId], references: [id])
+  worldEvent   WorldEvent @relation(fields: [worldEventId], references: [id], onDelete: Cascade)
 }
 
 model Actor {

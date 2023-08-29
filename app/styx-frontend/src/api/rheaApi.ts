@@ -99,6 +99,14 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldDetails'],
 			}),
+			createWorldEventDelta: build.mutation<CreateWorldEventDeltaApiResponse, CreateWorldEventDeltaApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/delta`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldDetails'],
+			}),
 		}),
 		overrideExisting: false,
 	})
@@ -466,6 +474,21 @@ export type UnrevokeWorldEventApiArg = {
 	/** Any string value */
 	eventId: string
 }
+export type CreateWorldEventDeltaApiResponse = /** status 200  */ {
+	id: string
+}
+export type CreateWorldEventDeltaApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	eventId: string
+	body: {
+		timestamp: string
+		name: string
+		description: string
+		customName: boolean
+	}
+}
 export const {
 	useCreateActorMutation,
 	useUpdateActorMutation,
@@ -486,4 +509,5 @@ export const {
 	useDeleteWorldEventMutation,
 	useRevokeWorldEventMutation,
 	useUnrevokeWorldEventMutation,
+	useCreateWorldEventDeltaMutation,
 } = injectedRtkApi

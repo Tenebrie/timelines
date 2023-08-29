@@ -21,7 +21,12 @@ export const TimelineContextMenu = () => {
 
 	const selectedEvent = selectedEventOrBundle?.markerType !== 'bundle' ? selectedEventOrBundle : null
 
-	const { navigateToEventCreator, selectTime, selectedTime: selectedWorldTime } = useWorldRouter()
+	const {
+		navigateToEventCreator,
+		navigateToEventDeltaCreator,
+		selectTime,
+		selectedTime: selectedWorldTime,
+	} = useWorldRouter()
 	const scrollTimelineTo = useTimelineBusDispatch()
 
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
@@ -51,8 +56,8 @@ export const TimelineContextMenu = () => {
 		if (!selectedEvent) {
 			return
 		}
-		navigateToEventCreator({ selectedTime: selectedWorldTime, replacedEventId: selectedEvent.id })
-	}, [navigateToEventCreator, onClose, selectedEvent, selectedWorldTime])
+		navigateToEventDeltaCreator({ eventId: selectedEvent.id })
+	}, [navigateToEventDeltaCreator, onClose, selectedEvent])
 
 	const onRevokeSelectedEvent = useCallback(async () => {
 		if (!selectedEvent) {

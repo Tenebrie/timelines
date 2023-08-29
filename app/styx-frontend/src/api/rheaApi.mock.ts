@@ -3,7 +3,7 @@ import { SetupServer } from 'msw/lib/node'
 import { v4 as getRandomId } from 'uuid'
 
 import { User } from '../app/features/auth/reducer'
-import { ActorDetails, WorldDetails, WorldItem } from '../app/features/world/types'
+import { ActorDetails, WorldDetails, WorldEventDelta, WorldItem } from '../app/features/world/types'
 import { WorldEvent } from '../app/features/world/types'
 import {
 	CheckAuthenticationApiResponse,
@@ -204,6 +204,16 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	customName: false,
 	deltaStates: [],
 	...statement,
+})
+
+export const mockEventDeltaModel = (
+	provided: Partial<WorldEventDelta> & Pick<WorldEventDelta, 'worldEventId'>
+): WorldEventDelta => ({
+	id: getRandomId(),
+	timestamp: 0,
+	name: 'Delta name',
+	description: 'Delta description',
+	...provided,
 })
 
 export const mockApiEventModel = (

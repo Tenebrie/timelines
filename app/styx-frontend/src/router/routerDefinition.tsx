@@ -7,7 +7,9 @@ import { Register } from '../app/features/auth/register/Register'
 import { Spinny } from '../app/features/demo/spinny/Spinny'
 import { Home } from '../app/features/home/Home'
 import { ActorEditor } from '../app/features/world/components/ActorEditor/ActorEditor'
-import { EventCreator } from '../app/features/world/components/EventEditor/CreateEventEditor'
+import { EventCreator } from '../app/features/world/components/EventEditor/EventCreator'
+import { EventDeltaCreator } from '../app/features/world/components/EventEditor/EventDeltaEditor/EventDeltaCreator'
+import { EventDeltaEditor } from '../app/features/world/components/EventEditor/EventDeltaEditor/EventDeltaEditor'
 import { EventEditor } from '../app/features/world/components/EventEditor/EventEditor'
 import { Outliner } from '../app/features/world/components/Outliner/Outliner'
 import { appRoutes, worldRoutes } from '../app/features/world/router'
@@ -51,12 +53,20 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 						element: <ActorEditor />,
 					},
 					{
+						path: worldRoutes.eventCreator,
+						element: <EventCreator />,
+					},
+					{
 						path: worldRoutes.eventEditor,
 						element: <EventEditor />,
 					},
 					{
-						path: worldRoutes.eventCreator,
-						element: <EventCreator />,
+						path: worldRoutes.eventDeltaCreator,
+						element: <EventDeltaCreator />,
+					},
+					{
+						path: worldRoutes.eventDeltaEditor,
+						element: <EventDeltaEditor />,
 					},
 				],
 			},

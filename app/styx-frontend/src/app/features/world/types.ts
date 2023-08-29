@@ -6,10 +6,17 @@ export type WorldItem = GetWorldsApiResponse[number]
 export type WorldDetails = Omit<GetWorldInfoApiResponse, 'events'> & {
 	events: WorldEvent[]
 }
-export type WorldEvent = Omit<GetWorldInfoApiResponse['events'][number], 'timestamp' | 'revokedAt'> & {
+export type WorldEvent = Omit<
+	GetWorldInfoApiResponse['events'][number],
+	'timestamp' | 'revokedAt' | 'deltaStates'
+> & {
 	timestamp: number
 	revokedAt?: number
+	deltaStates: (Omit<GetWorldInfoApiResponse['events'][number]['deltaStates'][number], 'timestamp'> & {
+		timestamp: number
+	})[]
 }
+export type WorldEventDelta = WorldEvent['deltaStates'][number]
 export type WorldEventType = WorldEvent['type']
 export type WorldCalendarType = WorldDetails['calendar']
 

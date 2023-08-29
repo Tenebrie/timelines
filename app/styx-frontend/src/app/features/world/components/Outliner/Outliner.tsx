@@ -18,7 +18,7 @@ import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmpt
 import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
 
 export const Outliner = () => {
-	const { actors, events, selectedEvents } = useSelector(getWorldState)
+	const { actors } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
 	const { lineSpacing } = useSelector(getTimelinePreferences)
 	const { showInactiveStatements, expandedActors, expandedEvents } = useSelector(getOutlinerPreferences)

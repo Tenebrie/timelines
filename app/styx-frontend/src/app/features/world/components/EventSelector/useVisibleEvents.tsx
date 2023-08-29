@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
+import { applyEventDelta } from '../../../../utils/applyEventDelta'
 import { getWorldState } from '../../selectors'
 import { WorldEvent } from '../../types'
 
@@ -27,7 +28,8 @@ export const useVisibleEvents = ({ timestamp, excludedEvents, includeInactive }:
 					active: event.revokedAt === undefined || event.revokedAt > timestamp,
 				}))
 				.filter((event) => includeInactive || event.active)
-				.sort((a, b) => a.timestamp - b.timestamp || a.index - b.index),
+				.sort((a, b) => a.timestamp - b.timestamp || a.index - b.index)
+				.map((event) => applyEventDelta({ event, timestamp })),
 		[events, timestamp, excludedEvents, includeInactive]
 	)
 
