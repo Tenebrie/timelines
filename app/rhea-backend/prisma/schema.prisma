@@ -57,7 +57,6 @@ enum WorldEventField {
   EventIcon
   TargetActors
   MentionedActors
-  ReplacesEvent
 }
 
 model WorldEvent {
@@ -82,10 +81,19 @@ model WorldEvent {
   introducedActors Actor[] @relation(name: "EventIntroducedActors")
   terminatedActors Actor[] @relation(name: "EventTerminatedActors")
 
-  replaces          WorldEvent? @relation(name: "ReplacedEvent", fields: [replacedEventId], references: [id])
-  replacedBy        WorldEvent? @relation(name: "ReplacedEvent")
-  replacedEventId   String?     @unique
-  replacedByEventId String?     @unique
+  deltaStates WorldEventDelta[]
+}
+
+model WorldEventDelta {
+  id        String @id @unique @default(uuid())
+  timestamp BigInt
+
+  name        String?
+  description String?
+  customName  Boolean?
+
+  worldEventId String
+  worldEvent   WorldEvent @relation(fields: [worldEventId], references: [id])
 }
 
 model Actor {

@@ -8,12 +8,11 @@ export const makeCreateWorldEventQuery = (
 	worldId: string,
 	data: Pick<
 		WorldEvent,
-		'type' | 'extraFields' | 'name' | 'description' | 'timestamp' | 'revokedAt' | 'icon' | 'replacedEventId'
+		'type' | 'extraFields' | 'name' | 'description' | 'timestamp' | 'revokedAt' | 'icon'
 	> & {
 		customNameEnabled: boolean
 		targetActors: Actor[]
 		mentionedActors: Actor[]
-		replacedByEventId?: string | null
 	}
 ) =>
 	dbClient.worldEvent.create({
@@ -26,8 +25,6 @@ export const makeCreateWorldEventQuery = (
 			description: data.description,
 			timestamp: data.timestamp,
 			revokedAt: data.revokedAt,
-			replacedEventId: data.replacedEventId,
-			replacedByEventId: data.replacedByEventId,
 			targetActors: {
 				connect: data.targetActors.map((actor) => ({ id: actor.id })),
 			},

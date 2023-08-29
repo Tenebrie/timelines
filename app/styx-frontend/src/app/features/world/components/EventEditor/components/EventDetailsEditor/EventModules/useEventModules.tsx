@@ -6,11 +6,6 @@ export const useEventModules = () => {
 	const options: { text: string; secondary: string; module: WorldEventModule }[] = useMemo(
 		() => [
 			{
-				text: 'Override event',
-				secondary: 'Set an event to replace in the timeline',
-				module: 'ReplacesEvent',
-			},
-			{
 				text: 'Revoked at',
 				secondary: 'Specify the end-of-life timestamp for this event',
 				module: 'RevokedAt',

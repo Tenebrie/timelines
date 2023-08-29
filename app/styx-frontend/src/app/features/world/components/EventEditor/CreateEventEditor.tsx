@@ -11,16 +11,11 @@ import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetails
 import { FullHeightContainer } from './styles'
 
 export const EventCreator = () => {
-	const { id, events } = useSelector(getWorldState)
+	const { id } = useSelector(getWorldState)
 	const { selectedTime } = useWorldRouter()
 
 	const { setEventCreatorGhostEvent } = worldSlice.actions
 	const dispatch = useDispatch()
-
-	const { query } = useWorldRouter()
-	const { eventCreatorReplacedEventId } = query
-
-	const replacedEvent = events.find((event) => event.id === eventCreatorReplacedEventId)
 
 	const defaultEventValues: WorldEvent = useMemo(
 		() =>
@@ -29,16 +24,8 @@ export const EventCreator = () => {
 				name: '',
 				description: '',
 				timestamp: selectedTime,
-				extraFields: replacedEvent ? ['ReplacesEvent'] : [],
-				replaces: replacedEvent
-					? {
-							id: replacedEvent.id,
-							name: replacedEvent.name,
-							timestamp: replacedEvent.timestamp,
-					  }
-					: null,
 			}),
-		[id, replacedEvent, selectedTime]
+		[id, selectedTime]
 	)
 
 	useEffect(() => {

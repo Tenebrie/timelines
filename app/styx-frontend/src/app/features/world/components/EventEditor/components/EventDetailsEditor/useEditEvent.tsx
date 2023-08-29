@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux'
 import { UpdateWorldEventApiArg, useUpdateWorldEventMutation } from '../../../../../../../api/rheaApi'
 import { arraysEqual } from '../../../../../../utils/arraysEqual'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
-import { ingestNestedEvent } from '../../../../../../utils/ingestEvent'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useIsFirstRender } from '../../../../../../utils/useIsFirstRender'
 import { worldSlice } from '../../../../reducer'
@@ -30,7 +29,6 @@ type SavedEvent = Pick<
 	| 'customName'
 	| 'targetActors'
 	| 'mentionedActors'
-	| 'replaces'
 >
 
 export const useEditEvent = ({ mode, event, state }: Props) => {
@@ -42,7 +40,6 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		icon,
 		timestamp,
 		revokedAt,
-		replacedEvent,
 		selectedActors,
 		mentionedActors,
 		description,
@@ -52,7 +49,6 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		setIcon,
 		setTimestamp,
 		setRevokedAt,
-		setReplacedEvent,
 		setSelectedActors,
 		setMentionedActors,
 		setDescription,
@@ -70,7 +66,6 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 			setIcon(event.icon)
 			setTimestamp(event.timestamp)
 			setRevokedAt(event.revokedAt)
-			setReplacedEvent(event.replaces)
 			setSelectedActors(mapActorsToOptions(event.targetActors))
 			setMentionedActors(mapActorsToOptions(event.mentionedActors))
 			setDescription(event.description)
@@ -86,7 +81,6 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		setModules,
 		setName,
 		setRevokedAt,
-		setReplacedEvent,
 		setSelectedActors,
 		setTimestamp,
 		setCustomNameEnabled,
@@ -116,7 +110,6 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 				...response,
 				timestamp: Number(response.timestamp),
 				revokedAt: Number(response.revokedAt),
-				replaces: ingestNestedEvent(response.replaces),
 			}
 			lastSavedAt.current = new Date()
 		},
@@ -136,7 +129,6 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 				icon,
 				timestamp: String(timestamp),
 				revokedAt: revokedAt ? String(revokedAt) : null,
-				replacedEventId: replacedEvent ? replacedEvent.id : null,
 				description,
 				customNameEnabled,
 				targetActorIds: selectedActors.map((a) => a.id),
@@ -159,7 +151,6 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 				lastSaved.current.icon === icon &&
 				lastSaved.current.timestamp === timestamp &&
 				lastSaved.current.revokedAt === revokedAt &&
-				lastSaved.current.replaces?.id === replacedEvent?.id &&
 				lastSaved.current.description === description &&
 				lastSaved.current.customName === customNameEnabled &&
 				arraysEqual(lastSaved.current.targetActors, selectedActors, (a, b) => a.id === b.id) &&
@@ -183,7 +174,6 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		isFirstRender,
 		autosave,
 		mode,
-		replacedEvent?.id,
 	])
 
 	const onDelete = useCallback(() => {

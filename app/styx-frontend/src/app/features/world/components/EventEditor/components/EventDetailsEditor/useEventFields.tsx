@@ -1,15 +1,13 @@
 import { useState } from 'react'
 
-import { WorldEvent, WorldEventModule, WorldEventReplaceLink } from '../../../../types'
+import { WorldEvent, WorldEventModule } from '../../../../types'
 import { ActorOption, useMapActorsToOptions } from '../../../ActorSelector/useMapActorsToOptions'
-import { useMapEventsToOptions } from '../../../EventSelector/useMapEventsToOptions'
 
 type Props = {
 	event: WorldEvent
 }
 
 export const useEventFields = ({ event }: Props) => {
-	const { mapSingleEventLinkToOption } = useMapEventsToOptions()
 	const { mapActorsToOptions } = useMapActorsToOptions()
 
 	const [modules, setModules] = useState<WorldEventModule[]>(event.extraFields)
@@ -17,9 +15,6 @@ export const useEventFields = ({ event }: Props) => {
 	const [icon, setIcon] = useState<string>(event.icon)
 	const [timestamp, setTimestamp] = useState<number>(event.timestamp)
 	const [revokedAt, setRevokedAt] = useState<number | undefined>(event.revokedAt)
-	const [replacedEvent, setReplacedEvent] = useState<WorldEventReplaceLink>(
-		mapSingleEventLinkToOption(event.replaces)
-	)
 	const [selectedActors, setSelectedActors] = useState<ActorOption[]>(mapActorsToOptions(event.targetActors))
 	const [mentionedActors, setMentionedActors] = useState<ActorOption[]>(
 		mapActorsToOptions(event.mentionedActors)
@@ -34,7 +29,6 @@ export const useEventFields = ({ event }: Props) => {
 			icon,
 			timestamp,
 			revokedAt,
-			replacedEvent,
 			selectedActors,
 			mentionedActors,
 			description,
@@ -44,7 +38,6 @@ export const useEventFields = ({ event }: Props) => {
 			setIcon,
 			setTimestamp,
 			setRevokedAt,
-			setReplacedEvent,
 			setSelectedActors,
 			setMentionedActors,
 			setDescription,

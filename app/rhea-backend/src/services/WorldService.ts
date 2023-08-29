@@ -2,10 +2,8 @@ import { Actor, User, WorldCalendarType, WorldEvent, WorldEventField } from '@pr
 import { BadRequestError, UnauthorizedError } from 'tenebrie-framework'
 
 import { dbClient } from './DatabaseClient'
-import { fetchWorldEventOrThrow } from './dbQueries/fetchWorldEventOrThrow'
 import { CreateWorldQueryData, makeCreateWorldEventQuery } from './dbQueries/makeCreateWorldEventQuery'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
-import { makeUnrevokeWorldEventQuery } from './dbQueries/makeUnrevokeWorldEventQuery'
 
 export const WorldService = {
 	checkUserReadAccess: async (user: User, worldId: string) => {
@@ -63,86 +61,9 @@ export const WorldService = {
 		})
 	},
 
-	createWorldEvent: async ({
-		worldId,
-		eventData,
-	}: {
-		worldId: string
-		eventData: Omit<CreateWorldQueryData, 'replacedByEventId'>
-	}) => {
-		const replacedEventId = eventData.replacedEventId
-		if (replacedEventId) {
-			return WorldService.createWorldEventAsReplace({
-				worldId,
-				eventData: {
-					...eventData,
-					replacedEventId,
-				},
-			})
-		} else {
-			return WorldService.createWorldEventAsNew({
-				worldId,
-				eventData: {
-					...eventData,
-					replacedEventId: null,
-				},
-			})
-		}
-	},
-
-	createWorldEventAsNew: async ({
-		worldId,
-		eventData,
-	}: {
-		worldId: string
-		eventData: Omit<CreateWorldQueryData, 'replacedEventId'> & {
-			replacedEventId: null
-		}
-	}) => {
+	createWorldEvent: async ({ worldId, eventData }: { worldId: string; eventData: CreateWorldQueryData }) => {
 		const [event, world] = await dbClient.$transaction([
 			makeCreateWorldEventQuery(worldId, eventData),
-			makeTouchWorldQuery(worldId),
-		])
-		return {
-			event,
-			world,
-		}
-	},
-
-	createWorldEventAsReplace: async ({
-		worldId,
-		eventData,
-	}: {
-		worldId: string
-		eventData: Omit<CreateWorldQueryData, 'replacedEventId'> & {
-			replacedEventId: NonNullable<WorldEvent['replacedEventId']>
-		}
-	}) => {
-		const replacedEvent = await fetchWorldEventOrThrow(eventData.replacedEventId)
-		const modifiedEventData: typeof eventData = {
-			...eventData,
-			revokedAt: replacedEvent.revokedAt ?? eventData.revokedAt,
-			replacedByEventId: replacedEvent.replacedByEventId,
-		}
-		const [, , event, , world] = await dbClient.$transaction([
-			dbClient.worldEvent.update({
-				where: {
-					id: eventData.replacedEventId,
-				},
-				data: {
-					replacedByEventId: null,
-				},
-			}),
-			dbClient.worldEvent.update({
-				where: {
-					id: replacedEvent.replacedByEventId ?? undefined,
-				},
-				data: {
-					replacedEventId: null,
-				},
-			}),
-			makeCreateWorldEventQuery(worldId, modifiedEventData),
-			makeUnrevokeWorldEventQuery({ event: replacedEvent }),
 			makeTouchWorldQuery(worldId),
 		])
 		return {
@@ -158,7 +79,7 @@ export const WorldService = {
 	}: {
 		worldId: string
 		eventId: string
-		params: Omit<Partial<WorldEvent>, 'replacedByEventId'> & {
+		params: Partial<WorldEvent> & {
 			targetActors: Actor[] | null
 			mentionedActors: Actor[] | null
 		}
@@ -170,11 +91,6 @@ export const WorldService = {
 				},
 				data: {
 					...params,
-					replacedEventId: params.replacedEventId
-						? {
-								set: params.replacedEventId,
-						  }
-						: params.replacedEventId,
 					targetActors:
 						params.targetActors !== null
 							? {
@@ -189,13 +105,7 @@ export const WorldService = {
 							: undefined,
 				},
 				include: {
-					replaces: {
-						select: {
-							id: true,
-							name: true,
-							timestamp: true,
-						},
-					},
+					deltaStates: true,
 					targetActors: true,
 					mentionedActors: true,
 				},
@@ -310,20 +220,7 @@ export const WorldService = {
 						mentionedActors: true,
 						introducedActors: true,
 						terminatedActors: true,
-						replaces: {
-							select: {
-								id: true,
-								name: true,
-								timestamp: true,
-							},
-						},
-						replacedBy: {
-							select: {
-								id: true,
-								name: true,
-								timestamp: true,
-							},
-						},
+						deltaStates: true,
 					},
 				},
 			},

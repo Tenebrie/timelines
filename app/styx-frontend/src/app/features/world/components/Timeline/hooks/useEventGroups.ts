@@ -17,11 +17,7 @@ const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; 
 
 	const { isLocationEqual } = useWorldRouter()
 
-	const getMarkerType = useCallback(
-		(event: WorldEvent): MarkerType =>
-			event.replaces ? ('replaceAt' as MarkerType) : ('issuedAt' as MarkerType),
-		[]
-	)
+	const getMarkerType = useCallback((event: WorldEvent): MarkerType => 'issuedAt' as MarkerType, [])
 
 	const eventGroups = useMemo(() => {
 		const eventGroups: WorldEventGroup[] = []
@@ -80,7 +76,7 @@ const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; 
 			}
 		})
 		return eventGroups
-	}, [events, ghostEvent, isLocationEqual, scaledTimeToRealTime, timelineScale])
+	}, [events, getMarkerType, ghostEvent, isLocationEqual, scaledTimeToRealTime, timelineScale])
 
 	return eventGroups
 }

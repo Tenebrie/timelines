@@ -1,20 +1,9 @@
 import { useCallback } from 'react'
 
-import { WorldEvent, WorldEventReplaceLink } from '../../types'
+import { WorldEvent } from '../../types'
 
 export const useMapEventsToOptions = () => {
 	const mapSingleEventToOption = useCallback((targetEvent: WorldEvent | null | undefined) => {
-		if (!targetEvent) {
-			return null
-		}
-
-		return {
-			...targetEvent,
-			label: `${targetEvent.name}`,
-		}
-	}, [])
-
-	const mapSingleEventLinkToOption = useCallback((targetEvent: WorldEventReplaceLink | null | undefined) => {
 		if (!targetEvent) {
 			return null
 		}
@@ -36,7 +25,6 @@ export const useMapEventsToOptions = () => {
 
 	return {
 		mapSingleEventToOption,
-		mapSingleEventLinkToOption,
 		mapEventsToOptions,
 	}
 }
