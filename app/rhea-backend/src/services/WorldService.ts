@@ -2,20 +2,10 @@ import { Actor, User, WorldCalendarType, WorldEvent, WorldEventField } from '@pr
 import { BadRequestError, UnauthorizedError } from 'tenebrie-framework'
 
 import { dbClient } from './DatabaseClient'
-
-export const touchWorld = (worldId: string) =>
-	dbClient.world.update({
-		where: {
-			id: worldId,
-		},
-		data: {
-			id: worldId,
-		},
-		select: {
-			id: true,
-			updatedAt: true,
-		},
-	})
+import { fetchWorldEventOrThrow } from './dbQueries/fetchWorldEventOrThrow'
+import { CreateWorldQueryData, makeCreateWorldEventQuery } from './dbQueries/makeCreateWorldEventQuery'
+import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
+import { makeUnrevokeWorldEventQuery } from './dbQueries/makeUnrevokeWorldEventQuery'
 
 export const WorldService = {
 	checkUserReadAccess: async (user: User, worldId: string) => {
@@ -73,42 +63,87 @@ export const WorldService = {
 		})
 	},
 
-	createWorldEvent: async (
-		worldId: string,
-		data: Pick<
-			WorldEvent,
-			'type' | 'extraFields' | 'name' | 'description' | 'timestamp' | 'revokedAt' | 'icon' | 'replacedEventId'
-		> & {
-			customNameEnabled: boolean
-			targetActors: Actor[]
-			mentionedActors: Actor[]
-		}
-	) => {
-		const [event, world] = await dbClient.$transaction([
-			dbClient.worldEvent.create({
-				data: {
-					worldId,
-					type: data.type,
-					extraFields: data.extraFields,
-					name: data.name,
-					icon: data.icon,
-					description: data.description,
-					timestamp: data.timestamp,
-					revokedAt: data.revokedAt,
-					replacedEventId: data.replacedEventId,
-					targetActors: {
-						connect: data.targetActors.map((actor) => ({ id: actor.id })),
-					},
-					mentionedActors: {
-						connect: data.mentionedActors.map((actor) => ({ id: actor.id })),
-					},
-					customName: data.customNameEnabled,
+	createWorldEvent: async ({
+		worldId,
+		eventData,
+	}: {
+		worldId: string
+		eventData: Omit<CreateWorldQueryData, 'replacedByEventId'>
+	}) => {
+		const replacedEventId = eventData.replacedEventId
+		if (replacedEventId) {
+			return WorldService.createWorldEventAsReplace({
+				worldId,
+				eventData: {
+					...eventData,
+					replacedEventId,
 				},
-				select: {
-					id: true,
+			})
+		} else {
+			return WorldService.createWorldEventAsNew({
+				worldId,
+				eventData: {
+					...eventData,
+					replacedEventId: null,
+				},
+			})
+		}
+	},
+
+	createWorldEventAsNew: async ({
+		worldId,
+		eventData,
+	}: {
+		worldId: string
+		eventData: Omit<CreateWorldQueryData, 'replacedEventId'> & {
+			replacedEventId: null
+		}
+	}) => {
+		const [event, world] = await dbClient.$transaction([
+			makeCreateWorldEventQuery(worldId, eventData),
+			makeTouchWorldQuery(worldId),
+		])
+		return {
+			event,
+			world,
+		}
+	},
+
+	createWorldEventAsReplace: async ({
+		worldId,
+		eventData,
+	}: {
+		worldId: string
+		eventData: Omit<CreateWorldQueryData, 'replacedEventId'> & {
+			replacedEventId: NonNullable<WorldEvent['replacedEventId']>
+		}
+	}) => {
+		const replacedEvent = await fetchWorldEventOrThrow(eventData.replacedEventId)
+		const modifiedEventData: typeof eventData = {
+			...eventData,
+			revokedAt: replacedEvent.revokedAt ?? eventData.revokedAt,
+			replacedByEventId: replacedEvent.replacedByEventId,
+		}
+		const [, , event, , world] = await dbClient.$transaction([
+			dbClient.worldEvent.update({
+				where: {
+					id: eventData.replacedEventId,
+				},
+				data: {
+					replacedByEventId: null,
 				},
 			}),
-			touchWorld(worldId),
+			dbClient.worldEvent.update({
+				where: {
+					id: replacedEvent.replacedByEventId ?? undefined,
+				},
+				data: {
+					replacedEventId: null,
+				},
+			}),
+			makeCreateWorldEventQuery(worldId, modifiedEventData),
+			makeUnrevokeWorldEventQuery({ event: replacedEvent }),
+			makeTouchWorldQuery(worldId),
 		])
 		return {
 			event,
@@ -165,7 +200,7 @@ export const WorldService = {
 					mentionedActors: true,
 				},
 			}),
-			touchWorld(worldId),
+			makeTouchWorldQuery(worldId),
 		])
 		return {
 			event,
@@ -180,7 +215,7 @@ export const WorldService = {
 					id: eventId,
 				},
 			}),
-			touchWorld(worldId),
+			makeTouchWorldQuery(worldId),
 		])
 		return {
 			event,
@@ -218,7 +253,7 @@ export const WorldService = {
 					extraFields: updatedModules,
 				},
 			}),
-			touchWorld(worldId),
+			makeTouchWorldQuery(worldId),
 		])
 		return {
 			statement,
@@ -236,7 +271,7 @@ export const WorldService = {
 					revokedAt: null,
 				},
 			}),
-			touchWorld(worldId),
+			makeTouchWorldQuery(worldId),
 		])
 		return {
 			statement,

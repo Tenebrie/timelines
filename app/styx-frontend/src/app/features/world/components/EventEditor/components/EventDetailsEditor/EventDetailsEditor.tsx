@@ -167,7 +167,8 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 					<OverlayingLabel>Modules</OverlayingLabel>
 					<Stack gap={2} height="100%">
 						<EventModulesControls modules={modules} state={state} />
-						{modules.includes('ReplacesEvent') && (
+						{((mode === 'create' && modules.includes('ReplacesEvent')) ||
+							(mode === 'edit' && replacedEvent)) && (
 							<Autocomplete
 								value={replacedEvent}
 								onChange={(_, value) => setReplacedEvent(value)}

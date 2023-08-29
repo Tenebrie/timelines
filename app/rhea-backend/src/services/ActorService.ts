@@ -1,7 +1,7 @@
 import { Actor } from '@prisma/client'
 
 import { dbClient } from './DatabaseClient'
-import { touchWorld } from './WorldService'
+import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
 
 export const ActorService = {
 	findActorsByIds: async (actorIds: string[]) => {
@@ -31,7 +31,7 @@ export const ActorService = {
 					id: true,
 				},
 			}),
-			touchWorld(worldId),
+			makeTouchWorldQuery(worldId),
 		])
 		return {
 			actor,
@@ -60,7 +60,7 @@ export const ActorService = {
 					description: params.description,
 				},
 			}),
-			touchWorld(worldId),
+			makeTouchWorldQuery(worldId),
 		])
 		return {
 			actor,
@@ -75,7 +75,7 @@ export const ActorService = {
 					id: actorId,
 				},
 			}),
-			touchWorld(worldId),
+			makeTouchWorldQuery(worldId),
 		])
 		return {
 			actor,

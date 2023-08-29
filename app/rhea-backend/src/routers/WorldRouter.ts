@@ -139,11 +139,14 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 	const targetActors = (await parseActorList(params.targetActorIds)) ?? []
 	const mentionedActors = (await parseActorList(params.mentionedActorIds)) ?? []
 
-	const { event, world } = await WorldService.createWorldEvent(worldId, {
-		...params,
-		extraFields: params.modules,
-		targetActors,
-		mentionedActors,
+	const { event, world } = await WorldService.createWorldEvent({
+		worldId,
+		eventData: {
+			...params,
+			extraFields: params.modules,
+			targetActors,
+			mentionedActors,
+		},
 	})
 
 	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
