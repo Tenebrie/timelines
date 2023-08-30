@@ -30,7 +30,7 @@ export const Marker = styled.div<{ iconPath: string }>`
 		transition: background-color 0.3s;
 	}
 
-	&.ghost {
+	&.ghostEvent {
 		background-color: rgb(28, 69, 114);
 		pointer-events: none;
 		.icon {

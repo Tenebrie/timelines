@@ -1,3 +1,4 @@
+import { colors } from '@mui/material'
 import classNames from 'classnames'
 import { memo, MouseEvent, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,18 +9,18 @@ import { useEventIcons } from '../../../../../../hooks/useEventIcons'
 import { worldSlice } from '../../../../../../reducer'
 import { useWorldRouter } from '../../../../../../router'
 import { getWorldState } from '../../../../../../selectors'
-import { WorldEventOnTimeline } from '../../../../../../types'
+import { TimelineEntity } from '../../../../../../types'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
 import { Label, LabelContainer, Marker } from './styles'
 
 type Props = {
-	event: WorldEventOnTimeline
+	entity: TimelineEntity
 	groupIndex: number
 	expanded: boolean
 	highlighted: boolean
 }
 
-export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighted }: Props) => {
+export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlighted }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
 	const dispatch = useDispatch()
@@ -31,20 +32,23 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
-			if (event.markerType === 'bundle') {
-				navigateToOutliner(event.events.sort((a, b) => b.timestamp - a.timestamp)[0].timestamp)
+			if (entity.markerType === 'bundle') {
+				navigateToOutliner(entity.events.sort((a, b) => b.timestamp - a.timestamp)[0].timestamp)
 				return
 			}
 
-			if (selectedEvents.includes(event.id)) {
-				dispatch(removeEventFromSelection(event.id))
+			if (selectedEvents.includes(entity.eventId)) {
+				dispatch(removeEventFromSelection(entity.eventId))
 			} else {
-				dispatch(addEventToSelection({ id: event.id, multiselect }))
+				dispatch(addEventToSelection({ id: entity.eventId, multiselect }))
 			}
 		},
 		onDoubleClick: () => {
-			navigateToEventEditor(event.id)
-			dispatch(removeEventFromSelection(event.id))
+			if (entity.markerType === 'bundle') {
+				return
+			}
+			navigateToEventEditor(entity.eventId)
+			dispatch(removeEventFromSelection(entity.eventId))
 		},
 		ignoreDelay: true,
 	})
@@ -62,35 +66,35 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 
 		dispatch(
 			openTimelineContextMenu({
-				selectedEvent: event,
+				selectedEvent: entity,
 				mousePos: {
 					x: clickEvent.clientX + 1,
 					y: clickEvent.clientY,
 				},
-				selectedTime: event.markerType === 'revokedAt' ? (event.revokedAt as number) : event.timestamp,
+				selectedTime: entity.markerType === 'revokedAt' ? (entity.revokedAt as number) : entity.timestamp,
 			})
 		)
 	}
 
 	const onMouseEnter = () => {
 		setIsInfoVisible(true)
-		HoveredTimelineEvents.hoverEvent(event)
+		HoveredTimelineEvents.hoverEvent(entity)
 	}
 
 	const onMouseLeave = () => {
 		setIsInfoVisible(false)
-		HoveredTimelineEvents.unhoverEvent(event)
+		HoveredTimelineEvents.unhoverEvent(entity)
 	}
 
-	const selected = selectedEvents.includes(event.id)
+	const selected = entity.markerType !== 'bundle' && selectedEvents.includes(entity.eventId)
 
 	const labelType =
-		event.markerType === 'issuedAt' ? (
-			<b style={{ color: 'green' }}>Issue:</b>
-		) : event.markerType === 'revokedAt' ? (
-			<b style={{ color: 'red' }}>Revoke:</b>
-		) : event.markerType === 'replaceAt' ? (
-			<b style={{ color: 'yellow' }}>Replace:</b>
+		entity.markerType === 'issuedAt' ? (
+			<b style={{ color: colors.green[500] }}>Issue:</b>
+		) : entity.markerType === 'revokedAt' ? (
+			<b style={{ color: colors.red[500] }}>Revoke:</b>
+		) : entity.markerType === 'deltaState' ? (
+			<b style={{ color: colors.yellow[500] }}>Delta:</b>
 		) : (
 			''
 		)
@@ -104,13 +108,14 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 			className={classNames({
 				expanded: groupIndex > 0 && expanded,
 				selected,
-				edited: event.id === eventEditorParams.eventId,
+				edited: entity.id === eventEditorParams.eventId,
 				highlighted,
-				revoked: event.markerType === 'revokedAt',
-				replace: event.markerType === 'replaceAt',
-				ghost: event.markerType === 'ghost',
+				revoked: entity.markerType === 'revokedAt',
+				replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',
+				ghostEvent: entity.markerType === 'ghostEvent',
+				ghostDelta: entity.markerType === 'ghostDelta',
 			})}
-			iconPath={getIconPath(event.icon)}
+			iconPath={getIconPath(entity.icon)}
 			data-testid="timeline-event-marker"
 		>
 			{isInfoVisible && (
@@ -119,7 +124,7 @@ export const TimelineEventComponent = ({ event, groupIndex, expanded, highlighte
 						<span>
 							{labelType}
 							{labelType ? ' ' : ''}
-							{event.name}
+							{entity.name}
 						</span>
 					</Label>
 				</LabelContainer>

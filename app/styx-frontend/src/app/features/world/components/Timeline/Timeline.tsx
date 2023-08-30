@@ -14,14 +14,12 @@ import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScal
 import { TimelineSelectedLabel } from './components/TimelineSelectedLabel/TimelineSelectedLabel'
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
 import useEventGroups from './hooks/useEventGroups'
+import { useTimelineDimensions } from './hooks/useTimelineDimensions'
 import { useTimelineNavigation } from './hooks/useTimelineNavigation'
 import { timelineSlice } from './reducer'
 import { TimelineContainer, TimelineWrapper } from './styles'
 
 export const Timeline = () => {
-	const containerRef = useRef<HTMLDivElement | null>(null)
-	const containerWidth = useRef<number>(window.innerWidth)
-
 	const { events, timeOrigin, calendar } = useSelector(getWorldState)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
 
@@ -61,17 +59,12 @@ export const Timeline = () => {
 		[scrollTimelineTo, navigateToOutliner, navigateToEventCreator, selectedTimeOrNull]
 	)
 
-	useEffect(() => {
-		if (!containerRef.current) {
-			return
-		}
-		containerWidth.current = containerRef.current.getBoundingClientRect().width
-	}, [containerRef])
+	const { containerRef, containerWidth } = useTimelineDimensions()
 
 	const { scroll, timelineScale, scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
 		containerRef,
-		defaultScroll: Math.floor(containerWidth.current / 2) - Number(timeOrigin),
-		maximumScroll: calendar === 'COUNTUP' ? Math.floor(containerWidth.current / 2) : Infinity,
+		defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
+		maximumScroll: calendar === 'COUNTUP' ? Math.floor(containerWidth / 2) : Infinity,
 		scaleLimits: [-3, 10],
 		onClick: (time) => onClick(time),
 		onDoubleClick: (time) => onDoubleClick(time),
@@ -94,8 +87,6 @@ export const Timeline = () => {
 		dispatch(setScaleLevel(scaleLevel))
 	}, [dispatch, scaleLevel, setScaleLevel])
 
-	const scrollPageSize = containerWidth.current
-
 	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel })
 
 	const { onContextMenu } = useTimelineContextMenu({
@@ -110,7 +101,7 @@ export const Timeline = () => {
 				<TimelineEdgeScroll
 					side="left"
 					currentScroll={scroll}
-					pageSize={scrollPageSize}
+					pageSize={containerWidth}
 					timelineScale={timelineScale}
 					scaleLevel={scaleLevel}
 					scrollTo={scrollTimelineTo}
@@ -121,6 +112,7 @@ export const Timeline = () => {
 					scroll={scroll}
 					timelineScale={timelineScale}
 					scaleLevel={scaleLevel}
+					containerWidth={containerWidth}
 				/>
 				{selectedTimeOrNull !== null && (
 					<TimeMarker
@@ -139,7 +131,7 @@ export const Timeline = () => {
 						scroll={scroll}
 						eventGroup={group}
 						timelineScale={timelineScale}
-						containerWidth={containerWidth.current}
+						containerWidth={containerWidth}
 						eventEditorParams={eventEditorParams}
 						contextMenuState={contextMenuState}
 						realTimeToScaledTime={realTimeToScaledTime}
@@ -149,7 +141,7 @@ export const Timeline = () => {
 				<TimelineEdgeScroll
 					side="right"
 					currentScroll={scroll}
-					pageSize={scrollPageSize}
+					pageSize={containerWidth}
 					timelineScale={timelineScale}
 					scaleLevel={scaleLevel}
 					scrollTo={scrollTimelineTo}

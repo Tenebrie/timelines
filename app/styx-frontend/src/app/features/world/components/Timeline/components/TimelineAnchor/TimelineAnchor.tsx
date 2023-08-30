@@ -16,15 +16,16 @@ type Props = {
 	scroll: number
 	timelineScale: number
 	scaleLevel: ScaleLevel
+	containerWidth: number
 }
 
-const TimelineAnchorComponent = ({ scroll, timelineScale, scaleLevel, visible }: Props) => {
+const TimelineAnchorComponent = ({ scroll, timelineScale, scaleLevel, visible, containerWidth }: Props) => {
 	const { lineSpacing } = useSelector(getTimelinePreferences)
 	const { parseTime, timeToShortLabel } = useWorldTime()
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel })
 
 	const lineCount =
-		Math.ceil((window.innerWidth / lineSpacing) * timelineScale) +
+		Math.ceil((containerWidth / lineSpacing) * timelineScale) +
 		Math.ceil(TimelineAnchorPadding / lineSpacing) * 2
 
 	const dividers = useMemo(() => Array(lineCount).fill(null), [lineCount])

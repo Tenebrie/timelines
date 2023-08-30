@@ -22,6 +22,7 @@ export type WorldCalendarType = WorldDetails['calendar']
 
 export type WorldEventBundle = {
 	id: string
+	key: string
 	events: WorldEvent[]
 	markerType: 'bundle'
 	name: string
@@ -29,11 +30,14 @@ export type WorldEventBundle = {
 	icon: 'bundle'
 }
 
-export type MarkerType = 'issuedAt' | 'replaceAt' | 'revokedAt' | 'ghost'
+export type MarkerType = 'issuedAt' | 'deltaState' | 'revokedAt' | 'ghostEvent' | 'ghostDelta'
 export type WorldEventGroup = {
-	events: ((WorldEvent & { markerPosition: number; markerType: MarkerType }) | WorldEventBundle)[]
+	events: (
+		| (WorldEvent & { eventId: string; key: string; markerPosition: number; markerType: MarkerType })
+		| WorldEventBundle
+	)[]
 	timestamp: number
 }
-export type WorldEventOnTimeline = WorldEventGroup['events'][number]
+export type TimelineEntity = WorldEventGroup['events'][number]
 
 export type WorldEventModule = WorldEvent['extraFields'][number]

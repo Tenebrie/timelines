@@ -104,16 +104,16 @@ export const TimelineContextMenu = () => {
 		>
 			{selectedEvent && (
 				<MenuItem disabled>
-					<ListItemText primary={'Event'} />
+					<ListItemText primary={selectedEvent.markerType === 'deltaState' ? 'Event state' : 'Event'} />
 				</MenuItem>
 			)}
 			{selectedEvent && <Divider />}
 			{selectedEvent && (
 				<MenuItem onClick={onReplaceSelectedEvent} disabled={isRequestInFlight}>
-					<ListItemText primary="Replace this event" />
+					<ListItemText primary="Create event state" />
 				</MenuItem>
 			)}
-			{(selectedEvent?.markerType === 'issuedAt' || selectedEvent?.markerType === 'replaceAt') && (
+			{(selectedEvent?.markerType === 'issuedAt' || selectedEvent?.markerType === 'deltaState') && (
 				<MenuItem onClick={onRevokeSelectedEvent} disabled={isRequestInFlight}>
 					{isRequestInFlight && (
 						<ListItemIcon>
@@ -133,9 +133,14 @@ export const TimelineContextMenu = () => {
 					<ListItemText primary="Unrevoke this event" />
 				</MenuItem>
 			)}
-			{selectedEvent && (
+			{(selectedEvent?.markerType === 'issuedAt' || selectedEvent?.markerType === 'revokedAt') && (
 				<MenuItem onClick={onDeleteSelectedEvent}>
 					<ListItemText primary="Delete this event" />
+				</MenuItem>
+			)}
+			{selectedEvent?.markerType === 'deltaState' && (
+				<MenuItem onClick={onDeleteSelectedEvent}>
+					<ListItemText primary="Delete this state" />
 				</MenuItem>
 			)}
 			{selectedEvent && <Divider />}

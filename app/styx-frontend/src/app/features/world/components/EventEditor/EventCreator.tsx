@@ -14,7 +14,7 @@ export const EventCreator = () => {
 	const { id } = useSelector(getWorldState)
 	const { selectedTime } = useWorldRouter()
 
-	const { setEventCreatorGhostEvent } = worldSlice.actions
+	const { setEventCreatorGhost } = worldSlice.actions
 	const dispatch = useDispatch()
 
 	const defaultEventValues: WorldEvent = useMemo(
@@ -29,11 +29,11 @@ export const EventCreator = () => {
 	)
 
 	useEffect(() => {
-		dispatch(setEventCreatorGhostEvent(defaultEventValues))
+		dispatch(setEventCreatorGhost(defaultEventValues))
 		return () => {
-			dispatch(setEventCreatorGhostEvent(null))
+			dispatch(setEventCreatorGhost(null))
 		}
-	}, [defaultEventValues, dispatch, setEventCreatorGhostEvent])
+	}, [defaultEventValues, dispatch, setEventCreatorGhost])
 
 	return (
 		<FullHeightContainer maxWidth="xl">

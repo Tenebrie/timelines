@@ -7,8 +7,8 @@ import { CreateWorldQueryData, makeCreateWorldEventQuery } from './dbQueries/mak
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
 
 export const WorldEventService = {
-	fetchWorldEvent: async (eventId: string, include: Parameters<typeof fetchWorldEventOrThrow>[1] = {}) => {
-		return await fetchWorldEventOrThrow(eventId, include)
+	fetchWorldEvent: async (eventId: string) => {
+		return await fetchWorldEventOrThrow(eventId)
 	},
 
 	fetchWorldEventWithDeltaStates: async (eventId: string) => {

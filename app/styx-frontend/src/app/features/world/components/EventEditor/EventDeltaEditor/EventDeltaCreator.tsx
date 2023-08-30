@@ -1,7 +1,9 @@
 import { Grid } from '@mui/material'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { mockEventDeltaModel } from '../../../../../../api/rheaApi.mock'
+import { worldSlice } from '../../../reducer'
 import { useWorldRouter } from '../../../router'
 import { WorldEventDelta } from '../../../types'
 import { FullHeightContainer } from '../styles'
@@ -10,8 +12,8 @@ import { EventDeltaDetailsEditor } from './components/EventDeltaDetailsEditor'
 export const EventDeltaCreator = () => {
 	const { selectedTime, eventDeltaCreatorParams } = useWorldRouter()
 
-	// const { setEventCreatorGhostEvent } = worldSlice.actions
-	// const dispatch = useDispatch()
+	const { setEventDeltaCreatorGhost } = worldSlice.actions
+	const dispatch = useDispatch()
 
 	const defaultDeltaValues: WorldEventDelta = useMemo(
 		() =>
@@ -24,12 +26,12 @@ export const EventDeltaCreator = () => {
 		[eventDeltaCreatorParams, selectedTime]
 	)
 
-	// useEffect(() => {
-	// 	dispatch(setEventCreatorGhostEvent(defaultEventValues))
-	// 	return () => {
-	// 		dispatch(setEventCreatorGhostEvent(null))
-	// 	}
-	// }, [defaultEventValues, dispatch, setEventCreatorGhostEvent])
+	useEffect(() => {
+		dispatch(setEventDeltaCreatorGhost(defaultDeltaValues))
+		return () => {
+			dispatch(setEventDeltaCreatorGhost(null))
+		}
+	}, [defaultDeltaValues, dispatch, setEventDeltaCreatorGhost])
 
 	return (
 		<FullHeightContainer maxWidth="xl">

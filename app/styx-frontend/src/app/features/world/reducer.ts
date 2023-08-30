@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 import { GetWorldInfoApiResponse } from '../../../api/rheaApi'
 import { ingestEvent } from '../../utils/ingestEvent'
-import { ActorDetails, WorldCalendarType, WorldEvent, WorldEventOnTimeline } from './types'
+import { ActorDetails, TimelineEntity, WorldCalendarType, WorldEvent, WorldEventDelta } from './types'
 
 export const initialState = {
 	isLoaded: false as boolean,
@@ -19,7 +19,11 @@ export const initialState = {
 	selectedEvents: [] as string[],
 
 	eventCreator: {
-		ghostEvent: null as WorldEvent | null,
+		ghost: null as WorldEvent | null,
+	},
+
+	eventDeltaCreator: {
+		ghost: null as WorldEventDelta | null,
 	},
 
 	actorWizard: {
@@ -34,7 +38,7 @@ export const initialState = {
 	timelineContextMenu: {
 		isOpen: false as boolean,
 		selectedTime: 0 as number,
-		selectedEvent: null as WorldEventOnTimeline | null,
+		selectedEvent: null as TimelineEntity | null,
 		mousePos: { x: 0, y: 0 } as { x: number; y: number },
 	},
 
@@ -136,8 +140,11 @@ export const worldSlice = createSlice({
 		},
 
 		/* Event creator */
-		setEventCreatorGhostEvent: (state, { payload }: PayloadAction<WorldEvent | null>) => {
-			state.eventCreator.ghostEvent = payload
+		setEventCreatorGhost: (state, { payload }: PayloadAction<WorldEvent | null>) => {
+			state.eventCreator.ghost = payload
+		},
+		setEventDeltaCreatorGhost: (state, { payload }: PayloadAction<WorldEventDelta | null>) => {
+			state.eventDeltaCreator.ghost = payload
 		},
 
 		/* Actor wizard */
@@ -166,7 +173,7 @@ export const worldSlice = createSlice({
 				payload,
 			}: PayloadAction<{
 				selectedTime: number
-				selectedEvent: WorldEventOnTimeline | null
+				selectedEvent: TimelineEntity | null
 				mousePos: { x: number; y: number }
 			}>
 		) => {
