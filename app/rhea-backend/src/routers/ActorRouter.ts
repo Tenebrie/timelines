@@ -1,5 +1,6 @@
 import { UserAuthenticator } from '@src/auth/UserAuthenticator'
 import { ActorService } from '@src/services/ActorService'
+import { AuthorizationService } from '@src/services/AuthorizationService'
 import { RedisService } from '@src/services/RedisService'
 import { WorldService } from '@src/services/WorldService'
 import {
@@ -35,7 +36,7 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 		worldId: PathParam(StringValidator),
 	})
 
-	await WorldService.checkUserWriteAccess(user, worldId)
+	await AuthorizationService.checkUserWriteAccess(user, worldId)
 
 	const params = useRequestBody(ctx, {
 		name: RequiredParam(NameStringValidator),
@@ -65,7 +66,7 @@ router.patch('/api/world/:worldId/actor/:actorId', async (ctx) => {
 		actorId: PathParam(StringValidator),
 	})
 
-	await WorldService.checkUserWriteAccess(user, worldId)
+	await AuthorizationService.checkUserWriteAccess(user, worldId)
 
 	const params = useRequestBody(ctx, {
 		name: OptionalParam(NameStringValidator),
@@ -95,7 +96,7 @@ router.delete('/api/world/:worldId/actor/:actorId', async (ctx) => {
 		actorId: PathParam(StringValidator),
 	})
 
-	await WorldService.checkUserWriteAccess(user, worldId)
+	await AuthorizationService.checkUserWriteAccess(user, worldId)
 
 	const { actor, world } = await ActorService.deleteActor({ worldId, actorId })
 

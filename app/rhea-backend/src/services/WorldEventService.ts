@@ -1,4 +1,5 @@
 import { Actor, WorldEvent, WorldEventField } from '@prisma/client'
+import { BadRequestError } from 'tenebrie-framework'
 
 import { dbClient } from './DatabaseClient'
 import { fetchWorldEventOrThrow } from './dbQueries/fetchWorldEventOrThrow'
@@ -6,8 +7,23 @@ import { CreateWorldQueryData, makeCreateWorldEventQuery } from './dbQueries/mak
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
 
 export const WorldEventService = {
-	fetchWorldEvent: async (eventId: string) => {
-		return await fetchWorldEventOrThrow(eventId)
+	fetchWorldEvent: async (eventId: string, include: Parameters<typeof fetchWorldEventOrThrow>[1] = {}) => {
+		return await fetchWorldEventOrThrow(eventId, include)
+	},
+
+	fetchWorldEventWithDeltaStates: async (eventId: string) => {
+		const event = await dbClient.worldEvent.findFirst({
+			where: {
+				id: eventId,
+			},
+			include: {
+				deltaStates: true,
+			},
+		})
+		if (!event) {
+			throw new BadRequestError(`Unable to find event.`)
+		}
+		return event
 	},
 
 	createWorldEvent: async ({ worldId, eventData }: { worldId: string; eventData: CreateWorldQueryData }) => {

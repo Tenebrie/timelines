@@ -1,36 +1,8 @@
 import { User, WorldCalendarType } from '@prisma/client'
-import { BadRequestError, UnauthorizedError } from 'tenebrie-framework'
 
 import { dbClient } from './DatabaseClient'
 
 export const WorldService = {
-	checkUserReadAccess: async (user: User, worldId: string) => {
-		await WorldService.checkUserWriteAccess(user, worldId)
-	},
-
-	checkUserWriteAccess: async (user: User, worldId: string) => {
-		const count = await dbClient.world.count({
-			where: {
-				id: worldId,
-				owner: user,
-			},
-		})
-		if (count === 0) {
-			throw new UnauthorizedError('No access to this world')
-		}
-	},
-
-	checkEventValidity: async (eventId: string) => {
-		const count = await dbClient.worldEvent.count({
-			where: {
-				id: eventId,
-			},
-		})
-		if (count === 0) {
-			throw new BadRequestError('Event does not exist')
-		}
-	},
-
 	createWorld: async (params: {
 		owner: User
 		name: string
