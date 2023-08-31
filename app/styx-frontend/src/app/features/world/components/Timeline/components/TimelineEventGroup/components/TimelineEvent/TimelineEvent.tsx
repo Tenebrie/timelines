@@ -27,7 +27,8 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 	const { addEventToSelection, removeEventFromSelection, openTimelineContextMenu } = worldSlice.actions
 
 	const { selectedEvents } = useSelector(getWorldState)
-	const { eventEditorParams, navigateToEventEditor, navigateToOutliner } = useWorldRouter()
+	const { eventEditorParams, navigateToEventEditor, navigateToEventDeltaEditor, navigateToOutliner } =
+		useWorldRouter()
 	const { getIconPath } = useEventIcons()
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
@@ -44,11 +45,24 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 			}
 		},
 		onDoubleClick: () => {
-			if (entity.markerType === 'bundle') {
+			if (
+				entity.markerType === 'bundle' ||
+				entity.markerType === 'ghostEvent' ||
+				entity.markerType === 'ghostDelta'
+			) {
 				return
 			}
-			navigateToEventEditor(entity.eventId)
+
 			dispatch(removeEventFromSelection(entity.eventId))
+
+			if (entity.markerType === 'deltaState') {
+				navigateToEventDeltaEditor({
+					eventId: entity.eventId,
+					deltaId: entity.id,
+				})
+			} else {
+				navigateToEventEditor(entity.eventId)
+			}
 		},
 		ignoreDelay: true,
 	})

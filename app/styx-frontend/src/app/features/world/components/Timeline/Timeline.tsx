@@ -32,6 +32,8 @@ export const Timeline = () => {
 		navigateToEventCreator,
 		selectedTimeOrNull,
 		eventEditorParams,
+		eventDeltaEditorParams,
+		isLocationEqual,
 	} = useWorldRouter()
 
 	const scrollTimelineTo = useTimelineBusDispatch()
@@ -132,7 +134,9 @@ export const Timeline = () => {
 						eventGroup={group}
 						timelineScale={timelineScale}
 						containerWidth={containerWidth}
+						isLocationEqual={isLocationEqual}
 						eventEditorParams={eventEditorParams}
+						eventDeltaEditorParams={eventDeltaEditorParams}
 						contextMenuState={contextMenuState}
 						realTimeToScaledTime={realTimeToScaledTime}
 					/>

@@ -210,6 +210,8 @@ export const mockEventDeltaModel = (
 	provided: Partial<WorldEventDelta> & Pick<WorldEventDelta, 'worldEventId'>
 ): WorldEventDelta => ({
 	id: getRandomId(),
+	createdAt: new Date(0).toISOString(),
+	updatedAt: new Date(0).toISOString(),
 	timestamp: 0,
 	name: 'Delta name',
 	description: 'Delta description',

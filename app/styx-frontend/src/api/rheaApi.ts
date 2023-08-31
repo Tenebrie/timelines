@@ -107,6 +107,21 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldDetails'],
 			}),
+			updateWorldEventDelta: build.mutation<UpdateWorldEventDeltaApiResponse, UpdateWorldEventDeltaApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/delta/${queryArg.deltaId}`,
+					method: 'PATCH',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldDetails'],
+			}),
+			deleteWorldEventDelta: build.mutation<DeleteWorldEventDeltaApiResponse, DeleteWorldEventDeltaApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/delta/${queryArg.deltaId}`,
+					method: 'DELETE',
+				}),
+				invalidatesTags: ['worldDetails'],
+			}),
 		}),
 		overrideExisting: false,
 	})
@@ -321,6 +336,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		}[]
 		deltaStates: {
 			id: string
+			createdAt: string
+			updatedAt: string
 			timestamp: string
 			name?: null | string
 			description?: null | string
@@ -387,6 +404,8 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	}[]
 	deltaStates: {
 		id: string
+		createdAt: string
+		updatedAt: string
 		timestamp: string
 		name?: null | string
 		description?: null | string
@@ -484,10 +503,52 @@ export type CreateWorldEventDeltaApiArg = {
 	eventId: string
 	body: {
 		timestamp: string
-		name: string
-		description: string
-		customName: boolean
+		name: null | string
+		description: null | string
+		customName: null | boolean
 	}
+}
+export type UpdateWorldEventDeltaApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	timestamp: string
+	name?: null | string
+	description?: null | string
+	customName?: null | boolean
+	worldEventId: string
+}
+export type UpdateWorldEventDeltaApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	eventId: string
+	/** Any string value */
+	deltaId: string
+	body: {
+		timestamp?: string
+		name?: string
+		description?: string
+		customName?: boolean
+	}
+}
+export type DeleteWorldEventDeltaApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	timestamp: string
+	name?: null | string
+	description?: null | string
+	customName?: null | boolean
+	worldEventId: string
+}
+export type DeleteWorldEventDeltaApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	eventId: string
+	/** Any string value */
+	deltaId: string
 }
 export const {
 	useCreateActorMutation,
@@ -510,4 +571,6 @@ export const {
 	useRevokeWorldEventMutation,
 	useUnrevokeWorldEventMutation,
 	useCreateWorldEventDeltaMutation,
+	useUpdateWorldEventDeltaMutation,
+	useDeleteWorldEventDeltaMutation,
 } = injectedRtkApi

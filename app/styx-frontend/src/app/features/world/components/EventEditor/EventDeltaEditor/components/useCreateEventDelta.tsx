@@ -25,10 +25,10 @@ export const useCreateEventDelta = ({ state }: Props) => {
 				worldId,
 				eventId: eventDeltaCreatorParams.eventId,
 				body: {
-					name: state.name,
+					name: state.name ?? null,
 					timestamp: String(state.timestamp),
-					description: state.description,
-					customName: state.customName,
+					description: state.description ?? null,
+					customName: state.customName ?? null,
 				},
 			})
 		)

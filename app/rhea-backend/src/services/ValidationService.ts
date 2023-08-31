@@ -15,6 +15,17 @@ export const ValidationService = {
 		}
 	},
 
+	checkEventDeltaStateValidity: async (deltaId: string) => {
+		const count = await dbClient.worldEventDelta.count({
+			where: {
+				id: deltaId,
+			},
+		})
+		if (count === 0) {
+			throw new BadRequestError('Event delta state does not exist')
+		}
+	},
+
 	checkIfEventIsRevokableAt: async (eventId: string, timestamp: bigint | null | undefined) => {
 		if (timestamp === null || timestamp === undefined) {
 			return

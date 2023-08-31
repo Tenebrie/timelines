@@ -75,7 +75,7 @@ export const worldRoutes = {
 	eventCreator: '/world/:worldId/editor/create',
 	eventEditor: '/world/:worldId/editor/:eventId',
 	eventDeltaCreator: '/world/:worldId/editor/:eventId/delta/create',
-	eventDeltaEditor: '/world/:worldId/editor/:eventId/delta/create/:deltaId',
+	eventDeltaEditor: '/world/:worldId/editor/:eventId/delta/:deltaId',
 } as const
 
 export type WorldRouteParamMapping = {

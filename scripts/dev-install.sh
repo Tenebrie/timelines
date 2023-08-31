@@ -29,8 +29,8 @@ max_retry=7
 counter=2
 until (cd app/styx-frontend && yarn openapi)
 do
+   echo "Trying again. Try #$counter"
    sleep 5
    [[ counter -eq $max_retry ]] && exit 1
-   echo "Trying again. Try #$counter"
    ((counter++))
 done

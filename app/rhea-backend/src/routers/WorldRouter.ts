@@ -10,6 +10,7 @@ import {
 	BooleanValidator,
 	NonEmptyStringValidator,
 	NullableBigIntValidator,
+	NullableBooleanValidator,
 	NumberValidator,
 	OptionalParam,
 	PathParam,
@@ -23,8 +24,11 @@ import {
 } from 'tenebrie-framework'
 
 import { parseActorList } from './utils/parseActorList'
+import { ActualNullableBooleanValidator } from './validators/ActualNullableBooleanValidator'
 import { ContentStringValidator } from './validators/ContentStringValidator'
 import { NameStringValidator } from './validators/NameStringValidator'
+import { NullableContentStringValidator } from './validators/NullableContentStringValidator'
+import { NullableNameStringValidator } from './validators/NullableNameStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
 import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator'
@@ -313,9 +317,9 @@ router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		timestamp: RequiredParam(BigIntValidator),
-		name: RequiredParam(NameStringValidator),
-		description: RequiredParam(ContentStringValidator),
-		customName: RequiredParam(BooleanValidator),
+		name: RequiredParam(NullableNameStringValidator),
+		description: RequiredParam(NullableContentStringValidator),
+		customName: RequiredParam(ActualNullableBooleanValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccess(user, worldId)
@@ -324,10 +328,76 @@ router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
 	const { deltaState, world } = await WorldEventDeltaService.createEventDeltaState({
 		worldId,
 		eventId,
-		data: {
-			...params,
+		data: params,
+	})
+
+	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+
+	return deltaState
+})
+
+router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) => {
+	useApiEndpoint({
+		name: 'updateWorldEventDelta',
+		description: 'Updates the target world event delta state',
+		tags: [worldDetailsTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId, eventId, deltaId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+		eventId: PathParam(StringValidator),
+		deltaId: PathParam(StringValidator),
+	})
+
+	const params = useRequestBody(ctx, {
+		timestamp: OptionalParam(BigIntValidator),
+		name: OptionalParam(OptionalNameStringValidator),
+		description: OptionalParam(ContentStringValidator),
+		customName: OptionalParam(BooleanValidator),
+	})
+
+	await AuthorizationService.checkUserWriteAccess(user, worldId)
+	await ValidationService.checkEventValidity(eventId)
+	await ValidationService.checkEventDeltaStateValidity(deltaId)
+
+	const { deltaState, world } = await WorldEventDeltaService.updateEventDeltaState({
+		worldId,
+		deltaId,
+		params: {
+			timestamp: params.timestamp,
+			name: params.name,
+			description: params.description,
+			customName: params.customName,
 		},
 	})
+
+	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+
+	return deltaState
+})
+
+router.delete('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) => {
+	useApiEndpoint({
+		name: 'deleteWorldEventDelta',
+		description: 'Deletes the target world event delta state.',
+		tags: [worldDetailsTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId, eventId, deltaId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+		eventId: PathParam(StringValidator),
+		deltaId: PathParam(StringValidator),
+	})
+
+	await AuthorizationService.checkUserWriteAccess(user, worldId)
+	await ValidationService.checkEventValidity(eventId)
+	await ValidationService.checkEventDeltaStateValidity(deltaId)
+
+	const { deltaState, world } = await WorldEventDeltaService.deleteEventDeltaState({ worldId, deltaId })
 
 	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
 

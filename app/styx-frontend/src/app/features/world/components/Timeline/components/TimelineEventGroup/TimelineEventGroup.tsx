@@ -13,7 +13,9 @@ type Props = {
 	timelineScale: number
 	visible: boolean
 	containerWidth: number
+	isLocationEqual: ReturnType<typeof useWorldRouter>['isLocationEqual']
 	eventEditorParams: ReturnType<typeof useWorldRouter>['eventEditorParams']
+	eventDeltaEditorParams: ReturnType<typeof useWorldRouter>['eventDeltaEditorParams']
 	contextMenuState: ReturnType<typeof getTimelineContextMenuState>
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
@@ -24,7 +26,9 @@ export const TimelineEventGroup = ({
 	timelineScale,
 	visible,
 	containerWidth,
+	isLocationEqual,
 	eventEditorParams,
+	eventDeltaEditorParams,
 	contextMenuState,
 	realTimeToScaledTime,
 }: Props) => {
@@ -45,9 +49,11 @@ export const TimelineEventGroup = ({
 	}
 
 	const highlightedEvents = eventGroup.events.filter(
-		(event) =>
-			eventEditorParams.eventId === event.id ||
-			(contextMenuState.isOpen && contextMenuState.selectedEvent?.id === event.id)
+		(entity) =>
+			(isLocationEqual('/world/:worldId/editor/:eventId') && eventEditorParams.eventId === entity.id) ||
+			(isLocationEqual('/world/:worldId/editor/:eventId/delta/:deltaId') &&
+				eventDeltaEditorParams.deltaId === entity.id) ||
+			(contextMenuState.isOpen && contextMenuState.selectedEvent?.id === entity.id)
 	)
 
 	const isExpanded = isHovered || highlightedEvents.length > 0

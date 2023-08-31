@@ -1,4 +1,4 @@
-import { ArrowBack } from '@mui/icons-material'
+import { ArrowBack, Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, Grid, Stack, Switch, TextField, Tooltip } from '@mui/material'
 
@@ -7,6 +7,7 @@ import { TimestampField } from '../../../../../time/components/TimestampField'
 import { WorldEventDelta } from '../../../../types'
 import { useEntityName } from '../../components/EventDetailsEditor/EventModules/useEntityName'
 import { useCreateEventDelta } from './useCreateEventDelta'
+import { useEditEventDelta } from './useEditEventDelta'
 import { useEventDeltaFields } from './useEventDeltaFields'
 
 type Props = {
@@ -20,21 +21,26 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 		state
 
 	const { isCreating, createDeltaState, createIcon, createIconColor } = useCreateEventDelta({ state })
+	const { isSaving, manualSave, onDelete, autosaveIcon, autosaveColor } = useEditEventDelta({
+		mode,
+		state,
+		deltaState: delta,
+	})
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		if (mode === 'create') {
 			createDeltaState()
 		} else {
-			// manualSave()
+			manualSave()
 		}
 	})
 
 	const { name: evaluatedName } = useEntityName({
-		textSource: description,
+		textSource: description ?? '',
 		entityClassName: 'event',
 		timestamp: delta.timestamp,
-		customName: name,
-		customNameEnabled: customName,
+		customName: name ?? '',
+		customNameEnabled: customName ?? false,
 		onChange: (value) => {
 			setName(value)
 		},
@@ -89,7 +95,7 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 								</span>
 							</Tooltip>
 						)}
-						{/* {mode === 'edit' && (
+						{mode === 'edit' && (
 							<Stack spacing={2} direction="row-reverse">
 								<Tooltip title={shortcutLabel} arrow placement="top">
 									<span>
@@ -109,7 +115,7 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 									Delete
 								</Button>
 							</Stack>
-						)} */}
+						)}
 						<Button variant="outlined" onClick={() => window.history.back()} startIcon={<ArrowBack />}>
 							Back
 						</Button>
