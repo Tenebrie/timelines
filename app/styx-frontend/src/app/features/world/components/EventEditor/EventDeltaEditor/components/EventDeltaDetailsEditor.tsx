@@ -19,7 +19,7 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 	const { name, timestamp, description, customName, setName, setTimestamp, setDescription, setCustomName } =
 		state
 
-	const { isCreating, createDeltaState } = useCreateEventDelta({ state })
+	const { isCreating, createDeltaState, createIcon, createIconColor } = useCreateEventDelta({ state })
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		if (mode === 'create') {
@@ -81,8 +81,8 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 										variant="contained"
 										onClick={() => createDeltaState()}
 										loadingPosition="start"
-										// color={autosaveColor}
-										// startIcon={autosaveIcon}
+										color={createIconColor}
+										startIcon={createIcon}
 									>
 										Create
 									</LoadingButton>

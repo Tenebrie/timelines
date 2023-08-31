@@ -44,7 +44,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		setCustomNameEnabled,
 	} = state
 
-	const { isCreating, createWorldEvent } = useCreateEvent({ state })
+	const { isCreating, createWorldEvent, createIcon, createIconColor } = useCreateEvent({ state })
 	const { isSaving, manualSave, onDelete, autosaveIcon, autosaveColor } = useEditEvent({
 		mode,
 		event,
@@ -122,8 +122,8 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 										variant="contained"
 										onClick={() => createWorldEvent()}
 										loadingPosition="start"
-										color={autosaveColor}
-										startIcon={autosaveIcon}
+										color={createIconColor}
+										startIcon={createIcon}
 									>
 										Create
 									</LoadingButton>

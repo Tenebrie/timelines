@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCreateWorldEventMutation } from '../../../../../../../api/rheaApi'
+import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
@@ -16,7 +17,7 @@ export const useCreateEvent = ({ state }: Props) => {
 
 	const { navigateToOutliner, selectedTime } = useWorldRouter()
 
-	const [createWorldEvent, { isLoading, isError }] = useCreateWorldEventMutation()
+	const [createWorldEvent, { isLoading: isCreating, isError }] = useCreateWorldEventMutation()
 
 	const sendRequest = useCallback(async () => {
 		const { error } = parseApiResponse(
@@ -42,9 +43,21 @@ export const useCreateEvent = ({ state }: Props) => {
 		navigateToOutliner(selectedTime)
 	}, [createWorldEvent, navigateToOutliner, selectedTime, state, worldId])
 
+	const {
+		icon: createIcon,
+		color: createIconColor,
+		manualSave,
+	} = useAutosave({
+		onSave: sendRequest,
+		isSaving: isCreating,
+		isError,
+	})
+
 	return {
-		isCreating: isLoading,
-		createWorldEvent: sendRequest,
+		createIcon,
+		createIconColor,
+		isCreating,
+		createWorldEvent: manualSave,
 		isError,
 	}
 }

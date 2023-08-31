@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCreateWorldEventDeltaMutation } from '../../../../../../../api/rheaApi'
+import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
@@ -16,7 +17,7 @@ export const useCreateEventDelta = ({ state }: Props) => {
 
 	const { navigateToOutliner, selectedTime, eventDeltaCreatorParams } = useWorldRouter()
 
-	const [createDeltaState, { isLoading, isError }] = useCreateWorldEventDeltaMutation()
+	const [createDeltaState, { isLoading: isCreating, isError }] = useCreateWorldEventDeltaMutation()
 
 	const sendRequest = useCallback(async () => {
 		const { error } = parseApiResponse(
@@ -37,9 +38,21 @@ export const useCreateEventDelta = ({ state }: Props) => {
 		navigateToOutliner(selectedTime)
 	}, [createDeltaState, eventDeltaCreatorParams.eventId, navigateToOutliner, selectedTime, state, worldId])
 
+	const {
+		icon: createIcon,
+		color: createIconColor,
+		manualSave,
+	} = useAutosave({
+		onSave: sendRequest,
+		isSaving: isCreating,
+		isError,
+	})
+
 	return {
-		isCreating: isLoading,
-		createDeltaState: sendRequest,
+		createIcon,
+		createIconColor,
+		isCreating,
+		createDeltaState: manualSave,
 		isError,
 	}
 }
