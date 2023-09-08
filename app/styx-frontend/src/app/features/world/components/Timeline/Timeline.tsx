@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '../../../time/hooks/useTimelineWorldTime'
@@ -14,13 +14,14 @@ import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScal
 import { TimelineSelectedLabel } from './components/TimelineSelectedLabel/TimelineSelectedLabel'
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
 import useEventGroups from './hooks/useEventGroups'
+import { useScrollToActiveEntity } from './hooks/useScrollToActiveEntity'
 import { useTimelineDimensions } from './hooks/useTimelineDimensions'
 import { useTimelineNavigation } from './hooks/useTimelineNavigation'
 import { timelineSlice } from './reducer'
 import { TimelineContainer, TimelineWrapper } from './styles'
 
 export const Timeline = () => {
-	const { events, timeOrigin, calendar } = useSelector(getWorldState)
+	const { timeOrigin, calendar } = useSelector(getWorldState)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
 
 	const dispatch = useDispatch()
@@ -71,19 +72,9 @@ export const Timeline = () => {
 		onClick: (time) => onClick(time),
 		onDoubleClick: (time) => onDoubleClick(time),
 	})
-	const eventGroups = useEventGroups({ timelineScale, scaleLevel })
 
-	const lastSeenEventId = useRef<string | null>(null)
-	useEffect(() => {
-		if (eventEditorParams.eventId && eventEditorParams.eventId !== lastSeenEventId.current) {
-			const event = events.find((e) => e.id === eventEditorParams.eventId)
-			if (!event) {
-				return
-			}
-			scrollTimelineTo(event.timestamp)
-		}
-		lastSeenEventId.current = eventEditorParams.eventId
-	}, [eventEditorParams, events, scrollTimelineTo])
+	const eventGroups = useEventGroups({ timelineScale, scaleLevel })
+	useScrollToActiveEntity()
 
 	useEffect(() => {
 		dispatch(setScaleLevel(scaleLevel))
