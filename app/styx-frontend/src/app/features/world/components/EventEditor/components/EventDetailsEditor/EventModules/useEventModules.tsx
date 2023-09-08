@@ -6,7 +6,7 @@ export const useEventModules = () => {
 	const options: { text: string; secondary: string; module: WorldEventModule }[] = useMemo(
 		() => [
 			{
-				text: 'Revoked at',
+				text: 'Retired at',
 				secondary: 'Specify the end-of-life timestamp for this event',
 				module: 'RevokedAt',
 			},

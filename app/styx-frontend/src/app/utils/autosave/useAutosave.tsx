@@ -1,5 +1,6 @@
+import { Save } from '@mui/icons-material'
 import debounce from 'lodash.debounce'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 
 import { isRunningInTest } from '../../../jest/isRunningInTest'
 import { useEffectOnce } from '../useEffectOnce'
@@ -10,9 +11,10 @@ type Props = {
 	onSave: () => void
 	isSaving: boolean
 	isError?: boolean
+	defaultIcon?: ReactElement
 }
 
-export const useAutosave = ({ onSave, isSaving, isError }: Props) => {
+export const useAutosave = ({ onSave, isSaving, isError, defaultIcon }: Props) => {
 	const savingStateRef = useRef<SavingState>('none')
 	const [savingState, setSavingState] = useState<SavingState>('none')
 	const successTimeoutRef = useRef<number | null>(null)
@@ -77,8 +79,10 @@ export const useAutosave = ({ onSave, isSaving, isError }: Props) => {
 	}, [savingState])
 
 	const renderIcon = useCallback(() => {
-		return <AutosaveIcon savingState={savingState} isSaving={isSaving} />
-	}, [isSaving, savingState])
+		return (
+			<AutosaveIcon savingState={savingState} isSaving={isSaving} defaultIcon={defaultIcon ?? <Save />} />
+		)
+	}, [defaultIcon, isSaving, savingState])
 
 	useEffectOnce(() => {
 		return () => {

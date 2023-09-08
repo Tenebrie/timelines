@@ -2,7 +2,7 @@ import { act } from 'react-dom/test-utils'
 
 import { renderHookWithProviders } from '../jest/renderWithProviders'
 import { MockedRouter, mockRouter, resetMockRouter } from './router.mock'
-import { useBaseRouter } from './useBaseRouter'
+import { QueryStrategy, useBaseRouter } from './useBaseRouter'
 
 describe('useBaseRouter', () => {
 	beforeAll(() => {
@@ -96,7 +96,57 @@ describe('useBaseRouter', () => {
 		expect(MockedRouter.navigations[1].target).toEqual('/app/test?q=barfoo')
 	})
 
-	it('preserves URL param between navigations', () => {
+	it('preserves URL param between navigations with Preserve strategy', () => {
+		const { result } = renderHookWithProviders(() =>
+			useBaseRouter({
+				test1: '/app/test1',
+				test2: '/app/test2',
+			})
+		)
+
+		act(() => {
+			result.current.navigateTo('/app/test1', {}, { q: 'foobar' })
+		})
+		act(() => {
+			result.current.navigateTo(
+				'/app/test2',
+				{},
+				{
+					q: QueryStrategy.Preserve,
+				}
+			)
+		})
+
+		expect(MockedRouter.navigations.length).toEqual(2)
+		expect(MockedRouter.navigations[1].target).toEqual('/app/test2?q=foobar')
+	})
+
+	it('clears URL param between navigations with Clear strategy', () => {
+		const { result } = renderHookWithProviders(() =>
+			useBaseRouter({
+				test1: '/app/test1',
+				test2: '/app/test2',
+			})
+		)
+
+		act(() => {
+			result.current.navigateTo('/app/test1', {}, { q: 'foobar' })
+		})
+		act(() => {
+			result.current.navigateTo(
+				'/app/test2',
+				{},
+				{
+					q: QueryStrategy.Clear,
+				}
+			)
+		})
+
+		expect(MockedRouter.navigations.length).toEqual(2)
+		expect(MockedRouter.navigations[1].target).toEqual('/app/test2')
+	})
+
+	it('clears URL param between navigations by default', () => {
 		const { result } = renderHookWithProviders(() =>
 			useBaseRouter({
 				test1: '/app/test1',
@@ -112,7 +162,7 @@ describe('useBaseRouter', () => {
 		})
 
 		expect(MockedRouter.navigations.length).toEqual(2)
-		expect(MockedRouter.navigations[1].target).toEqual('/app/test2?q=foobar')
+		expect(MockedRouter.navigations[1].target).toEqual('/app/test2')
 	})
 
 	it('ignores identical navigation calls', () => {

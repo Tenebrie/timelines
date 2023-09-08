@@ -4,6 +4,7 @@ import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import { useLocationRef } from '../../../hooks/useLocationRef'
 import { BlockingSpinner } from '../../components/BlockingSpinner'
 import { ActorWizardModal } from './components/ActorWizard/ActorWizardModal'
+import { DeleteEventDeltaModal } from './components/EventEditor/components/DeleteEventDeltaModal/DeleteEventDeltaModal'
 import { DeleteEventModal } from './components/EventEditor/components/DeleteEventModal/DeleteEventModal'
 import { RevokedStatementWizard } from './components/EventEditor/components/RevokedStatementWizard/RevokedStatementWizard'
 import { EventWizardModal } from './components/EventWizard/EventWizardModal'
@@ -54,6 +55,7 @@ export const World = () => {
 			<EventWizardModal />
 			<RevokedStatementWizard />
 			<DeleteEventModal />
+			<DeleteEventDeltaModal />
 		</>
 	)
 }

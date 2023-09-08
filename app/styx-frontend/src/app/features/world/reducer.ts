@@ -60,6 +60,10 @@ export const initialState = {
 			isOpen: false as boolean,
 			target: null as WorldEvent | null,
 		},
+		deleteEventDeltaModal: {
+			isOpen: false as boolean,
+			target: null as WorldEventDelta | null,
+		},
 		revokedStatementWizard: {
 			isOpen: false as boolean,
 			preselectedEventId: '' as string,
@@ -214,6 +218,16 @@ export const worldSlice = createSlice({
 
 		closeDeleteEventModal: (state) => {
 			state.eventEditor.deleteEventModal.isOpen = false
+		},
+
+		/* Event editor - Delete event delta modal */
+		openDeleteEventDeltaModal: (state, { payload }: PayloadAction<WorldEventDelta>) => {
+			state.eventEditor.deleteEventDeltaModal.isOpen = true
+			state.eventEditor.deleteEventDeltaModal.target = payload
+		},
+
+		closeDeleteEventDeltaModal: (state) => {
+			state.eventEditor.deleteEventDeltaModal.isOpen = false
 		},
 
 		/* Event editor - Revoked world statement wizard */

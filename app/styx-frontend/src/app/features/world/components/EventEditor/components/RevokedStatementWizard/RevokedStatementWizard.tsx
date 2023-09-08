@@ -9,6 +9,7 @@ import { useRevokeWorldEventMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import { ModalFooter, ModalHeader, useModalCleanup } from '../../../../../../../ui-lib/components/Modal'
 import Modal from '../../../../../../../ui-lib/components/Modal/Modal'
+import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { getOutlinerPreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
@@ -28,7 +29,7 @@ export const RevokedStatementWizard = () => {
 	const { expandedEvents } = useSelector(getOutlinerPreferences)
 
 	const { worldParams, selectedTime } = useWorldRouter()
-	const [revokeWorldStatement, { isLoading }] = useRevokeWorldEventMutation()
+	const [revokeWorldStatement, { isLoading, isError, reset }] = useRevokeWorldEventMutation()
 	const { timeToLabel } = useWorldTime()
 
 	const dispatch = useDispatch()
@@ -37,6 +38,7 @@ export const RevokedStatementWizard = () => {
 	useModalCleanup({
 		isOpen,
 		onCleanup: () => {
+			reset()
 			if (!preselectedEventId) {
 				setId('')
 				return
@@ -46,7 +48,7 @@ export const RevokedStatementWizard = () => {
 		},
 	})
 
-	const onConfirm = async () => {
+	const sendRequest = async () => {
 		if (!isOpen) {
 			return
 		}
@@ -72,11 +74,11 @@ export const RevokedStatementWizard = () => {
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
-		onConfirm()
+		sendRequest()
 	})
 
 	const removableCards = worldEvents
-		.filter((event) => event.revokedAt === undefined && event.timestamp < selectedTime)
+		.filter((event) => event.timestamp < selectedTime)
 		.sort((a, b) => a.timestamp - b.timestamp)
 
 	const options = removableCards.map((card) => ({
@@ -85,9 +87,20 @@ export const RevokedStatementWizard = () => {
 	}))
 	const previewOption = options.find((option) => option.card.id === id)
 
+	const {
+		icon,
+		color: iconColor,
+		manualSave: onConfirm,
+	} = useAutosave({
+		onSave: sendRequest,
+		isSaving: isLoading,
+		isError,
+		defaultIcon: <Add />,
+	})
+
 	return (
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
-			<ModalHeader>Revoke Statement</ModalHeader>
+			<ModalHeader>Retire event</ModalHeader>
 
 			<Typography>
 				<b>Timestamp:</b> {timeToLabel(selectedTime)}
@@ -109,11 +122,11 @@ export const RevokedStatementWizard = () => {
 							<EventHeaderRenderer event={option.card} owningActor={null} short={true} active />
 						</ListItem>
 					)}
-					renderInput={(params) => <TextField {...params} label="Statement to revoke" />}
+					renderInput={(params) => <TextField {...params} label="Event to retire" />}
 				/>
 			)}
 			{removableCards.length === 0 && (
-				<TextField label="Statement to revoke" disabled value="No statements available!" />
+				<TextField label="Event to retire" disabled value="No events available!" />
 			)}
 			<TransitionGroup style={{ marginBottom: '-16px' }}>
 				{previewOption && (
@@ -140,7 +153,8 @@ export const RevokedStatementWizard = () => {
 							variant="contained"
 							onClick={onConfirm}
 							loadingPosition="start"
-							startIcon={<Add />}
+							startIcon={icon}
+							color={iconColor}
 						>
 							<span>Confirm</span>
 						</LoadingButton>

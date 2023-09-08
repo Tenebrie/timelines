@@ -15,6 +15,9 @@ export const useScrollToActiveEntity = () => {
 	const lastSeenEventDeltaId = useRef<string | null>(null)
 	useEffect(() => {
 		if (!eventEditorParams.eventId) {
+			lastSeenEventId.current = null
+			lastSeenEventDeltaId.current = null
+
 			return
 		}
 		const event = events.find((e) => e.id === eventEditorParams.eventId)

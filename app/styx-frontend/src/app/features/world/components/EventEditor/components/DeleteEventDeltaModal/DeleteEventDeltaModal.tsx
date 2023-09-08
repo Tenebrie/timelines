@@ -4,7 +4,7 @@ import { Button, Stack, Tooltip } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useDeleteWorldEventMutation } from '../../../../../../../api/rheaApi'
+import { useDeleteWorldEventDeltaMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import Modal, {
 	ModalFooter,
@@ -14,18 +14,18 @@ import Modal, {
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
-import { getDeleteEventModalState } from '../../../../selectors'
+import { getDeleteEventDeltaModalState } from '../../../../selectors'
 
-export const DeleteEventModal = () => {
-	const [deleteWorldEvent, { isLoading }] = useDeleteWorldEventMutation()
+export const DeleteEventDeltaModal = () => {
+	const [deleteWorldEvent, { isLoading }] = useDeleteWorldEventDeltaMutation()
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 
 	const { worldParams, navigateToCurrentWorld } = useWorldRouter()
 
 	const dispatch = useDispatch()
-	const { closeDeleteEventModal } = worldSlice.actions
+	const { closeDeleteEventDeltaModal } = worldSlice.actions
 
-	const { isOpen, target: targetEvent } = useSelector(getDeleteEventModalState)
+	const { isOpen, target: targetDelta } = useSelector(getDeleteEventDeltaModalState)
 
 	useModalCleanup({
 		isOpen,
@@ -35,14 +35,15 @@ export const DeleteEventModal = () => {
 	})
 
 	const onConfirm = async () => {
-		if (!isOpen || !targetEvent) {
+		if (!isOpen || !targetDelta) {
 			return
 		}
 
 		const { error } = parseApiResponse(
 			await deleteWorldEvent({
 				worldId: worldParams.worldId,
-				eventId: targetEvent.id,
+				eventId: targetDelta.worldEventId,
+				deltaId: targetDelta.id,
 			})
 		)
 		if (error) {
@@ -50,7 +51,7 @@ export const DeleteEventModal = () => {
 			return
 		}
 
-		dispatch(closeDeleteEventModal())
+		dispatch(closeDeleteEventDeltaModal())
 		navigateToCurrentWorld()
 	}
 
@@ -58,7 +59,7 @@ export const DeleteEventModal = () => {
 		if (isLoading) {
 			return
 		}
-		dispatch(closeDeleteEventModal())
+		dispatch(closeDeleteEventDeltaModal())
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
@@ -70,8 +71,7 @@ export const DeleteEventModal = () => {
 			<ModalHeader>Delete Event</ModalHeader>
 			<Stack spacing={2}>
 				<div>
-					Attempting to permanently delete world event '<b>{targetEvent?.name}</b>'. This will also delete all
-					associated delta states, if any are present.
+					Attempting to permanently delete delta state '<b>{targetDelta?.name}</b>'.
 				</div>
 				<div>This action can't be reverted!</div>
 				{deletionError && (

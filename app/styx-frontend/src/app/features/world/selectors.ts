@@ -9,6 +9,8 @@ export const getTimelineContextMenuState = (state: RootState) => state.world.tim
 export const getEventTutorialModalState = (state: RootState) => state.world.outliner.eventTutorialModal
 export const getDeleteActorModalState = (state: RootState) => state.world.actorEditor.deleteActorModal
 export const getDeleteEventModalState = (state: RootState) => state.world.eventEditor.deleteEventModal
+export const getDeleteEventDeltaModalState = (state: RootState) =>
+	state.world.eventEditor.deleteEventDeltaModal
 export const getRevokedStatementWizardState = (state: RootState) =>
 	state.world.eventEditor.revokedStatementWizard
 export const getIssuedActorStatementWizardState = (state: RootState) =>

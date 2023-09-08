@@ -10,7 +10,6 @@ import {
 	BooleanValidator,
 	NonEmptyStringValidator,
 	NullableBigIntValidator,
-	NullableBooleanValidator,
 	NumberValidator,
 	OptionalParam,
 	PathParam,
@@ -361,6 +360,9 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 	await AuthorizationService.checkUserWriteAccess(user, worldId)
 	await ValidationService.checkEventValidity(eventId)
 	await ValidationService.checkEventDeltaStateValidity(deltaId)
+	if (params.timestamp !== undefined) {
+		await ValidationService.checkIfEventDeltaStateIsCreatableAt(eventId, params.timestamp)
+	}
 
 	const { deltaState, world } = await WorldEventDeltaService.updateEventDeltaState({
 		worldId,

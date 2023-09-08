@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 
 import {
 	UpdateWorldEventDeltaApiArg,
@@ -7,6 +8,7 @@ import {
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useIsFirstRender } from '../../../../../../utils/useIsFirstRender'
+import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
 import { WorldEventDelta } from '../../../../types'
 import { useEventDeltaFields } from './useEventDeltaFields'
@@ -37,8 +39,8 @@ export const useEditEventDelta = ({ mode, deltaState, state }: Props) => {
 		}
 	}, [deltaState, setCustomName, setDescription, setName, setTimestamp])
 
-	// const { openDeleteEventModal } = worldSlice.actions
-	// const dispatch = useDispatch()
+	const { openDeleteEventDeltaModal } = worldSlice.actions
+	const dispatch = useDispatch()
 
 	const [updateDeltaState, { isLoading: isSaving, isError }] = useUpdateWorldEventDeltaMutation()
 
@@ -104,8 +106,8 @@ export const useEditEventDelta = ({ mode, deltaState, state }: Props) => {
 	}, [autosave, customName, description, isFirstRender, mode, name, timestamp])
 
 	const onDelete = useCallback(() => {
-		// dispatch(openDeleteEventModal(event))
-	}, [])
+		dispatch(openDeleteEventDeltaModal(deltaState))
+	}, [deltaState, dispatch, openDeleteEventDeltaModal])
 
 	return {
 		isSaving,

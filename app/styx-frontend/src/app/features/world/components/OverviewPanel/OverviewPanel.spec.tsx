@@ -66,8 +66,8 @@ describe('<OverviewPanel />', () => {
 
 			const items = screen.getAllByRole('listitem')
 
-			const rootItem = items.findIndex((item) => item.innerHTML.includes('Actors (6)'))
-			expect(within(items[rootItem]).getByText('Actors (6)')).toBeInTheDocument()
+			const rootItem = items.findIndex((item) => item.innerHTML.includes('Actors (6/6)'))
+			expect(within(items[rootItem]).getByText('Actors (6/6)')).toBeInTheDocument()
 			expect(within(items[rootItem + 1]).getByText('AAA First Actor')).toBeInTheDocument()
 			expect(within(items[rootItem + 2]).getByText('BBB Second Actor')).toBeInTheDocument()
 			expect(within(items[rootItem + 3]).getByText('CCC Third Actor')).toBeInTheDocument()
@@ -95,8 +95,8 @@ describe('<OverviewPanel />', () => {
 
 			const items = screen.getAllByRole('listitem')
 
-			const rootItem = items.findIndex((item) => item.innerHTML.includes('Actors (6)'))
-			expect(within(items[rootItem]).getByText('Actors (6)')).toBeInTheDocument()
+			const rootItem = items.findIndex((item) => item.innerHTML.includes('Actors (6/6)'))
+			expect(within(items[rootItem]).getByText('Actors (6/6)')).toBeInTheDocument()
 			expect(within(items[rootItem + 1]).getByText('AAA Sixth Actor')).toBeInTheDocument()
 			expect(within(items[rootItem + 2]).getByText('BBB Fifth Actor')).toBeInTheDocument()
 			expect(within(items[rootItem + 3]).getByText('AAA Fourth Actor')).toBeInTheDocument()
@@ -105,7 +105,7 @@ describe('<OverviewPanel />', () => {
 			expect(within(items[rootItem + 6]).getByText('AAA First Actor')).toBeInTheDocument()
 		})
 
-		it('navigates to actor editor on actor click', async () => {
+		it('navigates to actor editor on actor double click', async () => {
 			const { user } = renderWithProviders(
 				<OverviewPanel />,
 				getPreloadedState({
@@ -113,6 +113,7 @@ describe('<OverviewPanel />', () => {
 				})
 			)
 
+			await user.click(screen.getByText('Actor name'))
 			await user.click(screen.getByText('Actor name'))
 
 			await waitFor(() => expect(MockedRouter.navigations.length).toEqual(1))
@@ -140,8 +141,8 @@ describe('<OverviewPanel />', () => {
 
 			const items = screen.getAllByRole('listitem')
 
-			const rootItem = items.findIndex((item) => item.innerHTML.includes('Actors (1)'))
-			expect(within(items[rootItem]).getByText('Actors (1)')).toBeInTheDocument()
+			const rootItem = items.findIndex((item) => item.innerHTML.includes('Actors (1/2)'))
+			expect(within(items[rootItem]).getByText('Actors (1/2)')).toBeInTheDocument()
 			expect(within(items[rootItem + 1]).getByText('Alice')).toBeInTheDocument()
 		})
 
@@ -166,8 +167,8 @@ describe('<OverviewPanel />', () => {
 
 			const items = screen.getAllByRole('listitem')
 
-			const rootItem = items.findIndex((item) => item.innerHTML.includes('Actors (2)'))
-			expect(within(items[rootItem]).getByText('Actors (2)')).toBeInTheDocument()
+			const rootItem = items.findIndex((item) => item.innerHTML.includes('Actors (2/2)'))
+			expect(within(items[rootItem]).getByText('Actors (2/2)')).toBeInTheDocument()
 			expect(within(items[rootItem + 1]).getByText('Alice')).toBeInTheDocument()
 			expect(within(items[rootItem + 2]).getByText('Bob')).toBeInTheDocument()
 		})
@@ -203,7 +204,7 @@ describe('<OverviewPanel />', () => {
 
 			const items = screen.getAllByRole('listitem')
 
-			const rootItem = items.findIndex((item) => item.innerHTML.includes('Events (3)'))
+			const rootItem = items.findIndex((item) => item.innerHTML.includes('Events (3/3)'))
 			expect(within(items[rootItem + 1]).getByText('Day 2, 01:00')).toBeInTheDocument()
 			expect(within(items[rootItem + 2]).getByText('Day 2, 17:40')).toBeInTheDocument()
 			expect(within(items[rootItem + 3]).getByText('Day 3, 10:20')).toBeInTheDocument()
@@ -223,8 +224,8 @@ describe('<OverviewPanel />', () => {
 
 			const items = screen.getAllByRole('listitem')
 
-			const rootItem = items.findIndex((item) => item.innerHTML.includes('Events (3)'))
-			expect(within(items[rootItem]).getByText('Events (3)')).toBeInTheDocument()
+			const rootItem = items.findIndex((item) => item.innerHTML.includes('Events (3/3)'))
+			expect(within(items[rootItem]).getByText('Events (3/3)')).toBeInTheDocument()
 			expect(within(items[rootItem + 1]).getByText('First Event')).toBeInTheDocument()
 			expect(within(items[rootItem + 2]).getByText('Second Event')).toBeInTheDocument()
 			expect(within(items[rootItem + 3]).getByText('Third Event')).toBeInTheDocument()
@@ -246,25 +247,11 @@ describe('<OverviewPanel />', () => {
 
 			const items = screen.getAllByRole('listitem')
 
-			const rootItem = items.findIndex((item) => item.innerHTML.includes('Events (3)'))
-			expect(within(items[rootItem]).getByText('Events (3)')).toBeInTheDocument()
+			const rootItem = items.findIndex((item) => item.innerHTML.includes('Events (3/3)'))
+			expect(within(items[rootItem]).getByText('Events (3/3)')).toBeInTheDocument()
 			expect(within(items[rootItem + 1]).getByText('Third Event')).toBeInTheDocument()
 			expect(within(items[rootItem + 2]).getByText('Second Event')).toBeInTheDocument()
 			expect(within(items[rootItem + 3]).getByText('First Event')).toBeInTheDocument()
-		})
-
-		it('navigates to outliner on event click', async () => {
-			const { user } = renderWithProviders(
-				<OverviewPanel />,
-				getPreloadedState({
-					events: [mockEventModel({ id: 'event-2222', name: 'First Event', timestamp: 1600 })],
-				})
-			)
-
-			await user.click(screen.getByText('First Event'))
-
-			await waitFor(() => expect(MockedRouter.navigations.length).toEqual(1))
-			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/outliner/1600')
 		})
 
 		it('navigates to event editor on double click', async () => {
@@ -282,40 +269,32 @@ describe('<OverviewPanel />', () => {
 			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/editor/event-2222')
 		})
 
-		// it('filters the events based on the search query', async () => {
-		// 	const { user } = renderWithProviders(
-		// 		<OverviewPanel />,
-		// 		getPreloadedState({
-		// 			events: [
-		// 				mockEventModel({
-		// 					name: 'The Second Event',
-		// 					timestamp: 2500,
-		// 					issuedStatements: [
-		// 						mockStatementModel({
-		// 							title: 'The Second Statement',
-		// 						}),
-		// 					],
-		// 				}),
-		// 				mockEventModel({
-		// 					name: 'The First Event',
-		// 					timestamp: 1500,
-		// 					issuedStatements: [
-		// 						mockStatementModel({
-		// 							title: 'The First Statement',
-		// 						}),
-		// 					],
-		// 				}),
-		// 			],
-		// 		})
-		// 	)
+		it('filters the events based on the search query', async () => {
+			const { user } = renderWithProviders(
+				<OverviewPanel />,
+				getPreloadedState({
+					events: [
+						mockEventModel({
+							name: 'The Second Event',
+							description: 'The Text of the Second',
+							timestamp: 2500,
+						}),
+						mockEventModel({
+							name: 'The First Event',
+							description: 'The Text of the First',
+							timestamp: 1500,
+						}),
+					],
+				})
+			)
 
-		// 	await user.type(screen.getByPlaceholderText('Search...'), 'second event')
+			await user.type(screen.getByPlaceholderText('Search...'), 'second event')
 
-		// 	const items = screen.getAllByRole('listitem')
+			const items = screen.getAllByRole('listitem')
 
-		// 	const rootItem = items.findIndex((item) => item.innerHTML.includes('Events (1)'))
-		// 	expect(within(items[rootItem]).getByText('Events (1)')).toBeInTheDocument()
-		// 	expect(within(items[rootItem + 1]).getByText('The Second Event')).toBeInTheDocument()
-		// })
+			const rootItem = items.findIndex((item) => item.innerHTML.includes('Events (1/2)'))
+			expect(within(items[rootItem]).getByText('Events (1/2)')).toBeInTheDocument()
+			expect(within(items[rootItem + 1]).getByText('The Second Event')).toBeInTheDocument()
+		})
 	})
 })

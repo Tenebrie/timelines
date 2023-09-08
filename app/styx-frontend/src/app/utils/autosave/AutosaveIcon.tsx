@@ -1,4 +1,5 @@
-import { Check, Error, MoreHoriz, Save } from '@mui/icons-material'
+import { Check, Error, MoreHoriz } from '@mui/icons-material'
+import { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { SavingState } from './types'
@@ -6,6 +7,7 @@ import { SavingState } from './types'
 type Subprops = {
 	savingState: SavingState
 	isSaving: boolean
+	defaultIcon: ReactElement
 }
 
 const IconContainer = styled.span`
@@ -26,13 +28,18 @@ const IconContainer = styled.span`
 			opacity: 1;
 			transition-delay: 0.3s !important;
 		}
+
+		&.default {
+			width: 100%;
+			height: 100%;
+		}
 	}
 `
 
-export const AutosaveIcon = ({ savingState, isSaving }: Subprops) => {
+export const AutosaveIcon = ({ savingState, isSaving, defaultIcon }: Subprops) => {
 	return (
 		<IconContainer>
-			<Save className={`${savingState === 'none' ? 'visible' : ''}`} />
+			<svg className={`${savingState === 'none' ? 'default visible' : 'default'}`}>{defaultIcon}</svg>
 			<MoreHoriz className={`${savingState === 'debounce' ? 'visible' : ''}`} />
 			<Check className={`${savingState === 'success' || isSaving ? 'visible' : ''}`} />
 			<Error className={`${savingState === 'error' ? 'visible' : ''}`} />

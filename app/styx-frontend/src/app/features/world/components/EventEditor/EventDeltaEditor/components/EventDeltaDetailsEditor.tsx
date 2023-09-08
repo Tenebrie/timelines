@@ -48,7 +48,8 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 
 	return (
 		<>
-			<Grid item xs={12} md={6} style={{ maxHeight: '100%' }}>
+			<Grid item xs={0} md={2} />
+			<Grid item xs={12} md={8} style={{ maxHeight: '100%' }}>
 				<Stack spacing={2} direction="column">
 					<TimestampField label="Issued at" timestamp={timestamp} onChange={setTimestamp} />
 					<Stack direction="row" gap={1} width="100%">
