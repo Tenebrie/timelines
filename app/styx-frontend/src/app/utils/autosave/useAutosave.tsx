@@ -18,6 +18,7 @@ export const useAutosave = ({ onSave, isSaving, isError, defaultIcon }: Props) =
 	const savingStateRef = useRef<SavingState>('none')
 	const [savingState, setSavingState] = useState<SavingState>('none')
 	const successTimeoutRef = useRef<number | null>(null)
+	const defaultIconRef = useRef<ReactElement | undefined>(defaultIcon)
 
 	const autosaveDelay = isRunningInTest() ? 1000 : 3000
 
@@ -80,9 +81,13 @@ export const useAutosave = ({ onSave, isSaving, isError, defaultIcon }: Props) =
 
 	const renderIcon = useCallback(() => {
 		return (
-			<AutosaveIcon savingState={savingState} isSaving={isSaving} defaultIcon={defaultIcon ?? <Save />} />
+			<AutosaveIcon
+				savingState={savingState}
+				isSaving={isSaving}
+				defaultIcon={defaultIconRef.current ?? <Save />}
+			/>
 		)
-	}, [defaultIcon, isSaving, savingState])
+	}, [isSaving, savingState])
 
 	useEffectOnce(() => {
 		return () => {

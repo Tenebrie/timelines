@@ -1,7 +1,7 @@
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Autocomplete, Button, Collapse, List, ListItem, TextField, Tooltip, Typography } from '@mui/material'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { TransitionGroup } from 'react-transition-group'
 
@@ -48,7 +48,7 @@ export const RevokedStatementWizard = () => {
 		},
 	})
 
-	const sendRequest = async () => {
+	const sendRequest = useCallback(async () => {
 		if (!isOpen) {
 			return
 		}
@@ -64,7 +64,7 @@ export const RevokedStatementWizard = () => {
 			return
 		}
 		dispatch(closeRevokedStatementWizard())
-	}
+	}, [closeRevokedStatementWizard, dispatch, id, isOpen, revokeWorldStatement, selectedTime, worldParams])
 
 	const onCloseAttempt = () => {
 		if (isLoading) {
