@@ -17,7 +17,7 @@ export const LostConnectionAlert = ({ server }: Props) => {
 	return (
 		<Snackbar open={open}>
 			<Alert severity="warning" sx={{ width: '100%' }}>
-				Unable to connect to the server
+				Unable to reach the server
 			</Alert>
 		</Snackbar>
 	)

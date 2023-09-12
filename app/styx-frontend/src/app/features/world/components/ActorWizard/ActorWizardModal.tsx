@@ -1,14 +1,14 @@
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Alert, Button, Collapse, FormControl, InputLabel, Select, TextField, Tooltip } from '@mui/material'
+import { Button, FormControl, InputLabel, Select, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { TransitionGroup } from 'react-transition-group'
 
 import { useCreateActorMutation } from '../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
 import Modal, { useModalCleanup } from '../../../../../ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '../../../../../ui-lib/components/Modal'
+import { FormErrorBanner } from '../../../../components/FormErrorBanner'
 import { parseApiResponse } from '../../../../utils/parseApiResponse'
 import { useErrorState } from '../../../../utils/useErrorState'
 import { useActorColors } from '../../hooks/useActorColors'
@@ -24,7 +24,7 @@ export const ActorWizardModal = () => {
 	const [title, setTitle] = useState('')
 	const [color, setColor] = useState<string>(getColorOptions()[0].value)
 
-	const { error, raiseError, clearError } = useErrorState<{
+	const { error, raiseError, clearError, errorState } = useErrorState<{
 		MISSING_NAME: string
 		SERVER_SIDE_ERROR: string
 	}>()
@@ -85,13 +85,7 @@ export const ActorWizardModal = () => {
 	return (
 		<Modal visible={isOpen} onClose={() => dispatch(closeActorWizard())}>
 			<ModalHeader>Create new actor</ModalHeader>
-			<TransitionGroup>
-				{error && (
-					<Collapse>
-						<Alert severity="error">{error.data}</Alert>
-					</Collapse>
-				)}
-			</TransitionGroup>
+			<FormErrorBanner errorState={errorState} />
 			<TextField
 				label="Name"
 				type="text"

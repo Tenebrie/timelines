@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 type RecordElement<T> = {
 	[K in keyof T]: {
@@ -7,7 +7,16 @@ type RecordElement<T> = {
 	}
 }[keyof T]
 
-export const useErrorState = <ErrorListT extends Record<any, unknown>>() => {
+export type ErrorState<ErrorListT extends Record<string, unknown>> = {
+	error: RecordElement<ErrorListT> | null
+	raiseError: <TypeT extends RecordElement<ErrorListT>['type'], DataT extends ErrorListT[TypeT]>(
+		type: TypeT,
+		data: DataT
+	) => void
+	clearError: () => void
+}
+
+export const useErrorState = <ErrorListT extends Record<string, unknown>>() => {
 	type ErrorElementsT = RecordElement<ErrorListT>
 	const [currentError, setCurrentError] = useState<ErrorElementsT | null>(null)
 
@@ -28,9 +37,20 @@ export const useErrorState = <ErrorListT extends Record<any, unknown>>() => {
 		setCurrentError(null)
 	}, [])
 
+	const errorState = useMemo(
+		() =>
+			({
+				error: currentError,
+				raiseError,
+				clearError,
+			} satisfies ErrorState<ErrorListT>),
+		[clearError, currentError, raiseError]
+	)
+
 	return {
 		error: currentError,
 		raiseError,
 		clearError,
+		errorState,
 	}
 }

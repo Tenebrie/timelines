@@ -1,8 +1,11 @@
 import { ArrowBack, Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Button, Grid, Stack, Switch, TextField, Tooltip } from '@mui/material'
+import { Button, Grid, Stack, TextField, Tooltip } from '@mui/material'
 
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
+import { FormErrorBanner } from '../../../../../../components/FormErrorBanner'
+import { useDeltaStateEvent } from '../../../../../../utils/useDeltaStateEvent'
+import { useErrorState } from '../../../../../../utils/useErrorState'
 import { TimestampField } from '../../../../../time/components/TimestampField'
 import { WorldEventDelta } from '../../../../types'
 import { useEntityName } from '../../components/EventDetailsEditor/EventModules/useEntityName'
@@ -15,16 +18,26 @@ type Props = {
 	mode: 'create' | 'edit'
 }
 
+export type EventDeltaDetailsEditorErrors = {
+	DELTA_CREATION_FAILED: string
+	DELTA_EDITING_FAILED: string
+}
+
 export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 	const { state } = useEventDeltaFields({ delta })
-	const { name, timestamp, description, customName, setName, setTimestamp, setDescription, setCustomName } =
-		state
+	const { timestamp, description, setName, setTimestamp, setDescription } = state
 
-	const { isCreating, createDeltaState, createIcon, createIconColor } = useCreateEventDelta({ state })
+	const { errorState } = useErrorState<EventDeltaDetailsEditorErrors>()
+
+	const { isCreating, createDeltaState, createIcon, createIconColor } = useCreateEventDelta({
+		state,
+		errorState,
+	})
 	const { isSaving, manualSave, onDelete, autosaveIcon, autosaveColor } = useEditEventDelta({
 		mode,
 		state,
 		deltaState: delta,
+		errorState,
 	})
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
@@ -35,12 +48,23 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 		}
 	})
 
+	const event = useDeltaStateEvent(delta)
+
+	const name = (() => {
+		if (event.customName && delta.name && delta.name.length > 0) {
+			return delta.name
+		} else if (event.customName) {
+			return event.name
+		}
+		return ''
+	})()
+
 	const { name: evaluatedName } = useEntityName({
-		textSource: description ?? '',
+		textSource: description && description.length > 0 ? description : event.description,
 		entityClassName: 'event',
 		timestamp: delta.timestamp,
-		customName: name ?? '',
-		customNameEnabled: customName ?? false,
+		customName: name,
+		customNameEnabled: event.customName,
 		onChange: (value) => {
 			setName(value)
 		},
@@ -56,45 +80,45 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 						<TextField
 							type="text"
 							label="Name"
-							disabled={!customName}
+							disabled
 							value={evaluatedName}
 							onChange={(e) => setName(e.target.value)}
 							inputProps={{ maxLength: 256 }}
 							fullWidth
 						/>
-						<Tooltip title="Use custom event name" arrow placement="top">
-							<Button onClick={() => setCustomName(!customName)}>
-								<Stack alignItems="center" justifyContent="center">
-									<Switch size="small" checked={customName} style={{ pointerEvents: 'none' }} />
-								</Stack>
-							</Button>
-						</Tooltip>
 					</Stack>
 					<TextField
 						label="Content"
-						value={description}
+						value={description ?? ''}
+						placeholder={event.description}
 						onChange={(e) => setDescription(e.target.value)}
 						minRows={7}
 						maxRows={15}
 						multiline
 						autoFocus
 					/>
+					<FormErrorBanner errorState={errorState} />
 					<Stack direction="row-reverse" justifyContent="space-between">
 						{mode === 'create' && (
-							<Tooltip title={shortcutLabel} arrow placement="top">
-								<span>
-									<LoadingButton
-										loading={isCreating}
-										variant="contained"
-										onClick={() => createDeltaState()}
-										loadingPosition="start"
-										color={createIconColor}
-										startIcon={createIcon}
-									>
-										Create
-									</LoadingButton>
-								</span>
-							</Tooltip>
+							<Stack spacing={2} direction="row-reverse">
+								<Tooltip title={shortcutLabel} arrow placement="top">
+									<span>
+										<LoadingButton
+											loading={isCreating}
+											variant="contained"
+											onClick={() => createDeltaState()}
+											loadingPosition="start"
+											color={createIconColor}
+											startIcon={createIcon}
+										>
+											Create
+										</LoadingButton>
+									</span>
+								</Tooltip>
+								<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
+									Copy source text
+								</Button>
+							</Stack>
 						)}
 						{mode === 'edit' && (
 							<Stack spacing={2} direction="row-reverse">

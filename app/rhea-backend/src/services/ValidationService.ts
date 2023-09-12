@@ -33,7 +33,7 @@ export const ValidationService = {
 		const event = await WorldEventService.fetchWorldEventWithDeltaStates(eventId)
 		if (event.deltaStates.some((delta) => delta.timestamp > timestamp)) {
 			throw new BadRequestError(
-				'Unable to revoke an event at this timestamp (at least 1 delta state at a later timestamp)'
+				'Unable to retire an event at this timestamp (at least 1 delta state at a later timestamp)'
 			)
 		}
 	},
@@ -41,7 +41,7 @@ export const ValidationService = {
 	checkIfEventDeltaStateIsCreatableAt: async (eventId: string, timestamp: bigint) => {
 		const event = await WorldEventService.fetchWorldEvent(eventId)
 		if (event.revokedAt && timestamp >= event.revokedAt) {
-			throw new BadRequestError('Unable to create a delta state for a revoked event.')
+			throw new BadRequestError('Unable to create a delta state after event retirement.')
 		}
 	},
 }

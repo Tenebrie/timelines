@@ -527,8 +527,8 @@ export type UpdateWorldEventDeltaApiArg = {
 	deltaId: string
 	body: {
 		timestamp?: string
-		name?: string
-		description?: string
+		name?: null | string
+		description?: null | string
 		customName?: boolean
 	}
 }

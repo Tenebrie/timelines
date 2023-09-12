@@ -7,21 +7,18 @@ type Props = {
 }
 
 export const useEventDeltaFields = ({ delta }: Props) => {
-	const [name, setName] = useState<string | undefined>(delta.name ?? undefined)
+	const [name, setName] = useState<string | null>(delta.name ?? null)
 	const [timestamp, setTimestamp] = useState<number>(delta.timestamp)
-	const [description, setDescription] = useState<string | undefined>(delta.description ?? undefined)
-	const [customName, setCustomName] = useState<boolean | undefined>(delta.customName ?? undefined)
+	const [description, setDescription] = useState<string | null>(delta.description ?? null)
 
 	return {
 		state: {
 			name,
 			timestamp,
 			description,
-			customName,
 			setName,
 			setTimestamp,
 			setDescription,
-			setCustomName,
 		},
 	}
 }

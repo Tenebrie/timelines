@@ -4,15 +4,18 @@ import { useSelector } from 'react-redux'
 import { useCreateWorldEventDeltaMutation } from '../../../../../../../api/rheaApi'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
+import { ErrorState } from '../../../../../../utils/useErrorState'
 import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
+import { EventDeltaDetailsEditorErrors } from './EventDeltaDetailsEditor'
 import { useEventDeltaFields } from './useEventDeltaFields'
 
 type Props = {
 	state: ReturnType<typeof useEventDeltaFields>['state']
+	errorState: ErrorState<EventDeltaDetailsEditorErrors>
 }
 
-export const useCreateEventDelta = ({ state }: Props) => {
+export const useCreateEventDelta = ({ state, errorState }: Props) => {
 	const { id: worldId } = useSelector(getWorldState)
 
 	const { navigateToOutliner, selectedTime, eventDeltaCreatorParams } = useWorldRouter()
@@ -28,15 +31,25 @@ export const useCreateEventDelta = ({ state }: Props) => {
 					name: state.name ?? null,
 					timestamp: String(state.timestamp),
 					description: state.description ?? null,
-					customName: state.customName ?? null,
+					customName: false,
 				},
 			})
 		)
 		if (error) {
+			errorState.raiseError('DELTA_CREATION_FAILED', error.message)
 			return
 		}
+		errorState.clearError()
 		navigateToOutliner(selectedTime)
-	}, [createDeltaState, eventDeltaCreatorParams.eventId, navigateToOutliner, selectedTime, state, worldId])
+	}, [
+		createDeltaState,
+		eventDeltaCreatorParams.eventId,
+		navigateToOutliner,
+		selectedTime,
+		state,
+		worldId,
+		errorState,
+	])
 
 	const {
 		icon: createIcon,

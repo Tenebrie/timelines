@@ -352,8 +352,8 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 
 	const params = useRequestBody(ctx, {
 		timestamp: OptionalParam(BigIntValidator),
-		name: OptionalParam(OptionalNameStringValidator),
-		description: OptionalParam(ContentStringValidator),
+		name: OptionalParam(NullableNameStringValidator),
+		description: OptionalParam(NullableContentStringValidator),
 		customName: OptionalParam(BooleanValidator),
 	})
 

@@ -1,12 +1,12 @@
 import { AppRegistrationRounded } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Alert, Collapse, Link, Stack, TextField } from '@mui/material'
+import { Link, Stack, TextField } from '@mui/material'
 import { KeyboardEvent, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { NavLink } from 'react-router-dom'
-import { TransitionGroup } from 'react-transition-group'
 
 import { useCreateAccountMutation } from '../../../../api/rheaApi'
+import { FormErrorBanner } from '../../../components/FormErrorBanner'
 import { TenebrieLogo } from '../../../components/TenebrieLogo'
 import { parseApiResponse } from '../../../utils/parseApiResponse'
 import { useErrorState } from '../../../utils/useErrorState'
@@ -20,7 +20,7 @@ export const Register = () => {
 	const [password, setPassword] = useState('')
 	const [confirmPassword, setConfirmPassword] = useState('')
 
-	const { error, raiseError, clearError } = useErrorState<{
+	const { error, raiseError, clearError, errorState } = useErrorState<{
 		MISSING_EMAIL: string
 		MISSING_USERNAME: string
 		MISSING_PASSWORD: string
@@ -86,15 +86,7 @@ export const Register = () => {
 				<TenebrieLogo />
 			</Stack>
 			<AlreadyLoggedInAlert parentSpacing={2} />
-			<TransitionGroup style={{ marginBottom: -16 }}>
-				{error && (
-					<Collapse>
-						<Alert severity="error" style={{ marginBottom: 16 }}>
-							{error.data}
-						</Alert>
-					</Collapse>
-				)}
-			</TransitionGroup>
+			<FormErrorBanner errorState={errorState} />
 			<TextField
 				label="Email"
 				type="text"
