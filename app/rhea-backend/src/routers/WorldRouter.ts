@@ -26,6 +26,7 @@ import { parseActorList } from './utils/parseActorList'
 import { ContentStringValidator } from './validators/ContentStringValidator'
 import { NameStringValidator } from './validators/NameStringValidator'
 import { NullableContentStringValidator } from './validators/NullableContentStringValidator'
+import { NullableNameStringValidator } from './validators/NullableNameStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
 import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator'
@@ -314,7 +315,7 @@ router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		timestamp: RequiredParam(BigIntValidator),
-		name: RequiredParam(OptionalNameStringValidator),
+		name: RequiredParam(NullableNameStringValidator),
 		description: RequiredParam(NullableContentStringValidator),
 	})
 
