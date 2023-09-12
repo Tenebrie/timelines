@@ -20,7 +20,6 @@ export const WorldEventDeltaService = {
 					name: data.name,
 					description: data.description,
 					timestamp: data.timestamp,
-					customName: data.customName,
 				},
 				select: {
 					id: true,

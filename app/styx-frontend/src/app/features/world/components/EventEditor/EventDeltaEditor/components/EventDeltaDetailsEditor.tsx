@@ -1,9 +1,11 @@
 import { ArrowBack, Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, Grid, Stack, TextField, Tooltip } from '@mui/material'
+import { useCallback } from 'react'
 
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import { FormErrorBanner } from '../../../../../../components/FormErrorBanner'
+import { applyEventDelta } from '../../../../../../utils/applyEventDelta'
 import { useDeltaStateEvent } from '../../../../../../utils/useDeltaStateEvent'
 import { useErrorState } from '../../../../../../utils/useErrorState'
 import { TimestampField } from '../../../../../time/components/TimestampField'
@@ -19,6 +21,7 @@ type Props = {
 }
 
 export type EventDeltaDetailsEditorErrors = {
+	CONTENT_EMPTY: string
 	DELTA_CREATION_FAILED: string
 	DELTA_EDITING_FAILED: string
 }
@@ -40,6 +43,12 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 		errorState,
 	})
 
+	const event = applyEventDelta({ event: useDeltaStateEvent(delta), timestamp: delta.timestamp - 1 })
+
+	const onCopySource = useCallback(() => {
+		setDescription(event.description)
+	}, [event.description, setDescription])
+
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		if (mode === 'create') {
 			createDeltaState()
@@ -48,20 +57,18 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 		}
 	})
 
-	const event = useDeltaStateEvent(delta)
-
 	const name = (() => {
-		if (event.customName && delta.name && delta.name.length > 0) {
-			return delta.name
-		} else if (event.customName) {
+		if (event.customName) {
 			return event.name
+		} else if (delta.name && delta.name.length > 0) {
+			return delta.name
 		}
 		return ''
 	})()
 
 	const { name: evaluatedName } = useEntityName({
 		textSource: description && description.length > 0 ? description : event.description,
-		entityClassName: 'event',
+		entityClassName: 'delta state',
 		timestamp: delta.timestamp,
 		customName: name,
 		customNameEnabled: event.customName,
@@ -82,7 +89,6 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 							label="Name"
 							disabled
 							value={evaluatedName}
-							onChange={(e) => setName(e.target.value)}
 							inputProps={{ maxLength: 256 }}
 							fullWidth
 						/>
@@ -91,7 +97,7 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 						label="Content"
 						value={description ?? ''}
 						placeholder={event.description}
-						onChange={(e) => setDescription(e.target.value)}
+						onChange={(e) => setDescription(e.target.value ?? null)}
 						minRows={7}
 						maxRows={15}
 						multiline
@@ -115,7 +121,7 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 										</LoadingButton>
 									</span>
 								</Tooltip>
-								<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
+								<Button variant="outlined" onClick={onCopySource} startIcon={<Delete />}>
 									Copy source text
 								</Button>
 							</Stack>

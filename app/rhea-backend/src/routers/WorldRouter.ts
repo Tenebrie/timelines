@@ -23,11 +23,9 @@ import {
 } from 'tenebrie-framework'
 
 import { parseActorList } from './utils/parseActorList'
-import { ActualNullableBooleanValidator } from './validators/ActualNullableBooleanValidator'
 import { ContentStringValidator } from './validators/ContentStringValidator'
 import { NameStringValidator } from './validators/NameStringValidator'
 import { NullableContentStringValidator } from './validators/NullableContentStringValidator'
-import { NullableNameStringValidator } from './validators/NullableNameStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
 import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator'
@@ -316,9 +314,8 @@ router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		timestamp: RequiredParam(BigIntValidator),
-		name: RequiredParam(NullableNameStringValidator),
+		name: RequiredParam(OptionalNameStringValidator),
 		description: RequiredParam(NullableContentStringValidator),
-		customName: RequiredParam(ActualNullableBooleanValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccess(user, worldId)
@@ -352,16 +349,15 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 
 	const params = useRequestBody(ctx, {
 		timestamp: OptionalParam(BigIntValidator),
-		name: OptionalParam(NullableNameStringValidator),
+		name: OptionalParam(NullableContentStringValidator),
 		description: OptionalParam(NullableContentStringValidator),
-		customName: OptionalParam(BooleanValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccess(user, worldId)
 	await ValidationService.checkEventValidity(eventId)
 	await ValidationService.checkEventDeltaStateValidity(deltaId)
 	if (params.timestamp !== undefined) {
-		await ValidationService.checkIfEventDeltaStateIsCreatableAt(eventId, params.timestamp)
+		await ValidationService.checkIfEventDeltaStateIsCreatableAt(eventId, params.timestamp, [deltaId])
 	}
 
 	const { deltaState, world } = await WorldEventDeltaService.updateEventDeltaState({
@@ -371,7 +367,6 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 			timestamp: params.timestamp,
 			name: params.name,
 			description: params.description,
-			customName: params.customName,
 		},
 	})
 

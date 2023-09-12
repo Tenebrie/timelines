@@ -2,9 +2,7 @@ import { UserAuthenticator } from '@src/auth/UserAuthenticator'
 import { ActorService } from '@src/services/ActorService'
 import { AuthorizationService } from '@src/services/AuthorizationService'
 import { RedisService } from '@src/services/RedisService'
-import { WorldService } from '@src/services/WorldService'
 import {
-	NonEmptyStringValidator,
 	OptionalParam,
 	PathParam,
 	RequiredParam,

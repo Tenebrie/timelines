@@ -9,6 +9,5 @@ export const applyEventDelta = ({ event, timestamp }: { event: WorldEvent; times
 			...total,
 			name: delta.name ?? total.name,
 			description: delta.description ?? total.description,
-			customName: typeof delta.customName === 'boolean' ? delta.customName : total.customName,
 		}
 	}, event)

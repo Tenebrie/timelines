@@ -92,7 +92,6 @@ model WorldEventDelta {
 
   name        String?
   description String?
-  customName  Boolean?
 
   worldEventId String
   worldEvent   WorldEvent @relation(fields: [worldEventId], references: [id], onDelete: Cascade)

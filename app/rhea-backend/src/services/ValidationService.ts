@@ -38,10 +38,19 @@ export const ValidationService = {
 		}
 	},
 
-	checkIfEventDeltaStateIsCreatableAt: async (eventId: string, timestamp: bigint) => {
-		const event = await WorldEventService.fetchWorldEvent(eventId)
+	checkIfEventDeltaStateIsCreatableAt: async (
+		eventId: string,
+		timestamp: bigint,
+		excludedDeltaIds: string[] = []
+	) => {
+		const event = await WorldEventService.fetchWorldEventWithDeltaStates(eventId)
 		if (event.revokedAt && timestamp >= event.revokedAt) {
 			throw new BadRequestError('Unable to create a delta state after event retirement.')
+		}
+		if (
+			event.deltaStates.some((state) => state.timestamp === timestamp && !excludedDeltaIds.includes(state.id))
+		) {
+			throw new BadRequestError('Another delta state already exists at this timestamp.')
 		}
 	},
 }

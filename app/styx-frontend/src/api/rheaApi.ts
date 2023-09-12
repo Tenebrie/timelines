@@ -341,7 +341,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			timestamp: string
 			name?: null | string
 			description?: null | string
-			customName?: null | boolean
 			worldEventId: string
 		}[]
 	}[]
@@ -409,7 +408,6 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 		timestamp: string
 		name?: null | string
 		description?: null | string
-		customName?: null | boolean
 		worldEventId: string
 	}[]
 }
@@ -515,7 +513,6 @@ export type UpdateWorldEventDeltaApiResponse = /** status 200  */ {
 	timestamp: string
 	name?: null | string
 	description?: null | string
-	customName?: null | boolean
 	worldEventId: string
 }
 export type UpdateWorldEventDeltaApiArg = {
@@ -539,7 +536,6 @@ export type DeleteWorldEventDeltaApiResponse = /** status 200  */ {
 	timestamp: string
 	name?: null | string
 	description?: null | string
-	customName?: null | boolean
 	worldEventId: string
 }
 export type DeleteWorldEventDeltaApiArg = {

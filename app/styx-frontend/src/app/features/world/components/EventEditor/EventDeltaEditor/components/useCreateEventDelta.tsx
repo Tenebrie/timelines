@@ -30,7 +30,7 @@ export const useCreateEventDelta = ({ state, errorState }: Props) => {
 				body: {
 					name: state.name ?? null,
 					timestamp: String(state.timestamp),
-					description: state.description ?? null,
+					description: state.description,
 					customName: false,
 				},
 			})

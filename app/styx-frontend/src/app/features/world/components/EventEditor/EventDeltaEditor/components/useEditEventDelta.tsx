@@ -22,7 +22,7 @@ type Props = {
 	state: ReturnType<typeof useEventDeltaFields>['state']
 }
 
-type SavedDeltaState = Pick<WorldEventDelta, 'name' | 'timestamp' | 'description' | 'customName'>
+type SavedDeltaState = Pick<WorldEventDelta, 'name' | 'timestamp' | 'description'>
 
 export const useEditEventDelta = ({ mode, deltaState, errorState, state }: Props) => {
 	const { name, timestamp, description, setName, setTimestamp, setDescription } = state
@@ -57,9 +57,8 @@ export const useEditEventDelta = ({ mode, deltaState, errorState, state }: Props
 					deltaId: deltaState.id,
 					body: {
 						timestamp: body.timestamp,
-						name: body.name ? body.name : null,
-						description: body.description ? body.description : null,
-						customName: false,
+						name: body.description && body.name ? body.name : null,
+						description: body.description,
 					},
 				})
 			)
@@ -83,12 +82,13 @@ export const useEditEventDelta = ({ mode, deltaState, errorState, state }: Props
 		autosave,
 		manualSave,
 	} = useAutosave({
-		onSave: () =>
+		onSave: () => {
 			sendUpdate({
 				name,
 				timestamp: String(timestamp),
-				description,
-			}),
+				description: description,
+			})
+		},
 		isSaving,
 		isError,
 	})
@@ -101,9 +101,7 @@ export const useEditEventDelta = ({ mode, deltaState, errorState, state }: Props
 		}
 		if (
 			isFirstRender ||
-			(lastSaved.current.name === name &&
-				lastSaved.current.timestamp === timestamp &&
-				lastSaved.current.description === description)
+			(lastSaved.current.timestamp === timestamp && lastSaved.current.description === description)
 		) {
 			return
 		}

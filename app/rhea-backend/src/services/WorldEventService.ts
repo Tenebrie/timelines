@@ -5,6 +5,7 @@ import { dbClient } from './DatabaseClient'
 import { fetchWorldEventOrThrow } from './dbQueries/fetchWorldEventOrThrow'
 import { CreateWorldQueryData, makeCreateWorldEventQuery } from './dbQueries/makeCreateWorldEventQuery'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
+import { makeUpdateDeltaStateNamesQueries } from './dbQueries/makeUpdateDeltaStateNamesQueries'
 
 export const WorldEventService = {
 	fetchWorldEvent: async (eventId: string) => {
@@ -49,6 +50,8 @@ export const WorldEventService = {
 			mentionedActors: Actor[] | null
 		}
 	}) => {
+		const eventBeforeUpdate = await WorldEventService.fetchWorldEventWithDeltaStates(eventId)
+
 		const [event, world] = await dbClient.$transaction([
 			dbClient.worldEvent.update({
 				where: {
@@ -76,6 +79,11 @@ export const WorldEventService = {
 				},
 			}),
 			makeTouchWorldQuery(worldId),
+			...makeUpdateDeltaStateNamesQueries({
+				event: eventBeforeUpdate,
+				customName: params.name,
+				customNameEnabled: params.customName,
+			}),
 		])
 		return {
 			event,
