@@ -1,78 +1,94 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import App from '../App'
-import { Limbo } from '../app/features/auth/limbo/Limbo'
-import { Login } from '../app/features/auth/login/Login'
-import { Register } from '../app/features/auth/register/Register'
-import { Spinny } from '../app/features/demo/spinny/Spinny'
-import { Home } from '../app/features/home/Home'
-import { ActorEditor } from '../app/features/world/components/ActorEditor/ActorEditor'
-import { EventCreator } from '../app/features/world/components/EventEditor/EventCreator'
-import { EventDeltaCreator } from '../app/features/world/components/EventEditor/EventDeltaEditor/EventDeltaCreator'
-import { EventDeltaEditor } from '../app/features/world/components/EventEditor/EventDeltaEditor/EventDeltaEditor'
-import { EventEditor } from '../app/features/world/components/EventEditor/EventEditor'
-import { Outliner } from '../app/features/world/components/Outliner/Outliner'
 import { appRoutes, worldRoutes } from '../app/features/world/router'
-import { World } from '../app/features/world/World'
+
+const lazyImport = (component: Promise<() => JSX.Element>) => {
+	return {
+		lazy: async () => {
+			const comp = await component
+			return {
+				Component: comp,
+			}
+		},
+	}
+}
 
 export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 	{
 		path: '/',
-		element: <App />,
+		...lazyImport(import('../App').then((m) => m.default)),
 		children: [
 			{
 				path: appRoutes.limbo,
-				element: <Limbo />,
+				...lazyImport(import('../app/features/auth/limbo/Limbo').then((m) => m.Limbo)),
 			},
 			{
 				path: appRoutes.home,
-				element: <Home />,
+				...lazyImport(import('../app/features/home/Home').then((m) => m.Home)),
 			},
 			{
 				path: appRoutes.login,
-				element: <Login />,
+				...lazyImport(import('../app/features/auth/login/Login').then((m) => m.Login)),
 			},
 			{
 				path: appRoutes.register,
-				element: <Register />,
+				...lazyImport(import('../app/features/auth/register/Register').then((m) => m.Register)),
 			},
 			{
 				path: worldRoutes.root,
-				element: <World />,
+				...lazyImport(import('../app/features/world/World').then((m) => m.World)),
 				children: [
 					{
 						path: worldRoutes.root,
-						element: <Outliner />,
+						...lazyImport(
+							import('../app/features/world/components/Outliner/Outliner').then((m) => m.Outliner)
+						),
 					},
 					{
 						path: worldRoutes.outliner,
-						element: <Outliner />,
+						...lazyImport(
+							import('../app/features/world/components/Outliner/Outliner').then((m) => m.Outliner)
+						),
 					},
 					{
 						path: worldRoutes.actorEditor,
-						element: <ActorEditor />,
+						...lazyImport(
+							import('../app/features/world/components/ActorEditor/ActorEditor').then((m) => m.ActorEditor)
+						),
 					},
 					{
 						path: worldRoutes.eventCreator,
-						element: <EventCreator />,
+						...lazyImport(
+							import('../app/features/world/components/EventEditor/EventCreator').then((m) => m.EventCreator)
+						),
 					},
 					{
 						path: worldRoutes.eventEditor,
-						element: <EventEditor />,
+						...lazyImport(
+							import('../app/features/world/components/EventEditor/EventEditor').then((m) => m.EventEditor)
+						),
 					},
 					{
 						path: worldRoutes.eventDeltaCreator,
-						element: <EventDeltaCreator />,
+						...lazyImport(
+							import('../app/features/world/components/EventEditor/EventDeltaEditor/EventDeltaCreator').then(
+								(m) => m.EventDeltaCreator
+							)
+						),
 					},
 					{
 						path: worldRoutes.eventDeltaEditor,
-						element: <EventDeltaEditor />,
+						...lazyImport(
+							import('../app/features/world/components/EventEditor/EventDeltaEditor/EventDeltaEditor').then(
+								(m) => m.EventDeltaEditor
+							)
+						),
 					},
 				],
 			},
 			{
 				path: '/spinny',
-				element: <Spinny />,
+				...lazyImport(import('../app/features/demo/spinny/Spinny').then((m) => m.Spinny)),
 			},
 		],
 	},

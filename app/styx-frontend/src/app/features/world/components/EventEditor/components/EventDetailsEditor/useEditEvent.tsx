@@ -2,10 +2,8 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { UpdateWorldEventApiArg, useUpdateWorldEventMutation } from '../../../../../../../api/rheaApi'
-import { arraysEqual } from '../../../../../../utils/arraysEqual'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { useIsFirstRender } from '../../../../../../utils/useIsFirstRender'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
 import { WorldEvent } from '../../../../types'
@@ -18,23 +16,11 @@ type Props = {
 	state: ReturnType<typeof useEventFields>['state']
 }
 
-type SavedEvent = Pick<
-	WorldEvent,
-	| 'extraFields'
-	| 'name'
-	| 'icon'
-	| 'timestamp'
-	| 'revokedAt'
-	| 'description'
-	| 'customName'
-	| 'targetActors'
-	| 'mentionedActors'
->
-
 export const useEditEvent = ({ mode, event, state }: Props) => {
 	const { mapActorsToOptions } = useMapActorsToOptions()
 
 	const {
+		isDirty,
 		modules,
 		name,
 		icon,
@@ -44,6 +30,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		mentionedActors,
 		description,
 		customNameEnabled,
+		setDirty,
 		setModules,
 		setName,
 		setIcon,
@@ -55,27 +42,26 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		setCustomNameEnabled,
 	} = state
 
-	const savingEnabled = useRef<boolean>(true)
-	const lastSaved = useRef<SavedEvent>(event)
 	const lastSavedAt = useRef<Date>(new Date(event.updatedAt))
 
 	useEffect(() => {
 		if (new Date(event.updatedAt) > lastSavedAt.current) {
-			setModules(event.extraFields)
-			setName(event.name)
-			setIcon(event.icon)
-			setTimestamp(event.timestamp)
-			setRevokedAt(event.revokedAt)
-			setSelectedActors(mapActorsToOptions(event.targetActors))
-			setMentionedActors(mapActorsToOptions(event.mentionedActors))
-			setDescription(event.description)
-			setCustomNameEnabled(event.customName)
-			savingEnabled.current = false
+			setModules(event.extraFields, { cleanSet: true })
+			setName(event.name, { cleanSet: true })
+			setIcon(event.icon, { cleanSet: true })
+			setTimestamp(event.timestamp, { cleanSet: true })
+			setRevokedAt(event.revokedAt, { cleanSet: true })
+			setSelectedActors(mapActorsToOptions(event.targetActors), { cleanSet: true })
+			setMentionedActors(mapActorsToOptions(event.mentionedActors), { cleanSet: true })
+			setDescription(event.description, { cleanSet: true })
+			setCustomNameEnabled(event.customName, { cleanSet: true })
+
+			setDirty(false)
+			lastSavedAt.current = new Date(event.updatedAt)
 		}
 	}, [
 		event,
 		mapActorsToOptions,
-		setDescription,
 		setIcon,
 		setMentionedActors,
 		setModules,
@@ -84,6 +70,8 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		setSelectedActors,
 		setTimestamp,
 		setCustomNameEnabled,
+		setDirty,
+		setDescription,
 	])
 
 	const { openDeleteEventModal } = worldSlice.actions
@@ -96,7 +84,8 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 
 	const sendUpdate = useCallback(
 		async (delta: UpdateWorldEventApiArg['body']) => {
-			const { response, error } = parseApiResponse(
+			setDirty(false)
+			const { error } = parseApiResponse(
 				await updateWorldEvent({
 					worldId: worldId,
 					eventId: event.id,
@@ -106,14 +95,9 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 			if (error) {
 				return
 			}
-			lastSaved.current = {
-				...response,
-				timestamp: Number(response.timestamp),
-				revokedAt: Number(response.revokedAt),
-			}
 			lastSavedAt.current = new Date()
 		},
-		[event.id, updateWorldEvent, worldId]
+		[event.id, setDirty, updateWorldEvent, worldId]
 	)
 
 	const {
@@ -138,43 +122,11 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		isError,
 	})
 
-	const { isFirstRender } = useIsFirstRender()
 	useEffect(() => {
-		if (!savingEnabled.current || mode !== 'edit') {
-			savingEnabled.current = true
-			return
+		if (mode === 'edit' && isDirty.current) {
+			autosave()
 		}
-		if (
-			isFirstRender ||
-			(arraysEqual(lastSaved.current.extraFields, modules, (a, b) => a === b) &&
-				lastSaved.current.name === name &&
-				lastSaved.current.icon === icon &&
-				lastSaved.current.timestamp === timestamp &&
-				lastSaved.current.revokedAt === revokedAt &&
-				lastSaved.current.description === description &&
-				lastSaved.current.customName === customNameEnabled &&
-				arraysEqual(lastSaved.current.targetActors, selectedActors, (a, b) => a.id === b.id) &&
-				arraysEqual(lastSaved.current.mentionedActors, mentionedActors, (a, b) => a.id === b.id))
-		) {
-			return
-		}
-
-		autosave()
-	}, [
-		modules,
-		name,
-		icon,
-		timestamp,
-		revokedAt,
-		description,
-		customNameEnabled,
-		selectedActors,
-		mentionedActors,
-		sendUpdate,
-		isFirstRender,
-		autosave,
-		mode,
-	])
+	}, [autosave, isDirty, mode, state])
 
 	const onDelete = useCallback(() => {
 		dispatch(openDeleteEventModal(event))

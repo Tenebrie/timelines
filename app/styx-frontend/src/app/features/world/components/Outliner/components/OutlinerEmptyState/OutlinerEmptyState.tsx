@@ -4,11 +4,7 @@ import { useDispatch } from 'react-redux'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
 
-type Props = {
-	selectedTime: number
-}
-
-export const OutlinerEmptyState = ({ selectedTime }: Props) => {
+export const OutlinerEmptyState = () => {
 	const dispatch = useDispatch()
 	const { navigateToEventCreator } = useWorldRouter()
 	const { openEventTutorialModal } = worldSlice.actions

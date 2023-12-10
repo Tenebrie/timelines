@@ -2,13 +2,17 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useCheckAuthenticationQuery } from '../../../../api/rheaApi'
-import { appRoutes, useAppRouter } from '../../world/router'
+import { appRoutes } from '../../world/router'
 import { authSlice } from '../reducer'
 import { getAuthState } from '../selectors'
 
-export const useAuthCheck = () => {
+type ReturnType = {
+	success: boolean
+	target: '' | (typeof appRoutes)[keyof typeof appRoutes]
+}
+
+export const useAuthCheck = (): ReturnType => {
 	const { data, isLoading } = useCheckAuthenticationQuery()
-	const { navigateToLoginWithoutHistory, navigateToHomeWithoutHistory } = useAppRouter()
 
 	const { user } = useSelector(getAuthState)
 	const { setUser } = authSlice.actions
@@ -24,17 +28,23 @@ export const useAuthCheck = () => {
 		}
 	}, [data, dispatch, setUser])
 
-	useEffect(() => {
-		if (user || (data && data.authenticated) || isLoading) {
-			return
-		}
+	if (user || (data && data.authenticated) || isLoading) {
+		return { success: true, target: '' }
+	}
 
-		if (
-			window.location.pathname !== appRoutes.limbo &&
-			window.location.pathname !== appRoutes.login &&
-			window.location.pathname !== appRoutes.register
-		) {
-			navigateToLoginWithoutHistory()
+	if (
+		window.location.pathname !== appRoutes.limbo &&
+		window.location.pathname !== appRoutes.login &&
+		window.location.pathname !== appRoutes.register
+	) {
+		return {
+			success: false,
+			target: appRoutes.login,
 		}
-	}, [user, isLoading, navigateToHomeWithoutHistory, navigateToLoginWithoutHistory, data])
+	}
+
+	return {
+		success: true,
+		target: '',
+	}
 }

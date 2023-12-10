@@ -1,41 +1,42 @@
 import { ArrowBack, Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, FormControl, InputLabel, Select, Stack, TextField, Tooltip } from '@mui/material'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useUpdateActorMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { useIsFirstRender } from '../../../../../../utils/useIsFirstRender'
 import { useActorColors } from '../../../../hooks/useActorColors'
 import { worldSlice } from '../../../../reducer'
 import { useWorldRouter } from '../../../../router'
 import { Actor, ActorDetails } from '../../../../types'
+import { useActorFields } from './useActorFields'
 
 type Props = {
 	actor: ActorDetails
 }
 
 export const ActorDetailsEditor = ({ actor }: Props) => {
-	const [name, setName] = useState<string>(actor.name)
-	const [title, setTitle] = useState<string>(actor.title)
-	const [color, setColor] = useState<string>(actor.color)
-	const [description, setDescription] = useState<string>(actor.description)
+	const { state } = useActorFields({ actor })
 
-	const savingEnabled = useRef<boolean>(true)
-	const lastSaved = useRef<Actor>(actor)
+	const { isDirty, name, title, color, description, setDirty, setName, setTitle, setColor, setDescription } =
+		state
+
 	const lastSavedAt = useRef<Date>(new Date(actor.updatedAt))
 
 	useEffect(() => {
 		if (new Date(actor.updatedAt) > lastSavedAt.current) {
-			setName(actor.name)
-			setTitle(actor.title)
-			setDescription(actor.description)
-			savingEnabled.current = false
+			setName(actor.name, { cleanSet: true })
+			setTitle(actor.title, { cleanSet: true })
+			setColor(actor.color, { cleanSet: true })
+			setDescription(actor.description, { cleanSet: true })
+
+			setDirty(false)
+			lastSavedAt.current = new Date(actor.updatedAt)
 		}
-	}, [actor])
+	}, [actor, setColor, setDescription, setDirty, setName, setTitle])
 
 	const { openDeleteActorModal } = worldSlice.actions
 	const dispatch = useDispatch()
@@ -47,7 +48,8 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 
 	const sendUpdate = useCallback(
 		async (delta: Partial<Actor>) => {
-			const { response, error } = parseApiResponse(
+			isDirty.current = false
+			const { error } = parseApiResponse(
 				await updateActor({
 					worldId: worldId,
 					actorId: actor.id,
@@ -57,10 +59,9 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 			if (error) {
 				return
 			}
-			lastSaved.current = response
 			lastSavedAt.current = new Date()
 		},
-		[actor.id, updateActor, worldId]
+		[actor.id, isDirty, updateActor, worldId]
 	)
 
 	const {
@@ -79,24 +80,11 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 		isSaving,
 	})
 
-	const { isFirstRender } = useIsFirstRender()
 	useEffect(() => {
-		if (!savingEnabled.current) {
-			savingEnabled.current = true
-			return
+		if (isDirty.current) {
+			autosave()
 		}
-		if (
-			isFirstRender ||
-			(lastSaved.current.name === name &&
-				lastSaved.current.title === title &&
-				lastSaved.current.color === color &&
-				lastSaved.current.description === description)
-		) {
-			return
-		}
-
-		autosave()
-	}, [name, title, color, description, sendUpdate, isFirstRender, autosave])
+	}, [state, autosave, isDirty])
 
 	const onDelete = useCallback(() => {
 		dispatch(openDeleteActorModal(actor))

@@ -1,5 +1,5 @@
 import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
-import { setupServer } from 'msw/lib/node'
+import { setupServer } from 'msw/node'
 
 import {
 	mockApiEventModel,

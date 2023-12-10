@@ -1,6 +1,7 @@
 import { Queries, queries, render, renderHook, RenderHookOptions } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ReactNode } from 'react'
+import { act } from 'react-dom/test-utils'
 import { Provider } from 'react-redux'
 import { createBrowserRouter, MemoryRouter, RouterProvider } from 'react-router-dom'
 
@@ -25,7 +26,7 @@ export const renderWithProviders = (
 	}
 }
 
-export const renderWithRouter = (
+export const renderWithRouter = async (
 	routeName: keyof typeof appRoutes | keyof typeof worldRoutes,
 	{ preloadedState }: { preloadedState?: Partial<RootState> } = {}
 ) => {
@@ -36,7 +37,8 @@ export const renderWithRouter = (
 	const path = bigRouter[routeName]
 	window.history.pushState({}, 'Test page', path)
 	const store = generateStore({ preloadedState })
-	return {
+
+	const returnValue = {
 		user: userEvent.setup(),
 		store,
 		...render(
@@ -45,6 +47,12 @@ export const renderWithRouter = (
 			</Provider>
 		),
 	}
+
+	await act(async () => {
+		await vi.dynamicImportSettled()
+	})
+
+	return returnValue
 }
 
 export const renderHookWithProviders = <

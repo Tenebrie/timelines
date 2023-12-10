@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
+    "target": "ESNext",
     "lib": [
       "dom",
       "dom.iterable",
@@ -21,10 +21,12 @@
     "sourceMap": true,
     "jsx": "react-jsx",
     "types": [
+      "vite/client",
+      "vitest/globals",
       "./node_modules/user-agent-data-types"
     ]
   },
   "include": [
-    "src",
+    "src", "jest.config.ts",
   ]
 }

@@ -135,3 +135,5 @@ export const Register = () => {
 		</Stack>
 	)
 }
+
+export default Register

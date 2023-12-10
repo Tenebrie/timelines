@@ -1,5 +1,5 @@
 import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
-import { setupServer } from 'msw/lib/node'
+import { setupServer } from 'msw/node'
 
 import {
 	mockAuthenticatedUser,
@@ -55,7 +55,7 @@ describe('<Register />', () => {
 			mockNonAuthenticatedUser(server)
 		})
 		it('renders the login form at the correct path', async () => {
-			renderWithRouter('register')
+			await renderWithRouter('register')
 
 			expect(screen.getByLabelText('Email')).toBeInTheDocument()
 			expect(screen.getByLabelText('Username')).toBeInTheDocument()
@@ -65,15 +65,13 @@ describe('<Register />', () => {
 		})
 
 		it('navigates to registration on link click', async () => {
-			const { user } = renderWithRouter('register')
+			const { user } = await renderWithRouter('register')
 
 			await user.click(screen.getByText('Already have an account? Login instead'))
 			expect(window.location.pathname).toEqual(appRoutes.login)
 		})
 
 		it('sends registration request', async () => {
-			const { user } = renderWithRouter('register')
-
 			const { hasBeenCalled } = mockPostRegister(server, {
 				response: {
 					id: '1111-2222-3333',
@@ -82,6 +80,8 @@ describe('<Register />', () => {
 				},
 			})
 			mockGetWorlds(server, { response: [] })
+
+			const { user } = await renderWithRouter('register')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Username'), 'admin')
@@ -93,8 +93,6 @@ describe('<Register />', () => {
 		})
 
 		it('is redirected to home on successful registration', async () => {
-			const { user, store } = renderWithRouter('register')
-
 			mockAuthenticatedUser(server)
 			mockPostRegister(server, {
 				response: {
@@ -104,6 +102,8 @@ describe('<Register />', () => {
 				},
 			})
 			mockGetWorlds(server, { response: [] })
+
+			const { user, store } = await renderWithRouter('register')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Username'), 'admin')
@@ -121,7 +121,7 @@ describe('<Register />', () => {
 		})
 
 		it('prints error when email is missing', async () => {
-			const { user } = renderWithRouter('register')
+			const { user } = await renderWithRouter('register')
 
 			await user.type(screen.getByLabelText('Username'), 'admin')
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')
@@ -133,7 +133,7 @@ describe('<Register />', () => {
 		})
 
 		it('prints error when username is missing', async () => {
-			const { user } = renderWithRouter('register')
+			const { user } = await renderWithRouter('register')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')
@@ -145,7 +145,7 @@ describe('<Register />', () => {
 		})
 
 		it('prints error when password is missing', async () => {
-			const { user } = renderWithRouter('register')
+			const { user } = await renderWithRouter('register')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Username'), 'admin')
@@ -157,7 +157,7 @@ describe('<Register />', () => {
 		})
 
 		it('prints error when passwords are different', async () => {
-			const { user } = renderWithRouter('register')
+			const { user } = await renderWithRouter('register')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Username'), 'admin')
@@ -170,8 +170,6 @@ describe('<Register />', () => {
 		})
 
 		it('prints error when login fails', async () => {
-			const { user } = renderWithRouter('register')
-
 			mockPostRegister(server, {
 				error: {
 					status: 400,
@@ -179,6 +177,8 @@ describe('<Register />', () => {
 				},
 			})
 			mockGetWorlds(server, { response: [] })
+
+			const { user } = await renderWithRouter('register')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Username'), 'admin')
@@ -193,8 +193,6 @@ describe('<Register />', () => {
 		})
 
 		it('recovers from error when user starts typing', async () => {
-			const { user } = renderWithRouter('register')
-
 			mockPostRegister(server, {
 				error: {
 					status: 400,
@@ -202,6 +200,8 @@ describe('<Register />', () => {
 				},
 			})
 			mockGetWorlds(server, { response: [] })
+
+			const { user } = await renderWithRouter('register')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Username'), 'admin')

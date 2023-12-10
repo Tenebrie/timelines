@@ -8,6 +8,7 @@ import { useCreateWorldEventMutation } from '../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
 import Modal, { useModalCleanup } from '../../../../../ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '../../../../../ui-lib/components/Modal'
+import { parseApiResponse } from '../../../../utils/parseApiResponse'
 import { TimestampField } from '../../../time/components/TimestampField'
 import { worldSlice } from '../../reducer'
 import { useWorldRouter } from '../../router'
@@ -50,27 +51,30 @@ export const EventWizardModal = () => {
 			return
 		}
 
-		// const { response, error } = parseApiResponse(
-		// 	await createWorldEvent({
-		// 		worldId: worldParams.worldId,
-		// 		body: {
-		// 			type: 'SCENE',
-		// 			name: name.trim(),
-		// 			description: '',
-		// 			targetActorIds: [],
-		// 			mentionedActorIds: [],
-		// 			timestamp: String(timestamp),
-		// 			revokedAt: String(''),
-		// 		},
-		// 	})
-		// )
-		// if (error) {
-		// 	setNameValidationError(error.message)
-		// 	return
-		// }
+		const { response, error } = parseApiResponse(
+			await createWorldEvent({
+				worldId: worldParams.worldId,
+				body: {
+					type: 'SCENE',
+					name: name.trim(),
+					description: '',
+					targetActorIds: [],
+					mentionedActorIds: [],
+					timestamp: String(timestamp),
+					revokedAt: String(''),
+					customNameEnabled: false,
+					modules: [],
+					icon: 'default',
+				},
+			})
+		)
+		if (error) {
+			setNameValidationError(error.message)
+			return
+		}
 
-		// dispatch(closeEventWizard())
-		// navigateToEventEditor(response.id)
+		dispatch(closeEventWizard())
+		navigateToEventEditor(response.id)
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {

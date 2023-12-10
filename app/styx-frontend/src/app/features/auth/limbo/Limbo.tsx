@@ -1,15 +1,15 @@
 import { Button, Link, Stack, Typography } from '@mui/material'
 import { useEffect } from 'react'
+import { Navigate } from 'react-router-dom'
 
 import { useCheckAuthenticationQuery } from '../../../../api/rheaApi'
 import { BlockingSpinner } from '../../../components/BlockingSpinner'
 import { useErrorState } from '../../../utils/useErrorState'
-import { useAppRouter } from '../../world/router'
+import { appRoutes } from '../../world/router'
 import { LimboPageContainer } from './styles'
 
 export const Limbo = () => {
 	const { data, isError, refetch, isFetching } = useCheckAuthenticationQuery()
-	const { navigateToHomeWithoutHistory, navigateToLoginWithoutHistory } = useAppRouter()
 
 	const { error, raiseError } = useErrorState<{
 		WRONG_PORT: null
@@ -28,13 +28,13 @@ export const Limbo = () => {
 		if (!data) {
 			return
 		}
+	}, [data, isError, raiseError])
 
-		if (data.authenticated) {
-			navigateToHomeWithoutHistory()
-		} else {
-			navigateToLoginWithoutHistory()
-		}
-	}, [data, isError, navigateToHomeWithoutHistory, navigateToLoginWithoutHistory, raiseError])
+	if (data && data.authenticated) {
+		return <Navigate to={appRoutes.home} />
+	} else if (data && !data.authenticated) {
+		return <Navigate to={appRoutes.login} />
+	}
 
 	return (
 		<LimboPageContainer>

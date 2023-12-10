@@ -4,7 +4,7 @@ import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import React, { useCallback } from 'react'
 
 import { WorldEventModule } from '../../../../../types'
-import { useEventFields } from '../useEventFields'
+import { useEventFields } from '../../../../ActorEditor/components/ActorDetailsEditor/useActorFields'
 import { EventModulesPopup } from './EventModulesPopup'
 import { useEventModules } from './useEventModules'
 

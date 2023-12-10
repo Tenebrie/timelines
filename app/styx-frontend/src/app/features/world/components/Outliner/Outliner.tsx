@@ -122,7 +122,7 @@ export const Outliner = () => {
 								}}
 							/>
 						)}
-						{!scrollerVisible && <OutlinerEmptyState selectedTime={selectedTime} />}
+						{!scrollerVisible && <OutlinerEmptyState />}
 					</StatementsScroller>
 				</StatementsUnit>
 			</OutlinerContainer>

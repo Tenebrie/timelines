@@ -1,5 +1,5 @@
 import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
-import { setupServer } from 'msw/lib/node'
+import { setupServer } from 'msw/node'
 
 import {
 	mockAuthenticatedUser,
@@ -53,7 +53,7 @@ describe('<Login />', () => {
 			mockNonAuthenticatedUser(server)
 		})
 		it('renders the login form at the correct path', async () => {
-			renderWithRouter('login')
+			await renderWithRouter('login')
 
 			expect(screen.getByLabelText('Email')).toBeInTheDocument()
 			expect(screen.getByLabelText('Password')).toBeInTheDocument()
@@ -62,15 +62,13 @@ describe('<Login />', () => {
 		})
 
 		it('navigates to registration on link click', async () => {
-			const { user } = renderWithRouter('login')
+			const { user } = await renderWithRouter('login')
 
 			await user.click(screen.getByText('Create a new account'))
 			expect(window.location.pathname).toEqual(appRoutes.register)
 		})
 
 		it('sends login request', async () => {
-			const { user } = renderWithRouter('login')
-
 			const { hasBeenCalled } = mockPostLogin(server, {
 				response: {
 					id: '1111-2222-3333',
@@ -80,6 +78,8 @@ describe('<Login />', () => {
 			})
 			mockGetWorlds(server, { response: [] })
 
+			const { user } = await renderWithRouter('login')
+
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')
 			await user.click(screen.getByText('Login'))
@@ -88,8 +88,6 @@ describe('<Login />', () => {
 		})
 
 		it('is redirected to home on successful login', async () => {
-			const { user, store } = renderWithRouter('login')
-
 			mockAuthenticatedUser(server)
 			mockPostLogin(server, {
 				response: {
@@ -99,6 +97,8 @@ describe('<Login />', () => {
 				},
 			})
 			mockGetWorlds(server, { response: [] })
+
+			const { user, store } = await renderWithRouter('login')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')
@@ -114,7 +114,7 @@ describe('<Login />', () => {
 		})
 
 		it('prints error when email is missing', async () => {
-			const { user } = renderWithRouter('login')
+			const { user } = await renderWithRouter('login')
 
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')
 			await user.click(screen.getByText('Login'))
@@ -123,7 +123,7 @@ describe('<Login />', () => {
 		})
 
 		it('prints error when password is missing', async () => {
-			const { user } = renderWithRouter('login')
+			const { user } = await renderWithRouter('login')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.click(screen.getByText('Login'))
@@ -132,8 +132,6 @@ describe('<Login />', () => {
 		})
 
 		it('prints error when login fails', async () => {
-			const { user } = renderWithRouter('login')
-
 			mockPostLogin(server, {
 				error: {
 					status: 400,
@@ -141,6 +139,8 @@ describe('<Login />', () => {
 				},
 			})
 			mockGetWorlds(server, { response: [] })
+
+			const { user } = await renderWithRouter('login')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')
@@ -152,8 +152,6 @@ describe('<Login />', () => {
 		})
 
 		it('recovers from error when user starts typing', async () => {
-			const { user } = renderWithRouter('login')
-
 			mockPostLogin(server, {
 				error: {
 					status: 400,
@@ -161,6 +159,8 @@ describe('<Login />', () => {
 				},
 			})
 			mockGetWorlds(server, { response: [] })
+
+			const { user } = await renderWithRouter('login')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')

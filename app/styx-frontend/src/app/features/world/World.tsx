@@ -1,8 +1,9 @@
-import { useOutlet } from 'react-router-dom'
+import { Navigate, useOutlet } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useLocationRef } from '../../../hooks/useLocationRef'
 import { BlockingSpinner } from '../../components/BlockingSpinner'
+import { useAuthCheck } from '../auth/authCheck/useAuthCheck'
 import { ActorWizardModal } from './components/ActorWizard/ActorWizardModal'
 import { DeleteEventDeltaModal } from './components/EventEditor/components/DeleteEventDeltaModal/DeleteEventDeltaModal'
 import { DeleteEventModal } from './components/EventEditor/components/DeleteEventModal/DeleteEventModal'
@@ -24,6 +25,12 @@ export const World = () => {
 
 	const currentOutlet = useOutlet()
 	const { key, nodeRef } = useLocationRef()
+
+	const { success, target } = useAuthCheck()
+
+	if (!success) {
+		return <Navigate to={target} />
+	}
 
 	return (
 		<>

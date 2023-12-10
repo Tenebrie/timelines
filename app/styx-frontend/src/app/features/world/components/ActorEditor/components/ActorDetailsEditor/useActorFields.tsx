@@ -1,22 +1,23 @@
 import { Dispatch, useCallback, useMemo, useRef, useState } from 'react'
 
-import { WorldEventDelta } from '../../../../types'
+import { ActorDetails } from '../../../../types'
 
 type Props = {
-	delta: WorldEventDelta
+	actor: ActorDetails
 }
 
 type SetterArgs = {
 	cleanSet?: boolean
 }
 
-export const useEventDeltaFields = ({ delta }: Props) => {
+export const useActorFields = ({ actor }: Props) => {
 	const isDirty = useRef(false)
 	const setDirty = useCallback((value: boolean) => (isDirty.current = value), [])
 
-	const [name, setNameDirect] = useState<string | null>(delta.name ?? null)
-	const [timestamp, setTimestampDirect] = useState<number>(delta.timestamp)
-	const [description, setDescriptionDirect] = useState<string | null>(delta.description ?? null)
+	const [name, setNameDirect] = useState<string>(actor.name)
+	const [title, setTitleDirect] = useState<string>(actor.title)
+	const [color, setColorDirect] = useState<string>(actor.color)
+	const [description, setDescriptionDirect] = useState<string>(actor.description)
 
 	const generateSetter = <T,>(setter: Dispatch<React.SetStateAction<T>>) => {
 		return (val: T, args?: SetterArgs) => {
@@ -36,7 +37,8 @@ export const useEventDeltaFields = ({ delta }: Props) => {
 	const setters = useMemo(
 		() => ({
 			setName: generateSetter(setNameDirect),
-			setTimestamp: generateSetter(setTimestampDirect),
+			setTitle: generateSetter(setTitleDirect),
+			setColor: generateSetter(setColorDirect),
 			setDescription: generateSetter(setDescriptionDirect),
 		}),
 		[]
@@ -46,7 +48,8 @@ export const useEventDeltaFields = ({ delta }: Props) => {
 		state: {
 			isDirty,
 			name,
-			timestamp,
+			title,
+			color,
 			description,
 			setDirty,
 			...setters,

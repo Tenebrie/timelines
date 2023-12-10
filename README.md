@@ -13,6 +13,8 @@ For a quick update on a running environment after a dependency update, change to
 
 `yarn docker:install`
 
+- Note: App should be running for this command to work.
+
 To bring an older environment up-to-speed, or when something goes wrong, use the following command:
 
 `yarn docker:fullinstall`

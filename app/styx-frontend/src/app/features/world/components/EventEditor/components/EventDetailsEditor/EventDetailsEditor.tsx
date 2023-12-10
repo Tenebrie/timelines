@@ -77,7 +77,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		customName: name,
 		customNameEnabled,
 		onChange: (value) => {
-			setName(value)
+			setName(value, { cleanSet: true })
 		},
 	})
 

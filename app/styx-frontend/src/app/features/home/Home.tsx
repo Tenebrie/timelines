@@ -1,6 +1,8 @@
+import { Navigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { BaseNavigator } from '../../components/BaseNavigator'
+import { useAuthCheck } from '../auth/authCheck/useAuthCheck'
 import { WorldList } from '../worldList/WorldList'
 
 const HomePageContainer = styled.div`
@@ -22,6 +24,12 @@ const WorldListContainer = styled.div`
 `
 
 export const Home = () => {
+	const { success, target } = useAuthCheck()
+
+	if (!success) {
+		return <Navigate to={target} />
+	}
+
 	return (
 		<HomePageContainer>
 			<BaseNavigator />

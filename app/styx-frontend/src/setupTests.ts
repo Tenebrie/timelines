@@ -4,8 +4,12 @@
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom'
 
-jest.mock('./app/features/liveUpdates/useLiveUpdates', () => ({
+import nodeFetch, { Request, Response } from 'node-fetch'
+
+vi.mock('./app/features/liveUpdates/useLiveUpdates', () => ({
 	useLiveUpdates: () => {
 		/* Empty */
 	},
 }))
+
+Object.assign(global, { fetch: nodeFetch, Request, Response })

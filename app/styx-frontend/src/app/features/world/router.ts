@@ -35,16 +35,8 @@ export const useAppRouter = () => {
 		)
 	}
 
-	const navigateToHomeWithoutHistory = async () => {
-		navigateTo(appRoutes.home, {}, {}, { replace: true })
-	}
-
 	const navigateToLogin = async () => {
 		navigateTo(appRoutes.login, {}, {})
-	}
-
-	const navigateToLoginWithoutHistory = async () => {
-		navigateTo(appRoutes.login, {}, {}, { replace: true })
 	}
 
 	const navigateToRegister = async () => {
@@ -60,9 +52,7 @@ export const useAppRouter = () => {
 
 	return {
 		navigateToHome,
-		navigateToHomeWithoutHistory,
 		navigateToLogin,
-		navigateToLoginWithoutHistory,
 		navigateToRegister,
 		isLocationEqual,
 	}

@@ -9,16 +9,15 @@ import { RouterProvider } from 'react-router-dom'
 import { Configuration } from 'rollbar'
 
 import { store } from './app/store'
-import reportWebVitals from './reportWebVitals'
 import { router } from './router/routerDefinition'
 
 const container = document.getElementById('root')
 const root = createRoot(container!)
 
 const rollbarConfig: Configuration = {
-	enabled: process.env.NODE_ENV !== 'development',
+	enabled: import.meta.env.PROD,
 	accessToken: 'f426a5264860489095a22b56cc8d8e31',
-	environment: process.env.NODE_ENV,
+	environment: import.meta.env.MODE,
 	captureUncaught: true,
 	captureUnhandledRejections: true,
 }
@@ -42,8 +41,3 @@ root.render(
 		</ThemeProvider>
 	</React.StrictMode>
 )
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.info))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals()

@@ -1,5 +1,5 @@
 import { screen, waitFor } from '@testing-library/react'
-import { setupServer } from 'msw/lib/node'
+import { setupServer } from 'msw/node'
 
 import { mockActorModel, mockUpdateActor } from '../../../../../api/rheaApi.mock'
 import { renderWithProviders } from '../../../../../jest/renderWithProviders'
@@ -238,15 +238,15 @@ describe('ActorEditor', () => {
 			},
 		})
 
-		const actorNameInput = screen.getByDisplayValue('Actor name')
-		await user.clear(actorNameInput)
-		await user.type(actorNameInput, 'Updated name')
-
 		const mock = mockUpdateActor(server, {
 			worldId: 'world-1111',
 			actorId: 'actor-1111',
 			response: mockActorModel(),
 		})
+
+		const actorNameInput = screen.getByDisplayValue('Actor name')
+		await user.clear(actorNameInput)
+		await user.type(actorNameInput, 'Updated name')
 
 		await waitFor(() => expect(mock.hasBeenCalled()).toBeTruthy(), { timeout: 3000 })
 		expect(mock.invocations[0].jsonBody).toEqual({

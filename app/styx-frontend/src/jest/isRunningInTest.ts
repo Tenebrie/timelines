@@ -1,1 +1,1 @@
-export const isRunningInTest = () => process.env.JEST_WORKER_ID !== undefined
+export const isRunningInTest = () => import.meta.env.VITEST_WORKER_ID !== undefined

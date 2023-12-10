@@ -6,11 +6,11 @@ import { useDoubleClick } from './useDoubleClick'
 
 describe('useDoubleClick', () => {
 	beforeAll(() => {
-		jest.useFakeTimers()
+		vi.useFakeTimers()
 	})
 
 	afterAll(() => {
-		jest.useRealTimers()
+		vi.useRealTimers()
 	})
 
 	const mockMouseEvent = (data: { target?: any } = {}) =>
@@ -20,8 +20,8 @@ describe('useDoubleClick', () => {
 		} as MouseEvent)
 
 	it('performs a single click after delay only', async () => {
-		const onClickSpy = jest.fn()
-		const onDoubleClickSpy = jest.fn()
+		const onClickSpy = vi.fn()
+		const onDoubleClickSpy = vi.fn()
 
 		const { result } = renderHookWithProviders(() =>
 			useDoubleClick<void>({
@@ -35,18 +35,18 @@ describe('useDoubleClick', () => {
 			triggerClick(mockMouseEvent())
 		})
 
-		expect(onClickSpy).not.toBeCalled()
-		expect(onDoubleClickSpy).not.toBeCalled()
+		expect(onClickSpy).not.toHaveBeenCalled()
+		expect(onDoubleClickSpy).not.toHaveBeenCalled()
 
-		jest.advanceTimersByTime(1000)
+		vi.advanceTimersByTime(1000)
 
-		expect(onClickSpy).toBeCalled()
-		expect(onDoubleClickSpy).not.toBeCalled()
+		expect(onClickSpy).toHaveBeenCalled()
+		expect(onDoubleClickSpy).not.toHaveBeenCalled()
 	})
 
 	it('ignores delay if parameter is provided', async () => {
-		const onClickSpy = jest.fn()
-		const onDoubleClickSpy = jest.fn()
+		const onClickSpy = vi.fn()
+		const onDoubleClickSpy = vi.fn()
 
 		const { result } = renderHookWithProviders(() =>
 			useDoubleClick<void>({
@@ -61,18 +61,18 @@ describe('useDoubleClick', () => {
 			triggerClick(mockMouseEvent())
 		})
 
-		expect(onClickSpy).toBeCalledTimes(1)
-		expect(onDoubleClickSpy).not.toBeCalled()
+		expect(onClickSpy).toHaveBeenCalledTimes(1)
+		expect(onDoubleClickSpy).not.toHaveBeenCalled()
 
-		jest.advanceTimersByTime(1000)
+		vi.advanceTimersByTime(1000)
 
-		expect(onClickSpy).toBeCalledTimes(1)
-		expect(onDoubleClickSpy).not.toBeCalled()
+		expect(onClickSpy).toHaveBeenCalledTimes(1)
+		expect(onDoubleClickSpy).not.toHaveBeenCalled()
 	})
 
 	it('performs a double click immediately', async () => {
-		const onClickSpy = jest.fn()
-		const onDoubleClickSpy = jest.fn()
+		const onClickSpy = vi.fn()
+		const onDoubleClickSpy = vi.fn()
 
 		const { result } = renderHookWithProviders(() =>
 			useDoubleClick<void>({
@@ -87,17 +87,17 @@ describe('useDoubleClick', () => {
 			triggerClick(mockMouseEvent())
 		})
 
-		expect(onClickSpy).not.toBeCalled()
-		expect(onDoubleClickSpy).toBeCalled()
+		expect(onClickSpy).not.toHaveBeenCalled()
+		expect(onDoubleClickSpy).toHaveBeenCalled()
 
-		jest.advanceTimersByTime(1000)
+		vi.advanceTimersByTime(1000)
 
-		expect(onClickSpy).not.toBeCalled()
+		expect(onClickSpy).not.toHaveBeenCalled()
 	})
 
 	it('passes parameters on single click', async () => {
-		const onClickSpy = jest.fn()
-		const onDoubleClickSpy = jest.fn()
+		const onClickSpy = vi.fn()
+		const onDoubleClickSpy = vi.fn()
 
 		const { result } = renderHookWithProviders(() =>
 			useDoubleClick<{ foo: string }>({
@@ -113,16 +113,16 @@ describe('useDoubleClick', () => {
 			})
 		})
 
-		jest.advanceTimersByTime(1000)
+		vi.advanceTimersByTime(1000)
 
-		expect(onClickSpy).toBeCalledWith({
+		expect(onClickSpy).toHaveBeenCalledWith({
 			foo: 'my value',
 		})
 	})
 
 	it('passes paremeters on double click', async () => {
-		const onClickSpy = jest.fn()
-		const onDoubleClickSpy = jest.fn()
+		const onClickSpy = vi.fn()
+		const onDoubleClickSpy = vi.fn()
 
 		const { result } = renderHookWithProviders(() =>
 			useDoubleClick<{ foo: string }>({
@@ -141,14 +141,14 @@ describe('useDoubleClick', () => {
 			})
 		})
 
-		expect(onDoubleClickSpy).toBeCalledWith({
+		expect(onDoubleClickSpy).toHaveBeenCalledWith({
 			foo: 'my value',
 		})
 	})
 
 	it('does not trigger double click if targets are different', async () => {
-		const onClickSpy = jest.fn()
-		const onDoubleClickSpy = jest.fn()
+		const onClickSpy = vi.fn()
+		const onDoubleClickSpy = vi.fn()
 
 		const { result } = renderHookWithProviders(() =>
 			useDoubleClick<{ foo: string }>({

@@ -14,20 +14,17 @@ describe('<Limbo />', () => {
 
 	describe('with navigation', () => {
 		it('redirects over to login if user is not authenticated', async () => {
-			renderWithRouter('limbo')
-
 			mockCheckAuthentication(server, {
 				response: {
 					authenticated: false,
 				},
 			})
 
+			await renderWithRouter('limbo')
 			await waitFor(() => expect(window.location.pathname).toEqual(appRoutes.login))
 		})
 
 		it('redirects over to home if user is authenticated', async () => {
-			renderWithRouter('limbo')
-
 			mockCheckAuthentication(server, {
 				response: {
 					authenticated: true,
@@ -37,6 +34,7 @@ describe('<Limbo />', () => {
 				response: [],
 			})
 
+			await renderWithRouter('limbo')
 			await waitFor(() => expect(window.location.pathname).toEqual(appRoutes.home))
 		})
 	})

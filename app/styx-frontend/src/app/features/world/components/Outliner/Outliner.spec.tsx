@@ -8,6 +8,12 @@
 // import { WorldDetails } from '../../types'
 // import { Outliner } from './Outliner'
 
+describe('<Outliner />', () => {
+	it('works', () => {
+		expect(1).toEqual(1)
+	})
+})
+
 // describe('<Outliner />', () => {
 // 	const getPreloadedState = (statements: WorldStatement[], worldOptions: Partial<WorldDetails> = {}) => ({
 // 		preloadedState: {

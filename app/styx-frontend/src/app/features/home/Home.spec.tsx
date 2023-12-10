@@ -14,8 +14,6 @@ describe('<Home />', () => {
 
 	describe('with navigation', () => {
 		it('redirects over to login if user is not authenticated', async () => {
-			renderWithRouter('home')
-
 			mockCheckAuthentication(server, {
 				response: {
 					authenticated: false,
@@ -25,16 +23,18 @@ describe('<Home />', () => {
 				response: [],
 			})
 
+			await renderWithRouter('home')
+
 			await waitFor(() => expect(window.location.pathname).toEqual(appRoutes.login))
 		})
 
 		it('does not redirect if user is authenticated', async () => {
-			renderWithRouter('home')
-
 			mockAuthenticatedUser(server)
 			mockGetWorlds(server, {
 				response: [],
 			})
+
+			await renderWithRouter('home')
 
 			await waitFor(() => expect(window.location.pathname).toEqual(appRoutes.home))
 		})

@@ -1,5 +1,5 @@
 import { DefaultBodyType, rest } from 'msw'
-import { SetupServer } from 'msw/lib/node'
+import { SetupServer } from 'msw/node'
 import { v4 as getRandomId } from 'uuid'
 
 import { User } from '../app/features/auth/reducer'
