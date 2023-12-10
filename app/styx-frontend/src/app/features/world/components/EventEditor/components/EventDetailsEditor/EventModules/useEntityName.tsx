@@ -23,7 +23,7 @@ export const useEntityName = ({
 
 	const generateName = useCallback(
 		(source: string) => {
-			const allowedRegex = /^[^.!?;()[\]|/]+/iu
+			const allowedRegex = /^[^.!?;()[\]|/\n]+/iu
 			const regexResult = allowedRegex.exec(source)
 			if (regexResult) {
 				return regexResult[0].trim().slice(0, 256).trim()
