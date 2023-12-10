@@ -35,7 +35,7 @@ export const OutlinerEmptyState = ({ selectedTime }: Props) => {
 				</Grid>
 				<Grid item>
 					<Button onClick={onShowTutorial} variant="outlined" color="secondary">
-						Learn more about events and statements
+						Learn more about events
 					</Button>
 				</Grid>
 			</Grid>

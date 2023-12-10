@@ -1,4 +1,21 @@
-Thie readme is WIP
+This readme is WIP
+
+# Running the app
+
+The development environment requires Node, Yarn and Docker to run.
+
+In most cases, the following commands are enough to have the entire environment up and running:
+
+`yarn`
+`yarn docker`
+
+For a quick update on a running environment after a dependency update, change to Prisma types, creating a new migration, change to tsconfig.json or another change to package.json, use the following:
+
+`yarn docker:install`
+
+To bring an older environment up-to-speed, or when something goes wrong, use the following command:
+
+`yarn docker:fullinstall`
 
 # Planned features:
 
