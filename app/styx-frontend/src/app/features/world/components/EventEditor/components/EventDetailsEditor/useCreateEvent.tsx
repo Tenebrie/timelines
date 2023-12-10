@@ -6,7 +6,7 @@ import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
-import { useEventFields } from '../../../ActorEditor/components/ActorDetailsEditor/useActorFields'
+import { useEventFields } from './useEventFields'
 
 type Props = {
 	state: ReturnType<typeof useEventFields>['state']
