@@ -30,9 +30,9 @@ export const OutlinerEmptyState = () => {
 					</Button>
 				</Grid>
 				<Grid item>
-					<Button onClick={onShowTutorial} variant="outlined" color="secondary">
+					{/* <Button onClick={onShowTutorial} variant="outlined" color="secondary">
 						Learn more about events
-					</Button>
+					</Button> */}
 				</Grid>
 			</Grid>
 		</Stack>
