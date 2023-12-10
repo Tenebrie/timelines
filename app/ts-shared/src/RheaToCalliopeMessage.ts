@@ -15,7 +15,7 @@ export type RheaToCalliopeMessagePayload = {
 }
 
 export type RheaToCalliopeMessage = ShapeOfMessage<RheaToCalliopeMessagePayload>
-export type RheaToCalliopeMessageHandler = ShapeOfHandler<RheaToCalliopeMessagePayload>
+export type RheaToCalliopeMessageHandlers = ShapeOfHandler<RheaToCalliopeMessagePayload>
 
 type ShapeOfMessage<T> = {
 	[K in keyof T]: {

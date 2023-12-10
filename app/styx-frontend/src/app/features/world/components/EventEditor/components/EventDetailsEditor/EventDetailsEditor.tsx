@@ -186,6 +186,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 								autoHighlight
 								renderOption={renderActorOption}
 								renderInput={(params) => <TextField {...params} label="Actors" />}
+								disableClearable
 							/>
 						)}
 						{modules.includes('MentionedActors') && (

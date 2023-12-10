@@ -503,7 +503,6 @@ export type CreateWorldEventDeltaApiArg = {
 		timestamp: string
 		name: null | string
 		description: null | string
-		customName: null | boolean
 	}
 }
 export type UpdateWorldEventDeltaApiResponse = /** status 200  */ {
@@ -526,7 +525,6 @@ export type UpdateWorldEventDeltaApiArg = {
 		timestamp?: string
 		name?: null | string
 		description?: null | string
-		customName?: boolean
 	}
 }
 export type DeleteWorldEventDeltaApiResponse = /** status 200  */ {

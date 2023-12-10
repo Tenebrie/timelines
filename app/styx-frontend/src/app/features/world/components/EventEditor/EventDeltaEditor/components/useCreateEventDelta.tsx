@@ -31,7 +31,6 @@ export const useCreateEventDelta = ({ state, errorState }: Props) => {
 					name: state.description && state.name ? state.name : null,
 					timestamp: String(state.timestamp),
 					description: state.description,
-					customName: false,
 				},
 			})
 		)
