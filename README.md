@@ -9,6 +9,8 @@ In most cases, the following commands are enough to have the entire environment 
 `yarn`
 `yarn docker`
 
+The default admin user is `admin@localhost` with password `q`. If the user did not get created automatically, you can run `yarn db:seed` to manually create the first user.
+
 For a quick update on a running environment after a dependency update, change to Prisma types, creating a new migration, change to tsconfig.json or another change to package.json, use the following:
 
 `yarn docker:install`
