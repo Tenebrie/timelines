@@ -3,8 +3,7 @@ import viteTsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
-	// depending on your application, base can also be "/"
-	base: '',
+	base: '/',
 	plugins: [react(), viteTsconfigPaths()],
 	test: {
 		globals: true,
@@ -15,7 +14,6 @@ export default defineConfig({
 		outDir: 'build',
 	},
 	server: {
-		// this sets a default port to 3000
 		port: 8080,
 		watch: {
 			usePolling: true,
