@@ -19,10 +19,16 @@ export const useLiveMessageHandlers = () => {
 	}, [currentUpdatedAt])
 
 	const messageHandlers: CalliopeToClientMessageHandler = {
+		[CalliopeToClientMessageType.ANNOUNCEMENT]: () => {
+			dispatch(rheaApi.util.invalidateTags(['announcementList']))
+		},
 		[CalliopeToClientMessageType.WORLD_UPDATED]: (data) => {
 			if (new Date(updatedAtRef.current) < new Date(data.timestamp)) {
 				dispatch(rheaApi.util.invalidateTags(['worldDetails']))
 			}
+		},
+		[CalliopeToClientMessageType.WORLD_UNSHARED]: () => {
+			// TODO: Handle message
 		},
 	}
 

@@ -25,6 +25,15 @@ export const RedisService = {
 		await rawClient.connect()
 	},
 
+	notifyAboutNewAnnouncement: ({ userId }: { userId: string }) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.ANNOUNCEMENT,
+			data: {
+				userId,
+			},
+		})
+	},
+
 	notifyAboutWorldUpdate: ({
 		user,
 		worldId,
@@ -40,6 +49,16 @@ export const RedisService = {
 				userId: user.id,
 				worldId,
 				timestamp: timestamp.toISOString(),
+			},
+		})
+	},
+
+	notifyAboutWorldUnshared: ({ user, worldId }: { user: User; worldId: string }) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.WORLD_UNSHARED,
+			data: {
+				userId: user.id,
+				worldId,
 			},
 		})
 	},
