@@ -40,7 +40,10 @@
 		"testRegex": ".*\\.spec\\.ts$",
 		"transform": {
 			"^.+\\.(t|j)s$": "ts-jest"
-		}
+		},
+		"setupFiles": [
+			"<rootDir>/src/setupTests.ts"
+		]
 	},
 	"prisma": {
 		"seed": "ts-node src/prisma/seed.ts"

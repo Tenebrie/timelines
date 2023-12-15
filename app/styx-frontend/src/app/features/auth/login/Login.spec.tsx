@@ -1,5 +1,4 @@
 import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
-import { setupServer } from 'msw/node'
 
 import {
 	mockAuthenticatedUser,
@@ -9,17 +8,14 @@ import {
 	mockUserModel,
 } from '../../../../api/rheaApi.mock'
 import { renderWithProviders, renderWithRouter } from '../../../../jest/renderWithProviders'
+import { setupTestServer } from '../../../../jest/setupTestServer'
 import { appRoutes } from '../../world/router'
 import { authInitialState } from '../reducer'
 import { Login } from './Login'
 
-const server = setupServer()
+const server = setupTestServer()
 
 describe('<Login />', () => {
-	beforeAll(() => server.listen())
-	afterEach(() => server.resetHandlers())
-	afterAll(() => server.close())
-
 	it('renders the form', async () => {
 		renderWithProviders(<Login />)
 

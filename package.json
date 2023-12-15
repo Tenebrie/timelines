@@ -24,7 +24,10 @@
 		"docker:stop": "docker stop $(docker ps -a -q)",
 		"prisma:generate": "(cd app/rhea-backend && yarn prisma:generate)",
 		"prisma:migrate:dev": "(cd app/rhea-backend && yarn prisma:migrate:dev)",
-		"prisma:migrate:create": "(cd app/rhea-backend && yarn prisma:migrate:create)"
+		"prisma:migrate:create": "(cd app/rhea-backend && yarn prisma:migrate:create)",
+		"test": "(cd app/styx-frontend && yarn test run) && (cd app/rhea-backend && yarn test)",
+		"test:styx": "(cd app/styx-frontend && yarn test run)",
+		"test:rhea": "(cd app/rhea-backend && yarn test)"
 	},
 	"dependencies": {
 		"@typescript-eslint/eslint-plugin": "^4.7.0",

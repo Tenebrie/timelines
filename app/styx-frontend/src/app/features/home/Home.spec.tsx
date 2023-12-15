@@ -1,17 +1,13 @@
 import { waitFor } from '@testing-library/react'
-import { setupServer } from 'msw/node'
 
 import { mockAuthenticatedUser, mockCheckAuthentication, mockGetWorlds } from '../../../api/rheaApi.mock'
 import { renderWithRouter } from '../../../jest/renderWithProviders'
+import { setupTestServer } from '../../../jest/setupTestServer'
 import { appRoutes } from '../world/router'
 
-const server = setupServer()
+const server = setupTestServer()
 
 describe('<Home />', () => {
-	beforeAll(() => server.listen())
-	afterEach(() => server.resetHandlers())
-	afterAll(() => server.close())
-
 	describe('with navigation', () => {
 		it('redirects over to login if user is not authenticated', async () => {
 			mockCheckAuthentication(server, {
@@ -34,13 +30,6 @@ describe('<Home />', () => {
 
 		it('does not redirect if user is authenticated', async () => {
 			mockAuthenticatedUser(server)
-			mockGetWorlds(server, {
-				response: {
-					ownedWorlds: [],
-					contributableWorlds: [],
-					visibleWorlds: [],
-				},
-			})
 
 			await renderWithRouter('home')
 

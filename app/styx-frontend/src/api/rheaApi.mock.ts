@@ -11,6 +11,7 @@ import {
 	CreateWorldApiResponse,
 	DeleteWorldApiResponse,
 	DeleteWorldEventApiResponse,
+	GetAnnouncementsApiResponse,
 	GetWorldInfoApiResponse,
 	GetWorldsApiResponse,
 	PostLoginApiResponse,
@@ -121,6 +122,13 @@ export const mockDeleteWorldEvent = (
 		...params,
 	})
 
+export const mockGetAnnouncements = (server: SetupServer, params: MockParams<GetAnnouncementsApiResponse>) =>
+	generateEndpointMock(server, {
+		method: 'get',
+		path: '/api/announcements',
+		...params,
+	})
+
 /**
  * Mock utility functions
  */
@@ -161,6 +169,7 @@ export const mockWorldItemModel = (world: Partial<WorldItem> = {}): WorldItem =>
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
 	ownerId: '1111-2222-3333-4444',
+	collaborators: [],
 	...world,
 })
 
