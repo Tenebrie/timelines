@@ -8,7 +8,9 @@ export enum QueryStrategy {
 	Preserve,
 }
 
-export const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
+export const useBaseRouter = <ParamsT extends Record<string, Record<string, string> | undefined>>(
+	routes: Record<string, keyof ParamsT>
+) => {
 	const location = useLocation()
 	const actualParams = useParams()
 	const mockParams = MockedRouter.useParams()
@@ -21,23 +23,36 @@ export const useBaseRouter = <T extends string>(routes: Record<string, T>) => {
 	const [currentQuery, setCurrentQuery] = useSearchParams()
 
 	const navigateTo = useCallback(
-		(
-			target: (typeof routes)[keyof typeof routes],
-			args: Record<string, string>,
-			query: Record<string, string | null | undefined | QueryStrategy>,
+		<T extends (typeof routes)[keyof typeof routes]>({
+			target,
+			args,
+			query,
+			navigateParams,
+		}: {
+			target: T
+			args?: ParamsT[T]
+			query?: Record<string, string | null | undefined | QueryStrategy>
 			navigateParams?: NavigateOptions
-		) => {
-			const pathname = Object.keys(args).reduce(
-				(total, current) => total.replace(`:${current}`, args[current]),
-				target
-			)
+		}) => {
+			const pathname = (() => {
+				if (args === undefined) {
+					return target as string
+				}
+
+				return Object.keys(args).reduce(
+					(total, current) => total.replace(`:${current}`, args[current]),
+					target as string
+				)
+			})()
+
+			const evaluatedQuery = query ?? {}
 
 			const mappedQuery = (
 				Array.from(currentQuery.entries()) as [string, string | null | undefined | QueryStrategy][]
 			)
-				.filter((entry) => query[entry[0]] === QueryStrategy.Preserve)
+				.filter((entry) => evaluatedQuery[entry[0]] === QueryStrategy.Preserve)
 				.concat(
-					Object.entries(query).filter(
+					Object.entries(evaluatedQuery).filter(
 						(q) => q[1] !== undefined && q[1] !== QueryStrategy.Clear && q[1] !== QueryStrategy.Preserve
 					)
 				)

@@ -28,7 +28,7 @@ export const useLiveMessageHandlers = () => {
 			}
 		},
 		[CalliopeToClientMessageType.WORLD_UNSHARED]: () => {
-			// TODO: Handle message
+			dispatch(rheaApi.util.invalidateTags(['worldList']))
 		},
 	}
 

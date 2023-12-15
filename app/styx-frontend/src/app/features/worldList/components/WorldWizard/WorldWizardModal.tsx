@@ -4,16 +4,16 @@ import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip }
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useCreateWorldMutation } from '../../../../api/rheaApi'
-import { Shortcut, useShortcut } from '../../../../hooks/useShortcut'
-import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '../../../../ui-lib/components/Modal'
-import { parseApiResponse } from '../../../utils/parseApiResponse'
-import { TimestampField } from '../../time/components/TimestampField'
-import { useWorldCalendar } from '../../time/hooks/useWorldCalendar'
-import { useWorldRouter } from '../../world/router'
-import { WorldCalendarType } from '../../world/types'
-import { worldListSlice } from '../reducer'
-import { getWorldWizardModalState } from '../selectors'
+import { useCreateWorldMutation } from '../../../../../api/rheaApi'
+import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
+import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '../../../../../ui-lib/components/Modal'
+import { parseApiResponse } from '../../../../utils/parseApiResponse'
+import { TimestampField } from '../../../time/components/TimestampField'
+import { useWorldCalendar } from '../../../time/hooks/useWorldCalendar'
+import { useWorldRouter } from '../../../world/router'
+import { WorldCalendarType } from '../../../world/types'
+import { worldListSlice } from '../../reducer'
+import { getWorldWizardModalState } from '../../selectors'
 
 export const WorldWizardModal = () => {
 	const [name, setName] = useState('')

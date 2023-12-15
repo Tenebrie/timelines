@@ -2,8 +2,8 @@ import { Stack } from '@mui/material'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
+import { Announcements } from '../features/announcements/Announcements'
 import { SmallProfile } from '../features/auth/smallProfile/SmallProfile'
-import { Announcements } from '../features/world/components/Announcements/Announcements'
 
 const Container = styled.div`
 	width: 100%;
@@ -12,6 +12,8 @@ const Container = styled.div`
 	display: flex;
 	justify-content: space-between;
 	z-index: 2;
+	padding-top: 2px;
+	padding-bottom: 2px;
 `
 
 type Props = {

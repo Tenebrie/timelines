@@ -20,7 +20,7 @@ export const AuthorizationService = {
 						id: worldId,
 						collaborators: {
 							some: {
-								id: user.id,
+								userId: user.id,
 							},
 						},
 					},

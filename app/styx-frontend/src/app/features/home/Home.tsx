@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom'
+import { Navigate, useOutlet } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { BaseNavigator } from '../../components/BaseNavigator'
@@ -16,15 +16,16 @@ const HomePageContainer = styled.div`
 
 const WorldListContainer = styled.div`
 	display: flex;
+	flex-direction: row;
 	flex-grow: 1;
 	align-items: center;
 	justify-content: center;
 	gap: 64px;
-	flex-direction: column;
 `
 
 export const Home = () => {
 	const { success, target } = useAuthCheck()
+	const currentOutlet = useOutlet()
 
 	if (!success) {
 		return <Navigate to={target} />
@@ -35,6 +36,7 @@ export const Home = () => {
 			<BaseNavigator />
 			<WorldListContainer>
 				<WorldList />
+				{currentOutlet}
 			</WorldListContainer>
 		</HomePageContainer>
 	)

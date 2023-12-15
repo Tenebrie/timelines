@@ -2,7 +2,7 @@ import { Notifications } from '@mui/icons-material'
 import { Badge, IconButton, Popover } from '@mui/material'
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 
-import { useGetAnnouncementsQuery } from '../../../../../api/rheaApi'
+import { useGetAnnouncementsQuery } from '../../../api/rheaApi'
 import { AnnouncementList } from './AnnouncementList'
 
 export const Announcements = () => {

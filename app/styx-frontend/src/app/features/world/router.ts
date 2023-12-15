@@ -23,24 +23,23 @@ export type AppRouteParamMapping = {
 }
 
 export const useAppRouter = () => {
-	const { navigateTo, isLocationEqual: isBaseLocationEqual } = useBaseRouter(appRoutes)
+	const { navigateTo, isLocationEqual: isBaseLocationEqual } = useBaseRouter<AppRouteParamMapping>(appRoutes)
 
 	const navigateToHome = async () => {
-		navigateTo(
-			appRoutes.home,
-			{},
-			{
-				[QueryParams.SELECTED_TIME]: null,
-			}
-		)
+		navigateTo({
+			target: appRoutes.home,
+			query: {
+				[QueryParams.SELECTED_TIME]: QueryStrategy.Clear,
+			},
+		})
 	}
 
 	const navigateToLogin = async () => {
-		navigateTo(appRoutes.login, {}, {})
+		navigateTo({ target: appRoutes.login })
 	}
 
 	const navigateToRegister = async () => {
-		navigateTo(appRoutes.register, {}, {})
+		navigateTo({ target: appRoutes.register })
 	}
 
 	const isLocationEqual = useCallback(
@@ -55,6 +54,41 @@ export const useAppRouter = () => {
 		navigateToLogin,
 		navigateToRegister,
 		isLocationEqual,
+	}
+}
+
+export const homeRoutes = {
+	root: '/home',
+	worldDetails: '/home/world/:worldId',
+} as const
+
+export type HomeRouteParamMapping = {
+	[homeRoutes.root]: undefined
+	[homeRoutes.worldDetails]: HomeWorldDetailsParams
+}
+export type HomeWorldDetailsParams = {
+	worldId: string
+}
+
+export const useHomeRouter = () => {
+	const { navigateTo } = useBaseRouter<HomeRouteParamMapping>(homeRoutes)
+
+	const navigateToRoot = async () => {
+		navigateTo({ target: homeRoutes.root })
+	}
+
+	const navigateToWorldDetails = async ({ worldId }: { worldId: string }) => {
+		navigateTo({
+			target: homeRoutes.worldDetails,
+			args: {
+				worldId,
+			},
+		})
+	}
+
+	return {
+		navigateToRoot,
+		navigateToWorldDetails,
 	}
 }
 
@@ -82,7 +116,6 @@ export type WorldRootParams = {
 }
 export type WorldOutlinerParams = {
 	worldId: string
-	timestamp: string
 }
 export type ActorEditorParams = {
 	worldId: string
@@ -112,7 +145,7 @@ export const useWorldRouter = () => {
 		query,
 		setQuery,
 		isLocationEqual: isBaseLocationEqual,
-	} = useBaseRouter(worldRoutes)
+	} = useBaseRouter<WorldRouteParamMapping>(worldRoutes)
 
 	const { unloadWorld } = worldSlice.actions
 	const dispatch = useDispatch()
@@ -132,76 +165,75 @@ export const useWorldRouter = () => {
 
 	const navigateToWorld = async (id: string) => {
 		dispatch(unloadWorld())
-		navigateTo(
-			worldRoutes.root,
-			{
+		navigateTo({
+			target: worldRoutes.root,
+			args: {
 				worldId: id,
 			},
-			{}
-		)
+		})
 	}
 
 	const navigateToCurrentWorld = async ({ clearSelectedTime }: { clearSelectedTime?: boolean } = {}) => {
-		navigateTo(
-			worldRoutes.root,
-			{
+		navigateTo({
+			target: worldRoutes.root,
+			args: {
 				worldId: state['worldId'] || '',
 			},
-			{
+			query: {
 				[QueryParams.SELECTED_TIME]: clearSelectedTime ? QueryStrategy.Clear : QueryStrategy.Preserve,
-			}
-		)
+			},
+		})
 	}
 
 	const navigateToOutliner = (timestamp: number) => {
-		navigateTo(
-			worldRoutes.outliner,
-			{
+		navigateTo({
+			target: worldRoutes.outliner,
+			args: {
 				worldId: state['worldId'] || '',
 			},
-			{
+			query: {
 				[QueryParams.SELECTED_TIME]: String(timestamp),
-			}
-		)
+			},
+		})
 	}
 
 	const navigateToActorEditor = (actorId: string) => {
-		navigateTo(
-			worldRoutes.actorEditor,
-			{
+		navigateTo({
+			target: worldRoutes.actorEditor,
+			args: {
 				worldId: state['worldId'] || '',
 				actorId,
 			},
-			{
+			query: {
 				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
-			}
-		)
+			},
+		})
 	}
 
 	const navigateToEventCreator = ({ selectedTime }: { selectedTime?: number } = {}) => {
-		navigateTo(
-			worldRoutes.eventCreator,
-			{
+		navigateTo({
+			target: worldRoutes.eventCreator,
+			args: {
 				worldId: state['worldId'] || '',
 			},
-			{
+			query: {
 				[QueryParams.SELECTED_TIME]:
 					selectedTime === undefined ? QueryStrategy.Preserve : String(selectedTime),
-			}
-		)
+			},
+		})
 	}
 
 	const navigateToEventEditor = (eventId: string) => {
-		navigateTo(
-			worldRoutes.eventEditor,
-			{
+		navigateTo({
+			target: worldRoutes.eventEditor,
+			args: {
 				worldId: state['worldId'] || '',
 				eventId,
 			},
-			{
+			query: {
 				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
-			}
-		)
+			},
+		})
 	}
 
 	const navigateToEventDeltaCreator = ({
@@ -211,17 +243,17 @@ export const useWorldRouter = () => {
 		eventId: string
 		selectedTime?: number
 	}) => {
-		navigateTo(
-			worldRoutes.eventDeltaCreator,
-			{
+		navigateTo({
+			target: worldRoutes.eventDeltaCreator,
+			args: {
 				worldId: state['worldId'] || '',
 				eventId,
 			},
-			{
+			query: {
 				[QueryParams.SELECTED_TIME]:
 					selectedTime === undefined ? QueryStrategy.Preserve : String(selectedTime),
-			}
-		)
+			},
+		})
 	}
 
 	const navigateToEventDeltaEditor = ({
@@ -233,18 +265,18 @@ export const useWorldRouter = () => {
 		deltaId: string
 		selectedTime?: number
 	}) => {
-		navigateTo(
-			worldRoutes.eventDeltaEditor,
-			{
+		navigateTo({
+			target: worldRoutes.eventDeltaEditor,
+			args: {
 				worldId: state['worldId'] || '',
 				eventId,
 				deltaId,
 			},
-			{
+			query: {
 				[QueryParams.SELECTED_TIME]:
 					selectedTime === undefined ? QueryStrategy.Preserve : String(selectedTime),
-			}
-		)
+			},
+		})
 	}
 
 	const selectTime = (time: number) => {

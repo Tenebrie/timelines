@@ -1,6 +1,7 @@
 import { UserAuthenticator } from '@src/auth/UserAuthenticator'
 import { AuthorizationService } from '@src/services/AuthorizationService'
 import { WorldService } from '@src/services/WorldService'
+import { WorldShareService } from '@src/services/WorldShareService'
 import {
 	BadRequestError,
 	NonEmptyStringValidator,
@@ -16,6 +17,7 @@ import {
 	useRequestBody,
 } from 'tenebrie-framework'
 
+import { CollaboratorAccessValidator } from './validators/CollaboratorAccessValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
 import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator'
 
@@ -23,6 +25,7 @@ const router = new Router()
 
 export const worldListTag = 'worldList'
 export const worldDetailsTag = 'worldDetails'
+export const worldCollaboratorsTag = 'worldCollaborators'
 
 router.get('/api/worlds', async (ctx) => {
 	useApiEndpoint({
@@ -33,7 +36,7 @@ router.get('/api/worlds', async (ctx) => {
 
 	const user = await useAuth(ctx, UserAuthenticator)
 
-	return await WorldService.listOwnedWorlds({ owner: user })
+	return await WorldService.listAvailableWorlds({ owner: user })
 })
 
 router.post('/api/world', async (ctx) => {
@@ -95,11 +98,11 @@ router.get('/api/world/:worldId', async (ctx) => {
 	return await WorldService.findWorldDetails(worldId)
 })
 
-router.post('/api/world/:worldId/share', async (ctx) => {
+router.get('/api/world/:worldId/collaborators', async (ctx) => {
 	useApiEndpoint({
-		name: 'shareWorld',
-		description: 'Shares the world with the target users.',
-		tags: [worldDetailsTag],
+		name: 'getWorldCollaborators',
+		description: 'List the collaborating users',
+		tags: [worldCollaboratorsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -108,8 +111,27 @@ router.post('/api/world/:worldId/share', async (ctx) => {
 		worldId: PathParam(StringValidator),
 	})
 
-	const { userEmails } = useRequestBody(ctx, {
+	await AuthorizationService.checkUserWorldOwner(user, worldId)
+
+	return await WorldShareService.listCollaborators({ worldId })
+})
+
+router.post('/api/world/:worldId/share', async (ctx) => {
+	useApiEndpoint({
+		name: 'shareWorld',
+		description: 'Shares the world with the target users.',
+		tags: [worldCollaboratorsTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+	})
+
+	const { userEmails, access } = useRequestBody(ctx, {
 		userEmails: RequiredParam(StringArrayValidator),
+		access: RequiredParam(CollaboratorAccessValidator),
 	})
 
 	if (userEmails.length > 20) {
@@ -118,14 +140,14 @@ router.post('/api/world/:worldId/share', async (ctx) => {
 
 	await AuthorizationService.checkUserWorldOwner(user, worldId)
 
-	await WorldService.shareWorld(worldId, userEmails)
+	await WorldShareService.addCollaborators({ worldId, userEmails, access })
 })
 
 router.delete('/api/world/:worldId/share/:userEmail', async (ctx) => {
 	useApiEndpoint({
 		name: 'unshareWorld',
 		description: "Removes the target user's access to this world.",
-		tags: [worldDetailsTag],
+		tags: [worldCollaboratorsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -137,7 +159,7 @@ router.delete('/api/world/:worldId/share/:userEmail', async (ctx) => {
 
 	await AuthorizationService.checkUserWorldOwner(user, worldId)
 
-	await WorldService.unshareWorld({
+	await WorldShareService.removeCollaborator({
 		worldId,
 		userEmail,
 	})

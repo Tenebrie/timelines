@@ -1,8 +1,8 @@
-import { Close, HourglassEmpty } from '@mui/icons-material'
+import { ClearAll, Close } from '@mui/icons-material'
 import { Alert, AlertTitle, IconButton, List, Stack, Typography } from '@mui/material'
 import { useCallback, useRef } from 'react'
 
-import { useDismissAnnouncementMutation, useGetAnnouncementsQuery } from '../../../../../api/rheaApi'
+import { useDismissAnnouncementMutation, useGetAnnouncementsQuery } from '../../../api/rheaApi'
 
 export const AnnouncementList = () => {
 	const { data } = useGetAnnouncementsQuery()
@@ -14,7 +14,7 @@ export const AnnouncementList = () => {
 		async (id: string) => {
 			lastDismissedAnnouncement.current = id
 			await dismissAnnouncement({
-				id: 'qwe',
+				id,
 			})
 		},
 		[dismissAnnouncement]
@@ -24,8 +24,8 @@ export const AnnouncementList = () => {
 		<List sx={{ marginX: 1, marginY: 0.5 }}>
 			{(!data || data?.length === 0) && (
 				<Stack marginX={1} marginY={0.5} gap={2} alignItems="center">
-					<HourglassEmpty />
-					<Typography>Your next announcement is coming soon!</Typography>
+					<ClearAll />
+					<Typography>All clear!</Typography>
 				</Stack>
 			)}
 			{data?.map((announcement) => (

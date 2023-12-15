@@ -1,5 +1,11 @@
 import { baseApi as api } from './baseApi'
-export const addTagTypes = ['worldDetails', 'announcementList', 'auth', 'worldList'] as const
+export const addTagTypes = [
+	'worldDetails',
+	'announcementList',
+	'auth',
+	'worldList',
+	'worldCollaborators',
+] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -43,15 +49,15 @@ const injectedRtkApi = api
 			}),
 			createAccount: build.mutation<CreateAccountApiResponse, CreateAccountApiArg>({
 				query: (queryArg) => ({ url: `/api/auth`, method: 'POST', body: queryArg.body }),
-				invalidatesTags: ['auth', 'worldList', 'worldDetails'],
+				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
 			}),
 			postLogin: build.mutation<PostLoginApiResponse, PostLoginApiArg>({
 				query: (queryArg) => ({ url: `/api/auth/login`, method: 'POST', body: queryArg.body }),
-				invalidatesTags: ['auth', 'worldList', 'worldDetails'],
+				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
 			}),
 			postLogout: build.mutation<PostLogoutApiResponse, PostLogoutApiArg>({
 				query: () => ({ url: `/api/auth/logout`, method: 'POST' }),
-				invalidatesTags: ['auth', 'worldList', 'worldDetails'],
+				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
 			}),
 			createWorldEvent: build.mutation<CreateWorldEventApiResponse, CreateWorldEventApiArg>({
 				query: (queryArg) => ({
@@ -130,20 +136,24 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}` }),
 				providesTags: ['worldDetails'],
 			}),
+			getWorldCollaborators: build.query<GetWorldCollaboratorsApiResponse, GetWorldCollaboratorsApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/collaborators` }),
+				providesTags: ['worldCollaborators'],
+			}),
 			shareWorld: build.mutation<ShareWorldApiResponse, ShareWorldApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/share`,
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['worldDetails'],
+				invalidatesTags: ['worldCollaborators'],
 			}),
 			unshareWorld: build.mutation<UnshareWorldApiResponse, UnshareWorldApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/share/${queryArg.userEmail}`,
 					method: 'DELETE',
 				}),
-				invalidatesTags: ['worldDetails'],
+				invalidatesTags: ['worldCollaborators'],
 			}),
 		}),
 		overrideExisting: false,
@@ -450,14 +460,49 @@ export type DeleteWorldEventDeltaApiArg = {
 	deltaId: string
 }
 export type GetWorldsApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
-	timeOrigin: string
-	ownerId: string
-}[]
+	ownedWorlds: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
+		timeOrigin: string
+		ownerId: string
+		collaborators: {
+			access: 'ReadOnly' | 'Editing'
+			userId: string
+			worldId: string
+		}[]
+	}[]
+	contributableWorlds: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
+		timeOrigin: string
+		ownerId: string
+		collaborators: {
+			access: 'ReadOnly' | 'Editing'
+			userId: string
+			worldId: string
+		}[]
+	}[]
+	visibleWorlds: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
+		timeOrigin: string
+		ownerId: string
+		collaborators: {
+			access: 'ReadOnly' | 'Editing'
+			userId: string
+			worldId: string
+		}[]
+	}[]
+}
 export type GetWorldsApiArg = void
 export type CreateWorldApiResponse = /** status 200  */ {
 	name: string
@@ -582,12 +627,25 @@ export type GetWorldInfoApiArg = {
 	/** Any string value */
 	worldId: string
 }
+export type GetWorldCollaboratorsApiResponse = /** status 200  */ {
+	access: 'ReadOnly' | 'Editing'
+	userId: string
+	worldId: string
+	user: {
+		email: string
+	}
+}[]
+export type GetWorldCollaboratorsApiArg = {
+	/** Any string value */
+	worldId: string
+}
 export type ShareWorldApiResponse = unknown
 export type ShareWorldApiArg = {
 	/** Any string value */
 	worldId: string
 	body: {
 		userEmails: string[]
+		access: 'ReadOnly' | 'Editing'
 	}
 }
 export type UnshareWorldApiResponse = unknown
@@ -623,6 +681,8 @@ export const {
 	useDeleteWorldMutation,
 	useGetWorldInfoQuery,
 	useLazyGetWorldInfoQuery,
+	useGetWorldCollaboratorsQuery,
+	useLazyGetWorldCollaboratorsQuery,
 	useShareWorldMutation,
 	useUnshareWorldMutation,
 } = injectedRtkApi

@@ -1,5 +1,5 @@
 import { Home, Menu } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { BaseNavigator } from '../../../../components/BaseNavigator'
@@ -24,12 +24,14 @@ export const WorldNavigator = () => {
 
 	return (
 		<BaseNavigator>
-			<Button onClick={onToggleOverview}>
-				<Menu />
-			</Button>
-			<Button onClick={onBack}>
-				<Home /> Home
-			</Button>
+			<Stack direction="row" height="100%">
+				<Button onClick={onToggleOverview}>
+					<Menu />
+				</Button>
+				<Button onClick={onBack} sx={{ gap: 0.5 }}>
+					<Home /> Home
+				</Button>
+			</Stack>
 		</BaseNavigator>
 	)
 }

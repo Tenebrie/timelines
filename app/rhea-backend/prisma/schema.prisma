@@ -11,14 +11,17 @@ datasource db {
 }
 
 model User {
-  id                  String             @id @unique @default(uuid())
-  email               String             @unique
-  username            String
-  password            String
-  worlds              World[]            @relation(name: "worldOwner")
-  collaboratingWorlds World[]            @relation(name: "worldCollaborator")
-  level               UserLevel          @default(Free)
-  notifications       UserAnnouncement[]
+  id String @id @unique @default(uuid())
+
+  email    String @unique
+  username String
+  password String
+
+  level         UserLevel          @default(Free)
+  notifications UserAnnouncement[]
+
+  worlds          World[]
+  collaboratingIn CollaboratingUser[]
 }
 
 enum UserLevel {
@@ -45,9 +48,9 @@ model World {
   calendar   WorldCalendarType @default(COUNTUP)
   timeOrigin BigInt            @default(0)
 
-  owner         User   @relation(fields: [ownerId], references: [id], name: "worldOwner")
+  owner         User                @relation(fields: [ownerId], references: [id])
   ownerId       String
-  collaborators User[] @relation(name: "worldCollaborator")
+  collaborators CollaboratingUser[]
 }
 
 enum WorldEventType {
@@ -130,6 +133,22 @@ model ActorRelationship {
   name String
 
   @@id([originId, receiverId])
+}
+
+enum CollaboratorAccess {
+  ReadOnly
+  Editing
+}
+
+model CollaboratingUser {
+  user   User               @relation(fields: [userId], references: [id])
+  world  World              @relation(fields: [worldId], references: [id])
+  access CollaboratorAccess
+
+  userId  String
+  worldId String
+
+  @@id([userId, worldId])
 }
 
 enum AnnouncementType {

@@ -53,6 +53,18 @@ export const RedisService = {
 		})
 	},
 
+	notifyAboutWorldShared: ({ users, worldId }: { users: User[]; worldId: string }) => {
+		users.forEach((user) => {
+			calliope.sendMessage({
+				type: RheaToCalliopeMessageType.WORLD_UNSHARED,
+				data: {
+					userId: user.id,
+					worldId,
+				},
+			})
+		})
+	},
+
 	notifyAboutWorldUnshared: ({ user, worldId }: { user: User; worldId: string }) => {
 		calliope.sendMessage({
 			type: RheaToCalliopeMessageType.WORLD_UNSHARED,
