@@ -5,7 +5,27 @@ import { dbClient } from './DatabaseClient'
 
 export const AuthorizationService = {
 	checkUserReadAccess: async (user: User, worldId: string) => {
-		await AuthorizationService.checkUserWriteAccess(user, worldId)
+		const count = await dbClient.world.count({
+			where: {
+				OR: [
+					{
+						id: worldId,
+						owner: user,
+					},
+					{
+						id: worldId,
+						collaborators: {
+							some: {
+								userId: user.id,
+							},
+						},
+					},
+				],
+			},
+		})
+		if (count === 0) {
+			throw new UnauthorizedError('No access to this world')
+		}
 	},
 
 	checkUserWriteAccess: async (user: User, worldId: string) => {
@@ -21,6 +41,7 @@ export const AuthorizationService = {
 						collaborators: {
 							some: {
 								userId: user.id,
+								access: 'Editing',
 							},
 						},
 					},

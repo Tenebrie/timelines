@@ -13,7 +13,7 @@ export const WorldDetailsEditor = ({ world, collaborators }: Props) => {
 	const { listAllCalendars } = useWorldCalendar()
 
 	return (
-		<Stack gap={2}>
+		<Stack gap={2} minWidth={400}>
 			<TextField label="World name" value={world.name} disabled />
 			<FormControl fullWidth>
 				<InputLabel id="world-calendar-label">Calendar</InputLabel>

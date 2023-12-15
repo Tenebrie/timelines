@@ -31,7 +31,11 @@ describe('<Limbo />', () => {
 				},
 			})
 			mockGetWorlds(server, {
-				response: [],
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
 			})
 
 			await renderWithRouter('limbo')

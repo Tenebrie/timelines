@@ -21,11 +21,15 @@ describe('<WorldList />', () => {
 		renderWithProviders(<WorldList />)
 
 		mockGetWorlds(server, {
-			response: [
-				mockWorldItemModel({ name: 'My First World' }),
-				mockWorldItemModel({ name: 'My Second World' }),
-				mockWorldItemModel({ name: 'My Third World' }),
-			],
+			response: {
+				ownedWorlds: [
+					mockWorldItemModel({ name: 'My First World' }),
+					mockWorldItemModel({ name: 'My Second World' }),
+					mockWorldItemModel({ name: 'My Third World' }),
+				],
+				contributableWorlds: [],
+				visibleWorlds: [],
+			},
 		})
 
 		expect(await screen.findByText('- My First World')).toBeInTheDocument()
@@ -38,7 +42,11 @@ describe('<WorldList />', () => {
 		renderWithProviders(<WorldList />)
 
 		mockGetWorlds(server, {
-			response: [],
+			response: {
+				ownedWorlds: [],
+				contributableWorlds: [],
+				visibleWorlds: [],
+			},
 		})
 
 		expect(await screen.findByText('Nothing has been created yet!')).toBeInTheDocument()
@@ -47,7 +55,13 @@ describe('<WorldList />', () => {
 	it('creates a world', async () => {
 		const { user } = renderWithProviders(<WorldList />)
 
-		mockGetWorlds(server, { response: [] })
+		mockGetWorlds(server, {
+			response: {
+				ownedWorlds: [],
+				contributableWorlds: [],
+				visibleWorlds: [],
+			},
+		})
 
 		await user.click(await screen.findByText('Create new world...'))
 
@@ -59,7 +73,11 @@ describe('<WorldList />', () => {
 			response: newWorld,
 		})
 		mockGetWorlds(server, {
-			response: [newWorld],
+			response: {
+				ownedWorlds: [newWorld],
+				contributableWorlds: [],
+				visibleWorlds: [],
+			},
 		})
 
 		await user.type(screen.getByLabelText('Name'), 'New World')
@@ -77,7 +95,14 @@ describe('<WorldList />', () => {
 	it('creates a world with earth calendar and time origin', async () => {
 		const { user } = renderWithProviders(<WorldList />)
 
-		mockGetWorlds(server, { response: [] })
+		mockGetWorlds(server, {
+			response: {
+				ownedWorlds: [],
+				contributableWorlds: [],
+				visibleWorlds: [],
+			},
+		})
+
 		const { invocations } = mockCreateWorld(server, {
 			response: mockWorldItemModel(),
 		})
@@ -101,7 +126,14 @@ describe('<WorldList />', () => {
 	it('fails to create a world when the name is empty', async () => {
 		const { user } = renderWithProviders(<WorldList />)
 
-		mockGetWorlds(server, { response: [] })
+		mockGetWorlds(server, {
+			response: {
+				ownedWorlds: [],
+				contributableWorlds: [],
+				visibleWorlds: [],
+			},
+		})
+
 		const { hasBeenCalled } = mockCreateWorld(server, {
 			response: mockWorldItemModel(),
 		})
@@ -122,7 +154,13 @@ describe('<WorldList />', () => {
 			mockWorldItemModel({ name: 'My Third World' }),
 		]
 
-		mockGetWorlds(server, { response: worlds })
+		mockGetWorlds(server, {
+			response: {
+				ownedWorlds: worlds,
+				contributableWorlds: [],
+				visibleWorlds: [],
+			},
+		})
 
 		expect((await screen.findAllByTestId('DeleteIcon'))[0]).toBeInTheDocument()
 		await user.click((await screen.findAllByTestId('DeleteIcon'))[0])
@@ -135,7 +173,11 @@ describe('<WorldList />', () => {
 			response: worlds[0],
 		})
 		mockGetWorlds(server, {
-			response: [worlds[1], worlds[2]],
+			response: {
+				ownedWorlds: [worlds[1], worlds[2]],
+				contributableWorlds: [],
+				visibleWorlds: [],
+			},
 		})
 
 		await user.click(screen.getByText('Confirm'))

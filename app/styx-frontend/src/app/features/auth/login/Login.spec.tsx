@@ -76,7 +76,13 @@ describe('<Login />', () => {
 					username: 'admin',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
+			mockGetWorlds(server, {
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
+			})
 
 			const { user } = await renderWithRouter('login')
 
@@ -96,7 +102,13 @@ describe('<Login />', () => {
 					username: 'admin',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
+			mockGetWorlds(server, {
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
+			})
 
 			const { user, store } = await renderWithRouter('login')
 
@@ -138,7 +150,13 @@ describe('<Login />', () => {
 					message: 'Password invalid',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
+			mockGetWorlds(server, {
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
+			})
 
 			const { user } = await renderWithRouter('login')
 
@@ -158,7 +176,13 @@ describe('<Login />', () => {
 					message: 'Password invalid',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
+			mockGetWorlds(server, {
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
+			})
 
 			const { user } = await renderWithRouter('login')
 

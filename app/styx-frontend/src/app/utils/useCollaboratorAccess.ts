@@ -6,8 +6,8 @@ import { keysOf } from './keysOf'
 export const useCollaboratorAccess = () => {
 	const data = useMemo<Record<CollaboratorAccess, undefined>>(
 		() => ({
-			Editing: undefined,
 			ReadOnly: undefined,
+			Editing: undefined,
 		}),
 		[]
 	)

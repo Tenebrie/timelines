@@ -79,7 +79,13 @@ describe('<Register />', () => {
 					username: 'admin',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
+			mockGetWorlds(server, {
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
+			})
 
 			const { user } = await renderWithRouter('register')
 
@@ -101,7 +107,13 @@ describe('<Register />', () => {
 					username: 'admin',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
+			mockGetWorlds(server, {
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
+			})
 
 			const { user, store } = await renderWithRouter('register')
 
@@ -176,7 +188,13 @@ describe('<Register />', () => {
 					message: 'Unable to create account',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
+			mockGetWorlds(server, {
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
+			})
 
 			const { user } = await renderWithRouter('register')
 
@@ -199,7 +217,13 @@ describe('<Register />', () => {
 					message: 'Unable to create account',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
+			mockGetWorlds(server, {
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
+			})
 
 			const { user } = await renderWithRouter('register')
 

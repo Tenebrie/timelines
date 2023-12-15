@@ -20,7 +20,11 @@ describe('<Home />', () => {
 				},
 			})
 			mockGetWorlds(server, {
-				response: [],
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
 			})
 
 			await renderWithRouter('home')
@@ -31,7 +35,11 @@ describe('<Home />', () => {
 		it('does not redirect if user is authenticated', async () => {
 			mockAuthenticatedUser(server)
 			mockGetWorlds(server, {
-				response: [],
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
 			})
 
 			await renderWithRouter('home')
