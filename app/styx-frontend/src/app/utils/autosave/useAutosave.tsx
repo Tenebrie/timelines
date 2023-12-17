@@ -20,6 +20,7 @@ export const useAutosave = ({ onSave, isSaving, isError, defaultIcon }: Props) =
 	const successTimeoutRef = useRef<number | null>(null)
 	const defaultIconRef = useRef<ReactElement | undefined>(defaultIcon)
 
+	// TODO: Figure out a more permanent solution
 	const autosaveDelay = isRunningInTest() ? 300 : 3000
 
 	const onSaveRef = useRef<() => void>(onSave)

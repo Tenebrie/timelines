@@ -143,7 +143,7 @@ router.post('/api/world/:worldId/share', async (ctx) => {
 	await WorldShareService.addCollaborators({ worldId, userEmails, access })
 })
 
-router.delete('/api/world/:worldId/share/:userEmail', async (ctx) => {
+router.delete('/api/world/:worldId/share/:userId', async (ctx) => {
 	useApiEndpoint({
 		name: 'unshareWorld',
 		description: "Removes the target user's access to this world.",
@@ -152,16 +152,16 @@ router.delete('/api/world/:worldId/share/:userEmail', async (ctx) => {
 
 	const user = await useAuth(ctx, UserAuthenticator)
 
-	const { worldId, userEmail } = usePathParams(ctx, {
+	const { worldId, userId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),
-		userEmail: PathParam(StringValidator),
+		userId: PathParam(StringValidator),
 	})
 
 	await AuthorizationService.checkUserWorldOwner(user, worldId)
 
 	await WorldShareService.removeCollaborator({
 		worldId,
-		userEmail,
+		userId,
 	})
 })
 

@@ -11,12 +11,15 @@ export const WorldShareService = {
 			where: {
 				worldId,
 			},
-			include: {
+			select: {
 				user: {
 					select: {
+						id: true,
 						email: true,
 					},
 				},
+				worldId: true,
+				access: true,
 			},
 		})
 	},
@@ -101,7 +104,7 @@ export const WorldShareService = {
 		)
 	},
 
-	removeCollaborator: async ({ worldId, userEmail }: { worldId: string; userEmail: string }) => {
+	removeCollaborator: async ({ worldId, userId }: { worldId: string; userId: string }) => {
 		const world = await dbClient.world.findFirst({
 			where: {
 				id: worldId,
@@ -112,27 +115,17 @@ export const WorldShareService = {
 			throw new BadRequestError(`Unable to find world.`)
 		}
 
-		const user = await dbClient.user.findFirst({
-			where: {
-				email: userEmail,
-			},
-		})
-
-		if (!user) {
-			throw new BadRequestError('Unable to find user.')
-		}
-
 		await dbClient.collaboratingUser.delete({
 			where: {
 				userId_worldId: {
-					userId: user.id,
+					userId,
 					worldId,
 				},
 			},
 		})
 
 		RedisService.notifyAboutWorldUnshared({
-			user,
+			userId,
 			worldId,
 		})
 	},

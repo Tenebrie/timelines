@@ -324,6 +324,7 @@ export const useWorldRouter = () => {
 
 export const allRoutes = {
 	...appRoutes,
+	...homeRoutes,
 	...worldRoutes,
 }
-export type AllRouteParamMapping = AppRouteParamMapping & WorldRouteParamMapping
+export type AllRouteParamMapping = AppRouteParamMapping & HomeRouteParamMapping & WorldRouteParamMapping

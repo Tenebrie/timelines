@@ -150,7 +150,7 @@ const injectedRtkApi = api
 			}),
 			unshareWorld: build.mutation<UnshareWorldApiResponse, UnshareWorldApiArg>({
 				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/share/${queryArg.userEmail}`,
+					url: `/api/world/${queryArg.worldId}/share/${queryArg.userId}`,
 					method: 'DELETE',
 				}),
 				invalidatesTags: ['worldCollaborators'],
@@ -628,12 +628,12 @@ export type GetWorldInfoApiArg = {
 	worldId: string
 }
 export type GetWorldCollaboratorsApiResponse = /** status 200  */ {
-	access: 'ReadOnly' | 'Editing'
-	userId: string
 	worldId: string
 	user: {
+		id: string
 		email: string
 	}
+	access: 'ReadOnly' | 'Editing'
 }[]
 export type GetWorldCollaboratorsApiArg = {
 	/** Any string value */
@@ -653,7 +653,7 @@ export type UnshareWorldApiArg = {
 	/** Any string value */
 	worldId: string
 	/** Any string value */
-	userEmail: string
+	userId: string
 }
 export const {
 	useCreateActorMutation,

@@ -1,3 +1,4 @@
 import { GetWorldCollaboratorsApiResponse } from './rheaApi'
 
-export type CollaboratorAccess = GetWorldCollaboratorsApiResponse[number]['access']
+export type CollaboratingUser = GetWorldCollaboratorsApiResponse[number]
+export type CollaboratorAccess = CollaboratingUser['access']

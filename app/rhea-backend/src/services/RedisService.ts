@@ -65,11 +65,11 @@ export const RedisService = {
 		})
 	},
 
-	notifyAboutWorldUnshared: ({ user, worldId }: { user: User; worldId: string }) => {
+	notifyAboutWorldUnshared: ({ userId, worldId }: { userId: string; worldId: string }) => {
 		calliope.sendMessage({
 			type: RheaToCalliopeMessageType.WORLD_UNSHARED,
 			data: {
-				userId: user.id,
+				userId,
 				worldId,
 			},
 		})

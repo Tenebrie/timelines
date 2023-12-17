@@ -29,14 +29,14 @@ export const WorldCollaborators = ({ worldId, collaborators }: Props) => {
 
 	const onDelete = useCallback(
 		(collaborator: (typeof collaborators)[number]) => {
-			if (removingUser === collaborator.userId) {
+			if (removingUser === collaborator.user.id) {
 				removeCollaborator({
 					worldId,
-					userEmail: collaborator.user.email,
+					userId: collaborator.user.id,
 				})
 				setRemovingUser(null)
 			} else {
-				setRemovingUser(collaborator.userId)
+				setRemovingUser(collaborator.user.id)
 			}
 		},
 		[removeCollaborator, removingUser, worldId]
@@ -52,21 +52,25 @@ export const WorldCollaborators = ({ worldId, collaborators }: Props) => {
 
 	return (
 		<>
-			{collaborators.length === 0 && <Typography variant="caption">Empty!</Typography>}
+			{collaborators.length === 0 && <Typography variant="caption">No collaborators added</Typography>}
 			{collaborators.length > 0 && (
 				<List>
 					{collaborators.map((collaborator) => (
-						<ListItem key={`${collaborator.userId}-${collaborator.worldId}`}>
+						<ListItem key={`${collaborator.user.id}-${collaborator.worldId}`}>
 							<ListItemText primary={collaborator.user.email} secondary={collaborator.access} />
 							<ListItemSecondaryAction>
-								{removingUser === collaborator.userId && (
-									<IconButton>
+								{removingUser === collaborator.user.id && (
+									<IconButton
+										aria-label={`Cancel removing ${collaborator.user.email} from collaborators.`}
+										onClick={() => setRemovingUser(null)}
+									>
 										<Cancel />
 									</IconButton>
 								)}
 								<IconButton
+									aria-label={`Remove ${collaborator.user.email} from collaborators. Requires double click.`}
 									onClick={() => onDelete(collaborator)}
-									color={removingUser === collaborator.userId ? 'error' : 'default'}
+									color={removingUser === collaborator.user.id ? 'error' : 'default'}
 								>
 									<Delete />
 								</IconButton>

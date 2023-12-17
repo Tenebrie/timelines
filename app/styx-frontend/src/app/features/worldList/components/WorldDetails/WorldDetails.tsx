@@ -18,5 +18,9 @@ export const WorldDetails = () => {
 		return <></>
 	}
 
-	return <WorldDetailsEditor world={worldData} collaborators={collaboratorsData} />
+	return (
+		<>
+			<WorldDetailsEditor world={worldData} collaborators={collaboratorsData} />
+		</>
+	)
 }

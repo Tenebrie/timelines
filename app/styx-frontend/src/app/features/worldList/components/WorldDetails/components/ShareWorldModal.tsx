@@ -90,6 +90,7 @@ export const ShareWorldModal = () => {
 						value={access}
 						label="Access"
 						labelId="share-access-label"
+						aria-label="Collaborator access level"
 						onChange={(event) => {
 							setAccess(event.target.value as CollaboratorAccess)
 						}}
