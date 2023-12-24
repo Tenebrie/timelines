@@ -1,14 +1,14 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { OverlayingLabel } from '../../../../../../components/OverlayingLabel'
+import { OutlinedContainer } from '../../../../../../components/OutlinedContainer'
 import { getOutlinerPreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
 import { Actor } from '../../../../types'
 import { EventWithContentRenderer } from '../../../Renderers/Event/EventWithContentRenderer'
-import { StatementsScroller, StatementsUnit } from '../../styles'
+import { StatementsScroller } from '../../styles'
 import { ActorEventsEmptyState } from './ActorEventsEmptyState'
 
 type Props = {
@@ -33,8 +33,7 @@ export const ActorEvents = ({ actor }: Props) => {
 		}))
 
 	return (
-		<StatementsUnit>
-			<OverlayingLabel>Related events</OverlayingLabel>
+		<OutlinedContainer label="Related events">
 			<StatementsScroller>
 				{visibleEvents.map((event) => (
 					<EventWithContentRenderer
@@ -49,6 +48,6 @@ export const ActorEvents = ({ actor }: Props) => {
 				))}
 				{visibleEvents.length === 0 && <ActorEventsEmptyState />}
 			</StatementsScroller>
-		</StatementsUnit>
+		</OutlinedContainer>
 	)
 }

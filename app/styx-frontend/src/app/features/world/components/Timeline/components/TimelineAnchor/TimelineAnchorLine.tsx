@@ -191,7 +191,9 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		<DividerContainer key={rawIndex} offset={dividerPosition} className={visible ? 'visible' : ''}>
 			{!!labelSize && (
 				<DividerLabel
-					style={{ fontWeight: labelSize === 'large' ? 600 : labelSize === 'medium' ? 500 : 400 }}
+					style={{
+						fontWeight: labelSize === 'large' ? 600 : labelSize === 'medium' ? 500 : 400,
+					}}
 				>
 					{timeToShortLabel(scaledTimeToRealTime(index * lineSpacing), scaleLevel, labelSize)}
 				</DividerLabel>

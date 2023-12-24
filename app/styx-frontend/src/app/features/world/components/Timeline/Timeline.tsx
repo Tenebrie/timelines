@@ -1,6 +1,8 @@
+import { ThemeProvider } from '@mui/material'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { darkTheme } from '../../../theming/themes'
 import { useTimelineWorldTime } from '../../../time/hooks/useTimelineWorldTime'
 import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
 import { useWorldRouter } from '../../router'
@@ -90,59 +92,61 @@ export const Timeline = () => {
 
 	return (
 		<TimelineWrapper>
-			<TimelineContainer ref={containerRef} onContextMenu={onContextMenu}>
-				<TimelineEdgeScroll
-					side="left"
-					currentScroll={scroll}
-					pageSize={containerWidth}
-					timelineScale={timelineScale}
-					scaleLevel={scaleLevel}
-					scrollTo={scrollTimelineTo}
-				/>
-				<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
-				<TimelineAnchor
-					visible={!isSwitchingScale}
-					scroll={scroll}
-					timelineScale={timelineScale}
-					scaleLevel={scaleLevel}
-					containerWidth={containerWidth}
-				/>
-				{selectedTimeOrNull !== null && (
-					<TimeMarker
-						timestamp={selectedTimeOrNull}
+			<ThemeProvider theme={darkTheme}>
+				<TimelineContainer ref={containerRef} onContextMenu={onContextMenu}>
+					<TimelineEdgeScroll
+						side="left"
+						currentScroll={scroll}
+						pageSize={containerWidth}
 						timelineScale={timelineScale}
-						scroll={scroll}
-						mode="mouse"
 						scaleLevel={scaleLevel}
-						transitioning={isSwitchingScale}
+						scrollTo={scrollTimelineTo}
 					/>
-				)}
-				{eventGroups.map((group) => (
-					<TimelineEventGroup
-						key={group.timestamp}
+					<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
+					<TimelineAnchor
 						visible={!isSwitchingScale}
 						scroll={scroll}
-						eventGroup={group}
 						timelineScale={timelineScale}
+						scaleLevel={scaleLevel}
 						containerWidth={containerWidth}
-						isLocationEqual={isLocationEqual}
-						eventEditorParams={eventEditorParams}
-						eventDeltaEditorParams={eventDeltaEditorParams}
-						contextMenuState={contextMenuState}
-						realTimeToScaledTime={realTimeToScaledTime}
 					/>
-				))}
-				<TimelineSelectedLabel onNavigateToTime={(time) => scrollTimelineTo(time)} />
-				<TimelineEdgeScroll
-					side="right"
-					currentScroll={scroll}
-					pageSize={containerWidth}
-					timelineScale={timelineScale}
-					scaleLevel={scaleLevel}
-					scrollTo={scrollTimelineTo}
-				/>
-				<TimelineContextMenu />
-			</TimelineContainer>
+					{selectedTimeOrNull !== null && (
+						<TimeMarker
+							timestamp={selectedTimeOrNull}
+							timelineScale={timelineScale}
+							scroll={scroll}
+							mode="mouse"
+							scaleLevel={scaleLevel}
+							transitioning={isSwitchingScale}
+						/>
+					)}
+					{eventGroups.map((group) => (
+						<TimelineEventGroup
+							key={group.timestamp}
+							visible={!isSwitchingScale}
+							scroll={scroll}
+							eventGroup={group}
+							timelineScale={timelineScale}
+							containerWidth={containerWidth}
+							isLocationEqual={isLocationEqual}
+							eventEditorParams={eventEditorParams}
+							eventDeltaEditorParams={eventDeltaEditorParams}
+							contextMenuState={contextMenuState}
+							realTimeToScaledTime={realTimeToScaledTime}
+						/>
+					))}
+					<TimelineSelectedLabel onNavigateToTime={(time) => scrollTimelineTo(time)} />
+					<TimelineEdgeScroll
+						side="right"
+						currentScroll={scroll}
+						pageSize={containerWidth}
+						timelineScale={timelineScale}
+						scaleLevel={scaleLevel}
+						scrollTo={scrollTimelineTo}
+					/>
+					<TimelineContextMenu />
+				</TimelineContainer>
+			</ThemeProvider>
 		</TimelineWrapper>
 	)
 }

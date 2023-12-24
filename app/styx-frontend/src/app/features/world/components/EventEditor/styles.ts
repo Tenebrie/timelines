@@ -28,21 +28,6 @@ export const StatementsContainer = styled.div`
 	gap: 16px;
 `
 
-export const StatementsUnit = styled.fieldset`
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	border-radius: 4px;
-	border: 1px solid rgba(255, 255, 255, 0.23);
-	padding: 8px 16px;
-	position: relative;
-	margin-top: -8.5px;
-
-	@media all and (min-width: 900px) {
-		height: 100%;
-	}
-`
-
 export const StatementsScroller = styled.div`
 	width: 100%;
 	overflow-y: auto;

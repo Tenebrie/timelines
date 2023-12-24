@@ -3,12 +3,11 @@ import { Button, Stack, Tooltip } from '@mui/material'
 import { useDispatch } from 'react-redux'
 
 import { GetWorldsApiResponse } from '../../../api/rheaApi'
-import { OverlayingLabel } from '../../components/OverlayingLabel'
+import { OutlinedContainer } from '../../components/OutlinedContainer'
 import { TrunkatedSpan } from '../../components/TrunkatedTypography'
 import { useHomeRouter, useWorldRouter } from '../world/router'
 import { WorldListEmptyState } from './components/WorldListEmptyState'
 import { worldListSlice } from './reducer'
-import { WorldsUnit } from './styles'
 
 type Props = {
 	worlds:
@@ -51,8 +50,7 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 	}
 
 	return (
-		<WorldsUnit style={{ maxWidth: 600, minWidth: 400 }}>
-			<OverlayingLabel>{label}</OverlayingLabel>
+		<OutlinedContainer style={{ maxWidth: 600, minWidth: 400 }} label={label}>
 			<Stack spacing={1} minWidth={256}>
 				{worlds.map((world) => (
 					<Stack direction="row" justifyContent="space-between" key={world.id}>
@@ -82,6 +80,6 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 				))}
 				{showCreateButton && <Button onClick={onCreate}>Create new world...</Button>}
 			</Stack>
-		</WorldsUnit>
+		</OutlinedContainer>
 	)
 }

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useDoubleClick } from '../../../../../hooks/useDoubleClick'
+import { EventIcon } from '../../../../components/EventIcon'
 import { isMultiselectClick } from '../../../../utils/isMultiselectClick'
 import { preferencesSlice } from '../../../preferences/reducer'
 import { getOverviewPreferences } from '../../../preferences/selectors'
@@ -79,7 +80,7 @@ export const OverviewPanel = () => {
 				selected={selectedEvents.includes(event.id)}
 			>
 				<ListItemIcon>
-					<img src={getIconPath(event.icon)} height="24px" alt={`${event.icon} icon`} />
+					<EventIcon name={event.icon} height={24} />
 				</ListItemIcon>
 				<StyledListItemText data-hj-suppress primary={event.name} secondary={event.secondary} />
 			</StyledListItemButton>

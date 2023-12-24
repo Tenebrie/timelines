@@ -5,6 +5,7 @@ import { Actor, WorldEvent } from '../world/types'
 
 const initialState = {
 	time: {},
+	colorMode: 'dark' as 'light' | 'dark',
 	timeline: {
 		useCustomLineSpacing: false as boolean,
 		lineSpacing: 10 as number,
@@ -55,6 +56,7 @@ export const preferencesSlice = createSlice({
 				if (tabIndexValue) {
 					state.outliner.tabIndex = tabIndexValue
 				}
+				state.colorMode = parsedValue?.colorMode ?? 'dark'
 				state.timeline.useCustomLineSpacing = !!parsedValue?.timeline?.useCustomLineSpacing
 				state.timeline.lineSpacing = parsedValue?.timeline?.lineSpacing ?? 10
 				state.outliner.showInactiveStatements = !!parsedValue?.outliner?.showInactiveStatements
@@ -68,6 +70,11 @@ export const preferencesSlice = createSlice({
 			} catch (err) {
 				return
 			}
+		},
+
+		setColorMode: (state, { payload }: PayloadAction<'light' | 'dark'>) => {
+			state.colorMode = payload
+			saveToLocalStorage(state)
 		},
 
 		/* Timeline */

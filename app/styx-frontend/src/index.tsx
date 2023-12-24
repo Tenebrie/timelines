@@ -1,6 +1,5 @@
 import './index.css'
 
-import { createTheme, ThemeProvider } from '@mui/material'
 import { ErrorBoundary, Provider as RollbarProvider } from '@rollbar/react'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
@@ -22,22 +21,14 @@ const rollbarConfig: Configuration = {
 	captureUnhandledRejections: true,
 }
 
-const darkTheme = createTheme({
-	palette: {
-		mode: 'dark',
-	},
-})
-
 root.render(
 	<React.StrictMode>
-		<ThemeProvider theme={darkTheme}>
-			<ReduxProvider store={store}>
-				<RollbarProvider config={rollbarConfig}>
-					<ErrorBoundary>
-						<RouterProvider router={router} />
-					</ErrorBoundary>
-				</RollbarProvider>
-			</ReduxProvider>
-		</ThemeProvider>
+		<ReduxProvider store={store}>
+			<RollbarProvider config={rollbarConfig}>
+				<ErrorBoundary>
+					<RouterProvider router={router} />
+				</ErrorBoundary>
+			</RollbarProvider>
+		</ReduxProvider>
 	</React.StrictMode>
 )
