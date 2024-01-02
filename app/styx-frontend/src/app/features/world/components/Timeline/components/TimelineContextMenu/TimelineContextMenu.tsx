@@ -2,10 +2,11 @@ import { CircularProgress, Divider, ListItemIcon, ListItemText, Menu, MenuItem }
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { QueryParams } from '../../../../../../../router/routes/QueryParams'
+import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { useTimelineBusDispatch } from '../../../../hooks/useTimelineBus'
 import { worldSlice } from '../../../../reducer'
-import { useWorldRouter } from '../../../../router'
 import { getTimelineContextMenuState, getWorldState } from '../../../../selectors'
 import { useTimelineContextMenuRequests } from './hooks/useTimelineContextMenuRequests'
 
@@ -21,12 +22,8 @@ export const TimelineContextMenu = () => {
 
 	const selectedEvent = selectedEventOrBundle?.markerType !== 'bundle' ? selectedEventOrBundle : null
 
-	const {
-		navigateToEventCreator,
-		navigateToEventDeltaCreator,
-		selectTime,
-		selectedTime: selectedWorldTime,
-	} = useWorldRouter()
+	const { navigateTo, selectTime, selectedTimeOrZero: selectedWorldTime } = useWorldRouter()
+
 	const scrollTimelineTo = useTimelineBusDispatch()
 
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
@@ -46,9 +43,17 @@ export const TimelineContextMenu = () => {
 
 	const onCreateEvent = useCallback(() => {
 		onClose()
-		navigateToEventCreator({ selectedTime })
+		navigateTo({
+			target: worldRoutes.eventCreator,
+			args: {
+				worldId,
+			},
+			query: {
+				[QueryParams.SELECTED_TIME]: String(selectedTime),
+			},
+		})
 		scrollTimelineTo(selectedTime)
-	}, [navigateToEventCreator, onClose, scrollTimelineTo, selectedTime])
+	}, [navigateTo, onClose, scrollTimelineTo, selectedTime, worldId])
 
 	const onRevokeEvent = useCallback(() => {
 		onClose()
@@ -61,8 +66,14 @@ export const TimelineContextMenu = () => {
 		if (!selectedEvent) {
 			return
 		}
-		navigateToEventDeltaCreator({ eventId: selectedEvent.id })
-	}, [navigateToEventDeltaCreator, onClose, selectedEvent])
+		navigateTo({
+			target: worldRoutes.eventDeltaCreator,
+			args: {
+				worldId,
+				eventId: selectedEvent.id,
+			},
+		})
+	}, [navigateTo, onClose, selectedEvent, worldId])
 
 	const onRevokeSelectedEvent = useCallback(async () => {
 		if (!selectedEvent) {

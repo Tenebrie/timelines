@@ -2,9 +2,9 @@ import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCreateWorldEventMutation } from '../../../../../../../api/rheaApi'
+import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
 import { useEventFields } from './useEventFields'
 
@@ -15,7 +15,7 @@ type Props = {
 export const useCreateEvent = ({ state }: Props) => {
 	const { id: worldId } = useSelector(getWorldState)
 
-	const { navigateToOutliner, selectedTime } = useWorldRouter()
+	const { navigateToOutliner, selectedTimeOrZero } = useWorldRouter()
 
 	const [createWorldEvent, { isLoading: isCreating, isError }] = useCreateWorldEventMutation()
 
@@ -40,8 +40,8 @@ export const useCreateEvent = ({ state }: Props) => {
 		if (error) {
 			return
 		}
-		navigateToOutliner(selectedTime)
-	}, [createWorldEvent, navigateToOutliner, selectedTime, state, worldId])
+		navigateToOutliner(selectedTimeOrZero)
+	}, [createWorldEvent, navigateToOutliner, selectedTimeOrZero, state, worldId])
 
 	const {
 		icon: createIcon,

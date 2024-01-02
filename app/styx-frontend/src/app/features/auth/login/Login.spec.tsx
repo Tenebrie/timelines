@@ -9,7 +9,7 @@ import {
 } from '../../../../api/rheaApi.mock'
 import { renderWithProviders, renderWithRouter } from '../../../../jest/renderWithProviders'
 import { setupTestServer } from '../../../../jest/setupTestServer'
-import { appRoutes } from '../../world/router'
+import { appRoutes } from '../../../../router/routes/appRoutes'
 import { authInitialState } from '../reducer'
 import { Login } from './Login'
 

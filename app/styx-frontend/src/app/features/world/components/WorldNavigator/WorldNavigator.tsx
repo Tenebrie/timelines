@@ -2,13 +2,14 @@ import { Home, Menu } from '@mui/icons-material'
 import { Button, Stack } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { appRoutes } from '../../../../../router/routes/appRoutes'
+import { useRouter } from '../../../../../router/routes/routes'
 import { BaseNavigator } from '../../../../components/BaseNavigator'
 import { preferencesSlice } from '../../../preferences/reducer'
 import { getOverviewPreferences } from '../../../preferences/selectors'
-import { useAppRouter } from '../../router'
 
 export const WorldNavigator = () => {
-	const { navigateToHome } = useAppRouter()
+	const { navigateTo } = useRouter()
 
 	const { panelOpen } = useSelector(getOverviewPreferences)
 	const { setPanelOpen } = preferencesSlice.actions
@@ -19,7 +20,7 @@ export const WorldNavigator = () => {
 	}
 
 	const onBack = () => {
-		navigateToHome()
+		navigateTo({ target: appRoutes.home })
 	}
 
 	return (

@@ -1,10 +1,10 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
+import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { OutlinedContainer } from '../../../../../../components/OutlinedContainer'
 import { getOutlinerPreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
-import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
 import { Actor } from '../../../../types'
 import { EventWithContentRenderer } from '../../../Renderers/Event/EventWithContentRenderer'
@@ -21,7 +21,7 @@ export const ActorEvents = ({ actor }: Props) => {
 
 	const { expandedEvents } = useSelector(getOutlinerPreferences)
 
-	const { selectedTime } = useWorldRouter()
+	const { selectedTimeOrZero } = useWorldRouter()
 
 	const visibleEvents = events
 		.filter((event) => event.targetActors.some((targetActor) => targetActor.id === actor.id))
@@ -29,7 +29,7 @@ export const ActorEvents = ({ actor }: Props) => {
 			...event,
 			secondary: timeToLabel(event.timestamp),
 			collapsed: !expandedEvents.includes(event.id),
-			active: event.revokedAt === undefined || event.revokedAt > selectedTime,
+			active: event.revokedAt === undefined || event.revokedAt > selectedTimeOrZero,
 		}))
 
 	return (

@@ -62,9 +62,16 @@ describe('useBaseRouter', () => {
 
 	it('navigates to target URL with query param', () => {
 		const { result } = renderHookWithProviders(() =>
-			useBaseRouter({
-				app: '/app/test',
-			})
+			useBaseRouter(
+				{
+					app: '/app/test',
+				},
+				{
+					'/app/test': {
+						q: '' as string,
+					},
+				}
+			)
 		)
 
 		act(() => {
@@ -207,9 +214,16 @@ describe('useBaseRouter', () => {
 
 	it('unsets the query param if set to null', () => {
 		const { result } = renderHookWithProviders(() =>
-			useBaseRouter({
-				app: '/app/test',
-			})
+			useBaseRouter(
+				{
+					app: '/app/test',
+				},
+				{
+					'/app/test': {
+						q: '0',
+					},
+				}
+			)
 		)
 
 		act(() => {

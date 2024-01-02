@@ -2,10 +2,10 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { UpdateWorldEventApiArg, useUpdateWorldEventMutation } from '../../../../../../../api/rheaApi'
+import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { worldSlice } from '../../../../reducer'
-import { useWorldRouter } from '../../../../router'
 import { WorldEvent } from '../../../../types'
 import { useMapActorsToOptions } from '../../../ActorSelector/useMapActorsToOptions'
 import { useEventFields } from './useEventFields'
@@ -79,8 +79,8 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 
 	const [updateWorldEvent, { isLoading: isSaving, isError }] = useUpdateWorldEventMutation()
 
-	const { eventEditorParams } = useWorldRouter()
-	const { worldId } = eventEditorParams
+	const { stateOf } = useWorldRouter()
+	const { worldId } = stateOf(worldRoutes.eventEditor)
 
 	const sendUpdate = useCallback(
 		async (delta: UpdateWorldEventApiArg['body']) => {

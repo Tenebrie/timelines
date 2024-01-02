@@ -1,6 +1,6 @@
 import { Params } from 'react-router-dom'
 
-import { AllRouteParamMapping, allRoutes } from '../app/features/world/router'
+import { AllRouteParamMapping, allRoutes } from './routes/routes'
 
 export const MockedRouter = {
 	isEnabled: false as boolean,

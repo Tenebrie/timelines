@@ -6,12 +6,12 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useCreateWorldEventMutation } from '../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
+import { useWorldRouter, worldRoutes } from '../../../../../router/routes/worldRoutes'
 import Modal, { useModalCleanup } from '../../../../../ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '../../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../../utils/parseApiResponse'
 import { TimestampField } from '../../../time/components/TimestampField'
 import { worldSlice } from '../../reducer'
-import { useWorldRouter } from '../../router'
 import { getEventWizardState } from '../../selectors'
 
 export const EventWizardModal = () => {
@@ -26,7 +26,8 @@ export const EventWizardModal = () => {
 
 	const [createWorldEvent, { isLoading }] = useCreateWorldEventMutation()
 
-	const { navigateToEventEditor, worldParams } = useWorldRouter()
+	const { navigateToEventEditor, stateOf } = useWorldRouter()
+	const { worldId } = stateOf(worldRoutes.eventEditor)
 
 	useEffect(() => {
 		setNameValidationError(null)
@@ -53,7 +54,7 @@ export const EventWizardModal = () => {
 
 		const { response, error } = parseApiResponse(
 			await createWorldEvent({
-				worldId: worldParams.worldId,
+				worldId,
 				body: {
 					type: 'SCENE',
 					name: name.trim(),

@@ -6,11 +6,11 @@ import { useDispatch } from 'react-redux'
 
 import { useUpdateActorMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
+import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useActorColors } from '../../../../hooks/useActorColors'
 import { worldSlice } from '../../../../reducer'
-import { useWorldRouter } from '../../../../router'
 import { Actor, ActorDetails } from '../../../../types'
 import { useActorFields } from './useActorFields'
 
@@ -43,8 +43,8 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 
 	const [updateActor, { isLoading: isSaving }] = useUpdateActorMutation()
 
-	const { eventEditorParams } = useWorldRouter()
-	const { worldId } = eventEditorParams
+	const { stateOf } = useWorldRouter()
+	const { worldId } = stateOf(worldRoutes.eventEditor)
 
 	const sendUpdate = useCallback(
 		async (delta: Partial<Actor>) => {

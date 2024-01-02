@@ -1,15 +1,26 @@
 import { useCallback, useMemo } from 'react'
 import { NavigateOptions, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
+import { CleanUpPathParam, SplitStringBy } from '../types/utils'
 import { MockedRouter } from './router.mock'
 
 export enum QueryStrategy {
-	Clear,
-	Preserve,
+	Clear = '[[[clear]]]',
+	Preserve = '[[[preserve]]]',
 }
 
-export const useBaseRouter = <ParamsT extends Record<string, Record<string, string> | undefined>>(
-	routes: Record<string, keyof ParamsT>
+export const useBaseRouter = <
+	PathT extends string,
+	RoutesT extends Record<string, PathT>,
+	ParamsT extends {
+		[K in keyof RoutesT as RoutesT[K]]: {
+			[Q in CleanUpPathParam<SplitStringBy<RoutesT[K], '/'>[number]>]: string
+		}
+	},
+	QueryT extends Record<keyof ParamsT, Record<string, string> | undefined>
+>(
+	_: RoutesT,
+	defaultQuery?: QueryT
 ) => {
 	const location = useLocation()
 	const actualParams = useParams()
@@ -22,20 +33,72 @@ export const useBaseRouter = <ParamsT extends Record<string, Record<string, stri
 	const navigate = useNavigate()
 	const [currentQuery, setCurrentQuery] = useSearchParams()
 
+	const stateOf = useCallback(<T extends keyof ParamsT>(route: T) => state as ParamsT[typeof route], [state])
+	const queryOf = useCallback(
+		<T extends keyof ParamsT>(route: T) => {
+			if (!defaultQuery) {
+				return {} as NonNullable<QueryT[T]>
+			}
+
+			const defaultValue = defaultQuery[route]
+			if (!defaultValue) {
+				return {} as NonNullable<QueryT[T]>
+			}
+
+			const result = {} as NonNullable<QueryT[T]>
+			Object.keys(defaultValue).forEach((key) => {
+				// @ts-ignore
+				result[key] = currentQuery.get(key) ?? defaultValue[key]
+			})
+			return result
+		},
+		[currentQuery, defaultQuery]
+	)
+
+	const queryOfOrNull = useCallback(
+		<T extends keyof ParamsT>(route: T) => {
+			if (!defaultQuery) {
+				return {} as NonNullable<{ [K in keyof QueryT[T]]: QueryT[T][K] | null }>
+			}
+
+			const defaultValue = defaultQuery[route]
+			if (!defaultValue) {
+				return {} as NonNullable<{ [K in keyof QueryT[T]]: QueryT[T][K] | null }>
+			}
+
+			const result = {} as NonNullable<{ [K in keyof QueryT[T]]: QueryT[T][K] | null }>
+			Object.keys(defaultValue).forEach((key) => {
+				// @ts-ignore
+				result[key] = currentQuery.get(key) ?? null
+			})
+			return result
+		},
+		[currentQuery, defaultQuery]
+	)
+
+	type ArgsOrVoid<Q> = Q extends Record<string, never>
+		? { args?: void }
+		: Q extends Record<string, string>
+		? { args: Q }
+		: { args?: void }
+
+	type QueryOrVoid<Q> = Q extends undefined
+		? { query?: void }
+		: { query?: Partial<Record<keyof Q, string | number | QueryStrategy | null>> }
+
 	const navigateTo = useCallback(
-		<T extends (typeof routes)[keyof typeof routes]>({
+		<T extends keyof ParamsT>({
 			target,
 			args,
 			query,
 			navigateParams,
-		}: {
-			target: T
-			args?: ParamsT[T]
-			query?: Record<string, string | null | undefined | QueryStrategy>
-			navigateParams?: NavigateOptions
-		}) => {
+		}: ArgsOrVoid<ParamsT[T]> &
+			QueryOrVoid<QueryT[T]> & {
+				target: T
+				navigateParams?: NavigateOptions
+			}) => {
 			const pathname = (() => {
-				if (args === undefined) {
+				if (!args) {
 					return target as string
 				}
 
@@ -45,7 +108,11 @@ export const useBaseRouter = <ParamsT extends Record<string, Record<string, stri
 				)
 			})()
 
-			const evaluatedQuery = query ?? {}
+			const evaluatedQuery: QueryT[T] =
+				{
+					...(defaultQuery?.[target] ?? ({} as QueryT[T])),
+					...query,
+				} ?? ({} as NonNullable<QueryT[T]>)
 
 			const mappedQuery = (
 				Array.from(currentQuery.entries()) as [string, string | null | undefined | QueryStrategy][]
@@ -79,7 +146,7 @@ export const useBaseRouter = <ParamsT extends Record<string, Record<string, stri
 				})
 			}
 		},
-		[currentQuery, location.pathname, location.search, navigate]
+		[currentQuery, defaultQuery, location.pathname, location.search, navigate]
 	)
 
 	const setQuery = useCallback(
@@ -95,9 +162,9 @@ export const useBaseRouter = <ParamsT extends Record<string, Record<string, stri
 	)
 
 	const isLocationEqual = useCallback(
-		(route: string) => {
+		(route: keyof ParamsT) => {
 			const locationSegments = location.pathname.split('/')
-			return route
+			return (route as string)
 				.split('/')
 				.every((segment, index) => segment.startsWith(':') || locationSegments[index] === segment)
 		},
@@ -105,9 +172,10 @@ export const useBaseRouter = <ParamsT extends Record<string, Record<string, stri
 	)
 
 	return {
-		state,
 		navigateTo,
-		query: currentQuery,
+		stateOf,
+		queryOf,
+		queryOfOrNull,
 		setQuery,
 		isLocationEqual,
 	}

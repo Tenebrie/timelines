@@ -1,10 +1,10 @@
 import { useGetWorldCollaboratorsQuery, useGetWorldInfoQuery } from '../../../../../api/rheaApi'
-import { useWorldRouter } from '../../../world/router'
+import { useWorldRouter, worldRoutes } from '../../../../../router/routes/worldRoutes'
 import { WorldDetailsEditor } from './WorldDetailsEditor'
 
 export const WorldDetails = () => {
-	const { worldParams } = useWorldRouter()
-	const { worldId } = worldParams
+	const { stateOf } = useWorldRouter()
+	const { worldId } = stateOf(worldRoutes.root)
 
 	const { data: worldData } = useGetWorldInfoQuery({
 		worldId,

@@ -16,10 +16,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useShareWorldMutation } from '../../../../../../api/rheaApi'
 import { CollaboratorAccess } from '../../../../../../api/types'
 import { Shortcut, useShortcut } from '../../../../../../hooks/useShortcut'
+import { useRouter } from '../../../../../../router/routes/routes'
+import { worldRoutes } from '../../../../../../router/routes/worldRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '../../../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../../../utils/parseApiResponse'
 import { useCollaboratorAccess } from '../../../../../utils/useCollaboratorAccess'
-import { useWorldRouter } from '../../../../world/router'
 import { worldListSlice } from '../../../reducer'
 import { getShareWorldModalState } from '../../../selectors'
 
@@ -28,8 +29,8 @@ export const ShareWorldModal = () => {
 	const [access, setAccess] = useState<CollaboratorAccess>('ReadOnly')
 
 	const { listAllLevels } = useCollaboratorAccess()
-	const { worldParams } = useWorldRouter()
-	const { worldId } = worldParams
+	const { stateOf } = useRouter()
+	const { worldId } = stateOf(worldRoutes.root)
 
 	const { isOpen } = useSelector(getShareWorldModalState)
 

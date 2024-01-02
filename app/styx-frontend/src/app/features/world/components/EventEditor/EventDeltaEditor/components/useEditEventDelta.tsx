@@ -5,11 +5,11 @@ import {
 	UpdateWorldEventDeltaApiArg,
 	useUpdateWorldEventDeltaMutation,
 } from '../../../../../../../api/rheaApi'
+import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { ErrorState } from '../../../../../../utils/useErrorState'
 import { worldSlice } from '../../../../reducer'
-import { useWorldRouter } from '../../../../router'
 import { WorldEventDelta } from '../../../../types'
 import { EventDeltaDetailsEditorErrors } from './EventDeltaDetailsEditor'
 import { useEventDeltaFields } from './useEventDeltaFields'
@@ -42,8 +42,8 @@ export const useEditEventDelta = ({ mode, deltaState, errorState, state }: Props
 
 	const [updateDeltaState, { isLoading: isSaving, isError }] = useUpdateWorldEventDeltaMutation()
 
-	const { eventEditorParams } = useWorldRouter()
-	const { worldId } = eventEditorParams
+	const { stateOf } = useWorldRouter()
+	const { worldId } = stateOf(worldRoutes.eventEditor)
 
 	const sendUpdate = useCallback(
 		async (body: UpdateWorldEventDeltaApiArg['body']) => {

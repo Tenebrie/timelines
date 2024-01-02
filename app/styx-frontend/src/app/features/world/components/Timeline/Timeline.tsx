@@ -2,10 +2,10 @@ import { ThemeProvider } from '@mui/material'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useWorldRouter, worldRoutes } from '../../../../../router/routes/worldRoutes'
 import { darkTheme } from '../../../theming/themes'
 import { useTimelineWorldTime } from '../../../time/hooks/useTimelineWorldTime'
 import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
-import { useWorldRouter } from '../../router'
 import { getTimelineContextMenuState, getWorldState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
@@ -30,26 +30,27 @@ export const Timeline = () => {
 	const { setScaleLevel } = timelineSlice.actions
 
 	const {
-		navigateToCurrentWorld: navigateToCurrentWorldRoot,
+		navigateToCurrentWorldRoot,
 		navigateToOutliner,
 		navigateToEventCreator,
-		selectedTimeOrNull,
-		eventEditorParams,
-		eventDeltaEditorParams,
+		stateOf,
 		isLocationEqual,
+		selectedTimeOrNull,
 	} = useWorldRouter()
+	const stateOfEventEditor = stateOf(worldRoutes.eventEditor)
+	const stateOfDeltaEditor = stateOf(worldRoutes.eventDeltaEditor)
 
 	const scrollTimelineTo = useTimelineBusDispatch()
 
 	const onClick = useCallback(
 		(time: number) => {
 			if (selectedTimeOrNull === time) {
-				navigateToCurrentWorldRoot({ clearSelectedTime: true })
+				navigateToCurrentWorldRoot()
 			} else {
 				navigateToOutliner(time)
 			}
 		},
-		[navigateToCurrentWorldRoot, navigateToOutliner, selectedTimeOrNull]
+		[selectedTimeOrNull, navigateToCurrentWorldRoot, navigateToOutliner]
 	)
 
 	const onDoubleClick = useCallback(
@@ -61,7 +62,7 @@ export const Timeline = () => {
 				scrollTimelineTo(selectedTimeOrNull)
 			}
 		},
-		[scrollTimelineTo, navigateToOutliner, navigateToEventCreator, selectedTimeOrNull]
+		[navigateToEventCreator, navigateToOutliner, scrollTimelineTo, selectedTimeOrNull]
 	)
 
 	const { containerRef, containerWidth } = useTimelineDimensions()
@@ -129,8 +130,8 @@ export const Timeline = () => {
 							timelineScale={timelineScale}
 							containerWidth={containerWidth}
 							isLocationEqual={isLocationEqual}
-							eventEditorParams={eventEditorParams}
-							eventDeltaEditorParams={eventDeltaEditorParams}
+							eventEditorParams={stateOfEventEditor}
+							eventDeltaEditorParams={stateOfDeltaEditor}
 							contextMenuState={contextMenuState}
 							realTimeToScaledTime={realTimeToScaledTime}
 						/>

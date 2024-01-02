@@ -1,12 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useWorldRouter, worldRoutes } from '../../../../../../router/routes/worldRoutes'
 import { useTimelineBusDispatch } from '../../../hooks/useTimelineBus'
-import { useWorldRouter } from '../../../router'
 import { getWorldState } from '../../../selectors'
 
 export const useScrollToActiveEntity = () => {
-	const { eventEditorParams, eventDeltaEditorParams } = useWorldRouter()
+	const { stateOf } = useWorldRouter()
+	const { eventId, deltaId } = stateOf(worldRoutes.eventDeltaEditor)
 
 	const { events } = useSelector(getWorldState)
 
@@ -14,34 +15,30 @@ export const useScrollToActiveEntity = () => {
 	const lastSeenEventId = useRef<string | null>(null)
 	const lastSeenEventDeltaId = useRef<string | null>(null)
 	useEffect(() => {
-		if (!eventEditorParams.eventId) {
+		if (!eventId) {
 			lastSeenEventId.current = null
 			lastSeenEventDeltaId.current = null
 
 			return
 		}
-		const event = events.find((e) => e.id === eventEditorParams.eventId)
+		const event = events.find((e) => e.id === eventId)
 		if (!event) {
 			return
 		}
 
-		if (eventDeltaEditorParams.deltaId && eventDeltaEditorParams.deltaId !== lastSeenEventDeltaId.current) {
-			const delta = event.deltaStates.find((delta) => delta.id === eventDeltaEditorParams.deltaId)
+		if (deltaId && deltaId !== lastSeenEventDeltaId.current) {
+			const delta = event.deltaStates.find((delta) => delta.id === deltaId)
 			if (!delta) {
 				return
 			}
 
 			scrollTimelineTo(delta.timestamp)
-			lastSeenEventDeltaId.current = eventDeltaEditorParams.deltaId
+			lastSeenEventDeltaId.current = deltaId
 			lastSeenEventId.current = null
-		} else if (
-			!eventDeltaEditorParams.deltaId &&
-			eventEditorParams.eventId &&
-			eventEditorParams.eventId !== lastSeenEventId.current
-		) {
+		} else if (!deltaId && eventId && eventId !== lastSeenEventId.current) {
 			scrollTimelineTo(event.timestamp)
-			lastSeenEventId.current = eventEditorParams.eventId
+			lastSeenEventId.current = eventId
 			lastSeenEventDeltaId.current = null
 		}
-	}, [eventDeltaEditorParams.deltaId, eventEditorParams, events, scrollTimelineTo])
+	}, [eventId, deltaId, events, scrollTimelineTo])
 }

@@ -3,14 +3,15 @@ import { useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { mockEventDeltaModel } from '../../../../../../api/rheaApi.mock'
+import { useWorldRouter, worldRoutes } from '../../../../../../router/routes/worldRoutes'
 import { worldSlice } from '../../../reducer'
-import { useWorldRouter } from '../../../router'
 import { WorldEventDelta } from '../../../types'
 import { FullHeightContainer } from '../styles'
 import { EventDeltaDetailsEditor } from './components/EventDeltaDetailsEditor'
 
 export const EventDeltaCreator = () => {
-	const { selectedTime, eventDeltaCreatorParams } = useWorldRouter()
+	const { selectedTimeOrZero, stateOf } = useWorldRouter()
+	const { eventId } = stateOf(worldRoutes.eventDeltaCreator)
 
 	const { setEventDeltaCreatorGhost } = worldSlice.actions
 	const dispatch = useDispatch()
@@ -18,12 +19,12 @@ export const EventDeltaCreator = () => {
 	const defaultDeltaValues: WorldEventDelta = useMemo(
 		() =>
 			mockEventDeltaModel({
-				worldEventId: eventDeltaCreatorParams.eventId,
+				worldEventId: eventId,
 				name: '',
 				description: '',
-				timestamp: selectedTime,
+				timestamp: selectedTimeOrZero,
 			}),
-		[eventDeltaCreatorParams.eventId, selectedTime]
+		[eventId, selectedTimeOrZero]
 	)
 
 	useEffect(() => {

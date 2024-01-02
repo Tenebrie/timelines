@@ -3,9 +3,11 @@ import { Button, Stack, Tooltip } from '@mui/material'
 import { useDispatch } from 'react-redux'
 
 import { GetWorldsApiResponse } from '../../../api/rheaApi'
+import { homeRoutes } from '../../../router/routes/homeRoutes'
+import { useRouter } from '../../../router/routes/routes'
+import { worldRoutes } from '../../../router/routes/worldRoutes'
 import { OutlinedContainer } from '../../components/OutlinedContainer'
 import { TrunkatedSpan } from '../../components/TrunkatedTypography'
-import { useHomeRouter, useWorldRouter } from '../world/router'
 import { WorldListEmptyState } from './components/WorldListEmptyState'
 import { worldListSlice } from './reducer'
 
@@ -21,8 +23,7 @@ type Props = {
 }
 
 export const WorldListSection = ({ worlds, label, showActions, showEmptyState, showCreateButton }: Props) => {
-	const { navigateToWorld: navigateToWorldRoot } = useWorldRouter()
-	const { navigateToWorldDetails } = useHomeRouter()
+	const { navigateTo } = useRouter()
 
 	const dispatch = useDispatch()
 	const { openWorldWizardModal, openDeleteWorldModal } = worldListSlice.actions
@@ -32,11 +33,19 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 	}
 
 	const onLoad = (id: string) => {
-		navigateToWorldRoot(id)
+		navigateTo({
+			target: worldRoutes.root,
+			args: {
+				worldId: id,
+			},
+		})
 	}
 
 	const onEdit = (id: string) => {
-		navigateToWorldDetails({ worldId: id })
+		navigateTo({
+			target: homeRoutes.worldDetails,
+			args: { worldId: id },
+		})
 	}
 
 	const onDelete = (world: { id: string; name: string }) => {

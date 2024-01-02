@@ -1,6 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import { appRoutes, homeRoutes, worldRoutes } from '../app/features/world/router'
+import { appRoutes } from './routes/appRoutes'
+import { homeRoutes } from './routes/homeRoutes'
+import { worldRoutes } from './routes/worldRoutes'
 
 const lazyImport = (component: Promise<() => JSX.Element>) => {
 	return {
