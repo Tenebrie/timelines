@@ -36,6 +36,7 @@ router.get('/api/auth', async (ctx) => {
 				id: user.id,
 				email: user.email,
 				username: user.username,
+				level: user.level,
 			},
 		}
 	}

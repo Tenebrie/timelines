@@ -1,9 +1,9 @@
 import { Navigate, useOutlet } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { BaseNavigator } from '../../components/BaseNavigator'
 import { useAuthCheck } from '../auth/authCheck/useAuthCheck'
 import { WorldList } from '../worldList/WorldList'
+import { HomeNavigator } from './components/navigator/HomeNavigator'
 
 const HomePageContainer = styled.div`
 	position: relative;
@@ -33,7 +33,7 @@ export const Home = () => {
 
 	return (
 		<HomePageContainer>
-			<BaseNavigator />
+			<HomeNavigator />
 			<WorldListContainer>
 				<WorldList />
 				{currentOutlet}

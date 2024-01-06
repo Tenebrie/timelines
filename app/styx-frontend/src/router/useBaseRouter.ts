@@ -108,11 +108,10 @@ export const useBaseRouter = <
 				)
 			})()
 
-			const evaluatedQuery: QueryT[T] =
-				{
-					...(defaultQuery?.[target] ?? ({} as QueryT[T])),
-					...query,
-				} ?? ({} as NonNullable<QueryT[T]>)
+			const evaluatedQuery: NonNullable<QueryT[T]> = {
+				...(defaultQuery?.[target] ?? ({} as NonNullable<QueryT[T]>)),
+				...query,
+			}
 
 			const mappedQuery = (
 				Array.from(currentQuery.entries()) as [string, string | null | undefined | QueryStrategy][]

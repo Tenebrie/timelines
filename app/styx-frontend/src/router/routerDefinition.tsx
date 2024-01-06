@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { appRoutes } from './routes/appRoutes'
 import { homeRoutes } from './routes/homeRoutes'
+import { routes } from './routes/routes'
 import { worldRoutes } from './routes/worldRoutes'
 
 const lazyImport = (component: Promise<() => JSX.Element>) => {
@@ -97,6 +98,10 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 						),
 					},
 				],
+			},
+			{
+				path: routes.adminRoot,
+				...lazyImport(import('../app/features/admin/Admin').then((m) => m.Admin)),
 			},
 			{
 				path: '/spinny',

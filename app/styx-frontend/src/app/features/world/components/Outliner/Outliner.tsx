@@ -72,7 +72,7 @@ export const Outliner = () => {
 		<Container maxWidth="lg" style={{ height: '100%' }}>
 			<OutlinerContainer>
 				<OutlinerControls />
-				<OutlinedContainer label="World state">
+				<OutlinedContainer label="World state" fullHeight>
 					<StatementsScroller>
 						{scrollerVisible && (
 							<Virtuoso

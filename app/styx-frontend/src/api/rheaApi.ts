@@ -1,6 +1,7 @@
 import { baseApi as api } from './baseApi'
 export const addTagTypes = [
 	'worldDetails',
+	'adminUsers',
 	'announcementList',
 	'auth',
 	'worldList',
@@ -34,6 +35,10 @@ const injectedRtkApi = api
 					method: 'DELETE',
 				}),
 				invalidatesTags: ['worldDetails'],
+			}),
+			adminGetUsers: build.query<AdminGetUsersApiResponse, AdminGetUsersApiArg>({
+				query: () => ({ url: `/api/admin/users` }),
+				providesTags: ['adminUsers'],
 			}),
 			getAnnouncements: build.query<GetAnnouncementsApiResponse, GetAnnouncementsApiArg>({
 				query: () => ({ url: `/api/announcements` }),
@@ -210,6 +215,14 @@ export type DeleteActorApiArg = {
 	/** Any string value */
 	actorId: string
 }
+export type AdminGetUsersApiResponse = /** status 200  */ {
+	id: string
+	email: string
+	username: string
+	password: string
+	level: 'Free' | 'Premium' | 'Admin'
+}[]
+export type AdminGetUsersApiArg = void
 export type GetAnnouncementsApiResponse = /** status 200  */ {
 	id: string
 	timestamp: string
@@ -233,6 +246,7 @@ export type CheckAuthenticationApiResponse =
 				id: string
 				email: string
 				username: string
+				level: 'Free' | 'Premium' | 'Admin'
 			}
 	  }
 	| {
@@ -243,6 +257,7 @@ export type CreateAccountApiResponse = /** status 200  */ {
 	id: string
 	email: string
 	username: string
+	level: 'Free' | 'Premium' | 'Admin'
 }
 export type CreateAccountApiArg = {
 	body: {
@@ -255,6 +270,7 @@ export type PostLoginApiResponse = /** status 200  */ {
 	id: string
 	email: string
 	username: string
+	level: 'Free' | 'Premium' | 'Admin'
 }
 export type PostLoginApiArg = {
 	body: {
@@ -659,6 +675,8 @@ export const {
 	useCreateActorMutation,
 	useUpdateActorMutation,
 	useDeleteActorMutation,
+	useAdminGetUsersQuery,
+	useLazyAdminGetUsersQuery,
 	useGetAnnouncementsQuery,
 	useLazyGetAnnouncementsQuery,
 	useDismissAnnouncementMutation,

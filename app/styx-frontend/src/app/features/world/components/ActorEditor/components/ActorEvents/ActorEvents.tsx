@@ -33,7 +33,7 @@ export const ActorEvents = ({ actor }: Props) => {
 		}))
 
 	return (
-		<OutlinedContainer label="Related events">
+		<OutlinedContainer label="Related events" fullHeight>
 			<StatementsScroller>
 				{visibleEvents.map((event) => (
 					<EventWithContentRenderer

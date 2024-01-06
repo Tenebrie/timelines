@@ -157,7 +157,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 				</Stack>
 			</Grid>
 			<Grid item xs={12} md={6} style={{ height: '100%' }}>
-				<OutlinedContainer label="Modules">
+				<OutlinedContainer label="Modules" fullHeight>
 					<Stack gap={2} height="100%">
 						<EventModulesControls modules={modules} state={state} />
 						{modules.includes('RevokedAt') && (

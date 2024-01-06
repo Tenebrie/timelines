@@ -8,20 +8,21 @@ type Props = {
 	label?: string
 	children?: ReactNode | ReactNode[]
 	style?: React.CSSProperties
+	fullHeight?: boolean
 }
 
-export const OutlinedContainer = ({ label, children, style }: Props) => {
+export const OutlinedContainer = ({ label, children, style, fullHeight }: Props) => {
 	const theme = useTheme()
 
 	return (
-		<OutlinedFieldset theme={theme} style={style}>
+		<OutlinedFieldset theme={theme} style={style} fullHeight={fullHeight ?? false}>
 			{label && <OverlayingLabel>{label}</OverlayingLabel>}
 			{children}
 		</OutlinedFieldset>
 	)
 }
 
-const OutlinedFieldset = styled.fieldset`
+const OutlinedFieldset = styled.fieldset<{ fullHeight: boolean }>`
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
@@ -33,6 +34,6 @@ const OutlinedFieldset = styled.fieldset`
 	margin-top: -8.5px;
 
 	@media all and (min-width: 900px) {
-		height: 100%;
+		height: ${(props) => (props.fullHeight ? '100%' : 'unset')};
 	}
 `

@@ -4,7 +4,7 @@ import { appQueryParams, appRoutes } from './appRoutes'
 import { homeQueryParams, homeRoutes } from './homeRoutes'
 import { worldQueryParams, worldRoutes } from './worldRoutes'
 
-export const allRoutes = {
+export const routes = {
 	...adminRoutes,
 	...appRoutes,
 	...homeRoutes,
@@ -18,7 +18,7 @@ export const allQueries = {
 	...worldQueryParams,
 }
 
-export const useRouter = () => useBaseRouter(allRoutes, allQueries)
+export const useRouter = () => useBaseRouter(routes, allQueries)
 
 // export type AllRouteParamMapping = AppRouteParamMapping & HomeRouteParamMapping & WorldRouteParamMapping
 export type AllRouteParamMapping = Record<string, any>

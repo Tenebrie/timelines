@@ -59,7 +59,7 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 	}
 
 	return (
-		<OutlinedContainer style={{ maxWidth: 600, minWidth: 400 }} label={label}>
+		<OutlinedContainer style={{ maxWidth: 600, minWidth: 400 }} label={label} fullHeight>
 			<Stack spacing={1} minWidth={256}>
 				{worlds.map((world) => (
 					<Stack direction="row" justifyContent="space-between" key={world.id}>

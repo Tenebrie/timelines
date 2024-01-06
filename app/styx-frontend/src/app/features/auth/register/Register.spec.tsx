@@ -72,6 +72,7 @@ describe('<Register />', () => {
 					id: '1111-2222-3333',
 					email: 'admin@localhost',
 					username: 'admin',
+					level: 'Free',
 				},
 			})
 
@@ -93,6 +94,7 @@ describe('<Register />', () => {
 					id: '1111-2222-3333',
 					email: 'admin@localhost',
 					username: 'admin',
+					level: 'Free',
 				},
 			})
 

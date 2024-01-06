@@ -54,9 +54,9 @@ export const WorldCollaborators = ({ worldId, collaborators }: Props) => {
 		<>
 			{collaborators.length === 0 && <Typography variant="caption">No collaborators added</Typography>}
 			{collaborators.length > 0 && (
-				<List>
+				<List dense disablePadding>
 					{collaborators.map((collaborator) => (
-						<ListItem key={`${collaborator.user.id}-${collaborator.worldId}`}>
+						<ListItem key={`${collaborator.user.id}-${collaborator.worldId}`} disableGutters disablePadding>
 							<ListItemText primary={collaborator.user.email} secondary={collaborator.access} />
 							<ListItemSecondaryAction>
 								{removingUser === collaborator.user.id && (

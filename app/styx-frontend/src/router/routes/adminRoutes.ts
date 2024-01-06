@@ -1,13 +1,13 @@
 import { useBaseRouter } from '../useBaseRouter'
 
 export const adminRoutes = {
-	root: '/admin',
+	adminRoot: '/admin',
 	users: '/admin/users',
 	userEditor: '/admin/users/:userId',
 } as const
 
 export const adminQueryParams = {
-	[adminRoutes.root]: undefined,
+	[adminRoutes.adminRoot]: undefined,
 	[adminRoutes.users]: undefined,
 	[adminRoutes.userEditor]: undefined,
 }

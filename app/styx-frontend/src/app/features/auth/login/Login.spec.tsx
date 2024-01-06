@@ -70,6 +70,7 @@ describe('<Login />', () => {
 					id: '1111-2222-3333',
 					email: 'admin@localhost',
 					username: 'admin',
+					level: 'Free',
 				},
 			})
 			mockGetWorlds(server, {
@@ -96,6 +97,7 @@ describe('<Login />', () => {
 					id: '1111-2222-3333',
 					email: 'admin@localhost',
 					username: 'admin',
+					level: 'Free',
 				},
 			})
 			mockGetWorlds(server, {
