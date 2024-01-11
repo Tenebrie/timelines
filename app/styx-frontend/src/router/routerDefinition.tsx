@@ -107,6 +107,10 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 				path: '/spinny',
 				...lazyImport(import('../app/features/demo/spinny/Spinny').then((m) => m.Spinny)),
 			},
+			{
+				path: '/music',
+				...lazyImport(import('../app/features/demo/music/Music').then((m) => m.Music)),
+			},
 		],
 	},
 ]

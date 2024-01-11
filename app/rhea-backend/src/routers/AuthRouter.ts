@@ -29,20 +29,20 @@ router.get('/api/auth', async (ctx) => {
 
 	const user = await useOptionalAuth(ctx, UserAuthenticator)
 
-	if (user) {
+	if (!user) {
 		return {
-			authenticated: true,
-			user: {
-				id: user.id,
-				email: user.email,
-				username: user.username,
-				level: user.level,
-			},
+			authenticated: false,
 		}
 	}
 
 	return {
-		authenticated: false,
+		authenticated: true,
+		user: {
+			id: user.id,
+			email: user.email,
+			username: user.username,
+			level: user.level,
+		},
 	}
 })
 
