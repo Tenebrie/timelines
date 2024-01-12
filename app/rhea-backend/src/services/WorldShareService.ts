@@ -53,15 +53,12 @@ export const WorldShareService = {
 			)
 		)
 
-		const users = userResults
-			.map((user) => {
-				if (user.status === 'rejected') {
-					return null
-				}
-				return user.value
-			})
-			.filter((user) => !!user)
-			.map((user) => user as NonNullable<typeof user>)
+		const users = userResults.flatMap((user) => {
+			if (user.status === 'rejected' || user.value === null) {
+				return []
+			}
+			return user.value
+		})
 
 		if (users.length === 0) {
 			return
