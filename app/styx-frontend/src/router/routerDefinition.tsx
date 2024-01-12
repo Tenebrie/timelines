@@ -1,6 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom'
 
-import { appRoutes, worldRoutes } from '../app/features/world/router'
+import { appRoutes } from './routes/appRoutes'
+import { homeRoutes } from './routes/homeRoutes'
+import { routes } from './routes/routes'
+import { worldRoutes } from './routes/worldRoutes'
 
 const lazyImport = (component: Promise<() => JSX.Element>) => {
 	return {
@@ -25,6 +28,16 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 			{
 				path: appRoutes.home,
 				...lazyImport(import('../app/features/home/Home').then((m) => m.Home)),
+				children: [
+					{
+						path: homeRoutes.worldDetails,
+						...lazyImport(
+							import('../app/features/worldList/components/WorldDetails/WorldDetails').then(
+								(m) => m.WorldDetails
+							)
+						),
+					},
+				],
 			},
 			{
 				path: appRoutes.login,
@@ -87,8 +100,16 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 				],
 			},
 			{
+				path: routes.adminRoot,
+				...lazyImport(import('../app/features/admin/Admin').then((m) => m.Admin)),
+			},
+			{
 				path: '/spinny',
 				...lazyImport(import('../app/features/demo/spinny/Spinny').then((m) => m.Spinny)),
+			},
+			{
+				path: '/music',
+				...lazyImport(import('../app/features/demo/music/Music').then((m) => m.Music)),
 			},
 		],
 	},

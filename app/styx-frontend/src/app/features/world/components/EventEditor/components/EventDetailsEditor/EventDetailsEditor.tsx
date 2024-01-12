@@ -4,12 +4,11 @@ import { Autocomplete, Button, Grid, Stack, Switch, TextField, Tooltip } from '@
 import { useSelector } from 'react-redux'
 
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
-import { OverlayingLabel } from '../../../../../../components/OverlayingLabel'
+import { OutlinedContainer } from '../../../../../../components/OutlinedContainer'
 import { TimestampField } from '../../../../../time/components/TimestampField'
 import { getWorldState } from '../../../../selectors'
 import { WorldEvent } from '../../../../types'
 import { useAutocompleteActorList } from '../../../ActorSelector/useAutocompleteActorList'
-import { StatementsUnit } from '../../styles'
 import { EventIconDropdown } from '../EventIconDropdown/EventIconDropdown'
 import { EventModulesControls } from './EventModules/EventModulesControls'
 import { useEntityName } from './EventModules/useEntityName'
@@ -158,8 +157,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 				</Stack>
 			</Grid>
 			<Grid item xs={12} md={6} style={{ height: '100%' }}>
-				<StatementsUnit>
-					<OverlayingLabel>Modules</OverlayingLabel>
+				<OutlinedContainer label="Modules" fullHeight>
 					<Stack gap={2} height="100%">
 						<EventModulesControls modules={modules} state={state} />
 						{modules.includes('RevokedAt') && (
@@ -202,7 +200,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 							/>
 						)}
 					</Stack>
-				</StatementsUnit>
+				</OutlinedContainer>
 			</Grid>
 		</>
 	)

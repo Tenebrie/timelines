@@ -5,10 +5,10 @@ import { act } from 'react-dom/test-utils'
 import { Provider } from 'react-redux'
 import { createBrowserRouter, MemoryRouter, RouterProvider } from 'react-router-dom'
 
-import { appRoutes } from '../app/features/world/router'
-import { worldRoutes } from '../app/features/world/router'
 import { generateStore, RootState } from '../app/store'
 import { routerDefinition } from '../router/routerDefinition'
+import { appRoutes } from '../router/routes/appRoutes'
+import { worldRoutes } from '../router/routes/worldRoutes'
 
 export const renderWithProviders = (
 	node: ReactNode,

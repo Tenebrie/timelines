@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useDeleteWorldEventDeltaMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
+import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
 import Modal, {
 	ModalFooter,
 	ModalHeader,
@@ -13,14 +14,14 @@ import Modal, {
 } from '../../../../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { worldSlice } from '../../../../reducer'
-import { useWorldRouter } from '../../../../router'
 import { getDeleteEventDeltaModalState } from '../../../../selectors'
 
 export const DeleteEventDeltaModal = () => {
 	const [deleteWorldEvent, { isLoading }] = useDeleteWorldEventDeltaMutation()
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 
-	const { worldParams, navigateToCurrentWorld } = useWorldRouter()
+	const { stateOf, navigateToCurrentWorldRoot } = useWorldRouter()
+	const { worldId } = stateOf(worldRoutes.root)
 
 	const dispatch = useDispatch()
 	const { closeDeleteEventDeltaModal } = worldSlice.actions
@@ -41,7 +42,7 @@ export const DeleteEventDeltaModal = () => {
 
 		const { error } = parseApiResponse(
 			await deleteWorldEvent({
-				worldId: worldParams.worldId,
+				worldId,
 				eventId: targetDelta.worldEventId,
 				deltaId: targetDelta.id,
 			})
@@ -52,7 +53,7 @@ export const DeleteEventDeltaModal = () => {
 		}
 
 		dispatch(closeDeleteEventDeltaModal())
-		navigateToCurrentWorld()
+		navigateToCurrentWorldRoot()
 	}
 
 	const onCloseAttempt = () => {

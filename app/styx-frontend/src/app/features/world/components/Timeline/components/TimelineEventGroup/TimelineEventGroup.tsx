@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
+import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
-import { useWorldRouter } from '../../../../router'
 import { getTimelineContextMenuState } from '../../../../selectors'
 import { WorldEventGroup } from '../../../../types'
 import { TimelineEvent } from './components/TimelineEvent/TimelineEvent'
@@ -14,8 +14,12 @@ type Props = {
 	visible: boolean
 	containerWidth: number
 	isLocationEqual: ReturnType<typeof useWorldRouter>['isLocationEqual']
-	eventEditorParams: ReturnType<typeof useWorldRouter>['eventEditorParams']
-	eventDeltaEditorParams: ReturnType<typeof useWorldRouter>['eventDeltaEditorParams']
+	eventEditorParams: {
+		eventId: string
+	}
+	eventDeltaEditorParams: {
+		deltaId: string
+	}
 	contextMenuState: ReturnType<typeof getTimelineContextMenuState>
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }

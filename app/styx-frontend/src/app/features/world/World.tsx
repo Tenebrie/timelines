@@ -2,6 +2,7 @@ import { Navigate, useOutlet } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useLocationRef } from '../../../hooks/useLocationRef'
+import { useWorldRouter, worldRoutes } from '../../../router/routes/worldRoutes'
 import { BlockingSpinner } from '../../components/BlockingSpinner'
 import { useAuthCheck } from '../auth/authCheck/useAuthCheck'
 import { ActorWizardModal } from './components/ActorWizard/ActorWizardModal'
@@ -14,12 +15,11 @@ import { Timeline } from './components/Timeline/Timeline'
 import { TimelinePlaceholder } from './components/Timeline/TimelinePlaceholder'
 import { WorldNavigator } from './components/WorldNavigator/WorldNavigator'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
-import { useWorldRouter } from './router'
 import { WorldContainer, WorldContent } from './styles'
 
 export const World = () => {
-	const { worldParams } = useWorldRouter()
-	const { worldId } = worldParams
+	const { stateOf } = useWorldRouter()
+	const { worldId } = stateOf(worldRoutes.root)
 
 	const { isLoaded } = useLoadWorldInfo(worldId)
 

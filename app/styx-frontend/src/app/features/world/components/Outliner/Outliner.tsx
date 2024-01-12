@@ -3,11 +3,11 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Virtuoso } from 'react-virtuoso'
 
-import { OverlayingLabel } from '../../../../components/OverlayingLabel'
+import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
+import { OutlinedContainer } from '../../../../components/OutlinedContainer'
 import { getOutlinerPreferences, getTimelinePreferences } from '../../../preferences/selectors'
 import { useTimelineLevelScalar } from '../../../time/hooks/useTimelineLevelScalar'
 import { useOutlinerTabs } from '../../hooks/useOutlinerTabs'
-import { useWorldRouter } from '../../router'
 import { getTimelineState, getWorldState } from '../../selectors'
 import { useVisibleEvents } from '../EventSelector/useVisibleEvents'
 import { ActorWithStatementsRenderer } from '../Renderers/ActorWithStatementsRenderer'
@@ -15,7 +15,7 @@ import { EventWithContentRenderer } from '../Renderers/Event/EventWithContentRen
 import { EventTutorialModal } from './components/EventTutorialModal/EventTutorialModal'
 import { OutlinerControls } from './components/OutlinerControls/OutlinerControls'
 import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmptyState'
-import { OutlinerContainer, StatementsScroller, StatementsUnit } from './styles'
+import { OutlinerContainer, StatementsScroller } from './styles'
 
 export const Outliner = () => {
 	const { actors } = useSelector(getWorldState)
@@ -72,8 +72,7 @@ export const Outliner = () => {
 		<Container maxWidth="lg" style={{ height: '100%' }}>
 			<OutlinerContainer>
 				<OutlinerControls />
-				<StatementsUnit>
-					<OverlayingLabel>World state</OverlayingLabel>
+				<OutlinedContainer label="World state" fullHeight>
 					<StatementsScroller>
 						{scrollerVisible && (
 							<Virtuoso
@@ -124,7 +123,7 @@ export const Outliner = () => {
 						)}
 						{!scrollerVisible && <OutlinerEmptyState />}
 					</StatementsScroller>
-				</StatementsUnit>
+				</OutlinedContainer>
 			</OutlinerContainer>
 			<EventTutorialModal />
 		</Container>

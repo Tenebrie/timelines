@@ -45,4 +45,5 @@ export const DividerLabel = styled.div`
 	align-items: center;
 	justify-content: center;
 	white-space: pre;
+	color: #eaeff1;
 `

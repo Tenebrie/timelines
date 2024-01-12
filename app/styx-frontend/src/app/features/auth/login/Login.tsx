@@ -6,11 +6,11 @@ import { useDispatch } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 
 import { usePostLoginMutation } from '../../../../api/rheaApi'
+import { appRoutes, useAppRouter } from '../../../../router/routes/appRoutes'
 import { FormErrorBanner } from '../../../components/FormErrorBanner'
 import { TenebrieLogo } from '../../../components/TenebrieLogo'
 import { parseApiResponse } from '../../../utils/parseApiResponse'
 import { useErrorState } from '../../../utils/useErrorState'
-import { useAppRouter } from '../../world/router'
 import { AlreadyLoggedInAlert } from '../alreadyLoggedInAlert/AlreadyLoggedInAlert'
 import { authSlice } from '../reducer'
 
@@ -24,7 +24,7 @@ export const Login = () => {
 		SERVER_SIDE_ERROR: string
 	}>()
 
-	const { navigateToHome } = useAppRouter()
+	const { navigateTo } = useAppRouter()
 	const [login, { isLoading }] = usePostLoginMutation()
 
 	const { setUser } = authSlice.actions
@@ -58,7 +58,7 @@ export const Login = () => {
 			return
 		}
 		dispatch(setUser(response))
-		navigateToHome()
+		navigateTo({ target: appRoutes.home })
 	}
 
 	const onEnterKey = (event: KeyboardEvent) => {

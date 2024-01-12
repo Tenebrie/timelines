@@ -3,14 +3,25 @@ export enum RedisChannel {
 }
 
 export enum RheaToCalliopeMessageType {
+	ANNOUNCEMENT = 'announcement',
 	WORLD_UPDATED = 'worldUpdated',
+	WORLD_UNSHARED = 'worldUnshared',
 }
 
 export type RheaToCalliopeMessagePayload = {
+	[RheaToCalliopeMessageType.ANNOUNCEMENT]: {
+		userId: string
+	}
+
 	[RheaToCalliopeMessageType.WORLD_UPDATED]: {
 		userId: string
 		worldId: string
 		timestamp: string
+	}
+
+	[RheaToCalliopeMessageType.WORLD_UNSHARED]: {
+		userId: string
+		worldId: string
 	}
 }
 

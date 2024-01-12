@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useWorldRouter, worldRoutes } from '../../../../../../router/routes/worldRoutes'
 import { applyEventDelta } from '../../../../../utils/applyEventDelta'
 import { asMarkerType } from '../../../../../utils/asMarkerType'
 import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
-import { useWorldRouter, worldRoutes } from '../../../router'
 import { getEventCreatorState, getEventDeltaCreatorState, getWorldState } from '../../../selectors'
 import { WorldEvent, WorldEventBundle, WorldEventGroup } from '../../../types'
 import { ScaleLevel } from '../types'

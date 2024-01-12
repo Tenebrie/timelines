@@ -14,6 +14,7 @@ const Container = styled.div`
 	justify-content: center;
 	flex-wrap: wrap;
 	overflow: hidden;
+	animation: 0.6s ease-out 0s 1 initialAnimation;
 
 	&.huge {
 		width: 100%;
@@ -31,6 +32,18 @@ const Container = styled.div`
 		animation-duration: 3s;
 		animation-iteration-count: infinite;
 		animation-timing-function: ease-in-out;
+	}
+
+	@keyframes initialAnimation {
+		0% {
+			opacity: 0;
+		}
+		50% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
 	}
 `
 

@@ -1,13 +1,19 @@
 export const WORLD_UPDATE_NAME = 'worldUpdate'
 
 export enum CalliopeToClientMessageType {
+	ANNOUNCEMENT = 'announcement',
 	WORLD_UPDATED = 'worldUpdated',
+	WORLD_UNSHARED = 'worldUnshared',
 }
 
 export type CalliopeToClientMessagePayload = {
+	[CalliopeToClientMessageType.ANNOUNCEMENT]: null
 	[CalliopeToClientMessageType.WORLD_UPDATED]: {
 		worldId: string
 		timestamp: string
+	}
+	[CalliopeToClientMessageType.WORLD_UNSHARED]: {
+		worldId: string
 	}
 }
 

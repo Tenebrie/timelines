@@ -1,5 +1,4 @@
 import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
-import { setupServer } from 'msw/node'
 
 import {
 	mockAuthenticatedUser,
@@ -9,17 +8,14 @@ import {
 	mockUserModel,
 } from '../../../../api/rheaApi.mock'
 import { renderWithProviders, renderWithRouter } from '../../../../jest/renderWithProviders'
-import { appRoutes } from '../../world/router'
+import { setupTestServer } from '../../../../jest/setupTestServer'
+import { appRoutes } from '../../../../router/routes/appRoutes'
 import { authInitialState } from '../reducer'
 import { Login } from './Login'
 
-const server = setupServer()
+const server = setupTestServer()
 
 describe('<Login />', () => {
-	beforeAll(() => server.listen())
-	afterEach(() => server.resetHandlers())
-	afterAll(() => server.close())
-
 	it('renders the form', async () => {
 		renderWithProviders(<Login />)
 
@@ -74,9 +70,16 @@ describe('<Login />', () => {
 					id: '1111-2222-3333',
 					email: 'admin@localhost',
 					username: 'admin',
+					level: 'Free',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
+			mockGetWorlds(server, {
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
+			})
 
 			const { user } = await renderWithRouter('login')
 
@@ -94,9 +97,16 @@ describe('<Login />', () => {
 					id: '1111-2222-3333',
 					email: 'admin@localhost',
 					username: 'admin',
+					level: 'Free',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
+			mockGetWorlds(server, {
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
+			})
 
 			const { user, store } = await renderWithRouter('login')
 
@@ -138,7 +148,13 @@ describe('<Login />', () => {
 					message: 'Password invalid',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
+			mockGetWorlds(server, {
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
+			})
 
 			const { user } = await renderWithRouter('login')
 
@@ -158,7 +174,13 @@ describe('<Login />', () => {
 					message: 'Password invalid',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
+			mockGetWorlds(server, {
+				response: {
+					ownedWorlds: [],
+					contributableWorlds: [],
+					visibleWorlds: [],
+				},
+			})
 
 			const { user } = await renderWithRouter('login')
 

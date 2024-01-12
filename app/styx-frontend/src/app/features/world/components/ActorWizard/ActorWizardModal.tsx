@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useCreateActorMutation } from '../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
+import { useWorldRouter, worldRoutes } from '../../../../../router/routes/worldRoutes'
 import Modal, { useModalCleanup } from '../../../../../ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '../../../../../ui-lib/components/Modal'
 import { FormErrorBanner } from '../../../../components/FormErrorBanner'
@@ -13,7 +14,6 @@ import { parseApiResponse } from '../../../../utils/parseApiResponse'
 import { useErrorState } from '../../../../utils/useErrorState'
 import { useActorColors } from '../../hooks/useActorColors'
 import { worldSlice } from '../../reducer'
-import { useWorldRouter } from '../../router'
 import { getActorWizardState } from '../../selectors'
 
 export const ActorWizardModal = () => {
@@ -34,7 +34,8 @@ export const ActorWizardModal = () => {
 
 	const [createActor, { isLoading }] = useCreateActorMutation()
 
-	const { navigateToActorEditor, worldParams } = useWorldRouter()
+	const { navigateToActorEditor, stateOf } = useWorldRouter()
+	const { worldId } = stateOf(worldRoutes.root)
 
 	useEffect(() => {
 		clearError()
@@ -61,7 +62,7 @@ export const ActorWizardModal = () => {
 
 		const { response, error } = parseApiResponse(
 			await createActor({
-				worldId: worldParams.worldId,
+				worldId,
 				body: {
 					name: name.trim(),
 					title: title.trim(),

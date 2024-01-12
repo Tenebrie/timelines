@@ -10,6 +10,7 @@ export const UserService = {
 			},
 			select: {
 				id: true,
+				level: true,
 				email: true,
 				username: true,
 			},
@@ -26,6 +27,7 @@ export const UserService = {
 			},
 			select: {
 				id: true,
+				level: true,
 				email: true,
 				username: true,
 			},

@@ -4,10 +4,10 @@ import { memo, MouseEvent, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useDoubleClick } from '../../../../../../../../../hooks/useDoubleClick'
+import { useWorldRouter, worldRoutes } from '../../../../../../../../../router/routes/worldRoutes'
 import { isMultiselectClick } from '../../../../../../../../utils/isMultiselectClick'
 import { useEventIcons } from '../../../../../../hooks/useEventIcons'
 import { worldSlice } from '../../../../../../reducer'
-import { useWorldRouter } from '../../../../../../router'
 import { getWorldState } from '../../../../../../selectors'
 import { TimelineEntity } from '../../../../../../types'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
@@ -27,8 +27,8 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 	const { addEventToSelection, removeEventFromSelection, openTimelineContextMenu } = worldSlice.actions
 
 	const { selectedEvents } = useSelector(getWorldState)
-	const { eventEditorParams, navigateToEventEditor, navigateToEventDeltaEditor, navigateToOutliner } =
-		useWorldRouter()
+	const { stateOf, navigateToEventEditor, navigateToEventDeltaEditor, navigateToOutliner } = useWorldRouter()
+	const { eventId } = stateOf(worldRoutes.eventEditor)
 	const { getIconPath } = useEventIcons()
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
@@ -122,7 +122,7 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 			className={classNames({
 				expanded: groupIndex > 0 && expanded,
 				selected,
-				edited: entity.id === eventEditorParams.eventId,
+				edited: entity.id === eventId,
 				highlighted,
 				revoked: entity.markerType === 'revokedAt',
 				replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',

@@ -5,7 +5,10 @@ import * as bodyParser from 'koa-bodyparser'
 import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'tenebrie-framework'
 
 import { ActorRouter } from './routers/ActorRouter'
+import { AdminRouter } from './routers/AdminRouter'
+import { AnnouncementRouter } from './routers/AnnouncementRouter'
 import { AuthRouter } from './routers/AuthRouter'
+import { WorldEventRouter } from './routers/WorldEventRouter'
 import { WorldRouter } from './routers/WorldRouter'
 import { RedisService } from './services/RedisService'
 
@@ -21,7 +24,7 @@ useApiHeader({
 		email: 'tianara@tenebrie.com',
 	},
 	license: {
-		name: 'MIT',
+		name: 'Unlicensed',
 		url: 'https://example.com',
 	},
 	version: '1.0.0',
@@ -36,8 +39,14 @@ app
 	)
 	.use(ActorRouter.routes())
 	.use(ActorRouter.allowedMethods())
+	.use(AdminRouter.routes())
+	.use(AdminRouter.allowedMethods())
+	.use(AnnouncementRouter.routes())
+	.use(AnnouncementRouter.allowedMethods())
 	.use(AuthRouter.routes())
 	.use(AuthRouter.allowedMethods())
+	.use(WorldEventRouter.routes())
+	.use(WorldEventRouter.allowedMethods())
 	.use(WorldRouter.routes())
 	.use(WorldRouter.allowedMethods())
 	.use(
@@ -45,7 +54,10 @@ app
 			tsconfigPath: './tsconfig.json',
 			sourceFilePaths: [
 				'./src/routers/ActorRouter.ts',
+				'./src/routers/AdminRouter.ts',
+				'./src/routers/AnnouncementRouter.ts',
 				'./src/routers/AuthRouter.ts',
+				'./src/routers/WorldEventRouter.ts',
 				'./src/routers/WorldRouter.ts',
 			],
 		})

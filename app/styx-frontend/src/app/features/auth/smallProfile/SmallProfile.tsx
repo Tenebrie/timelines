@@ -3,12 +3,12 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import { useDispatch } from 'react-redux'
 
 import { usePostLogoutMutation } from '../../../../api/rheaApi'
+import { appRoutes, useAppRouter } from '../../../../router/routes/appRoutes'
 import { parseApiResponse } from '../../../utils/parseApiResponse'
-import { useAppRouter } from '../../world/router'
 import { authSlice } from '../reducer'
 
 export const SmallProfile = () => {
-	const { navigateToLogin } = useAppRouter()
+	const { navigateTo } = useAppRouter()
 
 	const [logout, { isLoading }] = usePostLogoutMutation()
 	const { clearUser } = authSlice.actions
@@ -20,7 +20,7 @@ export const SmallProfile = () => {
 			return
 		}
 		dispatch(clearUser())
-		navigateToLogin()
+		navigateTo({ target: appRoutes.login })
 	}
 
 	return (

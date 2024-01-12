@@ -1,15 +1,15 @@
 import { Grid } from '@mui/material'
 import { useSelector } from 'react-redux'
 
-import { useWorldRouter } from '../../router'
+import { useWorldRouter, worldRoutes } from '../../../../../router/routes/worldRoutes'
 import { getWorldState } from '../../selectors'
 import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetailsEditor'
 import { FullHeightContainer } from './styles'
 
 export const EventEditor = () => {
 	const { events } = useSelector(getWorldState)
-	const { eventEditorParams } = useWorldRouter()
-	const { eventId } = eventEditorParams
+	const { stateOf } = useWorldRouter()
+	const { eventId } = stateOf(worldRoutes.eventEditor)
 
 	const event = events.find((e) => e.id === eventId)
 

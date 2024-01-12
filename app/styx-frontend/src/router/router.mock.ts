@@ -1,6 +1,6 @@
 import { Params } from 'react-router-dom'
 
-import { AllRouteParamMapping, allRoutes } from '../app/features/world/router'
+import { AllRouteParamMapping, routes } from './routes/routes'
 
 export const MockedRouter = {
 	isEnabled: false as boolean,
@@ -8,7 +8,7 @@ export const MockedRouter = {
 	useParams: () => ({} as Readonly<Params<string>>),
 }
 
-export const mockRouter = <PathT extends (typeof allRoutes)[keyof typeof allRoutes]>(
+export const mockRouter = <PathT extends (typeof routes)[keyof typeof routes]>(
 	path: PathT,
 	params: AllRouteParamMapping[PathT]
 ) => {

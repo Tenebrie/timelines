@@ -6,6 +6,7 @@ import { TransitionGroup } from 'react-transition-group'
 
 import { useDeleteActorMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
+import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
 import Modal, {
 	ModalFooter,
 	ModalHeader,
@@ -14,7 +15,6 @@ import Modal, {
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useErrorState } from '../../../../../../utils/useErrorState'
 import { worldSlice } from '../../../../reducer'
-import { useWorldRouter } from '../../../../router'
 import { getDeleteActorModalState } from '../../../../selectors'
 
 export const DeleteActorModal = () => {
@@ -24,7 +24,8 @@ export const DeleteActorModal = () => {
 		SERVER_SIDE_ERROR: string
 	}>()
 
-	const { worldParams, navigateToCurrentWorld } = useWorldRouter()
+	const { stateOf, navigateToCurrentWorldRoot } = useWorldRouter()
+	const { worldId } = stateOf(worldRoutes.root)
 
 	const dispatch = useDispatch()
 	const { closeDeleteActorModal } = worldSlice.actions
@@ -45,7 +46,7 @@ export const DeleteActorModal = () => {
 
 		const { error } = parseApiResponse(
 			await deleteActor({
-				worldId: worldParams.worldId,
+				worldId,
 				actorId: targetActor.id,
 			})
 		)
@@ -55,7 +56,7 @@ export const DeleteActorModal = () => {
 		}
 
 		dispatch(closeDeleteActorModal())
-		navigateToCurrentWorld()
+		navigateToCurrentWorldRoot()
 	}
 
 	const onCloseAttempt = () => {
