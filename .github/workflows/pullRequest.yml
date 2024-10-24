@@ -1,0 +1,34 @@
+name: Run Tests
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  test-styx:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 20.x
+        cache: 'yarn'
+    - name: Install dependencies
+      run: yarn
+    - name: Run Styx tests
+      run: yarn test:styx
+    
+  test-rhea:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 20.x
+        cache: 'yarn'
+    - name: Install dependencies
+      run: yarn
+    - name: Run Rhea tests
+      run: yarn test:rhea
