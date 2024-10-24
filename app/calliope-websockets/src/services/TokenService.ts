@@ -1,3 +1,4 @@
+import * as fs from 'fs'
 import * as jwt from 'jsonwebtoken'
 
 type TokenPayload = {
@@ -7,10 +8,13 @@ type TokenPayload = {
 
 export const TokenService = {
 	getSecretKey: () => {
-		if (!process.env.JWT_SECRET) {
-			throw new Error('JWT_SECRET is not defined!')
+		if (fs.existsSync('/run/secrets/jwt-secret')) {
+			return fs.readFileSync('/run/secrets/jwt-secret', 'utf8')
 		}
-		return process.env.JWT_SECRET
+		if (process.env.JWT_SECRET) {
+			return process.env.JWT_SECRET
+		}
+		throw new Error('JWT_SECRET is not defined!')
 	},
 
 	decodeJwtToken: (token: string): TokenPayload => {

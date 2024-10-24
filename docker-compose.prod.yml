@@ -21,8 +21,9 @@ services:
         environment:
             NODE_ENV: production
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
-            JWT_SECRET: ${JWT_SECRET}
         command: yarn prod
+        secrets:
+            - jwt-secret
     calliope:
         image: tenebrie/timelines-calliope:${VERSION}
         build:
@@ -30,8 +31,13 @@ services:
             dockerfile: ./app/calliope-websockets/Dockerfile.prod
         environment:
             NODE_ENV: production
-            JWT_SECRET: ${JWT_SECRET}
         command: yarn prod
+        secrets:
+            - jwt-secret
     rhea-postgres:
         volumes:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached
+
+secrets:
+    jwt-secret:
+        file: /mnt/volume_secrets/keys/jwt-secret.txt
