@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: 20.x
         cache: 'yarn'
@@ -23,8 +23,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version: 20.x
         cache: 'yarn'
@@ -38,11 +38,24 @@ jobs:
     needs: [test-styx, test-rhea]
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v4
       with:
         node-version: 20.x
         cache: 'yarn'
+    - name: Generate Version Number
+      id: version
+      uses: paulhatch/semantic-version@v5.4.0
+      with:
+        major_pattern: "BREAKING CHANGE:"
+        minor_pattern: "feat:"
+        patch_pattern: "fix:"
+        version_format: "${major}.${minor}.${patch}-${GITHUB_SHA::8}"
+        debug: "true"
+    - name: Print out version
+      run: echo "Version is ${{ steps.version.outputs.version }}"
     - name: Log in to Docker Hub
       uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
       with:
