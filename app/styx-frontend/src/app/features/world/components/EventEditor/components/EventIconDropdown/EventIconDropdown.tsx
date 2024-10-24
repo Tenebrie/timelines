@@ -1,6 +1,7 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { useMemo } from 'react'
 
+import { EventIcon } from '../../../../../../components/EventIcon'
 import { useEventIcons } from '../../../../hooks/useEventIcons'
 
 type Props = {
@@ -28,7 +29,7 @@ export const EventIconDropdown = ({ icon, onChange }: Props) => {
 			>
 				{allIcons.map((renderedIcon) => (
 					<MenuItem key={renderedIcon.name} value={renderedIcon.name}>
-						<img src={renderedIcon.path} alt={`${renderedIcon.name} icon`} style={{ maxHeight: '48px' }} />
+						<EventIcon name={renderedIcon.name} height={48} />
 					</MenuItem>
 				))}
 			</Select>

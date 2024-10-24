@@ -7,6 +7,7 @@ import { TransitionGroup } from 'react-transition-group'
 
 import { useRevokeWorldEventMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
+import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
 import { ModalFooter, ModalHeader, useModalCleanup } from '../../../../../../../ui-lib/components/Modal'
 import Modal from '../../../../../../../ui-lib/components/Modal/Modal'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
@@ -14,7 +15,6 @@ import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { getOutlinerPreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { worldSlice } from '../../../../reducer'
-import { useWorldRouter } from '../../../../router'
 import { getRevokedStatementWizardState, getWorldState } from '../../../../selectors'
 import { EventHeaderRenderer } from '../../../Renderers/Event/EventHeaderRenderer'
 import { EventWithContentRenderer } from '../../../Renderers/Event/EventWithContentRenderer'
@@ -28,7 +28,8 @@ export const RevokedStatementWizard = () => {
 	const { events: worldEvents } = useSelector(getWorldState)
 	const { expandedEvents } = useSelector(getOutlinerPreferences)
 
-	const { worldParams, selectedTime } = useWorldRouter()
+	const { stateOf, selectedTimeOrZero } = useWorldRouter()
+	const { worldId } = stateOf(worldRoutes.eventEditor)
 	const [revokeWorldStatement, { isLoading, isError, reset }] = useRevokeWorldEventMutation()
 	const { timeToLabel } = useWorldTime()
 
@@ -55,16 +56,16 @@ export const RevokedStatementWizard = () => {
 
 		const { error } = parseApiResponse(
 			await revokeWorldStatement({
-				worldId: worldParams.worldId,
+				worldId,
 				eventId: id,
-				body: { revokedAt: String(selectedTime) },
+				body: { revokedAt: String(selectedTimeOrZero) },
 			})
 		)
 		if (error) {
 			return
 		}
 		dispatch(closeRevokedStatementWizard())
-	}, [closeRevokedStatementWizard, dispatch, id, isOpen, revokeWorldStatement, selectedTime, worldParams])
+	}, [closeRevokedStatementWizard, dispatch, id, isOpen, revokeWorldStatement, selectedTimeOrZero, worldId])
 
 	const onCloseAttempt = () => {
 		if (isLoading) {
@@ -78,7 +79,7 @@ export const RevokedStatementWizard = () => {
 	})
 
 	const removableCards = worldEvents
-		.filter((event) => event.timestamp < selectedTime)
+		.filter((event) => event.timestamp < selectedTimeOrZero)
 		.sort((a, b) => a.timestamp - b.timestamp)
 
 	const options = removableCards.map((card) => ({
@@ -103,7 +104,7 @@ export const RevokedStatementWizard = () => {
 			<ModalHeader>Retire event</ModalHeader>
 
 			<Typography>
-				<b>Timestamp:</b> {timeToLabel(selectedTime)}
+				<b>Timestamp:</b> {timeToLabel(selectedTimeOrZero)}
 			</Typography>
 			{removableCards.length > 0 && (
 				<Autocomplete

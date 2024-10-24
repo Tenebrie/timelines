@@ -1,15 +1,15 @@
 import { Grid } from '@mui/material'
 import { useSelector } from 'react-redux'
 
-import { useWorldRouter } from '../../../router'
+import { useWorldRouter, worldRoutes } from '../../../../../../router/routes/worldRoutes'
 import { getWorldState } from '../../../selectors'
 import { FullHeightContainer } from '../styles'
 import { EventDeltaDetailsEditor } from './components/EventDeltaDetailsEditor'
 
 export const EventDeltaEditor = () => {
 	const { events } = useSelector(getWorldState)
-	const { eventDeltaEditorParams } = useWorldRouter()
-	const { eventId, deltaId } = eventDeltaEditorParams
+	const { stateOf } = useWorldRouter()
+	const { eventId, deltaId } = stateOf(worldRoutes.eventDeltaEditor)
 
 	const event = events.find((e) => e.id === eventId)
 

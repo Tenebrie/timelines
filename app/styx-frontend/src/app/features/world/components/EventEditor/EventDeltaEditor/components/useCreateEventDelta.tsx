@@ -2,10 +2,10 @@ import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCreateWorldEventDeltaMutation } from '../../../../../../../api/rheaApi'
+import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { ErrorState } from '../../../../../../utils/useErrorState'
-import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
 import { EventDeltaDetailsEditorErrors } from './EventDeltaDetailsEditor'
 import { useEventDeltaFields } from './useEventDeltaFields'
@@ -18,7 +18,8 @@ type Props = {
 export const useCreateEventDelta = ({ state, errorState }: Props) => {
 	const { id: worldId } = useSelector(getWorldState)
 
-	const { navigateToOutliner, selectedTime, eventDeltaCreatorParams } = useWorldRouter()
+	const { navigateToOutliner, selectedTimeOrZero, stateOf } = useWorldRouter()
+	const { eventId } = stateOf(worldRoutes.eventDeltaCreator)
 
 	const [createDeltaState, { isLoading: isCreating, isError }] = useCreateWorldEventDeltaMutation()
 
@@ -26,7 +27,7 @@ export const useCreateEventDelta = ({ state, errorState }: Props) => {
 		const { error } = parseApiResponse(
 			await createDeltaState({
 				worldId,
-				eventId: eventDeltaCreatorParams.eventId,
+				eventId,
 				body: {
 					name: state.description && state.name ? state.name : null,
 					timestamp: String(state.timestamp),
@@ -39,16 +40,8 @@ export const useCreateEventDelta = ({ state, errorState }: Props) => {
 			return
 		}
 		errorState.clearError()
-		navigateToOutliner(selectedTime)
-	}, [
-		createDeltaState,
-		eventDeltaCreatorParams.eventId,
-		navigateToOutliner,
-		selectedTime,
-		state,
-		worldId,
-		errorState,
-	])
+		navigateToOutliner(selectedTimeOrZero)
+	}, [createDeltaState, eventId, navigateToOutliner, selectedTimeOrZero, state, worldId, errorState])
 
 	const {
 		icon: createIcon,

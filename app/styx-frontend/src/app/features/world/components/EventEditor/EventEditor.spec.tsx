@@ -1,5 +1,4 @@
 import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
-import { setupServer } from 'msw/node'
 
 import {
 	mockApiEventModel,
@@ -8,20 +7,17 @@ import {
 	mockUpdateWorldEvent,
 } from '../../../../../api/rheaApi.mock'
 import { renderWithProviders } from '../../../../../jest/renderWithProviders'
+import { setupTestServer } from '../../../../../jest/setupTestServer'
 import { mockRouter } from '../../../../../router/router.mock'
+import { worldRoutes } from '../../../../../router/routes/worldRoutes'
 import { initialState } from '../../reducer'
-import { worldRoutes } from '../../router'
 import { WorldEvent } from '../../types'
 import { DeleteEventModal } from './components/DeleteEventModal/DeleteEventModal'
 import { EventEditor } from './EventEditor'
 
-const server = setupServer()
+const server = setupTestServer()
 
 describe('<EventEditor />', () => {
-	beforeAll(() => server.listen())
-	afterEach(() => server.resetHandlers())
-	afterAll(() => server.close())
-
 	const getPreloadedState = (event: WorldEvent) => ({
 		preloadedState: {
 			world: {

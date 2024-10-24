@@ -5,6 +5,10 @@ const initialState = {
 	worldWizardModal: {
 		isOpen: false as boolean,
 	},
+	shareWorldModal: {
+		isOpen: false as boolean,
+		worldId: '' as string,
+	},
 	deleteWorldModal: {
 		isOpen: false as boolean,
 		worldId: '' as string,
@@ -23,6 +27,16 @@ export const worldListSlice = createSlice({
 
 		closeWorldWizardModal: (state) => {
 			state.worldWizardModal.isOpen = false
+		},
+
+		/* Share world modal */
+		openShareWorldModal: (state, { payload }: PayloadAction<{ id: string }>) => {
+			state.shareWorldModal.isOpen = true
+			state.shareWorldModal.worldId = payload.id
+		},
+
+		closeShareWorldModal: (state) => {
+			state.shareWorldModal.isOpen = false
 		},
 
 		/* Delete world modal */

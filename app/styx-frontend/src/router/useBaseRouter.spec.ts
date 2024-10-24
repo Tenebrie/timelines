@@ -20,13 +20,12 @@ describe('useBaseRouter', () => {
 		)
 
 		act(() => {
-			result.current.navigateTo(
-				'/app/test/:param',
-				{
+			result.current.navigateTo({
+				target: '/app/test/:param',
+				args: {
 					param: 'foobar',
 				},
-				{}
-			)
+			})
 		})
 
 		expect(MockedRouter.navigations.length).toEqual(1)
@@ -41,22 +40,20 @@ describe('useBaseRouter', () => {
 		)
 
 		act(() => {
-			result.current.navigateTo(
-				'/app/test/:param',
-				{
+			result.current.navigateTo({
+				target: '/app/test/:param',
+				args: {
 					param: 'foobar',
 				},
-				{}
-			)
+			})
 		})
 		act(() => {
-			result.current.navigateTo(
-				'/app/test/:param',
-				{
+			result.current.navigateTo({
+				target: '/app/test/:param',
+				args: {
 					param: 'barfoo',
 				},
-				{}
-			)
+			})
 		})
 
 		expect(MockedRouter.navigations.length).toEqual(2)
@@ -65,13 +62,23 @@ describe('useBaseRouter', () => {
 
 	it('navigates to target URL with query param', () => {
 		const { result } = renderHookWithProviders(() =>
-			useBaseRouter({
-				app: '/app/test',
-			})
+			useBaseRouter(
+				{
+					app: '/app/test',
+				},
+				{
+					'/app/test': {
+						q: '' as string,
+					},
+				}
+			)
 		)
 
 		act(() => {
-			result.current.navigateTo('/app/test', {}, { q: 'foobar' })
+			result.current.navigateTo({
+				target: '/app/test',
+				query: { q: 'foobar' },
+			})
 		})
 
 		expect(MockedRouter.navigations.length).toEqual(1)
@@ -86,10 +93,16 @@ describe('useBaseRouter', () => {
 		)
 
 		act(() => {
-			result.current.navigateTo('/app/test', {}, { q: 'foobar' })
+			result.current.navigateTo({
+				target: '/app/test',
+				query: { q: 'foobar' },
+			})
 		})
 		act(() => {
-			result.current.navigateTo('/app/test', {}, { q: 'barfoo' })
+			result.current.navigateTo({
+				target: '/app/test',
+				query: { q: 'barfoo' },
+			})
 		})
 
 		expect(MockedRouter.navigations.length).toEqual(2)
@@ -105,16 +118,16 @@ describe('useBaseRouter', () => {
 		)
 
 		act(() => {
-			result.current.navigateTo('/app/test1', {}, { q: 'foobar' })
+			result.current.navigateTo({
+				target: '/app/test1',
+				query: { q: 'foobar' },
+			})
 		})
 		act(() => {
-			result.current.navigateTo(
-				'/app/test2',
-				{},
-				{
-					q: QueryStrategy.Preserve,
-				}
-			)
+			result.current.navigateTo({
+				target: '/app/test2',
+				query: { q: QueryStrategy.Preserve },
+			})
 		})
 
 		expect(MockedRouter.navigations.length).toEqual(2)
@@ -130,16 +143,16 @@ describe('useBaseRouter', () => {
 		)
 
 		act(() => {
-			result.current.navigateTo('/app/test1', {}, { q: 'foobar' })
+			result.current.navigateTo({
+				target: '/app/test1',
+				query: { q: 'foobar' },
+			})
 		})
 		act(() => {
-			result.current.navigateTo(
-				'/app/test2',
-				{},
-				{
-					q: QueryStrategy.Clear,
-				}
-			)
+			result.current.navigateTo({
+				target: '/app/test2',
+				query: { q: QueryStrategy.Clear },
+			})
 		})
 
 		expect(MockedRouter.navigations.length).toEqual(2)
@@ -155,10 +168,15 @@ describe('useBaseRouter', () => {
 		)
 
 		act(() => {
-			result.current.navigateTo('/app/test1', {}, { q: 'foobar' })
+			result.current.navigateTo({
+				target: '/app/test1',
+				query: { q: 'foobar' },
+			})
 		})
 		act(() => {
-			result.current.navigateTo('/app/test2', {}, {})
+			result.current.navigateTo({
+				target: '/app/test2',
+			})
 		})
 
 		expect(MockedRouter.navigations.length).toEqual(2)
@@ -173,13 +191,22 @@ describe('useBaseRouter', () => {
 		)
 
 		act(() => {
-			result.current.navigateTo('/app/test', {}, { q: 'foobar' })
+			result.current.navigateTo({
+				target: '/app/test',
+				query: { q: 'foobar' },
+			})
 		})
 		act(() => {
-			result.current.navigateTo('/app/test', {}, { q: 'foobar' })
+			result.current.navigateTo({
+				target: '/app/test',
+				query: { q: 'foobar' },
+			})
 		})
 		act(() => {
-			result.current.navigateTo('/app/test', {}, { q: 'foobar' })
+			result.current.navigateTo({
+				target: '/app/test',
+				query: { q: 'foobar' },
+			})
 		})
 
 		expect(MockedRouter.navigations.length).toEqual(1)
@@ -187,16 +214,29 @@ describe('useBaseRouter', () => {
 
 	it('unsets the query param if set to null', () => {
 		const { result } = renderHookWithProviders(() =>
-			useBaseRouter({
-				app: '/app/test',
-			})
+			useBaseRouter(
+				{
+					app: '/app/test',
+				},
+				{
+					'/app/test': {
+						q: '0',
+					},
+				}
+			)
 		)
 
 		act(() => {
-			result.current.navigateTo('/app/test', {}, { q: 'foobar' })
+			result.current.navigateTo({
+				target: '/app/test',
+				query: { q: 'foobar' },
+			})
 		})
 		act(() => {
-			result.current.navigateTo('/app/test', {}, { q: null })
+			result.current.navigateTo({
+				target: '/app/test',
+				query: { q: null },
+			})
 		})
 
 		expect(MockedRouter.navigations[1].target).toEqual('/app/test')
@@ -211,14 +251,13 @@ describe('useBaseRouter', () => {
 			)
 
 			act(() => {
-				result.current.navigateTo(
-					'/app/:param1/:param2/foo',
-					{
+				result.current.navigateTo({
+					target: '/app/:param1/:param2/foo',
+					args: {
 						param1: 'foo',
 						param2: 'bar',
 					},
-					{}
-				)
+				})
 			})
 
 			expect(result.current.isLocationEqual('/app/:param1/:param2/foo')).toEqual(true)
@@ -243,14 +282,13 @@ describe('useBaseRouter', () => {
 			)
 
 			act(() => {
-				result.current.navigateTo(
-					'/app/:param1/:param2/bar',
-					{
+				result.current.navigateTo({
+					target: '/app/:param1/:param2/bar',
+					args: {
 						param1: '123',
 						param2: '123',
 					},
-					{}
-				)
+				})
 			})
 
 			expect(result.current.isLocationEqual('/app/:param1/:param2/foo')).toEqual(false)

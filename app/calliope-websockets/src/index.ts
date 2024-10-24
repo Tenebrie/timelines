@@ -37,7 +37,7 @@ app.ws.use(
 			throw new Error('No cookie provided')
 		}
 
-		const { id: userId, email: userEmail } = TokenService.decodeJwtToken(authCookie)
+		const { id: userId } = TokenService.decodeJwtToken(authCookie)
 
 		ctx.websocket.on('open', () => {
 			console.log('Client connected!')

@@ -1,15 +1,15 @@
 import { ArrowForward, Close } from '@mui/icons-material'
 import { Button, IconButton, Stack } from '@mui/material'
 
+import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
-import { useWorldRouter } from '../../../../router'
 
 type Props = {
 	onNavigateToTime: (timestamp: number) => void
 }
 
 export const TimelineSelectedLabel = ({ onNavigateToTime }: Props) => {
-	const { selectedTimeOrNull, navigateToOutliner, navigateToCurrentWorld } = useWorldRouter()
+	const { selectedTimeOrNull, navigateToOutliner, navigateToCurrentWorldRoot } = useWorldRouter()
 	const { timeToLabel } = useWorldTime()
 
 	if (selectedTimeOrNull === null) {
@@ -32,12 +32,7 @@ export const TimelineSelectedLabel = ({ onNavigateToTime }: Props) => {
 				<IconButton color="secondary" onClick={() => onNavigateToTime(selectedTimeOrNull)}>
 					<ArrowForward />
 				</IconButton>
-				<IconButton
-					color="secondary"
-					onClick={() => {
-						navigateToCurrentWorld({ clearSelectedTime: true })
-					}}
-				>
+				<IconButton color="secondary" onClick={() => navigateToCurrentWorldRoot()}>
 					<Close />
 				</IconButton>
 			</Stack>

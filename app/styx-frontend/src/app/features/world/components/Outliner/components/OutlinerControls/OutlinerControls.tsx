@@ -3,10 +3,10 @@ import { Button, Checkbox, Divider, FormControlLabel, FormGroup, Popover, Slider
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { preferencesSlice } from '../../../../../preferences/reducer'
 import { getOutlinerPreferences, getTimelinePreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
-import { useWorldRouter } from '../../../../router'
 import { getWorldState } from '../../../../selectors'
 import { CreateHerePopover } from '../CreateHerePopover/CreateHerePopover'
 import { useTimelineSpacingSlider } from './useTimelineSpacingSlider'

@@ -1,25 +1,20 @@
 import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react'
-import { setupServer } from 'msw/node'
 
 import {
 	mockAuthenticatedUser,
-	mockGetWorlds,
 	mockNonAuthenticatedUser,
 	mockPostRegister,
 	mockUserModel,
 } from '../../../../api/rheaApi.mock'
 import { renderWithProviders, renderWithRouter } from '../../../../jest/renderWithProviders'
-import { appRoutes } from '../../world/router'
+import { setupTestServer } from '../../../../jest/setupTestServer'
+import { appRoutes } from '../../../../router/routes/appRoutes'
 import { authInitialState } from '../reducer'
 import { Register } from './Register'
 
-const server = setupServer()
+const server = setupTestServer()
 
 describe('<Register />', () => {
-	beforeAll(() => server.listen())
-	afterEach(() => server.resetHandlers())
-	afterAll(() => server.close())
-
 	it('renders the form', async () => {
 		renderWithProviders(<Register />)
 
@@ -77,9 +72,9 @@ describe('<Register />', () => {
 					id: '1111-2222-3333',
 					email: 'admin@localhost',
 					username: 'admin',
+					level: 'Free',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
 
 			const { user } = await renderWithRouter('register')
 
@@ -99,9 +94,9 @@ describe('<Register />', () => {
 					id: '1111-2222-3333',
 					email: 'admin@localhost',
 					username: 'admin',
+					level: 'Free',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
 
 			const { user, store } = await renderWithRouter('register')
 
@@ -176,7 +171,6 @@ describe('<Register />', () => {
 					message: 'Unable to create account',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
 
 			const { user } = await renderWithRouter('register')
 
@@ -199,7 +193,6 @@ describe('<Register />', () => {
 					message: 'Unable to create account',
 				},
 			})
-			mockGetWorlds(server, { response: [] })
 
 			const { user } = await renderWithRouter('register')
 
