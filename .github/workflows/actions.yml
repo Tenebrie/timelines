@@ -15,23 +15,38 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Styx Test
-      uses: actions/setup-node@v3
+    - uses: actions/setup-node@v3
       with:
         node-version: 20.x
         cache: 'yarn'
-    - run: yarn
-    - run: yarn test:styx
+    - name: Install dependencies
+      run: yarn
+    - name: Run Styx tests
+      run: yarn test:styx
     
   test-rhea:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
-    - name: Rhea Test
-      uses: actions/setup-node@v3
+    - uses: actions/setup-node@v3
       with:
         node-version: 20.x
         cache: 'yarn'
-    - run: yarn
-    - run: yarn test:rhea
+    - name: Install dependencies
+      run: yarn
+    - name: Run Rhea tests
+      run: yarn test:rhea
+
+  build-container:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 20.x
+        cache: 'yarn'
+    - name: Build Container
+      run: yarn docker:prod:push
