@@ -3,7 +3,6 @@
 	"version": "0.0.0",
 	"license": "GPL-3.0-or-later",
 	"description": "",
-	"main": "dist/services/gaia/app.js",
 	"subPackages": [
 		"app/styx-frontend",
 		"app/rhea-backend",
@@ -14,6 +13,8 @@
 		"postinstall": "subpkg install && husky install",
 		"openapi": "./scripts/dev-openapi.sh",
 		"migrate": "./scripts/dev-migrate.sh",
+		"test:styx": "(cd app/styx-frontend && yarn test)",
+		"test:rhea": "(cd app/rhea-backend && yarn test)",
 		"db:seed": "(cd app/rhea-backend && DATABASE_URL=postgresql://docker:docker@localhost:5432/db?schema=public yarn prisma db seed)",
 		"docker": "yarn docker:start",
 		"docker:start": "docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up",
