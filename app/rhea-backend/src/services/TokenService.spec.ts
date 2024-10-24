@@ -1,6 +1,12 @@
 import { TokenService } from './TokenService'
 
 describe('TokenService', () => {
+	beforeAll(() => {
+		process.env = {
+			...process.env,
+			JWT_SECRET: 'secret',
+		}
+	})
 	it('creates a valid token', () => {
 		const token = TokenService.generateJwtToken({
 			id: '1111-2222-3333-4444',
@@ -26,7 +32,7 @@ describe('TokenService', () => {
 
 	it('verifies valid token', () => {
 		const token =
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExMTEtMjIyMi0zMzMzLTQ0NDQiLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsImlhdCI6MTY4MDAzOTMyM30.vKMBHqwZvklCTuvcBa25MqL2zeLR4m2UZgGpNL7Dn0M'
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExMTEtMjIyMi0zMzMzLTQ0NDQiLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsImlhdCI6MTcyOTc3NzIwMX0.gi7JbN4y3lH49vFJf_Z_3RoH9HPhZJVs6kznBobq0fY'
 		const result = TokenService.decodeJwtToken(token)
 		expect(result).toEqual(
 			expect.objectContaining({
