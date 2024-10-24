@@ -52,16 +52,16 @@ jobs:
         node-version: 20.x
         cache: 'yarn'
     - name: Generate Version Number
-      id: semver
+      id: version
       uses: paulhatch/semantic-version@v5.4.0
       with:
         major_pattern: "BREAKING CHANGE:"
         minor_pattern: "feat:"
         version_format: "v${major}.${minor}.${patch}"
         debug: true
-    - name: Append Commit ID
-      run: echo "version=${{ steps.semver.outputs.version }}-${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
-      id: version
+    # - name: Append Commit ID
+    #   run: echo "version=${{ steps.semver.outputs.version }}-${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
+    #   id: version
     - name: Print out version
       run: echo "Version is ${{ steps.version.outputs.version }} / ${{ steps.version.outputs }}"
     - name: Create a Release
