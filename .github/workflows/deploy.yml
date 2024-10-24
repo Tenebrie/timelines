@@ -51,26 +51,26 @@ jobs:
       with:
         node-version: 20.x
         cache: 'yarn'
-    # - name: Get commit ID
-    #   run: echo "GITHUB_SHA_8=${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
-    #   id: get_sha
     - name: Generate Version Number
-      id: version
+      id: semver
       uses: paulhatch/semantic-version@v5.4.0
       with:
         major_pattern: "BREAKING CHANGE:"
         minor_pattern: "feat:"
-        version_format: "v${major}.${minor}.${patch}-${GITHUB_SHA::8}"
+        version_format: "v${major}.${minor}.${patch}"
         debug: true
+    - name: Append Commit ID
+      run: echo "version=${{ steps.semver.outputs.version }}-${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
+      id: version
     - name: Print out version
-      run: echo "Version is ${{ steps.version.outputs.version }}"
+      run: echo "Version is ${{ steps.version.outputs.version }} / ${{ steps.version.outputs }}"
     - name: Create a Release
       uses: elgohr/Github-Release-Action@v5
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        title: Release ${{ steps.version.outputs.version }}
         tag: ${{ steps.version.outputs.version }}
+        title: Release ${{ steps.version.outputs.version }}
     - name: Log in to Docker Hub
       uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
       with:
