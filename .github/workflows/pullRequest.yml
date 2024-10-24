@@ -6,6 +6,7 @@ on:
 
 jobs:
   test-styx:
+    name: Test Styx (Frontend)
     runs-on: ubuntu-latest
 
     steps:
@@ -20,6 +21,7 @@ jobs:
       run: yarn test:styx
     
   test-rhea:
+    name: Test Rhea (Backend)
     runs-on: ubuntu-latest
 
     steps:
