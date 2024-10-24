@@ -9,6 +9,7 @@ type TokenPayload = {
 export const TokenService = {
 	getSecretKey: () => {
 		if (fs.existsSync('/run/secrets/jwt-secret')) {
+			console.log(fs.readFileSync('/run/secrets/jwt-secret', 'utf8').split('=')[1])
 			return fs.readFileSync('/run/secrets/jwt-secret', 'utf8').split('=')[1]
 		}
 		if (process.env.JWT_SECRET) {
