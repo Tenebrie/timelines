@@ -96,7 +96,7 @@ describe('<EventEditor />', () => {
 			)
 		)
 
-		const { hasBeenCalled, invocations } = mockUpdateWorldEvent(server, {
+		const { hasBeenCalled, invocations, clearInvocations } = mockUpdateWorldEvent(server, {
 			worldId: '1111',
 			eventId: '2222',
 			response: mockApiEventModel({
@@ -114,6 +114,7 @@ describe('<EventEditor />', () => {
 		await user.type(screen.getByLabelText('Minute'), '1500')
 		await user.click(screen.getByText('Save'))
 
+		clearInvocations()
 		await waitFor(() => expect(hasBeenCalled()).toBeTruthy())
 		expect(invocations.length).toEqual(1)
 		expect(invocations[0].jsonBody).toEqual({
