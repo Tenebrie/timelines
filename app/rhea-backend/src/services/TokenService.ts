@@ -7,11 +7,17 @@ type TokenPayload = {
 	email: string
 }
 
+let cachedKey: string | null = null
+
 export const TokenService = {
 	getSecretKey: () => {
+		if (cachedKey) {
+			return cachedKey
+		}
 		if (fs.existsSync('/run/secrets/jwt-secret')) {
-			console.log(fs.readFileSync('/run/secrets/jwt-secret', 'utf8').split('=')[1])
-			return fs.readFileSync('/run/secrets/jwt-secret', 'utf8').split('=')[1]
+			const key = fs.readFileSync('/run/secrets/jwt-secret', 'utf8').split('=')[1]
+			cachedKey = key
+			return key
 		}
 		if (process.env.JWT_SECRET) {
 			return process.env.JWT_SECRET
