@@ -8,7 +8,7 @@ describe('TokenService', () => {
 
 		beforeAll(() => {
 			jest.spyOn(fs, 'existsSync').mockReturnValue(true)
-			jest.spyOn(fs, 'readFileSync').mockReturnValue('secret')
+			jest.spyOn(fs, 'readFileSync').mockReturnValue('JWT_SECRET=secret')
 		})
 
 		it('creates a valid token', () => {
