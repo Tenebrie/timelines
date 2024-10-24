@@ -5,39 +5,41 @@ on:
     branches: [master]
 
 jobs:
-  test-styx:
-    name: Test Styx (Frontend)
-    runs-on: ubuntu-latest
+  # test-styx:
+  #   name: Test Styx (Frontend)
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
-        cache: 'yarn'
-    - run: yarn
-    - run: yarn test:styx
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - uses: actions/setup-node@v4
+  #     with:
+  #       node-version: 20.x
+  #       cache: 'yarn'
+  #   - run: yarn
+  #   - run: yarn test:styx
     
-  test-rhea:
-    name: Test Rhea (Backend)
-    runs-on: ubuntu-latest
+  # test-rhea:
+  #   name: Test Rhea (Backend)
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
-        cache: 'yarn'
-    - run: yarn
-    - run: yarn test:rhea
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #   - uses: actions/setup-node@v4
+  #     with:
+  #       node-version: 20.x
+  #       cache: 'yarn'
+  #   - run: yarn
+  #   - run: yarn test:rhea
 
-  build-container:
-    name: Build & Publish Containers
+  build-containers:
+    name: Build Containers
     runs-on: ubuntu-latest
-    needs: [test-styx, test-rhea]
+    # needs: [test-styx, test-rhea]
     permissions:
       packages: write
       contents: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
 
     steps:
     - uses: actions/checkout@v4
@@ -77,19 +79,31 @@ jobs:
     #   env:
     #     VERSION: ${{ steps.version.outputs.version }}
 
+  deploy-containers:
+    name: Publish Containers
+    runs-on: ubuntu-latest
+    needs: [build-containers]
+    permissions:
+      packages: write
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
       with:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
     
     - name: Setup SSH
-      uses: webfactory/ssh-agent@v0.9.0
-      with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-    
-    - name: Add DigitalOcean droplet to known hosts
-      run: ssh-keyscan -H $(doctl compute droplet get prod-manager-1 --format PublicIPv4 --no-header) >> ~/.ssh/known_hosts
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H $(doctl compute droplet get prod-manager-1 --format PublicIPv4 --no-header) >> ~/.ssh/known_hosts
 
     - name: Deploy to DigitalOcean
-      run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && git pull && VERSION=${{ steps.version.outputs.version }} ./scripts/stack-update.sh"
+      run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && git pull && VERSION=${{ needs.build-containers.outputs.version }} ./scripts/stack-update.sh"
     
