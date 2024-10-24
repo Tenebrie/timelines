@@ -96,7 +96,7 @@ describe('<EventEditor />', () => {
 			)
 		)
 
-		const { hasBeenCalled, invocations } = mockUpdateWorldEvent(server, {
+		const { hasBeenCalled } = mockUpdateWorldEvent(server, {
 			worldId: '1111',
 			eventId: '2222',
 			response: mockApiEventModel({

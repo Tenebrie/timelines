@@ -3,7 +3,6 @@
 	"version": "0.0.0",
 	"license": "GPL-3.0-or-later",
 	"description": "",
-	"main": "dist/services/gaia/app.js",
 	"subPackages": [
 		"app/styx-frontend",
 		"app/rhea-backend",
