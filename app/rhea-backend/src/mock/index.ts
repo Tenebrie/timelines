@@ -1,3 +1,3 @@
 export * from './auth'
 export * from './mock'
-export * from './prismaMock'
+export * from './requestBuilder'

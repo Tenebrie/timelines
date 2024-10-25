@@ -3,6 +3,13 @@ import { mockDeep } from 'jest-mock-extended'
 
 process.env.JWT_SECRET = 'secretkey'
 
+jest.mock('moonflower', () => {
+	return {
+		__esModule: true, //    <----- this __esModule: true is important
+		...jest.requireActual('moonflower'),
+	}
+})
+
 jest.mock('@src/services/dbClients/DatabaseClient', () => {
 	const mock = mockDeep<PrismaClient>()
 	return {

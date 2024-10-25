@@ -1,20 +1,27 @@
 import type { User } from '@prisma/client'
-import * as UserAuthenticatorModule from '@src/auth/UserAuthenticator'
+import * as moonflower from 'moonflower'
 
 import { mockUser } from './mock'
 import { requestBuilder } from './requestBuilder'
 
-let mockUserAuth: User | null = null
-
-jest.spyOn(UserAuthenticatorModule, 'UserAuthenticator').mockImplementation(async () => {
-	if (mockUserAuth) {
-		return mockUserAuth
-	}
-	throw new Error('User not authenticated')
-})
-
 export const withUserAuth = (user?: Partial<User>) => {
-	mockUserAuth = mockUser(user)
+	jest.spyOn(moonflower, 'useAuth').mockImplementation(async () => {
+		return mockUser({
+			...user,
+			level: 'Free',
+		})
+	})
+
+	return requestBuilder
+}
+
+export const withAdminAuth = (user?: Partial<User>) => {
+	jest.spyOn(moonflower, 'useAuth').mockImplementation(async () => {
+		return mockUser({
+			...user,
+			level: 'Admin',
+		})
+	})
 
 	return requestBuilder
 }
