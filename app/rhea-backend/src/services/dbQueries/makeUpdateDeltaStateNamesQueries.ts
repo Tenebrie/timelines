@@ -1,6 +1,6 @@
 import { generateEntityNameFromText } from '@src/ts-shared/utils/generateEntityNameFromText'
 
-import { dbClient } from '../dbClients/DatabaseClient'
+import { getPrismaClient } from '../dbClients/DatabaseClient'
 import { WorldEventService } from '../WorldEventService'
 
 export const makeUpdateDeltaStateNamesQueries = ({
@@ -14,7 +14,7 @@ export const makeUpdateDeltaStateNamesQueries = ({
 }) => {
 	if (customNameEnabled && customName) {
 		return [
-			dbClient.worldEventDelta.updateMany({
+			getPrismaClient().worldEventDelta.updateMany({
 				where: {
 					worldEventId: event.id,
 				},
@@ -25,7 +25,7 @@ export const makeUpdateDeltaStateNamesQueries = ({
 		]
 	} else {
 		return event.deltaStates.map((state) =>
-			dbClient.worldEventDelta.updateMany({
+			getPrismaClient().worldEventDelta.updateMany({
 				where: {
 					id: state.id,
 				},

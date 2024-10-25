@@ -11,6 +11,7 @@ import { AuthRouter } from './routers/AuthRouter'
 import { WorldEventRouter } from './routers/WorldEventRouter'
 import { WorldRouter } from './routers/WorldRouter'
 import { RedisService } from './services/RedisService'
+import { isRunningInTest } from './utils/isRunningInTest'
 
 export const app = new Koa()
 
@@ -49,7 +50,10 @@ app
 	.use(WorldEventRouter.allowedMethods())
 	.use(WorldRouter.routes())
 	.use(WorldRouter.allowedMethods())
-	.use(
+	.use(() => {
+		if (isRunningInTest()) {
+			return
+		}
 		initOpenApiEngine({
 			tsconfigPath: './tsconfig.json',
 			sourceFilePaths: [
@@ -61,8 +65,10 @@ app
 				'./src/routers/WorldRouter.ts',
 			],
 		})
-	)
+	})
 
-RedisService.initRedisConnection()
-app.listen(3000)
-console.info('[RHEA] Server up')
+if (!isRunningInTest()) {
+	RedisService.initRedisConnection()
+	app.listen(3000)
+	console.info('[RHEA] Server up')
+}

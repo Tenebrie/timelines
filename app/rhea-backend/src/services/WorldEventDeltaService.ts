@@ -1,6 +1,6 @@
 import { WorldEventDelta } from '@prisma/client'
 
-import { dbClient } from './dbClients/DatabaseClient'
+import { getPrismaClient } from './dbClients/DatabaseClient'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
 
 export const WorldEventDeltaService = {
@@ -13,8 +13,8 @@ export const WorldEventDeltaService = {
 		eventId: string
 		data: Omit<WorldEventDelta, 'id' | 'worldEventId' | 'createdAt' | 'updatedAt'>
 	}) => {
-		const [deltaState, world] = await dbClient.$transaction([
-			dbClient.worldEventDelta.create({
+		const [deltaState, world] = await getPrismaClient().$transaction([
+			getPrismaClient().worldEventDelta.create({
 				data: {
 					worldEventId: eventId,
 					name: data.name,
@@ -42,8 +42,8 @@ export const WorldEventDeltaService = {
 		deltaId: string
 		params: Partial<WorldEventDelta>
 	}) => {
-		const [deltaState, world] = await dbClient.$transaction([
-			dbClient.worldEventDelta.update({
+		const [deltaState, world] = await getPrismaClient().$transaction([
+			getPrismaClient().worldEventDelta.update({
 				where: {
 					id: deltaId,
 				},
@@ -58,8 +58,8 @@ export const WorldEventDeltaService = {
 	},
 
 	deleteEventDeltaState: async ({ worldId, deltaId }: { worldId: string; deltaId: string }) => {
-		const [deltaState, world] = await dbClient.$transaction([
-			dbClient.worldEventDelta.delete({
+		const [deltaState, world] = await getPrismaClient().$transaction([
+			getPrismaClient().worldEventDelta.delete({
 				where: {
 					id: deltaId,
 				},

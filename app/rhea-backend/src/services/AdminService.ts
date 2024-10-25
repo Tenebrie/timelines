@@ -1,10 +1,10 @@
 import { UserLevel } from '@prisma/client'
 
-import { dbClient } from './dbClients/DatabaseClient'
+import { getPrismaClient } from './dbClients/DatabaseClient'
 
 export const AdminService = {
 	listUsers: async () => {
-		return dbClient.user.findMany({
+		return getPrismaClient().user.findMany({
 			select: {
 				id: true,
 				email: true,
@@ -15,7 +15,7 @@ export const AdminService = {
 	},
 
 	deleteUser: async (userId: string) => {
-		return dbClient.user.delete({
+		return getPrismaClient().user.delete({
 			where: {
 				id: userId,
 			},
@@ -23,7 +23,7 @@ export const AdminService = {
 	},
 
 	setUserLevel: async (userId: string, level: UserLevel) => {
-		return dbClient.user.update({
+		return getPrismaClient().user.update({
 			where: {
 				id: userId,
 			},

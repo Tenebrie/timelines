@@ -4,11 +4,15 @@ import { TokenService } from './TokenService'
 
 describe('TokenService', () => {
 	describe("With token in '/run/secrets/jwt-secret'", () => {
-		jest.mock('fs')
-
 		beforeAll(() => {
+			const originalReadFileSync = fs.readFileSync
 			jest.spyOn(fs, 'existsSync').mockReturnValue(true)
-			jest.spyOn(fs, 'readFileSync').mockReturnValue('JWT_SECRET=secret')
+			jest.spyOn(fs, 'readFileSync').mockImplementation((...arg) => {
+				if (arg[0] === '/run/secrets/jwt-secret') {
+					return 'JWT_SECRET=secret'
+				}
+				return originalReadFileSync(...arg)
+			})
 		})
 
 		it('creates a valid token', () => {

@@ -1,6 +1,6 @@
 import { Actor, WorldEvent } from '@prisma/client'
 
-import { dbClient } from '../dbClients/DatabaseClient'
+import { getPrismaClient } from '../dbClients/DatabaseClient'
 
 export type CreateWorldQueryData = Parameters<typeof makeCreateWorldEventQuery>[1]
 
@@ -15,7 +15,7 @@ export const makeCreateWorldEventQuery = (
 		mentionedActors: Actor[]
 	}
 ) =>
-	dbClient.worldEvent.create({
+	getPrismaClient().worldEvent.create({
 		data: {
 			worldId,
 			type: data.type,

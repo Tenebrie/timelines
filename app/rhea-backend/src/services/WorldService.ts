@@ -1,6 +1,5 @@
 import { User, WorldCalendarType } from '@prisma/client'
-
-import { dbClient } from './dbClients/DatabaseClient'
+import { getPrismaClient } from '@src/services/dbClients/DatabaseClient'
 
 export const WorldService = {
 	createWorld: async (params: {
@@ -9,7 +8,7 @@ export const WorldService = {
 		calendar?: WorldCalendarType
 		timeOrigin?: number
 	}) => {
-		return dbClient.world.create({
+		return getPrismaClient().world.create({
 			data: {
 				name: params.name,
 				ownerId: params.owner.id,
@@ -24,7 +23,7 @@ export const WorldService = {
 	},
 
 	deleteWorld: async (worldId: string) => {
-		return dbClient.world.delete({
+		return getPrismaClient().world.delete({
 			where: {
 				id: worldId,
 			},
@@ -32,7 +31,7 @@ export const WorldService = {
 	},
 
 	listOwnedWorlds: async (params: { owner: User }) => {
-		return dbClient.world.findMany({
+		return getPrismaClient().world.findMany({
 			where: {
 				owner: params.owner,
 			},
@@ -40,7 +39,7 @@ export const WorldService = {
 	},
 
 	listAvailableWorlds: async (params: { owner: User }) => {
-		const worlds = await dbClient.world.findMany({
+		const worlds = await getPrismaClient().world.findMany({
 			where: {
 				OR: [
 					{ owner: params.owner },
@@ -76,7 +75,7 @@ export const WorldService = {
 	},
 
 	findWorldDetails: async (worldId: string) => {
-		return dbClient.world.findFirstOrThrow({
+		return getPrismaClient().world.findFirstOrThrow({
 			where: {
 				id: worldId,
 			},

@@ -1,11 +1,11 @@
 import { User } from '@prisma/client'
 import { UnauthorizedError } from 'moonflower'
 
-import { dbClient } from './dbClients/DatabaseClient'
+import { getPrismaClient } from './dbClients/DatabaseClient'
 
 export const AuthorizationService = {
 	checkUserReadAccess: async (user: User, worldId: string) => {
-		const count = await dbClient.world.count({
+		const count = await getPrismaClient().world.count({
 			where: {
 				OR: [
 					{
@@ -23,13 +23,13 @@ export const AuthorizationService = {
 				],
 			},
 		})
-		if (count === 0) {
+		if (!count) {
 			throw new UnauthorizedError('No access to this world')
 		}
 	},
 
 	checkUserWriteAccess: async (user: User, worldId: string) => {
-		const count = await dbClient.world.count({
+		const count = await getPrismaClient().world.count({
 			where: {
 				OR: [
 					{
@@ -48,31 +48,31 @@ export const AuthorizationService = {
 				],
 			},
 		})
-		if (count === 0) {
+		if (!count) {
 			throw new UnauthorizedError('No access to this world')
 		}
 	},
 
 	checkUserWorldOwner: async (user: User, worldId: string) => {
-		const count = await dbClient.world.count({
+		const count = await getPrismaClient().world.count({
 			where: {
 				id: worldId,
 				owner: user,
 			},
 		})
-		if (count === 0) {
+		if (!count) {
 			throw new UnauthorizedError('No access to this world')
 		}
 	},
 
 	checkUserAnnouncementAccess: async (user: User, announcementId: string) => {
-		const count = await dbClient.userAnnouncement.count({
+		const count = await getPrismaClient().userAnnouncement.count({
 			where: {
 				id: announcementId,
 				user,
 			},
 		})
-		if (count === 0) {
+		if (!count) {
 			throw new UnauthorizedError('No access to this announcement')
 		}
 	},

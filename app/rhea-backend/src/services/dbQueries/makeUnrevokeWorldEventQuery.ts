@@ -1,9 +1,9 @@
 import { WorldEvent } from '@prisma/client'
 
-import { dbClient } from '../dbClients/DatabaseClient'
+import { getPrismaClient } from '../dbClients/DatabaseClient'
 
 export const makeUnrevokeWorldEventQuery = ({ event }: { event: WorldEvent }) =>
-	dbClient.worldEvent.update({
+	getPrismaClient().worldEvent.update({
 		where: {
 			id: event.id,
 		},

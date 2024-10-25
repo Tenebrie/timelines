@@ -1,6 +1,6 @@
 import { AnnouncementType, User } from '@prisma/client'
 
-import { dbClient } from './dbClients/DatabaseClient'
+import { getPrismaClient } from './dbClients/DatabaseClient'
 import { RedisService } from './RedisService'
 
 export const AnnouncementService = {
@@ -15,7 +15,7 @@ export const AnnouncementService = {
 		title: string
 		description: string
 	}) => {
-		const announcement = await dbClient.userAnnouncement.create({
+		const announcement = await getPrismaClient().userAnnouncement.create({
 			data: {
 				type,
 				userId,
@@ -41,7 +41,7 @@ export const AnnouncementService = {
 	},
 
 	listAnnouncements: ({ user }: { user: User }) => {
-		return dbClient.userAnnouncement.findMany({
+		return getPrismaClient().userAnnouncement.findMany({
 			where: {
 				userId: user.id,
 			},
@@ -49,7 +49,7 @@ export const AnnouncementService = {
 	},
 
 	dismiss: ({ id }: { id: string }) => {
-		return dbClient.userAnnouncement.delete({
+		return getPrismaClient().userAnnouncement.delete({
 			where: {
 				id,
 			},

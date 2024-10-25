@@ -1,11 +1,11 @@
 import { BadRequestError } from 'moonflower'
 
-import { dbClient } from './dbClients/DatabaseClient'
+import { getPrismaClient } from './dbClients/DatabaseClient'
 import { WorldEventService } from './WorldEventService'
 
 export const ValidationService = {
 	checkEventValidity: async (eventId: string) => {
-		const count = await dbClient.worldEvent.count({
+		const count = await getPrismaClient().worldEvent.count({
 			where: {
 				id: eventId,
 			},
@@ -16,7 +16,7 @@ export const ValidationService = {
 	},
 
 	checkEventDeltaStateValidity: async (deltaId: string) => {
-		const count = await dbClient.worldEventDelta.count({
+		const count = await getPrismaClient().worldEventDelta.count({
 			where: {
 				id: deltaId,
 			},

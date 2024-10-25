@@ -1,7 +1,7 @@
 import { Actor, WorldEvent, WorldEventField } from '@prisma/client'
 import { BadRequestError } from 'moonflower'
 
-import { dbClient } from './dbClients/DatabaseClient'
+import { getPrismaClient } from './dbClients/DatabaseClient'
 import { fetchWorldEventOrThrow } from './dbQueries/fetchWorldEventOrThrow'
 import { CreateWorldQueryData, makeCreateWorldEventQuery } from './dbQueries/makeCreateWorldEventQuery'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
@@ -13,7 +13,7 @@ export const WorldEventService = {
 	},
 
 	fetchWorldEventWithDeltaStates: async (eventId: string) => {
-		const event = await dbClient.worldEvent.findFirst({
+		const event = await getPrismaClient().worldEvent.findFirst({
 			where: {
 				id: eventId,
 			},
@@ -28,7 +28,7 @@ export const WorldEventService = {
 	},
 
 	createWorldEvent: async ({ worldId, eventData }: { worldId: string; eventData: CreateWorldQueryData }) => {
-		const [event, world] = await dbClient.$transaction([
+		const [event, world] = await getPrismaClient().$transaction([
 			makeCreateWorldEventQuery(worldId, eventData),
 			makeTouchWorldQuery(worldId),
 		])
@@ -52,8 +52,8 @@ export const WorldEventService = {
 	}) => {
 		const eventBeforeUpdate = await WorldEventService.fetchWorldEventWithDeltaStates(eventId)
 
-		const [event, world] = await dbClient.$transaction([
-			dbClient.worldEvent.update({
+		const [event, world] = await getPrismaClient().$transaction([
+			getPrismaClient().worldEvent.update({
 				where: {
 					id: eventId,
 				},
@@ -92,8 +92,8 @@ export const WorldEventService = {
 	},
 
 	deleteWorldEvent: async ({ worldId, eventId }: { worldId: string; eventId: string }) => {
-		const [event, world] = await dbClient.$transaction([
-			dbClient.worldEvent.delete({
+		const [event, world] = await getPrismaClient().$transaction([
+			getPrismaClient().worldEvent.delete({
 				where: {
 					id: eventId,
 				},
@@ -115,7 +115,7 @@ export const WorldEventService = {
 		eventId: string
 		revokedAt: bigint
 	}) => {
-		const event = await dbClient.worldEvent.findFirstOrThrow({
+		const event = await getPrismaClient().worldEvent.findFirstOrThrow({
 			where: {
 				id: eventId,
 			},
@@ -126,8 +126,8 @@ export const WorldEventService = {
 		const updatedModules: WorldEventField[] = event.extraFields.includes('RevokedAt')
 			? event.extraFields
 			: [...event.extraFields, 'RevokedAt']
-		const [statement, world] = await dbClient.$transaction([
-			dbClient.worldEvent.update({
+		const [statement, world] = await getPrismaClient().$transaction([
+			getPrismaClient().worldEvent.update({
 				where: {
 					id: eventId,
 				},
@@ -145,8 +145,8 @@ export const WorldEventService = {
 	},
 
 	unrevokeWorldEvent: async ({ worldId, eventId }: { worldId: string; eventId: string }) => {
-		const [statement, world] = await dbClient.$transaction([
-			dbClient.worldEvent.update({
+		const [statement, world] = await getPrismaClient().$transaction([
+			getPrismaClient().worldEvent.update({
 				where: {
 					id: eventId,
 				},

@@ -2,12 +2,12 @@ import { CollaboratorAccess } from '@prisma/client'
 import { BadRequestError } from 'moonflower'
 
 import { AnnouncementService } from './AnnouncementService'
-import { dbClient } from './dbClients/DatabaseClient'
+import { getPrismaClient } from './dbClients/DatabaseClient'
 import { RedisService } from './RedisService'
 
 export const WorldShareService = {
 	listCollaborators: async ({ worldId }: { worldId: string }) => {
-		return dbClient.collaboratingUser.findMany({
+		return getPrismaClient().collaboratingUser.findMany({
 			where: {
 				worldId,
 			},
@@ -33,7 +33,7 @@ export const WorldShareService = {
 		userEmails: string[]
 		access: CollaboratorAccess
 	}) => {
-		const world = await dbClient.world.findFirst({
+		const world = await getPrismaClient().world.findFirst({
 			where: {
 				id: worldId,
 			},
@@ -45,7 +45,7 @@ export const WorldShareService = {
 
 		const userResults = await Promise.allSettled(
 			userEmails.map((email) =>
-				dbClient.user.findFirst({
+				getPrismaClient().user.findFirst({
 					where: {
 						email,
 					},
@@ -64,8 +64,8 @@ export const WorldShareService = {
 			return
 		}
 
-		await dbClient.$transaction([
-			dbClient.collaboratingUser.deleteMany(
+		await getPrismaClient().$transaction([
+			getPrismaClient().collaboratingUser.deleteMany(
 				...users.map((user) => ({
 					where: {
 						AND: {
@@ -75,7 +75,7 @@ export const WorldShareService = {
 					},
 				}))
 			),
-			dbClient.collaboratingUser.createMany(
+			getPrismaClient().collaboratingUser.createMany(
 				...users.map((user) => ({
 					data: {
 						userId: user.id,
@@ -102,7 +102,7 @@ export const WorldShareService = {
 	},
 
 	removeCollaborator: async ({ worldId, userId }: { worldId: string; userId: string }) => {
-		const world = await dbClient.world.findFirst({
+		const world = await getPrismaClient().world.findFirst({
 			where: {
 				id: worldId,
 			},
@@ -112,7 +112,7 @@ export const WorldShareService = {
 			throw new BadRequestError(`Unable to find world.`)
 		}
 
-		await dbClient.collaboratingUser.delete({
+		await getPrismaClient().collaboratingUser.delete({
 			where: {
 				userId_worldId: {
 					userId,

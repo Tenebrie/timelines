@@ -1,7 +1,7 @@
-import { dbClient } from '../dbClients/DatabaseClient'
+import { getPrismaClient } from '../dbClients/DatabaseClient'
 
 export const makeTouchWorldQuery = (worldId: string) =>
-	dbClient.world.update({
+	getPrismaClient().world.update({
 		where: {
 			id: worldId,
 		},
