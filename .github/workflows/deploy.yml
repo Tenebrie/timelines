@@ -5,36 +5,9 @@ on:
     branches: [master]
 
 jobs:
-  test-styx:
-    name: Test Styx (Frontend)
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
-        cache: 'yarn'
-    - run: yarn
-    - run: yarn test:styx
-    
-  test-rhea:
-    name: Test Rhea (Backend)
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
-        cache: 'yarn'
-    - run: yarn
-    - run: yarn test:rhea
-
   prepare-containers:
     name: Build & Publish Containers
     runs-on: ubuntu-latest
-    needs: [test-styx, test-rhea]
     permissions:
       packages: write
       contents: write

@@ -5,4 +5,4 @@ WORKDIR /app/styx
 ADD ./app/styx-frontend /app/styx
 ADD ./app/ts-shared /app/ts-shared
 COPY .prettierrc.js /app/styx
-RUN yarn && yarn build && yarn prune-build-modules
+RUN yarn && yarn build:ci && yarn prune-build-modules

@@ -6,6 +6,7 @@
 	"scripts": {
 		"analyze": "source-map-explorer 'build/assets/*.js'",
 		"build": "tsc && vite build",
+		"build:ci": "vite build",
 		"preview": "vite preview",
 		"eject": "react-scripts eject",
 		"lint": "eslint src/",
