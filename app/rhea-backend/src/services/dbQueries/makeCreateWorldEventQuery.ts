@@ -1,6 +1,6 @@
 import { Actor, WorldEvent } from '@prisma/client'
 
-import { dbClient } from '../DatabaseClient'
+import { dbClient } from '../dbClients/DatabaseClient'
 
 export type CreateWorldQueryData = Parameters<typeof makeCreateWorldEventQuery>[1]
 

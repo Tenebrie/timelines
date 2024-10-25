@@ -2,7 +2,7 @@ import './registerModuleAlias'
 
 import Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
-import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'tenebrie-framework'
+import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'moonflower'
 
 import { ActorRouter } from './routers/ActorRouter'
 import { AdminRouter } from './routers/AdminRouter'

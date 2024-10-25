@@ -1,4 +1,4 @@
-import { dbClient } from '../DatabaseClient'
+import { dbClient } from '../dbClients/DatabaseClient'
 
 export const makeTouchWorldQuery = (worldId: string) =>
 	dbClient.world.update({

@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt'
 
-import { dbClient } from './DatabaseClient'
+import { dbClient } from './dbClients/DatabaseClient'
 
 export const UserService = {
 	findByEmail: async (email: string) => {

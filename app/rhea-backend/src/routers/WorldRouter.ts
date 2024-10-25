@@ -15,7 +15,7 @@ import {
 	useAuth,
 	usePathParams,
 	useRequestBody,
-} from 'tenebrie-framework'
+} from 'moonflower'
 
 import { CollaboratorAccessValidator } from './validators/CollaboratorAccessValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'

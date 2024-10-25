@@ -1,6 +1,6 @@
-import { BadRequestError } from 'tenebrie-framework'
+import { BadRequestError } from 'moonflower'
 
-import { dbClient } from '../DatabaseClient'
+import { dbClient } from '../dbClients/DatabaseClient'
 
 export const fetchWorldEventOrThrow = async (eventId: string) => {
 	const event = await dbClient.worldEvent.findFirst({

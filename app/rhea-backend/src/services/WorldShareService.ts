@@ -1,8 +1,8 @@
 import { CollaboratorAccess } from '@prisma/client'
-import { BadRequestError } from 'tenebrie-framework'
+import { BadRequestError } from 'moonflower'
 
 import { AnnouncementService } from './AnnouncementService'
-import { dbClient } from './DatabaseClient'
+import { dbClient } from './dbClients/DatabaseClient'
 import { RedisService } from './RedisService'
 
 export const WorldShareService = {

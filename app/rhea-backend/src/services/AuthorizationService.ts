@@ -1,7 +1,7 @@
 import { User } from '@prisma/client'
-import { UnauthorizedError } from 'tenebrie-framework'
+import { UnauthorizedError } from 'moonflower'
 
-import { dbClient } from './DatabaseClient'
+import { dbClient } from './dbClients/DatabaseClient'
 
 export const AuthorizationService = {
 	checkUserReadAccess: async (user: User, worldId: string) => {

@@ -1,6 +1,6 @@
 import { generateEntityNameFromText } from '@src/ts-shared/utils/generateEntityNameFromText'
 
-import { dbClient } from '../DatabaseClient'
+import { dbClient } from '../dbClients/DatabaseClient'
 import { WorldEventService } from '../WorldEventService'
 
 export const makeUpdateDeltaStateNamesQueries = ({

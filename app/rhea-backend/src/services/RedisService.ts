@@ -1,28 +1,17 @@
 import { User } from '@prisma/client'
-import { createClient } from 'redis'
 
 import {
 	RedisChannel,
 	RheaToCalliopeMessage,
 	RheaToCalliopeMessageType,
 } from '../ts-shared/RheaToCalliopeMessage'
+import { getRedisClient, openRedisChannel } from './dbClients/RedisClient'
 
-const rawClient = createClient({
-	socket: {
-		host: 'redis',
-	},
-})
-rawClient.on('error', (err) => console.log('Redis Client Error', err))
-
-const makeClient = <T>(channel: RedisChannel) => ({
-	sendMessage: (message: T) => rawClient.publish(channel, JSON.stringify(message)),
-})
-
-const calliope = makeClient<RheaToCalliopeMessage>(RedisChannel.RHEA_TO_CALLIOPE)
+const calliope = openRedisChannel<RheaToCalliopeMessage>(RedisChannel.RHEA_TO_CALLIOPE)
 
 export const RedisService = {
 	initRedisConnection: async () => {
-		await rawClient.connect()
+		await getRedisClient().connect()
 	},
 
 	notifyAboutNewAnnouncement: ({ userId }: { userId: string }) => {

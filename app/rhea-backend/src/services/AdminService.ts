@@ -1,6 +1,6 @@
 import { UserLevel } from '@prisma/client'
 
-import { dbClient } from './DatabaseClient'
+import { dbClient } from './dbClients/DatabaseClient'
 
 export const AdminService = {
 	listUsers: async () => {

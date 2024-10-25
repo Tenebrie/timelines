@@ -1,6 +1,6 @@
 import { AnnouncementType, User } from '@prisma/client'
 
-import { dbClient } from './DatabaseClient'
+import { dbClient } from './dbClients/DatabaseClient'
 import { RedisService } from './RedisService'
 
 export const AnnouncementService = {

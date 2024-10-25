@@ -12,7 +12,7 @@ import {
 	useAuth,
 	usePathParams,
 	useRequestBody,
-} from 'tenebrie-framework'
+} from 'moonflower'
 
 import { ContentStringValidator } from './validators/ContentStringValidator'
 import { NameStringValidator } from './validators/NameStringValidator'

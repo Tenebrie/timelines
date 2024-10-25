@@ -17,7 +17,7 @@ import {
 	useAuth,
 	usePathParams,
 	useRequestBody,
-} from 'tenebrie-framework'
+} from 'moonflower'
 
 import { parseActorList } from './utils/parseActorList'
 import { ContentStringValidator } from './validators/ContentStringValidator'

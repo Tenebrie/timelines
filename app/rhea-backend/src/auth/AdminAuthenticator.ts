@@ -1,5 +1,5 @@
 import { ParameterizedContext } from 'koa'
-import { UnauthorizedError, useAuth } from 'tenebrie-framework'
+import { UnauthorizedError, useAuth } from 'moonflower'
 
 import { UserAuthenticator } from './UserAuthenticator'
 

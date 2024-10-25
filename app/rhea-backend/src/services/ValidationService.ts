@@ -1,6 +1,6 @@
-import { BadRequestError } from 'tenebrie-framework'
+import { BadRequestError } from 'moonflower'
 
-import { dbClient } from './DatabaseClient'
+import { dbClient } from './dbClients/DatabaseClient'
 import { WorldEventService } from './WorldEventService'
 
 export const ValidationService = {
