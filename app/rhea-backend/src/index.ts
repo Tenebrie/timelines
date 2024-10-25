@@ -50,24 +50,14 @@ app
 	.use(WorldEventRouter.allowedMethods())
 	.use(WorldRouter.routes())
 	.use(WorldRouter.allowedMethods())
-	.use(() => {
-		if (isRunningInTest()) {
-			return
-		}
-		initOpenApiEngine({
-			tsconfigPath: './tsconfig.json',
-			sourceFilePaths: [
-				'./src/routers/ActorRouter.ts',
-				'./src/routers/AdminRouter.ts',
-				'./src/routers/AnnouncementRouter.ts',
-				'./src/routers/AuthRouter.ts',
-				'./src/routers/WorldEventRouter.ts',
-				'./src/routers/WorldRouter.ts',
-			],
-		})
-	})
 
 if (!isRunningInTest()) {
+	app.use(
+		initOpenApiEngine({
+			tsconfigPath: './tsconfig.json',
+		})
+	)
+
 	RedisService.initRedisConnection()
 	app.listen(3000)
 	console.info('[RHEA] Server up')
