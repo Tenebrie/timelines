@@ -26,7 +26,7 @@ export const ModalContainer = styled.div`
 	padding: 32px 64px;
 	max-width: 768px;
 	width: 100%;
-	background: #0d2d50;
+	background: ${(props) => (props.theme.palette.mode === 'light' ? '#eaeff1' : '#0d2d50')};
 	border-radius: 4px;
 	display: flex;
 	gap: 16px;

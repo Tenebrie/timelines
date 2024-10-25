@@ -13,7 +13,7 @@
 		"openapi": "npx @rtk-query/codegen-openapi ./openapi/openapi-config.js && yarn eslint src/api/rheaApi.ts --fix",
 		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline",
 		"start": "vite --host --clearScreen false",
-		"test": "vitest run"
+		"test": "vitest"
 	},
 	"lint-staged": {
 		"*.(ts|tsx)": "eslint --fix"

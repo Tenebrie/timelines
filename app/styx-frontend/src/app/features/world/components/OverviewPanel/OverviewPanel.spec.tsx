@@ -3,8 +3,8 @@ import { screen, waitFor, within } from '@testing-library/react'
 import { mockActorModel, mockEventModel } from '../../../../../api/rheaApi.mock'
 import { renderWithProviders } from '../../../../../jest/renderWithProviders'
 import { MockedRouter, mockRouter, resetMockRouter } from '../../../../../router/router.mock'
+import { worldRoutes } from '../../../../../router/routes/worldRoutes'
 import { initialState } from '../../reducer'
-import { worldRoutes } from '../../router'
 import { WorldDetails } from '../../types'
 import { OverviewPanel } from './OverviewPanel'
 
@@ -109,6 +109,7 @@ describe('<OverviewPanel />', () => {
 			const { user } = renderWithProviders(
 				<OverviewPanel />,
 				getPreloadedState({
+					id: '1111',
 					actors: [mockActorModel({ id: 'actor-1111', name: 'Actor name' })],
 				})
 			)
@@ -117,7 +118,7 @@ describe('<OverviewPanel />', () => {
 			await user.click(screen.getByText('Actor name'))
 
 			await waitFor(() => expect(MockedRouter.navigations.length).toEqual(1))
-			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/actor/actor-1111')
+			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/actor/actor-1111?time=0')
 		})
 
 		it('filters the actors based on the search query on their name', async () => {
@@ -258,6 +259,7 @@ describe('<OverviewPanel />', () => {
 			const { user } = renderWithProviders(
 				<OverviewPanel />,
 				getPreloadedState({
+					id: '1111',
 					events: [mockEventModel({ id: 'event-2222', name: 'First Event', timestamp: 1500 })],
 				})
 			)
@@ -266,7 +268,7 @@ describe('<OverviewPanel />', () => {
 			await user.click(screen.getByText('First Event'))
 
 			expect(MockedRouter.navigations.length).toEqual(1)
-			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/editor/event-2222')
+			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/editor/event-2222?time=0')
 		})
 
 		it('filters the events based on the search query', async () => {

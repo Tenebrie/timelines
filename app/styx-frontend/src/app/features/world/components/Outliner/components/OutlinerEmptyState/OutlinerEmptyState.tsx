@@ -1,8 +1,8 @@
 import { Button, Grid, Stack, Typography } from '@mui/material'
 import { useDispatch } from 'react-redux'
 
+import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { worldSlice } from '../../../../reducer'
-import { useWorldRouter } from '../../../../router'
 
 export const OutlinerEmptyState = () => {
 	const dispatch = useDispatch()

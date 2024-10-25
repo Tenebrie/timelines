@@ -1,15 +1,19 @@
+import { Stack, useTheme } from '@mui/material'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
+import { Announcements } from '../features/announcements/Announcements'
 import { SmallProfile } from '../features/auth/smallProfile/SmallProfile'
+import { ThemeModeToggle } from '../features/theming/ThemeModeToggle'
 
 const Container = styled.div`
-	width: 100%;
-	background: #07121e;
-	box-shadow: 0 4px 2px -2px #214f81;
+	width: calc(100% - 16px);
+	background: ${(props) => (props.theme.palette.mode === 'light' ? '#c2e0ff' : '#07121e')};
+	box-shadow: 0 4px 2px -2px ${(props) => (props.theme.palette.mode === 'light' ? '#d8d8d8' : '#214f81')};
 	display: flex;
 	justify-content: space-between;
 	z-index: 2;
+	padding: 4px 8px;
 `
 
 type Props = {
@@ -17,10 +21,16 @@ type Props = {
 }
 
 export const BaseNavigator = ({ children }: Props) => {
+	const theme = useTheme()
+
 	return (
-		<Container>
+		<Container theme={theme}>
 			<div>{children}</div>
-			<SmallProfile />
+			<Stack direction="row" gap={2}>
+				<ThemeModeToggle />
+				<Announcements />
+				<SmallProfile />
+			</Stack>
 		</Container>
 	)
 }

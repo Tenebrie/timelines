@@ -1,3 +1,4 @@
+import { DeepPartial } from '@reduxjs/toolkit'
 import { DefaultBodyType, rest } from 'msw'
 import { SetupServer } from 'msw/node'
 import { v4 as getRandomId } from 'uuid'
@@ -11,12 +12,15 @@ import {
 	CreateWorldApiResponse,
 	DeleteWorldApiResponse,
 	DeleteWorldEventApiResponse,
+	GetAnnouncementsApiResponse,
+	GetWorldCollaboratorsApiResponse,
 	GetWorldInfoApiResponse,
 	GetWorldsApiResponse,
 	PostLoginApiResponse,
 	UpdateActorApiResponse,
 	UpdateWorldEventApiResponse,
 } from './rheaApi'
+import { CollaboratingUser } from './types'
 
 type HttpMethod = keyof typeof rest
 
@@ -77,6 +81,11 @@ export const mockCheckAuthentication = (
 export const mockGetWorlds = (server: SetupServer, params: MockParams<GetWorldsApiResponse>) =>
 	generateEndpointMock(server, { method: 'get', path: '/api/worlds', ...params })
 
+export const mockGetWorldDetails = (
+	server: SetupServer,
+	params: { worldId: string } & MockParams<GetWorldInfoApiResponse>
+) => generateEndpointMock(server, { method: 'get', path: `/api/world/${params.worldId}`, ...params })
+
 export const mockCreateWorld = (server: SetupServer, params: MockParams<CreateWorldApiResponse>) =>
 	generateEndpointMock(server, { method: 'post', path: `/api/world`, ...params })
 
@@ -84,6 +93,16 @@ export const mockDeleteWorld = (
 	server: SetupServer,
 	params: { worldId: string } & MockParams<DeleteWorldApiResponse>
 ) => generateEndpointMock(server, { method: 'delete', path: `/api/world/${params.worldId}`, ...params })
+
+export const mockGetWorldCollaborators = (
+	server: SetupServer,
+	params: { worldId: string } & MockParams<GetWorldCollaboratorsApiResponse>
+) =>
+	generateEndpointMock(server, {
+		method: 'get',
+		path: `/api/world/${params.worldId}/collaborators`,
+		...params,
+	})
 
 export const mockPostRegister = (server: SetupServer, params: MockParams<CreateAccountApiResponse>) =>
 	generateEndpointMock(server, { method: 'post', path: '/api/auth', ...params })
@@ -121,6 +140,26 @@ export const mockDeleteWorldEvent = (
 		...params,
 	})
 
+export const mockAddCollaborator = (server: SetupServer, params: { worldId: string } & MockParams<null>) =>
+	generateEndpointMock(server, { method: 'post', path: `/api/world/${params.worldId}/share`, ...params })
+
+export const mockRemoveCollaborator = (
+	server: SetupServer,
+	params: { worldId: string; userId: string } & MockParams<null>
+) =>
+	generateEndpointMock(server, {
+		method: 'delete',
+		path: `/api/world/${params.worldId}/share/${params.userId}`,
+		...params,
+	})
+
+export const mockGetAnnouncements = (server: SetupServer, params: MockParams<GetAnnouncementsApiResponse>) =>
+	generateEndpointMock(server, {
+		method: 'get',
+		path: '/api/announcements',
+		...params,
+	})
+
 /**
  * Mock utility functions
  */
@@ -153,6 +192,17 @@ export const mockUserModel = (user: Partial<User> = {}): User => ({
 	...user,
 })
 
+export const mockCollaboratingUser = (data: DeepPartial<CollaboratingUser> = {}): CollaboratingUser => ({
+	access: 'Editing',
+	worldId: 'world-1111',
+	...data,
+	user: {
+		id: 'user-1111',
+		email: 'user@localhost',
+		...data?.user,
+	},
+})
+
 export const mockWorldItemModel = (world: Partial<WorldItem> = {}): WorldItem => ({
 	id: getRandomId(),
 	name: 'World name',
@@ -161,6 +211,7 @@ export const mockWorldItemModel = (world: Partial<WorldItem> = {}): WorldItem =>
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
 	ownerId: '1111-2222-3333-4444',
+	collaborators: [],
 	...world,
 })
 
@@ -216,6 +267,21 @@ export const mockEventDeltaModel = (
 	name: 'Delta name',
 	description: 'Delta description',
 	...provided,
+})
+
+export const mockApiWorldDetailsModel = (
+	world: Partial<GetWorldInfoApiResponse> = {}
+): GetWorldInfoApiResponse => ({
+	id: getRandomId(),
+	name: 'World name',
+	createdAt: new Date(0).toISOString(),
+	updatedAt: new Date(0).toISOString(),
+	actors: [],
+	events: [],
+	calendar: 'EARTH',
+	ownerId: 'user-1111',
+	timeOrigin: '0',
+	...world,
 })
 
 export const mockApiEventModel = (

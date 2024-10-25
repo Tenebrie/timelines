@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useCheckAuthenticationQuery } from '../../../../api/rheaApi'
-import { appRoutes } from '../../world/router'
+import { appRoutes } from '../../../../router/routes/appRoutes'
 import { authSlice } from '../reducer'
 import { getAuthState } from '../selectors'
 

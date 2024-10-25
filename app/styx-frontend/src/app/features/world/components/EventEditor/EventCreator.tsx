@@ -3,8 +3,8 @@ import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { mockEventModel } from '../../../../../api/rheaApi.mock'
+import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
 import { worldSlice } from '../../reducer'
-import { useWorldRouter } from '../../router'
 import { getWorldState } from '../../selectors'
 import { WorldEvent } from '../../types'
 import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetailsEditor'
@@ -12,7 +12,7 @@ import { FullHeightContainer } from './styles'
 
 export const EventCreator = () => {
 	const { id } = useSelector(getWorldState)
-	const { selectedTime } = useWorldRouter()
+	const { selectedTimeOrZero } = useWorldRouter()
 
 	const { setEventCreatorGhost } = worldSlice.actions
 	const dispatch = useDispatch()
@@ -23,9 +23,9 @@ export const EventCreator = () => {
 				worldId: id,
 				name: '',
 				description: '',
-				timestamp: selectedTime,
+				timestamp: selectedTimeOrZero,
 			}),
-		[id, selectedTime]
+		[id, selectedTimeOrZero]
 	)
 
 	useEffect(() => {

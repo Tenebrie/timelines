@@ -11,12 +11,17 @@ datasource db {
 }
 
 model User {
-  id       String    @id @unique @default(uuid())
-  email    String    @unique
+  id String @id @unique @default(uuid())
+
+  email    String @unique
   username String
   password String
-  worlds   World[]
-  level    UserLevel @default(Free)
+
+  level         UserLevel          @default(Free)
+  notifications UserAnnouncement[]
+
+  worlds          World[]
+  collaboratingIn CollaboratingUser[]
 }
 
 enum UserLevel {
@@ -43,8 +48,9 @@ model World {
   calendar   WorldCalendarType @default(COUNTUP)
   timeOrigin BigInt            @default(0)
 
-  owner   User   @relation(fields: [ownerId], references: [id])
-  ownerId String
+  owner         User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId       String
+  collaborators CollaboratingUser[]
 }
 
 enum WorldEventType {
@@ -127,4 +133,40 @@ model ActorRelationship {
   name String
 
   @@id([originId, receiverId])
+}
+
+enum CollaboratorAccess {
+  ReadOnly
+  Editing
+}
+
+model CollaboratingUser {
+  user   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  world  World              @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  access CollaboratorAccess
+
+  userId  String
+  worldId String
+
+  @@id([userId, worldId])
+}
+
+enum AnnouncementType {
+  Info
+  Welcome
+  WorldShared
+}
+
+model UserAnnouncement {
+  id        String   @id @unique @default(uuid())
+  timestamp DateTime @default(now())
+
+  isUnread Boolean @default(true)
+
+  type        AnnouncementType
+  title       String
+  description String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
 }

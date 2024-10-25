@@ -1,4 +1,5 @@
 import { AUTH_COOKIE_NAME, UserAuthenticator } from '@src/auth/UserAuthenticator'
+import { AnnouncementService } from '@src/services/AnnouncementService'
 import {
 	BadRequestError,
 	EmailValidator,
@@ -12,6 +13,8 @@ import {
 
 import { TokenService } from '../services/TokenService'
 import { UserService } from '../services/UserService'
+import { adminUsersTag } from './AdminRouter'
+import { announcementListTag } from './AnnouncementRouter'
 import { worldDetailsTag, worldListTag } from './WorldRouter'
 
 const router = new Router()
@@ -27,19 +30,20 @@ router.get('/api/auth', async (ctx) => {
 
 	const user = await useOptionalAuth(ctx, UserAuthenticator)
 
-	if (user) {
+	if (!user) {
 		return {
-			authenticated: true,
-			user: {
-				id: user.id,
-				email: user.email,
-				username: user.username,
-			},
+			authenticated: false,
 		}
 	}
 
 	return {
-		authenticated: false,
+		authenticated: true,
+		user: {
+			id: user.id,
+			email: user.email,
+			username: user.username,
+			level: user.level,
+		},
 	}
 })
 
@@ -48,7 +52,7 @@ router.post('/api/auth', async (ctx) => {
 		name: 'createAccount',
 		summary: 'Registration endpoint',
 		description: 'Creates a new user account with provided credentials',
-		tags: [authTag, worldListTag, worldDetailsTag],
+		tags: [authTag, worldListTag, worldDetailsTag, announcementListTag],
 	})
 
 	const body = useRequestBody(ctx, {
@@ -70,6 +74,13 @@ router.post('/api/auth', async (ctx) => {
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
 	})
 
+	AnnouncementService.notify({
+		type: 'Welcome',
+		userId: user.id,
+		title: 'Welcome!',
+		description: 'Welcome to Timelines!',
+	})
+
 	return user
 })
 
@@ -78,7 +89,7 @@ router.post('/api/auth/login', async (ctx) => {
 		name: 'postLogin',
 		summary: 'Login endpoint',
 		description: 'Exchanges user credentials for a JWT token',
-		tags: [authTag, worldListTag, worldDetailsTag],
+		tags: [authTag, worldListTag, worldDetailsTag, announcementListTag, adminUsersTag],
 	})
 
 	const body = useRequestBody(ctx, {
@@ -106,7 +117,7 @@ router.post('/api/auth/logout', async (ctx) => {
 		name: 'postLogout',
 		summary: 'Logout endpoint',
 		description: "Clears the current user's auth cookie",
-		tags: [authTag, worldListTag, worldDetailsTag],
+		tags: [authTag, worldListTag, worldDetailsTag, announcementListTag],
 	})
 
 	ctx.cookies.set(AUTH_COOKIE_NAME, '', {
