@@ -36,9 +36,24 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldDetails'],
 			}),
+			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
+				query: () => ({ url: `/api/admin/levels` }),
+			}),
 			adminGetUsers: build.query<AdminGetUsersApiResponse, AdminGetUsersApiArg>({
 				query: () => ({ url: `/api/admin/users` }),
 				providesTags: ['adminUsers'],
+			}),
+			adminSetUserLevel: build.mutation<AdminSetUserLevelApiResponse, AdminSetUserLevelApiArg>({
+				query: (queryArg) => ({
+					url: `/api/admin/users/${queryArg.userId}/level`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['adminUsers'],
+			}),
+			adminDeleteUser: build.mutation<AdminDeleteUserApiResponse, AdminDeleteUserApiArg>({
+				query: (queryArg) => ({ url: `/api/admin/users/${queryArg.userId}`, method: 'DELETE' }),
+				invalidatesTags: ['adminUsers'],
 			}),
 			getAnnouncements: build.query<GetAnnouncementsApiResponse, GetAnnouncementsApiArg>({
 				query: () => ({ url: `/api/announcements` }),
@@ -58,7 +73,7 @@ const injectedRtkApi = api
 			}),
 			postLogin: build.mutation<PostLoginApiResponse, PostLoginApiArg>({
 				query: (queryArg) => ({ url: `/api/auth/login`, method: 'POST', body: queryArg.body }),
-				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
+				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList', 'adminUsers'],
 			}),
 			postLogout: build.mutation<PostLogoutApiResponse, PostLogoutApiArg>({
 				query: () => ({ url: `/api/auth/logout`, method: 'POST' }),
@@ -215,14 +230,40 @@ export type DeleteActorApiArg = {
 	/** Any string value */
 	actorId: string
 }
+export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premium' | 'Admin')[]
+export type AdminGetUserLevelsApiArg = void
 export type AdminGetUsersApiResponse = /** status 200  */ {
+	id: string
+	email: string
+	level: 'Free' | 'Premium' | 'Admin'
+	username: string
+}[]
+export type AdminGetUsersApiArg = void
+export type AdminSetUserLevelApiResponse = /** status 200  */ {
 	id: string
 	email: string
 	username: string
 	password: string
 	level: 'Free' | 'Premium' | 'Admin'
-}[]
-export type AdminGetUsersApiArg = void
+}
+export type AdminSetUserLevelApiArg = {
+	/** Any string value with at least one character */
+	userId: string
+	body: {
+		level: 'Free' | 'Premium' | 'Admin'
+	}
+}
+export type AdminDeleteUserApiResponse = /** status 200  */ {
+	id: string
+	email: string
+	username: string
+	password: string
+	level: 'Free' | 'Premium' | 'Admin'
+}
+export type AdminDeleteUserApiArg = {
+	/** Any string value with at least one character */
+	userId: string
+}
 export type GetAnnouncementsApiResponse = /** status 200  */ {
 	id: string
 	timestamp: string
@@ -242,6 +283,9 @@ export type CheckAuthenticationApiResponse =
 	/** status 200  */
 	| {
 			authenticated: boolean
+	  }
+	| {
+			authenticated: boolean
 			user: {
 				id: string
 				email: string
@@ -249,15 +293,12 @@ export type CheckAuthenticationApiResponse =
 				level: 'Free' | 'Premium' | 'Admin'
 			}
 	  }
-	| {
-			authenticated: boolean
-	  }
 export type CheckAuthenticationApiArg = void
 export type CreateAccountApiResponse = /** status 200  */ {
 	id: string
 	email: string
-	username: string
 	level: 'Free' | 'Premium' | 'Admin'
+	username: string
 }
 export type CreateAccountApiArg = {
 	body: {
@@ -269,8 +310,8 @@ export type CreateAccountApiArg = {
 export type PostLoginApiResponse = /** status 200  */ {
 	id: string
 	email: string
-	username: string
 	level: 'Free' | 'Premium' | 'Admin'
+	username: string
 }
 export type PostLoginApiArg = {
 	body: {
@@ -675,8 +716,12 @@ export const {
 	useCreateActorMutation,
 	useUpdateActorMutation,
 	useDeleteActorMutation,
+	useAdminGetUserLevelsQuery,
+	useLazyAdminGetUserLevelsQuery,
 	useAdminGetUsersQuery,
 	useLazyAdminGetUsersQuery,
+	useAdminSetUserLevelMutation,
+	useAdminDeleteUserMutation,
 	useGetAnnouncementsQuery,
 	useLazyGetAnnouncementsQuery,
 	useDismissAnnouncementMutation,

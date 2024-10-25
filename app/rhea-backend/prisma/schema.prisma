@@ -48,7 +48,7 @@ model World {
   calendar   WorldCalendarType @default(COUNTUP)
   timeOrigin BigInt            @default(0)
 
-  owner         User                @relation(fields: [ownerId], references: [id])
+  owner         User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId       String
   collaborators CollaboratingUser[]
 }
@@ -141,8 +141,8 @@ enum CollaboratorAccess {
 }
 
 model CollaboratingUser {
-  user   User               @relation(fields: [userId], references: [id])
-  world  World              @relation(fields: [worldId], references: [id])
+  user   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  world  World              @relation(fields: [worldId], references: [id], onDelete: Cascade)
   access CollaboratorAccess
 
   userId  String
@@ -167,6 +167,6 @@ model UserAnnouncement {
   title       String
   description String
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 }

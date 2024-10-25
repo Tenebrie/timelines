@@ -13,6 +13,7 @@ import {
 
 import { TokenService } from '../services/TokenService'
 import { UserService } from '../services/UserService'
+import { adminUsersTag } from './AdminRouter'
 import { announcementListTag } from './AnnouncementRouter'
 import { worldDetailsTag, worldListTag } from './WorldRouter'
 
@@ -88,7 +89,7 @@ router.post('/api/auth/login', async (ctx) => {
 		name: 'postLogin',
 		summary: 'Login endpoint',
 		description: 'Exchanges user credentials for a JWT token',
-		tags: [authTag, worldListTag, worldDetailsTag, announcementListTag],
+		tags: [authTag, worldListTag, worldDetailsTag, announcementListTag, adminUsersTag],
 	})
 
 	const body = useRequestBody(ctx, {
