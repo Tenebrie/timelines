@@ -87,15 +87,18 @@ router.get('/api/world/:worldId', async (ctx) => {
 		tags: [worldDetailsTag],
 	})
 
-	const user = await useAuth(ctx, UserAuthenticator)
-
 	const { worldId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),
 	})
 
-	await AuthorizationService.checkUserReadAccess(user, worldId)
+	const worldDetails = await WorldService.findWorldDetails(worldId)
 
-	return await WorldService.findWorldDetails(worldId)
+	if (worldDetails.accessMode === 'Private') {
+		const user = await useAuth(ctx, UserAuthenticator)
+		await AuthorizationService.checkUserReadAccess(user, worldId)
+	}
+
+	return worldDetails
 })
 
 router.get('/api/world/:worldId/collaborators', async (ctx) => {

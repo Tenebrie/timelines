@@ -171,7 +171,7 @@ export const mockAuthenticatedUser = (server: SetupServer) =>
 				id: '1111-2222-3333',
 				email: 'admin@localhost',
 				username: 'admin',
-				level: 'Admin',
+				level: 'Free',
 			},
 		},
 	})
@@ -190,7 +190,7 @@ export const mockUserModel = (user: Partial<User> = {}): User => ({
 	id: getRandomId(),
 	email: 'user@localhost',
 	username: 'User',
-	level: 'Admin',
+	level: 'Free',
 	...user,
 })
 

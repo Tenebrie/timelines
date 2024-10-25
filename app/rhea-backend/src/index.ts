@@ -12,7 +12,7 @@ import { WorldEventRouter } from './routers/WorldEventRouter'
 import { WorldRouter } from './routers/WorldRouter'
 import { RedisService } from './services/RedisService'
 
-const app = new Koa()
+export const app = new Koa()
 
 useApiHeader({
 	title: 'Timelines Rhea',

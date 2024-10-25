@@ -37,6 +37,12 @@ enum WorldCalendarType {
   RIMWORLD
 }
 
+enum WorldAccessMode {
+  Private
+  PublicRead
+  PublicEdit
+}
+
 model World {
   id        String   @id @unique @default(uuid())
   createdAt DateTime @default(now())
@@ -50,6 +56,7 @@ model World {
 
   owner         User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId       String
+  accessMode    WorldAccessMode     @default(Private)
   collaborators CollaboratingUser[]
 }
 

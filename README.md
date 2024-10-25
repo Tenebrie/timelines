@@ -1,3 +1,4 @@
+// TODO: Run migrations on CI deploy
 This readme is WIP
 
 # Running the app
