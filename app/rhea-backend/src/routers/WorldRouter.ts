@@ -96,9 +96,7 @@ router.get('/api/world/:worldId', async (ctx) => {
 	const worldDetails = await WorldService.findWorldDetails(worldId)
 	const user = await useOptionalAuth(ctx, UserAuthenticator)
 
-	if (worldDetails.accessMode === 'Private') {
-		await AuthorizationService.checkUserReadAccess(user, worldId)
-	}
+	await AuthorizationService.checkUserReadAccess(user, worldDetails)
 
 	return {
 		...worldDetails,
@@ -120,9 +118,7 @@ router.get('/api/world/:worldId/brief', async (ctx) => {
 	const worldBrief = await WorldService.findWorldBrief(worldId)
 	const user = await useOptionalAuth(ctx, UserAuthenticator)
 
-	if (worldBrief.accessMode === 'Private') {
-		await AuthorizationService.checkUserReadAccess(user, worldId)
-	}
+	await AuthorizationService.checkUserReadAccess(user, worldBrief)
 
 	return worldBrief
 })

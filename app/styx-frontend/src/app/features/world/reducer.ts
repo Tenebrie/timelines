@@ -3,7 +3,14 @@ import { createSlice } from '@reduxjs/toolkit'
 
 import { GetWorldInfoApiResponse } from '../../../api/rheaApi'
 import { ingestEvent } from '../../utils/ingestEvent'
-import { ActorDetails, TimelineEntity, WorldCalendarType, WorldEvent, WorldEventDelta } from './types'
+import {
+	ActorDetails,
+	TimelineEntity,
+	WorldAccessMode,
+	WorldCalendarType,
+	WorldEvent,
+	WorldEventDelta,
+} from './types'
 
 export const initialState = {
 	isLoaded: false as boolean,
@@ -18,6 +25,7 @@ export const initialState = {
 	selectedActors: [] as string[],
 	selectedEvents: [] as string[],
 	isReadOnly: false as boolean,
+	accessMode: 'Private' as WorldAccessMode,
 
 	eventCreator: {
 		ghost: null as WorldEvent | null,
@@ -105,6 +113,7 @@ export const worldSlice = createSlice({
 			state.createdAt = world.createdAt
 			state.updatedAt = world.updatedAt
 			state.isReadOnly = world.isReadOnly
+			state.accessMode = world.accessMode
 		},
 		unloadWorld: (state) => {
 			state.isLoaded = false

@@ -31,7 +31,7 @@ export const withCollaboratingUser = (data?: Partial<CollaboratingUser>) => {
 }
 
 export const withWorldReadAccess = (mockedUser?: Partial<User>, mockedWorld?: Partial<World>) => {
-	jest.spyOn(AuthorizationService, 'checkUserReadAccess').mockImplementation(async (user, worldId) => {
+	jest.spyOn(AuthorizationService, 'checkUserReadAccessById').mockImplementation(async (user, worldId) => {
 		if (user?.id === mockUser(mockedUser).id && worldId === mockWorld(mockedWorld).id) {
 			return
 		}
@@ -42,13 +42,13 @@ export const withWorldReadAccess = (mockedUser?: Partial<User>, mockedWorld?: Pa
 }
 
 export const withWorldWriteAccess = (mockedUser?: Partial<User>, mockedWorld?: Partial<World>) => {
-	jest.spyOn(AuthorizationService, 'checkUserReadAccess').mockImplementation(async (user, worldId) => {
+	jest.spyOn(AuthorizationService, 'checkUserReadAccessById').mockImplementation(async (user, worldId) => {
 		if (user?.id === mockUser(mockedUser).id && worldId === mockWorld(mockedWorld).id) {
 			return
 		}
 		throw new Error('Unauthorized')
 	})
-	jest.spyOn(AuthorizationService, 'checkUserWriteAccess').mockImplementation(async (user, worldId) => {
+	jest.spyOn(AuthorizationService, 'checkUserWriteAccessById').mockImplementation(async (user, worldId) => {
 		if (user?.id === mockUser(mockedUser).id && worldId === mockWorld(mockedWorld).id) {
 			return
 		}

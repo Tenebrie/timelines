@@ -21,7 +21,7 @@ const translations: Record<WorldAccessMode, ReactNode> = {
 	),
 	PublicEdit: (
 		<span>
-			<b>Public Wiki:</b> <>Anyone with a link can edit</>
+			<b>Public Wiki:</b> <>Any logged in user can edit</>
 		</span>
 	),
 }

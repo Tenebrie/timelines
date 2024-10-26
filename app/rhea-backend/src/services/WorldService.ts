@@ -124,18 +124,6 @@ export const WorldService = {
 			where: {
 				id: worldId,
 			},
-			include: {
-				actors: {
-					include: {
-						_count: true,
-					},
-				},
-				events: {
-					include: {
-						_count: true,
-					},
-				},
-			},
 		})
 	},
 }

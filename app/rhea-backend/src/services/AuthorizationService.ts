@@ -1,63 +1,71 @@
-import { User } from '@prisma/client'
+import { User, World } from '@prisma/client'
 import { UnauthorizedError } from 'moonflower'
 
 import { getPrismaClient } from './dbClients/DatabaseClient'
 import { WorldService } from './WorldService'
 
 export const AuthorizationService = {
-	checkUserReadAccess: async (user: User | undefined, worldId: string) => {
+	checkUserReadAccess: async (user: User | undefined, world: World) => {
+		if (world.accessMode === 'PublicRead' || world.accessMode === 'PublicEdit') {
+			return true
+		}
+
 		if (!user) {
 			throw new UnauthorizedError('No access to this world')
 		}
-		const count = await getPrismaClient().world.count({
+
+		if (user.id === world.ownerId) {
+			return true
+		}
+
+		const worldWithCollaboratorsCount = await getPrismaClient().world.count({
 			where: {
-				OR: [
-					{
-						id: worldId,
-						owner: user,
+				id: world.id,
+				collaborators: {
+					some: {
+						userId: user.id,
 					},
-					{
-						id: worldId,
-						collaborators: {
-							some: {
-								userId: user.id,
-							},
-						},
-					},
-				],
+				},
 			},
 		})
-		if (!count) {
+		if (!worldWithCollaboratorsCount) {
 			throw new UnauthorizedError('No access to this world')
 		}
 	},
 
-	checkUserWriteAccess: async (user: User | undefined, worldId: string) => {
+	checkUserWriteAccess: async (user: User | undefined, world: World) => {
 		if (!user) {
 			throw new UnauthorizedError('No access to this world')
 		}
-		const count = await getPrismaClient().world.count({
+
+		if (user.id === world.ownerId || world.accessMode === 'PublicEdit') {
+			return true
+		}
+
+		const worldWithCollaboratorsCount = await getPrismaClient().world.count({
 			where: {
-				OR: [
-					{
-						id: worldId,
-						owner: user,
+				id: world.id,
+				collaborators: {
+					some: {
+						userId: user.id,
+						access: 'Editing',
 					},
-					{
-						id: worldId,
-						collaborators: {
-							some: {
-								userId: user.id,
-								access: 'Editing',
-							},
-						},
-					},
-				],
+				},
 			},
 		})
-		if (!count) {
+		if (!worldWithCollaboratorsCount) {
 			throw new UnauthorizedError('No access to this world')
 		}
+	},
+
+	checkUserReadAccessById: async (user: User | undefined, worldId: string) => {
+		const worldBrief = await WorldService.findWorldBrief(worldId)
+		await AuthorizationService.checkUserWriteAccess(user, worldBrief)
+	},
+
+	checkUserWriteAccessById: async (user: User | undefined, worldId: string) => {
+		const worldBrief = await WorldService.findWorldBrief(worldId)
+		await AuthorizationService.checkUserWriteAccess(user, worldBrief)
 	},
 
 	checkUserWorldOwner: async (user: User, worldId: string) => {
@@ -88,14 +96,11 @@ export const AuthorizationService = {
 		world: Awaited<ReturnType<typeof WorldService.findWorldDetails>>,
 		user: User | undefined
 	) => {
-		if (world.accessMode === 'PublicEdit') {
-			return true
-		}
 		if (!user) {
 			return false
 		}
 
-		if (world.ownerId === user.id) {
+		if (world.accessMode === 'PublicEdit' || world.ownerId === user.id) {
 			return true
 		}
 

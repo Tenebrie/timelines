@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useCheckAuthenticationQuery } from '../../../../api/rheaApi'
 import { appRoutes } from '../../../../router/routes/appRoutes'
+import { getWorldState } from '../../world/selectors'
 import { authSlice } from '../reducer'
 import { getAuthState } from '../selectors'
 
@@ -15,6 +16,7 @@ export const useAuthCheck = (): ReturnType => {
 	const { data, isLoading } = useCheckAuthenticationQuery()
 
 	const { user } = useSelector(getAuthState)
+	const { isLoaded: isWorldLoaded, accessMode } = useSelector(getWorldState)
 	const { setUser } = authSlice.actions
 	const dispatch = useDispatch()
 
@@ -29,6 +31,10 @@ export const useAuthCheck = (): ReturnType => {
 	}, [data, dispatch, setUser])
 
 	if (user || (data && data.authenticated) || isLoading) {
+		return { success: true, target: '' }
+	}
+
+	if (window.location.pathname.startsWith('/world') && (!isWorldLoaded || accessMode !== 'Private')) {
 		return { success: true, target: '' }
 	}
 
