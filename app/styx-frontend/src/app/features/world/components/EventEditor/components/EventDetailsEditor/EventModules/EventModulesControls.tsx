@@ -20,7 +20,6 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 	const removeModulePopupState = usePopupState({ variant: 'popover', popupId: 'modulePopup' })
 
 	const { isReadOnly } = useIsReadOnly()
-	console.log(isReadOnly)
 
 	const onAddModule = useCallback(
 		(module: WorldEventModule) => {

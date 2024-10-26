@@ -4,7 +4,13 @@ import { SetupServer } from 'msw/node'
 import { v4 as getRandomId } from 'uuid'
 
 import { User } from '../app/features/auth/reducer'
-import { ActorDetails, WorldDetails, WorldEventDelta, WorldItem } from '../app/features/world/types'
+import {
+	ActorDetails,
+	WorldBrief,
+	WorldDetails,
+	WorldEventDelta,
+	WorldItem,
+} from '../app/features/world/types'
 import { WorldEvent } from '../app/features/world/types'
 import {
 	CheckAuthenticationApiResponse,
@@ -13,9 +19,11 @@ import {
 	DeleteWorldApiResponse,
 	DeleteWorldEventApiResponse,
 	GetAnnouncementsApiResponse,
+	GetWorldBriefApiResponse,
 	GetWorldCollaboratorsApiResponse,
 	GetWorldInfoApiResponse,
 	GetWorldsApiResponse,
+	ListWorldAccessModesApiResponse,
 	PostLoginApiResponse,
 	UpdateActorApiResponse,
 	UpdateWorldEventApiResponse,
@@ -80,6 +88,11 @@ export const mockCheckAuthentication = (
 
 export const mockGetWorlds = (server: SetupServer, params: MockParams<GetWorldsApiResponse>) =>
 	generateEndpointMock(server, { method: 'get', path: '/api/worlds', ...params })
+
+export const mockGetWorldBrief = (
+	server: SetupServer,
+	params: { worldId: string } & MockParams<GetWorldBriefApiResponse>
+) => generateEndpointMock(server, { method: 'get', path: `/api/world/${params.worldId}/brief`, ...params })
 
 export const mockGetWorldDetails = (
 	server: SetupServer,
@@ -160,6 +173,11 @@ export const mockGetAnnouncements = (server: SetupServer, params: MockParams<Get
 		...params,
 	})
 
+export const mockListWorldAccessModes = (
+	server: SetupServer,
+	params: MockParams<ListWorldAccessModesApiResponse>
+) => generateEndpointMock(server, { method: 'get', path: '/api/constants/world-access-modes', ...params })
+
 /**
  * Mock utility functions
  */
@@ -171,7 +189,7 @@ export const mockAuthenticatedUser = (server: SetupServer) =>
 				id: '1111-2222-3333',
 				email: 'admin@localhost',
 				username: 'admin',
-				level: 'Free',
+				level: 'Admin',
 			},
 		},
 	})
@@ -214,6 +232,12 @@ export const mockWorldItemModel = (world: Partial<WorldItem> = {}): WorldItem =>
 	updatedAt: new Date(0).toISOString(),
 	ownerId: '1111-2222-3333-4444',
 	collaborators: [],
+	accessMode: 'Private',
+	...world,
+})
+
+export const mockWorldBriefModel = (world: Partial<WorldBrief> = {}): WorldBrief => ({
+	...mockWorldItemModel(),
 	...world,
 })
 
@@ -221,6 +245,7 @@ export const mockWorldDetailsModel = (world: Partial<WorldDetails> = {}): WorldD
 	...mockWorldItemModel(),
 	events: [],
 	actors: [],
+	isReadOnly: false,
 	...world,
 })
 
@@ -283,6 +308,8 @@ export const mockApiWorldDetailsModel = (
 	calendar: 'EARTH',
 	ownerId: 'user-1111',
 	timeOrigin: '0',
+	accessMode: 'Private',
+	isReadOnly: false,
 	...world,
 })
 
@@ -305,5 +332,6 @@ export const mockApiEventModel = (
 	extraFields: [],
 	customName: false,
 	deltaStates: [],
+	revokedAt: null,
 	...statement,
 })

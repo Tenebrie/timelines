@@ -708,47 +708,6 @@ export type GetWorldInfoApiArg = {
 	worldId: string
 }
 export type GetWorldBriefApiResponse = /** status 200  */ {
-	actors: {
-		_count: {
-			introducedIn: number
-			terminatedIn: number
-			statements: number
-			mentionedIn: number
-			relationships: number
-			receivedRelationships: number
-			world: number
-		}
-		description: string
-		name: string
-		id: string
-		createdAt: string
-		updatedAt: string
-		title: string
-		color: string
-		worldId: string
-	}[]
-	events: {
-		_count: {
-			world: number
-			targetActors: number
-			mentionedActors: number
-			introducedActors: number
-			terminatedActors: number
-			deltaStates: number
-		}
-		description: string
-		name: string
-		id: string
-		createdAt: string
-		updatedAt: string
-		worldId: string
-		type: 'SCENE' | 'OTHER'
-		icon: string
-		timestamp: string
-		revokedAt: null | string
-		customName: boolean
-		extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
-	}[]
 	name: string
 	id: string
 	createdAt: string

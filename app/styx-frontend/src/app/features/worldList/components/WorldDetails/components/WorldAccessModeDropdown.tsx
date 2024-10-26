@@ -63,6 +63,7 @@ export const WorldAccessModeDropdown = ({ world }: Props) => {
 								{translations[option]}
 							</MenuItem>
 						))}
+					{!accessModes && <MenuItem value={world.accessMode}>{translations[world.accessMode]}</MenuItem>}
 				</Select>
 			</FormControl>
 			{world.accessMode !== 'Private' && <Button onClick={onCopyLink}>Copy Link to Clipboard</Button>}
