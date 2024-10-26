@@ -71,7 +71,7 @@ export const Timeline = () => {
 		containerRef,
 		defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
 		maximumScroll: calendar === 'COUNTUP' ? Math.floor(containerWidth / 2) : Infinity,
-		scaleLimits: [-3, 10],
+		scaleLimits: [-3, 16],
 		onClick: (time) => onClick(time),
 		onDoubleClick: (time) => onDoubleClick(time),
 	})

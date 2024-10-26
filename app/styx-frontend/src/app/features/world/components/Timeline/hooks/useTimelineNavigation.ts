@@ -10,6 +10,7 @@ import { rangeMap } from '../../../../../utils/rangeMap'
 import { getTimelinePreferences } from '../../../../preferences/selectors'
 import { useTimelineLevelScalar } from '../../../../time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
+import { useWorldTime } from '../../../../time/hooks/useWorldTime'
 import { useTimelineBusSubscribe } from '../../../hooks/useTimelineBus'
 import { ScaleLevel } from '../types'
 import { useTimelineScroll } from './useTimelineScroll'
@@ -42,6 +43,7 @@ export const useTimelineNavigation = ({
 	const boundingRectLeft = useRef(0)
 
 	const { getLevelScalar } = useTimelineLevelScalar()
+	const { parseTime, pickerToTimestamp } = useWorldTime()
 	const { lineSpacing } = useSelector(getTimelinePreferences)
 
 	const onMouseDown = useCallback((event: MouseEvent | TouchEvent) => {
@@ -148,7 +150,9 @@ export const useTimelineNavigation = ({
 			['[0; 4)', 0],
 			['[4; 32)', 1],
 			['[32; 256)', 2],
-			['[256; 2048]', 3],
+			['[256; 2048)', 3],
+			['[2048; 16384)', 4],
+			['[16384; 65536]', 5],
 		])
 
 		if (newScaleLevel === null) {
@@ -220,10 +224,21 @@ export const useTimelineNavigation = ({
 
 			setMousePos(newPos)
 
-			const newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(scrollDirection)
+			let newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(scrollDirection)
+			let newTargetScale = clampToRange(
+				scaleLimits[0],
+				scaleScroll / 100 + newScaleSwitchesToDo,
+				scaleLimits[1]
+			)
+
+			// Scales 8 and 9 are visually the same. Skip scale 8.
+			if (newTargetScale === 8) {
+				newTargetScale += Math.sign(scrollDirection)
+				newScaleSwitchesToDo += Math.sign(scrollDirection)
+			}
 			setScaleSwitchesToDo(newScaleSwitchesToDo)
 			setIsSwitchingScale(true)
-			setTargetScale(clampToRange(scaleLimits[0], scaleScroll / 100 + newScaleSwitchesToDo, scaleLimits[1]))
+			setTargetScale(newTargetScale)
 
 			if (switchingScaleTimeout.current !== null) {
 				window.clearTimeout(switchingScaleTimeout.current)
@@ -257,7 +272,22 @@ export const useTimelineNavigation = ({
 
 			const roundToX = lineSpacing / timelineScale
 			const clickOffset = Math.round((point.x - scroll) / roundToX) * roundToX * timelineScale
-			const selectedTime = scaledTimeToRealTime(clickOffset)
+			let selectedTime = scaledTimeToRealTime(clickOffset)
+			// For scaleLevel = 4, round to the nearest month
+			if (scaleLevel === 4) {
+				const t = parseTime(selectedTime)
+				if (t.day >= 15) {
+					t.monthIndex += 1
+				}
+				selectedTime = pickerToTimestamp({
+					day: 0,
+					hour: 0,
+					minute: 0,
+					monthDay: 1,
+					monthIndex: t.monthIndex,
+					year: t.year,
+				})
+			}
 
 			const currentTime = Date.now()
 			if (
@@ -281,6 +311,9 @@ export const useTimelineNavigation = ({
 			lineSpacing,
 			onClick,
 			onDoubleClick,
+			parseTime,
+			pickerToTimestamp,
+			scaleLevel,
 			scaledTimeToRealTime,
 			scroll,
 			timelineScale,

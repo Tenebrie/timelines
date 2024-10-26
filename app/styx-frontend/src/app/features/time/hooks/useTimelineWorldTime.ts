@@ -1,20 +1,13 @@
 import { useCallback, useMemo } from 'react'
-import { useSelector } from 'react-redux'
 
 import { ScaleLevel } from '../../world/components/Timeline/types'
-import { getWorldState } from '../../world/selectors'
 import { useTimelineLevelScalar } from './useTimelineLevelScalar'
-import { useWorldCalendar } from './useWorldCalendar'
 
 type Props = {
 	scaleLevel: ScaleLevel
 }
 
 export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
-	const { calendar } = useSelector(getWorldState)
-	const { getCalendar } = useWorldCalendar()
-	const calendarDefinition = getCalendar(calendar).definition
-
 	const { getLevelScalar } = useTimelineLevelScalar()
 
 	const scalar = useMemo<number>(() => getLevelScalar(scaleLevel), [getLevelScalar, scaleLevel])
@@ -52,7 +45,27 @@ export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
 				mediumGroupSize: Infinity,
 				smallGroupSize: 4,
 			}
+		} else if (scaleLevel === 3) {
+			// Note: See TimelineAnchorLine for custom logic
+			return {
+				largeGroupSize: Infinity,
+				mediumGroupSize: Infinity,
+				smallGroupSize: Infinity,
+			}
+		} else if (scaleLevel === 4) {
+			return {
+				largeGroupSize: Infinity,
+				mediumGroupSize: 120,
+				smallGroupSize: 12,
+			}
+		} else if (scaleLevel === 5) {
+			return {
+				largeGroupSize: Infinity,
+				mediumGroupSize: 100,
+				smallGroupSize: 10,
+			}
 		}
+
 		return {
 			largeGroupSize: Infinity,
 			mediumGroupSize: Infinity,
