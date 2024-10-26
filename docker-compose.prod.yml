@@ -6,7 +6,7 @@ services:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile.prod
         volumes:
-            - /mnt/volume_secrets/:/etc/letsencrypt:cached
+            - /mnt/volume_secrets/certs:/etc/letsencrypt:cached
     styx:
         image: tenebrie/timelines-styx:${VERSION}
         build:
