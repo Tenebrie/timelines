@@ -6,7 +6,7 @@ on:
 
 jobs:
   check-commits:
-    name: Check Deployable Commits
+    name: Check Commits
     runs-on: ubuntu-latest
     outputs:
       count: ${{ steps.calc.outputs.count }}
@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Calculate
+      - name: Check Commits
         id: calc
         run: |
           COUNT=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"%s" | grep -cE '^(fix|feat|major):' || true)
