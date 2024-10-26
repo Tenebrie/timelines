@@ -288,8 +288,12 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				const padMinute = String(minute).padStart(2, '0')
 
 				if (groupSize === 'large') {
-					if (scaleLevel === 3) {
+					if (scaleLevel === 2 || scaleLevel === 3) {
 						return `${monthName} ${year}`
+					} else if (scaleLevel === 4) {
+						return `${monthName} ${year}`
+					} else if (scaleLevel === 5) {
+						return `Year ${year}`
 					}
 					return `${monthNameShort} ${padDay}, ${year}`
 				}
@@ -297,14 +301,24 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				if (groupSize === 'medium') {
 					if (scaleLevel === 0) {
 						return `${padHour}:${padMinute}`
-					} else if (scaleLevel === 1 || scaleLevel === 2) {
+					} else if (scaleLevel === 1) {
 						return `${monthNameShort} ${padDay}`
+					} else if (scaleLevel === 2) {
+						// If months are short, use short month name
+						if (([...months].sort((a, b) => a.days - b.days)[0]?.days ?? 0) <= 20) {
+							return `${monthNameShort}`
+						}
+						return `${monthName} ${year}`
 					} else if (scaleLevel === 3) {
 						// If months are short, use short month name
 						if (([...months].sort((a, b) => a.days - b.days)[0]?.days ?? 0) <= 20) {
 							return `${monthNameShort}`
 						}
 						return `${monthName}`
+					} else if (scaleLevel === 4) {
+						return `${monthName} ${year}`
+					} else if (scaleLevel === 5) {
+						return `Year ${year}`
 					}
 				}
 
@@ -314,7 +328,11 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 					} else if (scaleLevel === 1) {
 						return `${padHour}:${padMinute}`
 					} else if (scaleLevel === 2) {
-						return `${padDay}`
+						return day % 3 === 0 ? `${monthNameShort} ${padDay}` : ''
+					} else if (scaleLevel === 4) {
+						return `${year}`
+					} else if (scaleLevel === 5) {
+						return `Year ${year}`
 					}
 				}
 				return 'No label'

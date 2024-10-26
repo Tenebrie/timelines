@@ -18,6 +18,10 @@ export const useTimelineLevelScalar = () => {
 					return 36 * spacingMod
 				case 3:
 					return 144 * spacingMod
+				case 4:
+					return 4380 * spacingMod
+				case 5:
+					return 52560 * spacingMod
 			}
 		},
 		[spacingMod]

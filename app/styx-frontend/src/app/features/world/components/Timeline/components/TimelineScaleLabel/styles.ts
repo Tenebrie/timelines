@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import styled from 'styled-components'
 
 export const Container = styled.div`
@@ -7,7 +8,6 @@ export const Container = styled.div`
 	align-items: center;
 	justify-content: center;
 	pointer-events: none;
-	font-size: 100px;
 	color: #2c5582;
 	gap: 32px;
 
@@ -18,11 +18,12 @@ export const Container = styled.div`
 	}
 `
 
-export const Label = styled.div`
-	width: 100px;
+export const Label = styled(Typography)`
+	min-width: 100px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	word-break: none;
 `
 
 export const LeftLabel = styled(Label)`

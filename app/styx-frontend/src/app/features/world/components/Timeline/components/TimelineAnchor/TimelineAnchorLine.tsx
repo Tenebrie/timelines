@@ -141,7 +141,13 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		if (isMediumGroup) {
 			return 'medium'
 		}
-		if (isSmallGroup && (timelineScale <= 0.5 || scaleLevel === 3)) {
+		if (
+			isSmallGroup &&
+			(timelineScale <= 0.5 ||
+				scaleLevel === 3 ||
+				(timelineScale <= 1 && scaleLevel === 4) ||
+				(timelineScale <= 1 && scaleLevel === 5))
+		) {
 			return 'small'
 		}
 
@@ -158,10 +164,14 @@ const TimelineAnchorLineComponent = (props: Props) => {
 				return '#979'
 			} else if (scaleLevel === 3) {
 				return '#799'
+			} else if (scaleLevel === 4) {
+				return '#A9A'
+			} else if (scaleLevel === 5) {
+				return '#9AA'
 			}
 		}
 
-		const groupColors = ['#63ffc8', '#ffd026', '#57fd20', '#EAADE9', '#ff6363']
+		const groupColors = ['#63ffc8', '#ffd026', '#57fd20', '#EAADE9', '#ff6363', '#f9a7f7', '#f9c2a7']
 		if (isLargeGroup) {
 			return groupColors[scaleLevel + 1]
 		} else if (isMediumGroup) {
@@ -192,7 +202,7 @@ const TimelineAnchorLineComponent = (props: Props) => {
 			{!!labelSize && (
 				<DividerLabel
 					style={{
-						fontWeight: labelSize === 'large' ? 600 : labelSize === 'medium' ? 500 : 400,
+						fontWeight: labelSize === 'large' ? 600 : labelSize === 'medium' ? 600 : 400,
 					}}
 				>
 					{timeToShortLabel(scaledTimeToRealTime(index * lineSpacing), scaleLevel, labelSize)}

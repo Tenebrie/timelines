@@ -45,7 +45,27 @@ export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
 				mediumGroupSize: Infinity,
 				smallGroupSize: 4,
 			}
+		} else if (scaleLevel === 3) {
+			// Note: See TimelineAnchorLine for custom logic
+			return {
+				largeGroupSize: Infinity,
+				mediumGroupSize: Infinity,
+				smallGroupSize: Infinity,
+			}
+		} else if (scaleLevel === 4) {
+			return {
+				largeGroupSize: Infinity,
+				mediumGroupSize: 120,
+				smallGroupSize: 12,
+			}
+		} else if (scaleLevel === 5) {
+			return {
+				largeGroupSize: Infinity,
+				mediumGroupSize: 100,
+				smallGroupSize: 10,
+			}
 		}
+
 		return {
 			largeGroupSize: Infinity,
 			mediumGroupSize: Infinity,
