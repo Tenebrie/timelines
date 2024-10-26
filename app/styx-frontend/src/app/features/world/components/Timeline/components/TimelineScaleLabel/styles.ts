@@ -25,11 +25,3 @@ export const Label = styled(Typography)`
 	justify-content: center;
 	word-break: none;
 `
-
-export const LeftLabel = styled(Label)`
-	justify-content: right;
-`
-
-export const RightLabel = styled(Label)`
-	justify-content: left;
-`

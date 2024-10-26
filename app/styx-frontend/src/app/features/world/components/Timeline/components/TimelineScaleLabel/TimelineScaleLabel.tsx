@@ -30,9 +30,6 @@ export const TimelineScaleLabel = ({ targetScaleIndex, visible }: Props) => {
 
 	return (
 		<Container className={visible ? 'visible' : ''}>
-			{/* <LeftLabel fontSize={100}>{leftLabel}</LeftLabel> */}
-			{/* <Label fontSize={100}>:</Label> */}
-			{/* <RightLabel fontSize={100}>{rightLabel}</RightLabel> */}
 			<Label fontSize={100}>{labels[targetScaleIndex]}</Label>
 		</Container>
 	)
