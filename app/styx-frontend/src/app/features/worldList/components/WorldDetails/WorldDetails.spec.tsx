@@ -72,7 +72,7 @@ describe('<WorldDetails />', () => {
 
 			const { invocations } = mockAddCollaborator(server, { worldId: 'world-1111', response: null })
 
-			await user.click(await screen.findByText('Share world...'))
+			await user.click(await screen.findByText('Share world with specific people...'))
 			await user.click(await screen.findByLabelText('Emails'))
 			await user.keyboard('user@localhost{enter}')
 			await user.click(await screen.findByText('Confirm'))
@@ -94,7 +94,7 @@ describe('<WorldDetails />', () => {
 
 			const { invocations } = mockAddCollaborator(server, { worldId: 'world-1111', response: null })
 
-			await user.click(await screen.findByText('Share world...'))
+			await user.click(await screen.findByText('Share world with specific people...'))
 			await user.click(await screen.findByLabelText('Emails'))
 			await user.keyboard('user@localhost{enter}')
 

@@ -13,6 +13,7 @@ import {
 	StringValidator,
 	useApiEndpoint,
 	useAuth,
+	useOptionalAuth,
 	usePathParams,
 	useRequestBody,
 } from 'moonflower'
@@ -92,13 +93,16 @@ router.get('/api/world/:worldId', async (ctx) => {
 	})
 
 	const worldDetails = await WorldService.findWorldDetails(worldId)
+	const user = await useOptionalAuth(ctx, UserAuthenticator)
 
 	if (worldDetails.accessMode === 'Private') {
-		const user = await useAuth(ctx, UserAuthenticator)
 		await AuthorizationService.checkUserReadAccess(user, worldId)
 	}
 
-	return worldDetails
+	return {
+		...worldDetails,
+		isReadOnly: !(await AuthorizationService.canUserEditWorld(worldDetails, user)),
+	}
 })
 
 router.get('/api/world/:worldId/collaborators', async (ctx) => {
@@ -117,6 +121,33 @@ router.get('/api/world/:worldId/collaborators', async (ctx) => {
 	await AuthorizationService.checkUserWorldOwner(user, worldId)
 
 	return await WorldShareService.listCollaborators({ worldId })
+})
+
+router.post('/api/world/:worldId/share', async (ctx) => {
+	useApiEndpoint({
+		name: 'shareWorld',
+		description: 'Shares the world with the target users.',
+		tags: [worldCollaboratorsTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+	})
+
+	const { userEmails, access } = useRequestBody(ctx, {
+		userEmails: RequiredParam(StringArrayValidator),
+		access: RequiredParam(CollaboratorAccessValidator),
+	})
+
+	if (userEmails.length > 20) {
+		throw new BadRequestError('Unable to share to more than 20 users at once.')
+	}
+
+	await AuthorizationService.checkUserWorldOwner(user, worldId)
+
+	await WorldShareService.addCollaborators({ worldId, userEmails, access })
 })
 
 router.post('/api/world/:worldId/share', async (ctx) => {

@@ -17,6 +17,7 @@ export const initialState = {
 	updatedAt: '0',
 	selectedActors: [] as string[],
 	selectedEvents: [] as string[],
+	isReadOnly: false as boolean,
 
 	eventCreator: {
 		ghost: null as WorldEvent | null,
@@ -103,10 +104,13 @@ export const worldSlice = createSlice({
 			state.timeOrigin = world.timeOrigin
 			state.createdAt = world.createdAt
 			state.updatedAt = world.updatedAt
+			console.log(world.isReadOnly)
+			state.isReadOnly = world.isReadOnly
 		},
 		unloadWorld: (state) => {
 			state.isLoaded = false
 			state.events = []
+			state.isReadOnly = false
 		},
 		addActorToSelection: (state, { payload }: PayloadAction<{ id: string; multiselect: boolean }>) => {
 			if (!payload.multiselect) {
@@ -141,6 +145,9 @@ export const worldSlice = createSlice({
 		clearSelections: (state) => {
 			state.selectedActors = []
 			state.selectedEvents = []
+		},
+		setIsReadOnly: (state, { payload }: PayloadAction<boolean>) => {
+			state.isReadOnly = payload
 		},
 
 		/* Event creator */

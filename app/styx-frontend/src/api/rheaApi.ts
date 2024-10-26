@@ -590,6 +590,7 @@ export type DeleteWorldApiArg = {
 	worldId: string
 }
 export type GetWorldInfoApiResponse = /** status 200  */ {
+	isReadOnly: boolean
 	actors: {
 		statements: {
 			id: string

@@ -1,4 +1,4 @@
-import { User, World } from '@prisma/client'
+import { CollaboratingUser, User, World } from '@prisma/client'
 
 export const mockUser = (data?: Partial<User>): User => ({
 	id: 'user-1111',
@@ -18,6 +18,13 @@ export const mockWorld = (data?: Partial<World>): World => ({
 	accessMode: 'Private',
 	createdAt: new Date(0),
 	updatedAt: new Date(0),
+	...data,
+})
+
+export const mockCollaboratingUser = (data?: Partial<CollaboratingUser>): CollaboratingUser => ({
+	userId: 'unknown-user-1111',
+	worldId: 'unknown-world-1111',
+	access: 'Editing',
 	...data,
 })
 

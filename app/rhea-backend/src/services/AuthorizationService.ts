@@ -2,9 +2,13 @@ import { User } from '@prisma/client'
 import { UnauthorizedError } from 'moonflower'
 
 import { getPrismaClient } from './dbClients/DatabaseClient'
+import { WorldService } from './WorldService'
 
 export const AuthorizationService = {
-	checkUserReadAccess: async (user: User, worldId: string) => {
+	checkUserReadAccess: async (user: User | undefined, worldId: string) => {
+		if (!user) {
+			throw new UnauthorizedError('No access to this world')
+		}
 		const count = await getPrismaClient().world.count({
 			where: {
 				OR: [
@@ -28,7 +32,10 @@ export const AuthorizationService = {
 		}
 	},
 
-	checkUserWriteAccess: async (user: User, worldId: string) => {
+	checkUserWriteAccess: async (user: User | undefined, worldId: string) => {
+		if (!user) {
+			throw new UnauthorizedError('No access to this world')
+		}
 		const count = await getPrismaClient().world.count({
 			where: {
 				OR: [
@@ -75,5 +82,36 @@ export const AuthorizationService = {
 		if (!count) {
 			throw new UnauthorizedError('No access to this announcement')
 		}
+	},
+
+	canUserEditWorld: async (
+		world: Awaited<ReturnType<typeof WorldService.findWorldDetails>>,
+		user: User | undefined
+	) => {
+		if (world.accessMode === 'PublicEdit') {
+			return true
+		}
+		if (!user) {
+			return false
+		}
+
+		if (world.ownerId === user.id) {
+			return true
+		}
+
+		const collaboratingUser = await getPrismaClient().collaboratingUser.findFirst({
+			where: {
+				userId: user.id,
+				worldId: world.id,
+				access: 'Editing',
+			},
+			select: {
+				access: true,
+			},
+		})
+		if (collaboratingUser) {
+			return true
+		}
+		return false
 	},
 }

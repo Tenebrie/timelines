@@ -11,12 +11,24 @@ export const withUserAuth = (user?: Partial<User>) => {
 			level: 'Free',
 		})
 	})
+	jest.spyOn(moonflower, 'useOptionalAuth').mockImplementation(async () => {
+		return mockUser({
+			...user,
+			level: 'Free',
+		})
+	})
 
 	return requestBuilder
 }
 
 export const withAdminAuth = (user?: Partial<User>) => {
 	jest.spyOn(moonflower, 'useAuth').mockImplementation(async () => {
+		return mockUser({
+			...user,
+			level: 'Admin',
+		})
+	})
+	jest.spyOn(moonflower, 'useOptionalAuth').mockImplementation(async () => {
 		return mockUser({
 			...user,
 			level: 'Admin',
