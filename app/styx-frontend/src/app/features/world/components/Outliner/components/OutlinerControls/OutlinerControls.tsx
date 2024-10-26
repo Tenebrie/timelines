@@ -3,6 +3,7 @@ import { Button, Checkbox, Divider, FormControlLabel, FormGroup, Popover, Slider
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useIsReadOnly } from '../../../../../../../hooks/useIsReadOnly'
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { preferencesSlice } from '../../../../../preferences/reducer'
 import { getOutlinerPreferences, getTimelinePreferences } from '../../../../../preferences/selectors'
@@ -21,6 +22,7 @@ export const OutlinerControls = () => {
 	const { showInactiveStatements } = useSelector(getOutlinerPreferences)
 	const { setUseCustomTimelineSpacing, setShowInactiveStatements } = preferencesSlice.actions
 
+	const { isReadOnly } = useIsReadOnly()
 	const { timelineSpacing, setTimelineSpacing } = useTimelineSpacingSlider()
 
 	const popupState = usePopupState({ variant: 'popover', popupId: 'outlinerFilters' })
@@ -87,13 +89,15 @@ export const OutlinerControls = () => {
 							</FormGroup>
 						</Stack>
 					</Popover>
-					<Button
-						disabled={selectedTimeOrNull === null}
-						variant="contained"
-						{...bindTrigger(createHerePopupState)}
-					>
-						Create new
-					</Button>
+					{!isReadOnly && (
+						<Button
+							disabled={selectedTimeOrNull === null}
+							variant="contained"
+							{...bindTrigger(createHerePopupState)}
+						>
+							Create new
+						</Button>
+					)}
 					<CreateHerePopover state={createHerePopupState} timestamp={selectedTimeOrNull ?? 0} />
 				</Stack>
 			</Stack>

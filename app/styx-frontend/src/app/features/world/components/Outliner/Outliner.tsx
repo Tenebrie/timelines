@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Virtuoso } from 'react-virtuoso'
 
+import { useIsReadOnly } from '../../../../../hooks/useIsReadOnly'
 import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
 import { OutlinedContainer } from '../../../../components/OutlinedContainer'
 import { getOutlinerPreferences, getTimelinePreferences } from '../../../preferences/selectors'
@@ -25,6 +26,7 @@ export const Outliner = () => {
 
 	const { getLevelScalar } = useTimelineLevelScalar()
 
+	const { isReadOnly } = useIsReadOnly()
 	const { selectedTimeOrNull } = useWorldRouter()
 	const selectedTime = selectedTimeOrNull === null ? Infinity : selectedTimeOrNull
 
@@ -61,7 +63,12 @@ export const Outliner = () => {
 		[actors, expandedActors, visibleEvents]
 	)
 
-	const eventActions = useMemo<('edit' | 'collapse')[]>(() => ['edit', 'collapse'], [])
+	const eventActions = useMemo<('edit' | 'collapse')[]>(() => {
+		if (isReadOnly) {
+			return ['collapse']
+		}
+		return ['edit', 'collapse']
+	}, [isReadOnly])
 	const { currentTab, setCurrentTab, actorsVisible, eventsVisible } = useOutlinerTabs()
 
 	const renderedActors = actorsVisible ? visibleActors : []

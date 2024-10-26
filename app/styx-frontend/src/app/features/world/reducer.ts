@@ -104,7 +104,6 @@ export const worldSlice = createSlice({
 			state.timeOrigin = world.timeOrigin
 			state.createdAt = world.createdAt
 			state.updatedAt = world.updatedAt
-			console.log(world.isReadOnly)
 			state.isReadOnly = world.isReadOnly
 		},
 		unloadWorld: (state) => {

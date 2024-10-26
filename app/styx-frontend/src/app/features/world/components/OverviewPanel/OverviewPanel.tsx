@@ -4,8 +4,7 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useDoubleClick } from '../../../../../hooks/useDoubleClick'
-import { useRouter } from '../../../../../router/routes/routes'
-import { worldRoutes } from '../../../../../router/routes/worldRoutes'
+import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
 import { EventIcon } from '../../../../components/EventIcon'
 import { isMultiselectClick } from '../../../../utils/isMultiselectClick'
 import { preferencesSlice } from '../../../preferences/reducer'
@@ -21,11 +20,11 @@ import { StyledListItemButton, StyledListItemText } from './styles'
 export const OverviewPanel = () => {
 	const [searchQuery, setSearchQuery] = useState<string>('')
 
-	const { id: worldId, actors, events, selectedActors, selectedEvents } = useSelector(getWorldState)
+	const { actors, events, selectedActors, selectedEvents } = useSelector(getWorldState)
 	const { panelOpen, actorsOpen, actorsReversed, eventsOpen, eventsReversed } =
 		useSelector(getOverviewPreferences)
 
-	const { navigateTo } = useRouter()
+	const { navigateToEventEditor, navigateToActorEditor } = useWorldRouter()
 	const { timeToLabel } = useWorldTime()
 	const {
 		openActorWizard,
@@ -119,13 +118,7 @@ export const OverviewPanel = () => {
 			}
 		},
 		onDoubleClick: ({ actor }) => {
-			navigateTo({
-				target: worldRoutes.actorEditor,
-				args: {
-					worldId,
-					actorId: actor.id,
-				},
-			})
+			navigateToActorEditor(actor.id)
 			dispatch(removeActorFromSelection(actor.id))
 		},
 		ignoreDelay: true,
@@ -140,13 +133,7 @@ export const OverviewPanel = () => {
 			}
 		},
 		onDoubleClick: ({ event }) => {
-			navigateTo({
-				target: worldRoutes.eventEditor,
-				args: {
-					worldId,
-					eventId: event.id,
-				},
-			})
+			navigateToEventEditor(event.id)
 			dispatch(removeEventFromSelection(event.id))
 		},
 		ignoreDelay: true,
