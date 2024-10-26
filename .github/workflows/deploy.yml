@@ -18,7 +18,7 @@ jobs:
       - name: Calculate
         id: calc
         run: |
-          COUNT=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"%s" | grep -cE '^(fix|feat|major):')
+          COUNT=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"%s" | grep -cE '^(fix|feat|major):' || true)
           echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
 
   prepare-containers:
