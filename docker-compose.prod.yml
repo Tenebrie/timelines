@@ -13,6 +13,8 @@ services:
         environment:
             NODE_ENV: production
         command: yarn serve -s build -l 8080
+        deploy:
+            replicas: 2
     rhea:
         image: tenebrie/timelines-rhea:${VERSION}
         build:
@@ -22,6 +24,8 @@ services:
             NODE_ENV: production
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
         command: yarn prod
+        deploy:
+            replicas: 2
         secrets:
             - jwt-secret
     calliope:
@@ -32,6 +36,8 @@ services:
         environment:
             NODE_ENV: production
         command: yarn prod
+        deploy:
+            replicas: 2
         secrets:
             - jwt-secret
     rhea-postgres:
