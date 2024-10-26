@@ -79,6 +79,9 @@ const injectedRtkApi = api
 				query: () => ({ url: `/api/auth/logout`, method: 'POST' }),
 				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
 			}),
+			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
+				query: () => ({ url: `/api/constants/world-access-modes` }),
+			}),
 			createWorldEvent: build.mutation<CreateWorldEventApiResponse, CreateWorldEventApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/event`,
@@ -156,6 +159,10 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}` }),
 				providesTags: ['worldDetails'],
 			}),
+			getWorldBrief: build.query<GetWorldBriefApiResponse, GetWorldBriefApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/brief` }),
+				providesTags: ['worldDetails'],
+			}),
 			getWorldCollaborators: build.query<GetWorldCollaboratorsApiResponse, GetWorldCollaboratorsApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/collaborators` }),
 				providesTags: ['worldCollaborators'],
@@ -167,6 +174,14 @@ const injectedRtkApi = api
 					body: queryArg.body,
 				}),
 				invalidatesTags: ['worldCollaborators'],
+			}),
+			setWorldAccessMode: build.mutation<SetWorldAccessModeApiResponse, SetWorldAccessModeApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/access`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldDetails'],
 			}),
 			unshareWorld: build.mutation<UnshareWorldApiResponse, UnshareWorldApiArg>({
 				query: (queryArg) => ({
@@ -321,6 +336,8 @@ export type PostLoginApiArg = {
 }
 export type PostLogoutApiResponse = unknown
 export type PostLogoutApiArg = void
+export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
+export type ListWorldAccessModesApiArg = void
 export type CreateWorldEventApiResponse = /** status 200  */ {
 	id: string
 }
@@ -690,6 +707,61 @@ export type GetWorldInfoApiArg = {
 	/** Any string value */
 	worldId: string
 }
+export type GetWorldBriefApiResponse = /** status 200  */ {
+	actors: {
+		_count: {
+			introducedIn: number
+			terminatedIn: number
+			statements: number
+			mentionedIn: number
+			relationships: number
+			receivedRelationships: number
+			world: number
+		}
+		description: string
+		name: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		title: string
+		color: string
+		worldId: string
+	}[]
+	events: {
+		_count: {
+			world: number
+			targetActors: number
+			mentionedActors: number
+			introducedActors: number
+			terminatedActors: number
+			deltaStates: number
+		}
+		description: string
+		name: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		worldId: string
+		type: 'SCENE' | 'OTHER'
+		icon: string
+		timestamp: string
+		revokedAt: null | string
+		customName: boolean
+		extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+	}[]
+	name: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
+	timeOrigin: string
+	ownerId: string
+	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
+}
+export type GetWorldBriefApiArg = {
+	/** Any string value */
+	worldId: string
+}
 export type GetWorldCollaboratorsApiResponse = /** status 200  */ {
 	worldId: string
 	user: {
@@ -709,6 +781,14 @@ export type ShareWorldApiArg = {
 	body: {
 		userEmails: string[]
 		access: 'ReadOnly' | 'Editing'
+	}
+}
+export type SetWorldAccessModeApiResponse = unknown
+export type SetWorldAccessModeApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		access: 'Private' | 'PublicRead' | 'PublicEdit'
 	}
 }
 export type UnshareWorldApiResponse = unknown
@@ -736,6 +816,8 @@ export const {
 	useCreateAccountMutation,
 	usePostLoginMutation,
 	usePostLogoutMutation,
+	useListWorldAccessModesQuery,
+	useLazyListWorldAccessModesQuery,
 	useCreateWorldEventMutation,
 	useUpdateWorldEventMutation,
 	useDeleteWorldEventMutation,
@@ -750,8 +832,11 @@ export const {
 	useDeleteWorldMutation,
 	useGetWorldInfoQuery,
 	useLazyGetWorldInfoQuery,
+	useGetWorldBriefQuery,
+	useLazyGetWorldBriefQuery,
 	useGetWorldCollaboratorsQuery,
 	useLazyGetWorldCollaboratorsQuery,
 	useShareWorldMutation,
+	useSetWorldAccessModeMutation,
 	useUnshareWorldMutation,
 } = injectedRtkApi

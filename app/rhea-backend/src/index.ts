@@ -8,6 +8,7 @@ import { ActorRouter } from './routers/ActorRouter'
 import { AdminRouter } from './routers/AdminRouter'
 import { AnnouncementRouter } from './routers/AnnouncementRouter'
 import { AuthRouter } from './routers/AuthRouter'
+import { ConstantsRouter } from './routers/ConstantsRouter'
 import { WorldEventRouter } from './routers/WorldEventRouter'
 import { WorldRouter } from './routers/WorldRouter'
 import { RedisService } from './services/RedisService'
@@ -46,6 +47,8 @@ app
 	.use(AnnouncementRouter.allowedMethods())
 	.use(AuthRouter.routes())
 	.use(AuthRouter.allowedMethods())
+	.use(ConstantsRouter.routes())
+	.use(ConstantsRouter.allowedMethods())
 	.use(WorldEventRouter.routes())
 	.use(WorldEventRouter.allowedMethods())
 	.use(WorldRouter.routes())

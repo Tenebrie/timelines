@@ -1,4 +1,4 @@
-import { User, WorldCalendarType } from '@prisma/client'
+import { User, World, WorldCalendarType } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient'
 
 export const WorldService = {
@@ -18,6 +18,17 @@ export const WorldService = {
 			select: {
 				id: true,
 				name: true,
+			},
+		})
+	},
+
+	updateWorld: async (params: { worldId: string; data: Partial<World> }) => {
+		return getPrismaClient().world.update({
+			where: {
+				id: params.worldId,
+			},
+			data: {
+				...params.data,
 			},
 		})
 	},
@@ -102,6 +113,26 @@ export const WorldService = {
 								timestamp: 'asc',
 							},
 						},
+					},
+				},
+			},
+		})
+	},
+
+	findWorldBrief: async (worldId: string) => {
+		return getPrismaClient().world.findFirstOrThrow({
+			where: {
+				id: worldId,
+			},
+			include: {
+				actors: {
+					include: {
+						_count: true,
+					},
+				},
+				events: {
+					include: {
+						_count: true,
 					},
 				},
 			},

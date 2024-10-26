@@ -20,6 +20,7 @@ import {
 
 import { CollaboratorAccessValidator } from './validators/CollaboratorAccessValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
+import { WorldAccessModeValidator } from './validators/WorldAccessModeValidator'
 import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator'
 
 const router = new Router()
@@ -105,6 +106,27 @@ router.get('/api/world/:worldId', async (ctx) => {
 	}
 })
 
+router.get('/api/world/:worldId/brief', async (ctx) => {
+	useApiEndpoint({
+		name: 'getWorldBrief',
+		description: 'Returns summarized information about a world.',
+		tags: [worldDetailsTag],
+	})
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+	})
+
+	const worldBrief = await WorldService.findWorldBrief(worldId)
+	const user = await useOptionalAuth(ctx, UserAuthenticator)
+
+	if (worldBrief.accessMode === 'Private') {
+		await AuthorizationService.checkUserReadAccess(user, worldId)
+	}
+
+	return worldBrief
+})
+
 router.get('/api/world/:worldId/collaborators', async (ctx) => {
 	useApiEndpoint({
 		name: 'getWorldCollaborators',
@@ -150,11 +172,11 @@ router.post('/api/world/:worldId/share', async (ctx) => {
 	await WorldShareService.addCollaborators({ worldId, userEmails, access })
 })
 
-router.post('/api/world/:worldId/share', async (ctx) => {
+router.post('/api/world/:worldId/access', async (ctx) => {
 	useApiEndpoint({
-		name: 'shareWorld',
-		description: 'Shares the world with the target users.',
-		tags: [worldCollaboratorsTag],
+		name: 'setWorldAccessMode',
+		description: "Changes the world's access mode.",
+		tags: [worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -163,18 +185,18 @@ router.post('/api/world/:worldId/share', async (ctx) => {
 		worldId: PathParam(StringValidator),
 	})
 
-	const { userEmails, access } = useRequestBody(ctx, {
-		userEmails: RequiredParam(StringArrayValidator),
-		access: RequiredParam(CollaboratorAccessValidator),
+	const { access } = useRequestBody(ctx, {
+		access: RequiredParam(WorldAccessModeValidator),
 	})
-
-	if (userEmails.length > 20) {
-		throw new BadRequestError('Unable to share to more than 20 users at once.')
-	}
 
 	await AuthorizationService.checkUserWorldOwner(user, worldId)
 
-	await WorldShareService.addCollaborators({ worldId, userEmails, access })
+	await WorldService.updateWorld({
+		worldId,
+		data: {
+			accessMode: access,
+		},
+	})
 })
 
 router.delete('/api/world/:worldId/share/:userId', async (ctx) => {
