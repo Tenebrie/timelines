@@ -5,6 +5,8 @@ services:
         build:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile.prod
+        deploy:
+            replicas: 2
         volumes:
             - /mnt/volume_secrets/certs:/etc/letsencrypt:cached
     styx:
