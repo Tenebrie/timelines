@@ -1,4 +1,4 @@
-import { useGetWorldCollaboratorsQuery, useGetWorldInfoQuery } from '../../../../../api/rheaApi'
+import { useGetWorldBriefQuery, useGetWorldCollaboratorsQuery } from '../../../../../api/rheaApi'
 import { OutlinedContainer } from '../../../../components/OutlinedContainer'
 import { WorldDetailsSkeleton } from './components/WorldDetailsSkeleton'
 import { WorldDetailsEditor } from './WorldDetailsEditor'
@@ -8,7 +8,7 @@ type Props = {
 }
 
 export const WorldDetailsEditorWrapper = ({ worldId }: Props) => {
-	const { data: worldData } = useGetWorldInfoQuery({
+	const { data: worldData } = useGetWorldBriefQuery({
 		worldId,
 	})
 

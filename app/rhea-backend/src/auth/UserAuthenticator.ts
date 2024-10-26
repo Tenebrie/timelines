@@ -1,12 +1,7 @@
-import { dbClient } from '@src/services/DatabaseClient'
+import { getPrismaClient } from '@src/services/dbClients/DatabaseClient'
 import { TokenService } from '@src/services/TokenService'
 import { ParameterizedContext } from 'koa'
-import {
-	NonEmptyStringValidator,
-	RequiredParam,
-	UnauthorizedError,
-	useCookieParams,
-} from 'tenebrie-framework'
+import { NonEmptyStringValidator, RequiredParam, UnauthorizedError, useCookieParams } from 'moonflower'
 
 export const AUTH_COOKIE_NAME = 'user-jwt-token'
 
@@ -17,7 +12,7 @@ export const UserAuthenticator = async (ctx: ParameterizedContext) => {
 
 	try {
 		const tokenPayload = TokenService.decodeJwtToken(token)
-		const user = await dbClient.user.findFirst({
+		const user = await getPrismaClient().user.findFirst({
 			where: {
 				id: tokenPayload.id,
 			},

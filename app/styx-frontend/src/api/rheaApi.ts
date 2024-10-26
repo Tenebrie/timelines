@@ -79,6 +79,9 @@ const injectedRtkApi = api
 				query: () => ({ url: `/api/auth/logout`, method: 'POST' }),
 				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
 			}),
+			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
+				query: () => ({ url: `/api/constants/world-access-modes` }),
+			}),
 			createWorldEvent: build.mutation<CreateWorldEventApiResponse, CreateWorldEventApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/event`,
@@ -156,6 +159,10 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}` }),
 				providesTags: ['worldDetails'],
 			}),
+			getWorldBrief: build.query<GetWorldBriefApiResponse, GetWorldBriefApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/brief` }),
+				providesTags: ['worldDetails'],
+			}),
 			getWorldCollaborators: build.query<GetWorldCollaboratorsApiResponse, GetWorldCollaboratorsApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/collaborators` }),
 				providesTags: ['worldCollaborators'],
@@ -167,6 +174,14 @@ const injectedRtkApi = api
 					body: queryArg.body,
 				}),
 				invalidatesTags: ['worldCollaborators'],
+			}),
+			setWorldAccessMode: build.mutation<SetWorldAccessModeApiResponse, SetWorldAccessModeApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/access`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldDetails'],
 			}),
 			unshareWorld: build.mutation<UnshareWorldApiResponse, UnshareWorldApiArg>({
 				query: (queryArg) => ({
@@ -193,12 +208,12 @@ export type CreateActorApiArg = {
 	}
 }
 export type UpdateActorApiResponse = /** status 200  */ {
+	description: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	title: string
-	description: string
 	color: string
 	worldId: string
 }
@@ -215,12 +230,12 @@ export type UpdateActorApiArg = {
 	}
 }
 export type DeleteActorApiResponse = /** status 200  */ {
+	description: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	title: string
-	description: string
 	color: string
 	worldId: string
 }
@@ -235,8 +250,8 @@ export type AdminGetUserLevelsApiArg = void
 export type AdminGetUsersApiResponse = /** status 200  */ {
 	id: string
 	email: string
-	level: 'Free' | 'Premium' | 'Admin'
 	username: string
+	level: 'Free' | 'Premium' | 'Admin'
 }[]
 export type AdminGetUsersApiArg = void
 export type AdminSetUserLevelApiResponse = /** status 200  */ {
@@ -265,13 +280,13 @@ export type AdminDeleteUserApiArg = {
 	userId: string
 }
 export type GetAnnouncementsApiResponse = /** status 200  */ {
-	id: string
-	timestamp: string
-	isUnread: boolean
-	type: 'Info' | 'Welcome' | 'WorldShared'
-	title: string
 	description: string
+	id: string
+	title: string
+	type: 'Info' | 'Welcome' | 'WorldShared'
+	timestamp: string
 	userId: string
+	isUnread: boolean
 }[]
 export type GetAnnouncementsApiArg = void
 export type DismissAnnouncementApiResponse = unknown
@@ -297,8 +312,8 @@ export type CheckAuthenticationApiArg = void
 export type CreateAccountApiResponse = /** status 200  */ {
 	id: string
 	email: string
-	level: 'Free' | 'Premium' | 'Admin'
 	username: string
+	level: 'Free' | 'Premium' | 'Admin'
 }
 export type CreateAccountApiArg = {
 	body: {
@@ -310,8 +325,8 @@ export type CreateAccountApiArg = {
 export type PostLoginApiResponse = /** status 200  */ {
 	id: string
 	email: string
-	level: 'Free' | 'Premium' | 'Admin'
 	username: string
+	level: 'Free' | 'Premium' | 'Admin'
 }
 export type PostLoginApiArg = {
 	body: {
@@ -321,6 +336,8 @@ export type PostLoginApiArg = {
 }
 export type PostLogoutApiResponse = unknown
 export type PostLogoutApiArg = void
+export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
+export type ListWorldAccessModesApiArg = void
 export type CreateWorldEventApiResponse = /** status 200  */ {
 	id: string
 }
@@ -341,47 +358,47 @@ export type CreateWorldEventApiArg = {
 	}
 }
 export type UpdateWorldEventApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	type: 'SCENE' | 'OTHER'
-	icon: string
-	name: string
-	timestamp: string
-	revokedAt?: null | string
-	description: string
-	customName: boolean
-	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
-	worldId: string
 	targetActors: {
+		description: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		title: string
-		description: string
 		color: string
 		worldId: string
 	}[]
 	mentionedActors: {
+		description: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		title: string
-		description: string
 		color: string
 		worldId: string
 	}[]
 	deltaStates: {
+		description: null | string
+		name: null | string
 		id: string
 		createdAt: string
 		updatedAt: string
 		timestamp: string
-		name?: null | string
-		description?: null | string
 		worldEventId: string
 	}[]
+	description: string
+	name: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	worldId: string
+	type: 'SCENE' | 'OTHER'
+	icon: string
+	timestamp: string
+	revokedAt: null | string
+	customName: boolean
+	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
 }
 export type UpdateWorldEventApiArg = {
 	/** Any string value */
@@ -401,18 +418,18 @@ export type UpdateWorldEventApiArg = {
 	}
 }
 export type DeleteWorldEventApiResponse = /** status 200  */ {
+	description: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
 	type: 'SCENE' | 'OTHER'
 	icon: string
-	name: string
 	timestamp: string
-	revokedAt?: null | string
-	description: string
+	revokedAt: null | string
 	customName: boolean
 	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
-	worldId: string
 }
 export type DeleteWorldEventApiArg = {
 	/** Any string value */
@@ -421,18 +438,18 @@ export type DeleteWorldEventApiArg = {
 	eventId: string
 }
 export type RevokeWorldEventApiResponse = /** status 200  */ {
+	description: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
 	type: 'SCENE' | 'OTHER'
 	icon: string
-	name: string
 	timestamp: string
-	revokedAt?: null | string
-	description: string
+	revokedAt: null | string
 	customName: boolean
 	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
-	worldId: string
 }
 export type RevokeWorldEventApiArg = {
 	/** Any string value */
@@ -444,18 +461,18 @@ export type RevokeWorldEventApiArg = {
 	}
 }
 export type UnrevokeWorldEventApiResponse = /** status 200  */ {
+	description: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
 	type: 'SCENE' | 'OTHER'
 	icon: string
-	name: string
 	timestamp: string
-	revokedAt?: null | string
-	description: string
+	revokedAt: null | string
 	customName: boolean
 	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
-	worldId: string
 }
 export type UnrevokeWorldEventApiArg = {
 	/** Any string value */
@@ -478,12 +495,12 @@ export type CreateWorldEventDeltaApiArg = {
 	}
 }
 export type UpdateWorldEventDeltaApiResponse = /** status 200  */ {
+	description: null | string
+	name: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
 	timestamp: string
-	name?: null | string
-	description?: null | string
 	worldEventId: string
 }
 export type UpdateWorldEventDeltaApiArg = {
@@ -500,12 +517,12 @@ export type UpdateWorldEventDeltaApiArg = {
 	}
 }
 export type DeleteWorldEventDeltaApiResponse = /** status 200  */ {
+	description: null | string
+	name: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
 	timestamp: string
-	name?: null | string
-	description?: null | string
 	worldEventId: string
 }
 export type DeleteWorldEventDeltaApiArg = {
@@ -518,46 +535,49 @@ export type DeleteWorldEventDeltaApiArg = {
 }
 export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
+		collaborators: {
+			worldId: string
+			userId: string
+			access: 'ReadOnly' | 'Editing'
+		}[]
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
 		timeOrigin: string
 		ownerId: string
-		collaborators: {
-			access: 'ReadOnly' | 'Editing'
-			userId: string
-			worldId: string
-		}[]
+		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	contributableWorlds: {
+		collaborators: {
+			worldId: string
+			userId: string
+			access: 'ReadOnly' | 'Editing'
+		}[]
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
 		timeOrigin: string
 		ownerId: string
-		collaborators: {
-			access: 'ReadOnly' | 'Editing'
-			userId: string
-			worldId: string
-		}[]
+		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	visibleWorlds: {
+		collaborators: {
+			worldId: string
+			userId: string
+			access: 'ReadOnly' | 'Editing'
+		}[]
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
 		timeOrigin: string
 		ownerId: string
-		collaborators: {
-			access: 'ReadOnly' | 'Editing'
-			userId: string
-			worldId: string
-		}[]
+		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 }
 export type GetWorldsApiArg = void
@@ -573,114 +593,131 @@ export type CreateWorldApiArg = {
 	}
 }
 export type DeleteWorldApiResponse = /** status 200  */ {
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
 	timeOrigin: string
 	ownerId: string
+	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type DeleteWorldApiArg = {
 	/** Any string value */
 	worldId: string
 }
 export type GetWorldInfoApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
-	timeOrigin: string
-	ownerId: string
+	isReadOnly: boolean
 	actors: {
-		id: string
-		createdAt: string
-		updatedAt: string
-		name: string
-		title: string
-		description: string
-		color: string
-		worldId: string
 		statements: {
 			id: string
 		}[]
 		relationships: {
-			originId: string
-			receiverId: string
 			name: string
+			receiverId: string
+			originId: string
 		}[]
 		receivedRelationships: {
-			originId: string
-			receiverId: string
 			name: string
+			receiverId: string
+			originId: string
 		}[]
-	}[]
-	events: {
+		description: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		type: 'SCENE' | 'OTHER'
-		icon: string
-		name: string
-		timestamp: string
-		revokedAt?: null | string
-		description: string
-		customName: boolean
-		extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+		title: string
+		color: string
 		worldId: string
+	}[]
+	events: {
 		targetActors: {
+			description: string
+			name: string
 			id: string
 			createdAt: string
 			updatedAt: string
-			name: string
 			title: string
-			description: string
 			color: string
 			worldId: string
 		}[]
 		mentionedActors: {
+			description: string
+			name: string
 			id: string
 			createdAt: string
 			updatedAt: string
-			name: string
 			title: string
-			description: string
 			color: string
 			worldId: string
 		}[]
 		introducedActors: {
+			description: string
+			name: string
 			id: string
 			createdAt: string
 			updatedAt: string
-			name: string
 			title: string
-			description: string
 			color: string
 			worldId: string
 		}[]
 		terminatedActors: {
+			description: string
+			name: string
 			id: string
 			createdAt: string
 			updatedAt: string
-			name: string
 			title: string
-			description: string
 			color: string
 			worldId: string
 		}[]
 		deltaStates: {
+			description: null | string
+			name: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			timestamp: string
-			name?: null | string
-			description?: null | string
 			worldEventId: string
 		}[]
+		description: string
+		name: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		worldId: string
+		type: 'SCENE' | 'OTHER'
+		icon: string
+		timestamp: string
+		revokedAt: null | string
+		customName: boolean
+		extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
 	}[]
+	name: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
+	timeOrigin: string
+	ownerId: string
+	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type GetWorldInfoApiArg = {
+	/** Any string value */
+	worldId: string
+}
+export type GetWorldBriefApiResponse = /** status 200  */ {
+	name: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
+	timeOrigin: string
+	ownerId: string
+	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
+}
+export type GetWorldBriefApiArg = {
 	/** Any string value */
 	worldId: string
 }
@@ -703,6 +740,14 @@ export type ShareWorldApiArg = {
 	body: {
 		userEmails: string[]
 		access: 'ReadOnly' | 'Editing'
+	}
+}
+export type SetWorldAccessModeApiResponse = unknown
+export type SetWorldAccessModeApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		access: 'Private' | 'PublicRead' | 'PublicEdit'
 	}
 }
 export type UnshareWorldApiResponse = unknown
@@ -730,6 +775,8 @@ export const {
 	useCreateAccountMutation,
 	usePostLoginMutation,
 	usePostLogoutMutation,
+	useListWorldAccessModesQuery,
+	useLazyListWorldAccessModesQuery,
 	useCreateWorldEventMutation,
 	useUpdateWorldEventMutation,
 	useDeleteWorldEventMutation,
@@ -744,8 +791,11 @@ export const {
 	useDeleteWorldMutation,
 	useGetWorldInfoQuery,
 	useLazyGetWorldInfoQuery,
+	useGetWorldBriefQuery,
+	useLazyGetWorldBriefQuery,
 	useGetWorldCollaboratorsQuery,
 	useLazyGetWorldCollaboratorsQuery,
 	useShareWorldMutation,
+	useSetWorldAccessModeMutation,
 	useUnshareWorldMutation,
 } = injectedRtkApi

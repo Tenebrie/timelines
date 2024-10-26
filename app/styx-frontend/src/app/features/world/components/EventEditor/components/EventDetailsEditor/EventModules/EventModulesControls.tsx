@@ -3,6 +3,7 @@ import { Button, Divider, Stack, Typography } from '@mui/material'
 import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import React, { useCallback } from 'react'
 
+import { useIsReadOnly } from '../../../../../../../../hooks/useIsReadOnly'
 import { WorldEventModule } from '../../../../../types'
 import { useEventFields } from '../useEventFields'
 import { EventModulesPopup } from './EventModulesPopup'
@@ -17,6 +18,8 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 	const { optionCount } = useEventModules()
 	const addModulePopupState = usePopupState({ variant: 'popover', popupId: 'modulePopup' })
 	const removeModulePopupState = usePopupState({ variant: 'popover', popupId: 'modulePopup' })
+
+	const { isReadOnly } = useIsReadOnly()
 
 	const onAddModule = useCallback(
 		(module: WorldEventModule) => {
@@ -53,7 +56,7 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 					<Button
 						variant="contained"
 						fullWidth
-						disabled={modules.length === optionCount}
+						disabled={modules.length === optionCount || isReadOnly}
 						startIcon={<Add />}
 						{...bindTrigger(addModulePopupState)}
 					>
@@ -61,7 +64,7 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 					</Button>
 					<Button
 						variant="outlined"
-						disabled={modules.length === 0}
+						disabled={modules.length === 0 || isReadOnly}
 						fullWidth
 						startIcon={<Remove />}
 						{...bindTrigger(removeModulePopupState)}

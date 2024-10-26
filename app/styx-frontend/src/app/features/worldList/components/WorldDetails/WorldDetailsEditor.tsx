@@ -1,23 +1,15 @@
-import {
-	Button,
-	Divider,
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
-	Stack,
-	TextField,
-	Typography,
-} from '@mui/material'
+import { Button, Divider, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material'
 import { useCallback } from 'react'
 
-import { GetWorldCollaboratorsApiResponse, GetWorldInfoApiResponse } from '../../../../../api/rheaApi'
+import { GetWorldCollaboratorsApiResponse } from '../../../../../api/rheaApi'
 import { useAppRouter } from '../../../../../router/routes/appRoutes'
 import { useWorldCalendar } from '../../../time/hooks/useWorldCalendar'
+import { WorldBrief } from '../../../world/types'
+import { WorldAccessModeDropdown } from './components/WorldAccessModeDropdown'
 import { WorldCollaborators } from './components/WorldCollaborators'
 
 type Props = {
-	world: GetWorldInfoApiResponse
+	world: WorldBrief
 	collaborators: GetWorldCollaboratorsApiResponse
 }
 
@@ -44,14 +36,8 @@ export const WorldDetailsEditor = ({ world, collaborators }: Props) => {
 					))}
 				</Select>
 			</FormControl>
-			<Stack gap={1}>
-				<Typography>
-					Events: <b>{world.events.length}</b>
-				</Typography>
-				<Typography>
-					Actors: <b>{world.actors.length}</b>
-				</Typography>
-			</Stack>
+			<Divider />
+			<WorldAccessModeDropdown world={world} />
 			<Divider />
 			<WorldCollaborators worldId={world.id} collaborators={collaborators} />
 			<Divider />

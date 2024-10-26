@@ -2,6 +2,7 @@ import { Add, Sort } from '@mui/icons-material'
 import { Collapse, IconButton, List, ListItem, ListItemButton, ListSubheader } from '@mui/material'
 import { MouseEvent, ReactNode } from 'react'
 
+import { useIsReadOnly } from '../../../../../hooks/useIsReadOnly'
 import { ExpandIcon } from './styles'
 
 type Props<T> = {
@@ -25,6 +26,8 @@ export function OverviewSublist<T extends { id: string }>({
 	entities,
 	renderEntity,
 }: Props<T>) {
+	const { isReadOnly } = useIsReadOnly()
+
 	const onAddClick = (event: MouseEvent) => {
 		event.stopPropagation()
 		if (onAddNew) {
@@ -47,7 +50,7 @@ export function OverviewSublist<T extends { id: string }>({
 				onClick={() => onToggleOpen(!open)}
 				disablePadding
 				disableGutters
-				secondaryAction={(onAddNew
+				secondaryAction={(onAddNew && !isReadOnly
 					? [
 							<IconButton key={'add'} onClick={onAddClick}>
 								<Add />

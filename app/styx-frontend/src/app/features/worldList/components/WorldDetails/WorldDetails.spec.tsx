@@ -3,11 +3,12 @@ import { screen, within } from '@testing-library/react'
 import { ShareWorldApiArg } from '../../../../../api/rheaApi'
 import {
 	mockAddCollaborator,
-	mockApiWorldDetailsModel,
 	mockCollaboratingUser,
+	mockGetWorldBrief,
 	mockGetWorldCollaborators,
-	mockGetWorldDetails,
+	mockListWorldAccessModes,
 	mockRemoveCollaborator,
+	mockWorldBriefModel,
 } from '../../../../../api/rheaApi.mock'
 import { renderWithProviders } from '../../../../../jest/renderWithProviders'
 import { setupTestServer } from '../../../../../jest/setupTestServer'
@@ -25,9 +26,13 @@ describe('<WorldDetails />', () => {
 
 	describe('collaborators', () => {
 		beforeEach(() => {
-			mockGetWorldDetails(server, {
+			mockListWorldAccessModes(server, {
+				response: ['Private', 'PublicEdit', 'PublicRead'],
+			})
+
+			mockGetWorldBrief(server, {
 				worldId: 'world-1111',
-				response: mockApiWorldDetailsModel({
+				response: mockWorldBriefModel({
 					id: 'world-1111',
 				}),
 			})
@@ -46,6 +51,13 @@ describe('<WorldDetails />', () => {
 
 		it("displays collaborator's email", async () => {
 			renderWithProviders(<WorldDetails />)
+
+			mockGetWorldBrief(server, {
+				worldId: 'world-1111',
+				response: mockWorldBriefModel({
+					id: 'world-1111',
+				}),
+			})
 
 			mockGetWorldCollaborators(server, {
 				worldId: 'world-1111',
@@ -70,9 +82,16 @@ describe('<WorldDetails />', () => {
 				</>
 			)
 
+			mockGetWorldBrief(server, {
+				worldId: 'world-1111',
+				response: mockWorldBriefModel({
+					id: 'world-1111',
+				}),
+			})
+
 			const { invocations } = mockAddCollaborator(server, { worldId: 'world-1111', response: null })
 
-			await user.click(await screen.findByText('Share world...'))
+			await user.click(await screen.findByText('Share world with specific people...'))
 			await user.click(await screen.findByLabelText('Emails'))
 			await user.keyboard('user@localhost{enter}')
 			await user.click(await screen.findByText('Confirm'))
@@ -92,9 +111,16 @@ describe('<WorldDetails />', () => {
 				</>
 			)
 
+			mockGetWorldBrief(server, {
+				worldId: 'world-1111',
+				response: mockWorldBriefModel({
+					id: 'world-1111',
+				}),
+			})
+
 			const { invocations } = mockAddCollaborator(server, { worldId: 'world-1111', response: null })
 
-			await user.click(await screen.findByText('Share world...'))
+			await user.click(await screen.findByText('Share world with specific people...'))
 			await user.click(await screen.findByLabelText('Emails'))
 			await user.keyboard('user@localhost{enter}')
 
@@ -112,6 +138,13 @@ describe('<WorldDetails />', () => {
 
 		it('removes a collaborator', async () => {
 			const { user } = renderWithProviders(<WorldDetails />)
+
+			mockGetWorldBrief(server, {
+				worldId: 'world-1111',
+				response: mockWorldBriefModel({
+					id: 'world-1111',
+				}),
+			})
 
 			mockGetWorldCollaborators(server, {
 				worldId: 'world-1111',
@@ -143,6 +176,12 @@ describe('<WorldDetails />', () => {
 		it('cancels removal request', async () => {
 			const { user } = renderWithProviders(<WorldDetails />)
 
+			mockGetWorldBrief(server, {
+				worldId: 'world-1111',
+				response: mockWorldBriefModel({
+					id: 'world-1111',
+				}),
+			})
 			mockGetWorldCollaborators(server, {
 				worldId: 'world-1111',
 				response: [

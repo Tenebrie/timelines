@@ -2,17 +2,19 @@ import './registerModuleAlias'
 
 import Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
-import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'tenebrie-framework'
+import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'moonflower'
 
 import { ActorRouter } from './routers/ActorRouter'
 import { AdminRouter } from './routers/AdminRouter'
 import { AnnouncementRouter } from './routers/AnnouncementRouter'
 import { AuthRouter } from './routers/AuthRouter'
+import { ConstantsRouter } from './routers/ConstantsRouter'
 import { WorldEventRouter } from './routers/WorldEventRouter'
 import { WorldRouter } from './routers/WorldRouter'
 import { RedisService } from './services/RedisService'
+import { isRunningInTest } from './utils/isRunningInTest'
 
-const app = new Koa()
+export const app = new Koa()
 
 useApiHeader({
 	title: 'Timelines Rhea',
@@ -45,24 +47,21 @@ app
 	.use(AnnouncementRouter.allowedMethods())
 	.use(AuthRouter.routes())
 	.use(AuthRouter.allowedMethods())
+	.use(ConstantsRouter.routes())
+	.use(ConstantsRouter.allowedMethods())
 	.use(WorldEventRouter.routes())
 	.use(WorldEventRouter.allowedMethods())
 	.use(WorldRouter.routes())
 	.use(WorldRouter.allowedMethods())
-	.use(
+
+if (!isRunningInTest()) {
+	app.use(
 		initOpenApiEngine({
 			tsconfigPath: './tsconfig.json',
-			sourceFilePaths: [
-				'./src/routers/ActorRouter.ts',
-				'./src/routers/AdminRouter.ts',
-				'./src/routers/AnnouncementRouter.ts',
-				'./src/routers/AuthRouter.ts',
-				'./src/routers/WorldEventRouter.ts',
-				'./src/routers/WorldRouter.ts',
-			],
 		})
 	)
 
-RedisService.initRedisConnection()
-app.listen(3000)
-console.info('[RHEA] Server up')
+	RedisService.initRedisConnection()
+	app.listen(3000)
+	console.info('[RHEA] Server up')
+}

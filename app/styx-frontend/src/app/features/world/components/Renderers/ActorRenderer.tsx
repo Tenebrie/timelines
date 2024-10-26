@@ -4,6 +4,7 @@ import cx from 'classnames'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { useIsReadOnly } from '../../../../../hooks/useIsReadOnly'
 import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
 import { preferencesSlice } from '../../../preferences/reducer'
 import { ActorDetails } from '../../types'
@@ -20,6 +21,7 @@ type Props = {
 export const ActorRenderer = ({ actor, collapsed, highlighted }: Props) => {
 	const { navigateToActorEditor } = useWorldRouter()
 
+	const { isReadOnly } = useIsReadOnly()
 	const dispatch = useDispatch()
 	const { collapseActorInOutliner, uncollapseActorInOutliner } = preferencesSlice.actions
 
@@ -31,19 +33,22 @@ export const ActorRenderer = ({ actor, collapsed, highlighted }: Props) => {
 		}
 	}, [actor, collapseActorInOutliner, collapsed, dispatch, uncollapseActorInOutliner])
 
+	const actions = [
+		<IconButton key={'collapse'} sx={{ marginRight: 2 }} onClick={onToggleOpen}>
+			<ShowHideChevron className={cx({ collapsed })} />
+		</IconButton>,
+	]
+	if (!isReadOnly) {
+		actions.push(
+			<IconButton key={'edit'} onClick={() => navigateToActorEditor(actor.id)}>
+				<Edit />
+			</IconButton>
+		)
+		actions.reverse()
+	}
+
 	return (
-		<ListItem
-			disableGutters
-			disablePadding
-			secondaryAction={[
-				<IconButton key={'edit'} onClick={() => navigateToActorEditor(actor.id)}>
-					<Edit />
-				</IconButton>,
-				<IconButton key={'collapse'} sx={{ marginRight: 2 }} onClick={onToggleOpen}>
-					<ShowHideChevron className={cx({ collapsed })} />
-				</IconButton>,
-			]}
-		>
+		<ListItem disableGutters disablePadding secondaryAction={actions}>
 			<StyledListItemButton selected={highlighted} onClick={onToggleOpen}>
 				<ListItemIcon>
 					<ActorAvatar actor={actor} />

@@ -1,6 +1,6 @@
 import { WorldEventField } from '@prisma/client'
 import { keysOf } from '@src/utils/keysOf'
-import { RequiredParam } from 'tenebrie-framework'
+import { RequiredParam } from 'moonflower'
 
 export const WorldEventFieldValidator = RequiredParam({
 	prevalidate: (v) => {
@@ -14,7 +14,7 @@ export const WorldEventFieldValidator = RequiredParam({
 		const inputArray = parsedJson as any[]
 		return inputArray.every((value) => keysOf(WorldEventField).some((enumEntry) => enumEntry === value))
 	},
-	rehydrate: (v) => JSON.parse(v ?? '') as WorldEventField[],
+	parse: (v) => JSON.parse(v ?? '') as WorldEventField[],
 	description: `Should be an array of the following: ${keysOf(WorldEventField)
 		.map((type) => `'${type}'`)
 		.join(', ')}`,

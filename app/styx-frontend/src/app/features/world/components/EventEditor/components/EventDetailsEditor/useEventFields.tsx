@@ -31,7 +31,7 @@ export const useEventFields = ({ event }: Props) => {
 	const [description, setDescriptionDirect] = useState<string>(event.description)
 	const [customNameEnabled, setCustomNameEnabledDirect] = useState<boolean>(event.customName)
 
-	const generateSetter = <T,>(setter: Dispatch<React.SetStateAction<T>>) => {
+	const generateSetter = useCallback(<T,>(setter: Dispatch<React.SetStateAction<T>>) => {
 		return (val: T, args?: SetterArgs) => {
 			setter((oldVal) => {
 				if (args?.cleanSet) {
@@ -44,7 +44,7 @@ export const useEventFields = ({ event }: Props) => {
 				return val
 			})
 		}
-	}
+	}, [])
 
 	const setters = useMemo(
 		() => ({
@@ -58,7 +58,7 @@ export const useEventFields = ({ event }: Props) => {
 			setDescription: generateSetter(setDescriptionDirect),
 			setCustomNameEnabled: generateSetter(setCustomNameEnabledDirect),
 		}),
-		[]
+		[generateSetter]
 	)
 
 	return {

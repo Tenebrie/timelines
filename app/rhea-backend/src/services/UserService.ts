@@ -1,10 +1,10 @@
 import * as bcrypt from 'bcrypt'
 
-import { dbClient } from './DatabaseClient'
+import { getPrismaClient } from './dbClients/DatabaseClient'
 
 export const UserService = {
 	findByEmail: async (email: string) => {
-		return dbClient.user.findFirst({
+		return getPrismaClient().user.findFirst({
 			where: {
 				email,
 			},
@@ -19,7 +19,7 @@ export const UserService = {
 
 	register: async (email: string, username: string, password: string) => {
 		const hashedPassword = await bcrypt.hash(password, 8)
-		const user = await dbClient.user.create({
+		const user = await getPrismaClient().user.create({
 			data: {
 				email,
 				username,
@@ -36,7 +36,7 @@ export const UserService = {
 	},
 
 	login: async (email: string, password: string) => {
-		const user = await dbClient.user.findFirst({
+		const user = await getPrismaClient().user.findFirst({
 			where: {
 				email,
 			},

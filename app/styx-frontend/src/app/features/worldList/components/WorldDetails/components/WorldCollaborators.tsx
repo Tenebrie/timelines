@@ -79,7 +79,7 @@ export const WorldCollaborators = ({ worldId, collaborators }: Props) => {
 					))}
 				</List>
 			)}
-			<Button onClick={onShareWorld}>Share world...</Button>
+			<Button onClick={onShareWorld}>Share world with specific people...</Button>
 		</>
 	)
 }

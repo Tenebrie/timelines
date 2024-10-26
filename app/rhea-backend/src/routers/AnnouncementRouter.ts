@@ -1,14 +1,7 @@
 import { UserAuthenticator } from '@src/auth/UserAuthenticator'
 import { AnnouncementService } from '@src/services/AnnouncementService'
 import { AuthorizationService } from '@src/services/AuthorizationService'
-import {
-	PathParam,
-	Router,
-	StringValidator,
-	useApiEndpoint,
-	useAuth,
-	usePathParams,
-} from 'tenebrie-framework'
+import { PathParam, Router, StringValidator, useApiEndpoint, useAuth, usePathParams } from 'moonflower'
 
 const router = new Router()
 

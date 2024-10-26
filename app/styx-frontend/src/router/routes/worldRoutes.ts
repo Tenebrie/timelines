@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getWorldState } from '../../app/features/world/selectors'
+import { useIsReadOnly } from '../../hooks/useIsReadOnly'
 import { useBaseRouter } from '../useBaseRouter'
 import { QueryParams } from './QueryParams'
 
@@ -41,6 +42,8 @@ export const useWorldRouter = () => {
 	const baseRouter = useBaseRouter(worldRoutes, worldQueryParams)
 	const { id: worldId } = useSelector(getWorldState)
 
+	const { isReadOnly } = useIsReadOnly()
+
 	const navigateToCurrentWorldRoot = useCallback(() => {
 		baseRouter.navigateTo({
 			target: worldRoutes.root,
@@ -66,16 +69,22 @@ export const useWorldRouter = () => {
 	)
 
 	const navigateToEventCreator = useCallback(() => {
+		if (isReadOnly) {
+			return
+		}
 		baseRouter.navigateTo({
 			target: worldRoutes.eventCreator,
 			args: {
 				worldId,
 			},
 		})
-	}, [baseRouter, worldId])
+	}, [baseRouter, isReadOnly, worldId])
 
 	const navigateToEventDeltaCreator = useCallback(
 		({ eventId, selectedTime }: { eventId: string; selectedTime: number }) => {
+			if (isReadOnly) {
+				return
+			}
 			baseRouter.navigateTo({
 				target: worldRoutes.eventDeltaCreator,
 				args: {
@@ -87,11 +96,14 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, worldId]
+		[baseRouter, isReadOnly, worldId]
 	)
 
 	const navigateToActorEditor = useCallback(
 		(actorId: string) => {
+			if (isReadOnly) {
+				return
+			}
 			baseRouter.navigateTo({
 				target: worldRoutes.actorEditor,
 				args: {
@@ -100,11 +112,14 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, worldId]
+		[baseRouter, isReadOnly, worldId]
 	)
 
 	const navigateToEventEditor = useCallback(
 		(eventId: string) => {
+			if (isReadOnly) {
+				return
+			}
 			baseRouter.navigateTo({
 				target: worldRoutes.eventEditor,
 				args: {
@@ -113,11 +128,14 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, worldId]
+		[baseRouter, isReadOnly, worldId]
 	)
 
 	const navigateToEventDeltaEditor = useCallback(
 		({ eventId, deltaId }: { eventId: string; deltaId: string }) => {
+			if (isReadOnly) {
+				return
+			}
 			baseRouter.navigateTo({
 				target: worldRoutes.eventDeltaEditor,
 				args: {
@@ -127,7 +145,7 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, worldId]
+		[baseRouter, isReadOnly, worldId]
 	)
 
 	const selectedTimeOrNull = useMemo(() => {

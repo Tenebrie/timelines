@@ -1,18 +1,24 @@
-import { Logout } from '@mui/icons-material'
+import { Login, Logout } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { usePostLogoutMutation } from '../../../../api/rheaApi'
 import { appRoutes, useAppRouter } from '../../../../router/routes/appRoutes'
 import { parseApiResponse } from '../../../utils/parseApiResponse'
 import { authSlice } from '../reducer'
+import { getAuthState } from '../selectors'
 
 export const SmallProfile = () => {
 	const { navigateTo } = useAppRouter()
 
 	const [logout, { isLoading }] = usePostLogoutMutation()
+	const { user } = useSelector(getAuthState)
 	const { clearUser } = authSlice.actions
 	const dispatch = useDispatch()
+
+	const onLogin = async () => {
+		navigateTo({ target: appRoutes.login })
+	}
 
 	const onLogout = async () => {
 		const { error } = parseApiResponse(await logout())
@@ -27,11 +33,11 @@ export const SmallProfile = () => {
 		<LoadingButton
 			loading={isLoading}
 			color="secondary"
-			onClick={onLogout}
+			onClick={user ? onLogout : onLogin}
 			loadingPosition="start"
-			startIcon={<Logout />}
+			startIcon={user ? <Logout /> : <Login />}
 		>
-			<span>Logout</span>
+			<span>{user ? 'Logout' : 'Login'}</span>
 		</LoadingButton>
 	)
 }

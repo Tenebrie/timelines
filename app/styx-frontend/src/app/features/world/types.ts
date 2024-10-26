@@ -1,8 +1,9 @@
-import { GetWorldInfoApiResponse, GetWorldsApiResponse } from '../../../api/rheaApi'
+import { GetWorldBriefApiResponse, GetWorldInfoApiResponse, GetWorldsApiResponse } from '../../../api/rheaApi'
 
 export type ActorDetails = GetWorldInfoApiResponse['actors'][number]
 export type Actor = Omit<ActorDetails, 'statements' | 'relationships' | 'receivedRelationships'>
 export type WorldItem = GetWorldsApiResponse['ownedWorlds'][number]
+export type WorldBrief = GetWorldBriefApiResponse
 export type WorldDetails = Omit<GetWorldInfoApiResponse, 'events'> & {
 	events: WorldEvent[]
 }
@@ -41,3 +42,4 @@ export type WorldEventGroup = {
 export type TimelineEntity = WorldEventGroup['events'][number]
 
 export type WorldEventModule = WorldEvent['extraFields'][number]
+export type WorldAccessMode = WorldBrief['accessMode']

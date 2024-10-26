@@ -3,7 +3,14 @@ import { createSlice } from '@reduxjs/toolkit'
 
 import { GetWorldInfoApiResponse } from '../../../api/rheaApi'
 import { ingestEvent } from '../../utils/ingestEvent'
-import { ActorDetails, TimelineEntity, WorldCalendarType, WorldEvent, WorldEventDelta } from './types'
+import {
+	ActorDetails,
+	TimelineEntity,
+	WorldAccessMode,
+	WorldCalendarType,
+	WorldEvent,
+	WorldEventDelta,
+} from './types'
 
 export const initialState = {
 	isLoaded: false as boolean,
@@ -17,6 +24,8 @@ export const initialState = {
 	updatedAt: '0',
 	selectedActors: [] as string[],
 	selectedEvents: [] as string[],
+	isReadOnly: false as boolean,
+	accessMode: 'Private' as WorldAccessMode,
 
 	eventCreator: {
 		ghost: null as WorldEvent | null,
@@ -103,10 +112,13 @@ export const worldSlice = createSlice({
 			state.timeOrigin = world.timeOrigin
 			state.createdAt = world.createdAt
 			state.updatedAt = world.updatedAt
+			state.isReadOnly = world.isReadOnly
+			state.accessMode = world.accessMode
 		},
 		unloadWorld: (state) => {
 			state.isLoaded = false
 			state.events = []
+			state.isReadOnly = false
 		},
 		addActorToSelection: (state, { payload }: PayloadAction<{ id: string; multiselect: boolean }>) => {
 			if (!payload.multiselect) {
@@ -141,6 +153,9 @@ export const worldSlice = createSlice({
 		clearSelections: (state) => {
 			state.selectedActors = []
 			state.selectedEvents = []
+		},
+		setIsReadOnly: (state, { payload }: PayloadAction<boolean>) => {
+			state.isReadOnly = payload
 		},
 
 		/* Event creator */

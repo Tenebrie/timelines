@@ -1,11 +1,11 @@
 import { Actor } from '@prisma/client'
 
-import { dbClient } from './DatabaseClient'
+import { getPrismaClient } from './dbClients/DatabaseClient'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
 
 export const ActorService = {
 	findActorsByIds: async (actorIds: string[]) => {
-		return dbClient.actor.findMany({
+		return getPrismaClient().actor.findMany({
 			where: {
 				id: {
 					in: actorIds,
@@ -18,8 +18,8 @@ export const ActorService = {
 		worldId: string,
 		data: Pick<Actor, 'name'> & Partial<Pick<Actor, 'title' | 'color' | 'description'>>
 	) => {
-		const [actor, world] = await dbClient.$transaction([
-			dbClient.actor.create({
+		const [actor, world] = await getPrismaClient().$transaction([
+			getPrismaClient().actor.create({
 				data: {
 					worldId,
 					name: data.name,
@@ -48,8 +48,8 @@ export const ActorService = {
 		actorId: string
 		params: Partial<Actor>
 	}) => {
-		const [actor, world] = await dbClient.$transaction([
-			dbClient.actor.update({
+		const [actor, world] = await getPrismaClient().$transaction([
+			getPrismaClient().actor.update({
 				where: {
 					id: actorId,
 				},
@@ -69,8 +69,8 @@ export const ActorService = {
 	},
 
 	deleteActor: async ({ worldId, actorId }: { worldId: string; actorId: string }) => {
-		const [actor, world] = await dbClient.$transaction([
-			dbClient.actor.delete({
+		const [actor, world] = await getPrismaClient().$transaction([
+			getPrismaClient().actor.delete({
 				where: {
 					id: actorId,
 				},

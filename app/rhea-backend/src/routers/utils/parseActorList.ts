@@ -1,5 +1,5 @@
 import { ActorService } from '@src/services/ActorService'
-import { BadRequestError } from 'tenebrie-framework'
+import { BadRequestError } from 'moonflower'
 
 export const parseActorList = async (actorIds: string[] | undefined) => {
 	if (!actorIds) {

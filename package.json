@@ -17,7 +17,7 @@
 		"docker": "yarn docker:start",
 		"docker:start": "docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up",
 		"docker:build": "docker compose -f docker-compose.common.yml -f docker-compose.dev.yml build",
-		"docker:install": "./scripts/dev-install.sh",
+		"docker:update": "./scripts/dev-install.sh",
 		"docker:fullinstall": "./scripts/dev-fullinstall.sh",
 		"docker:prod:push": "./scripts/docker-prod-push.sh",
 		"docker:stop": "docker stop $(docker ps -a -q)",

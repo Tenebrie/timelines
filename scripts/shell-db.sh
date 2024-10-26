@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker exec -it $(docker ps -aqf "name=timelines-rhea-postgres") psql -Udocker db
+docker exec -it $(docker ps -aqf "name=timelines_rhea-postgres") psql -Udocker db
