@@ -544,7 +544,7 @@ export type GetWorldsApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
+		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
@@ -559,7 +559,7 @@ export type GetWorldsApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
+		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
@@ -574,7 +574,7 @@ export type GetWorldsApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
+		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
@@ -588,7 +588,7 @@ export type CreateWorldApiResponse = /** status 200  */ {
 export type CreateWorldApiArg = {
 	body: {
 		name: string
-		calendar?: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
+		calendar?: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin?: number
 	}
 }
@@ -597,7 +597,7 @@ export type DeleteWorldApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
+	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
@@ -698,7 +698,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
+	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
@@ -712,7 +712,7 @@ export type GetWorldBriefApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD'
+	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'

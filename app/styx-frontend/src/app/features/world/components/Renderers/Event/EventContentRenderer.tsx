@@ -60,7 +60,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 								data-hj-suppress
 								primary={
 									<>
-										Issued at <b>{timeToLabel(event.timestamp)}</b>
+										Happened at <b>{timeToLabel(event.timestamp)}</b>
 										{revokedAtTimestamp}.
 									</>
 								}

@@ -1,20 +1,13 @@
 import { useCallback, useMemo } from 'react'
-import { useSelector } from 'react-redux'
 
 import { ScaleLevel } from '../../world/components/Timeline/types'
-import { getWorldState } from '../../world/selectors'
 import { useTimelineLevelScalar } from './useTimelineLevelScalar'
-import { useWorldCalendar } from './useWorldCalendar'
 
 type Props = {
 	scaleLevel: ScaleLevel
 }
 
 export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
-	const { calendar } = useSelector(getWorldState)
-	const { getCalendar } = useWorldCalendar()
-	const calendarDefinition = getCalendar(calendar).definition
-
 	const { getLevelScalar } = useTimelineLevelScalar()
 
 	const scalar = useMemo<number>(() => getLevelScalar(scaleLevel), [getLevelScalar, scaleLevel])

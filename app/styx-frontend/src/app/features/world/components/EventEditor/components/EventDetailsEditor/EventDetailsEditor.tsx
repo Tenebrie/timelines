@@ -84,7 +84,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		<>
 			<Grid item xs={12} md={6} style={{ maxHeight: '100%' }}>
 				<Stack spacing={2} direction="column">
-					<TimestampField label="Issued at" timestamp={timestamp} onChange={setTimestamp} />
+					<TimestampField label="Started at" timestamp={timestamp} onChange={setTimestamp} />
 					<Stack direction="row" gap={1} width="100%">
 						<TextField
 							type="text"
