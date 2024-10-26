@@ -15,7 +15,7 @@ describe('TokenService', () => {
 			})
 			jest.spyOn(fs, 'readFileSync').mockImplementation((...arg) => {
 				if (arg[0] === '/run/secrets/jwt-secret') {
-					return 'JWT_SECRET=secret'
+					return 'secret'
 				}
 				return originalReadFileSync(...arg)
 			})

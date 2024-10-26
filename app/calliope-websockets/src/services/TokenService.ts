@@ -14,7 +14,7 @@ export const TokenService = {
 			return cachedKey
 		}
 		if (fs.existsSync('/run/secrets/jwt-secret')) {
-			const key = fs.readFileSync('/run/secrets/jwt-secret', 'utf8').split('=')[1]
+			const key = fs.readFileSync('/run/secrets/jwt-secret', 'utf8')
 			cachedKey = key
 			return key
 		}
