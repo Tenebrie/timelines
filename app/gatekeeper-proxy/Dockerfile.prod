@@ -5,4 +5,4 @@ COPY scripts/init-certbot.sh /docker-entrypoint.d/99-init-certbot.sh
 COPY scripts/install-certbot.sh .
 RUN ./install-certbot.sh
 
-CMD ["echo", "."]
+CMD ["tail", "-f", "/dev/null"]
