@@ -12,13 +12,13 @@ RESET_COLOR='\033[0m'     # Reset to default
 trap 'rm -f gatekeeper.log styx.log rhea.log calliope.log' EXIT
 
 # Run each update in the background and redirect output to log files
-docker service update --image tenebrie/timelines-gatekeeper:${VERSION} timelines_gatekeeper > gatekeeper.log 2>&1 &
+docker service update --image tenebrie/timelines-gatekeeper:${VERSION} --update-delay 60s timelines_gatekeeper > gatekeeper.log 2>&1 &
 p1=$!
-docker service update --image tenebrie/timelines-styx:${VERSION} timelines_styx > styx.log 2>&1 &
+docker service update --image tenebrie/timelines-styx:${VERSION} --update-delay 60s timelines_styx > styx.log 2>&1 &
 p2=$!
-docker service update --image tenebrie/timelines-rhea:${VERSION} timelines_rhea > rhea.log 2>&1 &
+docker service update --image tenebrie/timelines-rhea:${VERSION} --update-delay 60s timelines_rhea > rhea.log 2>&1 &
 p3=$!
-docker service update --image tenebrie/timelines-calliope:${VERSION} timelines_calliope > calliope.log 2>&1 &
+docker service update --image tenebrie/timelines-calliope:${VERSION} --update-delay 60s timelines_calliope > calliope.log 2>&1 &
 p4=$!
 
 # Wait for all processes and capture exit codes
