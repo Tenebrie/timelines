@@ -2,6 +2,9 @@ version: "3.1"
 services:
     gatekeeper:
         image: tenebrie/timelines-gatekeeper:${VERSION}
+        build:
+            context: ./app/gatekeeper-proxy
+            dockerfile: ./Dockerfile.prod
         deploy:
             replicas: 2
             update_config:
@@ -11,6 +14,9 @@ services:
             - /mnt/volume_secrets/certs:/etc/letsencrypt:cached
     styx:
         image: tenebrie/timelines-styx:${VERSION}
+        build:
+            context: ./
+            dockerfile: ./app/styx-frontend/Dockerfile.prod
         environment:
             NODE_ENV: production
         command: yarn serve -s build -l 8080
@@ -21,6 +27,9 @@ services:
                 delay: 30s
     rhea:
         image: tenebrie/timelines-rhea:${VERSION}
+        build:
+            context: ./
+            dockerfile: ./app/rhea-backend/Dockerfile.prod
         environment:
             NODE_ENV: production
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
@@ -39,6 +48,9 @@ services:
             retries: 5
     calliope:
         image: tenebrie/timelines-calliope:${VERSION}
+        build:
+            context: ./
+            dockerfile: ./app/calliope-websockets/Dockerfile.prod
         environment:
             NODE_ENV: production
         command: yarn prod
