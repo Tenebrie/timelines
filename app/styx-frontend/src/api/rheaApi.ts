@@ -82,6 +82,9 @@ const injectedRtkApi = api
 			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
 				query: () => ({ url: `/api/constants/world-access-modes` }),
 			}),
+			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
+				query: () => ({ url: `/health` }),
+			}),
 			createWorldEvent: build.mutation<CreateWorldEventApiResponse, CreateWorldEventApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/event`,
@@ -338,6 +341,8 @@ export type PostLogoutApiResponse = unknown
 export type PostLogoutApiArg = void
 export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
 export type ListWorldAccessModesApiArg = void
+export type GetHealthApiResponse = /** status 200  */ string
+export type GetHealthApiArg = void
 export type CreateWorldEventApiResponse = /** status 200  */ {
 	id: string
 }
@@ -777,6 +782,8 @@ export const {
 	usePostLogoutMutation,
 	useListWorldAccessModesQuery,
 	useLazyListWorldAccessModesQuery,
+	useGetHealthQuery,
+	useLazyGetHealthQuery,
 	useCreateWorldEventMutation,
 	useUpdateWorldEventMutation,
 	useDeleteWorldEventMutation,

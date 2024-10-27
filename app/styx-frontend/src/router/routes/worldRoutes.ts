@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { getWorldState } from '../../app/features/world/selectors'
 import { useIsReadOnly } from '../../hooks/useIsReadOnly'
-import { useBaseRouter } from '../useBaseRouter'
+import { QueryStrategy, useBaseRouter } from '../useBaseRouter'
 import { QueryParams } from './QueryParams'
 
 export const worldRoutes = {
@@ -77,6 +77,9 @@ export const useWorldRouter = () => {
 			args: {
 				worldId,
 			},
+			query: {
+				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
+			},
 		})
 	}, [baseRouter, isReadOnly, worldId])
 
@@ -110,6 +113,9 @@ export const useWorldRouter = () => {
 					worldId,
 					actorId,
 				},
+				query: {
+					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
+				},
 			})
 		},
 		[baseRouter, isReadOnly, worldId]
@@ -125,6 +131,9 @@ export const useWorldRouter = () => {
 				args: {
 					worldId,
 					eventId,
+				},
+				query: {
+					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
 				},
 			})
 		},
@@ -142,6 +151,9 @@ export const useWorldRouter = () => {
 					worldId,
 					eventId,
 					deltaId,
+				},
+				query: {
+					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
 				},
 			})
 		},
