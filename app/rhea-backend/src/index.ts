@@ -9,6 +9,7 @@ import { AdminRouter } from './routers/AdminRouter'
 import { AnnouncementRouter } from './routers/AnnouncementRouter'
 import { AuthRouter } from './routers/AuthRouter'
 import { ConstantsRouter } from './routers/ConstantsRouter'
+import { HealthRouter } from './routers/HealthRouter'
 import { WorldEventRouter } from './routers/WorldEventRouter'
 import { WorldRouter } from './routers/WorldRouter'
 import { RedisService } from './services/RedisService'
@@ -49,6 +50,8 @@ app
 	.use(AuthRouter.allowedMethods())
 	.use(ConstantsRouter.routes())
 	.use(ConstantsRouter.allowedMethods())
+	.use(HealthRouter.routes())
+	.use(HealthRouter.allowedMethods())
 	.use(WorldEventRouter.routes())
 	.use(WorldEventRouter.allowedMethods())
 	.use(WorldRouter.routes())
