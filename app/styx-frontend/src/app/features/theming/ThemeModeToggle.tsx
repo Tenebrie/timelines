@@ -1,4 +1,4 @@
-import { Switch, useTheme } from '@mui/material'
+import { Stack, Switch, useTheme } from '@mui/material'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -22,11 +22,13 @@ export const ThemeModeToggle = () => {
 	const theme = useTheme()
 
 	return (
-		<MaterialUISwitch
-			theme={theme}
-			checked={colorMode === 'dark'}
-			onChange={(event) => onChange(event.target.checked)}
-		></MaterialUISwitch>
+		<Stack marginTop={0.25}>
+			<MaterialUISwitch
+				theme={theme}
+				checked={colorMode === 'dark'}
+				onChange={(event) => onChange(event.target.checked)}
+			></MaterialUISwitch>
+		</Stack>
 	)
 }
 

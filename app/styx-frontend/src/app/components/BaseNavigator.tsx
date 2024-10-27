@@ -45,11 +45,11 @@ export const BaseNavigator = ({ children }: Props) => {
 	return (
 		<Container theme={theme}>
 			<div>
-				<Stack direction="row" height="100%" gap={1}>
+				<Stack direction="row" height="100%" gap={1} alignItems="center">
 					<Stack minWidth={173} direction="row" gap={1}>
 						{children}
 					</Stack>
-					<Divider orientation="vertical" flexItem />
+					<Divider orientation="vertical" />
 					<Button
 						onClick={onHome}
 						variant={isHome ? 'contained' : 'text'}
@@ -76,9 +76,10 @@ export const BaseNavigator = ({ children }: Props) => {
 					)}
 				</Stack>
 			</div>
-			<Stack direction="row" gap={2}>
+			<Stack direction="row" gap={2} alignItems="center">
 				<ThemeModeToggle />
 				<Announcements />
+				<Divider orientation="vertical" sx={{ height: '60%' }} />
 				<SmallProfile />
 			</Stack>
 		</Container>
