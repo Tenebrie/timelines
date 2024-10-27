@@ -17,7 +17,9 @@ export const worldRoutes = {
 } as const
 
 export const worldQueryParams = {
-	[worldRoutes.root]: undefined,
+	[worldRoutes.root]: {
+		[QueryParams.SELECTED_TIME]: '0' as string,
+	},
 	[worldRoutes.outliner]: {
 		[QueryParams.SELECTED_TIME]: '0' as string,
 	},

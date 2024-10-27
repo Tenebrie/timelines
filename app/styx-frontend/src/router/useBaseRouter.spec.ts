@@ -6,7 +6,7 @@ import { QueryStrategy, useBaseRouter } from './useBaseRouter'
 
 describe('useBaseRouter', () => {
 	beforeAll(() => {
-		mockRouter('/', undefined)
+		mockRouter('/', undefined, undefined)
 	})
 	afterEach(() => {
 		resetMockRouter()

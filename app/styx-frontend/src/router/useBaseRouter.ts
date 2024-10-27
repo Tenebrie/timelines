@@ -1,8 +1,8 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { NavigateOptions, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 import { CleanUpPathParam, SplitStringBy } from '../types/utils'
-import { MockedRouter } from './router.mock'
+import { MockedRouter, useMockedRouter } from './router.mock'
 
 export enum QueryStrategy {
 	Clear = '[[[clear]]]',
@@ -23,15 +23,9 @@ export const useBaseRouter = <
 	defaultQuery?: QueryT
 ) => {
 	const location = useLocation()
-	const actualParams = useParams()
-	const mockParams = MockedRouter.useParams()
-	const state = useMemo(
-		() => (MockedRouter.isEnabled ? mockParams : actualParams),
-		[actualParams, mockParams]
-	)
-
 	const navigate = useNavigate()
-	const [currentQuery, setCurrentQuery] = useSearchParams()
+
+	const { params: state, currentQuery, setCurrentQuery } = useMockedRouter(useParams(), useSearchParams())
 
 	const stateOf = useCallback(<T extends keyof ParamsT>(route: T) => state as ParamsT[typeof route], [state])
 	const queryOf = useCallback(
@@ -138,6 +132,7 @@ export const useBaseRouter = <
 				navigateParams
 			)
 			if (MockedRouter.isEnabled) {
+				setCurrentQuery(new URLSearchParams(search))
 				MockedRouter.navigations.push({
 					target: `${pathname}${search ? '?' : ''}${search}`,
 					path: pathname,
@@ -145,7 +140,7 @@ export const useBaseRouter = <
 				})
 			}
 		},
-		[currentQuery, defaultQuery, location.pathname, location.search, navigate]
+		[currentQuery, defaultQuery, location.pathname, location.search, navigate, setCurrentQuery]
 	)
 
 	const setQuery = useCallback(
