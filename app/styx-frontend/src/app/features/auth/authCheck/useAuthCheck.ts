@@ -39,18 +39,18 @@ export const useAuthCheck = (): ReturnType => {
 	}
 
 	if (
-		window.location.pathname !== appRoutes.limbo &&
-		window.location.pathname !== appRoutes.login &&
-		window.location.pathname !== appRoutes.register
+		window.location.pathname === appRoutes.limbo ||
+		window.location.pathname === appRoutes.login ||
+		window.location.pathname === appRoutes.register
 	) {
 		return {
-			success: false,
-			target: appRoutes.login,
+			success: true,
+			target: '',
 		}
 	}
 
 	return {
-		success: true,
-		target: '',
+		success: false,
+		target: appRoutes.login,
 	}
 }

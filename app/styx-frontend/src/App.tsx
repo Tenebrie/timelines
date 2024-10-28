@@ -1,9 +1,10 @@
 import { Box, ThemeProvider } from '@mui/material'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 import styled from 'styled-components'
 
+import { useAuthCheck } from './app/features/auth/authCheck/useAuthCheck'
 import { LostConnectionAlert } from './app/features/auth/LostConnectionAlert/LostConnectionAlert'
 import { useLiveUpdates } from './app/features/liveUpdates/useLiveUpdates'
 import { getUserPreferences } from './app/features/preferences/selectors'
@@ -17,7 +18,21 @@ const Container = styled.div`
 	min-height: 100vh;
 `
 
-function App() {
+const RouterWrapper = () => {
+	const { success, target } = useAuthCheck()
+
+	if (!success) {
+		return <Navigate to={target} />
+	}
+
+	return (
+		<Container>
+			<Outlet />
+		</Container>
+	)
+}
+
+const App = () => {
 	useLiveUpdates()
 	useSavedPreferences()
 
@@ -33,9 +48,7 @@ function App() {
 						bgcolor: theme.palette.background.paper,
 					}}
 				>
-					<Container className="TEST">
-						<Outlet />
-					</Container>
+					<RouterWrapper />
 					<LostConnectionAlert server="rhea" />
 					<LostConnectionAlert server="calliope" />
 				</Box>
