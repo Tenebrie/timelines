@@ -1,7 +1,6 @@
-import { Queries, queries, render, renderHook, RenderHookOptions } from '@testing-library/react'
+import { act, Queries, queries, render, renderHook, RenderHookOptions } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ReactNode } from 'react'
-import { act } from 'react-dom/test-utils'
 import { Provider } from 'react-redux'
 import { createBrowserRouter, MemoryRouter, RouterProvider } from 'react-router-dom'
 

@@ -8,4 +8,4 @@ vi.mock('./app/features/liveUpdates/useLiveUpdates', () => ({
 	},
 }))
 
-Object.assign(global, { fetch: nodeFetch, Request, Response })
+Object.assign(globalThis, { fetch: nodeFetch, Request, Response })

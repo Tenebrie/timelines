@@ -1,4 +1,4 @@
-import { act } from 'react-dom/test-utils'
+import { act } from '@testing-library/react'
 
 import { renderHookWithProviders } from '../jest/renderWithProviders'
 import { MockedRouter, mockRouter, resetMockRouter } from './router.mock'
