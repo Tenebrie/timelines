@@ -1,15 +1,14 @@
-import { Home, Menu } from '@mui/icons-material'
-import { Button, Stack } from '@mui/material'
+import { Menu, Public } from '@mui/icons-material'
+import { Button } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { appRoutes } from '../../../../../router/routes/appRoutes'
-import { useRouter } from '../../../../../router/routes/routes'
+import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
 import { BaseNavigator } from '../../../../components/BaseNavigator'
 import { preferencesSlice } from '../../../preferences/reducer'
 import { getOverviewPreferences } from '../../../preferences/selectors'
 
 export const WorldNavigator = () => {
-	const { navigateTo } = useRouter()
+	const { navigateToCurrentWorldRoot } = useWorldRouter()
 
 	const { panelOpen } = useSelector(getOverviewPreferences)
 	const { setPanelOpen } = preferencesSlice.actions
@@ -19,20 +18,18 @@ export const WorldNavigator = () => {
 		dispatch(setPanelOpen(!panelOpen))
 	}
 
-	const onBack = () => {
-		navigateTo({ target: appRoutes.home })
+	const onNavigate = () => {
+		navigateToCurrentWorldRoot()
 	}
 
 	return (
 		<BaseNavigator>
-			<Stack direction="row" height="100%">
-				<Button onClick={onToggleOverview}>
-					<Menu />
-				</Button>
-				<Button onClick={onBack} sx={{ gap: 0.5 }}>
-					<Home /> Home
-				</Button>
-			</Stack>
+			<Button onClick={onToggleOverview}>
+				<Menu />
+			</Button>
+			<Button onClick={onNavigate} variant={'contained'} sx={{ gap: 0.5 }}>
+				<Public /> World
+			</Button>
 		</BaseNavigator>
 	)
 }

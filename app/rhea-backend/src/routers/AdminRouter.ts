@@ -2,10 +2,13 @@ import { AdminAuthenticator } from '@src/auth/AdminAuthenticator'
 import { AdminService } from '@src/services/AdminService'
 import {
 	NonEmptyStringValidator,
+	NumberValidator,
+	OptionalParam,
 	Router,
 	useApiEndpoint,
 	useAuth,
 	usePathParams,
+	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
 
@@ -20,24 +23,22 @@ const router = new Router().with(async (ctx) => {
 
 export const adminUsersTag = 'adminUsers'
 
-router.get('/api/admin/levels', async () => {
-	useApiEndpoint({
-		name: 'adminGetUserLevels',
-		description: 'Get all available user levels',
-		tags: [],
-	})
-
-	return ['Free', 'Premium', 'Admin'] as const
-})
-
-router.get('/api/admin/users', async () => {
+router.get('/api/admin/users', async (ctx) => {
 	useApiEndpoint({
 		name: 'adminGetUsers',
 		description: 'Gets list of all registered users',
 		tags: [adminUsersTag],
 	})
 
-	const users = await AdminService.listUsers()
+	const { page, size } = useQueryParams(ctx, {
+		page: OptionalParam(NumberValidator),
+		size: OptionalParam(NumberValidator),
+	})
+
+	const users = await AdminService.listUsers({
+		page,
+		size,
+	})
 
 	return users
 })

@@ -36,6 +36,9 @@ router.get('/api/auth', async (ctx) => {
 		}
 	}
 
+	console.log('Touch')
+	UserService.touchUser(user.id)
+
 	return {
 		authenticated: true,
 		user: {

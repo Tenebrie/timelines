@@ -3,15 +3,33 @@ import { UserLevel } from '@prisma/client'
 import { getPrismaClient } from './dbClients/DatabaseClient'
 
 export const AdminService = {
-	listUsers: async () => {
-		return getPrismaClient().user.findMany({
+	listUsers: async ({ page, size }: { page?: number; size?: number }) => {
+		const actualPage = page ?? 0
+		const actualSize = Math.min(size ?? 20, 100)
+		const result = await getPrismaClient().user.findMany({
 			select: {
 				id: true,
 				email: true,
 				level: true,
 				username: true,
+				createdAt: true,
+				updatedAt: true,
+			},
+			orderBy: [{ level: 'desc' }, { updatedAt: 'desc' }],
+			skip: actualPage * actualSize,
+			take: actualSize,
+		})
+		const rowCount = await getPrismaClient().user.aggregate({
+			_count: {
+				id: true,
 			},
 		})
+		return {
+			users: result,
+			page: actualPage,
+			size: actualSize,
+			pageCount: Math.ceil(rowCount._count.id / actualSize),
+		}
 	},
 
 	deleteUser: async (userId: string) => {

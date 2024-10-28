@@ -1,8 +1,14 @@
-import { Stack, useTheme } from '@mui/material'
-import React, { ReactElement } from 'react'
+import { AdminPanelSettings, Home } from '@mui/icons-material'
+import { Button, Divider, Stack, useTheme } from '@mui/material'
+import React, { ReactElement, useMemo } from 'react'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { adminRoutes } from '../../router/routes/adminRoutes'
+import { appRoutes } from '../../router/routes/appRoutes'
+import { useRouter } from '../../router/routes/routes'
 import { Announcements } from '../features/announcements/Announcements'
+import { getAuthState } from '../features/auth/selectors'
 import { SmallProfile } from '../features/auth/smallProfile/SmallProfile'
 import { ThemeModeToggle } from '../features/theming/ThemeModeToggle'
 
@@ -22,13 +28,58 @@ type Props = {
 
 export const BaseNavigator = ({ children }: Props) => {
 	const theme = useTheme()
+	const { navigateTo, isLocationEqual } = useRouter()
+	const { user } = useSelector(getAuthState)
+
+	const onHome = () => {
+		navigateTo({ target: appRoutes.home })
+	}
+
+	const onAdmin = () => {
+		navigateTo({ target: adminRoutes.adminRoot })
+	}
+
+	const isHome = useMemo(() => isLocationEqual(appRoutes.home), [isLocationEqual])
+	const isAdmin = useMemo(() => isLocationEqual(adminRoutes.adminRoot), [isLocationEqual])
 
 	return (
 		<Container theme={theme}>
-			<div>{children}</div>
-			<Stack direction="row" gap={2}>
+			<div>
+				<Stack direction="row" height="100%" gap={1} alignItems="center">
+					<Stack minWidth={173} direction="row" gap={1}>
+						{children}
+					</Stack>
+					<Divider orientation="vertical" />
+					<Button
+						onClick={onHome}
+						variant={isHome ? 'contained' : 'text'}
+						sx={{
+							gap: 0.5,
+							border: '1px solid transparent',
+							padding: '8px 15px',
+						}}
+					>
+						<Home /> Home
+					</Button>
+					{user?.level === 'Admin' && (
+						<Button
+							onClick={onAdmin}
+							variant={isAdmin ? 'contained' : 'text'}
+							sx={{
+								gap: 0.5,
+								border: '1px solid transparent',
+								padding: '8px 15px',
+							}}
+						>
+							<AdminPanelSettings /> Admin
+						</Button>
+					)}
+				</Stack>
+			</div>
+			<Stack direction="row" gap={2} alignItems="center">
 				<ThemeModeToggle />
 				<Announcements />
+				<Divider orientation="vertical" sx={{ height: '60%' }} />
 				<SmallProfile />
 			</Stack>
 		</Container>
