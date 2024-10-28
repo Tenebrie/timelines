@@ -4,7 +4,7 @@ if [[ -z "$VERSION" ]]; then
 fi
 
 docker service update --image tenebrie/timelines-gatekeeper:${VERSION} --update-delay 60s --update-parallelism 1 --update-failure-action rollback timelines_gatekeeper
-docker service update --image tenebrie/timelines-styx:${VERSION} --update-delay 60s --update-parallelism 1 --update-failure-action rollback timelines_styx
 docker service update --image tenebrie/timelines-rhea:${VERSION} --update-delay 60s --update-parallelism 1 --update-failure-action rollback timelines_rhea
 docker service update --image tenebrie/timelines-calliope:${VERSION} --update-delay 60s --update-parallelism 1 --update-failure-action rollback timelines_calliope
+docker service update --image tenebrie/timelines-styx:${VERSION} --update-delay 60s --update-parallelism 1 --update-failure-action rollback timelines_styx
 docker system prune -f
