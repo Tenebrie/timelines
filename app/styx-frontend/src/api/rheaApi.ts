@@ -36,11 +36,11 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldDetails'],
 			}),
-			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
-				query: () => ({ url: `/api/admin/levels` }),
-			}),
 			adminGetUsers: build.query<AdminGetUsersApiResponse, AdminGetUsersApiArg>({
-				query: () => ({ url: `/api/admin/users` }),
+				query: (queryArg) => ({
+					url: `/api/admin/users`,
+					params: { page: queryArg.page, size: queryArg.size },
+				}),
 				providesTags: ['adminUsers'],
 			}),
 			adminSetUserLevel: build.mutation<AdminSetUserLevelApiResponse, AdminSetUserLevelApiArg>({
@@ -78,6 +78,9 @@ const injectedRtkApi = api
 			postLogout: build.mutation<PostLogoutApiResponse, PostLogoutApiArg>({
 				query: () => ({ url: `/api/auth/logout`, method: 'POST' }),
 				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
+			}),
+			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
+				query: () => ({ url: `/api/constants/admin-levels` }),
 			}),
 			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
 				query: () => ({ url: `/api/constants/world-access-modes` }),
@@ -248,17 +251,29 @@ export type DeleteActorApiArg = {
 	/** Any string value */
 	actorId: string
 }
-export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premium' | 'Admin')[]
-export type AdminGetUserLevelsApiArg = void
 export type AdminGetUsersApiResponse = /** status 200  */ {
-	id: string
-	email: string
-	username: string
-	level: 'Free' | 'Premium' | 'Admin'
-}[]
-export type AdminGetUsersApiArg = void
+	users: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		email: string
+		username: string
+		level: 'Free' | 'Premium' | 'Admin'
+	}[]
+	page: number
+	size: number
+	pageCount: number
+}
+export type AdminGetUsersApiArg = {
+	/** Any numeric value */
+	page?: number
+	/** Any numeric value */
+	size?: number
+}
 export type AdminSetUserLevelApiResponse = /** status 200  */ {
 	id: string
+	createdAt: string
+	updatedAt: string
 	email: string
 	username: string
 	password: string
@@ -273,6 +288,8 @@ export type AdminSetUserLevelApiArg = {
 }
 export type AdminDeleteUserApiResponse = /** status 200  */ {
 	id: string
+	createdAt: string
+	updatedAt: string
 	email: string
 	username: string
 	password: string
@@ -339,6 +356,8 @@ export type PostLoginApiArg = {
 }
 export type PostLogoutApiResponse = unknown
 export type PostLogoutApiArg = void
+export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premium' | 'Admin')[]
+export type AdminGetUserLevelsApiArg = void
 export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
 export type ListWorldAccessModesApiArg = void
 export type GetHealthApiResponse = /** status 200  */ string
@@ -766,8 +785,6 @@ export const {
 	useCreateActorMutation,
 	useUpdateActorMutation,
 	useDeleteActorMutation,
-	useAdminGetUserLevelsQuery,
-	useLazyAdminGetUserLevelsQuery,
 	useAdminGetUsersQuery,
 	useLazyAdminGetUsersQuery,
 	useAdminSetUserLevelMutation,
@@ -780,6 +797,8 @@ export const {
 	useCreateAccountMutation,
 	usePostLoginMutation,
 	usePostLogoutMutation,
+	useAdminGetUserLevelsQuery,
+	useLazyAdminGetUserLevelsQuery,
 	useListWorldAccessModesQuery,
 	useLazyListWorldAccessModesQuery,
 	useGetHealthQuery,

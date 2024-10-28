@@ -14,7 +14,7 @@ const Container = styled.div`
 	display: flex;
 	justify-content: center;
 	width: 100vw;
-	height: 100vh;
+	min-height: 100vh;
 `
 
 function App() {
@@ -27,8 +27,13 @@ function App() {
 	return (
 		<div className="App">
 			<ThemeProvider theme={theme}>
-				<Box sx={{ color: theme.palette.text.secondary, bgcolor: theme.palette.background.paper }}>
-					<Container>
+				<Box
+					sx={{
+						color: theme.palette.text.secondary,
+						bgcolor: theme.palette.background.paper,
+					}}
+				>
+					<Container className="TEST">
 						<Outlet />
 					</Container>
 					<LostConnectionAlert server="rhea" />

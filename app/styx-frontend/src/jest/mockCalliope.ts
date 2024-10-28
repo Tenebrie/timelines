@@ -6,6 +6,6 @@ const webSocketServer = new Server({
 
 webSocketServer.on('connection', (socket) => {
 	socket.on('message', (message) => {
-		console.log(message)
+		console.info(message)
 	})
 })
