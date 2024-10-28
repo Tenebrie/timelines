@@ -75,13 +75,14 @@ export const Login = () => {
 						<TenebrieLogo />
 					</Stack>
 					<Divider />
-					<Typography variant="h6" align="center">
+					<Typography variant="h6" align="center" sx={{ padding: 1 }}>
 						Sign in to Timelines
 					</Typography>
 					<AlreadyLoggedInAlert parentSpacing={2} />
 					<FormErrorBanner errorState={errorState} />
 					<TextField
 						id="email"
+						autoComplete="username"
 						label="Email"
 						type="text"
 						value={email}
@@ -93,6 +94,7 @@ export const Login = () => {
 					/>
 					<TextField
 						id="password"
+						autoComplete="current-password"
 						label="Password"
 						type="password"
 						value={password}

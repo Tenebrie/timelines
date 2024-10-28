@@ -88,13 +88,14 @@ export const Register = () => {
 						<TenebrieLogo />
 					</Stack>
 					<Divider />
-					<Typography variant="h6" align="center">
+					<Typography variant="h6" align="center" sx={{ padding: 1 }}>
 						Create an Account
 					</Typography>
 					<AlreadyLoggedInAlert parentSpacing={2} />
 					<FormErrorBanner errorState={errorState} />
 					<TextField
-						id="email"
+						id="username"
+						autoComplete="username"
 						label="Email"
 						type="text"
 						value={email}
@@ -104,7 +105,8 @@ export const Register = () => {
 						error={!!error && error.type === 'MISSING_EMAIL'}
 					/>
 					<TextField
-						id="username"
+						id="display-name"
+						autoComplete="display-name"
 						label="Username"
 						type="text"
 						value={username}
@@ -114,6 +116,7 @@ export const Register = () => {
 					/>
 					<TextField
 						id="password"
+						autoComplete="new-password"
 						label="Password"
 						type="password"
 						value={password}
@@ -123,6 +126,7 @@ export const Register = () => {
 					/>
 					<TextField
 						id="confirm-password"
+						autoComplete="new-password"
 						label="Confirm password"
 						type="password"
 						value={confirmPassword}
