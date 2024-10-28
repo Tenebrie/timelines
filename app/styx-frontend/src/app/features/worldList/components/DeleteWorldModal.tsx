@@ -36,7 +36,7 @@ export const DeleteWorldModal = () => {
 		const { error } = parseApiResponse(
 			await confirmDeleteWorld({
 				worldId,
-			})
+			}),
 		)
 		if (error) {
 			setDeletionError(error.message)

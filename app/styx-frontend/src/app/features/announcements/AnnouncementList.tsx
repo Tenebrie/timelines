@@ -17,7 +17,7 @@ export const AnnouncementList = () => {
 				id,
 			})
 		},
-		[dismissAnnouncement]
+		[dismissAnnouncement],
 	)
 
 	return (

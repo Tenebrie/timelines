@@ -21,4 +21,4 @@ export const allQueries = {
 export const useRouter = () => useBaseRouter(routes, allQueries)
 
 // export type AllRouteParamMapping = AppRouteParamMapping & HomeRouteParamMapping & WorldRouteParamMapping
-export type AllRouteParamMapping = Record<string, any>
+export type AllRouteParamMapping = Record<string, object | undefined>

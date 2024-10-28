@@ -20,7 +20,7 @@ export const useVisibleEvents = ({ timestamp, excludedEvents, includeInactive }:
 				.filter(
 					(event) =>
 						event.timestamp <= timestamp &&
-						!(excludedEvents ?? []).some((excludedEvent) => excludedEvent.id === event.id)
+						!(excludedEvents ?? []).some((excludedEvent) => excludedEvent.id === event.id),
 				)
 				.map((event, index) => ({
 					...event,
@@ -30,7 +30,7 @@ export const useVisibleEvents = ({ timestamp, excludedEvents, includeInactive }:
 				.filter((event) => includeInactive || event.active)
 				.sort((a, b) => a.timestamp - b.timestamp || a.index - b.index)
 				.map((event) => applyEventDelta({ event, timestamp })),
-		[events, timestamp, excludedEvents, includeInactive]
+		[events, timestamp, excludedEvents, includeInactive],
 	)
 
 	return visibleEvents

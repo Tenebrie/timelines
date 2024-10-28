@@ -41,7 +41,7 @@ export const AdminUserList = () => {
 		(user: User) => {
 			dispatch(adminSlice.actions.openDeleteUserModal(user))
 		},
-		[dispatch]
+		[dispatch],
 	)
 
 	const formatDate = useCallback((date: string) => {

@@ -23,10 +23,10 @@ export const useEventFields = ({ event }: Props) => {
 	const [timestamp, setTimestampDirect] = useState<number>(event.timestamp)
 	const [revokedAt, setRevokedAtDirect] = useState<number | undefined>(event.revokedAt)
 	const [selectedActors, setSelectedActorsDirect] = useState<ActorOption[]>(
-		mapActorsToOptions(event.targetActors)
+		mapActorsToOptions(event.targetActors),
 	)
 	const [mentionedActors, setMentionedActorsDirect] = useState<ActorOption[]>(
-		mapActorsToOptions(event.mentionedActors)
+		mapActorsToOptions(event.mentionedActors),
 	)
 	const [description, setDescriptionDirect] = useState<string>(event.description)
 	const [customNameEnabled, setCustomNameEnabledDirect] = useState<boolean>(event.customName)
@@ -58,7 +58,7 @@ export const useEventFields = ({ event }: Props) => {
 			setDescription: generateSetter(setDescriptionDirect),
 			setCustomNameEnabled: generateSetter(setCustomNameEnabledDirect),
 		}),
-		[generateSetter]
+		[generateSetter],
 	)
 
 	return {

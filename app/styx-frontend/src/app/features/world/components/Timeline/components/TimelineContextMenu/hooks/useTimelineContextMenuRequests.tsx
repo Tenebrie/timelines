@@ -15,13 +15,13 @@ export const useTimelineContextMenuRequests = () => {
 					},
 					worldId,
 					eventId,
-				})
+				}),
 			)
 			if (error) {
 				return
 			}
 		},
-		[updateWorldEvent]
+		[updateWorldEvent],
 	)
 
 	const unrevokeEventAt = useCallback(
@@ -33,13 +33,13 @@ export const useTimelineContextMenuRequests = () => {
 					},
 					worldId,
 					eventId,
-				})
+				}),
 			)
 			if (error) {
 				return
 			}
 		},
-		[updateWorldEvent]
+		[updateWorldEvent],
 	)
 
 	return {

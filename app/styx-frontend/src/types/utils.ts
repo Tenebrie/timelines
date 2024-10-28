@@ -1,10 +1,10 @@
 export type SplitStringBy<S extends string, D extends string> = string extends S
 	? string[]
 	: S extends ''
-	? []
-	: S extends `${infer T}${D}${infer U}`
-	? [T, ...SplitStringBy<U, D>]
-	: [S]
+		? []
+		: S extends `${infer T}${D}${infer U}`
+			? [T, ...SplitStringBy<U, D>]
+			: [S]
 
 type RemoveLeadingColonWrapper<S extends string | undefined> = S extends string
 	? RemoveLeadingColon<S>

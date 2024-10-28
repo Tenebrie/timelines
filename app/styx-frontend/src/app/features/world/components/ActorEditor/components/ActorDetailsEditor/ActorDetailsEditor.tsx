@@ -54,14 +54,14 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 					worldId: worldId,
 					actorId: actor.id,
 					body: delta,
-				})
+				}),
 			)
 			if (error) {
 				return
 			}
 			lastSavedAt.current = new Date()
 		},
-		[actor.id, isDirty, updateActor, worldId]
+		[actor.id, isDirty, updateActor, worldId],
 	)
 
 	const {

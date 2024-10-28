@@ -30,7 +30,7 @@ export const useEntityName = ({
 			}
 			return `Unnamed ${entityClassName} at ${timeToLabel(timestamp)}`
 		},
-		[entityClassName, timeToLabel, timestamp]
+		[entityClassName, timeToLabel, timestamp],
 	)
 
 	const outputName = useMemo(() => {

@@ -36,7 +36,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 	const months = useMemo(
 		() =>
 			calendarDefinition.engine === 'JS_DATE' ? calendarDefinition.months : calendarDefinition.units.months,
-		[calendarDefinition]
+		[calendarDefinition],
 	)
 
 	const parseTime = useCallback(
@@ -174,7 +174,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				minute: 0,
 			}
 		},
-		[calendarDefinition, msPerUnit, usedCalendar]
+		[calendarDefinition, msPerUnit, usedCalendar],
 	)
 
 	const pickerToTimestamp = useCallback(
@@ -219,7 +219,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 
 			return 100
 		},
-		[calendarDefinition, msPerUnit]
+		[calendarDefinition, msPerUnit],
 	)
 
 	const timeToLabel = useCallback(
@@ -241,7 +241,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				return `${year}, ${monthName} ${day}, ${padHour}:${padMinute}`
 			}
 		},
-		[parseTime, usedCalendar]
+		[parseTime, usedCalendar],
 	)
 
 	const timeToShortLabel = useCallback(
@@ -338,7 +338,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				return 'No label'
 			}
 		},
-		[months, parseTime, usedCalendar]
+		[months, parseTime, usedCalendar],
 	)
 
 	const timeToShortestLabel = useCallback(
@@ -378,7 +378,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				return `${padDay}.${padMonth}`
 			}
 		},
-		[parseTime, usedCalendar]
+		[parseTime, usedCalendar],
 	)
 
 	return {

@@ -10,7 +10,7 @@ export const useTimelineBusSubscribe = ({ callback }: Props) => {
 		(event: CustomEvent) => {
 			callback(event.detail as number)
 		},
-		[callback]
+		[callback],
 	)
 
 	useEffect(() => {
@@ -26,7 +26,7 @@ export const useTimelineBusDispatch = () => {
 		window.dispatchEvent(
 			new CustomEvent('@timeline/scrollTo', {
 				detail: timestamp,
-			})
+			}),
 		)
 	}
 }

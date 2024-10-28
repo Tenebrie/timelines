@@ -17,17 +17,17 @@ export const useBaseRouter = <
 			[Q in CleanUpPathParam<SplitStringBy<RoutesT[K], '/'>[number]>]: string
 		}
 	},
-	QueryT extends Record<keyof ParamsT, Record<string, string> | undefined>
+	QueryT extends Record<keyof ParamsT, Record<string, string> | undefined>,
 >(
 	_: RoutesT,
-	defaultQuery?: QueryT
+	defaultQuery?: QueryT,
 ) => {
 	const location = useLocation()
 	const navigate = useNavigate()
 
 	const { params: state, currentQuery, setCurrentQuery } = useMockedRouter(useParams(), useSearchParams())
 
-	const stateOf = useCallback(<T extends keyof ParamsT>(route: T) => state as ParamsT[typeof route], [state])
+	const stateOf = useCallback(<T extends keyof ParamsT>(_: T) => state as ParamsT[typeof _], [state])
 	const queryOf = useCallback(
 		<T extends keyof ParamsT>(route: T) => {
 			if (!defaultQuery) {
@@ -46,7 +46,7 @@ export const useBaseRouter = <
 			})
 			return result
 		},
-		[currentQuery, defaultQuery]
+		[currentQuery, defaultQuery],
 	)
 
 	const queryOfOrNull = useCallback(
@@ -67,14 +67,15 @@ export const useBaseRouter = <
 			})
 			return result
 		},
-		[currentQuery, defaultQuery]
+		[currentQuery, defaultQuery],
 	)
 
-	type ArgsOrVoid<Q> = Q extends Record<string, never>
-		? { args?: void }
-		: Q extends Record<string, string>
-		? { args: Q }
-		: { args?: void }
+	type ArgsOrVoid<Q> =
+		Q extends Record<string, never>
+			? { args?: void }
+			: Q extends Record<string, string>
+				? { args: Q }
+				: { args?: void }
 
 	type QueryOrVoid<Q> = Q extends undefined
 		? { query?: void }
@@ -98,7 +99,7 @@ export const useBaseRouter = <
 
 				return Object.keys(args).reduce(
 					(total, current) => total.replace(`:${current}`, args[current]),
-					target as string
+					target as string,
 				)
 			})()
 
@@ -113,8 +114,8 @@ export const useBaseRouter = <
 				.filter((entry) => evaluatedQuery[entry[0]] === QueryStrategy.Preserve)
 				.concat(
 					Object.entries(evaluatedQuery).filter(
-						(q) => q[1] !== undefined && q[1] !== QueryStrategy.Clear && q[1] !== QueryStrategy.Preserve
-					)
+						(q) => q[1] !== undefined && q[1] !== QueryStrategy.Clear && q[1] !== QueryStrategy.Preserve,
+					),
 				)
 				.filter((entry) => entry[1] !== null) as [string, string][]
 
@@ -129,7 +130,7 @@ export const useBaseRouter = <
 					pathname,
 					search,
 				},
-				navigateParams
+				navigateParams,
 			)
 			if (MockedRouter.isEnabled) {
 				setCurrentQuery(new URLSearchParams(search))
@@ -140,7 +141,7 @@ export const useBaseRouter = <
 				})
 			}
 		},
-		[currentQuery, defaultQuery, location.pathname, location.search, navigate, setCurrentQuery]
+		[currentQuery, defaultQuery, location.pathname, location.search, navigate, setCurrentQuery],
 	)
 
 	const setQuery = useCallback(
@@ -152,7 +153,7 @@ export const useBaseRouter = <
 			}
 			setCurrentQuery(currentQuery)
 		},
-		[currentQuery, setCurrentQuery]
+		[currentQuery, setCurrentQuery],
 	)
 
 	const isLocationEqual = useCallback(
@@ -162,7 +163,7 @@ export const useBaseRouter = <
 				.split('/')
 				.every((segment, index) => segment.startsWith(':') || locationSegments[index] === segment)
 		},
-		[location.pathname]
+		[location.pathname],
 	)
 
 	return {

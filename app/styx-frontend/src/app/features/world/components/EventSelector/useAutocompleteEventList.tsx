@@ -16,7 +16,7 @@ export const useAutocompleteEventList = ({ timestamp, excludedEvents }: Props) =
 
 	const eventOptions = useMemo(() => mapEventsToOptions(visibleEvents), [mapEventsToOptions, visibleEvents])
 
-	const renderOption = (props: any, option: Pick<WorldEvent, 'id' | 'name'>) => (
+	const renderOption = (props: object, option: Pick<WorldEvent, 'id' | 'name'>) => (
 		<MenuItem key={option.id} {...props}>
 			<ListItemText primary={option.name} />
 		</MenuItem>

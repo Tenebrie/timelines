@@ -21,7 +21,7 @@ export const useShortcut = (shortcut: (typeof Shortcut)[keyof typeof Shortcut], 
 				callback()
 			}
 		},
-		[callback, ctrlKeyNeeded, defKeys]
+		[callback, ctrlKeyNeeded, defKeys],
 	)
 
 	useEffect(() => {

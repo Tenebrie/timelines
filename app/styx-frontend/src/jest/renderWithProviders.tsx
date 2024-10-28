@@ -11,7 +11,7 @@ import { worldRoutes } from '../router/routes/worldRoutes'
 
 export const renderWithProviders = (
 	node: ReactNode,
-	{ preloadedState }: { preloadedState?: Partial<RootState> } = {}
+	{ preloadedState }: { preloadedState?: Partial<RootState> } = {},
 ) => {
 	const store = generateStore({ preloadedState })
 	return {
@@ -20,14 +20,14 @@ export const renderWithProviders = (
 		...render(
 			<Provider store={store}>
 				<MemoryRouter>{node}</MemoryRouter>
-			</Provider>
+			</Provider>,
 		),
 	}
 }
 
 export const renderWithRouter = async (
 	routeName: keyof typeof appRoutes | keyof typeof worldRoutes,
-	{ preloadedState }: { preloadedState?: Partial<RootState> } = {}
+	{ preloadedState }: { preloadedState?: Partial<RootState> } = {},
 ) => {
 	const bigRouter = {
 		...appRoutes,
@@ -43,7 +43,7 @@ export const renderWithRouter = async (
 		...render(
 			<Provider store={store}>
 				<RouterProvider router={createBrowserRouter(routerDefinition)} />
-			</Provider>
+			</Provider>,
 		),
 	}
 
@@ -59,13 +59,13 @@ export const renderHookWithProviders = <
 	Props,
 	Q extends Queries = typeof queries,
 	Container extends Element | DocumentFragment = HTMLElement,
-	BaseElement extends Element | DocumentFragment = Container
+	BaseElement extends Element | DocumentFragment = Container,
 >(
 	render: (initialProps: Props) => Result,
 	{
 		preloadedState,
 		...options
-	}: RenderHookOptions<Props, Q, Container, BaseElement> & { preloadedState?: Partial<RootState> } = {}
+	}: RenderHookOptions<Props, Q, Container, BaseElement> & { preloadedState?: Partial<RootState> } = {},
 ) => {
 	const store = generateStore({ preloadedState })
 	return renderHook(render, {

@@ -4,7 +4,7 @@ import { StyledListItemButton, ZebraWrapper } from './styles'
 
 export const ActorEventsEmptyState = () => {
 	return (
-		<ZebraWrapper zebra={true}>
+		<ZebraWrapper $zebra={true}>
 			<StyledListItemButton selected={false}>
 				<ListItemText primary="No events to show!"></ListItemText>
 			</StyledListItemButton>

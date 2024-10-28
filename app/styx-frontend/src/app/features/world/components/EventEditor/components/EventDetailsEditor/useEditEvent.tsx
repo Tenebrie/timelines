@@ -90,14 +90,14 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 					worldId: worldId,
 					eventId: event.id,
 					body: delta,
-				})
+				}),
 			)
 			if (error) {
 				return
 			}
 			lastSavedAt.current = new Date()
 		},
-		[event.id, setDirty, updateWorldEvent, worldId]
+		[event.id, setDirty, updateWorldEvent, worldId],
 	)
 
 	const {

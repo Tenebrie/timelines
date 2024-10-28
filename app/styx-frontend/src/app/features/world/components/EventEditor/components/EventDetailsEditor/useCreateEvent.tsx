@@ -35,7 +35,7 @@ export const useCreateEvent = ({ state }: Props) => {
 					targetActorIds: state.selectedActors.map((a) => a.id),
 					mentionedActorIds: state.mentionedActors.map((a) => a.id),
 				},
-			})
+			}),
 		)
 		if (error) {
 			return

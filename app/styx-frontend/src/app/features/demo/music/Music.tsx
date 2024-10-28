@@ -39,7 +39,11 @@ export const Music = () => {
 							onChange={(_, index) => setCurrentTab(index)}
 						>
 							{dataSource.map((playlist) => (
-								<Tab label={playlist.title} sx={{ alignItems: 'start', minWidth: 500 }} />
+								<Tab
+									key={playlist.title}
+									label={playlist.title}
+									sx={{ alignItems: 'start', minWidth: 500 }}
+								/>
 							))}
 						</StyledTabs>
 						<Typography variant="caption">

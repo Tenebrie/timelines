@@ -11,7 +11,7 @@ export type ErrorState<ErrorListT extends Record<string, unknown>> = {
 	error: RecordElement<ErrorListT> | null
 	raiseError: <TypeT extends RecordElement<ErrorListT>['type'], DataT extends ErrorListT[TypeT]>(
 		type: TypeT,
-		data: DataT
+		data: DataT,
 	) => void
 	clearError: () => void
 }
@@ -30,7 +30,7 @@ export const useErrorState = <ErrorListT extends Record<string, unknown>>() => {
 				data,
 			}))
 		},
-		[currentError]
+		[currentError],
 	)
 
 	const clearError = useCallback(() => {
@@ -43,8 +43,8 @@ export const useErrorState = <ErrorListT extends Record<string, unknown>>() => {
 				error: currentError,
 				raiseError,
 				clearError,
-			} satisfies ErrorState<ErrorListT>),
-		[clearError, currentError, raiseError]
+			}) satisfies ErrorState<ErrorListT>,
+		[clearError, currentError, raiseError],
 	)
 
 	return {

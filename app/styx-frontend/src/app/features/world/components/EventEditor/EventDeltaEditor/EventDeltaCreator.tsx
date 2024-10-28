@@ -24,7 +24,7 @@ export const EventDeltaCreator = () => {
 				description: '',
 				timestamp: selectedTimeOrZero,
 			}),
-		[eventId, selectedTimeOrZero]
+		[eventId, selectedTimeOrZero],
 	)
 
 	useEffect(() => {

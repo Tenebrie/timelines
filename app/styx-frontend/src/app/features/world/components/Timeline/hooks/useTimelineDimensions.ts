@@ -20,7 +20,7 @@ export const useTimelineDimensions = () => {
 				return
 			}
 			containerWidth.current = containerRef.current.getBoundingClientRect().width
-		}, 100)
+		}, 100),
 	)
 
 	useEffectOnce(() => {

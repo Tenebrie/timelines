@@ -26,7 +26,7 @@ export const useEventModules = () => {
 				module: 'MentionedActors',
 			},
 		],
-		[]
+		[],
 	)
 
 	return {

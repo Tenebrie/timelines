@@ -1,5 +1,5 @@
 export const parseApiResponse = <DataT, ErrorT>(
-	response: { data: DataT } | { error: ErrorT }
+	response: { data: DataT } | { error: ErrorT },
 ): { response: DataT; error: null } | { response: null; error: { status: number; message: string } } => {
 	if (!('error' in response)) {
 		return { response: response.data, error: null }

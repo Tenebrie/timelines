@@ -11,7 +11,7 @@ export const useMapActorsToOptions = () => {
 				...actor,
 				label: `${actor.name}, ${actor.title}`,
 			})),
-		[]
+		[],
 	)
 
 	return {

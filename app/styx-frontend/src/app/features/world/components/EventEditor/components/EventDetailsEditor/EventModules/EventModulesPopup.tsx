@@ -19,7 +19,7 @@ export const EventModulesPopup = ({ mode, popupState, modules, onAdd, onRemove }
 	const visibleOptions = options.filter(
 		(option) =>
 			(mode === 'add' && !modules.includes(option.module)) ||
-			(mode === 'remove' && modules.includes(option.module))
+			(mode === 'remove' && modules.includes(option.module)),
 	)
 
 	const onClick = (module: WorldEventModule) => {

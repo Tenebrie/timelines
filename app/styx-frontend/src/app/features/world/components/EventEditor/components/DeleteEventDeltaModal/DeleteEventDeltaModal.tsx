@@ -45,7 +45,7 @@ export const DeleteEventDeltaModal = () => {
 				worldId,
 				eventId: targetDelta.worldEventId,
 				deltaId: targetDelta.id,
-			})
+			}),
 		)
 		if (error) {
 			setDeletionError(error.message)

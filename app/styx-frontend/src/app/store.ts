@@ -9,7 +9,7 @@ import timelineReducer from './features/world/components/Timeline/reducer'
 import worldReducer from './features/world/reducer'
 import worldListReducer from './features/worldList/reducer'
 
-export const generateStore = ({ preloadedState }: { preloadedState?: PreloadedState<any> } = {}) =>
+export const generateStore = ({ preloadedState }: { preloadedState?: PreloadedState<object> } = {}) =>
 	configureStore({
 		reducer: {
 			api: baseApi.reducer,

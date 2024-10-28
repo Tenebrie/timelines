@@ -59,7 +59,7 @@ export const RevokedStatementWizard = () => {
 				worldId,
 				eventId: id,
 				body: { revokedAt: String(selectedTimeOrZero) },
-			})
+			}),
 		)
 		if (error) {
 			return

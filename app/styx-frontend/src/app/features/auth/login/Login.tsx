@@ -51,7 +51,7 @@ export const Login = () => {
 					email,
 					password,
 				},
-			})
+			}),
 		)
 		if (error) {
 			raiseError('SERVER_SIDE_ERROR', error.message)

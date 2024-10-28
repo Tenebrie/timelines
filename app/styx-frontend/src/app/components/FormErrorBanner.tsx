@@ -1,5 +1,6 @@
 import { Close } from '@mui/icons-material'
 import { Alert, Collapse, IconButton } from '@mui/material'
+import { ReactNode } from 'react'
 import { TransitionGroup } from 'react-transition-group'
 
 type Props = {
@@ -7,7 +8,7 @@ type Props = {
 	errorState: {
 		clearError: () => void
 		error: {
-			data: any
+			data: ReactNode
 		} | null
 	}
 }

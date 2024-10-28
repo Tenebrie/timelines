@@ -1,6 +1,6 @@
 import { AdminPanelSettings, Home } from '@mui/icons-material'
 import { Button, Divider, Stack, useTheme } from '@mui/material'
-import React, { ReactElement, useMemo } from 'react'
+import { ReactElement, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 

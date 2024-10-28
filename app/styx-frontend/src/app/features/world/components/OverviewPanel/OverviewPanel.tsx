@@ -144,7 +144,7 @@ export const OverviewPanel = () => {
 		(entity) =>
 			entity.name.toLowerCase().includes(lowerCaseSearchQuery) ||
 			entity.title.toLowerCase().includes(lowerCaseSearchQuery) ||
-			entity.description.toLowerCase().includes(lowerCaseSearchQuery)
+			entity.description.toLowerCase().includes(lowerCaseSearchQuery),
 	)
 
 	const displayedEvents = sortedEvents.filter(
@@ -152,7 +152,7 @@ export const OverviewPanel = () => {
 			searchQuery.length <= 2 ||
 			entity.name.toLowerCase().includes(lowerCaseSearchQuery) ||
 			entity.description.toLowerCase().includes(lowerCaseSearchQuery) ||
-			entity.secondary.toLowerCase().includes(lowerCaseSearchQuery)
+			entity.secondary.toLowerCase().includes(lowerCaseSearchQuery),
 	)
 
 	return (

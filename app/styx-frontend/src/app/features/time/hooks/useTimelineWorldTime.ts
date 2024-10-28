@@ -16,14 +16,14 @@ export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
 		(time: number) => {
 			return time * scalar
 		},
-		[scalar]
+		[scalar],
 	)
 
 	const realTimeToScaledTime = useCallback(
 		(time: number) => {
 			return time / scalar
 		},
-		[scalar]
+		[scalar],
 	)
 
 	const getTimelineMultipliers = useCallback(() => {

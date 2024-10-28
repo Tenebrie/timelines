@@ -36,7 +36,7 @@ const saveToLocalStorage = (state: PreferencesState) => {
 				expandedActors: [],
 				expandedEvents: [],
 			},
-		})
+		}),
 	)
 }
 
@@ -67,7 +67,7 @@ export const preferencesSlice = createSlice({
 				state.overview.actorsReversed = !!parsedValue?.overview?.actorsReversed
 				state.overview.eventsOpen = !!parsedValue?.overview?.eventsOpen
 				state.overview.eventsReversed = !!parsedValue?.overview?.eventsReversed
-			} catch (err) {
+			} catch {
 				return
 			}
 		},

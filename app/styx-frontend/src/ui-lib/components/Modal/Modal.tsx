@@ -26,7 +26,7 @@ const Modal = ({ visible, children, onClose }: Props) => {
 			event.preventDefault()
 			onClose()
 		},
-		[isModalVisible, onClose]
+		[isModalVisible, onClose],
 	)
 
 	useEffect(() => {

@@ -17,7 +17,7 @@ export const useActorColors = () => {
 			{ value: pink[200], name: 'Pink' },
 			{ value: red[200], name: 'Red' },
 		],
-		[]
+		[],
 	)
 
 	const listAllColors = useCallback(() => {
@@ -33,12 +33,12 @@ export const useActorColors = () => {
 				</Stack>
 			</MenuItem>
 		),
-		[]
+		[],
 	)
 
 	const valueToName = useCallback(
 		(value: string) => availableColors.find((color) => color.value === value)?.name ?? value,
-		[availableColors]
+		[availableColors],
 	)
 
 	const renderValue = useCallback(
@@ -48,7 +48,7 @@ export const useActorColors = () => {
 				<ListItemText style={{ margin: 0 }} primary={valueToName(value)} secondary={value} />
 			</Stack>
 		),
-		[valueToName]
+		[valueToName],
 	)
 
 	const getColorOptions = useCallback(() => {
@@ -62,7 +62,7 @@ export const useActorColors = () => {
 		(colorValue: string) => {
 			return availableColors.findIndex((color) => color.value === colorValue)
 		},
-		[availableColors]
+		[availableColors],
 	)
 
 	return {

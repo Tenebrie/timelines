@@ -15,14 +15,14 @@ export const OutlinedContainer = ({ label, children, style, fullHeight }: Props)
 	const theme = useTheme()
 
 	return (
-		<OutlinedFieldset theme={theme} style={style} fullHeight={fullHeight ?? false}>
+		<OutlinedFieldset theme={theme} style={style} $fullHeight={fullHeight ?? false}>
 			{label && <OverlayingLabel>{label}</OverlayingLabel>}
 			{children}
 		</OutlinedFieldset>
 	)
 }
 
-const OutlinedFieldset = styled.fieldset<{ fullHeight: boolean }>`
+const OutlinedFieldset = styled.fieldset<{ $fullHeight: boolean }>`
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
@@ -34,6 +34,6 @@ const OutlinedFieldset = styled.fieldset<{ fullHeight: boolean }>`
 	margin-top: -8.5px;
 
 	@media all and (min-width: 900px) {
-		height: ${(props) => (props.fullHeight ? '100%' : 'unset')};
+		height: ${(props) => (props.$fullHeight ? '100%' : 'unset')};
 	}
 `

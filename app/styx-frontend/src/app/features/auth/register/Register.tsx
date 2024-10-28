@@ -60,7 +60,7 @@ export const Register = () => {
 					username,
 					password,
 				},
-			})
+			}),
 		)
 		if (error) {
 			raiseError('SERVER_SIDE_ERROR', error.message)

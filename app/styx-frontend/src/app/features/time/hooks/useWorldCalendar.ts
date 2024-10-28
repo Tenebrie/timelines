@@ -19,7 +19,7 @@ export const useWorldCalendar = () => {
 			{ name: 'November', shortName: 'Nov', days: 30 },
 			{ name: 'December', shortName: 'Dec', days: 31 },
 		],
-		[]
+		[],
 	)
 	const defaultUnits = useMemo<SimpleCalendarUnits>(
 		() => ({
@@ -30,7 +30,7 @@ export const useWorldCalendar = () => {
 			inDay: 24,
 			months: defaultMonths,
 		}),
-		[defaultMonths]
+		[defaultMonths],
 	)
 	const availableCalendars = useMemo(
 		() =>
@@ -126,14 +126,14 @@ export const useWorldCalendar = () => {
 					},
 				},
 			] satisfies { id: WorldCalendarType; displayName: string; definition: CalendarDefinition }[],
-		[defaultMonths, defaultUnits]
+		[defaultMonths, defaultUnits],
 	)
 
 	const getCalendar = useCallback(
 		(id: WorldCalendarType) => {
 			return availableCalendars.find((calendar) => calendar.id === id)!
 		},
-		[availableCalendars]
+		[availableCalendars],
 	)
 
 	const listAllCalendars = useCallback(() => {

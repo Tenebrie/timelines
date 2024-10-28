@@ -13,11 +13,11 @@ describe('useDoubleClick', () => {
 		vi.useRealTimers()
 	})
 
-	const mockMouseEvent = (data: { target?: any } = {}) =>
+	const mockMouseEvent = (data: { target?: unknown } = {}) =>
 		({
 			target: 'div1',
 			...data,
-		} as MouseEvent)
+		}) as MouseEvent
 
 	it('performs a single click after delay only', async () => {
 		const onClickSpy = vi.fn()
@@ -27,7 +27,7 @@ describe('useDoubleClick', () => {
 			useDoubleClick<void>({
 				onClick: onClickSpy,
 				onDoubleClick: onDoubleClickSpy,
-			})
+			}),
 		)
 		const { triggerClick } = result.current
 
@@ -53,7 +53,7 @@ describe('useDoubleClick', () => {
 				onClick: onClickSpy,
 				onDoubleClick: onDoubleClickSpy,
 				ignoreDelay: true,
-			})
+			}),
 		)
 		const { triggerClick } = result.current
 
@@ -78,7 +78,7 @@ describe('useDoubleClick', () => {
 			useDoubleClick<void>({
 				onClick: onClickSpy,
 				onDoubleClick: onDoubleClickSpy,
-			})
+			}),
 		)
 		const { triggerClick } = result.current
 
@@ -103,7 +103,7 @@ describe('useDoubleClick', () => {
 			useDoubleClick<{ foo: string }>({
 				onClick: onClickSpy,
 				onDoubleClick: onDoubleClickSpy,
-			})
+			}),
 		)
 		const { triggerClick } = result.current
 
@@ -128,7 +128,7 @@ describe('useDoubleClick', () => {
 			useDoubleClick<{ foo: string }>({
 				onClick: onClickSpy,
 				onDoubleClick: onDoubleClickSpy,
-			})
+			}),
 		)
 		const { triggerClick } = result.current
 
@@ -154,7 +154,7 @@ describe('useDoubleClick', () => {
 			useDoubleClick<{ foo: string }>({
 				onClick: onClickSpy,
 				onDoubleClick: onDoubleClickSpy,
-			})
+			}),
 		)
 		const { triggerClick } = result.current
 
@@ -165,7 +165,7 @@ describe('useDoubleClick', () => {
 				}),
 				{
 					foo: 'my value',
-				}
+				},
 			)
 			triggerClick(
 				mockMouseEvent({
@@ -173,7 +173,7 @@ describe('useDoubleClick', () => {
 				}),
 				{
 					foo: 'my value',
-				}
+				},
 			)
 		})
 

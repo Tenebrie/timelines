@@ -42,7 +42,7 @@ export const ActorRenderer = ({ actor, collapsed, highlighted }: Props) => {
 		actions.push(
 			<IconButton key={'edit'} onClick={() => navigateToActorEditor(actor.id)}>
 				<Edit />
-			</IconButton>
+			</IconButton>,
 		)
 		actions.reverse()
 	}

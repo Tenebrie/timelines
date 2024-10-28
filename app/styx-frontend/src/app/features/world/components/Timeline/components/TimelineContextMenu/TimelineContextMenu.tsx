@@ -38,7 +38,7 @@ export const TimelineContextMenu = () => {
 
 	const onClose = useCallback(
 		() => dispatch(closeTimelineContextMenu()),
-		[closeTimelineContextMenu, dispatch]
+		[closeTimelineContextMenu, dispatch],
 	)
 
 	const onCreateEvent = useCallback(() => {

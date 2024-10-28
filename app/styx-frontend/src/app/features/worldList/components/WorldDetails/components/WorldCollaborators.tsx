@@ -39,14 +39,14 @@ export const WorldCollaborators = ({ worldId, collaborators }: Props) => {
 				setRemovingUser(collaborator.user.id)
 			}
 		},
-		[removeCollaborator, removingUser, worldId]
+		[removeCollaborator, removingUser, worldId],
 	)
 
 	const onShareWorld = useCallback(() => {
 		dispatch(
 			openShareWorldModal({
 				id: worldId,
-			})
+			}),
 		)
 	}, [dispatch, openShareWorldModal, worldId])
 

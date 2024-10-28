@@ -67,7 +67,7 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, worldId]
+		[baseRouter, worldId],
 	)
 
 	const navigateToEventCreator = useCallback(() => {
@@ -101,7 +101,7 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, isReadOnly, worldId]
+		[baseRouter, isReadOnly, worldId],
 	)
 
 	const navigateToActorEditor = useCallback(
@@ -120,7 +120,7 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, isReadOnly, worldId]
+		[baseRouter, isReadOnly, worldId],
 	)
 
 	const navigateToEventEditor = useCallback(
@@ -139,7 +139,7 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, isReadOnly, worldId]
+		[baseRouter, isReadOnly, worldId],
 	)
 
 	const navigateToEventDeltaEditor = useCallback(
@@ -159,7 +159,7 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, isReadOnly, worldId]
+		[baseRouter, isReadOnly, worldId],
 	)
 
 	const selectedTimeOrNull = useMemo(() => {
@@ -175,7 +175,7 @@ export const useWorldRouter = () => {
 		(value: number | null) => {
 			baseRouter.setQuery(QueryParams.SELECTED_TIME, String(value))
 		},
-		[baseRouter]
+		[baseRouter],
 	)
 
 	return {

@@ -22,7 +22,7 @@ export const useTimelineSpacingSlider = () => {
 	const setTimelineSpacingDebounced = useRef(
 		debounce((value: number) => {
 			dispatch(setTimelineSpacing(value))
-		})
+		}),
 	)
 
 	const setValue = (value: number | number[]) => {

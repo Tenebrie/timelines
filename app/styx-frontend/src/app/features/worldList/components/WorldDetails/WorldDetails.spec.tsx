@@ -79,7 +79,7 @@ describe('<WorldDetails />', () => {
 				<>
 					<WorldDetails />
 					<ShareWorldModal />
-				</>
+				</>,
 			)
 
 			mockGetWorldBrief(server, {
@@ -108,7 +108,7 @@ describe('<WorldDetails />', () => {
 				<>
 					<WorldDetails />
 					<ShareWorldModal />
-				</>
+				</>,
 			)
 
 			mockGetWorldBrief(server, {
@@ -165,7 +165,7 @@ describe('<WorldDetails />', () => {
 			})
 
 			const button = await screen.findByLabelText(
-				'Remove user@localhost from collaborators. Requires double click.'
+				'Remove user@localhost from collaborators. Requires double click.',
 			)
 			await user.click(button)
 			await user.click(button)
@@ -201,7 +201,7 @@ describe('<WorldDetails />', () => {
 			})
 
 			const removeCollaboratorButton = await screen.findByLabelText(
-				'Remove user@localhost from collaborators. Requires double click.'
+				'Remove user@localhost from collaborators. Requires double click.',
 			)
 			await user.click(removeCollaboratorButton)
 			await user.click(await screen.findByLabelText('Cancel removing user@localhost from collaborators.'))
