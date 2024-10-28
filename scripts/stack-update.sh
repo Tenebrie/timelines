@@ -3,8 +3,8 @@ if [[ -z "$VERSION" ]]; then
     exit 1
 fi
 
-docker stack deploy -c docker-compose.common.yml -c docker-compose.prod.yml timelines
-
-# Run prune regardless of status codes
-echo -e "\n\nCleaning up after Docker..."
+docker service update --image tenebrie/timelines-gatekeeper:${VERSION} --update-delay 60s --update-parallelism 1 --update-failure-action rollback timelines_gatekeeper
+docker service update --image tenebrie/timelines-styx:${VERSION} --update-delay 60s --update-parallelism 1 --update-failure-action rollback timelines_styx
+docker service update --image tenebrie/timelines-rhea:${VERSION} --update-delay 60s --update-parallelism 1 --update-failure-action rollback timelines_rhea
+docker service update --image tenebrie/timelines-calliope:${VERSION} --update-delay 60s --update-parallelism 1 --update-failure-action rollback timelines_calliope
 docker system prune -f
