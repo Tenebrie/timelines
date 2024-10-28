@@ -45,7 +45,7 @@ const App = () => {
 				<Box
 					sx={{
 						color: theme.palette.text.secondary,
-						bgcolor: theme.palette.background.paper,
+						bgcolor: theme.palette.background.default,
 					}}
 				>
 					<RouterWrapper />

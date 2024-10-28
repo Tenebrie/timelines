@@ -1,6 +1,6 @@
 import { LoginRounded } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Link, Stack, TextField } from '@mui/material'
+import { Divider, Link, Paper, Stack, TextField, Typography } from '@mui/material'
 import { KeyboardEvent, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { NavLink } from 'react-router-dom'
@@ -44,7 +44,6 @@ export const Login = () => {
 			return
 		}
 
-		clearError()
 		const { response, error } = parseApiResponse(
 			await login({
 				body: {
@@ -57,6 +56,7 @@ export const Login = () => {
 			raiseError('SERVER_SIDE_ERROR', error.message)
 			return
 		}
+		clearError()
 		dispatch(setUser(response))
 		navigateTo({ target: appRoutes.home })
 	}
@@ -68,41 +68,53 @@ export const Login = () => {
 	}
 
 	return (
-		<Stack spacing={2} justifyContent="center" width="300px">
-			<Stack alignItems="center">
-				<TenebrieLogo />
-			</Stack>
-			<AlreadyLoggedInAlert parentSpacing={2} />
-			<FormErrorBanner errorState={errorState} />
-			<TextField
-				label="Email"
-				type="text"
-				value={email}
-				onChange={(event) => setEmail(event.target.value)}
-				autoFocus
-				onKeyDown={onEnterKey}
-				error={!!error && error.type === 'MISSING_EMAIL'}
-			/>
-			<TextField
-				label="Password"
-				type="password"
-				value={password}
-				onChange={(event) => setPassword(event.target.value)}
-				onKeyDown={onEnterKey}
-				error={!!error && error.type === 'MISSING_PASSWORD'}
-			/>
-			<LoadingButton
-				loading={isLoading}
-				variant="contained"
-				onClick={onLogin}
-				loadingPosition="center"
-				startIcon={<LoginRounded />}
-			>
-				<span>Login</span>
-			</LoadingButton>
-			<Link component={NavLink} to="/register">
-				Create a new account
-			</Link>
+		<Stack justifyContent="center">
+			<Paper elevation={2}>
+				<Stack spacing={2} justifyContent="center" width="300px" padding={4}>
+					<Stack alignItems="center">
+						<TenebrieLogo />
+					</Stack>
+					<Divider />
+					<Typography variant="h6" align="center">
+						Sign in to Timelines
+					</Typography>
+					<AlreadyLoggedInAlert parentSpacing={2} />
+					<FormErrorBanner errorState={errorState} />
+					<TextField
+						id="email"
+						label="Email"
+						type="text"
+						value={email}
+						placeholder="example@timelines.com"
+						onChange={(event) => setEmail(event.target.value)}
+						autoFocus
+						onKeyDown={onEnterKey}
+						error={!!error && error.type === 'MISSING_EMAIL'}
+					/>
+					<TextField
+						id="password"
+						label="Password"
+						type="password"
+						value={password}
+						placeholder="Your password"
+						onChange={(event) => setPassword(event.target.value)}
+						onKeyDown={onEnterKey}
+						error={!!error && error.type === 'MISSING_PASSWORD'}
+					/>
+					<LoadingButton
+						loading={isLoading}
+						variant="contained"
+						onClick={onLogin}
+						loadingPosition="center"
+						startIcon={<LoginRounded />}
+					>
+						<span>Sign In</span>
+					</LoadingButton>
+					<Link component={NavLink} to="/register">
+						Create a new account
+					</Link>
+				</Stack>
+			</Paper>
 		</Stack>
 	)
 }

@@ -21,7 +21,10 @@ export const FormErrorBanner = ({ errorState, marginBottom }: Props) => {
 			{error && (
 				<Collapse>
 					<Alert
-						style={{ marginBottom: marginBottom ?? 16 }}
+						sx={{
+							marginBottom: marginBottom ?? '16px',
+							'& > .MuiAlert-action': { paddingTop: 0 },
+						}}
 						severity="error"
 						action={
 							<IconButton size="small" onClick={clearError}>

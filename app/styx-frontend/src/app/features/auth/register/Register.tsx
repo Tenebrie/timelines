@@ -1,6 +1,6 @@
 import { AppRegistrationRounded } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
-import { Link, Stack, TextField } from '@mui/material'
+import { Divider, Link, Paper, Stack, TextField, Typography } from '@mui/material'
 import { KeyboardEvent, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { NavLink } from 'react-router-dom'
@@ -81,57 +81,69 @@ export const Register = () => {
 	}
 
 	return (
-		<Stack spacing={2} justifyContent="center" width="300px">
-			<Stack alignItems="center">
-				<TenebrieLogo />
-			</Stack>
-			<AlreadyLoggedInAlert parentSpacing={2} />
-			<FormErrorBanner errorState={errorState} />
-			<TextField
-				label="Email"
-				type="text"
-				value={email}
-				onChange={(event) => setEmail(event.target.value)}
-				autoFocus
-				onKeyDown={onEnterKey}
-				error={!!error && error.type === 'MISSING_EMAIL'}
-			/>
-			<TextField
-				label="Username"
-				type="text"
-				value={username}
-				onChange={(event) => setUsername(event.target.value)}
-				onKeyDown={onEnterKey}
-				error={!!error && error.type === 'MISSING_USERNAME'}
-			/>
-			<TextField
-				label="Password"
-				type="password"
-				value={password}
-				onChange={(event) => setPassword(event.target.value)}
-				onKeyDown={onEnterKey}
-				error={!!error && (error.type === 'MISSING_PASSWORD' || error.type === 'PASSWORDS_DO_NOT_MATCH')}
-			/>
-			<TextField
-				label="Confirm password"
-				type="password"
-				value={confirmPassword}
-				onChange={(event) => setConfirmPassword(event.target.value)}
-				onKeyDown={onEnterKey}
-				error={!!error && error.type === 'PASSWORDS_DO_NOT_MATCH'}
-			/>
-			<LoadingButton
-				loading={isLoading}
-				variant="contained"
-				onClick={onRegister}
-				loadingPosition="center"
-				startIcon={<AppRegistrationRounded />}
-			>
-				<span>Register</span>
-			</LoadingButton>
-			<Link component={NavLink} to="/login">
-				Already have an account? Login instead
-			</Link>
+		<Stack justifyContent="center">
+			<Paper elevation={2}>
+				<Stack spacing={2} justifyContent="center" width="300px" padding={4}>
+					<Stack alignItems="center">
+						<TenebrieLogo />
+					</Stack>
+					<Divider />
+					<Typography variant="h6" align="center">
+						Create an Account
+					</Typography>
+					<AlreadyLoggedInAlert parentSpacing={2} />
+					<FormErrorBanner errorState={errorState} />
+					<TextField
+						id="email"
+						label="Email"
+						type="text"
+						value={email}
+						onChange={(event) => setEmail(event.target.value)}
+						autoFocus
+						onKeyDown={onEnterKey}
+						error={!!error && error.type === 'MISSING_EMAIL'}
+					/>
+					<TextField
+						id="username"
+						label="Username"
+						type="text"
+						value={username}
+						onChange={(event) => setUsername(event.target.value)}
+						onKeyDown={onEnterKey}
+						error={!!error && error.type === 'MISSING_USERNAME'}
+					/>
+					<TextField
+						id="password"
+						label="Password"
+						type="password"
+						value={password}
+						onChange={(event) => setPassword(event.target.value)}
+						onKeyDown={onEnterKey}
+						error={!!error && (error.type === 'MISSING_PASSWORD' || error.type === 'PASSWORDS_DO_NOT_MATCH')}
+					/>
+					<TextField
+						id="confirm-password"
+						label="Confirm password"
+						type="password"
+						value={confirmPassword}
+						onChange={(event) => setConfirmPassword(event.target.value)}
+						onKeyDown={onEnterKey}
+						error={!!error && error.type === 'PASSWORDS_DO_NOT_MATCH'}
+					/>
+					<LoadingButton
+						loading={isLoading}
+						variant="contained"
+						onClick={onRegister}
+						loadingPosition="center"
+						startIcon={<AppRegistrationRounded />}
+					>
+						<span>Register</span>
+					</LoadingButton>
+					<Link component={NavLink} to="/login">
+						Already have an account? Sign in instead
+					</Link>
+				</Stack>
+			</Paper>
 		</Stack>
 	)
 }
