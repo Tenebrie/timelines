@@ -119,7 +119,7 @@ export const RevokedStatementWizard = () => {
 					options={options}
 					data-hj-suppress
 					renderOption={(props, option) => (
-						<ListItem key={option.card.id} {...props}>
+						<ListItem {...props} key={option.card.id}>
 							<EventHeaderRenderer event={option.card} owningActor={null} short={true} active />
 						</ListItem>
 					)}
