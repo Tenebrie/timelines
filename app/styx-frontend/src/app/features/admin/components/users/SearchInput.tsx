@@ -1,7 +1,7 @@
-import { Search } from '@mui/icons-material'
-import { Input, InputAdornment } from '@mui/material'
-import debounce from 'lodash.debounce'
-import { useRef, useState } from 'react'
+import { Clear, Search } from '@mui/icons-material'
+import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack } from '@mui/material'
+
+import { useDebouncedState } from '../../../../../hooks/useDebouncedState'
 
 type Props = {
 	initialQuery: string
@@ -9,29 +9,30 @@ type Props = {
 }
 
 export const SearchInput = ({ initialQuery, onChange }: Props) => {
-	const [query, setQuery] = useState(initialQuery)
-
-	const onQueryChange = (newQuery: string) => {
-		setQuery(newQuery)
-		emitQueryDebounced.current(newQuery)
-	}
-
-	const emitQueryDebounced = useRef(
-		debounce((newQuery: string) => {
-			onChange(newQuery)
-		}, 500),
-	)
+	const [query, setQuery, setQueryInstant] = useDebouncedState({
+		initialValue: initialQuery,
+		onDebounce: onChange,
+	})
 
 	return (
-		<Input
-			value={query}
-			onChange={(event) => onQueryChange(event.target.value)}
-			placeholder="Search"
-			startAdornment={
-				<InputAdornment position="start">
-					<Search />
-				</InputAdornment>
-			}
-		/>
+		<Stack direction="row">
+			<FormControl variant="outlined" size="small">
+				<InputLabel htmlFor="adminUserListSearch">Search</InputLabel>
+				<OutlinedInput
+					id="adminUserListSearch"
+					label="Search"
+					value={query}
+					onChange={(event) => setQuery(event.target.value)}
+					size="small"
+					endAdornment={
+						<InputAdornment position="end">
+							<IconButton onClick={() => setQueryInstant('')}>
+								{query.length > 0 ? <Clear /> : <Search />}
+							</IconButton>
+						</InputAdornment>
+					}
+				/>
+			</FormControl>
+		</Stack>
 	)
 }
