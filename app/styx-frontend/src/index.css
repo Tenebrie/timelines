@@ -23,32 +23,6 @@ code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-.scroller {
-	--scrollbar-color-thumb: hotpink;
-	--scrollbar-color-track: blue;
-	--scrollbar-width: thin;
-	--scrollbar-width-legacy: 10px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-	background: rgba(255, 255, 255, 0.1);
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-	background: rgba(255, 255, 255, 0.3);
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-	background: rgba(255, 255, 255, 0.2);
-}
-
-::-webkit-scrollbar-thumb:active {
-	background: rgba(255, 255, 255, 0.1);
-}
-
 fieldset {
 	min-width: 0;
 	min-height: 0;

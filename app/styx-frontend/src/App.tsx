@@ -11,6 +11,7 @@ import { useLiveUpdates } from './app/features/liveUpdates/useLiveUpdates'
 import { getUserPreferences } from './app/features/preferences/selectors'
 import { useSavedPreferences } from './app/features/preferences/useSavedPreferences'
 import { darkTheme, lightTheme } from './app/features/theming/themes'
+import { useBrowserSpecificScrollbars } from './hooks/useBrowserSpecificScrollbars'
 
 const Container = styled.div`
 	display: flex;
@@ -36,17 +37,15 @@ const RouterWrapper = () => {
 const App = () => {
 	useLiveUpdates()
 	useSavedPreferences()
+	const scrollbarThemes = useBrowserSpecificScrollbars()
 
 	const { colorMode } = useSelector(getUserPreferences)
 	const theme = useMemo(() => (colorMode === 'light' ? lightTheme : darkTheme), [colorMode])
 
 	const themeOverrides: SxProps<Theme> = {
+		...scrollbarThemes,
 		color: theme.palette.text.secondary,
 		bgcolor: theme.palette.background.default,
-		'& *': {
-			scrollbarWidth: 'thin',
-			scrollbarColor: 'rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1)',
-		},
 	}
 
 	return (
