@@ -1,12 +1,14 @@
 import { Button, Grid, Stack, Typography } from '@mui/material'
 
+import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
+
 export const OutlinerEmptyState = () => {
 	// const dispatch = useDispatch()
-	// const { navigateToEventCreator } = useWorldRouter()
+	const { navigateToEventCreator } = useWorldRouter()
 	// const { openEventTutorialModal } = worldSlice.actions
 
 	const onCreateEvent = () => {
-		// navigateToEventCreator()
+		navigateToEventCreator()
 	}
 
 	// const onShowTutorial = () => {
