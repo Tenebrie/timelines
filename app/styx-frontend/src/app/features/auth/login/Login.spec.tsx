@@ -21,7 +21,7 @@ describe('<Login />', () => {
 
 		expect(screen.getByLabelText('Email')).toBeInTheDocument()
 		expect(screen.getByLabelText('Password')).toBeInTheDocument()
-		expect(screen.getByText('Login')).toBeInTheDocument()
+		expect(screen.getByText('Sign In')).toBeInTheDocument()
 		expect(screen.getByText('Create a new account')).toBeInTheDocument()
 	})
 
@@ -53,7 +53,7 @@ describe('<Login />', () => {
 
 			expect(screen.getByLabelText('Email')).toBeInTheDocument()
 			expect(screen.getByLabelText('Password')).toBeInTheDocument()
-			expect(screen.getByText('Login')).toBeInTheDocument()
+			expect(screen.getByText('Sign In')).toBeInTheDocument()
 			expect(screen.getByText('Create a new account')).toBeInTheDocument()
 		})
 
@@ -85,7 +85,7 @@ describe('<Login />', () => {
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')
-			await user.click(screen.getByText('Login'))
+			await user.click(screen.getByText('Sign In'))
 
 			expect(hasBeenCalled()).toBeTruthy()
 		})
@@ -113,7 +113,7 @@ describe('<Login />', () => {
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')
 
-			await user.click(screen.getByText('Login'))
+			await user.click(screen.getByText('Sign In'))
 
 			await waitFor(() => expect(window.location.pathname).toEqual(appRoutes.home))
 			expect(store.getState().auth.user).toEqual({
@@ -128,7 +128,7 @@ describe('<Login />', () => {
 			const { user } = await renderWithRouter('login')
 
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')
-			await user.click(screen.getByText('Login'))
+			await user.click(screen.getByText('Sign In'))
 
 			expect(await screen.findByText('Missing email')).toBeInTheDocument()
 		})
@@ -137,7 +137,7 @@ describe('<Login />', () => {
 			const { user } = await renderWithRouter('login')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
-			await user.click(screen.getByText('Login'))
+			await user.click(screen.getByText('Sign In'))
 
 			expect(await screen.findByText('Missing password')).toBeInTheDocument()
 		})
@@ -161,7 +161,7 @@ describe('<Login />', () => {
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')
-			await user.click(screen.getByText('Login'))
+			await user.click(screen.getByText('Sign In'))
 
 			expect(await screen.findByText('Password invalid')).toBeInTheDocument()
 
@@ -187,7 +187,7 @@ describe('<Login />', () => {
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')
-			await user.click(screen.getByText('Login'))
+			await user.click(screen.getByText('Sign In'))
 
 			await user.type(screen.getByLabelText('Email'), '111')
 

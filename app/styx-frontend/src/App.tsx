@@ -20,29 +20,10 @@ const Container = styled.div`
 	min-height: 100vh;
 `
 
-const RouterWrapper = () => {
-	const { success, target } = useAuthCheck()
-
-	if (!success) {
-		console.log('Go away')
-		window.location.href = target
-		return (
-			<Container>
-				<Outlet />
-			</Container>
-		)
-	}
-
-	return (
-		<Container>
-			<Outlet />
-		</Container>
-	)
-}
-
 const App = () => {
 	useLiveUpdates()
 	useSavedPreferences()
+	useAuthCheck()
 	const scrollbarThemes = useBrowserSpecificScrollbars()
 
 	const { colorMode } = useSelector(getUserPreferences)
@@ -62,7 +43,9 @@ const App = () => {
 		<div className="App">
 			<ThemeProvider theme={theme}>
 				<Box sx={themeOverrides}>
-					<RouterWrapper />
+					<Container>
+						<Outlet />
+					</Container>
 					<LostConnectionAlert server="rhea" />
 					<LostConnectionAlert server="calliope" />
 				</Box>
