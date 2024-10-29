@@ -37,7 +37,7 @@ export const SmallProfile = () => {
 			loadingPosition="start"
 			startIcon={user ? <Logout /> : <Login />}
 		>
-			<span>{user ? 'Sign Out' : 'Sign In'}</span>
+			<span style={{ minWidth: '58px' }}>{user ? 'Sign Out' : 'Sign In'}</span>
 		</LoadingButton>
 	)
 }

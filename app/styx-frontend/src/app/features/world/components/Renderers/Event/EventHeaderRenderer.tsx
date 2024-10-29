@@ -34,7 +34,7 @@ export const EventHeaderRenderer = ({ event, owningActor, short, active }: Props
 				data-hj-suppress
 				primary={
 					<ShortText
-						inactive={!active}
+						$inactive={!active}
 						style={{ fontWeight: theme.typography.fontWeightBold, color: theme.palette.secondary.main }}
 					>
 						{event.name}

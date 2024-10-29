@@ -64,7 +64,7 @@ export const TimelineEventGroup = ({
 
 	return (
 		<Group
-			position={position}
+			$position={position}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 			className={`${visible ? 'visible' : ''} ${isExpanded ? 'expanded' : ''}`}

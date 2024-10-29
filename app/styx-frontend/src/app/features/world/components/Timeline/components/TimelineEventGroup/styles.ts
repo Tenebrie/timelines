@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 
-export const Group = styled.div.attrs<{ position: number }>((props) => ({
+export const Group = styled.div.attrs<{ $position: number }>((props) => ({
 	style: {
-		left: `${props.position}px`,
+		left: `${props.$position}px`,
 	},
-}))<{ position: number }>`
+}))<{ $position: number }>`
 	display: flex;
 	flex-direction: column-reverse;
 	position: absolute;
