@@ -38,7 +38,6 @@ const App = () => {
 	useSavedPreferences()
 
 	const { colorMode } = useSelector(getUserPreferences)
-	console.log(colorMode)
 	const theme = useMemo(() => (colorMode === 'light' ? lightTheme : darkTheme), [colorMode])
 
 	const themeOverrides: SxProps<Theme> = {

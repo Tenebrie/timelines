@@ -2,9 +2,9 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { Actor, WorldEvent } from '../world/types'
-import { DefaultPreferencesValue, loadPreferences } from './loadPreferences'
+import { loadPreferences } from './loadPreferences'
 
-const initialState = DefaultPreferencesValue
+const initialState = loadPreferences()
 
 const saveToLocalStorage = (state: PreferencesState) => {
 	window.localStorage.setItem(
