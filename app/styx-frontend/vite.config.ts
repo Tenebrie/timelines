@@ -50,7 +50,7 @@ export default defineConfig({
 					} else if (id.includes('src/app/features/world')) {
 						return 'world'
 					}
-					return 'appindextest'
+					return undefined
 				},
 			},
 		},
