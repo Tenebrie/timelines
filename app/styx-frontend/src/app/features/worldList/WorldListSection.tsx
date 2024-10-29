@@ -59,36 +59,34 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 	}
 
 	return (
-		<OutlinedContainer style={{ maxWidth: 600, minWidth: 400 }} label={label} fullHeight>
-			<Stack spacing={1} minWidth={256}>
-				{worlds.map((world) => (
-					<Stack direction="row" justifyContent="space-between" key={world.id}>
-						<Tooltip title={world.name} enterDelay={1000} arrow>
-							<Button
-								fullWidth={true}
-								onClick={() => onLoad(world.id)}
-								style={{ textAlign: 'start', lineBreak: 'anywhere' }}
-								data-hj-suppress
-							>
-								<TrunkatedSpan lines={1} style={{ width: '100%' }}>
-									- {world.name}
-								</TrunkatedSpan>
+		<OutlinedContainer style={{ maxWidth: 600, minWidth: 400 }} label={label}>
+			{worlds.map((world) => (
+				<Stack direction="row" justifyContent="space-between" key={world.id}>
+					<Tooltip title={world.name} enterDelay={1000} arrow>
+						<Button
+							fullWidth={true}
+							onClick={() => onLoad(world.id)}
+							style={{ textAlign: 'start', lineBreak: 'anywhere' }}
+							data-hj-suppress
+						>
+							<TrunkatedSpan lines={1} style={{ width: '100%' }}>
+								- {world.name}
+							</TrunkatedSpan>
+						</Button>
+					</Tooltip>
+					{showActions && (
+						<Stack direction="row" gap={0.5}>
+							<Button onClick={() => onEdit(world.id)}>
+								<Edit />
 							</Button>
-						</Tooltip>
-						{showActions && (
-							<Stack direction="row" gap={0.5}>
-								<Button onClick={() => onEdit(world.id)}>
-									<Edit />
-								</Button>
-								<Button onClick={() => onDelete(world)}>
-									<Delete />
-								</Button>
-							</Stack>
-						)}
-					</Stack>
-				))}
-				{showCreateButton && <Button onClick={onCreate}>Create new world...</Button>}
-			</Stack>
+							<Button onClick={() => onDelete(world)}>
+								<Delete />
+							</Button>
+						</Stack>
+					)}
+				</Stack>
+			))}
+			{showCreateButton && <Button onClick={onCreate}>Create new world...</Button>}
 		</OutlinedContainer>
 	)
 }
