@@ -86,7 +86,7 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 					y: clickEvent.clientY,
 				},
 				selectedTime: entity.markerType === 'revokedAt' ? (entity.revokedAt as number) : entity.timestamp,
-			})
+			}),
 		)
 	}
 
@@ -129,7 +129,7 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 				ghostEvent: entity.markerType === 'ghostEvent',
 				ghostDelta: entity.markerType === 'ghostDelta',
 			})}
-			iconPath={getIconPath(entity.icon)}
+			$iconPath={getIconPath(entity.icon)}
 			data-testid="timeline-event-marker"
 		>
 			{isInfoVisible && (

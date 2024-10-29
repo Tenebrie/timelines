@@ -23,7 +23,7 @@ describe('<Register />', () => {
 		expect(screen.getByLabelText('Password')).toBeInTheDocument()
 		expect(screen.getByLabelText('Confirm password')).toBeInTheDocument()
 		expect(screen.getByText('Register')).toBeInTheDocument()
-		expect(screen.getByText('Already have an account? Login instead')).toBeInTheDocument()
+		expect(screen.getByText('Already have an account? Sign in instead')).toBeInTheDocument()
 	})
 
 	it("does not render the 'continue to app' alert", async () => {
@@ -62,7 +62,7 @@ describe('<Register />', () => {
 		it('navigates to registration on link click', async () => {
 			const { user } = await renderWithRouter('register')
 
-			await user.click(screen.getByText('Already have an account? Login instead'))
+			await user.click(screen.getByText('Already have an account? Sign in instead'))
 			expect(window.location.pathname).toEqual(appRoutes.login)
 		})
 

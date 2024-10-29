@@ -58,7 +58,7 @@ export const useEditEventDelta = ({ mode, deltaState, errorState, state }: Props
 						name: body.description && body.name ? body.name : null,
 						description: body.description,
 					},
-				})
+				}),
 			)
 			if (error) {
 				errorState.raiseError('DELTA_EDITING_FAILED', error.message)
@@ -67,7 +67,7 @@ export const useEditEventDelta = ({ mode, deltaState, errorState, state }: Props
 			lastSavedAt.current = new Date()
 			errorState.clearError()
 		},
-		[deltaState.id, deltaState.worldEventId, errorState, setDirty, updateDeltaState, worldId]
+		[deltaState.id, deltaState.worldEventId, errorState, setDirty, updateDeltaState, worldId],
 	)
 
 	const {

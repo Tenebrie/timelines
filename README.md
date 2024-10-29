@@ -1,4 +1,3 @@
-// TODO: Run migrations on CI deploy
 This readme is WIP
 
 # Running the app
@@ -7,14 +6,16 @@ The development environment requires Node, Yarn and Docker to run.
 
 In most cases, the following commands are enough to have the entire environment up and running:
 
-`yarn`
-`yarn docker`
+`yarn` <!-- Install dependencies -->
+`yarn docker` <!-- Run containers -->
+`yarn docker:migrate:dev` <!-- Run migrations -->
+`yarn db:seed` <!-- Create the default user -->
 
-The default admin user is `admin@localhost` with password `q`. If the user did not get created automatically, you can run `yarn db:seed` to manually create the first user.
+The default admin user is `admin@localhost` with password `q`.
 
 For a quick update on a running environment after a dependency update, change to Prisma types, creating a new migration, change to tsconfig.json or another change to package.json, use the following:
 
-`yarn docker:install`
+`yarn docker:update`
 
 - Note: App should be running for this command to work.
 

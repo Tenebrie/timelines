@@ -24,7 +24,7 @@ type TwelveRealMonths = [
 	RealWorldMonth,
 	RealWorldMonth,
 	RealWorldMonth,
-	RealWorldMonth
+	RealWorldMonth,
 ]
 export type TwelveCustomMonths = [
 	CustomWorldMonth,
@@ -38,7 +38,7 @@ export type TwelveCustomMonths = [
 	CustomWorldMonth,
 	CustomWorldMonth,
 	CustomWorldMonth,
-	CustomWorldMonth
+	CustomWorldMonth,
 ]
 export type SimpleCalendarUnits = {
 	inMillisecond: number

@@ -96,7 +96,7 @@ export const worldSlice = createSlice({
 		},
 		loadWorld: (
 			state,
-			{ payload }: PayloadAction<{ world: GetWorldInfoApiResponse; actorColors: string[] }>
+			{ payload }: PayloadAction<{ world: GetWorldInfoApiResponse; actorColors: string[] }>,
 		) => {
 			const world = payload.world
 			state.isLoaded = true
@@ -105,7 +105,7 @@ export const worldSlice = createSlice({
 			state.actors = [...world.actors].sort(
 				(a, b) =>
 					payload.actorColors.indexOf(a.color) - payload.actorColors.indexOf(b.color) ||
-					a.name.localeCompare(b.name)
+					a.name.localeCompare(b.name),
 			)
 			state.events = world.events.map((e) => ingestEvent(e))
 			state.calendar = world.calendar
@@ -194,7 +194,7 @@ export const worldSlice = createSlice({
 				selectedTime: number
 				selectedEvent: TimelineEntity | null
 				mousePos: { x: number; y: number }
-			}>
+			}>,
 		) => {
 			state.timelineContextMenu.isOpen = true
 			state.timelineContextMenu.selectedTime = payload.selectedTime

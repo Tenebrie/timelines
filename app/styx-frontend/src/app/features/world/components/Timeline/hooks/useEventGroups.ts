@@ -39,8 +39,8 @@ const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; 
 						key: `${delta.id}-delta`,
 						markerPosition: delta.timestamp,
 						markerType: asMarkerType('deltaState'),
-					}))
-				)
+					})),
+				),
 			)
 			.concat(
 				events
@@ -51,7 +51,7 @@ const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; 
 						key: `${event.id}-revoked`,
 						markerPosition: event.revokedAt!,
 						markerType: asMarkerType('revokedAt'),
-					}))
+					})),
 			)
 			.sort((a, b) => b.markerPosition - a.markerPosition)
 

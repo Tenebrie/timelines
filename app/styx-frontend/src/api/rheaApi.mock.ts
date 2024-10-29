@@ -42,9 +42,9 @@ type MockParams<ResponseT extends DefaultBodyType> =
 
 const generateEndpointMock = (
 	server: SetupServer,
-	{ method, path, ...params }: { method: HttpMethod; path: string } & MockParams<DefaultBodyType>
+	{ method, path, ...params }: { method: HttpMethod; path: string } & MockParams<DefaultBodyType>,
 ) => {
-	let invocations: { jsonBody: any }[] = []
+	let invocations: { jsonBody: unknown }[] = []
 
 	const handler = rest[method](path, async (req, res, ctx) => {
 		invocations.push({ jsonBody: req.method === 'POST' || req.method === 'PATCH' ? await req.json() : {} })
@@ -83,7 +83,7 @@ const generateEndpointMock = (
  */
 export const mockCheckAuthentication = (
 	server: SetupServer,
-	params: MockParams<CheckAuthenticationApiResponse>
+	params: MockParams<CheckAuthenticationApiResponse>,
 ) => generateEndpointMock(server, { method: 'get', path: '/api/auth', ...params })
 
 export const mockGetWorlds = (server: SetupServer, params: MockParams<GetWorldsApiResponse>) =>
@@ -91,12 +91,12 @@ export const mockGetWorlds = (server: SetupServer, params: MockParams<GetWorldsA
 
 export const mockGetWorldBrief = (
 	server: SetupServer,
-	params: { worldId: string } & MockParams<GetWorldBriefApiResponse>
+	params: { worldId: string } & MockParams<GetWorldBriefApiResponse>,
 ) => generateEndpointMock(server, { method: 'get', path: `/api/world/${params.worldId}/brief`, ...params })
 
 export const mockGetWorldDetails = (
 	server: SetupServer,
-	params: { worldId: string } & MockParams<GetWorldInfoApiResponse>
+	params: { worldId: string } & MockParams<GetWorldInfoApiResponse>,
 ) => generateEndpointMock(server, { method: 'get', path: `/api/world/${params.worldId}`, ...params })
 
 export const mockCreateWorld = (server: SetupServer, params: MockParams<CreateWorldApiResponse>) =>
@@ -104,12 +104,12 @@ export const mockCreateWorld = (server: SetupServer, params: MockParams<CreateWo
 
 export const mockDeleteWorld = (
 	server: SetupServer,
-	params: { worldId: string } & MockParams<DeleteWorldApiResponse>
+	params: { worldId: string } & MockParams<DeleteWorldApiResponse>,
 ) => generateEndpointMock(server, { method: 'delete', path: `/api/world/${params.worldId}`, ...params })
 
 export const mockGetWorldCollaborators = (
 	server: SetupServer,
-	params: { worldId: string } & MockParams<GetWorldCollaboratorsApiResponse>
+	params: { worldId: string } & MockParams<GetWorldCollaboratorsApiResponse>,
 ) =>
 	generateEndpointMock(server, {
 		method: 'get',
@@ -125,7 +125,7 @@ export const mockPostLogin = (server: SetupServer, params: MockParams<PostLoginA
 
 export const mockUpdateActor = (
 	server: SetupServer,
-	params: { worldId: string; actorId: string } & MockParams<UpdateActorApiResponse>
+	params: { worldId: string; actorId: string } & MockParams<UpdateActorApiResponse>,
 ) =>
 	generateEndpointMock(server, {
 		method: 'patch',
@@ -135,7 +135,7 @@ export const mockUpdateActor = (
 
 export const mockUpdateWorldEvent = (
 	server: SetupServer,
-	params: { worldId: string; eventId: string } & MockParams<UpdateWorldEventApiResponse>
+	params: { worldId: string; eventId: string } & MockParams<UpdateWorldEventApiResponse>,
 ) =>
 	generateEndpointMock(server, {
 		method: 'patch',
@@ -145,7 +145,7 @@ export const mockUpdateWorldEvent = (
 
 export const mockDeleteWorldEvent = (
 	server: SetupServer,
-	params: { worldId: string; eventId: string } & MockParams<DeleteWorldEventApiResponse>
+	params: { worldId: string; eventId: string } & MockParams<DeleteWorldEventApiResponse>,
 ) =>
 	generateEndpointMock(server, {
 		method: 'delete',
@@ -158,7 +158,7 @@ export const mockAddCollaborator = (server: SetupServer, params: { worldId: stri
 
 export const mockRemoveCollaborator = (
 	server: SetupServer,
-	params: { worldId: string; userId: string } & MockParams<null>
+	params: { worldId: string; userId: string } & MockParams<null>,
 ) =>
 	generateEndpointMock(server, {
 		method: 'delete',
@@ -175,7 +175,7 @@ export const mockGetAnnouncements = (server: SetupServer, params: MockParams<Get
 
 export const mockListWorldAccessModes = (
 	server: SetupServer,
-	params: MockParams<ListWorldAccessModesApiResponse>
+	params: MockParams<ListWorldAccessModesApiResponse>,
 ) => generateEndpointMock(server, { method: 'get', path: '/api/constants/world-access-modes', ...params })
 
 /**
@@ -281,11 +281,12 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	extraFields: [],
 	customName: false,
 	deltaStates: [],
+	externalLink: '',
 	...statement,
 })
 
 export const mockEventDeltaModel = (
-	provided: Partial<WorldEventDelta> & Pick<WorldEventDelta, 'worldEventId'>
+	provided: Partial<WorldEventDelta> & Pick<WorldEventDelta, 'worldEventId'>,
 ): WorldEventDelta => ({
 	id: getRandomId(),
 	createdAt: new Date(0).toISOString(),
@@ -297,7 +298,7 @@ export const mockEventDeltaModel = (
 })
 
 export const mockApiWorldDetailsModel = (
-	world: Partial<GetWorldInfoApiResponse> = {}
+	world: Partial<GetWorldInfoApiResponse> = {},
 ): GetWorldInfoApiResponse => ({
 	id: getRandomId(),
 	name: 'World name',
@@ -314,7 +315,7 @@ export const mockApiWorldDetailsModel = (
 })
 
 export const mockApiEventModel = (
-	statement: Partial<GetWorldInfoApiResponse['events'][number]> = {}
+	statement: Partial<GetWorldInfoApiResponse['events'][number]> = {},
 ): GetWorldInfoApiResponse['events'][number] => ({
 	id: getRandomId(),
 	worldId: 'world-1111-2222-3333-4444',
@@ -333,5 +334,6 @@ export const mockApiEventModel = (
 	customName: false,
 	deltaStates: [],
 	revokedAt: null,
+	externalLink: '',
 	...statement,
 })

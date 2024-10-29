@@ -11,7 +11,7 @@ export const useDoubleClick = <ArgsT,>({ onClick, onDoubleClick, ignoreDelay }: 
 	const singleClickTimeout = useRef<number>(0)
 	const singleClickArguments = useRef<ArgsT>()
 	const lastClickTimestampRef = useRef<number>(0)
-	const lastClickTargetRef = useRef<any>(null)
+	const lastClickTargetRef = useRef<EventTarget | null>(null)
 
 	const onSingleClickTimeout = useCallback(() => {
 		onClick(singleClickArguments.current as ArgsT)
@@ -38,7 +38,7 @@ export const useDoubleClick = <ArgsT,>({ onClick, onDoubleClick, ignoreDelay }: 
 				singleClickArguments.current = args
 			}
 		},
-		[ignoreDelay, onClick, onDoubleClick, onSingleClickTimeout]
+		[ignoreDelay, onClick, onDoubleClick, onSingleClickTimeout],
 	)
 
 	return {

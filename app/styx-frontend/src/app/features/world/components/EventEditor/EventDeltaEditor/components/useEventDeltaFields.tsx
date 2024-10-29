@@ -39,7 +39,7 @@ export const useEventDeltaFields = ({ delta }: Props) => {
 			setTimestamp: generateSetter(setTimestampDirect),
 			setDescription: generateSetter(setDescriptionDirect),
 		}),
-		[]
+		[],
 	)
 
 	return {

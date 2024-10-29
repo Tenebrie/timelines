@@ -67,7 +67,7 @@ export const EventWizardModal = () => {
 					modules: [],
 					icon: 'default',
 				},
-			})
+			}),
 		)
 		if (error) {
 			setNameValidationError(error.message)

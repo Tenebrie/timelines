@@ -9,7 +9,7 @@ export const useCollaboratorAccess = () => {
 			ReadOnly: undefined,
 			Editing: undefined,
 		}),
-		[]
+		[],
 	)
 
 	const listAllLevels = useCallback(() => keysOf(data), [data])

@@ -23,8 +23,8 @@ const WorldListContainer = styled.div`
 `
 
 export const Home = () => {
-	const { success, target } = useAuthCheck()
 	const currentOutlet = useOutlet()
+	const { success, target } = useAuthCheck()
 
 	if (!success) {
 		return <Navigate to={target} />

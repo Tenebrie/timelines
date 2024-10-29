@@ -14,7 +14,7 @@ export const HoveredTimelineEvents = {
 
 	unhoverEvent: (event: WorldEvent | WorldEventBundle) => {
 		HoveredTimelineEvents.events = HoveredTimelineEvents.events.filter(
-			(hoveredEvent) => hoveredEvent.id !== event.id
+			(hoveredEvent) => hoveredEvent.id !== event.id,
 		)
 	},
 
@@ -24,7 +24,7 @@ export const HoveredTimelineEvents = {
 
 	unhoverEdgeScroller: (side: 'left' | 'right') => {
 		HoveredTimelineEvents.edgeScrollers = HoveredTimelineEvents.edgeScrollers.filter(
-			(hoveredEvent) => hoveredEvent !== side
+			(hoveredEvent) => hoveredEvent !== side,
 		)
 	},
 }

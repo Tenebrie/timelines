@@ -18,7 +18,7 @@ describe('useEntityName', () => {
 			useEntityName({
 				...getDefaultProps(),
 				textSource: 'This is a text. It has full stops.',
-			})
+			}),
 		)
 
 		expect(result.current.name).toEqual('This is a text')
@@ -29,7 +29,7 @@ describe('useEntityName', () => {
 			useEntityName({
 				...getDefaultProps(),
 				textSource: 'This is a text\nIt has a line break.',
-			})
+			}),
 		)
 
 		expect(result.current.name).toEqual('This is a text')

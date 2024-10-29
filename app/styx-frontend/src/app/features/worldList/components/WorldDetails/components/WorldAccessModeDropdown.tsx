@@ -39,7 +39,7 @@ export const WorldAccessModeDropdown = ({ world }: Props) => {
 				},
 			})
 		},
-		[setWorldAccessMode, world.id]
+		[setWorldAccessMode, world.id],
 	)
 
 	const onCopyLink = useCallback(() => {

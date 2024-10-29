@@ -25,6 +25,7 @@ import { NameStringValidator } from './validators/NameStringValidator'
 import { NullableContentStringValidator } from './validators/NullableContentStringValidator'
 import { NullableNameStringValidator } from './validators/NullableNameStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
+import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
 import { WorldEventFieldValidator } from './validators/WorldEventFieldValidator'
 import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
@@ -63,6 +64,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		targetActorIds: RequiredParam(StringArrayValidator),
 		mentionedActorIds: RequiredParam(StringArrayValidator),
 		customNameEnabled: RequiredParam(BooleanValidator),
+		externalLink: RequiredParam(ContentStringValidator),
 	})
 
 	const targetActors = (await parseActorList(params.targetActorIds)) ?? []
@@ -107,6 +109,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		targetActorIds: OptionalParam(StringArrayValidator),
 		mentionedActorIds: OptionalParam(StringArrayValidator),
 		customNameEnabled: OptionalParam(BooleanValidator),
+		externalLink: OptionalParam(OptionalURLStringValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -129,6 +132,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 			targetActors,
 			mentionedActors,
 			customName: params.customNameEnabled,
+			externalLink: params.externalLink,
 		},
 	})
 

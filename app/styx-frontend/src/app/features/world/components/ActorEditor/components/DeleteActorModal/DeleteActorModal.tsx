@@ -48,7 +48,7 @@ export const DeleteActorModal = () => {
 			await deleteActor({
 				worldId,
 				actorId: targetActor.id,
-			})
+			}),
 		)
 		if (error) {
 			raiseError('SERVER_SIDE_ERROR', error.message)

@@ -24,7 +24,7 @@ const getLoop = ({
 }) =>
 	-Math.floor(
 		(index * lineSpacing + timelineScroll * timelineScale + TimelineAnchorPadding) /
-			getPixelsPerLoop({ lineCount, lineSpacing })
+			getPixelsPerLoop({ lineCount, lineSpacing }),
 	)
 
 type Props = {
@@ -75,15 +75,15 @@ const TimelineAnchorLineComponent = (props: Props) => {
 				lineSpacing,
 				timelineScroll,
 			}),
-		[lineCount, lineSpacing, rawIndex, timelineScale, timelineScroll]
+		[lineCount, lineSpacing, rawIndex, timelineScale, timelineScroll],
 	)
 	const loopOffset = useMemo(
 		() => loopIndex * getPixelsPerLoop({ lineCount, lineSpacing }),
-		[lineCount, lineSpacing, loopIndex]
+		[lineCount, lineSpacing, loopIndex],
 	)
 	const dividerPosition = useMemo(
 		() => Math.round(((rawIndex * lineSpacing) / 1 + loopOffset) / timelineScale) + positionNormalizer,
-		[lineSpacing, loopOffset, positionNormalizer, rawIndex, timelineScale]
+		[lineSpacing, loopOffset, positionNormalizer, rawIndex, timelineScale],
 	)
 
 	const { largeGroupSize, mediumGroupSize, smallGroupSize } = getTimelineMultipliers()
@@ -221,5 +221,5 @@ export const TimelineAnchorLine = memo(
 		a.visible === b.visible &&
 		a.lineSpacing === b.lineSpacing &&
 		a.positionNormalizer === b.positionNormalizer &&
-		a.timeToShortLabel === b.timeToShortLabel
+		a.timeToShortLabel === b.timeToShortLabel,
 )

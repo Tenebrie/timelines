@@ -12,11 +12,11 @@ type Props = {
 	onSetTimestamp: (timestamp: number) => void
 }
 
-const Spoiler = styled.div<{ visible: boolean }>`
+const Spoiler = styled.div<{ $visible: boolean }>`
 	overflow: hidden;
 	transition: max-height 0.3s;
 
-	max-height: ${(props) => (props.visible ? '64px' : '0')};
+	max-height: ${(props) => (props.$visible ? '64px' : '0')};
 `
 
 const Container = styled.div`
@@ -79,7 +79,7 @@ export const TimePicker = ({ calendar, initialTimestamp, visible, onSetTimestamp
 	}, [calendar, initialTimestamp, months, oldCalendar, parsedTime, renderInt])
 
 	return (
-		<Spoiler visible={visible}>
+		<Spoiler $visible={visible}>
 			<Container>
 				<TextField
 					style={{ width: '50%' }}
@@ -87,8 +87,8 @@ export const TimePicker = ({ calendar, initialTimestamp, visible, onSetTimestamp
 					label="Year"
 					variant="outlined"
 					value={years.current}
-					onChange={(props) => {
-						years.current = Number(props.target.value)
+					onChange={(event) => {
+						years.current = Number(event.target.value)
 						updateUpstreamTimestamp()
 					}}
 				/>
@@ -118,8 +118,8 @@ export const TimePicker = ({ calendar, initialTimestamp, visible, onSetTimestamp
 					label="Day"
 					variant="outlined"
 					value={days.current}
-					onChange={(props) => {
-						days.current = Number(props.target.value)
+					onChange={(event) => {
+						days.current = Number(event.target.value)
 						updateUpstreamTimestamp()
 					}}
 				/>
@@ -129,8 +129,8 @@ export const TimePicker = ({ calendar, initialTimestamp, visible, onSetTimestamp
 					label="Hour"
 					variant="outlined"
 					value={hours.current}
-					onChange={(props) => {
-						hours.current = Number(props.target.value)
+					onChange={(event) => {
+						hours.current = Number(event.target.value)
 						updateUpstreamTimestamp()
 					}}
 				/>
@@ -140,8 +140,8 @@ export const TimePicker = ({ calendar, initialTimestamp, visible, onSetTimestamp
 					label="Minute"
 					variant="outlined"
 					value={minutes.current}
-					onChange={(props) => {
-						minutes.current = Number(props.target.value)
+					onChange={(event) => {
+						minutes.current = Number(event.target.value)
 						updateUpstreamTimestamp()
 					}}
 				/>

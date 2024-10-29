@@ -9,9 +9,9 @@ export const useMapActorsToOptions = () => {
 		(targetActors: Actor[]) =>
 			targetActors.map((actor) => ({
 				...actor,
-				label: `${actor.name}, ${actor.title}`,
+				label: actor.title ? `${actor.name}, ${actor.title}` : actor.name,
 			})),
-		[]
+		[],
 	)
 
 	return {

@@ -25,7 +25,7 @@ export const EventCreator = () => {
 				description: '',
 				timestamp: selectedTimeOrZero,
 			}),
-		[id, selectedTimeOrZero]
+		[id, selectedTimeOrZero],
 	)
 
 	useEffect(() => {

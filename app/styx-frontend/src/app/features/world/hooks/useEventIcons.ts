@@ -16,7 +16,7 @@ export const useEventIcons = () => {
 			{ name: 'valkyrie', path: '/assets/tribe-valkyrie-01.png' },
 			{ name: 'void', path: '/assets/tribe-voidspawn.png' },
 		],
-		[]
+		[],
 	)
 
 	const listAllIcons = useCallback(() => {
@@ -30,7 +30,7 @@ export const useEventIcons = () => {
 			}
 			return availableIcons.find((icon) => icon.name === name)?.path ?? availableIcons[0].path
 		},
-		[availableIcons]
+		[availableIcons],
 	)
 
 	return {

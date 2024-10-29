@@ -20,7 +20,7 @@ export const useMapEventsToOptions = () => {
 				...event,
 				label: `${event.name}`,
 			})),
-		[]
+		[],
 	)
 
 	return {

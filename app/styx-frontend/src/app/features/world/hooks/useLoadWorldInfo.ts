@@ -30,7 +30,7 @@ export const useLoadWorldInfo = (worldId: string) => {
 			loadWorld({
 				world: data,
 				actorColors: listAllColors().map((color) => color.value),
-			})
+			}),
 		)
 	}, [data, dispatch, listAllColors, loadWorld])
 

@@ -50,7 +50,7 @@ export const Timeline = () => {
 				navigateToOutliner(time)
 			}
 		},
-		[selectedTimeOrNull, navigateToCurrentWorldRoot, navigateToOutliner]
+		[selectedTimeOrNull, navigateToCurrentWorldRoot, navigateToOutliner],
 	)
 
 	const onDoubleClick = useCallback(
@@ -62,7 +62,7 @@ export const Timeline = () => {
 				scrollTimelineTo(selectedTimeOrNull)
 			}
 		},
-		[navigateToEventCreator, navigateToOutliner, scrollTimelineTo, selectedTimeOrNull]
+		[navigateToEventCreator, navigateToOutliner, scrollTimelineTo, selectedTimeOrNull],
 	)
 
 	const { containerRef, containerWidth } = useTimelineDimensions()

@@ -1,5 +1,6 @@
 import { Close } from '@mui/icons-material'
 import { Alert, Collapse, IconButton } from '@mui/material'
+import { ReactNode } from 'react'
 import { TransitionGroup } from 'react-transition-group'
 
 type Props = {
@@ -7,7 +8,7 @@ type Props = {
 	errorState: {
 		clearError: () => void
 		error: {
-			data: any
+			data: ReactNode
 		} | null
 	}
 }
@@ -20,7 +21,10 @@ export const FormErrorBanner = ({ errorState, marginBottom }: Props) => {
 			{error && (
 				<Collapse>
 					<Alert
-						style={{ marginBottom: marginBottom ?? 16 }}
+						sx={{
+							marginBottom: marginBottom ?? '16px',
+							'& > .MuiAlert-action': { paddingTop: 0 },
+						}}
 						severity="error"
 						action={
 							<IconButton size="small" onClick={clearError}>

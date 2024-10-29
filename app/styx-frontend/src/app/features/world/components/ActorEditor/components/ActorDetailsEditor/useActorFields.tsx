@@ -41,7 +41,7 @@ export const useActorFields = ({ actor }: Props) => {
 			setColor: generateSetter(setColorDirect),
 			setDescription: generateSetter(setDescriptionDirect),
 		}),
-		[]
+		[],
 	)
 
 	return {

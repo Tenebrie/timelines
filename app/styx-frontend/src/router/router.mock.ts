@@ -1,17 +1,16 @@
 import { Params, useSearchParams } from 'react-router-dom'
 
+import { noop } from '../app/utils/noop'
 import { allQueries, AllRouteParamMapping, routes } from './routes/routes'
 
 export const MockedRouter = {
 	isEnabled: false as boolean,
 	navigations: [] as { target: string; path: string; query: [string, string][] }[],
-	useParams: () => ({} as Readonly<Params<string>>),
+	useParams: () => ({}) as Readonly<Params<string>>,
 	useSearchParams: () => {
 		return {
 			query: new URLSearchParams(),
-			setQuery: (_: URLSearchParams) => {
-				/* */
-			},
+			setQuery: noop as (val: URLSearchParams) => void,
 		}
 	},
 }
@@ -19,7 +18,7 @@ export const MockedRouter = {
 export const mockRouter = <PathT extends (typeof routes)[keyof typeof routes]>(
 	_: PathT,
 	params: AllRouteParamMapping[PathT],
-	query?: (typeof allQueries)[PathT]
+	query?: (typeof allQueries)[PathT],
 ) => {
 	MockedRouter.isEnabled = true
 	MockedRouter.useParams = () => ({ ...params })
@@ -42,7 +41,7 @@ export const resetMockRouter = () => {
 
 export const useMockedRouter = (
 	params: Readonly<Params<string>>,
-	[currentQuery, setCurrentQuery]: [URLSearchParams, ReturnType<typeof useSearchParams>[1]]
+	[currentQuery, setCurrentQuery]: [URLSearchParams, ReturnType<typeof useSearchParams>[1]],
 ) => {
 	const mockParams = MockedRouter.useParams()
 	const { query: mockQuery, setQuery: setMockQuery } = MockedRouter.useSearchParams()

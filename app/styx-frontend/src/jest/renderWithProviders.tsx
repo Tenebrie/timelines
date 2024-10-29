@@ -1,7 +1,6 @@
-import { Queries, queries, render, renderHook, RenderHookOptions } from '@testing-library/react'
+import { act, Queries, queries, render, renderHook, RenderHookOptions } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ReactNode } from 'react'
-import { act } from 'react-dom/test-utils'
 import { Provider } from 'react-redux'
 import { createBrowserRouter, MemoryRouter, RouterProvider } from 'react-router-dom'
 
@@ -12,7 +11,7 @@ import { worldRoutes } from '../router/routes/worldRoutes'
 
 export const renderWithProviders = (
 	node: ReactNode,
-	{ preloadedState }: { preloadedState?: Partial<RootState> } = {}
+	{ preloadedState }: { preloadedState?: Partial<RootState> } = {},
 ) => {
 	const store = generateStore({ preloadedState })
 	return {
@@ -21,14 +20,14 @@ export const renderWithProviders = (
 		...render(
 			<Provider store={store}>
 				<MemoryRouter>{node}</MemoryRouter>
-			</Provider>
+			</Provider>,
 		),
 	}
 }
 
 export const renderWithRouter = async (
 	routeName: keyof typeof appRoutes | keyof typeof worldRoutes,
-	{ preloadedState }: { preloadedState?: Partial<RootState> } = {}
+	{ preloadedState }: { preloadedState?: Partial<RootState> } = {},
 ) => {
 	const bigRouter = {
 		...appRoutes,
@@ -44,7 +43,7 @@ export const renderWithRouter = async (
 		...render(
 			<Provider store={store}>
 				<RouterProvider router={createBrowserRouter(routerDefinition)} />
-			</Provider>
+			</Provider>,
 		),
 	}
 
@@ -60,13 +59,13 @@ export const renderHookWithProviders = <
 	Props,
 	Q extends Queries = typeof queries,
 	Container extends Element | DocumentFragment = HTMLElement,
-	BaseElement extends Element | DocumentFragment = Container
+	BaseElement extends Element | DocumentFragment = Container,
 >(
 	render: (initialProps: Props) => Result,
 	{
 		preloadedState,
 		...options
-	}: RenderHookOptions<Props, Q, Container, BaseElement> & { preloadedState?: Partial<RootState> } = {}
+	}: RenderHookOptions<Props, Q, Container, BaseElement> & { preloadedState?: Partial<RootState> } = {},
 ) => {
 	const store = generateStore({ preloadedState })
 	return renderHook(render, {

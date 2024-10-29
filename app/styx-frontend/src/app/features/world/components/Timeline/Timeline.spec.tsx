@@ -32,7 +32,7 @@ describe('<Timeline />', () => {
 			getPreloadedState([
 				mockEventModel({ name: 'First event', timestamp: 0 }),
 				mockEventModel({ name: 'Second event', timestamp: 100 }),
-			])
+			]),
 		)
 
 		expect(screen.getAllByTestId('timeline-event-marker').length).toEqual(2)
@@ -41,7 +41,7 @@ describe('<Timeline />', () => {
 	it('does not render an event off-screen', () => {
 		renderWithProviders(
 			<Timeline />,
-			getPreloadedState([mockEventModel({ name: 'Invisible event', timestamp: 100000 })])
+			getPreloadedState([mockEventModel({ name: 'Invisible event', timestamp: 100000 })]),
 		)
 
 		expect(screen.queryByTestId('timeline-event-marker')).not.toBeInTheDocument()

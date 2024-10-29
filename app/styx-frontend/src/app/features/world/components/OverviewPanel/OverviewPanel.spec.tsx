@@ -42,7 +42,7 @@ describe('<OverviewPanel />', () => {
 						mockEventModel({ name: 'My First Event', timestamp: 1500 }),
 						mockEventModel({ name: 'My Second Event', timestamp: 2500 }),
 					],
-				})
+				}),
 			)
 
 			expect(screen.getByText('My First Event')).toBeInTheDocument()
@@ -61,7 +61,7 @@ describe('<OverviewPanel />', () => {
 						mockActorModel({ name: 'BBB Fifth Actor', color: '#b0bec5' }),
 						mockActorModel({ name: 'AAA Sixth Actor', color: '#b39ddb' }),
 					],
-				})
+				}),
 			)
 
 			const items = screen.getAllByRole('listitem')
@@ -88,7 +88,7 @@ describe('<OverviewPanel />', () => {
 						mockActorModel({ name: 'BBB Fifth Actor', color: '#b0bec5' }),
 						mockActorModel({ name: 'AAA Sixth Actor', color: '#b39ddb' }),
 					],
-				})
+				}),
 			)
 
 			await user.click(screen.getAllByTestId('SortIcon')[0])
@@ -111,7 +111,7 @@ describe('<OverviewPanel />', () => {
 				getPreloadedState({
 					id: '1111',
 					actors: [mockActorModel({ id: 'actor-1111', name: 'Actor name' })],
-				})
+				}),
 			)
 
 			await user.click(screen.getByText('Actor name'))
@@ -129,7 +129,7 @@ describe('<OverviewPanel />', () => {
 				getPreloadedState({
 					id: '1111',
 					actors: [mockActorModel({ id: 'actor-1111', name: 'Actor name' })],
-				})
+				}),
 			)
 
 			await user.click(screen.getByText('Actor name'))
@@ -153,7 +153,7 @@ describe('<OverviewPanel />', () => {
 							title: 'The Right Cryptographer',
 						}),
 					],
-				})
+				}),
 			)
 
 			await user.type(screen.getByPlaceholderText('Search...'), 'alice')
@@ -179,7 +179,7 @@ describe('<OverviewPanel />', () => {
 							title: 'The Right Cryptographer',
 						}),
 					],
-				})
+				}),
 			)
 
 			await user.type(screen.getByPlaceholderText('Search...'), 'cryptographer')
@@ -202,7 +202,7 @@ describe('<OverviewPanel />', () => {
 						mockEventModel({ name: 'My First Event', timestamp: 1500 }),
 						mockEventModel({ name: 'My Second Event', timestamp: 2500 }),
 					],
-				})
+				}),
 			)
 
 			expect(screen.getByText('My First Event')).toBeInTheDocument()
@@ -218,7 +218,7 @@ describe('<OverviewPanel />', () => {
 						mockEventModel({ name: 'Second Event', timestamp: 2500 }),
 						mockEventModel({ name: 'Third Event', timestamp: 3500 }),
 					],
-				})
+				}),
 			)
 
 			const items = screen.getAllByRole('listitem')
@@ -238,7 +238,7 @@ describe('<OverviewPanel />', () => {
 						mockEventModel({ name: 'First Event', timestamp: 1500 }),
 						mockEventModel({ name: 'Third Event', timestamp: 3500 }),
 					],
-				})
+				}),
 			)
 
 			const items = screen.getAllByRole('listitem')
@@ -259,7 +259,7 @@ describe('<OverviewPanel />', () => {
 						mockEventModel({ name: 'First Event', timestamp: 1500 }),
 						mockEventModel({ name: 'Third Event', timestamp: 3500 }),
 					],
-				})
+				}),
 			)
 
 			await user.click(screen.getAllByTestId('SortIcon')[1])
@@ -279,7 +279,7 @@ describe('<OverviewPanel />', () => {
 				getPreloadedState({
 					id: '1111',
 					events: [mockEventModel({ id: 'event-2222', name: 'First Event', timestamp: 1500 })],
-				})
+				}),
 			)
 
 			await user.click(screen.getByText('First Event'))
@@ -297,7 +297,7 @@ describe('<OverviewPanel />', () => {
 				getPreloadedState({
 					id: '1111',
 					events: [mockEventModel({ id: 'event-2222', name: 'First Event', timestamp: 1500 })],
-				})
+				}),
 			)
 
 			await user.click(screen.getByText('First Event'))
@@ -323,7 +323,7 @@ describe('<OverviewPanel />', () => {
 							timestamp: 1500,
 						}),
 					],
-				})
+				}),
 			)
 
 			await user.type(screen.getByPlaceholderText('Search...'), 'second event')

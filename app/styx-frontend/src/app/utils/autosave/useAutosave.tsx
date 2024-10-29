@@ -31,7 +31,7 @@ export const useAutosave = ({ onSave, isSaving, isError, defaultIcon }: Props) =
 			}
 			setSavingState('waiting')
 			onSaveRef.current()
-		}, autosaveDelay)
+		}, autosaveDelay),
 	)
 
 	const onAutosave = useCallback(() => {

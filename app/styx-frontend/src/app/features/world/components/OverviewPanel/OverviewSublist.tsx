@@ -55,7 +55,7 @@ export function OverviewSublist<T extends { id: string }>({
 							<IconButton key={'add'} onClick={onAddClick}>
 								<Add />
 							</IconButton>,
-					  ]
+						]
 					: []
 				).concat([
 					<IconButton key={'sort'} onClick={onSortClick}>

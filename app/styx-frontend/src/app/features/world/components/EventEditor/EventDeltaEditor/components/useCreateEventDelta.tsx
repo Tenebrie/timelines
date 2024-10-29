@@ -33,7 +33,7 @@ export const useCreateEventDelta = ({ state, errorState }: Props) => {
 					timestamp: String(state.timestamp),
 					description: state.description,
 				},
-			})
+			}),
 		)
 		if (error) {
 			errorState.raiseError('DELTA_CREATION_FAILED', error.message)

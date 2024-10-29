@@ -39,7 +39,7 @@ const injectedRtkApi = api
 			adminGetUsers: build.query<AdminGetUsersApiResponse, AdminGetUsersApiArg>({
 				query: (queryArg) => ({
 					url: `/api/admin/users`,
-					params: { page: queryArg.page, size: queryArg.size },
+					params: { page: queryArg.page, size: queryArg.size, query: queryArg.query },
 				}),
 				providesTags: ['adminUsers'],
 			}),
@@ -269,6 +269,8 @@ export type AdminGetUsersApiArg = {
 	page?: number
 	/** Any numeric value */
 	size?: number
+	/** Any string value */
+	query?: string
 }
 export type AdminSetUserLevelApiResponse = /** status 200  */ {
 	id: string
@@ -370,7 +372,7 @@ export type CreateWorldEventApiArg = {
 	worldId: string
 	body: {
 		type: 'SCENE' | 'OTHER'
-		modules: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+		modules: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 		name: string
 		icon: string
 		description: string
@@ -379,6 +381,7 @@ export type CreateWorldEventApiArg = {
 		targetActorIds: string[]
 		mentionedActorIds: string[]
 		customNameEnabled: boolean
+		externalLink: string
 	}
 }
 export type UpdateWorldEventApiResponse = /** status 200  */ {
@@ -422,7 +425,8 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	timestamp: string
 	revokedAt: null | string
 	customName: boolean
-	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+	externalLink: string
+	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 }
 export type UpdateWorldEventApiArg = {
 	/** Any string value */
@@ -430,7 +434,7 @@ export type UpdateWorldEventApiArg = {
 	/** Any string value */
 	eventId: string
 	body: {
-		modules?: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+		modules?: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 		name?: string
 		icon?: string
 		timestamp?: string
@@ -439,6 +443,7 @@ export type UpdateWorldEventApiArg = {
 		targetActorIds?: string[]
 		mentionedActorIds?: string[]
 		customNameEnabled?: boolean
+		externalLink?: string
 	}
 }
 export type DeleteWorldEventApiResponse = /** status 200  */ {
@@ -453,7 +458,8 @@ export type DeleteWorldEventApiResponse = /** status 200  */ {
 	timestamp: string
 	revokedAt: null | string
 	customName: boolean
-	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+	externalLink: string
+	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 }
 export type DeleteWorldEventApiArg = {
 	/** Any string value */
@@ -473,7 +479,8 @@ export type RevokeWorldEventApiResponse = /** status 200  */ {
 	timestamp: string
 	revokedAt: null | string
 	customName: boolean
-	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+	externalLink: string
+	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 }
 export type RevokeWorldEventApiArg = {
 	/** Any string value */
@@ -496,7 +503,8 @@ export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	timestamp: string
 	revokedAt: null | string
 	customName: boolean
-	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+	externalLink: string
+	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 }
 export type UnrevokeWorldEventApiArg = {
 	/** Any string value */
@@ -716,7 +724,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		timestamp: string
 		revokedAt: null | string
 		customName: boolean
-		extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors')[]
+		externalLink: string
+		extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 	}[]
 	name: string
 	id: string

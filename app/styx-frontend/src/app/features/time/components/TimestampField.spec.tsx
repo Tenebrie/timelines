@@ -6,11 +6,11 @@ import { TimestampField } from './TimestampField'
 describe('<TimestampField />', () => {
 	it('displays the correct timestamp by default', () => {
 		renderWithProviders(
-			<TimestampField label="Custom Label" timestamp={0} calendar="EARTH" onChange={vi.fn()} />
+			<TimestampField label="Custom Label" timestamp={0} calendar="EARTH" onChange={vi.fn()} />,
 		)
 
 		expect((screen.getByLabelText('Custom Label') as HTMLInputElement).value).toEqual(
-			'2023, January 1, 00:00'
+			'2023, January 1, 00:00',
 		)
 	})
 
@@ -28,7 +28,7 @@ describe('<TimestampField />', () => {
 
 	it('parses initial time into timestamp field', () => {
 		renderWithProviders(
-			<TimestampField label="Custom Label" timestamp={157989907} calendar="EARTH" onChange={vi.fn()} />
+			<TimestampField label="Custom Label" timestamp={157989907} calendar="EARTH" onChange={vi.fn()} />,
 		)
 
 		expect((screen.getByLabelText('Custom Label') as HTMLInputElement).value).toEqual('2323, May 24, 05:07')
@@ -36,7 +36,7 @@ describe('<TimestampField />', () => {
 
 	it('parses initial timestamp into time picker', async () => {
 		const { user } = renderWithProviders(
-			<TimestampField timestamp={157989907} calendar="EARTH" onChange={vi.fn()} />
+			<TimestampField timestamp={157989907} calendar="EARTH" onChange={vi.fn()} />,
 		)
 
 		await user.click(screen.getByTestId('CalendarMonthIcon'))
@@ -51,7 +51,7 @@ describe('<TimestampField />', () => {
 	it('updates timestamp on year change', async () => {
 		const onChangeSpy = vi.fn()
 		const { user } = renderWithProviders(
-			<TimestampField timestamp={0} calendar="EARTH" onChange={onChangeSpy} />
+			<TimestampField timestamp={0} calendar="EARTH" onChange={onChangeSpy} />,
 		)
 
 		await user.click(screen.getByTestId('CalendarMonthIcon'))
@@ -66,7 +66,7 @@ describe('<TimestampField />', () => {
 	it('updates timestamp on day change', async () => {
 		const onChangeSpy = vi.fn()
 		const { user } = renderWithProviders(
-			<TimestampField timestamp={0} calendar="EARTH" onChange={onChangeSpy} />
+			<TimestampField timestamp={0} calendar="EARTH" onChange={onChangeSpy} />,
 		)
 
 		await user.click(screen.getByTestId('CalendarMonthIcon'))
@@ -78,7 +78,7 @@ describe('<TimestampField />', () => {
 	it('updates timestamp on hour change', async () => {
 		const onChangeSpy = vi.fn()
 		const { user } = renderWithProviders(
-			<TimestampField timestamp={0} calendar="EARTH" onChange={onChangeSpy} />
+			<TimestampField timestamp={0} calendar="EARTH" onChange={onChangeSpy} />,
 		)
 
 		await user.click(screen.getByTestId('CalendarMonthIcon'))
@@ -90,7 +90,7 @@ describe('<TimestampField />', () => {
 	it('updates timestamp on minute change', async () => {
 		const onChangeSpy = vi.fn()
 		const { user } = renderWithProviders(
-			<TimestampField timestamp={0} calendar="EARTH" onChange={onChangeSpy} />
+			<TimestampField timestamp={0} calendar="EARTH" onChange={onChangeSpy} />,
 		)
 
 		await user.click(screen.getByTestId('CalendarMonthIcon'))

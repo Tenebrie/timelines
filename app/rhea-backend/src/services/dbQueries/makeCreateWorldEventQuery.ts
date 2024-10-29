@@ -8,7 +8,7 @@ export const makeCreateWorldEventQuery = (
 	worldId: string,
 	data: Pick<
 		WorldEvent,
-		'type' | 'extraFields' | 'name' | 'description' | 'timestamp' | 'revokedAt' | 'icon'
+		'type' | 'extraFields' | 'name' | 'description' | 'timestamp' | 'revokedAt' | 'icon' | 'externalLink'
 	> & {
 		customNameEnabled: boolean
 		targetActors: Actor[]
@@ -32,6 +32,7 @@ export const makeCreateWorldEventQuery = (
 				connect: data.mentionedActors.map((actor) => ({ id: actor.id })),
 			},
 			customName: data.customNameEnabled,
+			externalLink: data.externalLink,
 		},
 		select: {
 			id: true,

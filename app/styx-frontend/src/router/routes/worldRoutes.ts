@@ -67,23 +67,26 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, worldId]
+		[baseRouter, worldId],
 	)
 
-	const navigateToEventCreator = useCallback(() => {
-		if (isReadOnly) {
-			return
-		}
-		baseRouter.navigateTo({
-			target: worldRoutes.eventCreator,
-			args: {
-				worldId,
-			},
-			query: {
-				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
-			},
-		})
-	}, [baseRouter, isReadOnly, worldId])
+	const navigateToEventCreator = useCallback(
+		(time?: number) => {
+			if (isReadOnly) {
+				return
+			}
+			baseRouter.navigateTo({
+				target: worldRoutes.eventCreator,
+				args: {
+					worldId,
+				},
+				query: {
+					[QueryParams.SELECTED_TIME]: time ?? QueryStrategy.Preserve,
+				},
+			})
+		},
+		[baseRouter, isReadOnly, worldId],
+	)
 
 	const navigateToEventDeltaCreator = useCallback(
 		({ eventId, selectedTime }: { eventId: string; selectedTime: number }) => {
@@ -101,7 +104,7 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, isReadOnly, worldId]
+		[baseRouter, isReadOnly, worldId],
 	)
 
 	const navigateToActorEditor = useCallback(
@@ -120,7 +123,7 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, isReadOnly, worldId]
+		[baseRouter, isReadOnly, worldId],
 	)
 
 	const navigateToEventEditor = useCallback(
@@ -139,7 +142,7 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, isReadOnly, worldId]
+		[baseRouter, isReadOnly, worldId],
 	)
 
 	const navigateToEventDeltaEditor = useCallback(
@@ -159,7 +162,7 @@ export const useWorldRouter = () => {
 				},
 			})
 		},
-		[baseRouter, isReadOnly, worldId]
+		[baseRouter, isReadOnly, worldId],
 	)
 
 	const selectedTimeOrNull = useMemo(() => {
@@ -175,7 +178,7 @@ export const useWorldRouter = () => {
 		(value: number | null) => {
 			baseRouter.setQuery(QueryParams.SELECTED_TIME, String(value))
 		},
-		[baseRouter]
+		[baseRouter],
 	)
 
 	return {

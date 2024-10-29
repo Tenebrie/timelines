@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id String @id @unique @default(uuid())
+  id        String   @id @unique @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -73,6 +73,7 @@ enum WorldEventField {
   EventIcon
   TargetActors
   MentionedActors
+  ExternalLink
 }
 
 model WorldEvent {
@@ -80,14 +81,15 @@ model WorldEvent {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  type        WorldEventType
-  icon        String            @default("default")
-  name        String
-  timestamp   BigInt
-  revokedAt   BigInt?
-  description String            @default("")
-  customName  Boolean           @default(false)
-  extraFields WorldEventField[]
+  type         WorldEventType
+  icon         String            @default("default")
+  name         String
+  timestamp    BigInt
+  revokedAt    BigInt?
+  description  String            @default("")
+  customName   Boolean           @default(false)
+  externalLink String            @default("")
+  extraFields  WorldEventField[]
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String

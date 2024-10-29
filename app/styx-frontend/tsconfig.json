@@ -18,7 +18,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "jsx": "react-jsx",
     "types": [
       "vite/client",
@@ -27,6 +27,7 @@
     ]
   },
   "include": [
-    "src", "jest.config.ts",
+    "src",
+    "jest.config.ts",
   ]
 }

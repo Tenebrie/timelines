@@ -6,7 +6,7 @@ export type StoryEventMarkerProps = {
 	expanded: boolean
 }
 
-export const Marker = styled.div<{ iconPath: string }>`
+export const Marker = styled.div<{ $iconPath: string }>`
 	position: relative;
 	width: 50px;
 	height: 50px;
@@ -14,12 +14,15 @@ export const Marker = styled.div<{ iconPath: string }>`
 	background: #0a1929;
 	cursor: pointer;
 	margin-bottom: -35px;
-	transition: margin-bottom 0.3s, outline-color 0.3s, background-color 0.3s;
+	transition:
+		margin-bottom 0.3s,
+		outline-color 0.3s,
+		background-color 0.3s;
 	outline: 2px solid ${colors.grey[300]};
 
 	.icon {
 		background: ${colors.green[300]};
-		mask-image: url(${(props) => props.iconPath});
+		mask-image: url(${(props) => props.$iconPath});
 		mask-size: contain;
 		background-origin: content-box;
 		background-size: contain;

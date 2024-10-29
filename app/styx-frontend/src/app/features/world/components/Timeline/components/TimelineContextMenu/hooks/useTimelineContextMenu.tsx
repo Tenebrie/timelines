@@ -47,7 +47,7 @@ export const useTimelineContextMenu = ({ scroll, timelineScale, scaleLevel }: Pr
 					},
 					selectedTime,
 					selectedEvent: null,
-				})
+				}),
 			)
 		},
 		[
@@ -59,7 +59,7 @@ export const useTimelineContextMenu = ({ scroll, timelineScale, scaleLevel }: Pr
 			scaledTimeToRealTime,
 			scroll,
 			timelineScale,
-		]
+		],
 	)
 
 	return {

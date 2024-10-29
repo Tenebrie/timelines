@@ -44,7 +44,7 @@ export const DeleteEventModal = () => {
 			await deleteWorldEvent({
 				worldId,
 				eventId: targetEvent.id,
-			})
+			}),
 		)
 		if (error) {
 			setDeletionError(error.message)

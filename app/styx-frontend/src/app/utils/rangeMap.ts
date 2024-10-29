@@ -11,7 +11,7 @@ export const rangeMap = <T>(value: number, ranges: [RangeDefinition, T][]): T | 
 		const rightInclusive = def.at(def.length - 1) === ']'
 		const leftValue = Number(def.substring(1, def.indexOf(';')))
 		const rightValue = Number(
-			def.substring(def.indexOf(';') + 1, rightInclusive ? def.indexOf(']') : def.indexOf(')'))
+			def.substring(def.indexOf(';') + 1, rightInclusive ? def.indexOf(']') : def.indexOf(')')),
 		)
 
 		if (

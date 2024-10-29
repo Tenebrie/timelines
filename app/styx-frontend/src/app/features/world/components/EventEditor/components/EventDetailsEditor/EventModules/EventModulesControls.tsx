@@ -1,7 +1,7 @@
 import { Add, Remove } from '@mui/icons-material'
 import { Button, Divider, Stack, Typography } from '@mui/material'
 import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 
 import { useIsReadOnly } from '../../../../../../../../hooks/useIsReadOnly'
 import { WorldEventModule } from '../../../../../types'
@@ -25,7 +25,7 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 		(module: WorldEventModule) => {
 			state.setModules([...modules, module])
 		},
-		[modules, state]
+		[modules, state],
 	)
 
 	const onRemoveModule = useCallback(
@@ -44,9 +44,12 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 				case 'MentionedActors':
 					state.setMentionedActors([])
 					break
+				case 'ExternalLink':
+					state.setExternalLink('')
+					break
 			}
 		},
-		[modules, state]
+		[modules, state],
 	)
 
 	return (

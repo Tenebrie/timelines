@@ -102,7 +102,8 @@ export const lightTheme = createTheme({
 	palette: {
 		mode: 'light',
 		background: {
-			paper: '#eaeff1',
+			default: 'hsl(197, 20%, 90%)',
+			paper: 'hsl(197, 20%, 95%)',
 		},
 	},
 })

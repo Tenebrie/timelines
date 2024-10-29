@@ -5,6 +5,7 @@ import {
 	NumberValidator,
 	OptionalParam,
 	Router,
+	StringValidator,
 	useApiEndpoint,
 	useAuth,
 	usePathParams,
@@ -30,14 +31,16 @@ router.get('/api/admin/users', async (ctx) => {
 		tags: [adminUsersTag],
 	})
 
-	const { page, size } = useQueryParams(ctx, {
+	const { page, size, query } = useQueryParams(ctx, {
 		page: OptionalParam(NumberValidator),
 		size: OptionalParam(NumberValidator),
+		query: OptionalParam(StringValidator),
 	})
 
 	const users = await AdminService.listUsers({
 		page,
 		size,
+		query,
 	})
 
 	return users

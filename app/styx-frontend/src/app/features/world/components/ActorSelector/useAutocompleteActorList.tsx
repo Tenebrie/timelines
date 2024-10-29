@@ -13,21 +13,22 @@ export const useAutocompleteActorList = ({ actors, selectedActors, mentionedActo
 	const actorOptions = actors
 		.map((actor) => ({
 			...actor,
-			label: `${actor.name}, ${actor.title}`,
+			label: actor.title ? `${actor.name}, ${actor.title}` : actor.name,
 		}))
 		.filter(
-			(actor) => !mentionedActors || !mentionedActors.some((mentionedActor) => mentionedActor.id === actor.id)
+			(actor) =>
+				!mentionedActors || !mentionedActors.some((mentionedActor) => mentionedActor.id === actor.id),
 		)
 	const mentionedActorOptions = actors
 		.map((actor) => ({
 			...actor,
-			label: `${actor.name}, ${actor.title}`,
+			label: actor.title ? `${actor.name}, ${actor.title}` : actor.name,
 		}))
 		.filter(
-			(actor) => !selectedActors || !selectedActors.some((selectedActor) => selectedActor.id === actor.id)
+			(actor) => !selectedActors || !selectedActors.some((selectedActor) => selectedActor.id === actor.id),
 		)
 
-	const renderOption = (props: any, option: ActorOption) => (
+	const renderOption = (props: object, option: ActorOption) => (
 		<MenuItem key={option.id} {...props}>
 			<ListItemText primary={option.name} secondary={option.title} />
 		</MenuItem>

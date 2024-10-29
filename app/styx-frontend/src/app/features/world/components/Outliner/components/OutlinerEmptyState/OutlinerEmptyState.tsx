@@ -1,21 +1,19 @@
 import { Button, Grid, Stack, Typography } from '@mui/material'
-import { useDispatch } from 'react-redux'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
-import { worldSlice } from '../../../../reducer'
 
 export const OutlinerEmptyState = () => {
-	const dispatch = useDispatch()
+	// const dispatch = useDispatch()
 	const { navigateToEventCreator } = useWorldRouter()
-	const { openEventTutorialModal } = worldSlice.actions
+	// const { openEventTutorialModal } = worldSlice.actions
 
 	const onCreateEvent = () => {
 		navigateToEventCreator()
 	}
 
-	const onShowTutorial = () => {
-		dispatch(openEventTutorialModal())
-	}
+	// const onShowTutorial = () => {
+	// dispatch(openEventTutorialModal())
+	// }
 
 	return (
 		<Stack direction="column" justifyContent="center" alignItems="center" margin={8} spacing={2}>

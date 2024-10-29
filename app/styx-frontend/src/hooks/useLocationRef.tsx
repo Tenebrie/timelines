@@ -1,7 +1,7 @@
 import { createRef, Ref } from 'react'
 import { useLocation } from 'react-router-dom'
 
-const refs: Record<string, Ref<any>> = {}
+const refs: Record<string, Ref<never>> = {}
 
 export const useLocationRef = () => {
 	const location = useLocation()

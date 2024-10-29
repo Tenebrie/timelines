@@ -49,7 +49,7 @@ export const Outliner = () => {
 					active: event.revokedAt === undefined || event.revokedAt > selectedTime,
 				}))
 				.sort((a, b) => a.timestamp - b.timestamp || a.index - b.index),
-		[expandedEvents, highlightWithin, selectedTime, allVisibleEvents]
+		[expandedEvents, highlightWithin, selectedTime, allVisibleEvents],
 	)
 
 	const visibleActors = useMemo(
@@ -60,7 +60,7 @@ export const Outliner = () => {
 				collapsed: !expandedActors.includes(actor.id),
 				events: visibleEvents.filter((event) => actor.statements.some((e) => e.id === event.id)),
 			})),
-		[actors, expandedActors, visibleEvents]
+		[actors, expandedActors, visibleEvents],
 	)
 
 	const eventActions = useMemo<('edit' | 'collapse')[]>(() => {

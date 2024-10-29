@@ -57,14 +57,14 @@ export const TimelineEventGroup = ({
 			(isLocationEqual('/world/:worldId/editor/:eventId') && eventEditorParams.eventId === entity.id) ||
 			(isLocationEqual('/world/:worldId/editor/:eventId/delta/:deltaId') &&
 				eventDeltaEditorParams.deltaId === entity.id) ||
-			(contextMenuState.isOpen && contextMenuState.selectedEvent?.id === entity.id)
+			(contextMenuState.isOpen && contextMenuState.selectedEvent?.id === entity.id),
 	)
 
 	const isExpanded = isHovered || highlightedEvents.length > 0
 
 	return (
 		<Group
-			position={position}
+			$position={position}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 			className={`${visible ? 'visible' : ''} ${isExpanded ? 'expanded' : ''}`}

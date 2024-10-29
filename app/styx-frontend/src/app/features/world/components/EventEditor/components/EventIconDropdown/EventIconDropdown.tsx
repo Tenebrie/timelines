@@ -15,7 +15,7 @@ export const EventIconDropdown = ({ icon, onChange }: Props) => {
 
 	const displayedIcon = useMemo(
 		() => (allIcons.some((allowedIcon) => allowedIcon.name === icon) ? icon : 'leaf'),
-		[icon, allIcons]
+		[icon, allIcons],
 	)
 
 	return (

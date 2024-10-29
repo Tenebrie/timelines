@@ -33,8 +33,8 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 						path: homeRoutes.worldDetails,
 						...lazyImport(
 							import('../app/features/worldList/components/WorldDetails/WorldDetails').then(
-								(m) => m.WorldDetails
-							)
+								(m) => m.WorldDetails,
+							),
 						),
 					},
 				],
@@ -54,47 +54,47 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 					{
 						path: worldRoutes.root,
 						...lazyImport(
-							import('../app/features/world/components/Outliner/Outliner').then((m) => m.Outliner)
+							import('../app/features/world/components/Outliner/Outliner').then((m) => m.Outliner),
 						),
 					},
 					{
 						path: worldRoutes.outliner,
 						...lazyImport(
-							import('../app/features/world/components/Outliner/Outliner').then((m) => m.Outliner)
+							import('../app/features/world/components/Outliner/Outliner').then((m) => m.Outliner),
 						),
 					},
 					{
 						path: worldRoutes.actorEditor,
 						...lazyImport(
-							import('../app/features/world/components/ActorEditor/ActorEditor').then((m) => m.ActorEditor)
+							import('../app/features/world/components/ActorEditor/ActorEditor').then((m) => m.ActorEditor),
 						),
 					},
 					{
 						path: worldRoutes.eventCreator,
 						...lazyImport(
-							import('../app/features/world/components/EventEditor/EventCreator').then((m) => m.EventCreator)
+							import('../app/features/world/components/EventEditor/EventCreator').then((m) => m.EventCreator),
 						),
 					},
 					{
 						path: worldRoutes.eventEditor,
 						...lazyImport(
-							import('../app/features/world/components/EventEditor/EventEditor').then((m) => m.EventEditor)
+							import('../app/features/world/components/EventEditor/EventEditor').then((m) => m.EventEditor),
 						),
 					},
 					{
 						path: worldRoutes.eventDeltaCreator,
 						...lazyImport(
 							import('../app/features/world/components/EventEditor/EventDeltaEditor/EventDeltaCreator').then(
-								(m) => m.EventDeltaCreator
-							)
+								(m) => m.EventDeltaCreator,
+							),
 						),
 					},
 					{
 						path: worldRoutes.eventDeltaEditor,
 						...lazyImport(
 							import('../app/features/world/components/EventEditor/EventDeltaEditor/EventDeltaEditor').then(
-								(m) => m.EventDeltaEditor
-							)
+								(m) => m.EventDeltaEditor,
+							),
 						),
 					},
 				],

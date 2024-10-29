@@ -35,7 +35,7 @@ export const DeleteUserModal = () => {
 		const { error } = parseApiResponse(
 			await deleteUser({
 				userId: targetUser.id,
-			})
+			}),
 		)
 		if (error) {
 			setDeletionError(error.message)

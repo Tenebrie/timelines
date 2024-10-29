@@ -1,5 +1,5 @@
 import bezier from 'bezier-easing'
-import { throttle } from 'lodash'
+import throttle from 'lodash.throttle'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -91,7 +91,7 @@ export const useTimelineNavigation = ({
 				setMousePos(newPos)
 			}
 		},
-		[draggingFrom, isDragging, maximumScroll, mousePos.x, overscroll, scroll, setScroll]
+		[draggingFrom, isDragging, maximumScroll, mousePos.x, overscroll, scroll, setScroll],
 	)
 
 	useEffect(() => {
@@ -137,7 +137,7 @@ export const useTimelineNavigation = ({
 			const newScaleScroll = clampToRange(
 				scaleLimits[0] * 100,
 				currentScaleScroll + 100 * Math.sign(scaleSwitchesToDo),
-				scaleLimits[1] * 100
+				scaleLimits[1] * 100,
 			)
 
 			const newTimePerPixel = Math.pow(2, newScaleScroll / 100)
@@ -228,7 +228,7 @@ export const useTimelineNavigation = ({
 			let newTargetScale = clampToRange(
 				scaleLimits[0],
 				scaleScroll / 100 + newScaleSwitchesToDo,
-				scaleLimits[1]
+				scaleLimits[1],
 			)
 
 			// Scales 8 and 9 are visually the same. Skip scale 8.
@@ -250,7 +250,7 @@ export const useTimelineNavigation = ({
 			}, 300)
 			switchingScaleTimeout.current = timeout
 		},
-		[scaleLimits, scaleScroll, scaleSwitchesToDo]
+		[scaleLimits, scaleScroll, scaleSwitchesToDo],
 	)
 
 	// Click
@@ -317,7 +317,7 @@ export const useTimelineNavigation = ({
 			scaledTimeToRealTime,
 			scroll,
 			timelineScale,
-		]
+		],
 	)
 
 	// Mouse events
@@ -363,7 +363,7 @@ export const useTimelineNavigation = ({
 			const easing = bezier(0.5, 0, 0.5, 1)
 			const targetScroll = Math.floor(
 				realTimeToScaledTime(-timestamp / timelineScale) +
-					containerRef.current.getBoundingClientRect().width / 2
+					containerRef.current.getBoundingClientRect().width / 2,
 			)
 
 			const isScrollingAlready =
@@ -384,7 +384,7 @@ export const useTimelineNavigation = ({
 				const time = Math.min(1, (new Date().getTime() - smoothScrollStartedAtTime.current.getTime()) / 300)
 				const bezierPos = easing(time)
 				setScroll(
-					startedScrollFrom.current + (desiredScrollTo.current - startedScrollFrom.current) * bezierPos
+					startedScrollFrom.current + (desiredScrollTo.current - startedScrollFrom.current) * bezierPos,
 				)
 				if (time < 1) {
 					requestAnimationFrame(callback)
@@ -396,7 +396,7 @@ export const useTimelineNavigation = ({
 
 			requestAnimationFrame(callback)
 		},
-		[containerRef, maximumScroll, realTimeToScaledTime, scroll, setScroll, timelineScale]
+		[containerRef, maximumScroll, realTimeToScaledTime, scroll, setScroll, timelineScale],
 	)
 
 	useTimelineBusSubscribe({

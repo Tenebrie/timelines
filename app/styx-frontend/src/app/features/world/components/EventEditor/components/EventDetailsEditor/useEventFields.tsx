@@ -23,13 +23,15 @@ export const useEventFields = ({ event }: Props) => {
 	const [timestamp, setTimestampDirect] = useState<number>(event.timestamp)
 	const [revokedAt, setRevokedAtDirect] = useState<number | undefined>(event.revokedAt)
 	const [selectedActors, setSelectedActorsDirect] = useState<ActorOption[]>(
-		mapActorsToOptions(event.targetActors)
+		mapActorsToOptions(event.targetActors),
 	)
 	const [mentionedActors, setMentionedActorsDirect] = useState<ActorOption[]>(
-		mapActorsToOptions(event.mentionedActors)
+		mapActorsToOptions(event.mentionedActors),
 	)
 	const [description, setDescriptionDirect] = useState<string>(event.description)
 	const [customNameEnabled, setCustomNameEnabledDirect] = useState<boolean>(event.customName)
+
+	const [externalLink, setExternalLink] = useState<string>(event.externalLink)
 
 	const generateSetter = useCallback(<T,>(setter: Dispatch<React.SetStateAction<T>>) => {
 		return (val: T, args?: SetterArgs) => {
@@ -57,8 +59,9 @@ export const useEventFields = ({ event }: Props) => {
 			setMentionedActors: generateSetter(setMentionedActorsDirect),
 			setDescription: generateSetter(setDescriptionDirect),
 			setCustomNameEnabled: generateSetter(setCustomNameEnabledDirect),
+			setExternalLink: generateSetter(setExternalLink),
 		}),
-		[generateSetter]
+		[generateSetter],
 	)
 
 	return {
@@ -73,6 +76,7 @@ export const useEventFields = ({ event }: Props) => {
 			mentionedActors,
 			description,
 			customNameEnabled,
+			externalLink,
 			setDirty,
 			...setters,
 		},

@@ -33,6 +33,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		mentionedActors,
 		description,
 		customNameEnabled,
+		externalLink,
 		setName,
 		setTimestamp,
 		setIcon,
@@ -41,6 +42,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		setMentionedActors,
 		setDescription,
 		setCustomNameEnabled,
+		setExternalLink,
 	} = state
 
 	const { isCreating, createWorldEvent, createIcon, createIconColor } = useCreateEvent({ state })
@@ -83,81 +85,83 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 	return (
 		<>
 			<Grid item xs={12} md={6} style={{ maxHeight: '100%' }}>
-				<Stack spacing={2} direction="column">
-					<TimestampField label="Started at" timestamp={timestamp} onChange={setTimestamp} />
-					<Stack direction="row" gap={1} width="100%">
-						<TextField
-							type="text"
-							label="Name"
-							disabled={!customNameEnabled}
-							value={evaluatedName}
-							onChange={(e) => setName(e.target.value)}
-							inputProps={{ maxLength: 256 }}
-							fullWidth
-						/>
-						<Tooltip title="Use custom event name" arrow placement="top">
-							<Button onClick={() => setCustomNameEnabled(!customNameEnabled)}>
-								<Stack alignItems="center" justifyContent="center">
-									<Switch size="small" checked={customNameEnabled} style={{ pointerEvents: 'none' }} />
-								</Stack>
-							</Button>
-						</Tooltip>
-					</Stack>
-					<TextField
-						label="Content"
-						value={description}
-						onChange={(e) => setDescription(e.target.value)}
-						minRows={7}
-						maxRows={15}
-						multiline
-						autoFocus
-					/>
-					<Stack direction="row-reverse" justifyContent="space-between">
-						{mode === 'create' && (
-							<Tooltip title={shortcutLabel} arrow placement="top">
-								<span>
-									<LoadingButton
-										loading={isCreating}
-										variant="contained"
-										onClick={() => createWorldEvent()}
-										loadingPosition="start"
-										color={createIconColor}
-										startIcon={createIcon}
-									>
-										Create
-									</LoadingButton>
-								</span>
+				<OutlinedContainer label={mode === 'create' ? 'Create Event' : 'Edit Event'} gap={3}>
+					<Stack spacing={2} direction="column">
+						<TimestampField label="Started at" timestamp={timestamp} onChange={setTimestamp} />
+						<Stack direction="row" gap={1} width="100%">
+							<TextField
+								type="text"
+								label="Name"
+								disabled={!customNameEnabled}
+								value={evaluatedName}
+								onChange={(e) => setName(e.target.value)}
+								inputProps={{ maxLength: 256 }}
+								fullWidth
+							/>
+							<Tooltip title="Use custom event name" arrow placement="top">
+								<Button onClick={() => setCustomNameEnabled(!customNameEnabled)}>
+									<Stack alignItems="center" justifyContent="center">
+										<Switch size="small" checked={customNameEnabled} style={{ pointerEvents: 'none' }} />
+									</Stack>
+								</Button>
 							</Tooltip>
-						)}
-						{mode === 'edit' && (
-							<Stack spacing={2} direction="row-reverse">
+						</Stack>
+						<TextField
+							label="Content"
+							value={description}
+							onChange={(e) => setDescription(e.target.value)}
+							minRows={7}
+							maxRows={15}
+							multiline
+							autoFocus
+						/>
+						<Stack direction="row-reverse" justifyContent="space-between">
+							{mode === 'create' && (
 								<Tooltip title={shortcutLabel} arrow placement="top">
 									<span>
 										<LoadingButton
-											loading={isSaving}
-											variant="outlined"
-											onClick={manualSave}
+											loading={isCreating}
+											variant="contained"
+											onClick={() => createWorldEvent()}
 											loadingPosition="start"
-											color={autosaveColor}
-											startIcon={autosaveIcon}
+											color={createIconColor}
+											startIcon={createIcon}
 										>
-											Save
+											Create
 										</LoadingButton>
 									</span>
 								</Tooltip>
-								<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
-									Delete
-								</Button>
-							</Stack>
-						)}
-						<Button variant="outlined" onClick={() => window.history.back()} startIcon={<ArrowBack />}>
-							Back
-						</Button>
+							)}
+							{mode === 'edit' && (
+								<Stack spacing={2} direction="row-reverse">
+									<Tooltip title={shortcutLabel} arrow placement="top">
+										<span>
+											<LoadingButton
+												loading={isSaving}
+												variant="outlined"
+												onClick={manualSave}
+												loadingPosition="start"
+												color={autosaveColor}
+												startIcon={autosaveIcon}
+											>
+												Save
+											</LoadingButton>
+										</span>
+									</Tooltip>
+									<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
+										Delete
+									</Button>
+								</Stack>
+							)}
+							<Button variant="outlined" onClick={() => window.history.back()} startIcon={<ArrowBack />}>
+								Back
+							</Button>
+						</Stack>
 					</Stack>
-				</Stack>
+				</OutlinedContainer>
 			</Grid>
 			<Grid item xs={12} md={6} style={{ height: '100%' }}>
-				<OutlinedContainer label="Modules" fullHeight>
+				<OutlinedContainer label="Modules" fullHeight gap={2}>
 					<Stack gap={2} height="100%">
 						<EventModulesControls modules={modules} state={state} />
 						{modules.includes('RevokedAt') && (
@@ -197,6 +201,17 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 								autoHighlight
 								renderOption={renderActorOption}
 								renderInput={(params) => <TextField {...params} label="Mentioned actors" />}
+							/>
+						)}
+						{modules.includes('ExternalLink') && (
+							<TextField
+								type="text"
+								label="External Link"
+								placeholder="https://example.com"
+								value={externalLink}
+								onChange={(e) => setExternalLink(e.target.value)}
+								inputProps={{ maxLength: 2048 }}
+								fullWidth
 							/>
 						)}
 					</Stack>

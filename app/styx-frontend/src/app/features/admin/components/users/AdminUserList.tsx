@@ -1,11 +1,7 @@
-import { Search } from '@mui/icons-material'
 import {
 	Button,
-	Divider,
-	Input,
-	InputAdornment,
 	Link,
-	Pagination,
+	Paper,
 	Stack,
 	TableBody,
 	TableCell,
@@ -23,14 +19,20 @@ import { User } from '../../../auth/reducer'
 import { getAuthState } from '../../../auth/selectors'
 import { adminSlice } from '../../reducer'
 import { DeleteUserModal } from './DeleteUserModal'
+import { Pagination } from './Pagination'
+import { SearchInput } from './SearchInput'
 import { UserAccessLevelDropdown } from './UserAccessLevelDropdown'
+
+const pageSize = 14
 
 export const AdminUserList = () => {
 	const [page, setPage] = useState(0)
+	const [query, setQuery] = useState('')
 
 	const { data } = useAdminGetUsersQuery({
 		page,
-		size: 50,
+		size: pageSize,
+		query,
 	})
 
 	const { user: loggedInUser } = useSelector(getAuthState)
@@ -41,7 +43,7 @@ export const AdminUserList = () => {
 		(user: User) => {
 			dispatch(adminSlice.actions.openDeleteUserModal(user))
 		},
-		[dispatch]
+		[dispatch],
 	)
 
 	const formatDate = useCallback((date: string) => {
@@ -61,18 +63,26 @@ export const AdminUserList = () => {
 	}
 
 	return (
-		<Stack alignItems="center">
-			<Stack sx={{ paddingTop: 2 }} direction="row" gap={1}>
-				<Input
-					placeholder="Search"
-					startAdornment={
-						<InputAdornment position="start">
-							<Search />
-						</InputAdornment>
-					}
+		<Paper elevation={2} sx={{ marginTop: 4 }}>
+			<Stack
+				sx={{ padding: '16px 16px' }}
+				direction="row"
+				gap={1}
+				justifyContent="space-between"
+				width="calc(100% - 32px)"
+				alignItems="center"
+			>
+				<Stack flexBasis="10%" />
+				<Stack alignItems="center" sx={{ flexBasis: '33.3333%' }}>
+					<Pagination initialPage={page} pageCount={data.pageCount} onChange={setPage} />
+				</Stack>
+				<SearchInput
+					initialQuery={query}
+					onChange={(value: string) => {
+						setQuery(value)
+						setPage(0)
+					}}
 				/>
-				<Divider orientation="vertical" />
-				<Pagination count={data.pageCount} onChange={(_, page) => setPage(page - 1)} />
 			</Stack>
 			<Stack component="span">
 				<TableContainer component="table">
@@ -83,7 +93,7 @@ export const AdminUserList = () => {
 							<TableCell width={205}>Level</TableCell>
 							<TableCell width={160}>Created At</TableCell>
 							<TableCell width={160}>Updated At</TableCell>
-							<TableCell>Actions</TableCell>
+							<TableCell width={270}>Actions</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -120,6 +130,6 @@ export const AdminUserList = () => {
 				</TableContainer>
 			</Stack>
 			<DeleteUserModal />
-		</Stack>
+		</Paper>
 	)
 }

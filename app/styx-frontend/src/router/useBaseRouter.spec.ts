@@ -1,4 +1,4 @@
-import { act } from 'react-dom/test-utils'
+import { act } from '@testing-library/react'
 
 import { renderHookWithProviders } from '../jest/renderWithProviders'
 import { MockedRouter, mockRouter, resetMockRouter } from './router.mock'
@@ -16,7 +16,7 @@ describe('useBaseRouter', () => {
 		const { result } = renderHookWithProviders(() =>
 			useBaseRouter({
 				app: '/app/test/:param',
-			})
+			}),
 		)
 
 		act(() => {
@@ -36,7 +36,7 @@ describe('useBaseRouter', () => {
 		const { result } = renderHookWithProviders(() =>
 			useBaseRouter({
 				app: '/app/test/:param',
-			})
+			}),
 		)
 
 		act(() => {
@@ -70,8 +70,8 @@ describe('useBaseRouter', () => {
 					'/app/test': {
 						q: '' as string,
 					},
-				}
-			)
+				},
+			),
 		)
 
 		act(() => {
@@ -89,7 +89,7 @@ describe('useBaseRouter', () => {
 		const { result } = renderHookWithProviders(() =>
 			useBaseRouter({
 				app: '/app/test',
-			})
+			}),
 		)
 
 		act(() => {
@@ -114,7 +114,7 @@ describe('useBaseRouter', () => {
 			useBaseRouter({
 				test1: '/app/test1',
 				test2: '/app/test2',
-			})
+			}),
 		)
 
 		act(() => {
@@ -139,7 +139,7 @@ describe('useBaseRouter', () => {
 			useBaseRouter({
 				test1: '/app/test1',
 				test2: '/app/test2',
-			})
+			}),
 		)
 
 		act(() => {
@@ -164,7 +164,7 @@ describe('useBaseRouter', () => {
 			useBaseRouter({
 				test1: '/app/test1',
 				test2: '/app/test2',
-			})
+			}),
 		)
 
 		act(() => {
@@ -187,7 +187,7 @@ describe('useBaseRouter', () => {
 		const { result } = renderHookWithProviders(() =>
 			useBaseRouter({
 				app: '/app/test',
-			})
+			}),
 		)
 
 		act(() => {
@@ -222,8 +222,8 @@ describe('useBaseRouter', () => {
 					'/app/test': {
 						q: '0',
 					},
-				}
-			)
+				},
+			),
 		)
 
 		act(() => {
@@ -247,7 +247,7 @@ describe('useBaseRouter', () => {
 			const { result } = renderHookWithProviders(() =>
 				useBaseRouter({
 					app: '/app/:param1/:param2/foo',
-				})
+				}),
 			)
 
 			act(() => {
@@ -267,7 +267,7 @@ describe('useBaseRouter', () => {
 			const { result } = renderHookWithProviders(() =>
 				useBaseRouter({
 					app: '/app/:param1/:param2/foo',
-				})
+				}),
 			)
 
 			expect(result.current.isLocationEqual('/app/:param1/:param2/foo')).toEqual(false)
@@ -278,7 +278,7 @@ describe('useBaseRouter', () => {
 				useBaseRouter({
 					test1: '/app/:param1/:param2/foo',
 					test2: '/app/:param1/:param2/bar',
-				})
+				}),
 			)
 
 			act(() => {

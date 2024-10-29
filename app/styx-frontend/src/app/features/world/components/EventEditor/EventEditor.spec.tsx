@@ -43,8 +43,8 @@ describe('<EventEditor />', () => {
 					name: 'Event title',
 					description: 'Amazing event text',
 					customName: true,
-				})
-			)
+				}),
+			),
 		)
 
 		expect(screen.getByDisplayValue('Event title')).toBeInTheDocument()
@@ -60,8 +60,8 @@ describe('<EventEditor />', () => {
 					name: 'Event title',
 					description: 'Amazing event text',
 					customName: false,
-				})
-			)
+				}),
+			),
 		)
 
 		mockUpdateWorldEvent(server, {
@@ -88,8 +88,8 @@ describe('<EventEditor />', () => {
 					name: 'Event title',
 					description: 'Amazing event text',
 					customName: true,
-				})
-			)
+				}),
+			),
 		)
 
 		const { hasBeenCalled } = mockUpdateWorldEvent(server, {
@@ -136,8 +136,8 @@ describe('<EventEditor />', () => {
 					icon: 'fire',
 					description: 'Amazing event text',
 					extraFields: ['EventIcon'],
-				})
-			)
+				}),
+			),
 		)
 
 		expect(screen.getByAltText('fire icon')).toBeInTheDocument()
@@ -152,8 +152,8 @@ describe('<EventEditor />', () => {
 					name: 'Amazing event text',
 					description: 'Amazing event text',
 					extraFields: ['EventIcon'],
-				})
-			)
+				}),
+			),
 		)
 
 		const { hasBeenCalled, invocations } = mockUpdateWorldEvent(server, {
@@ -175,7 +175,7 @@ describe('<EventEditor />', () => {
 		expect(invocations[0].jsonBody).toEqual(
 			expect.objectContaining({
 				icon: 'fire',
-			})
+			}),
 		)
 	})
 
@@ -190,8 +190,8 @@ describe('<EventEditor />', () => {
 					id: '2222',
 					name: 'Event title',
 					description: 'Amazing event text',
-				})
-			)
+				}),
+			),
 		)
 
 		const { hasBeenCalled } = mockDeleteWorldEvent(server, {

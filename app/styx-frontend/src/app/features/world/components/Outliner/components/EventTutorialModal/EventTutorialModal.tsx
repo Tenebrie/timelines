@@ -24,7 +24,7 @@ export const EventTutorialModal = () => {
 				In Timelines app, a project (referred to as a <b>World</b>) contains many events that have associated
 				timestamp, icon, and other metadata. An <b>Event</b> describes the moment of something happening, for
 				example
-				<i>"The adventurers have reached the inn"</i> event may happen on Day 1.
+				<i>"The adventurers have reached the inn"</i>" may happen on Day 1.
 			</Typography>
 			<Typography variant="body1">
 				Most events contain a number of <b>Statements</b>. A statement describes the state of the world

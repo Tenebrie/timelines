@@ -68,7 +68,7 @@ export const ActorWizardModal = () => {
 					title: title.trim(),
 					color: color,
 				},
-			})
+			}),
 		)
 		if (error) {
 			raiseError('SERVER_SIDE_ERROR', error.message)

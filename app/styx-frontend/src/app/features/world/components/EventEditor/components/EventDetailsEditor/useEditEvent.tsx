@@ -30,6 +30,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		mentionedActors,
 		description,
 		customNameEnabled,
+		externalLink,
 		setDirty,
 		setModules,
 		setName,
@@ -40,6 +41,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		setMentionedActors,
 		setDescription,
 		setCustomNameEnabled,
+		setExternalLink,
 	} = state
 
 	const lastSavedAt = useRef<Date>(new Date(event.updatedAt))
@@ -55,6 +57,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 			setMentionedActors(mapActorsToOptions(event.mentionedActors), { cleanSet: true })
 			setDescription(event.description, { cleanSet: true })
 			setCustomNameEnabled(event.customName, { cleanSet: true })
+			setExternalLink(event.externalLink, { cleanSet: true })
 
 			setDirty(false)
 			lastSavedAt.current = new Date(event.updatedAt)
@@ -72,6 +75,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		setCustomNameEnabled,
 		setDirty,
 		setDescription,
+		setExternalLink,
 	])
 
 	const { openDeleteEventModal } = worldSlice.actions
@@ -90,14 +94,14 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 					worldId: worldId,
 					eventId: event.id,
 					body: delta,
-				})
+				}),
 			)
 			if (error) {
 				return
 			}
 			lastSavedAt.current = new Date()
 		},
-		[event.id, setDirty, updateWorldEvent, worldId]
+		[event.id, setDirty, updateWorldEvent, worldId],
 	)
 
 	const {
@@ -117,6 +121,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 				customNameEnabled,
 				targetActorIds: selectedActors.map((a) => a.id),
 				mentionedActorIds: mentionedActors.map((a) => a.id),
+				externalLink,
 			}),
 		isSaving,
 		isError,

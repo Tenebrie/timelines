@@ -59,7 +59,7 @@ export const ShareWorldModal = () => {
 					userEmails: emails,
 					access,
 				},
-			})
+			}),
 		)
 		if (error) {
 			return

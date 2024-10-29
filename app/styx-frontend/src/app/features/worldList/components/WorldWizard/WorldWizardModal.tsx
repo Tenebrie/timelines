@@ -60,7 +60,7 @@ export const WorldWizardModal = () => {
 					calendar,
 					timeOrigin,
 				},
-			})
+			}),
 		)
 		if (error) {
 			setNameValidationError(error.message)
