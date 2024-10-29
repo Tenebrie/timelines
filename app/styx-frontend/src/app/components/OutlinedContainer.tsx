@@ -6,16 +6,17 @@ type Props = {
 	children?: ReactNode | ReactNode[]
 	style?: React.CSSProperties
 	fullHeight?: boolean
+	gap?: number
 }
 
-export const OutlinedContainer = ({ label, children, style, fullHeight }: Props) => {
+export const OutlinedContainer = ({ label, children, style, fullHeight, gap }: Props) => {
 	return (
 		<Paper
-			sx={{ padding: 2, paddingTop: 3, height: fullHeight ? '100%' : 'unset' }}
+			sx={{ padding: 2, paddingTop: 3, height: fullHeight ? 'calc(100% - 16px)' : 'unset' }}
 			elevation={2}
 			style={style}
 		>
-			<Stack gap={1} sx={{ height: fullHeight ? '100%' : 'unset' }}>
+			<Stack gap={gap ?? 1} sx={{ height: fullHeight ? '100%' : 'unset' }}>
 				{label && (
 					<Stack gap={1}>
 						<Typography variant="h6" marginLeft={1}>

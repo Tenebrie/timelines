@@ -2,8 +2,7 @@ import { CircularProgress, Divider, ListItemIcon, ListItemText, Menu, MenuItem }
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { QueryParams } from '../../../../../../../router/routes/QueryParams'
-import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
+import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { useTimelineBusDispatch } from '../../../../hooks/useTimelineBus'
 import { worldSlice } from '../../../../reducer'
@@ -22,7 +21,13 @@ export const TimelineContextMenu = () => {
 
 	const selectedEvent = selectedEventOrBundle?.markerType !== 'bundle' ? selectedEventOrBundle : null
 
-	const { navigateTo, selectTime, selectedTimeOrZero: selectedWorldTime } = useWorldRouter()
+	const {
+		navigateToOutliner,
+		navigateToEventCreator,
+		navigateToEventDeltaCreator,
+		selectTime,
+		selectedTimeOrZero: selectedWorldTime,
+	} = useWorldRouter()
 
 	const scrollTimelineTo = useTimelineBusDispatch()
 
@@ -43,37 +48,26 @@ export const TimelineContextMenu = () => {
 
 	const onCreateEvent = useCallback(() => {
 		onClose()
-		navigateTo({
-			target: worldRoutes.eventCreator,
-			args: {
-				worldId,
-			},
-			query: {
-				[QueryParams.SELECTED_TIME]: String(selectedTime),
-			},
-		})
-		scrollTimelineTo(selectedTime)
-	}, [navigateTo, onClose, scrollTimelineTo, selectedTime, worldId])
+		navigateToEventCreator(selectedTime)
+	}, [navigateToEventCreator, onClose, selectedTime])
 
 	const onRevokeEvent = useCallback(() => {
 		onClose()
 		selectTime(selectedTime)
 		dispatch(openRevokedStatementWizard({ preselectedEventId: '' }))
-	}, [dispatch, onClose, openRevokedStatementWizard, selectTime, selectedTime])
+		navigateToOutliner(selectedTime)
+	}, [dispatch, navigateToOutliner, onClose, openRevokedStatementWizard, selectTime, selectedTime])
 
 	const onReplaceSelectedEvent = useCallback(() => {
 		onClose()
 		if (!selectedEvent) {
 			return
 		}
-		navigateTo({
-			target: worldRoutes.eventDeltaCreator,
-			args: {
-				worldId,
-				eventId: selectedEvent.id,
-			},
+		navigateToEventDeltaCreator({
+			eventId: selectedEvent.id,
+			selectedTime: selectedWorldTime,
 		})
-	}, [navigateTo, onClose, selectedEvent, worldId])
+	}, [navigateToEventDeltaCreator, onClose, selectedEvent, selectedWorldTime])
 
 	const onRevokeSelectedEvent = useCallback(async () => {
 		if (!selectedEvent) {
@@ -143,25 +137,25 @@ export const TimelineContextMenu = () => {
 			)}
 			{(selectedEvent?.markerType === 'issuedAt' || selectedEvent?.markerType === 'deltaState') && (
 				<MenuItem onClick={onRevokeSelectedEvent} disabled={isRequestInFlight}>
+					<ListItemText primary="Retire this event" />
 					{isRequestInFlight && (
 						<ListItemIcon>
-							<CircularProgress size={24} />
+							<CircularProgress size={20} />
 						</ListItemIcon>
 					)}
-					<ListItemText primary="Retire this event" />
 				</MenuItem>
 			)}
 			{selectedEvent?.markerType === 'revokedAt' && (
 				<MenuItem onClick={onUnrevokeSelectedEvent} disabled={isRequestInFlight}>
+					<ListItemText primary="Unretire this event" />
 					{isRequestInFlight && (
 						<ListItemIcon>
-							<CircularProgress size={24} />
+							<CircularProgress size={20} />
 						</ListItemIcon>
 					)}
-					<ListItemText primary="Unretire this event" />
 				</MenuItem>
 			)}
-			{(selectedEvent?.markerType === 'issuedAt' || selectedEvent?.markerType === 'revokedAt') && (
+			{selectedEvent?.markerType === 'issuedAt' && (
 				<MenuItem onClick={onDeleteSelectedEvent}>
 					<ListItemText primary="Delete this event" />
 				</MenuItem>

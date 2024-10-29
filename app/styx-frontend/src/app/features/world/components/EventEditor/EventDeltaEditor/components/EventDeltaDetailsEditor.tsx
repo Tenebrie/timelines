@@ -5,6 +5,7 @@ import { useCallback } from 'react'
 
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import { FormErrorBanner } from '../../../../../../components/FormErrorBanner'
+import { OutlinedContainer } from '../../../../../../components/OutlinedContainer'
 import { applyEventDelta } from '../../../../../../utils/applyEventDelta'
 import { useDeltaStateEvent } from '../../../../../../utils/useDeltaStateEvent'
 import { useErrorState } from '../../../../../../utils/useErrorState'
@@ -81,77 +82,83 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 		<>
 			<Grid item xs={0} md={2} />
 			<Grid item xs={12} md={8} style={{ maxHeight: '100%' }}>
-				<Stack spacing={2} direction="column">
-					<TimestampField label="Started at" timestamp={timestamp} onChange={setTimestamp} />
-					<Stack direction="row" gap={1} width="100%">
+				<OutlinedContainer
+					label={mode === 'create' ? 'Create Event Delta' : 'Edit Event Delta'}
+					fullHeight
+					gap={3}
+				>
+					<Stack spacing={2} direction="column">
+						<TimestampField label="Started at" timestamp={timestamp} onChange={setTimestamp} />
+						<Stack direction="row" gap={1} width="100%">
+							<TextField
+								type="text"
+								label="Name"
+								disabled
+								value={evaluatedName}
+								inputProps={{ maxLength: 256 }}
+								fullWidth
+							/>
+						</Stack>
 						<TextField
-							type="text"
-							label="Name"
-							disabled
-							value={evaluatedName}
-							inputProps={{ maxLength: 256 }}
-							fullWidth
+							label="Content"
+							value={description ?? ''}
+							placeholder={event.description}
+							onChange={(e) => setDescription(e.target.value ?? null)}
+							minRows={7}
+							maxRows={15}
+							multiline
+							autoFocus
 						/>
+						<FormErrorBanner errorState={errorState} />
+						<Stack direction="row-reverse" justifyContent="space-between">
+							{mode === 'create' && (
+								<Stack spacing={2} direction="row-reverse">
+									<Tooltip title={shortcutLabel} arrow placement="top">
+										<span>
+											<LoadingButton
+												loading={isCreating}
+												variant="contained"
+												onClick={() => createDeltaState()}
+												loadingPosition="start"
+												color={createIconColor}
+												startIcon={createIcon}
+											>
+												Create
+											</LoadingButton>
+										</span>
+									</Tooltip>
+									<Button variant="outlined" onClick={onCopySource} startIcon={<Delete />}>
+										Copy source text
+									</Button>
+								</Stack>
+							)}
+							{mode === 'edit' && (
+								<Stack spacing={2} direction="row-reverse">
+									<Tooltip title={shortcutLabel} arrow placement="top">
+										<span>
+											<LoadingButton
+												loading={isSaving}
+												variant="outlined"
+												onClick={manualSave}
+												loadingPosition="start"
+												color={autosaveColor}
+												startIcon={autosaveIcon}
+											>
+												Save
+											</LoadingButton>
+										</span>
+									</Tooltip>
+									<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
+										Delete
+									</Button>
+								</Stack>
+							)}
+							<Button variant="outlined" onClick={() => window.history.back()} startIcon={<ArrowBack />}>
+								Back
+							</Button>
+						</Stack>
 					</Stack>
-					<TextField
-						label="Content"
-						value={description ?? ''}
-						placeholder={event.description}
-						onChange={(e) => setDescription(e.target.value ?? null)}
-						minRows={7}
-						maxRows={15}
-						multiline
-						autoFocus
-					/>
-					<FormErrorBanner errorState={errorState} />
-					<Stack direction="row-reverse" justifyContent="space-between">
-						{mode === 'create' && (
-							<Stack spacing={2} direction="row-reverse">
-								<Tooltip title={shortcutLabel} arrow placement="top">
-									<span>
-										<LoadingButton
-											loading={isCreating}
-											variant="contained"
-											onClick={() => createDeltaState()}
-											loadingPosition="start"
-											color={createIconColor}
-											startIcon={createIcon}
-										>
-											Create
-										</LoadingButton>
-									</span>
-								</Tooltip>
-								<Button variant="outlined" onClick={onCopySource} startIcon={<Delete />}>
-									Copy source text
-								</Button>
-							</Stack>
-						)}
-						{mode === 'edit' && (
-							<Stack spacing={2} direction="row-reverse">
-								<Tooltip title={shortcutLabel} arrow placement="top">
-									<span>
-										<LoadingButton
-											loading={isSaving}
-											variant="outlined"
-											onClick={manualSave}
-											loadingPosition="start"
-											color={autosaveColor}
-											startIcon={autosaveIcon}
-										>
-											Save
-										</LoadingButton>
-									</span>
-								</Tooltip>
-								<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
-									Delete
-								</Button>
-							</Stack>
-						)}
-						<Button variant="outlined" onClick={() => window.history.back()} startIcon={<ArrowBack />}>
-							Back
-						</Button>
-					</Stack>
-				</Stack>
+				</OutlinedContainer>
 			</Grid>
 		</>
 	)

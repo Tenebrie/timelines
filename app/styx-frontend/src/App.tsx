@@ -46,6 +46,10 @@ const App = () => {
 		...scrollbarThemes,
 		color: theme.palette.text.secondary,
 		bgcolor: theme.palette.background.default,
+		'* .MuiTabs-indicator': {
+			borderRadius: 1,
+			backgroundColor: theme.palette.primary.main,
+		},
 	}
 
 	return (

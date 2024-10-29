@@ -70,20 +70,23 @@ export const useWorldRouter = () => {
 		[baseRouter, worldId],
 	)
 
-	const navigateToEventCreator = useCallback(() => {
-		if (isReadOnly) {
-			return
-		}
-		baseRouter.navigateTo({
-			target: worldRoutes.eventCreator,
-			args: {
-				worldId,
-			},
-			query: {
-				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
-			},
-		})
-	}, [baseRouter, isReadOnly, worldId])
+	const navigateToEventCreator = useCallback(
+		(time?: number) => {
+			if (isReadOnly) {
+				return
+			}
+			baseRouter.navigateTo({
+				target: worldRoutes.eventCreator,
+				args: {
+					worldId,
+				},
+				query: {
+					[QueryParams.SELECTED_TIME]: time ?? QueryStrategy.Preserve,
+				},
+			})
+		},
+		[baseRouter, isReadOnly, worldId],
+	)
 
 	const navigateToEventDeltaCreator = useCallback(
 		({ eventId, selectedTime }: { eventId: string; selectedTime: number }) => {
