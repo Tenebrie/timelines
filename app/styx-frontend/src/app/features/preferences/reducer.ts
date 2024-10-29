@@ -4,7 +4,6 @@ import { createSlice } from '@reduxjs/toolkit'
 import { Actor, WorldEvent } from '../world/types'
 
 const initialState = {
-	time: {},
 	colorMode: 'dark' as 'light' | 'dark',
 	timeline: {
 		useCustomLineSpacing: false as boolean,

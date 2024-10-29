@@ -1,5 +1,5 @@
 import { Clear, Search, SubdirectoryArrowRight } from '@mui/icons-material'
-import { IconButton, InputAdornment, List, ListItem, ListItemIcon, TextField } from '@mui/material'
+import { IconButton, InputAdornment, List, ListItem, ListItemIcon, Paper, TextField } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -156,20 +156,19 @@ export const OverviewPanel = () => {
 	)
 
 	return (
-		<div
+		<Paper
 			style={{
 				padding: '8px',
 				width: '384px',
 				marginLeft: `${panelOpen ? 0 : -384}px`,
-				height: '100%',
 				boxSizing: 'border-box',
-				background: 'rgba(0, 0, 255, 0.05)',
 				overflowX: 'hidden',
 				overflowY: 'scroll',
 				transition: 'margin-left 0.3s',
 				display: 'flex',
 				flexDirection: 'column',
 			}}
+			elevation={2}
 		>
 			<TextField
 				id="overview-search"
@@ -218,6 +217,6 @@ export const OverviewPanel = () => {
 					renderEntity={renderEvent}
 				/>
 			</List>
-		</div>
+		</Paper>
 	)
 }

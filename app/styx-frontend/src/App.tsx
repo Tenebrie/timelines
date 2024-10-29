@@ -1,4 +1,5 @@
-import { Box, ThemeProvider } from '@mui/material'
+import { Theme } from '@emotion/react'
+import { Box, SxProps, ThemeProvider } from '@mui/material'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, Outlet } from 'react-router-dom'
@@ -37,17 +38,22 @@ const App = () => {
 	useSavedPreferences()
 
 	const { colorMode } = useSelector(getUserPreferences)
+	console.log(colorMode)
 	const theme = useMemo(() => (colorMode === 'light' ? lightTheme : darkTheme), [colorMode])
+
+	const themeOverrides: SxProps<Theme> = {
+		color: theme.palette.text.secondary,
+		bgcolor: theme.palette.background.default,
+		'& *': {
+			scrollbarWidth: 'thin',
+			scrollbarColor: 'rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1)',
+		},
+	}
 
 	return (
 		<div className="App">
 			<ThemeProvider theme={theme}>
-				<Box
-					sx={{
-						color: theme.palette.text.secondary,
-						bgcolor: theme.palette.background.default,
-					}}
-				>
+				<Box sx={themeOverrides}>
 					<RouterWrapper />
 					<LostConnectionAlert server="rhea" />
 					<LostConnectionAlert server="calliope" />

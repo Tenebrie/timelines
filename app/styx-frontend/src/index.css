@@ -23,12 +23,11 @@ code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-* {
-	scrollbar-width: thin;
-}
-
-::-webkit-scrollbar {
-	width: 8px;
+.scroller {
+	--scrollbar-color-thumb: hotpink;
+	--scrollbar-color-track: blue;
+	--scrollbar-width: thin;
+	--scrollbar-width-legacy: 10px;
 }
 
 /* Track */
