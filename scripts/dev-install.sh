@@ -18,6 +18,8 @@ docker cp app/calliope-websockets/yarn.lock $(docker ps -aqf "name=^timelines-ca
 docker cp app/calliope-websockets/tsconfig.json $(docker ps -aqf "name=^timelines-calliope-[0-9]+"):/app/calliope
 docker exec $(docker ps -aqf "name=^timelines-calliope-[0-9]+") yarn
 
+(cd app/rhea-backend && yarn prisma:migrate:dev)
+
 docker exec $(docker ps -aqf "name=^timelines-rhea-[0-9]+") yarn prisma generate
 docker exec $(docker ps -aqf "name=^timelines-rhea-[0-9]+") touch src/index.ts
 
@@ -34,5 +36,3 @@ do
    [[ counter -eq $max_retry ]] && exit 1
    ((counter++))
 done
-
-(cd app/rhea-backend && yarn prisma:migrate:dev)

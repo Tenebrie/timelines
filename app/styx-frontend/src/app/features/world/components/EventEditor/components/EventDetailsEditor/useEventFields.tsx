@@ -31,6 +31,8 @@ export const useEventFields = ({ event }: Props) => {
 	const [description, setDescriptionDirect] = useState<string>(event.description)
 	const [customNameEnabled, setCustomNameEnabledDirect] = useState<boolean>(event.customName)
 
+	const [externalLink, setExternalLink] = useState<string>(event.externalLink)
+
 	const generateSetter = useCallback(<T,>(setter: Dispatch<React.SetStateAction<T>>) => {
 		return (val: T, args?: SetterArgs) => {
 			setter((oldVal) => {
@@ -57,6 +59,7 @@ export const useEventFields = ({ event }: Props) => {
 			setMentionedActors: generateSetter(setMentionedActorsDirect),
 			setDescription: generateSetter(setDescriptionDirect),
 			setCustomNameEnabled: generateSetter(setCustomNameEnabledDirect),
+			setExternalLink: generateSetter(setExternalLink),
 		}),
 		[generateSetter],
 	)
@@ -73,6 +76,7 @@ export const useEventFields = ({ event }: Props) => {
 			mentionedActors,
 			description,
 			customNameEnabled,
+			externalLink,
 			setDirty,
 			...setters,
 		},

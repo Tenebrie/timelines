@@ -2,7 +2,7 @@ import { Theme } from '@emotion/react'
 import { Box, SxProps, ThemeProvider } from '@mui/material'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useAuthCheck } from './app/features/auth/authCheck/useAuthCheck'
@@ -24,7 +24,13 @@ const RouterWrapper = () => {
 	const { success, target } = useAuthCheck()
 
 	if (!success) {
-		return <Navigate to={target} />
+		console.log('Go away')
+		window.location.href = target
+		return (
+			<Container>
+				<Outlet />
+			</Container>
+		)
 	}
 
 	return (

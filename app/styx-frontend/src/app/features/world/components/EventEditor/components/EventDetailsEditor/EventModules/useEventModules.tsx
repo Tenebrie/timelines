@@ -25,6 +25,11 @@ export const useEventModules = () => {
 				secondary: 'Set the actors mentioned in this event',
 				module: 'MentionedActors',
 			},
+			{
+				text: 'External Link',
+				secondary: 'Add a link to an external resource',
+				module: 'ExternalLink',
+			},
 		],
 		[],
 	)

@@ -44,6 +44,9 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 				case 'MentionedActors':
 					state.setMentionedActors([])
 					break
+				case 'ExternalLink':
+					state.setExternalLink('')
+					break
 			}
 		},
 		[modules, state],

@@ -33,6 +33,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		mentionedActors,
 		description,
 		customNameEnabled,
+		externalLink,
 		setName,
 		setTimestamp,
 		setIcon,
@@ -41,6 +42,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		setMentionedActors,
 		setDescription,
 		setCustomNameEnabled,
+		setExternalLink,
 	} = state
 
 	const { isCreating, createWorldEvent, createIcon, createIconColor } = useCreateEvent({ state })
@@ -199,6 +201,17 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 								autoHighlight
 								renderOption={renderActorOption}
 								renderInput={(params) => <TextField {...params} label="Mentioned actors" />}
+							/>
+						)}
+						{modules.includes('ExternalLink') && (
+							<TextField
+								type="text"
+								label="External Link"
+								placeholder="https://example.com"
+								value={externalLink}
+								onChange={(e) => setExternalLink(e.target.value)}
+								inputProps={{ maxLength: 2048 }}
+								fullWidth
 							/>
 						)}
 					</Stack>

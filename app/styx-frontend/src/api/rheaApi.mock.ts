@@ -281,6 +281,7 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	extraFields: [],
 	customName: false,
 	deltaStates: [],
+	externalLink: '',
 	...statement,
 })
 
@@ -333,5 +334,6 @@ export const mockApiEventModel = (
 	customName: false,
 	deltaStates: [],
 	revokedAt: null,
+	externalLink: '',
 	...statement,
 })

@@ -1,7 +1,15 @@
 import { z } from 'zod'
 
+const defaultTheme = ((): 'light' | 'dark' => {
+	if (window.matchMedia) {
+		const query = window.matchMedia('(prefers-color-scheme:dark)')
+		return query.matches ? 'dark' : 'light'
+	}
+	return 'light'
+})()
+
 const PreferencesStateSchema = z.object({
-	colorMode: z.union([z.literal('light'), z.literal('dark')]).default('dark'),
+	colorMode: z.union([z.literal('light'), z.literal('dark')]).default(defaultTheme),
 	timeline: z
 		.object({
 			useCustomLineSpacing: z.boolean().default(false),

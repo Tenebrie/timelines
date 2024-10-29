@@ -13,7 +13,7 @@ export const useAutocompleteActorList = ({ actors, selectedActors, mentionedActo
 	const actorOptions = actors
 		.map((actor) => ({
 			...actor,
-			label: `${actor.name}, ${actor.title}`,
+			label: actor.title ? `${actor.name}, ${actor.title}` : actor.name,
 		}))
 		.filter(
 			(actor) =>
@@ -22,7 +22,7 @@ export const useAutocompleteActorList = ({ actors, selectedActors, mentionedActo
 	const mentionedActorOptions = actors
 		.map((actor) => ({
 			...actor,
-			label: `${actor.name}, ${actor.title}`,
+			label: actor.title ? `${actor.name}, ${actor.title}` : actor.name,
 		}))
 		.filter(
 			(actor) => !selectedActors || !selectedActors.some((selectedActor) => selectedActor.id === actor.id),
