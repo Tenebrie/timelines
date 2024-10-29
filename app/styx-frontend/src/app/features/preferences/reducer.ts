@@ -2,27 +2,9 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { Actor, WorldEvent } from '../world/types'
+import { DefaultPreferencesValue, loadPreferences } from './loadPreferences'
 
-const initialState = {
-	colorMode: 'dark' as 'light' | 'dark',
-	timeline: {
-		useCustomLineSpacing: false as boolean,
-		lineSpacing: 10 as number,
-	},
-	outliner: {
-		tabIndex: 0 as number,
-		showInactiveStatements: false as boolean,
-		expandedActors: [] as string[],
-		expandedEvents: [] as string[],
-	},
-	overview: {
-		panelOpen: true as boolean,
-		actorsOpen: true as boolean,
-		actorsReversed: false as boolean,
-		eventsOpen: true as boolean,
-		eventsReversed: false as boolean,
-	},
-}
+const initialState = DefaultPreferencesValue
 
 const saveToLocalStorage = (state: PreferencesState) => {
 	window.localStorage.setItem(
@@ -44,31 +26,11 @@ export const preferencesSlice = createSlice({
 	initialState,
 	reducers: {
 		loadFromLocalStorage: (state) => {
-			const value = window.localStorage.getItem('userPreferences/v1')
-			if (!value) {
-				return
-			}
-
-			try {
-				const parsedValue = JSON.parse(value) as PreferencesState
-				const tabIndexValue = parsedValue?.outliner?.tabIndex
-				if (tabIndexValue) {
-					state.outliner.tabIndex = tabIndexValue
-				}
-				state.colorMode = parsedValue?.colorMode ?? 'dark'
-				state.timeline.useCustomLineSpacing = !!parsedValue?.timeline?.useCustomLineSpacing
-				state.timeline.lineSpacing = parsedValue?.timeline?.lineSpacing ?? 10
-				state.outliner.showInactiveStatements = !!parsedValue?.outliner?.showInactiveStatements
-				state.outliner.expandedActors = parsedValue?.outliner?.expandedActors ?? []
-				state.outliner.expandedEvents = parsedValue?.outliner?.expandedEvents ?? []
-				state.overview.panelOpen = !!parsedValue?.overview?.panelOpen
-				state.overview.actorsOpen = !!parsedValue?.overview?.actorsOpen
-				state.overview.actorsReversed = !!parsedValue?.overview?.actorsReversed
-				state.overview.eventsOpen = !!parsedValue?.overview?.eventsOpen
-				state.overview.eventsReversed = !!parsedValue?.overview?.eventsReversed
-			} catch {
-				return
-			}
+			const value = loadPreferences()
+			state['colorMode'] = value['colorMode']
+			state['timeline'] = value['timeline']
+			state['outliner'] = value['outliner']
+			state['overview'] = value['overview']
 		},
 
 		setColorMode: (state, { payload }: PayloadAction<'light' | 'dark'>) => {

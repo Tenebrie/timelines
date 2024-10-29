@@ -77,7 +77,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 									data-hj-suppress
 									primary={
 										<TrunkatedTypography
-											lines={10}
+											$lines={10}
 											sx={{ fontSize: '16px' }}
 											style={{ whiteSpace: 'break-spaces' }}
 										>
@@ -99,7 +99,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 								<ListItemText
 									data-hj-suppress
 									primary={
-										<TrunkatedTypography lines={3} component="span">
+										<TrunkatedTypography $lines={3} component="span">
 											<StatementActorsText>
 												{event.targetActors.length > 0 ? <Link /> : ''} {targetActors}
 											</StatementActorsText>
@@ -118,7 +118,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 								<ListItemText
 									data-hj-suppress
 									primary={
-										<TrunkatedTypography lines={3} component="span">
+										<TrunkatedTypography $lines={3} component="span">
 											<StatementActorsText>
 												{event.mentionedActors.length > 0 ? <ArrowRightAlt /> : ''} {mentionedActors}
 											</StatementActorsText>

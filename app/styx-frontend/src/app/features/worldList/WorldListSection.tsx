@@ -69,7 +69,7 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 							style={{ textAlign: 'start', lineBreak: 'anywhere' }}
 							data-hj-suppress
 						>
-							<TrunkatedSpan lines={1} style={{ width: '100%' }}>
+							<TrunkatedSpan $lines={1} style={{ width: '100%' }}>
 								- {world.name}
 							</TrunkatedSpan>
 						</Button>
