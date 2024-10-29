@@ -1,5 +1,5 @@
 import bezier from 'bezier-easing'
-import { throttle } from 'lodash'
+import throttle from 'lodash.throttle'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 

@@ -19,7 +19,7 @@ services:
             dockerfile: ./app/styx-frontend/Dockerfile.prod
         environment:
             NODE_ENV: production
-        command: yarn serve -s build -l 8080
+        command: yarn prod
         deploy:
             replicas: 2
             update_config:
