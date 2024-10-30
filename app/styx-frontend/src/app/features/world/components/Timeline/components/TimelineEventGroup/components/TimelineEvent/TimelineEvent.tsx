@@ -1,4 +1,4 @@
-import { colors } from '@mui/material'
+import { colors, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { memo, MouseEvent, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -135,11 +135,11 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 			{isInfoVisible && (
 				<LabelContainer>
 					<Label data-hj-suppress>
-						<span>
+						<Typography sx={{ color: 'white' }}>
 							{labelType}
 							{labelType ? ' ' : ''}
 							{entity.name}
-						</span>
+						</Typography>
 					</Label>
 				</LabelContainer>
 			)}
