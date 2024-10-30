@@ -22,6 +22,7 @@ type TimeDefinition = {
 }
 
 export const maximumDateTime = 8640000000000000
+export const maximumCustomTime = 10076284008022500n
 
 export const useWorldTime = ({ calendar }: Props = {}) => {
 	const { calendar: worldCalendar } = useSelector(getWorldState)
@@ -43,10 +44,15 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 
 	const parseTime = useCallback(
 		(rawTime: number): TimeDefinition => {
-			const time = rawTime * msPerUnit + calendarDefinition.baseOffset
-			if (calendarDefinition.engine === 'JS_DATE' && time >= maximumDateTime) {
-				console.log(calendarDefinition)
-				throw new Error('Error')
+			let time = rawTime * msPerUnit + calendarDefinition.baseOffset
+			if (calendarDefinition.engine === 'JS_DATE' && Math.abs(time) >= maximumDateTime) {
+				time = maximumDateTime * Math.sign(time)
+			} else if (calendarDefinition.engine === 'JS_DATE' && isNaN(time)) {
+				time = maximumDateTime
+			} else if (calendarDefinition.engine === 'SIMPLE' && Math.abs(time) >= Number(maximumCustomTime)) {
+				time = Number(maximumCustomTime) * Math.sign(time)
+			} else if (calendarDefinition.engine === 'SIMPLE' && isNaN(time)) {
+				time = Number(maximumCustomTime)
 			}
 			if (calendarDefinition.engine === 'JS_DATE' && usedCalendar !== 'COUNTUP') {
 				const date = new Date(time)
@@ -197,7 +203,11 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				targetDate.setUTCDate(day + 1)
 				targetDate.setUTCHours(hour)
 				targetDate.setUTCMinutes(minute)
-				return (targetDate.getTime() - calendarDefinition.baseOffset) / msPerUnit
+				const value = (targetDate.getTime() - calendarDefinition.baseOffset) / msPerUnit
+				if (isNaN(value)) {
+					return maximumDateTime
+				}
+				return value > maximumDateTime ? maximumDateTime : value < -maximumDateTime ? -maximumDateTime : value
 			} else if (calendarDefinition.engine === 'SIMPLE') {
 				const inMillisecond = calendarDefinition.units.inMillisecond
 				const inSecond = calendarDefinition.units.inSecond * inMillisecond
@@ -216,7 +226,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 						.reduce((total, current) => total + current.days, 0)
 				})()
 
-				return (
+				const value =
 					(inYear * year +
 						inDay * monthDays +
 						inDay * day +
@@ -224,7 +234,12 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 						inMinute * minute -
 						calendarDefinition.baseOffset) /
 					msPerUnit
-				)
+
+				return BigInt(Math.round(value)) > maximumCustomTime
+					? Number(maximumCustomTime)
+					: BigInt(Math.round(value)) < -maximumCustomTime
+						? Number(-maximumCustomTime)
+						: value
 			}
 
 			return 100

@@ -52,6 +52,7 @@ export const TimePicker = ({ calendar, initialTimestamp, visible, onSetTimestamp
 			hour: hours.current,
 			minute: minutes.current,
 		})
+		console.log(value)
 
 		if (value === timestamp.current) {
 			return
