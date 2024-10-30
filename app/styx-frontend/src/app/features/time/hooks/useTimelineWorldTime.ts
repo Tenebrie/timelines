@@ -60,9 +60,21 @@ export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
 			}
 		} else if (scaleLevel === 5) {
 			return {
-				largeGroupSize: Infinity,
+				largeGroupSize: 1000,
 				mediumGroupSize: 100,
 				smallGroupSize: 10,
+			}
+		} else if (scaleLevel === 6) {
+			return {
+				largeGroupSize: Infinity,
+				mediumGroupSize: 100,
+				smallGroupSize: 20,
+			}
+		} else if (scaleLevel === 7) {
+			return {
+				largeGroupSize: Infinity,
+				mediumGroupSize: 100,
+				smallGroupSize: 20,
 			}
 		}
 

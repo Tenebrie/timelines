@@ -108,6 +108,7 @@ export const useTimelineNavigation = ({
 	const [timelineScale, setTimelineScale] = useState(1)
 	const [scaleLevel, setScaleLevel] = useState<ScaleLevel>(0)
 	const [isSwitchingScale, setIsSwitchingScale] = useState(false)
+	const [isScrollUsingMouse, setIsScrollUsingMouse] = useState(false)
 
 	const [readyToSwitchScale, setReadyToSwitchScale] = useState(false)
 	const [scaleSwitchesToDo, setScaleSwitchesToDo] = useState(0)
@@ -127,11 +128,15 @@ export const useTimelineNavigation = ({
 
 		setScaleSwitchesToDo(0)
 		setReadyToSwitchScale(false)
+		const scrollIntoPos = isScrollUsingMouse
+			? mousePos.x
+			: (containerRef.current?.getBoundingClientRect().width ?? 0) / 2
+		// const scrollIntoPos = 0
 
 		let currentScaleScroll = scaleScroll
 		let currentTimePerPixel = scaledTimeToRealTime(timelineScale)
 
-		const timestampAtMouse = scaledTimeToRealTime((-scroll + mousePos.x) * timelineScale)
+		const timestampAtMouse = scaledTimeToRealTime((-scroll + scrollIntoPos) * timelineScale)
 
 		for (let i = 0; i < Math.abs(scaleSwitchesToDo); i++) {
 			const newScaleScroll = clampToRange(
@@ -147,24 +152,26 @@ export const useTimelineNavigation = ({
 		}
 
 		const newScaleLevel = rangeMap<ScaleLevel>(currentTimePerPixel, [
-			['[0; 4)', 0],
-			['[4; 32)', 1],
-			['[32; 256)', 2],
-			['[256; 2048)', 3],
-			['[2048; 16384)', 4],
-			['[16384; 65536]', 5],
+			['[0; 2)', 0],
+			['[2; 4)', 1],
+			['[4; 8)', 2],
+			['[8; 16)', 3],
+			['[16; 32)', 4],
+			['[32; 64)', 5],
+			['[64; 128)', 6],
+			['[128; 256)', 7],
 		])
 
 		if (newScaleLevel === null) {
 			return
 		}
 
-		if (currentTimePerPixel > 2) {
-			currentTimePerPixel = Math.max(0.5, (Math.log2(currentTimePerPixel) + 1) % 3)
+		if (currentTimePerPixel > 1) {
+			currentTimePerPixel = 1
 		}
 
 		const scalar = getLevelScalar(newScaleLevel)
-		const targetScroll = Math.floor(-timestampAtMouse / currentTimePerPixel / scalar + mousePos.x)
+		const targetScroll = Math.floor(-timestampAtMouse / currentTimePerPixel / scalar + scrollIntoPos)
 
 		setScroll(Math.min(targetScroll, maximumScroll))
 		setScaleLevel(newScaleLevel)
@@ -175,7 +182,9 @@ export const useTimelineNavigation = ({
 			setIsSwitchingScale(false)
 		})
 	}, [
+		containerRef,
 		getLevelScalar,
+		isScrollUsingMouse,
 		maximumScroll,
 		mousePos.x,
 		readyToSwitchScale,
@@ -187,6 +196,49 @@ export const useTimelineNavigation = ({
 		setScroll,
 		timelineScale,
 	])
+
+	/**
+	 * @param {number} scrollDirection - integer representing the direction of the scroll and number of steps.
+	 */
+	const performZoom = useCallback(
+		(scrollDirection: number, useMouse: boolean) => {
+			let newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(scrollDirection)
+			let newTargetScale = clampToRange(
+				scaleLimits[0],
+				scaleScroll / 100 + newScaleSwitchesToDo,
+				scaleLimits[1],
+			)
+
+			if (newTargetScale === 2) {
+				newTargetScale += Math.sign(scrollDirection)
+				newScaleSwitchesToDo += Math.sign(scrollDirection)
+			}
+			setScaleSwitchesToDo(newScaleSwitchesToDo)
+			setIsSwitchingScale(true)
+			setIsScrollUsingMouse(useMouse)
+			setTargetScale(newTargetScale)
+
+			if (switchingScaleTimeout.current !== null) {
+				window.clearTimeout(switchingScaleTimeout.current)
+			}
+
+			const timeout = window.setTimeout(() => {
+				setReadyToSwitchScale(true)
+				switchingScaleTimeout.current = null
+			}, 300)
+			switchingScaleTimeout.current = timeout
+		},
+		[scaleLimits, scaleScroll, scaleSwitchesToDo],
+	)
+
+	const [requestedZoom, setRequestedZoom] = useState<number>(0)
+	useEffect(() => {
+		if (requestedZoom === 0) {
+			return
+		}
+		performZoom(requestedZoom, false)
+		setRequestedZoom(0)
+	}, [performZoom, requestedZoom])
 
 	const scrollAccumulator = useRef<number>(0)
 	const onWheel = useCallback(
@@ -223,34 +275,9 @@ export const useTimelineNavigation = ({
 			}
 
 			setMousePos(newPos)
-
-			let newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(scrollDirection)
-			let newTargetScale = clampToRange(
-				scaleLimits[0],
-				scaleScroll / 100 + newScaleSwitchesToDo,
-				scaleLimits[1],
-			)
-
-			// Scales 8 and 9 are visually the same. Skip scale 8.
-			if (newTargetScale === 8) {
-				newTargetScale += Math.sign(scrollDirection)
-				newScaleSwitchesToDo += Math.sign(scrollDirection)
-			}
-			setScaleSwitchesToDo(newScaleSwitchesToDo)
-			setIsSwitchingScale(true)
-			setTargetScale(newTargetScale)
-
-			if (switchingScaleTimeout.current !== null) {
-				window.clearTimeout(switchingScaleTimeout.current)
-			}
-
-			const timeout = window.setTimeout(() => {
-				setReadyToSwitchScale(true)
-				switchingScaleTimeout.current = null
-			}, 300)
-			switchingScaleTimeout.current = timeout
+			performZoom(scrollDirection, true)
 		},
-		[scaleLimits, scaleScroll, scaleSwitchesToDo],
+		[performZoom],
 	)
 
 	// Click
@@ -425,5 +452,6 @@ export const useTimelineNavigation = ({
 		targetScaleIndex: targetScale,
 		isSwitchingScale,
 		scrollTo,
+		performZoom: setRequestedZoom,
 	}
 }

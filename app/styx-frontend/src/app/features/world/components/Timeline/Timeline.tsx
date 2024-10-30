@@ -10,10 +10,10 @@ import { getTimelineContextMenuState, getWorldState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
 import { TimelineContextMenu } from './components/TimelineContextMenu/TimelineContextMenu'
+import { TimelineControls } from './components/TimelineControls/TimelineControls'
 import { TimelineEdgeScroll } from './components/TimelineEdgeScroll/TimelineEdgeScroll'
 import { TimelineEventGroup } from './components/TimelineEventGroup/TimelineEventGroup'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
-import { TimelineSelectedLabel } from './components/TimelineSelectedLabel/TimelineSelectedLabel'
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
 import useEventGroups from './hooks/useEventGroups'
 import { useScrollToActiveEntity } from './hooks/useScrollToActiveEntity'
@@ -67,14 +67,15 @@ export const Timeline = () => {
 
 	const { containerRef, containerWidth } = useTimelineDimensions()
 
-	const { scroll, timelineScale, scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
-		containerRef,
-		defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
-		maximumScroll: calendar === 'COUNTUP' ? Math.floor(containerWidth / 2) : Infinity,
-		scaleLimits: [-3, 16],
-		onClick: (time) => onClick(time),
-		onDoubleClick: (time) => onDoubleClick(time),
-	})
+	const { scroll, timelineScale, scaleLevel, targetScaleIndex, isSwitchingScale, performZoom } =
+		useTimelineNavigation({
+			containerRef,
+			defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
+			maximumScroll: calendar === 'COUNTUP' ? Math.floor(containerWidth / 2) : Infinity,
+			scaleLimits: [-1, 7],
+			onClick: (time) => onClick(time),
+			onDoubleClick: (time) => onDoubleClick(time),
+		})
 
 	const eventGroups = useEventGroups({ timelineScale, scaleLevel })
 	useScrollToActiveEntity()
@@ -90,6 +91,10 @@ export const Timeline = () => {
 		scaleLevel,
 		timelineScale,
 	})
+
+	const scrollTimelineToTime = useCallback((time: number) => scrollTimelineTo(time), [scrollTimelineTo])
+	const scrollZoomIn = useCallback(() => performZoom(-1), [performZoom])
+	const scrollZoomOut = useCallback(() => performZoom(1), [performZoom])
 
 	return (
 		<TimelineWrapper>
@@ -136,7 +141,11 @@ export const Timeline = () => {
 							realTimeToScaledTime={realTimeToScaledTime}
 						/>
 					))}
-					<TimelineSelectedLabel onNavigateToTime={(time) => scrollTimelineTo(time)} />
+					<TimelineControls
+						onNavigateToTime={scrollTimelineToTime}
+						onZoomIn={scrollZoomIn}
+						onZoomOut={scrollZoomOut}
+					/>
 					<TimelineEdgeScroll
 						side="right"
 						currentScroll={scroll}

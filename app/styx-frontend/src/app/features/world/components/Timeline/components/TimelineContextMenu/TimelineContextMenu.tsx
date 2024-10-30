@@ -1,15 +1,14 @@
 import { CircularProgress, Divider, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
-import { useCallback } from 'react'
+import { memo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
-import { useTimelineBusDispatch } from '../../../../hooks/useTimelineBus'
 import { worldSlice } from '../../../../reducer'
 import { getTimelineContextMenuState, getWorldState } from '../../../../selectors'
 import { useTimelineContextMenuRequests } from './hooks/useTimelineContextMenuRequests'
 
-export const TimelineContextMenu = () => {
+export const TimelineContextMenuComponent = () => {
 	const { timeToLabel } = useWorldTime()
 	const { id: worldId } = useSelector(getWorldState)
 	const {
@@ -28,8 +27,6 @@ export const TimelineContextMenu = () => {
 		selectTime,
 		selectedTimeOrZero: selectedWorldTime,
 	} = useWorldRouter()
-
-	const scrollTimelineTo = useTimelineBusDispatch()
 
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 
@@ -179,3 +176,5 @@ export const TimelineContextMenu = () => {
 		</Menu>
 	)
 }
+
+export const TimelineContextMenu = memo(TimelineContextMenuComponent)

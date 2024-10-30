@@ -21,6 +21,8 @@ type TimeDefinition = {
 	minute: number
 }
 
+export const maximumDateTime = 8640000000000000
+
 export const useWorldTime = ({ calendar }: Props = {}) => {
 	const { calendar: worldCalendar } = useSelector(getWorldState)
 
@@ -42,6 +44,10 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 	const parseTime = useCallback(
 		(rawTime: number): TimeDefinition => {
 			const time = rawTime * msPerUnit + calendarDefinition.baseOffset
+			if (calendarDefinition.engine === 'JS_DATE' && time >= maximumDateTime) {
+				console.log(calendarDefinition)
+				throw new Error('Error')
+			}
 			if (calendarDefinition.engine === 'JS_DATE' && usedCalendar !== 'COUNTUP') {
 				const date = new Date(time)
 
@@ -73,6 +79,10 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				const oneDay = 1000 * 60 * 60 * 24
 				const day = Math.floor(diff / oneDay)
 
+				// console.log(time)
+				// console.log(calendarDefinition)
+				// console.log(date)
+				// console.log(date.getUTCMonth())
 				return {
 					year,
 					monthName: calendarDefinition.months[date.getUTCMonth()].name,
@@ -290,12 +300,10 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				if (groupSize === 'large') {
 					if (scaleLevel === 2 || scaleLevel === 3) {
 						return `${monthName} ${year}`
-					} else if (scaleLevel === 4) {
-						return `${monthName} ${year}`
-					} else if (scaleLevel === 5) {
+					} else if (scaleLevel >= 4) {
 						return `Year ${year}`
 					}
-					return `${monthNameShort} ${padDay}, ${year}`
+					return `${monthName} ${padDay}, ${year}`
 				}
 
 				if (groupSize === 'medium') {
@@ -317,7 +325,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 						return `${monthName}`
 					} else if (scaleLevel === 4) {
 						return `${monthName} ${year}`
-					} else if (scaleLevel === 5) {
+					} else if (scaleLevel >= 5) {
 						return `Year ${year}`
 					}
 				}
@@ -328,11 +336,11 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 					} else if (scaleLevel === 1) {
 						return `${padHour}:${padMinute}`
 					} else if (scaleLevel === 2) {
-						return day % 3 === 0 ? `${monthNameShort} ${padDay}` : ''
+						return day % 8 === 0 ? `${monthNameShort} ${padDay}` : ''
 					} else if (scaleLevel === 4) {
 						return `${year}`
-					} else if (scaleLevel === 5) {
-						return `Year ${year}`
+					} else if (scaleLevel >= 5) {
+						return `${year}`
 					}
 				}
 				return 'No label'

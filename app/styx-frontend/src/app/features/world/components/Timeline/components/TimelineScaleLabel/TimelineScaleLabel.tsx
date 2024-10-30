@@ -1,3 +1,5 @@
+import { memo } from 'react'
+
 import { Container, Label } from './styles'
 
 type Props = {
@@ -5,27 +7,17 @@ type Props = {
 	visible: boolean
 }
 
-export const TimelineScaleLabel = ({ targetScaleIndex, visible }: Props) => {
+const TimelineScaleLabelComponent = ({ targetScaleIndex, visible }: Props) => {
 	const labels: Record<number, string> = {
-		[-3]: '2 hours',
-		[-2]: '6 hours',
-		[-1]: '12 hours',
-		0: '1 day',
-		1: '2 days',
-		2: '4 day',
-		3: '1 week',
-		4: '2 weeks',
-		5: '4 weeks',
-		6: '1 month',
-		7: '2 months',
-		9: '4 months',
-		10: '1 year',
-		11: '5 years',
-		12: '10 years',
-		13: '20 years',
-		14: '60 years',
-		15: '120 years',
-		16: '250 years',
+		[-1]: 'Minutes',
+		0: 'Hours',
+		1: 'Days',
+		2: 'Weeks',
+		3: 'Months',
+		4: 'Years',
+		5: 'Decades',
+		6: 'Centuries',
+		7: 'Millenia',
 	}
 
 	return (
@@ -34,3 +26,5 @@ export const TimelineScaleLabel = ({ targetScaleIndex, visible }: Props) => {
 		</Container>
 	)
 }
+
+export const TimelineScaleLabel = memo(TimelineScaleLabelComponent)
