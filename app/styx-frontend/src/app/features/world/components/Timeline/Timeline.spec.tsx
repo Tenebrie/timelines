@@ -48,7 +48,7 @@ describe('<Timeline />', () => {
 	})
 
 	it('renders the labels for countup calendar world', async () => {
-		renderWithProviders(<Timeline />, getPreloadedState([]))
+		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'COUNTUP' }))
 
 		expect(screen.getByText('18:00')).toBeInTheDocument()
 		expect(screen.getByText('Day 1')).toBeInTheDocument()
@@ -59,7 +59,7 @@ describe('<Timeline />', () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'EARTH' }))
 
 		expect(screen.getByText('18:00')).toBeInTheDocument()
-		expect(screen.getByText('Jan 01, 2023')).toBeInTheDocument()
+		expect(screen.getByText('January 01, 2023')).toBeInTheDocument()
 		expect(screen.getByText('06:00')).toBeInTheDocument()
 	})
 
@@ -67,7 +67,7 @@ describe('<Timeline />', () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'PF2E' }))
 
 		expect(screen.getByText('18:00')).toBeInTheDocument()
-		expect(screen.getByText('Abad 01, 4723')).toBeInTheDocument()
+		expect(screen.getByText('(01) Abadius 01, 4723')).toBeInTheDocument()
 		expect(screen.getByText('06:00')).toBeInTheDocument()
 	})
 
@@ -75,13 +75,14 @@ describe('<Timeline />', () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'RIMWORLD' }))
 
 		expect(screen.getByText('18:00')).toBeInTheDocument()
-		expect(screen.getByText('Apr 01, 5500')).toBeInTheDocument()
+		expect(screen.getByText('Aprimay 01, 5500')).toBeInTheDocument()
 		expect(screen.getByText('06:00')).toBeInTheDocument()
 	})
 
 	it('respects the world time origin', async () => {
-		renderWithProviders(<Timeline />, getPreloadedState([], { timeOrigin: '100000' }))
+		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'COUNTUP', timeOrigin: '100000' }))
 
+		screen.debug()
 		expect(screen.getByText('Day 70')).toBeInTheDocument()
 	})
 })

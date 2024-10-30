@@ -23,7 +23,7 @@ import { timelineSlice } from './reducer'
 import { TimelineContainer, TimelineWrapper } from './styles'
 
 export const Timeline = () => {
-	const { timeOrigin, calendar } = useSelector(getWorldState)
+	const { timeOrigin } = useSelector(getWorldState)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
 
 	const dispatch = useDispatch()
@@ -71,7 +71,6 @@ export const Timeline = () => {
 		useTimelineNavigation({
 			containerRef,
 			defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
-			maximumScroll: calendar === 'COUNTUP' ? Math.floor(containerWidth / 2) : Infinity,
 			scaleLimits: [-1, 7],
 			onClick: (time) => onClick(time),
 			onDoubleClick: (time) => onDoubleClick(time),

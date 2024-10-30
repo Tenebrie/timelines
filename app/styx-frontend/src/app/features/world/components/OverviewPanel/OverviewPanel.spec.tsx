@@ -213,6 +213,7 @@ describe('<OverviewPanel />', () => {
 			renderWithProviders(
 				<OverviewPanel />,
 				getPreloadedState({
+					calendar: 'COUNTUP',
 					events: [
 						mockEventModel({ name: 'First Event', timestamp: 1500 }),
 						mockEventModel({ name: 'Second Event', timestamp: 2500 }),
