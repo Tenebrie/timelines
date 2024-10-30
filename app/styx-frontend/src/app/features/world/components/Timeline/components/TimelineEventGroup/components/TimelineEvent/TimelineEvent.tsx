@@ -104,11 +104,11 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 
 	const labelType =
 		entity.markerType === 'issuedAt' ? (
-			<b style={{ color: colors.green[500] }}>Create:</b>
+			<b style={{ color: colors.green[500] }}></b>
 		) : entity.markerType === 'revokedAt' ? (
-			<b style={{ color: colors.red[500] }}>Retire:</b>
+			<b style={{ color: colors.red[500] }}>Resolve:</b>
 		) : entity.markerType === 'deltaState' ? (
-			<b style={{ color: colors.yellow[500] }}>Delta:</b>
+			<b style={{ color: colors.yellow[500] }}>Data Point:</b>
 		) : (
 			''
 		)

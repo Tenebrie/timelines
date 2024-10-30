@@ -69,10 +69,10 @@ export const DeleteEventDeltaModal = () => {
 
 	return (
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
-			<ModalHeader>Delete Event</ModalHeader>
+			<ModalHeader>Delete Data Point</ModalHeader>
 			<Stack spacing={2}>
 				<div>
-					Attempting to permanently delete delta state '<b>{targetDelta?.name}</b>'.
+					Attempting to permanently delete data point '<b>{targetDelta?.name}</b>'.
 				</div>
 				<div>This action can't be reverted!</div>
 				{deletionError && (

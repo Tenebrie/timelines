@@ -123,18 +123,18 @@ export const TimelineContextMenuComponent = () => {
 		>
 			{selectedEvent && (
 				<MenuItem disabled>
-					<ListItemText primary={selectedEvent.markerType === 'deltaState' ? 'Event state' : 'Event'} />
+					<ListItemText primary={selectedEvent.markerType === 'deltaState' ? 'Data point' : 'Event'} />
 				</MenuItem>
 			)}
 			{selectedEvent && <Divider />}
 			{selectedEvent && (
 				<MenuItem onClick={onReplaceSelectedEvent} disabled={isRequestInFlight}>
-					<ListItemText primary="Create event state" />
+					<ListItemText primary="Create data point" />
 				</MenuItem>
 			)}
 			{(selectedEvent?.markerType === 'issuedAt' || selectedEvent?.markerType === 'deltaState') && (
 				<MenuItem onClick={onRevokeSelectedEvent} disabled={isRequestInFlight}>
-					<ListItemText primary="Retire this event" />
+					<ListItemText primary="Resolve this event" />
 					{isRequestInFlight && (
 						<ListItemIcon>
 							<CircularProgress size={20} />
@@ -144,7 +144,7 @@ export const TimelineContextMenuComponent = () => {
 			)}
 			{selectedEvent?.markerType === 'revokedAt' && (
 				<MenuItem onClick={onUnrevokeSelectedEvent} disabled={isRequestInFlight}>
-					<ListItemText primary="Unretire this event" />
+					<ListItemText primary="Unresolve this event" />
 					{isRequestInFlight && (
 						<ListItemIcon>
 							<CircularProgress size={20} />
@@ -159,7 +159,7 @@ export const TimelineContextMenuComponent = () => {
 			)}
 			{selectedEvent?.markerType === 'deltaState' && (
 				<MenuItem onClick={onDeleteSelectedEvent}>
-					<ListItemText primary="Delete this state" />
+					<ListItemText primary="Delete this data point" />
 				</MenuItem>
 			)}
 			{selectedEvent && <Divider />}
@@ -171,7 +171,7 @@ export const TimelineContextMenuComponent = () => {
 				<ListItemText primary="Create event here" />
 			</MenuItem>
 			<MenuItem onClick={onRevokeEvent}>
-				<ListItemText primary="Retire event here" />
+				<ListItemText primary="Resolve event here" />
 			</MenuItem>
 		</Menu>
 	)

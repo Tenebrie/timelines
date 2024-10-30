@@ -69,7 +69,7 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 
 	const { name: evaluatedName } = useEntityName({
 		textSource: description && description.length > 0 ? description : event.description,
-		entityClassName: 'delta state',
+		entityClassName: 'data point',
 		timestamp: delta.timestamp,
 		customName: name,
 		customNameEnabled: event.customName,
@@ -83,7 +83,7 @@ export const EventDeltaDetailsEditor = ({ delta, mode }: Props) => {
 			<Grid item xs={0} md={2} />
 			<Grid item xs={12} md={8} style={{ maxHeight: '100%' }}>
 				<OutlinedContainer
-					label={mode === 'create' ? 'Create Event Delta' : 'Edit Event Delta'}
+					label={mode === 'create' ? 'Create Data Point' : 'Edit Data Point'}
 					fullHeight
 					gap={3}
 				>

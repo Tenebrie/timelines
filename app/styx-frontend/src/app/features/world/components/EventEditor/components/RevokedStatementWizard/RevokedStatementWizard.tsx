@@ -101,7 +101,7 @@ export const RevokedStatementWizard = () => {
 
 	return (
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
-			<ModalHeader>Retire event</ModalHeader>
+			<ModalHeader>Resolve event</ModalHeader>
 
 			<Typography>
 				<b>Timestamp:</b> {timeToLabel(selectedTimeOrZero)}
@@ -123,11 +123,11 @@ export const RevokedStatementWizard = () => {
 							<EventHeaderRenderer event={option.card} owningActor={null} short={true} active />
 						</ListItem>
 					)}
-					renderInput={(params) => <TextField {...params} label="Event to retire" />}
+					renderInput={(params) => <TextField {...params} label="Event to resolve" />}
 				/>
 			)}
 			{removableCards.length === 0 && (
-				<TextField label="Event to retire" disabled value="No events available!" />
+				<TextField label="Event to resolve" disabled value="No events available!" />
 			)}
 			<TransitionGroup style={{ marginBottom: '-16px' }}>
 				{previewOption && (
