@@ -18,7 +18,7 @@ export const initialState = {
 	name: '' as string,
 	actors: [] as ActorDetails[],
 	events: [] as WorldEvent[],
-	calendar: 'COUNTUP' as WorldCalendarType,
+	calendar: 'RIMWORLD' as WorldCalendarType,
 	timeOrigin: '0',
 	createdAt: '0',
 	updatedAt: '0',

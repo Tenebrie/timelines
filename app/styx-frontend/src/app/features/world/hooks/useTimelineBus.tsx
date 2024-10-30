@@ -22,11 +22,11 @@ export const useTimelineBusSubscribe = ({ callback }: Props) => {
 }
 
 export const useTimelineBusDispatch = () => {
-	return (timestamp: number) => {
+	return useCallback((timestamp: number) => {
 		window.dispatchEvent(
 			new CustomEvent('@timeline/scrollTo', {
 				detail: timestamp,
 			}),
 		)
-	}
+	}, [])
 }

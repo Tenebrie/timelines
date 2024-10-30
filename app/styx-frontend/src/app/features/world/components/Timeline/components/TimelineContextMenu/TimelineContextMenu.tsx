@@ -1,15 +1,14 @@
 import { CircularProgress, Divider, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
-import { useCallback } from 'react'
+import { memo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
-import { useTimelineBusDispatch } from '../../../../hooks/useTimelineBus'
 import { worldSlice } from '../../../../reducer'
 import { getTimelineContextMenuState, getWorldState } from '../../../../selectors'
 import { useTimelineContextMenuRequests } from './hooks/useTimelineContextMenuRequests'
 
-export const TimelineContextMenu = () => {
+export const TimelineContextMenuComponent = () => {
 	const { timeToLabel } = useWorldTime()
 	const { id: worldId } = useSelector(getWorldState)
 	const {
@@ -28,8 +27,6 @@ export const TimelineContextMenu = () => {
 		selectTime,
 		selectedTimeOrZero: selectedWorldTime,
 	} = useWorldRouter()
-
-	const scrollTimelineTo = useTimelineBusDispatch()
 
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 
@@ -126,18 +123,18 @@ export const TimelineContextMenu = () => {
 		>
 			{selectedEvent && (
 				<MenuItem disabled>
-					<ListItemText primary={selectedEvent.markerType === 'deltaState' ? 'Event state' : 'Event'} />
+					<ListItemText primary={selectedEvent.markerType === 'deltaState' ? 'Data point' : 'Event'} />
 				</MenuItem>
 			)}
 			{selectedEvent && <Divider />}
 			{selectedEvent && (
 				<MenuItem onClick={onReplaceSelectedEvent} disabled={isRequestInFlight}>
-					<ListItemText primary="Create event state" />
+					<ListItemText primary="Create data point" />
 				</MenuItem>
 			)}
 			{(selectedEvent?.markerType === 'issuedAt' || selectedEvent?.markerType === 'deltaState') && (
 				<MenuItem onClick={onRevokeSelectedEvent} disabled={isRequestInFlight}>
-					<ListItemText primary="Retire this event" />
+					<ListItemText primary="Resolve this event" />
 					{isRequestInFlight && (
 						<ListItemIcon>
 							<CircularProgress size={20} />
@@ -147,7 +144,7 @@ export const TimelineContextMenu = () => {
 			)}
 			{selectedEvent?.markerType === 'revokedAt' && (
 				<MenuItem onClick={onUnrevokeSelectedEvent} disabled={isRequestInFlight}>
-					<ListItemText primary="Unretire this event" />
+					<ListItemText primary="Unresolve this event" />
 					{isRequestInFlight && (
 						<ListItemIcon>
 							<CircularProgress size={20} />
@@ -162,7 +159,7 @@ export const TimelineContextMenu = () => {
 			)}
 			{selectedEvent?.markerType === 'deltaState' && (
 				<MenuItem onClick={onDeleteSelectedEvent}>
-					<ListItemText primary="Delete this state" />
+					<ListItemText primary="Delete this data point" />
 				</MenuItem>
 			)}
 			{selectedEvent && <Divider />}
@@ -174,8 +171,10 @@ export const TimelineContextMenu = () => {
 				<ListItemText primary="Create event here" />
 			</MenuItem>
 			<MenuItem onClick={onRevokeEvent}>
-				<ListItemText primary="Retire event here" />
+				<ListItemText primary="Resolve event here" />
 			</MenuItem>
 		</Menu>
 	)
 }
+
+export const TimelineContextMenu = memo(TimelineContextMenuComponent)

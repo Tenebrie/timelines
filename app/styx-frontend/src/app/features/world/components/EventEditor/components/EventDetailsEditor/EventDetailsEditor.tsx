@@ -166,7 +166,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 						<EventModulesControls modules={modules} state={state} />
 						{modules.includes('RevokedAt') && (
 							<TimestampField
-								label="Retired at"
+								label="Resolved at"
 								timestamp={revokedAt}
 								initialTimestamp={timestamp}
 								onChange={setRevokedAt}

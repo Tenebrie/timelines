@@ -41,7 +41,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 
 	const revokedAtTimestamp = event.revokedAt ? (
 		<>
-			, retired at <b>{timeToLabel(event.revokedAt)}</b>
+			, resolved at <b>{timeToLabel(event.revokedAt)}</b>
 		</>
 	) : (
 		''

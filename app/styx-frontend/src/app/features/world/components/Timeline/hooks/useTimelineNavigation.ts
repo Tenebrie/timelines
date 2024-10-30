@@ -1,6 +1,6 @@
 import bezier from 'bezier-easing'
 import throttle from 'lodash.throttle'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { Position } from '../../../../../../types/Position'
@@ -10,7 +10,7 @@ import { rangeMap } from '../../../../../utils/rangeMap'
 import { getTimelinePreferences } from '../../../../preferences/selectors'
 import { useTimelineLevelScalar } from '../../../../time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
-import { useWorldTime } from '../../../../time/hooks/useWorldTime'
+import { maximumTime, useWorldTime } from '../../../../time/hooks/useWorldTime'
 import { useTimelineBusSubscribe } from '../../../hooks/useTimelineBus'
 import { ScaleLevel } from '../types'
 import { useTimelineScroll } from './useTimelineScroll'
@@ -18,7 +18,6 @@ import { useTimelineScroll } from './useTimelineScroll'
 type Props = {
 	containerRef: React.MutableRefObject<HTMLDivElement | null>
 	defaultScroll: number
-	maximumScroll: number
 	scaleLimits: [number, number]
 	onClick: (time: number) => void
 	onDoubleClick: (time: number) => void
@@ -27,7 +26,6 @@ type Props = {
 export const useTimelineNavigation = ({
 	containerRef,
 	defaultScroll,
-	maximumScroll,
 	scaleLimits,
 	onClick,
 	onDoubleClick,
@@ -45,6 +43,11 @@ export const useTimelineNavigation = ({
 	const { getLevelScalar } = useTimelineLevelScalar()
 	const { parseTime, pickerToTimestamp } = useWorldTime()
 	const { lineSpacing } = useSelector(getTimelinePreferences)
+
+	const [scaleLevel, setScaleLevel] = useState<ScaleLevel>(0)
+	const scalar = useMemo(() => getLevelScalar(scaleLevel), [getLevelScalar, scaleLevel])
+	const minimumScroll = useMemo(() => -maximumTime / scalar / 1000 / 60, [scalar])
+	const maximumScroll = useMemo(() => maximumTime / scalar / 1000 / 60, [scalar])
 
 	const onMouseDown = useCallback((event: MouseEvent | TouchEvent) => {
 		const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
@@ -80,7 +83,10 @@ export const useTimelineNavigation = ({
 
 			if (isDragging) {
 				const newScroll = scroll + newPos.x - mousePos.x + overscroll
-				if (newScroll > maximumScroll) {
+				if (isFinite(minimumScroll) && newScroll < minimumScroll) {
+					setScroll(minimumScroll)
+					setOverscroll(newScroll - minimumScroll)
+				} else if (isFinite(maximumScroll) && newScroll > maximumScroll) {
 					setScroll(maximumScroll)
 					setOverscroll(newScroll - maximumScroll)
 				} else {
@@ -91,7 +97,7 @@ export const useTimelineNavigation = ({
 				setMousePos(newPos)
 			}
 		},
-		[draggingFrom, isDragging, maximumScroll, mousePos.x, overscroll, scroll, setScroll],
+		[draggingFrom, isDragging, scroll, mousePos.x, overscroll, minimumScroll, maximumScroll],
 	)
 
 	useEffect(() => {
@@ -100,14 +106,14 @@ export const useTimelineNavigation = ({
 		}
 		const interval = window.setInterval(() => {
 			setOverscroll((overscroll) => overscroll * 0.9)
-		}, 5)
+		}, 1)
 		return () => window.clearInterval(interval)
 	}, [isDragging])
 
 	// Zoom
 	const [timelineScale, setTimelineScale] = useState(1)
-	const [scaleLevel, setScaleLevel] = useState<ScaleLevel>(0)
 	const [isSwitchingScale, setIsSwitchingScale] = useState(false)
+	const [isScrollUsingMouse, setIsScrollUsingMouse] = useState(false)
 
 	const [readyToSwitchScale, setReadyToSwitchScale] = useState(false)
 	const [scaleSwitchesToDo, setScaleSwitchesToDo] = useState(0)
@@ -127,11 +133,13 @@ export const useTimelineNavigation = ({
 
 		setScaleSwitchesToDo(0)
 		setReadyToSwitchScale(false)
+		const containerCenter = (containerRef.current?.getBoundingClientRect().width ?? 0) / 2
+		const scrollIntoPos = isScrollUsingMouse ? mousePos.x : containerCenter
 
 		let currentScaleScroll = scaleScroll
 		let currentTimePerPixel = scaledTimeToRealTime(timelineScale)
 
-		const timestampAtMouse = scaledTimeToRealTime((-scroll + mousePos.x) * timelineScale)
+		const timestampAtMouse = scaledTimeToRealTime((-scroll + scrollIntoPos) * timelineScale)
 
 		for (let i = 0; i < Math.abs(scaleSwitchesToDo); i++) {
 			const newScaleScroll = clampToRange(
@@ -147,26 +155,36 @@ export const useTimelineNavigation = ({
 		}
 
 		const newScaleLevel = rangeMap<ScaleLevel>(currentTimePerPixel, [
-			['[0; 4)', 0],
-			['[4; 32)', 1],
-			['[32; 256)', 2],
-			['[256; 2048)', 3],
-			['[2048; 16384)', 4],
-			['[16384; 65536]', 5],
+			['[0; 2)', 0],
+			['[2; 4)', 1],
+			['[4; 8)', 2],
+			['[8; 16)', 3],
+			['[16; 32)', 4],
+			['[32; 64)', 5],
+			['[64; 128)', 6],
+			['[128; 256)', 7],
 		])
 
 		if (newScaleLevel === null) {
 			return
 		}
 
-		if (currentTimePerPixel > 2) {
-			currentTimePerPixel = Math.max(0.5, (Math.log2(currentTimePerPixel) + 1) % 3)
+		if (currentTimePerPixel > 1) {
+			currentTimePerPixel = 1
 		}
 
 		const scalar = getLevelScalar(newScaleLevel)
-		const targetScroll = Math.floor(-timestampAtMouse / currentTimePerPixel / scalar + mousePos.x)
+		const targetScroll = Math.floor(-timestampAtMouse / currentTimePerPixel / scalar + scrollIntoPos)
+		const newMinimumScroll = -maximumTime / scalar / 1000 / 60
+		const newMaximumScroll = maximumTime / scalar / 1000 / 60
 
-		setScroll(Math.min(targetScroll, maximumScroll))
+		let scrollToSet = targetScroll
+		if (isFinite(newMinimumScroll) && scrollToSet < newMinimumScroll) {
+			scrollToSet = newMinimumScroll
+		} else if (isFinite(newMaximumScroll) && scrollToSet > newMaximumScroll) {
+			scrollToSet = newMaximumScroll
+		}
+		setScroll(scrollToSet)
 		setScaleLevel(newScaleLevel)
 		setScaleScroll(currentScaleScroll)
 		setTimelineScale(currentTimePerPixel)
@@ -175,8 +193,9 @@ export const useTimelineNavigation = ({
 			setIsSwitchingScale(false)
 		})
 	}, [
+		containerRef,
 		getLevelScalar,
-		maximumScroll,
+		isScrollUsingMouse,
 		mousePos.x,
 		readyToSwitchScale,
 		scaleLimits,
@@ -187,6 +206,49 @@ export const useTimelineNavigation = ({
 		setScroll,
 		timelineScale,
 	])
+
+	/**
+	 * @param {number} scrollDirection - integer representing the direction of the scroll and number of steps.
+	 */
+	const performZoom = useCallback(
+		(scrollDirection: number, useMouse: boolean) => {
+			let newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(scrollDirection)
+			let newTargetScale = clampToRange(
+				scaleLimits[0],
+				scaleScroll / 100 + newScaleSwitchesToDo,
+				scaleLimits[1],
+			)
+
+			if (newTargetScale === 2) {
+				newTargetScale += Math.sign(scrollDirection)
+				newScaleSwitchesToDo += Math.sign(scrollDirection)
+			}
+			setScaleSwitchesToDo(newScaleSwitchesToDo)
+			setIsSwitchingScale(true)
+			setIsScrollUsingMouse(useMouse)
+			setTargetScale(newTargetScale)
+
+			if (switchingScaleTimeout.current !== null) {
+				window.clearTimeout(switchingScaleTimeout.current)
+			}
+
+			const timeout = window.setTimeout(() => {
+				setReadyToSwitchScale(true)
+				switchingScaleTimeout.current = null
+			}, 300)
+			switchingScaleTimeout.current = timeout
+		},
+		[scaleLimits, scaleScroll, scaleSwitchesToDo],
+	)
+
+	const [requestedZoom, setRequestedZoom] = useState<number>(0)
+	useEffect(() => {
+		if (requestedZoom === 0) {
+			return
+		}
+		performZoom(requestedZoom, false)
+		setRequestedZoom(0)
+	}, [performZoom, requestedZoom])
 
 	const scrollAccumulator = useRef<number>(0)
 	const onWheel = useCallback(
@@ -223,34 +285,9 @@ export const useTimelineNavigation = ({
 			}
 
 			setMousePos(newPos)
-
-			let newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(scrollDirection)
-			let newTargetScale = clampToRange(
-				scaleLimits[0],
-				scaleScroll / 100 + newScaleSwitchesToDo,
-				scaleLimits[1],
-			)
-
-			// Scales 8 and 9 are visually the same. Skip scale 8.
-			if (newTargetScale === 8) {
-				newTargetScale += Math.sign(scrollDirection)
-				newScaleSwitchesToDo += Math.sign(scrollDirection)
-			}
-			setScaleSwitchesToDo(newScaleSwitchesToDo)
-			setIsSwitchingScale(true)
-			setTargetScale(newTargetScale)
-
-			if (switchingScaleTimeout.current !== null) {
-				window.clearTimeout(switchingScaleTimeout.current)
-			}
-
-			const timeout = window.setTimeout(() => {
-				setReadyToSwitchScale(true)
-				switchingScaleTimeout.current = null
-			}, 300)
-			switchingScaleTimeout.current = timeout
+			performZoom(scrollDirection, true)
 		},
-		[scaleLimits, scaleScroll, scaleSwitchesToDo],
+		[performZoom],
 	)
 
 	// Click
@@ -369,7 +406,14 @@ export const useTimelineNavigation = ({
 			const isScrollingAlready =
 				Math.abs(startedScrollFrom.current) > 0 || Math.abs(desiredScrollTo.current) > 0
 			startedScrollFrom.current = scroll
-			desiredScrollTo.current = Math.min(maximumScroll, targetScroll)
+
+			let scrollToSet = targetScroll
+			if (isFinite(minimumScroll) && scrollToSet < minimumScroll) {
+				scrollToSet = minimumScroll
+			} else if (isFinite(maximumScroll) && scrollToSet > maximumScroll) {
+				scrollToSet = maximumScroll
+			}
+			desiredScrollTo.current = scrollToSet
 			smoothScrollStartedAtTime.current = new Date()
 
 			/**
@@ -396,7 +440,7 @@ export const useTimelineNavigation = ({
 
 			requestAnimationFrame(callback)
 		},
-		[containerRef, maximumScroll, realTimeToScaledTime, scroll, setScroll, timelineScale],
+		[containerRef, minimumScroll, maximumScroll, realTimeToScaledTime, scroll, setScroll, timelineScale],
 	)
 
 	useTimelineBusSubscribe({
@@ -419,11 +463,12 @@ export const useTimelineNavigation = ({
 	}, [containerRef, scaledTimeToRealTime, scroll, throttledSetPublicScroll, timelineScale])
 
 	return {
-		scroll: scroll + Math.pow(overscroll, 0.85),
+		scroll: scroll + Math.pow(Math.abs(overscroll), 0.85) * Math.sign(overscroll),
 		timelineScale,
 		scaleLevel,
 		targetScaleIndex: targetScale,
 		isSwitchingScale,
 		scrollTo,
+		performZoom: setRequestedZoom,
 	}
 }

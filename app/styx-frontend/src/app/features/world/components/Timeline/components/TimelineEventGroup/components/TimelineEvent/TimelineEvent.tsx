@@ -1,4 +1,4 @@
-import { colors } from '@mui/material'
+import { colors, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { memo, MouseEvent, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -104,11 +104,11 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 
 	const labelType =
 		entity.markerType === 'issuedAt' ? (
-			<b style={{ color: colors.green[500] }}>Create:</b>
+			<b style={{ color: colors.green[500] }}></b>
 		) : entity.markerType === 'revokedAt' ? (
-			<b style={{ color: colors.red[500] }}>Retire:</b>
+			<b style={{ color: colors.red[500] }}>Resolve:</b>
 		) : entity.markerType === 'deltaState' ? (
-			<b style={{ color: colors.yellow[500] }}>Delta:</b>
+			<b style={{ color: colors.yellow[500] }}>Data Point:</b>
 		) : (
 			''
 		)
@@ -135,11 +135,11 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 			{isInfoVisible && (
 				<LabelContainer>
 					<Label data-hj-suppress>
-						<span>
+						<Typography sx={{ color: 'white' }}>
 							{labelType}
 							{labelType ? ' ' : ''}
 							{entity.name}
-						</span>
+						</Typography>
 					</Label>
 				</LabelContainer>
 			)}

@@ -72,7 +72,7 @@ export const DeleteEventModal = () => {
 			<Stack spacing={2}>
 				<div>
 					Attempting to permanently delete world event '<b>{targetEvent?.name}</b>'. This will also delete all
-					associated delta states, if any are present.
+					associated data points, if any are present.
 				</div>
 				<div>This action can't be reverted!</div>
 				{deletionError && (

@@ -21,6 +21,8 @@ type TimeDefinition = {
 	minute: number
 }
 
+export const maximumTime = 8640000000000000
+
 export const useWorldTime = ({ calendar }: Props = {}) => {
 	const { calendar: worldCalendar } = useSelector(getWorldState)
 
@@ -41,7 +43,12 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 
 	const parseTime = useCallback(
 		(rawTime: number): TimeDefinition => {
-			const time = rawTime * msPerUnit + calendarDefinition.baseOffset
+			let time = rawTime * msPerUnit + calendarDefinition.baseOffset
+			if (Math.abs(time) >= maximumTime) {
+				time = maximumTime * Math.sign(time)
+			} else if (isNaN(time)) {
+				time = maximumTime
+			}
 			if (calendarDefinition.engine === 'JS_DATE' && usedCalendar !== 'COUNTUP') {
 				const date = new Date(time)
 
@@ -187,7 +194,11 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				targetDate.setUTCDate(day + 1)
 				targetDate.setUTCHours(hour)
 				targetDate.setUTCMinutes(minute)
-				return (targetDate.getTime() - calendarDefinition.baseOffset) / msPerUnit
+				const value = (targetDate.getTime() - calendarDefinition.baseOffset) / msPerUnit
+				if (isNaN(value)) {
+					return maximumTime
+				}
+				return value > maximumTime ? maximumTime : value < -maximumTime ? -maximumTime : value
 			} else if (calendarDefinition.engine === 'SIMPLE') {
 				const inMillisecond = calendarDefinition.units.inMillisecond
 				const inSecond = calendarDefinition.units.inSecond * inMillisecond
@@ -206,7 +217,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 						.reduce((total, current) => total + current.days, 0)
 				})()
 
-				return (
+				const value =
 					(inYear * year +
 						inDay * monthDays +
 						inDay * day +
@@ -214,7 +225,8 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 						inMinute * minute -
 						calendarDefinition.baseOffset) /
 					msPerUnit
-				)
+
+				return value > maximumTime ? maximumTime : value < -maximumTime ? -maximumTime : value
 			}
 
 			return 100
@@ -290,12 +302,10 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				if (groupSize === 'large') {
 					if (scaleLevel === 2 || scaleLevel === 3) {
 						return `${monthName} ${year}`
-					} else if (scaleLevel === 4) {
-						return `${monthName} ${year}`
-					} else if (scaleLevel === 5) {
+					} else if (scaleLevel >= 4) {
 						return `Year ${year}`
 					}
-					return `${monthNameShort} ${padDay}, ${year}`
+					return `${monthName} ${padDay}, ${year}`
 				}
 
 				if (groupSize === 'medium') {
@@ -317,7 +327,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 						return `${monthName}`
 					} else if (scaleLevel === 4) {
 						return `${monthName} ${year}`
-					} else if (scaleLevel === 5) {
+					} else if (scaleLevel >= 5) {
 						return `Year ${year}`
 					}
 				}
@@ -328,11 +338,11 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 					} else if (scaleLevel === 1) {
 						return `${padHour}:${padMinute}`
 					} else if (scaleLevel === 2) {
-						return day % 3 === 0 ? `${monthNameShort} ${padDay}` : ''
+						return day % 8 === 0 ? `${monthNameShort} ${padDay}` : ''
 					} else if (scaleLevel === 4) {
 						return `${year}`
-					} else if (scaleLevel === 5) {
-						return `Year ${year}`
+					} else if (scaleLevel >= 5) {
+						return `${year}`
 					}
 				}
 				return 'No label'

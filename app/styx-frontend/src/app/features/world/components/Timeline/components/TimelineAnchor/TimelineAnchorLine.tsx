@@ -145,8 +145,11 @@ const TimelineAnchorLineComponent = (props: Props) => {
 			isSmallGroup &&
 			(timelineScale <= 0.5 ||
 				scaleLevel === 3 ||
+				(timelineScale <= 1 && scaleLevel === 2) ||
 				(timelineScale <= 1 && scaleLevel === 4) ||
-				(timelineScale <= 1 && scaleLevel === 5))
+				(timelineScale <= 1 && scaleLevel === 5) ||
+				scaleLevel === 6 ||
+				scaleLevel === 7)
 		) {
 			return 'small'
 		}
@@ -168,10 +171,24 @@ const TimelineAnchorLineComponent = (props: Props) => {
 				return '#A9A'
 			} else if (scaleLevel === 5) {
 				return '#9AA'
+			} else if (scaleLevel === 6) {
+				return '#797'
+			} else if (scaleLevel === 7) {
+				return '#979'
 			}
 		}
 
-		const groupColors = ['#63ffc8', '#ffd026', '#57fd20', '#EAADE9', '#ff6363', '#f9a7f7', '#f9c2a7']
+		const groupColors = [
+			'#63ffc8',
+			'#ffd026',
+			'#57fd20',
+			'#EAADE9',
+			'#ff6363',
+			'#f9a7f7',
+			'#f9c2a7',
+			'#63ffc8',
+			'#ffd026',
+		]
 		if (isLargeGroup) {
 			return groupColors[scaleLevel + 1]
 		} else if (isMediumGroup) {
