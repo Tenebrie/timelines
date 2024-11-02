@@ -64,6 +64,7 @@ services:
     rhea-postgres:
         volumes:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached
+            - /mnt/volume_rhea_postgres/backups:/backups:cached
 
 # docker secret create jwt-secret /mnt/volume_secrets/keys/jwt-secret.txt
 secrets:
