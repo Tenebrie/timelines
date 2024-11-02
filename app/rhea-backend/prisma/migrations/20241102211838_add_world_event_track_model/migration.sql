@@ -1,5 +1,5 @@
 -- AlterTable
-ALTER TABLE "WorldEvent" ADD COLUMN     "worldEventTrackId" TEXT NOT NULL DEFAULT '';
+ALTER TABLE "WorldEvent" ADD COLUMN     "worldEventTrackId" TEXT;
 
 -- CreateTable
 CREATE TABLE "WorldEventTrack" (
@@ -11,23 +11,6 @@ CREATE TABLE "WorldEventTrack" (
     "worldId" TEXT NOT NULL,
 
     CONSTRAINT "WorldEventTrack_pkey" PRIMARY KEY ("id")
-);
-
--- Populate existing events with a default track
-INSERT INTO "WorldEventTrack" ("id", "name", "position", "worldId")
-SELECT 
-  gen_random_uuid() AS "id",
-  'Uncategorized' AS "name",
-  0 AS "position",  -- Assuming a default position value of 0; adjust if needed
-  "id" AS "worldId"
-FROM 
-  "World";
-
-UPDATE "WorldEvent"
-SET "worldEventTrackId" = (
-  SELECT "id"
-  FROM "WorldEventTrack"
-  WHERE "WorldEventTrack"."worldId" = "WorldEvent"."worldId"
 );
 
 -- CreateIndex

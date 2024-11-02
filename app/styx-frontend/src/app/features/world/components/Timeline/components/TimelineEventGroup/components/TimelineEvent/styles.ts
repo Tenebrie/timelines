@@ -41,6 +41,14 @@ export const Marker = styled.div<{ $iconPath: string }>`
 		}
 	}
 
+	&.ghostDelta {
+		background-color: rgb(28, 69, 114);
+		pointer-events: none;
+		.icon {
+			opacity: 0.5;
+		}
+	}
+
 	&.expanded {
 		margin-bottom: 4px;
 	}

@@ -1,4 +1,9 @@
-import { GetWorldBriefApiResponse, GetWorldInfoApiResponse, GetWorldsApiResponse } from '../../../api/rheaApi'
+import {
+	GetWorldBriefApiResponse,
+	GetWorldEventTracksApiResponse,
+	GetWorldInfoApiResponse,
+	GetWorldsApiResponse,
+} from '../../../api/rheaApi'
 
 export type ActorDetails = GetWorldInfoApiResponse['actors'][number]
 export type Actor = Omit<ActorDetails, 'statements' | 'relationships' | 'receivedRelationships'>
@@ -32,14 +37,14 @@ export type WorldEventBundle = {
 }
 
 export type MarkerType = 'issuedAt' | 'deltaState' | 'revokedAt' | 'ghostEvent' | 'ghostDelta'
-export type WorldEventGroup = {
-	events: (
-		| (WorldEvent & { eventId: string; key: string; markerPosition: number; markerType: MarkerType })
-		| WorldEventBundle
-	)[]
-	timestamp: number
+export type TimelineEntity = WorldEvent & {
+	eventId: string
+	key: string
+	markerPosition: number
+	markerType: MarkerType
 }
-export type TimelineEntity = WorldEventGroup['events'][number]
 
 export type WorldEventModule = WorldEvent['extraFields'][number]
 export type WorldAccessMode = WorldBrief['accessMode']
+
+export type WorldEventTrack = GetWorldEventTracksApiResponse[number]

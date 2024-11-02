@@ -15,29 +15,22 @@ import { Label, LabelContainer, Marker } from './styles'
 
 type Props = {
 	entity: TimelineEntity
-	groupIndex: number
-	expanded: boolean
 	highlighted: boolean
 }
 
-export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlighted }: Props) => {
+export const TimelineEventComponent = ({ entity, highlighted }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
 	const dispatch = useDispatch()
 	const { addEventToSelection, removeEventFromSelection, openTimelineContextMenu } = worldSlice.actions
 
 	const { selectedEvents } = useSelector(getWorldState)
-	const { stateOf, navigateToEventEditor, navigateToEventDeltaEditor, navigateToOutliner } = useWorldRouter()
+	const { stateOf, navigateToEventEditor, navigateToEventDeltaEditor } = useWorldRouter()
 	const { eventId } = stateOf(worldRoutes.eventEditor)
 	const { getIconPath } = useEventIcons()
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
-			if (entity.markerType === 'bundle') {
-				navigateToOutliner(entity.events.sort((a, b) => b.timestamp - a.timestamp)[0].timestamp)
-				return
-			}
-
 			if (selectedEvents.includes(entity.eventId)) {
 				dispatch(removeEventFromSelection(entity.eventId))
 			} else {
@@ -45,11 +38,7 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 			}
 		},
 		onDoubleClick: () => {
-			if (
-				entity.markerType === 'bundle' ||
-				entity.markerType === 'ghostEvent' ||
-				entity.markerType === 'ghostDelta'
-			) {
+			if (entity.markerType === 'ghostEvent' || entity.markerType === 'ghostDelta') {
 				return
 			}
 
@@ -100,7 +89,7 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 		HoveredTimelineEvents.unhoverEvent(entity)
 	}
 
-	const selected = entity.markerType !== 'bundle' && selectedEvents.includes(entity.eventId)
+	const selected = selectedEvents.includes(entity.eventId)
 
 	const labelType =
 		entity.markerType === 'issuedAt' ? (
@@ -120,7 +109,6 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 			className={classNames({
-				expanded: groupIndex > 0 && expanded,
 				selected,
 				edited: entity.id === eventId,
 				highlighted,

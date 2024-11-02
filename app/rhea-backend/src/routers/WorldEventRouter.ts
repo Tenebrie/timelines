@@ -27,6 +27,7 @@ import { NullableNameStringValidator } from './validators/NullableNameStringVali
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
+import { UuidStringValidator } from './validators/UuidStringValidator'
 import { WorldEventFieldValidator } from './validators/WorldEventFieldValidator'
 import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
 
@@ -65,6 +66,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		mentionedActorIds: RequiredParam(StringArrayValidator),
 		customNameEnabled: RequiredParam(BooleanValidator),
 		externalLink: RequiredParam(ContentStringValidator),
+		worldEventTrackId: OptionalParam(UuidStringValidator),
 	})
 
 	const targetActors = (await parseActorList(params.targetActorIds)) ?? []
@@ -110,6 +112,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		mentionedActorIds: OptionalParam(StringArrayValidator),
 		customNameEnabled: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(OptionalURLStringValidator),
+		worldEventTrackId: OptionalParam(UuidStringValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -133,6 +136,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 			mentionedActors,
 			customName: params.customNameEnabled,
 			externalLink: params.externalLink,
+			worldEventTrackId: params.worldEventTrackId,
 		},
 	})
 

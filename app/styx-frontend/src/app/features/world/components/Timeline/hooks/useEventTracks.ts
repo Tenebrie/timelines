@@ -4,24 +4,17 @@ import { useSelector } from 'react-redux'
 import { useWorldRouter, worldRoutes } from '../../../../../../router/routes/worldRoutes'
 import { applyEventDelta } from '../../../../../utils/applyEventDelta'
 import { asMarkerType } from '../../../../../utils/asMarkerType'
-import { useTimelineWorldTime } from '../../../../time/hooks/useTimelineWorldTime'
 import { getEventCreatorState, getEventDeltaCreatorState, getWorldState } from '../../../selectors'
-import { WorldEvent, WorldEventBundle, WorldEventGroup } from '../../../types'
-import { ScaleLevel } from '../types'
+import { useEventTracksRequest } from './useEventTracksRequest'
 
-const GROUP_DISTANCE = 35
-const EVENTS_PER_GROUP = 5
-
-const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; scaleLevel: ScaleLevel }) => {
+const useEventTracks = () => {
 	const { events } = useSelector(getWorldState)
 	const { ghost: eventGhost } = useSelector(getEventCreatorState)
 	const { ghost: deltaGhost } = useSelector(getEventDeltaCreatorState)
-	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
 	const { isLocationEqual } = useWorldRouter()
 
 	const eventGroups = useMemo(() => {
-		const eventGroups: WorldEventGroup[] = []
 		const sortedEvents = events
 			.map((event) => ({
 				...event,
@@ -76,48 +69,37 @@ const useEventGroups = ({ timelineScale, scaleLevel }: { timelineScale: number; 
 			}
 		}
 
-		sortedEvents.forEach((event) => {
-			const closestExistingGroup = eventGroups
-				.map((group) => ({
-					...group,
-					distance: Math.abs(group.timestamp - event.markerPosition),
-					originalGroup: group,
-				}))
-				.sort((a, b) => a.distance - b.distance)[0]
+		return sortedEvents
+	}, [events, eventGhost, isLocationEqual, deltaGhost])
 
-			if (
-				!closestExistingGroup ||
-				closestExistingGroup.distance >= scaledTimeToRealTime(GROUP_DISTANCE) * timelineScale
-			) {
-				const newEventGroup = {
-					events: [event],
-					timestamp: event.markerPosition,
-				}
-				eventGroups.push(newEventGroup)
-			} else {
-				closestExistingGroup.events.push(event)
+	const { tracks } = useEventTracksRequest()
+	const tracksWithEvents = tracks
+		.map((track) => ({
+			id: track.id,
+			name: track.name,
+			position: track.position,
+		}))
+		.concat([
+			{
+				id: 'default',
+				name: 'Unassigned',
+				position: tracks.length,
+			},
+		])
+		.map((track) => {
+			const events = eventGroups.filter(
+				(event) =>
+					event.worldEventTrackId === track.id ||
+					(event.worldEventTrackId === null && track.id === 'default'),
+			)
+
+			return {
+				...track,
+				events,
 			}
 		})
 
-		eventGroups.forEach((group) => {
-			group.events.sort((a, b) => a.timestamp - b.timestamp || a.name.localeCompare(b.name))
-			if (group.events.length > EVENTS_PER_GROUP) {
-				const eventBundle: WorldEventBundle = {
-					id: `bundle-${group.timestamp}-${group.events.length}`,
-					key: `bundle-${group.timestamp}-${group.events.length}`,
-					markerType: 'bundle',
-					events: group.events.slice(EVENTS_PER_GROUP) as WorldEvent[],
-					timestamp: group.timestamp,
-					name: `${group.events.length - (EVENTS_PER_GROUP - 1)} more events`,
-					icon: 'bundle',
-				}
-				group.events = group.events.slice(0, EVENTS_PER_GROUP - 1).concat(eventBundle)
-			}
-		})
-		return eventGroups
-	}, [events, eventGhost, isLocationEqual, deltaGhost, scaledTimeToRealTime, timelineScale])
-
-	return eventGroups
+	return tracksWithEvents
 }
 
-export default useEventGroups
+export default useEventTracks

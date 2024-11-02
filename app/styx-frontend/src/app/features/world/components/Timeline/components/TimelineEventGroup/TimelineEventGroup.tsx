@@ -1,14 +1,15 @@
-import { useState } from 'react'
+import { Button, Divider } from '@mui/material'
+import { useMemo } from 'react'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState } from '../../../../selectors'
-import { WorldEventGroup } from '../../../../types'
-import { TimelineEvent } from './components/TimelineEvent/TimelineEvent'
-import { Group } from './styles'
+import useEventTracks from '../../hooks/useEventTracks'
+import { TimelineTrackWrapper } from '../TimelineTracks/components/TimelineTrackWrapper'
+import { TimelineEventPositioner } from './components/TimelineEventPositioner/TimelineEventPositioner'
 
 type Props = {
-	eventGroup: WorldEventGroup
+	track: ReturnType<typeof useEventTracks>[number]
 	scroll: number
 	timelineScale: number
 	visible: boolean
@@ -25,7 +26,7 @@ type Props = {
 }
 
 export const TimelineEventGroup = ({
-	eventGroup,
+	track,
 	scroll,
 	timelineScale,
 	visible,
@@ -36,48 +37,41 @@ export const TimelineEventGroup = ({
 	contextMenuState,
 	realTimeToScaledTime,
 }: Props) => {
-	const [isHovered, setIsHovered] = useState(false)
-
-	const position = realTimeToScaledTime(Math.floor(eventGroup.timestamp) / timelineScale) + scroll
-
-	if (position < -100 || position > containerWidth + 100) {
-		return <></>
-	}
-
-	const onMouseEnter = () => {
-		setIsHovered(true)
-	}
-
-	const onMouseLeave = () => {
-		setIsHovered(false)
-	}
-
-	const highlightedEvents = eventGroup.events.filter(
-		(entity) =>
-			(isLocationEqual('/world/:worldId/editor/:eventId') && eventEditorParams.eventId === entity.id) ||
-			(isLocationEqual('/world/:worldId/editor/:eventId/delta/:deltaId') &&
-				eventDeltaEditorParams.deltaId === entity.id) ||
-			(contextMenuState.isOpen && contextMenuState.selectedEvent?.id === entity.id),
+	const highlightedEvents = useMemo(
+		() =>
+			track.events.filter(
+				(entity) =>
+					(isLocationEqual('/world/:worldId/editor/:eventId') && eventEditorParams.eventId === entity.id) ||
+					(isLocationEqual('/world/:worldId/editor/:eventId/delta/:deltaId') &&
+						eventDeltaEditorParams.deltaId === entity.id) ||
+					(contextMenuState.isOpen && contextMenuState.selectedEvent?.id === entity.id),
+			),
+		[
+			contextMenuState.isOpen,
+			contextMenuState.selectedEvent,
+			eventDeltaEditorParams.deltaId,
+			eventEditorParams.eventId,
+			isLocationEqual,
+			track.events,
+		],
 	)
 
-	const isExpanded = isHovered || highlightedEvents.length > 0
-
 	return (
-		<Group
-			$position={position}
-			onMouseEnter={onMouseEnter}
-			onMouseLeave={onMouseLeave}
-			className={`${visible ? 'visible' : ''} ${isExpanded ? 'expanded' : ''}`}
-		>
-			{eventGroup.events.map((event, index) => (
-				<TimelineEvent
+		<TimelineTrackWrapper>
+			<Divider sx={{ position: 'absolute', top: 0, width: '100%' }} />
+			<Button sx={{ marginLeft: 4, pointerEvents: 'all' }}>{track.name}</Button>
+			{track.events.map((event) => (
+				<TimelineEventPositioner
 					key={event.key}
 					entity={event}
-					groupIndex={index}
-					expanded={isExpanded}
+					visible={visible}
+					scroll={scroll}
+					timelineScale={timelineScale}
+					containerWidth={containerWidth}
 					highlighted={highlightedEvents.includes(event)}
+					realTimeToScaledTime={realTimeToScaledTime}
 				/>
 			))}
-		</Group>
+		</TimelineTrackWrapper>
 	)
 }
