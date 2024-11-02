@@ -68,6 +68,10 @@ export const useTimelineNavigation = ({
 
 	const onMouseMove = useCallback(
 		(event: MouseEvent | TouchEvent) => {
+			if (window.document.body.classList.contains('resizing')) {
+				return
+			}
+
 			const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
 			const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
 			const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }
@@ -295,7 +299,11 @@ export const useTimelineNavigation = ({
 	const [lastClickTime, setLastClickTime] = useState<number | null>(null)
 	const onTimelineClick = useCallback(
 		(event: MouseEvent) => {
-			if (!canClick || event.target !== containerRef.current) {
+			if (
+				!canClick ||
+				event.target !== containerRef.current ||
+				window.document.body.classList.contains('resizing')
+			) {
 				return
 			}
 

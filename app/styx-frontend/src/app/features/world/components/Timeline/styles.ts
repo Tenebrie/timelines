@@ -6,14 +6,17 @@ export const TimelineWrapper = styled.div`
 	background: #002552;
 `
 
-export const TimelineContainer = styled.div`
+export const TimelineContainer = styled.div.attrs<{ $height: number }>((props) => ({
+	style: {
+		height: props.$height + 'px',
+	},
+}))`
 	position: relative;
 	width: 100%;
 	background: #1c4572;
 	user-select: none;
 	overflow-x: clip;
 	border-bottom: 1px solid #112550;
-	height: 192px;
 
 	@media all and (max-height: 1200px) {
 		height: 160px;

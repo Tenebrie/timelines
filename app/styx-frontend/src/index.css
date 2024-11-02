@@ -19,6 +19,10 @@ body {
 	-webkit-overflow-scrolling: touch;
 }
 
+body.resizing {
+	cursor: ns-resize;
+}
+
 code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

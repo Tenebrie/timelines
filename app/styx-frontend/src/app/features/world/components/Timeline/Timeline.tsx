@@ -13,8 +13,10 @@ import { TimelineContextMenu } from './components/TimelineContextMenu/TimelineCo
 import { TimelineControls } from './components/TimelineControls/TimelineControls'
 import { TimelineEdgeScroll } from './components/TimelineEdgeScroll/TimelineEdgeScroll'
 import { TimelineEventGroup } from './components/TimelineEventGroup/TimelineEventGroup'
+import { TimelineGrabber } from './components/TimelineGrabber/TimelineGrabber'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
+import { useContainerHeight } from './hooks/useContainerHeight'
 import useEventGroups from './hooks/useEventGroups'
 import { useScrollToActiveEntity } from './hooks/useScrollToActiveEntity'
 import { useTimelineDimensions } from './hooks/useTimelineDimensions'
@@ -95,10 +97,12 @@ export const Timeline = () => {
 	const scrollZoomIn = useCallback(() => performZoom(-1), [performZoom])
 	const scrollZoomOut = useCallback(() => performZoom(1), [performZoom])
 
+	const containerHeight = useContainerHeight()
+
 	return (
 		<TimelineWrapper>
 			<ThemeProvider theme={darkTheme}>
-				<TimelineContainer ref={containerRef} onContextMenu={onContextMenu}>
+				<TimelineContainer ref={containerRef} onContextMenu={onContextMenu} $height={containerHeight}>
 					<TimelineEdgeScroll
 						side="left"
 						currentScroll={scroll}
@@ -145,6 +149,7 @@ export const Timeline = () => {
 						onZoomIn={scrollZoomIn}
 						onZoomOut={scrollZoomOut}
 					/>
+					<TimelineGrabber />
 					<TimelineEdgeScroll
 						side="right"
 						currentScroll={scroll}

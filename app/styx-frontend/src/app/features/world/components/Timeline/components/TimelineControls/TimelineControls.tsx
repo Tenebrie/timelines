@@ -23,7 +23,7 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 		<div
 			style={{
 				position: 'absolute',
-				top: 4,
+				top: 12,
 				left: 0,
 				marginLeft: 32,
 				marginRight: 32,
