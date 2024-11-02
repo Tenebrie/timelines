@@ -1,9 +1,3 @@
-TODO:
-- Event Delta State -> Event Data Point
-- Revoke Event -> Resolve Event
-
-This readme is WIP
-
 # Running the app
 
 The development environment requires Node, Yarn and Docker to run.
@@ -30,6 +24,10 @@ To bring an older environment up-to-speed, or when something goes wrong, use the
 # Planned features:
 
 This is a non-binding list of features that I am planning to add to Timelines at some point or another. They are likely sorted by priority, but order of implementation is not guaranteed.
+
+## Character Map
+
+An interactive, Miro-like board highlighting (and allowing the user to edit) connections and relationships between actors.
 
 ## Calendar v3
 
