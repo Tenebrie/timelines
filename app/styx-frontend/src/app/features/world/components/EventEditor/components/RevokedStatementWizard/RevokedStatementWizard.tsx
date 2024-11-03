@@ -2,7 +2,7 @@ import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Autocomplete, Button, Collapse, List, ListItem, TextField, Tooltip, Typography } from '@mui/material'
 import { useCallback, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { TransitionGroup } from 'react-transition-group'
 
 import { useRevokeWorldEventMutation } from '../../../../../../../api/rheaApi'
@@ -12,15 +12,15 @@ import { ModalFooter, ModalHeader, useModalCleanup } from '../../../../../../../
 import Modal from '../../../../../../../ui-lib/components/Modal/Modal'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
+import { useModal } from '../../../../../modals/reducer'
 import { getOutlinerPreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
-import { worldSlice } from '../../../../reducer'
-import { getRevokedStatementWizardState, getWorldState } from '../../../../selectors'
+import { getWorldState } from '../../../../selectors'
 import { EventHeaderRenderer } from '../../../Renderers/Event/EventHeaderRenderer'
 import { EventWithContentRenderer } from '../../../Renderers/Event/EventWithContentRenderer'
 
 export const RevokedStatementWizard = () => {
-	const { isOpen, preselectedEventId } = useSelector(getRevokedStatementWizardState)
+	const { isOpen, preselectedEventId, close } = useModal('revokedStatementWizard')
 
 	const [id, setId] = useState('')
 	const [inputValue, setInputValue] = useState('')
@@ -32,9 +32,6 @@ export const RevokedStatementWizard = () => {
 	const { worldId } = stateOf(worldRoutes.eventEditor)
 	const [revokeWorldStatement, { isLoading, isError, reset }] = useRevokeWorldEventMutation()
 	const { timeToLabel } = useWorldTime()
-
-	const dispatch = useDispatch()
-	const { closeRevokedStatementWizard } = worldSlice.actions
 
 	useModalCleanup({
 		isOpen,
@@ -64,14 +61,14 @@ export const RevokedStatementWizard = () => {
 		if (error) {
 			return
 		}
-		dispatch(closeRevokedStatementWizard())
-	}, [closeRevokedStatementWizard, dispatch, id, isOpen, revokeWorldStatement, selectedTimeOrZero, worldId])
+		close()
+	}, [close, id, isOpen, revokeWorldStatement, selectedTimeOrZero, worldId])
 
 	const onCloseAttempt = () => {
 		if (isLoading) {
 			return
 		}
-		dispatch(closeRevokedStatementWizard())
+		close()
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {

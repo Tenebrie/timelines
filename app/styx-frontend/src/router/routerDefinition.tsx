@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom'
 
+import { ErrorBoundary } from './error/ErrorBoundary'
 import { appRoutes } from './routes/appRoutes'
 import { homeRoutes } from './routes/homeRoutes'
 import { routes } from './routes/routes'
@@ -20,6 +21,7 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 	{
 		path: '/',
 		...lazyImport(import('../App').then((m) => m.default)),
+		errorElement: <ErrorBoundary />,
 		children: [
 			{
 				path: appRoutes.limbo,

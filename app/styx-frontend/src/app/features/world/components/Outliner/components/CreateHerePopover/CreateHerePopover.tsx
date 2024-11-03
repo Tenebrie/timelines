@@ -1,9 +1,8 @@
 import { Person, Public } from '@mui/icons-material'
 import { Divider, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
 import { bindMenu, PopupState } from 'material-ui-popup-state/hooks'
-import { useDispatch } from 'react-redux'
 
-import { worldSlice } from '../../../../reducer'
+import { useModal } from '../../../../../modals/reducer'
 
 type Props = {
 	state: PopupState
@@ -11,17 +10,17 @@ type Props = {
 }
 
 export const CreateHerePopover = ({ state, timestamp }: Props) => {
-	const dispatch = useDispatch()
-	const { openEventWizard, openActorWizard } = worldSlice.actions
+	const { open: openActorWizard } = useModal('actorWizard')
+	const { open: openEventWizard } = useModal('eventWizard')
 
 	const onCreateEvent = () => {
 		state.close()
-		dispatch(openEventWizard({ timestamp }))
+		openEventWizard({ timestamp })
 	}
 
 	const onCreateActor = () => {
 		state.close()
-		dispatch(openActorWizard())
+		openActorWizard({})
 	}
 
 	return (

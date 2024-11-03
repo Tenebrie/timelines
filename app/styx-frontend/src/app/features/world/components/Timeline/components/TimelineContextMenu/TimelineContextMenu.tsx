@@ -3,6 +3,7 @@ import { memo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
+import { useModal } from '../../../../../modals/reducer'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { worldSlice } from '../../../../reducer'
 import { getTimelineContextMenuState, getWorldState } from '../../../../selectors'
@@ -11,14 +12,7 @@ import { useTimelineContextMenuRequests } from './hooks/useTimelineContextMenuRe
 export const TimelineContextMenuComponent = () => {
 	const { timeToLabel } = useWorldTime()
 	const { id: worldId } = useSelector(getWorldState)
-	const {
-		isOpen,
-		selectedTime,
-		selectedEvent: selectedEventOrBundle,
-		mousePos,
-	} = useSelector(getTimelineContextMenuState)
-
-	const selectedEvent = selectedEventOrBundle?.markerType !== 'bundle' ? selectedEventOrBundle : null
+	const { isOpen, selectedTime, selectedEvent, mousePos } = useSelector(getTimelineContextMenuState)
 
 	const {
 		navigateToOutliner,
@@ -31,12 +25,10 @@ export const TimelineContextMenuComponent = () => {
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 
 	const dispatch = useDispatch()
-	const {
-		openRevokedStatementWizard,
-		closeTimelineContextMenu,
-		openDeleteEventModal,
-		openDeleteEventDeltaModal,
-	} = worldSlice.actions
+	const { closeTimelineContextMenu } = worldSlice.actions
+	const { open: openRevokedStatementWizard } = useModal('revokedStatementWizard')
+	const { open: openDeleteEventModal } = useModal('deleteEventModal')
+	const { open: openDeleteEventDeltaModal } = useModal('deleteEventDeltaModal')
 
 	const onClose = useCallback(
 		() => dispatch(closeTimelineContextMenu()),
@@ -51,9 +43,9 @@ export const TimelineContextMenuComponent = () => {
 	const onRevokeEvent = useCallback(() => {
 		onClose()
 		selectTime(selectedTime)
-		dispatch(openRevokedStatementWizard({ preselectedEventId: '' }))
+		openRevokedStatementWizard({ preselectedEventId: '' })
 		navigateToOutliner(selectedTime)
-	}, [dispatch, navigateToOutliner, onClose, openRevokedStatementWizard, selectTime, selectedTime])
+	}, [navigateToOutliner, onClose, openRevokedStatementWizard, selectTime, selectedTime])
 
 	const onReplaceSelectedEvent = useCallback(() => {
 		onClose()
@@ -106,12 +98,12 @@ export const TimelineContextMenuComponent = () => {
 				return
 			}
 
-			dispatch(openDeleteEventDeltaModal(deltaState))
+			openDeleteEventDeltaModal({ target: deltaState })
 			return
 		}
 
-		dispatch(openDeleteEventModal(selectedEvent))
-	}, [dispatch, onClose, openDeleteEventDeltaModal, openDeleteEventModal, selectedEvent])
+		openDeleteEventModal({ target: selectedEvent })
+	}, [onClose, openDeleteEventDeltaModal, openDeleteEventModal, selectedEvent])
 
 	return (
 		<Menu

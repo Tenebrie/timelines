@@ -7,6 +7,7 @@ import { useDoubleClick } from '../../../../../hooks/useDoubleClick'
 import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
 import { EventIcon } from '../../../../components/EventIcon'
 import { isMultiselectClick } from '../../../../utils/isMultiselectClick'
+import { useModal } from '../../../modals/reducer'
 import { preferencesSlice } from '../../../preferences/reducer'
 import { getOverviewPreferences } from '../../../preferences/selectors'
 import { useWorldTime } from '../../../time/hooks/useWorldTime'
@@ -26,14 +27,10 @@ export const OverviewPanel = () => {
 
 	const { navigateToEventEditor, navigateToActorEditor } = useWorldRouter()
 	const { timeToLabel } = useWorldTime()
-	const {
-		openActorWizard,
-		openEventWizard,
-		addActorToSelection,
-		removeActorFromSelection,
-		addEventToSelection,
-		removeEventFromSelection,
-	} = worldSlice.actions
+	const { addActorToSelection, removeActorFromSelection, addEventToSelection, removeEventFromSelection } =
+		worldSlice.actions
+	const { open: openActorWizard } = useModal('actorWizard')
+	const { open: openEventWizard } = useModal('eventWizard')
 	const { setActorsOpen, setActorsReversed, setEventsOpen, setEventsReversed } = preferencesSlice.actions
 	const dispatch = useDispatch()
 
@@ -201,7 +198,7 @@ export const OverviewPanel = () => {
 					entities={displayedActors}
 					open={actorsOpen}
 					reversed={actorsReversed}
-					onAddNew={() => dispatch(openActorWizard())}
+					onAddNew={() => openActorWizard({})}
 					onToggleOpen={(val) => dispatch(setActorsOpen(val))}
 					onToggleReversed={(val) => dispatch(setActorsReversed(val))}
 					renderEntity={renderActor}
@@ -211,7 +208,7 @@ export const OverviewPanel = () => {
 					entities={displayedEvents}
 					open={eventsOpen}
 					reversed={eventsReversed}
-					onAddNew={() => dispatch(openEventWizard({ timestamp: 0 }))}
+					onAddNew={() => openEventWizard({ timestamp: 0 })}
 					onToggleOpen={(val) => dispatch(setEventsOpen(val))}
 					onToggleReversed={(val) => dispatch(setEventsReversed(val))}
 					renderEntity={renderEvent}

@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { UpdateWorldEventApiArg, useUpdateWorldEventMutation } from '../../../../../../../api/rheaApi'
 import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { worldSlice } from '../../../../reducer'
+import { useModal } from '../../../../../modals/reducer'
 import { WorldEvent } from '../../../../types'
 import { useMapActorsToOptions } from '../../../ActorSelector/useMapActorsToOptions'
 import { useEventFields } from './useEventFields'
@@ -78,8 +77,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		setExternalLink,
 	])
 
-	const { openDeleteEventModal } = worldSlice.actions
-	const dispatch = useDispatch()
+	const { open: openDeleteEventModal } = useModal('deleteEventModal')
 
 	const [updateWorldEvent, { isLoading: isSaving, isError }] = useUpdateWorldEventMutation()
 
@@ -134,8 +132,8 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 	}, [autosave, isDirty, mode, state])
 
 	const onDelete = useCallback(() => {
-		dispatch(openDeleteEventModal(event))
-	}, [dispatch, event, openDeleteEventModal])
+		openDeleteEventModal({ target: event })
+	}, [event, openDeleteEventModal])
 
 	return {
 		isSaving,
