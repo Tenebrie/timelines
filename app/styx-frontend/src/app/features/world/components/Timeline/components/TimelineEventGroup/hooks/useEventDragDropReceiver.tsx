@@ -23,7 +23,7 @@ export const useEventDragDropReceiver = ({ track }: Props) => {
 		onDrop: async (state) => {
 			dispatch(
 				updateEvent({
-					id: state.params.event.id,
+					id: state.params.event.eventId,
 					worldEventTrackId: track.id,
 				}),
 			)
