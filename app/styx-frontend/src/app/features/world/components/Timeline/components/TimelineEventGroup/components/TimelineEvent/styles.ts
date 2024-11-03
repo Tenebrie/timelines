@@ -13,21 +13,22 @@ export const Marker = styled.div<{ $iconPath: string }>`
 	border-radius: 50%;
 	background: #0a1929;
 	cursor: pointer;
-	margin-bottom: -35px;
 	transition:
 		margin-bottom 0.3s,
 		outline-color 0.3s,
 		background-color 0.3s;
 	outline: 2px solid ${colors.grey[300]};
+	margin: 2px;
 
 	.icon {
+		position: absolute;
 		background: ${colors.green[300]};
 		mask-image: url(${(props) => props.$iconPath});
 		mask-size: contain;
 		background-origin: content-box;
 		background-size: contain;
-		margin-top: 2px;
-		margin-left: 2px;
+		top: 2px;
+		left: 2px;
 		width: calc(100% - 4px);
 		height: calc(100% - 4px);
 		transition: background-color 0.3s;
@@ -47,10 +48,6 @@ export const Marker = styled.div<{ $iconPath: string }>`
 		.icon {
 			opacity: 0.5;
 		}
-	}
-
-	&.expanded {
-		margin-bottom: 4px;
 	}
 
 	&:hover {

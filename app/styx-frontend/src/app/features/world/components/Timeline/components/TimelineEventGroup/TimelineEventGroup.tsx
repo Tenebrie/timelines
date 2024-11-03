@@ -70,6 +70,7 @@ export const TimelineEventGroup = ({
 	return (
 		<TimelineTrackWrapper>
 			<Divider sx={{ position: 'absolute', bottom: 0, width: '100%' }} />
+			{/* TODO: Memo */}
 			<Button sx={{ marginLeft: 4, pointerEvents: 'all' }} onClick={onOpen}>
 				{track.baseModel && (
 					<span>
