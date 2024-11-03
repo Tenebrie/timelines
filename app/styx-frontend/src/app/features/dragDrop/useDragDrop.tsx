@@ -89,7 +89,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({ type, params, ghos
 		window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
 	}, [clearState])
 
-	useEffect(() => {
+	const attachEvents = useCallback(() => {
 		const container = containerRef.current
 		if (!container) {
 			return
@@ -101,6 +101,10 @@ export const useDragDrop = <T extends AllowedDraggableType>({ type, params, ghos
 			container.removeEventListener('mousedown', onMouseDown)
 		}
 	}, [containerRef, onMouseDown])
+
+	useEffect(() => {
+		attachEvents()
+	}, [attachEvents])
 
 	useEffectOnce(() => {
 		window.addEventListener('mouseup', onMouseUp)
@@ -116,5 +120,6 @@ export const useDragDrop = <T extends AllowedDraggableType>({ type, params, ghos
 		ref: containerRef,
 		isDragging: isDraggingNow.current,
 		ghostElement,
+		attachEvents,
 	}
 }

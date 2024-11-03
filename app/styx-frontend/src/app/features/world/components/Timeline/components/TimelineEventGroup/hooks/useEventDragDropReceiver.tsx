@@ -33,7 +33,7 @@ export const useEventDragDropReceiver = ({ track }: Props) => {
 						worldEventTrackId: track.baseModel ? track.id : null,
 					},
 					worldId,
-					eventId: state.params.event.id,
+					eventId: state.params.event.eventId,
 				}),
 			)
 			if (error) {

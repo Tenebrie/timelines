@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import { useRef } from 'react'
 
 import { useDragDrop } from '../../../../../../../dragDrop/useDragDrop'
 import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
@@ -28,7 +29,7 @@ export const TimelineEventPositioner = ({
 	realTimeToScaledTime,
 }: Props) => {
 	const { getIconPath } = useEventIcons()
-	const { ref, isDragging, ghostElement } = useDragDrop({
+	const { ref, isDragging, ghostElement, attachEvents } = useDragDrop({
 		type: 'timelineEvent',
 		params: { event: entity },
 		ghostFactory: () => (
@@ -47,8 +48,18 @@ export const TimelineEventPositioner = ({
 	})
 	const position = realTimeToScaledTime(Math.floor(entity.markerPosition) / timelineScale) + scroll
 
+	const isHidden = useRef(false)
+
 	if (position < -30 || position > containerWidth + 30) {
+		isHidden.current = true
 		return null
+	}
+
+	if (isHidden.current) {
+		isHidden.current = false
+		setTimeout(() => {
+			attachEvents()
+		}, 0)
 	}
 
 	return (
