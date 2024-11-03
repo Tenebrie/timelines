@@ -24,6 +24,7 @@ import { ContentStringValidator } from './validators/ContentStringValidator'
 import { NameStringValidator } from './validators/NameStringValidator'
 import { NullableContentStringValidator } from './validators/NullableContentStringValidator'
 import { NullableNameStringValidator } from './validators/NullableNameStringValidator'
+import { NullableUuidStringValidator } from './validators/NullableUuidStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
@@ -91,7 +92,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	useApiEndpoint({
 		name: 'updateWorldEvent',
 		description: 'Updates the target world event',
-		tags: [worldDetailsTag],
+		tags: [],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -112,7 +113,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		mentionedActorIds: OptionalParam(StringArrayValidator),
 		customNameEnabled: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(OptionalURLStringValidator),
-		worldEventTrackId: OptionalParam(UuidStringValidator),
+		worldEventTrackId: OptionalParam(NullableUuidStringValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -122,7 +123,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	const targetActors = await parseActorList(params.targetActorIds)
 	const mentionedActors = await parseActorList(params.mentionedActorIds)
 
-	const { event, world } = await WorldEventService.updateWorldEvent({
+	const { event } = await WorldEventService.updateWorldEvent({
 		worldId,
 		eventId,
 		params: {
@@ -140,7 +141,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		},
 	})
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldEventUpdate({ user, worldId, event })
 
 	return event
 })

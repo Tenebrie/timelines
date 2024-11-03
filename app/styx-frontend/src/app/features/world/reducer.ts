@@ -79,6 +79,37 @@ export const worldSlice = createSlice({
 			state.events = []
 			state.isReadOnly = false
 		},
+		updateEvent: (state, { payload }: PayloadAction<Pick<WorldEvent, 'id'> & Partial<WorldEvent>>) => {
+			const event = state.events.find((e) => e.id === payload.id)
+			if (!event) {
+				return
+			}
+
+			const newEvent = {
+				...event,
+				...payload,
+			}
+			state.events.splice(state.events.indexOf(event), 1, newEvent)
+		},
+		updateEventDelta: (
+			state,
+			{ payload }: PayloadAction<Pick<WorldEventDelta, 'id' | 'worldEventId'> & Partial<WorldEventDelta>>,
+		) => {
+			const event = state.events.find((e) => e.id === payload.worldEventId)
+			if (!event) {
+				return
+			}
+			const delta = event.deltaStates.find((d) => d.id === payload.id)
+			if (!delta) {
+				return
+			}
+
+			const newDelta = {
+				...event,
+				...payload,
+			}
+			event.deltaStates.splice(state.events.indexOf(event), 1, newDelta)
+		},
 		addActorToSelection: (state, { payload }: PayloadAction<{ id: string; multiselect: boolean }>) => {
 			if (!payload.multiselect) {
 				state.selectedEvents = []

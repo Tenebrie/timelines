@@ -103,7 +103,6 @@ const injectedRtkApi = api
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['worldDetails'],
 			}),
 			deleteWorldEvent: build.mutation<DeleteWorldEventApiResponse, DeleteWorldEventApiArg>({
 				query: (queryArg) => ({
@@ -474,7 +473,7 @@ export type UpdateWorldEventApiArg = {
 		mentionedActorIds?: string[]
 		customNameEnabled?: boolean
 		externalLink?: string
-		worldEventTrackId?: string
+		worldEventTrackId?: null | string
 	}
 }
 export type DeleteWorldEventApiResponse = /** status 200  */ {

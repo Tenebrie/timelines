@@ -26,7 +26,7 @@ export const ActorWithStatementsRendererComponent = ({ actor, highlighted, colla
 					{!collapsed &&
 						actor.events.map((event, index) => (
 							<Collapse key={event.id}>
-								<ZebraWrapper zebra={index % 2 === 0}>
+								<ZebraWrapper $zebra={index % 2 === 0}>
 									<EventRenderer
 										event={event}
 										owningActor={actor}

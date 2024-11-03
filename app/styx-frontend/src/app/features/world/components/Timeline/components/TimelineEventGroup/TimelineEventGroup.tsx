@@ -1,13 +1,14 @@
-import { Button, Divider } from '@mui/material'
-import { useCallback, useMemo } from 'react'
+import { Divider, Stack } from '@mui/material'
+import { useMemo } from 'react'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
-import { useModal } from '../../../../../modals/reducer'
+import { useDragDropStateWithRenders } from '../../../../../dragDrop/DragDropState'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState } from '../../../../selectors'
 import useEventTracks from '../../hooks/useEventTracks'
-import { TimelineTrackWrapper } from '../TimelineTracks/components/TimelineTrackWrapper'
 import { TimelineEventPositioner } from './components/TimelineEventPositioner/TimelineEventPositioner'
+import { TimelineEventTrackTitle } from './components/TimelineEventTrackTitle/TimelineEventTrackTitle'
+import { useEventDragDropReceiver } from './hooks/useEventDragDropReceiver'
 
 type Props = {
 	track: ReturnType<typeof useEventTracks>[number]
@@ -56,29 +57,30 @@ export const TimelineEventGroup = ({
 			track.events,
 		],
 	)
-	const { open: openEventTrackWizard } = useModal('eventTrackWizard')
-	const { open: openEventTrackEdit } = useModal('eventTrackEdit')
 
-	const onOpen = useCallback(() => {
-		if (!track.baseModel) {
-			openEventTrackWizard({})
-			return
-		}
-		openEventTrackEdit({ target: track.baseModel })
-	}, [openEventTrackEdit, openEventTrackWizard, track.baseModel])
+	const { isDragging } = useDragDropStateWithRenders()
+	const { ref } = useEventDragDropReceiver({
+		track,
+	})
 
 	return (
-		<TimelineTrackWrapper>
+		<Stack
+			ref={ref}
+			direction="row"
+			width="100%"
+			alignItems="center"
+			sx={{
+				position: 'relative',
+				flexShrink: 0,
+				height: 96,
+				pointerEvents: isDragging ? 'auto' : 'none',
+				'&:hover': {
+					background: isDragging ? 'rgb(255 255 255 / 10%)' : 'none',
+				},
+			}}
+		>
 			<Divider sx={{ position: 'absolute', bottom: 0, width: '100%' }} />
-			{/* TODO: Memo */}
-			<Button sx={{ marginLeft: 4, pointerEvents: 'all' }} onClick={onOpen}>
-				{track.baseModel && (
-					<span>
-						({track.position}) {track.name}
-					</span>
-				)}
-				{!track.baseModel && <span>Create new track...</span>}
-			</Button>
+			<TimelineEventTrackTitle track={track} />
 			{track.events.map((event) => (
 				<TimelineEventPositioner
 					key={event.key}
@@ -91,6 +93,6 @@ export const TimelineEventGroup = ({
 					realTimeToScaledTime={realTimeToScaledTime}
 				/>
 			))}
-		</TimelineTrackWrapper>
+		</Stack>
 	)
 }

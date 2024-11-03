@@ -1,48 +1,31 @@
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 
-import { useEffectOnce } from '../app/utils/useEffectOnce'
+import { useEffectOnce } from '../../utils/useEffectOnce'
+import { useDragDropState } from './DragDropState'
+import { GhostWrapper } from './GhostWrapper'
+import { AllowedDraggableType, DraggableParams } from './types'
 
-type Props = {
+type Props<T extends AllowedDraggableType> = {
+	type: T
+	params: DraggableParams[T]
 	ghostFactory: () => ReactNode
 }
 
-type WrapperProps = {
-	children: ReactNode
-	initialLeft: number
-	initialTop: number
-	left: number
-	top: number
-}
-
-const GhostWrapper = ({ children, initialLeft, initialTop, left, top }: WrapperProps) => {
-	return (
-		<div
-			style={{
-				position: 'absolute',
-				transform: `translate(${left - initialLeft}px, ${top - initialTop}px)`,
-				top: 'calc(-50% + 5px)',
-				left: 'calc(-50% + 5px)',
-				cursor: 'grabbing',
-			}}
-		>
-			{children}
-		</div>
-	)
-}
-
-export const useDragDrop = <T extends HTMLElement>({ ghostFactory }: Props) => {
+export const useDragDrop = <T extends AllowedDraggableType>({ type, params, ghostFactory }: Props<T>) => {
 	const isDraggingNow = useRef(false)
 	const isPreparingToDrag = useRef(false)
 	const rootPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
 	const dragFromPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
 	const [ghostElement, setGhostElement] = useState<ReturnType<typeof GhostWrapper> | null>(null)
-	const containerRef = useRef<T | null>(null)
+	const containerRef = useRef<HTMLDivElement | null>(null)
+
+	const { setState, clearState } = useDragDropState()
 
 	const onMouseDown = useCallback((event: MouseEvent) => {
 		if (!containerRef.current) {
 			return
 		}
-		window.document.body.classList.add('resizing')
+		window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
 		isPreparingToDrag.current = true
 		const boundingRect = containerRef.current.getBoundingClientRect()
 		rootPos.current = { x: boundingRect.left, y: boundingRect.top }
@@ -55,6 +38,7 @@ export const useDragDrop = <T extends HTMLElement>({ ghostFactory }: Props) => {
 				return
 			}
 			isDraggingNow.current = true
+			setState({ type, params })
 
 			setGhostElement(
 				<GhostWrapper
@@ -67,7 +51,7 @@ export const useDragDrop = <T extends HTMLElement>({ ghostFactory }: Props) => {
 				</GhostWrapper>,
 			)
 		},
-		[ghostFactory],
+		[ghostFactory, params, setState, type],
 	)
 
 	const onMouseMove = useCallback(
@@ -97,12 +81,13 @@ export const useDragDrop = <T extends HTMLElement>({ ghostFactory }: Props) => {
 		[ghostFactory, startDragging],
 	)
 
-	const onMouseUp = useCallback((event: MouseEvent) => {
+	const onMouseUp = useCallback(() => {
 		isDraggingNow.current = false
 		isPreparingToDrag.current = false
 		setGhostElement(null)
-		window.document.body.classList.remove('resizing')
-	}, [])
+		clearState()
+		window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
+	}, [clearState])
 
 	useEffect(() => {
 		const container = containerRef.current

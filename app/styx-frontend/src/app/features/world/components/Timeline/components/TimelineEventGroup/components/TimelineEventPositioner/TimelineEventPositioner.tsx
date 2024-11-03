@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 
-import { useDragDrop } from '../../../../../../../../../hooks/useDragDrop'
+import { useDragDrop } from '../../../../../../../dragDrop/useDragDrop'
 import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
 import { useEventIcons } from '../../../../../../hooks/useEventIcons'
 import useEventTracks from '../../../../hooks/useEventTracks'
@@ -28,7 +28,9 @@ export const TimelineEventPositioner = ({
 	realTimeToScaledTime,
 }: Props) => {
 	const { getIconPath } = useEventIcons()
-	const { ref, isDragging, ghostElement } = useDragDrop<HTMLDivElement>({
+	const { ref, isDragging, ghostElement } = useDragDrop({
+		type: 'timelineEvent',
+		params: { event: entity },
 		ghostFactory: () => (
 			<Marker
 				$iconPath={getIconPath(entity.icon)}

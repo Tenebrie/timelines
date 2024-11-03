@@ -46,7 +46,7 @@ export const Outliner = () => {
 					index,
 					collapsed: !expandedEvents.includes(event.id),
 					highlighted: Math.abs(event.timestamp - selectedTime) < highlightWithin,
-					active: event.revokedAt === undefined || event.revokedAt > selectedTime,
+					active: event.revokedAt === null || event.revokedAt === undefined || event.revokedAt > selectedTime,
 				}))
 				.sort((a, b) => a.timestamp - b.timestamp || a.index - b.index),
 		[expandedEvents, highlightWithin, selectedTime, allVisibleEvents],

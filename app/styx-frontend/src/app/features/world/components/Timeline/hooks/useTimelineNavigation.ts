@@ -68,7 +68,7 @@ export const useTimelineNavigation = ({
 
 	const onMouseMove = useCallback(
 		(event: MouseEvent | TouchEvent) => {
-			if (window.document.body.classList.contains('resizing')) {
+			if (window.document.body.classList.contains('mouse-busy')) {
 				return
 			}
 
@@ -302,7 +302,7 @@ export const useTimelineNavigation = ({
 			if (
 				!canClick ||
 				event.target !== containerRef.current ||
-				window.document.body.classList.contains('resizing')
+				window.document.body.classList.contains('mouse-busy')
 			) {
 				return
 			}

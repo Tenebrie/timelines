@@ -28,9 +28,9 @@ export const TimelineTracks = (props: Props) => {
 			sx={{
 				position: 'relative',
 				height: 'calc(100%)',
-				pointerEvents: 'none',
 				overflowX: 'hidden',
 				overflowY: 'scroll',
+				pointerEvents: 'none',
 			}}
 		>
 			{eventTracks.map((track) => (

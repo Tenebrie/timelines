@@ -19,8 +19,12 @@ body {
 	-webkit-overflow-scrolling: touch;
 }
 
-body.resizing {
-	cursor: ns-resize;
+body.cursor-resizing {
+	cursor: ns-resize !important;
+}
+
+body.cursor-grabbing {
+	cursor: grabbing !important;
 }
 
 code {

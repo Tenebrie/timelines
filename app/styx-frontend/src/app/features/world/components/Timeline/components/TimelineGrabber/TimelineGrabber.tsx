@@ -26,13 +26,13 @@ export const TimelineGrabber = () => {
 	const onMouseDown = (event: ReactMouseEvent) => {
 		isDraggingNow.current = true
 		mouseStartingPosition.current = event.clientY
-		window.document.body.classList.add('resizing')
+		window.document.body.classList.add('cursor-resizing', 'mouse-busy')
 	}
 
 	useEffectOnce(() => {
 		const onMouseUp = () => {
 			isDraggingNow.current = false
-			window.document.body.classList.remove('resizing')
+			window.document.body.classList.remove('cursor-resizing', 'mouse-busy')
 		}
 		const onMouseMove = (event: MouseEvent) => {
 			if (isDraggingNow.current) {
