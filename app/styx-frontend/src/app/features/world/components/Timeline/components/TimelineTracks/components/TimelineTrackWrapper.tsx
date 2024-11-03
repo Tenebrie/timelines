@@ -11,7 +11,7 @@ export const TimelineTrackWrapper = ({ children }: Props) => {
 			direction="row"
 			width="100%"
 			alignItems="center"
-			sx={{ position: 'relative', height: 96, pointerEvents: 'none' }}
+			sx={{ position: 'relative', flexShrink: 0, height: 96, pointerEvents: 'none' }}
 		>
 			{children}
 		</Stack>

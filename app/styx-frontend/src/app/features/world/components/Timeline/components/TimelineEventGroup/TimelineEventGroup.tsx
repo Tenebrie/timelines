@@ -1,7 +1,8 @@
 import { Button, Divider } from '@mui/material'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
+import { useModal } from '../../../../../modals/reducer'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState } from '../../../../selectors'
 import useEventTracks from '../../hooks/useEventTracks'
@@ -55,11 +56,28 @@ export const TimelineEventGroup = ({
 			track.events,
 		],
 	)
+	const { open: openEventTrackWizard } = useModal('eventTrackWizard')
+	const { open: openEventTrackEdit } = useModal('eventTrackEdit')
+
+	const onOpen = useCallback(() => {
+		if (!track.baseModel) {
+			openEventTrackWizard({})
+			return
+		}
+		openEventTrackEdit({ target: track.baseModel })
+	}, [openEventTrackEdit, openEventTrackWizard, track.baseModel])
 
 	return (
 		<TimelineTrackWrapper>
-			<Divider sx={{ position: 'absolute', top: 0, width: '100%' }} />
-			<Button sx={{ marginLeft: 4, pointerEvents: 'all' }}>{track.name}</Button>
+			<Divider sx={{ position: 'absolute', bottom: 0, width: '100%' }} />
+			<Button sx={{ marginLeft: 4, pointerEvents: 'all' }} onClick={onOpen}>
+				{track.baseModel && (
+					<span>
+						({track.position}) {track.name}
+					</span>
+				)}
+				{!track.baseModel && <span>Create new track...</span>}
+			</Button>
 			{track.events.map((event) => (
 				<TimelineEventPositioner
 					key={event.key}

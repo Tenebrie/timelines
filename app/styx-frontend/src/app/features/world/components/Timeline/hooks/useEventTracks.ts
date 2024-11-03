@@ -5,6 +5,7 @@ import { useWorldRouter, worldRoutes } from '../../../../../../router/routes/wor
 import { applyEventDelta } from '../../../../../utils/applyEventDelta'
 import { asMarkerType } from '../../../../../utils/asMarkerType'
 import { getEventCreatorState, getEventDeltaCreatorState, getWorldState } from '../../../selectors'
+import { WorldEventTrack } from '../../../types'
 import { useEventTracksRequest } from './useEventTracksRequest'
 
 const useEventTracks = () => {
@@ -78,14 +79,17 @@ const useEventTracks = () => {
 			id: track.id,
 			name: track.name,
 			position: track.position,
+			baseModel: track as WorldEventTrack | null,
 		}))
 		.concat([
 			{
 				id: 'default',
 				name: 'Unassigned',
-				position: tracks.length,
+				position: Infinity,
+				baseModel: null,
 			},
 		])
+		.sort((a, b) => b.position - a.position)
 		.map((track) => {
 			const events = eventGroups.filter(
 				(event) =>

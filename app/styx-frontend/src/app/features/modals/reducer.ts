@@ -4,13 +4,22 @@ import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { User } from '../auth/reducer'
-import { ActorDetails, WorldEvent, WorldEventDelta } from '../world/types'
+import { ActorDetails, WorldEvent, WorldEventDelta, WorldEventTrack } from '../world/types'
 
 const modals = {
 	/* Admin */
 	deleteUserModal: {
 		isOpen: false as boolean,
 		targetUser: null as User | null,
+	},
+
+	/* Event Tracks */
+	eventTrackWizard: {
+		isOpen: false as boolean,
+	},
+	eventTrackEdit: {
+		isOpen: false as boolean,
+		target: null as WorldEventTrack | null,
 	},
 
 	/* World */

@@ -1,4 +1,4 @@
-import { Button, Divider, Stack } from '@mui/material'
+import { Stack } from '@mui/material'
 import { useSelector } from 'react-redux'
 
 import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
@@ -6,7 +6,6 @@ import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorld
 import { getTimelineContextMenuState } from '../../../../selectors'
 import useEventTracks from '../../hooks/useEventTracks'
 import { TimelineEventGroup } from '../TimelineEventGroup/TimelineEventGroup'
-import { TimelineTrackWrapper } from './components/TimelineTrackWrapper'
 
 type Props = {
 	scroll: number
@@ -30,11 +29,10 @@ export const TimelineTracks = (props: Props) => {
 				position: 'relative',
 				height: 'calc(100%)',
 				pointerEvents: 'none',
+				overflowX: 'hidden',
+				overflowY: 'scroll',
 			}}
 		>
-			<TimelineTrackWrapper>
-				<Button sx={{ marginLeft: 4, pointerEvents: 'all' }}>Create new track...</Button>
-			</TimelineTrackWrapper>
 			{eventTracks.map((track) => (
 				<TimelineEventGroup
 					key={track.id}
@@ -46,7 +44,6 @@ export const TimelineTracks = (props: Props) => {
 					{...props}
 				/>
 			))}
-			<Divider sx={{ position: 'absolute', bottom: 0, width: '100%' }} />
 		</Stack>
 	)
 }

@@ -162,6 +162,21 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldEventTracks'],
 			}),
+			updateWorldEventTrack: build.mutation<UpdateWorldEventTrackApiResponse, UpdateWorldEventTrackApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event-track/${queryArg.trackId}`,
+					method: 'PATCH',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldEventTracks'],
+			}),
+			deleteWorldEventTrack: build.mutation<DeleteWorldEventTrackApiResponse, DeleteWorldEventTrackApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event-track/${queryArg.trackId}`,
+					method: 'DELETE',
+				}),
+				invalidatesTags: ['worldEventTracks'],
+			}),
 			getWorlds: build.query<GetWorldsApiResponse, GetWorldsApiArg>({
 				query: () => ({ url: `/api/worlds` }),
 				providesTags: ['worldList'],
@@ -605,7 +620,35 @@ export type CreateWorldEventTrackApiArg = {
 	body: {
 		name: string
 		position: number
+		assignOrphans: boolean
 	}
+}
+export type UpdateWorldEventTrackApiResponse = /** status 200  */ {
+	id: string
+}
+export type UpdateWorldEventTrackApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	trackId: string
+	body: {
+		name: string
+		position: number
+	}
+}
+export type DeleteWorldEventTrackApiResponse = /** status 200  */ {
+	name: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	worldId: string
+	position: number
+}
+export type DeleteWorldEventTrackApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	trackId: string
 }
 export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
@@ -866,6 +909,8 @@ export const {
 	useGetWorldEventTracksQuery,
 	useLazyGetWorldEventTracksQuery,
 	useCreateWorldEventTrackMutation,
+	useUpdateWorldEventTrackMutation,
+	useDeleteWorldEventTrackMutation,
 	useGetWorldsQuery,
 	useLazyGetWorldsQuery,
 	useCreateWorldMutation,
