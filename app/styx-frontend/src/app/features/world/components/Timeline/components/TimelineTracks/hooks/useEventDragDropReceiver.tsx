@@ -39,7 +39,7 @@ export const useEventDragDropReceiver = ({ track }: Props) => {
 			const { error } = parseApiResponse(
 				await updateWorldEvent({
 					body: {
-						timestamp: String(markerRealTime),
+						timestamp: String(Math.round(markerRealTime)),
 						worldEventTrackId: track.baseModel ? track.id : null,
 					},
 					worldId,
@@ -65,7 +65,7 @@ export const useEventDragDropReceiver = ({ track }: Props) => {
 			const { error } = parseApiResponse(
 				await updateWorldEvent({
 					body: {
-						revokedAt: String(markerRealTime),
+						revokedAt: String(Math.round(markerRealTime)),
 						worldEventTrackId: track.baseModel ? track.id : null,
 					},
 					worldId,
@@ -97,7 +97,7 @@ export const useEventDragDropReceiver = ({ track }: Props) => {
 			const { error } = parseApiResponse(
 				await updateWorldEventDelta({
 					body: {
-						timestamp: String(markerRealTime),
+						timestamp: String(Math.round(markerRealTime)),
 						worldEventTrackId: track.baseModel ? track.id : null,
 					},
 					worldId,

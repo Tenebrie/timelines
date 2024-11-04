@@ -13,16 +13,7 @@ export const TimelineContainer = styled.div.attrs<{ $height: number }>((props) =
 }))`
 	position: relative;
 	width: 100%;
-	background: #1c4572;
 	user-select: none;
 	overflow-x: clip;
 	border-bottom: 1px solid #112550;
-
-	@media all and (max-height: 1200px) {
-		height: 160px;
-	}
-
-	@media all and (max-height: 900px) {
-		height: 137px;
-	}
 `

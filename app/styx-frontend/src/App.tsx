@@ -38,6 +38,7 @@ const App = () => {
 			borderRadius: 1,
 			backgroundColor: theme.palette.primary.main,
 		},
+		transition: 'background 0.3s',
 	}
 
 	return (

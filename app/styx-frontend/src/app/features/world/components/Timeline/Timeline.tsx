@@ -1,8 +1,9 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
-import { getTimelinePreferences } from '../../../preferences/selectors'
+import { getTimelinePreferences, getUserPreferences } from '../../../preferences/selectors'
+import { darkTheme, lightTheme } from '../../../theming/themes'
 import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
 import { getWorldState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
@@ -24,6 +25,8 @@ import { TimelineContainer, TimelineWrapper } from './styles'
 export const Timeline = () => {
 	const { timeOrigin } = useSelector(getWorldState)
 	const { lineSpacing } = useSelector(getTimelinePreferences)
+	const { colorMode } = useSelector(getUserPreferences)
+	const theme = useMemo(() => (colorMode === 'light' ? lightTheme : darkTheme), [colorMode])
 
 	const dispatch = useDispatch()
 	const { setScaleLevel } = timelineSlice.actions
@@ -82,7 +85,14 @@ export const Timeline = () => {
 
 	return (
 		<TimelineWrapper>
-			<TimelineContainer ref={containerRef} onContextMenu={onContextMenu} $height={containerHeight}>
+			<TimelineContainer
+				ref={containerRef}
+				onContextMenu={onContextMenu}
+				$height={containerHeight}
+				style={{
+					backgroundColor: theme.palette.background.paper,
+				}}
+			>
 				<TimelineEdgeScroll
 					side="left"
 					currentScroll={scroll}

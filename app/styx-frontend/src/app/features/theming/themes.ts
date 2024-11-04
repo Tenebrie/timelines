@@ -1,4 +1,4 @@
-import { createTheme, Theme } from '@mui/material'
+import { createTheme, Theme } from '@mui/material/styles'
 
 const commonTheme = createTheme()
 
