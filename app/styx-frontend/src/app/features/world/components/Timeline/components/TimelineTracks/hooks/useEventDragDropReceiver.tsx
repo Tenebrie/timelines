@@ -18,7 +18,7 @@ type Props = {
 }
 
 export const useEventDragDropReceiver = ({ track }: Props) => {
-	const { id: worldId } = useSelector(getWorldState)
+	const { id: worldId, events } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
 	const [updateWorldEvent] = useUpdateWorldEventMutation()
 	const [updateWorldEventDelta] = useUpdateWorldEventDeltaMutation()
@@ -82,6 +82,12 @@ export const useEventDragDropReceiver = ({ track }: Props) => {
 	const moveEventDeltaState = useCallback(
 		async (entity: TimelineEntity<'deltaState'>, markerRealTime: number) => {
 			dispatch(
+				updateEvent({
+					id: entity.eventId,
+					worldEventTrackId: track.id,
+				}),
+			)
+			dispatch(
 				updateEventDelta({
 					id: entity.id,
 					worldEventId: entity.eventId,
@@ -100,10 +106,20 @@ export const useEventDragDropReceiver = ({ track }: Props) => {
 				}),
 			)
 			if (error) {
+				dispatch(updateEvent(events.find((e) => e.id === entity.eventId)!))
 				dispatch(updateEventDelta(entity.baseEntity))
 			}
 		},
-		[dispatch, track.baseModel, track.id, updateEventDelta, updateWorldEventDelta, worldId],
+		[
+			dispatch,
+			events,
+			track.baseModel,
+			track.id,
+			updateEvent,
+			updateEventDelta,
+			updateWorldEventDelta,
+			worldId,
+		],
 	)
 
 	const { ref, getState } = useDragDropReceiver({
