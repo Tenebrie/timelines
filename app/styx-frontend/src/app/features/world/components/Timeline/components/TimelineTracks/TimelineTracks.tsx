@@ -13,6 +13,7 @@ type Props = {
 	visible: boolean
 	containerWidth: number
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
+	scaledTimeToRealTime: ReturnType<typeof useTimelineWorldTime>['scaledTimeToRealTime']
 }
 
 export const TimelineTracks = (props: Props) => {

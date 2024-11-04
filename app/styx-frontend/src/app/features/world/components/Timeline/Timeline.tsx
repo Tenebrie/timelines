@@ -74,7 +74,7 @@ export const Timeline = () => {
 		dispatch(setScaleLevel(scaleLevel))
 	}, [dispatch, scaleLevel, setScaleLevel])
 
-	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel })
+	const { realTimeToScaledTime, scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
 	const { onContextMenu } = useTimelineContextMenu({
 		scroll,
@@ -106,6 +106,7 @@ export const Timeline = () => {
 						timelineScale={timelineScale}
 						containerWidth={containerWidth}
 						realTimeToScaledTime={realTimeToScaledTime}
+						scaledTimeToRealTime={scaledTimeToRealTime}
 					/>
 					<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
 					<TimelineAnchor

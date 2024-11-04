@@ -17,6 +17,7 @@ type Props = {
 	containerWidth: number
 	highlighted: boolean
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
+	scaledTimeToRealTime: ReturnType<typeof useTimelineWorldTime>['scaledTimeToRealTime']
 }
 
 export const TimelineEventPositioner = ({
@@ -27,23 +28,51 @@ export const TimelineEventPositioner = ({
 	containerWidth,
 	highlighted,
 	realTimeToScaledTime,
+	scaledTimeToRealTime,
 }: Props) => {
 	const { getIconPath } = useEventIcons()
+
+	const adjustPosition = (pos: { x: number; y: number }, startingPos: { x: number; y: number }) => {
+		const roundingFactor = 10
+		const posTimestamp = pos.x
+		const roundedValue = Math.floor(posTimestamp / roundingFactor) * roundingFactor
+		// const markerRealTime = scaledTimeToRealTime(pos.x - startingPos.x - 29) + entity.markerPosition
+		const windowHeight = window.innerHeight
+		return {
+			x: roundedValue + ((entity.markerPosition + scroll) % 10),
+			y: window.innerHeight - Math.round((window.innerHeight - pos.y + 14) / 96) * 96 + 16,
+			// y: pos.y,
+		}
+	}
+
 	const { ref, isDragging, ghostElement, attachEvents } = useDragDrop({
 		type: 'timelineEvent',
 		params: { event: entity },
+		adjustPosition,
 		ghostFactory: () => (
-			<Marker
-				$iconPath={getIconPath(entity.icon)}
-				className={classNames({
-					revoked: entity.markerType === 'revokedAt',
-					replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',
-					ghostEvent: entity.markerType === 'issuedAt' || entity.markerType === 'revokedAt',
-					ghostDelta: entity.markerType === 'deltaState',
-				})}
-			>
-				<div className="icon" />
-			</Marker>
+			<>
+				<div
+					style={{
+						height: '100vh',
+						background: 'red',
+						width: '1px',
+						position: 'absolute',
+						top: 0,
+						left: '50%',
+					}}
+				></div>
+				<Marker
+					$iconPath={getIconPath(entity.icon)}
+					className={classNames({
+						revoked: entity.markerType === 'revokedAt',
+						replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',
+						ghostEvent: entity.markerType === 'issuedAt' || entity.markerType === 'revokedAt',
+						ghostDelta: entity.markerType === 'deltaState',
+					})}
+				>
+					<div className="icon" />
+				</Marker>
+			</>
 		),
 	})
 	const position = realTimeToScaledTime(Math.floor(entity.markerPosition) / timelineScale) + scroll
@@ -66,7 +95,7 @@ export const TimelineEventPositioner = ({
 		<Group
 			ref={ref}
 			$position={position}
-			className={`${visible ? 'visible' : ''} ${isDragging} ? 'dragging' : ''`}
+			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''}`}
 		>
 			<TimelineEvent entity={entity} highlighted={highlighted} />
 			{ghostElement}

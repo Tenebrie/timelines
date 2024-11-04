@@ -18,7 +18,6 @@ export const Marker = styled.div<{ $iconPath: string }>`
 		outline-color 0.3s,
 		background-color 0.3s;
 	outline: 2px solid ${colors.grey[300]};
-	margin: 2px;
 
 	.icon {
 		position: absolute;

@@ -25,6 +25,7 @@ type Props = {
 	}
 	contextMenuState: ReturnType<typeof getTimelineContextMenuState>
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
+	scaledTimeToRealTime: ReturnType<typeof useTimelineWorldTime>['scaledTimeToRealTime']
 }
 
 export const TimelineEventGroup = ({
@@ -38,6 +39,7 @@ export const TimelineEventGroup = ({
 	eventDeltaEditorParams,
 	contextMenuState,
 	realTimeToScaledTime,
+	scaledTimeToRealTime,
 }: Props) => {
 	const highlightedEvents = useMemo(
 		() =>
@@ -72,7 +74,7 @@ export const TimelineEventGroup = ({
 			sx={{
 				position: 'relative',
 				flexShrink: 0,
-				height: 96,
+				height: '96px',
 				pointerEvents: isDragging ? 'auto' : 'none',
 				'&:hover': {
 					background: isDragging ? 'rgb(255 255 255 / 10%)' : 'none',
@@ -91,6 +93,7 @@ export const TimelineEventGroup = ({
 					containerWidth={containerWidth}
 					highlighted={highlightedEvents.includes(event)}
 					realTimeToScaledTime={realTimeToScaledTime}
+					scaledTimeToRealTime={scaledTimeToRealTime}
 				/>
 			))}
 		</Stack>

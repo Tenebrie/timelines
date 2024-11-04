@@ -22,4 +22,8 @@ export const Group = styled.div.attrs<{ $position: number }>((props) => ({
 	&.expanded {
 		z-index: 2;
 	}
+
+	&.dragging {
+		z-index: 3;
+	}
 `
