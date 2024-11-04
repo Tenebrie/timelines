@@ -29,12 +29,15 @@ export const useTimelineSpacingSlider = () => {
 		if (typeof value !== 'number') {
 			throw new Error('Range values not supported')
 		}
-		setLineSpacingBuffer(value * defaultSpacing)
-		setTimelineSpacingDebounced.current(value * defaultSpacing)
+		const valueSent = Math.round(value * 10 * 10) / 10
+		setLineSpacingBuffer(valueSent)
+		console.log(defaultSpacing)
+		console.log(valueSent)
+		setTimelineSpacingDebounced.current(valueSent)
 	}
 
 	return {
-		timelineSpacing: lineSpacingBuffer / defaultSpacing,
+		timelineSpacing: lineSpacingBuffer / 10,
 		setTimelineSpacing: setValue,
 	}
 }

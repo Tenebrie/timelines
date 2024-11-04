@@ -4,16 +4,17 @@ import { useSelector } from 'react-redux'
 import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState } from '../../../../selectors'
-import useEventTracks from '../../hooks/useEventTracks'
-import { TimelineEventGroup } from '../TimelineEventGroup/TimelineEventGroup'
+import { ScaleLevel } from '../../types'
+import useEventTracks from './hooks/useEventTracks'
+import { TimelineTrackItem } from './TimelineTrackItem'
 
 type Props = {
-	scroll: number
-	timelineScale: number
 	visible: boolean
+	scroll: number
+	lineSpacing: number
+	scaleLevel: ScaleLevel
+	timelineScale: number
 	containerWidth: number
-	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
-	scaledTimeToRealTime: ReturnType<typeof useTimelineWorldTime>['scaledTimeToRealTime']
 }
 
 export const TimelineTracks = (props: Props) => {
@@ -22,6 +23,8 @@ export const TimelineTracks = (props: Props) => {
 	const stateOfEventEditor = stateOf(worldRoutes.eventEditor)
 	const stateOfDeltaEditor = stateOf(worldRoutes.eventDeltaEditor)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
+
+	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel: props.scaleLevel })
 
 	return (
 		<Stack
@@ -35,13 +38,14 @@ export const TimelineTracks = (props: Props) => {
 			}}
 		>
 			{eventTracks.map((track) => (
-				<TimelineEventGroup
+				<TimelineTrackItem
 					key={track.id}
 					track={track}
 					isLocationEqual={isLocationEqual}
 					contextMenuState={contextMenuState}
 					eventEditorParams={stateOfEventEditor}
 					eventDeltaEditorParams={stateOfDeltaEditor}
+					realTimeToScaledTime={realTimeToScaledTime}
 					{...props}
 				/>
 			))}

@@ -27,7 +27,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 	const [ghostElement, setGhostElement] = useState<ReturnType<typeof GhostWrapper> | null>(null)
 	const containerRef = useRef<HTMLDivElement | null>(null)
 
-	const { setState, clearState } = useDragDropState()
+	const { getState, setStateQuietly, setStateImmediately, clearState } = useDragDropState()
 
 	const onMouseDown = useCallback((event: MouseEvent) => {
 		if (!containerRef.current) {
@@ -46,7 +46,12 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 				return
 			}
 			isDraggingNow.current = true
-			setState({ type, params })
+			setStateImmediately({
+				type,
+				params,
+				targetPos: { x: event.clientX, y: event.clientY },
+				targetRootPos: { x: rootPos.current.x, y: rootPos.current.y },
+			})
 
 			setGhostElement(
 				<GhostWrapper
@@ -59,7 +64,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 				</GhostWrapper>,
 			)
 		},
-		[ghostFactory, params, setState, type],
+		[ghostFactory, params, setStateImmediately, type],
 	)
 
 	const onMouseMove = useCallback(
@@ -76,6 +81,10 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 			if (isDraggingNow.current) {
 				const basePos = { x: event.clientX, y: event.clientY }
 				const pos = adjustPosition ? adjustPosition(basePos, rootPos.current) : basePos
+				setStateQuietly({
+					...getState()!,
+					targetPos: pos,
+				})
 				setGhostElement(
 					<GhostWrapper
 						initialLeft={rootPos.current.x}
@@ -88,7 +97,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 				)
 			}
 		},
-		[adjustPosition, ghostFactory, startDragging],
+		[adjustPosition, getState, ghostFactory, setStateQuietly, startDragging],
 	)
 
 	const onMouseUp = useCallback(() => {

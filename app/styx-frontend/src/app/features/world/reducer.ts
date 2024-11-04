@@ -5,6 +5,7 @@ import { GetWorldInfoApiResponse } from '../../../api/rheaApi'
 import { ingestEvent } from '../../utils/ingestEvent'
 import {
 	ActorDetails,
+	MarkerType,
 	TimelineEntity,
 	WorldAccessMode,
 	WorldCalendarType,
@@ -38,7 +39,7 @@ export const initialState = {
 	timelineContextMenu: {
 		isOpen: false as boolean,
 		selectedTime: 0 as number,
-		selectedEvent: null as TimelineEntity | null,
+		selectedEvent: null as TimelineEntity<MarkerType> | null,
 		mousePos: { x: 0, y: 0 } as { x: number; y: number },
 	},
 }
@@ -90,6 +91,25 @@ export const worldSlice = createSlice({
 				...payload,
 			}
 			state.events.splice(state.events.indexOf(event), 1, newEvent)
+		},
+		updateEventDelta: (
+			state,
+			{ payload }: PayloadAction<Pick<WorldEventDelta, 'id' | 'worldEventId'> & Partial<WorldEventDelta>>,
+		) => {
+			const event = state.events.find((e) => e.id === payload.worldEventId)
+			if (!event) {
+				return
+			}
+			const delta = event.deltaStates.find((d) => d.id === payload.id)
+			if (!delta) {
+				return
+			}
+
+			const newDelta = {
+				...delta,
+				...payload,
+			}
+			event.deltaStates.splice(event.deltaStates.indexOf(delta), 1, newDelta)
 		},
 		addActorToSelection: (state, { payload }: PayloadAction<{ id: string; multiselect: boolean }>) => {
 			if (!payload.multiselect) {
@@ -144,7 +164,7 @@ export const worldSlice = createSlice({
 				payload,
 			}: PayloadAction<{
 				selectedTime: number
-				selectedEvent: TimelineEntity | null
+				selectedEvent: TimelineEntity<MarkerType> | null
 				mousePos: { x: number; y: number }
 			}>,
 		) => {

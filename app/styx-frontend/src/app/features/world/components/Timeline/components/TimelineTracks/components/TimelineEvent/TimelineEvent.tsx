@@ -9,12 +9,12 @@ import { isMultiselectClick } from '../../../../../../../../utils/isMultiselectC
 import { useEventIcons } from '../../../../../../hooks/useEventIcons'
 import { worldSlice } from '../../../../../../reducer'
 import { getWorldState } from '../../../../../../selectors'
-import { TimelineEntity } from '../../../../../../types'
+import { MarkerType, TimelineEntity } from '../../../../../../types'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
 import { Label, LabelContainer, Marker } from './styles'
 
 type Props = {
-	entity: TimelineEntity
+	entity: TimelineEntity<MarkerType>
 	highlighted: boolean
 }
 

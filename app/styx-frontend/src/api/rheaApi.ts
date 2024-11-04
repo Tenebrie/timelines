@@ -555,8 +555,8 @@ export type CreateWorldEventDeltaApiArg = {
 	eventId: string
 	body: {
 		timestamp: string
-		name: null | string
-		description: null | string
+		name: string
+		description: string
 	}
 }
 export type UpdateWorldEventDeltaApiResponse = /** status 200  */ {
@@ -577,8 +577,9 @@ export type UpdateWorldEventDeltaApiArg = {
 	deltaId: string
 	body: {
 		timestamp?: string
-		name?: null | string
-		description?: null | string
+		name?: string
+		description?: string
+		worldEventTrackId?: null | string
 	}
 }
 export type DeleteWorldEventDeltaApiResponse = /** status 200  */ {

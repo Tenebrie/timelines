@@ -10,6 +10,8 @@ export const DragDropState = {
 export type DragDropStateType<T extends AllowedDraggableType> = {
 	type: T
 	params: DraggableParams[T]
+	targetPos: { x: number; y: number }
+	targetRootPos: { x: number; y: number }
 }
 
 export const useDragDropState = () => {
@@ -22,6 +24,15 @@ export const useDragDropState = () => {
 				DragDropState.current = state
 				notifyBus()
 			}, 1)
+		},
+		setStateQuietly: (state: DragDropStateType<AllowedDraggableType>) => {
+			setTimeout(() => {
+				DragDropState.current = state
+			}, 1)
+		},
+		setStateImmediately: (state: DragDropStateType<AllowedDraggableType>) => {
+			DragDropState.current = state
+			notifyBus()
 		},
 		clearState: () => {
 			setTimeout(() => {
@@ -37,6 +48,7 @@ export const useDragDropStateWithRenders = () => {
 	useDragDropBusSubscribe({
 		callback: () => setState(DragDropState.current),
 	})
+	const notifyBus = useDragDropBusDispatch()
 
 	return {
 		state,
@@ -44,11 +56,17 @@ export const useDragDropStateWithRenders = () => {
 		setState: (state: DragDropStateType<AllowedDraggableType>) => {
 			setTimeout(() => {
 				DragDropState.current = state
+				notifyBus()
 			}, 1)
+		},
+		setStateImmediately: (state: DragDropStateType<AllowedDraggableType>) => {
+			DragDropState.current = state
+			notifyBus()
 		},
 		clearState: () => {
 			setTimeout(() => {
 				DragDropState.current = null
+				notifyBus()
 			}, 1)
 		},
 	}

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import { MouseEvent as ReactMouseEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -18,7 +18,7 @@ const StyledDragger = styled.div`
 	cursor: ns-resize;
 `
 
-export const TimelineGrabber = () => {
+const TimelineGrabberComponent = () => {
 	const isDraggingNow = useRef(false)
 	const [mousePosition, setMousePosition] = useState(0)
 	const mouseStartingPosition = useRef(0)
@@ -71,3 +71,5 @@ export const TimelineGrabber = () => {
 
 	return <StyledDragger onMouseDown={(event) => onMouseDown(event)}></StyledDragger>
 }
+
+export const TimelineGrabber = memo(TimelineGrabberComponent)

@@ -1,10 +1,10 @@
 import classNames from 'classnames'
-import { useRef } from 'react'
+import { memo, useRef } from 'react'
 
 import { useDragDrop } from '../../../../../../../dragDrop/useDragDrop'
 import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
 import { useEventIcons } from '../../../../../../hooks/useEventIcons'
-import useEventTracks from '../../../../hooks/useEventTracks'
+import useEventTracks from '../../hooks/useEventTracks'
 import { Group } from '../../styles'
 import { Marker } from '../TimelineEvent/styles'
 import { TimelineEvent } from '../TimelineEvent/TimelineEvent'
@@ -12,36 +12,33 @@ import { TimelineEvent } from '../TimelineEvent/TimelineEvent'
 type Props = {
 	entity: ReturnType<typeof useEventTracks>[number]['events'][number]
 	scroll: number
+	lineSpacing: number
 	timelineScale: number
 	visible: boolean
 	containerWidth: number
 	highlighted: boolean
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
-	scaledTimeToRealTime: ReturnType<typeof useTimelineWorldTime>['scaledTimeToRealTime']
 }
 
-export const TimelineEventPositioner = ({
+export const TimelineEventPositionerComponent = ({
 	entity,
 	scroll,
+	lineSpacing,
 	timelineScale,
 	visible,
 	containerWidth,
 	highlighted,
 	realTimeToScaledTime,
-	scaledTimeToRealTime,
 }: Props) => {
 	const { getIconPath } = useEventIcons()
 
-	const adjustPosition = (pos: { x: number; y: number }, startingPos: { x: number; y: number }) => {
-		const roundingFactor = 10
+	const adjustPosition = (pos: { x: number; y: number }) => {
+		const roundingFactor = lineSpacing
 		const posTimestamp = pos.x
 		const roundedValue = Math.floor(posTimestamp / roundingFactor) * roundingFactor
-		// const markerRealTime = scaledTimeToRealTime(pos.x - startingPos.x - 29) + entity.markerPosition
-		const windowHeight = window.innerHeight
 		return {
-			x: roundedValue + ((entity.markerPosition + scroll) % 10),
+			x: roundedValue + ((entity.markerPosition + scroll) % lineSpacing),
 			y: window.innerHeight - Math.round((window.innerHeight - pos.y + 14) / 96) * 96 + 16,
-			// y: pos.y,
 		}
 	}
 
@@ -102,3 +99,5 @@ export const TimelineEventPositioner = ({
 		</Group>
 	)
 }
+
+export const TimelineEventPositioner = memo(TimelineEventPositionerComponent)

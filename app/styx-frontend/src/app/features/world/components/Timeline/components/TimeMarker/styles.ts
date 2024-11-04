@@ -8,7 +8,7 @@ export const Container = styled.div.attrs<{ offset: number }>((props) => ({
 	top: 0;
 	position: absolute;
 	background: white;
-	width: 3px;
+	width: 2px;
 	margin-left: -1px;
 	height: 100%;
 	opacity: 1;

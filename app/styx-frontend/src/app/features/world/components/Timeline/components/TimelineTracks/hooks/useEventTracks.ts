@@ -1,12 +1,14 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useWorldRouter, worldRoutes } from '../../../../../../router/routes/worldRoutes'
-import { applyEventDelta } from '../../../../../utils/applyEventDelta'
-import { asMarkerType } from '../../../../../utils/asMarkerType'
-import { getEventCreatorState, getEventDeltaCreatorState, getWorldState } from '../../../selectors'
-import { WorldEventTrack } from '../../../types'
-import { useEventTracksRequest } from './useEventTracksRequest'
+import { useWorldRouter, worldRoutes } from '../../../../../../../../router/routes/worldRoutes'
+import { applyEventDelta } from '../../../../../../../utils/applyEventDelta'
+import { asMarkerType } from '../../../../../../../utils/asMarkerType'
+import { getEventCreatorState, getEventDeltaCreatorState, getWorldState } from '../../../../../selectors'
+import { WorldEvent, WorldEventDelta, WorldEventTrack } from '../../../../../types'
+import { useEventTracksRequest } from '../../../hooks/useEventTracksRequest'
+
+export type TimelineTrack = ReturnType<typeof useEventTracks>[number]
 
 const useEventTracks = () => {
 	const { events } = useSelector(getWorldState)
@@ -23,6 +25,7 @@ const useEventTracks = () => {
 				key: `${event.id}-issued`,
 				markerPosition: event.timestamp,
 				markerType: asMarkerType('issuedAt'),
+				baseEntity: event as WorldEvent | WorldEventDelta | null,
 			}))
 			.concat(
 				events.flatMap((event) =>
@@ -33,6 +36,7 @@ const useEventTracks = () => {
 						key: `${delta.id}-delta`,
 						markerPosition: delta.timestamp,
 						markerType: asMarkerType('deltaState'),
+						baseEntity: delta,
 					})),
 				),
 			)
@@ -45,6 +49,7 @@ const useEventTracks = () => {
 						key: `${event.id}-revoked`,
 						markerPosition: event.revokedAt!,
 						markerType: asMarkerType('revokedAt'),
+						baseEntity: event,
 					})),
 			)
 			.sort((a, b) => b.markerPosition - a.markerPosition)
@@ -56,6 +61,7 @@ const useEventTracks = () => {
 				key: eventGhost.id,
 				markerType: asMarkerType('ghostEvent'),
 				markerPosition: eventGhost.timestamp,
+				baseEntity: null,
 			})
 		} else if (deltaGhost && isLocationEqual(worldRoutes.eventDeltaCreator)) {
 			const event = events.find((event) => event.id === deltaGhost.worldEventId)
@@ -66,6 +72,7 @@ const useEventTracks = () => {
 					key: deltaGhost.id,
 					markerType: asMarkerType('ghostDelta'),
 					markerPosition: deltaGhost.timestamp,
+					baseEntity: null,
 				})
 			}
 		}

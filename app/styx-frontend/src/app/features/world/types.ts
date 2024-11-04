@@ -37,11 +37,18 @@ export type WorldEventBundle = {
 }
 
 export type MarkerType = 'issuedAt' | 'deltaState' | 'revokedAt' | 'ghostEvent' | 'ghostDelta'
-export type TimelineEntity = WorldEvent & {
+export type TimelineEntity<T extends MarkerType> = WorldEvent & {
 	eventId: string
 	key: string
 	markerPosition: number
-	markerType: MarkerType
+	markerType: T
+	baseEntity: T extends 'issuedAt'
+		? WorldEvent
+		: T extends 'revokedAt'
+			? WorldEvent
+			: T extends 'deltaState'
+				? WorldEventDelta
+				: null
 }
 
 export type WorldEventModule = WorldEvent['extraFields'][number]

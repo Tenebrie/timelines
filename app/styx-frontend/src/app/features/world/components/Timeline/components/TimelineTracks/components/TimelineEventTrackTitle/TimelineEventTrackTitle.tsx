@@ -2,7 +2,7 @@ import { Button } from '@mui/material'
 import { memo, useCallback } from 'react'
 
 import { useModal } from '../../../../../../../modals/reducer'
-import useEventTracks from '../../../../hooks/useEventTracks'
+import useEventTracks from '../../hooks/useEventTracks'
 
 type Props = {
 	track: ReturnType<typeof useEventTracks>[number]

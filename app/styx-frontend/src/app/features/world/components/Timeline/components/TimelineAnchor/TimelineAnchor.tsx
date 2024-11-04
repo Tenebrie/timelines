@@ -1,7 +1,5 @@
 import { memo, useMemo } from 'react'
-import { useSelector } from 'react-redux'
 
-import { getTimelinePreferences } from '../../../../../preferences/selectors'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { ScaleLevel } from '../../types'
@@ -14,19 +12,29 @@ export const ResetNumbersAfterEvery = 3000000 // pixels of scrolling
 type Props = {
 	visible: boolean
 	scroll: number
+	lineSpacing: number
 	timelineScale: number
 	scaleLevel: ScaleLevel
 	containerWidth: number
 }
 
-const TimelineAnchorComponent = ({ scroll, timelineScale, scaleLevel, visible, containerWidth }: Props) => {
-	const { lineSpacing } = useSelector(getTimelinePreferences)
+const TimelineAnchorComponent = ({
+	scroll,
+	lineSpacing,
+	timelineScale,
+	scaleLevel,
+	visible,
+	containerWidth,
+}: Props) => {
 	const { parseTime, timeToShortLabel } = useWorldTime()
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel })
 
-	const lineCount =
-		Math.ceil((containerWidth / lineSpacing) * timelineScale) +
-		Math.ceil(TimelineAnchorPadding / lineSpacing) * 2
+	const lineCount = useMemo(
+		() =>
+			Math.ceil((containerWidth / lineSpacing) * timelineScale) +
+			Math.ceil(TimelineAnchorPadding / lineSpacing) * 2,
+		[containerWidth, lineSpacing, timelineScale],
+	)
 
 	const dividers = useMemo(() => Array(lineCount).fill(null), [lineCount])
 

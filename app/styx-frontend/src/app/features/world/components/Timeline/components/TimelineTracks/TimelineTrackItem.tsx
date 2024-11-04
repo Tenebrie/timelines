@@ -5,14 +5,15 @@ import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useDragDropStateWithRenders } from '../../../../../dragDrop/DragDropState'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState } from '../../../../selectors'
-import useEventTracks from '../../hooks/useEventTracks'
 import { TimelineEventPositioner } from './components/TimelineEventPositioner/TimelineEventPositioner'
 import { TimelineEventTrackTitle } from './components/TimelineEventTrackTitle/TimelineEventTrackTitle'
 import { useEventDragDropReceiver } from './hooks/useEventDragDropReceiver'
+import useEventTracks from './hooks/useEventTracks'
 
 type Props = {
 	track: ReturnType<typeof useEventTracks>[number]
 	scroll: number
+	lineSpacing: number
 	timelineScale: number
 	visible: boolean
 	containerWidth: number
@@ -25,12 +26,12 @@ type Props = {
 	}
 	contextMenuState: ReturnType<typeof getTimelineContextMenuState>
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
-	scaledTimeToRealTime: ReturnType<typeof useTimelineWorldTime>['scaledTimeToRealTime']
 }
 
-export const TimelineEventGroup = ({
+export const TimelineTrackItem = ({
 	track,
 	scroll,
+	lineSpacing,
 	timelineScale,
 	visible,
 	containerWidth,
@@ -39,7 +40,6 @@ export const TimelineEventGroup = ({
 	eventDeltaEditorParams,
 	contextMenuState,
 	realTimeToScaledTime,
-	scaledTimeToRealTime,
 }: Props) => {
 	const highlightedEvents = useMemo(
 		() =>
@@ -89,11 +89,11 @@ export const TimelineEventGroup = ({
 					entity={event}
 					visible={visible}
 					scroll={scroll}
+					lineSpacing={lineSpacing}
 					timelineScale={timelineScale}
 					containerWidth={containerWidth}
 					highlighted={highlightedEvents.includes(event)}
 					realTimeToScaledTime={realTimeToScaledTime}
-					scaledTimeToRealTime={scaledTimeToRealTime}
 				/>
 			))}
 		</Stack>

@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { ScaleLevel } from '../../types'
-import { HoveredTimelineEvents } from '../TimelineEventGroup/components/TimelineEvent/HoveredTimelineEvents'
+import { HoveredTimelineEvents } from '../TimelineTracks/components/TimelineEvent/HoveredTimelineEvents'
 import { Container } from './styles'
 
 type Props = {

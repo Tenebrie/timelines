@@ -22,8 +22,6 @@ import {
 import { parseActorList } from './utils/parseActorList'
 import { ContentStringValidator } from './validators/ContentStringValidator'
 import { NameStringValidator } from './validators/NameStringValidator'
-import { NullableContentStringValidator } from './validators/NullableContentStringValidator'
-import { NullableNameStringValidator } from './validators/NullableNameStringValidator'
 import { NullableUuidStringValidator } from './validators/NullableUuidStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator'
@@ -80,6 +78,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 			extraFields: params.modules,
 			targetActors,
 			mentionedActors,
+			worldEventTrackId: params.worldEventTrackId ?? null,
 		},
 	})
 
@@ -116,9 +115,20 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		worldEventTrackId: OptionalParam(NullableUuidStringValidator),
 	})
 
+	const mappedParams = {
+		extraFields: params.modules,
+		name: params.name,
+		icon: params.icon,
+		timestamp: params.timestamp,
+		revokedAt: params.revokedAt,
+		description: params.description,
+		customName: params.customNameEnabled,
+		externalLink: params.externalLink,
+		worldEventTrackId: params.worldEventTrackId,
+	}
+
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
-	await ValidationService.checkEventValidity(eventId)
-	await ValidationService.checkIfEventIsRevokableAt(eventId, params.revokedAt)
+	await ValidationService.checkEventPatchValidity(eventId, mappedParams)
 
 	const targetActors = await parseActorList(params.targetActorIds)
 	const mentionedActors = await parseActorList(params.mentionedActorIds)
@@ -127,17 +137,9 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		worldId,
 		eventId,
 		params: {
-			extraFields: params.modules,
-			name: params.name,
-			icon: params.icon,
-			timestamp: params.timestamp,
-			revokedAt: params.revokedAt,
-			description: params.description,
+			...mappedParams,
 			targetActors,
 			mentionedActors,
-			customName: params.customNameEnabled,
-			externalLink: params.externalLink,
-			worldEventTrackId: params.worldEventTrackId,
 		},
 	})
 
@@ -249,8 +251,8 @@ router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		timestamp: RequiredParam(BigIntValidator),
-		name: RequiredParam(NullableNameStringValidator),
-		description: RequiredParam(NullableContentStringValidator),
+		name: RequiredParam(OptionalNameStringValidator),
+		description: RequiredParam(OptionalNameStringValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -284,8 +286,9 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 
 	const params = useRequestBody(ctx, {
 		timestamp: OptionalParam(BigIntValidator),
-		name: OptionalParam(NullableContentStringValidator),
-		description: OptionalParam(NullableContentStringValidator),
+		name: OptionalParam(OptionalNameStringValidator),
+		description: OptionalParam(OptionalNameStringValidator),
+		worldEventTrackId: OptionalParam(NullableUuidStringValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -295,17 +298,21 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 		await ValidationService.checkIfEventDeltaStateIsCreatableAt(eventId, params.timestamp, [deltaId])
 	}
 
-	const { deltaState, world } = await WorldEventDeltaService.updateEventDeltaState({
+	const { deltaState, event } = await WorldEventDeltaService.updateEventDeltaState({
 		worldId,
+		eventId,
 		deltaId,
 		params: {
 			timestamp: params.timestamp,
 			name: params.name,
 			description: params.description,
 		},
+		eventParams: {
+			worldEventTrackId: params.worldEventTrackId,
+		},
 	})
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldEventUpdate({ user, worldId, event })
 
 	return deltaState
 })

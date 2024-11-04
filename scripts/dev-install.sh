@@ -23,16 +23,16 @@ docker exec $(docker ps -aqf "name=^timelines-calliope-[0-9]+") yarn
 docker exec $(docker ps -aqf "name=^timelines-rhea-[0-9]+") yarn prisma generate
 docker exec $(docker ps -aqf "name=^timelines-rhea-[0-9]+") touch src/index.ts
 
-echo "Waiting a few seconds for Rhea to get up..."
-sleep 5
-echo "The request may fail, do not panic"
+echo "Waiting for Rhea to get up..."
 sleep 1
-max_retry=7
+max_retry=30
 counter=2
-until (cd app/styx-frontend && yarn openapi)
+until (curl localhost:3000/health > /dev/null 2>&1);
 do
-   echo "Trying again. Try #$counter"
-   sleep 5
+   echo "Rhea not yet ready..."
+   sleep 1
    [[ counter -eq $max_retry ]] && exit 1
    ((counter++))
 done
+
+cd app/styx-frontend && yarn openapi

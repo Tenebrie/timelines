@@ -1,10 +1,8 @@
-import { ThemeProvider } from '@mui/material'
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
-import { darkTheme } from '../../../theming/themes'
-import { useTimelineWorldTime } from '../../../time/hooks/useTimelineWorldTime'
+import { getTimelinePreferences } from '../../../preferences/selectors'
 import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
 import { getWorldState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
@@ -25,24 +23,20 @@ import { TimelineContainer, TimelineWrapper } from './styles'
 
 export const Timeline = () => {
 	const { timeOrigin } = useSelector(getWorldState)
+	const { lineSpacing } = useSelector(getTimelinePreferences)
 
 	const dispatch = useDispatch()
 	const { setScaleLevel } = timelineSlice.actions
 
-	const { navigateToCurrentWorldRoot, navigateToOutliner, navigateToEventCreator, selectedTimeOrNull } =
-		useWorldRouter()
+	const { navigateToOutliner, navigateToEventCreator, selectedTimeOrNull } = useWorldRouter()
 
 	const scrollTimelineTo = useTimelineBusDispatch()
 
 	const onClick = useCallback(
 		(time: number) => {
-			if (selectedTimeOrNull === time) {
-				navigateToCurrentWorldRoot()
-			} else {
-				navigateToOutliner(time)
-			}
+			navigateToOutliner(time)
 		},
-		[selectedTimeOrNull, navigateToCurrentWorldRoot, navigateToOutliner],
+		[navigateToOutliner],
 	)
 
 	const onDoubleClick = useCallback(
@@ -74,8 +68,6 @@ export const Timeline = () => {
 		dispatch(setScaleLevel(scaleLevel))
 	}, [dispatch, scaleLevel, setScaleLevel])
 
-	const { realTimeToScaledTime, scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
-
 	const { onContextMenu } = useTimelineContextMenu({
 		scroll,
 		scaleLevel,
@@ -90,59 +82,58 @@ export const Timeline = () => {
 
 	return (
 		<TimelineWrapper>
-			<ThemeProvider theme={darkTheme}>
-				<TimelineContainer ref={containerRef} onContextMenu={onContextMenu} $height={containerHeight}>
-					<TimelineEdgeScroll
-						side="left"
-						currentScroll={scroll}
-						pageSize={containerWidth}
+			<TimelineContainer ref={containerRef} onContextMenu={onContextMenu} $height={containerHeight}>
+				<TimelineEdgeScroll
+					side="left"
+					currentScroll={scroll}
+					pageSize={containerWidth}
+					timelineScale={timelineScale}
+					scaleLevel={scaleLevel}
+					scrollTo={scrollTimelineTo}
+				/>
+				<TimelineTracks
+					visible={!isSwitchingScale}
+					scroll={scroll}
+					lineSpacing={lineSpacing}
+					scaleLevel={scaleLevel}
+					timelineScale={timelineScale}
+					containerWidth={containerWidth}
+				/>
+				<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
+				<TimelineAnchor
+					visible={!isSwitchingScale}
+					scroll={scroll}
+					lineSpacing={lineSpacing}
+					timelineScale={timelineScale}
+					scaleLevel={scaleLevel}
+					containerWidth={containerWidth}
+				/>
+				{selectedTimeOrNull !== null && (
+					<TimeMarker
+						timestamp={selectedTimeOrNull}
 						timelineScale={timelineScale}
-						scaleLevel={scaleLevel}
-						scrollTo={scrollTimelineTo}
-					/>
-					<TimelineTracks
-						visible={!isSwitchingScale}
 						scroll={scroll}
-						timelineScale={timelineScale}
-						containerWidth={containerWidth}
-						realTimeToScaledTime={realTimeToScaledTime}
-						scaledTimeToRealTime={scaledTimeToRealTime}
-					/>
-					<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
-					<TimelineAnchor
-						visible={!isSwitchingScale}
-						scroll={scroll}
-						timelineScale={timelineScale}
+						mode="mouse"
 						scaleLevel={scaleLevel}
-						containerWidth={containerWidth}
+						transitioning={isSwitchingScale}
 					/>
-					{selectedTimeOrNull !== null && (
-						<TimeMarker
-							timestamp={selectedTimeOrNull}
-							timelineScale={timelineScale}
-							scroll={scroll}
-							mode="mouse"
-							scaleLevel={scaleLevel}
-							transitioning={isSwitchingScale}
-						/>
-					)}
-					<TimelineControls
-						onNavigateToTime={scrollTimelineToTime}
-						onZoomIn={scrollZoomIn}
-						onZoomOut={scrollZoomOut}
-					/>
-					<TimelineGrabber />
-					<TimelineEdgeScroll
-						side="right"
-						currentScroll={scroll}
-						pageSize={containerWidth}
-						timelineScale={timelineScale}
-						scaleLevel={scaleLevel}
-						scrollTo={scrollTimelineTo}
-					/>
-					<TimelineContextMenu />
-				</TimelineContainer>
-			</ThemeProvider>
+				)}
+				<TimelineControls
+					onNavigateToTime={scrollTimelineToTime}
+					onZoomIn={scrollZoomIn}
+					onZoomOut={scrollZoomOut}
+				/>
+				<TimelineGrabber />
+				<TimelineEdgeScroll
+					side="right"
+					currentScroll={scroll}
+					pageSize={containerWidth}
+					timelineScale={timelineScale}
+					scaleLevel={scaleLevel}
+					scrollTo={scrollTimelineTo}
+				/>
+				<TimelineContextMenu />
+			</TimelineContainer>
 		</TimelineWrapper>
 	)
 }
