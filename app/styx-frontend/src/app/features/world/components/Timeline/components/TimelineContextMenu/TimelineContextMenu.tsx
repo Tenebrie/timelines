@@ -65,7 +65,7 @@ export const TimelineContextMenuComponent = () => {
 
 		await revokeEventAt({
 			worldId,
-			eventId: selectedEvent.id,
+			eventId: selectedEvent.eventId,
 			revokedAt: selectedWorldTime,
 		})
 
@@ -79,7 +79,7 @@ export const TimelineContextMenuComponent = () => {
 
 		await unrevokeEventAt({
 			worldId,
-			eventId: selectedEvent.id,
+			eventId: selectedEvent.eventId,
 		})
 
 		onClose()
