@@ -13,9 +13,9 @@ import useEventTracks from './hooks/useEventTracks'
 
 type Props = {
 	track: ReturnType<typeof useEventTracks>[number]
-	scroll: number
 	lineSpacing: number
 	timelineScale: number
+	scroll: number
 	visible: boolean
 	containerWidth: number
 	isLocationEqual: ReturnType<typeof useWorldRouter>['isLocationEqual']
@@ -31,9 +31,9 @@ type Props = {
 
 const TimelineTrackItemComponent = ({
 	track,
-	scroll,
 	lineSpacing,
 	timelineScale,
+	scroll,
 	visible,
 	containerWidth,
 	isLocationEqual,
@@ -70,6 +70,8 @@ const TimelineTrackItemComponent = ({
 		track,
 	})
 
+	const dividerProps = useMemo(() => ({ position: 'absolute', bottom: 0, width: '100%' }), [])
+
 	return (
 		<Stack
 			ref={ref}
@@ -85,33 +87,39 @@ const TimelineTrackItemComponent = ({
 				},
 			}}
 		>
-			<Divider sx={{ position: 'absolute', bottom: 0, width: '100%' }} />
-			{chainLinks.map((event) => (
-				<TimelineChainPositioner
-					key={event.key}
-					entity={event}
-					visible={visible}
-					scroll={scroll}
-					lineSpacing={lineSpacing}
-					timelineScale={timelineScale}
-					containerWidth={containerWidth}
-					highlighted={highlightedEvents.includes(event)}
-					realTimeToScaledTime={realTimeToScaledTime}
-				/>
-			))}
-			{track.events.map((event) => (
-				<TimelineEventPositioner
-					key={event.key}
-					entity={event}
-					visible={visible}
-					scroll={scroll}
-					lineSpacing={lineSpacing}
-					timelineScale={timelineScale}
-					containerWidth={containerWidth}
-					highlighted={highlightedEvents.includes(event)}
-					realTimeToScaledTime={realTimeToScaledTime}
-				/>
-			))}
+			<Divider sx={dividerProps} />
+			<Stack
+				style={{
+					transform: `translateX(${scroll}px)`,
+				}}
+			>
+				{chainLinks.map((event) => (
+					<TimelineChainPositioner
+						key={event.key}
+						entity={event}
+						visible={visible}
+						scroll={0}
+						lineSpacing={lineSpacing}
+						timelineScale={timelineScale}
+						containerWidth={containerWidth}
+						highlighted={highlightedEvents.includes(event)}
+						realTimeToScaledTime={realTimeToScaledTime}
+					/>
+				))}
+				{track.events.map((event) => (
+					<TimelineEventPositioner
+						key={event.key}
+						entity={event}
+						visible={visible}
+						scroll={0}
+						lineSpacing={lineSpacing}
+						timelineScale={timelineScale}
+						containerWidth={containerWidth}
+						highlighted={highlightedEvents.includes(event)}
+						realTimeToScaledTime={realTimeToScaledTime}
+					/>
+				))}
+			</Stack>
 			<TimelineEventTrackTitle track={track} />
 		</Stack>
 	)

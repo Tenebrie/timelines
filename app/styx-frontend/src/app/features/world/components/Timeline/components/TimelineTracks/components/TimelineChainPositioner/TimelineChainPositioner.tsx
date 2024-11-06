@@ -28,9 +28,9 @@ const TimelineChainPositionerComponent = ({
 }: Props) => {
 	const position = realTimeToScaledTime(Math.floor(entity.markerPosition) / timelineScale) + scroll
 
-	if (position < -30 || position > containerWidth + 30) {
-		return null
-	}
+	// if (position < -30 || position > containerWidth + 30) {
+	// 	return null
+	// }
 
 	return (
 		<Chain $position={position} className={`${visible ? 'visible' : ''}`}>

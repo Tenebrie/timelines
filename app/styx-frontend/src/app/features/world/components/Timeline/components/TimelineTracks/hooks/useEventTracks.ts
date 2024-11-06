@@ -123,35 +123,38 @@ const useEventTracks = () => {
 	}, [events, eventGhost, isLocationEqual, deltaGhost])
 
 	const { tracks } = useEventTracksRequest()
-	const tracksWithEvents = tracks
-		.map((track) => ({
-			id: track.id,
-			name: track.name,
-			position: track.position,
-			baseModel: track as WorldEventTrack | null,
-		}))
-		.concat([
-			{
-				id: 'default',
-				name: 'Unassigned',
-				position: Infinity,
-				baseModel: null,
-			},
-		])
-		.sort((a, b) => a.position - b.position)
-		.map((track) => {
-			const events = eventGroups.filter(
-				(event) =>
-					event.worldEventTrackId === track.id ||
-					(event.worldEventTrackId === null && track.id === 'default'),
-			)
+	const tracksWithEvents = useMemo(
+		() =>
+			tracks
+				.map((track) => ({
+					id: track.id,
+					name: track.name,
+					position: track.position,
+					baseModel: track as WorldEventTrack | null,
+				}))
+				.concat([
+					{
+						id: 'default',
+						name: 'Unassigned',
+						position: Infinity,
+						baseModel: null,
+					},
+				])
+				.sort((a, b) => a.position - b.position)
+				.map((track) => {
+					const events = eventGroups.filter(
+						(event) =>
+							event.worldEventTrackId === track.id ||
+							(event.worldEventTrackId === null && track.id === 'default'),
+					)
 
-			return {
-				...track,
-				events: events,
-			}
-		})
-
+					return {
+						...track,
+						events: events,
+					}
+				}),
+		[eventGroups, tracks],
+	)
 	return tracksWithEvents
 }
 
