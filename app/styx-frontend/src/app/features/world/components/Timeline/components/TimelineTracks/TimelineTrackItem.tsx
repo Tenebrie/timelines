@@ -1,15 +1,15 @@
-import { Divider, Stack } from '@mui/material'
-import { memo, useMemo } from 'react'
+import { Divider } from '@mui/material'
+import { useMemo, useRef, useState } from 'react'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
-import { useDragDropStateWithRenders } from '../../../../../dragDrop/DragDropState'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState } from '../../../../selectors'
 import { TimelineChainPositioner } from './components/TimelineChainPositioner/TimelineChainPositioner'
 import { TimelineEventPositioner } from './components/TimelineEventPositioner/TimelineEventPositioner'
 import { TimelineEventTrackTitle } from './components/TimelineEventTrackTitle/TimelineEventTrackTitle'
-import { useEventDragDropReceiver } from './hooks/useEventDragDropReceiver'
 import useEventTracks from './hooks/useEventTracks'
+import { TrackContainer, TrackPositioner } from './styles'
+import { TimelineTrackItemDragDrop } from './TimelineTrackItemDragDrop'
 
 type Props = {
 	track: ReturnType<typeof useEventTracks>[number]
@@ -29,7 +29,7 @@ type Props = {
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
-const TimelineTrackItemComponent = ({
+export const TimelineTrackItem = ({
 	track,
 	lineSpacing,
 	timelineScale,
@@ -42,6 +42,9 @@ const TimelineTrackItemComponent = ({
 	contextMenuState,
 	realTimeToScaledTime,
 }: Props) => {
+	const dragDropReceiverRef = useRef<HTMLDivElement | null>(null)
+	const [isDragging, setIsDragging] = useState(false)
+
 	const highlightedEvents = useMemo(
 		() =>
 			track.events.filter(
@@ -65,43 +68,18 @@ const TimelineTrackItemComponent = ({
 		return track.events.filter((event) => event.nextEntity)
 	}, [track.events])
 
-	const { isDragging } = useDragDropStateWithRenders()
-	const { ref } = useEventDragDropReceiver({
-		track,
-	})
-
 	const dividerProps = useMemo(() => ({ position: 'absolute', bottom: 0, width: '100%' }), [])
 
 	return (
-		<Stack
-			ref={ref}
-			direction="row"
-			width="100%"
-			alignItems="center"
-			sx={{
-				position: 'relative',
-				height: '96px',
-				pointerEvents: isDragging ? 'auto' : 'none',
-				'&:hover': {
-					background: isDragging ? 'rgb(255 255 255 / 10%)' : 'none',
-				},
-			}}
-		>
+		<TrackContainer ref={dragDropReceiverRef} className={`${isDragging ? 'dragging' : ''}`}>
 			<Divider sx={dividerProps} />
-			<Stack
-				style={{
-					transform: `translateX(${scroll}px)`,
-				}}
-			>
+			<TrackPositioner $position={scroll}>
 				{chainLinks.map((event) => (
 					<TimelineChainPositioner
 						key={event.key}
 						entity={event}
 						visible={visible}
-						scroll={0}
-						lineSpacing={lineSpacing}
 						timelineScale={timelineScale}
-						containerWidth={containerWidth}
 						highlighted={highlightedEvents.includes(event)}
 						realTimeToScaledTime={realTimeToScaledTime}
 					/>
@@ -111,18 +89,19 @@ const TimelineTrackItemComponent = ({
 						key={event.key}
 						entity={event}
 						visible={visible}
-						scroll={0}
 						lineSpacing={lineSpacing}
 						timelineScale={timelineScale}
-						containerWidth={containerWidth}
 						highlighted={highlightedEvents.includes(event)}
 						realTimeToScaledTime={realTimeToScaledTime}
 					/>
 				))}
-			</Stack>
+			</TrackPositioner>
 			<TimelineEventTrackTitle track={track} />
-		</Stack>
+			<TimelineTrackItemDragDrop
+				track={track}
+				receiverRef={dragDropReceiverRef}
+				onDragChanged={setIsDragging}
+			/>
+		</TrackContainer>
 	)
 }
-
-export const TimelineTrackItem = memo(TimelineTrackItemComponent)

@@ -15,9 +15,10 @@ import { TimelineTrack } from './useEventTracks'
 
 type Props = {
 	track: TimelineTrack
+	receiverRef?: React.MutableRefObject<HTMLDivElement | null>
 }
 
-export const useEventDragDropReceiver = ({ track }: Props) => {
+export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
 	const { id: worldId, events } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
 	const [updateWorldEvent] = useUpdateWorldEventMutation()
@@ -124,6 +125,7 @@ export const useEventDragDropReceiver = ({ track }: Props) => {
 
 	const { ref, getState } = useDragDropReceiver({
 		type: 'timelineEvent',
+		receiverRef,
 		onDrop: async (state) => {
 			const entity = state.params.event
 			const markerRealTime =

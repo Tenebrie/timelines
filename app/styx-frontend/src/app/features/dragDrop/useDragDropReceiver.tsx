@@ -5,10 +5,15 @@ import { AllowedDraggableType } from './types'
 
 type Props<T extends AllowedDraggableType> = {
 	type: T
+	receiverRef?: React.MutableRefObject<HTMLDivElement | null>
 	onDrop: (state: DragDropStateType<T>) => void
 }
 
-export const useDragDropReceiver = <T extends AllowedDraggableType>({ type, onDrop }: Props<T>) => {
+export const useDragDropReceiver = <T extends AllowedDraggableType>({
+	type,
+	receiverRef,
+	onDrop,
+}: Props<T>) => {
 	const containerRef = useRef<HTMLDivElement | null>(null)
 	const { getState } = useDragDropState()
 
@@ -20,7 +25,7 @@ export const useDragDropReceiver = <T extends AllowedDraggableType>({ type, onDr
 	}, [getState, type, onDrop])
 
 	useEffect(() => {
-		const container = containerRef.current
+		const container = receiverRef?.current ?? containerRef.current
 		if (!container) {
 			return
 		}
@@ -30,7 +35,7 @@ export const useDragDropReceiver = <T extends AllowedDraggableType>({ type, onDr
 		return () => {
 			container.removeEventListener('mouseup', onDropCallback)
 		}
-	}, [containerRef, onDropCallback])
+	}, [containerRef, receiverRef, onDropCallback])
 
 	return {
 		ref: containerRef,

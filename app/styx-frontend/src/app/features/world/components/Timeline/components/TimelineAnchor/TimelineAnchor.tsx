@@ -1,8 +1,9 @@
-import { memo, useMemo } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { ScaleLevel } from '../../types'
+import { TimelineScroll } from '../../utils/TimelineScroll'
 import { TimelineAnchorContainer } from './styles'
 import { TimelineAnchorLine } from './TimelineAnchorLine'
 
@@ -19,11 +20,11 @@ type Props = {
 }
 
 const TimelineAnchorComponent = ({
-	scroll,
 	lineSpacing,
 	timelineScale,
 	scaleLevel,
 	visible,
+	scroll,
 	containerWidth,
 }: Props) => {
 	const { parseTime, timeToShortLabel } = useWorldTime()
@@ -35,6 +36,21 @@ const TimelineAnchorComponent = ({
 			Math.ceil(TimelineAnchorPadding / lineSpacing) * 2,
 		[containerWidth, lineSpacing, timelineScale],
 	)
+
+	const lastSeenScroll = useRef(0)
+	const [scroll2, setScroll] = useState(0)
+
+	useEffect(() => {
+		const timeout = window.setInterval(() => {
+			if (lastSeenScroll.current !== TimelineScroll.current) {
+				lastSeenScroll.current = TimelineScroll.current
+				setScroll(TimelineScroll.current)
+			}
+		}, 2)
+		return () => {
+			window.clearInterval(timeout)
+		}
+	}, [])
 
 	const dividers = useMemo(() => Array(lineCount).fill(null), [lineCount])
 

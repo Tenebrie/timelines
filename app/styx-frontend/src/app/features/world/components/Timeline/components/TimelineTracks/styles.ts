@@ -47,3 +47,28 @@ export const Chain = styled.div.attrs<{ $position: number }>((props) => ({
 		opacity: 1;
 	}
 `
+
+export const TrackContainer = styled.div`
+	position: relative;
+	height: 96px;
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	align-items: center;
+
+	pointer-events: none;
+	background: none;
+
+	&.dragging:hover {
+		pointer-events: auto;
+		background: rgb(255 255 255 / 10%);
+	}
+`
+
+export const TrackPositioner = styled.div.attrs<{ $position: number }>((props) => ({
+	style: {
+		transform: `translateX(${props.$position}px)`,
+	},
+}))`
+	background: red;
+`

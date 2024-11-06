@@ -22,6 +22,7 @@ import { useTimelineDimensions } from './hooks/useTimelineDimensions'
 import { useTimelineNavigation } from './hooks/useTimelineNavigation'
 import { timelineSlice } from './reducer'
 import { TimelineContainer, TimelineWrapper } from './styles'
+import { TimelineScroll } from './utils/TimelineScroll'
 
 export const Timeline = () => {
 	const { timeOrigin } = useSelector(getWorldState)
@@ -78,6 +79,10 @@ export const Timeline = () => {
 		scaleLevel,
 		timelineScale,
 	})
+
+	useEffect(() => {
+		TimelineScroll.current = scroll
+	}, [scroll])
 
 	const scrollTimelineToTime = useCallback((time: number) => scrollTimelineTo(time), [scrollTimelineTo])
 	const scrollZoomIn = useCallback(() => performZoom(-1), [performZoom])
