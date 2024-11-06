@@ -27,3 +27,21 @@ export const Group = styled.div.attrs<{ $position: number }>((props) => ({
 		z-index: 3;
 	}
 `
+
+export const Chain = styled.div.attrs<{ $position: number }>((props) => ({
+	style: {
+		left: `calc(${props.$position}px)`,
+	},
+}))<{ $position: number }>`
+	display: flex;
+	position: absolute;
+	top: calc(50%);
+	opacity: 0;
+	transition: opacity 0.3s;
+	z-index: 1;
+	pointer-events: none;
+
+	&.visible {
+		opacity: 1;
+	}
+`

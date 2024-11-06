@@ -5,6 +5,7 @@ import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useDragDropStateWithRenders } from '../../../../../dragDrop/DragDropState'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState } from '../../../../selectors'
+import { TimelineChainPositioner } from './components/TimelineChainPositioner/TimelineChainPositioner'
 import { TimelineEventPositioner } from './components/TimelineEventPositioner/TimelineEventPositioner'
 import { TimelineEventTrackTitle } from './components/TimelineEventTrackTitle/TimelineEventTrackTitle'
 import { useEventDragDropReceiver } from './hooks/useEventDragDropReceiver'
@@ -60,6 +61,10 @@ export const TimelineTrackItem = ({
 		],
 	)
 
+	const chainLinks = useMemo(() => {
+		return track.events.filter((event) => event.nextEntity)
+	}, [track.events])
+
 	const { isDragging } = useDragDropStateWithRenders()
 	const { ref } = useEventDragDropReceiver({
 		track,
@@ -82,7 +87,19 @@ export const TimelineTrackItem = ({
 			}}
 		>
 			<Divider sx={{ position: 'absolute', bottom: 0, width: '100%' }} />
-			<TimelineEventTrackTitle track={track} />
+			{track.events.map((event) => (
+				<TimelineChainPositioner
+					key={event.key}
+					entity={event}
+					visible={visible}
+					scroll={scroll}
+					lineSpacing={lineSpacing}
+					timelineScale={timelineScale}
+					containerWidth={containerWidth}
+					highlighted={highlightedEvents.includes(event)}
+					realTimeToScaledTime={realTimeToScaledTime}
+				/>
+			))}
 			{track.events.map((event) => (
 				<TimelineEventPositioner
 					key={event.key}
@@ -96,6 +113,7 @@ export const TimelineTrackItem = ({
 					realTimeToScaledTime={realTimeToScaledTime}
 				/>
 			))}
+			<TimelineEventTrackTitle track={track} />
 		</Stack>
 	)
 }

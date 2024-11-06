@@ -20,7 +20,7 @@ type Props = {
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
-export const TimelineEventPositionerComponent = ({
+const TimelineEventPositionerComponent = ({
 	entity,
 	scroll,
 	lineSpacing,
