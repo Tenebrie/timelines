@@ -38,7 +38,8 @@ const TimelineEventPositionerComponent = ({
 			const roundedValue = Math.floor(posTimestamp / roundingFactor) * roundingFactor
 			return {
 				x: roundedValue + ((entity.markerPosition + TimelineScroll.current) % lineSpacing),
-				y: window.innerHeight - Math.round((window.innerHeight - pos.y + 15 - 25) / 96) * 96 + 34 - 24 - 16,
+				// y: window.innerHeight - Math.round((window.innerHeight - pos.y + 15 - 25) / 96) * 96 + 34 - 24 - 16,
+				y: pos.y,
 			}
 		},
 		ghostFactory: () => (

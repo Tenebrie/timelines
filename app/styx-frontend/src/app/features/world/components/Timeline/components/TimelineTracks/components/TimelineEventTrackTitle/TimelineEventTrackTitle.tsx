@@ -1,4 +1,4 @@
-import { Button } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import { memo, useCallback } from 'react'
 
 import { useModal } from '../../../../../../../modals/reducer'
@@ -21,14 +21,23 @@ export const TimelineEventTrackTitleComponent = ({ track }: Props) => {
 	}, [openEventTrackEdit, openEventTrackWizard, track.baseModel])
 
 	return (
-		<Button sx={{ marginLeft: 4, pointerEvents: 'all' }} onClick={onOpen}>
-			{track.baseModel && (
-				<span>
-					({track.position}) {track.name}
-				</span>
-			)}
-			{!track.baseModel && <span>Create new track...</span>}
-		</Button>
+		<Stack
+			sx={{
+				marginLeft: 1,
+				background: 'rgb(10 10 50 / 100%)',
+				zIndex: 100,
+				borderRadius: 1,
+			}}
+		>
+			<Button sx={{ pointerEvents: 'all' }} onClick={onOpen}>
+				{track.baseModel && (
+					<span>
+						({track.position}) {track.name}
+					</span>
+				)}
+				{!track.baseModel && <span>Create new track...</span>}
+			</Button>
+		</Stack>
 	)
 }
 

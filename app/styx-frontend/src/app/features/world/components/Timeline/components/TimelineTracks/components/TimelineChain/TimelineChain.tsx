@@ -1,20 +1,30 @@
 import { memo } from 'react'
 
 import { hashCode } from '../../../../../../../../utils/hashCode'
+import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
 import { MarkerType, TimelineEntity } from '../../../../../../types'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
+	timelineScale: number
 	highlighted: boolean
+	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
-export const TimelineChainComponent = ({ entity, highlighted }: Props) => {
+export const TimelineChainComponent = ({
+	entity,
+	timelineScale,
+	highlighted,
+	realTimeToScaledTime,
+}: Props) => {
 	if (!entity.nextEntity) {
 		return
 	}
 	const padding = 10
-	const dist = entity.nextEntity.markerPosition - entity.markerPosition + padding - 7
-	const height = -Math.min(dist / 10, 48)
+	const dist =
+		realTimeToScaledTime(entity.nextEntity.markerPosition - entity.markerPosition + padding - 7) /
+		timelineScale
+	const height = -Math.min(dist / 10, 45)
 	const color = hashCode(entity.eventId) % 2 === 0 ? 'rgb(255, 200, 200)' : 'rgb(200, 255, 200)'
 
 	return (

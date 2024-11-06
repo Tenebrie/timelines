@@ -24,7 +24,12 @@ export const TimelineChainPositionerComponent = ({
 
 	return (
 		<Chain $position={position} className={`${visible ? 'visible' : ''}`}>
-			<TimelineChain entity={entity} highlighted={highlighted} />
+			<TimelineChain
+				entity={entity}
+				timelineScale={timelineScale}
+				highlighted={highlighted}
+				realTimeToScaledTime={realTimeToScaledTime}
+			/>
 		</Chain>
 	)
 }

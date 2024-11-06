@@ -15,7 +15,6 @@ type Props = {
 	lineSpacing: number
 	scaleLevel: ScaleLevel
 	timelineScale: number
-	containerWidth: number
 }
 
 export const TimelineTracks = (props: Props) => {
@@ -35,7 +34,7 @@ export const TimelineTracks = (props: Props) => {
 				position: 'absolute',
 				bottom: 25,
 				width: '100%',
-				maxHeight: 'calc(100% - 64px)',
+				maxHeight: 'calc(100% - 72px)',
 				overflowX: 'hidden',
 				overflowY: 'scroll',
 			}}

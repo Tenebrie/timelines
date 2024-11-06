@@ -105,7 +105,9 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		isPreparingToDrag.current = false
 		setGhostElement(null)
 		clearState()
-		window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
+		setTimeout(() => {
+			window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
+		}, 1)
 	}, [clearState])
 
 	const attachEvents = useCallback(() => {

@@ -306,6 +306,7 @@ export const useTimelineNavigation = ({
 			) {
 				return
 			}
+			console.log(window.document.body.classList.contains('mouse-busy'))
 			event.stopPropagation()
 			event.stopImmediatePropagation()
 

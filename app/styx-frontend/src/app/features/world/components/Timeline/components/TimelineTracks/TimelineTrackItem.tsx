@@ -17,7 +17,6 @@ type Props = {
 	timelineScale: number
 	scroll: number
 	visible: boolean
-	containerWidth: number
 	isLocationEqual: ReturnType<typeof useWorldRouter>['isLocationEqual']
 	eventEditorParams: {
 		eventId: string
@@ -35,7 +34,6 @@ export const TimelineTrackItem = ({
 	timelineScale,
 	scroll,
 	visible,
-	containerWidth,
 	isLocationEqual,
 	eventEditorParams,
 	eventDeltaEditorParams,

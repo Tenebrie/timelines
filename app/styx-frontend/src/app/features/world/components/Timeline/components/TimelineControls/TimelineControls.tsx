@@ -1,4 +1,4 @@
-import { ArrowForward, Close, ZoomIn, ZoomOut } from '@mui/icons-material'
+import { Close, ExpandMore, ZoomIn, ZoomOut } from '@mui/icons-material'
 import { Button, Divider, IconButton, Stack } from '@mui/material'
 import { memo } from 'react'
 
@@ -27,7 +27,8 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 		<div
 			style={{
 				position: 'relative',
-				width: 'calc(100%)',
+				width: 'calc(100% - 64px)',
+				padding: '4px 32px',
 			}}
 		>
 			<Stack direction="row" justifyContent="space-between" width="calc(100%-64px)">
@@ -42,9 +43,6 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 					>
 						{timeToLabel(selectedTimeOrNull)}
 					</Button>
-					<IconButton color="secondary" onClick={() => onNavigateToTime(selectedTimeOrNull)}>
-						<ArrowForward />
-					</IconButton>
 					<IconButton color="secondary" onClick={() => navigateToCurrentWorldRoot()}>
 						<Close />
 					</IconButton>
@@ -58,7 +56,18 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 					</Button>
 				</Stack>
 			</Stack>
-			<Divider sx={{ position: 'absolute', bottom: 0, width: '100%' }} />
+			<Divider sx={{ position: 'absolute', left: 0, bottom: 0, width: '100%' }} />
+			<div
+				style={{
+					position: 'absolute',
+					left: '50%',
+					bottom: '18px',
+					width: '100%',
+					height: 1,
+				}}
+			>
+				<ExpandMore />
+			</div>
 			<TimelineEdgeScroll side="left" onClick={scrollTimelineLeft} />
 			<TimelineEdgeScroll side="right" onClick={scrollTimelineRight} />
 		</div>
