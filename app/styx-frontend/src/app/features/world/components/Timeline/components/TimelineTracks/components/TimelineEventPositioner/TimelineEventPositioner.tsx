@@ -32,26 +32,24 @@ const TimelineEventPositionerComponent = ({
 }: Props) => {
 	const { getIconPath } = useEventIcons()
 
-	const adjustPosition = (pos: { x: number; y: number }) => {
-		const roundingFactor = lineSpacing
-		const posTimestamp = pos.x
-		const roundedValue = Math.floor(posTimestamp / roundingFactor) * roundingFactor
-		return {
-			x: roundedValue + ((entity.markerPosition + scroll) % lineSpacing),
-			y: window.innerHeight - Math.round((window.innerHeight - pos.y + 14) / 96) * 96 + 16,
-		}
-	}
-
 	const { ref, isDragging, ghostElement, attachEvents } = useDragDrop({
 		type: 'timelineEvent',
 		params: { event: entity },
-		adjustPosition,
+		adjustPosition: (pos) => {
+			const roundingFactor = lineSpacing
+			const posTimestamp = pos.x
+			const roundedValue = Math.floor(posTimestamp / roundingFactor) * roundingFactor
+			return {
+				x: roundedValue + ((entity.markerPosition + scroll) % lineSpacing),
+				y: window.innerHeight - Math.round((window.innerHeight - pos.y + 15 - 25) / 96) * 96 + 34 - 24 - 16,
+			}
+		},
 		ghostFactory: () => (
 			<>
 				<div
 					style={{
 						height: '100vh',
-						background: 'red',
+						background: 'gray',
 						width: '1px',
 						position: 'absolute',
 						top: 0,
@@ -59,6 +57,7 @@ const TimelineEventPositionerComponent = ({
 					}}
 				></div>
 				<Marker
+					$borderColor="gray"
 					$iconPath={getIconPath(entity.icon)}
 					className={classNames({
 						revoked: entity.markerType === 'revokedAt',

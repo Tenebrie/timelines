@@ -1,16 +1,17 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
+import { useEventBusSubscribe } from '../../../eventBus'
 import { getTimelinePreferences, getUserPreferences } from '../../../preferences/selectors'
 import { darkTheme, lightTheme } from '../../../theming/themes'
+import { useTimelineWorldTime } from '../../../time/hooks/useTimelineWorldTime'
 import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
 import { getWorldState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
 import { TimelineContextMenu } from './components/TimelineContextMenu/TimelineContextMenu'
 import { TimelineControls } from './components/TimelineControls/TimelineControls'
-import { TimelineEdgeScroll } from './components/TimelineEdgeScroll/TimelineEdgeScroll'
 import { TimelineGrabber } from './components/TimelineGrabber/TimelineGrabber'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
 import { TimelineTracks } from './components/TimelineTracks/TimelineTracks'
@@ -55,10 +56,11 @@ export const Timeline = () => {
 	)
 
 	const { containerRef, containerWidth } = useTimelineDimensions()
+	const anotherRef = useRef<HTMLDivElement | null>(null)
 
 	const { scroll, timelineScale, scaleLevel, targetScaleIndex, isSwitchingScale, performZoom } =
 		useTimelineNavigation({
-			containerRef,
+			containerRef: [containerRef, anotherRef],
 			defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
 			scaleLimits: [-1, 7],
 			onClick: (time) => onClick(time),
@@ -81,6 +83,21 @@ export const Timeline = () => {
 	const scrollZoomIn = useCallback(() => performZoom(-1), [performZoom])
 	const scrollZoomOut = useCallback(() => performZoom(1), [performZoom])
 
+	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
+	const onScrollFullPage = useCallback(
+		(side: 'left' | 'right') => {
+			const currentTimestamp = scaledTimeToRealTime(-scroll * timelineScale)
+			const sideScalar = side === 'left' ? -1 : 1
+			scrollTimelineToTime(
+				currentTimestamp +
+					scaledTimeToRealTime((containerWidth * sideScalar + containerWidth / 2) * timelineScale),
+			)
+		},
+		[scaledTimeToRealTime, scroll, timelineScale, scrollTimelineToTime, containerWidth],
+	)
+	useEventBusSubscribe({ event: 'scrollTimelineLeft', callback: () => onScrollFullPage('left') })
+	useEventBusSubscribe({ event: 'scrollTimelineRight', callback: () => onScrollFullPage('right') })
+
 	const containerHeight = useContainerHeight()
 
 	return (
@@ -93,15 +110,13 @@ export const Timeline = () => {
 					backgroundColor: theme.palette.background.paper,
 				}}
 			>
-				<TimelineEdgeScroll
-					side="left"
-					currentScroll={scroll}
-					pageSize={containerWidth}
-					timelineScale={timelineScale}
-					scaleLevel={scaleLevel}
-					scrollTo={scrollTimelineTo}
+				<TimelineControls
+					onNavigateToTime={scrollTimelineToTime}
+					onZoomIn={scrollZoomIn}
+					onZoomOut={scrollZoomOut}
 				/>
 				<TimelineTracks
+					anotherRef={anotherRef}
 					visible={!isSwitchingScale}
 					scroll={scroll}
 					lineSpacing={lineSpacing}
@@ -128,20 +143,7 @@ export const Timeline = () => {
 						transitioning={isSwitchingScale}
 					/>
 				)}
-				<TimelineControls
-					onNavigateToTime={scrollTimelineToTime}
-					onZoomIn={scrollZoomIn}
-					onZoomOut={scrollZoomOut}
-				/>
 				<TimelineGrabber />
-				<TimelineEdgeScroll
-					side="right"
-					currentScroll={scroll}
-					pageSize={containerWidth}
-					timelineScale={timelineScale}
-					scaleLevel={scaleLevel}
-					scrollTo={scrollTimelineTo}
-				/>
 				<TimelineContextMenu />
 			</TimelineContainer>
 		</TimelineWrapper>

@@ -1,5 +1,5 @@
 import { Divider, Stack } from '@mui/material'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useDragDropStateWithRenders } from '../../../../../dragDrop/DragDropState'
@@ -29,7 +29,7 @@ type Props = {
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
-export const TimelineTrackItem = ({
+const TimelineTrackItemComponent = ({
 	track,
 	scroll,
 	lineSpacing,
@@ -78,7 +78,6 @@ export const TimelineTrackItem = ({
 			alignItems="center"
 			sx={{
 				position: 'relative',
-				flexShrink: 0,
 				height: '96px',
 				pointerEvents: isDragging ? 'auto' : 'none',
 				'&:hover': {
@@ -87,7 +86,7 @@ export const TimelineTrackItem = ({
 			}}
 		>
 			<Divider sx={{ position: 'absolute', bottom: 0, width: '100%' }} />
-			{track.events.map((event) => (
+			{chainLinks.map((event) => (
 				<TimelineChainPositioner
 					key={event.key}
 					entity={event}
@@ -117,3 +116,5 @@ export const TimelineTrackItem = ({
 		</Stack>
 	)
 }
+
+export const TimelineTrackItem = memo(TimelineTrackItemComponent)

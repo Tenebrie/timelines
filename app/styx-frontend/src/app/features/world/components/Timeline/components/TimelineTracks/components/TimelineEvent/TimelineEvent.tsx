@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useDoubleClick } from '../../../../../../../../../hooks/useDoubleClick'
 import { useWorldRouter, worldRoutes } from '../../../../../../../../../router/routes/worldRoutes'
+import { hashCode } from '../../../../../../../../utils/hashCode'
 import { isMultiselectClick } from '../../../../../../../../utils/isMultiselectClick'
 import { useEventIcons } from '../../../../../../hooks/useEventIcons'
 import { worldSlice } from '../../../../../../reducer'
@@ -102,12 +103,15 @@ export const TimelineEventComponent = ({ entity, highlighted }: Props) => {
 			''
 		)
 
+	const color = hashCode(entity.eventId) % 2 === 0 ? 'rgb(255, 200, 200)' : 'rgb(200, 255, 200)'
+
 	return (
 		<Marker
 			onClick={onClick}
 			onContextMenu={onContextMenu}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
+			$borderColor={color}
 			className={classNames({
 				selected,
 				edited: entity.id === eventId,

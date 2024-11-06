@@ -6,10 +6,10 @@ export type StoryEventMarkerProps = {
 	expanded: boolean
 }
 
-export const Marker = styled.div<{ $iconPath: string }>`
+export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
 	position: relative;
-	width: 50px;
-	height: 50px;
+	width: 48px;
+	height: 48px;
 	border-radius: 50%;
 	background: #0a1929;
 	cursor: pointer;
@@ -99,6 +99,8 @@ export const Marker = styled.div<{ $iconPath: string }>`
 	&.revoked.highlighted {
 		background-color: rgb(100, 0, 0);
 	}
+
+	outline-color: ${(props) => props.$borderColor} !important;
 `
 
 export const LabelContainer = styled.div`

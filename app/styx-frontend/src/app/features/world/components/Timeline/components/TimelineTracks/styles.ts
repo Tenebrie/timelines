@@ -2,13 +2,14 @@ import styled from 'styled-components'
 
 export const Group = styled.div.attrs<{ $position: number }>((props) => ({
 	style: {
-		left: `calc(${props.$position}px - 29px)`,
+		// left: `calc(${props.$position}px - 29px)`,
+		transform: `translateX(${props.$position - 29}px)`,
 	},
 }))<{ $position: number }>`
 	display: flex;
 	flex-direction: column-reverse;
 	position: absolute;
-	top: calc(50% - 29px);
+	top: calc(50% - 10px);
 	padding: 5px;
 	opacity: 0;
 	transition: opacity 0.3s;
@@ -30,7 +31,8 @@ export const Group = styled.div.attrs<{ $position: number }>((props) => ({
 
 export const Chain = styled.div.attrs<{ $position: number }>((props) => ({
 	style: {
-		left: `calc(${props.$position}px)`,
+		// left: `calc(${props.$position}px)`,
+		transform: `translateX(${props.$position}px)`,
 	},
 }))<{ $position: number }>`
 	display: flex;

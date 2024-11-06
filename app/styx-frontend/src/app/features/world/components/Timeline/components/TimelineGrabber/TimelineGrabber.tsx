@@ -62,9 +62,17 @@ const TimelineGrabberComponent = () => {
 	useEffect(() => {
 		if (isDraggingNow.current && mousePosition !== 0) {
 			setMousePosition(0)
-			dispatch(
-				setTimelineHeight(currentContainerHeight.current - mousePosition + mouseStartingPosition.current),
-			)
+			const safeValue = (() => {
+				const value = currentContainerHeight.current - mousePosition + mouseStartingPosition.current
+				if (value < 260) {
+					return 260
+				}
+				if (value > 800) {
+					return 800
+				}
+				return value
+			})()
+			dispatch(setTimelineHeight(safeValue))
 			mouseStartingPosition.current = mousePosition
 		}
 	}, [dispatch, mousePosition, setTimelineHeight])

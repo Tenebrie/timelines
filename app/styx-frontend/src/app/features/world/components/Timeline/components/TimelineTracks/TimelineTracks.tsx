@@ -9,6 +9,7 @@ import useEventTracks from './hooks/useEventTracks'
 import { TimelineTrackItem } from './TimelineTrackItem'
 
 type Props = {
+	anotherRef: React.RefObject<HTMLDivElement>
 	visible: boolean
 	scroll: number
 	lineSpacing: number
@@ -28,13 +29,15 @@ export const TimelineTracks = (props: Props) => {
 
 	return (
 		<Stack
-			justifyContent="flex-end"
+			ref={props.anotherRef}
 			sx={{
-				position: 'relative',
-				height: 'calc(100%)',
+				display: 'block',
+				position: 'absolute',
+				bottom: 25,
+				width: '100%',
+				maxHeight: 'calc(100% - 64px)',
 				overflowX: 'hidden',
 				overflowY: 'scroll',
-				pointerEvents: 'none',
 			}}
 		>
 			{eventTracks.map((track) => (

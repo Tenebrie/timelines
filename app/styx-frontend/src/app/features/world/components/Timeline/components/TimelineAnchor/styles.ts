@@ -6,7 +6,6 @@ export const TimelineAnchorContainer = styled.div.attrs<{ offset: number }>((pro
 	},
 }))<{ offset: number }>`
 	position: absolute;
-	width: fit-content;
 	bottom: 0;
 `
 

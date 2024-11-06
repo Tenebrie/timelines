@@ -138,7 +138,7 @@ const useEventTracks = () => {
 				baseModel: null,
 			},
 		])
-		.sort((a, b) => b.position - a.position)
+		.sort((a, b) => a.position - b.position)
 		.map((track) => {
 			const events = eventGroups.filter(
 				(event) =>
