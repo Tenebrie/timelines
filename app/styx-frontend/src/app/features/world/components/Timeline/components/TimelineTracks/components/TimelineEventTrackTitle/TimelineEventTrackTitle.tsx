@@ -24,12 +24,11 @@ export const TimelineEventTrackTitleComponent = ({ track }: Props) => {
 		<Stack
 			sx={{
 				marginLeft: 1,
-				background: 'rgb(10 10 50 / 100%)',
 				zIndex: 100,
 				borderRadius: 1,
 			}}
 		>
-			<Button sx={{ pointerEvents: 'all' }} onClick={onOpen}>
+			<Button variant="contained" color="secondary" sx={{ pointerEvents: 'all' }} onClick={onOpen}>
 				{track.baseModel && (
 					<span>
 						({track.position}) {track.name}

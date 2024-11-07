@@ -7,6 +7,8 @@ import {
 } from '../../../../../../../../api/rheaApi'
 import { parseApiResponse } from '../../../../../../../utils/parseApiResponse'
 import { useDragDropReceiver } from '../../../../../../dragDrop/useDragDropReceiver'
+import { getTimelinePreferences } from '../../../../../../preferences/selectors'
+import { useTimelineLevelScalar } from '../../../../../../time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '../../../../../../time/hooks/useTimelineWorldTime'
 import { worldSlice } from '../../../../../reducer'
 import { getTimelineState, getWorldState } from '../../../../../selectors'
@@ -123,19 +125,23 @@ export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
 		],
 	)
 
+	const { getLevelScalar } = useTimelineLevelScalar()
+	const { lineSpacing } = useSelector(getTimelinePreferences)
 	const { ref, getState } = useDragDropReceiver({
 		type: 'timelineEvent',
 		receiverRef,
 		onDrop: async (state) => {
 			const entity = state.params.event
-			const markerRealTime =
+			const roundingFactor = lineSpacing * getLevelScalar(scaleLevel)
+			const realTime =
 				scaledTimeToRealTime(state.targetPos.x - state.targetRootPos.x - 29) + entity.markerPosition
+			const roundedRealTime = Math.round(realTime / roundingFactor) * roundingFactor
 			if (entityIsOfType('issuedAt', entity)) {
-				moveEventIssuedAt(entity, markerRealTime)
+				moveEventIssuedAt(entity, roundedRealTime)
 			} else if (entityIsOfType('revokedAt', entity)) {
-				moveEventRevokedAt(entity, markerRealTime)
+				moveEventRevokedAt(entity, roundedRealTime)
 			} else if (entityIsOfType('deltaState', entity)) {
-				moveEventDeltaState(entity, markerRealTime)
+				moveEventDeltaState(entity, roundedRealTime)
 			}
 		},
 	})

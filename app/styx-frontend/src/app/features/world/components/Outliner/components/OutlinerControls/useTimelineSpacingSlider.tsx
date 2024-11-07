@@ -31,8 +31,6 @@ export const useTimelineSpacingSlider = () => {
 		}
 		const valueSent = Math.round(value * 10 * 10) / 10
 		setLineSpacingBuffer(valueSent)
-		console.log(defaultSpacing)
-		console.log(valueSent)
 		setTimelineSpacingDebounced.current(valueSent)
 	}
 

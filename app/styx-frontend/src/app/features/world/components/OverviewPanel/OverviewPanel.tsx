@@ -155,6 +155,7 @@ export const OverviewPanel = () => {
 	return (
 		<Paper
 			style={{
+				borderRadius: 0,
 				padding: '8px',
 				width: '384px',
 				marginLeft: `${panelOpen ? 0 : -384}px`,

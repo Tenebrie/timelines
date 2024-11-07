@@ -1,5 +1,6 @@
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
 
+import { useCustomTheme } from '../../../../../../../hooks/useCustomTheme'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { ScaleLevel } from '../../types'
@@ -23,10 +24,11 @@ const TimelineAnchorComponent = ({
 	lineSpacing,
 	timelineScale,
 	scaleLevel,
-	visible,
 	scroll,
+	visible,
 	containerWidth,
 }: Props) => {
+	const theme = useCustomTheme()
 	const { parseTime, timeToShortLabel } = useWorldTime()
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel })
 
@@ -46,7 +48,7 @@ const TimelineAnchorComponent = ({
 				lastSeenScroll.current = TimelineScroll.current
 				setScroll(TimelineScroll.current)
 			}
-		}, 2)
+		}, 10)
 		return () => {
 			window.clearInterval(timeout)
 		}
@@ -59,6 +61,7 @@ const TimelineAnchorComponent = ({
 			{dividers.map((_, index) => (
 				<TimelineAnchorLine
 					key={`${index}`}
+					theme={theme}
 					index={index}
 					visible={visible}
 					lineCount={lineCount}

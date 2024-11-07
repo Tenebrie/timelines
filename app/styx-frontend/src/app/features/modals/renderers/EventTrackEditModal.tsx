@@ -1,6 +1,6 @@
 import { Delete, Save } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Button, Stack, TextField, Tooltip } from '@mui/material'
+import { Button, Stack, TextField, Tooltip, Typography } from '@mui/material'
 import { useState } from 'react'
 
 import { useDeleteWorldEventTrackMutation, useUpdateWorldEventTrackMutation } from '../../../../api/rheaApi'
@@ -18,7 +18,6 @@ export const EventTrackEditModal = () => {
 	const { isOpen, target: targetTrack, close } = useModal('eventTrackEdit')
 
 	const [name, setName] = useState('')
-	const [position, setPosition] = useState(0)
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
 
 	const { stateOf, navigateToCurrentWorldRoot } = useWorldRouter()
@@ -29,7 +28,6 @@ export const EventTrackEditModal = () => {
 		onCleanup: () => {
 			if (targetTrack) {
 				setName(targetTrack.name)
-				setPosition(targetTrack.position)
 			}
 			setNameValidationError(null)
 			setDeletionError(null)
@@ -47,7 +45,7 @@ export const EventTrackEditModal = () => {
 				trackId: targetTrack.id,
 				body: {
 					name,
-					position,
+					position: targetTrack.position,
 				},
 			}),
 		)
@@ -99,28 +97,13 @@ export const EventTrackEditModal = () => {
 				type="text"
 				value={name}
 				onChange={(event) => setName(event.target.value)}
-				error={!!nameValidationError}
-				helperText={nameValidationError}
+				error={!!nameValidationError || !!deletionError}
+				helperText={nameValidationError || deletionError}
 				autoFocus
 			/>
-			<TextField
-				type="number"
-				label="Position"
-				value={position}
-				onChange={(e) => setPosition(parseInt(e.target.value))}
-			/>
-			{/* <Stack spacing={2}>
-				<div>
-					Attempting to permanently delete world event '<b>{targetEvent?.name}</b>'. This will also delete all
-					associated data points, if any are present.
-				</div>
-				<div>This action can't be reverted!</div>
-				{deletionError && (
-					<div style={{ color: 'red' }}>
-						Unable to delete: <b>{deletionError}</b>
-					</div>
-				)}
-			</Stack> */}
+			<Stack spacing={2}>
+				<Typography>Deleting a track will safely unassign all events from it.</Typography>
+			</Stack>
 			<ModalFooter>
 				<Stack direction="row-reverse" justifyContent="space-between" width="100%">
 					<Stack direction="row-reverse" spacing={2}>

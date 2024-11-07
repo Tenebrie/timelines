@@ -1,6 +1,6 @@
 import { memo } from 'react'
 
-import { hashCode } from '../../../../../../../../utils/hashCode'
+import { useStringColor } from '../../../../../../../../utils/getStringColor'
 import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
 import { MarkerType, TimelineEntity } from '../../../../../../types'
 
@@ -17,6 +17,7 @@ export const TimelineChainComponent = ({
 	highlighted,
 	realTimeToScaledTime,
 }: Props) => {
+	const { getStringColor } = useStringColor()
 	if (!entity.nextEntity) {
 		return
 	}
@@ -25,7 +26,7 @@ export const TimelineChainComponent = ({
 		realTimeToScaledTime(entity.nextEntity.markerPosition - entity.markerPosition + padding - 7) /
 		timelineScale
 	const height = -Math.min(dist / 10, 45)
-	const color = hashCode(entity.eventId) % 2 === 0 ? 'rgb(255, 200, 200)' : 'rgb(200, 255, 200)'
+	const color = getStringColor(entity.eventId)
 
 	return (
 		<div style={{ pointerEvents: 'none', position: 'absolute', top: -8 - padding - 75, left: 4 - padding }}>

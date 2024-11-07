@@ -1,5 +1,5 @@
-import { Close, ExpandMore, ZoomIn, ZoomOut } from '@mui/icons-material'
-import { Button, Divider, IconButton, Stack } from '@mui/material'
+import { ExpandMore, ZoomIn, ZoomOut } from '@mui/icons-material'
+import { Button, Divider, Stack } from '@mui/material'
 import { memo } from 'react'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
@@ -14,7 +14,7 @@ type Props = {
 }
 
 const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Props) => {
-	const { selectedTimeOrNull, navigateToOutliner, navigateToCurrentWorldRoot } = useWorldRouter()
+	const { selectedTimeOrNull, navigateToOutliner } = useWorldRouter()
 	const { timeToLabel } = useWorldTime()
 	const scrollTimelineLeft = useEventBusDispatch({ event: 'scrollTimelineLeft' })
 	const scrollTimelineRight = useEventBusDispatch({ event: 'scrollTimelineRight' })
@@ -43,9 +43,6 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 					>
 						{timeToLabel(selectedTimeOrNull)}
 					</Button>
-					<IconButton color="secondary" onClick={() => navigateToCurrentWorldRoot()}>
-						<Close />
-					</IconButton>
 				</Stack>
 				<Stack direction="row" gap={0.5}>
 					<Button variant="outlined" color="secondary" onClick={onZoomOut}>
@@ -60,7 +57,7 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 			<div
 				style={{
 					position: 'absolute',
-					left: '50%',
+					left: 'calc(50% - 13px)',
 					bottom: '18px',
 					width: '100%',
 					height: 1,

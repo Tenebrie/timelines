@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { Paper } from '@mui/material'
+import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useCustomTheme } from '../../../../../hooks/useCustomTheme'
 import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
 import { useEventBusSubscribe } from '../../../eventBus'
-import { getTimelinePreferences, getUserPreferences } from '../../../preferences/selectors'
-import { darkTheme, lightTheme } from '../../../theming/themes'
+import { getTimelinePreferences } from '../../../preferences/selectors'
 import { useTimelineWorldTime } from '../../../time/hooks/useTimelineWorldTime'
 import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
 import { getWorldState } from '../../selectors'
@@ -27,8 +28,7 @@ import { TimelineScroll } from './utils/TimelineScroll'
 export const Timeline = () => {
 	const { timeOrigin } = useSelector(getWorldState)
 	const { lineSpacing } = useSelector(getTimelinePreferences)
-	const { colorMode } = useSelector(getUserPreferences)
-	const theme = useMemo(() => (colorMode === 'light' ? lightTheme : darkTheme), [colorMode])
+	const theme = useCustomTheme()
 
 	const dispatch = useDispatch()
 	const { setScaleLevel } = timelineSlice.actions
@@ -106,50 +106,53 @@ export const Timeline = () => {
 	const containerHeight = useContainerHeight()
 
 	return (
-		<TimelineWrapper>
-			<TimelineContainer
-				ref={containerRef}
-				onContextMenu={onContextMenu}
-				$height={containerHeight}
-				style={{
-					backgroundColor: theme.palette.background.paper,
-				}}
-			>
-				<TimelineControls
-					onNavigateToTime={scrollTimelineToTime}
-					onZoomIn={scrollZoomIn}
-					onZoomOut={scrollZoomOut}
-				/>
-				<TimelineTracks
-					anotherRef={anotherRef}
-					visible={!isSwitchingScale}
-					scroll={scroll}
-					lineSpacing={lineSpacing}
-					scaleLevel={scaleLevel}
-					timelineScale={timelineScale}
-				/>
-				<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
-				<TimelineAnchor
-					visible={!isSwitchingScale}
-					scroll={scroll}
-					lineSpacing={lineSpacing}
-					timelineScale={timelineScale}
-					scaleLevel={scaleLevel}
-					containerWidth={containerWidth}
-				/>
-				{selectedTimeOrNull !== null && (
-					<TimeMarker
-						timestamp={selectedTimeOrNull}
-						timelineScale={timelineScale}
-						scroll={scroll}
-						mode="mouse"
-						scaleLevel={scaleLevel}
-						transitioning={isSwitchingScale}
+		<Paper>
+			<TimelineWrapper>
+				<TimelineContainer
+					ref={containerRef}
+					onContextMenu={onContextMenu}
+					$theme={theme}
+					$height={containerHeight}
+					style={{
+						backgroundColor: theme.custom.palette.background.timeline,
+					}}
+				>
+					<TimelineControls
+						onNavigateToTime={scrollTimelineToTime}
+						onZoomIn={scrollZoomIn}
+						onZoomOut={scrollZoomOut}
 					/>
-				)}
-				<TimelineGrabber />
-				<TimelineContextMenu />
-			</TimelineContainer>
-		</TimelineWrapper>
+					<TimelineTracks
+						anotherRef={anotherRef}
+						visible={!isSwitchingScale}
+						scroll={scroll}
+						lineSpacing={lineSpacing}
+						scaleLevel={scaleLevel}
+						timelineScale={timelineScale}
+					/>
+					<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
+					<TimelineAnchor
+						visible={!isSwitchingScale}
+						scroll={scroll}
+						lineSpacing={lineSpacing}
+						timelineScale={timelineScale}
+						scaleLevel={scaleLevel}
+						containerWidth={containerWidth}
+					/>
+					{selectedTimeOrNull !== null && (
+						<TimeMarker
+							timestamp={selectedTimeOrNull}
+							timelineScale={timelineScale}
+							scroll={scroll}
+							mode="mouse"
+							scaleLevel={scaleLevel}
+							transitioning={isSwitchingScale}
+						/>
+					)}
+					<TimelineGrabber />
+					<TimelineContextMenu />
+				</TimelineContainer>
+			</TimelineWrapper>
+		</Paper>
 	)
 }

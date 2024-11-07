@@ -4,6 +4,7 @@ import { RedisService } from '@src/services/RedisService'
 import { WorldEventTrackService } from '@src/services/WorldEventTrackService'
 import {
 	BooleanValidator,
+	OptionalParam,
 	PathParam,
 	RequiredParam,
 	Router,
@@ -56,7 +57,7 @@ router.post('/api/world/:worldId/event-track', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		name: RequiredParam(NameStringValidator),
-		position: RequiredParam(NonNegativeIntegerValidator),
+		position: OptionalParam(NonNegativeIntegerValidator),
 		assignOrphans: RequiredParam(BooleanValidator),
 	})
 
@@ -94,8 +95,8 @@ router.patch('/api/world/:worldId/event-track/:trackId', async (ctx) => {
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
 	const params = useRequestBody(ctx, {
-		name: RequiredParam(NameStringValidator),
-		position: RequiredParam(NonNegativeIntegerValidator),
+		name: OptionalParam(NameStringValidator),
+		position: OptionalParam(NonNegativeIntegerValidator),
 	})
 
 	const { eventTrack, world } = await WorldEventTrackService.updateEventTrack({

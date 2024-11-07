@@ -1,6 +1,6 @@
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Button, TextField, Tooltip } from '@mui/material'
+import { Button, Checkbox, FormControlLabel, FormGroup, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
 
 import { useCreateWorldEventTrackMutation } from '../../../../api/rheaApi'
@@ -14,7 +14,7 @@ export const EventTrackWizardModal = () => {
 	const { isOpen, close } = useModal('eventTrackWizard')
 
 	const [name, setName] = useState('')
-	const [position, setPosition] = useState(0)
+	const [assignOrphans, setAssignOrphans] = useState(true)
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
 
 	const [createWorldEventTrack, { isLoading }] = useCreateWorldEventTrackMutation()
@@ -30,7 +30,7 @@ export const EventTrackWizardModal = () => {
 		isOpen,
 		onCleanup: () => {
 			setName('')
-			setPosition(0)
+			setAssignOrphans(true)
 			setNameValidationError(null)
 		},
 	})
@@ -50,8 +50,7 @@ export const EventTrackWizardModal = () => {
 				worldId,
 				body: {
 					name: name.trim(),
-					position,
-					assignOrphans: true,
+					assignOrphans,
 				},
 			}),
 		)
@@ -79,12 +78,12 @@ export const EventTrackWizardModal = () => {
 				helperText={nameValidationError}
 				autoFocus
 			/>
-			<TextField
-				type="number"
-				label="Position"
-				value={position}
-				onChange={(e) => setPosition(parseInt(e.target.value))}
-			/>
+			<FormGroup>
+				<FormControlLabel
+					control={<Checkbox checked={assignOrphans} onChange={(_, checked) => setAssignOrphans(checked)} />}
+					label="Assign orphan events to new track"
+				/>
+			</FormGroup>
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">
 					<span>

@@ -1,11 +1,12 @@
+import { PaletteMode } from '@mui/material'
 import styled from 'styled-components'
 
-export const Container = styled.div`
+export const Container = styled.div<{ $theme: PaletteMode }>`
 	position: absolute;
 	top: 0;
 	height: 100%;
 	width: 24px;
-	background: rgba(255, 255, 255, 0.05);
+	background: ${(props) => (props.$theme === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)')};
 	transition: background 0.3s;
 
 	&.left {
@@ -19,6 +20,9 @@ export const Container = styled.div`
 	}
 
 	&:hover {
-		background: rgba(255, 255, 255, 0.2);
+		background: ${(props) => (props.$theme === 'dark' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)')};
+	}
+	&:active {
+		background: ${(props) => (props.$theme === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)')};
 	}
 `

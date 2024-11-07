@@ -108,10 +108,9 @@ export const LabelContainer = styled.div`
 	display: flex;
 	align-items: center;
 	width: 250px;
-	left: calc(100% + 4px);
-	top: 0;
-	height: 100%;
-	z-index: 1;
+	left: 0%;
+	bottom: calc(100% + 8px);
+	z-index: 10;
 	pointer-events: none;
 `
 

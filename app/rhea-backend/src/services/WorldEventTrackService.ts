@@ -17,13 +17,20 @@ export const WorldEventTrackService = {
 		data,
 	}: {
 		worldId: string
-		data: Omit<WorldEventTrack, 'id' | 'worldId' | 'createdAt' | 'updatedAt'>
+		data: Omit<WorldEventTrack, 'id' | 'worldId' | 'createdAt' | 'updatedAt' | 'position'> & {
+			position?: number
+		}
 	}) => {
+		const trackCount = await getPrismaClient().worldEventTrack.count({
+			where: {
+				worldId,
+			},
+		})
 		const [eventTrack, world] = await getPrismaClient().$transaction([
 			getPrismaClient().worldEventTrack.create({
 				data: {
 					name: data.name,
-					position: data.position,
+					position: data.position ?? trackCount,
 					worldId,
 				},
 				select: {

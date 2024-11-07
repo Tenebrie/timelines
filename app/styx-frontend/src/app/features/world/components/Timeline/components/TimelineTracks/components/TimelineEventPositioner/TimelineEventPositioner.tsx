@@ -44,7 +44,7 @@ const TimelineEventPositionerComponent = ({
 		},
 		ghostFactory: () => (
 			<>
-				<div
+				{/* <div
 					style={{
 						height: '100vh',
 						background: 'gray',
@@ -52,8 +52,9 @@ const TimelineEventPositionerComponent = ({
 						position: 'absolute',
 						top: 0,
 						left: '50%',
+						overflow: 'hidden',
 					}}
-				></div>
+				></div> */}
 				<Marker
 					$borderColor="gray"
 					$iconPath={getIconPath(entity.icon)}

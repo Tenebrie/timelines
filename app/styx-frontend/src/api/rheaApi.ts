@@ -619,7 +619,7 @@ export type CreateWorldEventTrackApiArg = {
 	worldId: string
 	body: {
 		name: string
-		position: number
+		position?: number
 		assignOrphans: boolean
 	}
 }
@@ -632,8 +632,8 @@ export type UpdateWorldEventTrackApiArg = {
 	/** Any string value */
 	trackId: string
 	body: {
-		name: string
-		position: number
+		name?: string
+		position?: number
 	}
 }
 export type DeleteWorldEventTrackApiResponse = /** status 200  */ {

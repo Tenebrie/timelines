@@ -36,7 +36,7 @@ export const TimelineTracks = (props: Props) => {
 				width: '100%',
 				maxHeight: 'calc(100% - 72px)',
 				overflowX: 'hidden',
-				overflowY: 'scroll',
+				overflowY: 'auto',
 			}}
 		>
 			{eventTracks.map((track) => (

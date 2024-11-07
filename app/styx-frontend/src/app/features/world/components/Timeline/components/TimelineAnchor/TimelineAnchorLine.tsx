@@ -1,5 +1,6 @@
 import { memo, useCallback, useMemo } from 'react'
 
+import { CustomTheme } from '../../../../../../../hooks/useCustomTheme'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { ScaleLevel } from '../../types'
@@ -28,6 +29,8 @@ const getLoop = ({
 	)
 
 type Props = {
+	// Theme to use for styling
+	theme: CustomTheme
 	// Raw index of the anchor line
 	index: number
 	// Total number of the anchor lines
@@ -52,6 +55,7 @@ type Props = {
 
 const TimelineAnchorLineComponent = (props: Props) => {
 	const {
+		theme,
 		index: rawIndex,
 		lineCount,
 		timelineScale,
@@ -218,6 +222,7 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		<DividerContainer key={rawIndex} offset={dividerPosition} className={visible ? 'visible' : ''}>
 			{!!labelSize && (
 				<DividerLabel
+					$theme={theme}
 					style={{
 						fontWeight: labelSize === 'large' ? 600 : labelSize === 'medium' ? 600 : 400,
 					}}
@@ -234,6 +239,7 @@ export const TimelineAnchorLine = memo(
 	TimelineAnchorLineComponent,
 	(a, b) =>
 		getLoop(a) === getLoop(b) &&
+		a.theme === b.theme &&
 		a.timelineScale === b.timelineScale &&
 		a.visible === b.visible &&
 		a.lineSpacing === b.lineSpacing &&
