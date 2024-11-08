@@ -12,6 +12,7 @@ type Props<T extends AllowedDraggableType> = {
 		pos: { x: number; y: number },
 		startingPos: { x: number; y: number },
 	) => { x: number; y: number }
+	disabled?: boolean
 }
 
 export const useDragDrop = <T extends AllowedDraggableType>({
@@ -19,6 +20,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 	params,
 	ghostFactory,
 	adjustPosition,
+	disabled,
 }: Props<T>) => {
 	const isDraggingNow = useRef(false)
 	const isPreparingToDrag = useRef(false)
@@ -112,7 +114,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 
 	const attachEvents = useCallback(() => {
 		const container = containerRef.current
-		if (!container) {
+		if (!container || disabled) {
 			return
 		}
 
@@ -121,13 +123,16 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		return () => {
 			container.removeEventListener('mousedown', onMouseDown)
 		}
-	}, [containerRef, onMouseDown])
+	}, [containerRef, onMouseDown, disabled])
 
 	useEffect(() => {
 		attachEvents()
 	}, [attachEvents])
 
 	useEffect(() => {
+		if (disabled) {
+			return
+		}
 		window.addEventListener('mouseup', onMouseUp)
 		window.addEventListener('mousemove', onMouseMove)
 
@@ -135,7 +140,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 			window.removeEventListener('mouseup', onMouseUp)
 			window.removeEventListener('mousemove', onMouseMove)
 		}
-	}, [onMouseMove, onMouseUp])
+	}, [onMouseMove, onMouseUp, disabled])
 
 	return {
 		ref: containerRef,

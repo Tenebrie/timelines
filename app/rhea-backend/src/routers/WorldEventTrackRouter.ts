@@ -110,6 +110,35 @@ router.patch('/api/world/:worldId/event-track/:trackId', async (ctx) => {
 	return eventTrack
 })
 
+router.post('/api/world/:worldId/event-track/swap', async (ctx) => {
+	useApiEndpoint({
+		name: 'swapWorldEventTracks',
+		description: 'Swaps the position of two given tracks.',
+		tags: [worldEventTracksTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+	})
+
+	await AuthorizationService.checkUserWriteAccessById(user, worldId)
+
+	const params = useRequestBody(ctx, {
+		trackA: RequiredParam(StringValidator),
+		trackB: RequiredParam(StringValidator),
+	})
+
+	const { world } = await WorldEventTrackService.swapEventTracks({
+		worldId,
+		trackIdA: params.trackA,
+		trackIdB: params.trackB,
+	})
+
+	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+})
+
 router.delete('/api/world/:worldId/event-track/:trackId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteWorldEventTrack',

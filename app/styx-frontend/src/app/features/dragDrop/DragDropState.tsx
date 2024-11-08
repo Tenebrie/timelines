@@ -71,3 +71,10 @@ export const useDragDropStateWithRenders = () => {
 		},
 	}
 }
+
+export const IsDragDropStateOfType = <T extends AllowedDraggableType>(
+	state: DragDropStateType<AllowedDraggableType> | null,
+	type: T,
+): state is DragDropStateType<T> => {
+	return state?.type === type
+}

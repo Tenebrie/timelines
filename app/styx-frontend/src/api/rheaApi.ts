@@ -176,6 +176,14 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldEventTracks'],
 			}),
+			swapWorldEventTracks: build.mutation<SwapWorldEventTracksApiResponse, SwapWorldEventTracksApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event-track/swap`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldEventTracks'],
+			}),
 			getWorlds: build.query<GetWorldsApiResponse, GetWorldsApiArg>({
 				query: () => ({ url: `/api/worlds` }),
 				providesTags: ['worldList'],
@@ -650,6 +658,15 @@ export type DeleteWorldEventTrackApiArg = {
 	/** Any string value */
 	trackId: string
 }
+export type SwapWorldEventTracksApiResponse = unknown
+export type SwapWorldEventTracksApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		trackA: string
+		trackB: string
+	}
+}
 export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
 		collaborators: {
@@ -911,6 +928,7 @@ export const {
 	useCreateWorldEventTrackMutation,
 	useUpdateWorldEventTrackMutation,
 	useDeleteWorldEventTrackMutation,
+	useSwapWorldEventTracksMutation,
 	useGetWorldsQuery,
 	useLazyGetWorldsQuery,
 	useCreateWorldMutation,

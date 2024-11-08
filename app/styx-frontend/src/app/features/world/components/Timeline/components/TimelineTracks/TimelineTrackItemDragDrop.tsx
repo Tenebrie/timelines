@@ -1,9 +1,10 @@
 import { Stack } from '@mui/material'
-import { memo, useEffect } from 'react'
+import { memo, useEffect, useMemo } from 'react'
 
-import { useDragDropStateWithRenders } from '../../../../../dragDrop/DragDropState'
+import { IsDragDropStateOfType, useDragDropStateWithRenders } from '../../../../../dragDrop/DragDropState'
 import { useEventDragDropReceiver } from './hooks/useEventDragDropReceiver'
 import { TimelineTrack } from './hooks/useEventTracks'
+import { useTrackDragDropReceiver } from './hooks/useTrackDragDropReceiver'
 
 type Props = {
 	track: TimelineTrack
@@ -12,15 +13,29 @@ type Props = {
 }
 
 const TimelineTrackItemDragDropComponent = ({ track, receiverRef, onDragChanged }: Props) => {
-	const { isDragging } = useDragDropStateWithRenders()
+	const { isDragging, state } = useDragDropStateWithRenders()
+
+	const isHighlighted = useMemo(
+		() =>
+			isDragging &&
+			state &&
+			(state.type === 'timelineEvent' ||
+				(IsDragDropStateOfType(state, 'timelineTrack') && !!track.baseModel)),
+		[isDragging, state, track.baseModel],
+	)
+
 	useEventDragDropReceiver({
+		track,
+		receiverRef,
+	})
+	useTrackDragDropReceiver({
 		track,
 		receiverRef,
 	})
 
 	useEffect(() => {
-		onDragChanged(isDragging)
-	}, [isDragging, onDragChanged])
+		onDragChanged(isHighlighted ?? false)
+	}, [isHighlighted, onDragChanged])
 
 	return (
 		<Stack
@@ -28,7 +43,7 @@ const TimelineTrackItemDragDropComponent = ({ track, receiverRef, onDragChanged 
 				position: 'absolute',
 				width: '100%',
 				height: '100%',
-				pointerEvents: isDragging ? 'auto' : 'none',
+				pointerEvents: isHighlighted ? 'auto' : 'none',
 			}}
 		/>
 	)

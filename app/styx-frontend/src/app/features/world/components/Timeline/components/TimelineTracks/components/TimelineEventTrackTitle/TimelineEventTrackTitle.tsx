@@ -1,6 +1,7 @@
 import { Button, Stack } from '@mui/material'
 import { memo, useCallback } from 'react'
 
+import { useDragDrop } from '../../../../../../../dragDrop/useDragDrop'
 import { useModal } from '../../../../../../../modals/reducer'
 import useEventTracks from '../../hooks/useEventTracks'
 
@@ -20,9 +21,26 @@ export const TimelineEventTrackTitleComponent = ({ track }: Props) => {
 		openEventTrackEdit({ target: track.baseModel })
 	}, [openEventTrackEdit, openEventTrackWizard, track.baseModel])
 
+	const { ref, ghostElement } = useDragDrop({
+		type: 'timelineTrack',
+		params: { track },
+		ghostFactory: () => (
+			<Button variant="contained" color="secondary" style={{ opacity: 0.5 }}>
+				{track.baseModel && (
+					<span>
+						({track.position}) {track.name}
+					</span>
+				)}
+			</Button>
+		),
+		disabled: !track.baseModel,
+	})
+
 	return (
 		<Stack
+			ref={ref}
 			sx={{
+				position: 'relative',
 				marginLeft: 1,
 				zIndex: 100,
 				borderRadius: 1,
@@ -36,6 +54,7 @@ export const TimelineEventTrackTitleComponent = ({ track }: Props) => {
 				)}
 				{!track.baseModel && <span>Create new track...</span>}
 			</Button>
+			{ghostElement}
 		</Stack>
 	)
 }

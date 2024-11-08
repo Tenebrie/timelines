@@ -90,6 +90,60 @@ export const WorldEventTrackService = {
 		}
 	},
 
+	swapEventTracks: async ({
+		worldId,
+		trackIdA,
+		trackIdB,
+	}: {
+		worldId: string
+		trackIdA: string
+		trackIdB: string
+	}) => {
+		const [trackA, trackB] = await Promise.all([
+			getPrismaClient().worldEventTrack.findFirst({
+				where: {
+					id: trackIdA,
+				},
+				select: {
+					position: true,
+				},
+			}),
+			getPrismaClient().worldEventTrack.findFirst({
+				where: {
+					id: trackIdB,
+				},
+				select: {
+					position: true,
+				},
+			}),
+		])
+
+		if (!trackA || !trackB) {
+			throw new Error('One of the tracks does not exist')
+		}
+
+		const [, , world] = await getPrismaClient().$transaction([
+			getPrismaClient().worldEventTrack.update({
+				where: {
+					id: trackIdA,
+				},
+				data: {
+					position: trackB.position,
+				},
+			}),
+			getPrismaClient().worldEventTrack.update({
+				where: {
+					id: trackIdB,
+				},
+				data: {
+					position: trackA.position,
+				},
+			}),
+			makeTouchWorldQuery(worldId),
+		])
+		return { world }
+	},
+
 	deleteEventTrack: async ({ worldId, trackId }: { worldId: string; trackId: string }) => {
 		const [, eventTrack, world] = await getPrismaClient().$transaction([
 			getPrismaClient().worldEvent.updateMany({
