@@ -5,7 +5,7 @@ import { StyledListItemButton, ZebraWrapper } from '../Outliner/styles'
 
 export const EmptyStatementListRenderer = () => {
 	return (
-		<ZebraWrapper zebra>
+		<ZebraWrapper $zebra>
 			<StyledListItemButton selected={false}>
 				<ListItemText
 					primary={<Typography sx={{ fontSize: 16 }}>No content to show!</Typography>}

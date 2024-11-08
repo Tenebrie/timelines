@@ -22,6 +22,7 @@ import {
 import { parseActorList } from './utils/parseActorList'
 import { ContentStringValidator } from './validators/ContentStringValidator'
 import { NameStringValidator } from './validators/NameStringValidator'
+import { NullableNameStringValidator } from './validators/NullableNameStringValidator'
 import { NullableUuidStringValidator } from './validators/NullableUuidStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator'
@@ -251,8 +252,8 @@ router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		timestamp: RequiredParam(BigIntValidator),
-		name: RequiredParam(OptionalNameStringValidator),
-		description: RequiredParam(OptionalNameStringValidator),
+		name: RequiredParam(NullableNameStringValidator),
+		description: RequiredParam(NullableNameStringValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -286,8 +287,8 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 
 	const params = useRequestBody(ctx, {
 		timestamp: OptionalParam(BigIntValidator),
-		name: OptionalParam(OptionalNameStringValidator),
-		description: OptionalParam(OptionalNameStringValidator),
+		name: OptionalParam(NullableNameStringValidator),
+		description: OptionalParam(NullableNameStringValidator),
 		worldEventTrackId: OptionalParam(NullableUuidStringValidator),
 	})
 
