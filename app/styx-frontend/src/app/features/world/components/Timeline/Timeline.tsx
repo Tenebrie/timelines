@@ -62,6 +62,7 @@ export const Timeline = () => {
 		containerRef: [containerRef, anotherRef],
 		defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
 		scaleLimits: [0, 7],
+		selectedTime: selectedTimeOrNull,
 		onClick: (time) => onClick(time),
 		onDoubleClick: (time) => onDoubleClick(time),
 	})

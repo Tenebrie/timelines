@@ -18,6 +18,7 @@ import { useTimelineScroll } from './useTimelineScroll'
 type Props = {
 	containerRef: React.MutableRefObject<HTMLDivElement | null>[]
 	defaultScroll: number
+	selectedTime: number | null
 	scaleLimits: [number, number]
 	onClick: (time: number) => void
 	onDoubleClick: (time: number) => void
@@ -26,6 +27,7 @@ type Props = {
 export const useTimelineNavigation = ({
 	containerRef,
 	defaultScroll,
+	selectedTime: defaultSelectedTime,
 	scaleLimits,
 	onClick,
 	onDoubleClick,
@@ -37,6 +39,7 @@ export const useTimelineNavigation = ({
 	const [mousePos, setMousePos] = useState<Position>({ x: 0, y: 0 })
 	const [isDragging, setDragging] = useState(false)
 	const [canClick, setCanClick] = useState(true)
+	const [selectedTime, setSelectedTime] = useState<number | null>(defaultSelectedTime)
 	const boundingRectTop = useRef(0)
 	const boundingRectLeft = useRef(0)
 
@@ -136,8 +139,8 @@ export const useTimelineNavigation = ({
 
 		setScaleSwitchesToDo(0)
 		setReadyToSwitchScale(false)
-		const containerCenter = (containerRef[0].current?.getBoundingClientRect().width ?? 0) / 2
-		const scrollIntoPos = isScrollUsingMouse ? mousePos.x : containerCenter
+		// const containerCenter = Math.floor((containerRef[0].current?.getBoundingClientRect().width ?? 0) / 2)
+		const scrollIntoPos = Math.round(realTimeToScaledTime(selectedTime ?? 0) + scroll)
 
 		let currentScaleScroll = scaleScroll
 		let currentTimePerPixel: number = 0
@@ -200,8 +203,10 @@ export const useTimelineNavigation = ({
 		scaleScroll,
 		scaleSwitchesToDo,
 		scaledTimeToRealTime,
+		realTimeToScaledTime,
 		scroll,
 		setScroll,
+		selectedTime,
 	])
 
 	/**
@@ -311,14 +316,14 @@ export const useTimelineNavigation = ({
 			}
 
 			const clickOffset = Math.round((point.x - scroll) / lineSpacing) * lineSpacing
-			let selectedTime = scaledTimeToRealTime(clickOffset)
+			let newSelectedTime = scaledTimeToRealTime(clickOffset)
 			// For scaleLevel = 4, round to the nearest month
 			if (scaleLevel === 4) {
-				const t = parseTime(selectedTime)
+				const t = parseTime(newSelectedTime)
 				if (t.day >= 15) {
 					t.monthIndex += 1
 				}
-				selectedTime = pickerToTimestamp({
+				newSelectedTime = pickerToTimestamp({
 					day: 0,
 					hour: 0,
 					minute: 0,
@@ -327,6 +332,7 @@ export const useTimelineNavigation = ({
 					year: t.year,
 				})
 			}
+			setSelectedTime(newSelectedTime)
 
 			const currentTime = Date.now()
 			if (
@@ -335,11 +341,11 @@ export const useTimelineNavigation = ({
 				currentTime - lastClickTime > 500 ||
 				Math.abs(point.x - lastClickPos) > 5
 			) {
-				onClick(selectedTime)
+				onClick(newSelectedTime)
 				setLastClickPos(point.x)
 				setLastClickTime(currentTime)
 			} else {
-				onDoubleClick(selectedTime)
+				onDoubleClick(newSelectedTime)
 			}
 		},
 		[
