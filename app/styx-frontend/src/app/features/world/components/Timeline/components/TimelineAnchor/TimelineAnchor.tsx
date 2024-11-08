@@ -15,28 +15,18 @@ type Props = {
 	visible: boolean
 	scroll: number
 	lineSpacing: number
-	timelineScale: number
 	scaleLevel: ScaleLevel
 	containerWidth: number
 }
 
-const TimelineAnchorComponent = ({
-	lineSpacing,
-	timelineScale,
-	scaleLevel,
-	scroll,
-	visible,
-	containerWidth,
-}: Props) => {
+const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, containerWidth }: Props) => {
 	const theme = useCustomTheme()
 	const { parseTime, timeToShortLabel } = useWorldTime()
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel })
 
 	const lineCount = useMemo(
-		() =>
-			Math.ceil((containerWidth / lineSpacing) * timelineScale) +
-			Math.ceil(TimelineAnchorPadding / lineSpacing) * 2,
-		[containerWidth, lineSpacing, timelineScale],
+		() => Math.ceil(containerWidth / lineSpacing) + Math.ceil(TimelineAnchorPadding / lineSpacing) * 2,
+		[containerWidth, lineSpacing],
 	)
 
 	const lastSeenScroll = useRef(0)
@@ -66,7 +56,6 @@ const TimelineAnchorComponent = ({
 					visible={visible}
 					lineCount={lineCount}
 					lineSpacing={lineSpacing}
-					timelineScale={timelineScale}
 					scaleLevel={scaleLevel}
 					timelineScroll={scroll}
 					parseTime={parseTime}

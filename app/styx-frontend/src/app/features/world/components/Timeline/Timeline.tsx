@@ -59,14 +59,13 @@ export const Timeline = () => {
 	const { containerRef, containerWidth } = useTimelineDimensions()
 	const anotherRef = useRef<HTMLDivElement | null>(null)
 
-	const { scroll, timelineScale, scaleLevel, targetScaleIndex, isSwitchingScale, performZoom } =
-		useTimelineNavigation({
-			containerRef: [containerRef, anotherRef],
-			defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
-			scaleLimits: [-1, 7],
-			onClick: (time) => onClick(time),
-			onDoubleClick: (time) => onDoubleClick(time),
-		})
+	const { scroll, scaleLevel, targetScaleIndex, isSwitchingScale, performZoom } = useTimelineNavigation({
+		containerRef: [containerRef, anotherRef],
+		defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
+		scaleLimits: [0, 7],
+		onClick: (time) => onClick(time),
+		onDoubleClick: (time) => onDoubleClick(time),
+	})
 
 	useScrollToActiveEntity()
 
@@ -77,7 +76,6 @@ export const Timeline = () => {
 	const { onContextMenu } = useTimelineContextMenu({
 		scroll,
 		scaleLevel,
-		timelineScale,
 	})
 
 	useEffect(() => {
@@ -91,14 +89,13 @@ export const Timeline = () => {
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 	const onScrollFullPage = useCallback(
 		(side: 'left' | 'right') => {
-			const currentTimestamp = scaledTimeToRealTime(-scroll * timelineScale)
+			const currentTimestamp = scaledTimeToRealTime(-scroll)
 			const sideScalar = side === 'left' ? -1 : 1
 			scrollTimelineToTime(
-				currentTimestamp +
-					scaledTimeToRealTime((containerWidth * sideScalar + containerWidth / 2) * timelineScale),
+				currentTimestamp + scaledTimeToRealTime(containerWidth * sideScalar + containerWidth / 2),
 			)
 		},
-		[scaledTimeToRealTime, scroll, timelineScale, scrollTimelineToTime, containerWidth],
+		[scaledTimeToRealTime, scroll, scrollTimelineToTime, containerWidth],
 	)
 	useEventBusSubscribe({ event: 'scrollTimelineLeft', callback: () => onScrollFullPage('left') })
 	useEventBusSubscribe({ event: 'scrollTimelineRight', callback: () => onScrollFullPage('right') })
@@ -128,7 +125,6 @@ export const Timeline = () => {
 						scroll={scroll}
 						lineSpacing={lineSpacing}
 						scaleLevel={scaleLevel}
-						timelineScale={timelineScale}
 						containerWidth={containerWidth}
 					/>
 					<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
@@ -136,14 +132,12 @@ export const Timeline = () => {
 						visible={!isSwitchingScale}
 						scroll={scroll}
 						lineSpacing={lineSpacing}
-						timelineScale={timelineScale}
 						scaleLevel={scaleLevel}
 						containerWidth={containerWidth}
 					/>
 					{selectedTimeOrNull !== null && (
 						<TimeMarker
 							timestamp={selectedTimeOrNull}
-							timelineScale={timelineScale}
 							scroll={scroll}
 							mode="mouse"
 							scaleLevel={scaleLevel}

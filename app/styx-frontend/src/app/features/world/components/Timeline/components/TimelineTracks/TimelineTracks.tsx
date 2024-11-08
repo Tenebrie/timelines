@@ -14,7 +14,6 @@ type Props = {
 	scroll: number
 	lineSpacing: number
 	scaleLevel: ScaleLevel
-	timelineScale: number
 	containerWidth: number
 }
 

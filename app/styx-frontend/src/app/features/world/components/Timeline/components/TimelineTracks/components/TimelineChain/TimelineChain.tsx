@@ -6,25 +6,17 @@ import { MarkerType, TimelineEntity } from '../../../../../../types'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
-	timelineScale: number
 	highlighted: boolean
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
-export const TimelineChainComponent = ({
-	entity,
-	timelineScale,
-	highlighted,
-	realTimeToScaledTime,
-}: Props) => {
+export const TimelineChainComponent = ({ entity, highlighted, realTimeToScaledTime }: Props) => {
 	const { getStringColor } = useStringColor()
 	if (!entity.nextEntity) {
 		return
 	}
 	const padding = 10
-	const dist =
-		realTimeToScaledTime(entity.nextEntity.markerPosition - entity.markerPosition + padding - 7) /
-		timelineScale
+	const dist = realTimeToScaledTime(entity.nextEntity.markerPosition - entity.markerPosition + padding - 7)
 	const height = -Math.min(dist / 10, 45)
 	const color = getStringColor(entity.eventId)
 

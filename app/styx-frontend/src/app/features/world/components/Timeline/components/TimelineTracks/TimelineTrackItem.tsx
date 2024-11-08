@@ -15,7 +15,6 @@ import { TimelineTrackItemDragDrop } from './TimelineTrackItemDragDrop'
 type Props = {
 	track: ReturnType<typeof useEventTracks>[number]
 	lineSpacing: number
-	timelineScale: number
 	scroll: number
 	visible: boolean
 	containerWidth: number
@@ -33,7 +32,6 @@ type Props = {
 export const TimelineTrackItem = ({
 	track,
 	lineSpacing,
-	timelineScale,
 	scroll,
 	visible,
 	containerWidth,
@@ -72,7 +70,7 @@ export const TimelineTrackItem = ({
 			(t: TimelineTrack, scr: number, width: number, realTimeToScaledTime: Props['realTimeToScaledTime']) => {
 				setVisibleEvents(
 					t.events.filter((event) => {
-						const position = realTimeToScaledTime(Math.floor(event.markerPosition) / timelineScale) + scr
+						const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + scr
 						return position >= -250 && position <= width + 250
 					}),
 				)
@@ -100,7 +98,6 @@ export const TimelineTrackItem = ({
 						key={event.key}
 						entity={event}
 						visible={visible}
-						timelineScale={timelineScale}
 						highlighted={highlightedEvents.includes(event)}
 						realTimeToScaledTime={realTimeToScaledTime}
 					/>
@@ -111,7 +108,6 @@ export const TimelineTrackItem = ({
 						entity={event}
 						visible={visible}
 						lineSpacing={lineSpacing}
-						timelineScale={timelineScale}
 						highlighted={highlightedEvents.includes(event)}
 						realTimeToScaledTime={realTimeToScaledTime}
 					/>
