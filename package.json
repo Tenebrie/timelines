@@ -26,7 +26,10 @@
 		"prisma:migrate:create": "(cd app/rhea-backend && yarn prisma:migrate:create)",
 		"test": "(cd app/styx-frontend && yarn test run) && (cd app/rhea-backend && yarn test)",
 		"test:styx": "(cd app/styx-frontend && yarn test run)",
-		"test:rhea": "(cd app/rhea-backend && yarn test)"
+		"test:rhea": "(cd app/rhea-backend && yarn test)",
+		"build:styx": "(cd app/styx-frontend && yarn build)",
+		"build:rhea": "(cd app/rhea-backend && yarn build)",
+		"build:calliope": "(cd app/calliope-websockets && yarn build)"
 	},
 	"dependencies": {
 		"@typescript-eslint/eslint-plugin": "^4.7.0",

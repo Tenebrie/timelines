@@ -5,6 +5,48 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  build-styx:
+    name: Build Styx
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn
+      - name: Build Styx
+        run: yarn build:styx
+  
+  build-rhea:
+    name: Build Rhea
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn
+      - name: Build Rhea
+        run: yarn build:rhea
+
+  build-calliope:
+    name: Build Calliope
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn
+      - name: Build Calliope
+        run: yarn build:calliope
+
   test-styx:
     name: Test Styx (Frontend)
     runs-on: ubuntu-latest
