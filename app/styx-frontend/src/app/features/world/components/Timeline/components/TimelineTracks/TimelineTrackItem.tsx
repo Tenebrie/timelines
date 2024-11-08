@@ -1,5 +1,6 @@
 import { Divider } from '@mui/material'
-import { useMemo, useRef, useState } from 'react'
+import throttle from 'lodash.throttle'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
@@ -7,7 +8,7 @@ import { getTimelineContextMenuState } from '../../../../selectors'
 import { TimelineChainPositioner } from './components/TimelineChainPositioner/TimelineChainPositioner'
 import { TimelineEventPositioner } from './components/TimelineEventPositioner/TimelineEventPositioner'
 import { TimelineEventTrackTitle } from './components/TimelineEventTrackTitle/TimelineEventTrackTitle'
-import useEventTracks from './hooks/useEventTracks'
+import useEventTracks, { TimelineTrack } from './hooks/useEventTracks'
 import { TrackContainer, TrackPositioner } from './styles'
 import { TimelineTrackItemDragDrop } from './TimelineTrackItemDragDrop'
 
@@ -17,6 +18,7 @@ type Props = {
 	timelineScale: number
 	scroll: number
 	visible: boolean
+	containerWidth: number
 	isLocationEqual: ReturnType<typeof useWorldRouter>['isLocationEqual']
 	eventEditorParams: {
 		eventId: string
@@ -34,6 +36,7 @@ export const TimelineTrackItem = ({
 	timelineScale,
 	scroll,
 	visible,
+	containerWidth,
 	isLocationEqual,
 	eventEditorParams,
 	eventDeltaEditorParams,
@@ -62,6 +65,26 @@ export const TimelineTrackItem = ({
 		],
 	)
 
+	const [visibleEvents, setVisibleEvents] = useState(track.events)
+
+	const updateVisibleEventsThrottled = useRef(
+		throttle(
+			(t: TimelineTrack, scr: number, width: number, realTimeToScaledTime: Props['realTimeToScaledTime']) => {
+				setVisibleEvents(
+					t.events.filter((event) => {
+						const position = realTimeToScaledTime(Math.floor(event.markerPosition) / timelineScale) + scr
+						return position >= -250 && position <= width + 250
+					}),
+				)
+			},
+			100,
+		),
+	)
+
+	useEffect(() => {
+		updateVisibleEventsThrottled.current(track, scroll, containerWidth, realTimeToScaledTime)
+	}, [scroll, track, containerWidth, realTimeToScaledTime])
+
 	const chainLinks = useMemo(() => {
 		return track.events.filter((event) => event.nextEntity)
 	}, [track.events])
@@ -82,7 +105,7 @@ export const TimelineTrackItem = ({
 						realTimeToScaledTime={realTimeToScaledTime}
 					/>
 				))}
-				{track.events.map((event) => (
+				{visibleEvents.map((event) => (
 					<TimelineEventPositioner
 						key={event.key}
 						entity={event}

@@ -15,6 +15,7 @@ type Props = {
 	lineSpacing: number
 	scaleLevel: ScaleLevel
 	timelineScale: number
+	containerWidth: number
 }
 
 export const TimelineTracks = (props: Props) => {

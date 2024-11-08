@@ -129,6 +129,7 @@ export const Timeline = () => {
 						lineSpacing={lineSpacing}
 						scaleLevel={scaleLevel}
 						timelineScale={timelineScale}
+						containerWidth={containerWidth}
 					/>
 					<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
 					<TimelineAnchor
