@@ -14,7 +14,8 @@ type Props = {
 	entity: ReturnType<typeof useEventTracks>[number]['events'][number]
 	lineSpacing: number
 	visible: boolean
-	highlighted: boolean
+	edited: boolean
+	selected: boolean
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
@@ -22,7 +23,8 @@ const TimelineEventPositionerComponent = ({
 	entity,
 	lineSpacing,
 	visible,
-	highlighted,
+	edited,
+	selected,
 	realTimeToScaledTime,
 }: Props) => {
 	const { getIconPath } = useEventIcons()
@@ -76,7 +78,7 @@ const TimelineEventPositionerComponent = ({
 			$position={position}
 			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''}`}
 		>
-			<TimelineEvent entity={entity} highlighted={highlighted} />
+			<TimelineEvent entity={entity} edited={edited} selected={selected} />
 			{ghostElement}
 		</Group>
 	)

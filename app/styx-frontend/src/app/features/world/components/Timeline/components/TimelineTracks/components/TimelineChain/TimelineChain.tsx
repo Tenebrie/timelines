@@ -6,11 +6,12 @@ import { MarkerType, TimelineEntity } from '../../../../../../types'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
-	highlighted: boolean
+	edited: boolean
+	selected: boolean
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
-export const TimelineChainComponent = ({ entity, highlighted, realTimeToScaledTime }: Props) => {
+export const TimelineChainComponent = ({ entity, edited, selected, realTimeToScaledTime }: Props) => {
 	const { getStringColor } = useStringColor()
 	if (!entity.nextEntity) {
 		return

@@ -25,6 +25,7 @@ export const initialState = {
 	updatedAt: '0',
 	selectedActors: [] as string[],
 	selectedEvents: [] as string[],
+	selectedTimelineMarkers: [] as string[],
 	isReadOnly: false as boolean,
 	accessMode: 'Private' as WorldAccessMode,
 
@@ -140,6 +141,23 @@ export const worldSlice = createSlice({
 		},
 		removeEventFromSelection: (state, { payload }: PayloadAction<string>) => {
 			state.selectedEvents = state.selectedEvents.filter((event) => event !== payload)
+		},
+		addTimelineMarkerToSelection: (
+			state,
+			{ payload }: PayloadAction<{ id: string; multiselect: boolean }>,
+		) => {
+			if (!payload.multiselect) {
+				state.selectedTimelineMarkers = [payload.id]
+				return
+			}
+
+			if (state.selectedTimelineMarkers.includes(payload.id)) {
+				return
+			}
+			state.selectedTimelineMarkers = [...state.selectedTimelineMarkers, payload.id]
+		},
+		removeTimelineMarkerFromSelection: (state, { payload }: PayloadAction<string>) => {
+			state.selectedTimelineMarkers = state.selectedTimelineMarkers.filter((event) => event !== payload)
 		},
 		clearSelections: (state) => {
 			state.selectedActors = []

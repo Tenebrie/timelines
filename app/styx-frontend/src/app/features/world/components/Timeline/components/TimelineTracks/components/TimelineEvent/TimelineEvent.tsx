@@ -1,41 +1,42 @@
 import { colors, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { memo, MouseEvent, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { useDoubleClick } from '../../../../../../../../../hooks/useDoubleClick'
-import { useWorldRouter, worldRoutes } from '../../../../../../../../../router/routes/worldRoutes'
+import { useWorldRouter } from '../../../../../../../../../router/routes/worldRoutes'
 import { useStringColor } from '../../../../../../../../utils/getStringColor'
 import { isMultiselectClick } from '../../../../../../../../utils/isMultiselectClick'
 import { useEventIcons } from '../../../../../../hooks/useEventIcons'
+import { useTimelineBusDispatch } from '../../../../../../hooks/useTimelineBus'
 import { worldSlice } from '../../../../../../reducer'
-import { getWorldState } from '../../../../../../selectors'
 import { MarkerType, TimelineEntity } from '../../../../../../types'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
 import { Label, LabelContainer, Marker } from './styles'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
-	highlighted: boolean
+	edited: boolean
+	selected: boolean
 }
 
-export const TimelineEventComponent = ({ entity, highlighted }: Props) => {
+export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
+	const scrollTimelineTo = useTimelineBusDispatch()
 	const dispatch = useDispatch()
-	const { addEventToSelection, removeEventFromSelection, openTimelineContextMenu } = worldSlice.actions
+	const { addTimelineMarkerToSelection, removeTimelineMarkerFromSelection, openTimelineContextMenu } =
+		worldSlice.actions
 
-	const { selectedEvents } = useSelector(getWorldState)
-	const { stateOf, navigateToEventEditor, navigateToEventDeltaEditor } = useWorldRouter()
-	const { eventId } = stateOf(worldRoutes.eventEditor)
+	const { navigateToEventEditor, navigateToEventDeltaEditor } = useWorldRouter()
 	const { getIconPath } = useEventIcons()
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
-			if (selectedEvents.includes(entity.eventId)) {
-				dispatch(removeEventFromSelection(entity.eventId))
+			if (selected) {
+				dispatch(removeTimelineMarkerFromSelection(entity.key))
 			} else {
-				dispatch(addEventToSelection({ id: entity.eventId, multiselect }))
+				dispatch(addTimelineMarkerToSelection({ id: entity.key, multiselect }))
 			}
 		},
 		onDoubleClick: () => {
@@ -43,7 +44,7 @@ export const TimelineEventComponent = ({ entity, highlighted }: Props) => {
 				return
 			}
 
-			dispatch(removeEventFromSelection(entity.eventId))
+			dispatch(removeTimelineMarkerFromSelection(entity.key))
 
 			if (entity.markerType === 'deltaState') {
 				navigateToEventDeltaEditor({
@@ -53,6 +54,7 @@ export const TimelineEventComponent = ({ entity, highlighted }: Props) => {
 			} else {
 				navigateToEventEditor(entity.eventId)
 			}
+			scrollTimelineTo(entity.markerPosition)
 		},
 		ignoreDelay: true,
 	})
@@ -75,7 +77,7 @@ export const TimelineEventComponent = ({ entity, highlighted }: Props) => {
 					x: clickEvent.clientX + 1,
 					y: clickEvent.clientY,
 				},
-				selectedTime: entity.markerType === 'revokedAt' ? (entity.revokedAt as number) : entity.timestamp,
+				selectedTime: entity.markerPosition,
 			}),
 		)
 	}
@@ -89,8 +91,6 @@ export const TimelineEventComponent = ({ entity, highlighted }: Props) => {
 		setIsInfoVisible(false)
 		HoveredTimelineEvents.unhoverEvent(entity)
 	}
-
-	const selected = selectedEvents.includes(entity.eventId)
 
 	const labelType =
 		entity.markerType === 'issuedAt' ? (
@@ -115,8 +115,7 @@ export const TimelineEventComponent = ({ entity, highlighted }: Props) => {
 			$borderColor={color}
 			className={classNames({
 				selected,
-				edited: entity.id === eventId,
-				highlighted,
+				edited,
 				revoked: entity.markerType === 'revokedAt',
 				replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',
 				ghostEvent: entity.markerType === 'ghostEvent',

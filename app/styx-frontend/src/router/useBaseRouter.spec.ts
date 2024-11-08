@@ -293,5 +293,22 @@ describe('useBaseRouter', () => {
 
 			expect(result.current.isLocationEqual('/app/:param1/:param2/foo')).toEqual(false)
 		})
+
+		it('does not match a child location', () => {
+			const { result } = renderHookWithProviders(() =>
+				useBaseRouter({
+					test1: '/app/foo',
+					test2: '/app/foo/bar',
+				}),
+			)
+
+			act(() => {
+				result.current.navigateTo({
+					target: '/app/foo/bar',
+				})
+			})
+
+			expect(result.current.isLocationEqual('/app/foo')).toEqual(false)
+		})
 	})
 })

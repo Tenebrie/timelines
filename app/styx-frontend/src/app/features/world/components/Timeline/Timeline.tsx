@@ -18,7 +18,6 @@ import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScal
 import { TimelineTracks } from './components/TimelineTracks/TimelineTracks'
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
 import { useContainerHeight } from './hooks/useContainerHeight'
-import { useScrollToActiveEntity } from './hooks/useScrollToActiveEntity'
 import { useTimelineDimensions } from './hooks/useTimelineDimensions'
 import { useTimelineNavigation } from './hooks/useTimelineNavigation'
 import { timelineSlice } from './reducer'
@@ -67,7 +66,7 @@ export const Timeline = () => {
 		onDoubleClick: (time) => onDoubleClick(time),
 	})
 
-	useScrollToActiveEntity()
+	// useScrollToActiveEntity()
 
 	useEffect(() => {
 		dispatch(setScaleLevel(scaleLevel))

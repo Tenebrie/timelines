@@ -29,7 +29,7 @@ const useEventTracks = () => {
 			.map((event) => ({
 				...event,
 				eventId: event.id,
-				key: `${event.id}-issued`,
+				key: `issuedAt-${event.id}`,
 				markerPosition: event.timestamp,
 				markerType: asMarkerType('issuedAt'),
 				deltaStates: [...event.deltaStates].sort((a, b) => a.timestamp - b.timestamp),
@@ -42,7 +42,7 @@ const useEventTracks = () => {
 						...applyEventDelta({ event, timestamp: delta.timestamp }),
 						id: delta.id,
 						eventId: event.id,
-						key: `${delta.id}-delta`,
+						key: `deltaState-${delta.id}`,
 						markerPosition: delta.timestamp,
 						markerType: asMarkerType('deltaState'),
 						baseEntity: delta,
@@ -56,7 +56,7 @@ const useEventTracks = () => {
 					.map((event) => ({
 						...event,
 						eventId: event.id,
-						key: `${event.id}-revoked`,
+						key: `revokedAt-${event.id}`,
 						markerPosition: event.revokedAt!,
 						markerType: asMarkerType('revokedAt'),
 						baseEntity: event,
@@ -98,7 +98,7 @@ const useEventTracks = () => {
 			chainedEvents.push({
 				...eventGhost,
 				eventId: eventGhost.id,
-				key: eventGhost.id,
+				key: `ghostEvent-${eventGhost.id}`,
 				markerType: asMarkerType('ghostEvent'),
 				markerPosition: eventGhost.timestamp,
 				baseEntity: null,
@@ -110,7 +110,7 @@ const useEventTracks = () => {
 				chainedEvents.push({
 					...event,
 					eventId: deltaGhost.worldEventId,
-					key: deltaGhost.id,
+					key: `ghostDelta-${deltaGhost.id}`,
 					markerType: asMarkerType('ghostDelta'),
 					markerPosition: deltaGhost.timestamp,
 					baseEntity: null,

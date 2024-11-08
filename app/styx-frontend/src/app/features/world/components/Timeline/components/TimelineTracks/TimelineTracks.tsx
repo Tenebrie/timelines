@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
-import { getTimelineContextMenuState } from '../../../../selectors'
+import { getTimelineContextMenuState, getWorldState } from '../../../../selectors'
 import { ScaleLevel } from '../../types'
 import useEventTracks from './hooks/useEventTracks'
 import { TimelineTrackItem } from './TimelineTrackItem'
@@ -22,6 +22,7 @@ export const TimelineTracks = (props: Props) => {
 	const { stateOf, isLocationEqual } = useWorldRouter()
 	const stateOfEventEditor = stateOf(worldRoutes.eventEditor)
 	const stateOfDeltaEditor = stateOf(worldRoutes.eventDeltaEditor)
+	const worldState = useSelector(getWorldState)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
 
 	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel: props.scaleLevel })
@@ -44,6 +45,7 @@ export const TimelineTracks = (props: Props) => {
 					key={track.id}
 					track={track}
 					isLocationEqual={isLocationEqual}
+					worldState={worldState}
 					contextMenuState={contextMenuState}
 					eventEditorParams={stateOfEventEditor}
 					eventDeltaEditorParams={stateOfDeltaEditor}

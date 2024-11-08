@@ -1,18 +1,18 @@
-import { WorldEvent, WorldEventBundle } from '../../../../../../types'
+import { WorldEvent } from '../../../../../../types'
 
 export const HoveredTimelineEvents = {
-	events: [] as (WorldEvent | WorldEventBundle)[],
+	events: [] as WorldEvent[],
 	edgeScrollers: [] as ('left' | 'right')[],
 
 	anyHovered: () => {
 		return HoveredTimelineEvents.events.length > 0 || HoveredTimelineEvents.edgeScrollers.length > 0
 	},
 
-	hoverEvent: (event: WorldEvent | WorldEventBundle) => {
+	hoverEvent: (event: WorldEvent) => {
 		HoveredTimelineEvents.events.push(event)
 	},
 
-	unhoverEvent: (event: WorldEvent | WorldEventBundle) => {
+	unhoverEvent: (event: WorldEvent) => {
 		HoveredTimelineEvents.events = HoveredTimelineEvents.events.filter(
 			(hoveredEvent) => hoveredEvent.id !== event.id,
 		)

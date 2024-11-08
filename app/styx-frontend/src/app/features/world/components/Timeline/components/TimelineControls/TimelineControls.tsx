@@ -61,6 +61,7 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 					bottom: '18px',
 					width: '100%',
 					height: 1,
+					pointerEvents: 'none',
 				}}
 			>
 				<ExpandMore />
