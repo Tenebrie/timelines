@@ -5,6 +5,7 @@ import { GetWorldInfoApiResponse } from '../../../api/rheaApi'
 import { ingestEvent } from '../../utils/ingestEvent'
 import {
 	ActorDetails,
+	MarkerType,
 	TimelineEntity,
 	WorldAccessMode,
 	WorldCalendarType,
@@ -35,52 +36,11 @@ export const initialState = {
 		ghost: null as WorldEventDelta | null,
 	},
 
-	actorWizard: {
-		isOpen: false as boolean,
-	},
-
-	eventWizard: {
-		isOpen: false as boolean,
-		timestamp: 0 as number,
-	},
-
 	timelineContextMenu: {
 		isOpen: false as boolean,
 		selectedTime: 0 as number,
-		selectedEvent: null as TimelineEntity | null,
+		selectedEvent: null as TimelineEntity<MarkerType> | null,
 		mousePos: { x: 0, y: 0 } as { x: number; y: number },
-	},
-
-	outliner: {
-		eventTutorialModal: {
-			isOpen: false as boolean,
-		},
-	},
-
-	actorEditor: {
-		deleteActorModal: {
-			isOpen: false as boolean,
-			target: null as ActorDetails | null,
-		},
-	},
-
-	eventEditor: {
-		deleteEventModal: {
-			isOpen: false as boolean,
-			target: null as WorldEvent | null,
-		},
-		deleteEventDeltaModal: {
-			isOpen: false as boolean,
-			target: null as WorldEventDelta | null,
-		},
-		revokedStatementWizard: {
-			isOpen: false as boolean,
-			preselectedEventId: '' as string,
-		},
-		issuedActorStatementWizard: {
-			isOpen: false as boolean,
-			actor: null as ActorDetails | null,
-		},
 	},
 }
 
@@ -119,6 +79,37 @@ export const worldSlice = createSlice({
 			state.isLoaded = false
 			state.events = []
 			state.isReadOnly = false
+		},
+		updateEvent: (state, { payload }: PayloadAction<Pick<WorldEvent, 'id'> & Partial<WorldEvent>>) => {
+			const event = state.events.find((e) => e.id === payload.id)
+			if (!event) {
+				return
+			}
+
+			const newEvent = {
+				...event,
+				...payload,
+			}
+			state.events.splice(state.events.indexOf(event), 1, newEvent)
+		},
+		updateEventDelta: (
+			state,
+			{ payload }: PayloadAction<Pick<WorldEventDelta, 'id' | 'worldEventId'> & Partial<WorldEventDelta>>,
+		) => {
+			const event = state.events.find((e) => e.id === payload.worldEventId)
+			if (!event) {
+				return
+			}
+			const delta = event.deltaStates.find((d) => d.id === payload.id)
+			if (!delta) {
+				return
+			}
+
+			const newDelta = {
+				...delta,
+				...payload,
+			}
+			event.deltaStates.splice(event.deltaStates.indexOf(delta), 1, newDelta)
 		},
 		addActorToSelection: (state, { payload }: PayloadAction<{ id: string; multiselect: boolean }>) => {
 			if (!payload.multiselect) {
@@ -166,25 +157,6 @@ export const worldSlice = createSlice({
 			state.eventDeltaCreator.ghost = payload
 		},
 
-		/* Actor wizard */
-		openActorWizard: (state) => {
-			state.actorWizard.isOpen = true
-		},
-
-		closeActorWizard: (state) => {
-			state.actorWizard.isOpen = false
-		},
-
-		/* Event wizard */
-		openEventWizard: (state, { payload }: PayloadAction<{ timestamp: number }>) => {
-			state.eventWizard.isOpen = true
-			state.eventWizard.timestamp = payload.timestamp
-		},
-
-		closeEventWizard: (state) => {
-			state.eventWizard.isOpen = false
-		},
-
 		/* Timeline context menu */
 		openTimelineContextMenu: (
 			state,
@@ -192,7 +164,7 @@ export const worldSlice = createSlice({
 				payload,
 			}: PayloadAction<{
 				selectedTime: number
-				selectedEvent: TimelineEntity | null
+				selectedEvent: TimelineEntity<MarkerType> | null
 				mousePos: { x: number; y: number }
 			}>,
 		) => {
@@ -204,64 +176,6 @@ export const worldSlice = createSlice({
 
 		closeTimelineContextMenu: (state) => {
 			state.timelineContextMenu.isOpen = false
-		},
-
-		/* Outliner - Event tutorial modal */
-		openEventTutorialModal: (state) => {
-			state.outliner.eventTutorialModal.isOpen = true
-		},
-
-		closeEventTutorialModal: (state) => {
-			state.outliner.eventTutorialModal.isOpen = false
-		},
-
-		/* Actor editor - Delete actor modal */
-		openDeleteActorModal: (state, { payload }: PayloadAction<ActorDetails>) => {
-			state.actorEditor.deleteActorModal.isOpen = true
-			state.actorEditor.deleteActorModal.target = payload
-		},
-
-		closeDeleteActorModal: (state) => {
-			state.actorEditor.deleteActorModal.isOpen = false
-		},
-
-		/* Event editor - Delete event modal */
-		openDeleteEventModal: (state, { payload }: PayloadAction<WorldEvent>) => {
-			state.eventEditor.deleteEventModal.isOpen = true
-			state.eventEditor.deleteEventModal.target = payload
-		},
-
-		closeDeleteEventModal: (state) => {
-			state.eventEditor.deleteEventModal.isOpen = false
-		},
-
-		/* Event editor - Delete event delta modal */
-		openDeleteEventDeltaModal: (state, { payload }: PayloadAction<WorldEventDelta>) => {
-			state.eventEditor.deleteEventDeltaModal.isOpen = true
-			state.eventEditor.deleteEventDeltaModal.target = payload
-		},
-
-		closeDeleteEventDeltaModal: (state) => {
-			state.eventEditor.deleteEventDeltaModal.isOpen = false
-		},
-
-		/* Event editor - Revoked world statement wizard */
-		openRevokedStatementWizard: (state, { payload }: PayloadAction<{ preselectedEventId: string }>) => {
-			state.eventEditor.revokedStatementWizard.isOpen = true
-			state.eventEditor.revokedStatementWizard.preselectedEventId = payload.preselectedEventId
-		},
-
-		closeRevokedStatementWizard: (state) => {
-			state.eventEditor.revokedStatementWizard.isOpen = false
-		},
-
-		/* Event editor - Issued actor statement wizard */
-		openIssuedActorStatementWizard: (state) => {
-			state.eventEditor.issuedActorStatementWizard.isOpen = true
-		},
-
-		closeIssuedActorStatementWizard: (state) => {
-			state.eventEditor.issuedActorStatementWizard.isOpen = false
 		},
 	},
 })

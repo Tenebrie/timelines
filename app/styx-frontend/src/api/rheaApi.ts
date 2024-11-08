@@ -5,6 +5,7 @@ export const addTagTypes = [
 	'announcementList',
 	'auth',
 	'worldList',
+	'worldEventTracks',
 	'worldCollaborators',
 ] as const
 const injectedRtkApi = api
@@ -102,7 +103,6 @@ const injectedRtkApi = api
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['worldDetails'],
 			}),
 			deleteWorldEvent: build.mutation<DeleteWorldEventApiResponse, DeleteWorldEventApiArg>({
 				query: (queryArg) => ({
@@ -148,6 +148,41 @@ const injectedRtkApi = api
 					method: 'DELETE',
 				}),
 				invalidatesTags: ['worldDetails'],
+			}),
+			getWorldEventTracks: build.query<GetWorldEventTracksApiResponse, GetWorldEventTracksApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/event-tracks` }),
+				providesTags: ['worldEventTracks'],
+			}),
+			createWorldEventTrack: build.mutation<CreateWorldEventTrackApiResponse, CreateWorldEventTrackApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event-track`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldEventTracks'],
+			}),
+			updateWorldEventTrack: build.mutation<UpdateWorldEventTrackApiResponse, UpdateWorldEventTrackApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event-track/${queryArg.trackId}`,
+					method: 'PATCH',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldEventTracks'],
+			}),
+			deleteWorldEventTrack: build.mutation<DeleteWorldEventTrackApiResponse, DeleteWorldEventTrackApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event-track/${queryArg.trackId}`,
+					method: 'DELETE',
+				}),
+				invalidatesTags: ['worldEventTracks'],
+			}),
+			swapWorldEventTracks: build.mutation<SwapWorldEventTracksApiResponse, SwapWorldEventTracksApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event-track/swap`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldEventTracks'],
 			}),
 			getWorlds: build.query<GetWorldsApiResponse, GetWorldsApiArg>({
 				query: () => ({ url: `/api/worlds` }),
@@ -382,6 +417,7 @@ export type CreateWorldEventApiArg = {
 		mentionedActorIds: string[]
 		customNameEnabled: boolean
 		externalLink: string
+		worldEventTrackId?: string
 	}
 }
 export type UpdateWorldEventApiResponse = /** status 200  */ {
@@ -427,6 +463,7 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	customName: boolean
 	externalLink: string
 	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+	worldEventTrackId: null | string
 }
 export type UpdateWorldEventApiArg = {
 	/** Any string value */
@@ -444,6 +481,7 @@ export type UpdateWorldEventApiArg = {
 		mentionedActorIds?: string[]
 		customNameEnabled?: boolean
 		externalLink?: string
+		worldEventTrackId?: null | string
 	}
 }
 export type DeleteWorldEventApiResponse = /** status 200  */ {
@@ -460,6 +498,7 @@ export type DeleteWorldEventApiResponse = /** status 200  */ {
 	customName: boolean
 	externalLink: string
 	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+	worldEventTrackId: null | string
 }
 export type DeleteWorldEventApiArg = {
 	/** Any string value */
@@ -481,6 +520,7 @@ export type RevokeWorldEventApiResponse = /** status 200  */ {
 	customName: boolean
 	externalLink: string
 	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+	worldEventTrackId: null | string
 }
 export type RevokeWorldEventApiArg = {
 	/** Any string value */
@@ -505,6 +545,7 @@ export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	customName: boolean
 	externalLink: string
 	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+	worldEventTrackId: null | string
 }
 export type UnrevokeWorldEventApiArg = {
 	/** Any string value */
@@ -546,6 +587,7 @@ export type UpdateWorldEventDeltaApiArg = {
 		timestamp?: string
 		name?: null | string
 		description?: null | string
+		worldEventTrackId?: null | string
 	}
 }
 export type DeleteWorldEventDeltaApiResponse = /** status 200  */ {
@@ -564,6 +606,66 @@ export type DeleteWorldEventDeltaApiArg = {
 	eventId: string
 	/** Any string value */
 	deltaId: string
+}
+export type GetWorldEventTracksApiResponse = /** status 200  */ {
+	name: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	worldId: string
+	position: number
+}[]
+export type GetWorldEventTracksApiArg = {
+	/** Any string value */
+	worldId: string
+}
+export type CreateWorldEventTrackApiResponse = /** status 200  */ {
+	id: string
+}
+export type CreateWorldEventTrackApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		name: string
+		position?: number
+		assignOrphans: boolean
+	}
+}
+export type UpdateWorldEventTrackApiResponse = /** status 200  */ {
+	id: string
+}
+export type UpdateWorldEventTrackApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	trackId: string
+	body: {
+		name?: string
+		position?: number
+	}
+}
+export type DeleteWorldEventTrackApiResponse = /** status 200  */ {
+	name: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	worldId: string
+	position: number
+}
+export type DeleteWorldEventTrackApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	trackId: string
+}
+export type SwapWorldEventTracksApiResponse = unknown
+export type SwapWorldEventTracksApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		trackA: string
+		trackB: string
+	}
 }
 export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
@@ -726,6 +828,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		customName: boolean
 		externalLink: string
 		extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+		worldEventTrackId: null | string
 	}[]
 	name: string
 	id: string
@@ -820,6 +923,12 @@ export const {
 	useCreateWorldEventDeltaMutation,
 	useUpdateWorldEventDeltaMutation,
 	useDeleteWorldEventDeltaMutation,
+	useGetWorldEventTracksQuery,
+	useLazyGetWorldEventTracksQuery,
+	useCreateWorldEventTrackMutation,
+	useUpdateWorldEventTrackMutation,
+	useDeleteWorldEventTrackMutation,
+	useSwapWorldEventTracksMutation,
 	useGetWorldsQuery,
 	useLazyGetWorldsQuery,
 	useCreateWorldMutation,

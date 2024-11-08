@@ -2,15 +2,14 @@ import { ArrowBack, Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, FormControl, InputLabel, Select, Stack, TextField, Tooltip } from '@mui/material'
 import { useCallback, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { useUpdateActorMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
 import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
+import { useModal } from '../../../../../modals/reducer'
 import { useActorColors } from '../../../../hooks/useActorColors'
-import { worldSlice } from '../../../../reducer'
 import { Actor, ActorDetails } from '../../../../types'
 import { useActorFields } from './useActorFields'
 
@@ -38,8 +37,7 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 		}
 	}, [actor, setColor, setDescription, setDirty, setName, setTitle])
 
-	const { openDeleteActorModal } = worldSlice.actions
-	const dispatch = useDispatch()
+	const { open: openDeleteActorModal } = useModal('deleteActorModal')
 
 	const [updateActor, { isLoading: isSaving }] = useUpdateActorMutation()
 
@@ -87,8 +85,8 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 	}, [state, autosave, isDirty])
 
 	const onDelete = useCallback(() => {
-		dispatch(openDeleteActorModal(actor))
-	}, [dispatch, actor, openDeleteActorModal])
+		openDeleteActorModal({ target: actor })
+	}, [actor, openDeleteActorModal])
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		manualSave()

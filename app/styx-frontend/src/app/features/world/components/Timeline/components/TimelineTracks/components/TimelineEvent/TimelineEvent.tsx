@@ -5,39 +5,33 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useDoubleClick } from '../../../../../../../../../hooks/useDoubleClick'
 import { useWorldRouter, worldRoutes } from '../../../../../../../../../router/routes/worldRoutes'
+import { useStringColor } from '../../../../../../../../utils/getStringColor'
 import { isMultiselectClick } from '../../../../../../../../utils/isMultiselectClick'
 import { useEventIcons } from '../../../../../../hooks/useEventIcons'
 import { worldSlice } from '../../../../../../reducer'
 import { getWorldState } from '../../../../../../selectors'
-import { TimelineEntity } from '../../../../../../types'
+import { MarkerType, TimelineEntity } from '../../../../../../types'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
 import { Label, LabelContainer, Marker } from './styles'
 
 type Props = {
-	entity: TimelineEntity
-	groupIndex: number
-	expanded: boolean
+	entity: TimelineEntity<MarkerType>
 	highlighted: boolean
 }
 
-export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlighted }: Props) => {
+export const TimelineEventComponent = ({ entity, highlighted }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
 	const dispatch = useDispatch()
 	const { addEventToSelection, removeEventFromSelection, openTimelineContextMenu } = worldSlice.actions
 
 	const { selectedEvents } = useSelector(getWorldState)
-	const { stateOf, navigateToEventEditor, navigateToEventDeltaEditor, navigateToOutliner } = useWorldRouter()
+	const { stateOf, navigateToEventEditor, navigateToEventDeltaEditor } = useWorldRouter()
 	const { eventId } = stateOf(worldRoutes.eventEditor)
 	const { getIconPath } = useEventIcons()
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
-			if (entity.markerType === 'bundle') {
-				navigateToOutliner(entity.events.sort((a, b) => b.timestamp - a.timestamp)[0].timestamp)
-				return
-			}
-
 			if (selectedEvents.includes(entity.eventId)) {
 				dispatch(removeEventFromSelection(entity.eventId))
 			} else {
@@ -45,11 +39,7 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 			}
 		},
 		onDoubleClick: () => {
-			if (
-				entity.markerType === 'bundle' ||
-				entity.markerType === 'ghostEvent' ||
-				entity.markerType === 'ghostDelta'
-			) {
+			if (entity.markerType === 'ghostEvent' || entity.markerType === 'ghostDelta') {
 				return
 			}
 
@@ -100,7 +90,7 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 		HoveredTimelineEvents.unhoverEvent(entity)
 	}
 
-	const selected = entity.markerType !== 'bundle' && selectedEvents.includes(entity.eventId)
+	const selected = selectedEvents.includes(entity.eventId)
 
 	const labelType =
 		entity.markerType === 'issuedAt' ? (
@@ -113,14 +103,17 @@ export const TimelineEventComponent = ({ entity, groupIndex, expanded, highlight
 			''
 		)
 
+	const { getStringColor } = useStringColor()
+	const color = getStringColor(entity.eventId)
+
 	return (
 		<Marker
 			onClick={onClick}
 			onContextMenu={onContextMenu}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
+			$borderColor={color}
 			className={classNames({
-				expanded: groupIndex > 0 && expanded,
 				selected,
 				edited: entity.id === eventId,
 				highlighted,

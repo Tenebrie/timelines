@@ -1,24 +1,15 @@
 import { Button, Typography } from '@mui/material'
-import { useDispatch, useSelector } from 'react-redux'
 
 import { ModalFooter } from '../../../../../../../ui-lib/components/Modal'
 import Modal from '../../../../../../../ui-lib/components/Modal/Modal'
 import { ModalHeader } from '../../../../../../../ui-lib/components/Modal/styles'
-import { worldSlice } from '../../../../reducer'
-import { getEventTutorialModalState } from '../../../../selectors'
+import { useModal } from '../../../../../modals/reducer'
 
 export const EventTutorialModal = () => {
-	const dispatch = useDispatch()
-	const { closeEventTutorialModal } = worldSlice.actions
-
-	const { isOpen } = useSelector(getEventTutorialModalState)
-
-	const onCloseAttempt = () => {
-		dispatch(closeEventTutorialModal())
-	}
+	const { isOpen, close } = useModal('eventTutorialModal')
 
 	return (
-		<Modal visible={isOpen} onClose={onCloseAttempt}>
+		<Modal visible={isOpen} onClose={close}>
 			<ModalHeader>Event Tutorial</ModalHeader>
 			<Typography variant="body1">
 				In Timelines app, a project (referred to as a <b>World</b>) contains many events that have associated
@@ -38,7 +29,7 @@ export const EventTutorialModal = () => {
 				Day 10, and inspecting the state of the world will only show this statement between the two events.
 			</Typography>
 			<ModalFooter>
-				<Button variant="outlined" onClick={onCloseAttempt}>
+				<Button variant="outlined" onClick={close}>
 					Close
 				</Button>
 			</ModalFooter>

@@ -1,3 +1,5 @@
+import { WorldEvent } from '@prisma/client'
+import { definedProps } from '@src/utils/definedProps'
 import { BadRequestError } from 'moonflower'
 
 import { getPrismaClient } from './dbClients/DatabaseClient'
@@ -26,6 +28,30 @@ export const ValidationService = {
 		}
 	},
 
+	checkEventPatchValidity: async (eventId: string, params: Partial<WorldEvent>) => {
+		const originalEvent = await WorldEventService.fetchWorldEventWithDeltaStates(eventId)
+		const event = {
+			...originalEvent,
+			...definedProps(params),
+		}
+
+		if (event.revokedAt && event.revokedAt <= event.timestamp) {
+			throw new BadRequestError('Event cannot be revoked before it is created')
+		}
+		if (event.deltaStates.some((delta) => delta.timestamp < event.timestamp)) {
+			throw new BadRequestError(
+				'Unable to retire an event at this timestamp (at least 1 delta state at a later timestamp)'
+			)
+		}
+
+		const revokedAt = event.revokedAt
+		if (revokedAt && event.deltaStates.some((delta) => delta.timestamp > revokedAt)) {
+			throw new BadRequestError(
+				'Unable to retire an event at this timestamp (at least 1 delta state at a later timestamp)'
+			)
+		}
+	},
+
 	checkIfEventIsRevokableAt: async (eventId: string, timestamp: bigint | null | undefined) => {
 		if (timestamp === null || timestamp === undefined) {
 			return
@@ -44,6 +70,9 @@ export const ValidationService = {
 		excludedDeltaIds: string[] = []
 	) => {
 		const event = await WorldEventService.fetchWorldEventWithDeltaStates(eventId)
+		if (timestamp < event.timestamp) {
+			throw new BadRequestError('Unable to create a delta state before event creation.')
+		}
 		if (event.revokedAt && timestamp >= event.revokedAt) {
 			throw new BadRequestError('Unable to create a delta state after event retirement.')
 		}

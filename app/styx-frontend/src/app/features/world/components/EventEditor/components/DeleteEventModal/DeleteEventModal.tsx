@@ -2,7 +2,6 @@ import { Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, Stack, Tooltip } from '@mui/material'
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
 import { useDeleteWorldEventMutation } from '../../../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
@@ -13,8 +12,7 @@ import Modal, {
 	useModalCleanup,
 } from '../../../../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { worldSlice } from '../../../../reducer'
-import { getDeleteEventModalState } from '../../../../selectors'
+import { useModal } from '../../../../../modals/reducer'
 
 export const DeleteEventModal = () => {
 	const [deleteWorldEvent, { isLoading }] = useDeleteWorldEventMutation()
@@ -23,10 +21,7 @@ export const DeleteEventModal = () => {
 	const { stateOf, navigateToCurrentWorldRoot } = useWorldRouter()
 	const { worldId } = stateOf(worldRoutes.root)
 
-	const dispatch = useDispatch()
-	const { closeDeleteEventModal } = worldSlice.actions
-
-	const { isOpen, target: targetEvent } = useSelector(getDeleteEventModalState)
+	const { isOpen, target: targetEvent, close } = useModal('deleteEventModal')
 
 	useModalCleanup({
 		isOpen,
@@ -51,7 +46,7 @@ export const DeleteEventModal = () => {
 			return
 		}
 
-		dispatch(closeDeleteEventModal())
+		close()
 		navigateToCurrentWorldRoot()
 	}
 
@@ -59,7 +54,7 @@ export const DeleteEventModal = () => {
 		if (isLoading) {
 			return
 		}
-		dispatch(closeDeleteEventModal())
+		close()
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {

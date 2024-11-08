@@ -1,10 +1,10 @@
-import { memo, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 
-import { getTimelinePreferences } from '../../../../../preferences/selectors'
+import { useCustomTheme } from '../../../../../../../hooks/useCustomTheme'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { ScaleLevel } from '../../types'
+import { TimelineScroll } from '../../utils/TimelineScroll'
 import { TimelineAnchorContainer } from './styles'
 import { TimelineAnchorLine } from './TimelineAnchorLine'
 
@@ -14,19 +14,45 @@ export const ResetNumbersAfterEvery = 3000000 // pixels of scrolling
 type Props = {
 	visible: boolean
 	scroll: number
+	lineSpacing: number
 	timelineScale: number
 	scaleLevel: ScaleLevel
 	containerWidth: number
 }
 
-const TimelineAnchorComponent = ({ scroll, timelineScale, scaleLevel, visible, containerWidth }: Props) => {
-	const { lineSpacing } = useSelector(getTimelinePreferences)
+const TimelineAnchorComponent = ({
+	lineSpacing,
+	timelineScale,
+	scaleLevel,
+	scroll,
+	visible,
+	containerWidth,
+}: Props) => {
+	const theme = useCustomTheme()
 	const { parseTime, timeToShortLabel } = useWorldTime()
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel })
 
-	const lineCount =
-		Math.ceil((containerWidth / lineSpacing) * timelineScale) +
-		Math.ceil(TimelineAnchorPadding / lineSpacing) * 2
+	const lineCount = useMemo(
+		() =>
+			Math.ceil((containerWidth / lineSpacing) * timelineScale) +
+			Math.ceil(TimelineAnchorPadding / lineSpacing) * 2,
+		[containerWidth, lineSpacing, timelineScale],
+	)
+
+	const lastSeenScroll = useRef(0)
+	const [scroll2, setScroll] = useState(0)
+
+	useEffect(() => {
+		const timeout = window.setInterval(() => {
+			if (lastSeenScroll.current !== TimelineScroll.current) {
+				lastSeenScroll.current = TimelineScroll.current
+				setScroll(TimelineScroll.current)
+			}
+		}, 10)
+		return () => {
+			window.clearInterval(timeout)
+		}
+	}, [])
 
 	const dividers = useMemo(() => Array(lineCount).fill(null), [lineCount])
 
@@ -35,6 +61,7 @@ const TimelineAnchorComponent = ({ scroll, timelineScale, scaleLevel, visible, c
 			{dividers.map((_, index) => (
 				<TimelineAnchorLine
 					key={`${index}`}
+					theme={theme}
 					index={index}
 					visible={visible}
 					lineCount={lineCount}

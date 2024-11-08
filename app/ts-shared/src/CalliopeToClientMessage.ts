@@ -4,6 +4,7 @@ export enum CalliopeToClientMessageType {
 	ANNOUNCEMENT = 'announcement',
 	WORLD_UPDATED = 'worldUpdated',
 	WORLD_UNSHARED = 'worldUnshared',
+	WORLD_EVENT_UPDATED = 'worldEventUpdated',
 }
 
 export type CalliopeToClientMessagePayload = {
@@ -14,6 +15,11 @@ export type CalliopeToClientMessagePayload = {
 	}
 	[CalliopeToClientMessageType.WORLD_UNSHARED]: {
 		worldId: string
+	}
+	[CalliopeToClientMessageType.WORLD_EVENT_UPDATED]: {
+		worldId: string
+		// TODO: Type properly
+		event: string
 	}
 }
 

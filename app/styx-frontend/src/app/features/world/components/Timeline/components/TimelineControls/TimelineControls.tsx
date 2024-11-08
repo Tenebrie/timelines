@@ -1,9 +1,11 @@
-import { ArrowForward, Close, ZoomIn, ZoomOut } from '@mui/icons-material'
-import { Button, IconButton, Stack } from '@mui/material'
+import { ExpandMore, ZoomIn, ZoomOut } from '@mui/icons-material'
+import { Button, Divider, Stack } from '@mui/material'
 import { memo } from 'react'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
+import { useEventBusDispatch } from '../../../../../eventBus'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
+import { TimelineEdgeScroll } from '../TimelineEdgeScroll/TimelineEdgeScroll'
 
 type Props = {
 	onNavigateToTime: (timestamp: number) => void
@@ -12,8 +14,10 @@ type Props = {
 }
 
 const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Props) => {
-	const { selectedTimeOrNull, navigateToOutliner, navigateToCurrentWorldRoot } = useWorldRouter()
+	const { selectedTimeOrNull, navigateToOutliner } = useWorldRouter()
 	const { timeToLabel } = useWorldTime()
+	const scrollTimelineLeft = useEventBusDispatch({ event: 'scrollTimelineLeft' })
+	const scrollTimelineRight = useEventBusDispatch({ event: 'scrollTimelineRight' })
 
 	if (selectedTimeOrNull === null) {
 		return <></>
@@ -22,12 +26,9 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 	return (
 		<div
 			style={{
-				position: 'absolute',
-				top: 4,
-				left: 0,
-				marginLeft: 32,
-				marginRight: 32,
+				position: 'relative',
 				width: 'calc(100% - 64px)',
+				padding: '4px 32px',
 			}}
 		>
 			<Stack direction="row" justifyContent="space-between" width="calc(100%-64px)">
@@ -42,12 +43,6 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 					>
 						{timeToLabel(selectedTimeOrNull)}
 					</Button>
-					<IconButton color="secondary" onClick={() => onNavigateToTime(selectedTimeOrNull)}>
-						<ArrowForward />
-					</IconButton>
-					<IconButton color="secondary" onClick={() => navigateToCurrentWorldRoot()}>
-						<Close />
-					</IconButton>
 				</Stack>
 				<Stack direction="row" gap={0.5}>
 					<Button variant="outlined" color="secondary" onClick={onZoomOut}>
@@ -58,6 +53,20 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 					</Button>
 				</Stack>
 			</Stack>
+			<Divider sx={{ position: 'absolute', left: 0, bottom: 0, width: '100%' }} />
+			<div
+				style={{
+					position: 'absolute',
+					left: 'calc(50% - 13px)',
+					bottom: '18px',
+					width: '100%',
+					height: 1,
+				}}
+			>
+				<ExpandMore />
+			</div>
+			<TimelineEdgeScroll side="left" onClick={scrollTimelineLeft} />
+			<TimelineEdgeScroll side="right" onClick={scrollTimelineRight} />
 		</div>
 	)
 }

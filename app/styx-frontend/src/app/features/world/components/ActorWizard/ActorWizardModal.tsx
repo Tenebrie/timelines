@@ -2,7 +2,6 @@ import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, FormControl, InputLabel, Select, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
 import { useCreateActorMutation } from '../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
@@ -12,12 +11,11 @@ import { ModalFooter, ModalHeader } from '../../../../../ui-lib/components/Modal
 import { FormErrorBanner } from '../../../../components/FormErrorBanner'
 import { parseApiResponse } from '../../../../utils/parseApiResponse'
 import { useErrorState } from '../../../../utils/useErrorState'
+import { useModal } from '../../../modals/reducer'
 import { useActorColors } from '../../hooks/useActorColors'
-import { worldSlice } from '../../reducer'
-import { getActorWizardState } from '../../selectors'
 
 export const ActorWizardModal = () => {
-	const { isOpen } = useSelector(getActorWizardState)
+	const { isOpen, close } = useModal('actorWizard')
 	const { getColorOptions, renderOption, renderValue } = useActorColors()
 
 	const [name, setName] = useState('')
@@ -28,9 +26,6 @@ export const ActorWizardModal = () => {
 		MISSING_NAME: string
 		SERVER_SIDE_ERROR: string
 	}>()
-
-	const dispatch = useDispatch()
-	const { closeActorWizard } = worldSlice.actions
 
 	const [createActor, { isLoading }] = useCreateActorMutation()
 
@@ -75,7 +70,7 @@ export const ActorWizardModal = () => {
 			return
 		}
 
-		dispatch(closeActorWizard())
+		close()
 		navigateToActorEditor(response.id)
 	}
 
@@ -84,7 +79,7 @@ export const ActorWizardModal = () => {
 	})
 
 	return (
-		<Modal visible={isOpen} onClose={() => dispatch(closeActorWizard())}>
+		<Modal visible={isOpen} onClose={close}>
 			<ModalHeader>Create new actor</ModalHeader>
 			<FormErrorBanner errorState={errorState} />
 			<TextField
@@ -128,7 +123,7 @@ export const ActorWizardModal = () => {
 						</LoadingButton>
 					</span>
 				</Tooltip>
-				<Button variant="outlined" onClick={() => dispatch(closeActorWizard())}>
+				<Button variant="outlined" onClick={close}>
 					Cancel
 				</Button>
 			</ModalFooter>

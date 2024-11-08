@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getTimelinePreferences } from '../../preferences/selectors'
@@ -6,7 +6,7 @@ import { ScaleLevel } from '../../world/components/Timeline/types'
 
 export const useTimelineLevelScalar = () => {
 	const { lineSpacing } = useSelector(getTimelinePreferences)
-	const spacingMod = 10 / lineSpacing
+	const spacingMod = useMemo(() => 10 / lineSpacing, [lineSpacing])
 	const getLevelScalar = useCallback(
 		(forLevel: ScaleLevel) => {
 			switch (forLevel) {

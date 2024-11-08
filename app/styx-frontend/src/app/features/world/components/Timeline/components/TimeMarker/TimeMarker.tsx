@@ -1,3 +1,4 @@
+import { useCustomTheme } from '../../../../../../../hooks/useCustomTheme'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { ScaleLevel } from '../../types'
 import { Container } from './styles'
@@ -14,5 +15,7 @@ type Props = {
 export const TimeMarker = ({ timestamp, scroll, timelineScale, scaleLevel, transitioning }: Props) => {
 	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel })
 	const offset = Math.round(realTimeToScaledTime(timestamp / timelineScale)) + scroll
-	return <Container offset={offset} className={`${transitioning ? 'hidden' : ''}`} />
+	const theme = useCustomTheme()
+
+	return <Container $theme={theme} $offset={offset} className={`${transitioning ? 'hidden' : ''}`} />
 }

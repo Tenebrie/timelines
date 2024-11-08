@@ -28,7 +28,8 @@ export const ActorEvents = ({ actor }: Props) => {
 			...event,
 			secondary: timeToLabel(event.timestamp),
 			collapsed: !expandedEvents.includes(event.id),
-			active: event.revokedAt === undefined || event.revokedAt > selectedTimeOrZero,
+			active:
+				event.revokedAt === null || event.revokedAt === undefined || event.revokedAt > selectedTimeOrZero,
 		}))
 
 	return (

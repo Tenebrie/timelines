@@ -2,7 +2,6 @@ import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
 import { useCreateWorldEventMutation } from '../../../../../api/rheaApi'
 import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
@@ -10,19 +9,15 @@ import { useWorldRouter, worldRoutes } from '../../../../../router/routes/worldR
 import Modal, { useModalCleanup } from '../../../../../ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '../../../../../ui-lib/components/Modal'
 import { parseApiResponse } from '../../../../utils/parseApiResponse'
+import { useModal } from '../../../modals/reducer'
 import { TimestampField } from '../../../time/components/TimestampField'
-import { worldSlice } from '../../reducer'
-import { getEventWizardState } from '../../selectors'
 
 export const EventWizardModal = () => {
-	const { isOpen, timestamp: initialTimestamp } = useSelector(getEventWizardState)
+	const { isOpen, timestamp: initialTimestamp, close } = useModal('eventWizard')
 
 	const [name, setName] = useState('')
 	const [timestamp, setTimestamp] = useState(initialTimestamp)
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
-
-	const dispatch = useDispatch()
-	const { closeEventWizard } = worldSlice.actions
 
 	const [createWorldEvent, { isLoading }] = useCreateWorldEventMutation()
 
@@ -75,7 +70,7 @@ export const EventWizardModal = () => {
 			return
 		}
 
-		dispatch(closeEventWizard())
+		close()
 		navigateToEventEditor(response.id)
 	}
 
@@ -84,7 +79,7 @@ export const EventWizardModal = () => {
 	})
 
 	return (
-		<Modal visible={isOpen} onClose={() => dispatch(closeEventWizard())}>
+		<Modal visible={isOpen} onClose={close}>
 			<ModalHeader>Create new event</ModalHeader>
 			<TextField
 				label="Name"
@@ -110,7 +105,7 @@ export const EventWizardModal = () => {
 						</LoadingButton>
 					</span>
 				</Tooltip>
-				<Button variant="outlined" onClick={() => dispatch(closeEventWizard())}>
+				<Button variant="outlined" onClick={close}>
 					Cancel
 				</Button>
 			</ModalFooter>

@@ -57,10 +57,11 @@ model World {
   calendar   WorldCalendarType @default(COUNTUP)
   timeOrigin BigInt            @default(0)
 
-  owner         User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId       String
-  accessMode    WorldAccessMode     @default(Private)
-  collaborators CollaboratingUser[]
+  owner            User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId          String
+  accessMode       WorldAccessMode     @default(Private)
+  collaborators    CollaboratingUser[]
+  worldEventTracks WorldEventTrack[]
 }
 
 enum WorldEventType {
@@ -91,8 +92,10 @@ model WorldEvent {
   externalLink String            @default("")
   extraFields  WorldEventField[]
 
-  world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
-  worldId String
+  world             World            @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  track             WorldEventTrack? @relation(fields: [worldEventTrackId], references: [id], onDelete: Cascade)
+  worldId           String
+  worldEventTrackId String?
 
   targetActors     Actor[] @relation("EventTargetActors")
   mentionedActors  Actor[] @relation("EventMentionedActors")
@@ -113,6 +116,20 @@ model WorldEventDelta {
 
   worldEventId String
   worldEvent   WorldEvent @relation(fields: [worldEventId], references: [id], onDelete: Cascade)
+}
+
+model WorldEventTrack {
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  name     String
+  position Int
+
+  world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  worldId String
+
+  events WorldEvent[]
 }
 
 model Actor {

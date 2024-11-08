@@ -4,6 +4,7 @@ import { baseApi } from '../api/baseApi'
 import adminReducer from './features/admin/reducer'
 import authReducer from './features/auth/reducer'
 import spinnyReducer from './features/demo/spinny/reducer'
+import modalsReducer from './features/modals/reducer'
 import preferencesReducer from './features/preferences/reducer'
 import timelineReducer from './features/world/components/Timeline/reducer'
 import worldReducer from './features/world/reducer'
@@ -15,6 +16,7 @@ export const generateStore = ({ preloadedState }: { preloadedState?: PreloadedSt
 			api: baseApi.reducer,
 			admin: adminReducer,
 			auth: authReducer,
+			modals: modalsReducer,
 			spinny: spinnyReducer,
 			world: worldReducer,
 			worldList: worldListReducer,

@@ -1,14 +1,16 @@
 import styled from 'styled-components'
 
-export const Container = styled.div.attrs<{ offset: number }>((props) => ({
+import { CustomTheme } from '../../../../../../../hooks/useCustomTheme'
+
+export const Container = styled.div.attrs<{ $offset: number }>((props) => ({
 	style: {
-		transform: `translateX(${props.offset}px)`,
+		transform: `translateX(${props.$offset}px)`,
 	},
-}))<{ offset: number }>`
+}))<{ $offset: number; $theme: CustomTheme }>`
 	top: 0;
 	position: absolute;
-	background: white;
-	width: 3px;
+	background: ${(props) => props.$theme.material.palette.primary.main};
+	width: 2px;
 	margin-left: -1px;
 	height: 100%;
 	opacity: 1;

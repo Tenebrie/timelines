@@ -13,6 +13,11 @@ export default defineConfig({
 	},
 	build: {
 		outDir: 'build',
+		rollupOptions: {
+			output: {
+				manualChunks: () => 'everything',
+			},
+		},
 	},
 	server: {
 		port: 8080,

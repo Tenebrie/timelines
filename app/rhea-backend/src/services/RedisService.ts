@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import { User, WorldEvent } from '@prisma/client'
 
 import {
 	RedisChannel,
@@ -38,6 +38,25 @@ export const RedisService = {
 				userId: user.id,
 				worldId,
 				timestamp: timestamp.toISOString(),
+			},
+		})
+	},
+
+	notifyAboutWorldEventUpdate: ({
+		user,
+		worldId,
+		event,
+	}: {
+		user: User
+		worldId: string
+		event: WorldEvent
+	}) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.WORLD_EVENT_UPDATED,
+			data: {
+				userId: user.id,
+				worldId,
+				event: JSON.stringify(event, (_, value) => (typeof value === 'bigint' ? value.toString() : value)),
 			},
 		})
 	},

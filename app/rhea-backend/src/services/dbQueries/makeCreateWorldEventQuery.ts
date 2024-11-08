@@ -8,7 +8,15 @@ export const makeCreateWorldEventQuery = (
 	worldId: string,
 	data: Pick<
 		WorldEvent,
-		'type' | 'extraFields' | 'name' | 'description' | 'timestamp' | 'revokedAt' | 'icon' | 'externalLink'
+		| 'type'
+		| 'extraFields'
+		| 'name'
+		| 'description'
+		| 'timestamp'
+		| 'revokedAt'
+		| 'icon'
+		| 'externalLink'
+		| 'worldEventTrackId'
 	> & {
 		customNameEnabled: boolean
 		targetActors: Actor[]
@@ -33,6 +41,7 @@ export const makeCreateWorldEventQuery = (
 			},
 			customName: data.customNameEnabled,
 			externalLink: data.externalLink,
+			worldEventTrackId: data.worldEventTrackId,
 		},
 		select: {
 			id: true,

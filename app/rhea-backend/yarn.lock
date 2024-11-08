@@ -3966,10 +3966,10 @@ module-alias@^2.2.2:
   resolved "https://registry.yarnpkg.com/module-alias/-/module-alias-2.2.2.tgz#151cdcecc24e25739ff0aa6e51e1c5716974c0e0"
   integrity sha512-A/78XjoX2EmNvppVWEhM2oGk3x4lLxnkEA4jTbaK97QKSDjkIoOsKQlfylt/d3kKKi596Qy3NP5XrXJ6fZIC9Q==
 
-moonflower@^0.9.2:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/moonflower/-/moonflower-0.9.2.tgz#1d3f8a25708c07b43579e2371c4cd4498148e24f"
-  integrity sha512-ftH7W7oU+QIQNgzdlXbYdEcL+novRsydbob3SFYh/Hu8gAmut0N7Lu+PwFoTJKS8gZ/5dNNtRK4GfO9dVc/x0Q==
+moonflower@^0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/moonflower/-/moonflower-0.9.3.tgz#ea7344275b7915cd1afae0c0ecaad2e429c50546"
+  integrity sha512-zJcVeHGUdalb5hr20+TPtjeTgkGAaKC8jEykRHyIEV2BRu1FD7xgJOanMOSw+mxPKoW/azrYvlkaJ3ryXzXxQg==
   dependencies:
     http-status-codes "^2.2.0"
     module-alias "^2.2.2"

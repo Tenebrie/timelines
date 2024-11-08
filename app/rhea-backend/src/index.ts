@@ -11,6 +11,7 @@ import { AuthRouter } from './routers/AuthRouter'
 import { ConstantsRouter } from './routers/ConstantsRouter'
 import { HealthRouter } from './routers/HealthRouter'
 import { WorldEventRouter } from './routers/WorldEventRouter'
+import { WorldEventTrackRouter } from './routers/WorldEventTrackRouter'
 import { WorldRouter } from './routers/WorldRouter'
 import { RedisService } from './services/RedisService'
 import { isRunningInTest } from './utils/isRunningInTest'
@@ -54,6 +55,8 @@ app
 	.use(HealthRouter.allowedMethods())
 	.use(WorldEventRouter.routes())
 	.use(WorldEventRouter.allowedMethods())
+	.use(WorldEventTrackRouter.routes())
+	.use(WorldEventTrackRouter.allowedMethods())
 	.use(WorldRouter.routes())
 	.use(WorldRouter.allowedMethods())
 

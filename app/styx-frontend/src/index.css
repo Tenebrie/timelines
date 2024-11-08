@@ -12,11 +12,20 @@ body {
 	/* background: #0a1929; */
 	/* background: #eaeff1; */
 	/* color: rgb(178, 186, 194); */
+	color: #b053df;
 
 	height: 100%;
 	position: fixed;
 	overflow-y: auto;
 	-webkit-overflow-scrolling: touch;
+}
+
+body.cursor-resizing {
+	cursor: ns-resize !important;
+}
+
+body.cursor-grabbing {
+	cursor: grabbing !important;
 }
 
 code {

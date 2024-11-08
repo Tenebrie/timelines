@@ -22,11 +22,12 @@ import {
 import { parseActorList } from './utils/parseActorList'
 import { ContentStringValidator } from './validators/ContentStringValidator'
 import { NameStringValidator } from './validators/NameStringValidator'
-import { NullableContentStringValidator } from './validators/NullableContentStringValidator'
 import { NullableNameStringValidator } from './validators/NullableNameStringValidator'
+import { NullableUuidStringValidator } from './validators/NullableUuidStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
+import { UuidStringValidator } from './validators/UuidStringValidator'
 import { WorldEventFieldValidator } from './validators/WorldEventFieldValidator'
 import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
 
@@ -65,6 +66,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		mentionedActorIds: RequiredParam(StringArrayValidator),
 		customNameEnabled: RequiredParam(BooleanValidator),
 		externalLink: RequiredParam(ContentStringValidator),
+		worldEventTrackId: OptionalParam(UuidStringValidator),
 	})
 
 	const targetActors = (await parseActorList(params.targetActorIds)) ?? []
@@ -77,6 +79,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 			extraFields: params.modules,
 			targetActors,
 			mentionedActors,
+			worldEventTrackId: params.worldEventTrackId ?? null,
 		},
 	})
 
@@ -89,7 +92,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	useApiEndpoint({
 		name: 'updateWorldEvent',
 		description: 'Updates the target world event',
-		tags: [worldDetailsTag],
+		tags: [],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -110,33 +113,38 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		mentionedActorIds: OptionalParam(StringArrayValidator),
 		customNameEnabled: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(OptionalURLStringValidator),
+		worldEventTrackId: OptionalParam(NullableUuidStringValidator),
 	})
 
+	const mappedParams = {
+		extraFields: params.modules,
+		name: params.name,
+		icon: params.icon,
+		timestamp: params.timestamp,
+		revokedAt: params.revokedAt,
+		description: params.description,
+		customName: params.customNameEnabled,
+		externalLink: params.externalLink,
+		worldEventTrackId: params.worldEventTrackId,
+	}
+
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
-	await ValidationService.checkEventValidity(eventId)
-	await ValidationService.checkIfEventIsRevokableAt(eventId, params.revokedAt)
+	await ValidationService.checkEventPatchValidity(eventId, mappedParams)
 
 	const targetActors = await parseActorList(params.targetActorIds)
 	const mentionedActors = await parseActorList(params.mentionedActorIds)
 
-	const { event, world } = await WorldEventService.updateWorldEvent({
+	const { event } = await WorldEventService.updateWorldEvent({
 		worldId,
 		eventId,
 		params: {
-			extraFields: params.modules,
-			name: params.name,
-			icon: params.icon,
-			timestamp: params.timestamp,
-			revokedAt: params.revokedAt,
-			description: params.description,
+			...mappedParams,
 			targetActors,
 			mentionedActors,
-			customName: params.customNameEnabled,
-			externalLink: params.externalLink,
 		},
 	})
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldEventUpdate({ user, worldId, event })
 
 	return event
 })
@@ -245,7 +253,7 @@ router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		timestamp: RequiredParam(BigIntValidator),
 		name: RequiredParam(NullableNameStringValidator),
-		description: RequiredParam(NullableContentStringValidator),
+		description: RequiredParam(NullableNameStringValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -279,8 +287,9 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 
 	const params = useRequestBody(ctx, {
 		timestamp: OptionalParam(BigIntValidator),
-		name: OptionalParam(NullableContentStringValidator),
-		description: OptionalParam(NullableContentStringValidator),
+		name: OptionalParam(NullableNameStringValidator),
+		description: OptionalParam(NullableNameStringValidator),
+		worldEventTrackId: OptionalParam(NullableUuidStringValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -290,17 +299,21 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 		await ValidationService.checkIfEventDeltaStateIsCreatableAt(eventId, params.timestamp, [deltaId])
 	}
 
-	const { deltaState, world } = await WorldEventDeltaService.updateEventDeltaState({
+	const { deltaState, event } = await WorldEventDeltaService.updateEventDeltaState({
 		worldId,
+		eventId,
 		deltaId,
 		params: {
 			timestamp: params.timestamp,
 			name: params.name,
 			description: params.description,
 		},
+		eventParams: {
+			worldEventTrackId: params.worldEventTrackId,
+		},
 	})
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldEventUpdate({ user, worldId, event })
 
 	return deltaState
 })

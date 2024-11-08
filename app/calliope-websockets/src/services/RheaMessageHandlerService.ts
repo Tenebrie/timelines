@@ -42,6 +42,19 @@ const handlers: RheaToCalliopeMessageHandlers = {
 			})
 		)
 	},
+
+	[RheaToCalliopeMessageType.WORLD_EVENT_UPDATED]: (data) => {
+		const clients = WebsocketService.findClients(data.userId)
+		clients.forEach((client) =>
+			client.sendMessage({
+				type: CalliopeToClientMessageType.WORLD_EVENT_UPDATED,
+				data: {
+					worldId: data.worldId,
+					event: data.event,
+				},
+			})
+		)
+	},
 }
 
 export const RheaMessageHandlerService = {

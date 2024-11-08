@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { useAuthCheck } from './app/features/auth/authCheck/useAuthCheck'
 import { LostConnectionAlert } from './app/features/auth/LostConnectionAlert/LostConnectionAlert'
 import { useLiveUpdates } from './app/features/liveUpdates/useLiveUpdates'
+import { ModalRenderer } from './app/features/modals/ModalRenderer'
 import { getUserPreferences } from './app/features/preferences/selectors'
 import { useSavedPreferences } from './app/features/preferences/useSavedPreferences'
 import { darkTheme, lightTheme } from './app/features/theming/themes'
@@ -37,6 +38,7 @@ const App = () => {
 			borderRadius: 1,
 			backgroundColor: theme.palette.primary.main,
 		},
+		transition: 'background 0.3s',
 	}
 
 	return (
@@ -45,6 +47,7 @@ const App = () => {
 				<Box sx={themeOverrides}>
 					<Container>
 						<Outlet />
+						<ModalRenderer />
 					</Container>
 					<LostConnectionAlert server="rhea" />
 					<LostConnectionAlert server="calliope" />

@@ -50,6 +50,10 @@ export const preferencesSlice = createSlice({
 			state.timeline.lineSpacing = payload
 			saveToLocalStorage(state)
 		},
+		setTimelineHeight: (state, { payload }: PayloadAction<number>) => {
+			state.timeline.containerHeight = payload
+			saveToLocalStorage(state)
+		},
 
 		/* Outliner */
 		setOutlinerTab: (state, { payload }: PayloadAction<number>) => {

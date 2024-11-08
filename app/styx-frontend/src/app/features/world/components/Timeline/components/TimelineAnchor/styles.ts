@@ -1,12 +1,13 @@
 import styled from 'styled-components'
 
+import { CustomTheme } from '../../../../../../../hooks/useCustomTheme'
+
 export const TimelineAnchorContainer = styled.div.attrs<{ offset: number }>((props) => ({
 	style: {
 		transform: `translateX(${props.offset}px)`,
 	},
 }))<{ offset: number }>`
 	position: absolute;
-	width: fit-content;
 	bottom: 0;
 `
 
@@ -38,12 +39,12 @@ export const Divider = styled.div.attrs<{ color: string; height: number }>((prop
 	bottom: 0;
 `
 
-export const DividerLabel = styled.div`
+export const DividerLabel = styled.div<{ $theme: CustomTheme }>`
 	position: absolute;
 	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	white-space: pre;
-	color: #eaeff1;
+	color: ${(props) => props.$theme.custom.palette.timelineAnchor.text};
 `

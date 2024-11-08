@@ -53,7 +53,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 	return (
 		<>
 			<List disablePadding>
-				<ZebraWrapper zebra>
+				<ZebraWrapper $zebra>
 					<ListItem disablePadding>
 						<StyledListItemButton onClick={scrollTimelineToEvent}>
 							<ListItemText
@@ -70,7 +70,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 					</ListItem>
 				</ZebraWrapper>
 				{paragraphs.map((p, index) => (
-					<ZebraWrapper key={p} zebra={index % 2 === 1}>
+					<ZebraWrapper key={p} $zebra={index % 2 === 1}>
 						<ListItem disablePadding>
 							<StyledListItemButton>
 								<ListItemText
@@ -93,7 +93,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 					</ZebraWrapper>
 				))}
 				{targetActors.length > 0 && (
-					<ZebraWrapper zebra={targetActorIndex % 2 === 0}>
+					<ZebraWrapper $zebra={targetActorIndex % 2 === 0}>
 						<ListItem disablePadding>
 							<StyledListItemButton>
 								<ListItemText
@@ -112,7 +112,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 					</ZebraWrapper>
 				)}
 				{mentionedActors.length > 0 && (
-					<ZebraWrapper zebra={mentionedActorsIndex % 2 === 1}>
+					<ZebraWrapper $zebra={mentionedActorsIndex % 2 === 1}>
 						<ListItem disablePadding>
 							<StyledListItemButton>
 								<ListItemText
