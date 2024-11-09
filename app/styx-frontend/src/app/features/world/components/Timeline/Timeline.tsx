@@ -11,7 +11,6 @@ import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
 import { getWorldState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
-import { TimelineContextMenu } from './components/TimelineContextMenu/TimelineContextMenu'
 import { TimelineControls } from './components/TimelineControls/TimelineControls'
 import { TimelineGrabber } from './components/TimelineGrabber/TimelineGrabber'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
@@ -146,7 +145,6 @@ export const Timeline = () => {
 						/>
 					)}
 					<TimelineGrabber />
-					<TimelineContextMenu />
 				</TimelineContainer>
 			</TimelineWrapper>
 		</Paper>

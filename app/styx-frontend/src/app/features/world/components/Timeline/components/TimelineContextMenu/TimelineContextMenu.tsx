@@ -1,5 +1,5 @@
 import { CircularProgress, Divider, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
-import { memo, useCallback } from 'react'
+import { memo, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
@@ -7,26 +7,38 @@ import { useModal } from '../../../../../modals/reducer'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { worldSlice } from '../../../../reducer'
 import { getTimelineContextMenuState, getWorldState } from '../../../../selectors'
+import { MarkerType, TimelineEntity } from '../../../../types'
 import { useTimelineContextMenuRequests } from './hooks/useTimelineContextMenuRequests'
 
-export const TimelineContextMenuComponent = () => {
-	const { timeToLabel } = useWorldTime()
-	const { id: worldId } = useSelector(getWorldState)
-	const { isOpen, selectedTime, selectedEvent, mousePos } = useSelector(getTimelineContextMenuState)
+type Props = {
+	markers: TimelineEntity<MarkerType>[]
+}
 
+export const TimelineContextMenuComponent = ({ markers }: Props) => {
+	const { timeToLabel } = useWorldTime()
+	const { id: worldId, selectedTimelineMarkers } = useSelector(getWorldState)
+	const { clearSelections } = worldSlice.actions
 	const {
-		navigateToOutliner,
-		navigateToEventCreator,
-		navigateToEventDeltaCreator,
-		selectTime,
-		selectedTimeOrZero: selectedWorldTime,
-	} = useWorldRouter()
+		isOpen,
+		selectedTime,
+		selectedEvent: targetedMarker,
+		mousePos,
+	} = useSelector(getTimelineContextMenuState)
+
+	const selectedMarker = useMemo(
+		() =>
+			selectedTimelineMarkers.length === 1
+				? (markers.find((marker) => marker.key === selectedTimelineMarkers[0]) ?? null)
+				: null,
+		[markers, selectedTimelineMarkers],
+	)
+
+	const { navigateToEventCreator, navigateToEventDeltaCreator } = useWorldRouter()
 
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 
 	const dispatch = useDispatch()
 	const { closeTimelineContextMenu } = worldSlice.actions
-	const { open: openRevokedStatementWizard } = useModal('revokedStatementWizard')
 	const { open: openDeleteEventModal } = useModal('deleteEventModal')
 	const { open: openDeleteEventDeltaModal } = useModal('deleteEventDeltaModal')
 
@@ -40,60 +52,53 @@ export const TimelineContextMenuComponent = () => {
 		navigateToEventCreator(selectedTime)
 	}, [navigateToEventCreator, onClose, selectedTime])
 
-	const onRevokeEvent = useCallback(() => {
-		onClose()
-		selectTime(selectedTime)
-		openRevokedStatementWizard({ preselectedEventId: '' })
-		navigateToOutliner(selectedTime)
-	}, [navigateToOutliner, onClose, openRevokedStatementWizard, selectTime, selectedTime])
-
 	const onReplaceSelectedEvent = useCallback(() => {
 		onClose()
-		if (!selectedEvent) {
+		if (!selectedMarker) {
 			return
 		}
 		navigateToEventDeltaCreator({
-			eventId: selectedEvent.id,
-			selectedTime: selectedWorldTime,
+			eventId: selectedMarker.eventId,
+			selectedTime: selectedTime,
 		})
-	}, [navigateToEventDeltaCreator, onClose, selectedEvent, selectedWorldTime])
+	}, [navigateToEventDeltaCreator, onClose, selectedMarker, selectedTime])
 
-	const onRevokeSelectedEvent = useCallback(async () => {
-		if (!selectedEvent) {
+	const onResolveSelectedEvent = useCallback(async () => {
+		if (!selectedMarker) {
 			return
 		}
 
 		await revokeEventAt({
 			worldId,
-			eventId: selectedEvent.eventId,
-			revokedAt: selectedWorldTime,
+			eventId: selectedMarker.eventId,
+			revokedAt: selectedTime,
 		})
 
 		onClose()
-	}, [onClose, revokeEventAt, selectedEvent, selectedWorldTime, worldId])
+	}, [onClose, revokeEventAt, selectedMarker, selectedTime, worldId])
 
 	const onUnrevokeSelectedEvent = useCallback(async () => {
-		if (!selectedEvent) {
+		if (!targetedMarker) {
 			return
 		}
 
 		await unrevokeEventAt({
 			worldId,
-			eventId: selectedEvent.eventId,
+			eventId: targetedMarker.eventId,
 		})
 
 		onClose()
-	}, [onClose, selectedEvent, unrevokeEventAt, worldId])
+	}, [onClose, targetedMarker, unrevokeEventAt, worldId])
 
 	const onDeleteSelectedEvent = useCallback(() => {
 		onClose()
 
-		if (!selectedEvent) {
+		if (!targetedMarker) {
 			return
 		}
 
-		if (selectedEvent.markerType === 'deltaState') {
-			const deltaState = selectedEvent.deltaStates.find((state) => state.id === selectedEvent.id)
+		if (targetedMarker.markerType === 'deltaState') {
+			const deltaState = targetedMarker.deltaStates.find((state) => state.id === targetedMarker.id)
 			if (!deltaState) {
 				return
 			}
@@ -102,41 +107,41 @@ export const TimelineContextMenuComponent = () => {
 			return
 		}
 
-		openDeleteEventModal({ target: selectedEvent })
-	}, [onClose, openDeleteEventDeltaModal, openDeleteEventModal, selectedEvent])
+		openDeleteEventModal({ target: targetedMarker })
+	}, [onClose, openDeleteEventDeltaModal, openDeleteEventModal, targetedMarker])
+
+	const onUnselectAll = useCallback(() => {
+		dispatch(clearSelections())
+		onClose()
+	}, [clearSelections, dispatch, onClose])
 
 	return (
 		<Menu
 			open={isOpen}
 			onClose={onClose}
+			defaultValue={undefined}
 			MenuListProps={{ sx: { minWidth: 250 } }}
 			anchorReference="anchorPosition"
 			anchorPosition={{ top: mousePos.y, left: mousePos.x }}
 		>
-			{selectedEvent && (
+			{/* Click on marker */}
+			{targetedMarker && (
 				<MenuItem disabled>
-					<ListItemText primary={selectedEvent.markerType === 'deltaState' ? 'Data point' : 'Event'} />
+					<ListItemText
+						primary={
+							targetedMarker.markerType === 'deltaState'
+								? 'Data point'
+								: targetedMarker.markerType === 'issuedAt'
+									? 'Event'
+									: 'Event resolution'
+						}
+					/>
 				</MenuItem>
 			)}
-			{selectedEvent && <Divider />}
-			{selectedEvent && (
-				<MenuItem onClick={onReplaceSelectedEvent} disabled={isRequestInFlight}>
-					<ListItemText primary="Create data point" />
-				</MenuItem>
-			)}
-			{(selectedEvent?.markerType === 'issuedAt' || selectedEvent?.markerType === 'deltaState') && (
-				<MenuItem onClick={onRevokeSelectedEvent} disabled={isRequestInFlight}>
-					<ListItemText primary="Resolve this event" />
-					{isRequestInFlight && (
-						<ListItemIcon>
-							<CircularProgress size={20} />
-						</ListItemIcon>
-					)}
-				</MenuItem>
-			)}
-			{selectedEvent?.markerType === 'revokedAt' && (
+			{targetedMarker && <Divider />}
+			{targetedMarker?.markerType === 'revokedAt' && (
 				<MenuItem onClick={onUnrevokeSelectedEvent} disabled={isRequestInFlight}>
-					<ListItemText primary="Unresolve this event" />
+					<ListItemText primary="Remove event end time" />
 					{isRequestInFlight && (
 						<ListItemIcon>
 							<CircularProgress size={20} />
@@ -144,27 +149,64 @@ export const TimelineContextMenuComponent = () => {
 					)}
 				</MenuItem>
 			)}
-			{selectedEvent?.markerType === 'issuedAt' && (
+			{targetedMarker?.markerType === 'issuedAt' && (
 				<MenuItem onClick={onDeleteSelectedEvent}>
 					<ListItemText primary="Delete this event" />
 				</MenuItem>
 			)}
-			{selectedEvent?.markerType === 'deltaState' && (
+			{targetedMarker?.markerType === 'deltaState' && (
 				<MenuItem onClick={onDeleteSelectedEvent}>
 					<ListItemText primary="Delete this data point" />
 				</MenuItem>
 			)}
-			{selectedEvent && <Divider />}
-			<MenuItem disabled>
-				<ListItemText primary={timeToLabel(selectedTime)} />
-			</MenuItem>
-			<Divider />
-			<MenuItem onClick={onCreateEvent}>
-				<ListItemText primary="Create event here" />
-			</MenuItem>
-			<MenuItem onClick={onRevokeEvent}>
-				<ListItemText primary="Resolve event here" />
-			</MenuItem>
+
+			{/* Click on timeline with exactly one selected */}
+			{!targetedMarker && selectedMarker && (
+				<MenuItem disabled>
+					<ListItemText
+						primary={
+							selectedMarker.markerType === 'deltaState'
+								? 'Data point'
+								: selectedMarker.markerType === 'issuedAt'
+									? 'Event'
+									: 'Event resolution'
+						}
+					/>
+				</MenuItem>
+			)}
+			{!targetedMarker && selectedMarker && <Divider />}
+			{!targetedMarker && selectedMarker && selectedMarker.markerType !== 'revokedAt' && (
+				<MenuItem onClick={onReplaceSelectedEvent}>
+					<ListItemText primary="Create data point" />
+				</MenuItem>
+			)}
+			{!targetedMarker && selectedMarker && (
+				<MenuItem onClick={onResolveSelectedEvent}>
+					<ListItemText primary="Resolve event" />
+				</MenuItem>
+			)}
+			{!targetedMarker && selectedMarker && <Divider />}
+
+			{/* Click on timeline with at least one selected */}
+			{!targetedMarker && selectedTimelineMarkers.length > 0 && (
+				<MenuItem onClick={onUnselectAll}>
+					<ListItemText primary="Unselect all" />
+				</MenuItem>
+			)}
+			{!targetedMarker && selectedTimelineMarkers.length > 0 && <Divider />}
+
+			{/* Click on timeline */}
+			{!targetedMarker && (
+				<MenuItem disabled>
+					<ListItemText primary={timeToLabel(selectedTime)} />
+				</MenuItem>
+			)}
+			{!targetedMarker && <Divider />}
+			{!targetedMarker && (
+				<MenuItem onClick={onCreateEvent}>
+					<ListItemText primary="Create event" />
+				</MenuItem>
+			)}
 		</Menu>
 	)
 }

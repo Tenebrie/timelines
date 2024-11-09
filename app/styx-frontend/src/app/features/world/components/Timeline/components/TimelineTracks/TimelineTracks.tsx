@@ -5,6 +5,7 @@ import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState, getWorldState } from '../../../../selectors'
 import { ScaleLevel } from '../../types'
+import { TimelineContextMenu } from '../TimelineContextMenu/TimelineContextMenu'
 import useEventTracks from './hooks/useEventTracks'
 import { TimelineTrackItem } from './TimelineTrackItem'
 
@@ -53,6 +54,7 @@ export const TimelineTracks = (props: Props) => {
 					{...props}
 				/>
 			))}
+			<TimelineContextMenu markers={eventTracks.flatMap((track) => track.events)} />
 		</Stack>
 	)
 }

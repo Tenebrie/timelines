@@ -162,6 +162,7 @@ export const worldSlice = createSlice({
 		clearSelections: (state) => {
 			state.selectedActors = []
 			state.selectedEvents = []
+			state.selectedTimelineMarkers = []
 		},
 		setIsReadOnly: (state, { payload }: PayloadAction<boolean>) => {
 			state.isReadOnly = payload
