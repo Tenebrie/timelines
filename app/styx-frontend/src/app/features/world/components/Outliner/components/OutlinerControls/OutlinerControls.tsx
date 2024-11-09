@@ -1,16 +1,15 @@
 import { Filter } from '@mui/icons-material'
-import { Button, Checkbox, Divider, FormControlLabel, FormGroup, Popover, Slider, Stack } from '@mui/material'
+import { Button, Checkbox, FormControlLabel, FormGroup, Popover, Stack } from '@mui/material'
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useIsReadOnly } from '../../../../../../../hooks/useIsReadOnly'
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { preferencesSlice } from '../../../../../preferences/reducer'
-import { getOutlinerPreferences, getTimelinePreferences } from '../../../../../preferences/selectors'
+import { getOutlinerPreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { getWorldState } from '../../../../selectors'
 import { CreateHerePopover } from '../CreateHerePopover/CreateHerePopover'
-import { useTimelineSpacingSlider } from './useTimelineSpacingSlider'
 
 export const OutlinerControls = () => {
 	const { timeToLabel } = useWorldTime()
@@ -18,12 +17,10 @@ export const OutlinerControls = () => {
 
 	const dispatch = useDispatch()
 	const { events } = useSelector(getWorldState)
-	const { useCustomLineSpacing } = useSelector(getTimelinePreferences)
 	const { showInactiveStatements } = useSelector(getOutlinerPreferences)
-	const { setUseCustomTimelineSpacing, setShowInactiveStatements } = preferencesSlice.actions
+	const { setShowInactiveStatements } = preferencesSlice.actions
 
 	const { isReadOnly } = useIsReadOnly()
-	const { timelineSpacing, setTimelineSpacing } = useTimelineSpacingSlider()
 
 	const popupState = usePopupState({ variant: 'popover', popupId: 'outlinerFilters' })
 	const createHerePopupState = usePopupState({ variant: 'popover', popupId: 'createHerePopover' })
@@ -64,27 +61,6 @@ export const OutlinerControls = () => {
 									}
 									label="Include revoked statements"
 									checked={showInactiveStatements}
-								/>
-								<Divider />
-								<FormControlLabel
-									control={
-										<Checkbox
-											onChange={(event) => dispatch(setUseCustomTimelineSpacing(event.target.checked))}
-										/>
-									}
-									label="Custom timeline spacing"
-									checked={useCustomLineSpacing}
-								/>
-								<Slider
-									disabled={!useCustomLineSpacing}
-									aria-label="Spacing"
-									getAriaValueText={() => `Spacing = ${timelineSpacing}`}
-									valueLabelDisplay="auto"
-									step={0.1}
-									value={timelineSpacing}
-									min={0.5}
-									max={5}
-									onChange={(_, value) => setTimelineSpacing(value)}
 								/>
 							</FormGroup>
 						</Stack>

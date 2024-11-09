@@ -4,7 +4,7 @@ import { useCustomTheme } from '../../../../../../../hooks/useCustomTheme'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { ScaleLevel } from '../../types'
-import { TimelineScroll } from '../../utils/TimelineScroll'
+import { TimelineState } from '../../utils/TimelineState'
 import { TimelineAnchorContainer } from './styles'
 import { TimelineAnchorLine } from './TimelineAnchorLine'
 
@@ -15,28 +15,18 @@ type Props = {
 	visible: boolean
 	scroll: number
 	lineSpacing: number
-	timelineScale: number
 	scaleLevel: ScaleLevel
 	containerWidth: number
 }
 
-const TimelineAnchorComponent = ({
-	lineSpacing,
-	timelineScale,
-	scaleLevel,
-	scroll,
-	visible,
-	containerWidth,
-}: Props) => {
+const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, containerWidth }: Props) => {
 	const theme = useCustomTheme()
 	const { parseTime, timeToShortLabel } = useWorldTime()
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel })
 
 	const lineCount = useMemo(
-		() =>
-			Math.ceil((containerWidth / lineSpacing) * timelineScale) +
-			Math.ceil(TimelineAnchorPadding / lineSpacing) * 2,
-		[containerWidth, lineSpacing, timelineScale],
+		() => Math.ceil(containerWidth / lineSpacing) + Math.ceil(TimelineAnchorPadding / lineSpacing) * 2,
+		[containerWidth, lineSpacing],
 	)
 
 	const lastSeenScroll = useRef(0)
@@ -44,9 +34,9 @@ const TimelineAnchorComponent = ({
 
 	useEffect(() => {
 		const timeout = window.setInterval(() => {
-			if (lastSeenScroll.current !== TimelineScroll.current) {
-				lastSeenScroll.current = TimelineScroll.current
-				setScroll(TimelineScroll.current)
+			if (lastSeenScroll.current !== TimelineState.scroll) {
+				lastSeenScroll.current = TimelineState.scroll
+				setScroll(TimelineState.scroll)
 			}
 		}, 10)
 		return () => {
@@ -66,7 +56,6 @@ const TimelineAnchorComponent = ({
 					visible={visible}
 					lineCount={lineCount}
 					lineSpacing={lineSpacing}
-					timelineScale={timelineScale}
 					scaleLevel={scaleLevel}
 					timelineScroll={scroll}
 					parseTime={parseTime}

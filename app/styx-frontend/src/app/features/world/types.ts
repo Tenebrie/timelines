@@ -26,17 +26,16 @@ export type WorldEventDelta = WorldEvent['deltaStates'][number]
 export type WorldEventType = WorldEvent['type']
 export type WorldCalendarType = WorldDetails['calendar']
 
-export type WorldEventBundle = {
-	id: string
-	key: string
-	events: WorldEvent[]
-	markerType: 'bundle'
-	name: string
-	timestamp: number
-	icon: 'bundle'
-}
-
 export type MarkerType = 'issuedAt' | 'deltaState' | 'revokedAt' | 'ghostEvent' | 'ghostDelta'
+/**
+ * id: ID of the object this marker represents
+ * 	- issuedAt: ID of the event
+ *  - revokedAt: ID of the event
+ *  - deltaState: ID of the delta
+ * eventId: Always ID of the corresponding event
+ * key: Unique ID of the marker
+ *  - (e.g. `1111-revoked`)
+ */
 export type TimelineEntity<T extends MarkerType> = WorldEvent & {
 	eventId: string
 	key: string

@@ -7,27 +7,27 @@ import { TimelineChain } from '../TimelineChain/TimelineChain'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
-	timelineScale: number
 	visible: boolean
-	highlighted: boolean
+	edited: boolean
+	selected: boolean
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
 export const TimelineChainPositionerComponent = ({
 	entity,
-	timelineScale,
 	visible,
-	highlighted,
+	edited,
+	selected,
 	realTimeToScaledTime,
 }: Props) => {
-	const position = realTimeToScaledTime(Math.floor(entity.markerPosition) / timelineScale)
+	const position = realTimeToScaledTime(Math.floor(entity.markerPosition))
 
 	return (
 		<Chain $position={position} className={`${visible ? 'visible' : ''}`}>
 			<TimelineChain
 				entity={entity}
-				timelineScale={timelineScale}
-				highlighted={highlighted}
+				edited={edited}
+				selected={selected}
 				realTimeToScaledTime={realTimeToScaledTime}
 			/>
 		</Chain>

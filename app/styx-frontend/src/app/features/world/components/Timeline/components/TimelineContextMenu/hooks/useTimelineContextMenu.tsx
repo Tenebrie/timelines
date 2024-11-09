@@ -9,11 +9,10 @@ import { ScaleLevel } from '../../../types'
 
 type Props = {
 	scroll: number
-	timelineScale: number
 	scaleLevel: ScaleLevel
 }
 
-export const useTimelineContextMenu = ({ scroll, timelineScale, scaleLevel }: Props) => {
+export const useTimelineContextMenu = ({ scroll, scaleLevel }: Props) => {
 	const { isOpen } = useSelector(getTimelineContextMenuState)
 	const { lineSpacing } = useSelector(getTimelinePreferences)
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
@@ -35,8 +34,7 @@ export const useTimelineContextMenu = ({ scroll, timelineScale, scaleLevel }: Pr
 				y: event.clientY - boundingRect.top,
 			}
 
-			const roundToX = lineSpacing / timelineScale
-			const clickOffset = Math.round((point.x - scroll) / roundToX) * roundToX * timelineScale
+			const clickOffset = Math.round((point.x - scroll) / lineSpacing) * lineSpacing
 			const selectedTime = scaledTimeToRealTime(clickOffset)
 
 			dispatch(
@@ -58,7 +56,6 @@ export const useTimelineContextMenu = ({ scroll, timelineScale, scaleLevel }: Pr
 			openTimelineContextMenu,
 			scaledTimeToRealTime,
 			scroll,
-			timelineScale,
 		],
 	)
 

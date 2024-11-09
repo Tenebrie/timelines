@@ -158,10 +158,14 @@ export const useBaseRouter = <
 
 	const isLocationEqual = useCallback(
 		(route: keyof ParamsT) => {
+			const routeSegments = (route as string).split('/')
 			const locationSegments = location.pathname.split('/')
-			return (route as string)
-				.split('/')
-				.every((segment, index) => segment.startsWith(':') || locationSegments[index] === segment)
+			if (routeSegments.length !== locationSegments.length) {
+				return false
+			}
+			return routeSegments.every(
+				(segment, index) => segment.startsWith(':') || locationSegments[index] === segment,
+			)
 		},
 		[location.pathname],
 	)

@@ -11,9 +11,10 @@ import { useModal } from '../../../modals/reducer'
 import { preferencesSlice } from '../../../preferences/reducer'
 import { getOverviewPreferences } from '../../../preferences/selectors'
 import { useWorldTime } from '../../../time/hooks/useWorldTime'
+import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
 import { worldSlice } from '../../reducer'
 import { getWorldState } from '../../selectors'
-import { Actor, ActorDetails, WorldEvent } from '../../types'
+import { Actor, ActorDetails, WorldEvent, WorldEventDelta } from '../../types'
 import { ActorAvatar } from '../Renderers/ActorAvatar/ActorAvatar'
 import { OverviewSublist } from './OverviewSublist'
 import { StyledListItemButton, StyledListItemText } from './styles'
@@ -25,7 +26,8 @@ export const OverviewPanel = () => {
 	const { panelOpen, actorsOpen, actorsReversed, eventsOpen, eventsReversed } =
 		useSelector(getOverviewPreferences)
 
-	const { navigateToEventEditor, navigateToActorEditor } = useWorldRouter()
+	const scrollTimelineTo = useTimelineBusDispatch()
+	const { navigateToEventEditor, navigateToEventDeltaEditor, navigateToActorEditor } = useWorldRouter()
 	const { timeToLabel } = useWorldTime()
 	const { addActorToSelection, removeActorFromSelection, addEventToSelection, removeEventFromSelection } =
 		worldSlice.actions
@@ -89,7 +91,7 @@ export const OverviewPanel = () => {
 						deltaIndex < event.deltaStates.length - 1
 					}
 					onClick={(clickEvent) =>
-						moveToEvent(clickEvent, { event, multiselect: isMultiselectClick(clickEvent) })
+						moveToEventDelta(clickEvent, { delta, multiselect: isMultiselectClick(clickEvent) })
 					}
 					selected={selectedEvents.includes(event.id)}
 				>
@@ -131,10 +133,29 @@ export const OverviewPanel = () => {
 		},
 		onDoubleClick: ({ event }) => {
 			navigateToEventEditor(event.id)
+			scrollTimelineTo(event.timestamp)
 			dispatch(removeEventFromSelection(event.id))
 		},
 		ignoreDelay: true,
 	})
+
+	const { triggerClick: moveToEventDelta } = useDoubleClick<{ delta: WorldEventDelta; multiselect: boolean }>(
+		{
+			onClick: ({ delta, multiselect }) => {
+				if (selectedEvents.includes(delta.id)) {
+					dispatch(removeEventFromSelection(delta.worldEventId))
+				} else {
+					dispatch(addEventToSelection({ id: delta.worldEventId, multiselect }))
+				}
+			},
+			onDoubleClick: ({ delta }) => {
+				navigateToEventDeltaEditor({ eventId: delta.worldEventId, deltaId: delta.id })
+				scrollTimelineTo(delta.timestamp)
+				dispatch(removeEventFromSelection(delta.worldEventId))
+			},
+			ignoreDelay: true,
+		},
+	)
 
 	const lowerCaseSearchQuery = searchQuery.toLowerCase()
 	const displayedActors = actors.filter(

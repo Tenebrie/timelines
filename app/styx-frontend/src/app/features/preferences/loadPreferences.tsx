@@ -13,7 +13,7 @@ const PreferencesStateSchema = z.object({
 	timeline: z
 		.object({
 			useCustomLineSpacing: z.boolean().default(false),
-			lineSpacing: z.number().default(10),
+			lineSpacing: z.number().default(20),
 			containerHeight: z.number().default(260),
 		})
 		.default({}),

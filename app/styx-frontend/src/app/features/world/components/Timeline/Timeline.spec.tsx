@@ -4,6 +4,7 @@ import { mockEventModel } from '../../../../../api/rheaApi.mock'
 import { renderWithProviders } from '../../../../../jest/renderWithProviders'
 import { mockRouter } from '../../../../../router/router.mock'
 import { worldRoutes } from '../../../../../router/routes/worldRoutes'
+import { PreferencesInitialState } from '../../../preferences/reducer'
 import { initialState } from '../../reducer'
 import { WorldDetails, WorldEvent } from '../../types'
 import { Timeline } from './Timeline'
@@ -16,6 +17,13 @@ describe('<Timeline />', () => {
 				isLoaded: true,
 				...worldOptions,
 				events,
+			},
+			preferences: {
+				...PreferencesInitialState,
+				timeline: {
+					...PreferencesInitialState.timeline,
+					lineSpacing: 10,
+				},
 			},
 		},
 	})
@@ -82,7 +90,6 @@ describe('<Timeline />', () => {
 	it('respects the world time origin', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'COUNTUP', timeOrigin: '100000' }))
 
-		screen.debug()
 		expect(screen.getByText('Day 70')).toBeInTheDocument()
 	})
 })

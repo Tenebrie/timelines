@@ -13,18 +13,16 @@ const getPixelsPerLoop = ({ lineCount, lineSpacing }: { lineCount: number; lineS
 const getLoop = ({
 	index,
 	lineCount,
-	timelineScale,
 	lineSpacing,
 	timelineScroll,
 }: {
 	index: number
 	lineCount: number
 	lineSpacing: number
-	timelineScale: number
 	timelineScroll: number
 }) =>
 	-Math.floor(
-		(index * lineSpacing + timelineScroll * timelineScale + TimelineAnchorPadding) /
+		(index * lineSpacing + timelineScroll + TimelineAnchorPadding) /
 			getPixelsPerLoop({ lineCount, lineSpacing }),
 	)
 
@@ -35,8 +33,6 @@ type Props = {
 	index: number
 	// Total number of the anchor lines
 	lineCount: number
-	// Current zoom scalar
-	timelineScale: number
 	// User-specified preference of pixels per line on screen
 	lineSpacing: number
 	// Current level of scale
@@ -58,7 +54,6 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		theme,
 		index: rawIndex,
 		lineCount,
-		timelineScale,
 		lineSpacing,
 		scaleLevel,
 		visible,
@@ -75,19 +70,18 @@ const TimelineAnchorLineComponent = (props: Props) => {
 			getLoop({
 				index: rawIndex,
 				lineCount,
-				timelineScale,
 				lineSpacing,
 				timelineScroll,
 			}),
-		[lineCount, lineSpacing, rawIndex, timelineScale, timelineScroll],
+		[lineCount, lineSpacing, rawIndex, timelineScroll],
 	)
 	const loopOffset = useMemo(
 		() => loopIndex * getPixelsPerLoop({ lineCount, lineSpacing }),
 		[lineCount, lineSpacing, loopIndex],
 	)
 	const dividerPosition = useMemo(
-		() => Math.round(((rawIndex * lineSpacing) / 1 + loopOffset) / timelineScale) + positionNormalizer,
-		[lineSpacing, loopOffset, positionNormalizer, rawIndex, timelineScale],
+		() => Math.round((rawIndex * lineSpacing) / 1 + loopOffset) + positionNormalizer,
+		[lineSpacing, loopOffset, positionNormalizer, rawIndex],
 	)
 
 	const { largeGroupSize, mediumGroupSize, smallGroupSize } = getTimelineMultipliers()
@@ -147,11 +141,10 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		}
 		if (
 			isSmallGroup &&
-			(timelineScale <= 0.5 ||
+			(scaleLevel === 2 ||
 				scaleLevel === 3 ||
-				(timelineScale <= 1 && scaleLevel === 2) ||
-				(timelineScale <= 1 && scaleLevel === 4) ||
-				(timelineScale <= 1 && scaleLevel === 5) ||
+				scaleLevel === 4 ||
+				scaleLevel === 5 ||
 				scaleLevel === 6 ||
 				scaleLevel === 7)
 		) {
@@ -159,7 +152,7 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		}
 
 		return null
-	}, [isLargeGroup, isMediumGroup, isSmallGroup, scaleLevel, timelineScale])
+	}, [isLargeGroup, isMediumGroup, isSmallGroup, scaleLevel])
 
 	const getLineColor = useCallback(() => {
 		if (!isMediumGroup && !isLargeGroup) {
@@ -240,7 +233,6 @@ export const TimelineAnchorLine = memo(
 	(a, b) =>
 		getLoop(a) === getLoop(b) &&
 		a.theme === b.theme &&
-		a.timelineScale === b.timelineScale &&
 		a.visible === b.visible &&
 		a.lineSpacing === b.lineSpacing &&
 		a.positionNormalizer === b.positionNormalizer &&

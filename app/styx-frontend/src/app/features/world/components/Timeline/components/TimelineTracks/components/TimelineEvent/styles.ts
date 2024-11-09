@@ -80,23 +80,23 @@ export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
 		background-color: ${colors.red[700]};
 	}
 
-	&.selected {
-		outline-color: ${colors.amber[300]};
+	&.edited {
+		box-shadow: 0 0 10px 10px rgb(0, 100, 0);
 	}
-	&.selected:hover {
-		outline-color: ${colors.amber[500]};
+	&.replace.edited {
+		box-shadow: 0 0 10px 10px rgb(100, 100, 0);
 	}
-	&.selected:active {
-		outline-color: ${colors.amber[700]};
+	&.revoked.edited {
+		box-shadow: 0 0 10px 10px rgb(75, 0, 0);
 	}
 
-	&.highlighted {
+	&.selected {
 		background-color: rgb(0, 100, 0);
 	}
-	&.replace.highlighted {
+	&.replace.selected {
 		background-color: rgb(100, 100, 0);
 	}
-	&.revoked.highlighted {
+	&.revoked.selected {
 		background-color: rgb(100, 0, 0);
 	}
 

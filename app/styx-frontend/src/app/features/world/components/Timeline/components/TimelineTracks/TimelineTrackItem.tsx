@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
-import { getTimelineContextMenuState } from '../../../../selectors'
+import { getTimelineContextMenuState, getWorldState } from '../../../../selectors'
 import { TimelineChainPositioner } from './components/TimelineChainPositioner/TimelineChainPositioner'
 import { TimelineEventPositioner } from './components/TimelineEventPositioner/TimelineEventPositioner'
 import { TimelineEventTrackTitle } from './components/TimelineEventTrackTitle/TimelineEventTrackTitle'
@@ -15,7 +15,6 @@ import { TimelineTrackItemDragDrop } from './TimelineTrackItemDragDrop'
 type Props = {
 	track: ReturnType<typeof useEventTracks>[number]
 	lineSpacing: number
-	timelineScale: number
 	scroll: number
 	visible: boolean
 	containerWidth: number
@@ -26,6 +25,7 @@ type Props = {
 	eventDeltaEditorParams: {
 		deltaId: string
 	}
+	worldState: ReturnType<typeof getWorldState>
 	contextMenuState: ReturnType<typeof getTimelineContextMenuState>
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
@@ -33,46 +33,49 @@ type Props = {
 export const TimelineTrackItem = ({
 	track,
 	lineSpacing,
-	timelineScale,
 	scroll,
 	visible,
 	containerWidth,
 	isLocationEqual,
 	eventEditorParams,
 	eventDeltaEditorParams,
+	worldState,
 	contextMenuState,
 	realTimeToScaledTime,
 }: Props) => {
 	const dragDropReceiverRef = useRef<HTMLDivElement | null>(null)
 	const [isDragging, setIsDragging] = useState(false)
 
-	const highlightedEvents = useMemo(
+	const editedEntities = useMemo(
 		() =>
 			track.events.filter(
 				(entity) =>
-					(isLocationEqual('/world/:worldId/editor/:eventId') && eventEditorParams.eventId === entity.id) ||
+					(['issuedAt', 'revokedAt'].includes(entity.markerType) &&
+						isLocationEqual('/world/:worldId/editor/:eventId') &&
+						eventEditorParams.eventId === entity.eventId) ||
 					(isLocationEqual('/world/:worldId/editor/:eventId/delta/:deltaId') &&
-						eventDeltaEditorParams.deltaId === entity.id) ||
-					(contextMenuState.isOpen && contextMenuState.selectedEvent?.id === entity.id),
+						eventDeltaEditorParams.deltaId === entity.id),
 			),
-		[
-			contextMenuState.isOpen,
-			contextMenuState.selectedEvent,
-			eventDeltaEditorParams.deltaId,
-			eventEditorParams.eventId,
-			isLocationEqual,
-			track.events,
-		],
+		[eventDeltaEditorParams, eventEditorParams, isLocationEqual, track.events],
 	)
 
-	const [visibleEvents, setVisibleEvents] = useState(track.events)
+	const selectedMarkers = useMemo(
+		() =>
+			track.events.filter(
+				(entity) =>
+					worldState.selectedTimelineMarkers.includes(entity.key) ||
+					(contextMenuState.isOpen && contextMenuState.selectedEvent?.key === entity.key),
+			),
+		[contextMenuState, track.events, worldState.selectedTimelineMarkers],
+	)
+	const [visibleMarkers, setVisibleMarkers] = useState(track.events)
 
-	const updateVisibleEventsThrottled = useRef(
+	const updateVisibleMarkersThrottled = useRef(
 		throttle(
 			(t: TimelineTrack, scr: number, width: number, realTimeToScaledTime: Props['realTimeToScaledTime']) => {
-				setVisibleEvents(
+				setVisibleMarkers(
 					t.events.filter((event) => {
-						const position = realTimeToScaledTime(Math.floor(event.markerPosition) / timelineScale) + scr
+						const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + scr
 						return position >= -250 && position <= width + 250
 					}),
 				)
@@ -82,7 +85,7 @@ export const TimelineTrackItem = ({
 	)
 
 	useEffect(() => {
-		updateVisibleEventsThrottled.current(track, scroll, containerWidth, realTimeToScaledTime)
+		updateVisibleMarkersThrottled.current(track, scroll, containerWidth, realTimeToScaledTime)
 	}, [scroll, track, containerWidth, realTimeToScaledTime])
 
 	const chainLinks = useMemo(() => {
@@ -100,19 +103,19 @@ export const TimelineTrackItem = ({
 						key={event.key}
 						entity={event}
 						visible={visible}
-						timelineScale={timelineScale}
-						highlighted={highlightedEvents.includes(event)}
+						edited={false}
+						selected={false}
 						realTimeToScaledTime={realTimeToScaledTime}
 					/>
 				))}
-				{visibleEvents.map((event) => (
+				{visibleMarkers.map((event) => (
 					<TimelineEventPositioner
 						key={event.key}
 						entity={event}
 						visible={visible}
 						lineSpacing={lineSpacing}
-						timelineScale={timelineScale}
-						highlighted={highlightedEvents.includes(event)}
+						edited={editedEntities.includes(event)}
+						selected={selectedMarkers.includes(event)}
 						realTimeToScaledTime={realTimeToScaledTime}
 					/>
 				))}
