@@ -430,7 +430,6 @@ export const useTimelineNavigation = ({
 			useRawScroll?: boolean
 			skipAnim?: boolean
 		}) => {
-			console.log('asdasdasd')
 			if (!containerRef[0].current) {
 				return
 			}
