@@ -1,14 +1,14 @@
 import { useCallback, useEffect } from 'react'
 
 type Props = {
-	callback: (timestamp: number) => unknown
+	callback: (props: { timestamp: number; useRawScroll?: boolean; skipAnim?: boolean }) => unknown
 }
 
 export const useTimelineBusSubscribe = ({ callback }: Props) => {
 	const onEvent = useCallback<EventListener>(
 		// @ts-ignore
 		(event: CustomEvent) => {
-			callback(event.detail as number)
+			callback(event.detail as { timestamp: number; useRawScroll?: boolean; skipAnim?: boolean })
 		},
 		[callback],
 	)
@@ -22,10 +22,14 @@ export const useTimelineBusSubscribe = ({ callback }: Props) => {
 }
 
 export const useTimelineBusDispatch = () => {
-	return useCallback((timestamp: number) => {
+	return useCallback((timestamp: number, useRawScroll?: boolean, skipAnim?: boolean) => {
 		window.dispatchEvent(
 			new CustomEvent('@timeline/scrollTo', {
-				detail: timestamp,
+				detail: {
+					timestamp,
+					useRawScroll,
+					skipAnim,
+				},
 			}),
 		)
 	}, [])

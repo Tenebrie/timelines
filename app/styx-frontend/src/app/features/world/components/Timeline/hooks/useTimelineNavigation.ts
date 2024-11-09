@@ -24,6 +24,16 @@ type Props = {
 	onDoubleClick: (time: number) => void
 }
 
+const checkIfClickBlocked = (target: EventTarget | null, depth = 0) => {
+	if (depth >= 10 || (!(target instanceof HTMLElement) && !(target instanceof SVGElement))) {
+		return false
+	}
+	if (target.classList.contains('block-timeline')) {
+		return true
+	}
+	return checkIfClickBlocked(target.parentNode, depth + 1)
+}
+
 export const useTimelineNavigation = ({
 	containerRef,
 	defaultScroll,
@@ -53,6 +63,9 @@ export const useTimelineNavigation = ({
 	const maximumScroll = useMemo(() => maximumTime / scalar / 1000 / 60, [scalar])
 
 	const onMouseDown = useCallback((event: MouseEvent | TouchEvent) => {
+		if (checkIfClickBlocked(event.target)) {
+			return
+		}
 		const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
 		const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
 		const boundingRect = (event.currentTarget as HTMLDivElement).getBoundingClientRect()
@@ -408,15 +421,29 @@ export const useTimelineNavigation = ({
 	const smoothScrollStartedAtTime = useRef(new Date())
 	// Outside controls
 	const scrollTo = useCallback(
-		(timestamp: number) => {
+		({
+			timestamp,
+			useRawScroll,
+			skipAnim,
+		}: {
+			timestamp: number
+			useRawScroll?: boolean
+			skipAnim?: boolean
+		}) => {
+			console.log('asdasdasd')
 			if (!containerRef[0].current) {
 				return
 			}
 
 			const easing = bezier(0.5, 0, 0.5, 1)
-			const targetScroll = Math.floor(
-				realTimeToScaledTime(-timestamp) + containerRef[0].current.getBoundingClientRect().width / 2,
-			)
+			const targetScroll = (() => {
+				if (useRawScroll) {
+					return timestamp
+				}
+				return Math.floor(
+					realTimeToScaledTime(-timestamp) + containerRef[0].current.getBoundingClientRect().width / 2,
+				)
+			})()
 
 			const isScrollingAlready =
 				Math.abs(startedScrollFrom.current) > 0 || Math.abs(desiredScrollTo.current) > 0
@@ -453,11 +480,18 @@ export const useTimelineNavigation = ({
 				}
 			}
 
-			requestAnimationFrame(callback)
+			if (skipAnim) {
+				setScroll(desiredScrollTo.current)
+				startedScrollFrom.current = 0
+				desiredScrollTo.current = 0
+			} else {
+				requestAnimationFrame(callback)
+			}
 		},
 		[containerRef, minimumScroll, maximumScroll, realTimeToScaledTime, scroll, setScroll],
 	)
 
+	/* External scrollTo */
 	useTimelineBusSubscribe({
 		callback: scrollTo,
 	})

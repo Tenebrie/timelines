@@ -4,7 +4,7 @@ import { memo } from 'react'
 import { useDragDrop } from '../../../../../../../dragDrop/useDragDrop'
 import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
 import { useEventIcons } from '../../../../../../hooks/useEventIcons'
-import { TimelineScroll } from '../../../../utils/TimelineScroll'
+import { TimelineState } from '../../../../utils/TimelineState'
 import useEventTracks from '../../hooks/useEventTracks'
 import { Group } from '../../styles'
 import { Marker } from '../TimelineEvent/styles'
@@ -37,7 +37,7 @@ const TimelineEventPositionerComponent = ({
 			const posTimestamp = pos.x
 			const roundedValue = Math.floor(posTimestamp / roundingFactor) * roundingFactor
 			return {
-				x: roundedValue + ((entity.markerPosition + TimelineScroll.current) % lineSpacing),
+				x: roundedValue + ((entity.markerPosition + TimelineState.scroll) % lineSpacing),
 				// y: window.innerHeight - Math.round((window.innerHeight - pos.y + 15 - 25) / 96) * 96 + 34 - 24 - 16,
 				y: pos.y,
 			}

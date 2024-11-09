@@ -4,7 +4,7 @@ import { useCustomTheme } from '../../../../../../../hooks/useCustomTheme'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { ScaleLevel } from '../../types'
-import { TimelineScroll } from '../../utils/TimelineScroll'
+import { TimelineState } from '../../utils/TimelineState'
 import { TimelineAnchorContainer } from './styles'
 import { TimelineAnchorLine } from './TimelineAnchorLine'
 
@@ -34,9 +34,9 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 
 	useEffect(() => {
 		const timeout = window.setInterval(() => {
-			if (lastSeenScroll.current !== TimelineScroll.current) {
-				lastSeenScroll.current = TimelineScroll.current
-				setScroll(TimelineScroll.current)
+			if (lastSeenScroll.current !== TimelineState.scroll) {
+				lastSeenScroll.current = TimelineState.scroll
+				setScroll(TimelineState.scroll)
 			}
 		}, 10)
 		return () => {
