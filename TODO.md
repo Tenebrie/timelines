@@ -3,7 +3,6 @@
 - Show event on a timeline after creating from dialog
 - Do not change event timestamp when moving across tracks
 - Hide unused tracks
-- Remove string length limitations
 - Select which tracks to show
 - Navigate to first/last events in a track
 - Color code the tracks (somehow)

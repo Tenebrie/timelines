@@ -102,6 +102,11 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 		],
 	)
 
+	const positionNormalizer = useMemo(
+		() => Math.floor(Math.abs(scroll) / ResetNumbersAfterEvery) * ResetNumbersAfterEvery * Math.sign(scroll),
+		[scroll],
+	)
+
 	return (
 		<TimelineAnchorContainer offset={scroll % ResetNumbersAfterEvery}>
 			<TimelineSmallestPips
@@ -123,11 +128,7 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 							timelineScroll={scroll}
 							timeToShortLabel={timeToShortLabel}
 							scaledTimeToRealTime={scaledTimeToRealTime}
-							positionNormalizer={
-								Math.floor(Math.abs(scroll) / ResetNumbersAfterEvery) *
-								ResetNumbersAfterEvery *
-								Math.sign(scroll)
-							}
+							positionNormalizer={positionNormalizer}
 							{...data}
 						/>
 					)}
