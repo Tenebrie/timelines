@@ -32,6 +32,7 @@ const useEventTracks = () => {
 				key: `issuedAt-${event.id}`,
 				markerPosition: event.timestamp,
 				markerType: asMarkerType('issuedAt'),
+				markerHeight: 0,
 				deltaStates: [...event.deltaStates].sort((a, b) => a.timestamp - b.timestamp),
 				baseEntity: event as WorldEvent | WorldEventDelta | null,
 				nextEntity: null,
@@ -45,6 +46,7 @@ const useEventTracks = () => {
 						key: `deltaState-${delta.id}`,
 						markerPosition: delta.timestamp,
 						markerType: asMarkerType('deltaState'),
+						markerHeight: 0,
 						baseEntity: delta,
 						nextEntity: null,
 					})),
@@ -59,6 +61,7 @@ const useEventTracks = () => {
 						key: `revokedAt-${event.id}`,
 						markerPosition: event.revokedAt!,
 						markerType: asMarkerType('revokedAt'),
+						markerHeight: 0,
 						baseEntity: event,
 						nextEntity: null,
 					})),
@@ -101,6 +104,7 @@ const useEventTracks = () => {
 				key: `ghostEvent-${eventGhost.id}`,
 				markerType: asMarkerType('ghostEvent'),
 				markerPosition: eventGhost.timestamp,
+				markerHeight: 0,
 				baseEntity: null,
 				nextEntity: null,
 			})
@@ -113,6 +117,7 @@ const useEventTracks = () => {
 					key: `ghostDelta-${deltaGhost.id}`,
 					markerType: asMarkerType('ghostDelta'),
 					markerPosition: deltaGhost.timestamp,
+					markerHeight: 0,
 					baseEntity: null,
 					nextEntity: null,
 				})
@@ -155,7 +160,46 @@ const useEventTracks = () => {
 				}),
 		[eventGroups, tracks],
 	)
-	return tracksWithEvents
+	const finalizedTracks = calculateMarkerHeights(tracksWithEvents) as typeof tracksWithEvents
+	return finalizedTracks
+}
+
+const calculateMarkerHeights = (tracks: TimelineTrack[]) => {
+	const data: Record<string, TimelineEntity<MarkerType>[]> = {}
+	const currentState: TimelineEntity<MarkerType>[] = []
+
+	return tracks.map((track) => {
+		return {
+			...track,
+			events: track.events.map((event) => {
+				if (event.markerType === 'ghostEvent' || event.markerType === 'ghostDelta') {
+					return event
+				}
+				if (event.markerType !== 'issuedAt') {
+					return {
+						...event,
+						markerHeight: currentState.find((m) => m.eventId === event.eventId)!.markerHeight,
+					}
+				}
+
+				const trackId = event.worldEventTrackId ?? 'default'
+				const previousEvents =
+					data[trackId]?.filter(
+						(e) => e.timestamp < event.markerPosition && e.revokedAt! > event.markerPosition,
+					) ?? []
+				const height = previousEvents.length
+				if (event.deltaStates.length > 0 || (event.revokedAt !== null && event.revokedAt !== undefined)) {
+					data[trackId] = previousEvents.concat(event)
+				}
+				const newEvent = {
+					...event,
+					markerHeight: height,
+				}
+				currentState.push(newEvent)
+				return newEvent
+			}),
+		}
+	})
 }
 
 export default useEventTracks

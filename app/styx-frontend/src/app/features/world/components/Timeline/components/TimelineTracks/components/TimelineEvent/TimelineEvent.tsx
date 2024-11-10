@@ -106,8 +106,13 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	const { getStringColor } = useStringColor()
 	const color = getStringColor(entity.eventId)
 
+	const height = 20 * entity.markerHeight
+
 	return (
 		<Marker
+			style={{
+				bottom: height,
+			}}
 			onClick={onClick}
 			onContextMenu={onContextMenu}
 			onMouseEnter={onMouseEnter}
@@ -135,7 +140,6 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 					</Label>
 				</LabelContainer>
 			)}
-			<div className="icon" />
 		</Marker>
 	)
 }

@@ -9,7 +9,7 @@ export const Group = styled.div.attrs<{ $position: number }>((props) => ({
 	display: flex;
 	flex-direction: column-reverse;
 	position: absolute;
-	top: calc(50% - 10px);
+	top: 16px;
 	padding: 5px;
 	opacity: 0;
 	transition: opacity 0.3s;
@@ -37,7 +37,6 @@ export const Chain = styled.div.attrs<{ $position: number }>((props) => ({
 }))<{ $position: number }>`
 	display: flex;
 	position: absolute;
-	top: calc(50%);
 	opacity: 0;
 	transition: opacity 0.3s;
 	z-index: 1;

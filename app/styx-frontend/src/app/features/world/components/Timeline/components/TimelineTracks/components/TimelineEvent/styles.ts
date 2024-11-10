@@ -8,9 +8,9 @@ export type StoryEventMarkerProps = {
 
 export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
 	position: relative;
-	width: 48px;
-	height: 48px;
-	border-radius: 50%;
+	width: 12px;
+	height: 24px;
+	border-radius: 4px 4px 0 0;
 	background: #0a1929;
 	cursor: pointer;
 	transition:
