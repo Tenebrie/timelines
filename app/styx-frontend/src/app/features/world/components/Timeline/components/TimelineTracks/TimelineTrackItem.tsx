@@ -76,7 +76,7 @@ export const TimelineTrackItem = ({
 				setVisibleMarkers(
 					t.events.filter((event) => {
 						const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + scr
-						return true
+						return position >= -250 && position <= width + 250
 					}),
 				)
 			},
