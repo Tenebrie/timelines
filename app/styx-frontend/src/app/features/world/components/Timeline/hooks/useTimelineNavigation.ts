@@ -82,42 +82,80 @@ export const useTimelineNavigation = ({
 		setDraggingFrom(null)
 	}, [])
 
+	const onMouseMoveThrottled = useRef(
+		throttle(
+			({
+				event,
+				isDragging,
+				mousePos,
+				scroll,
+				overscroll,
+				minimumScroll,
+				maximumScroll,
+				draggingFrom,
+			}: {
+				event: MouseEvent | TouchEvent
+				isDragging: boolean
+				mousePos: Position
+				scroll: number
+				overscroll: number
+				minimumScroll: number
+				maximumScroll: number
+				draggingFrom: Position | null
+			}) => {
+				console.log('Event')
+
+				const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
+				const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
+				const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }
+
+				if (draggingFrom !== null) {
+					/* If the mouse moved less than N pixels, do not start dragging */
+					/* Makes clicking feel more responsive with accidental mouse movements */
+					const dist = Math.abs(newPos.x - draggingFrom.x)
+					if (dist >= 5) {
+						setDragging(true)
+					}
+				}
+
+				if (isDragging) {
+					const newScroll = scroll + newPos.x - mousePos.x + overscroll
+					if (isFinite(minimumScroll) && newScroll < minimumScroll) {
+						setScroll(minimumScroll)
+						setOverscroll(newScroll - minimumScroll)
+					} else if (isFinite(maximumScroll) && newScroll > maximumScroll) {
+						setScroll(maximumScroll)
+						setOverscroll(newScroll - maximumScroll)
+					} else {
+						setScroll(newScroll)
+						setOverscroll(0)
+					}
+					setCanClick(false)
+					setMousePos(newPos)
+				}
+			},
+			1,
+		),
+	)
+
 	const onMouseMove = useCallback(
 		(event: MouseEvent | TouchEvent) => {
 			if (window.document.body.classList.contains('mouse-busy')) {
 				return
 			}
 
-			const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
-			const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
-			const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }
-
-			if (draggingFrom !== null) {
-				/* If the mouse moved less than N pixels, do not start dragging */
-				/* Makes clicking feel more responsive with accidental mouse movements */
-				const dist = Math.abs(newPos.x - draggingFrom.x)
-				if (dist >= 5) {
-					setDragging(true)
-				}
-			}
-
-			if (isDragging) {
-				const newScroll = scroll + newPos.x - mousePos.x + overscroll
-				if (isFinite(minimumScroll) && newScroll < minimumScroll) {
-					setScroll(minimumScroll)
-					setOverscroll(newScroll - minimumScroll)
-				} else if (isFinite(maximumScroll) && newScroll > maximumScroll) {
-					setScroll(maximumScroll)
-					setOverscroll(newScroll - maximumScroll)
-				} else {
-					setScroll(newScroll)
-					setOverscroll(0)
-				}
-				setCanClick(false)
-				setMousePos(newPos)
-			}
+			onMouseMoveThrottled.current({
+				event,
+				draggingFrom,
+				isDragging,
+				mousePos,
+				scroll,
+				overscroll,
+				minimumScroll,
+				maximumScroll,
+			})
 		},
-		[draggingFrom, isDragging, scroll, mousePos.x, overscroll, minimumScroll, maximumScroll],
+		[draggingFrom, isDragging, scroll, mousePos, overscroll, minimumScroll, maximumScroll],
 	)
 
 	useEffect(() => {

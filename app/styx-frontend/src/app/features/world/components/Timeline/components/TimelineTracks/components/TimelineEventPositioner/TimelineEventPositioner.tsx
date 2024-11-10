@@ -14,6 +14,7 @@ type Props = {
 	entity: ReturnType<typeof useEventTracks>[number]['events'][number]
 	lineSpacing: number
 	visible: boolean
+	scroll: number
 	edited: boolean
 	selected: boolean
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
@@ -23,6 +24,7 @@ const TimelineEventPositionerComponent = ({
 	entity,
 	lineSpacing,
 	visible,
+	scroll,
 	edited,
 	selected,
 	realTimeToScaledTime,
@@ -70,7 +72,7 @@ const TimelineEventPositionerComponent = ({
 			</>
 		),
 	})
-	const position = realTimeToScaledTime(Math.floor(entity.markerPosition))
+	const position = realTimeToScaledTime(Math.floor(entity.markerPosition)) + scroll
 
 	return (
 		<Group

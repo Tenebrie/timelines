@@ -11,6 +11,26 @@ export const TimelineAnchorContainer = styled.div.attrs<{ offset: number }>((pro
 	bottom: 0;
 `
 
+export const TimelineSmallestPips = styled.div.attrs<{
+	offset: number
+	$visible: boolean
+	$lineSpacing: number
+}>((props) => ({
+	style: {
+		transform: `translateX(${-props.offset + (props.offset % props.$lineSpacing)}px)`,
+		opacity: props.$visible ? 1 : 0,
+	},
+}))<{ offset: number; $lineSpacing: number }>`
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 120vw;
+	height: 10px;
+	background-image: linear-gradient(to right, gray 1px, transparent 1px);
+	background-size: ${(props) => props.$lineSpacing}px 100%;
+	transition: opacity 0.3s;
+`
+
 export const DividerContainer = styled.div.attrs<{ offset: number }>((props) => ({
 	style: {
 		transform: `translateX(${props.offset}px)`,

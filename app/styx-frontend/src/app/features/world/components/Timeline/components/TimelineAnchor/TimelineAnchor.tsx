@@ -5,8 +5,8 @@ import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorld
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { ScaleLevel } from '../../types'
 import { TimelineState } from '../../utils/TimelineState'
-import { TimelineAnchorContainer } from './styles'
-import { TimelineAnchorLine } from './TimelineAnchorLine'
+import { TimelineAnchorContainer, TimelineSmallestPips } from './styles'
+import { getLoop, TimelineAnchorLine } from './TimelineAnchorLine'
 
 export const TimelineAnchorPadding = 150 // pixels
 export const ResetNumbersAfterEvery = 3000000 // pixels of scrolling
@@ -44,28 +44,94 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 		}
 	}, [])
 
-	const dividers = useMemo(() => Array(lineCount).fill(null), [lineCount])
+	const { smallGroupSize, mediumGroupSize, largeGroupSize } = getTimelineMultipliers()
+	const dividers = useMemo(
+		() =>
+			Array(lineCount)
+				.fill(null)
+				.map((_, rawIndex) => {
+					const loopIndex = getLoop({
+						index: rawIndex,
+						lineCount,
+						lineSpacing,
+						timelineScroll: scroll,
+					})
+					const index = rawIndex + loopIndex * lineCount
+					const parsedTime = parseTime(scaledTimeToRealTime(index * lineSpacing))
+					const isStartOfMonth = () => {
+						return parsedTime.monthDay === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
+					}
+
+					const isStartOfYear = () => {
+						return (
+							parsedTime.monthIndex === 0 &&
+							parsedTime.day === 1 &&
+							parsedTime.hour === 0 &&
+							parsedTime.minute === 0
+						)
+					}
+
+					const isSmallGroup = index % smallGroupSize === 0
+					const isMediumGroup =
+						(isSmallGroup && index % mediumGroupSize === 0) ||
+						(scaleLevel === 2 && isStartOfMonth()) ||
+						(scaleLevel === 3 && isStartOfMonth())
+					const isLargeGroup =
+						isMediumGroup &&
+						(index % largeGroupSize === 0 ||
+							(scaleLevel === 1 && isStartOfMonth()) ||
+							(scaleLevel === 2 && isStartOfYear()) ||
+							(scaleLevel === 3 && isStartOfYear()))
+					return {
+						isRendered: isSmallGroup || isMediumGroup || isLargeGroup,
+						isSmallGroup,
+						isMediumGroup,
+						isLargeGroup,
+					}
+				}),
+		[
+			largeGroupSize,
+			lineCount,
+			lineSpacing,
+			mediumGroupSize,
+			parseTime,
+			scaleLevel,
+			scaledTimeToRealTime,
+			scroll,
+			smallGroupSize,
+		],
+	)
 
 	return (
 		<TimelineAnchorContainer offset={scroll % ResetNumbersAfterEvery}>
-			{dividers.map((_, index) => (
-				<TimelineAnchorLine
-					key={`${index}`}
-					theme={theme}
-					index={index}
-					visible={visible}
-					lineCount={lineCount}
-					lineSpacing={lineSpacing}
-					scaleLevel={scaleLevel}
-					timelineScroll={scroll}
-					parseTime={parseTime}
-					timeToShortLabel={timeToShortLabel}
-					scaledTimeToRealTime={scaledTimeToRealTime}
-					getTimelineMultipliers={getTimelineMultipliers}
-					positionNormalizer={
-						Math.floor(Math.abs(scroll) / ResetNumbersAfterEvery) * ResetNumbersAfterEvery * Math.sign(scroll)
-					}
-				/>
+			<TimelineSmallestPips
+				offset={scroll % ResetNumbersAfterEvery}
+				$visible={visible}
+				$lineSpacing={lineSpacing}
+			/>
+			{dividers.map((data, index) => (
+				<>
+					{data.isRendered && (
+						<TimelineAnchorLine
+							key={`${index}`}
+							theme={theme}
+							index={index}
+							visible={visible}
+							lineCount={lineCount}
+							lineSpacing={lineSpacing}
+							scaleLevel={scaleLevel}
+							timelineScroll={scroll}
+							timeToShortLabel={timeToShortLabel}
+							scaledTimeToRealTime={scaledTimeToRealTime}
+							positionNormalizer={
+								Math.floor(Math.abs(scroll) / ResetNumbersAfterEvery) *
+								ResetNumbersAfterEvery *
+								Math.sign(scroll)
+							}
+							{...data}
+						/>
+					)}
+				</>
 			))}
 		</TimelineAnchorContainer>
 	)

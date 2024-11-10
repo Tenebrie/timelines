@@ -68,7 +68,9 @@ export const TrackContainer = styled.div`
 export const TrackPositioner = styled.div.attrs<{ $position: number }>((props) => ({
 	style: {
 		transform: `translateX(${props.$position}px)`,
+		// left: `${props.$position}px`,
 	},
 }))`
+	position: absolute;
 	background: red;
 `

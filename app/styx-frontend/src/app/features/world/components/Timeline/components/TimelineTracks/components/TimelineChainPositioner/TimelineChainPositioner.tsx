@@ -10,6 +10,7 @@ type Props = {
 	visible: boolean
 	edited: boolean
 	selected: boolean
+	scroll: number
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
@@ -18,9 +19,10 @@ export const TimelineChainPositionerComponent = ({
 	visible,
 	edited,
 	selected,
+	scroll,
 	realTimeToScaledTime,
 }: Props) => {
-	const position = realTimeToScaledTime(Math.floor(entity.markerPosition))
+	const position = realTimeToScaledTime(Math.floor(entity.markerPosition)) + scroll
 
 	return (
 		<Chain $position={position} className={`${visible ? 'visible' : ''}`}>

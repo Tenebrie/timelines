@@ -76,7 +76,7 @@ export const TimelineTrackItem = ({
 				setVisibleMarkers(
 					t.events.filter((event) => {
 						const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + scr
-						return position >= -250 && position <= width + 250
+						return true
 					}),
 				)
 			},
@@ -97,7 +97,7 @@ export const TimelineTrackItem = ({
 	return (
 		<TrackContainer ref={dragDropReceiverRef} className={`${isDragging ? 'dragging' : ''}`}>
 			<Divider sx={dividerProps} />
-			<TrackPositioner $position={scroll}>
+			<TrackPositioner $position={0}>
 				{chainLinks.map((event) => (
 					<TimelineChainPositioner
 						key={event.key}
@@ -105,6 +105,7 @@ export const TimelineTrackItem = ({
 						visible={visible}
 						edited={false}
 						selected={false}
+						scroll={scroll}
 						realTimeToScaledTime={realTimeToScaledTime}
 					/>
 				))}
@@ -114,6 +115,7 @@ export const TimelineTrackItem = ({
 						entity={event}
 						visible={visible}
 						lineSpacing={lineSpacing}
+						scroll={scroll}
 						edited={editedEntities.includes(event)}
 						selected={selectedMarkers.includes(event)}
 						realTimeToScaledTime={realTimeToScaledTime}

@@ -7,10 +7,10 @@ import { ScaleLevel } from '../../types'
 import { Divider, DividerContainer, DividerLabel } from './styles'
 import { TimelineAnchorPadding } from './TimelineAnchor'
 
-const getPixelsPerLoop = ({ lineCount, lineSpacing }: { lineCount: number; lineSpacing: number }) =>
+export const getPixelsPerLoop = ({ lineCount, lineSpacing }: { lineCount: number; lineSpacing: number }) =>
 	lineCount * lineSpacing
 
-const getLoop = ({
+export const getLoop = ({
 	index,
 	lineCount,
 	lineSpacing,
@@ -43,10 +43,11 @@ type Props = {
 	timelineScroll: number
 	// An offset added to divider position to counteract number overflow on far scrolling
 	positionNormalizer: number
-	parseTime: ReturnType<typeof useWorldTime>['parseTime']
 	timeToShortLabel: ReturnType<typeof useWorldTime>['timeToShortLabel']
 	scaledTimeToRealTime: ReturnType<typeof useTimelineWorldTime>['scaledTimeToRealTime']
-	getTimelineMultipliers: ReturnType<typeof useTimelineWorldTime>['getTimelineMultipliers']
+	isSmallGroup: boolean
+	isMediumGroup: boolean
+	isLargeGroup: boolean
 }
 
 const TimelineAnchorLineComponent = (props: Props) => {
@@ -59,10 +60,11 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		visible,
 		timelineScroll,
 		positionNormalizer,
-		parseTime,
 		timeToShortLabel,
 		scaledTimeToRealTime,
-		getTimelineMultipliers,
+		isSmallGroup,
+		isMediumGroup,
+		isLargeGroup,
 	} = props
 
 	const loopIndex = useMemo(
@@ -84,53 +86,7 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		[lineSpacing, loopOffset, positionNormalizer, rawIndex],
 	)
 
-	const { largeGroupSize, mediumGroupSize, smallGroupSize } = getTimelineMultipliers()
-
 	const index = useMemo(() => rawIndex + loopIndex * lineCount, [lineCount, loopIndex, rawIndex])
-
-	const { isSmallGroup, isMediumGroup, isLargeGroup } = useMemo(() => {
-		const parsedTime = parseTime(scaledTimeToRealTime(index * lineSpacing))
-
-		const isStartOfMonth = () => {
-			return parsedTime.monthDay === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
-		}
-
-		const isStartOfYear = () => {
-			return (
-				parsedTime.monthIndex === 0 &&
-				parsedTime.day === 1 &&
-				parsedTime.hour === 0 &&
-				parsedTime.minute === 0
-			)
-		}
-
-		const isSmallGroup = index % smallGroupSize === 0
-		const isMediumGroup =
-			(isSmallGroup && index % mediumGroupSize === 0) ||
-			(scaleLevel === 2 && isStartOfMonth()) ||
-			(scaleLevel === 3 && isStartOfMonth())
-		const isLargeGroup =
-			isMediumGroup &&
-			(index % largeGroupSize === 0 ||
-				(scaleLevel === 1 && isStartOfMonth()) ||
-				(scaleLevel === 2 && isStartOfYear()) ||
-				(scaleLevel === 3 && isStartOfYear()))
-
-		return {
-			isSmallGroup,
-			isMediumGroup,
-			isLargeGroup,
-		}
-	}, [
-		index,
-		largeGroupSize,
-		lineSpacing,
-		mediumGroupSize,
-		parseTime,
-		scaleLevel,
-		scaledTimeToRealTime,
-		smallGroupSize,
-	])
 
 	const labelSize = useMemo(() => {
 		if (isLargeGroup) {
