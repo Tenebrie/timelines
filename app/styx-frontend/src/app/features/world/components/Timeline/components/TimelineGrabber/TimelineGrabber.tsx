@@ -9,9 +9,9 @@ import { getTimelinePreferences } from '../../../../../preferences/selectors'
 
 const StyledDragger = styled.div`
 	width: 100%;
-	height: 4px;
+	height: 8px;
 	position: absolute;
-	top: 0;
+	top: -4px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
