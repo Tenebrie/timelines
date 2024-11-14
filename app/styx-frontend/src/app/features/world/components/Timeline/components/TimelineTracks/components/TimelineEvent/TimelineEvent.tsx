@@ -11,6 +11,7 @@ import { useEventIcons } from '../../../../../../hooks/useEventIcons'
 import { useTimelineBusDispatch } from '../../../../../../hooks/useTimelineBus'
 import { worldSlice } from '../../../../../../reducer'
 import { MarkerType, TimelineEntity } from '../../../../../../types'
+import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
 import { Label, LabelContainer, Marker } from './styles'
 
@@ -113,6 +114,7 @@ export const TimelineEventComponent = ({ entity, edited, selected, trackHeight }
 			onContextMenu={onContextMenu}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
+			$size={TimelineEventHeightPx - 6}
 			$borderColor={color}
 			className={classNames({
 				selected,

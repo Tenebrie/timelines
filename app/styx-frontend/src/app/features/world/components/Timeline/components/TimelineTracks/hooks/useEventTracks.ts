@@ -17,7 +17,7 @@ import {
 import { useEventTracksRequest } from '../../../hooks/useEventTracksRequest'
 
 export type TimelineTrack = ReturnType<typeof useEventTracks>[number]
-export const TimelineEventHeightPx = 30
+export const TimelineEventHeightPx = 40
 
 const useEventTracks = () => {
 	const { events } = useSelector(getWorldState)
@@ -219,7 +219,7 @@ const calculateMarkerHeights = (tracks: TimelineTrack[]) => {
 			...track,
 			events: trackEvents,
 			height:
-				Math.max(3, trackEvents.map((e) => e.markerHeight + 2).sort((a, b) => b - a)[0] ?? 0) *
+				Math.max(2, trackEvents.map((e) => e.markerHeight + 2).sort((a, b) => b - a)[0] ?? 0) *
 				TimelineEventHeightPx,
 		}
 	})

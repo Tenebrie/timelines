@@ -6,10 +6,10 @@ export type StoryEventMarkerProps = {
 	expanded: boolean
 }
 
-export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
+export const Marker = styled.div<{ $iconPath: string; $borderColor: string; $size: number }>`
 	position: relative;
-	width: 24px;
-	height: 24px;
+	width: ${(props) => props.$size}px;
+	height: ${(props) => props.$size}px;
 	border-radius: 4px;
 	background: #0a1929;
 	cursor: pointer;
@@ -22,7 +22,7 @@ export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
 
 	.icon {
 		position: absolute;
-		background: ${colors.green[300]};
+		background: ${(props) => props.$borderColor};
 		mask-image: url(${(props) => props.$iconPath});
 		mask-size: cover;
 		mask-position: 0px 0px;
@@ -60,18 +60,18 @@ export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
 			background: ${colors.green[700]};
 		}
 	}
-	&.replace > .icon {
-		background-color: ${colors.yellow[300]};
-	}
+	// &.replace > .icon {
+	// 	background-color: ${colors.yellow[300]};
+	// }
 	&.replace:hover > .icon {
 		background-color: ${colors.yellow[500]};
 	}
 	&.replace:active > .icon {
 		background-color: ${colors.yellow[700]};
 	}
-	&.revoked > .icon {
-		background-color: ${colors.red[300]};
-	}
+	// &.revoked > .icon {
+	// 	background-color: ${colors.red[300]};
+	// }
 	&.revoked:hover > .icon {
 		background-color: ${colors.red[500]};
 	}

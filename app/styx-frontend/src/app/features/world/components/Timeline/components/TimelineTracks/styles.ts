@@ -12,6 +12,13 @@ export const Group = styled.div.attrs<{ $position: number; $height: number }>((p
 	transition: opacity 0.3s;
 	z-index: 1;
 	pointer-events: auto;
+
+	opacity: 0;
+	pointer-events: auto;
+
+	&.visible {
+		opacity: 1;
+	}
 `
 
 export const Chain = styled.div.attrs<{ $position: number }>((props) => ({

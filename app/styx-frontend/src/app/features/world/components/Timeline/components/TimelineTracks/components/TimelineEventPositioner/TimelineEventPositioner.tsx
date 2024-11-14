@@ -60,6 +60,7 @@ const TimelineEventPositionerComponent = ({
 					}}
 				></div>
 				<Marker
+					$size={TimelineEventHeightPx - 6}
 					$borderColor="gray"
 					$iconPath={getIconPath(entity.icon)}
 					className={classNames({
@@ -74,7 +75,8 @@ const TimelineEventPositionerComponent = ({
 			</>
 		),
 	})
-	const position = realTimeToScaledTime(Math.floor(entity.markerPosition)) + scroll - 5
+	const position =
+		realTimeToScaledTime(Math.floor(entity.markerPosition)) + scroll - TimelineEventHeightPx / 2 + 10
 	const height = TimelineEventHeightPx * entity.markerHeight
 
 	return (

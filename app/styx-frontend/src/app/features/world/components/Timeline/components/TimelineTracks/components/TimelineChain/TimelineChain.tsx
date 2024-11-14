@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import { memo } from 'react'
 
 import { useStringColor } from '../../../../../../../../utils/getStringColor'
@@ -17,21 +18,36 @@ export const TimelineChainComponent = ({ entity, edited, selected, realTimeToSca
 	if (!entity.nextEntity) {
 		return
 	}
-	const padding = 0
-	const dist = realTimeToScaledTime(entity.nextEntity.markerPosition - entity.markerPosition + padding)
-	const height = TimelineEventHeightPx * entity.markerHeight + 7
+	const dist =
+		realTimeToScaledTime(entity.nextEntity.markerPosition - entity.markerPosition) - TimelineEventHeightPx - 2
+	const height = TimelineEventHeightPx * entity.markerHeight + 4
 	const color = getStringColor(entity.eventId)
 
 	return (
-		<div style={{ pointerEvents: 'none', position: 'absolute', bottom: height, left: 0 }}>
+		<div
+			style={{
+				pointerEvents: 'none',
+				position: 'absolute',
+				bottom: height,
+				left: TimelineEventHeightPx / 2 - 1,
+			}}
+		>
 			<div
 				style={{
-					width: dist + padding,
-					height: 12,
+					width: dist,
+					height: TimelineEventHeightPx - 12,
 					background: 'rgb(255 255 255 / 10%)',
-					outline: `2px solid ${color}`,
+					borderTop: `2px solid ${color}`,
+					display: 'flex',
+					alignItems: 'center',
+					paddingLeft: 4,
+					paddingRight: 0,
 				}}
-			></div>
+			>
+				<Typography variant="caption" fontWeight={800} noWrap style={{ width: 'calc(100% - 8px)' }}>
+					{entity.name}
+				</Typography>
+			</div>
 		</div>
 	)
 }
