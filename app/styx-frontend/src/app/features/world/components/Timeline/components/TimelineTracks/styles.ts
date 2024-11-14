@@ -1,29 +1,17 @@
 import styled from 'styled-components'
 
-export const Group = styled.div.attrs<{ $position: number }>((props) => ({
+export const Group = styled.div.attrs<{ $position: number; $height: number }>((props) => ({
 	style: {
 		// left: `calc(${props.$position}px - 29px)`,
 		transform: `translateX(${props.$position - 9}px)`,
+		bottom: `${props.$height}px`,
 	},
 }))<{ $position: number }>`
 	position: absolute;
 	bottom: 0;
-	opacity: 0;
 	transition: opacity 0.3s;
 	z-index: 1;
 	pointer-events: auto;
-
-	&.visible {
-		opacity: 1;
-	}
-
-	&.expanded {
-		z-index: 2;
-	}
-
-	&.dragging {
-		z-index: 3;
-	}
 `
 
 export const Chain = styled.div.attrs<{ $position: number }>((props) => ({

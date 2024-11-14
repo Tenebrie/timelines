@@ -4,7 +4,7 @@ import { memo } from 'react'
 import { useDragDrop } from '../../../../../../../dragDrop/useDragDrop'
 import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
 import { useEventIcons } from '../../../../../../hooks/useEventIcons'
-import useEventTracks from '../../hooks/useEventTracks'
+import useEventTracks, { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { Group } from '../../styles'
 import { Marker } from '../TimelineEvent/styles'
 import { TimelineEvent } from '../TimelineEvent/TimelineEvent'
@@ -35,7 +35,7 @@ const TimelineEventPositionerComponent = ({
 	const { ref, isDragging, ghostElement } = useDragDrop({
 		type: 'timelineEvent',
 		params: { event: entity },
-		adjustPosition: (pos, startPos) => {
+		adjustPosition: (pos) => {
 			const roundingFactor = lineSpacing
 			const b = -scroll % lineSpacing
 			const posTimestamp = pos.x + b
@@ -75,11 +75,13 @@ const TimelineEventPositionerComponent = ({
 		),
 	})
 	const position = realTimeToScaledTime(Math.floor(entity.markerPosition)) + scroll - 5
+	const height = TimelineEventHeightPx * entity.markerHeight
 
 	return (
 		<Group
 			ref={ref}
 			$position={position}
+			$height={height}
 			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''}`}
 		>
 			<TimelineEvent entity={entity} trackHeight={trackHeight} edited={edited} selected={selected} />
