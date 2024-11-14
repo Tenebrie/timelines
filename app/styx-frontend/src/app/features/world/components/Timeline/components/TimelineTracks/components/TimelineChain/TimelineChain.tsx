@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material'
 import { memo } from 'react'
 
+import { useCustomTheme } from '../../../../../../../../../hooks/useCustomTheme'
 import { useStringColor } from '../../../../../../../../utils/getStringColor'
 import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
 import { MarkerType, TimelineEntity } from '../../../../../../types'
@@ -14,6 +15,7 @@ type Props = {
 }
 
 export const TimelineChainComponent = ({ entity, edited, selected, realTimeToScaledTime }: Props) => {
+	const theme = useCustomTheme()
 	const { getStringColor } = useStringColor()
 	if (!entity.nextEntity) {
 		return
@@ -36,7 +38,7 @@ export const TimelineChainComponent = ({ entity, edited, selected, realTimeToSca
 				style={{
 					width: dist,
 					height: TimelineEventHeightPx - 12,
-					background: 'rgb(255 255 255 / 10%)',
+					background: theme.custom.palette.background.soft,
 					borderTop: `2px solid ${color}`,
 					display: 'flex',
 					alignItems: 'center',

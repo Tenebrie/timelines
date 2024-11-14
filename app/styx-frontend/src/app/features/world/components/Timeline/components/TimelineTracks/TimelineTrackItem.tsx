@@ -2,6 +2,7 @@ import { Divider } from '@mui/material'
 import throttle from 'lodash.throttle'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
+import { useCustomTheme } from '../../../../../../../hooks/useCustomTheme'
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState, getWorldState } from '../../../../selectors'
@@ -45,6 +46,7 @@ export const TimelineTrackItem = ({
 }: Props) => {
 	const dragDropReceiverRef = useRef<HTMLDivElement | null>(null)
 	const [isDragging, setIsDragging] = useState(false)
+	const theme = useCustomTheme()
 
 	const editedEntities = useMemo(
 		() =>
@@ -98,6 +100,7 @@ export const TimelineTrackItem = ({
 		<TrackContainer
 			ref={dragDropReceiverRef}
 			$height={track.height}
+			$background={theme.custom.palette.background.soft}
 			className={`${isDragging ? 'dragging' : ''}`}
 		>
 			<Divider sx={dividerProps} />

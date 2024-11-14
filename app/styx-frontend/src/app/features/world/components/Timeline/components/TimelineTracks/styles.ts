@@ -39,7 +39,7 @@ export const Chain = styled.div.attrs<{ $position: number }>((props) => ({
 	}
 `
 
-export const TrackContainer = styled.div<{ $height: number }>`
+export const TrackContainer = styled.div<{ $height: number; $background: string }>`
 	position: relative;
 	height: ${(props) => props.$height}px;
 	display: flex;
@@ -52,7 +52,7 @@ export const TrackContainer = styled.div<{ $height: number }>`
 
 	&.dragging:hover {
 		pointer-events: auto;
-		background: rgb(255 255 255 / 10%);
+		background: ${(props) => props.$background};
 	}
 `
 
