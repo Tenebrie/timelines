@@ -1,6 +1,6 @@
 import { Theme } from '@emotion/react'
 import { Box, SxProps, ThemeProvider } from '@mui/material'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import styled from 'styled-components'
@@ -40,6 +40,10 @@ const App = () => {
 		},
 		transition: 'background 0.3s',
 	}
+
+	useEffect(() => {
+		window.document.title = 'Timelines (Dev)'
+	}, [])
 
 	return (
 		<div className="App">
