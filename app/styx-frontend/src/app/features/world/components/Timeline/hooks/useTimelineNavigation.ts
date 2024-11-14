@@ -210,7 +210,8 @@ export const useTimelineNavigation = ({
 		}
 
 		const newScaleLevel = rangeMap<ScaleLevel>(currentTimePerPixel, [
-			['[0; 2)', 0],
+			['[0.5; 1)', -1],
+			['[1; 2)', 0],
 			['[2; 4)', 1],
 			['[4; 8)', 2],
 			['[8; 16)', 3],

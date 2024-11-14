@@ -60,7 +60,7 @@ export const Timeline = () => {
 	const { scroll, scaleLevel, targetScaleIndex, isSwitchingScale, performZoom } = useTimelineNavigation({
 		containerRef: [containerRef, anotherRef],
 		defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
-		scaleLimits: [0, 7],
+		scaleLimits: [-1, 7],
 		selectedTime: selectedTimeOrNull,
 		onClick: (time) => onClick(time),
 		onDoubleClick: (time) => onDoubleClick(time),

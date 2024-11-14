@@ -8,7 +8,7 @@ export type StoryEventMarkerProps = {
 
 export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
 	position: relative;
-	width: 16px;
+	width: 24px;
 	height: 24px;
 	border-radius: 4px;
 	background: #0a1929;
@@ -24,13 +24,13 @@ export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
 		position: absolute;
 		background: ${colors.green[300]};
 		mask-image: url(${(props) => props.$iconPath});
-		mask-size: contain;
+		mask-size: cover;
+		mask-position: 0px 0px;
+		mask-repeat: no-repeat;
 		background-origin: content-box;
 		background-size: contain;
-		top: 2px;
-		left: 2px;
-		width: calc(100% - 4px);
-		height: calc(100% - 4px);
+		width: calc(100%);
+		height: calc(100%);
 		transition: background-color 0.3s;
 	}
 
@@ -105,8 +105,9 @@ export const LabelContainer = styled.div`
 	display: flex;
 	align-items: center;
 	width: 250px;
-	left: 0%;
-	bottom: calc(100% + 8px);
+	transform: translateY(50%);
+	left: calc(100% + 8px);
+	bottom: calc(50%);
 	z-index: 10;
 	pointer-events: none;
 `

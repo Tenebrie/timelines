@@ -11,6 +11,7 @@ import { useEventIcons } from '../../../../../../hooks/useEventIcons'
 import { useTimelineBusDispatch } from '../../../../../../hooks/useTimelineBus'
 import { worldSlice } from '../../../../../../reducer'
 import { MarkerType, TimelineEntity } from '../../../../../../types'
+import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
 import { Label, LabelContainer, Marker } from './styles'
 
@@ -18,9 +19,10 @@ type Props = {
 	entity: TimelineEntity<MarkerType>
 	edited: boolean
 	selected: boolean
+	trackHeight: number
 }
 
-export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
+export const TimelineEventComponent = ({ entity, edited, selected, trackHeight }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
 	const scrollTimelineTo = useTimelineBusDispatch()
@@ -94,7 +96,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 
 	const labelType =
 		entity.markerType === 'issuedAt' ? (
-			<b style={{ color: colors.green[500] }}></b>
+			<b style={{ color: colors.green[500] }}>Event:</b>
 		) : entity.markerType === 'revokedAt' ? (
 			<b style={{ color: colors.red[500] }}>Resolve:</b>
 		) : entity.markerType === 'deltaState' ? (
@@ -106,7 +108,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	const { getStringColor } = useStringColor()
 	const color = getStringColor(entity.eventId)
 
-	const height = 30 * entity.markerHeight - 3
+	const height = TimelineEventHeightPx * entity.markerHeight
 
 	return (
 		<Marker
@@ -129,6 +131,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 			$iconPath={getIconPath(entity.icon)}
 			data-testid="timeline-event-marker"
 		>
+			<div className="icon"></div>
 			{isInfoVisible && (
 				<LabelContainer>
 					<Label data-hj-suppress>

@@ -15,8 +15,8 @@ export const GhostWrapper = ({ children, initialLeft, initialTop, left, top }: W
 				pointerEvents: 'none',
 				position: 'absolute',
 				transform: `translate(${left - initialLeft}px, ${top - initialTop}px)`,
-				top: 'calc(-50% + 5px)',
-				left: 'calc(-50% + 5px)',
+				top: 'calc(-50%)',
+				left: 'calc(-50%)',
 			}}
 		>
 			{children}

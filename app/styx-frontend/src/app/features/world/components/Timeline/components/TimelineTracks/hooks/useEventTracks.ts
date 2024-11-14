@@ -17,6 +17,7 @@ import {
 import { useEventTracksRequest } from '../../../hooks/useEventTracksRequest'
 
 export type TimelineTrack = ReturnType<typeof useEventTracks>[number]
+export const TimelineEventHeightPx = 30
 
 const useEventTracks = () => {
 	const { events } = useSelector(getWorldState)
@@ -137,6 +138,7 @@ const useEventTracks = () => {
 					name: track.name,
 					position: track.position,
 					baseModel: track as WorldEventTrack | null,
+					height: 0,
 				}))
 				.concat([
 					{
@@ -144,6 +146,7 @@ const useEventTracks = () => {
 						name: 'Unassigned',
 						position: Infinity,
 						baseModel: null,
+						height: 0,
 					},
 				])
 				.sort((a, b) => a.position - b.position)
@@ -170,49 +173,54 @@ const calculateMarkerHeights = (tracks: TimelineTrack[]) => {
 	const currentState: TimelineEntity<MarkerType>[] = []
 
 	return tracks.map((track) => {
+		const trackEvents = track.events
+			.map((event) => {
+				if (event.markerType === 'ghostEvent' || event.markerType === 'ghostDelta') {
+					return event
+				}
+				if (event.markerType !== 'issuedAt') {
+					return {
+						...event,
+						markerHeight: currentState.find((m) => m.eventId === event.eventId)!.markerHeight,
+					}
+				}
+
+				const trackId = event.worldEventTrackId ?? 'default'
+				const previousEvents =
+					data[trackId]?.filter(
+						(e) =>
+							(e.timestamp <= event.markerPosition && e.revokedAt! >= event.markerPosition) ||
+							e.timestamp === event.markerPosition,
+					) ?? []
+				const maximumHeight =
+					previousEvents.length > 0
+						? previousEvents.map((e) => e.markerHeight).sort((a, b) => b - a)[0] + 1
+						: 0
+
+				const height = (() => {
+					for (let i = 0; i <= maximumHeight; i++) {
+						if (!previousEvents.some((e) => e.markerHeight === i)) {
+							return i
+						}
+					}
+					return maximumHeight
+				})()
+				const newEvent = {
+					...event,
+					markerHeight: height,
+				}
+				data[trackId] = previousEvents.concat(newEvent)
+				currentState.push(newEvent)
+				return newEvent
+			})
+			.sort((a, b) => b.markerPosition - a.markerPosition)
+
 		return {
 			...track,
-			events: track.events
-				.map((event) => {
-					if (event.markerType === 'ghostEvent' || event.markerType === 'ghostDelta') {
-						return event
-					}
-					if (event.markerType !== 'issuedAt') {
-						return {
-							...event,
-							markerHeight: currentState.find((m) => m.eventId === event.eventId)!.markerHeight,
-						}
-					}
-
-					const trackId = event.worldEventTrackId ?? 'default'
-					const previousEvents =
-						data[trackId]?.filter(
-							(e) =>
-								(e.timestamp <= event.markerPosition && e.revokedAt! >= event.markerPosition) ||
-								e.timestamp === event.markerPosition,
-						) ?? []
-					const maximumHeight =
-						previousEvents.length > 0
-							? previousEvents.map((e) => e.markerHeight).sort((a, b) => b - a)[0] + 1
-							: 0
-
-					const height = (() => {
-						for (let i = 0; i <= maximumHeight; i++) {
-							if (!previousEvents.some((e) => e.markerHeight === i)) {
-								return i
-							}
-						}
-						return maximumHeight
-					})()
-					const newEvent = {
-						...event,
-						markerHeight: height,
-					}
-					data[trackId] = previousEvents.concat(newEvent)
-					currentState.push(newEvent)
-					return newEvent
-				})
-				.sort((a, b) => b.markerHeight - a.markerHeight || a.markerPosition - b.markerPosition),
+			events: trackEvents,
+			height:
+				Math.max(3, trackEvents.map((e) => e.markerHeight + 2).sort((a, b) => b - a)[0] ?? 0) *
+				TimelineEventHeightPx,
 		}
 	})
 }

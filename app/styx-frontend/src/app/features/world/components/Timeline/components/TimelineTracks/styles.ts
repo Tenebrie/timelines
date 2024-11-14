@@ -6,10 +6,8 @@ export const Group = styled.div.attrs<{ $position: number }>((props) => ({
 		transform: `translateX(${props.$position - 9}px)`,
 	},
 }))<{ $position: number }>`
-	display: flex;
-	flex-direction: column-reverse;
 	position: absolute;
-	top: 16px;
+	bottom: 0;
 	opacity: 0;
 	transition: opacity 0.3s;
 	z-index: 1;
@@ -46,13 +44,13 @@ export const Chain = styled.div.attrs<{ $position: number }>((props) => ({
 	}
 `
 
-export const TrackContainer = styled.div`
+export const TrackContainer = styled.div<{ $height: number }>`
 	position: relative;
-	height: 96px;
+	height: ${(props) => props.$height}px;
 	display: flex;
 	flex-direction: row;
 	width: 100%;
-	align-items: center;
+	align-items: flex-end;
 
 	pointer-events: none;
 	background: none;
@@ -70,5 +68,4 @@ export const TrackPositioner = styled.div.attrs<{ $position: number }>((props) =
 	},
 }))`
 	position: absolute;
-	background: red;
 `

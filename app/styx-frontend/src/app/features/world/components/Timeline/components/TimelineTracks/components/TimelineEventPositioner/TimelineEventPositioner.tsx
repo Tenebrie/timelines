@@ -16,6 +16,7 @@ type Props = {
 	scroll: number
 	edited: boolean
 	selected: boolean
+	trackHeight: number
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
@@ -26,6 +27,7 @@ const TimelineEventPositionerComponent = ({
 	scroll,
 	edited,
 	selected,
+	trackHeight,
 	realTimeToScaledTime,
 }: Props) => {
 	const { getIconPath } = useEventIcons()
@@ -35,10 +37,12 @@ const TimelineEventPositionerComponent = ({
 		params: { event: entity },
 		adjustPosition: (pos, startPos) => {
 			const roundingFactor = lineSpacing
-			const posTimestamp = pos.x
-			const roundedValue = Math.floor(posTimestamp / roundingFactor) * roundingFactor
+			const b = -scroll % lineSpacing
+			const posTimestamp = pos.x + b
+			const roundedValue = Math.round(posTimestamp / roundingFactor) * roundingFactor
+			const offset = -scroll % lineSpacing > lineSpacing / 2 ? scroll % lineSpacing : scroll % lineSpacing
 			return {
-				x: roundedValue + (startPos.x % lineSpacing) - lineSpacing + 5,
+				x: roundedValue + offset,
 				y: pos.y,
 			}
 		},
@@ -64,11 +68,13 @@ const TimelineEventPositionerComponent = ({
 						ghostEvent: entity.markerType === 'issuedAt' || entity.markerType === 'revokedAt',
 						ghostDelta: entity.markerType === 'deltaState',
 					})}
-				></Marker>
+				>
+					<div className="icon"></div>
+				</Marker>
 			</>
 		),
 	})
-	const position = realTimeToScaledTime(Math.floor(entity.markerPosition)) + scroll
+	const position = realTimeToScaledTime(Math.floor(entity.markerPosition)) + scroll - 5
 
 	return (
 		<Group
@@ -76,7 +82,7 @@ const TimelineEventPositionerComponent = ({
 			$position={position}
 			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''}`}
 		>
-			<TimelineEvent entity={entity} edited={edited} selected={selected} />
+			<TimelineEvent entity={entity} trackHeight={trackHeight} edited={edited} selected={selected} />
 			{ghostElement}
 		</Group>
 	)

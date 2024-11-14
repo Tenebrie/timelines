@@ -10,6 +10,8 @@ export const useTimelineLevelScalar = () => {
 	const getLevelScalar = useCallback(
 		(forLevel: ScaleLevel) => {
 			switch (forLevel) {
+				case -1:
+					return 0.1 * spacingMod
 				case 0:
 					return 1 * spacingMod
 				case 1:

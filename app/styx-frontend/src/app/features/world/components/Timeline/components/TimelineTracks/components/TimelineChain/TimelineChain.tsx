@@ -3,6 +3,7 @@ import { memo } from 'react'
 import { useStringColor } from '../../../../../../../../utils/getStringColor'
 import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
 import { MarkerType, TimelineEntity } from '../../../../../../types'
+import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
@@ -18,7 +19,7 @@ export const TimelineChainComponent = ({ entity, edited, selected, realTimeToSca
 	}
 	const padding = 0
 	const dist = realTimeToScaledTime(entity.nextEntity.markerPosition - entity.markerPosition + padding)
-	const height = 30 * entity.markerHeight - 40
+	const height = TimelineEventHeightPx * entity.markerHeight + 7
 	const color = getStringColor(entity.eventId)
 
 	return (

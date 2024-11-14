@@ -44,7 +44,9 @@ export const TimelineEventTrackTitleComponent = ({ track }: Props) => {
 				marginLeft: 1,
 				zIndex: 100,
 				borderRadius: 1,
+				height: '100%',
 			}}
+			justifyContent={'center'}
 		>
 			<Button variant="contained" color="secondary" sx={{ pointerEvents: 'all' }} onClick={onOpen}>
 				{track.baseModel && (

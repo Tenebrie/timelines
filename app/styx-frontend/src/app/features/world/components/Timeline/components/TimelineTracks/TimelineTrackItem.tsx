@@ -95,7 +95,11 @@ export const TimelineTrackItem = ({
 	const dividerProps = useMemo(() => ({ position: 'absolute', bottom: 0, width: '100%' }), [])
 
 	return (
-		<TrackContainer ref={dragDropReceiverRef} className={`${isDragging ? 'dragging' : ''}`}>
+		<TrackContainer
+			ref={dragDropReceiverRef}
+			$height={track.height}
+			className={`${isDragging ? 'dragging' : ''}`}
+		>
 			<Divider sx={dividerProps} />
 			<TrackPositioner $position={0}>
 				{chainLinks.map((event) => (
@@ -118,6 +122,7 @@ export const TimelineTrackItem = ({
 						scroll={scroll}
 						edited={editedEntities.some((marker) => marker.key === event.key)}
 						selected={selectedMarkers.some((marker) => marker.key === event.key)}
+						trackHeight={track.height}
 						realTimeToScaledTime={realTimeToScaledTime}
 					/>
 				))}
