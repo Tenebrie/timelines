@@ -134,7 +134,7 @@ export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
 			const entity = state.params.event
 			const roundingFactor = lineSpacing * getLevelScalar(scaleLevel)
 			const realTime =
-				scaledTimeToRealTime(state.targetPos.x - state.targetRootPos.x - 29) + entity.markerPosition
+				scaledTimeToRealTime(state.targetPos.x - state.targetRootPos.x - 13) + entity.markerPosition
 			const roundedRealTime = Math.round(realTime / roundingFactor) * roundingFactor
 			if (entityIsOfType('issuedAt', entity)) {
 				moveEventIssuedAt(entity, roundedRealTime)

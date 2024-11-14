@@ -103,8 +103,6 @@ export const useTimelineNavigation = ({
 				maximumScroll: number
 				draggingFrom: Position | null
 			}) => {
-				console.log('Event')
-
 				const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
 				const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
 				const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }

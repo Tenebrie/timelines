@@ -8,16 +8,17 @@ export type StoryEventMarkerProps = {
 
 export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
 	position: relative;
-	width: 12px;
+	width: 16px;
 	height: 24px;
-	border-radius: 4px 4px 0 0;
+	border-radius: 4px;
 	background: #0a1929;
 	cursor: pointer;
 	transition:
 		margin-bottom 0.3s,
-		outline-color 0.3s,
+		border-color 0.3s,
 		background-color 0.3s;
-	outline: 2px solid ${colors.grey[300]};
+	border: 2px solid ${colors.grey[300]};
+	border-color: ${(props) => props.$borderColor} !important;
 
 	.icon {
 		position: absolute;
@@ -50,13 +51,11 @@ export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
 	}
 
 	&:hover {
-		outline-color: ${colors.grey[500]};
 		& > .icon {
 			background: ${colors.green[500]};
 		}
 	}
 	&:active {
-		outline-color: ${colors.grey[700]};
 		& > .icon {
 			background: ${colors.green[700]};
 		}
@@ -99,8 +98,6 @@ export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
 	&.revoked.selected {
 		background-color: rgb(100, 0, 0);
 	}
-
-	outline-color: ${(props) => props.$borderColor} !important;
 `
 
 export const LabelContainer = styled.div`

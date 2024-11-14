@@ -81,7 +81,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 			}
 
 			if (isDraggingNow.current) {
-				const basePos = { x: event.clientX, y: event.clientY }
+				const basePos = { x: event.clientX + 8, y: event.clientY }
 				const pos = adjustPosition ? adjustPosition(basePos, rootPos.current) : basePos
 				setStateQuietly({
 					...getState()!,

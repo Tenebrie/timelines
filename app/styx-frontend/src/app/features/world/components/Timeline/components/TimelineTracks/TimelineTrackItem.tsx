@@ -116,8 +116,8 @@ export const TimelineTrackItem = ({
 						visible={visible}
 						lineSpacing={lineSpacing}
 						scroll={scroll}
-						edited={editedEntities.includes(event)}
-						selected={selectedMarkers.includes(event)}
+						edited={editedEntities.some((marker) => marker.key === event.key)}
+						selected={selectedMarkers.some((marker) => marker.key === event.key)}
 						realTimeToScaledTime={realTimeToScaledTime}
 					/>
 				))}

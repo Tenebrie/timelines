@@ -5,6 +5,7 @@ import { useWorldRouter, worldRoutes } from '../../../../../../../../router/rout
 import { applyEventDelta } from '../../../../../../../utils/applyEventDelta'
 import { asMarkerType } from '../../../../../../../utils/asMarkerType'
 import { findStartingFrom } from '../../../../../../../utils/findStartingFrom'
+import { isNotNull } from '../../../../../../../utils/isNotNull'
 import { getEventCreatorState, getEventDeltaCreatorState, getWorldState } from '../../../../../selectors'
 import {
 	MarkerType,
@@ -54,7 +55,7 @@ const useEventTracks = () => {
 			)
 			.concat(
 				events
-					.filter((event) => !!event.revokedAt)
+					.filter((event) => isNotNull(event.revokedAt))
 					.map((event) => ({
 						...event,
 						eventId: event.id,
@@ -72,7 +73,7 @@ const useEventTracks = () => {
 			if (event.markerType === 'issuedAt' && event.deltaStates.length > 0) {
 				return sortedEvents.find((e) => e.id === event.deltaStates[0].id) ?? null
 			}
-			if (event.markerType === 'issuedAt' && event.revokedAt !== null && event.revokedAt !== undefined) {
+			if (event.markerType === 'issuedAt' && isNotNull(event.revokedAt)) {
 				return sortedEvents.find((e) => e.eventId === event.eventId && e.markerType === 'revokedAt') ?? null
 			}
 			if (event.markerType === 'deltaState') {
@@ -85,7 +86,7 @@ const useEventTracks = () => {
 				if (nextDelta) {
 					return nextDelta
 				}
-				if (event.revokedAt !== null && event.revokedAt !== undefined) {
+				if (isNotNull(event.revokedAt)) {
 					return sortedEvents.find((e) => e.eventId === event.eventId && e.markerType === 'revokedAt') ?? null
 				}
 			}
@@ -155,7 +156,7 @@ const useEventTracks = () => {
 
 					return {
 						...track,
-						events: events,
+						events,
 					}
 				}),
 		[eventGroups, tracks],
@@ -171,33 +172,47 @@ const calculateMarkerHeights = (tracks: TimelineTrack[]) => {
 	return tracks.map((track) => {
 		return {
 			...track,
-			events: track.events.map((event) => {
-				if (event.markerType === 'ghostEvent' || event.markerType === 'ghostDelta') {
-					return event
-				}
-				if (event.markerType !== 'issuedAt') {
-					return {
-						...event,
-						markerHeight: currentState.find((m) => m.eventId === event.eventId)!.markerHeight,
+			events: track.events
+				.map((event) => {
+					if (event.markerType === 'ghostEvent' || event.markerType === 'ghostDelta') {
+						return event
 					}
-				}
+					if (event.markerType !== 'issuedAt') {
+						return {
+							...event,
+							markerHeight: currentState.find((m) => m.eventId === event.eventId)!.markerHeight,
+						}
+					}
 
-				const trackId = event.worldEventTrackId ?? 'default'
-				const previousEvents =
-					data[trackId]?.filter(
-						(e) => e.timestamp < event.markerPosition && e.revokedAt! > event.markerPosition,
-					) ?? []
-				const height = previousEvents.length
-				if (event.deltaStates.length > 0 || (event.revokedAt !== null && event.revokedAt !== undefined)) {
-					data[trackId] = previousEvents.concat(event)
-				}
-				const newEvent = {
-					...event,
-					markerHeight: height,
-				}
-				currentState.push(newEvent)
-				return newEvent
-			}),
+					const trackId = event.worldEventTrackId ?? 'default'
+					const previousEvents =
+						data[trackId]?.filter(
+							(e) =>
+								(e.timestamp <= event.markerPosition && e.revokedAt! >= event.markerPosition) ||
+								e.timestamp === event.markerPosition,
+						) ?? []
+					const maximumHeight =
+						previousEvents.length > 0
+							? previousEvents.map((e) => e.markerHeight).sort((a, b) => b - a)[0] + 1
+							: 0
+
+					const height = (() => {
+						for (let i = 0; i <= maximumHeight; i++) {
+							if (!previousEvents.some((e) => e.markerHeight === i)) {
+								return i
+							}
+						}
+						return maximumHeight
+					})()
+					const newEvent = {
+						...event,
+						markerHeight: height,
+					}
+					data[trackId] = previousEvents.concat(newEvent)
+					currentState.push(newEvent)
+					return newEvent
+				})
+				.sort((a, b) => b.markerHeight - a.markerHeight || a.markerPosition - b.markerPosition),
 		}
 	})
 }

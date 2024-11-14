@@ -17,12 +17,12 @@ export const TimelineChainComponent = ({ entity, edited, selected, realTimeToSca
 		return
 	}
 	const padding = 0
-	const dist = realTimeToScaledTime(entity.nextEntity.markerPosition - entity.markerPosition + padding - 7)
-	const height = 20 * entity.markerHeight - 45
+	const dist = realTimeToScaledTime(entity.nextEntity.markerPosition - entity.markerPosition + padding)
+	const height = 30 * entity.markerHeight - 40
 	const color = getStringColor(entity.eventId)
 
 	return (
-		<div style={{ pointerEvents: 'none', position: 'absolute', bottom: height, left: -12 }}>
+		<div style={{ pointerEvents: 'none', position: 'absolute', bottom: height, left: 0 }}>
 			<div
 				style={{
 					width: dist + padding,

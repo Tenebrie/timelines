@@ -3,14 +3,13 @@ import styled from 'styled-components'
 export const Group = styled.div.attrs<{ $position: number }>((props) => ({
 	style: {
 		// left: `calc(${props.$position}px - 29px)`,
-		transform: `translateX(${props.$position - 29}px)`,
+		transform: `translateX(${props.$position - 9}px)`,
 	},
 }))<{ $position: number }>`
 	display: flex;
 	flex-direction: column-reverse;
 	position: absolute;
 	top: 16px;
-	padding: 5px;
 	opacity: 0;
 	transition: opacity 0.3s;
 	z-index: 1;

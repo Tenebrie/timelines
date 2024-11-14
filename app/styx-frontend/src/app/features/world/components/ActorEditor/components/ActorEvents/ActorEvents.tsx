@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux'
 
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { OutlinedContainer } from '../../../../../../components/OutlinedContainer'
+import { isNull } from '../../../../../../utils/isNull'
 import { getOutlinerPreferences } from '../../../../../preferences/selectors'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { getWorldState } from '../../../../selectors'
@@ -28,8 +29,7 @@ export const ActorEvents = ({ actor }: Props) => {
 			...event,
 			secondary: timeToLabel(event.timestamp),
 			collapsed: !expandedEvents.includes(event.id),
-			active:
-				event.revokedAt === null || event.revokedAt === undefined || event.revokedAt > selectedTimeOrZero,
+			active: isNull(event.revokedAt) || event.revokedAt > selectedTimeOrZero,
 		}))
 
 	return (

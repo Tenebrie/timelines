@@ -106,7 +106,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	const { getStringColor } = useStringColor()
 	const color = getStringColor(entity.eventId)
 
-	const height = 20 * entity.markerHeight
+	const height = 30 * entity.markerHeight - 3
 
 	return (
 		<Marker

@@ -4,7 +4,6 @@ import { memo } from 'react'
 import { useDragDrop } from '../../../../../../../dragDrop/useDragDrop'
 import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
 import { useEventIcons } from '../../../../../../hooks/useEventIcons'
-import { TimelineState } from '../../../../utils/TimelineState'
 import useEventTracks from '../../hooks/useEventTracks'
 import { Group } from '../../styles'
 import { Marker } from '../TimelineEvent/styles'
@@ -34,19 +33,18 @@ const TimelineEventPositionerComponent = ({
 	const { ref, isDragging, ghostElement } = useDragDrop({
 		type: 'timelineEvent',
 		params: { event: entity },
-		adjustPosition: (pos) => {
+		adjustPosition: (pos, startPos) => {
 			const roundingFactor = lineSpacing
 			const posTimestamp = pos.x
 			const roundedValue = Math.floor(posTimestamp / roundingFactor) * roundingFactor
 			return {
-				x: roundedValue + ((entity.markerPosition + TimelineState.scroll) % lineSpacing),
-				// y: window.innerHeight - Math.round((window.innerHeight - pos.y + 15 - 25) / 96) * 96 + 34 - 24 - 16,
+				x: roundedValue + (startPos.x % lineSpacing) - lineSpacing + 5,
 				y: pos.y,
 			}
 		},
 		ghostFactory: () => (
 			<>
-				{/* <div
+				<div
 					style={{
 						height: '100vh',
 						background: 'gray',
@@ -56,7 +54,7 @@ const TimelineEventPositionerComponent = ({
 						left: '50%',
 						overflow: 'hidden',
 					}}
-				></div> */}
+				></div>
 				<Marker
 					$borderColor="gray"
 					$iconPath={getIconPath(entity.icon)}
@@ -66,9 +64,7 @@ const TimelineEventPositionerComponent = ({
 						ghostEvent: entity.markerType === 'issuedAt' || entity.markerType === 'revokedAt',
 						ghostDelta: entity.markerType === 'deltaState',
 					})}
-				>
-					<div className="icon" />
-				</Marker>
+				></Marker>
 			</>
 		),
 	})
