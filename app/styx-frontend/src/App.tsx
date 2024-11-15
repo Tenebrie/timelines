@@ -42,7 +42,9 @@ const App = () => {
 	}
 
 	useEffect(() => {
-		window.document.title = 'Timelines (Dev)'
+		if (process.env.NODE_ENV === 'development') {
+			window.document.title = 'Timelines (Dev)'
+		}
 	}, [])
 
 	return (
