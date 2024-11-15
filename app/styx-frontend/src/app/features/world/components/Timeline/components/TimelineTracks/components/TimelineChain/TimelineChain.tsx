@@ -24,6 +24,9 @@ export const TimelineChainComponent = ({ entity, edited, selected, realTimeToSca
 		realTimeToScaledTime(entity.nextEntity.markerPosition - entity.markerPosition) - TimelineEventHeightPx - 2
 	const height = TimelineEventHeightPx * entity.markerHeight + 4
 	const color = getStringColor(entity.eventId)
+	if (dist < 1) {
+		return null
+	}
 
 	return (
 		<div

@@ -134,7 +134,7 @@ const useEventTracks = () => {
 		() =>
 			tracks
 				.map((track) => ({
-					id: track.id,
+					id: track.id as string | 'default',
 					name: track.name,
 					position: track.position,
 					baseModel: track as WorldEventTrack | null,
