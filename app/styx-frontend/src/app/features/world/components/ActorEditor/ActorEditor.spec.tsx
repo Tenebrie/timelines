@@ -1,9 +1,10 @@
 import { screen, waitFor } from '@testing-library/react'
 import { setupServer } from 'msw/node'
 
-import { mockActorModel, mockUpdateActor } from '../../../../../api/rheaApi.mock'
-import { renderWithProviders } from '../../../../../jest/renderWithProviders'
-import { mockRouter } from '../../../../../router/router.mock'
+import { mockActorModel, mockUpdateActor } from '@/api/rheaApi.mock'
+import { renderWithProviders } from '@/jest/renderWithProviders'
+import { mockRouter } from '@/router/router.mock'
+
 import { worldInitialState } from '../../reducer'
 import { ActorEditor } from './ActorEditor'
 

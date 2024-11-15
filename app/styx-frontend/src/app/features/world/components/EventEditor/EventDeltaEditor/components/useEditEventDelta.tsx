@@ -1,15 +1,13 @@
 import { useCallback, useEffect, useRef } from 'react'
 
-import {
-	UpdateWorldEventDeltaApiArg,
-	useUpdateWorldEventDeltaMutation,
-} from '../../../../../../../api/rheaApi'
-import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
-import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
-import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { ErrorState } from '../../../../../../utils/useErrorState'
-import { useModal } from '../../../../../modals/reducer'
-import { WorldEventDelta } from '../../../../types'
+import { UpdateWorldEventDeltaApiArg, useUpdateWorldEventDeltaMutation } from '@/api/worldApi'
+import { useModal } from '@/app/features/modals/reducer'
+import { WorldEventDelta } from '@/app/features/world/types'
+import { useAutosave } from '@/app/utils/autosave/useAutosave'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { ErrorState } from '@/app/utils/useErrorState'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+
 import { EventDeltaDetailsEditorErrors } from './EventDeltaDetailsEditor'
 import { useEventDeltaFields } from './useEventDeltaFields'
 

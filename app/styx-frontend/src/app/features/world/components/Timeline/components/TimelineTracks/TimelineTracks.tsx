@@ -1,9 +1,10 @@
 import { Stack } from '@mui/material'
 import { useSelector } from 'react-redux'
 
-import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
-import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
-import { getTimelineContextMenuState, getWorldState } from '../../../../selectors'
+import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+
 import { ScaleLevel } from '../../types'
 import { TimelineContextMenu } from '../TimelineContextMenu/TimelineContextMenu'
 import useEventTracks from './hooks/useEventTracks'

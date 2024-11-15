@@ -1,6 +1,6 @@
 import { Button, ListItemButton, Stack } from '@mui/material'
 
-import { OutlinedContainer } from '../../../components/OutlinedContainer'
+import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 
 type Props = {
 	label: string

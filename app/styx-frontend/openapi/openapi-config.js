@@ -33,7 +33,7 @@ const config = {
 		},
 		'../src/api/otherApi.ts': {
 			exportName: 'otherApi',
-			filterEndpoints: pathMatcher(/api/i),
+			filterEndpoints: pathMatcher(/health/i),
 		},
 	},
 	tag: true,

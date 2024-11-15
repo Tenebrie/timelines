@@ -15,12 +15,13 @@ import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useUpdateWorldEventTrackMutation } from '../../../../../../../../api/rheaApi'
-import { useWorldRouter } from '../../../../../../../../router/routes/worldRoutes'
-import { parseApiResponse } from '../../../../../../../utils/parseApiResponse'
-import { useModal } from '../../../../../../modals/reducer'
-import { useWorldTime } from '../../../../../../time/hooks/useWorldTime'
-import { getWorldState } from '../../../../../selectors'
+import { useUpdateWorldEventTrackMutation } from '@/api/worldApi'
+import { useModal } from '@/app/features/modals/reducer'
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
+import { getWorldState } from '@/app/features/world/selectors'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
+
 import useEventTracks, { TimelineTrack } from '../../TimelineTracks/hooks/useEventTracks'
 
 type Props = {
@@ -41,7 +42,7 @@ export const EventTracksMenu = ({ onNavigateToTime }: Props) => {
 
 	const onToggleVisibility = useCallback(
 		async (track: TimelineTrack) => {
-			const { error } = parseApiResponse(
+			parseApiResponse(
 				await updateTrack({
 					worldId,
 					trackId: track.id,

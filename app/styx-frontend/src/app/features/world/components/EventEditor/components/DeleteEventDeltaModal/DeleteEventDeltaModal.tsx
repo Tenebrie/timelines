@@ -3,16 +3,12 @@ import { LoadingButton } from '@mui/lab'
 import { Button, Stack, Tooltip } from '@mui/material'
 import { useState } from 'react'
 
-import { useDeleteWorldEventDeltaMutation } from '../../../../../../../api/rheaApi'
-import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
-import Modal, {
-	ModalFooter,
-	ModalHeader,
-	useModalCleanup,
-} from '../../../../../../../ui-lib/components/Modal'
-import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { useModal } from '../../../../../modals/reducer'
+import { useDeleteWorldEventDeltaMutation } from '@/api/worldApi'
+import { useModal } from '@/app/features/modals/reducer'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const DeleteEventDeltaModal = () => {
 	const [deleteWorldEvent, { isLoading }] = useDeleteWorldEventDeltaMutation()

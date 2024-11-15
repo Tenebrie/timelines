@@ -1,11 +1,12 @@
+import { useAdminGetUserLevelsQuery } from '@api/constantsApi'
 import { Cancel, Save } from '@mui/icons-material'
 import { Button, FormControl, IconButton, MenuItem, Select, Stack } from '@mui/material'
 import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useAdminGetUserLevelsQuery, useAdminSetUserLevelMutation } from '../../../../../api/rheaApi'
-import { User } from '../../../auth/reducer'
-import { getAuthState } from '../../../auth/selectors'
+import { useAdminSetUserLevelMutation } from '@/api/adminApi'
+import { User } from '@/app/features/auth/reducer'
+import { getAuthState } from '@/app/features/auth/selectors'
 
 type Props = {
 	user: User

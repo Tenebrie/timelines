@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useCheckAuthenticationQuery } from '../../../../api/rheaApi'
-import { appRoutes } from '../../../../router/routes/appRoutes'
+import { useCheckAuthenticationQuery } from '@/api/authApi'
+import { appRoutes } from '@/router/routes/appRoutes'
+
 import { getWorldState } from '../../world/selectors'
 import { authSlice } from '../reducer'
 import { getAuthState } from '../selectors'

@@ -2,7 +2,8 @@ import { Add, Sort } from '@mui/icons-material'
 import { Collapse, IconButton, List, ListItem, ListItemButton, ListSubheader } from '@mui/material'
 import { MouseEvent, ReactNode } from 'react'
 
-import { useIsReadOnly } from '../../../../../hooks/useIsReadOnly'
+import { useIsReadOnly } from '@/hooks/useIsReadOnly'
+
 import { ExpandIcon } from './styles'
 
 type Props<T> = {

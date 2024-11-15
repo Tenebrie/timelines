@@ -1,7 +1,7 @@
 import { Container } from '@mui/material'
 import styled from 'styled-components'
 
-import { ScrollbarStyling } from '../../../../styles'
+import { ScrollbarStyling } from '@/app/styles'
 
 export const FullHeightContainer = styled(Container)`
 	@media all and (min-width: 900px) {

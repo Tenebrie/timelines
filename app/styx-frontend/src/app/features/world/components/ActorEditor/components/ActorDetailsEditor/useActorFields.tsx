@@ -1,6 +1,6 @@
 import { Dispatch, useCallback, useMemo, useRef, useState } from 'react'
 
-import { ActorDetails } from '../../../../types'
+import { ActorDetails } from '@/app/features/world/types'
 
 type Props = {
 	actor: ActorDetails

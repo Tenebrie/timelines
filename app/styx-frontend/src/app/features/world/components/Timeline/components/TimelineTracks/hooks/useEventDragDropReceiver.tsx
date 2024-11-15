@@ -1,18 +1,16 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import {
-	useUpdateWorldEventDeltaMutation,
-	useUpdateWorldEventMutation,
-} from '../../../../../../../../api/rheaApi'
-import { parseApiResponse } from '../../../../../../../utils/parseApiResponse'
-import { useDragDropReceiver } from '../../../../../../dragDrop/useDragDropReceiver'
-import { getTimelinePreferences } from '../../../../../../preferences/selectors'
-import { useTimelineLevelScalar } from '../../../../../../time/hooks/useTimelineLevelScalar'
-import { useTimelineWorldTime } from '../../../../../../time/hooks/useTimelineWorldTime'
-import { worldSlice } from '../../../../../reducer'
-import { getTimelineState, getWorldState } from '../../../../../selectors'
-import { MarkerType, TimelineEntity } from '../../../../../types'
+import { useUpdateWorldEventDeltaMutation, useUpdateWorldEventMutation } from '@/api/worldApi'
+import { useDragDropReceiver } from '@/app/features/dragDrop/useDragDropReceiver'
+import { getTimelinePreferences } from '@/app/features/preferences/selectors'
+import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
+import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { worldSlice } from '@/app/features/world/reducer'
+import { getTimelineState, getWorldState } from '@/app/features/world/selectors'
+import { MarkerType, TimelineEntity } from '@/app/features/world/types'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+
 import { TimelineTrack } from './useEventTracks'
 
 type Props = {

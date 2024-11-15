@@ -3,14 +3,15 @@ import classNames from 'classnames'
 import { memo, MouseEvent, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { useDoubleClick } from '../../../../../../../../../hooks/useDoubleClick'
-import { useWorldRouter } from '../../../../../../../../../router/routes/worldRoutes'
-import { useStringColor } from '../../../../../../../../utils/getStringColor'
-import { isMultiselectClick } from '../../../../../../../../utils/isMultiselectClick'
-import { useEventIcons } from '../../../../../../hooks/useEventIcons'
-import { useTimelineBusDispatch } from '../../../../../../hooks/useTimelineBus'
-import { worldSlice } from '../../../../../../reducer'
-import { MarkerType, TimelineEntity } from '../../../../../../types'
+import { useEventIcons } from '@/app/features/world/hooks/useEventIcons'
+import { useTimelineBusDispatch } from '@/app/features/world/hooks/useTimelineBus'
+import { worldSlice } from '@/app/features/world/reducer'
+import { MarkerType, TimelineEntity } from '@/app/features/world/types'
+import { useStringColor } from '@/app/utils/getStringColor'
+import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
+import { useDoubleClick } from '@/hooks/useDoubleClick'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
+
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
 import { Label, LabelContainer, Marker } from './styles'
@@ -22,7 +23,7 @@ type Props = {
 	trackHeight: number
 }
 
-export const TimelineEventComponent = ({ entity, edited, selected, trackHeight }: Props) => {
+export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
 	const scrollTimelineTo = useTimelineBusDispatch()

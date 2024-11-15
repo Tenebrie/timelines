@@ -1,8 +1,9 @@
 import { Navigate, useOutlet } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useLocationRef } from '../../../hooks/useLocationRef'
-import { useWorldRouter, worldRoutes } from '../../../router/routes/worldRoutes'
+import { useLocationRef } from '@/hooks/useLocationRef'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+
 import { BlockingSpinner } from '../../components/BlockingSpinner'
 import { useAuthCheck } from '../auth/authCheck/useAuthCheck'
 import { ActorWizardModal } from './components/ActorWizard/ActorWizardModal'

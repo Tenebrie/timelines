@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 
-import { useGetWorldEventTracksQuery } from '../../../../../../api/rheaApi'
-import { getWorldState } from '../../../selectors'
+import { useGetWorldEventTracksQuery } from '@/api/worldApi'
+import { getWorldState } from '@/app/features/world/selectors'
 
 export const useEventTracksRequest = () => {
 	const { isLoaded, id: worldId } = useSelector(getWorldState)

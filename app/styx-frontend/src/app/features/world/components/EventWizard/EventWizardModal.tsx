@@ -3,14 +3,14 @@ import { LoadingButton } from '@mui/lab'
 import { Button, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
 
-import { useCreateWorldEventMutation } from '../../../../../api/rheaApi'
-import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '../../../../../router/routes/worldRoutes'
-import Modal, { useModalCleanup } from '../../../../../ui-lib/components/Modal'
-import { ModalFooter, ModalHeader } from '../../../../../ui-lib/components/Modal'
-import { parseApiResponse } from '../../../../utils/parseApiResponse'
-import { useModal } from '../../../modals/reducer'
-import { TimestampField } from '../../../time/components/TimestampField'
+import { useCreateWorldEventMutation } from '@/api/worldApi'
+import { useModal } from '@/app/features/modals/reducer'
+import { TimestampField } from '@/app/features/time/components/TimestampField'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import Modal, { useModalCleanup } from '@/ui-lib/components/Modal'
+import { ModalFooter, ModalHeader } from '@/ui-lib/components/Modal'
 
 export const EventWizardModal = () => {
 	const { isOpen, timestamp: initialTimestamp, close } = useModal('eventWizard')

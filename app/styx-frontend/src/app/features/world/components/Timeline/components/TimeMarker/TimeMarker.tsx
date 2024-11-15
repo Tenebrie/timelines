@@ -1,5 +1,6 @@
-import { useCustomTheme } from '../../../../../../../hooks/useCustomTheme'
-import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
+import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { useCustomTheme } from '@/hooks/useCustomTheme'
+
 import { ScaleLevel } from '../../types'
 import { Container } from './styles'
 

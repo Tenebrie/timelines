@@ -1,9 +1,10 @@
 import { screen, waitFor, within } from '@testing-library/react'
 
-import { mockActorModel, mockEventModel } from '../../../../../api/rheaApi.mock'
-import { renderWithProviders } from '../../../../../jest/renderWithProviders'
-import { MockedRouter, mockRouter, resetMockRouter } from '../../../../../router/router.mock'
-import { worldRoutes } from '../../../../../router/routes/worldRoutes'
+import { mockActorModel, mockEventModel } from '@/api/rheaApi.mock'
+import { renderWithProviders } from '@/jest/renderWithProviders'
+import { MockedRouter, mockRouter, resetMockRouter } from '@/router/router.mock'
+import { worldRoutes } from '@/router/routes/worldRoutes'
+
 import { initialState } from '../../reducer'
 import { WorldDetails } from '../../types'
 import { OverviewPanel } from './OverviewPanel'

@@ -2,12 +2,13 @@ import { CircularProgress, Divider, ListItemIcon, ListItemText, Menu, MenuItem }
 import { memo, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
-import { useModal } from '../../../../../modals/reducer'
-import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
-import { worldSlice } from '../../../../reducer'
-import { getTimelineContextMenuState, getWorldState } from '../../../../selectors'
-import { MarkerType, TimelineEntity } from '../../../../types'
+import { useModal } from '@/app/features/modals/reducer'
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
+import { worldSlice } from '@/app/features/world/reducer'
+import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
+import { MarkerType, TimelineEntity } from '@/app/features/world/types'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
+
 import { useTimelineContextMenuRequests } from './hooks/useTimelineContextMenuRequests'
 
 type Props = {

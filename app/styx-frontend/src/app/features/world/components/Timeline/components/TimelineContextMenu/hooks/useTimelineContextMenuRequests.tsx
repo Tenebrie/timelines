@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
-import { useUpdateWorldEventMutation } from '../../../../../../../../api/rheaApi'
-import { parseApiResponse } from '../../../../../../../utils/parseApiResponse'
+import { useUpdateWorldEventMutation } from '@/api/worldApi'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 export const useTimelineContextMenuRequests = () => {
 	const [updateWorldEvent, { isLoading: isRequestInFlight }] = useUpdateWorldEventMutation()

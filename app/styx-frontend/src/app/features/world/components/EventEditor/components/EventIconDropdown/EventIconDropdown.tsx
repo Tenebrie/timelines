@@ -1,8 +1,8 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { useMemo } from 'react'
 
-import { EventIcon } from '../../../../../../components/EventIcon'
-import { useEventIcons } from '../../../../hooks/useEventIcons'
+import { EventIcon } from '@/app/components/EventIcon'
+import { useEventIcons } from '@/app/features/world/hooks/useEventIcons'
 
 type Props = {
 	icon: string

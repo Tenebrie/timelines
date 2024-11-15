@@ -1,8 +1,9 @@
 import { useSelector } from 'react-redux'
 
-import { useSwapWorldEventTracksMutation } from '../../../../../../../../api/rheaApi'
-import { useDragDropReceiver } from '../../../../../../dragDrop/useDragDropReceiver'
-import { getWorldState } from '../../../../../selectors'
+import { useSwapWorldEventTracksMutation } from '@/api/worldApi'
+import { useDragDropReceiver } from '@/app/features/dragDrop/useDragDropReceiver'
+import { getWorldState } from '@/app/features/world/selectors'
+
 import { TimelineTrack } from './useEventTracks'
 
 type Props = {

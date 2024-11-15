@@ -3,7 +3,7 @@ import {
 	GetWorldEventTracksApiResponse,
 	GetWorldInfoApiResponse,
 	GetWorldsApiResponse,
-} from '../../../api/rheaApi'
+} from '@/api/worldApi'
 
 export type ActorDetails = GetWorldInfoApiResponse['actors'][number]
 export type Actor = Omit<ActorDetails, 'statements' | 'relationships' | 'receivedRelationships'>

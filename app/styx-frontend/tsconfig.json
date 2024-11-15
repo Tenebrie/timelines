@@ -6,6 +6,14 @@
       "dom.iterable",
       "esnext"
     ],
+    "paths": {
+      "@api/*": [
+        "./src/api/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ],
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

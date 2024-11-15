@@ -2,9 +2,10 @@ import { Login, Logout } from '@mui/icons-material'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { usePostLogoutMutation } from '../../../../api/rheaApi'
-import { appRoutes, useAppRouter } from '../../../../router/routes/appRoutes'
-import { parseApiResponse } from '../../../utils/parseApiResponse'
+import { usePostLogoutMutation } from '@/api/authApi'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { appRoutes, useAppRouter } from '@/router/routes/appRoutes'
+
 import { authSlice } from '../reducer'
 import { getAuthState } from '../selectors'
 

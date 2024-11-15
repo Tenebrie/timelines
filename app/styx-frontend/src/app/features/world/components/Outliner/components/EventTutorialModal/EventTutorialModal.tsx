@@ -1,9 +1,9 @@
 import { Button, Typography } from '@mui/material'
 
-import { ModalFooter } from '../../../../../../../ui-lib/components/Modal'
-import Modal from '../../../../../../../ui-lib/components/Modal/Modal'
-import { ModalHeader } from '../../../../../../../ui-lib/components/Modal/styles'
-import { useModal } from '../../../../../modals/reducer'
+import { useModal } from '@/app/features/modals/reducer'
+import { ModalFooter } from '@/ui-lib/components/Modal'
+import Modal from '@/ui-lib/components/Modal/Modal'
+import { ModalHeader } from '@/ui-lib/components/Modal/styles'
 
 export const EventTutorialModal = () => {
 	const { isOpen, close } = useModal('eventTutorialModal')

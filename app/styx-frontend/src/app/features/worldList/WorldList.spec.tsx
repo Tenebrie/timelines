@@ -1,13 +1,9 @@
 import { screen, waitFor } from '@testing-library/react'
 import { setupServer } from 'msw/node'
 
-import {
-	mockCreateWorld,
-	mockDeleteWorld,
-	mockGetWorlds,
-	mockWorldItemModel,
-} from '../../../api/rheaApi.mock'
-import { renderWithProviders } from '../../../jest/renderWithProviders'
+import { mockCreateWorld, mockDeleteWorld, mockGetWorlds, mockWorldItemModel } from '@/api/rheaApi.mock'
+import { renderWithProviders } from '@/jest/renderWithProviders'
+
 import { WorldList } from './WorldList'
 
 const server = setupServer()

@@ -1,11 +1,12 @@
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useCreateWorldEventMutation } from '../../../../../../../api/rheaApi'
-import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
-import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
-import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { getWorldState } from '../../../../selectors'
+import { useCreateWorldEventMutation } from '@/api/worldApi'
+import { getWorldState } from '@/app/features/world/selectors'
+import { useAutosave } from '@/app/utils/autosave/useAutosave'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
+
 import { useEventFields } from './useEventFields'
 
 type Props = {

@@ -2,8 +2,9 @@ import { Grid } from '@mui/material'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { mockEventModel } from '../../../../../api/rheaApi.mock'
-import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
+import { mockEventModel } from '@/api/rheaApi.mock'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
+
 import { worldSlice } from '../../reducer'
 import { getWorldState } from '../../selectors'
 import { WorldEvent } from '../../types'

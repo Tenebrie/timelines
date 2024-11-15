@@ -1,6 +1,5 @@
 - Show event on a timeline after creating from dialog
 - Do not change event timestamp when moving across tracks
 - Hide unused tracks
-- Select which tracks to show
 - Color code the tracks (somehow)
 - Implement scrubber

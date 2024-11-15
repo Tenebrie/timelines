@@ -1,9 +1,9 @@
 import { waitFor } from '@testing-library/react'
 
-import { mockCheckAuthentication } from '../../../../api/rheaApi.mock'
-import { renderWithRouter } from '../../../../jest/renderWithProviders'
-import { setupTestServer } from '../../../../jest/setupTestServer'
-import { appRoutes } from '../../../../router/routes/appRoutes'
+import { mockCheckAuthentication } from '@/api/rheaApi.mock'
+import { renderWithRouter } from '@/jest/renderWithProviders'
+import { setupTestServer } from '@/jest/setupTestServer'
+import { appRoutes } from '@/router/routes/appRoutes'
 
 const server = setupTestServer()
 

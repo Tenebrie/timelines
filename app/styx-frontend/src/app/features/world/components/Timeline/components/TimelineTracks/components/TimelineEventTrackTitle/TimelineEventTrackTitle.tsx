@@ -1,8 +1,9 @@
 import { Button, Stack } from '@mui/material'
 import { memo, useCallback } from 'react'
 
-import { useDragDrop } from '../../../../../../../dragDrop/useDragDrop'
-import { useModal } from '../../../../../../../modals/reducer'
+import { useDragDrop } from '@/app/features/dragDrop/useDragDrop'
+import { useModal } from '@/app/features/modals/reducer'
+
 import useEventTracks from '../../hooks/useEventTracks'
 
 type Props = {

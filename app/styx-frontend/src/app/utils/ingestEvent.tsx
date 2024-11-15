@@ -1,4 +1,4 @@
-import { GetWorldInfoApiResponse } from '../../api/rheaApi'
+import { GetWorldInfoApiResponse } from '../../api/worldApi'
 import { WorldEvent } from '../features/world/types'
 import { isNotNull } from './isNotNull'
 

@@ -3,14 +3,15 @@ import { LoadingButton } from '@mui/lab'
 import { Button, FormControl, InputLabel, Select, Stack, TextField, Tooltip } from '@mui/material'
 import { useCallback, useEffect, useRef } from 'react'
 
-import { useUpdateActorMutation } from '../../../../../../../api/rheaApi'
-import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
-import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
-import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { useModal } from '../../../../../modals/reducer'
-import { useActorColors } from '../../../../hooks/useActorColors'
-import { Actor, ActorDetails } from '../../../../types'
+import { useUpdateActorMutation } from '@/api/worldApi'
+import { useModal } from '@/app/features/modals/reducer'
+import { useActorColors } from '@/app/features/world/hooks/useActorColors'
+import { Actor, ActorDetails } from '@/app/features/world/types'
+import { useAutosave } from '@/app/utils/autosave/useAutosave'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+
 import { useActorFields } from './useActorFields'
 
 type Props = {

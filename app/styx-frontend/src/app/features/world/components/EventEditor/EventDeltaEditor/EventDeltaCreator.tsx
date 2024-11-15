@@ -2,10 +2,11 @@ import { Grid } from '@mui/material'
 import { useEffect, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { mockEventDeltaModel } from '../../../../../../api/rheaApi.mock'
-import { useWorldRouter, worldRoutes } from '../../../../../../router/routes/worldRoutes'
-import { worldSlice } from '../../../reducer'
-import { WorldEventDelta } from '../../../types'
+import { mockEventDeltaModel } from '@/api/rheaApi.mock'
+import { worldSlice } from '@/app/features/world/reducer'
+import { WorldEventDelta } from '@/app/features/world/types'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+
 import { FullHeightContainer } from '../styles'
 import { EventDeltaDetailsEditor } from './components/EventDeltaDetailsEditor'
 

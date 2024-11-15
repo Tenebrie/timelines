@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { CalliopeToClientMessage } from '../../../ts-shared/CalliopeToClientMessage'
+import { CalliopeToClientMessage } from '@/ts-shared/CalliopeToClientMessage'
+
 import { useEffectOnce } from '../../utils/useEffectOnce'
 import { authSlice } from '../auth/reducer'
 import { useLiveMessageHandlers } from './useLiveMessageHandlers'

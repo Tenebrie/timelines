@@ -2,10 +2,11 @@ import { Button, Link, Stack, Typography } from '@mui/material'
 import { useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 
-import { useCheckAuthenticationQuery } from '../../../../api/rheaApi'
-import { appRoutes } from '../../../../router/routes/appRoutes'
-import { BlockingSpinner } from '../../../components/BlockingSpinner'
-import { useErrorState } from '../../../utils/useErrorState'
+import { useCheckAuthenticationQuery } from '@/api/authApi'
+import { BlockingSpinner } from '@/app/components/BlockingSpinner'
+import { useErrorState } from '@/app/utils/useErrorState'
+import { appRoutes } from '@/router/routes/appRoutes'
+
 import { LimboPageContainer } from './styles'
 
 export const Limbo = () => {

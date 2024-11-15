@@ -2,11 +2,10 @@ import debounce from 'lodash.debounce'
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { preferencesSlice } from '../../../../../preferences/reducer'
-import { getTimelinePreferences } from '../../../../../preferences/selectors'
-import { useTimelineLevelScalar } from '../../../../../time/hooks/useTimelineLevelScalar'
-import { useTimelineBusDispatch } from '../../../../hooks/useTimelineBus'
-import { TimelineState } from '../../../Timeline/utils/TimelineState'
+import { preferencesSlice } from '@/app/features/preferences/reducer'
+import { getTimelinePreferences } from '@/app/features/preferences/selectors'
+import { TimelineState } from '@/app/features/world/components/Timeline/utils/TimelineState'
+import { useTimelineBusDispatch } from '@/app/features/world/hooks/useTimelineBus'
 
 type Props = {
 	containerRef: React.MutableRefObject<HTMLDivElement | null>
@@ -15,7 +14,6 @@ type Props = {
 export const useTimelineSpacingSlider = ({ containerRef }: Props) => {
 	const { lineSpacing } = useSelector(getTimelinePreferences)
 	const { setTimelineSpacing } = preferencesSlice.actions
-	const { getLevelScalar } = useTimelineLevelScalar()
 	const scrollTimelineTo = useTimelineBusDispatch()
 
 	const [lineSpacingBuffer, setLineSpacingBuffer] = useState<number>(lineSpacing)

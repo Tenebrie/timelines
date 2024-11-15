@@ -1,10 +1,11 @@
 import { Typography } from '@mui/material'
 import { memo } from 'react'
 
-import { useCustomTheme } from '../../../../../../../../../hooks/useCustomTheme'
-import { useStringColor } from '../../../../../../../../utils/getStringColor'
-import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
-import { MarkerType, TimelineEntity } from '../../../../../../types'
+import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { MarkerType, TimelineEntity } from '@/app/features/world/types'
+import { useStringColor } from '@/app/utils/getStringColor'
+import { useCustomTheme } from '@/hooks/useCustomTheme'
+
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 
 type Props = {
@@ -14,7 +15,7 @@ type Props = {
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
-export const TimelineChainComponent = ({ entity, edited, selected, realTimeToScaledTime }: Props) => {
+export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) => {
 	const theme = useCustomTheme()
 	const { getStringColor } = useStringColor()
 	if (!entity.nextEntity) {

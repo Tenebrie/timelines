@@ -1,7 +1,8 @@
 import { Stack } from '@mui/material'
 import { memo, useEffect, useMemo } from 'react'
 
-import { IsDragDropStateOfType, useDragDropStateWithRenders } from '../../../../../dragDrop/DragDropState'
+import { IsDragDropStateOfType, useDragDropStateWithRenders } from '@/app/features/dragDrop/DragDropState'
+
 import { useEventDragDropReceiver } from './hooks/useEventDragDropReceiver'
 import { TimelineTrack } from './hooks/useEventTracks'
 import { useTrackDragDropReceiver } from './hooks/useTrackDragDropReceiver'

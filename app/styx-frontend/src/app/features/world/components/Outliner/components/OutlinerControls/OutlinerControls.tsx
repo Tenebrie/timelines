@@ -3,12 +3,13 @@ import { Button, Checkbox, FormControlLabel, FormGroup, Popover, Stack } from '@
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useIsReadOnly } from '../../../../../../../hooks/useIsReadOnly'
-import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
-import { preferencesSlice } from '../../../../../preferences/reducer'
-import { getOutlinerPreferences } from '../../../../../preferences/selectors'
-import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
-import { getWorldState } from '../../../../selectors'
+import { preferencesSlice } from '@/app/features/preferences/reducer'
+import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
+import { getWorldState } from '@/app/features/world/selectors'
+import { useIsReadOnly } from '@/hooks/useIsReadOnly'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
+
 import { CreateHerePopover } from '../CreateHerePopover/CreateHerePopover'
 
 export const OutlinerControls = () => {

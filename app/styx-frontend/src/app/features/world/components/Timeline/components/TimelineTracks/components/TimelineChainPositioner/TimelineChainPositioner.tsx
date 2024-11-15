@@ -1,7 +1,8 @@
 import { memo } from 'react'
 
-import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
-import { MarkerType, TimelineEntity } from '../../../../../../types'
+import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { MarkerType, TimelineEntity } from '@/app/features/world/types'
+
 import { Chain } from '../../styles'
 import { TimelineChain } from '../TimelineChain/TimelineChain'
 

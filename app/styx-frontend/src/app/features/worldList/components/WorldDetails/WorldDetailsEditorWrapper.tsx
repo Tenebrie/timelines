@@ -1,5 +1,6 @@
-import { useGetWorldBriefQuery, useGetWorldCollaboratorsQuery } from '../../../../../api/rheaApi'
-import { OutlinedContainer } from '../../../../components/OutlinedContainer'
+import { useGetWorldBriefQuery, useGetWorldCollaboratorsQuery } from '@/api/worldApi'
+import { OutlinedContainer } from '@/app/components/OutlinedContainer'
+
 import { WorldDetailsSkeleton } from './components/WorldDetailsSkeleton'
 import { WorldDetailsEditor } from './WorldDetailsEditor'
 

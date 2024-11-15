@@ -5,11 +5,12 @@ import {
 	mockDeleteWorldEvent,
 	mockEventModel,
 	mockUpdateWorldEvent,
-} from '../../../../../api/rheaApi.mock'
-import { renderWithProviders } from '../../../../../jest/renderWithProviders'
-import { setupTestServer } from '../../../../../jest/setupTestServer'
-import { mockRouter } from '../../../../../router/router.mock'
-import { worldRoutes } from '../../../../../router/routes/worldRoutes'
+} from '@/api/rheaApi.mock'
+import { renderWithProviders } from '@/jest/renderWithProviders'
+import { setupTestServer } from '@/jest/setupTestServer'
+import { mockRouter } from '@/router/router.mock'
+import { worldRoutes } from '@/router/routes/worldRoutes'
+
 import { initialState } from '../../reducer'
 import { WorldEvent } from '../../types'
 import { DeleteEventModal } from './components/DeleteEventModal/DeleteEventModal'

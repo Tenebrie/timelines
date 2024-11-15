@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react'
 
-import { useWorldTime } from '../../../../../../time/hooks/useWorldTime'
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 
 type Props = {
 	textSource: string

@@ -1,9 +1,10 @@
 import classNames from 'classnames'
 import { memo } from 'react'
 
-import { useDragDrop } from '../../../../../../../dragDrop/useDragDrop'
-import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
-import { useEventIcons } from '../../../../../../hooks/useEventIcons'
+import { useDragDrop } from '@/app/features/dragDrop/useDragDrop'
+import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { useEventIcons } from '@/app/features/world/hooks/useEventIcons'
+
 import useEventTracks, { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { Group } from '../../styles'
 import { Marker } from '../TimelineEvent/styles'
