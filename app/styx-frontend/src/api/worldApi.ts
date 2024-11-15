@@ -1,13 +1,5 @@
 import { baseApi as api } from './baseApi'
-export const addTagTypes = [
-	'worldDetails',
-	'adminUsers',
-	'announcementList',
-	'auth',
-	'worldList',
-	'worldEventTracks',
-	'worldCollaborators',
-] as const
+export const addTagTypes = ['worldDetails', 'worldEventTracks', 'worldList', 'worldCollaborators'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -36,58 +28,6 @@ const injectedRtkApi = api
 					method: 'DELETE',
 				}),
 				invalidatesTags: ['worldDetails'],
-			}),
-			adminGetUsers: build.query<AdminGetUsersApiResponse, AdminGetUsersApiArg>({
-				query: (queryArg) => ({
-					url: `/api/admin/users`,
-					params: { page: queryArg.page, size: queryArg.size, query: queryArg.query },
-				}),
-				providesTags: ['adminUsers'],
-			}),
-			adminSetUserLevel: build.mutation<AdminSetUserLevelApiResponse, AdminSetUserLevelApiArg>({
-				query: (queryArg) => ({
-					url: `/api/admin/users/${queryArg.userId}/level`,
-					method: 'POST',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['adminUsers'],
-			}),
-			adminDeleteUser: build.mutation<AdminDeleteUserApiResponse, AdminDeleteUserApiArg>({
-				query: (queryArg) => ({ url: `/api/admin/users/${queryArg.userId}`, method: 'DELETE' }),
-				invalidatesTags: ['adminUsers'],
-			}),
-			getAnnouncements: build.query<GetAnnouncementsApiResponse, GetAnnouncementsApiArg>({
-				query: () => ({ url: `/api/announcements` }),
-				providesTags: ['announcementList'],
-			}),
-			dismissAnnouncement: build.mutation<DismissAnnouncementApiResponse, DismissAnnouncementApiArg>({
-				query: (queryArg) => ({ url: `/api/announcements/${queryArg.id}`, method: 'DELETE' }),
-				invalidatesTags: ['announcementList'],
-			}),
-			checkAuthentication: build.query<CheckAuthenticationApiResponse, CheckAuthenticationApiArg>({
-				query: () => ({ url: `/api/auth` }),
-				providesTags: ['auth'],
-			}),
-			createAccount: build.mutation<CreateAccountApiResponse, CreateAccountApiArg>({
-				query: (queryArg) => ({ url: `/api/auth`, method: 'POST', body: queryArg.body }),
-				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
-			}),
-			postLogin: build.mutation<PostLoginApiResponse, PostLoginApiArg>({
-				query: (queryArg) => ({ url: `/api/auth/login`, method: 'POST', body: queryArg.body }),
-				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList', 'adminUsers'],
-			}),
-			postLogout: build.mutation<PostLogoutApiResponse, PostLogoutApiArg>({
-				query: () => ({ url: `/api/auth/logout`, method: 'POST' }),
-				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
-			}),
-			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
-				query: () => ({ url: `/api/constants/admin-levels` }),
-			}),
-			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
-				query: () => ({ url: `/api/constants/world-access-modes` }),
-			}),
-			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
-				query: () => ({ url: `/health` }),
 			}),
 			createWorldEvent: build.mutation<CreateWorldEventApiResponse, CreateWorldEventApiArg>({
 				query: (queryArg) => ({
@@ -234,7 +174,7 @@ const injectedRtkApi = api
 		}),
 		overrideExisting: false,
 	})
-export { injectedRtkApi as rheaApi }
+export { injectedRtkApi as worldApi }
 export type CreateActorApiResponse = /** status 200  */ {
 	id: string
 }
@@ -286,119 +226,6 @@ export type DeleteActorApiArg = {
 	/** Any string value */
 	actorId: string
 }
-export type AdminGetUsersApiResponse = /** status 200  */ {
-	users: {
-		id: string
-		createdAt: string
-		updatedAt: string
-		email: string
-		username: string
-		level: 'Free' | 'Premium' | 'Admin'
-	}[]
-	page: number
-	size: number
-	pageCount: number
-}
-export type AdminGetUsersApiArg = {
-	/** Any numeric value */
-	page?: number
-	/** Any numeric value */
-	size?: number
-	/** Any string value */
-	query?: string
-}
-export type AdminSetUserLevelApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	email: string
-	username: string
-	password: string
-	level: 'Free' | 'Premium' | 'Admin'
-}
-export type AdminSetUserLevelApiArg = {
-	/** Any string value with at least one character */
-	userId: string
-	body: {
-		level: 'Free' | 'Premium' | 'Admin'
-	}
-}
-export type AdminDeleteUserApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	email: string
-	username: string
-	password: string
-	level: 'Free' | 'Premium' | 'Admin'
-}
-export type AdminDeleteUserApiArg = {
-	/** Any string value with at least one character */
-	userId: string
-}
-export type GetAnnouncementsApiResponse = /** status 200  */ {
-	description: string
-	id: string
-	title: string
-	type: 'Info' | 'Welcome' | 'WorldShared'
-	timestamp: string
-	userId: string
-	isUnread: boolean
-}[]
-export type GetAnnouncementsApiArg = void
-export type DismissAnnouncementApiResponse = unknown
-export type DismissAnnouncementApiArg = {
-	/** Any string value */
-	id: string
-}
-export type CheckAuthenticationApiResponse =
-	/** status 200  */
-	| {
-			authenticated: boolean
-	  }
-	| {
-			authenticated: boolean
-			user: {
-				id: string
-				email: string
-				username: string
-				level: 'Free' | 'Premium' | 'Admin'
-			}
-	  }
-export type CheckAuthenticationApiArg = void
-export type CreateAccountApiResponse = /** status 200  */ {
-	id: string
-	email: string
-	username: string
-	level: 'Free' | 'Premium' | 'Admin'
-}
-export type CreateAccountApiArg = {
-	body: {
-		email: string
-		username: string
-		password: string
-	}
-}
-export type PostLoginApiResponse = /** status 200  */ {
-	id: string
-	email: string
-	username: string
-	level: 'Free' | 'Premium' | 'Admin'
-}
-export type PostLoginApiArg = {
-	body: {
-		email: string
-		password: string
-	}
-}
-export type PostLogoutApiResponse = unknown
-export type PostLogoutApiArg = void
-export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premium' | 'Admin')[]
-export type AdminGetUserLevelsApiArg = void
-export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
-export type ListWorldAccessModesApiArg = void
-export type GetHealthApiResponse = /** status 200  */ string
-export type GetHealthApiArg = void
 export type CreateWorldEventApiResponse = /** status 200  */ {
 	id: string
 }
@@ -614,6 +441,7 @@ export type GetWorldEventTracksApiResponse = /** status 200  */ {
 	updatedAt: string
 	worldId: string
 	position: number
+	visible: boolean
 }[]
 export type GetWorldEventTracksApiArg = {
 	/** Any string value */
@@ -642,6 +470,7 @@ export type UpdateWorldEventTrackApiArg = {
 	body: {
 		name?: string
 		position?: number
+		visible?: boolean
 	}
 }
 export type DeleteWorldEventTrackApiResponse = /** status 200  */ {
@@ -651,6 +480,7 @@ export type DeleteWorldEventTrackApiResponse = /** status 200  */ {
 	updatedAt: string
 	worldId: string
 	position: number
+	visible: boolean
 }
 export type DeleteWorldEventTrackApiArg = {
 	/** Any string value */
@@ -897,24 +727,6 @@ export const {
 	useCreateActorMutation,
 	useUpdateActorMutation,
 	useDeleteActorMutation,
-	useAdminGetUsersQuery,
-	useLazyAdminGetUsersQuery,
-	useAdminSetUserLevelMutation,
-	useAdminDeleteUserMutation,
-	useGetAnnouncementsQuery,
-	useLazyGetAnnouncementsQuery,
-	useDismissAnnouncementMutation,
-	useCheckAuthenticationQuery,
-	useLazyCheckAuthenticationQuery,
-	useCreateAccountMutation,
-	usePostLoginMutation,
-	usePostLogoutMutation,
-	useAdminGetUserLevelsQuery,
-	useLazyAdminGetUserLevelsQuery,
-	useListWorldAccessModesQuery,
-	useLazyListWorldAccessModesQuery,
-	useGetHealthQuery,
-	useLazyGetHealthQuery,
 	useCreateWorldEventMutation,
 	useUpdateWorldEventMutation,
 	useDeleteWorldEventMutation,

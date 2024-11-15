@@ -2,7 +2,7 @@ import { ExpandMore } from '@mui/icons-material'
 import { ListItemButton, ListItemText } from '@mui/material'
 import styled from 'styled-components'
 
-import { ScrollbarStyling } from '../../../../styles'
+import { ScrollbarStyling } from '@/app/styles'
 
 export const OutlinerContainer = styled.div`
 	height: calc(100% - 32px);

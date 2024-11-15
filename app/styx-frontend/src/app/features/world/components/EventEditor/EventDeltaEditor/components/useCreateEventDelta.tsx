@@ -1,12 +1,13 @@
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useCreateWorldEventDeltaMutation } from '../../../../../../../api/rheaApi'
-import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
-import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
-import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { ErrorState } from '../../../../../../utils/useErrorState'
-import { getWorldState } from '../../../../selectors'
+import { useCreateWorldEventDeltaMutation } from '@/api/worldApi'
+import { getWorldState } from '@/app/features/world/selectors'
+import { useAutosave } from '@/app/utils/autosave/useAutosave'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { ErrorState } from '@/app/utils/useErrorState'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+
 import { EventDeltaDetailsEditorErrors } from './EventDeltaDetailsEditor'
 import { useEventDeltaFields } from './useEventDeltaFields'
 

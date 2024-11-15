@@ -1,9 +1,5 @@
-- Timeline markers to stackable bars
-- Increase double click timer to move to event
 - Show event on a timeline after creating from dialog
 - Do not change event timestamp when moving across tracks
 - Hide unused tracks
-- Select which tracks to show
-- Navigate to first/last events in a track
 - Color code the tracks (somehow)
 - Implement scrubber

@@ -14,9 +14,10 @@ import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 
-import { useAdminGetUsersQuery } from '../../../../../api/rheaApi'
-import { User } from '../../../auth/reducer'
-import { getAuthState } from '../../../auth/selectors'
+import { useAdminGetUsersQuery } from '@/api/adminApi'
+import { User } from '@/app/features/auth/reducer'
+import { getAuthState } from '@/app/features/auth/selectors'
+
 import { adminSlice } from '../../reducer'
 import { DeleteUserModal } from './DeleteUserModal'
 import { Pagination } from './Pagination'

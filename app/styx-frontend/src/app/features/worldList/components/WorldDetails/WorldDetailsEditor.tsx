@@ -1,10 +1,11 @@
 import { Button, Divider, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material'
 import { useCallback } from 'react'
 
-import { GetWorldCollaboratorsApiResponse } from '../../../../../api/rheaApi'
-import { useAppRouter } from '../../../../../router/routes/appRoutes'
-import { useWorldCalendar } from '../../../time/hooks/useWorldCalendar'
-import { WorldBrief } from '../../../world/types'
+import { GetWorldCollaboratorsApiResponse } from '@/api/worldApi'
+import { useWorldCalendar } from '@/app/features/time/hooks/useWorldCalendar'
+import { WorldBrief } from '@/app/features/world/types'
+import { useAppRouter } from '@/router/routes/appRoutes'
+
 import { WorldAccessModeDropdown } from './components/WorldAccessModeDropdown'
 import { WorldCollaborators } from './components/WorldCollaborators'
 

@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 
-import { getTimelinePreferences } from '../../../../preferences/selectors'
+import { getTimelinePreferences } from '@/app/features/preferences/selectors'
 
 export const useContainerHeight = () => {
 	const { containerHeight } = useSelector(getTimelinePreferences)

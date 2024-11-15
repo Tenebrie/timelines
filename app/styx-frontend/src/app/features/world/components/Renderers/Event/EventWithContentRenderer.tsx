@@ -2,7 +2,8 @@ import { Collapse, Divider, List } from '@mui/material'
 import { memo } from 'react'
 import { TransitionGroup } from 'react-transition-group'
 
-import { Actor, WorldEvent } from '../../../types'
+import { Actor, WorldEvent } from '@/app/features/world/types'
+
 import { EventContentRenderer } from './EventContentRenderer'
 import { EventRenderer } from './EventRenderer'
 

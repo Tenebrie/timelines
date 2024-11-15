@@ -1,8 +1,9 @@
+import { useListWorldAccessModesQuery } from '@api/constantsApi'
 import { Button, FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material'
 import { ReactNode, useCallback } from 'react'
 
-import { useListWorldAccessModesQuery, useSetWorldAccessModeMutation } from '../../../../../../api/rheaApi'
-import { WorldAccessMode, WorldBrief } from '../../../../world/types'
+import { useSetWorldAccessModeMutation } from '@/api/worldApi'
+import { WorldAccessMode, WorldBrief } from '@/app/features/world/types'
 
 type Props = {
 	world: WorldBrief

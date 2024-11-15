@@ -1,13 +1,14 @@
 import { useSelector } from 'react-redux'
 
-import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
-import { OutlinedContainer } from '../../../../../../components/OutlinedContainer'
-import { isNull } from '../../../../../../utils/isNull'
-import { getOutlinerPreferences } from '../../../../../preferences/selectors'
-import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
-import { getWorldState } from '../../../../selectors'
-import { Actor } from '../../../../types'
-import { EventWithContentRenderer } from '../../../Renderers/Event/EventWithContentRenderer'
+import { OutlinedContainer } from '@/app/components/OutlinedContainer'
+import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
+import { EventWithContentRenderer } from '@/app/features/world/components/Renderers/Event/EventWithContentRenderer'
+import { getWorldState } from '@/app/features/world/selectors'
+import { Actor } from '@/app/features/world/types'
+import { isNull } from '@/app/utils/isNull'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
+
 import { StatementsScroller } from '../../styles'
 import { ActorEventsEmptyState } from './ActorEventsEmptyState'
 

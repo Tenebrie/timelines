@@ -1,8 +1,9 @@
 import { Grid } from '@mui/material'
 import { useSelector } from 'react-redux'
 
-import { useWorldRouter, worldRoutes } from '../../../../../../router/routes/worldRoutes'
-import { getWorldState } from '../../../selectors'
+import { getWorldState } from '@/app/features/world/selectors'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+
 import { FullHeightContainer } from '../styles'
 import { EventDeltaDetailsEditor } from './components/EventDeltaDetailsEditor'
 

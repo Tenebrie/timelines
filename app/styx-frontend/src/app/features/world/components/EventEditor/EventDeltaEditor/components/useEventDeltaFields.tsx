@@ -1,6 +1,6 @@
 import { Dispatch, useCallback, useMemo, useRef, useState } from 'react'
 
-import { WorldEventDelta } from '../../../../types'
+import { WorldEventDelta } from '@/app/features/world/types'
 
 type Props = {
 	delta: WorldEventDelta

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Actor } from '../../../types'
+import { Actor } from '@/app/features/world/types'
 
 export const useActorsToString = () => {
 	const actorsToString = (data: Actor[], owningActor: Actor | null, maxActorsDisplayed: number) => {

@@ -1,6 +1,6 @@
 import { Stack } from '@mui/material'
 
-import { LoadingSpinner } from '../../../../../components/LoadingSpinner'
+import { LoadingSpinner } from '@/app/components/LoadingSpinner'
 
 export const WorldDetailsSkeleton = () => {
 	return (

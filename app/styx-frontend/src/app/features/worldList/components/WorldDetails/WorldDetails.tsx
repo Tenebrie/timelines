@@ -1,4 +1,5 @@
-import { useWorldRouter, worldRoutes } from '../../../../../router/routes/worldRoutes'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+
 import { WorldDetailsEditorWrapper } from './WorldDetailsEditorWrapper'
 
 export const WorldDetails = () => {

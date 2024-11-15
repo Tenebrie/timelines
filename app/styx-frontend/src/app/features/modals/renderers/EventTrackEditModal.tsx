@@ -3,11 +3,12 @@ import { LoadingButton } from '@mui/lab'
 import { Button, Stack, TextField, Tooltip, Typography } from '@mui/material'
 import { useState } from 'react'
 
-import { useDeleteWorldEventTrackMutation, useUpdateWorldEventTrackMutation } from '../../../../api/rheaApi'
-import { Shortcut, useShortcut } from '../../../../hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '../../../../router/routes/worldRoutes'
-import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '../../../../ui-lib/components/Modal'
-import { parseApiResponse } from '../../../utils/parseApiResponse'
+import { useDeleteWorldEventTrackMutation, useUpdateWorldEventTrackMutation } from '@/api/worldApi'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
+
 import { useModal } from '../reducer'
 
 export const EventTrackEditModal = () => {

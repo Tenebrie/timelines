@@ -2,8 +2,9 @@ import { ArrowRightAlt, Link } from '@mui/icons-material'
 import { useTheme } from '@mui/material'
 import ListItemIcon from '@mui/material/ListItemIcon'
 
-import { EventIcon } from '../../../../../components/EventIcon'
-import { Actor, WorldEvent } from '../../../types'
+import { EventIcon } from '@/app/components/EventIcon'
+import { Actor, WorldEvent } from '@/app/features/world/types'
+
 import { StatementActorsText, StyledListItemText } from '../../Outliner/styles'
 import { ShortText } from './styles'
 import { useActorsToString } from './useActorsToString'

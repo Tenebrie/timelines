@@ -4,9 +4,10 @@ import cx from 'classnames'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { useIsReadOnly } from '../../../../../hooks/useIsReadOnly'
-import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
-import { preferencesSlice } from '../../../preferences/reducer'
+import { preferencesSlice } from '@/app/features/preferences/reducer'
+import { useIsReadOnly } from '@/hooks/useIsReadOnly'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
+
 import { ActorDetails } from '../../types'
 import { StyledListItemButton, StyledListItemText } from '../Outliner/styles'
 import { ActorAvatar } from './ActorAvatar/ActorAvatar'

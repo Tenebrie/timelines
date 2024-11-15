@@ -1,6 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react'
 
-import { renderWithProviders } from '../../../../jest/renderWithProviders'
+import { renderWithProviders } from '@/jest/renderWithProviders'
+
 import { TimestampField } from './TimestampField'
 
 describe('<TimestampField />', () => {

@@ -1,7 +1,7 @@
 import debounce from 'lodash.debounce'
 import { useEffect, useRef } from 'react'
 
-import { useEffectOnce } from '../../../../../utils/useEffectOnce'
+import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 export const useTimelineDimensions = () => {
 	const containerRef = useRef<HTMLDivElement | null>(null)

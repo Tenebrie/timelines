@@ -13,16 +13,16 @@ import {
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useShareWorldMutation } from '../../../../../../api/rheaApi'
-import { CollaboratorAccess } from '../../../../../../api/types'
-import { Shortcut, useShortcut } from '../../../../../../hooks/useShortcut'
-import { useRouter } from '../../../../../../router/routes/routes'
-import { worldRoutes } from '../../../../../../router/routes/worldRoutes'
-import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '../../../../../../ui-lib/components/Modal'
-import { parseApiResponse } from '../../../../../utils/parseApiResponse'
-import { useCollaboratorAccess } from '../../../../../utils/useCollaboratorAccess'
-import { worldListSlice } from '../../../reducer'
-import { getShareWorldModalState } from '../../../selectors'
+import { CollaboratorAccess } from '@/api/types'
+import { useShareWorldMutation } from '@/api/worldApi'
+import { worldListSlice } from '@/app/features/worldList/reducer'
+import { getShareWorldModalState } from '@/app/features/worldList/selectors'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { useCollaboratorAccess } from '@/app/utils/useCollaboratorAccess'
+import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { useRouter } from '@/router/routes/routes'
+import { worldRoutes } from '@/router/routes/worldRoutes'
+import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const ShareWorldModal = () => {
 	const [emails, setEmails] = useState<string[]>([])

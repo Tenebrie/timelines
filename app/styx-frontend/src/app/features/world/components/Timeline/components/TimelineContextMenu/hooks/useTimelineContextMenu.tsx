@@ -1,11 +1,11 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { getTimelinePreferences } from '../../../../../../preferences/selectors'
-import { useTimelineWorldTime } from '../../../../../../time/hooks/useTimelineWorldTime'
-import { worldSlice } from '../../../../../reducer'
-import { getTimelineContextMenuState } from '../../../../../selectors'
-import { ScaleLevel } from '../../../types'
+import { getTimelinePreferences } from '@/app/features/preferences/selectors'
+import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { ScaleLevel } from '@/app/features/world/components/Timeline/types'
+import { worldSlice } from '@/app/features/world/reducer'
+import { getTimelineContextMenuState } from '@/app/features/world/selectors'
 
 type Props = {
 	scroll: number

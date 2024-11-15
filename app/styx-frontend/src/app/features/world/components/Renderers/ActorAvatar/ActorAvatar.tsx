@@ -1,7 +1,7 @@
 import { Avatar } from '@mui/material'
 import { useMemo } from 'react'
 
-import { Actor } from '../../../types'
+import { Actor } from '@/app/features/world/types'
 
 type Props = {
 	actor: Actor

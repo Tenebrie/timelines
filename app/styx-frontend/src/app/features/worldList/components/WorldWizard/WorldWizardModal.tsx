@@ -4,14 +4,15 @@ import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip }
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useCreateWorldMutation } from '../../../../../api/rheaApi'
-import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '../../../../../router/routes/worldRoutes'
-import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '../../../../../ui-lib/components/Modal'
-import { parseApiResponse } from '../../../../utils/parseApiResponse'
-import { TimestampField } from '../../../time/components/TimestampField'
-import { useWorldCalendar } from '../../../time/hooks/useWorldCalendar'
-import { WorldCalendarType } from '../../../world/types'
+import { useCreateWorldMutation } from '@/api/worldApi'
+import { TimestampField } from '@/app/features/time/components/TimestampField'
+import { useWorldCalendar } from '@/app/features/time/hooks/useWorldCalendar'
+import { WorldCalendarType } from '@/app/features/world/types'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
+
 import { worldListSlice } from '../../reducer'
 import { getWorldWizardModalState } from '../../selectors'
 

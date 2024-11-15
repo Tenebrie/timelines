@@ -1,4 +1,5 @@
-import { renderHookWithProviders } from '../../../../../../../../jest/renderWithProviders'
+import { renderHookWithProviders } from '@/jest/renderWithProviders'
+
 import { useEntityName } from './useEntityName'
 
 describe('useEntityName', () => {

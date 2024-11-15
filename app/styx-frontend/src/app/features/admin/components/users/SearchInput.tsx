@@ -1,7 +1,7 @@
 import { Clear, Search } from '@mui/icons-material'
 import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack } from '@mui/material'
 
-import { useDebouncedState } from '../../../../../hooks/useDebouncedState'
+import { useDebouncedState } from '@/hooks/useDebouncedState'
 
 type Props = {
 	initialQuery: string

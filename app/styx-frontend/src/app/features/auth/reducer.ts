@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { CreateAccountApiResponse } from '../../../api/rheaApi'
+import { CreateAccountApiResponse } from '@/api/authApi'
 
 export type User = CreateAccountApiResponse
 

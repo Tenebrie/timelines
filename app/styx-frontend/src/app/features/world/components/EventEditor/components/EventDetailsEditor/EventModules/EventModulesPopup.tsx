@@ -3,7 +3,8 @@ import List from '@mui/material/List'
 import Popover from '@mui/material/Popover'
 import { bindPopover, PopupState } from 'material-ui-popup-state/hooks'
 
-import { WorldEventModule } from '../../../../../types'
+import { WorldEventModule } from '@/app/features/world/types'
+
 import { useEventModules } from './useEventModules'
 
 type Props = {

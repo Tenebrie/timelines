@@ -3,17 +3,13 @@ import { LoadingButton } from '@mui/lab'
 import { Alert, Button, Collapse, Stack, Tooltip } from '@mui/material'
 import { TransitionGroup } from 'react-transition-group'
 
-import { useDeleteActorMutation } from '../../../../../../../api/rheaApi'
-import { Shortcut, useShortcut } from '../../../../../../../hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
-import Modal, {
-	ModalFooter,
-	ModalHeader,
-	useModalCleanup,
-} from '../../../../../../../ui-lib/components/Modal'
-import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { useErrorState } from '../../../../../../utils/useErrorState'
-import { useModal } from '../../../../../modals/reducer'
+import { useDeleteActorMutation } from '@/api/worldApi'
+import { useModal } from '@/app/features/modals/reducer'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { useErrorState } from '@/app/utils/useErrorState'
+import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const DeleteActorModal = () => {
 	const [deleteActor, { isLoading }] = useDeleteActorMutation()

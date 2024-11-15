@@ -1,7 +1,8 @@
 import { Grid } from '@mui/material'
 import { useSelector } from 'react-redux'
 
-import { useWorldRouter, worldRoutes } from '../../../../../router/routes/worldRoutes'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+
 import { getWorldState } from '../../selectors'
 import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetailsEditor'
 import { FullHeightContainer } from './styles'

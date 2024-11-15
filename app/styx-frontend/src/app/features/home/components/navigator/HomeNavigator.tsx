@@ -1,4 +1,4 @@
-import { BaseNavigator } from '../../../../components/BaseNavigator'
+import { BaseNavigator } from '@/app/components/BaseNavigator'
 
 export const HomeNavigator = () => {
 	return <BaseNavigator />

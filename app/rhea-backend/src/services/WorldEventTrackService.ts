@@ -17,7 +17,7 @@ export const WorldEventTrackService = {
 		data,
 	}: {
 		worldId: string
-		data: Omit<WorldEventTrack, 'id' | 'worldId' | 'createdAt' | 'updatedAt' | 'position'> & {
+		data: Omit<WorldEventTrack, 'id' | 'worldId' | 'createdAt' | 'updatedAt' | 'position' | 'visible'> & {
 			position?: number
 		}
 	}) => {

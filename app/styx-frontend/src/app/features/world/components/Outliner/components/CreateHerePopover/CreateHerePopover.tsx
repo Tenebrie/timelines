@@ -2,7 +2,7 @@ import { Person, Public } from '@mui/icons-material'
 import { Divider, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
 import { bindMenu, PopupState } from 'material-ui-popup-state/hooks'
 
-import { useModal } from '../../../../../modals/reducer'
+import { useModal } from '@/app/features/modals/reducer'
 
 type Props = {
 	state: PopupState

@@ -1,4 +1,4 @@
-import { WorldEvent } from '../../../../../../types'
+import { WorldEvent } from '@/app/features/world/types'
 
 export const HoveredTimelineEvents = {
 	events: [] as WorldEvent[],

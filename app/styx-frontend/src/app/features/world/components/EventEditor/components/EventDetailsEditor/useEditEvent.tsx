@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useRef } from 'react'
 
-import { UpdateWorldEventApiArg, useUpdateWorldEventMutation } from '../../../../../../../api/rheaApi'
-import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
-import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
-import { isNotNull } from '../../../../../../utils/isNotNull'
-import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
-import { useModal } from '../../../../../modals/reducer'
-import { WorldEvent } from '../../../../types'
-import { useMapActorsToOptions } from '../../../ActorSelector/useMapActorsToOptions'
+import { UpdateWorldEventApiArg, useUpdateWorldEventMutation } from '@/api/worldApi'
+import { useModal } from '@/app/features/modals/reducer'
+import { useMapActorsToOptions } from '@/app/features/world/components/ActorSelector/useMapActorsToOptions'
+import { WorldEvent } from '@/app/features/world/types'
+import { useAutosave } from '@/app/utils/autosave/useAutosave'
+import { isNotNull } from '@/app/utils/isNotNull'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+
 import { useEventFields } from './useEventFields'
 
 type Props = {

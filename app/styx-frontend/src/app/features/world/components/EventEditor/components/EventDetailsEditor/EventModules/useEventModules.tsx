@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { WorldEventModule } from '../../../../../types'
+import { WorldEventModule } from '@/app/features/world/types'
 
 export const useEventModules = () => {
 	const options: { text: string; secondary: string; module: WorldEventModule }[] = useMemo(

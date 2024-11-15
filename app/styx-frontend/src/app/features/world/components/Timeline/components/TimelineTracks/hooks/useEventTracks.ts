@@ -1,25 +1,33 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useWorldRouter, worldRoutes } from '../../../../../../../../router/routes/worldRoutes'
-import { applyEventDelta } from '../../../../../../../utils/applyEventDelta'
-import { asMarkerType } from '../../../../../../../utils/asMarkerType'
-import { findStartingFrom } from '../../../../../../../utils/findStartingFrom'
-import { isNotNull } from '../../../../../../../utils/isNotNull'
-import { getEventCreatorState, getEventDeltaCreatorState, getWorldState } from '../../../../../selectors'
+import { useEventTracksRequest } from '@/app/features/world/components/Timeline/hooks/useEventTracksRequest'
+import {
+	getEventCreatorState,
+	getEventDeltaCreatorState,
+	getWorldState,
+} from '@/app/features/world/selectors'
 import {
 	MarkerType,
 	TimelineEntity,
 	WorldEvent,
 	WorldEventDelta,
 	WorldEventTrack,
-} from '../../../../../types'
-import { useEventTracksRequest } from '../../../hooks/useEventTracksRequest'
+} from '@/app/features/world/types'
+import { applyEventDelta } from '@/app/utils/applyEventDelta'
+import { asMarkerType } from '@/app/utils/asMarkerType'
+import { findStartingFrom } from '@/app/utils/findStartingFrom'
+import { isNotNull } from '@/app/utils/isNotNull'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
 
 export type TimelineTrack = ReturnType<typeof useEventTracks>[number]
 export const TimelineEventHeightPx = 40
 
-const useEventTracks = () => {
+type Props = {
+	showHidden?: boolean
+}
+
+const useEventTracks = ({ showHidden }: Props = {}) => {
 	const { events } = useSelector(getWorldState)
 	const { ghost: eventGhost } = useSelector(getEventCreatorState)
 	const { ghost: deltaGhost } = useSelector(getEventDeltaCreatorState)
@@ -133,11 +141,13 @@ const useEventTracks = () => {
 	const tracksWithEvents = useMemo(
 		() =>
 			tracks
+				.filter((track) => showHidden || track.visible)
 				.map((track) => ({
-					id: track.id,
+					id: track.id as string | 'default',
 					name: track.name,
 					position: track.position,
 					baseModel: track as WorldEventTrack | null,
+					visible: track.visible,
 					height: 0,
 				}))
 				.concat([
@@ -146,6 +156,7 @@ const useEventTracks = () => {
 						name: 'Unassigned',
 						position: Infinity,
 						baseModel: null,
+						visible: true,
 						height: 0,
 					},
 				])
@@ -162,7 +173,7 @@ const useEventTracks = () => {
 						events,
 					}
 				}),
-		[eventGroups, tracks],
+		[eventGroups, showHidden, tracks],
 	)
 	const finalizedTracks = calculateMarkerHeights(tracksWithEvents) as typeof tracksWithEvents
 	return finalizedTracks

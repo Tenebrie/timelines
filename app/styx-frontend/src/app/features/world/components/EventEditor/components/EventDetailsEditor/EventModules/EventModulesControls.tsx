@@ -3,8 +3,9 @@ import { Button, Divider, Stack, Typography } from '@mui/material'
 import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useCallback } from 'react'
 
-import { useIsReadOnly } from '../../../../../../../../hooks/useIsReadOnly'
-import { WorldEventModule } from '../../../../../types'
+import { WorldEventModule } from '@/app/features/world/types'
+import { useIsReadOnly } from '@/hooks/useIsReadOnly'
+
 import { useEventFields } from '../useEventFields'
 import { EventModulesPopup } from './EventModulesPopup'
 import { useEventModules } from './useEventModules'

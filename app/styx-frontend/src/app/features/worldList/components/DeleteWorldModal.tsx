@@ -4,11 +4,12 @@ import { Button, Stack, Tooltip } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useDeleteWorldMutation } from '../../../../api/rheaApi'
-import { Shortcut, useShortcut } from '../../../../hooks/useShortcut'
-import Modal, { ModalFooter, useModalCleanup } from '../../../../ui-lib/components/Modal'
-import { ModalHeader } from '../../../../ui-lib/components/Modal/styles'
-import { parseApiResponse } from '../../../utils/parseApiResponse'
+import { useDeleteWorldMutation } from '@/api/worldApi'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import Modal, { ModalFooter, useModalCleanup } from '@/ui-lib/components/Modal'
+import { ModalHeader } from '@/ui-lib/components/Modal/styles'
+
 import { worldListSlice } from '../reducer'
 import { getDeleteWorldModalState } from '../selectors'
 

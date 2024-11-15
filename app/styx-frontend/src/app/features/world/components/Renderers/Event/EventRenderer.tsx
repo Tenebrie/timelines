@@ -5,9 +5,10 @@ import cx from 'classnames'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { useWorldRouter } from '../../../../../../router/routes/worldRoutes'
-import { preferencesSlice } from '../../../../preferences/reducer'
-import { Actor, WorldEvent } from '../../../types'
+import { preferencesSlice } from '@/app/features/preferences/reducer'
+import { Actor, WorldEvent } from '@/app/features/world/types'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
+
 import { StyledListItemButton } from '../../Outliner/styles'
 import { ShowHideChevron } from '../styles'
 import { EventHeaderRenderer } from './EventHeaderRenderer'

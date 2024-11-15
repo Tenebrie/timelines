@@ -4,10 +4,11 @@ import { Button, Stack, Tooltip } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useAdminDeleteUserMutation } from '../../../../../api/rheaApi'
-import { Shortcut, useShortcut } from '../../../../../hooks/useShortcut'
-import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '../../../../../ui-lib/components/Modal'
-import { parseApiResponse } from '../../../../utils/parseApiResponse'
+import { useAdminDeleteUserMutation } from '@/api/adminApi'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
+
 import { adminSlice } from '../../reducer'
 import { getDeleteUserModalState } from '../../selectors'
 

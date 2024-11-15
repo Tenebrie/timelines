@@ -2,11 +2,13 @@ import { ZoomIn, ZoomOut } from '@mui/icons-material'
 import { Button, Divider, Slider, Stack } from '@mui/material'
 import { memo } from 'react'
 
-import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
-import { useEventBusDispatch } from '../../../../../eventBus'
-import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
-import { useTimelineSpacingSlider } from '../../../Outliner/components/OutlinerControls/useTimelineSpacingSlider'
+import { useEventBusDispatch } from '@/app/features/eventBus'
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
+import { useTimelineSpacingSlider } from '@/app/features/world/components/Outliner/components/OutlinerControls/useTimelineSpacingSlider'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
+
 import { TimelineEdgeScroll } from '../TimelineEdgeScroll/TimelineEdgeScroll'
+import { EventTracksMenu } from './EventTracksMenu/EventTracksMenu'
 
 type Props = {
 	containerRef: React.MutableRefObject<HTMLDivElement | null>
@@ -36,7 +38,8 @@ const TimelineControlsComponent = ({ containerRef, onNavigateToTime, onZoomIn, o
 			}}
 		>
 			<Stack direction="row" justifyContent="space-between" width="calc(100%-64px)">
-				<Stack direction="row" gap={0.5}>
+				<Stack direction="row" gap={2} marginLeft={1}>
+					<EventTracksMenu onNavigateToTime={onNavigateToTime} />
 					<Button
 						color="secondary"
 						variant="outlined"

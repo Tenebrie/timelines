@@ -11,8 +11,8 @@ import {
 import { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { GetWorldCollaboratorsApiResponse, useUnshareWorldMutation } from '../../../../../../api/rheaApi'
-import { worldListSlice } from '../../../reducer'
+import { GetWorldCollaboratorsApiResponse, useUnshareWorldMutation } from '@/api/worldApi'
+import { worldListSlice } from '@/app/features/worldList/reducer'
 
 type Props = {
 	worldId: string

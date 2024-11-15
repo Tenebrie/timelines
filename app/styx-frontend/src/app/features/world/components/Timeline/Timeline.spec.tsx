@@ -1,10 +1,11 @@
 import { screen } from '@testing-library/react'
 
-import { mockEventModel } from '../../../../../api/rheaApi.mock'
-import { renderWithProviders } from '../../../../../jest/renderWithProviders'
-import { mockRouter } from '../../../../../router/router.mock'
-import { worldRoutes } from '../../../../../router/routes/worldRoutes'
-import { PreferencesInitialState } from '../../../preferences/reducer'
+import { mockEventModel } from '@/api/rheaApi.mock'
+import { PreferencesInitialState } from '@/app/features/preferences/reducer'
+import { renderWithProviders } from '@/jest/renderWithProviders'
+import { mockRouter } from '@/router/router.mock'
+import { worldRoutes } from '@/router/routes/worldRoutes'
+
 import { initialState } from '../../reducer'
 import { WorldDetails, WorldEvent } from '../../types'
 import { Timeline } from './Timeline'

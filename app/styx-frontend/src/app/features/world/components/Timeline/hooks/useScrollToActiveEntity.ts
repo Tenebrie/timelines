@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useWorldRouter, worldRoutes } from '../../../../../../router/routes/worldRoutes'
-import { useTimelineBusDispatch } from '../../../hooks/useTimelineBus'
-import { getWorldState } from '../../../selectors'
+import { useTimelineBusDispatch } from '@/app/features/world/hooks/useTimelineBus'
+import { getWorldState } from '@/app/features/world/selectors'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
 
 export const useScrollToActiveEntity = () => {
 	const { stateOf } = useWorldRouter()

@@ -3,9 +3,9 @@ import { MouseEvent as ReactMouseEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { useEffectOnce } from '../../../../../../utils/useEffectOnce'
-import { preferencesSlice } from '../../../../../preferences/reducer'
-import { getTimelinePreferences } from '../../../../../preferences/selectors'
+import { preferencesSlice } from '@/app/features/preferences/reducer'
+import { getTimelinePreferences } from '@/app/features/preferences/selectors'
+import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 const StyledDragger = styled.div`
 	width: 100%;

@@ -1,6 +1,5 @@
 import { screen, within } from '@testing-library/react'
 
-import { ShareWorldApiArg } from '../../../../../api/rheaApi'
 import {
 	mockAddCollaborator,
 	mockCollaboratingUser,
@@ -9,11 +8,13 @@ import {
 	mockListWorldAccessModes,
 	mockRemoveCollaborator,
 	mockWorldBriefModel,
-} from '../../../../../api/rheaApi.mock'
-import { renderWithProviders } from '../../../../../jest/renderWithProviders'
-import { setupTestServer } from '../../../../../jest/setupTestServer'
-import { mockRouter } from '../../../../../router/router.mock'
-import { homeRoutes } from '../../../../../router/routes/homeRoutes'
+} from '@/api/rheaApi.mock'
+import { ShareWorldApiArg } from '@/api/worldApi'
+import { renderWithProviders } from '@/jest/renderWithProviders'
+import { setupTestServer } from '@/jest/setupTestServer'
+import { mockRouter } from '@/router/router.mock'
+import { homeRoutes } from '@/router/routes/homeRoutes'
+
 import { ShareWorldModal } from './components/ShareWorldModal'
 import { WorldDetails } from './WorldDetails'
 

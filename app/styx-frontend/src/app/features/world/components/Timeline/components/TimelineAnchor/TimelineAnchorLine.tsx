@@ -1,8 +1,9 @@
 import { memo, useCallback, useMemo } from 'react'
 
-import { CustomTheme } from '../../../../../../../hooks/useCustomTheme'
-import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
-import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
+import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
+import { CustomTheme } from '@/hooks/useCustomTheme'
+
 import { ScaleLevel } from '../../types'
 import { Divider, DividerContainer, DividerLabel } from './styles'
 import { TimelineAnchorPadding } from './TimelineAnchor'

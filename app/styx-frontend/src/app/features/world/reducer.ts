@@ -1,7 +1,8 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { GetWorldInfoApiResponse } from '../../../api/rheaApi'
+import { GetWorldInfoApiResponse } from '@/api/worldApi'
+
 import { ingestEvent } from '../../utils/ingestEvent'
 import {
 	ActorDetails,

@@ -2,10 +2,10 @@ import { Menu, Public } from '@mui/icons-material'
 import { Button } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
-import { BaseNavigator } from '../../../../components/BaseNavigator'
-import { preferencesSlice } from '../../../preferences/reducer'
-import { getOverviewPreferences } from '../../../preferences/selectors'
+import { BaseNavigator } from '@/app/components/BaseNavigator'
+import { preferencesSlice } from '@/app/features/preferences/reducer'
+import { getOverviewPreferences } from '@/app/features/preferences/selectors'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
 
 export const WorldNavigator = () => {
 	const { navigateToCurrentWorldRoot } = useWorldRouter()

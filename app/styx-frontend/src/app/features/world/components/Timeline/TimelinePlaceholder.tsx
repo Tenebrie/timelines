@@ -1,4 +1,5 @@
-import { useCustomTheme } from '../../../../../hooks/useCustomTheme'
+import { useCustomTheme } from '@/hooks/useCustomTheme'
+
 import { useContainerHeight } from './hooks/useContainerHeight'
 import { TimelineContainer, TimelineWrapper } from './styles'
 

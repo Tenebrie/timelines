@@ -125,6 +125,7 @@ model WorldEventTrack {
 
   name     String
   position Int
+  visible  Boolean @default(true)
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String

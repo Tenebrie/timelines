@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
-import { LoadingSpinner } from '../../../components/LoadingSpinner'
+import { LoadingSpinner } from '@/app/components/LoadingSpinner'
+
 import { SpinnyControls } from './components/SpinnyControls'
 
 const SpinnyPageContainer = styled.div`

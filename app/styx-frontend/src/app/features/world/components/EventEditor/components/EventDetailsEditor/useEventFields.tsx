@@ -1,7 +1,10 @@
 import { Dispatch, useCallback, useMemo, useRef, useState } from 'react'
 
-import { WorldEvent } from '../../../../types'
-import { ActorOption, useMapActorsToOptions } from '../../../ActorSelector/useMapActorsToOptions'
+import {
+	ActorOption,
+	useMapActorsToOptions,
+} from '@/app/features/world/components/ActorSelector/useMapActorsToOptions'
+import { WorldEvent } from '@/app/features/world/types'
 
 type Props = {
 	event: WorldEvent

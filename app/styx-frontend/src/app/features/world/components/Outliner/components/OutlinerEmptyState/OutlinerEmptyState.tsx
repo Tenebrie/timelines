@@ -1,6 +1,6 @@
 import { Button, Grid, Stack, Typography } from '@mui/material'
 
-import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
 
 export const OutlinerEmptyState = () => {
 	// const dispatch = useDispatch()
