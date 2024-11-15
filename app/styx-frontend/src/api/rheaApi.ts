@@ -614,6 +614,7 @@ export type GetWorldEventTracksApiResponse = /** status 200  */ {
 	updatedAt: string
 	worldId: string
 	position: number
+	visible: boolean
 }[]
 export type GetWorldEventTracksApiArg = {
 	/** Any string value */
@@ -642,6 +643,7 @@ export type UpdateWorldEventTrackApiArg = {
 	body: {
 		name?: string
 		position?: number
+		visible?: boolean
 	}
 }
 export type DeleteWorldEventTrackApiResponse = /** status 200  */ {
@@ -651,6 +653,7 @@ export type DeleteWorldEventTrackApiResponse = /** status 200  */ {
 	updatedAt: string
 	worldId: string
 	position: number
+	visible: boolean
 }
 export type DeleteWorldEventTrackApiArg = {
 	/** Any string value */

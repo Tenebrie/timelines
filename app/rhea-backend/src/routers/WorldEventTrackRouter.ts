@@ -97,6 +97,7 @@ router.patch('/api/world/:worldId/event-track/:trackId', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		name: OptionalParam(NameStringValidator),
 		position: OptionalParam(NonNegativeIntegerValidator),
+		visible: OptionalParam(BooleanValidator),
 	})
 
 	const { eventTrack, world } = await WorldEventTrackService.updateEventTrack({

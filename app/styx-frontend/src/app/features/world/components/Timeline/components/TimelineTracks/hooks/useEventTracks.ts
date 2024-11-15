@@ -19,7 +19,11 @@ import { useEventTracksRequest } from '../../../hooks/useEventTracksRequest'
 export type TimelineTrack = ReturnType<typeof useEventTracks>[number]
 export const TimelineEventHeightPx = 40
 
-const useEventTracks = () => {
+type Props = {
+	showHidden?: boolean
+}
+
+const useEventTracks = ({ showHidden }: Props = {}) => {
 	const { events } = useSelector(getWorldState)
 	const { ghost: eventGhost } = useSelector(getEventCreatorState)
 	const { ghost: deltaGhost } = useSelector(getEventDeltaCreatorState)
@@ -133,11 +137,13 @@ const useEventTracks = () => {
 	const tracksWithEvents = useMemo(
 		() =>
 			tracks
+				.filter((track) => showHidden || track.visible)
 				.map((track) => ({
 					id: track.id as string | 'default',
 					name: track.name,
 					position: track.position,
 					baseModel: track as WorldEventTrack | null,
+					visible: track.visible,
 					height: 0,
 				}))
 				.concat([
@@ -146,6 +152,7 @@ const useEventTracks = () => {
 						name: 'Unassigned',
 						position: Infinity,
 						baseModel: null,
+						visible: true,
 						height: 0,
 					},
 				])
@@ -162,7 +169,7 @@ const useEventTracks = () => {
 						events,
 					}
 				}),
-		[eventGroups, tracks],
+		[eventGroups, showHidden, tracks],
 	)
 	const finalizedTracks = calculateMarkerHeights(tracksWithEvents) as typeof tracksWithEvents
 	return finalizedTracks
