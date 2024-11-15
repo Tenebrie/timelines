@@ -103,8 +103,6 @@ export const useTimelineNavigation = ({
 				maximumScroll: number
 				draggingFrom: Position | null
 			}) => {
-				console.log('Event')
-
 				const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
 				const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
 				const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }
@@ -212,7 +210,8 @@ export const useTimelineNavigation = ({
 		}
 
 		const newScaleLevel = rangeMap<ScaleLevel>(currentTimePerPixel, [
-			['[0; 2)', 0],
+			['[0.5; 1)', -1],
+			['[1; 2)', 0],
 			['[2; 4)', 1],
 			['[4; 8)', 2],
 			['[8; 16)', 3],

@@ -24,7 +24,7 @@ export const useDoubleClick = <ArgsT,>({ onClick, onDoubleClick, ignoreDelay }: 
 			const lastClickTarget = lastClickTargetRef.current
 			lastClickTimestampRef.current = time
 			lastClickTargetRef.current = event.target
-			if (time - lastClickTime < 200 && lastClickTarget === event.target) {
+			if (time - lastClickTime < 300 && lastClickTarget === event.target) {
 				lastClickTimestampRef.current = 0
 				lastClickTargetRef.current = null
 				onDoubleClick(args)
@@ -34,7 +34,7 @@ export const useDoubleClick = <ArgsT,>({ onClick, onDoubleClick, ignoreDelay }: 
 			if (ignoreDelay) {
 				onClick(args)
 			} else {
-				singleClickTimeout.current = window.setTimeout(onSingleClickTimeout, 200)
+				singleClickTimeout.current = window.setTimeout(onSingleClickTimeout, 300)
 				singleClickArguments.current = args
 			}
 		},

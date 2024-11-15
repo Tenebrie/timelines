@@ -38,7 +38,10 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
 		isPreparingToDrag.current = true
 		const boundingRect = containerRef.current.getBoundingClientRect()
-		rootPos.current = { x: boundingRect.left, y: boundingRect.top }
+		rootPos.current = {
+			x: boundingRect.left,
+			y: boundingRect.top,
+		}
 		dragFromPos.current = { x: event.clientX, y: event.clientY }
 	}, [])
 

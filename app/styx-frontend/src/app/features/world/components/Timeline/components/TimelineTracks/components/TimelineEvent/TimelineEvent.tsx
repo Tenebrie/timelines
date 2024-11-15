@@ -11,6 +11,7 @@ import { useEventIcons } from '../../../../../../hooks/useEventIcons'
 import { useTimelineBusDispatch } from '../../../../../../hooks/useTimelineBus'
 import { worldSlice } from '../../../../../../reducer'
 import { MarkerType, TimelineEntity } from '../../../../../../types'
+import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
 import { Label, LabelContainer, Marker } from './styles'
 
@@ -18,9 +19,10 @@ type Props = {
 	entity: TimelineEntity<MarkerType>
 	edited: boolean
 	selected: boolean
+	trackHeight: number
 }
 
-export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
+export const TimelineEventComponent = ({ entity, edited, selected, trackHeight }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
 	const scrollTimelineTo = useTimelineBusDispatch()
@@ -94,7 +96,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 
 	const labelType =
 		entity.markerType === 'issuedAt' ? (
-			<b style={{ color: colors.green[500] }}></b>
+			<b style={{ color: colors.green[500] }}>Event:</b>
 		) : entity.markerType === 'revokedAt' ? (
 			<b style={{ color: colors.red[500] }}>Resolve:</b>
 		) : entity.markerType === 'deltaState' ? (
@@ -112,6 +114,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 			onContextMenu={onContextMenu}
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
+			$size={TimelineEventHeightPx - 6}
 			$borderColor={color}
 			className={classNames({
 				selected,
@@ -124,6 +127,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 			$iconPath={getIconPath(entity.icon)}
 			data-testid="timeline-event-marker"
 		>
+			<div className="icon"></div>
 			{isInfoVisible && (
 				<LabelContainer>
 					<Label data-hj-suppress>
@@ -135,7 +139,6 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 					</Label>
 				</LabelContainer>
 			)}
-			<div className="icon" />
 		</Marker>
 	)
 }

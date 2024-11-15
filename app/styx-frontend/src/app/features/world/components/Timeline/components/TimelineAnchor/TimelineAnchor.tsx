@@ -1,10 +1,9 @@
-import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useMemo } from 'react'
 
 import { useCustomTheme } from '../../../../../../../hooks/useCustomTheme'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '../../../../../time/hooks/useWorldTime'
 import { ScaleLevel } from '../../types'
-import { TimelineState } from '../../utils/TimelineState'
 import { TimelineAnchorContainer, TimelineSmallestPips } from './styles'
 import { getLoop, TimelineAnchorLine } from './TimelineAnchorLine'
 
@@ -28,21 +27,6 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 		() => Math.ceil(containerWidth / lineSpacing) + Math.ceil(TimelineAnchorPadding / lineSpacing) * 2,
 		[containerWidth, lineSpacing],
 	)
-
-	const lastSeenScroll = useRef(0)
-	const [scroll2, setScroll] = useState(0)
-
-	useEffect(() => {
-		const timeout = window.setInterval(() => {
-			if (lastSeenScroll.current !== TimelineState.scroll) {
-				lastSeenScroll.current = TimelineState.scroll
-				setScroll(TimelineState.scroll)
-			}
-		}, 10)
-		return () => {
-			window.clearInterval(timeout)
-		}
-	}, [])
 
 	const { smallGroupSize, mediumGroupSize, largeGroupSize } = getTimelineMultipliers()
 	const dividers = useMemo(
@@ -115,7 +99,7 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 				$lineSpacing={lineSpacing}
 			/>
 			{dividers.map((data, index) => (
-				<>
+				<div key={index}>
 					{data.isRendered && (
 						<TimelineAnchorLine
 							key={`${index}`}
@@ -132,7 +116,7 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 							{...data}
 						/>
 					)}
-				</>
+				</div>
 			))}
 		</TimelineAnchorContainer>
 	)

@@ -6,30 +6,31 @@ export type StoryEventMarkerProps = {
 	expanded: boolean
 }
 
-export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
+export const Marker = styled.div<{ $iconPath: string; $borderColor: string; $size: number }>`
 	position: relative;
-	width: 48px;
-	height: 48px;
-	border-radius: 50%;
+	width: ${(props) => props.$size}px;
+	height: ${(props) => props.$size}px;
+	border-radius: 4px;
 	background: #0a1929;
 	cursor: pointer;
 	transition:
 		margin-bottom 0.3s,
-		outline-color 0.3s,
+		border-color 0.3s,
 		background-color 0.3s;
-	outline: 2px solid ${colors.grey[300]};
+	border: 2px solid ${colors.grey[300]};
+	border-color: ${(props) => props.$borderColor} !important;
 
 	.icon {
 		position: absolute;
-		background: ${colors.green[300]};
+		background: ${(props) => props.$borderColor};
 		mask-image: url(${(props) => props.$iconPath});
-		mask-size: contain;
+		mask-size: cover;
+		mask-position: 0px 0px;
+		mask-repeat: no-repeat;
 		background-origin: content-box;
 		background-size: contain;
-		top: 2px;
-		left: 2px;
-		width: calc(100% - 4px);
-		height: calc(100% - 4px);
+		width: calc(100%);
+		height: calc(100%);
 		transition: background-color 0.3s;
 	}
 
@@ -50,29 +51,27 @@ export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
 	}
 
 	&:hover {
-		outline-color: ${colors.grey[500]};
 		& > .icon {
 			background: ${colors.green[500]};
 		}
 	}
 	&:active {
-		outline-color: ${colors.grey[700]};
 		& > .icon {
 			background: ${colors.green[700]};
 		}
 	}
-	&.replace > .icon {
-		background-color: ${colors.yellow[300]};
-	}
+	// &.replace > .icon {
+	// 	background-color: ${colors.yellow[300]};
+	// }
 	&.replace:hover > .icon {
 		background-color: ${colors.yellow[500]};
 	}
 	&.replace:active > .icon {
 		background-color: ${colors.yellow[700]};
 	}
-	&.revoked > .icon {
-		background-color: ${colors.red[300]};
-	}
+	// &.revoked > .icon {
+	// 	background-color: ${colors.red[300]};
+	// }
 	&.revoked:hover > .icon {
 		background-color: ${colors.red[500]};
 	}
@@ -99,8 +98,6 @@ export const Marker = styled.div<{ $iconPath: string; $borderColor: string }>`
 	&.revoked.selected {
 		background-color: rgb(100, 0, 0);
 	}
-
-	outline-color: ${(props) => props.$borderColor} !important;
 `
 
 export const LabelContainer = styled.div`
@@ -108,8 +105,9 @@ export const LabelContainer = styled.div`
 	display: flex;
 	align-items: center;
 	width: 250px;
-	left: 0%;
-	bottom: calc(100% + 8px);
+	transform: translateY(50%);
+	left: calc(100% + 8px);
+	bottom: calc(50%);
 	z-index: 10;
 	pointer-events: none;
 `

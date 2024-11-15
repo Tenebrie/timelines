@@ -3,6 +3,7 @@ import { List, ListItem, ListItemText } from '@mui/material'
 import { useCallback } from 'react'
 
 import { TrunkatedTypography } from '../../../../../components/TrunkatedTypography'
+import { isNotNull } from '../../../../../utils/isNotNull'
 import { useWorldTime } from '../../../../time/hooks/useWorldTime'
 import { useTimelineBusDispatch } from '../../../hooks/useTimelineBus'
 import { Actor, WorldEvent } from '../../../types'
@@ -29,7 +30,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 
 	const scrollTimelineToEvent = useCallback(() => {
 		const scroll = getTimelineScroll()
-		if (event.revokedAt && Math.abs(scroll - event.timestamp) <= 5) {
+		if (isNotNull(event.revokedAt) && Math.abs(scroll - event.timestamp) <= 5) {
 			scrollTimelineTo(event.revokedAt)
 		} else {
 			scrollTimelineTo(event.timestamp)
@@ -39,7 +40,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 	// const paragraphs = event.description.split('\n').filter((p) => p.trim().length > 0)
 	const paragraphs = [event.description]
 
-	const revokedAtTimestamp = event.revokedAt ? (
+	const revokedAtTimestamp = isNotNull(event.revokedAt) ? (
 		<>
 			, resolved at <b>{timeToLabel(event.revokedAt)}</b>
 		</>

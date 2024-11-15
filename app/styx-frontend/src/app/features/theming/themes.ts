@@ -209,6 +209,7 @@ export const customLightTheme = {
 			text: 'rgb(21, 16, 11)',
 		},
 		background: {
+			soft: 'rgb(0 0 0 / 10%)',
 			timeline: 'hsl(197, 20%, 95%)',
 			navigator: 'hsl(197, 20%, 95%)',
 		},
@@ -221,6 +222,7 @@ export const customDarkTheme: typeof customLightTheme = {
 			text: 'white',
 		},
 		background: {
+			soft: 'rgb(255 255 255 / 10%)',
 			timeline: '#0a1929',
 			navigator: '#0a1929',
 		},

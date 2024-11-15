@@ -2,6 +2,7 @@ import { Divider } from '@mui/material'
 import throttle from 'lodash.throttle'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
+import { useCustomTheme } from '../../../../../../../hooks/useCustomTheme'
 import { useWorldRouter } from '../../../../../../../router/routes/worldRoutes'
 import { useTimelineWorldTime } from '../../../../../time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState, getWorldState } from '../../../../selectors'
@@ -45,6 +46,7 @@ export const TimelineTrackItem = ({
 }: Props) => {
 	const dragDropReceiverRef = useRef<HTMLDivElement | null>(null)
 	const [isDragging, setIsDragging] = useState(false)
+	const theme = useCustomTheme()
 
 	const editedEntities = useMemo(
 		() =>
@@ -95,7 +97,12 @@ export const TimelineTrackItem = ({
 	const dividerProps = useMemo(() => ({ position: 'absolute', bottom: 0, width: '100%' }), [])
 
 	return (
-		<TrackContainer ref={dragDropReceiverRef} className={`${isDragging ? 'dragging' : ''}`}>
+		<TrackContainer
+			ref={dragDropReceiverRef}
+			$height={track.height}
+			$background={theme.custom.palette.background.soft}
+			className={`${isDragging ? 'dragging' : ''}`}
+		>
 			<Divider sx={dividerProps} />
 			<TrackPositioner $position={0}>
 				{chainLinks.map((event) => (
@@ -116,8 +123,9 @@ export const TimelineTrackItem = ({
 						visible={visible}
 						lineSpacing={lineSpacing}
 						scroll={scroll}
-						edited={editedEntities.includes(event)}
-						selected={selectedMarkers.includes(event)}
+						edited={editedEntities.some((marker) => marker.key === event.key)}
+						selected={selectedMarkers.some((marker) => marker.key === event.key)}
+						trackHeight={track.height}
 						realTimeToScaledTime={realTimeToScaledTime}
 					/>
 				))}

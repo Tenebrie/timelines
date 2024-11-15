@@ -4,8 +4,7 @@ import { memo } from 'react'
 import { useDragDrop } from '../../../../../../../dragDrop/useDragDrop'
 import { useTimelineWorldTime } from '../../../../../../../time/hooks/useTimelineWorldTime'
 import { useEventIcons } from '../../../../../../hooks/useEventIcons'
-import { TimelineState } from '../../../../utils/TimelineState'
-import useEventTracks from '../../hooks/useEventTracks'
+import useEventTracks, { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { Group } from '../../styles'
 import { Marker } from '../TimelineEvent/styles'
 import { TimelineEvent } from '../TimelineEvent/TimelineEvent'
@@ -17,6 +16,7 @@ type Props = {
 	scroll: number
 	edited: boolean
 	selected: boolean
+	trackHeight: number
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
@@ -27,6 +27,7 @@ const TimelineEventPositionerComponent = ({
 	scroll,
 	edited,
 	selected,
+	trackHeight,
 	realTimeToScaledTime,
 }: Props) => {
 	const { getIconPath } = useEventIcons()
@@ -36,17 +37,18 @@ const TimelineEventPositionerComponent = ({
 		params: { event: entity },
 		adjustPosition: (pos) => {
 			const roundingFactor = lineSpacing
-			const posTimestamp = pos.x
-			const roundedValue = Math.floor(posTimestamp / roundingFactor) * roundingFactor
+			const b = -scroll % lineSpacing
+			const posTimestamp = pos.x + b
+			const roundedValue = Math.round(posTimestamp / roundingFactor) * roundingFactor
+			const offset = -scroll % lineSpacing > lineSpacing / 2 ? scroll % lineSpacing : scroll % lineSpacing
 			return {
-				x: roundedValue + ((entity.markerPosition + TimelineState.scroll) % lineSpacing),
-				// y: window.innerHeight - Math.round((window.innerHeight - pos.y + 15 - 25) / 96) * 96 + 34 - 24 - 16,
+				x: roundedValue + offset,
 				y: pos.y,
 			}
 		},
 		ghostFactory: () => (
 			<>
-				{/* <div
+				<div
 					style={{
 						height: '100vh',
 						background: 'gray',
@@ -56,8 +58,9 @@ const TimelineEventPositionerComponent = ({
 						left: '50%',
 						overflow: 'hidden',
 					}}
-				></div> */}
+				></div>
 				<Marker
+					$size={TimelineEventHeightPx - 6}
 					$borderColor="gray"
 					$iconPath={getIconPath(entity.icon)}
 					className={classNames({
@@ -67,20 +70,23 @@ const TimelineEventPositionerComponent = ({
 						ghostDelta: entity.markerType === 'deltaState',
 					})}
 				>
-					<div className="icon" />
+					<div className="icon"></div>
 				</Marker>
 			</>
 		),
 	})
-	const position = realTimeToScaledTime(Math.floor(entity.markerPosition)) + scroll
+	const position =
+		realTimeToScaledTime(Math.floor(entity.markerPosition)) + scroll - TimelineEventHeightPx / 2 + 10
+	const height = TimelineEventHeightPx * entity.markerHeight
 
 	return (
 		<Group
 			ref={ref}
 			$position={position}
+			$height={height}
 			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''}`}
 		>
-			<TimelineEvent entity={entity} edited={edited} selected={selected} />
+			<TimelineEvent entity={entity} trackHeight={trackHeight} edited={edited} selected={selected} />
 			{ghostElement}
 		</Group>
 	)

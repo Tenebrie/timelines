@@ -41,6 +41,7 @@ export type TimelineEntity<T extends MarkerType> = WorldEvent & {
 	key: string
 	markerPosition: number
 	markerType: T
+	markerHeight: number
 	baseEntity: T extends 'issuedAt'
 		? WorldEvent
 		: T extends 'revokedAt'

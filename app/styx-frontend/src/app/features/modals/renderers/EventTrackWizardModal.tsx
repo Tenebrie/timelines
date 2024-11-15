@@ -14,7 +14,7 @@ export const EventTrackWizardModal = () => {
 	const { isOpen, close } = useModal('eventTrackWizard')
 
 	const [name, setName] = useState('')
-	const [assignOrphans, setAssignOrphans] = useState(true)
+	const [assignOrphans, setAssignOrphans] = useState(false)
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
 
 	const [createWorldEventTrack, { isLoading }] = useCreateWorldEventTrackMutation()
@@ -30,7 +30,7 @@ export const EventTrackWizardModal = () => {
 		isOpen,
 		onCleanup: () => {
 			setName('')
-			setAssignOrphans(true)
+			setAssignOrphans(false)
 			setNameValidationError(null)
 		},
 	})

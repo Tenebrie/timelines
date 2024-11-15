@@ -6,6 +6,7 @@ import { Virtuoso } from 'react-virtuoso'
 import { useIsReadOnly } from '../../../../../hooks/useIsReadOnly'
 import { useWorldRouter } from '../../../../../router/routes/worldRoutes'
 import { OutlinedContainer } from '../../../../components/OutlinedContainer'
+import { isNull } from '../../../../utils/isNull'
 import { getOutlinerPreferences, getTimelinePreferences } from '../../../preferences/selectors'
 import { useTimelineLevelScalar } from '../../../time/hooks/useTimelineLevelScalar'
 import { useOutlinerTabs } from '../../hooks/useOutlinerTabs'
@@ -46,7 +47,7 @@ export const Outliner = () => {
 					index,
 					collapsed: !expandedEvents.includes(event.id),
 					highlighted: Math.abs(event.timestamp - selectedTime) < highlightWithin,
-					active: event.revokedAt === null || event.revokedAt === undefined || event.revokedAt > selectedTime,
+					active: isNull(event.revokedAt) || event.revokedAt > selectedTime,
 				}))
 				.sort((a, b) => a.timestamp - b.timestamp || a.index - b.index),
 		[expandedEvents, highlightWithin, selectedTime, allVisibleEvents],

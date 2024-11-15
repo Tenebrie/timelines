@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { UpdateWorldEventApiArg, useUpdateWorldEventMutation } from '../../../../../../../api/rheaApi'
 import { useWorldRouter, worldRoutes } from '../../../../../../../router/routes/worldRoutes'
 import { useAutosave } from '../../../../../../utils/autosave/useAutosave'
+import { isNotNull } from '../../../../../../utils/isNotNull'
 import { parseApiResponse } from '../../../../../../utils/parseApiResponse'
 import { useModal } from '../../../../../modals/reducer'
 import { WorldEvent } from '../../../../types'
@@ -114,7 +115,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 				name,
 				icon,
 				timestamp: String(timestamp),
-				revokedAt: revokedAt ? String(revokedAt) : null,
+				revokedAt: isNotNull(revokedAt) ? String(revokedAt) : null,
 				description,
 				customNameEnabled,
 				targetActorIds: selectedActors.map((a) => a.id),

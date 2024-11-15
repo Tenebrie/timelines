@@ -37,24 +37,26 @@ export const TimelineEventTrackTitleComponent = ({ track }: Props) => {
 	})
 
 	return (
-		<Stack
-			ref={ref}
-			sx={{
-				position: 'relative',
-				marginLeft: 1,
-				zIndex: 100,
-				borderRadius: 1,
-			}}
-		>
-			<Button variant="contained" color="secondary" sx={{ pointerEvents: 'all' }} onClick={onOpen}>
-				{track.baseModel && (
-					<span>
-						({track.position}) {track.name}
-					</span>
-				)}
-				{!track.baseModel && <span>Create new track...</span>}
-			</Button>
-			{ghostElement}
+		<Stack height="100%" justifyContent="center">
+			<Stack
+				ref={ref}
+				sx={{
+					position: 'relative',
+					marginLeft: 1,
+					zIndex: 100,
+					borderRadius: 1,
+				}}
+			>
+				<Button variant="contained" color="secondary" sx={{ pointerEvents: 'all' }} onClick={onOpen}>
+					{track.baseModel && (
+						<span>
+							({track.position}) {track.name}
+						</span>
+					)}
+					{!track.baseModel && <span>Create new track...</span>}
+				</Button>
+				{ghostElement}
+			</Stack>
 		</Stack>
 	)
 }
