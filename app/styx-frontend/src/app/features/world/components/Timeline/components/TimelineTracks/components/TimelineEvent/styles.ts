@@ -1,17 +1,24 @@
 import { colors } from '@mui/material'
 import styled from 'styled-components'
 
+import { CustomTheme } from '@/hooks/useCustomTheme'
+
 export type StoryEventMarkerProps = {
 	groupIndex: number
 	expanded: boolean
 }
 
-export const Marker = styled.div<{ $iconPath: string; $borderColor: string; $size: number }>`
+export const Marker = styled.div<{
+	$iconPath: string
+	$borderColor: string
+	$size: number
+	$theme: CustomTheme
+}>`
 	position: relative;
 	width: ${(props) => props.$size}px;
 	height: ${(props) => props.$size}px;
 	border-radius: 4px;
-	background: #0a1929;
+	background: ${(props) => props.$theme.custom.palette.background.timelineMarker};
 	cursor: pointer;
 	transition:
 		margin-bottom 0.3s,
@@ -50,53 +57,73 @@ export const Marker = styled.div<{ $iconPath: string; $borderColor: string; $siz
 		}
 	}
 
-	&:hover {
-		& > .icon {
-			background: ${colors.green[500]};
-		}
+	&:hover > .icon {
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[500] : colors.green[800])};
 	}
-	&:active {
-		& > .icon {
-			background: ${colors.green[700]};
-		}
-	}
-	// &.replace > .icon {
-	// 	background-color: ${colors.yellow[300]};
-	// }
 	&.replace:hover > .icon {
-		background-color: ${colors.yellow[500]};
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[900])};
 	}
-	&.replace:active > .icon {
-		background-color: ${colors.yellow[700]};
-	}
-	// &.revoked > .icon {
-	// 	background-color: ${colors.red[300]};
-	// }
 	&.revoked:hover > .icon {
-		background-color: ${colors.red[500]};
-	}
-	&.revoked:active > .icon {
-		background-color: ${colors.red[700]};
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900])};
 	}
 
 	&.edited {
-		box-shadow: 0 0 10px 10px rgb(0, 100, 0);
+		box-shadow: ${(props) => {
+			const color = props.$theme.mode === 'dark' ? colors.green[500] : colors.green[900]
+			return `0 0 10px 10px ${color}`
+		}};
 	}
 	&.replace.edited {
-		box-shadow: 0 0 10px 10px rgb(100, 100, 0);
+		box-shadow: ${(props) => {
+			const color = props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[700]
+			return `0 0 10px 10px ${color}`
+		}};
 	}
 	&.revoked.edited {
-		box-shadow: 0 0 10px 10px rgb(75, 0, 0);
+		box-shadow: ${(props) => {
+			const color = props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900]
+			return `0 0 10px 10px ${color}`
+		}};
+	}
+
+	@media (min-resolution: 2dppx) {
+		&.edited {
+			box-shadow: ${(props) => {
+				const color = props.$theme.mode === 'dark' ? colors.green[500] : colors.green[900]
+				return `0 0 5px 5px ${color}`
+			}};
+		}
+		&.replace.edited {
+			box-shadow: ${(props) => {
+				const color = props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[700]
+				return `0 0 5px 5px ${color}`
+			}};
+		}
+		&.revoked.edited {
+			box-shadow: ${(props) => {
+				const color = props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900]
+				return `0 0 5px 5px ${color}`
+			}};
+		}
 	}
 
 	&.selected {
-		background-color: rgb(0, 100, 0);
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[500] : colors.green[900])};
+		& > .icon {
+			background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[900] : colors.green[500])};
+		}
 	}
 	&.replace.selected {
-		background-color: rgb(100, 100, 0);
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[900])};
+		& > .icon {
+			background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[900] : colors.yellow[500])};
+		}
 	}
 	&.revoked.selected {
-		background-color: rgb(100, 0, 0);
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[300] : colors.red[900])};
+		& > .icon {
+			background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[900] : colors.red[300])};
+		}
 	}
 `
 

@@ -14,7 +14,7 @@ const PreferencesStateSchema = z.object({
 		.object({
 			useCustomLineSpacing: z.boolean().default(false),
 			lineSpacing: z.number().default(20),
-			containerHeight: z.number().default(260),
+			containerHeight: z.number().default(232),
 		})
 		.default({}),
 	outliner: z

@@ -111,49 +111,6 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		return null
 	}, [isLargeGroup, isMediumGroup, isSmallGroup, scaleLevel])
 
-	const getLineColor = useCallback(() => {
-		if (!isMediumGroup && !isLargeGroup) {
-			if (scaleLevel === 0) {
-				return '#999'
-			} else if (scaleLevel === 1) {
-				return '#797'
-			} else if (scaleLevel === 2) {
-				return '#979'
-			} else if (scaleLevel === 3) {
-				return '#799'
-			} else if (scaleLevel === 4) {
-				return '#A9A'
-			} else if (scaleLevel === 5) {
-				return '#9AA'
-			} else if (scaleLevel === 6) {
-				return '#797'
-			} else if (scaleLevel === 7) {
-				return '#979'
-			}
-		}
-
-		const groupColors = [
-			'#63ffc8',
-			'#ffd026',
-			'#57fd20',
-			'#EAADE9',
-			'#ff6363',
-			'#f9a7f7',
-			'#f9c2a7',
-			'#63ffc8',
-			'#ffd026',
-		]
-		if (isLargeGroup) {
-			return groupColors[scaleLevel + 1]
-		} else if (isMediumGroup) {
-			return groupColors[scaleLevel - 0]
-		} else if (isSmallGroup) {
-			return groupColors[scaleLevel - 1]
-		}
-
-		return 'gray'
-	}, [isLargeGroup, isMediumGroup, isSmallGroup, scaleLevel])
-
 	const getDividerHeight = useCallback(() => {
 		if (isLargeGroup) {
 			return 2.5
@@ -165,7 +122,6 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		return 1
 	}, [isLargeGroup, isMediumGroup, isSmallGroup])
 
-	const lineColor = useMemo(getLineColor, [getLineColor])
 	const dividerHeight = useMemo(getDividerHeight, [getDividerHeight])
 
 	return (
@@ -180,7 +136,7 @@ const TimelineAnchorLineComponent = (props: Props) => {
 					{timeToShortLabel(scaledTimeToRealTime(index * lineSpacing), scaleLevel, labelSize)}
 				</DividerLabel>
 			)}
-			<Divider color={lineColor} height={dividerHeight} />
+			<Divider color={'gray'} height={dividerHeight} />
 		</DividerContainer>
 	)
 }
