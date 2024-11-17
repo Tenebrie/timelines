@@ -144,6 +144,7 @@ export const customLightTheme = {
 			soft: 'rgb(0 0 0 / 10%)',
 			timeline: '#eee',
 			navigator: '#eee',
+			timelineMarker: '#fff',
 		},
 	},
 }
@@ -157,6 +158,7 @@ export const customDarkTheme: typeof customLightTheme = {
 			soft: 'rgb(255 255 255 / 10%)',
 			timeline: '#22333b',
 			navigator: '#22333b',
+			timelineMarker: '#0a0908',
 		},
 	},
 }

@@ -4,6 +4,7 @@ import { memo } from 'react'
 import { useDragDrop } from '@/app/features/dragDrop/useDragDrop'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useEventIcons } from '@/app/features/world/hooks/useEventIcons'
+import { useCustomTheme } from '@/hooks/useCustomTheme'
 
 import useEventTracks, { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { Group } from '../../styles'
@@ -32,6 +33,7 @@ const TimelineEventPositionerComponent = ({
 	realTimeToScaledTime,
 }: Props) => {
 	const { getIconPath } = useEventIcons()
+	const theme = useCustomTheme()
 
 	const { ref, isDragging, ghostElement } = useDragDrop({
 		type: 'timelineEvent',
@@ -64,6 +66,7 @@ const TimelineEventPositionerComponent = ({
 					$size={TimelineEventHeightPx - 6}
 					$borderColor="gray"
 					$iconPath={getIconPath(entity.icon)}
+					$theme={theme}
 					className={classNames({
 						revoked: entity.markerType === 'revokedAt',
 						replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',

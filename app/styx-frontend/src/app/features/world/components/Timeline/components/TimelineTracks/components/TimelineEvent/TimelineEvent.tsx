@@ -9,6 +9,7 @@ import { worldSlice } from '@/app/features/world/reducer'
 import { MarkerType, TimelineEntity } from '@/app/features/world/types'
 import { useStringColor } from '@/app/utils/getStringColor'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
+import { useCustomTheme } from '@/hooks/useCustomTheme'
 import { useDoubleClick } from '@/hooks/useDoubleClick'
 import { useWorldRouter } from '@/router/routes/worldRoutes'
 
@@ -106,8 +107,8 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 			''
 		)
 
-	const { getStringColor } = useStringColor()
-	const color = getStringColor(entity.eventId)
+	const color = useStringColor(entity.eventId)
+	const theme = useCustomTheme()
 
 	return (
 		<Marker
@@ -117,6 +118,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 			onMouseLeave={onMouseLeave}
 			$size={TimelineEventHeightPx - 6}
 			$borderColor={color}
+			$theme={theme}
 			className={classNames({
 				selected,
 				edited,
