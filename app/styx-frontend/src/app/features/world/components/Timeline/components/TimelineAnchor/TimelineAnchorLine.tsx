@@ -113,23 +113,7 @@ const TimelineAnchorLineComponent = (props: Props) => {
 
 	const getLineColor = useCallback(() => {
 		if (!isMediumGroup && !isLargeGroup) {
-			if (scaleLevel === 0) {
-				return '#999'
-			} else if (scaleLevel === 1) {
-				return '#797'
-			} else if (scaleLevel === 2) {
-				return '#979'
-			} else if (scaleLevel === 3) {
-				return '#799'
-			} else if (scaleLevel === 4) {
-				return '#A9A'
-			} else if (scaleLevel === 5) {
-				return '#9AA'
-			} else if (scaleLevel === 6) {
-				return '#797'
-			} else if (scaleLevel === 7) {
-				return '#979'
-			}
+			return ''
 		}
 
 		const groupColors = [
