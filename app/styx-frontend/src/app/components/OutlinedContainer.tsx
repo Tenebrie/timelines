@@ -12,7 +12,13 @@ type Props = {
 export const OutlinedContainer = ({ label, children, style, fullHeight, gap }: Props) => {
 	return (
 		<Paper
-			sx={{ padding: 2, paddingTop: 3, height: fullHeight ? 'calc(100% - 16px)' : 'unset' }}
+			sx={{
+				padding: 2,
+				paddingTop: 3,
+				height: fullHeight ? 'calc(100% - 16px)' : 'unset',
+				maxHeight: 'calc(100% - 16px)',
+				overflowY: 'auto',
+			}}
 			elevation={2}
 			style={style}
 		>
