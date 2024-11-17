@@ -97,64 +97,22 @@ const baseTheme: Partial<Theme> = {
 	},
 }
 
-export const colors = {
-	palette: {
-		0: '#28410b',
-		1: '#3c5c07',
-		2: '#4f7703',
-		3: '#719a19',
-		4: '#92bd2e',
-		5: '#a5d534',
-		6: '#603720',
-		7: '#6c3e23',
-		8: '#784426',
-		9: '#9c6544',
-	},
-}
-
 export const lightTheme = createTheme({
 	...baseTheme,
 	palette: {
 		mode: 'light',
 		background: {
-			default: 'hsl(197, 20%, 90%)',
-			paper: 'hsl(197, 20%, 95%)',
+			paper: '#eee',
+			default: '#d8d8d8',
 		},
-		// mode: 'light',
-		// primary: {
-		// 	main: '#67be23',
-		// 	contrastText: '#fff',
-		// },
-		// secondary: {
-		// 	main: '#2A132E',
-		// 	contrastText: '#fff',
-		// },
-		// background: {
-		// 	default: '#f0f0f0',
-		// 	paper: '#ffffff',
-		// },
-		// success: {
-		// 	main: '#67be23',
-		// 	contrastText: '#fff',
-		// },
-		// error: {
-		// 	main: '#fa541c',
-		// 	contrastText: '#fff',
-		// },
-		// warning: {
-		// 	main: '#fa8c16',
-		// 	contrastText: '#fff',
-		// },
-		// info: {
-		// 	main: '#0b82f0',
-		// 	contrastText: '#fff',
-		// },
-		// divider: 'rgba(0,0,0,0)',
-		// text: {
-		// 	primary: '#626262',
-		// 	secondary: '#9f9f9f',
-		// 	disabled: '#c1c1c1',
-		// },
+		primary: {
+			main: '#2d4e2c',
+			contrastText: '#fff',
+		},
+		secondary: {
+			main: '#c17149',
+			contrastText: '#0a0908',
+		},
 	},
 })
 
@@ -163,43 +121,17 @@ export const darkTheme = createTheme({
 	palette: {
 		mode: 'dark',
 		background: {
-			paper: '#0a1929',
+			default: '#0a0908',
+			paper: '#22333b',
 		},
-		// mode: 'dark',
-		// primary: {
-		// 	main: '#77f',
-		// 	contrastText: '#fff',
-		// },
-		// secondary: {
-		// 	main: '#d077ff',
-		// 	contrastText: '#fff',
-		// },
-		// background: {
-		// 	default: '#212121',
-		// 	paper: '#242424',
-		// },
-		// success: {
-		// 	main: '#67be23',
-		// 	contrastText: '#fff',
-		// },
-		// error: {
-		// 	main: '#ee2a1e',
-		// 	contrastText: '#fff',
-		// },
-		// warning: {
-		// 	main: '#fa8c16',
-		// 	contrastText: '#fff',
-		// },
-		// info: {
-		// 	main: '#1890ff',
-		// 	contrastText: '#fff',
-		// },
-		// divider: 'rgba(0,0,0,0)',
-		// text: {
-		// 	primary: '#fff',
-		// 	secondary: 'rgba(255,255,255,0.7)',
-		// 	disabled: '#d1d1d1',
-		// },
+		primary: {
+			main: '#4b8349',
+			contrastText: '#0a0908',
+		},
+		secondary: {
+			main: '#cb8867',
+			contrastText: '#0a0908',
+		},
 	},
 })
 
@@ -210,8 +142,8 @@ export const customLightTheme = {
 		},
 		background: {
 			soft: 'rgb(0 0 0 / 10%)',
-			timeline: 'hsl(197, 20%, 95%)',
-			navigator: 'hsl(197, 20%, 95%)',
+			timeline: '#eee',
+			navigator: '#eee',
 		},
 	},
 }
@@ -223,8 +155,8 @@ export const customDarkTheme: typeof customLightTheme = {
 		},
 		background: {
 			soft: 'rgb(255 255 255 / 10%)',
-			timeline: '#0a1929',
-			navigator: '#0a1929',
+			timeline: '#22333b',
+			navigator: '#22333b',
 		},
 	},
 }
