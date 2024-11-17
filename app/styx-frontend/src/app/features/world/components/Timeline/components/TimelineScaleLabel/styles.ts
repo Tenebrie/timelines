@@ -11,7 +11,6 @@ export const Container = styled.div`
 	align-items: center;
 	justify-content: center;
 	pointer-events: none;
-	color: #2c5582;
 	gap: 32px;
 
 	opacity: 0;
