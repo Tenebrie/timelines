@@ -68,8 +68,8 @@ const TimelineGrabberComponent = () => {
 			setMousePosition(0)
 			const safeValue = (() => {
 				const value = currentContainerHeight.current - mousePosition + mouseStartingPosition.current
-				if (value < 260) {
-					return 260
+				if (value < 232) {
+					return 232
 				}
 				if (value > 800) {
 					return 800

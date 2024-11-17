@@ -12,10 +12,7 @@ export const WorldContainer = styled.div`
 export const WorldContent = styled.div`
 	width: 100%;
 	flex-grow: 1;
-	overflow: hidden;
 	height: 0;
 
-	@media all and (max-width: 900px) {
-		overflow: auto;
-	}
+	overflow: auto;
 `
