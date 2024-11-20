@@ -6,11 +6,6 @@ export const useEventModules = () => {
 	const options: { text: string; secondary: string; module: WorldEventModule }[] = useMemo(
 		() => [
 			{
-				text: 'Resolved at',
-				secondary: 'Specify the end-of-life timestamp for this event',
-				module: 'RevokedAt',
-			},
-			{
 				text: 'Icon',
 				secondary: 'Choose a more interesting icon',
 				module: 'EventIcon',

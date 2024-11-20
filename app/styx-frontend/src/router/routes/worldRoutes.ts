@@ -127,7 +127,7 @@ export const useWorldRouter = () => {
 	)
 
 	const navigateToEventEditor = useCallback(
-		(eventId: string) => {
+		({ eventId, time }: { eventId: string; time?: number }) => {
 			if (isReadOnly) {
 				return
 			}
@@ -138,7 +138,7 @@ export const useWorldRouter = () => {
 					eventId,
 				},
 				query: {
-					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
+					[QueryParams.SELECTED_TIME]: time ?? QueryStrategy.Preserve,
 				},
 			})
 		},
@@ -146,7 +146,7 @@ export const useWorldRouter = () => {
 	)
 
 	const navigateToEventDeltaEditor = useCallback(
-		({ eventId, deltaId }: { eventId: string; deltaId: string }) => {
+		({ eventId, deltaId, time }: { eventId: string; deltaId: string; time?: number }) => {
 			if (isReadOnly) {
 				return
 			}
@@ -158,7 +158,7 @@ export const useWorldRouter = () => {
 					deltaId,
 				},
 				query: {
-					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
+					[QueryParams.SELECTED_TIME]: time ?? QueryStrategy.Preserve,
 				},
 			})
 		},

@@ -63,6 +63,10 @@ export const useTimelineNavigation = ({
 	const minimumScroll = useMemo(() => -maximumTime / scalar / 1000 / 60, [scalar])
 	const maximumScroll = useMemo(() => maximumTime / scalar / 1000 / 60, [scalar])
 
+	useEffect(() => {
+		setSelectedTime(defaultSelectedTime)
+	}, [defaultSelectedTime])
+
 	const onMouseDown = useCallback((event: MouseEvent | TouchEvent) => {
 		if (checkIfClickBlocked(event.target)) {
 			return
@@ -189,8 +193,9 @@ export const useTimelineNavigation = ({
 
 		setScaleSwitchesToDo(0)
 		setReadyToSwitchScale(false)
-		// const containerCenter = Math.floor((containerRef[0].current?.getBoundingClientRect().width ?? 0) / 2)
-		const scrollIntoPos = Math.round(realTimeToScaledTime(selectedTime ?? 0) + scroll)
+		const selectedTimeOnScreen = Math.round(realTimeToScaledTime(selectedTime ?? 0) + scroll)
+		const containerWidth = containerRef[0].current?.getBoundingClientRect().width ?? 9999999
+		const scrollIntoPos = Math.max(0, Math.min(containerWidth, selectedTimeOnScreen))
 
 		let currentScaleScroll = scaleScroll
 		let currentTimePerPixel: number = 0

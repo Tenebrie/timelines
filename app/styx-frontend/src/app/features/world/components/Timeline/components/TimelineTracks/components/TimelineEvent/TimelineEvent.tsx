@@ -54,9 +54,10 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 				navigateToEventDeltaEditor({
 					eventId: entity.eventId,
 					deltaId: entity.id,
+					time: entity.markerPosition,
 				})
 			} else {
-				navigateToEventEditor(entity.eventId)
+				navigateToEventEditor({ eventId: entity.eventId, time: entity.markerPosition })
 			}
 			scrollTimelineTo(entity.markerPosition)
 		},

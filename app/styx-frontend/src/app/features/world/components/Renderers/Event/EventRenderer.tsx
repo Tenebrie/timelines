@@ -42,7 +42,7 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 		switch (action) {
 			case 'edit':
 				return (
-					<IconButton key={'edit'} onClick={() => navigateToEventEditor(event.id)}>
+					<IconButton key={'edit'} onClick={() => navigateToEventEditor({ eventId: event.id })}>
 						<Edit />
 					</IconButton>
 				)

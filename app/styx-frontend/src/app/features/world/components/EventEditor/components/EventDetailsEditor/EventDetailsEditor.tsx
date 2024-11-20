@@ -165,15 +165,13 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 				<OutlinedContainer label="Modules" gap={2}>
 					<Stack gap={2} height="100%">
 						<EventModulesControls modules={modules} state={state} />
-						{modules.includes('RevokedAt') && (
-							<TimestampField
-								label="Resolved at"
-								timestamp={revokedAt}
-								initialTimestamp={timestamp}
-								onChange={setRevokedAt}
-								clearable
-							/>
-						)}
+						<TimestampField
+							label="Resolved at"
+							timestamp={revokedAt}
+							initialTimestamp={timestamp}
+							onChange={setRevokedAt}
+							clearable
+						/>
 						{modules.includes('EventIcon') && (
 							<Grid item margin={0} padding={0}>
 								<EventIconDropdown icon={icon} onChange={setIcon} />

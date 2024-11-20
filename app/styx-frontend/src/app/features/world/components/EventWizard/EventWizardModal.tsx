@@ -71,7 +71,7 @@ export const EventWizardModal = () => {
 		}
 
 		close()
-		navigateToEventEditor(response.id)
+		navigateToEventEditor({ eventId: response.id })
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {

@@ -11,9 +11,5 @@
 - Show ResolvedAt module automatically 
 - Stacking of tracks with event state without revoked at
 - Ordering of tracks on deletion
-- ZoomIn / ZoomOut should prioritize, in this order:
-	- Edited entity
-	- Screen boundaries
-	- Selected time
 - CountUp calendar broken kinda
 - CountUp and Earth calendars drifting

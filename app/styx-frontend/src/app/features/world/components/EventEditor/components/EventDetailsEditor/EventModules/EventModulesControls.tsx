@@ -1,5 +1,5 @@
 import { Add, Remove } from '@mui/icons-material'
-import { Button, Divider, Stack, Typography } from '@mui/material'
+import { Button, Divider, Stack } from '@mui/material'
 import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useCallback } from 'react'
 
@@ -25,8 +25,9 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 	const onAddModule = useCallback(
 		(module: WorldEventModule) => {
 			state.setModules([...modules, module])
+			addModulePopupState.close()
 		},
-		[modules, state],
+		[addModulePopupState, modules, state],
 	)
 
 	const onRemoveModule = useCallback(
@@ -49,8 +50,9 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 					state.setExternalLink('')
 					break
 			}
+			removeModulePopupState.close()
 		},
-		[modules, state],
+		[removeModulePopupState, modules, state],
 	)
 
 	return (
@@ -92,11 +94,6 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 				onRemove={onRemoveModule}
 			/>
 			<Divider />
-			{modules.length === 0 && (
-				<Typography variant="body1" textAlign="center">
-					Missing some fields? You can add them here!
-				</Typography>
-			)}
 		</>
 	)
 }

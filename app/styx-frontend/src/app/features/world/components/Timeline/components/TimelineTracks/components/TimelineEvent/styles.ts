@@ -70,41 +70,20 @@ export const Marker = styled.div<{
 	&.edited {
 		box-shadow: ${(props) => {
 			const color = props.$theme.mode === 'dark' ? colors.green[500] : colors.green[900]
-			return `0 0 10px 10px ${color}`
+			return `0 0 4px 4px ${color}`
 		}};
 	}
 	&.replace.edited {
 		box-shadow: ${(props) => {
 			const color = props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[700]
-			return `0 0 10px 10px ${color}`
+			return `0 0 4px 4px ${color}`
 		}};
 	}
 	&.revoked.edited {
 		box-shadow: ${(props) => {
 			const color = props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900]
-			return `0 0 10px 10px ${color}`
+			return `0 0 4px 4px ${color}`
 		}};
-	}
-
-	@media (min-resolution: 2dppx) {
-		&.edited {
-			box-shadow: ${(props) => {
-				const color = props.$theme.mode === 'dark' ? colors.green[500] : colors.green[900]
-				return `0 0 5px 5px ${color}`
-			}};
-		}
-		&.replace.edited {
-			box-shadow: ${(props) => {
-				const color = props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[700]
-				return `0 0 5px 5px ${color}`
-			}};
-		}
-		&.revoked.edited {
-			box-shadow: ${(props) => {
-				const color = props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900]
-				return `0 0 5px 5px ${color}`
-			}};
-		}
 	}
 
 	&.selected {

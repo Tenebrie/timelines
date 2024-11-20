@@ -133,7 +133,7 @@ export const OverviewPanel = () => {
 			}
 		},
 		onDoubleClick: ({ event }) => {
-			navigateToEventEditor(event.id)
+			navigateToEventEditor({ eventId: event.id })
 			scrollTimelineTo(event.timestamp)
 			dispatch(removeEventFromSelection(event.id))
 		},
