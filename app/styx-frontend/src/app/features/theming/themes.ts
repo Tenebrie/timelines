@@ -103,15 +103,15 @@ export const lightTheme = createTheme({
 		mode: 'light',
 		background: {
 			paper: '#eee',
-			default: '#d8d8d8',
+			default: 'hsl(119, 0%, 85%)',
 		},
 		primary: {
-			main: '#2d4e2c',
+			main: 'hsl(118, 28%, 37%)',
 			contrastText: '#fff',
 		},
 		secondary: {
-			main: '#c17149',
-			contrastText: '#0a0908',
+			main: 'hsl(20, 69%, 42%)',
+			contrastText: '#fff',
 		},
 	},
 })
@@ -122,14 +122,14 @@ export const darkTheme = createTheme({
 		mode: 'dark',
 		background: {
 			default: '#0a0908',
-			paper: '#22333b',
+			paper: 'hsl(199, 27%, 18%)',
 		},
 		primary: {
-			main: '#4b8349',
+			main: 'hsl(118, 38%, 60%)',
 			contrastText: '#0a0908',
 		},
 		secondary: {
-			main: '#cb8867',
+			main: 'hsl(20, 49%, 60%)',
 			contrastText: '#0a0908',
 		},
 	},
