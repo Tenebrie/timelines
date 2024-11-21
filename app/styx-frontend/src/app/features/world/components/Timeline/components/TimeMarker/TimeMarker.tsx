@@ -7,7 +7,6 @@ import { Container } from './styles'
 type Props = {
 	timestamp: number
 	scroll: number
-	mode: 'mouse' | 'outliner'
 	scaleLevel: ScaleLevel
 	transitioning: boolean
 }

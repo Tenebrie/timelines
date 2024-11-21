@@ -127,7 +127,24 @@ export const Timeline = () => {
 						scaleLevel={scaleLevel}
 						containerWidth={containerWidth}
 					/>
+					{selectedTimeOrNull !== null && (
+						<TimeMarker
+							timestamp={selectedTimeOrNull}
+							scroll={scroll}
+							scaleLevel={scaleLevel}
+							transitioning={isSwitchingScale}
+						/>
+					)}
 					<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
+					<Paper
+						elevation={4}
+						style={{
+							position: 'absolute',
+							bottom: '-32px',
+							height: '32px',
+							width: '100vw',
+						}}
+					></Paper>
 					<TimelineAnchor
 						visible={!isSwitchingScale}
 						scroll={scroll}
@@ -135,15 +152,6 @@ export const Timeline = () => {
 						scaleLevel={scaleLevel}
 						containerWidth={containerWidth}
 					/>
-					{selectedTimeOrNull !== null && (
-						<TimeMarker
-							timestamp={selectedTimeOrNull}
-							scroll={scroll}
-							mode="mouse"
-							scaleLevel={scaleLevel}
-							transitioning={isSwitchingScale}
-						/>
-					)}
 					<TimelineGrabber />
 				</TimelineContainer>
 			</TimelineWrapper>
