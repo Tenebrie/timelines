@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/reducer'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
+import { useTimelineBusDispatch } from '@/app/features/world/hooks/useTimelineBus'
 import { worldSlice } from '@/app/features/world/reducer'
 import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
 import { MarkerType, TimelineEntity } from '@/app/features/world/types'
@@ -48,10 +49,13 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 		[closeTimelineContextMenu, dispatch],
 	)
 
+	const scrollTimelineTo = useTimelineBusDispatch()
+
 	const onCreateEvent = useCallback(() => {
 		onClose()
+		scrollTimelineTo(selectedTime)
 		navigateToEventCreator(selectedTime)
-	}, [navigateToEventCreator, onClose, selectedTime])
+	}, [navigateToEventCreator, scrollTimelineTo, onClose, selectedTime])
 
 	const onReplaceSelectedEvent = useCallback(() => {
 		onClose()

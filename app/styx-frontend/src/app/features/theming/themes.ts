@@ -142,6 +142,7 @@ export const customLightTheme = {
 		},
 		background: {
 			soft: 'rgb(0 0 0 / 10%)',
+			modal: '#eee',
 			timeline: '#eee',
 			navigator: '#eee',
 			timelineMarker: '#fff',
@@ -156,6 +157,7 @@ export const customDarkTheme: typeof customLightTheme = {
 		},
 		background: {
 			soft: 'rgb(255 255 255 / 10%)',
+			modal: '#22333b',
 			timeline: '#22333b',
 			navigator: '#22333b',
 			timelineMarker: '#0a0908',

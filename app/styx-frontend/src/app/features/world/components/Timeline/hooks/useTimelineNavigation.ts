@@ -194,7 +194,7 @@ export const useTimelineNavigation = ({
 		setScaleSwitchesToDo(0)
 		setReadyToSwitchScale(false)
 		const selectedTimeOnScreen = Math.round(realTimeToScaledTime(selectedTime ?? 0) + scroll)
-		const containerWidth = containerRef[0].current?.getBoundingClientRect().width ?? 9999999
+		const containerWidth = containerRef[0].current?.getBoundingClientRect().width ?? 0
 		const scrollIntoPos = Math.max(0, Math.min(containerWidth, selectedTimeOnScreen))
 
 		let currentScaleScroll = scaleScroll

@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+import { CustomTheme } from '@/hooks/useCustomTheme'
+
 export const ModalWrapper = styled.div`
 	position: fixed;
 	top: 0;
@@ -22,11 +24,11 @@ export const ModalWrapper = styled.div`
 	}
 `
 
-export const ModalContainer = styled.div`
+export const ModalContainer = styled.div<{ $theme: CustomTheme }>`
 	padding: 32px 64px;
 	max-width: 768px;
 	width: 100%;
-	background: ${(props) => (props.theme.palette.mode === 'light' ? '#eaeff1' : '#0d2d50')};
+	background: ${(props) => props.$theme.custom.palette.background.modal};
 	border-radius: 4px;
 	display: flex;
 	gap: 16px;

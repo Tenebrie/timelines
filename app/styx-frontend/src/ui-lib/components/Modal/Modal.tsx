@@ -1,5 +1,6 @@
-import { useTheme } from '@mui/material'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+
+import { useCustomTheme } from '@/hooks/useCustomTheme'
 
 import { ModalContainer, ModalWrapper } from './styles'
 
@@ -52,11 +53,11 @@ const Modal = ({ visible, children, onClose }: Props) => {
 		}
 	}, [isModalRendered, isModalVisible])
 
-	const theme = useTheme()
+	const theme = useCustomTheme()
 
 	return (
 		<ModalWrapper className={isModalVisible ? 'visible' : ''}>
-			<ModalContainer ref={bodyRef} theme={theme}>
+			<ModalContainer ref={bodyRef} $theme={theme}>
 				{isModalRendered && children}
 			</ModalContainer>
 		</ModalWrapper>

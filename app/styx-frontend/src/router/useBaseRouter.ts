@@ -41,7 +41,6 @@ export const useBaseRouter = <
 
 			const result = {} as NonNullable<QueryT[T]>
 			Object.keys(defaultValue).forEach((key) => {
-				// @ts-ignore
 				result[key] = currentQuery.get(key) ?? defaultValue[key]
 			})
 			return result

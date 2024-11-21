@@ -1,8 +1,8 @@
 import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getWorldState } from '../../app/features/world/selectors'
-import { useIsReadOnly } from '../../hooks/useIsReadOnly'
+import { getWorldRouterState } from '@/app/features/world/selectors'
+
 import { QueryStrategy, useBaseRouter } from '../useBaseRouter'
 import { QueryParams } from './QueryParams'
 
@@ -42,9 +42,7 @@ export const worldQueryParams = {
 
 export const useWorldRouter = () => {
 	const baseRouter = useBaseRouter(worldRoutes, worldQueryParams)
-	const { id: worldId } = useSelector(getWorldState)
-
-	const { isReadOnly } = useIsReadOnly()
+	const { id: worldId, isReadOnly } = useSelector(getWorldRouterState)
 
 	const navigateToCurrentWorldRoot = useCallback(() => {
 		baseRouter.navigateTo({

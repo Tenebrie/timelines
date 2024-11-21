@@ -32,7 +32,7 @@ export const Timeline = () => {
 	const dispatch = useDispatch()
 	const { setScaleLevel } = timelineSlice.actions
 
-	const { navigateToOutliner, navigateToEventCreator, selectedTimeOrNull } = useWorldRouter()
+	const { navigateToOutliner, selectedTimeOrNull } = useWorldRouter()
 
 	const scrollTimelineTo = useTimelineBusDispatch()
 
@@ -48,11 +48,10 @@ export const Timeline = () => {
 			if (selectedTimeOrNull === null) {
 				navigateToOutliner(time)
 			} else {
-				navigateToEventCreator()
-				scrollTimelineTo(selectedTimeOrNull)
+				scrollTimelineTo(time)
 			}
 		},
-		[navigateToEventCreator, navigateToOutliner, scrollTimelineTo, selectedTimeOrNull],
+		[navigateToOutliner, scrollTimelineTo, selectedTimeOrNull],
 	)
 
 	const { containerRef, containerWidth } = useTimelineDimensions()
