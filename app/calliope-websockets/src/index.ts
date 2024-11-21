@@ -40,7 +40,7 @@ app.ws.use(
 		const { id: userId } = TokenService.decodeJwtToken(authCookie)
 
 		ctx.websocket.on('open', () => {
-			console.log('Client connected!')
+			console.info('Client connected!')
 		})
 		ctx.websocket.on('message', (rawMessage) => {
 			const message = String(rawMessage)

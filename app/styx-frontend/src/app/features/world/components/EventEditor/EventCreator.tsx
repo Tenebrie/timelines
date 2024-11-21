@@ -28,7 +28,6 @@ export const EventCreator = () => {
 			}),
 		[id, selectedTimeOrZero],
 	)
-	console.log(selectedTimeOrZero)
 
 	useEffect(() => {
 		dispatch(setEventCreatorGhost(defaultEventValues))

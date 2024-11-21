@@ -56,7 +56,7 @@ export type CreateWorldEventApiArg = {
 	worldId: string
 	body: {
 		type: 'SCENE' | 'OTHER'
-		modules: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+		modules: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 		name: string
 		icon: string
 		description: string
@@ -111,7 +111,7 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	revokedAt: null | string
 	customName: boolean
 	externalLink: string
-	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 	worldEventTrackId: null | string
 }
 export type UpdateWorldEventApiArg = {
@@ -120,7 +120,7 @@ export type UpdateWorldEventApiArg = {
 	/** Any string value */
 	eventId: string
 	body: {
-		modules?: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+		modules?: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 		name?: string
 		icon?: string
 		timestamp?: string
@@ -146,7 +146,7 @@ export type DeleteWorldEventApiResponse = /** status 200  */ {
 	revokedAt: null | string
 	customName: boolean
 	externalLink: string
-	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 	worldEventTrackId: null | string
 }
 export type DeleteWorldEventApiArg = {
@@ -168,7 +168,7 @@ export type RevokeWorldEventApiResponse = /** status 200  */ {
 	revokedAt: null | string
 	customName: boolean
 	externalLink: string
-	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 	worldEventTrackId: null | string
 }
 export type RevokeWorldEventApiArg = {
@@ -193,7 +193,7 @@ export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	revokedAt: null | string
 	customName: boolean
 	externalLink: string
-	extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 	worldEventTrackId: null | string
 }
 export type UnrevokeWorldEventApiArg = {

@@ -7,7 +7,7 @@ const rawClient = createClient({
 		host: 'redis',
 	},
 })
-rawClient.on('error', (err) => console.log('Redis Client Error', err))
+rawClient.on('error', (err) => console.info('Redis Client Error', err))
 
 export const getRedisClient = () => rawClient
 

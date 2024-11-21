@@ -1,4 +1,4 @@
-import { Actor, WorldEvent, WorldEventField } from '@prisma/client'
+import { Actor, WorldEvent } from '@prisma/client'
 import { BadRequestError } from 'moonflower'
 
 import { getPrismaClient } from './dbClients/DatabaseClient'
@@ -123,9 +123,6 @@ export const WorldEventService = {
 				extraFields: true,
 			},
 		})
-		const updatedModules: WorldEventField[] = event.extraFields.includes('RevokedAt')
-			? event.extraFields
-			: [...event.extraFields, 'RevokedAt']
 		const [statement, world] = await getPrismaClient().$transaction([
 			getPrismaClient().worldEvent.update({
 				where: {
@@ -133,7 +130,7 @@ export const WorldEventService = {
 				},
 				data: {
 					revokedAt,
-					extraFields: updatedModules,
+					extraFields: event.extraFields,
 				},
 			}),
 			makeTouchWorldQuery(worldId),
