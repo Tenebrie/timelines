@@ -8,7 +8,5 @@
 # Part 2
 - Double click event keeps selected
 - ResolvedAt is highlighted (bad, shouldn't be)
-- Show ResolvedAt module automatically 
-- Stacking of tracks with event state without revoked at
 - CountUp calendar broken kinda
 - CountUp and Earth calendars drifting

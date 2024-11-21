@@ -198,11 +198,19 @@ const calculateMarkerHeights = (tracks: TimelineTrack[]) => {
 
 				const trackId = event.worldEventTrackId ?? 'default'
 				const previousEvents =
-					data[trackId]?.filter(
-						(e) =>
-							(e.timestamp <= event.markerPosition && e.revokedAt! >= event.markerPosition) ||
-							e.timestamp === event.markerPosition,
-					) ?? []
+					data[trackId]?.filter((e) => {
+						if (
+							e.nextEntity &&
+							e.timestamp <= event.markerPosition &&
+							e.nextEntity.markerPosition >= event.markerPosition
+						) {
+							return true
+						}
+						if (e.timestamp === event.markerPosition) {
+							return true
+						}
+						return false
+					}) ?? []
 				const maximumHeight =
 					previousEvents.length > 0
 						? previousEvents.map((e) => e.markerHeight).sort((a, b) => b - a)[0] + 1
