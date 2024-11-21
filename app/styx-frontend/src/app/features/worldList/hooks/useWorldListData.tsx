@@ -1,4 +1,4 @@
-import { useGetWorldsQuery } from '@/api/worldApi'
+import { useGetWorldsQuery } from '@api/worldListApi'
 
 export const useWorldListData = () => {
 	const { data, isFetching } = useGetWorldsQuery()

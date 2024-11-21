@@ -1,3 +1,4 @@
+import { GetWorldCollaboratorsApiResponse, useUnshareWorldMutation } from '@api/worldCollaboratorsApi'
 import { Cancel, Delete } from '@mui/icons-material'
 import {
 	Button,
@@ -11,7 +12,6 @@ import {
 import { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { GetWorldCollaboratorsApiResponse, useUnshareWorldMutation } from '@/api/worldApi'
 import { worldListSlice } from '@/app/features/worldList/reducer'
 
 type Props = {

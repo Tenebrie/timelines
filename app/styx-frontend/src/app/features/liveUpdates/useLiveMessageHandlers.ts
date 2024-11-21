@@ -1,9 +1,9 @@
-import { announcementsApi } from '@api/announcementsApi'
-import { worldApi } from '@api/worldApi'
+import { announcementListApi } from '@api/announcementListApi'
+import { GetWorldInfoApiResponse, worldDetailsApi } from '@api/worldDetailsApi'
+import { worldListApi } from '@api/worldListApi'
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { GetWorldInfoApiResponse } from '@/api/worldApi'
 import {
 	CalliopeToClientMessageHandler,
 	CalliopeToClientMessageType,
@@ -26,15 +26,18 @@ export const useLiveMessageHandlers = () => {
 
 	const messageHandlers: CalliopeToClientMessageHandler = {
 		[CalliopeToClientMessageType.ANNOUNCEMENT]: () => {
-			dispatch(announcementsApi.util.invalidateTags(['announcementList']))
+			// TODO: Invalidate on all APIs
+			dispatch(announcementListApi.util.invalidateTags(['announcementList']))
 		},
 		[CalliopeToClientMessageType.WORLD_UPDATED]: (data) => {
 			if (new Date(updatedAtRef.current) < new Date(data.timestamp)) {
-				dispatch(worldApi.util.invalidateTags(['worldDetails']))
+				// TODO: Invalidate on all APIs
+				dispatch(worldDetailsApi.util.invalidateTags(['worldDetails']))
 			}
 		},
 		[CalliopeToClientMessageType.WORLD_UNSHARED]: () => {
-			dispatch(worldApi.util.invalidateTags(['worldList']))
+			// TODO: Invalidate on all APIs
+			dispatch(worldListApi.util.invalidateTags(['worldList']))
 		},
 		[CalliopeToClientMessageType.WORLD_EVENT_UPDATED]: (data) => {
 			dispatch(updateEvent(ingestEvent(JSON.parse(data.event) as GetWorldInfoApiResponse['events'][number])))

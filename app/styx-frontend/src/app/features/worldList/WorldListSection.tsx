@@ -2,7 +2,7 @@ import { Delete, Edit } from '@mui/icons-material'
 import { Button, Stack, Tooltip } from '@mui/material'
 import { useDispatch } from 'react-redux'
 
-import { GetWorldsApiResponse } from '@/api/worldApi'
+import { GetWorldsApiResponse } from '@/api/worldListApi'
 import { homeRoutes } from '@/router/routes/homeRoutes'
 import { useRouter } from '@/router/routes/routes'
 import { worldRoutes } from '@/router/routes/worldRoutes'

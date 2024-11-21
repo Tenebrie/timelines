@@ -3,7 +3,7 @@ import { LoadingButton } from '@mui/lab'
 import { Button, Stack, TextField, Tooltip, Typography } from '@mui/material'
 import { useState } from 'react'
 
-import { useDeleteWorldEventTrackMutation, useUpdateWorldEventTrackMutation } from '@/api/worldApi'
+import { useDeleteWorldEventTrackMutation, useUpdateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'

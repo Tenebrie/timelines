@@ -21,11 +21,13 @@ import { worldDetailsTag } from './WorldRouter'
 
 const router = new Router()
 
+const actorListTag = 'actorList'
+
 router.post('/api/world/:worldId/actors', async (ctx) => {
 	useApiEndpoint({
 		name: 'createActor',
 		description: 'Creates a new actor.',
-		tags: [worldDetailsTag],
+		tags: [actorListTag, worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -54,7 +56,7 @@ router.patch('/api/world/:worldId/actor/:actorId', async (ctx) => {
 	useApiEndpoint({
 		name: 'updateActor',
 		description: 'Updates the target actor.',
-		tags: [worldDetailsTag],
+		tags: [actorListTag, worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -84,7 +86,7 @@ router.delete('/api/world/:worldId/actor/:actorId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteActor',
 		description: 'Deletes the target actor.',
-		tags: [worldDetailsTag],
+		tags: [actorListTag, worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)

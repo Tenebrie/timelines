@@ -6,6 +6,12 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
+			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
+				query: () => ({ url: `/api/constants/admin-levels` }),
+			}),
+			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
+				query: () => ({ url: `/api/constants/world-access-modes` }),
+			}),
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
 			}),
@@ -13,6 +19,17 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as otherApi }
+export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premium' | 'Admin')[]
+export type AdminGetUserLevelsApiArg = void
+export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
+export type ListWorldAccessModesApiArg = void
 export type GetHealthApiResponse = /** status 200  */ string
 export type GetHealthApiArg = void
-export const { useGetHealthQuery, useLazyGetHealthQuery } = injectedRtkApi
+export const {
+	useAdminGetUserLevelsQuery,
+	useLazyAdminGetUserLevelsQuery,
+	useListWorldAccessModesQuery,
+	useLazyListWorldAccessModesQuery,
+	useGetHealthQuery,
+	useLazyGetHealthQuery,
+} = injectedRtkApi

@@ -3,7 +3,7 @@ import { LoadingButton } from '@mui/lab'
 import { Alert, Button, Collapse, Stack, Tooltip } from '@mui/material'
 import { TransitionGroup } from 'react-transition-group'
 
-import { useDeleteActorMutation } from '@/api/worldApi'
+import { useDeleteActorMutation } from '@/api/actorListApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useErrorState } from '@/app/utils/useErrorState'

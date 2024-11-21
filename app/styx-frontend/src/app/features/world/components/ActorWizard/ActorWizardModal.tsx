@@ -3,7 +3,7 @@ import { LoadingButton } from '@mui/lab'
 import { Button, FormControl, InputLabel, Select, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
 
-import { useCreateActorMutation } from '@/api/worldApi'
+import { useCreateActorMutation } from '@/api/actorListApi'
 import { FormErrorBanner } from '@/app/components/FormErrorBanner'
 import { useModal } from '@/app/features/modals/reducer'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'

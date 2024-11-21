@@ -2,7 +2,7 @@ import { Notifications } from '@mui/icons-material'
 import { Badge, IconButton, Popover } from '@mui/material'
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 
-import { useGetAnnouncementsQuery } from '@/api/announcementsApi'
+import { useGetAnnouncementsQuery } from '@/api/announcementListApi'
 
 import { AnnouncementList } from './AnnouncementList'
 

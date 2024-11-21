@@ -1,4 +1,5 @@
-import { GetWorldInfoApiResponse } from '../../api/worldApi'
+import { GetWorldInfoApiResponse } from '@api/worldDetailsApi'
+
 import { WorldEvent } from '../features/world/types'
 import { isNotNull } from './isNotNull'
 

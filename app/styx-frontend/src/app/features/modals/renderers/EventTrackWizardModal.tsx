@@ -3,7 +3,7 @@ import { LoadingButton } from '@mui/lab'
 import { Button, Checkbox, FormControlLabel, FormGroup, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
 
-import { useCreateWorldEventTrackMutation } from '@/api/worldApi'
+import { useCreateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'

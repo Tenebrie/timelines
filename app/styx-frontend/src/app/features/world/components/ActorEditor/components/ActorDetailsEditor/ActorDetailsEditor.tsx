@@ -3,7 +3,7 @@ import { LoadingButton } from '@mui/lab'
 import { Button, FormControl, InputLabel, Select, Stack, TextField, Tooltip } from '@mui/material'
 import { useCallback, useEffect, useRef } from 'react'
 
-import { useUpdateActorMutation } from '@/api/worldApi'
+import { useUpdateActorMutation } from '@/api/actorListApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { useActorColors } from '@/app/features/world/hooks/useActorColors'
 import { Actor, ActorDetails } from '@/app/features/world/types'

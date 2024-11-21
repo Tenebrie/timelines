@@ -2,7 +2,7 @@ import { Check, Close } from '@mui/icons-material'
 import { Alert, AlertTitle, IconButton, List, Stack, Typography } from '@mui/material'
 import { useCallback, useRef } from 'react'
 
-import { useDismissAnnouncementMutation, useGetAnnouncementsQuery } from '@/api/announcementsApi'
+import { useDismissAnnouncementMutation, useGetAnnouncementsQuery } from '@/api/announcementListApi'
 
 export const AnnouncementList = () => {
 	const { data } = useGetAnnouncementsQuery()

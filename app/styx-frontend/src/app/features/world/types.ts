@@ -1,9 +1,7 @@
-import {
-	GetWorldBriefApiResponse,
-	GetWorldEventTracksApiResponse,
-	GetWorldInfoApiResponse,
-	GetWorldsApiResponse,
-} from '@/api/worldApi'
+import { GetWorldEventTracksApiResponse } from '@api/worldEventTracksApi'
+import { GetWorldsApiResponse } from '@api/worldListApi'
+
+import { GetWorldBriefApiResponse, GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
 
 export type ActorDetails = GetWorldInfoApiResponse['actors'][number]
 export type Actor = Omit<ActorDetails, 'statements' | 'relationships' | 'receivedRelationships'>

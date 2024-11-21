@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useGetWorldInfoQuery } from '@/api/worldApi'
+import { useGetWorldInfoQuery } from '@/api/worldDetailsApi'
 
 import { worldSlice } from '../reducer'
 import { getWorldState } from '../selectors'

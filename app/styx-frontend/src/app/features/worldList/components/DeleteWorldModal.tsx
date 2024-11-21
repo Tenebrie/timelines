@@ -1,10 +1,10 @@
+import { useDeleteWorldMutation } from '@api/worldListApi'
 import { Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, Stack, Tooltip } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useDeleteWorldMutation } from '@/api/worldApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import Modal, { ModalFooter, useModalCleanup } from '@/ui-lib/components/Modal'

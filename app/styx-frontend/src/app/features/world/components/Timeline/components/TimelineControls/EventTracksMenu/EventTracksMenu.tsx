@@ -15,7 +15,7 @@ import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useUpdateWorldEventTrackMutation } from '@/api/worldApi'
+import { useUpdateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getWorldState } from '@/app/features/world/selectors'

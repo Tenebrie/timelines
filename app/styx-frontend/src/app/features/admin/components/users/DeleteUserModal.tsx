@@ -4,7 +4,7 @@ import { Button, Stack, Tooltip } from '@mui/material'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useAdminDeleteUserMutation } from '@/api/adminApi'
+import { useAdminDeleteUserMutation } from '@/api/adminUsersApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'

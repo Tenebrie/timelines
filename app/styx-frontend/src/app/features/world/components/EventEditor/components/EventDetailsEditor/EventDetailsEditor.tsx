@@ -23,7 +23,6 @@ type Props = {
 }
 
 export const EventDetailsEditor = ({ event, mode }: Props) => {
-	console.log(event)
 	const { state } = useEventFields({ event })
 	const {
 		modules,

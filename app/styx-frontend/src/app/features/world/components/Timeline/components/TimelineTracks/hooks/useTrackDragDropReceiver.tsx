@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 
-import { useSwapWorldEventTracksMutation } from '@/api/worldApi'
+import { useSwapWorldEventTracksMutation } from '@/api/worldEventTracksApi'
 import { useDragDropReceiver } from '@/app/features/dragDrop/useDragDropReceiver'
 import { getWorldState } from '@/app/features/world/selectors'
 

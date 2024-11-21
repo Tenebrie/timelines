@@ -5,7 +5,7 @@ import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { TransitionGroup } from 'react-transition-group'
 
-import { useRevokeWorldEventMutation } from '@/api/worldApi'
+import { useRevokeWorldEventMutation } from '@/api/worldEventApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'

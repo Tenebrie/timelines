@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 
-import { UpdateWorldEventApiArg, useUpdateWorldEventMutation } from '@/api/worldApi'
+import { UpdateWorldEventApiArg, useUpdateWorldEventMutation } from '@/api/worldEventApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { useMapActorsToOptions } from '@/app/features/world/components/ActorSelector/useMapActorsToOptions'
 import { WorldEvent } from '@/app/features/world/types'

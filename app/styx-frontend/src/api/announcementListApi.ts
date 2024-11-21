@@ -17,7 +17,7 @@ const injectedRtkApi = api
 		}),
 		overrideExisting: false,
 	})
-export { injectedRtkApi as announcementsApi }
+export { injectedRtkApi as announcementListApi }
 export type GetAnnouncementsApiResponse = /** status 200  */ {
 	description: string
 	id: string

@@ -1,8 +1,8 @@
-import { useListWorldAccessModesQuery } from '@api/constantsApi'
+import { useListWorldAccessModesQuery } from '@api/otherApi'
+import { useSetWorldAccessModeMutation } from '@api/worldDetailsApi'
 import { Button, FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material'
 import { ReactNode, useCallback } from 'react'
 
-import { useSetWorldAccessModeMutation } from '@/api/worldApi'
 import { WorldAccessMode, WorldBrief } from '@/app/features/world/types'
 
 type Props = {

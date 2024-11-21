@@ -12,21 +12,15 @@ import {
 	WorldItem,
 } from '../app/features/world/types'
 import { WorldEvent } from '../app/features/world/types'
-import { GetAnnouncementsApiResponse } from './announcementsApi'
+import { UpdateActorApiResponse } from './actorListApi'
+import { GetAnnouncementsApiResponse } from './announcementListApi'
 import { CheckAuthenticationApiResponse, CreateAccountApiResponse, PostLoginApiResponse } from './authApi'
-import { ListWorldAccessModesApiResponse } from './constantsApi'
+import { ListWorldAccessModesApiResponse } from './otherApi'
 import { CollaboratingUser } from './types'
-import {
-	CreateWorldApiResponse,
-	DeleteWorldApiResponse,
-	DeleteWorldEventApiResponse,
-	GetWorldBriefApiResponse,
-	GetWorldCollaboratorsApiResponse,
-	GetWorldInfoApiResponse,
-	GetWorldsApiResponse,
-	UpdateActorApiResponse,
-	UpdateWorldEventApiResponse,
-} from './worldApi'
+import { GetWorldCollaboratorsApiResponse } from './worldCollaboratorsApi'
+import { GetWorldBriefApiResponse, GetWorldInfoApiResponse } from './worldDetailsApi'
+import { DeleteWorldEventApiResponse, UpdateWorldEventApiResponse } from './worldEventApi'
+import { CreateWorldApiResponse, DeleteWorldApiResponse, GetWorldsApiResponse } from './worldListApi'
 
 type HttpMethod = keyof typeof rest
 

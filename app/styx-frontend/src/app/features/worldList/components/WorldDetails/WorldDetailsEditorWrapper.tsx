@@ -1,4 +1,6 @@
-import { useGetWorldBriefQuery, useGetWorldCollaboratorsQuery } from '@/api/worldApi'
+import { useGetWorldCollaboratorsQuery } from '@api/worldCollaboratorsApi'
+import { useGetWorldBriefQuery } from '@api/worldDetailsApi'
+
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 
 import { WorldDetailsSkeleton } from './components/WorldDetailsSkeleton'

@@ -1,3 +1,4 @@
+import { ShareWorldApiArg } from '@api/worldCollaboratorsApi'
 import { screen, within } from '@testing-library/react'
 
 import {
@@ -9,7 +10,6 @@ import {
 	mockRemoveCollaborator,
 	mockWorldBriefModel,
 } from '@/api/rheaApi.mock'
-import { ShareWorldApiArg } from '@/api/worldApi'
 import { renderWithProviders } from '@/jest/renderWithProviders'
 import { setupTestServer } from '@/jest/setupTestServer'
 import { mockRouter } from '@/router/router.mock'

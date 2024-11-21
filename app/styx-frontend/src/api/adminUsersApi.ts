@@ -28,7 +28,7 @@ const injectedRtkApi = api
 		}),
 		overrideExisting: false,
 	})
-export { injectedRtkApi as adminApi }
+export { injectedRtkApi as adminUsersApi }
 export type AdminGetUsersApiResponse = /** status 200  */ {
 	users: {
 		id: string

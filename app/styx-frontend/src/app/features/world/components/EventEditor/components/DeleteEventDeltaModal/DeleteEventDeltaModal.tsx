@@ -3,7 +3,7 @@ import { LoadingButton } from '@mui/lab'
 import { Button, Stack, Tooltip } from '@mui/material'
 import { useState } from 'react'
 
-import { useDeleteWorldEventDeltaMutation } from '@/api/worldApi'
+import { useDeleteWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'

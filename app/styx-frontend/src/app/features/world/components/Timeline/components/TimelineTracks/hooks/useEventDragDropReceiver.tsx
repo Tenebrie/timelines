@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useUpdateWorldEventDeltaMutation, useUpdateWorldEventMutation } from '@/api/worldApi'
+import { useUpdateWorldEventMutation } from '@/api/worldEventApi'
+import { useUpdateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { useDragDropReceiver } from '@/app/features/dragDrop/useDragDropReceiver'
 import { getTimelinePreferences } from '@/app/features/preferences/selectors'
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'

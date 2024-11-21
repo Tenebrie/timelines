@@ -33,6 +33,8 @@ import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
 
 const router = new Router()
 
+export const worldEventTag = 'worldEvent'
+export const worldEventDeltaTag = 'worldEventDelta'
 export const worldListTag = 'worldList'
 export const worldDetailsTag = 'worldDetails'
 
@@ -43,7 +45,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 	useApiEndpoint({
 		name: 'createWorldEvent',
 		description: 'Creates a new world event.',
-		tags: [worldDetailsTag],
+		tags: [worldEventTag, worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -92,7 +94,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	useApiEndpoint({
 		name: 'updateWorldEvent',
 		description: 'Updates the target world event',
-		tags: [],
+		tags: [worldEventTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -153,7 +155,7 @@ router.delete('/api/world/:worldId/event/:eventId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteWorldEvent',
 		description: 'Deletes the target world event.',
-		tags: [worldDetailsTag],
+		tags: [worldEventTag, worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -177,7 +179,7 @@ router.post('/api/world/:worldId/event/:eventId/revoke', async (ctx) => {
 	useApiEndpoint({
 		name: 'revokeWorldEvent',
 		description: 'Marks the specified event as revoked at specified timestamp.',
-		tags: [worldDetailsTag],
+		tags: [worldEventTag, worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -210,7 +212,7 @@ router.post('/api/world/:worldId/event/:eventId/unrevoke', async (ctx) => {
 	useApiEndpoint({
 		name: 'unrevokeWorldEvent',
 		description: 'Marks the event as never revoked.',
-		tags: [worldDetailsTag],
+		tags: [worldEventTag, worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -240,7 +242,7 @@ router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
 	useApiEndpoint({
 		name: 'createWorldEventDelta',
 		description: 'Creates a new delta state for given event.',
-		tags: [worldDetailsTag],
+		tags: [worldEventDeltaTag, worldEventTag, worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -274,7 +276,7 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 	useApiEndpoint({
 		name: 'updateWorldEventDelta',
 		description: 'Updates the target world event delta state',
-		tags: [worldDetailsTag],
+		tags: [worldEventDeltaTag, worldEventTag, worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -322,7 +324,7 @@ router.delete('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =
 	useApiEndpoint({
 		name: 'deleteWorldEventDelta',
 		description: 'Deletes the target world event delta state.',
-		tags: [worldDetailsTag],
+		tags: [worldEventDeltaTag, worldEventTag, worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)

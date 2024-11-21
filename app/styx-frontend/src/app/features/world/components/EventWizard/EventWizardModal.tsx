@@ -3,7 +3,7 @@ import { LoadingButton } from '@mui/lab'
 import { Button, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
 
-import { useCreateWorldEventMutation } from '@/api/worldApi'
+import { useCreateWorldEventMutation } from '@/api/worldEventApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'

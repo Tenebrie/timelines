@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 
-import { UpdateWorldEventDeltaApiArg, useUpdateWorldEventDeltaMutation } from '@/api/worldApi'
+import { UpdateWorldEventDeltaApiArg, useUpdateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { WorldEventDelta } from '@/app/features/world/types'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'

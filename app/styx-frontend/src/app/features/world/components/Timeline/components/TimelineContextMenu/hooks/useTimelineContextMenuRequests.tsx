@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { useUpdateWorldEventMutation } from '@/api/worldApi'
+import { useUpdateWorldEventMutation } from '@/api/worldEventApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 export const useTimelineContextMenuRequests = () => {

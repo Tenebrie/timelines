@@ -1,3 +1,4 @@
+import { useShareWorldMutation } from '@api/worldCollaboratorsApi'
 import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import {
@@ -14,7 +15,6 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { CollaboratorAccess } from '@/api/types'
-import { useShareWorldMutation } from '@/api/worldApi'
 import { worldListSlice } from '@/app/features/worldList/reducer'
 import { getShareWorldModalState } from '@/app/features/worldList/selectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'

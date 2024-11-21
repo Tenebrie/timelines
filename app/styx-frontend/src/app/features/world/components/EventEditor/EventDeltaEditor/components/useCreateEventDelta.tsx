@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useCreateWorldEventDeltaMutation } from '@/api/worldApi'
+import { useCreateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { getWorldState } from '@/app/features/world/selectors'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
