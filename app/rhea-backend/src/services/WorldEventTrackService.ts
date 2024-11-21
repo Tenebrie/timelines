@@ -145,8 +145,8 @@ export const WorldEventTrackService = {
 	},
 
 	deleteEventTrack: async ({ worldId, trackId }: { worldId: string; trackId: string }) => {
-		const [, eventTrack, world] = await getPrismaClient().$transaction([
-			getPrismaClient().worldEvent.updateMany({
+		return await getPrismaClient().$transaction(async (prisma) => {
+			await prisma.worldEvent.updateMany({
 				where: {
 					worldId,
 					worldEventTrackId: trackId,
@@ -154,17 +154,63 @@ export const WorldEventTrackService = {
 				data: {
 					worldEventTrackId: null,
 				},
-			}),
-			getPrismaClient().worldEventTrack.delete({
+			})
+			await prisma.worldEventTrack.delete({
 				where: {
 					id: trackId,
 				},
-			}),
-			makeTouchWorldQuery(worldId),
-		])
-		return {
-			eventTrack,
-			world,
-		}
+			})
+			const tracks = await prisma.worldEventTrack.findMany({
+				where: {
+					worldId,
+				},
+				orderBy: {
+					position: 'asc',
+				},
+				select: {
+					id: true,
+				},
+			})
+
+			await Promise.all(
+				tracks.map((track, index) =>
+					prisma.worldEventTrack.update({
+						where: {
+							id: track.id,
+						},
+						data: {
+							position: index,
+						},
+					})
+				)
+			)
+
+			const world = await prisma.world.update({
+				where: {
+					id: worldId,
+				},
+				data: {
+					id: worldId,
+				},
+				select: {
+					id: true,
+					updatedAt: true,
+				},
+			})
+			const eventTrack = await prisma.worldEventTrack.findMany({
+				where: {
+					id: trackId,
+				},
+				select: {
+					id: true,
+					position: true,
+				},
+			})
+
+			return {
+				world,
+				eventTrack,
+			}
+		})
 	},
 }

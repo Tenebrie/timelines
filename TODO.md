@@ -10,6 +10,5 @@
 - ResolvedAt is highlighted (bad, shouldn't be)
 - Show ResolvedAt module automatically 
 - Stacking of tracks with event state without revoked at
-- Ordering of tracks on deletion
 - CountUp calendar broken kinda
 - CountUp and Earth calendars drifting
