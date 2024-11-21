@@ -48,8 +48,6 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 				return
 			}
 
-			dispatch(removeTimelineMarkerFromSelection(entity.key))
-
 			if (entity.markerType === 'deltaState') {
 				navigateToEventDeltaEditor({
 					eventId: entity.eventId,

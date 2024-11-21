@@ -6,7 +6,6 @@
 - Implement scrubber
 
 # Part 2
-- Double click event keeps selected
 - ResolvedAt is highlighted (bad, shouldn't be)
 - CountUp calendar broken kinda
 - CountUp and Earth calendars drifting
