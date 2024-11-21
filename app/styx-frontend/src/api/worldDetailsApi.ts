@@ -113,7 +113,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		revokedAt: null | string
 		customName: boolean
 		externalLink: string
-		extraFields: ('RevokedAt' | 'EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+		extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 		worldEventTrackId: null | string
 	}[]
 	name: string

@@ -7,12 +7,10 @@ export const Container = styled.div.attrs<{ $offset: number }>((props) => ({
 		transform: `translateX(${props.$offset}px)`,
 	},
 }))<{ $offset: number; $theme: CustomTheme }>`
-	top: 0;
-	position: absolute;
 	background: ${(props) => props.$theme.material.palette.primary.main};
-	width: 2px;
+	width: 3px;
 	margin-left: -1px;
-	height: 100%;
+	height: calc(100% - 32px);
 	opacity: 1;
 	transition: opacity 0.3s;
 	pointer-events: none;

@@ -9,6 +9,5 @@ export const makeUnrevokeWorldEventQuery = ({ event }: { event: WorldEvent }) =>
 		},
 		data: {
 			revokedAt: null,
-			extraFields: event.extraFields.filter((field) => field !== 'RevokedAt'),
 		},
 	})

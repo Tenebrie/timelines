@@ -107,8 +107,8 @@ describe('<EventEditor />', () => {
 		await user.type(screen.getByLabelText('Name'), 'New title')
 		await user.clear(screen.getByLabelText('Content'))
 		await user.type(screen.getByLabelText('Content'), 'New description')
-		await user.click(screen.getByTestId('CalendarMonthIcon'))
-		await user.type(screen.getByLabelText('Minute'), '1500')
+		await user.click(screen.getAllByTestId('CalendarMonthIcon')[0])
+		await user.type(screen.getAllByLabelText('Minute')[0], '1500')
 		await user.click(screen.getByText('Save'))
 
 		await waitFor(() => expect(hasBeenCalled()).toBeTruthy())

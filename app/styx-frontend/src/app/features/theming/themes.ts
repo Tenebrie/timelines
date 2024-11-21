@@ -102,7 +102,7 @@ export const lightTheme = createTheme({
 	palette: {
 		mode: 'light',
 		background: {
-			paper: '#eee',
+			paper: '#fff',
 			default: 'hsl(119, 0%, 85%)',
 		},
 		primary: {
@@ -143,8 +143,9 @@ export const customLightTheme = {
 		background: {
 			soft: 'rgb(0 0 0 / 10%)',
 			modal: '#eee',
-			timeline: '#eee',
-			navigator: '#eee',
+			timeline: '#fff',
+			timelineHeader: '#f3f3f3',
+			navigator: '#fff',
 			timelineMarker: '#fff',
 		},
 	},
@@ -159,6 +160,7 @@ export const customDarkTheme: typeof customLightTheme = {
 			soft: 'rgb(255 255 255 / 10%)',
 			modal: '#22333b',
 			timeline: '#22333b',
+			timelineHeader: '#22333b',
 			navigator: '#22333b',
 			timelineMarker: '#0a0908',
 		},

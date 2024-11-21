@@ -34,9 +34,6 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 		(module: WorldEventModule) => {
 			state.setModules(modules.filter((m) => m !== module))
 			switch (module) {
-				case 'RevokedAt':
-					state.setRevokedAt(undefined)
-					break
 				case 'EventIcon':
 					state.setIcon('default')
 					break

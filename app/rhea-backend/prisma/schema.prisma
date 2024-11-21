@@ -70,7 +70,6 @@ enum WorldEventType {
 }
 
 enum WorldEventField {
-  RevokedAt
   EventIcon
   TargetActors
   MentionedActors
