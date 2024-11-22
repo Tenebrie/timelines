@@ -1,10 +1,11 @@
 import { Container, Tab, Tabs } from '@mui/material'
-import { useMemo } from 'react'
+import { Profiler, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Virtuoso } from 'react-virtuoso'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { getOutlinerPreferences, getTimelinePreferences } from '@/app/features/preferences/selectors'
+import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
 import { isNull } from '@/app/utils/isNull'
 import { useIsReadOnly } from '@/hooks/useIsReadOnly'
@@ -78,63 +79,65 @@ export const Outliner = () => {
 	const scrollerVisible = visibleActors.length > 0 || visibleEvents.length > 0
 
 	return (
-		<Container maxWidth="lg" style={{ height: '100%' }}>
-			<OutlinerContainer>
-				<OutlinerControls />
-				<OutlinedContainer label="World state" fullHeight>
-					<StatementsScroller>
-						{scrollerVisible && (
-							<Virtuoso
-								style={{ height: '100%' }}
-								totalCount={renderedActors.length + renderedEvents.length + 1}
-								itemContent={(index) => {
-									if (index === 0) {
-										return (
-											<Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
-												<Tab label="All" />
-												<Tab label="Actors" />
-												<Tab label="Events" />
-											</Tabs>
-										)
-									}
+		<Profiler id="Outliner" onRender={reportComponentProfile}>
+			<Container maxWidth="lg" style={{ height: '100%' }}>
+				<OutlinerContainer>
+					<OutlinerControls />
+					<OutlinedContainer label="World state" fullHeight>
+						<StatementsScroller>
+							{scrollerVisible && (
+								<Virtuoso
+									style={{ height: '100%' }}
+									totalCount={renderedActors.length + renderedEvents.length + 1}
+									itemContent={(index) => {
+										if (index === 0) {
+											return (
+												<Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
+													<Tab label="All" />
+													<Tab label="Actors" />
+													<Tab label="Events" />
+												</Tabs>
+											)
+										}
 
-									const actorIndex = index - 1
-									if (actorIndex < renderedActors.length) {
-										const actor = renderedActors[actorIndex]
-										return (
-											<ActorWithStatementsRenderer
-												{...actor}
-												actor={actor}
-												divider={
-													(eventsVisible && renderedEvents.length > 0) ||
-													actorIndex !== renderedActors.length - 1
-												}
-											/>
-										)
-									}
+										const actorIndex = index - 1
+										if (actorIndex < renderedActors.length) {
+											const actor = renderedActors[actorIndex]
+											return (
+												<ActorWithStatementsRenderer
+													{...actor}
+													actor={actor}
+													divider={
+														(eventsVisible && renderedEvents.length > 0) ||
+														actorIndex !== renderedActors.length - 1
+													}
+												/>
+											)
+										}
 
-									const eventIndex = actorIndex - renderedActors.length
-									if (eventIndex < renderedEvents.length) {
-										const event = renderedEvents[eventIndex]
-										return (
-											<EventWithContentRenderer
-												{...event}
-												event={event}
-												owningActor={null}
-												short={false}
-												divider={eventIndex !== renderedEvents.length - 1}
-												actions={eventActions}
-											/>
-										)
-									}
-								}}
-							/>
-						)}
-						{!scrollerVisible && <OutlinerEmptyState />}
-					</StatementsScroller>
-				</OutlinedContainer>
-			</OutlinerContainer>
-			<EventTutorialModal />
-		</Container>
+										const eventIndex = actorIndex - renderedActors.length
+										if (eventIndex < renderedEvents.length) {
+											const event = renderedEvents[eventIndex]
+											return (
+												<EventWithContentRenderer
+													{...event}
+													event={event}
+													owningActor={null}
+													short={false}
+													divider={eventIndex !== renderedEvents.length - 1}
+													actions={eventActions}
+												/>
+											)
+										}
+									}}
+								/>
+							)}
+							{!scrollerVisible && <OutlinerEmptyState />}
+						</StatementsScroller>
+					</OutlinedContainer>
+				</OutlinerContainer>
+				<EventTutorialModal />
+			</Container>
+		</Profiler>
 	)
 }

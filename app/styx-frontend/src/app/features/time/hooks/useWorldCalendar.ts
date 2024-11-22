@@ -39,10 +39,10 @@ export const useWorldCalendar = () => {
 					id: 'COUNTUP',
 					displayName: 'Count Up Calendar',
 					definition: {
-						engine: 'JS_DATE',
+						engine: 'COUNTUP',
 						baseOffset: -62167219200000,
 						timelineScalar: 1,
-						months: defaultMonths,
+						units: defaultUnits,
 					},
 				},
 				{

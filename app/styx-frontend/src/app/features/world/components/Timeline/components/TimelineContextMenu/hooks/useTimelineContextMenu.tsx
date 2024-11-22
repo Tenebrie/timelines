@@ -5,7 +5,7 @@ import { getTimelinePreferences } from '@/app/features/preferences/selectors'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { ScaleLevel } from '@/app/features/world/components/Timeline/types'
 import { worldSlice } from '@/app/features/world/reducer'
-import { getTimelineContextMenuState } from '@/app/features/world/selectors'
+import { getTimelineContextMenuState, getWorldCalendarState } from '@/app/features/world/selectors'
 
 type Props = {
 	scroll: number
@@ -15,7 +15,8 @@ type Props = {
 export const useTimelineContextMenu = ({ scroll, scaleLevel }: Props) => {
 	const { isOpen } = useSelector(getTimelineContextMenuState)
 	const { lineSpacing } = useSelector(getTimelinePreferences)
-	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
+	const { calendar } = useSelector(getWorldCalendarState)
+	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
 
 	const dispatch = useDispatch()
 	const { openTimelineContextMenu, closeTimelineContextMenu } = worldSlice.actions

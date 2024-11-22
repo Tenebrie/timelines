@@ -1,7 +1,8 @@
 import { Divider } from '@mui/material'
 import throttle from 'lodash.throttle'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Profiler, useEffect, useMemo, useRef, useState } from 'react'
 
+import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
@@ -98,45 +99,47 @@ export const TimelineTrackItem = ({
 	const dividerProps = useMemo(() => ({ position: 'absolute', bottom: 0, width: '100%' }), [])
 
 	return (
-		<TrackContainer
-			ref={dragDropReceiverRef}
-			$height={track.height}
-			$background={theme.custom.palette.background.soft}
-			className={`${isDragging ? 'dragging' : ''}`}
-		>
-			<Divider sx={dividerProps} />
-			<TrackPositioner $position={0}>
-				{chainLinks.map((event) => (
-					<TimelineChainPositioner
-						key={event.key}
-						entity={event}
-						visible={visible}
-						edited={false}
-						selected={false}
-						scroll={scroll}
-						realTimeToScaledTime={realTimeToScaledTime}
-					/>
-				))}
-				{visibleMarkers.map((event) => (
-					<TimelineEventPositioner
-						key={event.key}
-						entity={event}
-						visible={visible}
-						lineSpacing={lineSpacing}
-						scroll={scroll}
-						edited={editedEntities.some((marker) => marker.key === event.key)}
-						selected={selectedMarkers.some((marker) => marker.key === event.key)}
-						trackHeight={track.height}
-						realTimeToScaledTime={realTimeToScaledTime}
-					/>
-				))}
-			</TrackPositioner>
-			<TimelineEventTrackTitle track={track} />
-			<TimelineTrackItemDragDrop
-				track={track}
-				receiverRef={dragDropReceiverRef}
-				onDragChanged={setIsDragging}
-			/>
-		</TrackContainer>
+		<Profiler id="TimelineTrackItem" onRender={reportComponentProfile}>
+			<TrackContainer
+				ref={dragDropReceiverRef}
+				$height={track.height}
+				$background={theme.custom.palette.background.soft}
+				className={`${isDragging ? 'dragging' : ''}`}
+			>
+				<Divider sx={dividerProps} />
+				<TrackPositioner $position={0}>
+					{chainLinks.map((event) => (
+						<TimelineChainPositioner
+							key={event.key}
+							entity={event}
+							visible={visible}
+							edited={false}
+							selected={false}
+							scroll={scroll}
+							realTimeToScaledTime={realTimeToScaledTime}
+						/>
+					))}
+					{visibleMarkers.map((event) => (
+						<TimelineEventPositioner
+							key={event.key}
+							entity={event}
+							visible={visible}
+							lineSpacing={lineSpacing}
+							scroll={scroll}
+							edited={editedEntities.some((marker) => marker.key === event.key)}
+							selected={selectedMarkers.some((marker) => marker.key === event.key)}
+							trackHeight={track.height}
+							realTimeToScaledTime={realTimeToScaledTime}
+						/>
+					))}
+				</TrackPositioner>
+				<TimelineEventTrackTitle track={track} />
+				<TimelineTrackItemDragDrop
+					track={track}
+					receiverRef={dragDropReceiverRef}
+					onDragChanged={setIsDragging}
+				/>
+			</TrackContainer>
+		</Profiler>
 	)
 }

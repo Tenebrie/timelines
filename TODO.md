@@ -12,3 +12,4 @@
 
 # Part 3
 - Create and preview events on the clicked track
+- Register websockets per opened world, not per user

@@ -49,7 +49,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 			} else if (isNaN(time)) {
 				time = maximumTime
 			}
-			if (calendarDefinition.engine === 'JS_DATE' && usedCalendar !== 'COUNTUP') {
+			if (calendarDefinition.engine === 'JS_DATE') {
 				const date = new Date(time)
 
 				return {
@@ -62,7 +62,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 					hour: date.getUTCHours(),
 					minute: date.getUTCMinutes(),
 				}
-			} else if (calendarDefinition.engine === 'JS_DATE' && usedCalendar === 'COUNTUP' && rawTime >= 0) {
+			} else if (calendarDefinition.engine === 'COUNTUP' && rawTime >= 0) {
 				const date = new Date(time)
 
 				const year = date.getUTCFullYear()
@@ -82,15 +82,15 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 
 				return {
 					year,
-					monthName: calendarDefinition.months[date.getUTCMonth()].name,
-					monthNameShort: calendarDefinition.months[date.getUTCMonth()].shortName,
+					monthName: '',
+					monthNameShort: '',
 					monthIndex: date.getUTCMonth(),
 					monthDay: date.getUTCDate(),
 					day: day + 1,
 					hour,
 					minute,
 				}
-			} else if (calendarDefinition.engine === 'JS_DATE' && usedCalendar === 'COUNTUP' && rawTime < 0) {
+			} else if (calendarDefinition.engine === 'COUNTUP' && rawTime < 0) {
 				const date = new Date(time)
 
 				const year = date.getUTCFullYear() + 1
@@ -110,8 +110,8 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 
 				return {
 					year,
-					monthName: calendarDefinition.months[date.getUTCMonth()].name,
-					monthNameShort: calendarDefinition.months[date.getUTCMonth()].shortName,
+					monthName: '',
+					monthNameShort: '',
 					monthIndex: date.getUTCMonth(),
 					monthDay: date.getUTCDate(),
 					day: -(365 - day),
@@ -181,7 +181,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				minute: 0,
 			}
 		},
-		[calendarDefinition, msPerUnit, usedCalendar],
+		[calendarDefinition, msPerUnit],
 	)
 
 	const pickerToTimestamp = useCallback(
@@ -264,7 +264,10 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				const padMinutes = String(minute).padStart(2, '0')
 
 				if (groupSize === 'large') {
-					if (year === 0) {
+					if (scaleLevel >= 2) {
+						return `Week ${Math.floor(day / 7) + 1}`
+					}
+					if (year <= 0) {
 						return `Day ${day}`
 					}
 
@@ -272,24 +275,24 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				}
 
 				if (groupSize === 'medium') {
-					if (scaleLevel === 0) {
+					if (scaleLevel <= 0) {
 						return `${padHours}:${padMinutes}`
-					} else if (scaleLevel === 1) {
+					} else if (scaleLevel >= 2) {
+						return 'boop'
+					} else if (scaleLevel >= 1) {
 						if (year === 0) {
 							return `Day ${day}`
 						}
 
 						return `Year ${year}, Day ${day}`
-					} else if (scaleLevel === 2 || scaleLevel === 3) {
-						return `${monthNameShort}`
 					}
 				}
 
 				if (groupSize === 'small') {
-					if (scaleLevel === 0 || scaleLevel === 1) {
+					if (scaleLevel <= 1) {
 						return `${padHours}:${padMinutes}`
 					} else if (scaleLevel === 2) {
-						return `${day}`
+						return day % 7 === 0 ? `Week ${day / 7 + 1}` : ''
 					} else if (scaleLevel === 3) {
 						return `${day}`
 					}
@@ -300,7 +303,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				const padMinute = String(minute).padStart(2, '0')
 
 				if (groupSize === 'large') {
-					if (scaleLevel === 2 || scaleLevel === 3) {
+					if (scaleLevel === 2 || scaleLevel <= 3) {
 						return `${monthName} ${year}`
 					} else if (scaleLevel >= 4) {
 						return `Year ${year}`
@@ -309,7 +312,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				}
 
 				if (groupSize === 'medium') {
-					if (scaleLevel === 0) {
+					if (scaleLevel <= 0) {
 						return `${padHour}:${padMinute}`
 					} else if (scaleLevel === 1) {
 						return `${monthNameShort} ${padDay}`
@@ -333,15 +336,11 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				}
 
 				if (groupSize === 'small') {
-					if (scaleLevel === 0) {
-						return `${padHour}:${padMinute}`
-					} else if (scaleLevel === 1) {
+					if (scaleLevel <= 1) {
 						return `${padHour}:${padMinute}`
 					} else if (scaleLevel === 2) {
-						return day % 8 === 0 ? `${monthNameShort} ${padDay}` : ''
-					} else if (scaleLevel === 4) {
-						return `${year}`
-					} else if (scaleLevel >= 5) {
+						return day % 7 === 0 ? `${monthNameShort} ${padDay}` : ''
+					} else if (scaleLevel >= 4) {
 						return `${year}`
 					}
 				}

@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material'
-import { memo } from 'react'
+import { memo, Profiler } from 'react'
 
+import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { MarkerType, TimelineEntity } from '@/app/features/world/types'
 import { useStringColor } from '@/app/utils/getStringColor'
@@ -29,31 +30,33 @@ export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) 
 	}
 
 	return (
-		<div
-			style={{
-				pointerEvents: 'none',
-				position: 'absolute',
-				bottom: height,
-				left: TimelineEventHeightPx / 2 - 1,
-			}}
-		>
+		<Profiler id="TimelineChain" onRender={reportComponentProfile}>
 			<div
 				style={{
-					width: dist,
-					height: TimelineEventHeightPx - 12,
-					background: theme.custom.palette.background.soft,
-					borderTop: `2px solid ${color}`,
-					display: 'flex',
-					alignItems: 'center',
-					paddingLeft: 4,
-					paddingRight: 0,
+					pointerEvents: 'none',
+					position: 'absolute',
+					bottom: height,
+					left: TimelineEventHeightPx / 2 - 1,
 				}}
 			>
-				<Typography variant="caption" fontWeight={800} noWrap style={{ width: 'calc(100% - 8px)' }}>
-					{entity.name}
-				</Typography>
+				<div
+					style={{
+						width: dist,
+						height: TimelineEventHeightPx - 12,
+						background: theme.custom.palette.background.soft,
+						borderTop: `2px solid ${color}`,
+						display: 'flex',
+						alignItems: 'center',
+						paddingLeft: 4,
+						paddingRight: 0,
+					}}
+				>
+					<Typography variant="caption" fontWeight={800} noWrap style={{ width: 'calc(100% - 8px)' }}>
+						{entity.name}
+					</Typography>
+				</div>
 			</div>
-		</div>
+		</Profiler>
 	)
 }
 

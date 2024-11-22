@@ -1,4 +1,4 @@
-import { AdminPanelSettings, Home } from '@mui/icons-material'
+import { AdminPanelSettings, Home, Speed } from '@mui/icons-material'
 import { Button, Divider, Stack } from '@mui/material'
 import { ReactElement, useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -11,6 +11,7 @@ import { useRouter } from '../../router/routes/routes'
 import { Announcements } from '../features/announcements/Announcements'
 import { getAuthState } from '../features/auth/selectors'
 import { SmallProfile } from '../features/auth/smallProfile/SmallProfile'
+import { PerformanceMetrics } from '../features/profiling/PerformanceMetrics'
 import { ThemeModeToggle } from '../features/theming/ThemeModeToggle'
 
 const Container = styled.div<{ $theme: CustomTheme }>`
@@ -38,6 +39,13 @@ export const BaseNavigator = ({ children }: Props) => {
 
 	const onAdmin = () => {
 		navigateTo({ target: adminRoutes.adminRoot })
+	}
+
+	const onProfile = () => {
+		const values = Object.values(PerformanceMetrics.components).sort(
+			(a, b) => b.totalActualDuration - a.totalActualDuration,
+		)
+		console.info(values)
 	}
 
 	const isHome = useMemo(() => isLocationEqual(appRoutes.home), [isLocationEqual])
@@ -73,6 +81,18 @@ export const BaseNavigator = ({ children }: Props) => {
 							}}
 						>
 							<AdminPanelSettings /> Admin
+						</Button>
+					)}
+					{user?.level === 'Admin' && (
+						<Button
+							onClick={onProfile}
+							sx={{
+								gap: 0.5,
+								border: '1px solid transparent',
+								padding: '8px 15px',
+							}}
+						>
+							<Speed /> Profiler
 						</Button>
 					)}
 				</Stack>

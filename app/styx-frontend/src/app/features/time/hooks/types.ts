@@ -2,6 +2,12 @@ export type CalendarDefinition =
 	| {
 			baseOffset: number
 			timelineScalar: number
+			engine: 'COUNTUP'
+			units: CountupCalendarUnits
+	  }
+	| {
+			baseOffset: number
+			timelineScalar: number
 			engine: 'SIMPLE'
 			units: SimpleCalendarUnits
 	  }
@@ -40,6 +46,13 @@ export type TwelveCustomMonths = [
 	CustomWorldMonth,
 	CustomWorldMonth,
 ]
+export type CountupCalendarUnits = {
+	inMillisecond: number
+	inSecond: number
+	inMinute: number
+	inHour: number
+	inDay: number
+}
 export type SimpleCalendarUnits = {
 	inMillisecond: number
 	inSecond: number

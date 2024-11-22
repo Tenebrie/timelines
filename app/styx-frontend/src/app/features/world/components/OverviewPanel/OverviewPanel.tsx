@@ -1,12 +1,13 @@
 import { Clear, Search, SubdirectoryArrowRight } from '@mui/icons-material'
 import { IconButton, InputAdornment, List, ListItem, ListItemIcon, Paper, TextField } from '@mui/material'
-import { useState } from 'react'
+import { Profiler, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { EventIcon } from '@/app/components/EventIcon'
 import { useModal } from '@/app/features/modals/reducer'
 import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { getOverviewPreferences } from '@/app/features/preferences/selectors'
+import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
 import { useDoubleClick } from '@/hooks/useDoubleClick'
@@ -175,68 +176,70 @@ export const OverviewPanel = () => {
 	)
 
 	return (
-		<Paper
-			style={{
-				borderRadius: 0,
-				padding: '8px',
-				width: '384px',
-				marginLeft: `${panelOpen ? 0 : -384}px`,
-				boxSizing: 'border-box',
-				overflowX: 'hidden',
-				overflowY: 'scroll',
-				transition: 'margin-left 0.3s',
-				display: 'flex',
-				flexDirection: 'column',
-			}}
-			elevation={2}
-		>
-			<TextField
-				id="overview-search"
-				value={searchQuery}
-				onChange={(event) => setSearchQuery(event.target.value ?? null)}
-				size="small"
-				placeholder="Search..."
-				InputProps={{
-					startAdornment: (
-						<InputAdornment position="start">
-							<Search />
-						</InputAdornment>
-					),
-					endAdornment: searchQuery && (
-						<InputAdornment position="end">
-							<IconButton
-								onClick={() => {
-									setSearchQuery('')
-								}}
-							>
-								<Clear />
-							</IconButton>
-						</InputAdornment>
-					),
+		<Profiler id="OverviewPanel" onRender={reportComponentProfile}>
+			<Paper
+				style={{
+					borderRadius: 0,
+					padding: '8px',
+					width: '384px',
+					marginLeft: `${panelOpen ? 0 : -384}px`,
+					boxSizing: 'border-box',
+					overflowX: 'hidden',
+					overflowY: 'scroll',
+					transition: 'margin-left 0.3s',
+					display: 'flex',
+					flexDirection: 'column',
 				}}
-			/>
-			<List dense>
-				<OverviewSublist
-					title={`Actors (${displayedActors.length}/${actors.length})`}
-					entities={displayedActors}
-					open={actorsOpen}
-					reversed={actorsReversed}
-					onAddNew={() => openActorWizard({})}
-					onToggleOpen={(val) => dispatch(setActorsOpen(val))}
-					onToggleReversed={(val) => dispatch(setActorsReversed(val))}
-					renderEntity={renderActor}
+				elevation={2}
+			>
+				<TextField
+					id="overview-search"
+					value={searchQuery}
+					onChange={(event) => setSearchQuery(event.target.value ?? null)}
+					size="small"
+					placeholder="Search..."
+					InputProps={{
+						startAdornment: (
+							<InputAdornment position="start">
+								<Search />
+							</InputAdornment>
+						),
+						endAdornment: searchQuery && (
+							<InputAdornment position="end">
+								<IconButton
+									onClick={() => {
+										setSearchQuery('')
+									}}
+								>
+									<Clear />
+								</IconButton>
+							</InputAdornment>
+						),
+					}}
 				/>
-				<OverviewSublist
-					title={`Events (${displayedEvents.length}/${events.length})`}
-					entities={displayedEvents}
-					open={eventsOpen}
-					reversed={eventsReversed}
-					onAddNew={() => openEventWizard({ timestamp: 0 })}
-					onToggleOpen={(val) => dispatch(setEventsOpen(val))}
-					onToggleReversed={(val) => dispatch(setEventsReversed(val))}
-					renderEntity={renderEvent}
-				/>
-			</List>
-		</Paper>
+				<List dense>
+					<OverviewSublist
+						title={`Actors (${displayedActors.length}/${actors.length})`}
+						entities={displayedActors}
+						open={actorsOpen}
+						reversed={actorsReversed}
+						onAddNew={() => openActorWizard({})}
+						onToggleOpen={(val) => dispatch(setActorsOpen(val))}
+						onToggleReversed={(val) => dispatch(setActorsReversed(val))}
+						renderEntity={renderActor}
+					/>
+					<OverviewSublist
+						title={`Events (${displayedEvents.length}/${events.length})`}
+						entities={displayedEvents}
+						open={eventsOpen}
+						reversed={eventsReversed}
+						onAddNew={() => openEventWizard({ timestamp: 0 })}
+						onToggleOpen={(val) => dispatch(setEventsOpen(val))}
+						onToggleReversed={(val) => dispatch(setEventsReversed(val))}
+						renderEntity={renderEvent}
+					/>
+				</List>
+			</Paper>
+		</Profiler>
 	)
 }

@@ -25,7 +25,7 @@ import { TimelineContainer, TimelineWrapper } from './styles'
 import { TimelineState } from './utils/TimelineState'
 
 export const Timeline = () => {
-	const { timeOrigin } = useSelector(getWorldState)
+	const { timeOrigin, calendar } = useSelector(getWorldState)
 	const { lineSpacing } = useSelector(getTimelinePreferences)
 	const theme = useCustomTheme()
 
@@ -85,7 +85,7 @@ export const Timeline = () => {
 	const scrollZoomIn = useCallback(() => performZoom(-1), [performZoom])
 	const scrollZoomOut = useCallback(() => performZoom(1), [performZoom])
 
-	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
+	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
 	const onScrollFullPage = useCallback(
 		(side: 'left' | 'right') => {
 			const currentTimestamp = scaledTimeToRealTime(-scroll)

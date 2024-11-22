@@ -9,6 +9,7 @@ export const TimelineAnchorContainer = styled.div.attrs<{ offset: number }>((pro
 }))<{ offset: number }>`
 	position: absolute;
 	bottom: 0;
+	pointer-events: none;
 `
 
 export const TimelineSmallestPips = styled.div.attrs<{
@@ -47,16 +48,17 @@ export const DividerContainer = styled.div.attrs<{ offset: number }>((props) => 
 	}
 `
 
-export const Divider = styled.div.attrs<{ color: string; height: number }>((props) => ({
+export const Divider = styled.div.attrs<{ color: string; width: number; height: number }>((props) => ({
 	style: {
 		backgroundColor: props.color,
+		width: `${props.width}px`,
 		height: `${8 * props.height}px`,
 	},
 }))<{ color: string; height: number }>`
 	position: absolute;
 	background: gray;
-	width: 1px;
 	bottom: 0;
+	border-radius: 4px 4px 0 0;
 `
 
 export const DividerLabel = styled.div<{ $theme: CustomTheme }>`

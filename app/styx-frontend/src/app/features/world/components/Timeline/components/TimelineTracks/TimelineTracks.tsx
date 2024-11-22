@@ -27,7 +27,10 @@ export const TimelineTracks = (props: Props) => {
 	const worldState = useSelector(getWorldState)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
 
-	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel: props.scaleLevel })
+	const { realTimeToScaledTime } = useTimelineWorldTime({
+		scaleLevel: props.scaleLevel,
+		calendar: worldState.calendar,
+	})
 
 	return (
 		<Stack

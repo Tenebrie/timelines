@@ -1,14 +1,18 @@
 import { useCallback, useMemo } from 'react'
 
 import { ScaleLevel } from '../../world/components/Timeline/types'
+import { WorldCalendarType } from '../../world/types'
 import { useTimelineLevelScalar } from './useTimelineLevelScalar'
+import { useWorldCalendar } from './useWorldCalendar'
 
 type Props = {
 	scaleLevel: ScaleLevel
+	calendar: WorldCalendarType
 }
 
-export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
+export const useTimelineWorldTime = ({ scaleLevel, calendar }: Props) => {
 	const { getLevelScalar } = useTimelineLevelScalar()
+	const { getCalendar } = useWorldCalendar()
 
 	const scalar = useMemo<number>(() => getLevelScalar(scaleLevel), [getLevelScalar, scaleLevel])
 
@@ -27,7 +31,47 @@ export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
 	)
 
 	const getTimelineMultipliers = useCallback(() => {
-		if (scaleLevel === 0) {
+		const engine = getCalendar(calendar).definition.engine
+		if (engine === 'COUNTUP') {
+			if (scaleLevel === -1) {
+				return {
+					largeGroupSize: 1440,
+					mediumGroupSize: 60,
+					smallGroupSize: 10,
+				}
+			} else if (scaleLevel === 0) {
+				return {
+					largeGroupSize: 144,
+					mediumGroupSize: 36,
+					smallGroupSize: 6,
+				}
+			} else if (scaleLevel === 1) {
+				return {
+					largeGroupSize: Infinity,
+					mediumGroupSize: 24,
+					smallGroupSize: 6,
+				}
+			} else if (scaleLevel === 2) {
+				return {
+					largeGroupSize: Infinity,
+					mediumGroupSize: Infinity,
+					smallGroupSize: 4,
+				}
+			}
+			return {
+				largeGroupSize: 1000,
+				mediumGroupSize: 100,
+				smallGroupSize: 10,
+			}
+		}
+
+		if (scaleLevel === -1) {
+			return {
+				largeGroupSize: 1440,
+				mediumGroupSize: 60,
+				smallGroupSize: 10,
+			}
+		} else if (scaleLevel === 0) {
 			return {
 				largeGroupSize: 144,
 				mediumGroupSize: 36,
@@ -83,7 +127,7 @@ export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
 			mediumGroupSize: Infinity,
 			smallGroupSize: Infinity,
 		}
-	}, [scaleLevel])
+	}, [getCalendar, calendar, scaleLevel])
 
 	return {
 		getTimelineMultipliers,

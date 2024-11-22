@@ -8,6 +8,7 @@ import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLev
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { maximumTime, useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useTimelineBusSubscribe } from '@/app/features/world/hooks/useTimelineBus'
+import { getWorldCalendarState } from '@/app/features/world/selectors'
 import clampToRange from '@/app/utils/clampToRange'
 import { isMacOS } from '@/app/utils/isMacOS'
 import { rangeMap } from '@/app/utils/rangeMap'
@@ -56,6 +57,7 @@ export const useTimelineNavigation = ({
 
 	const { getLevelScalar } = useTimelineLevelScalar()
 	const { parseTime, pickerToTimestamp } = useWorldTime()
+	const { calendar } = useSelector(getWorldCalendarState)
 	const { lineSpacing } = useSelector(getTimelinePreferences)
 
 	const [scaleLevel, setScaleLevel] = useState<ScaleLevel>(0)
@@ -184,7 +186,7 @@ export const useTimelineNavigation = ({
 
 	const [targetScale, setTargetScale] = useState(0)
 
-	const { realTimeToScaledTime, scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
+	const { realTimeToScaledTime, scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
 
 	useEffect(() => {
 		if (!readyToSwitchScale) {
@@ -270,17 +272,17 @@ export const useTimelineNavigation = ({
 	 */
 	const performZoom = useCallback(
 		(scrollDirection: number, useMouse: boolean) => {
-			let newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(scrollDirection)
-			let newTargetScale = clampToRange(
+			const newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(scrollDirection)
+			const newTargetScale = clampToRange(
 				scaleLimits[0],
 				scaleScroll / 100 + newScaleSwitchesToDo,
 				scaleLimits[1],
 			)
 
-			if (newTargetScale === 2) {
-				newTargetScale += Math.sign(scrollDirection)
-				newScaleSwitchesToDo += Math.sign(scrollDirection)
-			}
+			// if (newTargetScale === 2) {
+			// 	newTargetScale += Math.sign(scrollDirection)
+			// 	newScaleSwitchesToDo += Math.sign(scrollDirection)
+			// }
 			setScaleSwitchesToDo(newScaleSwitchesToDo)
 			setIsSwitchingScale(true)
 			setIsScrollUsingMouse(useMouse)
