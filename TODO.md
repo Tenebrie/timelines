@@ -7,7 +7,6 @@
 
 # Part 2
 - ResolvedAt is highlighted (bad, shouldn't be)
-- CountUp calendar broken kinda
 - CountUp and Earth calendars drifting
 
 # Part 3

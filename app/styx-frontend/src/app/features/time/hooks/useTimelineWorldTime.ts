@@ -32,45 +32,6 @@ export const useTimelineWorldTime = ({ scaleLevel, calendar }: Props) => {
 
 	const getTimelineMultipliers = useCallback(() => {
 		const engine = getCalendar(calendar).definition.engine
-		if (engine === 'COUNTUP') {
-			if (scaleLevel === -1) {
-				return {
-					largeGroupSize: 1440,
-					mediumGroupSize: 60,
-					smallGroupSize: 10,
-				}
-			} else if (scaleLevel === 0) {
-				return {
-					largeGroupSize: 144,
-					mediumGroupSize: 36,
-					smallGroupSize: 6,
-				}
-			} else if (scaleLevel === 1) {
-				return {
-					largeGroupSize: Infinity,
-					mediumGroupSize: 24,
-					smallGroupSize: 6,
-				}
-			} else if (scaleLevel === 2) {
-				return {
-					largeGroupSize: Infinity,
-					mediumGroupSize: Infinity,
-					smallGroupSize: 4,
-				}
-			} else if (scaleLevel === 3) {
-				return {
-					largeGroupSize: Infinity,
-					mediumGroupSize: Infinity,
-					smallGroupSize: 4,
-				}
-			}
-			return {
-				largeGroupSize: 1000,
-				mediumGroupSize: 100,
-				smallGroupSize: 10,
-			}
-		}
-
 		if (scaleLevel === -1) {
 			return {
 				largeGroupSize: 1440,

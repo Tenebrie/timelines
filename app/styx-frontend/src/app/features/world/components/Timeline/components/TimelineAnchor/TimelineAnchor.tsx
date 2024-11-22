@@ -64,17 +64,11 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 			}
 			const parsedTime = parseTime(scaledTimeToRealTime(index * lineSpacing))
 			const isStartOfMonth = () => {
-				return (
-					calendar !== 'COUNTUP' &&
-					parsedTime.monthDay === 1 &&
-					parsedTime.hour === 0 &&
-					parsedTime.minute === 0
-				)
+				return parsedTime.monthDay === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
 			}
 
 			const isStartOfYear = () => {
 				return (
-					calendar !== 'COUNTUP' &&
 					parsedTime.monthIndex === 0 &&
 					parsedTime.day === 1 &&
 					parsedTime.hour === 0 &&
