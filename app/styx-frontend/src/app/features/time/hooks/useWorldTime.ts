@@ -294,7 +294,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 					} else if (scaleLevel === 2) {
 						return day % 7 === 0 ? `Week ${day / 7 + 1}` : ''
 					} else if (scaleLevel === 3) {
-						return `${day}`
+						return day % 7 === 0 ? `Week ${day / 7 + 1}` : ''
 					}
 				}
 			} else {

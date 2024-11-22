@@ -57,6 +57,12 @@ export const useTimelineWorldTime = ({ scaleLevel, calendar }: Props) => {
 					mediumGroupSize: Infinity,
 					smallGroupSize: 4,
 				}
+			} else if (scaleLevel === 3) {
+				return {
+					largeGroupSize: Infinity,
+					mediumGroupSize: Infinity,
+					smallGroupSize: 4,
+				}
 			}
 			return {
 				largeGroupSize: 1000,
