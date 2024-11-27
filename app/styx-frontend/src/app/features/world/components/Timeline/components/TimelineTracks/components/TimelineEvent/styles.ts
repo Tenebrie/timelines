@@ -130,9 +130,10 @@ export const LabelContainer = styled.div`
 	width: 250px;
 	transform: translateY(50%);
 	left: calc(100% + 8px);
-	bottom: calc(50%);
+	bottom: calc(50% + 1px);
 	z-index: 10;
 	pointer-events: none;
+	white-space: nowrap;
 `
 
 export const Label = styled.div`
