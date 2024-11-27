@@ -61,13 +61,14 @@
 		"koa-bodyparser": "^4.3.0",
 		"lint-staged": "^13.2.0",
 		"module-alias": "^2.2.2",
+		"moonflower": "^0.9.3",
 		"nodemon": "^2.0.20",
 		"pg": "^8.8.0",
 		"prisma": "^5.21.1",
 		"redis": "^4.6.5",
 		"sqlite3": "^5.0.0",
-		"moonflower": "^0.9.3",
-		"ts-morph": "^16.0.0"
+		"ts-morph": "^16.0.0",
+		"ws": "^8.18.0"
 	},
 	"devDependencies": {
 		"@types/bcrypt": "^5.0.0",
@@ -80,6 +81,7 @@
 		"@types/mock-knex": "^0.4.3",
 		"@types/node": "^16.0.0",
 		"@types/supertest": "^2.0.10",
+		"@types/ws": "^8.5.13",
 		"@typescript-eslint/eslint-plugin": "^5.0.0",
 		"@typescript-eslint/parser": "^5.0.0",
 		"eslint": "^8.0.1",
