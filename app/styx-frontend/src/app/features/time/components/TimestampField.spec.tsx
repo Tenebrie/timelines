@@ -32,7 +32,7 @@ describe('<TimestampField />', () => {
 			<TimestampField label="Custom Label" timestamp={157989907} calendar="EARTH" onChange={vi.fn()} />,
 		)
 
-		expect((screen.getByLabelText('Custom Label') as HTMLInputElement).value).toEqual('2323, May 24, 05:07')
+		expect((screen.getByLabelText('Custom Label') as HTMLInputElement).value).toEqual('2323, August 4, 05:07')
 	})
 
 	it('parses initial timestamp into time picker', async () => {
@@ -43,8 +43,8 @@ describe('<TimestampField />', () => {
 		await user.click(screen.getByTestId('CalendarMonthIcon'))
 
 		expect((screen.getByLabelText('Year') as HTMLInputElement).value).toEqual('2323')
-		expect(within(screen.getByLabelText('Month')).getByText('May')).toBeInTheDocument()
-		expect((screen.getByLabelText('Day') as HTMLInputElement).value).toEqual('24')
+		expect(within(screen.getByLabelText('Month')).getByText('August')).toBeInTheDocument()
+		expect((screen.getByLabelText('Day') as HTMLInputElement).value).toEqual('4')
 		expect((screen.getByLabelText('Hour') as HTMLInputElement).value).toEqual('5')
 		expect((screen.getByLabelText('Minute') as HTMLInputElement).value).toEqual('7')
 	})
@@ -61,7 +61,7 @@ describe('<TimestampField />', () => {
 			initialSelectionEnd: 5,
 		})
 
-		expect(onChangeSpy).toHaveBeenCalledWith(-1059261120)
+		expect(onChangeSpy).toHaveBeenCalledWith(-1058558400)
 	})
 
 	it('updates timestamp on day change', async () => {

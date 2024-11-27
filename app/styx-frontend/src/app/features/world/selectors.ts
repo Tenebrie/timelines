@@ -3,6 +3,9 @@ import { createSelector } from '@reduxjs/toolkit'
 import { RootState } from '../../store'
 
 export const getWorldState = (state: RootState) => state.world
+export const getWorldCalendarState = createSelector([getWorldState], (state) => ({
+	calendar: state.calendar,
+}))
 export const getWorldRouterState = createSelector([getWorldState], (state) => ({
 	id: state.id,
 	isReadOnly: state.isReadOnly,

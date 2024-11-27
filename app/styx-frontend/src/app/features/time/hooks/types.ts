@@ -53,11 +53,12 @@ export type SimpleCalendarUnits = {
 	}[]
 }
 
-type RealWorldMonth = {
+export type RealWorldMonth = {
 	name: string
 	shortName: string
+	days: number
 }
-type CustomWorldMonth = {
+export type CustomWorldMonth = {
 	name: string
 	shortName: string
 	days: number

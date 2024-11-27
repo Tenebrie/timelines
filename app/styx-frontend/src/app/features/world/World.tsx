@@ -1,11 +1,14 @@
 import { Navigate, useOutlet } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
+import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { useLocationRef } from '@/hooks/useLocationRef'
 import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import { ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage'
 
 import { BlockingSpinner } from '../../components/BlockingSpinner'
 import { useAuthCheck } from '../auth/authCheck/useAuthCheck'
+import { useEventBusDispatch, useEventBusSubscribe } from '../eventBus'
 import { ActorWizardModal } from './components/ActorWizard/ActorWizardModal'
 import { DeleteEventDeltaModal } from './components/EventEditor/components/DeleteEventDeltaModal/DeleteEventDeltaModal'
 import { DeleteEventModal } from './components/EventEditor/components/DeleteEventModal/DeleteEventModal'
@@ -28,6 +31,32 @@ export const World = () => {
 	const { key, nodeRef } = useLocationRef()
 
 	const { success, target } = useAuthCheck()
+
+	const sendCalliopeMessage = useEventBusDispatch({ event: 'sendCalliopeMessage' })
+
+	useEffectOnce(() => {
+		sendCalliopeMessage({
+			type: ClientToCalliopeMessageType.WORLD_SUBSCRIBE,
+			data: { worldId },
+		})
+
+		return () => {
+			sendCalliopeMessage({
+				type: ClientToCalliopeMessageType.WORLD_UNSUBSCRIBE,
+				data: { worldId },
+			})
+		}
+	})
+
+	useEventBusSubscribe({
+		event: 'calliopeReconnected',
+		callback: () => {
+			sendCalliopeMessage({
+				type: ClientToCalliopeMessageType.WORLD_SUBSCRIBE,
+				data: { worldId },
+			})
+		},
+	})
 
 	if (!success) {
 		return <Navigate to={target} />

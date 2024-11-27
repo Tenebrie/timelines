@@ -20,30 +20,45 @@ type Props = {
 }
 
 export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
-	const { id: worldId, events } = useSelector(getWorldState)
+	const { id: worldId, events, calendar } = useSelector(getWorldState)
 	const { scaleLevel } = useSelector(getTimelineState)
 	const [updateWorldEvent] = useUpdateWorldEventMutation()
 	const [updateWorldEventDelta] = useUpdateWorldEventDeltaMutation()
-	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
+	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
 
 	const { updateEvent, updateEventDelta } = worldSlice.actions
 	const dispatch = useDispatch()
 
 	const moveEventIssuedAt = useCallback(
 		async (entity: TimelineEntity<'issuedAt'>, markerRealTime: number) => {
-			dispatch(
-				updateEvent({
-					id: entity.eventId,
-					timestamp: markerRealTime,
-					worldEventTrackId: track.id,
-				}),
-			)
+			if ((entity.worldEventTrackId ?? 'default') === track.id) {
+				dispatch(
+					updateEvent({
+						id: entity.eventId,
+						timestamp: markerRealTime,
+					}),
+				)
+			} else {
+				dispatch(
+					updateEvent({
+						id: entity.eventId,
+						worldEventTrackId: track.id,
+					}),
+				)
+			}
+			const body: Parameters<typeof updateWorldEvent>[0]['body'] = (() => {
+				if ((entity.worldEventTrackId ?? 'default') === track.id) {
+					return {
+						timestamp: String(Math.round(markerRealTime)),
+					}
+				}
+				return {
+					worldEventTrackId: track.baseModel ? track.id : null,
+				}
+			})()
 			const { error } = parseApiResponse(
 				await updateWorldEvent({
-					body: {
-						timestamp: String(Math.round(markerRealTime)),
-						worldEventTrackId: track.baseModel ? track.id : null,
-					},
+					body,
 					worldId,
 					eventId: entity.eventId,
 				}),
@@ -57,19 +72,24 @@ export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
 
 	const moveEventRevokedAt = useCallback(
 		async (entity: TimelineEntity<'revokedAt'>, markerRealTime: number) => {
-			dispatch(
-				updateEvent({
-					id: entity.eventId,
-					revokedAt: markerRealTime,
-					worldEventTrackId: track.id,
-				}),
-			)
+			if ((entity.worldEventTrackId ?? 'default') === track.id) {
+				dispatch(updateEvent({ id: entity.eventId, revokedAt: markerRealTime }))
+			} else {
+				dispatch(updateEvent({ id: entity.eventId, worldEventTrackId: track.id }))
+			}
+			const body: Parameters<typeof updateWorldEvent>[0]['body'] = (() => {
+				if ((entity.worldEventTrackId ?? 'default') === track.id) {
+					return {
+						revokedAt: String(Math.round(markerRealTime)),
+					}
+				}
+				return {
+					worldEventTrackId: track.baseModel ? track.id : null,
+				}
+			})()
 			const { error } = parseApiResponse(
 				await updateWorldEvent({
-					body: {
-						revokedAt: String(Math.round(markerRealTime)),
-						worldEventTrackId: track.baseModel ? track.id : null,
-					},
+					body,
 					worldId,
 					eventId: entity.eventId,
 				}),
@@ -83,33 +103,50 @@ export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
 
 	const moveEventDeltaState = useCallback(
 		async (entity: TimelineEntity<'deltaState'>, markerRealTime: number) => {
-			dispatch(
-				updateEvent({
-					id: entity.eventId,
-					worldEventTrackId: track.id,
-				}),
-			)
-			dispatch(
-				updateEventDelta({
-					id: entity.id,
-					worldEventId: entity.eventId,
-					timestamp: markerRealTime,
-				}),
-			)
-			const { error } = parseApiResponse(
-				await updateWorldEventDelta({
-					body: {
-						timestamp: String(Math.round(markerRealTime)),
-						worldEventTrackId: track.baseModel ? track.id : null,
-					},
-					worldId,
-					eventId: entity.eventId,
-					deltaId: entity.id,
-				}),
-			)
-			if (error) {
-				dispatch(updateEvent(events.find((e) => e.id === entity.eventId)!))
-				dispatch(updateEventDelta(entity.baseEntity))
+			if ((entity.worldEventTrackId ?? 'default') === track.id) {
+				// Same track - update delta
+				dispatch(
+					updateEventDelta({
+						id: entity.id,
+						worldEventId: entity.eventId,
+						timestamp: markerRealTime,
+					}),
+				)
+				const { error } = parseApiResponse(
+					await updateWorldEventDelta({
+						body: {
+							timestamp: String(Math.round(markerRealTime)),
+						},
+						worldId,
+						eventId: entity.eventId,
+						deltaId: entity.id,
+					}),
+				)
+				if (error) {
+					dispatch(updateEvent(events.find((e) => e.id === entity.eventId)!))
+					dispatch(updateEventDelta(entity.baseEntity))
+				}
+			} else {
+				// Another track - move event
+				dispatch(
+					updateEvent({
+						id: entity.eventId,
+						worldEventTrackId: track.id,
+					}),
+				)
+				const { error } = parseApiResponse(
+					await updateWorldEvent({
+						body: {
+							worldEventTrackId: track.baseModel ? track.id : null,
+						},
+						worldId,
+						eventId: entity.eventId,
+					}),
+				)
+				if (error) {
+					dispatch(updateEvent(events.find((e) => e.id === entity.eventId)!))
+					dispatch(updateEventDelta(entity.baseEntity))
+				}
 			}
 		},
 		[
@@ -119,6 +156,7 @@ export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
 			track.id,
 			updateEvent,
 			updateEventDelta,
+			updateWorldEvent,
 			updateWorldEventDelta,
 			worldId,
 		],

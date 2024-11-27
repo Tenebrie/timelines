@@ -1,5 +1,6 @@
-import { memo, useCallback, useMemo } from 'react'
+import { memo, Profiler, useCallback, useMemo } from 'react'
 
+import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { CustomTheme } from '@/hooks/useCustomTheme'
@@ -96,48 +97,54 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		if (isMediumGroup) {
 			return 'medium'
 		}
-		if (
-			isSmallGroup &&
-			(scaleLevel === 2 ||
-				scaleLevel === 3 ||
-				scaleLevel === 4 ||
-				scaleLevel === 5 ||
-				scaleLevel === 6 ||
-				scaleLevel === 7)
-		) {
+		if (isSmallGroup) {
 			return 'small'
 		}
 
 		return null
-	}, [isLargeGroup, isMediumGroup, isSmallGroup, scaleLevel])
+	}, [isLargeGroup, isMediumGroup, isSmallGroup])
 
-	const getDividerHeight = useCallback(() => {
+	const getDividerWidth = useCallback(() => {
 		if (isLargeGroup) {
-			return 2.5
+			return 5
 		} else if (isMediumGroup) {
-			return 2
+			return 3
 		} else if (isSmallGroup) {
-			return 1.5
+			return 1
 		}
 		return 1
 	}, [isLargeGroup, isMediumGroup, isSmallGroup])
 
+	const getDividerHeight = useCallback(() => {
+		if (isLargeGroup) {
+			return 3
+		} else if (isMediumGroup) {
+			return 2.5
+		} else if (isSmallGroup) {
+			return 2
+		}
+		return 1
+	}, [isLargeGroup, isMediumGroup, isSmallGroup])
+
+	const dividerWidth = useMemo(getDividerWidth, [getDividerWidth])
 	const dividerHeight = useMemo(getDividerHeight, [getDividerHeight])
 
 	return (
-		<DividerContainer key={rawIndex} offset={dividerPosition} className={visible ? 'visible' : ''}>
-			{!!labelSize && (
-				<DividerLabel
-					$theme={theme}
-					style={{
-						fontWeight: labelSize === 'large' ? 600 : labelSize === 'medium' ? 600 : 400,
-					}}
-				>
-					{timeToShortLabel(scaledTimeToRealTime(index * lineSpacing), scaleLevel, labelSize)}
-				</DividerLabel>
-			)}
-			<Divider color={'gray'} height={dividerHeight} />
-		</DividerContainer>
+		<Profiler id="TimelineAnchorLine" onRender={reportComponentProfile}>
+			<DividerContainer key={rawIndex} offset={dividerPosition} className={visible ? 'visible' : ''}>
+				{!!labelSize && (
+					<DividerLabel
+						$theme={theme}
+						style={{
+							fontWeight: labelSize === 'large' ? 600 : labelSize === 'medium' ? 600 : 400,
+						}}
+					>
+						{timeToShortLabel(scaledTimeToRealTime(index * lineSpacing), scaleLevel, labelSize)}
+					</DividerLabel>
+				)}
+				<Divider color={'gray'} width={dividerWidth} height={dividerHeight} />
+			</DividerContainer>
+		</Profiler>
 	)
 }
 

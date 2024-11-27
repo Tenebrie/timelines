@@ -1,3 +1,5 @@
+#!/bin/bash
+
 certbot --nginx --non-interactive --agree-tos \
 	--no-eff-email \
 	--email 'kos94ok@gmail.com' \

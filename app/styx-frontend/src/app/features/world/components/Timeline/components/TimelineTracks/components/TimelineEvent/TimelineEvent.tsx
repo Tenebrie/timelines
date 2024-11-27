@@ -1,8 +1,9 @@
 import { colors, Typography } from '@mui/material'
 import classNames from 'classnames'
-import { memo, MouseEvent, useState } from 'react'
+import { memo, MouseEvent, Profiler, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useEventIcons } from '@/app/features/world/hooks/useEventIcons'
 import { useTimelineBusDispatch } from '@/app/features/world/hooks/useTimelineBus'
 import { worldSlice } from '@/app/features/world/reducer'
@@ -110,38 +111,40 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	const theme = useCustomTheme()
 
 	return (
-		<Marker
-			onClick={onClick}
-			onContextMenu={onContextMenu}
-			onMouseEnter={onMouseEnter}
-			onMouseLeave={onMouseLeave}
-			$size={TimelineEventHeightPx - 6}
-			$borderColor={color}
-			$theme={theme}
-			className={classNames({
-				selected,
-				edited,
-				revoked: entity.markerType === 'revokedAt',
-				replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',
-				ghostEvent: entity.markerType === 'ghostEvent',
-				ghostDelta: entity.markerType === 'ghostDelta',
-			})}
-			$iconPath={getIconPath(entity.icon)}
-			data-testid="timeline-event-marker"
-		>
-			<div className="icon"></div>
-			{isInfoVisible && (
-				<LabelContainer>
-					<Label data-hj-suppress>
-						<Typography sx={{ color: 'white' }}>
-							{labelType}
-							{labelType ? ' ' : ''}
-							{entity.name}
-						</Typography>
-					</Label>
-				</LabelContainer>
-			)}
-		</Marker>
+		<Profiler id="TimelineEvent" onRender={reportComponentProfile}>
+			<Marker
+				onClick={onClick}
+				onContextMenu={onContextMenu}
+				onMouseEnter={onMouseEnter}
+				onMouseLeave={onMouseLeave}
+				$size={TimelineEventHeightPx - 6}
+				$borderColor={color}
+				$theme={theme}
+				className={classNames({
+					selected,
+					edited,
+					revoked: entity.markerType === 'revokedAt',
+					replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',
+					ghostEvent: entity.markerType === 'ghostEvent',
+					ghostDelta: entity.markerType === 'ghostDelta',
+				})}
+				$iconPath={getIconPath(entity.icon)}
+				data-testid="timeline-event-marker"
+			>
+				<div className="icon"></div>
+				{isInfoVisible && (
+					<LabelContainer>
+						<Label data-hj-suppress>
+							<Typography sx={{ color: 'white' }}>
+								{labelType}
+								{labelType ? ' ' : ''}
+								{entity.name}
+							</Typography>
+						</Label>
+					</LabelContainer>
+				)}
+			</Marker>
+		</Profiler>
 	)
 }
 

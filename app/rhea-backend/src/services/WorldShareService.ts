@@ -88,7 +88,6 @@ export const WorldShareService = {
 
 		RedisService.notifyAboutWorldShared({
 			users,
-			worldId,
 		})
 
 		await AnnouncementService.notifyMany(
@@ -123,7 +122,6 @@ export const WorldShareService = {
 
 		RedisService.notifyAboutWorldUnshared({
 			userId,
-			worldId,
 		})
 	},
 }

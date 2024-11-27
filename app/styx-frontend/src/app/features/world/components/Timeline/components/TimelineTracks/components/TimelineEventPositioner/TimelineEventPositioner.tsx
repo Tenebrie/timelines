@@ -1,7 +1,8 @@
 import classNames from 'classnames'
-import { memo } from 'react'
+import { memo, Profiler } from 'react'
 
 import { useDragDrop } from '@/app/features/dragDrop/useDragDrop'
+import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useEventIcons } from '@/app/features/world/hooks/useEventIcons'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
@@ -84,15 +85,17 @@ const TimelineEventPositionerComponent = ({
 	const height = TimelineEventHeightPx * entity.markerHeight
 
 	return (
-		<Group
-			ref={ref}
-			$position={position}
-			$height={height}
-			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''}`}
-		>
-			<TimelineEvent entity={entity} trackHeight={trackHeight} edited={edited} selected={selected} />
-			{ghostElement}
-		</Group>
+		<Profiler id="TimelineEventPositioner" onRender={reportComponentProfile}>
+			<Group
+				ref={ref}
+				$position={position}
+				$height={height}
+				className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''}`}
+			>
+				<TimelineEvent entity={entity} trackHeight={trackHeight} edited={edited} selected={selected} />
+				{ghostElement}
+			</Group>
+		</Profiler>
 	)
 }
 

@@ -85,7 +85,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		},
 	})
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 
 	return event
 })
@@ -146,7 +146,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		},
 	})
 
-	RedisService.notifyAboutWorldEventUpdate({ user, worldId, event })
+	RedisService.notifyAboutWorldEventUpdate({ worldId, event })
 
 	return event
 })
@@ -170,7 +170,7 @@ router.delete('/api/world/:worldId/event/:eventId', async (ctx) => {
 
 	const { event, world } = await WorldEventService.deleteWorldEvent({ worldId, eventId })
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 
 	return event
 })
@@ -203,7 +203,7 @@ router.post('/api/world/:worldId/event/:eventId/revoke', async (ctx) => {
 		revokedAt,
 	})
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 
 	return statement
 })
@@ -230,7 +230,7 @@ router.post('/api/world/:worldId/event/:eventId/unrevoke', async (ctx) => {
 		eventId,
 	})
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 
 	return statement
 })
@@ -267,7 +267,7 @@ router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
 		data: params,
 	})
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 
 	return deltaState
 })
@@ -291,7 +291,6 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 		timestamp: OptionalParam(BigIntValidator),
 		name: OptionalParam(NullableNameStringValidator),
 		description: OptionalParam(NullableNameStringValidator),
-		worldEventTrackId: OptionalParam(NullableUuidStringValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -301,21 +300,17 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 		await ValidationService.checkIfEventDeltaStateIsCreatableAt(eventId, params.timestamp, [deltaId])
 	}
 
-	const { deltaState, event } = await WorldEventDeltaService.updateEventDeltaState({
+	const { deltaState } = await WorldEventDeltaService.updateEventDeltaState({
 		worldId,
-		eventId,
 		deltaId,
 		params: {
 			timestamp: params.timestamp,
 			name: params.name,
 			description: params.description,
 		},
-		eventParams: {
-			worldEventTrackId: params.worldEventTrackId,
-		},
 	})
 
-	RedisService.notifyAboutWorldEventUpdate({ user, worldId, event })
+	RedisService.notifyAboutWorldEventDeltaUpdate({ worldId, delta: deltaState })
 
 	return deltaState
 })
@@ -341,7 +336,7 @@ router.delete('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =
 
 	const { deltaState, world } = await WorldEventDeltaService.deleteEventDeltaState({ worldId, deltaId })
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 
 	return deltaState
 })

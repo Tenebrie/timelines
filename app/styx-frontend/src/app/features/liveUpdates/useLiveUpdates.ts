@@ -2,17 +2,28 @@ import { useCallback, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { CalliopeToClientMessage } from '@/ts-shared/CalliopeToClientMessage'
+import { ClientToCalliopeMessage, ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage'
 
 import { useEffectOnce } from '../../utils/useEffectOnce'
 import { authSlice } from '../auth/reducer'
+import { useEventBusDispatch, useEventBusSubscribe } from '../eventBus'
 import { useLiveMessageHandlers } from './useLiveMessageHandlers'
 
-const expBackoffDelays = [50, 1000, 10000, 30000]
+const expBackoffDelays = [50, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
 
 export const useLiveUpdates = () => {
 	const currentWebsocket = useRef<WebSocket>()
 	const heartbeatInterval = useRef<number | null>(null)
 	const backoffLevel = useRef<number>(-1)
+	useEventBusSubscribe({
+		event: 'sendCalliopeMessage',
+		callback: (message) => {
+			if (currentWebsocket.current?.readyState === WebSocket.OPEN) {
+				currentWebsocket.current?.send(JSON.stringify(message))
+			}
+		},
+	})
+	const notifyAboutReconnect = useEventBusDispatch({ event: 'calliopeReconnected' })
 
 	const { showCalliopeConnectionAlert, hideCalliopeConnectionAlert } = authSlice.actions
 	const dispatch = useDispatch()
@@ -54,14 +65,24 @@ export const useLiveUpdates = () => {
 				if (currentWebsocket.current?.readyState !== WebSocket.OPEN) {
 					return
 				}
-				socket.send('keepalive')
+				const message: ClientToCalliopeMessage = {
+					type: ClientToCalliopeMessageType.KEEPALIVE,
+					data: {},
+				}
+				socket.send(JSON.stringify(message))
 			}, 15000)
 
 			socket.onopen = function () {
 				console.info('[ws] Connection established!')
 				dispatch(hideCalliopeConnectionAlert())
-				socket.send('init')
+				console.log('init')
+				const message: ClientToCalliopeMessage = {
+					type: ClientToCalliopeMessageType.INIT,
+					data: {},
+				}
+				socket.send(JSON.stringify(message))
 				backoffLevel.current = -1
+				notifyAboutReconnect()
 			}
 
 			socket.onmessage = function (event) {

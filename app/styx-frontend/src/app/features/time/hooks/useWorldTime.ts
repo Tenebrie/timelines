@@ -49,7 +49,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 			} else if (isNaN(time)) {
 				time = maximumTime
 			}
-			if (calendarDefinition.engine === 'JS_DATE' && usedCalendar !== 'COUNTUP') {
+			if (calendarDefinition.engine === 'JS_DATE') {
 				const date = new Date(time)
 
 				return {
@@ -61,62 +61,6 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 					day: date.getUTCDate(),
 					hour: date.getUTCHours(),
 					minute: date.getUTCMinutes(),
-				}
-			} else if (calendarDefinition.engine === 'JS_DATE' && usedCalendar === 'COUNTUP' && rawTime >= 0) {
-				const date = new Date(time)
-
-				const year = date.getUTCFullYear()
-				const hour = date.getUTCHours()
-				const minute = date.getUTCMinutes()
-
-				const startingYearDate = new Date(time)
-				startingYearDate.setUTCMilliseconds(0)
-				startingYearDate.setUTCSeconds(0)
-				startingYearDate.setUTCMinutes(0)
-				startingYearDate.setUTCHours(0)
-				startingYearDate.setUTCDate(1)
-				startingYearDate.setUTCMonth(0)
-				const diff = date.getTime() - startingYearDate.getTime()
-				const oneDay = 1000 * 60 * 60 * 24
-				const day = Math.floor(diff / oneDay)
-
-				return {
-					year,
-					monthName: calendarDefinition.months[date.getUTCMonth()].name,
-					monthNameShort: calendarDefinition.months[date.getUTCMonth()].shortName,
-					monthIndex: date.getUTCMonth(),
-					monthDay: date.getUTCDate(),
-					day: day + 1,
-					hour,
-					minute,
-				}
-			} else if (calendarDefinition.engine === 'JS_DATE' && usedCalendar === 'COUNTUP' && rawTime < 0) {
-				const date = new Date(time)
-
-				const year = date.getUTCFullYear() + 1
-				const hour = date.getUTCHours()
-				const minute = date.getUTCMinutes()
-
-				const startingYearDate = new Date(time)
-				startingYearDate.setUTCMilliseconds(0)
-				startingYearDate.setUTCSeconds(0)
-				startingYearDate.setUTCMinutes(0)
-				startingYearDate.setUTCHours(0)
-				startingYearDate.setUTCDate(1)
-				startingYearDate.setUTCMonth(0)
-				const diff = date.getTime() - startingYearDate.getTime()
-				const oneDay = 1000 * 60 * 60 * 24
-				const day = Math.floor(diff / oneDay)
-
-				return {
-					year,
-					monthName: calendarDefinition.months[date.getUTCMonth()].name,
-					monthNameShort: calendarDefinition.months[date.getUTCMonth()].shortName,
-					monthIndex: date.getUTCMonth(),
-					monthDay: date.getUTCDate(),
-					day: -(365 - day),
-					hour,
-					minute,
 				}
 			} else if (calendarDefinition.engine === 'SIMPLE') {
 				const inMillisecond = calendarDefinition.units.inMillisecond
@@ -181,7 +125,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 				minute: 0,
 			}
 		},
-		[calendarDefinition, msPerUnit, usedCalendar],
+		[calendarDefinition, msPerUnit],
 	)
 
 	const pickerToTimestamp = useCallback(
@@ -237,133 +181,72 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 	const timeToLabel = useCallback(
 		(rawTime: number) => {
 			const { year, monthName, day, hour, minute } = parseTime(rawTime)
-			if (usedCalendar === 'COUNTUP') {
-				const padHours = String(hour).padStart(2, '0')
-				const padMinutes = String(minute).padStart(2, '0')
+			const padHour = String(hour).padStart(2, '0')
+			const padMinute = String(minute).padStart(2, '0')
 
-				if (year === 0) {
-					return `Day ${day}, ${padHours}:${padMinutes}`
-				}
-
-				return `Year ${year}, Day ${day}, ${padHours}:${padMinutes}`
-			} else {
-				const padHour = String(hour).padStart(2, '0')
-				const padMinute = String(minute).padStart(2, '0')
-
-				return `${year}, ${monthName} ${day}, ${padHour}:${padMinute}`
-			}
+			return `${year}, ${monthName} ${day}, ${padHour}:${padMinute}`
 		},
-		[parseTime, usedCalendar],
+		[parseTime],
 	)
 
 	const timeToShortLabel = useCallback(
 		(rawTime: number, scaleLevel: ScaleLevel, groupSize: 'large' | 'medium' | 'small') => {
 			const { year, monthName, monthNameShort, day, hour, minute } = parseTime(rawTime)
-			if (usedCalendar === 'COUNTUP') {
-				const padHours = String(hour).padStart(2, '0')
-				const padMinutes = String(minute).padStart(2, '0')
+			const padDay = String(day).padStart(2, '0')
+			const padHour = String(hour).padStart(2, '0')
+			const padMinute = String(minute).padStart(2, '0')
 
-				if (groupSize === 'large') {
-					if (year === 0) {
-						return `Day ${day}`
-					}
-
-					return `Year ${year}, Day ${day}`
+			if (groupSize === 'large') {
+				if (scaleLevel === 2 || scaleLevel === 3) {
+					return `${monthName} ${year}`
+				} else if (scaleLevel >= 4) {
+					return `Year ${year}`
 				}
+				return `${monthName} ${padDay}, ${year}`
+			}
 
-				if (groupSize === 'medium') {
-					if (scaleLevel === 0) {
-						return `${padHours}:${padMinutes}`
-					} else if (scaleLevel === 1) {
-						if (year === 0) {
-							return `Day ${day}`
-						}
-
-						return `Year ${year}, Day ${day}`
-					} else if (scaleLevel === 2 || scaleLevel === 3) {
+			if (groupSize === 'medium') {
+				if (scaleLevel <= 0) {
+					return `${padHour}:${padMinute}`
+				} else if (scaleLevel === 1) {
+					return `${monthNameShort} ${padDay}`
+				} else if (scaleLevel === 2) {
+					// If months are short, use short month name
+					if (([...months].sort((a, b) => a.days - b.days)[0]?.days ?? 0) <= 20) {
 						return `${monthNameShort}`
 					}
-				}
-
-				if (groupSize === 'small') {
-					if (scaleLevel === 0 || scaleLevel === 1) {
-						return `${padHours}:${padMinutes}`
-					} else if (scaleLevel === 2) {
-						return `${day}`
-					} else if (scaleLevel === 3) {
-						return `${day}`
+					return `${monthName} ${year}`
+				} else if (scaleLevel === 3) {
+					// If months are short, use short month name
+					if (([...months].sort((a, b) => a.days - b.days)[0]?.days ?? 0) <= 20) {
+						return `${monthNameShort}`
 					}
+					return `${monthName}`
+				} else if (scaleLevel === 4) {
+					return `${monthName} ${year}`
+				} else if (scaleLevel >= 5) {
+					return `Year ${year}`
 				}
-			} else {
-				const padDay = String(day).padStart(2, '0')
-				const padHour = String(hour).padStart(2, '0')
-				const padMinute = String(minute).padStart(2, '0')
-
-				if (groupSize === 'large') {
-					if (scaleLevel === 2 || scaleLevel === 3) {
-						return `${monthName} ${year}`
-					} else if (scaleLevel >= 4) {
-						return `Year ${year}`
-					}
-					return `${monthName} ${padDay}, ${year}`
-				}
-
-				if (groupSize === 'medium') {
-					if (scaleLevel === 0) {
-						return `${padHour}:${padMinute}`
-					} else if (scaleLevel === 1) {
-						return `${monthNameShort} ${padDay}`
-					} else if (scaleLevel === 2) {
-						// If months are short, use short month name
-						if (([...months].sort((a, b) => a.days - b.days)[0]?.days ?? 0) <= 20) {
-							return `${monthNameShort}`
-						}
-						return `${monthName} ${year}`
-					} else if (scaleLevel === 3) {
-						// If months are short, use short month name
-						if (([...months].sort((a, b) => a.days - b.days)[0]?.days ?? 0) <= 20) {
-							return `${monthNameShort}`
-						}
-						return `${monthName}`
-					} else if (scaleLevel === 4) {
-						return `${monthName} ${year}`
-					} else if (scaleLevel >= 5) {
-						return `Year ${year}`
-					}
-				}
-
-				if (groupSize === 'small') {
-					if (scaleLevel === 0) {
-						return `${padHour}:${padMinute}`
-					} else if (scaleLevel === 1) {
-						return `${padHour}:${padMinute}`
-					} else if (scaleLevel === 2) {
-						return day % 8 === 0 ? `${monthNameShort} ${padDay}` : ''
-					} else if (scaleLevel === 4) {
-						return `${year}`
-					} else if (scaleLevel >= 5) {
-						return `${year}`
-					}
-				}
-				return 'No label'
 			}
+
+			if (groupSize === 'small') {
+				if (scaleLevel <= 1) {
+					return `${padHour}:${padMinute}`
+				} else if (scaleLevel === 2) {
+					return day % 7 === 0 ? `${monthNameShort} ${padDay}` : ''
+				} else if (scaleLevel >= 4) {
+					return `${year}`
+				}
+			}
+			return 'No label'
 		},
-		[months, parseTime, usedCalendar],
+		[months, parseTime],
 	)
 
 	const timeToShortestLabel = useCallback(
 		(rawTime: number, scaleLevel: ScaleLevel) => {
 			const { year, monthIndex, day, hour, minute } = parseTime(rawTime)
-			if (usedCalendar === 'COUNTUP') {
-				const padHours = String(hour).padStart(2, '0')
-				const padMinutes = String(minute).padStart(2, '0')
-
-				if (scaleLevel === 0 || scaleLevel === 1 || scaleLevel === 2 || scaleLevel === 3) {
-					return `${padHours}:${padMinutes}`
-				}
-
-				return `Year ${year}, Day ${day}`
-			} else if (usedCalendar === 'RIMWORLD') {
+			if (usedCalendar === 'RIMWORLD') {
 				const padMonth = String(monthIndex + 1).padStart(2, '0')
 				const padDay = String(day).padStart(2, '0')
 				const padHours = String(hour).padStart(2, '0')
