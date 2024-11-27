@@ -1,0 +1,19 @@
+enum AnnouncementType {
+    Info
+    Welcome
+    WorldShared
+}
+
+model UserAnnouncement {
+    id        String   @id @unique @default(uuid())
+    timestamp DateTime @default(now())
+
+    isUnread Boolean @default(true)
+
+    type        AnnouncementType
+    title       String
+    description String
+
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+}

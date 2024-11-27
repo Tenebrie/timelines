@@ -1,0 +1,37 @@
+enum UserLevel {
+    Free
+    Premium
+    Admin
+}
+
+enum CollaboratorAccess {
+    ReadOnly
+    Editing
+}
+
+model User {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
+    email    String @unique
+    username String
+    password String
+
+    level         UserLevel          @default(Free)
+    notifications UserAnnouncement[]
+
+    worlds          World[]
+    collaboratingIn CollaboratingUser[]
+}
+
+model CollaboratingUser {
+    user   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+    world  World              @relation(fields: [worldId], references: [id], onDelete: Cascade)
+    access CollaboratorAccess
+
+    userId  String
+    worldId String
+
+    @@id([userId, worldId])
+}
