@@ -6,4 +6,7 @@ ADD ./app/calliope-websockets /app/calliope
 ADD ./app/ts-shared /app/ts-shared
 RUN yarn
 
+WORKDIR /app/ts-shared
+RUN yarn
+
 EXPOSE 3000

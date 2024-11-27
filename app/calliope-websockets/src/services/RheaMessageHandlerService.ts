@@ -1,4 +1,4 @@
-import { CalliopeToClientMessageType } from '@src/ts-shared/CalliopeToClientMessage'
+import { CalliopeToClientMessage, CalliopeToClientMessageType } from '@src/ts-shared/CalliopeToClientMessage'
 import {
 	RheaToCalliopeMessage,
 	RheaToCalliopeMessageHandlers,
@@ -7,53 +7,48 @@ import {
 
 import { WebsocketService } from './WebsocketService'
 
+const relayMessageToUserSockets = (
+	message: CalliopeToClientMessage & { data: CalliopeToClientMessage['data'] & { userId: string } }
+) => {
+	console.log(message)
+	const clients = WebsocketService.findClientsByUserId(message.data.userId)
+	console.log(clients.length)
+	clients.forEach((client) => client.sendMessage(message))
+}
+
+const relayMessageToWorldSockets = (
+	message: CalliopeToClientMessage & { data: CalliopeToClientMessage['data'] & { worldId: string } }
+) => {
+	const clients = WebsocketService.findClientsByWorldId(message.data.worldId)
+	clients.forEach((client) => client.sendMessage(message))
+}
+
 const handlers: RheaToCalliopeMessageHandlers = {
 	[RheaToCalliopeMessageType.ANNOUNCEMENT]: (data) => {
-		const clients = WebsocketService.findClients(data.userId)
-		clients.forEach((client) =>
-			client.sendMessage({
-				type: CalliopeToClientMessageType.ANNOUNCEMENT,
-				data: null,
-			})
-		)
+		relayMessageToUserSockets({
+			type: CalliopeToClientMessageType.ANNOUNCEMENT,
+			data,
+		})
 	},
 
-	[RheaToCalliopeMessageType.WORLD_UPDATED]: (data) => {
-		const clients = WebsocketService.findClients(data.userId)
-		clients.forEach((client) =>
-			client.sendMessage({
-				type: CalliopeToClientMessageType.WORLD_UPDATED,
-				data: {
-					worldId: data.worldId,
-					timestamp: data.timestamp,
-				},
-			})
-		)
+	[RheaToCalliopeMessageType.WORLD_SHARED]: (data) => {
+		relayMessageToUserSockets({ type: CalliopeToClientMessageType.WORLD_SHARED, data })
 	},
 
 	[RheaToCalliopeMessageType.WORLD_UNSHARED]: (data) => {
-		const clients = WebsocketService.findClients(data.userId)
-		clients.forEach((client) =>
-			client.sendMessage({
-				type: CalliopeToClientMessageType.WORLD_UNSHARED,
-				data: {
-					worldId: data.worldId,
-				},
-			})
-		)
+		relayMessageToUserSockets({ type: CalliopeToClientMessageType.WORLD_UNSHARED, data })
+	},
+
+	[RheaToCalliopeMessageType.WORLD_UPDATED]: (data) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_UPDATED, data })
 	},
 
 	[RheaToCalliopeMessageType.WORLD_EVENT_UPDATED]: (data) => {
-		const clients = WebsocketService.findClients(data.userId)
-		clients.forEach((client) =>
-			client.sendMessage({
-				type: CalliopeToClientMessageType.WORLD_EVENT_UPDATED,
-				data: {
-					worldId: data.worldId,
-					event: data.event,
-				},
-			})
-		)
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_EVENT_UPDATED, data })
+	},
+
+	[RheaToCalliopeMessageType.WORLD_EVENT_DELTA_UPDATED]: (data) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_EVENT_DELTA_UPDATED, data })
 	},
 }
 

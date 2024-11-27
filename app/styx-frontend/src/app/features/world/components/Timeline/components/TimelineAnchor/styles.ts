@@ -53,6 +53,7 @@ export const Divider = styled.div.attrs<{ color: string; width: number; height: 
 		backgroundColor: props.color,
 		width: `${props.width}px`,
 		height: `${8 * props.height}px`,
+		marginLeft: `${-props.width / 2}px`,
 	},
 }))<{ color: string; height: number }>`
 	position: absolute;

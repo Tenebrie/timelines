@@ -9,7 +9,7 @@ import {
 	CalliopeToClientMessageType,
 } from '@/ts-shared/CalliopeToClientMessage'
 
-import { ingestEvent } from '../../utils/ingestEvent'
+import { ingestEvent, ingestEventDelta } from '../../utils/ingestEvent'
 import { worldSlice } from '../world/reducer'
 import { getWorldState } from '../world/selectors'
 
@@ -17,7 +17,7 @@ export const useLiveMessageHandlers = () => {
 	const updatedAtRef = useRef<string>('0')
 
 	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState)
-	const { updateEvent } = worldSlice.actions
+	const { updateEvent, updateEventDelta } = worldSlice.actions
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -31,16 +31,26 @@ export const useLiveMessageHandlers = () => {
 		},
 		[CalliopeToClientMessageType.WORLD_UPDATED]: (data) => {
 			if (new Date(updatedAtRef.current) < new Date(data.timestamp)) {
-				// TODO: Invalidate on all APIs
 				dispatch(worldDetailsApi.util.invalidateTags(['worldDetails']))
 			}
 		},
+		[CalliopeToClientMessageType.WORLD_SHARED]: () => {
+			dispatch(worldListApi.util.invalidateTags(['worldList']))
+		},
 		[CalliopeToClientMessageType.WORLD_UNSHARED]: () => {
-			// TODO: Invalidate on all APIs
 			dispatch(worldListApi.util.invalidateTags(['worldList']))
 		},
 		[CalliopeToClientMessageType.WORLD_EVENT_UPDATED]: (data) => {
 			dispatch(updateEvent(ingestEvent(JSON.parse(data.event) as GetWorldInfoApiResponse['events'][number])))
+		},
+		[CalliopeToClientMessageType.WORLD_EVENT_DELTA_UPDATED]: (data) => {
+			dispatch(
+				updateEventDelta(
+					ingestEventDelta(
+						JSON.parse(data.eventDelta) as GetWorldInfoApiResponse['events'][number]['deltaStates'][number],
+					),
+				),
+			)
 		},
 	}
 

@@ -6,9 +6,11 @@ import * as route from 'koa-route'
 import * as websocketify from 'koa-websocket'
 import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'tenebrie-framework'
 
+import { ClientMessageHandlerService } from './services/ClientMessageHandlerService'
 import { initRedisConnection } from './services/RedisService'
 import { TokenService } from './services/TokenService'
 import { WebsocketService } from './services/WebsocketService'
+import { ClientToCalliopeMessage } from './ts-shared/ClientToCalliopeMessage'
 
 const app = websocketify(new Koa())
 
@@ -39,20 +41,19 @@ app.ws.use(
 
 		const { id: userId } = TokenService.decodeJwtToken(authCookie)
 
-		ctx.websocket.on('open', () => {
-			console.info('Client connected!')
-		})
 		ctx.websocket.on('message', (rawMessage) => {
-			const message = String(rawMessage)
-			if (message === 'init') {
-				WebsocketService.registerClient(userId, ctx.websocket)
+			try {
+				const message = JSON.parse(rawMessage.toString()) as ClientToCalliopeMessage
+				ClientMessageHandlerService.handleMessage(message, userId, ctx.websocket)
+			} catch (e) {
+				console.error('Error handling message', e)
 			}
 		})
 		ctx.websocket.on('close', () => {
-			WebsocketService.forgetClient(userId, ctx.websocket)
+			WebsocketService.unregisterSocket(userId, ctx.websocket)
 		})
 		ctx.websocket.on('error', () => {
-			WebsocketService.forgetClient(userId, ctx.websocket)
+			WebsocketService.unregisterSocket(userId, ctx.websocket)
 		})
 	})
 )

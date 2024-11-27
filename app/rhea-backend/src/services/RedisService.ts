@@ -1,4 +1,4 @@
-import { User, WorldEvent } from '@prisma/client'
+import { User, WorldEvent, WorldEventDelta } from '@prisma/client'
 
 import {
 	RedisChannel,
@@ -23,62 +23,54 @@ export const RedisService = {
 		})
 	},
 
-	notifyAboutWorldUpdate: ({
-		user,
-		worldId,
-		timestamp,
-	}: {
-		user: User
-		worldId: string
-		timestamp: Date
-	}) => {
+	notifyAboutWorldUpdate: ({ worldId, timestamp }: { worldId: string; timestamp: Date }) => {
 		calliope.sendMessage({
 			type: RheaToCalliopeMessageType.WORLD_UPDATED,
 			data: {
-				userId: user.id,
 				worldId,
 				timestamp: timestamp.toISOString(),
 			},
 		})
 	},
 
-	notifyAboutWorldEventUpdate: ({
-		user,
-		worldId,
-		event,
-	}: {
-		user: User
-		worldId: string
-		event: WorldEvent
-	}) => {
+	notifyAboutWorldEventUpdate: ({ worldId, event }: { worldId: string; event: WorldEvent }) => {
 		calliope.sendMessage({
 			type: RheaToCalliopeMessageType.WORLD_EVENT_UPDATED,
 			data: {
-				userId: user.id,
 				worldId,
 				event: JSON.stringify(event, (_, value) => (typeof value === 'bigint' ? value.toString() : value)),
 			},
 		})
 	},
 
-	notifyAboutWorldShared: ({ users, worldId }: { users: User[]; worldId: string }) => {
+	notifyAboutWorldEventDeltaUpdate: ({ worldId, delta }: { worldId: string; delta: WorldEventDelta }) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.WORLD_EVENT_DELTA_UPDATED,
+			data: {
+				worldId,
+				eventDelta: JSON.stringify(delta, (_, value) =>
+					typeof value === 'bigint' ? value.toString() : value
+				),
+			},
+		})
+	},
+
+	notifyAboutWorldShared: ({ users }: { users: User[] }) => {
 		users.forEach((user) => {
 			calliope.sendMessage({
-				type: RheaToCalliopeMessageType.WORLD_UNSHARED,
+				type: RheaToCalliopeMessageType.WORLD_SHARED,
 				data: {
 					userId: user.id,
-					worldId,
 				},
 			})
 		})
 	},
 
-	notifyAboutWorldUnshared: ({ userId, worldId }: { userId: string; worldId: string }) => {
+	notifyAboutWorldUnshared: ({ userId }: { userId: string }) => {
 		calliope.sendMessage({
 			type: RheaToCalliopeMessageType.WORLD_UNSHARED,
 			data: {
 				userId,
-				worldId,
 			},
 		})
 	},

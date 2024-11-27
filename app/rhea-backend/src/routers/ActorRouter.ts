@@ -47,7 +47,7 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 
 	const { actor, world } = await ActorService.createActor(worldId, params)
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 
 	return actor
 })
@@ -77,7 +77,7 @@ router.patch('/api/world/:worldId/actor/:actorId', async (ctx) => {
 
 	const { actor, world } = await ActorService.updateActor({ worldId, actorId, params })
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 
 	return actor
 })
@@ -100,7 +100,7 @@ router.delete('/api/world/:worldId/actor/:actorId', async (ctx) => {
 
 	const { actor, world } = await ActorService.deleteActor({ worldId, actorId })
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 
 	return actor
 })

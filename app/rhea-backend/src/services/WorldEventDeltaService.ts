@@ -35,40 +35,24 @@ export const WorldEventDeltaService = {
 
 	updateEventDeltaState: async ({
 		worldId,
-		eventId,
 		deltaId,
 		params,
-		eventParams,
 	}: {
 		worldId: string
-		eventId: string
 		deltaId: string
 		params: Partial<WorldEventDelta>
-		eventParams: Partial<Pick<WorldEvent, 'worldEventTrackId'>>
 	}) => {
-		const [deltaState, event, world] = await getPrismaClient().$transaction([
+		const [deltaState, world] = await getPrismaClient().$transaction([
 			getPrismaClient().worldEventDelta.update({
 				where: {
 					id: deltaId,
 				},
 				data: params,
 			}),
-			getPrismaClient().worldEvent.update({
-				where: {
-					id: eventId,
-				},
-				data: eventParams,
-				include: {
-					deltaStates: true,
-					targetActors: true,
-					mentionedActors: true,
-				},
-			}),
 			makeTouchWorldQuery(worldId),
 		])
 		return {
 			deltaState,
-			event,
 			world,
 		}
 	},

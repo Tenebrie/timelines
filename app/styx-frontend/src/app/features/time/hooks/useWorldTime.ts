@@ -197,7 +197,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 			const padMinute = String(minute).padStart(2, '0')
 
 			if (groupSize === 'large') {
-				if (scaleLevel === 2 || scaleLevel <= 3) {
+				if (scaleLevel === 2 || scaleLevel === 3) {
 					return `${monthName} ${year}`
 				} else if (scaleLevel >= 4) {
 					return `Year ${year}`

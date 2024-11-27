@@ -36,10 +36,12 @@
 	},
 	"dependencies": {
 		"lint-staged": "^13.2.0",
-		"module-alias": "^2.2.2"
+		"module-alias": "^2.2.2",
+		"ws": "^8.18.0"
 	},
 	"devDependencies": {
 		"@types/node": "^16.0.0",
+		"@types/ws": "^8.5.10",
 		"@typescript-eslint/eslint-plugin": "^5.0.0",
 		"@typescript-eslint/parser": "^5.0.0",
 		"eslint": "^8.0.1",

@@ -73,7 +73,7 @@ router.post('/api/world/:worldId/event-track', async (ctx) => {
 		})
 	}
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 
 	return eventTrack
 })
@@ -106,7 +106,7 @@ router.patch('/api/world/:worldId/event-track/:trackId', async (ctx) => {
 		data: params,
 	})
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 
 	return eventTrack
 })
@@ -137,7 +137,7 @@ router.post('/api/world/:worldId/event-track/swap', async (ctx) => {
 		trackIdB: params.trackB,
 	})
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 })
 
 router.delete('/api/world/:worldId/event-track/:trackId', async (ctx) => {
@@ -161,7 +161,7 @@ router.delete('/api/world/:worldId/event-track/:trackId', async (ctx) => {
 		trackId,
 	})
 
-	RedisService.notifyAboutWorldUpdate({ user, worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 
 	return eventTrack
 })

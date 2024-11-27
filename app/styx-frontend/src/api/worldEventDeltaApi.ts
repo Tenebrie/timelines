@@ -67,7 +67,6 @@ export type UpdateWorldEventDeltaApiArg = {
 		timestamp?: string
 		name?: null | string
 		description?: null | string
-		worldEventTrackId?: null | string
 	}
 }
 export type DeleteWorldEventDeltaApiResponse = /** status 200  */ {
