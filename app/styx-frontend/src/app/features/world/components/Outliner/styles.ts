@@ -6,7 +6,6 @@ import { ScrollbarStyling } from '@/app/styles'
 
 export const OutlinerContainer = styled.div`
 	flex: 1;
-	height: calc(100% - 32px);
 	display: flex;
 	flex-direction: column;
 	gap: 12px;

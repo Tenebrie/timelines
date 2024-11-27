@@ -28,7 +28,10 @@ const TimelineControlsComponent = ({ containerRef, onNavigateToTime, onZoomIn, o
 	const scrollTimelineRight = useEventBusDispatch({ event: 'scrollTimelineRight' })
 
 	return (
-		<Paper elevation={2} sx={{ backgroundColor: theme.custom.palette.background.timelineHeader }}>
+		<Paper
+			elevation={2}
+			sx={{ backgroundColor: theme.custom.palette.background.timelineHeader, minWidth: '700px' }}
+		>
 			<div
 				className="block-timeline"
 				style={{

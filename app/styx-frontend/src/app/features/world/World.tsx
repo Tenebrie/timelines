@@ -16,9 +16,9 @@ import { DeleteEventDeltaModal } from './components/EventEditor/components/Delet
 import { DeleteEventModal } from './components/EventEditor/components/DeleteEventModal/DeleteEventModal'
 import { RevokedStatementWizard } from './components/EventEditor/components/RevokedStatementWizard/RevokedStatementWizard'
 import { EventWizardModal } from './components/EventWizard/EventWizardModal'
-import { OverviewPanel } from './components/OverviewPanel/OverviewPanel'
 import { Timeline } from './components/Timeline/Timeline'
 import { TimelinePlaceholder } from './components/Timeline/TimelinePlaceholder'
+import { WorldDrawer } from './components/WorldDrawer/WorldDrawer'
 import { WorldNavigator } from './components/WorldNavigator/WorldNavigator'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
 import { worldSlice } from './reducer'
@@ -91,7 +91,7 @@ export const World = () => {
 			>
 				<WorldNavigator />
 				<WorldContainer>
-					<OverviewPanel />
+					<WorldDrawer />
 					<div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
 						<SwitchTransition>
 							<CSSTransition key={key} timeout={300} classNames="fade" unmountOnExit nodeRef={nodeRef}>

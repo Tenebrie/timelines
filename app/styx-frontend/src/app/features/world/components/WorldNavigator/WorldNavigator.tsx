@@ -8,10 +8,15 @@ import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { getOverviewPreferences } from '@/app/features/preferences/selectors'
 import { useWorldRouter } from '@/router/routes/worldRoutes'
 
+import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
+import { worldSlice } from '../../reducer'
+
 export const WorldNavigatorComponent = () => {
-	const { navigateToCurrentWorldRoot } = useWorldRouter()
+	const { navigateToOutliner } = useWorldRouter()
+	const scrollTimelineTo = useTimelineBusDispatch()
 
 	const { panelOpen } = useSelector(getOverviewPreferences)
+	const { setSelectedTime } = worldSlice.actions
 	const { setPanelOpen } = preferencesSlice.actions
 	const dispatch = useDispatch()
 
@@ -20,8 +25,10 @@ export const WorldNavigatorComponent = () => {
 	}, [dispatch, panelOpen, setPanelOpen])
 
 	const onNavigate = useCallback(() => {
-		navigateToCurrentWorldRoot()
-	}, [navigateToCurrentWorldRoot])
+		navigateToOutliner()
+		dispatch(setSelectedTime(0))
+		scrollTimelineTo(0)
+	}, [dispatch, navigateToOutliner, scrollTimelineTo, setSelectedTime])
 
 	return (
 		<BaseNavigator>

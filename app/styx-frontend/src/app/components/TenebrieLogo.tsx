@@ -10,5 +10,5 @@ type Props = {
 
 export const TenebrieLogo = ({ sizeScalar: providedSizeScalar }: Props) => {
 	const sizeScalar = providedSizeScalar ?? 1
-	return <Logo src="logo.webp" alt="Logo" style={{ height: 155 * sizeScalar }} />
+	return <Logo src="/logo.webp" alt="Logo" style={{ height: 155 * sizeScalar }} />
 }
