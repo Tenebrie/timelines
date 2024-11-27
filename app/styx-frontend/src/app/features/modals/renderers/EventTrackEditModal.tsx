@@ -2,13 +2,15 @@ import { Delete, Save } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, Stack, TextField, Tooltip, Typography } from '@mui/material'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useDeleteWorldEventTrackMutation, useUpdateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
+import { getWorldIdState } from '../../world/selectors'
 import { useModal } from '../reducer'
 
 export const EventTrackEditModal = () => {
@@ -21,8 +23,8 @@ export const EventTrackEditModal = () => {
 	const [name, setName] = useState('')
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
 
-	const { stateOf, navigateToCurrentWorldRoot } = useWorldRouter()
-	const { worldId } = stateOf(worldRoutes.root)
+	const { navigateToCurrentWorldRoot } = useWorldRouter()
+	const worldId = useSelector(getWorldIdState)
 
 	useModalCleanup({
 		isOpen,

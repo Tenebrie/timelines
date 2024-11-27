@@ -5,10 +5,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { getTimelinePreferences } from '@/app/features/preferences/selectors'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 import { useWorldRouter } from '@/router/routes/worldRoutes'
 
 import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
+import { worldSlice } from '../../reducer'
 import { getWorldState } from '../../selectors'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
@@ -25,33 +27,30 @@ import { TimelineContainer, TimelineWrapper } from './styles'
 import { TimelineState } from './utils/TimelineState'
 
 export const Timeline = () => {
-	const { timeOrigin, calendar } = useSelector(getWorldState)
+	const { timeOrigin, calendar, selectedTime } = useSelector(getWorldState)
 	const { lineSpacing } = useSelector(getTimelinePreferences)
 	const theme = useCustomTheme()
 
-	const dispatch = useDispatch()
+	const { setSelectedTime } = worldSlice.actions
 	const { setScaleLevel } = timelineSlice.actions
-
-	const { navigateToOutliner, selectedTimeOrNull } = useWorldRouter()
+	const dispatch = useDispatch()
+	const { navigateToOutliner } = useWorldRouter()
 
 	const scrollTimelineTo = useTimelineBusDispatch()
 
 	const onClick = useCallback(
 		(time: number) => {
-			navigateToOutliner(time)
+			navigateToOutliner()
+			dispatch(setSelectedTime(time))
 		},
-		[navigateToOutliner],
+		[dispatch, setSelectedTime, navigateToOutliner],
 	)
 
 	const onDoubleClick = useCallback(
 		(time: number) => {
-			if (selectedTimeOrNull === null) {
-				navigateToOutliner(time)
-			} else {
-				scrollTimelineTo(time)
-			}
+			scrollTimelineTo(time)
 		},
-		[navigateToOutliner, scrollTimelineTo, selectedTimeOrNull],
+		[scrollTimelineTo],
 	)
 
 	const { containerRef, containerWidth } = useTimelineDimensions()
@@ -61,12 +60,10 @@ export const Timeline = () => {
 		containerRef: [containerRef, anotherRef],
 		defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
 		scaleLimits: [-1, 7],
-		selectedTime: selectedTimeOrNull,
+		selectedTime,
 		onClick: (time) => onClick(time),
 		onDoubleClick: (time) => onDoubleClick(time),
 	})
-
-	// useScrollToActiveEntity()
 
 	useEffect(() => {
 		dispatch(setScaleLevel(scaleLevel))
@@ -101,6 +98,10 @@ export const Timeline = () => {
 
 	const containerHeight = useContainerHeight()
 
+	useEffectOnce(() => {
+		scrollTimelineTo(selectedTime)
+	})
+
 	return (
 		<Paper>
 			<TimelineWrapper>
@@ -127,14 +128,12 @@ export const Timeline = () => {
 						scaleLevel={scaleLevel}
 						containerWidth={containerWidth}
 					/>
-					{selectedTimeOrNull !== null && (
-						<TimeMarker
-							timestamp={selectedTimeOrNull}
-							scroll={scroll}
-							scaleLevel={scaleLevel}
-							transitioning={isSwitchingScale}
-						/>
-					)}
+					<TimeMarker
+						timestamp={selectedTime}
+						scroll={scroll}
+						scaleLevel={scaleLevel}
+						transitioning={isSwitchingScale}
+					/>
 					<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
 					<Paper
 						elevation={4}

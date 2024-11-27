@@ -8,16 +8,14 @@ import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getWorldState } from '@/app/features/world/selectors'
 import { useIsReadOnly } from '@/hooks/useIsReadOnly'
-import { useWorldRouter } from '@/router/routes/worldRoutes'
 
 import { CreateHerePopover } from '../CreateHerePopover/CreateHerePopover'
 
 export const OutlinerControls = () => {
 	const { timeToLabel } = useWorldTime()
-	const { selectedTimeOrNull } = useWorldRouter()
 
 	const dispatch = useDispatch()
-	const { events } = useSelector(getWorldState)
+	const { selectedTime } = useSelector(getWorldState)
 	const { showInactiveStatements } = useSelector(getOutlinerPreferences)
 	const { setShowInactiveStatements } = preferencesSlice.actions
 
@@ -26,10 +24,7 @@ export const OutlinerControls = () => {
 	const popupState = usePopupState({ variant: 'popover', popupId: 'outlinerFilters' })
 	const createHerePopupState = usePopupState({ variant: 'popover', popupId: 'createHerePopover' })
 
-	const latestTime = [...events].sort((a, b) => b.timestamp - a.timestamp)[0]?.timestamp ?? 0
-
-	const label =
-		selectedTimeOrNull === null ? `Latest (${timeToLabel(latestTime)})` : timeToLabel(selectedTimeOrNull)
+	const label = timeToLabel(selectedTime)
 
 	return (
 		<Stack>
@@ -67,15 +62,11 @@ export const OutlinerControls = () => {
 						</Stack>
 					</Popover>
 					{!isReadOnly && (
-						<Button
-							disabled={selectedTimeOrNull === null}
-							variant="contained"
-							{...bindTrigger(createHerePopupState)}
-						>
+						<Button variant="contained" {...bindTrigger(createHerePopupState)}>
 							Create new
 						</Button>
 					)}
-					<CreateHerePopover state={createHerePopupState} timestamp={selectedTimeOrNull ?? 0} />
+					<CreateHerePopover state={createHerePopupState} timestamp={selectedTime} />
 				</Stack>
 			</Stack>
 		</Stack>

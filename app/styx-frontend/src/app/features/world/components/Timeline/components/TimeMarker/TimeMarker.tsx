@@ -15,7 +15,7 @@ type Props = {
 }
 
 export const TimeMarker = ({ timestamp, scroll, scaleLevel, transitioning }: Props) => {
-	const { calendar } = useSelector(getWorldCalendarState)
+	const calendar = useSelector(getWorldCalendarState)
 	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel, calendar })
 	const offset = Math.round(realTimeToScaledTime(timestamp)) + scroll
 	const theme = useCustomTheme()

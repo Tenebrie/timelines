@@ -1,10 +1,11 @@
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import { useSelector } from 'react-redux'
+
+import { getWorldIdState } from '@/app/features/world/selectors'
 
 import { WorldDetailsEditorWrapper } from './WorldDetailsEditorWrapper'
 
 export const WorldDetails = () => {
-	const { stateOf } = useWorldRouter()
-	const { worldId } = stateOf(worldRoutes.root)
+	const worldId = useSelector(getWorldIdState)
 
 	return <WorldDetailsEditorWrapper worldId={worldId} key={worldId} />
 }

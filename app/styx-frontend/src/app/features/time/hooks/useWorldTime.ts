@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { ScaleLevel } from '../../world/components/Timeline/types'
-import { getWorldState } from '../../world/selectors'
+import { getWorldCalendarState } from '../../world/selectors'
 import { WorldCalendarType } from '../../world/types'
 import { useWorldCalendar } from './useWorldCalendar'
 
@@ -24,7 +24,7 @@ type TimeDefinition = {
 export const maximumTime = 8640000000000000
 
 export const useWorldTime = ({ calendar }: Props = {}) => {
-	const { calendar: worldCalendar } = useSelector(getWorldState)
+	const worldCalendar = useSelector(getWorldCalendarState)
 
 	const msPerUnit = useMemo(() => 60000, []) // Milliseconds per unit
 	const daysInYear = useMemo(() => 365.2422, [])

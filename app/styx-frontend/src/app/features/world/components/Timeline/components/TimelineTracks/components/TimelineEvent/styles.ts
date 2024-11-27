@@ -29,8 +29,6 @@ export const Marker = styled.div<{
 
 	.icon {
 		position: absolute;
-		background: ${(props) => props.$borderColor};
-		mask-image: url(${(props) => props.$iconPath});
 		mask-size: cover;
 		mask-position: 0px 0px;
 		mask-repeat: no-repeat;
@@ -38,7 +36,16 @@ export const Marker = styled.div<{
 		background-size: contain;
 		width: calc(100%);
 		height: calc(100%);
-		transition: background-color 0.3s;
+		transition:
+			color 0.3s,
+			background-color 0.3s;
+		// color: ${(props) => props.$borderColor};
+		color: red;
+	}
+
+	.image {
+		background: ${(props) => props.$borderColor};
+		mask-image: url(${(props) => props.$iconPath});
 	}
 
 	&.ghostEvent {
@@ -58,12 +65,22 @@ export const Marker = styled.div<{
 	}
 
 	&:hover > .icon {
-		background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[500] : colors.green[800])};
+		color: ${(props) => (props.$theme.mode === 'dark' ? colors.green[500] : colors.green[800])};
 	}
 	&.replace:hover > .icon {
-		background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[900])};
+		color: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[900])};
 	}
 	&.revoked:hover > .icon {
+		color: ${(props) => (props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900])};
+	}
+
+	&:hover > .image {
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[500] : colors.green[800])};
+	}
+	&.replace:hover > .image {
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[900])};
+	}
+	&.revoked:hover > .image {
 		background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900])};
 	}
 

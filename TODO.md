@@ -1,5 +1,4 @@
 # Part 1
-- Show event on a timeline after creating from dialog
 - Hide unused tracks
 - Color code the tracks (somehow)
 - Implement scrubber

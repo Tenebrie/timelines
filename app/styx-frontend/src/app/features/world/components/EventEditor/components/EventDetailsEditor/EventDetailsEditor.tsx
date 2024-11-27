@@ -1,6 +1,7 @@
 import { ArrowBack, Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Autocomplete, Button, Grid, Stack, Switch, TextField, Tooltip } from '@mui/material'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
@@ -19,7 +20,7 @@ import { useEventFields } from './useEventFields'
 
 type Props = {
 	event: WorldEvent
-	mode: 'create' | 'edit'
+	mode: 'create' | 'create-compact' | 'edit'
 }
 
 export const EventDetailsEditor = ({ event, mode }: Props) => {
@@ -46,14 +47,27 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		setExternalLink,
 	} = state
 
-	const { isCreating, createWorldEvent, createIcon, createIconColor } = useCreateEvent({ state })
+	const { isCreating, createWorldEvent, createIcon, createIconColor } = useCreateEvent({
+		state,
+		onCreated: () => {
+			if (mode !== 'edit') {
+				setName('')
+				setDescription('')
+				setCustomNameEnabled(false)
+			}
+		},
+	})
 	const { isSaving, manualSave, onDelete, autosaveIcon, autosaveColor } = useEditEvent({
 		mode,
 		event,
 		state,
 	})
 
-	const { actors } = useSelector(getWorldState)
+	useEffect(() => {
+		setTimestamp(event.timestamp, { cleanSet: true })
+	}, [event, setTimestamp])
+
+	const { actors } = useSelector(getWorldState, (a, b) => a.actors === b.actors)
 	const {
 		actorOptions,
 		mentionedActorOptions,
@@ -65,7 +79,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 	})
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
-		if (mode === 'create') {
+		if (mode !== 'edit') {
 			createWorldEvent()
 		} else {
 			manualSave()
@@ -85,8 +99,8 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 
 	return (
 		<>
-			<Grid item xs={12} md={6} style={{ maxHeight: '100%' }}>
-				<OutlinedContainer label={mode === 'create' ? 'Create Event' : 'Edit Event'} gap={3}>
+			<Grid item xs={12} md={mode === 'create-compact' ? 12 : 6} style={{ maxHeight: '100%' }}>
+				<OutlinedContainer label={mode === 'edit' ? 'Edit Event' : 'Create Event'} gap={3}>
 					<Stack spacing={2} direction="column">
 						<TimestampField label="Started at" timestamp={timestamp} onChange={setTimestamp} />
 						<Stack direction="row" gap={1} width="100%">
@@ -117,7 +131,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 							autoFocus
 						/>
 						<Stack direction="row-reverse" justifyContent="space-between">
-							{mode === 'create' && (
+							{mode !== 'edit' && (
 								<Tooltip title={shortcutLabel} arrow placement="top">
 									<span>
 										<LoadingButton
@@ -154,68 +168,72 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 									</Button>
 								</Stack>
 							)}
-							<Button variant="outlined" onClick={() => window.history.back()} startIcon={<ArrowBack />}>
-								Back
-							</Button>
+							{mode !== 'create-compact' && (
+								<Button variant="outlined" onClick={() => window.history.back()} startIcon={<ArrowBack />}>
+									Back
+								</Button>
+							)}
 						</Stack>
 					</Stack>
 				</OutlinedContainer>
 			</Grid>
-			<Grid item xs={12} md={6} style={{ height: '100%' }}>
-				<OutlinedContainer label="Modules" gap={2}>
-					<Stack gap={2} height="100%">
-						<EventModulesControls modules={modules} state={state} />
-						<TimestampField
-							label="Resolved at"
-							timestamp={revokedAt}
-							initialTimestamp={timestamp}
-							onChange={setRevokedAt}
-							clearable
-						/>
-						{modules.includes('EventIcon') && (
-							<Grid item margin={0} padding={0}>
-								<EventIconDropdown icon={icon} onChange={setIcon} />
-							</Grid>
-						)}
-						{modules.includes('TargetActors') && (
-							<Autocomplete
-								value={selectedActors}
-								onChange={(_, value) => setSelectedActors(value)}
-								multiple={true}
-								options={actorOptions}
-								isOptionEqualToValue={(option, value) => option.id === value.id}
-								autoHighlight
-								renderOption={renderActorOption}
-								renderInput={(params) => <TextField {...params} label="Actors" />}
-								disableClearable
+			{mode !== 'create-compact' && (
+				<Grid item xs={12} md={6} style={{ height: '100%' }}>
+					<OutlinedContainer label="Modules" gap={2}>
+						<Stack gap={2} height="100%">
+							<EventModulesControls modules={modules} state={state} />
+							<TimestampField
+								label="Resolved at"
+								timestamp={revokedAt}
+								initialTimestamp={timestamp}
+								onChange={setRevokedAt}
+								clearable
 							/>
-						)}
-						{modules.includes('MentionedActors') && (
-							<Autocomplete
-								value={mentionedActors}
-								onChange={(_, value) => setMentionedActors(value)}
-								multiple={true}
-								options={mentionedActorOptions}
-								isOptionEqualToValue={(option, value) => option.id === value.id}
-								autoHighlight
-								renderOption={renderActorOption}
-								renderInput={(params) => <TextField {...params} label="Mentioned actors" />}
-							/>
-						)}
-						{modules.includes('ExternalLink') && (
-							<TextField
-								type="text"
-								label="External Link"
-								placeholder="https://example.com"
-								value={externalLink}
-								onChange={(e) => setExternalLink(e.target.value)}
-								inputProps={{ maxLength: 2048 }}
-								fullWidth
-							/>
-						)}
-					</Stack>
-				</OutlinedContainer>
-			</Grid>
+							{modules.includes('EventIcon') && (
+								<Grid item margin={0} padding={0}>
+									<EventIconDropdown icon={icon} onChange={setIcon} />
+								</Grid>
+							)}
+							{modules.includes('TargetActors') && (
+								<Autocomplete
+									value={selectedActors}
+									onChange={(_, value) => setSelectedActors(value)}
+									multiple={true}
+									options={actorOptions}
+									isOptionEqualToValue={(option, value) => option.id === value.id}
+									autoHighlight
+									renderOption={renderActorOption}
+									renderInput={(params) => <TextField {...params} label="Actors" />}
+									disableClearable
+								/>
+							)}
+							{modules.includes('MentionedActors') && (
+								<Autocomplete
+									value={mentionedActors}
+									onChange={(_, value) => setMentionedActors(value)}
+									multiple={true}
+									options={mentionedActorOptions}
+									isOptionEqualToValue={(option, value) => option.id === value.id}
+									autoHighlight
+									renderOption={renderActorOption}
+									renderInput={(params) => <TextField {...params} label="Mentioned actors" />}
+								/>
+							)}
+							{modules.includes('ExternalLink') && (
+								<TextField
+									type="text"
+									label="External Link"
+									placeholder="https://example.com"
+									value={externalLink}
+									onChange={(e) => setExternalLink(e.target.value)}
+									inputProps={{ maxLength: 2048 }}
+									fullWidth
+								/>
+							)}
+						</Stack>
+					</OutlinedContainer>
+				</Grid>
+			)}
 		</>
 	)
 }

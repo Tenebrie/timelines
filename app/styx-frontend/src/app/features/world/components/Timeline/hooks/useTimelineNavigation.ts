@@ -57,7 +57,7 @@ export const useTimelineNavigation = ({
 
 	const { getLevelScalar } = useTimelineLevelScalar()
 	const { parseTime, pickerToTimestamp } = useWorldTime()
-	const { calendar } = useSelector(getWorldCalendarState)
+	const calendar = useSelector(getWorldCalendarState)
 	const { lineSpacing } = useSelector(getTimelinePreferences)
 
 	const [scaleLevel, setScaleLevel] = useState<ScaleLevel>(0)

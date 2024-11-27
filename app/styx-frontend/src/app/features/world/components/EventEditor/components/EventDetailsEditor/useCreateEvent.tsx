@@ -1,8 +1,10 @@
 import { useCreateWorldEventMutation } from '@api/worldEventApi'
 import { useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { getWorldState } from '@/app/features/world/selectors'
+import { useTimelineBusDispatch } from '@/app/features/world/hooks/useTimelineBus'
+import { worldSlice } from '@/app/features/world/reducer'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useWorldRouter } from '@/router/routes/worldRoutes'
@@ -11,12 +13,16 @@ import { useEventFields } from './useEventFields'
 
 type Props = {
 	state: ReturnType<typeof useEventFields>['state']
+	onCreated: () => void
 }
 
-export const useCreateEvent = ({ state }: Props) => {
-	const { id: worldId } = useSelector(getWorldState)
+export const useCreateEvent = ({ state, onCreated }: Props) => {
+	const worldId = useSelector(getWorldIdState)
+	const { navigateToOutliner } = useWorldRouter()
 
-	const { navigateToOutliner, selectedTimeOrZero } = useWorldRouter()
+	const scrollTimelineTo = useTimelineBusDispatch()
+	const { setSelectedTime } = worldSlice.actions
+	const dispatch = useDispatch()
 
 	const [createWorldEvent, { isLoading: isCreating, isError }] = useCreateWorldEventMutation()
 
@@ -42,8 +48,20 @@ export const useCreateEvent = ({ state }: Props) => {
 		if (error) {
 			return
 		}
-		navigateToOutliner(selectedTimeOrZero)
-	}, [createWorldEvent, navigateToOutliner, selectedTimeOrZero, state, worldId])
+		scrollTimelineTo(state.timestamp)
+		navigateToOutliner()
+		dispatch(setSelectedTime(state.timestamp))
+		onCreated()
+	}, [
+		createWorldEvent,
+		scrollTimelineTo,
+		state,
+		worldId,
+		navigateToOutliner,
+		onCreated,
+		dispatch,
+		setSelectedTime,
+	])
 
 	const {
 		icon: createIcon,

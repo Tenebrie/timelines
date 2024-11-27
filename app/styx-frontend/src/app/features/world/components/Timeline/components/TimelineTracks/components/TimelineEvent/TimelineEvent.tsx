@@ -1,3 +1,4 @@
+import { Close } from '@mui/icons-material'
 import { colors, Typography } from '@mui/material'
 import classNames from 'classnames'
 import { memo, MouseEvent, Profiler, useState } from 'react'
@@ -30,8 +31,12 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 
 	const scrollTimelineTo = useTimelineBusDispatch()
 	const dispatch = useDispatch()
-	const { addTimelineMarkerToSelection, removeTimelineMarkerFromSelection, openTimelineContextMenu } =
-		worldSlice.actions
+	const {
+		addTimelineMarkerToSelection,
+		removeTimelineMarkerFromSelection,
+		openTimelineContextMenu,
+		setSelectedTime,
+	} = worldSlice.actions
 
 	const { navigateToEventEditor, navigateToEventDeltaEditor } = useWorldRouter()
 	const { getIconPath } = useEventIcons()
@@ -53,12 +58,12 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 				navigateToEventDeltaEditor({
 					eventId: entity.eventId,
 					deltaId: entity.id,
-					time: entity.markerPosition,
 				})
 			} else {
-				navigateToEventEditor({ eventId: entity.eventId, time: entity.markerPosition })
+				navigateToEventEditor({ eventId: entity.eventId })
 			}
 			scrollTimelineTo(entity.markerPosition)
+			dispatch(setSelectedTime(entity.markerPosition))
 		},
 		ignoreDelay: true,
 	})
@@ -131,7 +136,15 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 				$iconPath={getIconPath(entity.icon)}
 				data-testid="timeline-event-marker"
 			>
-				<div className="icon"></div>
+				{entity.markerType !== 'revokedAt' && <div className="icon image"></div>}
+				{entity.markerType === 'revokedAt' && (
+					<>
+						<div className="icon image"></div>
+						<div className="icon">
+							<Close sx={{ width: '100%', height: '100%' }} />
+						</div>
+					</>
+				)}
 				{isInfoVisible && (
 					<LabelContainer>
 						<Label data-hj-suppress>

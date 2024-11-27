@@ -75,7 +75,7 @@ const TimelineEventPositionerComponent = ({
 						ghostDelta: entity.markerType === 'deltaState',
 					})}
 				>
-					<div className="icon"></div>
+					<div className="icon image"></div>
 				</Marker>
 			</>
 		),

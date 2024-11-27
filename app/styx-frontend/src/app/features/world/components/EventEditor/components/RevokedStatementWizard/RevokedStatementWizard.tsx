@@ -15,7 +15,6 @@ import { getWorldState } from '@/app/features/world/selectors'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
 import { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 import Modal from '@/ui-lib/components/Modal/Modal'
 
@@ -25,11 +24,9 @@ export const RevokedStatementWizard = () => {
 	const [id, setId] = useState('')
 	const [inputValue, setInputValue] = useState('')
 
-	const { events: worldEvents } = useSelector(getWorldState)
+	const { id: worldId, selectedTime, events: worldEvents } = useSelector(getWorldState)
 	const { expandedEvents } = useSelector(getOutlinerPreferences)
 
-	const { stateOf, selectedTimeOrZero } = useWorldRouter()
-	const { worldId } = stateOf(worldRoutes.eventEditor)
 	const [revokeWorldStatement, { isLoading, isError, reset }] = useRevokeWorldEventMutation()
 	const { timeToLabel } = useWorldTime()
 
@@ -55,14 +52,14 @@ export const RevokedStatementWizard = () => {
 			await revokeWorldStatement({
 				worldId,
 				eventId: id,
-				body: { revokedAt: String(selectedTimeOrZero) },
+				body: { revokedAt: String(selectedTime) },
 			}),
 		)
 		if (error) {
 			return
 		}
 		close()
-	}, [close, id, isOpen, revokeWorldStatement, selectedTimeOrZero, worldId])
+	}, [close, id, isOpen, revokeWorldStatement, selectedTime, worldId])
 
 	const onCloseAttempt = () => {
 		if (isLoading) {
@@ -76,7 +73,7 @@ export const RevokedStatementWizard = () => {
 	})
 
 	const removableCards = worldEvents
-		.filter((event) => event.timestamp < selectedTimeOrZero)
+		.filter((event) => event.timestamp < selectedTime)
 		.sort((a, b) => a.timestamp - b.timestamp)
 
 	const options = removableCards.map((card) => ({
@@ -101,7 +98,7 @@ export const RevokedStatementWizard = () => {
 			<ModalHeader>Resolve event</ModalHeader>
 
 			<Typography>
-				<b>Timestamp:</b> {timeToLabel(selectedTimeOrZero)}
+				<b>Timestamp:</b> {timeToLabel(selectedTime)}
 			</Typography>
 			{removableCards.length > 0 && (
 				<Autocomplete

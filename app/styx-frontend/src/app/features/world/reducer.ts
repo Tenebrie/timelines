@@ -2,6 +2,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
+import { QueryParams } from '@/router/routes/QueryParams'
 
 import { ingestEvent } from '../../utils/ingestEvent'
 import {
@@ -44,6 +45,8 @@ export const initialState = {
 		selectedEvent: null as TimelineEntity<MarkerType> | null,
 		mousePos: { x: 0, y: 0 } as { x: number; y: number },
 	},
+
+	selectedTime: 0 as number,
 }
 
 export const worldSlice = createSlice({
@@ -196,6 +199,13 @@ export const worldSlice = createSlice({
 
 		closeTimelineContextMenu: (state) => {
 			state.timelineContextMenu.isOpen = false
+		},
+
+		/* Navigation state */
+		setSelectedTime: (state, { payload }: PayloadAction<number>) => {
+			state.selectedTime = payload
+			// Use history.replaceState to put the new selectedTime into the url
+			window.history.replaceState(null, '', `?${QueryParams.SELECTED_TIME}=${payload}`)
 		},
 	},
 })

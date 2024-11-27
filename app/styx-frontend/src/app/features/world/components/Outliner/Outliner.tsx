@@ -1,4 +1,4 @@
-import { Container, Tab, Tabs } from '@mui/material'
+import { Container, Stack, Tab, Tabs } from '@mui/material'
 import { Profiler, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Virtuoso } from 'react-virtuoso'
@@ -9,10 +9,10 @@ import { reportComponentProfile } from '@/app/features/profiling/reportComponent
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
 import { isNull } from '@/app/utils/isNull'
 import { useIsReadOnly } from '@/hooks/useIsReadOnly'
-import { useWorldRouter } from '@/router/routes/worldRoutes'
 
 import { useOutlinerTabs } from '../../hooks/useOutlinerTabs'
 import { getTimelineState, getWorldState } from '../../selectors'
+import { EventCreator } from '../EventEditor/EventCreator'
 import { useVisibleEvents } from '../EventSelector/useVisibleEvents'
 import { ActorWithStatementsRenderer } from '../Renderers/ActorWithStatementsRenderer'
 import { EventWithContentRenderer } from '../Renderers/Event/EventWithContentRenderer'
@@ -22,16 +22,23 @@ import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmpt
 import { OutlinerContainer, StatementsScroller } from './styles'
 
 export const Outliner = () => {
-	const { actors } = useSelector(getWorldState)
-	const { scaleLevel } = useSelector(getTimelineState)
-	const { lineSpacing } = useSelector(getTimelinePreferences)
-	const { showInactiveStatements, expandedActors, expandedEvents } = useSelector(getOutlinerPreferences)
+	const { actors, selectedTime } = useSelector(
+		getWorldState,
+		(a, b) => a.actors === b.actors && a.selectedTime === b.selectedTime,
+	)
+	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
+	const { lineSpacing } = useSelector(getTimelinePreferences, (a, b) => a.lineSpacing === b.lineSpacing)
+	const { showInactiveStatements, expandedActors, expandedEvents } = useSelector(
+		getOutlinerPreferences,
+		(a, b) =>
+			a.showInactiveStatements === b.showInactiveStatements &&
+			a.expandedActors === b.expandedActors &&
+			a.expandedEvents === b.expandedEvents,
+	)
 
 	const { getLevelScalar } = useTimelineLevelScalar()
 
 	const { isReadOnly } = useIsReadOnly()
-	const { selectedTimeOrNull } = useWorldRouter()
-	const selectedTime = selectedTimeOrNull === null ? Infinity : selectedTimeOrNull
 
 	// Sorted list of all events visible at this point in outliner
 	const highlightWithin = lineSpacing * getLevelScalar(scaleLevel)
@@ -66,6 +73,10 @@ export const Outliner = () => {
 		[actors, expandedActors, visibleEvents],
 	)
 
+	// const simplifiedView = useMemo(() => {
+
+	// })
+
 	const eventActions = useMemo<('edit' | 'collapse')[]>(() => {
 		if (isReadOnly) {
 			return ['collapse']
@@ -80,7 +91,10 @@ export const Outliner = () => {
 
 	return (
 		<Profiler id="Outliner" onRender={reportComponentProfile}>
-			<Container maxWidth="lg" style={{ height: '100%' }}>
+			<Container maxWidth="xl" style={{ height: '100%', display: 'flex' }}>
+				<Stack sx={{ flex: 1 }}>
+					<EventCreator mode="create-compact" />
+				</Stack>
 				<OutlinerContainer>
 					<OutlinerControls />
 					<OutlinedContainer label="World state" fullHeight>
@@ -96,6 +110,7 @@ export const Outliner = () => {
 													<Tab label="All" />
 													<Tab label="Actors" />
 													<Tab label="Events" />
+													<Tab label="Simplified" />
 												</Tabs>
 											)
 										}

@@ -14,7 +14,7 @@ type Props = {
 }
 
 export const useVisibleEvents = ({ timestamp, excludedEvents, includeInactive }: Props) => {
-	const { events } = useSelector(getWorldState)
+	const { events } = useSelector(getWorldState, (a, b) => a.events === b.events)
 
 	const visibleEvents = useMemo(
 		() =>

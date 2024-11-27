@@ -19,11 +19,19 @@ type Props = {
 export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) => {
 	const theme = useCustomTheme()
 	const color = useStringColor(entity.eventId)
-	if (!entity.nextEntity) {
-		return
-	}
-	const dist =
-		realTimeToScaledTime(entity.nextEntity.markerPosition - entity.markerPosition) - TimelineEventHeightPx - 2
+	const rawDist = (() => {
+		if (entity.chainEntity) {
+			return realTimeToScaledTime(entity.chainEntity.markerPosition - entity.markerPosition)
+		}
+		if (entity.followingEntity) {
+			return Math.min(
+				200,
+				realTimeToScaledTime(entity.followingEntity.markerPosition - entity.markerPosition),
+			)
+		}
+		return 200
+	})()
+	const dist = rawDist - TimelineEventHeightPx + 5
 	const height = TimelineEventHeightPx * entity.markerHeight + 4
 	if (dist < 1) {
 		return null
@@ -36,7 +44,7 @@ export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) 
 					pointerEvents: 'none',
 					position: 'absolute',
 					bottom: height,
-					left: TimelineEventHeightPx / 2 - 1,
+					left: TimelineEventHeightPx / 2 - 8,
 				}}
 			>
 				<div
@@ -47,8 +55,9 @@ export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) 
 						borderTop: `2px solid ${color}`,
 						display: 'flex',
 						alignItems: 'center',
-						paddingLeft: 4,
+						paddingLeft: 12,
 						paddingRight: 0,
+						borderRadius: 8,
 					}}
 				>
 					<Typography variant="caption" fontWeight={800} noWrap style={{ width: 'calc(100% - 8px)' }}>

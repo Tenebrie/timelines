@@ -24,7 +24,7 @@ type Props = {
 
 const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, containerWidth }: Props) => {
 	const theme = useCustomTheme()
-	const { calendar } = useSelector(getWorldCalendarState)
+	const calendar = useSelector(getWorldCalendarState)
 	const { parseTime, timeToShortLabel } = useWorldTime()
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel, calendar })
 

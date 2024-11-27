@@ -1,5 +1,6 @@
 import { Menu, Public } from '@mui/icons-material'
 import { Button } from '@mui/material'
+import { memo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { BaseNavigator } from '@/app/components/BaseNavigator'
@@ -7,20 +8,20 @@ import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { getOverviewPreferences } from '@/app/features/preferences/selectors'
 import { useWorldRouter } from '@/router/routes/worldRoutes'
 
-export const WorldNavigator = () => {
+export const WorldNavigatorComponent = () => {
 	const { navigateToCurrentWorldRoot } = useWorldRouter()
 
 	const { panelOpen } = useSelector(getOverviewPreferences)
 	const { setPanelOpen } = preferencesSlice.actions
 	const dispatch = useDispatch()
 
-	const onToggleOverview = () => {
+	const onToggleOverview = useCallback(() => {
 		dispatch(setPanelOpen(!panelOpen))
-	}
+	}, [dispatch, panelOpen, setPanelOpen])
 
-	const onNavigate = () => {
+	const onNavigate = useCallback(() => {
 		navigateToCurrentWorldRoot()
-	}
+	}, [navigateToCurrentWorldRoot])
 
 	return (
 		<BaseNavigator>
@@ -33,3 +34,5 @@ export const WorldNavigator = () => {
 		</BaseNavigator>
 	)
 }
+
+export const WorldNavigator = memo(WorldNavigatorComponent)

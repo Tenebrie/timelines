@@ -15,7 +15,7 @@ type Props = {
 export const useTimelineContextMenu = ({ scroll, scaleLevel }: Props) => {
 	const { isOpen } = useSelector(getTimelineContextMenuState)
 	const { lineSpacing } = useSelector(getTimelinePreferences)
-	const { calendar } = useSelector(getWorldCalendarState)
+	const calendar = useSelector(getWorldCalendarState)
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
 
 	const dispatch = useDispatch()

@@ -1,8 +1,10 @@
+import { useDispatch } from 'react-redux'
 import { Navigate, useOutlet } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { useLocationRef } from '@/hooks/useLocationRef'
+import { QueryParams } from '@/router/routes/QueryParams'
 import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
 import { ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage'
 
@@ -19,6 +21,7 @@ import { Timeline } from './components/Timeline/Timeline'
 import { TimelinePlaceholder } from './components/Timeline/TimelinePlaceholder'
 import { WorldNavigator } from './components/WorldNavigator/WorldNavigator'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
+import { worldSlice } from './reducer'
 import { WorldContainer, WorldContent } from './styles'
 
 export const World = () => {
@@ -33,6 +36,19 @@ export const World = () => {
 	const { success, target } = useAuthCheck()
 
 	const sendCalliopeMessage = useEventBusDispatch({ event: 'sendCalliopeMessage' })
+
+	const { setSelectedTime } = worldSlice.actions
+	const dispatch = useDispatch()
+
+	useEffectOnce(() => {
+		const searchParams = new URLSearchParams(window.location.search)
+		searchParams.forEach((value, key) => {
+			if (key === QueryParams.SELECTED_TIME) {
+				const selectedTime = parseInt(value)
+				dispatch(setSelectedTime(selectedTime))
+			}
+		})
+	})
 
 	useEffectOnce(() => {
 		sendCalliopeMessage({

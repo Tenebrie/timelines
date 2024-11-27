@@ -40,7 +40,7 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 
 	const dispatch = useDispatch()
-	const { closeTimelineContextMenu } = worldSlice.actions
+	const { closeTimelineContextMenu, setSelectedTime } = worldSlice.actions
 	const { open: openDeleteEventModal } = useModal('deleteEventModal')
 	const { open: openDeleteEventDeltaModal } = useModal('deleteEventDeltaModal')
 
@@ -53,9 +53,10 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 
 	const onCreateEvent = useCallback(() => {
 		onClose()
+		navigateToEventCreator()
 		scrollTimelineTo(selectedTime)
-		navigateToEventCreator(selectedTime)
-	}, [navigateToEventCreator, scrollTimelineTo, onClose, selectedTime])
+		dispatch(setSelectedTime(selectedTime))
+	}, [onClose, navigateToEventCreator, scrollTimelineTo, selectedTime, dispatch, setSelectedTime])
 
 	const onReplaceSelectedEvent = useCallback(() => {
 		onClose()
@@ -64,9 +65,18 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 		}
 		navigateToEventDeltaCreator({
 			eventId: selectedMarker.eventId,
-			selectedTime: selectedTime,
 		})
-	}, [navigateToEventDeltaCreator, onClose, selectedMarker, selectedTime])
+		scrollTimelineTo(selectedTime)
+		dispatch(setSelectedTime(selectedTime))
+	}, [
+		dispatch,
+		navigateToEventDeltaCreator,
+		onClose,
+		scrollTimelineTo,
+		selectedMarker,
+		selectedTime,
+		setSelectedTime,
+	])
 
 	const onResolveSelectedEvent = useCallback(async () => {
 		if (!selectedMarker) {

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useGetWorldInfoQuery } from '@/api/worldDetailsApi'
 
 import { worldSlice } from '../reducer'
-import { getWorldState } from '../selectors'
+import { getWorldStateLoaded } from '../selectors'
 import { useActorColors } from './useActorColors'
 
 export const useLoadWorldInfo = (worldId: string) => {
@@ -13,7 +13,7 @@ export const useLoadWorldInfo = (worldId: string) => {
 	})
 
 	const { listAllColors } = useActorColors()
-	const { isLoaded } = useSelector(getWorldState)
+	const isLoaded = useSelector(getWorldStateLoaded)
 
 	const { loadWorld } = worldSlice.actions
 	const dispatch = useDispatch()

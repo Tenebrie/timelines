@@ -93,7 +93,9 @@ export const TimelineTrackItem = ({
 	}, [scroll, track, containerWidth, realTimeToScaledTime])
 
 	const chainLinks = useMemo(() => {
-		return track.events.filter((event) => event.nextEntity)
+		return track.events.filter(
+			(event) => event.markerType === 'issuedAt' || event.markerType === 'deltaState',
+		)
 	}, [track.events])
 
 	const dividerProps = useMemo(() => ({ position: 'absolute', bottom: 0, width: '100%' }), [])

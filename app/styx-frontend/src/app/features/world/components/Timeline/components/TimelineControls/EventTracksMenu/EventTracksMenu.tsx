@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux'
 import { useUpdateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { getWorldState } from '@/app/features/world/selectors'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useWorldRouter } from '@/router/routes/worldRoutes'
 
@@ -29,7 +29,7 @@ type Props = {
 }
 
 export const EventTracksMenu = ({ onNavigateToTime }: Props) => {
-	const { id: worldId } = useSelector(getWorldState)
+	const worldId = useSelector(getWorldIdState)
 	const tracks = useEventTracks({ showHidden: true })
 	const displayedTracks = tracks.filter((t) => t.id !== 'default')
 	const { timeToLabel } = useWorldTime()
@@ -112,11 +112,10 @@ export const EventTracksMenu = ({ onNavigateToTime }: Props) => {
 													color="secondary"
 													variant="outlined"
 													onClick={() => {
-														onNavigateToTime(track.events[track.events.length - 1].timestamp)
-														navigateToOutliner(track.events[track.events.length - 1].timestamp)
+														onNavigateToTime(track.events[track.events.length - 1].markerPosition)
 													}}
 												>
-													{timeToLabel(track.events[track.events.length - 1].timestamp)}
+													{timeToLabel(track.events[track.events.length - 1].markerPosition)}
 												</Button>
 											)}
 											{track.events.length === 0 && '-'}
@@ -127,11 +126,10 @@ export const EventTracksMenu = ({ onNavigateToTime }: Props) => {
 													color="secondary"
 													variant="outlined"
 													onClick={() => {
-														onNavigateToTime(track.events[0].timestamp)
-														navigateToOutliner(track.events[0].timestamp)
+														onNavigateToTime(track.events[0].markerPosition)
 													}}
 												>
-													{timeToLabel(track.events[0].timestamp)}
+													{timeToLabel(track.events[0].markerPosition)}
 												</Button>
 											)}
 											{track.events.length === 0 && '-'}

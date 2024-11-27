@@ -15,13 +15,12 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { CollaboratorAccess } from '@/api/types'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { worldListSlice } from '@/app/features/worldList/reducer'
 import { getShareWorldModalState } from '@/app/features/worldList/selectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useCollaboratorAccess } from '@/app/utils/useCollaboratorAccess'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useRouter } from '@/router/routes/routes'
-import { worldRoutes } from '@/router/routes/worldRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const ShareWorldModal = () => {
@@ -29,8 +28,7 @@ export const ShareWorldModal = () => {
 	const [access, setAccess] = useState<CollaboratorAccess>('ReadOnly')
 
 	const { listAllLevels } = useCollaboratorAccess()
-	const { stateOf } = useRouter()
-	const { worldId } = stateOf(worldRoutes.root)
+	const worldId = useSelector(getWorldIdState)
 
 	const { isOpen } = useSelector(getShareWorldModalState)
 

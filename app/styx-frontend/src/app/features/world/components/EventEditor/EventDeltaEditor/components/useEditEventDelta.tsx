@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 
 import { UpdateWorldEventDeltaApiArg, useUpdateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { useModal } from '@/app/features/modals/reducer'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { WorldEventDelta } from '@/app/features/world/types'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { ErrorState } from '@/app/utils/useErrorState'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
 
 import { EventDeltaDetailsEditorErrors } from './EventDeltaDetailsEditor'
 import { useEventDeltaFields } from './useEventDeltaFields'
@@ -38,8 +39,7 @@ export const useEditEventDelta = ({ mode, deltaState, errorState, state }: Props
 
 	const [updateDeltaState, { isLoading: isSaving, isError }] = useUpdateWorldEventDeltaMutation()
 
-	const { stateOf } = useWorldRouter()
-	const { worldId } = stateOf(worldRoutes.eventEditor)
+	const worldId = useSelector(getWorldIdState)
 
 	const sendUpdate = useCallback(
 		async (body: UpdateWorldEventDeltaApiArg['body']) => {
