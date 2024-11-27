@@ -1,8 +1,10 @@
 import { useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { useCreateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
-import { getWorldState } from '@/app/features/world/selectors'
+import { useTimelineBusDispatch } from '@/app/features/world/hooks/useTimelineBus'
+import { worldSlice } from '@/app/features/world/reducer'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { ErrorState } from '@/app/utils/useErrorState'
@@ -17,10 +19,14 @@ type Props = {
 }
 
 export const useCreateEventDelta = ({ state, errorState }: Props) => {
-	const { id: worldId } = useSelector(getWorldState)
+	const worldId = useSelector(getWorldIdState)
 
-	const { navigateToOutliner, selectedTimeOrZero, stateOf } = useWorldRouter()
+	const { stateOf, navigateToOutliner } = useWorldRouter()
 	const { eventId } = stateOf(worldRoutes.eventDeltaCreator)
+	const scrollTimelineTo = useTimelineBusDispatch()
+
+	const { setSelectedTime } = worldSlice.actions
+	const dispatch = useDispatch()
 
 	const [createDeltaState, { isLoading: isCreating, isError }] = useCreateWorldEventDeltaMutation()
 
@@ -41,8 +47,20 @@ export const useCreateEventDelta = ({ state, errorState }: Props) => {
 			return
 		}
 		errorState.clearError()
-		navigateToOutliner(selectedTimeOrZero)
-	}, [createDeltaState, eventId, navigateToOutliner, selectedTimeOrZero, state, worldId, errorState])
+		navigateToOutliner()
+		scrollTimelineTo(state.timestamp)
+		dispatch(setSelectedTime(state.timestamp))
+	}, [
+		createDeltaState,
+		worldId,
+		eventId,
+		state,
+		errorState,
+		scrollTimelineTo,
+		navigateToOutliner,
+		dispatch,
+		setSelectedTime,
+	])
 
 	const {
 		icon: createIcon,

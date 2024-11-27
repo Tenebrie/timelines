@@ -1,18 +1,19 @@
 import { useCallback, useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 
 import { UpdateWorldEventApiArg, useUpdateWorldEventMutation } from '@/api/worldEventApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { useMapActorsToOptions } from '@/app/features/world/components/ActorSelector/useMapActorsToOptions'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { WorldEvent } from '@/app/features/world/types'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { isNotNull } from '@/app/utils/isNotNull'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
 
 import { useEventFields } from './useEventFields'
 
 type Props = {
-	mode: 'create' | 'edit'
+	mode: 'create' | 'create-compact' | 'edit'
 	event: WorldEvent
 	state: ReturnType<typeof useEventFields>['state']
 }
@@ -83,8 +84,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 
 	const [updateWorldEvent, { isLoading: isSaving, isError }] = useUpdateWorldEventMutation()
 
-	const { stateOf } = useWorldRouter()
-	const { worldId } = stateOf(worldRoutes.eventEditor)
+	const worldId = useSelector(getWorldIdState)
 
 	const sendUpdate = useCallback(
 		async (delta: UpdateWorldEventApiArg['body']) => {

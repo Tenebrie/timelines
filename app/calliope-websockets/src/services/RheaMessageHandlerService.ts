@@ -10,9 +10,7 @@ import { WebsocketService } from './WebsocketService'
 const relayMessageToUserSockets = (
 	message: CalliopeToClientMessage & { data: CalliopeToClientMessage['data'] & { userId: string } }
 ) => {
-	console.log(message)
 	const clients = WebsocketService.findClientsByUserId(message.data.userId)
-	console.log(clients.length)
 	clients.forEach((client) => client.sendMessage(message))
 }
 

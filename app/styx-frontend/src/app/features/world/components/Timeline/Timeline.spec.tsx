@@ -15,6 +15,7 @@ describe('<Timeline />', () => {
 		preloadedState: {
 			world: {
 				...initialState,
+				id: '1111',
 				isLoaded: true,
 				...worldOptions,
 				events,

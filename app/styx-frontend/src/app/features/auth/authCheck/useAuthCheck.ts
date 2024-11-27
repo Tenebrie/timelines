@@ -17,7 +17,10 @@ export const useAuthCheck = (): ReturnType => {
 	const { data, isLoading } = useCheckAuthenticationQuery()
 
 	const { user } = useSelector(getAuthState)
-	const { isLoaded: isWorldLoaded, accessMode } = useSelector(getWorldState)
+	const { isLoaded: isWorldLoaded, accessMode } = useSelector(
+		getWorldState,
+		(a, b) => a.isLoaded === b.isLoaded && a.accessMode === b.accessMode,
+	)
 	const { setUser } = authSlice.actions
 	const dispatch = useDispatch()
 

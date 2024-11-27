@@ -47,7 +47,8 @@ export type TimelineEntity<T extends MarkerType> = WorldEvent & {
 			: T extends 'deltaState'
 				? WorldEventDelta
 				: null
-	nextEntity: TimelineEntity<MarkerType> | null
+	chainEntity: TimelineEntity<MarkerType> | null
+	followingEntity: TimelineEntity<MarkerType> | null
 }
 
 export type WorldEventModule = WorldEvent['extraFields'][number]

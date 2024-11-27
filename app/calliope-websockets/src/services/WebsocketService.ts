@@ -57,7 +57,6 @@ export const WebsocketService = {
 	},
 
 	findClientsByUserId: (userId: string) => {
-		console.log(userListeners)
 		return userListeners[userId] || []
 	},
 

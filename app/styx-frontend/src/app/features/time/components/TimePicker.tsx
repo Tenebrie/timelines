@@ -1,5 +1,5 @@
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
 import { WorldCalendarType } from '../../world/types'
@@ -29,7 +29,7 @@ const Container = styled.div`
 	flex-direction: row;
 `
 
-export const TimePicker = ({ calendar, initialTimestamp, visible, onSetTimestamp }: Props) => {
+export const TimePickerComponent = ({ calendar, initialTimestamp, visible, onSetTimestamp }: Props) => {
 	const [renderInt, setRenderInt] = useState(0)
 	const oldCalendar = useRef(calendar)
 	const timestamp = useRef(initialTimestamp)
@@ -62,7 +62,7 @@ export const TimePicker = ({ calendar, initialTimestamp, visible, onSetTimestamp
 	}
 
 	useEffect(() => {
-		if (calendar === oldCalendar.current) {
+		if (calendar === oldCalendar.current && initialTimestamp === timestamp.current) {
 			return
 		}
 
@@ -149,3 +149,5 @@ export const TimePicker = ({ calendar, initialTimestamp, visible, onSetTimestamp
 		</Spoiler>
 	)
 }
+
+export const TimePicker = memo(TimePickerComponent)

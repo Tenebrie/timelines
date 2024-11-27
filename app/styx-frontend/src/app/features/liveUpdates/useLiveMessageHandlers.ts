@@ -16,7 +16,7 @@ import { getWorldState } from '../world/selectors'
 export const useLiveMessageHandlers = () => {
 	const updatedAtRef = useRef<string>('0')
 
-	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState)
+	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState, (a, b) => a.updatedAt === b.updatedAt)
 	const { updateEvent, updateEventDelta } = worldSlice.actions
 	const dispatch = useDispatch()
 

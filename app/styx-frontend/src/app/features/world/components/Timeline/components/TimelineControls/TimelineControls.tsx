@@ -1,12 +1,13 @@
 import { ZoomIn, ZoomOut } from '@mui/icons-material'
 import { Button, Paper, Slider, Stack } from '@mui/material'
 import { memo } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useTimelineSpacingSlider } from '@/app/features/world/components/Outliner/components/OutlinerControls/useTimelineSpacingSlider'
+import { getWorldState } from '@/app/features/world/selectors'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
-import { useWorldRouter } from '@/router/routes/worldRoutes'
 
 import { TimelineEdgeScroll } from '../TimelineEdgeScroll/TimelineEdgeScroll'
 import { EventTracksMenu } from './EventTracksMenu/EventTracksMenu'
@@ -20,18 +21,17 @@ type Props = {
 
 const TimelineControlsComponent = ({ containerRef, onNavigateToTime, onZoomIn, onZoomOut }: Props) => {
 	const theme = useCustomTheme()
-	const { selectedTimeOrNull, navigateToOutliner } = useWorldRouter()
+	const { selectedTime } = useSelector(getWorldState)
 	const { timeToLabel } = useWorldTime()
 	const { timelineSpacing, setTimelineSpacing } = useTimelineSpacingSlider({ containerRef })
 	const scrollTimelineLeft = useEventBusDispatch({ event: 'scrollTimelineLeft' })
 	const scrollTimelineRight = useEventBusDispatch({ event: 'scrollTimelineRight' })
 
-	if (selectedTimeOrNull === null) {
-		return <></>
-	}
-
 	return (
-		<Paper elevation={2} sx={{ backgroundColor: theme.custom.palette.background.timelineHeader }}>
+		<Paper
+			elevation={2}
+			sx={{ backgroundColor: theme.custom.palette.background.timelineHeader, minWidth: '700px' }}
+		>
 			<div
 				className="block-timeline"
 				style={{
@@ -47,11 +47,10 @@ const TimelineControlsComponent = ({ containerRef, onNavigateToTime, onZoomIn, o
 							color="secondary"
 							variant="outlined"
 							onClick={() => {
-								onNavigateToTime(selectedTimeOrNull)
-								navigateToOutliner(selectedTimeOrNull)
+								onNavigateToTime(selectedTime)
 							}}
 						>
-							{timeToLabel(selectedTimeOrNull)}
+							{timeToLabel(selectedTime)}
 						</Button>
 					</Stack>
 					<Stack direction="row" gap={0.5} alignItems="center">

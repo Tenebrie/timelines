@@ -7,7 +7,6 @@ import { EventWithContentRenderer } from '@/app/features/world/components/Render
 import { getWorldState } from '@/app/features/world/selectors'
 import { Actor } from '@/app/features/world/types'
 import { isNull } from '@/app/utils/isNull'
-import { useWorldRouter } from '@/router/routes/worldRoutes'
 
 import { StatementsScroller } from '../../styles'
 import { ActorEventsEmptyState } from './ActorEventsEmptyState'
@@ -17,12 +16,10 @@ type Props = {
 }
 
 export const ActorEvents = ({ actor }: Props) => {
-	const { events } = useSelector(getWorldState)
+	const { events, selectedTime } = useSelector(getWorldState)
 	const { timeToLabel } = useWorldTime()
 
 	const { expandedEvents } = useSelector(getOutlinerPreferences)
-
-	const { selectedTimeOrZero } = useWorldRouter()
 
 	const visibleEvents = events
 		.filter((event) => event.targetActors.some((targetActor) => targetActor.id === actor.id))
@@ -30,7 +27,7 @@ export const ActorEvents = ({ actor }: Props) => {
 			...event,
 			secondary: timeToLabel(event.timestamp),
 			collapsed: !expandedEvents.includes(event.id),
-			active: isNull(event.revokedAt) || event.revokedAt > selectedTimeOrZero,
+			active: isNull(event.revokedAt) || event.revokedAt > selectedTime,
 		}))
 
 	return (

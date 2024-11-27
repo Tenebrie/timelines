@@ -10,6 +10,7 @@ import {
 	mockRemoveCollaborator,
 	mockWorldBriefModel,
 } from '@/api/rheaApi.mock'
+import { worldInitialState } from '@/app/features/world/reducer'
 import { renderWithProviders } from '@/jest/renderWithProviders'
 import { setupTestServer } from '@/jest/setupTestServer'
 import { mockRouter } from '@/router/router.mock'
@@ -21,6 +22,15 @@ import { WorldDetails } from './WorldDetails'
 const server = setupTestServer()
 
 describe('<WorldDetails />', () => {
+	const preloadedState = {
+		preloadedState: {
+			world: {
+				...worldInitialState,
+				id: 'world-1111',
+			},
+		},
+	}
+
 	beforeAll(() => {
 		mockRouter(homeRoutes.worldDetails, { worldId: 'world-1111' })
 	})
@@ -45,13 +55,13 @@ describe('<WorldDetails />', () => {
 		})
 
 		it('renders empty state for collaborators by default', async () => {
-			renderWithProviders(<WorldDetails />)
+			renderWithProviders(<WorldDetails />, preloadedState)
 
 			expect(await screen.findByText('No collaborators added')).toBeInTheDocument()
 		})
 
 		it("displays collaborator's email", async () => {
-			renderWithProviders(<WorldDetails />)
+			renderWithProviders(<WorldDetails />, preloadedState)
 
 			mockGetWorldBrief(server, {
 				worldId: 'world-1111',
@@ -81,6 +91,7 @@ describe('<WorldDetails />', () => {
 					<WorldDetails />
 					<ShareWorldModal />
 				</>,
+				preloadedState,
 			)
 
 			mockGetWorldBrief(server, {
@@ -110,6 +121,7 @@ describe('<WorldDetails />', () => {
 					<WorldDetails />
 					<ShareWorldModal />
 				</>,
+				preloadedState,
 			)
 
 			mockGetWorldBrief(server, {
@@ -138,7 +150,7 @@ describe('<WorldDetails />', () => {
 		})
 
 		it('removes a collaborator', async () => {
-			const { user } = renderWithProviders(<WorldDetails />)
+			const { user } = renderWithProviders(<WorldDetails />, preloadedState)
 
 			mockGetWorldBrief(server, {
 				worldId: 'world-1111',
@@ -175,7 +187,7 @@ describe('<WorldDetails />', () => {
 		})
 
 		it('cancels removal request', async () => {
-			const { user } = renderWithProviders(<WorldDetails />)
+			const { user } = renderWithProviders(<WorldDetails />, preloadedState)
 
 			mockGetWorldBrief(server, {
 				worldId: 'world-1111',

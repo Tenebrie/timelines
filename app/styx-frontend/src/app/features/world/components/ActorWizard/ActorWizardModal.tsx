@@ -2,6 +2,7 @@ import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, FormControl, InputLabel, Select, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useCreateActorMutation } from '@/api/actorListApi'
 import { FormErrorBanner } from '@/app/components/FormErrorBanner'
@@ -9,11 +10,12 @@ import { useModal } from '@/app/features/modals/reducer'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useErrorState } from '@/app/utils/useErrorState'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
 import Modal, { useModalCleanup } from '@/ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '@/ui-lib/components/Modal'
 
 import { useActorColors } from '../../hooks/useActorColors'
+import { getWorldIdState } from '../../selectors'
 
 export const ActorWizardModal = () => {
 	const { isOpen, close } = useModal('actorWizard')
@@ -30,8 +32,8 @@ export const ActorWizardModal = () => {
 
 	const [createActor, { isLoading }] = useCreateActorMutation()
 
-	const { navigateToActorEditor, stateOf } = useWorldRouter()
-	const { worldId } = stateOf(worldRoutes.root)
+	const { navigateToActorEditor } = useWorldRouter()
+	const worldId = useSelector(getWorldIdState)
 
 	useEffect(() => {
 		clearError()

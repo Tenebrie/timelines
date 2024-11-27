@@ -2,20 +2,22 @@ import { Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, Stack, Tooltip } from '@mui/material'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useDeleteWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { useModal } from '@/app/features/modals/reducer'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const DeleteEventDeltaModal = () => {
 	const [deleteWorldEvent, { isLoading }] = useDeleteWorldEventDeltaMutation()
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 
-	const { stateOf, navigateToCurrentWorldRoot } = useWorldRouter()
-	const { worldId } = stateOf(worldRoutes.root)
+	const { navigateToCurrentWorldRoot } = useWorldRouter()
+	const worldId = useSelector(getWorldIdState)
 
 	const { isOpen, target: targetDelta, close } = useModal('deleteEventDeltaModal')
 

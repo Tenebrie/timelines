@@ -35,7 +35,7 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 
 	const onLoad = (id: string) => {
 		navigateTo({
-			target: worldRoutes.root,
+			target: worldRoutes.outliner,
 			args: {
 				worldId: id,
 			},

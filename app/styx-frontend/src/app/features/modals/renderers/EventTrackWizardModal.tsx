@@ -2,13 +2,14 @@ import { Add } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, Checkbox, FormControlLabel, FormGroup, TextField, Tooltip } from '@mui/material'
 import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useCreateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
+import { getWorldIdState } from '../../world/selectors'
 import { useModal } from '../reducer'
 
 export const EventTrackWizardModal = () => {
@@ -20,8 +21,7 @@ export const EventTrackWizardModal = () => {
 
 	const [createWorldEventTrack, { isLoading }] = useCreateWorldEventTrackMutation()
 
-	const { stateOf } = useWorldRouter()
-	const { worldId } = stateOf(worldRoutes.eventEditor)
+	const worldId = useSelector(getWorldIdState)
 
 	useEffect(() => {
 		setNameValidationError(null)

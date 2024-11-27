@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getWorldRouterState } from '@/app/features/world/selectors'
@@ -42,7 +42,10 @@ export const worldQueryParams = {
 
 export const useWorldRouter = () => {
 	const baseRouter = useBaseRouter(worldRoutes, worldQueryParams)
-	const { id: worldId, isReadOnly } = useSelector(getWorldRouterState)
+	const { id: worldId, isReadOnly } = useSelector(
+		getWorldRouterState,
+		(a, b) => a.id === b.id && a.isReadOnly === b.isReadOnly,
+	)
 
 	const navigateToCurrentWorldRoot = useCallback(() => {
 		baseRouter.navigateTo({
@@ -50,44 +53,41 @@ export const useWorldRouter = () => {
 			args: {
 				worldId,
 			},
+			query: {
+				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
+			},
 		})
 	}, [baseRouter, worldId])
 
-	const navigateToOutliner = useCallback(
-		(time: number) => {
-			baseRouter.navigateTo({
-				target: worldRoutes.outliner,
-				args: {
-					worldId,
-				},
-				query: {
-					time: String(time),
-				},
-			})
-		},
-		[baseRouter, worldId],
-	)
+	const navigateToOutliner = useCallback(() => {
+		baseRouter.navigateTo({
+			target: worldRoutes.outliner,
+			args: {
+				worldId,
+			},
+			query: {
+				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
+			},
+		})
+	}, [baseRouter, worldId])
 
-	const navigateToEventCreator = useCallback(
-		(time?: number) => {
-			if (isReadOnly) {
-				return
-			}
-			baseRouter.navigateTo({
-				target: worldRoutes.eventCreator,
-				args: {
-					worldId,
-				},
-				query: {
-					[QueryParams.SELECTED_TIME]: time ?? QueryStrategy.Preserve,
-				},
-			})
-		},
-		[baseRouter, isReadOnly, worldId],
-	)
+	const navigateToEventCreator = useCallback(() => {
+		if (isReadOnly) {
+			return
+		}
+		baseRouter.navigateTo({
+			target: worldRoutes.eventCreator,
+			args: {
+				worldId,
+			},
+			query: {
+				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
+			},
+		})
+	}, [baseRouter, isReadOnly, worldId])
 
 	const navigateToEventDeltaCreator = useCallback(
-		({ eventId, selectedTime }: { eventId: string; selectedTime: number }) => {
+		({ eventId }: { eventId: string }) => {
 			if (isReadOnly) {
 				return
 			}
@@ -98,7 +98,7 @@ export const useWorldRouter = () => {
 					eventId,
 				},
 				query: {
-					[QueryParams.SELECTED_TIME]: String(selectedTime),
+					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
 				},
 			})
 		},
@@ -125,7 +125,7 @@ export const useWorldRouter = () => {
 	)
 
 	const navigateToEventEditor = useCallback(
-		({ eventId, time }: { eventId: string; time?: number }) => {
+		({ eventId }: { eventId: string }) => {
 			if (isReadOnly) {
 				return
 			}
@@ -136,7 +136,7 @@ export const useWorldRouter = () => {
 					eventId,
 				},
 				query: {
-					[QueryParams.SELECTED_TIME]: time ?? QueryStrategy.Preserve,
+					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
 				},
 			})
 		},
@@ -144,7 +144,7 @@ export const useWorldRouter = () => {
 	)
 
 	const navigateToEventDeltaEditor = useCallback(
-		({ eventId, deltaId, time }: { eventId: string; deltaId: string; time?: number }) => {
+		({ eventId, deltaId }: { eventId: string; deltaId: string }) => {
 			if (isReadOnly) {
 				return
 			}
@@ -156,27 +156,11 @@ export const useWorldRouter = () => {
 					deltaId,
 				},
 				query: {
-					[QueryParams.SELECTED_TIME]: time ?? QueryStrategy.Preserve,
+					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
 				},
 			})
 		},
 		[baseRouter, isReadOnly, worldId],
-	)
-
-	const selectedTimeOrNull = useMemo(() => {
-		const value = baseRouter.queryOfOrNull(worldRoutes.outliner).time
-		return value === null ? null : Number(value)
-	}, [baseRouter])
-
-	const selectedTimeOrZero = useMemo(() => {
-		return Number(baseRouter.queryOf(worldRoutes.outliner).time)
-	}, [baseRouter])
-
-	const selectTime = useCallback(
-		(value: number | null) => {
-			baseRouter.setQuery(QueryParams.SELECTED_TIME, String(value))
-		},
-		[baseRouter],
 	)
 
 	return {
@@ -188,8 +172,5 @@ export const useWorldRouter = () => {
 		navigateToActorEditor,
 		navigateToEventEditor,
 		navigateToEventDeltaEditor,
-		selectedTimeOrNull,
-		selectedTimeOrZero,
-		selectTime,
 	}
 }

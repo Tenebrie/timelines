@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 
 import { useSwapWorldEventTracksMutation } from '@/api/worldEventTracksApi'
 import { useDragDropReceiver } from '@/app/features/dragDrop/useDragDropReceiver'
-import { getWorldState } from '@/app/features/world/selectors'
+import { getWorldIdState } from '@/app/features/world/selectors'
 
 import { TimelineTrack } from './useEventTracks'
 
@@ -12,7 +12,7 @@ type Props = {
 }
 
 export const useTrackDragDropReceiver = ({ track, receiverRef }: Props) => {
-	const { id: worldId } = useSelector(getWorldState)
+	const worldId = useSelector(getWorldIdState)
 	const [swapWorldEvents] = useSwapWorldEventTracksMutation()
 
 	useDragDropReceiver({

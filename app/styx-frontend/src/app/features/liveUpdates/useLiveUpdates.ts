@@ -75,7 +75,6 @@ export const useLiveUpdates = () => {
 			socket.onopen = function () {
 				console.info('[ws] Connection established!')
 				dispatch(hideCalliopeConnectionAlert())
-				console.log('init')
 				const message: ClientToCalliopeMessage = {
 					type: ClientToCalliopeMessageType.INIT,
 					data: {},
@@ -110,7 +109,14 @@ export const useLiveUpdates = () => {
 		}
 
 		return { initiateConnection }
-	}, [clearHeartbeat, dispatch, hideCalliopeConnectionAlert, messageHandlers, showCalliopeConnectionAlert])
+	}, [
+		clearHeartbeat,
+		dispatch,
+		hideCalliopeConnectionAlert,
+		messageHandlers,
+		notifyAboutReconnect,
+		showCalliopeConnectionAlert,
+	])
 
 	useEffectOnce(() => initiateConnection())
 }

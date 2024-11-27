@@ -1,14 +1,16 @@
 import { Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Alert, Button, Collapse, Stack, Tooltip } from '@mui/material'
+import { useSelector } from 'react-redux'
 import { TransitionGroup } from 'react-transition-group'
 
 import { useDeleteActorMutation } from '@/api/actorListApi'
 import { useModal } from '@/app/features/modals/reducer'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useErrorState } from '@/app/utils/useErrorState'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import { useWorldRouter } from '@/router/routes/worldRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const DeleteActorModal = () => {
@@ -18,8 +20,8 @@ export const DeleteActorModal = () => {
 		SERVER_SIDE_ERROR: string
 	}>()
 
-	const { stateOf, navigateToCurrentWorldRoot } = useWorldRouter()
-	const { worldId } = stateOf(worldRoutes.root)
+	const { navigateToCurrentWorldRoot } = useWorldRouter()
+	const worldId = useSelector(getWorldIdState)
 
 	const { isOpen, target: targetActor, close } = useModal('deleteActorModal')
 

@@ -2,15 +2,16 @@ import { ArrowBack, Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, FormControl, InputLabel, Select, Stack, TextField, Tooltip } from '@mui/material'
 import { useCallback, useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useUpdateActorMutation } from '@/api/actorListApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { useActorColors } from '@/app/features/world/hooks/useActorColors'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { Actor, ActorDetails } from '@/app/features/world/types'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
 
 import { useActorFields } from './useActorFields'
 
@@ -42,8 +43,7 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 
 	const [updateActor, { isLoading: isSaving }] = useUpdateActorMutation()
 
-	const { stateOf } = useWorldRouter()
-	const { worldId } = stateOf(worldRoutes.eventEditor)
+	const worldId = useSelector(getWorldIdState)
 
 	const sendUpdate = useCallback(
 		async (delta: Partial<Actor>) => {

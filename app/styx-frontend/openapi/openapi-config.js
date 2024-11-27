@@ -1,10 +1,4 @@
 'use strict'
-Object.defineProperty(exports, '__esModule', { value: true })
-const pathMatcher = (pattern) => {
-	return (operationName, operationDefinition) => {
-		return pattern.test(operationDefinition.path)
-	}
-}
 
 const tags = [
 	'worldList',

@@ -1,4 +1,4 @@
-import { WorldEvent, WorldEventDelta } from '@prisma/client'
+import { WorldEventDelta } from '@prisma/client'
 
 import { getPrismaClient } from './dbClients/DatabaseClient'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'

@@ -1,9 +1,10 @@
 import { Grid } from '@mui/material'
 import { useEffect, useMemo } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { mockEventDeltaModel } from '@/api/rheaApi.mock'
 import { worldSlice } from '@/app/features/world/reducer'
+import { getWorldState } from '@/app/features/world/selectors'
 import { WorldEventDelta } from '@/app/features/world/types'
 import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
 
@@ -11,7 +12,8 @@ import { FullHeightContainer } from '../styles'
 import { EventDeltaDetailsEditor } from './components/EventDeltaDetailsEditor'
 
 export const EventDeltaCreator = () => {
-	const { selectedTimeOrZero, stateOf } = useWorldRouter()
+	const { selectedTime } = useSelector(getWorldState)
+	const { stateOf } = useWorldRouter()
 	const { eventId } = stateOf(worldRoutes.eventDeltaCreator)
 
 	const { setEventDeltaCreatorGhost } = worldSlice.actions
@@ -23,9 +25,9 @@ export const EventDeltaCreator = () => {
 				worldEventId: eventId,
 				name: '',
 				description: '',
-				timestamp: selectedTimeOrZero,
+				timestamp: selectedTime,
 			}),
-		[eventId, selectedTimeOrZero],
+		[eventId, selectedTime],
 	)
 
 	useEffect(() => {

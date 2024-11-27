@@ -74,7 +74,9 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 					{
 						path: worldRoutes.eventCreator,
 						...lazyImport(
-							import('../app/features/world/components/EventEditor/EventCreator').then((m) => m.EventCreator),
+							import('../app/features/world/components/EventEditor/EventCreatorWrapper').then(
+								(m) => m.EventCreatorWrapper,
+							),
 						),
 					},
 					{

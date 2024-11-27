@@ -3,13 +3,14 @@ import React, { ReactNode } from 'react'
 
 type Props = {
 	label?: string
+	secondaryLabel?: string
 	children?: ReactNode | ReactNode[]
 	style?: React.CSSProperties
 	fullHeight?: boolean
 	gap?: number
 }
 
-export const OutlinedContainer = ({ label, children, style, fullHeight, gap }: Props) => {
+export const OutlinedContainer = ({ label, secondaryLabel, children, style, fullHeight, gap }: Props) => {
 	return (
 		<Paper
 			sx={{
@@ -25,9 +26,16 @@ export const OutlinedContainer = ({ label, children, style, fullHeight, gap }: P
 			<Stack gap={gap ?? 1} sx={{ height: fullHeight ? '100%' : 'unset' }}>
 				{label && (
 					<Stack gap={1}>
-						<Typography variant="h6" marginLeft={1}>
-							{label}
-						</Typography>
+						<Stack width="100%" justifyContent="space-between" direction="row" alignContent="center">
+							<Typography variant="h6" marginLeft={1}>
+								{label}
+							</Typography>
+							{secondaryLabel && (
+								<Typography variant="body2" marginRight={1} display="flex" alignItems="center">
+									{secondaryLabel}
+								</Typography>
+							)}
+						</Stack>
 						<Divider />
 					</Stack>
 				)}

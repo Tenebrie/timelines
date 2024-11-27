@@ -29,6 +29,7 @@ describe('ActorEditor', () => {
 			preloadedState: {
 				world: {
 					...worldInitialState,
+					id: 'world-1111',
 					actors: [
 						mockActorModel({
 							id: 'actor-1111',
@@ -53,6 +54,7 @@ describe('ActorEditor', () => {
 			preloadedState: {
 				world: {
 					...worldInitialState,
+					id: 'world-1111',
 					actors: [
 						mockActorModel({
 							id: 'actor-1111',
@@ -191,6 +193,7 @@ describe('ActorEditor', () => {
 			preloadedState: {
 				world: {
 					...worldInitialState,
+					id: 'world-1111',
 					actors: [
 						mockActorModel({
 							id: 'actor-1111',
@@ -226,6 +229,7 @@ describe('ActorEditor', () => {
 			preloadedState: {
 				world: {
 					...worldInitialState,
+					id: 'world-1111',
 					actors: [
 						mockActorModel({
 							id: 'actor-1111',
@@ -263,6 +267,7 @@ describe('ActorEditor', () => {
 			preloadedState: {
 				world: {
 					...worldInitialState,
+					id: 'world-1111',
 					actors: [
 						mockActorModel({
 							id: 'actor-1111',
@@ -300,6 +305,7 @@ describe('ActorEditor', () => {
 			preloadedState: {
 				world: {
 					...worldInitialState,
+					id: 'world-1111',
 					actors: [
 						mockActorModel({
 							id: 'actor-1111',
@@ -336,6 +342,7 @@ describe('ActorEditor', () => {
 			preloadedState: {
 				world: {
 					...worldInitialState,
+					id: 'world-1111',
 					actors: [
 						mockActorModel({
 							id: 'actor-1111',
