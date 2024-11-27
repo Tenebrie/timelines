@@ -60,6 +60,7 @@ export const BaseNavigator = ({ children }: Props) => {
 					</Stack>
 					<Divider orientation="vertical" />
 					<Button
+						aria-label="Home"
 						onClick={onHome}
 						variant={isHome ? 'contained' : 'text'}
 						sx={{
@@ -72,6 +73,7 @@ export const BaseNavigator = ({ children }: Props) => {
 					</Button>
 					{user?.level === 'Admin' && (
 						<Button
+							aria-label="Admin"
 							onClick={onAdmin}
 							variant={isAdmin ? 'contained' : 'text'}
 							sx={{
@@ -85,6 +87,7 @@ export const BaseNavigator = ({ children }: Props) => {
 					)}
 					{user?.level === 'Admin' && (
 						<Button
+							aria-label="Profiler"
 							onClick={onProfile}
 							sx={{
 								gap: 0.5,

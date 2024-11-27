@@ -15,6 +15,7 @@ type Props<T> = {
 	onToggleReversed: (value: boolean) => void
 	entities: T[]
 	renderEntity: (entity: T) => ReactNode
+	entityName: string
 }
 
 export function OverviewSublist<T extends { id: string }>({
@@ -26,6 +27,7 @@ export function OverviewSublist<T extends { id: string }>({
 	onToggleReversed,
 	entities,
 	renderEntity,
+	entityName,
 }: Props<T>) {
 	const { isReadOnly } = useIsReadOnly()
 
@@ -53,13 +55,13 @@ export function OverviewSublist<T extends { id: string }>({
 				disableGutters
 				secondaryAction={(onAddNew && !isReadOnly
 					? [
-							<IconButton key={'add'} onClick={onAddClick}>
+							<IconButton key={'add'} onClick={onAddClick} aria-label={`Create new ${entityName}`}>
 								<Add />
 							</IconButton>,
 						]
 					: []
 				).concat([
-					<IconButton key={'sort'} onClick={onSortClick}>
+					<IconButton key={'sort'} onClick={onSortClick} aria-label="Sort">
 						<Sort />
 					</IconButton>,
 				])}

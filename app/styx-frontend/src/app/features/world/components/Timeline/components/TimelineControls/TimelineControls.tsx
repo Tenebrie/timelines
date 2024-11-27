@@ -70,10 +70,10 @@ const TimelineControlsComponent = ({ containerRef, onNavigateToTime, onZoomIn, o
 								onChange={(_, value) => setTimelineSpacing(value)}
 							/>
 						</Stack>
-						<Button variant="outlined" color="secondary" onClick={onZoomOut}>
+						<Button variant="outlined" color="secondary" onClick={onZoomOut} aria-label="Zoom out">
 							<ZoomOut />
 						</Button>
-						<Button variant="outlined" color="secondary" onClick={onZoomIn}>
+						<Button variant="outlined" color="secondary" onClick={onZoomIn} aria-label="Zoom in">
 							<ZoomIn />
 						</Button>
 					</Stack>

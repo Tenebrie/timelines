@@ -227,6 +227,7 @@ export const OverviewPanel = () => {
 						onToggleOpen={(val) => dispatch(setActorsOpen(val))}
 						onToggleReversed={(val) => dispatch(setActorsReversed(val))}
 						renderEntity={renderActor}
+						entityName="actor"
 					/>
 					<OverviewSublist
 						title={`Events (${displayedEvents.length}/${events.length})`}
@@ -237,6 +238,7 @@ export const OverviewPanel = () => {
 						onToggleOpen={(val) => dispatch(setEventsOpen(val))}
 						onToggleReversed={(val) => dispatch(setEventsReversed(val))}
 						renderEntity={renderEvent}
+						entityName="event"
 					/>
 				</List>
 			</Paper>

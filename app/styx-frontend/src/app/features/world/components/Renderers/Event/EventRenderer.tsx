@@ -42,13 +42,22 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 		switch (action) {
 			case 'edit':
 				return (
-					<IconButton key={'edit'} onClick={() => navigateToEventEditor({ eventId: event.id })}>
+					<IconButton
+						key={'edit'}
+						onClick={() => navigateToEventEditor({ eventId: event.id })}
+						aria-label="Edit"
+					>
 						<Edit />
 					</IconButton>
 				)
 			case 'collapse':
 				return (
-					<IconButton key={'collapse'} sx={{ marginRight: 2 }} onClick={onToggleOpen}>
+					<IconButton
+						key={'collapse'}
+						sx={{ marginRight: 2 }}
+						onClick={onToggleOpen}
+						aria-label="Expand or collapse"
+					>
 						<ShowHideChevron className={cx({ collapsed })} />
 					</IconButton>
 				)
