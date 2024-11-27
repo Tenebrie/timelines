@@ -24,7 +24,7 @@ export const WorldNavigator = () => {
 
 	return (
 		<BaseNavigator>
-			<Button onClick={onToggleOverview}>
+			<Button onClick={onToggleOverview} aria-label="Toggle">
 				<Menu />
 			</Button>
 			<Button onClick={onNavigate} variant={'contained'} sx={{ gap: 0.5 }}>

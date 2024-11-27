@@ -24,6 +24,7 @@ export const ThemeModeToggle = () => {
 	return (
 		<Stack marginTop={0.25}>
 			<MaterialUISwitch
+				aria-label="Toggle light/dark theme"
 				theme={theme}
 				checked={colorMode === 'dark'}
 				onChange={(event) => onChange(event.target.checked)}
