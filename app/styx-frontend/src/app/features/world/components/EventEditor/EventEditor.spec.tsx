@@ -23,6 +23,7 @@ describe('<EventEditor />', () => {
 		preloadedState: {
 			world: {
 				...initialState,
+				id: '1111',
 				events: [event],
 			},
 		},

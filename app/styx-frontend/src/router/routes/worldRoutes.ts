@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { getWorldRouterState } from '@/app/features/world/selectors'
 
-import { useBaseRouter } from '../useBaseRouter'
+import { QueryStrategy, useBaseRouter } from '../useBaseRouter'
 import { QueryParams } from './QueryParams'
 
 export const worldRoutes = {
@@ -53,6 +53,9 @@ export const useWorldRouter = () => {
 			args: {
 				worldId,
 			},
+			query: {
+				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
+			},
 		})
 	}, [baseRouter, worldId])
 
@@ -61,6 +64,9 @@ export const useWorldRouter = () => {
 			target: worldRoutes.outliner,
 			args: {
 				worldId,
+			},
+			query: {
+				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
 			},
 		})
 	}, [baseRouter, worldId])
@@ -73,6 +79,9 @@ export const useWorldRouter = () => {
 			target: worldRoutes.eventCreator,
 			args: {
 				worldId,
+			},
+			query: {
+				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
 			},
 		})
 	}, [baseRouter, isReadOnly, worldId])
@@ -87,6 +96,9 @@ export const useWorldRouter = () => {
 				args: {
 					worldId,
 					eventId,
+				},
+				query: {
+					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
 				},
 			})
 		},
@@ -104,6 +116,9 @@ export const useWorldRouter = () => {
 					worldId,
 					actorId,
 				},
+				query: {
+					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
+				},
 			})
 		},
 		[baseRouter, isReadOnly, worldId],
@@ -119,6 +134,9 @@ export const useWorldRouter = () => {
 				args: {
 					worldId,
 					eventId,
+				},
+				query: {
+					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
 				},
 			})
 		},
@@ -136,6 +154,9 @@ export const useWorldRouter = () => {
 					worldId,
 					eventId,
 					deltaId,
+				},
+				query: {
+					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
 				},
 			})
 		},

@@ -120,7 +120,7 @@ export const Outliner = () => {
 														<Tab label="All" />
 														<Tab label="Actors" />
 														<Tab label="Events" />
-														<Tab label="Simplified" />
+														{/* <Tab label="Simplified" /> */}
 													</Tabs>
 												)
 											}
