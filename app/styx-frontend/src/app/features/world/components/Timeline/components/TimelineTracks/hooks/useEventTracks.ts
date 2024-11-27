@@ -28,9 +28,9 @@ type Props = {
 }
 
 const useEventTracks = ({ showHidden }: Props = {}) => {
-	const { events } = useSelector(getWorldState)
-	const { ghost: eventGhost } = useSelector(getEventCreatorState)
-	const { ghost: deltaGhost } = useSelector(getEventDeltaCreatorState)
+	const { events } = useSelector(getWorldState, (a, b) => a.events === b.events)
+	const { ghost: eventGhost } = useSelector(getEventCreatorState, (a, b) => a.ghost === b.ghost)
+	const { ghost: deltaGhost } = useSelector(getEventDeltaCreatorState, (a, b) => a.ghost === b.ghost)
 
 	const { isLocationEqual } = useWorldRouter()
 
@@ -140,7 +140,7 @@ const useEventTracks = ({ showHidden }: Props = {}) => {
 		}
 
 		return chainedEvents
-	}, [events, eventGhost, isLocationEqual, deltaGhost])
+	}, [events, eventGhost, deltaGhost, isLocationEqual])
 
 	const { tracks } = useEventTracksRequest()
 	const tracksWithEvents = useMemo(
@@ -180,8 +180,14 @@ const useEventTracks = ({ showHidden }: Props = {}) => {
 				}),
 		[eventGroups, showHidden, tracks],
 	)
-	const tracksWithHeights = calculateMarkerHeights(tracksWithEvents) as typeof tracksWithEvents
-	const tracksWithFollowers = injectFollowerData(tracksWithHeights) as typeof tracksWithEvents
+	const tracksWithHeights = useMemo(
+		(): typeof tracksWithEvents => calculateMarkerHeights(tracksWithEvents),
+		[tracksWithEvents],
+	)
+	const tracksWithFollowers = useMemo(
+		(): typeof tracksWithEvents => injectFollowerData(tracksWithHeights),
+		[tracksWithHeights],
+	)
 	return tracksWithFollowers
 }
 
@@ -206,7 +212,6 @@ const calculateMarkerHeights = (tracks: TimelineTrack[]) => {
 						if (e.timestamp === event.markerPosition) {
 							return true
 						}
-						console.log(e)
 						return false
 					}) ?? []
 
@@ -259,11 +264,8 @@ const injectFollowerData = (tracks: TimelineTrack[]) => {
 		const sortedEvents = track.events.sort((a, b) => a.markerPosition - b.markerPosition)
 		const events = sortedEvents.map((event, index) => ({
 			...event,
-			followingEntity: findStartingFrom(
-				sortedEvents,
-				index + 1,
-				(e) => e.markerHeight === event.markerHeight,
-			),
+			followingEntity:
+				findStartingFrom(sortedEvents, index + 1, (e) => e.markerHeight === event.markerHeight) ?? null,
 		}))
 		return {
 			...track,
