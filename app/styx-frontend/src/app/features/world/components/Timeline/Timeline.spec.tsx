@@ -56,14 +56,6 @@ describe('<Timeline />', () => {
 		expect(screen.queryByTestId('timeline-event-marker')).not.toBeInTheDocument()
 	})
 
-	it('renders the labels for countup calendar world', async () => {
-		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'COUNTUP' }))
-
-		expect(screen.getByText('18:00')).toBeInTheDocument()
-		expect(screen.getByText('Day 1')).toBeInTheDocument()
-		expect(screen.getByText('06:00')).toBeInTheDocument()
-	})
-
 	it('renders the labels for earth calendar world', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'EARTH' }))
 
@@ -89,8 +81,10 @@ describe('<Timeline />', () => {
 	})
 
 	it('respects the world time origin', async () => {
-		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'COUNTUP', timeOrigin: '100000' }))
+		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'PF2E', timeOrigin: '100000' }))
 
-		expect(screen.getByText('Day 70')).toBeInTheDocument()
+		screen.debug(undefined, 1000000)
+
+		expect(screen.getByText('(03) Pharast 11, 4723')).toBeInTheDocument()
 	})
 })

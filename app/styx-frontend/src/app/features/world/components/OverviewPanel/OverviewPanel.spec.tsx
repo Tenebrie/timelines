@@ -214,7 +214,7 @@ describe('<OverviewPanel />', () => {
 			renderWithProviders(
 				<OverviewPanel />,
 				getPreloadedState({
-					calendar: 'COUNTUP',
+					calendar: 'PF2E',
 					events: [
 						mockEventModel({ name: 'First Event', timestamp: 1500 }),
 						mockEventModel({ name: 'Second Event', timestamp: 2500 }),
@@ -226,9 +226,9 @@ describe('<OverviewPanel />', () => {
 			const items = screen.getAllByRole('listitem')
 
 			const rootItem = items.findIndex((item) => item.innerHTML.includes('Events (3/3)'))
-			expect(within(items[rootItem + 1]).getByText('Day 2, 01:00')).toBeInTheDocument()
-			expect(within(items[rootItem + 2]).getByText('Day 2, 17:40')).toBeInTheDocument()
-			expect(within(items[rootItem + 3]).getByText('Day 3, 10:20')).toBeInTheDocument()
+			expect(within(items[rootItem + 1]).getByText('4723, (01) Abadius 2, 01:00')).toBeInTheDocument()
+			expect(within(items[rootItem + 2]).getByText('4723, (01) Abadius 2, 17:40')).toBeInTheDocument()
+			expect(within(items[rootItem + 3]).getByText('4723, (01) Abadius 3, 10:20')).toBeInTheDocument()
 		})
 
 		it('sorts provided events based on timestamp', () => {
