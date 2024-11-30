@@ -8,9 +8,15 @@ import { getWorldStateLoaded } from '../selectors'
 import { useActorColors } from './useActorColors'
 
 export const useLoadWorldInfo = (worldId: string) => {
-	const { data } = useGetWorldInfoQuery({
-		worldId: worldId,
-	})
+	const { data } = useGetWorldInfoQuery(
+		{
+			worldId: worldId,
+		},
+		{
+			refetchOnReconnect: true,
+			refetchOnMountOrArgChange: true,
+		},
+	)
 
 	const { listAllColors } = useActorColors()
 	const isLoaded = useSelector(getWorldStateLoaded)

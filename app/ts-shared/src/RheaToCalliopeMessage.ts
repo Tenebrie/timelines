@@ -11,6 +11,7 @@ export enum RheaToCalliopeMessageType {
 	WORLD_UNSHARED = 'worldUnshared',
 	WORLD_EVENT_UPDATED = 'worldEventUpdated',
 	WORLD_EVENT_DELTA_UPDATED = 'worldEventDeltaUpdated',
+	WORLD_TRACKS_UPDATED = 'worldTracksUpdated',
 }
 
 export type RheaToCalliopeMessagePayload = {
@@ -36,6 +37,10 @@ export type RheaToCalliopeMessagePayload = {
 		worldId: string
 		// TODO: Type properly
 		eventDelta: string
+	}
+	[RheaToCalliopeMessageType.WORLD_TRACKS_UPDATED]: {
+		worldId: string
+		timestamp: string
 	}
 }
 

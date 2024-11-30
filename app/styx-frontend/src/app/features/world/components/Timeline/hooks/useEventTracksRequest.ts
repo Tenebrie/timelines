@@ -14,6 +14,7 @@ export const useEventTracksRequest = () => {
 		},
 		{
 			skip: !isLoaded,
+			refetchOnMountOrArgChange: true,
 		},
 	)
 

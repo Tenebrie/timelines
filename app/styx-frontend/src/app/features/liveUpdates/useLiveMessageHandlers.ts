@@ -1,5 +1,6 @@
 import { announcementListApi } from '@api/announcementListApi'
 import { GetWorldInfoApiResponse, worldDetailsApi } from '@api/worldDetailsApi'
+import { worldEventTracksApi } from '@api/worldEventTracksApi'
 import { worldListApi } from '@api/worldListApi'
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -33,6 +34,9 @@ export const useLiveMessageHandlers = () => {
 			if (new Date(updatedAtRef.current) < new Date(data.timestamp)) {
 				dispatch(worldDetailsApi.util.invalidateTags(['worldDetails']))
 			}
+		},
+		[CalliopeToClientMessageType.WORLD_TRACKS_UPDATED]: () => {
+			dispatch(worldEventTracksApi.util.invalidateTags(['worldEventTracks']))
 		},
 		[CalliopeToClientMessageType.WORLD_SHARED]: () => {
 			dispatch(worldListApi.util.invalidateTags(['worldList']))

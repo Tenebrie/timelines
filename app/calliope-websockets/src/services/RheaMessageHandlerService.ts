@@ -48,6 +48,10 @@ const handlers: RheaToCalliopeMessageHandlers = {
 	[RheaToCalliopeMessageType.WORLD_EVENT_DELTA_UPDATED]: (data) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_EVENT_DELTA_UPDATED, data })
 	},
+
+	[RheaToCalliopeMessageType.WORLD_TRACKS_UPDATED]: (data) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_TRACKS_UPDATED, data })
+	},
 }
 
 export const RheaMessageHandlerService = {
