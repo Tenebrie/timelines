@@ -1,12 +1,28 @@
 import { screen, waitFor } from '@testing-library/react'
 import { setupServer } from 'msw/node'
 
-import { mockCreateWorld, mockDeleteWorld, mockGetWorlds, mockWorldItemModel } from '@/api/rheaApi.mock'
+import {
+	mockCreateWorld,
+	mockDeleteWorld,
+	mockGetWorlds,
+	mockUserModel,
+	mockWorldItemModel,
+} from '@/api/rheaApi.mock'
 import { renderWithProviders } from '@/jest/renderWithProviders'
 
+import { initialState } from '../auth/reducer'
 import { WorldList } from './WorldList'
 
 const server = setupServer()
+
+const preloadedState = {
+	preloadedState: {
+		auth: {
+			...initialState,
+			user: mockUserModel(),
+		},
+	},
+}
 
 describe('<WorldList />', () => {
 	beforeAll(() => server.listen())
@@ -14,7 +30,7 @@ describe('<WorldList />', () => {
 	afterAll(() => server.close())
 
 	it('renders list of worlds', async () => {
-		renderWithProviders(<WorldList />)
+		renderWithProviders(<WorldList />, preloadedState)
 
 		mockGetWorlds(server, {
 			response: {
@@ -35,7 +51,7 @@ describe('<WorldList />', () => {
 	})
 
 	it('renders empty state if no worlds are provided', async () => {
-		renderWithProviders(<WorldList />)
+		renderWithProviders(<WorldList />, preloadedState)
 
 		mockGetWorlds(server, {
 			response: {
@@ -49,7 +65,7 @@ describe('<WorldList />', () => {
 	})
 
 	it('creates a world', async () => {
-		const { user } = renderWithProviders(<WorldList />)
+		const { user } = renderWithProviders(<WorldList />, preloadedState)
 
 		mockGetWorlds(server, {
 			response: {
@@ -89,7 +105,7 @@ describe('<WorldList />', () => {
 	})
 
 	it('creates a world with earth calendar and time origin', async () => {
-		const { user } = renderWithProviders(<WorldList />)
+		const { user } = renderWithProviders(<WorldList />, preloadedState)
 
 		mockGetWorlds(server, {
 			response: {
@@ -120,7 +136,7 @@ describe('<WorldList />', () => {
 	})
 
 	it('fails to create a world when the name is empty', async () => {
-		const { user } = renderWithProviders(<WorldList />)
+		const { user } = renderWithProviders(<WorldList />, preloadedState)
 
 		mockGetWorlds(server, {
 			response: {
@@ -142,7 +158,7 @@ describe('<WorldList />', () => {
 	})
 
 	it('deletes a world', async () => {
-		const { user } = renderWithProviders(<WorldList />)
+		const { user } = renderWithProviders(<WorldList />, preloadedState)
 
 		const worlds = [
 			mockWorldItemModel({ name: 'My First World' }),
