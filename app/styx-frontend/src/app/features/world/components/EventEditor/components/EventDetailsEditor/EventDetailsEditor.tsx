@@ -12,8 +12,9 @@ import { WorldEvent } from '@/app/features/world/types'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 
 import { EventIconDropdown } from '../EventIconDropdown/EventIconDropdown'
-import { EventModulesControls } from './EventModules/EventModulesControls'
-import { useEntityName } from './EventModules/useEntityName'
+import { EventModulesControls } from './controls/EventModulesControls'
+import { useEntityName } from './hooks/useEntityName'
+import { ExternalLinkModule } from './modules/ExternalLinkModule'
 import { useCreateEvent } from './useCreateEvent'
 import { useEditEvent } from './useEditEvent'
 import { useEventFields } from './useEventFields'
@@ -227,15 +228,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 								/>
 							)}
 							{modules.includes('ExternalLink') && (
-								<TextField
-									type="text"
-									label="External Link"
-									placeholder="https://example.com"
-									value={externalLink}
-									onChange={(e) => setExternalLink(e.target.value)}
-									inputProps={{ maxLength: 2048 }}
-									fullWidth
-								/>
+								<ExternalLinkModule externalLink={externalLink} onChange={setExternalLink} />
 							)}
 						</Stack>
 					</OutlinedContainer>

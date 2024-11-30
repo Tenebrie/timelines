@@ -88,9 +88,13 @@ export const EventTrackEditModal = () => {
 		close()
 	}
 
-	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
-		onConfirmUpdate()
-	})
+	const { largeLabel: shortcutLabel } = useShortcut(
+		Shortcut.CtrlEnter,
+		() => {
+			onConfirmUpdate()
+		},
+		isOpen ? 1 : -1,
+	)
 
 	return (
 		<Modal visible={isOpen} onClose={onCloseAttempt}>

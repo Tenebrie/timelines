@@ -9,6 +9,7 @@ export enum CalliopeToClientMessageType {
 	WORLD_UPDATED = 'worldUpdated',
 	WORLD_EVENT_UPDATED = 'worldEventUpdated',
 	WORLD_EVENT_DELTA_UPDATED = 'worldEventDeltaUpdated',
+	WORLD_TRACKS_UPDATED = 'worldTracksUpdated',
 }
 
 export type CalliopeToClientMessagePayload = {
@@ -29,6 +30,10 @@ export type CalliopeToClientMessagePayload = {
 		worldId: string
 		// TODO: Type properly
 		eventDelta: string
+	}
+	[CalliopeToClientMessageType.WORLD_TRACKS_UPDATED]: {
+		worldId: string
+		timestamp: string
 	}
 }
 

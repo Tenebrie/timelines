@@ -13,6 +13,7 @@ import { getUserPreferences } from './app/features/preferences/selectors'
 import { useSavedPreferences } from './app/features/preferences/useSavedPreferences'
 import { darkTheme, lightTheme } from './app/features/theming/themes'
 import { useBrowserSpecificScrollbars } from './hooks/useBrowserSpecificScrollbars'
+import { useShortcutManager } from './hooks/useShortcutManager'
 
 const Container = styled.div`
 	display: flex;
@@ -25,6 +26,7 @@ const App = () => {
 	useLiveUpdates()
 	useSavedPreferences()
 	useAuthCheck()
+	useShortcutManager()
 	const scrollbarThemes = useBrowserSpecificScrollbars()
 
 	const { colorMode } = useSelector(getUserPreferences)
@@ -37,6 +39,14 @@ const App = () => {
 		'* .MuiTabs-indicator': {
 			borderRadius: 1,
 			backgroundColor: theme.palette.primary.main,
+		},
+		a: {
+			color: theme.palette.primary.main,
+			transition: 'color 0.5s',
+		},
+		'a:hover': {
+			color: theme.palette.secondary.main,
+			transition: 'color 0s',
 		},
 		transition: 'background 0.3s',
 	}

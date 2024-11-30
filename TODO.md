@@ -1,11 +1,13 @@
-# Part 1
-- Hide unused tracks
-- Color code the tracks (somehow)
-- Implement scrubber
+High prio:
+- Create and preview events on the clicked track
+- Hidden tracks should not be displayed in world state
+- Add eras/ages support
 
-# Part 2
-- ResolvedAt is highlighted (bad, shouldn't be)
+Medium prio:
+- Implement scrubber
 - Earth calendar does not respect leap years
 
-# Part 3
-- Create and preview events on the clicked track
+Low prio:
+- Hide unused tracks
+- Color code the tracks (somehow)
+- ResolvedAt is highlighted (bad, shouldn't be)

@@ -55,6 +55,16 @@ export const RedisService = {
 		})
 	},
 
+	notifyAboutWorldTracksUpdate: ({ worldId, timestamp }: { worldId: string; timestamp: Date }) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.WORLD_TRACKS_UPDATED,
+			data: {
+				worldId,
+				timestamp: timestamp.toISOString(),
+			},
+		})
+	},
+
 	notifyAboutWorldShared: ({ users }: { users: User[] }) => {
 		users.forEach((user) => {
 			calliope.sendMessage({

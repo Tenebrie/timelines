@@ -24,7 +24,14 @@ import { StyledListItemButton, StyledListItemText } from './styles'
 export const OverviewPanel = () => {
 	const [searchQuery, setSearchQuery] = useState<string>('')
 
-	const { actors, events, selectedActors, selectedEvents } = useSelector(getWorldState)
+	const { actors, events, selectedActors, selectedEvents } = useSelector(getWorldState, (a, b) => {
+		return (
+			a.actors === b.actors &&
+			a.events === b.events &&
+			a.selectedActors === b.selectedActors &&
+			a.selectedEvents === b.selectedEvents
+		)
+	})
 	const { panelOpen, actorsOpen, actorsReversed, eventsOpen, eventsReversed } =
 		useSelector(getOverviewPreferences)
 
@@ -134,9 +141,7 @@ export const OverviewPanel = () => {
 			}
 		},
 		onDoubleClick: ({ event }) => {
-			navigateToEventEditor({ eventId: event.id })
-			scrollTimelineTo(event.timestamp)
-			dispatch(removeEventFromSelection(event.id))
+			navigateToEventEditor({ eventId: event.id, selectedTime: event.timestamp })
 		},
 		ignoreDelay: true,
 	})

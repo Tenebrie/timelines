@@ -68,9 +68,13 @@ export const RevokedStatementWizard = () => {
 		close()
 	}
 
-	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
-		sendRequest()
-	})
+	const { largeLabel: shortcutLabel } = useShortcut(
+		Shortcut.CtrlEnter,
+		() => {
+			sendRequest()
+		},
+		isOpen ? 1 : -1,
+	)
 
 	const removableCards = worldEvents
 		.filter((event) => event.timestamp < selectedTime)

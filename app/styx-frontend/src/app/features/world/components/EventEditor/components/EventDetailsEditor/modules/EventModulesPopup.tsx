@@ -5,7 +5,7 @@ import { bindPopover, PopupState } from 'material-ui-popup-state/hooks'
 
 import { WorldEventModule } from '@/app/features/world/types'
 
-import { useEventModules } from './useEventModules'
+import { useEventModules } from '../hooks/useEventModules'
 
 type Props = {
 	mode: 'add' | 'remove'

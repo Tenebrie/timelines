@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux'
 
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useEventIcons } from '@/app/features/world/hooks/useEventIcons'
-import { useTimelineBusDispatch } from '@/app/features/world/hooks/useTimelineBus'
 import { worldSlice } from '@/app/features/world/reducer'
 import { MarkerType, TimelineEntity } from '@/app/features/world/types'
 import { useStringColor } from '@/app/utils/getStringColor'
@@ -29,14 +28,9 @@ type Props = {
 export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
-	const scrollTimelineTo = useTimelineBusDispatch()
 	const dispatch = useDispatch()
-	const {
-		addTimelineMarkerToSelection,
-		removeTimelineMarkerFromSelection,
-		openTimelineContextMenu,
-		setSelectedTime,
-	} = worldSlice.actions
+	const { addTimelineMarkerToSelection, removeTimelineMarkerFromSelection, openTimelineContextMenu } =
+		worldSlice.actions
 
 	const { navigateToEventEditor, navigateToEventDeltaEditor } = useWorldRouter()
 	const { getIconPath } = useEventIcons()
@@ -58,12 +52,11 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 				navigateToEventDeltaEditor({
 					eventId: entity.eventId,
 					deltaId: entity.id,
+					selectedTime: entity.markerPosition,
 				})
 			} else {
-				navigateToEventEditor({ eventId: entity.eventId })
+				navigateToEventEditor({ eventId: entity.eventId, selectedTime: entity.markerPosition })
 			}
-			scrollTimelineTo(entity.markerPosition)
-			dispatch(setSelectedTime(entity.markerPosition))
 		},
 		ignoreDelay: true,
 	})

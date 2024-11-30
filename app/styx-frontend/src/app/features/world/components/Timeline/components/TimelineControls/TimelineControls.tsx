@@ -21,7 +21,7 @@ type Props = {
 
 const TimelineControlsComponent = ({ containerRef, onNavigateToTime, onZoomIn, onZoomOut }: Props) => {
 	const theme = useCustomTheme()
-	const { selectedTime } = useSelector(getWorldState)
+	const { selectedTime } = useSelector(getWorldState, (a, b) => a.selectedTime === b.selectedTime)
 	const { timeToLabel } = useWorldTime()
 	const { timelineSpacing, setTimelineSpacing } = useTimelineSpacingSlider({ containerRef })
 	const scrollTimelineLeft = useEventBusDispatch({ event: 'scrollTimelineLeft' })
