@@ -2,9 +2,11 @@ import { Cancel, Edit, Save } from '@mui/icons-material'
 import { Button, Stack, Tooltip, Typography } from '@mui/material'
 import TextField from '@mui/material/TextField'
 import { useCallback, useMemo, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import { useTimelineBusDispatch } from '@/app/features/world/hooks/useTimelineBus'
+import { worldSlice } from '@/app/features/world/reducer'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import { QueryParams } from '@/router/routes/QueryParams'
 
@@ -72,15 +74,19 @@ export const ExternalLinkModule = ({ externalLink, onChange }: Props) => {
 	}, [internalData, onChange])
 
 	const scrollTimelineTo = useTimelineBusDispatch()
+	const { setSelectedTime } = worldSlice.actions
+	const dispatch = useDispatch()
 	const onNavigation = useCallback(() => {
 		if (!isLocal) {
 			return
 		}
 		const link = new URL(externalLink)
 		if (link.searchParams.has(QueryParams.SELECTED_TIME)) {
-			scrollTimelineTo(parseInt(link.searchParams.get(QueryParams.SELECTED_TIME) ?? '0'))
+			const selectedTime = parseInt(link.searchParams.get(QueryParams.SELECTED_TIME) ?? '0')
+			scrollTimelineTo(selectedTime)
+			dispatch(setSelectedTime(selectedTime))
 		}
-	}, [externalLink, isLocal, scrollTimelineTo])
+	}, [dispatch, externalLink, isLocal, scrollTimelineTo, setSelectedTime])
 
 	const { largeLabel: shortcutLabel } = useShortcut(
 		Shortcut.CtrlEnter,
@@ -122,9 +128,7 @@ export const ExternalLinkModule = ({ externalLink, onChange }: Props) => {
 								width: '100%',
 							}}
 						>
-							<Typography variant="body2" noWrap>
-								{isLocal ? 'Internal ' : 'External '}Resource Link:
-							</Typography>
+							<Typography variant="body2">{isLocal ? 'Internal' : 'External'} Resource Link:</Typography>
 							{validatedLink.state === 'valid' && (
 								<Link
 									target={isLocal ? undefined : '_blank'}

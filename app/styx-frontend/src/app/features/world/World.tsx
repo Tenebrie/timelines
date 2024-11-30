@@ -34,15 +34,20 @@ const useWatchSelectedTime = () => {
 	const { setSelectedTime } = worldSlice.actions
 	const dispatch = useDispatch()
 
+	/**
+	 * Selected time has been changed externally
+	 */
 	useEffect(() => {
 		const value = queryOf(worldRoutes.root).time
 		const selectedTime = parseInt(value)
-		setTimeout(() => {
-			dispatch(setSelectedTime(selectedTime))
-		}, 1)
+		console.log(selectedTime)
+		dispatch(setSelectedTime(selectedTime))
 		scrollTimelineTo(selectedTime)
 	}, [dispatch, setSelectedTime, scrollTimelineTo, queryOf])
 
+	/**
+	 * User has pushed the back button
+	 */
 	const onPopstate = useCallback(() => {
 		const url = new URL(window.location.href)
 		const value = url.searchParams.get(QueryParams.SELECTED_TIME)
