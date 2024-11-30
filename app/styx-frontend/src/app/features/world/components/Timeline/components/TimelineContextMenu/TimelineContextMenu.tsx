@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/reducer'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { useTimelineBusDispatch } from '@/app/features/world/hooks/useTimelineBus'
 import { worldSlice } from '@/app/features/world/reducer'
 import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
 import { MarkerType, TimelineEntity } from '@/app/features/world/types'
@@ -40,7 +39,7 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 
 	const dispatch = useDispatch()
-	const { closeTimelineContextMenu, setSelectedTime } = worldSlice.actions
+	const { closeTimelineContextMenu } = worldSlice.actions
 	const { open: openDeleteEventModal } = useModal('deleteEventModal')
 	const { open: openDeleteEventDeltaModal } = useModal('deleteEventDeltaModal')
 
@@ -49,14 +48,10 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 		[closeTimelineContextMenu, dispatch],
 	)
 
-	const scrollTimelineTo = useTimelineBusDispatch()
-
 	const onCreateEvent = useCallback(() => {
 		onClose()
-		navigateToEventCreator()
-		scrollTimelineTo(selectedTime)
-		dispatch(setSelectedTime(selectedTime))
-	}, [onClose, navigateToEventCreator, scrollTimelineTo, selectedTime, dispatch, setSelectedTime])
+		navigateToEventCreator(selectedTime)
+	}, [onClose, navigateToEventCreator, selectedTime])
 
 	const onReplaceSelectedEvent = useCallback(() => {
 		onClose()
@@ -65,18 +60,9 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 		}
 		navigateToEventDeltaCreator({
 			eventId: selectedMarker.eventId,
+			selectedTime,
 		})
-		scrollTimelineTo(selectedTime)
-		dispatch(setSelectedTime(selectedTime))
-	}, [
-		dispatch,
-		navigateToEventDeltaCreator,
-		onClose,
-		scrollTimelineTo,
-		selectedMarker,
-		selectedTime,
-		setSelectedTime,
-	])
+	}, [navigateToEventDeltaCreator, onClose, selectedMarker, selectedTime])
 
 	const onResolveSelectedEvent = useCallback(async () => {
 		if (!selectedMarker) {

@@ -1,33 +1,25 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 
-import { isMacOS } from '../app/utils/isMacOS'
 import { ShortcutLabel } from './styles'
+import { RegisteredShortcuts } from './useShortcutManager'
+import { Shortcut } from './useShortcutManager'
 
-export const Shortcut = {
-	Enter: 'Enter',
-	CtrlEnter: 'Ctrl+Enter',
-} as const
+export { Shortcut }
 
-export const useShortcut = (shortcut: (typeof Shortcut)[keyof typeof Shortcut], callback: () => void) => {
-	const defKeys = useMemo(() => shortcut.split('+'), [shortcut])
-	const ctrlKeyNeeded = useMemo(() => defKeys.some((key) => key === 'Ctrl'), [defKeys])
-
-	const onKeyDown = useCallback(
-		(event: KeyboardEvent) => {
-			const key = event.key
-			const ctrlKey = isMacOS() ? event.metaKey : event.ctrlKey
-
-			if (ctrlKey === ctrlKeyNeeded && key === defKeys[defKeys.length - 1]) {
-				callback()
-			}
-		},
-		[callback, ctrlKeyNeeded, defKeys],
-	)
-
+export const useShortcut = (
+	shortcut: (typeof Shortcut)[keyof typeof Shortcut],
+	callback: () => void,
+	priority?: number,
+) => {
 	useEffect(() => {
-		document.addEventListener('keydown', onKeyDown)
-		return () => document.removeEventListener('keydown', onKeyDown)
-	}, [onKeyDown, shortcut])
+		RegisteredShortcuts[shortcut].push({
+			callback,
+			priority: priority ?? 0,
+		})
+		return () => {
+			RegisteredShortcuts[shortcut] = RegisteredShortcuts[shortcut].filter((cb) => cb.callback !== callback)
+		}
+	}, [callback, priority, shortcut])
 
 	return {
 		label: shortcut,

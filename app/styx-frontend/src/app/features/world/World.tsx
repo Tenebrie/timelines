@@ -1,3 +1,4 @@
+import { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Navigate, useOutlet } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
@@ -21,12 +22,49 @@ import { Timeline } from './components/Timeline/Timeline'
 import { TimelinePlaceholder } from './components/Timeline/TimelinePlaceholder'
 import { WorldNavigator } from './components/WorldNavigator/WorldNavigator'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
+import { useTimelineBusDispatch } from './hooks/useTimelineBus'
 import { worldSlice } from './reducer'
 import { WorldContainer, WorldContent } from './styles'
+
+const useWatchSelectedTime = () => {
+	const { queryOf } = useWorldRouter()
+
+	const scrollTimelineTo = useTimelineBusDispatch()
+
+	const { setSelectedTime } = worldSlice.actions
+	const dispatch = useDispatch()
+
+	useEffect(() => {
+		const value = queryOf(worldRoutes.root).time
+		const selectedTime = parseInt(value)
+		setTimeout(() => {
+			dispatch(setSelectedTime(selectedTime))
+		}, 1)
+		scrollTimelineTo(selectedTime)
+	}, [dispatch, setSelectedTime, scrollTimelineTo, queryOf])
+
+	const onPopstate = useCallback(() => {
+		const url = new URL(window.location.href)
+		const value = url.searchParams.get(QueryParams.SELECTED_TIME)
+		if (value) {
+			const selectedTime = parseInt(value)
+			dispatch(setSelectedTime(selectedTime))
+			scrollTimelineTo(selectedTime)
+		}
+	}, [dispatch, scrollTimelineTo, setSelectedTime])
+
+	useEffect(() => {
+		window.addEventListener('popstate', onPopstate)
+		return () => {
+			window.removeEventListener('popstate', onPopstate)
+		}
+	}, [onPopstate])
+}
 
 export const World = () => {
 	const { stateOf } = useWorldRouter()
 	const { worldId } = stateOf(worldRoutes.root)
+	useWatchSelectedTime()
 
 	const { isLoaded } = useLoadWorldInfo(worldId)
 
@@ -36,19 +74,6 @@ export const World = () => {
 	const { success, target } = useAuthCheck()
 
 	const sendCalliopeMessage = useEventBusDispatch({ event: 'sendCalliopeMessage' })
-
-	const { setSelectedTime } = worldSlice.actions
-	const dispatch = useDispatch()
-
-	useEffectOnce(() => {
-		const searchParams = new URLSearchParams(window.location.search)
-		searchParams.forEach((value, key) => {
-			if (key === QueryParams.SELECTED_TIME) {
-				const selectedTime = parseInt(value)
-				dispatch(setSelectedTime(selectedTime))
-			}
-		})
-	})
 
 	useEffectOnce(() => {
 		sendCalliopeMessage({

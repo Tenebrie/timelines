@@ -63,9 +63,13 @@ export const EventTrackWizardModal = () => {
 		close()
 	}
 
-	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
-		onConfirm()
-	})
+	const { largeLabel: shortcutLabel } = useShortcut(
+		Shortcut.CtrlEnter,
+		() => {
+			onConfirm()
+		},
+		isOpen ? 1 : -1,
+	)
 
 	return (
 		<Modal visible={isOpen} onClose={close}>

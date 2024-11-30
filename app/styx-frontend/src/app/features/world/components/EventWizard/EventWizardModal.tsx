@@ -12,8 +12,6 @@ import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
 import Modal, { useModalCleanup } from '@/ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '@/ui-lib/components/Modal'
 
-import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
-
 export const EventWizardModal = () => {
 	const { isOpen, timestamp: initialTimestamp, close } = useModal('eventWizard')
 
@@ -22,8 +20,6 @@ export const EventWizardModal = () => {
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
 
 	const [createWorldEvent, { isLoading }] = useCreateWorldEventMutation()
-
-	const scrollTimelineTo = useTimelineBusDispatch()
 
 	const { navigateToEventEditor, stateOf } = useWorldRouter()
 	const { worldId } = stateOf(worldRoutes.eventEditor)
@@ -75,13 +71,16 @@ export const EventWizardModal = () => {
 		}
 
 		close()
-		navigateToEventEditor({ eventId: response.id })
-		scrollTimelineTo(timestamp)
+		navigateToEventEditor({ eventId: response.id, selectedTime: timestamp })
 	}
 
-	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
-		onConfirm()
-	})
+	const { largeLabel: shortcutLabel } = useShortcut(
+		Shortcut.CtrlEnter,
+		() => {
+			onConfirm()
+		},
+		isOpen ? 1 : -1,
+	)
 
 	return (
 		<Modal visible={isOpen} onClose={close}>

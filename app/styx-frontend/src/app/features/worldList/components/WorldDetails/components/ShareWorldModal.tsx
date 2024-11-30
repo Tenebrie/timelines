@@ -66,9 +66,13 @@ export const ShareWorldModal = () => {
 		dispatch(closeShareWorldModal())
 	}
 
-	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
-		onConfirm()
-	})
+	const { largeLabel: shortcutLabel } = useShortcut(
+		Shortcut.CtrlEnter,
+		() => {
+			onConfirm()
+		},
+		isOpen ? 1 : -1,
+	)
 
 	return (
 		<>

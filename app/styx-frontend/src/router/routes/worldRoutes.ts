@@ -1,6 +1,8 @@
 import { useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { useTimelineBusDispatch } from '@/app/features/world/hooks/useTimelineBus'
+import { worldSlice } from '@/app/features/world/reducer'
 import { getWorldRouterState } from '@/app/features/world/selectors'
 
 import { QueryStrategy, useBaseRouter } from '../useBaseRouter'
@@ -47,6 +49,10 @@ export const useWorldRouter = () => {
 		(a, b) => a.id === b.id && a.isReadOnly === b.isReadOnly,
 	)
 
+	const scrollTimelineTo = useTimelineBusDispatch()
+	const { setSelectedTime } = worldSlice.actions
+	const dispatch = useDispatch()
+
 	const navigateToCurrentWorldRoot = useCallback(() => {
 		baseRouter.navigateTo({
 			target: worldRoutes.root,
@@ -71,23 +77,30 @@ export const useWorldRouter = () => {
 		})
 	}, [baseRouter, worldId])
 
-	const navigateToEventCreator = useCallback(() => {
-		if (isReadOnly) {
-			return
-		}
-		baseRouter.navigateTo({
-			target: worldRoutes.eventCreator,
-			args: {
-				worldId,
-			},
-			query: {
-				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
-			},
-		})
-	}, [baseRouter, isReadOnly, worldId])
+	const navigateToEventCreator = useCallback(
+		(selectedTime?: number) => {
+			if (isReadOnly) {
+				return
+			}
+			baseRouter.navigateTo({
+				target: worldRoutes.eventCreator,
+				args: {
+					worldId,
+				},
+				query: {
+					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
+				},
+			})
+			if (selectedTime !== undefined) {
+				scrollTimelineTo(selectedTime)
+				dispatch(setSelectedTime(selectedTime))
+			}
+		},
+		[baseRouter, dispatch, isReadOnly, scrollTimelineTo, setSelectedTime, worldId],
+	)
 
 	const navigateToEventDeltaCreator = useCallback(
-		({ eventId }: { eventId: string }) => {
+		({ eventId, selectedTime }: { eventId: string; selectedTime?: number }) => {
 			if (isReadOnly) {
 				return
 			}
@@ -101,8 +114,12 @@ export const useWorldRouter = () => {
 					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
 				},
 			})
+			if (selectedTime !== undefined) {
+				scrollTimelineTo(selectedTime)
+				dispatch(setSelectedTime(selectedTime))
+			}
 		},
-		[baseRouter, isReadOnly, worldId],
+		[baseRouter, dispatch, isReadOnly, scrollTimelineTo, setSelectedTime, worldId],
 	)
 
 	const navigateToActorEditor = useCallback(
@@ -125,7 +142,7 @@ export const useWorldRouter = () => {
 	)
 
 	const navigateToEventEditor = useCallback(
-		({ eventId }: { eventId: string }) => {
+		({ eventId, selectedTime }: { eventId: string; selectedTime?: number }) => {
 			if (isReadOnly) {
 				return
 			}
@@ -139,12 +156,16 @@ export const useWorldRouter = () => {
 					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
 				},
 			})
+			if (selectedTime !== undefined) {
+				scrollTimelineTo(selectedTime)
+				dispatch(setSelectedTime(selectedTime))
+			}
 		},
-		[baseRouter, isReadOnly, worldId],
+		[baseRouter, dispatch, isReadOnly, scrollTimelineTo, setSelectedTime, worldId],
 	)
 
 	const navigateToEventDeltaEditor = useCallback(
-		({ eventId, deltaId }: { eventId: string; deltaId: string }) => {
+		({ eventId, deltaId, selectedTime }: { eventId: string; deltaId: string; selectedTime?: number }) => {
 			if (isReadOnly) {
 				return
 			}
@@ -159,8 +180,12 @@ export const useWorldRouter = () => {
 					[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
 				},
 			})
+			if (selectedTime !== undefined) {
+				scrollTimelineTo(selectedTime)
+				dispatch(setSelectedTime(selectedTime))
+			}
 		},
-		[baseRouter, isReadOnly, worldId],
+		[baseRouter, dispatch, isReadOnly, scrollTimelineTo, setSelectedTime, worldId],
 	)
 
 	return {

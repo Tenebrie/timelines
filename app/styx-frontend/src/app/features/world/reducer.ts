@@ -205,7 +205,9 @@ export const worldSlice = createSlice({
 		setSelectedTime: (state, { payload }: PayloadAction<number>) => {
 			state.selectedTime = payload
 			// Use history.replaceState to put the new selectedTime into the url
-			window.history.replaceState(null, '', `?${QueryParams.SELECTED_TIME}=${payload}`)
+			setTimeout(() => {
+				window.history.replaceState(null, '', `?${QueryParams.SELECTED_TIME}=${payload}`)
+			}, 5)
 		},
 	},
 })

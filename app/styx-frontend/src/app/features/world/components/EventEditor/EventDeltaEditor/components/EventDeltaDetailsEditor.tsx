@@ -12,7 +12,7 @@ import { useDeltaStateEvent } from '@/app/utils/useDeltaStateEvent'
 import { useErrorState } from '@/app/utils/useErrorState'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 
-import { useEntityName } from '../../components/EventDetailsEditor/EventModules/useEntityName'
+import { useEntityName } from '../../components/EventDetailsEditor/hooks/useEntityName'
 import { useCreateEventDelta } from './useCreateEventDelta'
 import { useEditEventDelta } from './useEditEventDelta'
 import { useEventDeltaFields } from './useEventDeltaFields'

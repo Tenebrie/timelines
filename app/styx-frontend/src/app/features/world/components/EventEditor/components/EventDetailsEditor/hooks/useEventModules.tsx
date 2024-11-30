@@ -21,8 +21,8 @@ export const useEventModules = () => {
 				module: 'MentionedActors',
 			},
 			{
-				text: 'External Link',
-				secondary: 'Add a link to an external resource',
+				text: 'Resource link',
+				secondary: 'Add a link to another resource, internal or external',
 				module: 'ExternalLink',
 			},
 		],

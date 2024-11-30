@@ -6,9 +6,9 @@ import { useCallback } from 'react'
 import { WorldEventModule } from '@/app/features/world/types'
 import { useIsReadOnly } from '@/hooks/useIsReadOnly'
 
+import { useEventModules } from '../hooks/useEventModules'
+import { EventModulesPopup } from '../modules/EventModulesPopup'
 import { useEventFields } from '../useEventFields'
-import { EventModulesPopup } from './EventModulesPopup'
-import { useEventModules } from './useEventModules'
 
 type Props = {
 	modules: WorldEventModule[]
