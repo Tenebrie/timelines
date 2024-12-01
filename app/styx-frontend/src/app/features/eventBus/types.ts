@@ -6,6 +6,7 @@ export type AllowedEvents =
 	| 'scrollTimelineRight'
 	| 'sendCalliopeMessage'
 	| 'calliopeReconnected'
+	| 'timelineScrolled'
 export type EventParams = {
 	['hideEventInfo']: {
 		id: string
@@ -14,4 +15,5 @@ export type EventParams = {
 	['scrollTimelineRight']: void
 	['sendCalliopeMessage']: ClientToCalliopeMessage
 	['calliopeReconnected']: void
+	['timelineScrolled']: { scroll: number }
 }

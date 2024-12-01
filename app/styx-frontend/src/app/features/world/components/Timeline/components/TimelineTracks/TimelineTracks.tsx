@@ -1,4 +1,5 @@
 import { Stack } from '@mui/material'
+import { memo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
@@ -13,13 +14,12 @@ import { TimelineTrackItem } from './TimelineTrackItem'
 type Props = {
 	anotherRef: React.RefObject<HTMLDivElement>
 	visible: boolean
-	scroll: number
 	lineSpacing: number
 	scaleLevel: ScaleLevel
 	containerWidth: number
 }
 
-export const TimelineTracks = (props: Props) => {
+export const TimelineTracksComponent = (props: Props) => {
 	const eventTracks = useEventTracks()
 	const { stateOf, isLocationEqual } = useWorldRouter()
 	const stateOfEventEditor = stateOf(worldRoutes.eventEditor)
@@ -62,3 +62,5 @@ export const TimelineTracks = (props: Props) => {
 		</Stack>
 	)
 }
+
+export const TimelineTracks = memo(TimelineTracksComponent)

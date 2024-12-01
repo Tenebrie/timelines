@@ -45,6 +45,7 @@ export const useTimelineNavigation = ({
 	onDoubleClick,
 }: Props) => {
 	// Scroll
+	const scrollRef = useRef(defaultScroll)
 	const [scroll, setScroll] = useState(defaultScroll)
 	const [overscroll, setOverscroll] = useState(0)
 	const draggingFrom = useRef<Position | null>(null)
@@ -95,14 +96,12 @@ export const useTimelineNavigation = ({
 			({
 				event,
 				isDragging,
-				scroll,
 				overscroll,
 				minimumScroll,
 				maximumScroll,
 			}: {
 				event: MouseEvent | TouchEvent
 				isDragging: boolean
-				scroll: number
 				overscroll: number
 				minimumScroll: number
 				maximumScroll: number
@@ -110,6 +109,7 @@ export const useTimelineNavigation = ({
 				const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
 				const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
 				const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }
+				// console.log(newPos)
 
 				if (draggingFrom.current !== null) {
 					/* If the mouse moved less than N pixels, do not start dragging */
@@ -121,17 +121,19 @@ export const useTimelineNavigation = ({
 				}
 
 				if (isDragging) {
-					const newScroll = scroll + newPos.x - mousePos.current.x + overscroll
+					const newScroll = scrollRef.current + newPos.x - mousePos.current.x + overscroll
+					console.log(newScroll)
 					if (isFinite(minimumScroll) && newScroll < minimumScroll) {
-						setScroll(minimumScroll)
+						scrollRef.current = minimumScroll
 						setOverscroll(newScroll - minimumScroll)
 					} else if (isFinite(maximumScroll) && newScroll > maximumScroll) {
-						setScroll(maximumScroll)
+						scrollRef.current = maximumScroll
 						setOverscroll(newScroll - maximumScroll)
 					} else {
-						setScroll(newScroll)
+						scrollRef.current = newScroll
 						setOverscroll(0)
 					}
+					setScroll(scrollRef.current)
 					setCanClick(false)
 					mousePos.current = newPos
 				}
@@ -149,13 +151,12 @@ export const useTimelineNavigation = ({
 			onMouseMoveThrottled.current({
 				event,
 				isDragging,
-				scroll,
 				overscroll,
 				minimumScroll,
 				maximumScroll,
 			})
 		},
-		[isDragging, scroll, overscroll, minimumScroll, maximumScroll],
+		[isDragging, overscroll, minimumScroll, maximumScroll],
 	)
 
 	useEffect(() => {
@@ -190,14 +191,14 @@ export const useTimelineNavigation = ({
 
 		setScaleSwitchesToDo(0)
 		setReadyToSwitchScale(false)
-		const selectedTimeOnScreen = Math.round(realTimeToScaledTime(selectedTime ?? 0) + scroll)
+		const selectedTimeOnScreen = Math.round(realTimeToScaledTime(selectedTime ?? 0) + scrollRef.current)
 		const containerWidth = containerRef[0].current?.getBoundingClientRect().width ?? 0
 		const scrollIntoPos = Math.max(0, Math.min(containerWidth, selectedTimeOnScreen))
 
 		let currentScaleScroll = scaleScroll
 		let currentTimePerPixel: number = 0
 
-		const timestampAtMouse = scaledTimeToRealTime(-scroll + scrollIntoPos)
+		const timestampAtMouse = scaledTimeToRealTime(-scrollRef.current + scrollIntoPos)
 
 		for (let i = 0; i < Math.abs(scaleSwitchesToDo); i++) {
 			const newScaleScroll = clampToRange(
@@ -239,6 +240,7 @@ export const useTimelineNavigation = ({
 		} else if (isFinite(newMaximumScroll) && scrollToSet > newMaximumScroll) {
 			scrollToSet = newMaximumScroll
 		}
+		scrollRef.current = scrollToSet
 		setScroll(scrollToSet)
 		setScaleLevel(newScaleLevel)
 		setScaleScroll(currentScaleScroll)
@@ -256,7 +258,6 @@ export const useTimelineNavigation = ({
 		scaleSwitchesToDo,
 		scaledTimeToRealTime,
 		realTimeToScaledTime,
-		scroll,
 		setScroll,
 		selectedTime,
 	])
@@ -367,7 +368,7 @@ export const useTimelineNavigation = ({
 				y: event.clientY - boundingRectTop.current,
 			}
 
-			const clickOffset = Math.round((point.x - scroll) / lineSpacing) * lineSpacing
+			const clickOffset = Math.round((point.x - scrollRef.current) / lineSpacing) * lineSpacing
 			let newSelectedTime = scaledTimeToRealTime(clickOffset)
 			// For scaleLevel = 4, round to the nearest month
 			if (scaleLevel === 4) {
@@ -412,7 +413,6 @@ export const useTimelineNavigation = ({
 			pickerToTimestamp,
 			scaleLevel,
 			scaledTimeToRealTime,
-			scroll,
 		],
 	)
 
@@ -507,9 +507,9 @@ export const useTimelineNavigation = ({
 			const callback = () => {
 				const time = Math.min(1, (new Date().getTime() - smoothScrollStartedAtTime.current.getTime()) / 300)
 				const bezierPos = easing(time)
-				setScroll(
-					startedScrollFrom.current + (desiredScrollTo.current - startedScrollFrom.current) * bezierPos,
-				)
+				scrollRef.current =
+					startedScrollFrom.current + (desiredScrollTo.current - startedScrollFrom.current) * bezierPos
+				setScroll(scrollRef.current)
 				if (time < 1) {
 					requestAnimationFrame(callback)
 				} else {
@@ -519,7 +519,8 @@ export const useTimelineNavigation = ({
 			}
 
 			if (skipAnim) {
-				setScroll(desiredScrollTo.current)
+				scrollRef.current = desiredScrollTo.current
+				setScroll(scrollRef.current)
 				startedScrollFrom.current = 0
 				desiredScrollTo.current = 0
 			} else {

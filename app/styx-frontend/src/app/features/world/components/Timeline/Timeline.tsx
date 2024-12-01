@@ -2,7 +2,7 @@ import { Paper } from '@mui/material'
 import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventBus'
 import { getTimelinePreferences } from '@/app/features/preferences/selectors'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
@@ -73,9 +73,22 @@ export const Timeline = () => {
 		scaleLevel,
 	})
 
+	const notifyTimelineScrolled = useEventBusDispatch({
+		event: 'timelineScrolled',
+	})
+
 	useEffect(() => {
 		TimelineState.scroll = scroll
-	}, [scroll])
+		const elements = document.querySelectorAll<HTMLElement>('.timeline-marker-scroll')
+		if (elements) {
+			elements.forEach((element) => {
+				element.style.setProperty('--timeline-scroll', `${scroll}px`)
+			})
+		}
+		notifyTimelineScrolled({
+			scroll,
+		})
+	}, [notifyTimelineScrolled, scroll])
 
 	const scrollTimelineToTime = useCallback((time: number) => scrollTimelineTo(time), [scrollTimelineTo])
 	const scrollZoomIn = useCallback(() => performZoom(-1), [performZoom])
@@ -122,7 +135,6 @@ export const Timeline = () => {
 					<TimelineTracks
 						anotherRef={anotherRef}
 						visible={!isSwitchingScale}
-						scroll={scroll}
 						lineSpacing={lineSpacing}
 						scaleLevel={scaleLevel}
 						containerWidth={containerWidth}

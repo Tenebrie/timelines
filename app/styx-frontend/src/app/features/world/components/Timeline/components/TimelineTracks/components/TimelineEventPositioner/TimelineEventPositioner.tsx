@@ -15,7 +15,6 @@ type Props = {
 	entity: ReturnType<typeof useEventTracks>[number]['events'][number]
 	lineSpacing: number
 	visible: boolean
-	scroll: number
 	edited: boolean
 	selected: boolean
 	trackHeight: number
@@ -26,7 +25,6 @@ const TimelineEventPositionerComponent = ({
 	entity,
 	lineSpacing,
 	visible,
-	scroll,
 	edited,
 	selected,
 	trackHeight,
@@ -79,6 +77,7 @@ const TimelineEventPositionerComponent = ({
 			</>
 		),
 	})
+	const scroll = 0
 	const position =
 		realTimeToScaledTime(Math.floor(entity.markerPosition)) + scroll - TimelineEventHeightPx / 2 + 10
 	const height = TimelineEventHeightPx * entity.markerHeight
@@ -88,7 +87,7 @@ const TimelineEventPositionerComponent = ({
 			ref={ref}
 			$position={position}
 			$height={height}
-			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''}`}
+			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''} timeline-marker-scroll`}
 		>
 			<TimelineEvent entity={entity} trackHeight={trackHeight} edited={edited} selected={selected} />
 			{ghostElement}
