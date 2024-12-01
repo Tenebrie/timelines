@@ -36,6 +36,9 @@ export const Marker = styled.div<{
 		background-size: contain;
 		width: calc(100%);
 		height: calc(100%);
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		transition:
 			color 0.3s,
 			background-color 0.3s;

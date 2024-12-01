@@ -134,7 +134,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 					<>
 						<div className="icon image"></div>
 						<div className="icon">
-							<Close sx={{ width: '100%', height: '100%' }} />
+							<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
 						</div>
 					</>
 				)}
