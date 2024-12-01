@@ -42,8 +42,11 @@ export const Marker = styled.div<{
 		transition:
 			color 0.3s,
 			background-color 0.3s;
-		// color: ${(props) => props.$borderColor};
-		color: red;
+		color: ${(props) => props.$borderColor};
+		& > svg {
+			filter: hue-rotate(180deg) brightness(0.8) saturate(2);
+		}
+		// color: red;
 	}
 
 	.image {
