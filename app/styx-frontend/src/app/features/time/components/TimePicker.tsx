@@ -2,7 +2,7 @@ import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/mater
 import { memo, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { WorldCalendarType } from '../../world/types'
+import { WorldCalendarType } from '../../worldTimeline/types'
 import { useWorldTime } from '../hooks/useWorldTime'
 
 type Props = {

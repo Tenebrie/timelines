@@ -9,7 +9,7 @@ import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
-import { getWorldIdState } from '../../world/selectors'
+import { getWorldIdState } from '../../worldTimeline/selectors'
 import { useModal } from '../reducer'
 
 export const EventTrackWizardModal = () => {

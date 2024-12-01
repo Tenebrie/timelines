@@ -7,10 +7,10 @@ import { useSelector } from 'react-redux'
 import { useDeleteWorldEventTrackMutation, useUpdateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldRouter } from '@/router/routes/worldRoutes'
+import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
-import { getWorldIdState } from '../../world/selectors'
+import { getWorldIdState } from '../../worldTimeline/selectors'
 import { useModal } from '../reducer'
 
 export const EventTrackEditModal = () => {
@@ -23,7 +23,7 @@ export const EventTrackEditModal = () => {
 	const [name, setName] = useState('')
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
 
-	const { navigateToCurrentWorldRoot } = useWorldRouter()
+	const { navigateToCurrentWorldRoot } = useWorldTimelineRouter()
 	const worldId = useSelector(getWorldIdState)
 
 	useModalCleanup({

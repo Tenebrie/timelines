@@ -10,8 +10,8 @@ import {
 	WorldDetails,
 	WorldEventDelta,
 	WorldItem,
-} from '../app/features/world/types'
-import { WorldEvent } from '../app/features/world/types'
+} from '../app/features/worldTimeline/types'
+import { WorldEvent } from '../app/features/worldTimeline/types'
 import { UpdateActorApiResponse } from './actorListApi'
 import { GetAnnouncementsApiResponse } from './announcementListApi'
 import { CheckAuthenticationApiResponse, CreateAccountApiResponse, PostLoginApiResponse } from './authApi'

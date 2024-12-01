@@ -3,7 +3,7 @@ import { Button, FormControl, Stack, TextField } from '@mui/material'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import { WorldCalendarType } from '../../world/types'
+import { WorldCalendarType } from '../../worldTimeline/types'
 import { useWorldTime } from '../hooks/useWorldTime'
 import { TimePicker } from './TimePicker'
 

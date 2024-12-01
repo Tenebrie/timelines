@@ -1,7 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Actor, WorldEvent } from '../world/types'
+import { Actor, WorldEvent } from '../worldTimeline/types'
 import { loadPreferences, PreferencesKey } from './loadPreferences'
 
 const initialState = loadPreferences()

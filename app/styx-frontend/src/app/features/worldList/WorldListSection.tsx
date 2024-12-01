@@ -3,9 +3,7 @@ import { Button, Stack, Tooltip } from '@mui/material'
 import { useDispatch } from 'react-redux'
 
 import { GetWorldsApiResponse } from '@/api/worldListApi'
-import { homeRoutes } from '@/router/routes/homeRoutes'
-import { useRouter } from '@/router/routes/routes'
-import { worldRoutes } from '@/router/routes/worldRoutes'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
 
 import { OutlinedContainer } from '../../components/OutlinedContainer'
 import { TrunkatedSpan } from '../../components/TrunkatedTypography'
@@ -24,7 +22,7 @@ type Props = {
 }
 
 export const WorldListSection = ({ worlds, label, showActions, showEmptyState, showCreateButton }: Props) => {
-	const { navigateTo } = useRouter()
+	const { navigateTo } = useWorldRouter()
 
 	const dispatch = useDispatch()
 	const { openWorldWizardModal, openDeleteWorldModal } = worldListSlice.actions
@@ -35,7 +33,7 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 
 	const onLoad = (id: string) => {
 		navigateTo({
-			target: worldRoutes.outliner,
+			target: worldRoutes.timeline,
 			args: {
 				worldId: id,
 			},
@@ -44,7 +42,7 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 
 	const onEdit = (id: string) => {
 		navigateTo({
-			target: homeRoutes.worldDetails,
+			target: worldRoutes.settings,
 			args: { worldId: id },
 		})
 	}

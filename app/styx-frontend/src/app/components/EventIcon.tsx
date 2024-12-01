@@ -1,6 +1,6 @@
 import { useTheme } from '@mui/material'
 
-import { useEventIcons } from '../features/world/hooks/useEventIcons'
+import { useEventIcons } from '../features/worldTimeline/hooks/useEventIcons'
 
 type Props = {
 	name: string

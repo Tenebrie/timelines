@@ -169,6 +169,17 @@ export const useBaseRouter = <
 		[location.pathname],
 	)
 
+	const isLocationChildOf = useCallback(
+		(route: keyof ParamsT) => {
+			const routeSegments = (route as string).split('/')
+			const locationSegments = location.pathname.split('/')
+			return routeSegments.every(
+				(segment, index) => segment.startsWith(':') || locationSegments[index] === segment,
+			)
+		},
+		[location.pathname],
+	)
+
 	return {
 		navigateTo,
 		stateOf,
@@ -176,5 +187,6 @@ export const useBaseRouter = <
 		queryOfOrNull,
 		setQuery,
 		isLocationEqual,
+		isLocationChildOf,
 	}
 }

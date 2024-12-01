@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 
-import { ScaleLevel } from '../../world/components/Timeline/types'
-import { WorldCalendarType } from '../../world/types'
+import { ScaleLevel } from '../../worldTimeline/components/Timeline/types'
+import { WorldCalendarType } from '../../worldTimeline/types'
 import { useTimelineLevelScalar } from './useTimelineLevelScalar'
 
 type Props = {

@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { ScaleLevel } from '../../world/components/Timeline/types'
+import { ScaleLevel } from '../../worldTimeline/components/Timeline/types'
 
 export const useTimelineLevelScalar = () => {
 	const spacingMod = 0.5

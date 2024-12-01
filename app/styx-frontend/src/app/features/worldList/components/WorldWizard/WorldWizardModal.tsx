@@ -7,10 +7,10 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { useWorldCalendar } from '@/app/features/time/hooks/useWorldCalendar'
-import { WorldCalendarType } from '@/app/features/world/types'
+import { WorldCalendarType } from '@/app/features/worldTimeline/types'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 import { worldListSlice } from '../../reducer'
@@ -26,7 +26,7 @@ export const WorldWizardModal = () => {
 
 	const { isOpen } = useSelector(getWorldWizardModalState)
 
-	const { navigateTo } = useWorldRouter()
+	const { navigateTo } = useWorldTimelineRouter()
 
 	const [createWorld, { isLoading }] = useCreateWorldMutation()
 
@@ -70,7 +70,7 @@ export const WorldWizardModal = () => {
 
 		dispatch(closeWorldWizardModal())
 		navigateTo({
-			target: worldRoutes.root,
+			target: worldTimelineRoutes.root,
 			args: {
 				worldId: response.id,
 			},

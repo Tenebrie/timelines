@@ -1,6 +1,6 @@
 import { GetWorldInfoApiResponse } from '@api/worldDetailsApi'
 
-import { WorldEvent, WorldEventDelta } from '../features/world/types'
+import { WorldEvent, WorldEventDelta } from '../features/worldTimeline/types'
 import { isNotNull } from './isNotNull'
 
 export const ingestEvent = (rawEvent: GetWorldInfoApiResponse['events'][number]): WorldEvent => {

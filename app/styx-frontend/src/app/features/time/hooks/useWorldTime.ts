@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { ScaleLevel } from '../../world/components/Timeline/types'
-import { getWorldCalendarState } from '../../world/selectors'
-import { WorldCalendarType } from '../../world/types'
+import { ScaleLevel } from '../../worldTimeline/components/Timeline/types'
+import { getWorldCalendarState } from '../../worldTimeline/selectors'
+import { WorldCalendarType } from '../../worldTimeline/types'
 import { useWorldCalendar } from './useWorldCalendar'
 
 type Props = {

@@ -7,7 +7,7 @@ import { createBrowserRouter, MemoryRouter, RouterProvider } from 'react-router-
 import { generateStore, RootState } from '../app/store'
 import { routerDefinition } from '../router/routerDefinition'
 import { appRoutes } from '../router/routes/appRoutes'
-import { worldRoutes } from '../router/routes/worldRoutes'
+import { worldTimelineRoutes } from '../router/routes/worldTimelineRoutes'
 
 export const renderWithProviders = (
 	node: ReactNode,
@@ -26,12 +26,12 @@ export const renderWithProviders = (
 }
 
 export const renderWithRouter = async (
-	routeName: keyof typeof appRoutes | keyof typeof worldRoutes,
+	routeName: keyof typeof appRoutes | keyof typeof worldTimelineRoutes,
 	{ preloadedState }: { preloadedState?: Partial<RootState> } = {},
 ) => {
 	const bigRouter = {
 		...appRoutes,
-		...worldRoutes,
+		...worldTimelineRoutes,
 	}
 	const path = bigRouter[routeName]
 	window.history.pushState({}, 'Test page', path)

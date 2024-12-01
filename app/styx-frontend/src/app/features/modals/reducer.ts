@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { User } from '../auth/reducer'
-import { ActorDetails, WorldEvent, WorldEventDelta, WorldEventTrack } from '../world/types'
+import { ActorDetails, WorldEvent, WorldEventDelta, WorldEventTrack } from '../worldTimeline/types'
 
 const modals = {
 	/* Admin */

@@ -6,9 +6,9 @@ import authReducer from './features/auth/reducer'
 import spinnyReducer from './features/demo/spinny/reducer'
 import modalsReducer from './features/modals/reducer'
 import preferencesReducer from './features/preferences/reducer'
-import timelineReducer from './features/world/components/Timeline/reducer'
-import worldReducer from './features/world/reducer'
 import worldListReducer from './features/worldList/reducer'
+import timelineReducer from './features/worldTimeline/components/Timeline/reducer'
+import worldReducer from './features/worldTimeline/reducer'
 
 export const generateStore = ({ preloadedState }: { preloadedState?: PreloadedState<object> } = {}) =>
 	configureStore({
