@@ -79,12 +79,6 @@ export const Timeline = () => {
 
 	useEffect(() => {
 		TimelineState.scroll = scroll
-		const elements = document.querySelectorAll<HTMLElement>('.timeline-marker-scroll')
-		if (elements) {
-			elements.forEach((element) => {
-				element.style.setProperty('--timeline-scroll', `${scroll}px`)
-			})
-		}
 		notifyTimelineScrolled({
 			scroll,
 		})

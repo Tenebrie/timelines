@@ -1,9 +1,10 @@
 import { memo, useRef } from 'react'
 
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { TimelineState } from '@/app/features/world/components/Timeline/utils/TimelineState'
 import { MarkerType, TimelineEntity } from '@/app/features/world/types'
 
-import { useMarkerScroll } from '../../hooks/useMarkerScroll'
 import { Chain } from '../../styles'
 import { TimelineChain } from '../TimelineChain/TimelineChain'
 
@@ -22,9 +23,19 @@ export const TimelineChainPositionerComponent = ({
 	selected,
 	realTimeToScaledTime,
 }: Props) => {
-	const position = realTimeToScaledTime(Math.floor(entity.markerPosition))
 	const ref = useRef<HTMLDivElement | null>(null)
-	useMarkerScroll({ ref })
+	const position = realTimeToScaledTime(Math.floor(entity.markerPosition)) + TimelineState.scroll
+
+	useEventBusSubscribe({
+		event: 'timelineScrolled',
+		callback: () => {
+			const pos = realTimeToScaledTime(Math.floor(entity.markerPosition)) + TimelineState.scroll
+
+			if (ref.current) {
+				ref.current.style.left = `${pos}px`
+			}
+		},
+	})
 
 	return (
 		<Chain ref={ref} $position={position} className={`${visible ? 'visible' : ''} timeline-marker-scroll`}>

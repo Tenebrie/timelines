@@ -30,7 +30,7 @@ body.cursor-grabbing {
 
 .timeline-marker-scroll {
 	--timeline-scroll: -10000px;
-	transform: translateX(var(--timeline-scroll));
+	/* transform: translateX(); */
 }
 
 code {

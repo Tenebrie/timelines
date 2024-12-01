@@ -2,12 +2,13 @@ import classNames from 'classnames'
 import { memo } from 'react'
 
 import { useDragDrop } from '@/app/features/dragDrop/useDragDrop'
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { TimelineState } from '@/app/features/world/components/Timeline/utils/TimelineState'
 import { useEventIcons } from '@/app/features/world/hooks/useEventIcons'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 
 import useEventTracks, { TimelineEventHeightPx } from '../../hooks/useEventTracks'
-import { useMarkerScroll } from '../../hooks/useMarkerScroll'
 import { Group } from '../../styles'
 import { Marker } from '../TimelineEvent/styles'
 import { TimelineEvent } from '../TimelineEvent/TimelineEvent'
@@ -38,6 +39,7 @@ const TimelineEventPositionerComponent = ({
 		type: 'timelineEvent',
 		params: { event: entity },
 		adjustPosition: (pos) => {
+			const scroll = TimelineState.scroll
 			const roundingFactor = lineSpacing
 			const b = -scroll % lineSpacing
 			const posTimestamp = pos.x + b
@@ -78,11 +80,28 @@ const TimelineEventPositionerComponent = ({
 			</>
 		),
 	})
-	const scroll = 0
 	const position =
-		realTimeToScaledTime(Math.floor(entity.markerPosition)) + scroll - TimelineEventHeightPx / 2 + 10
+		realTimeToScaledTime(Math.floor(entity.markerPosition)) +
+		TimelineState.scroll -
+		TimelineEventHeightPx / 2 +
+		1
+
+	useEventBusSubscribe({
+		event: 'timelineScrolled',
+		callback: () => {
+			const pos =
+				realTimeToScaledTime(Math.floor(entity.markerPosition)) +
+				TimelineState.scroll -
+				TimelineEventHeightPx / 2 +
+				1
+
+			if (ref.current) {
+				ref.current.style.left = `${pos}px`
+			}
+		},
+	})
+
 	const height = TimelineEventHeightPx * entity.markerHeight
-	useMarkerScroll({ ref })
 
 	return (
 		<Group

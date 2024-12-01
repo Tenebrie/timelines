@@ -15,5 +15,5 @@ export type EventParams = {
 	['scrollTimelineRight']: void
 	['sendCalliopeMessage']: ClientToCalliopeMessage
 	['calliopeReconnected']: void
-	['timelineScrolled']: { scroll: number }
+	['timelineScrolled']: void
 }

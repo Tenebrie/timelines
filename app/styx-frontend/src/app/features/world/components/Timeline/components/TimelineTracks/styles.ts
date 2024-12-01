@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const Group = styled.div.attrs<{ $position: number; $height: number }>((props) => ({
 	style: {
-		left: `calc(${props.$position}px - 9px)`,
+		left: `${props.$position}px`,
 		bottom: `${props.$height}px`,
 	},
 }))<{ $position: number }>`
@@ -22,7 +22,7 @@ export const Group = styled.div.attrs<{ $position: number; $height: number }>((p
 
 export const Chain = styled.div.attrs<{ $position: number }>((props) => ({
 	style: {
-		left: `calc(${props.$position}px)`,
+		left: `calc(${props.$position}px`,
 	},
 }))<{ $position: number }>`
 	display: flex;
@@ -52,13 +52,4 @@ export const TrackContainer = styled.div<{ $height: number; $background: string 
 		pointer-events: auto;
 		background: ${(props) => props.$background};
 	}
-`
-
-export const TrackPositioner = styled.div.attrs<{ $position: number }>((props) => ({
-	style: {
-		// transform: `translateX(${props.$position}px)`,
-		// left: `${props.$position}px`,
-	},
-}))`
-	position: absolute;
 `
