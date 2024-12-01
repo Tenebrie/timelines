@@ -40,7 +40,6 @@ const useWatchSelectedTime = () => {
 	useEffect(() => {
 		const value = queryOf(worldRoutes.root).time
 		const selectedTime = parseInt(value)
-		console.log(selectedTime)
 		dispatch(setSelectedTime(selectedTime))
 		scrollTimelineTo(selectedTime)
 	}, [dispatch, setSelectedTime, scrollTimelineTo, queryOf])

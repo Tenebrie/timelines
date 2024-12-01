@@ -109,7 +109,6 @@ export const useTimelineNavigation = ({
 				const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
 				const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
 				const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }
-				// console.log(newPos)
 
 				if (draggingFrom.current !== null) {
 					/* If the mouse moved less than N pixels, do not start dragging */
@@ -122,7 +121,6 @@ export const useTimelineNavigation = ({
 
 				if (isDragging) {
 					const newScroll = scrollRef.current + newPos.x - mousePos.current.x + overscroll
-					console.log(newScroll)
 					if (isFinite(minimumScroll) && newScroll < minimumScroll) {
 						scrollRef.current = minimumScroll
 						setOverscroll(newScroll - minimumScroll)

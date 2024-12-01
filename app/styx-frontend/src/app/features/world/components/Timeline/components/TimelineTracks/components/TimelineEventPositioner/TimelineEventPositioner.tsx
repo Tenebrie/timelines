@@ -7,6 +7,7 @@ import { useEventIcons } from '@/app/features/world/hooks/useEventIcons'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 
 import useEventTracks, { TimelineEventHeightPx } from '../../hooks/useEventTracks'
+import { useMarkerScroll } from '../../hooks/useMarkerScroll'
 import { Group } from '../../styles'
 import { Marker } from '../TimelineEvent/styles'
 import { TimelineEvent } from '../TimelineEvent/TimelineEvent'
@@ -81,6 +82,7 @@ const TimelineEventPositionerComponent = ({
 	const position =
 		realTimeToScaledTime(Math.floor(entity.markerPosition)) + scroll - TimelineEventHeightPx / 2 + 10
 	const height = TimelineEventHeightPx * entity.markerHeight
+	useMarkerScroll({ ref })
 
 	return (
 		<Group
