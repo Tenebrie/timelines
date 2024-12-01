@@ -72,7 +72,7 @@ export const TimelineTrackItem = ({
 			),
 		[contextMenuState, track.events, worldState.selectedTimelineMarkers],
 	)
-	const [visibleMarkers, setVisibleMarkers] = useState(track.events)
+	const [visibleMarkers, setVisibleMarkers] = useState<(typeof track)['events']>([])
 
 	const updateVisibleMarkersThrottled = useRef(
 		throttle(

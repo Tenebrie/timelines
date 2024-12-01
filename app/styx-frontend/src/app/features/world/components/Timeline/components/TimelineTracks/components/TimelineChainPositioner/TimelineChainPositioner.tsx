@@ -1,6 +1,5 @@
-import { memo, Profiler } from 'react'
+import { memo } from 'react'
 
-import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { MarkerType, TimelineEntity } from '@/app/features/world/types'
 
@@ -27,16 +26,14 @@ export const TimelineChainPositionerComponent = ({
 	const position = realTimeToScaledTime(Math.floor(entity.markerPosition)) + scroll
 
 	return (
-		<Profiler id="TimelineChainPositioner" onRender={reportComponentProfile}>
-			<Chain $position={position} className={`${visible ? 'visible' : ''}`}>
-				<TimelineChain
-					entity={entity}
-					edited={edited}
-					selected={selected}
-					realTimeToScaledTime={realTimeToScaledTime}
-				/>
-			</Chain>
-		</Profiler>
+		<Chain $position={position} className={`${visible ? 'visible' : ''}`}>
+			<TimelineChain
+				entity={entity}
+				edited={edited}
+				selected={selected}
+				realTimeToScaledTime={realTimeToScaledTime}
+			/>
+		</Chain>
 	)
 }
 
