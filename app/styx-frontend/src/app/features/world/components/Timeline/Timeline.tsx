@@ -70,7 +70,6 @@ export const Timeline = () => {
 	}, [dispatch, scaleLevel, setScaleLevel])
 
 	const { onContextMenu } = useTimelineContextMenu({
-		scroll,
 		scaleLevel,
 	})
 
