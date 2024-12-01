@@ -63,11 +63,16 @@ export const Divider = styled.div.attrs<{ color: string; width: number; height: 
 `
 
 export const DividerLabel = styled.div<{ $theme: CustomTheme }>`
+	transform: translateX(-50%);
 	position: absolute;
-	width: 100%;
+	top: 3px;
+	left: -50%;
+	background: ${(props) => props.$theme.custom.palette.background.timelineHeader};
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	white-space: pre;
+	padding: 2px 16px;
+	border-radius: 8px;
 	color: ${(props) => props.$theme.custom.palette.timelineAnchor.text};
 `

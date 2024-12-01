@@ -131,7 +131,14 @@ const TimelineAnchorLineComponent = (props: Props) => {
 
 	return (
 		<Profiler id="TimelineAnchorLine" onRender={reportComponentProfile}>
-			<DividerContainer key={rawIndex} offset={dividerPosition} className={visible ? 'visible' : ''}>
+			<DividerContainer
+				key={rawIndex}
+				offset={dividerPosition}
+				className={visible ? 'visible' : ''}
+				style={{
+					zIndex: labelSize === 'large' ? 2 : labelSize === 'medium' ? 1 : 0,
+				}}
+			>
 				{!!labelSize && (
 					<DividerLabel
 						$theme={theme}
