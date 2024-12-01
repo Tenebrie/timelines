@@ -20,7 +20,6 @@ import { useModal } from '@/app/features/modals/reducer'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getWorldIdState } from '@/app/features/world/selectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { useWorldRouter } from '@/router/routes/worldRoutes'
 
 import useEventTracks, { TimelineTrack } from '../../TimelineTracks/hooks/useEventTracks'
 
@@ -33,7 +32,6 @@ export const EventTracksMenu = ({ onNavigateToTime }: Props) => {
 	const tracks = useEventTracks({ showHidden: true })
 	const displayedTracks = tracks.filter((t) => t.id !== 'default')
 	const { timeToLabel } = useWorldTime()
-	const { navigateToOutliner } = useWorldRouter()
 	const { open: openEventTrackEdit } = useModal('eventTrackEdit')
 
 	const [updateTrack] = useUpdateWorldEventTrackMutation()

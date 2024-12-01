@@ -4,16 +4,15 @@ import { useSelector } from 'react-redux'
 import { Virtuoso } from 'react-virtuoso'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
-import { getOutlinerPreferences, getTimelinePreferences } from '@/app/features/preferences/selectors'
+import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
-import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { isNull } from '@/app/utils/isNull'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 import { useIsReadOnly } from '@/hooks/useIsReadOnly'
 
 import { useOutlinerTabs } from '../../hooks/useOutlinerTabs'
-import { getTimelineState, getWorldState } from '../../selectors'
+import { getWorldState } from '../../selectors'
 import { EventCreator } from '../EventEditor/EventCreator'
 import { useVisibleEvents } from '../EventSelector/useVisibleEvents'
 import { ActorWithStatementsRenderer } from '../Renderers/ActorWithStatementsRenderer'
@@ -28,8 +27,6 @@ export const Outliner = () => {
 		getWorldState,
 		(a, b) => a.actors === b.actors && a.selectedTime === b.selectedTime,
 	)
-	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
-	const { lineSpacing } = useSelector(getTimelinePreferences, (a, b) => a.lineSpacing === b.lineSpacing)
 	const { showInactiveStatements, expandedActors, expandedEvents } = useSelector(
 		getOutlinerPreferences,
 		(a, b) =>
@@ -38,14 +35,10 @@ export const Outliner = () => {
 			a.expandedEvents === b.expandedEvents,
 	)
 
-	const { getLevelScalar } = useTimelineLevelScalar()
 	const { timeToLabel } = useWorldTime()
 	const timeLabel = useMemo(() => timeToLabel(selectedTime), [selectedTime, timeToLabel])
 
 	const { isReadOnly } = useIsReadOnly()
-
-	// Sorted list of all events visible at this point in outliner
-	const highlightWithin = lineSpacing * getLevelScalar(scaleLevel)
 
 	const allVisibleEvents = useVisibleEvents({
 		timestamp: selectedTime,
@@ -59,18 +52,16 @@ export const Outliner = () => {
 					...event,
 					index,
 					collapsed: !expandedEvents.includes(event.id),
-					highlighted: Math.abs(event.timestamp - selectedTime) < highlightWithin,
 					active: isNull(event.revokedAt) || event.revokedAt > selectedTime,
 				}))
 				.sort((a, b) => a.timestamp - b.timestamp || a.index - b.index),
-		[expandedEvents, highlightWithin, selectedTime, allVisibleEvents],
+		[expandedEvents, selectedTime, allVisibleEvents],
 	)
 
 	const visibleActors = useMemo(
 		() =>
 			actors.map((actor) => ({
 				...actor,
-				highlighted: false,
 				collapsed: !expandedActors.includes(actor.id),
 				events: visibleEvents.filter((event) => actor.statements.some((e) => e.id === event.id)),
 			})),

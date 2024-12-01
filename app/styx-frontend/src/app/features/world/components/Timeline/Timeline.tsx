@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventBus'
-import { getTimelinePreferences } from '@/app/features/preferences/selectors'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
@@ -28,7 +27,6 @@ import { TimelineState } from './utils/TimelineState'
 
 export const Timeline = () => {
 	const { timeOrigin, calendar, selectedTime } = useSelector(getWorldState)
-	const { lineSpacing } = useSelector(getTimelinePreferences)
 	const theme = useCustomTheme()
 
 	const { setSelectedTime } = worldSlice.actions
@@ -79,9 +77,7 @@ export const Timeline = () => {
 
 	useEffect(() => {
 		TimelineState.scroll = scroll
-		notifyTimelineScrolled({
-			scroll,
-		})
+		notifyTimelineScrolled()
 	}, [notifyTimelineScrolled, scroll])
 
 	const scrollTimelineToTime = useCallback((time: number) => scrollTimelineTo(time), [scrollTimelineTo])
@@ -121,7 +117,6 @@ export const Timeline = () => {
 					}}
 				>
 					<TimelineControls
-						containerRef={containerRef}
 						onNavigateToTime={scrollTimelineToTime}
 						onZoomIn={scrollZoomIn}
 						onZoomOut={scrollZoomOut}
@@ -129,7 +124,6 @@ export const Timeline = () => {
 					<TimelineTracks
 						anotherRef={anotherRef}
 						visible={!isSwitchingScale}
-						lineSpacing={lineSpacing}
 						scaleLevel={scaleLevel}
 						containerWidth={containerWidth}
 					/>
@@ -148,11 +142,11 @@ export const Timeline = () => {
 							height: '32px',
 							width: '100vw',
 						}}
+						sx={{ backgroundColor: theme.custom.palette.background.timelineHeader }}
 					></Paper>
 					<TimelineAnchor
 						visible={!isSwitchingScale}
 						scroll={scroll}
-						lineSpacing={lineSpacing}
 						scaleLevel={scaleLevel}
 						containerWidth={containerWidth}
 					/>

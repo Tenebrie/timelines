@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+export const PreferencesKey = 'userPreferences/v2'
+
 const defaultTheme = ((): 'light' | 'dark' => {
 	if (window.matchMedia) {
 		const query = window.matchMedia('(prefers-color-scheme:dark)')
@@ -12,8 +14,6 @@ const PreferencesStateSchema = z.object({
 	colorMode: z.union([z.literal('light'), z.literal('dark')]).default(defaultTheme),
 	timeline: z
 		.object({
-			useCustomLineSpacing: z.boolean().default(false),
-			lineSpacing: z.number().default(20),
 			containerHeight: z.number().default(232),
 		})
 		.default({}),
@@ -37,7 +37,7 @@ const PreferencesStateSchema = z.object({
 })
 
 export const loadPreferences = () => {
-	const value = window.localStorage.getItem('userPreferences/v1')
+	const value = window.localStorage.getItem(PreferencesKey)
 	if (!value) {
 		return DefaultPreferencesValue
 	}

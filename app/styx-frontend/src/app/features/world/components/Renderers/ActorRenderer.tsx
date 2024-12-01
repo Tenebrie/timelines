@@ -16,10 +16,9 @@ import { ShowHideChevron } from './styles'
 type Props = {
 	actor: ActorDetails
 	collapsed: boolean
-	highlighted: boolean
 }
 
-export const ActorRenderer = ({ actor, collapsed, highlighted }: Props) => {
+export const ActorRenderer = ({ actor, collapsed }: Props) => {
 	const { navigateToActorEditor } = useWorldRouter()
 
 	const { isReadOnly } = useIsReadOnly()
@@ -50,7 +49,7 @@ export const ActorRenderer = ({ actor, collapsed, highlighted }: Props) => {
 
 	return (
 		<ListItem disableGutters disablePadding secondaryAction={actions}>
-			<StyledListItemButton selected={highlighted} onClick={onToggleOpen}>
+			<StyledListItemButton onClick={onToggleOpen}>
 				<ListItemIcon>
 					<ActorAvatar actor={actor} />
 				</ListItemIcon>

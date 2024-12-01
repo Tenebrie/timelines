@@ -3,12 +3,12 @@ import throttle from 'lodash.throttle'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getTimelinePreferences } from '@/app/features/preferences/selectors'
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { maximumTime, useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useTimelineBusSubscribe } from '@/app/features/world/hooks/useTimelineBus'
 import { getWorldCalendarState } from '@/app/features/world/selectors'
+import { LineSpacing } from '@/app/features/world/utils/constants'
 import clampToRange from '@/app/utils/clampToRange'
 import { isMacOS } from '@/app/utils/isMacOS'
 import { rangeMap } from '@/app/utils/rangeMap'
@@ -60,7 +60,6 @@ export const useTimelineNavigation = ({
 	const { getLevelScalar } = useTimelineLevelScalar()
 	const { parseTime, pickerToTimestamp } = useWorldTime()
 	const calendar = useSelector(getWorldCalendarState)
-	const { lineSpacing } = useSelector(getTimelinePreferences)
 
 	const [scaleLevel, setScaleLevel] = useState<ScaleLevel>(0)
 	const scalar = useMemo(() => getLevelScalar(scaleLevel), [getLevelScalar, scaleLevel])
@@ -366,7 +365,7 @@ export const useTimelineNavigation = ({
 				y: event.clientY - boundingRectTop.current,
 			}
 
-			const clickOffset = Math.round((point.x - scrollRef.current) / lineSpacing) * lineSpacing
+			const clickOffset = Math.round((point.x - scrollRef.current) / LineSpacing) * LineSpacing
 			let newSelectedTime = scaledTimeToRealTime(clickOffset)
 			// For scaleLevel = 4, round to the nearest month
 			if (scaleLevel === 4) {
@@ -404,7 +403,6 @@ export const useTimelineNavigation = ({
 			containerRef,
 			lastClickPos,
 			lastClickTime,
-			lineSpacing,
 			onClick,
 			onDoubleClick,
 			parseTime,

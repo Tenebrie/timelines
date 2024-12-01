@@ -6,6 +6,7 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { TimelineState } from '@/app/features/world/components/Timeline/utils/TimelineState'
 import { useEventIcons } from '@/app/features/world/hooks/useEventIcons'
+import { LineSpacing } from '@/app/features/world/utils/constants'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 
 import useEventTracks, { TimelineEventHeightPx } from '../../hooks/useEventTracks'
@@ -15,7 +16,6 @@ import { TimelineEvent } from '../TimelineEvent/TimelineEvent'
 
 type Props = {
 	entity: ReturnType<typeof useEventTracks>[number]['events'][number]
-	lineSpacing: number
 	visible: boolean
 	edited: boolean
 	selected: boolean
@@ -25,7 +25,6 @@ type Props = {
 
 const TimelineEventPositionerComponent = ({
 	entity,
-	lineSpacing,
 	visible,
 	edited,
 	selected,
@@ -40,11 +39,10 @@ const TimelineEventPositionerComponent = ({
 		params: { event: entity },
 		adjustPosition: (pos) => {
 			const scroll = TimelineState.scroll
-			const roundingFactor = lineSpacing
-			const b = -scroll % lineSpacing
+			const b = -scroll % LineSpacing
 			const posTimestamp = pos.x + b
-			const roundedValue = Math.round(posTimestamp / roundingFactor) * roundingFactor
-			const offset = -scroll % lineSpacing > lineSpacing / 2 ? scroll % lineSpacing : scroll % lineSpacing
+			const roundedValue = Math.round(posTimestamp / LineSpacing) * LineSpacing
+			const offset = -scroll % LineSpacing > LineSpacing / 2 ? scroll % LineSpacing : scroll % LineSpacing
 			return {
 				x: roundedValue + offset,
 				y: pos.y,

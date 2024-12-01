@@ -14,7 +14,6 @@ import { TimelineTrackItem } from './TimelineTrackItem'
 type Props = {
 	anotherRef: React.RefObject<HTMLDivElement>
 	visible: boolean
-	lineSpacing: number
 	scaleLevel: ScaleLevel
 	containerWidth: number
 }

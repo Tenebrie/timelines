@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useUpdateWorldEventMutation } from '@/api/worldEventApi'
 import { useUpdateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { useDragDropReceiver } from '@/app/features/dragDrop/useDragDropReceiver'
-import { getTimelinePreferences } from '@/app/features/preferences/selectors'
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { worldSlice } from '@/app/features/world/reducer'
 import { getTimelineState, getWorldState } from '@/app/features/world/selectors'
 import { MarkerType, TimelineEntity } from '@/app/features/world/types'
+import { LineSpacing } from '@/app/features/world/utils/constants'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import { TimelineTrack } from './useEventTracks'
@@ -163,13 +163,12 @@ export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
 	)
 
 	const { getLevelScalar } = useTimelineLevelScalar()
-	const { lineSpacing } = useSelector(getTimelinePreferences)
 	const { ref, getState } = useDragDropReceiver({
 		type: 'timelineEvent',
 		receiverRef,
 		onDrop: async (state) => {
 			const entity = state.params.event
-			const roundingFactor = lineSpacing * getLevelScalar(scaleLevel)
+			const roundingFactor = LineSpacing * getLevelScalar(scaleLevel)
 			const realTime =
 				scaledTimeToRealTime(state.targetPos.x - state.targetRootPos.x - 10) + entity.markerPosition
 			const roundedRealTime = Math.round(realTime / roundingFactor) * roundingFactor

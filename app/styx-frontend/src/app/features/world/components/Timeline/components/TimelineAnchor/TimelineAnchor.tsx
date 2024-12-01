@@ -5,6 +5,7 @@ import { reportComponentProfile } from '@/app/features/profiling/reportComponent
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getWorldCalendarState } from '@/app/features/world/selectors'
+import { LineSpacing } from '@/app/features/world/utils/constants'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 
 import { ScaleLevel } from '../../types'
@@ -17,26 +18,24 @@ export const ResetNumbersAfterEvery = 3000000 // pixels of scrolling
 type Props = {
 	visible: boolean
 	scroll: number
-	lineSpacing: number
 	scaleLevel: ScaleLevel
 	containerWidth: number
 }
 
-const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, containerWidth }: Props) => {
+const TimelineAnchorComponent = ({ scaleLevel, scroll, visible, containerWidth }: Props) => {
 	const theme = useCustomTheme()
 	const calendar = useSelector(getWorldCalendarState)
 	const { parseTime, timeToShortLabel } = useWorldTime()
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel, calendar })
 
 	const lineCount = useMemo(
-		() => Math.ceil(containerWidth / lineSpacing) + Math.ceil(TimelineAnchorPadding / lineSpacing) * 2,
-		[containerWidth, lineSpacing],
+		() => Math.ceil(containerWidth / LineSpacing) + Math.ceil(TimelineAnchorPadding / LineSpacing) * 2,
+		[containerWidth],
 	)
 	const dividers = useRef(
 		Array(lineCount).fill({
 			index: -1,
 			scaleLevel: -1,
-			lineSpacing: -1,
 			isRendered: false,
 			isSmallGroup: false,
 			isMediumGroup: false,
@@ -51,18 +50,13 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 			const loopIndex = getLoop({
 				index: rawIndex,
 				lineCount,
-				lineSpacing,
 				timelineScroll: scroll,
 			})
 			const index = rawIndex + loopIndex * lineCount
-			if (
-				oldData.index === index &&
-				oldData.scaleLevel === scaleLevel &&
-				oldData.lineSpacing === lineSpacing
-			) {
+			if (oldData.index === index && oldData.scaleLevel === scaleLevel) {
 				return oldData
 			}
-			const parsedTime = parseTime(scaledTimeToRealTime(index * lineSpacing))
+			const parsedTime = parseTime(scaledTimeToRealTime(index * LineSpacing))
 			const isStartOfMonth = () => {
 				return parsedTime.monthDay === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
 			}
@@ -90,7 +84,6 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 			return {
 				index,
 				scaleLevel,
-				lineSpacing,
 				isRendered: isSmallGroup || isMediumGroup || isLargeGroup,
 				isSmallGroup,
 				isMediumGroup,
@@ -101,7 +94,6 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 	}, [
 		largeGroupSize,
 		lineCount,
-		lineSpacing,
 		mediumGroupSize,
 		parseTime,
 		scaleLevel,
@@ -119,7 +111,6 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 				index: -1,
 				lineCount: -1,
 				scaleLevel: -1,
-				lineSpacing: -1,
 				isRendered: false,
 				isSmallGroup: false,
 				isMediumGroup: false,
@@ -140,7 +131,7 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 				<TimelineSmallestPips
 					offset={scroll % ResetNumbersAfterEvery}
 					$visible={visible}
-					$lineSpacing={lineSpacing}
+					$lineSpacing={LineSpacing}
 				/>
 				{renderedDividers.map((data, index) => (
 					<div key={index}>
@@ -151,7 +142,6 @@ const TimelineAnchorComponent = ({ lineSpacing, scaleLevel, scroll, visible, con
 								index={index}
 								visible={visible}
 								lineCount={lineCount}
-								lineSpacing={lineSpacing}
 								scaleLevel={scaleLevel}
 								timelineScroll={scroll}
 								timeToShortLabel={timeToShortLabel}

@@ -3,16 +3,14 @@ import { useCallback, useMemo } from 'react'
 import { ScaleLevel } from '../../world/components/Timeline/types'
 import { WorldCalendarType } from '../../world/types'
 import { useTimelineLevelScalar } from './useTimelineLevelScalar'
-import { useWorldCalendar } from './useWorldCalendar'
 
 type Props = {
 	scaleLevel: ScaleLevel
 	calendar: WorldCalendarType
 }
 
-export const useTimelineWorldTime = ({ scaleLevel, calendar }: Props) => {
+export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
 	const { getLevelScalar } = useTimelineLevelScalar()
-	const { getCalendar } = useWorldCalendar()
 
 	const scalar = useMemo<number>(() => getLevelScalar(scaleLevel), [getLevelScalar, scaleLevel])
 
@@ -31,7 +29,6 @@ export const useTimelineWorldTime = ({ scaleLevel, calendar }: Props) => {
 	)
 
 	const getTimelineMultipliers = useCallback(() => {
-		const engine = getCalendar(calendar).definition.engine
 		if (scaleLevel === -1) {
 			return {
 				largeGroupSize: 1440,
@@ -94,7 +91,7 @@ export const useTimelineWorldTime = ({ scaleLevel, calendar }: Props) => {
 			mediumGroupSize: Infinity,
 			smallGroupSize: Infinity,
 		}
-	}, [getCalendar, calendar, scaleLevel])
+	}, [scaleLevel])
 
 	return {
 		getTimelineMultipliers,

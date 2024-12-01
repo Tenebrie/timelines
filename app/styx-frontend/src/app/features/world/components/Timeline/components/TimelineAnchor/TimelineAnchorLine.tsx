@@ -3,29 +3,26 @@ import { memo, Profiler, useCallback, useMemo } from 'react'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
+import { LineSpacing } from '@/app/features/world/utils/constants'
 import { CustomTheme } from '@/hooks/useCustomTheme'
 
 import { ScaleLevel } from '../../types'
 import { Divider, DividerContainer, DividerLabel } from './styles'
 import { TimelineAnchorPadding } from './TimelineAnchor'
 
-export const getPixelsPerLoop = ({ lineCount, lineSpacing }: { lineCount: number; lineSpacing: number }) =>
-	lineCount * lineSpacing
+export const getPixelsPerLoop = ({ lineCount }: { lineCount: number }) => lineCount * LineSpacing
 
 export const getLoop = ({
 	index,
 	lineCount,
-	lineSpacing,
 	timelineScroll,
 }: {
 	index: number
 	lineCount: number
-	lineSpacing: number
 	timelineScroll: number
 }) =>
 	-Math.floor(
-		(index * lineSpacing + timelineScroll + TimelineAnchorPadding) /
-			getPixelsPerLoop({ lineCount, lineSpacing }),
+		(index * LineSpacing + timelineScroll + TimelineAnchorPadding) / getPixelsPerLoop({ lineCount }),
 	)
 
 type Props = {
@@ -35,8 +32,6 @@ type Props = {
 	index: number
 	// Total number of the anchor lines
 	lineCount: number
-	// User-specified preference of pixels per line on screen
-	lineSpacing: number
 	// Current level of scale
 	scaleLevel: ScaleLevel
 	// Set to 'false' while switching scales
@@ -57,7 +52,6 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		theme,
 		index: rawIndex,
 		lineCount,
-		lineSpacing,
 		scaleLevel,
 		visible,
 		timelineScroll,
@@ -74,18 +68,14 @@ const TimelineAnchorLineComponent = (props: Props) => {
 			getLoop({
 				index: rawIndex,
 				lineCount,
-				lineSpacing,
 				timelineScroll,
 			}),
-		[lineCount, lineSpacing, rawIndex, timelineScroll],
+		[lineCount, rawIndex, timelineScroll],
 	)
-	const loopOffset = useMemo(
-		() => loopIndex * getPixelsPerLoop({ lineCount, lineSpacing }),
-		[lineCount, lineSpacing, loopIndex],
-	)
+	const loopOffset = useMemo(() => loopIndex * getPixelsPerLoop({ lineCount }), [lineCount, loopIndex])
 	const dividerPosition = useMemo(
-		() => Math.round((rawIndex * lineSpacing) / 1 + loopOffset) + positionNormalizer,
-		[lineSpacing, loopOffset, positionNormalizer, rawIndex],
+		() => Math.round((rawIndex * LineSpacing) / 1 + loopOffset) + positionNormalizer,
+		[loopOffset, positionNormalizer, rawIndex],
 	)
 
 	const index = useMemo(() => rawIndex + loopIndex * lineCount, [lineCount, loopIndex, rawIndex])
@@ -146,7 +136,7 @@ const TimelineAnchorLineComponent = (props: Props) => {
 							fontWeight: labelSize === 'large' ? 600 : labelSize === 'medium' ? 600 : 400,
 						}}
 					>
-						{timeToShortLabel(scaledTimeToRealTime(index * lineSpacing), scaleLevel, labelSize)}
+						{timeToShortLabel(scaledTimeToRealTime(index * LineSpacing), scaleLevel, labelSize)}
 					</DividerLabel>
 				)}
 				<Divider color={'gray'} width={dividerWidth} height={dividerHeight} />
@@ -161,7 +151,6 @@ export const TimelineAnchorLine = memo(
 		getLoop(a) === getLoop(b) &&
 		a.theme === b.theme &&
 		a.visible === b.visible &&
-		a.lineSpacing === b.lineSpacing &&
 		a.positionNormalizer === b.positionNormalizer &&
 		a.timeToShortLabel === b.timeToShortLabel,
 )

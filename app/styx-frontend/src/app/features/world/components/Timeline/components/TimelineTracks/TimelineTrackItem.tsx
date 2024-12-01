@@ -19,7 +19,6 @@ import { TimelineTrackItemDragDrop } from './TimelineTrackItemDragDrop'
 
 type Props = {
 	track: ReturnType<typeof useEventTracks>[number]
-	lineSpacing: number
 	visible: boolean
 	containerWidth: number
 	isLocationEqual: ReturnType<typeof useWorldRouter>['isLocationEqual']
@@ -36,7 +35,6 @@ type Props = {
 
 export const TimelineTrackItem = ({
 	track,
-	lineSpacing,
 	visible,
 	containerWidth,
 	isLocationEqual,
@@ -130,7 +128,6 @@ export const TimelineTrackItem = ({
 						key={event.key}
 						entity={event}
 						visible={visible}
-						lineSpacing={lineSpacing}
 						edited={editedEntities.some((marker) => marker.key === event.key)}
 						selected={selectedMarkers.some((marker) => marker.key === event.key)}
 						trackHeight={track.height}

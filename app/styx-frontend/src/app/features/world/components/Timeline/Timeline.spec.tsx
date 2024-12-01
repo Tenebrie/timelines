@@ -1,7 +1,6 @@
 import { screen } from '@testing-library/react'
 
 import { mockEventModel } from '@/api/rheaApi.mock'
-import { PreferencesInitialState } from '@/app/features/preferences/reducer'
 import { renderWithProviders } from '@/jest/renderWithProviders'
 import { mockRouter } from '@/router/router.mock'
 import { worldRoutes } from '@/router/routes/worldRoutes'
@@ -19,13 +18,6 @@ describe('<Timeline />', () => {
 				isLoaded: true,
 				...worldOptions,
 				events,
-			},
-			preferences: {
-				...PreferencesInitialState,
-				timeline: {
-					...PreferencesInitialState.timeline,
-					lineSpacing: 10,
-				},
 			},
 		},
 	})

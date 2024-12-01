@@ -12,15 +12,14 @@ type Props = {
 	actor: Omit<ActorDetails, 'events'> & {
 		events: (WorldEvent & { active: boolean })[]
 	}
-	highlighted: boolean
 	collapsed: boolean
 	divider: boolean
 }
 
-export const ActorWithStatementsRendererComponent = ({ actor, highlighted, collapsed, divider }: Props) => {
+export const ActorWithStatementsRendererComponent = ({ actor, collapsed, divider }: Props) => {
 	return (
 		<>
-			<ActorRenderer actor={actor} collapsed={collapsed} highlighted={highlighted} />
+			<ActorRenderer actor={actor} collapsed={collapsed} />
 			<List dense component="div" disablePadding>
 				<TransitionGroup>
 					{!collapsed &&

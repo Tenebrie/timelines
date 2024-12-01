@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { getTimelinePreferences } from '@/app/features/preferences/selectors'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { ScaleLevel } from '@/app/features/world/components/Timeline/types'
 import { TimelineState } from '@/app/features/world/components/Timeline/utils/TimelineState'
 import { worldSlice } from '@/app/features/world/reducer'
 import { getTimelineContextMenuState, getWorldCalendarState } from '@/app/features/world/selectors'
+import { LineSpacing } from '@/app/features/world/utils/constants'
 
 type Props = {
 	scaleLevel: ScaleLevel
@@ -14,7 +14,6 @@ type Props = {
 
 export const useTimelineContextMenu = ({ scaleLevel }: Props) => {
 	const { isOpen } = useSelector(getTimelineContextMenuState)
-	const { lineSpacing } = useSelector(getTimelinePreferences)
 	const calendar = useSelector(getWorldCalendarState)
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
 
@@ -35,7 +34,7 @@ export const useTimelineContextMenu = ({ scaleLevel }: Props) => {
 				y: event.clientY - boundingRect.top,
 			}
 
-			const clickOffset = Math.round((point.x - TimelineState.scroll) / lineSpacing) * lineSpacing
+			const clickOffset = Math.round((point.x - TimelineState.scroll) / LineSpacing) * LineSpacing
 			const selectedTime = scaledTimeToRealTime(clickOffset)
 
 			dispatch(
@@ -49,7 +48,7 @@ export const useTimelineContextMenu = ({ scaleLevel }: Props) => {
 				}),
 			)
 		},
-		[closeTimelineContextMenu, dispatch, isOpen, lineSpacing, openTimelineContextMenu, scaledTimeToRealTime],
+		[closeTimelineContextMenu, dispatch, isOpen, openTimelineContextMenu, scaledTimeToRealTime],
 	)
 
 	return {
