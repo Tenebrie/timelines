@@ -99,6 +99,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			createdAt: string
 			updatedAt: string
 			timestamp: string
+			descriptionRich: null | string
 			worldEventId: string
 		}[]
 		description: string
@@ -111,6 +112,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		icon: string
 		timestamp: string
 		revokedAt: null | string
+		descriptionRich: string
 		customName: boolean
 		externalLink: string
 		extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]

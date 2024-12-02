@@ -12,6 +12,7 @@ export const makeCreateWorldEventQuery = (
 		| 'extraFields'
 		| 'name'
 		| 'description'
+		| 'descriptionRich'
 		| 'timestamp'
 		| 'revokedAt'
 		| 'icon'
@@ -31,6 +32,7 @@ export const makeCreateWorldEventQuery = (
 			name: data.name,
 			icon: data.icon,
 			description: data.description,
+			descriptionRich: data.descriptionRich,
 			timestamp: data.timestamp,
 			revokedAt: data.revokedAt,
 			targetActors: {

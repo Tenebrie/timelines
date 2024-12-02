@@ -3,6 +3,7 @@ import { List, ListItem, ListItemText } from '@mui/material'
 import { useCallback } from 'react'
 
 import { TrunkatedTypography } from '@/app/components/TrunkatedTypography'
+import { RichTextEditorReadonly } from '@/app/features/richTextEditor/RichTextEditorReadonly'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTimelineBus'
 import { Actor, WorldEvent } from '@/app/features/worldTimeline/types'
@@ -39,7 +40,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 	}, [event.revokedAt, event.timestamp, scrollTimelineTo, getTimelineScroll])
 
 	// const paragraphs = event.description.split('\n').filter((p) => p.trim().length > 0)
-	const paragraphs = [event.description]
+	const paragraphs = [event.descriptionRich]
 
 	const revokedAtTimestamp = isNotNull(event.revokedAt) ? (
 		<>
@@ -83,9 +84,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 											sx={{ fontSize: '16px' }}
 											style={{ whiteSpace: 'break-spaces' }}
 										>
-											<b>Content:</b>
-											<br />
-											{p}
+											<RichTextEditorReadonly value={p} />
 										</TrunkatedTypography>
 									}
 									style={{ color: active ? 'inherit' : 'gray' }}

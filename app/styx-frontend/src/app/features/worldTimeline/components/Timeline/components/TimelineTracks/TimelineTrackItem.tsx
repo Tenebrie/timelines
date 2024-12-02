@@ -53,9 +53,9 @@ export const TimelineTrackItem = ({
 			track.events.filter(
 				(entity) =>
 					(['issuedAt', 'revokedAt'].includes(entity.markerType) &&
-						isLocationEqual('/world/:worldId/editor/:eventId') &&
+						isLocationEqual('/world/:worldId/timeline/editor/:eventId') &&
 						eventEditorParams.eventId === entity.eventId) ||
-					(isLocationEqual('/world/:worldId/editor/:eventId/delta/:deltaId') &&
+					(isLocationEqual('/world/:worldId/timeline/editor/:eventId/delta/:deltaId') &&
 						eventDeltaEditorParams.deltaId === entity.id),
 			),
 		[eventDeltaEditorParams, eventEditorParams, isLocationEqual, track.events],

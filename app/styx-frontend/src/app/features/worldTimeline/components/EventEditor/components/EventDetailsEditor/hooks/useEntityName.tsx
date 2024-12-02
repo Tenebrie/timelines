@@ -26,7 +26,7 @@ export const useEntityName = ({
 			const allowedRegex = /^[^.!?;()[\]|/\n]+/iu
 			const regexResult = allowedRegex.exec(source)
 			if (regexResult) {
-				return regexResult[0].trim().slice(0, 256).trim()
+				return regexResult[0].trim().slice(0, 64).trim()
 			}
 			return `Unnamed ${entityClassName} at ${timeToLabel(timestamp)}`
 		},

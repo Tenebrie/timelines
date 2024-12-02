@@ -1,10 +1,11 @@
 import { ArrowBack, Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Autocomplete, Button, Grid, Stack, Switch, TextField, Tooltip } from '@mui/material'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
+import { RichTextEditor } from '@/app/features/richTextEditor/RichTextEditor'
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { useAutocompleteActorList } from '@/app/features/worldTimeline/components/ActorSelector/useAutocompleteActorList'
 import { getWorldState } from '@/app/features/worldTimeline/selectors'
@@ -35,6 +36,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		selectedActors,
 		mentionedActors,
 		description,
+		descriptionRich,
 		customNameEnabled,
 		externalLink,
 		setName,
@@ -44,9 +46,12 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		setSelectedActors,
 		setMentionedActors,
 		setDescription,
+		setDescriptionRich,
 		setCustomNameEnabled,
 		setExternalLink,
 	} = state
+
+	const [createEventKey, setCreateEventKey] = useState(0)
 
 	const { isCreating, createWorldEvent, createIcon, createIconColor } = useCreateEvent({
 		state,
@@ -54,7 +59,9 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 			if (mode !== 'edit') {
 				setName('')
 				setDescription('')
+				setDescriptionRich('')
 				setCustomNameEnabled(false)
+				setCreateEventKey((prev) => prev + 1)
 			}
 		},
 	})
@@ -120,14 +127,11 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 						</Button>
 					</Tooltip>
 				</Stack>
-				<TextField
-					label="Content"
-					value={description}
-					onChange={(e) => setDescription(e.target.value)}
-					minRows={7}
-					maxRows={15}
-					multiline
-					autoFocus
+				<RichTextEditor
+					key={createEventKey}
+					value={descriptionRich}
+					onChangePlain={setDescription}
+					onChangeRich={setDescriptionRich}
 				/>
 				<Stack direction="row-reverse" justifyContent="space-between">
 					{mode !== 'edit' && (

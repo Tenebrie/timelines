@@ -32,6 +32,7 @@ export const useEventFields = ({ event }: Props) => {
 		mapActorsToOptions(event.mentionedActors),
 	)
 	const [description, setDescriptionDirect] = useState<string>(event.description)
+	const [descriptionRich, setDescriptionRichDirect] = useState<string>(event.descriptionRich)
 	const [customNameEnabled, setCustomNameEnabledDirect] = useState<boolean>(event.customName)
 
 	const [externalLink, setExternalLink] = useState<string>(event.externalLink)
@@ -61,6 +62,7 @@ export const useEventFields = ({ event }: Props) => {
 			setSelectedActors: generateSetter(setSelectedActorsDirect),
 			setMentionedActors: generateSetter(setMentionedActorsDirect),
 			setDescription: generateSetter(setDescriptionDirect),
+			setDescriptionRich: generateSetter(setDescriptionRichDirect),
 			setCustomNameEnabled: generateSetter(setCustomNameEnabledDirect),
 			setExternalLink: generateSetter(setExternalLink),
 		}),
@@ -78,6 +80,7 @@ export const useEventFields = ({ event }: Props) => {
 			selectedActors,
 			mentionedActors,
 			description,
+			descriptionRich,
 			customNameEnabled,
 			externalLink,
 			setDirty,

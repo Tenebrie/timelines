@@ -38,6 +38,7 @@ export const useCreateEvent = ({ state, onCreated }: Props) => {
 					timestamp: String(state.timestamp),
 					revokedAt: state.revokedAt ? String(state.revokedAt) : null,
 					description: state.description,
+					descriptionRich: state.descriptionRich,
 					customNameEnabled: state.customNameEnabled,
 					targetActorIds: state.selectedActors.map((a) => a.id),
 					mentionedActorIds: state.mentionedActors.map((a) => a.id),

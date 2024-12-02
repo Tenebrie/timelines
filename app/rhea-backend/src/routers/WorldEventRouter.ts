@@ -62,6 +62,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		name: RequiredParam(NameStringValidator),
 		icon: RequiredParam(NameStringValidator),
 		description: RequiredParam(ContentStringValidator),
+		descriptionRich: RequiredParam(ContentStringValidator),
 		timestamp: RequiredParam(BigIntValidator),
 		revokedAt: RequiredParam(NullableBigIntValidator),
 		targetActorIds: RequiredParam(StringArrayValidator),
@@ -111,6 +112,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		timestamp: OptionalParam(BigIntValidator),
 		revokedAt: OptionalParam(NullableBigIntValidator),
 		description: OptionalParam(ContentStringValidator),
+		descriptionRich: OptionalParam(ContentStringValidator),
 		targetActorIds: OptionalParam(StringArrayValidator),
 		mentionedActorIds: OptionalParam(StringArrayValidator),
 		customNameEnabled: OptionalParam(BooleanValidator),
@@ -125,6 +127,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		timestamp: params.timestamp,
 		revokedAt: params.revokedAt,
 		description: params.description,
+		descriptionRich: params.descriptionRich,
 		customName: params.customNameEnabled,
 		externalLink: params.externalLink,
 		worldEventTrackId: params.worldEventTrackId,
@@ -256,6 +259,7 @@ router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
 		timestamp: RequiredParam(BigIntValidator),
 		name: RequiredParam(NullableNameStringValidator),
 		description: RequiredParam(NullableNameStringValidator),
+		descriptionRich: RequiredParam(NullableNameStringValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -291,6 +295,7 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 		timestamp: OptionalParam(BigIntValidator),
 		name: OptionalParam(NullableNameStringValidator),
 		description: OptionalParam(NullableNameStringValidator),
+		descriptionRich: OptionalParam(NullableNameStringValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -307,6 +312,7 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 			timestamp: params.timestamp,
 			name: params.name,
 			description: params.description,
+			descriptionRich: params.descriptionRich,
 		},
 	})
 

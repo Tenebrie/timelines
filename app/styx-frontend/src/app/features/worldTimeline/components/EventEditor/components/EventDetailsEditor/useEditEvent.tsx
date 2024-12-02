@@ -31,6 +31,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		selectedActors,
 		mentionedActors,
 		description,
+		descriptionRich,
 		customNameEnabled,
 		externalLink,
 		setDirty,
@@ -42,6 +43,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		setSelectedActors,
 		setMentionedActors,
 		setDescription,
+		setDescriptionRich,
 		setCustomNameEnabled,
 		setExternalLink,
 	} = state
@@ -58,6 +60,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 			setSelectedActors(mapActorsToOptions(event.targetActors), { cleanSet: true })
 			setMentionedActors(mapActorsToOptions(event.mentionedActors), { cleanSet: true })
 			setDescription(event.description, { cleanSet: true })
+			setDescriptionRich(event.descriptionRich, { cleanSet: true })
 			setCustomNameEnabled(event.customName, { cleanSet: true })
 			setExternalLink(event.externalLink, { cleanSet: true })
 
@@ -77,6 +80,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		setCustomNameEnabled,
 		setDirty,
 		setDescription,
+		setDescriptionRich,
 		setExternalLink,
 	])
 
@@ -118,6 +122,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 				timestamp: String(timestamp),
 				revokedAt: isNotNull(revokedAt) ? String(revokedAt) : null,
 				description,
+				descriptionRich,
 				customNameEnabled,
 				targetActorIds: selectedActors.map((a) => a.id),
 				mentionedActorIds: mentionedActors.map((a) => a.id),
