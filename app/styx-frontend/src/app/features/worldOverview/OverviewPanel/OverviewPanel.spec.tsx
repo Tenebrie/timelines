@@ -5,8 +5,8 @@ import { renderWithProviders } from '@/jest/renderWithProviders'
 import { MockedRouter, mockRouter, resetMockRouter } from '@/router/router.mock'
 import { worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
 
-import { initialState } from '../../reducer'
-import { WorldDetails } from '../../types'
+import { initialState } from '../../worldTimeline/reducer'
+import { WorldDetails } from '../../worldTimeline/types'
 import { OverviewPanel } from './OverviewPanel'
 
 describe('<OverviewPanel />', () => {

@@ -81,7 +81,7 @@ export const WorldDrawer = () => {
 						transition: 'left 0.3s',
 						display: 'flex',
 						flexDirection: 'column',
-						gap: 16,
+						gap: 8,
 						padding: '16px 4px',
 					}}
 					elevation={2}
@@ -115,7 +115,7 @@ export const WorldDrawer = () => {
 						transition: 'left 0.3s',
 						display: 'flex',
 						flexDirection: 'column',
-						gap: 16,
+						gap: 8,
 						padding: 16,
 					}}
 					elevation={2}
@@ -146,13 +146,11 @@ export const WorldDrawer = () => {
 
 const StyledButton = styled(Button)`
 	gap: 6px;
-	font-size: 18px !important;
 	justify-content: flex-start !important;
 	padding: 8px 16px !important;
 `
 
 const StyledSmallButton = styled(Button)`
 	gap: 6px;
-	font-size: 18px !important;
 	padding: 8px 16px !important;
 `

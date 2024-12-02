@@ -13,11 +13,11 @@ import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
 import { useDoubleClick } from '@/hooks/useDoubleClick'
 import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
 
-import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
-import { worldSlice } from '../../reducer'
-import { getWorldState } from '../../selectors'
-import { Actor, ActorDetails, WorldEvent, WorldEventDelta } from '../../types'
-import { ActorAvatar } from '../Renderers/ActorAvatar/ActorAvatar'
+import { ActorAvatar } from '../../worldTimeline/components/Renderers/ActorAvatar/ActorAvatar'
+import { useTimelineBusDispatch } from '../../worldTimeline/hooks/useTimelineBus'
+import { worldSlice } from '../../worldTimeline/reducer'
+import { getWorldState } from '../../worldTimeline/selectors'
+import { Actor, ActorDetails, WorldEvent, WorldEventDelta } from '../../worldTimeline/types'
 import { OverviewSublist } from './OverviewSublist'
 import { StyledListItemButton, StyledListItemText } from './styles'
 
@@ -32,8 +32,7 @@ export const OverviewPanel = () => {
 			a.selectedEvents === b.selectedEvents
 		)
 	})
-	const { panelOpen, actorsOpen, actorsReversed, eventsOpen, eventsReversed } =
-		useSelector(getOverviewPreferences)
+	const { actorsOpen, actorsReversed, eventsOpen, eventsReversed } = useSelector(getOverviewPreferences)
 
 	const scrollTimelineTo = useTimelineBusDispatch()
 	const { navigateToEventEditor, navigateToEventDeltaEditor, navigateToActorEditor } =

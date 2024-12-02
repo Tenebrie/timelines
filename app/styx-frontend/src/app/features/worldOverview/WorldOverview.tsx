@@ -2,7 +2,7 @@ import { Stack } from '@mui/material'
 import { Navigate } from 'react-router-dom'
 
 import { useAuthCheck } from '../auth/authCheck/useAuthCheck'
-import { OverviewPanel } from '../worldTimeline/components/OverviewPanel/OverviewPanel'
+import { OverviewPanel } from './OverviewPanel/OverviewPanel'
 
 export const WorldOverview = () => {
 	const { success, target } = useAuthCheck()
