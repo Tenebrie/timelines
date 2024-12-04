@@ -6,14 +6,24 @@ type Props<T extends AllowedEvents> = {
 	event: T
 }
 
+export const dispatchEvent = <T extends AllowedEvents>({
+	event,
+	params,
+}: {
+	event: T
+	params: EventParams[T]
+}) => {
+	window.dispatchEvent(
+		new CustomEvent(`@timelines/${event}`, {
+			detail: params,
+		}),
+	)
+}
+
 export const useEventBusDispatch = <T extends AllowedEvents>({ event }: Props<T>) => {
 	return useCallback(
 		(params: EventParams[T]) => {
-			window.dispatchEvent(
-				new CustomEvent(`@timeline/${event}`, {
-					detail: params,
-				}),
-			)
+			dispatchEvent({ event, params })
 		},
 		[event],
 	)

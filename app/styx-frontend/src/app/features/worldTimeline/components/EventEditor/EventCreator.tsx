@@ -27,6 +27,7 @@ export const EventCreatorComponent = ({ mode }: Props) => {
 				worldId: id,
 				name: '',
 				description: '',
+				descriptionRich: '',
 				timestamp: selectedTime,
 			}),
 		[id, selectedTime],

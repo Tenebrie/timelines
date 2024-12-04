@@ -21,9 +21,9 @@ export const useEventBusSubscribe = <T extends AllowedEvents>({ event, condition
 	)
 
 	useEffect(() => {
-		window.addEventListener(`@timeline/${event}`, onEvent)
+		window.addEventListener(`@timelines/${event}`, onEvent)
 		return () => {
-			window.removeEventListener(`@timeline/${event}`, onEvent)
+			window.removeEventListener(`@timelines/${event}`, onEvent)
 		}
 	}, [event, onEvent])
 }

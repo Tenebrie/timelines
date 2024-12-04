@@ -1,4 +1,3 @@
-import { ArrowRightAlt, Link } from '@mui/icons-material'
 import { List, ListItem, ListItemText } from '@mui/material'
 import { useCallback } from 'react'
 
@@ -9,7 +8,7 @@ import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTi
 import { Actor, WorldEvent } from '@/app/features/worldTimeline/types'
 import { isNotNull } from '@/app/utils/isNotNull'
 
-import { StatementActorsText, StyledListItemButton, ZebraWrapper } from '../../Outliner/styles'
+import { StyledListItemButton, ZebraWrapper } from '../../Outliner/styles'
 import { useTimelineScroll } from '../../Timeline/hooks/useTimelineScroll'
 import { useActorsToString } from './useActorsToString'
 
@@ -23,7 +22,6 @@ type Props = {
 export const EventContentRenderer = ({ event, owningActor, short, active }: Props) => {
 	const maxActorsDisplayed = short ? 2 : 5
 	const actorsToString = useActorsToString()
-	const targetActors = actorsToString(event.targetActors, owningActor, maxActorsDisplayed)
 	const mentionedActors = actorsToString(event.mentionedActors, owningActor, maxActorsDisplayed)
 
 	const { timeToLabel } = useWorldTime()
@@ -49,9 +47,6 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 	) : (
 		''
 	)
-
-	const targetActorIndex = paragraphs.length + 1
-	const mentionedActorsIndex = targetActorIndex + targetActors.length > 0 ? 1 : 0
 
 	return (
 		<>
@@ -84,6 +79,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 											sx={{ fontSize: '16px' }}
 											style={{ whiteSpace: 'break-spaces' }}
 										>
+											<b>Content:</b>
 											<RichTextEditorReadonly value={p} />
 										</TrunkatedTypography>
 									}
@@ -93,44 +89,6 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 						</ListItem>
 					</ZebraWrapper>
 				))}
-				{targetActors.length > 0 && (
-					<ZebraWrapper $zebra={targetActorIndex % 2 === 0}>
-						<ListItem disablePadding>
-							<StyledListItemButton>
-								<ListItemText
-									data-hj-suppress
-									primary={
-										<TrunkatedTypography $lines={3} component="span">
-											<StatementActorsText>
-												{event.targetActors.length > 0 ? <Link /> : ''} {targetActors}
-											</StatementActorsText>
-										</TrunkatedTypography>
-									}
-									style={{ color: active ? 'inherit' : 'gray' }}
-								></ListItemText>
-							</StyledListItemButton>
-						</ListItem>
-					</ZebraWrapper>
-				)}
-				{mentionedActors.length > 0 && (
-					<ZebraWrapper $zebra={mentionedActorsIndex % 2 === 1}>
-						<ListItem disablePadding>
-							<StyledListItemButton>
-								<ListItemText
-									data-hj-suppress
-									primary={
-										<TrunkatedTypography $lines={3} component="span">
-											<StatementActorsText>
-												{event.mentionedActors.length > 0 ? <ArrowRightAlt /> : ''} {mentionedActors}
-											</StatementActorsText>
-										</TrunkatedTypography>
-									}
-									style={{ color: active ? 'inherit' : 'gray' }}
-								></ListItemText>
-							</StyledListItemButton>
-						</ListItem>
-					</ZebraWrapper>
-				)}
 			</List>
 		</>
 	)

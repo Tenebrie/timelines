@@ -104,7 +104,6 @@ export const WorldService = {
 				},
 				events: {
 					include: {
-						targetActors: true,
 						mentionedActors: true,
 						introducedActors: true,
 						terminatedActors: true,

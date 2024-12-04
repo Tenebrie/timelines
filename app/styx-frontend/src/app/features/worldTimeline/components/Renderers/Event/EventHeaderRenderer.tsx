@@ -1,4 +1,4 @@
-import { ArrowRightAlt, Link } from '@mui/icons-material'
+import { Link } from '@mui/icons-material'
 import { useTheme } from '@mui/material'
 import ListItemIcon from '@mui/material/ListItemIcon'
 
@@ -19,7 +19,6 @@ type Props = {
 export const EventHeaderRenderer = ({ event, owningActor, short, active }: Props) => {
 	const maxActorsDisplayed = short ? 2 : 5
 	const actorsToString = useActorsToString()
-	const targetActors = actorsToString(event.targetActors, owningActor, maxActorsDisplayed)
 	const mentionedActors = actorsToString(event.mentionedActors, owningActor, maxActorsDisplayed)
 	const theme = useTheme()
 
@@ -43,8 +42,7 @@ export const EventHeaderRenderer = ({ event, owningActor, short, active }: Props
 				}
 				secondary={
 					<StatementActorsText>
-						{targetActors.length > 0 ? <Link fontSize="small" /> : ''} {targetActors}
-						{mentionedActors.length > 0 ? <ArrowRightAlt fontSize="small" /> : ''} {mentionedActors}
+						{mentionedActors.length > 0 ? <Link fontSize="small" /> : ''} {mentionedActors}
 					</StatementActorsText>
 				}
 			/>

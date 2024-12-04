@@ -5,7 +5,8 @@ import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTi
 import { worldSlice } from '@/app/features/worldTimeline/reducer'
 import { getWorldRouterState } from '@/app/features/worldTimeline/selectors'
 
-import { QueryStrategy, useBaseRouter } from '../useBaseRouter'
+import { GenericArgsOrVoid, GenericQueryOrVoid, QueryStrategy } from '../types'
+import { useBaseRouter } from '../useBaseRouter'
 import { QueryParams } from './QueryParams'
 
 export const worldTimelineRoutes = {
@@ -41,6 +42,9 @@ export const worldTimelineQueryParams = {
 		[QueryParams.SELECTED_TIME]: '0' as string,
 	},
 }
+
+export type ArgsOrVoid = GenericArgsOrVoid<typeof worldTimelineRoutes>
+export type QueryOrVoid = GenericQueryOrVoid<typeof worldTimelineQueryParams>
 
 export const useWorldTimelineRouter = () => {
 	const baseRouter = useBaseRouter(worldTimelineRoutes, worldTimelineQueryParams)
@@ -157,8 +161,10 @@ export const useWorldTimelineRouter = () => {
 				},
 			})
 			if (selectedTime !== undefined) {
-				scrollTimelineTo(selectedTime)
-				dispatch(setSelectedTime(selectedTime))
+				setTimeout(() => {
+					scrollTimelineTo(selectedTime)
+					dispatch(setSelectedTime(selectedTime))
+				})
 			}
 		},
 		[baseRouter, dispatch, isReadOnly, scrollTimelineTo, setSelectedTime, worldId],

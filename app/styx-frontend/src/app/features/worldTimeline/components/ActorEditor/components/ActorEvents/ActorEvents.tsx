@@ -22,7 +22,7 @@ export const ActorEvents = ({ actor }: Props) => {
 	const { expandedEvents } = useSelector(getOutlinerPreferences)
 
 	const visibleEvents = events
-		.filter((event) => event.targetActors.some((targetActor) => targetActor.id === actor.id))
+		.filter((event) => event.mentionedActors.some((targetActor) => targetActor.id === actor.id))
 		.map((event) => ({
 			...event,
 			secondary: timeToLabel(event.timestamp),

@@ -261,6 +261,7 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	worldId: 'world-1111-2222-3333-4444',
 	name: 'Event name',
 	description: 'Event description',
+	descriptionRich: '<p>Event description</p>',
 	type: 'SCENE',
 	icon: 'default',
 	timestamp: 0,
@@ -287,6 +288,7 @@ export const mockEventDeltaModel = (
 	timestamp: 0,
 	name: 'Delta name',
 	description: 'Delta description',
+	descriptionRich: '<p>Delta description</p>',
 	...provided,
 })
 
@@ -314,6 +316,7 @@ export const mockApiEventModel = (
 	worldId: 'world-1111-2222-3333-4444',
 	name: 'Event name',
 	description: 'Event description',
+	descriptionRich: '<p>Event description</p>',
 	type: 'SCENE',
 	icon: 'default',
 	timestamp: '0',

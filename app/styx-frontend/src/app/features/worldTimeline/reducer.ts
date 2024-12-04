@@ -59,19 +59,12 @@ export const worldSlice = createSlice({
 		setName: (state, { payload }: PayloadAction<string>) => {
 			state.name = payload
 		},
-		loadWorld: (
-			state,
-			{ payload }: PayloadAction<{ world: GetWorldInfoApiResponse; actorColors: string[] }>,
-		) => {
+		loadWorld: (state, { payload }: PayloadAction<{ world: GetWorldInfoApiResponse }>) => {
 			const world = payload.world
 			state.isLoaded = true
 			state.id = world.id
 			state.name = world.name
-			state.actors = [...world.actors].sort(
-				(a, b) =>
-					payload.actorColors.indexOf(a.color) - payload.actorColors.indexOf(b.color) ||
-					a.name.localeCompare(b.name),
-			)
+			state.actors = [...world.actors].sort((a, b) => a.name.localeCompare(b.name))
 			state.events = world.events.map((e) => ingestEvent(e))
 			state.calendar = world.calendar
 			state.timeOrigin = world.timeOrigin
@@ -115,6 +108,9 @@ export const worldSlice = createSlice({
 				...payload,
 			}
 			event.deltaStates.splice(event.deltaStates.indexOf(delta), 1, newDelta)
+		},
+		addActor: (state, { payload }: PayloadAction<ActorDetails>) => {
+			state.actors = state.actors.concat(payload).sort((a, b) => a.name.localeCompare(b.name))
 		},
 		addActorToSelection: (state, { payload }: PayloadAction<{ id: string; multiselect: boolean }>) => {
 			if (!payload.multiselect) {

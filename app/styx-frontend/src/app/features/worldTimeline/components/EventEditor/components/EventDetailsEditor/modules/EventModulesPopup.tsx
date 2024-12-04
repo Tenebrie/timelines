@@ -46,9 +46,12 @@ export const EventModulesPopup = ({ mode, popupState, modules, onAdd, onRemove }
 				horizontal: 'center',
 			}}
 			sx={{ marginTop: 1 }}
-			PaperProps={{
-				style: { minWidth: 340 },
+			slotProps={{
+				paper: { sx: { minWidth: 340 } },
 			}}
+			// PaperProps={{
+			// 	style: { minWidth: 340 },
+			// }}
 		>
 			<List>
 				{visibleOptions.map((option) => (

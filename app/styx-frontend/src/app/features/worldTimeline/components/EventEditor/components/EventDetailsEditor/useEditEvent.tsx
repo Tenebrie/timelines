@@ -28,7 +28,6 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		icon,
 		timestamp,
 		revokedAt,
-		selectedActors,
 		mentionedActors,
 		description,
 		descriptionRich,
@@ -40,7 +39,6 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		setIcon,
 		setTimestamp,
 		setRevokedAt,
-		setSelectedActors,
 		setMentionedActors,
 		setDescription,
 		setDescriptionRich,
@@ -57,7 +55,6 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 			setIcon(event.icon, { cleanSet: true })
 			setTimestamp(event.timestamp, { cleanSet: true })
 			setRevokedAt(event.revokedAt, { cleanSet: true })
-			setSelectedActors(mapActorsToOptions(event.targetActors), { cleanSet: true })
 			setMentionedActors(mapActorsToOptions(event.mentionedActors), { cleanSet: true })
 			setDescription(event.description, { cleanSet: true })
 			setDescriptionRich(event.descriptionRich, { cleanSet: true })
@@ -75,7 +72,6 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		setModules,
 		setName,
 		setRevokedAt,
-		setSelectedActors,
 		setTimestamp,
 		setCustomNameEnabled,
 		setDirty,
@@ -124,8 +120,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 				description,
 				descriptionRich,
 				customNameEnabled,
-				targetActorIds: selectedActors.map((a) => a.id),
-				mentionedActorIds: mentionedActors.map((a) => a.id),
+				mentionedActorIds: mentionedActors,
 				externalLink,
 			}),
 		isSaving,

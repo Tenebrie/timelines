@@ -1,9 +1,6 @@
 import { Dispatch, useCallback, useMemo, useRef, useState } from 'react'
 
-import {
-	ActorOption,
-	useMapActorsToOptions,
-} from '@/app/features/worldTimeline/components/ActorSelector/useMapActorsToOptions'
+import { useMapActorsToOptions } from '@/app/features/worldTimeline/components/ActorSelector/useMapActorsToOptions'
 import { WorldEvent } from '@/app/features/worldTimeline/types'
 
 type Props = {
@@ -25,10 +22,7 @@ export const useEventFields = ({ event }: Props) => {
 	const [icon, setIconDirect] = useState<string>(event.icon)
 	const [timestamp, setTimestampDirect] = useState<number>(event.timestamp)
 	const [revokedAt, setRevokedAtDirect] = useState<number | undefined>(event.revokedAt)
-	const [selectedActors, setSelectedActorsDirect] = useState<ActorOption[]>(
-		mapActorsToOptions(event.targetActors),
-	)
-	const [mentionedActors, setMentionedActorsDirect] = useState<ActorOption[]>(
+	const [mentionedActors, setMentionedActorsDirect] = useState<string[]>(
 		mapActorsToOptions(event.mentionedActors),
 	)
 	const [description, setDescriptionDirect] = useState<string>(event.description)
@@ -59,7 +53,6 @@ export const useEventFields = ({ event }: Props) => {
 			setIcon: generateSetter(setIconDirect),
 			setTimestamp: generateSetter(setTimestampDirect),
 			setRevokedAt: generateSetter(setRevokedAtDirect),
-			setSelectedActors: generateSetter(setSelectedActorsDirect),
 			setMentionedActors: generateSetter(setMentionedActorsDirect),
 			setDescription: generateSetter(setDescriptionDirect),
 			setDescriptionRich: generateSetter(setDescriptionRichDirect),
@@ -77,7 +70,6 @@ export const useEventFields = ({ event }: Props) => {
 			icon,
 			timestamp,
 			revokedAt,
-			selectedActors,
 			mentionedActors,
 			description,
 			descriptionRich,

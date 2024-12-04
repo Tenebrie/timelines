@@ -1,14 +1,11 @@
 import { ArrowBack, Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Autocomplete, Button, Grid, Stack, Switch, TextField, Tooltip } from '@mui/material'
-import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { Button, Grid, Stack, Switch, TextField, Tooltip } from '@mui/material'
+import { useCallback, useEffect, useState } from 'react'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { RichTextEditor } from '@/app/features/richTextEditor/RichTextEditor'
 import { TimestampField } from '@/app/features/time/components/TimestampField'
-import { useAutocompleteActorList } from '@/app/features/worldTimeline/components/ActorSelector/useAutocompleteActorList'
-import { getWorldState } from '@/app/features/worldTimeline/selectors'
 import { WorldEvent } from '@/app/features/worldTimeline/types'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 
@@ -33,8 +30,6 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		icon,
 		timestamp,
 		revokedAt,
-		selectedActors,
-		mentionedActors,
 		description,
 		descriptionRich,
 		customNameEnabled,
@@ -43,7 +38,6 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		setTimestamp,
 		setIcon,
 		setRevokedAt,
-		setSelectedActors,
 		setMentionedActors,
 		setDescription,
 		setDescriptionRich,
@@ -60,6 +54,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 				setName('')
 				setDescription('')
 				setDescriptionRich('')
+				setMentionedActors([])
 				setCustomNameEnabled(false)
 				setCreateEventKey((prev) => prev + 1)
 			}
@@ -74,17 +69,6 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 	useEffect(() => {
 		setTimestamp(event.timestamp, { cleanSet: true })
 	}, [event, setTimestamp])
-
-	const { actors } = useSelector(getWorldState, (a, b) => a.actors === b.actors)
-	const {
-		actorOptions,
-		mentionedActorOptions,
-		renderOption: renderActorOption,
-	} = useAutocompleteActorList({
-		actors,
-		selectedActors,
-		mentionedActors,
-	})
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		if (mode !== 'edit') {
@@ -104,6 +88,15 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 			setName(value, { cleanSet: true })
 		},
 	})
+
+	const onDescriptionChange = useCallback(
+		(params: Parameters<Parameters<typeof RichTextEditor>[0]['onChange']>[0]) => {
+			setDescription(params.plainText)
+			setDescriptionRich(params.richText)
+			setMentionedActors(params.mentions)
+		},
+		[setDescription, setDescriptionRich, setMentionedActors],
+	)
 
 	const leftColumn = (
 		<OutlinedContainer label={mode === 'edit' ? 'Edit Event' : 'Create Event'} gap={3}>
@@ -127,12 +120,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 						</Button>
 					</Tooltip>
 				</Stack>
-				<RichTextEditor
-					key={createEventKey}
-					value={descriptionRich}
-					onChangePlain={setDescription}
-					onChangeRich={setDescriptionRich}
-				/>
+				<RichTextEditor key={createEventKey} value={descriptionRich} onChange={onDescriptionChange} />
 				<Stack direction="row-reverse" justifyContent="space-between">
 					{mode !== 'edit' && (
 						<Tooltip title={shortcutLabel} arrow placement="top">
@@ -205,31 +193,6 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 								<Grid item margin={0} padding={0}>
 									<EventIconDropdown icon={icon} onChange={setIcon} />
 								</Grid>
-							)}
-							{modules.includes('TargetActors') && (
-								<Autocomplete
-									value={selectedActors}
-									onChange={(_, value) => setSelectedActors(value)}
-									multiple={true}
-									options={actorOptions}
-									isOptionEqualToValue={(option, value) => option.id === value.id}
-									autoHighlight
-									renderOption={renderActorOption}
-									renderInput={(params) => <TextField {...params} label="Actors" />}
-									disableClearable
-								/>
-							)}
-							{modules.includes('MentionedActors') && (
-								<Autocomplete
-									value={mentionedActors}
-									onChange={(_, value) => setMentionedActors(value)}
-									multiple={true}
-									options={mentionedActorOptions}
-									isOptionEqualToValue={(option, value) => option.id === value.id}
-									autoHighlight
-									renderOption={renderActorOption}
-									renderInput={(params) => <TextField {...params} label="Mentioned actors" />}
-								/>
 							)}
 							{modules.includes('ExternalLink') && (
 								<ExternalLinkModule externalLink={externalLink} onChange={setExternalLink} />

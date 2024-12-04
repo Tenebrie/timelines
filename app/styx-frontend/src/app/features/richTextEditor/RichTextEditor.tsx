@@ -1,41 +1,43 @@
-import { Box, Button, Paper } from '@mui/material'
-import Placeholder from '@tiptap/extension-placeholder'
-import { Editor, EditorContent, useEditor } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
+import { Editor, useEditor } from '@tiptap/react'
 import debounce from 'lodash.debounce'
 import { useRef } from 'react'
-import styled from 'styled-components'
 
-import { CustomTheme, useCustomTheme } from '@/hooks/useCustomTheme'
+import { useCustomTheme } from '@/hooks/useCustomTheme'
+
+import { MentionsList } from './extensions/actorMentions/MentionsList'
+import { EditorExtensions } from './extensions/config'
+import { RichTextEditorControls } from './RichTextEditorControls'
+import { StyledContainer, StyledEditorContent } from './styles'
 
 type Props = {
 	value: string
-	onChangeRich: (value: string) => void
-	onChangePlain: (value: string) => void
+	onChange: (params: { plainText: string; richText: string; mentions: string[] }) => void
 }
 
-export const RichTextEditor = ({ value, onChangeRich, onChangePlain }: Props) => {
+export const RichTextEditor = ({ value, onChange }: Props) => {
 	const theme = useCustomTheme()
 
 	const onChangeThrottled = useRef(
 		debounce((editor: Editor) => {
-			onChangeRich(editor.getHTML())
-			onChangePlain(editor.getText())
-			editor.getJSON()
+			const mentions: string[] = []
+			editor.state.doc.descendants((node) => {
+				if (node.type.name === 'mentionChip') {
+					mentions.push(node.attrs.componentProps.actor)
+				}
+			})
+
+			onChange({
+				plainText: editor.getText(),
+				richText: editor.getHTML(),
+				mentions,
+			})
 		}, 100),
 	)
 
 	const editor = useEditor({
 		content: value,
 		autofocus: 'end',
-		extensions: [
-			StarterKit.configure({
-				hardBreak: false,
-			}),
-			Placeholder.configure({
-				placeholder: 'Content',
-			}),
-		],
+		extensions: EditorExtensions,
 		onUpdate({ editor }) {
 			onChangeThrottled.current(editor)
 		},
@@ -48,65 +50,9 @@ export const RichTextEditor = ({ value, onChangeRich, onChangePlain }: Props) =>
 			}}
 			$theme={theme}
 		>
-			<Paper>
-				<Button>Bold</Button>
-				<Button>Italic</Button>
-			</Paper>
+			<RichTextEditorControls editor={editor} />
 			<StyledEditorContent className="content" editor={editor} placeholder="Content" />
-			{/* <FloatingMenu editor={editor}>This is the floating menu</FloatingMenu> */}
-			{/* <BubbleMenu editor={editor}>This is the bubble menu</BubbleMenu> */}
+			<MentionsList editor={editor} />
 		</StyledContainer>
 	)
 }
-
-const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
-	flex: 0;
-	border: 1px solid ${({ $theme }) => $theme.custom.palette.outline};
-
-	&:hover {
-		border: 1px solid ${({ $theme }) => $theme.material.palette.text.primary};
-	}
-
-	&:has(.content .ProseMirror-focused) {
-		border: 1px solid ${({ $theme }) => $theme.material.palette.primary.main};
-		outline: 1px solid ${({ $theme }) => $theme.material.palette.primary.main};
-	}
-
-	.tiptap p.is-editor-empty:first-child::before {
-		color: ${({ $theme }) => $theme.material.palette.text.secondary};
-		content: attr(data-placeholder);
-		height: 0;
-		pointer-events: none;
-		font-weight: 400;
-	}
-`
-
-const StyledEditorContent = styled(EditorContent)`
-	font-family: 'Roboto', sans-serif;
-	outline: none;
-
-	&::focus {
-		background: red;
-	}
-
-	.ProseMirror {
-		outline: none;
-	}
-
-	p {
-		margin: 0;
-		padding: 6px 16px;
-		line-height: 1.5;
-		word-break: break-word;
-	}
-	p:first-child {
-		padding-top: 16px;
-	}
-	p:last-child {
-		padding-bottom: 16px;
-	}
-
-	.ProseMirror {
-		min-height: 1rem;
-	}
-`

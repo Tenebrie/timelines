@@ -46,7 +46,6 @@ export const WorldEventService = {
 		worldId: string
 		eventId: string
 		params: Partial<WorldEvent> & {
-			targetActors: Actor[] | null
 			mentionedActors: Actor[] | null
 		}
 	}) => {
@@ -59,12 +58,6 @@ export const WorldEventService = {
 				},
 				data: {
 					...params,
-					targetActors:
-						params.targetActors !== null
-							? {
-									set: params.targetActors.map((actor) => ({ id: actor.id })),
-							  }
-							: undefined,
 					mentionedActors:
 						params.mentionedActors !== null
 							? {
@@ -74,7 +67,6 @@ export const WorldEventService = {
 				},
 				include: {
 					deltaStates: true,
-					targetActors: true,
 					mentionedActors: true,
 				},
 			}),

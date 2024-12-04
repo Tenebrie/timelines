@@ -1,2 +1,2 @@
-export * from './useEventBusDispatch'
-export * from './useEventBusSubscribe'
+export * from './eventBusDispatch'
+export * from './eventBusSubscribe'

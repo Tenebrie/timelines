@@ -5,7 +5,6 @@ import { useGetWorldInfoQuery } from '@/api/worldDetailsApi'
 
 import { worldSlice } from '../reducer'
 import { getWorldStateLoaded } from '../selectors'
-import { useActorColors } from './useActorColors'
 
 export const useLoadWorldInfo = (worldId: string) => {
 	const { data } = useGetWorldInfoQuery(
@@ -18,7 +17,6 @@ export const useLoadWorldInfo = (worldId: string) => {
 		},
 	)
 
-	const { listAllColors } = useActorColors()
 	const isLoaded = useSelector(getWorldStateLoaded)
 
 	const { loadWorld } = worldSlice.actions
@@ -36,10 +34,9 @@ export const useLoadWorldInfo = (worldId: string) => {
 		dispatch(
 			loadWorld({
 				world: data,
-				actorColors: listAllColors().map((color) => color.value),
 			}),
 		)
-	}, [data, dispatch, listAllColors, loadWorld])
+	}, [data, dispatch, loadWorld])
 
 	return {
 		isLoaded,

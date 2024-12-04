@@ -63,7 +63,6 @@ export type CreateWorldEventApiArg = {
 		descriptionRich: string
 		timestamp: string
 		revokedAt: null | string
-		targetActorIds: string[]
 		mentionedActorIds: string[]
 		customNameEnabled: boolean
 		externalLink: string
@@ -130,7 +129,6 @@ export type UpdateWorldEventApiArg = {
 		revokedAt?: null | string
 		description?: string
 		descriptionRich?: string
-		targetActorIds?: string[]
 		mentionedActorIds?: string[]
 		customNameEnabled?: boolean
 		externalLink?: string

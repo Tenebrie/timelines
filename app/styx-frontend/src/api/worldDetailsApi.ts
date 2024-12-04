@@ -34,13 +34,13 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		}[]
 		relationships: {
 			name: string
-			receiverId: string
 			originId: string
+			receiverId: string
 		}[]
 		receivedRelationships: {
 			name: string
-			receiverId: string
 			originId: string
+			receiverId: string
 		}[]
 		description: string
 		name: string

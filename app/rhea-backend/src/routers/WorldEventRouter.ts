@@ -65,14 +65,12 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		descriptionRich: RequiredParam(ContentStringValidator),
 		timestamp: RequiredParam(BigIntValidator),
 		revokedAt: RequiredParam(NullableBigIntValidator),
-		targetActorIds: RequiredParam(StringArrayValidator),
 		mentionedActorIds: RequiredParam(StringArrayValidator),
 		customNameEnabled: RequiredParam(BooleanValidator),
 		externalLink: RequiredParam(ContentStringValidator),
 		worldEventTrackId: OptionalParam(UuidStringValidator),
 	})
 
-	const targetActors = (await parseActorList(params.targetActorIds)) ?? []
 	const mentionedActors = (await parseActorList(params.mentionedActorIds)) ?? []
 
 	const { event, world } = await WorldEventService.createWorldEvent({
@@ -80,7 +78,6 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		eventData: {
 			...params,
 			extraFields: params.modules,
-			targetActors,
 			mentionedActors,
 			worldEventTrackId: params.worldEventTrackId ?? null,
 		},
@@ -113,7 +110,6 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		revokedAt: OptionalParam(NullableBigIntValidator),
 		description: OptionalParam(ContentStringValidator),
 		descriptionRich: OptionalParam(ContentStringValidator),
-		targetActorIds: OptionalParam(StringArrayValidator),
 		mentionedActorIds: OptionalParam(StringArrayValidator),
 		customNameEnabled: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(OptionalURLStringValidator),
@@ -136,7 +132,6 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 	await ValidationService.checkEventPatchValidity(eventId, mappedParams)
 
-	const targetActors = await parseActorList(params.targetActorIds)
 	const mentionedActors = await parseActorList(params.mentionedActorIds)
 
 	const { event } = await WorldEventService.updateWorldEvent({
@@ -144,7 +139,6 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		eventId,
 		params: {
 			...mappedParams,
-			targetActors,
 			mentionedActors,
 		},
 	})

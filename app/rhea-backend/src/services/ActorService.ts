@@ -24,11 +24,17 @@ export const ActorService = {
 					worldId,
 					name: data.name,
 					title: data.title,
-					color: data.color,
+					color: data.color ?? '#008080',
 					description: data.description,
 				},
-				select: {
-					id: true,
+				include: {
+					statements: {
+						select: {
+							id: true,
+						},
+					},
+					relationships: true,
+					receivedRelationships: true,
 				},
 			}),
 			makeTouchWorldQuery(worldId),

@@ -20,7 +20,6 @@ export const makeCreateWorldEventQuery = (
 		| 'worldEventTrackId'
 	> & {
 		customNameEnabled: boolean
-		targetActors: Actor[]
 		mentionedActors: Actor[]
 	}
 ) =>
@@ -35,9 +34,6 @@ export const makeCreateWorldEventQuery = (
 			descriptionRich: data.descriptionRich,
 			timestamp: data.timestamp,
 			revokedAt: data.revokedAt,
-			targetActors: {
-				connect: data.targetActors.map((actor) => ({ id: actor.id })),
-			},
 			mentionedActors: {
 				connect: data.mentionedActors.map((actor) => ({ id: actor.id })),
 			},
