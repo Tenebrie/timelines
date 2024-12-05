@@ -12,9 +12,9 @@ export const WorldHeader = () => {
 			<div
 				style={{
 					position: 'absolute',
-					backgroundImage: 'url(https://wallpapers.com/images/hd/fantasy-background-w3cq4qc0oewbm2hu.jpg)',
+					backgroundImage: 'url(https://image.lexica.art/full_webp/b707ce67-d80e-4318-a0e1-228165dd2917)',
 					backgroundSize: 'cover',
-					filter: 'blur(1px)',
+					filter: 'blur(0px)',
 					top: -16,
 					left: -16,
 					width: 'calc(100% + 32px)',

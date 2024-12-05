@@ -184,18 +184,16 @@ export const OverviewPanel = () => {
 		<Profiler id="OverviewPanel" onRender={reportComponentProfile}>
 			<Paper
 				style={{
-					margin: 32,
-					width: '100%',
+					width: 'calc(100% - 16px)',
 					maxWidth: 1000,
+					height: '100%',
 					padding: '8px',
 					boxSizing: 'border-box',
 					overflowX: 'hidden',
 					overflowY: 'scroll',
-					transition: 'margin-left 0.3s',
 					display: 'flex',
 					flexDirection: 'column',
 				}}
-				elevation={2}
 			>
 				<TextField
 					id="overview-search"
@@ -222,7 +220,7 @@ export const OverviewPanel = () => {
 						),
 					}}
 				/>
-				<List dense>
+				<List dense sx={{ height: '100%' }}>
 					<OverviewSublist
 						title={`Actors (${displayedActors.length}/${actors.length})`}
 						entities={displayedActors}
@@ -239,7 +237,6 @@ export const OverviewPanel = () => {
 						entities={displayedEvents}
 						open={eventsOpen}
 						reversed={eventsReversed}
-						onAddNew={() => openEventWizard({ timestamp: 0 })}
 						onToggleOpen={(val) => dispatch(setEventsOpen(val))}
 						onToggleReversed={(val) => dispatch(setEventsReversed(val))}
 						renderEntity={renderEvent}
