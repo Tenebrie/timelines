@@ -52,16 +52,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		worldId: string
 	}[]
 	events: {
-		targetActors: {
-			description: string
-			name: string
-			id: string
-			createdAt: string
-			updatedAt: string
-			title: string
-			color: string
-			worldId: string
-		}[]
 		mentionedActors: {
 			description: string
 			name: string

@@ -23,7 +23,7 @@ export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premiu
 export type AdminGetUserLevelsApiArg = void
 export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
 export type ListWorldAccessModesApiArg = void
-export type GetHealthApiResponse = /** status 200  */ string
+export type GetHealthApiResponse = unknown
 export type GetHealthApiArg = void
 export const {
 	useAdminGetUserLevelsQuery,

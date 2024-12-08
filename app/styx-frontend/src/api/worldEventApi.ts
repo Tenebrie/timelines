@@ -70,16 +70,6 @@ export type CreateWorldEventApiArg = {
 	}
 }
 export type UpdateWorldEventApiResponse = /** status 200  */ {
-	targetActors: {
-		description: string
-		name: string
-		id: string
-		createdAt: string
-		updatedAt: string
-		title: string
-		color: string
-		worldId: string
-	}[]
 	mentionedActors: {
 		description: string
 		name: string

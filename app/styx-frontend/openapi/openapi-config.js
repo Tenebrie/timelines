@@ -3,6 +3,7 @@
 const tags = [
 	'worldList',
 	'worldDetails',
+	'worldThumbnail',
 	'worldEventTracks',
 	'worldCollaborators',
 	'auth',
