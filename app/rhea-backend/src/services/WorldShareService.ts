@@ -49,8 +49,8 @@ export const WorldShareService = {
 					where: {
 						email,
 					},
-				})
-			)
+				}),
+			),
 		)
 
 		const users = userResults.flatMap((user) => {
@@ -73,7 +73,7 @@ export const WorldShareService = {
 							worldId: worldId,
 						},
 					},
-				}))
+				})),
 			),
 			getPrismaClient().collaboratingUser.createMany(
 				...users.map((user) => ({
@@ -82,7 +82,7 @@ export const WorldShareService = {
 						worldId,
 						access,
 					},
-				}))
+				})),
 			),
 		])
 
@@ -96,7 +96,7 @@ export const WorldShareService = {
 				userId: user.id,
 				title: 'Collaboration invite',
 				description: 'Someone has shared their World with you!',
-			}))
+			})),
 		)
 	},
 

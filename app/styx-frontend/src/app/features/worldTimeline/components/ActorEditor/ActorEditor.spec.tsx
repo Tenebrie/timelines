@@ -14,7 +14,7 @@ describe('ActorEditor', () => {
 	beforeAll(() => {
 		server.listen()
 
-		mockRouter('/world/:worldId/actor/:actorId', {
+		mockRouter('/world/:worldId/timeline/actor/:actorId', {
 			worldId: 'world-1111',
 			actorId: 'actor-1111',
 		})

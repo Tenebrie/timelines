@@ -62,7 +62,7 @@ export const WorldEventService = {
 						params.mentionedActors !== null
 							? {
 									set: params.mentionedActors.map((actor) => ({ id: actor.id })),
-							  }
+								}
 							: undefined,
 				},
 				include: {

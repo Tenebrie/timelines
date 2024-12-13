@@ -1,7 +1,7 @@
 export const parseApiResponse = <DataT, ErrorT>(
-	response: { data: DataT } | { error: ErrorT },
+	response: { data: Required<DataT> } | { error?: ErrorT },
 ): { response: DataT; error: null } | { response: null; error: { status: number; message: string } } => {
-	if (!('error' in response)) {
+	if ('data' in response && !('error' in response)) {
 		return { response: response.data, error: null }
 	}
 
@@ -10,7 +10,7 @@ export const parseApiResponse = <DataT, ErrorT>(
 		return { response: null, error: { status: 500, message: String(error) } }
 	}
 
-	if (typeof error !== 'object' || error === null) {
+	if (typeof error !== 'object' || error === undefined || error === null) {
 		return { response: null, error: { status: 500, message: 'Unknown error' } }
 	}
 

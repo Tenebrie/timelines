@@ -40,7 +40,7 @@ app
 	.use(
 		bodyParser({
 			enableTypes: ['text', 'json', 'form'],
-		})
+		}),
 	)
 	.use(ActorRouter.routes())
 	.use(ActorRouter.allowedMethods())
@@ -70,7 +70,7 @@ if (!isRunningInTest()) {
 			sourceFileDiscovery: {
 				rootPath: './src/routers',
 			},
-		})
+		}),
 	)
 
 	RedisService.initRedisConnection()

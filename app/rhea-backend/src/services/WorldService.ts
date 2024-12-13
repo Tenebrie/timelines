@@ -71,11 +71,11 @@ export const WorldService = {
 		const ownedWorlds = worlds.filter((world) => world.ownerId === params.owner.id)
 
 		const contributableWorlds = worlds.filter((world) =>
-			world.collaborators.some((user) => user.userId === params.owner.id && user.access === 'Editing')
+			world.collaborators.some((user) => user.userId === params.owner.id && user.access === 'Editing'),
 		)
 
 		const visibleWorlds = worlds.filter((world) =>
-			world.collaborators.some((user) => user.userId === params.owner.id && user.access === 'ReadOnly')
+			world.collaborators.some((user) => user.userId === params.owner.id && user.access === 'ReadOnly'),
 		)
 
 		return {

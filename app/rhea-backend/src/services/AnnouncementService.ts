@@ -35,7 +35,7 @@ export const AnnouncementService = {
 			userId: string
 			title: string
 			description: string
-		}[]
+		}[],
 	) => {
 		return Promise.all(announcements.map((announcement) => AnnouncementService.notify(announcement)))
 	},

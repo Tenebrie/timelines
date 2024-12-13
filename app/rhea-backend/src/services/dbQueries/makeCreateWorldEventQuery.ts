@@ -21,7 +21,7 @@ export const makeCreateWorldEventQuery = (
 	> & {
 		customNameEnabled: boolean
 		mentionedActors: Actor[]
-	}
+	},
 ) =>
 	getPrismaClient().worldEvent.create({
 		data: {

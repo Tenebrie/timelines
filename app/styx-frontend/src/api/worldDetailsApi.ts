@@ -83,13 +83,13 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			worldId: string
 		}[]
 		deltaStates: {
-			description: null | string
-			name: null | string
+			description?: null | string
+			name?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			timestamp: string
-			descriptionRich: null | string
+			descriptionRich?: null | string
 			worldEventId: string
 		}[]
 		description: string
@@ -101,12 +101,12 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		type: 'SCENE' | 'OTHER'
 		icon: string
 		timestamp: string
-		revokedAt: null | string
+		revokedAt?: null | string
 		descriptionRich: string
 		customName: boolean
 		externalLink: string
 		extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
-		worldEventTrackId: null | string
+		worldEventTrackId?: null | string
 	}[]
 	name: string
 	id: string

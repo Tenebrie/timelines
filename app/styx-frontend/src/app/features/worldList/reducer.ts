@@ -53,4 +53,5 @@ export const worldListSlice = createSlice({
 })
 
 export type WorldListState = typeof initialState
+export const worldListInitialState = initialState
 export default worldListSlice.reducer

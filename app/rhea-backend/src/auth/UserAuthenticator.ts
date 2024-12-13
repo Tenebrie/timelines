@@ -21,7 +21,7 @@ export const UserAuthenticator = async (ctx: ParameterizedContext) => {
 			throw new UnauthorizedError('Invalid auth token')
 		}
 		return user
-	} catch (err) {
+	} catch {
 		throw new UnauthorizedError('Invalid auth token')
 	}
 }

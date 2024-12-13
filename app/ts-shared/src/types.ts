@@ -9,6 +9,4 @@ export type ShapeOfHandler<T> = {
 	[K in keyof T]: (data: T[K]) => void
 }
 
-export type EmptyObject = {
-	/* Empty */
-}
+export type EmptyObject = Record<never, unknown>

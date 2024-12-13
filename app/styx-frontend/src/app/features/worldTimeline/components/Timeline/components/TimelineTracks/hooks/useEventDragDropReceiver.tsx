@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { RefObject, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useUpdateWorldEventMutation } from '@/api/worldEventApi'
@@ -16,7 +16,7 @@ import { TimelineTrack } from './useEventTracks'
 
 type Props = {
 	track: TimelineTrack
-	receiverRef?: React.MutableRefObject<HTMLDivElement | null>
+	receiverRef?: RefObject<HTMLDivElement | null>
 }
 
 export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {

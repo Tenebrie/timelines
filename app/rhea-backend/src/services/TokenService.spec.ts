@@ -40,7 +40,7 @@ describe('TokenService', () => {
 				expect.objectContaining({
 					id: '1111-2222-3333-4444',
 					email: 'admin@localhost',
-				})
+				}),
 			)
 		})
 
@@ -52,7 +52,7 @@ describe('TokenService', () => {
 				expect.objectContaining({
 					id: '1111-2222-3333-4444',
 					email: 'admin@localhost',
-				})
+				}),
 			)
 		})
 
@@ -99,7 +99,7 @@ describe('TokenService', () => {
 				expect.objectContaining({
 					id: '1111-2222-3333-4444',
 					email: 'admin@localhost',
-				})
+				}),
 			)
 		})
 
@@ -111,7 +111,7 @@ describe('TokenService', () => {
 				expect.objectContaining({
 					id: '1111-2222-3333-4444',
 					email: 'admin@localhost',
-				})
+				}),
 			)
 		})
 

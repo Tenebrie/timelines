@@ -37,9 +37,6 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 				case 'EventIcon':
 					state.setIcon('default')
 					break
-				case 'TargetActors':
-					state.setSelectedActors([])
-					break
 				case 'MentionedActors':
 					state.setMentionedActors([])
 					break

@@ -9,7 +9,11 @@ const injectedRtkApi = api
 			adminGetUsers: build.query<AdminGetUsersApiResponse, AdminGetUsersApiArg>({
 				query: (queryArg) => ({
 					url: `/api/admin/users`,
-					params: { page: queryArg.page, size: queryArg.size, query: queryArg.query },
+					params: {
+						page: queryArg.page,
+						size: queryArg.size,
+						query: queryArg.query,
+					},
 				}),
 				providesTags: ['adminUsers'],
 			}),

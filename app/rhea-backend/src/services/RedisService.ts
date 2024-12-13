@@ -49,7 +49,7 @@ export const RedisService = {
 			data: {
 				worldId,
 				eventDelta: JSON.stringify(delta, (_, value) =>
-					typeof value === 'bigint' ? value.toString() : value
+					typeof value === 'bigint' ? value.toString() : value,
 				),
 			},
 		})

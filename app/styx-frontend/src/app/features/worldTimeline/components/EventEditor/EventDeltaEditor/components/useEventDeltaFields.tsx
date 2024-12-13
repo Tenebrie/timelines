@@ -17,6 +17,7 @@ export const useEventDeltaFields = ({ delta }: Props) => {
 	const [name, setNameDirect] = useState<string | null>(delta.name ?? null)
 	const [timestamp, setTimestampDirect] = useState<number>(delta.timestamp)
 	const [description, setDescriptionDirect] = useState<string | null>(delta.description ?? null)
+	const [descriptionRich, setDescriptionRichDirect] = useState<string | null>(delta.descriptionRich ?? null)
 
 	const generateSetter = <T,>(setter: Dispatch<React.SetStateAction<T>>) => {
 		return (val: T, args?: SetterArgs) => {
@@ -38,6 +39,7 @@ export const useEventDeltaFields = ({ delta }: Props) => {
 			setName: generateSetter(setNameDirect),
 			setTimestamp: generateSetter(setTimestampDirect),
 			setDescription: generateSetter(setDescriptionDirect),
+			setDescriptionRich: generateSetter(setDescriptionRichDirect),
 		}),
 		[],
 	)
@@ -48,6 +50,7 @@ export const useEventDeltaFields = ({ delta }: Props) => {
 			name,
 			timestamp,
 			description,
+			descriptionRich,
 			setDirty,
 			...setters,
 		},

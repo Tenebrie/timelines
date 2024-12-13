@@ -55,7 +55,7 @@ app.ws.use(
 		ctx.websocket.on('error', () => {
 			WebsocketService.unregisterSocket(userId, ctx.websocket)
 		})
-	})
+	}),
 )
 
 app
@@ -63,13 +63,13 @@ app
 	.use(
 		bodyParser({
 			enableTypes: ['text', 'json', 'form'],
-		})
+		}),
 	)
 	.use(
 		initOpenApiEngine({
 			tsconfigPath: './tsconfig.json',
 			sourceFilePaths: [],
-		})
+		}),
 	)
 
 initRedisConnection()

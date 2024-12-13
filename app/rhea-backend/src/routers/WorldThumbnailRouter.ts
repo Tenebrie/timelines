@@ -1,5 +1,4 @@
 import { UserAuthenticator } from '@src/auth/UserAuthenticator'
-import { error } from 'console'
 import { getAverageColor } from 'fast-average-color-node'
 import * as fs from 'fs'
 import {

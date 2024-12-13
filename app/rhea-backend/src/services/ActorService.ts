@@ -16,7 +16,7 @@ export const ActorService = {
 
 	createActor: async (
 		worldId: string,
-		data: Pick<Actor, 'name'> & Partial<Pick<Actor, 'title' | 'color' | 'description'>>
+		data: Pick<Actor, 'name'> & Partial<Pick<Actor, 'title' | 'color' | 'description'>>,
 	) => {
 		const [actor, world] = await getPrismaClient().$transaction([
 			getPrismaClient().actor.create({

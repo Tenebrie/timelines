@@ -95,6 +95,6 @@ export const preferencesSlice = createSlice({
 })
 
 export type PreferencesState = typeof initialState
-export const PreferencesInitialState = initialState
+export const preferencesInitialState = initialState
 
 export default preferencesSlice.reducer

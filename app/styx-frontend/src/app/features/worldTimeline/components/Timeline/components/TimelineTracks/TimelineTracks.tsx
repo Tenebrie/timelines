@@ -12,7 +12,7 @@ import useEventTracks from './hooks/useEventTracks'
 import { TimelineTrackItem } from './TimelineTrackItem'
 
 type Props = {
-	anotherRef: React.RefObject<HTMLDivElement>
+	anotherRef: React.RefObject<HTMLDivElement | null>
 	visible: boolean
 	scaleLevel: ScaleLevel
 	containerWidth: number

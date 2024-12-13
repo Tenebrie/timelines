@@ -181,8 +181,8 @@ export const WorldEventTrackService = {
 						data: {
 							position: index,
 						},
-					})
-				)
+					}),
+				),
 			)
 
 			const world = await prisma.world.update({

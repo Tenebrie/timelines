@@ -1,7 +1,8 @@
-import { DeepPartial } from '@reduxjs/toolkit'
-import { DefaultBodyType, rest } from 'msw'
+import { DefaultBodyType, http } from 'msw'
 import { SetupServer } from 'msw/node'
 import { v4 as getRandomId } from 'uuid'
+
+import { DeepPartial } from '@/types/utils'
 
 import { User } from '../app/features/auth/reducer'
 import {
@@ -22,7 +23,7 @@ import { GetWorldBriefApiResponse, GetWorldInfoApiResponse } from './worldDetail
 import { DeleteWorldEventApiResponse, UpdateWorldEventApiResponse } from './worldEventApi'
 import { CreateWorldApiResponse, DeleteWorldApiResponse, GetWorldsApiResponse } from './worldListApi'
 
-type HttpMethod = keyof typeof rest
+type HttpMethod = keyof typeof http
 
 type MockParams<ResponseT extends DefaultBodyType> =
 	| {
@@ -38,8 +39,11 @@ const generateEndpointMock = (
 ) => {
 	let invocations: { jsonBody: unknown }[] = []
 
-	const handler = rest[method](path, async (req, res, ctx) => {
-		invocations.push({ jsonBody: req.method === 'POST' || req.method === 'PATCH' ? await req.json() : {} })
+	const handler = http[method](path, async (t) => {
+		const { request } = t
+		invocations.push({
+			jsonBody: request.method === 'POST' || request.method === 'PATCH' ? await request.json() : {},
+		})
 
 		const status = (() => {
 			if ('error' in params) {
@@ -59,7 +63,9 @@ const generateEndpointMock = (
 			return undefined
 		})()
 
-		return res(ctx.status(status), ctx.json(returnedResponse))
+		return new Response(JSON.stringify(returnedResponse), {
+			status,
+		})
 	})
 	server.use(handler)
 
@@ -267,7 +273,6 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	timestamp: 0,
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
-	targetActors: [],
 	mentionedActors: [],
 	introducedActors: [],
 	terminatedActors: [],
@@ -322,7 +327,6 @@ export const mockApiEventModel = (
 	timestamp: '0',
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
-	targetActors: [],
 	mentionedActors: [],
 	introducedActors: [],
 	terminatedActors: [],

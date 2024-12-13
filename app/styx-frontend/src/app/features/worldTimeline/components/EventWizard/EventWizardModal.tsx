@@ -54,7 +54,7 @@ export const EventWizardModal = () => {
 					type: 'SCENE',
 					name: name.trim(),
 					description: '',
-					targetActorIds: [],
+					descriptionRich: '',
 					mentionedActorIds: [],
 					timestamp: String(timestamp),
 					revokedAt: null,

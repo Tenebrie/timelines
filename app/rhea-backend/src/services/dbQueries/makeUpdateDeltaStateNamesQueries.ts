@@ -8,7 +8,7 @@ export const makeUpdateDeltaStateNamesQueries = ({
 	customName,
 	customNameEnabled,
 }: {
-	event: Awaited<ReturnType<typeof WorldEventService['fetchWorldEventWithDeltaStates']>>
+	event: Awaited<ReturnType<(typeof WorldEventService)['fetchWorldEventWithDeltaStates']>>
 	customName: string | undefined
 	customNameEnabled: boolean | undefined
 }) => {
@@ -34,7 +34,7 @@ export const makeUpdateDeltaStateNamesQueries = ({
 						source: state.description ?? '',
 					}),
 				},
-			})
+			}),
 		)
 	}
 }
