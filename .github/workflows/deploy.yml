@@ -1,11 +1,11 @@
-name: Deploy Production
+name: Deploy
 
 on:
   push:
-    branches: [master]
+    branches: [master, dev]
 
 concurrency:
-  group: 'deploy-production'
+  group: 'deploy'
   cancel-in-progress: false
 
 jobs:
@@ -74,10 +74,38 @@ jobs:
         env:
           VERSION: ${{ steps.version.outputs.version }}
 
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [prepare-containers]
+    if: ${{ github.ref == 'refs/head/dev' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $(doctl compute droplet get staging-manager-1 --format PublicIPv4 --no-header) >> ~/.ssh/known_hosts
+
+      - name: Deploy to DigitalOcean
+        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.prepare-containers.outputs.version }} ./scripts/stack-update.sh"
+
+      - name: Run migrations
+        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && git pull && ./scripts/stack-migrate.sh"
+
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
     needs: [prepare-containers]
+    if: ${{ github.ref == 'refs/head/master' }}
 
     steps:
       - uses: actions/checkout@v4

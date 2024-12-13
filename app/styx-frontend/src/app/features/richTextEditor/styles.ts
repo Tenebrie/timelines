@@ -36,6 +36,8 @@ export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
 export const StyledEditorContent = styled(EditorContent)`
 	font-family: 'Roboto', sans-serif;
 	outline: none;
+	height: 384px;
+	overflow-y: auto;
 
 	&::focus {
 		background: red;
@@ -43,6 +45,7 @@ export const StyledEditorContent = styled(EditorContent)`
 
 	.ProseMirror {
 		outline: none;
+		height: 100%;
 	}
 
 	p {
