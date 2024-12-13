@@ -1,7 +1,7 @@
 import { act, Queries, queries, render, renderHook, RenderHookOptions } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ReactNode } from 'react'
-import { Provider } from 'react-redux'
+import { Provider as ReduxProvider } from 'react-redux'
 import { createBrowserRouter, MemoryRouter, RouterProvider } from 'react-router-dom'
 
 import { generateStore, RootState } from '../app/store'
@@ -18,9 +18,9 @@ export const renderWithProviders = (
 		user: userEvent.setup(),
 		store,
 		...render(
-			<Provider store={store}>
+			<ReduxProvider store={store}>
 				<MemoryRouter>{node}</MemoryRouter>
-			</Provider>,
+			</ReduxProvider>,
 		),
 	}
 }
@@ -41,9 +41,9 @@ export const renderWithRouter = async (
 		user: userEvent.setup(),
 		store,
 		...render(
-			<Provider store={store}>
+			<ReduxProvider store={store}>
 				<RouterProvider router={createBrowserRouter(routerDefinition)} />
-			</Provider>,
+			</ReduxProvider>,
 		),
 	}
 
@@ -71,9 +71,9 @@ export const renderHookWithProviders = <
 	return renderHook(render, {
 		...options,
 		wrapper: ({ children }) => (
-			<Provider store={store}>
+			<ReduxProvider store={store}>
 				<MemoryRouter>{children}</MemoryRouter>
-			</Provider>
+			</ReduxProvider>
 		),
 	})
 }
