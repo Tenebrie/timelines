@@ -28,6 +28,8 @@ const App = () => {
 	useEffect(() => {
 		if (process.env.NODE_ENV === 'development') {
 			window.document.title = 'Timelines (Dev)'
+		} else if (window.location.hostname === 'staging.tenebrie.com') {
+			window.document.title = 'Timelines (Staging)'
 		}
 	}, [])
 
