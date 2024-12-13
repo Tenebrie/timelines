@@ -120,7 +120,7 @@ describe('<OverviewPanel />', () => {
 			await user.click(screen.getByText('Actor name'))
 
 			await waitFor(() => expect(MockedRouter.navigations.length).toEqual(1))
-			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/actor/actor-1111')
+			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/timeline/actor/actor-1111')
 		})
 
 		it('navigates to actor editor on actor double click while preserving selected time', async () => {
@@ -138,7 +138,7 @@ describe('<OverviewPanel />', () => {
 			await user.click(screen.getByText('Actor name'))
 
 			await waitFor(() => expect(MockedRouter.navigations.length).toEqual(1))
-			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/actor/actor-1111?time=100')
+			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/timeline/actor/actor-1111?time=100')
 		})
 
 		it('filters the actors based on the search query on their name', async () => {
@@ -289,7 +289,7 @@ describe('<OverviewPanel />', () => {
 			await user.click(screen.getByText('First Event'))
 
 			expect(MockedRouter.navigations.length).toEqual(1)
-			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/editor/event-2222')
+			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/timeline/editor/event-2222')
 		})
 
 		it('navigates to event editor on double click while preserving the time', async () => {
@@ -307,7 +307,7 @@ describe('<OverviewPanel />', () => {
 			await user.click(screen.getByText('First Event'))
 
 			expect(MockedRouter.navigations.length).toEqual(1)
-			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/editor/event-2222?time=100')
+			expect(MockedRouter.navigations[0].target).toEqual('/world/1111/timeline/editor/event-2222?time=100')
 		})
 
 		it('filters the events based on the search query', async () => {

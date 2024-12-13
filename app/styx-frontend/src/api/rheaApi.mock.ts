@@ -1,4 +1,4 @@
-import { DefaultBodyType, http } from 'msw'
+import { DefaultBodyType, rest } from 'msw'
 import { SetupServer } from 'msw/node'
 import { v4 as getRandomId } from 'uuid'
 
@@ -23,7 +23,7 @@ import { GetWorldBriefApiResponse, GetWorldInfoApiResponse } from './worldDetail
 import { DeleteWorldEventApiResponse, UpdateWorldEventApiResponse } from './worldEventApi'
 import { CreateWorldApiResponse, DeleteWorldApiResponse, GetWorldsApiResponse } from './worldListApi'
 
-type HttpMethod = keyof typeof http
+type HttpMethod = keyof typeof rest
 
 type MockParams<ResponseT extends DefaultBodyType> =
 	| {
@@ -39,10 +39,9 @@ const generateEndpointMock = (
 ) => {
 	let invocations: { jsonBody: unknown }[] = []
 
-	const handler = http[method](path, async (t) => {
-		const { request } = t
+	const handler = rest[method](path, async (req, res, ctx) => {
 		invocations.push({
-			jsonBody: request.method === 'POST' || request.method === 'PATCH' ? await request.json() : {},
+			jsonBody: req.method === 'POST' || req.method === 'PATCH' ? await req.json() : {},
 		})
 
 		const status = (() => {
@@ -63,9 +62,7 @@ const generateEndpointMock = (
 			return undefined
 		})()
 
-		return new Response(JSON.stringify(returnedResponse), {
-			status,
-		})
+		return res(ctx.status(status), ctx.json(returnedResponse))
 	})
 	server.use(handler)
 

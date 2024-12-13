@@ -76,8 +76,6 @@ describe('<Timeline />', () => {
 	it('respects the world time origin', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'PF2E', timeOrigin: '100000' }))
 
-		screen.debug(undefined, 1000000)
-
-		expect(screen.getByText('(03) Pharast 11, 4723')).toBeInTheDocument()
+		expect(await screen.findByText('(03) Pharast 11, 4723')).toBeInTheDocument()
 	})
 })

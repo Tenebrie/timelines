@@ -7,6 +7,7 @@ import { reportComponentProfile } from '@/app/features/profiling/reportComponent
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState, getWorldState } from '@/app/features/worldTimeline/selectors'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { isRunningInTest } from '@/jest/isRunningInTest'
 import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
 
 import { TimelineState } from '../../utils/TimelineState'
@@ -73,14 +74,17 @@ export const TimelineTrackItem = ({
 	const [visibleMarkers, setVisibleMarkers] = useState<(typeof track)['events']>([])
 
 	const updateVisibleMarkersThrottled = useRef(
-		throttle((t: TimelineTrack, width: number, realTimeToScaledTime: Props['realTimeToScaledTime']) => {
-			setVisibleMarkers(
-				t.events.filter((event) => {
-					const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + TimelineState.scroll
-					return position >= -250 && position <= width + 250
-				}),
-			)
-		}, 100),
+		throttle(
+			(t: TimelineTrack, width: number, realTimeToScaledTime: Props['realTimeToScaledTime']) => {
+				setVisibleMarkers(
+					t.events.filter((event) => {
+						const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + TimelineState.scroll
+						return position >= -250 && position <= width + 250
+					}),
+				)
+			},
+			isRunningInTest() ? 0 : 100,
+		),
 	)
 
 	const updateVisibleMarkers = useCallback(() => {

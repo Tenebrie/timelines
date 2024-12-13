@@ -4,7 +4,6 @@ import Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
 import * as route from 'koa-route'
 import * as websocketify from 'koa-websocket'
-import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'tenebrie-framework'
 
 import { ClientMessageHandlerService } from './services/ClientMessageHandlerService'
 import { initRedisConnection } from './services/RedisService'
@@ -13,22 +12,6 @@ import { WebsocketService } from './services/WebsocketService'
 import { ClientToCalliopeMessage } from './ts-shared/ClientToCalliopeMessage'
 
 const app = websocketify(new Koa())
-
-useApiHeader({
-	title: 'Timelines Calliope',
-	description: 'This is a description field',
-	termsOfService: 'https://example.com',
-	contact: {
-		name: 'Tenebrie',
-		url: 'https://github.com/tenebrie',
-		email: 'tianara@tenebrie.com',
-	},
-	license: {
-		name: 'MIT',
-		url: 'https://example.com',
-	},
-	version: '1.0.0',
-})
 
 const AUTH_COOKIE_NAME = 'user-jwt-token'
 
@@ -58,19 +41,11 @@ app.ws.use(
 	}),
 )
 
-app
-	.use(HttpErrorHandler)
-	.use(
-		bodyParser({
-			enableTypes: ['text', 'json', 'form'],
-		}),
-	)
-	.use(
-		initOpenApiEngine({
-			tsconfigPath: './tsconfig.json',
-			sourceFilePaths: [],
-		}),
-	)
+app.use(
+	bodyParser({
+		enableTypes: ['text', 'json', 'form'],
+	}),
+)
 
 initRedisConnection()
 app.listen(3001)

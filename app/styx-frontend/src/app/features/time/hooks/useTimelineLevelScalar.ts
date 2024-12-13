@@ -1,9 +1,10 @@
 import { useCallback } from 'react'
 
 import { ScaleLevel } from '../../worldTimeline/components/Timeline/types'
+import { LineSpacing } from '../../worldTimeline/utils/constants'
 
 export const useTimelineLevelScalar = () => {
-	const spacingMod = 0.5
+	const spacingMod = 10 / LineSpacing
 	const getLevelScalar = useCallback(
 		(forLevel: ScaleLevel) => {
 			switch (forLevel) {

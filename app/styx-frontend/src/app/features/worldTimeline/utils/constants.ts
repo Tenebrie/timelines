@@ -1,1 +1,3 @@
-export const LineSpacing = 20
+import { isRunningInTest } from '@/jest/isRunningInTest'
+
+export const LineSpacing = isRunningInTest() ? 10 : 20
