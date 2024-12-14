@@ -36,7 +36,7 @@ export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
 export const StyledEditorContent = styled(EditorContent)`
 	font-family: 'Roboto', sans-serif;
 	outline: none;
-	height: 384px;
+	height: 200px;
 	overflow-y: auto;
 
 	&::focus {

@@ -26,6 +26,7 @@ export const useShortcutManager = () => {
 
 			if (ctrlKey === ctrlKeyNeeded && key === defKeys[defKeys.length - 1]) {
 				RegisteredShortcuts[shortcut].sort((a, b) => b.priority - a.priority)[0]?.callback()
+				event.preventDefault()
 			}
 		})
 	}, [])

@@ -17,11 +17,11 @@ import { mockRouter } from '@/router/router.mock'
 import { homeRoutes } from '@/router/routes/homeRoutes'
 
 import { ShareWorldModal } from './components/ShareWorldModal'
-import { WorldDetails } from './WorldDetails'
+import { WorldDetails } from './WorldSettings'
 
 const server = setupTestServer()
 
-describe('<WorldDetails />', () => {
+describe('<WorldSettings />', () => {
 	const preloadedState = {
 		preloadedState: {
 			world: {

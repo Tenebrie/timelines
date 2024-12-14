@@ -69,17 +69,24 @@ export const useWorldTimelineRouter = () => {
 		})
 	}, [baseRouter, worldId])
 
-	const navigateToOutliner = useCallback(() => {
-		baseRouter.navigateTo({
-			target: worldTimelineRoutes.outliner,
-			args: {
-				worldId,
-			},
-			query: {
-				[QueryParams.SELECTED_TIME]: QueryStrategy.Preserve,
-			},
-		})
-	}, [baseRouter, worldId])
+	const navigateToOutliner = useCallback(
+		(selectedTime?: number, updateQuery?: boolean) => {
+			baseRouter.navigateTo({
+				target: worldTimelineRoutes.outliner,
+				args: {
+					worldId,
+				},
+				query: {
+					[QueryParams.SELECTED_TIME]: updateQuery ? selectedTime : QueryStrategy.Preserve,
+				},
+			})
+			if (selectedTime !== undefined) {
+				scrollTimelineTo(selectedTime)
+				dispatch(setSelectedTime(selectedTime))
+			}
+		},
+		[baseRouter, dispatch, scrollTimelineTo, setSelectedTime, worldId],
+	)
 
 	const navigateToEventCreator = useCallback(
 		(selectedTime?: number) => {

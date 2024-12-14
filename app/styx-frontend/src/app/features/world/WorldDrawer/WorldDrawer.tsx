@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { getOverviewPreferences } from '@/app/features/preferences/selectors'
+import { store } from '@/app/store'
 import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
 import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
 
@@ -19,7 +20,7 @@ export const WorldDrawer = () => {
 	const { navigateToOutliner } = useWorldTimelineRouter()
 
 	const onTimelineClick = () => {
-		navigateToOutliner()
+		navigateToOutliner(store.getState().world.selectedTime, true)
 	}
 
 	const onOverviewClick = () => {

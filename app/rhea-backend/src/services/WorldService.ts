@@ -5,12 +5,14 @@ export const WorldService = {
 	createWorld: async (params: {
 		owner: User
 		name: string
+		description?: string
 		calendar?: WorldCalendarType
 		timeOrigin?: number
 	}) => {
 		return getPrismaClient().world.create({
 			data: {
 				name: params.name,
+				description: params.description,
 				ownerId: params.owner.id,
 				calendar: params.calendar,
 				timeOrigin: params.timeOrigin,
@@ -22,7 +24,10 @@ export const WorldService = {
 		})
 	},
 
-	updateWorld: async (params: { worldId: string; data: Partial<World> }) => {
+	updateWorld: async (params: {
+		worldId: string
+		data: Pick<Partial<World>, 'name' | 'description' | 'calendar' | 'accessMode'> & { timeOrigin?: number }
+	}) => {
 		return getPrismaClient().world.update({
 			where: {
 				id: params.worldId,

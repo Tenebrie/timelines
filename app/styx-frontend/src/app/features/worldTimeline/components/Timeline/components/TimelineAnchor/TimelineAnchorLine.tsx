@@ -150,6 +150,7 @@ export const TimelineAnchorLine = memo(
 	(a, b) =>
 		getLoop(a) === getLoop(b) &&
 		a.theme === b.theme &&
+		a.scaleLevel === b.scaleLevel &&
 		a.visible === b.visible &&
 		a.positionNormalizer === b.positionNormalizer &&
 		a.timeToShortLabel === b.timeToShortLabel,

@@ -4,6 +4,7 @@ import { LoadingButton } from '@mui/lab'
 import {
 	Autocomplete,
 	Button,
+	createFilterOptions,
 	FormControl,
 	InputLabel,
 	MenuItem,
@@ -24,7 +25,7 @@ import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const ShareWorldModal = () => {
-	const [emails, setEmails] = useState<string[]>([])
+	const [emails, setEmails] = useState<{ value: string; label: string }[]>([])
 	const [access, setAccess] = useState<CollaboratorAccess>('ReadOnly')
 
 	const { listAllLevels } = useCollaboratorAccess()
@@ -54,7 +55,7 @@ export const ShareWorldModal = () => {
 			await shareWorld({
 				worldId,
 				body: {
-					userEmails: emails,
+					userEmails: emails.map((email) => email.value),
 					access,
 				},
 			}),
@@ -74,6 +75,8 @@ export const ShareWorldModal = () => {
 		isOpen ? 1 : -1,
 	)
 
+	const filter = createFilterOptions<{ value: string; label: string }>()
+
 	return (
 		<>
 			<Modal visible={isOpen} onClose={() => dispatch(closeShareWorldModal())}>
@@ -81,10 +84,37 @@ export const ShareWorldModal = () => {
 				<Autocomplete
 					multiple
 					value={emails}
-					onChange={(_, newValue) => setEmails(newValue)}
+					onChange={(_, newValue) => {
+						setEmails(
+							newValue.map((email) => {
+								if (typeof email === 'string') {
+									return {
+										value: email,
+										label: email,
+									}
+								}
+								return email
+							}),
+						)
+					}}
 					options={[]}
 					freeSolo
 					data-hj-suppress
+					filterOptions={(options, params) => {
+						const filtered = filter(options, params)
+
+						const { inputValue } = params
+						// Suggest the creation of a new value
+						const isExisting = options.some((option) => inputValue === option.label)
+						if (inputValue !== '' && !isExisting) {
+							filtered.push({
+								value: inputValue,
+								label: `Add "${inputValue}"`,
+							})
+						}
+
+						return filtered
+					}}
 					renderInput={(params) => <TextField {...params} label="Emails" />}
 				/>
 				<FormControl fullWidth>

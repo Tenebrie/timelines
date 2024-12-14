@@ -41,7 +41,7 @@ router.get('/api/worlds', async (ctx) => {
 	return await WorldService.listAvailableWorlds({ owner: user })
 })
 
-router.post('/api/world', async (ctx) => {
+router.post('/api/worlds', async (ctx) => {
 	useApiEndpoint({
 		name: 'createWorld',
 		description: 'Creates a new world (project).',
@@ -52,6 +52,7 @@ router.post('/api/world', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		name: RequiredParam(NonEmptyStringValidator),
+		description: OptionalParam(StringValidator),
 		calendar: OptionalParam(WorldCalendarTypeValidator),
 		timeOrigin: OptionalParam(NumberValidator),
 	})
@@ -80,6 +81,34 @@ router.delete('/api/world/:worldId', async (ctx) => {
 	await AuthorizationService.checkUserWorldOwner(user, worldId)
 
 	return await WorldService.deleteWorld(worldId)
+})
+
+router.patch('/api/world/:worldId', async (ctx) => {
+	useApiEndpoint({
+		name: 'updateWorld',
+		description: 'Updates the world information.',
+		tags: [worldDetailsTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+	})
+
+	const params = useRequestBody(ctx, {
+		name: OptionalParam(NonEmptyStringValidator),
+		description: OptionalParam(StringValidator),
+		calendar: OptionalParam(WorldCalendarTypeValidator),
+		timeOrigin: OptionalParam(NumberValidator),
+	})
+
+	await AuthorizationService.checkUserWorldOwner(user, worldId)
+
+	await WorldService.updateWorld({
+		worldId,
+		data: params,
+	})
 })
 
 router.get('/api/world/:worldId', async (ctx) => {

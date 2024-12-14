@@ -18,6 +18,7 @@ import { getWorldWizardModalState } from '../../selectors'
 
 export const WorldWizardModal = () => {
 	const [name, setName] = useState('')
+	const [description, setDescription] = useState('')
 	const [calendar, setCalendar] = useState<WorldCalendarType>('EARTH')
 	const [timeOrigin, setTimeOrigin] = useState<number>(0)
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
@@ -41,6 +42,9 @@ export const WorldWizardModal = () => {
 		isOpen,
 		onCleanup: () => {
 			setName('')
+			setDescription('')
+			setCalendar('EARTH')
+			setTimeOrigin(0)
 		},
 	})
 
@@ -58,6 +62,7 @@ export const WorldWizardModal = () => {
 			await createWorld({
 				body: {
 					name,
+					description,
 					calendar,
 					timeOrigin,
 				},
@@ -97,6 +102,12 @@ export const WorldWizardModal = () => {
 					error={!!nameValidationError}
 					helperText={nameValidationError}
 					autoFocus
+				/>
+				<TextField
+					label="Description"
+					type="text"
+					value={description}
+					onChange={(event) => setDescription(event.target.value)}
 				/>
 				<FormControl fullWidth>
 					<InputLabel id="world-calendar-label">Calendar</InputLabel>

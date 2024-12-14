@@ -2,6 +2,7 @@ import { Paper, Stack } from '@mui/material'
 
 import { homeRoutes, useHomeRouter } from '@/router/routes/homeRoutes'
 
+import { ShareWorldModal } from './components/ShareWorldModal'
 import { WorldDetailsEditorWrapper } from './WorldDetailsEditorWrapper'
 
 export const WorldDetails = () => {
@@ -13,6 +14,7 @@ export const WorldDetails = () => {
 			<Paper>
 				<WorldDetailsEditorWrapper worldId={worldId} key={worldId} />
 			</Paper>
+			<ShareWorldModal />
 		</Stack>
 	)
 }

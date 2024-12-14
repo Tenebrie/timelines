@@ -29,11 +29,12 @@ model World {
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
 
-    name       String
-    actors     Actor[]
-    events     WorldEvent[]
-    calendar   WorldCalendarType @default(COUNTUP)
-    timeOrigin BigInt            @default(0)
+    name        String
+    description String            @default("")
+    actors      Actor[]
+    events      WorldEvent[]
+    calendar    WorldCalendarType @default(COUNTUP)
+    timeOrigin  BigInt            @default(0)
 
     owner            User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
     ownerId          String

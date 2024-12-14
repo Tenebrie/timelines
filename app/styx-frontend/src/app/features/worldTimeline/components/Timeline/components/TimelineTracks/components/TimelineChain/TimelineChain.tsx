@@ -60,7 +60,12 @@ export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) 
 						borderRadius: 8,
 					}}
 				>
-					<Typography variant="caption" fontWeight={800} noWrap style={{ width: 'calc(100% - 8px)' }}>
+					<Typography
+						variant="caption"
+						fontWeight={800}
+						noWrap
+						style={{ width: 'calc(100% - 8px)', overflowY: 'visible' }}
+					>
 						{entity.name}
 					</Typography>
 				</div>

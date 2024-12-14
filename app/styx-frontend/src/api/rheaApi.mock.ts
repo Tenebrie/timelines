@@ -221,6 +221,7 @@ export const mockCollaboratingUser = (data: DeepPartial<CollaboratingUser> = {})
 export const mockWorldItemModel = (world: Partial<WorldItem> = {}): WorldItem => ({
 	id: getRandomId(),
 	name: 'World name',
+	description: 'World description',
 	calendar: 'COUNTUP',
 	timeOrigin: '0',
 	createdAt: new Date(0).toISOString(),
@@ -299,6 +300,7 @@ export const mockApiWorldDetailsModel = (
 ): GetWorldInfoApiResponse => ({
 	id: getRandomId(),
 	name: 'World name',
+	description: 'World description',
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
 	actors: [],

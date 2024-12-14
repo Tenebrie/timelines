@@ -34,7 +34,7 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 				children: [
 					{
 						path: homeRoutes.worldDetails,
-						...lazyImport(import('../app/features/worldSettings/WorldDetails').then((m) => m.WorldDetails)),
+						...lazyImport(import('../app/features/worldSettings/WorldSettings').then((m) => m.WorldDetails)),
 					},
 				],
 			},
@@ -122,7 +122,7 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 					},
 					{
 						path: worldRoutes.settings,
-						...lazyImport(import('../app/features/worldSettings/WorldDetails').then((m) => m.WorldDetails)),
+						...lazyImport(import('../app/features/worldSettings/WorldSettings').then((m) => m.WorldDetails)),
 					},
 				],
 			},

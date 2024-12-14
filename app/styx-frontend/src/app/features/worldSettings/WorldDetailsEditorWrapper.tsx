@@ -20,7 +20,7 @@ export const WorldDetailsEditorWrapper = ({ worldId }: Props) => {
 	})
 
 	return (
-		<OutlinedContainer label="World details" style={{ minWidth: '400px' }}>
+		<OutlinedContainer label="World details" style={{ minWidth: '600px' }}>
 			{worldData && collaboratorsData && (
 				<WorldDetailsEditor world={worldData} collaborators={collaboratorsData} />
 			)}

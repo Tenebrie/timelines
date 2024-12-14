@@ -19,6 +19,7 @@ export const initialState = {
 	isLoaded: false as boolean,
 	id: '' as string,
 	name: '' as string,
+	description: '' as string,
 	actors: [] as ActorDetails[],
 	events: [] as WorldEvent[],
 	calendar: 'RIMWORLD' as WorldCalendarType,
@@ -64,6 +65,7 @@ export const worldSlice = createSlice({
 			state.isLoaded = true
 			state.id = world.id
 			state.name = world.name
+			state.description = world.description
 			state.actors = [...world.actors].sort((a, b) => a.name.localeCompare(b.name))
 			state.events = world.events.map((e) => ingestEvent(e))
 			state.calendar = world.calendar

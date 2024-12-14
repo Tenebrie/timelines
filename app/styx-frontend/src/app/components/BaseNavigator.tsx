@@ -13,6 +13,7 @@ import { getAuthState } from '../features/auth/selectors'
 import { SmallProfile } from '../features/auth/smallProfile/SmallProfile'
 import { PerformanceMetrics } from '../features/profiling/PerformanceMetrics'
 import { ThemeModeToggle } from '../features/theming/ThemeModeToggle'
+import { isDev } from '../utils/isDev'
 
 const Container = styled.div<{ $theme: CustomTheme }>`
 	width: calc(100% - 16px);
@@ -85,7 +86,7 @@ export const BaseNavigator = ({ children }: Props) => {
 							<AdminPanelSettings /> Admin
 						</Button>
 					)}
-					{user?.level === 'Admin' && (
+					{user?.level === 'Admin' && isDev && (
 						<Button
 							aria-label="Profiler"
 							onClick={onProfile}

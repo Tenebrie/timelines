@@ -6,6 +6,14 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
+			updateWorld: build.mutation<UpdateWorldApiResponse, UpdateWorldApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}`,
+					method: 'PATCH',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldDetails'],
+			}),
 			getWorldInfo: build.query<GetWorldInfoApiResponse, GetWorldInfoApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}` }),
 				providesTags: ['worldDetails'],
@@ -26,6 +34,17 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as worldDetailsApi }
+export type UpdateWorldApiResponse = unknown
+export type UpdateWorldApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		name?: string
+		description?: string
+		calendar?: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+		timeOrigin?: number
+	}
+}
 export type GetWorldInfoApiResponse = /** status 200  */ {
 	isReadOnly: boolean
 	actors: {
@@ -108,6 +127,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 		worldEventTrackId?: null | string
 	}[]
+	description: string
 	name: string
 	id: string
 	createdAt: string
@@ -122,6 +142,7 @@ export type GetWorldInfoApiArg = {
 	worldId: string
 }
 export type GetWorldBriefApiResponse = /** status 200  */ {
+	description: string
 	name: string
 	id: string
 	createdAt: string
@@ -144,6 +165,7 @@ export type SetWorldAccessModeApiArg = {
 	}
 }
 export const {
+	useUpdateWorldMutation,
 	useGetWorldInfoQuery,
 	useLazyGetWorldInfoQuery,
 	useGetWorldBriefQuery,
