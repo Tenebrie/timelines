@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 
 import { GetWorldsApiResponse } from '@/api/worldListApi'
 import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
 
 import { OutlinedContainer } from '../../components/OutlinedContainer'
 import { TrunkatedSpan } from '../../components/TrunkatedTypography'
@@ -23,6 +24,7 @@ type Props = {
 
 export const WorldListSection = ({ worlds, label, showActions, showEmptyState, showCreateButton }: Props) => {
 	const { navigateTo } = useWorldRouter()
+	const { navigateTo: navigateToTimeline } = useWorldTimelineRouter()
 
 	const dispatch = useDispatch()
 	const { openWorldWizardModal, openDeleteWorldModal } = worldListSlice.actions
@@ -32,8 +34,8 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 	}
 
 	const onLoad = (id: string) => {
-		navigateTo({
-			target: worldRoutes.timeline,
+		navigateToTimeline({
+			target: worldTimelineRoutes.outliner,
 			args: {
 				worldId: id,
 			},
