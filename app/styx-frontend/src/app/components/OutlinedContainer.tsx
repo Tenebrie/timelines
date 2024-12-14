@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react'
 
 type Props = {
 	label?: string
-	secondaryLabel?: string
+	secondaryLabel?: ReactNode
 	children?: ReactNode | ReactNode[]
 	style?: React.CSSProperties
 	fullHeight?: boolean

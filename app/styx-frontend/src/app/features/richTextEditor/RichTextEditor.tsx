@@ -51,7 +51,7 @@ export const RichTextEditor = ({ value, onChange }: Props) => {
 			$theme={theme}
 		>
 			<RichTextEditorControls editor={editor} />
-			<StyledEditorContent className="content" editor={editor} placeholder="Content" />
+			<StyledEditorContent className="content" editor={editor} placeholder="Content" $mode="edit" />
 			<MentionsList editor={editor} />
 		</StyledContainer>
 	)

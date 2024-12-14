@@ -10,9 +10,10 @@ import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetails
 
 type Props = {
 	mode?: 'create' | 'create-compact'
+	secondaryAction?: string
 }
 
-export const EventCreatorComponent = ({ mode }: Props) => {
+export const EventCreatorComponent = ({ mode, secondaryAction }: Props) => {
 	const { id, selectedTime } = useSelector(
 		getWorldState,
 		(a, b) => a.id === b.id && a.selectedTime === b.selectedTime,
@@ -40,7 +41,13 @@ export const EventCreatorComponent = ({ mode }: Props) => {
 		}
 	}, [defaultEventValues, dispatch, setEventCreatorGhost])
 
-	return <EventDetailsEditor event={defaultEventValues} mode={mode ?? 'create'} />
+	return (
+		<EventDetailsEditor
+			event={defaultEventValues}
+			mode={mode ?? 'create'}
+			secondaryAction={secondaryAction}
+		/>
+	)
 }
 
 export const EventCreator = memo(EventCreatorComponent)

@@ -33,10 +33,10 @@ export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
 	}
 `
 
-export const StyledEditorContent = styled(EditorContent)`
+export const StyledEditorContent = styled(EditorContent)<{ $mode: 'read' | 'edit' }>`
 	font-family: 'Roboto', sans-serif;
 	outline: none;
-	height: 200px;
+	height: ${(props) => (props.$mode === 'edit' ? '200px' : 'unset')};
 	overflow-y: auto;
 
 	&::focus {
@@ -46,11 +46,12 @@ export const StyledEditorContent = styled(EditorContent)`
 	.ProseMirror {
 		outline: none;
 		height: 100%;
+		padding: ${(props) => (props.$mode === 'edit' ? '0 16px' : 'unset')};
 	}
 
 	p {
 		margin: 0;
-		padding: 6px 16px;
+		padding: 6px 0px;
 		line-height: 1.5;
 		word-break: break-word;
 	}

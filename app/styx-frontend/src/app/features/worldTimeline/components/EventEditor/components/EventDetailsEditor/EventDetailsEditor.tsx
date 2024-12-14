@@ -20,9 +20,10 @@ import { useEventFields } from './useEventFields'
 type Props = {
 	event: WorldEvent
 	mode: 'create' | 'create-compact' | 'edit'
+	secondaryAction?: string
 }
 
-export const EventDetailsEditor = ({ event, mode }: Props) => {
+export const EventDetailsEditor = ({ event, mode, secondaryAction }: Props) => {
 	const { state } = useEventFields({ event })
 	const {
 		modules,
@@ -99,9 +100,12 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 	)
 
 	const leftColumn = (
-		<OutlinedContainer label={mode === 'edit' ? 'Edit Event' : 'Create Event'} gap={3}>
+		<OutlinedContainer
+			label={mode === 'edit' ? 'Edit Event' : 'Create Event'}
+			gap={3}
+			secondaryLabel={<Button sx={{ padding: '4px 12px' }}>{secondaryAction}</Button>}
+		>
 			<Stack spacing={2} direction="column">
-				<TimestampField label="Started at" timestamp={timestamp} onChange={setTimestamp} />
 				<Stack direction="row" gap={1} width="100%">
 					<TextField
 						type="text"
