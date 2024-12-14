@@ -158,7 +158,7 @@ export const useWorldCalendar = () => {
 	)
 
 	const listAllCalendars = useCallback(() => {
-		return availableCalendars
+		return availableCalendars.filter((calendar) => calendar.id !== 'COUNTUP')
 	}, [availableCalendars])
 
 	return {

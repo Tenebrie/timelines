@@ -34,6 +34,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 	const usedCalendar = useMemo<WorldCalendarType>(() => calendar ?? worldCalendar, [calendar, worldCalendar])
 
 	const { getCalendar } = useWorldCalendar()
+	const calendarData = useMemo(() => getCalendar(usedCalendar), [getCalendar, usedCalendar])
 	const calendarDefinition = useMemo(() => getCalendar(usedCalendar).definition, [getCalendar, usedCalendar])
 	const months = useMemo(
 		() =>
@@ -49,20 +50,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 			} else if (isNaN(time)) {
 				time = maximumTime
 			}
-			if (calendarDefinition.engine === 'JS_DATE') {
-				const date = new Date(time)
-
-				return {
-					year: date.getUTCFullYear(),
-					monthName: calendarDefinition.months[date.getUTCMonth()].name,
-					monthNameShort: calendarDefinition.months[date.getUTCMonth()].shortName,
-					monthIndex: date.getUTCMonth(),
-					monthDay: date.getUTCDate(),
-					day: date.getUTCDate(),
-					hour: date.getUTCHours(),
-					minute: date.getUTCMinutes(),
-				}
-			} else if (calendarDefinition.engine === 'SIMPLE') {
+			if (calendarDefinition.engine === 'SIMPLE') {
 				const inMillisecond = calendarDefinition.units.inMillisecond
 				const inSecond = calendarDefinition.units.inSecond * inMillisecond
 				const inMinute = calendarDefinition.units.inMinute * inSecond
@@ -131,19 +119,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 	const pickerToTimestamp = useCallback(
 		(picker: Omit<TimeDefinition, 'monthName' | 'monthNameShort'>) => {
 			const { year, monthIndex, day, hour, minute } = picker
-			if (calendarDefinition.engine === 'JS_DATE') {
-				const targetDate = new Date(0)
-				targetDate.setUTCFullYear(year)
-				targetDate.setUTCMonth(monthIndex)
-				targetDate.setUTCDate(day + 1)
-				targetDate.setUTCHours(hour)
-				targetDate.setUTCMinutes(minute)
-				const value = (targetDate.getTime() - calendarDefinition.baseOffset) / msPerUnit
-				if (isNaN(value)) {
-					return maximumTime
-				}
-				return value > maximumTime ? maximumTime : value < -maximumTime ? -maximumTime : value
-			} else if (calendarDefinition.engine === 'SIMPLE') {
+			if (calendarDefinition.engine === 'SIMPLE') {
 				const inMillisecond = calendarDefinition.units.inMillisecond
 				const inSecond = calendarDefinition.units.inSecond * inMillisecond
 				const inMinute = calendarDefinition.units.inMinute * inSecond
