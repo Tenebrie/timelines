@@ -24,7 +24,7 @@ export const WorldHeader = () => {
 	const textColor = data.color.isDark ? darkTheme.palette.text.primary : lightTheme.palette.text.primary
 
 	return (
-		<div style={{ position: 'relative', height: 108 }}>
+		<div style={{ position: 'relative', height: 96 }}>
 			<div
 				style={{
 					position: 'absolute',
@@ -37,27 +37,25 @@ export const WorldHeader = () => {
 					height: 'calc(100% + 16px)',
 				}}
 			></div>
-			<div style={{ position: 'absolute', top: 8, left: 8, width: '100%' }}>
+			<Stack gap={1} style={{ position: 'absolute', top: 8, left: 8, width: '100%' }}>
 				<Stack alignItems="center" direction="row" width="100%" justifyContent="center" gap={2}>
-					<Stack gap={0} width="100%">
-						<Typography variant="h5" noWrap color={textColor} sx={{ width: '100%' }}>
-							{name}
-						</Typography>
-					</Stack>
+					<Typography variant="h5" noWrap color={textColor} sx={{ width: '100%' }}>
+						{name}
+					</Typography>
 				</Stack>
 				<Typography
-					variant="caption"
+					variant="body2"
 					sx={{
 						overflow: 'hidden',
 						textOverflow: 'ellipsis',
 						display: '-webkit-box',
-						WebkitLineClamp: '3',
+						WebkitLineClamp: '2',
 						WebkitBoxOrient: 'vertical',
 					}}
 				>
 					{description}
 				</Typography>
-			</div>
+			</Stack>
 		</div>
 	)
 }

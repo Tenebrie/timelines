@@ -10,7 +10,7 @@ export const WorldList = () => {
 	const { isFetching, isReady, ownedWorlds, contributableWorlds, visibleWorlds } = useWorldListData()
 
 	return (
-		<Container style={{ position: 'relative' }}>
+		<Container style={{ position: 'relative', minWidth: 512 }}>
 			{isReady && (
 				<Stack gap={4}>
 					<WorldListSection

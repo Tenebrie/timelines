@@ -6,6 +6,7 @@ import { useAuthCheck } from './app/features/auth/authCheck/useAuthCheck'
 import { LostConnectionAlert } from './app/features/auth/LostConnectionAlert/LostConnectionAlert'
 import { useLiveUpdates } from './app/features/liveUpdates/useLiveUpdates'
 import { ModalRenderer } from './app/features/modals/ModalRenderer'
+import { PageMetadata } from './app/features/pageMetadata/PageMetadata'
 import { useSavedPreferences } from './app/features/preferences/useSavedPreferences'
 import { CustomThemeOverrides } from './app/features/theming/CustomThemeOverrides'
 import { CustomThemeProvider } from './app/features/theming/CustomThemeProvider'
@@ -46,6 +47,7 @@ const App = () => {
 				</CustomThemeOverrides>
 			</CustomThemeProvider>
 			<NavigationReceiverWrapper />
+			<PageMetadata />
 		</div>
 	)
 }
