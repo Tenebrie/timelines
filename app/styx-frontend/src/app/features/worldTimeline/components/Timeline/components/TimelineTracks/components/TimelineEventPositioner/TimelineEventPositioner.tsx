@@ -66,6 +66,7 @@ const TimelineEventPositionerComponent = ({
 					$borderColor="gray"
 					$iconPath={getIconPath(entity.icon)}
 					$theme={theme}
+					$isDataPoint={entity.markerType === 'deltaState'}
 					className={classNames({
 						revoked: entity.markerType === 'revokedAt',
 						replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',

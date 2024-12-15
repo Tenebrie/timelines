@@ -101,10 +101,19 @@ export const TimelineTrackItem = ({
 	})
 
 	const chainLinks = useMemo(() => {
-		return track.events.filter(
-			(event) => event.markerType === 'issuedAt' || event.markerType === 'deltaState',
-		)
-	}, [track.events])
+		return track.events
+			.filter((event) => event.markerType === 'issuedAt' || event.markerType === 'deltaState')
+			.filter((event) => {
+				if (event.followingEntity?.id === event.chainEntity?.id) {
+					return true
+				}
+				const timeToFollowingEntity = event.followingEntity
+					? event.followingEntity.markerPosition - event.markerPosition
+					: Infinity
+				const scaledTime = realTimeToScaledTime(timeToFollowingEntity)
+				return scaledTime > 200
+			})
+	}, [realTimeToScaledTime, track.events])
 
 	const dividerProps = useMemo(() => ({ position: 'absolute', bottom: 0, width: '100%' }), [])
 

@@ -16,11 +16,6 @@ export const useEventModules = () => {
 				module: 'TargetActors',
 			},
 			{
-				text: 'Mentioned actors',
-				secondary: 'Set the actors mentioned in this event',
-				module: 'MentionedActors',
-			},
-			{
 				text: 'Resource link',
 				secondary: 'Add a link to another resource, internal or external',
 				module: 'ExternalLink',

@@ -13,11 +13,12 @@ export const Marker = styled.div<{
 	$borderColor: string
 	$size: number
 	$theme: CustomTheme
+	$isDataPoint: boolean
 }>`
 	position: relative;
 	width: ${(props) => props.$size}px;
 	height: ${(props) => props.$size}px;
-	border-radius: 4px;
+	border-radius: ${(props) => (props.$isDataPoint ? '50%' : '4px')};
 	background: ${(props) => props.$theme.custom.palette.background.timelineMarker};
 	cursor: pointer;
 	transition:

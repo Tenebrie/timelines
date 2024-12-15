@@ -22,6 +22,12 @@ export type EventParams = {
 	['richEditor/openMentions']: { query: string; screenPosTop: number; screenPosLeft: number }
 	['richEditor/updateMentions']: { query: string }
 	['richEditor/closeMentions']: void
-	['richEditor/keyDown']: { key: string }
+	['richEditor/keyDown']: {
+		key: string
+		ctrlKey: boolean
+		shiftKey: boolean
+		altKey: boolean
+		metaKey: boolean
+	}
 	['navigate/worldTimeline']: Parameters<ReturnType<typeof useWorldTimelineRouter>['navigateTo']>[0]
 }

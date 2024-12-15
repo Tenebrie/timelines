@@ -84,10 +84,10 @@ export const MentionsList = ({ editor }: Props) => {
 
 	useEventBusSubscribe({
 		event: 'richEditor/keyDown',
-		callback: async ({ key }) => {
-			if (key === 'ArrowUp') {
+		callback: async ({ key, shiftKey }) => {
+			if (key === 'ArrowUp' || (key === 'Tab' && shiftKey)) {
 				setSelectedIndex((prev) => Math.max(prev - 1, -1))
-			} else if (key === 'ArrowDown') {
+			} else if (key === 'ArrowDown' || key === 'Tab') {
 				setSelectedIndex((prev) => {
 					return Math.min(prev + 1, displayedMentions.length)
 				})

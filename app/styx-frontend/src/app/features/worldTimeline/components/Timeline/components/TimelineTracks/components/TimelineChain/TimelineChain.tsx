@@ -31,7 +31,7 @@ export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) 
 		}
 		return 200
 	})()
-	const dist = rawDist - TimelineEventHeightPx + 5
+	const dist = rawDist - TimelineEventHeightPx + 13
 	const height = TimelineEventHeightPx * entity.markerHeight + 4
 	if (dist < 1) {
 		return null
@@ -44,7 +44,7 @@ export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) 
 					pointerEvents: 'none',
 					position: 'absolute',
 					bottom: height,
-					left: TimelineEventHeightPx / 2 - 8,
+					left: TimelineEventHeightPx / 2 - 16,
 				}}
 			>
 				<div
@@ -55,7 +55,7 @@ export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) 
 						borderTop: `2px solid ${color}`,
 						display: 'flex',
 						alignItems: 'center',
-						paddingLeft: 12,
+						paddingLeft: 20,
 						paddingRight: 0,
 						borderRadius: 8,
 					}}

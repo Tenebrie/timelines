@@ -54,7 +54,7 @@ export const MentionChip = Node.create({
 	},
 
 	renderText({ node }) {
-		return `@${getActorName(node)}`
+		return `${getActorName(node)}`
 	},
 
 	addKeyboardShortcuts() {
