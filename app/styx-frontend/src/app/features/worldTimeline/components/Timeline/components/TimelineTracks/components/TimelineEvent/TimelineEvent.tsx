@@ -118,7 +118,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 				$size={TimelineEventHeightPx - 6}
 				$borderColor={color}
 				$theme={theme}
-				$isDataPoint={entity.markerType === 'deltaState'}
+				$isDataPoint={entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta'}
 				className={classNames({
 					selected,
 					edited,
