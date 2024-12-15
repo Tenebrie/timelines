@@ -1,11 +1,12 @@
 import { ArrowBack, Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Button, Grid, Stack, Switch, TextField, Tooltip } from '@mui/material'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { RichTextEditor } from '@/app/features/richTextEditor/RichTextEditor'
 import { TimestampField } from '@/app/features/time/components/TimestampField'
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { WorldEvent } from '@/app/features/worldTimeline/types'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 
@@ -20,10 +21,9 @@ import { useEventFields } from './useEventFields'
 type Props = {
 	event: WorldEvent
 	mode: 'create' | 'create-compact' | 'edit'
-	secondaryAction?: string
 }
 
-export const EventDetailsEditor = ({ event, mode, secondaryAction }: Props) => {
+export const EventDetailsEditor = ({ event, mode }: Props) => {
 	const { state } = useEventFields({ event })
 	const {
 		modules,
@@ -99,11 +99,14 @@ export const EventDetailsEditor = ({ event, mode, secondaryAction }: Props) => {
 		[setDescription, setDescriptionRich, setMentionedActors],
 	)
 
+	const { timeToLabel } = useWorldTime()
+	const timeLabel = useMemo(() => timeToLabel(timestamp), [timeToLabel, timestamp])
+
 	const leftColumn = (
 		<OutlinedContainer
 			label={mode === 'edit' ? 'Edit Event' : 'Create Event'}
 			gap={3}
-			secondaryLabel={<Button sx={{ padding: '4px 12px' }}>{secondaryAction}</Button>}
+			secondaryLabel={<Button sx={{ padding: '4px 12px' }}>{timeLabel}</Button>}
 		>
 			<Stack spacing={2} direction="column">
 				<Stack direction="row" gap={1} width="100%">

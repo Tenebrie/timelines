@@ -7,7 +7,6 @@ import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { SearchInput } from '@/app/components/SearchInput'
 import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
-import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { isNull } from '@/app/utils/isNull'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 import { useIsReadOnly } from '@/hooks/useIsReadOnly'
@@ -35,9 +34,6 @@ export const Outliner = () => {
 			a.expandedActors === b.expandedActors &&
 			a.expandedEvents === b.expandedEvents,
 	)
-
-	const { timeToLabel } = useWorldTime()
-	const timeLabel = useMemo(() => timeToLabel(selectedTime), [selectedTime, timeToLabel])
 
 	const { isReadOnly } = useIsReadOnly()
 
@@ -95,7 +91,7 @@ export const Outliner = () => {
 				<Grid container height="100%" maxWidth="xl">
 					{isLargeScreen && (
 						<Grid item lg={5} xs={12} sx={{ padding: 2, spacing: 2 }} height="100%">
-							<EventCreator mode="create-compact" secondaryAction={timeLabel} />
+							<EventCreator mode="create-compact" />
 						</Grid>
 					)}
 					<Grid item lg={7} xs={12} sx={{ padding: 2, spacing: 2 }} height="100%">

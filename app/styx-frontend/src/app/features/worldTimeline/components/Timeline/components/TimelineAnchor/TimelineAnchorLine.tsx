@@ -119,6 +119,10 @@ const TimelineAnchorLineComponent = (props: Props) => {
 	const dividerWidth = useMemo(getDividerWidth, [getDividerWidth])
 	const dividerHeight = useMemo(getDividerHeight, [getDividerHeight])
 
+	const label = labelSize
+		? timeToShortLabel(scaledTimeToRealTime(index * LineSpacing), scaleLevel, labelSize)
+		: null
+
 	return (
 		<Profiler id="TimelineAnchorLine" onRender={reportComponentProfile}>
 			<DividerContainer
@@ -129,14 +133,14 @@ const TimelineAnchorLineComponent = (props: Props) => {
 					zIndex: labelSize === 'large' ? 2 : labelSize === 'medium' ? 1 : 0,
 				}}
 			>
-				{!!labelSize && (
+				{label && (
 					<DividerLabel
 						$theme={theme}
 						style={{
 							fontWeight: labelSize === 'large' ? 600 : labelSize === 'medium' ? 600 : 400,
 						}}
 					>
-						{timeToShortLabel(scaledTimeToRealTime(index * LineSpacing), scaleLevel, labelSize)}
+						{label}
 					</DividerLabel>
 				)}
 				<Divider color={'gray'} width={dividerWidth} height={dividerHeight} />

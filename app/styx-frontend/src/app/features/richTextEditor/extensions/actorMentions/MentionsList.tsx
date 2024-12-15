@@ -86,10 +86,10 @@ export const MentionsList = ({ editor }: Props) => {
 		event: 'richEditor/keyDown',
 		callback: async ({ key, shiftKey }) => {
 			if (key === 'ArrowUp' || (key === 'Tab' && shiftKey)) {
-				setSelectedIndex((prev) => Math.max(prev - 1, -1))
+				setSelectedIndex((prev) => Math.max(prev - 1, 0))
 			} else if (key === 'ArrowDown' || key === 'Tab') {
 				setSelectedIndex((prev) => {
-					return Math.min(prev + 1, displayedMentions.length)
+					return Math.min(prev + 1, displayedMentions.length - (query.length > 0 ? 0 : 1))
 				})
 			} else if (key === 'Enter') {
 				await selectActor(editor, selectedIndex)
@@ -120,16 +120,20 @@ export const MentionsList = ({ editor }: Props) => {
 					selected={selectedIndex === index}
 					key={actor.id}
 					onClick={() => selectActor(editor, index)}
+					sx={{ borderRadius: 1 }}
 				>
 					{actor.name}
 				</MenuItem>
 			))}
-			<MenuItem
-				selected={selectedIndex === displayedMentions.length}
-				onClick={() => selectActor(editor, displayedMentions.length)}
-			>
-				Create actor {query.length > 0 ? `'${query}'` : `'Unnamed Actor'`}
-			</MenuItem>
+			{query.length > 0 && (
+				<MenuItem
+					selected={selectedIndex === displayedMentions.length}
+					onClick={() => selectActor(editor, displayedMentions.length)}
+					sx={{ borderRadius: 1 }}
+				>
+					Create actor {query.length > 0 ? `'${query}'` : `'Unnamed Actor'`}
+				</MenuItem>
+			)}
 		</Paper>
 	)
 }

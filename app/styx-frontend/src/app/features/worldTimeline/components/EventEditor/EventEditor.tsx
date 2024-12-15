@@ -8,7 +8,7 @@ import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetails
 import { FullHeightContainer } from './styles'
 
 export const EventEditor = () => {
-	const { events } = useSelector(getWorldState)
+	const { events } = useSelector(getWorldState, (a, b) => a.events === b.events)
 	const { stateOf } = useWorldTimelineRouter()
 	const { eventId } = stateOf(worldTimelineRoutes.eventEditor)
 

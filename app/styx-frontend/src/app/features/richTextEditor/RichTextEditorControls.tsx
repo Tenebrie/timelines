@@ -4,6 +4,8 @@ import Paper from '@mui/material/Paper'
 import { Editor } from '@tiptap/react'
 import { useCallback } from 'react'
 
+import { ActiveButtonIndicator } from './extensions/actorMentions/components/ActiveButtonIndicator'
+
 type Props = {
 	editor: Editor | null
 }
@@ -37,9 +39,11 @@ export const RichTextEditorControls = ({ editor }: Props) => {
 			<Stack direction="row" gap={1}>
 				<Button onClick={onBoldClick} color="secondary">
 					Bold
+					<ActiveButtonIndicator active={isBold} />
 				</Button>
 				<Button onClick={onItalicClick} color="secondary">
 					Italic
+					<ActiveButtonIndicator active={isItalic} />
 				</Button>
 				<Button onClick={onMentionActorClick} color="secondary">
 					@Actor
