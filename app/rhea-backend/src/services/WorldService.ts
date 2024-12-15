@@ -108,10 +108,11 @@ export const WorldService = {
 					},
 				},
 				events: {
+					orderBy: {
+						timestamp: 'asc',
+					},
 					include: {
 						mentionedActors: true,
-						introducedActors: true,
-						terminatedActors: true,
 						deltaStates: {
 							orderBy: {
 								timestamp: 'asc',

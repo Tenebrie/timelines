@@ -3,8 +3,8 @@ import { Profiler, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Virtuoso } from 'react-virtuoso'
 
+import { ContainedSpinner } from '@/app/components/ContainedSpinner'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
-import { SearchInput } from '@/app/components/SearchInput'
 import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { isNull } from '@/app/utils/isNull'
@@ -14,18 +14,21 @@ import { useIsReadOnly } from '@/hooks/useIsReadOnly'
 import { useOutlinerTabs } from '../../hooks/useOutlinerTabs'
 import { getWorldState } from '../../selectors'
 import { EventCreator } from '../EventEditor/EventCreator'
+import { useVisibleActors } from '../EventSelector/useVisibleActors'
 import { useVisibleEvents } from '../EventSelector/useVisibleEvents'
 import { ActorWithStatementsRenderer } from '../Renderers/ActorWithStatementsRenderer'
 import { EventWithContentRenderer } from '../Renderers/Event/EventWithContentRenderer'
 import { EventTutorialModal } from './components/EventTutorialModal/EventTutorialModal'
 import { OutlinerControls } from './components/OutlinerControls/OutlinerControls'
 import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmptyState'
+import { SearchEmptyState } from './components/OutlinerEmptyState/SearchEmptyState'
+import { OutlinerSearch } from './components/OutlinerSearch/OutlinerSearch'
 import { StatementsScroller } from './styles'
 
 export const Outliner = () => {
-	const { actors, selectedTime } = useSelector(
+	const { selectedTime, search } = useSelector(
 		getWorldState,
-		(a, b) => a.actors === b.actors && a.selectedTime === b.selectedTime,
+		(a, b) => a.selectedTime === b.selectedTime && a.search === b.search,
 	)
 	const { showInactiveStatements, expandedActors, expandedEvents } = useSelector(
 		getOutlinerPreferences,
@@ -36,6 +39,8 @@ export const Outliner = () => {
 	)
 
 	const { isReadOnly } = useIsReadOnly()
+
+	const allVisibleActors = useVisibleActors()
 
 	const allVisibleEvents = useVisibleEvents({
 		timestamp: selectedTime,
@@ -57,12 +62,12 @@ export const Outliner = () => {
 
 	const visibleActors = useMemo(
 		() =>
-			actors.map((actor) => ({
+			allVisibleActors.map((actor) => ({
 				...actor,
 				collapsed: !expandedActors.includes(actor.id),
 				events: visibleEvents.filter((event) => actor.statements.some((e) => e.id === event.id)),
 			})),
-		[actors, expandedActors, visibleEvents],
+		[allVisibleActors, expandedActors, visibleEvents],
 	)
 
 	// const simplifiedView = useMemo(() => {
@@ -79,7 +84,7 @@ export const Outliner = () => {
 
 	const renderedActors = actorsVisible ? visibleActors : []
 	const renderedEvents = eventsVisible ? visibleEvents : []
-	const scrollerVisible = visibleActors.length > 0 || visibleEvents.length > 0
+	const scrollerVisible = visibleActors.length > 0 || visibleEvents.length > 0 || !!search.query
 
 	const theme = useCustomTheme()
 	const isLargeScreen = useMediaQuery(theme.material.breakpoints.up('lg'))
@@ -104,19 +109,26 @@ export const Outliner = () => {
 										itemContent={(index) => {
 											if (index === 0) {
 												return (
-													<Stack
-														direction="row"
-														justifyContent="space-between"
-														alignItems="center"
-														sx={{ margin: '1px' }}
-													>
-														<Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
-															<Tab label="All" />
-															<Tab label="Actors" />
-															<Tab label="Events" />
-															{/* <Tab label="Simplified" /> */}
-														</Tabs>
-														<SearchInput />
+													<Stack>
+														<Stack
+															direction="row"
+															justifyContent="space-between"
+															alignItems="center"
+															sx={{ margin: '1px' }}
+														>
+															<Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
+																<Tab label="All" />
+																<Tab label="Actors" />
+																<Tab label="Events" />
+																{/* <Tab label="Simplified" /> */}
+															</Tabs>
+															<OutlinerSearch />
+														</Stack>
+														<ContainedSpinner visible={search.isLoading} />
+														{search.query &&
+															!search.isLoading &&
+															search.results.actors.length === 0 &&
+															search.results.events.length === 0 && <SearchEmptyState />}
 													</Stack>
 												)
 											}

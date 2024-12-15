@@ -2,6 +2,7 @@
 
 const tags = [
 	'worldList',
+	'worldSearch',
 	'worldDetails',
 	'worldThumbnail',
 	'worldEventTracks',

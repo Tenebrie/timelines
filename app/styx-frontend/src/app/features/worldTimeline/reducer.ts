@@ -20,8 +20,8 @@ export const initialState = {
 	id: '' as string,
 	name: '' as string,
 	description: '' as string,
-	actors: [] as ActorDetails[],
 	events: [] as WorldEvent[],
+	actors: [] as ActorDetails[],
 	calendar: 'RIMWORLD' as WorldCalendarType,
 	timeOrigin: '0',
 	createdAt: '0',
@@ -31,6 +31,15 @@ export const initialState = {
 	selectedTimelineMarkers: [] as string[],
 	isReadOnly: false as boolean,
 	accessMode: 'Private' as WorldAccessMode,
+
+	search: {
+		query: null as string | null,
+		isLoading: false as boolean,
+		results: {
+			events: [] as WorldEvent[],
+			actors: [] as ActorDetails[],
+		},
+	},
 
 	eventCreator: {
 		ghost: null as WorldEvent | null,
@@ -176,6 +185,23 @@ export const worldSlice = createSlice({
 		},
 		setEventDeltaCreatorGhost: (state, { payload }: PayloadAction<WorldEventDelta | null>) => {
 			state.eventDeltaCreator.ghost = payload
+		},
+
+		/* Search */
+		setSearchLoading: (state, { payload }: PayloadAction<boolean>) => {
+			state.search.isLoading = payload
+		},
+		setSearchResults: (
+			state,
+			{ payload }: PayloadAction<{ query: string; results: (typeof initialState)['search']['results'] }>,
+		) => {
+			state.search.query = payload.query
+			state.search.isLoading = false
+			state.search.results = payload.results
+		},
+		cancelSearch: (state) => {
+			state.search.query = null
+			state.search.isLoading = false
 		},
 
 		/* Timeline context menu */

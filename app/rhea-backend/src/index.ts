@@ -13,6 +13,7 @@ import { HealthRouter } from './routers/HealthRouter'
 import { WorldEventRouter } from './routers/WorldEventRouter'
 import { WorldEventTrackRouter } from './routers/WorldEventTrackRouter'
 import { WorldRouter } from './routers/WorldRouter'
+import { WorldSearchRouter } from './routers/WorldSearchRouter'
 import { WorldThumbnailRouter } from './routers/WorldThumbnailRouter'
 import { RedisService } from './services/RedisService'
 import { isRunningInTest } from './utils/isRunningInTest'
@@ -60,6 +61,8 @@ app
 	.use(WorldEventTrackRouter.allowedMethods())
 	.use(WorldRouter.routes())
 	.use(WorldRouter.allowedMethods())
+	.use(WorldSearchRouter.routes())
+	.use(WorldSearchRouter.allowedMethods())
 	.use(WorldThumbnailRouter.routes())
 	.use(WorldThumbnailRouter.allowedMethods())
 

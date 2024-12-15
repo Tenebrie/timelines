@@ -81,26 +81,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			color: string
 			worldId: string
 		}[]
-		introducedActors: {
-			description: string
-			name: string
-			id: string
-			createdAt: string
-			updatedAt: string
-			title: string
-			color: string
-			worldId: string
-		}[]
-		terminatedActors: {
-			description: string
-			name: string
-			id: string
-			createdAt: string
-			updatedAt: string
-			title: string
-			color: string
-			worldId: string
-		}[]
 		deltaStates: {
 			description?: null | string
 			name?: null | string
