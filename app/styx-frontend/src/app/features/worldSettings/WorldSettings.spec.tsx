@@ -16,7 +16,6 @@ import { setupTestServer } from '@/jest/setupTestServer'
 import { mockRouter } from '@/router/router.mock'
 import { homeRoutes } from '@/router/routes/homeRoutes'
 
-import { ShareWorldModal } from './components/ShareWorldModal'
 import { WorldDetails } from './WorldSettings'
 
 const server = setupTestServer()
@@ -89,7 +88,6 @@ describe('<WorldSettings />', () => {
 			const { user } = renderWithProviders(
 				<>
 					<WorldDetails />
-					<ShareWorldModal />
 				</>,
 				preloadedState,
 			)
@@ -103,6 +101,7 @@ describe('<WorldSettings />', () => {
 
 			const { invocations } = mockAddCollaborator(server, { worldId: 'world-1111', response: null })
 
+			screen.debug(undefined, 1000000)
 			await user.click(await screen.findByText('Share world with specific people...'))
 			await user.click(await screen.findByLabelText('Emails'))
 			await user.keyboard('user@localhost{enter}')
@@ -119,7 +118,6 @@ describe('<WorldSettings />', () => {
 			const { user } = renderWithProviders(
 				<>
 					<WorldDetails />
-					<ShareWorldModal />
 				</>,
 				preloadedState,
 			)
