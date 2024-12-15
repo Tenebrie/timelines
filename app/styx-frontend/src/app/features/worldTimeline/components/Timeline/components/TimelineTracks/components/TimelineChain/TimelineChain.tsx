@@ -26,7 +26,7 @@ export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) 
 		if (entity.followingEntity) {
 			return Math.min(
 				200,
-				realTimeToScaledTime(entity.followingEntity.markerPosition - entity.markerPosition - 15),
+				realTimeToScaledTime(entity.followingEntity.markerPosition - entity.markerPosition) - 25,
 			)
 		}
 		return 200
