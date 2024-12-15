@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 docker compose -f docker-compose.common.yml -f docker-compose.prod.yml build
 docker push tenebrie/timelines-gatekeeper:${VERSION}
 docker push tenebrie/timelines-styx:${VERSION}
