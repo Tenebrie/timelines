@@ -1,12 +1,13 @@
 import { ArrowBack, Delete } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import { Button, FormControl, InputLabel, Select, Stack, TextField, Tooltip } from '@mui/material'
+import { Button, Stack, TextField, Tooltip } from '@mui/material'
 import { useCallback, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useUpdateActorMutation } from '@/api/actorListApi'
+import { ColorPicker } from '@/app/components/ColorPicker'
+import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { useModal } from '@/app/features/modals/reducer'
-import { useActorColors } from '@/app/features/worldTimeline/hooks/useActorColors'
 import { getWorldIdState } from '@/app/features/worldTimeline/selectors'
 import { Actor, ActorDetails } from '@/app/features/worldTimeline/types'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
@@ -93,69 +94,57 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 		manualSave()
 	})
 
-	const { getColorOptions, renderOption, renderValue } = useActorColors()
-
 	return (
-		<Stack spacing={2} direction="column">
-			<TextField
-				type="text"
-				label="Name"
-				value={name}
-				onChange={(e) => setName(e.target.value)}
-				inputProps={{ maxLength: 256 }}
-			/>
-			<TextField
-				type="text"
-				label="Title"
-				value={title}
-				onChange={(e) => setTitle(e.target.value)}
-				inputProps={{ maxLength: 256 }}
-			/>
-			<FormControl fullWidth>
-				<InputLabel id="actorColorSelectLabel">Color</InputLabel>
-				<Select
-					MenuProps={{ PaperProps: { sx: { maxHeight: 700 } } }}
-					labelId="actorColorSelectLabel"
-					value={color}
-					onChange={(event) => setColor(event.target.value)}
-					label="Color"
-					renderValue={renderValue}
-				>
-					{getColorOptions().map((option) => renderOption(option))}
-				</Select>
-			</FormControl>
-			<TextField
-				label="Description"
-				value={description}
-				onChange={(e) => setDescription(e.target.value)}
-				minRows={3}
-				maxRows={11}
-				multiline
-			/>
-			<Stack direction="row-reverse" justifyContent="space-between">
-				<Stack spacing={2} direction="row-reverse">
-					<Tooltip title={shortcutLabel} arrow placement="top">
-						<span>
-							<LoadingButton
-								loading={isSaving}
-								variant="outlined"
-								onClick={manualSave}
-								loadingPosition="start"
-								color={autosaveColor}
-								startIcon={autosaveIcon}
-							>
-								Save
-							</LoadingButton>
-						</span>
-					</Tooltip>
-					<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
-						Delete
+		<OutlinedContainer label="Edit Actor" gap={3}>
+			<Stack spacing={2} direction="column">
+				<TextField
+					type="text"
+					label="Name"
+					value={name}
+					onChange={(e) => setName(e.target.value)}
+					inputProps={{ maxLength: 256 }}
+				/>
+				<TextField
+					type="text"
+					label="Title"
+					value={title}
+					onChange={(e) => setTitle(e.target.value)}
+					inputProps={{ maxLength: 256 }}
+				/>
+				<ColorPicker initialValue={actor.color} onChangeHex={(color) => setColor(color)} />
+				<TextField
+					label="Description"
+					value={description}
+					onChange={(e) => setDescription(e.target.value)}
+					minRows={3}
+					maxRows={11}
+					multiline
+				/>
+				<Stack direction="row-reverse" justifyContent="space-between">
+					<Stack spacing={2} direction="row-reverse">
+						<Tooltip title={shortcutLabel} arrow placement="top">
+							<span>
+								<LoadingButton
+									loading={isSaving}
+									variant="outlined"
+									onClick={manualSave}
+									loadingPosition="start"
+									color={autosaveColor}
+									startIcon={autosaveIcon}
+								>
+									Save
+								</LoadingButton>
+							</span>
+						</Tooltip>
+						<Button variant="outlined" onClick={onDelete} startIcon={<Delete />}>
+							Delete
+						</Button>
+					</Stack>
+					<Button variant="outlined" onClick={() => window.history.back()} startIcon={<ArrowBack />}>
+						Back
 					</Button>
 				</Stack>
-				<Button variant="outlined" onClick={() => window.history.back()} startIcon={<ArrowBack />}>
-					Back
-				</Button>
 			</Stack>
-		</Stack>
+		</OutlinedContainer>
 	)
 }

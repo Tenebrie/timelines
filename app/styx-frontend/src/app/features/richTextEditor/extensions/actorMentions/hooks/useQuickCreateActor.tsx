@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { worldSlice } from '@/app/features/worldTimeline/reducer'
 import { getWorldIdState } from '@/app/features/worldTimeline/selectors'
+import { hslToHex } from '@/app/utils/getContrastTextColor'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 export const useQuickCreateActor = () => {
@@ -20,6 +21,7 @@ export const useQuickCreateActor = () => {
 					worldId,
 					body: {
 						name: query.length > 0 ? query : 'Unnamed Actor',
+						color: hslToHex(Math.random(), 0.5, 0.5),
 					},
 				}),
 			)
