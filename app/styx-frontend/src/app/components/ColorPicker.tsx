@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { darkTheme, lightTheme } from '../features/theming/themes'
-import { colorStringToHsl, hslToHex } from '../utils/getContrastTextColor'
+import { colorStringToHsl, colorStringToHslWithDefault, hslToHex } from '../utils/getContrastTextColor'
 import { ColoredChip } from './ColoredChip'
 
 type Props = {
@@ -13,7 +13,12 @@ type Props = {
 }
 
 export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) => {
-	const parsedValue = colorStringToHsl(initialValue ?? 'hsl(180, 100%, 50%)')
+	const parsedValue = useMemo(
+		() => colorStringToHslWithDefault(initialValue ?? 'hsl(180, 100%, 50%)', { h: 0.5, s: 1, l: 0.5 }),
+		[initialValue],
+	)
+
+	const [inputValue, setInputValue] = useState<string | null>(null)
 
 	const [hue, setHue] = useState(parsedValue.h * 360)
 	const [saturation, setSaturation] = useState(parsedValue.s * 100)
@@ -25,6 +30,19 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 		[calculatedHue, lightness, saturation],
 	)
 
+	const onSetFullValue = (value: string) => {
+		setInputValue(value)
+
+		try {
+			const parsedValue = colorStringToHsl(value)
+			setHue(Math.max(0, Math.min(360, Math.round(parsedValue.h * 360))))
+			setSaturation(Math.max(0, Math.min(100, Math.round(parsedValue.s * 100))))
+			setLightness(Math.max(0, Math.min(100, Math.round(parsedValue.l * 100))))
+		} catch {
+			//
+		}
+	}
+
 	useEffect(() => {
 		const hexValue = hslToHex(hue / 360, saturation / 100, lightness / 100)
 		if (hexValue === initialValue || color === initialValue) {
@@ -35,8 +53,8 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 		onChangeHsl?.(color)
 	}, [calculatedHue, color, lightness, onChangeHex, onChangeHsl, saturation, hue, initialValue])
 
-	const hueShowColor = `hsl(${calculatedHue}, ${100}%, ${50}%)`
-	const saturationShowColor = `hsl(${calculatedHue}, ${saturation}%, ${50}%)`
+	const hueShowColor = `hsl(${calculatedHue}, ${saturation}%, ${lightness}%)`
+	const saturationShowColor = `hsl(${calculatedHue}, ${saturation}%, ${lightness}%)`
 
 	return (
 		<Stack direction="row" gap={4}>
@@ -80,54 +98,94 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 						</div>
 					</Stack>
 				</Stack>
-				{/* <ColoredChip text="Name" color={color} /> */}
-				<OutlinedInput size="small" sx={{ width: '192px' }} value={color} />
+				<OutlinedInput
+					size="small"
+					sx={{ width: '192px' }}
+					value={inputValue ?? color}
+					onChange={(event) => onSetFullValue(event.target.value)}
+				/>
 			</Stack>
-			<Stack direction="column" width="100%" gap={1}>
-				<Stack direction="row" gap={4} sx={{ alignItems: 'center' }}>
+			<Stack
+				direction="column"
+				width="100%"
+				gap={1}
+				sx={{
+					'* .MuiSlider-rail': {
+						'--hue': `${hue}deg`,
+						'--saturation': `${saturation}%`,
+						'--lightness': `${lightness}%`,
+					},
+				}}
+			>
+				<Stack
+					direction="row"
+					gap={4}
+					sx={{
+						alignItems: 'center',
+					}}
+				>
 					<HueSlider
-						name="hue"
 						step={1}
 						max={360}
 						$color={hueShowColor}
 						value={hue}
-						onChange={(_, value) => setHue(value as number)}
+						onChange={(_, value) => {
+							setHue(value as number)
+							setInputValue(null)
+						}}
 					/>
-					<OutlinedInput size="small" sx={{ width: '110px' }} type="number" value={calculatedHue} />
+					<OutlinedInput
+						size="small"
+						sx={{ width: '110px' }}
+						type="number"
+						value={calculatedHue}
+						onChange={(event) => {
+							setHue(Math.max(0, Math.min(360, Math.round(Number(event.target.value)))))
+							setInputValue(null)
+						}}
+					/>
 				</Stack>
 				<Stack direction="row" gap={4} sx={{ alignItems: 'center' }}>
-					<BaseSlider
-						name="saturation"
+					<SaturationSlider
 						step={1}
 						$color={saturationShowColor}
 						value={saturation}
-						onChange={(_, value) => setSaturation(value as number)}
-						sx={{
-							'.MuiSlider-rail': {
-								background: `linear-gradient(90deg, hsl(${calculatedHue}, 0%, 50%) 0%, hsl(${calculatedHue}, 100%, 50%) 100%);`,
-							},
+						onChange={(_, value) => {
+							setSaturation(value as number)
+							setInputValue(null)
 						}}
 					/>
-					<OutlinedInput size="small" sx={{ width: '110px' }} type="number" value={saturation} />
+					<OutlinedInput
+						size="small"
+						sx={{ width: '110px' }}
+						type="number"
+						value={saturation}
+						onChange={(event) => {
+							setSaturation(Math.max(0, Math.min(100, Math.round(Number(event.target.value)))))
+							setInputValue(null)
+						}}
+					/>
 				</Stack>
 				<Stack direction="row" gap={4} sx={{ alignItems: 'center' }}>
-					<BaseSlider
-						name="lightness"
+					<LightnessSlider
 						step={1}
 						$color={color}
 						value={lightness}
-						onChange={(_, value) => setLightness(value as number)}
-						sx={{
-							'.MuiSlider-rail': {
-								background: `
-									linear-gradient(90deg,
-										hsl(${calculatedHue}, ${saturation}%, 0%) 0%,
-										hsl(${calculatedHue}, ${saturation}%, 50%) 50%,
-										hsl(${calculatedHue}, ${saturation}%, 100%) 100%);`,
-							},
+						onChange={(_, value) => {
+							setLightness(value as number)
+							setInputValue(null)
 						}}
 					/>
-					<OutlinedInput size="small" sx={{ width: '110px' }} type="number" value={lightness} />
+					<OutlinedInput
+						size="small"
+						sx={{ width: '110px' }}
+						type="number"
+						value={lightness}
+						onChange={(event) => {
+							setLightness(Math.max(0, Math.min(100, Math.round(Number(event.target.value)))))
+							setInputValue(null)
+						}}
+					/>
 				</Stack>
 			</Stack>
 		</Stack>
@@ -140,10 +198,16 @@ const BaseSlider = styled(Slider).attrs<{ $color: string }>((props) => ({
 	},
 }))`
 	height: 64px;
+	transition: none;
+
+	.MuiSlider-thumb {
+		transition: none;
+	}
 
 	.MuiSlider-rail {
 		opacity: 1;
 		height: 12px;
+		transition: none;
 	}
 
 	.MuiSlider-track {
@@ -155,13 +219,34 @@ const HueSlider = styled(BaseSlider)`
 	.MuiSlider-rail {
 		background: linear-gradient(
 			90deg,
-			rgba(255, 0, 0, 1) 0%,
-			rgba(255, 255, 0, 1) 17%,
-			rgba(0, 255, 0, 1) 33%,
-			rgba(0, 255, 255, 1) 50%,
-			rgba(0, 0, 255, 1) 67%,
-			rgba(255, 0, 255, 1) 83%,
-			rgba(255, 0, 0, 1) 100%
+			hsl(0, var(--saturation), var(--lightness)) 0%,
+			hsl(60, var(--saturation), var(--lightness)) 17%,
+			hsl(120, var(--saturation), var(--lightness)) 33%,
+			hsl(180, var(--saturation), var(--lightness)) 50%,
+			hsl(240, var(--saturation), var(--lightness)) 67%,
+			hsl(300, var(--saturation), var(--lightness)) 83%,
+			hsl(360, var(--saturation), var(--lightness)) 100%
+		);
+	}
+`
+
+const SaturationSlider = styled(BaseSlider)`
+	.MuiSlider-rail {
+		background: linear-gradient(
+			90deg,
+			hsl(var(--hue), 0%, var(--lightness)) 0%,
+			hsl(var(--hue), 100%, var(--lightness)) 100%
+		);
+	}
+`
+
+const LightnessSlider = styled(BaseSlider)`
+	.MuiSlider-rail {
+		background: linear-gradient(
+			90deg,
+			hsl(var(--hue), var(--saturation), 0%) 0%,
+			hsl(var(--hue), var(--saturation), 50%) 50%,
+			hsl(var(--hue), var(--saturation), 100%) 100%
 		);
 	}
 `

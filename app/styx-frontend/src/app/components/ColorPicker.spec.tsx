@@ -5,10 +5,58 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import { ColorPicker } from './ColorPicker'
 
 describe('ColorPicker', () => {
-	it('renders correctly with initial value', () => {
+	it('renders correctly with initial value', async () => {
 		render(<ColorPicker initialValue="hsl(180, 100%, 50%)" />)
 		const colorBox = screen.getByTestId('color-preview')
 		expect(colorBox).toHaveStyle({ backgroundColor: 'hsl(180, 100%, 50%)' })
+	})
+
+	it('changes the value on hue input change', () => {
+		render(<ColorPicker initialValue="hsl(180, 100%, 50%)" />)
+		const input = screen.getAllByDisplayValue('180').find((el) => el.matches('input[type="number"]'))!
+		fireEvent.change(input, { target: { value: 190 } })
+		expect(screen.getByDisplayValue('hsl(190, 100%, 50%)')).toBeInTheDocument()
+	})
+
+	it('changes the value on saturation input change', () => {
+		render(<ColorPicker initialValue="hsl(180, 100%, 50%)" />)
+		const input = screen.getAllByDisplayValue('100').find((el) => el.matches('input[type="number"]'))!
+		fireEvent.change(input, { target: { value: 75 } })
+		expect(screen.getByDisplayValue('hsl(180, 75%, 50%)')).toBeInTheDocument()
+	})
+
+	it('changes the value on lightness input change', () => {
+		render(<ColorPicker initialValue="hsl(180, 100%, 50%)" />)
+		const input = screen.getAllByDisplayValue('50').find((el) => el.matches('input[type="number"]'))!
+		fireEvent.change(input, { target: { value: 34 } })
+		expect(screen.getByDisplayValue('hsl(180, 100%, 34%)')).toBeInTheDocument()
+	})
+
+	it('changes the value on manual HSL input', () => {
+		render(<ColorPicker initialValue="hsl(180, 100%, 50%)" />)
+		const input = screen.getByDisplayValue('hsl(180, 100%, 50%)')
+		fireEvent.change(input, { target: { value: 'hsl(130, 80%, 60%)' } })
+		expect(screen.getAllByDisplayValue('130')[0]).toBeInTheDocument()
+		expect(screen.getAllByDisplayValue('80')[0]).toBeInTheDocument()
+		expect(screen.getAllByDisplayValue('60')[0]).toBeInTheDocument()
+	})
+
+	it('changes the value on manual HSL input', () => {
+		render(<ColorPicker initialValue="hsl(180, 100%, 50%)" />)
+		const input = screen.getByDisplayValue('hsl(180, 100%, 50%)')
+		fireEvent.change(input, { target: { value: 'rgb(216, 191, 216)' } })
+		expect(screen.getAllByDisplayValue('300')[0]).toBeInTheDocument()
+		expect(screen.getAllByDisplayValue('24')[0]).toBeInTheDocument()
+		expect(screen.getAllByDisplayValue('80')[0]).toBeInTheDocument()
+	})
+
+	it('changes the value on manual hex input', () => {
+		render(<ColorPicker initialValue="hsl(180, 100%, 50%)" />)
+		const input = screen.getByDisplayValue('hsl(180, 100%, 50%)')
+		fireEvent.change(input, { target: { value: '#D8BFD8' } })
+		expect(screen.getAllByDisplayValue('300')[0]).toBeInTheDocument()
+		expect(screen.getAllByDisplayValue('24')[0]).toBeInTheDocument()
+		expect(screen.getAllByDisplayValue('80')[0]).toBeInTheDocument()
 	})
 
 	describe('hsl', () => {

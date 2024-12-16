@@ -18,6 +18,7 @@ export const ColoredChip = ({ text, color, onClick }: Props) => {
 				height: '1.6em',
 				'& .MuiChip-label': { fontSize: '1em' },
 				color: textColor,
+				transition: 'none',
 			}}
 			style={{ backgroundColor: color }}
 			onClick={() => onClick?.()}
