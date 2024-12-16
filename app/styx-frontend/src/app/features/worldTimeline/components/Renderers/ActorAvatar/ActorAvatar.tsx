@@ -2,6 +2,7 @@ import { Avatar } from '@mui/material'
 import { useMemo } from 'react'
 
 import { Actor } from '@/app/features/worldTimeline/types'
+import { getContrastTextColor } from '@/app/utils/getContrastTextColor'
 
 type Props = {
 	actor: Actor
@@ -23,5 +24,5 @@ export const ActorAvatar = ({ actor }: Props) => {
 		return actor.name.substring(0, 2)
 	}, [actor])
 
-	return <Avatar sx={{ bgcolor: color }}>{initials}</Avatar>
+	return <Avatar sx={{ color: getContrastTextColor(color), bgcolor: color }}>{initials}</Avatar>
 }

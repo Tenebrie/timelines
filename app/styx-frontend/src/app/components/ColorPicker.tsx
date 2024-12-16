@@ -20,9 +20,9 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 
 	const [inputValue, setInputValue] = useState<string | null>(null)
 
-	const [hue, setHue] = useState(parsedValue.h * 360)
-	const [saturation, setSaturation] = useState(parsedValue.s * 100)
-	const [lightness, setLightness] = useState(parsedValue.l * 100)
+	const [hue, setHue] = useState(Math.round(parsedValue.h * 360))
+	const [saturation, setSaturation] = useState(Math.round(parsedValue.s * 100))
+	const [lightness, setLightness] = useState(Math.round(parsedValue.l * 100))
 
 	const calculatedHue = useMemo(() => Math.round(hue), [hue])
 	const color = useMemo(
