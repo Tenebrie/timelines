@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { worldSlice } from '@/app/features/worldTimeline/reducer'
 import { getWorldIdState } from '@/app/features/worldTimeline/selectors'
-import { hslToHex } from '@/app/utils/getContrastTextColor'
+import { hslToHex } from '@/app/utils/colors/hslToHex'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 export const useQuickCreateActor = () => {

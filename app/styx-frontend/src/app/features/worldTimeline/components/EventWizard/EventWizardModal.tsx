@@ -1,6 +1,8 @@
-import { Add } from '@mui/icons-material'
-import { LoadingButton } from '@mui/lab'
-import { Button, TextField, Tooltip } from '@mui/material'
+import Add from '@mui/icons-material/Add'
+import LoadingButton from '@mui/lab/LoadingButton'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import Tooltip from '@mui/material/Tooltip'
 import { useEffect, useState } from 'react'
 
 import { useCreateWorldEventMutation } from '@/api/worldEventApi'

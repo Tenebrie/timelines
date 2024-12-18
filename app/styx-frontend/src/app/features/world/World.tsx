@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material'
+import Stack from '@mui/material/Stack'
 import { Navigate, Outlet } from 'react-router-dom'
 
 import { BlockingSpinner } from '@/app/components/BlockingSpinner'

@@ -1,4 +1,4 @@
-import { ListItemButton } from '@mui/material'
+import ListItemButton from '@mui/material/ListItemButton'
 import styled from 'styled-components'
 
 export const StyledListItemButton = styled(ListItemButton)`

@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material'
+import Stack from '@mui/material/Stack'
 import { memo, useEffect, useMemo } from 'react'
 
 import { IsDragDropStateOfType, useDragDropStateWithRenders } from '@/app/features/dragDrop/DragDropState'

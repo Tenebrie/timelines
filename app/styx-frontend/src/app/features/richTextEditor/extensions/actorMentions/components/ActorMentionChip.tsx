@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { getWorldState } from '@/app/features/worldTimeline/selectors'
-import { getContrastTextColor } from '@/app/utils/getContrastTextColor'
+import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
 import { QueryParams } from '@/router/routes/QueryParams'
 import { worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
 import { QueryStrategy } from '@/router/types'

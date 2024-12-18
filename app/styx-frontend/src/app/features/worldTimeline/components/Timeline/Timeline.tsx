@@ -1,4 +1,4 @@
-import { Paper } from '@mui/material'
+import Paper from '@mui/material/Paper'
 import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 

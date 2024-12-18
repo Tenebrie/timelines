@@ -1,6 +1,11 @@
 import { useListWorldAccessModesQuery } from '@api/otherApi'
 import { useSetWorldAccessModeMutation } from '@api/worldDetailsApi'
-import { Button, FormControl, InputLabel, MenuItem, Select, Stack } from '@mui/material'
+import Button from '@mui/material/Button'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import Stack from '@mui/material/Stack'
 import { ReactNode, useCallback } from 'react'
 
 import { WorldAccessMode, WorldBrief } from '@/app/features/worldTimeline/types'

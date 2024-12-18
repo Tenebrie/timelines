@@ -3194,6 +3194,13 @@ eslint-config-prettier@^9.1.0:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-9.1.0.tgz#31af3d94578645966c082fcb71a5846d3c94867f"
   integrity sha512-NSWl5BFQWEPi1j4TjVNItzYV7dZXZ+wP6I6ZhrBGpChQhZRUaElihE9uRRkcbRnNb76UMKDF3r+WTmNcGPKsqw==
 
+eslint-plugin-mui-path-imports@^0.0.15:
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-mui-path-imports/-/eslint-plugin-mui-path-imports-0.0.15.tgz#c3ac85a1d7800eab36d4fe67ae1feb0b5d26780b"
+  integrity sha512-u61kgRBtUAG+zoApuf8oWuW6mf3SIfrpMq/gSQEM2h/3qzkqvWXB4RRmPzVryS6bpeXT0QsW8rFcdcMVnoz0hw==
+  dependencies:
+    requireindex "^1.2.0"
+
 eslint-plugin-no-relative-import-paths@^1.5.5:
   version "1.5.5"
   resolved "https://registry.yarnpkg.com/eslint-plugin-no-relative-import-paths/-/eslint-plugin-no-relative-import-paths-1.5.5.tgz#c1cf7fed05943b1ec038e29086b190f14f42ed6e"
@@ -5988,6 +5995,11 @@ require-from-string@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/require-from-string/-/require-from-string-2.0.2.tgz#89a7fdd938261267318eafe14f9c32e598c36909"
   integrity sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==
+
+requireindex@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/requireindex/-/requireindex-1.2.0.tgz#3463cdb22ee151902635aa6c9535d4de9c2ef1ef"
+  integrity sha512-L9jEkOi3ASd9PYit2cwRfyppc9NoABujTP8/5gFcbERmo5jUoAKovIC3fsF17pkTnGsrByysqX+Kxd2OTNI1ww==
 
 requires-port@^1.0.0:
   version "1.0.0"

@@ -1,4 +1,4 @@
-import { Save } from '@mui/icons-material'
+import Save from '@mui/icons-material/Save'
 import debounce from 'lodash.debounce'
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 

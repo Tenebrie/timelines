@@ -1,4 +1,7 @@
-import { Button, Link, Stack, Typography } from '@mui/material'
+import Button from '@mui/material/Button'
+import Link from '@mui/material/Link'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import { useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
 

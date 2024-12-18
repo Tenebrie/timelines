@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 

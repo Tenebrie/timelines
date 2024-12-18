@@ -1,4 +1,5 @@
-import { ListItemText, MenuItem } from '@mui/material'
+import ListItemText from '@mui/material/ListItemText'
+import MenuItem from '@mui/material/MenuItem'
 import { useMemo } from 'react'
 
 import { WorldEvent } from '../../types'

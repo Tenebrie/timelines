@@ -1,8 +1,8 @@
-import { Avatar } from '@mui/material'
+import Avatar from '@mui/material/Avatar'
 import { useMemo } from 'react'
 
 import { Actor } from '@/app/features/worldTimeline/types'
-import { getContrastTextColor } from '@/app/utils/getContrastTextColor'
+import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
 
 type Props = {
 	actor: Actor

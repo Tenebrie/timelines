@@ -1,5 +1,8 @@
-import { Add, Remove } from '@mui/icons-material'
-import { Button, Divider, Stack } from '@mui/material'
+import Add from '@mui/icons-material/Add'
+import Remove from '@mui/icons-material/Remove'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import Stack from '@mui/material/Stack'
 import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useCallback } from 'react'
 

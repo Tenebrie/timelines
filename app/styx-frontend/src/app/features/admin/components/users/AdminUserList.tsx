@@ -1,15 +1,13 @@
-import {
-	Button,
-	Link,
-	Paper,
-	Stack,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	Typography,
-} from '@mui/material'
+import Button from '@mui/material/Button'
+import Link from '@mui/material/Link'
+import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Typography from '@mui/material/Typography'
 import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'

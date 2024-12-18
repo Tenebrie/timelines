@@ -1,5 +1,8 @@
-import { Delete, Edit } from '@mui/icons-material'
-import { Button, Stack, Tooltip } from '@mui/material'
+import Delete from '@mui/icons-material/Delete'
+import Edit from '@mui/icons-material/Edit'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import Tooltip from '@mui/material/Tooltip'
 import { useDispatch } from 'react-redux'
 
 import { GetWorldsApiResponse } from '@/api/worldListApi'

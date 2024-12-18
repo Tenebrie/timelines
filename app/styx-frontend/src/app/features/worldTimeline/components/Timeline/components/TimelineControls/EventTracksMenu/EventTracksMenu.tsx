@@ -1,16 +1,14 @@
-import { Leaderboard } from '@mui/icons-material'
-import {
-	Button,
-	Checkbox,
-	Paper,
-	Popover,
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-} from '@mui/material'
+import Leaderboard from '@mui/icons-material/Leaderboard'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import Paper from '@mui/material/Paper'
+import Popover from '@mui/material/Popover'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'

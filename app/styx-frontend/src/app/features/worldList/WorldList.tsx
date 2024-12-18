@@ -1,4 +1,5 @@
-import { Container, Stack } from '@mui/material'
+import Container from '@mui/material/Container'
+import Stack from '@mui/material/Stack'
 
 import { BlockingSpinner } from '../../components/BlockingSpinner'
 import { DeleteWorldModal } from './components/DeleteWorldModal'

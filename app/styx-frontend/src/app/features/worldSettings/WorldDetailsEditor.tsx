@@ -1,16 +1,14 @@
 import { GetWorldCollaboratorsApiResponse } from '@api/worldCollaboratorsApi'
 import LoadingButton from '@mui/lab/LoadingButton'
-import {
-	Button,
-	Divider,
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
-	Stack,
-	TextField,
-	Tooltip,
-} from '@mui/material'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import Stack from '@mui/material/Stack'
+import TextField from '@mui/material/TextField'
+import Tooltip from '@mui/material/Tooltip'
 import { useCallback } from 'react'
 
 import { useWorldCalendar } from '@/app/features/time/hooks/useWorldCalendar'

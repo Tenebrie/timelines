@@ -1,4 +1,5 @@
-import { Button, Typography } from '@mui/material'
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
 
 import { useModal } from '@/app/features/modals/reducer'
 import { ModalFooter } from '@/ui-lib/components/Modal'

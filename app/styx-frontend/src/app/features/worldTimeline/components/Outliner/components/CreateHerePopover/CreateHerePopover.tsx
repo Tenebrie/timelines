@@ -1,5 +1,10 @@
-import { Person, Public } from '@mui/icons-material'
-import { Divider, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
+import Person from '@mui/icons-material/Person'
+import Public from '@mui/icons-material/Public'
+import Divider from '@mui/material/Divider'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 import { bindMenu, PopupState } from 'material-ui-popup-state/hooks'
 
 import { useModal } from '@/app/features/modals/reducer'

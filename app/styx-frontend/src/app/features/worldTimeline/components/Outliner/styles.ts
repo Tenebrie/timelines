@@ -1,5 +1,6 @@
-import { ExpandMore } from '@mui/icons-material'
-import { ListItemButton, ListItemText } from '@mui/material'
+import ExpandMore from '@mui/icons-material/ExpandMore'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemText from '@mui/material/ListItemText'
 import styled from 'styled-components'
 
 import { ScrollbarStyling } from '@/app/styles'

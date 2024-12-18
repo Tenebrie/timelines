@@ -1,14 +1,13 @@
 import { GetWorldCollaboratorsApiResponse, useUnshareWorldMutation } from '@api/worldCollaboratorsApi'
-import { Cancel, Delete } from '@mui/icons-material'
-import {
-	Button,
-	IconButton,
-	List,
-	ListItem,
-	ListItemSecondaryAction,
-	ListItemText,
-	Typography,
-} from '@mui/material'
+import Cancel from '@mui/icons-material/Cancel'
+import Delete from '@mui/icons-material/Delete'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
+import ListItemText from '@mui/material/ListItemText'
+import Typography from '@mui/material/Typography'
 import { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 

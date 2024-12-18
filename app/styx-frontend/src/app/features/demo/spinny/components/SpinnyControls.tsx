@@ -1,4 +1,7 @@
-import { Checkbox, FormControlLabel, FormGroup, Stack } from '@mui/material'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormGroup from '@mui/material/FormGroup'
+import Stack from '@mui/material/Stack'
 import { ChangeEvent } from 'react'
 import { useDispatch } from 'react-redux'
 

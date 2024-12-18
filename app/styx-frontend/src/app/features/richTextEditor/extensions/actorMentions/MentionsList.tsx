@@ -1,4 +1,5 @@
-import { MenuItem, Paper } from '@mui/material'
+import MenuItem from '@mui/material/MenuItem'
+import Paper from '@mui/material/Paper'
 import { Editor } from '@tiptap/react'
 import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'

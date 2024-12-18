@@ -1,5 +1,6 @@
-import { Close } from '@mui/icons-material'
-import { colors, Typography } from '@mui/material'
+import Close from '@mui/icons-material/Close'
+import { colors } from '@mui/material'
+import Typography from '@mui/material/Typography'
 import classNames from 'classnames'
 import { memo, MouseEvent, Profiler, useState } from 'react'
 import { useDispatch } from 'react-redux'

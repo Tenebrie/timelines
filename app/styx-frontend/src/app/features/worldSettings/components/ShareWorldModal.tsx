@@ -1,17 +1,15 @@
 import { useShareWorldMutation } from '@api/worldCollaboratorsApi'
-import { Add } from '@mui/icons-material'
-import { LoadingButton } from '@mui/lab'
-import {
-	Autocomplete,
-	Button,
-	createFilterOptions,
-	FormControl,
-	InputLabel,
-	MenuItem,
-	Select,
-	TextField,
-	Tooltip,
-} from '@mui/material'
+import Add from '@mui/icons-material/Add'
+import LoadingButton from '@mui/lab/LoadingButton'
+import { createFilterOptions } from '@mui/material'
+import Autocomplete from '@mui/material/Autocomplete'
+import Button from '@mui/material/Button'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
+import Tooltip from '@mui/material/Tooltip'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 

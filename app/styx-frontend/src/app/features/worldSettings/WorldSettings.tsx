@@ -1,4 +1,5 @@
-import { Paper, Stack } from '@mui/material'
+import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
 
 import { homeRoutes, useHomeRouter } from '@/router/routes/homeRoutes'
 

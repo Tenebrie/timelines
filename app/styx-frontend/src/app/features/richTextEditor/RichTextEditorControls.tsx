@@ -1,6 +1,6 @@
-import { Stack } from '@mui/material'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
 import { Editor } from '@tiptap/react'
 import { useCallback } from 'react'
 

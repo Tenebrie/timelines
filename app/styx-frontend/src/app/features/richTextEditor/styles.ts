@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 import { EditorContent } from '@tiptap/react'
 import styled from 'styled-components'
 

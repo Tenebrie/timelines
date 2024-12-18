@@ -1,9 +1,12 @@
-import { OutlinedInput, Slider, Stack } from '@mui/material'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import Slider from '@mui/material/Slider'
+import Stack from '@mui/material/Stack'
 import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 import { darkTheme, lightTheme } from '../features/theming/themes'
-import { colorStringToHsl, colorStringToHslWithDefault, hslToHex } from '../utils/getContrastTextColor'
+import { colorStringToHsl, colorStringToHslWithDefault } from '../utils/colors/colorStringToHsl'
+import { hslToHex } from '../utils/colors/hslToHex'
 import { ColoredChip } from './ColoredChip'
 
 type Props = {

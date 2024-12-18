@@ -1,6 +1,6 @@
 import Chip from '@mui/material/Chip'
 
-import { getContrastTextColor } from '@/app/utils/getContrastTextColor'
+import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
 
 type Props = {
 	text: string

@@ -1,5 +1,8 @@
-import { ZoomIn, ZoomOut } from '@mui/icons-material'
-import { Button, Paper, Stack } from '@mui/material'
+import ZoomIn from '@mui/icons-material/ZoomIn'
+import ZoomOut from '@mui/icons-material/ZoomOut'
+import Button from '@mui/material/Button'
+import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
 import { memo } from 'react'
 import { useSelector } from 'react-redux'
 

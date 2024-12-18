@@ -1,4 +1,7 @@
-import { Stack, Tab, Tabs, Typography } from '@mui/material'
+import Stack from '@mui/material/Stack'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
+import Typography from '@mui/material/Typography'
 import { useRef, useState } from 'react'
 import styled from 'styled-components'
 

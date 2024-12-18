@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import Typography from '@mui/material/Typography'
 import { memo, Profiler } from 'react'
 
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'

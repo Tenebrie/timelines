@@ -1,4 +1,4 @@
-import { Divider } from '@mui/material'
+import Divider from '@mui/material/Divider'
 import throttle from 'lodash.throttle'
 import { Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 

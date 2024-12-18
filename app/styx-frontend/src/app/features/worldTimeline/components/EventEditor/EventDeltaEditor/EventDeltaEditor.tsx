@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import { useSelector } from 'react-redux'
 
 import { getWorldState } from '@/app/features/worldTimeline/selectors'

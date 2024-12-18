@@ -1,4 +1,7 @@
-import { Divider, Paper, Stack, Typography } from '@mui/material'
+import Divider from '@mui/material/Divider'
+import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import React, { ReactNode } from 'react'
 
 type Props = {

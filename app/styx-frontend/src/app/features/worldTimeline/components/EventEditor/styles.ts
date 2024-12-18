@@ -1,4 +1,4 @@
-import { Container } from '@mui/material'
+import Container from '@mui/material/Container'
 import styled from 'styled-components'
 
 import { ScrollbarStyling } from '@/app/styles'

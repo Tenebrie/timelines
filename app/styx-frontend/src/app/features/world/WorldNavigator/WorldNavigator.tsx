@@ -1,5 +1,6 @@
-import { Menu, Public } from '@mui/icons-material'
-import { Button } from '@mui/material'
+import Menu from '@mui/icons-material/Menu'
+import Public from '@mui/icons-material/Public'
+import Button from '@mui/material/Button'
 import { memo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 

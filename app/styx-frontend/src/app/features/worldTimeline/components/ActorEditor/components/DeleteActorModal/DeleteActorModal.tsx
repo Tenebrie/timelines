@@ -1,6 +1,10 @@
-import { Delete } from '@mui/icons-material'
-import { LoadingButton } from '@mui/lab'
-import { Alert, Button, Collapse, Stack, Tooltip } from '@mui/material'
+import Delete from '@mui/icons-material/Delete'
+import LoadingButton from '@mui/lab/LoadingButton'
+import Alert from '@mui/material/Alert'
+import Button from '@mui/material/Button'
+import Collapse from '@mui/material/Collapse'
+import Stack from '@mui/material/Stack'
+import Tooltip from '@mui/material/Tooltip'
 import { useSelector } from 'react-redux'
 import { TransitionGroup } from 'react-transition-group'
 

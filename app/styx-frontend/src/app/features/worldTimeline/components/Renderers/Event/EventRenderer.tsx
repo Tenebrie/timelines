@@ -1,4 +1,4 @@
-import { Edit } from '@mui/icons-material'
+import Edit from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import cx from 'classnames'

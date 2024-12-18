@@ -1,4 +1,4 @@
-import { Link } from '@mui/icons-material'
+import Link from '@mui/icons-material/Link'
 import { useTheme } from '@mui/material'
 import ListItemIcon from '@mui/material/ListItemIcon'
 

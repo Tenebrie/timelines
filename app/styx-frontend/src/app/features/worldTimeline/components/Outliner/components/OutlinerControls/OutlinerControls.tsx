@@ -1,5 +1,6 @@
-import { Add } from '@mui/icons-material'
-import { Box, Fab } from '@mui/material'
+import Add from '@mui/icons-material/Add'
+import Box from '@mui/material/Box'
+import Fab from '@mui/material/Fab'
 import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useSelector } from 'react-redux'
 

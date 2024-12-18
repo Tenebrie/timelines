@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import { useSelector } from 'react-redux'
 
 import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'

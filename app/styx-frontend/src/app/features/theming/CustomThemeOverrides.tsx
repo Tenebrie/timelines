@@ -1,5 +1,6 @@
 import { Theme } from '@emotion/react'
-import { Box, SxProps } from '@mui/material'
+import { SxProps } from '@mui/material'
+import Box from '@mui/material/Box'
 
 import { useBrowserSpecificScrollbars } from '@/hooks/useBrowserSpecificScrollbars'
 import { useCustomTheme } from '@/hooks/useCustomTheme'

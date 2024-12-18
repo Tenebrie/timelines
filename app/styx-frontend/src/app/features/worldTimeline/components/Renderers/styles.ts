@@ -1,4 +1,4 @@
-import { ChevronLeft } from '@mui/icons-material'
+import ChevronLeft from '@mui/icons-material/ChevronLeft'
 import styled from 'styled-components'
 
 export const ShowHideChevron = styled(ChevronLeft)`

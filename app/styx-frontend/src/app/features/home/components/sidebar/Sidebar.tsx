@@ -1,4 +1,5 @@
-import { Button, TextField } from '@mui/material'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 
 import { SidebarContainer } from './styles'

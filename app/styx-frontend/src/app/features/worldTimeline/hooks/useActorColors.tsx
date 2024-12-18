@@ -1,7 +1,8 @@
-import { Avatar, Stack } from '@mui/material'
+import Avatar from '@mui/material/Avatar'
 import { blueGrey, brown, deepPurple, green, grey, lime, pink, red } from '@mui/material/colors'
 import ListItemText from '@mui/material/ListItemText'
 import MenuItem from '@mui/material/MenuItem'
+import Stack from '@mui/material/Stack'
 import { useCallback, useMemo } from 'react'
 
 export const useActorColors = () => {

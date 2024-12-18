@@ -1,4 +1,9 @@
-import { CircularProgress, Divider, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
+import CircularProgress from '@mui/material/CircularProgress'
+import Divider from '@mui/material/Divider'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 import { memo, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
