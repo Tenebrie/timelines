@@ -101,7 +101,6 @@ describe('<WorldSettings />', () => {
 
 			const { invocations } = mockAddCollaborator(server, { worldId: 'world-1111', response: null })
 
-			screen.debug(undefined, 1000000)
 			await user.click(await screen.findByText('Share world with specific people...'))
 			await user.click(await screen.findByLabelText('Emails'))
 			await user.keyboard('user@localhost{enter}')

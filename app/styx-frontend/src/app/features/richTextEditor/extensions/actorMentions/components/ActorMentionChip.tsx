@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { getWorldState } from '@/app/features/worldTimeline/selectors'
+import { colorStringToHsl } from '@/app/utils/colors/colorStringToHsl'
 import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
 import { QueryParams } from '@/router/routes/QueryParams'
 import { worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
@@ -22,6 +23,7 @@ export const MentionChipInternal = ({ actorId }: Props) => {
 	})
 
 	const textColor = getContrastTextColor(actorColor ?? '#eee')
+	const parsedColor = colorStringToHsl(actorColor ?? '#000')
 
 	return (
 		<Chip
@@ -39,6 +41,12 @@ export const MentionChipInternal = ({ actorId }: Props) => {
 					query: { [QueryParams.SELECTED_TIME]: QueryStrategy.Preserve },
 				})
 			}
+			style={{
+				background: `linear-gradient(90deg,
+					hsl(${parsedColor.h * 360 - 15}deg, ${parsedColor.s * 100}%, ${parsedColor.l * 100}%) 0%,
+					hsl(${parsedColor.h * 360 + 0}deg, ${parsedColor.s * 100}%, ${parsedColor.l * 100}%) 50%,
+					hsl(${parsedColor.h * 360 + 15}deg, ${parsedColor.s * 100}%, ${parsedColor.l * 100}%) 100%)`,
+			}}
 			label={actorName}
 		/>
 	)

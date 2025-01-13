@@ -44,6 +44,7 @@ describe('<EventEditor />', () => {
 					id: '2222',
 					name: 'Event title',
 					description: 'Amazing event text',
+					descriptionRich: 'Amazing event text',
 					customName: true,
 				}),
 			),
@@ -61,6 +62,7 @@ describe('<EventEditor />', () => {
 					id: '2222',
 					name: 'Event title',
 					description: 'Amazing event text',
+					descriptionRich: 'Amazing event text',
 					customName: false,
 				}),
 			),
@@ -89,6 +91,7 @@ describe('<EventEditor />', () => {
 					id: '2222',
 					name: 'Event title',
 					description: 'Amazing event text',
+					descriptionRich: 'Amazing event text',
 					customName: true,
 				}),
 			),
@@ -101,13 +104,14 @@ describe('<EventEditor />', () => {
 				id: '2222',
 				name: 'New title',
 				description: 'New description',
+				descriptionRich: 'New description',
 			}),
 		})
 
 		await user.clear(screen.getByLabelText('Name'))
 		await user.type(screen.getByLabelText('Name'), 'New title')
-		await user.clear(screen.getByLabelText('Content'))
-		await user.type(screen.getByLabelText('Content'), 'New description')
+		await user.clear(screen.getByPlaceholderText('Content'))
+		await user.type(screen.getByPlaceholderText('Content'), 'New description')
 		await user.click(screen.getAllByTestId('CalendarMonthIcon')[0])
 		await user.type(screen.getAllByLabelText('Minute')[0], '1500')
 		await user.click(screen.getByText('Save'))
@@ -137,6 +141,7 @@ describe('<EventEditor />', () => {
 					name: 'Amazing event text',
 					icon: 'fire',
 					description: 'Amazing event text',
+					descriptionRich: 'Amazing event text',
 					extraFields: ['EventIcon'],
 				}),
 			),
@@ -153,6 +158,7 @@ describe('<EventEditor />', () => {
 					id: '2222',
 					name: 'Amazing event text',
 					description: 'Amazing event text',
+					descriptionRich: 'Amazing event text',
 					extraFields: ['EventIcon'],
 				}),
 			),
@@ -165,6 +171,7 @@ describe('<EventEditor />', () => {
 				id: '2222',
 				name: 'Amazing event text',
 				description: 'Amazing event text',
+				descriptionRich: 'Amazing event text',
 				extraFields: ['EventIcon'],
 			}),
 		})
@@ -192,6 +199,7 @@ describe('<EventEditor />', () => {
 					id: '2222',
 					name: 'Event title',
 					description: 'Amazing event text',
+					descriptionRich: 'Amazing event text',
 				}),
 			),
 		)
@@ -203,6 +211,7 @@ describe('<EventEditor />', () => {
 				id: '2222',
 				name: 'Event title',
 				description: 'Amazing event text',
+				descriptionRich: 'Amazing event text',
 			}),
 		})
 

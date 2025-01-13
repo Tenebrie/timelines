@@ -82,6 +82,8 @@ export const TimePickerComponent = ({ calendar, initialTimestamp, visible, onSet
 		setRenderInt(renderInt + 1)
 	}, [calendar, initialTimestamp, months, oldCalendar, parsedTime, renderInt])
 
+	const actualSelectedMonth = months.includes(selectedMonth.current) ? selectedMonth.current : months[0]
+
 	return (
 		<Spoiler $visible={visible}>
 			<Container>
@@ -100,7 +102,7 @@ export const TimePickerComponent = ({ calendar, initialTimestamp, visible, onSet
 					<FormControl style={{ width: '100%' }}>
 						<InputLabel id="time-picker-month-label">Month</InputLabel>
 						<Select
-							value={selectedMonth.current.name}
+							value={actualSelectedMonth.name}
 							label="Month"
 							labelId="time-picker-month-label"
 							onChange={(event) => {

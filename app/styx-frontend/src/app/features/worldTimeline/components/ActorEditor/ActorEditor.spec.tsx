@@ -1,4 +1,4 @@
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import { setupServer } from 'msw/node'
 
 import { mockActorModel, mockUpdateActor } from '@/api/rheaApi.mock'
@@ -45,7 +45,7 @@ describe('ActorEditor', () => {
 
 		expect(screen.getByDisplayValue('Actor name')).toBeInTheDocument()
 		expect(screen.getByDisplayValue('Actor title')).toBeInTheDocument()
-		expect(screen.getByDisplayValue('#008080')).toBeInTheDocument()
+		expect(screen.getByDisplayValue('hsl(180, 100%, 25%)')).toBeInTheDocument()
 		expect(screen.getByDisplayValue('This is the actor description')).toBeInTheDocument()
 	})
 
@@ -319,8 +319,8 @@ describe('ActorEditor', () => {
 			},
 		})
 
-		await user.click(screen.getByLabelText('Color'))
-		await user.click(screen.getByText('Pink'))
+		await user.clear(within(screen.getByTestId('color-input')).getByRole('textbox'))
+		await user.type(screen.getByTestId('color-input'), '#f48fb1')
 
 		const mock = mockUpdateActor(server, {
 			worldId: 'world-1111',

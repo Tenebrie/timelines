@@ -11,6 +11,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { RichTextEditor } from '@/app/features/richTextEditor/RichTextEditor'
+import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { WorldEvent } from '@/app/features/worldTimeline/types'
@@ -133,7 +134,11 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 						</Button>
 					</Tooltip>
 				</Stack>
-				<RichTextEditor key={createEventKey} value={descriptionRich} onChange={onDescriptionChange} />
+				<RichTextEditorWithFallback
+					key={createEventKey}
+					value={descriptionRich}
+					onChange={onDescriptionChange}
+				/>
 				<Stack direction="row-reverse" justifyContent="space-between">
 					{mode !== 'edit' && (
 						<Tooltip title={shortcutLabel} arrow placement="top">

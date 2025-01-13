@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 
 import { mockEventModel } from '@/api/rheaApi.mock'
 import { renderWithProviders } from '@/jest/renderWithProviders'
@@ -76,6 +76,6 @@ describe('<Timeline />', () => {
 	it('respects the world time origin', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'PF2E', timeOrigin: '100000' }))
 
-		expect(await screen.findByText('(03) Pharast 11, 4723')).toBeInTheDocument()
+		waitFor(async () => expect(await screen.findByText('(03) Pharast 11, 4723')).toBeInTheDocument())
 	})
 })

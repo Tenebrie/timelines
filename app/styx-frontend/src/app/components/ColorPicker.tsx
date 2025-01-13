@@ -23,13 +23,16 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 
 	const [inputValue, setInputValue] = useState<string | null>(null)
 
+	/**
+	 * For precise RGB -> HSL conversions, internal values range from 0 to 1000 instead of 0 to 100.
+	 */
 	const [hue, setHue] = useState(Math.round(parsedValue.h * 360))
-	const [saturation, setSaturation] = useState(Math.round(parsedValue.s * 100))
-	const [lightness, setLightness] = useState(Math.round(parsedValue.l * 100))
+	const [saturation, setSaturation] = useState(Math.round(parsedValue.s * 1000))
+	const [lightness, setLightness] = useState(Math.round(parsedValue.l * 1000))
 
 	const calculatedHue = useMemo(() => Math.round(hue), [hue])
 	const color = useMemo(
-		() => `hsl(${calculatedHue}, ${saturation}%, ${lightness}%)`,
+		() => `hsl(${calculatedHue}, ${Math.round(saturation / 10)}%, ${Math.round(lightness / 10)}%)`,
 		[calculatedHue, lightness, saturation],
 	)
 
@@ -39,15 +42,15 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 		try {
 			const parsedValue = colorStringToHsl(value)
 			setHue(Math.max(0, Math.min(360, Math.round(parsedValue.h * 360))))
-			setSaturation(Math.max(0, Math.min(100, Math.round(parsedValue.s * 100))))
-			setLightness(Math.max(0, Math.min(100, Math.round(parsedValue.l * 100))))
+			setSaturation(Math.max(0, Math.min(1000, Math.round(parsedValue.s * 1000))))
+			setLightness(Math.max(0, Math.min(1000, Math.round(parsedValue.l * 1000))))
 		} catch {
 			//
 		}
 	}
 
 	useEffect(() => {
-		const hexValue = hslToHex(hue / 360, saturation / 100, lightness / 100)
+		const hexValue = hslToHex(hue / 360, saturation / 1000, lightness / 1000)
 		if (hexValue === initialValue || color === initialValue) {
 			return
 		}
@@ -55,9 +58,6 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 		onChangeHex?.(hexValue)
 		onChangeHsl?.(color)
 	}, [calculatedHue, color, lightness, onChangeHex, onChangeHsl, saturation, hue, initialValue])
-
-	const hueShowColor = `hsl(${calculatedHue}, ${saturation}%, ${lightness}%)`
-	const saturationShowColor = `hsl(${calculatedHue}, ${saturation}%, ${lightness}%)`
 
 	return (
 		<Stack direction="row" gap={4}>
@@ -105,6 +105,7 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 					size="small"
 					sx={{ width: '192px' }}
 					value={inputValue ?? color}
+					data-testid="color-input"
 					onChange={(event) => onSetFullValue(event.target.value)}
 				/>
 			</Stack>
@@ -115,8 +116,8 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 				sx={{
 					'* .MuiSlider-rail': {
 						'--hue': `${hue}deg`,
-						'--saturation': `${saturation}%`,
-						'--lightness': `${lightness}%`,
+						'--saturation': `${saturation / 10}%`,
+						'--lightness': `${lightness / 10}%`,
 					},
 				}}
 			>
@@ -130,7 +131,7 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 					<HueSlider
 						step={1}
 						max={360}
-						$color={hueShowColor}
+						$color={color}
 						value={hue}
 						onChange={(_, value) => {
 							setHue(value as number)
@@ -151,10 +152,10 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 				<Stack direction="row" gap={4} sx={{ alignItems: 'center' }}>
 					<SaturationSlider
 						step={1}
-						$color={saturationShowColor}
-						value={saturation}
+						$color={color}
+						value={saturation / 10}
 						onChange={(_, value) => {
-							setSaturation(value as number)
+							setSaturation((value as number) * 10)
 							setInputValue(null)
 						}}
 					/>
@@ -162,9 +163,9 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 						size="small"
 						sx={{ width: '110px' }}
 						type="number"
-						value={saturation}
+						value={Math.round(saturation / 10)}
 						onChange={(event) => {
-							setSaturation(Math.max(0, Math.min(100, Math.round(Number(event.target.value)))))
+							setSaturation(Math.max(0, Math.min(1000, Math.round(Number(event.target.value) * 10))))
 							setInputValue(null)
 						}}
 					/>
@@ -173,9 +174,9 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 					<LightnessSlider
 						step={1}
 						$color={color}
-						value={lightness}
+						value={lightness / 10}
 						onChange={(_, value) => {
-							setLightness(value as number)
+							setLightness((value as number) * 10)
 							setInputValue(null)
 						}}
 					/>
@@ -183,9 +184,9 @@ export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) =
 						size="small"
 						sx={{ width: '110px' }}
 						type="number"
-						value={lightness}
+						value={Math.round(lightness / 10)}
 						onChange={(event) => {
-							setLightness(Math.max(0, Math.min(100, Math.round(Number(event.target.value)))))
+							setLightness(Math.max(0, Math.min(1000, Math.round(Number(event.target.value) * 10))))
 							setInputValue(null)
 						}}
 					/>

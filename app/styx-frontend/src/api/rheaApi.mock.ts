@@ -95,7 +95,7 @@ export const mockGetWorldDetails = (
 ) => generateEndpointMock(server, { method: 'get', path: `/api/world/${params.worldId}`, ...params })
 
 export const mockCreateWorld = (server: SetupServer, params: MockParams<CreateWorldApiResponse>) =>
-	generateEndpointMock(server, { method: 'post', path: `/api/world`, ...params })
+	generateEndpointMock(server, { method: 'post', path: `/api/worlds`, ...params })
 
 export const mockDeleteWorld = (
 	server: SetupServer,
@@ -222,7 +222,7 @@ export const mockWorldItemModel = (world: Partial<WorldItem> = {}): WorldItem =>
 	id: getRandomId(),
 	name: 'World name',
 	description: 'World description',
-	calendar: 'COUNTUP',
+	calendar: 'EARTH',
 	timeOrigin: '0',
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
