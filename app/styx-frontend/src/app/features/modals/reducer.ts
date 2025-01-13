@@ -3,6 +3,8 @@ import { createSlice } from '@reduxjs/toolkit'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { isEventObject } from '@/app/utils/isEventObject'
+
 import { User } from '../auth/reducer'
 import { ActorDetails, WorldEvent, WorldEventDelta, WorldEventTrack } from '../worldTimeline/types'
 
@@ -53,6 +55,9 @@ const modals = {
 		isOpen: false as boolean,
 		actor: null as ActorDetails | null,
 	},
+	timeTravelModal: {
+		isOpen: false as boolean,
+	},
 
 	/* WorldList */
 	worldWizardModal: {
@@ -99,11 +104,12 @@ export const useModal = <T extends ValidModals>(id: T) => {
 	const dispatch = useDispatch()
 	const open = useCallback(
 		(data: Omit<(typeof modals)[T], 'isOpen'>) => {
+			const modalData = isEventObject(data) ? {} : data
 			dispatch(
 				modalsSlice.actions.openModal({
 					id,
 					data: {
-						...data,
+						...modalData,
 						isOpen: true,
 					},
 				}),

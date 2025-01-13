@@ -5,6 +5,7 @@ import { isMacOS } from '../app/utils/isMacOS'
 export const Shortcut = {
 	Enter: 'Enter',
 	CtrlEnter: 'Ctrl+Enter',
+	Search: 'Ctrl+f',
 } as const
 
 export const RegisteredShortcuts: Record<
@@ -13,6 +14,7 @@ export const RegisteredShortcuts: Record<
 > = {
 	[Shortcut.Enter]: [],
 	[Shortcut.CtrlEnter]: [],
+	[Shortcut.Search]: [],
 }
 
 export const useShortcutManager = () => {

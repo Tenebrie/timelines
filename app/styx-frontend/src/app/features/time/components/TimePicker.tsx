@@ -51,7 +51,6 @@ export const TimePickerComponent = ({ calendar, initialTimestamp, visible, onSet
 		const value = pickerToTimestamp({
 			year: years.current,
 			monthIndex: months.length > 0 ? months.indexOf(selectedMonth.current) : 0,
-			monthDay: days.current - 1,
 			day: days.current - 1,
 			hour: hours.current,
 			minute: minutes.current,

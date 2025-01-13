@@ -377,7 +377,6 @@ export const useTimelineNavigation = ({
 					day: 0,
 					hour: 0,
 					minute: 0,
-					monthDay: 1,
 					monthIndex: t.monthIndex,
 					year: t.year,
 				})

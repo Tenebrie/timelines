@@ -12,7 +12,6 @@ import { isNotNull } from '@/app/utils/isNotNull'
 
 import { StyledListItemButton, ZebraWrapper } from '../../Outliner/styles'
 import { useTimelineScroll } from '../../Timeline/hooks/useTimelineScroll'
-import { useActorsToString } from './useActorsToString'
 
 type Props = {
 	event: WorldEvent
@@ -21,11 +20,7 @@ type Props = {
 	active: boolean
 }
 
-export const EventContentRenderer = ({ event, owningActor, short, active }: Props) => {
-	const maxActorsDisplayed = short ? 2 : 5
-	const actorsToString = useActorsToString()
-	const mentionedActors = actorsToString(event.mentionedActors, owningActor, maxActorsDisplayed)
-
+export const EventContentRenderer = ({ event, active }: Props) => {
 	const { timeToLabel } = useWorldTime()
 	const scrollTimelineTo = useTimelineBusDispatch()
 	const { getScroll: getTimelineScroll } = useTimelineScroll()
@@ -72,7 +67,7 @@ export const EventContentRenderer = ({ event, owningActor, short, active }: Prop
 				{paragraphs.map((p, index) => (
 					<ZebraWrapper key={p} $zebra={index % 2 === 1}>
 						<ListItem disablePadding>
-							<StyledListItemButton>
+							<StyledListItemButton disableRipple disableTouchRipple sx={{ cursor: 'default' }}>
 								<ListItemText
 									data-hj-suppress
 									primary={

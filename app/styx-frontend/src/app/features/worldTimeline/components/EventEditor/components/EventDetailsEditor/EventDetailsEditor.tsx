@@ -10,6 +10,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
+import { useModal } from '@/app/features/modals/reducer'
 import { RichTextEditor } from '@/app/features/richTextEditor/RichTextEditor'
 import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { TimestampField } from '@/app/features/time/components/TimestampField'
@@ -109,11 +110,17 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 	const { timeToLabel } = useWorldTime()
 	const timeLabel = useMemo(() => timeToLabel(timestamp), [timeToLabel, timestamp])
 
+	const { open: openTimeTravelModal } = useModal('timeTravelModal')
+
 	const leftColumn = (
 		<OutlinedContainer
 			label={mode === 'edit' ? 'Edit Event' : 'Create Event'}
 			gap={3}
-			secondaryLabel={<Button sx={{ padding: '4px 12px' }}>{timeLabel}</Button>}
+			secondaryLabel={
+				<Button sx={{ padding: '4px 12px' }} onClick={openTimeTravelModal}>
+					{timeLabel}
+				</Button>
+			}
 		>
 			<Stack spacing={2} direction="column">
 				<Stack direction="row" gap={1} width="100%">

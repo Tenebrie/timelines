@@ -34,7 +34,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 	const usedCalendar = useMemo<WorldCalendarType>(() => calendar ?? worldCalendar, [calendar, worldCalendar])
 
 	const { getCalendar } = useWorldCalendar()
-	const calendarData = useMemo(() => getCalendar(usedCalendar), [getCalendar, usedCalendar])
+	// const calendarData = useMemo(() => getCalendar(usedCalendar), [getCalendar, usedCalendar])
 	const calendarDefinition = useMemo(() => getCalendar(usedCalendar).definition, [getCalendar, usedCalendar])
 	const months = useMemo(
 		() =>
@@ -117,7 +117,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 	)
 
 	const pickerToTimestamp = useCallback(
-		(picker: Omit<TimeDefinition, 'monthName' | 'monthNameShort'>) => {
+		(picker: Omit<TimeDefinition, 'monthName' | 'monthNameShort' | 'monthDay'>) => {
 			const { year, monthIndex, day, hour, minute } = picker
 			if (calendarDefinition.engine === 'SIMPLE') {
 				const inMillisecond = calendarDefinition.units.inMillisecond

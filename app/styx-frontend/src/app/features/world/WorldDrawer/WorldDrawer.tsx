@@ -135,9 +135,9 @@ export const WorldDrawer = () => {
 					<StyledButton variant={getButtonStyle(worldRoutes.overview)} onClick={onOverviewClick}>
 						<ViewList /> Overview
 					</StyledButton>
-					<StyledButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
+					{/* <StyledButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
 						<Person /> Actors
-					</StyledButton>
+					</StyledButton> */}
 					<Divider />
 					<StyledButton variant={getButtonStyle(worldRoutes.settings)} onClick={onSettingsClick}>
 						<Settings /> Settings
