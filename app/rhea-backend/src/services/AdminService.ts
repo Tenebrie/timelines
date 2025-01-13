@@ -32,7 +32,7 @@ export const AdminService = {
 									},
 								},
 							],
-					  }
+						}
 					: {}),
 			},
 			orderBy: [{ level: 'desc' }, { updatedAt: 'desc' }],
@@ -60,7 +60,7 @@ export const AdminService = {
 									},
 								},
 							],
-					  }
+						}
 					: {}),
 			},
 		})

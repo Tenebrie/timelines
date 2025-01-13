@@ -1,7 +1,9 @@
 import { useDeleteWorldMutation } from '@api/worldListApi'
-import { Delete } from '@mui/icons-material'
-import { LoadingButton } from '@mui/lab'
-import { Button, Stack, Tooltip } from '@mui/material'
+import Delete from '@mui/icons-material/Delete'
+import LoadingButton from '@mui/lab/LoadingButton'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import Tooltip from '@mui/material/Tooltip'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 

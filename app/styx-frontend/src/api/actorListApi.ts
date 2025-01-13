@@ -34,7 +34,27 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as actorListApi }
 export type CreateActorApiResponse = /** status 200  */ {
+	statements: {
+		id: string
+	}[]
+	relationships: {
+		name: string
+		originId: string
+		receiverId: string
+	}[]
+	receivedRelationships: {
+		name: string
+		originId: string
+		receiverId: string
+	}[]
+	description: string
+	name: string
 	id: string
+	createdAt: string
+	updatedAt: string
+	title: string
+	color: string
+	worldId: string
 }
 export type CreateActorApiArg = {
 	/** Any string value */

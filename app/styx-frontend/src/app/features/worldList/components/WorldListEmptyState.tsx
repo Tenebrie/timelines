@@ -1,4 +1,6 @@
-import { Button, ListItemButton, Stack } from '@mui/material'
+import Button from '@mui/material/Button'
+import ListItemButton from '@mui/material/ListItemButton'
+import Stack from '@mui/material/Stack'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 

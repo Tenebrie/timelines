@@ -1,4 +1,4 @@
-import { Pagination as MuiPagination } from '@mui/material'
+import MuiPagination from '@mui/material/Pagination'
 
 import { useDebouncedState } from '@/hooks/useDebouncedState'
 

@@ -1,14 +1,14 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Actor, WorldEvent } from '../world/types'
-import { loadPreferences } from './loadPreferences'
+import { Actor, WorldEvent } from '../worldTimeline/types'
+import { loadPreferences, PreferencesKey } from './loadPreferences'
 
 const initialState = loadPreferences()
 
 const saveToLocalStorage = (state: PreferencesState) => {
 	window.localStorage.setItem(
-		'userPreferences/v1',
+		PreferencesKey,
 		JSON.stringify({
 			...state,
 			outliner: {
@@ -39,17 +39,6 @@ export const preferencesSlice = createSlice({
 		},
 
 		/* Timeline */
-		setUseCustomTimelineSpacing: (state, { payload }: PayloadAction<boolean>) => {
-			state.timeline.useCustomLineSpacing = payload
-			if (payload === false) {
-				state.timeline.lineSpacing = initialState.timeline.lineSpacing
-			}
-			saveToLocalStorage(state)
-		},
-		setTimelineSpacing: (state, { payload }: PayloadAction<number>) => {
-			state.timeline.lineSpacing = payload
-			saveToLocalStorage(state)
-		},
 		setTimelineHeight: (state, { payload }: PayloadAction<number>) => {
 			state.timeline.containerHeight = payload
 			saveToLocalStorage(state)
@@ -106,6 +95,6 @@ export const preferencesSlice = createSlice({
 })
 
 export type PreferencesState = typeof initialState
-export const PreferencesInitialState = initialState
+export const preferencesInitialState = initialState
 
 export default preferencesSlice.reducer

@@ -9,7 +9,7 @@ type Props<ArgsT> = {
 
 export const useDoubleClick = <ArgsT,>({ onClick, onDoubleClick, ignoreDelay }: Props<ArgsT>) => {
 	const singleClickTimeout = useRef<number>(0)
-	const singleClickArguments = useRef<ArgsT>()
+	const singleClickArguments = useRef<ArgsT | null>(null)
 	const lastClickTimestampRef = useRef<number>(0)
 	const lastClickTargetRef = useRef<EventTarget | null>(null)
 

@@ -1,5 +1,9 @@
-import { AdminPanelSettings, Home, Speed } from '@mui/icons-material'
-import { Button, Divider, Stack } from '@mui/material'
+import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings'
+import Home from '@mui/icons-material/Home'
+import Speed from '@mui/icons-material/Speed'
+import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
+import Stack from '@mui/material/Stack'
 import { ReactElement, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -13,6 +17,7 @@ import { getAuthState } from '../features/auth/selectors'
 import { SmallProfile } from '../features/auth/smallProfile/SmallProfile'
 import { PerformanceMetrics } from '../features/profiling/PerformanceMetrics'
 import { ThemeModeToggle } from '../features/theming/ThemeModeToggle'
+import { isDev } from '../utils/isDev'
 
 const Container = styled.div<{ $theme: CustomTheme }>`
 	width: calc(100% - 16px);
@@ -85,7 +90,7 @@ export const BaseNavigator = ({ children }: Props) => {
 							<AdminPanelSettings /> Admin
 						</Button>
 					)}
-					{user?.level === 'Admin' && (
+					{user?.level === 'Admin' && isDev && (
 						<Button
 							aria-label="Profiler"
 							onClick={onProfile}

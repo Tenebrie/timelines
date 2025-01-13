@@ -12,6 +12,7 @@ export const makeCreateWorldEventQuery = (
 		| 'extraFields'
 		| 'name'
 		| 'description'
+		| 'descriptionRich'
 		| 'timestamp'
 		| 'revokedAt'
 		| 'icon'
@@ -19,9 +20,8 @@ export const makeCreateWorldEventQuery = (
 		| 'worldEventTrackId'
 	> & {
 		customNameEnabled: boolean
-		targetActors: Actor[]
 		mentionedActors: Actor[]
-	}
+	},
 ) =>
 	getPrismaClient().worldEvent.create({
 		data: {
@@ -31,11 +31,9 @@ export const makeCreateWorldEventQuery = (
 			name: data.name,
 			icon: data.icon,
 			description: data.description,
+			descriptionRich: data.descriptionRich,
 			timestamp: data.timestamp,
 			revokedAt: data.revokedAt,
-			targetActors: {
-				connect: data.targetActors.map((actor) => ({ id: actor.id })),
-			},
 			mentionedActors: {
 				connect: data.mentionedActors.map((actor) => ({ id: actor.id })),
 			},

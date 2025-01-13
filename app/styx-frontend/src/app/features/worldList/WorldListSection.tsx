@@ -1,11 +1,13 @@
-import { Delete, Edit } from '@mui/icons-material'
-import { Button, Stack, Tooltip } from '@mui/material'
+import Delete from '@mui/icons-material/Delete'
+import Edit from '@mui/icons-material/Edit'
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import Tooltip from '@mui/material/Tooltip'
 import { useDispatch } from 'react-redux'
 
 import { GetWorldsApiResponse } from '@/api/worldListApi'
-import { homeRoutes } from '@/router/routes/homeRoutes'
-import { useRouter } from '@/router/routes/routes'
-import { worldRoutes } from '@/router/routes/worldRoutes'
+import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
 
 import { OutlinedContainer } from '../../components/OutlinedContainer'
 import { TrunkatedSpan } from '../../components/TrunkatedTypography'
@@ -24,7 +26,8 @@ type Props = {
 }
 
 export const WorldListSection = ({ worlds, label, showActions, showEmptyState, showCreateButton }: Props) => {
-	const { navigateTo } = useRouter()
+	const { navigateTo } = useWorldRouter()
+	const { navigateTo: navigateToTimeline } = useWorldTimelineRouter()
 
 	const dispatch = useDispatch()
 	const { openWorldWizardModal, openDeleteWorldModal } = worldListSlice.actions
@@ -34,8 +37,8 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 	}
 
 	const onLoad = (id: string) => {
-		navigateTo({
-			target: worldRoutes.outliner,
+		navigateToTimeline({
+			target: worldTimelineRoutes.outliner,
 			args: {
 				worldId: id,
 			},
@@ -44,7 +47,7 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 
 	const onEdit = (id: string) => {
 		navigateTo({
-			target: homeRoutes.worldDetails,
+			target: worldRoutes.settings,
 			args: { worldId: id },
 		})
 	}

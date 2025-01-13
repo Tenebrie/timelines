@@ -2,20 +2,20 @@ import { useBaseRouter } from '../useBaseRouter'
 import { adminQueryParams, adminRoutes } from './adminRoutes'
 import { appQueryParams, appRoutes } from './appRoutes'
 import { homeQueryParams, homeRoutes } from './homeRoutes'
-import { worldQueryParams, worldRoutes } from './worldRoutes'
+import { worldTimelineQueryParams, worldTimelineRoutes } from './worldTimelineRoutes'
 
 export const routes = {
 	...adminRoutes,
 	...appRoutes,
 	...homeRoutes,
-	...worldRoutes,
+	...worldTimelineRoutes,
 }
 
 export const allQueries = {
 	...adminQueryParams,
 	...appQueryParams,
 	...homeQueryParams,
-	...worldQueryParams,
+	...worldTimelineQueryParams,
 }
 
 export const useRouter = () => useBaseRouter(routes, allQueries)

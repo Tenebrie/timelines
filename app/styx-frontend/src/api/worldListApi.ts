@@ -11,7 +11,7 @@ const injectedRtkApi = api
 				providesTags: ['worldList'],
 			}),
 			createWorld: build.mutation<CreateWorldApiResponse, CreateWorldApiArg>({
-				query: (queryArg) => ({ url: `/api/world`, method: 'POST', body: queryArg.body }),
+				query: (queryArg) => ({ url: `/api/worlds`, method: 'POST', body: queryArg.body }),
 				invalidatesTags: ['worldList'],
 			}),
 			deleteWorld: build.mutation<DeleteWorldApiResponse, DeleteWorldApiArg>({
@@ -29,6 +29,7 @@ export type GetWorldsApiResponse = /** status 200  */ {
 			userId: string
 			access: 'ReadOnly' | 'Editing'
 		}[]
+		description: string
 		name: string
 		id: string
 		createdAt: string
@@ -44,6 +45,7 @@ export type GetWorldsApiResponse = /** status 200  */ {
 			userId: string
 			access: 'ReadOnly' | 'Editing'
 		}[]
+		description: string
 		name: string
 		id: string
 		createdAt: string
@@ -59,6 +61,7 @@ export type GetWorldsApiResponse = /** status 200  */ {
 			userId: string
 			access: 'ReadOnly' | 'Editing'
 		}[]
+		description: string
 		name: string
 		id: string
 		createdAt: string
@@ -77,11 +80,13 @@ export type CreateWorldApiResponse = /** status 200  */ {
 export type CreateWorldApiArg = {
 	body: {
 		name: string
+		description?: string
 		calendar?: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin?: number
 	}
 }
 export type DeleteWorldApiResponse = /** status 200  */ {
+	description: string
 	name: string
 	id: string
 	createdAt: string

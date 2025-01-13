@@ -1,7 +1,8 @@
-import { DeepPartial } from '@reduxjs/toolkit'
 import { DefaultBodyType, rest } from 'msw'
 import { SetupServer } from 'msw/node'
 import { v4 as getRandomId } from 'uuid'
+
+import { DeepPartial } from '@/types/utils'
 
 import { User } from '../app/features/auth/reducer'
 import {
@@ -10,8 +11,8 @@ import {
 	WorldDetails,
 	WorldEventDelta,
 	WorldItem,
-} from '../app/features/world/types'
-import { WorldEvent } from '../app/features/world/types'
+} from '../app/features/worldTimeline/types'
+import { WorldEvent } from '../app/features/worldTimeline/types'
 import { UpdateActorApiResponse } from './actorListApi'
 import { GetAnnouncementsApiResponse } from './announcementListApi'
 import { CheckAuthenticationApiResponse, CreateAccountApiResponse, PostLoginApiResponse } from './authApi'
@@ -39,7 +40,9 @@ const generateEndpointMock = (
 	let invocations: { jsonBody: unknown }[] = []
 
 	const handler = rest[method](path, async (req, res, ctx) => {
-		invocations.push({ jsonBody: req.method === 'POST' || req.method === 'PATCH' ? await req.json() : {} })
+		invocations.push({
+			jsonBody: req.method === 'POST' || req.method === 'PATCH' ? await req.json() : {},
+		})
 
 		const status = (() => {
 			if ('error' in params) {
@@ -92,7 +95,7 @@ export const mockGetWorldDetails = (
 ) => generateEndpointMock(server, { method: 'get', path: `/api/world/${params.worldId}`, ...params })
 
 export const mockCreateWorld = (server: SetupServer, params: MockParams<CreateWorldApiResponse>) =>
-	generateEndpointMock(server, { method: 'post', path: `/api/world`, ...params })
+	generateEndpointMock(server, { method: 'post', path: `/api/worlds`, ...params })
 
 export const mockDeleteWorld = (
 	server: SetupServer,
@@ -218,7 +221,8 @@ export const mockCollaboratingUser = (data: DeepPartial<CollaboratingUser> = {})
 export const mockWorldItemModel = (world: Partial<WorldItem> = {}): WorldItem => ({
 	id: getRandomId(),
 	name: 'World name',
-	calendar: 'COUNTUP',
+	description: 'World description',
+	calendar: 'EARTH',
 	timeOrigin: '0',
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
@@ -261,15 +265,13 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	worldId: 'world-1111-2222-3333-4444',
 	name: 'Event name',
 	description: 'Event description',
+	descriptionRich: '<p>Event description</p>',
 	type: 'SCENE',
 	icon: 'default',
 	timestamp: 0,
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
-	targetActors: [],
 	mentionedActors: [],
-	introducedActors: [],
-	terminatedActors: [],
 	extraFields: [],
 	customName: false,
 	deltaStates: [],
@@ -287,6 +289,7 @@ export const mockEventDeltaModel = (
 	timestamp: 0,
 	name: 'Delta name',
 	description: 'Delta description',
+	descriptionRich: '<p>Delta description</p>',
 	...provided,
 })
 
@@ -295,6 +298,7 @@ export const mockApiWorldDetailsModel = (
 ): GetWorldInfoApiResponse => ({
 	id: getRandomId(),
 	name: 'World name',
+	description: 'World description',
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
 	actors: [],
@@ -314,15 +318,13 @@ export const mockApiEventModel = (
 	worldId: 'world-1111-2222-3333-4444',
 	name: 'Event name',
 	description: 'Event description',
+	descriptionRich: '<p>Event description</p>',
 	type: 'SCENE',
 	icon: 'default',
 	timestamp: '0',
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
-	targetActors: [],
 	mentionedActors: [],
-	introducedActors: [],
-	terminatedActors: [],
 	extraFields: [],
 	customName: false,
 	deltaStates: [],

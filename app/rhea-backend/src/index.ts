@@ -13,6 +13,8 @@ import { HealthRouter } from './routers/HealthRouter'
 import { WorldEventRouter } from './routers/WorldEventRouter'
 import { WorldEventTrackRouter } from './routers/WorldEventTrackRouter'
 import { WorldRouter } from './routers/WorldRouter'
+import { WorldSearchRouter } from './routers/WorldSearchRouter'
+import { WorldThumbnailRouter } from './routers/WorldThumbnailRouter'
 import { RedisService } from './services/RedisService'
 import { isRunningInTest } from './utils/isRunningInTest'
 
@@ -39,7 +41,7 @@ app
 	.use(
 		bodyParser({
 			enableTypes: ['text', 'json', 'form'],
-		})
+		}),
 	)
 	.use(ActorRouter.routes())
 	.use(ActorRouter.allowedMethods())
@@ -59,6 +61,10 @@ app
 	.use(WorldEventTrackRouter.allowedMethods())
 	.use(WorldRouter.routes())
 	.use(WorldRouter.allowedMethods())
+	.use(WorldSearchRouter.routes())
+	.use(WorldSearchRouter.allowedMethods())
+	.use(WorldThumbnailRouter.routes())
+	.use(WorldThumbnailRouter.allowedMethods())
 
 if (!isRunningInTest()) {
 	app.use(
@@ -67,7 +73,7 @@ if (!isRunningInTest()) {
 			sourceFileDiscovery: {
 				rootPath: './src/routers',
 			},
-		})
+		}),
 	)
 
 	RedisService.initRedisConnection()

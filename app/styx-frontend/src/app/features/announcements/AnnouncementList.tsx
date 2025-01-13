@@ -1,5 +1,11 @@
-import { Check, Close } from '@mui/icons-material'
-import { Alert, AlertTitle, IconButton, List, Stack, Typography } from '@mui/material'
+import Check from '@mui/icons-material/Check'
+import Close from '@mui/icons-material/Close'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
+import IconButton from '@mui/material/IconButton'
+import List from '@mui/material/List'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import { useCallback, useRef } from 'react'
 
 import { useDismissAnnouncementMutation, useGetAnnouncementsQuery } from '@/api/announcementListApi'

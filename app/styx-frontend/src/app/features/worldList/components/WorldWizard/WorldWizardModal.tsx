@@ -1,16 +1,22 @@
 import { useCreateWorldMutation } from '@api/worldListApi'
-import { Add } from '@mui/icons-material'
-import { LoadingButton } from '@mui/lab'
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Tooltip } from '@mui/material'
+import Add from '@mui/icons-material/Add'
+import LoadingButton from '@mui/lab/LoadingButton'
+import Button from '@mui/material/Button'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
+import Tooltip from '@mui/material/Tooltip'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { useWorldCalendar } from '@/app/features/time/hooks/useWorldCalendar'
-import { WorldCalendarType } from '@/app/features/world/types'
+import { WorldCalendarType } from '@/app/features/worldTimeline/types'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 import { worldListSlice } from '../../reducer'
@@ -18,6 +24,7 @@ import { getWorldWizardModalState } from '../../selectors'
 
 export const WorldWizardModal = () => {
 	const [name, setName] = useState('')
+	const [description, setDescription] = useState('')
 	const [calendar, setCalendar] = useState<WorldCalendarType>('EARTH')
 	const [timeOrigin, setTimeOrigin] = useState<number>(0)
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
@@ -26,7 +33,7 @@ export const WorldWizardModal = () => {
 
 	const { isOpen } = useSelector(getWorldWizardModalState)
 
-	const { navigateTo } = useWorldRouter()
+	const { navigateTo } = useWorldTimelineRouter()
 
 	const [createWorld, { isLoading }] = useCreateWorldMutation()
 
@@ -41,6 +48,9 @@ export const WorldWizardModal = () => {
 		isOpen,
 		onCleanup: () => {
 			setName('')
+			setDescription('')
+			setCalendar('EARTH')
+			setTimeOrigin(0)
 		},
 	})
 
@@ -58,6 +68,7 @@ export const WorldWizardModal = () => {
 			await createWorld({
 				body: {
 					name,
+					description,
 					calendar,
 					timeOrigin,
 				},
@@ -70,7 +81,7 @@ export const WorldWizardModal = () => {
 
 		dispatch(closeWorldWizardModal())
 		navigateTo({
-			target: worldRoutes.root,
+			target: worldTimelineRoutes.root,
 			args: {
 				worldId: response.id,
 			},
@@ -97,6 +108,12 @@ export const WorldWizardModal = () => {
 					error={!!nameValidationError}
 					helperText={nameValidationError}
 					autoFocus
+				/>
+				<TextField
+					label="Description"
+					type="text"
+					value={description}
+					onChange={(event) => setDescription(event.target.value)}
 				/>
 				<FormControl fullWidth>
 					<InputLabel id="world-calendar-label">Calendar</InputLabel>

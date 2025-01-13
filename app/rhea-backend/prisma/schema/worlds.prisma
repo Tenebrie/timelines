@@ -29,11 +29,12 @@ model World {
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
 
-    name       String
-    actors     Actor[]
-    events     WorldEvent[]
-    calendar   WorldCalendarType @default(COUNTUP)
-    timeOrigin BigInt            @default(0)
+    name        String
+    description String            @default("")
+    actors      Actor[]
+    events      WorldEvent[]
+    calendar    WorldCalendarType @default(COUNTUP)
+    timeOrigin  BigInt            @default(0)
 
     owner            User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
     ownerId          String
@@ -47,15 +48,16 @@ model WorldEvent {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    type         WorldEventType
-    icon         String            @default("default")
-    name         String
-    timestamp    BigInt
-    revokedAt    BigInt?
-    description  String            @default("")
-    customName   Boolean           @default(false)
-    externalLink String            @default("")
-    extraFields  WorldEventField[]
+    type            WorldEventType
+    icon            String            @default("default")
+    name            String
+    timestamp       BigInt
+    revokedAt       BigInt?
+    description     String            @default("")
+    descriptionRich String            @default("")
+    customName      Boolean           @default(false)
+    externalLink    String            @default("")
+    extraFields     WorldEventField[]
 
     world             World            @relation(fields: [worldId], references: [id], onDelete: Cascade)
     track             WorldEventTrack? @relation(fields: [worldEventTrackId], references: [id], onDelete: Cascade)
@@ -76,8 +78,9 @@ model WorldEventDelta {
     updatedAt DateTime @default(now()) @updatedAt
     timestamp BigInt
 
-    name        String?
-    description String?
+    name            String?
+    description     String?
+    descriptionRich String?
 
     worldEventId String
     worldEvent   WorldEvent @relation(fields: [worldEventId], references: [id], onDelete: Cascade)

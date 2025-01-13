@@ -12,6 +12,7 @@ import { router } from './router/routerDefinition'
 
 const container = document.getElementById('root')
 const root = createRoot(container!)
+export const reactRoot = root
 
 const rollbarConfig: Configuration = {
 	enabled: import.meta.env.PROD,

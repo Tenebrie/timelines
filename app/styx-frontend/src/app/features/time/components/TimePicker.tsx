@@ -1,8 +1,12 @@
-import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
 import { memo, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { WorldCalendarType } from '../../world/types'
+import { WorldCalendarType } from '../../worldTimeline/types'
 import { useWorldTime } from '../hooks/useWorldTime'
 
 type Props = {
@@ -47,7 +51,6 @@ export const TimePickerComponent = ({ calendar, initialTimestamp, visible, onSet
 		const value = pickerToTimestamp({
 			year: years.current,
 			monthIndex: months.length > 0 ? months.indexOf(selectedMonth.current) : 0,
-			monthDay: days.current - 1,
 			day: days.current - 1,
 			hour: hours.current,
 			minute: minutes.current,
@@ -78,6 +81,8 @@ export const TimePickerComponent = ({ calendar, initialTimestamp, visible, onSet
 		setRenderInt(renderInt + 1)
 	}, [calendar, initialTimestamp, months, oldCalendar, parsedTime, renderInt])
 
+	const actualSelectedMonth = months.includes(selectedMonth.current) ? selectedMonth.current : months[0]
+
 	return (
 		<Spoiler $visible={visible}>
 			<Container>
@@ -96,7 +101,7 @@ export const TimePickerComponent = ({ calendar, initialTimestamp, visible, onSet
 					<FormControl style={{ width: '100%' }}>
 						<InputLabel id="time-picker-month-label">Month</InputLabel>
 						<Select
-							value={selectedMonth.current.name}
+							value={actualSelectedMonth.name}
 							label="Month"
 							labelId="time-picker-month-label"
 							onChange={(event) => {

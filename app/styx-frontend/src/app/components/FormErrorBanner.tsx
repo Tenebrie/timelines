@@ -1,5 +1,7 @@
-import { Close } from '@mui/icons-material'
-import { Alert, Collapse, IconButton } from '@mui/material'
+import Close from '@mui/icons-material/Close'
+import Alert from '@mui/material/Alert'
+import Collapse from '@mui/material/Collapse'
+import IconButton from '@mui/material/IconButton'
 import { ReactNode } from 'react'
 import { TransitionGroup } from 'react-transition-group'
 

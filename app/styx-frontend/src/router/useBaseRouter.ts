@@ -3,11 +3,7 @@ import { NavigateOptions, useLocation, useNavigate, useParams, useSearchParams }
 
 import { CleanUpPathParam, SplitStringBy } from '../types/utils'
 import { MockedRouter, useMockedRouter } from './router.mock'
-
-export enum QueryStrategy {
-	Clear = '[[[clear]]]',
-	Preserve = '[[[preserve]]]',
-}
+import { GenericArgsOrVoid, GenericQueryOrVoid, QueryStrategy } from './types'
 
 export const useBaseRouter = <
 	PathT extends string,
@@ -69,25 +65,14 @@ export const useBaseRouter = <
 		[currentQuery, defaultQuery],
 	)
 
-	type ArgsOrVoid<Q> =
-		Q extends Record<string, never>
-			? { args?: void }
-			: Q extends Record<string, string>
-				? { args: Q }
-				: { args?: void }
-
-	type QueryOrVoid<Q> = Q extends undefined
-		? { query?: void }
-		: { query?: Partial<Record<keyof Q, string | number | QueryStrategy | null>> }
-
 	const navigateTo = useCallback(
 		<T extends keyof ParamsT>({
 			target,
 			args,
 			query,
 			navigateParams,
-		}: ArgsOrVoid<ParamsT[T]> &
-			QueryOrVoid<QueryT[T]> & {
+		}: GenericArgsOrVoid<ParamsT[T]> &
+			GenericQueryOrVoid<QueryT[T]> & {
 				target: T
 				navigateParams?: NavigateOptions
 			}) => {
@@ -169,6 +154,17 @@ export const useBaseRouter = <
 		[location.pathname],
 	)
 
+	const isLocationChildOf = useCallback(
+		(route: keyof ParamsT) => {
+			const routeSegments = (route as string).split('/')
+			const locationSegments = location.pathname.split('/')
+			return routeSegments.every(
+				(segment, index) => segment.startsWith(':') || locationSegments[index] === segment,
+			)
+		},
+		[location.pathname],
+	)
+
 	return {
 		navigateTo,
 		stateOf,
@@ -176,5 +172,6 @@ export const useBaseRouter = <
 		queryOfOrNull,
 		setQuery,
 		isLocationEqual,
+		isLocationChildOf,
 	}
 }

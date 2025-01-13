@@ -29,7 +29,7 @@ export const ModalContainer = styled.div<{ $theme: CustomTheme }>`
 	max-width: 768px;
 	width: 100%;
 	background: ${(props) => props.$theme.custom.palette.background.modal};
-	border-radius: 4px;
+	border-radius: 8px;
 	display: flex;
 	gap: 16px;
 	flex-direction: column;

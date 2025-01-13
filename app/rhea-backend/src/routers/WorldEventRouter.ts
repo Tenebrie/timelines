@@ -62,16 +62,15 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		name: RequiredParam(NameStringValidator),
 		icon: RequiredParam(NameStringValidator),
 		description: RequiredParam(ContentStringValidator),
+		descriptionRich: RequiredParam(ContentStringValidator),
 		timestamp: RequiredParam(BigIntValidator),
 		revokedAt: RequiredParam(NullableBigIntValidator),
-		targetActorIds: RequiredParam(StringArrayValidator),
 		mentionedActorIds: RequiredParam(StringArrayValidator),
 		customNameEnabled: RequiredParam(BooleanValidator),
 		externalLink: RequiredParam(ContentStringValidator),
 		worldEventTrackId: OptionalParam(UuidStringValidator),
 	})
 
-	const targetActors = (await parseActorList(params.targetActorIds)) ?? []
 	const mentionedActors = (await parseActorList(params.mentionedActorIds)) ?? []
 
 	const { event, world } = await WorldEventService.createWorldEvent({
@@ -79,7 +78,6 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		eventData: {
 			...params,
 			extraFields: params.modules,
-			targetActors,
 			mentionedActors,
 			worldEventTrackId: params.worldEventTrackId ?? null,
 		},
@@ -111,7 +109,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		timestamp: OptionalParam(BigIntValidator),
 		revokedAt: OptionalParam(NullableBigIntValidator),
 		description: OptionalParam(ContentStringValidator),
-		targetActorIds: OptionalParam(StringArrayValidator),
+		descriptionRich: OptionalParam(ContentStringValidator),
 		mentionedActorIds: OptionalParam(StringArrayValidator),
 		customNameEnabled: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(OptionalURLStringValidator),
@@ -125,6 +123,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		timestamp: params.timestamp,
 		revokedAt: params.revokedAt,
 		description: params.description,
+		descriptionRich: params.descriptionRich,
 		customName: params.customNameEnabled,
 		externalLink: params.externalLink,
 		worldEventTrackId: params.worldEventTrackId,
@@ -133,7 +132,6 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 	await ValidationService.checkEventPatchValidity(eventId, mappedParams)
 
-	const targetActors = await parseActorList(params.targetActorIds)
 	const mentionedActors = await parseActorList(params.mentionedActorIds)
 
 	const { event } = await WorldEventService.updateWorldEvent({
@@ -141,7 +139,6 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		eventId,
 		params: {
 			...mappedParams,
-			targetActors,
 			mentionedActors,
 		},
 	})
@@ -256,6 +253,7 @@ router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
 		timestamp: RequiredParam(BigIntValidator),
 		name: RequiredParam(NullableNameStringValidator),
 		description: RequiredParam(NullableNameStringValidator),
+		descriptionRich: RequiredParam(NullableNameStringValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -291,6 +289,7 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 		timestamp: OptionalParam(BigIntValidator),
 		name: OptionalParam(NullableNameStringValidator),
 		description: OptionalParam(NullableNameStringValidator),
+		descriptionRich: OptionalParam(NullableNameStringValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -307,6 +306,7 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 			timestamp: params.timestamp,
 			name: params.name,
 			description: params.description,
+			descriptionRich: params.descriptionRich,
 		},
 	})
 

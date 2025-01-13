@@ -4,9 +4,10 @@ import { fileURLToPath } from 'node:url'
 import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 import tsParser from '@typescript-eslint/parser'
+import muiPathImports from 'eslint-plugin-mui-path-imports'
+import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import unusedImports from 'eslint-plugin-unused-imports'
-import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths'
 import globals from 'globals'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -32,6 +33,7 @@ export default [
 			'simple-import-sort': simpleImportSort,
 			'unused-imports': unusedImports,
 			'no-relative-import-paths': noRelativeImportPaths,
+			'mui-path-imports': muiPathImports,
 		},
 
 		settings: {
@@ -67,10 +69,11 @@ export default [
 			'simple-import-sort/exports': 'error',
 			'unused-imports/no-unused-imports': 'error',
 			'react/no-unescaped-entities': 'off',
-			
-			"no-relative-import-paths/no-relative-import-paths": [
-				"warn",
-				{ "allowSameFolder": true, "rootDir": "src", "prefix": "@", "allowedDepth": 2 }
+			'mui-path-imports/mui-path-imports': 'error',
+
+			'no-relative-import-paths/no-relative-import-paths': [
+				'warn',
+				{ allowSameFolder: true, rootDir: 'src', prefix: '@', allowedDepth: 2 },
 			],
 
 			'unused-imports/no-unused-vars': [

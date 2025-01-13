@@ -5,6 +5,7 @@ import { isMacOS } from '../app/utils/isMacOS'
 export const Shortcut = {
 	Enter: 'Enter',
 	CtrlEnter: 'Ctrl+Enter',
+	Search: 'Ctrl+f',
 } as const
 
 export const RegisteredShortcuts: Record<
@@ -13,6 +14,7 @@ export const RegisteredShortcuts: Record<
 > = {
 	[Shortcut.Enter]: [],
 	[Shortcut.CtrlEnter]: [],
+	[Shortcut.Search]: [],
 }
 
 export const useShortcutManager = () => {
@@ -26,6 +28,7 @@ export const useShortcutManager = () => {
 
 			if (ctrlKey === ctrlKeyNeeded && key === defKeys[defKeys.length - 1]) {
 				RegisteredShortcuts[shortcut].sort((a, b) => b.priority - a.priority)[0]?.callback()
+				event.preventDefault()
 			}
 		})
 	}, [])

@@ -16,3 +16,8 @@ export type CleanUpPathParam<S> = S extends string
 		? RemoveLeadingColonWrapper<RemoveTrailingQuestion<S>>
 		: never
 	: never
+export type DeepPartial<T> = T extends object
+	? {
+			[P in keyof T]?: DeepPartial<T[P]>
+		}
+	: T

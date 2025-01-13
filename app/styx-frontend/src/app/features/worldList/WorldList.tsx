@@ -1,8 +1,8 @@
-import { Container, Stack } from '@mui/material'
+import Container from '@mui/material/Container'
+import Stack from '@mui/material/Stack'
 
 import { BlockingSpinner } from '../../components/BlockingSpinner'
 import { DeleteWorldModal } from './components/DeleteWorldModal'
-import { ShareWorldModal } from './components/WorldDetails/components/ShareWorldModal'
 import { WorldWizardModal } from './components/WorldWizard/WorldWizardModal'
 import { useWorldListData } from './hooks/useWorldListData'
 import { WorldListSection } from './WorldListSection'
@@ -11,7 +11,7 @@ export const WorldList = () => {
 	const { isFetching, isReady, ownedWorlds, contributableWorlds, visibleWorlds } = useWorldListData()
 
 	return (
-		<Container style={{ position: 'relative' }}>
+		<Container style={{ position: 'relative', minWidth: 512 }}>
 			{isReady && (
 				<Stack gap={4}>
 					<WorldListSection
@@ -27,7 +27,6 @@ export const WorldList = () => {
 			)}
 			<BlockingSpinner visible={isFetching} />
 			<WorldWizardModal />
-			<ShareWorldModal />
 			<DeleteWorldModal />
 		</Container>
 	)

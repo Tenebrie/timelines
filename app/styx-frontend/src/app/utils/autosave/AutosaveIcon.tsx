@@ -1,4 +1,6 @@
-import { Check, Error, MoreHoriz } from '@mui/icons-material'
+import Check from '@mui/icons-material/Check'
+import Error from '@mui/icons-material/Error'
+import MoreHoriz from '@mui/icons-material/MoreHoriz'
 import { ReactElement } from 'react'
 import styled from 'styled-components'
 

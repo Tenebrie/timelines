@@ -1,6 +1,11 @@
-import { Add } from '@mui/icons-material'
-import { LoadingButton } from '@mui/lab'
-import { Button, Checkbox, FormControlLabel, FormGroup, TextField, Tooltip } from '@mui/material'
+import Add from '@mui/icons-material/Add'
+import LoadingButton from '@mui/lab/LoadingButton'
+import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import FormGroup from '@mui/material/FormGroup'
+import TextField from '@mui/material/TextField'
+import Tooltip from '@mui/material/Tooltip'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -9,7 +14,7 @@ import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
-import { getWorldIdState } from '../../world/selectors'
+import { getWorldIdState } from '../../worldTimeline/selectors'
 import { useModal } from '../reducer'
 
 export const EventTrackWizardModal = () => {

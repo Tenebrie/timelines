@@ -12,7 +12,7 @@ import { useLiveMessageHandlers } from './useLiveMessageHandlers'
 const expBackoffDelays = [50, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
 
 export const useLiveUpdates = () => {
-	const currentWebsocket = useRef<WebSocket>()
+	const currentWebsocket = useRef<WebSocket | null>(null)
 	const heartbeatInterval = useRef<number | null>(null)
 	const backoffLevel = useRef<number>(-1)
 	useEventBusSubscribe({

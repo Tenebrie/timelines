@@ -40,14 +40,14 @@ export const ValidationService = {
 		}
 		if (event.deltaStates.some((delta) => delta.timestamp < event.timestamp)) {
 			throw new BadRequestError(
-				'Unable to retire an event at this timestamp (at least 1 delta state at a later timestamp)'
+				'Unable to retire an event at this timestamp (at least 1 delta state at a later timestamp)',
 			)
 		}
 
 		const revokedAt = event.revokedAt
 		if (revokedAt && event.deltaStates.some((delta) => delta.timestamp > revokedAt)) {
 			throw new BadRequestError(
-				'Unable to retire an event at this timestamp (at least 1 delta state at a later timestamp)'
+				'Unable to retire an event at this timestamp (at least 1 delta state at a later timestamp)',
 			)
 		}
 	},
@@ -59,7 +59,7 @@ export const ValidationService = {
 		const event = await WorldEventService.fetchWorldEventWithDeltaStates(eventId)
 		if (event.deltaStates.some((delta) => delta.timestamp > timestamp)) {
 			throw new BadRequestError(
-				'Unable to retire an event at this timestamp (at least 1 delta state at a later timestamp)'
+				'Unable to retire an event at this timestamp (at least 1 delta state at a later timestamp)',
 			)
 		}
 	},
@@ -67,7 +67,7 @@ export const ValidationService = {
 	checkIfEventDeltaStateIsCreatableAt: async (
 		eventId: string,
 		timestamp: bigint,
-		excludedDeltaIds: string[] = []
+		excludedDeltaIds: string[] = [],
 	) => {
 		const event = await WorldEventService.fetchWorldEventWithDeltaStates(eventId)
 		if (timestamp < event.timestamp) {

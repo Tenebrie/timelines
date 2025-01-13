@@ -14,8 +14,9 @@ export const mockUser = (data?: Partial<User>): User => ({
 export const mockWorld = (data?: Partial<World>): World => ({
 	id: 'world-1111',
 	name: 'Test World',
+	description: 'Test World Description',
 	ownerId: 'undefined-user-1111',
-	calendar: 'COUNTUP',
+	calendar: 'EARTH',
 	timeOrigin: BigInt(100),
 	accessMode: 'Private',
 	createdAt: new Date(0),

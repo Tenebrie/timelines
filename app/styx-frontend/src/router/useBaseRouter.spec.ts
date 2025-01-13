@@ -2,7 +2,8 @@ import { act } from '@testing-library/react'
 
 import { renderHookWithProviders } from '../jest/renderWithProviders'
 import { MockedRouter, mockRouter, resetMockRouter } from './router.mock'
-import { QueryStrategy, useBaseRouter } from './useBaseRouter'
+import { QueryStrategy } from './types'
+import { useBaseRouter } from './useBaseRouter'
 
 describe('useBaseRouter', () => {
 	beforeAll(() => {

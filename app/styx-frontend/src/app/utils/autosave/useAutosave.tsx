@@ -1,4 +1,4 @@
-import { Save } from '@mui/icons-material'
+import Save from '@mui/icons-material/Save'
 import debounce from 'lodash.debounce'
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 
@@ -22,7 +22,7 @@ export const useAutosave = ({ onSave, isSaving, isError, defaultIcon }: Props) =
 	const defaultIconRef = useRef<ReactElement | undefined>(defaultIcon)
 
 	// TODO: Figure out a more permanent solution
-	const autosaveDelay = isRunningInTest() ? 300 : 3000
+	const autosaveDelay = isRunningInTest() ? 300 : 1000
 
 	const onSaveRef = useRef<() => void>(onSave)
 	const debouncedAutosave = useRef(

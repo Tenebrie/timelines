@@ -1,7 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 (cd app/styx-frontend && yarn lint-staged)
 (cd app/rhea-backend && yarn lint-staged)
 (cd app/calliope-websockets && yarn lint-staged)
-#npx lint-staged

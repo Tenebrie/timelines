@@ -1,4 +1,6 @@
-import { Alert, Collapse, Link } from '@mui/material'
+import Alert from '@mui/material/Alert'
+import Collapse from '@mui/material/Collapse'
+import Link from '@mui/material/Link'
 import { useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { TransitionGroup } from 'react-transition-group'

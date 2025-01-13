@@ -94,7 +94,7 @@ export const AuthorizationService = {
 
 	canUserEditWorld: async (
 		world: Awaited<ReturnType<typeof WorldService.findWorldDetails>>,
-		user: User | undefined
+		user: User | undefined,
 	) => {
 		if (!user) {
 			return false

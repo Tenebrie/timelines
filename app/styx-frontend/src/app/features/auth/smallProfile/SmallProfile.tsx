@@ -1,4 +1,5 @@
-import { Login, Logout } from '@mui/icons-material'
+import Login from '@mui/icons-material/Login'
+import Logout from '@mui/icons-material/Logout'
 import LoadingButton from '@mui/lab/LoadingButton'
 import { useDispatch, useSelector } from 'react-redux'
 

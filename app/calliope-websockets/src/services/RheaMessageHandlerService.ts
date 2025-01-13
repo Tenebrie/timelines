@@ -8,14 +8,14 @@ import {
 import { WebsocketService } from './WebsocketService'
 
 const relayMessageToUserSockets = (
-	message: CalliopeToClientMessage & { data: CalliopeToClientMessage['data'] & { userId: string } }
+	message: CalliopeToClientMessage & { data: CalliopeToClientMessage['data'] & { userId: string } },
 ) => {
 	const clients = WebsocketService.findClientsByUserId(message.data.userId)
 	clients.forEach((client) => client.sendMessage(message))
 }
 
 const relayMessageToWorldSockets = (
-	message: CalliopeToClientMessage & { data: CalliopeToClientMessage['data'] & { worldId: string } }
+	message: CalliopeToClientMessage & { data: CalliopeToClientMessage['data'] & { worldId: string } },
 ) => {
 	const clients = WebsocketService.findClientsByWorldId(message.data.worldId)
 	clients.forEach((client) => client.sendMessage(message))

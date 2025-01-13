@@ -140,6 +140,7 @@ export const customLightTheme = {
 		timelineAnchor: {
 			text: 'rgb(21, 16, 11)',
 		},
+		outline: 'rgb(0 0 0 / 23%)',
 		background: {
 			soft: 'rgb(0 0 0 / 10%)',
 			modal: '#eee',
@@ -156,6 +157,7 @@ export const customDarkTheme: typeof customLightTheme = {
 		timelineAnchor: {
 			text: 'white',
 		},
+		outline: 'rgb(255 255 255 / 23%)',
 		background: {
 			soft: 'rgb(255 255 255 / 10%)',
 			modal: '#22333b',

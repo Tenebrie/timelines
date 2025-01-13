@@ -28,6 +28,11 @@ body.cursor-grabbing {
 	cursor: grabbing !important;
 }
 
+.timeline-marker-scroll {
+	--timeline-scroll: -10000px;
+	/* transform: translateX(); */
+}
+
 code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

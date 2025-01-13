@@ -10,6 +10,8 @@ services:
             update_config:
                 parallelism: 1
                 delay: 10s
+        secrets:
+            - environment
         volumes:
             - /mnt/volume_secrets/certs:/etc/letsencrypt:cached
     styx:
@@ -18,20 +20,22 @@ services:
             context: ./
             dockerfile: ./app/styx-frontend/Dockerfile.prod
         environment:
-            NODE_ENV: production
+            NODE_ENV: production # Prod or staging
         command: yarn prod
         deploy:
             replicas: 2
             update_config:
                 parallelism: 1
                 delay: 30s
+        secrets:
+            - environment
     rhea:
         image: tenebrie/timelines-rhea:${VERSION}
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile.prod
         environment:
-            NODE_ENV: production
+            NODE_ENV: production # Prod or staging
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
         command: yarn prod
         deploy:
@@ -41,6 +45,7 @@ services:
                 delay: 10s
         secrets:
             - jwt-secret
+            - environment
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
             interval: 30s
@@ -52,7 +57,7 @@ services:
             context: ./
             dockerfile: ./app/calliope-websockets/Dockerfile.prod
         environment:
-            NODE_ENV: production
+            NODE_ENV: production # Prod or staging
         command: yarn prod
         deploy:
             replicas: 2
@@ -61,12 +66,16 @@ services:
                 delay: 10s
         secrets:
             - jwt-secret
+            - environment
     rhea-postgres:
         volumes:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached
             - /mnt/volume_rhea_postgres/backups:/backups:cached
 
 # docker secret create jwt-secret /mnt/volume_secrets/keys/jwt-secret.txt
+# echo "production" | docker secret create ENVIRONMENT -
 secrets:
     jwt-secret:
+        external: true
+    environment:
         external: true

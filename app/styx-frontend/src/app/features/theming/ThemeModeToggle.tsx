@@ -1,4 +1,6 @@
-import { Stack, Switch, useTheme } from '@mui/material'
+import { useTheme } from '@mui/material'
+import Stack from '@mui/material/Stack'
+import Switch from '@mui/material/Switch'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
