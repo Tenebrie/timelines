@@ -6,11 +6,13 @@ import Tooltip from '@mui/material/Tooltip'
 import { useDispatch } from 'react-redux'
 
 import { GetWorldsApiResponse } from '@/api/worldListApi'
+import { QueryParams } from '@/router/routes/QueryParams'
 import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
 import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
 
 import { OutlinedContainer } from '../../components/OutlinedContainer'
 import { TrunkatedSpan } from '../../components/TrunkatedTypography'
+import { worldSlice } from '../worldTimeline/reducer'
 import { WorldListEmptyState } from './components/WorldListEmptyState'
 import { worldListSlice } from './reducer'
 
@@ -29,18 +31,28 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 	const { navigateTo } = useWorldRouter()
 	const { navigateTo: navigateToTimeline } = useWorldTimelineRouter()
 
-	const dispatch = useDispatch()
+	const { unloadWorld } = worldSlice.actions
 	const { openWorldWizardModal, openDeleteWorldModal } = worldListSlice.actions
+	const dispatch = useDispatch()
 
 	const onCreate = async () => {
 		dispatch(openWorldWizardModal())
 	}
 
 	const onLoad = (id: string) => {
+		const world = worlds.find((w) => w.id === id)
+		if (!world) {
+			return
+		}
+
+		dispatch(unloadWorld())
 		navigateToTimeline({
 			target: worldTimelineRoutes.outliner,
 			args: {
 				worldId: id,
+			},
+			query: {
+				[QueryParams.SELECTED_TIME]: world.timeOrigin,
 			},
 		})
 	}

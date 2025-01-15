@@ -52,25 +52,19 @@ describe('<Timeline />', () => {
 	it('renders the labels for earth calendar world', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'EARTH' }))
 
-		expect(screen.getByText('18:00')).toBeInTheDocument()
 		expect(screen.getByText('January 01, 2023')).toBeInTheDocument()
-		expect(screen.getByText('06:00')).toBeInTheDocument()
 	})
 
 	it('renders the label for pf2e calendar world', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'PF2E' }))
 
-		expect(screen.getByText('18:00')).toBeInTheDocument()
 		expect(screen.getByText('(01) Abadius 01, 4723')).toBeInTheDocument()
-		expect(screen.getByText('06:00')).toBeInTheDocument()
 	})
 
 	it('renders the label for rimworld calendar world', async () => {
 		renderWithProviders(<Timeline />, getPreloadedState([], { calendar: 'RIMWORLD' }))
 
-		expect(screen.getByText('18:00')).toBeInTheDocument()
 		expect(screen.getByText('Aprimay 01, 5500')).toBeInTheDocument()
-		expect(screen.getByText('06:00')).toBeInTheDocument()
 	})
 
 	it('respects the world time origin', async () => {

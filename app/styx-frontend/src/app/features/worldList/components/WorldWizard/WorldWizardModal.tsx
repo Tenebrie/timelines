@@ -13,9 +13,11 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { useWorldCalendar } from '@/app/features/time/hooks/useWorldCalendar'
+import { worldSlice } from '@/app/features/worldTimeline/reducer'
 import { WorldCalendarType } from '@/app/features/worldTimeline/types'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { QueryParams } from '@/router/routes/QueryParams'
 import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
@@ -32,12 +34,12 @@ export const WorldWizardModal = () => {
 	const { listAllCalendars } = useWorldCalendar()
 
 	const { isOpen } = useSelector(getWorldWizardModalState)
-
 	const { navigateTo } = useWorldTimelineRouter()
 
 	const [createWorld, { isLoading }] = useCreateWorldMutation()
 
 	const dispatch = useDispatch()
+	const { unloadWorld } = worldSlice.actions
 	const { closeWorldWizardModal } = worldListSlice.actions
 
 	useEffect(() => {
@@ -80,10 +82,14 @@ export const WorldWizardModal = () => {
 		}
 
 		dispatch(closeWorldWizardModal())
+		dispatch(unloadWorld())
 		navigateTo({
 			target: worldTimelineRoutes.root,
 			args: {
 				worldId: response.id,
+			},
+			query: {
+				[QueryParams.SELECTED_TIME]: timeOrigin,
 			},
 		})
 	}

@@ -101,7 +101,7 @@ export const Timeline = () => {
 	const containerHeight = useContainerHeight()
 
 	useEffectOnce(() => {
-		scrollTimelineTo(selectedTime)
+		scrollTimelineTo(selectedTime, false, true)
 	})
 
 	return (
