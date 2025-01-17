@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
@@ -16,6 +17,7 @@ import { worldSlice } from '../../worldTimeline/reducer'
 import { getWorldState } from '../../worldTimeline/selectors'
 import { WorldCalendarType } from '../../worldTimeline/types'
 import { useModal } from '../reducer'
+import { TimeTravelModalInfo } from './TimeTravelModalInfo'
 
 export const TimeTravelModal = () => {
 	const { isOpen, close } = useModal('timeTravelModal')
@@ -105,7 +107,11 @@ export const TimeTravelModal = () => {
 				onChange={(event) => onSelectorChanged(event.target.value)}
 				autoFocus
 			/>
-			<Typography>Travel to: {displayedTargetTime}</Typography>
+			<Typography>
+				<b>Travel to:</b> {displayedTargetTime}
+			</Typography>
+			<Divider />
+			<TimeTravelModalInfo />
 			<ModalFooter>
 				<Stack direction="row-reverse" justifyContent="space-between" width="100%">
 					<Stack direction="row-reverse" spacing={2}>

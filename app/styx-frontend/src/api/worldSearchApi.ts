@@ -56,16 +56,6 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		statements: {
 			id: string
 		}[]
-		relationships: {
-			name: string
-			originId: string
-			receiverId: string
-		}[]
-		receivedRelationships: {
-			name: string
-			originId: string
-			receiverId: string
-		}[]
 		description: string
 		name: string
 		id: string

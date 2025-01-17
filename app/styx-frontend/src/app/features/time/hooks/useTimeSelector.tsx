@@ -23,6 +23,26 @@ const parseNumber = (str: string) => {
 	return 0
 }
 
+const parseTime = (time: string) => {
+	const parts = time.split(':')
+	return {
+		deltaHours: parts[0].includes('x') ? undefined : parseNumber(parts[0]),
+		deltaMinutes: parts[1].includes('x') ? undefined : parseNumber(parts[1]),
+	}
+}
+
+const parseDate = (date: string) => {
+	const parts = date.split('-')
+	const year = parts[0].includes('x') ? undefined : parseNumber(parts[0])
+	const month = parts[1].includes('x') || parts[1].match(/^[0]+$/) ? undefined : parseNumber(parts[1]) - 1
+	const day = parts[2].includes('x') || parts[2].match(/^[0]+$/) ? undefined : parseNumber(parts[2]) - 1
+	return {
+		toYear: year,
+		toMonth: month,
+		toDay: day,
+	}
+}
+
 export const parseTimeSelector = (timeSelector: string): TimeDelta => {
 	const parts = timeSelector.split(' ')
 	return parts
@@ -76,6 +96,10 @@ export const parseTimeSelector = (timeSelector: string): TimeDelta => {
 				return { deltaHours: parseNumber(num) }
 			} else if (partial.match(/[-0-9]+(m|min|minute|minutes)/)) {
 				return { deltaMinutes: parseNumber(num) }
+			} else if (partial.match(/[0-9x]{2}:[0-9x]{2}/)) {
+				return { ...parseTime(partial) }
+			} else if (partial.match(/[0-9]+-[0-9]+-[0-9]+/)) {
+				return { ...parseDate(partial) }
 			}
 			return {}
 		})
