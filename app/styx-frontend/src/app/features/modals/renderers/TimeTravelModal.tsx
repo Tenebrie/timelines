@@ -31,7 +31,7 @@ export const TimeTravelModal = () => {
 	const dispatch = useDispatch()
 
 	const { timeToLabel } = useWorldTime()
-	const { parseSelector } = useTimeSelector({ rawTime: selectedTime })
+	const { applySelector } = useTimeSelector({ rawTime: selectedTime })
 
 	const calendarRef = useRef<WorldCalendarType>(null)
 	const selectorRef = useRef<HTMLInputElement | null>(null)
@@ -50,18 +50,18 @@ export const TimeTravelModal = () => {
 	const onSelectorChanged = useCallback(
 		(value: string) => {
 			setTimeSelector(value)
-			const { timestamp } = parseSelector(value)
+			const { timestamp } = applySelector(value)
 			setTargetTime(timestamp)
 
 			setDisplayedTargetTime(timeToLabel(timestamp))
 		},
-		[parseSelector, timeToLabel],
+		[applySelector, timeToLabel],
 	)
 
 	useModalCleanup({
 		isOpen,
 		onCleanup: () => {
-			const { timestamp } = parseSelector(timeSelector)
+			const { timestamp } = applySelector(timeSelector)
 			setTargetTime(timestamp)
 			setDisplayedTargetTime(timeToLabel(timestamp))
 		},
