@@ -33,6 +33,8 @@ model World {
     description String            @default("")
     actors      Actor[]
     events      WorldEvent[]
+    articles    WikiArticle[]
+    tags        Tag[]
     calendar    WorldCalendarType @default(COUNTUP)
     timeOrigin  BigInt            @default(0)
 
@@ -59,17 +61,18 @@ model WorldEvent {
     externalLink    String            @default("")
     extraFields     WorldEventField[]
 
+    targetActors      Actor[]       @relation("EventTargetActors")
+    mentionedActors   Actor[]       @relation("EventMentionedActors")
+    mentionedTags     Tag[]         @relation("EventMentionedTags")
+    mentionedArticles WikiArticle[] @relation("EventMentionedWiki")
+    relatedArticles   WikiArticle[] @relation("WikiMentionedEvents")
+
+    deltaStates WorldEventDelta[]
+
     world             World            @relation(fields: [worldId], references: [id], onDelete: Cascade)
     track             WorldEventTrack? @relation(fields: [worldEventTrackId], references: [id], onDelete: Cascade)
     worldId           String
     worldEventTrackId String?
-
-    targetActors     Actor[] @relation("EventTargetActors")
-    mentionedActors  Actor[] @relation("EventMentionedActors")
-    introducedActors Actor[] @relation(name: "EventIntroducedActors")
-    terminatedActors Actor[] @relation(name: "EventTerminatedActors")
-
-    deltaStates WorldEventDelta[]
 }
 
 model WorldEventDelta {
@@ -95,8 +98,8 @@ model WorldEventTrack {
     position Int
     visible  Boolean @default(true)
 
+    events WorldEvent[]
+
     world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
     worldId String
-
-    events WorldEvent[]
 }

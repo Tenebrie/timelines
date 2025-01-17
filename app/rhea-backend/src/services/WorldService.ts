@@ -103,8 +103,6 @@ export const WorldService = {
 								id: true,
 							},
 						},
-						relationships: true,
-						receivedRelationships: true,
 					},
 				},
 				events: {

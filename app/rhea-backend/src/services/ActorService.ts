@@ -33,8 +33,6 @@ export const ActorService = {
 							id: true,
 						},
 					},
-					relationships: true,
-					receivedRelationships: true,
 				},
 			}),
 			makeTouchWorldQuery(worldId),

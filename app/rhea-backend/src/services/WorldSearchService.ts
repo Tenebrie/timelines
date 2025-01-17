@@ -50,8 +50,6 @@ export const WorldSearchService = {
 						id: true,
 					},
 				},
-				relationships: true,
-				receivedRelationships: true,
 			},
 		})
 	},

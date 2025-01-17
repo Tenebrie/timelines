@@ -1,0 +1,32 @@
+model Tag {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
+    name String
+
+    relatedActors   Actor[]       @relation("ActorMentionedTags")
+    relatedEvents   WorldEvent[]  @relation("EventMentionedTags")
+    relatedArticles WikiArticle[] @relation("WikiMentionedTags")
+
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+    worldId String
+}
+
+model WikiArticle {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
+    name            String
+    descriptionRich String @default("")
+
+    mentionedActors Actor[]      @relation("WikiMentionedActors")
+    mentionedEvents WorldEvent[] @relation("WikiMentionedEvents")
+    mentionedTags   Tag[]        @relation("WikiMentionedTags")
+    relatedActors   Actor[]      @relation("ActorMentionedWiki")
+    relatedEvents   WorldEvent[] @relation("EventMentionedWiki")
+
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+    worldId String
+}
