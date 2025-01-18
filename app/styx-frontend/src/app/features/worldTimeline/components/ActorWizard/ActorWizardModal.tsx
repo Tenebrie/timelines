@@ -15,7 +15,7 @@ import { useModal } from '@/app/features/modals/reducer'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useErrorState } from '@/app/utils/useErrorState'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import Modal, { useModalCleanup } from '@/ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '@/ui-lib/components/Modal'
 

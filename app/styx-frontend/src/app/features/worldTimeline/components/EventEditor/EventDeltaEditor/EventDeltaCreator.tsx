@@ -6,7 +6,10 @@ import { mockEventDeltaModel } from '@/api/rheaApi.mock'
 import { worldSlice } from '@/app/features/worldTimeline/reducer'
 import { getWorldState } from '@/app/features/worldTimeline/selectors'
 import { WorldEventDelta } from '@/app/features/worldTimeline/types'
-import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
+import {
+	useWorldTimelineRouter,
+	worldTimelineRoutes,
+} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { FullHeightContainer } from '../styles'
 import { EventDeltaDetailsEditor } from './components/EventDeltaDetailsEditor'

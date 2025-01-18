@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { worldTimelineQueryParams } from '@/router/routes/worldTimelineRoutes'
+import { worldTimelineQueryParams } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import { QueryStrategy } from '@/router/types'
 
 export const useNavigationReceiver = () => {

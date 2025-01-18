@@ -2,10 +2,11 @@ import { createBrowserRouter } from 'react-router-dom'
 
 import { ErrorBoundary } from './error/ErrorBoundary'
 import { appRoutes } from './routes/appRoutes'
-import { homeRoutes } from './routes/homeRoutes'
+import { homeRoutes } from './routes/featureRoutes/homeRoutes'
+import { worldRoutes } from './routes/featureRoutes/worldRoutes'
+import { worldTimelineRoutes } from './routes/featureRoutes/worldTimelineRoutes'
+import { worldWikiRoutes } from './routes/featureRoutes/worldWikiRoutes'
 import { routes } from './routes/routes'
-import { worldRoutes } from './routes/worldRoutes'
-import { worldTimelineRoutes } from './routes/worldTimelineRoutes'
 
 const lazyImport = (component: Promise<() => JSX.Element>) => {
 	return {
@@ -115,6 +116,18 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 					{
 						path: worldRoutes.overview,
 						...lazyImport(import('../app/features/worldOverview/WorldOverview').then((m) => m.WorldOverview)),
+					},
+					{
+						path: worldRoutes.wiki,
+						...lazyImport(import('../app/features/worldWiki/WorldWiki').then((m) => m.WorldWiki)),
+						children: [
+							{
+								path: worldWikiRoutes.article,
+								...lazyImport(
+									import('../app/features/worldWiki/components/Article/Article').then((m) => m.Article),
+								),
+							},
+						],
 					},
 					{
 						path: worldRoutes.actors,

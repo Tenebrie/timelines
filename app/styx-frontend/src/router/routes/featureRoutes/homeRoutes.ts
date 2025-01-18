@@ -1,4 +1,4 @@
-import { useBaseRouter } from '../useBaseRouter'
+import { useBaseRouter } from '../../useBaseRouter'
 
 export const homeRoutes = {
 	root: '/home',

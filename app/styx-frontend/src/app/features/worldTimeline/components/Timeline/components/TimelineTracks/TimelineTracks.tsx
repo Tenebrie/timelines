@@ -4,7 +4,10 @@ import { useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState, getWorldState } from '@/app/features/worldTimeline/selectors'
-import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
+import {
+	useWorldTimelineRouter,
+	worldTimelineRoutes,
+} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { ScaleLevel } from '../../types'
 import { TimelineContextMenu } from '../TimelineContextMenu/TimelineContextMenu'

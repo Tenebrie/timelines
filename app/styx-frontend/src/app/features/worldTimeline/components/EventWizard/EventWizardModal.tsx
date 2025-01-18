@@ -10,7 +10,10 @@ import { useModal } from '@/app/features/modals/reducer'
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
+import {
+	useWorldTimelineRouter,
+	worldTimelineRoutes,
+} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import Modal, { useModalCleanup } from '@/ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '@/ui-lib/components/Modal'
 

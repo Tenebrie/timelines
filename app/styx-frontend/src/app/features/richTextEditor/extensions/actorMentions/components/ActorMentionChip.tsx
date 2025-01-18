@@ -5,8 +5,8 @@ import { useEventBusDispatch } from '@/app/features/eventBus'
 import { getWorldState } from '@/app/features/worldTimeline/selectors'
 import { colorStringToHsl } from '@/app/utils/colors/colorStringToHsl'
 import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
+import { worldTimelineRoutes } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import { QueryParams } from '@/router/routes/QueryParams'
-import { worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
 import { QueryStrategy } from '@/router/types'
 
 type Props = {

@@ -8,7 +8,10 @@ import { getWorldIdState } from '@/app/features/worldTimeline/selectors'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { ErrorState } from '@/app/utils/useErrorState'
-import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
+import {
+	useWorldTimelineRouter,
+	worldTimelineRoutes,
+} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { EventDeltaDetailsEditorErrors } from './EventDeltaDetailsEditor'
 import { useEventDeltaFields } from './useEventDeltaFields'

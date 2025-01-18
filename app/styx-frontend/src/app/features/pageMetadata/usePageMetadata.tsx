@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import { useWorldRouter, worldRoutes } from '@/router/routes/featureRoutes/worldRoutes'
 
 import { getWorldState } from '../worldTimeline/selectors'
 

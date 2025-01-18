@@ -1,3 +1,4 @@
+import AutoStories from '@mui/icons-material/AutoStories'
 import Home from '@mui/icons-material/Home'
 import Person from '@mui/icons-material/Person'
 import Settings from '@mui/icons-material/Settings'
@@ -12,8 +13,8 @@ import styled from 'styled-components'
 
 import { getOverviewPreferences } from '@/app/features/preferences/selectors'
 import { store } from '@/app/store'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
-import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import { useWorldRouter, worldRoutes } from '@/router/routes/featureRoutes/worldRoutes'
+import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { getWorldIdState } from '../../worldTimeline/selectors'
 import { WorldHeader } from './components/WorldHeader'
@@ -32,6 +33,15 @@ export const WorldDrawer = () => {
 	const onOverviewClick = () => {
 		navigateTo({
 			target: worldRoutes.overview,
+			args: {
+				worldId,
+			},
+		})
+	}
+
+	const onWikiClick = () => {
+		navigateTo({
+			target: worldRoutes.wiki,
 			args: {
 				worldId,
 			},
@@ -134,6 +144,9 @@ export const WorldDrawer = () => {
 					</StyledButton>
 					<StyledButton variant={getButtonStyle(worldRoutes.overview)} onClick={onOverviewClick}>
 						<ViewList /> Overview
+					</StyledButton>
+					<StyledButton variant={getButtonStyle(worldRoutes.wiki)} onClick={onWikiClick}>
+						<AutoStories /> Wiki
 					</StyledButton>
 					{/* <StyledButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
 						<Person /> Actors

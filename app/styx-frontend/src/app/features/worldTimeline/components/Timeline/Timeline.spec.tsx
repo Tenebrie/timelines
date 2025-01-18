@@ -3,7 +3,7 @@ import { screen, waitFor } from '@testing-library/react'
 import { mockEventModel } from '@/api/rheaApi.mock'
 import { renderWithProviders } from '@/jest/renderWithProviders'
 import { mockRouter } from '@/router/router.mock'
-import { worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
+import { worldTimelineRoutes } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { initialState } from '../../reducer'
 import { WorldDetails, WorldEvent } from '../../types'

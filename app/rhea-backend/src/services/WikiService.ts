@@ -10,6 +10,7 @@ export const WikiService = {
 			select: {
 				id: true,
 				name: true,
+				contentRich: true,
 				createdAt: true,
 				updatedAt: true,
 			},
@@ -33,7 +34,7 @@ export const WikiService = {
 
 	updateWikiArticle: async (
 		params: Partial<
-			Pick<WikiArticle, 'id' | 'worldId' | 'name' | 'descriptionRich'> & {
+			Pick<WikiArticle, 'id' | 'worldId' | 'name' | 'contentRich'> & {
 				mentionedActors: string[]
 				mentionedEvents: string[]
 				mentionedTags: string[]
@@ -46,7 +47,7 @@ export const WikiService = {
 			},
 			data: {
 				name: params.name,
-				descriptionRich: params.descriptionRich,
+				contentRich: params.contentRich,
 				mentionedActors: {
 					connect: params.mentionedActors?.map((id) => ({ id })),
 				},

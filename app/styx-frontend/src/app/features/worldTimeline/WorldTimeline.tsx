@@ -4,8 +4,11 @@ import { useOutlet } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useLocationRef } from '@/hooks/useLocationRef'
+import {
+	useWorldTimelineRouter,
+	worldTimelineRoutes,
+} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import { QueryParams } from '@/router/routes/QueryParams'
-import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
 
 import { useTimelineBusDispatch } from './hooks/useTimelineBus'
 import { worldSlice } from './reducer'

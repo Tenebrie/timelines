@@ -1,5 +1,5 @@
 import { baseApi as api } from './baseApi'
-export const addTagTypes = [] as const
+export const addTagTypes = ['worldWiki'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -17,6 +17,7 @@ const injectedRtkApi = api
 			}),
 			getArticles: build.query<GetArticlesApiResponse, GetArticlesApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/wiki/articles` }),
+				providesTags: ['worldWiki'],
 			}),
 			createArticle: build.mutation<CreateArticleApiResponse, CreateArticleApiArg>({
 				query: (queryArg) => ({
@@ -24,6 +25,7 @@ const injectedRtkApi = api
 					method: 'POST',
 					body: queryArg.body,
 				}),
+				invalidatesTags: ['worldWiki'],
 			}),
 			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
 				query: (queryArg) => ({
@@ -31,6 +33,7 @@ const injectedRtkApi = api
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
+				invalidatesTags: ['worldWiki'],
 			}),
 		}),
 		overrideExisting: false,
@@ -47,6 +50,7 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	contentRich: string
 }[]
 export type GetArticlesApiArg = {
 	/** Any string value */
@@ -78,7 +82,7 @@ export type UpdateArticleApiArg = {
 	articleId: string
 	body: {
 		name?: string
-		descriptionRich?: string
+		contentRich?: string
 		mentionedActors?: string[]
 		mentionedEvents?: string[]
 		mentionedTags?: string[]

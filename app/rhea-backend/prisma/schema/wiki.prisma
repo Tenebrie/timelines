@@ -18,8 +18,8 @@ model WikiArticle {
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
 
-    name            String
-    descriptionRich String @default("")
+    name        String
+    contentRich String @default("")
 
     mentionedActors Actor[]      @relation("WikiMentionedActors")
     mentionedEvents WorldEvent[] @relation("WikiMentionedEvents")

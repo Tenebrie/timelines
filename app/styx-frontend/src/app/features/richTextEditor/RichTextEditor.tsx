@@ -14,6 +14,12 @@ type Props = {
 	onChange: (params: { plainText: string; richText: string; mentions: string[] }) => void
 }
 
+export type OnChangeParams = {
+	plainText: string
+	richText: string
+	mentions: string[]
+}
+
 export const RichTextEditor = ({ value, onChange }: Props) => {
 	const theme = useCustomTheme()
 

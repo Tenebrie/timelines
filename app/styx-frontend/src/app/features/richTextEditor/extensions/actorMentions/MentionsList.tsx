@@ -94,6 +94,10 @@ export const MentionsList = ({ editor }: Props) => {
 				})
 			} else if (key === 'Enter') {
 				await selectActor(editor, selectedIndex)
+			} else if (key === 'PageUp') {
+				setSelectedIndex(0)
+			} else if (key === 'PageDown') {
+				setSelectedIndex(displayedMentions.length - 1)
 			}
 		},
 	})

@@ -6,7 +6,7 @@ import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventB
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
-import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
 import { worldSlice } from '../../reducer'

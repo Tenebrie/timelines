@@ -5,9 +5,9 @@ import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTi
 import { worldSlice } from '@/app/features/worldTimeline/reducer'
 import { getWorldRouterState } from '@/app/features/worldTimeline/selectors'
 
-import { GenericArgsOrVoid, GenericQueryOrVoid, QueryStrategy } from '../types'
-import { useBaseRouter } from '../useBaseRouter'
-import { QueryParams } from './QueryParams'
+import { GenericArgsOrVoid, GenericQueryOrVoid, QueryStrategy } from '../../types'
+import { useBaseRouter } from '../../useBaseRouter'
+import { QueryParams } from '../QueryParams'
 
 export const worldTimelineRoutes = {
 	root: '/world/:worldId/timeline',

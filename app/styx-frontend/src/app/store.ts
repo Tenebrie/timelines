@@ -9,6 +9,7 @@ import preferencesReducer from './features/preferences/reducer'
 import worldListReducer from './features/worldList/reducer'
 import timelineReducer from './features/worldTimeline/components/Timeline/reducer'
 import worldReducer from './features/worldTimeline/reducer'
+import wikiReducer from './features/worldWiki/reducer'
 import { deepMerge } from './utils/deepMerge'
 
 const rootReducer = combineReducers({
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
 	worldList: worldListReducer,
 	preferences: preferencesReducer,
 	timeline: timelineReducer,
+	wiki: wikiReducer,
 })
 
 const initialState = configureStore({ reducer: rootReducer }).getState()

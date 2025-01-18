@@ -7,7 +7,7 @@ import { worldSlice } from '@/app/features/worldTimeline/reducer'
 import { getWorldIdState } from '@/app/features/worldTimeline/selectors'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { useEventFields } from './useEventFields'
 

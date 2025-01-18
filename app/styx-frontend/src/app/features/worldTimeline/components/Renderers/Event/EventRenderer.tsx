@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 
 import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { Actor, WorldEvent } from '@/app/features/worldTimeline/types'
-import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { StyledListItemButton } from '../../Outliner/styles'
 import { ShowHideChevron } from '../styles'

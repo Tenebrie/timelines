@@ -57,33 +57,33 @@ export const MentionChip = Node.create({
 		return `${getActorName(node)}`
 	},
 
-	addKeyboardShortcuts() {
-		return {
-			Backspace: ({ editor }) => {
-				const { state, dispatch } = editor.view
-				const { selection } = state
-				const { $from } = selection
+	// addKeyboardShortcuts() {
+	// 	return {
+	// 		Backspace: ({ editor }) => {
+	// 			const { state, dispatch } = editor.view
+	// 			const { selection } = state
+	// 			const { $from } = selection
 
-				// Check if the cursor is directly after the node
-				const nodeBefore = $from.nodeBefore
-				if (nodeBefore && nodeBefore.type.name === this.name) {
-					const pos = $from.pos - nodeBefore.nodeSize
+	// 			// Check if the cursor is directly after the node
+	// 			const nodeBefore = $from.nodeBefore
+	// 			if (nodeBefore && nodeBefore.type.name === this.name) {
+	// 				const pos = $from.pos - nodeBefore.nodeSize
 
-					// Replace the node with plain text
-					const transaction = state.tr.replaceWith(
-						pos,
-						$from.pos,
-						editor.schema.text(`@${getActorName(nodeBefore)}`),
-					)
+	// 				// Replace the node with plain text
+	// 				const transaction = state.tr.replaceWith(
+	// 					pos,
+	// 					$from.pos,
+	// 					editor.schema.text(`@${getActorName(nodeBefore)}`),
+	// 				)
 
-					dispatch(transaction)
-					return true // Prevent default backspace behavior
-				}
+	// 				dispatch(transaction)
+	// 				return true // Prevent default backspace behavior
+	// 			}
 
-				return false // Allow default behavior otherwise
-			},
-		}
-	},
+	// 			return false // Allow default behavior otherwise
+	// 		},
+	// 	}
+	// },
 
 	addNodeView() {
 		return ({ node }) => {

@@ -9,7 +9,7 @@ import {
 import { renderWithProviders } from '@/jest/renderWithProviders'
 import { setupTestServer } from '@/jest/setupTestServer'
 import { mockRouter } from '@/router/router.mock'
-import { worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
+import { worldTimelineRoutes } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { initialState } from '../../reducer'
 import { WorldEvent } from '../../types'

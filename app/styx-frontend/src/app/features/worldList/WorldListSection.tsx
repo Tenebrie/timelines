@@ -6,9 +6,12 @@ import Tooltip from '@mui/material/Tooltip'
 import { useDispatch } from 'react-redux'
 
 import { GetWorldsApiResponse } from '@/api/worldListApi'
+import { useWorldRouter, worldRoutes } from '@/router/routes/featureRoutes/worldRoutes'
+import {
+	useWorldTimelineRouter,
+	worldTimelineRoutes,
+} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import { QueryParams } from '@/router/routes/QueryParams'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
-import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
 
 import { OutlinedContainer } from '../../components/OutlinedContainer'
 import { TrunkatedSpan } from '../../components/TrunkatedTypography'

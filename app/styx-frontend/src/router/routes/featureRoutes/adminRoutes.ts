@@ -1,4 +1,4 @@
-import { useBaseRouter } from '../useBaseRouter'
+import { useBaseRouter } from '../../useBaseRouter'
 
 export const adminRoutes = {
 	adminRoot: '/admin',

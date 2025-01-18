@@ -42,7 +42,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 					})
 					return true
 				}
-				if (['ArrowUp', 'ArrowDown', 'Enter', 'Tab'].includes(props.event.key)) {
+				if (['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'PageUp', 'PageDown'].includes(props.event.key)) {
 					dispatchEvent({
 						event: 'richEditor/keyDown',
 						params: {

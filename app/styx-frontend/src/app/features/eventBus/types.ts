@@ -1,4 +1,4 @@
-import type { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import type { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
 export type AllowedEvents =

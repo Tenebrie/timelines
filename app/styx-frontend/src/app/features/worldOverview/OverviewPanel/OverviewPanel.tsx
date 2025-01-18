@@ -19,7 +19,7 @@ import { reportComponentProfile } from '@/app/features/profiling/reportComponent
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
 import { useDoubleClick } from '@/hooks/useDoubleClick'
-import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { ActorAvatar } from '../../worldTimeline/components/Renderers/ActorAvatar/ActorAvatar'
 import { useTimelineBusDispatch } from '../../worldTimeline/hooks/useTimelineBus'

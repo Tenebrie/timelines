@@ -17,8 +17,11 @@ import { worldSlice } from '@/app/features/worldTimeline/reducer'
 import { WorldCalendarType } from '@/app/features/worldTimeline/types'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import {
+	useWorldTimelineRouter,
+	worldTimelineRoutes,
+} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import { QueryParams } from '@/router/routes/QueryParams'
-import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 import { worldListSlice } from '../../reducer'

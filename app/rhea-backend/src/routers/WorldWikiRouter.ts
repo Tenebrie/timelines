@@ -14,10 +14,13 @@ import { StringArrayValidator } from './validators/StringArrayValidator'
 
 const router = new Router()
 
+export const worldWikiTag = 'worldWiki'
+
 router.get('/api/world/:worldId/wiki/articles', async (ctx) => {
 	useApiEndpoint({
 		name: 'getArticles',
 		description: 'Returns a list of articles in the wiki without content.',
+		tags: [worldWikiTag],
 	})
 
 	const { worldId } = usePathParams(ctx, {
@@ -31,6 +34,7 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 	useApiEndpoint({
 		name: 'createArticle',
 		description: 'Creates a new article in the wiki.',
+		tags: [worldWikiTag],
 	})
 
 	const { worldId } = usePathParams(ctx, {
@@ -51,6 +55,7 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 	useApiEndpoint({
 		name: 'updateArticle',
 		description: 'Updates an article in the wiki.',
+		tags: [worldWikiTag],
 	})
 
 	const { worldId, articleId } = usePathParams(ctx, {
@@ -58,9 +63,9 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 		articleId: PathParam(StringValidator),
 	})
 
-	const { name, descriptionRich, mentionedActors, mentionedEvents, mentionedTags } = useRequestBody(ctx, {
+	const { name, contentRich, mentionedActors, mentionedEvents, mentionedTags } = useRequestBody(ctx, {
 		name: OptionalParam(StringValidator),
-		descriptionRich: OptionalParam(StringValidator),
+		contentRich: OptionalParam(StringValidator),
 		mentionedActors: OptionalParam(StringArrayValidator),
 		mentionedEvents: OptionalParam(StringArrayValidator),
 		mentionedTags: OptionalParam(StringArrayValidator),
@@ -70,11 +75,11 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 		id: articleId,
 		worldId,
 		name,
-		descriptionRich,
+		contentRich,
 		mentionedActors,
 		mentionedEvents,
 		mentionedTags,
 	})
 })
 
-export const WikiRouter = router
+export const WorldWikiRouter = router

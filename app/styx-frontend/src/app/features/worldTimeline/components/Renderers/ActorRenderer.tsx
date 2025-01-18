@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux'
 
 import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { useIsReadOnly } from '@/hooks/useIsReadOnly'
-import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { ActorDetails } from '../../types'
 import { StyledListItemButton, StyledListItemText } from '../Outliner/styles'

@@ -12,7 +12,7 @@ import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { worldSlice } from '@/app/features/worldTimeline/reducer'
 import { getTimelineContextMenuState, getWorldState } from '@/app/features/worldTimeline/selectors'
 import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
-import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { useTimelineContextMenuRequests } from './hooks/useTimelineContextMenuRequests'
 

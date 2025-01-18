@@ -14,7 +14,7 @@ import { worldInitialState } from '@/app/features/worldTimeline/reducer'
 import { renderWithProviders } from '@/jest/renderWithProviders'
 import { setupTestServer } from '@/jest/setupTestServer'
 import { mockRouter } from '@/router/router.mock'
-import { homeRoutes } from '@/router/routes/homeRoutes'
+import { homeRoutes } from '@/router/routes/featureRoutes/homeRoutes'
 
 import { WorldDetails } from './WorldSettings'
 

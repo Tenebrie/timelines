@@ -13,7 +13,7 @@ import { useStringColor } from '@/app/utils/getStringColor'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 import { useDoubleClick } from '@/hooks/useDoubleClick'
-import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
