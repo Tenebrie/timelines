@@ -2,23 +2,20 @@ import TextField from '@mui/material/TextField'
 
 import { isRunningInTest } from '@/jest/isRunningInTest'
 
-import { OnChangeParams, RichTextEditor } from './RichTextEditor'
+import { RichTextEditor, RichTextEditorProps } from './RichTextEditor'
 
-type Props = {
-	value: string
-	onChange: (params: OnChangeParams) => void
-}
-
-export const RichTextEditorWithFallback = ({ value, onChange }: Props) => {
+export const RichTextEditorWithFallback = (props: RichTextEditorProps) => {
 	if (isRunningInTest()) {
 		return (
 			<TextField
-				value={value}
+				{...props}
 				placeholder="Content"
-				onChange={(e) => onChange({ plainText: e.target.value, richText: e.target.value, mentions: [] })}
+				onChange={(e) =>
+					props.onChange({ plainText: e.target.value, richText: e.target.value, mentions: [] })
+				}
 			/>
 		)
 	}
 
-	return <RichTextEditor value={value} onChange={onChange} />
+	return <RichTextEditor {...props} />
 }

@@ -2,9 +2,9 @@ import { memo, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { mockEventModel } from '@/api/rheaApi.mock'
+import { worldSlice } from '@/app/features/world/reducer'
+import { getWorldState } from '@/app/features/world/selectors'
 
-import { worldSlice } from '../../reducer'
-import { getWorldState } from '../../selectors'
 import { WorldEvent } from '../../types'
 import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetailsEditor'
 

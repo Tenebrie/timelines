@@ -20,6 +20,7 @@ model WikiArticle {
 
     name        String
     contentRich String @default("")
+    position    Int    @default(0)
 
     mentionedActors Actor[]      @relation("WikiMentionedActors")
     mentionedEvents WorldEvent[] @relation("WikiMentionedEvents")

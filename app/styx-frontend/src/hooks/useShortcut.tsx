@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 
 import { ShortcutLabel } from './styles'
-import { RegisteredShortcuts } from './useShortcutManager'
+import { RegisteredShortcuts, ShortcutPriority } from './useShortcutManager'
 import { Shortcut } from './useShortcutManager'
 
 export { Shortcut }
@@ -9,7 +9,7 @@ export { Shortcut }
 export const useShortcut = (
 	shortcutOrArray: (typeof Shortcut)[keyof typeof Shortcut] | (typeof Shortcut)[keyof typeof Shortcut][],
 	callback: () => void,
-	priority?: number,
+	priority?: ShortcutPriority,
 ) => {
 	useEffect(() => {
 		const shortcuts = Array.isArray(shortcutOrArray) ? shortcutOrArray : [shortcutOrArray]

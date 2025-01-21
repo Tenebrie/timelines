@@ -11,8 +11,8 @@ import {
 } from '@/ts-shared/CalliopeToClientMessage'
 
 import { ingestEvent, ingestEventDelta } from '../../utils/ingestEvent'
-import { worldSlice } from '../worldTimeline/reducer'
-import { getWorldState } from '../worldTimeline/selectors'
+import { worldSlice } from '../world/reducer'
+import { getWorldState } from '../world/selectors'
 
 export const useLiveMessageHandlers = () => {
 	const updatedAtRef = useRef<string>('0')

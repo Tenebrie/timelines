@@ -4,7 +4,7 @@ import Fab from '@mui/material/Fab'
 import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useSelector } from 'react-redux'
 
-import { getWorldState } from '@/app/features/worldTimeline/selectors'
+import { getWorldState } from '@/app/features/world/selectors'
 import { useIsReadOnly } from '@/hooks/useIsReadOnly'
 
 import { CreateHerePopover } from '../CreateHerePopover/CreateHerePopover'

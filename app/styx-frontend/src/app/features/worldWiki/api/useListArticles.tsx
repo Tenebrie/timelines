@@ -1,7 +1,7 @@
 import { useGetArticlesQuery } from '@api/otherApi'
 import { useSelector } from 'react-redux'
 
-import { getWorldIdState } from '../../worldTimeline/selectors'
+import { getWorldIdState } from '../../world/selectors'
 
 export const useListArticles = () => {
 	const worldId = useSelector(getWorldIdState)

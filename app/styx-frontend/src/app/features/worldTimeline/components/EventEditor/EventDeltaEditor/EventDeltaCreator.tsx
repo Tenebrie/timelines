@@ -3,8 +3,8 @@ import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { mockEventDeltaModel } from '@/api/rheaApi.mock'
-import { worldSlice } from '@/app/features/worldTimeline/reducer'
-import { getWorldState } from '@/app/features/worldTimeline/selectors'
+import { worldSlice } from '@/app/features/world/reducer'
+import { getWorldState } from '@/app/features/world/selectors'
 import { WorldEventDelta } from '@/app/features/worldTimeline/types'
 import {
 	useWorldTimelineRouter,

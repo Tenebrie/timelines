@@ -10,8 +10,8 @@ import {
 } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import { QueryParams } from '@/router/routes/QueryParams'
 
+import { worldSlice } from '../world/reducer'
 import { useTimelineBusDispatch } from './hooks/useTimelineBus'
-import { worldSlice } from './reducer'
 import { WorldContent } from './styles'
 
 const useWatchSelectedTime = () => {

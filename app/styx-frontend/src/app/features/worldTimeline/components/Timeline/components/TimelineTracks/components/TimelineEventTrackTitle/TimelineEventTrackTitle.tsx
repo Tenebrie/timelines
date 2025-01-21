@@ -26,6 +26,10 @@ export const TimelineEventTrackTitleComponent = ({ track }: Props) => {
 	const { ref, ghostElement } = useDragDrop({
 		type: 'timelineTrack',
 		params: { track },
+		ghostAlign: {
+			top: 'center',
+			left: 'center',
+		},
 		ghostFactory: () => (
 			<Button variant="contained" color="secondary" style={{ opacity: 0.5 }}>
 				{track.baseModel && (

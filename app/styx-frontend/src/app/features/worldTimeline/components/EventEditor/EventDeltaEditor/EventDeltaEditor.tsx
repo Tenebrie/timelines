@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid'
 import { useSelector } from 'react-redux'
 
-import { getWorldState } from '@/app/features/worldTimeline/selectors'
+import { getWorldState } from '@/app/features/world/selectors'
 import {
 	useWorldTimelineRouter,
 	worldTimelineRoutes,

@@ -13,15 +13,25 @@ export const WikiService = {
 				contentRich: true,
 				createdAt: true,
 				updatedAt: true,
+				position: true,
 			},
 		})
 	},
 
-	createWikiArticle: async (params: Pick<WikiArticle, 'worldId' | 'name'>) => {
+	getArticleCount: async (params: Pick<WikiArticle, 'worldId'>) => {
+		return getPrismaClient().wikiArticle.count({
+			where: {
+				worldId: params.worldId,
+			},
+		})
+	},
+
+	createWikiArticle: async (params: Pick<WikiArticle, 'worldId' | 'name' | 'position'>) => {
 		return getPrismaClient().wikiArticle.create({
 			data: {
 				worldId: params.worldId,
 				name: params.name,
+				position: params.position,
 			},
 			select: {
 				id: true,

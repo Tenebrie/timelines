@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useCheckAuthenticationQuery } from '@/api/authApi'
 import { appRoutes } from '@/router/routes/appRoutes'
 
-import { getWorldState } from '../../worldTimeline/selectors'
+import { getWorldState } from '../../world/selectors'
 import { authSlice } from '../reducer'
 import { getAuthState } from '../selectors'
 

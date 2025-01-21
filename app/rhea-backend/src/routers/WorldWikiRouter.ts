@@ -27,7 +27,8 @@ router.get('/api/world/:worldId/wiki/articles', async (ctx) => {
 		worldId: PathParam(StringValidator),
 	})
 
-	return WikiService.listWikiArticles({ worldId })
+	const articles = await WikiService.listWikiArticles({ worldId })
+	return articles.sort((a, b) => a.position - b.position)
 })
 
 router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
@@ -45,9 +46,12 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 		name: RequiredParam(StringValidator),
 	})
 
+	const articleCount = await WikiService.getArticleCount({ worldId })
+
 	return WikiService.createWikiArticle({
 		worldId,
 		name,
+		position: articleCount,
 	})
 })
 

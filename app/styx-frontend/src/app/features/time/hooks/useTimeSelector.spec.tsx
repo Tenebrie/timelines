@@ -1,6 +1,6 @@
 import { renderHookWithProviders } from '@/jest/renderWithProviders'
 
-import { worldInitialState } from '../../worldTimeline/reducer'
+import { worldInitialState } from '../../world/reducer'
 import { useTimeSelector } from './useTimeSelector'
 
 describe('useTimeSelector', () => {

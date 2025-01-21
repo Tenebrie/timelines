@@ -13,7 +13,7 @@ import {
 	WorldCalendarType,
 	WorldEvent,
 	WorldEventDelta,
-} from './types'
+} from '../worldTimeline/types'
 
 export const initialState = {
 	isLoaded: false as boolean,

@@ -10,7 +10,7 @@ import { TransitionGroup } from 'react-transition-group'
 
 import { useDeleteActorMutation } from '@/api/actorListApi'
 import { useModal } from '@/app/features/modals/reducer'
-import { getWorldIdState } from '@/app/features/worldTimeline/selectors'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useErrorState } from '@/app/utils/useErrorState'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'

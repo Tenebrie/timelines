@@ -15,7 +15,7 @@ import { QueryParams } from '@/router/routes/QueryParams'
 
 import { OutlinedContainer } from '../../components/OutlinedContainer'
 import { TrunkatedSpan } from '../../components/TrunkatedTypography'
-import { worldSlice } from '../worldTimeline/reducer'
+import { worldSlice } from '../world/reducer'
 import { WorldListEmptyState } from './components/WorldListEmptyState'
 import { worldListSlice } from './reducer'
 

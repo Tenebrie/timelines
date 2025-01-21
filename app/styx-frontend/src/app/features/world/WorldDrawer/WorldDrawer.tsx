@@ -16,7 +16,7 @@ import { store } from '@/app/store'
 import { useWorldRouter, worldRoutes } from '@/router/routes/featureRoutes/worldRoutes'
 import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
-import { getWorldIdState } from '../../worldTimeline/selectors'
+import { getWorldIdState } from '../selectors'
 import { WorldHeader } from './components/WorldHeader'
 
 export const WorldDrawer = () => {

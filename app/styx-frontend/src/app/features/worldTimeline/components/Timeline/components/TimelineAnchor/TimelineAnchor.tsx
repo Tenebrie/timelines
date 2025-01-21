@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { getWorldCalendarState } from '@/app/features/worldTimeline/selectors'
+import { getWorldCalendarState } from '@/app/features/world/selectors'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 

@@ -2,7 +2,7 @@ import Chip from '@mui/material/Chip'
 import { useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { getWorldState } from '@/app/features/worldTimeline/selectors'
+import { getWorldState } from '@/app/features/world/selectors'
 import { colorStringToHsl } from '@/app/utils/colors/colorStringToHsl'
 import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
 import { worldTimelineRoutes } from '@/router/routes/featureRoutes/worldTimelineRoutes'

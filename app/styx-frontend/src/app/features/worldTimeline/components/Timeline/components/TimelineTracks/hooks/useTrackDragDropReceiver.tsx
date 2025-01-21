@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 
 import { useSwapWorldEventTracksMutation } from '@/api/worldEventTracksApi'
 import { useDragDropReceiver } from '@/app/features/dragDrop/useDragDropReceiver'
-import { getWorldIdState } from '@/app/features/worldTimeline/selectors'
+import { getWorldIdState } from '@/app/features/world/selectors'
 
 import { TimelineTrack } from './useEventTracks'
 

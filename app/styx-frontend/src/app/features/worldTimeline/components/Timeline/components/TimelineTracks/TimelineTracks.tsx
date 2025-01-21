@@ -3,7 +3,7 @@ import { memo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { getTimelineContextMenuState, getWorldState } from '@/app/features/worldTimeline/selectors'
+import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
 import {
 	useWorldTimelineRouter,
 	worldTimelineRoutes,

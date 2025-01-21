@@ -15,7 +15,7 @@ import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
-import { getWorldIdState } from '../../worldTimeline/selectors'
+import { getWorldIdState } from '../../world/selectors'
 import { useModal } from '../reducer'
 
 export const EventTrackEditModal = () => {

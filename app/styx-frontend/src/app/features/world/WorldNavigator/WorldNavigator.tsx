@@ -10,7 +10,7 @@ import { getOverviewPreferences } from '@/app/features/preferences/selectors'
 import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { useTimelineBusDispatch } from '../../worldTimeline/hooks/useTimelineBus'
-import { worldSlice } from '../../worldTimeline/reducer'
+import { worldSlice } from '../reducer'
 
 export const WorldNavigatorComponent = () => {
 	const { navigateToOutliner } = useWorldTimelineRouter()

@@ -5,7 +5,7 @@ export const initialState = {
 	bulkActionArticles: [] as string[],
 }
 
-export const modalsSlice = createSlice({
+export const wikiSlice = createSlice({
 	name: 'worldWiki',
 	initialState,
 	reducers: {
@@ -23,4 +23,4 @@ export const modalsSlice = createSlice({
 
 export type ModalsState = typeof initialState
 export const modalsInitialState = initialState
-export default modalsSlice.reducer
+export default wikiSlice.reducer

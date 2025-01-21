@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { worldSlice } from '@/app/features/world/reducer'
+import { getWorldRouterState } from '@/app/features/world/selectors'
 import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTimelineBus'
-import { worldSlice } from '@/app/features/worldTimeline/reducer'
-import { getWorldRouterState } from '@/app/features/worldTimeline/selectors'
 
 import { GenericArgsOrVoid, GenericQueryOrVoid, QueryStrategy } from '../../types'
 import { useBaseRouter } from '../../useBaseRouter'

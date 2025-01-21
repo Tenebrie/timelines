@@ -12,7 +12,9 @@ import { StyledContainer, StyledEditorContent } from './styles'
 type Props = {
 	value: string
 	onChange: (params: { plainText: string; richText: string; mentions: string[] }) => void
+	onBlur?: () => void
 }
+export type RichTextEditorProps = Props
 
 export type OnChangeParams = {
 	plainText: string
@@ -20,7 +22,7 @@ export type OnChangeParams = {
 	mentions: string[]
 }
 
-export const RichTextEditor = ({ value, onChange }: Props) => {
+export const RichTextEditor = ({ value, onChange, onBlur }: Props) => {
 	const theme = useCustomTheme()
 
 	const onChangeThrottled = useRef(
@@ -55,6 +57,7 @@ export const RichTextEditor = ({ value, onChange }: Props) => {
 				borderRadius: '6px',
 			}}
 			$theme={theme}
+			onBlur={onBlur}
 		>
 			<RichTextEditorControls editor={editor} />
 			<StyledEditorContent className="content" editor={editor} placeholder="Content" $mode="edit" />

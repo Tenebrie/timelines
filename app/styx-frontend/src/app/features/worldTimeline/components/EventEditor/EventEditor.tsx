@@ -1,12 +1,12 @@
 import Grid from '@mui/material/Grid'
 import { useSelector } from 'react-redux'
 
+import { getWorldState } from '@/app/features/world/selectors'
 import {
 	useWorldTimelineRouter,
 	worldTimelineRoutes,
 } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
-import { getWorldState } from '../../selectors'
 import { EventDetailsEditor } from './components/EventDetailsEditor/EventDetailsEditor'
 import { FullHeightContainer } from './styles'
 

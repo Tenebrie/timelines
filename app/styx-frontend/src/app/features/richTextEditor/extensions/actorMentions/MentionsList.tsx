@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { getWorldState } from '@/app/features/worldTimeline/selectors'
+import { getWorldState } from '@/app/features/world/selectors'
 import { Actor } from '@/app/features/worldTimeline/types'
 
 import { ActorMentionNodeName } from './components/ActorMentionNode'

@@ -124,7 +124,9 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 							{
 								path: worldWikiRoutes.article,
 								...lazyImport(
-									import('../app/features/worldWiki/components/Article/Article').then((m) => m.Article),
+									import('../app/features/worldWiki/components/ArticleDetails/ArticleDetails').then(
+										(m) => m.ArticleDetails,
+									),
 								),
 							},
 						],

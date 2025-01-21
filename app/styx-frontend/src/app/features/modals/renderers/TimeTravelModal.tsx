@@ -12,9 +12,9 @@ import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/compo
 
 import { useTimeSelector } from '../../time/hooks/useTimeSelector'
 import { useWorldTime } from '../../time/hooks/useWorldTime'
+import { worldSlice } from '../../world/reducer'
+import { getWorldState } from '../../world/selectors'
 import { useTimelineBusDispatch } from '../../worldTimeline/hooks/useTimelineBus'
-import { worldSlice } from '../../worldTimeline/reducer'
-import { getWorldState } from '../../worldTimeline/selectors'
 import { WorldCalendarType } from '../../worldTimeline/types'
 import { useModal } from '../reducer'
 import { TimeTravelModalInfo } from './TimeTravelModalInfo'

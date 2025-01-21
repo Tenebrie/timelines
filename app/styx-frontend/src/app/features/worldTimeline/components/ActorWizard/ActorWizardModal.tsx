@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux'
 import { useCreateActorMutation } from '@/api/actorListApi'
 import { FormErrorBanner } from '@/app/components/FormErrorBanner'
 import { useModal } from '@/app/features/modals/reducer'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useErrorState } from '@/app/utils/useErrorState'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
@@ -20,7 +21,6 @@ import Modal, { useModalCleanup } from '@/ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '@/ui-lib/components/Modal'
 
 import { useActorColors } from '../../hooks/useActorColors'
-import { getWorldIdState } from '../../selectors'
 
 export const ActorWizardModal = () => {
 	const { isOpen, close } = useModal('actorWizard')

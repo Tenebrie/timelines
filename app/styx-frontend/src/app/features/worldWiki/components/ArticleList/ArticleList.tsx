@@ -1,8 +1,8 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 
-import { useCreateArticle } from '../../hooks/useCreateArticle'
-import { useListArticles } from '../../hooks/useListArticles'
+import { useCreateArticle } from '../../api/useCreateArticle'
+import { useListArticles } from '../../api/useListArticles'
 import { ArticleListItem } from './ArticleListItem'
 
 export const ArticleList = () => {

@@ -2,8 +2,8 @@ import { useCreateActorMutation } from '@api/actorListApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { worldSlice } from '@/app/features/worldTimeline/reducer'
-import { getWorldIdState } from '@/app/features/worldTimeline/selectors'
+import { worldSlice } from '@/app/features/world/reducer'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { hslToHex } from '@/app/utils/colors/hslToHex'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 

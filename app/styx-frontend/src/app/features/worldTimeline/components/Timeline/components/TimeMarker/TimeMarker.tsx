@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { getWorldCalendarState } from '@/app/features/worldTimeline/selectors'
+import { getWorldCalendarState } from '@/app/features/world/selectors'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 
 import { ScaleLevel } from '../../types'

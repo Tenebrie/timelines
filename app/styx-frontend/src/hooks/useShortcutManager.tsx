@@ -6,18 +6,26 @@ export const Shortcut = {
 	Enter: 'Enter',
 	CtrlEnter: 'Ctrl+Enter',
 	Search: 'Ctrl+f',
+	Escape: 'Escape',
 } as const
+
+export type ShortcutPriority = number | boolean
 
 export const RegisteredShortcuts: Record<
 	(typeof Shortcut)[keyof typeof Shortcut],
-	{ priority: number; callback: () => unknown }[]
+	{ priority: ShortcutPriority; callback: () => unknown }[]
 > = {
 	[Shortcut.Enter]: [],
 	[Shortcut.CtrlEnter]: [],
 	[Shortcut.Search]: [],
+	[Shortcut.Escape]: [],
 }
 
 export const useShortcutManager = () => {
+	const parsePriority = (priority: ShortcutPriority) => {
+		return priority === true ? 1 : priority === false ? -1 : Number(priority)
+	}
+
 	const onKeyDown = useCallback((event: KeyboardEvent) => {
 		const key = event.key
 		const ctrlKey = isMacOS() ? event.metaKey : event.ctrlKey
@@ -27,7 +35,10 @@ export const useShortcutManager = () => {
 			const ctrlKeyNeeded = defKeys.some((key) => key === 'Ctrl')
 
 			if (ctrlKey === ctrlKeyNeeded && key === defKeys[defKeys.length - 1]) {
-				RegisteredShortcuts[shortcut].sort((a, b) => b.priority - a.priority)[0]?.callback()
+				RegisteredShortcuts[shortcut]
+					.filter((shc) => shc.priority !== false)
+					.sort((a, b) => parsePriority(b.priority) - parsePriority(a.priority))[0]
+					?.callback()
 				event.preventDefault()
 			}
 		})

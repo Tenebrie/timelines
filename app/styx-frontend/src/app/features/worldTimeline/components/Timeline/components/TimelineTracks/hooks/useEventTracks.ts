@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useEventTracksRequest } from '@/app/features/worldTimeline/components/Timeline/hooks/useEventTracksRequest'
 import {
 	getEventCreatorState,
 	getEventDeltaCreatorState,
 	getWorldState,
-} from '@/app/features/worldTimeline/selectors'
+} from '@/app/features/world/selectors'
+import { useEventTracksRequest } from '@/app/features/worldTimeline/components/Timeline/hooks/useEventTracksRequest'
 import {
 	MarkerType,
 	TimelineEntity,

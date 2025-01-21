@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useGetWorldInfoQuery } from '@/api/worldDetailsApi'
 
-import { worldSlice } from '../reducer'
-import { getWorldStateLoaded } from '../selectors'
+import { worldSlice } from '../../world/reducer'
+import { getWorldStateLoaded } from '../../world/selectors'
 
 export const useLoadWorldInfo = (worldId: string) => {
 	const { data } = useGetWorldInfoQuery(

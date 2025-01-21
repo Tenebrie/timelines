@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { useWorldCalendar } from '@/app/features/time/hooks/useWorldCalendar'
-import { worldSlice } from '@/app/features/worldTimeline/reducer'
+import { worldSlice } from '@/app/features/world/reducer'
 import { WorldCalendarType } from '@/app/features/worldTimeline/types'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
