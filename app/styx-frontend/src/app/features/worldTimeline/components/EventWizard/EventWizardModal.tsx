@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import { useCreateWorldEventMutation } from '@/api/worldEventApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { TimestampField } from '@/app/features/time/components/TimestampField'
+import { isEntityNameValid } from '@/app/features/validation/isEntityNameValid'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import {
@@ -47,8 +48,9 @@ export const EventWizardModal = () => {
 			return
 		}
 
-		if (!name.trim()) {
-			setNameValidationError("Field can't be empty")
+		const validationResult = isEntityNameValid(name)
+		if (validationResult.error) {
+			setNameValidationError(validationResult.error)
 			return
 		}
 

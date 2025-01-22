@@ -14,6 +14,7 @@ import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
+import { isEntityNameValid } from '../../validation/isEntityNameValid'
 import { getWorldIdState } from '../../world/selectors'
 import { useModal } from '../reducer'
 
@@ -46,8 +47,9 @@ export const EventTrackWizardModal = () => {
 			return
 		}
 
-		if (!name.trim()) {
-			setNameValidationError("Field can't be empty")
+		const validationResult = isEntityNameValid(name)
+		if (validationResult.error) {
+			setNameValidationError(validationResult.error)
 			return
 		}
 

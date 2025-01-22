@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux'
 import { useCreateActorMutation } from '@/api/actorListApi'
 import { FormErrorBanner } from '@/app/components/FormErrorBanner'
 import { useModal } from '@/app/features/modals/reducer'
+import { isEntityNameValid } from '@/app/features/validation/isEntityNameValid'
 import { getWorldIdState } from '@/app/features/world/selectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useErrorState } from '@/app/utils/useErrorState'
@@ -58,8 +59,9 @@ export const ActorWizardModal = () => {
 			return
 		}
 
-		if (!name.trim()) {
-			raiseError('MISSING_NAME', 'Field can not be empty')
+		const validationResult = isEntityNameValid(name)
+		if (validationResult.error) {
+			raiseError('MISSING_NAME', validationResult.error)
 			return
 		}
 

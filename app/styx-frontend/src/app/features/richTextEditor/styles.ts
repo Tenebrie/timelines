@@ -60,8 +60,14 @@ export const StyledEditorContent = styled(EditorContent)<{ $mode: 'read' | 'edit
 	p:first-child {
 		padding-top: 16px;
 	}
-	p:last-child {
-		padding-bottom: 16px;
+	// p:last-child {
+	// 	padding-bottom: 0px;
+	// }
+
+	code {
+		padding: 4px 8px;
+		border-radius: 4px;
+		background: #00000033;
 	}
 
 	.ProseMirror {

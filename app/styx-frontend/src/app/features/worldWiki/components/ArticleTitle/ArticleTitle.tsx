@@ -48,9 +48,9 @@ export const ArticleTitle = () => {
 	}
 
 	return (
-		<Stack width="100%" justifyContent="space-between" direction="row" alignContent="center">
-			<Stack gap={1} direction="row" alignContent="center" width="100%" sx={{ height: '32px' }}>
-				{!editing && (
+		<Stack gap={1} direction="row" alignContent="center" width="100%" sx={{ height: '32px' }}>
+			{!editing && (
+				<Stack direction="row" justifyContent="space-between">
 					<Button
 						variant="text"
 						sx={{ padding: '0 8px', width: '100%', justifyContent: 'flex-start' }}
@@ -58,24 +58,24 @@ export const ArticleTitle = () => {
 					>
 						<Typography variant="h6">{article.name}</Typography>
 					</Button>
-				)}
-				{editing && (
-					<Input
-						autoFocus
-						value={name}
-						onChange={(event) => setName(event.target.value)}
-						onBlur={() => applyChanges()}
-						sx={{
-							width: '100%',
-							marginBottom: '-9px',
-							fontSize: '20px',
-							fontWeight: 450,
-							paddingLeft: '8px',
-							paddingBottom: '8px',
-						}}
-					/>
-				)}
-			</Stack>
+				</Stack>
+			)}
+			{editing && (
+				<Input
+					autoFocus
+					value={name}
+					onChange={(event) => setName(event.target.value)}
+					onBlur={() => applyChanges()}
+					sx={{
+						width: '100%',
+						marginBottom: '-9px',
+						fontSize: '20px',
+						fontWeight: 450,
+						paddingLeft: '8px',
+						paddingBottom: '8px',
+					}}
+				/>
+			)}
 		</Stack>
 	)
 }

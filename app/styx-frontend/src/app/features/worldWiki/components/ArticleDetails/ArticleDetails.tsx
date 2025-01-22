@@ -52,6 +52,7 @@ export const ArticleDetails = () => {
 			value={article.contentRich}
 			onChange={onChange}
 			onBlur={manualSave}
+			allowReadMode
 		/>
 	)
 }

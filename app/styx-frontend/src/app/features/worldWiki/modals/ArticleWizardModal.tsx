@@ -10,6 +10,7 @@ import { useWorldWikiRouter, worldWikiRoutes } from '@/router/routes/featureRout
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 import { useModal } from '../../modals/reducer'
+import { isEntityNameValid } from '../../validation/isEntityNameValid'
 import { useCreateArticle } from '../api/useCreateArticle'
 
 export const ArticleWizardModal = () => {
@@ -38,8 +39,9 @@ export const ArticleWizardModal = () => {
 			return
 		}
 
-		if (!name.trim()) {
-			setNameValidationError("Field can't be empty")
+		const validationResult = isEntityNameValid(name)
+		if (validationResult.error) {
+			setNameValidationError(validationResult.error)
 			return
 		}
 

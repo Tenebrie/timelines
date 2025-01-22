@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { useWorldCalendar } from '@/app/features/time/hooks/useWorldCalendar'
+import { isEntityNameValid } from '@/app/features/validation/isEntityNameValid'
 import { worldSlice } from '@/app/features/world/reducer'
 import { WorldCalendarType } from '@/app/features/worldTimeline/types'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
@@ -64,8 +65,9 @@ export const WorldWizardModal = () => {
 			return
 		}
 
-		if (!name.trim()) {
-			setNameValidationError("Field can't be empty")
+		const validationResult = isEntityNameValid(name)
+		if (validationResult.error) {
+			setNameValidationError(validationResult.error)
 			return
 		}
 
