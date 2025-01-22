@@ -43,7 +43,7 @@ export const ArticleDetails = () => {
 	}
 
 	if (!article) {
-		return null
+		return <></>
 	}
 
 	return (

@@ -55,6 +55,7 @@ export const RichTextEditor = ({ value, onChange, onBlur }: Props) => {
 		<StyledContainer
 			sx={{
 				borderRadius: '6px',
+				height: '100%',
 			}}
 			$theme={theme}
 			onBlur={onBlur}

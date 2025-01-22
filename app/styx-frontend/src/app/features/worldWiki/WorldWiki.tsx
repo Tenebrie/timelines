@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
@@ -34,7 +35,7 @@ export const WorldWiki = () => {
 						paddingTop: 3,
 						width: 'calc(100% - 64px)',
 						height: 'calc(100% - 128px)',
-						maxWidth: '400px',
+						maxWidth: '350px',
 						maxHeight: 'calc(100% - 16px)',
 						overflowY: 'auto',
 					}}
@@ -60,12 +61,12 @@ export const WorldWiki = () => {
 					}}
 					elevation={2}
 				>
-					<Stack gap={1}>
+					<Stack gap={1} height={'calc(100%)'}>
 						<Stack gap={1}>
 							<ArticleTitle />
 							<Divider />
 						</Stack>
-						{<Outlet />}
+						<Box height={'calc(100% - 64px)'}>{<Outlet />}</Box>
 					</Stack>
 				</Paper>
 			</Stack>

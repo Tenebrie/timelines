@@ -1,6 +1,7 @@
 import ArrowBack from '@mui/icons-material/ArrowBack'
 import Delete from '@mui/icons-material/Delete'
 import LoadingButton from '@mui/lab/LoadingButton'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
@@ -141,11 +142,13 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 						</Button>
 					</Tooltip>
 				</Stack>
-				<RichTextEditorWithFallback
-					key={createEventKey}
-					value={descriptionRich}
-					onChange={onDescriptionChange}
-				/>
+				<Box height={'300px'}>
+					<RichTextEditorWithFallback
+						key={createEventKey}
+						value={descriptionRich}
+						onChange={onDescriptionChange}
+					/>
+				</Box>
 				<Stack direction="row-reverse" justifyContent="space-between">
 					{mode !== 'edit' && (
 						<Tooltip title={shortcutLabel} arrow placement="top">
