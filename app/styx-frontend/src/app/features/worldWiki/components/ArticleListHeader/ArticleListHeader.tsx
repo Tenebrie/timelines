@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/reducer'
+import { getWikiPreferences } from '@/app/features/preferences/selectors'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 
 import { useListArticles } from '../../api/useListArticles'
@@ -16,6 +17,7 @@ import { getWikiState } from '../../selectors'
 
 export const ArticleListHeader = () => {
 	const { data: articles } = useListArticles()
+	const { readModeEnabled } = useSelector(getWikiPreferences)
 	const { isBulkSelecting, bulkActionArticles } = useSelector(getWikiState)
 	const { open: openArticleWizard } = useModal('articleWizard')
 	const { open: openDeleteArticleModal } = useModal('deleteArticleModal')
@@ -43,24 +45,30 @@ export const ArticleListHeader = () => {
 
 	return (
 		<Stack sx={{ height: '32px' }} direction="row">
-			<Checkbox
-				checked={!!articles && bulkActionArticles.length > 0}
-				indeterminate={
-					articles && bulkActionArticles.length > 0 && bulkActionArticles.length < articles.length
-				}
-				size="small"
-				sx={{
-					width: 32,
-					height: 32,
-				}}
-				onChange={() => onChange()}
-			/>
+			{isBulkSelecting && (
+				<Checkbox
+					checked={!!articles && bulkActionArticles.length > 0}
+					indeterminate={
+						articles && bulkActionArticles.length > 0 && bulkActionArticles.length < articles.length
+					}
+					size="small"
+					sx={{
+						width: 32,
+						height: 32,
+					}}
+					onChange={() => onChange()}
+				/>
+			)}
 			<Stack direction="row" justifyContent="space-between" width="100%">
 				<Typography variant="h6" marginLeft={1}>
 					Articles
 				</Typography>
 				{!isBulkSelecting && (
-					<Button variant="contained" startIcon={<Add />} onClick={() => openArticleWizard({})}>
+					<Button
+						variant={readModeEnabled ? 'outlined' : 'contained'}
+						startIcon={<Add />}
+						onClick={() => openArticleWizard({})}
+					>
 						Create article
 					</Button>
 				)}
