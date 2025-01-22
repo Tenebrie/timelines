@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useRef } from 'react'
 
 import { OnChangeParams } from '@/app/features/richTextEditor/RichTextEditor'
 import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
@@ -6,32 +6,39 @@ import { useAutosave } from '@/app/utils/autosave/useAutosave'
 
 import { useEditArticle } from '../../api/useEditArticle'
 import { useCurrentArticle } from '../../hooks/useCurrentArticle'
+import { WikiArticle } from '../../types'
 
 export const ArticleDetails = () => {
 	const { article } = useCurrentArticle()
 	const [editArticle, { isLoading: isSaving }] = useEditArticle()
 
-	const [content, setContent] = useState('')
+	const articleToSave = useRef<(WikiArticle & { mentionedActors: string[] }) | null>(null)
 
 	const { autosave, manualSave } = useAutosave({
 		onSave: () => {
-			if (!article || content === article.contentRich) {
+			const article = articleToSave.current
+			if (!article) {
 				return
 			}
 			editArticle({
 				id: article.id,
-				contentRich: content,
+				contentRich: article.contentRich,
+				mentionedActors: article.mentionedActors,
 			})
+			articleToSave.current = null
 		},
 		isSaving,
 	})
 
-	useEffect(() => {
-		setContent(article?.contentRich ?? '')
-	}, [article])
-
 	const onChange = (params: OnChangeParams) => {
-		setContent(params.richText)
+		if (!article) {
+			return
+		}
+		articleToSave.current = {
+			...article,
+			contentRich: params.richText,
+			mentionedActors: params.mentions,
+		}
 		autosave()
 	}
 

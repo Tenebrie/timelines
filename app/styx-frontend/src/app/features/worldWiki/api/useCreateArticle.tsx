@@ -8,11 +8,11 @@ import { getWorldIdState } from '../../world/selectors'
 
 export const useCreateArticle = () => {
 	const worldId = useSelector(getWorldIdState)
-	const [createArticle] = useCreateArticleMutation()
+	const [createArticle, params] = useCreateArticleMutation()
 
 	const dispatch = useDispatch<AppDispatch>()
 
-	const create = async ({ name }: { name: string }) => {
+	const commit = async ({ name }: { name: string }) => {
 		const { response, error } = parseApiResponse(
 			await createArticle({
 				worldId,
@@ -22,7 +22,6 @@ export const useCreateArticle = () => {
 			}),
 		)
 		if (error) {
-			console.error(error)
 			return
 		}
 
@@ -43,7 +42,5 @@ export const useCreateArticle = () => {
 		return response
 	}
 
-	return {
-		createArticle: create,
-	}
+	return [commit, params] as const
 }

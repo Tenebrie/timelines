@@ -185,31 +185,10 @@ export const WorldEventTrackService = {
 				),
 			)
 
-			const world = await prisma.world.update({
-				where: {
-					id: worldId,
-				},
-				data: {
-					id: worldId,
-				},
-				select: {
-					id: true,
-					updatedAt: true,
-				},
-			})
-			const eventTrack = await prisma.worldEventTrack.findMany({
-				where: {
-					id: trackId,
-				},
-				select: {
-					id: true,
-					position: true,
-				},
-			})
+			const world = await makeTouchWorldQuery(worldId)
 
 			return {
 				world,
-				eventTrack,
 			}
 		})
 	},

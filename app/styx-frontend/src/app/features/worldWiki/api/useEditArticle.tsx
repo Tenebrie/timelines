@@ -1,16 +1,15 @@
 import { otherApi, useUpdateArticleMutation } from '@api/otherApi'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import { getWorldIdState } from '../../world/selectors'
+import { useArticleApiCache } from './useArticleApiCache'
 
 export const useEditArticle = () => {
 	const worldId = useSelector(getWorldIdState)
 	const [updateArticle, params] = useUpdateArticleMutation()
-
-	const dispatch = useDispatch<AppDispatch>()
+	const { updateCachedArticle } = useArticleApiCache()
 
 	const edit = async (data: {
 		id: string
@@ -22,20 +21,7 @@ export const useEditArticle = () => {
 	}) => {
 		const { id, name, contentRich, mentionedActors, mentionedEvents, mentionedTags } = data
 
-		dispatch(
-			otherApi.util.updateQueryData('getArticles', { worldId }, (draft) => {
-				return draft.map((article) => {
-					if (article.id !== id) {
-						return article
-					}
-
-					return {
-						...article,
-						...data,
-					}
-				})
-			}),
-		)
+		updateCachedArticle(data)
 
 		const { response, error } = parseApiResponse(
 			await updateArticle({

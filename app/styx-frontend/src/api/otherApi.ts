@@ -35,6 +35,29 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldWiki'],
 			}),
+			deleteArticle: build.mutation<DeleteArticleApiResponse, DeleteArticleApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/wiki/article/${queryArg.articleId}`,
+					method: 'DELETE',
+				}),
+				invalidatesTags: ['worldWiki'],
+			}),
+			swapArticlePositions: build.mutation<SwapArticlePositionsApiResponse, SwapArticlePositionsApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/wiki/article/swap`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldWiki'],
+			}),
+			bulkDeleteArticles: build.mutation<BulkDeleteArticlesApiResponse, BulkDeleteArticlesApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/wiki/articles/delete`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldWiki'],
+			}),
 		}),
 		overrideExisting: false,
 	})
@@ -50,6 +73,7 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	position: number
 	contentRich: string
 }[]
 export type GetArticlesApiArg = {
@@ -61,6 +85,9 @@ export type CreateArticleApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
+	position: number
+	contentRich: string
 }
 export type CreateArticleApiArg = {
 	/** Any string value */
@@ -74,6 +101,9 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
+	position: number
+	contentRich: string
 }
 export type UpdateArticleApiArg = {
 	/** Any string value */
@@ -88,6 +118,30 @@ export type UpdateArticleApiArg = {
 		mentionedTags?: string[]
 	}
 }
+export type DeleteArticleApiResponse = unknown
+export type DeleteArticleApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	articleId: string
+}
+export type SwapArticlePositionsApiResponse = unknown
+export type SwapArticlePositionsApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		articleA: string
+		articleB: string
+	}
+}
+export type BulkDeleteArticlesApiResponse = unknown
+export type BulkDeleteArticlesApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		articles: string[]
+	}
+}
 export const {
 	useAdminGetUserLevelsQuery,
 	useLazyAdminGetUserLevelsQuery,
@@ -99,4 +153,7 @@ export const {
 	useLazyGetArticlesQuery,
 	useCreateArticleMutation,
 	useUpdateArticleMutation,
+	useDeleteArticleMutation,
+	useSwapArticlePositionsMutation,
+	useBulkDeleteArticlesMutation,
 } = injectedRtkApi

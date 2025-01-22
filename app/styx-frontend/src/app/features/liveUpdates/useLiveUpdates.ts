@@ -87,7 +87,9 @@ export const useLiveUpdates = () => {
 			socket.onmessage = function (event) {
 				const message = JSON.parse(event.data) as CalliopeToClientMessage
 				// TODO: The data is guaranteed to be correct, but fix typings
-				messageHandlers[message.type](message.data as never)
+				if (messageHandlers.current) {
+					messageHandlers.current[message.type](message.data as never)
+				}
 			}
 
 			socket.onclose = function (event) {

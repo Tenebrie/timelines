@@ -7,6 +7,7 @@ export const Shortcut = {
 	CtrlEnter: 'Ctrl+Enter',
 	Search: 'Ctrl+f',
 	Escape: 'Escape',
+	CreateNew: 'n',
 } as const
 
 export type ShortcutPriority = number | boolean
@@ -19,6 +20,7 @@ export const RegisteredShortcuts: Record<
 	[Shortcut.CtrlEnter]: [],
 	[Shortcut.Search]: [],
 	[Shortcut.Escape]: [],
+	[Shortcut.CreateNew]: [],
 }
 
 export const useShortcutManager = () => {
@@ -29,6 +31,15 @@ export const useShortcutManager = () => {
 	const onKeyDown = useCallback((event: KeyboardEvent) => {
 		const key = event.key
 		const ctrlKey = isMacOS() ? event.metaKey : event.ctrlKey
+
+		const isTargetingInput =
+			event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement
+		const isTargetingRichInput = event.target instanceof HTMLElement && event.target.isContentEditable
+		const isSingleKeyShortcut = key.length === 1
+
+		if (isSingleKeyShortcut && (isTargetingInput || isTargetingRichInput)) {
+			return
+		}
 
 		Object.values(Shortcut).forEach((shortcut) => {
 			const defKeys = shortcut.split('+')

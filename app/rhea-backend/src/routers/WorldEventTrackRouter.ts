@@ -156,14 +156,12 @@ router.delete('/api/world/:worldId/event-track/:trackId', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
-	const { eventTrack, world } = await WorldEventTrackService.deleteEventTrack({
+	const { world } = await WorldEventTrackService.deleteEventTrack({
 		worldId,
 		trackId,
 	})
 
 	RedisService.notifyAboutWorldTracksUpdate({ worldId, timestamp: world.updatedAt })
-
-	return eventTrack
 })
 
 export const WorldEventTrackRouter = router

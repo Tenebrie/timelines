@@ -1,4 +1,5 @@
 import { announcementListApi } from '@api/announcementListApi'
+import { otherApi } from '@api/otherApi'
 import { GetWorldInfoApiResponse, worldDetailsApi } from '@api/worldDetailsApi'
 import { worldEventTracksApi } from '@api/worldEventTracksApi'
 import { worldListApi } from '@api/worldListApi'
@@ -13,13 +14,18 @@ import {
 import { ingestEvent, ingestEventDelta } from '../../utils/ingestEvent'
 import { worldSlice } from '../world/reducer'
 import { getWorldState } from '../world/selectors'
+import { useArticleApiCache } from '../worldWiki/api/useArticleApiCache'
+import { WikiArticle } from '../worldWiki/types'
 
 export const useLiveMessageHandlers = () => {
 	const updatedAtRef = useRef<string>('0')
+	const currentHandlersRef = useRef<CalliopeToClientMessageHandler | null>(null)
 
 	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState, (a, b) => a.updatedAt === b.updatedAt)
 	const { updateEvent, updateEventDelta } = worldSlice.actions
 	const dispatch = useDispatch()
+
+	const { updateCachedArticle } = useArticleApiCache()
 
 	useEffect(() => {
 		updatedAtRef.current = currentUpdatedAt
@@ -27,7 +33,6 @@ export const useLiveMessageHandlers = () => {
 
 	const messageHandlers: CalliopeToClientMessageHandler = {
 		[CalliopeToClientMessageType.ANNOUNCEMENT]: () => {
-			// TODO: Invalidate on all APIs
 			dispatch(announcementListApi.util.invalidateTags(['announcementList']))
 		},
 		[CalliopeToClientMessageType.WORLD_UPDATED]: (data) => {
@@ -56,7 +61,16 @@ export const useLiveMessageHandlers = () => {
 				),
 			)
 		},
+		[CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED]: (data) => {
+			const article = JSON.parse(data.article) as WikiArticle
+			updateCachedArticle(article)
+		},
+		[CalliopeToClientMessageType.WIKI_ARTICLE_DELETED]: () => {
+			dispatch(otherApi.util.invalidateTags(['worldWiki']))
+		},
 	}
 
-	return messageHandlers
+	currentHandlersRef.current = messageHandlers
+
+	return currentHandlersRef
 }

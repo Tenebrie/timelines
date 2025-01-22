@@ -1,11 +1,11 @@
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
 import { Navigate, Outlet } from 'react-router-dom'
 
 import { useAuthCheck } from '../auth/authCheck/useAuthCheck'
 import { ArticleList } from './components/ArticleList/ArticleList'
+import { ArticleListHeader } from './components/ArticleListHeader/ArticleListHeader'
 import { ArticleTitle } from './components/ArticleTitle/ArticleTitle'
 
 export const WorldWiki = () => {
@@ -42,11 +42,7 @@ export const WorldWiki = () => {
 				>
 					<Stack gap={1}>
 						<Stack gap={1}>
-							<Stack width="100%" justifyContent="space-between" direction="row" alignContent="center">
-								<Typography variant="h6" marginLeft={1}>
-									Articles
-								</Typography>
-							</Stack>
+							<ArticleListHeader />
 							<Divider />
 						</Stack>
 						<ArticleList />

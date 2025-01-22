@@ -48,6 +48,10 @@ export const useAutosave = ({ onSave, isSaving, isError, defaultIcon }: Props) =
 		onSaveRef.current()
 	}, [isSaving])
 
+	const onCancelAutosave = useCallback(() => {
+		setSavingState('none')
+	}, [])
+
 	useEffect(() => {
 		onSaveRef.current = onSave
 	}, [onSave])
@@ -118,6 +122,7 @@ export const useAutosave = ({ onSave, isSaving, isError, defaultIcon }: Props) =
 		color: currentColor,
 		autosave: onAutosave,
 		manualSave: onManualSave,
+		cancelAutosave: onCancelAutosave,
 		savingState,
 	}
 }

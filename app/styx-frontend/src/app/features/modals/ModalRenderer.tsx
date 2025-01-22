@@ -1,5 +1,7 @@
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 
+import { ArticleWizardModal } from '../worldWiki/modals/ArticleWizardModal'
+import { DeleteArticleModal } from '../worldWiki/modals/DeleteArticleModal'
 import { useModal } from './reducer'
 import { EventTrackEditModal } from './renderers/EventTrackEditModal'
 import { EventTrackWizardModal } from './renderers/EventTrackWizardModal'
@@ -17,6 +19,8 @@ export const ModalRenderer = () => {
 			<EventTrackEditModal />
 			<EventTrackWizardModal />
 			<TimeTravelModal />
+			<ArticleWizardModal />
+			<DeleteArticleModal />
 		</>
 	)
 }
