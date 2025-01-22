@@ -135,7 +135,6 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 			return
 		}
 
-		container.style.position = 'relative'
 		container.addEventListener('mousedown', onMouseDown)
 
 		return () => {

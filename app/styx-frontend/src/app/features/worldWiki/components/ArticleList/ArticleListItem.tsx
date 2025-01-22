@@ -39,7 +39,7 @@ export const ArticleListItem = ({ article }: Props) => {
 	const { checkboxVisible, checked, onChange } = useArticleBulkActions({ article })
 
 	return (
-		<Stack ref={ref} direction="row">
+		<Stack ref={ref} direction="row" position={'relative'}>
 			{checkboxVisible && <Checkbox size="small" checked={checked} onChange={onChange}></Checkbox>}
 			<Button color="secondary" sx={{ justifyContent: 'start' }} fullWidth onClick={onNavigate}>
 				{article.name}
