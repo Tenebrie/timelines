@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 export const initialState = {
 	lastCheckedArticle: null as string | null,
+	isBulkSelecting: false as boolean,
 	bulkActionArticles: [] as string[],
 }
 
@@ -14,7 +15,12 @@ export const wikiSlice = createSlice({
 			state.lastCheckedArticle = payload.article
 		},
 
+		setBulkSelecting: (state, { payload }: PayloadAction<boolean>) => {
+			state.isBulkSelecting = payload
+		},
+
 		addToBulkSelection: (state, { payload }: PayloadAction<{ articles: string[] }>) => {
+			state.isBulkSelecting = true
 			state.bulkActionArticles = [...state.bulkActionArticles, ...payload.articles]
 		},
 

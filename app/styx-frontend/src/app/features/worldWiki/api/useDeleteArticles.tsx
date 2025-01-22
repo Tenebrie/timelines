@@ -5,14 +5,17 @@ import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import { getWorldIdState } from '../../world/selectors'
 import { wikiSlice } from '../reducer'
+import { getWikiState } from '../selectors'
 import { useArticleApiCache } from './useArticleApiCache'
 
 export const useDeleteArticles = () => {
 	const worldId = useSelector(getWorldIdState)
+	const { bulkActionArticles } = useSelector(getWikiState)
+
 	const [deleteArticle, params] = useBulkDeleteArticlesMutation()
 	const { removeCachedArticles } = useArticleApiCache()
 
-	const { removeFromBulkSelection } = wikiSlice.actions
+	const { removeFromBulkSelection, setBulkSelecting } = wikiSlice.actions
 	const dispatch = useDispatch()
 
 	const commit = async (articles: string[]) => {
@@ -31,6 +34,9 @@ export const useDeleteArticles = () => {
 			return { response: null, error }
 		}
 
+		if (bulkActionArticles.length === articles.length) {
+			dispatch(setBulkSelecting(false))
+		}
 		dispatch(removeFromBulkSelection({ articles }))
 
 		return { response, error: null }

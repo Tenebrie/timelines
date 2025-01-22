@@ -1,4 +1,5 @@
 import Add from '@mui/icons-material/Add'
+import Cancel from '@mui/icons-material/Cancel'
 import Delete from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
@@ -15,11 +16,11 @@ import { getWikiState } from '../../selectors'
 
 export const ArticleListHeader = () => {
 	const { data: articles } = useListArticles()
-	const { bulkActionArticles } = useSelector(getWikiState)
+	const { isBulkSelecting, bulkActionArticles } = useSelector(getWikiState)
 	const { open: openArticleWizard } = useModal('articleWizard')
 	const { open: openDeleteArticleModal } = useModal('deleteArticleModal')
 
-	const { addToBulkSelection, clearBulkSelection } = wikiSlice.actions
+	const { setBulkSelecting, addToBulkSelection, clearBulkSelection } = wikiSlice.actions
 	const dispatch = useDispatch()
 
 	const onChange = () => {
@@ -31,6 +32,11 @@ export const ArticleListHeader = () => {
 		} else {
 			dispatch(clearBulkSelection())
 		}
+	}
+
+	const onCancel = () => {
+		dispatch(setBulkSelecting(false))
+		dispatch(clearBulkSelection())
 	}
 
 	useShortcut(Shortcut.CreateNew, () => openArticleWizard({}))
@@ -53,21 +59,34 @@ export const ArticleListHeader = () => {
 				<Typography variant="h6" marginLeft={1}>
 					Articles
 				</Typography>
-				{bulkActionArticles.length === 0 && (
+				{!isBulkSelecting && (
 					<Button variant="contained" startIcon={<Add />} onClick={() => openArticleWizard({})}>
 						Create article
 					</Button>
 				)}
-				{bulkActionArticles.length > 0 && (
-					<Button
-						color="error"
-						variant="outlined"
-						sx={{ minWidth: 64 }}
-						startIcon={<Delete />}
-						onClick={() => openDeleteArticleModal({ articles: bulkActionArticles })}
-					>
-						Delete
-					</Button>
+				{isBulkSelecting && (
+					<Stack direction="row" gap={1}>
+						{bulkActionArticles.length > 0 && (
+							<Button
+								color="error"
+								variant="outlined"
+								sx={{ minWidth: 64 }}
+								startIcon={<Delete />}
+								onClick={() => openDeleteArticleModal({ articles: bulkActionArticles })}
+							>
+								Delete
+							</Button>
+						)}
+						<Button
+							color="secondary"
+							variant="outlined"
+							sx={{ minWidth: 64 }}
+							startIcon={<Cancel />}
+							onClick={() => onCancel()}
+						>
+							Cancel
+						</Button>
+					</Stack>
 				)}
 			</Stack>
 		</Stack>
