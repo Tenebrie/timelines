@@ -18,6 +18,8 @@ type Props = {
 export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
 	const { readModeEnabled } = useSelector(getWikiPreferences)
 
+	const isReadMode = readModeEnabled && allowReadMode
+
 	const isBold = editor?.isActive('bold') ?? false
 	const isItalic = editor?.isActive('italic') ?? false
 
@@ -45,7 +47,7 @@ export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
 		<Paper sx={{ padding: '4px 8px' }}>
 			<Stack direction="row" justifyContent="space-between">
 				<Stack direction="row" gap={1}>
-					{!readModeEnabled && (
+					{!isReadMode && (
 						<>
 							<Button onClick={onBoldClick} color="secondary">
 								Bold
@@ -60,7 +62,7 @@ export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
 							</Button>
 						</>
 					)}
-					{readModeEnabled && (
+					{isReadMode && (
 						<Stack sx={{ height: '100%', alignItems: 'center' }} direction="row">
 							<Typography variant="body2" color="gray" sx={{ fontStyle: 'italic' }}>
 								Read mode

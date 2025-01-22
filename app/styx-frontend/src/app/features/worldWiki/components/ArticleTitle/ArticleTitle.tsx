@@ -50,7 +50,7 @@ export const ArticleTitle = () => {
 	return (
 		<Stack gap={1} direction="row" alignContent="center" width="100%" sx={{ height: '32px' }}>
 			{!editing && (
-				<Stack direction="row" justifyContent="space-between">
+				<Stack direction="row" justifyContent="space-between" width="100%">
 					<Button
 						variant="text"
 						sx={{ padding: '0 8px', width: '100%', justifyContent: 'flex-start' }}
