@@ -75,7 +75,7 @@ export const RichTextEditor = ({ value, onChange, onBlur, allowReadMode }: Props
 			$theme={theme}
 			onBlur={onBlur}
 		>
-			<RichTextEditorControls editor={editor} allowReadMode />
+			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode} />
 			<StyledEditorContent
 				className="content"
 				editor={editor}
