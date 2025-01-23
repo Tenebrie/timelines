@@ -38,9 +38,10 @@ export const WorldEventService = {
 			await makeUpdateWorldEventQuery({
 				eventId: baseEvent.id,
 				params: eventData,
+				prisma,
 			})
 
-			const world = await makeTouchWorldQuery(worldId)
+			const world = await makeTouchWorldQuery(worldId, prisma)
 
 			const event = await fetchWorldEventDetailsOrThrow(baseEvent.id, prisma)
 

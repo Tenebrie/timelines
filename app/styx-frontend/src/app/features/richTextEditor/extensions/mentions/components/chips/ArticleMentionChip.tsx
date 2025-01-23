@@ -18,8 +18,8 @@ export const ArticleMentionChip = ({ articleId }: Props) => {
 	})
 
 	const article = articles.find((article) => article.id === articleId)
-	const articleName = article ? `@${article.name}` : '@Unknown Article'
+	const articleName = article ? `${article.name}` : '@Unknown Article'
 	const articleColor = article ? '#525' : undefined
 
-	return <BaseMentionChip label={articleName} color={articleColor} onClick={() => {}} />
+	return <BaseMentionChip type="Article" label={articleName} color={articleColor} onClick={() => {}} />
 }

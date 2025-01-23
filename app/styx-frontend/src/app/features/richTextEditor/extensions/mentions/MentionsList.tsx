@@ -10,8 +10,11 @@ import { Editor } from '@tiptap/react'
 import { useEffect, useRef, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { MentionedEntity } from '@/app/features/worldTimeline/types'
+import { useCreateArticle } from '@/app/features/worldWiki/api/useCreateArticle'
 
 import { useQuickCreateActor } from './api/useQuickCreateActor'
+import { useQuickCreateEvent } from './api/useQuickCreateEvent'
 import { MentionNodeName } from './components/MentionNode'
 import { useDisplayedMentions } from './hooks/useDisplayedMentions'
 
@@ -26,7 +29,10 @@ export const MentionsList = ({ editor }: Props) => {
 	const [selectedIndex, setSelectedIndex] = useState(0)
 
 	const { mentions } = useDisplayedMentions({ query })
+
 	const createActor = useQuickCreateActor()
+	const createEvent = useQuickCreateEvent()
+	const [createArticle] = useCreateArticle()
 
 	const quickCreateVisible = query.length > 0
 	const lastItemIndex = quickCreateVisible ? mentions.length + 2 : mentions.length - 1
@@ -65,9 +71,17 @@ export const MentionsList = ({ editor }: Props) => {
 			return
 		}
 
+		let entityType: MentionedEntity = selectedMention?.type
 		let createdEntityId: string | undefined = undefined
 		if (!selectedMention && index === mentions.length) {
+			entityType = 'Actor'
 			createdEntityId = (await createActor({ query }))?.id
+		} else if (!selectedMention && index === mentions.length + 1) {
+			entityType = 'Event'
+			createdEntityId = (await createEvent({ query }))?.id
+		} else if (!selectedMention && index === mentions.length + 2) {
+			entityType = 'Article'
+			createdEntityId = (await createArticle({ name: query }))?.id
 		}
 
 		if (!selectedMention && !createdEntityId) {
@@ -85,9 +99,9 @@ export const MentionsList = ({ editor }: Props) => {
 				type: MentionNodeName,
 				attrs: {
 					componentProps: {
-						actor: selectedMention.type === 'Actor' && (createdEntityId ?? selectedMention.id),
-						event: selectedMention.type === 'Event' && (createdEntityId ?? selectedMention.id),
-						article: selectedMention.type === 'Article' && (createdEntityId ?? selectedMention.id),
+						actor: entityType === 'Actor' && (createdEntityId ?? selectedMention.id),
+						event: entityType === 'Event' && (createdEntityId ?? selectedMention.id),
+						article: entityType === 'Article' && (createdEntityId ?? selectedMention.id),
 					},
 				},
 			})

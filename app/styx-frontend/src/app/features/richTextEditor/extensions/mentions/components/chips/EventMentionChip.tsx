@@ -16,8 +16,8 @@ export const EventMentionChip = ({ eventId }: Props) => {
 	})
 
 	const event = events.find((event) => event.id === eventId)
-	const eventName = event ? `@${event.name}` : '@Unknown Event'
+	const eventName = event ? `${event.name}` : '@Unknown Event'
 	const eventColor = event ? '#252' : undefined
 
-	return <BaseMentionChip label={eventName} color={eventColor} onClick={() => {}} />
+	return <BaseMentionChip type="Event" label={eventName} color={eventColor} onClick={() => {}} />
 }

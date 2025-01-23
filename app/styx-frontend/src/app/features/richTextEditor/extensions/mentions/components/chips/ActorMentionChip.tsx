@@ -19,11 +19,12 @@ export const ActorMentionChip = ({ actorId }: Props) => {
 	})
 
 	const actor = actors.find((actor) => actor.id === actorId)
-	const actorName = actor ? `@${actor.name}` : '@Unknown Actor'
+	const actorName = actor ? `${actor.name}` : '@Unknown Actor'
 	const actorColor = actor ? actor.color : undefined
 
 	return (
 		<BaseMentionChip
+			type="Actor"
 			label={actorName}
 			color={actorColor}
 			onClick={() =>

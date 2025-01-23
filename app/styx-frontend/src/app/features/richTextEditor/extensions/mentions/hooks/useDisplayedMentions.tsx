@@ -78,6 +78,8 @@ export const useDisplayedMentions = ({ query }: Props) => {
 			.concat(allEvents)
 			.concat(allArticles)
 			.filter((entity) => entity.name.toLowerCase().includes(query.toLowerCase()))
+			.sort((a, b) => b.updatedAt - a.updatedAt)
+			.slice(0, 5)
 	}, [actors, events, articles, query])
 
 	return {
