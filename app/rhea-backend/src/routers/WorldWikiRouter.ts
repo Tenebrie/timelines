@@ -14,6 +14,7 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
+import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
 
 const router = new Router()
@@ -87,22 +88,17 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
-	const { name, contentRich, mentionedActors, mentionedEvents, mentionedTags } = useRequestBody(ctx, {
+	const { name, contentRich, mentions } = useRequestBody(ctx, {
 		name: OptionalParam(StringValidator),
 		contentRich: OptionalParam(StringValidator),
-		mentionedActors: OptionalParam(StringArrayValidator),
-		mentionedEvents: OptionalParam(StringArrayValidator),
-		mentionedTags: OptionalParam(StringArrayValidator),
+		mentions: OptionalParam(MentionsArrayValidator),
 	})
 
 	const article = await WikiService.updateWikiArticle({
 		id: articleId,
-		worldId,
 		name,
 		contentRich,
-		mentionedActors,
-		mentionedEvents,
-		mentionedTags,
+		mentions,
 	})
 
 	RedisService.notifyAboutWikiArticleUpdate({ worldId, article })

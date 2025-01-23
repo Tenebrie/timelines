@@ -1,10 +1,19 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-import { Actor } from '@/app/features/worldTimeline/types'
+import { getWorldState } from '@/app/features/world/selectors'
+import { Actor, MentionDetails } from '@/app/features/worldTimeline/types'
 
-export const useActorsToString = () => {
-	const actorsToString = (data: Actor[], owningActor: Actor | null, maxActorsDisplayed: number) => {
-		const actors = data.filter((a) => a.id !== owningActor?.id)
+export const useMentionsToString = () => {
+	const { actors: baseActors } = useSelector(getWorldState, (a, b) => a.actors === b.actors)
+
+	const mentionsToString = (
+		data: MentionDetails[],
+		owningActor: Actor | null,
+		maxActorsDisplayed: number,
+	) => {
+		const mentions = data.map((m) => m.targetId)
+		const actors = baseActors.filter((a) => a.id !== owningActor?.id).filter((a) => mentions.includes(a.id))
 
 		const actorToColor = (actor: Actor) => {
 			if (actor.color) {
@@ -34,5 +43,5 @@ export const useActorsToString = () => {
 		}
 	}
 
-	return actorsToString
+	return mentionsToString
 }

@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import { getWorldIdState } from '../../world/selectors'
+import { MentionDetails } from '../../worldTimeline/types'
 import { useArticleApiCache } from './useArticleApiCache'
 
 export const useEditArticle = () => {
@@ -15,11 +16,9 @@ export const useEditArticle = () => {
 		id: string
 		name?: string
 		contentRich?: string
-		mentionedActors?: string[]
-		mentionedEvents?: string[]
-		mentionedTags?: string[]
+		newMentions?: MentionDetails[]
 	}) => {
-		const { id, name, contentRich, mentionedActors, mentionedEvents, mentionedTags } = data
+		const { id, name, contentRich, newMentions } = data
 
 		updateCachedArticle(data)
 
@@ -30,9 +29,7 @@ export const useEditArticle = () => {
 				body: {
 					name,
 					contentRich,
-					mentionedActors,
-					mentionedEvents,
-					mentionedTags,
+					mentions: newMentions,
 				},
 			}),
 		)

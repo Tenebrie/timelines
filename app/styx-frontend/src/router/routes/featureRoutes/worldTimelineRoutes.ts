@@ -10,7 +10,7 @@ import { useBaseRouter } from '../../useBaseRouter'
 import { QueryParams } from '../QueryParams'
 
 export const worldTimelineRoutes = {
-	root: '/world/:worldId/timeline',
+	timelineRoot: '/world/:worldId/timeline',
 	outliner: '/world/:worldId/timeline/outliner',
 	actorEditor: '/world/:worldId/timeline/actor/:actorId',
 	eventCreator: '/world/:worldId/timeline/editor/create',
@@ -20,7 +20,7 @@ export const worldTimelineRoutes = {
 } as const
 
 export const worldTimelineQueryParams = {
-	[worldTimelineRoutes.root]: {
+	[worldTimelineRoutes.timelineRoot]: {
 		[QueryParams.SELECTED_TIME]: '0' as string,
 	},
 	[worldTimelineRoutes.outliner]: {
@@ -59,7 +59,7 @@ export const useWorldTimelineRouter = () => {
 
 	const navigateToCurrentWorldRoot = useCallback(() => {
 		baseRouter.navigateTo({
-			target: worldTimelineRoutes.root,
+			target: worldTimelineRoutes.timelineRoot,
 			args: {
 				worldId,
 			},

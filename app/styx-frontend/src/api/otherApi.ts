@@ -73,6 +73,34 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	mentions: {
+		targetId: string
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
+	}[]
+	mentionedIn: {
+		targetId: string
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
+	}[]
 	position: number
 	contentRich: string
 }[]
@@ -113,9 +141,10 @@ export type UpdateArticleApiArg = {
 	body: {
 		name?: string
 		contentRich?: string
-		mentionedActors?: string[]
-		mentionedEvents?: string[]
-		mentionedTags?: string[]
+		mentions?: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
 	}
 }
 export type DeleteArticleApiResponse = unknown

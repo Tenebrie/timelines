@@ -40,7 +40,7 @@ export const useCreateEvent = ({ state, onCreated }: Props) => {
 					description: state.description,
 					descriptionRich: state.descriptionRich,
 					customNameEnabled: state.customNameEnabled,
-					mentionedActorIds: state.mentionedActors,
+					mentions: state.mentions,
 					externalLink: state.externalLink,
 				},
 			}),

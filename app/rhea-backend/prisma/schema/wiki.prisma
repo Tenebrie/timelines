@@ -5,9 +5,8 @@ model Tag {
 
     name String
 
-    relatedActors   Actor[]       @relation("ActorMentionedTags")
-    relatedEvents   WorldEvent[]  @relation("EventMentionedTags")
-    relatedArticles WikiArticle[] @relation("WikiMentionedTags")
+    mentions    Mention[] @relation("TagMentionSource")
+    mentionedIn Mention[] @relation("TagMentionTarget")
 
     world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
     worldId String
@@ -22,11 +21,8 @@ model WikiArticle {
     contentRich String @default("")
     position    Int    @default(0)
 
-    mentionedActors Actor[]      @relation("WikiMentionedActors")
-    mentionedEvents WorldEvent[] @relation("WikiMentionedEvents")
-    mentionedTags   Tag[]        @relation("WikiMentionedTags")
-    relatedActors   Actor[]      @relation("ActorMentionedWiki")
-    relatedEvents   WorldEvent[] @relation("EventMentionedWiki")
+    mentions    Mention[] @relation("ArticleMentionSource")
+    mentionedIn Mention[] @relation("ArticleMentionTarget")
 
     world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
     worldId String

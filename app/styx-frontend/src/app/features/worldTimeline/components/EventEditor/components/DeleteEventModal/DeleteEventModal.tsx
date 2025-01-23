@@ -20,7 +20,7 @@ export const DeleteEventModal = () => {
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 
 	const { stateOf, navigateToCurrentWorldRoot } = useWorldTimelineRouter()
-	const { worldId } = stateOf(worldTimelineRoutes.root)
+	const { worldId } = stateOf(worldTimelineRoutes.timelineRoot)
 
 	const { isOpen, target: targetEvent, close } = useModal('deleteEventModal')
 

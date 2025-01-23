@@ -19,14 +19,13 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { parseActorList } from './utils/parseActorList'
 import { ContentStringValidator } from './validators/ContentStringValidator'
+import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
 import { NameStringValidator } from './validators/NameStringValidator'
 import { NullableNameStringValidator } from './validators/NullableNameStringValidator'
 import { NullableUuidStringValidator } from './validators/NullableUuidStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator'
-import { StringArrayValidator } from './validators/StringArrayValidator'
 import { UuidStringValidator } from './validators/UuidStringValidator'
 import { WorldEventFieldValidator } from './validators/WorldEventFieldValidator'
 import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
@@ -58,27 +57,24 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		type: RequiredParam(WorldEventTypeValidator),
-		modules: RequiredParam(WorldEventFieldValidator),
 		name: RequiredParam(NameStringValidator),
-		icon: RequiredParam(NameStringValidator),
-		description: RequiredParam(ContentStringValidator),
-		descriptionRich: RequiredParam(ContentStringValidator),
+		modules: OptionalParam(WorldEventFieldValidator),
+		icon: OptionalParam(NameStringValidator),
+		description: OptionalParam(ContentStringValidator),
+		descriptionRich: OptionalParam(ContentStringValidator),
 		timestamp: RequiredParam(BigIntValidator),
-		revokedAt: RequiredParam(NullableBigIntValidator),
-		mentionedActorIds: RequiredParam(StringArrayValidator),
-		customNameEnabled: RequiredParam(BooleanValidator),
-		externalLink: RequiredParam(ContentStringValidator),
+		revokedAt: OptionalParam(NullableBigIntValidator),
+		customNameEnabled: OptionalParam(BooleanValidator),
+		externalLink: OptionalParam(ContentStringValidator),
 		worldEventTrackId: OptionalParam(UuidStringValidator),
+		mentions: OptionalParam(MentionsArrayValidator),
 	})
-
-	const mentionedActors = (await parseActorList(params.mentionedActorIds)) ?? []
 
 	const { event, world } = await WorldEventService.createWorldEvent({
 		worldId,
 		eventData: {
 			...params,
 			extraFields: params.modules,
-			mentionedActors,
 			worldEventTrackId: params.worldEventTrackId ?? null,
 		},
 	})
@@ -110,7 +106,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		revokedAt: OptionalParam(NullableBigIntValidator),
 		description: OptionalParam(ContentStringValidator),
 		descriptionRich: OptionalParam(ContentStringValidator),
-		mentionedActorIds: OptionalParam(StringArrayValidator),
+		mentions: OptionalParam(MentionsArrayValidator),
 		customNameEnabled: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(OptionalURLStringValidator),
 		worldEventTrackId: OptionalParam(NullableUuidStringValidator),
@@ -127,20 +123,16 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		customName: params.customNameEnabled,
 		externalLink: params.externalLink,
 		worldEventTrackId: params.worldEventTrackId,
+		mentions: params.mentions,
 	}
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 	await ValidationService.checkEventPatchValidity(eventId, mappedParams)
 
-	const mentionedActors = await parseActorList(params.mentionedActorIds)
-
 	const { event } = await WorldEventService.updateWorldEvent({
 		worldId,
 		eventId,
-		params: {
-			...mappedParams,
-			mentionedActors,
-		},
+		params: mappedParams,
 	})
 
 	RedisService.notifyAboutWorldEventUpdate({ worldId, event })

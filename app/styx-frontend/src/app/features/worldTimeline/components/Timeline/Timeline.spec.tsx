@@ -23,7 +23,7 @@ describe('<Timeline />', () => {
 	})
 
 	beforeAll(() => {
-		mockRouter(worldTimelineRoutes.root, {
+		mockRouter(worldTimelineRoutes.timelineRoot, {
 			worldId: '1111',
 		})
 	})

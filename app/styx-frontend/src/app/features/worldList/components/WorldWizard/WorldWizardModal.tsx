@@ -89,7 +89,7 @@ export const WorldWizardModal = () => {
 		dispatch(closeWorldWizardModal())
 		dispatch(unloadWorld())
 		navigateTo({
-			target: worldTimelineRoutes.root,
+			target: worldTimelineRoutes.timelineRoot,
 			args: {
 				worldId: response.id,
 			},

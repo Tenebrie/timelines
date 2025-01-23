@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import { generateEntityNameFromText } from '@src/ts-shared/utils/generateEntityNameFromText'
 
 import { getPrismaClient } from '../dbClients/DatabaseClient'
@@ -7,14 +8,16 @@ export const makeUpdateDeltaStateNamesQueries = ({
 	event,
 	customName,
 	customNameEnabled,
+	prisma,
 }: {
-	event: Awaited<ReturnType<(typeof WorldEventService)['fetchWorldEventWithDeltaStates']>>
+	event: Awaited<ReturnType<(typeof WorldEventService)['fetchWorldEventWithDetails']>>
 	customName: string | undefined
 	customNameEnabled: boolean | undefined
+	prisma?: Prisma.TransactionClient
 }) => {
 	if (customNameEnabled && customName) {
-		return [
-			getPrismaClient().worldEventDelta.updateMany({
+		return Promise.all([
+			getPrismaClient(prisma).worldEventDelta.updateMany({
 				where: {
 					worldEventId: event.id,
 				},
@@ -22,19 +25,21 @@ export const makeUpdateDeltaStateNamesQueries = ({
 					name: null,
 				},
 			}),
-		]
+		])
 	} else {
-		return event.deltaStates.map((state) =>
-			getPrismaClient().worldEventDelta.updateMany({
-				where: {
-					id: state.id,
-				},
-				data: {
-					name: generateEntityNameFromText({
-						source: state.description ?? '',
-					}),
-				},
-			}),
+		return Promise.all(
+			event.deltaStates.map((state) =>
+				getPrismaClient(prisma).worldEventDelta.updateMany({
+					where: {
+						id: state.id,
+					},
+					data: {
+						name: generateEntityNameFromText({
+							source: state.description ?? '',
+						}),
+					},
+				}),
+			),
 		)
 	}
 }

@@ -4,8 +4,8 @@ import Placeholder from '@tiptap/extension-placeholder'
 import { Extensions } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
-import { MentionChip } from './actorMentions/components/ActorMentionNode'
-import { mentionsSuggestions } from './actorMentions/MentionsExtension'
+import { MentionNode } from './mentions/components/MentionNode'
+import { mentionsSuggestions } from './mentions/MentionsExtension'
 
 export const SharedExtensions: Extensions = [
 	// Starter kit
@@ -22,7 +22,7 @@ export const SharedExtensions: Extensions = [
 		},
 	}),
 	// Support for actor mentions
-	MentionChip,
+	MentionNode,
 ]
 
 export const EditorExtensions: Extensions = [

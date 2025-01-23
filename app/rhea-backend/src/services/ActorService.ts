@@ -2,6 +2,7 @@ import { Actor } from '@prisma/client'
 
 import { getPrismaClient } from './dbClients/DatabaseClient'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
+import { makeUpdateActorQuery } from './dbQueries/makeUpdateActorQuery'
 
 export const ActorService = {
 	findActorsByIds: async (actorIds: string[]) => {
@@ -16,31 +17,33 @@ export const ActorService = {
 
 	createActor: async (
 		worldId: string,
-		data: Pick<Actor, 'name'> & Partial<Pick<Actor, 'title' | 'color' | 'description'>>,
+		params: Pick<Actor, 'name'> & Parameters<typeof makeUpdateActorQuery>[0]['params'],
 	) => {
-		const [actor, world] = await getPrismaClient().$transaction([
-			getPrismaClient().actor.create({
+		return getPrismaClient().$transaction(async (prisma) => {
+			const baseActor = await getPrismaClient(prisma).actor.create({
 				data: {
 					worldId,
-					name: data.name,
-					title: data.title,
-					color: data.color ?? '#008080',
-					description: data.description,
+					name: params.name,
 				},
 				include: {
-					statements: {
-						select: {
-							id: true,
-						},
-					},
+					mentions: true,
+					mentionedIn: true,
 				},
-			}),
-			makeTouchWorldQuery(worldId),
-		])
-		return {
-			actor,
-			world,
-		}
+			})
+
+			const actor = await makeUpdateActorQuery({
+				actorId: baseActor.id,
+				params,
+				prisma,
+			})
+
+			const world = await makeTouchWorldQuery(worldId)
+
+			return {
+				world,
+				actor,
+			}
+		})
 	},
 
 	updateActor: async ({
@@ -50,26 +53,20 @@ export const ActorService = {
 	}: {
 		worldId: string
 		actorId: string
-		params: Partial<Actor>
+		params: Parameters<typeof makeUpdateActorQuery>[0]['params']
 	}) => {
-		const [actor, world] = await getPrismaClient().$transaction([
-			getPrismaClient().actor.update({
-				where: {
-					id: actorId,
-				},
-				data: {
-					name: params.name,
-					title: params.title,
-					color: params.color,
-					description: params.description,
-				},
-			}),
-			makeTouchWorldQuery(worldId),
-		])
-		return {
-			actor,
-			world,
-		}
+		return getPrismaClient().$transaction(async (prisma) => {
+			const actor = await makeUpdateActorQuery({
+				actorId,
+				params,
+				prisma,
+			})
+			const world = await makeTouchWorldQuery(worldId)
+			return {
+				world,
+				actor,
+			}
+		})
 	},
 
 	deleteActor: async ({ worldId, actorId }: { worldId: string; actorId: string }) => {

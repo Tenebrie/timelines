@@ -48,7 +48,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		setTimestamp,
 		setIcon,
 		setRevokedAt,
-		setMentionedActors,
+		setMentions,
 		setDescription,
 		setDescriptionRich,
 		setCustomNameEnabled,
@@ -64,7 +64,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 				setName('')
 				setDescription('')
 				setDescriptionRich('')
-				setMentionedActors([])
+				setMentions([])
 				setCustomNameEnabled(false)
 				setCreateEventKey((prev) => prev + 1)
 			}
@@ -103,9 +103,9 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		(params: Parameters<Parameters<typeof RichTextEditor>[0]['onChange']>[0]) => {
 			setDescription(params.plainText)
 			setDescriptionRich(params.richText)
-			setMentionedActors(params.mentions)
+			setMentions(params.mentions)
 		},
-		[setDescription, setDescriptionRich, setMentionedActors],
+		[setDescription, setDescriptionRich, setMentions],
 	)
 
 	const { timeToLabel } = useWorldTime()

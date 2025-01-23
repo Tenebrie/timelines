@@ -34,8 +34,33 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as actorListApi }
 export type CreateActorApiResponse = /** status 200  */ {
-	statements: {
-		id: string
+	mentions: {
+		targetId: string
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
+	}[]
+	mentionedIn: {
+		targetId: string
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
 	}[]
 	description: string
 	name: string
@@ -54,9 +79,41 @@ export type CreateActorApiArg = {
 		title?: string
 		color?: string
 		description?: string
+		mentions?: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
 	}
 }
 export type UpdateActorApiResponse = /** status 200  */ {
+	mentions: {
+		targetId: string
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
+	}[]
+	mentionedIn: {
+		targetId: string
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
+	}[]
 	description: string
 	name: string
 	id: string

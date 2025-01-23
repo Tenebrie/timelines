@@ -6,7 +6,7 @@ import { getUserPreferences } from '../preferences/selectors'
 import { darkTheme, lightTheme } from './themes'
 
 type Props = {
-	children: JSX.Element | JSX.Element[]
+	children: JSX.Element | (JSX.Element | null)[] | null
 }
 
 export const CustomThemeProvider = ({ children }: Props) => {

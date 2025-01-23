@@ -66,11 +66,14 @@ export const Outliner = () => {
 
 	const visibleActors = useMemo(
 		() =>
-			allVisibleActors.map((actor) => ({
-				...actor,
-				collapsed: !expandedActors.includes(actor.id),
-				events: visibleEvents.filter((event) => actor.statements.some((e) => e.id === event.id)),
-			})),
+			allVisibleActors.map((actor) => {
+				const mentionedEventIds = actor.mentionedIn.map((mention) => mention.targetId)
+				return {
+					...actor,
+					collapsed: !expandedActors.includes(actor.id),
+					events: visibleEvents.filter((event) => mentionedEventIds.includes(event.id)),
+				}
+			}),
 		[allVisibleActors, expandedActors, visibleEvents],
 	)
 

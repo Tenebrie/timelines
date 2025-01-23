@@ -8,11 +8,8 @@ model Actor {
     description String @default("")
     color       String @default("")
 
-    statements        WorldEvent[]  @relation("EventTargetActors")
-    mentionedIn       WorldEvent[]  @relation("EventMentionedActors")
-    mentionedTags     Tag[]         @relation("ActorMentionedTags")
-    mentionedArticles WikiArticle[] @relation("ActorMentionedWiki")
-    relatedArticles   WikiArticle[] @relation("WikiMentionedActors")
+    mentions    Mention[] @relation("ActorMentionSource")
+    mentionedIn Mention[] @relation("ActorMentionTarget")
 
     world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
     worldId String

@@ -16,15 +16,33 @@ const injectedRtkApi = api
 export { injectedRtkApi as worldSearchApi }
 export type SearchWorldApiResponse = /** status 200  */ {
 	events: {
-		mentionedActors: {
-			description: string
-			name: string
-			id: string
-			createdAt: string
-			updatedAt: string
-			title: string
-			color: string
-			worldId: string
+		mentions: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
+		}[]
+		mentionedIn: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
 		}[]
 		deltaStates: {
 			description?: null | string
@@ -37,14 +55,14 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			worldEventId: string
 		}[]
 		description: string
+		type: 'SCENE' | 'OTHER'
 		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		worldId: string
-		type: 'SCENE' | 'OTHER'
-		icon: string
 		timestamp: string
+		icon: string
 		revokedAt?: null | string
 		descriptionRich: string
 		customName: boolean
@@ -53,8 +71,33 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		worldEventTrackId?: null | string
 	}[]
 	actors: {
-		statements: {
-			id: string
+		mentions: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
+		}[]
+		mentionedIn: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
 		}[]
 		description: string
 		name: string

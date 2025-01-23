@@ -40,9 +40,6 @@ export const EventModulesControls = ({ modules, state }: Props) => {
 				case 'EventIcon':
 					state.setIcon('default')
 					break
-				case 'MentionedActors':
-					state.setMentionedActors([])
-					break
 				case 'ExternalLink':
 					state.setExternalLink('')
 					break

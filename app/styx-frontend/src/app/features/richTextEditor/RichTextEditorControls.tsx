@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 
 import { getWikiPreferences } from '../preferences/selectors'
 import { ReadModeToggle } from '../worldWiki/components/ReadModeToggle/ReadModeToggle'
-import { ActiveButtonIndicator } from './extensions/actorMentions/components/ActiveButtonIndicator'
+import { ActiveButtonIndicator } from './extensions/mentions/components/ActiveButtonIndicator'
 
 type Props = {
 	editor: Editor | null
@@ -58,7 +58,7 @@ export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
 								<ActiveButtonIndicator active={isItalic} />
 							</Button>
 							<Button onClick={onMentionActorClick} color="secondary">
-								@Actor
+								@Mention
 							</Button>
 						</>
 					)}

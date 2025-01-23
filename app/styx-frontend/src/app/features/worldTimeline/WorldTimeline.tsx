@@ -26,7 +26,7 @@ const useWatchSelectedTime = () => {
 	 * Selected time has been changed externally
 	 */
 	useEffect(() => {
-		const value = queryOf(worldTimelineRoutes.root).time
+		const value = queryOf(worldTimelineRoutes.timelineRoot).time
 		const selectedTime = parseInt(value)
 		dispatch(setSelectedTime(selectedTime))
 		scrollTimelineTo(selectedTime)

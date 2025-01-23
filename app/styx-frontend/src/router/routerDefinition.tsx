@@ -56,7 +56,7 @@ export const routerDefinition: Parameters<typeof createBrowserRouter>[0] = [
 						...lazyImport(import('../app/features/worldTimeline/WorldTimeline').then((m) => m.WorldTimeline)),
 						children: [
 							{
-								path: worldTimelineRoutes.root,
+								path: worldTimelineRoutes.timelineRoot,
 								...lazyImport(
 									import('../app/features/worldTimeline/components/Outliner/Outliner').then(
 										(m) => m.Outliner,

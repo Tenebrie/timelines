@@ -1,38 +1,43 @@
-import { useCreateActorMutation } from '@api/actorListApi'
+import { useCreateWorldEventMutation } from '@api/worldEventApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { worldSlice } from '@/app/features/world/reducer'
 import { getWorldIdState } from '@/app/features/world/selectors'
-import { hslToHex } from '@/app/utils/colors/hslToHex'
+import { ingestEvent } from '@/app/utils/ingestEvent'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
-export const useQuickCreateActor = () => {
+export const useQuickCreateEvent = () => {
 	const worldId = useSelector(getWorldIdState)
-	const [createActor] = useCreateActorMutation()
+	const [createEvent] = useCreateWorldEventMutation()
 
-	const { addActor } = worldSlice.actions
+	const { addEvent } = worldSlice.actions
 	const dispatch = useDispatch()
 
-	const quickCreateActor = useCallback(
+	const quickCreateEvent = useCallback(
 		async ({ query }: { query: string }) => {
+			if (query.length === 0) {
+				return
+			}
+
 			const { response, error } = parseApiResponse(
-				await createActor({
+				await createEvent({
 					worldId,
 					body: {
-						name: query.length > 0 ? query : 'Unnamed Actor',
-						color: hslToHex(Math.random(), 0.5, 0.5),
+						name: query,
+						type: 'SCENE',
+						timestamp: '0',
 					},
 				}),
 			)
 			if (error) {
 				return null
 			}
-			dispatch(addActor(response))
+			dispatch(addEvent(ingestEvent(response)))
 			return response
 		},
-		[addActor, createActor, dispatch, worldId],
+		[addEvent, createEvent, dispatch, worldId],
 	)
 
-	return quickCreateActor
+	return quickCreateEvent
 }

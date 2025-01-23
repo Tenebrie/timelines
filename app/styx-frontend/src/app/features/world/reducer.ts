@@ -120,6 +120,9 @@ export const worldSlice = createSlice({
 			}
 			event.deltaStates.splice(event.deltaStates.indexOf(delta), 1, newDelta)
 		},
+		addEvent: (state, { payload }: PayloadAction<WorldEvent>) => {
+			state.events = state.events.concat(payload)
+		},
 		addActor: (state, { payload }: PayloadAction<ActorDetails>) => {
 			state.actors = state.actors.concat(payload).sort((a, b) => a.name.localeCompare(b.name))
 		},

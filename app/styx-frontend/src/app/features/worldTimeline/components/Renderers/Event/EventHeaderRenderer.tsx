@@ -7,7 +7,7 @@ import { Actor, WorldEvent } from '@/app/features/worldTimeline/types'
 
 import { StatementActorsText, StyledListItemText } from '../../Outliner/styles'
 import { ShortText } from './styles'
-import { useActorsToString } from './useActorsToString'
+import { useMentionsToString } from './useMentionsToString'
 
 type Props = {
 	event: WorldEvent
@@ -18,8 +18,8 @@ type Props = {
 
 export const EventHeaderRenderer = ({ event, owningActor, short, active }: Props) => {
 	const maxActorsDisplayed = short ? 2 : 5
-	const actorsToString = useActorsToString()
-	const mentionedActors = actorsToString(event.mentionedActors, owningActor, maxActorsDisplayed)
+	const mentionsToString = useMentionsToString()
+	const mentionedActors = mentionsToString(event.mentions, owningActor, maxActorsDisplayed)
 	const theme = useTheme()
 
 	return (

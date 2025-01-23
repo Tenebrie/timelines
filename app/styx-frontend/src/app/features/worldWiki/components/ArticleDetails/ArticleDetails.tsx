@@ -2,17 +2,22 @@ import { useRef } from 'react'
 
 import { OnChangeParams } from '@/app/features/richTextEditor/RichTextEditor'
 import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
+import { MentionDetails } from '@/app/features/worldTimeline/types'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 
 import { useEditArticle } from '../../api/useEditArticle'
 import { useCurrentArticle } from '../../hooks/useCurrentArticle'
 import { WikiArticle } from '../../types'
 
+type WikiArticleToSave = WikiArticle & {
+	newMentions: MentionDetails[]
+}
+
 export const ArticleDetails = () => {
 	const { article } = useCurrentArticle()
 	const [editArticle, { isLoading: isSaving }] = useEditArticle()
 
-	const articleToSave = useRef<(WikiArticle & { mentionedActors: string[] }) | null>(null)
+	const articleToSave = useRef<WikiArticleToSave | null>(null)
 
 	const { autosave, manualSave } = useAutosave({
 		onSave: () => {
@@ -23,7 +28,7 @@ export const ArticleDetails = () => {
 			editArticle({
 				id: article.id,
 				contentRich: article.contentRich,
-				mentionedActors: article.mentionedActors,
+				newMentions: article.newMentions,
 			})
 			articleToSave.current = null
 		},
@@ -37,7 +42,7 @@ export const ArticleDetails = () => {
 		articleToSave.current = {
 			...article,
 			contentRich: params.richText,
-			mentionedActors: params.mentions,
+			newMentions: params.mentions,
 		}
 		autosave()
 	}

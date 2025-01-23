@@ -5,6 +5,8 @@ import { useGetWorldInfoQuery } from '@/api/worldDetailsApi'
 
 import { worldSlice } from '../../world/reducer'
 import { getWorldStateLoaded } from '../../world/selectors'
+import { useListArticles } from '../../worldWiki/api/useListArticles'
+import { wikiSlice } from '../../worldWiki/reducer'
 
 export const useLoadWorldInfo = (worldId: string) => {
 	const { data } = useGetWorldInfoQuery(
@@ -16,10 +18,12 @@ export const useLoadWorldInfo = (worldId: string) => {
 			refetchOnMountOrArgChange: true,
 		},
 	)
+	const { data: articles } = useListArticles()
 
 	const isLoaded = useSelector(getWorldStateLoaded)
 
 	const { loadWorld } = worldSlice.actions
+	const { loadArticles } = wikiSlice.actions
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -37,6 +41,10 @@ export const useLoadWorldInfo = (worldId: string) => {
 			}),
 		)
 	}, [data, dispatch, loadWorld])
+
+	useEffect(() => {
+		dispatch(loadArticles({ articles: articles ?? [] }))
+	})
 
 	return {
 		isLoaded,

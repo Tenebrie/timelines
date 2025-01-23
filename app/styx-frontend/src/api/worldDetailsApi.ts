@@ -48,8 +48,33 @@ export type UpdateWorldApiArg = {
 export type GetWorldInfoApiResponse = /** status 200  */ {
 	isReadOnly: boolean
 	actors: {
-		statements: {
-			id: string
+		mentions: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
+		}[]
+		mentionedIn: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
 		}[]
 		description: string
 		name: string
@@ -61,15 +86,33 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		worldId: string
 	}[]
 	events: {
-		mentionedActors: {
-			description: string
-			name: string
-			id: string
-			createdAt: string
-			updatedAt: string
-			title: string
-			color: string
-			worldId: string
+		mentions: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
+		}[]
+		mentionedIn: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
 		}[]
 		deltaStates: {
 			description?: null | string
@@ -82,14 +125,14 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			worldEventId: string
 		}[]
 		description: string
+		type: 'SCENE' | 'OTHER'
 		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		worldId: string
-		type: 'SCENE' | 'OTHER'
-		icon: string
 		timestamp: string
+		icon: string
 		revokedAt?: null | string
 		descriptionRich: string
 		customName: boolean

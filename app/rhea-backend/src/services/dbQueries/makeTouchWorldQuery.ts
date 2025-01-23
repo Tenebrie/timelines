@@ -3,9 +3,7 @@ import { Prisma } from '@prisma/client'
 import { getPrismaClient } from '../dbClients/DatabaseClient'
 
 export const makeTouchWorldQuery = (worldId: string, prisma?: Prisma.TransactionClient) => {
-	prisma = prisma ?? getPrismaClient()
-
-	return prisma.world.update({
+	return getPrismaClient(prisma).world.update({
 		where: {
 			id: worldId,
 		},

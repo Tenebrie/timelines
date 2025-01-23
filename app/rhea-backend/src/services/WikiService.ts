@@ -1,8 +1,9 @@
-import { WikiArticle } from '@prisma/client'
+import { MentionedEntity, WikiArticle } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient'
 
 import { makeSortWikiArticles } from './dbQueries/makeSortWikiArticles'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
+import { MentionData, MentionsService } from './MentionsService'
 
 export const WikiService = {
 	listWikiArticles: async (params: Pick<WikiArticle, 'worldId'>) => {
@@ -17,6 +18,8 @@ export const WikiService = {
 				createdAt: true,
 				updatedAt: true,
 				position: true,
+				mentions: true,
+				mentionedIn: true,
 			},
 		})
 	},
@@ -40,31 +43,43 @@ export const WikiService = {
 	},
 
 	updateWikiArticle: async (
-		params: Partial<
-			Pick<WikiArticle, 'id' | 'worldId' | 'name' | 'contentRich'> & {
-				mentionedActors: string[]
-				mentionedEvents: string[]
-				mentionedTags: string[]
-			}
-		>,
+		params: Partial<Pick<WikiArticle, 'name' | 'contentRich'>> & {
+			id: string
+			mentions?: MentionData[]
+		},
 	) => {
-		return getPrismaClient().wikiArticle.update({
-			where: {
-				id: params.id,
-			},
-			data: {
-				name: params.name,
-				contentRich: params.contentRich,
-				mentionedActors: {
-					connect: params.mentionedActors?.map((id) => ({ id })),
+		return getPrismaClient().$transaction(async (prisma) => {
+			const mentionedEntities = await MentionsService.createMentions(
+				params.id,
+				MentionedEntity.Article,
+				params.mentions,
+				prisma,
+			)
+
+			const updatedArticle = await prisma.wikiArticle.update({
+				where: {
+					id: params.id,
 				},
-				mentionedEvents: {
-					connect: params.mentionedEvents?.map((id) => ({ id })),
+				data: {
+					name: params.name,
+					contentRich: params.contentRich,
+					mentions: mentionedEntities
+						? {
+								set: mentionedEntities.map((mention) => ({
+									sourceId_targetId: {
+										sourceId: mention.sourceId,
+										targetId: mention.targetId,
+									},
+								})),
+							}
+						: undefined,
 				},
-				mentionedTags: {
-					connect: params.mentionedTags?.map((id) => ({ id })),
-				},
-			},
+			})
+
+			await MentionsService.clearOrphanedMentions(prisma)
+			await makeTouchWorldQuery(updatedArticle.worldId, prisma)
+
+			return updatedArticle
 		})
 	},
 

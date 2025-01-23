@@ -29,7 +29,7 @@ export const ValidationService = {
 	},
 
 	checkEventPatchValidity: async (eventId: string, params: Partial<WorldEvent>) => {
-		const originalEvent = await WorldEventService.fetchWorldEventWithDeltaStates(eventId)
+		const originalEvent = await WorldEventService.fetchWorldEventWithDetails(eventId)
 		const event = {
 			...originalEvent,
 			...definedProps(params),
@@ -56,7 +56,7 @@ export const ValidationService = {
 		if (timestamp === null || timestamp === undefined) {
 			return
 		}
-		const event = await WorldEventService.fetchWorldEventWithDeltaStates(eventId)
+		const event = await WorldEventService.fetchWorldEventWithDetails(eventId)
 		if (event.deltaStates.some((delta) => delta.timestamp > timestamp)) {
 			throw new BadRequestError(
 				'Unable to retire an event at this timestamp (at least 1 delta state at a later timestamp)',
@@ -69,7 +69,7 @@ export const ValidationService = {
 		timestamp: bigint,
 		excludedDeltaIds: string[] = [],
 	) => {
-		const event = await WorldEventService.fetchWorldEventWithDeltaStates(eventId)
+		const event = await WorldEventService.fetchWorldEventWithDetails(eventId)
 		if (timestamp < event.timestamp) {
 			throw new BadRequestError('Unable to create a delta state before event creation.')
 		}

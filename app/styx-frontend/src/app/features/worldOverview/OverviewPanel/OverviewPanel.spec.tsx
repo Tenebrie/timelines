@@ -22,7 +22,7 @@ describe('<OverviewPanel />', () => {
 	})
 
 	beforeEach(() => {
-		mockRouter(worldTimelineRoutes.root, {
+		mockRouter(worldTimelineRoutes.timelineRoot, {
 			worldId: '1111',
 		})
 	})
@@ -124,7 +124,7 @@ describe('<OverviewPanel />', () => {
 		})
 
 		it('navigates to actor editor on actor double click while preserving selected time', async () => {
-			mockRouter(worldTimelineRoutes.root, { worldId: '1111' }, { time: '100' })
+			mockRouter(worldTimelineRoutes.timelineRoot, { worldId: '1111' }, { time: '100' })
 
 			const { user } = renderWithProviders(
 				<OverviewPanel />,
@@ -293,7 +293,7 @@ describe('<OverviewPanel />', () => {
 		})
 
 		it('navigates to event editor on double click while preserving the time', async () => {
-			mockRouter(worldTimelineRoutes.root, { worldId: '1111' }, { time: '100' })
+			mockRouter(worldTimelineRoutes.timelineRoot, { worldId: '1111' }, { time: '100' })
 
 			const { user } = renderWithProviders(
 				<OverviewPanel />,

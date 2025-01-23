@@ -23,7 +23,8 @@ export const WorldSearchService = {
 				timestamp: 'asc',
 			},
 			include: {
-				mentionedActors: true,
+				mentions: true,
+				mentionedIn: true,
 				deltaStates: {
 					orderBy: {
 						timestamp: 'asc',
@@ -45,11 +46,8 @@ export const WorldSearchService = {
 				],
 			},
 			include: {
-				statements: {
-					select: {
-						id: true,
-					},
-				},
+				mentions: true,
+				mentionedIn: true,
 			},
 		})
 	},
