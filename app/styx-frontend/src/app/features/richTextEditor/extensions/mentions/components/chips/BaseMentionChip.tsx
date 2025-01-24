@@ -7,6 +7,7 @@ import Stack from '@mui/material/Stack'
 import { MentionedEntity } from '@/app/features/worldTimeline/types'
 import { colorStringToHsl } from '@/app/utils/colors/colorStringToHsl'
 import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
+import { hslToHex } from '@/app/utils/colors/hslToHex'
 
 type Props = {
 	type: MentionedEntity
@@ -21,8 +22,9 @@ export const BaseMentionChip = ({ type, label, color, onClick }: Props) => {
 
 	const typeColor = {
 		...parsedColor,
-		l: Math.min(parsedColor.l, 0.2),
+		l: parsedColor.l > 0.5 ? parsedColor.l - 0.2 : parsedColor.l + 0.2,
 	}
+	const iconColor = getContrastTextColor(hslToHex(typeColor.h, typeColor.s, typeColor.l))
 
 	const iconSlotSize = `26px`
 
@@ -32,7 +34,7 @@ export const BaseMentionChip = ({ type, label, color, onClick }: Props) => {
 				size="small"
 				sx={{
 					height: '1.6em',
-					'& .MuiChip-label': { fontSize: '1em' },
+					'& .MuiChip-label': { fontSize: '1em', height: '1.6em' },
 					color: textColor,
 				}}
 				onClick={() => onClick()}
@@ -50,9 +52,15 @@ export const BaseMentionChip = ({ type, label, color, onClick }: Props) => {
 				}}
 				label={label}
 			/>
-			{type === 'Actor' && <Person sx={{ position: 'absolute', left: -3, top: 1, fontSize: 20 }} />}
-			{type === 'Event' && <Event sx={{ position: 'absolute', left: -3, top: 1, fontSize: 20 }} />}
-			{type === 'Article' && <Article sx={{ position: 'absolute', left: -3, top: 1, fontSize: 20 }} />}
+			{type === 'Actor' && (
+				<Person sx={{ position: 'absolute', left: -3, top: 1, fontSize: 19, color: iconColor }} />
+			)}
+			{type === 'Event' && (
+				<Event sx={{ position: 'absolute', left: -2, top: 2, fontSize: 17, color: iconColor }} />
+			)}
+			{type === 'Article' && (
+				<Article sx={{ position: 'absolute', left: -1, top: 2, fontSize: 17, color: iconColor }} />
+			)}
 		</Stack>
 	)
 }
