@@ -142,7 +142,7 @@ export const MentionsList = ({ editor }: Props) => {
 				position: 'absolute',
 				top: `calc(${pos.top}px + 1.5rem)`,
 				left: pos.left,
-				visibility: visible ? 'visible' : 'hidden',
+				display: visible ? 'block' : 'none',
 				minWidth: '200px',
 			}}
 		>
