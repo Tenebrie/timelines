@@ -60,7 +60,7 @@ export const AuthorizationService = {
 
 	checkUserReadAccessById: async (user: User | undefined, worldId: string) => {
 		const worldBrief = await WorldService.findWorldBrief(worldId)
-		await AuthorizationService.checkUserWriteAccess(user, worldBrief)
+		await AuthorizationService.checkUserReadAccess(user, worldBrief)
 	},
 
 	checkUserWriteAccessById: async (user: User | undefined, worldId: string) => {
