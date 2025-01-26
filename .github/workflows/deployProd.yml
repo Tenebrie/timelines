@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       # - name: Configure Git
       #   run: |
       #     git config --global user.name "github-actions[bot]"
@@ -24,10 +28,6 @@ jobs:
           git pull origin master
           git merge origin/dev --no-ff --no-edit || (git merge --abort && exit 1)
           git push origin master
-      
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
