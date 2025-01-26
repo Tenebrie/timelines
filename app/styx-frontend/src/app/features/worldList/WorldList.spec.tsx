@@ -155,7 +155,9 @@ describe('<WorldList />', () => {
 		await user.click(await screen.findByText('Create new world...'))
 		await user.click(screen.getByText('Confirm'))
 
-		expect(await screen.findByText("Field can't be empty")).toBeInTheDocument()
+		screen.debug()
+
+		expect(await screen.findByText("Name can't be empty")).toBeInTheDocument()
 		expect(hasBeenCalled()).toBeFalsy()
 	})
 
