@@ -8,24 +8,9 @@ model Actor {
     description String @default("")
     color       String @default("")
 
-    introducedIn WorldEvent[] @relation(name: "EventIntroducedActors")
-    terminatedIn WorldEvent[] @relation(name: "EventTerminatedActors")
+    mentions    Mention[] @relation("ActorMentionSource")
+    mentionedIn Mention[] @relation("ActorMentionTarget")
 
-    statements            WorldEvent[]        @relation("EventTargetActors")
-    mentionedIn           WorldEvent[]        @relation("EventMentionedActors")
-    relationships         ActorRelationship[] @relation(name: "ActorRelationships")
-    receivedRelationships ActorRelationship[] @relation(name: "ReceivedActorRelationships")
-    world                 World               @relation(fields: [worldId], references: [id], onDelete: Cascade)
-    worldId               String
-}
-
-model ActorRelationship {
-    originId   String
-    receiverId String
-    origin     Actor  @relation(name: "ActorRelationships", fields: [originId], references: [id])
-    receiver   Actor  @relation(name: "ReceivedActorRelationships", fields: [receiverId], references: [id])
-
-    name String
-
-    @@id([originId, receiverId])
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+    worldId String
 }

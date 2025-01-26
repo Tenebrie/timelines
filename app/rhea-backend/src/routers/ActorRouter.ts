@@ -15,6 +15,7 @@ import {
 } from 'moonflower'
 
 import { ContentStringValidator } from './validators/ContentStringValidator'
+import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
 import { NameStringValidator } from './validators/NameStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { worldDetailsTag } from './WorldRouter'
@@ -26,7 +27,7 @@ const actorListTag = 'actorList'
 router.post('/api/world/:worldId/actors', async (ctx) => {
 	useApiEndpoint({
 		name: 'createActor',
-		description: 'Creates a new actor.',
+		description: 'Creates a new actor',
 		tags: [actorListTag, worldDetailsTag],
 	})
 
@@ -43,6 +44,7 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 		title: OptionalParam(OptionalNameStringValidator),
 		color: OptionalParam(NameStringValidator),
 		description: OptionalParam(ContentStringValidator),
+		mentions: OptionalParam(MentionsArrayValidator),
 	})
 
 	const { actor, world } = await ActorService.createActor(worldId, params)
@@ -55,7 +57,7 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 router.patch('/api/world/:worldId/actor/:actorId', async (ctx) => {
 	useApiEndpoint({
 		name: 'updateActor',
-		description: 'Updates the target actor.',
+		description: 'Updates the target actor',
 		tags: [actorListTag, worldDetailsTag],
 	})
 
@@ -85,7 +87,7 @@ router.patch('/api/world/:worldId/actor/:actorId', async (ctx) => {
 router.delete('/api/world/:worldId/actor/:actorId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteActor',
-		description: 'Deletes the target actor.',
+		description: 'Deletes the target actor',
 		tags: [actorListTag, worldDetailsTag],
 	})
 

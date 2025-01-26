@@ -6,7 +6,7 @@ services:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile.prod
         deploy:
-            replicas: 2
+            replicas: 1
             update_config:
                 parallelism: 1
                 delay: 10s

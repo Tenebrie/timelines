@@ -1,7 +1,10 @@
 import { useSelector } from 'react-redux'
 
-import { getWorldState } from '@/app/features/worldTimeline/selectors'
-import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
+import { getWorldState } from '@/app/features/world/selectors'
+import {
+	useWorldTimelineRouter,
+	worldTimelineRoutes,
+} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 export const useActorEditorTarget = () => {
 	const { actors } = useSelector(getWorldState)

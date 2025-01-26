@@ -1,7 +1,6 @@
 import { Dispatch, useCallback, useMemo, useRef, useState } from 'react'
 
-import { useMapActorsToOptions } from '@/app/features/worldTimeline/components/ActorSelector/useMapActorsToOptions'
-import { WorldEvent } from '@/app/features/worldTimeline/types'
+import { MentionDetails, WorldEvent } from '@/app/features/worldTimeline/types'
 
 type Props = {
 	event: WorldEvent
@@ -12,8 +11,6 @@ type SetterArgs = {
 }
 
 export const useEventFields = ({ event }: Props) => {
-	const { mapActorsToOptions } = useMapActorsToOptions()
-
 	const isDirty = useRef(false)
 	const setDirty = useCallback((value: boolean) => (isDirty.current = value), [])
 
@@ -22,9 +19,7 @@ export const useEventFields = ({ event }: Props) => {
 	const [icon, setIconDirect] = useState<string>(event.icon)
 	const [timestamp, setTimestampDirect] = useState<number>(event.timestamp)
 	const [revokedAt, setRevokedAtDirect] = useState<number | undefined>(event.revokedAt)
-	const [mentionedActors, setMentionedActorsDirect] = useState<string[]>(
-		mapActorsToOptions(event.mentionedActors),
-	)
+	const [mentions, setMentionsDirect] = useState<MentionDetails[]>(event.mentions)
 	const [description, setDescriptionDirect] = useState<string>(event.description)
 	const [descriptionRich, setDescriptionRichDirect] = useState<string>(event.descriptionRich)
 	const [customNameEnabled, setCustomNameEnabledDirect] = useState<boolean>(event.customName)
@@ -53,7 +48,7 @@ export const useEventFields = ({ event }: Props) => {
 			setIcon: generateSetter(setIconDirect),
 			setTimestamp: generateSetter(setTimestampDirect),
 			setRevokedAt: generateSetter(setRevokedAtDirect),
-			setMentionedActors: generateSetter(setMentionedActorsDirect),
+			setMentions: generateSetter(setMentionsDirect),
 			setDescription: generateSetter(setDescriptionDirect),
 			setDescriptionRich: generateSetter(setDescriptionRichDirect),
 			setCustomNameEnabled: generateSetter(setCustomNameEnabledDirect),
@@ -70,7 +65,7 @@ export const useEventFields = ({ event }: Props) => {
 			icon,
 			timestamp,
 			revokedAt,
-			mentionedActors,
+			mentions,
 			description,
 			descriptionRich,
 			customNameEnabled,

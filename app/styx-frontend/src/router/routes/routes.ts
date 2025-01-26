@@ -1,21 +1,24 @@
 import { useBaseRouter } from '../useBaseRouter'
-import { adminQueryParams, adminRoutes } from './adminRoutes'
 import { appQueryParams, appRoutes } from './appRoutes'
-import { homeQueryParams, homeRoutes } from './homeRoutes'
-import { worldTimelineQueryParams, worldTimelineRoutes } from './worldTimelineRoutes'
+import { adminQueryParams, adminRoutes } from './featureRoutes/adminRoutes'
+import { homeQueryParams, homeRoutes } from './featureRoutes/homeRoutes'
+import { worldTimelineQueryParams, worldTimelineRoutes } from './featureRoutes/worldTimelineRoutes'
+import { worldWikiQueryParams, worldWikiRoutes } from './featureRoutes/worldWikiRoutes'
 
 export const routes = {
 	...adminRoutes,
-	...appRoutes,
 	...homeRoutes,
+	...appRoutes,
 	...worldTimelineRoutes,
+	...worldWikiRoutes,
 }
 
 export const allQueries = {
 	...adminQueryParams,
-	...appQueryParams,
 	...homeQueryParams,
+	...appQueryParams,
 	...worldTimelineQueryParams,
+	...worldWikiQueryParams,
 }
 
 export const useRouter = () => useBaseRouter(routes, allQueries)

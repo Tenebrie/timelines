@@ -8,10 +8,10 @@ export const parseActorList = async (actorIds: string[] | undefined) => {
 
 	const deduplicatedActorIds = Array.from(new Set(actorIds))
 
-	const targetActors = await ActorService.findActorsByIds(deduplicatedActorIds)
-	if (targetActors.length < deduplicatedActorIds.length) {
+	const actors = await ActorService.findActorsByIds(deduplicatedActorIds)
+	if (actors.length < deduplicatedActorIds.length) {
 		throw new BadRequestError('Invalid actor IDs')
 	}
 
-	return targetActors
+	return actors
 }

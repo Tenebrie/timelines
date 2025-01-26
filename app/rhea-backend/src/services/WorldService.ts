@@ -98,13 +98,8 @@ export const WorldService = {
 			include: {
 				actors: {
 					include: {
-						statements: {
-							select: {
-								id: true,
-							},
-						},
-						relationships: true,
-						receivedRelationships: true,
+						mentions: true,
+						mentionedIn: true,
 					},
 				},
 				events: {
@@ -112,7 +107,8 @@ export const WorldService = {
 						timestamp: 'asc',
 					},
 					include: {
-						mentionedActors: true,
+						mentions: true,
+						mentionedIn: true,
 						deltaStates: {
 							orderBy: {
 								timestamp: 'asc',

@@ -3,9 +3,9 @@ import { screen, waitFor, within } from '@testing-library/react'
 import { mockActorModel, mockEventModel } from '@/api/rheaApi.mock'
 import { renderWithProviders } from '@/jest/renderWithProviders'
 import { MockedRouter, mockRouter, resetMockRouter } from '@/router/router.mock'
-import { worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
+import { worldTimelineRoutes } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
-import { initialState } from '../../worldTimeline/reducer'
+import { initialState } from '../../world/reducer'
 import { WorldDetails } from '../../worldTimeline/types'
 import { OverviewPanel } from './OverviewPanel'
 
@@ -22,7 +22,7 @@ describe('<OverviewPanel />', () => {
 	})
 
 	beforeEach(() => {
-		mockRouter(worldTimelineRoutes.root, {
+		mockRouter(worldTimelineRoutes.timelineRoot, {
 			worldId: '1111',
 		})
 	})
@@ -124,7 +124,7 @@ describe('<OverviewPanel />', () => {
 		})
 
 		it('navigates to actor editor on actor double click while preserving selected time', async () => {
-			mockRouter(worldTimelineRoutes.root, { worldId: '1111' }, { time: '100' })
+			mockRouter(worldTimelineRoutes.timelineRoot, { worldId: '1111' }, { time: '100' })
 
 			const { user } = renderWithProviders(
 				<OverviewPanel />,
@@ -293,7 +293,7 @@ describe('<OverviewPanel />', () => {
 		})
 
 		it('navigates to event editor on double click while preserving the time', async () => {
-			mockRouter(worldTimelineRoutes.root, { worldId: '1111' }, { time: '100' })
+			mockRouter(worldTimelineRoutes.timelineRoot, { worldId: '1111' }, { time: '100' })
 
 			const { user } = renderWithProviders(
 				<OverviewPanel />,

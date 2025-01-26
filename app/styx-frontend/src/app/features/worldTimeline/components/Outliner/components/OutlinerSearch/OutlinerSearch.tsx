@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { SearchInput } from '@/app/components/SearchInput'
-import { worldSlice } from '@/app/features/worldTimeline/reducer'
-import { getWorldIdState } from '@/app/features/worldTimeline/selectors'
+import { worldSlice } from '@/app/features/world/reducer'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { ingestEvent } from '@/app/utils/ingestEvent'
 
 export const OutlinerSearch = () => {

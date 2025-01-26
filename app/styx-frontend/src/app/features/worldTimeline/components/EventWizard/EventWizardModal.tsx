@@ -8,9 +8,13 @@ import { useEffect, useState } from 'react'
 import { useCreateWorldEventMutation } from '@/api/worldEventApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { TimestampField } from '@/app/features/time/components/TimestampField'
+import { isEntityNameValid } from '@/app/features/validation/isEntityNameValid'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
+import {
+	useWorldTimelineRouter,
+	worldTimelineRoutes,
+} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import Modal, { useModalCleanup } from '@/ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '@/ui-lib/components/Modal'
 
@@ -44,8 +48,9 @@ export const EventWizardModal = () => {
 			return
 		}
 
-		if (!name.trim()) {
-			setNameValidationError("Field can't be empty")
+		const validationResult = isEntityNameValid(name)
+		if (validationResult.error) {
+			setNameValidationError(validationResult.error)
 			return
 		}
 
@@ -55,15 +60,7 @@ export const EventWizardModal = () => {
 				body: {
 					type: 'SCENE',
 					name: name.trim(),
-					description: '',
-					descriptionRich: '',
-					mentionedActorIds: [],
 					timestamp: String(timestamp),
-					revokedAt: null,
-					customNameEnabled: false,
-					modules: [],
-					icon: 'default',
-					externalLink: '',
 				},
 			}),
 		)

@@ -37,6 +37,10 @@ const TimelineEventPositionerComponent = ({
 	const { ref, isDragging, ghostElement } = useDragDrop({
 		type: 'timelineEvent',
 		params: { event: entity },
+		ghostAlign: {
+			top: 'center',
+			left: 'center',
+		},
 		adjustPosition: (pos) => {
 			const scroll = TimelineState.scroll
 			const b = -scroll % LineSpacing

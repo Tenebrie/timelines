@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { worldTimelineQueryParams } from '@/router/routes/worldTimelineRoutes'
+import { worldTimelineQueryParams } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import { QueryStrategy } from '@/router/types'
 
 export const useNavigationReceiver = () => {
@@ -47,6 +47,29 @@ export const useNavigationReceiver = () => {
 			}
 
 			navigate({ pathname, search })
+		},
+	})
+
+	// TODO: Merge with previous
+	useEventBusSubscribe({
+		event: 'navigate/articleDetails',
+		callback: ({ target, args }) => {
+			const pathname = (() => {
+				if (!args) {
+					return target as string
+				}
+
+				return Object.keys(args).reduce(
+					(total, current) => total.replace(`:${current}`, args[current as keyof typeof args]),
+					target as string,
+				)
+			})()
+
+			if (location.pathname === pathname) {
+				return
+			}
+
+			navigate({ pathname })
 		},
 	})
 }

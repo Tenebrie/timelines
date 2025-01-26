@@ -72,6 +72,15 @@ const modals = {
 		worldId: '' as string,
 		worldName: '' as string,
 	},
+
+	/* WorldWiki */
+	articleWizard: {
+		isOpen: false as boolean,
+	},
+	deleteArticleModal: {
+		isOpen: false as boolean,
+		articles: [] as string[],
+	},
 } as const
 
 export const initialState = modals

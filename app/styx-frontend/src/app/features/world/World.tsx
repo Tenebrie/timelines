@@ -3,7 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom'
 
 import { BlockingSpinner } from '@/app/components/BlockingSpinner'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import { useWorldRouter, worldRoutes } from '@/router/routes/featureRoutes/worldRoutes'
 import { ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage'
 
 import { useAuthCheck } from '../auth/authCheck/useAuthCheck'

@@ -6,6 +6,7 @@
 	"homepage": "https://timelines.tenebrie.com",
 	"scripts": {
 		"analyze": "source-map-explorer 'build/assets/*.js'",
+		"tsc": "tsc",
 		"build": "tsc && vite build",
 		"build:ci": "vite build",
 		"preview": "vite preview",

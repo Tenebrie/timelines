@@ -1,4 +1,4 @@
-import { User, WorldEvent, WorldEventDelta } from '@prisma/client'
+import { User, WikiArticle, WorldEvent, WorldEventDelta } from '@prisma/client'
 
 import {
 	RedisChannel,
@@ -81,6 +81,25 @@ export const RedisService = {
 			type: RheaToCalliopeMessageType.WORLD_UNSHARED,
 			data: {
 				userId,
+			},
+		})
+	},
+
+	notifyAboutWikiArticleUpdate: ({ worldId, article }: { worldId: string; article: WikiArticle }) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.WIKI_ARTICLE_UPDATED,
+			data: {
+				worldId,
+				article: JSON.stringify(article),
+			},
+		})
+	},
+
+	notifyAboutWikiArticleDeletion: ({ worldId }: { worldId: string }) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.WIKI_ARTICLE_DELETED,
+			data: {
+				worldId,
 			},
 		})
 	},

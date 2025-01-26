@@ -7,7 +7,7 @@ import { createBrowserRouter, MemoryRouter, RouterProvider } from 'react-router-
 import { generateStore, RootState } from '../app/store'
 import { routerDefinition } from '../router/routerDefinition'
 import { appRoutes } from '../router/routes/appRoutes'
-import { worldTimelineRoutes } from '../router/routes/worldTimelineRoutes'
+import { worldTimelineRoutes } from '../router/routes/featureRoutes/worldTimelineRoutes'
 
 export const renderWithProviders = (
 	node: ReactNode,

@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux'
 import { useUpdateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { getWorldIdState } from '@/app/features/worldTimeline/selectors'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import useEventTracks, { TimelineTrack } from '../../TimelineTracks/hooks/useEventTracks'

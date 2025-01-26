@@ -1,7 +1,7 @@
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 
-import { homeRoutes, useHomeRouter } from '@/router/routes/homeRoutes'
+import { homeRoutes, useHomeRouter } from '@/router/routes/featureRoutes/homeRoutes'
 
 import { ShareWorldModal } from './components/ShareWorldModal'
 import { WorldDetailsEditorWrapper } from './WorldDetailsEditorWrapper'

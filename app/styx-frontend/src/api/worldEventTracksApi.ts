@@ -84,10 +84,7 @@ export type UpdateWorldEventTrackApiArg = {
 		visible?: boolean
 	}
 }
-export type DeleteWorldEventTrackApiResponse = /** status 200  */ {
-	id: string
-	position: number
-}[]
+export type DeleteWorldEventTrackApiResponse = unknown
 export type DeleteWorldEventTrackApiArg = {
 	/** Any string value */
 	worldId: string

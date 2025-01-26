@@ -1,10 +1,11 @@
+import { HardBreak } from '@tiptap/extension-hard-break'
 import Mention from '@tiptap/extension-mention'
 import Placeholder from '@tiptap/extension-placeholder'
 import { Extensions } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
-import { MentionChip } from './actorMentions/components/ActorMentionNode'
-import { mentionsSuggestions } from './actorMentions/MentionsExtension'
+import { MentionNode } from './mentions/components/MentionNode'
+import { mentionsSuggestions } from './mentions/MentionsExtension'
 
 export const SharedExtensions: Extensions = [
 	// Starter kit
@@ -12,8 +13,16 @@ export const SharedExtensions: Extensions = [
 	StarterKit.configure({
 		hardBreak: false,
 	}),
+	HardBreak.extend({
+		addKeyboardShortcuts() {
+			return {
+				...this?.parent?.(),
+				'Mod-Enter': () => false,
+			}
+		},
+	}),
 	// Support for actor mentions
-	MentionChip,
+	MentionNode,
 ]
 
 export const EditorExtensions: Extensions = [

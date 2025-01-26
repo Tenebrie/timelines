@@ -2,10 +2,10 @@ import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { worldSlice } from '@/app/features/world/reducer'
+import { getTimelineContextMenuState, getWorldCalendarState } from '@/app/features/world/selectors'
 import { ScaleLevel } from '@/app/features/worldTimeline/components/Timeline/types'
 import { TimelineState } from '@/app/features/worldTimeline/components/Timeline/utils/TimelineState'
-import { worldSlice } from '@/app/features/worldTimeline/reducer'
-import { getTimelineContextMenuState, getWorldCalendarState } from '@/app/features/worldTimeline/selectors'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
 
 type Props = {

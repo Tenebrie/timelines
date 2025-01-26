@@ -8,10 +8,10 @@ import { useSelector } from 'react-redux'
 
 import { useDeleteWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { useModal } from '@/app/features/modals/reducer'
-import { getWorldIdState } from '@/app/features/worldTimeline/selectors'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const DeleteEventDeltaModal = () => {

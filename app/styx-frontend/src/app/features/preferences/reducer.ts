@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { Actor, WorldEvent } from '../worldTimeline/types'
 import { loadPreferences, PreferencesKey } from './loadPreferences'
 
-const initialState = loadPreferences()
+const initialState = loadPreferences() as Required<ReturnType<typeof loadPreferences>>
 
 const saveToLocalStorage = (state: PreferencesState) => {
 	window.localStorage.setItem(
@@ -31,6 +31,7 @@ export const preferencesSlice = createSlice({
 			state['timeline'] = value['timeline']
 			state['outliner'] = value['outliner']
 			state['overview'] = value['overview']
+			state['wiki'] = value['wiki']
 		},
 
 		setColorMode: (state, { payload }: PayloadAction<'light' | 'dark'>) => {
@@ -89,6 +90,12 @@ export const preferencesSlice = createSlice({
 		},
 		setEventsReversed: (state, { payload }: PayloadAction<boolean>) => {
 			state.overview.eventsReversed = payload
+			saveToLocalStorage(state)
+		},
+
+		/* Wiki */
+		setReadMode: (state, { payload }: PayloadAction<boolean>) => {
+			state.wiki.readModeEnabled = payload
 			saveToLocalStorage(state)
 		},
 	},

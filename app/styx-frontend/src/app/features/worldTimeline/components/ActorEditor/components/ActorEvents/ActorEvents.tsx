@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
+import { getWorldState } from '@/app/features/world/selectors'
 import { EventWithContentRenderer } from '@/app/features/worldTimeline/components/Renderers/Event/EventWithContentRenderer'
-import { getWorldState } from '@/app/features/worldTimeline/selectors'
 import { Actor } from '@/app/features/worldTimeline/types'
 import { isNull } from '@/app/utils/isNull'
 
@@ -20,9 +20,12 @@ export const ActorEvents = ({ actor }: Props) => {
 	const { timeToLabel } = useWorldTime()
 
 	const { expandedEvents } = useSelector(getOutlinerPreferences)
+	const mentionedInEvents = actor.mentionedIn
+		.filter((mention) => mention.targetId === actor.id)
+		.map((mention) => mention.sourceId)
 
 	const visibleEvents = events
-		.filter((event) => event.mentionedActors.some((targetActor) => targetActor.id === actor.id))
+		.filter((event) => mentionedInEvents.includes(event.id))
 		.map((event) => ({
 			...event,
 			secondary: timeToLabel(event.timestamp),

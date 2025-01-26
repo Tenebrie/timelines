@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography'
 import { useSelector } from 'react-redux'
 
 import { darkTheme, lightTheme } from '@/app/features/theming/themes'
-import { getWorldState } from '@/app/features/worldTimeline/selectors'
+import { getWorldState } from '@/app/features/world/selectors'
 
 export const WorldHeader = () => {
 	const {

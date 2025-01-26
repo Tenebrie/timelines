@@ -7,6 +7,10 @@ import { AllowedDraggableType, DraggableParams } from './types'
 type Props<T extends AllowedDraggableType> = {
 	type: T
 	params: DraggableParams[T]
+	ghostAlign?: {
+		top?: 'start' | 'center' | 'end'
+		left?: 'start' | 'center' | 'end'
+	}
 	ghostFactory: () => ReactNode
 	adjustPosition?: (
 		pos: { x: number; y: number },
@@ -18,6 +22,7 @@ type Props<T extends AllowedDraggableType> = {
 export const useDragDrop = <T extends AllowedDraggableType>({
 	type,
 	params,
+	ghostAlign,
 	ghostFactory,
 	adjustPosition,
 	disabled,
@@ -64,12 +69,16 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 					initialTop={rootPos.current.y}
 					left={event.clientX}
 					top={event.clientY}
+					align={{
+						top: ghostAlign?.top ?? 'start',
+						left: ghostAlign?.left ?? 'start',
+					}}
 				>
 					{ghostFactory()}
 				</GhostWrapper>,
 			)
 		},
-		[ghostFactory, params, setStateImmediately, type],
+		[ghostFactory, params, setStateImmediately, type, ghostAlign],
 	)
 
 	const onMouseMove = useCallback(
@@ -90,19 +99,24 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 					...getState()!,
 					targetPos: pos,
 				})
+				// TODO: Do not recreate the ghost every frame
 				setGhostElement(
 					<GhostWrapper
 						initialLeft={rootPos.current.x}
 						initialTop={rootPos.current.y}
 						left={pos.x}
 						top={pos.y}
+						align={{
+							top: ghostAlign?.top ?? 'start',
+							left: ghostAlign?.left ?? 'start',
+						}}
 					>
 						{ghostFactory()}
 					</GhostWrapper>,
 				)
 			}
 		},
-		[adjustPosition, getState, ghostFactory, setStateQuietly, startDragging],
+		[adjustPosition, getState, ghostFactory, setStateQuietly, startDragging, ghostAlign],
 	)
 
 	const onMouseUp = useCallback(() => {

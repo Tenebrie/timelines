@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
+import { getWorldState } from '@/app/features/world/selectors'
 import { applyEventDelta } from '@/app/utils/applyEventDelta'
 import { isNull } from '@/app/utils/isNull'
 
-import { getWorldState } from '../../selectors'
 import { WorldEvent } from '../../types'
 
 type Props = {

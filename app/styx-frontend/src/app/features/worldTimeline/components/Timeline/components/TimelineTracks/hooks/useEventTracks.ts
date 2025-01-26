@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useEventTracksRequest } from '@/app/features/worldTimeline/components/Timeline/hooks/useEventTracksRequest'
 import {
 	getEventCreatorState,
 	getEventDeltaCreatorState,
 	getWorldState,
-} from '@/app/features/worldTimeline/selectors'
+} from '@/app/features/world/selectors'
+import { useEventTracksRequest } from '@/app/features/worldTimeline/components/Timeline/hooks/useEventTracksRequest'
 import {
 	MarkerType,
 	TimelineEntity,
@@ -18,7 +18,10 @@ import { applyEventDelta } from '@/app/utils/applyEventDelta'
 import { asMarkerType } from '@/app/utils/asMarkerType'
 import { findStartingFrom } from '@/app/utils/findStartingFrom'
 import { isNotNull } from '@/app/utils/isNotNull'
-import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
+import {
+	useWorldTimelineRouter,
+	worldTimelineRoutes,
+} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 export type TimelineTrack = ReturnType<typeof useEventTracks>[number]
 export const TimelineEventHeightPx = 40

@@ -2,13 +2,16 @@ import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useCreateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
+import { worldSlice } from '@/app/features/world/reducer'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTimelineBus'
-import { worldSlice } from '@/app/features/worldTimeline/reducer'
-import { getWorldIdState } from '@/app/features/worldTimeline/selectors'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { ErrorState } from '@/app/utils/useErrorState'
-import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
+import {
+	useWorldTimelineRouter,
+	worldTimelineRoutes,
+} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { EventDeltaDetailsEditorErrors } from './EventDeltaDetailsEditor'
 import { useEventDeltaFields } from './useEventDeltaFields'

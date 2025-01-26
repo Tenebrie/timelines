@@ -1,0 +1,29 @@
+model Tag {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
+    name String
+
+    mentions    Mention[] @relation("TagMentionSource")
+    mentionedIn Mention[] @relation("TagMentionTarget")
+
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+    worldId String
+}
+
+model WikiArticle {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
+    name        String
+    contentRich String @default("")
+    position    Int    @default(0)
+
+    mentions    Mention[] @relation("ArticleMentionSource")
+    mentionedIn Mention[] @relation("ArticleMentionTarget")
+
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+    worldId String
+}

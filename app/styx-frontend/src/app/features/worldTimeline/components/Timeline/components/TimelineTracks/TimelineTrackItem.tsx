@@ -5,10 +5,10 @@ import { Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'rea
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { getTimelineContextMenuState, getWorldState } from '@/app/features/worldTimeline/selectors'
+import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 import { isRunningInTest } from '@/jest/isRunningInTest'
-import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { TimelineState } from '../../utils/TimelineState'
 import { TimelineChainPositioner } from './components/TimelineChainPositioner/TimelineChainPositioner'

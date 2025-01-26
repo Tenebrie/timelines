@@ -1,41 +1,55 @@
-import { Actor, WorldEvent } from '@prisma/client'
-import { BadRequestError } from 'moonflower'
+import { WorldEvent } from '@prisma/client'
 
 import { getPrismaClient } from './dbClients/DatabaseClient'
+import { fetchWorldEventDetailsOrThrow } from './dbQueries/fetchWorldEventDetailsOrThrow'
 import { fetchWorldEventOrThrow } from './dbQueries/fetchWorldEventOrThrow'
-import { CreateWorldQueryData, makeCreateWorldEventQuery } from './dbQueries/makeCreateWorldEventQuery'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
 import { makeUpdateDeltaStateNamesQueries } from './dbQueries/makeUpdateDeltaStateNamesQueries'
+import { makeUpdateWorldEventQuery } from './dbQueries/makeUpdateWorldEventQuery'
+import { MentionData } from './MentionsService'
 
 export const WorldEventService = {
 	fetchWorldEvent: async (eventId: string) => {
 		return await fetchWorldEventOrThrow(eventId)
 	},
 
-	fetchWorldEventWithDeltaStates: async (eventId: string) => {
-		const event = await getPrismaClient().worldEvent.findFirst({
-			where: {
-				id: eventId,
-			},
-			include: {
-				deltaStates: true,
-			},
-		})
-		if (!event) {
-			throw new BadRequestError(`Unable to find event.`)
-		}
-		return event
+	fetchWorldEventWithDetails: async (eventId: string) => {
+		return fetchWorldEventDetailsOrThrow(eventId)
 	},
 
-	createWorldEvent: async ({ worldId, eventData }: { worldId: string; eventData: CreateWorldQueryData }) => {
-		const [event, world] = await getPrismaClient().$transaction([
-			makeCreateWorldEventQuery(worldId, eventData),
-			makeTouchWorldQuery(worldId),
-		])
-		return {
-			event,
-			world,
-		}
+	createWorldEvent: async ({
+		worldId,
+		eventData,
+	}: {
+		worldId: string
+		eventData: Pick<WorldEvent, 'name' | 'type' | 'timestamp'> &
+			Parameters<typeof makeUpdateWorldEventQuery>[0]['params']
+	}) => {
+		return getPrismaClient().$transaction(async (prisma) => {
+			const baseEvent = await prisma.worldEvent.create({
+				data: {
+					worldId,
+					name: eventData.name,
+					type: eventData.type,
+					timestamp: eventData.timestamp,
+				},
+			})
+
+			await makeUpdateWorldEventQuery({
+				eventId: baseEvent.id,
+				params: eventData,
+				prisma,
+			})
+
+			const world = await makeTouchWorldQuery(worldId, prisma)
+
+			const event = await fetchWorldEventDetailsOrThrow(baseEvent.id, prisma)
+
+			return {
+				world,
+				event,
+			}
+		})
 	},
 
 	updateWorldEvent: async ({
@@ -46,41 +60,32 @@ export const WorldEventService = {
 		worldId: string
 		eventId: string
 		params: Partial<WorldEvent> & {
-			mentionedActors: Actor[] | null
+			mentions: MentionData[] | undefined
 		}
 	}) => {
-		const eventBeforeUpdate = await WorldEventService.fetchWorldEventWithDeltaStates(eventId)
+		const eventBeforeUpdate = await WorldEventService.fetchWorldEventWithDetails(eventId)
 
-		const [event, world] = await getPrismaClient().$transaction([
-			getPrismaClient().worldEvent.update({
-				where: {
-					id: eventId,
-				},
-				data: {
-					...params,
-					mentionedActors:
-						params.mentionedActors !== null
-							? {
-									set: params.mentionedActors.map((actor) => ({ id: actor.id })),
-								}
-							: undefined,
-				},
-				include: {
-					deltaStates: true,
-					mentionedActors: true,
-				},
-			}),
-			makeTouchWorldQuery(worldId),
-			...makeUpdateDeltaStateNamesQueries({
+		return getPrismaClient().$transaction(async (prisma) => {
+			await makeUpdateWorldEventQuery({
+				eventId,
+				params,
+				prisma,
+			})
+
+			await makeUpdateDeltaStateNamesQueries({
 				event: eventBeforeUpdate,
 				customName: params.name,
 				customNameEnabled: params.customName,
-			}),
-		])
-		return {
-			event,
-			world,
-		}
+			})
+
+			const world = await makeTouchWorldQuery(worldId, prisma)
+			const event = await fetchWorldEventDetailsOrThrow(eventId, prisma)
+
+			return {
+				world,
+				event,
+			}
+		})
 	},
 
 	deleteWorldEvent: async ({ worldId, eventId }: { worldId: string; eventId: string }) => {

@@ -4,11 +4,14 @@ import { useOutlet } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useLocationRef } from '@/hooks/useLocationRef'
+import {
+	useWorldTimelineRouter,
+	worldTimelineRoutes,
+} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import { QueryParams } from '@/router/routes/QueryParams'
-import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
 
+import { worldSlice } from '../world/reducer'
 import { useTimelineBusDispatch } from './hooks/useTimelineBus'
-import { worldSlice } from './reducer'
 import { WorldContent } from './styles'
 
 const useWatchSelectedTime = () => {
@@ -23,7 +26,7 @@ const useWatchSelectedTime = () => {
 	 * Selected time has been changed externally
 	 */
 	useEffect(() => {
-		const value = queryOf(worldTimelineRoutes.root).time
+		const value = queryOf(worldTimelineRoutes.timelineRoot).time
 		const selectedTime = parseInt(value)
 		dispatch(setSelectedTime(selectedTime))
 		scrollTimelineTo(selectedTime)

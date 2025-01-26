@@ -7,10 +7,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { BaseNavigator } from '@/app/components/BaseNavigator'
 import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { getOverviewPreferences } from '@/app/features/preferences/selectors'
-import { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { useTimelineBusDispatch } from '../../worldTimeline/hooks/useTimelineBus'
-import { worldSlice } from '../../worldTimeline/reducer'
+import { worldSlice } from '../reducer'
 
 export const WorldNavigatorComponent = () => {
 	const { navigateToOutliner } = useWorldTimelineRouter()

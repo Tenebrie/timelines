@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getWorldState } from '../../selectors'
+import { getWorldState } from '@/app/features/world/selectors'
 
 export const useVisibleActors = () => {
 	const { actors, search } = useSelector(

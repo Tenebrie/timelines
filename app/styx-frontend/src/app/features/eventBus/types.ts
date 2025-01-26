@@ -1,4 +1,5 @@
-import type { useWorldTimelineRouter } from '@/router/routes/worldTimelineRoutes'
+import type { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
+import { useWorldWikiRouter } from '@/router/routes/featureRoutes/worldWikiRoutes'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
 export type AllowedEvents =
@@ -12,6 +13,7 @@ export type AllowedEvents =
 	| 'richEditor/closeMentions'
 	| 'richEditor/keyDown'
 	| 'navigate/worldTimeline'
+	| 'navigate/articleDetails'
 
 export type EventParams = {
 	['scrollTimelineLeft']: void
@@ -30,4 +32,5 @@ export type EventParams = {
 		metaKey: boolean
 	}
 	['navigate/worldTimeline']: Parameters<ReturnType<typeof useWorldTimelineRouter>['navigateTo']>[0]
+	['navigate/articleDetails']: Parameters<ReturnType<typeof useWorldWikiRouter>['navigateTo']>[0]
 }

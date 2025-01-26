@@ -10,8 +10,8 @@ import { useCallback, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+import { worldSlice } from '@/app/features/world/reducer'
 import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTimelineBus'
-import { worldSlice } from '@/app/features/worldTimeline/reducer'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import { QueryParams } from '@/router/routes/QueryParams'
 

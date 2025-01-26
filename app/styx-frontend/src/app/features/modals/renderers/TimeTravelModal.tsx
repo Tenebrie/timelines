@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
@@ -11,11 +12,12 @@ import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/compo
 
 import { useTimeSelector } from '../../time/hooks/useTimeSelector'
 import { useWorldTime } from '../../time/hooks/useWorldTime'
+import { worldSlice } from '../../world/reducer'
+import { getWorldState } from '../../world/selectors'
 import { useTimelineBusDispatch } from '../../worldTimeline/hooks/useTimelineBus'
-import { worldSlice } from '../../worldTimeline/reducer'
-import { getWorldState } from '../../worldTimeline/selectors'
 import { WorldCalendarType } from '../../worldTimeline/types'
 import { useModal } from '../reducer'
+import { TimeTravelModalInfo } from './TimeTravelModalInfo'
 
 export const TimeTravelModal = () => {
 	const { isOpen, close } = useModal('timeTravelModal')
@@ -29,7 +31,7 @@ export const TimeTravelModal = () => {
 	const dispatch = useDispatch()
 
 	const { timeToLabel } = useWorldTime()
-	const { parseSelector } = useTimeSelector({ rawTime: selectedTime })
+	const { applySelector } = useTimeSelector({ rawTime: selectedTime })
 
 	const calendarRef = useRef<WorldCalendarType>(null)
 	const selectorRef = useRef<HTMLInputElement | null>(null)
@@ -48,18 +50,18 @@ export const TimeTravelModal = () => {
 	const onSelectorChanged = useCallback(
 		(value: string) => {
 			setTimeSelector(value)
-			const { timestamp } = parseSelector(value)
+			const { timestamp } = applySelector(value)
 			setTargetTime(timestamp)
 
 			setDisplayedTargetTime(timeToLabel(timestamp))
 		},
-		[parseSelector, timeToLabel],
+		[applySelector, timeToLabel],
 	)
 
 	useModalCleanup({
 		isOpen,
 		onCleanup: () => {
-			const { timestamp } = parseSelector(timeSelector)
+			const { timestamp } = applySelector(timeSelector)
 			setTargetTime(timestamp)
 			setDisplayedTargetTime(timeToLabel(timestamp))
 		},
@@ -105,7 +107,11 @@ export const TimeTravelModal = () => {
 				onChange={(event) => onSelectorChanged(event.target.value)}
 				autoFocus
 			/>
-			<Typography>Travel to: {displayedTargetTime}</Typography>
+			<Typography>
+				<b>Travel to:</b> {displayedTargetTime}
+			</Typography>
+			<Divider />
+			<TimeTravelModalInfo />
 			<ModalFooter>
 				<Stack direction="row-reverse" justifyContent="space-between" width="100%">
 					<Stack direction="row-reverse" spacing={2}>

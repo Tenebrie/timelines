@@ -7,6 +7,7 @@ import { CustomTheme } from '@/hooks/useCustomTheme'
 export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
 	flex: 0;
 	border: 1px solid ${({ $theme }) => $theme.custom.palette.outline};
+	height: 100%;
 
 	&:hover {
 		border: 1px solid ${({ $theme }) => $theme.material.palette.text.primary};
@@ -36,8 +37,9 @@ export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
 export const StyledEditorContent = styled(EditorContent)<{ $mode: 'read' | 'edit' }>`
 	font-family: 'Roboto', sans-serif;
 	outline: none;
-	height: ${(props) => (props.$mode === 'edit' ? '200px' : 'unset')};
+	height: ${(props) => (props.$mode === 'edit' ? 'calc(100% - 46px)' : 'unset')};
 	overflow-y: auto;
+	min-height: 200px;
 
 	&::focus {
 		background: red;
@@ -45,7 +47,7 @@ export const StyledEditorContent = styled(EditorContent)<{ $mode: 'read' | 'edit
 
 	.ProseMirror {
 		outline: none;
-		height: 100%;
+		height: calc(100% - 32px);
 		padding: ${(props) => (props.$mode === 'edit' ? '0 16px' : 'unset')};
 	}
 
@@ -58,8 +60,14 @@ export const StyledEditorContent = styled(EditorContent)<{ $mode: 'read' | 'edit
 	p:first-child {
 		padding-top: 16px;
 	}
-	p:last-child {
-		padding-bottom: 16px;
+	// p:last-child {
+	// 	padding-bottom: 0px;
+	// }
+
+	code {
+		padding: 4px 8px;
+		border-radius: 4px;
+		background: #00000033;
 	}
 
 	.ProseMirror {

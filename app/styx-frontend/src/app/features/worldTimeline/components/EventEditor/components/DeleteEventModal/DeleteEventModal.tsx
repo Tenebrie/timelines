@@ -9,7 +9,10 @@ import { useDeleteWorldEventMutation } from '@/api/worldEventApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldTimelineRouter, worldTimelineRoutes } from '@/router/routes/worldTimelineRoutes'
+import {
+	useWorldTimelineRouter,
+	worldTimelineRoutes,
+} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const DeleteEventModal = () => {
@@ -17,7 +20,7 @@ export const DeleteEventModal = () => {
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 
 	const { stateOf, navigateToCurrentWorldRoot } = useWorldTimelineRouter()
-	const { worldId } = stateOf(worldTimelineRoutes.root)
+	const { worldId } = stateOf(worldTimelineRoutes.timelineRoot)
 
 	const { isOpen, target: targetEvent, close } = useModal('deleteEventModal')
 

@@ -10,6 +10,8 @@ export enum CalliopeToClientMessageType {
 	WORLD_EVENT_UPDATED = 'worldEventUpdated',
 	WORLD_EVENT_DELTA_UPDATED = 'worldEventDeltaUpdated',
 	WORLD_TRACKS_UPDATED = 'worldTracksUpdated',
+	WIKI_ARTICLE_UPDATED = 'wikiArticleUpdated',
+	WIKI_ARTICLE_DELETED = 'wikiArticleDeleted',
 }
 
 export type CalliopeToClientMessagePayload = {
@@ -34,6 +36,14 @@ export type CalliopeToClientMessagePayload = {
 	[CalliopeToClientMessageType.WORLD_TRACKS_UPDATED]: {
 		worldId: string
 		timestamp: string
+	}
+	[CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED]: {
+		worldId: string
+		// TODO: Type properly
+		article: string
+	}
+	[CalliopeToClientMessageType.WIKI_ARTICLE_DELETED]: {
+		worldId: string
 	}
 }
 

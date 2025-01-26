@@ -15,6 +15,7 @@ import { WorldEventTrackRouter } from './routers/WorldEventTrackRouter'
 import { WorldRouter } from './routers/WorldRouter'
 import { WorldSearchRouter } from './routers/WorldSearchRouter'
 import { WorldThumbnailRouter } from './routers/WorldThumbnailRouter'
+import { WorldWikiRouter } from './routers/WorldWikiRouter'
 import { RedisService } from './services/RedisService'
 import { isRunningInTest } from './utils/isRunningInTest'
 
@@ -65,6 +66,8 @@ app
 	.use(WorldSearchRouter.allowedMethods())
 	.use(WorldThumbnailRouter.routes())
 	.use(WorldThumbnailRouter.allowedMethods())
+	.use(WorldWikiRouter.routes())
+	.use(WorldWikiRouter.allowedMethods())
 
 if (!isRunningInTest()) {
 	app.use(

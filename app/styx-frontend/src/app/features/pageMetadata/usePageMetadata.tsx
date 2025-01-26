@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useWorldRouter, worldRoutes } from '@/router/routes/worldRoutes'
+import { useWorldRouter, worldRoutes } from '@/router/routes/featureRoutes/worldRoutes'
 
-import { getWorldState } from '../worldTimeline/selectors'
+import { getWorldState } from '../world/selectors'
 
 if (process.env.NODE_ENV === 'development') {
 	window.document.title = 'Timelines (Dev)'

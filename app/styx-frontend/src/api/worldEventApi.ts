@@ -49,36 +49,33 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as worldEventApi }
 export type CreateWorldEventApiResponse = /** status 200  */ {
-	id: string
-}
-export type CreateWorldEventApiArg = {
-	/** Any string value */
-	worldId: string
-	body: {
-		type: 'SCENE' | 'OTHER'
-		modules: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
-		name: string
-		icon: string
-		description: string
-		descriptionRich: string
-		timestamp: string
-		revokedAt: null | string
-		mentionedActorIds: string[]
-		customNameEnabled: boolean
-		externalLink: string
-		worldEventTrackId?: string
-	}
-}
-export type UpdateWorldEventApiResponse = /** status 200  */ {
-	mentionedActors: {
-		description: string
-		name: string
-		id: string
-		createdAt: string
-		updatedAt: string
-		title: string
-		color: string
-		worldId: string
+	mentions: {
+		targetId: string
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
+	}[]
+	mentionedIn: {
+		targetId: string
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
 	}[]
 	deltaStates: {
 		description?: null | string
@@ -91,14 +88,90 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 		worldEventId: string
 	}[]
 	description: string
+	type: 'SCENE' | 'OTHER'
 	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	worldId: string
-	type: 'SCENE' | 'OTHER'
-	icon: string
 	timestamp: string
+	icon: string
+	revokedAt?: null | string
+	descriptionRich: string
+	customName: boolean
+	externalLink: string
+	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+	worldEventTrackId?: null | string
+}
+export type CreateWorldEventApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		type: 'SCENE' | 'OTHER'
+		name: string
+		modules?: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+		icon?: string
+		description?: string
+		descriptionRich?: string
+		timestamp: string
+		revokedAt?: null | string
+		customNameEnabled?: boolean
+		externalLink?: string
+		worldEventTrackId?: string
+		mentions?: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
+	}
+}
+export type UpdateWorldEventApiResponse = /** status 200  */ {
+	mentions: {
+		targetId: string
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
+	}[]
+	mentionedIn: {
+		targetId: string
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
+	}[]
+	deltaStates: {
+		description?: null | string
+		name?: null | string
+		id: string
+		createdAt: string
+		updatedAt: string
+		timestamp: string
+		descriptionRich?: null | string
+		worldEventId: string
+	}[]
+	description: string
+	type: 'SCENE' | 'OTHER'
+	name: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	worldId: string
+	timestamp: string
+	icon: string
 	revokedAt?: null | string
 	descriptionRich: string
 	customName: boolean
@@ -119,7 +192,10 @@ export type UpdateWorldEventApiArg = {
 		revokedAt?: null | string
 		description?: string
 		descriptionRich?: string
-		mentionedActorIds?: string[]
+		mentions?: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
 		customNameEnabled?: boolean
 		externalLink?: string
 		worldEventTrackId?: null | string
@@ -127,14 +203,14 @@ export type UpdateWorldEventApiArg = {
 }
 export type DeleteWorldEventApiResponse = /** status 200  */ {
 	description: string
+	type: 'SCENE' | 'OTHER'
 	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	worldId: string
-	type: 'SCENE' | 'OTHER'
-	icon: string
 	timestamp: string
+	icon: string
 	revokedAt?: null | string
 	descriptionRich: string
 	customName: boolean
@@ -150,14 +226,14 @@ export type DeleteWorldEventApiArg = {
 }
 export type RevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
+	type: 'SCENE' | 'OTHER'
 	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	worldId: string
-	type: 'SCENE' | 'OTHER'
-	icon: string
 	timestamp: string
+	icon: string
 	revokedAt?: null | string
 	descriptionRich: string
 	customName: boolean
@@ -176,14 +252,14 @@ export type RevokeWorldEventApiArg = {
 }
 export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
+	type: 'SCENE' | 'OTHER'
 	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	worldId: string
-	type: 'SCENE' | 'OTHER'
-	icon: string
 	timestamp: string
+	icon: string
 	revokedAt?: null | string
 	descriptionRich: string
 	customName: boolean

@@ -52,6 +52,14 @@ const handlers: RheaToCalliopeMessageHandlers = {
 	[RheaToCalliopeMessageType.WORLD_TRACKS_UPDATED]: (data) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_TRACKS_UPDATED, data })
 	},
+
+	[RheaToCalliopeMessageType.WIKI_ARTICLE_UPDATED]: (data) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED, data })
+	},
+
+	[RheaToCalliopeMessageType.WIKI_ARTICLE_DELETED]: (data) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_ARTICLE_DELETED, data })
+	},
 }
 
 export const RheaMessageHandlerService = {

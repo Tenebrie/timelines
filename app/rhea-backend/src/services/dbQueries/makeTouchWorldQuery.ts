@@ -1,7 +1,9 @@
+import { Prisma } from '@prisma/client'
+
 import { getPrismaClient } from '../dbClients/DatabaseClient'
 
-export const makeTouchWorldQuery = (worldId: string) =>
-	getPrismaClient().world.update({
+export const makeTouchWorldQuery = (worldId: string, prisma?: Prisma.TransactionClient) => {
+	return getPrismaClient(prisma).world.update({
 		where: {
 			id: worldId,
 		},
@@ -13,3 +15,4 @@ export const makeTouchWorldQuery = (worldId: string) =>
 			updatedAt: true,
 		},
 	})
+}

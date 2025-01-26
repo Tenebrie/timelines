@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { getWorldState } from '@/app/features/worldTimeline/selectors'
+import { getWorldState } from '@/app/features/world/selectors'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 
 import { TimelineEdgeScroll } from '../TimelineEdgeScroll/TimelineEdgeScroll'

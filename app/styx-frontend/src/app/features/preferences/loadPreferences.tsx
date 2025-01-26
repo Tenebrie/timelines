@@ -10,7 +10,7 @@ const defaultTheme = ((): 'light' | 'dark' => {
 	return 'light'
 })()
 
-const PreferencesStateSchema = z.object({
+export const PreferencesStateSchema = z.object({
 	colorMode: z.union([z.literal('light'), z.literal('dark')]).default(defaultTheme),
 	timeline: z
 		.object({
@@ -32,6 +32,11 @@ const PreferencesStateSchema = z.object({
 			actorsReversed: z.boolean().default(false),
 			eventsOpen: z.boolean().default(true),
 			eventsReversed: z.boolean().default(false),
+		})
+		.default({}),
+	wiki: z
+		.object({
+			readModeEnabled: z.boolean().default(false),
 		})
 		.default({}),
 })

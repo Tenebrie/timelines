@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { UpdateWorldEventDeltaApiArg, useUpdateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { useModal } from '@/app/features/modals/reducer'
-import { getWorldIdState } from '@/app/features/worldTimeline/selectors'
+import { getWorldIdState } from '@/app/features/world/selectors'
 import { WorldEventDelta } from '@/app/features/worldTimeline/types'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'

@@ -11,12 +11,12 @@ import { ContainedSpinner } from '@/app/components/ContainedSpinner'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
+import { getWorldState } from '@/app/features/world/selectors'
 import { isNull } from '@/app/utils/isNull'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 import { useIsReadOnly } from '@/hooks/useIsReadOnly'
 
 import { useOutlinerTabs } from '../../hooks/useOutlinerTabs'
-import { getWorldState } from '../../selectors'
 import { EventCreator } from '../EventEditor/EventCreator'
 import { useVisibleActors } from '../EventSelector/useVisibleActors'
 import { useVisibleEvents } from '../EventSelector/useVisibleEvents'
@@ -66,11 +66,14 @@ export const Outliner = () => {
 
 	const visibleActors = useMemo(
 		() =>
-			allVisibleActors.map((actor) => ({
-				...actor,
-				collapsed: !expandedActors.includes(actor.id),
-				events: visibleEvents.filter((event) => actor.statements.some((e) => e.id === event.id)),
-			})),
+			allVisibleActors.map((actor) => {
+				const mentionedEventIds = actor.mentionedIn.map((mention) => mention.targetId)
+				return {
+					...actor,
+					collapsed: !expandedActors.includes(actor.id),
+					events: visibleEvents.filter((event) => mentionedEventIds.includes(event.id)),
+				}
+			}),
 		[allVisibleActors, expandedActors, visibleEvents],
 	)
 
