@@ -1,8 +1,7 @@
 name: Deploy Production
 
 on:
-  push:
-    branches: [master]
+  workflow_dispatch:  # Allows manual trigger from GitHub UI
 
 concurrency:
   group: 'deploy'
@@ -14,9 +13,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # - name: Configure Git
+      #   run: |
+      #     git config --global user.name "github-actions[bot]"
+      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge dev into master
+        run: |
+          git checkout master
+          git pull origin master
+          git merge origin/dev --no-ff --no-edit || (git merge --abort && exit 1)
+          git push origin master
+      
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0 
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
