@@ -58,13 +58,12 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		type: RequiredParam(WorldEventTypeValidator),
 		name: RequiredParam(NameStringValidator),
-		modules: OptionalParam(WorldEventFieldValidator),
 		icon: OptionalParam(NameStringValidator),
 		description: OptionalParam(ContentStringValidator),
 		descriptionRich: OptionalParam(ContentStringValidator),
 		timestamp: RequiredParam(BigIntValidator),
 		revokedAt: OptionalParam(NullableBigIntValidator),
-		customNameEnabled: OptionalParam(BooleanValidator),
+		customName: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(ContentStringValidator),
 		worldEventTrackId: OptionalParam(UuidStringValidator),
 		mentions: OptionalParam(MentionsArrayValidator),
@@ -72,11 +71,12 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 
 	const { event, world } = await WorldEventService.createWorldEvent({
 		worldId,
-		eventData: {
-			...params,
-			extraFields: params.modules,
-			worldEventTrackId: params.worldEventTrackId ?? null,
+		createData: {
+			name: params.name,
+			type: params.type,
+			timestamp: params.timestamp,
 		},
+		updateData: params,
 	})
 
 	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })

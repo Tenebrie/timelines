@@ -1,12 +1,12 @@
-import { WorldEvent } from '@prisma/client'
+import { Prisma } from '@prisma/client'
+import { unwrapParam } from '@src/utils/unwrapParam'
 
 import { getPrismaClient } from './dbClients/DatabaseClient'
 import { fetchWorldEventDetailsOrThrow } from './dbQueries/fetchWorldEventDetailsOrThrow'
 import { fetchWorldEventOrThrow } from './dbQueries/fetchWorldEventOrThrow'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
 import { makeUpdateDeltaStateNamesQueries } from './dbQueries/makeUpdateDeltaStateNamesQueries'
-import { makeUpdateWorldEventQuery } from './dbQueries/makeUpdateWorldEventQuery'
-import { MentionData } from './MentionsService'
+import { makeUpdateWorldEventQuery, UpdateWorldEventQueryParams } from './dbQueries/makeUpdateWorldEventQuery'
 
 export const WorldEventService = {
 	fetchWorldEvent: async (eventId: string) => {
@@ -19,25 +19,24 @@ export const WorldEventService = {
 
 	createWorldEvent: async ({
 		worldId,
-		eventData,
+		createData,
+		updateData,
 	}: {
 		worldId: string
-		eventData: Pick<WorldEvent, 'name' | 'type' | 'timestamp'> &
-			Parameters<typeof makeUpdateWorldEventQuery>[0]['params']
+		createData: Omit<Prisma.WorldEventUncheckedCreateInput, 'worldId'>
+		updateData: UpdateWorldEventQueryParams
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
 			const baseEvent = await prisma.worldEvent.create({
 				data: {
 					worldId,
-					name: eventData.name,
-					type: eventData.type,
-					timestamp: eventData.timestamp,
+					...createData,
 				},
 			})
 
 			await makeUpdateWorldEventQuery({
 				eventId: baseEvent.id,
-				params: eventData,
+				params: updateData,
 				prisma,
 			})
 
@@ -59,9 +58,7 @@ export const WorldEventService = {
 	}: {
 		worldId: string
 		eventId: string
-		params: Partial<WorldEvent> & {
-			mentions: MentionData[] | undefined
-		}
+		params: UpdateWorldEventQueryParams
 	}) => {
 		const eventBeforeUpdate = await WorldEventService.fetchWorldEventWithDetails(eventId)
 
@@ -74,8 +71,8 @@ export const WorldEventService = {
 
 			await makeUpdateDeltaStateNamesQueries({
 				event: eventBeforeUpdate,
-				customName: params.name,
-				customNameEnabled: params.customName,
+				customName: unwrapParam(params.name),
+				customNameEnabled: unwrapParam(params.customName),
 			})
 
 			const world = await makeTouchWorldQuery(worldId, prisma)
