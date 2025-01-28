@@ -9,13 +9,28 @@ export const MentionsService = {
 		sourceId: string,
 		sourceType: MentionedEntity,
 		mentions: MentionData[] | undefined,
-		transaction?: Prisma.TransactionClient,
+		prisma?: Prisma.TransactionClient,
 	) => {
 		if (!mentions) {
 			return []
 		}
 
-		const data = mentions.map((mention) => {
+		const mentionedActorIds = mentions.map((mention) => mention.targetId)
+		const mentionedActors = await getPrismaClient(prisma).actor.findMany({
+			where: {
+				id: {
+					in: mentionedActorIds,
+				},
+			},
+			select: {
+				id: true,
+			},
+		})
+		const validMentions = mentions.filter((mention) =>
+			mentionedActors.some((actor) => actor.id === mention.targetId),
+		)
+
+		const data = validMentions.map((mention) => {
 			return {
 				sourceId: sourceId,
 				sourceType: sourceType,
@@ -35,7 +50,7 @@ export const MentionsService = {
 			}
 		})
 
-		await (transaction ?? getPrismaClient()).mention.createMany({
+		await getPrismaClient(prisma).mention.createMany({
 			data,
 			skipDuplicates: true,
 		})

@@ -19,21 +19,20 @@ export const EventMentionChip = ({ eventId }: Props) => {
 	})
 
 	const event = events.find((event) => event.id === eventId)
-	const eventName = event ? `${event.name}` : '@Unknown Event'
+	const eventName = event ? `${event.name}` : 'Unknown Event'
 	const eventColor = event ? '#252' : undefined
 
-	return (
-		<BaseMentionChip
-			type="Event"
-			label={eventName}
-			color={eventColor}
-			onClick={() => {
-				navigateTo({
-					target: worldTimelineRoutes.eventEditor,
-					args: { worldId, eventId },
-					query: { [QueryParams.SELECTED_TIME]: QueryStrategy.Preserve },
-				})
-			}}
-		/>
-	)
+	const onClick = () => {
+		if (!event) {
+			return
+		}
+
+		navigateTo({
+			target: worldTimelineRoutes.eventEditor,
+			args: { worldId, eventId },
+			query: { [QueryParams.SELECTED_TIME]: QueryStrategy.Preserve },
+		})
+	}
+
+	return <BaseMentionChip type="Event" label={eventName} color={eventColor} onClick={onClick} />
 }

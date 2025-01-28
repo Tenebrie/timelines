@@ -19,21 +19,19 @@ export const ActorMentionChip = ({ actorId }: Props) => {
 	})
 
 	const actor = actors.find((actor) => actor.id === actorId)
-	const actorName = actor ? `${actor.name}` : '@Unknown Actor'
+	const actorName = actor ? `${actor.name}` : 'Unknown Actor'
 	const actorColor = actor ? actor.color : undefined
 
-	return (
-		<BaseMentionChip
-			type="Actor"
-			label={actorName}
-			color={actorColor}
-			onClick={() =>
-				navigateTo({
-					target: worldTimelineRoutes.actorEditor,
-					args: { worldId, actorId },
-					query: { [QueryParams.SELECTED_TIME]: QueryStrategy.Preserve },
-				})
-			}
-		/>
-	)
+	const onClick = () => {
+		if (!actor) {
+			return
+		}
+		navigateTo({
+			target: worldTimelineRoutes.actorEditor,
+			args: { worldId, actorId },
+			query: { [QueryParams.SELECTED_TIME]: QueryStrategy.Preserve },
+		})
+	}
+
+	return <BaseMentionChip type="Actor" label={actorName} color={actorColor} onClick={onClick} />
 }

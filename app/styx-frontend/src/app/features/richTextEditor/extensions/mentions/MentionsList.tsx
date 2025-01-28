@@ -105,6 +105,7 @@ export const MentionsList = ({ editor }: Props) => {
 					},
 				},
 			})
+			.insertContent(' ')
 			.run()
 	}
 

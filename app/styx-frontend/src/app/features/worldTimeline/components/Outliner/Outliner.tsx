@@ -100,8 +100,8 @@ export const Outliner = () => {
 		<Profiler id="Outliner" onRender={reportComponentProfile}>
 			{!isLargeScreen && <OutlinerControls />}
 			<Stack height={'calc(100% - 16px)'} alignItems="center">
-				<Grid container height="100%" maxWidth="xl">
-					{isLargeScreen && (
+				<Grid container height="100%" maxWidth="xl" justifyContent="center">
+					{isLargeScreen && !isReadOnly && (
 						<Grid item lg={5} xs={12} sx={{ padding: 2, spacing: 2 }} height="100%">
 							<EventCreator mode="create-compact" />
 						</Grid>

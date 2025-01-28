@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { OnChangeParams } from '@/app/features/richTextEditor/RichTextEditor'
 import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
@@ -18,6 +18,7 @@ export const ArticleDetails = () => {
 	const [editArticle, { isLoading: isSaving }] = useEditArticle()
 
 	const articleToSave = useRef<WikiArticleToSave | null>(null)
+	const skipNextAutosave = useRef(false)
 
 	const { autosave, manualSave } = useAutosave({
 		onSave: () => {
@@ -39,6 +40,10 @@ export const ArticleDetails = () => {
 		if (!article) {
 			return
 		}
+		if (skipNextAutosave.current) {
+			skipNextAutosave.current = false
+			return
+		}
 		articleToSave.current = {
 			...article,
 			contentRich: params.richText,
@@ -46,6 +51,10 @@ export const ArticleDetails = () => {
 		}
 		autosave()
 	}
+
+	useEffect(() => {
+		skipNextAutosave.current = true
+	}, [article])
 
 	if (!article) {
 		return <></>
