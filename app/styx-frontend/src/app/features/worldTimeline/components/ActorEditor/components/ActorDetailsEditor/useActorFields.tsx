@@ -1,6 +1,6 @@
 import { Dispatch, useCallback, useMemo, useRef, useState } from 'react'
 
-import { ActorDetails } from '@/app/features/worldTimeline/types'
+import { ActorDetails, MentionDetails } from '@/app/features/worldTimeline/types'
 
 type Props = {
 	actor: ActorDetails
@@ -17,7 +17,9 @@ export const useActorFields = ({ actor }: Props) => {
 	const [name, setNameDirect] = useState<string>(actor.name)
 	const [title, setTitleDirect] = useState<string>(actor.title)
 	const [color, setColorDirect] = useState<string>(actor.color)
+	const [mentions, setMentionsDirect] = useState<MentionDetails[]>(actor.mentions)
 	const [description, setDescriptionDirect] = useState<string>(actor.description)
+	const [descriptionRich, setDescriptionRichDirect] = useState<string>(actor.descriptionRich)
 
 	const generateSetter = <T,>(setter: Dispatch<React.SetStateAction<T>>) => {
 		return (val: T, args?: SetterArgs) => {
@@ -39,7 +41,9 @@ export const useActorFields = ({ actor }: Props) => {
 			setName: generateSetter(setNameDirect),
 			setTitle: generateSetter(setTitleDirect),
 			setColor: generateSetter(setColorDirect),
+			setMentions: generateSetter(setMentionsDirect),
 			setDescription: generateSetter(setDescriptionDirect),
+			setDescriptionRich: generateSetter(setDescriptionRichDirect),
 		}),
 		[],
 	)
@@ -50,7 +54,9 @@ export const useActorFields = ({ actor }: Props) => {
 			name,
 			title,
 			color,
+			mentions,
 			description,
+			descriptionRich,
 			setDirty,
 			...setters,
 		},

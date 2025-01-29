@@ -251,6 +251,7 @@ export const mockActorModel = (actor: Partial<ActorDetails> = {}): ActorDetails 
 	name: 'Actor name',
 	title: 'Actor title',
 	description: 'Actor description',
+	descriptionRich: 'Actor description',
 	createdAt: new Date(0).toISOString(),
 	updatedAt: new Date(0).toISOString(),
 	mentions: [],

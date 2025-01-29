@@ -1,7 +1,14 @@
-import { Actor, MentionedEntity, Prisma } from '@prisma/client'
+import { MentionedEntity, Prisma } from '@prisma/client'
 
 import { getPrismaClient } from '../dbClients/DatabaseClient'
 import { MentionData, MentionsService } from '../MentionsService'
+
+export type UpdateActorQueryParams = Omit<
+	Prisma.ActorUncheckedUpdateInput,
+	'id' | 'createdAt' | 'updatedAt' | 'worldId' | 'mentions'
+> & {
+	mentions?: MentionData[] | undefined
+}
 
 export const makeUpdateActorQuery = async ({
 	actorId,
@@ -9,9 +16,7 @@ export const makeUpdateActorQuery = async ({
 	prisma,
 }: {
 	actorId: string
-	params: Partial<Actor> & {
-		mentions?: MentionData[] | undefined
-	}
+	params: UpdateActorQueryParams
 	prisma?: Prisma.TransactionClient
 }) => {
 	const mentionedEntities = await MentionsService.createMentions(

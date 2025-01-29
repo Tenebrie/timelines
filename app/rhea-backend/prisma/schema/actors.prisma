@@ -3,10 +3,11 @@ model Actor {
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
 
-    name        String
-    title       String @default("")
-    description String @default("")
-    color       String @default("")
+    name            String
+    title           String @default("")
+    description     String @default("")
+    descriptionRich String @default("")
+    color           String @default("")
 
     mentions    Mention[] @relation("ActorMentionSource")
     mentionedIn Mention[] @relation("ActorMentionTarget")

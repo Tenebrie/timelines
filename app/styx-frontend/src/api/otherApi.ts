@@ -69,10 +69,10 @@ export type ListWorldAccessModesApiArg = void
 export type GetHealthApiResponse = unknown
 export type GetHealthApiArg = void
 export type GetArticlesApiResponse = /** status 200  */ {
-	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	name: string
 	mentions: {
 		targetId: string
 		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -109,11 +109,11 @@ export type GetArticlesApiArg = {
 	worldId: string
 }
 export type CreateArticleApiResponse = /** status 200  */ {
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	name: string
 	position: number
 	contentRich: string
 }
@@ -125,11 +125,11 @@ export type CreateArticleApiArg = {
 	}
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	name: string
 	position: number
 	contentRich: string
 }

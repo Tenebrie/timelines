@@ -97,12 +97,11 @@ export const RichTextEditor = ({ value, onChange, onBlur, allowReadMode }: Props
 			$theme={theme}
 			onBlur={onBlur}
 		>
-			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode && !isReadOnly} />
+			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode} />
 			<StyledEditorContent
 				className="content"
 				editor={editor}
 				placeholder="Content"
-				readOnly
 				$mode={isReadMode ? 'read' : 'edit'}
 			/>
 			<MentionsList editor={editor} />

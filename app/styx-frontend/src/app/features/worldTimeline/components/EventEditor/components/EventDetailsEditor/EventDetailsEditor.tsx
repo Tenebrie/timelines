@@ -77,6 +77,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		mode,
 		event,
 		state,
+		onClear: () => setCreateEventKey((prev) => prev + 1),
 	})
 
 	useEffect(() => {

@@ -8,6 +8,8 @@ import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { useIsReadOnly } from '@/hooks/useIsReadOnly'
+
 import { getWikiPreferences } from '../preferences/selectors'
 import { ReadModeToggle } from '../worldWiki/components/ReadModeToggle/ReadModeToggle'
 import { ActiveButtonIndicator } from './extensions/mentions/components/ActiveButtonIndicator'
@@ -19,8 +21,9 @@ type Props = {
 
 export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
 	const { readModeEnabled } = useSelector(getWikiPreferences)
+	const { isReadOnly } = useIsReadOnly()
 
-	const isReadMode = readModeEnabled && allowReadMode
+	const isReadMode = isReadOnly || (readModeEnabled && allowReadMode)
 
 	const isBold = editor?.isActive('bold') ?? false
 	const isItalic = editor?.isActive('italic') ?? false
@@ -102,7 +105,7 @@ export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
 						</Stack>
 					)}
 				</Stack>
-				{allowReadMode && <ReadModeToggle />}
+				{allowReadMode && !isReadOnly && <ReadModeToggle />}
 			</Stack>
 		</Paper>
 	)

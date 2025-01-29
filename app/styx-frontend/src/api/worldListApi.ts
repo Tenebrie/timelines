@@ -30,10 +30,10 @@ export type GetWorldsApiResponse = /** status 200  */ {
 			access: 'ReadOnly' | 'Editing'
 		}[]
 		description: string
-		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
 		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
@@ -46,10 +46,10 @@ export type GetWorldsApiResponse = /** status 200  */ {
 			access: 'ReadOnly' | 'Editing'
 		}[]
 		description: string
-		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
 		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
@@ -62,10 +62,10 @@ export type GetWorldsApiResponse = /** status 200  */ {
 			access: 'ReadOnly' | 'Editing'
 		}[]
 		description: string
-		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
 		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
@@ -74,8 +74,8 @@ export type GetWorldsApiResponse = /** status 200  */ {
 }
 export type GetWorldsApiArg = void
 export type CreateWorldApiResponse = /** status 200  */ {
-	name: string
 	id: string
+	name: string
 }
 export type CreateWorldApiArg = {
 	body: {
@@ -87,10 +87,10 @@ export type CreateWorldApiArg = {
 }
 export type DeleteWorldApiResponse = /** status 200  */ {
 	description: string
-	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	name: string
 	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string

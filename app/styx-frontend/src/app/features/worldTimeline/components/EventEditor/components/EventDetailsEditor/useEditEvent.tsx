@@ -16,9 +16,10 @@ type Props = {
 	mode: 'create' | 'create-compact' | 'edit'
 	event: WorldEvent
 	state: ReturnType<typeof useEventFields>['state']
+	onClear: () => void
 }
 
-export const useEditEvent = ({ mode, event, state }: Props) => {
+export const useEditEvent = ({ mode, event, state, onClear }: Props) => {
 	const { mapActorsToOptions } = useMapActorsToOptions()
 
 	const {
@@ -60,6 +61,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 			setDescriptionRich(event.descriptionRich, { cleanSet: true })
 			setCustomNameEnabled(event.customName, { cleanSet: true })
 			setExternalLink(event.externalLink, { cleanSet: true })
+			onClear()
 
 			setDirty(false)
 			lastSavedAt.current = new Date(event.updatedAt)
@@ -78,6 +80,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 		setDescription,
 		setDescriptionRich,
 		setExternalLink,
+		onClear,
 	])
 
 	const { open: openDeleteEventModal } = useModal('deleteEventModal')

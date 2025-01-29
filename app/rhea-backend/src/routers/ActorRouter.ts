@@ -43,11 +43,20 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 		name: RequiredParam(NameStringValidator),
 		title: OptionalParam(OptionalNameStringValidator),
 		color: OptionalParam(NameStringValidator),
-		description: OptionalParam(ContentStringValidator),
 		mentions: OptionalParam(MentionsArrayValidator),
+		description: OptionalParam(ContentStringValidator),
+		descriptionRich: OptionalParam(ContentStringValidator),
 	})
 
-	const { actor, world } = await ActorService.createActor(worldId, params)
+	const { actor, world } = await ActorService.createActor({
+		worldId,
+		createData: {
+			name: params.name,
+		},
+		updateData: {
+			...params,
+		},
+	})
 
 	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
 
@@ -74,7 +83,9 @@ router.patch('/api/world/:worldId/actor/:actorId', async (ctx) => {
 		name: OptionalParam(NameStringValidator),
 		title: OptionalParam(OptionalNameStringValidator),
 		color: OptionalParam(NameStringValidator),
+		mentions: OptionalParam(MentionsArrayValidator),
 		description: OptionalParam(ContentStringValidator),
+		descriptionRich: OptionalParam(ContentStringValidator),
 	})
 
 	const { actor, world } = await ActorService.updateActor({ worldId, actorId, params })

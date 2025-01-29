@@ -40,14 +40,18 @@ export const StyledEditorContent = styled(EditorContent)<{ $mode: 'read' | 'edit
 	height: ${(props) => (props.$mode === 'edit' ? 'calc(100% - 46px)' : 'unset')};
 	overflow-y: auto;
 	min-height: 200px;
+	display: flex;
+	flex-direction: column;
 
 	&::focus {
 		background: red;
 	}
 
 	.ProseMirror {
+		flex: 1;
 		outline: none;
-		height: calc(100% - 32px);
+		min-height: 1rem;
+		height: 100%;
 		padding: ${(props) => (props.$mode === 'edit' ? '0 16px' : 'unset')};
 
 		& > p:first-child {
@@ -72,9 +76,5 @@ export const StyledEditorContent = styled(EditorContent)<{ $mode: 'read' | 'edit
 		padding: 4px 8px;
 		border-radius: 4px;
 		background: #00000033;
-	}
-
-	.ProseMirror {
-		min-height: 1rem;
 	}
 `

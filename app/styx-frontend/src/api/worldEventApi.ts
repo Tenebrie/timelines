@@ -79,25 +79,25 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 	}[]
 	deltaStates: {
 		description?: null | string
-		name?: null | string
 		id: string
 		createdAt: string
 		updatedAt: string
-		timestamp: string
+		name?: null | string
 		descriptionRich?: null | string
+		timestamp: string
 		worldEventId: string
 	}[]
 	description: string
 	type: 'SCENE' | 'OTHER'
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	name: string
+	descriptionRich: string
 	timestamp: string
 	icon: string
 	revokedAt?: null | string
-	descriptionRich: string
 	customName: boolean
 	externalLink: string
 	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
@@ -154,25 +154,25 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	}[]
 	deltaStates: {
 		description?: null | string
-		name?: null | string
 		id: string
 		createdAt: string
 		updatedAt: string
-		timestamp: string
+		name?: null | string
 		descriptionRich?: null | string
+		timestamp: string
 		worldEventId: string
 	}[]
 	description: string
 	type: 'SCENE' | 'OTHER'
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	name: string
+	descriptionRich: string
 	timestamp: string
 	icon: string
 	revokedAt?: null | string
-	descriptionRich: string
 	customName: boolean
 	externalLink: string
 	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
@@ -203,15 +203,15 @@ export type UpdateWorldEventApiArg = {
 export type DeleteWorldEventApiResponse = /** status 200  */ {
 	description: string
 	type: 'SCENE' | 'OTHER'
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	name: string
+	descriptionRich: string
 	timestamp: string
 	icon: string
 	revokedAt?: null | string
-	descriptionRich: string
 	customName: boolean
 	externalLink: string
 	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
@@ -226,15 +226,15 @@ export type DeleteWorldEventApiArg = {
 export type RevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
 	type: 'SCENE' | 'OTHER'
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	name: string
+	descriptionRich: string
 	timestamp: string
 	icon: string
 	revokedAt?: null | string
-	descriptionRich: string
 	customName: boolean
 	externalLink: string
 	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
@@ -252,15 +252,15 @@ export type RevokeWorldEventApiArg = {
 export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
 	type: 'SCENE' | 'OTHER'
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	name: string
+	descriptionRich: string
 	timestamp: string
 	icon: string
 	revokedAt?: null | string
-	descriptionRich: string
 	customName: boolean
 	externalLink: string
 	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]

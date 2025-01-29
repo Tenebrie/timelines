@@ -46,11 +46,11 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as worldEventTracksApi }
 export type GetWorldEventTracksApiResponse = /** status 200  */ {
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	name: string
 	position: number
 	visible: boolean
 }[]

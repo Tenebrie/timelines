@@ -63,13 +63,14 @@ export type CreateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	description: string
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	name: string
 	title: string
+	descriptionRich: string
 	color: string
-	worldId: string
 }
 export type CreateActorApiArg = {
 	/** Any string value */
@@ -78,11 +79,12 @@ export type CreateActorApiArg = {
 		name: string
 		title?: string
 		color?: string
-		description?: string
 		mentions?: {
 			targetId: string
 			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
+		description?: string
+		descriptionRich?: string
 	}
 }
 export type UpdateActorApiResponse = /** status 200  */ {
@@ -115,13 +117,14 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	description: string
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	name: string
 	title: string
+	descriptionRich: string
 	color: string
-	worldId: string
 }
 export type UpdateActorApiArg = {
 	/** Any string value */
@@ -132,18 +135,24 @@ export type UpdateActorApiArg = {
 		name?: string
 		title?: string
 		color?: string
+		mentions?: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
 		description?: string
+		descriptionRich?: string
 	}
 }
 export type DeleteActorApiResponse = /** status 200  */ {
 	description: string
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	name: string
 	title: string
+	descriptionRich: string
 	color: string
-	worldId: string
 }
 export type DeleteActorApiArg = {
 	/** Any string value */
