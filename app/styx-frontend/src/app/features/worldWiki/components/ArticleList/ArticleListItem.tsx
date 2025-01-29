@@ -1,3 +1,4 @@
+import Article from '@mui/icons-material/Article'
 import Menu from '@mui/icons-material/Menu'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
@@ -21,7 +22,9 @@ type Props = {
 
 export const ArticleListItem = ({ article }: Props) => {
 	const worldId = useSelector(getWorldIdState)
-	const { navigateTo } = useWorldWikiRouter()
+	const { navigateTo, stateOf } = useWorldWikiRouter()
+
+	const highlighted = stateOf(worldWikiRoutes.article).articleId === article.id
 
 	const onNavigate = useCallback(() => {
 		navigateTo({
@@ -41,7 +44,14 @@ export const ArticleListItem = ({ article }: Props) => {
 	return (
 		<Stack ref={ref} direction="row" position={'relative'}>
 			{checkboxVisible && <Checkbox size="small" checked={checked} onChange={onChange}></Checkbox>}
-			<Button color="secondary" sx={{ justifyContent: 'start' }} fullWidth onClick={onNavigate}>
+			<Button
+				startIcon={<Article />}
+				variant={highlighted ? 'contained' : 'text'}
+				color="secondary"
+				sx={{ justifyContent: 'start', paddingLeft: 2 }}
+				fullWidth
+				onClick={onNavigate}
+			>
 				{article.name}
 			</Button>
 			<IconButton color="secondary" {...bindTrigger(popupState)}>

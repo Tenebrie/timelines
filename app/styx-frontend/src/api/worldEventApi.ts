@@ -109,13 +109,12 @@ export type CreateWorldEventApiArg = {
 	body: {
 		type: 'SCENE' | 'OTHER'
 		name: string
-		modules?: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 		icon?: string
 		description?: string
 		descriptionRich?: string
 		timestamp: string
 		revokedAt?: null | string
-		customNameEnabled?: boolean
+		customName?: boolean
 		externalLink?: string
 		worldEventTrackId?: string
 		mentions?: {

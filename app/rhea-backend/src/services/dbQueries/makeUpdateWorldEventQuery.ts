@@ -1,7 +1,14 @@
-import { MentionedEntity, Prisma, WorldEvent } from '@prisma/client'
+import { MentionedEntity, Prisma } from '@prisma/client'
 
 import { getPrismaClient } from '../dbClients/DatabaseClient'
 import { MentionData, MentionsService } from '../MentionsService'
+
+export type UpdateWorldEventQueryParams = Omit<
+	Prisma.WorldEventUncheckedUpdateInput,
+	'id' | 'createdAt' | 'updatedAt' | 'worldId' | 'mentions'
+> & {
+	mentions?: MentionData[] | undefined
+}
 
 export const makeUpdateWorldEventQuery = async ({
 	eventId,
@@ -9,9 +16,7 @@ export const makeUpdateWorldEventQuery = async ({
 	prisma,
 }: {
 	eventId: string
-	params: Partial<WorldEvent> & {
-		mentions?: MentionData[] | undefined
-	}
+	params: UpdateWorldEventQueryParams
 	prisma?: Prisma.TransactionClient
 }) => {
 	const mentionedEntities = await MentionsService.createMentions(

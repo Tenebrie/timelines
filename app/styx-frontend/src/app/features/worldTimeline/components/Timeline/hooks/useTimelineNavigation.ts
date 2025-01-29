@@ -47,9 +47,11 @@ export const useTimelineNavigation = ({
 	// Scroll
 	const scrollRef = useRef(defaultScroll)
 	const [scroll, setScroll] = useState(defaultScroll)
+	const overscrollRef = useRef(0)
 	const [overscroll, setOverscroll] = useState(0)
 	const draggingFrom = useRef<Position | null>(null)
 	const mousePos = useRef<Position>({ x: 0, y: 0 })
+	const isDraggingRef = useRef(false)
 	const [isDragging, setDragging] = useState(false)
 	const [canClick, setCanClick] = useState(true)
 	const [selectedTime, setSelectedTime] = useState<number | null>(defaultSelectedTime)
@@ -94,14 +96,10 @@ export const useTimelineNavigation = ({
 		throttle(
 			({
 				event,
-				isDragging,
-				overscroll,
 				minimumScroll,
 				maximumScroll,
 			}: {
 				event: MouseEvent | TouchEvent
-				isDragging: boolean
-				overscroll: number
 				minimumScroll: number
 				maximumScroll: number
 			}) => {
@@ -109,7 +107,7 @@ export const useTimelineNavigation = ({
 				const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
 				const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }
 
-				if (draggingFrom.current !== null) {
+				if (draggingFrom.current !== null && !isDraggingRef.current) {
 					/* If the mouse moved less than N pixels, do not start dragging */
 					/* Makes clicking feel more responsive with accidental mouse movements */
 					const dist = Math.abs(newPos.x - draggingFrom.current.x)
@@ -118,8 +116,8 @@ export const useTimelineNavigation = ({
 					}
 				}
 
-				if (isDragging) {
-					const newScroll = scrollRef.current + newPos.x - mousePos.current.x + overscroll
+				if (isDraggingRef.current) {
+					const newScroll = scrollRef.current + newPos.x - mousePos.current.x + overscrollRef.current
 					if (isFinite(minimumScroll) && newScroll < minimumScroll) {
 						scrollRef.current = minimumScroll
 						setOverscroll(newScroll - minimumScroll)
@@ -147,16 +145,19 @@ export const useTimelineNavigation = ({
 
 			onMouseMoveThrottled.current({
 				event,
-				isDragging,
-				overscroll,
 				minimumScroll,
 				maximumScroll,
 			})
 		},
-		[isDragging, overscroll, minimumScroll, maximumScroll],
+		[minimumScroll, maximumScroll],
 	)
 
 	useEffect(() => {
+		overscrollRef.current = overscroll
+	}, [overscroll])
+
+	useEffect(() => {
+		isDraggingRef.current = isDragging
 		if (isDragging) {
 			return
 		}

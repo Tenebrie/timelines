@@ -11,6 +11,7 @@ import {
 	StringValidator,
 	useApiEndpoint,
 	useAuth,
+	useOptionalAuth,
 	usePathParams,
 	useRequestBody,
 } from 'moonflower'
@@ -29,7 +30,7 @@ router.get('/api/world/:worldId/event-tracks', async (ctx) => {
 		tags: [worldEventTracksTag],
 	})
 
-	const user = await useAuth(ctx, UserAuthenticator)
+	const user = await useOptionalAuth(ctx, UserAuthenticator)
 
 	const { worldId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),

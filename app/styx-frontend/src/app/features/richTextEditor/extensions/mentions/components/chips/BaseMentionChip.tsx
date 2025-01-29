@@ -17,7 +17,7 @@ type Props = {
 }
 
 export const BaseMentionChip = ({ type, label, color, onClick }: Props) => {
-	const textColor = getContrastTextColor(color ?? '#eee')
+	const textColor = getContrastTextColor(color ?? '#000')
 	const parsedColor = colorStringToHsl(color ?? '#000')
 
 	const typeColor = {

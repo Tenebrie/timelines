@@ -1,4 +1,5 @@
 import { UserAuthenticator } from '@src/auth/UserAuthenticator'
+import { AuthorizationService } from '@src/services/AuthorizationService'
 import { getAverageColor } from 'fast-average-color-node'
 import * as fs from 'fs'
 import {
@@ -6,7 +7,7 @@ import {
 	Router,
 	StringValidator,
 	useApiEndpoint,
-	useAuth,
+	useOptionalAuth,
 	usePathParams,
 	useReturnValue,
 } from 'moonflower'
@@ -23,11 +24,12 @@ router.get('/api/world/:worldId/thumbnail', async (ctx) => {
 		tags: [worldThumbnailTag],
 	})
 
-	usePathParams(ctx, {
+	const { worldId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),
 	})
 
-	await useAuth(ctx, UserAuthenticator)
+	const user = await useOptionalAuth(ctx, UserAuthenticator)
+	await AuthorizationService.checkUserReadAccessById(user, worldId)
 
 	const file = await new Promise<Buffer>((resolve) => {
 		resolve(fs.readFileSync(path.resolve(__dirname, '../assets/images/world-thumbnail-default.webp')))
@@ -42,11 +44,12 @@ router.get('/api/world/:worldId/thumbnail/metadata', async (ctx) => {
 		tags: [worldThumbnailTag],
 	})
 
-	usePathParams(ctx, {
+	const { worldId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),
 	})
 
-	await useAuth(ctx, UserAuthenticator)
+	const user = await useOptionalAuth(ctx, UserAuthenticator)
+	await AuthorizationService.checkUserReadAccessById(user, worldId)
 
 	const file = await new Promise<Buffer>((resolve) => {
 		resolve(fs.readFileSync(path.resolve(__dirname, '../assets/images/world-thumbnail-default.webp')))

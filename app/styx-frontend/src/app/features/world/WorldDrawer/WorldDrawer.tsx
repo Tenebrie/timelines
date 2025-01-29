@@ -1,6 +1,5 @@
 import AutoStories from '@mui/icons-material/AutoStories'
 import Home from '@mui/icons-material/Home'
-import Person from '@mui/icons-material/Person'
 import Settings from '@mui/icons-material/Settings'
 import ViewList from '@mui/icons-material/ViewList'
 import Box from '@mui/material/Box'
@@ -16,11 +15,14 @@ import { store } from '@/app/store'
 import { useWorldRouter, worldRoutes } from '@/router/routes/featureRoutes/worldRoutes'
 import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
-import { getWorldIdState } from '../selectors'
+import { getWorldState } from '../selectors'
 import { WorldHeader } from './components/WorldHeader'
 
 export const WorldDrawer = () => {
-	const worldId = useSelector(getWorldIdState)
+	const { id: worldId, isReadOnly } = useSelector(
+		getWorldState,
+		(a, b) => a.id === b.id && a.isReadOnly === b.isReadOnly,
+	)
 
 	const { panelOpen } = useSelector(getOverviewPreferences)
 	const { navigateTo, isLocationChildOf } = useWorldRouter()
@@ -109,13 +111,20 @@ export const WorldDrawer = () => {
 					<StyledSmallButton variant={getButtonStyle(worldRoutes.overview)} onClick={onOverviewClick}>
 						<ViewList />
 					</StyledSmallButton>
-					<StyledSmallButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
+					{/* <StyledSmallButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
 						<Person />
+					</StyledSmallButton> */}
+					<StyledSmallButton variant={getButtonStyle(worldRoutes.wiki)} onClick={onWikiClick}>
+						<AutoStories />
 					</StyledSmallButton>
-					<Divider />
-					<StyledSmallButton variant={getButtonStyle(worldRoutes.settings)} onClick={onSettingsClick}>
-						<Settings />
-					</StyledSmallButton>
+					{!isReadOnly && (
+						<>
+							<Divider />
+							<StyledSmallButton variant={getButtonStyle(worldRoutes.settings)} onClick={onSettingsClick}>
+								<Settings />
+							</StyledSmallButton>
+						</>
+					)}
 					{/* <StyledSmallButton> */}
 					{/* <Help /> */}
 					{/* </StyledSmallButton> */}
@@ -151,10 +160,14 @@ export const WorldDrawer = () => {
 					{/* <StyledButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
 						<Person /> Actors
 					</StyledButton> */}
-					<Divider />
-					<StyledButton variant={getButtonStyle(worldRoutes.settings)} onClick={onSettingsClick}>
-						<Settings /> Settings
-					</StyledButton>
+					{!isReadOnly && (
+						<>
+							<Divider />
+							<StyledButton variant={getButtonStyle(worldRoutes.settings)} onClick={onSettingsClick}>
+								<Settings /> Settings
+							</StyledButton>
+						</>
+					)}
 					{/* <StyledButton> */}
 					{/* <Help /> Help */}
 					{/* </StyledButton> */}

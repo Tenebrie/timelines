@@ -22,6 +22,7 @@ import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import { EventIconDropdown } from '../EventIconDropdown/EventIconDropdown'
 import { EventModulesControls } from './controls/EventModulesControls'
 import { useEntityName } from './hooks/useEntityName'
+import { usePreserveCreateState } from './hooks/usePreserveCreateState'
 import { ExternalLinkModule } from './modules/ExternalLinkModule'
 import { useCreateEvent } from './useCreateEvent'
 import { useEditEvent } from './useEditEvent'
@@ -56,6 +57,8 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 	} = state
 
 	const [createEventKey, setCreateEventKey] = useState(0)
+
+	usePreserveCreateState({ mode, state, onLoaded: () => setCreateEventKey((prev) => prev + 1) })
 
 	const { isCreating, createWorldEvent, createIcon, createIconColor } = useCreateEvent({
 		state,

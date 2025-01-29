@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { useCustomTheme } from '@/hooks/useCustomTheme'
 
 import { getWikiPreferences } from '../preferences/selectors'
+import { getWorldState } from '../world/selectors'
 import { MentionDetails } from '../worldTimeline/types'
 import { EditorExtensions } from './extensions/config'
 import { MentionNodeName } from './extensions/mentions/components/MentionNode'
@@ -29,6 +30,7 @@ export type OnChangeParams = {
 
 export const RichTextEditor = ({ value, onChange, onBlur, allowReadMode }: Props) => {
 	const theme = useCustomTheme()
+	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 	const { readModeEnabled } = useSelector(getWikiPreferences)
 
 	const onChangeThrottled = useRef(
@@ -66,7 +68,7 @@ export const RichTextEditor = ({ value, onChange, onBlur, allowReadMode }: Props
 		}, 100),
 	)
 
-	const isReadMode = readModeEnabled && allowReadMode
+	const isReadMode = isReadOnly || (readModeEnabled && allowReadMode)
 
 	const editor = useEditor({
 		content: value,
@@ -95,7 +97,7 @@ export const RichTextEditor = ({ value, onChange, onBlur, allowReadMode }: Props
 			$theme={theme}
 			onBlur={onBlur}
 		>
-			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode} />
+			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode && !isReadOnly} />
 			<StyledEditorContent
 				className="content"
 				editor={editor}

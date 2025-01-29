@@ -25,6 +25,8 @@ export const useQuickCreateEvent = () => {
 					worldId,
 					body: {
 						name: query,
+						description: query,
+						descriptionRich: query,
 						type: 'SCENE',
 						timestamp: '0',
 					},

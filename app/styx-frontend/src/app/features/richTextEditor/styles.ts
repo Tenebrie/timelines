@@ -49,6 +49,10 @@ export const StyledEditorContent = styled(EditorContent)<{ $mode: 'read' | 'edit
 		outline: none;
 		height: calc(100% - 32px);
 		padding: ${(props) => (props.$mode === 'edit' ? '0 16px' : 'unset')};
+
+		& > p:first-child {
+			padding-top: 16px;
+		}
 	}
 
 	p {
@@ -57,8 +61,8 @@ export const StyledEditorContent = styled(EditorContent)<{ $mode: 'read' | 'edit
 		line-height: 1.5;
 		word-break: break-word;
 	}
-	p:first-child {
-		padding-top: 16px;
+	li > p {
+		padding: 3px 0;
 	}
 	// p:last-child {
 	// 	padding-bottom: 0px;
