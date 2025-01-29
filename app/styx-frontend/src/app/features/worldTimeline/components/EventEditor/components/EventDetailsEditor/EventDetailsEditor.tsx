@@ -104,7 +104,6 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 
 	const onDescriptionChange = useCallback(
 		(params: Parameters<Parameters<typeof RichTextEditor>[0]['onChange']>[0]) => {
-			console.log('on change')
 			setDescription(params.plainText)
 			setDescriptionRich(params.richText)
 			setMentions(params.mentions)
