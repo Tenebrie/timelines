@@ -1,6 +1,7 @@
 import { HardBreak } from '@tiptap/extension-hard-break'
 import Mention from '@tiptap/extension-mention'
 import Placeholder from '@tiptap/extension-placeholder'
+import Underline from '@tiptap/extension-underline'
 import { Extensions } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -21,6 +22,7 @@ export const SharedExtensions: Extensions = [
 			}
 		},
 	}),
+	Underline,
 	// Support for actor mentions
 	MentionNode,
 ]

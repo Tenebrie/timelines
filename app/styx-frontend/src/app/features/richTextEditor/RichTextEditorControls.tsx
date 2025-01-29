@@ -1,10 +1,12 @@
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
+import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { Editor } from '@tiptap/react'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import { getWikiPreferences } from '../preferences/selectors'
 import { ReadModeToggle } from '../worldWiki/components/ReadModeToggle/ReadModeToggle'
@@ -22,6 +24,8 @@ export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
 
 	const isBold = editor?.isActive('bold') ?? false
 	const isItalic = editor?.isActive('italic') ?? false
+	const isUnderline = editor?.isActive('underline') ?? false
+	const isStrikethrough = editor?.isActive('strike') ?? false
 
 	const onBoldClick = useCallback(() => {
 		editor?.chain().focus().toggleBold().run()
@@ -29,6 +33,14 @@ export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
 
 	const onItalicClick = useCallback(() => {
 		editor?.chain().focus().toggleItalic().run()
+	}, [editor])
+
+	const onUnderlineClick = useCallback(() => {
+		editor?.chain().focus().toggleUnderline().run()
+	}, [editor])
+
+	const onStrikeClick = useCallback(() => {
+		editor?.chain().focus().toggleStrike().run()
 	}, [editor])
 
 	const onMentionActorClick = useCallback(() => {
@@ -46,17 +58,37 @@ export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
 	return (
 		<Paper sx={{ padding: '4px 8px' }}>
 			<Stack direction="row" justifyContent="space-between">
-				<Stack direction="row" gap={1}>
+				<Stack direction="row" gap={0.75} flexWrap={'wrap'}>
 					{!isReadMode && (
 						<>
-							<Button onClick={onBoldClick} color="secondary">
-								Bold
-								<ActiveButtonIndicator active={isBold} />
-							</Button>
-							<Button onClick={onItalicClick} color="secondary">
-								Italic
-								<ActiveButtonIndicator active={isItalic} />
-							</Button>
+							<Tooltip title="Bold">
+								<StyledSmallButton onClick={onBoldClick} color="secondary">
+									<b>B</b>
+									<ActiveButtonIndicator active={isBold} />
+								</StyledSmallButton>
+							</Tooltip>
+							<Tooltip title="Italic">
+								<StyledSmallButton onClick={onItalicClick} color="secondary">
+									<i>I</i>
+									<ActiveButtonIndicator active={isItalic} />
+								</StyledSmallButton>
+							</Tooltip>
+							<Tooltip title="Underline">
+								<StyledSmallButton onClick={onUnderlineClick} color="secondary">
+									<u>U</u>
+									<ActiveButtonIndicator active={isUnderline} />
+								</StyledSmallButton>
+							</Tooltip>
+							<Tooltip title="Strikethrough">
+								<StyledSmallButton
+									onClick={onStrikeClick}
+									color="secondary"
+									sx={{ textDecoration: 'line-through !important' }}
+								>
+									S
+									<ActiveButtonIndicator active={isStrikethrough} />
+								</StyledSmallButton>
+							</Tooltip>
 							<Button onClick={onMentionActorClick} color="secondary">
 								@Mention
 							</Button>
@@ -75,3 +107,9 @@ export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
 		</Paper>
 	)
 }
+
+const StyledSmallButton = styled(Button)`
+	min-width: 32px !important;
+	padding: 0;
+	font-family: 'Roboto Mono' !important;
+`

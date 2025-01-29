@@ -76,6 +76,7 @@ export const RichTextEditor = ({ value, onChange, onBlur, allowReadMode }: Props
 		editable: !isReadMode,
 		extensions: EditorExtensions,
 		onUpdate({ editor }) {
+			console.log('On update')
 			onChangeThrottled.current(editor)
 		},
 	})

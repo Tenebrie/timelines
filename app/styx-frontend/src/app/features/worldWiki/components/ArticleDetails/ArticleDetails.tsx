@@ -54,7 +54,7 @@ export const ArticleDetails = () => {
 
 	useEffect(() => {
 		skipNextAutosave.current = true
-	}, [article])
+	}, [article?.id])
 
 	if (!article) {
 		return <></>

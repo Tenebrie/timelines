@@ -184,7 +184,7 @@ export const MentionsList = ({ editor }: Props) => {
 					</MenuItem>
 					<MenuItem
 						selected={selectedIndex === mentions.length + 1}
-						onClick={() => selectEntity(editor, mentions.length)}
+						onClick={() => selectEntity(editor, mentions.length + 1)}
 						sx={{ borderRadius: 1 }}
 					>
 						<ListItemIcon>
@@ -196,7 +196,7 @@ export const MentionsList = ({ editor }: Props) => {
 					</MenuItem>
 					<MenuItem
 						selected={selectedIndex === mentions.length + 2}
-						onClick={() => selectEntity(editor, mentions.length)}
+						onClick={() => selectEntity(editor, mentions.length + 2)}
 						sx={{ borderRadius: 1 }}
 					>
 						<ListItemIcon>
