@@ -1,4 +1,6 @@
+import DropcursorExtension from '@tiptap/extension-dropcursor'
 import { HardBreak } from '@tiptap/extension-hard-break'
+import ImageExtension from '@tiptap/extension-image'
 import Mention from '@tiptap/extension-mention'
 import Placeholder from '@tiptap/extension-placeholder'
 import Underline from '@tiptap/extension-underline'
@@ -10,10 +12,12 @@ import { mentionsSuggestions } from './mentions/MentionsExtension'
 
 export const SharedExtensions: Extensions = [
 	// Starter kit
-	// TODO: Check which extensions are included
 	StarterKit.configure({
 		hardBreak: false,
 	}),
+	// Support for underlined text
+	Underline,
+	// Support for hard breaks (Shift + Enter)
 	HardBreak.extend({
 		addKeyboardShortcuts() {
 			return {
@@ -22,9 +26,12 @@ export const SharedExtensions: Extensions = [
 			}
 		},
 	}),
-	Underline,
 	// Support for actor mentions
 	MentionNode,
+	// Image embeds
+	ImageExtension,
+	// Drop cursor (ghost cursor when dragging)
+	DropcursorExtension,
 ]
 
 export const EditorExtensions: Extensions = [

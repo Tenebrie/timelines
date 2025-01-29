@@ -24,7 +24,8 @@
 	"dependencies": {
 		"@rollbar/react": "^0.12.0-beta",
 		"@tiptap/core": "^2.10.3",
-		"@tiptap/extension-image": "^2.10.3",
+		"@tiptap/extension-dropcursor": "^2.11.3",
+		"@tiptap/extension-image": "^2.11.3",
 		"@tiptap/extension-mention": "^2.10.3",
 		"@tiptap/extension-placeholder": "^2.10.3",
 		"@tiptap/extension-table": "^2.10.3",
