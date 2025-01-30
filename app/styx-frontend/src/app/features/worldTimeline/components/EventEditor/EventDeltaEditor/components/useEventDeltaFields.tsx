@@ -1,13 +1,10 @@
-import { Dispatch, useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 
 import { WorldEventDelta } from '@/app/features/worldTimeline/types'
+import { generateSetter } from '@/app/utils/autosave/generateSetter'
 
 type Props = {
 	delta: WorldEventDelta
-}
-
-type SetterArgs = {
-	cleanSet?: boolean
 }
 
 export const useEventDeltaFields = ({ delta }: Props) => {
@@ -19,27 +16,12 @@ export const useEventDeltaFields = ({ delta }: Props) => {
 	const [description, setDescriptionDirect] = useState<string | null>(delta.description ?? null)
 	const [descriptionRich, setDescriptionRichDirect] = useState<string | null>(delta.descriptionRich ?? null)
 
-	const generateSetter = <T,>(setter: Dispatch<React.SetStateAction<T>>) => {
-		return (val: T, args?: SetterArgs) => {
-			setter((oldVal) => {
-				if (args?.cleanSet) {
-					return val
-				}
-				if (oldVal !== val && !args?.cleanSet) {
-					isDirty.current = true
-				}
-
-				return val
-			})
-		}
-	}
-
 	const setters = useMemo(
 		() => ({
-			setName: generateSetter(setNameDirect),
-			setTimestamp: generateSetter(setTimestampDirect),
-			setDescription: generateSetter(setDescriptionDirect),
-			setDescriptionRich: generateSetter(setDescriptionRichDirect),
+			setName: generateSetter(setNameDirect, isDirty),
+			setTimestamp: generateSetter(setTimestampDirect, isDirty),
+			setDescription: generateSetter(setDescriptionDirect, isDirty),
+			setDescriptionRich: generateSetter(setDescriptionRichDirect, isDirty),
 		}),
 		[],
 	)
