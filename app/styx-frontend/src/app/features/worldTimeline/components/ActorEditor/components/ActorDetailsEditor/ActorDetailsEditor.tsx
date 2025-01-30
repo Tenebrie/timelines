@@ -5,7 +5,7 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 
 import { ColorPicker } from '@/app/components/ColorPicker'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
@@ -36,12 +36,9 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 		setDescriptionRich,
 	} = state
 
-	const [descriptionKey, setDescriptionKey] = useState(0)
-
 	const { isSaving, manualSave, onDelete, autosaveIcon, autosaveColor } = useEditActor({
 		actor,
 		state,
-		onClear: () => setDescriptionKey((prev) => prev + 1),
 	})
 
 	const onDescriptionChange = useCallback(
@@ -87,11 +84,7 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 					maxRows={11}
 					multiline
 				/> */}
-				<RichTextEditorWithFallback
-					key={descriptionKey}
-					value={descriptionRich}
-					onChange={onDescriptionChange}
-				/>
+				<RichTextEditorWithFallback value={descriptionRich} onChange={onDescriptionChange} />
 				<Stack direction="row-reverse" justifyContent="space-between">
 					<Stack spacing={2} direction="row-reverse">
 						<Tooltip title={shortcutLabel} arrow placement="top">

@@ -37,6 +37,7 @@ describe('ActorEditor', () => {
 							title: 'Actor title',
 							color: '#008080',
 							description: 'This is the actor description',
+							descriptionRich: 'This is the actor description',
 						}),
 					],
 				},
@@ -201,6 +202,7 @@ describe('ActorEditor', () => {
 							title: 'Actor title',
 							color: '#008080',
 							description: 'This is the actor description',
+							descriptionRich: 'This is the actor description',
 						}),
 					],
 				},
@@ -220,7 +222,9 @@ describe('ActorEditor', () => {
 			name: 'Actor name',
 			title: 'Actor title',
 			color: '#008080',
+			mentions: [],
 			description: 'This is the actor description',
+			descriptionRich: 'This is the actor description',
 		})
 	})
 
@@ -236,7 +240,9 @@ describe('ActorEditor', () => {
 							name: 'Actor name',
 							title: 'Actor title',
 							color: '#008080',
+							mentions: [],
 							description: 'This is the actor description',
+							descriptionRich: 'This is the actor description',
 						}),
 					],
 				},
@@ -258,7 +264,9 @@ describe('ActorEditor', () => {
 			name: 'Updated name',
 			title: 'Actor title',
 			color: '#008080',
+			mentions: [],
 			description: 'This is the actor description',
+			descriptionRich: 'This is the actor description',
 		})
 	})
 
@@ -275,6 +283,7 @@ describe('ActorEditor', () => {
 							title: 'Actor title',
 							color: '#008080',
 							description: 'This is the actor description',
+							descriptionRich: 'This is the actor description',
 						}),
 					],
 				},
@@ -296,7 +305,9 @@ describe('ActorEditor', () => {
 			name: 'Actor name',
 			title: 'Updated title',
 			color: '#008080',
+			mentions: [],
 			description: 'This is the actor description',
+			descriptionRich: 'This is the actor description',
 		})
 	})
 
@@ -313,6 +324,7 @@ describe('ActorEditor', () => {
 							title: 'Actor title',
 							color: '#008080',
 							description: 'This is the actor description',
+							descriptionRich: 'This is the actor description',
 						}),
 					],
 				},
@@ -333,7 +345,9 @@ describe('ActorEditor', () => {
 			name: 'Actor name',
 			title: 'Actor title',
 			color: '#f48fb1',
+			mentions: [],
 			description: 'This is the actor description',
+			descriptionRich: 'This is the actor description',
 		})
 	})
 
@@ -350,6 +364,7 @@ describe('ActorEditor', () => {
 							title: 'Actor title',
 							color: '#008080',
 							description: 'This is the actor description',
+							descriptionRich: 'This is the actor description',
 						}),
 					],
 				},
@@ -371,7 +386,9 @@ describe('ActorEditor', () => {
 			name: 'Actor name',
 			title: 'Actor title',
 			color: '#008080',
+			mentions: [],
 			description: 'New description',
+			descriptionRich: 'New description',
 		})
 	})
 })
