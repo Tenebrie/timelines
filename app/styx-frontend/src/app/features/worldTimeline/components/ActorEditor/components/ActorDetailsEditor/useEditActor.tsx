@@ -13,10 +13,9 @@ import { useActorFields } from './useActorFields'
 type Props = {
 	actor: Actor
 	state: ReturnType<typeof useActorFields>['state']
-	onClear: () => void
 }
 
-export const useEditActor = ({ actor, state, onClear }: Props) => {
+export const useEditActor = ({ actor, state }: Props) => {
 	const {
 		isDirty,
 		name,
@@ -44,12 +43,11 @@ export const useEditActor = ({ actor, state, onClear }: Props) => {
 			setMentions(actor.mentions, { cleanSet: true })
 			setDescription(actor.description, { cleanSet: true })
 			setDescriptionRich(actor.descriptionRich, { cleanSet: true })
-			onClear()
 
 			setDirty(false)
 			lastSavedAt.current = new Date(actor.updatedAt)
 		}
-	}, [actor, setColor, setMentions, setDescription, setDescriptionRich, setDirty, setName, setTitle, onClear])
+	}, [actor, setColor, setMentions, setDescription, setDescriptionRich, setDirty, setName, setTitle])
 
 	const { open: openDeleteActorModal } = useModal('deleteActorModal')
 

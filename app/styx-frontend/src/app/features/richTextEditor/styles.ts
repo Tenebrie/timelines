@@ -47,6 +47,11 @@ export const StyledEditorContent = styled(EditorContent)<{ $mode: 'read' | 'edit
 		background: red;
 	}
 
+	img {
+		max-height: 200px;
+		max-width: 100%;
+	}
+
 	.ProseMirror {
 		flex: 1;
 		outline: none;

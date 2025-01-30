@@ -16,10 +16,9 @@ type Props = {
 	mode: 'create' | 'create-compact' | 'edit'
 	event: WorldEvent
 	state: ReturnType<typeof useEventFields>['state']
-	onClear: () => void
 }
 
-export const useEditEvent = ({ mode, event, state, onClear }: Props) => {
+export const useEditEvent = ({ mode, event, state }: Props) => {
 	const { mapActorsToOptions } = useMapActorsToOptions()
 
 	const {
@@ -50,7 +49,7 @@ export const useEditEvent = ({ mode, event, state, onClear }: Props) => {
 	const lastSavedAt = useRef<Date>(new Date(event.updatedAt))
 
 	useEffect(() => {
-		if (new Date(event.updatedAt) > lastSavedAt.current) {
+		if (new Date(event.updatedAt).getTime() > lastSavedAt.current.getTime()) {
 			setModules(event.extraFields, { cleanSet: true })
 			setName(event.name, { cleanSet: true })
 			setIcon(event.icon, { cleanSet: true })
@@ -61,7 +60,6 @@ export const useEditEvent = ({ mode, event, state, onClear }: Props) => {
 			setDescriptionRich(event.descriptionRich, { cleanSet: true })
 			setCustomNameEnabled(event.customName, { cleanSet: true })
 			setExternalLink(event.externalLink, { cleanSet: true })
-			onClear()
 
 			setDirty(false)
 			lastSavedAt.current = new Date(event.updatedAt)
@@ -80,7 +78,6 @@ export const useEditEvent = ({ mode, event, state, onClear }: Props) => {
 		setDescription,
 		setDescriptionRich,
 		setExternalLink,
-		onClear,
 	])
 
 	const { open: openDeleteEventModal } = useModal('deleteEventModal')

@@ -58,9 +58,9 @@ export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
 		editor.chain().focus().insertContent('@').run()
 	}, [editor])
 
-	const onImageClick = useCallback(() => {
-		editor?.chain().focus().setImage().run()
-	}, [editor])
+	// const onImageClick = useCallback(() => {
+	// 	editor?.chain().focus().setImage().run()
+	// }, [editor])
 
 	return (
 		<Paper sx={{ padding: '4px 8px' }}>

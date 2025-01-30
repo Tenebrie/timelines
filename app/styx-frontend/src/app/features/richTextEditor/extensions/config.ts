@@ -1,4 +1,3 @@
-import DropcursorExtension from '@tiptap/extension-dropcursor'
 import { HardBreak } from '@tiptap/extension-hard-break'
 import ImageExtension from '@tiptap/extension-image'
 import Mention from '@tiptap/extension-mention'
@@ -7,6 +6,7 @@ import Underline from '@tiptap/extension-underline'
 import { Extensions } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
+import { ExternalImageNode } from './externalImage/ExternalImageNode'
 import { MentionNode } from './mentions/components/MentionNode'
 import { mentionsSuggestions } from './mentions/MentionsExtension'
 
@@ -30,8 +30,7 @@ export const SharedExtensions: Extensions = [
 	MentionNode,
 	// Image embeds
 	ImageExtension,
-	// Drop cursor (ghost cursor when dragging)
-	DropcursorExtension,
+	ExternalImageNode,
 ]
 
 export const EditorExtensions: Extensions = [
