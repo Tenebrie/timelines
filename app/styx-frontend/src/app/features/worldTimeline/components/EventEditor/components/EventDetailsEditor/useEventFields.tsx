@@ -1,13 +1,10 @@
-import { Dispatch, useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 
 import { MentionDetails, WorldEvent } from '@/app/features/worldTimeline/types'
+import { generateSetter } from '@/app/utils/autosave/generateSetter'
 
 type Props = {
 	event: WorldEvent
-}
-
-type SetterArgs = {
-	cleanSet?: boolean
 }
 
 export const useEventFields = ({ event }: Props) => {
@@ -26,35 +23,20 @@ export const useEventFields = ({ event }: Props) => {
 
 	const [externalLink, setExternalLink] = useState<string>(event.externalLink)
 
-	const generateSetter = useCallback(<T,>(setter: Dispatch<React.SetStateAction<T>>) => {
-		return (val: T, args?: SetterArgs) => {
-			setter((oldVal) => {
-				if (args?.cleanSet) {
-					return val
-				}
-				if (oldVal !== val && !args?.cleanSet) {
-					isDirty.current = true
-				}
-
-				return val
-			})
-		}
-	}, [])
-
 	const setters = useMemo(
 		() => ({
-			setModules: generateSetter(setModulesDirect),
-			setName: generateSetter(setNameDirect),
-			setIcon: generateSetter(setIconDirect),
-			setTimestamp: generateSetter(setTimestampDirect),
-			setRevokedAt: generateSetter(setRevokedAtDirect),
-			setMentions: generateSetter(setMentionsDirect),
-			setDescription: generateSetter(setDescriptionDirect),
-			setDescriptionRich: generateSetter(setDescriptionRichDirect),
-			setCustomNameEnabled: generateSetter(setCustomNameEnabledDirect),
-			setExternalLink: generateSetter(setExternalLink),
+			setModules: generateSetter(setModulesDirect, isDirty),
+			setName: generateSetter(setNameDirect, isDirty),
+			setIcon: generateSetter(setIconDirect, isDirty),
+			setTimestamp: generateSetter(setTimestampDirect, isDirty),
+			setRevokedAt: generateSetter(setRevokedAtDirect, isDirty),
+			setMentions: generateSetter(setMentionsDirect, isDirty),
+			setDescription: generateSetter(setDescriptionDirect, isDirty),
+			setDescriptionRich: generateSetter(setDescriptionRichDirect, isDirty),
+			setCustomNameEnabled: generateSetter(setCustomNameEnabledDirect, isDirty),
+			setExternalLink: generateSetter(setExternalLink, isDirty),
 		}),
-		[generateSetter],
+		[],
 	)
 
 	return {

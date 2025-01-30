@@ -49,7 +49,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 	const lastSavedAt = useRef<Date>(new Date(event.updatedAt))
 
 	useEffect(() => {
-		if (new Date(event.updatedAt) > lastSavedAt.current) {
+		if (new Date(event.updatedAt).getTime() > lastSavedAt.current.getTime()) {
 			setModules(event.extraFields, { cleanSet: true })
 			setName(event.name, { cleanSet: true })
 			setIcon(event.icon, { cleanSet: true })
