@@ -32,7 +32,7 @@ export const BaseMentionChip = ({ type, label, color, onClick }: Props) => {
 	const iconColor = getContrastTextColor(hslToHex(typeColor.h, typeColor.s, typeColor.l))
 
 	const iconSlotSize = `26px`
-	const transparency = theme.mode === 'dark' ? 0.25 : 0.35
+	const transparency = theme.mode === 'dark' ? 0.7 : 0.2
 
 	return (
 		<Stack direction="row" spacing={1} display={'inline'} position={'relative'}>
