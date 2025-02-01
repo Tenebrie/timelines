@@ -37,7 +37,7 @@ export const Register = () => {
 	const { navigateTo } = useAppRouter()
 	const [createAccount, { isLoading }] = useCreateAccountMutation()
 
-	const { setUser } = authSlice.actions
+	const { setUser, setSessionId } = authSlice.actions
 	const dispatch = useDispatch()
 
 	const onRegister = async () => {
@@ -72,7 +72,8 @@ export const Register = () => {
 			raiseError('SERVER_SIDE_ERROR', error.message)
 			return
 		}
-		dispatch(setUser(response))
+		dispatch(setUser(response.user))
+		dispatch(setSessionId(response.sessionId))
 		navigateTo({ target: appRoutes.home })
 	}
 

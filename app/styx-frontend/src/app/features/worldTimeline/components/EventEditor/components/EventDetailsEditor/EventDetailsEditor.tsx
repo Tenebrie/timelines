@@ -11,6 +11,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/reducer'
 import { RichTextEditor } from '@/app/features/richTextEditor/RichTextEditor'
 import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
@@ -54,11 +55,21 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		setDescriptionRich,
 		setCustomNameEnabled,
 		setExternalLink,
+		loadEvent,
 	} = state
 
-	const [createEventKey, setCreateEventKey] = useState(0)
+	const [descriptionKey, setDescriptionKey] = useState(0)
 
-	usePreserveCreateState({ mode, state, onLoaded: () => setCreateEventKey((prev) => prev + 1) })
+	usePreserveCreateState({ mode, state, onLoaded: () => setDescriptionKey((prev) => prev + 1) })
+
+	useEventBusSubscribe({
+		event: 'richEditor/forceUpdateEvent',
+		condition: (data) => mode === 'edit' && event.id === data.event.id,
+		callback: (data) => {
+			loadEvent(data.event)
+			setDescriptionKey((prev) => prev + 1)
+		},
+	})
 
 	const { isCreating, createWorldEvent, createIcon, createIconColor } = useCreateEvent({
 		state,
@@ -69,7 +80,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 				setDescriptionRich('')
 				setMentions([])
 				setCustomNameEnabled(false)
-				setCreateEventKey((prev) => prev + 1)
+				setDescriptionKey((prev) => prev + 1)
 			}
 		},
 	})
@@ -147,7 +158,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 				</Stack>
 				<Box height={'300px'}>
 					<RichTextEditorWithFallback
-						key={createEventKey}
+						softKey={descriptionKey}
 						value={descriptionRich}
 						onChange={onDescriptionChange}
 					/>

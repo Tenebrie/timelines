@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { UpdateWorldEventDeltaApiArg, useUpdateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { useModal } from '@/app/features/modals/reducer'
+import { worldSlice } from '@/app/features/world/reducer'
 import { getWorldIdState } from '@/app/features/world/selectors'
 import { WorldEventDelta } from '@/app/features/worldTimeline/types'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
+import { ingestEventDelta } from '@/app/utils/ingestEvent'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { ErrorState } from '@/app/utils/useErrorState'
 
@@ -21,6 +23,9 @@ type Props = {
 
 export const useEditEventDelta = ({ mode, deltaState, errorState, state }: Props) => {
 	const { isDirty, name, timestamp, description, setDirty, setName, setTimestamp, setDescription } = state
+
+	const { updateEventDelta } = worldSlice.actions
+	const dispatch = useDispatch()
 
 	const lastSavedAt = useRef<Date>(new Date(deltaState.updatedAt))
 
@@ -44,7 +49,7 @@ export const useEditEventDelta = ({ mode, deltaState, errorState, state }: Props
 	const sendUpdate = useCallback(
 		async (body: UpdateWorldEventDeltaApiArg['body']) => {
 			setDirty(false)
-			const { error } = parseApiResponse(
+			const { response, error } = parseApiResponse(
 				await updateDeltaState({
 					worldId,
 					eventId: deltaState.worldEventId,
@@ -61,9 +66,10 @@ export const useEditEventDelta = ({ mode, deltaState, errorState, state }: Props
 				return
 			}
 			lastSavedAt.current = new Date()
+			dispatch(updateEventDelta(ingestEventDelta(response)))
 			errorState.clearError()
 		},
-		[deltaState.id, deltaState.worldEventId, errorState, setDirty, updateDeltaState, worldId],
+		[deltaState, dispatch, errorState, setDirty, updateDeltaState, updateEventDelta, worldId],
 	)
 
 	const {

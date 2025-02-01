@@ -1,4 +1,4 @@
-import { UserAuthenticator } from '@src/auth/UserAuthenticator'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
 import { AuthorizationService } from '@src/services/AuthorizationService'
 import { RedisService } from '@src/services/RedisService'
 import { WikiService } from '@src/services/WikiService'
@@ -15,10 +15,11 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
+import { SessionMiddleware } from '../middleware/SessionMiddleware'
 import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
 
-const router = new Router()
+const router = new Router().with(SessionMiddleware)
 
 export const worldWikiTag = 'worldWiki'
 
@@ -68,7 +69,7 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 		position: articleCount,
 	})
 
-	RedisService.notifyAboutWikiArticleUpdate({ worldId, article })
+	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })
 
 	return article
 })
@@ -102,7 +103,7 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 		mentions,
 	})
 
-	RedisService.notifyAboutWikiArticleUpdate({ worldId, article })
+	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })
 
 	return article
 })
@@ -133,8 +134,8 @@ router.post('/api/world/:worldId/wiki/article/swap', async (ctx) => {
 		articleIdB: params.articleB,
 	})
 
-	RedisService.notifyAboutWikiArticleUpdate({ worldId, article: articleA })
-	RedisService.notifyAboutWikiArticleUpdate({ worldId, article: articleB })
+	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article: articleA })
+	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article: articleB })
 })
 
 router.delete('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
@@ -155,7 +156,7 @@ router.delete('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 
 	await WikiService.deleteWikiArticle({ worldId, articleId })
 
-	RedisService.notifyAboutWikiArticleDeletion({ worldId })
+	RedisService.notifyAboutWikiArticleDeletion(ctx, { worldId })
 })
 
 router.post('/api/world/:worldId/wiki/articles/delete', async (ctx) => {
@@ -179,7 +180,7 @@ router.post('/api/world/:worldId/wiki/articles/delete', async (ctx) => {
 
 	await WikiService.bulkDeleteWikiArticles({ worldId, articles })
 
-	RedisService.notifyAboutWikiArticleDeletion({ worldId })
+	RedisService.notifyAboutWikiArticleDeletion(ctx, { worldId })
 })
 
 export const WorldWikiRouter = router

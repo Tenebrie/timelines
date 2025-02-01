@@ -1,4 +1,5 @@
-import { UserAuthenticator } from '@src/auth/UserAuthenticator'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
 import { ActorService } from '@src/services/ActorService'
 import { AuthorizationService } from '@src/services/AuthorizationService'
 import { RedisService } from '@src/services/RedisService'
@@ -20,7 +21,7 @@ import { NameStringValidator } from './validators/NameStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { worldDetailsTag } from './WorldRouter'
 
-const router = new Router()
+const router = new Router().with(SessionMiddleware)
 
 const actorListTag = 'actorList'
 
@@ -58,7 +59,7 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 		},
 	})
 
-	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
 
 	return actor
 })
@@ -67,7 +68,7 @@ router.patch('/api/world/:worldId/actor/:actorId', async (ctx) => {
 	useApiEndpoint({
 		name: 'updateActor',
 		description: 'Updates the target actor',
-		tags: [actorListTag, worldDetailsTag],
+		tags: [actorListTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -88,9 +89,9 @@ router.patch('/api/world/:worldId/actor/:actorId', async (ctx) => {
 		descriptionRich: OptionalParam(ContentStringValidator),
 	})
 
-	const { actor, world } = await ActorService.updateActor({ worldId, actorId, params })
+	const { actor } = await ActorService.updateActor({ worldId, actorId, params })
 
-	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutActorUpdate(ctx, { worldId, actor })
 
 	return actor
 })
@@ -113,7 +114,7 @@ router.delete('/api/world/:worldId/actor/:actorId', async (ctx) => {
 
 	const { actor, world } = await ActorService.deleteActor({ worldId, actorId })
 
-	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
 
 	return actor
 })

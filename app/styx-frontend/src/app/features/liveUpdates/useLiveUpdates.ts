@@ -1,17 +1,19 @@
-import { useCallback, useMemo, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { CalliopeToClientMessage } from '@/ts-shared/CalliopeToClientMessage'
 import { ClientToCalliopeMessage, ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage'
 
-import { useEffectOnce } from '../../utils/useEffectOnce'
 import { authSlice } from '../auth/reducer'
+import { getAuthState } from '../auth/selectors'
 import { useEventBusDispatch, useEventBusSubscribe } from '../eventBus'
 import { useLiveMessageHandlers } from './useLiveMessageHandlers'
 
 const expBackoffDelays = [50, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
 
 export const useLiveUpdates = () => {
+	const { sessionId } = useSelector(getAuthState)
+
 	const currentWebsocket = useRef<WebSocket | null>(null)
 	const heartbeatInterval = useRef<number | null>(null)
 	const backoffLevel = useRef<number>(-1)
@@ -59,7 +61,7 @@ export const useLiveUpdates = () => {
 			clearHeartbeat()
 
 			const protocol = window.location.protocol === 'http:' ? 'ws:' : 'wss:'
-			const socket = new WebSocket(`${protocol}//${window.location.host}/live`)
+			const socket = new WebSocket(`${protocol}//${window.location.host}/live/${sessionId}`)
 
 			heartbeatInterval.current = window.setInterval(() => {
 				if (currentWebsocket.current?.readyState !== WebSocket.OPEN) {
@@ -117,8 +119,14 @@ export const useLiveUpdates = () => {
 		hideCalliopeConnectionAlert,
 		messageHandlers,
 		notifyAboutReconnect,
+		sessionId,
 		showCalliopeConnectionAlert,
 	])
 
-	useEffectOnce(() => initiateConnection())
+	useEffect(() => {
+		if (!sessionId) {
+			return
+		}
+		initiateConnection()
+	}, [initiateConnection, sessionId])
 }

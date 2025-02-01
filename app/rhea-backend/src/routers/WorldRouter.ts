@@ -1,5 +1,7 @@
-import { UserAuthenticator } from '@src/auth/UserAuthenticator'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
 import { AuthorizationService } from '@src/services/AuthorizationService'
+import { RedisService } from '@src/services/RedisService'
 import { WorldService } from '@src/services/WorldService'
 import { WorldShareService } from '@src/services/WorldShareService'
 import {
@@ -23,7 +25,7 @@ import { StringArrayValidator } from './validators/StringArrayValidator'
 import { WorldAccessModeValidator } from './validators/WorldAccessModeValidator'
 import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator'
 
-const router = new Router()
+const router = new Router().with(SessionMiddleware)
 
 export const worldListTag = 'worldList'
 export const worldDetailsTag = 'worldDetails'
@@ -194,7 +196,11 @@ router.post('/api/world/:worldId/share', async (ctx) => {
 
 	await AuthorizationService.checkUserWorldOwner(user, worldId)
 
-	await WorldShareService.addCollaborators({ worldId, userEmails, access })
+	const { users } = await WorldShareService.addCollaborators({ worldId, userEmails, access })
+
+	RedisService.notifyAboutWorldShared(ctx, {
+		users,
+	})
 })
 
 router.post('/api/world/:worldId/access', async (ctx) => {
@@ -242,6 +248,10 @@ router.delete('/api/world/:worldId/share/:userId', async (ctx) => {
 
 	await WorldShareService.removeCollaborator({
 		worldId,
+		userId,
+	})
+
+	RedisService.notifyAboutWorldUnshared(ctx, {
 		userId,
 	})
 })

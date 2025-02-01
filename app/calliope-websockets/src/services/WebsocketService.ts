@@ -10,14 +10,16 @@ const worldListeners: Record<string, RegisteredClient[]> = {}
 type RegisteredClient = {
 	socket: WebSocket
 	userId: string
+	sessionId: string
 	sendMessage: (message: CalliopeToClientMessage) => void
 }
 
 export const WebsocketService = {
-	registerUserSocket: (userId: string, socket: WebSocket) => {
+	registerUserSocket: (userId: string, sessionId: string, socket: WebSocket) => {
 		const newClient: RegisteredClient = {
 			socket,
 			userId,
+			sessionId,
 			sendMessage: (message: CalliopeToClientMessage) => {
 				socket.send(JSON.stringify(message))
 			},
@@ -25,6 +27,7 @@ export const WebsocketService = {
 
 		const sockets = [...(userListeners[userId] ?? []), newClient]
 		userListeners[userId] = sockets
+		return newClient
 	},
 
 	unregisterSocket: (userId: string, targetSocket: WebSocket) => {
@@ -36,10 +39,11 @@ export const WebsocketService = {
 			})
 	},
 
-	registerWorldClient: (worldId: string, userId: string, socket: WebSocket) => {
+	registerWorldClient: (worldId: string, userId: string, sessionId: string, socket: WebSocket) => {
 		const newClient: RegisteredClient = {
 			socket,
 			userId,
+			sessionId,
 			sendMessage: (message: CalliopeToClientMessage) => {
 				socket.send(JSON.stringify(message))
 			},

@@ -45,6 +45,7 @@ export const WorldHeader = () => {
 				</Stack>
 				<Typography
 					variant="body2"
+					color={textColor}
 					sx={{
 						overflow: 'hidden',
 						textOverflow: 'ellipsis',

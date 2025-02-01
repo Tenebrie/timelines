@@ -30,9 +30,11 @@ export type CheckAuthenticationApiResponse =
 	/** status 200  */
 	| {
 			authenticated: boolean
+			sessionId: string
 	  }
 	| {
 			authenticated: boolean
+			sessionId: string
 			user: {
 				id: string
 				email: string
@@ -42,10 +44,13 @@ export type CheckAuthenticationApiResponse =
 	  }
 export type CheckAuthenticationApiArg = void
 export type CreateAccountApiResponse = /** status 200  */ {
-	id: string
-	email: string
-	username: string
-	level: 'Free' | 'Premium' | 'Admin'
+	user: {
+		id: string
+		email: string
+		username: string
+		level: 'Free' | 'Premium' | 'Admin'
+	}
+	sessionId: string
 }
 export type CreateAccountApiArg = {
 	body: {
@@ -55,10 +60,13 @@ export type CreateAccountApiArg = {
 	}
 }
 export type PostLoginApiResponse = /** status 200  */ {
-	id: string
-	email: string
-	username: string
-	level: 'Free' | 'Premium' | 'Admin'
+	user: {
+		id: string
+		email: string
+		username: string
+		level: 'Free' | 'Premium' | 'Admin'
+	}
+	sessionId: string
 }
 export type PostLoginApiArg = {
 	body: {

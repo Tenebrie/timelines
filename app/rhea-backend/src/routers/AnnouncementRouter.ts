@@ -1,4 +1,4 @@
-import { UserAuthenticator } from '@src/auth/UserAuthenticator'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
 import { AnnouncementService } from '@src/services/AnnouncementService'
 import { AuthorizationService } from '@src/services/AuthorizationService'
 import { PathParam, Router, StringValidator, useApiEndpoint, useAuth, usePathParams } from 'moonflower'

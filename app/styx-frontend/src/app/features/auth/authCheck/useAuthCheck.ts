@@ -21,7 +21,7 @@ export const useAuthCheck = (): ReturnType => {
 		getWorldState,
 		(a, b) => a.isLoaded === b.isLoaded && a.accessMode === b.accessMode,
 	)
-	const { setUser } = authSlice.actions
+	const { setUser, setSessionId } = authSlice.actions
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -29,10 +29,11 @@ export const useAuthCheck = (): ReturnType => {
 			return
 		}
 
+		dispatch(setSessionId(data.sessionId))
 		if (data.authenticated && 'user' in data) {
 			dispatch(setUser(data.user))
 		}
-	}, [data, dispatch, setUser])
+	}, [data, dispatch, setSessionId, setUser])
 
 	if (user || (data && data.authenticated) || isLoading) {
 		return { success: true, target: '' }
