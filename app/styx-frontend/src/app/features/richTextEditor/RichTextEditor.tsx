@@ -1,5 +1,5 @@
 import { Editor, useEditor } from '@tiptap/react'
-import debounce from 'lodash.debounce'
+import throttle from 'lodash.throttle'
 import { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -34,8 +34,13 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 	const { readModeEnabled } = useSelector(getWikiPreferences)
 
+	const onChangeRef = useRef(onChange)
+	useEffect(() => {
+		onChangeRef.current = onChange
+	}, [onChange])
+
 	const onChangeThrottled = useRef(
-		debounce((editor: Editor) => {
+		throttle((editor: Editor) => {
 			const mentions: MentionDetails[] = []
 			editor.state.doc.descendants((node) => {
 				if (node.type.name === MentionNodeName) {
@@ -61,7 +66,7 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 				}
 			})
 
-			onChange({
+			onChangeRef.current({
 				plainText: editor.getText(),
 				richText: editor.getHTML(),
 				mentions,
@@ -94,10 +99,53 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 		if (!editor) {
 			return
 		}
-		const from = editor.state.selection.from
-		const to = editor.state.selection.to
-		editor.commands.setContent(currentValue.current)
-		editor.commands.setTextSelection({ from, to })
+
+		// 1. Capture the old content and selection before updating.
+		const oldText = editor.getText() // or editor.getHTML() depending on your use case
+		const { from, to } = editor.state.selection
+
+		// Extract up to 5 characters before and after the selection.
+		const leftContext = oldText.substring(Math.max(0, from - 5), from)
+		const rightContext = oldText.substring(to, to + 5)
+
+		// 2. Update the content with the new value.
+		const newText = currentValue.current
+		editor.commands.setContent(newText)
+
+		// 3. Try to find the matching positions in the new text.
+
+		// Find where the left context appears.
+		let newFrom = -1
+		if (leftContext.length > 0) {
+			const leftIndex = newText.indexOf(leftContext)
+			if (leftIndex !== -1) {
+				newFrom = leftIndex - leftContext.length + 2
+			}
+		}
+		// If not found, fallback to the old 'from'
+		if (newFrom === -1) {
+			newFrom = from
+		}
+
+		// Find the right context after newFrom.
+		let newTo = -1
+		if (rightContext.length > 0) {
+			const rightIndex = newText.indexOf(rightContext, newFrom)
+			if (rightIndex !== -1) {
+				newTo = rightIndex
+			}
+		}
+		// Fallback: try to preserve the original selection length.
+		if (newTo === -1) {
+			newTo = newFrom + (to - from)
+		}
+
+		// If the selection was just a caret, ensure both positions match.
+		if (from === to) {
+			newTo = newFrom
+		}
+
+		editor.commands.setTextSelection({ from: newFrom, to: newTo })
 	}, [editor, softKey])
 
 	useEffect(() => {
@@ -115,7 +163,10 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 				},
 			}}
 			$theme={theme}
-			onBlur={onBlur}
+			onBlur={() => {
+				onBlur?.()
+				onChangeThrottled.current.cancel()
+			}}
 		>
 			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode} />
 			<StyledEditorContent
