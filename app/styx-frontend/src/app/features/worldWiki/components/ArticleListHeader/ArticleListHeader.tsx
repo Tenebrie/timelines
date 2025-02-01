@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/reducer'
 import { getWikiPreferences } from '@/app/features/preferences/selectors'
+import { useIsReadOnly } from '@/hooks/useIsReadOnly'
 import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 
 import { useListArticles } from '../../api/useListArticles'
@@ -21,6 +22,8 @@ export const ArticleListHeader = () => {
 	const { isBulkSelecting, bulkActionArticles } = useSelector(getWikiState)
 	const { open: openArticleWizard } = useModal('articleWizard')
 	const { open: openDeleteArticleModal } = useModal('deleteArticleModal')
+
+	const { isReadOnly } = useIsReadOnly()
 
 	const { setBulkSelecting, addToBulkSelection, clearBulkSelection } = wikiSlice.actions
 	const dispatch = useDispatch()
@@ -63,7 +66,7 @@ export const ArticleListHeader = () => {
 				<Typography variant="h6" marginLeft={1}>
 					Articles
 				</Typography>
-				{!isBulkSelecting && (
+				{!isBulkSelecting && !isReadOnly && (
 					<Button
 						variant={readModeEnabled ? 'outlined' : 'contained'}
 						startIcon={<Add />}

@@ -1,4 +1,4 @@
-import { AdminAuthenticator } from '@src/auth/AdminAuthenticator'
+import { AdminAuthenticator } from '@src/middleware/auth/AdminAuthenticator'
 import { AdminService } from '@src/services/AdminService'
 import {
 	NonEmptyStringValidator,

@@ -3,7 +3,6 @@ import { BadRequestError } from 'moonflower'
 
 import { AnnouncementService } from './AnnouncementService'
 import { getPrismaClient } from './dbClients/DatabaseClient'
-import { RedisService } from './RedisService'
 
 export const WorldShareService = {
 	listCollaborators: async ({ worldId }: { worldId: string }) => {
@@ -61,7 +60,7 @@ export const WorldShareService = {
 		})
 
 		if (users.length === 0) {
-			return
+			return { users }
 		}
 
 		await getPrismaClient().$transaction([
@@ -86,10 +85,6 @@ export const WorldShareService = {
 			),
 		])
 
-		RedisService.notifyAboutWorldShared({
-			users,
-		})
-
 		await AnnouncementService.notifyMany(
 			users.map((user) => ({
 				type: 'WorldShared',
@@ -98,6 +93,8 @@ export const WorldShareService = {
 				description: 'Someone has shared their World with you!',
 			})),
 		)
+
+		return { users }
 	},
 
 	removeCollaborator: async ({ worldId, userId }: { worldId: string; userId: string }) => {
@@ -118,10 +115,6 @@ export const WorldShareService = {
 					worldId,
 				},
 			},
-		})
-
-		RedisService.notifyAboutWorldUnshared({
-			userId,
 		})
 	},
 }

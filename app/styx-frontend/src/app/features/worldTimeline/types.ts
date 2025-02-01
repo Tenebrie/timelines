@@ -6,8 +6,8 @@ import { GetWorldBriefApiResponse, GetWorldInfoApiResponse } from '@/api/worldDe
 export type FullMentionDetails = GetWorldInfoApiResponse['actors'][number]['mentions'][number]
 export type MentionedEntity = GetWorldInfoApiResponse['actors'][number]['mentions'][number]['sourceType']
 export type MentionDetails = Pick<FullMentionDetails, 'targetId' | 'targetType'>
+export type Actor = Omit<ActorDetails, 'statements'>
 export type ActorDetails = GetWorldInfoApiResponse['actors'][number]
-export type Actor = Omit<ActorDetails, 'statements' | 'relationships' | 'receivedRelationships'>
 export type WorldItem = GetWorldsApiResponse['ownedWorlds'][number]
 export type WorldBrief = GetWorldBriefApiResponse
 export type WorldDetails = Omit<GetWorldInfoApiResponse, 'events'> & {

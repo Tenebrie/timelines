@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 
-import { ActorDetails, MentionDetails } from '@/app/features/worldTimeline/types'
+import { Actor, ActorDetails, MentionDetails } from '@/app/features/worldTimeline/types'
 import { generateSetter } from '@/app/utils/autosave/generateSetter'
 
 type Props = {
@@ -32,6 +32,27 @@ export const useActorFields = ({ actor }: Props) => {
 		[],
 	)
 
+	const loadState = (loadedState: {
+		name: string
+		title: string
+		color: string
+		mentions: MentionDetails[]
+		description: string
+		descriptionRich: string
+	}) => {
+		setDirty(false)
+		setters.setName(loadedState.name, { cleanSet: true })
+		setters.setTitle(loadedState.title, { cleanSet: true })
+		setters.setColor(loadedState.color, { cleanSet: true })
+		setters.setMentions(loadedState.mentions, { cleanSet: true })
+		setters.setDescription(loadedState.description, { cleanSet: true })
+		setters.setDescriptionRich(loadedState.descriptionRich, { cleanSet: true })
+	}
+
+	const loadActor = (actor: Actor) => {
+		loadState(actor)
+	}
+
 	return {
 		state: {
 			isDirty,
@@ -43,6 +64,8 @@ export const useActorFields = ({ actor }: Props) => {
 			descriptionRich,
 			setDirty,
 			...setters,
+			loadState,
+			loadActor,
 		},
 	}
 }

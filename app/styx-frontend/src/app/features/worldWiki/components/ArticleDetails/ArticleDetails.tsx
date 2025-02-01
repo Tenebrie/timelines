@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { OnChangeParams } from '@/app/features/richTextEditor/RichTextEditor'
 import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { MentionDetails } from '@/app/features/worldTimeline/types'
@@ -16,6 +17,8 @@ type WikiArticleToSave = WikiArticle & {
 export const ArticleDetails = () => {
 	const { article } = useCurrentArticle()
 	const [editArticle, { isLoading: isSaving }] = useEditArticle()
+
+	const [key, setKey] = useState(0)
 
 	const articleToSave = useRef<WikiArticleToSave | null>(null)
 	const skipNextAutosave = useRef(false)
@@ -37,10 +40,7 @@ export const ArticleDetails = () => {
 	})
 
 	const onChange = (params: OnChangeParams) => {
-		if (!article) {
-			return
-		}
-		if (skipNextAutosave.current) {
+		if (!article || skipNextAutosave.current) {
 			skipNextAutosave.current = false
 			return
 		}
@@ -49,6 +49,9 @@ export const ArticleDetails = () => {
 			contentRich: params.richText,
 			newMentions: params.mentions,
 		}
+		if (article.contentRich === params.richText) {
+			return
+		}
 		autosave()
 	}
 
@@ -56,13 +59,19 @@ export const ArticleDetails = () => {
 		skipNextAutosave.current = true
 	}, [article?.id])
 
+	useEventBusSubscribe({
+		event: 'richEditor/forceUpdateArticle',
+		condition: (data) => data.articleId === article?.id,
+		callback: () => setKey((prev) => prev + 1),
+	})
+
 	if (!article) {
 		return <></>
 	}
 
 	return (
 		<RichTextEditorWithFallback
-			key={article.id}
+			softKey={`${article.id}-${key}`}
 			value={article.contentRich}
 			onChange={onChange}
 			onBlur={manualSave}

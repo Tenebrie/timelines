@@ -9,6 +9,7 @@ import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getWorldIdState } from '@/app/features/world/selectors'
+import { useIsReadOnly } from '@/hooks/useIsReadOnly'
 import { useWorldWikiRouter, worldWikiRoutes } from '@/router/routes/featureRoutes/worldWikiRoutes'
 
 import { useArticleBulkActions } from '../../hooks/useArticleBulkActions'
@@ -25,6 +26,7 @@ export const ArticleListItem = ({ article }: Props) => {
 	const { navigateTo, stateOf } = useWorldWikiRouter()
 
 	const highlighted = stateOf(worldWikiRoutes.article).articleId === article.id
+	const { isReadOnly } = useIsReadOnly()
 
 	const onNavigate = useCallback(() => {
 		navigateTo({
@@ -54,9 +56,11 @@ export const ArticleListItem = ({ article }: Props) => {
 			>
 				{article.name}
 			</Button>
-			<IconButton color="secondary" {...bindTrigger(popupState)}>
-				<Menu />
-			</IconButton>
+			{!isReadOnly && (
+				<IconButton color="secondary" {...bindTrigger(popupState)}>
+					<Menu />
+				</IconButton>
+			)}
 			<ArticleContextMenu article={article} popupState={popupState} />
 			{ghostElement}
 		</Stack>

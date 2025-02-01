@@ -26,5 +26,5 @@ export type ClientToCalliopeMessage = ShapeOfMessage<ClientToCalliopeMessagePayl
 export type ClientToCalliopeMessageHandlers = ShapeOfHandler<ClientToCalliopeMessagePayload>
 
 export type ShapeOfHandler<T> = {
-	[K in keyof T]: (data: T[K], userId: string, socket: WebSocket) => void
+	[K in keyof T]: (data: T[K], userId: string, socket: WebSocket, sessionId: string) => void
 }

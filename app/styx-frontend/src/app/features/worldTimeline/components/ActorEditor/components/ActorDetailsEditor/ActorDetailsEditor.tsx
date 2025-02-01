@@ -5,10 +5,11 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 
 import { ColorPicker } from '@/app/components/ColorPicker'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { RichTextEditor } from '@/app/features/richTextEditor/RichTextEditor'
 import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { ActorDetails } from '@/app/features/worldTimeline/types'
@@ -34,11 +35,23 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 		setMentions,
 		setDescription,
 		setDescriptionRich,
+		loadActor,
 	} = state
+
+	const [descriptionKey, setDescriptionKey] = useState(0)
 
 	const { isSaving, manualSave, onDelete, autosaveIcon, autosaveColor } = useEditActor({
 		actor,
 		state,
+	})
+
+	useEventBusSubscribe({
+		event: 'richEditor/forceUpdateActor',
+		condition: (data) => actor.id === data.actor.id,
+		callback: (data) => {
+			loadActor(data.actor)
+			setDescriptionKey((prev) => prev + 1)
+		},
 	})
 
 	const onDescriptionChange = useCallback(
@@ -75,16 +88,24 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 						inputProps={{ maxLength: 256 }}
 					/>
 				</Stack>
-				<ColorPicker initialValue={actor.color} onChangeHex={(color) => setColor(color)} />
+				<ColorPicker
+					key={descriptionKey}
+					initialValue={actor.color}
+					onChangeHex={(color) => setColor(color)}
+				/>
 				{/* <TextField
 					label="Description"
 					value={description}
 					onChange={(e) => setDescription(e.target.value)}
 					minRows={3}
 					maxRows={11}
-					multiline
+					multiline 
 				/> */}
-				<RichTextEditorWithFallback value={descriptionRich} onChange={onDescriptionChange} />
+				<RichTextEditorWithFallback
+					softKey={descriptionKey}
+					value={descriptionRich}
+					onChange={onDescriptionChange}
+				/>
 				<Stack direction="row-reverse" justifyContent="space-between">
 					<Stack spacing={2} direction="row-reverse">
 						<Tooltip title={shortcutLabel} arrow placement="top">

@@ -1,4 +1,5 @@
-import { UserAuthenticator } from '@src/auth/UserAuthenticator'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
 import { AuthorizationService } from '@src/services/AuthorizationService'
 import { RedisService } from '@src/services/RedisService'
 import { ValidationService } from '@src/services/ValidationService'
@@ -30,7 +31,7 @@ import { UuidStringValidator } from './validators/UuidStringValidator'
 import { WorldEventFieldValidator } from './validators/WorldEventFieldValidator'
 import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
 
-const router = new Router()
+const router = new Router().with(SessionMiddleware)
 
 export const worldEventTag = 'worldEvent'
 export const worldEventDeltaTag = 'worldEventDelta'
@@ -79,7 +80,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		updateData: params,
 	})
 
-	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
 
 	return event
 })
@@ -135,7 +136,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		params: mappedParams,
 	})
 
-	RedisService.notifyAboutWorldEventUpdate({ worldId, event })
+	RedisService.notifyAboutWorldEventUpdate(ctx, { worldId, event })
 
 	return event
 })
@@ -159,7 +160,7 @@ router.delete('/api/world/:worldId/event/:eventId', async (ctx) => {
 
 	const { event, world } = await WorldEventService.deleteWorldEvent({ worldId, eventId })
 
-	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
 
 	return event
 })
@@ -192,7 +193,7 @@ router.post('/api/world/:worldId/event/:eventId/revoke', async (ctx) => {
 		revokedAt,
 	})
 
-	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
 
 	return statement
 })
@@ -219,7 +220,7 @@ router.post('/api/world/:worldId/event/:eventId/unrevoke', async (ctx) => {
 		eventId,
 	})
 
-	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
 
 	return statement
 })
@@ -257,7 +258,7 @@ router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
 		data: params,
 	})
 
-	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
 
 	return deltaState
 })
@@ -302,7 +303,7 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 		},
 	})
 
-	RedisService.notifyAboutWorldEventDeltaUpdate({ worldId, delta: deltaState })
+	RedisService.notifyAboutWorldEventDeltaUpdate(ctx, { worldId, delta: deltaState })
 
 	return deltaState
 })
@@ -328,7 +329,7 @@ router.delete('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =
 
 	const { deltaState, world } = await WorldEventDeltaService.deleteEventDeltaState({ worldId, deltaId })
 
-	RedisService.notifyAboutWorldUpdate({ worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
 
 	return deltaState
 })

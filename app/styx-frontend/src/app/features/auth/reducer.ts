@@ -2,10 +2,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import { CreateAccountApiResponse } from '@/api/authApi'
 
-export type User = CreateAccountApiResponse
+export type User = CreateAccountApiResponse['user']
 
 export const initialState = {
 	user: null as User | null,
+	sessionId: undefined as string | undefined,
 	showRheaConnectionAlert: false as boolean,
 	showCalliopeConnectionAlert: false as boolean,
 }
@@ -19,6 +20,9 @@ export const authSlice = createSlice({
 		},
 		clearUser: (state) => {
 			state.user = null
+		},
+		setSessionId: (state, { payload }: PayloadAction<string>) => {
+			state.sessionId = payload
 		},
 		showRheaConnectionAlert: (state) => {
 			state.showRheaConnectionAlert = true

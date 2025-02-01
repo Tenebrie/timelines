@@ -27,6 +27,28 @@ export const useArticleApiCache = () => {
 		)
 	}
 
+	const upsertCachedArticle = (data: WikiArticle) => {
+		dispatch(
+			otherApi.util.updateQueryData('getArticles', { worldId }, (draft) => {
+				if (!draft.some((article) => article.id === data.id)) {
+					draft.push(data)
+					return draft
+				}
+
+				return draft.map((article) => {
+					if (article.id !== data.id) {
+						return article
+					}
+
+					return {
+						...article,
+						...data,
+					}
+				})
+			}),
+		)
+	}
+
 	const removeCachedArticles = (articles: string[]) => {
 		dispatch(
 			otherApi.util.updateQueryData('getArticles', { worldId }, (draft) => {
@@ -37,6 +59,7 @@ export const useArticleApiCache = () => {
 
 	return {
 		updateCachedArticle,
+		upsertCachedArticle,
 		removeCachedArticles,
 	}
 }

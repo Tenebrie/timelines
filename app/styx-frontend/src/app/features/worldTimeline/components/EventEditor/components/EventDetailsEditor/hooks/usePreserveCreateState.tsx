@@ -54,16 +54,7 @@ export const usePreserveCreateState = ({ mode, state, onLoaded }: Props) => {
 			return
 		}
 
-		state.setName(loadedState.name)
-		state.setDescription(loadedState.description)
-		state.setDescriptionRich(loadedState.descriptionRich)
-		state.setTimestamp(loadedState.timestamp)
-		state.setIcon(loadedState.icon)
-		state.setMentions(loadedState.mentions)
-		state.setExternalLink(loadedState.externalLink)
-		state.setCustomNameEnabled(loadedState.customNameEnabled)
-		state.setRevokedAt(loadedState.revokedAt)
-		state.setModules(loadedState.extraFields)
+		state.loadState(loadedState)
 
 		sessionStorage.removeItem(storageKey)
 		setHasLoaded(true)
