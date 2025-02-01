@@ -1,4 +1,4 @@
-import { UserAuthenticator } from '@src/auth/UserAuthenticator'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
 import { AuthorizationService } from '@src/services/AuthorizationService'
 import { getAverageColor } from 'fast-average-color-node'
 import * as fs from 'fs'

@@ -180,6 +180,7 @@ export const mockAuthenticatedUser = (server: SetupServer) =>
 	mockCheckAuthentication(server, {
 		response: {
 			authenticated: true,
+			sessionId: 'test-session-id',
 			user: {
 				id: '1111-2222-3333',
 				email: 'admin@localhost',
@@ -193,6 +194,7 @@ export const mockNonAuthenticatedUser = (server: SetupServer) =>
 	mockCheckAuthentication(server, {
 		response: {
 			authenticated: false,
+			sessionId: 'test-session-id',
 		},
 	})
 

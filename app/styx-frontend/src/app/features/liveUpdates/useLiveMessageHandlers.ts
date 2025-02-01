@@ -11,7 +11,8 @@ import {
 	CalliopeToClientMessageType,
 } from '@/ts-shared/CalliopeToClientMessage'
 
-import { ingestEvent, ingestEventDelta } from '../../utils/ingestEvent'
+import { ingestActor, ingestEvent, ingestEventDelta } from '../../utils/ingestEvent'
+import { useEventBusDispatch } from '../eventBus'
 import { worldSlice } from '../world/reducer'
 import { getWorldState } from '../world/selectors'
 import { useArticleApiCache } from '../worldWiki/api/useArticleApiCache'
@@ -22,10 +23,14 @@ export const useLiveMessageHandlers = () => {
 	const currentHandlersRef = useRef<CalliopeToClientMessageHandler | null>(null)
 
 	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState, (a, b) => a.updatedAt === b.updatedAt)
-	const { updateEvent, updateEventDelta } = worldSlice.actions
+	const { updateEvent, updateEventDelta, updateActor } = worldSlice.actions
 	const dispatch = useDispatch()
 
-	const { updateCachedArticle } = useArticleApiCache()
+	const { upsertCachedArticle } = useArticleApiCache()
+
+	const forceUpdateActor = useEventBusDispatch({ event: 'richEditor/forceUpdateActor' })
+	const forceUpdateEvent = useEventBusDispatch({ event: 'richEditor/forceUpdateEvent' })
+	const forceUpdateArticle = useEventBusDispatch({ event: 'richEditor/forceUpdateArticle' })
 
 	useEffect(() => {
 		updatedAtRef.current = currentUpdatedAt
@@ -50,7 +55,9 @@ export const useLiveMessageHandlers = () => {
 			dispatch(worldListApi.util.invalidateTags(['worldList']))
 		},
 		[CalliopeToClientMessageType.WORLD_EVENT_UPDATED]: (data) => {
-			dispatch(updateEvent(ingestEvent(JSON.parse(data.event) as GetWorldInfoApiResponse['events'][number])))
+			const event = ingestEvent(JSON.parse(data.event) as GetWorldInfoApiResponse['events'][number])
+			dispatch(updateEvent(event))
+			forceUpdateEvent({ event })
 		},
 		[CalliopeToClientMessageType.WORLD_EVENT_DELTA_UPDATED]: (data) => {
 			dispatch(
@@ -61,9 +68,15 @@ export const useLiveMessageHandlers = () => {
 				),
 			)
 		},
+		[CalliopeToClientMessageType.ACTOR_UPDATED]: (data) => {
+			const actor = ingestActor(JSON.parse(data.actor) as GetWorldInfoApiResponse['actors'][number])
+			dispatch(updateActor(actor))
+			forceUpdateActor({ actor })
+		},
 		[CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED]: (data) => {
 			const article = JSON.parse(data.article) as WikiArticle
-			updateCachedArticle(article)
+			upsertCachedArticle(article)
+			forceUpdateArticle({ articleId: article.id })
 		},
 		[CalliopeToClientMessageType.WIKI_ARTICLE_DELETED]: () => {
 			dispatch(otherApi.util.invalidateTags(['worldWiki']))

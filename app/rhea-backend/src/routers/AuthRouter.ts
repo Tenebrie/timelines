@@ -1,4 +1,5 @@
-import { AUTH_COOKIE_NAME, UserAuthenticator } from '@src/auth/UserAuthenticator'
+import { AUTH_COOKIE_NAME, UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
 import { AnnouncementService } from '@src/services/AnnouncementService'
 import {
 	BadRequestError,
@@ -17,7 +18,7 @@ import { adminUsersTag } from './AdminRouter'
 import { announcementListTag } from './AnnouncementRouter'
 import { worldDetailsTag, worldListTag } from './WorldRouter'
 
-const router = new Router()
+const router = new Router().with(SessionMiddleware)
 
 export const authTag = 'auth'
 
@@ -29,10 +30,12 @@ router.get('/api/auth', async (ctx) => {
 	})
 
 	const user = await useOptionalAuth(ctx, UserAuthenticator)
+	const sessionId = ctx.sessionId ?? crypto.randomUUID()
 
 	if (!user) {
 		return {
 			authenticated: false,
+			sessionId,
 		}
 	}
 
@@ -40,6 +43,7 @@ router.get('/api/auth', async (ctx) => {
 
 	return {
 		authenticated: true,
+		sessionId,
 		user: {
 			id: user.id,
 			email: user.email,
@@ -70,6 +74,7 @@ router.post('/api/auth', async (ctx) => {
 
 	const user = await UserService.register(body.email, body.username, body.password)
 	const token = TokenService.generateJwtToken(user)
+	const sessionId = ctx.sessionId ?? crypto.randomUUID()
 
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
@@ -83,7 +88,10 @@ router.post('/api/auth', async (ctx) => {
 		description: 'Welcome to Timelines!',
 	})
 
-	return user
+	return {
+		user,
+		sessionId,
+	}
 })
 
 router.post('/api/auth/login', async (ctx) => {
@@ -105,13 +113,17 @@ router.post('/api/auth/login', async (ctx) => {
 	}
 
 	const token = TokenService.generateJwtToken(user)
+	const sessionId = ctx.sessionId ?? crypto.randomUUID()
 
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
 	})
 
-	return user
+	return {
+		user,
+		sessionId,
+	}
 })
 
 router.post('/api/auth/logout', async (ctx) => {

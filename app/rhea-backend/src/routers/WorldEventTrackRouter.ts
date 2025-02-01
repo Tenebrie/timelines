@@ -1,4 +1,5 @@
-import { UserAuthenticator } from '@src/auth/UserAuthenticator'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
 import { AuthorizationService } from '@src/services/AuthorizationService'
 import { RedisService } from '@src/services/RedisService'
 import { WorldEventTrackService } from '@src/services/WorldEventTrackService'
@@ -19,7 +20,7 @@ import {
 import { NameStringValidator } from './validators/NameStringValidator'
 import { NonNegativeIntegerValidator } from './validators/NonNegativeIntegerValidator'
 
-const router = new Router()
+const router = new Router().with(SessionMiddleware)
 
 export const worldEventTracksTag = 'worldEventTracks'
 
@@ -74,7 +75,7 @@ router.post('/api/world/:worldId/event-track', async (ctx) => {
 		})
 	}
 
-	RedisService.notifyAboutWorldTracksUpdate({ worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldTracksUpdate(ctx, { worldId, timestamp: world.updatedAt })
 
 	return eventTrack
 })
@@ -107,7 +108,7 @@ router.patch('/api/world/:worldId/event-track/:trackId', async (ctx) => {
 		data: params,
 	})
 
-	RedisService.notifyAboutWorldTracksUpdate({ worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldTracksUpdate(ctx, { worldId, timestamp: world.updatedAt })
 
 	return eventTrack
 })
@@ -138,7 +139,7 @@ router.post('/api/world/:worldId/event-track/swap', async (ctx) => {
 		trackIdB: params.trackB,
 	})
 
-	RedisService.notifyAboutWorldTracksUpdate({ worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldTracksUpdate(ctx, { worldId, timestamp: world.updatedAt })
 })
 
 router.delete('/api/world/:worldId/event-track/:trackId', async (ctx) => {
@@ -162,7 +163,7 @@ router.delete('/api/world/:worldId/event-track/:trackId', async (ctx) => {
 		trackId,
 	})
 
-	RedisService.notifyAboutWorldTracksUpdate({ worldId, timestamp: world.updatedAt })
+	RedisService.notifyAboutWorldTracksUpdate(ctx, { worldId, timestamp: world.updatedAt })
 })
 
 export const WorldEventTrackRouter = router

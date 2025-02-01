@@ -33,7 +33,7 @@ export const Login = () => {
 	const { navigateTo } = useAppRouter()
 	const [login, { isLoading }] = usePostLoginMutation()
 
-	const { setUser } = authSlice.actions
+	const { setUser, setSessionId } = authSlice.actions
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -63,7 +63,8 @@ export const Login = () => {
 			return
 		}
 		clearError()
-		dispatch(setUser(response))
+		dispatch(setUser(response.user))
+		dispatch(setSessionId(response.sessionId))
 		navigateTo({ target: appRoutes.home })
 	}
 

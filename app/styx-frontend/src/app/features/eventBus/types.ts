@@ -2,6 +2,8 @@ import type { useWorldTimelineRouter } from '@/router/routes/featureRoutes/world
 import { useWorldWikiRouter } from '@/router/routes/featureRoutes/worldWikiRoutes'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
+import { ActorDetails, WorldEvent } from '../worldTimeline/types'
+
 export type AllowedEvents =
 	| 'scrollTimelineLeft'
 	| 'scrollTimelineRight'
@@ -14,6 +16,9 @@ export type AllowedEvents =
 	| 'richEditor/keyDown'
 	| 'navigate/worldTimeline'
 	| 'navigate/articleDetails'
+	| 'richEditor/forceUpdateEvent'
+	| 'richEditor/forceUpdateActor'
+	| 'richEditor/forceUpdateArticle'
 
 export type EventParams = {
 	['scrollTimelineLeft']: void
@@ -33,4 +38,13 @@ export type EventParams = {
 	}
 	['navigate/worldTimeline']: Parameters<ReturnType<typeof useWorldTimelineRouter>['navigateTo']>[0]
 	['navigate/articleDetails']: Parameters<ReturnType<typeof useWorldWikiRouter>['navigateTo']>[0]
+	['richEditor/forceUpdateEvent']: {
+		event: WorldEvent
+	}
+	['richEditor/forceUpdateActor']: {
+		actor: ActorDetails
+	}
+	['richEditor/forceUpdateArticle']: {
+		articleId: string
+	}
 }

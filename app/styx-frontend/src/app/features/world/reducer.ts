@@ -4,7 +4,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
 import { QueryParams } from '@/router/routes/QueryParams'
 
-import { ingestEvent } from '../../utils/ingestEvent'
+import { ingestActor, ingestEvent } from '../../utils/ingestEvent'
 import {
 	ActorDetails,
 	MarkerType,
@@ -75,7 +75,7 @@ export const worldSlice = createSlice({
 			state.id = world.id
 			state.name = world.name
 			state.description = world.description
-			state.actors = [...world.actors].sort((a, b) => a.name.localeCompare(b.name))
+			state.actors = [...world.actors].sort((a, b) => a.name.localeCompare(b.name)).map((a) => ingestActor(a))
 			state.events = world.events.map((e) => ingestEvent(e))
 			state.calendar = world.calendar
 			state.timeOrigin = world.timeOrigin
@@ -119,6 +119,18 @@ export const worldSlice = createSlice({
 				...payload,
 			}
 			event.deltaStates.splice(event.deltaStates.indexOf(delta), 1, newDelta)
+		},
+		updateActor: (state, { payload }: PayloadAction<Pick<ActorDetails, 'id'> & Partial<ActorDetails>>) => {
+			const actor = state.actors.find((e) => e.id === payload.id)
+			if (!actor) {
+				return
+			}
+
+			const newActor = {
+				...actor,
+				...payload,
+			}
+			state.actors.splice(state.actors.indexOf(actor), 1, newActor)
 		},
 		addEvent: (state, { payload }: PayloadAction<WorldEvent>) => {
 			state.events = state.events.concat(payload)

@@ -16,6 +16,7 @@ import { StyledContainer, StyledEditorContent } from './styles'
 
 type Props = {
 	value: string
+	softKey: string | number
 	onChange: (params: OnChangeParams) => void
 	onBlur?: () => void
 	allowReadMode?: boolean
@@ -28,7 +29,7 @@ export type OnChangeParams = {
 	mentions: MentionDetails[]
 }
 
-export const RichTextEditor = ({ value, onChange, onBlur, allowReadMode }: Props) => {
+export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode }: Props) => {
 	const theme = useCustomTheme()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 	const { readModeEnabled } = useSelector(getWikiPreferences)
@@ -76,9 +77,28 @@ export const RichTextEditor = ({ value, onChange, onBlur, allowReadMode }: Props
 		editable: !isReadMode,
 		extensions: EditorExtensions,
 		onUpdate({ editor }) {
+			if (editor.getHTML() === value) {
+				return
+			}
 			onChangeThrottled.current(editor)
 		},
 	})
+
+	const currentValue = useRef(value)
+
+	useEffect(() => {
+		currentValue.current = value
+	}, [value])
+
+	useEffect(() => {
+		if (!editor) {
+			return
+		}
+		const from = editor.state.selection.from
+		const to = editor.state.selection.to
+		editor.commands.setContent(currentValue.current)
+		editor.commands.setTextSelection({ from, to })
+	}, [editor, softKey])
 
 	useEffect(() => {
 		editor?.setEditable(!isReadMode)

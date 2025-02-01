@@ -7,58 +7,79 @@ import {
 
 import { WebsocketService } from './WebsocketService'
 
+/**
+ * Relays a message to all sockets of a user
+ * The `userId` param is provided by Rhea, indicating the user to relay the message to.
+ * The `messageSourceSessionId` param indicates the source session of the request (websocket connection), which should be ignored.
+ */
 const relayMessageToUserSockets = (
-	message: CalliopeToClientMessage & { data: CalliopeToClientMessage['data'] & { userId: string } },
+	message: CalliopeToClientMessage & {
+		data: CalliopeToClientMessage['data'] & { userId: string }
+		messageSourceSessionId: string | undefined
+	},
 ) => {
 	const clients = WebsocketService.findClientsByUserId(message.data.userId)
-	clients.forEach((client) => client.sendMessage(message))
+	const sessionIdToIgnore = message.messageSourceSessionId
+	clients
+		.filter((client) => !sessionIdToIgnore || client.sessionId !== sessionIdToIgnore)
+		.forEach((client) => client.sendMessage(message))
 }
 
 const relayMessageToWorldSockets = (
-	message: CalliopeToClientMessage & { data: CalliopeToClientMessage['data'] & { worldId: string } },
+	message: CalliopeToClientMessage & {
+		data: CalliopeToClientMessage['data'] & { worldId: string }
+		messageSourceSessionId: string | undefined
+	},
 ) => {
 	const clients = WebsocketService.findClientsByWorldId(message.data.worldId)
-	clients.forEach((client) => client.sendMessage(message))
+	const sessionIdToIgnore = message.messageSourceSessionId
+	clients
+		.filter((client) => !sessionIdToIgnore || client.sessionId !== sessionIdToIgnore)
+		.forEach((client) => client.sendMessage(message))
 }
 
 const handlers: RheaToCalliopeMessageHandlers = {
-	[RheaToCalliopeMessageType.ANNOUNCEMENT]: (data) => {
+	[RheaToCalliopeMessageType.ANNOUNCEMENT]: (ctx) => {
 		relayMessageToUserSockets({
 			type: CalliopeToClientMessageType.ANNOUNCEMENT,
-			data,
+			...ctx,
 		})
 	},
 
-	[RheaToCalliopeMessageType.WORLD_SHARED]: (data) => {
-		relayMessageToUserSockets({ type: CalliopeToClientMessageType.WORLD_SHARED, data })
+	[RheaToCalliopeMessageType.WORLD_SHARED]: (ctx) => {
+		relayMessageToUserSockets({ type: CalliopeToClientMessageType.WORLD_SHARED, ...ctx })
 	},
 
-	[RheaToCalliopeMessageType.WORLD_UNSHARED]: (data) => {
-		relayMessageToUserSockets({ type: CalliopeToClientMessageType.WORLD_UNSHARED, data })
+	[RheaToCalliopeMessageType.WORLD_UNSHARED]: (ctx) => {
+		relayMessageToUserSockets({ type: CalliopeToClientMessageType.WORLD_UNSHARED, ...ctx })
 	},
 
-	[RheaToCalliopeMessageType.WORLD_UPDATED]: (data) => {
-		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_UPDATED, data })
+	[RheaToCalliopeMessageType.WORLD_UPDATED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_UPDATED, ...ctx })
 	},
 
-	[RheaToCalliopeMessageType.WORLD_EVENT_UPDATED]: (data) => {
-		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_EVENT_UPDATED, data })
+	[RheaToCalliopeMessageType.WORLD_EVENT_UPDATED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_EVENT_UPDATED, ...ctx })
 	},
 
-	[RheaToCalliopeMessageType.WORLD_EVENT_DELTA_UPDATED]: (data) => {
-		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_EVENT_DELTA_UPDATED, data })
+	[RheaToCalliopeMessageType.WORLD_EVENT_DELTA_UPDATED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_EVENT_DELTA_UPDATED, ...ctx })
 	},
 
-	[RheaToCalliopeMessageType.WORLD_TRACKS_UPDATED]: (data) => {
-		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_TRACKS_UPDATED, data })
+	[RheaToCalliopeMessageType.WORLD_TRACKS_UPDATED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WORLD_TRACKS_UPDATED, ...ctx })
 	},
 
-	[RheaToCalliopeMessageType.WIKI_ARTICLE_UPDATED]: (data) => {
-		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED, data })
+	[RheaToCalliopeMessageType.ACTOR_UPDATED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.ACTOR_UPDATED, ...ctx })
 	},
 
-	[RheaToCalliopeMessageType.WIKI_ARTICLE_DELETED]: (data) => {
-		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_ARTICLE_DELETED, data })
+	[RheaToCalliopeMessageType.WIKI_ARTICLE_UPDATED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED, ...ctx })
+	},
+
+	[RheaToCalliopeMessageType.WIKI_ARTICLE_DELETED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_ARTICLE_DELETED, ...ctx })
 	},
 }
 
@@ -67,7 +88,7 @@ export const RheaMessageHandlerService = {
 		const handler = handlers[message.type]
 		if (handler) {
 			// TODO: The data is guaranteed to be correct, but fix typings
-			handler(message.data as any)
+			handler({ data: message.data as any, messageSourceSessionId: message.messageSourceSessionId })
 		}
 	},
 }

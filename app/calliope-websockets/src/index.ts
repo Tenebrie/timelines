@@ -10,24 +10,27 @@ import { initRedisConnection } from './services/RedisService'
 import { TokenService } from './services/TokenService'
 import { WebsocketService } from './services/WebsocketService'
 import { ClientToCalliopeMessage } from './ts-shared/ClientToCalliopeMessage'
+import { AUTH_COOKIE_NAME } from './ts-shared/const/constants'
 
 const app = websocketify(new Koa())
 
-const AUTH_COOKIE_NAME = 'user-jwt-token'
-
 app.ws.use(
-	route.all('/live', function (ctx: websocketify.MiddlewareContext<Koa.DefaultState>) {
+	route.all('/live/:sessionId', function (ctx: websocketify.MiddlewareContext<Koa.DefaultState>) {
 		const authCookie = ctx.cookies.get(AUTH_COOKIE_NAME)
 		if (!authCookie) {
 			throw new Error('No cookie provided')
 		}
 
 		const { id: userId } = TokenService.decodeJwtToken(authCookie)
+		const sessionId = ctx.path.split('/')[2]
+		if (!sessionId) {
+			throw new Error('No session id')
+		}
 
 		ctx.websocket.on('message', (rawMessage) => {
 			try {
 				const message = JSON.parse(rawMessage.toString()) as ClientToCalliopeMessage
-				ClientMessageHandlerService.handleMessage(message, userId, ctx.websocket)
+				ClientMessageHandlerService.handleMessage(message, userId, sessionId, ctx.websocket)
 			} catch (e) {
 				console.error('Error handling message', e)
 			}
