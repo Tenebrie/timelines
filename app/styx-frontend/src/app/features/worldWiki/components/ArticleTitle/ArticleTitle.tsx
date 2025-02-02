@@ -48,7 +48,14 @@ export const ArticleTitle = () => {
 	}
 
 	return (
-		<Stack gap={1} direction="row" alignContent="center" width="100%" sx={{ height: '32px' }}>
+		<Stack
+			gap={1}
+			direction="row"
+			alignContent="center"
+			width="100%"
+			sx={{ height: '32px' }}
+			data-testid="ArticleTitle"
+		>
 			{!editing && (
 				<Stack direction="row" justifyContent="space-between" width="100%">
 					<Button
@@ -66,6 +73,7 @@ export const ArticleTitle = () => {
 					value={name}
 					onChange={(event) => setName(event.target.value)}
 					onBlur={() => applyChanges()}
+					role="textbox"
 					sx={{
 						width: '100%',
 						marginBottom: '-9px',

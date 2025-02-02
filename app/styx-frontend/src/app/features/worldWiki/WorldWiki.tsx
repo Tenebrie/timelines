@@ -40,6 +40,7 @@ export const WorldWiki = () => {
 						overflowY: 'auto',
 					}}
 					elevation={2}
+					data-testid="ArticleListWithHeader"
 				>
 					<Stack gap={1}>
 						<Stack gap={1}>

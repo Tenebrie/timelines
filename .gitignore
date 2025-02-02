@@ -10,6 +10,8 @@ node_modules
 # testing
 coverage
 
+e2e/test-report
+
 # production
 build
 dist

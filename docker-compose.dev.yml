@@ -1,9 +1,10 @@
-version: "3.1"
 services:
     gatekeeper:
         build:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile
+        networks:
+            - dev_network
     styx:
         build:
             context: ./
@@ -17,6 +18,8 @@ services:
             - ./app/ts-shared/src:/app/ts-shared/src:cached
         ports:
             - 8080:8080
+        networks:
+            - dev_network
         command: yarn start
         tty: true
         restart: on-failure
@@ -34,6 +37,8 @@ services:
             - ./app/ts-shared/src:/app/ts-shared/src:cached
         ports:
             - 3000:3000
+        networks:
+            - dev_network
         command: yarn start
         tty: true
         restart: on-failure
@@ -49,6 +54,8 @@ services:
             - ./app/ts-shared/src:/app/ts-shared/src:cached
         ports:
             - 3001:3001
+        networks:
+            - dev_network
         command: yarn start
         tty: true
         restart: on-failure
@@ -62,9 +69,17 @@ services:
         volumes:
             - rhea-db:/var/lib/postgresql/data/:cached
         restart: on-failure
+        networks:
+            - dev_network
     redis:
         ports:
-          - "6379:6379"
+            - "6379:6379"
+        networks:
+            - dev_network
 volumes:
     redis:
     rhea-db:
+
+networks:
+    dev_network:
+        name: timelines_dev_network

@@ -1,0 +1,9 @@
+services:
+  playwright:
+    build: .
+    volumes:
+      - .:/app  # Mount the current directory into the container for live changes
+    user: "${MY_UID}:${MY_GID}"
+    environment:
+      - TARGET_ENV
+    command: npx playwright test

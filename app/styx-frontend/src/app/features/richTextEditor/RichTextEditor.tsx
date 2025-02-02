@@ -162,6 +162,7 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 					border: isReadMode ? '1px solid transparent' : '',
 				},
 			}}
+			data-testid="RichTextEditor"
 			$theme={theme}
 			onBlur={() => {
 				onBlur?.()

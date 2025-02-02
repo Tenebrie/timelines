@@ -8,6 +8,7 @@ import {
 	Router,
 	UnauthorizedError,
 	useApiEndpoint,
+	useAuth,
 	useOptionalAuth,
 	useRequestBody,
 } from 'moonflower'
@@ -133,6 +134,23 @@ router.post('/api/auth/logout', async (ctx) => {
 		description: "Clears the current user's auth cookie",
 		tags: [authTag, worldListTag, worldDetailsTag, announcementListTag],
 	})
+
+	ctx.cookies.set(AUTH_COOKIE_NAME, '', {
+		path: '/',
+		expires: new Date(),
+	})
+})
+
+router.delete('/api/auth', async (ctx) => {
+	useApiEndpoint({
+		name: 'deleteAccount',
+		summary: 'Account deletion endpoint',
+		description: 'Deletes the current user account',
+		tags: [authTag, worldListTag, worldDetailsTag, announcementListTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+	await UserService.deleteUser(user.id)
 
 	ctx.cookies.set(AUTH_COOKIE_NAME, '', {
 		path: '/',

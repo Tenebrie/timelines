@@ -7,7 +7,8 @@
 		"app/styx-frontend",
 		"app/rhea-backend",
 		"app/calliope-websockets",
-		"app/ts-shared"
+		"app/ts-shared",
+		"e2e"
 	],
 	"scripts": {
 		"postinstall": "subpkg install && husky",
@@ -25,9 +26,11 @@
 		"prisma:generate": "(cd app/rhea-backend && yarn prisma:generate)",
 		"prisma:migrate:dev": "(cd app/rhea-backend && yarn prisma:migrate:dev)",
 		"prisma:migrate:create": "(cd app/rhea-backend && yarn prisma:migrate:create)",
-		"test": "(cd app/styx-frontend && yarn test run) && (cd app/rhea-backend && yarn test)",
+		"test": "yarn test:styx && yarn test:rhea && yarn test:e2e",
 		"test:styx": "(cd app/styx-frontend && yarn test run)",
 		"test:rhea": "(cd app/rhea-backend && yarn test)",
+		"test:e2e": "(cd e2e && yarn test)",
+		"test:e2e:run": "(cd e2e && yarn test:local)",
 		"build:styx": "(cd app/styx-frontend && yarn build)",
 		"build:rhea": "(cd app/rhea-backend && yarn build)",
 		"build:calliope": "(cd app/calliope-websockets && yarn build)"

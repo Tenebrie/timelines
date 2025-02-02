@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { OnChangeParams } from '@/app/features/richTextEditor/RichTextEditor'
@@ -21,7 +21,6 @@ export const ArticleDetails = () => {
 	const [key, setKey] = useState(0)
 
 	const articleToSave = useRef<WikiArticleToSave | null>(null)
-	const skipNextAutosave = useRef(false)
 
 	const { autosave, manualSave } = useAutosave({
 		onSave: () => {
@@ -40,8 +39,7 @@ export const ArticleDetails = () => {
 	})
 
 	const onChange = (params: OnChangeParams) => {
-		if (!article || skipNextAutosave.current) {
-			skipNextAutosave.current = false
+		if (!article) {
 			return
 		}
 		articleToSave.current = {
@@ -55,10 +53,6 @@ export const ArticleDetails = () => {
 		autosave()
 	}
 
-	useEffect(() => {
-		skipNextAutosave.current = true
-	}, [article?.id])
-
 	useEventBusSubscribe({
 		event: 'richEditor/forceUpdateArticle',
 		condition: (data) => data.articleId === article?.id,
@@ -71,6 +65,7 @@ export const ArticleDetails = () => {
 
 	return (
 		<RichTextEditorWithFallback
+			key={article.id}
 			softKey={`${article.id}-${key}`}
 			value={article.contentRich}
 			onChange={onChange}

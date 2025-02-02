@@ -57,4 +57,12 @@ export const UserService = {
 		}
 		return null
 	},
+
+	deleteUser: async (userId: string) => {
+		return getPrismaClient().user.delete({
+			where: {
+				id: userId,
+			},
+		})
+	},
 }

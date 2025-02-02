@@ -88,7 +88,7 @@ export const RheaMessageHandlerService = {
 		const handler = handlers[message.type]
 		if (handler) {
 			// TODO: The data is guaranteed to be correct, but fix typings
-			handler({ data: message.data as any, messageSourceSessionId: message.messageSourceSessionId })
+			handler({ data: message.data as never, messageSourceSessionId: message.messageSourceSessionId })
 		}
 	},
 }
