@@ -63,7 +63,7 @@ test.describe('Wiki', () => {
 			// Add mention
 			await textbox.fill('Hello @TestActor')
 			await page.keyboard.press('Enter')
-			await page.waitForTimeout(100)
+			await page.waitForTimeout(1000)
 
 			// Switch to article B
 			await page.getByText('Second article').click()
@@ -73,7 +73,7 @@ test.describe('Wiki', () => {
 			// Add mention
 			await textbox.fill('Also hi @UnrelatedActor')
 			await page.keyboard.press('Enter')
-			await page.waitForTimeout(100)
+			await page.waitForTimeout(1000)
 
 			// Switch back to article A
 			await page.getByText('First article').click()

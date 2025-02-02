@@ -115,6 +115,7 @@ jobs:
           node-version: 20.x
           cache: 'yarn'
       - name: Install dependencies
+        working-directory: e2e
         run: yarn
       - name: Build test docker container
         working-directory: e2e
