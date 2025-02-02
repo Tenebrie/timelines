@@ -70,10 +70,13 @@ describe('<Register />', () => {
 		it('sends registration request', async () => {
 			const { hasBeenCalled } = mockPostRegister(server, {
 				response: {
-					id: '1111-2222-3333',
-					email: 'admin@localhost',
-					username: 'admin',
-					level: 'Free',
+					user: {
+						id: '1111-2222-3333',
+						email: 'admin@localhost',
+						username: 'admin',
+						level: 'Free',
+					},
+					sessionId: 'sessionId',
 				},
 			})
 
@@ -92,10 +95,13 @@ describe('<Register />', () => {
 			mockAuthenticatedUser(server)
 			mockPostRegister(server, {
 				response: {
-					id: '1111-2222-3333',
-					email: 'admin@localhost',
-					username: 'admin',
-					level: 'Admin',
+					user: {
+						id: '1111-2222-3333',
+						email: 'admin@localhost',
+						username: 'admin',
+						level: 'Admin',
+					},
+					sessionId: 'sessionId',
 				},
 			})
 

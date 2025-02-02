@@ -3,6 +3,8 @@ import '@testing-library/jest-dom'
 import { configure } from '@testing-library/dom'
 import nodeFetch, { Request, Response } from 'node-fetch'
 
+console.debug = () => {}
+
 vi.mock('./app/features/liveUpdates/useLiveUpdates', () => ({
 	useLiveUpdates: () => {
 		/* Empty */
