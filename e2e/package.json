@@ -5,13 +5,14 @@
 	"description": "",
 	"scripts": {
 		"lint": "eslint ./",
-		"test": "yarn test:build && yarn test:local",
-		"test:build": "docker compose build playwright",
+		"build": "docker compose build playwright",
+		"test": "yarn build && yarn test:local",
 		"test:report": "serve ./test-report/html --listen 3605",
 		"test:local": "TARGET_ENV=local MY_UID=\"$(id -u)\" MY_GID=\"$(id -g)\" docker compose -f docker-compose.yml -f docker-compose.local.yml run --service-ports --rm playwright",
 		"test:staging": "TARGET_ENV=staging MY_UID=\"$(id -u)\" MY_GID=\"$(id -g)\" docker compose run --rm playwright",
 		"test:prod": "TARGET_ENV=prod MY_UID=\"$(id -u)\" MY_GID=\"$(id -g)\" docker compose run --rm playwright",
-		"test:ui": "TARGET_ENV=local_ui playwright test --ui"
+		"test:ui": "TARGET_ENV=local_ui playwright test --ui",
+		"test:staging:ui": "TARGET_ENV=staging playwright test --ui"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.50.1",
