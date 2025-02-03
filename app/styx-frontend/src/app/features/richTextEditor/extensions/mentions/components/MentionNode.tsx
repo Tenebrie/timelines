@@ -84,13 +84,20 @@ export const MentionNode = Node.create({
 	},
 
 	addNodeView() {
-		return ({ node }) => {
+		return ({ node: initialNode }) => {
 			const dom = document.createElement('span')
 
 			let root: Root | null = null
 
 			setTimeout(() => {
 				root = createRoot(dom)
+				rerender(initialNode)
+			})
+
+			const rerender = (node: ProseMirrorNode) => {
+				if (!root) {
+					return
+				}
 				const actorId = node.attrs.componentProps.actor as string | undefined
 				const eventId = node.attrs.componentProps.event as string | undefined
 				const articleId = node.attrs.componentProps.article as string | undefined
@@ -103,11 +110,14 @@ export const MentionNode = Node.create({
 						</CustomThemeProvider>
 					</ReduxProvider>,
 				)
-			})
+			}
 
 			return {
 				dom,
-				update: () => true,
+				update: (node) => {
+					rerender(node)
+					return true
+				},
 				destroy: () => {
 					setTimeout(() => {
 						root?.unmount()
