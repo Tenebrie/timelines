@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker exec -it $(docker ps -aqf "name=timelines-styx-1") sh
+docker exec -it $(docker ps -aqf "name=timelines[-_]styx[-_]1") sh
