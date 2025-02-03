@@ -37,7 +37,7 @@ export const ClientMessageHandlerService = {
 		const handler = handlers[message.type]
 		if (handler) {
 			// TODO: The data is guaranteed to be correct, but fix typings)
-			handler(message.data as any, userId, socket, sessionId)
+			handler(message.data as never, userId, socket, sessionId)
 		}
 	},
 }

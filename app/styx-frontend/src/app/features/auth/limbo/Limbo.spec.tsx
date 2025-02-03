@@ -1,6 +1,6 @@
 import { waitFor } from '@testing-library/react'
 
-import { mockCheckAuthentication } from '@/api/rheaApi.mock'
+import { mockCheckAuthentication, mockUserModel } from '@/api/rheaApi.mock'
 import { renderWithRouter } from '@/jest/renderWithProviders'
 import { setupTestServer } from '@/jest/setupTestServer'
 import { appRoutes } from '@/router/routes/appRoutes'
@@ -13,6 +13,8 @@ describe('<Limbo />', () => {
 			mockCheckAuthentication(server, {
 				response: {
 					authenticated: false,
+					user: mockUserModel(),
+					sessionId: 'sessionId',
 				},
 			})
 
@@ -24,6 +26,8 @@ describe('<Limbo />', () => {
 			mockCheckAuthentication(server, {
 				response: {
 					authenticated: true,
+					user: mockUserModel(),
+					sessionId: 'sessionId',
 				},
 			})
 

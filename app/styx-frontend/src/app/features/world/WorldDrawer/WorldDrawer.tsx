@@ -50,14 +50,14 @@ export const WorldDrawer = () => {
 		})
 	}
 
-	const onActorsClick = () => {
-		navigateTo({
-			target: worldRoutes.actors,
-			args: {
-				worldId,
-			},
-		})
-	}
+	// const onActorsClick = () => {
+	// 	navigateTo({
+	// 		target: worldRoutes.actors,
+	// 		args: {
+	// 			worldId,
+	// 		},
+	// 	})
+	// }
 
 	const onSettingsClick = () => {
 		navigateTo({

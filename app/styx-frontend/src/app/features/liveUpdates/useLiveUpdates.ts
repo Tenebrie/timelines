@@ -57,11 +57,11 @@ export const useLiveUpdates = () => {
 				return
 			}
 
-			console.info('[ws] Attempting connection...')
-			clearHeartbeat()
-
 			const protocol = window.location.protocol === 'http:' ? 'ws:' : 'wss:'
 			const socket = new WebSocket(`${protocol}//${window.location.host}/live/${sessionId}`)
+
+			console.info(`[ws] Attempting connection to ${socket.url}...`)
+			clearHeartbeat()
 
 			heartbeatInterval.current = window.setInterval(() => {
 				if (currentWebsocket.current?.readyState !== WebSocket.OPEN) {
@@ -88,6 +88,7 @@ export const useLiveUpdates = () => {
 
 			socket.onmessage = function (event) {
 				const message = JSON.parse(event.data) as CalliopeToClientMessage
+				console.debug('[ws] Received message:', message)
 				// TODO: The data is guaranteed to be correct, but fix typings
 				if (messageHandlers.current) {
 					messageHandlers.current[message.type](message.data as never)

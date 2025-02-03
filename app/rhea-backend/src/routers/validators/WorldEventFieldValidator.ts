@@ -11,7 +11,7 @@ export const WorldEventFieldValidator = RequiredParam({
 		if (!Array.isArray(parsedJson)) {
 			return false
 		}
-		const inputArray = parsedJson as any[]
+		const inputArray = parsedJson as unknown[]
 		return inputArray.every((value) => keysOf(WorldEventField).some((enumEntry) => enumEntry === value))
 	},
 	parse: (v) => JSON.parse(v ?? '') as WorldEventField[],

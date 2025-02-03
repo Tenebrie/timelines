@@ -1,5 +1,5 @@
+import ListItemButton from '@mui/material/ListItemButton'
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
 import { useMemo } from 'react'
 
 import { useListArticles } from '../../api/useListArticles'
@@ -18,7 +18,7 @@ export const ArticleList = () => {
 			{sortedArticles.length > 0 ? (
 				sortedArticles.map((article) => <ArticleListItem key={article.id} article={article} />)
 			) : (
-				<Typography variant="body1">No articles</Typography>
+				<ListItemButton>Nothing has been created yet!</ListItemButton>
 			)}
 		</Stack>
 	)

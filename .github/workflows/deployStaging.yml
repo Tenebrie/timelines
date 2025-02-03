@@ -102,3 +102,24 @@ jobs:
 
       - name: Run migrations
         run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && git pull && ./scripts/stack-migrate.sh"
+
+  run-e2e:
+    name: Run E2E Tests
+    runs-on: ubuntu-latest
+    needs: [deploy-staging]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'yarn'
+      - name: Install dependencies
+        working-directory: e2e
+        run: yarn
+      - name: Build test docker container
+        working-directory: e2e
+        run: yarn build
+      - name: Run tests against staging
+        working-directory: e2e
+        run: yarn test:staging

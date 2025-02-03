@@ -35,11 +35,17 @@ export const useAuthCheck = (): ReturnType => {
 		}
 	}, [data, dispatch, setSessionId, setUser])
 
-	if (user || (data && data.authenticated) || isLoading) {
+	if (isLoading) {
+		console.debug('Auth check successful: User details loading')
+		return { success: true, target: '' }
+	}
+
+	if (user || (data && data.authenticated)) {
 		return { success: true, target: '' }
 	}
 
 	if (window.location.pathname.startsWith('/world') && (!isWorldLoaded || accessMode !== 'Private')) {
+		console.debug('Auth check successful: World is public or still loading')
 		return { success: true, target: '' }
 	}
 
@@ -48,12 +54,14 @@ export const useAuthCheck = (): ReturnType => {
 		window.location.pathname === appRoutes.login ||
 		window.location.pathname === appRoutes.register
 	) {
+		console.debug('Auth check successful: Public route')
 		return {
 			success: true,
 			target: '',
 		}
 	}
 
+	console.debug('Redirecting to login')
 	return {
 		success: false,
 		target: appRoutes.login,

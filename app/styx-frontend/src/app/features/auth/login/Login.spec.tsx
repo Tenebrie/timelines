@@ -68,10 +68,13 @@ describe('<Login />', () => {
 		it('sends login request', async () => {
 			const { hasBeenCalled } = mockPostLogin(server, {
 				response: {
-					id: '1111-2222-3333',
-					email: 'admin@localhost',
-					username: 'admin',
-					level: 'Free',
+					user: {
+						id: '1111-2222-3333',
+						email: 'admin@localhost',
+						username: 'admin',
+						level: 'Free',
+					},
+					sessionId: 'sessionId',
 				},
 			})
 			mockGetWorlds(server, {
@@ -95,10 +98,13 @@ describe('<Login />', () => {
 			mockAuthenticatedUser(server)
 			mockPostLogin(server, {
 				response: {
-					id: '1111-2222-3333',
-					email: 'admin@localhost',
-					username: 'admin',
-					level: 'Admin',
+					user: {
+						id: '1111-2222-3333',
+						email: 'admin@localhost',
+						username: 'admin',
+						level: 'Free',
+					},
+					sessionId: 'sessionId',
 				},
 			})
 			mockGetWorlds(server, {

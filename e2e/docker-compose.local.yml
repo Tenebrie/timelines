@@ -1,0 +1,11 @@
+services:
+  playwright:
+    ports:
+      - "9323:9323"
+    networks:
+      - dev_network
+
+networks:
+  dev_network:
+    name: timelines_dev_network
+    external: true
