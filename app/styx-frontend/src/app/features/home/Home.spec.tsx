@@ -1,6 +1,11 @@
 import { waitFor } from '@testing-library/react'
 
-import { mockAuthenticatedUser, mockCheckAuthentication, mockGetWorlds } from '@/api/rheaApi.mock'
+import {
+	mockAuthenticatedUser,
+	mockCheckAuthentication,
+	mockGetWorlds,
+	mockUserModel,
+} from '@/api/rheaApi.mock'
 import { renderWithRouter } from '@/jest/renderWithProviders'
 import { setupTestServer } from '@/jest/setupTestServer'
 import { appRoutes } from '@/router/routes/appRoutes'
@@ -13,6 +18,8 @@ describe('<Home />', () => {
 			mockCheckAuthentication(server, {
 				response: {
 					authenticated: false,
+					sessionId: 'sessionId',
+					user: mockUserModel(),
 				},
 			})
 			mockGetWorlds(server, {
