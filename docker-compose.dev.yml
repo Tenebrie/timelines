@@ -11,7 +11,7 @@ services:
             dockerfile: ./app/styx-frontend/Dockerfile
         environment:
             NODE_ENV: development
-            DANGEROUSLY_DISABLE_HOST_CHECK: true # For React dev server to work behind Gatekeeper
+            DANGEROUSLY_DISABLE_HOST_CHECK: "true" # For React dev server to work behind Gatekeeper
         volumes:
             - ./app/styx-frontend/src:/app/styx/src:cached
             - ./app/styx-frontend/public:/app/styx/public:cached
