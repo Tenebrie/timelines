@@ -85,6 +85,50 @@ test.describe('Wiki', () => {
 			await expect(textbox).toBeVisible()
 			await expect(textbox).toHaveText('Also hi UnrelatedActor')
 		})
+
+		test('add mentions -> switch article -> switch back -> edit -> mentions stay the same', async ({
+			page,
+		}) => {
+			// Prepare world
+			const world = await createWorld(page)
+			await createWikiArticle(page, world, { name: 'First article' })
+			await createWikiArticle(page, world, { name: 'Second article' })
+			await navigateToWiki(page, world)
+
+			// Navigate to article A
+			await page.getByText('First article').click()
+			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
+			await expect(textbox).toBeVisible()
+			await expect(textbox).toHaveText('')
+
+			// Add mentions
+			await textbox.fill('Hello @TestActor')
+			await page.keyboard.press('Enter')
+			await page.waitForTimeout(1000)
+			await textbox.pressSequentially('\nHello @UnrelatedActor')
+			await page.keyboard.press('Enter')
+			await page.waitForTimeout(1000)
+
+			// Switch to article B
+			await page.getByText('Second article').click()
+			await expect(textbox).toBeVisible()
+			await expect(textbox).toHaveText('')
+			await page.waitForTimeout(100)
+
+			// Switch back to article A
+			await page.getByTestId('ArticleListWithHeader').getByText('First article').click()
+			await expect(textbox).toBeVisible()
+			await expect(textbox).toHaveText('Hello TestActorHello UnrelatedActor')
+
+			// Edit article
+			await textbox.focus()
+			await textbox.press('Home')
+			await page.waitForTimeout(1000)
+			await textbox.press('ArrowUp')
+			await textbox.press('Enter')
+			await page.waitForTimeout(100)
+			await expect(textbox).toHaveText('Hello TestActorHello UnrelatedActor')
+		})
 	})
 
 	test.describe('shortcuts', () => {

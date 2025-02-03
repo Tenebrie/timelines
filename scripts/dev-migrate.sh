@@ -4,8 +4,8 @@ cd "${0%/*}"
 cd ..
 
 (cd app/rhea-backend && yarn prisma:migrate:dev)
-docker exec -it $(docker ps -aqf "name=^timelines-rhea-[0-9]+") yarn prisma generate
-docker exec -it $(docker ps -aqf "name=^timelines-rhea-[0-9]+") touch src/index.ts
+docker exec -it $(docker ps -aqf "name=^timelines[-_]rhea[-_][0-9]+") yarn prisma generate
+docker exec -it $(docker ps -aqf "name=^timelines[-_]rhea[-_][0-9]+") touch src/index.ts
 
 echo "Waiting for Rhea to get up..."
 sleep 1
