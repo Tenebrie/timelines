@@ -85,14 +85,8 @@ export const MentionNode = Node.create({
 
 	addNodeView() {
 		return ({ node: initialNode }) => {
-			const dom = document.createElement('span')
-
 			let root: Root | null = null
-
-			setTimeout(() => {
-				root = createRoot(dom)
-				rerender(initialNode)
-			})
+			const dom = document.createElement('span')
 
 			const rerender = (node: ProseMirrorNode) => {
 				if (!root) {
@@ -111,6 +105,11 @@ export const MentionNode = Node.create({
 					</ReduxProvider>,
 				)
 			}
+
+			setTimeout(() => {
+				root = createRoot(dom!)
+				rerender(initialNode)
+			})
 
 			return {
 				dom,

@@ -65,7 +65,6 @@ export const ArticleDetails = () => {
 
 	return (
 		<RichTextEditorWithFallback
-			key={article.id}
 			softKey={`${article.id}-${key}`}
 			value={article.contentRich}
 			onChange={onChange}
