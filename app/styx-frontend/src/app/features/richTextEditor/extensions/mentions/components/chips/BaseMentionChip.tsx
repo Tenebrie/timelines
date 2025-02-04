@@ -47,6 +47,7 @@ export const BaseMentionChip = ({ type, label, color, onClick }: Props) => {
 				}}
 				onClick={() => onClick()}
 				style={{
+					animation: 'none',
 					paddingLeft: iconSlotSize,
 					paddingRight: '4px',
 					marginLeft: '1px',
@@ -60,15 +61,9 @@ export const BaseMentionChip = ({ type, label, color, onClick }: Props) => {
 				}}
 				label={label}
 			/>
-			{type === 'Actor' && (
-				<Person sx={{ position: 'absolute', left: -3, top: 1, fontSize: 19, color: iconColor }} />
-			)}
-			{type === 'Event' && (
-				<Event sx={{ position: 'absolute', left: -2, top: 2, fontSize: 17, color: iconColor }} />
-			)}
-			{type === 'Article' && (
-				<Article sx={{ position: 'absolute', left: -1, top: 2, fontSize: 17, color: iconColor }} />
-			)}
+			{type === 'Actor' && <Person className="mention-chip-actor-icon" style={{ color: iconColor }} />}
+			{type === 'Event' && <Event className="mention-chip-event-icon" style={{ color: iconColor }} />}
+			{type === 'Article' && <Article className="mention-chip-article-icon" style={{ color: iconColor }} />}
 		</Stack>
 	)
 }

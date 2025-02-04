@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-import { makeUrl } from '../fixtures/utils'
+import { makeUrl } from './utils'
 
 test.describe('Guest user', () => {
 	test('user is redirected to login page', async ({ page }) => {

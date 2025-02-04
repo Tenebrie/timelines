@@ -1,5 +1,5 @@
 import { expect, Page } from '@playwright/test'
-import { makeUrl } from 'fixtures/utils'
+import { makeUrl } from 'tests/utils'
 
 export const createNewUser = async (page: Page) => {
 	const userId = `playwright-${Math.random().toString(16).slice(2)}`

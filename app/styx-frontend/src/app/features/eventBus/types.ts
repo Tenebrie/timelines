@@ -1,3 +1,5 @@
+import { Node as ProseMirrorNode } from '@tiptap/pm/model'
+
 import type { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import { useWorldWikiRouter } from '@/router/routes/featureRoutes/worldWikiRoutes'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
@@ -19,6 +21,8 @@ export type AllowedEvents =
 	| 'richEditor/forceUpdateEvent'
 	| 'richEditor/forceUpdateActor'
 	| 'richEditor/forceUpdateArticle'
+	| 'richEditor/mentionRender/start'
+	| 'richEditor/mentionRender/end'
 
 export type EventParams = {
 	['scrollTimelineLeft']: void
@@ -46,5 +50,11 @@ export type EventParams = {
 	}
 	['richEditor/forceUpdateArticle']: {
 		articleId: string
+	}
+	['richEditor/mentionRender/start']: {
+		node: ProseMirrorNode
+	}
+	['richEditor/mentionRender/end']: {
+		node: ProseMirrorNode
 	}
 }

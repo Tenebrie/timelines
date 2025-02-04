@@ -1,5 +1,3 @@
-import { useSelector } from 'react-redux'
-
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { getWorldState } from '@/app/features/world/selectors'
 import { worldTimelineRoutes } from '@/router/routes/featureRoutes/worldTimelineRoutes'
@@ -9,11 +7,12 @@ import { QueryStrategy } from '@/router/types'
 import { BaseMentionChip } from './BaseMentionChip'
 
 type Props = {
+	worldId: string
 	actorId: string
+	actors: ReturnType<typeof getWorldState>['actors']
 }
 
-export const ActorMentionChip = ({ actorId }: Props) => {
-	const { id: worldId, actors } = useSelector(getWorldState, (a, b) => a.id === b.id && a.actors === b.actors)
+export const ActorMentionChip = ({ worldId, actorId, actors }: Props) => {
 	const navigateTo = useEventBusDispatch({
 		event: 'navigate/worldTimeline',
 	})
