@@ -37,7 +37,7 @@ export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
 export const StyledEditorContent = styled(EditorContent)<{ $mode: 'read' | 'edit' }>`
 	font-family: 'Roboto', sans-serif;
 	outline: none;
-	height: ${(props) => (props.$mode === 'edit' ? 'calc(100% - 46px)' : 'unset')};
+	height: ${(props) => (props.$mode === 'edit' ? 'calc(100% - 48px)' : 'unset')};
 	overflow-y: auto;
 	min-height: 200px;
 	display: flex;

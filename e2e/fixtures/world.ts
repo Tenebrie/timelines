@@ -1,6 +1,6 @@
 import { expect, Page } from '@playwright/test'
 
-import { makeUrl } from './utils'
+import { makeUrl } from '../tests/utils'
 
 export const createWorld = async (page: Page) => {
 	const worldData = {

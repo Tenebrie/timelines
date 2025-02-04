@@ -1,19 +1,16 @@
-import { useSelector } from 'react-redux'
-
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { getWorldIdState } from '@/app/features/world/selectors'
 import { getWikiState } from '@/app/features/worldWiki/selectors'
 import { worldWikiRoutes } from '@/router/routes/featureRoutes/worldWikiRoutes'
 
 import { BaseMentionChip } from './BaseMentionChip'
 
 type Props = {
+	worldId: string
 	articleId: string
+	articles: ReturnType<typeof getWikiState>['articles']
 }
 
-export const ArticleMentionChip = ({ articleId }: Props) => {
-	const worldId = useSelector(getWorldIdState)
-	const { articles } = useSelector(getWikiState, (a, b) => a.articles === b.articles)
+export const ArticleMentionChip = ({ worldId, articleId, articles }: Props) => {
 	const navigateTo = useEventBusDispatch({
 		event: 'navigate/articleDetails',
 	})

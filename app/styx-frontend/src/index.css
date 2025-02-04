@@ -66,3 +66,24 @@ fieldset {
 .fade-exit-active {
 	transition: opacity 200ms;
 }
+
+svg.mention-chip-actor-icon {
+	position: absolute;
+	left: -3px;
+	top: 1px;
+	font-size: 19px;
+}
+
+svg.mention-chip-event-icon {
+	position: absolute;
+	left: -2px;
+	top: 2px;
+	font-size: 17px;
+}
+
+svg.mention-chip-article-icon {
+	position: absolute;
+	left: -1px;
+	top: 2px;
+	font-size: 17px;
+}

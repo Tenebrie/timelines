@@ -9,6 +9,7 @@ import { getWikiPreferences } from '../preferences/selectors'
 import { getWorldState } from '../world/selectors'
 import { MentionDetails } from '../worldTimeline/types'
 import { EditorExtensions } from './extensions/config'
+import { FadeInOverlay } from './extensions/mentions/components/FadeInOverlay/FadeInOverlay'
 import { MentionNodeName } from './extensions/mentions/components/MentionNode'
 import { MentionsList } from './extensions/mentions/MentionsList'
 import { RichTextEditorControls } from './RichTextEditorControls'
@@ -74,11 +75,10 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 		}, 100),
 	)
 
-	const isReadMode = isReadOnly || (readModeEnabled && allowReadMode)
+	const isReadMode = (isReadOnly || (readModeEnabled && allowReadMode)) ?? false
 
 	const editor = useEditor({
 		content: value,
-		autofocus: 'end',
 		editable: !isReadMode,
 		extensions: EditorExtensions,
 		onUpdate({ editor }) {
@@ -161,6 +161,7 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 				'&:hover': {
 					border: isReadMode ? '1px solid transparent' : '',
 				},
+				position: 'relative',
 			}}
 			data-testid="RichTextEditor"
 			$theme={theme}
@@ -177,6 +178,7 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 				$mode={isReadMode ? 'read' : 'edit'}
 			/>
 			<MentionsList editor={editor} />
+			<FadeInOverlay key={softKey} isReadMode={isReadMode} />
 		</StyledContainer>
 	)
 }

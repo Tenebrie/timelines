@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { createNewUser, deleteAccount } from 'fixtures/auth'
 
-import { makeUrl } from '../fixtures/utils'
+import { makeUrl } from './utils'
 
 test.describe('World management', () => {
 	test.beforeEach(async ({ page }) => {

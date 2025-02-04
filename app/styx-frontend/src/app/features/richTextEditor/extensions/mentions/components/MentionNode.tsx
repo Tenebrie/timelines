@@ -1,10 +1,11 @@
 import { Node } from '@tiptap/core'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { createRoot, Root } from 'react-dom/client'
-import { Provider as ReduxProvider } from 'react-redux'
 
+import { dispatchEvent } from '@/app/features/eventBus'
 import { CustomThemeProvider } from '@/app/features/theming/CustomThemeProvider'
 import { store } from '@/app/store'
+import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 import { ActorMentionChip } from './chips/ActorMentionChip'
 import { ArticleMentionChip } from './chips/ArticleMentionChip'
@@ -85,32 +86,61 @@ export const MentionNode = Node.create({
 
 	addNodeView() {
 		return ({ node: initialNode }) => {
+			let root: Root | null = null
 			const dom = document.createElement('span')
 
-			let root: Root | null = null
-
-			setTimeout(() => {
-				root = createRoot(dom)
-				rerender(initialNode)
-			})
+			let lastNode: ProseMirrorNode | null = null
 
 			const rerender = (node: ProseMirrorNode) => {
 				if (!root) {
 					return
 				}
+				if (lastNode) {
+					dispatchEvent({
+						event: 'richEditor/mentionRender/end',
+						params: { node: lastNode },
+					})
+				}
+				lastNode = node
+				dispatchEvent({
+					event: 'richEditor/mentionRender/start',
+					params: { node },
+				})
 				const actorId = node.attrs.componentProps.actor as string | undefined
 				const eventId = node.attrs.componentProps.event as string | undefined
 				const articleId = node.attrs.componentProps.article as string | undefined
-				root.render(
-					<ReduxProvider store={store}>
-						<CustomThemeProvider>
-							{actorId ? <ActorMentionChip actorId={actorId} /> : null}
-							{eventId ? <EventMentionChip eventId={eventId} /> : null}
-							{articleId ? <ArticleMentionChip articleId={articleId} /> : null}
+				const state = store.getState()
+				const worldId = state.world.id
+				const actors = state.world.actors
+				const events = state.world.events
+				const articles = state.wiki.articles
+
+				const Component = () => {
+					useEffectOnce(() => {
+						dispatchEvent({
+							event: 'richEditor/mentionRender/end',
+							params: { node },
+						})
+					})
+
+					return (
+						<CustomThemeProvider colorMode={state.preferences.colorMode}>
+							{actorId ? <ActorMentionChip worldId={worldId} actorId={actorId} actors={actors} /> : null}
+							{eventId ? <EventMentionChip worldId={worldId} eventId={eventId} events={events} /> : null}
+							{articleId ? (
+								<ArticleMentionChip worldId={worldId} articleId={articleId} articles={articles} />
+							) : null}
 						</CustomThemeProvider>
-					</ReduxProvider>,
-				)
+					)
+				}
+
+				root.render(<Component />)
 			}
+
+			requestAnimationFrame(() => {
+				root = createRoot(dom!)
+				rerender(initialNode)
+			})
 
 			return {
 				dom,
@@ -119,8 +149,20 @@ export const MentionNode = Node.create({
 					return true
 				},
 				destroy: () => {
+					if (lastNode) {
+						dispatchEvent({
+							event: 'richEditor/mentionRender/end',
+							params: { node: lastNode },
+						})
+					}
 					setTimeout(() => {
 						root?.unmount()
+						if (lastNode) {
+							dispatchEvent({
+								event: 'richEditor/mentionRender/end',
+								params: { node: lastNode },
+							})
+						}
 					})
 				},
 			}
