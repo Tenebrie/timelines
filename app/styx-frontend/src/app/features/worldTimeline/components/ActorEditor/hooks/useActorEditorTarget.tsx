@@ -1,15 +1,11 @@
+import { useParams } from '@tanstack/react-router'
 import { useSelector } from 'react-redux'
 
 import { getWorldState } from '@/app/features/world/selectors'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 export const useActorEditorTarget = () => {
 	const { actors } = useSelector(getWorldState)
-	const { stateOf } = useWorldTimelineRouter()
-	const { actorId } = stateOf(worldTimelineRoutes.actorEditor)
+	const { actorId } = useParams({ from: '/world/$worldId/_world/timeline/_timeline/actor/$actorId' })
 
 	return actors.find((a) => a.id === actorId)
 }

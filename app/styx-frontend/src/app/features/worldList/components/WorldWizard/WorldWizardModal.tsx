@@ -8,6 +8,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
+import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -16,13 +17,8 @@ import { useWorldCalendar } from '@/app/features/time/hooks/useWorldCalendar'
 import { isEntityNameValid } from '@/app/features/validation/isEntityNameValid'
 import { worldSlice } from '@/app/features/world/reducer'
 import { WorldCalendarType } from '@/app/features/worldTimeline/types'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
-import { QueryParams } from '@/router/routes/QueryParams'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 import { worldListSlice } from '../../reducer'
@@ -38,7 +34,7 @@ export const WorldWizardModal = () => {
 	const { listAllCalendars } = useWorldCalendar()
 
 	const { isOpen } = useSelector(getWorldWizardModalState)
-	const { navigateTo } = useWorldTimelineRouter()
+	const navigate = useNavigate()
 
 	const [createWorld, { isLoading }] = useCreateWorldMutation()
 
@@ -88,14 +84,10 @@ export const WorldWizardModal = () => {
 
 		dispatch(closeWorldWizardModal())
 		dispatch(unloadWorld())
-		navigateTo({
-			target: worldTimelineRoutes.timelineRoot,
-			args: {
-				worldId: response.id,
-			},
-			query: {
-				[QueryParams.SELECTED_TIME]: timeOrigin,
-			},
+		navigate({
+			to: '/world/$worldId/timeline',
+			params: { worldId: response.id },
+			search: { time: timeOrigin },
 		})
 	}
 

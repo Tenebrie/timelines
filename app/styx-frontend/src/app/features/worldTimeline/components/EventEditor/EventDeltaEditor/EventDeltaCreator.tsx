@@ -1,4 +1,5 @@
 import Grid from '@mui/material/Grid'
+import { useParams } from '@tanstack/react-router'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -6,18 +7,15 @@ import { mockEventDeltaModel } from '@/api/rheaApi.mock'
 import { worldSlice } from '@/app/features/world/reducer'
 import { getWorldState } from '@/app/features/world/selectors'
 import { WorldEventDelta } from '@/app/features/worldTimeline/types'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { FullHeightContainer } from '../styles'
 import { EventDeltaDetailsEditor } from './components/EventDeltaDetailsEditor'
 
 export const EventDeltaCreator = () => {
 	const { selectedTime } = useSelector(getWorldState)
-	const { stateOf } = useWorldTimelineRouter()
-	const { eventId } = stateOf(worldTimelineRoutes.eventDeltaCreator)
+	const { eventId } = useParams({
+		from: '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/create',
+	})
 
 	const { setEventDeltaCreatorGhost } = worldSlice.actions
 	const dispatch = useDispatch()

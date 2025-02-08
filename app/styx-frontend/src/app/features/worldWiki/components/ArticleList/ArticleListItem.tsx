@@ -4,13 +4,11 @@ import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
+import { useMatches, useNavigate } from '@tanstack/react-router'
 import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useCallback } from 'react'
-import { useSelector } from 'react-redux'
 
-import { getWorldIdState } from '@/app/features/world/selectors'
-import { useIsReadOnly } from '@/hooks/useIsReadOnly'
-import { useWorldWikiRouter, worldWikiRoutes } from '@/router/routes/featureRoutes/worldWikiRoutes'
+import { useIsReadOnly } from '@/app/hooks/useIsReadOnly'
 
 import { useArticleBulkActions } from '../../hooks/useArticleBulkActions'
 import { useArticleDragDrop } from '../../hooks/useArticleDragDrop'
@@ -22,21 +20,22 @@ type Props = {
 }
 
 export const ArticleListItem = ({ article }: Props) => {
-	const worldId = useSelector(getWorldIdState)
-	const { navigateTo, stateOf } = useWorldWikiRouter()
+	const navigate = useNavigate({ from: '/world/$worldId' })
+	const matches = useMatches()
+	const highlighted = matches.some(
+		(match) =>
+			match.routeId === '/world/$worldId/_world/wiki/_wiki/$articleId' &&
+			match.params.articleId === article.id,
+	)
 
-	const highlighted = stateOf(worldWikiRoutes.article).articleId === article.id
 	const { isReadOnly } = useIsReadOnly()
 
 	const onNavigate = useCallback(() => {
-		navigateTo({
-			target: worldWikiRoutes.article,
-			args: {
-				worldId,
-				articleId: article.id,
-			},
+		navigate({
+			to: '/world/$worldId/wiki/$articleId',
+			params: { articleId: article.id },
 		})
-	}, [article.id, navigateTo, worldId])
+	}, [article.id, navigate])
 
 	const { ref, ghostElement } = useArticleDragDrop({ article })
 

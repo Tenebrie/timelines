@@ -9,12 +9,12 @@ import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
+import { useNavigate } from '@tanstack/react-router'
 import { useCallback } from 'react'
 
 import { useWorldCalendar } from '@/app/features/time/hooks/useWorldCalendar'
 import { WorldBrief, WorldCalendarType } from '@/app/features/worldTimeline/types'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useAppRouter } from '@/router/routes/appRoutes'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 
 import { WorldAccessModeDropdown } from './components/WorldAccessModeDropdown'
 import { WorldCollaborators } from './components/WorldCollaborators'
@@ -27,7 +27,7 @@ type Props = {
 }
 
 export const WorldDetailsEditor = ({ world, collaborators }: Props) => {
-	const { navigateTo } = useAppRouter()
+	const navigate = useNavigate()
 	const { listAllCalendars } = useWorldCalendar()
 
 	const state = useWorldFields({ world })
@@ -39,10 +39,8 @@ export const WorldDetailsEditor = ({ world, collaborators }: Props) => {
 	})
 
 	const onClose = useCallback(() => {
-		navigateTo({
-			target: '/home',
-		})
-	}, [navigateTo])
+		navigate({ to: '/home' })
+	}, [navigate])
 
 	return (
 		<Stack gap={2} marginTop={1}>

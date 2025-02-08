@@ -8,7 +8,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListSubheader from '@mui/material/ListSubheader'
 import { MouseEvent, ReactNode } from 'react'
 
-import { useIsReadOnly } from '@/hooks/useIsReadOnly'
+import { useIsReadOnly } from '@/app/hooks/useIsReadOnly'
 
 import { ExpandIcon } from './styles'
 

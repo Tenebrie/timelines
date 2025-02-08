@@ -2,7 +2,7 @@ import Save from '@mui/icons-material/Save'
 import debounce from 'lodash.throttle'
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 
-import { isRunningInTest } from '@/jest/isRunningInTest'
+import { isRunningInTest } from '@/test-utils/isRunningInTest'
 
 import { useEffectOnce } from '../useEffectOnce'
 import { AutosaveIcon } from './AutosaveIcon'

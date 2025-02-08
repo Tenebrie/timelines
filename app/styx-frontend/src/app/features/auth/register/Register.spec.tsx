@@ -6,9 +6,9 @@ import {
 	mockPostRegister,
 	mockUserModel,
 } from '@/api/rheaApi.mock'
-import { renderWithProviders, renderWithRouter } from '@/jest/renderWithProviders'
-import { setupTestServer } from '@/jest/setupTestServer'
-import { appRoutes } from '@/router/routes/appRoutes'
+import { appRoutes } from '@/legacy-router/routes/appRoutes'
+import { renderWithProviders, renderWithRouter } from '@/test-utils/renderWithProviders'
+import { setupTestServer } from '@/test-utils/setupTestServer'
 
 import { authInitialState } from '../reducer'
 import { Register } from './Register'

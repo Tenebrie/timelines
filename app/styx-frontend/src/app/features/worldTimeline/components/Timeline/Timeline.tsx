@@ -1,14 +1,13 @@
 import Paper from '@mui/material/Paper'
+import { useNavigate } from '@tanstack/react-router'
 import { useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { worldSlice } from '@/app/features/world/reducer'
 import { getWorldState } from '@/app/features/world/selectors'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
@@ -29,19 +28,20 @@ export const Timeline = () => {
 	const { timeOrigin, calendar, selectedTime } = useSelector(getWorldState)
 	const theme = useCustomTheme()
 
-	const { setSelectedTime } = worldSlice.actions
 	const { setScaleLevel } = timelineSlice.actions
 	const dispatch = useDispatch()
-	const { navigateToOutliner } = useWorldTimelineRouter()
+	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 
 	const scrollTimelineTo = useTimelineBusDispatch()
 
 	const onClick = useCallback(
 		(time: number) => {
-			navigateToOutliner()
-			dispatch(setSelectedTime(time))
+			navigate({
+				to: '/world/$worldId/timeline/outliner',
+				search: { time },
+			})
 		},
-		[dispatch, setSelectedTime, navigateToOutliner],
+		[navigate],
 	)
 
 	const onDoubleClick = useCallback(

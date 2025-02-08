@@ -1,6 +1,7 @@
 import Close from '@mui/icons-material/Close'
 import { colors } from '@mui/material'
 import Typography from '@mui/material/Typography'
+import { useNavigate } from '@tanstack/react-router'
 import classNames from 'classnames'
 import { memo, MouseEvent, Profiler, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -9,11 +10,10 @@ import { reportComponentProfile } from '@/app/features/profiling/reportComponent
 import { worldSlice } from '@/app/features/world/reducer'
 import { useEventIcons } from '@/app/features/worldTimeline/hooks/useEventIcons'
 import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { useStringColor } from '@/app/utils/getStringColor'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
-import { useDoubleClick } from '@/hooks/useDoubleClick'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
@@ -33,7 +33,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	const { addTimelineMarkerToSelection, removeTimelineMarkerFromSelection, openTimelineContextMenu } =
 		worldSlice.actions
 
-	const { navigateToEventEditor, navigateToEventDeltaEditor } = useWorldTimelineRouter()
+	const navigate = useNavigate({ from: '/world/$worldId' })
 	const { getIconPath } = useEventIcons()
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
@@ -50,13 +50,17 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 			}
 
 			if (entity.markerType === 'deltaState') {
-				navigateToEventDeltaEditor({
-					eventId: entity.eventId,
-					deltaId: entity.id,
-					selectedTime: entity.markerPosition,
+				navigate({
+					to: '/world/$worldId/timeline/event/$eventId/delta/$deltaId',
+					params: { eventId: entity.eventId, deltaId: entity.id },
+					search: { time: entity.markerPosition },
 				})
 			} else {
-				navigateToEventEditor({ eventId: entity.eventId, selectedTime: entity.markerPosition })
+				navigate({
+					to: '/world/$worldId/timeline/event/$eventId',
+					params: { eventId: entity.eventId },
+					search: { time: entity.markerPosition },
+				})
 			}
 		},
 		ignoreDelay: true,

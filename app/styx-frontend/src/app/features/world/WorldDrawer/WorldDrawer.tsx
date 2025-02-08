@@ -6,14 +6,12 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
+import { useMatch, useNavigate } from '@tanstack/react-router'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { getOverviewPreferences } from '@/app/features/preferences/selectors'
-import { store } from '@/app/store'
-import { useWorldRouter, worldRoutes } from '@/router/routes/featureRoutes/worldRoutes'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { getWorldState } from '../selectors'
 import { WorldHeader } from './components/WorldHeader'
@@ -23,28 +21,35 @@ export const WorldDrawer = () => {
 		getWorldState,
 		(a, b) => a.id === b.id && a.isReadOnly === b.isReadOnly,
 	)
-
 	const { panelOpen } = useSelector(getOverviewPreferences)
-	const { navigateTo, isLocationChildOf } = useWorldRouter()
-	const { navigateToOutliner } = useWorldTimelineRouter()
+	const navigate = useNavigate()
 
+	const matchesTimeline = !!useMatch({ from: '/world/$worldId/_world/timeline', shouldThrow: false })
 	const onTimelineClick = () => {
-		navigateToOutliner(store.getState().world.selectedTime, true)
+		navigate({
+			to: '/world/$worldId/timeline/outliner',
+			params: {
+				worldId,
+			},
+		})
+		// navigateToOutliner(store.getState().world.selectedTime, true)
 	}
 
+	const matchesOverview = !!useMatch({ from: '/world/$worldId/_world/overview', shouldThrow: false })
 	const onOverviewClick = () => {
-		navigateTo({
-			target: worldRoutes.overview,
-			args: {
+		navigate({
+			to: '/world/$worldId/overview',
+			params: {
 				worldId,
 			},
 		})
 	}
 
+	const matchesWiki = !!useMatch({ from: '/world/$worldId/_world/wiki', shouldThrow: false })
 	const onWikiClick = () => {
-		navigateTo({
-			target: worldRoutes.wiki,
-			args: {
+		navigate({
+			to: '/world/$worldId/wiki',
+			params: {
 				worldId,
 			},
 		})
@@ -59,24 +64,19 @@ export const WorldDrawer = () => {
 	// 	})
 	// }
 
+	const matchesSettings = !!useMatch({ from: '/world/$worldId/_world/settings', shouldThrow: false })
 	const onSettingsClick = () => {
-		navigateTo({
-			target: worldRoutes.settings,
-			args: {
+		navigate({
+			to: '/world/$worldId/settings',
+			params: {
 				worldId,
 			},
 		})
 	}
 
-	const getButtonStyle = useCallback(
-		(route: (typeof worldRoutes)[keyof typeof worldRoutes]) => {
-			if (isLocationChildOf(route)) {
-				return 'contained'
-			}
-			return 'text'
-		},
-		[isLocationChildOf],
-	)
+	const getButtonStyle = useCallback((matches: boolean) => {
+		return matches ? 'contained' : 'text'
+	}, [])
 
 	return (
 		<>
@@ -105,22 +105,22 @@ export const WorldDrawer = () => {
 					}}
 					elevation={2}
 				>
-					<StyledSmallButton variant={getButtonStyle(worldRoutes.timeline)} onClick={onTimelineClick}>
+					<StyledSmallButton variant={getButtonStyle(matchesTimeline)} onClick={onTimelineClick}>
 						<Home />
 					</StyledSmallButton>
-					<StyledSmallButton variant={getButtonStyle(worldRoutes.overview)} onClick={onOverviewClick}>
+					<StyledSmallButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}>
 						<ViewList />
 					</StyledSmallButton>
 					{/* <StyledSmallButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
 						<Person />
 					</StyledSmallButton> */}
-					<StyledSmallButton variant={getButtonStyle(worldRoutes.wiki)} onClick={onWikiClick}>
+					<StyledSmallButton variant={getButtonStyle(matchesWiki)} onClick={onWikiClick}>
 						<AutoStories />
 					</StyledSmallButton>
 					{!isReadOnly && (
 						<>
 							<Divider />
-							<StyledSmallButton variant={getButtonStyle(worldRoutes.settings)} onClick={onSettingsClick}>
+							<StyledSmallButton variant={getButtonStyle(matchesSettings)} onClick={onSettingsClick}>
 								<Settings />
 							</StyledSmallButton>
 						</>
@@ -148,13 +148,13 @@ export const WorldDrawer = () => {
 				>
 					<WorldHeader />
 					<Divider />
-					<StyledButton variant={getButtonStyle(worldRoutes.timeline)} onClick={onTimelineClick}>
+					<StyledButton variant={getButtonStyle(matchesTimeline)} onClick={onTimelineClick}>
 						<Home /> Timeline
 					</StyledButton>
-					<StyledButton variant={getButtonStyle(worldRoutes.overview)} onClick={onOverviewClick}>
+					<StyledButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}>
 						<ViewList /> Overview
 					</StyledButton>
-					<StyledButton variant={getButtonStyle(worldRoutes.wiki)} onClick={onWikiClick}>
+					<StyledButton variant={getButtonStyle(matchesWiki)} onClick={onWikiClick}>
 						<AutoStories /> Wiki
 					</StyledButton>
 					{/* <StyledButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
@@ -163,7 +163,7 @@ export const WorldDrawer = () => {
 					{!isReadOnly && (
 						<>
 							<Divider />
-							<StyledButton variant={getButtonStyle(worldRoutes.settings)} onClick={onSettingsClick}>
+							<StyledButton variant={getButtonStyle(matchesSettings)} onClick={onSettingsClick}>
 								<Settings /> Settings
 							</StyledButton>
 						</>

@@ -1,17 +1,13 @@
+import { useNavigate, useParams } from '@tanstack/react-router'
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import { useCreateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
-import { worldSlice } from '@/app/features/world/reducer'
 import { getWorldIdState } from '@/app/features/world/selectors'
 import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTimelineBus'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { ErrorState } from '@/app/utils/useErrorState'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { EventDeltaDetailsEditorErrors } from './EventDeltaDetailsEditor'
 import { useEventDeltaFields } from './useEventDeltaFields'
@@ -23,13 +19,12 @@ type Props = {
 
 export const useCreateEventDelta = ({ state, errorState }: Props) => {
 	const worldId = useSelector(getWorldIdState)
+	const navigate = useNavigate({ from: '/world/$worldId' })
+	const { eventId } = useParams({
+		from: '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/create',
+	})
 
-	const { stateOf, navigateToOutliner } = useWorldTimelineRouter()
-	const { eventId } = stateOf(worldTimelineRoutes.eventDeltaCreator)
 	const scrollTimelineTo = useTimelineBusDispatch()
-
-	const { setSelectedTime } = worldSlice.actions
-	const dispatch = useDispatch()
 
 	const [createDeltaState, { isLoading: isCreating, isError }] = useCreateWorldEventDeltaMutation()
 
@@ -51,19 +46,19 @@ export const useCreateEventDelta = ({ state, errorState }: Props) => {
 			return
 		}
 		errorState.clearError()
-		navigateToOutliner()
+		navigate({ to: '/world/$worldId/timeline/outliner', search: { time: state.timestamp } })
 		scrollTimelineTo(state.timestamp)
-		dispatch(setSelectedTime(state.timestamp))
 	}, [
 		createDeltaState,
 		worldId,
 		eventId,
-		state,
+		state.description,
+		state.name,
+		state.timestamp,
+		state.descriptionRich,
 		errorState,
+		navigate,
 		scrollTimelineTo,
-		navigateToOutliner,
-		dispatch,
-		setSelectedTime,
 	])
 
 	const {

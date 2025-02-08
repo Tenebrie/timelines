@@ -4,8 +4,8 @@ import { memo, Profiler } from 'react'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 import { useStringColor } from '@/app/utils/getStringColor'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 

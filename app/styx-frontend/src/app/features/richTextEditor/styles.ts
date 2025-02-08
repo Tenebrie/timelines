@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import { EditorContent } from '@tiptap/react'
 import styled from 'styled-components'
 
-import { CustomTheme } from '@/hooks/useCustomTheme'
+import { CustomTheme } from '@/app/hooks/useCustomTheme'
 
 export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
 	flex: 0;

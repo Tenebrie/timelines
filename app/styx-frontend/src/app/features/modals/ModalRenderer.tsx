@@ -1,4 +1,4 @@
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 
 import { ArticleWizardModal } from '../worldWiki/modals/ArticleWizardModal'
 import { DeleteArticleModal } from '../worldWiki/modals/DeleteArticleModal'

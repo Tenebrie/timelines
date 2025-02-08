@@ -1,7 +1,7 @@
 import { colors } from '@mui/material'
 import styled from 'styled-components'
 
-import { CustomTheme } from '@/hooks/useCustomTheme'
+import { CustomTheme } from '@/app/hooks/useCustomTheme'
 
 export type StoryEventMarkerProps = {
 	groupIndex: number

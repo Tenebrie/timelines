@@ -1,3 +1,4 @@
+import { useMatch } from '@tanstack/react-router'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -18,10 +19,6 @@ import { applyEventDelta } from '@/app/utils/applyEventDelta'
 import { asMarkerType } from '@/app/utils/asMarkerType'
 import { findStartingFrom } from '@/app/utils/findStartingFrom'
 import { isNotNull } from '@/app/utils/isNotNull'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 export type TimelineTrack = ReturnType<typeof useEventTracks>[number]
 export const TimelineEventHeightPx = 40
@@ -35,7 +32,14 @@ const useEventTracks = ({ showHidden }: Props = {}) => {
 	const { ghost: eventGhost } = useSelector(getEventCreatorState, (a, b) => a.ghost === b.ghost)
 	const { ghost: deltaGhost } = useSelector(getEventDeltaCreatorState, (a, b) => a.ghost === b.ghost)
 
-	const { isLocationEqual } = useWorldTimelineRouter()
+	const isEventCreator = !!useMatch({
+		from: '/world/$worldId/_world/timeline/_timeline/event/create',
+		shouldThrow: false,
+	})
+	const isDeltaCreator = !!useMatch({
+		from: '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/create',
+		shouldThrow: false,
+	})
 
 	const eventGroups = useMemo<TimelineEntity<MarkerType>[]>(() => {
 		const sortedEvents = events
@@ -113,7 +117,7 @@ const useEventTracks = ({ showHidden }: Props = {}) => {
 			chainEntity: findChainedEntity(event, index),
 		}))
 
-		if (eventGhost && isLocationEqual(worldTimelineRoutes.eventCreator)) {
+		if (eventGhost && isEventCreator) {
 			chainedEvents.push({
 				...eventGhost,
 				eventId: eventGhost.id,
@@ -125,7 +129,7 @@ const useEventTracks = ({ showHidden }: Props = {}) => {
 				chainEntity: null,
 				followingEntity: null,
 			})
-		} else if (deltaGhost && isLocationEqual(worldTimelineRoutes.eventDeltaCreator)) {
+		} else if (deltaGhost && isDeltaCreator) {
 			const event = events.find((event) => event.id === deltaGhost.worldEventId)
 			if (event) {
 				chainedEvents.push({
@@ -143,7 +147,7 @@ const useEventTracks = ({ showHidden }: Props = {}) => {
 		}
 
 		return chainedEvents
-	}, [events, eventGhost, deltaGhost, isLocationEqual])
+	}, [events, eventGhost, isEventCreator, deltaGhost, isDeltaCreator])
 
 	const { tracks } = useEventTracksRequest()
 	const tracksWithEvents = useMemo(

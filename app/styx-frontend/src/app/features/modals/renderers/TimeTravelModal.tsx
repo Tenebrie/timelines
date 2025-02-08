@@ -4,15 +4,15 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+import { useNavigate } from '@tanstack/react-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 import { useTimeSelector } from '../../time/hooks/useTimeSelector'
 import { useWorldTime } from '../../time/hooks/useWorldTime'
-import { worldSlice } from '../../world/reducer'
 import { getWorldState } from '../../world/selectors'
 import { useTimelineBusDispatch } from '../../worldTimeline/hooks/useTimelineBus'
 import { WorldCalendarType } from '../../worldTimeline/types'
@@ -21,14 +21,12 @@ import { TimeTravelModalInfo } from './TimeTravelModalInfo'
 
 export const TimeTravelModal = () => {
 	const { isOpen, close } = useModal('timeTravelModal')
+	const navigate = useNavigate({ from: '/world/$worldId' })
 
 	const { selectedTime, calendar } = useSelector(
 		getWorldState,
 		(a, b) => a.selectedTime === b.selectedTime && a.calendar === b.calendar,
 	)
-
-	const { setSelectedTime } = worldSlice.actions
-	const dispatch = useDispatch()
 
 	const { timeToLabel } = useWorldTime()
 	const { applySelector } = useTimeSelector({ rawTime: selectedTime })
@@ -73,10 +71,12 @@ export const TimeTravelModal = () => {
 		if (!isOpen) {
 			return
 		}
-		dispatch(setSelectedTime(targetTime))
 		scrollTimelineTo(targetTime)
+		navigate({
+			search: {},
+		})
 		close()
-	}, [isOpen, dispatch, setSelectedTime, targetTime, scrollTimelineTo, close])
+	}, [isOpen, targetTime, scrollTimelineTo, navigate, close])
 
 	useEffect(() => {
 		const interval = window.setInterval(() => {

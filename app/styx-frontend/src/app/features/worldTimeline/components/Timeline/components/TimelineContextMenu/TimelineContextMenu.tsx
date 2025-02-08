@@ -4,6 +4,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import { useNavigate } from '@tanstack/react-router'
 import { memo, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -12,7 +13,6 @@ import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { worldSlice } from '@/app/features/world/reducer'
 import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
 import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { useTimelineContextMenuRequests } from './hooks/useTimelineContextMenuRequests'
 
@@ -39,7 +39,7 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 		[markers, selectedTimelineMarkers],
 	)
 
-	const { navigateToEventCreator, navigateToEventDeltaCreator } = useWorldTimelineRouter()
+	const navigate = useNavigate({ from: '/world/$worldId' })
 
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 
@@ -55,19 +55,20 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 
 	const onCreateEvent = useCallback(() => {
 		onClose()
-		navigateToEventCreator(selectedTime)
-	}, [onClose, navigateToEventCreator, selectedTime])
+		navigate({ to: '/world/$worldId/timeline/event/create', search: { time: selectedTime } })
+	}, [onClose, navigate, selectedTime])
 
 	const onReplaceSelectedEvent = useCallback(() => {
 		onClose()
 		if (!selectedMarker) {
 			return
 		}
-		navigateToEventDeltaCreator({
-			eventId: selectedMarker.eventId,
-			selectedTime,
+		navigate({
+			to: '/world/$worldId/timeline/event/$eventId/delta/create',
+			params: { eventId: selectedMarker.eventId },
+			search: { time: selectedTime },
 		})
-	}, [navigateToEventDeltaCreator, onClose, selectedMarker, selectedTime])
+	}, [navigate, onClose, selectedMarker, selectedTime])
 
 	const onResolveSelectedEvent = useCallback(async () => {
 		if (!selectedMarker) {

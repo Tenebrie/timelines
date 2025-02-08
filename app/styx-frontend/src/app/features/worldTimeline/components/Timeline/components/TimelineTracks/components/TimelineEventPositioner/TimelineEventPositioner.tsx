@@ -7,7 +7,7 @@ import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorld
 import { TimelineState } from '@/app/features/worldTimeline/components/Timeline/utils/TimelineState'
 import { useEventIcons } from '@/app/features/worldTimeline/hooks/useEventIcons'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
 import useEventTracks, { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { Group } from '../../styles'

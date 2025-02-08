@@ -1,19 +1,17 @@
 import Grid from '@mui/material/Grid'
+import { useParams } from '@tanstack/react-router'
 import { useSelector } from 'react-redux'
 
 import { getWorldState } from '@/app/features/world/selectors'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { FullHeightContainer } from '../styles'
 import { EventDeltaDetailsEditor } from './components/EventDeltaDetailsEditor'
 
 export const EventDeltaEditor = () => {
 	const { events } = useSelector(getWorldState)
-	const { stateOf } = useWorldTimelineRouter()
-	const { eventId, deltaId } = stateOf(worldTimelineRoutes.eventDeltaEditor)
+	const { eventId, deltaId } = useParams({
+		from: '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/$deltaId',
+	})
 
 	const event = events.find((e) => e.id === eventId)
 

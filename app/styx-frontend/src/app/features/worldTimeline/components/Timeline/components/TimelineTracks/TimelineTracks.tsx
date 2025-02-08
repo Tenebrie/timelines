@@ -4,10 +4,6 @@ import { useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { ScaleLevel } from '../../types'
 import { TimelineContextMenu } from '../TimelineContextMenu/TimelineContextMenu'
@@ -23,9 +19,6 @@ type Props = {
 
 export const TimelineTracksComponent = (props: Props) => {
 	const eventTracks = useEventTracks()
-	const { stateOf, isLocationEqual } = useWorldTimelineRouter()
-	const stateOfEventEditor = stateOf(worldTimelineRoutes.eventEditor)
-	const stateOfDeltaEditor = stateOf(worldTimelineRoutes.eventDeltaEditor)
 	const worldState = useSelector(getWorldState)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
 
@@ -51,11 +44,8 @@ export const TimelineTracksComponent = (props: Props) => {
 				<TimelineTrackItem
 					key={track.id}
 					track={track}
-					isLocationEqual={isLocationEqual}
 					worldState={worldState}
 					contextMenuState={contextMenuState}
-					eventEditorParams={stateOfEventEditor}
-					eventDeltaEditorParams={stateOfDeltaEditor}
 					realTimeToScaledTime={realTimeToScaledTime}
 					{...props}
 				/>

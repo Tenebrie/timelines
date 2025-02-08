@@ -2,13 +2,12 @@ import Button from '@mui/material/Button'
 import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import { Navigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
-import { Navigate } from 'react-router-dom'
 
 import { useCheckAuthenticationQuery } from '@/api/authApi'
 import { BlockingSpinner } from '@/app/components/BlockingSpinner'
 import { useErrorState } from '@/app/utils/useErrorState'
-import { appRoutes } from '@/router/routes/appRoutes'
 
 import { LimboPageContainer } from './styles'
 
@@ -35,13 +34,14 @@ export const Limbo = () => {
 	}, [data, isError, raiseError])
 
 	if (data && data.authenticated) {
-		return <Navigate to={appRoutes.home} />
+		return <Navigate to={'/home'} />
 	} else if (data && !data.authenticated) {
-		return <Navigate to={appRoutes.login} />
+		return <Navigate to={'/login'} />
 	}
 
 	return (
 		<LimboPageContainer>
+			<Typography variant="h1">Limbo</Typography>
 			<BlockingSpinner visible={isFetching} />
 			{error && error.type === 'WRONG_PORT' && (
 				<Stack gap={1}>

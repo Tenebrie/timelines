@@ -5,16 +5,16 @@ import Button from '@mui/material/Button'
 import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
+import { useNavigate } from '@tanstack/react-router'
 import { useSelector } from 'react-redux'
 import { TransitionGroup } from 'react-transition-group'
 
 import { useDeleteActorMutation } from '@/api/actorListApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { getWorldIdState } from '@/app/features/world/selectors'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useErrorState } from '@/app/utils/useErrorState'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const DeleteActorModal = () => {
@@ -24,7 +24,7 @@ export const DeleteActorModal = () => {
 		SERVER_SIDE_ERROR: string
 	}>()
 
-	const { navigateToCurrentWorldRoot } = useWorldTimelineRouter()
+	const navigate = useNavigate({ from: '/world/$worldId' })
 	const worldId = useSelector(getWorldIdState)
 
 	const { isOpen, target: targetActor, close } = useModal('deleteActorModal')
@@ -53,7 +53,7 @@ export const DeleteActorModal = () => {
 		}
 
 		close()
-		navigateToCurrentWorldRoot()
+		navigate({ to: '/world/$worldId' })
 	}
 
 	const onCloseAttempt = () => {

@@ -9,10 +9,10 @@ import { maximumTime, useWorldTime } from '@/app/features/time/hooks/useWorldTim
 import { getWorldCalendarState } from '@/app/features/world/selectors'
 import { useTimelineBusSubscribe } from '@/app/features/worldTimeline/hooks/useTimelineBus'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
+import { Position } from '@/app/types/Position'
 import clampToRange from '@/app/utils/clampToRange'
 import { isMacOS } from '@/app/utils/isMacOS'
 import { rangeMap } from '@/app/utils/rangeMap'
-import { Position } from '@/types/Position'
 
 import { ScaleLevel } from '../types'
 import { useTimelineScroll } from './useTimelineScroll'

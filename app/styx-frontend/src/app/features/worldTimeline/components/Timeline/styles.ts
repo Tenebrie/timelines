@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { CustomTheme } from '@/hooks/useCustomTheme'
+import { CustomTheme } from '@/app/hooks/useCustomTheme'
 
 export const TimelineWrapper = styled.div`
 	width: 100%;

@@ -2,19 +2,14 @@ import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Outlet, useMatch } from '@tanstack/react-router'
 
-import { useAuthCheck } from '../auth/authCheck/useAuthCheck'
 import { ArticleList } from './components/ArticleList/ArticleList'
 import { ArticleListHeader } from './components/ArticleListHeader/ArticleListHeader'
 import { ArticleTitle } from './components/ArticleTitle/ArticleTitle'
 
 export const WorldWiki = () => {
-	const { success, target } = useAuthCheck()
-
-	if (!success) {
-		return <Navigate to={target} />
-	}
+	const isArticle = !!useMatch({ from: '/world/$worldId/_world/wiki/_wiki/$articleId', shouldThrow: false })
 
 	return (
 		<>
@@ -62,13 +57,15 @@ export const WorldWiki = () => {
 					}}
 					elevation={2}
 				>
-					<Stack gap={1} height={'calc(100%)'}>
-						<Stack gap={1}>
-							<ArticleTitle />
-							<Divider />
+					{isArticle && (
+						<Stack gap={1} height={'calc(100%)'}>
+							<Stack gap={1}>
+								<ArticleTitle />
+								<Divider />
+							</Stack>
+							<Box height={'calc(100% - 64px)'}>{<Outlet />}</Box>
 						</Stack>
-						<Box height={'calc(100% - 64px)'}>{<Outlet />}</Box>
-					</Stack>
+					)}
 				</Paper>
 			</Stack>
 		</>

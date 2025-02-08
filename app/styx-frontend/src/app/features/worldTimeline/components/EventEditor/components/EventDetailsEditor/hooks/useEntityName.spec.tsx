@@ -1,4 +1,4 @@
-import { renderHookWithProviders } from '@/jest/renderWithProviders'
+import { renderHookWithProviders } from '@/test-utils/renderWithProviders'
 
 import { useEntityName } from './useEntityName'
 

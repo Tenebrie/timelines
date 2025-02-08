@@ -6,7 +6,7 @@ import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorld
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getWorldCalendarState } from '@/app/features/world/selectors'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
 import { ScaleLevel } from '../../types'
 import { TimelineAnchorContainer, TimelineSmallestPips } from './styles'

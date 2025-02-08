@@ -7,8 +7,8 @@ import Tooltip from '@mui/material/Tooltip'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import Modal, { ModalFooter, useModalCleanup } from '@/ui-lib/components/Modal'
 import { ModalHeader } from '@/ui-lib/components/Modal/styles'
 

@@ -2,7 +2,7 @@ import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { useEffect, useRef } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
 import { createCubicBezier } from './createCubicBezier'
 import { ProgressBar } from './ProgressBar'

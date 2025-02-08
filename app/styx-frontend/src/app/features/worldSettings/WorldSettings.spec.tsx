@@ -11,10 +11,10 @@ import {
 	mockWorldBriefModel,
 } from '@/api/rheaApi.mock'
 import { worldInitialState } from '@/app/features/world/reducer'
-import { renderWithProviders } from '@/jest/renderWithProviders'
-import { setupTestServer } from '@/jest/setupTestServer'
-import { mockRouter } from '@/router/router.mock'
-import { homeRoutes } from '@/router/routes/featureRoutes/homeRoutes'
+import { homeRoutes } from '@/legacy-router/routes/featureRoutes/homeRoutes'
+import { mockRouter } from '@/router-utils/router.mock'
+import { renderWithProviders } from '@/test-utils/renderWithProviders'
+import { setupTestServer } from '@/test-utils/setupTestServer'
 
 import { WorldDetails } from './WorldSettings'
 

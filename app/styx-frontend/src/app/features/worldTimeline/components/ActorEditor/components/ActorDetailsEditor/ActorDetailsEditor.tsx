@@ -13,7 +13,7 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { RichTextEditor } from '@/app/features/richTextEditor/RichTextEditor'
 import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { ActorDetails } from '@/app/features/worldTimeline/types'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 
 import { useActorFields } from './useActorFields'
 import { useEditActor } from './useEditActor'

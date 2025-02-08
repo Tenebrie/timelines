@@ -18,7 +18,7 @@ import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTe
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { WorldEvent } from '@/app/features/worldTimeline/types'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 
 import { EventIconDropdown } from '../EventIconDropdown/EventIconDropdown'
 import { EventModulesControls } from './controls/EventModulesControls'

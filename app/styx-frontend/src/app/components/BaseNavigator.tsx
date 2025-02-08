@@ -4,19 +4,17 @@ import Speed from '@mui/icons-material/Speed'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
-import { ReactElement, useMemo } from 'react'
+import { useMatch, useNavigate } from '@tanstack/react-router'
+import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { CustomTheme, useCustomTheme } from '../../hooks/useCustomTheme'
-import { appRoutes } from '../../router/routes/appRoutes'
-import { adminRoutes } from '../../router/routes/featureRoutes/adminRoutes'
-import { useRouter } from '../../router/routes/routes'
 import { Announcements } from '../features/announcements/Announcements'
 import { getAuthState } from '../features/auth/selectors'
 import { SmallProfile } from '../features/auth/smallProfile/SmallProfile'
 import { PerformanceMetrics } from '../features/profiling/PerformanceMetrics'
 import { ThemeModeToggle } from '../features/theming/ThemeModeToggle'
+import { CustomTheme, useCustomTheme } from '../hooks/useCustomTheme'
 import { isDev } from '../utils/isDev'
 
 const Container = styled.div<{ $theme: CustomTheme }>`
@@ -34,16 +32,16 @@ type Props = {
 }
 
 export const BaseNavigator = ({ children }: Props) => {
-	const { navigateTo, isLocationEqual } = useRouter()
+	const navigate = useNavigate()
 	const { user } = useSelector(getAuthState)
 	const theme = useCustomTheme()
 
 	const onHome = () => {
-		navigateTo({ target: appRoutes.home })
+		navigate({ to: '/home' })
 	}
 
 	const onAdmin = () => {
-		navigateTo({ target: adminRoutes.adminRoot })
+		navigate({ to: '/admin' })
 	}
 
 	const onProfile = () => {
@@ -53,8 +51,8 @@ export const BaseNavigator = ({ children }: Props) => {
 		console.info(values)
 	}
 
-	const isHome = useMemo(() => isLocationEqual(appRoutes.home), [isLocationEqual])
-	const isAdmin = useMemo(() => isLocationEqual(adminRoutes.adminRoot), [isLocationEqual])
+	const isHome = useMatch({ from: '/home', shouldThrow: false })
+	const isAdmin = useMatch({ from: '/admin', shouldThrow: false })
 
 	return (
 		<Container $theme={theme}>

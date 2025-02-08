@@ -5,7 +5,7 @@ import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useSelector } from 'react-redux'
 
 import { getWorldState } from '@/app/features/world/selectors'
-import { useIsReadOnly } from '@/hooks/useIsReadOnly'
+import { useIsReadOnly } from '@/app/hooks/useIsReadOnly'
 
 import { CreateHerePopover } from '../CreateHerePopover/CreateHerePopover'
 

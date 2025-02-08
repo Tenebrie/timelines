@@ -3,7 +3,7 @@ import throttle from 'lodash.throttle'
 import { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
 import { getWikiPreferences } from '../preferences/selectors'
 import { getWorldState } from '../world/selectors'

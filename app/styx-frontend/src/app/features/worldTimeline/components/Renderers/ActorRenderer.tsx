@@ -2,13 +2,13 @@ import Edit from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
+import { useNavigate } from '@tanstack/react-router'
 import cx from 'classnames'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { preferencesSlice } from '@/app/features/preferences/reducer'
-import { useIsReadOnly } from '@/hooks/useIsReadOnly'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
+import { useIsReadOnly } from '@/app/hooks/useIsReadOnly'
 
 import { ActorDetails } from '../../types'
 import { StyledListItemButton, StyledListItemText } from '../Outliner/styles'
@@ -21,7 +21,7 @@ type Props = {
 }
 
 export const ActorRenderer = ({ actor, collapsed }: Props) => {
-	const { navigateToActorEditor } = useWorldTimelineRouter()
+	const navigate = useNavigate({ from: '/world/$worldId' })
 
 	const { isReadOnly } = useIsReadOnly()
 	const dispatch = useDispatch()
@@ -42,7 +42,12 @@ export const ActorRenderer = ({ actor, collapsed }: Props) => {
 	]
 	if (!isReadOnly) {
 		actions.push(
-			<IconButton key={'edit'} onClick={() => navigateToActorEditor(actor.id)}>
+			<IconButton
+				key={'edit'}
+				onClick={() =>
+					navigate({ to: '/world/$worldId/timeline/actor/$actorId', params: { actorId: actor.id } })
+				}
+			>
 				<Edit />
 			</IconButton>,
 		)

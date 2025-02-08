@@ -2,7 +2,6 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
-import { QueryParams } from '@/router/routes/QueryParams'
 
 import { ingestActor, ingestEvent } from '../../utils/ingestEvent'
 import {
@@ -243,10 +242,6 @@ export const worldSlice = createSlice({
 		/* Navigation state */
 		setSelectedTime: (state, { payload }: PayloadAction<number>) => {
 			state.selectedTime = payload
-			// Use history.replaceState to put the new selectedTime into the url
-			setTimeout(() => {
-				window.history.replaceState(null, '', `?${QueryParams.SELECTED_TIME}=${payload}`)
-			}, 5)
 		},
 	},
 })

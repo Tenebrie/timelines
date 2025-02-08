@@ -1,12 +1,10 @@
 import Stack from '@mui/material/Stack'
-import { Navigate, Outlet } from 'react-router-dom'
+import { Outlet, useMatch, useParams } from '@tanstack/react-router'
 
 import { BlockingSpinner } from '@/app/components/BlockingSpinner'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
-import { useWorldRouter, worldRoutes } from '@/router/routes/featureRoutes/worldRoutes'
 import { ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage'
 
-import { useAuthCheck } from '../auth/authCheck/useAuthCheck'
 import { useEventBusDispatch, useEventBusSubscribe } from '../eventBus'
 import { ActorWizardModal } from '../worldTimeline/components/ActorWizard/ActorWizardModal'
 import { DeleteEventDeltaModal } from '../worldTimeline/components/EventEditor/components/DeleteEventDeltaModal/DeleteEventDeltaModal'
@@ -20,9 +18,13 @@ import { WorldDrawer } from './WorldDrawer/WorldDrawer'
 import { WorldNavigator } from './WorldNavigator/WorldNavigator'
 
 export const World = () => {
-	const { stateOf, isLocationChildOf } = useWorldRouter()
-	const { worldId } = stateOf(worldRoutes.root)
-	const { success, target } = useAuthCheck()
+	const { worldId } = useParams({
+		from: '/world/$worldId/_world',
+	})
+	const matchesTimeline = useMatch({
+		from: '/world/$worldId/_world/timeline',
+		shouldThrow: false,
+	})
 
 	const { isLoaded } = useLoadWorldInfo(worldId)
 
@@ -52,10 +54,6 @@ export const World = () => {
 		},
 	})
 
-	if (!success) {
-		return <Navigate to={target} />
-	}
-
 	return (
 		<>
 			<div
@@ -74,7 +72,7 @@ export const World = () => {
 						<Outlet />
 					</div>
 				</Stack>
-				{isLocationChildOf(worldRoutes.timeline) && (
+				{matchesTimeline && (
 					<>
 						{isLoaded && <Timeline />}
 						{!isLoaded && <TimelinePlaceholder />}

@@ -6,9 +6,8 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
-import { isRunningInTest } from '@/jest/isRunningInTest'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { isRunningInTest } from '@/test-utils/isRunningInTest'
 
 import { TimelineState } from '../../utils/TimelineState'
 import { TimelineChainPositioner } from './components/TimelineChainPositioner/TimelineChainPositioner'
@@ -22,13 +21,6 @@ type Props = {
 	track: ReturnType<typeof useEventTracks>[number]
 	visible: boolean
 	containerWidth: number
-	isLocationEqual: ReturnType<typeof useWorldTimelineRouter>['isLocationEqual']
-	eventEditorParams: {
-		eventId: string
-	}
-	eventDeltaEditorParams: {
-		deltaId: string
-	}
 	worldState: ReturnType<typeof getWorldState>
 	contextMenuState: ReturnType<typeof getTimelineContextMenuState>
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
@@ -38,9 +30,6 @@ export const TimelineTrackItem = ({
 	track,
 	visible,
 	containerWidth,
-	isLocationEqual,
-	eventEditorParams,
-	eventDeltaEditorParams,
 	worldState,
 	contextMenuState,
 	realTimeToScaledTime,
@@ -53,13 +42,10 @@ export const TimelineTrackItem = ({
 		() =>
 			track.events.filter(
 				(entity) =>
-					(['issuedAt', 'revokedAt'].includes(entity.markerType) &&
-						isLocationEqual('/world/:worldId/timeline/editor/:eventId') &&
-						eventEditorParams.eventId === entity.eventId) ||
-					(isLocationEqual('/world/:worldId/timeline/editor/:eventId/delta/:deltaId') &&
-						eventDeltaEditorParams.deltaId === entity.id),
+					(['issuedAt', 'revokedAt'].includes(entity.markerType) && location.pathname.includes(entity.id)) ||
+					location.pathname.includes(entity.eventId),
 			),
-		[eventDeltaEditorParams, eventEditorParams, isLocationEqual, track.events],
+		[track.events],
 	)
 
 	const selectedMarkers = useMemo(

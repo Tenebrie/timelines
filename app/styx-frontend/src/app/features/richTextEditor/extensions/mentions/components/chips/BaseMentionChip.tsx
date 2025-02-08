@@ -5,10 +5,10 @@ import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 
 import { MentionedEntity } from '@/app/features/worldTimeline/types'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 import { colorStringToHsl } from '@/app/utils/colors/colorStringToHsl'
 import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
 import { hslToHex } from '@/app/utils/colors/hslToHex'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
 
 type Props = {
 	type: MentionedEntity

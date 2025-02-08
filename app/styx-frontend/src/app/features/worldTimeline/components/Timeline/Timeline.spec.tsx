@@ -2,9 +2,9 @@ import { screen, waitFor } from '@testing-library/react'
 
 import { mockEventModel } from '@/api/rheaApi.mock'
 import { initialState } from '@/app/features/world/reducer'
-import { renderWithProviders } from '@/jest/renderWithProviders'
-import { mockRouter } from '@/router/router.mock'
-import { worldTimelineRoutes } from '@/router/routes/featureRoutes/worldTimelineRoutes'
+import { worldTimelineRoutes } from '@/legacy-router/routes/featureRoutes/worldTimelineRoutes'
+import { mockRouter } from '@/router-utils/router.mock'
+import { renderWithProviders } from '@/test-utils/renderWithProviders'
 
 import { WorldDetails, WorldEvent } from '../../types'
 import { Timeline } from './Timeline'

@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
+import { useLocation } from '@tanstack/react-router'
 import { Profiler, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Virtuoso } from 'react-virtuoso'
@@ -12,9 +13,9 @@ import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { getWorldState } from '@/app/features/world/selectors'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { useIsReadOnly } from '@/app/hooks/useIsReadOnly'
 import { isNull } from '@/app/utils/isNull'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
-import { useIsReadOnly } from '@/hooks/useIsReadOnly'
 
 import { useOutlinerTabs } from '../../hooks/useOutlinerTabs'
 import { EventCreator } from '../EventEditor/EventCreator'
@@ -30,6 +31,8 @@ import { OutlinerSearch } from './components/OutlinerSearch/OutlinerSearch'
 import { StatementsScroller } from './styles'
 
 export const Outliner = () => {
+	const params = useLocation()
+	console.log(params.pathname)
 	const { selectedTime, search } = useSelector(
 		getWorldState,
 		(a, b) => a.selectedTime === b.selectedTime && a.search === b.search,

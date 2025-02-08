@@ -1,10 +1,17 @@
+import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
 	base: '/',
-	plugins: [react(), viteTsconfigPaths()],
+	plugins: [
+		TanStackRouterVite({
+			// autoCodeSplitting: true,
+		}),
+		react(),
+		viteTsconfigPaths(),
+	],
 	resolve: {
 		alias: {
 			'@api': '/src/api',

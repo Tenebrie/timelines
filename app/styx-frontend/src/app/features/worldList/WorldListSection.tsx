@@ -3,19 +3,15 @@ import Edit from '@mui/icons-material/Edit'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
+import { useNavigate } from '@tanstack/react-router'
 import { useDispatch } from 'react-redux'
 
 import { GetWorldsApiResponse } from '@/api/worldListApi'
-import { useWorldRouter, worldRoutes } from '@/router/routes/featureRoutes/worldRoutes'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
-import { QueryParams } from '@/router/routes/QueryParams'
 
 import { OutlinedContainer } from '../../components/OutlinedContainer'
 import { TrunkatedSpan } from '../../components/TrunkatedTypography'
 import { worldSlice } from '../world/reducer'
+import { WorldBrief } from '../worldTimeline/types'
 import { WorldListEmptyState } from './components/WorldListEmptyState'
 import { worldListSlice } from './reducer'
 
@@ -31,8 +27,7 @@ type Props = {
 }
 
 export const WorldListSection = ({ worlds, label, showActions, showEmptyState, showCreateButton }: Props) => {
-	const { navigateTo } = useWorldRouter()
-	const { navigateTo: navigateToTimeline } = useWorldTimelineRouter()
+	const navigate = useNavigate()
 
 	const { unloadWorld } = worldSlice.actions
 	const { openWorldWizardModal, openDeleteWorldModal } = worldListSlice.actions
@@ -42,28 +37,22 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 		dispatch(openWorldWizardModal())
 	}
 
-	const onLoad = (id: string) => {
-		const world = worlds.find((w) => w.id === id)
-		if (!world) {
-			return
-		}
-
+	const onLoad = (world: WorldBrief) => {
 		dispatch(unloadWorld())
-		navigateToTimeline({
-			target: worldTimelineRoutes.outliner,
-			args: {
-				worldId: id,
+		navigate({
+			to: '/world/$worldId/timeline/outliner',
+			params: {
+				worldId: world.id,
 			},
-			query: {
-				[QueryParams.SELECTED_TIME]: world.timeOrigin,
+			search: {
+				time: parseInt(world.timeOrigin),
 			},
 		})
 	}
 
 	const onEdit = (id: string) => {
-		navigateTo({
-			target: worldRoutes.settings,
-			args: { worldId: id },
+		navigate({
+			to: `/world/${id}/settings`,
 		})
 	}
 
@@ -84,7 +73,7 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 					<Tooltip title={world.name} enterDelay={1000} arrow>
 						<Button
 							fullWidth={true}
-							onClick={() => onLoad(world.id)}
+							onClick={() => onLoad(world)}
 							style={{ textAlign: 'start', lineBreak: 'anywhere' }}
 							data-hj-suppress
 						>

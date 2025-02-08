@@ -3,7 +3,7 @@ services:
     build: .
     volumes:
       - .:/app  # Mount the current directory into the container for live changes
-    user: "${MY_UID}:${MY_GID}"
+    user: "${DOCKER_UID}:${DOCKER_GID}"
     environment:
       - TARGET_ENV
     command: npx playwright test

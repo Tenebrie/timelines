@@ -1,49 +1,42 @@
+import { Outlet, useSearch } from '@tanstack/react-router'
 import { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { useOutlet } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-import { useLocationRef } from '@/hooks/useLocationRef'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
-import { QueryParams } from '@/router/routes/QueryParams'
+import { useLocationRef } from '@/app/hooks/useLocationRef'
 
 import { worldSlice } from '../world/reducer'
 import { useTimelineBusDispatch } from './hooks/useTimelineBus'
 import { WorldContent } from './styles'
 
 const useWatchSelectedTime = () => {
-	const { queryOf } = useWorldTimelineRouter()
-
 	const scrollTimelineTo = useTimelineBusDispatch()
+	const search = useSearch({ from: '/world/$worldId/_world/timeline/_timeline' })
 
 	const { setSelectedTime } = worldSlice.actions
 	const dispatch = useDispatch()
 
 	/**
-	 * Selected time has been changed externally
+	 * Selected time has changed for any reason
 	 */
 	useEffect(() => {
-		const value = queryOf(worldTimelineRoutes.timelineRoot).time
-		const selectedTime = parseInt(value)
-		dispatch(setSelectedTime(selectedTime))
-		scrollTimelineTo(selectedTime)
-	}, [dispatch, setSelectedTime, scrollTimelineTo, queryOf])
+		const selectedTime = search.time
+		setTimeout(() => {
+			dispatch(setSelectedTime(selectedTime))
+		}, 0)
+	}, [dispatch, setSelectedTime, scrollTimelineTo, search.time])
 
 	/**
 	 * User has pushed the back button
 	 */
 	const onPopstate = useCallback(() => {
 		const url = new URL(window.location.href)
-		const value = url.searchParams.get(QueryParams.SELECTED_TIME)
+		const value = url.searchParams.get('time' satisfies keyof typeof search)
 		if (value) {
 			const selectedTime = parseInt(value)
-			dispatch(setSelectedTime(selectedTime))
 			scrollTimelineTo(selectedTime)
 		}
-	}, [dispatch, scrollTimelineTo, setSelectedTime])
+	}, [scrollTimelineTo])
 
 	useEffect(() => {
 		window.addEventListener('popstate', onPopstate)
@@ -56,14 +49,15 @@ const useWatchSelectedTime = () => {
 export const WorldTimeline = () => {
 	useWatchSelectedTime()
 
-	const currentOutlet = useOutlet()
 	const { key, nodeRef } = useLocationRef()
 
 	return (
 		<>
 			<SwitchTransition>
-				<CSSTransition key={key} timeout={300} classNames="fade" unmountOnExit nodeRef={nodeRef}>
-					<WorldContent ref={nodeRef}>{currentOutlet}</WorldContent>
+				<CSSTransition key={key} timeout={300} classNames="fade" mountOnEnter unmountOnExit nodeRef={nodeRef}>
+					<WorldContent ref={nodeRef}>
+						<Outlet />
+					</WorldContent>
 				</CSSTransition>
 			</SwitchTransition>
 		</>

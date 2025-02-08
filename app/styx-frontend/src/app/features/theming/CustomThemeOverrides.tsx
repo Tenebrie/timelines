@@ -2,8 +2,8 @@ import { Theme } from '@emotion/react'
 import { SxProps } from '@mui/material'
 import Box from '@mui/material/Box'
 
-import { useBrowserSpecificScrollbars } from '@/hooks/useBrowserSpecificScrollbars'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
 type Props = {
 	children: JSX.Element | JSX.Element[]

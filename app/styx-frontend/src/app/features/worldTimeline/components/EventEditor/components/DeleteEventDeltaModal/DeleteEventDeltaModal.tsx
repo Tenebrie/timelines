@@ -3,22 +3,22 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
+import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useDeleteWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { getWorldIdState } from '@/app/features/world/selectors'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const DeleteEventDeltaModal = () => {
 	const [deleteWorldEvent, { isLoading }] = useDeleteWorldEventDeltaMutation()
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 
-	const { navigateToCurrentWorldRoot } = useWorldTimelineRouter()
+	const navigate = useNavigate({ from: '/world/$worldId' })
 	const worldId = useSelector(getWorldIdState)
 
 	const { isOpen, target: targetDelta, close } = useModal('deleteEventDeltaModal')
@@ -48,7 +48,7 @@ export const DeleteEventDeltaModal = () => {
 		}
 
 		close()
-		navigateToCurrentWorldRoot()
+		navigate({ to: '/world/$worldId' })
 	}
 
 	const onCloseAttempt = () => {

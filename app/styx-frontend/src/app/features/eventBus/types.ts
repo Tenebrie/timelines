@@ -1,7 +1,6 @@
+import type { NavigateOptions } from '@tanstack/react-router'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
-import type { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
-import { useWorldWikiRouter } from '@/router/routes/featureRoutes/worldWikiRoutes'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
 import { ActorDetails, WorldEvent } from '../worldTimeline/types'
@@ -16,8 +15,7 @@ export type AllowedEvents =
 	| 'richEditor/updateMentions'
 	| 'richEditor/closeMentions'
 	| 'richEditor/keyDown'
-	| 'navigate/worldTimeline'
-	| 'navigate/articleDetails'
+	| 'navigate/world'
 	| 'richEditor/forceUpdateEvent'
 	| 'richEditor/forceUpdateActor'
 	| 'richEditor/forceUpdateArticle'
@@ -40,8 +38,7 @@ export type EventParams = {
 		altKey: boolean
 		metaKey: boolean
 	}
-	['navigate/worldTimeline']: Parameters<ReturnType<typeof useWorldTimelineRouter>['navigateTo']>[0]
-	['navigate/articleDetails']: Parameters<ReturnType<typeof useWorldWikiRouter>['navigateTo']>[0]
+	['navigate/world']: NavigateOptions
 	['richEditor/forceUpdateEvent']: {
 		event: WorldEvent
 	}

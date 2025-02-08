@@ -8,7 +8,7 @@ import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { useIsReadOnly } from '@/hooks/useIsReadOnly'
+import { useIsReadOnly } from '@/app/hooks/useIsReadOnly'
 
 import { getWikiPreferences } from '../preferences/selectors'
 import { ReadModeToggle } from '../worldWiki/components/ReadModeToggle/ReadModeToggle'

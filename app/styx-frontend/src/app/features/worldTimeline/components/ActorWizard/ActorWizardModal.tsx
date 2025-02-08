@@ -6,6 +6,7 @@ import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
+import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -14,10 +15,9 @@ import { FormErrorBanner } from '@/app/components/FormErrorBanner'
 import { useModal } from '@/app/features/modals/reducer'
 import { isEntityNameValid } from '@/app/features/validation/isEntityNameValid'
 import { getWorldIdState } from '@/app/features/world/selectors'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useErrorState } from '@/app/utils/useErrorState'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import Modal, { useModalCleanup } from '@/ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '@/ui-lib/components/Modal'
 
@@ -38,7 +38,7 @@ export const ActorWizardModal = () => {
 
 	const [createActor, { isLoading }] = useCreateActorMutation()
 
-	const { navigateToActorEditor } = useWorldTimelineRouter()
+	const navigate = useNavigate({ from: '/world/$worldId' })
 	const worldId = useSelector(getWorldIdState)
 
 	useEffect(() => {
@@ -81,7 +81,10 @@ export const ActorWizardModal = () => {
 		}
 
 		close()
-		navigateToActorEditor(response.id)
+		navigate({
+			to: '/world/$worldId/timeline/actor/$actorId',
+			params: { actorId: response.id },
+		})
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(

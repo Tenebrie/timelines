@@ -6,14 +6,11 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+import { Link, useNavigate, useSearch } from '@tanstack/react-router'
 import { useCallback, useMemo, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
 
-import { worldSlice } from '@/app/features/world/reducer'
 import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTimelineBus'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { QueryParams } from '@/router/routes/QueryParams'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 
 type Props = {
 	externalLink: string
@@ -38,6 +35,8 @@ const tryValidateUrl = (url: string) => {
 }
 
 export const ExternalLinkModule = ({ externalLink, onChange }: Props) => {
+	const navigate = useNavigate({ from: '/world/$worldId' })
+	const search = useSearch({ from: '/world/$worldId/_world/timeline' })
 	const [isEditing, setEditing] = useState(false)
 	const [internalData, setInternalData] = useState(externalLink)
 	const isLocal = useMemo(
@@ -79,19 +78,18 @@ export const ExternalLinkModule = ({ externalLink, onChange }: Props) => {
 	}, [internalData, onChange])
 
 	const scrollTimelineTo = useTimelineBusDispatch()
-	const { setSelectedTime } = worldSlice.actions
-	const dispatch = useDispatch()
 	const onNavigation = useCallback(() => {
 		if (!isLocal) {
 			return
 		}
 		const link = new URL(externalLink)
-		if (link.searchParams.has(QueryParams.SELECTED_TIME)) {
-			const selectedTime = parseInt(link.searchParams.get(QueryParams.SELECTED_TIME) ?? '0')
+		const paramName = 'time' satisfies keyof typeof search
+		if (link.searchParams.has(paramName)) {
+			const selectedTime = parseInt(link.searchParams.get(paramName) ?? '0')
 			scrollTimelineTo(selectedTime)
-			dispatch(setSelectedTime(selectedTime))
+			navigate({ search: { time: selectedTime } })
 		}
-	}, [dispatch, externalLink, isLocal, scrollTimelineTo, setSelectedTime])
+	}, [externalLink, isLocal, navigate, scrollTimelineTo])
 
 	const { largeLabel: shortcutLabel } = useShortcut(
 		Shortcut.CtrlEnter,

@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react'
 
 import { mockActorModel } from '@/api/rheaApi.mock'
-import { renderWithProviders } from '@/jest/renderWithProviders'
+import { renderWithProviders } from '@/test-utils/renderWithProviders'
 
 import { ActorAvatar } from './ActorAvatar'
 
