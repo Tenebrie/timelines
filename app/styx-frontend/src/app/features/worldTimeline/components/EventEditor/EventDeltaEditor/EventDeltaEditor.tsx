@@ -10,7 +10,7 @@ import { EventDeltaDetailsEditor } from './components/EventDeltaDetailsEditor'
 export const EventDeltaEditor = () => {
 	const { events } = useSelector(getWorldState)
 	const { eventId, deltaId } = useParams({
-		from: '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/$deltaId',
+		from: '/world/$worldId/_world/timeline/_timeline/delta/$deltaId/$eventId',
 	})
 
 	const event = events.find((e) => e.id === eventId)

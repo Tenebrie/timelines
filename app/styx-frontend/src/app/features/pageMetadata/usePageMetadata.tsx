@@ -1,6 +1,7 @@
-import { useMatch } from '@tanstack/react-router'
 import { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 import { getWorldState } from '../world/selectors'
 
@@ -20,7 +21,7 @@ const getEnvTag = () => {
 }
 
 export const usePageMetadata = () => {
-	const isWorldOpen = useMatch({ from: '/world/$worldId', shouldThrow: false })
+	const isWorldOpen = useCheckRouteMatch('/world/$worldId')
 	const { name: worldName, description: worldDescription } = useSelector(
 		getWorldState,
 		(a, b) => a.name === b.name && a.description === b.description,

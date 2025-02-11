@@ -20,9 +20,18 @@ type Props = {
 export const useCreateEventDelta = ({ state, errorState }: Props) => {
 	const worldId = useSelector(getWorldIdState)
 	const navigate = useNavigate({ from: '/world/$worldId' })
-	const { eventId } = useParams({
-		from: '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/create',
+	const creatorParams = useParams({
+		from: '/world/$worldId/_world/timeline/_timeline/delta/create/$eventId',
+		shouldThrow: false,
 	})
+	const editorParams = useParams({
+		from: '/world/$worldId/_world/timeline/_timeline/delta/$deltaId/$eventId',
+		shouldThrow: false,
+	})
+	const eventId = creatorParams?.eventId ?? editorParams?.eventId ?? null
+	if (!eventId) {
+		throw new Error('Routing error: eventId is not defined')
+	}
 
 	const scrollTimelineTo = useTimelineBusDispatch()
 

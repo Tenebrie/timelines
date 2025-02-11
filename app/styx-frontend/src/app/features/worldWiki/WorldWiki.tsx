@@ -2,14 +2,16 @@ import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import { Outlet, useMatch } from '@tanstack/react-router'
+import { Outlet } from '@tanstack/react-router'
+
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 import { ArticleList } from './components/ArticleList/ArticleList'
 import { ArticleListHeader } from './components/ArticleListHeader/ArticleListHeader'
 import { ArticleTitle } from './components/ArticleTitle/ArticleTitle'
 
 export const WorldWiki = () => {
-	const isArticle = !!useMatch({ from: '/world/$worldId/_world/wiki/_wiki/$articleId', shouldThrow: false })
+	const isArticle = useCheckRouteMatch('/world/$worldId/wiki/$articleId')
 
 	return (
 		<>

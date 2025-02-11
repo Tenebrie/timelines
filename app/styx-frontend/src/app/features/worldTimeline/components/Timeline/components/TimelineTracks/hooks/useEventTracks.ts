@@ -1,4 +1,3 @@
-import { useMatch } from '@tanstack/react-router'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -19,6 +18,7 @@ import { applyEventDelta } from '@/app/utils/applyEventDelta'
 import { asMarkerType } from '@/app/utils/asMarkerType'
 import { findStartingFrom } from '@/app/utils/findStartingFrom'
 import { isNotNull } from '@/app/utils/isNotNull'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 export type TimelineTrack = ReturnType<typeof useEventTracks>[number]
 export const TimelineEventHeightPx = 40
@@ -32,14 +32,8 @@ const useEventTracks = ({ showHidden }: Props = {}) => {
 	const { ghost: eventGhost } = useSelector(getEventCreatorState, (a, b) => a.ghost === b.ghost)
 	const { ghost: deltaGhost } = useSelector(getEventDeltaCreatorState, (a, b) => a.ghost === b.ghost)
 
-	const isEventCreator = !!useMatch({
-		from: '/world/$worldId/_world/timeline/_timeline/event/create',
-		shouldThrow: false,
-	})
-	const isDeltaCreator = !!useMatch({
-		from: '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/create',
-		shouldThrow: false,
-	})
+	const isEventCreator = useCheckRouteMatch('/world/$worldId/timeline/event/create')
+	const isDeltaCreator = useCheckRouteMatch('/world/$worldId/timeline/delta/create/$eventId')
 
 	const eventGroups = useMemo<TimelineEntity<MarkerType>[]>(() => {
 		const sortedEvents = events

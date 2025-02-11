@@ -6,12 +6,13 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
-import { useMatch, useNavigate } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { getOverviewPreferences } from '@/app/features/preferences/selectors'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 import { getWorldState } from '../selectors'
 import { WorldHeader } from './components/WorldHeader'
@@ -22,30 +23,21 @@ export const WorldDrawer = () => {
 		(a, b) => a.id === b.id && a.isReadOnly === b.isReadOnly,
 	)
 	const { panelOpen } = useSelector(getOverviewPreferences)
-	const navigate = useNavigate()
+	const navigate = useNavigate({ from: '/world/$worldId' })
 
-	const matchesTimeline = !!useMatch({ from: '/world/$worldId/_world/timeline', shouldThrow: false })
+	const matchesTimeline = useCheckRouteMatch('/world/$worldId/timeline')
 	const onTimelineClick = () => {
-		navigate({
-			to: '/world/$worldId/timeline/outliner',
-			params: {
-				worldId,
-			},
-		})
-		// navigateToOutliner(store.getState().world.selectedTime, true)
+		navigate({ to: '/world/$worldId/timeline/outliner' })
 	}
 
-	const matchesOverview = !!useMatch({ from: '/world/$worldId/_world/overview', shouldThrow: false })
+	const matchesOverview = useCheckRouteMatch('/world/$worldId/overview')
 	const onOverviewClick = () => {
 		navigate({
 			to: '/world/$worldId/overview',
-			params: {
-				worldId,
-			},
 		})
 	}
 
-	const matchesWiki = !!useMatch({ from: '/world/$worldId/_world/wiki', shouldThrow: false })
+	const matchesWiki = useCheckRouteMatch('/world/$worldId/wiki')
 	const onWikiClick = () => {
 		navigate({
 			to: '/world/$worldId/wiki',
@@ -64,7 +56,7 @@ export const WorldDrawer = () => {
 	// 	})
 	// }
 
-	const matchesSettings = !!useMatch({ from: '/world/$worldId/_world/settings', shouldThrow: false })
+	const matchesSettings = useCheckRouteMatch('/world/$worldId/settings')
 	const onSettingsClick = () => {
 		navigate({
 			to: '/world/$worldId/settings',

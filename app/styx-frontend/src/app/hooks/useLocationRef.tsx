@@ -3,17 +3,20 @@ import { createRef, Ref } from 'react'
 
 const refs: Record<string, Ref<never>> = {}
 
-let i = 0
 export const useLocationRef = () => {
 	const location = useLocation()
 
 	const ref = (() => {
-		refs[i] = createRef()
-		return refs[i++]
+		const oldRef = refs[location.pathname]
+		if (oldRef) {
+			return oldRef
+		}
+		refs[location.pathname] = createRef()
+		return refs[location.pathname]
 	})()
 
 	return {
-		key: i - 1,
+		key: location.pathname,
 		nodeRef: ref,
 	}
 }

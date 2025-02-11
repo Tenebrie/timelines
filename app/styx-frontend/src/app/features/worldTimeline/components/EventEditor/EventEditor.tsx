@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid'
-import { useLocation, useParams } from '@tanstack/react-router'
+import { useParams } from '@tanstack/react-router'
 import { useSelector } from 'react-redux'
 
 import { getWorldState } from '@/app/features/world/selectors'
@@ -9,9 +9,9 @@ import { FullHeightContainer } from './styles'
 
 export const EventEditor = () => {
 	const { events } = useSelector(getWorldState, (a, b) => a.events === b.events)
-	const { eventId } = useParams({ from: '/world/$worldId/_world/timeline/_timeline/event/$eventId' })
-	const params = useLocation()
-	console.log(params.pathname)
+	const { eventId } = useParams({
+		from: '/world/$worldId/_world/timeline/_timeline/event/$eventId',
+	})
 
 	const event = events.find((e) => e.id === eventId)
 

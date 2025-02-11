@@ -14,7 +14,7 @@ import { EventDeltaDetailsEditor } from './components/EventDeltaDetailsEditor'
 export const EventDeltaCreator = () => {
 	const { selectedTime } = useSelector(getWorldState)
 	const { eventId } = useParams({
-		from: '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/create',
+		from: '/world/$worldId/_world/timeline/_timeline/delta/create/$eventId',
 	})
 
 	const { setEventDeltaCreatorGhost } = worldSlice.actions

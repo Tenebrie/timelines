@@ -51,7 +51,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 
 			if (entity.markerType === 'deltaState') {
 				navigate({
-					to: '/world/$worldId/timeline/event/$eventId/delta/$deltaId',
+					to: '/world/$worldId/timeline/delta/$deltaId/$eventId',
 					params: { eventId: entity.eventId, deltaId: entity.id },
 					search: { time: entity.markerPosition },
 				})

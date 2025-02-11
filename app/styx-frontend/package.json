@@ -23,7 +23,7 @@
 	},
 	"dependencies": {
 		"@rollbar/react": "^0.12.0-beta",
-		"@tanstack/react-router": "^1.99.13",
+		"@tanstack/react-router": "^1.102.1",
 		"@tiptap/core": "^2.10.3",
 		"@tiptap/extension-image": "^2.11.3",
 		"@tiptap/extension-mention": "^2.10.3",

@@ -33,8 +33,8 @@ import { Route as WorldWorldIdWorldTimelineTimelineOutlinerImport } from './rout
 import { Route as WorldWorldIdWorldTimelineTimelineEventCreateImport } from './routes/world.$worldId/_world.timeline/_timeline/event.create'
 import { Route as WorldWorldIdWorldTimelineTimelineEventEventIdImport } from './routes/world.$worldId/_world.timeline/_timeline/event.$eventId'
 import { Route as WorldWorldIdWorldTimelineTimelineActorActorIdImport } from './routes/world.$worldId/_world.timeline/_timeline/actor.$actorId'
-import { Route as WorldWorldIdWorldTimelineTimelineEventEventIdDeltaCreateImport } from './routes/world.$worldId/_world.timeline/_timeline/event.$eventId.delta.create'
-import { Route as WorldWorldIdWorldTimelineTimelineEventEventIdDeltaDeltaIdImport } from './routes/world.$worldId/_world.timeline/_timeline/event.$eventId.delta.$deltaId'
+import { Route as WorldWorldIdWorldTimelineTimelineDeltaCreateEventIdImport } from './routes/world.$worldId/_world.timeline/_timeline/delta.create.$eventId'
+import { Route as WorldWorldIdWorldTimelineTimelineDeltaDeltaIdEventIdImport } from './routes/world.$worldId/_world.timeline/_timeline/delta.$deltaId.$eventId'
 
 // Create Virtual Routes
 
@@ -190,18 +190,18 @@ const WorldWorldIdWorldTimelineTimelineActorActorIdRoute =
     getParentRoute: () => WorldWorldIdWorldTimelineTimelineRoute,
   } as any)
 
-const WorldWorldIdWorldTimelineTimelineEventEventIdDeltaCreateRoute =
-  WorldWorldIdWorldTimelineTimelineEventEventIdDeltaCreateImport.update({
-    id: '/delta/create',
-    path: '/delta/create',
-    getParentRoute: () => WorldWorldIdWorldTimelineTimelineEventEventIdRoute,
+const WorldWorldIdWorldTimelineTimelineDeltaCreateEventIdRoute =
+  WorldWorldIdWorldTimelineTimelineDeltaCreateEventIdImport.update({
+    id: '/delta/create/$eventId',
+    path: '/delta/create/$eventId',
+    getParentRoute: () => WorldWorldIdWorldTimelineTimelineRoute,
   } as any)
 
-const WorldWorldIdWorldTimelineTimelineEventEventIdDeltaDeltaIdRoute =
-  WorldWorldIdWorldTimelineTimelineEventEventIdDeltaDeltaIdImport.update({
-    id: '/delta/$deltaId',
-    path: '/delta/$deltaId',
-    getParentRoute: () => WorldWorldIdWorldTimelineTimelineEventEventIdRoute,
+const WorldWorldIdWorldTimelineTimelineDeltaDeltaIdEventIdRoute =
+  WorldWorldIdWorldTimelineTimelineDeltaDeltaIdEventIdImport.update({
+    id: '/delta/$deltaId/$eventId',
+    path: '/delta/$deltaId/$eventId',
+    getParentRoute: () => WorldWorldIdWorldTimelineTimelineRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -369,48 +369,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorldWorldIdWorldTimelineTimelineEventCreateImport
       parentRoute: typeof WorldWorldIdWorldTimelineTimelineImport
     }
-    '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/$deltaId': {
-      id: '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/$deltaId'
-      path: '/delta/$deltaId'
-      fullPath: '/world/$worldId/timeline/event/$eventId/delta/$deltaId'
-      preLoaderRoute: typeof WorldWorldIdWorldTimelineTimelineEventEventIdDeltaDeltaIdImport
-      parentRoute: typeof WorldWorldIdWorldTimelineTimelineEventEventIdImport
+    '/world/$worldId/_world/timeline/_timeline/delta/$deltaId/$eventId': {
+      id: '/world/$worldId/_world/timeline/_timeline/delta/$deltaId/$eventId'
+      path: '/delta/$deltaId/$eventId'
+      fullPath: '/world/$worldId/timeline/delta/$deltaId/$eventId'
+      preLoaderRoute: typeof WorldWorldIdWorldTimelineTimelineDeltaDeltaIdEventIdImport
+      parentRoute: typeof WorldWorldIdWorldTimelineTimelineImport
     }
-    '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/create': {
-      id: '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/create'
-      path: '/delta/create'
-      fullPath: '/world/$worldId/timeline/event/$eventId/delta/create'
-      preLoaderRoute: typeof WorldWorldIdWorldTimelineTimelineEventEventIdDeltaCreateImport
-      parentRoute: typeof WorldWorldIdWorldTimelineTimelineEventEventIdImport
+    '/world/$worldId/_world/timeline/_timeline/delta/create/$eventId': {
+      id: '/world/$worldId/_world/timeline/_timeline/delta/create/$eventId'
+      path: '/delta/create/$eventId'
+      fullPath: '/world/$worldId/timeline/delta/create/$eventId'
+      preLoaderRoute: typeof WorldWorldIdWorldTimelineTimelineDeltaCreateEventIdImport
+      parentRoute: typeof WorldWorldIdWorldTimelineTimelineImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface WorldWorldIdWorldTimelineTimelineEventEventIdRouteChildren {
-  WorldWorldIdWorldTimelineTimelineEventEventIdDeltaDeltaIdRoute: typeof WorldWorldIdWorldTimelineTimelineEventEventIdDeltaDeltaIdRoute
-  WorldWorldIdWorldTimelineTimelineEventEventIdDeltaCreateRoute: typeof WorldWorldIdWorldTimelineTimelineEventEventIdDeltaCreateRoute
-}
-
-const WorldWorldIdWorldTimelineTimelineEventEventIdRouteChildren: WorldWorldIdWorldTimelineTimelineEventEventIdRouteChildren =
-  {
-    WorldWorldIdWorldTimelineTimelineEventEventIdDeltaDeltaIdRoute:
-      WorldWorldIdWorldTimelineTimelineEventEventIdDeltaDeltaIdRoute,
-    WorldWorldIdWorldTimelineTimelineEventEventIdDeltaCreateRoute:
-      WorldWorldIdWorldTimelineTimelineEventEventIdDeltaCreateRoute,
-  }
-
-const WorldWorldIdWorldTimelineTimelineEventEventIdRouteWithChildren =
-  WorldWorldIdWorldTimelineTimelineEventEventIdRoute._addFileChildren(
-    WorldWorldIdWorldTimelineTimelineEventEventIdRouteChildren,
-  )
-
 interface WorldWorldIdWorldTimelineTimelineRouteChildren {
   WorldWorldIdWorldTimelineTimelineOutlinerRoute: typeof WorldWorldIdWorldTimelineTimelineOutlinerRoute
   WorldWorldIdWorldTimelineTimelineActorActorIdRoute: typeof WorldWorldIdWorldTimelineTimelineActorActorIdRoute
-  WorldWorldIdWorldTimelineTimelineEventEventIdRoute: typeof WorldWorldIdWorldTimelineTimelineEventEventIdRouteWithChildren
+  WorldWorldIdWorldTimelineTimelineEventEventIdRoute: typeof WorldWorldIdWorldTimelineTimelineEventEventIdRoute
   WorldWorldIdWorldTimelineTimelineEventCreateRoute: typeof WorldWorldIdWorldTimelineTimelineEventCreateRoute
+  WorldWorldIdWorldTimelineTimelineDeltaDeltaIdEventIdRoute: typeof WorldWorldIdWorldTimelineTimelineDeltaDeltaIdEventIdRoute
+  WorldWorldIdWorldTimelineTimelineDeltaCreateEventIdRoute: typeof WorldWorldIdWorldTimelineTimelineDeltaCreateEventIdRoute
 }
 
 const WorldWorldIdWorldTimelineTimelineRouteChildren: WorldWorldIdWorldTimelineTimelineRouteChildren =
@@ -420,9 +404,13 @@ const WorldWorldIdWorldTimelineTimelineRouteChildren: WorldWorldIdWorldTimelineT
     WorldWorldIdWorldTimelineTimelineActorActorIdRoute:
       WorldWorldIdWorldTimelineTimelineActorActorIdRoute,
     WorldWorldIdWorldTimelineTimelineEventEventIdRoute:
-      WorldWorldIdWorldTimelineTimelineEventEventIdRouteWithChildren,
+      WorldWorldIdWorldTimelineTimelineEventEventIdRoute,
     WorldWorldIdWorldTimelineTimelineEventCreateRoute:
       WorldWorldIdWorldTimelineTimelineEventCreateRoute,
+    WorldWorldIdWorldTimelineTimelineDeltaDeltaIdEventIdRoute:
+      WorldWorldIdWorldTimelineTimelineDeltaDeltaIdEventIdRoute,
+    WorldWorldIdWorldTimelineTimelineDeltaCreateEventIdRoute:
+      WorldWorldIdWorldTimelineTimelineDeltaCreateEventIdRoute,
   }
 
 const WorldWorldIdWorldTimelineTimelineRouteWithChildren =
@@ -525,10 +513,10 @@ export interface FileRoutesByFullPath {
   '/world/$worldId/wiki/$articleId': typeof WorldWorldIdWorldWikiWikiArticleIdRoute
   '/world/$worldId/wiki/': typeof WorldWorldIdWorldWikiWikiIndexRoute
   '/world/$worldId/timeline/actor/$actorId': typeof WorldWorldIdWorldTimelineTimelineActorActorIdRoute
-  '/world/$worldId/timeline/event/$eventId': typeof WorldWorldIdWorldTimelineTimelineEventEventIdRouteWithChildren
+  '/world/$worldId/timeline/event/$eventId': typeof WorldWorldIdWorldTimelineTimelineEventEventIdRoute
   '/world/$worldId/timeline/event/create': typeof WorldWorldIdWorldTimelineTimelineEventCreateRoute
-  '/world/$worldId/timeline/event/$eventId/delta/$deltaId': typeof WorldWorldIdWorldTimelineTimelineEventEventIdDeltaDeltaIdRoute
-  '/world/$worldId/timeline/event/$eventId/delta/create': typeof WorldWorldIdWorldTimelineTimelineEventEventIdDeltaCreateRoute
+  '/world/$worldId/timeline/delta/$deltaId/$eventId': typeof WorldWorldIdWorldTimelineTimelineDeltaDeltaIdEventIdRoute
+  '/world/$worldId/timeline/delta/create/$eventId': typeof WorldWorldIdWorldTimelineTimelineDeltaCreateEventIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -549,10 +537,10 @@ export interface FileRoutesByTo {
   '/world/$worldId/timeline/outliner': typeof WorldWorldIdWorldTimelineTimelineOutlinerRoute
   '/world/$worldId/wiki/$articleId': typeof WorldWorldIdWorldWikiWikiArticleIdRoute
   '/world/$worldId/timeline/actor/$actorId': typeof WorldWorldIdWorldTimelineTimelineActorActorIdRoute
-  '/world/$worldId/timeline/event/$eventId': typeof WorldWorldIdWorldTimelineTimelineEventEventIdRouteWithChildren
+  '/world/$worldId/timeline/event/$eventId': typeof WorldWorldIdWorldTimelineTimelineEventEventIdRoute
   '/world/$worldId/timeline/event/create': typeof WorldWorldIdWorldTimelineTimelineEventCreateRoute
-  '/world/$worldId/timeline/event/$eventId/delta/$deltaId': typeof WorldWorldIdWorldTimelineTimelineEventEventIdDeltaDeltaIdRoute
-  '/world/$worldId/timeline/event/$eventId/delta/create': typeof WorldWorldIdWorldTimelineTimelineEventEventIdDeltaCreateRoute
+  '/world/$worldId/timeline/delta/$deltaId/$eventId': typeof WorldWorldIdWorldTimelineTimelineDeltaDeltaIdEventIdRoute
+  '/world/$worldId/timeline/delta/create/$eventId': typeof WorldWorldIdWorldTimelineTimelineDeltaCreateEventIdRoute
 }
 
 export interface FileRoutesById {
@@ -578,10 +566,10 @@ export interface FileRoutesById {
   '/world/$worldId/_world/wiki/_wiki/$articleId': typeof WorldWorldIdWorldWikiWikiArticleIdRoute
   '/world/$worldId/_world/wiki/_wiki/': typeof WorldWorldIdWorldWikiWikiIndexRoute
   '/world/$worldId/_world/timeline/_timeline/actor/$actorId': typeof WorldWorldIdWorldTimelineTimelineActorActorIdRoute
-  '/world/$worldId/_world/timeline/_timeline/event/$eventId': typeof WorldWorldIdWorldTimelineTimelineEventEventIdRouteWithChildren
+  '/world/$worldId/_world/timeline/_timeline/event/$eventId': typeof WorldWorldIdWorldTimelineTimelineEventEventIdRoute
   '/world/$worldId/_world/timeline/_timeline/event/create': typeof WorldWorldIdWorldTimelineTimelineEventCreateRoute
-  '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/$deltaId': typeof WorldWorldIdWorldTimelineTimelineEventEventIdDeltaDeltaIdRoute
-  '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/create': typeof WorldWorldIdWorldTimelineTimelineEventEventIdDeltaCreateRoute
+  '/world/$worldId/_world/timeline/_timeline/delta/$deltaId/$eventId': typeof WorldWorldIdWorldTimelineTimelineDeltaDeltaIdEventIdRoute
+  '/world/$worldId/_world/timeline/_timeline/delta/create/$eventId': typeof WorldWorldIdWorldTimelineTimelineDeltaCreateEventIdRoute
 }
 
 export interface FileRouteTypes {
@@ -607,8 +595,8 @@ export interface FileRouteTypes {
     | '/world/$worldId/timeline/actor/$actorId'
     | '/world/$worldId/timeline/event/$eventId'
     | '/world/$worldId/timeline/event/create'
-    | '/world/$worldId/timeline/event/$eventId/delta/$deltaId'
-    | '/world/$worldId/timeline/event/$eventId/delta/create'
+    | '/world/$worldId/timeline/delta/$deltaId/$eventId'
+    | '/world/$worldId/timeline/delta/create/$eventId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -630,8 +618,8 @@ export interface FileRouteTypes {
     | '/world/$worldId/timeline/actor/$actorId'
     | '/world/$worldId/timeline/event/$eventId'
     | '/world/$worldId/timeline/event/create'
-    | '/world/$worldId/timeline/event/$eventId/delta/$deltaId'
-    | '/world/$worldId/timeline/event/$eventId/delta/create'
+    | '/world/$worldId/timeline/delta/$deltaId/$eventId'
+    | '/world/$worldId/timeline/delta/create/$eventId'
   id:
     | '__root__'
     | '/'
@@ -657,8 +645,8 @@ export interface FileRouteTypes {
     | '/world/$worldId/_world/timeline/_timeline/actor/$actorId'
     | '/world/$worldId/_world/timeline/_timeline/event/$eventId'
     | '/world/$worldId/_world/timeline/_timeline/event/create'
-    | '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/$deltaId'
-    | '/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/create'
+    | '/world/$worldId/_world/timeline/_timeline/delta/$deltaId/$eventId'
+    | '/world/$worldId/_world/timeline/_timeline/delta/create/$eventId'
   fileRoutesById: FileRoutesById
 }
 
@@ -774,7 +762,9 @@ export const routeTree = rootRoute
         "/world/$worldId/_world/timeline/_timeline/outliner",
         "/world/$worldId/_world/timeline/_timeline/actor/$actorId",
         "/world/$worldId/_world/timeline/_timeline/event/$eventId",
-        "/world/$worldId/_world/timeline/_timeline/event/create"
+        "/world/$worldId/_world/timeline/_timeline/event/create",
+        "/world/$worldId/_world/timeline/_timeline/delta/$deltaId/$eventId",
+        "/world/$worldId/_world/timeline/_timeline/delta/create/$eventId"
       ]
     },
     "/world/$worldId/_world/wiki": {
@@ -810,23 +800,19 @@ export const routeTree = rootRoute
     },
     "/world/$worldId/_world/timeline/_timeline/event/$eventId": {
       "filePath": "world.$worldId/_world.timeline/_timeline/event.$eventId.tsx",
-      "parent": "/world/$worldId/_world/timeline/_timeline",
-      "children": [
-        "/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/$deltaId",
-        "/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/create"
-      ]
+      "parent": "/world/$worldId/_world/timeline/_timeline"
     },
     "/world/$worldId/_world/timeline/_timeline/event/create": {
       "filePath": "world.$worldId/_world.timeline/_timeline/event.create.tsx",
       "parent": "/world/$worldId/_world/timeline/_timeline"
     },
-    "/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/$deltaId": {
-      "filePath": "world.$worldId/_world.timeline/_timeline/event.$eventId.delta.$deltaId.tsx",
-      "parent": "/world/$worldId/_world/timeline/_timeline/event/$eventId"
+    "/world/$worldId/_world/timeline/_timeline/delta/$deltaId/$eventId": {
+      "filePath": "world.$worldId/_world.timeline/_timeline/delta.$deltaId.$eventId.tsx",
+      "parent": "/world/$worldId/_world/timeline/_timeline"
     },
-    "/world/$worldId/_world/timeline/_timeline/event/$eventId/delta/create": {
-      "filePath": "world.$worldId/_world.timeline/_timeline/event.$eventId.delta.create.tsx",
-      "parent": "/world/$worldId/_world/timeline/_timeline/event/$eventId"
+    "/world/$worldId/_world/timeline/_timeline/delta/create/$eventId": {
+      "filePath": "world.$worldId/_world.timeline/_timeline/delta.create.$eventId.tsx",
+      "parent": "/world/$worldId/_world/timeline/_timeline"
     }
   }
 }

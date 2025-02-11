@@ -1,7 +1,6 @@
 import { Outlet, useSearch } from '@tanstack/react-router'
 import { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 import { useLocationRef } from '@/app/hooks/useLocationRef'
 
@@ -11,7 +10,7 @@ import { WorldContent } from './styles'
 
 const useWatchSelectedTime = () => {
 	const scrollTimelineTo = useTimelineBusDispatch()
-	const search = useSearch({ from: '/world/$worldId/_world/timeline/_timeline' })
+	const search = useSearch({ from: '/world/$worldId/_world/timeline/_timeline', select: (search) => search })
 
 	const { setSelectedTime } = worldSlice.actions
 	const dispatch = useDispatch()
@@ -53,13 +52,13 @@ export const WorldTimeline = () => {
 
 	return (
 		<>
-			<SwitchTransition>
-				<CSSTransition key={key} timeout={300} classNames="fade" mountOnEnter unmountOnExit nodeRef={nodeRef}>
-					<WorldContent ref={nodeRef}>
-						<Outlet />
-					</WorldContent>
-				</CSSTransition>
-			</SwitchTransition>
+			{/* <SwitchTransition> */}
+			{/* <CSSTransition key={key} timeout={300} classNames="fade" mountOnEnter unmountOnExit nodeRef={nodeRef}> */}
+			<WorldContent ref={nodeRef}>
+				<Outlet />
+			</WorldContent>
+			{/* </CSSTransition> */}
+			{/* </SwitchTransition> */}
 		</>
 	)
 }

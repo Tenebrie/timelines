@@ -4,10 +4,12 @@ import Speed from '@mui/icons-material/Speed'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
-import { useMatch, useNavigate } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
+
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 import { Announcements } from '../features/announcements/Announcements'
 import { getAuthState } from '../features/auth/selectors'
@@ -51,8 +53,8 @@ export const BaseNavigator = ({ children }: Props) => {
 		console.info(values)
 	}
 
-	const isHome = useMatch({ from: '/home', shouldThrow: false })
-	const isAdmin = useMatch({ from: '/admin', shouldThrow: false })
+	const isHome = useCheckRouteMatch('/home')
+	const isAdmin = useCheckRouteMatch('/admin')
 
 	return (
 		<Container $theme={theme}>

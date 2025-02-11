@@ -3,13 +3,14 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
-import { useNavigate, useParams } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { useDeleteWorldEventMutation } from '@/api/worldEventApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const DeleteEventModal = () => {
@@ -17,7 +18,9 @@ export const DeleteEventModal = () => {
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 
 	const navigate = useNavigate({ from: '/world/$worldId' })
-	const { worldId } = useParams({ from: '/world/$worldId' })
+	const { worldId } = useStrictParams({
+		from: '/world/$worldId',
+	})
 
 	const { isOpen, target: targetEvent, close } = useModal('deleteEventModal')
 

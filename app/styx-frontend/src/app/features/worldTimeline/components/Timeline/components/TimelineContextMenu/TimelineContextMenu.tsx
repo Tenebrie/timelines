@@ -64,7 +64,7 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 			return
 		}
 		navigate({
-			to: '/world/$worldId/timeline/event/$eventId/delta/create',
+			to: '/world/$worldId/timeline/delta/create/$eventId',
 			params: { eventId: selectedMarker.eventId },
 			search: { time: selectedTime },
 		})

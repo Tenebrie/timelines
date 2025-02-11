@@ -6,3 +6,5 @@ import { RouterContext } from '@/main'
 export const Route = createRootRouteWithContext<RouterContext>()({
 	component: App,
 })
+
+export const RootRoute = Route

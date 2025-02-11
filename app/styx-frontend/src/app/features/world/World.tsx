@@ -1,8 +1,10 @@
 import Stack from '@mui/material/Stack'
-import { Outlet, useMatch, useParams } from '@tanstack/react-router'
+import { Outlet } from '@tanstack/react-router'
 
 import { BlockingSpinner } from '@/app/components/BlockingSpinner'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
 import { ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage'
 
 import { useEventBusDispatch, useEventBusSubscribe } from '../eventBus'
@@ -18,13 +20,10 @@ import { WorldDrawer } from './WorldDrawer/WorldDrawer'
 import { WorldNavigator } from './WorldNavigator/WorldNavigator'
 
 export const World = () => {
-	const { worldId } = useParams({
-		from: '/world/$worldId/_world',
+	const { worldId } = useStrictParams({
+		from: '/world/$worldId',
 	})
-	const matchesTimeline = useMatch({
-		from: '/world/$worldId/_world/timeline',
-		shouldThrow: false,
-	})
+	const matchesTimeline = useCheckRouteMatch('/world/$worldId/timeline')
 
 	const { isLoaded } = useLoadWorldInfo(worldId)
 

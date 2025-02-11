@@ -169,7 +169,7 @@ export const OverviewPanel = () => {
 			},
 			onDoubleClick: ({ delta }) => {
 				navigate({
-					to: '/world/$worldId/timeline/event/$eventId/delta/$deltaId',
+					to: 'timeline/delta/$deltaId/$eventId',
 					params: { eventId: delta.worldEventId, deltaId: delta.id },
 					search: { time: delta.timestamp },
 				})
