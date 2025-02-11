@@ -8,6 +8,7 @@ import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
 import { ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage'
 
 import { useEventBusDispatch, useEventBusSubscribe } from '../eventBus'
+import { RichTextEditorPortal } from '../richTextEditor/portals/RichTextEditorPortal'
 import { ActorWizardModal } from '../worldTimeline/components/ActorWizard/ActorWizardModal'
 import { DeleteEventDeltaModal } from '../worldTimeline/components/EventEditor/components/DeleteEventDeltaModal/DeleteEventDeltaModal'
 import { DeleteEventModal } from '../worldTimeline/components/EventEditor/components/DeleteEventModal/DeleteEventModal'
@@ -79,6 +80,7 @@ export const World = () => {
 				)}
 				<BlockingSpinner visible={!isLoaded} />
 			</div>
+			<RichTextEditorPortal />
 			<ActorWizardModal />
 			<EventWizardModal />
 			<RevokedStatementWizard />

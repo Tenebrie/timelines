@@ -1,6 +1,6 @@
 import { Editor, useEditor } from '@tiptap/react'
 import throttle from 'lodash.throttle'
-import { useEffect, useRef } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
@@ -30,7 +30,7 @@ export type OnChangeParams = {
 	mentions: MentionDetails[]
 }
 
-export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode }: Props) => {
+export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allowReadMode }: Props) => {
 	const theme = useCustomTheme()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 	const { readModeEnabled } = useSelector(getWikiPreferences)
@@ -182,3 +182,5 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 		</StyledContainer>
 	)
 }
+
+export const RichTextEditor = memo(RichTextEditorComponent)

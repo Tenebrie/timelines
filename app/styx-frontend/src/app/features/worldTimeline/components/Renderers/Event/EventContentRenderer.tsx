@@ -75,6 +75,7 @@ export const EventContentRenderer = ({ event, active }: Props) => {
 											$lines={10}
 											sx={{ fontSize: '16px' }}
 											style={{ whiteSpace: 'break-spaces' }}
+											component="div"
 										>
 											<b>Content:</b>
 											<RichTextEditorReadonly value={p} />

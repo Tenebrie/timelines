@@ -10,8 +10,8 @@ import { useCallback, useState } from 'react'
 import { ColorPicker } from '@/app/components/ColorPicker'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortalSlot'
 import { RichTextEditor } from '@/app/features/richTextEditor/RichTextEditor'
-import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { ActorDetails } from '@/app/features/worldTimeline/types'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 
@@ -93,15 +93,7 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 					initialValue={actor.color}
 					onChangeHex={(color) => setColor(color)}
 				/>
-				{/* <TextField
-					label="Description"
-					value={description}
-					onChange={(e) => setDescription(e.target.value)}
-					minRows={3}
-					maxRows={11}
-					multiline 
-				/> */}
-				<RichTextEditorWithFallback
+				<RichTextEditorPortalSlot
 					softKey={descriptionKey}
 					value={descriptionRich}
 					onChange={onDescriptionChange}

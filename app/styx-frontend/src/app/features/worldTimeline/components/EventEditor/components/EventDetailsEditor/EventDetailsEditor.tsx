@@ -13,8 +13,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/reducer'
+import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortalSlot'
 import { RichTextEditor } from '@/app/features/richTextEditor/RichTextEditor'
-import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { WorldEvent } from '@/app/features/worldTimeline/types'
@@ -157,7 +157,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 					</Tooltip>
 				</Stack>
 				<Box height={'300px'}>
-					<RichTextEditorWithFallback
+					<RichTextEditorPortalSlot
 						softKey={descriptionKey}
 						value={descriptionRich}
 						onChange={onDescriptionChange}

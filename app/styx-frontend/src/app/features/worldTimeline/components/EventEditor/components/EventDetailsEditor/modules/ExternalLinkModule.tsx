@@ -36,7 +36,7 @@ const tryValidateUrl = (url: string) => {
 
 export const ExternalLinkModule = ({ externalLink, onChange }: Props) => {
 	const navigate = useNavigate({ from: '/world/$worldId' })
-	const search = useSearch({ from: '/world/$worldId/_world/timeline' })
+	const _search = useSearch({ from: '/world/$worldId/_world/timeline' })
 	const [isEditing, setEditing] = useState(false)
 	const [internalData, setInternalData] = useState(externalLink)
 	const isLocal = useMemo(
@@ -83,7 +83,7 @@ export const ExternalLinkModule = ({ externalLink, onChange }: Props) => {
 			return
 		}
 		const link = new URL(externalLink)
-		const paramName = 'time' satisfies keyof typeof search
+		const paramName = 'time' satisfies keyof typeof _search
 		if (link.searchParams.has(paramName)) {
 			const selectedTime = parseInt(link.searchParams.get(paramName) ?? '0')
 			scrollTimelineTo(selectedTime)
