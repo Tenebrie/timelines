@@ -53,6 +53,7 @@ export const ArticleWizardModal = () => {
 				navigate({
 					to: '/world/$worldId/wiki/$articleId',
 					params: { articleId: response.id },
+					search: true,
 				})
 			}, 100)
 		}

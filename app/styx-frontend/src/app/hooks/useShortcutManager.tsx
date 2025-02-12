@@ -5,7 +5,7 @@ import { isMacOS } from '../utils/isMacOS'
 export const Shortcut = {
 	Enter: 'Enter',
 	CtrlEnter: 'Ctrl+Enter',
-	Search: 'Ctrl+f',
+	Search: 't',
 	Escape: 'Escape',
 	CreateNew: 'n',
 } as const

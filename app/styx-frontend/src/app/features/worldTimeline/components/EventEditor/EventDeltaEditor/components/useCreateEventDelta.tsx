@@ -3,8 +3,8 @@ import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCreateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { getWorldIdState } from '@/app/features/world/selectors'
-import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTimelineBus'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { ErrorState } from '@/app/utils/useErrorState'
@@ -33,7 +33,7 @@ export const useCreateEventDelta = ({ state, errorState }: Props) => {
 		throw new Error('Routing error: eventId is not defined')
 	}
 
-	const scrollTimelineTo = useTimelineBusDispatch()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 
 	const [createDeltaState, { isLoading: isCreating, isError }] = useCreateWorldEventDeltaMutation()
 
@@ -55,8 +55,11 @@ export const useCreateEventDelta = ({ state, errorState }: Props) => {
 			return
 		}
 		errorState.clearError()
-		navigate({ to: '/world/$worldId/timeline/outliner', search: { time: state.timestamp } })
-		scrollTimelineTo(state.timestamp)
+		navigate({
+			to: '/world/$worldId/timeline/outliner',
+			search: (prev) => ({ ...prev, time: state.timestamp }),
+		})
+		scrollTimelineTo({ timestamp: state.timestamp })
 	}, [
 		createDeltaState,
 		worldId,

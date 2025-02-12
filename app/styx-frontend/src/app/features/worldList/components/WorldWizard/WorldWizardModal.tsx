@@ -87,7 +87,7 @@ export const WorldWizardModal = () => {
 		navigate({
 			to: '/world/$worldId/timeline',
 			params: { worldId: response.id },
-			search: { time: timeOrigin },
+			search: (prev) => ({ ...prev, time: timeOrigin }),
 		})
 	}
 

@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack'
 import Switch from '@mui/material/Switch'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
@@ -38,6 +38,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 	const { state } = useEventFields({ event })
 	const {
 		modules,
+		key,
 		name,
 		icon,
 		timestamp,
@@ -46,6 +47,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		descriptionRich,
 		customNameEnabled,
 		externalLink,
+		bumpKey,
 		setName,
 		setTimestamp,
 		setIcon,
@@ -58,16 +60,14 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		loadEvent,
 	} = state
 
-	const [descriptionKey, setDescriptionKey] = useState(0)
-
-	usePreserveCreateState({ mode, state, onLoaded: () => setDescriptionKey((prev) => prev + 1) })
+	usePreserveCreateState({ mode, state, onLoaded: bumpKey })
 
 	useEventBusSubscribe({
 		event: 'richEditor/forceUpdateEvent',
 		condition: (data) => mode === 'edit' && event.id === data.event.id,
 		callback: (data) => {
 			loadEvent(data.event)
-			setDescriptionKey((prev) => prev + 1)
+			bumpKey()
 		},
 	})
 
@@ -80,7 +80,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 				setDescriptionRich('')
 				setMentions([])
 				setCustomNameEnabled(false)
-				setDescriptionKey((prev) => prev + 1)
+				bumpKey()
 			}
 		},
 	})
@@ -158,7 +158,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 				</Stack>
 				<Box height={'300px'}>
 					<RichTextEditorPortalSlot
-						softKey={descriptionKey}
+						softKey={`${event.id}/${key}`}
 						value={descriptionRich}
 						onChange={onDescriptionChange}
 					/>

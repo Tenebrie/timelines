@@ -6,6 +6,7 @@ import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 import { ActorDetails, WorldEvent } from '../worldTimeline/types'
 
 export type AllowedEvents =
+	| 'scrollTimelineTo'
 	| 'scrollTimelineLeft'
 	| 'scrollTimelineRight'
 	| 'sendCalliopeMessage'
@@ -22,7 +23,18 @@ export type AllowedEvents =
 	| 'richEditor/mentionRender/start'
 	| 'richEditor/mentionRender/end'
 
+type ScrollTimelineToParams =
+	| {
+			timestamp: number
+			skipAnim?: boolean
+	  }
+	| {
+			rawScrollValue: number
+			skipAnim?: boolean
+	  }
+
 export type EventParams = {
+	['scrollTimelineTo']: ScrollTimelineToParams
 	['scrollTimelineLeft']: void
 	['scrollTimelineRight']: void
 	['sendCalliopeMessage']: ClientToCalliopeMessage

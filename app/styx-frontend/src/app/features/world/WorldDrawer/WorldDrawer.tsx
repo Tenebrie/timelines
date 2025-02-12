@@ -18,22 +18,20 @@ import { getWorldState } from '../selectors'
 import { WorldHeader } from './components/WorldHeader'
 
 export const WorldDrawer = () => {
-	const { id: worldId, isReadOnly } = useSelector(
-		getWorldState,
-		(a, b) => a.id === b.id && a.isReadOnly === b.isReadOnly,
-	)
+	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 	const { panelOpen } = useSelector(getOverviewPreferences)
 	const navigate = useNavigate({ from: '/world/$worldId' })
 
 	const matchesTimeline = useCheckRouteMatch('/world/$worldId/timeline')
 	const onTimelineClick = () => {
-		navigate({ to: '/world/$worldId/timeline/outliner' })
+		navigate({ to: '/world/$worldId/timeline/outliner', search: true })
 	}
 
 	const matchesOverview = useCheckRouteMatch('/world/$worldId/overview')
 	const onOverviewClick = () => {
 		navigate({
 			to: '/world/$worldId/overview',
+			search: true,
 		})
 	}
 
@@ -41,9 +39,7 @@ export const WorldDrawer = () => {
 	const onWikiClick = () => {
 		navigate({
 			to: '/world/$worldId/wiki',
-			params: {
-				worldId,
-			},
+			search: true,
 		})
 	}
 
@@ -60,9 +56,7 @@ export const WorldDrawer = () => {
 	const onSettingsClick = () => {
 		navigate({
 			to: '/world/$worldId/settings',
-			params: {
-				worldId,
-			},
+			search: true,
 		})
 	}
 

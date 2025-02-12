@@ -34,6 +34,7 @@ export const ArticleListItem = ({ article }: Props) => {
 		navigate({
 			to: '/world/$worldId/wiki/$articleId',
 			params: { articleId: article.id },
+			search: true,
 		})
 	}, [article.id, navigate])
 

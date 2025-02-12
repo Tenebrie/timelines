@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { MentionDetails, WorldEvent } from '@/app/features/worldTimeline/types'
 import { generateSetter } from '@/app/utils/autosave/generateSetter'
@@ -13,6 +13,8 @@ export const useEventFields = ({ event }: Props) => {
 		isDirty.current = value
 	}, [])
 
+	const currentId = useRef(event.id)
+	const [key, setKey] = useState(0)
 	const [modules, setModulesDirect] = useState<typeof event.extraFields>(event.extraFields)
 	const [name, setNameDirect] = useState<string>(event.name)
 	const [icon, setIconDirect] = useState<string>(event.icon)
@@ -41,41 +43,56 @@ export const useEventFields = ({ event }: Props) => {
 		[],
 	)
 
-	const loadState = (loadedState: {
-		name: string
-		description: string
-		descriptionRich: string
-		timestamp: number
-		icon: string
-		mentions: MentionDetails[]
-		externalLink: string
-		customNameEnabled: boolean
-		revokedAt?: number | undefined
-		extraFields: typeof event.extraFields
-	}) => {
-		setDirty(false)
-		setters.setName(loadedState.name, { cleanSet: true })
-		setters.setDescription(loadedState.description, { cleanSet: true })
-		setters.setDescriptionRich(loadedState.descriptionRich, { cleanSet: true })
-		setters.setTimestamp(loadedState.timestamp, { cleanSet: true })
-		setters.setIcon(loadedState.icon, { cleanSet: true })
-		setters.setMentions(loadedState.mentions, { cleanSet: true })
-		setters.setExternalLink(loadedState.externalLink, { cleanSet: true })
-		setters.setCustomNameEnabled(loadedState.customNameEnabled, { cleanSet: true })
-		setters.setRevokedAt(loadedState.revokedAt, { cleanSet: true })
-		setters.setModules(loadedState.extraFields, { cleanSet: true })
-	}
+	const loadState = useCallback(
+		(loadedState: {
+			name: string
+			description: string
+			descriptionRich: string
+			timestamp: number
+			icon: string
+			mentions: MentionDetails[]
+			externalLink: string
+			customNameEnabled: boolean
+			revokedAt?: number | undefined
+			extraFields: typeof event.extraFields
+		}) => {
+			setDirty(false)
+			setters.setName(loadedState.name, { cleanSet: true })
+			setters.setDescription(loadedState.description, { cleanSet: true })
+			setters.setDescriptionRich(loadedState.descriptionRich, { cleanSet: true })
+			setters.setTimestamp(loadedState.timestamp, { cleanSet: true })
+			setters.setIcon(loadedState.icon, { cleanSet: true })
+			setters.setMentions(loadedState.mentions, { cleanSet: true })
+			setters.setExternalLink(loadedState.externalLink, { cleanSet: true })
+			setters.setCustomNameEnabled(loadedState.customNameEnabled, { cleanSet: true })
+			setters.setRevokedAt(loadedState.revokedAt, { cleanSet: true })
+			setters.setModules(loadedState.extraFields, { cleanSet: true })
+			setKey((prev) => prev + 1)
+		},
+		[event, setDirty, setters],
+	)
 
-	const loadEvent = (event: WorldEvent) => {
-		loadState({
-			...event,
-			customNameEnabled: event.customName,
-		})
-	}
+	const loadEvent = useCallback(
+		(event: WorldEvent) => {
+			loadState({
+				...event,
+				customNameEnabled: event.customName,
+			})
+			currentId.current = event.id
+		},
+		[loadState],
+	)
+
+	useEffect(() => {
+		if (currentId.current !== event.id) {
+			loadEvent(event)
+		}
+	}, [event, event.id, loadEvent])
 
 	return {
 		state: {
 			isDirty,
+			key,
 			modules,
 			name,
 			icon,
@@ -87,6 +104,7 @@ export const useEventFields = ({ event }: Props) => {
 			customNameEnabled: customName,
 			externalLink,
 			setDirty,
+			bumpKey: () => setKey((prev) => prev + 1),
 			...setters,
 			loadState,
 			loadEvent,

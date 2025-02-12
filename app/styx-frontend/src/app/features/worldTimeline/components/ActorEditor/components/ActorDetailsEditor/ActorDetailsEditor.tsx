@@ -94,7 +94,7 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 					onChangeHex={(color) => setColor(color)}
 				/>
 				<RichTextEditorPortalSlot
-					softKey={descriptionKey}
+					softKey={`${actor.id}/${descriptionKey}`}
 					value={descriptionRich}
 					onChange={onDescriptionChange}
 				/>

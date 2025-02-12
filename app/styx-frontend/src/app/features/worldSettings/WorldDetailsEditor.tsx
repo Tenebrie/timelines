@@ -1,6 +1,5 @@
 import { GetWorldCollaboratorsApiResponse } from '@api/worldCollaboratorsApi'
 import LoadingButton from '@mui/lab/LoadingButton'
-import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
@@ -9,8 +8,6 @@ import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
-import { useNavigate } from '@tanstack/react-router'
-import { useCallback } from 'react'
 
 import { useWorldCalendar } from '@/app/features/time/hooks/useWorldCalendar'
 import { WorldBrief, WorldCalendarType } from '@/app/features/worldTimeline/types'
@@ -27,7 +24,6 @@ type Props = {
 }
 
 export const WorldDetailsEditor = ({ world, collaborators }: Props) => {
-	const navigate = useNavigate()
 	const { listAllCalendars } = useWorldCalendar()
 
 	const state = useWorldFields({ world })
@@ -37,10 +33,6 @@ export const WorldDetailsEditor = ({ world, collaborators }: Props) => {
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		manualSave()
 	})
-
-	const onClose = useCallback(() => {
-		navigate({ to: '/home' })
-	}, [navigate])
 
 	return (
 		<Stack gap={2} marginTop={1}>
@@ -67,7 +59,6 @@ export const WorldDetailsEditor = ({ world, collaborators }: Props) => {
 			<WorldCollaborators worldId={world.id} collaborators={collaborators} />
 			<Divider />
 			<Stack direction="row" justifyContent="flex-end" gap={2}>
-				<Button onClick={onClose}>Close</Button>
 				<Tooltip title={shortcutLabel} arrow placement="top">
 					<span>
 						<LoadingButton

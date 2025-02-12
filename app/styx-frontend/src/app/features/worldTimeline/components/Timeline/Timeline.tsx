@@ -1,6 +1,6 @@
 import Paper from '@mui/material/Paper'
 import { useNavigate } from '@tanstack/react-router'
-import { useCallback, useEffect, useRef } from 'react'
+import { memo, useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventBus'
@@ -9,13 +9,13 @@ import { getWorldState } from '@/app/features/world/selectors'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
-import { useTimelineBusDispatch } from '../../hooks/useTimelineBus'
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
 import { TimelineControls } from './components/TimelineControls/TimelineControls'
 import { TimelineGrabber } from './components/TimelineGrabber/TimelineGrabber'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
 import { TimelineTracks } from './components/TimelineTracks/TimelineTracks'
+import { TimelineZoomReporter } from './components/TimelineZoomReporter'
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
 import { useContainerHeight } from './hooks/useContainerHeight'
 import { useTimelineDimensions } from './hooks/useTimelineDimensions'
@@ -24,21 +24,26 @@ import { timelineSlice } from './reducer'
 import { TimelineContainer, TimelineWrapper } from './styles'
 import { TimelineState } from './utils/TimelineState'
 
-export const Timeline = () => {
-	const { timeOrigin, calendar, selectedTime } = useSelector(getWorldState)
+export const Timeline = memo(TimelineComponent)
+
+function TimelineComponent() {
+	const { timeOrigin, calendar, selectedTime } = useSelector(
+		getWorldState,
+		(a, b) => a.selectedTime === b.selectedTime && a.calendar === b.calendar && a.timeOrigin === b.timeOrigin,
+	)
 	const theme = useCustomTheme()
 
 	const { setScaleLevel } = timelineSlice.actions
 	const dispatch = useDispatch()
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 
-	const scrollTimelineTo = useTimelineBusDispatch()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 
 	const onClick = useCallback(
 		(time: number) => {
 			navigate({
 				to: '/world/$worldId/timeline/outliner',
-				search: { time },
+				search: (prev) => ({ ...prev, time }),
 			})
 		},
 		[navigate],
@@ -46,7 +51,7 @@ export const Timeline = () => {
 
 	const onDoubleClick = useCallback(
 		(time: number) => {
-			scrollTimelineTo(time)
+			scrollTimelineTo({ timestamp: time })
 		},
 		[scrollTimelineTo],
 	)
@@ -80,7 +85,6 @@ export const Timeline = () => {
 		notifyTimelineScrolled()
 	}, [notifyTimelineScrolled, scroll])
 
-	const scrollTimelineToTime = useCallback((time: number) => scrollTimelineTo(time), [scrollTimelineTo])
 	const scrollZoomIn = useCallback(() => performZoom(-1), [performZoom])
 	const scrollZoomOut = useCallback(() => performZoom(1), [performZoom])
 
@@ -89,11 +93,11 @@ export const Timeline = () => {
 		(side: 'left' | 'right') => {
 			const currentTimestamp = scaledTimeToRealTime(-scroll)
 			const sideScalar = side === 'left' ? -1 : 1
-			scrollTimelineToTime(
-				currentTimestamp + scaledTimeToRealTime(containerWidth * sideScalar + containerWidth / 2),
-			)
+			scrollTimelineTo({
+				timestamp: currentTimestamp + scaledTimeToRealTime(containerWidth * sideScalar + containerWidth / 2),
+			})
 		},
-		[scaledTimeToRealTime, scroll, scrollTimelineToTime, containerWidth],
+		[scaledTimeToRealTime, scroll, scrollTimelineTo, containerWidth],
 	)
 	useEventBusSubscribe({ event: 'scrollTimelineLeft', callback: () => onScrollFullPage('left') })
 	useEventBusSubscribe({ event: 'scrollTimelineRight', callback: () => onScrollFullPage('right') })
@@ -101,7 +105,10 @@ export const Timeline = () => {
 	const containerHeight = useContainerHeight()
 
 	useEffectOnce(() => {
-		scrollTimelineTo(selectedTime, false, true)
+		scrollTimelineTo({
+			timestamp: selectedTime,
+			skipAnim: true,
+		})
 	})
 
 	return (
@@ -116,11 +123,7 @@ export const Timeline = () => {
 						backgroundColor: theme.custom.palette.background.timeline,
 					}}
 				>
-					<TimelineControls
-						onNavigateToTime={scrollTimelineToTime}
-						onZoomIn={scrollZoomIn}
-						onZoomOut={scrollZoomOut}
-					/>
+					<TimelineControls onZoomIn={scrollZoomIn} onZoomOut={scrollZoomOut} />
 					<TimelineTracks
 						anotherRef={anotherRef}
 						visible={!isSwitchingScale}
@@ -153,6 +156,7 @@ export const Timeline = () => {
 					<TimelineGrabber />
 				</TimelineContainer>
 			</TimelineWrapper>
+			<TimelineZoomReporter />
 		</Paper>
 	)
 }

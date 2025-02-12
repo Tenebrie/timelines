@@ -45,7 +45,11 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 					<IconButton
 						key={'edit'}
 						onClick={() =>
-							navigate({ to: '/world/$worldId/timeline/event/$eventId', params: { eventId: event.id } })
+							navigate({
+								to: '/world/$worldId/timeline/event/$eventId',
+								params: { eventId: event.id },
+								search: true,
+							})
 						}
 						aria-label="Edit"
 					>

@@ -1,39 +1,31 @@
 import bezier from 'bezier-easing'
 import throttle from 'lodash.throttle'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { maximumTime, useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getWorldCalendarState } from '@/app/features/world/selectors'
-import { useTimelineBusSubscribe } from '@/app/features/worldTimeline/hooks/useTimelineBus'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
 import { Position } from '@/app/types/Position'
 import clampToRange from '@/app/utils/clampToRange'
 import { isMacOS } from '@/app/utils/isMacOS'
 import { rangeMap } from '@/app/utils/rangeMap'
+import { router } from '@/router'
 
 import { ScaleLevel } from '../types'
 import { useTimelineScroll } from './useTimelineScroll'
 
 type Props = {
-	containerRef: React.MutableRefObject<HTMLDivElement | null>[]
+	containerRef: React.RefObject<HTMLDivElement | null>[]
 	defaultScroll: number
 	selectedTime: number | null
-	scaleLimits: [number, number]
+	scaleLimits: [ScaleLevel, ScaleLevel]
 	onClick: (time: number) => void
 	onDoubleClick: (time: number) => void
-}
-
-const checkIfClickBlocked = (target: EventTarget | null, depth = 0) => {
-	if (depth >= 10 || (!(target instanceof HTMLElement) && !(target instanceof SVGElement))) {
-		return false
-	}
-	if (target.classList.contains('block-timeline')) {
-		return true
-	}
-	return checkIfClickBlocked(target.parentNode, depth + 1)
 }
 
 export const useTimelineNavigation = ({
@@ -63,7 +55,10 @@ export const useTimelineNavigation = ({
 	const { parseTime, pickerToTimestamp } = useWorldTime()
 	const calendar = useSelector(getWorldCalendarState)
 
-	const [scaleLevel, setScaleLevel] = useState<ScaleLevel>(0)
+	const { setScaleLevel: setPreferredScaleLevel } = preferencesSlice.actions
+	const dispatch = useDispatch()
+
+	const [scaleLevel, setScaleLevel] = useState<ScaleLevel>(router.state.location.search.scale ?? 0)
 	const scalar = useMemo(() => getLevelScalar(scaleLevel), [getLevelScalar, scaleLevel])
 	const minimumScroll = useMemo(() => -maximumTime / scalar / 1000 / 60, [scalar])
 	const maximumScroll = useMemo(() => maximumTime / scalar / 1000 / 60, [scalar])
@@ -173,12 +168,10 @@ export const useTimelineNavigation = ({
 
 	const [readyToSwitchScale, setReadyToSwitchScale] = useState(false)
 	const [scaleSwitchesToDo, setScaleSwitchesToDo] = useState(0)
-	// const [switchingScaleTimeout, setSwitchingScaleTimeout] = useState<number | null>(null)
 	const switchingScaleTimeout = useRef<number | null>(null)
 
-	const [scaleScroll, setScaleScroll] = useState(0)
-
-	const [targetScale, setTargetScale] = useState(0)
+	const [scaleScroll, setScaleScroll] = useState(scaleLevel * 100)
+	const [targetScale, setTargetScale] = useState(scaleLevel)
 
 	const { realTimeToScaledTime, scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
 
@@ -242,6 +235,7 @@ export const useTimelineNavigation = ({
 		setScroll(scrollToSet)
 		setScaleLevel(newScaleLevel)
 		setScaleScroll(currentScaleScroll)
+		dispatch(setPreferredScaleLevel(newScaleLevel))
 
 		setTimeout(() => {
 			setIsSwitchingScale(false)
@@ -258,6 +252,8 @@ export const useTimelineNavigation = ({
 		realTimeToScaledTime,
 		setScroll,
 		selectedTime,
+		dispatch,
+		setPreferredScaleLevel,
 	])
 
 	/**
@@ -268,14 +264,10 @@ export const useTimelineNavigation = ({
 			const newScaleSwitchesToDo = scaleSwitchesToDo + Math.sign(scrollDirection)
 			const newTargetScale = clampToRange(
 				scaleLimits[0],
-				scaleScroll / 100 + newScaleSwitchesToDo,
+				Math.round(scaleScroll / 100 + newScaleSwitchesToDo),
 				scaleLimits[1],
-			)
+			) as ScaleLevel
 
-			// if (newTargetScale === 2) {
-			// 	newTargetScale += Math.sign(scrollDirection)
-			// 	newScaleSwitchesToDo += Math.sign(scrollDirection)
-			// }
 			setScaleSwitchesToDo(newScaleSwitchesToDo)
 			setIsSwitchingScale(true)
 			setIsScrollUsingMouse(useMouse)
@@ -527,8 +519,22 @@ export const useTimelineNavigation = ({
 	)
 
 	/* External scrollTo */
-	useTimelineBusSubscribe({
-		callback: scrollTo,
+	// useTimelineBusSubscribe({
+	// callback: scrollTo,
+	// })
+	useEventBusSubscribe({
+		event: 'scrollTimelineTo',
+		callback: (props) => {
+			if ('rawScrollValue' in props) {
+				scrollTo({
+					timestamp: props.rawScrollValue,
+					useRawScroll: true,
+					skipAnim: props.skipAnim,
+				})
+			} else {
+				scrollTo(props)
+			}
+		},
 	})
 
 	// Published scroll
@@ -549,7 +555,16 @@ export const useTimelineNavigation = ({
 		scaleLevel,
 		targetScaleIndex: targetScale,
 		isSwitchingScale,
-		scrollTo,
 		performZoom: setRequestedZoom,
 	}
+}
+
+function checkIfClickBlocked(target: EventTarget | null, depth = 0) {
+	if (depth >= 10 || (!(target instanceof HTMLElement) && !(target instanceof SVGElement))) {
+		return false
+	}
+	if (target.classList.contains('block-timeline')) {
+		return true
+	}
+	return checkIfClickBlocked(target.parentNode, depth + 1)
 }

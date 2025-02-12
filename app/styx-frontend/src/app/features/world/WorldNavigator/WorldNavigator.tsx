@@ -9,10 +9,10 @@ import { BaseNavigator } from '@/app/components/BaseNavigator'
 import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { getOverviewPreferences } from '@/app/features/preferences/selectors'
 
-import { useTimelineBusDispatch } from '../../worldTimeline/hooks/useTimelineBus'
+import { useEventBusDispatch } from '../../eventBus'
 
 export const WorldNavigatorComponent = () => {
-	const scrollTimelineTo = useTimelineBusDispatch()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 	const navigate = useNavigate({ from: '/world/$worldId' })
 
 	const { panelOpen } = useSelector(getOverviewPreferences)
@@ -24,8 +24,8 @@ export const WorldNavigatorComponent = () => {
 	}, [dispatch, panelOpen, setPanelOpen])
 
 	const onNavigate = useCallback(() => {
-		navigate({ to: '/world/$worldId/timeline/outliner' })
-		scrollTimelineTo(0)
+		navigate({ to: '/world/$worldId/timeline/outliner', search: true })
+		scrollTimelineTo({ timestamp: 0 })
 	}, [navigate, scrollTimelineTo])
 
 	return (

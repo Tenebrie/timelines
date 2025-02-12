@@ -1,11 +1,12 @@
 import { useTheme } from '@mui/material'
-import { useMemo } from 'react'
+import { useDebugValue, useMemo } from 'react'
 
 import { customDarkTheme, customLightTheme, darkTheme, lightTheme } from '../features/theming/themes'
 
 export type CustomTheme = ReturnType<typeof useCustomTheme>
 
 export const useCustomTheme = () => {
+	useDebugValue('useCustomTheme')
 	const theme = useTheme()
 
 	const customTheme = useMemo(() => {

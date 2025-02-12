@@ -21,10 +21,10 @@ import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
 
+import { useEventBusDispatch } from '../../eventBus'
 import { worldSlice } from '../../world/reducer'
 import { getWorldState } from '../../world/selectors'
 import { ActorAvatar } from '../../worldTimeline/components/Renderers/ActorAvatar/ActorAvatar'
-import { useTimelineBusDispatch } from '../../worldTimeline/hooks/useTimelineBus'
 import { Actor, ActorDetails, WorldEvent, WorldEventDelta } from '../../worldTimeline/types'
 import { OverviewSublist } from './OverviewSublist'
 import { StyledListItemButton, StyledListItemText } from './styles'
@@ -42,7 +42,7 @@ export const OverviewPanel = () => {
 	})
 	const { actorsOpen, actorsReversed, eventsOpen, eventsReversed } = useSelector(getOverviewPreferences)
 
-	const scrollTimelineTo = useTimelineBusDispatch()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 	const navigate = useNavigate({ from: '/world/$worldId' })
 	const { timeToLabel } = useWorldTime()
 	const { addActorToSelection, removeActorFromSelection, addEventToSelection, removeEventFromSelection } =
@@ -151,9 +151,9 @@ export const OverviewPanel = () => {
 			navigate({
 				to: '/world/$worldId/timeline/event/$eventId',
 				params: { eventId: event.id },
-				search: { time: event.timestamp },
+				search: (prev) => ({ ...prev, time: event.timestamp }),
 			})
-			scrollTimelineTo(event.timestamp)
+			scrollTimelineTo({ timestamp: event.timestamp })
 		},
 		ignoreDelay: true,
 	})
@@ -171,9 +171,9 @@ export const OverviewPanel = () => {
 				navigate({
 					to: 'timeline/delta/$deltaId/$eventId',
 					params: { eventId: delta.worldEventId, deltaId: delta.id },
-					search: { time: delta.timestamp },
+					search: (prev) => ({ ...prev, time: delta.timestamp }),
 				})
-				scrollTimelineTo(delta.timestamp)
+				scrollTimelineTo({ timestamp: delta.timestamp })
 				dispatch(removeEventFromSelection(delta.worldEventId))
 			},
 			ignoreDelay: true,

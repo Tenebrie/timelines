@@ -11,10 +11,10 @@ import { useSelector } from 'react-redux'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
+import { useEventBusDispatch } from '../../eventBus'
 import { useTimeSelector } from '../../time/hooks/useTimeSelector'
 import { useWorldTime } from '../../time/hooks/useWorldTime'
 import { getWorldState } from '../../world/selectors'
-import { useTimelineBusDispatch } from '../../worldTimeline/hooks/useTimelineBus'
 import { WorldCalendarType } from '../../worldTimeline/types'
 import { useModal } from '../reducer'
 import { TimeTravelModalInfo } from './TimeTravelModalInfo'
@@ -65,15 +65,18 @@ export const TimeTravelModal = () => {
 		},
 	})
 
-	const scrollTimelineTo = useTimelineBusDispatch()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 
 	const onConfirm = useCallback(() => {
 		if (!isOpen) {
 			return
 		}
-		scrollTimelineTo(targetTime)
+		scrollTimelineTo({ timestamp: targetTime })
 		navigate({
-			search: {},
+			search: (prev) => ({
+				...prev,
+				time: targetTime,
+			}),
 		})
 		close()
 	}, [isOpen, targetTime, scrollTimelineTo, navigate, close])

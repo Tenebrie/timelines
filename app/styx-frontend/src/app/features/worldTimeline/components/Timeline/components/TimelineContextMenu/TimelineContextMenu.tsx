@@ -55,7 +55,10 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 
 	const onCreateEvent = useCallback(() => {
 		onClose()
-		navigate({ to: '/world/$worldId/timeline/event/create', search: { time: selectedTime } })
+		navigate({
+			to: '/world/$worldId/timeline/event/create',
+			search: (prev) => ({ ...prev, time: selectedTime }),
+		})
 	}, [onClose, navigate, selectedTime])
 
 	const onReplaceSelectedEvent = useCallback(() => {
@@ -66,7 +69,7 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 		navigate({
 			to: '/world/$worldId/timeline/delta/create/$eventId',
 			params: { eventId: selectedMarker.eventId },
-			search: { time: selectedTime },
+			search: (prev) => ({ ...prev, time: selectedTime }),
 		})
 	}, [navigate, onClose, selectedMarker, selectedTime])
 

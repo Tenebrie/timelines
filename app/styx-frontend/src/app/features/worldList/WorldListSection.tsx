@@ -44,15 +44,17 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 			params: {
 				worldId: world.id,
 			},
-			search: {
+			search: (prev) => ({
+				...prev,
 				time: parseInt(world.timeOrigin),
-			},
+			}),
 		})
 	}
 
 	const onEdit = (id: string) => {
 		navigate({
 			to: `/world/${id}/settings`,
+			search: true,
 		})
 	}
 

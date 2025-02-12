@@ -6,6 +6,7 @@ import classNames from 'classnames'
 import { memo, MouseEvent, Profiler, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { worldSlice } from '@/app/features/world/reducer'
 import { useEventIcons } from '@/app/features/worldTimeline/hooks/useEventIcons'
@@ -35,6 +36,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 
 	const navigate = useNavigate({ from: '/world/$worldId' })
 	const { getIconPath } = useEventIcons()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
@@ -53,15 +55,16 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 				navigate({
 					to: '/world/$worldId/timeline/delta/$deltaId/$eventId',
 					params: { eventId: entity.eventId, deltaId: entity.id },
-					search: { time: entity.markerPosition },
+					search: (prev) => ({ ...prev, time: entity.markerPosition }),
 				})
 			} else {
 				navigate({
 					to: '/world/$worldId/timeline/event/$eventId',
 					params: { eventId: entity.eventId },
-					search: { time: entity.markerPosition },
+					search: (prev) => ({ ...prev, time: entity.markerPosition }),
 				})
 			}
+			scrollTimelineTo({ timestamp: entity.markerPosition })
 		},
 		ignoreDelay: true,
 	})

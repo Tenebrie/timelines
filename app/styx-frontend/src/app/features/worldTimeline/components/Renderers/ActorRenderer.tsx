@@ -45,7 +45,11 @@ export const ActorRenderer = ({ actor, collapsed }: Props) => {
 			<IconButton
 				key={'edit'}
 				onClick={() =>
-					navigate({ to: '/world/$worldId/timeline/actor/$actorId', params: { actorId: actor.id } })
+					navigate({
+						to: '/world/$worldId/timeline/actor/$actorId',
+						params: { actorId: actor.id },
+						search: true,
+					})
 				}
 			>
 				<Edit />

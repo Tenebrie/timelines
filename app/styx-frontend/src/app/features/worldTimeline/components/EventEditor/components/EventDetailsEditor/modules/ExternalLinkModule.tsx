@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 import { Link, useNavigate, useSearch } from '@tanstack/react-router'
 import { useCallback, useMemo, useState } from 'react'
 
-import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTimelineBus'
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 
 type Props = {
@@ -77,7 +77,7 @@ export const ExternalLinkModule = ({ externalLink, onChange }: Props) => {
 		setEditing(false)
 	}, [internalData, onChange])
 
-	const scrollTimelineTo = useTimelineBusDispatch()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 	const onNavigation = useCallback(() => {
 		if (!isLocal) {
 			return
@@ -86,8 +86,10 @@ export const ExternalLinkModule = ({ externalLink, onChange }: Props) => {
 		const paramName = 'time' satisfies keyof typeof _search
 		if (link.searchParams.has(paramName)) {
 			const selectedTime = parseInt(link.searchParams.get(paramName) ?? '0')
-			scrollTimelineTo(selectedTime)
-			navigate({ search: { time: selectedTime } })
+			scrollTimelineTo({ timestamp: selectedTime })
+			navigate({
+				search: (prev) => ({ ...prev, time: selectedTime }),
+			})
 		}
 	}, [externalLink, isLocal, navigate, scrollTimelineTo])
 

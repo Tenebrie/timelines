@@ -14,6 +14,7 @@ import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useUpdateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/reducer'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getWorldIdState } from '@/app/features/world/selectors'
@@ -21,16 +22,14 @@ import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import useEventTracks, { TimelineTrack } from '../../TimelineTracks/hooks/useEventTracks'
 
-type Props = {
-	onNavigateToTime: (timestamp: number) => void
-}
-
-export const EventTracksMenu = ({ onNavigateToTime }: Props) => {
+export const EventTracksMenu = () => {
 	const worldId = useSelector(getWorldIdState)
 	const tracks = useEventTracks({ showHidden: true })
 	const displayedTracks = tracks.filter((t) => t.id !== 'default')
 	const { timeToLabel } = useWorldTime()
 	const { open: openEventTrackEdit } = useModal('eventTrackEdit')
+
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 
 	const [updateTrack] = useUpdateWorldEventTrackMutation()
 
@@ -108,7 +107,9 @@ export const EventTracksMenu = ({ onNavigateToTime }: Props) => {
 													color="secondary"
 													variant="outlined"
 													onClick={() => {
-														onNavigateToTime(track.events[track.events.length - 1].markerPosition)
+														scrollTimelineTo({
+															timestamp: track.events[track.events.length - 1].markerPosition,
+														})
 													}}
 												>
 													{timeToLabel(track.events[track.events.length - 1].markerPosition)}
@@ -122,7 +123,9 @@ export const EventTracksMenu = ({ onNavigateToTime }: Props) => {
 													color="secondary"
 													variant="outlined"
 													onClick={() => {
-														onNavigateToTime(track.events[0].markerPosition)
+														scrollTimelineTo({
+															timestamp: track.events[0].markerPosition,
+														})
 													}}
 												>
 													{timeToLabel(track.events[0].markerPosition)}

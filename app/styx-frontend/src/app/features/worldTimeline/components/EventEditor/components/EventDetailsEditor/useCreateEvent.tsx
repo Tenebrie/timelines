@@ -3,8 +3,8 @@ import { useNavigate } from '@tanstack/react-router'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { getWorldIdState } from '@/app/features/world/selectors'
-import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTimelineBus'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
@@ -19,7 +19,7 @@ export const useCreateEvent = ({ state, onCreated }: Props) => {
 	const worldId = useSelector(getWorldIdState)
 	const navigate = useNavigate({ from: '/world/$worldId' })
 
-	const scrollTimelineTo = useTimelineBusDispatch()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 
 	const [createWorldEvent, { isLoading: isCreating, isError }] = useCreateWorldEventMutation()
 
@@ -44,7 +44,7 @@ export const useCreateEvent = ({ state, onCreated }: Props) => {
 		if (error) {
 			return
 		}
-		scrollTimelineTo(state.timestamp)
+		scrollTimelineTo({ timestamp: state.timestamp })
 		navigate({ to: '/world/$worldId/timeline/outliner', search: { time: state.timestamp } })
 		onCreated()
 	}, [

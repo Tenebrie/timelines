@@ -15,15 +15,17 @@ import { TimelineEdgeScroll } from '../TimelineEdgeScroll/TimelineEdgeScroll'
 import { EventTracksMenu } from './EventTracksMenu/EventTracksMenu'
 
 type Props = {
-	onNavigateToTime: (timestamp: number) => void
 	onZoomIn: () => void
 	onZoomOut: () => void
 }
 
-const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Props) => {
+export const TimelineControls = memo(TimelineControlsComponent)
+
+function TimelineControlsComponent({ onZoomIn, onZoomOut }: Props) {
 	const theme = useCustomTheme()
 	const { selectedTime } = useSelector(getWorldState, (a, b) => a.selectedTime === b.selectedTime)
 	const { timeToLabel } = useWorldTime()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 	const scrollTimelineLeft = useEventBusDispatch({ event: 'scrollTimelineLeft' })
 	const scrollTimelineRight = useEventBusDispatch({ event: 'scrollTimelineRight' })
 
@@ -42,12 +44,12 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 			>
 				<Stack direction="row" justifyContent="space-between" width="calc(100%-64px)">
 					<Stack direction="row" gap={2} marginLeft={1}>
-						<EventTracksMenu onNavigateToTime={onNavigateToTime} />
+						<EventTracksMenu />
 						<Button
 							color="secondary"
 							variant="outlined"
 							onClick={() => {
-								onNavigateToTime(selectedTime)
+								scrollTimelineTo({ timestamp: selectedTime })
 							}}
 						>
 							{timeToLabel(selectedTime)}
@@ -68,5 +70,3 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 		</Paper>
 	)
 }
-
-export const TimelineControls = memo(TimelineControlsComponent)

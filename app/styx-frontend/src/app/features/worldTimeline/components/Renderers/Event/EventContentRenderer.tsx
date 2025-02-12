@@ -4,9 +4,9 @@ import ListItemText from '@mui/material/ListItemText'
 import { useCallback } from 'react'
 
 import { TrunkatedTypography } from '@/app/components/TrunkatedTypography'
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { RichTextEditorReadonly } from '@/app/features/richTextEditor/RichTextEditorReadonly'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTimelineBus'
 import { Actor, WorldEvent } from '@/app/features/worldTimeline/types'
 import { isNotNull } from '@/app/utils/isNotNull'
 
@@ -22,15 +22,15 @@ type Props = {
 
 export const EventContentRenderer = ({ event, active }: Props) => {
 	const { timeToLabel } = useWorldTime()
-	const scrollTimelineTo = useTimelineBusDispatch()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 	const { getScroll: getTimelineScroll } = useTimelineScroll()
 
 	const scrollTimelineToEvent = useCallback(() => {
 		const scroll = getTimelineScroll()
 		if (isNotNull(event.revokedAt) && Math.abs(scroll - event.timestamp) <= 5) {
-			scrollTimelineTo(event.revokedAt)
+			scrollTimelineTo({ timestamp: event.revokedAt })
 		} else {
-			scrollTimelineTo(event.timestamp)
+			scrollTimelineTo({ timestamp: event.timestamp })
 		}
 	}, [event.revokedAt, event.timestamp, scrollTimelineTo, getTimelineScroll])
 

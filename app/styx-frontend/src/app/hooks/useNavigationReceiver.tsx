@@ -8,7 +8,10 @@ export const useNavigationReceiver = () => {
 	useEventBusSubscribe({
 		event: 'navigate/world',
 		callback: (params) => {
-			navigate(params)
+			navigate({
+				search: true,
+				...params,
+			})
 		},
 	})
 }

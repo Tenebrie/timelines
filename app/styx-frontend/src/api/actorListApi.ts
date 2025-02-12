@@ -20,7 +20,7 @@ const injectedRtkApi = api
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['actorList', 'worldDetails'],
+				invalidatesTags: ['actorList'],
 			}),
 			deleteActor: build.mutation<DeleteActorApiResponse, DeleteActorApiArg>({
 				query: (queryArg) => ({

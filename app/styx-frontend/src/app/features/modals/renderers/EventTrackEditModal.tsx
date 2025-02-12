@@ -63,7 +63,7 @@ export const EventTrackEditModal = () => {
 		}
 
 		close()
-		navigate({ to: '/world/$worldId' })
+		navigate({ to: '/world/$worldId', search: true })
 	}
 
 	const onConfirmDelete = async () => {
@@ -83,7 +83,7 @@ export const EventTrackEditModal = () => {
 		}
 
 		close()
-		navigate({ to: '/world/$worldId' })
+		navigate({ to: '/world/$worldId', search: true })
 	}
 
 	const onCloseAttempt = () => {

@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+import { ScaleLevelSchema } from '../worldTimeline/components/Timeline/types'
+
 export const PreferencesKey = 'userPreferences/v2'
 
 const defaultTheme = ((): 'light' | 'dark' => {
@@ -15,6 +17,7 @@ export const PreferencesStateSchema = z.object({
 	timeline: z
 		.object({
 			containerHeight: z.number().default(232),
+			scaleLevel: ScaleLevelSchema.default(0),
 		})
 		.default({}),
 	outliner: z

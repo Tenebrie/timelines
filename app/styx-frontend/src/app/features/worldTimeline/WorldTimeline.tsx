@@ -4,13 +4,18 @@ import { useDispatch } from 'react-redux'
 
 import { useLocationRef } from '@/app/hooks/useLocationRef'
 
+import { useEventBusDispatch } from '../eventBus'
 import { worldSlice } from '../world/reducer'
-import { useTimelineBusDispatch } from './hooks/useTimelineBus'
 import { WorldContent } from './styles'
 
 const useWatchSelectedTime = () => {
-	const scrollTimelineTo = useTimelineBusDispatch()
-	const search = useSearch({ from: '/world/$worldId/_world/timeline/_timeline', select: (search) => search })
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
+	const search = useSearch({
+		from: '/world/$worldId/_world/timeline/_timeline',
+		select: (search) => ({
+			time: search.time,
+		}),
+	})
 
 	const { setSelectedTime } = worldSlice.actions
 	const dispatch = useDispatch()
@@ -33,7 +38,7 @@ const useWatchSelectedTime = () => {
 		const value = url.searchParams.get('time' satisfies keyof typeof search)
 		if (value) {
 			const selectedTime = parseInt(value)
-			scrollTimelineTo(selectedTime)
+			scrollTimelineTo({ timestamp: selectedTime })
 		}
 	}, [scrollTimelineTo])
 

@@ -1,9 +1,10 @@
 import debounce from 'lodash.debounce'
-import { useEffect, useRef } from 'react'
+import { useDebugValue, useEffect, useRef } from 'react'
 
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 export const useTimelineDimensions = () => {
+	useDebugValue('useTimelineDimensions')
 	const containerRef = useRef<HTMLDivElement | null>(null)
 	const containerWidth = useRef<number>(window.innerWidth)
 

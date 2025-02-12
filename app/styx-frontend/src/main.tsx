@@ -1,7 +1,7 @@
 import './main.css'
 
 import { ErrorBoundary, Provider as RollbarProvider } from '@rollbar/react'
-import { createRouter, RouterProvider } from '@tanstack/react-router'
+import { RouterProvider } from '@tanstack/react-router'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider as ReduxProvider } from 'react-redux'
@@ -9,7 +9,7 @@ import { Configuration } from 'rollbar'
 
 import { useAuthCheck } from './app/features/auth/authCheck/useAuthCheck'
 import { store } from './app/store'
-import { routeTree } from './routeTree.gen'
+import { router } from './router'
 
 const container = document.getElementById('root')
 const root = createRoot(container!)
@@ -21,25 +21,6 @@ const rollbarConfig: Configuration = {
 	environment: import.meta.env.MODE,
 	captureUncaught: true,
 	captureUnhandledRejections: true,
-}
-
-export type RouterContext = { auth: ReturnType<typeof useAuthCheck> }
-
-const router = createRouter({
-	routeTree,
-	context: {
-		auth: {
-			isAuthenticating: false,
-			success: false,
-			redirectTo: undefined,
-		},
-	} satisfies RouterContext,
-})
-
-declare module '@tanstack/react-router' {
-	interface Register {
-		router: typeof router
-	}
 }
 
 const RouterWrapper = () => {
