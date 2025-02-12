@@ -78,24 +78,19 @@ export const FadeInOverlay = ({ isReadMode }: Props) => {
 			}
 		}
 
-		if (waitForRenderTimeoutRef.current) {
-			clearInterval(waitForRenderTimeoutRef.current)
-		}
-		waitForRenderTimeoutRef.current = window.setInterval(() => {
-			if (elementsRendering.current.length > 0) {
-				return
-			}
-			inProgress.current = true
-			requestAnimationFrame(animate)
-			if (waitForRenderTimeoutRef.current) {
-				clearInterval(waitForRenderTimeoutRef.current)
-			}
-		}, 1)
+		const b = requestIdleCallback(
+			() => {
+				inProgress.current = true
+				requestAnimationFrame(animate)
+				if (waitForRenderTimeoutRef.current) {
+					clearInterval(waitForRenderTimeoutRef.current)
+				}
+			},
+			{ timeout: 500 },
+		)
 
 		return () => {
-			if (waitForRenderTimeoutRef.current) {
-				window.clearInterval(waitForRenderTimeoutRef.current)
-			}
+			cancelIdleCallback(b)
 		}
 	}, [])
 
