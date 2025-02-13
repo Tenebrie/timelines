@@ -1,6 +1,7 @@
 import Divider from '@mui/material/Divider'
 import throttle from 'lodash.throttle'
 import { Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
@@ -21,7 +22,6 @@ type Props = {
 	track: ReturnType<typeof useEventTracks>[number]
 	visible: boolean
 	containerWidth: number
-	worldState: ReturnType<typeof getWorldState>
 	contextMenuState: ReturnType<typeof getTimelineContextMenuState>
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
@@ -30,13 +30,16 @@ export const TimelineTrackItem = ({
 	track,
 	visible,
 	containerWidth,
-	worldState,
 	contextMenuState,
 	realTimeToScaledTime,
 }: Props) => {
 	const dragDropReceiverRef = useRef<HTMLDivElement | null>(null)
 	const [isDragging, setIsDragging] = useState(false)
 	const theme = useCustomTheme()
+	const { selectedTimelineMarkers } = useSelector(
+		getWorldState,
+		(a, b) => a.selectedTimelineMarkers === b.selectedTimelineMarkers,
+	)
 
 	const editedEntities = useMemo(
 		() =>
@@ -52,10 +55,10 @@ export const TimelineTrackItem = ({
 		() =>
 			track.events.filter(
 				(entity) =>
-					worldState.selectedTimelineMarkers.includes(entity.key) ||
+					selectedTimelineMarkers.includes(entity.key) ||
 					(contextMenuState.isOpen && contextMenuState.selectedEvent?.key === entity.key),
 			),
-		[contextMenuState, track.events, worldState.selectedTimelineMarkers],
+		[contextMenuState, track.events, selectedTimelineMarkers],
 	)
 	const [visibleMarkers, setVisibleMarkers] = useState<(typeof track)['events']>([])
 

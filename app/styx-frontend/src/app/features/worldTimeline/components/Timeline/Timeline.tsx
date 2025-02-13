@@ -112,7 +112,7 @@ function TimelineComponent() {
 	})
 
 	return (
-		<Paper style={{ zIndex: 2 }}>
+		<Paper style={{ zIndex: 2 }} sx={{ height: '100%' }}>
 			<TimelineWrapper>
 				<TimelineContainer
 					ref={containerRef}
@@ -123,7 +123,6 @@ function TimelineComponent() {
 						backgroundColor: theme.custom.palette.background.timeline,
 					}}
 				>
-					<TimelineControls onZoomIn={scrollZoomIn} onZoomOut={scrollZoomOut} />
 					<TimelineTracks
 						anotherRef={anotherRef}
 						visible={!isSwitchingScale}
@@ -137,7 +136,7 @@ function TimelineComponent() {
 						transitioning={isSwitchingScale}
 					/>
 					<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
-					<Paper
+					{/* <Paper
 						elevation={4}
 						style={{
 							position: 'absolute',
@@ -146,7 +145,7 @@ function TimelineComponent() {
 							width: '100vw',
 						}}
 						sx={{ backgroundColor: theme.custom.palette.background.timelineHeader }}
-					></Paper>
+					></Paper> */}
 					<TimelineAnchor
 						visible={!isSwitchingScale}
 						scroll={scroll}
@@ -155,6 +154,7 @@ function TimelineComponent() {
 					/>
 					<TimelineGrabber />
 				</TimelineContainer>
+				<TimelineControls onZoomIn={scrollZoomIn} onZoomOut={scrollZoomOut} />
 			</TimelineWrapper>
 			<TimelineZoomReporter />
 		</Paper>

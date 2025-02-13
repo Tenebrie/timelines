@@ -14,8 +14,6 @@ import { DeleteEventDeltaModal } from '../worldTimeline/components/EventEditor/c
 import { DeleteEventModal } from '../worldTimeline/components/EventEditor/components/DeleteEventModal/DeleteEventModal'
 import { RevokedStatementWizard } from '../worldTimeline/components/EventEditor/components/RevokedStatementWizard/RevokedStatementWizard'
 import { EventWizardModal } from '../worldTimeline/components/EventWizard/EventWizardModal'
-import { Timeline } from '../worldTimeline/components/Timeline/Timeline'
-import { TimelinePlaceholder } from '../worldTimeline/components/Timeline/TimelinePlaceholder'
 import { useLoadWorldInfo } from '../worldTimeline/hooks/useLoadWorldInfo'
 import { WorldDrawer } from './WorldDrawer/WorldDrawer'
 import { WorldNavigator } from './WorldNavigator/WorldNavigator'
@@ -72,12 +70,12 @@ export const World = () => {
 						<Outlet />
 					</div>
 				</Stack>
-				{matchesTimeline && (
+				{/* {matchesTimeline && ( 
 					<>
 						{isLoaded && <Timeline />}
 						{!isLoaded && <TimelinePlaceholder />}
 					</>
-				)}
+				)} */}
 				<BlockingSpinner visible={!isLoaded} />
 			</div>
 			<RichTextEditorPortal />

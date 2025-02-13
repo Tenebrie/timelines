@@ -22,10 +22,12 @@ body {
 
 body.cursor-resizing {
 	cursor: ns-resize !important;
+	user-select: none !important;
 }
 
 body.cursor-grabbing {
 	cursor: grabbing !important;
+	user-select: none !important;
 }
 
 .timeline-marker-scroll {

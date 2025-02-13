@@ -16,7 +16,7 @@ export const OutlinerControls = () => {
 	const createHerePopupState = usePopupState({ variant: 'popover', popupId: 'createHerePopover' })
 
 	return (
-		<Box sx={{ position: 'fixed', bottom: 16, right: 16, zIndex: 1000 }}>
+		<Box sx={{ position: 'fixed', bottom: 16, right: 16, zIndex: 1000, pointerEvents: 'auto' }}>
 			{!isReadOnly && (
 				<Fab color="primary" {...bindTrigger(createHerePopupState)}>
 					<Add />{' '}

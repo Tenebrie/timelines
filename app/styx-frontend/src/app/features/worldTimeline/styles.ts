@@ -13,6 +13,7 @@ export const WorldContent = styled.div`
 	width: 100%;
 	flex-grow: 1;
 	height: 0;
+	position: relative;
 
 	overflow: auto;
 `

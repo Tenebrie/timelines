@@ -49,7 +49,7 @@ export const TimelineEventTrackTitleComponent = ({ track }: Props) => {
 				sx={{
 					position: 'relative',
 					marginLeft: 1,
-					zIndex: 100,
+					zIndex: 2,
 					borderRadius: 1,
 				}}
 			>

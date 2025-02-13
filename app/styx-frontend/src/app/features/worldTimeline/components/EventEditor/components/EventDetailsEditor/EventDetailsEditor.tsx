@@ -137,7 +137,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 				</Button>
 			}
 		>
-			<Stack spacing={2} direction="column">
+			<Stack spacing={2} direction="column" height="100%">
 				<Stack direction="row" gap={1} width="100%">
 					<TextField
 						type="text"
@@ -156,7 +156,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 						</Button>
 					</Tooltip>
 				</Stack>
-				<Box height={'300px'}>
+				<Box height="100%">
 					<RichTextEditorPortalSlot
 						softKey={`${event.id}/${key}`}
 						value={descriptionRich}

@@ -77,6 +77,7 @@ export const WorldDrawer = () => {
 			>
 				<Paper
 					style={{
+						zIndex: 3,
 						position: 'absolute',
 						borderRadius: 0,
 						width: '72px',
@@ -117,7 +118,7 @@ export const WorldDrawer = () => {
 				</Paper>
 				<Paper
 					style={{
-						zIndex: 1,
+						zIndex: 3,
 						position: 'absolute',
 						borderRadius: 0,
 						width: '300px',

@@ -32,7 +32,11 @@ function TimelineControlsComponent({ onZoomIn, onZoomOut }: Props) {
 	return (
 		<Paper
 			elevation={2}
-			sx={{ backgroundColor: theme.custom.palette.background.timelineHeader, minWidth: '700px' }}
+			sx={{
+				backgroundColor: theme.custom.palette.background.timelineHeader,
+				minWidth: '700px',
+				paddingTop: '32px',
+			}}
 		>
 			<div
 				className="block-timeline"

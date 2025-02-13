@@ -3,6 +3,7 @@ import Home from '@mui/icons-material/Home'
 import Speed from '@mui/icons-material/Speed'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
+import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { useNavigate } from '@tanstack/react-router'
 import { ReactElement } from 'react'
@@ -19,13 +20,14 @@ import { ThemeModeToggle } from '../features/theming/ThemeModeToggle'
 import { CustomTheme, useCustomTheme } from '../hooks/useCustomTheme'
 import { isDev } from '../utils/isDev'
 
-const Container = styled.div<{ $theme: CustomTheme }>`
+const Container = styled(Paper)<{ $theme: CustomTheme }>`
 	width: calc(100% - 16px);
 	background: ${(props) => props.$theme.custom.palette.background.navigator};
 	box-shadow: 0 4px 2px -2px ${(props) => props.$theme.custom.palette.background.navigator};
 	display: flex;
 	justify-content: space-between;
-	z-index: 2;
+	border-radius: 0 !important;
+	z-index: 10;
 	padding: 4px 8px;
 `
 
