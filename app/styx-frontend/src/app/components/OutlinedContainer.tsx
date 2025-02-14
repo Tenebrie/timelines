@@ -22,8 +22,8 @@ export const OutlinedContainer = ({ label, secondaryLabel, children, style, full
 					paddingTop: 3,
 					overflowY: 'auto',
 					height: '100%',
-					boxShadow: 'none',
 					position: 'relative',
+					borderRadius: 0,
 				}}
 				elevation={2}
 				style={style}

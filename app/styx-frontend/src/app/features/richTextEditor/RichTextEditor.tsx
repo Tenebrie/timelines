@@ -157,6 +157,7 @@ export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allo
 			sx={{
 				borderRadius: '6px',
 				height: '100%',
+				minHeight: '200px',
 				border: isReadMode ? '1px solid transparent' : '',
 				'&:hover': {
 					border: isReadMode ? '1px solid transparent' : '',
@@ -171,14 +172,9 @@ export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allo
 			}}
 		>
 			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode} />
-			<StyledEditorContent
-				className="content"
-				editor={editor}
-				placeholder="Content"
-				$mode={isReadMode ? 'read' : 'edit'}
-			/>
+			<StyledEditorContent className="content" editor={editor} $mode={isReadMode ? 'read' : 'edit'} />
 			<MentionsList editor={editor} />
-			<FadeInOverlay key={softKey} isReadMode={isReadMode} />
+			<FadeInOverlay key={softKey} content={value} isReadMode={isReadMode} />
 		</StyledContainer>
 	)
 }

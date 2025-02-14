@@ -1,19 +1,19 @@
 import Divider from '@mui/material/Divider'
+import { useSearch } from '@tanstack/react-router'
 import throttle from 'lodash.throttle'
 import { Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
+import { getTimelineContextMenuState } from '@/app/features/world/selectors'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 import { isRunningInTest } from '@/test-utils/isRunningInTest'
 
 import { TimelineState } from '../../utils/TimelineState'
-import { TimelineChainPositioner } from './components/TimelineChainPositioner/TimelineChainPositioner'
-import { TimelineEventPositioner } from './components/TimelineEventPositioner/TimelineEventPositioner'
-import { TimelineEventTrackTitle } from './components/TimelineEventTrackTitle/TimelineEventTrackTitle'
+import { TimelineChainPositioner } from './components/TimelineChainPositioner'
+import { TimelineEventPositioner } from './components/TimelineEventPositioner'
+import { TimelineEventTrackTitle } from './components/TimelineEventTrackTitle'
 import useEventTracks, { TimelineTrack } from './hooks/useEventTracks'
 import { TrackContainer } from './styles'
 import { TimelineTrackItemDragDrop } from './TimelineTrackItemDragDrop'
@@ -36,29 +36,19 @@ export const TimelineTrackItem = ({
 	const dragDropReceiverRef = useRef<HTMLDivElement | null>(null)
 	const [isDragging, setIsDragging] = useState(false)
 	const theme = useCustomTheme()
-	const { selectedTimelineMarkers } = useSelector(
-		getWorldState,
-		(a, b) => a.selectedTimelineMarkers === b.selectedTimelineMarkers,
-	)
-
-	const editedEntities = useMemo(
-		() =>
-			track.events.filter(
-				(entity) =>
-					(['issuedAt', 'revokedAt'].includes(entity.markerType) && location.pathname.includes(entity.id)) ||
-					location.pathname.includes(entity.eventId),
-			),
-		[track.events],
-	)
+	const selectedMarkerIds = useSearch({
+		from: '/world/$worldId/_world/timeline/_timeline',
+		select: (search) => search.selection,
+	})
 
 	const selectedMarkers = useMemo(
 		() =>
 			track.events.filter(
 				(entity) =>
-					selectedTimelineMarkers.includes(entity.key) ||
+					selectedMarkerIds.some((marker) => marker === entity.key) ||
 					(contextMenuState.isOpen && contextMenuState.selectedEvent?.key === entity.key),
 			),
-		[contextMenuState, track.events, selectedTimelineMarkers],
+		[contextMenuState, track.events, selectedMarkerIds],
 	)
 	const [visibleMarkers, setVisibleMarkers] = useState<(typeof track)['events']>([])
 
@@ -121,7 +111,7 @@ export const TimelineTrackItem = ({
 						key={event.key}
 						entity={event}
 						visible={visible}
-						edited={editedEntities.some((marker) => marker.key === event.key)}
+						edited={false}
 						selected={selectedMarkers.some((marker) => marker.key === event.key)}
 						trackHeight={track.height}
 						realTimeToScaledTime={realTimeToScaledTime}

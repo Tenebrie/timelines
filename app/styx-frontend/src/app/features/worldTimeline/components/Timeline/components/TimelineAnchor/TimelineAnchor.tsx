@@ -1,4 +1,4 @@
-import { memo, Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, Profiler, startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
@@ -117,7 +117,9 @@ const TimelineAnchorComponent = ({ scaleLevel, scroll, visible, containerWidth }
 				isLargeGroup: false,
 			})
 		}
-		updateDividers()
+		startTransition(() => {
+			updateDividers()
+		})
 	}, [calendar, lineCount, updateDividers])
 
 	const positionNormalizer = useMemo(

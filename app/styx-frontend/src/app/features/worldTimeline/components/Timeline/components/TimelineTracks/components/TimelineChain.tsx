@@ -7,7 +7,7 @@ import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 import { useStringColor } from '@/app/utils/getStringColor'
 
-import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
+import { TimelineEventHeightPx } from '../hooks/useEventTracks'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>

@@ -6,6 +6,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
 import { useNavigate } from '@tanstack/react-router'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
@@ -16,6 +17,7 @@ import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 import { getWorldState } from '../selectors'
 import { WorldHeader } from './components/WorldHeader'
+import { WorldTimelineControls } from './components/WorldTimelineControls'
 
 export const WorldDrawer = () => {
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
@@ -87,34 +89,37 @@ export const WorldDrawer = () => {
 						transition: 'left 0.3s',
 						display: 'flex',
 						flexDirection: 'column',
-						gap: 8,
 						padding: '16px 4px',
+						justifyContent: 'space-between',
 					}}
 					elevation={2}
 				>
-					<StyledSmallButton variant={getButtonStyle(matchesTimeline)} onClick={onTimelineClick}>
-						<Home />
-					</StyledSmallButton>
-					<StyledSmallButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}>
-						<ViewList />
-					</StyledSmallButton>
-					{/* <StyledSmallButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
+					<Stack sx={{ gap: '8px', flexDirection: 'column' }}>
+						<StyledSmallButton variant={getButtonStyle(matchesTimeline)} onClick={onTimelineClick}>
+							<Home />
+						</StyledSmallButton>
+						<StyledSmallButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}>
+							<ViewList />
+						</StyledSmallButton>
+						{/* <StyledSmallButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
 						<Person />
 					</StyledSmallButton> */}
-					<StyledSmallButton variant={getButtonStyle(matchesWiki)} onClick={onWikiClick}>
-						<AutoStories />
-					</StyledSmallButton>
-					{!isReadOnly && (
-						<>
-							<Divider />
-							<StyledSmallButton variant={getButtonStyle(matchesSettings)} onClick={onSettingsClick}>
-								<Settings />
-							</StyledSmallButton>
-						</>
-					)}
-					{/* <StyledSmallButton> */}
-					{/* <Help /> */}
-					{/* </StyledSmallButton> */}
+						<StyledSmallButton variant={getButtonStyle(matchesWiki)} onClick={onWikiClick}>
+							<AutoStories />
+						</StyledSmallButton>
+						{!isReadOnly && (
+							<>
+								<Divider />
+								<StyledSmallButton variant={getButtonStyle(matchesSettings)} onClick={onSettingsClick}>
+									<Settings />
+								</StyledSmallButton>
+							</>
+						)}
+						{/* <StyledSmallButton> */}
+						{/* <Help /> */}
+						{/* </StyledSmallButton> */}
+					</Stack>
+					<WorldTimelineControls />
 				</Paper>
 				<Paper
 					style={{

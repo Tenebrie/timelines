@@ -2,26 +2,25 @@ import Button from '@mui/material/Button'
 import Input from '@mui/material/Input'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
+import { useModal } from '@/app/features/modals/reducer'
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 
-import { useEditArticle } from '../../api/useEditArticle'
-import { useCurrentArticle } from '../../hooks/useCurrentArticle'
+import { EventDraft } from '../EventEditor/components/EventDetailsEditor/useEventFields'
 
-export const ArticleTitle = () => {
-	const { article } = useCurrentArticle()
-	const [editArticle] = useEditArticle()
+type Props = {
+	draft: EventDraft
+}
 
+export const EventTitle = ({ draft }: Props) => {
 	const [editing, setEditing] = useState(false)
-	const [name, setName] = useState(article?.name)
+	const [name, setName] = useState(draft.name)
 
 	const applyChanges = () => {
 		setEditing(false)
-		if (!article || name === article.name) {
-			return
-		}
-		editArticle({ id: article.id, name })
+		draft.setName(name.trim())
 	}
 
 	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], applyChanges, editing)
@@ -29,22 +28,27 @@ export const ArticleTitle = () => {
 		[Shortcut.Escape],
 		() => {
 			setEditing(false)
-			setName(article!.name)
+			setName(draft.name)
 		},
 		editing,
 	)
 
+	const { timeToLabel } = useWorldTime()
+	const timeLabel = useMemo(() => {
+		if (!draft) {
+			return ''
+		}
+		return timeToLabel(draft.timestamp)
+	}, [timeToLabel, draft])
+
+	const { open: openTimeTravelModal } = useModal('timeTravelModal')
+
 	useEffect(() => {
-		setEditing(false)
-	}, [article])
+		setName(draft.name)
+	}, [draft.name])
 
-	if (!article) {
+	if (!draft) {
 		return null
-	}
-
-	const onStartEdit = () => {
-		setEditing(true)
-		setName(article.name)
 	}
 
 	return (
@@ -54,18 +58,24 @@ export const ArticleTitle = () => {
 			alignContent="center"
 			width="100%"
 			sx={{ height: '32px' }}
-			data-testid="ArticleTitle"
+			data-testid="EventTitle"
 		>
 			{!editing && (
 				<Stack direction="row" justifyContent="space-between" width="100%">
 					<Button
 						variant="text"
-						sx={{ padding: '0 8px', width: '100%', justifyContent: 'flex-start' }}
-						onClick={onStartEdit}
+						sx={{ padding: '0 8px', flexGrow: 1, justifyContent: 'flex-start' }}
+						onClick={() => setEditing(true)}
 					>
 						<Typography variant="h6" noWrap>
-							{article.name}
+							{draft.name || 'Create event'}
 						</Typography>
+					</Button>
+					<Button
+						sx={{ padding: '4px 12px', textWrap: 'nowrap', flexShrink: 0 }}
+						onClick={openTimeTravelModal}
+					>
+						{timeLabel}
 					</Button>
 				</Stack>
 			)}
@@ -75,6 +85,7 @@ export const ArticleTitle = () => {
 					value={name}
 					onChange={(event) => setName(event.target.value)}
 					onBlur={() => applyChanges()}
+					placeholder="Create event"
 					role="textbox"
 					sx={{
 						width: '100%',

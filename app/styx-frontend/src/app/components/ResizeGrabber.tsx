@@ -6,7 +6,6 @@ import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 const StyledDragger = styled.div`
 	width: calc(100%);
-	height: 8px;
 	flex-shrink: 0;
 	display: flex;
 	align-items: center;
@@ -38,11 +37,13 @@ export function useResizeGrabber({ defaultHeight }: TopProps) {
 	}
 }
 
-type Props = ReturnType<typeof useResizeGrabber>
+type Props = ReturnType<typeof useResizeGrabber> & {
+	active: boolean
+}
 
 export const ResizeGrabber = memo(ResizeGrabberComponent)
 
-function ResizeGrabberComponent({ _displayedHeight, _setDisplayedHeight }: Props) {
+function ResizeGrabberComponent({ _displayedHeight, _setDisplayedHeight, active }: Props) {
 	const isDraggingNow = useRef(false)
 	const [mousePosition, setMousePosition] = useState(0)
 	const mouseStartingPosition = useRef(0)
@@ -59,6 +60,9 @@ function ResizeGrabberComponent({ _displayedHeight, _setDisplayedHeight }: Props
 		const onMouseUp = () => {
 			if (isDraggingNow.current) {
 				isDraggingNow.current = false
+				if (currentContainerHeight.current <= 64) {
+					setInternalHeight(0)
+				}
 				setTimeout(() => {
 					window.document.body.classList.remove('cursor-resizing', 'mouse-busy')
 				}, 1)
@@ -96,7 +100,7 @@ function ResizeGrabberComponent({ _displayedHeight, _setDisplayedHeight }: Props
 			setInternalHeight(value)
 
 			const safeValue = (() => {
-				if (value < 20) {
+				if (value < 64) {
 					return 0
 				}
 				return value
@@ -106,5 +110,10 @@ function ResizeGrabberComponent({ _displayedHeight, _setDisplayedHeight }: Props
 		}
 	}, [mousePosition, _setDisplayedHeight])
 
-	return <StyledDragger onMouseDown={(event) => onMouseDown(event)}></StyledDragger>
+	return (
+		<StyledDragger
+			style={{ height: active ? '8px' : '0' }}
+			onMouseDown={(event) => onMouseDown(event)}
+		></StyledDragger>
+	)
 }

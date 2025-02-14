@@ -1,6 +1,6 @@
 import bezier from 'bezier-easing'
 import throttle from 'lodash.throttle'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
@@ -287,6 +287,14 @@ export const useTimelineNavigation = ({
 	)
 
 	const [requestedZoom, setRequestedZoom] = useState<number>(0)
+
+	useEventBusSubscribe({
+		event: 'timeline/requestZoom',
+		callback: (props) => {
+			setRequestedZoom(props.direction === 'in' ? -1 : 1)
+		},
+	})
+
 	useEffect(() => {
 		if (requestedZoom === 0) {
 			return
@@ -525,15 +533,17 @@ export const useTimelineNavigation = ({
 	useEventBusSubscribe({
 		event: 'scrollTimelineTo',
 		callback: (props) => {
-			if ('rawScrollValue' in props) {
-				scrollTo({
-					timestamp: props.rawScrollValue,
-					useRawScroll: true,
-					skipAnim: props.skipAnim,
-				})
-			} else {
-				scrollTo(props)
-			}
+			startTransition(() => {
+				if ('rawScrollValue' in props) {
+					scrollTo({
+						timestamp: props.rawScrollValue,
+						useRawScroll: true,
+						skipAnim: props.skipAnim,
+					})
+				} else {
+					scrollTo(props)
+				}
+			})
 		},
 	})
 
@@ -555,7 +565,6 @@ export const useTimelineNavigation = ({
 		scaleLevel,
 		targetScaleIndex: targetScale,
 		isSwitchingScale,
-		performZoom: setRequestedZoom,
 	}
 }
 

@@ -5,11 +5,10 @@ import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
+import { getTimelineContextMenuState, getTimelineState, getWorldState } from '@/app/features/world/selectors'
 
 import { ScaleLevel } from '../../types'
 import { TimelineContextMenu } from '../TimelineContextMenu/TimelineContextMenu'
-import useEventTracks from './hooks/useEventTracks'
 import { TimelineTrackItem } from './TimelineTrackItem'
 
 type Props = {
@@ -22,7 +21,7 @@ type Props = {
 export const TimelineTracks = memo(TimelineTracksComponent)
 
 export function TimelineTracksComponent(props: Props) {
-	const eventTracks = useEventTracks()
+	const { tracks } = useSelector(getTimelineState, (a, b) => a.tracks === b.tracks)
 	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
 
@@ -71,7 +70,7 @@ export function TimelineTracksComponent(props: Props) {
 		>
 			{/* TODO: Size of box is always equal to the height of the Outliner */}
 			<Box sx={{ height: `calc(${outlinerHeight}px - 32px)`, pointerEvents: 'none' }} />
-			{eventTracks.map((track) => (
+			{tracks.map((track) => (
 				<TimelineTrackItem
 					key={track.id}
 					track={track}
@@ -80,7 +79,7 @@ export function TimelineTracksComponent(props: Props) {
 					{...props}
 				/>
 			))}
-			<TimelineContextMenu markers={eventTracks.flatMap((track) => track.events)} />
+			<TimelineContextMenu />
 		</Stack>
 	)
 }

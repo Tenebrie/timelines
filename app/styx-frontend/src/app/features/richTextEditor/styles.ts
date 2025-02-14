@@ -39,7 +39,6 @@ export const StyledEditorContent = styled(EditorContent)<{ $mode: 'read' | 'edit
 	outline: none;
 	height: ${(props) => (props.$mode === 'edit' ? 'calc(100% - 48px)' : 'unset')};
 	overflow-y: auto;
-	min-height: 200px;
 	display: flex;
 	flex-direction: column;
 

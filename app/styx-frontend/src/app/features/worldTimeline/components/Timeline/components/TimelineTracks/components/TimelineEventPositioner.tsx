@@ -9,10 +9,10 @@ import { useEventIcons } from '@/app/features/worldTimeline/hooks/useEventIcons'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
-import useEventTracks, { TimelineEventHeightPx } from '../../hooks/useEventTracks'
-import { Group } from '../../styles'
-import { Marker } from '../TimelineEvent/styles'
-import { TimelineEvent } from '../TimelineEvent/TimelineEvent'
+import useEventTracks, { TimelineEventHeightPx } from '../hooks/useEventTracks'
+import { Group } from '../styles'
+import { Marker } from './TimelineEvent/styles'
+import { TimelineEvent } from './TimelineEvent/TimelineEvent'
 
 type Props = {
 	entity: ReturnType<typeof useEventTracks>[number]['events'][number]

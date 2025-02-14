@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { useEventFields } from '../useEventFields'
+import { EventDraft } from '../useEventFields'
 
 type Props = {
-	mode: 'create' | 'create-compact' | 'edit'
-	state: ReturnType<typeof useEventFields>['state']
-	onLoaded: () => void
+	mode: 'create' | 'edit'
+	draft: EventDraft
 }
 
 const storageKey = 'createEvent/savedState'
 
-const prepareState = (state: Props['state']) => ({
+const prepareState = (state: EventDraft) => ({
 	name: state.name,
 	description: state.description,
 	descriptionRich: state.descriptionRich,
@@ -23,7 +22,7 @@ const prepareState = (state: Props['state']) => ({
 	extraFields: state.modules,
 })
 
-const saveState = (state: Props['state']) => {
+const saveState = (state: EventDraft) => {
 	sessionStorage.setItem(storageKey, JSON.stringify(prepareState(state)))
 }
 
@@ -35,34 +34,29 @@ const loadState = () => {
 	return JSON.parse(savedItem) as ReturnType<typeof prepareState>
 }
 
-export const usePreserveCreateState = ({ mode, state, onLoaded }: Props) => {
-	const stateRef = useRef(state)
+export const usePreserveCreateState = ({ mode, draft }: Props) => {
+	const stateRef = useRef(draft)
 	const [hasLoaded, setHasLoaded] = useState(false)
 
 	useEffect(() => {
-		stateRef.current = state
-	}, [state])
+		stateRef.current = draft
+	}, [draft])
 
 	useEffect(() => {
-		if (mode === 'edit' || hasLoaded) {
-			return
-		}
-
 		const loadedState = loadState()
-		if (!loadedState) {
+		if (!loadedState || mode !== 'create') {
 			setHasLoaded(true)
 			return
 		}
 
-		state.loadState(loadedState)
+		draft.loadState(loadedState)
 
 		sessionStorage.removeItem(storageKey)
 		setHasLoaded(true)
-		onLoaded()
-	}, [mode, hasLoaded, state, onLoaded])
+	}, [hasLoaded, draft, mode])
 
 	useEffect(() => {
-		if (!hasLoaded) {
+		if (!hasLoaded || mode !== 'create') {
 			return
 		}
 
@@ -73,5 +67,5 @@ export const usePreserveCreateState = ({ mode, state, onLoaded }: Props) => {
 			window.removeEventListener('beforeunload', handleSave)
 			saveState(stateRef.current)
 		}
-	}, [hasLoaded])
+	}, [hasLoaded, mode])
 }

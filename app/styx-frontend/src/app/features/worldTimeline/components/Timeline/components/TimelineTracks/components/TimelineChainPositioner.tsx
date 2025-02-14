@@ -5,8 +5,8 @@ import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorld
 import { TimelineState } from '@/app/features/worldTimeline/components/Timeline/utils/TimelineState'
 import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
 
-import { Chain } from '../../styles'
-import { TimelineChain } from '../TimelineChain/TimelineChain'
+import { Chain } from '../styles'
+import { TimelineChain } from './TimelineChain'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>

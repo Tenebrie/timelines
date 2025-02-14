@@ -7,6 +7,8 @@ type Props = {
 	event: WorldEvent
 }
 
+export type EventDraft = ReturnType<typeof useEventFields>['state']
+
 export const useEventFields = ({ event }: Props) => {
 	const isDirty = useRef(false)
 	const setDirty = useCallback((value: boolean) => {
@@ -85,6 +87,7 @@ export const useEventFields = ({ event }: Props) => {
 
 	useEffect(() => {
 		if (currentId.current !== event.id) {
+			console.log('EFFECT')
 			loadEvent(event)
 		}
 	}, [event, event.id, loadEvent])
@@ -110,4 +113,8 @@ export const useEventFields = ({ event }: Props) => {
 			loadEvent,
 		},
 	}
+}
+
+export const useEventDraft = ({ event }: Props) => {
+	return useEventFields({ event }).state
 }

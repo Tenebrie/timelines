@@ -1,12 +1,12 @@
+import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { Outlet, useSearch } from '@tanstack/react-router'
 import { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { useLocationRef } from '@/app/hooks/useLocationRef'
-
 import { useEventBusDispatch } from '../eventBus'
 import { worldSlice } from '../world/reducer'
+import { WorldState } from './components/Outliner/components/WorldState'
 import { Timeline } from './components/Timeline/Timeline'
 import { WorldContent } from './styles'
 
@@ -55,26 +55,23 @@ const useWatchSelectedTime = () => {
 export const WorldTimeline = () => {
 	useWatchSelectedTime()
 
-	const { nodeRef } = useLocationRef()
-
 	return (
-		<>
-			{/* <SwitchTransition> */}
-			{/* <CSSTransition key={key} timeout={300} classNames="fade" mountOnEnter unmountOnExit nodeRef={nodeRef}> */}
-			<WorldContent ref={nodeRef}>
+		<Stack direction="row" sx={{ width: '100%', height: '100%' }}>
+			<WorldContent>
 				<Timeline />
 				<Stack
 					sx={{ position: 'absolute', width: '100%', zIndex: 2, top: 0, pointerEvents: 'none' }}
 					justifyContent="center"
-					alignItems="center"
+					alignItems="flex-start"
 				>
-					<Stack sx={{ width: '100%', maxWidth: '1800px', pointerEvents: 'auto' }}>
+					<Stack sx={{ width: '100%', maxWidth: '600px', pointerEvents: 'auto' }}>
 						<Outlet />
 					</Stack>
 				</Stack>
 			</WorldContent>
-			{/* </CSSTransition> */}
-			{/* </SwitchTransition> */}
-		</>
+			<Paper sx={{ width: '33%' }} elevation={2}>
+				<WorldState />
+			</Paper>
+		</Stack>
 	)
 }

@@ -20,14 +20,22 @@ import { findStartingFrom } from '@/app/utils/findStartingFrom'
 import { isNotNull } from '@/app/utils/isNotNull'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
-export type TimelineTrack = ReturnType<typeof useEventTracks>[number]
+export type TimelineTrack = {
+	events: TimelineEntity<MarkerType>[]
+	id: string | 'default'
+	name: string
+	position: number
+	baseModel: WorldEventTrack | null
+	visible: boolean
+	height: number
+}
 export const TimelineEventHeightPx = 40
 
 type Props = {
 	showHidden?: boolean
 }
 
-const useEventTracks = ({ showHidden }: Props = {}) => {
+const useEventTracks = ({ showHidden }: Props = {}): TimelineTrack[] => {
 	const { events } = useSelector(getWorldState, (a, b) => a.events === b.events)
 	const { ghost: eventGhost } = useSelector(getEventCreatorState, (a, b) => a.ghost === b.ghost)
 	const { ghost: deltaGhost } = useSelector(getEventDeltaCreatorState, (a, b) => a.ghost === b.ghost)

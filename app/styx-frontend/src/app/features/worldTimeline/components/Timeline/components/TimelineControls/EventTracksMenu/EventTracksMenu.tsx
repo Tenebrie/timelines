@@ -17,14 +17,18 @@ import { useUpdateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/reducer'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { getWorldIdState } from '@/app/features/world/selectors'
+import { getTimelineState, getWorldIdState } from '@/app/features/world/selectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
-import useEventTracks, { TimelineTrack } from '../../TimelineTracks/hooks/useEventTracks'
+import { TimelineTrack } from '../../TimelineTracks/hooks/useEventTracks'
 
-export const EventTracksMenu = () => {
+type Props = {
+	size?: 'small'
+}
+
+export const EventTracksMenu = ({ size }: Props) => {
 	const worldId = useSelector(getWorldIdState)
-	const tracks = useEventTracks({ showHidden: true })
+	const { tracks } = useSelector(getTimelineState, (a, b) => a.tracks === b.tracks)
 	const displayedTracks = tracks.filter((t) => t.id !== 'default')
 	const { timeToLabel } = useWorldTime()
 	const { open: openEventTrackEdit } = useModal('eventTrackEdit')
@@ -62,11 +66,11 @@ export const EventTracksMenu = () => {
 		<>
 			<Button
 				color="primary"
-				variant="outlined"
-				startIcon={<Leaderboard style={{ transform: 'rotate(90deg)' }} />}
+				startIcon={size === 'small' ? null : <Leaderboard style={{ transform: 'rotate(90deg)' }} />}
+				sx={{ height: size === 'small' ? 64 : undefined }}
 				{...bindTrigger(popupState)}
 			>
-				Event tracks
+				{size === 'small' ? <Leaderboard style={{ transform: 'rotate(90deg)' }} /> : 'Event tracks'}
 			</Button>
 			{tracks && (
 				<Popover

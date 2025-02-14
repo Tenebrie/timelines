@@ -11,8 +11,7 @@ export const WorldContainer = styled.div`
 
 export const WorldContent = styled.div`
 	width: 100%;
-	flex-grow: 1;
-	height: 0;
+	height: 100%;
 	position: relative;
 
 	overflow: auto;

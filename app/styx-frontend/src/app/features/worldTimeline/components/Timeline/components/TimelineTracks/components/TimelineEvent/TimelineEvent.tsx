@@ -34,7 +34,8 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	const { addTimelineMarkerToSelection, removeTimelineMarkerFromSelection, openTimelineContextMenu } =
 		worldSlice.actions
 
-	const navigate = useNavigate({ from: '/world/$worldId' })
+	const navigate = useNavigate({ from: '/world/$worldId/timeline/outliner' })
+
 	const { getIconPath } = useEventIcons()
 	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 
@@ -42,28 +43,25 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 		onClick: ({ multiselect }) => {
 			if (selected) {
 				dispatch(removeTimelineMarkerFromSelection(entity.key))
+				navigate({
+					search: (prev) => ({ ...prev, selection: [] }),
+				})
 			} else {
-				dispatch(addTimelineMarkerToSelection({ id: entity.key, multiselect }))
+				dispatch(addTimelineMarkerToSelection({ id: entity.key, eventId: entity.eventId, multiselect }))
+				navigate({
+					search: (prev) => ({ ...prev, selection: [entity.key] }),
+				})
 			}
 		},
-		onDoubleClick: () => {
+		onDoubleClick: ({ multiselect }) => {
 			if (entity.markerType === 'ghostEvent' || entity.markerType === 'ghostDelta') {
 				return
 			}
 
-			if (entity.markerType === 'deltaState') {
-				navigate({
-					to: '/world/$worldId/timeline/delta/$deltaId/$eventId',
-					params: { eventId: entity.eventId, deltaId: entity.id },
-					search: (prev) => ({ ...prev, time: entity.markerPosition }),
-				})
-			} else {
-				navigate({
-					to: '/world/$worldId/timeline/event/$eventId',
-					params: { eventId: entity.eventId },
-					search: (prev) => ({ ...prev, time: entity.markerPosition }),
-				})
-			}
+			dispatch(addTimelineMarkerToSelection({ id: entity.key, eventId: entity.eventId, multiselect }))
+			navigate({
+				search: (prev) => ({ ...prev, time: entity.markerPosition, selection: [entity.key] }),
+			})
 			scrollTimelineTo({ timestamp: entity.markerPosition })
 		},
 		ignoreDelay: true,

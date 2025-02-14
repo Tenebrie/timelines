@@ -8,10 +8,11 @@ import { createCubicBezier } from './createCubicBezier'
 import { ProgressBar } from './ProgressBar'
 
 type Props = {
+	content: string
 	isReadMode: boolean
 }
 
-export const FadeInOverlay = ({ isReadMode }: Props) => {
+export const FadeInOverlay = ({ content, isReadMode }: Props) => {
 	const theme = useCustomTheme()
 
 	const ref = useRef<HTMLDivElement | null>(null)
@@ -116,6 +117,7 @@ export const FadeInOverlay = ({ isReadMode }: Props) => {
 				ref={ref}
 				className="overlay"
 				style={{
+					display: content.length === 0 ? 'none' : 'block',
 					pointerEvents: 'none',
 					position: 'absolute',
 					top: 52,

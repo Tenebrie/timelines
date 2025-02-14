@@ -11,7 +11,6 @@ import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
-import { TimelineControls } from './components/TimelineControls/TimelineControls'
 import { TimelineGrabber } from './components/TimelineGrabber/TimelineGrabber'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
 import { TimelineTracks } from './components/TimelineTracks/TimelineTracks'
@@ -59,7 +58,7 @@ function TimelineComponent() {
 	const { containerRef, containerWidth } = useTimelineDimensions()
 	const anotherRef = useRef<HTMLDivElement | null>(null)
 
-	const { scroll, scaleLevel, targetScaleIndex, isSwitchingScale, performZoom } = useTimelineNavigation({
+	const { scroll, scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
 		containerRef: [containerRef, anotherRef],
 		defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
 		scaleLimits: [-1, 7],
@@ -85,9 +84,6 @@ function TimelineComponent() {
 		notifyTimelineScrolled()
 	}, [notifyTimelineScrolled, scroll])
 
-	const scrollZoomIn = useCallback(() => performZoom(-1), [performZoom])
-	const scrollZoomOut = useCallback(() => performZoom(1), [performZoom])
-
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
 	const onScrollFullPage = useCallback(
 		(side: 'left' | 'right') => {
@@ -112,7 +108,7 @@ function TimelineComponent() {
 	})
 
 	return (
-		<Paper style={{ zIndex: 2 }} sx={{ height: '100%' }}>
+		<Paper sx={{ height: '100%', borderRadius: 0, zIndex: 2 }}>
 			<TimelineWrapper>
 				<TimelineContainer
 					ref={containerRef}
@@ -154,7 +150,7 @@ function TimelineComponent() {
 					/>
 					<TimelineGrabber />
 				</TimelineContainer>
-				<TimelineControls onZoomIn={scrollZoomIn} onZoomOut={scrollZoomOut} />
+				{/* <TimelineControls onZoomIn={scrollZoomIn} onZoomOut={scrollZoomOut} /> */}
 			</TimelineWrapper>
 			<TimelineZoomReporter />
 		</Paper>
