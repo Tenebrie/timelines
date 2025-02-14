@@ -1,5 +1,7 @@
 import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
 import Divider from '@mui/material/Divider'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
@@ -113,6 +115,7 @@ export const TimeTravelModal = () => {
 			<Typography>
 				<b>Travel to:</b> {displayedTargetTime}
 			</Typography>
+			<FormControlLabel control={<Checkbox defaultChecked />} label="Move selected events" />
 			<Divider />
 			<TimeTravelModalInfo />
 			<ModalFooter>

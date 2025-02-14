@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react'
-import { MouseEvent } from 'react'
+import { MouseEvent as ReactMouseEvent } from 'react'
 
 type Props<ArgsT> = {
 	onClick: (args: ArgsT) => void
@@ -18,7 +18,7 @@ export const useDoubleClick = <ArgsT,>({ onClick, onDoubleClick, ignoreDelay }: 
 	}, [onClick])
 
 	const triggerClick = useCallback(
-		(event: MouseEvent, args: ArgsT) => {
+		(event: MouseEvent | ReactMouseEvent, args: ArgsT) => {
 			const time = Date.now()
 			const lastClickTime = lastClickTimestampRef.current
 			const lastClickTarget = lastClickTargetRef.current

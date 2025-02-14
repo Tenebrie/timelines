@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 
 import { useEventBusDispatch } from '../eventBus'
 import { worldSlice } from '../world/reducer'
+import { OutlinerControls } from './components/Outliner/components/OutlinerControls/OutlinerControls'
 import { WorldState } from './components/Outliner/components/WorldState'
 import { Timeline } from './components/Timeline/Timeline'
 import { WorldContent } from './styles'
@@ -68,6 +69,7 @@ export const WorldTimeline = () => {
 						<Outlet />
 					</Stack>
 				</Stack>
+				<OutlinerControls />
 			</WorldContent>
 			<Paper sx={{ width: '33%' }} elevation={2}>
 				<WorldState />

@@ -51,8 +51,11 @@ function TimelineComponent() {
 	const onDoubleClick = useCallback(
 		(time: number) => {
 			scrollTimelineTo({ timestamp: time })
+			navigate({
+				search: (prev) => ({ ...prev, selection: [] }),
+			})
 		},
-		[scrollTimelineTo],
+		[navigate, scrollTimelineTo],
 	)
 
 	const { containerRef, containerWidth } = useTimelineDimensions()

@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react'
 import { AllowedEvents, EventParams } from './types'
 
 type Props<T extends AllowedEvents> = {
-	event: T
+	event?: T
 	condition?: (params: EventParams[T]) => boolean
 	callback: (params: EventParams[T]) => void
 }
@@ -21,6 +21,9 @@ export const useEventBusSubscribe = <T extends AllowedEvents>({ event, condition
 	)
 
 	useEffect(() => {
+		if (!event) {
+			return
+		}
 		window.addEventListener(`@timelines/${event}`, onEvent)
 		return () => {
 			window.removeEventListener(`@timelines/${event}`, onEvent)

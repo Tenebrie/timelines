@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
+
+import { useAutoRef } from '@/app/hooks/useAutoRef'
 
 import { EventDraft } from '../useEventFields'
 
@@ -10,6 +12,7 @@ type Props = {
 const storageKey = 'createEvent/savedState'
 
 const prepareState = (state: EventDraft) => ({
+	id: state.id,
 	name: state.name,
 	description: state.description,
 	descriptionRich: state.descriptionRich,
@@ -35,12 +38,8 @@ const loadState = () => {
 }
 
 export const usePreserveCreateState = ({ mode, draft }: Props) => {
-	const stateRef = useRef(draft)
+	const stateRef = useAutoRef(draft)
 	const [hasLoaded, setHasLoaded] = useState(false)
-
-	useEffect(() => {
-		stateRef.current = draft
-	}, [draft])
 
 	useEffect(() => {
 		const loadedState = loadState()
@@ -60,12 +59,13 @@ export const usePreserveCreateState = ({ mode, draft }: Props) => {
 			return
 		}
 
-		const handleSave = () => saveState(stateRef.current)
+		const currentValue = stateRef.current
+		const handleSave = () => saveState(currentValue)
 		window.addEventListener('beforeunload', handleSave)
 
 		return () => {
 			window.removeEventListener('beforeunload', handleSave)
-			saveState(stateRef.current)
+			saveState(currentValue)
 		}
-	}, [hasLoaded, mode])
+	}, [hasLoaded, mode, stateRef])
 }

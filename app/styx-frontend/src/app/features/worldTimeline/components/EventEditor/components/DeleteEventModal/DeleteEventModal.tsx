@@ -48,7 +48,7 @@ export const DeleteEventModal = () => {
 		}
 
 		close()
-		navigate({ to: '/world/$worldId', search: true })
+		navigate({ to: '/world/$worldId/timeline/outliner', search: true })
 	}
 
 	const onCloseAttempt = () => {

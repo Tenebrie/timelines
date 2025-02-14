@@ -28,7 +28,6 @@ export const useCreateEvent = ({ state, onCreated }: Props) => {
 			await createWorldEvent({
 				worldId,
 				body: {
-					type: 'SCENE',
 					name: state.name,
 					icon: state.icon,
 					timestamp: String(state.timestamp),

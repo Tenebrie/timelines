@@ -49,7 +49,7 @@ const TimelineGrabberComponent = () => {
 
 		return () => {
 			window.removeEventListener('mouseup', onMouseUp)
-			window.removeEventListener('mousemove', onMouseUp)
+			window.removeEventListener('mousemove', onMouseMove)
 		}
 	})
 

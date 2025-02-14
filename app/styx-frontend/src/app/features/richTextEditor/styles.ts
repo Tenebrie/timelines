@@ -13,6 +13,13 @@ export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
 		border: 1px solid ${({ $theme }) => $theme.material.palette.text.primary};
 	}
 
+	body.cursor-grabbing &,
+	body.cursor-resizing & {
+		&:hover {
+			border: 1px solid ${({ $theme }) => $theme.custom.palette.outline};
+		}
+	}
+
 	&:has(.content .ProseMirror-focused) {
 		border: 1px solid ${({ $theme }) => $theme.material.palette.primary.main};
 		outline: 1px solid ${({ $theme }) => $theme.material.palette.primary.main};

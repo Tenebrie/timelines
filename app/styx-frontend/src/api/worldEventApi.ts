@@ -107,10 +107,10 @@ export type CreateWorldEventApiArg = {
 	/** Any string value */
 	worldId: string
 	body: {
-		type: 'SCENE' | 'OTHER'
-		name: string
+		id?: string
+		name?: string
 		icon?: string
-		description?: string
+		description: string
 		descriptionRich?: string
 		timestamp: string
 		revokedAt?: null | string

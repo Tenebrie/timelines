@@ -8,19 +8,23 @@ import { useModal } from '@/app/features/modals/reducer'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 
+import { WorldEvent } from '../../types'
 import { EventDraft } from '../EventEditor/components/EventDetailsEditor/useEventFields'
 
 type Props = {
+	event: WorldEvent
 	draft: EventDraft
 }
 
-export const EventTitle = ({ draft }: Props) => {
+export const EventTitle = ({ event, draft }: Props) => {
 	const [editing, setEditing] = useState(false)
 	const [name, setName] = useState(draft.name)
 
 	const applyChanges = () => {
 		setEditing(false)
-		draft.setName(name.trim())
+		const trimmedName = name.trim()
+		draft.setName(trimmedName)
+		draft.setCustomNameEnabled(trimmedName.length > 0)
 	}
 
 	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], applyChanges, editing)
@@ -44,8 +48,12 @@ export const EventTitle = ({ draft }: Props) => {
 	const { open: openTimeTravelModal } = useModal('timeTravelModal')
 
 	useEffect(() => {
-		setName(draft.name)
-	}, [draft.name])
+		if (draft.customNameEnabled) {
+			setName(draft.name)
+		} else {
+			setName('')
+		}
+	}, [draft.customNameEnabled, draft.name])
 
 	if (!draft) {
 		return null
@@ -68,7 +76,7 @@ export const EventTitle = ({ draft }: Props) => {
 						onClick={() => setEditing(true)}
 					>
 						<Typography variant="h6" noWrap>
-							{draft.name || 'Create event'}
+							{name || event.name || 'Create event'}
 						</Typography>
 					</Button>
 					<Button
@@ -85,7 +93,7 @@ export const EventTitle = ({ draft }: Props) => {
 					value={name}
 					onChange={(event) => setName(event.target.value)}
 					onBlur={() => applyChanges()}
-					placeholder="Create event"
+					placeholder={'Custom name'}
 					role="textbox"
 					sx={{
 						width: '100%',

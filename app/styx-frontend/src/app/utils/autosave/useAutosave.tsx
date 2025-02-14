@@ -2,6 +2,7 @@ import Save from '@mui/icons-material/Save'
 import debounce from 'lodash.throttle'
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 
+import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { isRunningInTest } from '@/test-utils/isRunningInTest'
 
 import { useEffectOnce } from '../useEffectOnce'
@@ -24,10 +25,15 @@ export const useAutosave = ({ onSave, isSaving, isError, defaultIcon }: Props) =
 	// TODO: Figure out a more permanent solution
 	const autosaveDelay = isRunningInTest() ? 300 : 1000
 
-	const onSaveRef = useRef<() => void>(onSave)
+	const onSaveRef = useAutoRef(onSave)
+	const isSavingRef = useAutoRef(isSaving)
 	const debouncedAutosave = useRef(
 		debounce(() => {
 			if (savingStateRef.current !== 'debounce') {
+				return
+			}
+			if (isSavingRef.current) {
+				debouncedAutosave.current()
 				return
 			}
 			setSavingState('waiting')
@@ -46,15 +52,11 @@ export const useAutosave = ({ onSave, isSaving, isError, defaultIcon }: Props) =
 		}
 		setSavingState('waiting')
 		onSaveRef.current()
-	}, [isSaving])
+	}, [isSaving, onSaveRef])
 
 	const onCancelAutosave = useCallback(() => {
 		setSavingState('none')
 	}, [])
-
-	useEffect(() => {
-		onSaveRef.current = onSave
-	}, [onSave])
 
 	const startedWaitingRef = useRef<boolean>(false)
 	useEffect(() => {

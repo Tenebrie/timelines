@@ -156,8 +156,7 @@ export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allo
 		<StyledContainer
 			sx={{
 				borderRadius: '6px',
-				height: '100%',
-				minHeight: '200px',
+				minHeight: '128px',
 				border: isReadMode ? '1px solid transparent' : '',
 				'&:hover': {
 					border: isReadMode ? '1px solid transparent' : '',

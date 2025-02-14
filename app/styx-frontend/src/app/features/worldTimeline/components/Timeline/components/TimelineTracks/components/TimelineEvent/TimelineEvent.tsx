@@ -31,25 +31,23 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
 	const dispatch = useDispatch()
-	const { addTimelineMarkerToSelection, removeTimelineMarkerFromSelection, openTimelineContextMenu } =
-		worldSlice.actions
+	const { openTimelineContextMenu } = worldSlice.actions
 
 	const navigate = useNavigate({ from: '/world/$worldId/timeline/outliner' })
 
 	const { getIconPath } = useEventIcons()
 	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
+	const openEventDrawer = useEventBusDispatch({ event: 'timeline/openEventDrawer' })
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
 			if (selected) {
-				dispatch(removeTimelineMarkerFromSelection(entity.key))
 				navigate({
-					search: (prev) => ({ ...prev, selection: [] }),
+					search: (prev) => ({ ...prev, selection: prev.selection.filter((id) => id !== entity.key) }),
 				})
 			} else {
-				dispatch(addTimelineMarkerToSelection({ id: entity.key, eventId: entity.eventId, multiselect }))
 				navigate({
-					search: (prev) => ({ ...prev, selection: [entity.key] }),
+					search: (prev) => ({ ...prev, selection: [...(multiselect ? prev.selection : []), entity.key] }),
 				})
 			}
 		},
@@ -58,11 +56,15 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 				return
 			}
 
-			dispatch(addTimelineMarkerToSelection({ id: entity.key, eventId: entity.eventId, multiselect }))
 			navigate({
-				search: (prev) => ({ ...prev, time: entity.markerPosition, selection: [entity.key] }),
+				search: (prev) => ({
+					...prev,
+					time: entity.markerPosition,
+					selection: [...(multiselect ? prev.selection : []), entity.key],
+				}),
 			})
 			scrollTimelineTo({ timestamp: entity.markerPosition })
+			openEventDrawer()
 		},
 		ignoreDelay: true,
 	})

@@ -1,6 +1,7 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
 import { AuthorizationService } from '@src/services/AuthorizationService'
+import { EntityNameService } from '@src/services/EntityNameService'
 import { RedisService } from '@src/services/RedisService'
 import { ValidationService } from '@src/services/ValidationService'
 import { WorldEventDeltaService } from '@src/services/WorldEventDeltaService'
@@ -22,14 +23,12 @@ import {
 
 import { ContentStringValidator } from './validators/ContentStringValidator'
 import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
-import { NameStringValidator } from './validators/NameStringValidator'
 import { NullableNameStringValidator } from './validators/NullableNameStringValidator'
 import { NullableUuidStringValidator } from './validators/NullableUuidStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator'
 import { UuidStringValidator } from './validators/UuidStringValidator'
 import { WorldEventFieldValidator } from './validators/WorldEventFieldValidator'
-import { WorldEventTypeValidator } from './validators/WorldEventTypeValidator'
 
 const router = new Router().with(SessionMiddleware)
 
@@ -57,10 +56,10 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
 	const params = useRequestBody(ctx, {
-		type: RequiredParam(WorldEventTypeValidator),
-		name: RequiredParam(NameStringValidator),
-		icon: OptionalParam(NameStringValidator),
-		description: OptionalParam(ContentStringValidator),
+		id: OptionalParam(UuidStringValidator),
+		name: OptionalParam(OptionalNameStringValidator),
+		icon: OptionalParam(OptionalNameStringValidator),
+		description: RequiredParam(ContentStringValidator),
 		descriptionRich: OptionalParam(ContentStringValidator),
 		timestamp: RequiredParam(BigIntValidator),
 		revokedAt: OptionalParam(NullableBigIntValidator),
@@ -70,11 +69,14 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		mentions: OptionalParam(MentionsArrayValidator),
 	})
 
+	params.name = EntityNameService.getEventCreateName(params)
+
 	const { event, world } = await WorldEventService.createWorldEvent({
 		worldId,
 		createData: {
+			id: params.id,
 			name: params.name,
-			type: params.type,
+			type: 'SCENE',
 			timestamp: params.timestamp,
 		},
 		updateData: params,
@@ -115,7 +117,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 
 	const mappedParams = {
 		extraFields: params.modules,
-		name: params.name,
+		name: EntityNameService.getEventUpdateName(params),
 		icon: params.icon,
 		timestamp: params.timestamp,
 		revokedAt: params.revokedAt,
