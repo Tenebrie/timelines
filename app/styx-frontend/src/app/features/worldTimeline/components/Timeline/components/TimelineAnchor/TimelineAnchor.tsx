@@ -1,4 +1,4 @@
-import { memo, Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, Profiler, startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
@@ -6,7 +6,7 @@ import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorld
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getWorldCalendarState } from '@/app/features/world/selectors'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
 import { ScaleLevel } from '../../types'
 import { TimelineAnchorContainer, TimelineSmallestPips } from './styles'
@@ -117,7 +117,9 @@ const TimelineAnchorComponent = ({ scaleLevel, scroll, visible, containerWidth }
 				isLargeGroup: false,
 			})
 		}
-		updateDividers()
+		startTransition(() => {
+			updateDividers()
+		})
 	}, [calendar, lineCount, updateDividers])
 
 	const positionNormalizer = useMemo(

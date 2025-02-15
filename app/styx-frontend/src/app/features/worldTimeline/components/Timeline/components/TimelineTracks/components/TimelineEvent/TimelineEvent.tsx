@@ -1,19 +1,20 @@
 import Close from '@mui/icons-material/Close'
 import { colors } from '@mui/material'
 import Typography from '@mui/material/Typography'
+import { useNavigate } from '@tanstack/react-router'
 import classNames from 'classnames'
 import { memo, MouseEvent, Profiler, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { worldSlice } from '@/app/features/world/reducer'
 import { useEventIcons } from '@/app/features/worldTimeline/hooks/useEventIcons'
 import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { useStringColor } from '@/app/utils/getStringColor'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
-import { useDoubleClick } from '@/hooks/useDoubleClick'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
@@ -30,34 +31,40 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	const [isInfoVisible, setIsInfoVisible] = useState(false)
 
 	const dispatch = useDispatch()
-	const { addTimelineMarkerToSelection, removeTimelineMarkerFromSelection, openTimelineContextMenu } =
-		worldSlice.actions
+	const { openTimelineContextMenu } = worldSlice.actions
 
-	const { navigateToEventEditor, navigateToEventDeltaEditor } = useWorldTimelineRouter()
+	const navigate = useNavigate({ from: '/world/$worldId/timeline/outliner' })
+
 	const { getIconPath } = useEventIcons()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
+	const openEventDrawer = useEventBusDispatch({ event: 'timeline/openEventDrawer' })
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
 			if (selected) {
-				dispatch(removeTimelineMarkerFromSelection(entity.key))
+				navigate({
+					search: (prev) => ({ ...prev, selection: prev.selection.filter((id) => id !== entity.key) }),
+				})
 			} else {
-				dispatch(addTimelineMarkerToSelection({ id: entity.key, multiselect }))
+				navigate({
+					search: (prev) => ({ ...prev, selection: [...(multiselect ? prev.selection : []), entity.key] }),
+				})
 			}
 		},
-		onDoubleClick: () => {
+		onDoubleClick: ({ multiselect }) => {
 			if (entity.markerType === 'ghostEvent' || entity.markerType === 'ghostDelta') {
 				return
 			}
 
-			if (entity.markerType === 'deltaState') {
-				navigateToEventDeltaEditor({
-					eventId: entity.eventId,
-					deltaId: entity.id,
-					selectedTime: entity.markerPosition,
-				})
-			} else {
-				navigateToEventEditor({ eventId: entity.eventId, selectedTime: entity.markerPosition })
-			}
+			navigate({
+				search: (prev) => ({
+					...prev,
+					time: entity.markerPosition,
+					selection: [...(multiselect ? prev.selection : []), entity.key],
+				}),
+			})
+			scrollTimelineTo({ timestamp: entity.markerPosition })
+			openEventDrawer()
 		},
 		ignoreDelay: true,
 	})

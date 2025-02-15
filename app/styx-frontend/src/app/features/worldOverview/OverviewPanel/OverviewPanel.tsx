@@ -8,6 +8,7 @@ import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
+import { useNavigate } from '@tanstack/react-router'
 import { Profiler, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -17,14 +18,13 @@ import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { getOverviewPreferences } from '@/app/features/preferences/selectors'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
+import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
-import { useDoubleClick } from '@/hooks/useDoubleClick'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
+import { useEventBusDispatch } from '../../eventBus'
 import { worldSlice } from '../../world/reducer'
 import { getWorldState } from '../../world/selectors'
 import { ActorAvatar } from '../../worldTimeline/components/Renderers/ActorAvatar/ActorAvatar'
-import { useTimelineBusDispatch } from '../../worldTimeline/hooks/useTimelineBus'
 import { Actor, ActorDetails, WorldEvent, WorldEventDelta } from '../../worldTimeline/types'
 import { OverviewSublist } from './OverviewSublist'
 import { StyledListItemButton, StyledListItemText } from './styles'
@@ -42,9 +42,8 @@ export const OverviewPanel = () => {
 	})
 	const { actorsOpen, actorsReversed, eventsOpen, eventsReversed } = useSelector(getOverviewPreferences)
 
-	const scrollTimelineTo = useTimelineBusDispatch()
-	const { navigateToEventEditor, navigateToEventDeltaEditor, navigateToActorEditor } =
-		useWorldTimelineRouter()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
+	const navigate = useNavigate({ from: '/world/$worldId' })
 	const { timeToLabel } = useWorldTime()
 	const { addActorToSelection, removeActorFromSelection, addEventToSelection, removeEventFromSelection } =
 		worldSlice.actions
@@ -134,7 +133,7 @@ export const OverviewPanel = () => {
 			}
 		},
 		onDoubleClick: ({ actor }) => {
-			navigateToActorEditor(actor.id)
+			navigate({ to: '/world/$worldId/timeline/actor/$actorId', params: { actorId: actor.id } })
 			dispatch(removeActorFromSelection(actor.id))
 		},
 		ignoreDelay: true,
@@ -149,7 +148,12 @@ export const OverviewPanel = () => {
 			}
 		},
 		onDoubleClick: ({ event }) => {
-			navigateToEventEditor({ eventId: event.id, selectedTime: event.timestamp })
+			navigate({
+				to: '/world/$worldId/timeline/event/$eventId',
+				params: { eventId: event.id },
+				search: (prev) => ({ ...prev, time: event.timestamp }),
+			})
+			scrollTimelineTo({ timestamp: event.timestamp })
 		},
 		ignoreDelay: true,
 	})
@@ -164,8 +168,12 @@ export const OverviewPanel = () => {
 				}
 			},
 			onDoubleClick: ({ delta }) => {
-				navigateToEventDeltaEditor({ eventId: delta.worldEventId, deltaId: delta.id })
-				scrollTimelineTo(delta.timestamp)
+				navigate({
+					to: 'timeline/delta/$deltaId/$eventId',
+					params: { eventId: delta.worldEventId, deltaId: delta.id },
+					search: (prev) => ({ ...prev, time: delta.timestamp }),
+				})
+				scrollTimelineTo({ timestamp: delta.timestamp })
 				dispatch(removeEventFromSelection(delta.worldEventId))
 			},
 			ignoreDelay: true,

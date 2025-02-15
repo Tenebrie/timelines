@@ -1,16 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { useEventFields } from '../useEventFields'
+import { useAutoRef } from '@/app/hooks/useAutoRef'
+
+import { EventDraft } from '../useEventFields'
 
 type Props = {
-	mode: 'create' | 'create-compact' | 'edit'
-	state: ReturnType<typeof useEventFields>['state']
-	onLoaded: () => void
+	mode: 'create' | 'edit'
+	draft: EventDraft
 }
 
 const storageKey = 'createEvent/savedState'
 
-const prepareState = (state: Props['state']) => ({
+const prepareState = (state: EventDraft) => ({
+	id: state.id,
 	name: state.name,
 	description: state.description,
 	descriptionRich: state.descriptionRich,
@@ -23,7 +25,7 @@ const prepareState = (state: Props['state']) => ({
 	extraFields: state.modules,
 })
 
-const saveState = (state: Props['state']) => {
+const saveState = (state: EventDraft) => {
 	sessionStorage.setItem(storageKey, JSON.stringify(prepareState(state)))
 }
 
@@ -35,43 +37,35 @@ const loadState = () => {
 	return JSON.parse(savedItem) as ReturnType<typeof prepareState>
 }
 
-export const usePreserveCreateState = ({ mode, state, onLoaded }: Props) => {
-	const stateRef = useRef(state)
+export const usePreserveCreateState = ({ mode, draft }: Props) => {
+	const stateRef = useAutoRef(draft)
 	const [hasLoaded, setHasLoaded] = useState(false)
 
 	useEffect(() => {
-		stateRef.current = state
-	}, [state])
-
-	useEffect(() => {
-		if (mode === 'edit' || hasLoaded) {
-			return
-		}
-
 		const loadedState = loadState()
-		if (!loadedState) {
+		if (!loadedState || mode !== 'create') {
 			setHasLoaded(true)
 			return
 		}
 
-		state.loadState(loadedState)
+		draft.loadState(loadedState)
 
 		sessionStorage.removeItem(storageKey)
 		setHasLoaded(true)
-		onLoaded()
-	}, [mode, hasLoaded, state, onLoaded])
+	}, [hasLoaded, draft, mode])
 
 	useEffect(() => {
-		if (!hasLoaded) {
+		if (!hasLoaded || mode !== 'create') {
 			return
 		}
 
-		const handleSave = () => saveState(stateRef.current)
+		const currentValue = stateRef.current
+		const handleSave = () => saveState(currentValue)
 		window.addEventListener('beforeunload', handleSave)
 
 		return () => {
 			window.removeEventListener('beforeunload', handleSave)
-			saveState(stateRef.current)
+			saveState(currentValue)
 		}
-	}, [hasLoaded])
+	}, [hasLoaded, mode, stateRef])
 }

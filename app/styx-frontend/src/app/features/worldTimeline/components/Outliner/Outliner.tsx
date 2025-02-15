@@ -1,184 +1,109 @@
-import { useMediaQuery } from '@mui/material'
-import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
-import { Profiler, useMemo } from 'react'
-import { useSelector } from 'react-redux'
-import { Virtuoso } from 'react-virtuoso'
+import Typography from '@mui/material/Typography'
+import { useSearch } from '@tanstack/react-router'
+import debounce from 'lodash.debounce'
+import { Profiler, useEffect, useRef } from 'react'
 
-import { ContainedSpinner } from '@/app/components/ContainedSpinner'
-import { OutlinedContainer } from '@/app/components/OutlinedContainer'
-import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
+import { ResizeGrabber, useResizeGrabber } from '@/app/components/ResizeGrabber'
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
-import { getWorldState } from '@/app/features/world/selectors'
-import { isNull } from '@/app/utils/isNull'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
-import { useIsReadOnly } from '@/hooks/useIsReadOnly'
 
-import { useOutlinerTabs } from '../../hooks/useOutlinerTabs'
-import { EventCreator } from '../EventEditor/EventCreator'
-import { useVisibleActors } from '../EventSelector/useVisibleActors'
-import { useVisibleEvents } from '../EventSelector/useVisibleEvents'
-import { ActorWithStatementsRenderer } from '../Renderers/ActorWithStatementsRenderer'
-import { EventWithContentRenderer } from '../Renderers/Event/EventWithContentRenderer'
-import { EventTutorialModal } from './components/EventTutorialModal/EventTutorialModal'
-import { OutlinerControls } from './components/OutlinerControls/OutlinerControls'
-import { OutlinerEmptyState } from './components/OutlinerEmptyState/OutlinerEmptyState'
-import { SearchEmptyState } from './components/OutlinerEmptyState/SearchEmptyState'
-import { OutlinerSearch } from './components/OutlinerSearch/OutlinerSearch'
-import { StatementsScroller } from './styles'
+import { CollapsedEventDetails } from '../EventDetails/CollapsedEventDetails'
+import { EventDetails } from '../EventDetails/EventDetails'
 
 export const Outliner = () => {
-	const { selectedTime, search } = useSelector(
-		getWorldState,
-		(a, b) => a.selectedTime === b.selectedTime && a.search === b.search,
-	)
-	const { showInactiveStatements, expandedActors, expandedEvents } = useSelector(
-		getOutlinerPreferences,
-		(a, b) =>
-			a.showInactiveStatements === b.showInactiveStatements &&
-			a.expandedActors === b.expandedActors &&
-			a.expandedEvents === b.expandedEvents,
-	)
+	const minHeight = 230
+	const defaultHeight = 400
+	const grabberProps = useResizeGrabber({ minHeight, defaultHeight, openOnEvent: 'timeline/openEventDrawer' })
+	const {
+		visible: drawerVisible,
+		height,
+		setVisible,
+		overflowHeight,
+		isDraggingNow,
+		isDraggingChild,
+	} = grabberProps
 
-	const { isReadOnly } = useIsReadOnly()
-
-	const allVisibleActors = useVisibleActors()
-
-	const allVisibleEvents = useVisibleEvents({
-		timestamp: selectedTime,
-		includeInactive: showInactiveStatements,
+	const selectedMarkerIds = useSearch({
+		from: '/world/$worldId/_world/timeline/_timeline',
+		select: (search) => search.selection,
 	})
 
-	const visibleEvents = useMemo(
-		() =>
-			allVisibleEvents
-				.map((event, index) => ({
-					...event,
-					index,
-					collapsed: !expandedEvents.includes(event.id),
-					active: isNull(event.revokedAt) || event.revokedAt > selectedTime,
-				}))
-				.sort((a, b) => a.timestamp - b.timestamp || a.index - b.index),
-		[expandedEvents, selectedTime, allVisibleEvents],
+	const notifyAboutHeightChange = useEventBusDispatch({ event: 'outlinerResized' })
+
+	const onResize = useRef(
+		debounce((h: number) => {
+			notifyAboutHeightChange({ height: h })
+		}, 100),
 	)
 
-	const visibleActors = useMemo(
-		() =>
-			allVisibleActors.map((actor) => {
-				const mentionedEventIds = actor.mentionedIn.map((mention) => mention.targetId)
-				return {
-					...actor,
-					collapsed: !expandedActors.includes(actor.id),
-					events: visibleEvents.filter((event) => mentionedEventIds.includes(event.id)),
-				}
-			}),
-		[allVisibleActors, expandedActors, visibleEvents],
-	)
-
-	// const simplifiedView = useMemo(() => {
-
-	// })
-
-	const eventActions = useMemo<('edit' | 'collapse')[]>(() => {
-		if (isReadOnly) {
-			return ['collapse']
-		}
-		return ['edit', 'collapse']
-	}, [isReadOnly])
-	const { currentTab, setCurrentTab, actorsVisible, eventsVisible } = useOutlinerTabs()
-
-	const renderedActors = actorsVisible ? visibleActors : []
-	const renderedEvents = eventsVisible ? visibleEvents : []
-	const scrollerVisible = visibleActors.length > 0 || visibleEvents.length > 0 || !!search.query
-
-	const theme = useCustomTheme()
-	const isLargeScreen = useMediaQuery(theme.material.breakpoints.up('lg'))
+	useEffect(() => {
+		onResize.current(height)
+	}, [height, notifyAboutHeightChange])
 
 	return (
 		<Profiler id="Outliner" onRender={reportComponentProfile}>
-			{!isLargeScreen && <OutlinerControls />}
-			<Stack height={'calc(100% - 16px)'} alignItems="center">
-				<Grid container height="100%" maxWidth="xl" justifyContent="center">
-					{isLargeScreen && !isReadOnly && (
-						<Grid item lg={5} xs={12} sx={{ padding: 2, spacing: 2 }} height="100%">
-							<EventCreator mode="create-compact" />
-						</Grid>
+			<Paper
+				style={{
+					height,
+					minHeight,
+					marginTop: drawerVisible ? `${overflowHeight}px` : `${-height}px`,
+					transition: `margin-top ${isDraggingNow.current ? 0 : 0.3}s, opacity 0.3s`,
+				}}
+				sx={{
+					position: 'relative',
+					alignItems: 'center',
+					opacity: drawerVisible ? 1 : 0,
+				}}
+				elevation={2}
+			>
+				<Stack
+					direction="row"
+					height="100%"
+					sx={{
+						'& > *': { flex: 1 },
+						pointerEvents: 'auto',
+					}}
+				>
+					{selectedMarkerIds.length < 2 && <EventDetails />}
+					{selectedMarkerIds.length >= 2 && (
+						<Stack padding={4}>
+							<Typography>Bulk actions</Typography>
+						</Stack>
 					)}
-					<Grid item lg={7} xs={12} sx={{ padding: 2, spacing: 2 }} height="100%">
-						<OutlinedContainer label="World state" fullHeight>
-							<StatementsScroller>
-								{scrollerVisible && (
-									<Virtuoso
-										style={{ height: '100%' }}
-										totalCount={renderedActors.length + renderedEvents.length + 1}
-										itemContent={(index) => {
-											if (index === 0) {
-												return (
-													<Stack>
-														<Stack
-															direction="row"
-															justifyContent="space-between"
-															alignItems="center"
-															sx={{ margin: '1px' }}
-														>
-															<Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
-																<Tab label="All" />
-																<Tab label="Actors" />
-																<Tab label="Events" />
-																{/* <Tab label="Simplified" /> */}
-															</Tabs>
-															<OutlinerSearch />
-														</Stack>
-														<ContainedSpinner visible={search.isLoading} />
-														{search.query &&
-															!search.isLoading &&
-															search.results.actors.length === 0 &&
-															search.results.events.length === 0 && <SearchEmptyState />}
-													</Stack>
-												)
-											}
-
-											const actorIndex = index - 1
-											if (actorIndex < renderedActors.length) {
-												const actor = renderedActors[actorIndex]
-												return (
-													<ActorWithStatementsRenderer
-														{...actor}
-														actor={actor}
-														divider={
-															(eventsVisible && renderedEvents.length > 0) ||
-															actorIndex !== renderedActors.length - 1
-														}
-													/>
-												)
-											}
-
-											const eventIndex = actorIndex - renderedActors.length
-											if (eventIndex < renderedEvents.length) {
-												const event = renderedEvents[eventIndex]
-												return (
-													<EventWithContentRenderer
-														{...event}
-														event={event}
-														owningActor={null}
-														short={false}
-														divider={eventIndex !== renderedEvents.length - 1}
-														actions={eventActions}
-													/>
-												)
-											}
-										}}
-									/>
-								)}
-								{!scrollerVisible && <OutlinerEmptyState />}
-							</StatementsScroller>
-						</OutlinedContainer>
-					</Grid>
-					<EventTutorialModal />
-				</Grid>
-			</Stack>
+				</Stack>
+				<div
+					style={{
+						backgroundColor: `rgba(255, 255, 255, ${overflowHeight < 0 ? 0.1 : 0.0})`,
+						position: 'absolute',
+						top: 0,
+						left: 0,
+						width: '100%',
+						height: '100%',
+						pointerEvents: 'none',
+						borderRadius: '6px',
+						transition: 'background-color 0.3s',
+					}}
+				/>
+			</Paper>
+			<ResizeGrabber {...grabberProps} active={drawerVisible}>
+				<Box
+					sx={{
+						opacity: drawerVisible && !isDraggingChild ? 0 : 1,
+						transition: 'opacity 0.3s',
+						pointerEvents: 'none',
+					}}
+				>
+					<CollapsedEventDetails
+						visible={!drawerVisible}
+						onClick={() => {
+							setVisible(true)
+						}}
+					/>
+				</Box>
+			</ResizeGrabber>
 		</Profiler>
 	)
 }

@@ -18,24 +18,30 @@ import { applyEventDelta } from '@/app/utils/applyEventDelta'
 import { asMarkerType } from '@/app/utils/asMarkerType'
 import { findStartingFrom } from '@/app/utils/findStartingFrom'
 import { isNotNull } from '@/app/utils/isNotNull'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
-export type TimelineTrack = ReturnType<typeof useEventTracks>[number]
+export type TimelineTrack = {
+	events: TimelineEntity<MarkerType>[]
+	id: string | 'default'
+	name: string
+	position: number
+	baseModel: WorldEventTrack | null
+	visible: boolean
+	height: number
+}
 export const TimelineEventHeightPx = 40
 
 type Props = {
 	showHidden?: boolean
 }
 
-const useEventTracks = ({ showHidden }: Props = {}) => {
+const useEventTracks = ({ showHidden }: Props = {}): TimelineTrack[] => {
 	const { events } = useSelector(getWorldState, (a, b) => a.events === b.events)
 	const { ghost: eventGhost } = useSelector(getEventCreatorState, (a, b) => a.ghost === b.ghost)
 	const { ghost: deltaGhost } = useSelector(getEventDeltaCreatorState, (a, b) => a.ghost === b.ghost)
 
-	const { isLocationEqual } = useWorldTimelineRouter()
+	const isEventCreator = useCheckRouteMatch('/world/$worldId/timeline/event/create')
+	const isDeltaCreator = useCheckRouteMatch('/world/$worldId/timeline/delta/create/$eventId')
 
 	const eventGroups = useMemo<TimelineEntity<MarkerType>[]>(() => {
 		const sortedEvents = events
@@ -113,7 +119,7 @@ const useEventTracks = ({ showHidden }: Props = {}) => {
 			chainEntity: findChainedEntity(event, index),
 		}))
 
-		if (eventGhost && isLocationEqual(worldTimelineRoutes.eventCreator)) {
+		if (eventGhost && isEventCreator) {
 			chainedEvents.push({
 				...eventGhost,
 				eventId: eventGhost.id,
@@ -125,7 +131,7 @@ const useEventTracks = ({ showHidden }: Props = {}) => {
 				chainEntity: null,
 				followingEntity: null,
 			})
-		} else if (deltaGhost && isLocationEqual(worldTimelineRoutes.eventDeltaCreator)) {
+		} else if (deltaGhost && isDeltaCreator) {
 			const event = events.find((event) => event.id === deltaGhost.worldEventId)
 			if (event) {
 				chainedEvents.push({
@@ -143,7 +149,7 @@ const useEventTracks = ({ showHidden }: Props = {}) => {
 		}
 
 		return chainedEvents
-	}, [events, eventGhost, deltaGhost, isLocationEqual])
+	}, [events, eventGhost, isEventCreator, deltaGhost, isDeltaCreator])
 
 	const { tracks } = useEventTracksRequest()
 	const tracksWithEvents = useMemo(

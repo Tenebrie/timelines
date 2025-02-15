@@ -1,17 +1,14 @@
+import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { memo } from 'react'
+import { memo, useLayoutEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
+import { getTimelineContextMenuState, getTimelineState, getWorldState } from '@/app/features/world/selectors'
 
 import { ScaleLevel } from '../../types'
 import { TimelineContextMenu } from '../TimelineContextMenu/TimelineContextMenu'
-import useEventTracks from './hooks/useEventTracks'
 import { TimelineTrackItem } from './TimelineTrackItem'
 
 type Props = {
@@ -21,18 +18,42 @@ type Props = {
 	containerWidth: number
 }
 
-export const TimelineTracksComponent = (props: Props) => {
-	const eventTracks = useEventTracks()
-	const { stateOf, isLocationEqual } = useWorldTimelineRouter()
-	const stateOfEventEditor = stateOf(worldTimelineRoutes.eventEditor)
-	const stateOfDeltaEditor = stateOf(worldTimelineRoutes.eventDeltaEditor)
-	const worldState = useSelector(getWorldState)
+export const TimelineTracks = memo(TimelineTracksComponent)
+
+export function TimelineTracksComponent(props: Props) {
+	const { tracks } = useSelector(getTimelineState, (a, b) => a.tracks === b.tracks)
+	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
 
 	const { realTimeToScaledTime } = useTimelineWorldTime({
 		scaleLevel: props.scaleLevel,
-		calendar: worldState.calendar,
+		calendar,
 	})
+
+	const [outlinerHeight, setOutlinerHeight] = useState(300)
+	const [needToScrollBy, setNeedToScrollBy] = useState(0)
+	const preResizeScroll = useRef(0)
+	useEventBusSubscribe({
+		event: 'outlinerResized',
+		callback: ({ height }) => {
+			const diff = height - outlinerHeight
+			setOutlinerHeight(height)
+			setNeedToScrollBy(diff)
+			preResizeScroll.current = props.anotherRef.current?.scrollTop ?? 0
+		},
+	})
+
+	useLayoutEffect(() => {
+		const timeline = props.anotherRef.current
+		if (!timeline || needToScrollBy === 0) {
+			return
+		}
+
+		const scrollLost = preResizeScroll.current - timeline.scrollTop
+
+		timeline.scrollBy({ top: needToScrollBy + scrollLost })
+		setNeedToScrollBy(0)
+	}, [needToScrollBy, outlinerHeight, props.anotherRef])
 
 	return (
 		<Stack
@@ -47,22 +68,18 @@ export const TimelineTracksComponent = (props: Props) => {
 				overflowY: 'auto',
 			}}
 		>
-			{eventTracks.map((track) => (
+			{/* TODO: Size of box is always equal to the height of the Outliner */}
+			<Box sx={{ height: `calc(${outlinerHeight}px - 32px)`, pointerEvents: 'none' }} />
+			{tracks.map((track) => (
 				<TimelineTrackItem
 					key={track.id}
 					track={track}
-					isLocationEqual={isLocationEqual}
-					worldState={worldState}
 					contextMenuState={contextMenuState}
-					eventEditorParams={stateOfEventEditor}
-					eventDeltaEditorParams={stateOfDeltaEditor}
 					realTimeToScaledTime={realTimeToScaledTime}
 					{...props}
 				/>
 			))}
-			<TimelineContextMenu markers={eventTracks.flatMap((track) => track.events)} />
+			<TimelineContextMenu />
 		</Stack>
 	)
 }
-
-export const TimelineTracks = memo(TimelineTracksComponent)

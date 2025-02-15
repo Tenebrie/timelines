@@ -8,22 +8,21 @@ import Stack from '@mui/material/Stack'
 import Switch from '@mui/material/Switch'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/reducer'
+import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortalSlot'
 import { RichTextEditor } from '@/app/features/richTextEditor/RichTextEditor'
-import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { WorldEvent } from '@/app/features/worldTimeline/types'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 
 import { EventIconDropdown } from '../EventIconDropdown/EventIconDropdown'
 import { EventModulesControls } from './controls/EventModulesControls'
 import { useEntityName } from './hooks/useEntityName'
-import { usePreserveCreateState } from './hooks/usePreserveCreateState'
 import { ExternalLinkModule } from './modules/ExternalLinkModule'
 import { useCreateEvent } from './useCreateEvent'
 import { useEditEvent } from './useEditEvent'
@@ -38,6 +37,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 	const { state } = useEventFields({ event })
 	const {
 		modules,
+		key,
 		name,
 		icon,
 		timestamp,
@@ -46,6 +46,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		descriptionRich,
 		customNameEnabled,
 		externalLink,
+		bumpKey,
 		setName,
 		setTimestamp,
 		setIcon,
@@ -58,16 +59,14 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		loadEvent,
 	} = state
 
-	const [descriptionKey, setDescriptionKey] = useState(0)
-
-	usePreserveCreateState({ mode, state, onLoaded: () => setDescriptionKey((prev) => prev + 1) })
+	// usePreserveCreateState({ mode, state, onLoaded: bumpKey })
 
 	useEventBusSubscribe({
 		event: 'richEditor/forceUpdateEvent',
 		condition: (data) => mode === 'edit' && event.id === data.event.id,
 		callback: (data) => {
 			loadEvent(data.event)
-			setDescriptionKey((prev) => prev + 1)
+			bumpKey()
 		},
 	})
 
@@ -80,7 +79,7 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 				setDescriptionRich('')
 				setMentions([])
 				setCustomNameEnabled(false)
-				setDescriptionKey((prev) => prev + 1)
+				bumpKey()
 			}
 		},
 	})
@@ -131,13 +130,14 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 		<OutlinedContainer
 			label={mode === 'edit' ? 'Edit Event' : 'Create Event'}
 			gap={3}
+			fullHeight
 			secondaryLabel={
 				<Button sx={{ padding: '4px 12px' }} onClick={openTimeTravelModal}>
 					{timeLabel}
 				</Button>
 			}
 		>
-			<Stack spacing={2} direction="column">
+			<Stack spacing={2} direction="column" height="100%">
 				<Stack direction="row" gap={1} width="100%">
 					<TextField
 						type="text"
@@ -156,9 +156,9 @@ export const EventDetailsEditor = ({ event, mode }: Props) => {
 						</Button>
 					</Tooltip>
 				</Stack>
-				<Box height={'300px'}>
-					<RichTextEditorWithFallback
-						softKey={descriptionKey}
+				<Box height="100%">
+					<RichTextEditorPortalSlot
+						softKey={`${event.id}/${key}`}
 						value={descriptionRich}
 						onChange={onDescriptionChange}
 					/>

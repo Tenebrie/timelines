@@ -1,6 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
+import { ScaleLevel } from '../worldTimeline/components/Timeline/types'
 import { Actor, WorldEvent } from '../worldTimeline/types'
 import { loadPreferences, PreferencesKey } from './loadPreferences'
 
@@ -42,6 +43,10 @@ export const preferencesSlice = createSlice({
 		/* Timeline */
 		setTimelineHeight: (state, { payload }: PayloadAction<number>) => {
 			state.timeline.containerHeight = payload
+			saveToLocalStorage(state)
+		},
+		setScaleLevel: (state, { payload }: PayloadAction<ScaleLevel>) => {
+			state.timeline.scaleLevel = payload
 			saveToLocalStorage(state)
 		},
 

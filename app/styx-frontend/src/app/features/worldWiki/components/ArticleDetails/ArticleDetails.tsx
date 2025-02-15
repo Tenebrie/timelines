@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortalSlot'
 import { OnChangeParams } from '@/app/features/richTextEditor/RichTextEditor'
-import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { MentionDetails } from '@/app/features/worldTimeline/types'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 
@@ -64,7 +64,7 @@ export const ArticleDetails = () => {
 	}
 
 	return (
-		<RichTextEditorWithFallback
+		<RichTextEditorPortalSlot
 			softKey={`${article.id}-${key}`}
 			value={article.contentRich}
 			onChange={onChange}

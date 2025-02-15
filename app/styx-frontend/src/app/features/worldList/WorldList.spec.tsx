@@ -8,7 +8,7 @@ import {
 	mockUserModel,
 	mockWorldItemModel,
 } from '@/api/rheaApi.mock'
-import { renderWithProviders } from '@/jest/renderWithProviders'
+import { renderWithProviders } from '@/test-utils/renderWithProviders'
 
 import { initialState } from '../auth/reducer'
 import { WorldList } from './WorldList'

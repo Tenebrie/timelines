@@ -1,4 +1,4 @@
-import { renderHookWithProviders } from '@/jest/renderWithProviders'
+import { renderHookWithProviders } from '@/test-utils/renderWithProviders'
 
 import { worldInitialState } from '../../world/reducer'
 import { useTimeSelector } from './useTimeSelector'

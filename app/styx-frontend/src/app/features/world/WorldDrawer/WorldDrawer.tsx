@@ -6,47 +6,42 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
+import { useNavigate } from '@tanstack/react-router'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { getOverviewPreferences } from '@/app/features/preferences/selectors'
-import { store } from '@/app/store'
-import { useWorldRouter, worldRoutes } from '@/router/routes/featureRoutes/worldRoutes'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 import { getWorldState } from '../selectors'
 import { WorldHeader } from './components/WorldHeader'
+import { WorldTimelineControls } from './components/WorldTimelineControls'
 
 export const WorldDrawer = () => {
-	const { id: worldId, isReadOnly } = useSelector(
-		getWorldState,
-		(a, b) => a.id === b.id && a.isReadOnly === b.isReadOnly,
-	)
-
+	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 	const { panelOpen } = useSelector(getOverviewPreferences)
-	const { navigateTo, isLocationChildOf } = useWorldRouter()
-	const { navigateToOutliner } = useWorldTimelineRouter()
+	const navigate = useNavigate({ from: '/world/$worldId' })
 
+	const matchesTimeline = useCheckRouteMatch('/world/$worldId/timeline')
 	const onTimelineClick = () => {
-		navigateToOutliner(store.getState().world.selectedTime, true)
+		navigate({ to: '/world/$worldId/timeline/outliner', search: true })
 	}
 
+	const matchesOverview = useCheckRouteMatch('/world/$worldId/overview')
 	const onOverviewClick = () => {
-		navigateTo({
-			target: worldRoutes.overview,
-			args: {
-				worldId,
-			},
+		navigate({
+			to: '/world/$worldId/overview',
+			search: true,
 		})
 	}
 
+	const matchesWiki = useCheckRouteMatch('/world/$worldId/wiki')
 	const onWikiClick = () => {
-		navigateTo({
-			target: worldRoutes.wiki,
-			args: {
-				worldId,
-			},
+		navigate({
+			to: '/world/$worldId/wiki',
+			search: true,
 		})
 	}
 
@@ -59,24 +54,17 @@ export const WorldDrawer = () => {
 	// 	})
 	// }
 
+	const matchesSettings = useCheckRouteMatch('/world/$worldId/settings')
 	const onSettingsClick = () => {
-		navigateTo({
-			target: worldRoutes.settings,
-			args: {
-				worldId,
-			},
+		navigate({
+			to: '/world/$worldId/settings',
+			search: true,
 		})
 	}
 
-	const getButtonStyle = useCallback(
-		(route: (typeof worldRoutes)[keyof typeof worldRoutes]) => {
-			if (isLocationChildOf(route)) {
-				return 'contained'
-			}
-			return 'text'
-		},
-		[isLocationChildOf],
-	)
+	const getButtonStyle = useCallback((matches: boolean) => {
+		return matches ? 'contained' : 'text'
+	}, [])
 
 	return (
 		<>
@@ -91,6 +79,7 @@ export const WorldDrawer = () => {
 			>
 				<Paper
 					style={{
+						zIndex: 3,
 						position: 'absolute',
 						borderRadius: 0,
 						width: '72px',
@@ -100,38 +89,41 @@ export const WorldDrawer = () => {
 						transition: 'left 0.3s',
 						display: 'flex',
 						flexDirection: 'column',
-						gap: 8,
 						padding: '16px 4px',
+						justifyContent: 'space-between',
 					}}
 					elevation={2}
 				>
-					<StyledSmallButton variant={getButtonStyle(worldRoutes.timeline)} onClick={onTimelineClick}>
-						<Home />
-					</StyledSmallButton>
-					<StyledSmallButton variant={getButtonStyle(worldRoutes.overview)} onClick={onOverviewClick}>
-						<ViewList />
-					</StyledSmallButton>
-					{/* <StyledSmallButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
+					<Stack sx={{ gap: '8px', flexDirection: 'column' }}>
+						<StyledSmallButton variant={getButtonStyle(matchesTimeline)} onClick={onTimelineClick}>
+							<Home />
+						</StyledSmallButton>
+						<StyledSmallButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}>
+							<ViewList />
+						</StyledSmallButton>
+						{/* <StyledSmallButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
 						<Person />
 					</StyledSmallButton> */}
-					<StyledSmallButton variant={getButtonStyle(worldRoutes.wiki)} onClick={onWikiClick}>
-						<AutoStories />
-					</StyledSmallButton>
-					{!isReadOnly && (
-						<>
-							<Divider />
-							<StyledSmallButton variant={getButtonStyle(worldRoutes.settings)} onClick={onSettingsClick}>
-								<Settings />
-							</StyledSmallButton>
-						</>
-					)}
-					{/* <StyledSmallButton> */}
-					{/* <Help /> */}
-					{/* </StyledSmallButton> */}
+						<StyledSmallButton variant={getButtonStyle(matchesWiki)} onClick={onWikiClick}>
+							<AutoStories />
+						</StyledSmallButton>
+						{!isReadOnly && (
+							<>
+								<Divider />
+								<StyledSmallButton variant={getButtonStyle(matchesSettings)} onClick={onSettingsClick}>
+									<Settings />
+								</StyledSmallButton>
+							</>
+						)}
+						{/* <StyledSmallButton> */}
+						{/* <Help /> */}
+						{/* </StyledSmallButton> */}
+					</Stack>
+					<WorldTimelineControls />
 				</Paper>
 				<Paper
 					style={{
-						zIndex: 1,
+						zIndex: 3,
 						position: 'absolute',
 						borderRadius: 0,
 						width: '300px',
@@ -148,13 +140,13 @@ export const WorldDrawer = () => {
 				>
 					<WorldHeader />
 					<Divider />
-					<StyledButton variant={getButtonStyle(worldRoutes.timeline)} onClick={onTimelineClick}>
+					<StyledButton variant={getButtonStyle(matchesTimeline)} onClick={onTimelineClick}>
 						<Home /> Timeline
 					</StyledButton>
-					<StyledButton variant={getButtonStyle(worldRoutes.overview)} onClick={onOverviewClick}>
+					<StyledButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}>
 						<ViewList /> Overview
 					</StyledButton>
-					<StyledButton variant={getButtonStyle(worldRoutes.wiki)} onClick={onWikiClick}>
+					<StyledButton variant={getButtonStyle(matchesWiki)} onClick={onWikiClick}>
 						<AutoStories /> Wiki
 					</StyledButton>
 					{/* <StyledButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
@@ -163,7 +155,7 @@ export const WorldDrawer = () => {
 					{!isReadOnly && (
 						<>
 							<Divider />
-							<StyledButton variant={getButtonStyle(worldRoutes.settings)} onClick={onSettingsClick}>
+							<StyledButton variant={getButtonStyle(matchesSettings)} onClick={onSettingsClick}>
 								<Settings /> Settings
 							</StyledButton>
 						</>

@@ -1,8 +1,5 @@
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { getWorldState } from '@/app/features/world/selectors'
-import { worldTimelineRoutes } from '@/router/routes/featureRoutes/worldTimelineRoutes'
-import { QueryParams } from '@/router/routes/QueryParams'
-import { QueryStrategy } from '@/router/types'
 
 import { BaseMentionChip } from './BaseMentionChip'
 
@@ -14,7 +11,7 @@ type Props = {
 
 export const EventMentionChip = ({ worldId, eventId, events }: Props) => {
 	const navigateTo = useEventBusDispatch({
-		event: 'navigate/worldTimeline',
+		event: 'navigate/world',
 	})
 
 	const event = events.find((event) => event.id === eventId)
@@ -27,9 +24,8 @@ export const EventMentionChip = ({ worldId, eventId, events }: Props) => {
 		}
 
 		navigateTo({
-			target: worldTimelineRoutes.eventEditor,
-			args: { worldId, eventId },
-			query: { [QueryParams.SELECTED_TIME]: QueryStrategy.Preserve },
+			to: '/world/$worldId/timeline/event/$eventId',
+			params: { worldId, eventId },
 		})
 	}
 

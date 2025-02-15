@@ -4,7 +4,7 @@ import { reportComponentProfile } from '@/app/features/profiling/reportComponent
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
-import { CustomTheme } from '@/hooks/useCustomTheme'
+import { CustomTheme } from '@/app/hooks/useCustomTheme'
 
 import { ScaleLevel } from '../../types'
 import { Divider, DividerContainer, DividerLabel } from './styles'

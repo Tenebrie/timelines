@@ -1,14 +1,17 @@
+import type { NavigateOptions } from '@tanstack/react-router'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
-import type { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
-import { useWorldWikiRouter } from '@/router/routes/featureRoutes/worldWikiRoutes'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
 import { ActorDetails, WorldEvent } from '../worldTimeline/types'
 
 export type AllowedEvents =
+	| 'scrollTimelineTo'
 	| 'scrollTimelineLeft'
 	| 'scrollTimelineRight'
+	| 'timeline/requestZoom'
+	| 'timeline/openEventDrawer'
+	| 'outlinerResized'
 	| 'sendCalliopeMessage'
 	| 'calliopeReconnected'
 	| 'timelineScrolled'
@@ -16,17 +19,30 @@ export type AllowedEvents =
 	| 'richEditor/updateMentions'
 	| 'richEditor/closeMentions'
 	| 'richEditor/keyDown'
-	| 'navigate/worldTimeline'
-	| 'navigate/articleDetails'
+	| 'navigate/world'
 	| 'richEditor/forceUpdateEvent'
 	| 'richEditor/forceUpdateActor'
 	| 'richEditor/forceUpdateArticle'
 	| 'richEditor/mentionRender/start'
 	| 'richEditor/mentionRender/end'
 
+type ScrollTimelineToParams =
+	| {
+			timestamp: number
+			skipAnim?: boolean
+	  }
+	| {
+			rawScrollValue: number
+			skipAnim?: boolean
+	  }
+
 export type EventParams = {
+	['scrollTimelineTo']: ScrollTimelineToParams
 	['scrollTimelineLeft']: void
 	['scrollTimelineRight']: void
+	['timeline/requestZoom']: { direction: 'in' | 'out' }
+	['timeline/openEventDrawer']: void
+	['outlinerResized']: { height: number }
 	['sendCalliopeMessage']: ClientToCalliopeMessage
 	['calliopeReconnected']: void
 	['timelineScrolled']: void
@@ -40,8 +56,7 @@ export type EventParams = {
 		altKey: boolean
 		metaKey: boolean
 	}
-	['navigate/worldTimeline']: Parameters<ReturnType<typeof useWorldTimelineRouter>['navigateTo']>[0]
-	['navigate/articleDetails']: Parameters<ReturnType<typeof useWorldWikiRouter>['navigateTo']>[0]
+	['navigate/world']: NavigateOptions
 	['richEditor/forceUpdateEvent']: {
 		event: WorldEvent
 	}

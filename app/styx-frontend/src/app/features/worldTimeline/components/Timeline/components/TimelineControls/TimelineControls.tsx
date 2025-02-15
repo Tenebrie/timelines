@@ -9,28 +9,34 @@ import { useSelector } from 'react-redux'
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getWorldState } from '@/app/features/world/selectors'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
 import { TimelineEdgeScroll } from '../TimelineEdgeScroll/TimelineEdgeScroll'
 import { EventTracksMenu } from './EventTracksMenu/EventTracksMenu'
 
 type Props = {
-	onNavigateToTime: (timestamp: number) => void
 	onZoomIn: () => void
 	onZoomOut: () => void
 }
 
-const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Props) => {
+export const TimelineControls = memo(TimelineControlsComponent)
+
+function TimelineControlsComponent({ onZoomIn, onZoomOut }: Props) {
 	const theme = useCustomTheme()
 	const { selectedTime } = useSelector(getWorldState, (a, b) => a.selectedTime === b.selectedTime)
 	const { timeToLabel } = useWorldTime()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 	const scrollTimelineLeft = useEventBusDispatch({ event: 'scrollTimelineLeft' })
 	const scrollTimelineRight = useEventBusDispatch({ event: 'scrollTimelineRight' })
 
 	return (
 		<Paper
 			elevation={2}
-			sx={{ backgroundColor: theme.custom.palette.background.timelineHeader, minWidth: '700px' }}
+			sx={{
+				backgroundColor: theme.custom.palette.background.timelineHeader,
+				minWidth: '700px',
+				paddingTop: '32px',
+			}}
 		>
 			<div
 				className="block-timeline"
@@ -42,12 +48,12 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 			>
 				<Stack direction="row" justifyContent="space-between" width="calc(100%-64px)">
 					<Stack direction="row" gap={2} marginLeft={1}>
-						<EventTracksMenu onNavigateToTime={onNavigateToTime} />
+						<EventTracksMenu />
 						<Button
 							color="secondary"
 							variant="outlined"
 							onClick={() => {
-								onNavigateToTime(selectedTime)
+								scrollTimelineTo({ timestamp: selectedTime })
 							}}
 						>
 							{timeToLabel(selectedTime)}
@@ -68,5 +74,3 @@ const TimelineControlsComponent = ({ onNavigateToTime, onZoomIn, onZoomOut }: Pr
 		</Paper>
 	)
 }
-
-export const TimelineControls = memo(TimelineControlsComponent)

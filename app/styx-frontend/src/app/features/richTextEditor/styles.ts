@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import { EditorContent } from '@tiptap/react'
 import styled from 'styled-components'
 
-import { CustomTheme } from '@/hooks/useCustomTheme'
+import { CustomTheme } from '@/app/hooks/useCustomTheme'
 
 export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
 	flex: 0;
@@ -11,6 +11,13 @@ export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
 
 	&:hover {
 		border: 1px solid ${({ $theme }) => $theme.material.palette.text.primary};
+	}
+
+	body.cursor-grabbing &,
+	body.cursor-resizing & {
+		&:hover {
+			border: 1px solid ${({ $theme }) => $theme.custom.palette.outline};
+		}
 	}
 
 	&:has(.content .ProseMirror-focused) {
@@ -39,7 +46,6 @@ export const StyledEditorContent = styled(EditorContent)<{ $mode: 'read' | 'edit
 	outline: none;
 	height: ${(props) => (props.$mode === 'edit' ? 'calc(100% - 48px)' : 'unset')};
 	overflow-y: auto;
-	min-height: 200px;
 	display: flex;
 	flex-direction: column;
 

@@ -2,7 +2,7 @@ import { DefaultBodyType, rest } from 'msw'
 import { SetupServer } from 'msw/node'
 import { v4 as getRandomId } from 'uuid'
 
-import { DeepPartial } from '@/types/utils'
+import { DeepPartial } from '@/app/types/utils'
 
 import { User } from '../app/features/auth/reducer'
 import {

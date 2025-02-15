@@ -27,7 +27,6 @@ export const useQuickCreateEvent = () => {
 						name: query,
 						description: query,
 						descriptionRich: query,
-						type: 'SCENE',
 						timestamp: '0',
 					},
 				}),

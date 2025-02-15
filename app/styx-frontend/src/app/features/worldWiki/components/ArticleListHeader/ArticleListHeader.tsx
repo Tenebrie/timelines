@@ -9,8 +9,8 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/reducer'
 import { getWikiPreferences } from '@/app/features/preferences/selectors'
-import { useIsReadOnly } from '@/hooks/useIsReadOnly'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { useIsReadOnly } from '@/app/hooks/useIsReadOnly'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 
 import { useListArticles } from '../../api/useListArticles'
 import { wikiSlice } from '../../reducer'

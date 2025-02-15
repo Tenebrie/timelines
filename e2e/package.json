@@ -8,9 +8,9 @@
 		"build": "docker compose build playwright",
 		"test": "yarn build && yarn test:local",
 		"test:report": "serve ./test-report/html --listen 3605",
-		"test:local": "TARGET_ENV=local MY_UID=\"$(id -u)\" MY_GID=\"$(id -g)\" docker compose -f docker-compose.yml -f docker-compose.local.yml run --service-ports --rm playwright",
-		"test:staging": "TARGET_ENV=staging MY_UID=\"$(id -u)\" MY_GID=\"$(id -g)\" docker compose run --rm playwright",
-		"test:prod": "TARGET_ENV=prod MY_UID=\"$(id -u)\" MY_GID=\"$(id -g)\" docker compose run --rm playwright",
+		"test:local": ". ../scripts/export-user-id.sh && TARGET_ENV=local docker compose -f docker-compose.yml -f docker-compose.local.yml run --service-ports --rm playwright",
+		"test:staging": ". ../scripts/export-user-id.sh && TARGET_ENV=staging docker compose run --rm playwright",
+		"test:prod": ". ../scripts/export-user-id.sh && TARGET_ENV=prod docker compose run --rm playwright",
 		"test:ui": "TARGET_ENV=local_ui playwright test --ui",
 		"test:staging:ui": "TARGET_ENV=staging playwright test --ui"
 	},

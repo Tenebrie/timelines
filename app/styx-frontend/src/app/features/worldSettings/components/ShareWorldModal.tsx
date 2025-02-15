@@ -17,9 +17,9 @@ import { CollaboratorAccess } from '@/api/types'
 import { getWorldIdState } from '@/app/features/world/selectors'
 import { worldListSlice } from '@/app/features/worldList/reducer'
 import { getShareWorldModalState } from '@/app/features/worldList/selectors'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useCollaboratorAccess } from '@/app/utils/useCollaboratorAccess'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const ShareWorldModal = () => {

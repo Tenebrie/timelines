@@ -10,8 +10,8 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCreateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 import { isEntityNameValid } from '../../validation/isEntityNameValid'

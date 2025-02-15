@@ -14,23 +14,26 @@ import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useUpdateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/reducer'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { getWorldIdState } from '@/app/features/world/selectors'
+import { getTimelineState, getWorldIdState } from '@/app/features/world/selectors'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
-import useEventTracks, { TimelineTrack } from '../../TimelineTracks/hooks/useEventTracks'
+import { TimelineTrack } from '../../TimelineTracks/hooks/useEventTracks'
 
 type Props = {
-	onNavigateToTime: (timestamp: number) => void
+	size?: 'small'
 }
 
-export const EventTracksMenu = ({ onNavigateToTime }: Props) => {
+export const EventTracksMenu = ({ size }: Props) => {
 	const worldId = useSelector(getWorldIdState)
-	const tracks = useEventTracks({ showHidden: true })
+	const { tracks } = useSelector(getTimelineState, (a, b) => a.tracks === b.tracks)
 	const displayedTracks = tracks.filter((t) => t.id !== 'default')
 	const { timeToLabel } = useWorldTime()
 	const { open: openEventTrackEdit } = useModal('eventTrackEdit')
+
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 
 	const [updateTrack] = useUpdateWorldEventTrackMutation()
 
@@ -63,11 +66,11 @@ export const EventTracksMenu = ({ onNavigateToTime }: Props) => {
 		<>
 			<Button
 				color="primary"
-				variant="outlined"
-				startIcon={<Leaderboard style={{ transform: 'rotate(90deg)' }} />}
+				startIcon={size === 'small' ? null : <Leaderboard style={{ transform: 'rotate(90deg)' }} />}
+				sx={{ height: size === 'small' ? 64 : undefined }}
 				{...bindTrigger(popupState)}
 			>
-				Event tracks
+				{size === 'small' ? <Leaderboard style={{ transform: 'rotate(90deg)' }} /> : 'Event tracks'}
 			</Button>
 			{tracks && (
 				<Popover
@@ -108,7 +111,9 @@ export const EventTracksMenu = ({ onNavigateToTime }: Props) => {
 													color="secondary"
 													variant="outlined"
 													onClick={() => {
-														onNavigateToTime(track.events[track.events.length - 1].markerPosition)
+														scrollTimelineTo({
+															timestamp: track.events[track.events.length - 1].markerPosition,
+														})
 													}}
 												>
 													{timeToLabel(track.events[track.events.length - 1].markerPosition)}
@@ -122,7 +127,9 @@ export const EventTracksMenu = ({ onNavigateToTime }: Props) => {
 													color="secondary"
 													variant="outlined"
 													onClick={() => {
-														onNavigateToTime(track.events[0].markerPosition)
+														scrollTimelineTo({
+															timestamp: track.events[0].markerPosition,
+														})
 													}}
 												>
 													{timeToLabel(track.events[0].markerPosition)}

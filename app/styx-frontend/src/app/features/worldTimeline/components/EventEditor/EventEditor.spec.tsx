@@ -7,10 +7,10 @@ import {
 	mockUpdateWorldEvent,
 } from '@/api/rheaApi.mock'
 import { initialState } from '@/app/features/world/reducer'
-import { renderWithProviders } from '@/jest/renderWithProviders'
-import { setupTestServer } from '@/jest/setupTestServer'
-import { mockRouter } from '@/router/router.mock'
-import { worldTimelineRoutes } from '@/router/routes/featureRoutes/worldTimelineRoutes'
+import { worldTimelineRoutes } from '@/legacy-router/routes/featureRoutes/worldTimelineRoutes'
+import { mockRouter } from '@/router-utils/router.mock'
+import { renderWithProviders } from '@/test-utils/renderWithProviders'
+import { setupTestServer } from '@/test-utils/setupTestServer'
 
 import { WorldEvent } from '../../types'
 import { DeleteEventModal } from './components/DeleteEventModal/DeleteEventModal'

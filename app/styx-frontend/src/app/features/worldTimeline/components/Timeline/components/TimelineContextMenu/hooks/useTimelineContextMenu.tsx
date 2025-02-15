@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useDebugValue } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
@@ -13,6 +13,7 @@ type Props = {
 }
 
 export const useTimelineContextMenu = ({ scaleLevel }: Props) => {
+	useDebugValue('useTimelineContextMenu')
 	const { isOpen } = useSelector(getTimelineContextMenuState)
 	const calendar = useSelector(getWorldCalendarState)
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
