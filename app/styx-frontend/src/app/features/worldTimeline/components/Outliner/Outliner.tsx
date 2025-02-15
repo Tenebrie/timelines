@@ -34,14 +34,14 @@ export const Outliner = () => {
 	const notifyAboutHeightChange = useEventBusDispatch({ event: 'outlinerResized' })
 
 	const onResize = useRef(
-		debounce((h: number) => {
-			notifyAboutHeightChange({ height: h })
+		debounce((h: number, v: boolean) => {
+			notifyAboutHeightChange({ height: v ? h : 0 })
 		}, 100),
 	)
 
 	useEffect(() => {
-		onResize.current(height)
-	}, [height, notifyAboutHeightChange])
+		onResize.current(height, drawerVisible)
+	}, [height, drawerVisible, notifyAboutHeightChange])
 
 	return (
 		<Profiler id="Outliner" onRender={reportComponentProfile}>
@@ -55,7 +55,6 @@ export const Outliner = () => {
 				sx={{
 					position: 'relative',
 					alignItems: 'center',
-					opacity: drawerVisible ? 1 : 0,
 				}}
 				elevation={2}
 			>

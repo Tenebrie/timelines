@@ -58,6 +58,7 @@ export function useResizeGrabber({ minHeight, defaultHeight, openOnEvent }: TopP
 					_setInternalHeight(Math.max(minHeight ?? 0, _internalHeight))
 				} else {
 					_setInternalHeight(0)
+					_setOverflowHeight(-Math.max(minHeight ?? 0, _internalHeight))
 				}
 			} else {
 				_setOverflowHeight(0)
@@ -115,9 +116,9 @@ function ResizeGrabberComponent({
 }: Props) {
 	const [mousePosition, setMousePosition] = useState(0)
 	const mouseLastSeenPosition = useRef(0)
+	const _currentContainerHeight = useAutoRef(_internalHeight)
 
 	const visibleRef = useAutoRef(visible)
-	const currentContainerHeight = useAutoRef(_internalHeight)
 
 	const onMouseDown = (event: MouseEvent | ReactMouseEvent, isChild: boolean) => {
 		isDraggingNow.current = true
@@ -153,7 +154,7 @@ function ResizeGrabberComponent({
 				return
 			}
 			isDraggingNow.current = false
-			if (currentContainerHeight.current <= _minHeight) {
+			if (_currentContainerHeight.current <= _minHeight) {
 				setVisible(false)
 			}
 			setIsDraggingChild(false)
@@ -174,7 +175,7 @@ function ResizeGrabberComponent({
 	}, [
 		_minHeight,
 		_setOverflowHeight,
-		currentContainerHeight,
+		_currentContainerHeight,
 		isDraggingNow,
 		setIsDraggingChild,
 		setVisible,
@@ -191,7 +192,7 @@ function ResizeGrabberComponent({
 		}
 		setMousePosition(0)
 
-		const value = currentContainerHeight.current + mousePosition - mouseLastSeenPosition.current
+		const value = _currentContainerHeight.current + mousePosition - mouseLastSeenPosition.current
 		_setInternalHeight(value)
 
 		const constrainedValue = Math.max(_minHeight, value)
@@ -204,13 +205,13 @@ function ResizeGrabberComponent({
 
 		if (!visible) {
 			setVisible(true)
-			_setOverflowHeight(900)
+			// _setOverflowHeight(_minHeight)
 		}
 	}, [
 		mousePosition,
 		_setDisplayedHeight,
 		_minHeight,
-		currentContainerHeight,
+		_currentContainerHeight,
 		setVisible,
 		visibleRef,
 		_setOverflowHeight,
