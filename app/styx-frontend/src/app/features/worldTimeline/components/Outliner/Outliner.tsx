@@ -17,7 +17,14 @@ export const Outliner = () => {
 	const minHeight = 230
 	const defaultHeight = 400
 	const grabberProps = useResizeGrabber({ minHeight, defaultHeight, openOnEvent: 'timeline/openEventDrawer' })
-	const { visible, height, setVisible } = grabberProps
+	const {
+		visible: drawerVisible,
+		height,
+		setVisible,
+		overflowHeight,
+		isDraggingNow,
+		isDraggingChild,
+	} = grabberProps
 
 	const selectedMarkerIds = useSearch({
 		from: '/world/$worldId/_world/timeline/_timeline',
@@ -39,13 +46,16 @@ export const Outliner = () => {
 	return (
 		<Profiler id="Outliner" onRender={reportComponentProfile}>
 			<Paper
-				sx={{
+				style={{
 					height,
 					minHeight,
+					marginTop: drawerVisible ? `${overflowHeight}px` : `${-height}px`,
+					transition: `margin-top ${isDraggingNow.current ? 0 : 0.3}s, opacity 0.3s`,
+				}}
+				sx={{
+					position: 'relative',
 					alignItems: 'center',
-					marginTop: visible ? '0' : `${-height}px`,
-					opacity: visible ? 1 : 0,
-					transition: 'margin-top 0.3s, opacity 0.3s',
+					opacity: drawerVisible ? 1 : 0,
 				}}
 				elevation={2}
 			>
@@ -54,6 +64,7 @@ export const Outliner = () => {
 					height="100%"
 					sx={{
 						'& > *': { flex: 1 },
+						pointerEvents: 'auto',
 					}}
 				>
 					{selectedMarkerIds.length < 2 && <EventDetails />}
@@ -63,21 +74,36 @@ export const Outliner = () => {
 						</Stack>
 					)}
 				</Stack>
-			</Paper>
-			<ResizeGrabber {...grabberProps} key={grabberProps.key} active={visible} />
-			<Box
-				sx={{
-					opacity: visible ? 0 : 1,
-					transition: 'opacity 0.3s',
-					pointerEvents: visible ? 'none' : 'auto',
-				}}
-			>
-				<CollapsedEventDetails
-					onClick={() => {
-						setVisible(true)
+				<div
+					style={{
+						backgroundColor: `rgba(255, 255, 255, ${overflowHeight < 0 ? 0.1 : 0.0})`,
+						position: 'absolute',
+						top: 0,
+						left: 0,
+						width: '100%',
+						height: '100%',
+						pointerEvents: 'none',
+						borderRadius: '6px',
+						transition: 'background-color 0.3s',
 					}}
 				/>
-			</Box>
+			</Paper>
+			<ResizeGrabber {...grabberProps} active={drawerVisible}>
+				<Box
+					sx={{
+						opacity: drawerVisible && !isDraggingChild ? 0 : 1,
+						transition: 'opacity 0.3s',
+						pointerEvents: 'none',
+					}}
+				>
+					<CollapsedEventDetails
+						visible={!drawerVisible}
+						onClick={() => {
+							setVisible(true)
+						}}
+					/>
+				</Box>
+			</ResizeGrabber>
 		</Profiler>
 	)
 }

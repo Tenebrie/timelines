@@ -65,7 +65,7 @@ export const WorldTimeline = () => {
 					justifyContent="center"
 					alignItems="flex-start"
 				>
-					<Stack sx={{ width: '100%', maxWidth: '600px', pointerEvents: 'auto' }}>
+					<Stack sx={{ width: '100%', maxWidth: '600px' }}>
 						<Outlet />
 					</Stack>
 				</Stack>

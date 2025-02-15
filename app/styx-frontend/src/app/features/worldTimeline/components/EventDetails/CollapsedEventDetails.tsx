@@ -5,20 +5,25 @@ import { useCurrentOrNewEvent } from '../../hooks/useCurrentOrNewEvent'
 
 type Props = {
 	onClick: () => void
+	visible: boolean
 }
 
-export const CollapsedEventDetails = ({ onClick }: Props) => {
+export const CollapsedEventDetails = ({ onClick, visible }: Props) => {
 	const { event } = useCurrentOrNewEvent()
 
 	return (
-		<Stack direction="row" justifyContent="flex-end">
+		<Stack direction="row" justifyContent="flex-end" sx={{ pointerEvents: 'none' }}>
 			<Button
 				color="secondary"
 				sx={{
+					pointerEvents: visible ? 'auto' : 'none',
 					minWidth: 140,
 					maxWidth: '100px',
 					background: 'rgba(0, 0, 0, 50%)',
 					borderRadius: '0 0 16px 16px',
+					'&:hover': {
+						background: 'rgba(0, 0, 0, 70%)',
+					},
 				}}
 				onClick={onClick}
 			>

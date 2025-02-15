@@ -11,7 +11,6 @@ import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
-import { TimelineGrabber } from './components/TimelineGrabber/TimelineGrabber'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
 import { TimelineTracks } from './components/TimelineTracks/TimelineTracks'
 import { TimelineZoomReporter } from './components/TimelineZoomReporter'
@@ -151,7 +150,7 @@ function TimelineComponent() {
 						scaleLevel={scaleLevel}
 						containerWidth={containerWidth}
 					/>
-					<TimelineGrabber />
+					{/* <TimelineGrabber /> */}
 				</TimelineContainer>
 				{/* <TimelineControls onZoomIn={scrollZoomIn} onZoomOut={scrollZoomOut} /> */}
 			</TimelineWrapper>

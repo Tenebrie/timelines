@@ -1,5 +1,6 @@
+import { ReactNode } from '@tanstack/react-router'
 import throttle from 'lodash.throttle'
-import { memo, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { MouseEvent as ReactMouseEvent } from 'react'
 import styled from 'styled-components'
 
@@ -42,14 +43,28 @@ type TopProps = {
 }
 
 export function useResizeGrabber({ minHeight, defaultHeight, openOnEvent }: TopProps) {
-	const [key, setKey] = useState(0)
-	const [visible, setVisible] = useState(true)
+	const isDraggingNow = useRef(false)
+	const [isDraggingChild, setIsDraggingChild] = useState(false)
+	const [visible, setVisibleInternal] = useState(true)
+	const [overflowHeight, _setOverflowHeight] = useState(0)
 	const [_displayedHeight, _setDisplayedHeight] = useState(defaultHeight ?? 300)
+	const [_internalHeight, _setInternalHeight] = useState(_displayedHeight)
 
-	const setHeight = (value: number) => {
-		_setDisplayedHeight(value)
-		setKey((prev) => prev + 1)
-	}
+	const setVisible = useCallback(
+		(value: boolean) => {
+			setVisibleInternal(value)
+			if (value) {
+				if (!isDraggingNow.current) {
+					_setInternalHeight(Math.max(minHeight ?? 0, _internalHeight))
+				} else {
+					_setInternalHeight(0)
+				}
+			} else {
+				_setOverflowHeight(0)
+			}
+		},
+		[_internalHeight, minHeight],
+	)
 
 	useEventBusSubscribe({
 		event: openOnEvent,
@@ -61,43 +76,54 @@ export function useResizeGrabber({ minHeight, defaultHeight, openOnEvent }: TopP
 	})
 
 	return {
-		key,
 		height: _displayedHeight,
-		setHeight,
+		isDraggingNow,
 		_minHeight: minHeight ?? 64,
-		_displayedHeight,
-		_setDisplayedHeight,
 		visible,
 		setVisible,
+		isDraggingChild,
+		setIsDraggingChild,
+		overflowHeight,
+		_setOverflowHeight,
+		_internalHeight,
+		_setInternalHeight,
+		_displayedHeight,
+		_setDisplayedHeight,
 	}
 }
 
 type Props = ReturnType<typeof useResizeGrabber> & {
 	active: boolean
+	children: ReactNode | ReactNode[]
 }
 
 export const ResizeGrabber = memo(ResizeGrabberComponent)
 
 function ResizeGrabberComponent({
-	_displayedHeight,
+	isDraggingNow,
 	_setDisplayedHeight,
 	_minHeight,
 	active,
 	visible,
 	setVisible,
+	setIsDraggingChild,
+	_internalHeight,
+	_setInternalHeight,
+	overflowHeight,
+	_setOverflowHeight,
+	children,
 }: Props) {
-	const isDraggingNow = useRef(false)
 	const [mousePosition, setMousePosition] = useState(0)
-	const mouseStartingPosition = useRef(0)
+	const mouseLastSeenPosition = useRef(0)
 
 	const visibleRef = useAutoRef(visible)
-	const [internalHeight, setInternalHeight] = useState(_displayedHeight)
-	const currentContainerHeight = useAutoRef(internalHeight)
+	const currentContainerHeight = useAutoRef(_internalHeight)
 
-	const onMouseDown = (event: ReactMouseEvent) => {
+	const onMouseDown = (event: MouseEvent | ReactMouseEvent, isChild: boolean) => {
 		isDraggingNow.current = true
-		mouseStartingPosition.current = event.clientY
+		mouseLastSeenPosition.current = event.clientY
 		window.document.body.classList.add('cursor-resizing', 'mouse-busy')
+		setIsDraggingChild(isChild)
 	}
 
 	const { triggerClick } = useDoubleClick({
@@ -109,6 +135,10 @@ function ResizeGrabberComponent({
 		},
 	})
 
+	const onMouseClick = (event: ReactMouseEvent) => {
+		triggerClick(event, {})
+	}
+
 	const onMouseMove = useRef(
 		throttle((event: MouseEvent) => {
 			if (isDraggingNow.current) {
@@ -118,69 +148,102 @@ function ResizeGrabberComponent({
 	)
 
 	useEffect(() => {
-		const onMouseClick = (event: MouseEvent) => {
-			triggerClick(event, {})
-		}
 		const onMouseUp = () => {
-			if (isDraggingNow.current) {
-				isDraggingNow.current = false
-				if (currentContainerHeight.current <= _minHeight) {
-					setInternalHeight(_minHeight)
-				}
-				setTimeout(() => {
-					window.document.body.classList.remove('cursor-resizing', 'mouse-busy')
-				}, 1)
+			if (!isDraggingNow.current) {
+				return
 			}
+			isDraggingNow.current = false
+			if (currentContainerHeight.current <= _minHeight) {
+				setVisible(false)
+			}
+			setIsDraggingChild(false)
+			setTimeout(() => {
+				window.document.body.classList.remove('cursor-resizing', 'mouse-busy')
+			}, 1)
 		}
 
 		const onMove = onMouseMove.current
 
-		window.addEventListener('click', onMouseClick)
 		window.addEventListener('mouseup', onMouseUp)
 		window.addEventListener('mousemove', onMove)
 
 		return () => {
-			window.removeEventListener('click', onMouseClick)
 			window.removeEventListener('mouseup', onMouseUp)
 			window.removeEventListener('mousemove', onMove)
 		}
-	}, [_minHeight, currentContainerHeight, triggerClick])
+	}, [
+		_minHeight,
+		_setOverflowHeight,
+		currentContainerHeight,
+		isDraggingNow,
+		setIsDraggingChild,
+		setVisible,
+		triggerClick,
+	])
 
 	// const { containerHeight } = useSelector(getTimelinePreferences)
 	// const { setTimelineHeight } = preferencesSlice.actions
 	// const dispatch = useDispatch()
 
 	useEffect(() => {
-		if (isDraggingNow.current && mousePosition !== 0) {
-			setMousePosition(0)
-			const value = currentContainerHeight.current + mousePosition - mouseStartingPosition.current
-			setInternalHeight(value)
-
-			const safeValue = (() => {
-				if (value < _minHeight) {
-					return _minHeight
-				}
-				return value
-			})()
-			_setDisplayedHeight(safeValue)
-			const newVisible = safeValue > _minHeight
-			if (newVisible !== visibleRef.current) {
-				setVisible(newVisible)
-			}
-			mouseStartingPosition.current = mousePosition
+		if (!isDraggingNow.current || mousePosition === 0) {
+			return
 		}
-	}, [mousePosition, _setDisplayedHeight, _minHeight, currentContainerHeight, setVisible, visibleRef])
+		setMousePosition(0)
+
+		const value = currentContainerHeight.current + mousePosition - mouseLastSeenPosition.current
+		_setInternalHeight(value)
+
+		const constrainedValue = Math.max(_minHeight, value)
+		_setDisplayedHeight(constrainedValue)
+
+		if (overflowHeight !== value - constrainedValue) {
+			_setOverflowHeight(value - constrainedValue)
+		}
+		mouseLastSeenPosition.current = mousePosition
+
+		if (!visible) {
+			setVisible(true)
+			_setOverflowHeight(900)
+		}
+	}, [
+		mousePosition,
+		_setDisplayedHeight,
+		_minHeight,
+		currentContainerHeight,
+		setVisible,
+		visibleRef,
+		_setOverflowHeight,
+		isDraggingNow,
+		overflowHeight,
+		visible,
+		_setInternalHeight,
+	])
 
 	return (
-		<StyledDragger
-			style={{
-				opacity: active ? 1 : 0,
-				pointerEvents: active ? 'auto' : 'none',
-				transition: 'opacity 0.3s',
-			}}
-			onMouseDown={(event) => onMouseDown(event)}
-		>
-			<StyledInnerDragger></StyledInnerDragger>
-		</StyledDragger>
+		<div style={{ pointerEvents: 'none' }}>
+			<StyledDragger
+				onClick={onMouseClick}
+				onMouseDown={(event) => onMouseDown(event, false)}
+				style={{
+					opacity: active ? 1 : 0,
+					pointerEvents: active ? 'auto' : 'none',
+					transition: 'opacity 0.3s',
+					position: 'relative',
+				}}
+			>
+				<StyledInnerDragger></StyledInnerDragger>
+			</StyledDragger>
+			<div
+				onClick={onMouseClick}
+				style={{
+					cursor: 's-resize',
+					pointerEvents: 'none',
+				}}
+				onMouseDown={(event) => onMouseDown(event, true)}
+			>
+				{children}
+			</div>
+		</div>
 	)
 }
