@@ -24,7 +24,7 @@ export const WorldNavigatorComponent = () => {
 	}, [dispatch, panelOpen, setPanelOpen])
 
 	const onNavigate = useCallback(() => {
-		navigate({ to: '/world/$worldId/timeline/outliner', search: true })
+		navigate({ to: '/world/$worldId/timeline', search: true })
 		scrollTimelineTo({ timestamp: 0 })
 	}, [navigate, scrollTimelineTo])
 

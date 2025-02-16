@@ -18,7 +18,6 @@ import { applyEventDelta } from '@/app/utils/applyEventDelta'
 import { asMarkerType } from '@/app/utils/asMarkerType'
 import { findStartingFrom } from '@/app/utils/findStartingFrom'
 import { isNotNull } from '@/app/utils/isNotNull'
-import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 export type TimelineTrack = {
 	events: TimelineEntity<MarkerType>[]
@@ -40,8 +39,10 @@ const useEventTracks = ({ showHidden }: Props = {}): TimelineTrack[] => {
 	const { ghost: eventGhost } = useSelector(getEventCreatorState, (a, b) => a.ghost === b.ghost)
 	const { ghost: deltaGhost } = useSelector(getEventDeltaCreatorState, (a, b) => a.ghost === b.ghost)
 
-	const isEventCreator = useCheckRouteMatch('/world/$worldId/timeline/event/create')
-	const isDeltaCreator = useCheckRouteMatch('/world/$worldId/timeline/delta/create/$eventId')
+	// const isEventCreator = useCheckRouteMatch('/world/$worldId/timeline/event/create')
+	// const isDeltaCreator = useCheckRouteMatch('/world/$worldId/timeline/delta/create/$eventId')
+	const isEventCreator = false
+	const isDeltaCreator = false
 
 	const eventGroups = useMemo<TimelineEntity<MarkerType>[]>(() => {
 		const sortedEvents = events

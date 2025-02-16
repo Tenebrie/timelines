@@ -33,7 +33,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	const dispatch = useDispatch()
 	const { openTimelineContextMenu } = worldSlice.actions
 
-	const navigate = useNavigate({ from: '/world/$worldId/timeline/outliner' })
+	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 
 	const { getIconPath } = useEventIcons()
 	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })

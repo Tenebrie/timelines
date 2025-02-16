@@ -6,7 +6,7 @@ import { getTimelineState } from '../../world/selectors'
 
 export const useCurrentEvent = () => {
 	const selectedMarkerIds = useSearch({
-		from: '/world/$worldId/_world/timeline/_timeline',
+		from: '/world/$worldId/_world/timeline',
 		select: (search) => search.selection,
 	})
 	const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)

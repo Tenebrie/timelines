@@ -81,8 +81,8 @@ export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allo
 		content: value,
 		editable: !isReadMode,
 		extensions: EditorExtensions,
-		onUpdate({ editor }) {
-			if (editor.getHTML() === value) {
+		onUpdate({ editor, transaction }) {
+			if (editor.getHTML() === value || transaction.steps.length === 0) {
 				return
 			}
 			onChangeThrottled.current(editor)

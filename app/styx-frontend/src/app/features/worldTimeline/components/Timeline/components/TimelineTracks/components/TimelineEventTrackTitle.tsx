@@ -48,7 +48,7 @@ export const TimelineEventTrackTitleComponent = ({ track }: Props) => {
 				ref={ref}
 				sx={{
 					position: 'relative',
-					marginLeft: 1,
+					marginLeft: 3,
 					zIndex: 2,
 					borderRadius: 1,
 				}}

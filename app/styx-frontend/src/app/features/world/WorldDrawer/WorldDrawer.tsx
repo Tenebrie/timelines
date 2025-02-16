@@ -26,7 +26,7 @@ export const WorldDrawer = () => {
 
 	const matchesTimeline = useCheckRouteMatch('/world/$worldId/timeline')
 	const onTimelineClick = () => {
-		navigate({ to: '/world/$worldId/timeline/outliner', search: true })
+		navigate({ to: '/world/$worldId/timeline', search: true })
 	}
 
 	const matchesOverview = useCheckRouteMatch('/world/$worldId/overview')

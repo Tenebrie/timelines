@@ -1,11 +1,22 @@
-import { RefObject, useEffect, useRef } from 'react'
+import { useEffect, useMemo } from 'react'
 
-export const useAutoRef = <T,>(value: T): RefObject<T> => {
-	const ref = useRef<T>(value)
+export const useAutoRef = <T,>(value: T) => {
+	const ref = useMemo(
+		() => ({
+			current: value,
+			previous: null as T | null,
+		}),
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[],
+	)
 
 	useEffect(() => {
+		if (value === ref.current) {
+			return
+		}
+		ref.previous = ref.current
 		ref.current = value
-	}, [value])
+	}, [ref, value])
 
 	return ref
 }

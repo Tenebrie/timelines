@@ -20,8 +20,13 @@ body {
 	-webkit-overflow-scrolling: touch;
 }
 
-body.cursor-resizing {
+body.cursor-resizing-ns {
 	cursor: ns-resize !important;
+	user-select: none !important;
+}
+
+body.cursor-resizing-ew {
+	cursor: ew-resize !important;
 	user-select: none !important;
 }
 

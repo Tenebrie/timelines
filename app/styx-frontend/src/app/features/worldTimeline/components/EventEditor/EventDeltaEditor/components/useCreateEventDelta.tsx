@@ -56,7 +56,7 @@ export const useCreateEventDelta = ({ state, errorState }: Props) => {
 		}
 		errorState.clearError()
 		navigate({
-			to: '/world/$worldId/timeline/outliner',
+			to: '/world/$worldId/timeline',
 			search: (prev) => ({ ...prev, time: state.timestamp }),
 		})
 		scrollTimelineTo({ timestamp: state.timestamp })

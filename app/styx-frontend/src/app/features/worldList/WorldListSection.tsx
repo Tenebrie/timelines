@@ -40,7 +40,7 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 	const onLoad = (world: WorldBrief) => {
 		dispatch(unloadWorld())
 		navigate({
-			to: '/world/$worldId/timeline/outliner',
+			to: '/world/$worldId/timeline',
 			params: {
 				worldId: world.id,
 			},

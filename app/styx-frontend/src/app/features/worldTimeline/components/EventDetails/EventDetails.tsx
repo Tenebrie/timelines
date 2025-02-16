@@ -4,30 +4,30 @@ import Stack from '@mui/material/Stack'
 import { useNavigate } from '@tanstack/react-router'
 import { memo } from 'react'
 
+import { useUpsertEvent } from '@/app/features/worldTimeline/hooks/useUpsertEvent'
+
 import { useCurrentOrNewEvent } from '../../hooks/useCurrentOrNewEvent'
 import { useEventDraft } from '../EventEditor/components/EventDetailsEditor/useEventFields'
 import { EventDescription } from './EventDescription'
 import { EventTitle } from './EventTitle'
-import { useUpsertEvent } from './useUpsertEvent'
 
 export const EventDetails = memo(EventDetailsComponent)
 
 export function EventDetailsComponent() {
 	const { mode, event } = useCurrentOrNewEvent()
 	const draft = useEventDraft({ event })
-	const navigate = useNavigate({ from: '/world/$worldId/timeline/outliner' })
+	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 
 	useUpsertEvent({
 		mode,
 		draft,
 		onCreate: (createdEvent) => {
 			navigate({
-				to: '/world/$worldId/timeline/outliner',
+				to: '/world/$worldId/timeline',
 				search: (prev) => ({ ...prev, selection: [`issuedAt-${createdEvent.id}`] }),
 			})
 		},
 	})
-	// usePreserveCreateState({ mode, draft })
 
 	return (
 		<Stack
@@ -40,7 +40,7 @@ export function EventDetailsComponent() {
 			<EventTitle event={event} draft={draft} />
 			<Divider />
 			<Box flexGrow={1}>
-				<EventDescription id={'1'} draft={draft} />
+				<EventDescription draft={draft} />
 			</Box>
 		</Stack>
 	)

@@ -1,5 +1,5 @@
 import Paper from '@mui/material/Paper'
-import { useNavigate } from '@tanstack/react-router'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -25,9 +25,13 @@ import { TimelineState } from './utils/TimelineState'
 export const Timeline = memo(TimelineComponent)
 
 function TimelineComponent() {
-	const { timeOrigin, calendar, selectedTime } = useSelector(
+	const selectedTime = useSearch({
+		from: '/world/$worldId/_world',
+		select: (search) => search.time,
+	})
+	const { timeOrigin, calendar } = useSelector(
 		getWorldState,
-		(a, b) => a.selectedTime === b.selectedTime && a.calendar === b.calendar && a.timeOrigin === b.timeOrigin,
+		(a, b) => a.calendar === b.calendar && a.timeOrigin === b.timeOrigin,
 	)
 	const theme = useCustomTheme()
 
@@ -40,7 +44,7 @@ function TimelineComponent() {
 	const onClick = useCallback(
 		(time: number) => {
 			navigate({
-				to: '/world/$worldId/timeline/outliner',
+				to: '/world/$worldId/timeline',
 				search: (prev) => ({ ...prev, time }),
 			})
 		},

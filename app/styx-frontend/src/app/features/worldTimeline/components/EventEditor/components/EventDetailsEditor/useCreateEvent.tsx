@@ -44,7 +44,7 @@ export const useCreateEvent = ({ state, onCreated }: Props) => {
 			return
 		}
 		scrollTimelineTo({ timestamp: state.timestamp })
-		navigate({ to: '/world/$worldId/timeline/outliner', search: { time: state.timestamp } })
+		navigate({ to: '/world/$worldId/timeline', search: { time: state.timestamp } })
 		onCreated()
 	}, [
 		createWorldEvent,

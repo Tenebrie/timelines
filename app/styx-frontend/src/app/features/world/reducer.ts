@@ -88,6 +88,9 @@ export const worldSlice = createSlice({
 			state.events = []
 			state.isReadOnly = false
 		},
+		addEvent: (state, { payload }: PayloadAction<WorldEvent>) => {
+			state.events = state.events.concat(payload)
+		},
 		updateEvent: (state, { payload }: PayloadAction<Pick<WorldEvent, 'id'> & Partial<WorldEvent>>) => {
 			const event = state.events.find((e) => e.id === payload.id)
 			if (!event) {
@@ -99,6 +102,9 @@ export const worldSlice = createSlice({
 				...payload,
 			}
 			state.events.splice(state.events.indexOf(event), 1, newEvent)
+		},
+		removeEvent: (state, { payload }: PayloadAction<string>) => {
+			state.events = state.events.filter((e) => e.id !== payload)
 		},
 		updateEventDelta: (
 			state,
@@ -130,9 +136,6 @@ export const worldSlice = createSlice({
 				...payload,
 			}
 			state.actors.splice(state.actors.indexOf(actor), 1, newActor)
-		},
-		addEvent: (state, { payload }: PayloadAction<WorldEvent>) => {
-			state.events = state.events.concat(payload)
 		},
 		addActor: (state, { payload }: PayloadAction<ActorDetails>) => {
 			state.actors = state.actors.concat(payload).sort((a, b) => a.name.localeCompare(b.name))

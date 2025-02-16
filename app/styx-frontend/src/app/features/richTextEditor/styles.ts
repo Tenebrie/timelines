@@ -14,7 +14,8 @@ export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
 	}
 
 	body.cursor-grabbing &,
-	body.cursor-resizing & {
+	body.cursor-resizing-ns &,
+	body.cursor-resizing-ew & {
 		&:hover {
 			border: 1px solid ${({ $theme }) => $theme.custom.palette.outline};
 		}

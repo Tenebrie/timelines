@@ -1,20 +1,20 @@
-import Paper from '@mui/material/Paper'
+import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { Outlet, useSearch } from '@tanstack/react-router'
+import { useSearch } from '@tanstack/react-router'
 import { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useEventBusDispatch } from '../eventBus'
 import { worldSlice } from '../world/reducer'
-import { OutlinerControls } from './components/Outliner/components/OutlinerControls/OutlinerControls'
-import { WorldState } from './components/Outliner/components/WorldState'
+import { Outliner } from './components/Outliner/Outliner'
 import { Timeline } from './components/Timeline/Timeline'
-import { WorldContent } from './styles'
+import { WorldStateWithDragger } from './components/WorldStateDrawer/WorldStateWithDragger'
+import { WorldStateWithDraggerMirror } from './components/WorldStateDrawer/WorldStateWithDraggerMirror'
 
 const useWatchSelectedTime = () => {
 	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 	const search = useSearch({
-		from: '/world/$worldId/_world/timeline/_timeline',
+		from: '/world/$worldId/_world/timeline',
 		select: (search) => ({
 			time: search.time,
 		}),
@@ -28,9 +28,10 @@ const useWatchSelectedTime = () => {
 	 */
 	useEffect(() => {
 		const selectedTime = search.time
-		setTimeout(() => {
-			dispatch(setSelectedTime(selectedTime))
-		}, 0)
+		// setTimeout(() => {
+		// 	dispatch(setSelectedTime(selectedTime))
+		// }, 0)
+		dispatch(setSelectedTime(selectedTime))
 	}, [dispatch, setSelectedTime, scrollTimelineTo, search.time])
 
 	/**
@@ -57,23 +58,13 @@ export const WorldTimeline = () => {
 	useWatchSelectedTime()
 
 	return (
-		<Stack direction="row" sx={{ width: '100%', height: '100%' }}>
-			<WorldContent>
+		<Stack direction="row" sx={{ width: '100%', height: '100%', overflowX: 'hidden' }}>
+			<WorldStateWithDraggerMirror />
+			<Box width={1} height={1} position="relative" overflow="auto">
 				<Timeline />
-				<Stack
-					sx={{ position: 'absolute', width: '100%', zIndex: 2, top: 0, pointerEvents: 'none' }}
-					justifyContent="center"
-					alignItems="flex-start"
-				>
-					<Stack sx={{ width: '100%', maxWidth: '600px' }}>
-						<Outlet />
-					</Stack>
-				</Stack>
-				<OutlinerControls />
-			</WorldContent>
-			<Paper sx={{ width: '33%' }} elevation={2}>
-				<WorldState />
-			</Paper>
+				<Outliner />
+			</Box>
+			<WorldStateWithDragger />
 		</Stack>
 	)
 }

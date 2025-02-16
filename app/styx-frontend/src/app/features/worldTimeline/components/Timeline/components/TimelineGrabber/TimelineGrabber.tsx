@@ -26,7 +26,7 @@ const TimelineGrabberComponent = () => {
 	const onMouseDown = (event: ReactMouseEvent) => {
 		isDraggingNow.current = true
 		mouseStartingPosition.current = event.clientY
-		window.document.body.classList.add('cursor-resizing', 'mouse-busy')
+		window.document.body.classList.add('cursor-resizing-ns', 'mouse-busy')
 	}
 
 	useEffectOnce(() => {
@@ -34,7 +34,7 @@ const TimelineGrabberComponent = () => {
 			if (isDraggingNow.current) {
 				isDraggingNow.current = false
 				setTimeout(() => {
-					window.document.body.classList.remove('cursor-resizing', 'mouse-busy')
+					window.document.body.classList.remove('cursor-resizing-ns', 'mouse-busy')
 				}, 1)
 			}
 		}

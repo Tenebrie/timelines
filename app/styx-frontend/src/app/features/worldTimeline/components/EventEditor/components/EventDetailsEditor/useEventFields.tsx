@@ -10,10 +10,8 @@ type Props = {
 export type EventDraft = ReturnType<typeof useEventFields>['state']
 
 export const useEventFields = ({ event }: Props) => {
-	const isDirty = useRef(false)
-	const setDirty = useCallback((value: boolean) => {
-		isDirty.current = value
-	}, [])
+	const [isDirty, setDirty] = useState(false)
+	const makeDirty = () => setDirty(true)
 
 	const currentId = useRef(event.id)
 	const [key, setKey] = useState(0)
@@ -32,17 +30,17 @@ export const useEventFields = ({ event }: Props) => {
 
 	const setters = useMemo(
 		() => ({
-			setId: generateSetter(setIdDirect, isDirty),
-			setModules: generateSetter(setModulesDirect, isDirty),
-			setName: generateSetter(setNameDirect, isDirty),
-			setIcon: generateSetter(setIconDirect, isDirty),
-			setTimestamp: generateSetter(setTimestampDirect, isDirty),
-			setRevokedAt: generateSetter(setRevokedAtDirect, isDirty),
-			setMentions: generateSetter(setMentionsDirect, isDirty),
-			setDescription: generateSetter(setDescriptionDirect, isDirty),
-			setDescriptionRich: generateSetter(setDescriptionRichDirect, isDirty),
-			setCustomNameEnabled: generateSetter(setCustomNameDirect, isDirty),
-			setExternalLink: generateSetter(setExternalLink, isDirty),
+			setId: generateSetter(setIdDirect, makeDirty),
+			setModules: generateSetter(setModulesDirect, makeDirty),
+			setName: generateSetter(setNameDirect, makeDirty),
+			setIcon: generateSetter(setIconDirect, makeDirty),
+			setTimestamp: generateSetter(setTimestampDirect, makeDirty),
+			setRevokedAt: generateSetter(setRevokedAtDirect, makeDirty),
+			setMentions: generateSetter(setMentionsDirect, makeDirty),
+			setDescription: generateSetter(setDescriptionDirect, makeDirty),
+			setDescriptionRich: generateSetter(setDescriptionRichDirect, makeDirty),
+			setCustomNameEnabled: generateSetter(setCustomNameDirect, makeDirty),
+			setExternalLink: generateSetter(setExternalLink, makeDirty),
 		}),
 		[],
 	)
@@ -121,11 +119,9 @@ export const useEventFields = ({ event }: Props) => {
 		timestamp,
 	])
 
-	useEffect(() => {
-		if (currentId.current !== event.id) {
-			loadEvent(event)
-		}
-	}, [event, event.id, loadEvent])
+	if (currentId.current !== event.id) {
+		loadEvent(event)
+	}
 
 	return {
 		state: {

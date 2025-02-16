@@ -21,7 +21,7 @@ export const TimelineContextMenuComponent = () => {
 	const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
 
 	const selectedMarkers = useSearch({
-		from: '/world/$worldId/_world/timeline/_timeline',
+		from: '/world/$worldId/_world/timeline',
 		select: (search) => search.selection,
 	})
 
@@ -41,7 +41,7 @@ export const TimelineContextMenuComponent = () => {
 		[markers, selectedMarkers],
 	)
 
-	const navigate = useNavigate({ from: '/world/$worldId/timeline/outliner' })
+	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 
@@ -57,10 +57,10 @@ export const TimelineContextMenuComponent = () => {
 
 	const onCreateEvent = useCallback(() => {
 		onClose()
-		navigate({
-			to: '/world/$worldId/timeline/event/create',
-			search: (prev) => ({ ...prev, time: selectedTime }),
-		})
+		// navigate({
+		// 	to: '/world/$worldId/timeline/event/create',
+		// 	search: (prev) => ({ ...prev, time: selectedTime }),
+		// })
 	}, [onClose, navigate, selectedTime])
 
 	const onReplaceSelectedEvent = useCallback(() => {
@@ -68,11 +68,11 @@ export const TimelineContextMenuComponent = () => {
 		if (!selectedMarker) {
 			return
 		}
-		navigate({
-			to: '/world/$worldId/timeline/delta/create/$eventId',
-			params: { eventId: selectedMarker.eventId },
-			search: (prev) => ({ ...prev, time: selectedTime }),
-		})
+		// navigate({
+		// 	to: '/world/$worldId/timeline/delta/create/$eventId',
+		// 	params: { eventId: selectedMarker.eventId },
+		// 	search: (prev) => ({ ...prev, time: selectedTime }),
+		// })
 	}, [navigate, onClose, selectedMarker, selectedTime])
 
 	const onResolveSelectedEvent = useCallback(async () => {

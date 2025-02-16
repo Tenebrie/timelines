@@ -37,7 +37,7 @@ export const TimelineTrackItem = ({
 	const [isDragging, setIsDragging] = useState(false)
 	const theme = useCustomTheme()
 	const selectedMarkerIds = useSearch({
-		from: '/world/$worldId/_world/timeline/_timeline',
+		from: '/world/$worldId/_world/timeline',
 		select: (search) => search.selection,
 	})
 

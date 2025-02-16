@@ -6,7 +6,7 @@ import { RichTextEditorProps } from '@/app/features/richTextEditor/RichTextEdito
 import { EventDraft } from '../EventEditor/components/EventDetailsEditor/useEventFields'
 
 type Props = {
-	id: string
+	id?: string
 	draft: EventDraft
 }
 
@@ -24,7 +24,7 @@ export const EventDescription = ({ id, draft }: Props) => {
 
 	return (
 		<RichTextEditorPortalSlot
-			softKey={`${id}/${key}`}
+			softKey={`${id ?? 'no-key'}/${key}`}
 			value={descriptionRich}
 			onChange={onDescriptionChange}
 		/>

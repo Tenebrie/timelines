@@ -11,19 +11,21 @@ export const useCurrentOrNewEvent = () => {
 		(a, b) => a.id === b.id && a.selectedTime === b.selectedTime,
 	)
 	const { event: currentEvent } = useCurrentEvent()
-	const event = useMemo(
-		() =>
-			currentEvent ??
-			mockEventModel({
-				worldId,
-				name: '',
-				description: '',
-				descriptionRich: '',
-				timestamp: selectedTime,
-			}),
+	const { event, mode } = useMemo(
+		() => ({
+			event:
+				currentEvent ??
+				mockEventModel({
+					worldId,
+					name: '',
+					description: '',
+					descriptionRich: '',
+					timestamp: selectedTime,
+				}),
+			mode: currentEvent ? ('edit' as const) : ('create' as const),
+		}),
 		[currentEvent, selectedTime, worldId],
 	)
-	const mode = currentEvent ? ('edit' as const) : ('create' as const)
 	return {
 		id: event.id,
 		worldId,

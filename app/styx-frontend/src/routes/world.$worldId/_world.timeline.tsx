@@ -8,7 +8,7 @@ const timelineSearchSchema = z.object({
 	selection: z.array(z.string()).default([]),
 })
 
-export const Route = createFileRoute('/world/$worldId/_world/timeline/_timeline')({
+export const Route = createFileRoute('/world/$worldId/_world/timeline')({
 	component: WorldTimelineComponent,
 	validateSearch: timelineSearchSchema,
 })

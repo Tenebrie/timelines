@@ -13,14 +13,14 @@ import { useOutlinerTabs } from '@/app/features/worldTimeline/hooks/useOutlinerT
 import { useIsReadOnly } from '@/app/hooks/useIsReadOnly'
 import { isNull } from '@/app/utils/isNull'
 
-import { useVisibleActors } from '../../EventSelector/useVisibleActors'
-import { useVisibleEvents } from '../../EventSelector/useVisibleEvents'
-import { ActorWithStatementsRenderer } from '../../Renderers/ActorWithStatementsRenderer'
-import { EventWithContentRenderer } from '../../Renderers/Event/EventWithContentRenderer'
-import { StatementsScroller } from '../styles'
+import { useVisibleActors } from '../EventSelector/useVisibleActors'
+import { useVisibleEvents } from '../EventSelector/useVisibleEvents'
+import { StatementsScroller } from '../Outliner/styles'
+import { ActorWithStatementsRenderer } from '../Renderers/ActorWithStatementsRenderer'
+import { EventWithContentRenderer } from '../Renderers/Event/EventWithContentRenderer'
 import { OutlinerEmptyState } from './OutlinerEmptyState/OutlinerEmptyState'
 import { SearchEmptyState } from './OutlinerEmptyState/SearchEmptyState'
-import { OutlinerSearch } from './OutlinerSearch/OutlinerSearch'
+import { OutlinerSearch } from './OutlinerSearch'
 
 export const WorldState = () => {
 	const { isReadOnly } = useIsReadOnly()
