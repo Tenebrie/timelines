@@ -1,0 +1,63 @@
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import styled from 'styled-components'
+
+import { useEventIcons } from '@/app/features/worldTimeline/hooks/useEventIcons'
+import { CustomTheme, useCustomTheme } from '@/app/hooks/useCustomTheme'
+
+type Props = {
+	icon: string
+	color: string
+	onClick: () => void
+}
+
+export const Marker = styled(Button)<{
+	$iconPath: string
+	$mainColor: string
+	$theme: CustomTheme
+}>`
+	position: relative;
+	width: calc(100%);
+	height: calc(100%);
+	min-width: 1px !important;
+	border-radius: 6px;
+	cursor: pointer;
+	transition:
+		border-color 0.3s,
+		background-color 0.3s;
+
+	.icon {
+		position: absolute;
+		mask-size: cover;
+		top: 1px;
+		left: 1px;
+		width: calc(100% - 2px);
+		height: calc(100% - 2px);
+		transition:
+			color 0.3s,
+			background-color 0.3s;
+		background: ${(props) => props.$mainColor};
+		mask-image: url(${(props) => props.$iconPath});
+	}
+`
+
+export function ColorIconPicker({ icon, color, onClick }: Props) {
+	const theme = useCustomTheme()
+	const { getIconPath } = useEventIcons()
+
+	const baseColor = color ?? '#000000'
+
+	return (
+		<Box
+			sx={{
+				height: 'calc(100%)',
+				aspectRatio: 1,
+				borderRadius: '6px',
+			}}
+		>
+			<Marker $mainColor={baseColor} $theme={theme} $iconPath={getIconPath(icon)} onClick={onClick}>
+				<div className="icon"></div>
+			</Marker>
+		</Box>
+	)
+}

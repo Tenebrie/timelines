@@ -47,7 +47,6 @@ export const Marker = styled.div<{
 		& > svg {
 			filter: hue-rotate(180deg) brightness(0.8) saturate(2);
 		}
-		// color: red;
 	}
 
 	.image {
@@ -89,6 +88,26 @@ export const Marker = styled.div<{
 	}
 	&.revoked:hover > .image {
 		background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900])};
+	}
+
+	&:active > .icon {
+		color: ${(props) => (props.$theme.mode === 'dark' ? colors.green[600] : colors.green[900])};
+	}
+	&.replace:active > .icon {
+		color: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[600] : colors.yellow['A100'])};
+	}
+	&.revoked:active > .icon {
+		color: ${(props) => (props.$theme.mode === 'dark' ? colors.red[500] : colors.red['A100'])};
+	}
+
+	&:active > .image {
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[600] : colors.green[900])};
+	}
+	&.replace:active > .image {
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[600] : colors.yellow['A100'])};
+	}
+	&.revoked:active > .image {
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[500] : colors.red['A100'])};
 	}
 
 	&.edited {

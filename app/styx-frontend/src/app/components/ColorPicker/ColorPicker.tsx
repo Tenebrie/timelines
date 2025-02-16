@@ -1,12 +1,12 @@
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Slider from '@mui/material/Slider'
 import Stack from '@mui/material/Stack'
-import { useEffect, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { darkTheme, lightTheme } from '../features/theming/themes'
-import { colorStringToHsl, colorStringToHslWithDefault } from '../utils/colors/colorStringToHsl'
-import { hslToHex } from '../utils/colors/hslToHex'
+import { darkTheme, lightTheme } from '../../features/theming/themes'
+import { colorStringToHsl, colorStringToHslWithDefault } from '../../utils/colors/colorStringToHsl'
+import { hslToHex } from '../../utils/colors/hslToHex'
 import { ColoredChip } from './ColoredChip'
 
 type Props = {
@@ -15,7 +15,9 @@ type Props = {
 	onChangeHsl?: (value: string) => void
 }
 
-export const ColorPicker = ({ initialValue, onChangeHex, onChangeHsl }: Props) => {
+export const ColorPicker = memo(ColorPickerComponent)
+
+export function ColorPickerComponent({ initialValue, onChangeHex, onChangeHsl }: Props) {
 	const parsedValue = useMemo(
 		() => colorStringToHslWithDefault(initialValue ?? 'hsl(180, 100%, 50%)', { h: 0.5, s: 1, l: 0.5 }),
 		[initialValue],

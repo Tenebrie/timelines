@@ -19,14 +19,16 @@ export const useEventFields = ({ event }: Props) => {
 	const [modules, setModulesDirect] = useState<typeof event.extraFields>(event.extraFields)
 	const [name, setNameDirect] = useState<string>(event.name)
 	const [icon, setIconDirect] = useState<string>(event.icon)
+	const [color, setColorDirect] = useState<string>(event.color)
 	const [timestamp, setTimestampDirect] = useState<number>(event.timestamp)
 	const [revokedAt, setRevokedAtDirect] = useState<number | undefined>(event.revokedAt)
 	const [mentions, setMentionsDirect] = useState<MentionDetails[]>(event.mentions)
 	const [description, setDescriptionDirect] = useState<string>(event.description)
 	const [descriptionRich, setDescriptionRichDirect] = useState<string>(event.descriptionRich)
 	const [customName, setCustomNameDirect] = useState<boolean>(event.customName)
-
 	const [externalLink, setExternalLink] = useState<string>(event.externalLink)
+
+	const [editingColors, setEditingColors] = useState(false)
 
 	const setters = useMemo(
 		() => ({
@@ -34,6 +36,7 @@ export const useEventFields = ({ event }: Props) => {
 			setModules: generateSetter(setModulesDirect, makeDirty),
 			setName: generateSetter(setNameDirect, makeDirty),
 			setIcon: generateSetter(setIconDirect, makeDirty),
+			setColor: generateSetter(setColorDirect, makeDirty),
 			setTimestamp: generateSetter(setTimestampDirect, makeDirty),
 			setRevokedAt: generateSetter(setRevokedAtDirect, makeDirty),
 			setMentions: generateSetter(setMentionsDirect, makeDirty),
@@ -53,6 +56,7 @@ export const useEventFields = ({ event }: Props) => {
 			descriptionRich: string
 			timestamp: number
 			icon: string
+			color: string
 			mentions: MentionDetails[]
 			externalLink: string
 			customNameEnabled: boolean
@@ -66,6 +70,7 @@ export const useEventFields = ({ event }: Props) => {
 			setters.setDescriptionRich(loadedState.descriptionRich, { cleanSet: true })
 			setters.setTimestamp(loadedState.timestamp, { cleanSet: true })
 			setters.setIcon(loadedState.icon, { cleanSet: true })
+			setters.setColor(loadedState.color, { cleanSet: true })
 			setters.setMentions(loadedState.mentions, { cleanSet: true })
 			setters.setExternalLink(loadedState.externalLink, { cleanSet: true })
 			setters.setCustomNameEnabled(loadedState.customNameEnabled, { cleanSet: true })
@@ -97,6 +102,7 @@ export const useEventFields = ({ event }: Props) => {
 			modules,
 			name,
 			icon,
+			color,
 			timestamp: String(timestamp),
 			revokedAt: revokedAt ? String(revokedAt) : null,
 			mentions,
@@ -111,6 +117,7 @@ export const useEventFields = ({ event }: Props) => {
 		descriptionRich,
 		externalLink,
 		icon,
+		color,
 		id,
 		mentions,
 		modules,
@@ -131,6 +138,7 @@ export const useEventFields = ({ event }: Props) => {
 			modules,
 			name,
 			icon,
+			color,
 			timestamp,
 			revokedAt,
 			mentions,
@@ -138,9 +146,11 @@ export const useEventFields = ({ event }: Props) => {
 			descriptionRich,
 			customNameEnabled: customName,
 			externalLink,
+			editingColors,
 			setDirty,
 			bumpKey: () => setKey((prev) => prev + 1),
 			...setters,
+			setEditingColors,
 			loadState,
 			loadEvent,
 			toPayload,

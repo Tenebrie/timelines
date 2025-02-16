@@ -10,7 +10,7 @@ export function WorldStateWithDragger() {
 	const grabberProps = useResizeGrabber({
 		minHeight: 350,
 	})
-	const { visible: drawerVisible, height, overflowHeight, isDraggingNow } = grabberProps
+	const { drawerVisible, contentVisible, height, overflowHeight, isDraggingNow } = grabberProps
 
 	return (
 		<>
@@ -34,7 +34,7 @@ export function WorldStateWithDragger() {
 					<ResizeGrabber {...grabberProps} active position={'right'} />
 				</Box>
 				<Box sx={{ height: 1, pointerEvents: grabberProps.isDraggingNow.current ? 'none' : 'unset' }}>
-					<WorldState />
+					{contentVisible && <WorldState />}
 				</Box>
 				<ResizeGrabberOverlay {...grabberProps} />
 			</Paper>

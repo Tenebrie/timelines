@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { worldSlice } from '@/app/features/world/reducer'
 import { getWorldIdState } from '@/app/features/world/selectors'
+import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
 import { ingestEvent } from '@/app/utils/ingestEvent'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
@@ -25,6 +26,7 @@ export const useQuickCreateEvent = () => {
 					worldId,
 					body: {
 						name: query,
+						color: getRandomEntityColor(),
 						description: query,
 						descriptionRich: query,
 						timestamp: '0',

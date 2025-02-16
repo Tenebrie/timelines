@@ -1,7 +1,7 @@
 import Divider from '@mui/material/Divider'
 import { useSearch } from '@tanstack/react-router'
 import throttle from 'lodash.throttle'
-import { Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
@@ -26,13 +26,15 @@ type Props = {
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
-export const TimelineTrackItem = ({
+export const TimelineTrackItem = memo(TimelineTrackItemComponent)
+
+export function TimelineTrackItemComponent({
 	track,
 	visible,
 	containerWidth,
 	contextMenuState,
 	realTimeToScaledTime,
-}: Props) => {
+}: Props) {
 	const dragDropReceiverRef = useRef<HTMLDivElement | null>(null)
 	const [isDragging, setIsDragging] = useState(false)
 	const theme = useCustomTheme()

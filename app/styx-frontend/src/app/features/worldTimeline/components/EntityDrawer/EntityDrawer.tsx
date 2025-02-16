@@ -13,12 +13,13 @@ import { useReportOutlinerHeight } from '../Outliner/hooks/useReportOutlinerHeig
 
 export function EntityDrawer() {
 	const grabberProps = useResizeGrabber({
-		minHeight: 230,
+		minHeight: 235,
 		defaultHeight: 400,
 		openOnEvent: 'timeline/openEventDrawer',
 	})
 	const {
-		visible: drawerVisible,
+		drawerVisible,
+		contentVisible,
 		height,
 		setVisible,
 		overflowHeight,
@@ -47,17 +48,19 @@ export function EntityDrawer() {
 				}}
 				elevation={2}
 			>
-				<Stack
-					direction="row"
-					height="100%"
-					sx={{
-						'& > *': { flex: 1 },
-						pointerEvents: 'auto',
-					}}
-				>
-					{selectedMarkerIds.length < 2 && <EventDetails />}
-					{selectedMarkerIds.length >= 2 && <EventBulkActions />}
-				</Stack>
+				{contentVisible && (
+					<Stack
+						direction="row"
+						height="100%"
+						sx={{
+							'& > *': { flex: 1 },
+							pointerEvents: 'auto',
+						}}
+					>
+						{selectedMarkerIds.length < 2 && <EventDetails />}
+						{selectedMarkerIds.length >= 2 && <EventBulkActions />}
+					</Stack>
+				)}
 				<ResizeGrabberOverlay {...grabberProps} />
 			</Paper>
 			<ResizeGrabber {...grabberProps} active={drawerVisible} position="top">

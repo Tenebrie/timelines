@@ -5,7 +5,7 @@ import { reportComponentProfile } from '@/app/features/profiling/reportComponent
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
-import { useStringColor } from '@/app/utils/getStringColor'
+import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 
 import { TimelineEventHeightPx } from '../hooks/useEventTracks'
 
@@ -18,7 +18,7 @@ type Props = {
 
 export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) => {
 	const theme = useCustomTheme()
-	const color = useStringColor(entity.eventId)
+	const color = useEntityColor({ entity })
 	const rawDist = (() => {
 		if (entity.chainEntity) {
 			return realTimeToScaledTime(entity.chainEntity.markerPosition - entity.markerPosition)

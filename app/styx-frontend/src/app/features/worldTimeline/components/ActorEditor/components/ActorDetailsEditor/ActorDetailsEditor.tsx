@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import { useCallback, useState } from 'react'
 
-import { ColorPicker } from '@/app/components/ColorPicker'
+import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortalSlot'

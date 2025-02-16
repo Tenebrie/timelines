@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useEffect, useMemo, useState } from 'react'
 
+import { EventColorIconPicker } from '@/app/components/ColorIconPicker/EventColorIconPicker'
 import { useModal } from '@/app/features/modals/reducer'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
@@ -70,6 +71,7 @@ export const EventTitle = ({ event, draft }: Props) => {
 		>
 			{!editing && (
 				<Stack direction="row" justifyContent="space-between" width="100%">
+					<EventColorIconPicker draft={draft} />
 					<Button
 						variant="text"
 						sx={{ padding: '0 8px', flexGrow: 1, justifyContent: 'flex-start' }}

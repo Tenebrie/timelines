@@ -10,8 +10,7 @@ export function WorldStateWithDraggerMirror() {
 	const grabberProps = useResizeGrabber({
 		minHeight: 350,
 	})
-	const { visible: drawerVisible, height, overflowHeight, isDraggingNow } = grabberProps
-	console.log(overflowHeight)
+	const { drawerVisible, contentVisible, height, overflowHeight, isDraggingNow } = grabberProps
 
 	return (
 		<>
@@ -25,7 +24,7 @@ export function WorldStateWithDraggerMirror() {
 				elevation={2}
 			>
 				<Box sx={{ height: 1, pointerEvents: grabberProps.isDraggingNow.current ? 'none' : 'unset' }}>
-					<WorldState />
+					{contentVisible && <WorldState />}
 				</Box>
 				<Box
 					sx={{

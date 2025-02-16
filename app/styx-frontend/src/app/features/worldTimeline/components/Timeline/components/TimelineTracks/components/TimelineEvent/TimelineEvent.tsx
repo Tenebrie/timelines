@@ -13,7 +13,7 @@ import { useEventIcons } from '@/app/features/worldTimeline/hooks/useEventIcons'
 import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
-import { useStringColor } from '@/app/utils/getStringColor'
+import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
@@ -113,7 +113,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 			''
 		)
 
-	const color = useStringColor(entity.eventId)
+	const color = useEntityColor({ entity })
 	const theme = useCustomTheme()
 
 	return (

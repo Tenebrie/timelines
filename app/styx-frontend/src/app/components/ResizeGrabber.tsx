@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import { ReactNode } from '@tanstack/react-router'
 import throttle from 'lodash.throttle'
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { memo, startTransition, useCallback, useEffect, useRef, useState } from 'react'
 import { MouseEvent as ReactMouseEvent } from 'react'
 import styled from 'styled-components'
 
@@ -35,14 +35,32 @@ type TopProps = {
 export function useResizeGrabber({ minHeight, defaultHeight, openOnEvent }: TopProps = {}) {
 	const isDraggingNow = useRef(false)
 	const [isDraggingChild, setIsDraggingChild] = useState(false)
-	const [visible, setVisibleInternal] = useState(true)
+	const [drawerVisible, setDrawerVisible] = useState(true)
 	const [overflowHeight, _setOverflowHeight] = useState(0)
 	const [_displayedHeight, _setDisplayedHeight] = useState(defaultHeight ?? minHeight ?? 300)
 	const [_internalHeight, _setInternalHeight] = useState(_displayedHeight)
 
+	const [contentVisible, setContentVisible] = useState(false)
+	const animationRef = useRef<number | null>(null)
+
+	useEffect(() => {
+		if (animationRef.current) {
+			window.clearTimeout(animationRef.current)
+		}
+		if (!drawerVisible) {
+			animationRef.current = window.setTimeout(() => {
+				startTransition(() => {
+					setContentVisible(false)
+				})
+			}, 3000)
+		} else {
+			setContentVisible(true)
+		}
+	}, [drawerVisible])
+
 	const setVisible = useCallback(
 		(value: boolean) => {
-			setVisibleInternal(value)
+			setDrawerVisible(value)
 			if (value) {
 				if (!isDraggingNow.current) {
 					_setInternalHeight(Math.max(minHeight ?? 0, _internalHeight))
@@ -60,7 +78,7 @@ export function useResizeGrabber({ minHeight, defaultHeight, openOnEvent }: TopP
 	useEventBusSubscribe({
 		event: openOnEvent,
 		callback: () => {
-			if (!visible) {
+			if (!drawerVisible) {
 				setVisible(true)
 			}
 		},
@@ -70,8 +88,9 @@ export function useResizeGrabber({ minHeight, defaultHeight, openOnEvent }: TopP
 		height: _displayedHeight,
 		isDraggingNow,
 		_minHeight: minHeight ?? 0,
-		visible,
+		drawerVisible,
 		setVisible,
+		contentVisible,
 		isDraggingChild,
 		setIsDraggingChild,
 		overflowHeight,
@@ -95,7 +114,7 @@ function ResizeGrabberComponent({
 	_setDisplayedHeight,
 	_minHeight,
 	active,
-	visible,
+	drawerVisible,
 	setVisible,
 	setIsDraggingChild,
 	_internalHeight,
@@ -111,7 +130,7 @@ function ResizeGrabberComponent({
 	const mouseLastSeenPosition = useRef(0)
 	const _currentContainerHeight = useAutoRef(_internalHeight)
 
-	const visibleRef = useAutoRef(visible)
+	const drawerVisibleRef = useAutoRef(drawerVisible)
 
 	const onMouseDown = (event: MouseEvent | ReactMouseEvent, isChild: boolean) => {
 		isClicking.current = true
@@ -128,7 +147,7 @@ function ResizeGrabberComponent({
 	const { triggerClick } = useDoubleClick({
 		onClick: () => {},
 		onDoubleClick: () => {
-			setVisible(!visibleRef.current)
+			setVisible(!drawerVisibleRef.current)
 		},
 	})
 
@@ -169,7 +188,7 @@ function ResizeGrabberComponent({
 				return
 			}
 			isDraggingNow.current = false
-			if (_currentContainerHeight.current <= _minHeight) {
+			if (_currentContainerHeight.current < _minHeight) {
 				setVisible(false)
 			}
 		}
@@ -221,7 +240,7 @@ function ResizeGrabberComponent({
 		}
 		mouseLastSeenPosition.current = mousePosition
 
-		if (!visible) {
+		if (!drawerVisible) {
 			setVisible(true)
 		}
 	}, [
@@ -230,11 +249,11 @@ function ResizeGrabberComponent({
 		_minHeight,
 		_currentContainerHeight,
 		setVisible,
-		visibleRef,
+		drawerVisibleRef,
 		_setOverflowHeight,
 		isDraggingNow,
 		overflowHeight,
-		visible,
+		drawerVisible,
 		_setInternalHeight,
 		isVertical,
 		position,

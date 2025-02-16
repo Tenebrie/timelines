@@ -2,7 +2,7 @@ import Chip from '@mui/material/Chip'
 
 import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
 
-import { colorStringToHsl } from '../utils/colors/colorStringToHsl'
+import { colorStringToHsl } from '../../utils/colors/colorStringToHsl'
 
 type Props = {
 	text: string

@@ -2,6 +2,8 @@ import { mockEventModel } from '@api/rheaApi.mock'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
+import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
+
 import { getWorldState } from '../../world/selectors'
 import { useCurrentEvent } from './useCurrentEvent'
 
@@ -18,6 +20,7 @@ export const useCurrentOrNewEvent = () => {
 				mockEventModel({
 					worldId,
 					name: '',
+					color: getRandomEntityColor(),
 					description: '',
 					descriptionRich: '',
 					timestamp: selectedTime,

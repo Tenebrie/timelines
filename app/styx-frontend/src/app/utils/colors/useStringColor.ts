@@ -1,5 +1,5 @@
-import { useCustomTheme } from '../hooks/useCustomTheme'
-import { hashCode } from './hashCode'
+import { useCustomTheme } from '../../hooks/useCustomTheme'
+import { hashCode } from '../hashCode'
 
 export const useStringColor = (value: string) => {
 	const theme = useCustomTheme()

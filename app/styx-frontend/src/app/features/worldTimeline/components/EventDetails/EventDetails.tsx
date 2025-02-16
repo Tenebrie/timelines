@@ -1,9 +1,11 @@
 import Box from '@mui/material/Box'
+import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { useNavigate } from '@tanstack/react-router'
 import { memo } from 'react'
 
+import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
 import { useUpsertEvent } from '@/app/features/worldTimeline/hooks/useUpsertEvent'
 
 import { useCurrentOrNewEvent } from '../../hooks/useCurrentOrNewEvent'
@@ -39,6 +41,9 @@ export function EventDetailsComponent() {
 		>
 			<EventTitle event={event} draft={draft} />
 			<Divider />
+			<Collapse in={draft.editingColors} sx={{ overflow: 'hidden' }}>
+				<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
+			</Collapse>
 			<Box flexGrow={1}>
 				<EventDescription draft={draft} />
 			</Box>

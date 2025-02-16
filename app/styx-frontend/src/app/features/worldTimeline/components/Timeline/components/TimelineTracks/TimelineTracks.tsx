@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { memo, useLayoutEffect, useRef, useState } from 'react'
+import { memo, startTransition, useLayoutEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
@@ -37,8 +37,10 @@ export function TimelineTracksComponent(props: Props) {
 		event: 'outlinerResized',
 		callback: ({ height }) => {
 			const diff = height - outlinerHeight
-			setOutlinerHeight(height)
-			setNeedToScrollBy(diff)
+			startTransition(() => {
+				setOutlinerHeight(height)
+				setNeedToScrollBy(diff)
+			})
 			preResizeScroll.current = props.anotherRef.current?.scrollTop ?? 0
 		},
 	})
@@ -51,7 +53,7 @@ export function TimelineTracksComponent(props: Props) {
 
 		const scrollLost = preResizeScroll.current - timeline.scrollTop
 
-		timeline.scrollBy({ top: needToScrollBy + scrollLost })
+		timeline.scrollBy({ top: Math.round(needToScrollBy + scrollLost) })
 		setNeedToScrollBy(0)
 	}, [needToScrollBy, outlinerHeight, props.anotherRef])
 

@@ -69,8 +69,9 @@ export type CreateActorApiResponse = /** status 200  */ {
 	updatedAt: string
 	name: string
 	title: string
-	descriptionRich: string
+	icon: string
 	color: string
+	descriptionRich: string
 }
 export type CreateActorApiArg = {
 	/** Any string value */
@@ -78,6 +79,7 @@ export type CreateActorApiArg = {
 	body: {
 		name: string
 		title?: string
+		icon?: string
 		color?: string
 		mentions?: {
 			targetId: string
@@ -123,8 +125,9 @@ export type UpdateActorApiResponse = /** status 200  */ {
 	updatedAt: string
 	name: string
 	title: string
-	descriptionRich: string
+	icon: string
 	color: string
+	descriptionRich: string
 }
 export type UpdateActorApiArg = {
 	/** Any string value */
@@ -134,6 +137,7 @@ export type UpdateActorApiArg = {
 	body: {
 		name?: string
 		title?: string
+		icon?: string
 		color?: string
 		mentions?: {
 			targetId: string
@@ -151,8 +155,9 @@ export type DeleteActorApiResponse = /** status 200  */ {
 	updatedAt: string
 	name: string
 	title: string
-	descriptionRich: string
+	icon: string
 	color: string
+	descriptionRich: string
 }
 export type DeleteActorApiArg = {
 	/** Any string value */
