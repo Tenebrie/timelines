@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { Virtuoso } from 'react-virtuoso'
 
@@ -22,7 +22,9 @@ import { OutlinerEmptyState } from './OutlinerEmptyState/OutlinerEmptyState'
 import { SearchEmptyState } from './OutlinerEmptyState/SearchEmptyState'
 import { OutlinerSearch } from './OutlinerSearch'
 
-export const WorldState = () => {
+export const WorldState = memo(WorldStateComponent)
+
+export function WorldStateComponent() {
 	const { isReadOnly } = useIsReadOnly()
 
 	const { selectedTime, search } = useSelector(

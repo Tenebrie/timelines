@@ -11,13 +11,14 @@ export function WorldStateWithDraggerMirror() {
 		minHeight: 350,
 	})
 	const { visible: drawerVisible, height, overflowHeight, isDraggingNow } = grabberProps
+	console.log(overflowHeight)
 
 	return (
 		<>
 			<Paper
 				style={{
 					width: grabberProps.height,
-					marginLeft: drawerVisible ? `${overflowHeight}px` : `${-height}px`,
+					marginLeft: drawerVisible ? `${Math.max(overflowHeight, -350)}px` : `${-height}px`,
 					transition: `margin-left ${isDraggingNow.current ? 0 : 0.3}s`,
 				}}
 				sx={{ position: 'relative', flexShrink: 0 }}
