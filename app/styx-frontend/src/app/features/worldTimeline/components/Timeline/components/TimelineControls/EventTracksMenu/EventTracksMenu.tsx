@@ -10,7 +10,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useUpdateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
@@ -28,8 +28,8 @@ type Props = {
 
 export const EventTracksMenu = ({ size }: Props) => {
 	const worldId = useSelector(getWorldIdState)
-	const { tracks } = useSelector(getTimelineState, (a, b) => a.tracks === b.tracks)
-	const displayedTracks = tracks.filter((t) => t.id !== 'default')
+	const { allTracks } = useSelector(getTimelineState, (a, b) => a.allTracks === b.allTracks)
+	const displayedTracks = useMemo(() => allTracks.filter((t) => t.id !== 'default'), [allTracks])
 	const { timeToLabel } = useWorldTime()
 	const { open: openEventTrackEdit } = useModal('eventTrackEdit')
 
@@ -72,7 +72,7 @@ export const EventTracksMenu = ({ size }: Props) => {
 			>
 				{size === 'small' ? <Leaderboard style={{ transform: 'rotate(90deg)' }} /> : 'Event tracks'}
 			</Button>
-			{tracks && (
+			{displayedTracks && (
 				<Popover
 					{...bindPopover(popupState)}
 					anchorOrigin={{

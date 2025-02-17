@@ -5,10 +5,10 @@ import { memo, useCallback } from 'react'
 import { useDragDrop } from '@/app/features/dragDrop/useDragDrop'
 import { useModal } from '@/app/features/modals/reducer'
 
-import useEventTracks from '../hooks/useEventTracks'
+import { TimelineTrack } from '../hooks/useEventTracks'
 
 type Props = {
-	track: ReturnType<typeof useEventTracks>[number]
+	track: TimelineTrack
 }
 
 export const TimelineEventTrackTitleComponent = ({ track }: Props) => {

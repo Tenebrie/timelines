@@ -1,13 +1,13 @@
+import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import { memo, useCallback, useEffect, useRef } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { getWorldState } from '@/app/features/world/selectors'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
@@ -15,7 +15,6 @@ import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScal
 import { TimelineTracks } from './components/TimelineTracks/TimelineTracks'
 import { TimelineZoomReporter } from './components/TimelineZoomReporter'
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
-import { useContainerHeight } from './hooks/useContainerHeight'
 import { useTimelineDimensions } from './hooks/useTimelineDimensions'
 import { useTimelineNavigation } from './hooks/useTimelineNavigation'
 import { timelineSlice } from './reducer'
@@ -29,9 +28,9 @@ function TimelineComponent() {
 		from: '/world/$worldId/_world',
 		select: (search) => search.time,
 	})
-	const { timeOrigin, calendar } = useSelector(
+	const { timeOrigin, calendar, isLoaded } = useSelector(
 		getWorldState,
-		(a, b) => a.calendar === b.calendar && a.timeOrigin === b.timeOrigin,
+		(a, b) => a.calendar === b.calendar && a.timeOrigin === b.timeOrigin && a.isLoaded === b.isLoaded,
 	)
 	const theme = useCustomTheme()
 
@@ -62,7 +61,6 @@ function TimelineComponent() {
 	)
 
 	const { containerRef, containerWidth } = useTimelineDimensions()
-	const trackWrapperRef = useRef<HTMLDivElement | null>(null)
 
 	const { scroll, scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
 		containerRef: containerRef,
@@ -104,14 +102,21 @@ function TimelineComponent() {
 	useEventBusSubscribe({ event: 'scrollTimelineLeft', callback: () => onScrollFullPage('left') })
 	useEventBusSubscribe({ event: 'scrollTimelineRight', callback: () => onScrollFullPage('right') })
 
-	const containerHeight = useContainerHeight()
-
-	useEffectOnce(() => {
+	const isShown = useRef(false)
+	const [opacity, setOpacity] = useState(0)
+	useEffect(() => {
+		if (isShown.current || !isLoaded) {
+			return
+		}
+		isShown.current = true
 		scrollTimelineTo({
 			timestamp: selectedTime,
 			skipAnim: true,
 		})
-	})
+		requestIdleCallback(() => {
+			setOpacity(1)
+		})
+	}, [isLoaded, scrollTimelineTo, selectedTime])
 
 	return (
 		<Paper sx={{ height: '100%', borderRadius: 0, zIndex: 2 }}>
@@ -120,43 +125,40 @@ function TimelineComponent() {
 					ref={containerRef}
 					onContextMenu={onContextMenu}
 					$theme={theme}
-					$height={containerHeight}
 					style={{
 						backgroundColor: theme.custom.palette.background.timeline,
 					}}
 				>
-					<TimelineTracks
-						anotherRef={trackWrapperRef}
-						visible={!isSwitchingScale}
-						scaleLevel={scaleLevel}
-						containerWidth={containerWidth}
-					/>
-					<TimeMarker
-						timestamp={selectedTime}
-						scroll={scroll}
-						scaleLevel={scaleLevel}
-						transitioning={isSwitchingScale}
-					/>
-					<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
-					{/* <Paper
-						elevation={4}
-						style={{
-							position: 'absolute',
-							bottom: '-32px',
-							height: '32px',
-							width: '100vw',
-						}}
-						sx={{ backgroundColor: theme.custom.palette.background.timelineHeader }}
-					></Paper> */}
-					<TimelineAnchor
-						visible={!isSwitchingScale}
-						scroll={scroll}
-						scaleLevel={scaleLevel}
-						containerWidth={containerWidth}
-					/>
-					{/* <TimelineGrabber /> */}
+					<Box
+						width={1}
+						height={1}
+						style={{ opacity }}
+						sx={{ pointerEvents: 'none', transition: 'opacity 0.3s' }}
+					>
+						{opacity > 0 && (
+							<>
+								<TimelineTracks
+									visible={!isSwitchingScale}
+									scaleLevel={scaleLevel}
+									containerWidth={containerWidth}
+								/>
+								<TimeMarker
+									timestamp={selectedTime}
+									scroll={scroll}
+									scaleLevel={scaleLevel}
+									transitioning={isSwitchingScale}
+								/>
+								<TimelineScaleLabel targetScaleIndex={targetScaleIndex} visible={isSwitchingScale} />
+								<TimelineAnchor
+									visible={!isSwitchingScale}
+									scroll={scroll}
+									scaleLevel={scaleLevel}
+									containerWidth={containerWidth}
+								/>
+							</>
+						)}
+					</Box>
 				</TimelineContainer>
-				{/* <TimelineControls onZoomIn={scrollZoomIn} onZoomOut={scrollZoomOut} /> */}
 			</TimelineWrapper>
 			<TimelineZoomReporter />
 		</Paper>

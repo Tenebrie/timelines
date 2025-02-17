@@ -6,16 +6,17 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { TimelineState } from '@/app/features/worldTimeline/components/Timeline/utils/TimelineState'
 import { useEventIcons } from '@/app/features/worldTimeline/hooks/useEventIcons'
+import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
-import useEventTracks, { TimelineEventHeightPx } from '../hooks/useEventTracks'
+import { TimelineEventHeightPx } from '../hooks/useEventTracks'
 import { Group } from '../styles'
 import { Marker } from './TimelineEvent/styles'
 import { TimelineEvent } from './TimelineEvent/TimelineEvent'
 
 type Props = {
-	entity: ReturnType<typeof useEventTracks>[number]['events'][number]
+	entity: TimelineEntity<MarkerType>
 	visible: boolean
 	edited: boolean
 	selected: boolean

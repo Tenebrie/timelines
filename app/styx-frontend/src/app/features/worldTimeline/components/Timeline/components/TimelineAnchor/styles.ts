@@ -10,6 +10,7 @@ export const TimelineAnchorContainer = styled.div.attrs<{ offset: number }>((pro
 	position: absolute;
 	bottom: 0;
 	pointer-events: none;
+	transition: opacity 0.3s;
 `
 
 export const TimelineSmallestPips = styled.div.attrs<{

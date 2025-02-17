@@ -14,12 +14,13 @@ import { TimelineState } from '../../utils/TimelineState'
 import { TimelineChainPositioner } from './components/TimelineChainPositioner'
 import { TimelineEventPositioner } from './components/TimelineEventPositioner'
 import { TimelineEventTrackTitle } from './components/TimelineEventTrackTitle'
-import useEventTracks, { TimelineTrack } from './hooks/useEventTracks'
+import { TimelineTrack } from './hooks/useEventTracks'
 import { TrackContainer } from './styles'
 import { TimelineTrackItemDragDrop } from './TimelineTrackItemDragDrop'
 
 type Props = {
-	track: ReturnType<typeof useEventTracks>[number]
+	track: TimelineTrack
+	trackCount: number
 	visible: boolean
 	containerWidth: number
 	contextMenuState: ReturnType<typeof getTimelineContextMenuState>
@@ -30,6 +31,7 @@ export const TimelineTrackItem = memo(TimelineTrackItemComponent)
 
 export function TimelineTrackItemComponent({
 	track,
+	trackCount,
 	visible,
 	containerWidth,
 	contextMenuState,
@@ -54,13 +56,31 @@ export function TimelineTrackItemComponent({
 	)
 	const [visibleMarkers, setVisibleMarkers] = useState<(typeof track)['events']>([])
 
+	const lastRecordedScroll = useRef<number | null>(null)
 	const updateVisibleMarkersThrottled = useRef(
 		throttle(
-			(t: TimelineTrack, width: number, realTimeToScaledTime: Props['realTimeToScaledTime']) => {
+			(
+				t: TimelineTrack,
+				width: number,
+				realTimeToScaledTime: Props['realTimeToScaledTime'],
+				forceUpdate: boolean,
+			) => {
+				const prevScroll = lastRecordedScroll.current
+				const staggerValue = track.position * (1000 / trackCount)
+				if (
+					!forceUpdate &&
+					prevScroll !== null &&
+					Math.abs(TimelineState.scroll - prevScroll + staggerValue) < 1000
+				) {
+					return
+				}
+
+				lastRecordedScroll.current = TimelineState.scroll
 				setVisibleMarkers(
 					t.events.filter((event) => {
 						const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + TimelineState.scroll
-						return position >= -250 && position <= width + 250
+
+						return position >= -1000 && position <= width + 1000
 					}),
 				)
 			},
@@ -69,17 +89,21 @@ export function TimelineTrackItemComponent({
 	)
 
 	const updateVisibleMarkers = useCallback(() => {
-		updateVisibleMarkersThrottled.current(track, containerWidth, realTimeToScaledTime)
+		updateVisibleMarkersThrottled.current(track, containerWidth, realTimeToScaledTime, false)
 	}, [containerWidth, realTimeToScaledTime, track])
 
 	useEffect(() => {
-		updateVisibleMarkers()
-	}, [updateVisibleMarkers])
+		updateVisibleMarkersThrottled.current(track, containerWidth, realTimeToScaledTime, true)
+	}, [containerWidth, realTimeToScaledTime, track, updateVisibleMarkers])
 
 	useEventBusSubscribe({
 		event: 'timelineScrolled',
 		callback: updateVisibleMarkers,
 	})
+
+	// useEffect(() => {
+	// 	updateVisibleMarkers()
+	// }, [updateVisibleMarkers])
 
 	const chainLinks = useMemo(() => {
 		return track.events.filter(

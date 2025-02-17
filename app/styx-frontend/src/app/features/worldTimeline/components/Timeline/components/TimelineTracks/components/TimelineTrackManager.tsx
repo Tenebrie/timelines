@@ -6,14 +6,14 @@ import { timelineSlice } from '@/app/features/worldTimeline/components/Timeline/
 import useEventTracks from '../hooks/useEventTracks'
 
 export const TimelineTrackManager = () => {
-	const tracks = useEventTracks()
+	const data = useEventTracks()
 
 	const { setTracks } = timelineSlice.actions
 	const dispatch = useDispatch()
 
 	useEffect(() => {
-		dispatch(setTracks(tracks))
-	}, [dispatch, setTracks, tracks])
+		dispatch(setTracks(data))
+	}, [data, dispatch, setTracks])
 
 	return null
 }

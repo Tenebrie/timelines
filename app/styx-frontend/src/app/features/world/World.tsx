@@ -1,7 +1,6 @@
 import Stack from '@mui/material/Stack'
 import { Outlet } from '@tanstack/react-router'
 
-import { BlockingSpinner } from '@/app/components/BlockingSpinner'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
@@ -76,7 +75,7 @@ export const World = () => {
 						{!isLoaded && <TimelinePlaceholder />}
 					</>
 				)} */}
-				<BlockingSpinner visible={!isLoaded} />
+				{/* <BlockingSpinner visible={!isLoaded} /> */}
 			</div>
 			<RichTextEditorPortal />
 			<ActorWizardModal />

@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import React, { memo, startTransition, useLayoutEffect, useRef, useState } from 'react'
+import { memo, startTransition, useLayoutEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
@@ -12,7 +12,6 @@ import { TimelineContextMenu } from '../TimelineContextMenu/TimelineContextMenu'
 import { TimelineTrackItem } from './TimelineTrackItem'
 
 type Props = {
-	anotherRef: React.RefObject<HTMLDivElement | null>
 	visible: boolean
 	scaleLevel: ScaleLevel
 	containerWidth: number
@@ -21,7 +20,12 @@ type Props = {
 export const TimelineTracks = memo(TimelineTracksComponent)
 
 export function TimelineTracksComponent(props: Props) {
-	const { tracks } = useSelector(getTimelineState, (a, b) => a.tracks === b.tracks)
+	const anotherRef = useRef<HTMLDivElement | null>(null)
+
+	const { tracks, loadingTracks } = useSelector(
+		getTimelineState,
+		(a, b) => a.tracks === b.tracks && a.loadingTracks === b.loadingTracks,
+	)
 	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
 
@@ -41,12 +45,12 @@ export function TimelineTracksComponent(props: Props) {
 				setOutlinerHeight(height)
 				setNeedToScrollBy(diff)
 			})
-			preResizeScroll.current = props.anotherRef.current?.scrollTop ?? 0
+			preResizeScroll.current = anotherRef.current?.scrollTop ?? 0
 		},
 	})
 
 	useLayoutEffect(() => {
-		const timeline = props.anotherRef.current
+		const timeline = anotherRef.current
 		if (!timeline || needToScrollBy === 0) {
 			return
 		}
@@ -55,11 +59,11 @@ export function TimelineTracksComponent(props: Props) {
 
 		timeline.scrollBy({ top: Math.round(needToScrollBy + scrollLost) })
 		setNeedToScrollBy(0)
-	}, [needToScrollBy, outlinerHeight, props.anotherRef])
+	}, [needToScrollBy, outlinerHeight, anotherRef])
 
 	return (
 		<Stack
-			ref={props.anotherRef}
+			ref={anotherRef}
 			sx={{
 				display: 'block',
 				position: 'absolute',
@@ -73,15 +77,24 @@ export function TimelineTracksComponent(props: Props) {
 		>
 			{/* TODO: Size of box is always equal to the height of the Outliner */}
 			<Box sx={{ height: `calc(${outlinerHeight}px - 32px)`, pointerEvents: 'none' }} />
-			{tracks.map((track) => (
-				<TimelineTrackItem
-					key={track.id}
-					track={track}
-					contextMenuState={contextMenuState}
-					realTimeToScaledTime={realTimeToScaledTime}
-					{...props}
-				/>
-			))}
+			<Box
+				style={{ opacity: loadingTracks ? 0 : 1 }}
+				sx={{
+					pointerEvents: 'none',
+					transition: 'opacity 0.3s',
+				}}
+			>
+				{tracks.map((track) => (
+					<TimelineTrackItem
+						key={track.id}
+						track={track}
+						trackCount={tracks.length}
+						contextMenuState={contextMenuState}
+						realTimeToScaledTime={realTimeToScaledTime}
+						{...props}
+					/>
+				))}
+			</Box>
 			<TimelineContextMenu />
 		</Stack>
 	)

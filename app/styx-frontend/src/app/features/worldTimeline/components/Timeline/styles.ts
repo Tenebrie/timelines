@@ -8,11 +8,7 @@ export const TimelineWrapper = styled.div`
 	// padding-bottom: 32px;
 `
 
-export const TimelineContainer = styled.div.attrs<{ $height: number }>((props) => ({
-	style: {
-		// height: props.$height + 'px',
-	},
-}))<{ $theme: CustomTheme }>`
+export const TimelineContainer = styled.div<{ $theme: CustomTheme }>`
 	position: relative;
 	width: 100%;
 	height: calc(100%);

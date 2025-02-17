@@ -34,7 +34,11 @@ type Props = {
 	showHidden?: boolean
 }
 
-const useEventTracks = ({ showHidden }: Props = {}): TimelineTrack[] => {
+const useEventTracks = ({ showHidden }: Props = {}): {
+	tracks: TimelineTrack[]
+	allTracks: TimelineTrack[]
+	isLoading: boolean
+} => {
 	const { events } = useSelector(getWorldState, (a, b) => a.events === b.events)
 	const { ghost: eventGhost } = useSelector(getEventCreatorState, (a, b) => a.ghost === b.ghost)
 	const { ghost: deltaGhost } = useSelector(getEventDeltaCreatorState, (a, b) => a.ghost === b.ghost)
@@ -152,11 +156,10 @@ const useEventTracks = ({ showHidden }: Props = {}): TimelineTrack[] => {
 		return chainedEvents
 	}, [events, eventGhost, isEventCreator, deltaGhost, isDeltaCreator])
 
-	const { tracks } = useEventTracksRequest()
+	const { data: tracks, isLoading } = useEventTracksRequest()
 	const tracksWithEvents = useMemo(
 		() =>
-			tracks
-				.filter((track) => showHidden || track.visible)
+			(tracks ?? [])
 				.map((track) => ({
 					id: track.id as string | 'default',
 					name: track.name,
@@ -188,17 +191,28 @@ const useEventTracks = ({ showHidden }: Props = {}): TimelineTrack[] => {
 						events,
 					}
 				}),
-		[eventGroups, showHidden, tracks],
+		[eventGroups, tracks],
 	)
 	const tracksWithHeights = useMemo(
 		(): typeof tracksWithEvents => calculateMarkerHeights(tracksWithEvents),
 		[tracksWithEvents],
 	)
-	const tracksWithFollowers = useMemo(
-		(): typeof tracksWithEvents => injectFollowerData(tracksWithHeights),
-		[tracksWithHeights],
+	const tracksWithFollowers = useMemo(() => {
+		const allTracks = injectFollowerData(tracksWithHeights)
+		return {
+			visible: allTracks.filter((track) => track.visible || showHidden),
+			all: allTracks,
+		}
+	}, [showHidden, tracksWithHeights])
+	const finalData = useMemo(
+		() => ({
+			tracks: tracksWithFollowers.visible,
+			allTracks: tracksWithFollowers.all,
+			isLoading: isLoading || tracks === undefined,
+		}),
+		[tracksWithFollowers, isLoading, tracks],
 	)
-	return tracksWithFollowers
+	return finalData
 }
 
 const calculateMarkerHeights = (tracks: TimelineTrack[]) => {

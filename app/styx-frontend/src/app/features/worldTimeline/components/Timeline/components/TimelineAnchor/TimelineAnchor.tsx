@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { getWorldCalendarState } from '@/app/features/world/selectors'
+import { getWorldState } from '@/app/features/world/selectors'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
@@ -22,9 +22,11 @@ type Props = {
 	containerWidth: number
 }
 
-const TimelineAnchorComponent = ({ scaleLevel, scroll, visible, containerWidth }: Props) => {
+export const TimelineAnchor = memo(TimelineAnchorComponent)
+
+function TimelineAnchorComponent({ scaleLevel, scroll, visible, containerWidth }: Props) {
 	const theme = useCustomTheme()
-	const calendar = useSelector(getWorldCalendarState)
+	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
 	const { parseTime, timeToShortLabel } = useWorldTime()
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel, calendar })
 
@@ -158,5 +160,3 @@ const TimelineAnchorComponent = ({ scaleLevel, scroll, visible, containerWidth }
 		</Profiler>
 	)
 }
-
-export const TimelineAnchor = memo(TimelineAnchorComponent)
