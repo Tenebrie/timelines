@@ -69,6 +69,7 @@ export function TimelineTracksComponent(props: Props) {
 				overflowX: 'hidden',
 				overflowY: 'auto',
 			}}
+			className={'allow-timeline-click'}
 		>
 			{/* TODO: Size of box is always equal to the height of the Outliner */}
 			<Box sx={{ height: `calc(${outlinerHeight}px - 32px)`, pointerEvents: 'none' }} />
