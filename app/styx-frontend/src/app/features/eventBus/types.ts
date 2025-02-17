@@ -41,7 +41,7 @@ export type EventParams = {
 	['scrollTimelineLeft']: void
 	['scrollTimelineRight']: void
 	['timeline/requestZoom']: { direction: 'in' | 'out' }
-	['timeline/openEventDrawer']: void
+	['timeline/openEventDrawer']: { extraHeight?: number }
 	['outlinerResized']: { height: number }
 	['sendCalliopeMessage']: ClientToCalliopeMessage
 	['calliopeReconnected']: void

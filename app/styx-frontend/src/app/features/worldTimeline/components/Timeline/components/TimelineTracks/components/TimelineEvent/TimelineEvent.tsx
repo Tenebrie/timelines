@@ -3,7 +3,7 @@ import { colors } from '@mui/material'
 import Typography from '@mui/material/Typography'
 import { useNavigate } from '@tanstack/react-router'
 import classNames from 'classnames'
-import { memo, MouseEvent, Profiler, useState } from 'react'
+import { CSSProperties, memo, MouseEvent, Profiler, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
@@ -64,7 +64,7 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 				}),
 			})
 			scrollTimelineTo({ timestamp: entity.markerPosition })
-			openEventDrawer()
+			openEventDrawer({})
 		},
 		ignoreDelay: true,
 	})
@@ -116,17 +116,23 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	const color = useEntityColor({ entity })
 	const theme = useCustomTheme()
 
+	const isDataPoint = entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta'
+	const cssVariables = {
+		'--border-color': color,
+		'--icon-path': `url(${getIconPath(entity.icon)})`,
+		'--marker-size': `${TimelineEventHeightPx - 6}px`,
+		'--border-radius': isDataPoint ? '50%' : '4px',
+	} as CSSProperties
+
 	return (
 		<Profiler id="TimelineEvent" onRender={reportComponentProfile}>
 			<Marker
+				style={cssVariables}
 				onClick={onClick}
 				onContextMenu={onContextMenu}
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
-				$size={TimelineEventHeightPx - 6}
-				$borderColor={color}
 				$theme={theme}
-				$isDataPoint={entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta'}
 				className={classNames({
 					selected,
 					edited,
@@ -135,7 +141,6 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 					ghostEvent: entity.markerType === 'ghostEvent',
 					ghostDelta: entity.markerType === 'ghostDelta',
 				})}
-				$iconPath={getIconPath(entity.icon)}
 				data-testid="timeline-event-marker"
 			>
 				{entity.markerType !== 'revokedAt' && <div className="icon image"></div>}

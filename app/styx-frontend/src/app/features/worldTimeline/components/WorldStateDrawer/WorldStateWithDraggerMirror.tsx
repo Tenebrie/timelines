@@ -1,16 +1,34 @@
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
+import { useEffect } from 'react'
 
-import { ResizeGrabber, useResizeGrabber } from '@/app/components/ResizeGrabber'
-import { ResizeGrabberOverlay } from '@/app/components/ResizeGrabberOverlay'
+import { ResizeGrabber, useResizeGrabber } from '@/app/components/ResizeGrabber/ResizeGrabber'
+import { ResizeGrabberOverlay } from '@/app/components/ResizeGrabber/ResizeGrabberOverlay'
+import { ResizeGrabberPreferencesSchema } from '@/app/components/ResizeGrabber/ResizeGrabberPreferencesSchema'
+import usePersistentState from '@/app/hooks/usePersistentState'
 
 import { WorldState } from './WorldState'
 
 export function WorldStateWithDraggerMirror() {
+	const [preferences, setPreferences] = usePersistentState(
+		'mirrorWorldState/v1',
+		ResizeGrabberPreferencesSchema,
+		{
+			height: 400,
+			visible: true,
+		},
+	)
+
 	const grabberProps = useResizeGrabber({
+		initialOpen: preferences.visible,
+		initialHeight: preferences.height,
 		minHeight: 350,
 	})
 	const { drawerVisible, contentVisible, height, overflowHeight, isDraggingNow } = grabberProps
+
+	useEffect(() => {
+		setPreferences({ height, visible: drawerVisible })
+	}, [drawerVisible, height, setPreferences])
 
 	return (
 		<>

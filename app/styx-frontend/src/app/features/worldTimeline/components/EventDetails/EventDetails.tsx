@@ -4,8 +4,10 @@ import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { useNavigate } from '@tanstack/react-router'
 import { memo } from 'react'
+import { useSelector } from 'react-redux'
 
 import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
+import { getEditingPreferences } from '@/app/features/preferences/selectors'
 import { useUpsertEvent } from '@/app/features/worldTimeline/hooks/useUpsertEvent'
 
 import { useCurrentOrNewEvent } from '../../hooks/useCurrentOrNewEvent'
@@ -19,6 +21,10 @@ export function EventDetailsComponent() {
 	const { mode, event } = useCurrentOrNewEvent()
 	const draft = useEventDraft({ event })
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
+	const { eventColorPickerOpen } = useSelector(
+		getEditingPreferences,
+		(a, b) => a.eventColorPickerOpen === b.eventColorPickerOpen,
+	)
 
 	useUpsertEvent({
 		mode,
@@ -41,7 +47,7 @@ export function EventDetailsComponent() {
 		>
 			<EventTitle event={event} draft={draft} />
 			<Divider />
-			<Collapse in={draft.editingColors} sx={{ overflow: 'hidden' }}>
+			<Collapse in={eventColorPickerOpen} sx={{ overflow: 'hidden' }} timeout={300} easing={'ease-in-out'}>
 				<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
 			</Collapse>
 			<Box flexGrow={1}>

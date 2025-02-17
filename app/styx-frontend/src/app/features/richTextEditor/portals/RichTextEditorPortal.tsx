@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { RichTextEditorProps } from '../RichTextEditor'
@@ -12,6 +12,28 @@ export function RichTextEditorPortalComponent() {
 	const [portalPosition, setPortalPosition] = useState<HTMLElement | null>(null)
 	const [portalProps, setPortalProps] = useState<RichTextEditorProps | null>(null)
 
+	const containerRef = useRef<HTMLDivElement>(
+		(() => {
+			const element = document.createElement('div')
+			element.style.width = '100%'
+			element.style.height = '100%'
+			return element
+		})(),
+	)
+
+	useEffect(() => {
+		const containerEl = containerRef.current
+		if (portalPosition && containerEl.parentNode !== portalPosition) {
+			portalPosition.appendChild(containerEl)
+		}
+
+		return () => {
+			if (containerEl.parentNode) {
+				containerEl.parentNode.removeChild(containerEl)
+			}
+		}
+	}, [portalPosition])
+
 	useEffect(() => {
 		SetPortalPosition = (position, props) => {
 			setPortalPosition(position)
@@ -19,9 +41,11 @@ export function RichTextEditorPortalComponent() {
 		}
 	}, [setPortalPosition])
 
-	if (!portalPosition || !portalProps) {
-		return null
+	const actualProps = portalProps ?? {
+		value: '',
+		softKey: 'parked',
+		onChange: () => {},
 	}
 
-	return createPortal(<RichTextEditorWithFallback {...portalProps} />, portalPosition)
+	return createPortal(<RichTextEditorWithFallback {...actualProps} />, containerRef.current)
 }

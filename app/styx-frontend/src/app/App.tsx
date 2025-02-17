@@ -32,11 +32,6 @@ const App = () => {
 		}
 	}, [])
 
-	// const ctx = useRouteContext({ from: '/' })
-	// if (ctx.auth.isAuthenticating) {
-	// return <Limbo />
-	// }
-
 	return (
 		<div className="App">
 			<CustomThemeProvider>

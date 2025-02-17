@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { memo, Profiler } from 'react'
 
@@ -39,25 +40,30 @@ export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) 
 
 	return (
 		<Profiler id="TimelineChain" onRender={reportComponentProfile}>
-			<div
+			<Box
 				style={{
-					pointerEvents: 'none',
-					position: 'absolute',
 					bottom: height,
 					left: TimelineEventHeightPx / 2 - 16,
 				}}
+				sx={{
+					pointerEvents: 'none',
+					position: 'absolute',
+				}}
 			>
-				<div
+				<Box
 					style={{
 						width: dist,
 						height: TimelineEventHeightPx - 12,
-						background: theme.custom.palette.background.soft,
-						borderTop: `2px solid ${color}`,
+						borderTopColor: color,
+					}}
+					sx={{
 						display: 'flex',
 						alignItems: 'center',
-						paddingLeft: 20,
+						paddingLeft: '20px',
 						paddingRight: 0,
-						borderRadius: 8,
+						borderRadius: '8px',
+						borderTop: `2px solid ${color}`,
+						background: theme.custom.palette.background.soft,
 					}}
 				>
 					<Typography
@@ -68,8 +74,8 @@ export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) 
 					>
 						{entity.name}
 					</Typography>
-				</div>
-			</div>
+				</Box>
+			</Box>
 		</Profiler>
 	)
 }

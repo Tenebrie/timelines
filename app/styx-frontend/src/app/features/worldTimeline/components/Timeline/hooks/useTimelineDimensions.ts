@@ -1,8 +1,7 @@
 import debounce from 'lodash.debounce'
-import { useDebugValue, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 export const useTimelineDimensions = () => {
-	useDebugValue('useTimelineDimensions')
 	const containerRef = useRef<HTMLDivElement | null>(null)
 	const containerWidth = useRef<number>(window.innerWidth)
 
@@ -19,7 +18,6 @@ export const useTimelineDimensions = () => {
 				return
 			}
 			containerWidth.current = containerRef.current.getBoundingClientRect().width
-			console.log(containerWidth.current)
 		}, 100),
 	)
 

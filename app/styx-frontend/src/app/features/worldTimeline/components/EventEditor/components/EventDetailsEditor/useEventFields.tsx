@@ -28,8 +28,6 @@ export const useEventFields = ({ event }: Props) => {
 	const [customName, setCustomNameDirect] = useState<boolean>(event.customName)
 	const [externalLink, setExternalLink] = useState<string>(event.externalLink)
 
-	const [editingColors, setEditingColors] = useState(false)
-
 	const setters = useMemo(
 		() => ({
 			setId: generateSetter(setIdDirect, makeDirty),
@@ -146,11 +144,9 @@ export const useEventFields = ({ event }: Props) => {
 			descriptionRich,
 			customNameEnabled: customName,
 			externalLink,
-			editingColors,
 			setDirty,
 			bumpKey: () => setKey((prev) => prev + 1),
 			...setters,
-			setEditingColors,
 			loadState,
 			loadEvent,
 			toPayload,

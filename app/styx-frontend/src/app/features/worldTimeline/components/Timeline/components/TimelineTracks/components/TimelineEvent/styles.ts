@@ -9,16 +9,12 @@ export type StoryEventMarkerProps = {
 }
 
 export const Marker = styled.div<{
-	$iconPath: string
-	$borderColor: string
-	$size: number
 	$theme: CustomTheme
-	$isDataPoint: boolean
 }>`
 	position: relative;
-	width: ${(props) => props.$size}px;
-	height: ${(props) => props.$size}px;
-	border-radius: ${(props) => (props.$isDataPoint ? '50%' : '4px')};
+	width: var(--marker-size);
+	height: var(--marker-size);
+	border-radius: var(--border-radius);
 	background: ${(props) => props.$theme.custom.palette.background.timelineMarker};
 	cursor: pointer;
 	transition:
@@ -26,7 +22,7 @@ export const Marker = styled.div<{
 		border-color 0.3s,
 		background-color 0.3s;
 	border: 2px solid ${colors.grey[300]};
-	border-color: ${(props) => props.$borderColor} !important;
+	border-color: var(--border-color) !important;
 
 	.icon {
 		position: absolute;
@@ -43,15 +39,15 @@ export const Marker = styled.div<{
 		transition:
 			color 0.3s,
 			background-color 0.3s;
-		color: ${(props) => props.$borderColor};
+		color: var(--border-color);
 		& > svg {
 			filter: hue-rotate(180deg) brightness(0.8) saturate(2);
 		}
 	}
 
 	.image {
-		background: ${(props) => props.$borderColor};
-		mask-image: url(${(props) => props.$iconPath});
+		background: var(--border-color);
+		mask-image: var(--icon-path);
 	}
 
 	&.ghostEvent {

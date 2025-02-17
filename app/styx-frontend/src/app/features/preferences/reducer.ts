@@ -29,6 +29,7 @@ export const preferencesSlice = createSlice({
 		loadFromLocalStorage: (state) => {
 			const value = loadPreferences()
 			state['colorMode'] = value['colorMode']
+			state['editing'] = value['editing']
 			state['timeline'] = value['timeline']
 			state['outliner'] = value['outliner']
 			state['overview'] = value['overview']
@@ -37,6 +38,12 @@ export const preferencesSlice = createSlice({
 
 		setColorMode: (state, { payload }: PayloadAction<'light' | 'dark'>) => {
 			state.colorMode = payload
+			saveToLocalStorage(state)
+		},
+
+		/* Editing */
+		setEventColorPickerOpen: (state, { payload }: PayloadAction<boolean>) => {
+			state.editing.eventColorPickerOpen = payload
 			saveToLocalStorage(state)
 		},
 

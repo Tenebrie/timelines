@@ -5,10 +5,8 @@ import { memo, startTransition, useCallback, useEffect, useRef, useState } from 
 import { MouseEvent as ReactMouseEvent } from 'react'
 import styled from 'styled-components'
 
-import { useEventBusSubscribe } from '../features/eventBus'
-import { AllowedEvents } from '../features/eventBus/types'
-import { useAutoRef } from '../hooks/useAutoRef'
-import { useDoubleClick } from '../hooks/useDoubleClick'
+import { useAutoRef } from '../../hooks/useAutoRef'
+import { useDoubleClick } from '../../hooks/useDoubleClick'
 
 const StyledInnerDragger = styled.div`
 	width: calc(100% - 32px);
@@ -28,22 +26,26 @@ const StyledInnerDraggerHorizontal = styled.div`
 
 type TopProps = {
 	minHeight?: number
-	defaultHeight?: number
-	openOnEvent?: AllowedEvents
+	initialOpen?: boolean
+	initialHeight?: number
+	keepMounted?: boolean
 }
 
-export function useResizeGrabber({ minHeight, defaultHeight, openOnEvent }: TopProps = {}) {
+export function useResizeGrabber({ minHeight, initialOpen, initialHeight, keepMounted }: TopProps = {}) {
 	const isDraggingNow = useRef(false)
 	const [isDraggingChild, setIsDraggingChild] = useState(false)
-	const [drawerVisible, setDrawerVisible] = useState(true)
+	const [drawerVisible, setDrawerVisible] = useState(initialOpen ?? true)
 	const [overflowHeight, _setOverflowHeight] = useState(0)
-	const [_displayedHeight, _setDisplayedHeight] = useState(defaultHeight ?? minHeight ?? 300)
+	const [_displayedHeight, _setDisplayedHeight] = useState(initialHeight ?? minHeight ?? 300)
 	const [_internalHeight, _setInternalHeight] = useState(_displayedHeight)
 
-	const [contentVisible, setContentVisible] = useState(false)
+	const [contentVisible, setContentVisible] = useState((initialOpen ?? true) || (keepMounted ?? false))
 	const animationRef = useRef<number | null>(null)
 
 	useEffect(() => {
+		if (keepMounted) {
+			return
+		}
 		if (animationRef.current) {
 			window.clearTimeout(animationRef.current)
 		}
@@ -54,9 +56,11 @@ export function useResizeGrabber({ minHeight, defaultHeight, openOnEvent }: TopP
 				})
 			}, 3000)
 		} else {
-			setContentVisible(true)
+			startTransition(() => {
+				setContentVisible(true)
+			})
 		}
-	}, [drawerVisible])
+	}, [drawerVisible, keepMounted])
 
 	const setVisible = useCallback(
 		(value: boolean) => {
@@ -75,14 +79,13 @@ export function useResizeGrabber({ minHeight, defaultHeight, openOnEvent }: TopP
 		[_internalHeight, minHeight],
 	)
 
-	useEventBusSubscribe({
-		event: openOnEvent,
-		callback: () => {
-			if (!drawerVisible) {
-				setVisible(true)
-			}
+	const setHeight = useCallback(
+		(value: number) => {
+			_setDisplayedHeight(value)
+			_setInternalHeight(value)
 		},
-	})
+		[_setDisplayedHeight, _setInternalHeight],
+	)
 
 	return {
 		height: _displayedHeight,
@@ -90,7 +93,8 @@ export function useResizeGrabber({ minHeight, defaultHeight, openOnEvent }: TopP
 		_minHeight: minHeight ?? 0,
 		drawerVisible,
 		setVisible,
-		contentVisible,
+		setHeight,
+		contentVisible: contentVisible ?? keepMounted,
 		isDraggingChild,
 		setIsDraggingChild,
 		overflowHeight,
