@@ -45,10 +45,11 @@ export const TrackContainer = styled.div<{ $height: number; $background: string 
 	width: 100%;
 	align-items: flex-end;
 
-	pointer-events: none;
+	// pointer-events: none;
 	background: none;
+	transition: background 0.3s;
 
-	&.dragging:hover {
+	&:hover {
 		pointer-events: auto;
 		background: ${(props) => props.$background};
 	}

@@ -54,7 +54,7 @@ export function useResizeGrabber({ minHeight, initialOpen, initialHeight, keepMo
 				startTransition(() => {
 					setContentVisible(false)
 				})
-			}, 3000)
+			}, 300)
 		} else {
 			startTransition(() => {
 				setContentVisible(true)

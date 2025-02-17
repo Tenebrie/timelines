@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { memo } from 'react'
+import { CSSProperties, memo } from 'react'
 
 import { useDragDrop } from '@/app/features/dragDrop/useDragDrop'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
@@ -34,6 +34,13 @@ const TimelineEventPositionerComponent = ({
 	const { getIconPath } = useEventIcons()
 	const theme = useCustomTheme()
 
+	const cssVariables = {
+		'--border-color': 'gray',
+		'--icon-path': `url(${getIconPath(entity.icon)})`,
+		'--marker-size': `${TimelineEventHeightPx - 6}px`,
+		'--border-radius': entity.markerType === 'deltaState' ? '50%' : '4px',
+	} as CSSProperties
+
 	const { ref, isDragging, ghostElement } = useDragDrop({
 		type: 'timelineEvent',
 		params: { event: entity },
@@ -66,11 +73,8 @@ const TimelineEventPositionerComponent = ({
 					}}
 				></div>
 				<Marker
-					$size={TimelineEventHeightPx - 6}
-					$borderColor="gray"
-					$iconPath={getIconPath(entity.icon)}
 					$theme={theme}
-					$isDataPoint={entity.markerType === 'deltaState'}
+					style={cssVariables}
 					className={classNames({
 						revoked: entity.markerType === 'revokedAt',
 						replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',

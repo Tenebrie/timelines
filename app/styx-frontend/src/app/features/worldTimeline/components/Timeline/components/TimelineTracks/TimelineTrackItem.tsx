@@ -94,8 +94,9 @@ export function TimelineTrackItemComponent({
 			<TrackContainer
 				ref={dragDropReceiverRef}
 				$height={track.height}
-				$background={theme.custom.palette.background.soft}
-				className={`${isDragging ? 'dragging' : ''}`}
+				$background={theme.custom.palette.background.softest}
+				className={`${isDragging ? 'dragging' : ''} allow-timeline-click`}
+				data-trackid={track.id}
 			>
 				<Divider sx={dividerProps} />
 				{chainLinks.map((event) => (

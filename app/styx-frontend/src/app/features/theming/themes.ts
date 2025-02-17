@@ -143,6 +143,8 @@ export const customLightTheme = {
 		outline: 'rgb(0 0 0 / 23%)',
 		background: {
 			soft: 'rgb(0 0 0 / 10%)',
+			softer: 'rgb(0 0 0 / 5%)',
+			softest: 'rgb(0 0 0 / 2%)',
 			modal: '#eee',
 			timeline: '#fff',
 			timelineHeader: '#f3f3f3',
@@ -161,6 +163,8 @@ export const customDarkTheme: typeof customLightTheme = {
 		outline: 'rgb(255 255 255 / 23%)',
 		background: {
 			soft: 'rgb(255 255 255 / 10%)',
+			softer: 'rgb(255 255 255 / 5%)',
+			softest: 'rgb(255 255 255 / 2%)',
 			modal: '#22333b',
 			timeline: '#22333b',
 			timelineHeader: '#22333b',

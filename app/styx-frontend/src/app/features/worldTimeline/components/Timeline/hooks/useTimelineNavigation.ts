@@ -20,7 +20,7 @@ import { ScaleLevel } from '../types'
 import { useTimelineScroll } from './useTimelineScroll'
 
 type Props = {
-	containerRef: React.RefObject<HTMLDivElement | null>[]
+	containerRef: React.RefObject<HTMLDivElement | null>
 	defaultScroll: number
 	selectedTime: number | null
 	scaleLimits: [ScaleLevel, ScaleLevel]
@@ -183,7 +183,7 @@ export const useTimelineNavigation = ({
 		setScaleSwitchesToDo(0)
 		setReadyToSwitchScale(false)
 		const selectedTimeOnScreen = Math.round(realTimeToScaledTime(selectedTime ?? 0) + scrollRef.current)
-		const containerWidth = containerRef[0].current?.getBoundingClientRect().width ?? 0
+		const containerWidth = containerRef.current?.getBoundingClientRect().width ?? 0
 		const scrollIntoPos = Math.max(0, Math.min(containerWidth, selectedTimeOnScreen))
 
 		let currentScaleScroll = scaleScroll
@@ -348,11 +348,11 @@ export const useTimelineNavigation = ({
 	const [lastClickTime, setLastClickTime] = useState<number | null>(null)
 	const onTimelineClick = useCallback(
 		(event: MouseEvent) => {
-			if (
-				!canClick ||
-				!containerRef.some((ref) => ref.current === event.target) ||
-				window.document.body.classList.contains('mouse-busy')
-			) {
+			const isClickBlocked = !canClick || window.document.body.classList.contains('mouse-busy')
+			const isTargetValid =
+				event.target === containerRef.current ||
+				(event.target instanceof HTMLElement && event.target.classList.contains('allow-timeline-click'))
+			if (isClickBlocked || !isTargetValid) {
 				return
 			}
 			event.stopPropagation()
@@ -414,40 +414,30 @@ export const useTimelineNavigation = ({
 
 	// Mouse events
 	useEffect(() => {
-		containerRef.forEach((ref) => {
-			const container = ref.current
-			if (!container) {
-				return
-			}
+		const container = containerRef.current
+		if (!container) {
+			return
+		}
 
-			container.addEventListener('click', onTimelineClick)
-			container.addEventListener('mousedown', onMouseDown)
-			document.addEventListener('mousemove', onMouseMove)
-			document.addEventListener('mouseup', onMouseUp)
-			container.addEventListener('touchstart', onMouseDown)
-			container.addEventListener('touchmove', onMouseMove)
-			container.addEventListener('touchend', onMouseUp)
-			document.addEventListener('mouseleave', onMouseUp)
-			// container.addEventListener('wheel', onWheel)
-		})
+		container.addEventListener('click', onTimelineClick)
+		container.addEventListener('mousedown', onMouseDown)
+		document.addEventListener('mousemove', onMouseMove)
+		document.addEventListener('mouseup', onMouseUp)
+		container.addEventListener('touchstart', onMouseDown)
+		container.addEventListener('touchmove', onMouseMove)
+		container.addEventListener('touchend', onMouseUp)
+		document.addEventListener('mouseleave', onMouseUp)
+		// container.addEventListener('wheel', onWheel)
 
 		return () => {
-			containerRef.forEach((ref) => {
-				const container = ref.current
-				if (!container) {
-					return
-				}
-
-				container.removeEventListener('click', onTimelineClick)
-				container.removeEventListener('mousedown', onMouseDown)
-				document.removeEventListener('mousemove', onMouseMove)
-				document.removeEventListener('mouseup', onMouseUp)
-				container.removeEventListener('touchstart', onMouseDown)
-				container.removeEventListener('touchmove', onMouseMove)
-				container.removeEventListener('touchend', onMouseUp)
-				document.removeEventListener('mouseleave', onMouseUp)
-			})
-			// container.removeEventListener('wheel', onWheel)
+			container.removeEventListener('click', onTimelineClick)
+			container.removeEventListener('mousedown', onMouseDown)
+			document.removeEventListener('mousemove', onMouseMove)
+			document.removeEventListener('mouseup', onMouseUp)
+			container.removeEventListener('touchstart', onMouseDown)
+			container.removeEventListener('touchmove', onMouseMove)
+			container.removeEventListener('touchend', onMouseUp)
+			document.removeEventListener('mouseleave', onMouseUp)
 		}
 	}, [containerRef, onClick, onMouseDown, onMouseMove, onMouseUp, onTimelineClick, onWheel])
 
@@ -465,7 +455,7 @@ export const useTimelineNavigation = ({
 			useRawScroll?: boolean
 			skipAnim?: boolean
 		}) => {
-			if (!containerRef[0].current) {
+			if (!containerRef.current) {
 				return
 			}
 
@@ -475,7 +465,7 @@ export const useTimelineNavigation = ({
 					return timestamp
 				}
 				return Math.floor(
-					realTimeToScaledTime(-timestamp) + containerRef[0].current.getBoundingClientRect().width / 2,
+					realTimeToScaledTime(-timestamp) + containerRef.current.getBoundingClientRect().width / 2,
 				)
 			})()
 
@@ -552,7 +542,7 @@ export const useTimelineNavigation = ({
 	const throttledSetPublicScroll = useRef(throttle((val: number) => setPublicScroll(val), 100))
 
 	useEffect(() => {
-		const container = containerRef[0].current
+		const container = containerRef.current
 		if (!container) {
 			return
 		}

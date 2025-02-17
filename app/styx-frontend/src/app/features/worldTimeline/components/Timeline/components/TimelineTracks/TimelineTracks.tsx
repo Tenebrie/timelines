@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { memo, startTransition, useLayoutEffect, useRef, useState } from 'react'
+import React, { memo, startTransition, useLayoutEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'

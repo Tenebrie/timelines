@@ -62,10 +62,10 @@ function TimelineComponent() {
 	)
 
 	const { containerRef, containerWidth } = useTimelineDimensions()
-	const anotherRef = useRef<HTMLDivElement | null>(null)
+	const trackWrapperRef = useRef<HTMLDivElement | null>(null)
 
 	const { scroll, scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
-		containerRef: [containerRef, anotherRef],
+		containerRef: containerRef,
 		defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
 		scaleLimits: [-1, 7],
 		selectedTime,
@@ -126,7 +126,7 @@ function TimelineComponent() {
 					}}
 				>
 					<TimelineTracks
-						anotherRef={anotherRef}
+						anotherRef={trackWrapperRef}
 						visible={!isSwitchingScale}
 						scaleLevel={scaleLevel}
 						containerWidth={containerWidth}

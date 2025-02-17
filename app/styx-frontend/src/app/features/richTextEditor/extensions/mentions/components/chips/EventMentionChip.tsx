@@ -24,8 +24,9 @@ export const EventMentionChip = ({ worldId, eventId, events }: Props) => {
 		}
 
 		navigateTo({
-			to: '/world/$worldId/timeline/event/$eventId',
-			params: { worldId, eventId },
+			to: '/world/$worldId/timeline',
+			params: { worldId },
+			search: (prev) => ({ ...prev, selection: [`issuedAt-${eventId}`] }),
 		})
 	}
 
