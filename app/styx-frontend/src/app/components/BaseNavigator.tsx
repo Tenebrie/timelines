@@ -6,7 +6,7 @@ import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { useNavigate } from '@tanstack/react-router'
-import { ReactElement } from 'react'
+import { ReactNode } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -32,7 +32,7 @@ const Container = styled(Paper)<{ $theme: CustomTheme }>`
 `
 
 type Props = {
-	children?: ReactElement | ReactElement[]
+	children?: ReactNode | ReactNode[]
 }
 
 export const BaseNavigator = ({ children }: Props) => {

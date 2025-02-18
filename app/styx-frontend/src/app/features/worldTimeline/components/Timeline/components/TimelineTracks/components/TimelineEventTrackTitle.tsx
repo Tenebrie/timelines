@@ -53,9 +53,14 @@ export const TimelineEventTrackTitleComponent = ({ track }: Props) => {
 					borderRadius: 1,
 				}}
 			>
-				<Button variant="contained" color="secondary" sx={{ pointerEvents: 'all' }} onClick={onOpen}>
+				<Button
+					variant="contained"
+					color="secondary"
+					sx={{ pointerEvents: 'all', maxWidth: '384px' }}
+					onClick={onOpen}
+				>
 					{track.baseModel && (
-						<span>
+						<span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
 							({track.position}) {track.name}
 						</span>
 					)}

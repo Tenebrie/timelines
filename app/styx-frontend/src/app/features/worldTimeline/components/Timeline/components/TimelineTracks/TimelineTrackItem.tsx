@@ -2,11 +2,12 @@ import Divider from '@mui/material/Divider'
 import { useSearch } from '@tanstack/react-router'
 import throttle from 'lodash.throttle'
 import { memo, Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { getTimelineContextMenuState } from '@/app/features/world/selectors'
+import { getTimelineContextMenuState, getTimelineState } from '@/app/features/world/selectors'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 import { isRunningInTest } from '@/test-utils/isRunningInTest'
 
@@ -39,6 +40,7 @@ export function TimelineTrackItemComponent({
 }: Props) {
 	const dragDropReceiverRef = useRef<HTMLDivElement | null>(null)
 	const [isDragging, setIsDragging] = useState(false)
+	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const theme = useCustomTheme()
 	const selectedMarkerIds = useSearch({
 		from: '/world/$worldId/_world/timeline',
@@ -94,7 +96,8 @@ export function TimelineTrackItemComponent({
 
 	useEffect(() => {
 		updateVisibleMarkersThrottled.current(track, containerWidth, realTimeToScaledTime, true)
-	}, [containerWidth, realTimeToScaledTime, track, updateVisibleMarkers])
+		updateVisibleMarkersThrottled.current.flush()
+	}, [containerWidth, realTimeToScaledTime, track, updateVisibleMarkers, scaleLevel])
 
 	useEventBusSubscribe({
 		event: 'timelineScrolled',

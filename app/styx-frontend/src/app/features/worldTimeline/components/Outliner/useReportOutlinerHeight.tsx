@@ -15,7 +15,9 @@ export function useReportOutlinerHeight({ event, height, drawerVisible }: Props)
 
 	const onResize = useRef(
 		debounce((h: number, v: boolean) => {
-			notifyAboutHeightChange({ height: v ? h : 0 })
+			requestIdleCallback(() => {
+				notifyAboutHeightChange({ height: v ? h : 0 })
+			})
 		}, 100),
 	)
 

@@ -38,7 +38,7 @@ export function WorldStateWithDragger() {
 					marginRight: drawerVisible ? `${overflowHeight}px` : `${-height}px`,
 					transition: `margin-right ${isDraggingNow.current ? 0 : 0.3}s`,
 				}}
-				sx={{ position: 'relative', flexShrink: 0 }}
+				sx={{ position: 'relative', flexShrink: 0, zIndex: 2 }}
 				elevation={2}
 			>
 				<Box
@@ -47,6 +47,7 @@ export function WorldStateWithDragger() {
 						height: 1,
 						zIndex: 1,
 						transition: `right ${isDraggingNow.current ? 0 : 0.3}s`,
+						marginLeft: -0.6,
 					}}
 				>
 					<ResizeGrabber {...grabberProps} active position={'right'} />

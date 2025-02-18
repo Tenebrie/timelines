@@ -1,3 +1,4 @@
+import Fade from '@mui/material/Fade'
 import { memo, Profiler, startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -131,32 +132,30 @@ function TimelineAnchorComponent({ scaleLevel, scroll, visible, containerWidth }
 
 	return (
 		<Profiler id="TimelineAnchor" onRender={reportComponentProfile}>
-			<TimelineAnchorContainer offset={scroll % ResetNumbersAfterEvery}>
-				<TimelineSmallestPips
-					offset={scroll % ResetNumbersAfterEvery}
-					$visible={visible}
-					$lineSpacing={LineSpacing}
-				/>
-				{renderedDividers.map((data, index) => (
-					<div key={index}>
-						{data.isRendered && (
-							<TimelineAnchorLine
-								key={`${index}`}
-								theme={theme}
-								index={index}
-								visible={visible}
-								lineCount={lineCount}
-								scaleLevel={scaleLevel}
-								timelineScroll={scroll}
-								timeToShortLabel={timeToShortLabel}
-								scaledTimeToRealTime={scaledTimeToRealTime}
-								positionNormalizer={positionNormalizer}
-								{...data}
-							/>
-						)}
-					</div>
-				))}
-			</TimelineAnchorContainer>
+			<Fade in={visible} appear timeout={300}>
+				<TimelineAnchorContainer offset={scroll % ResetNumbersAfterEvery}>
+					<TimelineSmallestPips offset={scroll % ResetNumbersAfterEvery} $lineSpacing={LineSpacing} />
+					{renderedDividers.map((data, index) => (
+						<div key={index}>
+							{data.isRendered && (
+								<TimelineAnchorLine
+									key={`${index}`}
+									theme={theme}
+									index={index}
+									visible={visible}
+									lineCount={lineCount}
+									scaleLevel={scaleLevel}
+									timelineScroll={scroll}
+									timeToShortLabel={timeToShortLabel}
+									scaledTimeToRealTime={scaledTimeToRealTime}
+									positionNormalizer={positionNormalizer}
+									{...data}
+								/>
+							)}
+						</div>
+					))}
+				</TimelineAnchorContainer>
+			</Fade>
 		</Profiler>
 	)
 }

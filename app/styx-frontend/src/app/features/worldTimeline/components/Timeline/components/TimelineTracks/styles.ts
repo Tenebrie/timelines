@@ -49,8 +49,7 @@ export const TrackContainer = styled.div<{ $height: number; $background: string 
 	background: none;
 	transition: background 0.3s;
 
-	&:hover {
+	body:not(.mouse-busy) &:hover {
 		background: ${(props) => props.$background};
-		transition: background 0s;
 	}
 `

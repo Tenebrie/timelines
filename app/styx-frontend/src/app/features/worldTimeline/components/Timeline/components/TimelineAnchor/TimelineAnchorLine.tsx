@@ -128,7 +128,6 @@ const TimelineAnchorLineComponent = (props: Props) => {
 			<DividerContainer
 				key={rawIndex}
 				offset={dividerPosition}
-				className={visible ? 'visible' : ''}
 				style={{
 					zIndex: labelSize === 'large' ? 2 : labelSize === 'medium' ? 1 : 0,
 				}}

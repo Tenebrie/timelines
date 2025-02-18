@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box'
+import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import { memo, useRef } from 'react'
 import { useSelector } from 'react-redux'
@@ -22,9 +23,9 @@ export const TimelineTracks = memo(TimelineTracksComponent)
 export function TimelineTracksComponent(props: Props) {
 	const ref = useRef<HTMLDivElement | null>(null)
 
-	const { tracks, loadingTracks } = useSelector(
+	const { allTracks, loadingTracks } = useSelector(
 		getTimelineState,
-		(a, b) => a.tracks === b.tracks && a.loadingTracks === b.loadingTracks,
+		(a, b) => a.allTracks === b.allTracks && a.loadingTracks === b.loadingTracks,
 	)
 	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
@@ -59,15 +60,16 @@ export function TimelineTracksComponent(props: Props) {
 					transition: 'opacity 0.3s',
 				}}
 			>
-				{tracks.map((track) => (
-					<TimelineTrackItem
-						key={track.id}
-						track={track}
-						trackCount={tracks.length}
-						contextMenuState={contextMenuState}
-						realTimeToScaledTime={realTimeToScaledTime}
-						{...props}
-					/>
+				{allTracks.map((track) => (
+					<Collapse in={track.visible} key={track.id} mountOnEnter unmountOnExit>
+						<TimelineTrackItem
+							track={track}
+							trackCount={allTracks.length}
+							contextMenuState={contextMenuState}
+							realTimeToScaledTime={realTimeToScaledTime}
+							{...props}
+						/>
+					</Collapse>
 				))}
 			</Box>
 			<TimelineContextMenu />

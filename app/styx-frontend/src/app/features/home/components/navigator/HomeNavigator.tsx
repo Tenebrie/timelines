@@ -24,12 +24,16 @@ export const HomeNavigator = () => {
 
 	return (
 		<BaseNavigator>
-			<Button aria-label="Toggle" sx={{ visibility: 'hidden' }}>
-				<Menu />
-			</Button>
-			<Button onClick={onNavigateToLastWorld} sx={{ gap: 0.5, padding: '8px 15px' }}>
-				<Public /> World
-			</Button>
+			{isLoaded && (
+				<>
+					<Button aria-label="Toggle" sx={{ visibility: 'hidden' }}>
+						<Menu />
+					</Button>
+					<Button onClick={onNavigateToLastWorld} sx={{ gap: 0.5, padding: '8px 15px' }}>
+						<Public /> World
+					</Button>
+				</>
+			)}
 		</BaseNavigator>
 	)
 }

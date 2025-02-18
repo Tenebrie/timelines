@@ -15,12 +15,10 @@ export const TimelineAnchorContainer = styled.div.attrs<{ offset: number }>((pro
 
 export const TimelineSmallestPips = styled.div.attrs<{
 	offset: number
-	$visible: boolean
 	$lineSpacing: number
 }>((props) => ({
 	style: {
 		transform: `translateX(${-props.offset + (props.offset % props.$lineSpacing)}px)`,
-		opacity: props.$visible ? 1 : 0,
 	},
 }))<{ offset: number; $lineSpacing: number }>`
 	position: absolute;
@@ -41,12 +39,6 @@ export const DividerContainer = styled.div.attrs<{ offset: number }>((props) => 
 	position: absolute;
 	bottom: 0;
 	pointer-events: none;
-	opacity: 0;
-	transition: opacity 0.3s;
-
-	&.visible {
-		opacity: 1;
-	}
 `
 
 export const Divider = styled.div.attrs<{ color: string; width: number; height: number }>((props) => ({

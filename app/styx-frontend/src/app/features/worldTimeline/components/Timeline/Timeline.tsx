@@ -11,6 +11,7 @@ import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
+import { TimelineControls } from './components/TimelineControls'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
 import { TimelineTracks } from './components/TimelineTracks/TimelineTracks'
 import { TimelineZoomReporter } from './components/TimelineZoomReporter'
@@ -134,7 +135,7 @@ function TimelineComponent() {
 						width={1}
 						height={1}
 						style={{ opacity }}
-						sx={{ pointerEvents: 'none', transition: 'opacity 0.3s' }}
+						sx={{ transition: 'opacity 0.3s', pointerEvents: 'none' }}
 					>
 						{opacity > 0 && (
 							<>
@@ -160,6 +161,7 @@ function TimelineComponent() {
 						)}
 					</Box>
 				</TimelineContainer>
+				<TimelineControls />
 			</TimelineWrapper>
 			<TimelineZoomReporter />
 		</Paper>

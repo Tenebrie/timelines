@@ -352,6 +352,7 @@ export const useTimelineNavigation = ({
 			const isTargetValid =
 				event.target === containerRef.current ||
 				(event.target instanceof HTMLElement && event.target.classList.contains('allow-timeline-click'))
+			console.log(event.target)
 			if (isClickBlocked || !isTargetValid) {
 				return
 			}

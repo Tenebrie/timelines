@@ -16,8 +16,7 @@ import { getOverviewPreferences } from '@/app/features/preferences/selectors'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 import { getWorldState } from '../selectors'
-import { WorldHeader } from './components/WorldHeader'
-import { WorldTimelineControls } from './components/WorldTimelineControls'
+import { WorldHeader } from './WorldHeader'
 
 export const WorldDrawer = () => {
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
@@ -120,7 +119,6 @@ export const WorldDrawer = () => {
 						{/* <Help /> */}
 						{/* </StyledSmallButton> */}
 					</Stack>
-					<WorldTimelineControls />
 				</Paper>
 				<Paper
 					style={{

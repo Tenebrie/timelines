@@ -38,7 +38,7 @@ export function WorldStateWithDraggerMirror() {
 					marginLeft: drawerVisible ? `${Math.max(overflowHeight, -350)}px` : `${-height}px`,
 					transition: `margin-left ${isDraggingNow.current ? 0 : 0.3}s`,
 				}}
-				sx={{ position: 'relative', flexShrink: 0 }}
+				sx={{ position: 'relative', flexShrink: 0, zIndex: 2 }}
 				elevation={2}
 			>
 				<Box sx={{ height: 1, pointerEvents: grabberProps.isDraggingNow.current ? 'none' : 'unset' }}>

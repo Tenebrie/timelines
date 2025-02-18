@@ -24,14 +24,16 @@ type Props = {
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
-const TimelineEventPositionerComponent = ({
+export const TimelineEventPositioner = memo(TimelineEventPositionerComponent)
+
+function TimelineEventPositionerComponent({
 	entity,
 	visible,
 	edited,
 	selected,
 	trackHeight,
 	realTimeToScaledTime,
-}: Props) => {
+}: Props) {
 	const { getIconPath } = useEventIcons()
 	const theme = useCustomTheme()
 
@@ -123,5 +125,3 @@ const TimelineEventPositionerComponent = ({
 		</Group>
 	)
 }
-
-export const TimelineEventPositioner = memo(TimelineEventPositionerComponent)

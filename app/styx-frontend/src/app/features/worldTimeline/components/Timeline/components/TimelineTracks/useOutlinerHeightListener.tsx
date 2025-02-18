@@ -7,38 +7,40 @@ type Props = {
 }
 
 export function useOutlinerHeightListener({ ref }: Props) {
-	const [tracksHeight, setTracksHeight] = useState(300)
-	const [entityHeight, setEntityHeight] = useState(300)
+	const tracksHeightRef = useRef(300)
+	const entityHeightRef = useRef(300)
 
+	const outlinerHeightRef = useRef(300)
 	const [outlinerHeight, setOutlinerHeight] = useState(300)
 	const [needToScrollBy, setNeedToScrollBy] = useState(0)
 	const preResizeScroll = useRef(0)
 
 	const onResize = useCallback(
 		(height: number) => {
-			const diff = height - outlinerHeight
+			const diff = height - outlinerHeightRef.current
+			outlinerHeightRef.current = height
 			startTransition(() => {
 				setOutlinerHeight(height)
 				setNeedToScrollBy(diff)
 			})
 			preResizeScroll.current = ref.current?.scrollTop ?? 0
 		},
-		[outlinerHeight, ref],
+		[ref],
 	)
 
 	useEventBusSubscribe({
 		event: 'outliner/tracksDrawerResized',
 		callback: ({ height }) => {
-			setTracksHeight(height)
-			onResize(Math.max(entityHeight, height))
+			tracksHeightRef.current = height
+			onResize(Math.max(entityHeightRef.current, height))
 		},
 	})
 
 	useEventBusSubscribe({
 		event: 'outliner/entityDrawerResized',
 		callback: ({ height }) => {
-			setEntityHeight(height)
-			onResize(Math.max(tracksHeight, height))
+			entityHeightRef.current = height
+			onResize(Math.max(tracksHeightRef.current, height))
 		},
 	})
 

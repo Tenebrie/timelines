@@ -9,7 +9,7 @@ import { ResizeGrabberPreferencesSchema } from '@/app/components/ResizeGrabber/R
 import usePersistentState from '@/app/hooks/usePersistentState'
 
 import { useReportOutlinerHeight } from '../Outliner/useReportOutlinerHeight'
-import { EventTracksMenu } from '../Timeline/components/TimelineControls/EventTracksMenu/EventTracksMenu'
+import { EventTracksMenu } from './EventTracksMenu'
 import { TracksDrawerPulldown } from './TracksDrawerPulldown'
 
 export function TracksDrawer() {

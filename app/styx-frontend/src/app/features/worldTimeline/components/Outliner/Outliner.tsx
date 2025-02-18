@@ -6,10 +6,10 @@ import { TracksDrawer } from '../OutlinerTracksDrawer/TracksDrawer'
 export const Outliner = () => {
 	return (
 		<Stack
-			sx={{ position: 'absolute', width: 'calc(100% - 16px)', zIndex: 2, top: 0, pointerEvents: 'none' }}
+			sx={{ position: 'absolute', width: 'calc(100% - 32px)', zIndex: 2, top: 0, pointerEvents: 'none' }}
 			justifyContent="flex-start"
 			flexDirection="row"
-			padding={'0 8px'}
+			padding={'0 16px'}
 			gap={2}
 		>
 			<Stack sx={{ width: '100%', maxWidth: '500px' }}>
