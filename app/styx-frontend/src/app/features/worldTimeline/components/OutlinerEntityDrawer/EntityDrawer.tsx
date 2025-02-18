@@ -9,9 +9,9 @@ import { ResizeGrabberPreferencesSchema } from '@/app/components/ResizeGrabber/R
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import usePersistentState from '@/app/hooks/usePersistentState'
 
-import { CollapsedEventDetails } from '../EventDetails/CollapsedEventDetails'
+import { useReportOutlinerHeight } from '../Outliner/useReportOutlinerHeight'
 import { EntityDrawerOutlet } from './EntityDrawerOutlet'
-import { useReportOutlinerHeight } from './useReportOutlinerHeight'
+import { EntityDrawerPulldown } from './EntityDrawerPulldown'
 
 export function EntityDrawer() {
 	const [preferences, setPreferences] = usePersistentState(
@@ -55,7 +55,7 @@ export function EntityDrawer() {
 		},
 	})
 
-	useReportOutlinerHeight({ height, drawerVisible })
+	useReportOutlinerHeight({ height, drawerVisible, event: 'outliner/entityDrawerResized' })
 
 	return (
 		<>
@@ -93,7 +93,7 @@ export function EntityDrawer() {
 						pointerEvents: 'none',
 					}}
 				>
-					<CollapsedEventDetails
+					<EntityDrawerPulldown
 						visible={!drawerVisible}
 						onClick={() => {
 							setVisible(true)

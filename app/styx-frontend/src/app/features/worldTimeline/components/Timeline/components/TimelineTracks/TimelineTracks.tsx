@@ -1,15 +1,15 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { memo, startTransition, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState, getTimelineState, getWorldState } from '@/app/features/world/selectors'
 
 import { ScaleLevel } from '../../types'
 import { TimelineContextMenu } from '../TimelineContextMenu/TimelineContextMenu'
 import { TimelineTrackItem } from './TimelineTrackItem'
+import { useOutlinerHeightListener } from './useOutlinerHeightListener'
 
 type Props = {
 	visible: boolean
@@ -20,7 +20,7 @@ type Props = {
 export const TimelineTracks = memo(TimelineTracksComponent)
 
 export function TimelineTracksComponent(props: Props) {
-	const anotherRef = useRef<HTMLDivElement | null>(null)
+	const ref = useRef<HTMLDivElement | null>(null)
 
 	const { tracks, loadingTracks } = useSelector(
 		getTimelineState,
@@ -34,36 +34,11 @@ export function TimelineTracksComponent(props: Props) {
 		calendar,
 	})
 
-	const [outlinerHeight, setOutlinerHeight] = useState(300)
-	const [needToScrollBy, setNeedToScrollBy] = useState(0)
-	const preResizeScroll = useRef(0)
-	useEventBusSubscribe({
-		event: 'outlinerResized',
-		callback: ({ height }) => {
-			const diff = height - outlinerHeight
-			startTransition(() => {
-				setOutlinerHeight(height)
-				setNeedToScrollBy(diff)
-			})
-			preResizeScroll.current = anotherRef.current?.scrollTop ?? 0
-		},
-	})
-
-	useLayoutEffect(() => {
-		const timeline = anotherRef.current
-		if (!timeline || needToScrollBy === 0) {
-			return
-		}
-
-		const scrollLost = preResizeScroll.current - timeline.scrollTop
-
-		timeline.scrollBy({ top: Math.round(needToScrollBy + scrollLost) })
-		setNeedToScrollBy(0)
-	}, [needToScrollBy, outlinerHeight, anotherRef])
+	const { outlinerHeight } = useOutlinerHeightListener({ ref })
 
 	return (
 		<Stack
-			ref={anotherRef}
+			ref={ref}
 			sx={{
 				display: 'block',
 				position: 'absolute',

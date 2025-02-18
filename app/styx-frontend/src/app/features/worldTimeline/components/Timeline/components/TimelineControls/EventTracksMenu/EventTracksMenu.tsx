@@ -1,16 +1,14 @@
-import Leaderboard from '@mui/icons-material/Leaderboard'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
-import Paper from '@mui/material/Paper'
-import Popover from '@mui/material/Popover'
+import Stack from '@mui/material/Stack'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
-import { useCallback, useMemo } from 'react'
+import { usePopupState } from 'material-ui-popup-state/hooks'
+import { memo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useUpdateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
@@ -26,10 +24,11 @@ type Props = {
 	size?: 'small'
 }
 
-export const EventTracksMenu = ({ size }: Props) => {
+export const EventTracksMenu = memo(EventTracksMenuComponent)
+
+function EventTracksMenuComponent({ size }: Props) {
 	const worldId = useSelector(getWorldIdState)
 	const { allTracks } = useSelector(getTimelineState, (a, b) => a.allTracks === b.allTracks)
-	const displayedTracks = useMemo(() => allTracks.filter((t) => t.id !== 'default'), [allTracks])
 	const { timeToLabel } = useWorldTime()
 	const { open: openEventTrackEdit } = useModal('eventTrackEdit')
 
@@ -63,87 +62,70 @@ export const EventTracksMenu = ({ size }: Props) => {
 	)
 
 	return (
-		<>
-			<Button
-				color="primary"
-				startIcon={size === 'small' ? null : <Leaderboard style={{ transform: 'rotate(90deg)' }} />}
-				sx={{ height: size === 'small' ? 64 : undefined }}
-				{...bindTrigger(popupState)}
-			>
-				{size === 'small' ? <Leaderboard style={{ transform: 'rotate(90deg)' }} /> : 'Event tracks'}
-			</Button>
-			{displayedTracks && (
-				<Popover
-					{...bindPopover(popupState)}
-					anchorOrigin={{
-						vertical: 'top',
-						horizontal: 'left',
-					}}
-					transformOrigin={{
-						vertical: 'bottom',
-						horizontal: 'right',
-					}}
-				>
-					<TableContainer component={Paper} sx={{ width: 1000, maxHeight: 500 }}>
-						<Table>
-							<TableHead>
-								<TableRow>
-									<TableCell>Displayed</TableCell>
-									<TableCell>Index</TableCell>
-									<TableCell>Name</TableCell>
-									<TableCell>First event</TableCell>
-									<TableCell>Last event</TableCell>
-								</TableRow>
-							</TableHead>
-							<TableBody>
-								{displayedTracks.map((track) => (
-									<TableRow key={track.id}>
-										<TableCell>
-											<Checkbox checked={track.visible} onChange={() => onToggleVisibility(track)} />
-										</TableCell>
-										<TableCell>{track.position}</TableCell>
-										<TableCell>
-											<Button onClick={() => onClick(track)}>{track.name}</Button>
-										</TableCell>
-										<TableCell>
-											{track.events.length > 0 && (
-												<Button
-													color="secondary"
-													variant="outlined"
-													onClick={() => {
-														scrollTimelineTo({
-															timestamp: track.events[track.events.length - 1].markerPosition,
-														})
-													}}
-												>
-													{timeToLabel(track.events[track.events.length - 1].markerPosition)}
-												</Button>
-											)}
-											{track.events.length === 0 && '-'}
-										</TableCell>
-										<TableCell>
-											{track.events.length > 0 && (
-												<Button
-													color="secondary"
-													variant="outlined"
-													onClick={() => {
-														scrollTimelineTo({
-															timestamp: track.events[0].markerPosition,
-														})
-													}}
-												>
-													{timeToLabel(track.events[0].markerPosition)}
-												</Button>
-											)}
-											{track.events.length === 0 && '-'}
-										</TableCell>
-									</TableRow>
-								))}
-							</TableBody>
-						</Table>
-					</TableContainer>
-				</Popover>
-			)}
-		</>
+		<TableContainer sx={{ padding: '0 16px 24px 16px', marginBottom: 3 }}>
+			<Table>
+				<TableHead>
+					<TableRow>
+						<TableCell></TableCell>
+						<TableCell>Name</TableCell>
+						<TableCell>Navigation</TableCell>
+					</TableRow>
+				</TableHead>
+				<TableBody>
+					{allTracks.map((track) => (
+						<TableRow key={track.id}>
+							<TableCell width={'1px'} sx={{ margin: 0, padding: 1, paddingRight: 0 }}>
+								<Checkbox
+									checked={track.visible}
+									sx={{ padding: 0 }}
+									onChange={() => onToggleVisibility(track)}
+								/>
+							</TableCell>
+							<TableCell>
+								<Button
+									variant="outlined"
+									onClick={() => onClick(track)}
+									sx={{ display: 'flex', justifyContent: 'flex-start', width: '220px' }}
+								>
+									<span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+										{track.name}
+									</span>
+								</Button>
+							</TableCell>
+							<TableCell>
+								<Stack direction="row" gap={1}>
+									{track.events.length > 0 && (
+										<Button
+											color="secondary"
+											variant="outlined"
+											onClick={() => {
+												scrollTimelineTo({
+													timestamp: track.events[track.events.length - 1].markerPosition,
+												})
+											}}
+										>
+											&lt;--
+										</Button>
+									)}
+									{track.events.length > 0 && (
+										<Button
+											color="secondary"
+											variant="outlined"
+											onClick={() => {
+												scrollTimelineTo({
+													timestamp: track.events[0].markerPosition,
+												})
+											}}
+										>
+											--&gt;
+										</Button>
+									)}
+								</Stack>
+							</TableCell>
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+		</TableContainer>
 	)
 }

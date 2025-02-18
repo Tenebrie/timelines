@@ -8,7 +8,7 @@ type Props = {
 	visible: boolean
 }
 
-export const CollapsedEventDetails = ({ onClick, visible }: Props) => {
+export const EntityDrawerPulldown = ({ onClick, visible }: Props) => {
 	const { event } = useCurrentOrNewEvent()
 
 	return (

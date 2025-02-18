@@ -6,7 +6,6 @@ import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { EventTracksMenu } from '@/app/features/worldTimeline/components/Timeline/components/TimelineControls/EventTracksMenu/EventTracksMenu'
 
 export const WorldTimelineControls = () => {
 	const requestZoom = useEventBusDispatch({ event: 'timeline/requestZoom' })
@@ -23,8 +22,6 @@ export const WorldTimelineControls = () => {
 				}}
 				elevation={5}
 			>
-				<EventTracksMenu size="small" />
-
 				<Button
 					color="primary"
 					onClick={() => requestZoom({ direction: 'in' })}

@@ -12,7 +12,6 @@ import { OutlinedContainer } from '../../components/OutlinedContainer'
 import { TrunkatedSpan } from '../../components/TrunkatedTypography'
 import { worldSlice } from '../world/reducer'
 import { WorldBrief } from '../worldTimeline/types'
-import { WorldListEmptyState } from './components/WorldListEmptyState'
 import { worldListSlice } from './reducer'
 
 type Props = {
@@ -22,11 +21,10 @@ type Props = {
 		| GetWorldsApiResponse['visibleWorlds']
 	label: string
 	showActions?: boolean
-	showEmptyState?: boolean
 	showCreateButton?: boolean
 }
 
-export const WorldListSection = ({ worlds, label, showActions, showEmptyState, showCreateButton }: Props) => {
+export const WorldListSection = ({ worlds, label, showActions, showCreateButton }: Props) => {
 	const navigate = useNavigate()
 
 	const { unloadWorld } = worldSlice.actions
@@ -62,14 +60,8 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 		dispatch(openDeleteWorldModal(world))
 	}
 
-	if (worlds.length === 0 && showEmptyState) {
-		return <WorldListEmptyState label={label} onCreate={onCreate} />
-	} else if (worlds.length === 0) {
-		return <></>
-	}
-
 	return (
-		<OutlinedContainer style={{ maxWidth: 600, minWidth: 400 }} label={label}>
+		<OutlinedContainer style={{ maxWidth: 600, minWidth: 400, borderRadius: 8 }} label={label}>
 			{worlds.map((world) => (
 				<Stack direction="row" justifyContent="space-between" key={world.id}>
 					<Tooltip title={world.name} enterDelay={1000} arrow>

@@ -2,14 +2,16 @@ import debounce from 'lodash.debounce'
 import { useEffect, useRef } from 'react'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
+import { AllowedEvents } from '@/app/features/eventBus/types'
 
 type Props = {
+	event: AllowedEvents
 	height: number
 	drawerVisible: boolean
 }
 
-export function useReportOutlinerHeight({ height, drawerVisible }: Props) {
-	const notifyAboutHeightChange = useEventBusDispatch({ event: 'outlinerResized' })
+export function useReportOutlinerHeight({ event, height, drawerVisible }: Props) {
+	const notifyAboutHeightChange = useEventBusDispatch({ event })
 
 	const onResize = useRef(
 		debounce((h: number, v: boolean) => {

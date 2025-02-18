@@ -47,10 +47,19 @@ export function EventDetailsComponent() {
 		>
 			<EventTitle event={event} draft={draft} />
 			<Divider />
-			<Collapse in={eventColorPickerOpen} sx={{ overflow: 'hidden' }} timeout={300} easing={'ease-in-out'}>
-				<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
-			</Collapse>
-			<Box flexGrow={1}>
+			<Box sx={{ paddingBottom: eventColorPickerOpen ? 1 : 0, transition: 'padding 300ms' }}>
+				<Collapse
+					in={eventColorPickerOpen}
+					sx={{ overflow: 'hidden' }}
+					timeout={300}
+					easing={'ease-in-out'}
+					mountOnEnter
+					unmountOnExit
+				>
+					<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
+				</Collapse>
+			</Box>
+			<Box flexGrow={1} sx={{ marginTop: -1 }}>
 				<EventDescription draft={draft} />
 			</Box>
 		</Stack>

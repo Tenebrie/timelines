@@ -22,6 +22,7 @@ import { WorldTimelineControls } from './components/WorldTimelineControls'
 export const WorldDrawer = () => {
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 	const { panelOpen } = useSelector(getOverviewPreferences)
+
 	const navigate = useNavigate({ from: '/world/$worldId' })
 
 	const matchesTimeline = useCheckRouteMatch('/world/$worldId/timeline')

@@ -1,6 +1,7 @@
 import Stack from '@mui/material/Stack'
 
-import { EntityDrawer } from '../EntityDrawer/EntityDrawer'
+import { EntityDrawer } from '../OutlinerEntityDrawer/EntityDrawer'
+import { TracksDrawer } from '../OutlinerTracksDrawer/TracksDrawer'
 
 export const Outliner = () => {
 	return (
@@ -11,6 +12,9 @@ export const Outliner = () => {
 			padding={'0 8px'}
 			gap={2}
 		>
+			<Stack sx={{ width: '100%', maxWidth: '500px' }}>
+				<TracksDrawer />
+			</Stack>
 			<Stack sx={{ width: '100%', maxWidth: '600px' }}>
 				<EntityDrawer />
 			</Stack>

@@ -1,9 +1,9 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import styled from 'styled-components'
+import styled, { CSSProperties } from 'styled-components'
 
 import { useEventIcons } from '@/app/features/worldTimeline/hooks/useEventIcons'
-import { CustomTheme, useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
 type Props = {
 	icon: string
@@ -11,11 +11,7 @@ type Props = {
 	onClick: () => void
 }
 
-export const Marker = styled(Button)<{
-	$iconPath: string
-	$mainColor: string
-	$theme: CustomTheme
-}>`
+export const Marker = styled(Button)`
 	position: relative;
 	width: calc(100%);
 	height: calc(100%);
@@ -36,8 +32,8 @@ export const Marker = styled(Button)<{
 		transition:
 			color 0.3s,
 			background-color 0.3s;
-		background: ${(props) => props.$mainColor};
-		mask-image: url(${(props) => props.$iconPath});
+		background: var(--background);
+		mask-image: var(--icon-path);
 	}
 `
 
@@ -47,6 +43,11 @@ export function ColorIconPicker({ icon, color, onClick }: Props) {
 
 	const baseColor = color ?? '#000000'
 
+	const cssVariables = {
+		'--icon-path': `url(${getIconPath(icon)})`,
+		'--background': baseColor,
+	} as CSSProperties
+
 	return (
 		<Box
 			sx={{
@@ -55,7 +56,7 @@ export function ColorIconPicker({ icon, color, onClick }: Props) {
 				borderRadius: '6px',
 			}}
 		>
-			<Marker $mainColor={baseColor} $theme={theme} $iconPath={getIconPath(icon)} onClick={onClick}>
+			<Marker style={cssVariables} onClick={onClick}>
 				<div className="icon"></div>
 			</Marker>
 		</Box>

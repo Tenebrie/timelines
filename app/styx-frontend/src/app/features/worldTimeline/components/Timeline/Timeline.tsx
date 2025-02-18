@@ -64,7 +64,7 @@ function TimelineComponent() {
 
 	const { scroll, scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
 		containerRef: containerRef,
-		defaultScroll: Math.floor(containerWidth / 2) - Number(timeOrigin),
+		defaultScroll: Math.floor(containerWidth / 2) - timeOrigin,
 		scaleLimits: [-1, 7],
 		selectedTime,
 		onClick: (time) => onClick(time),
@@ -126,6 +126,7 @@ function TimelineComponent() {
 					onContextMenu={onContextMenu}
 					$theme={theme}
 					style={{
+						transition: 'background-color 0.3s',
 						backgroundColor: theme.custom.palette.background.timeline,
 					}}
 				>

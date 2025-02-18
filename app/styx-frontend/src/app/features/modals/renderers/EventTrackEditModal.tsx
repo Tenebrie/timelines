@@ -83,7 +83,6 @@ export const EventTrackEditModal = () => {
 		}
 
 		close()
-		navigate({ to: '/world/$worldId', search: true })
 	}
 
 	const onCloseAttempt = () => {

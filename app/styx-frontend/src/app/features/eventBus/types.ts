@@ -11,7 +11,8 @@ export type AllowedEvents =
 	| 'scrollTimelineRight'
 	| 'timeline/requestZoom'
 	| 'timeline/openEventDrawer'
-	| 'outlinerResized'
+	| 'outliner/tracksDrawerResized'
+	| 'outliner/entityDrawerResized'
 	| 'sendCalliopeMessage'
 	| 'calliopeReconnected'
 	| 'timelineScrolled'
@@ -42,7 +43,8 @@ export type EventParams = {
 	['scrollTimelineRight']: void
 	['timeline/requestZoom']: { direction: 'in' | 'out' }
 	['timeline/openEventDrawer']: { extraHeight?: number }
-	['outlinerResized']: { height: number }
+	['outliner/tracksDrawerResized']: { height: number }
+	['outliner/entityDrawerResized']: { height: number }
 	['sendCalliopeMessage']: ClientToCalliopeMessage
 	['calliopeReconnected']: void
 	['timelineScrolled']: void
