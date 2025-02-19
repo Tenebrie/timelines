@@ -18,7 +18,6 @@ import { TimelineEvent } from './TimelineEvent/TimelineEvent'
 type Props = {
 	entity: TimelineEntity<MarkerType>
 	visible: boolean
-	edited: boolean
 	selected: boolean
 	trackHeight: number
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
@@ -29,7 +28,6 @@ export const TimelineEventPositioner = memo(TimelineEventPositionerComponent)
 function TimelineEventPositionerComponent({
 	entity,
 	visible,
-	edited,
 	selected,
 	trackHeight,
 	realTimeToScaledTime,
@@ -120,7 +118,7 @@ function TimelineEventPositionerComponent({
 			$height={height}
 			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''} timeline-marker-scroll`}
 		>
-			<TimelineEvent entity={entity} trackHeight={trackHeight} edited={edited} selected={selected} />
+			<TimelineEvent entity={entity} trackHeight={trackHeight} selected={selected} />
 			{ghostElement}
 		</Group>
 	)

@@ -6,6 +6,7 @@ import cx from 'classnames'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { Actor, WorldEvent } from '@/app/features/worldTimeline/types'
 
@@ -19,11 +20,14 @@ type Props = {
 	owningActor: Actor | null
 	short: boolean
 	active: boolean
-	actions: ('edit' | 'collapse')[]
+	actions: readonly ('edit' | 'collapse')[]
 }
 
 export const EventRenderer = ({ event, collapsed, owningActor, short, active, actions }: Props) => {
 	const navigate = useNavigate({ from: '/world/$worldId' })
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
+	const openEntityDrawer = useEventBusDispatch({ event: 'timeline/openEventDrawer' })
+
 	const dispatch = useDispatch()
 	const { collapseEventInOutliner, uncollapseEventInOutliner } = preferencesSlice.actions
 
@@ -44,13 +48,14 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 				return (
 					<IconButton
 						key={'edit'}
-						onClick={() =>
+						onClick={() => {
 							navigate({
-								to: '/world/$worldId/timeline/event/$eventId',
-								params: { eventId: event.id },
-								search: true,
+								to: '/world/$worldId/timeline',
+								search: (prev) => ({ ...prev, selection: [`issuedAt-${event.id}`] }),
 							})
-						}
+							scrollTimelineTo({ timestamp: event.timestamp })
+							openEntityDrawer({})
+						}}
 						aria-label="Edit"
 					>
 						<Edit />

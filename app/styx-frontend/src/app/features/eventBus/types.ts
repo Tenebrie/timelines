@@ -3,7 +3,7 @@ import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
-import { ActorDetails, WorldEvent } from '../worldTimeline/types'
+import { ActorDetails, MarkerType, TimelineEntity, WorldEvent } from '../worldTimeline/types'
 
 export type AllowedEvents =
 	| 'scrollTimelineTo'
@@ -11,6 +11,7 @@ export type AllowedEvents =
 	| 'scrollTimelineRight'
 	| 'timeline/requestZoom'
 	| 'timeline/openEventDrawer'
+	| 'timeline/markerHovered'
 	| 'outliner/tracksDrawerResized'
 	| 'outliner/entityDrawerResized'
 	| 'sendCalliopeMessage'
@@ -43,6 +44,7 @@ export type EventParams = {
 	['scrollTimelineRight']: void
 	['timeline/requestZoom']: { direction: 'in' | 'out' }
 	['timeline/openEventDrawer']: { extraHeight?: number }
+	['timeline/markerHovered']: { marker: TimelineEntity<MarkerType>; hover: boolean }
 	['outliner/tracksDrawerResized']: { height: number }
 	['outliner/entityDrawerResized']: { height: number }
 	['sendCalliopeMessage']: ClientToCalliopeMessage

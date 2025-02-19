@@ -3,9 +3,10 @@ import { otherApi } from '@api/otherApi'
 import { GetWorldInfoApiResponse, worldDetailsApi } from '@api/worldDetailsApi'
 import { worldEventTracksApi } from '@api/worldEventTracksApi'
 import { worldListApi } from '@api/worldListApi'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useAutoRef } from '@/app/hooks/useAutoRef'
 import {
 	CalliopeToClientMessageHandler,
 	CalliopeToClientMessageType,
@@ -19,9 +20,6 @@ import { useArticleApiCache } from '../worldWiki/api/useArticleApiCache'
 import { WikiArticle } from '../worldWiki/types'
 
 export const useLiveMessageHandlers = () => {
-	const updatedAtRef = useRef<string>('0')
-	const currentHandlersRef = useRef<CalliopeToClientMessageHandler | null>(null)
-
 	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState, (a, b) => a.updatedAt === b.updatedAt)
 	const { updateEvent, updateEventDelta, updateActor } = worldSlice.actions
 	const dispatch = useDispatch()
@@ -32,9 +30,7 @@ export const useLiveMessageHandlers = () => {
 	const forceUpdateEvent = useEventBusDispatch({ event: 'richEditor/forceUpdateEvent' })
 	const forceUpdateArticle = useEventBusDispatch({ event: 'richEditor/forceUpdateArticle' })
 
-	useEffect(() => {
-		updatedAtRef.current = currentUpdatedAt
-	}, [currentUpdatedAt])
+	const updatedAtRef = useAutoRef(currentUpdatedAt)
 
 	const messageHandlers: CalliopeToClientMessageHandler = {
 		[CalliopeToClientMessageType.ANNOUNCEMENT]: () => {
@@ -83,7 +79,7 @@ export const useLiveMessageHandlers = () => {
 		},
 	}
 
+	const currentHandlersRef = useRef(messageHandlers)
 	currentHandlersRef.current = messageHandlers
-
 	return currentHandlersRef
 }

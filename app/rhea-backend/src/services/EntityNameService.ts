@@ -32,6 +32,6 @@ export const EntityNameService = {
 				return regexResult[0].trim().slice(0, 64).trim()
 			}
 		}
-		return 'Unnamed event'
+		return description
 	},
 }

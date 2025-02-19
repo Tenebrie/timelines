@@ -38,6 +38,7 @@ export function useResizeGrabber({ minHeight, initialOpen, initialHeight, keepMo
 	const [overflowHeight, _setOverflowHeight] = useState(0)
 	const [_displayedHeight, _setDisplayedHeight] = useState(initialHeight ?? minHeight ?? 300)
 	const [_internalHeight, _setInternalHeight] = useState(_displayedHeight)
+	const [preferredOpen, setPreferredOpen] = useState(initialOpen ?? true)
 
 	const [contentVisible, setContentVisible] = useState((initialOpen ?? true) || (keepMounted ?? false))
 	const animationRef = useRef<number | null>(null)
@@ -62,8 +63,8 @@ export function useResizeGrabber({ minHeight, initialOpen, initialHeight, keepMo
 		}
 	}, [drawerVisible, keepMounted])
 
-	const setVisible = useCallback(
-		(value: boolean) => {
+	const _setVisibleInternal = useCallback(
+		(value: boolean, updatePreferred: boolean) => {
 			setDrawerVisible(value)
 			if (value) {
 				if (!isDraggingNow.current) {
@@ -75,8 +76,18 @@ export function useResizeGrabber({ minHeight, initialOpen, initialHeight, keepMo
 			} else {
 				_setOverflowHeight(0)
 			}
+			if (updatePreferred) {
+				setPreferredOpen(value)
+			}
 		},
 		[_internalHeight, minHeight],
+	)
+
+	const setVisible = useCallback(
+		(value: boolean) => {
+			_setVisibleInternal(value, false)
+		},
+		[_setVisibleInternal],
 	)
 
 	const setHeight = useCallback(
@@ -92,7 +103,9 @@ export function useResizeGrabber({ minHeight, initialOpen, initialHeight, keepMo
 		isDraggingNow,
 		_minHeight: minHeight ?? 0,
 		drawerVisible,
+		preferredOpen,
 		setVisible,
+		_setVisibleInternal,
 		setHeight,
 		contentVisible: contentVisible ?? keepMounted,
 		isDraggingChild,
@@ -119,7 +132,7 @@ function ResizeGrabberComponent({
 	_minHeight,
 	active,
 	drawerVisible,
-	setVisible,
+	_setVisibleInternal,
 	setIsDraggingChild,
 	_internalHeight,
 	_setInternalHeight,
@@ -151,7 +164,7 @@ function ResizeGrabberComponent({
 	const { triggerClick } = useDoubleClick({
 		onClick: () => {},
 		onDoubleClick: () => {
-			setVisible(!drawerVisibleRef.current)
+			_setVisibleInternal(!drawerVisibleRef.current, true)
 		},
 	})
 
@@ -193,7 +206,7 @@ function ResizeGrabberComponent({
 			}
 			isDraggingNow.current = false
 			if (_currentContainerHeight.current < _minHeight) {
-				setVisible(false)
+				_setVisibleInternal(false, true)
 			}
 		}
 
@@ -212,7 +225,7 @@ function ResizeGrabberComponent({
 		_currentContainerHeight,
 		isDraggingNow,
 		setIsDraggingChild,
-		setVisible,
+		_setVisibleInternal,
 		triggerClick,
 		isVertical,
 	])
@@ -245,14 +258,14 @@ function ResizeGrabberComponent({
 		mouseLastSeenPosition.current = mousePosition
 
 		if (!drawerVisible) {
-			setVisible(true)
+			_setVisibleInternal(true, true)
 		}
 	}, [
 		mousePosition,
 		_setDisplayedHeight,
 		_minHeight,
 		_currentContainerHeight,
-		setVisible,
+		_setVisibleInternal,
 		drawerVisibleRef,
 		_setOverflowHeight,
 		isDraggingNow,

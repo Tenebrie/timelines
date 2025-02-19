@@ -12,9 +12,8 @@ import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 import { isRunningInTest } from '@/test-utils/isRunningInTest'
 
 import { TimelineState } from '../../utils/TimelineState'
-import { TimelineChainPositioner } from './components/TimelineChainPositioner'
-import { TimelineEventPositioner } from './components/TimelineEventPositioner'
 import { TimelineEventTrackTitle } from './components/TimelineEventTrackTitle'
+import { TimelineMarker } from './components/TimelineMarker'
 import { TimelineTrack } from './hooks/useEventTracks'
 import { TrackContainer } from './styles'
 import { TimelineTrackItemDragDrop } from './TimelineTrackItemDragDrop'
@@ -79,11 +78,13 @@ export function TimelineTrackItemComponent({
 
 				lastRecordedScroll.current = TimelineState.scroll
 				setVisibleMarkers(
-					t.events.filter((event) => {
-						const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + TimelineState.scroll
+					t.events
+						.filter((event) => {
+							const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + TimelineState.scroll
 
-						return position >= -1000 && position <= width + 1000
-					}),
+							return position >= -1000 && position <= width + 1000
+						})
+						.sort((a, b) => a.markerPosition - b.markerPosition),
 				)
 			},
 			isRunningInTest() ? 0 : 100,
@@ -104,18 +105,6 @@ export function TimelineTrackItemComponent({
 		callback: updateVisibleMarkers,
 	})
 
-	// useEffect(() => {
-	// 	updateVisibleMarkers()
-	// }, [updateVisibleMarkers])
-
-	const chainLinks = useMemo(() => {
-		return track.events.filter(
-			(event) => event.markerType === 'issuedAt' || event.markerType === 'deltaState',
-		)
-	}, [track.events])
-
-	const dividerProps = useMemo(() => ({ position: 'absolute', bottom: 0, width: '100%' }), [])
-
 	return (
 		<Profiler id="TimelineTrackItem" onRender={reportComponentProfile}>
 			<TrackContainer
@@ -125,23 +114,12 @@ export function TimelineTrackItemComponent({
 				className={`${isDragging ? 'dragging' : ''} allow-timeline-click`}
 				data-trackid={track.id}
 			>
-				<Divider sx={dividerProps} />
-				{chainLinks.map((event) => (
-					<TimelineChainPositioner
-						key={event.key}
-						entity={event}
-						visible={visible}
-						edited={false}
-						selected={false}
-						realTimeToScaledTime={realTimeToScaledTime}
-					/>
-				))}
+				<Divider sx={{ position: 'absolute', bottom: 0, width: '100%', pointerEvents: 'none' }} />
 				{visibleMarkers.map((event) => (
-					<TimelineEventPositioner
+					<TimelineMarker
 						key={event.key}
-						entity={event}
+						marker={event}
 						visible={visible}
-						edited={false}
 						selected={selectedMarkers.some((marker) => marker.key === event.key)}
 						trackHeight={track.height}
 						realTimeToScaledTime={realTimeToScaledTime}

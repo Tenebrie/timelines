@@ -29,7 +29,6 @@ export const Chain = styled.div.attrs<{ $position: number }>((props) => ({
 	position: absolute;
 	opacity: 0;
 	transition: opacity 0.3s;
-	z-index: 1;
 	pointer-events: none;
 
 	&.visible {

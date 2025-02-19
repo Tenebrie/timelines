@@ -11,18 +11,10 @@ import { TimelineChain } from './TimelineChain'
 type Props = {
 	entity: TimelineEntity<MarkerType>
 	visible: boolean
-	edited: boolean
-	selected: boolean
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
-export const TimelineChainPositionerComponent = ({
-	entity,
-	visible,
-	edited,
-	selected,
-	realTimeToScaledTime,
-}: Props) => {
+export const TimelineChainPositionerComponent = ({ entity, visible, realTimeToScaledTime }: Props) => {
 	const ref = useRef<HTMLDivElement | null>(null)
 	const position = realTimeToScaledTime(Math.floor(entity.markerPosition)) + TimelineState.scroll
 
@@ -39,12 +31,7 @@ export const TimelineChainPositionerComponent = ({
 
 	return (
 		<Chain ref={ref} $position={position} className={`${visible ? 'visible' : ''} timeline-marker-scroll`}>
-			<TimelineChain
-				entity={entity}
-				edited={edited}
-				selected={selected}
-				realTimeToScaledTime={realTimeToScaledTime}
-			/>
+			<TimelineChain entity={entity} realTimeToScaledTime={realTimeToScaledTime} />
 		</Chain>
 	)
 }

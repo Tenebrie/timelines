@@ -6,28 +6,27 @@ import { EventDetails } from '../EventDetails/EventDetails'
 
 type Props = {
 	isOpen: boolean
+	preferredOpen: boolean
 	onClear: () => void
 }
 
-export function EntityDrawerOutlet({ isOpen, onClear }: Props) {
+export function EntityDrawerOutlet({ isOpen, preferredOpen, onClear }: Props) {
 	const selectedMarkerIds = useSearch({
 		from: '/world/$worldId/_world/timeline',
 		select: (search) => search.selection,
 	})
 
-	const isOpenRef = useRef(false)
-	const isControlledExternally = useRef(false)
+	const lastSeenIdsRef = useRef(selectedMarkerIds.length)
 
 	useEffect(() => {
-		if (selectedMarkerIds.length === 0 && isOpenRef.current && !isControlledExternally.current) {
+		if (selectedMarkerIds.length === lastSeenIdsRef.current) {
+			return
+		}
+		if (selectedMarkerIds.length === 0 && isOpen && !preferredOpen) {
 			onClear()
 		}
-		isOpenRef.current = selectedMarkerIds.length > 0
-	}, [onClear, selectedMarkerIds])
-
-	useEffect(() => {
-		isControlledExternally.current = isOpen !== isOpenRef.current
-	}, [isOpen])
+		lastSeenIdsRef.current = selectedMarkerIds.length
+	}, [isOpen, onClear, preferredOpen, selectedMarkerIds])
 
 	return (
 		<>

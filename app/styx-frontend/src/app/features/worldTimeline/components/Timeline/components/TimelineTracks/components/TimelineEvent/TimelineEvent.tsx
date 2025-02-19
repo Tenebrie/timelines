@@ -1,11 +1,8 @@
 import Close from '@mui/icons-material/Close'
 import { colors } from '@mui/material'
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
 import { useNavigate } from '@tanstack/react-router'
 import classNames from 'classnames'
-import { CSSProperties, memo, MouseEvent, Profiler, useState } from 'react'
+import { CSSProperties, memo, MouseEvent, Profiler } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
@@ -24,16 +21,13 @@ import { Marker } from './styles'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
-	edited: boolean
 	selected: boolean
 	trackHeight: number
 }
 
 export const TimelineEvent = memo(TimelineEventComponent)
 
-export function TimelineEventComponent({ entity, edited, selected }: Props) {
-	const [isInfoVisible, setIsInfoVisible] = useState(false)
-
+export function TimelineEventComponent({ entity, selected }: Props) {
 	const dispatch = useDispatch()
 	const { openTimelineContextMenu } = worldSlice.actions
 
@@ -97,12 +91,10 @@ export function TimelineEventComponent({ entity, edited, selected }: Props) {
 	}
 
 	const onMouseEnter = () => {
-		setIsInfoVisible(true)
 		HoveredTimelineEvents.hoverEvent(entity)
 	}
 
 	const onMouseLeave = () => {
-		setIsInfoVisible(false)
 		HoveredTimelineEvents.unhoverEvent(entity)
 	}
 
@@ -139,7 +131,6 @@ export function TimelineEventComponent({ entity, edited, selected }: Props) {
 				$theme={theme}
 				className={classNames({
 					selected,
-					edited,
 					revoked: entity.markerType === 'revokedAt',
 					replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',
 					ghostEvent: entity.markerType === 'ghostEvent',
@@ -155,41 +146,6 @@ export function TimelineEventComponent({ entity, edited, selected }: Props) {
 							<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
 						</div>
 					</>
-				)}
-				{isInfoVisible && (
-					<Box
-						sx={{
-							position: 'absolute',
-							bottom: 2,
-							left: 34,
-							width: 196,
-							height: 64,
-							background: theme.custom.palette.background.soft,
-							display: 'flex',
-							paddingLeft: '8px',
-							paddingRight: 0,
-							borderRadius: '8px 8px 8px 0px',
-							borderTop: `2px solid ${color}`,
-							borderLeft: `2px solid ${color}`,
-							pointerEvents: 'none',
-						}}
-					>
-						<Stack sx={{ height: 28, justifyContent: 'center' }}>
-							<Typography variant="caption" fontWeight={800} noWrap style={{ overflowY: 'visible' }}>
-								{entity.name}
-							</Typography>
-							{/* <Typography sx={{ color: 'white' }}>
-								{labelType}
-								{labelType ? ' ' : ''}
-								{entity.name}
-							</Typography> */}
-						</Stack>
-					</Box>
-					// <LabelContainer>
-					// 	<Label data-hj-suppress>
-
-					// 	</Label>
-					// </LabelContainer>
 				)}
 			</Marker>
 		</Profiler>

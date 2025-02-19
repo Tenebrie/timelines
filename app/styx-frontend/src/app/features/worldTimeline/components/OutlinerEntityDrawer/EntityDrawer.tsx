@@ -33,6 +33,7 @@ export function EntityDrawer() {
 	const {
 		drawerVisible,
 		contentVisible,
+		preferredOpen,
 		height,
 		setVisible,
 		setHeight,
@@ -80,7 +81,11 @@ export function EntityDrawer() {
 							pointerEvents: 'auto',
 						}}
 					>
-						<EntityDrawerOutlet isOpen={drawerVisible} onClear={() => setVisible(false)} />
+						<EntityDrawerOutlet
+							isOpen={drawerVisible}
+							preferredOpen={preferredOpen}
+							onClear={() => setVisible(false)}
+						/>
 					</Stack>
 				)}
 				<ResizeGrabberOverlay {...grabberProps} />

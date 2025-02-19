@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { RefObject, useCallback, useEffect, useRef } from 'react'
 
 import { DragDropStateType, useDragDropState } from './DragDropState'
 import { AllowedDraggableType } from './types'
 
 type Props<T extends AllowedDraggableType> = {
 	type: T
-	receiverRef?: React.MutableRefObject<HTMLDivElement | null>
+	receiverRef?: RefObject<HTMLDivElement | null>
 	onDrop: (state: DragDropStateType<T>) => void
 }
 
