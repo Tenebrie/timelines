@@ -14,5 +14,7 @@ export const TimelineContainer = styled.div<{ $theme: CustomTheme }>`
 	height: calc(100%);
 	user-select: none;
 	overflow-x: clip;
+	transition: background-color 0.3s;
+	background-color: ${(props) => props.$theme.custom.palette.background.timeline};
 	border-bottom: 1px solid ${(props) => props.$theme.material.palette.divider};
 `

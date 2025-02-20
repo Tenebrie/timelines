@@ -7,7 +7,6 @@ import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
 
 import { TimelineEventHeightPx } from '../hooks/useEventTracks'
 import { TimelineChainHover } from './TimelineChainHover'
-import { useHoveredTimelineMarker } from './TimelineEvent/HoveredTimelineEvents'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
@@ -15,8 +14,6 @@ type Props = {
 }
 
 export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) => {
-	const { hovered } = useHoveredTimelineMarker(entity)
-
 	const height = TimelineEventHeightPx * entity.markerHeight + 4
 
 	return (
@@ -31,7 +28,7 @@ export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) 
 					position: 'absolute',
 				}}
 			>
-				<TimelineChainHover entity={entity} hovered={hovered} realTimeToScaledTime={realTimeToScaledTime} />
+				<TimelineChainHover entity={entity} realTimeToScaledTime={realTimeToScaledTime} />
 			</Box>
 		</Profiler>
 	)

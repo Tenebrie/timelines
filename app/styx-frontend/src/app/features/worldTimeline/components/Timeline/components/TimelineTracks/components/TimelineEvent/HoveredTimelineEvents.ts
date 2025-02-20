@@ -34,16 +34,24 @@ export const HoveredTimelineEvents = {
 	},
 }
 
-export const useHoveredTimelineMarker = (marker: TimelineEntity<MarkerType>) => {
+export const useHoveredTimelineMarker = (target: TimelineEntity<MarkerType>) => {
 	const [hovered, setHovered] = useState(false)
+	const [lastHovered, setLastHovered] = useState(false)
 
 	useEventBusSubscribe({
 		event: 'timeline/markerHovered',
-		condition: (data) => data.marker.key === marker.key,
-		callback: ({ hover }) => {
-			setHovered(hover)
+		callback: ({ marker, hover }) => {
+			if (target.key === marker.key) {
+				setHovered(hover)
+				if (hover) {
+					setLastHovered(true)
+				}
+			}
+			if (target.key !== marker.key && lastHovered && hover) {
+				setLastHovered(false)
+			}
 		},
 	})
 
-	return { hovered }
+	return { hovered, lastHovered }
 }

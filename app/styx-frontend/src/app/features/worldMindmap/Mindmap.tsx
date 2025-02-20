@@ -5,6 +5,8 @@ import Typography from '@mui/material/Typography'
 import throttle from 'lodash.throttle'
 import { CSSProperties, useEffect, useRef } from 'react'
 
+import { MindmapContent } from './MindmapContent'
+
 export function Mindmap() {
 	// Small grid: the base grid
 	const smallGridSpacing = 32
@@ -18,10 +20,6 @@ export function Mindmap() {
 	const largeGridSpacing = mediumGridSpacing * 4 // 512px
 	const largeLineThickness = 3
 
-	// Extra-large grid: every 4 large grids
-	const xLargeGridSpacing = largeGridSpacing * 4 // 2048px
-	const xLargeLineThickness = 4
-
 	// Initialize CSS variables
 	const variables = useRef({
 		'--grid-offset-x': `0px`,
@@ -30,11 +28,9 @@ export function Mindmap() {
 		'--small-grid-spacing': `${smallGridSpacing}px`,
 		'--medium-grid-spacing': `${mediumGridSpacing}px`,
 		'--large-grid-spacing': `${largeGridSpacing}px`,
-		'--xlarge-grid-spacing': `${xLargeGridSpacing}px`,
 	} as CSSProperties)
 
 	const ref = useRef<HTMLDivElement>(null)
-	const smallGridRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		const element = ref.current
@@ -56,7 +52,6 @@ export function Mindmap() {
 			const effectiveSmallSpacing = Math.round(smallGridSpacing * mouseState.gridScale)
 			const effectiveMediumSpacing = effectiveSmallSpacing * 4
 			const effectiveLargeSpacing = effectiveMediumSpacing * 4
-			const effectiveXLargeSpacing = effectiveLargeSpacing * 4
 
 			variables.current = {
 				'--grid-offset-x': `${mouseState.gridOffsetX}px`,
@@ -65,7 +60,6 @@ export function Mindmap() {
 				'--small-grid-spacing': `${effectiveSmallSpacing}px`,
 				'--medium-grid-spacing': `${effectiveMediumSpacing}px`,
 				'--large-grid-spacing': `${effectiveLargeSpacing}px`,
-				'--xlarge-grid-spacing': `${effectiveXLargeSpacing}px`,
 			} as CSSProperties
 
 			// Update the element's CSS variables.
@@ -75,7 +69,6 @@ export function Mindmap() {
 			element.style.setProperty('--small-grid-spacing', `${effectiveSmallSpacing}px`)
 			element.style.setProperty('--medium-grid-spacing', `${effectiveMediumSpacing}px`)
 			element.style.setProperty('--large-grid-spacing', `${effectiveLargeSpacing}px`)
-			element.style.setProperty('--xlarge-grid-spacing', `${effectiveXLargeSpacing}px`)
 		}, 4)
 
 		const handleMouseDown = (event: MouseEvent) => {
@@ -124,7 +117,7 @@ export function Mindmap() {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [largeGridSpacing, mediumGridSpacing, xLargeGridSpacing])
+	}, [largeGridSpacing, mediumGridSpacing, ref])
 
 	return (
 		<Stack sx={{ width: '100%', height: '100%' }}>
@@ -133,37 +126,50 @@ export function Mindmap() {
 				style={variables.current}
 				sx={{
 					position: 'absolute',
-					opacity: 1,
 					width: '100%',
 					height: '100%',
-					backgroundPosition: 'var(--grid-offset-x) var(--grid-offset-y)',
-					backgroundImage: `
-						/* Extra-large grid lines */
-						linear-gradient(to right, rgba(0, 0, 0, 1) ${xLargeLineThickness}px, transparent ${xLargeLineThickness}px),
-						linear-gradient(to bottom, rgba(0, 0, 0, 1) ${xLargeLineThickness}px, transparent ${xLargeLineThickness}px),
-						/* Large grid lines */
-						linear-gradient(to right, rgba(0, 0, 0, 1) ${largeLineThickness}px, transparent ${largeLineThickness}px),
-						linear-gradient(to bottom, rgba(0, 0, 0, 1) ${largeLineThickness}px, transparent ${largeLineThickness}px),
-						/* Medium grid lines */
-						linear-gradient(to right, rgba(0, 0, 0, 1) ${mediumLineThickness}px, transparent ${mediumLineThickness}px),
-						linear-gradient(to bottom, rgba(0, 0, 0, 1) ${mediumLineThickness}px, transparent ${mediumLineThickness}px),
-						/* Small grid lines */
-						linear-gradient(to right, rgba(0, 0, 0, 1) ${smallLineThickness}px, transparent ${smallLineThickness}px),
-						linear-gradient(to bottom, rgba(0, 0, 0, 1) ${smallLineThickness}px, transparent ${smallLineThickness}px)
-					`,
-					// Use the computed CSS variables for grid spacings.
-					backgroundSize: `
-						var(--xlarge-grid-spacing) var(--xlarge-grid-spacing),
-						var(--xlarge-grid-spacing) var(--xlarge-grid-spacing),
-						var(--large-grid-spacing) var(--large-grid-spacing),
-						var(--large-grid-spacing) var(--large-grid-spacing),
-						var(--medium-grid-spacing) var(--medium-grid-spacing),
-						var(--medium-grid-spacing) var(--medium-grid-spacing),
-						var(--small-grid-spacing) var(--small-grid-spacing),
-						var(--small-grid-spacing) var(--small-grid-spacing)
-					`,
+					overflow: 'hidden',
 				}}
-			/>
+			>
+				<Box
+					sx={{
+						position: 'absolute',
+						width: '100%',
+						height: '100%',
+						backgroundPosition: 'var(--grid-offset-x) var(--grid-offset-y)',
+						backgroundImage: `
+							/* Large grid lines */
+							linear-gradient(to right, rgba(0, 0, 0, 1) ${largeLineThickness}px, transparent ${largeLineThickness}px),
+							linear-gradient(to bottom, rgba(0, 0, 0, 1) ${largeLineThickness}px, transparent ${largeLineThickness}px),
+							/* Medium grid lines */
+							linear-gradient(to right, rgba(0, 0, 0, 1) ${mediumLineThickness}px, transparent ${mediumLineThickness}px),
+							linear-gradient(to bottom, rgba(0, 0, 0, 1) ${mediumLineThickness}px, transparent ${mediumLineThickness}px),
+							/* Small grid lines */
+							linear-gradient(to right, rgba(0, 0, 0, 1) ${smallLineThickness}px, transparent ${smallLineThickness}px),
+							linear-gradient(to bottom, rgba(0, 0, 0, 1) ${smallLineThickness}px, transparent ${smallLineThickness}px)
+						`,
+						backgroundSize: `
+							var(--large-grid-spacing) var(--large-grid-spacing),
+							var(--large-grid-spacing) var(--large-grid-spacing),
+							var(--medium-grid-spacing) var(--medium-grid-spacing),
+							var(--medium-grid-spacing) var(--medium-grid-spacing),
+							var(--small-grid-spacing) var(--small-grid-spacing),
+							var(--small-grid-spacing) var(--small-grid-spacing)
+						`,
+					}}
+				/>
+				<Box
+					sx={{
+						position: 'absolute',
+						width: '100%',
+						height: '100%',
+						left: 'var(--grid-offset-x)',
+						top: 'var(--grid-offset-y)',
+					}}
+				>
+					<MindmapContent />
+				</Box>
+			</Box>
 			<Stack
 				sx={{
 					width: '100%',
@@ -175,7 +181,7 @@ export function Mindmap() {
 					zIndex: 1,
 				}}
 			>
-				<Typography variant="h3" component={'div'} sx={{ opacity: 0.25 }}>
+				<Typography variant="h3" component={'div'} sx={{ opacity: 0.05 }}>
 					<Stack direction="row" alignItems="center" justifyContent="center" gap={1}>
 						<Box sx={{ marginTop: 1.5 }}>
 							<Construction fontSize="inherit" />

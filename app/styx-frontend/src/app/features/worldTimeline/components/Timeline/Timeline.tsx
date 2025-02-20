@@ -122,15 +122,7 @@ function TimelineComponent() {
 	return (
 		<Paper sx={{ height: '100%', borderRadius: 0, zIndex: 2 }}>
 			<TimelineWrapper>
-				<TimelineContainer
-					ref={containerRef}
-					onContextMenu={onContextMenu}
-					$theme={theme}
-					style={{
-						transition: 'background-color 0.3s',
-						backgroundColor: theme.custom.palette.background.timeline,
-					}}
-				>
+				<TimelineContainer ref={containerRef} onContextMenu={onContextMenu} $theme={theme}>
 					<Box
 						width={1}
 						height={1}

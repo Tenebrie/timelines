@@ -117,7 +117,7 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 		'--border-color': color,
 		'--icon-path': `url(${getIconPath(entity.icon)})`,
 		'--marker-size': `${TimelineEventHeightPx - 6}px`,
-		'--border-radius': isDataPoint ? '50%' : '4px',
+		'--border-radius': isDataPoint ? '50%' : '6px',
 	} as CSSProperties
 
 	return (
