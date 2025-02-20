@@ -29,13 +29,13 @@ export const WorldDrawer = () => {
 		navigate({ to: '/world/$worldId/timeline', search: true })
 	}
 
-	const matchesOverview = useCheckRouteMatch('/world/$worldId/overview')
-	const onOverviewClick = () => {
-		navigate({
-			to: '/world/$worldId/overview',
-			search: true,
-		})
-	}
+	// const matchesOverview = useCheckRouteMatch('/world/$worldId/overview')
+	// const onOverviewClick = () => {
+	// 	navigate({
+	// 		to: '/world/$worldId/overview',
+	// 		search: true,
+	// 	})
+	// }
 
 	const matchesMindmap = useCheckRouteMatch('/world/$worldId/mindmap')
 	const onMindmapClick = () => {
@@ -52,15 +52,6 @@ export const WorldDrawer = () => {
 			search: true,
 		})
 	}
-
-	// const onActorsClick = () => {
-	// 	navigateTo({
-	// 		target: worldRoutes.actors,
-	// 		args: {
-	// 			worldId,
-	// 		},
-	// 	})
-	// }
 
 	const matchesSettings = useCheckRouteMatch('/world/$worldId/settings')
 	const onSettingsClick = () => {
