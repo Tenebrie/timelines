@@ -34,7 +34,7 @@ function WorldStateEventComponent({ event }: Props) {
 	)
 
 	if (!active && !search.query && !revokedVisible) {
-		return <div>Why</div>
+		return <div>Bad render</div>
 	}
 
 	return (

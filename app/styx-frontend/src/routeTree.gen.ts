@@ -25,7 +25,7 @@ import { Route as WorldWorldIdWorldImport } from './routes/world.$worldId/_world
 import { Route as WorldWorldIdWorldTimelineImport } from './routes/world.$worldId/_world.timeline'
 import { Route as WorldWorldIdWorldSettingsImport } from './routes/world.$worldId/_world.settings'
 import { Route as WorldWorldIdWorldOverviewImport } from './routes/world.$worldId/_world.overview'
-import { Route as WorldWorldIdWorldActorsImport } from './routes/world.$worldId/_world.actors'
+import { Route as WorldWorldIdWorldMindmapImport } from './routes/world.$worldId/_world.mindmap'
 import { Route as WorldWorldIdWorldWikiWikiImport } from './routes/world.$worldId/_world.wiki/_wiki'
 import { Route as WorldWorldIdWorldWikiWikiIndexImport } from './routes/world.$worldId/_world.wiki/_wiki.index'
 import { Route as WorldWorldIdWorldWikiWikiArticleIdImport } from './routes/world.$worldId/_world.wiki/_wiki.$articleId'
@@ -122,9 +122,9 @@ const WorldWorldIdWorldOverviewRoute = WorldWorldIdWorldOverviewImport.update({
   getParentRoute: () => WorldWorldIdWorldRoute,
 } as any)
 
-const WorldWorldIdWorldActorsRoute = WorldWorldIdWorldActorsImport.update({
-  id: '/actors',
-  path: '/actors',
+const WorldWorldIdWorldMindmapRoute = WorldWorldIdWorldMindmapImport.update({
+  id: '/mindmap',
+  path: '/mindmap',
   getParentRoute: () => WorldWorldIdWorldRoute,
 } as any)
 
@@ -221,11 +221,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorldWorldIdWorldImport
       parentRoute: typeof WorldWorldIdRoute
     }
-    '/world/$worldId/_world/actors': {
-      id: '/world/$worldId/_world/actors'
-      path: '/actors'
-      fullPath: '/world/$worldId/actors'
-      preLoaderRoute: typeof WorldWorldIdWorldActorsImport
+    '/world/$worldId/_world/mindmap': {
+      id: '/world/$worldId/_world/mindmap'
+      path: '/mindmap'
+      fullPath: '/world/$worldId/mindmap'
+      preLoaderRoute: typeof WorldWorldIdWorldMindmapImport
       parentRoute: typeof WorldWorldIdWorldImport
     }
     '/world/$worldId/_world/overview': {
@@ -313,7 +313,7 @@ const WorldWorldIdWorldWikiRouteWithChildren =
   )
 
 interface WorldWorldIdWorldRouteChildren {
-  WorldWorldIdWorldActorsRoute: typeof WorldWorldIdWorldActorsRoute
+  WorldWorldIdWorldMindmapRoute: typeof WorldWorldIdWorldMindmapRoute
   WorldWorldIdWorldOverviewRoute: typeof WorldWorldIdWorldOverviewRoute
   WorldWorldIdWorldSettingsRoute: typeof WorldWorldIdWorldSettingsRoute
   WorldWorldIdWorldTimelineRoute: typeof WorldWorldIdWorldTimelineRoute
@@ -321,7 +321,7 @@ interface WorldWorldIdWorldRouteChildren {
 }
 
 const WorldWorldIdWorldRouteChildren: WorldWorldIdWorldRouteChildren = {
-  WorldWorldIdWorldActorsRoute: WorldWorldIdWorldActorsRoute,
+  WorldWorldIdWorldMindmapRoute: WorldWorldIdWorldMindmapRoute,
   WorldWorldIdWorldOverviewRoute: WorldWorldIdWorldOverviewRoute,
   WorldWorldIdWorldSettingsRoute: WorldWorldIdWorldSettingsRoute,
   WorldWorldIdWorldTimelineRoute: WorldWorldIdWorldTimelineRoute,
@@ -353,7 +353,7 @@ export interface FileRoutesByFullPath {
   '/secret/music': typeof SecretMusicRoute
   '/secret/spinny': typeof SecretSpinnyRoute
   '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
-  '/world/$worldId/actors': typeof WorldWorldIdWorldActorsRoute
+  '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
   '/world/$worldId/overview': typeof WorldWorldIdWorldOverviewRoute
   '/world/$worldId/settings': typeof WorldWorldIdWorldSettingsRoute
   '/world/$worldId/timeline': typeof WorldWorldIdWorldTimelineRoute
@@ -372,7 +372,7 @@ export interface FileRoutesByTo {
   '/secret/music': typeof SecretMusicRoute
   '/secret/spinny': typeof SecretSpinnyRoute
   '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
-  '/world/$worldId/actors': typeof WorldWorldIdWorldActorsRoute
+  '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
   '/world/$worldId/overview': typeof WorldWorldIdWorldOverviewRoute
   '/world/$worldId/settings': typeof WorldWorldIdWorldSettingsRoute
   '/world/$worldId/timeline': typeof WorldWorldIdWorldTimelineRoute
@@ -392,7 +392,7 @@ export interface FileRoutesById {
   '/secret/spinny': typeof SecretSpinnyRoute
   '/world/$worldId': typeof WorldWorldIdRouteWithChildren
   '/world/$worldId/_world': typeof WorldWorldIdWorldRouteWithChildren
-  '/world/$worldId/_world/actors': typeof WorldWorldIdWorldActorsRoute
+  '/world/$worldId/_world/mindmap': typeof WorldWorldIdWorldMindmapRoute
   '/world/$worldId/_world/overview': typeof WorldWorldIdWorldOverviewRoute
   '/world/$worldId/_world/settings': typeof WorldWorldIdWorldSettingsRoute
   '/world/$worldId/_world/timeline': typeof WorldWorldIdWorldTimelineRoute
@@ -414,7 +414,7 @@ export interface FileRouteTypes {
     | '/secret/music'
     | '/secret/spinny'
     | '/world/$worldId'
-    | '/world/$worldId/actors'
+    | '/world/$worldId/mindmap'
     | '/world/$worldId/overview'
     | '/world/$worldId/settings'
     | '/world/$worldId/timeline'
@@ -432,7 +432,7 @@ export interface FileRouteTypes {
     | '/secret/music'
     | '/secret/spinny'
     | '/world/$worldId'
-    | '/world/$worldId/actors'
+    | '/world/$worldId/mindmap'
     | '/world/$worldId/overview'
     | '/world/$worldId/settings'
     | '/world/$worldId/timeline'
@@ -450,7 +450,7 @@ export interface FileRouteTypes {
     | '/secret/spinny'
     | '/world/$worldId'
     | '/world/$worldId/_world'
-    | '/world/$worldId/_world/actors'
+    | '/world/$worldId/_world/mindmap'
     | '/world/$worldId/_world/overview'
     | '/world/$worldId/_world/settings'
     | '/world/$worldId/_world/timeline'
@@ -540,15 +540,15 @@ export const routeTree = rootRoute
       "filePath": "world.$worldId/_world.tsx",
       "parent": "/world/$worldId",
       "children": [
-        "/world/$worldId/_world/actors",
+        "/world/$worldId/_world/mindmap",
         "/world/$worldId/_world/overview",
         "/world/$worldId/_world/settings",
         "/world/$worldId/_world/timeline",
         "/world/$worldId/_world/wiki"
       ]
     },
-    "/world/$worldId/_world/actors": {
-      "filePath": "world.$worldId/_world.actors.tsx",
+    "/world/$worldId/_world/mindmap": {
+      "filePath": "world.$worldId/_world.mindmap.tsx",
       "parent": "/world/$worldId/_world"
     },
     "/world/$worldId/_world/overview": {

@@ -1,7 +1,7 @@
 import AutoStories from '@mui/icons-material/AutoStories'
 import Home from '@mui/icons-material/Home'
+import Person from '@mui/icons-material/Person'
 import Settings from '@mui/icons-material/Settings'
-import ViewList from '@mui/icons-material/ViewList'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
@@ -33,6 +33,14 @@ export const WorldDrawer = () => {
 	const onOverviewClick = () => {
 		navigate({
 			to: '/world/$worldId/overview',
+			search: true,
+		})
+	}
+
+	const matchesMindmap = useCheckRouteMatch('/world/$worldId/mindmap')
+	const onMindmapClick = () => {
+		navigate({
+			to: '/world/$worldId/mindmap',
 			search: true,
 		})
 	}
@@ -98,12 +106,12 @@ export const WorldDrawer = () => {
 						<StyledSmallButton variant={getButtonStyle(matchesTimeline)} onClick={onTimelineClick}>
 							<Home />
 						</StyledSmallButton>
-						<StyledSmallButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}>
+						{/* <StyledSmallButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}> 
 							<ViewList />
+						</StyledSmallButton> */}
+						<StyledSmallButton variant={getButtonStyle(matchesMindmap)} onClick={onMindmapClick}>
+							<Person />
 						</StyledSmallButton>
-						{/* <StyledSmallButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
-						<Person />
-					</StyledSmallButton> */}
 						<StyledSmallButton variant={getButtonStyle(matchesWiki)} onClick={onWikiClick}>
 							<AutoStories />
 						</StyledSmallButton>
@@ -142,15 +150,15 @@ export const WorldDrawer = () => {
 					<StyledButton variant={getButtonStyle(matchesTimeline)} onClick={onTimelineClick}>
 						<Home /> Timeline
 					</StyledButton>
-					<StyledButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}>
+					{/* <StyledButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}>
 						<ViewList /> Overview
+					</StyledButton> */}
+					<StyledButton variant={getButtonStyle(matchesMindmap)} onClick={onMindmapClick}>
+						<Person /> Actors
 					</StyledButton>
 					<StyledButton variant={getButtonStyle(matchesWiki)} onClick={onWikiClick}>
 						<AutoStories /> Wiki
 					</StyledButton>
-					{/* <StyledButton variant={getButtonStyle(worldRoutes.actors)} onClick={onActorsClick}>
-						<Person /> Actors
-					</StyledButton> */}
 					{!isReadOnly && (
 						<>
 							<Divider />

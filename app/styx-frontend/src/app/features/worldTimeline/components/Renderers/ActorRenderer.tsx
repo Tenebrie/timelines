@@ -7,6 +7,7 @@ import cx from 'classnames'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { useIsReadOnly } from '@/app/hooks/useIsReadOnly'
 
@@ -27,6 +28,8 @@ export const ActorRenderer = ({ actor, collapsed }: Props) => {
 	const dispatch = useDispatch()
 	const { collapseActorInOutliner, uncollapseActorInOutliner } = preferencesSlice.actions
 
+	const openActorDrawer = useEventBusDispatch({ event: 'mindmap/openActorDrawer' })
+
 	const onToggleOpen = useCallback(() => {
 		if (collapsed) {
 			dispatch(uncollapseActorInOutliner(actor))
@@ -44,13 +47,15 @@ export const ActorRenderer = ({ actor, collapsed }: Props) => {
 		actions.push(
 			<IconButton
 				key={'edit'}
-				onClick={() =>
+				onClick={() => {
 					navigate({
-						to: '/world/$worldId/timeline/actor/$actorId',
-						params: { actorId: actor.id },
-						search: true,
+						to: '/world/$worldId/mindmap',
+						search: (prev) => ({ ...prev, selection: [actor.id] }),
 					})
-				}
+					requestIdleCallback(() => {
+						openActorDrawer({})
+					})
+				}}
 			>
 				<Edit />
 			</IconButton>,

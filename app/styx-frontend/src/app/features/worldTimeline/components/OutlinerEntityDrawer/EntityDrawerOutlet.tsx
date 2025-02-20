@@ -1,16 +1,14 @@
 import { useSearch } from '@tanstack/react-router'
 import { useEffect, useRef } from 'react'
 
+import { useResizeableDrawer } from '@/app/components/ResizeGrabber/ResizeableDrawerContext'
+
 import { EventBulkActions } from '../EventBulkActions/EventBulkActions'
 import { EventDetails } from '../EventDetails/EventDetails'
 
-type Props = {
-	isOpen: boolean
-	preferredOpen: boolean
-	onClear: () => void
-}
+export function EntityDrawerOutlet() {
+	const { drawerVisible, preferredOpen, setDrawerVisible } = useResizeableDrawer()
 
-export function EntityDrawerOutlet({ isOpen, preferredOpen, onClear }: Props) {
 	const selectedMarkerIds = useSearch({
 		from: '/world/$worldId/_world/timeline',
 		select: (search) => search.selection,
@@ -22,11 +20,11 @@ export function EntityDrawerOutlet({ isOpen, preferredOpen, onClear }: Props) {
 		if (selectedMarkerIds.length === lastSeenIdsRef.current) {
 			return
 		}
-		if (selectedMarkerIds.length === 0 && isOpen && !preferredOpen) {
-			onClear()
+		if (selectedMarkerIds.length === 0 && drawerVisible && !preferredOpen) {
+			setDrawerVisible(false)
 		}
 		lastSeenIdsRef.current = selectedMarkerIds.length
-	}, [isOpen, onClear, preferredOpen, selectedMarkerIds])
+	}, [drawerVisible, setDrawerVisible, preferredOpen, selectedMarkerIds])
 
 	return (
 		<>

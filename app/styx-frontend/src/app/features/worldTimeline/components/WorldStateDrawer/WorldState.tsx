@@ -70,62 +70,6 @@ export function WorldStateComponent() {
 								return allVisibleEvents[index]
 							})()
 							return <WorldStateItem index={rawIndex} actor={actor} event={event} />
-							// if (index === 0) {
-							// 	return (
-							// 		<Stack>
-							// 			<Stack
-							// 				direction="row"
-							// 				justifyContent="space-between"
-							// 				alignItems="center"
-							// 				sx={{ margin: '1px' }}
-							// 			>
-							// 				<Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
-							// 					<Tab label="All" />
-							// 					<Tab label="Actors" />
-							// 					<Tab label="Events" />
-							// 					{/* <Tab label="Simplified" /> */}
-							// 				</Tabs>
-							// 				<OutlinerSearch />
-							// 			</Stack>
-							// 			<ContainedSpinner visible={search.isLoading} />
-							// 			{search.query &&
-							// 				!search.isLoading &&
-							// 				search.results.actors.length === 0 &&
-							// 				search.results.events.length === 0 && <SearchEmptyState />}
-							// 		</Stack>
-							// 	)
-							// }
-
-							// const actorIndex = index - 1
-							// if (actorIndex < renderedActors.length) {
-							// 	const actor = renderedActors[actorIndex]
-							// 	return (
-							// 		<ActorWithStatementsRenderer
-							// 			{...actor}
-							// 			key={actor.id}
-							// 			actor={actor}
-							// 			divider={
-							// 				(eventsVisible && renderedEvents.length > 0) || actorIndex !== renderedActors.length - 1
-							// 			}
-							// 		/>
-							// 	)
-							// }
-
-							// const eventIndex = actorIndex - renderedActors.length
-							// if (eventIndex < renderedEvents.length) {
-							// 	const event = renderedEvents[eventIndex]
-							// 	return (
-							// 		<EventWithContentRenderer
-							// 			{...event}
-							// 			key={event.id}
-							// 			event={event}
-							// 			owningActor={null}
-							// 			short={false}
-							// 			divider={eventIndex !== renderedEvents.length - 1}
-							// 			actions={eventActions}
-							// 		/>
-							// 	)
-							// }
 						}}
 					/>
 				)}

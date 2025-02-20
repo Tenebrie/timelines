@@ -12,6 +12,7 @@ export type AllowedEvents =
 	| 'timeline/requestZoom'
 	| 'timeline/openEventDrawer'
 	| 'timeline/markerHovered'
+	| 'mindmap/openActorDrawer'
 	| 'outliner/tracksDrawerResized'
 	| 'outliner/entityDrawerResized'
 	| 'sendCalliopeMessage'
@@ -45,6 +46,7 @@ export type EventParams = {
 	['timeline/requestZoom']: { direction: 'in' | 'out' }
 	['timeline/openEventDrawer']: { extraHeight?: number }
 	['timeline/markerHovered']: { marker: TimelineEntity<MarkerType>; hover: boolean }
+	['mindmap/openActorDrawer']: { extraHeight?: number }
 	['outliner/tracksDrawerResized']: { height: number }
 	['outliner/entityDrawerResized']: { height: number }
 	['sendCalliopeMessage']: ClientToCalliopeMessage
