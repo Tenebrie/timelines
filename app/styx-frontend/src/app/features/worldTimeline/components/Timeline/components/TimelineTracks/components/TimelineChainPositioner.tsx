@@ -24,11 +24,11 @@ export const TimelineChainPositionerComponent = ({ entity, visible, realTimeToSc
 
 	useEventBusSubscribe({
 		event: 'timelineScrolled',
-		callback: () => {
+		callback: ({ newScroll }) => {
 			if (!chainVisible) {
 				return
 			}
-			const pos = realTimeToScaledTime(Math.floor(entity.markerPosition)) + TimelineState.scroll
+			const pos = realTimeToScaledTime(Math.floor(entity.markerPosition)) + newScroll
 			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${pos}px`) {
 				ref.current.style.setProperty('--position', `${pos}px`)
 			}

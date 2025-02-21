@@ -39,6 +39,9 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 		if (hovered) {
 			return 300
 		}
+		if (entity.markerType === 'revokedAt') {
+			return 0
+		}
 		return rawDist - TimelineEventHeightPx + 13
 	})()
 

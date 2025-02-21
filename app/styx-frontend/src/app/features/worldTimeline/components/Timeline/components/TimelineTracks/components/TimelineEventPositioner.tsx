@@ -96,12 +96,9 @@ function TimelineEventPositionerComponent({
 
 	useEventBusSubscribe({
 		event: 'timelineScrolled',
-		callback: () => {
+		callback: ({ newScroll }) => {
 			const pos =
-				realTimeToScaledTime(Math.round(entity.markerPosition)) +
-				TimelineState.scroll -
-				TimelineEventHeightPx / 2 +
-				1
+				realTimeToScaledTime(Math.round(entity.markerPosition)) + newScroll - TimelineEventHeightPx / 2 + 1
 
 			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${pos}px`) {
 				ref.current?.style.setProperty('--position', `${pos}px`)
