@@ -112,12 +112,11 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 	const color = useEntityColor({ entity })
 	const theme = useCustomTheme()
 
-	const isDataPoint = entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta'
 	const cssVariables = {
 		'--border-color': color,
 		'--icon-path': `url(${getIconPath(entity.icon)})`,
 		'--marker-size': `${TimelineEventHeightPx - 6}px`,
-		'--border-radius': isDataPoint ? '50%' : '6px',
+		'--border-radius': '6px',
 	} as CSSProperties
 
 	return (

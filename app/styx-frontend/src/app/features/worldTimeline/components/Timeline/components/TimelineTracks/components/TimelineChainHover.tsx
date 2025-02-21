@@ -28,11 +28,11 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 		}
 		if (entity.followingEntity) {
 			return Math.min(
-				200,
+				350,
 				realTimeToScaledTime(entity.followingEntity.markerPosition - entity.markerPosition) - 25,
 			)
 		}
-		return 200
+		return 350
 	})()
 
 	const dist = (() => {
@@ -43,6 +43,8 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 	})()
 
 	const chainVisible = entity.markerType === 'issuedAt' || entity.markerType === 'deltaState' || hovered
+	const chainMarker = !!entity.chainEntity
+	const rightBorder = !chainMarker || hovered
 
 	return (
 		<Box
@@ -50,31 +52,33 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 				position: 'absolute',
 				bottom: 0,
 				left: 0,
-				width: Math.max(0, dist) + 16,
-				height: hovered ? 68 : 30,
-				overflow: 'hidden',
-				borderRadius: '0 8px 8px 0',
-				transition: 'height 0.1s, width 0.1s',
+				width: Math.max(0, dist) + (dist > 16 ? 16 : 0),
+				height: hovered ? 54 : 30,
+				overflowY: 'hidden',
+				transition: 'height 0.3s, width 0.3s',
+				transitionDelay: hovered ? '0.4s' : '0s',
 			}}
 		>
 			<Box
 				sx={{
 					position: 'absolute',
-					width: 'calc(100% - 2px)',
+					width: `calc(100% - 24px - ${rightBorder ? 0 : 10}px)`,
 					height: 'calc(100% - 2px)',
-					background: hovered ? 'rgb(255 255 255 / 10%)' : theme.custom.palette.background.soft,
+					paddingRight: '-8px',
+					background: theme.custom.palette.background.soft,
 					display: 'flex',
-					// boxShadow: 'inset 0 0 100px rgba(0,0,0,1)',
 					opacity: dist > 1 && chainVisible ? 1 : 0,
 					paddingLeft: '20px',
-					borderRadius: '8px 8px 8px 0px',
+					borderRadius: `8px ${rightBorder ? 8 : 0}px ${rightBorder ? 8 : 2}px 0px`,
 					borderTop: `2px solid ${color}`,
 					borderLeft: `2px solid ${color}`,
+					borderRight: `2px solid ${color}`,
 					pointerEvents: 'none',
-					transition: 'height 0.3s, background 0.3s, width 0.3s, box-shadow 0.3s, color 0.3s, opacity 0.3s',
+					transition: 'width 0.3s, border-radius 0.3s, background 0.3s, opacity 0.3s',
+					transitionDelay: hovered ? '0.4s' : '0s',
 				}}
 			>
-				<Stack sx={{ gap: 0.5, paddingTop: 0.6, '& > *': { flexShrink: 0 }, width: 'calc(100% - 40px)' }}>
+				<Stack sx={{ gap: 0.5, paddingTop: 0.4, '& > *': { flexShrink: 0 }, width: 'calc(100% - 8px)' }}>
 					<Typography variant="body2" sx={{ fontFamily: 'Inter' }} fontWeight={600} noWrap>
 						{entity.name}
 					</Typography>
@@ -94,7 +98,8 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 						opacity: hovered ? 1 : 0,
 						backdropFilter: 'blur(8px)',
 						zIndex: -1,
-						transition: 'opacity 0.1s',
+						transition: 'opacity 0.3s',
+						transitionDelay: hovered ? '0.4s' : '0s',
 					}}
 				/>
 			)}

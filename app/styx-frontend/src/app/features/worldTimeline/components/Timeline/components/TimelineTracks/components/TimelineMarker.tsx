@@ -25,11 +25,11 @@ export function TimelineMarkerComponent({
 	trackHeight,
 	realTimeToScaledTime,
 }: Props) {
-	const { hovered, lastHovered } = useHoveredTimelineMarker(marker)
-	const zIndex = hovered ? 3 : lastHovered ? 2 : 1
+	const { hovered } = useHoveredTimelineMarker(marker)
+	const zIndex = hovered ? 3 : 1
 
 	return (
-		<Box sx={{ zIndex }}>
+		<Box sx={{ zIndex, transition: 'z-index 0.3s', transitionDelay: hovered ? '0.4s' : '0.15s' }}>
 			<TimelineChainPositioner
 				entity={marker}
 				visible={visible}
