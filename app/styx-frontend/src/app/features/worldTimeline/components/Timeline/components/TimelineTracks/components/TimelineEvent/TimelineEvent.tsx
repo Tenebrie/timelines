@@ -2,11 +2,10 @@ import Close from '@mui/icons-material/Close'
 import { colors } from '@mui/material'
 import { useNavigate } from '@tanstack/react-router'
 import classNames from 'classnames'
-import { CSSProperties, memo, MouseEvent, Profiler } from 'react'
+import { CSSProperties, memo, MouseEvent } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { worldSlice } from '@/app/features/world/reducer'
 import { useEventIcons } from '@/app/features/worldTimeline/hooks/useEventIcons'
 import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
@@ -17,7 +16,7 @@ import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
-import { Marker } from './styles'
+import { Marker, MarkerDelta, MarkerIcon, MarkerRevoked } from './styles'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
@@ -119,34 +118,38 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 		'--border-radius': '6px',
 	} as CSSProperties
 
+	const RenderedMarker = (() => {
+		if (entity.markerType === 'deltaState') {
+			return MarkerDelta
+		} else if (entity.markerType === 'revokedAt') {
+			return MarkerRevoked
+		}
+		return Marker
+	})()
+
+	// TODO: Split this marker for performance, it's horrible for css compilation
 	return (
-		<Profiler id="TimelineEvent" onRender={reportComponentProfile}>
-			<Marker
-				style={cssVariables}
-				onClick={onClick}
-				onContextMenu={onContextMenu}
-				onMouseEnter={onMouseEnter}
-				onMouseLeave={onMouseLeave}
-				$theme={theme}
-				className={classNames({
-					selected,
-					revoked: entity.markerType === 'revokedAt',
-					replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',
-					ghostEvent: entity.markerType === 'ghostEvent',
-					ghostDelta: entity.markerType === 'ghostDelta',
-				})}
-				data-testid="timeline-event-marker"
-			>
-				{entity.markerType !== 'revokedAt' && <div className="icon image"></div>}
-				{entity.markerType === 'revokedAt' && (
-					<>
-						<div className="icon image"></div>
-						<div className="icon">
-							<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
-						</div>
-					</>
-				)}
-			</Marker>
-		</Profiler>
+		<RenderedMarker
+			style={cssVariables}
+			onClick={onClick}
+			onContextMenu={onContextMenu}
+			onMouseEnter={onMouseEnter}
+			onMouseLeave={onMouseLeave}
+			$theme={theme}
+			className={classNames({
+				selected,
+			})}
+			data-testid="timeline-event-marker"
+		>
+			{entity.markerType !== 'revokedAt' && <MarkerIcon className="icon image"></MarkerIcon>}
+			{entity.markerType === 'revokedAt' && (
+				<>
+					<MarkerIcon className="icon image"></MarkerIcon>
+					<MarkerIcon className="icon">
+						<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
+					</MarkerIcon>
+				</>
+			)}
+		</RenderedMarker>
 	)
 }

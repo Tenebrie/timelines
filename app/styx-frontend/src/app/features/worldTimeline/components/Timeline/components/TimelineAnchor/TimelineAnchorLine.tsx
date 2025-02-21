@@ -92,7 +92,53 @@ function TimelineAnchorLineComponent(props: Props) {
 
 	const ref = useRef<HTMLDivElement>(null)
 
-	const [displayedLabel, setDisplayedLabel] = useState<string | null>(null)
+	// TODO remove duplication
+	const getLabel = (scroll: number) => {
+		const loopIndex = getLoop({
+			index: rawIndex,
+			lineCount,
+			timelineScroll: scroll,
+		})
+
+		const index = rawIndex + loopIndex * lineCount
+
+		const parsedTime = parseTime(scaledTimeToRealTime(index * LineSpacing))
+		const isStartOfMonth = parsedTime.monthDay === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
+		const isStartOfYear =
+			parsedTime.monthIndex === 0 && parsedTime.day === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
+
+		const isSmallGroup = index % smallGroupSize === 0
+		const isMediumGroup =
+			(isSmallGroup && index % mediumGroupSize === 0) ||
+			(scaleLevel === 2 && isStartOfMonth) ||
+			(scaleLevel === 3 && isStartOfMonth)
+		const isLargeGroup =
+			isMediumGroup &&
+			(index % largeGroupSize === 0 ||
+				(scaleLevel === 1 && isStartOfMonth) ||
+				(scaleLevel === 2 && isStartOfYear) ||
+				(scaleLevel === 3 && isStartOfYear))
+
+		const labelSize = (() => {
+			if (isLargeGroup) {
+				return 'large'
+			}
+			if (isMediumGroup) {
+				return 'medium'
+			}
+			if (isSmallGroup) {
+				return 'small'
+			}
+
+			return null
+		})()
+
+		return labelSize
+			? timeToShortLabel(scaledTimeToRealTime(index * LineSpacing), scaleLevel, labelSize)
+			: null
+	}
+
+	const [displayedLabel, setDisplayedLabel] = useState<string | null>(getLabel(TimelineState.scroll))
 
 	const updateVariables = useCallback(
 		(scroll: number) => {
@@ -210,6 +256,10 @@ function TimelineAnchorLineComponent(props: Props) {
 		}
 		updateVariables(TimelineState.scroll)
 	}, [updateVariables, ref])
+
+	if (!displayedLabel) {
+		return null
+	}
 
 	return (
 		<Box

@@ -65,14 +65,21 @@ export const useTimelineNavigation = ({
 
 	const lastScroll = useRef<number | null>(null)
 	const notifyTimelineScrolled = useEventBusDispatch({ event: 'timelineScrolled' })
+	const isBusyRendering = useRef(false)
+
 	const setScroll = useCallback(
 		(scroll: number) => {
+			if (isBusyRendering.current) {
+				return
+			}
 			const publicScroll = scroll + Math.pow(Math.abs(overscroll), 0.85) * Math.sign(overscroll)
 
 			if (publicScroll !== lastScroll.current) {
+				isBusyRendering.current = true
+				lastScroll.current = publicScroll
+				notifyTimelineScrolled({ newScroll: publicScroll })
 				requestAnimationFrame(() => {
-					lastScroll.current = publicScroll
-					notifyTimelineScrolled({ newScroll: publicScroll })
+					isBusyRendering.current = false
 				})
 			}
 			TimelineState.scroll = publicScroll

@@ -13,6 +13,7 @@ export const Group = styled.div.attrs<{ $height: number }>((props) => ({
 
 	opacity: 0;
 	pointer-events: auto;
+	transform: translateX(var(--position));
 
 	&.visible {
 		opacity: 1;

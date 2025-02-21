@@ -98,13 +98,13 @@ function TimelineEventPositionerComponent({
 		event: 'timelineScrolled',
 		callback: () => {
 			const pos =
-				realTimeToScaledTime(Math.floor(entity.markerPosition)) +
+				realTimeToScaledTime(Math.round(entity.markerPosition)) +
 				TimelineState.scroll -
 				TimelineEventHeightPx / 2 +
 				1
 
-			if (ref.current && ref.current.style.left !== `${pos}px`) {
-				ref.current.style.left = `${pos}px`
+			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${pos}px`) {
+				ref.current?.style.setProperty('--position', `${pos}px`)
 			}
 		},
 	})
@@ -114,7 +114,7 @@ function TimelineEventPositionerComponent({
 	return (
 		<Group
 			ref={ref}
-			style={{ left: `${position}px` }}
+			style={{ '--position': `${position}px` } as CSSProperties}
 			$height={height}
 			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''} timeline-marker-scroll`}
 		>

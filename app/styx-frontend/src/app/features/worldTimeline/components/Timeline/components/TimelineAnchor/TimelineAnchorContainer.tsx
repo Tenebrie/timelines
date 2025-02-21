@@ -42,7 +42,12 @@ export function TimelineAnchorContainer({ children }: Props) {
 	return (
 		<Box
 			ref={ref}
-			sx={{ position: 'absolute', bottom: 0, pointerEvents: 'none', transform: 'translateX(var(--scroll))' }}
+			sx={{
+				position: 'absolute',
+				bottom: 0,
+				pointerEvents: 'none',
+				transform: 'translateX(var(--scroll))',
+			}}
 		>
 			<TimelineSmallestPips $lineSpacing={LineSpacing} />
 			{children}
