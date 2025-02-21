@@ -7,6 +7,7 @@ import { useCallback, useEffect } from 'react'
 import { ResizeGrabber, useResizeGrabber } from '@/app/components/ResizeGrabber/ResizeGrabber'
 import { ResizeGrabberOverlay } from '@/app/components/ResizeGrabber/ResizeGrabberOverlay'
 import { ResizeGrabberPreferencesSchema } from '@/app/components/ResizeGrabber/ResizeGrabberPreferencesSchema'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import usePersistentState from '@/app/hooks/usePersistentState'
 
 import { ResizeableDrawerProvider } from './ResizeableDrawerContext'
@@ -88,6 +89,7 @@ export function ResizeableDrawer({
 				sx={{
 					position: 'relative',
 					alignItems: 'center',
+					...useBrowserSpecificScrollbars(),
 				}}
 				elevation={2}
 			>

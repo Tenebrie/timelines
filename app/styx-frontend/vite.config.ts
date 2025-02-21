@@ -32,6 +32,10 @@ export default defineConfig({
 			},
 		},
 	},
+	preview: {
+		port: 8080,
+		host: true,
+	},
 	server: {
 		port: 8080,
 		watch: {

@@ -11,7 +11,7 @@ import { EntityDrawerOutlet } from './EntityDrawerOutlet'
 export const EntityDrawer = memo(EntityDrawerComponent)
 
 function EntityDrawerComponent() {
-	const { event } = useCurrentOrNewEvent()
+	const { mode } = useCurrentOrNewEvent()
 	const notifyAboutHeightChange = useEventBusDispatch({ event: 'outliner/entityDrawerResized' })
 
 	const onResize = useRef(
@@ -25,7 +25,7 @@ function EntityDrawerComponent() {
 	return (
 		<ResizeableDrawer
 			pulldownWidth={140}
-			pulldownLabel={event ? 'Edit event' : 'Create event'}
+			pulldownLabel={mode === 'edit' ? 'Edit event' : 'Create event'}
 			minHeight={235}
 			persistentStateKey="entityDrawerState/v1"
 			onResize={onResize.current}

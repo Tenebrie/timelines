@@ -57,7 +57,7 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 				left: 0,
 				width: Math.max(0, dist) + (dist > 16 ? 16 : 0),
 				height: hovered ? 54 : 30,
-				overflowY: 'hidden',
+				overflow: 'hidden',
 				transition: 'height 0.3s, width 0.3s',
 				transitionDelay: hovered ? '0.4s' : '0s',
 			}}

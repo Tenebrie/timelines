@@ -1,9 +1,11 @@
+import Box from '@mui/material/Box'
 import { useRef, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortalSlot'
 import { OnChangeParams } from '@/app/features/richTextEditor/RichTextEditor'
 import { MentionDetails } from '@/app/features/worldTimeline/types'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 
 import { useEditArticle } from '../../api/useEditArticle'
@@ -59,17 +61,21 @@ export const ArticleDetails = () => {
 		callback: () => setKey((prev) => prev + 1),
 	})
 
+	const scrollbars = useBrowserSpecificScrollbars()
+
 	if (!article) {
 		return <></>
 	}
 
 	return (
-		<RichTextEditorPortalSlot
-			softKey={`${article.id}-${key}`}
-			value={article.contentRich}
-			onChange={onChange}
-			onBlur={manualSave}
-			allowReadMode
-		/>
+		<Box sx={{ ...scrollbars, height: '100%' }}>
+			<RichTextEditorPortalSlot
+				softKey={`${article.id}-${key}`}
+				value={article.contentRich}
+				onChange={onChange}
+				onBlur={manualSave}
+				allowReadMode
+			/>
+		</Box>
 	)
 }

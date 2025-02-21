@@ -9,12 +9,12 @@
 		"tsc": "tsc",
 		"build": "tsc && vite build",
 		"build:ci": "vite build",
-		"preview": "vite preview",
 		"lint": "eslint src/",
 		"lint-fix": "eslint src/ --fix",
 		"openapi": "npx @rtk-query/codegen-openapi ./openapi/openapi-config.cjs && yarn eslint src/api --fix",
 		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline",
 		"start": "vite --host --clearScreen false",
+		"preview": "vite build && vite preview",
 		"test": "vitest",
 		"prod": "serve -s build -l 8080"
 	},
