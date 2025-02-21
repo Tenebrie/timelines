@@ -53,7 +53,6 @@ const TimelineAnchorLineComponent = (props: Props) => {
 		index: rawIndex,
 		lineCount,
 		scaleLevel,
-		visible,
 		timelineScroll,
 		positionNormalizer,
 		timeToShortLabel,

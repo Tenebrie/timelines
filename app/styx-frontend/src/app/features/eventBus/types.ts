@@ -51,7 +51,7 @@ export type EventParams = {
 	['outliner/entityDrawerResized']: { height: number }
 	['sendCalliopeMessage']: ClientToCalliopeMessage
 	['calliopeReconnected']: void
-	['timelineScrolled']: void
+	['timelineScrolled']: { newScroll: number }
 	['richEditor/openMentions']: { query: string; screenPosTop: number; screenPosLeft: number }
 	['richEditor/updateMentions']: { query: string }
 	['richEditor/closeMentions']: void

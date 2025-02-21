@@ -1,20 +1,26 @@
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { getWorldState } from '@/app/features/world/selectors'
+import { getTimelineState, getWorldState } from '@/app/features/world/selectors'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
-import { ScaleLevel } from '../../types'
 import { Container } from './styles'
 
 type Props = {
 	timestamp: number
-	scroll: number
-	scaleLevel: ScaleLevel
-	transitioning: boolean
 }
 
-export const TimeMarker = ({ timestamp, scroll, scaleLevel, transitioning }: Props) => {
+export const TimeMarker = ({ timestamp }: Props) => {
+	const [scroll, setScroll] = useState(0)
+	useEventBusSubscribe({ event: 'timelineScrolled', callback: ({ newScroll }) => setScroll(newScroll) })
+
+	const { scaleLevel, isSwitchingScale } = useSelector(
+		getTimelineState,
+		(a, b) =>
+			a.scroll === b.scroll && a.scaleLevel === b.scaleLevel && a.isSwitchingScale === b.isSwitchingScale,
+	)
 	const { calendar, isLoaded } = useSelector(
 		getWorldState,
 		(a, b) => a.calendar === b.calendar && a.isLoaded === b.isLoaded,
@@ -26,7 +32,7 @@ export const TimeMarker = ({ timestamp, scroll, scaleLevel, transitioning }: Pro
 	return (
 		<>
 			{isLoaded && (
-				<Container $theme={theme} $offset={offset} className={`${transitioning ? 'hidden' : ''}`} />
+				<Container $theme={theme} $offset={offset} className={`${isSwitchingScale ? 'hidden' : ''}`} />
 			)}
 		</>
 	)

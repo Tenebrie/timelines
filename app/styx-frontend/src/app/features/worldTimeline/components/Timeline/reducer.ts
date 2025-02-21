@@ -5,7 +5,10 @@ import type { TimelineTrack } from './components/TimelineTracks/hooks/useEventTr
 import { ScaleLevel } from './types'
 
 export const initialState = {
+	scroll: 0,
+	isSwitchingScale: false,
 	scaleLevel: 0 as ScaleLevel,
+	targetScaleLevel: 0 as ScaleLevel,
 	loadingTracks: true,
 	// Only those with `visible: true`
 	tracks: [] as TimelineTrack[],
@@ -20,8 +23,17 @@ export const timelineSlice = createSlice({
 	initialState,
 	reducers: {
 		/* Timeline */
+		setScroll: (state, { payload }: PayloadAction<number>) => {
+			state.scroll = payload
+		},
+		setIsSwitchingScale: (state, { payload }: PayloadAction<boolean>) => {
+			state.isSwitchingScale = payload
+		},
 		setScaleLevel: (state, { payload }: PayloadAction<ScaleLevel>) => {
 			state.scaleLevel = payload
+		},
+		setTargetScaleLevel: (state, { payload }: PayloadAction<ScaleLevel>) => {
+			state.targetScaleLevel = payload
 		},
 		setTracks: (
 			state,

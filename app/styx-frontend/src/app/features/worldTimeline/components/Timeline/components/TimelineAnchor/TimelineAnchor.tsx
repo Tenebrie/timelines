@@ -2,14 +2,14 @@ import Fade from '@mui/material/Fade'
 import { memo, Profiler, startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { getWorldState } from '@/app/features/world/selectors'
+import { getTimelineState, getWorldState } from '@/app/features/world/selectors'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
-import { ScaleLevel } from '../../types'
 import { TimelineAnchorContainer, TimelineSmallestPips } from './styles'
 import { getLoop, TimelineAnchorLine } from './TimelineAnchorLine'
 
@@ -17,20 +17,26 @@ export const TimelineAnchorPadding = 150 // pixels
 export const ResetNumbersAfterEvery = 3000000 // pixels of scrolling
 
 type Props = {
-	visible: boolean
-	scroll: number
-	scaleLevel: ScaleLevel
 	containerWidth: number
 }
 
 export const TimelineAnchor = memo(TimelineAnchorComponent)
 
-function TimelineAnchorComponent({ scaleLevel, scroll, visible, containerWidth }: Props) {
+function TimelineAnchorComponent({ containerWidth }: Props) {
 	const theme = useCustomTheme()
 	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
+	const { scaleLevel, isSwitchingScale } = useSelector(
+		getTimelineState,
+		(a, b) => a.scaleLevel === b.scaleLevel && a.isSwitchingScale === b.isSwitchingScale,
+	)
 	const { parseTime, timeToShortLabel } = useWorldTime()
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel, calendar })
 
+	// TODO: Hard optimize this to avoid rerender here
+	const [scroll, setScroll] = useState(0)
+	useEventBusSubscribe({ event: 'timelineScrolled', callback: ({ newScroll }) => setScroll(newScroll) })
+
+	const visible = !isSwitchingScale
 	const lineCount = useMemo(
 		() => Math.ceil(containerWidth / LineSpacing) + Math.ceil(TimelineAnchorPadding / LineSpacing) * 2,
 		[containerWidth],
@@ -130,6 +136,7 @@ function TimelineAnchorComponent({ scaleLevel, scroll, visible, containerWidth }
 		[scroll],
 	)
 
+	// TODO: Optimize Fade component being heavy?
 	return (
 		<Profiler id="TimelineAnchor" onRender={reportComponentProfile}>
 			<Fade in={visible} appear timeout={300}>

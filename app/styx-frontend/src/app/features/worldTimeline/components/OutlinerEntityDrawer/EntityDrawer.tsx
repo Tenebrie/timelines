@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce'
-import { useRef } from 'react'
+import { memo, useRef } from 'react'
 
 import { ResizeableDrawer } from '@/app/components/ResizeGrabber/ResizeableDrawer'
 import { useEventBusDispatch } from '@/app/features/eventBus'
@@ -8,7 +8,9 @@ import { useCurrentOrNewEvent } from '../../hooks/useCurrentOrNewEvent'
 import { EntityDrawerListener } from './EntityDrawerListener'
 import { EntityDrawerOutlet } from './EntityDrawerOutlet'
 
-export function EntityDrawer() {
+export const EntityDrawer = memo(EntityDrawerComponent)
+
+function EntityDrawerComponent() {
 	const { event } = useCurrentOrNewEvent()
 	const notifyAboutHeightChange = useEventBusDispatch({ event: 'outliner/entityDrawerResized' })
 

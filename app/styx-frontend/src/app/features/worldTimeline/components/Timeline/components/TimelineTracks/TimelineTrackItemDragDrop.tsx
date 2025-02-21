@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack'
-import { memo, useEffect, useMemo } from 'react'
+import { memo, RefObject, useEffect, useMemo } from 'react'
 
 import { IsDragDropStateOfType, useDragDropStateWithRenders } from '@/app/features/dragDrop/DragDropState'
 
@@ -9,7 +9,7 @@ import { useTrackDragDropReceiver } from './hooks/useTrackDragDropReceiver'
 
 type Props = {
 	track: TimelineTrack
-	receiverRef: React.MutableRefObject<HTMLDivElement | null>
+	receiverRef: RefObject<HTMLDivElement | null>
 	onDragChanged: (isDragging: boolean) => void
 }
 

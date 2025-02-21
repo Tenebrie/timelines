@@ -1,20 +1,19 @@
-import { useCallback, useDebugValue } from 'react'
+import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { worldSlice } from '@/app/features/world/reducer'
-import { getTimelineContextMenuState, getWorldCalendarState } from '@/app/features/world/selectors'
-import { ScaleLevel } from '@/app/features/worldTimeline/components/Timeline/types'
+import {
+	getTimelineContextMenuState,
+	getTimelineState,
+	getWorldCalendarState,
+} from '@/app/features/world/selectors'
 import { TimelineState } from '@/app/features/worldTimeline/components/Timeline/utils/TimelineState'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
 
-type Props = {
-	scaleLevel: ScaleLevel
-}
-
-export const useTimelineContextMenu = ({ scaleLevel }: Props) => {
-	useDebugValue('useTimelineContextMenu')
-	const { isOpen } = useSelector(getTimelineContextMenuState)
+export const useTimelineContextMenu = () => {
+	const { isOpen } = useSelector(getTimelineContextMenuState, (a, b) => a.isOpen === b.isOpen)
+	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const calendar = useSelector(getWorldCalendarState)
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
 

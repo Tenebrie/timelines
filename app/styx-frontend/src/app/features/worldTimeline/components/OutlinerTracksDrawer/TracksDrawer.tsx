@@ -1,12 +1,14 @@
 import debounce from 'lodash.debounce'
-import { useRef } from 'react'
+import { memo, useRef } from 'react'
 
 import { ResizeableDrawer } from '@/app/components/ResizeGrabber/ResizeableDrawer'
 import { useEventBusDispatch } from '@/app/features/eventBus'
 
 import { EventTracksMenu } from './EventTracksMenu'
 
-export function TracksDrawer() {
+export const TracksDrawer = memo(TracksDrawerComponent)
+
+function TracksDrawerComponent() {
 	const notifyAboutHeightChange = useEventBusDispatch({ event: 'outliner/tracksDrawerResized' })
 
 	const onResize = useRef(
