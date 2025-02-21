@@ -1,5 +1,4 @@
 import bezier from 'bezier-easing'
-import throttle from 'lodash.throttle'
 import React, { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -74,16 +73,17 @@ export const useTimelineNavigation = ({
 			}
 			const publicScroll = scroll + Math.pow(Math.abs(overscroll), 0.85) * Math.sign(overscroll)
 
-			if (publicScroll !== lastScroll.current) {
-				isBusyRendering.current = true
-				lastScroll.current = publicScroll
-				notifyTimelineScrolled({ newScroll: publicScroll })
-				requestAnimationFrame(() => {
-					isBusyRendering.current = false
-				})
+			if (publicScroll === lastScroll.current) {
+				return
 			}
+			isBusyRendering.current = true
+			lastScroll.current = publicScroll
 			TimelineState.scroll = publicScroll
 			TimelineState.scaleLevel = scaleLevel
+			notifyTimelineScrolled(publicScroll)
+			requestAnimationFrame(() => {
+				isBusyRendering.current = false
+			})
 		},
 		[notifyTimelineScrolled, overscroll, scaleLevel],
 	)
@@ -113,61 +113,51 @@ export const useTimelineNavigation = ({
 	}, [])
 
 	const onMouseMoveThrottled = useRef(
-		throttle(
-			({
-				event,
-				minimumScroll,
-				maximumScroll,
-			}: {
-				event: MouseEvent | TouchEvent
-				minimumScroll: number
-				maximumScroll: number
-			}) => {
-				const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
-				const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
-				const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }
+		(event: MouseEvent | TouchEvent, minimumScroll: number, maximumScroll: number) => {
+			const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
+			const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
+			const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }
 
-				if (draggingFrom.current !== null && !isDraggingRef.current) {
-					/* If the mouse moved less than N pixels, do not start dragging */
-					/* Makes clicking feel more responsive with accidental mouse movements */
-					const dist = Math.abs(newPos.x - draggingFrom.current.x)
-					if (dist >= 5) {
-						setDragging(true)
-					}
-				}
-
-				if (isDraggingRef.current) {
-					const newScroll = scrollRef.current + newPos.x - mousePos.current.x + overscrollRef.current
-					if (isFinite(minimumScroll) && newScroll < minimumScroll) {
-						scrollRef.current = minimumScroll
-						setOverscroll(newScroll - minimumScroll)
-					} else if (isFinite(maximumScroll) && newScroll > maximumScroll) {
-						scrollRef.current = maximumScroll
-						setOverscroll(newScroll - maximumScroll)
-					} else {
-						scrollRef.current = newScroll
-						setOverscroll(0)
-					}
-					setScroll(scrollRef.current)
+			if (draggingFrom.current !== null && !isDraggingRef.current) {
+				/* If the mouse moved less than N pixels, do not start dragging */
+				/* Makes clicking feel more responsive with accidental mouse movements */
+				const dist = Math.abs(newPos.x - draggingFrom.current.x)
+				if (dist >= 5) {
+					setDragging(true)
 					setCanClick(false)
-					mousePos.current = newPos
 				}
-			},
-			1,
-		),
+			}
+
+			if (isDraggingRef.current) {
+				const newScroll = scrollRef.current + newPos.x - mousePos.current.x + overscrollRef.current
+				let targetOverscroll = 0
+				if (isFinite(minimumScroll) && newScroll < minimumScroll) {
+					scrollRef.current = minimumScroll
+					targetOverscroll = newScroll - minimumScroll
+				} else if (isFinite(maximumScroll) && newScroll > maximumScroll) {
+					scrollRef.current = maximumScroll
+					targetOverscroll = newScroll - maximumScroll
+				} else {
+					scrollRef.current = newScroll
+					targetOverscroll = 0
+				}
+
+				if (overscrollRef.current !== targetOverscroll) {
+					setOverscroll(targetOverscroll)
+				}
+				setScroll(scrollRef.current)
+				mousePos.current = newPos
+			}
+		},
 	)
 
 	const onMouseMove = useCallback(
-		(event: MouseEvent | TouchEvent) => {
+		(event: MouseEvent) => {
 			if (window.document.body.classList.contains('mouse-busy')) {
 				return
 			}
 
-			onMouseMoveThrottled.current({
-				event,
-				minimumScroll,
-				maximumScroll,
-			})
+			onMouseMoveThrottled.current(event, minimumScroll, maximumScroll)
 		},
 		[minimumScroll, maximumScroll],
 	)
@@ -449,7 +439,7 @@ export const useTimelineNavigation = ({
 		document.addEventListener('mousemove', onMouseMove)
 		document.addEventListener('mouseup', onMouseUp)
 		container.addEventListener('touchstart', onMouseDown)
-		container.addEventListener('touchmove', onMouseMove)
+		// container.addEventListener('touchmove', onMouseMove)
 		container.addEventListener('touchend', onMouseUp)
 		document.addEventListener('mouseleave', onMouseUp)
 		// container.addEventListener('wheel', onWheel)
@@ -460,7 +450,7 @@ export const useTimelineNavigation = ({
 			document.removeEventListener('mousemove', onMouseMove)
 			document.removeEventListener('mouseup', onMouseUp)
 			container.removeEventListener('touchstart', onMouseDown)
-			container.removeEventListener('touchmove', onMouseMove)
+			// container.removeEventListener('touchmove', onMouseMove)
 			container.removeEventListener('touchend', onMouseUp)
 			document.removeEventListener('mouseleave', onMouseUp)
 		}

@@ -51,8 +51,8 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 		defaultScroll: Math.floor(containerWidth / 2) - timeOrigin,
 		scaleLimits: [-1, 7],
 		selectedTime,
-		onClick: (time) => onClick(time),
-		onDoubleClick: (time) => onDoubleClick(time),
+		onClick,
+		onDoubleClick,
 	})
 
 	useEffect(() => {

@@ -18,7 +18,7 @@ export function TimelineAnchorContainer({ children }: Props) {
 	const lastSeenScroll = useRef(0)
 	useEventBusSubscribe({
 		event: 'timelineScrolled',
-		callback: ({ newScroll }) => {
+		callback: (newScroll) => {
 			const fixedScroll = newScroll % ResetNumbersAfterEvery
 			if (lastSeenScroll.current === newScroll) {
 				return

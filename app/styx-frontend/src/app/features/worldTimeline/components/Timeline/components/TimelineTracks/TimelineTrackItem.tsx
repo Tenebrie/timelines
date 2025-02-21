@@ -58,6 +58,7 @@ export function TimelineTrackItemComponent({
 	const [visibleMarkers, setVisibleMarkers] = useState<(typeof track)['events']>([])
 
 	const lastRecordedScroll = useRef<number | null>(null)
+	const lastVisibleMarkers = useRef<(typeof track)['events']>([])
 	const updateVisibleMarkersThrottled = useRef(
 		throttle(
 			(
@@ -77,17 +78,23 @@ export function TimelineTrackItemComponent({
 				}
 
 				lastRecordedScroll.current = TimelineState.scroll
-				setVisibleMarkers(
-					t.events
-						.filter((event) => {
-							const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + TimelineState.scroll
+				const markers = t.events
+					.filter((event) => {
+						const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + TimelineState.scroll
 
-							return position >= -1000 && position <= width + 1000
-						})
-						.sort((a, b) => a.markerPosition - b.markerPosition),
-				)
+						return position >= -1000 && position <= width + 1000
+					})
+					.sort((a, b) => a.markerPosition - b.markerPosition)
+
+				if (
+					markers.length !== lastVisibleMarkers.current.length ||
+					markers.some((marker, index) => marker.key !== lastVisibleMarkers.current[index].key)
+				) {
+					setVisibleMarkers(markers)
+					lastVisibleMarkers.current = markers
+				}
 			},
-			isRunningInTest() ? 0 : 100,
+			isRunningInTest() ? 0 : 1,
 		),
 	)
 

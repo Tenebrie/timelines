@@ -139,6 +139,7 @@ function TimelineAnchorLineComponent(props: Props) {
 	}
 
 	const [displayedLabel, setDisplayedLabel] = useState<string | null>(getLabel(TimelineState.scroll))
+	const displayedLabelRef = useRef(displayedLabel)
 
 	const updateVariables = useCallback(
 		(scroll: number) => {
@@ -190,7 +191,10 @@ function TimelineAnchorLineComponent(props: Props) {
 			})()
 
 			if (!labelSize) {
-				setDisplayedLabel(null)
+				if (displayedLabelRef.current !== null) {
+					setDisplayedLabel(null)
+					displayedLabelRef.current = null
+				}
 				return
 			}
 
@@ -221,7 +225,10 @@ function TimelineAnchorLineComponent(props: Props) {
 				ref.current?.style.setProperty(key, value as string)
 			})
 			cssVariablesRef.current = variables
-			setDisplayedLabel(label)
+			if (displayedLabelRef.current !== label) {
+				displayedLabelRef.current = label
+				setDisplayedLabel(label)
+			}
 		},
 		[
 			getDividerSize,
@@ -241,7 +248,7 @@ function TimelineAnchorLineComponent(props: Props) {
 
 	useEventBusSubscribe({
 		event: 'timelineScrolled',
-		callback: ({ newScroll }) => {
+		callback: (newScroll) => {
 			if (lastSeenScroll.current !== null && Math.abs(lastSeenScroll.current - newScroll) < 80) {
 				return
 			}

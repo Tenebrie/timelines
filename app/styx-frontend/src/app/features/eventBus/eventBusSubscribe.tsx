@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { AllowedEvents, EventParams } from './types'
 
@@ -9,24 +9,20 @@ type Props<T extends AllowedEvents> = {
 }
 
 export const useEventBusSubscribe = <T extends AllowedEvents>({ event, condition, callback }: Props<T>) => {
-	const onEvent = useCallback<EventListener>(
-		// @ts-ignore
-		(event: CustomEvent) => {
-			const params = event.detail as EventParams[T]
-			if (!condition || condition(params)) {
-				callback(params)
-			}
-		},
-		[callback, condition],
-	)
-
 	useEffect(() => {
 		if (!event) {
 			return
 		}
+		const onEvent = ((event: CustomEvent) => {
+			const params = event.detail as EventParams[T]
+			if (!condition || condition(params)) {
+				callback(params)
+			}
+		}) as EventListener
+
 		window.addEventListener(`@timelines/${event}`, onEvent)
 		return () => {
 			window.removeEventListener(`@timelines/${event}`, onEvent)
 		}
-	}, [event, onEvent])
+	}, [callback, condition, event])
 }

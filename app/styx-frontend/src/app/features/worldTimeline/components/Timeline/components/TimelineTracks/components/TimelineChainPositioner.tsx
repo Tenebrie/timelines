@@ -24,7 +24,7 @@ export const TimelineChainPositionerComponent = ({ entity, visible, realTimeToSc
 
 	useEventBusSubscribe({
 		event: 'timelineScrolled',
-		callback: ({ newScroll }) => {
+		callback: (newScroll) => {
 			if (!chainVisible) {
 				return
 			}
