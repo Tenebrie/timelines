@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import Box from '@mui/material/Box'
+import { useCallback, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
@@ -6,6 +7,7 @@ import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorld
 import { getTimelineState, getWorldState } from '@/app/features/world/selectors'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
+import { TimelineState } from '../../utils/TimelineState'
 import { Container } from './styles'
 
 type Props = {
@@ -13,9 +15,6 @@ type Props = {
 }
 
 export const TimeMarker = ({ timestamp }: Props) => {
-	const [scroll, setScroll] = useState(0)
-	useEventBusSubscribe({ event: 'timelineScrolled', callback: ({ newScroll }) => setScroll(newScroll) })
-
 	const { scaleLevel, isSwitchingScale } = useSelector(
 		getTimelineState,
 		(a, b) =>
@@ -26,14 +25,27 @@ export const TimeMarker = ({ timestamp }: Props) => {
 		(a, b) => a.calendar === b.calendar && a.isLoaded === b.isLoaded,
 	)
 	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel, calendar })
-	const offset = Math.round(realTimeToScaledTime(timestamp)) + scroll
+
 	const theme = useCustomTheme()
 
+	const ref = useRef<HTMLDivElement | null>(null)
+	const updatePosition = useCallback(
+		(scroll: number) => {
+			const offset = Math.round(realTimeToScaledTime(timestamp)) + scroll
+			ref.current?.style.setProperty('--marker-scroll', `${offset}px`)
+		},
+		[realTimeToScaledTime, timestamp],
+	)
+
+	useEffect(() => {
+		updatePosition(TimelineState.scroll)
+	}, [timestamp, updatePosition])
+
+	useEventBusSubscribe({ event: 'timelineScrolled', callback: ({ newScroll }) => updatePosition(newScroll) })
+
 	return (
-		<>
-			{isLoaded && (
-				<Container $theme={theme} $offset={offset} className={`${isSwitchingScale ? 'hidden' : ''}`} />
-			)}
-		</>
+		<Box ref={ref} sx={{ height: '100%', transform: 'translateX(var(--marker-scroll))' }}>
+			<Container $theme={theme} className={`${isSwitchingScale || !isLoaded ? 'hidden' : ''}`} />
+		</Box>
 	)
 }

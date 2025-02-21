@@ -1,14 +1,17 @@
-import { memo, Profiler, useCallback, useMemo } from 'react'
+import Box from '@mui/material/Box'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 
-import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
 import { CustomTheme } from '@/app/hooks/useCustomTheme'
+import { keysOf } from '@/app/utils/keysOf'
 
 import { ScaleLevel } from '../../types'
-import { Divider, DividerContainer, DividerLabel } from './styles'
-import { TimelineAnchorPadding } from './TimelineAnchor'
+import { TimelineState } from '../../utils/TimelineState'
+import { DividerLabel } from './styles'
+import { ResetNumbersAfterEvery, TimelineAnchorPadding } from './TimelineAnchor'
 
 export const getPixelsPerLoop = ({ lineCount }: { lineCount: number }) => lineCount * LineSpacing
 
@@ -34,126 +37,205 @@ type Props = {
 	lineCount: number
 	// Current level of scale
 	scaleLevel: ScaleLevel
-	// Set to 'false' while switching scales
-	visible: boolean
-	// Horizontal scroll of the entire timeline in pixels (offset)
-	timelineScroll: number
-	// An offset added to divider position to counteract number overflow on far scrolling
-	positionNormalizer: number
-	timeToShortLabel: ReturnType<typeof useWorldTime>['timeToShortLabel']
 	scaledTimeToRealTime: ReturnType<typeof useTimelineWorldTime>['scaledTimeToRealTime']
-	isSmallGroup: boolean
-	isMediumGroup: boolean
-	isLargeGroup: boolean
+	smallGroupSize: number
+	mediumGroupSize: number
+	largeGroupSize: number
 }
 
-const TimelineAnchorLineComponent = (props: Props) => {
+export const TimelineAnchorLine = memo(TimelineAnchorLineComponent)
+
+function TimelineAnchorLineComponent(props: Props) {
 	const {
 		theme,
 		index: rawIndex,
 		lineCount,
 		scaleLevel,
-		timelineScroll,
-		positionNormalizer,
-		timeToShortLabel,
 		scaledTimeToRealTime,
-		isSmallGroup,
-		isMediumGroup,
-		isLargeGroup,
+		smallGroupSize,
+		mediumGroupSize,
+		largeGroupSize,
 	} = props
 
-	const loopIndex = useMemo(
-		() =>
-			getLoop({
+	const { parseTime, timeToShortLabel } = useWorldTime()
+	const getDividerSize = useCallback(
+		({
+			isLargeGroup,
+			isMediumGroup,
+			isSmallGroup,
+		}: {
+			isLargeGroup: boolean
+			isMediumGroup: boolean
+			isSmallGroup: boolean
+		}) => {
+			if (isLargeGroup) {
+				return { width: 5, height: 3 }
+			} else if (isMediumGroup) {
+				return { width: 2, height: 2.5 }
+			} else if (isSmallGroup) {
+				return { width: 1, height: 2 }
+			}
+			return { width: 1, height: 1 }
+		},
+		[],
+	)
+
+	const cssVariablesRef = useRef({
+		'--divider-position': `0px`,
+		'--z-index': 0,
+		'--font-weight': 400,
+		'--divider-width': '1px',
+		'--divider-height': '8px',
+		'--divider-margin': '-4px',
+		'--divider-display': 'none',
+	} as Record<string, unknown>)
+
+	const ref = useRef<HTMLDivElement>(null)
+
+	const [displayedLabel, setDisplayedLabel] = useState<string | null>(null)
+
+	const updateVariables = useCallback(
+		(scroll: number) => {
+			const loopIndex = getLoop({
 				index: rawIndex,
 				lineCount,
-				timelineScroll,
-			}),
-		[lineCount, rawIndex, timelineScroll],
+				timelineScroll: scroll,
+			})
+			const loopOffset = loopIndex * getPixelsPerLoop({ lineCount })
+
+			const positionNormalizer =
+				Math.floor(Math.abs(scroll) / ResetNumbersAfterEvery) * ResetNumbersAfterEvery * Math.sign(scroll)
+			const dividerPosition = Math.round((rawIndex * LineSpacing) / 1 + loopOffset) + positionNormalizer
+
+			const index = rawIndex + loopIndex * lineCount
+
+			const parsedTime = parseTime(scaledTimeToRealTime(index * LineSpacing))
+			const isStartOfMonth = parsedTime.monthDay === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
+			const isStartOfYear =
+				parsedTime.monthIndex === 0 &&
+				parsedTime.day === 1 &&
+				parsedTime.hour === 0 &&
+				parsedTime.minute === 0
+
+			const isSmallGroup = index % smallGroupSize === 0
+			const isMediumGroup =
+				(isSmallGroup && index % mediumGroupSize === 0) ||
+				(scaleLevel === 2 && isStartOfMonth) ||
+				(scaleLevel === 3 && isStartOfMonth)
+			const isLargeGroup =
+				isMediumGroup &&
+				(index % largeGroupSize === 0 ||
+					(scaleLevel === 1 && isStartOfMonth) ||
+					(scaleLevel === 2 && isStartOfYear) ||
+					(scaleLevel === 3 && isStartOfYear))
+
+			const labelSize = (() => {
+				if (isLargeGroup) {
+					return 'large'
+				}
+				if (isMediumGroup) {
+					return 'medium'
+				}
+				if (isSmallGroup) {
+					return 'small'
+				}
+
+				return null
+			})()
+
+			if (!labelSize) {
+				setDisplayedLabel(null)
+				return
+			}
+
+			const { width: dividerWidth, height: dividerHeight } = getDividerSize({
+				isLargeGroup,
+				isMediumGroup,
+				isSmallGroup,
+			})
+
+			const label = labelSize
+				? timeToShortLabel(scaledTimeToRealTime(index * LineSpacing), scaleLevel, labelSize)
+				: null
+
+			const variables = {
+				'--divider-position': `${dividerPosition}px`,
+				'--z-index': labelSize === 'large' ? 2 : labelSize === 'medium' ? 1 : 0,
+				'--font-weight': labelSize === 'large' ? 600 : labelSize === 'medium' ? 600 : 400,
+				'--divider-width': `${dividerWidth}px`,
+				'--divider-height': `${dividerHeight * 8}px`,
+				'--divider-margin': `${-dividerWidth / 2}px`,
+			} as Record<string, unknown>
+
+			keysOf(variables).forEach((key) => {
+				const value = variables[key]
+				if (value === cssVariablesRef.current[key]) {
+					return
+				}
+				ref.current?.style.setProperty(key, value as string)
+			})
+			cssVariablesRef.current = variables
+			setDisplayedLabel(label)
+		},
+		[
+			getDividerSize,
+			largeGroupSize,
+			lineCount,
+			mediumGroupSize,
+			parseTime,
+			rawIndex,
+			scaleLevel,
+			scaledTimeToRealTime,
+			smallGroupSize,
+			timeToShortLabel,
+		],
 	)
-	const loopOffset = useMemo(() => loopIndex * getPixelsPerLoop({ lineCount }), [lineCount, loopIndex])
-	const dividerPosition = useMemo(
-		() => Math.round((rawIndex * LineSpacing) / 1 + loopOffset) + positionNormalizer,
-		[loopOffset, positionNormalizer, rawIndex],
-	)
 
-	const index = useMemo(() => rawIndex + loopIndex * lineCount, [lineCount, loopIndex, rawIndex])
+	const lastSeenScroll = useRef<number | null>(null)
 
-	const labelSize = useMemo(() => {
-		if (isLargeGroup) {
-			return 'large'
+	useEventBusSubscribe({
+		event: 'timelineScrolled',
+		callback: ({ newScroll }) => {
+			if (lastSeenScroll.current !== null && Math.abs(lastSeenScroll.current - newScroll) < 80) {
+				return
+			}
+			updateVariables(newScroll)
+			lastSeenScroll.current = newScroll
+		},
+	})
+
+	useEffect(() => {
+		if (!ref.current) {
+			return
 		}
-		if (isMediumGroup) {
-			return 'medium'
-		}
-		if (isSmallGroup) {
-			return 'small'
-		}
-
-		return null
-	}, [isLargeGroup, isMediumGroup, isSmallGroup])
-
-	const getDividerWidth = useCallback(() => {
-		if (isLargeGroup) {
-			return 5
-		} else if (isMediumGroup) {
-			return 3
-		} else if (isSmallGroup) {
-			return 1
-		}
-		return 1
-	}, [isLargeGroup, isMediumGroup, isSmallGroup])
-
-	const getDividerHeight = useCallback(() => {
-		if (isLargeGroup) {
-			return 3
-		} else if (isMediumGroup) {
-			return 2.5
-		} else if (isSmallGroup) {
-			return 2
-		}
-		return 1
-	}, [isLargeGroup, isMediumGroup, isSmallGroup])
-
-	const dividerWidth = useMemo(getDividerWidth, [getDividerWidth])
-	const dividerHeight = useMemo(getDividerHeight, [getDividerHeight])
-
-	const label = labelSize
-		? timeToShortLabel(scaledTimeToRealTime(index * LineSpacing), scaleLevel, labelSize)
-		: null
+		updateVariables(TimelineState.scroll)
+	}, [updateVariables, ref])
 
 	return (
-		<Profiler id="TimelineAnchorLine" onRender={reportComponentProfile}>
-			<DividerContainer
-				key={rawIndex}
-				offset={dividerPosition}
-				style={{
-					zIndex: labelSize === 'large' ? 2 : labelSize === 'medium' ? 1 : 0,
+		<Box
+			ref={ref}
+			style={cssVariablesRef.current}
+			sx={{
+				position: 'absolute',
+				bottom: 0,
+				pointerEvents: 'none',
+				zIndex: `var(--z-index)`,
+				fontWeight: 'var(--font-weight)',
+				transform: `translateX(var(--divider-position))`,
+			}}
+		>
+			{displayedLabel && <DividerLabel $theme={theme}>{displayedLabel}</DividerLabel>}
+			<Box
+				sx={{
+					position: 'absolute',
+					background: 'gray',
+					bottom: 0,
+					borderRadius: '4px 4px 0 0',
+					width: 'var(--divider-width)',
+					height: 'var(--divider-height)',
+					marginleft: 'var(--divider-margin)',
 				}}
-			>
-				{label && (
-					<DividerLabel
-						$theme={theme}
-						style={{
-							fontWeight: labelSize === 'large' ? 600 : labelSize === 'medium' ? 600 : 400,
-						}}
-					>
-						{label}
-					</DividerLabel>
-				)}
-				<Divider color={'gray'} width={dividerWidth} height={dividerHeight} />
-			</DividerContainer>
-		</Profiler>
+			/>
+		</Box>
 	)
 }
-
-export const TimelineAnchorLine = memo(
-	TimelineAnchorLineComponent,
-	(a, b) =>
-		getLoop(a) === getLoop(b) &&
-		a.theme === b.theme &&
-		a.scaleLevel === b.scaleLevel &&
-		a.visible === b.visible &&
-		a.positionNormalizer === b.positionNormalizer &&
-		a.timeToShortLabel === b.timeToShortLabel,
-)

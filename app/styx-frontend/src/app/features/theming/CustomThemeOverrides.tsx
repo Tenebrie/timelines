@@ -12,10 +12,10 @@ type Props = {
 export const CustomThemeOverrides = ({ children }: Props) => {
 	const theme = useCustomTheme()
 
+	// TODO: Apply scrollbar themes properly pls
 	const scrollbarThemes = useBrowserSpecificScrollbars()
 
 	const themeOverrides: SxProps<Theme> = {
-		...scrollbarThemes,
 		color: theme.material.palette.text.secondary,
 		bgcolor: theme.material.palette.background.default,
 		'* .MuiTabs-indicator': {

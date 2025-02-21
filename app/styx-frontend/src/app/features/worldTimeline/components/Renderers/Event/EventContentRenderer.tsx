@@ -11,7 +11,7 @@ import { Actor, WorldEvent } from '@/app/features/worldTimeline/types'
 import { isNotNull } from '@/app/utils/isNotNull'
 
 import { StyledListItemButton, ZebraWrapper } from '../../Outliner/styles'
-import { useTimelineScroll } from '../../Timeline/hooks/useTimelineScroll'
+import { TimelineState } from '../../Timeline/utils/TimelineState'
 
 type Props = {
 	event: WorldEvent
@@ -23,16 +23,15 @@ type Props = {
 export const EventContentRenderer = ({ event, active }: Props) => {
 	const { timeToLabel } = useWorldTime()
 	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
-	const { getScroll: getTimelineScroll } = useTimelineScroll()
 
 	const scrollTimelineToEvent = useCallback(() => {
-		const scroll = getTimelineScroll()
+		const scroll = TimelineState.scroll
 		if (isNotNull(event.revokedAt) && Math.abs(scroll - event.timestamp) <= 5) {
 			scrollTimelineTo({ timestamp: event.revokedAt })
 		} else {
 			scrollTimelineTo({ timestamp: event.timestamp })
 		}
-	}, [event.revokedAt, event.timestamp, scrollTimelineTo, getTimelineScroll])
+	}, [event.revokedAt, event.timestamp, scrollTimelineTo])
 
 	// const paragraphs = event.description.split('\n').filter((p) => p.trim().length > 0)
 	const paragraphs = [event.descriptionRich]

@@ -3,7 +3,9 @@ import Paper from '@mui/material/Paper'
 import { useSearch } from '@tanstack/react-router'
 import { memo, useState } from 'react'
 
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
@@ -28,11 +30,15 @@ function TimelineComponent() {
 
 	const theme = useCustomTheme()
 
+	const [opacity, setOpacity] = useState(0)
+	const { onContextMenu } = useTimelineContextMenu()
 	const { containerRef, containerWidth } = useTimelineDimensions()
 
-	const { onContextMenu } = useTimelineContextMenu()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 
-	const [opacity, setOpacity] = useState(0)
+	useEffectOnce(() => {
+		scrollTimelineTo({ timestamp: selectedTime, skipAnim: true })
+	})
 
 	return (
 		<Paper sx={{ height: '100%', borderRadius: 0, zIndex: 2 }}>

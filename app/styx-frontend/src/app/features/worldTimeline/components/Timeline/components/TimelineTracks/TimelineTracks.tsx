@@ -53,7 +53,6 @@ export function TimelineTracksComponent(props: Props) {
 			}}
 			className={'allow-timeline-click'}
 		>
-			{/* TODO: Size of box is always equal to the height of the Outliner */}
 			<Box sx={{ height: `calc(${outlinerHeight}px - 32px)`, pointerEvents: 'none' }} />
 			<Box
 				style={{ opacity: loadingTracks ? 0 : 1 }}

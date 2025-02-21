@@ -96,6 +96,7 @@ export function ResizeableDrawer({
 						direction="row"
 						height="100%"
 						sx={{
+							// TODO: Optimize
 							'& > *': { flex: 1 },
 							pointerEvents: 'auto',
 						}}

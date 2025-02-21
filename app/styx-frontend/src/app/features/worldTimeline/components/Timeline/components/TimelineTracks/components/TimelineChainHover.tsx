@@ -78,7 +78,15 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 					transitionDelay: hovered ? '0.4s' : '0s',
 				}}
 			>
-				<Stack sx={{ gap: 0.5, paddingTop: 0.4, '& > *': { flexShrink: 0 }, width: 'calc(100% - 8px)' }}>
+				<Stack
+					sx={{
+						gap: 0.5,
+						paddingTop: 0.4,
+						// TODO: Optimize this
+						'& > *': { flexShrink: 0 },
+						width: 'calc(100% - 8px)',
+					}}
+				>
 					<Typography variant="body2" sx={{ fontFamily: 'Inter' }} fontWeight={600} noWrap>
 						{entity.name}
 					</Typography>

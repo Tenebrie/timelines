@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
-import { memo, Profiler } from 'react'
+import { memo } from 'react'
 
-import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
 
@@ -17,20 +16,18 @@ export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) 
 	const height = TimelineEventHeightPx * entity.markerHeight + 4
 
 	return (
-		<Profiler id="TimelineChain" onRender={reportComponentProfile}>
-			<Box
-				style={{
-					bottom: height,
-					left: TimelineEventHeightPx / 2 - 16,
-				}}
-				sx={{
-					pointerEvents: 'none',
-					position: 'absolute',
-				}}
-			>
-				<TimelineChainHover entity={entity} realTimeToScaledTime={realTimeToScaledTime} />
-			</Box>
-		</Profiler>
+		<Box
+			style={{
+				bottom: height,
+				left: TimelineEventHeightPx / 2 - 16,
+			}}
+			sx={{
+				pointerEvents: 'none',
+				position: 'absolute',
+			}}
+		>
+			<TimelineChainHover entity={entity} realTimeToScaledTime={realTimeToScaledTime} />
+		</Box>
 	)
 }
 

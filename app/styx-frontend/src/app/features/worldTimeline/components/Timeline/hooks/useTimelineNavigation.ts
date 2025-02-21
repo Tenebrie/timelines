@@ -3,7 +3,7 @@ import throttle from 'lodash.throttle'
 import React, { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventBus'
 import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
@@ -17,7 +17,7 @@ import { rangeMap } from '@/app/utils/rangeMap'
 import { router } from '@/router'
 
 import { ScaleLevel } from '../types'
-import { useTimelineScroll } from './useTimelineScroll'
+import { TimelineState } from '../utils/TimelineState'
 
 type Props = {
 	containerRef: React.RefObject<HTMLDivElement | null>
@@ -38,7 +38,7 @@ export const useTimelineNavigation = ({
 }: Props) => {
 	// Scroll
 	const scrollRef = useRef(defaultScroll)
-	const [scroll, setScroll] = useState(defaultScroll)
+	// const [scroll, setScroll] = useState(defaultScroll)
 	const overscrollRef = useRef(0)
 	const [overscroll, setOverscroll] = useState(0)
 	const draggingFrom = useRef<Position | null>(null)
@@ -62,6 +62,24 @@ export const useTimelineNavigation = ({
 	const scalar = useMemo(() => getLevelScalar(scaleLevel), [getLevelScalar, scaleLevel])
 	const minimumScroll = useMemo(() => -maximumTime / scalar / 1000 / 60, [scalar])
 	const maximumScroll = useMemo(() => maximumTime / scalar / 1000 / 60, [scalar])
+
+	const lastScroll = useRef<number | null>(null)
+	const notifyTimelineScrolled = useEventBusDispatch({ event: 'timelineScrolled' })
+	const setScroll = useCallback(
+		(scroll: number) => {
+			const publicScroll = scroll + Math.pow(Math.abs(overscroll), 0.85) * Math.sign(overscroll)
+
+			if (publicScroll !== lastScroll.current) {
+				requestAnimationFrame(() => {
+					lastScroll.current = publicScroll
+					notifyTimelineScrolled({ newScroll: publicScroll })
+				})
+			}
+			TimelineState.scroll = publicScroll
+			TimelineState.scaleLevel = scaleLevel
+		},
+		[notifyTimelineScrolled, overscroll, scaleLevel],
+	)
 
 	useEffect(() => {
 		setSelectedTime(defaultSelectedTime)
@@ -471,7 +489,7 @@ export const useTimelineNavigation = ({
 
 			const isScrollingAlready =
 				Math.abs(startedScrollFrom.current) > 0 || Math.abs(desiredScrollTo.current) > 0
-			startedScrollFrom.current = scroll
+			startedScrollFrom.current = scrollRef.current
 
 			let scrollToSet = targetScroll
 			if (isFinite(minimumScroll) && scrollToSet < minimumScroll) {
@@ -513,13 +531,10 @@ export const useTimelineNavigation = ({
 				requestAnimationFrame(callback)
 			}
 		},
-		[containerRef, minimumScroll, maximumScroll, realTimeToScaledTime, scroll, setScroll],
+		[containerRef, minimumScroll, maximumScroll, realTimeToScaledTime, setScroll],
 	)
 
 	/* External scrollTo */
-	// useTimelineBusSubscribe({
-	// callback: scrollTo,
-	// })
 	useEventBusSubscribe({
 		event: 'scrollTimelineTo',
 		callback: (props) => {
@@ -537,21 +552,7 @@ export const useTimelineNavigation = ({
 		},
 	})
 
-	// Published scroll
-	const { setScroll: setPublicScroll } = useTimelineScroll()
-	const throttledSetPublicScroll = useRef(throttle((val: number) => setPublicScroll(val), 100))
-
-	useEffect(() => {
-		const container = containerRef.current
-		if (!container) {
-			return
-		}
-		const timestamp = -scaledTimeToRealTime(scroll - container.getBoundingClientRect().width / 2)
-		throttledSetPublicScroll.current(timestamp)
-	}, [containerRef, scaledTimeToRealTime, scroll, throttledSetPublicScroll])
-
 	return {
-		scroll: scroll + Math.pow(Math.abs(overscroll), 0.85) * Math.sign(overscroll),
 		scaleLevel,
 		targetScaleIndex: targetScale,
 		isSwitchingScale,

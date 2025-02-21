@@ -29,7 +29,14 @@ export function TimelineMarkerComponent({
 	const zIndex = hovered ? 3 : 1
 
 	return (
-		<Box sx={{ zIndex, transition: 'z-index 0.3s', transitionDelay: hovered ? '0.4s' : '0.15s' }}>
+		<Box
+			sx={{
+				position: 'absolute',
+				zIndex,
+				transition: 'z-index 0.3s',
+				transitionDelay: hovered ? '0.4s' : '0.15s',
+			}}
+		>
 			<TimelineChainPositioner
 				entity={marker}
 				visible={visible}

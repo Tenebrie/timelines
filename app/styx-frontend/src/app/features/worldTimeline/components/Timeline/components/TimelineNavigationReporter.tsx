@@ -1,6 +1,5 @@
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import throttle from 'lodash.throttle'
-import { RefObject, useCallback, useEffect, useRef } from 'react'
+import { RefObject, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
@@ -8,7 +7,6 @@ import { getWorldState } from '@/app/features/world/selectors'
 
 import { useTimelineNavigation } from '../hooks/useTimelineNavigation'
 import { timelineSlice } from '../reducer'
-import { TimelineState } from '../utils/TimelineState'
 
 type Props = {
 	ref: RefObject<HTMLDivElement | null>
@@ -24,9 +22,8 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
-	const notifyTimelineScrolled = useEventBusDispatch({ event: 'timelineScrolled' })
 
-	const { setScroll, setIsSwitchingScale, setScaleLevel, setTargetScaleLevel } = timelineSlice.actions
+	const { setIsSwitchingScale, setScaleLevel, setTargetScaleLevel } = timelineSlice.actions
 	const dispatch = useDispatch()
 
 	const onClick = useCallback(
@@ -49,7 +46,7 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 		[navigate, scrollTimelineTo],
 	)
 
-	const { scroll, scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
+	const { scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
 		containerRef: ref,
 		defaultScroll: Math.floor(containerWidth / 2) - timeOrigin,
 		scaleLimits: [-1, 7],
@@ -69,25 +66,6 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 	useEffect(() => {
 		dispatch(setTargetScaleLevel(targetScaleIndex))
 	}, [dispatch, targetScaleIndex, setTargetScaleLevel])
-
-	const thr = useRef(
-		throttle((newScroll: number) => {
-			requestAnimationFrame(() => {
-				TimelineState.scroll = newScroll
-				notifyTimelineScrolled({ newScroll })
-			})
-		}, 2),
-	)
-
-	const lastScroll = useRef<number | null>(null)
-	if (scroll !== lastScroll.current) {
-		lastScroll.current = scroll
-		thr.current(scroll)
-	}
-
-	// useEffect(() => {
-	// 	thr.current(scroll)
-	// }, [dispatch, notifyTimelineScrolled, scroll, setScroll])
 
 	return null
 }

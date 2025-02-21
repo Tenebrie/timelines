@@ -103,7 +103,7 @@ function TimelineEventPositionerComponent({
 				TimelineEventHeightPx / 2 +
 				1
 
-			if (ref.current) {
+			if (ref.current && ref.current.style.left !== `${pos}px`) {
 				ref.current.style.left = `${pos}px`
 			}
 		},
@@ -114,7 +114,7 @@ function TimelineEventPositionerComponent({
 	return (
 		<Group
 			ref={ref}
-			$position={position}
+			style={{ left: `${position}px` }}
 			$height={height}
 			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''} timeline-marker-scroll`}
 		>
