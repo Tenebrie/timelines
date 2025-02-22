@@ -139,7 +139,6 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 			className={classNames({
 				selected,
 			})}
-			data-testid="timeline-event-marker"
 		>
 			{entity.markerType !== 'revokedAt' && <MarkerIcon className="icon image"></MarkerIcon>}
 			{entity.markerType === 'revokedAt' && (

@@ -14,15 +14,15 @@ export function WorldStateWithDraggerMirror() {
 		'mirrorWorldState/v1',
 		ResizeGrabberPreferencesSchema,
 		{
-			height: 400,
-			visible: true,
+			height: 300,
+			visible: false,
 		},
 	)
 
 	const grabberProps = useResizeGrabber({
 		initialOpen: preferences.visible,
 		initialHeight: preferences.height,
-		minHeight: 350,
+		minHeight: 300,
 	})
 	const { drawerVisible, contentVisible, height, overflowHeight, isDraggingNow } = grabberProps
 

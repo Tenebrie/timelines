@@ -30,6 +30,9 @@ export const useShortcutManager = () => {
 
 	const onKeyDown = useCallback((event: KeyboardEvent) => {
 		const key = event.key
+		if (!key) {
+			return
+		}
 		const ctrlKey = isMacOS() ? event.metaKey : event.ctrlKey
 
 		const isTargetingInput =

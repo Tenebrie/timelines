@@ -51,6 +51,7 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 
 	return (
 		<Box
+			data-testid="TimelineMarkerChain"
 			sx={{
 				position: 'absolute',
 				bottom: 0,
@@ -93,9 +94,12 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 					<Typography variant="body2" sx={{ fontFamily: 'Inter' }} fontWeight={600} noWrap>
 						{entity.name}
 					</Typography>
-					<Typography variant="caption" noWrap>
-						{timeToLabel(entity.markerPosition)}
-					</Typography>
+					{hovered ||
+						(lastHovered && (
+							<Typography variant="caption" noWrap>
+								{timeToLabel(entity.markerPosition)}
+							</Typography>
+						))}
 				</Stack>
 			</Box>
 			{(hovered || lastHovered) && (

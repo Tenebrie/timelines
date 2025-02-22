@@ -10,6 +10,7 @@ export const TracksDrawerPulldown = ({ onClick, visible }: Props) => {
 	return (
 		<Stack direction="row" justifyContent="flex-end" sx={{ pointerEvents: 'none' }}>
 			<Button
+				data-testid="TracksDrawerPulldown"
 				color="secondary"
 				sx={{
 					pointerEvents: visible ? 'auto' : 'none',

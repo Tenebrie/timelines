@@ -88,7 +88,7 @@ export function TimelineTrackItemComponent({
 
 				if (
 					markers.length !== lastVisibleMarkers.current.length ||
-					markers.some((marker, index) => marker.key !== lastVisibleMarkers.current[index].key)
+					markers.some((marker, index) => marker !== lastVisibleMarkers.current[index])
 				) {
 					setVisibleMarkers(markers)
 					lastVisibleMarkers.current = markers

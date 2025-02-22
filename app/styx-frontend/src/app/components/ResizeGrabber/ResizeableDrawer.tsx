@@ -20,6 +20,7 @@ type Props = {
 	minHeight: number
 	keepMounted?: boolean
 	persistentStateKey: string
+	defaultOpen?: boolean
 	onResize?: (height: number, visible: boolean) => void
 }
 
@@ -30,6 +31,7 @@ export function ResizeableDrawer({
 	minHeight,
 	keepMounted,
 	persistentStateKey,
+	defaultOpen,
 	onResize,
 }: Props) {
 	const [preferences, setPreferences] = usePersistentState(
@@ -37,7 +39,7 @@ export function ResizeableDrawer({
 		ResizeGrabberPreferencesSchema,
 		{
 			height: 400,
-			visible: true,
+			visible: defaultOpen ?? false,
 		},
 	)
 

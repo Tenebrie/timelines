@@ -15,6 +15,7 @@ function ResizeableDrawerPulldownComponent({ label, width, visible, onClick }: P
 	return (
 		<Stack direction="row" justifyContent="flex-end" sx={{ pointerEvents: 'none' }}>
 			<Button
+				data-testid="ResizeableDrawerPulldown"
 				color="secondary"
 				sx={{
 					pointerEvents: visible ? 'auto' : 'none',

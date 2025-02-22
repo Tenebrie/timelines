@@ -1,9 +1,8 @@
 import { createRootRouteWithContext } from '@tanstack/react-router'
 
 import App from '@/app/App'
-import { RouterContext } from '@/router'
 
-export const Route = createRootRouteWithContext<RouterContext>()({
+export const Route = createRootRouteWithContext()({
 	component: AppComponent,
 	beforeLoad: async () => {
 		if (window.location.href === 'http://localhost:8080/') {

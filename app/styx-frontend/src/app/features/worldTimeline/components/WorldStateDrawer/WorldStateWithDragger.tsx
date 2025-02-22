@@ -14,7 +14,7 @@ export function WorldStateWithDragger() {
 		'mainWorldState/v1',
 		ResizeGrabberPreferencesSchema,
 		{
-			height: 400,
+			height: 300,
 			visible: true,
 		},
 	)
@@ -22,7 +22,7 @@ export function WorldStateWithDragger() {
 	const grabberProps = useResizeGrabber({
 		initialOpen: preferences.visible,
 		initialHeight: preferences.height,
-		minHeight: 350,
+		minHeight: 300,
 	})
 	const { drawerVisible, contentVisible, height, overflowHeight, isDraggingNow } = grabberProps
 

@@ -28,6 +28,8 @@ export function TimelineMarkerComponent({
 	const { hovered } = useHoveredTimelineMarker(marker)
 	const zIndex = hovered ? 3 : 1
 
+	console.log('TimelineMarkerComponent', marker)
+
 	return (
 		<Box
 			sx={{

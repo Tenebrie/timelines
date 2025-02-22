@@ -3,7 +3,6 @@ import throttle from 'lodash.throttle'
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 
 import { useAutoRef } from '@/app/hooks/useAutoRef'
-import { isRunningInTest } from '@/test-utils/isRunningInTest'
 
 import { useEffectOnce } from '../useEffectOnce'
 import { AutosaveIcon } from './AutosaveIcon'
@@ -23,23 +22,27 @@ export const useAutosave = <T extends unknown[]>({ onSave, isSaving, isError, de
 	const defaultIconRef = useRef<ReactElement | undefined>(defaultIcon)
 
 	// TODO: Figure out a more permanent solution
-	const autosaveDelay = isRunningInTest() ? 300 : 1000
+	const autosaveDelay = 300
 
 	const onSaveRef = useAutoRef(onSave)
 	const isSavingRef = useAutoRef(isSaving)
 	const debouncedAutosave = useRef(
-		throttle((...args: T) => {
-			if (savingStateRef.current !== 'debounce') {
-				return
-			}
-			if (isSavingRef.current) {
-				debouncedAutosave.current(...args)
-				return
-			}
-			setSavingState('waiting')
-			onSaveRef.current(...args)
-			lastSeenValue.current = null
-		}, autosaveDelay),
+		throttle(
+			(...args: T) => {
+				if (savingStateRef.current !== 'debounce') {
+					return
+				}
+				if (isSavingRef.current) {
+					debouncedAutosave.current(...args)
+					return
+				}
+				setSavingState('waiting')
+				onSaveRef.current(...args)
+				lastSeenValue.current = null
+			},
+			autosaveDelay,
+			{ trailing: true, leading: false },
+		),
 	)
 
 	const lastSeenValue = useRef<T | null>(null)
@@ -51,9 +54,7 @@ export const useAutosave = <T extends unknown[]>({ onSave, isSaving, isError, de
 
 	const onFlushSave = useCallback(() => {
 		if (savingStateRef.current === 'debounce' && lastSeenValue.current) {
-			// onSaveRef.current(...lastSeenValue.current)
 			debouncedAutosave.current.flush()
-			// lastSeenValue.current = null
 			setSavingState('none')
 		}
 	}, [])

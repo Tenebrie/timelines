@@ -15,7 +15,6 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
-import { Route as LimboImport } from './routes/limbo'
 import { Route as HomeImport } from './routes/home'
 import { Route as AdminImport } from './routes/admin'
 import { Route as IndexImport } from './routes/index'
@@ -48,12 +47,6 @@ const RegisterRoute = RegisterImport.update({
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const LimboRoute = LimboImport.update({
-  id: '/limbo',
-  path: '/limbo',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -170,13 +163,6 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeImport
-      parentRoute: typeof rootRoute
-    }
-    '/limbo': {
-      id: '/limbo'
-      path: '/limbo'
-      fullPath: '/limbo'
-      preLoaderRoute: typeof LimboImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -347,7 +333,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/home': typeof HomeRoute
-  '/limbo': typeof LimboRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/secret/music': typeof SecretMusicRoute
@@ -366,7 +351,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/home': typeof HomeRoute
-  '/limbo': typeof LimboRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/secret/music': typeof SecretMusicRoute
@@ -385,7 +369,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/home': typeof HomeRoute
-  '/limbo': typeof LimboRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/secret/music': typeof SecretMusicRoute
@@ -408,7 +391,6 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/home'
-    | '/limbo'
     | '/login'
     | '/register'
     | '/secret/music'
@@ -426,7 +408,6 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/home'
-    | '/limbo'
     | '/login'
     | '/register'
     | '/secret/music'
@@ -443,7 +424,6 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/home'
-    | '/limbo'
     | '/login'
     | '/register'
     | '/secret/music'
@@ -465,7 +445,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   HomeRoute: typeof HomeRoute
-  LimboRoute: typeof LimboRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   SecretMusicRoute: typeof SecretMusicRoute
@@ -477,7 +456,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   HomeRoute: HomeRoute,
-  LimboRoute: LimboRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   SecretMusicRoute: SecretMusicRoute,
@@ -498,7 +476,6 @@ export const routeTree = rootRoute
         "/",
         "/admin",
         "/home",
-        "/limbo",
         "/login",
         "/register",
         "/secret/music",
@@ -514,9 +491,6 @@ export const routeTree = rootRoute
     },
     "/home": {
       "filePath": "home.tsx"
-    },
-    "/limbo": {
-      "filePath": "limbo.tsx"
     },
     "/login": {
       "filePath": "login.tsx"

@@ -2,6 +2,7 @@ import AutoStories from '@mui/icons-material/AutoStories'
 import Home from '@mui/icons-material/Home'
 import Person from '@mui/icons-material/Person'
 import Settings from '@mui/icons-material/Settings'
+import { useMediaQuery } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
@@ -20,7 +21,11 @@ import { WorldHeader } from './WorldHeader'
 
 export const WorldDrawer = () => {
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
-	const { panelOpen } = useSelector(getOverviewPreferences)
+	const { panelOpen: panelOpenPreference } = useSelector(getOverviewPreferences)
+
+	const panelCanBeOpened = useMediaQuery('(min-width: 1400px)')
+
+	const panelOpen = panelOpenPreference && panelCanBeOpened
 
 	const navigate = useNavigate({ from: '/world/$worldId' })
 

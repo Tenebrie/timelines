@@ -10,16 +10,17 @@ import { getAuthState } from '../selectors'
 type ReturnType = {
 	isAuthenticating: boolean
 	success: boolean
-	redirectTo?: 'home' | 'login' | 'register' | undefined
+	redirectTo?: '/home' | '/login' | '/register' | undefined
 }
 
 export const useAuthCheck = (): ReturnType => {
-	const { data, isLoading: isAuthenticating } = useCheckAuthenticationQuery()
+	const { data, error, isLoading: isAuthenticating } = useCheckAuthenticationQuery()
 
 	const { user } = useSelector(getAuthState)
-	const { isLoaded: isWorldLoaded, accessMode } = useSelector(
+	const { isUnauthorized } = useSelector(
 		getWorldState,
-		(a, b) => a.isLoaded === b.isLoaded && a.accessMode === b.accessMode,
+		(a, b) =>
+			a.isLoaded === b.isLoaded && a.accessMode === b.accessMode && a.isUnauthorized === b.isUnauthorized,
 	)
 	const { setUser, setSessionId } = authSlice.actions
 	const dispatch = useDispatch()
@@ -33,14 +34,23 @@ export const useAuthCheck = (): ReturnType => {
 		if (data.authenticated && 'user' in data) {
 			dispatch(setUser(data.user))
 		}
-	}, [data, dispatch, setSessionId, setUser])
+	}, [data, error, dispatch, setSessionId, setUser])
 
 	if (isAuthenticating) {
 		return { isAuthenticating, success: true }
 	}
 
-	if (window.location.pathname.startsWith('/world') && (!isWorldLoaded || accessMode !== 'Private')) {
+	const publicRoutes = ['/login', '/register']
+	if (publicRoutes.some((r) => window.location.pathname.startsWith(r))) {
 		return { isAuthenticating, success: true }
+	}
+
+	if (!user && data && !data.authenticated) {
+		return { isAuthenticating, success: false, redirectTo: '/login' }
+	}
+
+	if (isUnauthorized) {
+		return { isAuthenticating, success: false, redirectTo: '/home' }
 	}
 
 	if (user || (data && data.authenticated)) {
@@ -50,6 +60,6 @@ export const useAuthCheck = (): ReturnType => {
 	return {
 		isAuthenticating,
 		success: false,
-		redirectTo: 'login',
+		redirectTo: '/login',
 	}
 }

@@ -16,6 +16,7 @@ import {
 
 export const initialState = {
 	isLoaded: false as boolean,
+	isUnauthorized: false as boolean,
 	id: '' as string,
 	name: '' as string,
 	description: '' as string,
@@ -71,6 +72,7 @@ export const worldSlice = createSlice({
 		loadWorld: (state, { payload }: PayloadAction<{ world: GetWorldInfoApiResponse }>) => {
 			const world = payload.world
 			state.isLoaded = true
+			state.isUnauthorized = false
 			state.id = world.id
 			state.name = world.name
 			state.description = world.description
@@ -85,8 +87,12 @@ export const worldSlice = createSlice({
 		},
 		unloadWorld: (state) => {
 			state.isLoaded = false
+			state.isUnauthorized = false
 			state.events = []
 			state.isReadOnly = false
+		},
+		setUnauthorized: (state, { payload }: PayloadAction<boolean>) => {
+			state.isUnauthorized = payload
 		},
 		addEvent: (state, { payload }: PayloadAction<WorldEvent>) => {
 			state.events = state.events.concat(payload)

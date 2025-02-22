@@ -110,6 +110,7 @@ function TimelineEventPositionerComponent({
 
 	return (
 		<Group
+			data-testid="TimelineMarker"
 			ref={ref}
 			style={{ '--position': `${position}px` } as CSSProperties}
 			$height={height}

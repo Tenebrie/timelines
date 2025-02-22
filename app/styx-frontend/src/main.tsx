@@ -2,7 +2,7 @@ import './main.css'
 
 import { ErrorBoundary, Provider as RollbarProvider } from '@rollbar/react'
 import { RouterProvider } from '@tanstack/react-router'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider as ReduxProvider } from 'react-redux'
 import { Configuration } from 'rollbar'
@@ -25,7 +25,13 @@ const rollbarConfig: Configuration = {
 
 const RouterWrapper = () => {
 	const auth = useAuthCheck()
-	return <RouterProvider router={router} context={{ auth }} />
+
+	useEffect(() => {
+		if (!auth.success && auth.redirectTo) {
+			router.navigate({ to: auth.redirectTo })
+		}
+	}, [auth])
+	return <RouterProvider router={router} />
 }
 
 root.render(
