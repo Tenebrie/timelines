@@ -1,5 +1,5 @@
 export function loadSafariPolyfills() {
-	if (window.requestIdleCallback) {
+	if (!window.requestIdleCallback) {
 		console.info('Loading requestIdleCallback polyfill')
 		window.requestIdleCallback = function (callback: IdleRequestCallback): number {
 			const start = Date.now()
