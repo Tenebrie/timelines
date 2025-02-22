@@ -3,10 +3,10 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
+import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import { useWorldWikiRouter, worldWikiRoutes } from '@/router/routes/featureRoutes/worldWikiRoutes'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 import { useModal } from '../../modals/reducer'
@@ -20,7 +20,7 @@ export const ArticleWizardModal = () => {
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
 
 	const [createArticle, { isLoading }] = useCreateArticle()
-	const { navigateTo } = useWorldWikiRouter()
+	const navigate = useNavigate({ from: '/world/$worldId' })
 
 	useEffect(() => {
 		setNameValidationError(null)
@@ -50,12 +50,10 @@ export const ArticleWizardModal = () => {
 
 		if (response) {
 			setTimeout(() => {
-				navigateTo({
-					target: worldWikiRoutes.article,
-					args: {
-						worldId: response.worldId,
-						articleId: response.id,
-					},
+				navigate({
+					to: '/world/$worldId/wiki/$articleId',
+					params: { articleId: response.id },
+					search: true,
 				})
 			}, 100)
 		}

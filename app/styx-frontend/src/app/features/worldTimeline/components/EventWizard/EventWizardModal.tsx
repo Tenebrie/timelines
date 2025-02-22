@@ -1,20 +1,18 @@
+// @ts-nocheck
 import Add from '@mui/icons-material/Add'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
+import { useNavigate, useParams } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
 import { useCreateWorldEventMutation } from '@/api/worldEventApi'
 import { useModal } from '@/app/features/modals/reducer'
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { isEntityNameValid } from '@/app/features/validation/isEntityNameValid'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
 import Modal, { useModalCleanup } from '@/ui-lib/components/Modal'
 import { ModalFooter, ModalHeader } from '@/ui-lib/components/Modal'
 
@@ -27,8 +25,8 @@ export const EventWizardModal = () => {
 
 	const [createWorldEvent, { isLoading }] = useCreateWorldEventMutation()
 
-	const { navigateToEventEditor, stateOf } = useWorldTimelineRouter()
-	const { worldId } = stateOf(worldTimelineRoutes.eventEditor)
+	const navigate = useNavigate({ from: '/world/$worldId' })
+	const { worldId } = useParams({ from: '/world/$worldId' })
 
 	useEffect(() => {
 		setNameValidationError(null)
@@ -70,7 +68,11 @@ export const EventWizardModal = () => {
 		}
 
 		close()
-		navigateToEventEditor({ eventId: response.id, selectedTime: timestamp })
+		navigate({
+			to: '/world/$worldId/timeline/event/$eventId',
+			params: { eventId: response.id },
+			search: { time: timestamp },
+		})
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(

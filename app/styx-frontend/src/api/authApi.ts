@@ -14,6 +14,10 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/auth`, method: 'POST', body: queryArg.body }),
 				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
 			}),
+			deleteAccount: build.mutation<DeleteAccountApiResponse, DeleteAccountApiArg>({
+				query: () => ({ url: `/api/auth`, method: 'DELETE' }),
+				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
+			}),
 			postLogin: build.mutation<PostLoginApiResponse, PostLoginApiArg>({
 				query: (queryArg) => ({ url: `/api/auth/login`, method: 'POST', body: queryArg.body }),
 				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList', 'adminUsers'],
@@ -59,6 +63,8 @@ export type CreateAccountApiArg = {
 		password: string
 	}
 }
+export type DeleteAccountApiResponse = unknown
+export type DeleteAccountApiArg = void
 export type PostLoginApiResponse = /** status 200  */ {
 	user: {
 		id: string
@@ -80,6 +86,7 @@ export const {
 	useCheckAuthenticationQuery,
 	useLazyCheckAuthenticationQuery,
 	useCreateAccountMutation,
+	useDeleteAccountMutation,
 	usePostLoginMutation,
 	usePostLogoutMutation,
 } = injectedRtkApi

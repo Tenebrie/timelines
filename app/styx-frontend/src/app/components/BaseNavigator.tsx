@@ -3,47 +3,49 @@ import Home from '@mui/icons-material/Home'
 import Speed from '@mui/icons-material/Speed'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
+import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import { ReactElement, useMemo } from 'react'
+import { useNavigate } from '@tanstack/react-router'
+import { ReactNode } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { CustomTheme, useCustomTheme } from '../../hooks/useCustomTheme'
-import { appRoutes } from '../../router/routes/appRoutes'
-import { adminRoutes } from '../../router/routes/featureRoutes/adminRoutes'
-import { useRouter } from '../../router/routes/routes'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+
 import { Announcements } from '../features/announcements/Announcements'
 import { getAuthState } from '../features/auth/selectors'
 import { SmallProfile } from '../features/auth/smallProfile/SmallProfile'
 import { PerformanceMetrics } from '../features/profiling/PerformanceMetrics'
 import { ThemeModeToggle } from '../features/theming/ThemeModeToggle'
+import { CustomTheme, useCustomTheme } from '../hooks/useCustomTheme'
 import { isDev } from '../utils/isDev'
 
-const Container = styled.div<{ $theme: CustomTheme }>`
+const Container = styled(Paper)<{ $theme: CustomTheme }>`
 	width: calc(100% - 16px);
 	background: ${(props) => props.$theme.custom.palette.background.navigator};
 	box-shadow: 0 4px 2px -2px ${(props) => props.$theme.custom.palette.background.navigator};
 	display: flex;
 	justify-content: space-between;
-	z-index: 2;
+	border-radius: 0 !important;
+	z-index: 10;
 	padding: 4px 8px;
 `
 
 type Props = {
-	children?: ReactElement | ReactElement[]
+	children?: ReactNode | ReactNode[]
 }
 
 export const BaseNavigator = ({ children }: Props) => {
-	const { navigateTo, isLocationEqual } = useRouter()
+	const navigate = useNavigate()
 	const { user } = useSelector(getAuthState)
 	const theme = useCustomTheme()
 
 	const onHome = () => {
-		navigateTo({ target: appRoutes.home })
+		navigate({ to: '/home' })
 	}
 
 	const onAdmin = () => {
-		navigateTo({ target: adminRoutes.adminRoot })
+		navigate({ to: '/admin' })
 	}
 
 	const onProfile = () => {
@@ -53,8 +55,8 @@ export const BaseNavigator = ({ children }: Props) => {
 		console.info(values)
 	}
 
-	const isHome = useMemo(() => isLocationEqual(appRoutes.home), [isLocationEqual])
-	const isAdmin = useMemo(() => isLocationEqual(adminRoutes.adminRoot), [isLocationEqual])
+	const isHome = useCheckRouteMatch('/home')
+	const isAdmin = useCheckRouteMatch('/admin')
 
 	return (
 		<Container $theme={theme}>

@@ -1,14 +1,12 @@
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-
-import { homeRoutes, useHomeRouter } from '@/router/routes/featureRoutes/homeRoutes'
+import { useParams } from '@tanstack/react-router'
 
 import { ShareWorldModal } from './components/ShareWorldModal'
 import { WorldDetailsEditorWrapper } from './WorldDetailsEditorWrapper'
 
 export const WorldDetails = () => {
-	const { stateOf } = useHomeRouter()
-	const worldId = stateOf(homeRoutes.worldDetails).worldId
+	const { worldId } = useParams({ from: '/world/$worldId/_world/settings' })
 
 	return (
 		<Stack sx={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>

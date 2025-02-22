@@ -1,6 +1,6 @@
 import TextField from '@mui/material/TextField'
 
-import { isRunningInTest } from '@/jest/isRunningInTest'
+import { isRunningInTest } from '@/test-utils/isRunningInTest'
 
 import { RichTextEditor, RichTextEditorProps } from './RichTextEditor'
 

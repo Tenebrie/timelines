@@ -1,27 +1,8 @@
 import styled from 'styled-components'
 
-import { CustomTheme } from '@/hooks/useCustomTheme'
+import { CustomTheme } from '@/app/hooks/useCustomTheme'
 
-export const TimelineAnchorContainer = styled.div.attrs<{ offset: number }>((props) => ({
-	style: {
-		transform: `translateX(${props.offset}px)`,
-	},
-}))<{ offset: number }>`
-	position: absolute;
-	bottom: 0;
-	pointer-events: none;
-`
-
-export const TimelineSmallestPips = styled.div.attrs<{
-	offset: number
-	$visible: boolean
-	$lineSpacing: number
-}>((props) => ({
-	style: {
-		transform: `translateX(${-props.offset + (props.offset % props.$lineSpacing)}px)`,
-		opacity: props.$visible ? 1 : 0,
-	},
-}))<{ offset: number; $lineSpacing: number }>`
+export const TimelineSmallestPips = styled.div<{ $lineSpacing: number }>`
 	position: absolute;
 	left: 0;
 	bottom: 0;
@@ -29,6 +10,7 @@ export const TimelineSmallestPips = styled.div.attrs<{
 	height: 10px;
 	background-image: linear-gradient(to right, gray 1px, transparent 1px);
 	background-size: ${(props) => props.$lineSpacing}px 100%;
+	transform: translateX(var(--pip-scroll));
 	transition: opacity 0.3s;
 `
 
@@ -40,26 +22,6 @@ export const DividerContainer = styled.div.attrs<{ offset: number }>((props) => 
 	position: absolute;
 	bottom: 0;
 	pointer-events: none;
-	opacity: 0;
-	transition: opacity 0.3s;
-
-	&.visible {
-		opacity: 1;
-	}
-`
-
-export const Divider = styled.div.attrs<{ color: string; width: number; height: number }>((props) => ({
-	style: {
-		backgroundColor: props.color,
-		width: `${props.width}px`,
-		height: `${8 * props.height}px`,
-		marginLeft: `${-props.width / 2}px`,
-	},
-}))<{ color: string; height: number }>`
-	position: absolute;
-	background: gray;
-	bottom: 0;
-	border-radius: 4px 4px 0 0;
 `
 
 export const DividerLabel = styled.div<{ $theme: CustomTheme }>`

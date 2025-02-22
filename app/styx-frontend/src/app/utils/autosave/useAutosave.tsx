@@ -1,60 +1,80 @@
 import Save from '@mui/icons-material/Save'
-import debounce from 'lodash.throttle'
+import throttle from 'lodash.throttle'
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 
-import { isRunningInTest } from '@/jest/isRunningInTest'
+import { useAutoRef } from '@/app/hooks/useAutoRef'
 
 import { useEffectOnce } from '../useEffectOnce'
 import { AutosaveIcon } from './AutosaveIcon'
 import { SavingState } from './types'
 
-type Props = {
-	onSave: () => void
+type Props<T extends unknown[]> = {
+	onSave: (...args: T) => void
 	isSaving: boolean
 	isError?: boolean
 	defaultIcon?: ReactElement
 }
 
-export const useAutosave = ({ onSave, isSaving, isError, defaultIcon }: Props) => {
+export const useAutosave = <T extends unknown[]>({ onSave, isSaving, isError, defaultIcon }: Props<T>) => {
 	const savingStateRef = useRef<SavingState>('none')
 	const [savingState, setSavingState] = useState<SavingState>('none')
 	const successTimeoutRef = useRef<number | null>(null)
 	const defaultIconRef = useRef<ReactElement | undefined>(defaultIcon)
 
 	// TODO: Figure out a more permanent solution
-	const autosaveDelay = isRunningInTest() ? 300 : 1000
+	const autosaveDelay = 300
 
-	const onSaveRef = useRef<() => void>(onSave)
+	const onSaveRef = useAutoRef(onSave)
+	const isSavingRef = useAutoRef(isSaving)
 	const debouncedAutosave = useRef(
-		debounce(() => {
-			if (savingStateRef.current !== 'debounce') {
+		throttle(
+			(...args: T) => {
+				if (savingStateRef.current !== 'debounce') {
+					return
+				}
+				if (isSavingRef.current) {
+					debouncedAutosave.current(...args)
+					return
+				}
+				setSavingState('waiting')
+				onSaveRef.current(...args)
+				lastSeenValue.current = null
+			},
+			autosaveDelay,
+			{ trailing: true, leading: false },
+		),
+	)
+
+	const lastSeenValue = useRef<T | null>(null)
+	const onAutosave = useCallback((...args: T) => {
+		setSavingState('debounce')
+		lastSeenValue.current = args
+		debouncedAutosave.current(...args)
+	}, [])
+
+	const onFlushSave = useCallback(() => {
+		if (savingStateRef.current === 'debounce' && lastSeenValue.current) {
+			debouncedAutosave.current.flush()
+			setSavingState('none')
+		}
+	}, [])
+
+	const onManualSave = useCallback(
+		(...args: T) => {
+			if (isSavingRef.current) {
 				return
 			}
 			setSavingState('waiting')
-			onSaveRef.current()
-		}, autosaveDelay),
+			onSaveRef.current(...args)
+			lastSeenValue.current = null
+		},
+		[isSavingRef, onSaveRef],
 	)
-
-	const onAutosave = useCallback(() => {
-		setSavingState('debounce')
-		debouncedAutosave.current()
-	}, [])
-
-	const onManualSave = useCallback(() => {
-		if (isSaving) {
-			return
-		}
-		setSavingState('waiting')
-		onSaveRef.current()
-	}, [isSaving])
 
 	const onCancelAutosave = useCallback(() => {
 		setSavingState('none')
+		lastSeenValue.current = null
 	}, [])
-
-	useEffect(() => {
-		onSaveRef.current = onSave
-	}, [onSave])
 
 	const startedWaitingRef = useRef<boolean>(false)
 	useEffect(() => {
@@ -97,8 +117,8 @@ export const useAutosave = ({ onSave, isSaving, isError, defaultIcon }: Props) =
 
 	useEffectOnce(() => {
 		return () => {
-			if (savingStateRef.current === 'debounce') {
-				onSaveRef.current()
+			if (savingStateRef.current === 'debounce' && lastSeenValue.current) {
+				onSaveRef.current(...lastSeenValue.current)
 			}
 		}
 	})
@@ -121,6 +141,7 @@ export const useAutosave = ({ onSave, isSaving, isError, defaultIcon }: Props) =
 		icon: currentIcon,
 		color: currentColor,
 		autosave: onAutosave,
+		flushSave: onFlushSave,
 		manualSave: onManualSave,
 		cancelAutosave: onCancelAutosave,
 		savingState,

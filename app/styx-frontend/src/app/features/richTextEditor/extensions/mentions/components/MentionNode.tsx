@@ -89,23 +89,12 @@ export const MentionNode = Node.create({
 			let root: Root | null = null
 			const dom = document.createElement('span')
 
-			let lastNode: ProseMirrorNode | null = null
+			let lastNode: ProseMirrorNode = initialNode
 
 			const rerender = (node: ProseMirrorNode) => {
 				if (!root) {
 					return
 				}
-				if (lastNode) {
-					dispatchEvent({
-						event: 'richEditor/mentionRender/end',
-						params: { node: lastNode },
-					})
-				}
-				lastNode = node
-				dispatchEvent({
-					event: 'richEditor/mentionRender/start',
-					params: { node },
-				})
 				const actorId = node.attrs.componentProps.actor as string | undefined
 				const eventId = node.attrs.componentProps.event as string | undefined
 				const articleId = node.attrs.componentProps.article as string | undefined
@@ -137,32 +126,44 @@ export const MentionNode = Node.create({
 				root.render(<Component />)
 			}
 
-			requestAnimationFrame(() => {
-				root = createRoot(dom!)
-				rerender(initialNode)
+			requestIdleCallback(
+				() => {
+					root = createRoot(dom!)
+					rerender(initialNode)
+				},
+				{ timeout: 100 },
+			)
+			dispatchEvent({
+				event: 'richEditor/mentionRender/start',
+				params: { node: initialNode },
 			})
 
 			return {
 				dom,
 				update: (node) => {
+					dispatchEvent({
+						event: 'richEditor/mentionRender/end',
+						params: { node: lastNode },
+					})
+					lastNode = node
+					dispatchEvent({
+						event: 'richEditor/mentionRender/start',
+						params: { node },
+					})
 					rerender(node)
 					return true
 				},
 				destroy: () => {
-					if (lastNode) {
+					dispatchEvent({
+						event: 'richEditor/mentionRender/end',
+						params: { node: lastNode },
+					})
+					setTimeout(() => {
+						root?.unmount()
 						dispatchEvent({
 							event: 'richEditor/mentionRender/end',
 							params: { node: lastNode },
 						})
-					}
-					setTimeout(() => {
-						root?.unmount()
-						if (lastNode) {
-							dispatchEvent({
-								event: 'richEditor/mentionRender/end',
-								params: { node: lastNode },
-							})
-						}
 					})
 				},
 			}

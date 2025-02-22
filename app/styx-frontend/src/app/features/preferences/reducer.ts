@@ -1,6 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
+import { ScaleLevel } from '../worldTimeline/components/Timeline/types'
 import { Actor, WorldEvent } from '../worldTimeline/types'
 import { loadPreferences, PreferencesKey } from './loadPreferences'
 
@@ -28,6 +29,7 @@ export const preferencesSlice = createSlice({
 		loadFromLocalStorage: (state) => {
 			const value = loadPreferences()
 			state['colorMode'] = value['colorMode']
+			state['editing'] = value['editing']
 			state['timeline'] = value['timeline']
 			state['outliner'] = value['outliner']
 			state['overview'] = value['overview']
@@ -39,9 +41,19 @@ export const preferencesSlice = createSlice({
 			saveToLocalStorage(state)
 		},
 
+		/* Editing */
+		setEventColorPickerOpen: (state, { payload }: PayloadAction<boolean>) => {
+			state.editing.eventColorPickerOpen = payload
+			saveToLocalStorage(state)
+		},
+
 		/* Timeline */
 		setTimelineHeight: (state, { payload }: PayloadAction<number>) => {
 			state.timeline.containerHeight = payload
+			saveToLocalStorage(state)
+		},
+		setScaleLevel: (state, { payload }: PayloadAction<ScaleLevel>) => {
+			state.timeline.scaleLevel = payload
 			saveToLocalStorage(state)
 		},
 

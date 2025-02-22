@@ -18,6 +18,8 @@ model WikiArticle {
     updatedAt DateTime @default(now()) @updatedAt
 
     name        String
+    icon        String @default("default")
+    color       String @default("#000000")
     contentRich String @default("")
     position    Int    @default(0)
 

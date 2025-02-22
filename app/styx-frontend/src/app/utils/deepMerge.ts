@@ -1,4 +1,4 @@
-import { DeepPartial } from '@/types/utils'
+import { DeepPartial } from '@/app/types/utils'
 
 function isObject(item: unknown): item is Record<string, unknown> {
 	return item !== null && typeof item === 'object' && !Array.isArray(item)

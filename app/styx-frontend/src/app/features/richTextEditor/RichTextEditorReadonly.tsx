@@ -14,9 +14,5 @@ export const RichTextEditorReadonly = ({ value }: Props) => {
 		extensions: ViewerExtensions,
 	})
 
-	return (
-		<div>
-			<StyledEditorContent className="content" editor={editor} readOnly $mode="read" />
-		</div>
-	)
+	return <StyledEditorContent className="content" editor={editor} readOnly $mode="read" />
 }

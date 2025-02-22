@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { WorldBrief } from '@/app/features/worldTimeline/types'
 import { generateSetter } from '@/app/utils/autosave/generateSetter'
@@ -8,8 +8,8 @@ type Props = {
 }
 
 export const useWorldFields = ({ world }: Props) => {
-	const isDirty = useRef(false)
-	const setDirty = useCallback((value: boolean) => (isDirty.current = value), [])
+	const [isDirty, setDirty] = useState(false)
+	const makeDirty = () => setDirty(true)
 
 	const [name, setName] = useState(world.name)
 	const [description, setDescription] = useState(world.description)
@@ -17,9 +17,9 @@ export const useWorldFields = ({ world }: Props) => {
 
 	const setters = useMemo(
 		() => ({
-			setName: generateSetter(setName, isDirty),
-			setDescription: generateSetter(setDescription, isDirty),
-			setCalendar: generateSetter(setCalendar, isDirty),
+			setName: generateSetter(setName, makeDirty),
+			setDescription: generateSetter(setDescription, makeDirty),
+			setCalendar: generateSetter(setCalendar, makeDirty),
 		}),
 		[],
 	)

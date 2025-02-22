@@ -2,8 +2,7 @@ import { Theme } from '@emotion/react'
 import { SxProps } from '@mui/material'
 import Box from '@mui/material/Box'
 
-import { useBrowserSpecificScrollbars } from '@/hooks/useBrowserSpecificScrollbars'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
 type Props = {
 	children: JSX.Element | JSX.Element[]
@@ -12,10 +11,7 @@ type Props = {
 export const CustomThemeOverrides = ({ children }: Props) => {
 	const theme = useCustomTheme()
 
-	const scrollbarThemes = useBrowserSpecificScrollbars()
-
 	const themeOverrides: SxProps<Theme> = {
-		...scrollbarThemes,
 		color: theme.material.palette.text.secondary,
 		bgcolor: theme.material.palette.background.default,
 		'* .MuiTabs-indicator': {

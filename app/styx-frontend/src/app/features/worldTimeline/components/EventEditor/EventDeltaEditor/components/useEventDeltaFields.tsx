@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { WorldEventDelta } from '@/app/features/worldTimeline/types'
 import { generateSetter } from '@/app/utils/autosave/generateSetter'
@@ -8,8 +8,8 @@ type Props = {
 }
 
 export const useEventDeltaFields = ({ delta }: Props) => {
-	const isDirty = useRef(false)
-	const setDirty = useCallback((value: boolean) => (isDirty.current = value), [])
+	const [isDirty, setDirty] = useState(false)
+	const makeDirty = () => setDirty(true)
 
 	const [name, setNameDirect] = useState<string | null>(delta.name ?? null)
 	const [timestamp, setTimestampDirect] = useState<number>(delta.timestamp)
@@ -18,10 +18,10 @@ export const useEventDeltaFields = ({ delta }: Props) => {
 
 	const setters = useMemo(
 		() => ({
-			setName: generateSetter(setNameDirect, isDirty),
-			setTimestamp: generateSetter(setTimestampDirect, isDirty),
-			setDescription: generateSetter(setDescriptionDirect, isDirty),
-			setDescriptionRich: generateSetter(setDescriptionRichDirect, isDirty),
+			setName: generateSetter(setNameDirect, makeDirty),
+			setTimestamp: generateSetter(setTimestampDirect, makeDirty),
+			setDescription: generateSetter(setDescriptionDirect, makeDirty),
+			setDescriptionRich: generateSetter(setDescriptionRichDirect, makeDirty),
 		}),
 		[],
 	)

@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useDebugValue, useMemo } from 'react'
 
 import { ScaleLevel } from '../../worldTimeline/components/Timeline/types'
 import { WorldCalendarType } from '../../worldTimeline/types'
@@ -10,6 +10,7 @@ type Props = {
 }
 
 export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
+	useDebugValue('useTimelineWorldTime')
 	const { getLevelScalar } = useTimelineLevelScalar()
 
 	const scalar = useMemo<number>(() => getLevelScalar(scaleLevel), [getLevelScalar, scaleLevel])

@@ -1,9 +1,9 @@
 import { Editor, useEditor } from '@tiptap/react'
 import throttle from 'lodash.throttle'
-import { useEffect, useRef } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
 import { getWikiPreferences } from '../preferences/selectors'
 import { getWorldState } from '../world/selectors'
@@ -30,7 +30,7 @@ export type OnChangeParams = {
 	mentions: MentionDetails[]
 }
 
-export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode }: Props) => {
+export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allowReadMode }: Props) => {
 	const theme = useCustomTheme()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 	const { readModeEnabled } = useSelector(getWikiPreferences)
@@ -81,8 +81,8 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 		content: value,
 		editable: !isReadMode,
 		extensions: EditorExtensions,
-		onUpdate({ editor }) {
-			if (editor.getHTML() === value) {
+		onUpdate({ editor, transaction }) {
+			if (editor.getHTML() === value || transaction.steps.length === 0) {
 				return
 			}
 			onChangeThrottled.current(editor)
@@ -156,7 +156,7 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 		<StyledContainer
 			sx={{
 				borderRadius: '6px',
-				height: '100%',
+				minHeight: '128px',
 				border: isReadMode ? '1px solid transparent' : '',
 				'&:hover': {
 					border: isReadMode ? '1px solid transparent' : '',
@@ -171,14 +171,11 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 			}}
 		>
 			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode} />
-			<StyledEditorContent
-				className="content"
-				editor={editor}
-				placeholder="Content"
-				$mode={isReadMode ? 'read' : 'edit'}
-			/>
+			<StyledEditorContent className="content" editor={editor} $mode={isReadMode ? 'read' : 'edit'} />
 			<MentionsList editor={editor} />
-			<FadeInOverlay key={softKey} isReadMode={isReadMode} />
+			<FadeInOverlay key={softKey} content={value} isReadMode={isReadMode} />
 		</StyledContainer>
 	)
 }
+
+export const RichTextEditor = memo(RichTextEditorComponent)

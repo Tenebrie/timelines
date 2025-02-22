@@ -2,7 +2,6 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
-import { QueryParams } from '@/router/routes/QueryParams'
 
 import { ingestActor, ingestEvent } from '../../utils/ingestEvent'
 import {
@@ -17,18 +16,19 @@ import {
 
 export const initialState = {
 	isLoaded: false as boolean,
+	isUnauthorized: false as boolean,
 	id: '' as string,
 	name: '' as string,
 	description: '' as string,
 	events: [] as WorldEvent[],
 	actors: [] as ActorDetails[],
 	calendar: 'RIMWORLD' as WorldCalendarType,
-	timeOrigin: '0',
+	timeOrigin: 0,
 	createdAt: '0',
 	updatedAt: '0',
 	selectedActors: [] as string[],
 	selectedEvents: [] as string[],
-	selectedTimelineMarkers: [] as string[],
+	selectedTimelineMarkers: [] as { id: string; eventId: string }[],
 	isReadOnly: false as boolean,
 	accessMode: 'Private' as WorldAccessMode,
 
@@ -72,13 +72,14 @@ export const worldSlice = createSlice({
 		loadWorld: (state, { payload }: PayloadAction<{ world: GetWorldInfoApiResponse }>) => {
 			const world = payload.world
 			state.isLoaded = true
+			state.isUnauthorized = false
 			state.id = world.id
 			state.name = world.name
 			state.description = world.description
 			state.actors = [...world.actors].sort((a, b) => a.name.localeCompare(b.name)).map((a) => ingestActor(a))
 			state.events = world.events.map((e) => ingestEvent(e))
 			state.calendar = world.calendar
-			state.timeOrigin = world.timeOrigin
+			state.timeOrigin = Number(world.timeOrigin)
 			state.createdAt = world.createdAt
 			state.updatedAt = world.updatedAt
 			state.isReadOnly = world.isReadOnly
@@ -86,8 +87,15 @@ export const worldSlice = createSlice({
 		},
 		unloadWorld: (state) => {
 			state.isLoaded = false
+			state.isUnauthorized = false
 			state.events = []
 			state.isReadOnly = false
+		},
+		setUnauthorized: (state, { payload }: PayloadAction<boolean>) => {
+			state.isUnauthorized = payload
+		},
+		addEvent: (state, { payload }: PayloadAction<WorldEvent>) => {
+			state.events = state.events.concat(payload)
 		},
 		updateEvent: (state, { payload }: PayloadAction<Pick<WorldEvent, 'id'> & Partial<WorldEvent>>) => {
 			const event = state.events.find((e) => e.id === payload.id)
@@ -100,6 +108,9 @@ export const worldSlice = createSlice({
 				...payload,
 			}
 			state.events.splice(state.events.indexOf(event), 1, newEvent)
+		},
+		removeEvent: (state, { payload }: PayloadAction<string>) => {
+			state.events = state.events.filter((e) => e.id !== payload)
 		},
 		updateEventDelta: (
 			state,
@@ -131,9 +142,6 @@ export const worldSlice = createSlice({
 				...payload,
 			}
 			state.actors.splice(state.actors.indexOf(actor), 1, newActor)
-		},
-		addEvent: (state, { payload }: PayloadAction<WorldEvent>) => {
-			state.events = state.events.concat(payload)
 		},
 		addActor: (state, { payload }: PayloadAction<ActorDetails>) => {
 			state.actors = state.actors.concat(payload).sort((a, b) => a.name.localeCompare(b.name))
@@ -170,20 +178,21 @@ export const worldSlice = createSlice({
 		},
 		addTimelineMarkerToSelection: (
 			state,
-			{ payload }: PayloadAction<{ id: string; multiselect: boolean }>,
+			{ payload }: PayloadAction<{ id: string; eventId: string; multiselect: boolean }>,
 		) => {
+			const record = { id: payload.id, eventId: payload.eventId }
 			if (!payload.multiselect) {
-				state.selectedTimelineMarkers = [payload.id]
+				state.selectedTimelineMarkers = [record]
 				return
 			}
 
-			if (state.selectedTimelineMarkers.includes(payload.id)) {
+			if (state.selectedTimelineMarkers.some((m) => m.id === payload.id)) {
 				return
 			}
-			state.selectedTimelineMarkers = [...state.selectedTimelineMarkers, payload.id]
+			state.selectedTimelineMarkers = [...state.selectedTimelineMarkers, record]
 		},
 		removeTimelineMarkerFromSelection: (state, { payload }: PayloadAction<string>) => {
-			state.selectedTimelineMarkers = state.selectedTimelineMarkers.filter((event) => event !== payload)
+			state.selectedTimelineMarkers = state.selectedTimelineMarkers.filter((marker) => marker.id !== payload)
 		},
 		clearSelections: (state) => {
 			state.selectedActors = []
@@ -243,10 +252,6 @@ export const worldSlice = createSlice({
 		/* Navigation state */
 		setSelectedTime: (state, { payload }: PayloadAction<number>) => {
 			state.selectedTime = payload
-			// Use history.replaceState to put the new selectedTime into the url
-			setTimeout(() => {
-				window.history.replaceState(null, '', `?${QueryParams.SELECTED_TIME}=${payload}`)
-			}, 5)
 		},
 	},
 })
