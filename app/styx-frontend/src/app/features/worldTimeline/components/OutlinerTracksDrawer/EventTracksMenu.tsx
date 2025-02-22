@@ -1,5 +1,5 @@
-import KeyboardDoubleArrowLeft from '@mui/icons-material/KeyboardDoubleArrowLeft'
-import KeyboardDoubleArrowRight from '@mui/icons-material/KeyboardDoubleArrowRight'
+import FirstPageIcon from '@mui/icons-material/FirstPage'
+import LastPageIcon from '@mui/icons-material/LastPage'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
@@ -16,6 +16,7 @@ import { useUpdateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/reducer'
 import { getTimelineState, getWorldIdState } from '@/app/features/world/selectors'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import { TimelineTrack } from '../Timeline/components/TimelineTracks/hooks/useEventTracks'
@@ -59,7 +60,15 @@ function EventTracksMenuComponent() {
 	}, [openEventTrackWizard])
 
 	return (
-		<Stack sx={{ padding: '0 16px 0 16px', marginBottom: 3, overflowX: 'hidden', overflowY: 'scroll' }}>
+		<Stack
+			sx={{
+				padding: '0 16px 0 16px',
+				marginBottom: 3,
+				overflowX: 'hidden',
+				overflowY: 'scroll',
+				...useBrowserSpecificScrollbars(),
+			}}
+		>
 			<Stack
 				gap={1}
 				direction="row"
@@ -91,7 +100,7 @@ function EventTracksMenuComponent() {
 								'&:last-child td, &:last-child th': { border: 0 },
 							}}
 						>
-							<TableCell width={'1px'} sx={{ margin: 0, padding: 1, paddingRight: 0 }}>
+							<TableCell width={'1px'} sx={{ margin: 0, padding: 1, paddingRight: 0, minWidth: 58 }}>
 								{track.id !== 'default' && (
 									<Switch checked={track.visible} onChange={() => onToggleVisibility(track)} />
 								)}
@@ -123,7 +132,7 @@ function EventTracksMenuComponent() {
 												minWidth: '32px',
 											}}
 										>
-											<KeyboardDoubleArrowLeft />
+											<FirstPageIcon />
 										</Button>
 									)}
 									{track.events.length > 0 && (
@@ -139,7 +148,7 @@ function EventTracksMenuComponent() {
 												minWidth: '32px',
 											}}
 										>
-											<KeyboardDoubleArrowRight />
+											<LastPageIcon />
 										</Button>
 									)}
 								</Stack>

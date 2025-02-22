@@ -73,6 +73,8 @@ export function ResizeableDrawer({
 		setVisible(true)
 	}, [setVisible])
 
+	const scrollbarStyles = useBrowserSpecificScrollbars()
+
 	return (
 		<ResizeableDrawerProvider
 			height={height}
@@ -91,7 +93,6 @@ export function ResizeableDrawer({
 				sx={{
 					position: 'relative',
 					alignItems: 'center',
-					...useBrowserSpecificScrollbars(),
 				}}
 				elevation={2}
 			>

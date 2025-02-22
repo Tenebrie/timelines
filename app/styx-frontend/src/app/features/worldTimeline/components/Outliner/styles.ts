@@ -2,8 +2,6 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import styled from 'styled-components'
 
-import { ScrollbarStyling } from '@/app/styles'
-
 export const StatementsScroller = styled.div`
 	width: 100%;
 	height: 100%;
@@ -15,8 +13,6 @@ export const StatementsScroller = styled.div`
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
-
-	${ScrollbarStyling}
 `
 
 export const StyledListItemButton = styled(ListItemButton)`

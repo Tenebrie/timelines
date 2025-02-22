@@ -23,7 +23,7 @@ function TracksDrawerComponent() {
 		<ResizeableDrawer
 			pulldownWidth={100}
 			pulldownLabel="Tracks"
-			minHeight={400}
+			minHeight={230}
 			persistentStateKey="tracksDrawerState/v1"
 			onResize={onResize.current}
 		>

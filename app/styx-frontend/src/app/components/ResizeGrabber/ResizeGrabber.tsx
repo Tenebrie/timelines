@@ -249,11 +249,12 @@ function ResizeGrabberComponent({
 		})()
 		_setInternalHeight(value)
 
-		const constrainedValue = Math.max(_minHeight, value)
+		const maxHeight = window.innerHeight - 256
+		const constrainedValue = Math.min(maxHeight, Math.max(_minHeight, value))
 		_setDisplayedHeight(constrainedValue)
 
 		if (overflowHeight !== value - constrainedValue) {
-			_setOverflowHeight(value - constrainedValue)
+			_setOverflowHeight(Math.min(0, value - constrainedValue))
 		}
 		mouseLastSeenPosition.current = mousePosition
 
