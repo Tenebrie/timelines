@@ -140,7 +140,7 @@ export const MentionsList = ({ editor }: Props) => {
 		<Paper
 			sx={{
 				zIndex: 10,
-				position: 'absolute',
+				position: 'fixed',
 				top: `calc(${pos.top}px + 1.5rem)`,
 				left: pos.left,
 				display: visible ? 'block' : 'none',
