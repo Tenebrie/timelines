@@ -9,7 +9,10 @@ import { Configuration } from 'rollbar'
 
 import { useAuthCheck } from './app/features/auth/authCheck/useAuthCheck'
 import { store } from './app/store'
+import { loadSafariPolyfills } from './polyfills/safariPolyfills'
 import { router } from './router'
+
+loadSafariPolyfills()
 
 const container = document.getElementById('root')
 const root = createRoot(container!)

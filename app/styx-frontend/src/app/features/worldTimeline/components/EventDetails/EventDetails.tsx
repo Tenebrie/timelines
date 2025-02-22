@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux'
 import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
 import { getEditingPreferences } from '@/app/features/preferences/selectors'
 import { useUpsertEvent } from '@/app/features/worldTimeline/hooks/useUpsertEvent'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
 import { useCurrentOrNewEvent } from '../../hooks/useCurrentOrNewEvent'
 import { useEventDraft } from '../EventEditor/components/EventDetailsEditor/useEventFields'
@@ -43,6 +44,7 @@ export function EventDetailsComponent() {
 			sx={{
 				padding: '24px 16px',
 				overflowY: 'auto',
+				...useBrowserSpecificScrollbars(),
 			}}
 		>
 			<EventTitle event={event} draft={draft} />

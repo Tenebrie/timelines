@@ -15,6 +15,7 @@ export const useCustomTheme = () => {
 			mode: theme.palette.mode,
 			material: materialTheme,
 			custom: theme.palette.mode === 'light' ? customLightTheme : customDarkTheme,
+			customInverted: theme.palette.mode === 'light' ? customDarkTheme : customLightTheme,
 		}
 	}, [theme])
 

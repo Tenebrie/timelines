@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box'
 import { memo } from 'react'
 import { useSelector } from 'react-redux'
 import { Virtuoso } from 'react-virtuoso'
@@ -5,10 +6,10 @@ import { Virtuoso } from 'react-virtuoso'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { getWorldState } from '@/app/features/world/selectors'
 import { useOutlinerTabs } from '@/app/features/worldTimeline/hooks/useOutlinerTabs'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
 import { useVisibleActors } from '../EventSelector/useVisibleActors'
 import { useVisibleEvents } from '../EventSelector/useVisibleEvents'
-import { StatementsScroller } from '../Outliner/styles'
 import { OutlinerEmptyState } from './OutlinerEmptyState/OutlinerEmptyState'
 import { WorldStateItem } from './WorldStateItem'
 
@@ -43,10 +44,26 @@ export function WorldStateComponent() {
 
 	return (
 		<OutlinedContainer label="World state" fullHeight style={{ pointerEvents: 'auto' }}>
-			<StatementsScroller>
+			<Box
+				sx={{
+					width: '100%',
+					height: '100%',
+					overflowY: 'auto',
+					display: 'flex',
+					flexDirection: 'column',
+					justifyContent: 'center',
+					'& > *': {
+						flexGrow: 0,
+						flexShrink: 0,
+					},
+					'& > [data-virtuoso-scroller]': {
+						...useBrowserSpecificScrollbars(),
+					},
+				}}
+			>
 				{scrollerVisible && (
 					<Virtuoso
-						style={{ height: '100%' }}
+						style={{ height: '100%', ...scrollbars }}
 						totalCount={totalCount}
 						itemContent={(rawIndex) => {
 							const actor = (() => {
@@ -74,7 +91,7 @@ export function WorldStateComponent() {
 					/>
 				)}
 				{!scrollerVisible && <OutlinerEmptyState />}
-			</StatementsScroller>
+			</Box>
 		</OutlinedContainer>
 	)
 }

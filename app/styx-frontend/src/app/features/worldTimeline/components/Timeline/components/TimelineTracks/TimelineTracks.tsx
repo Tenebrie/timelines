@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState, getTimelineState, getWorldState } from '@/app/features/world/selectors'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
 import { TimelineContextMenu } from '../TimelineContextMenu/TimelineContextMenu'
 import { TimelineTrackItem } from './TimelineTrackItem'
@@ -50,6 +51,7 @@ export function TimelineTracksComponent(props: Props) {
 				maxHeight: 'calc(100% - 72px)',
 				overflowX: 'hidden',
 				overflowY: 'auto',
+				...useBrowserSpecificScrollbars(),
 			}}
 			className={'allow-timeline-click'}
 		>

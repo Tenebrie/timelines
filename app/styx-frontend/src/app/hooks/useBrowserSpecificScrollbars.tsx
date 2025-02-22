@@ -20,20 +20,20 @@ export const useBrowserSpecificScrollbars = () => {
 		const darkScrollbarTrackColor = 'rgba(255, 255, 255, 0.1)'
 
 		const standardTheme: SxProps<Theme> = {
-			'& *': {
+			'&': {
 				scrollbarWidth: 'thin',
 				scrollbarColor:
 					colorMode === 'dark'
 						? `${darkScrollbarColor} ${darkScrollbarTrackColor}`
 						: `${lightScrollbarColor} ${lightScrollbarTrackColor}`,
 			},
-			'& *:hover': {
+			'&:hover': {
 				scrollbarColor:
 					colorMode === 'dark'
 						? `${darkScrollbarHoverColor} ${darkScrollbarTrackColor}`
 						: `${lightScrollbarHoverColor} ${lightScrollbarTrackColor}`,
 			},
-			'& *:active': {
+			'&:active': {
 				scrollbarColor:
 					colorMode === 'dark'
 						? `${darkScrollbarActiveColor} ${darkScrollbarTrackColor}`
@@ -42,22 +42,22 @@ export const useBrowserSpecificScrollbars = () => {
 		}
 
 		const chromeTheme: SxProps<Theme> = {
-			'* ::-webkit-scrollbar': {
+			'::-webkit-scrollbar': {
 				width: '8px',
 			},
-			'* ::-webkit-scrollbar-track': {
+			'::-webkit-scrollbar-track': {
 				borderRadius: '4px',
 				background: colorMode === 'dark' ? darkScrollbarTrackColor : lightScrollbarTrackColor,
 			},
-			'* ::-webkit-scrollbar-thumb': {
+			'::-webkit-scrollbar-thumb': {
 				borderRadius: '4px',
 				background: colorMode === 'dark' ? darkScrollbarColor : lightScrollbarColor,
 			},
 
-			'* ::-webkit-scrollbar-thumb:hover': {
+			'::-webkit-scrollbar-thumb:hover': {
 				background: colorMode === 'dark' ? darkScrollbarHoverColor : lightScrollbarHoverColor,
 			},
-			'* ::-webkit-scrollbar-thumb:active': {
+			'::-webkit-scrollbar-thumb:active': {
 				background: colorMode === 'dark' ? darkScrollbarActiveColor : lightScrollbarActiveColor,
 			},
 		}
