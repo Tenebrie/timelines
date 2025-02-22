@@ -1,13 +1,12 @@
 import { useCreateWorldEventMutation } from '@api/worldEventApi'
+import { useNavigate } from '@tanstack/react-router'
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-import { worldSlice } from '@/app/features/world/reducer'
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { getWorldIdState } from '@/app/features/world/selectors'
-import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTimelineBus'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { useEventFields } from './useEventFields'
 
@@ -18,11 +17,9 @@ type Props = {
 
 export const useCreateEvent = ({ state, onCreated }: Props) => {
 	const worldId = useSelector(getWorldIdState)
-	const { navigateToOutliner } = useWorldTimelineRouter()
+	const navigate = useNavigate({ from: '/world/$worldId' })
 
-	const scrollTimelineTo = useTimelineBusDispatch()
-	const { setSelectedTime } = worldSlice.actions
-	const dispatch = useDispatch()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 
 	const [createWorldEvent, { isLoading: isCreating, isError }] = useCreateWorldEventMutation()
 
@@ -31,7 +28,6 @@ export const useCreateEvent = ({ state, onCreated }: Props) => {
 			await createWorldEvent({
 				worldId,
 				body: {
-					type: 'SCENE',
 					name: state.name,
 					icon: state.icon,
 					timestamp: String(state.timestamp),
@@ -47,19 +43,24 @@ export const useCreateEvent = ({ state, onCreated }: Props) => {
 		if (error) {
 			return
 		}
-		scrollTimelineTo(state.timestamp)
-		navigateToOutliner()
-		dispatch(setSelectedTime(state.timestamp))
+		scrollTimelineTo({ timestamp: state.timestamp })
+		navigate({ to: '/world/$worldId/timeline', search: { time: state.timestamp } })
 		onCreated()
 	}, [
 		createWorldEvent,
-		scrollTimelineTo,
-		state,
 		worldId,
-		navigateToOutliner,
+		state.name,
+		state.icon,
+		state.timestamp,
+		state.revokedAt,
+		state.description,
+		state.descriptionRich,
+		state.customNameEnabled,
+		state.mentions,
+		state.externalLink,
+		scrollTimelineTo,
+		navigate,
 		onCreated,
-		dispatch,
-		setSelectedTime,
 	])
 
 	const {

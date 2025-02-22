@@ -2,7 +2,7 @@ import { DefaultBodyType, rest } from 'msw'
 import { SetupServer } from 'msw/node'
 import { v4 as getRandomId } from 'uuid'
 
-import { DeepPartial } from '@/types/utils'
+import { DeepPartial } from '@/app/types/utils'
 
 import { User } from '../app/features/auth/reducer'
 import {
@@ -258,6 +258,7 @@ export const mockActorModel = (actor: Partial<ActorDetails> = {}): ActorDetails 
 	updatedAt: new Date(0).toISOString(),
 	mentions: [],
 	mentionedIn: [],
+	icon: 'default',
 	color: '#008080',
 	...actor,
 })
@@ -280,6 +281,7 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	deltaStates: [],
 	externalLink: '',
 	worldEventTrackId: null,
+	color: '#008080',
 	...statement,
 })
 
@@ -335,5 +337,6 @@ export const mockApiEventModel = (
 	revokedAt: null,
 	externalLink: '',
 	worldEventTrackId: null,
+	color: '#008080',
 	...statement,
 })

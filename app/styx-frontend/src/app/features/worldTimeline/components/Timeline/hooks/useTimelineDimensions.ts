@@ -1,8 +1,6 @@
 import debounce from 'lodash.debounce'
 import { useEffect, useRef } from 'react'
 
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
-
 export const useTimelineDimensions = () => {
 	const containerRef = useRef<HTMLDivElement | null>(null)
 	const containerWidth = useRef<number>(window.innerWidth)
@@ -23,10 +21,18 @@ export const useTimelineDimensions = () => {
 		}, 100),
 	)
 
-	useEffectOnce(() => {
-		window.addEventListener('resize', onResize.current)
-		return () => window.removeEventListener('resize', onResize.current)
-	})
+	useEffect(() => {
+		if (!containerRef.current) {
+			return
+		}
+		const handler = onResize.current
+		const container = containerRef.current
+		const observer = new ResizeObserver(handler)
+		observer.observe(container)
+		return () => {
+			observer.unobserve(container)
+		}
+	}, [containerRef])
 
 	return {
 		containerRef,

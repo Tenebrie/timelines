@@ -1,17 +1,17 @@
 import Login from '@mui/icons-material/Login'
 import Logout from '@mui/icons-material/Logout'
 import LoadingButton from '@mui/lab/LoadingButton'
+import { useNavigate } from '@tanstack/react-router'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { usePostLogoutMutation } from '@/api/authApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { appRoutes, useAppRouter } from '@/router/routes/appRoutes'
 
 import { authSlice } from '../reducer'
 import { getAuthState } from '../selectors'
 
 export const SmallProfile = () => {
-	const { navigateTo } = useAppRouter()
+	const navigate = useNavigate()
 
 	const [logout, { isLoading }] = usePostLogoutMutation()
 	const { user } = useSelector(getAuthState)
@@ -19,7 +19,7 @@ export const SmallProfile = () => {
 	const dispatch = useDispatch()
 
 	const onLogin = async () => {
-		navigateTo({ target: appRoutes.login })
+		navigate({ to: '/login' })
 	}
 
 	const onLogout = async () => {
@@ -28,7 +28,7 @@ export const SmallProfile = () => {
 			return
 		}
 		dispatch(clearUser())
-		navigateTo({ target: appRoutes.login })
+		navigate({ to: '/login' })
 	}
 
 	return (

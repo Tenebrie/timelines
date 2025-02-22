@@ -103,7 +103,7 @@ export const lightTheme = createTheme({
 		mode: 'light',
 		background: {
 			paper: '#fff',
-			default: 'hsl(119, 0%, 85%)',
+			default: 'hsl(200, 0%, 85%)',
 		},
 		primary: {
 			main: 'hsl(118, 28%, 37%)',
@@ -121,7 +121,8 @@ export const darkTheme = createTheme({
 	palette: {
 		mode: 'dark',
 		background: {
-			default: '#0a0908',
+			// default: '#0a0908',
+			default: '#22333b',
 			paper: 'hsl(199, 27%, 18%)',
 		},
 		primary: {
@@ -143,8 +144,11 @@ export const customLightTheme = {
 		outline: 'rgb(0 0 0 / 23%)',
 		background: {
 			soft: 'rgb(0 0 0 / 10%)',
+			softer: 'rgb(0 0 0 / 5%)',
+			softest: 'rgb(0 0 0 / 2%)',
+			hardInvert: 'rgb(255 255 255 / 100%)',
 			modal: '#eee',
-			timeline: '#fff',
+			timeline: 'hsl(200, 0%, 98%)',
 			timelineHeader: '#f3f3f3',
 			navigator: '#fff',
 			paperActual: '#fff',
@@ -161,6 +165,9 @@ export const customDarkTheme: typeof customLightTheme = {
 		outline: 'rgb(255 255 255 / 23%)',
 		background: {
 			soft: 'rgb(255 255 255 / 10%)',
+			softer: 'rgb(255 255 255 / 5%)',
+			softest: 'rgb(255 255 255 / 2%)',
+			hardInvert: 'rgb(0 0 0 / 100%)',
 			modal: '#22333b',
 			timeline: '#22333b',
 			timelineHeader: '#22333b',

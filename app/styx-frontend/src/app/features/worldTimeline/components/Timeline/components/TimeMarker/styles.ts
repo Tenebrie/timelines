@@ -1,12 +1,8 @@
 import styled from 'styled-components'
 
-import { CustomTheme } from '@/hooks/useCustomTheme'
+import { CustomTheme } from '@/app/hooks/useCustomTheme'
 
-export const Container = styled.div.attrs<{ $offset: number }>((props) => ({
-	style: {
-		transform: `translateX(${props.$offset}px)`,
-	},
-}))<{ $offset: number; $theme: CustomTheme }>`
+export const Container = styled.div<{ $theme: CustomTheme }>`
 	background: ${(props) => props.$theme.material.palette.primary.main};
 	width: 3px;
 	margin-left: -1px;

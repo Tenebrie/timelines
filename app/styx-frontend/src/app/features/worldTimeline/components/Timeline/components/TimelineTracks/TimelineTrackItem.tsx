@@ -1,138 +1,132 @@
 import Divider from '@mui/material/Divider'
+import { useSearch } from '@tanstack/react-router'
 import throttle from 'lodash.throttle'
-import { Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
-import { isRunningInTest } from '@/jest/isRunningInTest'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
+import { getTimelineContextMenuState, getTimelineState } from '@/app/features/world/selectors'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { isRunningInTest } from '@/test-utils/isRunningInTest'
 
 import { TimelineState } from '../../utils/TimelineState'
-import { TimelineChainPositioner } from './components/TimelineChainPositioner/TimelineChainPositioner'
-import { TimelineEventPositioner } from './components/TimelineEventPositioner/TimelineEventPositioner'
-import { TimelineEventTrackTitle } from './components/TimelineEventTrackTitle/TimelineEventTrackTitle'
-import useEventTracks, { TimelineTrack } from './hooks/useEventTracks'
+import { TimelineEventTrackTitle } from './components/TimelineEventTrackTitle'
+import { TimelineMarker } from './components/TimelineMarker'
+import { TimelineTrack } from './hooks/useEventTracks'
 import { TrackContainer } from './styles'
 import { TimelineTrackItemDragDrop } from './TimelineTrackItemDragDrop'
 
 type Props = {
-	track: ReturnType<typeof useEventTracks>[number]
+	track: TimelineTrack
+	trackCount: number
 	visible: boolean
 	containerWidth: number
-	isLocationEqual: ReturnType<typeof useWorldTimelineRouter>['isLocationEqual']
-	eventEditorParams: {
-		eventId: string
-	}
-	eventDeltaEditorParams: {
-		deltaId: string
-	}
-	worldState: ReturnType<typeof getWorldState>
 	contextMenuState: ReturnType<typeof getTimelineContextMenuState>
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
-export const TimelineTrackItem = ({
+export const TimelineTrackItem = memo(TimelineTrackItemComponent)
+
+export function TimelineTrackItemComponent({
 	track,
+	trackCount,
 	visible,
 	containerWidth,
-	isLocationEqual,
-	eventEditorParams,
-	eventDeltaEditorParams,
-	worldState,
 	contextMenuState,
 	realTimeToScaledTime,
-}: Props) => {
+}: Props) {
 	const dragDropReceiverRef = useRef<HTMLDivElement | null>(null)
 	const [isDragging, setIsDragging] = useState(false)
+	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const theme = useCustomTheme()
-
-	const editedEntities = useMemo(
-		() =>
-			track.events.filter(
-				(entity) =>
-					(['issuedAt', 'revokedAt'].includes(entity.markerType) &&
-						isLocationEqual('/world/:worldId/timeline/editor/:eventId') &&
-						eventEditorParams.eventId === entity.eventId) ||
-					(isLocationEqual('/world/:worldId/timeline/editor/:eventId/delta/:deltaId') &&
-						eventDeltaEditorParams.deltaId === entity.id),
-			),
-		[eventDeltaEditorParams, eventEditorParams, isLocationEqual, track.events],
-	)
+	const selectedMarkerIds = useSearch({
+		from: '/world/$worldId/_world/timeline',
+		select: (search) => search.selection,
+	})
 
 	const selectedMarkers = useMemo(
 		() =>
 			track.events.filter(
 				(entity) =>
-					worldState.selectedTimelineMarkers.includes(entity.key) ||
+					selectedMarkerIds.some((marker) => marker === entity.key) ||
 					(contextMenuState.isOpen && contextMenuState.selectedEvent?.key === entity.key),
 			),
-		[contextMenuState, track.events, worldState.selectedTimelineMarkers],
+		[contextMenuState, track.events, selectedMarkerIds],
 	)
 	const [visibleMarkers, setVisibleMarkers] = useState<(typeof track)['events']>([])
 
+	const lastRecordedScroll = useRef<number | null>(null)
+	const lastVisibleMarkers = useRef<(typeof track)['events']>([])
 	const updateVisibleMarkersThrottled = useRef(
 		throttle(
-			(t: TimelineTrack, width: number, realTimeToScaledTime: Props['realTimeToScaledTime']) => {
-				setVisibleMarkers(
-					t.events.filter((event) => {
+			(
+				t: TimelineTrack,
+				width: number,
+				realTimeToScaledTime: Props['realTimeToScaledTime'],
+				forceUpdate: boolean,
+			) => {
+				const prevScroll = lastRecordedScroll.current
+				const staggerValue = track.position * (1000 / trackCount)
+				if (
+					!forceUpdate &&
+					prevScroll !== null &&
+					Math.abs(TimelineState.scroll - prevScroll + staggerValue) < 1000
+				) {
+					return
+				}
+
+				lastRecordedScroll.current = TimelineState.scroll
+				const markers = t.events
+					.filter((event) => {
 						const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + TimelineState.scroll
-						return position >= -250 && position <= width + 250
-					}),
-				)
+
+						return position >= -1000 && position <= width + 1000
+					})
+					.sort((a, b) => a.markerPosition - b.markerPosition)
+
+				if (
+					markers.length !== lastVisibleMarkers.current.length ||
+					markers.some((marker, index) => marker !== lastVisibleMarkers.current[index])
+				) {
+					setVisibleMarkers(markers)
+					lastVisibleMarkers.current = markers
+				}
 			},
-			isRunningInTest() ? 0 : 100,
+			isRunningInTest() ? 0 : 1,
 		),
 	)
 
 	const updateVisibleMarkers = useCallback(() => {
-		updateVisibleMarkersThrottled.current(track, containerWidth, realTimeToScaledTime)
+		updateVisibleMarkersThrottled.current(track, containerWidth, realTimeToScaledTime, false)
 	}, [containerWidth, realTimeToScaledTime, track])
 
 	useEffect(() => {
-		updateVisibleMarkers()
-	}, [updateVisibleMarkers])
+		updateVisibleMarkersThrottled.current(track, containerWidth, realTimeToScaledTime, true)
+		updateVisibleMarkersThrottled.current.flush()
+	}, [containerWidth, realTimeToScaledTime, track, updateVisibleMarkers, scaleLevel])
 
 	useEventBusSubscribe({
 		event: 'timelineScrolled',
 		callback: updateVisibleMarkers,
 	})
 
-	const chainLinks = useMemo(() => {
-		return track.events.filter(
-			(event) => event.markerType === 'issuedAt' || event.markerType === 'deltaState',
-		)
-	}, [track.events])
-
-	const dividerProps = useMemo(() => ({ position: 'absolute', bottom: 0, width: '100%' }), [])
-
 	return (
 		<Profiler id="TimelineTrackItem" onRender={reportComponentProfile}>
 			<TrackContainer
 				ref={dragDropReceiverRef}
 				$height={track.height}
-				$background={theme.custom.palette.background.soft}
-				className={`${isDragging ? 'dragging' : ''}`}
+				$background={theme.custom.palette.background.softest}
+				className={`${isDragging ? 'dragging' : ''} allow-timeline-click`}
+				data-trackid={track.id}
 			>
-				<Divider sx={dividerProps} />
-				{chainLinks.map((event) => (
-					<TimelineChainPositioner
-						key={event.key}
-						entity={event}
-						visible={visible}
-						edited={false}
-						selected={false}
-						realTimeToScaledTime={realTimeToScaledTime}
-					/>
-				))}
+				<Divider sx={{ position: 'absolute', bottom: 0, width: '100%', pointerEvents: 'none' }} />
 				{visibleMarkers.map((event) => (
-					<TimelineEventPositioner
+					<TimelineMarker
 						key={event.key}
-						entity={event}
+						marker={event}
 						visible={visible}
-						edited={editedEntities.some((marker) => marker.key === event.key)}
 						selected={selectedMarkers.some((marker) => marker.key === event.key)}
 						trackHeight={track.height}
 						realTimeToScaledTime={realTimeToScaledTime}

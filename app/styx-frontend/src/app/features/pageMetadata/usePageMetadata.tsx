@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useWorldRouter, worldRoutes } from '@/router/routes/featureRoutes/worldRoutes'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 import { getWorldState } from '../world/selectors'
 
@@ -21,7 +21,7 @@ const getEnvTag = () => {
 }
 
 export const usePageMetadata = () => {
-	const router = useWorldRouter()
+	const isWorldOpen = useCheckRouteMatch('/world/$worldId')
 	const { name: worldName, description: worldDescription } = useSelector(
 		getWorldState,
 		(a, b) => a.name === b.name && a.description === b.description,
@@ -29,14 +29,13 @@ export const usePageMetadata = () => {
 
 	const update = useCallback(() => {
 		const envTag = getEnvTag()
-		const isWorldOpen = router.isLocationChildOf(worldRoutes.root)
 		const name = isWorldOpen ? worldName : 'Timelines'
 		const title = `${envTag}${name}`
 		window.document.title = title
 
 		const description = isWorldOpen ? worldDescription : 'The app for all your writing needs.'
 		document.querySelector('meta[name="description"]')?.setAttribute('content', description)
-	}, [router, worldDescription, worldName])
+	}, [isWorldOpen, worldDescription, worldName])
 
 	useEffect(() => {
 		update()

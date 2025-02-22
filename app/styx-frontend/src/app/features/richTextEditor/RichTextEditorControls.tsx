@@ -4,11 +4,11 @@ import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { Editor } from '@tiptap/react'
-import { useCallback } from 'react'
+import { memo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { useIsReadOnly } from '@/hooks/useIsReadOnly'
+import { useIsReadOnly } from '@/app/hooks/useIsReadOnly'
 
 import { getWikiPreferences } from '../preferences/selectors'
 import { ReadModeToggle } from '../worldWiki/components/ReadModeToggle/ReadModeToggle'
@@ -19,7 +19,9 @@ type Props = {
 	allowReadMode?: boolean
 }
 
-export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
+export const RichTextEditorControls = memo(RichTextEditorControlsComponent)
+
+export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props) {
 	const { readModeEnabled } = useSelector(getWikiPreferences)
 	const { isReadOnly } = useIsReadOnly()
 

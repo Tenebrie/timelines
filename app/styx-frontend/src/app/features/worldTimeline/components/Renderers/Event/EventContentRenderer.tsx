@@ -4,14 +4,14 @@ import ListItemText from '@mui/material/ListItemText'
 import { useCallback } from 'react'
 
 import { TrunkatedTypography } from '@/app/components/TrunkatedTypography'
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { RichTextEditorReadonly } from '@/app/features/richTextEditor/RichTextEditorReadonly'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { useTimelineBusDispatch } from '@/app/features/worldTimeline/hooks/useTimelineBus'
 import { Actor, WorldEvent } from '@/app/features/worldTimeline/types'
 import { isNotNull } from '@/app/utils/isNotNull'
 
 import { StyledListItemButton, ZebraWrapper } from '../../Outliner/styles'
-import { useTimelineScroll } from '../../Timeline/hooks/useTimelineScroll'
+import { TimelineState } from '../../Timeline/utils/TimelineState'
 
 type Props = {
 	event: WorldEvent
@@ -22,17 +22,16 @@ type Props = {
 
 export const EventContentRenderer = ({ event, active }: Props) => {
 	const { timeToLabel } = useWorldTime()
-	const scrollTimelineTo = useTimelineBusDispatch()
-	const { getScroll: getTimelineScroll } = useTimelineScroll()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 
 	const scrollTimelineToEvent = useCallback(() => {
-		const scroll = getTimelineScroll()
+		const scroll = TimelineState.scroll
 		if (isNotNull(event.revokedAt) && Math.abs(scroll - event.timestamp) <= 5) {
-			scrollTimelineTo(event.revokedAt)
+			scrollTimelineTo({ timestamp: event.revokedAt })
 		} else {
-			scrollTimelineTo(event.timestamp)
+			scrollTimelineTo({ timestamp: event.timestamp })
 		}
-	}, [event.revokedAt, event.timestamp, scrollTimelineTo, getTimelineScroll])
+	}, [event.revokedAt, event.timestamp, scrollTimelineTo])
 
 	// const paragraphs = event.description.split('\n').filter((p) => p.trim().length > 0)
 	const paragraphs = [event.descriptionRich]
@@ -75,6 +74,7 @@ export const EventContentRenderer = ({ event, active }: Props) => {
 											$lines={10}
 											sx={{ fontSize: '16px' }}
 											style={{ whiteSpace: 'break-spaces' }}
+											component="div"
 										>
 											<b>Content:</b>
 											<RichTextEditorReadonly value={p} />

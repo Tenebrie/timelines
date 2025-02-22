@@ -1,24 +1,51 @@
+import Box from '@mui/material/Box'
+import { useCallback, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { getWorldCalendarState } from '@/app/features/world/selectors'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { getTimelineState, getWorldState } from '@/app/features/world/selectors'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
-import { ScaleLevel } from '../../types'
+import { TimelineState } from '../../utils/TimelineState'
 import { Container } from './styles'
 
 type Props = {
 	timestamp: number
-	scroll: number
-	scaleLevel: ScaleLevel
-	transitioning: boolean
 }
 
-export const TimeMarker = ({ timestamp, scroll, scaleLevel, transitioning }: Props) => {
-	const calendar = useSelector(getWorldCalendarState)
+export const TimeMarker = ({ timestamp }: Props) => {
+	const { scaleLevel, isSwitchingScale } = useSelector(
+		getTimelineState,
+		(a, b) =>
+			a.scroll === b.scroll && a.scaleLevel === b.scaleLevel && a.isSwitchingScale === b.isSwitchingScale,
+	)
+	const { calendar, isLoaded } = useSelector(
+		getWorldState,
+		(a, b) => a.calendar === b.calendar && a.isLoaded === b.isLoaded,
+	)
 	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel, calendar })
-	const offset = Math.round(realTimeToScaledTime(timestamp)) + scroll
+
 	const theme = useCustomTheme()
 
-	return <Container $theme={theme} $offset={offset} className={`${transitioning ? 'hidden' : ''}`} />
+	const ref = useRef<HTMLDivElement | null>(null)
+	const updatePosition = useCallback(
+		(scroll: number) => {
+			const offset = Math.round(realTimeToScaledTime(timestamp)) + scroll
+			ref.current?.style.setProperty('--marker-scroll', `${offset}px`)
+		},
+		[realTimeToScaledTime, timestamp],
+	)
+
+	useEffect(() => {
+		updatePosition(TimelineState.scroll)
+	}, [timestamp, updatePosition])
+
+	useEventBusSubscribe({ event: 'timelineScrolled', callback: (newScroll) => updatePosition(newScroll) })
+
+	return (
+		<Box ref={ref} sx={{ height: '100%', transform: 'translateX(var(--marker-scroll))' }}>
+			<Container $theme={theme} className={`${isSwitchingScale || !isLoaded ? 'hidden' : ''}`} />
+		</Box>
+	)
 }

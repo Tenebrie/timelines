@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { Actor, ActorDetails, MentionDetails } from '@/app/features/worldTimeline/types'
 import { generateSetter } from '@/app/utils/autosave/generateSetter'
@@ -8,10 +8,8 @@ type Props = {
 }
 
 export const useActorFields = ({ actor }: Props) => {
-	const isDirty = useRef(false)
-	const setDirty = useCallback((value: boolean) => {
-		isDirty.current = value
-	}, [])
+	const [isDirty, setDirty] = useState(false)
+	const makeDirty = () => setDirty(true)
 
 	const [name, setNameDirect] = useState<string>(actor.name)
 	const [title, setTitleDirect] = useState<string>(actor.title)
@@ -22,12 +20,12 @@ export const useActorFields = ({ actor }: Props) => {
 
 	const setters = useMemo(
 		() => ({
-			setName: generateSetter(setNameDirect, isDirty),
-			setTitle: generateSetter(setTitleDirect, isDirty),
-			setColor: generateSetter(setColorDirect, isDirty),
-			setMentions: generateSetter(setMentionsDirect, isDirty),
-			setDescription: generateSetter(setDescriptionDirect, isDirty),
-			setDescriptionRich: generateSetter(setDescriptionRichDirect, isDirty),
+			setName: generateSetter(setNameDirect, makeDirty),
+			setTitle: generateSetter(setTitleDirect, makeDirty),
+			setColor: generateSetter(setColorDirect, makeDirty),
+			setMentions: generateSetter(setMentionsDirect, makeDirty),
+			setDescription: generateSetter(setDescriptionDirect, makeDirty),
+			setDescriptionRich: generateSetter(setDescriptionRichDirect, makeDirty),
 		}),
 		[],
 	)

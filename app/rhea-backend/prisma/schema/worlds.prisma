@@ -52,6 +52,7 @@ model WorldEvent {
 
     type            WorldEventType
     icon            String            @default("default")
+    color           String            @default("#000000")
     name            String
     timestamp       BigInt
     revokedAt       BigInt?

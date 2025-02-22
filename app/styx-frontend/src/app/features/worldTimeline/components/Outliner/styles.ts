@@ -1,17 +1,8 @@
-import ExpandMore from '@mui/icons-material/ExpandMore'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import styled from 'styled-components'
 
 import { ScrollbarStyling } from '@/app/styles'
-
-export const OutlinerContainer = styled.div`
-	flex: 1;
-	display: flex;
-	flex-direction: column;
-	gap: 12px;
-	padding: 16px;
-`
 
 export const StatementsScroller = styled.div`
 	width: 100%;
@@ -43,17 +34,8 @@ export const StyledListItemText = styled(ListItemText)`
 	}
 `
 
-export const ExpandIcon = styled(ExpandMore)<{ rotated: 0 | 1 }>`
-	transform: rotate(${(props) => (props.rotated ? '180deg' : 0)});
-	transition: transform 0.3s;
-`
-
 export const ZebraWrapper = styled.div<{ $zebra: boolean }>`
 	background: ${(props) => (props.$zebra ? 'rgba(255, 255, 255, 0.03)' : 'none')};
-`
-
-export const StatementColoredActor = styled.div`
-	color: purple;
 `
 
 export const StatementActorsText = styled.span`

@@ -7,7 +7,7 @@ import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useCallback } from 'react'
 
 import { WorldEventModule } from '@/app/features/worldTimeline/types'
-import { useIsReadOnly } from '@/hooks/useIsReadOnly'
+import { useIsReadOnly } from '@/app/hooks/useIsReadOnly'
 
 import { useEventModules } from '../hooks/useEventModules'
 import { EventModulesPopup } from '../modules/EventModulesPopup'

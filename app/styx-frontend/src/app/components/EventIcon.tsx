@@ -16,7 +16,7 @@ export const EventIcon = ({ name, height }: Props) => {
 			style={{ filter: theme.palette.mode === 'light' ? 'invert()' : '' }}
 			src={getIconPath(name)}
 			alt={`${name} icon`}
-			height={`${height}px`}
+			height={typeof height === 'number' ? `${height}px` : height}
 		/>
 	)
 }

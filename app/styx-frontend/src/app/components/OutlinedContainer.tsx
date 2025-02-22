@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import React, { ReactNode } from 'react'
 
 type Props = {
-	label?: string
+	label: string
 	secondaryLabel?: ReactNode
 	children?: ReactNode | ReactNode[]
 	style?: React.CSSProperties
@@ -15,19 +15,20 @@ type Props = {
 
 export const OutlinedContainer = ({ label, secondaryLabel, children, style, fullHeight, gap }: Props) => {
 	return (
-		<Paper
-			sx={{
-				padding: 2,
-				paddingTop: 3,
-				height: fullHeight ? 'calc(100% - 16px)' : 'unset',
-				maxHeight: 'calc(100% - 16px)',
-				overflowY: 'auto',
-			}}
-			elevation={2}
-			style={style}
-		>
-			<Stack gap={gap ?? 1} sx={{ height: fullHeight ? '100%' : 'unset' }}>
-				{label && (
+		<Stack sx={{ height: '100%', position: 'relative' }}>
+			<Paper
+				sx={{
+					padding: 2,
+					paddingTop: 3,
+					overflowY: 'auto',
+					height: '100%',
+					position: 'relative',
+					borderRadius: 0,
+				}}
+				elevation={2}
+				style={style}
+			>
+				<Stack gap={gap ?? 1} sx={{ height: fullHeight ? '100%' : 'unset' }}>
 					<Stack gap={1}>
 						<Stack width="100%" justifyContent="space-between" direction="row" alignContent="center">
 							<Typography variant="h6" marginLeft={1}>
@@ -41,11 +42,9 @@ export const OutlinedContainer = ({ label, secondaryLabel, children, style, full
 						</Stack>
 						<Divider />
 					</Stack>
-				)}
-				<Stack gap={1} sx={{ height: fullHeight ? '100%' : 'unset' }}>
 					{children}
 				</Stack>
-			</Stack>
-		</Paper>
+			</Paper>
+		</Stack>
 	)
 }

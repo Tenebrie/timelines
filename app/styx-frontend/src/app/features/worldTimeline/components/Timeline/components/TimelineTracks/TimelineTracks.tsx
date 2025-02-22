@@ -1,42 +1,47 @@
+import Box from '@mui/material/Box'
+import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
-import { memo } from 'react'
+import { memo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
+import { getTimelineContextMenuState, getTimelineState, getWorldState } from '@/app/features/world/selectors'
 
-import { ScaleLevel } from '../../types'
 import { TimelineContextMenu } from '../TimelineContextMenu/TimelineContextMenu'
-import useEventTracks from './hooks/useEventTracks'
 import { TimelineTrackItem } from './TimelineTrackItem'
+import { useOutlinerHeightListener } from './useOutlinerHeightListener'
 
 type Props = {
-	anotherRef: React.RefObject<HTMLDivElement | null>
-	visible: boolean
-	scaleLevel: ScaleLevel
 	containerWidth: number
 }
 
-export const TimelineTracksComponent = (props: Props) => {
-	const eventTracks = useEventTracks()
-	const { stateOf, isLocationEqual } = useWorldTimelineRouter()
-	const stateOfEventEditor = stateOf(worldTimelineRoutes.eventEditor)
-	const stateOfDeltaEditor = stateOf(worldTimelineRoutes.eventDeltaEditor)
-	const worldState = useSelector(getWorldState)
+export const TimelineTracks = memo(TimelineTracksComponent)
+
+export function TimelineTracksComponent(props: Props) {
+	const ref = useRef<HTMLDivElement | null>(null)
+
+	const { allTracks, loadingTracks, scaleLevel, isSwitchingScale } = useSelector(
+		getTimelineState,
+		(a, b) =>
+			a.allTracks === b.allTracks &&
+			a.loadingTracks === b.loadingTracks &&
+			a.scaleLevel === b.scaleLevel &&
+			a.isSwitchingScale === b.isSwitchingScale,
+	)
+	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
 
+	const visible = !isSwitchingScale
 	const { realTimeToScaledTime } = useTimelineWorldTime({
-		scaleLevel: props.scaleLevel,
-		calendar: worldState.calendar,
+		scaleLevel,
+		calendar,
 	})
+
+	const { outlinerHeight } = useOutlinerHeightListener({ ref })
 
 	return (
 		<Stack
-			ref={props.anotherRef}
+			ref={ref}
 			sx={{
 				display: 'block',
 				position: 'absolute',
@@ -46,23 +51,30 @@ export const TimelineTracksComponent = (props: Props) => {
 				overflowX: 'hidden',
 				overflowY: 'auto',
 			}}
+			className={'allow-timeline-click'}
 		>
-			{eventTracks.map((track) => (
-				<TimelineTrackItem
-					key={track.id}
-					track={track}
-					isLocationEqual={isLocationEqual}
-					worldState={worldState}
-					contextMenuState={contextMenuState}
-					eventEditorParams={stateOfEventEditor}
-					eventDeltaEditorParams={stateOfDeltaEditor}
-					realTimeToScaledTime={realTimeToScaledTime}
-					{...props}
-				/>
-			))}
-			<TimelineContextMenu markers={eventTracks.flatMap((track) => track.events)} />
+			<Box sx={{ height: `calc(${outlinerHeight}px - 32px)`, pointerEvents: 'none' }} />
+			<Box
+				style={{ opacity: loadingTracks ? 0 : 1 }}
+				sx={{
+					pointerEvents: 'none',
+					transition: 'opacity 0.3s',
+				}}
+			>
+				{allTracks.map((track) => (
+					<Collapse in={track.visible} key={track.id} mountOnEnter unmountOnExit>
+						<TimelineTrackItem
+							visible={visible}
+							track={track}
+							trackCount={allTracks.length}
+							contextMenuState={contextMenuState}
+							realTimeToScaledTime={realTimeToScaledTime}
+							{...props}
+						/>
+					</Collapse>
+				))}
+			</Box>
+			<TimelineContextMenu />
 		</Stack>
 	)
 }
-
-export const TimelineTracks = memo(TimelineTracksComponent)

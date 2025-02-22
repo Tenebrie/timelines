@@ -1,63 +1,67 @@
 import Close from '@mui/icons-material/Close'
 import { colors } from '@mui/material'
-import Typography from '@mui/material/Typography'
+import { useNavigate } from '@tanstack/react-router'
 import classNames from 'classnames'
-import { memo, MouseEvent, Profiler, useState } from 'react'
+import { CSSProperties, memo, MouseEvent } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { worldSlice } from '@/app/features/world/reducer'
 import { useEventIcons } from '@/app/features/worldTimeline/hooks/useEventIcons'
 import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
-import { useStringColor } from '@/app/utils/getStringColor'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { useDoubleClick } from '@/app/hooks/useDoubleClick'
+import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
-import { useDoubleClick } from '@/hooks/useDoubleClick'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { HoveredTimelineEvents } from './HoveredTimelineEvents'
-import { Label, LabelContainer, Marker } from './styles'
+import { Marker, MarkerDelta, MarkerIcon, MarkerRevoked } from './styles'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
-	edited: boolean
 	selected: boolean
 	trackHeight: number
 }
 
-export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
-	const [isInfoVisible, setIsInfoVisible] = useState(false)
+export const TimelineEvent = memo(TimelineEventComponent)
 
+export function TimelineEventComponent({ entity, selected }: Props) {
 	const dispatch = useDispatch()
-	const { addTimelineMarkerToSelection, removeTimelineMarkerFromSelection, openTimelineContextMenu } =
-		worldSlice.actions
+	const { openTimelineContextMenu } = worldSlice.actions
 
-	const { navigateToEventEditor, navigateToEventDeltaEditor } = useWorldTimelineRouter()
+	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
+
 	const { getIconPath } = useEventIcons()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
+	const openEventDrawer = useEventBusDispatch({ event: 'timeline/openEventDrawer' })
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
 			if (selected) {
-				dispatch(removeTimelineMarkerFromSelection(entity.key))
+				navigate({
+					search: (prev) => ({ ...prev, selection: prev.selection.filter((id) => id !== entity.key) }),
+				})
 			} else {
-				dispatch(addTimelineMarkerToSelection({ id: entity.key, multiselect }))
+				navigate({
+					search: (prev) => ({ ...prev, selection: [...(multiselect ? prev.selection : []), entity.key] }),
+				})
 			}
 		},
-		onDoubleClick: () => {
+		onDoubleClick: ({ multiselect }) => {
 			if (entity.markerType === 'ghostEvent' || entity.markerType === 'ghostDelta') {
 				return
 			}
 
-			if (entity.markerType === 'deltaState') {
-				navigateToEventDeltaEditor({
-					eventId: entity.eventId,
-					deltaId: entity.id,
-					selectedTime: entity.markerPosition,
-				})
-			} else {
-				navigateToEventEditor({ eventId: entity.eventId, selectedTime: entity.markerPosition })
-			}
+			navigate({
+				search: (prev) => ({
+					...prev,
+					time: entity.markerPosition,
+					selection: [...(multiselect ? prev.selection : []), entity.key],
+				}),
+			})
+			scrollTimelineTo({ timestamp: entity.markerPosition })
+			openEventDrawer({})
 		},
 		ignoreDelay: true,
 	})
@@ -86,12 +90,10 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 	}
 
 	const onMouseEnter = () => {
-		setIsInfoVisible(true)
 		HoveredTimelineEvents.hoverEvent(entity)
 	}
 
 	const onMouseLeave = () => {
-		setIsInfoVisible(false)
 		HoveredTimelineEvents.unhoverEvent(entity)
 	}
 
@@ -106,54 +108,47 @@ export const TimelineEventComponent = ({ entity, edited, selected }: Props) => {
 			''
 		)
 
-	const color = useStringColor(entity.eventId)
+	const color = useEntityColor({ entity })
 	const theme = useCustomTheme()
 
+	const cssVariables = {
+		'--border-color': color,
+		'--icon-path': `url(${getIconPath(entity.icon)})`,
+		'--marker-size': `${TimelineEventHeightPx - 6}px`,
+		'--border-radius': '6px',
+	} as CSSProperties
+
+	const RenderedMarker = (() => {
+		if (entity.markerType === 'deltaState') {
+			return MarkerDelta
+		} else if (entity.markerType === 'revokedAt') {
+			return MarkerRevoked
+		}
+		return Marker
+	})()
+
+	// TODO: Split this marker for performance, it's horrible for css compilation
 	return (
-		<Profiler id="TimelineEvent" onRender={reportComponentProfile}>
-			<Marker
-				onClick={onClick}
-				onContextMenu={onContextMenu}
-				onMouseEnter={onMouseEnter}
-				onMouseLeave={onMouseLeave}
-				$size={TimelineEventHeightPx - 6}
-				$borderColor={color}
-				$theme={theme}
-				$isDataPoint={entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta'}
-				className={classNames({
-					selected,
-					edited,
-					revoked: entity.markerType === 'revokedAt',
-					replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',
-					ghostEvent: entity.markerType === 'ghostEvent',
-					ghostDelta: entity.markerType === 'ghostDelta',
-				})}
-				$iconPath={getIconPath(entity.icon)}
-				data-testid="timeline-event-marker"
-			>
-				{entity.markerType !== 'revokedAt' && <div className="icon image"></div>}
-				{entity.markerType === 'revokedAt' && (
-					<>
-						<div className="icon image"></div>
-						<div className="icon">
-							<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
-						</div>
-					</>
-				)}
-				{isInfoVisible && (
-					<LabelContainer>
-						<Label data-hj-suppress>
-							<Typography sx={{ color: 'white' }}>
-								{labelType}
-								{labelType ? ' ' : ''}
-								{entity.name}
-							</Typography>
-						</Label>
-					</LabelContainer>
-				)}
-			</Marker>
-		</Profiler>
+		<RenderedMarker
+			style={cssVariables}
+			onClick={onClick}
+			onContextMenu={onContextMenu}
+			onMouseEnter={onMouseEnter}
+			onMouseLeave={onMouseLeave}
+			$theme={theme}
+			className={classNames({
+				selected,
+			})}
+		>
+			{entity.markerType !== 'revokedAt' && <MarkerIcon className="icon image"></MarkerIcon>}
+			{entity.markerType === 'revokedAt' && (
+				<>
+					<MarkerIcon className="icon image"></MarkerIcon>
+					<MarkerIcon className="icon">
+						<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
+					</MarkerIcon>
+				</>
+			)}
+		</RenderedMarker>
 	)
 }
-
-export const TimelineEvent = memo(TimelineEventComponent)

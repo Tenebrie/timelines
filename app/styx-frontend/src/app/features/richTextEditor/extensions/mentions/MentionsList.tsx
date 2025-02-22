@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText'
 import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
 import { Editor } from '@tiptap/react'
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { MentionedEntity } from '@/app/features/worldTimeline/types'
@@ -22,7 +22,9 @@ type Props = {
 	editor: Editor | null
 }
 
-export const MentionsList = ({ editor }: Props) => {
+export const MentionsList = memo(MentionsListComponent)
+
+export function MentionsListComponent({ editor }: Props) {
 	const [visible, setVisible] = useState(false)
 	const [pos, setPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 })
 	const [query, setQuery] = useState('')
@@ -140,7 +142,7 @@ export const MentionsList = ({ editor }: Props) => {
 		<Paper
 			sx={{
 				zIndex: 10,
-				position: 'absolute',
+				position: 'fixed',
 				top: `calc(${pos.top}px + 1.5rem)`,
 				left: pos.left,
 				display: visible ? 'block' : 'none',
