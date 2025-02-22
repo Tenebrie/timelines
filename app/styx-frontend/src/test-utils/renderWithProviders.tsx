@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { act, render, renderHook, RenderHookOptions } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
