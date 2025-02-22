@@ -82,8 +82,7 @@ export const ActorWizardModal = () => {
 
 		close()
 		navigate({
-			to: '/world/$worldId/timeline/actor/$actorId',
-			params: { actorId: response.id },
+			to: '/world/$worldId/mindmap',
 			search: true,
 		})
 	}

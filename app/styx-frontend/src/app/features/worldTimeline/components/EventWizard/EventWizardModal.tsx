@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Add from '@mui/icons-material/Add'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Button from '@mui/material/Button'

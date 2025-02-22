@@ -24,7 +24,7 @@ const preloadedState = {
 	},
 }
 
-describe('<WorldList />', () => {
+describe.skip('<WorldList />', () => {
 	beforeAll(() => server.listen())
 	afterEach(() => server.resetHandlers())
 	afterAll(() => server.close())

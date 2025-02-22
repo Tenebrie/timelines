@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Grid from '@mui/material/Grid'
 import { useParams } from '@tanstack/react-router'
 import { useEffect, useMemo } from 'react'

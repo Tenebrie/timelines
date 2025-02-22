@@ -24,8 +24,9 @@ export const ActorMentionChip = ({ worldId, actorId, actors }: Props) => {
 		}
 
 		navigateTo({
-			to: '/world/$worldId/timeline/actor/$actorId',
-			params: { worldId, actorId },
+			to: '/world/$worldId/mindmap',
+			params: { worldId },
+			search: (prev) => ({ ...prev, selection: [actor.id] }),
 		})
 	}
 

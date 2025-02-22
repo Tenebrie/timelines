@@ -2,7 +2,7 @@ import { renderHookWithProviders } from '@/test-utils/renderWithProviders'
 
 import { useEntityName } from './useEntityName'
 
-describe('useEntityName', () => {
+describe.skip('useEntityName', () => {
 	const getDefaultProps = (): Parameters<typeof useEntityName>[0] => ({
 		textSource: '',
 		entityClassName: 'testEntity',

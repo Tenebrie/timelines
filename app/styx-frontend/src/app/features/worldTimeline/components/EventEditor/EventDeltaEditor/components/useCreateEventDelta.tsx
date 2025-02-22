@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'

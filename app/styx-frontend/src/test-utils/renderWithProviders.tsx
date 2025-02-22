@@ -1,78 +1,75 @@
-import { createBrowserRouter, MemoryRouter, RouterProvider } from '@tanstack/react-router'
-import { act, Queries, queries, render, renderHook, RenderHookOptions } from '@testing-library/react'
+import { createRouter, RouterProvider } from '@tanstack/react-router'
+import { act, render, renderHook, RenderHookOptions } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ReactNode } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 
+import { routeTree } from '@/routeTree.gen'
+
 import { generateStore, RootState } from '../app/store'
-import { routerDefinition } from '../router-utils/routerDefinition'
-import { appRoutes } from '../router-utils/routes/appRoutes'
-import { worldTimelineRoutes } from '../router-utils/routes/featureRoutes/worldTimelineRoutes'
+
+// Create a test router instance that uses your routeTree.
+const createTestRouter = () => {
+	return createRouter({
+		routeTree,
+		// Optionally add any other test-specific options.
+		defaultPreload: 'intent',
+	})
+}
 
 export const renderWithProviders = (
 	node: ReactNode,
 	{ preloadedState }: { preloadedState?: Partial<RootState> } = {},
 ) => {
 	const store = generateStore({ preloadedState })
+	const router = createTestRouter()
 	return {
 		user: userEvent.setup(),
 		store,
 		...render(
 			<ReduxProvider store={store}>
-				<MemoryRouter>{node}</MemoryRouter>
+				<RouterProvider router={router}>{node}</RouterProvider>
 			</ReduxProvider>,
 		),
 	}
 }
 
+// If you need to render a page at a given route, you can push a URL first.
 export const renderWithRouter = async (
-	routeName: keyof typeof appRoutes | keyof typeof worldTimelineRoutes,
+	path: string, // pass in the path you want to test
 	{ preloadedState }: { preloadedState?: Partial<RootState> } = {},
 ) => {
-	const bigRouter = {
-		...appRoutes,
-		...worldTimelineRoutes,
-	}
-	const path = bigRouter[routeName]
 	window.history.pushState({}, 'Test page', path)
 	const store = generateStore({ preloadedState })
-
+	const router = createTestRouter()
 	const returnValue = {
 		user: userEvent.setup(),
 		store,
 		...render(
 			<ReduxProvider store={store}>
-				<RouterProvider router={createBrowserRouter(routerDefinition)} />
+				<RouterProvider router={router} />
 			</ReduxProvider>,
 		),
 	}
 
 	await act(async () => {
-		await vi.dynamicImportSettled()
+		// Wait for any async router preloading, if needed.
 	})
 
 	return returnValue
 }
 
-export const renderHookWithProviders = <
-	Result,
-	Props,
-	Q extends Queries = typeof queries,
-	Container extends Element | DocumentFragment = HTMLElement,
-	BaseElement extends Element | DocumentFragment = Container,
->(
-	render: (initialProps: Props) => Result,
-	{
-		preloadedState,
-		...options
-	}: RenderHookOptions<Props, Q, Container, BaseElement> & { preloadedState?: Partial<RootState> } = {},
+export const renderHookWithProviders = <Result, Props>(
+	hook: (initialProps: Props) => Result,
+	{ preloadedState, ...options }: RenderHookOptions<Props> & { preloadedState?: Partial<RootState> } = {},
 ) => {
 	const store = generateStore({ preloadedState })
-	return renderHook(render, {
+	const router = createTestRouter()
+	return renderHook(hook, {
 		...options,
 		wrapper: ({ children }) => (
 			<ReduxProvider store={store}>
-				<MemoryRouter>{children}</MemoryRouter>
+				<RouterProvider router={router}>{children}</RouterProvider>
 			</ReduxProvider>
 		),
 	})
