@@ -1,0 +1,139 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main, dev]
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  check-commits:
+    name: Check Commits
+    runs-on: ubuntu-latest
+    outputs:
+      count: ${{ steps.calc.outputs.count }}
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check Commits
+        id: calc
+        run: |
+          COUNT=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"%s" | grep -cE '^(fix|feat|major):' || true)
+          echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
+        
+      - name: Generate Version Number
+        id: version
+        uses: paulhatch/semantic-version@v5.4.0
+        with:
+          major_pattern: 'major:'
+          minor_pattern: 'feat:'
+          version_format: 'v${major}.${minor}.${patch}'
+
+  prepare-containers:
+    name: Build & Publish Containers
+    runs-on: ubuntu-latest
+    needs: [check-commits]
+    permissions:
+      packages: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'yarn'
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3.3.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Check Existing Container
+        id: check-container
+        run: |
+          if docker manifest inspect tenebrie/timelines-rhea:${{ needs.check-commits.outputs.version }} > /dev/null 2>&1; then
+            echo "missing=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+          fi 
+
+      - name: Build & Publish
+        if: steps.check-container.outputs.missing == 'true'
+        run: yarn docker:prod:push
+        env:
+          VERSION: ${{ needs.check-commits.outputs.version }}
+
+      - name: Create a Release
+        if: steps.check-container.outputs.missing == 'true'
+        uses: elgohr/Github-Release-Action@v5
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag: ${{ needs.check-commits.outputs.version }}
+          title: Release ${{ needs.check-commits.outputs.version }}
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [check-commits, prepare-containers]
+    if: ${{ github.ref_name == 'dev' }}
+
+    steps:
+      - uses: actions/checkout@v4 
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $(doctl compute droplet get staging-manager-1 --format PublicIPv4 --no-header) >> ~/.ssh/known_hosts
+
+      - name: Deploy to DigitalOcean
+        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"
+
+      - name: Run migrations
+        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && git fetch && git checkout dev && git pull && ./scripts/stack-migrate.sh"
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [check-commits, prepare-containers]
+    if: ${{ github.ref_name == 'main' }}
+
+    steps:
+      - uses: actions/checkout@v4 
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $(doctl compute droplet get prod-manager-1 --format PublicIPv4 --no-header) >> ~/.ssh/known_hosts
+        
+      - name: Backup Database
+        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && ./scripts/stack-db-backup.sh"
+
+      - name: Deploy to DigitalOcean
+        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"
+
+      - name: Run migrations
+        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && git fetch && git checkout main && git pull && ./scripts/stack-migrate.sh"
