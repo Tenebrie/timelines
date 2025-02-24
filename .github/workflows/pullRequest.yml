@@ -96,6 +96,7 @@ jobs:
             echo "run_tests=true" >> "$GITHUB_OUTPUT"
           else
             echo "run_tests=false" >> "$GITHUB_OUTPUT"
+            echo "Tests will only run on the dev -> main PRs, skipping..."
           fi
 
       - name: Run E2E Tests
