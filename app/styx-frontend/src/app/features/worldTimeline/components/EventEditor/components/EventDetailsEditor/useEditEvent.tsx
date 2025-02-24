@@ -88,7 +88,7 @@ export const useEditEvent = ({ mode, event, state }: Props) => {
 	})
 
 	useEffect(() => {
-		if (mode === 'edit' && isDirty.current) {
+		if (mode === 'edit' && isDirty) {
 			autosave()
 		}
 	}, [autosave, isDirty, mode, state])

@@ -1,13 +1,14 @@
 import Edit from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
+import { useNavigate } from '@tanstack/react-router'
 import cx from 'classnames'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { Actor, WorldEvent } from '@/app/features/worldTimeline/types'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
 
 import { StyledListItemButton } from '../../Outliner/styles'
 import { ShowHideChevron } from '../styles'
@@ -19,11 +20,14 @@ type Props = {
 	owningActor: Actor | null
 	short: boolean
 	active: boolean
-	actions: ('edit' | 'collapse')[]
+	actions: readonly ('edit' | 'collapse')[]
 }
 
 export const EventRenderer = ({ event, collapsed, owningActor, short, active, actions }: Props) => {
-	const { navigateToEventEditor } = useWorldTimelineRouter()
+	const navigate = useNavigate({ from: '/world/$worldId' })
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
+	const openEntityDrawer = useEventBusDispatch({ event: 'timeline/openEventDrawer' })
+
 	const dispatch = useDispatch()
 	const { collapseEventInOutliner, uncollapseEventInOutliner } = preferencesSlice.actions
 
@@ -44,7 +48,14 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 				return (
 					<IconButton
 						key={'edit'}
-						onClick={() => navigateToEventEditor({ eventId: event.id })}
+						onClick={() => {
+							navigate({
+								to: '/world/$worldId/timeline',
+								search: (prev) => ({ ...prev, selection: [`issuedAt-${event.id}`] }),
+							})
+							scrollTimelineTo({ timestamp: event.timestamp })
+							openEntityDrawer({})
+						}}
 						aria-label="Edit"
 					>
 						<Edit />
@@ -62,7 +73,6 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 					</IconButton>
 				)
 		}
-		return ''
 	})
 
 	return (

@@ -57,7 +57,7 @@ export const useEditActor = ({ actor, state }: Props) => {
 
 	const sendUpdate = useCallback(
 		async (delta: UpdateActorApiArg['body']) => {
-			isDirty.current = false
+			setDirty(false)
 			const { error } = parseApiResponse(
 				await updateActor({
 					worldId: worldId,
@@ -70,7 +70,7 @@ export const useEditActor = ({ actor, state }: Props) => {
 			}
 			lastSavedAt.current = new Date()
 		},
-		[actor.id, isDirty, updateActor, worldId],
+		[actor.id, setDirty, updateActor, worldId],
 	)
 
 	const {
@@ -92,7 +92,7 @@ export const useEditActor = ({ actor, state }: Props) => {
 	})
 
 	useEffect(() => {
-		if (isDirty.current) {
+		if (isDirty) {
 			autosave()
 		}
 	}, [state, autosave, isDirty])

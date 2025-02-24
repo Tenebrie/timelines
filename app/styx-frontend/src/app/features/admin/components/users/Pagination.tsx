@@ -1,6 +1,6 @@
 import MuiPagination from '@mui/material/Pagination'
 
-import { useDebouncedState } from '@/hooks/useDebouncedState'
+import { useDebouncedState } from '@/app/hooks/useDebouncedState'
 
 type Props = {
 	initialPage: number

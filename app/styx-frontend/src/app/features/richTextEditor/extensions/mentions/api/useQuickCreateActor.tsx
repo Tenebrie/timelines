@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { worldSlice } from '@/app/features/world/reducer'
 import { getWorldIdState } from '@/app/features/world/selectors'
-import { hslToHex } from '@/app/utils/colors/hslToHex'
+import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 export const useQuickCreateActor = () => {
@@ -21,7 +21,7 @@ export const useQuickCreateActor = () => {
 					worldId,
 					body: {
 						name: query.length > 0 ? query : 'Unnamed Actor',
-						color: hslToHex(Math.random(), 0.5, 0.5),
+						color: getRandomEntityColor(),
 					},
 				}),
 			)

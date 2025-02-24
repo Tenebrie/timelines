@@ -6,16 +6,15 @@ import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
+import { Link as NavLink, useNavigate } from '@tanstack/react-router'
 import { KeyboardEvent, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { NavLink } from 'react-router-dom'
 
 import { useCreateAccountMutation } from '@/api/authApi'
 import { FormErrorBanner } from '@/app/components/FormErrorBanner'
 import { TenebrieLogo } from '@/app/components/TenebrieLogo'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useErrorState } from '@/app/utils/useErrorState'
-import { appRoutes, useAppRouter } from '@/router/routes/appRoutes'
 
 import { AlreadyLoggedInAlert } from '../alreadyLoggedInAlert/AlreadyLoggedInAlert'
 import { authSlice } from '../reducer'
@@ -34,7 +33,7 @@ export const Register = () => {
 		SERVER_SIDE_ERROR: string
 	}>()
 
-	const { navigateTo } = useAppRouter()
+	const navigate = useNavigate()
 	const [createAccount, { isLoading }] = useCreateAccountMutation()
 
 	const { setUser, setSessionId } = authSlice.actions
@@ -74,7 +73,7 @@ export const Register = () => {
 		}
 		dispatch(setUser(response.user))
 		dispatch(setSessionId(response.sessionId))
-		navigateTo({ target: appRoutes.home })
+		navigate({ to: '/home' })
 	}
 
 	useEffect(() => {

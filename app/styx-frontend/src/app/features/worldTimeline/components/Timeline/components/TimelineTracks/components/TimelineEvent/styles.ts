@@ -1,24 +1,20 @@
 import { colors } from '@mui/material'
 import styled from 'styled-components'
 
-import { CustomTheme } from '@/hooks/useCustomTheme'
+import { CustomTheme } from '@/app/hooks/useCustomTheme'
 
 export type StoryEventMarkerProps = {
 	groupIndex: number
 	expanded: boolean
 }
 
-export const Marker = styled.div<{
-	$iconPath: string
-	$borderColor: string
-	$size: number
+export const BaseMarker = styled.div<{
 	$theme: CustomTheme
-	$isDataPoint: boolean
 }>`
 	position: relative;
-	width: ${(props) => props.$size}px;
-	height: ${(props) => props.$size}px;
-	border-radius: ${(props) => (props.$isDataPoint ? '50%' : '4px')};
+	width: var(--marker-size);
+	height: var(--marker-size);
+	border-radius: var(--border-radius);
 	background: ${(props) => props.$theme.custom.palette.background.timelineMarker};
 	cursor: pointer;
 	transition:
@@ -26,107 +22,113 @@ export const Marker = styled.div<{
 		border-color 0.3s,
 		background-color 0.3s;
 	border: 2px solid ${colors.grey[300]};
-	border-color: ${(props) => props.$borderColor} !important;
+	border-color: var(--border-color) !important;
+`
 
-	.icon {
-		position: absolute;
-		mask-size: cover;
-		mask-position: 0px 0px;
-		mask-repeat: no-repeat;
-		background-origin: content-box;
-		background-size: contain;
-		width: calc(100%);
-		height: calc(100%);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		transition:
-			color 0.3s,
-			background-color 0.3s;
-		color: ${(props) => props.$borderColor};
-		& > svg {
-			filter: hue-rotate(180deg) brightness(0.8) saturate(2);
-		}
-		// color: red;
-	}
-
-	.image {
-		background: ${(props) => props.$borderColor};
-		mask-image: url(${(props) => props.$iconPath});
-	}
-
-	&.ghostEvent {
-		background-color: rgb(28, 69, 114);
-		pointer-events: none;
-		.icon {
-			opacity: 0.5;
-		}
-	}
-
-	&.ghostDelta {
-		background-color: rgb(28, 69, 114);
-		pointer-events: none;
-		.icon {
-			opacity: 0.5;
-		}
-	}
-
+export const Marker = styled(BaseMarker)`
 	&:hover > .icon {
 		color: ${(props) => (props.$theme.mode === 'dark' ? colors.green[500] : colors.green[800])};
 	}
-	&.replace:hover > .icon {
-		color: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[900])};
-	}
-	&.revoked:hover > .icon {
-		color: ${(props) => (props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900])};
-	}
-
 	&:hover > .image {
 		background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[500] : colors.green[800])};
 	}
-	&.replace:hover > .image {
-		background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[900])};
+	&:active > .icon {
+		color: ${(props) => (props.$theme.mode === 'dark' ? colors.green[600] : colors.green[900])};
 	}
-	&.revoked:hover > .image {
-		background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900])};
+	&:active > .image {
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[600] : colors.green[900])};
 	}
-
 	&.edited {
 		box-shadow: ${(props) => {
 			const color = props.$theme.mode === 'dark' ? colors.green[500] : colors.green[900]
 			return `0 0 4px 4px ${color}`
 		}};
 	}
-	&.replace.edited {
-		box-shadow: ${(props) => {
-			const color = props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[700]
-			return `0 0 4px 4px ${color}`
-		}};
-	}
-	&.revoked.edited {
-		box-shadow: ${(props) => {
-			const color = props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900]
-			return `0 0 4px 4px ${color}`
-		}};
-	}
-
 	&.selected {
 		background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[500] : colors.green[900])};
 		& > .icon {
 			background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[900] : colors.green[500])};
 		}
 	}
-	&.replace.selected {
+`
+
+export const MarkerDelta = styled(Marker)`
+	&:hover > .icon {
+		color: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[900])};
+	}
+	&:hover > .image {
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[900])};
+	}
+	&:active > .icon {
+		color: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[600] : colors.yellow['A100'])};
+	}
+	&:active > .image {
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[600] : colors.yellow['A100'])};
+	}
+	&.edited {
+		box-shadow: ${(props) => {
+			const color = props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[700]
+			return `0 0 4px 4px ${color}`
+		}};
+	}
+	&.selected {
 		background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[900])};
 		& > .icon {
 			background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[900] : colors.yellow[500])};
 		}
 	}
-	&.revoked.selected {
+`
+
+export const MarkerRevoked = styled(Marker)`
+	&:hover > .icon {
+		color: ${(props) => (props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900])};
+	}
+	&:hover > .image {
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900])};
+	}
+	&:active > .icon {
+		color: ${(props) => (props.$theme.mode === 'dark' ? colors.red[500] : colors.red['A100'])};
+	}
+	&:active > .image {
+		background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[500] : colors.red['A100'])};
+	}
+	&.edited {
+		box-shadow: ${(props) => {
+			const color = props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900]
+			return `0 0 4px 4px ${color}`
+		}};
+	}
+	&.selected {
 		background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[300] : colors.red[900])};
 		& > .icon {
 			background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[900] : colors.red[300])};
 		}
+	}
+`
+
+export const MarkerIcon = styled.div`
+	position: absolute;
+	mask-size: cover;
+	mask-position: 0px 0px;
+	mask-repeat: no-repeat;
+	background-origin: content-box;
+	background-size: contain;
+	width: calc(100%);
+	height: calc(100%);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition:
+		color 0.3s,
+		background-color 0.3s;
+	color: var(--border-color);
+	& > svg {
+		filter: hue-rotate(180deg) brightness(0.8) saturate(2);
+	}
+
+	&.image {
+		background: var(--border-color);
+		mask-image: var(--icon-path);
 	}
 `
 

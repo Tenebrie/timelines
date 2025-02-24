@@ -1,160 +1,75 @@
-import { memo, Profiler, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import Box from '@mui/material/Box'
+import Fade from '@mui/material/Fade'
+import { memo, Profiler, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { reportComponentProfile } from '@/app/features/profiling/reportComponentProfile'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { getWorldCalendarState } from '@/app/features/world/selectors'
+import { getTimelineState, getWorldState } from '@/app/features/world/selectors'
 import { LineSpacing } from '@/app/features/worldTimeline/utils/constants'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/hooks/useCustomTheme'
 
-import { ScaleLevel } from '../../types'
-import { TimelineAnchorContainer, TimelineSmallestPips } from './styles'
-import { getLoop, TimelineAnchorLine } from './TimelineAnchorLine'
+import { TimelineAnchorContainer } from './TimelineAnchorContainer'
+import { TimelineAnchorLine } from './TimelineAnchorLine'
 
 export const TimelineAnchorPadding = 150 // pixels
 export const ResetNumbersAfterEvery = 3000000 // pixels of scrolling
 
 type Props = {
-	visible: boolean
-	scroll: number
-	scaleLevel: ScaleLevel
 	containerWidth: number
 }
 
-const TimelineAnchorComponent = ({ scaleLevel, scroll, visible, containerWidth }: Props) => {
+export const TimelineAnchor = memo(TimelineAnchorComponent)
+
+function TimelineAnchorComponent({ containerWidth }: Props) {
 	const theme = useCustomTheme()
-	const calendar = useSelector(getWorldCalendarState)
-	const { parseTime, timeToShortLabel } = useWorldTime()
+	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
+	const { scaleLevel, isSwitchingScale } = useSelector(
+		getTimelineState,
+		(a, b) => a.scaleLevel === b.scaleLevel && a.isSwitchingScale === b.isSwitchingScale,
+	)
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel, calendar })
 
+	const visible = !isSwitchingScale
 	const lineCount = useMemo(
 		() => Math.ceil(containerWidth / LineSpacing) + Math.ceil(TimelineAnchorPadding / LineSpacing) * 2,
 		[containerWidth],
 	)
-	const dividers = useRef(
-		Array(lineCount).fill({
-			index: -1,
-			scaleLevel: -1,
-			isRendered: false,
-			isSmallGroup: false,
-			isMediumGroup: false,
-			isLargeGroup: false,
-		}),
-	)
-	const [renderedDividers, setRenderedDividers] = useState(dividers.current)
+
+	const [dividers, setDividers] = useState(Array(lineCount).fill(0))
 	const { smallGroupSize, mediumGroupSize, largeGroupSize } = getTimelineMultipliers()
-
-	const updateDividers = useCallback(() => {
-		dividers.current = dividers.current.map((oldData, rawIndex) => {
-			const loopIndex = getLoop({
-				index: rawIndex,
-				lineCount,
-				timelineScroll: scroll,
-			})
-			const index = rawIndex + loopIndex * lineCount
-			if (oldData.index === index && oldData.scaleLevel === scaleLevel) {
-				return oldData
-			}
-			const parsedTime = parseTime(scaledTimeToRealTime(index * LineSpacing))
-			const isStartOfMonth = () => {
-				return parsedTime.monthDay === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
-			}
-
-			const isStartOfYear = () => {
-				return (
-					parsedTime.monthIndex === 0 &&
-					parsedTime.day === 1 &&
-					parsedTime.hour === 0 &&
-					parsedTime.minute === 0
-				)
-			}
-
-			const isSmallGroup = index % smallGroupSize === 0
-			const isMediumGroup =
-				(isSmallGroup && index % mediumGroupSize === 0) ||
-				(scaleLevel === 2 && isStartOfMonth()) ||
-				(scaleLevel === 3 && isStartOfMonth())
-			const isLargeGroup =
-				isMediumGroup &&
-				(index % largeGroupSize === 0 ||
-					(scaleLevel === 1 && isStartOfMonth()) ||
-					(scaleLevel === 2 && isStartOfYear()) ||
-					(scaleLevel === 3 && isStartOfYear()))
-			return {
-				index,
-				scaleLevel,
-				isRendered: isSmallGroup || isMediumGroup || isLargeGroup,
-				isSmallGroup,
-				isMediumGroup,
-				isLargeGroup,
-			}
-		})
-		setRenderedDividers(dividers.current)
-	}, [
-		largeGroupSize,
-		lineCount,
-		mediumGroupSize,
-		parseTime,
-		scaleLevel,
-		scaledTimeToRealTime,
-		scroll,
-		smallGroupSize,
-	])
 
 	const lastLineCount = useRef(0)
 	const lastCalendar = useRef(calendar)
 	useEffect(() => {
 		if (lineCount !== lastLineCount.current || calendar !== lastCalendar.current) {
 			lastLineCount.current = lineCount
-			dividers.current = Array(lineCount).fill({
-				index: -1,
-				lineCount: -1,
-				scaleLevel: -1,
-				isRendered: false,
-				isSmallGroup: false,
-				isMediumGroup: false,
-				isLargeGroup: false,
-			})
+			setDividers(Array(lineCount).fill(0))
 		}
-		updateDividers()
-	}, [calendar, lineCount, updateDividers])
+	}, [calendar, lineCount])
 
-	const positionNormalizer = useMemo(
-		() => Math.floor(Math.abs(scroll) / ResetNumbersAfterEvery) * ResetNumbersAfterEvery * Math.sign(scroll),
-		[scroll],
-	)
-
+	// TODO: Optimize Fade component being heavy?
 	return (
 		<Profiler id="TimelineAnchor" onRender={reportComponentProfile}>
-			<TimelineAnchorContainer offset={scroll % ResetNumbersAfterEvery}>
-				<TimelineSmallestPips
-					offset={scroll % ResetNumbersAfterEvery}
-					$visible={visible}
-					$lineSpacing={LineSpacing}
-				/>
-				{renderedDividers.map((data, index) => (
-					<div key={index}>
-						{data.isRendered && (
+			<Fade in={visible} appear timeout={300}>
+				<Box>
+					<TimelineAnchorContainer>
+						{dividers.map((_, index) => (
 							<TimelineAnchorLine
 								key={`${index}`}
 								theme={theme}
 								index={index}
-								visible={visible}
 								lineCount={lineCount}
 								scaleLevel={scaleLevel}
-								timelineScroll={scroll}
-								timeToShortLabel={timeToShortLabel}
+								smallGroupSize={smallGroupSize}
+								mediumGroupSize={mediumGroupSize}
+								largeGroupSize={largeGroupSize}
 								scaledTimeToRealTime={scaledTimeToRealTime}
-								positionNormalizer={positionNormalizer}
-								{...data}
 							/>
-						)}
-					</div>
-				))}
-			</TimelineAnchorContainer>
+						))}
+					</TimelineAnchorContainer>
+				</Box>
+			</Fade>
 		</Profiler>
 	)
 }
-
-export const TimelineAnchor = memo(TimelineAnchorComponent)

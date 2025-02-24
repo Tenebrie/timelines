@@ -87,7 +87,7 @@ export const WorldEventService = {
 
 	deleteWorldEvent: async ({ worldId, eventId }: { worldId: string; eventId: string }) => {
 		const [event, world] = await getPrismaClient().$transaction([
-			getPrismaClient().worldEvent.delete({
+			getPrismaClient().worldEvent.deleteMany({
 				where: {
 					id: eventId,
 				},

@@ -8,7 +8,7 @@ export const useEventTracksRequest = () => {
 		getWorldState,
 		(a, b) => a.id === b.id && a.isLoaded === b.isLoaded,
 	)
-	const { data } = useGetWorldEventTracksQuery(
+	const state = useGetWorldEventTracksQuery(
 		{
 			worldId,
 		},
@@ -18,7 +18,5 @@ export const useEventTracksRequest = () => {
 		},
 	)
 
-	return {
-		tracks: data ?? [],
-	}
+	return state
 }

@@ -14,7 +14,7 @@ export const WorldService = {
 				name: params.name,
 				description: params.description,
 				ownerId: params.owner.id,
-				calendar: params.calendar,
+				calendar: params.calendar ?? 'EARTH',
 				timeOrigin: params.timeOrigin,
 			},
 			select: {

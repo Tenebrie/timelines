@@ -1,13 +1,16 @@
 import { memo } from 'react'
+import { useSelector } from 'react-redux'
+
+import { getTimelineState } from '@/app/features/world/selectors'
 
 import { Container, Label } from './styles'
 
-type Props = {
-	targetScaleIndex: number
-	visible: boolean
-}
+const TimelineScaleLabelComponent = () => {
+	const { targetScaleLevel, isSwitchingScale } = useSelector(
+		getTimelineState,
+		(a, b) => a.targetScaleLevel === b.targetScaleLevel && a.isSwitchingScale === b.isSwitchingScale,
+	)
 
-const TimelineScaleLabelComponent = ({ targetScaleIndex, visible }: Props) => {
 	const labels: Record<number, string> = {
 		[-1]: 'Minutes',
 		0: 'Hours',
@@ -21,8 +24,8 @@ const TimelineScaleLabelComponent = ({ targetScaleIndex, visible }: Props) => {
 	}
 
 	return (
-		<Container className={visible ? 'visible' : ''}>
-			<Label fontSize={50}>{labels[targetScaleIndex]}</Label>
+		<Container className={isSwitchingScale ? 'visible' : ''}>
+			<Label fontSize={50}>{labels[targetScaleLevel]}</Label>
 		</Container>
 	)
 }

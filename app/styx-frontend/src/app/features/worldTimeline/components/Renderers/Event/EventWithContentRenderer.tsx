@@ -16,10 +16,12 @@ type Props = {
 	active: boolean
 	divider: boolean
 	collapsed: boolean
-	actions: ('edit' | 'collapse')[]
+	actions: readonly ('edit' | 'collapse')[]
 }
 
-export const EventWithContentRendererComponent = ({
+export const EventWithContentRenderer = memo(EventWithContentRendererComponent)
+
+function EventWithContentRendererComponent({
 	event,
 	owningActor,
 	short,
@@ -27,7 +29,7 @@ export const EventWithContentRendererComponent = ({
 	divider,
 	collapsed,
 	actions,
-}: Props) => {
+}: Props) {
 	return (
 		<>
 			<EventRenderer
@@ -51,5 +53,3 @@ export const EventWithContentRendererComponent = ({
 		</>
 	)
 }
-
-export const EventWithContentRenderer = memo(EventWithContentRendererComponent)

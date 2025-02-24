@@ -2,7 +2,6 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getWorldState } from '@/app/features/world/selectors'
-import { applyEventDelta } from '@/app/utils/applyEventDelta'
 import { isNull } from '@/app/utils/isNull'
 
 import { WorldEvent } from '../../types'
@@ -32,12 +31,14 @@ export const useVisibleEvents = ({ timestamp, excludedEvents, includeInactive }:
 			)
 			.map((event, index) => ({
 				...event,
+				raw: event,
 				index,
 				active: isNull(event.revokedAt) || event.revokedAt > timestamp,
 			}))
 			.filter((event) => includeInactive || event.active)
 			.sort((a, b) => a.timestamp - b.timestamp || a.index - b.index)
-			.map((event) => applyEventDelta({ event, timestamp }))
+			.map((a) => a.raw)
+		// .map((event) => applyEventDelta({ event, timestamp }))
 	}, [search, events, timestamp, excludedEvents, includeInactive])
 
 	return visibleEvents

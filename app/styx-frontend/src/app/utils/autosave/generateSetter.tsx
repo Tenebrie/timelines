@@ -1,4 +1,4 @@
-import { Dispatch, RefObject } from 'react'
+import { Dispatch } from 'react'
 
 type SetterArgs = {
 	cleanSet?: boolean
@@ -17,17 +17,14 @@ const areEqual = <T,>(a: T, b: T): boolean => {
 	return false
 }
 
-export const generateSetter = <T,>(
-	setter: Dispatch<React.SetStateAction<T>>,
-	isDirty: RefObject<boolean>,
-) => {
+export const generateSetter = <T,>(setter: Dispatch<React.SetStateAction<T>>, makeDirty: () => void) => {
 	return (val: T, args?: SetterArgs) => {
 		setter((oldVal) => {
 			if (args?.cleanSet) {
 				return val
 			}
 			if (!areEqual(oldVal, val) && !args?.cleanSet) {
-				isDirty.current = true
+				makeDirty()
 			}
 
 			return val

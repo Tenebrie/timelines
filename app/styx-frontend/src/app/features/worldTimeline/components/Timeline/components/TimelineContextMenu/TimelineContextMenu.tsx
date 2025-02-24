@@ -4,25 +4,27 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 import { memo, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/reducer'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { worldSlice } from '@/app/features/world/reducer'
-import { getTimelineContextMenuState, getWorldState } from '@/app/features/world/selectors'
-import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
-import { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
+import { getTimelineContextMenuState, getTimelineState, getWorldState } from '@/app/features/world/selectors'
 
 import { useTimelineContextMenuRequests } from './hooks/useTimelineContextMenuRequests'
 
-type Props = {
-	markers: TimelineEntity<MarkerType>[]
-}
-
-export const TimelineContextMenuComponent = ({ markers }: Props) => {
+export const TimelineContextMenuComponent = () => {
 	const { timeToLabel } = useWorldTime()
-	const { id: worldId, selectedTimelineMarkers } = useSelector(getWorldState)
+	const { id: worldId } = useSelector(getWorldState, (a, b) => a.id === b.id)
+	const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
+
+	const selectedMarkers = useSearch({
+		from: '/world/$worldId/_world/timeline',
+		select: (search) => search.selection,
+	})
+
 	const { clearSelections } = worldSlice.actions
 	const {
 		isOpen,
@@ -33,13 +35,13 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 
 	const selectedMarker = useMemo(
 		() =>
-			selectedTimelineMarkers.length === 1
-				? (markers.find((marker) => marker.key === selectedTimelineMarkers[0]) ?? null)
+			selectedMarkers.length === 1
+				? (markers.find((marker) => marker.key === selectedMarkers[0]) ?? null)
 				: null,
-		[markers, selectedTimelineMarkers],
+		[markers, selectedMarkers],
 	)
 
-	const { navigateToEventCreator, navigateToEventDeltaCreator } = useWorldTimelineRouter()
+	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 
@@ -55,19 +57,23 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 
 	const onCreateEvent = useCallback(() => {
 		onClose()
-		navigateToEventCreator(selectedTime)
-	}, [onClose, navigateToEventCreator, selectedTime])
+		// navigate({
+		// 	to: '/world/$worldId/timeline/event/create',
+		// 	search: (prev) => ({ ...prev, time: selectedTime }),
+		// })
+	}, [onClose, navigate, selectedTime])
 
 	const onReplaceSelectedEvent = useCallback(() => {
 		onClose()
 		if (!selectedMarker) {
 			return
 		}
-		navigateToEventDeltaCreator({
-			eventId: selectedMarker.eventId,
-			selectedTime,
-		})
-	}, [navigateToEventDeltaCreator, onClose, selectedMarker, selectedTime])
+		// navigate({
+		// 	to: '/world/$worldId/timeline/delta/create/$eventId',
+		// 	params: { eventId: selectedMarker.eventId },
+		// 	search: (prev) => ({ ...prev, time: selectedTime }),
+		// })
+	}, [navigate, onClose, selectedMarker, selectedTime])
 
 	const onResolveSelectedEvent = useCallback(async () => {
 		if (!selectedMarker) {
@@ -118,8 +124,11 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 
 	const onUnselectAll = useCallback(() => {
 		dispatch(clearSelections())
+		navigate({
+			search: (prev) => ({ ...prev, selection: [] }),
+		})
 		onClose()
-	}, [clearSelections, dispatch, onClose])
+	}, [clearSelections, dispatch, navigate, onClose])
 
 	return (
 		<Menu
@@ -194,12 +203,12 @@ export const TimelineContextMenuComponent = ({ markers }: Props) => {
 			{!targetedMarker && selectedMarker && <Divider />}
 
 			{/* Click on timeline with at least one selected */}
-			{!targetedMarker && selectedTimelineMarkers.length > 0 && (
+			{!targetedMarker && selectedMarkers.length > 0 && (
 				<MenuItem onClick={onUnselectAll}>
 					<ListItemText primary="Unselect all" />
 				</MenuItem>
 			)}
-			{!targetedMarker && selectedTimelineMarkers.length > 0 && <Divider />}
+			{!targetedMarker && selectedMarkers.length > 0 && <Divider />}
 
 			{/* Click on timeline */}
 			{!targetedMarker && (

@@ -11,21 +11,20 @@ import { EmptyStatementListRenderer } from './EmptyStatementListRenderer'
 import { EventRenderer } from './Event/EventRenderer'
 
 type Props = {
-	actor: Omit<ActorDetails, 'events'> & {
-		events: (WorldEvent & { active: boolean })[]
-	}
+	actor: ActorDetails
 	collapsed: boolean
 	divider: boolean
 }
 
 export const ActorWithStatementsRendererComponent = ({ actor, collapsed, divider }: Props) => {
+	const events: WorldEvent[] = []
 	return (
 		<>
 			<ActorRenderer actor={actor} collapsed={collapsed} />
 			<List dense component="div" disablePadding>
 				<TransitionGroup>
 					{!collapsed &&
-						actor.events.map((event, index) => (
+						events.map((event, index) => (
 							<Collapse key={event.id}>
 								<ZebraWrapper $zebra={index % 2 === 0}>
 									<EventRenderer
@@ -33,13 +32,13 @@ export const ActorWithStatementsRendererComponent = ({ actor, collapsed, divider
 										owningActor={actor}
 										collapsed={false}
 										short={false}
-										active={event.active}
+										active
 										actions={[]}
 									/>
 								</ZebraWrapper>
 							</Collapse>
 						))}
-					{!collapsed && actor.events.length === 0 && (
+					{!collapsed && events.length === 0 && (
 						<Collapse>
 							<EmptyStatementListRenderer />
 						</Collapse>

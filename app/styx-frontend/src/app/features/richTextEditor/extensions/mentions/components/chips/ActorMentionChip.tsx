@@ -1,8 +1,5 @@
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { getWorldState } from '@/app/features/world/selectors'
-import { worldTimelineRoutes } from '@/router/routes/featureRoutes/worldTimelineRoutes'
-import { QueryParams } from '@/router/routes/QueryParams'
-import { QueryStrategy } from '@/router/types'
 
 import { BaseMentionChip } from './BaseMentionChip'
 
@@ -14,7 +11,7 @@ type Props = {
 
 export const ActorMentionChip = ({ worldId, actorId, actors }: Props) => {
 	const navigateTo = useEventBusDispatch({
-		event: 'navigate/worldTimeline',
+		event: 'navigate/world',
 	})
 
 	const actor = actors.find((actor) => actor.id === actorId)
@@ -25,10 +22,11 @@ export const ActorMentionChip = ({ worldId, actorId, actors }: Props) => {
 		if (!actor) {
 			return
 		}
+
 		navigateTo({
-			target: worldTimelineRoutes.actorEditor,
-			args: { worldId, actorId },
-			query: { [QueryParams.SELECTED_TIME]: QueryStrategy.Preserve },
+			to: '/world/$worldId/mindmap',
+			params: { worldId },
+			search: (prev) => ({ ...prev, selection: [actor.id] }),
 		})
 	}
 

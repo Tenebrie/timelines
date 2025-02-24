@@ -24,10 +24,16 @@ export const ProgressBar = ({ elementsRendering }: Props) => {
 			}
 			const currentValue =
 				((maxValueRef.current - elementsRendering.current.length) / maxValueRef.current) * 100
-			requestAnimationFrame(() => flushSync(() => setValue(currentValue)))
+			requestAnimationFrame(() =>
+				flushSync(() => {
+					setValue(currentValue)
+				}),
+			)
 			if (elementsRendering.current.length > 20 && !triggeredRef.current) {
 				triggeredRef.current = true
-				setOpacity(1)
+				requestAnimationFrame(() => {
+					setOpacity(1)
+				})
 			}
 		},
 	})

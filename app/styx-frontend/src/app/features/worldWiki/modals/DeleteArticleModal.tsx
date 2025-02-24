@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import { useState } from 'react'
 
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 import { useModal } from '../../modals/reducer'

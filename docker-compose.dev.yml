@@ -8,7 +8,11 @@ services:
     styx:
         build:
             context: ./
+            args:
+                DOCKER_UID: ${DOCKER_UID}
+                DOCKER_GID: ${DOCKER_GID}
             dockerfile: ./app/styx-frontend/Dockerfile
+        user: "${DOCKER_UID}:${DOCKER_GID}"
         environment:
             NODE_ENV: development
             DANGEROUSLY_DISABLE_HOST_CHECK: "true" # For React dev server to work behind Gatekeeper
@@ -16,6 +20,9 @@ services:
             - ./app/styx-frontend/src:/app/styx/src:cached
             - ./app/styx-frontend/public:/app/styx/public:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached
+            - type: bind
+              source: ./app/styx-frontend/vite.config.ts
+              target: /app/styx/vite.config.ts
         ports:
             - 8080:8080
         networks:

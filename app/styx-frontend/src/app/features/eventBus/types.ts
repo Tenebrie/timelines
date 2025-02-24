@@ -1,14 +1,20 @@
+import type { NavigateOptions } from '@tanstack/react-router'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
-import type { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
-import { useWorldWikiRouter } from '@/router/routes/featureRoutes/worldWikiRoutes'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
-import { ActorDetails, WorldEvent } from '../worldTimeline/types'
+import { ActorDetails, MarkerType, TimelineEntity, WorldEvent } from '../worldTimeline/types'
 
 export type AllowedEvents =
+	| 'scrollTimelineTo'
 	| 'scrollTimelineLeft'
 	| 'scrollTimelineRight'
+	| 'timeline/requestZoom'
+	| 'timeline/openEventDrawer'
+	| 'timeline/markerHovered'
+	| 'mindmap/openActorDrawer'
+	| 'outliner/tracksDrawerResized'
+	| 'outliner/entityDrawerResized'
 	| 'sendCalliopeMessage'
 	| 'calliopeReconnected'
 	| 'timelineScrolled'
@@ -16,20 +22,36 @@ export type AllowedEvents =
 	| 'richEditor/updateMentions'
 	| 'richEditor/closeMentions'
 	| 'richEditor/keyDown'
-	| 'navigate/worldTimeline'
-	| 'navigate/articleDetails'
+	| 'navigate/world'
 	| 'richEditor/forceUpdateEvent'
 	| 'richEditor/forceUpdateActor'
 	| 'richEditor/forceUpdateArticle'
 	| 'richEditor/mentionRender/start'
 	| 'richEditor/mentionRender/end'
 
+type ScrollTimelineToParams =
+	| {
+			timestamp: number
+			skipAnim?: boolean
+	  }
+	| {
+			rawScrollValue: number
+			skipAnim?: boolean
+	  }
+
 export type EventParams = {
+	['scrollTimelineTo']: ScrollTimelineToParams
 	['scrollTimelineLeft']: void
 	['scrollTimelineRight']: void
+	['timeline/requestZoom']: { direction: 'in' | 'out' }
+	['timeline/openEventDrawer']: { extraHeight?: number }
+	['timeline/markerHovered']: { marker: TimelineEntity<MarkerType>; hover: boolean }
+	['mindmap/openActorDrawer']: { extraHeight?: number }
+	['outliner/tracksDrawerResized']: { height: number }
+	['outliner/entityDrawerResized']: { height: number }
 	['sendCalliopeMessage']: ClientToCalliopeMessage
 	['calliopeReconnected']: void
-	['timelineScrolled']: void
+	['timelineScrolled']: number
 	['richEditor/openMentions']: { query: string; screenPosTop: number; screenPosLeft: number }
 	['richEditor/updateMentions']: { query: string }
 	['richEditor/closeMentions']: void
@@ -40,8 +62,7 @@ export type EventParams = {
 		altKey: boolean
 		metaKey: boolean
 	}
-	['navigate/worldTimeline']: Parameters<ReturnType<typeof useWorldTimelineRouter>['navigateTo']>[0]
-	['navigate/articleDetails']: Parameters<ReturnType<typeof useWorldWikiRouter>['navigateTo']>[0]
+	['navigate/world']: NavigateOptions
 	['richEditor/forceUpdateEvent']: {
 		event: WorldEvent
 	}

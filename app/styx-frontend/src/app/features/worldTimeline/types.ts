@@ -24,7 +24,6 @@ export type WorldEvent = Omit<
 	})[]
 }
 export type WorldEventDelta = WorldEvent['deltaStates'][number]
-export type WorldEventType = WorldEvent['type']
 export type WorldCalendarType = WorldDetails['calendar']
 
 export type MarkerType = 'issuedAt' | 'deltaState' | 'revokedAt' | 'ghostEvent' | 'ghostDelta'

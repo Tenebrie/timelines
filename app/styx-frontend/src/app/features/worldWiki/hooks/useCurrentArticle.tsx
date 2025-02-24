@@ -1,12 +1,10 @@
+import { useParams } from '@tanstack/react-router'
 import { useMemo } from 'react'
-
-import { useWorldWikiRouter, worldWikiRoutes } from '@/router/routes/featureRoutes/worldWikiRoutes'
 
 import { useListArticles } from '../api/useListArticles'
 
 export const useCurrentArticle = () => {
-	const { stateOf } = useWorldWikiRouter()
-	const state = stateOf(worldWikiRoutes.article)
+	const state = useParams({ from: '/world/$worldId/_world/wiki/_wiki/$articleId' })
 
 	const id = state.articleId
 	const { data: articles } = useListArticles()

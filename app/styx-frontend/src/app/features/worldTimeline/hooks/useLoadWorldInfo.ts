@@ -9,7 +9,7 @@ import { useListArticles } from '../../worldWiki/api/useListArticles'
 import { wikiSlice } from '../../worldWiki/reducer'
 
 export const useLoadWorldInfo = (worldId: string) => {
-	const { data } = useGetWorldInfoQuery(
+	const { data, error } = useGetWorldInfoQuery(
 		{
 			worldId: worldId,
 		},
@@ -22,9 +22,15 @@ export const useLoadWorldInfo = (worldId: string) => {
 
 	const isLoaded = useSelector(getWorldStateLoaded)
 
-	const { loadWorld } = worldSlice.actions
+	const { loadWorld, setUnauthorized } = worldSlice.actions
 	const { loadArticles } = wikiSlice.actions
 	const dispatch = useDispatch()
+
+	useEffect(() => {
+		if (error) {
+			dispatch(setUnauthorized(true))
+		}
+	}, [dispatch, error, setUnauthorized])
 
 	useEffect(() => {
 		if (!data) {

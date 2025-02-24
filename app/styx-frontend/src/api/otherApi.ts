@@ -114,6 +114,8 @@ export type CreateArticleApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	icon: string
+	color: string
 	position: number
 	contentRich: string
 }
@@ -130,6 +132,8 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	icon: string
+	color: string
 	position: number
 	contentRich: string
 }
@@ -140,6 +144,8 @@ export type UpdateArticleApiArg = {
 	articleId: string
 	body: {
 		name?: string
+		icon?: string
+		color?: string
 		contentRich?: string
 		mentions?: {
 			targetId: string

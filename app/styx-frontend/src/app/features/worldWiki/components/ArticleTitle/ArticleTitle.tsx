@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useEffect, useState } from 'react'
 
-import { Shortcut, useShortcut } from '@/hooks/useShortcut'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
 
 import { useEditArticle } from '../../api/useEditArticle'
 import { useCurrentArticle } from '../../hooks/useCurrentArticle'
@@ -63,7 +63,9 @@ export const ArticleTitle = () => {
 						sx={{ padding: '0 8px', width: '100%', justifyContent: 'flex-start' }}
 						onClick={onStartEdit}
 					>
-						<Typography variant="h6">{article.name}</Typography>
+						<Typography variant="h6" noWrap>
+							{article.name}
+						</Typography>
 					</Button>
 				</Stack>
 			)}

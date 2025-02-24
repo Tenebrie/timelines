@@ -1,10 +1,17 @@
+import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
 	base: '/',
-	plugins: [react(), viteTsconfigPaths()],
+	plugins: [
+		TanStackRouterVite({
+			// autoCodeSplitting: true,
+		}),
+		react(),
+		viteTsconfigPaths(),
+	],
 	resolve: {
 		alias: {
 			'@api': '/src/api',
@@ -14,7 +21,7 @@ export default defineConfig({
 	test: {
 		globals: true,
 		environment: 'jsdom',
-		setupFiles: 'src/setupTests.ts',
+		setupFiles: 'src/test-utils/setupTests.ts',
 		testTimeout: 15000,
 	},
 	build: {
@@ -24,6 +31,10 @@ export default defineConfig({
 				manualChunks: () => 'everything',
 			},
 		},
+	},
+	preview: {
+		port: 8080,
+		host: true,
 	},
 	server: {
 		port: 8080,

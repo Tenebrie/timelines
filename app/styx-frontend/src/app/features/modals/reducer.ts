@@ -32,9 +32,6 @@ const modals = {
 		isOpen: false as boolean,
 		timestamp: 0 as number,
 	},
-	eventTutorialModal: {
-		isOpen: false as boolean,
-	},
 	deleteActorModal: {
 		isOpen: false as boolean,
 		target: null as ActorDetails | null,

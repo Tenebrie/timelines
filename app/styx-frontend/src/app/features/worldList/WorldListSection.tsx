@@ -3,20 +3,15 @@ import Edit from '@mui/icons-material/Edit'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
+import { useNavigate } from '@tanstack/react-router'
 import { useDispatch } from 'react-redux'
 
 import { GetWorldsApiResponse } from '@/api/worldListApi'
-import { useWorldRouter, worldRoutes } from '@/router/routes/featureRoutes/worldRoutes'
-import {
-	useWorldTimelineRouter,
-	worldTimelineRoutes,
-} from '@/router/routes/featureRoutes/worldTimelineRoutes'
-import { QueryParams } from '@/router/routes/QueryParams'
 
 import { OutlinedContainer } from '../../components/OutlinedContainer'
 import { TrunkatedSpan } from '../../components/TrunkatedTypography'
 import { worldSlice } from '../world/reducer'
-import { WorldListEmptyState } from './components/WorldListEmptyState'
+import { WorldBrief } from '../worldTimeline/types'
 import { worldListSlice } from './reducer'
 
 type Props = {
@@ -26,13 +21,11 @@ type Props = {
 		| GetWorldsApiResponse['visibleWorlds']
 	label: string
 	showActions?: boolean
-	showEmptyState?: boolean
 	showCreateButton?: boolean
 }
 
-export const WorldListSection = ({ worlds, label, showActions, showEmptyState, showCreateButton }: Props) => {
-	const { navigateTo } = useWorldRouter()
-	const { navigateTo: navigateToTimeline } = useWorldTimelineRouter()
+export const WorldListSection = ({ worlds, label, showActions, showCreateButton }: Props) => {
+	const navigate = useNavigate()
 
 	const { unloadWorld } = worldSlice.actions
 	const { openWorldWizardModal, openDeleteWorldModal } = worldListSlice.actions
@@ -42,28 +35,24 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 		dispatch(openWorldWizardModal())
 	}
 
-	const onLoad = (id: string) => {
-		const world = worlds.find((w) => w.id === id)
-		if (!world) {
-			return
-		}
-
+	const onLoad = (world: WorldBrief) => {
 		dispatch(unloadWorld())
-		navigateToTimeline({
-			target: worldTimelineRoutes.outliner,
-			args: {
-				worldId: id,
+		navigate({
+			to: '/world/$worldId/timeline',
+			params: {
+				worldId: world.id,
 			},
-			query: {
-				[QueryParams.SELECTED_TIME]: world.timeOrigin,
-			},
+			search: (prev) => ({
+				...prev,
+				time: parseInt(world.timeOrigin),
+			}),
 		})
 	}
 
 	const onEdit = (id: string) => {
-		navigateTo({
-			target: worldRoutes.settings,
-			args: { worldId: id },
+		navigate({
+			to: `/world/${id}/settings`,
+			search: true,
 		})
 	}
 
@@ -71,20 +60,14 @@ export const WorldListSection = ({ worlds, label, showActions, showEmptyState, s
 		dispatch(openDeleteWorldModal(world))
 	}
 
-	if (worlds.length === 0 && showEmptyState) {
-		return <WorldListEmptyState label={label} onCreate={onCreate} />
-	} else if (worlds.length === 0) {
-		return <></>
-	}
-
 	return (
-		<OutlinedContainer style={{ maxWidth: 600, minWidth: 400 }} label={label}>
+		<OutlinedContainer style={{ maxWidth: 600, minWidth: 400, borderRadius: 8 }} label={label}>
 			{worlds.map((world) => (
 				<Stack direction="row" justifyContent="space-between" key={world.id}>
 					<Tooltip title={world.name} enterDelay={1000} arrow>
 						<Button
 							fullWidth={true}
-							onClick={() => onLoad(world.id)}
+							onClick={() => onLoad(world)}
 							style={{ textAlign: 'start', lineBreak: 'anywhere' }}
 							data-hj-suppress
 						>

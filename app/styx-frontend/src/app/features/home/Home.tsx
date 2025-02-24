@@ -1,7 +1,6 @@
-import { Navigate, useOutlet } from 'react-router-dom'
+import { Outlet } from '@tanstack/react-router'
 import styled from 'styled-components'
 
-import { useAuthCheck } from '../auth/authCheck/useAuthCheck'
 import { WorldList } from '../worldList/WorldList'
 import { HomeNavigator } from './components/navigator/HomeNavigator'
 
@@ -23,19 +22,12 @@ const WorldListContainer = styled.div`
 `
 
 export const Home = () => {
-	const currentOutlet = useOutlet()
-	const { success, target } = useAuthCheck()
-
-	if (!success) {
-		return <Navigate to={target} />
-	}
-
 	return (
 		<HomePageContainer>
 			<HomeNavigator />
 			<WorldListContainer>
 				<WorldList />
-				{currentOutlet}
+				<Outlet />
 			</WorldListContainer>
 		</HomePageContainer>
 	)

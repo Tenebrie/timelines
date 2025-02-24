@@ -64,7 +64,7 @@ export const useEditWorld = ({ world, state }: Props) => {
 	})
 
 	useEffect(() => {
-		if (isDirty.current) {
+		if (isDirty) {
 			autosave()
 		}
 	}, [autosave, isDirty, state])

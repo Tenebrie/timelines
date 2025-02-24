@@ -29,6 +29,7 @@ export default [
 		'plugin:prettier/recommended',
 	),
 	{
+		ignores: ['*.gen.ts'],
 		plugins: {
 			'simple-import-sort': simpleImportSort,
 			'unused-imports': unusedImports,
