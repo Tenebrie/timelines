@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [master, dev]
+    branches: [main, dev]
 
 concurrency:
   group: deploy
@@ -106,13 +106,13 @@ jobs:
         run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"
 
       - name: Run migrations
-        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && git pull && ./scripts/stack-migrate.sh"
+        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && git fetch && git checkout dev && git pull && ./scripts/stack-migrate.sh"
 
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
     needs: [check-commits, prepare-containers]
-    if: ${{ github.ref_name == 'master' }}
+    if: ${{ github.ref_name == 'main' }}
 
     steps:
       - uses: actions/checkout@v4 
@@ -136,7 +136,7 @@ jobs:
         run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"
 
       - name: Run migrations
-        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && git pull && ./scripts/stack-migrate.sh"
+        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && git fetch && git checkout main && git pull && ./scripts/stack-migrate.sh"
 
   run-e2e:
     name: Run E2E Tests
