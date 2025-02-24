@@ -59,19 +59,21 @@ jobs:
 
       - name: Check Existing Container
         id: check-container
-        # 0 = exists, 1 = does not exist
         run: |
-          docker manifest inspect tenebrie/timelines-rhea:${{ needs.check-commits.outputs.version }} > /dev/null 2> /dev/null
-          echo "exists=$?" >> "$GITHUB_OUTPUT"
+          if docker manifest inspect tenebrie/timelines-rhea:${{ needs.check-commits.outputs.version }} > /dev/null 2>&1; then
+            echo "missing=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+          fi 
 
       - name: Build & Publish
-        if: steps.check-container.outputs.exists == '1'
+        if: steps.check-container.outputs.missing == 'true'
         run: yarn docker:prod:push
         env:
           VERSION: ${{ needs.check-commits.outputs.version }}
 
       - name: Create a Release
-        if: steps.check-container.outputs.exists == '1'
+        if: steps.check-container.outputs.missing == 'true'
         uses: elgohr/Github-Release-Action@v5
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
