@@ -76,3 +76,33 @@ jobs:
       run: yarn
     - name: Run Rhea tests
       run: yarn test:rhea
+
+  run-e2e:
+    name: Run E2E Tests
+    if: ${{ github.base_ref == 'main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: 'yarn'
+
+      - name: Determine if tests should run
+        id: decide
+        run: |
+          if [ "${{ github.head_ref }}" == "dev" ]; then
+            echo "run_tests=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_tests=false" >> "$GITHUB_OUTPUT"
+            echo "Tests will only run on the dev -> main PRs, skipping..."
+          fi
+
+      - name: Run E2E Tests
+        if: steps.decide.outputs.run_tests == 'true'
+        working-directory: e2e
+        run: |
+          yarn
+          yarn build
+          yarn test:staging
