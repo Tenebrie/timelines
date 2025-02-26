@@ -1,3 +1,4 @@
+import { MentionedEntity } from '@api/types/types'
 import Article from '@mui/icons-material/Article'
 import Event from '@mui/icons-material/Event'
 import Person from '@mui/icons-material/Person'
@@ -10,8 +11,7 @@ import { Editor } from '@tiptap/react'
 import { memo, useEffect, useRef, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { MentionedEntity } from '@/app/features/worldTimeline/types'
-import { useCreateArticle } from '@/app/features/worldWiki/api/useCreateArticle'
+import { useCreateArticle } from '@/app/views/world/views/wiki/api/useCreateArticle'
 
 import { useQuickCreateActor } from './api/useQuickCreateActor'
 import { useQuickCreateEvent } from './api/useQuickCreateEvent'

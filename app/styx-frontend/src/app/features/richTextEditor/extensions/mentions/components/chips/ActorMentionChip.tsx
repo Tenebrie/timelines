@@ -1,5 +1,5 @@
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { getWorldState } from '@/app/features/world/selectors'
+import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { BaseMentionChip } from './BaseMentionChip'
 

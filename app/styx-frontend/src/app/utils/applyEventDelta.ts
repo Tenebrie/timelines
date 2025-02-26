@@ -1,4 +1,4 @@
-import { WorldEvent } from '../features/worldTimeline/types'
+import { WorldEvent } from '../../api/types/types'
 
 export const applyEventDelta = ({ event, timestamp }: { event: WorldEvent; timestamp: number }) =>
 	event.deltaStates.reduce((total, delta) => {

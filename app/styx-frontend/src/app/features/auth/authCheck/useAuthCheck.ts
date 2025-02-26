@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useCheckAuthenticationQuery } from '@/api/authApi'
+import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
-import { getWorldState } from '../../world/selectors'
 import { authSlice } from '../reducer'
 import { getAuthState } from '../selectors'
 

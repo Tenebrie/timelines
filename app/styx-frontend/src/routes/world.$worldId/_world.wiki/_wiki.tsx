@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { WorldWiki } from '@/app/features/worldWiki/WorldWiki'
+import { Wiki } from '@/app/views/world/views/wiki/Wiki'
 
 export const Route = createFileRoute('/world/$worldId/_world/wiki/_wiki')({
 	component: WorldWikiComponent,
 })
 
 function WorldWikiComponent() {
-	return <WorldWiki />
+	return <Wiki />
 }

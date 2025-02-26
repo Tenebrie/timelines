@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-import { ScaleLevelSchema } from '../worldTimeline/components/Timeline/types'
+import { ScaleLevelSchema } from '../../schema/ScaleLevel'
 
 export const PreferencesKey = 'userPreferences/v2'
 

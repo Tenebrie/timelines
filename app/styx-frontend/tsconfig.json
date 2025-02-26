@@ -38,6 +38,6 @@
 	},
 	"include": [
 		"src",
-		"jest.config.ts", "vite-env.d.ts",
+		"jest.config.ts", "dts/vite-env.d.ts",
 	]
 }

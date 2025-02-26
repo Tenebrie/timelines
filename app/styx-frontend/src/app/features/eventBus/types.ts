@@ -1,9 +1,8 @@
 import type { NavigateOptions } from '@tanstack/react-router'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
+import { ActorDetails, MarkerType, TimelineEntity, WorldEvent } from '@/api/types/types'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
-
-import { ActorDetails, MarkerType, TimelineEntity, WorldEvent } from '../worldTimeline/types'
 
 export type AllowedEvents =
 	| 'scrollTimelineTo'

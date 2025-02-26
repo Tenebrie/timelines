@@ -1,6 +1,7 @@
-import { TimelineTrack } from '../worldTimeline/components/Timeline/components/TimelineTracks/hooks/useEventTracks'
-import { MarkerType, TimelineEntity } from '../worldTimeline/types'
-import { WikiArticle } from '../worldWiki/types'
+import { MarkerType, TimelineEntity } from '@/api/types/types'
+
+import { TimelineTrack } from '../../views/world/views/timeline/components/TimelineTracks/hooks/useEventTracks'
+import { WikiArticle } from '../../views/world/views/wiki/types'
 
 export type DraggableParams = {
 	['timelineEvent']: {

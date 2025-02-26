@@ -1,3 +1,3 @@
-import { MarkerType } from '../features/worldTimeline/types'
+import { MarkerType } from '../../api/types/types'
 
 export const asMarkerType = (value: MarkerType): MarkerType => value as MarkerType

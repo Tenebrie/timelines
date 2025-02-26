@@ -2,7 +2,7 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { memo } from 'react'
 
-import { useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/useCustomTheme'
 
 type Props = {
 	label: string

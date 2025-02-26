@@ -11,11 +11,11 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useDeleteWorldEventTrackMutation, useUpdateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
-import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
-import { getWorldIdState } from '../../world/selectors'
 import { useModal } from '../reducer'
 
 export const EventTrackEditModal = () => {

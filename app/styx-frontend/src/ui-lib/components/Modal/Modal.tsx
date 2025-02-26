@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-import { useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/useCustomTheme'
 
 import { ModalContainer, ModalWrapper } from './styles'
 

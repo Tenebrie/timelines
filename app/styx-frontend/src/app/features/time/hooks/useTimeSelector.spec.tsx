@@ -1,6 +1,6 @@
+import { worldInitialState } from '@/app/views/world/WorldSlice'
 import { renderHookWithProviders } from '@/test-utils/renderWithProviders'
 
-import { worldInitialState } from '../../world/reducer'
 import { useTimeSelector } from './useTimeSelector'
 
 describe.skip('useTimeSelector', () => {

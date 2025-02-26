@@ -12,12 +12,12 @@ import {
 	CalliopeToClientMessageType,
 } from '@/ts-shared/CalliopeToClientMessage'
 
-import { ingestActor, ingestEvent, ingestEventDelta } from '../../utils/ingestEvent'
+import { ingestActor, ingestEvent, ingestEventDelta } from '../../utils/ingestEntity'
+import { useArticleApiCache } from '../../views/world/views/wiki/api/useArticleApiCache'
+import { WikiArticle } from '../../views/world/views/wiki/types'
+import { worldSlice } from '../../views/world/WorldSlice'
+import { getWorldState } from '../../views/world/WorldSliceSelectors'
 import { useEventBusDispatch } from '../eventBus'
-import { worldSlice } from '../world/reducer'
-import { getWorldState } from '../world/selectors'
-import { useArticleApiCache } from '../worldWiki/api/useArticleApiCache'
-import { WikiArticle } from '../worldWiki/types'
 
 export const useLiveMessageHandlers = () => {
 	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState, (a, b) => a.updatedAt === b.updatedAt)

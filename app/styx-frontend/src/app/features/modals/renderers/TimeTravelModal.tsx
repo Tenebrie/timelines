@@ -10,14 +10,14 @@ import { useNavigate } from '@tanstack/react-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
+import { WorldCalendarType } from '@/api/types/types'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 import { useEventBusDispatch } from '../../eventBus'
 import { useTimeSelector } from '../../time/hooks/useTimeSelector'
 import { useWorldTime } from '../../time/hooks/useWorldTime'
-import { getWorldState } from '../../world/selectors'
-import { WorldCalendarType } from '../../worldTimeline/types'
 import { useModal } from '../reducer'
 import { TimeTravelModalInfo } from './TimeTravelModalInfo'
 

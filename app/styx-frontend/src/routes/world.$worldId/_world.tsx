@@ -2,8 +2,8 @@ import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 
 import { loadPreferences } from '@/app/features/preferences/loadPreferences'
-import { World } from '@/app/features/world/World'
-import { ScaleLevelSchema } from '@/app/features/worldTimeline/components/Timeline/types'
+import { ScaleLevelSchema } from '@/app/schema/ScaleLevel'
+import { World } from '@/app/views/world/World'
 
 const worldSearchSchema = z.object({
 	time: z.number().min(-8640000000000000).max(8640000000000000).default(0),

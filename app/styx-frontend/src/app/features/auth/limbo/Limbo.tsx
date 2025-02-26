@@ -1,4 +1,4 @@
-import { BlockingSpinner } from '@/app/components/BlockingSpinner'
+import { BlockingSpinner } from '@/app/features/skeleton/BlockingSpinner'
 
 import { LimboPageContainer } from './styles'
 

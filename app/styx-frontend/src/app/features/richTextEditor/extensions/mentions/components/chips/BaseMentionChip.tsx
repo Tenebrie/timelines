@@ -1,11 +1,11 @@
+import { MentionedEntity } from '@api/types/types'
 import Article from '@mui/icons-material/Article'
 import Event from '@mui/icons-material/Event'
 import Person from '@mui/icons-material/Person'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 
-import { MentionedEntity } from '@/app/features/worldTimeline/types'
-import { useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/useCustomTheme'
 import { colorStringToHsl } from '@/app/utils/colors/colorStringToHsl'
 import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
 import { hslToHex } from '@/app/utils/colors/hslToHex'

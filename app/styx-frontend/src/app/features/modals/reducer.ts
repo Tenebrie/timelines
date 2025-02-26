@@ -3,10 +3,10 @@ import { createSlice } from '@reduxjs/toolkit'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { ActorDetails, WorldEvent, WorldEventDelta, WorldEventTrack } from '@/api/types/types'
 import { isEventObject } from '@/app/utils/isEventObject'
 
 import { User } from '../auth/reducer'
-import { ActorDetails, WorldEvent, WorldEventDelta, WorldEventTrack } from '../worldTimeline/types'
 
 const modals = {
 	/* Admin */
@@ -25,9 +25,6 @@ const modals = {
 	},
 
 	/* World */
-	actorWizard: {
-		isOpen: false as boolean,
-	},
 	eventWizard: {
 		isOpen: false as boolean,
 		timestamp: 0 as number,

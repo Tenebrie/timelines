@@ -10,12 +10,12 @@ import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCreateWorldEventTrackMutation } from '@/api/worldEventTracksApi'
-import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { isEntityNameValid } from '@/app/utils/isEntityNameValid'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
-import { isEntityNameValid } from '../../validation/isEntityNameValid'
-import { getWorldIdState } from '../../world/selectors'
 import { useModal } from '../reducer'
 
 export const EventTrackWizardModal = () => {

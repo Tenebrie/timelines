@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { CustomTheme } from '@/app/hooks/useCustomTheme'
+import { CustomTheme } from '@/app/features/theming/useCustomTheme'
 
 export const ModalWrapper = styled.div`
 	position: fixed;

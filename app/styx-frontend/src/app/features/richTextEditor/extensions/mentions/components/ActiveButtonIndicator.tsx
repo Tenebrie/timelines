@@ -1,4 +1,4 @@
-import { useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/useCustomTheme'
 
 type Props = {
 	active: boolean

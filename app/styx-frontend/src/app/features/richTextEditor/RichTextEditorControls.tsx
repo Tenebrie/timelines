@@ -8,10 +8,10 @@ import { memo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { useIsReadOnly } from '@/app/hooks/useIsReadOnly'
+import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 
+import { ReadModeToggle } from '../../views/world/views/wiki/components/ReadModeToggle'
 import { getWikiPreferences } from '../preferences/selectors'
-import { ReadModeToggle } from '../worldWiki/components/ReadModeToggle/ReadModeToggle'
 import { ActiveButtonIndicator } from './extensions/mentions/components/ActiveButtonIndicator'
 
 type Props = {

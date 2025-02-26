@@ -1,4 +1,4 @@
-import { MarkerType, TimelineEntity } from '@/app/features/worldTimeline/types'
+import { MarkerType, TimelineEntity } from '@api/types/types'
 
 import { useStringColor } from './useStringColor'
 

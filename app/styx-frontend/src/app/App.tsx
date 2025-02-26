@@ -5,12 +5,12 @@ import styled from 'styled-components'
 import { LostConnectionAlert } from './features/auth/LostConnectionAlert/LostConnectionAlert'
 import { useLiveUpdates } from './features/liveUpdates/useLiveUpdates'
 import { ModalRenderer } from './features/modals/ModalRenderer'
+import { NavigationReceiverWrapper } from './features/navigation/NavigationReceiverWrapper'
 import { PageMetadata } from './features/pageMetadata/PageMetadata'
 import { useSavedPreferences } from './features/preferences/useSavedPreferences'
 import { CustomThemeOverrides } from './features/theming/CustomThemeOverrides'
 import { CustomThemeProvider } from './features/theming/CustomThemeProvider'
-import { NavigationReceiverWrapper } from './hooks/NavigationReceiverWrapper'
-import { useShortcutManager } from './hooks/useShortcutManager'
+import { useShortcutManager } from './hooks/useShortcut/useShortcutManager'
 
 const Container = styled.div`
 	display: flex;

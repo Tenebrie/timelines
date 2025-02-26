@@ -6,7 +6,8 @@ import TextField from '@mui/material/TextField'
 import { memo, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { WorldCalendarType } from '../../worldTimeline/types'
+import { WorldCalendarType } from '@/api/types/types'
+
 import { useWorldTime } from '../hooks/useWorldTime'
 
 type Props = {

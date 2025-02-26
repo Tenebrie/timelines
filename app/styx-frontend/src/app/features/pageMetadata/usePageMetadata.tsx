@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
-import { getWorldState } from '../world/selectors'
+import { getWorldState } from '../../views/world/WorldSliceSelectors'
 
 if (process.env.NODE_ENV === 'development') {
 	window.document.title = 'Timelines (Dev)'

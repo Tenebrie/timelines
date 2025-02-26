@@ -1,5 +1,5 @@
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { getWikiState } from '@/app/features/worldWiki/selectors'
+import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 
 import { BaseMentionChip } from './BaseMentionChip'
 

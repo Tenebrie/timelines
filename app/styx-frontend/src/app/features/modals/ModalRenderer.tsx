@@ -1,7 +1,7 @@
-import { Shortcut, useShortcut } from '@/app/hooks/useShortcut'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
-import { ArticleWizardModal } from '../worldWiki/modals/ArticleWizardModal'
-import { DeleteArticleModal } from '../worldWiki/modals/DeleteArticleModal'
+import { ArticleWizardModal } from '../../views/world/views/wiki/modals/ArticleWizardModal'
+import { DeleteArticleModal } from '../../views/world/views/wiki/modals/DeleteArticleModal'
 import { useModal } from './reducer'
 import { EventTrackEditModal } from './renderers/EventTrackEditModal'
 import { EventTrackWizardModal } from './renderers/EventTrackWizardModal'

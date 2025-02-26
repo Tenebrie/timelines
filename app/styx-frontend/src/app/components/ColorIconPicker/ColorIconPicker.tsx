@@ -2,8 +2,8 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import styled, { CSSProperties } from 'styled-components'
 
-import { useEventIcons } from '@/app/features/worldTimeline/hooks/useEventIcons'
-import { useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { useEventIcons } from '@/app/features/icons/useEventIcons'
+import { useCustomTheme } from '@/app/features/theming/useCustomTheme'
 
 type Props = {
 	icon: string

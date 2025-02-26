@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { preferencesSlice } from '@/app/features/preferences/reducer'
 import { getEditingPreferences } from '@/app/features/preferences/selectors'
-import { EventDraft } from '@/app/features/worldTimeline/components/EventEditor/components/EventDetailsEditor/useEventFields'
+import { EventDraft } from '@/app/views/world/views/timeline/EventDetails/useEventFields'
 
 import { ColorIconPicker } from './ColorIconPicker'
 

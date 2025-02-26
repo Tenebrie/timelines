@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux'
 
 import { mockEventModel } from '../../api/rheaApi.mock'
-import { getWorldState } from '../features/world/selectors'
-import { WorldEventDelta } from '../features/worldTimeline/types'
+import { WorldEventDelta } from '../../api/types/types'
+import { getWorldState } from '../views/world/WorldSliceSelectors'
 
 export const useDeltaStateEvent = (delta: WorldEventDelta) => {
 	const { events } = useSelector(getWorldState)

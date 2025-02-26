@@ -5,19 +5,13 @@ import { v4 as getRandomId } from 'uuid'
 import { DeepPartial } from '@/app/types/utils'
 
 import { User } from '../app/features/auth/reducer'
-import {
-	ActorDetails,
-	WorldBrief,
-	WorldDetails,
-	WorldEventDelta,
-	WorldItem,
-} from '../app/features/worldTimeline/types'
-import { WorldEvent } from '../app/features/worldTimeline/types'
 import { UpdateActorApiResponse } from './actorListApi'
 import { GetAnnouncementsApiResponse } from './announcementListApi'
 import { CheckAuthenticationApiResponse, CreateAccountApiResponse, PostLoginApiResponse } from './authApi'
 import { ListWorldAccessModesApiResponse } from './otherApi'
 import { CollaboratingUser } from './types'
+import { ActorDetails, WorldBrief, WorldDetails, WorldEventDelta, WorldItem } from './types/types'
+import { WorldEvent } from './types/types'
 import { GetWorldCollaboratorsApiResponse } from './worldCollaboratorsApi'
 import { GetWorldBriefApiResponse, GetWorldInfoApiResponse } from './worldDetailsApi'
 import { DeleteWorldEventApiResponse, UpdateWorldEventApiResponse } from './worldEventApi'

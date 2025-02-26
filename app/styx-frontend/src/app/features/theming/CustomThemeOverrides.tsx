@@ -2,7 +2,7 @@ import { Theme } from '@emotion/react'
 import { SxProps } from '@mui/material'
 import Box from '@mui/material/Box'
 
-import { useCustomTheme } from '@/app/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/useCustomTheme'
 
 type Props = {
 	children: JSX.Element | JSX.Element[]

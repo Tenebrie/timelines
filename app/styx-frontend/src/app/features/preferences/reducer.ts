@@ -1,8 +1,9 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { ScaleLevel } from '../worldTimeline/components/Timeline/types'
-import { Actor, WorldEvent } from '../worldTimeline/types'
+import { Actor, WorldEvent } from '@/api/types/types'
+
+import { ScaleLevel } from '../../schema/ScaleLevel'
 import { loadPreferences, PreferencesKey } from './loadPreferences'
 
 const initialState = loadPreferences() as Required<ReturnType<typeof loadPreferences>>

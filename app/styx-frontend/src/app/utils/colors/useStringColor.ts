@@ -1,4 +1,4 @@
-import { useCustomTheme } from '../../hooks/useCustomTheme'
+import { useCustomTheme } from '../../features/theming/useCustomTheme'
 import { hashCode } from '../hashCode'
 
 export const useStringColor = (value: string) => {
