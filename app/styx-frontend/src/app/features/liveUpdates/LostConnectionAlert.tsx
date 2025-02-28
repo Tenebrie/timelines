@@ -2,7 +2,7 @@ import Alert from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
 import { useSelector } from 'react-redux'
 
-import { getAuthState } from '../selectors'
+import { getAuthState } from '../auth/selectors'
 
 type Props = {
 	server: 'rhea' | 'calliope'

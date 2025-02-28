@@ -11,7 +11,7 @@ import {
 import { renderWithProviders, renderWithRouter } from '@/test-utils/renderWithProviders'
 import { setupTestServer } from '@/test-utils/setupTestServer'
 
-import { authInitialState } from '../reducer'
+import { authInitialState } from '../../features/auth/reducer'
 import { Login } from './Login'
 
 const server = setupTestServer()

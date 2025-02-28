@@ -2,7 +2,7 @@ import { Outlet } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
-import { LostConnectionAlert } from './features/auth/LostConnectionAlert/LostConnectionAlert'
+import { LostConnectionAlert } from './features/liveUpdates/LostConnectionAlert'
 import { useLiveUpdates } from './features/liveUpdates/useLiveUpdates'
 import { ModalRenderer } from './features/modals/ModalRenderer'
 import { NavigationReceiverWrapper } from './features/navigation/NavigationReceiverWrapper'
