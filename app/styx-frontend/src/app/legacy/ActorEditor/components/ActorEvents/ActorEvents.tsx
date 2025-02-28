@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { EventWithContentRenderer } from '@/app/components/Outliner/items/OutlinerItemEvent/EventWithContentRenderer'
-import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
+import { getOutlinerPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { isNull } from '@/app/utils/isNull'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'

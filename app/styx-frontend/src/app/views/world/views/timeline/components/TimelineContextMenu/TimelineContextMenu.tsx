@@ -8,7 +8,7 @@ import { useNavigate, useSearch } from '@tanstack/react-router'
 import { memo, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useModal } from '@/app/features/modals/reducer'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import {

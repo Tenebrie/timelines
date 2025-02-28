@@ -6,9 +6,9 @@ import { memo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { BaseNavigator } from '@/app/features/navigation/BaseNavigator'
-import { preferencesSlice } from '@/app/features/preferences/reducer'
-import { getOverviewPreferences } from '@/app/features/preferences/selectors'
+import { BaseNavigator } from '@/app/features/navigation/components/BaseNavigator'
+import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
+import { getOverviewPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 export const WorldNavigator = memo(WorldNavigatorComponent)

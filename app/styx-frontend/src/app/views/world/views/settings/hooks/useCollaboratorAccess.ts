@@ -1,6 +1,6 @@
+import { CollaboratorAccess } from '@api/types/worldCollaboratorsTypes'
 import { useCallback, useMemo } from 'react'
 
-import { CollaboratorAccess } from '@/api/types'
 import { keysOf } from '@/app/utils/keysOf'
 
 export const useCollaboratorAccess = () => {

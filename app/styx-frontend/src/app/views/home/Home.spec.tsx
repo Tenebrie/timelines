@@ -6,7 +6,7 @@ import {
 	mockCheckAuthentication,
 	mockGetWorlds,
 	mockUserModel,
-} from '@/api/rheaApi.mock'
+} from '@/api/mock/rheaApi.mock'
 import { renderWithRouter } from '@/test-utils/renderWithProviders'
 import { setupTestServer } from '@/test-utils/setupTestServer'
 

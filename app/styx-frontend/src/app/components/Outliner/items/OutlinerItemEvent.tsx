@@ -3,7 +3,7 @@ import { memo, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useOutlinerTabs } from '@/app/components/Outliner/hooks/useOutlinerTabs'
-import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
+import { getOutlinerPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { isNull } from '@/app/utils/isNull'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'

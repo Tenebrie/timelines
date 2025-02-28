@@ -5,7 +5,7 @@ import Person from '@mui/icons-material/Person'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 
-import { useCustomTheme } from '@/app/features/theming/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { colorStringToHsl } from '@/app/utils/colors/colorStringToHsl'
 import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
 import { hslToHex } from '@/app/utils/colors/hslToHex'

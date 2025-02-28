@@ -16,7 +16,7 @@ import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
-import { useModal } from '../reducer'
+import { useModal } from '../ModalsSlice'
 
 export const EventTrackEditModal = () => {
 	const navigate = useNavigate({ from: '/world/$worldId' })

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { CustomTheme } from '@/app/features/theming/useCustomTheme'
+import { CustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 export const Container = styled.div<{ $theme: CustomTheme }>`
 	background: ${(props) => props.$theme.material.palette.primary.main};

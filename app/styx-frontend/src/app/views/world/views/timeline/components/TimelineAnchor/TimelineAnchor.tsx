@@ -3,7 +3,7 @@ import Fade from '@mui/material/Fade'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useCustomTheme } from '@/app/features/theming/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { LineSpacing } from '@/app/utils/constants'
 import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'

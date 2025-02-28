@@ -3,7 +3,7 @@ import { Actor } from '@api/types/types'
 import { useCallback, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useModal } from '@/app/features/modals/reducer'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'

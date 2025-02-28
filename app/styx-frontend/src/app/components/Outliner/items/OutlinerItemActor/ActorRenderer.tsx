@@ -10,12 +10,9 @@ import { useDispatch } from 'react-redux'
 
 import { ActorAvatar } from '@/app/components/ActorAvatar/ActorAvatar'
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { preferencesSlice } from '@/app/features/preferences/reducer'
+import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
-import {
-	StyledListItemButton,
-	StyledListItemText,
-} from '@/app/views/world/views/timeline/components/TimelineShelf/styles'
+import { StyledListItemButton, StyledListItemText } from '@/app/views/world/views/timeline/shelf/styles'
 
 import { ShowHideChevron } from './styles'
 

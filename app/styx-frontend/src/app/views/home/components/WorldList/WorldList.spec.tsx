@@ -1,14 +1,9 @@
+import { mockUserModel, mockWorldItemModel } from '@api/mock/rheaModels.mock'
 import { screen, waitFor } from '@testing-library/react'
 import { setupServer } from 'msw/node'
 
-import {
-	mockCreateWorld,
-	mockDeleteWorld,
-	mockGetWorlds,
-	mockUserModel,
-	mockWorldItemModel,
-} from '@/api/rheaApi.mock'
-import { authInitialState } from '@/app/features/auth/reducer'
+import { mockCreateWorld, mockDeleteWorld, mockGetWorlds } from '@/api/mock/rheaApi.mock'
+import { authInitialState } from '@/app/features/auth/AuthSlice'
 import { renderWithProviders } from '@/test-utils/renderWithProviders'
 
 import { WorldList } from './WorldList'

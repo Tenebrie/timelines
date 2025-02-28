@@ -22,9 +22,6 @@ export function useWatchSelectedTime() {
 	 */
 	useEffect(() => {
 		const selectedTime = search.time
-		// setTimeout(() => {
-		// 	dispatch(setSelectedTime(selectedTime))
-		// }, 0)
 		dispatch(setSelectedTime(selectedTime))
 	}, [dispatch, setSelectedTime, scrollTimelineTo, search.time])
 

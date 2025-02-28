@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import { memo, useCallback, useEffect, useRef, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { CustomTheme } from '@/app/features/theming/useCustomTheme'
+import { CustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { ScaleLevel } from '@/app/schema/ScaleLevel'

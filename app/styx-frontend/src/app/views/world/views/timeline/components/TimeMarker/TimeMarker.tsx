@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { useCustomTheme } from '@/app/features/theming/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 

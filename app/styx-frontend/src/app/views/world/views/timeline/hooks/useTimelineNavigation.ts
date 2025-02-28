@@ -4,18 +4,18 @@ import React, { startTransition, useCallback, useEffect, useMemo, useRef, useSta
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventBus'
-import { preferencesSlice } from '@/app/features/preferences/reducer'
+import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { maximumTime, useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
-import { Position } from '@/app/types/Position'
 import clampToRange from '@/app/utils/clampToRange'
 import { LineSpacing } from '@/app/utils/constants'
 import { rangeMap } from '@/app/utils/rangeMap'
 import { getWorldCalendarState } from '@/app/views/world/WorldSliceSelectors'
 import { router } from '@/router'
 
+import { Position } from '../utils/Position'
 import { TimelineState } from '../utils/TimelineState'
 
 type Props = {
@@ -37,7 +37,6 @@ export const useTimelineNavigation = ({
 }: Props) => {
 	// Scroll
 	const scrollRef = useRef(defaultScroll)
-	// const [scroll, setScroll] = useState(defaultScroll)
 	const overscrollRef = useRef(0)
 	const [overscroll, setOverscroll] = useState(0)
 	const draggingFrom = useRef<Position | null>(null)
@@ -252,7 +251,7 @@ export const useTimelineNavigation = ({
 		setScaleScroll(currentScaleScroll)
 		dispatch(setPreferredScaleLevel(newScaleLevel))
 
-		setTimeout(() => {
+		startTransition(() => {
 			setIsSwitchingScale(false)
 		})
 	}, [
@@ -438,9 +437,10 @@ export const useTimelineNavigation = ({
 		container.addEventListener('mousedown', onMouseDown)
 		document.addEventListener('mousemove', onMouseMove)
 		document.addEventListener('mouseup', onMouseUp)
-		container.addEventListener('touchstart', onMouseDown)
+		// TODO: Re-enable mobile scrolling
+		// container.addEventListener('touchstart', onMouseDown)
 		// container.addEventListener('touchmove', onMouseMove)
-		container.addEventListener('touchend', onMouseUp)
+		// container.addEventListener('touchend', onMouseUp)
 		document.addEventListener('mouseleave', onMouseUp)
 		// container.addEventListener('wheel', onWheel)
 
@@ -449,9 +449,9 @@ export const useTimelineNavigation = ({
 			container.removeEventListener('mousedown', onMouseDown)
 			document.removeEventListener('mousemove', onMouseMove)
 			document.removeEventListener('mouseup', onMouseUp)
-			container.removeEventListener('touchstart', onMouseDown)
+			// container.removeEventListener('touchstart', onMouseDown)
 			// container.removeEventListener('touchmove', onMouseMove)
-			container.removeEventListener('touchend', onMouseUp)
+			// container.removeEventListener('touchend', onMouseUp)
 			document.removeEventListener('mouseleave', onMouseUp)
 		}
 	}, [containerRef, onClick, onMouseDown, onMouseMove, onMouseUp, onTimelineClick, onWheel])

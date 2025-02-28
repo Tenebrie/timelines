@@ -1,7 +1,4 @@
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-
-import { RootState } from '@/app/store'
 
 const Container = styled.div`
 	position: relative;
@@ -118,7 +115,9 @@ const MySvg = styled.svg`
 export const LoadingSpinner = () => {
 	const colorA = '#0a1929'
 	const colorB = '#00b3b3'
-	const { colors, multiSpinny, extraSpinny } = useSelector((state: RootState) => state.spinny)
+	const colors = false
+	const multiSpinny = false
+	const extraSpinny = false
 	return (
 		<Container className={`${multiSpinny ? 'huge' : ''} ${extraSpinny ? 'wild' : ''}`}>
 			{!multiSpinny && (

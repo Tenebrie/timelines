@@ -1,6 +1,6 @@
 import { setupServer } from 'msw/node'
 
-import { mockGetAnnouncements, mockGetWorlds } from '../api/rheaApi.mock'
+import { mockGetAnnouncements, mockGetWorlds } from '../api/mock/rheaApi.mock'
 
 export const setupTestServer = () => {
 	const server = setupServer()

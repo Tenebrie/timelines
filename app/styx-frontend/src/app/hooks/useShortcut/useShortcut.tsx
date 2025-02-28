@@ -1,6 +1,6 @@
+import Stack from '@mui/material/Stack'
 import { useEffect, useMemo } from 'react'
 
-import { ShortcutLabel } from './styles'
 import { RegisteredShortcuts, ShortcutPriority } from './useShortcutManager'
 import { Shortcut } from './useShortcutManager'
 
@@ -33,7 +33,11 @@ export const useShortcut = (
 
 	const largeLabel = useMemo(() => {
 		const shortcuts = Array.isArray(shortcutOrArray) ? shortcutOrArray : [shortcutOrArray]
-		return shortcuts.map((shortcut) => <ShortcutLabel key={shortcut}>{shortcut}</ShortcutLabel>)
+		return shortcuts.map((shortcut) => (
+			<Stack sx={{ alignItems: 'center', justifyContent: 'center', fontSize: '12px' }} key={shortcut}>
+				{shortcut}
+			</Stack>
+		))
 	}, [shortcutOrArray])
 
 	return {

@@ -16,8 +16,8 @@ import { TenebrieLogo } from '@/app/components/TenebrieLogo'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useErrorState } from '@/app/utils/useErrorState'
 
-import { AlreadyLoggedInAlert } from '../../features/auth/alreadyLoggedInAlert/AlreadyLoggedInAlert'
-import { authSlice } from '../../features/auth/reducer'
+import { authSlice } from '../../features/auth/AuthSlice'
+import { AlreadyLoggedInAlert } from '../../features/auth/components/AlreadyLoggedInAlert'
 
 export const Login = () => {
 	const [email, setEmail] = useState('')

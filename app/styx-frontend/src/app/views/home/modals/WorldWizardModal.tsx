@@ -13,7 +13,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { useModal } from '@/app/features/modals/reducer'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { TimestampField } from '@/app/features/time/components/TimestampField'
 import { useWorldCalendar } from '@/app/features/time/hooks/useWorldCalendar'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'

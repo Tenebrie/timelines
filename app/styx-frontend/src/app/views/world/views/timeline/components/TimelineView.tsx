@@ -1,12 +1,12 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 
-import { OutlinerDrawer } from '@/app/components/Outliner/components/OutlinerDrawer'
-import { OutlinerDrawerMirrored } from '@/app/components/Outliner/components/OutlinerDrawerMirrored'
+import { OutlinerDrawer } from '@/app/views/world/components/OutlinerDrawer'
+import { OutlinerDrawerMirrored } from '@/app/views/world/components/OutlinerDrawerMirrored'
 import { SelectedTimeWatcher } from '@/app/views/world/views/timeline/components/SelectedTimeWatcher'
 
+import { TimelineShelf } from '../shelf/TimelineShelf'
 import { Timeline } from '../Timeline'
-import { TimelineShelf } from './TimelineShelf/TimelineShelf'
 
 export const TimelineView = () => {
 	return (

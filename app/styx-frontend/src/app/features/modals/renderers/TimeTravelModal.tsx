@@ -18,7 +18,7 @@ import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/compo
 import { useEventBusDispatch } from '../../eventBus'
 import { useTimeSelector } from '../../time/hooks/useTimeSelector'
 import { useWorldTime } from '../../time/hooks/useWorldTime'
-import { useModal } from '../reducer'
+import { useModal } from '../ModalsSlice'
 import { TimeTravelModalInfo } from './TimeTravelModalInfo'
 
 export const TimeTravelModal = () => {

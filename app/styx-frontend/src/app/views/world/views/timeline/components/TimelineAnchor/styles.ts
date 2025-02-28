@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { CustomTheme } from '@/app/features/theming/useCustomTheme'
+import { CustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 export const TimelineSmallestPips = styled.div<{ $lineSpacing: number }>`
 	position: absolute;

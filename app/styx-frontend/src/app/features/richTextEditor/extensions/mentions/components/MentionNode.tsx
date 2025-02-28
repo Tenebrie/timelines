@@ -3,7 +3,7 @@ import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { createRoot, Root } from 'react-dom/client'
 
 import { dispatchEvent } from '@/app/features/eventBus'
-import { CustomThemeProvider } from '@/app/features/theming/CustomThemeProvider'
+import { CustomThemeProvider } from '@/app/features/theming/context/CustomThemeProvider'
 import { store } from '@/app/store'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
@@ -158,7 +158,7 @@ export const MentionNode = Node.create({
 						event: 'richEditor/mentionRender/end',
 						params: { node: lastNode },
 					})
-					setTimeout(() => {
+					requestIdleCallback(() => {
 						root?.unmount()
 						dispatchEvent({
 							event: 'richEditor/mentionRender/end',

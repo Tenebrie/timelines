@@ -11,7 +11,7 @@ import styled from 'styled-components'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 
 import { ReadModeToggle } from '../../views/world/views/wiki/components/ReadModeToggle'
-import { getWikiPreferences } from '../preferences/selectors'
+import { getWikiPreferences } from '../preferences/PreferencesSliceSelectors'
 import { ActiveButtonIndicator } from './extensions/mentions/components/ActiveButtonIndicator'
 
 type Props = {

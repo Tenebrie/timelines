@@ -5,7 +5,7 @@ import List from '@mui/material/List'
 import { memo } from 'react'
 import { TransitionGroup } from 'react-transition-group'
 
-import { ZebraWrapper } from '@/app/views/world/views/timeline/components/TimelineShelf/styles'
+import { ZebraWrapper } from '@/app/views/world/views/timeline/shelf/styles'
 
 import { EventRenderer } from '../OutlinerItemEvent/EventRenderer'
 import { ActorRenderer } from './ActorRenderer'

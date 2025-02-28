@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 
-import { loadPreferences } from '@/app/features/preferences/loadPreferences'
+import { loadPreferences } from '@/app/features/preferences/utils/loadPreferences'
 import { ScaleLevelSchema } from '@/app/schema/ScaleLevel'
 import { World } from '@/app/views/world/World'
 

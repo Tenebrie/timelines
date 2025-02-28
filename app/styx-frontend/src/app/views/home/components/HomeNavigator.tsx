@@ -5,7 +5,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
-import { BaseNavigator } from '@/app/features/navigation/BaseNavigator'
+import { BaseNavigator } from '@/app/features/navigation/components/BaseNavigator'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 export const HomeNavigator = () => {

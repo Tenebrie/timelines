@@ -10,7 +10,7 @@ import {
 	mockListWorldAccessModes,
 	mockRemoveCollaborator,
 	mockWorldBriefModel,
-} from '@/api/rheaApi.mock'
+} from '@/api/mock/rheaApi.mock'
 import { worldInitialState } from '@/app/views/world/WorldSlice'
 import { mockRouter } from '@/router-utils/router.mock'
 import { renderWithProviders } from '@/test-utils/renderWithProviders'

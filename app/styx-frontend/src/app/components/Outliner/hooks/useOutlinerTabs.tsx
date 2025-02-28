@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 
-import { preferencesSlice } from '@/app/features/preferences/reducer'
-import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
+import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
+import { getOutlinerPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 
 export const useOutlinerTabs = () => {
 	const { tabIndex } = useSelector(getOutlinerPreferences, (a, b) => a.tabIndex === b.tabIndex)

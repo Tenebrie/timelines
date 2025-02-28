@@ -3,11 +3,8 @@ import Link from '@mui/icons-material/Link'
 import { useTheme } from '@mui/material'
 import ListItemIcon from '@mui/material/ListItemIcon'
 
-import { EventIcon } from '@/app/features/icons/EventIcon'
-import {
-	StatementActorsText,
-	StyledListItemText,
-} from '@/app/views/world/views/timeline/components/TimelineShelf/styles'
+import { EventIcon } from '@/app/features/icons/components/EventIcon'
+import { StatementActorsText, StyledListItemText } from '@/app/views/world/views/timeline/shelf/styles'
 
 import { ShortText } from './styles'
 import { useMentionsToString } from './useMentionsToString'

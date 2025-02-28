@@ -8,8 +8,8 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { preferencesSlice } from '@/app/features/preferences/reducer'
-import { StyledListItemButton } from '@/app/views/world/views/timeline/components/TimelineShelf/styles'
+import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
+import { StyledListItemButton } from '@/app/views/world/views/timeline/shelf/styles'
 
 import { ShowHideChevron } from '../OutlinerItemActor/styles'
 import { EventHeaderRenderer } from './EventHeaderRenderer'

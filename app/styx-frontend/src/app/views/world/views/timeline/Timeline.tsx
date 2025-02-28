@@ -4,7 +4,7 @@ import { useSearch } from '@tanstack/react-router'
 import { memo, useState } from 'react'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { useCustomTheme } from '@/app/features/theming/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
@@ -14,11 +14,11 @@ import { TimelineEventListener } from './components/TimelineEventListener'
 import { TimelineNavigationReporter } from './components/TimelineNavigationReporter'
 import { TimelinePrePositioner } from './components/TimelinePrePositioner'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
-import { TimelineTracks } from './components/TimelineTracks/TimelineTracks'
 import { TimelineZoomReporter } from './components/TimelineZoomReporter'
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
 import { useTimelineDimensions } from './hooks/useTimelineDimensions'
 import { TimelineContainer, TimelineWrapper } from './styles'
+import { TimelineTracks } from './tracks/TimelineTracks'
 
 export const Timeline = memo(TimelineComponent)
 

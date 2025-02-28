@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux'
 import { GetWorldsApiResponse } from '@/api/worldListApi'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { TrunkatedSpan } from '@/app/components/TrunkatedTypography'
-import { useModal } from '@/app/features/modals/reducer'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 
 type Props = {

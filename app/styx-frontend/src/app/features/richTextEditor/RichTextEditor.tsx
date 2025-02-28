@@ -4,10 +4,10 @@ import { memo, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { MentionDetails } from '@/api/types/types'
-import { useCustomTheme } from '@/app/features/theming/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 import { getWorldState } from '../../views/world/WorldSliceSelectors'
-import { getWikiPreferences } from '../preferences/selectors'
+import { getWikiPreferences } from '../preferences/PreferencesSliceSelectors'
 import { EditorExtensions } from './extensions/config'
 import { FadeInOverlay } from './extensions/mentions/components/FadeInOverlay/FadeInOverlay'
 import { MentionNodeName } from './extensions/mentions/components/MentionNode'

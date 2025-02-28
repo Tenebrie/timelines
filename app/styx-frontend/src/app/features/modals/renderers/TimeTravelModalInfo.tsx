@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import styled from 'styled-components'
 
-import { useCustomTheme } from '@/app/features/theming/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 const CodeButton = styled(Button)`
 	font-family: 'Roboto Mono', monospace;

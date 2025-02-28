@@ -13,13 +13,13 @@ import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useAdminGetUsersQuery } from '@/api/adminUsersApi'
-import { getAuthState } from '@/app/features/auth/selectors'
-import { useModal } from '@/app/features/modals/reducer'
+import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 
-import { DeleteUserModal } from './components/DeleteUserModal'
 import { Pagination } from './components/Pagination'
 import { SearchInput } from './components/SearchInput'
 import { UserAccessLevelDropdown } from './components/UserAccessLevelDropdown'
+import { DeleteUserModal } from './modals/DeleteUserModal'
 
 const pageSize = 14
 

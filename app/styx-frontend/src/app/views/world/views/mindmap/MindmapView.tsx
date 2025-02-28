@@ -1,10 +1,9 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 
-import { OutlinerDrawer } from '@/app/components/Outliner/components/OutlinerDrawer'
-
+import { OutlinerDrawer } from '../../components/OutlinerDrawer'
 import { Mindmap } from './Mindmap'
-import { MindmapShelf } from './MindmapShelf/MindmapShelf'
+import { MindmapShelf } from './shelf/MindmapShelf'
 
 export const MindmapView = () => {
 	return (

@@ -3,7 +3,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import Stack from '@mui/material/Stack'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
-import { useModal } from '@/app/features/modals/reducer'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 
 type Props = {
 	label: string

@@ -1,6 +1,6 @@
+import { mockEventModel } from '@api/mock/rheaModels.mock'
 import { useSelector } from 'react-redux'
 
-import { mockEventModel } from '../../api/rheaApi.mock'
 import { WorldEventDelta } from '../../api/types/types'
 import { getWorldState } from '../views/world/WorldSliceSelectors'
 

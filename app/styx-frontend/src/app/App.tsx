@@ -2,14 +2,14 @@ import { Outlet } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
-import { LostConnectionAlert } from './features/liveUpdates/LostConnectionAlert'
-import { useLiveUpdates } from './features/liveUpdates/useLiveUpdates'
-import { ModalRenderer } from './features/modals/ModalRenderer'
-import { NavigationReceiverWrapper } from './features/navigation/NavigationReceiverWrapper'
+import { LostConnectionAlert } from './features/liveUpdates/components/LostConnectionAlert'
+import { useLiveUpdates } from './features/liveUpdates/hooks/useLiveUpdates'
+import { ModalsRenderer } from './features/modals/ModalsRenderer'
+import { NavigationReceiverWrapper } from './features/navigation/components/NavigationReceiverWrapper'
 import { PageMetadata } from './features/pageMetadata/PageMetadata'
-import { useSavedPreferences } from './features/preferences/useSavedPreferences'
-import { CustomThemeOverrides } from './features/theming/CustomThemeOverrides'
-import { CustomThemeProvider } from './features/theming/CustomThemeProvider'
+import { useSavedPreferences } from './features/preferences/hooks/useSavedPreferences'
+import { CustomThemeOverrides } from './features/theming/components/CustomThemeOverrides'
+import { CustomThemeProvider } from './features/theming/context/CustomThemeProvider'
 import { useShortcutManager } from './hooks/useShortcut/useShortcutManager'
 
 const Container = styled.div`
@@ -38,7 +38,7 @@ const App = () => {
 				<CustomThemeOverrides>
 					<Container>
 						<Outlet />
-						<ModalRenderer />
+						<ModalsRenderer />
 					</Container>
 					<LostConnectionAlert server="rhea" />
 					<LostConnectionAlert server="calliope" />

@@ -1,8 +1,8 @@
-import { SxProps, Theme } from '@mui/material'
+import { SxProps, Theme } from '@mui/material/styles'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getUserPreferences } from '../features/preferences/selectors'
+import { getUserPreferences } from '../features/preferences/PreferencesSliceSelectors'
 
 export const useBrowserSpecificScrollbars = () => {
 	const { colorMode } = useSelector(getUserPreferences)

@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
 
-import type { TimelineTrack } from './components/TimelineTracks/hooks/useEventTracks'
+import type { TimelineTrack } from './hooks/useEventTracks'
 
 export const initialState = {
 	scroll: 0,

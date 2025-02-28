@@ -1,10 +1,7 @@
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 
-import {
-	StyledListItemButton,
-	ZebraWrapper,
-} from '@/app/views/world/views/timeline/components/TimelineShelf/styles'
+import { StyledListItemButton, ZebraWrapper } from '@/app/views/world/views/timeline/shelf/styles'
 
 export const EmptyStatementListRenderer = () => {
 	return (

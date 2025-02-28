@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { useAuthCheck } from './app/features/auth/authCheck/useAuthCheck'
+import { useAuthCheck } from './app/features/auth/hooks/useAuthCheck'
 import { store } from './app/store'
 import { loadSafariPolyfills } from './polyfills/safariPolyfills'
 import { router } from './router'

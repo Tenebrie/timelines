@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
-import { useCustomTheme } from '@/app/features/theming/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
-import { HoveredTimelineEvents } from '../TimelineTracks/components/TimelineEvent/HoveredTimelineEvents'
+import { HoveredTimelineEvents } from '../../tracks/components/HoveredTimelineEvents'
 import { Container } from './styles'
 
 type Props = {

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { BaseNavigator } from '@/app/features/navigation/BaseNavigator'
+import { BaseNavigator } from '@/app/features/navigation/components/BaseNavigator'
 
 import { Admin } from './Admin'
 

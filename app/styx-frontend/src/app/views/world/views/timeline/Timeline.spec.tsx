@@ -2,7 +2,7 @@
 import { WorldDetails, WorldEvent } from '@api/types/types'
 import { screen, waitFor } from '@testing-library/react'
 
-import { mockEventModel } from '@/api/rheaApi.mock'
+import { mockEventModel } from '@/api/mock/rheaApi.mock'
 import { initialState } from '@/app/views/world/WorldSlice'
 import { mockRouter } from '@/router-utils/router.mock'
 import { renderWithProviders } from '@/test-utils/renderWithProviders'

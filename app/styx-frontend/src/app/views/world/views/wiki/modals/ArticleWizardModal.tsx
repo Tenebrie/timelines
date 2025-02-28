@@ -6,7 +6,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
-import { useModal } from '@/app/features/modals/reducer'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { isEntityNameValid } from '@/app/utils/isEntityNameValid'
 import { useCreateArticle } from '@/app/views/world/views/wiki/api/useCreateArticle'

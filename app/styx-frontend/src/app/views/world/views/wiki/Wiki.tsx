@@ -6,9 +6,9 @@ import { Outlet } from '@tanstack/react-router'
 
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
-import { ArticleDetailsTitle } from './components/ArticleDetails/ArticleDetailsTitle'
-import { ArticleList } from './components/ArticleList/ArticleList'
-import { ArticleListHeader } from './components/ArticleList/ArticleListHeader'
+import { ArticleDetailsTitle } from './article/details/ArticleDetailsTitle'
+import { ArticleList } from './article/list/ArticleList'
+import { ArticleListHeader } from './article/list/ArticleListHeader'
 
 export const Wiki = () => {
 	const isArticle = useCheckRouteMatch('/world/$worldId/wiki/$articleId')

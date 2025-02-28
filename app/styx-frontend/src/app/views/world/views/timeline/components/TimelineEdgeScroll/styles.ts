@@ -1,4 +1,4 @@
-import { PaletteMode } from '@mui/material'
+import { PaletteMode } from '@mui/material/styles'
 import styled from 'styled-components'
 
 export const Container = styled.div<{ $theme: PaletteMode }>`

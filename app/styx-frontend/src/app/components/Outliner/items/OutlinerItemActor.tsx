@@ -2,7 +2,7 @@ import { ActorDetails } from '@api/types/types'
 import { memo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getOutlinerPreferences } from '@/app/features/preferences/selectors'
+import { getOutlinerPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 
 import { ActorWithStatementsRenderer } from './OutlinerItemActor/ActorWithStatementsRenderer'
 

@@ -34,10 +34,10 @@
 		"@tiptap/starter-kit": "^2.10.3",
 		"@tiptap/suggestion": "^2.10.3",
 		"@vitejs/plugin-react": "^4.3.4",
-		"add": "^2.0.6",
 		"bezier-easing": "^2.1.0",
 		"classnames": "^2.3.2",
 		"clone-deep": "^4.0.1",
+		"cost-of-modules": "^1.0.1",
 		"openapi-types": "^12.1.3",
 		"react-transition-group": "^4.4.5",
 		"react-virtuoso": "^4.12.3",
@@ -91,7 +91,7 @@
 		"lint-staged": "^15.2.11",
 		"lodash.debounce": "^4.0.8",
 		"lodash.throttle": "^4.1.1",
-		"material-ui-popup-state": "^5.3.1",
+		"material-ui-popup-state": "^5.3.3",
 		"msw": "^1.2.6",
 		"node-fetch": "2.7.0",
 		"prettier": "3.4.2",
@@ -104,6 +104,7 @@
 		"undici": "^7.1.0",
 		"user-agent-data-types": "^0.4.2",
 		"uuid": "^11.0.3",
+		"vite-bundle-analyzer": "^0.17.1",
 		"vitest": "^2.1.8"
 	}
 }

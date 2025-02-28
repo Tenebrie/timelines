@@ -11,8 +11,8 @@ import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useAdminSetUserLevelMutation } from '@/api/adminUsersApi'
-import { User } from '@/app/features/auth/reducer'
-import { getAuthState } from '@/app/features/auth/selectors'
+import { User } from '@/app/features/auth/AuthSlice'
+import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
 
 type Props = {
 	user: User

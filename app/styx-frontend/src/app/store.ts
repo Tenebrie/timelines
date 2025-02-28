@@ -1,22 +1,20 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
-import { baseApi } from '../api/baseApi'
-import authReducer from './features/auth/reducer'
-import modalsReducer from './features/modals/reducer'
-import preferencesReducer from './features/preferences/reducer'
+import { baseApi, BaseApiReducer } from '../api/base/baseApi'
+import { AuthReducer } from './features/auth/AuthSlice'
+import { ModalsReducer } from './features/modals/ModalsSlice'
+import { PreferencesReducer } from './features/preferences/PreferencesSlice'
 import { deepMerge } from './utils/deepMerge'
-import spinnyReducer from './views/spinny/reducer'
 import { TimelineReducer } from './views/world/views/timeline/TimelineSlice'
 import { WikiReducer } from './views/world/views/wiki/WikiSlice'
 import { WorldReducer } from './views/world/WorldSlice'
 
 const rootReducer = combineReducers({
-	api: baseApi.reducer,
-	auth: authReducer,
-	modals: modalsReducer,
-	spinny: spinnyReducer,
+	api: BaseApiReducer,
+	auth: AuthReducer,
+	modals: ModalsReducer,
 	world: WorldReducer,
-	preferences: preferencesReducer,
+	preferences: PreferencesReducer,
 	timeline: TimelineReducer,
 	wiki: WikiReducer,
 })

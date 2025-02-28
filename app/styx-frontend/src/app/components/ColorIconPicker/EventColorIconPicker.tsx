@@ -2,9 +2,9 @@ import { startTransition, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { preferencesSlice } from '@/app/features/preferences/reducer'
-import { getEditingPreferences } from '@/app/features/preferences/selectors'
-import { EventDraft } from '@/app/views/world/views/timeline/EventDetails/useEventFields'
+import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
+import { getEditingPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
+import { EventDraft } from '@/app/views/world/views/timeline/shelf/drawers/event/details/draft/useEventDraft'
 
 import { ColorIconPicker } from './ColorIconPicker'
 

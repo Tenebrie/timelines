@@ -18,7 +18,6 @@ import { Route as LoginImport } from './routes/login'
 import { Route as HomeImport } from './routes/home'
 import { Route as AdminImport } from './routes/admin'
 import { Route as IndexImport } from './routes/index'
-import { Route as SecretSpinnyImport } from './routes/secret/spinny'
 import { Route as SecretMusicImport } from './routes/secret/music'
 import { Route as WorldWorldIdWorldImport } from './routes/world.$worldId/_world'
 import { Route as WorldWorldIdWorldTimelineImport } from './routes/world.$worldId/_world.timeline'
@@ -70,12 +69,6 @@ const IndexRoute = IndexImport.update({
 const WorldWorldIdRoute = WorldWorldIdImport.update({
   id: '/world/$worldId',
   path: '/world/$worldId',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const SecretSpinnyRoute = SecretSpinnyImport.update({
-  id: '/secret/spinny',
-  path: '/secret/spinny',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -177,13 +170,6 @@ declare module '@tanstack/react-router' {
       path: '/secret/music'
       fullPath: '/secret/music'
       preLoaderRoute: typeof SecretMusicImport
-      parentRoute: typeof rootRoute
-    }
-    '/secret/spinny': {
-      id: '/secret/spinny'
-      path: '/secret/spinny'
-      fullPath: '/secret/spinny'
-      preLoaderRoute: typeof SecretSpinnyImport
       parentRoute: typeof rootRoute
     }
     '/world/$worldId': {
@@ -320,7 +306,6 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/secret/music': typeof SecretMusicRoute
-  '/secret/spinny': typeof SecretSpinnyRoute
   '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
   '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
   '/world/$worldId/settings': typeof WorldWorldIdWorldSettingsRoute
@@ -337,7 +322,6 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/secret/music': typeof SecretMusicRoute
-  '/secret/spinny': typeof SecretSpinnyRoute
   '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
   '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
   '/world/$worldId/settings': typeof WorldWorldIdWorldSettingsRoute
@@ -354,7 +338,6 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/secret/music': typeof SecretMusicRoute
-  '/secret/spinny': typeof SecretSpinnyRoute
   '/world/$worldId': typeof WorldWorldIdRouteWithChildren
   '/world/$worldId/_world': typeof WorldWorldIdWorldRouteWithChildren
   '/world/$worldId/_world/mindmap': typeof WorldWorldIdWorldMindmapRoute
@@ -375,7 +358,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/secret/music'
-    | '/secret/spinny'
     | '/world/$worldId'
     | '/world/$worldId/mindmap'
     | '/world/$worldId/settings'
@@ -391,7 +373,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/secret/music'
-    | '/secret/spinny'
     | '/world/$worldId'
     | '/world/$worldId/mindmap'
     | '/world/$worldId/settings'
@@ -406,7 +387,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/secret/music'
-    | '/secret/spinny'
     | '/world/$worldId'
     | '/world/$worldId/_world'
     | '/world/$worldId/_world/mindmap'
@@ -426,7 +406,6 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   SecretMusicRoute: typeof SecretMusicRoute
-  SecretSpinnyRoute: typeof SecretSpinnyRoute
   WorldWorldIdRoute: typeof WorldWorldIdRouteWithChildren
 }
 
@@ -437,7 +416,6 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   SecretMusicRoute: SecretMusicRoute,
-  SecretSpinnyRoute: SecretSpinnyRoute,
   WorldWorldIdRoute: WorldWorldIdRouteWithChildren,
 }
 
@@ -457,7 +435,6 @@ export const routeTree = rootRoute
         "/login",
         "/register",
         "/secret/music",
-        "/secret/spinny",
         "/world/$worldId"
       ]
     },
@@ -478,9 +455,6 @@ export const routeTree = rootRoute
     },
     "/secret/music": {
       "filePath": "secret/music.tsx"
-    },
-    "/secret/spinny": {
-      "filePath": "secret/spinny.tsx"
     },
     "/world/$worldId": {
       "filePath": "world.$worldId",

@@ -5,13 +5,7 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
 	base: '/',
-	plugins: [
-		TanStackRouterVite({
-			// autoCodeSplitting: true,
-		}),
-		react(),
-		viteTsconfigPaths(),
-	],
+	plugins: [TanStackRouterVite({ autoCodeSplitting: true }), react(), viteTsconfigPaths()],
 	resolve: {
 		alias: {
 			'@api': '/src/api',
@@ -27,9 +21,7 @@ export default defineConfig({
 	build: {
 		outDir: 'build',
 		rollupOptions: {
-			output: {
-				manualChunks: () => 'everything',
-			},
+			external: ['@tiptap/extension-bubble-menu', '@tiptap/extension-floating-menu'],
 		},
 	},
 	preview: {

@@ -6,11 +6,11 @@ import {
 	mockNonAuthenticatedUser,
 	mockPostRegister,
 	mockUserModel,
-} from '@/api/rheaApi.mock'
+} from '@/api/mock/rheaApi.mock'
 import { renderWithProviders, renderWithRouter } from '@/test-utils/renderWithProviders'
 import { setupTestServer } from '@/test-utils/setupTestServer'
 
-import { authInitialState } from '../../features/auth/reducer'
+import { authInitialState } from '../../features/auth/AuthSlice'
 import { Register } from './Register'
 
 const server = setupTestServer()

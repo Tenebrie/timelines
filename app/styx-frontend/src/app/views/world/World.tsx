@@ -7,8 +7,8 @@ import { ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage
 
 import { useEventBusDispatch, useEventBusSubscribe } from '../../features/eventBus'
 import { RichTextEditorPortal } from '../../features/richTextEditor/portals/RichTextEditorPortal'
+import { WorldSidebar } from './components/sidebar/WorldSidebar'
 import { WorldNavigator } from './components/WorldNavigator'
-import { WorldSidebar } from './components/WorldSidebar/WorldSidebar'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
 import { DeleteEventDeltaModal } from './modals/DeleteEventDeltaModal'
 import { DeleteEventModal } from './modals/DeleteEventModal'

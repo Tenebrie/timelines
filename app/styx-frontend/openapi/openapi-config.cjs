@@ -33,7 +33,7 @@ const noTagMatcher = () => {
 
 const config = {
 	schemaFile: 'http://localhost:3000/api-json',
-	apiFile: '../src/api/baseApi.ts',
+	apiFile: '../src/api/base/baseApi.ts',
 	apiImport: 'baseApi',
 	outputFiles: tags.reduce(
 		(acc, tag) => {

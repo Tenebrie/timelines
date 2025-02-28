@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 
-import { TimelineTrackManager } from '@/app/views/world/views/timeline/components/TimelineTracks/components/TimelineTrackManager'
 import { TimelineView } from '@/app/views/world/views/timeline/components/TimelineView'
+import { TimelineTrackReporter } from '@/app/views/world/views/timeline/tracks/components/TimelineTrackReporter'
 
 const timelineSearchSchema = z.object({
 	selection: z.array(z.string()).default([]),
@@ -17,7 +17,7 @@ function WorldTimelineComponent() {
 	return (
 		<>
 			<TimelineView />
-			<TimelineTrackManager />
+			<TimelineTrackReporter />
 		</>
 	)
 }

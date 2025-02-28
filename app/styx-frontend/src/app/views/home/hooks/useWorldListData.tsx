@@ -1,7 +1,7 @@
 import { useGetWorldsQuery } from '@api/worldListApi'
 import { useSelector } from 'react-redux'
 
-import { getAuthState } from '@/app/features/auth/selectors'
+import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
 
 export const useWorldListData = () => {
 	const { user } = useSelector(getAuthState)

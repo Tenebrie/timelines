@@ -1,12 +1,12 @@
-import { useTheme } from '@mui/material'
 import Stack from '@mui/material/Stack'
+import { useTheme } from '@mui/material/styles'
 import Switch from '@mui/material/Switch'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { preferencesSlice } from '@/app/features/preferences/reducer'
-import { getWikiPreferences } from '@/app/features/preferences/selectors'
+import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
+import { getWikiPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 
 export const ReadModeToggle = () => {
 	const { readModeEnabled } = useSelector(getWikiPreferences)
