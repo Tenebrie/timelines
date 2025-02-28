@@ -55,7 +55,7 @@
 		"*.(ts|json)": "eslint --fix"
 	},
 	"engines": {
-		"node": "20.x"
+		"node": "22.x"
 	},
 	"author": "Tenebrie",
 	"bugs": {
