@@ -1,8 +1,8 @@
+import { WikiArticle } from '@api/types/worldWikiTypes'
 import { ChangeEvent, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useListArticles } from '@/app/views/world/api/useListArticles'
-import { WikiArticle } from '@/app/views/world/views/wiki/types'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
 import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 

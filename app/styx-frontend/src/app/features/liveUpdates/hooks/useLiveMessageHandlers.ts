@@ -6,10 +6,10 @@ import { worldListApi } from '@api/worldListApi'
 import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { ingestActor, ingestEvent, ingestEventDelta } from '@/app/utils/ingestEntity'
 import { useArticleApiCache } from '@/app/views/world/views/wiki/api/useArticleApiCache'
-import { WikiArticle } from '@/app/views/world/views/wiki/types'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import {

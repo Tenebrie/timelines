@@ -1,8 +1,8 @@
 import { otherApi } from '@api/otherApi'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { AppDispatch } from '@/app/store'
-import { WikiArticle } from '@/app/views/world/views/wiki/types'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 export const useArticleApiCache = () => {

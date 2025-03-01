@@ -1,7 +1,6 @@
+import { WikiArticle } from '@api/types/worldWikiTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
-
-import { WikiArticle } from './types'
 
 export const initialState = {
 	articles: [] as WikiArticle[],

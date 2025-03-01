@@ -8,10 +8,10 @@ import { useMatches, useNavigate } from '@tanstack/react-router'
 import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useCallback } from 'react'
 
+import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { useArticleBulkActions } from '@/app/views/world/views/wiki/hooks/useArticleBulkActions'
 import { useArticleDragDrop } from '@/app/views/world/views/wiki/hooks/useArticleDragDrop'
-import { WikiArticle } from '@/app/views/world/views/wiki/types'
 
 import { ArticleContextMenu } from '../../components/ArticleContextMenu'
 

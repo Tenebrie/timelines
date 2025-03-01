@@ -2,6 +2,7 @@ import { MentionDetails } from '@api/types/types'
 import Box from '@mui/material/Box'
 import { useRef, useState } from 'react'
 
+import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortalSlot'
 import { OnChangeParams } from '@/app/features/richTextEditor/RichTextEditor'
@@ -9,7 +10,6 @@ import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScro
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { useEditArticle } from '@/app/views/world/views/wiki/api/useEditArticle'
 import { useCurrentArticle } from '@/app/views/world/views/wiki/hooks/useCurrentArticle'
-import { WikiArticle } from '@/app/views/world/views/wiki/types'
 
 type WikiArticleToSave = WikiArticle & {
 	newMentions: MentionDetails[]

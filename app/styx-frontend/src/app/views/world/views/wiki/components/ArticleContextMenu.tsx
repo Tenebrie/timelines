@@ -7,8 +7,8 @@ import MenuItem from '@mui/material/MenuItem'
 import { bindMenu, PopupState } from 'material-ui-popup-state/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { useModal } from '@/app/features/modals/ModalsSlice'
-import { WikiArticle } from '@/app/views/world/views/wiki/types'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
 import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 

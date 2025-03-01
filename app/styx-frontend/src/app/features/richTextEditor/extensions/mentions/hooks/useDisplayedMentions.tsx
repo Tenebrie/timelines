@@ -2,8 +2,8 @@ import { Actor, WorldEvent } from '@api/types/types'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
+import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { useListArticles } from '@/app/views/world/api/useListArticles'
-import { WikiArticle } from '@/app/views/world/views/wiki/types'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 type Props = {
