@@ -1,15 +1,16 @@
 services:
     gatekeeper:
+        stop_grace_period: 0s
         build:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile
         networks:
             - dev_network
     styx:
-        build:
-            context: ./
+        build: 
+            context: ./ 
             args:
-                DOCKER_UID: ${DOCKER_UID}
+                DOCKER_UID: ${DOCKER_UID} 
                 DOCKER_GID: ${DOCKER_GID}
             dockerfile: ./app/styx-frontend/Dockerfile
         user: "${DOCKER_UID}:${DOCKER_GID}"
