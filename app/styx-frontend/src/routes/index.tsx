@@ -3,9 +3,9 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Home } from '@/app/views/home/Home'
 
 export const Route = createFileRoute('/')({
-	component: HomeComponent,
+	component: RouteComponent,
 })
 
-function HomeComponent() {
+function RouteComponent() {
 	return <Home />
 }

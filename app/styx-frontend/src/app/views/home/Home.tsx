@@ -1,7 +1,8 @@
 import { Outlet } from '@tanstack/react-router'
 import styled from 'styled-components'
 
-import { HomeNavigator } from './components/HomeNavigator'
+import { BaseNavigator } from '@/app/features/navigation/components/BaseNavigator'
+
 import { WorldList } from './components/WorldList/WorldList'
 
 const HomePageContainer = styled.div`
@@ -24,7 +25,7 @@ const WorldListContainer = styled.div`
 export const Home = () => {
 	return (
 		<HomePageContainer>
-			<HomeNavigator />
+			<BaseNavigator />
 			<WorldListContainer>
 				<WorldList />
 				<Outlet />

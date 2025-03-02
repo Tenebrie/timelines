@@ -11,11 +11,11 @@ const worldSearchSchema = z.object({
 })
 
 export const Route = createFileRoute('/world/$worldId/_world')({
-	component: WorldComponent,
+	component: RouteComponent,
 	validateSearch: worldSearchSchema,
 })
 
-function WorldComponent() {
+function RouteComponent() {
 	return <World />
 }
 

@@ -3,9 +3,9 @@ import { createFileRoute } from '@tanstack/react-router'
 import { AdminView } from '@/app/views/admin/AdminView'
 
 export const Route = createFileRoute('/admin')({
-	component: AdminComponent,
+	component: RouteComponent,
 })
 
-function AdminComponent() {
+function RouteComponent() {
 	return <AdminView />
 }

@@ -2,13 +2,13 @@ import Stack from '@mui/material/Stack'
 
 import { BaseNavigator } from '@/app/features/navigation/components/BaseNavigator'
 
-import { Admin } from './Admin'
+import { Tools } from './Tools'
 
-export const AdminView = () => {
+export function ToolsView() {
 	return (
-		<Stack position="relative" width="100%" height="100%" alignItems="center">
+		<Stack width="100%" height="100%" alignItems="center" justifyContent="center">
 			<BaseNavigator />
-			<Admin />
+			<Tools />
 		</Stack>
 	)
 }

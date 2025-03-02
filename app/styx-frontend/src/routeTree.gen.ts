@@ -13,6 +13,7 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as ToolsImport } from './routes/tools'
 import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
 import { Route as HomeImport } from './routes/home'
@@ -35,6 +36,12 @@ const WorldWorldIdWorldWikiImport = createFileRoute(
 )()
 
 // Create/Update Routes
+
+const ToolsRoute = ToolsImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const RegisterRoute = RegisterImport.update({
   id: '/register',
@@ -163,6 +170,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterImport
+      parentRoute: typeof rootRoute
+    }
+    '/tools': {
+      id: '/tools'
+      path: '/tools'
+      fullPath: '/tools'
+      preLoaderRoute: typeof ToolsImport
       parentRoute: typeof rootRoute
     }
     '/secret/music': {
@@ -305,6 +319,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/tools': typeof ToolsRoute
   '/secret/music': typeof SecretMusicRoute
   '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
   '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
@@ -321,6 +336,7 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/tools': typeof ToolsRoute
   '/secret/music': typeof SecretMusicRoute
   '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
   '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
@@ -337,6 +353,7 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/tools': typeof ToolsRoute
   '/secret/music': typeof SecretMusicRoute
   '/world/$worldId': typeof WorldWorldIdRouteWithChildren
   '/world/$worldId/_world': typeof WorldWorldIdWorldRouteWithChildren
@@ -357,6 +374,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/login'
     | '/register'
+    | '/tools'
     | '/secret/music'
     | '/world/$worldId'
     | '/world/$worldId/mindmap'
@@ -372,6 +390,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/login'
     | '/register'
+    | '/tools'
     | '/secret/music'
     | '/world/$worldId'
     | '/world/$worldId/mindmap'
@@ -386,6 +405,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/login'
     | '/register'
+    | '/tools'
     | '/secret/music'
     | '/world/$worldId'
     | '/world/$worldId/_world'
@@ -405,6 +425,7 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  ToolsRoute: typeof ToolsRoute
   SecretMusicRoute: typeof SecretMusicRoute
   WorldWorldIdRoute: typeof WorldWorldIdRouteWithChildren
 }
@@ -415,6 +436,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  ToolsRoute: ToolsRoute,
   SecretMusicRoute: SecretMusicRoute,
   WorldWorldIdRoute: WorldWorldIdRouteWithChildren,
 }
@@ -434,6 +456,7 @@ export const routeTree = rootRoute
         "/home",
         "/login",
         "/register",
+        "/tools",
         "/secret/music",
         "/world/$worldId"
       ]
@@ -452,6 +475,9 @@ export const routeTree = rootRoute
     },
     "/register": {
       "filePath": "register.tsx"
+    },
+    "/tools": {
+      "filePath": "tools.tsx"
     },
     "/secret/music": {
       "filePath": "secret/music.tsx"

@@ -1,5 +1,4 @@
 import Menu from '@mui/icons-material/Menu'
-import Public from '@mui/icons-material/Public'
 import Button from '@mui/material/Button'
 import { useNavigate } from '@tanstack/react-router'
 import { memo, useCallback } from 'react'
@@ -35,9 +34,6 @@ export function WorldNavigatorComponent() {
 		<BaseNavigator>
 			<Button onClick={onToggleOverview} aria-label="Toggle">
 				<Menu />
-			</Button>
-			<Button onClick={onNavigate} variant={'contained'} sx={{ gap: 0.5, padding: '8px 15px' }}>
-				<Public /> World
 			</Button>
 		</BaseNavigator>
 	)

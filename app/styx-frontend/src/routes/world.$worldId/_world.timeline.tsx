@@ -9,11 +9,11 @@ const timelineSearchSchema = z.object({
 })
 
 export const Route = createFileRoute('/world/$worldId/_world/timeline')({
-	component: WorldTimelineComponent,
+	component: RouteComponent,
 	validateSearch: timelineSearchSchema,
 })
 
-function WorldTimelineComponent() {
+function RouteComponent() {
 	return (
 		<>
 			<TimelineView />

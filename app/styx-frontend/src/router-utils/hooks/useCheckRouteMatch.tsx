@@ -4,6 +4,6 @@ import { FileRouteTypes } from '@/routeTree.gen'
 
 export const useCheckRouteMatch = (route: FileRouteTypes['fullPaths']) => {
 	return useMatches({
-		select: (a) => a.some((a) => a.fullPath === route),
+		select: (a) => a.some((a) => a.routeId === route || a.fullPath === route),
 	})
 }

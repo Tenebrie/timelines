@@ -3,9 +3,9 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Music } from '@/app/views/music/Music'
 
 export const Route = createFileRoute('/secret/music')({
-	component: MusicComponent,
+	component: RouteComponent,
 })
 
-function MusicComponent() {
+function RouteComponent() {
 	return <Music />
 }
