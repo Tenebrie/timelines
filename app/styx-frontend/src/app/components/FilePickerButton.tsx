@@ -2,7 +2,12 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import Button from '@mui/material/Button'
 import styled from 'styled-components'
 
-export function FilePickerButton() {
+type Props = {
+	onSelect: (fileList: FileList) => void
+	multiple?: boolean
+}
+
+export function FilePickerButton({ onSelect, multiple }: Props) {
 	return (
 		<Button
 			component="label"
@@ -12,7 +17,15 @@ export function FilePickerButton() {
 			startIcon={<CloudUploadIcon />}
 		>
 			Upload files
-			<VisuallyHiddenInput type="file" onChange={(event) => console.log(event.target.files)} multiple />
+			<VisuallyHiddenInput
+				type="file"
+				onChange={(event) => {
+					if (event.target.files) {
+						onSelect(event.target.files!)
+					}
+				}}
+				multiple={multiple}
+			/>
 		</Button>
 	)
 }

@@ -9,7 +9,9 @@ import { AdminRouter } from './routers/AdminRouter'
 import { AnnouncementRouter } from './routers/AnnouncementRouter'
 import { AuthRouter } from './routers/AuthRouter'
 import { ConstantsRouter } from './routers/ConstantsRouter'
+import { FileSystemRouter } from './routers/FileSystemRouter'
 import { HealthRouter } from './routers/HealthRouter'
+import { ImageConversionRouter } from './routers/ImageConversionRouter'
 import { WorldEventRouter } from './routers/WorldEventRouter'
 import { WorldEventTrackRouter } from './routers/WorldEventTrackRouter'
 import { WorldRouter } from './routers/WorldRouter'
@@ -54,8 +56,12 @@ app
 	.use(AuthRouter.allowedMethods())
 	.use(ConstantsRouter.routes())
 	.use(ConstantsRouter.allowedMethods())
+	.use(FileSystemRouter.routes())
+	.use(FileSystemRouter.allowedMethods())
 	.use(HealthRouter.routes())
 	.use(HealthRouter.allowedMethods())
+	.use(ImageConversionRouter.routes())
+	.use(ImageConversionRouter.allowedMethods())
 	.use(WorldEventRouter.routes())
 	.use(WorldEventRouter.allowedMethods())
 	.use(WorldEventTrackRouter.routes())

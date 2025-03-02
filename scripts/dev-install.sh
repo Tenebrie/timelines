@@ -8,14 +8,12 @@ cd ..
 (cd app/rhea-backend && yarn prisma:migrate)
 exit_code=$?
 
-if [ $exit_code -eq 0 ]; then
-   exit 0
+if [ $exit_code -eq 1 ]; then
+   (cd app/rhea-backend && yarn prisma:migrate:dev)
+
+   docker exec $(docker ps -aqf "name=^timelines[-_]rhea[-_][0-9]+") yarn prisma generate
+   docker exec $(docker ps -aqf "name=^timelines[-_]rhea[-_][0-9]+") touch src/index.ts
 fi
-
-(cd app/rhea-backend && yarn prisma:migrate:dev)
-
-docker exec $(docker ps -aqf "name=^timelines[-_]rhea[-_][0-9]+") yarn prisma generate
-docker exec $(docker ps -aqf "name=^timelines[-_]rhea[-_][0-9]+") touch src/index.ts
 
 echo "Waiting for Rhea to get up..."
 sleep 1
@@ -28,5 +26,4 @@ do
    [[ counter -eq $max_retry ]] && exit 1
    ((counter++))
 done
-
 cd app/styx-frontend && yarn openapi

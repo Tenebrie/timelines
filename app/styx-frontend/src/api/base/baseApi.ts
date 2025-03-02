@@ -25,7 +25,7 @@ const baseQueryWithRetry = retry(baseQuery, {
 	},
 	retryCondition(baseError, _, extraArgs) {
 		const error = parseApiError(baseError)
-		if (error.status <= 400 || error.status === 401) {
+		if (error.status < 500) {
 			return false
 		}
 

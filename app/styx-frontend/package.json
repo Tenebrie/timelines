@@ -55,7 +55,7 @@
 		"@emotion/styled": "^11.14.0",
 		"@mui/icons-material": "^6.2.0",
 		"@mui/lab": "^6.0.0-beta.19",
-		"@mui/material": "^6.2.0",
+		"@mui/material": "^6.4.6",
 		"@reduxjs/toolkit": "^2.4.0",
 		"@rtk-query/codegen-openapi": "^2.0.0",
 		"@tanstack/router-devtools": "^1.99.13",
