@@ -1,7 +1,21 @@
 #!/bin/bash
+set -e
 
-docker exec $(docker ps -aqf "name=timelines_rhea-postgres") bash -c "pg_dump -Udocker db > /backups/db.sql"
-# Rename the file to include the current date and time
-mv /mnt/volume_rhea_postgres/backups/db.sql /mnt/volume_rhea_postgres/backups/db-$(date +%Y-%m-%d_%H-%M).sql
-# Delete files older than 7 days
-find /mnt/volume_rhea_postgres/backups/ -type f -name '*.sql' -mtime +7 -exec rm {} \;
+# Check if a bucket name was provided
+if [ $# -lt 1 ]; then
+  echo "Usage: $0 <bucket-name>"
+  exit 1
+fi
+
+BUCKET="$1"
+
+# Dump the database from the Docker container
+CONTAINER_ID=$(docker ps -aqf "name=timelines[-_]rhea[-_]postgres")
+docker exec "$CONTAINER_ID" bash -c "pg_dump -Udocker db > /backups/db.sql"
+
+# Prep some variables
+DATE=$(date +%Y-%m-%d_%H-%M)
+BACKUP_PATH="/mnt/volume_rhea_postgres/backups/db.sql"
+
+# Upload the backup to DigitalOcean Spaces
+aws s3 cp "$BACKUP_PATH" "s3://$BUCKET/rhea/backups/db-$DATE.sql" --endpoint-url https://fra1.digitaloceanspaces.com

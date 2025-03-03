@@ -20,9 +20,6 @@ export default defineConfig({
 	},
 	build: {
 		outDir: 'build',
-		rollupOptions: {
-			external: ['@tiptap/extension-bubble-menu', '@tiptap/extension-floating-menu'],
-		},
 	},
 	preview: {
 		port: 8080,

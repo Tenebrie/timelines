@@ -42,8 +42,7 @@ services:
         volumes:
             - ./app/rhea-backend/src:/app/rhea/src:cached
             - ./app/rhea-backend/prisma:/app/rhea/prisma:cached
-            - ./app/ts-shared/src:/app/ts-shared/src:cached
-            - rhea-files:/rhea/storage/:cached
+            - ./app/ts-shared/src:/app/ts-shared/src:cached 
         ports:
             - 3000:3000
         networks:
@@ -88,7 +87,6 @@ services:
 volumes:
     redis:
     rhea-db:
-    rhea-files:
 
 networks:
     dev_network:
