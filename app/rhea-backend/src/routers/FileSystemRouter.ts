@@ -14,7 +14,8 @@ router.get('/api/fs/image/:format/:filename', async (ctx) => {
 		filename: PathParam(StringValidator),
 	})
 
-	const file = await FileSystemService.loadFile(filename)
+	const filenameWithoutExtension = filename.split('.').slice(0, -1).join('.')
+	const file = await FileSystemService.loadFile(filenameWithoutExtension)
 	return useReturnValue(file, 200, `image/${format}`)
 })
 

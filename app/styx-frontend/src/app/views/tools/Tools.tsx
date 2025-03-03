@@ -103,7 +103,7 @@ export function Tools() {
 				{lastConverted && (
 					<a
 						download={lastConverted.name}
-						href={`/api/fs/image/${lastConverted.extension}/${lastConverted.path}`}
+						href={`/api/fs/image/${lastConverted.extension}/${lastConverted.path}.${lastConverted.extension}`}
 					>
 						Download {lastConverted.name}.{lastConverted.extension ?? 'webp'}
 					</a>
