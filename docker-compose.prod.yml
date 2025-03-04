@@ -11,7 +11,7 @@ services:
                 order: start-first
                 parallelism: 1
                 delay: 10s
-                update_failure_action: rollback
+                failure_action: rollback
         secrets:
             - environment
         volumes:
@@ -30,7 +30,7 @@ services:
                 order: start-first
                 parallelism: 1
                 delay: 30s
-                update_failure_action: rollback
+                failure_action: rollback
         secrets:
             - environment
     rhea:
@@ -48,7 +48,7 @@ services:
                 order: start-first
                 parallelism: 1
                 delay: 10s
-                update_failure_action: rollback
+                failure_action: rollback
         secrets:
             - jwt-secret
             - environment
@@ -71,7 +71,7 @@ services:
                 order: start-first
                 parallelism: 1
                 delay: 10s
-                update_failure_action: rollback
+                failure_action: rollback
         secrets:
             - jwt-secret
             - environment
