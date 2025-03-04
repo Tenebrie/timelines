@@ -87,9 +87,7 @@ services:
             - ~/.aws:/root/.aws:ro
         secrets:
             - environment
-        entrypoint: sh -c "apk add --no-cache py3-awscli dcron && crontab /scripts/cron-db-backup.cron && crond -f -L /dev/stdout"
-
-
+        entrypoint: sh -c "apk add --no-cache dcron python3 py3-pip && pip install awscli && crontab /scripts/cron-db-backup.cron && crond -f -L /dev/stdout"
 
 # docker secret create jwt-secret /mnt/volume_secrets/keys/jwt-secret.txt
 # echo "production" | docker secret create ENVIRONMENT -
