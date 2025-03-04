@@ -16,6 +16,8 @@ docker exec "$CONTAINER_ID" bash -c "pg_dump -Udocker db > /backups/db.sql"
 # Prep some variables
 DATE=$(date +%Y-%m-%d_%H-%M)
 BACKUP_PATH="/mnt/volume_rhea_postgres/backups/db.sql"
+UPLOAD_PATH="s3://$BUCKET/rhea/backups/db-$DATE.sql"
 
 # Upload the backup to DigitalOcean Spaces
-aws s3 cp "$BACKUP_PATH" "s3://$BUCKET/rhea/backups/db-$DATE.sql" --endpoint-url https://fra1.digitaloceanspaces.com
+aws s3 cp $BACKUP_PATH $UPLOAD_PATH --endpoint-url https://fra1.digitaloceanspaces.com
+echo "Successfully uploaded the latest backup to $UPLOAD_PATH"
