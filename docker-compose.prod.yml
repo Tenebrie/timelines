@@ -7,8 +7,10 @@ services:
         deploy:
             replicas: 1
             update_config:
+                order: start-first
                 parallelism: 1
                 delay: 10s
+                update_failure_action: rollback
         secrets:
             - environment
         volumes:
@@ -24,8 +26,10 @@ services:
         deploy:
             replicas: 2
             update_config:
+                order: start-first
                 parallelism: 1
                 delay: 30s
+                update_failure_action: rollback
         secrets:
             - environment
     rhea:
@@ -40,8 +44,10 @@ services:
         deploy:
             replicas: 2
             update_config:
+                order: start-first
                 parallelism: 1
                 delay: 10s
+                update_failure_action: rollback
         secrets:
             - jwt-secret
             - environment
@@ -61,8 +67,10 @@ services:
         deploy:
             replicas: 2
             update_config:
+                order: start-first
                 parallelism: 1
                 delay: 10s
+                update_failure_action: rollback
         secrets:
             - jwt-secret
             - environment
@@ -70,6 +78,13 @@ services:
         volumes:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached
             - /mnt/volume_rhea_postgres/backups:/backups:cached
+    cron-db-backup:
+        image: alpine:3.12
+        volumes:
+        - ./scripts:/scripts         # Your backup script and cron file
+        - /mnt/volume_rhea_postgres/backups:/backups
+        entrypoint: sh -c "apk add --no-cache cron && crontab /scripts/backup.cron && crond -f -L /dev/stdout"
+
 
 # docker secret create jwt-secret /mnt/volume_secrets/keys/jwt-secret.txt
 # echo "production" | docker secret create ENVIRONMENT -
