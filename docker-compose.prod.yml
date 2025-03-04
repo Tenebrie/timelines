@@ -79,16 +79,6 @@ services:
         volumes:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached
             - /mnt/volume_rhea_postgres/backups:/backups:cached
-    cron-db-backup:
-        image: alpine:3.12
-        init: true
-        volumes:
-            - ./scripts:/scripts
-            - /mnt/volume_rhea_postgres/backups:/backups
-            - ~/.aws:/root/.aws:ro
-        secrets:
-            - environment
-        entrypoint: sh -c "apk add --no-cache dcron python3 py3-pip && pip install awscli && crontab /scripts/cron-db-backup.cron && crond -f -L /dev/stdout"
 
 # docker secret create jwt-secret /mnt/volume_secrets/keys/jwt-secret.txt
 # echo "production" | docker secret create ENVIRONMENT -
