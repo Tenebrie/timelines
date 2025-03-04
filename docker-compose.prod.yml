@@ -81,6 +81,7 @@ services:
             - /mnt/volume_rhea_postgres/backups:/backups:cached
     cron-db-backup:
         image: alpine:3.12
+        init: true
         volumes:
             - ./scripts:/scripts
             - /mnt/volume_rhea_postgres/backups:/backups
