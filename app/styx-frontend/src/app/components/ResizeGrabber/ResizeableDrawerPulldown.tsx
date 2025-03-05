@@ -1,12 +1,12 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
-import { memo } from 'react'
+import { memo, ReactNode } from 'react'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { Shortcut } from '@/app/hooks/useShortcut/useShortcutManager'
 
 type Props = {
-	label: string
+	label: ReactNode
 	hotkey?: (typeof Shortcut)[keyof typeof Shortcut]
 	width: number
 	visible: boolean
@@ -34,7 +34,10 @@ function ResizeableDrawerPulldownComponent({ label, hotkey, width, visible, onCl
 				}}
 				onClick={onClick}
 			>
-				{label} {hotkey && `(${hotkey})`}
+				{label}
+				{hotkey && (
+					<span style={{ color: theme.material.palette.primary.main }}>&nbsp;({hotkey.toUpperCase()})</span>
+				)}
 			</Button>
 		</Stack>
 	)

@@ -110,7 +110,7 @@ export const lightTheme = createTheme({
 			contrastText: '#fff',
 		},
 		secondary: {
-			main: 'hsl(20, 69%, 42%)',
+			main: 'hsl(20, 69.20%, 42.00%)',
 			contrastText: '#fff',
 		},
 	},
@@ -130,7 +130,7 @@ export const darkTheme = createTheme({
 			contrastText: '#0a0908',
 		},
 		secondary: {
-			main: 'hsl(20, 49%, 60%)',
+			main: 'hsl(20, 49.00%, 60.00%)',
 			contrastText: '#0a0908',
 		},
 	},

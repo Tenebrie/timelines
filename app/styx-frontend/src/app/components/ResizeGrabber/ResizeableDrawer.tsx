@@ -1,13 +1,11 @@
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import { ReactNode } from '@tanstack/react-router'
-import { useCallback, useEffect } from 'react'
+import { ReactNode, useCallback, useEffect } from 'react'
 
 import { ResizeGrabber, useResizeGrabber } from '@/app/components/ResizeGrabber/ResizeGrabber'
 import { ResizeGrabberOverlay } from '@/app/components/ResizeGrabber/ResizeGrabberOverlay'
 import { ResizeGrabberPreferencesSchema } from '@/app/components/ResizeGrabber/ResizeGrabberPreferencesSchema'
-import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import usePersistentState from '@/app/hooks/usePersistentState'
 import { useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { Shortcut } from '@/app/hooks/useShortcut/useShortcutManager'
@@ -18,7 +16,7 @@ import { ResizeableDrawerPulldown } from './ResizeableDrawerPulldown'
 type Props = {
 	children: ReactNode | ReactNode[]
 	pulldownWidth: number
-	pulldownLabel: string
+	pulldownLabel: ReactNode
 	minHeight: number
 	keepMounted?: boolean
 	persistentStateKey: string
@@ -80,8 +78,6 @@ export function ResizeableDrawer({
 	const onPulldownClick = useCallback(() => {
 		setVisible(true)
 	}, [setVisible])
-
-	const scrollbarStyles = useBrowserSpecificScrollbars()
 
 	return (
 		<ResizeableDrawerProvider
