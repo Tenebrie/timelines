@@ -14,5 +14,12 @@ export function EventDrawerListener() {
 		},
 	})
 
+	useEventBusSubscribe({
+		event: 'timeline/closeEventDrawer',
+		callback: () => {
+			setDrawerVisible(false)
+		},
+	})
+
 	return <></>
 }

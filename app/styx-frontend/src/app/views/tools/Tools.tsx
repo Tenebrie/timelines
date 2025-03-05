@@ -24,7 +24,7 @@ export function Tools() {
 	const [format, setFormat] = useState<string>('webp')
 
 	const errorState = useErrorState<{ conversionError: string }>()
-	const { error, raiseError, clearError } = errorState
+	const { raiseError, clearError } = errorState
 
 	const onFilesSelected = async (fileList: FileList) => {
 		clearError()
@@ -41,8 +41,6 @@ export function Tools() {
 			}
 
 			try {
-				console.log(width)
-				console.log(height)
 				const { response, error } = parseApiResponse(
 					await convertImage({
 						body: {

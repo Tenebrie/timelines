@@ -3,6 +3,7 @@ import { memo, useRef } from 'react'
 
 import { ResizeableDrawer } from '@/app/components/ResizeGrabber/ResizeableDrawer'
 import { useEventBusDispatch } from '@/app/features/eventBus'
+import { Shortcut } from '@/app/hooks/useShortcut/useShortcutManager'
 import { useCurrentOrNewEvent } from '@/app/views/world/views/timeline/shelf/drawers/event/details/hooks/useCurrentOrNewEvent'
 
 import { EventDrawerListener } from './EventDrawerListener'
@@ -30,6 +31,7 @@ function EventDrawerComponent() {
 			persistentStateKey="entityDrawerState/v1"
 			onResize={onResize.current}
 			keepMounted
+			hotkey={Shortcut.CreateNew}
 		>
 			<EventDrawerOutlet />
 			<EventDrawerListener />

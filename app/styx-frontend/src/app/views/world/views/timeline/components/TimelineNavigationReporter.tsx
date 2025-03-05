@@ -21,6 +21,7 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 	const { timeOrigin } = useSelector(getWorldState, (a, b) => a.timeOrigin === b.timeOrigin)
 
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
+	const closeEventDrawer = useEventBusDispatch({ event: 'timeline/closeEventDrawer' })
 	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 
 	const { setIsSwitchingScale, setScaleLevel, setTargetScaleLevel } = timelineSlice.actions
@@ -30,10 +31,11 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 		(time: number) => {
 			navigate({
 				to: '/world/$worldId/timeline',
-				search: (prev) => ({ ...prev, time }),
+				search: (prev) => ({ ...prev, selection: [], time }),
 			})
+			closeEventDrawer()
 		},
-		[navigate],
+		[navigate, closeEventDrawer],
 	)
 
 	const onDoubleClick = useCallback(

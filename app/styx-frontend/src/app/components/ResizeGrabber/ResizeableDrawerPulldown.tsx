@@ -3,9 +3,11 @@ import Stack from '@mui/material/Stack'
 import { memo } from 'react'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { Shortcut } from '@/app/hooks/useShortcut/useShortcutManager'
 
 type Props = {
 	label: string
+	hotkey?: (typeof Shortcut)[keyof typeof Shortcut]
 	width: number
 	visible: boolean
 	onClick: () => void
@@ -13,7 +15,7 @@ type Props = {
 
 export const ResizeableDrawerPulldown = memo(ResizeableDrawerPulldownComponent)
 
-function ResizeableDrawerPulldownComponent({ label, width, visible, onClick }: Props) {
+function ResizeableDrawerPulldownComponent({ label, hotkey, width, visible, onClick }: Props) {
 	const theme = useCustomTheme()
 	return (
 		<Stack direction="row" justifyContent="flex-end" sx={{ pointerEvents: 'none' }}>
@@ -32,7 +34,7 @@ function ResizeableDrawerPulldownComponent({ label, width, visible, onClick }: P
 				}}
 				onClick={onClick}
 			>
-				{label}
+				{label} {hotkey && `(${hotkey})`}
 			</Button>
 		</Stack>
 	)

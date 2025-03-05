@@ -10,6 +10,7 @@ export type AllowedEvents =
 	| 'scrollTimelineRight'
 	| 'timeline/requestZoom'
 	| 'timeline/openEventDrawer'
+	| 'timeline/closeEventDrawer'
 	| 'timeline/markerHovered'
 	| 'mindmap/openActorDrawer'
 	| 'outliner/tracksDrawerResized'
@@ -44,6 +45,7 @@ export type EventParams = {
 	['scrollTimelineRight']: void
 	['timeline/requestZoom']: { direction: 'in' | 'out' }
 	['timeline/openEventDrawer']: { extraHeight?: number }
+	['timeline/closeEventDrawer']: void
 	['timeline/markerHovered']: { marker: TimelineEntity<MarkerType>; hover: boolean }
 	['mindmap/openActorDrawer']: { extraHeight?: number }
 	['outliner/tracksDrawerResized']: { height: number }

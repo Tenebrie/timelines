@@ -9,6 +9,8 @@ import { ResizeGrabberOverlay } from '@/app/components/ResizeGrabber/ResizeGrabb
 import { ResizeGrabberPreferencesSchema } from '@/app/components/ResizeGrabber/ResizeGrabberPreferencesSchema'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import usePersistentState from '@/app/hooks/usePersistentState'
+import { useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { Shortcut } from '@/app/hooks/useShortcut/useShortcutManager'
 
 import { ResizeableDrawerProvider } from './ResizeableDrawerContext'
 import { ResizeableDrawerPulldown } from './ResizeableDrawerPulldown'
@@ -21,6 +23,7 @@ type Props = {
 	keepMounted?: boolean
 	persistentStateKey: string
 	defaultOpen?: boolean
+	hotkey?: (typeof Shortcut)[keyof typeof Shortcut]
 	onResize?: (height: number, visible: boolean) => void
 }
 
@@ -32,6 +35,7 @@ export function ResizeableDrawer({
 	keepMounted,
 	persistentStateKey,
 	defaultOpen,
+	hotkey,
 	onResize,
 }: Props) {
 	const [preferences, setPreferences] = usePersistentState(
@@ -60,6 +64,10 @@ export function ResizeableDrawer({
 		isDraggingNow,
 		isDraggingChild,
 	} = grabberProps
+
+	useShortcut(hotkey ?? [], () => {
+		setVisible(!drawerVisible)
+	})
 
 	useEffect(() => {
 		setPreferences({ height, visible: drawerVisible })
@@ -121,6 +129,7 @@ export function ResizeableDrawer({
 				>
 					<ResizeableDrawerPulldown
 						label={pulldownLabel}
+						hotkey={hotkey}
 						width={pulldownWidth}
 						visible={!drawerVisible}
 						onClick={onPulldownClick}

@@ -7,6 +7,8 @@ import { useEvent } from 'react-use-event-hook'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
+import { useEventBusDispatch } from '../../eventBus'
+
 type Props = {
 	icon: ReactNode
 	label: string
@@ -14,6 +16,7 @@ type Props = {
 
 export function LastWorldNavigatorButton({ icon, label }: Props) {
 	const navigate = useNavigate()
+	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
 	const isMatching = useCheckRouteMatch('/world/$worldId/timeline')
 
 	const { id, isLoaded, timeOrigin } = useSelector(
@@ -23,6 +26,7 @@ export function LastWorldNavigatorButton({ icon, label }: Props) {
 
 	const onNavigate = useEvent(() => {
 		navigate({ to: `/world/$worldId/timeline`, params: { worldId: id }, search: { time: timeOrigin } })
+		scrollTimelineTo({ timestamp: timeOrigin })
 	})
 
 	if (!isLoaded) {
