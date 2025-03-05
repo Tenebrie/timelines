@@ -30,7 +30,7 @@ test.describe('World management', () => {
 		await page.getByText('Home').click()
 		await page.getByTestId('EditIcon').click()
 		await page.waitForURL(/\/world\/[a-f0-9-]+\/settings/)
-		await expect(page.getByText('World details', { exact: true })).toBeVisible()
+		await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
 
 		// Delete world
 		await page.getByText('Home').click()

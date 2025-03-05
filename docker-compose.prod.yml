@@ -1,3 +1,4 @@
+version: '3.8'
 services:
     gatekeeper:
         image: tenebrie/timelines-gatekeeper:${VERSION}
@@ -7,8 +8,10 @@ services:
         deploy:
             replicas: 1
             update_config:
+                order: start-first
                 parallelism: 1
                 delay: 10s
+                failure_action: rollback
         secrets:
             - environment
         volumes:
@@ -24,8 +27,10 @@ services:
         deploy:
             replicas: 2
             update_config:
+                order: start-first
                 parallelism: 1
                 delay: 30s
+                failure_action: rollback
         secrets:
             - environment
     rhea:
@@ -40,8 +45,10 @@ services:
         deploy:
             replicas: 2
             update_config:
+                order: start-first
                 parallelism: 1
                 delay: 10s
+                failure_action: rollback
         secrets:
             - jwt-secret
             - environment
@@ -61,8 +68,10 @@ services:
         deploy:
             replicas: 2
             update_config:
+                order: start-first
                 parallelism: 1
                 delay: 10s
+                failure_action: rollback
         secrets:
             - jwt-secret
             - environment

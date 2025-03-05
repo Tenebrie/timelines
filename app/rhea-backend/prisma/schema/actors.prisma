@@ -5,9 +5,10 @@ model Actor {
 
     name            String
     title           String @default("")
+    icon            String @default("default")
+    color           String @default("#000000")
     description     String @default("")
     descriptionRich String @default("")
-    color           String @default("")
 
     mentions    Mention[] @relation("ActorMentionSource")
     mentionedIn Mention[] @relation("ActorMentionTarget")

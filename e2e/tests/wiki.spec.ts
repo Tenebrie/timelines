@@ -36,6 +36,12 @@ test.describe('Wiki', () => {
 			await expect(textbox).toBeVisible()
 			await expect(textbox).toHaveText('This is a test article')
 
+			await textbox.fill('The text has been changed')
+			await page.waitForTimeout(1000)
+			await page.reload()
+			await expect(textbox).toBeVisible()
+			await expect(textbox).toHaveText('The text has been changed')
+
 			// Delete article
 			await page.getByTestId('ArticleListWithHeader').getByTestId('MenuIcon').click()
 			await page.getByRole('menuitem').getByText('Delete').click()

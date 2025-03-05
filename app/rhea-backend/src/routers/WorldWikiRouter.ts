@@ -92,6 +92,8 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 
 	const { name, contentRich, mentions } = useRequestBody(ctx, {
 		name: OptionalParam(StringValidator),
+		icon: OptionalParam(StringValidator),
+		color: OptionalParam(StringValidator),
 		contentRich: OptionalParam(StringValidator),
 		mentions: OptionalParam(MentionsArrayValidator),
 	})

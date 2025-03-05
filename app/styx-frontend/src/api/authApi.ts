@@ -1,4 +1,4 @@
-import { baseApi as api } from './baseApi'
+import { baseApi as api } from './base/baseApi'
 export const addTagTypes = ['auth', 'worldList', 'worldDetails', 'announcementList', 'adminUsers'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
@@ -12,6 +12,10 @@ const injectedRtkApi = api
 			}),
 			createAccount: build.mutation<CreateAccountApiResponse, CreateAccountApiArg>({
 				query: (queryArg) => ({ url: `/api/auth`, method: 'POST', body: queryArg.body }),
+				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
+			}),
+			deleteAccount: build.mutation<DeleteAccountApiResponse, DeleteAccountApiArg>({
+				query: () => ({ url: `/api/auth`, method: 'DELETE' }),
 				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
 			}),
 			postLogin: build.mutation<PostLoginApiResponse, PostLoginApiArg>({
@@ -59,6 +63,8 @@ export type CreateAccountApiArg = {
 		password: string
 	}
 }
+export type DeleteAccountApiResponse = unknown
+export type DeleteAccountApiArg = void
 export type PostLoginApiResponse = /** status 200  */ {
 	user: {
 		id: string
@@ -80,6 +86,7 @@ export const {
 	useCheckAuthenticationQuery,
 	useLazyCheckAuthenticationQuery,
 	useCreateAccountMutation,
+	useDeleteAccountMutation,
 	usePostLoginMutation,
 	usePostLogoutMutation,
 } = injectedRtkApi

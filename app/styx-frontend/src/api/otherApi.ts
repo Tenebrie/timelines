@@ -1,4 +1,4 @@
-import { baseApi as api } from './baseApi'
+import { baseApi as api } from './base/baseApi'
 export const addTagTypes = ['worldWiki'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
@@ -12,8 +12,14 @@ const injectedRtkApi = api
 			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
 				query: () => ({ url: `/api/constants/world-access-modes` }),
 			}),
+			loadFile: build.query<LoadFileApiResponse, LoadFileApiArg>({
+				query: (queryArg) => ({ url: `/api/fs/webp/${queryArg.filename}` }),
+			}),
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
+			}),
+			convertImage: build.mutation<ConvertImageApiResponse, ConvertImageApiArg>({
+				query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
 			}),
 			getArticles: build.query<GetArticlesApiResponse, GetArticlesApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/wiki/articles` }),
@@ -66,8 +72,90 @@ export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premiu
 export type AdminGetUserLevelsApiArg = void
 export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
 export type ListWorldAccessModesApiArg = void
+export type LoadFileApiResponse = unknown
+export type LoadFileApiArg = {
+	/** Any string value */
+	filename: string
+}
 export type GetHealthApiResponse = unknown
 export type GetHealthApiArg = void
+export type ConvertImageApiResponse = /** status 200  */ {
+	metadata: {
+		orientation?: number
+		format?:
+			| 'webp'
+			| 'avif'
+			| 'dz'
+			| 'fits'
+			| 'gif'
+			| 'heif'
+			| 'input'
+			| 'jpeg'
+			| 'jpg'
+			| 'jp2'
+			| 'jxl'
+			| 'magick'
+			| 'openslide'
+			| 'pdf'
+			| 'png'
+			| 'ppm'
+			| 'raw'
+			| 'svg'
+			| 'tiff'
+			| 'tif'
+			| 'v'
+		size?: number
+		width?: number
+		height?: number
+		space?: 'multiband' | 'b-w' | 'bw' | 'cmyk' | 'srgb'
+		channels?: '3' | '4'
+		depth?: string
+		density?: number
+		chromaSubsampling?: string
+		isProgressive?: boolean
+		pages?: number
+		pageHeight?: number
+		loop?: number
+		delay?: number[]
+		pagePrimary?: number
+		hasProfile?: boolean
+		hasAlpha?: boolean
+		exif?: Blob
+		icc?: Blob
+		iptc?: Blob
+		xmp?: Blob
+		tifftagPhotoshop?: Blob
+		compression?: 'av1' | 'hevc'
+		background?:
+			| number
+			| {
+					r: number
+					g: number
+					b: number
+			  }
+		levels?: {
+			width: number
+			height: number
+		}[]
+		subifds?: number
+		resolutionUnit?: 'inch' | 'cm'
+		formatMagick?: string
+		comments?: {
+			keyword: string
+			text: string
+		}[]
+	}
+	path: string
+}
+export type ConvertImageApiArg = {
+	body: {
+		image: Blob
+		format?: string
+		width?: number
+		height?: number
+		quality?: number
+	}
+}
 export type GetArticlesApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
@@ -114,6 +202,8 @@ export type CreateArticleApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	icon: string
+	color: string
 	position: number
 	contentRich: string
 }
@@ -130,6 +220,8 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	icon: string
+	color: string
 	position: number
 	contentRich: string
 }
@@ -140,6 +232,8 @@ export type UpdateArticleApiArg = {
 	articleId: string
 	body: {
 		name?: string
+		icon?: string
+		color?: string
 		contentRich?: string
 		mentions?: {
 			targetId: string
@@ -176,8 +270,11 @@ export const {
 	useLazyAdminGetUserLevelsQuery,
 	useListWorldAccessModesQuery,
 	useLazyListWorldAccessModesQuery,
+	useLoadFileQuery,
+	useLazyLoadFileQuery,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,
+	useConvertImageMutation,
 	useGetArticlesQuery,
 	useLazyGetArticlesQuery,
 	useCreateArticleMutation,

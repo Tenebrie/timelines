@@ -1,4 +1,4 @@
-import { baseApi as api } from './baseApi'
+import { baseApi as api } from './base/baseApi'
 export const addTagTypes = ['worldSearch', 'worldDetails'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
@@ -61,9 +61,10 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
+		icon: string
+		color: string
 		descriptionRich: string
 		timestamp: string
-		icon: string
 		revokedAt?: null | string
 		customName: boolean
 		externalLink: string
@@ -106,8 +107,9 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		updatedAt: string
 		name: string
 		title: string
-		descriptionRich: string
+		icon: string
 		color: string
+		descriptionRich: string
 	}[]
 }
 export type SearchWorldApiArg = {

@@ -2,10 +2,11 @@ import { useCreateWorldEventMutation } from '@api/worldEventApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { worldSlice } from '@/app/features/world/reducer'
-import { getWorldIdState } from '@/app/features/world/selectors'
-import { ingestEvent } from '@/app/utils/ingestEvent'
+import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
+import { ingestEvent } from '@/app/utils/ingestEntity'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { worldSlice } from '@/app/views/world/WorldSlice'
+import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 export const useQuickCreateEvent = () => {
 	const worldId = useSelector(getWorldIdState)
@@ -25,9 +26,9 @@ export const useQuickCreateEvent = () => {
 					worldId,
 					body: {
 						name: query,
+						color: getRandomEntityColor(),
 						description: query,
 						descriptionRich: query,
-						type: 'SCENE',
 						timestamp: '0',
 					},
 				}),

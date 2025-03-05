@@ -7,7 +7,7 @@ import InputLabel from '@mui/material/InputLabel'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Stack from '@mui/material/Stack'
 
-import { useDebouncedState } from '@/hooks/useDebouncedState'
+import { useDebouncedState } from '@/app/hooks/useDebouncedState'
 
 type Props = {
 	initialQuery?: string

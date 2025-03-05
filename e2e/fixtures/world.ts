@@ -18,6 +18,18 @@ export const createWorld = async (page: Page) => {
 	}
 }
 
+export const navigateToTimeline = async (
+	page: Page,
+	worldData: 'createWorld' | Awaited<ReturnType<typeof createWorld>>,
+) => {
+	if (worldData === 'createWorld') {
+		worldData = await createWorld(page)
+	}
+
+	await page.goto(makeUrl(`/world/${worldData.id}/timeline`))
+	return { world: worldData }
+}
+
 export const navigateToWiki = async (
 	page: Page,
 	worldData: 'createWorld' | Awaited<ReturnType<typeof createWorld>>,
