@@ -1,4 +1,5 @@
 import { WorldEvent } from '@api/types/types'
+import { useSearch } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
 import { useAutoRef } from '@/app/hooks/useAutoRef'
@@ -23,6 +24,8 @@ export const useUpsertEvent = (props: Props) => {
 
 	const draftRef = useAutoRef(baseDraft)
 
+	const targetTrack = useSearch({ from: '/world/$worldId/_world/timeline', select: (search) => search.track })
+
 	const { flushSave, autosave } = useAutosave({
 		onSave: async ({ draft, mode, onCreate }: Props) => {
 			if (!draft.isDirty) {
@@ -32,7 +35,10 @@ export const useUpsertEvent = (props: Props) => {
 			const hasSubstance =
 				(draft.name.trim().length > 0 && draft.customNameEnabled) || draft.description.trim().length > 0
 			if (hasSubstance && mode === 'create') {
-				const createdEvent = await createEvent(draft.toPayload())
+				const createdEvent = await createEvent({
+					...draft.toPayload(),
+					worldEventTrackId: targetTrack,
+				})
 				if (createdEvent) {
 					onCreate?.(createdEvent)
 				}

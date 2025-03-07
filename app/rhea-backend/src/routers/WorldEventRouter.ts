@@ -23,8 +23,8 @@ import {
 
 import { ContentStringValidator } from './validators/ContentStringValidator'
 import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
+import { NullableEventTrackValidator } from './validators/NullableEventTrackValidator'
 import { NullableNameStringValidator } from './validators/NullableNameStringValidator'
-import { NullableUuidStringValidator } from './validators/NullableUuidStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
 import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator'
 import { UuidStringValidator } from './validators/UuidStringValidator'
@@ -66,7 +66,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		revokedAt: OptionalParam(NullableBigIntValidator),
 		customName: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(ContentStringValidator),
-		worldEventTrackId: OptionalParam(UuidStringValidator),
+		worldEventTrackId: OptionalParam(NullableEventTrackValidator),
 		mentions: OptionalParam(MentionsArrayValidator),
 	})
 
@@ -114,7 +114,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		mentions: OptionalParam(MentionsArrayValidator),
 		customNameEnabled: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(OptionalURLStringValidator),
-		worldEventTrackId: OptionalParam(NullableUuidStringValidator),
+		worldEventTrackId: OptionalParam(NullableEventTrackValidator),
 	})
 
 	const mappedParams = {

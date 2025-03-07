@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { useSearch } from '@tanstack/react-router'
 import throttle from 'lodash.throttle'
@@ -40,9 +41,9 @@ export function TimelineTracksItemComponent({
 	const [isDragging, setIsDragging] = useState(false)
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const theme = useCustomTheme()
-	const selectedMarkerIds = useSearch({
+	const { selectedMarkerIds, trackActive } = useSearch({
 		from: '/world/$worldId/_world/timeline',
-		select: (search) => search.selection,
+		select: (search) => ({ selectedMarkerIds: search.selection, trackActive: search.track === track.id }),
 	})
 
 	const selectedMarkers = useMemo(
@@ -115,11 +116,24 @@ export function TimelineTracksItemComponent({
 		<TrackContainer
 			ref={dragDropReceiverRef}
 			$height={track.height}
-			$background={theme.custom.palette.background.softest}
-			className={`${isDragging ? 'dragging' : ''} allow-timeline-click`}
+			$hoverBg={theme.custom.palette.background.softest}
+			$activeBg={theme.custom.palette.background.softer}
+			className={`${isDragging ? 'dragging' : ''} allow-timeline-click ${trackActive ? 'active' : ''}`}
 			data-trackid={track.id}
 		>
 			<Divider sx={{ position: 'absolute', bottom: 0, width: '100%', pointerEvents: 'none' }} />
+			<Box
+				sx={{
+					position: 'absolute',
+					bottom: 0,
+					width: '100%',
+					height: '100%',
+					pointerEvents: 'none',
+					opacity: trackActive ? 0.2 : 0,
+					transition: 'opacity 0.3s',
+					background: theme.material.palette.primary.main,
+				}}
+			/>
 			{visibleMarkers.map((event) => (
 				<TimelineMarker
 					key={event.key}

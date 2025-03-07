@@ -40,22 +40,20 @@ type ScrollTimelineToParams =
 	  }
 
 export type EventParams = {
+	['timeline/onScroll']: number
+	['timeline/onMarkerHovered']: { marker: TimelineEntity<MarkerType>; hover: boolean }
 	['timeline/requestScrollTo']: ScrollTimelineToParams
 	['timeline/requestScrollLeft']: void
 	['timeline/requestScrollRight']: void
 	['timeline/requestZoom']: { direction: 'in' | 'out' }
+	['timeline/eventDrawer/onResize']: { height: number }
 	['timeline/eventDrawer/requestOpen']: { extraHeight?: number }
 	['timeline/eventDrawer/requestClose']: void
-	['timeline/onMarkerHovered']: { marker: TimelineEntity<MarkerType>; hover: boolean }
-	['mindmap/actorDrawer/requestOpen']: { extraHeight?: number }
 	['timeline/tracksDrawer/onResize']: { height: number }
-	['timeline/eventDrawer/onResize']: { height: number }
-	['calliope/requestSendMessage']: ClientToCalliopeMessage
+	['mindmap/actorDrawer/requestOpen']: { extraHeight?: number }
+	['world/requestNavigation']: NavigateOptions
 	['calliope/onReconnected']: void
-	['timeline/onScroll']: number
-	['richEditor/requestOpenMentions']: { query: string; screenPosTop: number; screenPosLeft: number }
-	['richEditor/requestUpdateMentions']: { query: string }
-	['richEditor/requestCloseMentions']: void
+	['calliope/requestSendMessage']: ClientToCalliopeMessage
 	['richEditor/onKeyDown']: {
 		key: string
 		ctrlKey: boolean
@@ -63,7 +61,15 @@ export type EventParams = {
 		altKey: boolean
 		metaKey: boolean
 	}
-	['world/requestNavigation']: NavigateOptions
+	['richEditor/requestOpenMentions']: { query: string; screenPosTop: number; screenPosLeft: number }
+	['richEditor/requestUpdateMentions']: { query: string }
+	['richEditor/requestCloseMentions']: void
+	['richEditor/mentionRender/onStart']: {
+		node: ProseMirrorNode
+	}
+	['richEditor/mentionRender/onEnd']: {
+		node: ProseMirrorNode
+	}
 	['richEditor/forceUpdateEvent']: {
 		event: WorldEvent
 	}
@@ -72,11 +78,5 @@ export type EventParams = {
 	}
 	['richEditor/forceUpdateArticle']: {
 		articleId: string
-	}
-	['richEditor/mentionRender/onStart']: {
-		node: ProseMirrorNode
-	}
-	['richEditor/mentionRender/onEnd']: {
-		node: ProseMirrorNode
 	}
 }

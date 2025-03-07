@@ -28,10 +28,10 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 	const dispatch = useDispatch()
 
 	const onClick = useCallback(
-		(time: number) => {
+		(time: number, track: string | undefined) => {
 			navigate({
 				to: '/world/$worldId/timeline',
-				search: (prev) => ({ ...prev, selection: [], time }),
+				search: (prev) => ({ ...prev, selection: [], time, track }),
 			})
 			closeEventDrawer()
 		},
@@ -39,10 +39,10 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 	)
 
 	const onDoubleClick = useCallback(
-		(time: number) => {
+		(time: number, track: string | undefined) => {
 			scrollTimelineTo({ timestamp: time })
 			navigate({
-				search: (prev) => ({ ...prev, selection: [] }),
+				search: (prev) => ({ ...prev, selection: [], track }),
 			})
 		},
 		[navigate, scrollTimelineTo],

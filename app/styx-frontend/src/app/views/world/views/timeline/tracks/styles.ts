@@ -20,7 +20,7 @@ export const Group = styled.div.attrs<{ $height: number }>((props) => ({
 	}
 `
 
-export const TrackContainer = styled.div<{ $height: number; $background: string }>`
+export const TrackContainer = styled.div<{ $height: number; $hoverBg: string; $activeBg: string }>`
 	position: relative;
 	height: ${(props) => props.$height}px;
 	display: flex;
@@ -33,6 +33,6 @@ export const TrackContainer = styled.div<{ $height: number; $background: string 
 	transition: background 0.3s;
 
 	body:not(.mouse-busy) &:hover {
-		background: ${(props) => props.$background};
+		background: ${(props) => props.$hoverBg};
 	}
 `

@@ -23,8 +23,8 @@ type Props = {
 	defaultScroll: number
 	selectedTime: number | null
 	scaleLimits: [ScaleLevel, ScaleLevel]
-	onClick: (time: number) => void
-	onDoubleClick: (time: number) => void
+	onClick: (time: number, trackId: string | undefined) => void
+	onDoubleClick: (time: number, trackId: string | undefined) => void
 }
 
 export const useTimelineNavigation = ({
@@ -369,6 +369,12 @@ export const useTimelineNavigation = ({
 			if (isClickBlocked || !isTargetValid) {
 				return
 			}
+			const trackId = (() => {
+				if (event.target && event.target instanceof HTMLElement && 'trackid' in event.target.dataset) {
+					return event.target.dataset.trackid
+				}
+				return undefined
+			})()
 			event.stopPropagation()
 			event.stopImmediatePropagation()
 
@@ -405,11 +411,11 @@ export const useTimelineNavigation = ({
 				currentTime - lastClickTime > 500 ||
 				Math.abs(point.x - lastClickPos) > 5
 			) {
-				onClick(newSelectedTime)
+				onClick(newSelectedTime, trackId)
 				setLastClickPos(point.x)
 				setLastClickTime(currentTime)
 			} else {
-				onDoubleClick(newSelectedTime)
+				onDoubleClick(newSelectedTime, trackId)
 			}
 		},
 		[

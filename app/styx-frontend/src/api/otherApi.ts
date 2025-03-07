@@ -13,7 +13,7 @@ const injectedRtkApi = api
 				query: () => ({ url: `/api/constants/world-access-modes` }),
 			}),
 			loadFile: build.query<LoadFileApiResponse, LoadFileApiArg>({
-				query: (queryArg) => ({ url: `/api/fs/webp/${queryArg.filename}` }),
+				query: (queryArg) => ({ url: `/api/fs/image/${queryArg.format}/${queryArg.filename}` }),
 			}),
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
@@ -74,6 +74,8 @@ export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'P
 export type ListWorldAccessModesApiArg = void
 export type LoadFileApiResponse = unknown
 export type LoadFileApiArg = {
+	/** The image file extension */
+	format: 'png' | 'jpg' | 'jpeg' | 'gif' | 'webp'
 	/** Any string value */
 	filename: string
 }
@@ -83,21 +85,21 @@ export type ConvertImageApiResponse = /** status 200  */ {
 	metadata: {
 		orientation?: number
 		format?:
+			| 'png'
+			| 'jpg'
+			| 'jpeg'
+			| 'gif'
 			| 'webp'
 			| 'avif'
 			| 'dz'
 			| 'fits'
-			| 'gif'
 			| 'heif'
 			| 'input'
-			| 'jpeg'
-			| 'jpg'
 			| 'jp2'
 			| 'jxl'
 			| 'magick'
 			| 'openslide'
 			| 'pdf'
-			| 'png'
 			| 'ppm'
 			| 'raw'
 			| 'svg'

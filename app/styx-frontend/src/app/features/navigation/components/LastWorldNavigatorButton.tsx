@@ -17,7 +17,7 @@ type Props = {
 export function LastWorldNavigatorButton({ icon, label }: Props) {
 	const navigate = useNavigate()
 	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
-	const isMatching = useCheckRouteMatch('/world/$worldId/timeline')
+	const isMatching = useCheckRouteMatch('/world/$worldId')
 
 	const { id, isLoaded, timeOrigin } = useSelector(
 		getWorldState,

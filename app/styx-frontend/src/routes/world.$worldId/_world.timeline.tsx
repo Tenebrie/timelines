@@ -6,6 +6,7 @@ import { TimelineTrackReporter } from '@/app/views/world/views/timeline/tracks/c
 
 const timelineSearchSchema = z.object({
 	selection: z.array(z.string()).default([]),
+	track: z.string().optional(),
 })
 
 export const Route = createFileRoute('/world/$worldId/_world/timeline')({

@@ -118,7 +118,7 @@ export type CreateWorldEventApiArg = {
 		revokedAt?: null | string
 		customName?: boolean
 		externalLink?: string
-		worldEventTrackId?: string
+		worldEventTrackId?: null | string
 		mentions?: {
 			targetId: string
 			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
