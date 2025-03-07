@@ -31,7 +31,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 	const isPreparingToDrag = useRef(false)
 	const rootPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
 	const dragFromPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
-	const [ghostElement, setGhostElement] = useState<ReturnType<typeof GhostWrapper> | null>(null)
+	const [ghostElement, setGhostElement] = useState<ReactNode | null>(null)
 	const containerRef = useRef<HTMLDivElement | null>(null)
 
 	const { getState, setStateQuietly, setStateImmediately, clearState } = useDragDropState()

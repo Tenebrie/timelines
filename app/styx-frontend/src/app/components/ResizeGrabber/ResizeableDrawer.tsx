@@ -21,7 +21,8 @@ type Props = {
 	keepMounted?: boolean
 	persistentStateKey: string
 	defaultOpen?: boolean
-	hotkey?: (typeof Shortcut)[keyof typeof Shortcut]
+	eventHandler?: ReactNode
+	hotkey?: () => (typeof Shortcut)[keyof typeof Shortcut]
 	onResize?: (height: number, visible: boolean) => void
 }
 
@@ -33,6 +34,7 @@ export function ResizeableDrawer({
 	keepMounted,
 	persistentStateKey,
 	defaultOpen,
+	eventHandler,
 	hotkey,
 	onResize,
 }: Props) {
@@ -63,10 +65,6 @@ export function ResizeableDrawer({
 		isDraggingChild,
 	} = grabberProps
 
-	useShortcut(hotkey ?? [], () => {
-		setVisible(!drawerVisible)
-	})
-
 	useShortcut(
 		Shortcut.Escape,
 		() => {
@@ -96,6 +94,7 @@ export function ResizeableDrawer({
 			setDrawerHeight={setHeight}
 			setDrawerVisible={setVisible}
 		>
+			{eventHandler}
 			<Paper
 				style={{
 					height,
@@ -133,7 +132,7 @@ export function ResizeableDrawer({
 				>
 					<ResizeableDrawerPulldown
 						label={pulldownLabel}
-						hotkey={hotkey}
+						hotkey={hotkey?.()}
 						width={pulldownWidth}
 						visible={!drawerVisible}
 						onClick={onPulldownClick}

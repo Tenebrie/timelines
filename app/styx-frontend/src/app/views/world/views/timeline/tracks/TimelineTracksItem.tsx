@@ -129,7 +129,7 @@ export function TimelineTracksItemComponent({
 					width: '100%',
 					height: '100%',
 					pointerEvents: 'none',
-					opacity: trackActive ? 0.2 : 0,
+					opacity: trackActive ? 0.1 : 0,
 					transition: 'opacity 0.3s',
 					background: theme.material.palette.primary.main,
 				}}

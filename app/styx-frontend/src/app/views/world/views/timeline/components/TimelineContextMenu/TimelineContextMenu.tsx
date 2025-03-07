@@ -199,11 +199,11 @@ export const TimelineContextMenuComponent = () => {
 				</MenuItem>
 			)}
 			{!targetedMarker && selectedMarker && <Divider />}
-			{!targetedMarker && selectedMarker && selectedMarker.markerType !== 'revokedAt' && (
+			{/* {!targetedMarker && selectedMarker && selectedMarker.markerType !== 'revokedAt' && (
 				<MenuItem onClick={onReplaceSelectedEvent}>
 					<ListItemText primary="Create data point" />
 				</MenuItem>
-			)}
+			)} */}
 			{!targetedMarker && selectedMarker && (
 				<MenuItem onClick={onResolveSelectedEvent}>
 					<ListItemText primary="Resolve event" />

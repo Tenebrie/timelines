@@ -7,6 +7,7 @@ import { MentionDetails } from '@/api/types/types'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 import { getWorldState } from '../../views/world/WorldSliceSelectors'
+import { useEventBusSubscribe } from '../eventBus'
 import { getWikiPreferences } from '../preferences/PreferencesSliceSelectors'
 import { EditorExtensions } from './extensions/config'
 import { FadeInOverlay } from './extensions/mentions/components/FadeInOverlay/FadeInOverlay'
@@ -151,6 +152,19 @@ export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allo
 	useEffect(() => {
 		editor?.setEditable(!isReadMode)
 	}, [editor, isReadMode])
+
+	useEventBusSubscribe({
+		event: 'richEditor/requestFocus',
+		callback: () => {
+			editor?.commands.focus()
+		},
+	})
+	useEventBusSubscribe({
+		event: 'richEditor/requestBlur',
+		callback: () => {
+			editor?.commands.blur()
+		},
+	})
 
 	return (
 		<StyledContainer

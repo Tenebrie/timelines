@@ -1,10 +1,12 @@
 import { MarkerType, TimelineEntity } from '@api/types/types'
-import classNames from 'classnames'
+import Close from '@mui/icons-material/Close'
 import { CSSProperties, memo } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
+import { getOverviewPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { LineSpacing } from '@/app/utils/constants'
@@ -12,7 +14,7 @@ import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineSt
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { Group } from '../styles'
-import { Marker } from './styles'
+import { Marker, MarkerIcon } from './styles'
 import { TimelineEvent } from './TimelineEvent'
 
 type Props = {
@@ -34,6 +36,7 @@ function TimelineEventPositionerComponent({
 }: Props) {
 	const { getIconPath } = useEventIcons()
 	const theme = useCustomTheme()
+	const { panelOpen } = useSelector(getOverviewPreferences)
 
 	const cssVariables = {
 		'--border-color': 'gray',
@@ -50,7 +53,7 @@ function TimelineEventPositionerComponent({
 			left: 'center',
 		},
 		adjustPosition: (pos) => {
-			const scroll = TimelineState.scroll
+			const scroll = TimelineState.scroll - (panelOpen ? 0 : 8)
 			const b = -scroll % LineSpacing
 			const posTimestamp = pos.x + b
 			const roundedValue = Math.round(posTimestamp / LineSpacing) * LineSpacing
@@ -73,17 +76,13 @@ function TimelineEventPositionerComponent({
 						overflow: 'hidden',
 					}}
 				></div>
-				<Marker
-					$theme={theme}
-					style={cssVariables}
-					className={classNames({
-						revoked: entity.markerType === 'revokedAt',
-						replace: entity.markerType === 'deltaState' || entity.markerType === 'ghostDelta',
-						ghostEvent: entity.markerType === 'issuedAt' || entity.markerType === 'revokedAt',
-						ghostDelta: entity.markerType === 'deltaState',
-					})}
-				>
-					<div className="icon image"></div>
+				<Marker $theme={theme} style={cssVariables}>
+					<MarkerIcon className="icon image"></MarkerIcon>
+					{entity.markerType === 'revokedAt' && (
+						<MarkerIcon className="icon">
+							<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
+						</MarkerIcon>
+					)}
 				</Marker>
 			</>
 		),

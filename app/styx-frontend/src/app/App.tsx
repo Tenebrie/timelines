@@ -2,6 +2,7 @@ import { Outlet } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
+import { DragDropPortalSlot } from './features/dragDrop/components/GhostWrapper'
 import { LostConnectionAlert } from './features/liveUpdates/components/LostConnectionAlert'
 import { useLiveUpdates } from './features/liveUpdates/hooks/useLiveUpdates'
 import { ModalsRenderer } from './features/modals/ModalsRenderer'
@@ -45,6 +46,7 @@ const App = () => {
 				</CustomThemeOverrides>
 			</CustomThemeProvider>
 			<NavigationReceiverWrapper />
+			<DragDropPortalSlot />
 			<PageMetadata />
 		</div>
 	)

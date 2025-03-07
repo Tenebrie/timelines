@@ -28,6 +28,8 @@ export type AllowedEvents =
 	| 'richEditor/forceUpdateEvent'
 	| 'richEditor/forceUpdateActor'
 	| 'richEditor/forceUpdateArticle'
+	| 'richEditor/requestFocus'
+	| 'richEditor/requestBlur'
 
 type ScrollTimelineToParams =
 	| {
@@ -79,4 +81,6 @@ export type EventParams = {
 	['richEditor/forceUpdateArticle']: {
 		articleId: string
 	}
+	['richEditor/requestFocus']: void
+	['richEditor/requestBlur']: void
 }

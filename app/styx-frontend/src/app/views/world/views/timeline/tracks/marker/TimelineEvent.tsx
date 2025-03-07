@@ -43,7 +43,11 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 				})
 			} else {
 				navigate({
-					search: (prev) => ({ ...prev, selection: [...(multiselect ? prev.selection : []), entity.key] }),
+					search: (prev) => ({
+						...prev,
+						selection: [...(multiselect ? prev.selection : []), entity.key],
+						track: entity.worldEventTrackId ?? undefined,
+					}),
 				})
 			}
 		},
@@ -128,14 +132,11 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 				selected,
 			})}
 		>
-			{entity.markerType !== 'revokedAt' && <MarkerIcon className="icon image"></MarkerIcon>}
+			<MarkerIcon className="icon image"></MarkerIcon>
 			{entity.markerType === 'revokedAt' && (
-				<>
-					<MarkerIcon className="icon image"></MarkerIcon>
-					<MarkerIcon className="icon">
-						<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
-					</MarkerIcon>
-				</>
+				<MarkerIcon className="icon">
+					<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
+				</MarkerIcon>
 			)}
 		</RenderedMarker>
 	)

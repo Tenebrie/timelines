@@ -6,6 +6,7 @@ import { useEventBusDispatch } from '@/app/features/eventBus'
 import { Shortcut } from '@/app/hooks/useShortcut/useShortcutManager'
 
 import { EventTracksMenu } from './details/EventTracksMenu'
+import { TracksDrawerHotkeys } from './TracksDrawerHotkeys'
 
 export const TracksDrawer = memo(TracksDrawerComponent)
 
@@ -27,7 +28,8 @@ function TracksDrawerComponent() {
 			minHeight={230}
 			persistentStateKey="tracksDrawerState/v1"
 			onResize={onResize.current}
-			hotkey={Shortcut.TracksMenu}
+			eventHandler={<TracksDrawerHotkeys />}
+			hotkey={() => Shortcut.TracksMenu}
 		>
 			<EventTracksMenu />
 		</ResizeableDrawer>
