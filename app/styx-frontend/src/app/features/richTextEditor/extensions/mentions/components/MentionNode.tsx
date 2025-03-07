@@ -107,7 +107,7 @@ export const MentionNode = Node.create({
 				const Component = () => {
 					useEffectOnce(() => {
 						dispatchEvent({
-							event: 'richEditor/mentionRender/end',
+							event: 'richEditor/mentionRender/onEnd',
 							params: { node },
 						})
 					})
@@ -134,7 +134,7 @@ export const MentionNode = Node.create({
 				{ timeout: 100 },
 			)
 			dispatchEvent({
-				event: 'richEditor/mentionRender/start',
+				event: 'richEditor/mentionRender/onStart',
 				params: { node: initialNode },
 			})
 
@@ -142,12 +142,12 @@ export const MentionNode = Node.create({
 				dom,
 				update: (node) => {
 					dispatchEvent({
-						event: 'richEditor/mentionRender/end',
+						event: 'richEditor/mentionRender/onEnd',
 						params: { node: lastNode },
 					})
 					lastNode = node
 					dispatchEvent({
-						event: 'richEditor/mentionRender/start',
+						event: 'richEditor/mentionRender/onStart',
 						params: { node },
 					})
 					rerender(node)
@@ -155,13 +155,13 @@ export const MentionNode = Node.create({
 				},
 				destroy: () => {
 					dispatchEvent({
-						event: 'richEditor/mentionRender/end',
+						event: 'richEditor/mentionRender/onEnd',
 						params: { node: lastNode },
 					})
 					requestIdleCallback(() => {
 						root?.unmount()
 						dispatchEvent({
-							event: 'richEditor/mentionRender/end',
+							event: 'richEditor/mentionRender/onEnd',
 							params: { node: lastNode },
 						})
 					})

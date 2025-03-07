@@ -5,29 +5,29 @@ import { ActorDetails, MarkerType, TimelineEntity, WorldEvent } from '@/api/type
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
 export type AllowedEvents =
-	| 'scrollTimelineTo'
-	| 'scrollTimelineLeft'
-	| 'scrollTimelineRight'
+	| 'timeline/onScroll'
+	| 'timeline/onMarkerHovered'
+	| 'timeline/requestScrollTo'
+	| 'timeline/requestScrollLeft'
+	| 'timeline/requestScrollRight'
 	| 'timeline/requestZoom'
-	| 'timeline/openEventDrawer'
-	| 'timeline/closeEventDrawer'
-	| 'timeline/markerHovered'
-	| 'mindmap/openActorDrawer'
-	| 'outliner/tracksDrawerResized'
-	| 'outliner/entityDrawerResized'
-	| 'sendCalliopeMessage'
-	| 'calliopeReconnected'
-	| 'timelineScrolled'
-	| 'richEditor/openMentions'
-	| 'richEditor/updateMentions'
-	| 'richEditor/closeMentions'
-	| 'richEditor/keyDown'
-	| 'navigate/world'
+	| 'timeline/eventDrawer/onResize'
+	| 'timeline/eventDrawer/requestOpen'
+	| 'timeline/eventDrawer/requestClose'
+	| 'timeline/tracksDrawer/onResize'
+	| 'mindmap/actorDrawer/requestOpen'
+	| 'world/requestNavigation'
+	| 'calliope/onReconnected'
+	| 'calliope/requestSendMessage'
+	| 'richEditor/onKeyDown'
+	| 'richEditor/requestOpenMentions'
+	| 'richEditor/requestUpdateMentions'
+	| 'richEditor/requestCloseMentions'
+	| 'richEditor/mentionRender/onStart'
+	| 'richEditor/mentionRender/onEnd'
 	| 'richEditor/forceUpdateEvent'
 	| 'richEditor/forceUpdateActor'
 	| 'richEditor/forceUpdateArticle'
-	| 'richEditor/mentionRender/start'
-	| 'richEditor/mentionRender/end'
 
 type ScrollTimelineToParams =
 	| {
@@ -40,30 +40,30 @@ type ScrollTimelineToParams =
 	  }
 
 export type EventParams = {
-	['scrollTimelineTo']: ScrollTimelineToParams
-	['scrollTimelineLeft']: void
-	['scrollTimelineRight']: void
+	['timeline/requestScrollTo']: ScrollTimelineToParams
+	['timeline/requestScrollLeft']: void
+	['timeline/requestScrollRight']: void
 	['timeline/requestZoom']: { direction: 'in' | 'out' }
-	['timeline/openEventDrawer']: { extraHeight?: number }
-	['timeline/closeEventDrawer']: void
-	['timeline/markerHovered']: { marker: TimelineEntity<MarkerType>; hover: boolean }
-	['mindmap/openActorDrawer']: { extraHeight?: number }
-	['outliner/tracksDrawerResized']: { height: number }
-	['outliner/entityDrawerResized']: { height: number }
-	['sendCalliopeMessage']: ClientToCalliopeMessage
-	['calliopeReconnected']: void
-	['timelineScrolled']: number
-	['richEditor/openMentions']: { query: string; screenPosTop: number; screenPosLeft: number }
-	['richEditor/updateMentions']: { query: string }
-	['richEditor/closeMentions']: void
-	['richEditor/keyDown']: {
+	['timeline/eventDrawer/requestOpen']: { extraHeight?: number }
+	['timeline/eventDrawer/requestClose']: void
+	['timeline/onMarkerHovered']: { marker: TimelineEntity<MarkerType>; hover: boolean }
+	['mindmap/actorDrawer/requestOpen']: { extraHeight?: number }
+	['timeline/tracksDrawer/onResize']: { height: number }
+	['timeline/eventDrawer/onResize']: { height: number }
+	['calliope/requestSendMessage']: ClientToCalliopeMessage
+	['calliope/onReconnected']: void
+	['timeline/onScroll']: number
+	['richEditor/requestOpenMentions']: { query: string; screenPosTop: number; screenPosLeft: number }
+	['richEditor/requestUpdateMentions']: { query: string }
+	['richEditor/requestCloseMentions']: void
+	['richEditor/onKeyDown']: {
 		key: string
 		ctrlKey: boolean
 		shiftKey: boolean
 		altKey: boolean
 		metaKey: boolean
 	}
-	['navigate/world']: NavigateOptions
+	['world/requestNavigation']: NavigateOptions
 	['richEditor/forceUpdateEvent']: {
 		event: WorldEvent
 	}
@@ -73,10 +73,10 @@ export type EventParams = {
 	['richEditor/forceUpdateArticle']: {
 		articleId: string
 	}
-	['richEditor/mentionRender/start']: {
+	['richEditor/mentionRender/onStart']: {
 		node: ProseMirrorNode
 	}
-	['richEditor/mentionRender/end']: {
+	['richEditor/mentionRender/onEnd']: {
 		node: ProseMirrorNode
 	}
 }

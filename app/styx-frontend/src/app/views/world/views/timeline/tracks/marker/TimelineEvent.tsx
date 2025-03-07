@@ -32,8 +32,8 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 
 	const { getIconPath } = useEventIcons()
-	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
-	const openEventDrawer = useEventBusDispatch({ event: 'timeline/openEventDrawer' })
+	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
+	const openEventDrawer = useEventBusDispatch({ event: 'timeline/eventDrawer/requestOpen' })
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {

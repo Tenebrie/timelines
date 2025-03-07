@@ -15,7 +15,7 @@ export const EventDrawer = memo(EventDrawerComponent)
 function EventDrawerComponent() {
 	const theme = useCustomTheme()
 	const { mode } = useCurrentOrNewEvent()
-	const notifyAboutHeightChange = useEventBusDispatch({ event: 'outliner/entityDrawerResized' })
+	const notifyAboutHeightChange = useEventBusDispatch({ event: 'timeline/eventDrawer/onResize' })
 
 	const onResize = useRef(
 		debounce((h: number, v: boolean) => {
@@ -27,7 +27,7 @@ function EventDrawerComponent() {
 
 	return (
 		<ResizeableDrawer
-			pulldownWidth={140}
+			pulldownWidth={150}
 			pulldownLabel={mode === 'edit' ? 'Edit event' : <>New event</>}
 			minHeight={235}
 			persistentStateKey="entityDrawerState/v1"

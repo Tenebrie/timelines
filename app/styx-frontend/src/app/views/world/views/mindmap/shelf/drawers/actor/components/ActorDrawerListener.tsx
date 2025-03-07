@@ -5,7 +5,7 @@ export function ActorDrawerListener() {
 	const { height, minHeight, setDrawerHeight, setDrawerVisible } = useResizeableDrawer()
 
 	useEventBusSubscribe({
-		event: 'mindmap/openActorDrawer',
+		event: 'mindmap/actorDrawer/requestOpen',
 		callback: ({ extraHeight }) => {
 			setDrawerVisible(true)
 			if (extraHeight) {

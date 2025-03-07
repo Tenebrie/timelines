@@ -40,7 +40,7 @@ export function MentionsListComponent({ editor }: Props) {
 	const lastItemIndex = quickCreateVisible ? mentions.length + 2 : mentions.length - 1
 
 	useEventBusSubscribe({
-		event: 'richEditor/openMentions',
+		event: 'richEditor/requestOpenMentions',
 		callback: ({ query, screenPosTop, screenPosLeft }) => {
 			if (!editor) {
 				return
@@ -54,13 +54,13 @@ export function MentionsListComponent({ editor }: Props) {
 		},
 	})
 	useEventBusSubscribe({
-		event: 'richEditor/updateMentions',
+		event: 'richEditor/requestUpdateMentions',
 		callback: ({ query }) => {
 			setQuery(query)
 		},
 	})
 	useEventBusSubscribe({
-		event: 'richEditor/closeMentions',
+		event: 'richEditor/requestCloseMentions',
 		callback: () => {
 			setVisible(false)
 			setSelectedIndex(0)
@@ -112,7 +112,7 @@ export function MentionsListComponent({ editor }: Props) {
 	}
 
 	useEventBusSubscribe({
-		event: 'richEditor/keyDown',
+		event: 'richEditor/onKeyDown',
 		callback: async ({ key, shiftKey }) => {
 			if (key === 'ArrowUp' || (key === 'Tab' && shiftKey)) {
 				setSelectedIndex((prev) => Math.max(prev - 1, 0))

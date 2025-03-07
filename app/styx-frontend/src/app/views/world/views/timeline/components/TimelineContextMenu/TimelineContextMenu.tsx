@@ -8,6 +8,7 @@ import { useNavigate, useSearch } from '@tanstack/react-router'
 import { memo, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { worldSlice } from '@/app/views/world/WorldSlice'
@@ -46,6 +47,8 @@ export const TimelineContextMenuComponent = () => {
 	)
 
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
+	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
+	const openEventDrawer = useEventBusDispatch({ event: 'timeline/eventDrawer/requestOpen' })
 
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 
@@ -61,11 +64,13 @@ export const TimelineContextMenuComponent = () => {
 
 	const onCreateEvent = useCallback(() => {
 		onClose()
-		// navigate({
-		// 	to: '/world/$worldId/timeline/event/create',
-		// 	search: (prev) => ({ ...prev, time: selectedTime }),
-		// })
-	}, [onClose, navigate, selectedTime])
+		navigate({
+			to: '/world/$worldId/timeline',
+			search: (prev) => ({ ...prev, time: selectedTime }),
+		})
+		scrollTimelineTo({ timestamp: selectedTime })
+		openEventDrawer({})
+	}, [onClose, navigate, scrollTimelineTo, selectedTime, openEventDrawer])
 
 	const onReplaceSelectedEvent = useCallback(() => {
 		onClose()

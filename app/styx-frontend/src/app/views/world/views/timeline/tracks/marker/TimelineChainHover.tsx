@@ -69,7 +69,7 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 					width: `calc(100% - 24px - ${rightBorder ? 0 : 10}px)`,
 					height: 'calc(100% - 2px)',
 					paddingRight: '-8px',
-					background: theme.custom.palette.background.soft,
+					background: theme.custom.palette.background.timelineMarkerTail,
 					display: 'flex',
 					opacity: dist > 1 && chainVisible ? 1 : 0,
 					paddingLeft: '20px',

@@ -155,6 +155,7 @@ export const customLightTheme = {
 			navigator: '#fff',
 			paperActual: '#fff',
 			timelineMarker: '#fff',
+			timelineMarkerTail: '#ddd',
 		},
 	},
 }
@@ -178,6 +179,7 @@ export const customDarkTheme: typeof customLightTheme = {
 			navigator: '#22333b',
 			paperActual: '#324048',
 			timelineMarker: '#0a0908',
+			timelineMarkerTail: '#39484f',
 		},
 	},
 }

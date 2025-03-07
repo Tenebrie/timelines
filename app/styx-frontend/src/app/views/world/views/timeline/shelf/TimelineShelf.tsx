@@ -15,7 +15,7 @@ export const TimelineShelf = () => {
 			<Stack sx={{ width: '100%', maxWidth: '500px' }}>
 				<TracksDrawer />
 			</Stack>
-			<Stack sx={{ width: '100%', maxWidth: '600px' }}>
+			<Stack sx={{ width: '100%', maxWidth: '1000px' }}>
 				<EventDrawer />
 			</Stack>
 		</Stack>

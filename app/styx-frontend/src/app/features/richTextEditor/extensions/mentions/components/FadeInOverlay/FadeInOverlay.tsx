@@ -24,7 +24,7 @@ export const FadeInOverlay = ({ content, isReadMode }: Props) => {
 	const waitForRenderTimeoutRef = useRef<number | null>(null)
 
 	useEventBusSubscribe({
-		event: 'richEditor/mentionRender/start',
+		event: 'richEditor/mentionRender/onStart',
 		callback: ({ node }) => {
 			if (!progressElementsRendering.current.includes(node)) {
 				progressElementsRendering.current.push(node)
@@ -42,7 +42,7 @@ export const FadeInOverlay = ({ content, isReadMode }: Props) => {
 	})
 
 	useEventBusSubscribe({
-		event: 'richEditor/mentionRender/end',
+		event: 'richEditor/mentionRender/onEnd',
 		callback: ({ node }) => {
 			elementsRendering.current = elementsRendering.current.filter((element) => element !== node)
 			progressElementsRendering.current = progressElementsRendering.current.filter(

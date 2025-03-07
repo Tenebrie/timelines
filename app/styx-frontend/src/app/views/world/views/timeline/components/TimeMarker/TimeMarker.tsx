@@ -41,7 +41,7 @@ export const TimeMarker = ({ timestamp }: Props) => {
 		updatePosition(TimelineState.scroll)
 	}, [timestamp, updatePosition])
 
-	useEventBusSubscribe({ event: 'timelineScrolled', callback: (newScroll) => updatePosition(newScroll) })
+	useEventBusSubscribe({ event: 'timeline/onScroll', callback: (newScroll) => updatePosition(newScroll) })
 
 	return (
 		<Box ref={ref} sx={{ height: '100%', transform: 'translateX(var(--marker-scroll))' }}>

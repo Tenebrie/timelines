@@ -11,7 +11,7 @@ type Props = {
 
 export const EventMentionChip = ({ worldId, eventId, events }: Props) => {
 	const navigateTo = useEventBusDispatch({
-		event: 'navigate/world',
+		event: 'world/requestNavigation',
 	})
 
 	const event = events.find((event) => event.id === eventId)

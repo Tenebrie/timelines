@@ -13,14 +13,14 @@ export const HoveredTimelineEvents = {
 
 	hoverEvent: (marker: TimelineEntity<MarkerType>) => {
 		HoveredTimelineEvents.events.push(marker)
-		dispatchEvent({ event: 'timeline/markerHovered', params: { hover: true, marker } })
+		dispatchEvent({ event: 'timeline/onMarkerHovered', params: { hover: true, marker } })
 	},
 
 	unhoverEvent: (marker: TimelineEntity<MarkerType>) => {
 		HoveredTimelineEvents.events = HoveredTimelineEvents.events.filter(
 			(hoveredEvent) => hoveredEvent.id !== marker.id,
 		)
-		dispatchEvent({ event: 'timeline/markerHovered', params: { hover: false, marker } })
+		dispatchEvent({ event: 'timeline/onMarkerHovered', params: { hover: false, marker } })
 	},
 
 	hoverEdgeScroller: (side: 'left' | 'right') => {
@@ -39,7 +39,7 @@ export const useHoveredTimelineMarker = (target: TimelineEntity<MarkerType>) => 
 	const [lastHovered, setLastHovered] = useState(false)
 
 	useEventBusSubscribe({
-		event: 'timeline/markerHovered',
+		event: 'timeline/onMarkerHovered',
 		callback: ({ marker, hover }) => {
 			if (target.key === marker.key) {
 				setHovered(hover)

@@ -5,7 +5,7 @@ export function EventDrawerListener() {
 	const { height, minHeight, setDrawerHeight, setDrawerVisible } = useResizeableDrawer()
 
 	useEventBusSubscribe({
-		event: 'timeline/openEventDrawer',
+		event: 'timeline/eventDrawer/requestOpen',
 		callback: ({ extraHeight }) => {
 			setDrawerVisible(true)
 			if (extraHeight) {
@@ -15,7 +15,7 @@ export function EventDrawerListener() {
 	})
 
 	useEventBusSubscribe({
-		event: 'timeline/closeEventDrawer',
+		event: 'timeline/eventDrawer/requestClose',
 		callback: () => {
 			setDrawerVisible(false)
 		},

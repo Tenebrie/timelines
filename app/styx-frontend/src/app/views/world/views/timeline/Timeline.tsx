@@ -34,7 +34,7 @@ function TimelineComponent() {
 	const { onContextMenu } = useTimelineContextMenu()
 	const { containerRef, containerWidth } = useTimelineDimensions()
 
-	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
+	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
 
 	useEffectOnce(() => {
 		scrollTimelineTo({ timestamp: selectedTime, skipAnim: true })

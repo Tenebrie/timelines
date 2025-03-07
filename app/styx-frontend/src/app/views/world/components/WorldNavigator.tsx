@@ -13,7 +13,7 @@ import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 export const WorldNavigator = memo(WorldNavigatorComponent)
 
 export function WorldNavigatorComponent() {
-	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
+	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
 	const navigate = useNavigate({ from: '/world/$worldId' })
 
 	const { timeOrigin } = useSelector(getWorldState, (a, b) => a.timeOrigin === b.timeOrigin)

@@ -6,7 +6,7 @@ export const useNavigationReceiver = () => {
 	const navigate = useNavigate({ from: '/world/$worldId' })
 
 	useEventBusSubscribe({
-		event: 'navigate/world',
+		event: 'world/requestNavigation',
 		callback: (params) => {
 			navigate({
 				search: true,

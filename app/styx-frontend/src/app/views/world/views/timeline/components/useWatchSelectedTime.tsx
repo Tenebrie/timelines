@@ -6,7 +6,7 @@ import { useEventBusDispatch } from '@/app/features/eventBus'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 
 export function useWatchSelectedTime() {
-	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
+	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
 	const search = useSearch({
 		from: '/world/$worldId/_world/timeline',
 		select: (search) => ({

@@ -62,7 +62,7 @@ export const useTimelineNavigation = ({
 	const maximumScroll = useMemo(() => maximumTime / scalar / 1000 / 60, [scalar])
 
 	const lastScroll = useRef<number | null>(null)
-	const notifyTimelineScrolled = useEventBusDispatch({ event: 'timelineScrolled' })
+	const notifyTimelineScrolled = useEventBusDispatch({ event: 'timeline/onScroll' })
 	const isBusyRendering = useRef(false)
 
 	const setScroll = useCallback(
@@ -533,7 +533,7 @@ export const useTimelineNavigation = ({
 
 	/* External scrollTo */
 	useEventBusSubscribe({
-		event: 'scrollTimelineTo',
+		event: 'timeline/requestScrollTo',
 		callback: (props) => {
 			startTransition(() => {
 				if ('rawScrollValue' in props) {

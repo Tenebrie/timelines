@@ -18,7 +18,7 @@ export function EventColorIconPicker({ draft }: Props) {
 		(a, b) => a.eventColorPickerOpen === b.eventColorPickerOpen,
 	)
 
-	const openEventDrawer = useEventBusDispatch({ event: 'timeline/openEventDrawer' })
+	const openEventDrawer = useEventBusDispatch({ event: 'timeline/eventDrawer/requestOpen' })
 	const { setEventColorPickerOpen } = preferencesSlice.actions
 	const dispatch = useDispatch()
 

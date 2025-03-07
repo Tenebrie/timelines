@@ -16,7 +16,7 @@ export const ProgressBar = ({ elementsRendering }: Props) => {
 	const maxValueRef = useRef(0)
 
 	useEventBusSubscribe({
-		event: 'richEditor/mentionRender/start',
+		event: 'richEditor/mentionRender/onStart',
 		callback: ({ node }) => {
 			maxValueRef.current = Math.max(maxValueRef.current, elementsRendering.current.length)
 			if (maxValueRef.current === 0) {
@@ -39,7 +39,7 @@ export const ProgressBar = ({ elementsRendering }: Props) => {
 	})
 
 	useEventBusSubscribe({
-		event: 'richEditor/mentionRender/end',
+		event: 'richEditor/mentionRender/onEnd',
 		callback: ({ node }) => {
 			if (maxValueRef.current === 0) {
 				return

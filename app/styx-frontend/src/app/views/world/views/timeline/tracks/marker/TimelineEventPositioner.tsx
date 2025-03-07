@@ -95,7 +95,7 @@ function TimelineEventPositionerComponent({
 		1
 
 	useEventBusSubscribe({
-		event: 'timelineScrolled',
+		event: 'timeline/onScroll',
 		callback: (newScroll) => {
 			const pos =
 				realTimeToScaledTime(Math.round(entity.markerPosition)) + newScroll - TimelineEventHeightPx / 2 + 1

@@ -67,6 +67,14 @@ export function ResizeableDrawer({
 		setVisible(!drawerVisible)
 	})
 
+	useShortcut(
+		Shortcut.Escape,
+		() => {
+			setVisible(false)
+		},
+		drawerVisible,
+	)
+
 	useEffect(() => {
 		setPreferences({ height, visible: drawerVisible })
 	}, [drawerVisible, height, setPreferences])

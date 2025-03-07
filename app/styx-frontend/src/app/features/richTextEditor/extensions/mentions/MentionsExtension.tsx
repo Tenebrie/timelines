@@ -14,7 +14,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 				state.isOpen = true
 				const pos = props.editor.view.coordsAtPos(props.range.from)
 				dispatchEvent({
-					event: 'richEditor/openMentions',
+					event: 'richEditor/requestOpenMentions',
 					params: {
 						query: props.query,
 						screenPosTop: pos.top,
@@ -25,7 +25,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 
 			onUpdate(props) {
 				dispatchEvent({
-					event: 'richEditor/updateMentions',
+					event: 'richEditor/requestUpdateMentions',
 					params: { query: props.query },
 				})
 			},
@@ -37,14 +37,14 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 				if (props.event.key === 'Escape') {
 					state.isOpen = false
 					dispatchEvent({
-						event: 'richEditor/closeMentions',
+						event: 'richEditor/requestCloseMentions',
 						params: undefined,
 					})
 					return true
 				}
 				if (['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'PageUp', 'PageDown'].includes(props.event.key)) {
 					dispatchEvent({
-						event: 'richEditor/keyDown',
+						event: 'richEditor/onKeyDown',
 						params: {
 							key: props.event.key,
 							ctrlKey: props.event.ctrlKey,
@@ -61,7 +61,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 			onExit() {
 				state.isOpen = false
 				dispatchEvent({
-					event: 'richEditor/closeMentions',
+					event: 'richEditor/requestCloseMentions',
 					params: undefined,
 				})
 			},

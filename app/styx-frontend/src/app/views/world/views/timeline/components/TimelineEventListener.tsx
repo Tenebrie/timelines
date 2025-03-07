@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 
 import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { TimelineState } from '../utils/TimelineState'
@@ -12,7 +13,7 @@ type Props = {
 }
 
 export function TimelineEventListener({ containerWidth }: Props) {
-	const scrollTimelineTo = useEventBusDispatch({ event: 'scrollTimelineTo' })
+	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
 	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 
@@ -27,8 +28,11 @@ export function TimelineEventListener({ containerWidth }: Props) {
 		},
 		[scaledTimeToRealTime, scrollTimelineTo, containerWidth],
 	)
-	useEventBusSubscribe({ event: 'scrollTimelineLeft', callback: () => onScrollFullPage('left') })
-	useEventBusSubscribe({ event: 'scrollTimelineRight', callback: () => onScrollFullPage('right') })
+	useEventBusSubscribe({ event: 'timeline/requestScrollLeft', callback: () => onScrollFullPage('left') })
+	useEventBusSubscribe({ event: 'timeline/requestScrollRight', callback: () => onScrollFullPage('right') })
+
+	useShortcut(Shortcut.ScrollTimelineLeft, () => onScrollFullPage('left'))
+	useShortcut(Shortcut.ScrollTimelineRight, () => onScrollFullPage('right'))
 
 	return null
 }

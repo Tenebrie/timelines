@@ -247,7 +247,7 @@ function TimelineAnchorLineComponent(props: Props) {
 	const lastSeenScroll = useRef<number | null>(null)
 
 	useEventBusSubscribe({
-		event: 'timelineScrolled',
+		event: 'timeline/onScroll',
 		callback: (newScroll) => {
 			if (lastSeenScroll.current !== null && Math.abs(lastSeenScroll.current - newScroll) < 80) {
 				return

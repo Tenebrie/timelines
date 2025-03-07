@@ -7,6 +7,9 @@ export const Shortcut = {
 	Search: 't',
 	Escape: 'Escape',
 	CreateNew: 'n',
+	TracksMenu: 'r',
+	ScrollTimelineLeft: 'j',
+	ScrollTimelineRight: 'l',
 } as const
 
 export type ShortcutPriority = number | boolean
@@ -20,6 +23,9 @@ export const RegisteredShortcuts: Record<
 	[Shortcut.Search]: [],
 	[Shortcut.Escape]: [],
 	[Shortcut.CreateNew]: [],
+	[Shortcut.TracksMenu]: [],
+	[Shortcut.ScrollTimelineLeft]: [],
+	[Shortcut.ScrollTimelineRight]: [],
 }
 
 export const useShortcutManager = () => {
