@@ -1,6 +1,4 @@
 import Stack from '@mui/material/Stack'
-import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
 import { memo } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -20,12 +18,12 @@ export function OutlinerItemHeaderComponent() {
 	return (
 		<Stack>
 			<Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ margin: '1px' }}>
-				<Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
+				{/* <Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
 					<Tab label="All" />
 					<Tab label="Actors" />
 					<Tab label="Events" />
-					{/* <Tab label="Simplified" /> */}
-				</Tabs>
+					<Tab label="Simplified" /> 
+				</Tabs> */}
 				<OutlinerSearch />
 			</Stack>
 			<ContainedSpinner visible={search.isLoading} />

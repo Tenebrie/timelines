@@ -6,6 +6,7 @@ import throttle from 'lodash.throttle'
 import { CSSProperties, useEffect, useRef } from 'react'
 
 import { MindmapContent } from './MindmapContent'
+import { MindmapClickArea } from './workspace/MindmapClickArea'
 
 export function Mindmap() {
 	// Small grid: the base grid
@@ -102,7 +103,7 @@ export function Mindmap() {
 			const scaleFactor = Math.round(smallGridSpacing * newScale) / Math.round(smallGridSpacing * oldScale)
 			mouseState.gridOffsetX = centerX - scaleFactor * (centerX - mouseState.gridOffsetX)
 			mouseState.gridOffsetY = centerY - scaleFactor * (centerY - mouseState.gridOffsetY)
-			mouseState.gridScale = newScale
+			mouseState.gridScale *= scaleFactor
 			update()
 		}
 
@@ -131,11 +132,14 @@ export function Mindmap() {
 					overflow: 'hidden',
 				}}
 			>
+				<MindmapClickArea />
 				<Box
 					sx={{
 						position: 'absolute',
 						width: '100%',
 						height: '100%',
+						opacity: 0.2,
+						pointerEvents: 'none',
 						backgroundPosition: 'var(--grid-offset-x) var(--grid-offset-y)',
 						backgroundImage: `
 							/* Large grid lines */
@@ -165,6 +169,8 @@ export function Mindmap() {
 						height: '100%',
 						left: 'var(--grid-offset-x)',
 						top: 'var(--grid-offset-y)',
+						pointerEvents: 'none',
+						zIndex: 2,
 					}}
 				>
 					<MindmapContent />

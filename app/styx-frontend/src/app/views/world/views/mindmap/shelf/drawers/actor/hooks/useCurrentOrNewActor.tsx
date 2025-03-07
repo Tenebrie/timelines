@@ -17,6 +17,7 @@ export const useCurrentOrNewActor = () => {
 				mockActorModel({
 					worldId,
 					name: '',
+					title: '',
 					color: getRandomEntityColor(),
 					description: '',
 					descriptionRich: '',

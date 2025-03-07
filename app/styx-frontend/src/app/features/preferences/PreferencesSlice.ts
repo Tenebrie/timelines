@@ -43,6 +43,10 @@ export const preferencesSlice = createSlice({
 		},
 
 		/* Editing */
+		setActorColorPickerOpen: (state, { payload }: PayloadAction<boolean>) => {
+			state.editing.actorColorPickerOpen = payload
+			saveToLocalStorage(state)
+		},
 		setEventColorPickerOpen: (state, { payload }: PayloadAction<boolean>) => {
 			state.editing.eventColorPickerOpen = payload
 			saveToLocalStorage(state)

@@ -16,6 +16,7 @@ export const PreferencesStateSchema = z.object({
 	colorMode: z.union([z.literal('light'), z.literal('dark')]).default(defaultTheme),
 	editing: z
 		.object({
+			actorColorPickerOpen: z.boolean().default(false),
 			eventColorPickerOpen: z.boolean().default(false),
 		})
 		.default({}),

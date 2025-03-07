@@ -27,6 +27,7 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 	const navigate = useNavigate({ from: '/world/$worldId' })
 	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
 	const openEntityDrawer = useEventBusDispatch({ event: 'timeline/eventDrawer/requestOpen' })
+	const focusEditor = useEventBusDispatch({ event: 'richEditor/requestFocus' })
 
 	const dispatch = useDispatch()
 	const { collapseEventInOutliner, uncollapseEventInOutliner } = preferencesSlice.actions
@@ -55,6 +56,7 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 							})
 							scrollTimelineTo({ timestamp: event.timestamp })
 							openEntityDrawer({})
+							focusEditor()
 						}}
 						aria-label="Edit"
 					>

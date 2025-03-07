@@ -1,36 +1,35 @@
+import { CreateActorApiArg, useCreateActorMutation } from '@api/actorListApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { UpdateWorldEventApiArg, useUpdateWorldEventMutation } from '@/api/worldEventApi'
-import { ingestEvent } from '@/app/utils/ingestEntity'
+import { ingestActor } from '@/app/utils/ingestEntity'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-export const useUpdateEvent = () => {
+export const useCreateActor = () => {
 	const worldId = useSelector(getWorldIdState)
-	const [updateWorldEvent, state] = useUpdateWorldEventMutation()
+	const [createActor, state] = useCreateActorMutation()
 
-	const { updateEvent } = worldSlice.actions
+	const { addActor } = worldSlice.actions
 	const dispatch = useDispatch()
 
 	const perform = useCallback(
-		async (id: string, body: UpdateWorldEventApiArg['body']) => {
+		async (body: CreateActorApiArg['body']) => {
 			const { response, error } = parseApiResponse(
-				await updateWorldEvent({
+				await createActor({
 					worldId,
-					eventId: id,
 					body,
 				}),
 			)
 			if (error) {
 				return
 			}
-			const event = ingestEvent(response)
-			dispatch(updateEvent(event))
-			return event
+			const actor = ingestActor(response)
+			dispatch(addActor(actor))
+			return actor
 		},
-		[dispatch, updateEvent, updateWorldEvent, worldId],
+		[addActor, createActor, dispatch, worldId],
 	)
 
 	return [perform, state] as const

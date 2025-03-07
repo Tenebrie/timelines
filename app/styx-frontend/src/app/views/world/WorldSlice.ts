@@ -158,6 +158,9 @@ export const worldSlice = createSlice({
 			}
 			state.selectedActors = [...state.selectedActors, payload.id]
 		},
+		removeActor: (state, { payload }: PayloadAction<string>) => {
+			state.actors = state.actors.filter((e) => e.id !== payload)
+		},
 		removeActorFromSelection: (state, { payload }: PayloadAction<string>) => {
 			state.selectedActors = state.selectedActors.filter((event) => event !== payload)
 		},
