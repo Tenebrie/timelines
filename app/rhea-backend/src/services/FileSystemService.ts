@@ -20,6 +20,7 @@ export const FileSystemService = {
 	},
 
 	saveFile: async (buffer: Buffer) => {
+		await FileSystemService.createFolder('/rhea')
 		await FileSystemService.createFolder(RootPath)
 		return new Promise<string>((resolve, reject) => {
 			const filename = randomBytes(16).toString('hex')

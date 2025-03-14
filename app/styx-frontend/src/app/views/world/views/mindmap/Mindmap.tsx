@@ -1,7 +1,5 @@
-import Construction from '@mui/icons-material/Construction'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
 import throttle from 'lodash.throttle'
 import { CSSProperties, useEffect, useRef } from 'react'
 
@@ -176,26 +174,6 @@ export function Mindmap() {
 					<MindmapContent />
 				</Box>
 			</Box>
-			<Stack
-				sx={{
-					width: '100%',
-					height: '100%',
-					alignItems: 'center',
-					justifyContent: 'center',
-					userSelect: 'none',
-					pointerEvents: 'none',
-					zIndex: 1,
-				}}
-			>
-				<Typography variant="h3" component={'div'} sx={{ opacity: 0.05 }}>
-					<Stack direction="row" alignItems="center" justifyContent="center" gap={1}>
-						<Box sx={{ marginTop: 1.5 }}>
-							<Construction fontSize="inherit" />
-						</Box>
-						Under construction
-					</Stack>
-				</Typography>
-			</Stack>
 		</Stack>
 	)
 }
