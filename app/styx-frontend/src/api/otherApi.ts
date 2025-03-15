@@ -6,6 +6,15 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
+			getAsset: build.query<GetAssetApiResponse, GetAssetApiArg>({
+				query: (queryArg) => ({ url: `/api/assets/${queryArg.assetId}` }),
+			}),
+			requestPresignedUrl: build.mutation<RequestPresignedUrlApiResponse, RequestPresignedUrlApiArg>({
+				query: (queryArg) => ({ url: `/api/assets/upload/presigned`, method: 'POST', body: queryArg.body }),
+			}),
+			finalizeAssetUpload: build.mutation<FinalizeAssetUploadApiResponse, FinalizeAssetUploadApiArg>({
+				query: (queryArg) => ({ url: `/api/assets/upload/finalize`, method: 'POST', body: queryArg.body }),
+			}),
 			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
 				query: () => ({ url: `/api/constants/admin-levels` }),
 			}),
@@ -18,9 +27,11 @@ const injectedRtkApi = api
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
 			}),
-			convertImage: build.mutation<ConvertImageApiResponse, ConvertImageApiArg>({
-				query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
-			}),
+			requestImageConversion: build.mutation<RequestImageConversionApiResponse, RequestImageConversionApiArg>(
+				{
+					query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
+				},
+			),
 			getArticles: build.query<GetArticlesApiResponse, GetArticlesApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/wiki/articles` }),
 				providesTags: ['worldWiki'],
@@ -68,6 +79,57 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as otherApi }
+export type GetAssetApiResponse = /** status 200  */ {
+	url: string
+}
+export type GetAssetApiArg = {
+	/** Any string value */
+	assetId: string
+}
+export type RequestPresignedUrlApiResponse = /** status 200  */ {
+	asset: {
+		status: 'Pending' | 'Finalized' | 'Failed'
+		id: string
+		createdAt: string
+		updatedAt: string
+		ownerId: string
+		size: number
+		bucketKey: string
+		expiresAt?: null | string
+		originalFileName: string
+		originalFileExtension: string
+		contentType: 'Image'
+	}
+	url: string
+	fields: {
+		[key: string]: string
+	}
+}
+export type RequestPresignedUrlApiArg = {
+	body: {
+		fileName: string
+		fileSize: number
+		assetType: 'Image'
+	}
+}
+export type FinalizeAssetUploadApiResponse = /** status 200  */ {
+	status: 'Pending' | 'Finalized' | 'Failed'
+	id: string
+	createdAt: string
+	updatedAt: string
+	ownerId: string
+	size: number
+	bucketKey: string
+	expiresAt?: null | string
+	originalFileName: string
+	originalFileExtension: string
+	contentType: 'Image'
+}
+export type FinalizeAssetUploadApiArg = {
+	body: {
+		assetId: string
+	}
+}
 export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premium' | 'Admin')[]
 export type AdminGetUserLevelsApiArg = void
 export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
@@ -81,78 +143,23 @@ export type LoadFileApiArg = {
 }
 export type GetHealthApiResponse = unknown
 export type GetHealthApiArg = void
-export type ConvertImageApiResponse = /** status 200  */ {
-	metadata: {
-		orientation?: number
-		format?:
-			| 'png'
-			| 'jpg'
-			| 'jpeg'
-			| 'gif'
-			| 'webp'
-			| 'avif'
-			| 'dz'
-			| 'fits'
-			| 'heif'
-			| 'input'
-			| 'jp2'
-			| 'jxl'
-			| 'magick'
-			| 'openslide'
-			| 'pdf'
-			| 'ppm'
-			| 'raw'
-			| 'svg'
-			| 'tiff'
-			| 'tif'
-			| 'v'
-		size?: number
-		width?: number
-		height?: number
-		space?: 'multiband' | 'b-w' | 'bw' | 'cmyk' | 'srgb'
-		channels?: '3' | '4'
-		depth?: string
-		density?: number
-		chromaSubsampling?: string
-		isProgressive?: boolean
-		pages?: number
-		pageHeight?: number
-		loop?: number
-		delay?: number[]
-		pagePrimary?: number
-		hasProfile?: boolean
-		hasAlpha?: boolean
-		exif?: Blob
-		icc?: Blob
-		iptc?: Blob
-		xmp?: Blob
-		tifftagPhotoshop?: Blob
-		compression?: 'av1' | 'hevc'
-		background?:
-			| number
-			| {
-					r: number
-					g: number
-					b: number
-			  }
-		levels?: {
-			width: number
-			height: number
-		}[]
-		subifds?: number
-		resolutionUnit?: 'inch' | 'cm'
-		formatMagick?: string
-		comments?: {
-			keyword: string
-			text: string
-		}[]
-	}
-	path: string
+export type RequestImageConversionApiResponse = /** status 200  */ {
+	status: 'Pending' | 'Finalized' | 'Failed'
+	id: string
+	createdAt: string
+	updatedAt: string
+	ownerId: string
+	size: number
+	bucketKey: string
+	expiresAt?: null | string
+	originalFileName: string
+	originalFileExtension: string
+	contentType: 'Image'
 }
-export type ConvertImageApiArg = {
+export type RequestImageConversionApiArg = {
 	body: {
-		image: Blob
-		format?: string
+		assetId: string
+		format: string
 		width?: number
 		height?: number
 		quality?: number
@@ -268,6 +275,10 @@ export type BulkDeleteArticlesApiArg = {
 	}
 }
 export const {
+	useGetAssetQuery,
+	useLazyGetAssetQuery,
+	useRequestPresignedUrlMutation,
+	useFinalizeAssetUploadMutation,
 	useAdminGetUserLevelsQuery,
 	useLazyAdminGetUserLevelsQuery,
 	useListWorldAccessModesQuery,
@@ -276,7 +287,7 @@ export const {
 	useLazyLoadFileQuery,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,
-	useConvertImageMutation,
+	useRequestImageConversionMutation,
 	useGetArticlesQuery,
 	useLazyGetArticlesQuery,
 	useCreateArticleMutation,

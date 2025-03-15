@@ -23,6 +23,8 @@ model User {
 
     worlds          World[]
     collaboratingIn CollaboratingUser[]
+
+    assets Asset[]
 }
 
 model CollaboratingUser {

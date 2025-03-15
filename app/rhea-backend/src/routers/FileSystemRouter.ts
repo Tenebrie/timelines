@@ -1,4 +1,4 @@
-import { FileSystemService } from '@src/services/FileSystemService'
+import { FileSystemService } from '@src/services/filesystem/FileSystemService'
 import {
 	PathParam,
 	RequiredParam,

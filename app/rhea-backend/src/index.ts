@@ -7,6 +7,7 @@ import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'moonflower'
 import { ActorRouter } from './routers/ActorRouter'
 import { AdminRouter } from './routers/AdminRouter'
 import { AnnouncementRouter } from './routers/AnnouncementRouter'
+import { AssetUploadRouter } from './routers/AssetRouter'
 import { AuthRouter } from './routers/AuthRouter'
 import { ConstantsRouter } from './routers/ConstantsRouter'
 import { FileSystemRouter } from './routers/FileSystemRouter'
@@ -52,6 +53,8 @@ app
 	.use(AdminRouter.allowedMethods())
 	.use(AnnouncementRouter.routes())
 	.use(AnnouncementRouter.allowedMethods())
+	.use(AssetUploadRouter.routes())
+	.use(AssetUploadRouter.allowedMethods())
 	.use(AuthRouter.routes())
 	.use(AuthRouter.allowedMethods())
 	.use(ConstantsRouter.routes())

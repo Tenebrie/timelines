@@ -119,4 +119,16 @@ export const AuthorizationService = {
 		}
 		return false
 	},
+
+	checkUserAssetAccess: async (userId: string, assetId: string) => {
+		const count = await getPrismaClient().asset.count({
+			where: {
+				id: assetId,
+				ownerId: userId,
+			},
+		})
+		if (!count) {
+			throw new UnauthorizedError('No access to this asset')
+		}
+	},
 }

@@ -1,4 +1,3 @@
-import { useConvertImageMutation } from '@api/otherApi'
 import Input from '@mui/material/Input'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
@@ -7,21 +6,25 @@ import { useState } from 'react'
 
 import { FilePickerButton } from '@/app/components/FilePickerButton'
 import { FormErrorBanner } from '@/app/components/FormErrorBanner'
-import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useErrorState } from '@/app/utils/useErrorState'
 
+import { useFileUpload } from './useFileUpload'
+import { useGetPresignedDownloadUrl } from './useGetPresignedDownloadUrl'
+import { useRequestImageConversion } from './useRequestImageConversion'
 export function Tools() {
-	const [convertImage] = useConvertImageMutation()
 	const [lastConverted, setLastConverted] = useState<{
 		name: string
-		extension: string
-		path: string
+		href: string
 	} | null>(null)
 
 	const [quality, setQuality] = useState<number>(80)
 	const [width, setWidth] = useState<string>('')
 	const [height, setHeight] = useState<string>('')
 	const [format, setFormat] = useState<string>('webp')
+
+	const { uploadFile } = useFileUpload()
+	const [requestImageConversion] = useRequestImageConversion()
+	const [getPresignedDownloadUrl] = useGetPresignedDownloadUrl()
 
 	const errorState = useErrorState<{ conversionError: string }>()
 	const { raiseError, clearError } = errorState
@@ -41,30 +44,21 @@ export function Tools() {
 			}
 
 			try {
-				const { response, error } = parseApiResponse(
-					await convertImage({
-						body: {
-							// @ts-ignore
-							image: base64File,
-							format,
-							quality,
-							width: width.length > 0 ? Number(width) : undefined,
-							height: height.length > 0 ? Number(height) : undefined,
-						},
-					}),
-				)
-				if (error) {
-					raiseError('conversionError', error.message)
-					return
-				}
-				const nameWithoutExtension = file.name.split('.').slice(0, -1).join('.')
-				setLastConverted({
-					name: nameWithoutExtension,
-					extension: format,
-					path: response.path,
+				const asset = await uploadFile(file, 'Image')
+				const convertedAsset = await requestImageConversion({
+					assetId: asset.id,
+					format: format ?? 'webp',
+					quality: quality,
+					width: width ? Number(width) : undefined,
+					height: height ? Number(height) : undefined,
 				})
-			} catch (error) {
-				console.error(error)
+				const downloadUrl = await getPresignedDownloadUrl(convertedAsset.id)
+				setLastConverted({
+					name: `${convertedAsset.originalFileName}.${format ?? 'webp'}`,
+					href: downloadUrl.url,
+				})
+			} catch {
+				raiseError('conversionError', 'Failed to upload file')
 			}
 		}
 
@@ -99,11 +93,8 @@ export function Tools() {
 					<FilePickerButton onSelect={onFilesSelected} />
 				</Stack>
 				{lastConverted && (
-					<a
-						download={lastConverted.name}
-						href={`/api/fs/image/${lastConverted.extension}/${lastConverted.path}.${lastConverted.extension}`}
-					>
-						Download {lastConverted.name}.{lastConverted.extension ?? 'webp'}
+					<a download={lastConverted.name} href={lastConverted.href}>
+						Download {lastConverted.name}
 					</a>
 				)}
 				<FormErrorBanner errorState={errorState} />
