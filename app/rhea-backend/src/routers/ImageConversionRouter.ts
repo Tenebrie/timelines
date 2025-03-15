@@ -1,4 +1,5 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
+import { SUPPORTED_IMAGE_FORMATS } from '@src/schema/ImageFormat'
 import { AssetService } from '@src/services/AssetService'
 import { CloudStorageService } from '@src/services/filesystem/CloudStorageService'
 import { ImageService } from '@src/services/ImageService'
@@ -14,7 +15,20 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
+import { ImageFormatValidator } from './validators/ImageFormatValidator'
+
 const router = new Router()
+
+router.get('/api/images/formats', async () => {
+	useApiEndpoint({
+		name: 'getSupportedImageFormats',
+		description: 'Returns a list of supported image formats for conversion.',
+	})
+
+	return {
+		formats: SUPPORTED_IMAGE_FORMATS,
+	}
+})
 
 router.post('/api/images/convert', async (ctx) => {
 	useApiEndpoint({
@@ -24,7 +38,7 @@ router.post('/api/images/convert', async (ctx) => {
 
 	const body = useRequestBody(ctx, {
 		assetId: RequiredParam(StringValidator),
-		format: RequiredParam(StringValidator),
+		format: RequiredParam(ImageFormatValidator),
 		width: OptionalParam(NumberValidator),
 		height: OptionalParam(NumberValidator),
 		quality: OptionalParam(NumberValidator),

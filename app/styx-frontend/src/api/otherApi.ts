@@ -27,6 +27,12 @@ const injectedRtkApi = api
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
 			}),
+			getSupportedImageFormats: build.query<
+				GetSupportedImageFormatsApiResponse,
+				GetSupportedImageFormatsApiArg
+			>({
+				query: () => ({ url: `/api/images/formats` }),
+			}),
 			requestImageConversion: build.mutation<RequestImageConversionApiResponse, RequestImageConversionApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
@@ -143,6 +149,10 @@ export type LoadFileApiArg = {
 }
 export type GetHealthApiResponse = unknown
 export type GetHealthApiArg = void
+export type GetSupportedImageFormatsApiResponse = /** status 200  */ {
+	formats: ('webp' | 'jpeg' | 'png' | 'gif')[]
+}
+export type GetSupportedImageFormatsApiArg = void
 export type RequestImageConversionApiResponse = /** status 200  */ {
 	status: 'Pending' | 'Finalized' | 'Failed'
 	id: string
@@ -159,7 +169,7 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 export type RequestImageConversionApiArg = {
 	body: {
 		assetId: string
-		format: string
+		format: 'png' | 'jpeg' | 'gif' | 'webp'
 		width?: number
 		height?: number
 		quality?: number
@@ -287,6 +297,8 @@ export const {
 	useLazyLoadFileQuery,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,
+	useGetSupportedImageFormatsQuery,
+	useLazyGetSupportedImageFormatsQuery,
 	useRequestImageConversionMutation,
 	useGetArticlesQuery,
 	useLazyGetArticlesQuery,

@@ -1,9 +1,12 @@
 import Input from '@mui/material/Input'
+import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
+import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 
+import { RequestImageConversionApiArg, useGetSupportedImageFormatsQuery } from '@/api/otherApi'
 import { FilePickerButton } from '@/app/components/FilePickerButton'
 import { FormErrorBanner } from '@/app/components/FormErrorBanner'
 import { useErrorState } from '@/app/utils/useErrorState'
@@ -11,6 +14,9 @@ import { useErrorState } from '@/app/utils/useErrorState'
 import { useFileUpload } from './useFileUpload'
 import { useGetPresignedDownloadUrl } from './useGetPresignedDownloadUrl'
 import { useRequestImageConversion } from './useRequestImageConversion'
+
+type ImageFormat = RequestImageConversionApiArg['body']['format']
+
 export function Tools() {
 	const [lastConverted, setLastConverted] = useState<{
 		name: string
@@ -20,8 +26,9 @@ export function Tools() {
 	const [quality, setQuality] = useState<number>(80)
 	const [width, setWidth] = useState<string>('')
 	const [height, setHeight] = useState<string>('')
-	const [format, setFormat] = useState<string>('webp')
+	const [format, setFormat] = useState<ImageFormat>('webp')
 
+	const { data: formatData } = useGetSupportedImageFormatsQuery()
 	const { uploadFile } = useFileUpload()
 	const [requestImageConversion] = useRequestImageConversion()
 	const [getPresignedDownloadUrl] = useGetPresignedDownloadUrl()
@@ -47,14 +54,14 @@ export function Tools() {
 				const asset = await uploadFile(file, 'Image')
 				const convertedAsset = await requestImageConversion({
 					assetId: asset.id,
-					format: format ?? 'webp',
+					format,
 					quality: quality,
 					width: width ? Number(width) : undefined,
 					height: height ? Number(height) : undefined,
 				})
 				const downloadUrl = await getPresignedDownloadUrl(convertedAsset.id)
 				setLastConverted({
-					name: `${convertedAsset.originalFileName}.${format ?? 'webp'}`,
+					name: `${convertedAsset.originalFileName}.${format}`,
 					href: downloadUrl.url,
 				})
 			} catch {
@@ -87,8 +94,18 @@ export function Tools() {
 						<Input type="number" value={height} onChange={(event) => setHeight(event.target.value)} />
 					</Stack>
 					<Stack direction="row" alignItems="center" gap={1} justifyContent="space-between">
-						<Typography>Format (webp, jpeg, png, gif):</Typography>
-						<Input value={format} onChange={(event) => setFormat(event.target.value)} />
+						<Typography>Format:</Typography>
+						<Select
+							value={format}
+							onChange={(event) => setFormat(event.target.value as ImageFormat)}
+							sx={{ minWidth: 120 }}
+						>
+							{formatData?.formats.map((format) => (
+								<MenuItem key={format} value={format}>
+									{format}
+								</MenuItem>
+							))}
+						</Select>
 					</Stack>
 					<FilePickerButton onSelect={onFilesSelected} />
 				</Stack>

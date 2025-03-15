@@ -1,3 +1,4 @@
+import { ImageFormat } from '@src/schema/ImageFormat'
 import { BadRequestError } from 'moonflower'
 import * as sharp from 'sharp'
 
@@ -17,7 +18,7 @@ export const ImageService = {
 
 	convertImage: async (params: {
 		image: Buffer
-		format?: string
+		format: ImageFormat
 		width?: number
 		height?: number
 		quality?: number
@@ -27,7 +28,7 @@ export const ImageService = {
 			if (params.width && params.height) {
 				draft.resize(params.width, params.height)
 			}
-			const format = params.format ?? 'webp'
+			const format = params.format
 			const quality = params.quality ?? 80
 			switch (format) {
 				case 'webp':
@@ -43,7 +44,7 @@ export const ImageService = {
 					draft.gif({ colors: quality })
 					break
 				default:
-					throw new BadRequestError('Unsupported image format')
+					format satisfies never
 			}
 			return await draft.toBuffer()
 		} catch (error) {
