@@ -5,17 +5,17 @@ import { Asset, AssetStatus, AssetType, User, UserLevel } from '@prisma/client'
 import { BadRequestError } from 'moonflower'
 
 import { AssetService } from '../AssetService'
+import { SecretService } from '../SecretService'
 
-const BUCKET_ID = 'timelines-dev'
+const BUCKET_ID = SecretService.getSecret('s3-bucket-id')
 
 const s3Client = new S3Client({
-	forcePathStyle: false, // Configures to use subdomain/virtual calling format.
-	endpoint: 'https://fra1.digitaloceanspaces.com',
+	forcePathStyle: SecretService.getSecret('environment') === 'development',
+	endpoint: SecretService.getSecret('s3-endpoint'),
 	region: 'us-east-1',
 	credentials: {
-		// TODO: Add credentials
-		accessKeyId: '...',
-		secretAccessKey: '...',
+		accessKeyId: SecretService.getSecret('s3-access-key-id'),
+		secretAccessKey: SecretService.getSecret('s3-access-key-secret'),
 	},
 })
 
@@ -125,7 +125,9 @@ export const CloudStorageService = {
 			Expires: 1800, // 30 minutes
 		})
 
-		return { asset, url, fields: fields as Record<string, string> }
+		const publicUrl = url.replace('s3-minio:9000', 'localhost')
+
+		return { asset, url: publicUrl, fields: fields as Record<string, string> }
 	},
 
 	finalizeAssetUpload: async (assetId: string) => {
@@ -226,6 +228,8 @@ export const CloudStorageService = {
 			Key: asset.bucketKey,
 		})
 
-		return await getSignedUrl(s3Client, command, { expiresIn: expiresInSeconds })
+		const url = await getSignedUrl(s3Client, command, { expiresIn: expiresInSeconds })
+		const publicUrl = url.replace('s3-minio:9000', 'localhost')
+		return publicUrl
 	},
 }

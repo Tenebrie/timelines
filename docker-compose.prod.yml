@@ -52,6 +52,10 @@ services:
         secrets:
             - jwt-secret
             - environment
+            - s3-bucket-id
+            - s3-endpoint
+            - s3-access-key-id
+            - s3-access-key-secret
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
             interval: 30s
@@ -80,10 +84,17 @@ services:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached
             - /mnt/volume_rhea_postgres/backups:/backups:cached
 
-# docker secret create jwt-secret /mnt/volume_secrets/keys/jwt-secret.txt
-# echo "production" | docker secret create ENVIRONMENT -
+# See docs/Creating New Cluster.md
 secrets:
     jwt-secret:
         external: true
     environment:
+        external: true
+    s3-bucket-id:
+        external: true
+    s3-endpoint:
+        external: true
+    s3-access-key-id:
+        external: true
+    s3-access-key-secret:
         external: true

@@ -14,14 +14,15 @@ export function useBucketFileUpload() {
 		})
 		formData.append('file', file)
 
-		try {
-			await fetch(presignedUrl.url, {
-				method: 'POST',
-				body: formData,
-			})
-		} catch (error) {
-			console.error('Error uploading file:', error)
-			throw new Error('Failed to upload file', { cause: error })
+		const response = await fetch(presignedUrl.url, {
+			method: 'POST',
+			body: formData,
+		})
+
+		if (!response.ok) {
+			const text = await response.text()
+			console.error('Upload failed:', text)
+			throw new Error('Failed to upload file', { cause: { response, text } })
 		}
 	}, [])
 

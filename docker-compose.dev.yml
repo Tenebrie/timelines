@@ -8,16 +8,18 @@ services:
         networks:
             - dev_network
     styx:
-        build: 
-            context: ./ 
+        build:
+            context: ./
             args:
-                DOCKER_UID: ${DOCKER_UID} 
+                DOCKER_UID: ${DOCKER_UID}
                 DOCKER_GID: ${DOCKER_GID}
             dockerfile: ./app/styx-frontend/Dockerfile
         user: "${DOCKER_UID}:${DOCKER_GID}"
         environment:
             NODE_ENV: development
             DANGEROUSLY_DISABLE_HOST_CHECK: "true" # For React dev server to work behind Gatekeeper
+            # Fake docker secrets
+            environment: development
         volumes:
             - ./app/styx-frontend/src:/app/styx/src:cached
             - ./app/styx-frontend/public:/app/styx/public:cached
@@ -38,12 +40,18 @@ services:
             dockerfile: ./app/rhea-backend/Dockerfile
         environment:
             NODE_ENV: development
-            JWT_SECRET: secretkey
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
+            # Fake docker secrets
+            environment: development
+            jwt-secret: secretkey
+            s3-endpoint: http://s3-minio:9000
+            s3-bucket-id: bucket
+            s3-access-key-id: devuser
+            s3-access-key-secret: devsecret
         volumes:
             - ./app/rhea-backend/src:/app/rhea/src:cached
             - ./app/rhea-backend/prisma:/app/rhea/prisma:cached
-            - ./app/ts-shared/src:/app/ts-shared/src:cached 
+            - ./app/ts-shared/src:/app/ts-shared/src:cached
         ports:
             - 3000:3000
         networks:
@@ -57,7 +65,9 @@ services:
             dockerfile: ./app/calliope-websockets/Dockerfile
         environment:
             NODE_ENV: development
-            JWT_SECRET: secretkey
+            # Fake docker secrets
+            environment: development
+            jwt-secret: secretkey
         volumes:
             - ./app/calliope-websockets/src:/app/calliope/src:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached
@@ -85,9 +95,45 @@ services:
             - "6379:6379"
         networks:
             - dev_network
+    s3-minio:
+        image: minio/minio
+        ports:
+            - "9000:9000" # API
+            - "9001:9001" # Console
+        environment:
+            MINIO_ROOT_USER: admin
+            MINIO_ROOT_PASSWORD: adminpassword
+            MINIO_BROWSER_LOG_LEVEL: debug
+            MINIO_API_LOG_LEVEL: debug
+        volumes:
+            - minio_data:/data
+        command: server /data --console-address ":9001"
+        healthcheck:
+            test: [ "CMD", "curl", "-f", "http://s3-minio:9000/minio/health/live" ]
+            interval: 5s
+            timeout: 5s
+            retries: 3
+        networks:
+            - dev_network
+    s3-minio-setup:
+        image: minio/mc
+        depends_on:
+            s3-minio:
+                condition: service_healthy
+        entrypoint: >
+            /bin/sh -c "
+                mc alias set minio-dev http://s3-minio:9000 admin adminpassword;
+                mc mb --ignore-existing minio-dev/bucket;
+                mc admin user add minio-dev devuser devsecret;
+                mc admin policy attach minio-dev readwrite --user devuser;
+                echo 'MinIO setup completed successfully';
+            "
+        networks:
+            - dev_network
 volumes:
     redis:
     rhea-db:
+    minio_data:
 
 networks:
     dev_network:

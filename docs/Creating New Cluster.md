@@ -9,17 +9,11 @@ This is an unorganized doc with notes about what needs to be done for a new clus
   - `/mnt/volume_secrets`
     - Mount them under different names and create symlinks to those locations
 
-### Secrets
-
-- Generate a JWT auth key, place it into `/mnt/volume_secrets/keys/jwt-secret.txt`
-  - Just the key without formatting or anything
-- 
-`docker secret create jwt-secret /mnt/volume_secrets/keys/jwt-secret.txt`
-`echo "production" | docker secret create ENVIRONMENT -`
 
 ### S3
 - Set up a new Spaces bucket through the UI and grab a new access token.
-- Install AWS CLI:
+- Setup CORS policy in the UI.
+- Install AWS CLI in the manager-1 node:
   - `apt install awscli`
 - Setup credentials:
   - `aws configure`:
@@ -28,6 +22,23 @@ This is an unorganized doc with notes about what needs to be done for a new clus
 > AWS Secret Access Key [None]: [...]
 > Default region name [None]: fra1
 > Default output format [None]: json
+
+### Secrets
+
+- Specify the environment secret
+  - All deployments are considered to be "production"
+  - `echo "production" | docker secret create environment -`
+
+- Generate a JWT auth key, place it into `/mnt/volume_secrets/keys/jwt-secret.txt`
+  - Just the key without formatting or anything
+- Register the key as a secret
+  - `docker secret create jwt-secret /mnt/volume_secrets/keys/jwt-secret.txt`
+
+- Configure S3 storage using the access key from the previous step
+  - `echo "timelines-prod" | docker secret create s3-bucket-id -`
+  - `echo "https://fra1.digitaloceanspaces.com" | docker secret create s3-endpoint -`
+  - `echo "..." | docker secret create s3-access-key-id -`
+  - `echo "..." | docker secret create s3-access-key-secret -`
 
 ### Setup app
 

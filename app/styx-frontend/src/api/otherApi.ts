@@ -94,8 +94,8 @@ export type RequestPresignedUrlApiResponse = /** status 200  */ {
 		updatedAt: string
 		ownerId: string
 		size: number
-		bucketKey: string
 		expiresAt?: null | string
+		bucketKey: string
 		originalFileName: string
 		originalFileExtension: string
 		contentType: 'Image'
@@ -119,8 +119,8 @@ export type FinalizeAssetUploadApiResponse = /** status 200  */ {
 	updatedAt: string
 	ownerId: string
 	size: number
-	bucketKey: string
 	expiresAt?: null | string
+	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'Image'
@@ -150,8 +150,8 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	updatedAt: string
 	ownerId: string
 	size: number
-	bucketKey: string
 	expiresAt?: null | string
+	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'Image'
