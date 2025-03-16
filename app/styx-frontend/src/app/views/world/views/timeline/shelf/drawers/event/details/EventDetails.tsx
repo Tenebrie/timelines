@@ -61,7 +61,7 @@ export function EventDetailsComponent() {
 					<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
 				</Collapse>
 			</Box>
-			<Box flexGrow={1} sx={{ marginTop: -1 }}>
+			<Box flexGrow={1} sx={{ marginTop: -1, height: 0 }}>
 				<EventDescription draft={draft} />
 			</Box>
 		</Stack>

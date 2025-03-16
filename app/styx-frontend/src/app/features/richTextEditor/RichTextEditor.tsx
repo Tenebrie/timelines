@@ -1,10 +1,13 @@
+import Box from '@mui/material/Box'
 import { Editor, useEditor } from '@tiptap/react'
+import { EditorContent } from '@tiptap/react'
 import throttle from 'lodash.throttle'
 import { memo, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { MentionDetails } from '@/api/types/types'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
 import { getWorldState } from '../../views/world/WorldSliceSelectors'
 import { useEventBusSubscribe } from '../eventBus'
@@ -14,7 +17,7 @@ import { FadeInOverlay } from './extensions/mentions/components/FadeInOverlay/Fa
 import { MentionNodeName } from './extensions/mentions/components/MentionNode'
 import { MentionsList } from './extensions/mentions/MentionsList'
 import { RichTextEditorControls } from './RichTextEditorControls'
-import { StyledContainer, StyledEditorContent } from './styles'
+import { StyledContainer } from './styles'
 
 type Props = {
 	value: string
@@ -30,6 +33,65 @@ export type OnChangeParams = {
 	richText: string
 	mentions: MentionDetails[]
 }
+
+type EditorContentBoxProps = {
+	editor: Editor
+	mode: 'read' | 'edit'
+	className?: string
+	readOnly?: boolean
+}
+
+export const EditorContentBox = ({ editor, mode, className, readOnly }: EditorContentBoxProps) => (
+	<Box
+		component={EditorContent}
+		className={className}
+		editor={editor}
+		readOnly={readOnly}
+		sx={{
+			fontFamily: '"Roboto", sans-serif',
+			outline: 'none',
+			height: mode === 'edit' ? 'calc(100% - 48px)' : 'unset',
+			overflowY: 'auto',
+			display: 'flex',
+			flexDirection: 'column',
+
+			'& img': {
+				maxHeight: '400px',
+				maxWidth: '100%',
+			},
+
+			'& .ProseMirror': {
+				flex: 1,
+				outline: 'none',
+				minHeight: '1rem',
+				height: '100%',
+				padding: mode === 'edit' ? '0 16px' : 'unset',
+
+				'& > p:first-child': {
+					paddingTop: '16px',
+				},
+			},
+
+			'& p': {
+				margin: 0,
+				padding: '6px 0px',
+				lineHeight: 1.5,
+				wordBreak: 'break-word',
+			},
+
+			'& li > p': {
+				padding: '3px 0',
+			},
+
+			'& code': {
+				padding: '4px 8px',
+				borderRadius: '4px',
+				background: '#00000033',
+			},
+			...useBrowserSpecificScrollbars(),
+		}}
+	/>
+)
 
 export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allowReadMode }: Props) => {
 	const theme = useCustomTheme()
@@ -185,7 +247,7 @@ export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allo
 			}}
 		>
 			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode} />
-			<StyledEditorContent className="content" editor={editor} $mode={isReadMode ? 'read' : 'edit'} />
+			{editor && <EditorContentBox className="content" editor={editor} mode={isReadMode ? 'read' : 'edit'} />}
 			<MentionsList editor={editor} />
 			<FadeInOverlay key={softKey} content={value} isReadMode={isReadMode} />
 		</StyledContainer>
