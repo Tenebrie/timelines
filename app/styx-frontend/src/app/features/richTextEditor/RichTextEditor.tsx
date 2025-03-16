@@ -67,7 +67,7 @@ export const EditorContentBox = ({ editor, mode, className, readOnly }: EditorCo
 				height: '100%',
 				padding: mode === 'edit' ? '0 16px' : 'unset',
 
-				'& > p:first-child': {
+				'& > p:first-of-type': {
 					paddingTop: '16px',
 				},
 			},

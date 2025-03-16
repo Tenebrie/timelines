@@ -7,10 +7,10 @@ import { memo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
+import { useUpsertEvent } from '@/app/components/Outliner/editors/event/details/draft/useUpsertEvent'
+import { useCurrentOrNewEvent } from '@/app/components/Outliner/editors/event/details/hooks/useCurrentOrNewEvent'
 import { getEditingPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
-import { useUpsertEvent } from '@/app/views/world/views/timeline/shelf/drawers/event/details/draft/useUpsertEvent'
-import { useCurrentOrNewEvent } from '@/app/views/world/views/timeline/shelf/drawers/event/details/hooks/useCurrentOrNewEvent'
 
 import { EventDescription } from './components/EventDescription'
 import { EventTitle } from './components/EventTitle'
@@ -42,6 +42,7 @@ export function EventDetailsComponent() {
 		<Stack
 			gap={1}
 			sx={{
+				height: 'calc(100% - 48px)',
 				padding: '24px 16px',
 				overflowY: 'auto',
 				...useBrowserSpecificScrollbars(),

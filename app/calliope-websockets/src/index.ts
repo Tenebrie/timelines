@@ -16,31 +16,36 @@ const app = websocketify(new Koa())
 
 app.ws.use(
 	route.all('/live/:sessionId', function (ctx: websocketify.MiddlewareContext<Koa.DefaultState>) {
-		const authCookie = ctx.cookies.get(AUTH_COOKIE_NAME)
-		if (!authCookie) {
-			throw new Error('No cookie provided')
-		}
-
-		const { id: userId } = TokenService.decodeJwtToken(authCookie)
-		const sessionId = ctx.path.split('/')[2]
-		if (!sessionId) {
-			throw new Error('No session id')
-		}
-
-		ctx.websocket.on('message', (rawMessage) => {
-			try {
-				const message = JSON.parse(rawMessage.toString()) as ClientToCalliopeMessage
-				ClientMessageHandlerService.handleMessage(message, userId, sessionId, ctx.websocket)
-			} catch (e) {
-				console.error('Error handling message', e)
+		try {
+			const authCookie = ctx.cookies.get(AUTH_COOKIE_NAME)
+			if (!authCookie) {
+				throw new Error('No cookie provided')
 			}
-		})
-		ctx.websocket.on('close', () => {
-			WebsocketService.unregisterSocket(userId, ctx.websocket)
-		})
-		ctx.websocket.on('error', () => {
-			WebsocketService.unregisterSocket(userId, ctx.websocket)
-		})
+
+			const { id: userId } = TokenService.decodeJwtToken(authCookie)
+			const sessionId = ctx.path.split('/')[2]
+			if (!sessionId) {
+				throw new Error('No session id')
+			}
+
+			ctx.websocket.on('message', (rawMessage) => {
+				try {
+					const message = JSON.parse(rawMessage.toString()) as ClientToCalliopeMessage
+					ClientMessageHandlerService.handleMessage(message, userId, sessionId, ctx.websocket)
+				} catch (e) {
+					console.error('Error handling message', e)
+				}
+			})
+			ctx.websocket.on('close', () => {
+				WebsocketService.unregisterSocket(userId, ctx.websocket)
+			})
+			ctx.websocket.on('error', () => {
+				WebsocketService.unregisterSocket(userId, ctx.websocket)
+			})
+		} catch (e) {
+			console.error('Error establishing websocket session', e)
+			throw e
+		}
 	}),
 )
 

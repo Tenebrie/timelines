@@ -32,7 +32,8 @@ type TopProps = {
 }
 
 export function useResizeGrabber({ minHeight, initialOpen, initialHeight, keepMounted }: TopProps = {}) {
-	const isDraggingNow = useRef(false)
+	const _isDraggingNow = useRef(false)
+	const [isDragging, _setIsDragging] = useState(false)
 	const [isDraggingChild, setIsDraggingChild] = useState(false)
 	const [drawerVisible, setDrawerVisible] = useState(initialOpen ?? true)
 	const [overflowHeight, _setOverflowHeight] = useState(0)
@@ -67,7 +68,7 @@ export function useResizeGrabber({ minHeight, initialOpen, initialHeight, keepMo
 		(value: boolean, updatePreferred: boolean) => {
 			setDrawerVisible(value)
 			if (value) {
-				if (!isDraggingNow.current) {
+				if (!_isDraggingNow.current) {
 					_setInternalHeight(Math.max(minHeight ?? 0, _internalHeight))
 				} else {
 					_setInternalHeight(0)
@@ -100,7 +101,7 @@ export function useResizeGrabber({ minHeight, initialOpen, initialHeight, keepMo
 
 	return {
 		height: _displayedHeight,
-		isDraggingNow,
+		_isDraggingNow,
 		_minHeight: minHeight ?? 0,
 		drawerVisible,
 		preferredOpen,
@@ -108,6 +109,8 @@ export function useResizeGrabber({ minHeight, initialOpen, initialHeight, keepMo
 		_setVisibleInternal,
 		setHeight,
 		contentVisible: contentVisible ?? keepMounted,
+		isDragging,
+		_setIsDragging,
 		isDraggingChild,
 		setIsDraggingChild,
 		overflowHeight,
@@ -127,7 +130,8 @@ type Props = ReturnType<typeof useResizeGrabber> & {
 export const ResizeGrabber = memo(ResizeGrabberComponent)
 
 function ResizeGrabberComponent({
-	isDraggingNow,
+	_isDraggingNow,
+	_setIsDragging,
 	_setDisplayedHeight,
 	_minHeight,
 	active,
@@ -177,12 +181,13 @@ function ResizeGrabberComponent({
 			const newMousePos = isVertical ? event.clientY : event.clientX
 			if (
 				isClicking.current &&
-				!isDraggingNow.current &&
+				!_isDraggingNow.current &&
 				Math.abs(newMousePos - mouseLastSeenPosition.current) > 4
 			) {
-				isDraggingNow.current = true
+				_isDraggingNow.current = true
+				_setIsDragging(true)
 			}
-			if (isDraggingNow.current) {
+			if (_isDraggingNow.current) {
 				setMousePosition(newMousePos)
 			}
 		}, 4),
@@ -190,10 +195,10 @@ function ResizeGrabberComponent({
 
 	useEffect(() => {
 		const onMouseUp = (event: MouseEvent) => {
-			if (!isClicking.current && !isDraggingNow.current) {
+			if (!isClicking.current && !_isDraggingNow.current) {
 				return
 			}
-			if (isClicking.current && !isDraggingNow.current) {
+			if (isClicking.current && !_isDraggingNow.current) {
 				triggerClick(event, {})
 			}
 			isClicking.current = false
@@ -201,10 +206,11 @@ function ResizeGrabberComponent({
 			setTimeout(() => {
 				window.document.body.classList.remove('cursor-resizing-ns', 'cursor-resizing-ew', 'mouse-busy')
 			}, 1)
-			if (!isDraggingNow.current) {
+			if (!_isDraggingNow.current) {
 				return
 			}
-			isDraggingNow.current = false
+			_isDraggingNow.current = false
+			_setIsDragging(false)
 			if (_currentContainerHeight.current < _minHeight) {
 				_setVisibleInternal(false, true)
 			}
@@ -223,11 +229,12 @@ function ResizeGrabberComponent({
 		_minHeight,
 		_setOverflowHeight,
 		_currentContainerHeight,
-		isDraggingNow,
+		_isDraggingNow,
 		setIsDraggingChild,
 		_setVisibleInternal,
 		triggerClick,
 		isVertical,
+		_setIsDragging,
 	])
 
 	// const { containerHeight } = useSelector(getTimelinePreferences)
@@ -235,7 +242,7 @@ function ResizeGrabberComponent({
 	// const dispatch = useDispatch()
 
 	useEffect(() => {
-		if (!isDraggingNow.current || mousePosition === 0) {
+		if (!_isDraggingNow.current || mousePosition === 0) {
 			return
 		}
 		setMousePosition(0)
@@ -269,7 +276,7 @@ function ResizeGrabberComponent({
 		_setVisibleInternal,
 		drawerVisibleRef,
 		_setOverflowHeight,
-		isDraggingNow,
+		_isDraggingNow,
 		overflowHeight,
 		drawerVisible,
 		_setInternalHeight,

@@ -5,7 +5,6 @@ import { TimelineView } from '@/app/views/world/views/timeline/components/Timeli
 import { TimelineTrackReporter } from '@/app/views/world/views/timeline/tracks/components/TimelineTrackReporter'
 
 const timelineSearchSchema = z.object({
-	selection: z.array(z.string()).default([]),
 	track: z.string().optional(),
 })
 

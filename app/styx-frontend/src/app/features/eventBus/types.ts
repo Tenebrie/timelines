@@ -12,10 +12,9 @@ export type AllowedEvents =
 	| 'timeline/requestScrollRight'
 	| 'timeline/requestZoom'
 	| 'timeline/eventDrawer/onResize'
-	| 'timeline/eventDrawer/requestOpen'
-	| 'timeline/eventDrawer/requestClose'
+	| 'timeline/eventEditor/requestOpen'
 	| 'timeline/tracksDrawer/onResize'
-	| 'mindmap/actorDrawer/requestOpen'
+	| 'mindmap/actorEditor/requestOpen'
 	| 'world/requestNavigation'
 	| 'calliope/onReconnected'
 	| 'calliope/requestSendMessage'
@@ -49,10 +48,9 @@ export type EventParams = {
 	['timeline/requestScrollRight']: void
 	['timeline/requestZoom']: { direction: 'in' | 'out' }
 	['timeline/eventDrawer/onResize']: { height: number }
-	['timeline/eventDrawer/requestOpen']: { extraHeight?: number }
-	['timeline/eventDrawer/requestClose']: void
+	['timeline/eventEditor/requestOpen']: { extraHeight?: number }
 	['timeline/tracksDrawer/onResize']: { height: number }
-	['mindmap/actorDrawer/requestOpen']: { extraHeight?: number }
+	['mindmap/actorEditor/requestOpen']: { extraHeight?: number }
 	['world/requestNavigation']: NavigateOptions
 	['calliope/onReconnected']: void
 	['calliope/requestSendMessage']: ClientToCalliopeMessage

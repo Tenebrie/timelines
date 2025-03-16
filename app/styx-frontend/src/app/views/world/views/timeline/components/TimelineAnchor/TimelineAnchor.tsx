@@ -40,12 +40,22 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 
 	const lastLineCount = useRef(0)
 	const lastCalendar = useRef(calendar)
+	const lastContainerWidth = useRef(containerWidth)
+	const lastScaleLevel = useRef(scaleLevel)
 	useEffect(() => {
-		if (lineCount !== lastLineCount.current || calendar !== lastCalendar.current) {
+		if (
+			lineCount !== lastLineCount.current ||
+			calendar !== lastCalendar.current ||
+			containerWidth !== lastContainerWidth.current ||
+			scaleLevel !== lastScaleLevel.current
+		) {
 			lastLineCount.current = lineCount
+			lastCalendar.current = calendar
+			lastContainerWidth.current = containerWidth
+			lastScaleLevel.current = scaleLevel
 			setDividers(Array(lineCount).fill(0))
 		}
-	}, [calendar, lineCount])
+	}, [calendar, lineCount, containerWidth, scaleLevel])
 
 	// TODO: Optimize Fade component being heavy?
 	return (
@@ -63,6 +73,7 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 							mediumGroupSize={mediumGroupSize}
 							largeGroupSize={largeGroupSize}
 							scaledTimeToRealTime={scaledTimeToRealTime}
+							containerWidth={containerWidth}
 						/>
 					))}
 				</TimelineAnchorContainer>

@@ -1,6 +1,5 @@
 import Stack from '@mui/material/Stack'
 
-import { EventDrawer } from './drawers/event/EventDrawer'
 import { TracksDrawer } from './drawers/tracks/TracksDrawer'
 
 export const TimelineShelf = () => {
@@ -14,9 +13,6 @@ export const TimelineShelf = () => {
 		>
 			<Stack sx={{ width: '100%', maxWidth: '500px' }}>
 				<TracksDrawer />
-			</Stack>
-			<Stack sx={{ width: '100%' }}>
-				<EventDrawer />
 			</Stack>
 		</Stack>
 	)

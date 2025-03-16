@@ -28,7 +28,7 @@ export const ActorRenderer = ({ actor, collapsed }: Props) => {
 	const dispatch = useDispatch()
 	const { collapseActorInOutliner, uncollapseActorInOutliner } = preferencesSlice.actions
 
-	const openActorDrawer = useEventBusDispatch({ event: 'mindmap/actorDrawer/requestOpen' })
+	const openActorDrawer = useEventBusDispatch({ event: 'mindmap/actorEditor/requestOpen' })
 
 	const onToggleOpen = useCallback(() => {
 		if (collapsed) {

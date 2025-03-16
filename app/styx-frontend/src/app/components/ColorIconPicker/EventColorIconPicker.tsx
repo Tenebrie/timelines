@@ -1,10 +1,10 @@
 import { startTransition, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { EventDraft } from '@/app/components/Outliner/editors/event/details/draft/useEventDraft'
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { getEditingPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
-import { EventDraft } from '@/app/views/world/views/timeline/shelf/drawers/event/details/draft/useEventDraft'
 
 import { ColorIconPicker } from './ColorIconPicker'
 
@@ -18,7 +18,7 @@ export function EventColorIconPicker({ draft }: Props) {
 		(a, b) => a.eventColorPickerOpen === b.eventColorPickerOpen,
 	)
 
-	const openEventDrawer = useEventBusDispatch({ event: 'timeline/eventDrawer/requestOpen' })
+	const openEventDrawer = useEventBusDispatch({ event: 'timeline/eventEditor/requestOpen' })
 	const { setEventColorPickerOpen } = preferencesSlice.actions
 	const dispatch = useDispatch()
 

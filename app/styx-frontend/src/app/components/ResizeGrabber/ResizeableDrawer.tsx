@@ -61,7 +61,7 @@ export function ResizeableDrawer({
 		setHeight,
 		setVisible,
 		overflowHeight,
-		isDraggingNow,
+		isDragging,
 		isDraggingChild,
 	} = grabberProps
 
@@ -99,7 +99,7 @@ export function ResizeableDrawer({
 				style={{
 					height,
 					marginTop: drawerVisible ? `${overflowHeight}px` : `${-height}px`,
-					transition: `height ${isDraggingNow.current ? 0 : 0.3}s ease-in-out, margin-top ${isDraggingNow.current ? 0 : 0.3}s`,
+					transition: `height ${isDragging ? 0 : 0.3}s ease-in-out, margin-top ${isDragging ? 0 : 0.3}s`,
 				}}
 				sx={{
 					position: 'relative',

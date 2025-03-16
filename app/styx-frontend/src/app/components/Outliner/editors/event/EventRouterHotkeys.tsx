@@ -5,10 +5,10 @@ import { useResizeableDrawer } from '@/app/components/ResizeGrabber/ResizeableDr
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
-export function EventDrawerHotkeys() {
-	const selectedMarkerIds = useSearch({
+export function EventRouterHotkeys() {
+	const { selectedMarkerIds, creatingNew } = useSearch({
 		from: '/world/$worldId/_world/timeline',
-		select: (search) => search.selection,
+		select: (search) => ({ selectedMarkerIds: search.selection, creatingNew: search.new }),
 	})
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 
@@ -23,7 +23,10 @@ export function EventDrawerHotkeys() {
 	}, [drawerVisible, requestBlur])
 
 	useShortcut(Shortcut.CreateNew, () => {
-		navigate({ to: '/world/$worldId/timeline', search: (prev) => ({ ...prev, selection: [] }) })
+		navigate({
+			to: '/world/$worldId/timeline',
+			search: (prev) => ({ ...prev, selection: [], new: true }),
+		})
 		setDrawerVisible(true)
 		requestFocus()
 		setTimeout(() => {
@@ -31,6 +34,7 @@ export function EventDrawerHotkeys() {
 			requestFocus()
 		})
 	})
+
 	useShortcut(
 		Shortcut.EditSelected,
 		() => {
@@ -38,6 +42,17 @@ export function EventDrawerHotkeys() {
 			setDrawerVisible(true)
 		},
 		drawerVisible || selectedMarkerIds.length > 0,
+	)
+
+	useShortcut(
+		Shortcut.Escape,
+		() => {
+			navigate({
+				to: '/world/$worldId/timeline',
+				search: (prev) => ({ ...prev, selection: [], new: undefined }),
+			})
+		},
+		selectedMarkerIds.length > 0 || creatingNew,
 	)
 
 	return <></>

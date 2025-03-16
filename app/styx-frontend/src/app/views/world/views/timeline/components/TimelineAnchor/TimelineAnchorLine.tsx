@@ -41,6 +41,7 @@ type Props = {
 	smallGroupSize: number
 	mediumGroupSize: number
 	largeGroupSize: number
+	containerWidth: number
 }
 
 export const TimelineAnchorLine = memo(TimelineAnchorLineComponent)
@@ -55,6 +56,7 @@ function TimelineAnchorLineComponent(props: Props) {
 		smallGroupSize,
 		mediumGroupSize,
 		largeGroupSize,
+		containerWidth,
 	} = props
 
 	const { parseTime, timeToShortLabel } = useWorldTime()
@@ -258,11 +260,15 @@ function TimelineAnchorLineComponent(props: Props) {
 	})
 
 	useEffect(() => {
+		updateVariables(TimelineState.scroll)
+	}, [containerWidth, updateVariables])
+
+	useEffect(() => {
 		if (!ref.current) {
 			return
 		}
 		updateVariables(TimelineState.scroll)
-	}, [updateVariables, ref])
+	}, [updateVariables, ref, containerWidth])
 
 	if (!displayedLabel) {
 		return null

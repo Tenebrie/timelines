@@ -1,15 +1,15 @@
 import debounce from 'lodash.debounce'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export const useTimelineDimensions = () => {
 	const containerRef = useRef<HTMLDivElement | null>(null)
-	const containerWidth = useRef<number>(window.innerWidth)
+	const [width, setWidth] = useState<number>(window.innerWidth)
 
 	useEffect(() => {
 		if (!containerRef.current) {
 			return
 		}
-		containerWidth.current = containerRef.current.getBoundingClientRect().width
+		setWidth(containerRef.current.getBoundingClientRect().width)
 	}, [containerRef])
 
 	const onResize = useRef(
@@ -17,7 +17,7 @@ export const useTimelineDimensions = () => {
 			if (!containerRef.current) {
 				return
 			}
-			containerWidth.current = containerRef.current.getBoundingClientRect().width
+			setWidth(containerRef.current.getBoundingClientRect().width)
 		}, 100),
 	)
 
@@ -36,6 +36,6 @@ export const useTimelineDimensions = () => {
 
 	return {
 		containerRef,
-		containerWidth: containerWidth.current,
+		containerWidth: width,
 	}
 }
