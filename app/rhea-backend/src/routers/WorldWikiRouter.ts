@@ -3,6 +3,7 @@ import { AuthorizationService } from '@src/services/AuthorizationService'
 import { RedisService } from '@src/services/RedisService'
 import { WikiService } from '@src/services/WikiService'
 import {
+	NumberValidator,
 	OptionalParam,
 	PathParam,
 	RequiredParam,
@@ -108,6 +109,35 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })
 
 	return article
+})
+
+router.post('/api/world/:worldId/wiki/article/move', async (ctx) => {
+	useApiEndpoint({
+		name: 'moveArticle',
+		description: 'Moves an article to a new position.',
+		tags: [worldWikiTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+	})
+
+	await AuthorizationService.checkUserWriteAccessById(user, worldId)
+
+	const params = useRequestBody(ctx, {
+		articleId: RequiredParam(StringValidator),
+		position: RequiredParam(NumberValidator),
+	})
+
+	const { article } = await WikiService.moveWikiArticle({
+		worldId,
+		articleId: params.articleId,
+		toPosition: params.position,
+	})
+
+	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })
 })
 
 router.post('/api/world/:worldId/wiki/article/swap', async (ctx) => {

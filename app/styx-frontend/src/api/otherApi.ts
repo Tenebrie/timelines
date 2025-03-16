@@ -65,6 +65,14 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldWiki'],
 			}),
+			moveArticle: build.mutation<MoveArticleApiResponse, MoveArticleApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/wiki/article/move`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldWiki'],
+			}),
 			swapArticlePositions: build.mutation<SwapArticlePositionsApiResponse, SwapArticlePositionsApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/wiki/article/swap`,
@@ -225,6 +233,7 @@ export type CreateArticleApiResponse = /** status 200  */ {
 	color: string
 	position: number
 	contentRich: string
+	parentId?: null | string
 }
 export type CreateArticleApiArg = {
 	/** Any string value */
@@ -243,6 +252,7 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	color: string
 	position: number
 	contentRich: string
+	parentId?: null | string
 }
 export type UpdateArticleApiArg = {
 	/** Any string value */
@@ -266,6 +276,15 @@ export type DeleteArticleApiArg = {
 	worldId: string
 	/** Any string value */
 	articleId: string
+}
+export type MoveArticleApiResponse = unknown
+export type MoveArticleApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		articleId: string
+		position: number
+	}
 }
 export type SwapArticlePositionsApiResponse = unknown
 export type SwapArticlePositionsApiArg = {
@@ -305,6 +324,7 @@ export const {
 	useCreateArticleMutation,
 	useUpdateArticleMutation,
 	useDeleteArticleMutation,
+	useMoveArticleMutation,
 	useSwapArticlePositionsMutation,
 	useBulkDeleteArticlesMutation,
 } = injectedRtkApi

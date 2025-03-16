@@ -1,7 +1,7 @@
 import { MentionedEntity, WikiArticle } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient'
 
-import { makeSortWikiArticles } from './dbQueries/makeSortWikiArticles'
+import { makeSortWikiArticles as makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticles'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
 import { MentionData, MentionsService } from './MentionsService'
 
@@ -83,6 +83,72 @@ export const WikiService = {
 		})
 	},
 
+	moveWikiArticle: async (params: { worldId: string; articleId: string; toPosition: number }) => {
+		return getPrismaClient().$transaction(async (prisma) => {
+			const baseArticle = await prisma.wikiArticle.findFirst({
+				where: { id: params.articleId },
+				select: {
+					position: true,
+					parentId: true,
+				},
+			})
+
+			if (!baseArticle) {
+				throw new Error('Article not found')
+			}
+
+			const article = await prisma.wikiArticle.update({
+				where: {
+					id: params.articleId,
+				},
+				data: {
+					position: params.toPosition,
+				},
+			})
+
+			const selectRange = (() => {
+				if (params.toPosition > baseArticle.position) {
+					return {
+						gt: baseArticle.position,
+						lte: params.toPosition,
+					}
+				}
+
+				return {
+					gte: params.toPosition,
+					lt: baseArticle.position,
+				}
+			})()
+
+			const movedSiblings = await prisma.wikiArticle.findMany({
+				where: {
+					parentId: article.parentId,
+					position: selectRange,
+					id: {
+						not: params.articleId,
+					},
+				},
+			})
+
+			await Promise.all(
+				movedSiblings.map((sibling) => {
+					return prisma.wikiArticle.update({
+						where: {
+							id: sibling.id,
+						},
+						data: {
+							position: sibling.position + (params.toPosition > baseArticle.position ? -1 : 1),
+						},
+					})
+				}),
+			)
+
+			const world = await makeTouchWorldQuery(params.worldId, prisma)
+
+			return { article, world }
+		})
+	},
+
 	swapWikiArticlePositions: async (params: { worldId: string; articleIdA: string; articleIdB: string }) => {
 		const [articleA, articleB] = await Promise.all([
 			getPrismaClient().wikiArticle.findFirst({
@@ -145,7 +211,7 @@ export const WikiService = {
 				},
 			})
 
-			await makeSortWikiArticles(worldId, prisma)
+			await makeSortWikiArticlesQuery(worldId, prisma)
 			const world = await makeTouchWorldQuery(worldId, prisma)
 
 			return {
@@ -164,7 +230,7 @@ export const WikiService = {
 				},
 			})
 
-			await makeSortWikiArticles(worldId, prisma)
+			await makeSortWikiArticlesQuery(worldId, prisma)
 			const world = await makeTouchWorldQuery(worldId, prisma)
 
 			return {
