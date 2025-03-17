@@ -7,7 +7,7 @@ import { WorldService } from './WorldService'
 export const AuthorizationService = {
 	checkUserReadAccess: async (user: User | undefined, world: World) => {
 		if (world.accessMode === 'PublicRead' || world.accessMode === 'PublicEdit') {
-			return true
+			return
 		}
 
 		if (!user) {
@@ -15,7 +15,7 @@ export const AuthorizationService = {
 		}
 
 		if (user.id === world.ownerId) {
-			return true
+			return
 		}
 
 		const worldWithCollaboratorsCount = await getPrismaClient().world.count({
@@ -39,7 +39,7 @@ export const AuthorizationService = {
 		}
 
 		if (user.id === world.ownerId || world.accessMode === 'PublicEdit') {
-			return true
+			return
 		}
 
 		const worldWithCollaboratorsCount = await getPrismaClient().world.count({

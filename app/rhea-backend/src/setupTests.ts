@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { mockDeep } from 'jest-mock-extended'
 
-process.env.jwt_secret = 'secretkey'
+process.env['jwt-secret'] = 'secretkey'
 
 jest.mock('moonflower', () => {
 	return {

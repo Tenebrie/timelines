@@ -73,7 +73,7 @@ describe('TokenService', () => {
 			originalEnv = process.env
 			process.env = {
 				...process.env,
-				jwt_secret: 'secret',
+				['jwt-secret']: 'secret',
 			}
 		})
 		afterAll(() => {

@@ -35,7 +35,13 @@ export const OutlinedContainer = ({ label, secondaryLabel, children, style, full
 								{label}
 							</Typography>
 							{secondaryLabel && (
-								<Typography variant="body2" marginRight={1} display="flex" alignItems="center">
+								<Typography
+									component={'div'}
+									variant="body2"
+									marginRight={1}
+									display="flex"
+									alignItems="center"
+								>
 									{secondaryLabel}
 								</Typography>
 							)}

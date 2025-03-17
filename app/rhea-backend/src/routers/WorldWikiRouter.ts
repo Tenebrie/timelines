@@ -13,11 +13,13 @@ import {
 	useAuth,
 	useOptionalAuth,
 	usePathParams,
+	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
 
 import { SessionMiddleware } from '../middleware/SessionMiddleware'
 import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
+import { NullableStringValidator } from './validators/NullableStringValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
 
 const router = new Router().with(SessionMiddleware)
@@ -37,9 +39,13 @@ router.get('/api/world/:worldId/wiki/articles', async (ctx) => {
 		worldId: PathParam(StringValidator),
 	})
 
+	const { parentId } = useQueryParams(ctx, {
+		parentId: OptionalParam(NullableStringValidator),
+	})
+
 	await AuthorizationService.checkUserReadAccessById(user, worldId)
 
-	const articles = await WikiService.listWikiArticles({ worldId })
+	const articles = await WikiService.listWikiArticles({ worldId, parentId })
 	return articles.sort((a, b) => a.position - b.position)
 })
 
@@ -128,6 +134,7 @@ router.post('/api/world/:worldId/wiki/article/move', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		articleId: RequiredParam(StringValidator),
+		parentId: OptionalParam(NullableStringValidator),
 		position: RequiredParam(NumberValidator),
 	})
 
@@ -135,6 +142,7 @@ router.post('/api/world/:worldId/wiki/article/move', async (ctx) => {
 		worldId,
 		articleId: params.articleId,
 		toPosition: params.position,
+		toParentId: params.parentId,
 	})
 
 	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })

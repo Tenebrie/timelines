@@ -39,7 +39,12 @@ const injectedRtkApi = api
 				},
 			),
 			getArticles: build.query<GetArticlesApiResponse, GetArticlesApiArg>({
-				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/wiki/articles` }),
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/wiki/articles`,
+					params: {
+						parentId: queryArg.parentId,
+					},
+				}),
 				providesTags: ['worldWiki'],
 			}),
 			createArticle: build.mutation<CreateArticleApiResponse, CreateArticleApiArg>({
@@ -184,44 +189,34 @@ export type RequestImageConversionApiArg = {
 	}
 }
 export type GetArticlesApiResponse = /** status 200  */ {
+	children: {
+		worldId: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		icon: string
+		color: string
+		position: number
+		contentRich: string
+		parentId?: null | string
+	}[]
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	mentions: {
-		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
-	}[]
-	mentionedIn: {
-		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
-	}[]
+	icon: string
+	color: string
 	position: number
 	contentRich: string
+	parentId?: null | string
 }[]
 export type GetArticlesApiArg = {
 	/** Any string value */
 	worldId: string
+	/** Any string or null value */
+	parentId?: null | string
 }
 export type CreateArticleApiResponse = /** status 200  */ {
 	worldId: string
@@ -283,6 +278,7 @@ export type MoveArticleApiArg = {
 	worldId: string
 	body: {
 		articleId: string
+		parentId?: null | string
 		position: number
 	}
 }

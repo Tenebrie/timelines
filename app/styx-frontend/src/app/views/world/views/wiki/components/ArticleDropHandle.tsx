@@ -7,9 +7,11 @@ import { useMoveArticle } from '../api/useMoveArticle'
 
 type Props = {
 	position: number
+	parentId: string | null
+	marginLeft?: string | number
 }
 
-export function ArticleDropHandle({ position }: Props) {
+export function ArticleDropHandle({ position, parentId, marginLeft }: Props) {
 	const [moveArticle] = useMoveArticle()
 
 	const ref = useRef<HTMLDivElement>(null)
@@ -22,6 +24,7 @@ export function ArticleDropHandle({ position }: Props) {
 			const targetPosition = isMovingDown ? position - 1 : position
 			moveArticle({
 				articleId: params.article.id,
+				parentId,
 				position: targetPosition,
 			})
 		},
@@ -33,6 +36,9 @@ export function ArticleDropHandle({ position }: Props) {
 			sx={{
 				width: '100%',
 				height: '8px',
+				marginTop: '-6px',
+				zIndex: 2,
+				marginLeft,
 				'body.cursor-grabbing &:hover': { backgroundColor: 'red' },
 			}}
 		></Box>

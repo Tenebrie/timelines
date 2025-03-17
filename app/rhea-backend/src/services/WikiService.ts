@@ -6,20 +6,16 @@ import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
 import { MentionData, MentionsService } from './MentionsService'
 
 export const WikiService = {
-	listWikiArticles: async (params: Pick<WikiArticle, 'worldId'>) => {
+	listWikiArticles: async (
+		params: Pick<WikiArticle, 'worldId'> & { parentId: string | null | undefined },
+	) => {
 		return getPrismaClient().wikiArticle.findMany({
 			where: {
 				worldId: params.worldId,
+				...(params.parentId === undefined ? {} : { parentId: params.parentId }),
 			},
-			select: {
-				id: true,
-				name: true,
-				contentRich: true,
-				createdAt: true,
-				updatedAt: true,
-				position: true,
-				mentions: true,
-				mentionedIn: true,
+			include: {
+				children: true,
 			},
 		})
 	},
@@ -83,11 +79,17 @@ export const WikiService = {
 		})
 	},
 
-	moveWikiArticle: async (params: { worldId: string; articleId: string; toPosition: number }) => {
+	moveWikiArticle: async (params: {
+		worldId: string
+		articleId: string
+		toPosition: number
+		toParentId?: string | null
+	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
 			const baseArticle = await prisma.wikiArticle.findFirst({
 				where: { id: params.articleId },
 				select: {
+					id: true,
 					position: true,
 					parentId: true,
 				},
@@ -95,6 +97,10 @@ export const WikiService = {
 
 			if (!baseArticle) {
 				throw new Error('Article not found')
+			}
+
+			if (params.toParentId === baseArticle.id) {
+				throw new Error('Cannot move article to be its own parent')
 			}
 
 			const article = await prisma.wikiArticle.update({
@@ -106,23 +112,34 @@ export const WikiService = {
 				},
 			})
 
+			const fromPosition = (() => {
+				if (params.toParentId && params.toParentId !== baseArticle.parentId) {
+					return undefined
+				}
+
+				return baseArticle.position
+			})()
+
+			const toPosition = params.toPosition
+			const targetParentId = params.toParentId ?? baseArticle.parentId
+
 			const selectRange = (() => {
-				if (params.toPosition > baseArticle.position) {
+				if (fromPosition !== undefined && toPosition > fromPosition) {
 					return {
-						gt: baseArticle.position,
-						lte: params.toPosition,
+						gt: fromPosition,
+						lte: toPosition,
 					}
 				}
 
 				return {
-					gte: params.toPosition,
-					lt: baseArticle.position,
+					gte: toPosition,
+					lt: fromPosition,
 				}
 			})()
 
 			const movedSiblings = await prisma.wikiArticle.findMany({
 				where: {
-					parentId: article.parentId,
+					parentId: targetParentId,
 					position: selectRange,
 					id: {
 						not: params.articleId,
@@ -143,6 +160,17 @@ export const WikiService = {
 				}),
 			)
 
+			if (params.toParentId !== undefined && params.toParentId !== baseArticle.parentId) {
+				await prisma.wikiArticle.update({
+					where: {
+						id: params.articleId,
+					},
+					data: {
+						parentId: params.toParentId,
+					},
+				})
+				await makeSortWikiArticlesQuery(params.worldId, prisma)
+			}
 			const world = await makeTouchWorldQuery(params.worldId, prisma)
 
 			return { article, world }

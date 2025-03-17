@@ -44,7 +44,7 @@ export const Wiki = () => {
 							<ArticleListHeader />
 							<Divider />
 						</Stack>
-						<ArticleList />
+						<ArticleList parentId={null} />
 					</Stack>
 				</Paper>
 				<Paper

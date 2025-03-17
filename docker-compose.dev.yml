@@ -43,7 +43,7 @@ services:
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
             # Fake docker secrets
             environment: development
-            jwt_secret: secretkey
+            jwt-secret: secretkey
             s3-endpoint: http://s3-minio:9000
             s3-bucket-id: bucket
             s3-access-key-id: devuser
@@ -67,7 +67,7 @@ services:
             NODE_ENV: development
             # Fake docker secrets
             environment: development
-            jwt_secret: secretkey
+            jwt-secret: secretkey
         volumes:
             - ./app/calliope-websockets/src:/app/calliope/src:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached
