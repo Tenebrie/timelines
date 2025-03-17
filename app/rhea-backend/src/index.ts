@@ -82,6 +82,7 @@ if (!isRunningInTest()) {
 	app.use(
 		initOpenApiEngine({
 			tsconfigPath: './tsconfig.json',
+			logLevel: 'info',
 			sourceFileDiscovery: {
 				rootPath: './src/routers',
 			},

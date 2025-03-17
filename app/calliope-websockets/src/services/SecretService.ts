@@ -20,9 +20,11 @@ export const SecretService = {
 			secretCache[secretName] = key
 			return key
 		}
-		if (process.env[secretName]) {
-			secretCache[secretName] = process.env[secretName]
-			return process.env[secretName]
+		const envKey = secretName.replace(/-/g, '_')
+		const envValue = process.env[envKey] || process.env[secretName]
+		if (envValue) {
+			secretCache[secretName] = envValue
+			return envValue
 		}
 		throw new Error(`${secretName} is not defined!`)
 	},

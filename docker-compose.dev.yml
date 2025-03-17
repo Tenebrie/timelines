@@ -44,10 +44,10 @@ services:
             # Fake docker secrets
             environment: development
             jwt-secret: secretkey
-            s3-endpoint: http://s3-minio:9000
-            s3-bucket-id: bucket
-            s3-access-key-id: devuser
-            s3-access-key-secret: devsecret
+            s3_endpoint: http://s3-minio:9000
+            s3_bucket_id: bucket
+            s3_access_key_id: devuser
+            s3_access_key_secret: devsecret
         volumes:
             - ./app/rhea-backend/src:/app/rhea/src:cached
             - ./app/rhea-backend/prisma:/app/rhea/prisma:cached
@@ -67,7 +67,7 @@ services:
             NODE_ENV: development
             # Fake docker secrets
             environment: development
-            jwt-secret: secretkey
+            jwt_secret: secretkey
         volumes:
             - ./app/calliope-websockets/src:/app/calliope/src:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached
