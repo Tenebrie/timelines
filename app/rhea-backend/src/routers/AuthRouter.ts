@@ -15,13 +15,9 @@ import {
 
 import { TokenService } from '../services/TokenService'
 import { UserService } from '../services/UserService'
-import { adminUsersTag } from './AdminRouter'
-import { announcementListTag } from './AnnouncementRouter'
-import { worldDetailsTag, worldListTag } from './WorldRouter'
+import { adminUsersTag, announcementListTag, authTag, worldDetailsTag, worldListTag } from './utils/tags'
 
 const router = new Router().with(SessionMiddleware)
-
-export const authTag = 'auth'
 
 router.get('/api/auth', async (ctx) => {
 	useApiEndpoint({

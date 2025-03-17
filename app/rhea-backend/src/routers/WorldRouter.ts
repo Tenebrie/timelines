@@ -20,16 +20,13 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
+import { worldCollaboratorsTag, worldDetailsTag, worldListTag } from './utils/tags'
 import { CollaboratorAccessValidator } from './validators/CollaboratorAccessValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
 import { WorldAccessModeValidator } from './validators/WorldAccessModeValidator'
 import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator'
 
 const router = new Router().with(SessionMiddleware)
-
-export const worldListTag = 'worldList'
-export const worldDetailsTag = 'worldDetails'
-export const worldCollaboratorsTag = 'worldCollaborators'
 
 router.get('/api/worlds', async (ctx) => {
 	useApiEndpoint({

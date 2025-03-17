@@ -15,15 +15,13 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
+import { actorListTag, worldDetailsTag } from './utils/tags'
 import { ContentStringValidator } from './validators/ContentStringValidator'
 import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
 import { NameStringValidator } from './validators/NameStringValidator'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
-import { worldDetailsTag } from './WorldRouter'
 
 const router = new Router().with(SessionMiddleware)
-
-const actorListTag = 'actorList'
 
 router.post('/api/world/:worldId/actors', async (ctx) => {
 	useApiEndpoint({

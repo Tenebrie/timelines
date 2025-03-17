@@ -2,11 +2,9 @@ import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
 import { WorldSearchService } from '@src/services/WorldSearchService'
 import { PathParam, Router, StringValidator, useApiEndpoint, useAuth, usePathParams } from 'moonflower'
 
-import { worldDetailsTag } from './WorldRouter'
+import { worldDetailsTag, worldSearchTag } from './utils/tags'
 
 const router = new Router()
-
-const worldSearchTag = 'worldSearch'
 
 router.get('/api/world/:worldId/search/:query', async (ctx) => {
 	useApiEndpoint({

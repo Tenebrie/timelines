@@ -13,9 +13,9 @@ import {
 } from 'moonflower'
 import * as path from 'path'
 
-const router = new Router()
+import { worldThumbnailTag } from './utils/tags'
 
-export const worldThumbnailTag = 'worldThumbnail'
+const router = new Router()
 
 router.get('/api/world/:worldId/thumbnail', async (ctx) => {
 	useApiEndpoint({

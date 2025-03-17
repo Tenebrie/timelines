@@ -18,13 +18,12 @@ import {
 } from 'moonflower'
 
 import { SessionMiddleware } from '../middleware/SessionMiddleware'
+import { worldWikiTag } from './utils/tags'
 import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
 import { NullableStringValidator } from './validators/NullableStringValidator'
 import { StringArrayValidator } from './validators/StringArrayValidator'
 
 const router = new Router().with(SessionMiddleware)
-
-export const worldWikiTag = 'worldWiki'
 
 router.get('/api/world/:worldId/wiki/articles', async (ctx) => {
 	useApiEndpoint({

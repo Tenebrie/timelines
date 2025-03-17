@@ -17,12 +17,11 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
+import { worldEventTracksTag } from './utils/tags'
 import { NameStringValidator } from './validators/NameStringValidator'
 import { NonNegativeIntegerValidator } from './validators/NonNegativeIntegerValidator'
 
 const router = new Router().with(SessionMiddleware)
-
-export const worldEventTracksTag = 'worldEventTracks'
 
 router.get('/api/world/:worldId/event-tracks', async (ctx) => {
 	useApiEndpoint({

@@ -3,9 +3,9 @@ import { AnnouncementService } from '@src/services/AnnouncementService'
 import { AuthorizationService } from '@src/services/AuthorizationService'
 import { PathParam, Router, StringValidator, useApiEndpoint, useAuth, usePathParams } from 'moonflower'
 
-const router = new Router()
+import { announcementListTag } from './utils/tags'
 
-export const announcementListTag = 'announcementList'
+const router = new Router()
 
 router.get('/api/announcements', async (ctx) => {
 	useApiEndpoint({

@@ -13,6 +13,7 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
+import { adminUsersTag } from './utils/tags'
 import { UserLevelValidator } from './validators/UserLevelValidator'
 
 const router = new Router().with(async (ctx) => {
@@ -21,8 +22,6 @@ const router = new Router().with(async (ctx) => {
 		user,
 	}
 })
-
-export const adminUsersTag = 'adminUsers'
 
 router.get('/api/admin/users', async (ctx) => {
 	useApiEndpoint({

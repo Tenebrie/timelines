@@ -21,6 +21,7 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
+import { worldDetailsTag, worldEventDeltaTag, worldEventTag } from './utils/tags'
 import { ContentStringValidator } from './validators/ContentStringValidator'
 import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
 import { NullableEventTrackValidator } from './validators/NullableEventTrackValidator'
@@ -31,11 +32,6 @@ import { UuidStringValidator } from './validators/UuidStringValidator'
 import { WorldEventFieldValidator } from './validators/WorldEventFieldValidator'
 
 const router = new Router().with(SessionMiddleware)
-
-export const worldEventTag = 'worldEvent'
-export const worldEventDeltaTag = 'worldEventDelta'
-export const worldListTag = 'worldList'
-export const worldDetailsTag = 'worldDetails'
 
 /**
  * World events
