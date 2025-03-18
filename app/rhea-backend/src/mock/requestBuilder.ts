@@ -1,6 +1,6 @@
 import { CollaboratingUser, User, World } from '@prisma/client'
 import { AuthorizationService } from '@src/services/AuthorizationService'
-import * as request from 'supertest'
+import request from 'supertest'
 
 import { app } from '..'
 import { withUserAuth } from './auth'
