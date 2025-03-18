@@ -1,5 +1,5 @@
 import { User, World } from '@prisma/client'
-import { UnauthorizedError } from 'moonflower'
+import { UnauthorizedError } from 'moonflower/errors/UserFacingErrors'
 
 import { getPrismaClient } from './dbClients/DatabaseClient'
 import { WorldService } from './WorldService'

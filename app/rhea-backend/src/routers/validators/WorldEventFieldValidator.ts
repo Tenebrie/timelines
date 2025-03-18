@@ -1,6 +1,6 @@
 import { WorldEventField } from '@prisma/client'
 import { keysOf } from '@src/utils/keysOf'
-import { RequiredParam } from 'moonflower'
+import { RequiredParam } from 'moonflower/validators/ParamWrappers'
 
 export const WorldEventFieldValidator = RequiredParam({
 	prevalidate: (v) => {

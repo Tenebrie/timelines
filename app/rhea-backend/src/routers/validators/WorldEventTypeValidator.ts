@@ -1,6 +1,6 @@
 import { WorldEventType } from '@prisma/client'
 import { keysOf } from '@src/utils/keysOf'
-import { RequiredParam } from 'moonflower'
+import { RequiredParam } from 'moonflower/validators/ParamWrappers'
 
 export const WorldEventTypeValidator = RequiredParam({
 	prevalidate: (v) => keysOf(WorldEventType).some((type) => type === (v ?? '').toUpperCase()),

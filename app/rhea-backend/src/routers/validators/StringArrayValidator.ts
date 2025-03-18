@@ -1,4 +1,4 @@
-import { RequiredParam } from 'moonflower'
+import { RequiredParam } from 'moonflower/validators/ParamWrappers'
 
 export const StringArrayValidator = RequiredParam({
 	parse: (v) => JSON.parse(v ?? '') as string[],

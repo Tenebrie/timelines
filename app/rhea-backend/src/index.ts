@@ -1,8 +1,10 @@
 import './registerModuleAlias'
 
 import Koa from 'koa'
-import * as bodyParser from 'koa-bodyparser'
-import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'moonflower'
+import bodyParser from 'koa-bodyparser'
+import { HttpErrorHandler } from 'moonflower/errors/HttpErrorHandler'
+import { useApiHeader } from 'moonflower/hooks/useApiHeader'
+import { initOpenApiEngine } from 'moonflower/openapi/initOpenApiEngine'
 
 import { ActorRouter } from './routers/ActorRouter'
 import { AdminRouter } from './routers/AdminRouter'

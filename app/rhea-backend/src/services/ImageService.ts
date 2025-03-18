@@ -1,6 +1,6 @@
 import { ImageFormat } from '@src/schema/ImageFormat'
 import { BadRequestError } from 'moonflower'
-import * as sharp from 'sharp'
+import sharp from 'sharp'
 
 export const ImageService = {
 	validateImage: async (image: Buffer) => {

@@ -1,5 +1,5 @@
 import { AssetType } from '@prisma/client'
-import { RequiredParam } from 'moonflower'
+import { RequiredParam } from 'moonflower/validators/ParamWrappers'
 import { z } from 'zod'
 
 const zodSchema = z.nativeEnum(AssetType)

@@ -1,4 +1,4 @@
-import { RequiredParam } from 'moonflower'
+import { RequiredParam } from 'moonflower/validators/ParamWrappers'
 
 export const NullableUuidStringValidator = RequiredParam({
 	parse: (v) => (v === null ? v : String(v).trim()),

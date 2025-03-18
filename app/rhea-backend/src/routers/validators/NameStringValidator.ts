@@ -1,4 +1,4 @@
-import { RequiredParam } from 'moonflower'
+import { RequiredParam } from 'moonflower/validators/ParamWrappers'
 
 export const NameStringValidator = RequiredParam({
 	parse: (v) => String(v).trim(),
