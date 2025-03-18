@@ -11,7 +11,7 @@ export const useArticleApiCache = () => {
 
 	const updateCachedArticle = (data: Pick<WikiArticle, 'id'> & Partial<WikiArticle>) => {
 		dispatch(
-			otherApi.util.updateQueryData('getArticles', { worldId }, (draft) => {
+			otherApi.util.updateQueryData('getArticles', { worldId, parentId: data.parentId }, (draft) => {
 				return draft.map((article) => {
 					if (article.id !== data.id) {
 						return article
@@ -28,7 +28,7 @@ export const useArticleApiCache = () => {
 
 	const upsertCachedArticle = (data: WikiArticle) => {
 		dispatch(
-			otherApi.util.updateQueryData('getArticles', { worldId }, (draft) => {
+			otherApi.util.updateQueryData('getArticles', { worldId, parentId: data.parentId }, (draft) => {
 				if (!draft.some((article) => article.id === data.id)) {
 					draft.push(data)
 					return draft
@@ -49,6 +49,7 @@ export const useArticleApiCache = () => {
 	}
 
 	const removeCachedArticles = (articles: string[]) => {
+		// TODO: Fix, this is a bug for folders
 		dispatch(
 			otherApi.util.updateQueryData('getArticles', { worldId }, (draft) => {
 				return draft.filter((article) => !articles.includes(article.id))

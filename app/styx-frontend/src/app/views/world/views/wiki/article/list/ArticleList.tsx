@@ -27,7 +27,7 @@ export const ArticleList = ({ parentId }: Props) => {
 				<span key={article.id}>
 					<ArticleListItem article={article} />
 					<ArticleDropHandle position={0} parentId={article.id} marginLeft={2} />
-					{article.children.length > 0 && <ArticleList parentId={article.id} />}
+					{article.children && article.children.length > 0 && <ArticleList parentId={article.id} />}
 					<ArticleDropHandle position={article.position + 1} parentId={parentId} />
 				</span>
 			))}

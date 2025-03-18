@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "analyze",
+			"path": "app/styx-frontend",
+			"problemMatcher": [],
+			"label": "npm: analyze - app/styx-frontend",
+			"detail": "source-map-explorer 'build/assets/*.js'"
+		}
+	]
+}

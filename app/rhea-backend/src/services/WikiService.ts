@@ -35,6 +35,9 @@ export const WikiService = {
 				name: params.name,
 				position: params.position,
 			},
+			include: {
+				children: true,
+			},
 		})
 	},
 
@@ -69,6 +72,9 @@ export const WikiService = {
 								})),
 							}
 						: undefined,
+				},
+				include: {
+					children: true,
 				},
 			})
 
@@ -109,6 +115,9 @@ export const WikiService = {
 				},
 				data: {
 					position: params.toPosition,
+				},
+				include: {
+					children: true,
 				},
 			})
 
@@ -183,16 +192,16 @@ export const WikiService = {
 				where: {
 					id: params.articleIdA,
 				},
-				select: {
-					position: true,
+				include: {
+					children: true,
 				},
 			}),
 			getPrismaClient().wikiArticle.findFirst({
 				where: {
 					id: params.articleIdB,
 				},
-				select: {
-					position: true,
+				include: {
+					children: true,
 				},
 			}),
 		])

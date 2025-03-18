@@ -1,4 +1,33 @@
 import { mockToResponse, mockUser, mockWorld, withUserAuth, withWorld } from '@src/mock'
+import { vi } from 'vitest'
+
+vi.mock('@src/services/SecretService', () => {
+	return {
+		SecretService: {
+			getSecret: vi.fn((secretName) => {
+				if (secretName === 'jwt-secret') {
+					return 'secretkey'
+				}
+				if (secretName === 'environment') {
+					return 'development'
+				}
+				if (secretName === 's3-endpoint') {
+					return 'http://localhost:9000'
+				}
+				if (secretName === 's3-bucket-id') {
+					return 'test-bucket'
+				}
+				if (secretName === 's3-access-key-id') {
+					return 'secret'
+				}
+				if (secretName === 's3-access-key-secret') {
+					return 'secret'
+				}
+				throw new Error(`Secret ${secretName} not found`)
+			}),
+		},
+	}
+})
 
 describe('WorldRouter', () => {
 	describe('GET /api/world/:worldId', () => {

@@ -17,8 +17,8 @@
 		"prod": "node dist/index.js",
 		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline",
 		"start": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' src/index.ts",
-		"test": "jest",
-		"test:watch": "jest --watchAll"
+		"test": "vitest --run",
+		"test:watch": "vitest"
 	},
 	"lint-staged": {
 		"*.(ts)": "eslint --fix"
@@ -97,8 +97,7 @@
 		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-simple-import-sort": "^12.1.1",
 		"eslint-plugin-unused-imports": "^4.1.4",
-		"jest": "29.7.0",
-		"jest-mock-extended": "4.0.0-beta1",
+		"jsdom": "^26.0.0",
 		"prettier": "^3.4.2",
 		"source-map-support": "^0.5.20",
 		"supertest": "^7.0.0",
@@ -106,6 +105,7 @@
 		"ts-node": "^10.9.2",
 		"ts-node-dev": "^2.0.0",
 		"tsconfig-paths": "4.2.0",
-		"typescript": "^5.7.2"
+		"typescript": "^5.7.2",
+		"vitest": "^3.0.9"
 	}
 }

@@ -1,19 +1,20 @@
-import * as fs from 'fs'
+import fs from 'fs'
+import { beforeEach, vi } from 'vitest'
 
 import { TokenService } from './TokenService'
 
 describe('TokenService', () => {
 	describe("With token in '/run/secrets/jwt-secret'", () => {
-		beforeAll(() => {
+		beforeEach(() => {
 			const originalExistsSync = fs.existsSync
 			const originalReadFileSync = fs.readFileSync
-			jest.spyOn(fs, 'existsSync').mockImplementation((...arg) => {
+			vi.spyOn(fs, 'existsSync').mockImplementation((...arg) => {
 				if (arg[0] === '/run/secrets/jwt-secret') {
 					return true
 				}
 				return originalExistsSync(...arg)
 			})
-			jest.spyOn(fs, 'readFileSync').mockImplementation((...arg) => {
+			vi.spyOn(fs, 'readFileSync').mockImplementation((...arg) => {
 				if (arg[0] === '/run/secrets/jwt-secret') {
 					return 'secret'
 				}
@@ -69,7 +70,7 @@ describe('TokenService', () => {
 	describe('With token in environment variable', () => {
 		let originalEnv: typeof process.env
 
-		beforeAll(() => {
+		beforeEach(() => {
 			originalEnv = process.env
 			process.env = {
 				...process.env,
