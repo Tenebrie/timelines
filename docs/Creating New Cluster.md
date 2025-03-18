@@ -58,4 +58,4 @@ This is an unorganized doc with notes about what needs to be done for a new clus
   - `./scripts/stack-migrate.sh`
 - Setup DB backups
   - `crontab -e`
-  - `0 */6 * * * /root/timelines/scripts/stack-create-db-backup.sh BUCKET_NAME >> /var/log/stack-db-backup.log 2>&1`
+  - `0 */6 * * * /root/timelines/scripts/stack-create-db-backup.sh BUCKET_NAME >> /var/log/stack-create-db-backup.log 2>&1`
