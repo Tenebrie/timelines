@@ -11,8 +11,8 @@ exit_code=$?
 if [ $exit_code -eq 1 ]; then
    (cd app/rhea-backend && yarn prisma:migrate:dev)
 
-   docker exec $(docker ps -aqf "name=^timelines[-_]rhea[-_][0-9]+") yarn prisma generate
-   docker exec $(docker ps -aqf "name=^timelines[-_]rhea[-_][0-9]+") touch src/index.ts
+   docker exec $(docker ps -qf "name=^timelines[-_]rhea[-_][0-9]+") yarn prisma generate
+   docker exec $(docker ps -qf "name=^timelines[-_]rhea[-_][0-9]+") touch src/index.ts
 fi
 
 echo "Waiting for Rhea to get up..."
