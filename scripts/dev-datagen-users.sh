@@ -23,4 +23,4 @@ BEGIN
 END\$\$;
 "
 
-docker exec $(docker ps -aqf "name=timelines[-_]rhea[-_]postgres") psql -U docker -d db -c "${CMD}"
+docker exec $(docker ps -qf "name=timelines[-_]rhea[-_]postgres") psql -U docker -d db -c "${CMD}"

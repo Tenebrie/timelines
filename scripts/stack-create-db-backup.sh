@@ -10,7 +10,7 @@ fi
 BUCKET="$1"
 
 # Dump the database from the Docker container
-CONTAINER_ID=$(docker ps -aqf "name=timelines[-_]rhea[-_]postgres")
+CONTAINER_ID=$(docker ps -qf "name=timelines[-_]rhea[-_]postgres" | head -n 1)
 docker exec "$CONTAINER_ID" bash -c "pg_dump -Udocker db > /backups/db.sql"
 
 # Prep some variables
