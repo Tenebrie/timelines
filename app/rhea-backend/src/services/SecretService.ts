@@ -24,7 +24,7 @@ export const SecretService = {
 			return secretCache[secretName]
 		}
 		if (fs.existsSync(`/run/secrets/${secretName}`)) {
-			const key = fs.readFileSync(`/run/secrets/${secretName}`, 'utf8')
+			const key = fs.readFileSync(`/run/secrets/${secretName}`, 'utf8').trim()
 			SecretService.writeToCache(secretName, key)
 			return key
 		}
