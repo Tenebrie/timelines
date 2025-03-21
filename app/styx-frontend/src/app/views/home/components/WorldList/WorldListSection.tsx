@@ -57,7 +57,7 @@ export const WorldListSection = ({ worlds, label, showActions, showCreateButton 
 	}
 
 	return (
-		<OutlinedContainer style={{ maxWidth: 600, minWidth: 400, borderRadius: 8 }} label={label}>
+		<OutlinedContainer style={{ minWidth: 400, borderRadius: 8 }} label={label}>
 			{worlds.map((world) => (
 				<Stack direction="row" justifyContent="space-between" key={world.id}>
 					<Tooltip title={world.name} enterDelay={1000} arrow>

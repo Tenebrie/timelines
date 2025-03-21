@@ -13,7 +13,7 @@ export const WorldList = () => {
 	const { isFetching, isReady, ownedWorlds, contributableWorlds, visibleWorlds } = useWorldListData()
 
 	return (
-		<Container style={{ minWidth: 512 }}>
+		<Container maxWidth="sm">
 			<Stack gap={2} position="relative">
 				{ownedWorlds.length === 0 && isReady && <WorldListEmptyState label="Your worlds" />}
 				{ownedWorlds.length > 0 && (

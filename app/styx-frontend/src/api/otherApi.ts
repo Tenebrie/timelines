@@ -41,17 +41,17 @@ export type GetSupportedImageFormatsApiResponse = /** status 200  */ {
 }
 export type GetSupportedImageFormatsApiArg = void
 export type RequestImageConversionApiResponse = /** status 200  */ {
+	status: 'Pending' | 'Finalized' | 'Failed'
 	id: string
 	createdAt: string
 	updatedAt: string
-	expiresAt?: null | string
 	ownerId: string
-	bucketKey: string
 	size: number
+	expiresAt?: null | string
+	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'ImageConversion' | 'Avatar'
-	status: 'Pending' | 'Finalized' | 'Failed'
 }
 export type RequestImageConversionApiArg = {
 	body: {

@@ -35,33 +35,33 @@ export type GetAssetApiArg = {
 }
 export type ListUserAssetsApiResponse = /** status 200  */ {
 	assets: {
+		status: 'Pending' | 'Finalized' | 'Failed'
 		id: string
 		createdAt: string
 		updatedAt: string
-		expiresAt?: null | string
 		ownerId: string
-		bucketKey: string
 		size: number
+		expiresAt?: null | string
+		bucketKey: string
 		originalFileName: string
 		originalFileExtension: string
 		contentType: 'ImageConversion' | 'Avatar'
-		status: 'Pending' | 'Finalized' | 'Failed'
 	}[]
 }
 export type ListUserAssetsApiArg = void
 export type RequestPresignedUrlApiResponse = /** status 200  */ {
 	asset: {
+		status: 'Pending' | 'Finalized' | 'Failed'
 		id: string
 		createdAt: string
 		updatedAt: string
-		expiresAt?: null | string
 		ownerId: string
-		bucketKey: string
 		size: number
+		expiresAt?: null | string
+		bucketKey: string
 		originalFileName: string
 		originalFileExtension: string
 		contentType: 'ImageConversion' | 'Avatar'
-		status: 'Pending' | 'Finalized' | 'Failed'
 	}
 	url: string
 	fields: {
@@ -76,17 +76,17 @@ export type RequestPresignedUrlApiArg = {
 	}
 }
 export type FinalizeAssetUploadApiResponse = /** status 200  */ {
+	status: 'Pending' | 'Finalized' | 'Failed'
 	id: string
 	createdAt: string
 	updatedAt: string
-	expiresAt?: null | string
 	ownerId: string
-	bucketKey: string
 	size: number
+	expiresAt?: null | string
+	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'ImageConversion' | 'Avatar'
-	status: 'Pending' | 'Finalized' | 'Failed'
 }
 export type FinalizeAssetUploadApiArg = {
 	body: {

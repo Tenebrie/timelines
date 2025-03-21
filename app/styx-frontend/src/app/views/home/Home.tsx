@@ -1,35 +1,17 @@
-import { Outlet } from '@tanstack/react-router'
-import styled from 'styled-components'
+import Container from '@mui/material/Container'
+import Stack from '@mui/material/Stack'
 
 import { BaseNavigator } from '@/app/features/navigation/components/BaseNavigator'
 
 import { WorldList } from './components/WorldList/WorldList'
 
-const HomePageContainer = styled.div`
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-	align-items: center;
-`
-
-const WorldListContainer = styled.div`
-	display: flex;
-	flex-direction: row;
-	flex-grow: 1;
-	align-items: center;
-	justify-content: center;
-	gap: 64px;
-`
-
 export const Home = () => {
 	return (
-		<HomePageContainer>
+		<Stack width="100%" height="100%" alignItems="center" justifyContent="center">
 			<BaseNavigator />
-			<WorldListContainer>
+			<Container sx={{ marginTop: 4 }}>
 				<WorldList />
-				<Outlet />
-			</WorldListContainer>
-		</HomePageContainer>
+			</Container>
+		</Stack>
 	)
 }
