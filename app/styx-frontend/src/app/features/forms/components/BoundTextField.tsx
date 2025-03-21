@@ -20,13 +20,20 @@ export function BoundTextField(props: Props) {
 		return 'Validation error'
 	}, [field.state.meta.errors])
 
+	const helperText = useMemo(() => {
+		if (error) {
+			return <Typography variant="caption">{error}</Typography>
+		}
+		return props.helperText
+	}, [error, props.helperText])
+
 	return (
 		<TextField
 			{...props}
 			value={field.state.value}
 			onChange={(e) => field.handleChange(e.target.value)}
 			error={!!error}
-			helperText={<Typography variant="caption">{error}</Typography>}
+			helperText={helperText}
 		/>
 	)
 }

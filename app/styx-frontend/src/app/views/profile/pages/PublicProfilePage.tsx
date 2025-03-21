@@ -2,6 +2,7 @@ import { useUpdateProfile } from '@api/hooks/useUpdateProfile'
 import SaveIcon from '@mui/icons-material/Save'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -48,10 +49,11 @@ function InternalComponent({ user }: Props) {
 	})
 
 	return (
-		<>
-			<Typography variant="h5" sx={{ mb: 3 }}>
-				Public profile
-			</Typography>
+		<Stack gap={3}>
+			<Stack gap={2}>
+				<Typography variant="h5">Public profile</Typography>
+				<Divider />
+			</Stack>
 
 			<Stack direction="row" spacing={3}>
 				<Stack flex={1} spacing={3}>
@@ -102,12 +104,12 @@ function InternalComponent({ user }: Props) {
 				<Stack direction="row" spacing={4}>
 					<Stack alignItems="center" width={280}>
 						<Avatar src={user.avatarUrl} alt="Profile picture" sx={{ width: 260, height: 260, mb: 2 }} />
-						<Button variant="outlined" fullWidth>
+						<Button variant="outlined" fullWidth disabled>
 							Change picture
 						</Button>
 					</Stack>
 				</Stack>
 			</Stack>
-		</>
+		</Stack>
 	)
 }

@@ -38,9 +38,6 @@ router.patch('/api/profile', async (ctx) => {
 		tags: [profileTag],
 	})
 
-	// Wait 2 seconds
-	await new Promise((resolve) => setTimeout(resolve, 2000))
-
 	const user = await useAuth(ctx, UserAuthenticator)
 	const body = useRequestBody(ctx, {
 		username: NonEmptyStringValidator,
