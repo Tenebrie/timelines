@@ -6,7 +6,6 @@ import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import { ReactNode } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -17,6 +16,7 @@ import { ThemeModeToggle } from '../../theming/components/ThemeModeToggle'
 import { CustomTheme, useCustomTheme } from '../../theming/hooks/useCustomTheme'
 import { LastWorldNavigatorButton } from './LastWorldNavigatorButton'
 import { NavigatorButton } from './NavigatorButton'
+import { NavigatorDeliveryTarget } from './NavigatorPortal'
 
 const Container = styled(Paper)<{ $theme: CustomTheme }>`
 	width: calc(100% - 16px);
@@ -29,11 +29,7 @@ const Container = styled(Paper)<{ $theme: CustomTheme }>`
 	padding: 4px 8px;
 `
 
-type Props = {
-	children?: ReactNode | ReactNode[]
-}
-
-export const BaseNavigator = ({ children }: Props) => {
+export const BaseNavigator = () => {
 	const { user } = useSelector(getAuthState)
 	const theme = useCustomTheme()
 
@@ -42,7 +38,7 @@ export const BaseNavigator = ({ children }: Props) => {
 			<Box>
 				<Stack direction="row" height="100%" gap={1} alignItems="center">
 					<Stack minWidth={173} direction="row" gap={1} sx={{ justifyContent: 'flex-end' }}>
-						{children}
+						<NavigatorDeliveryTarget />
 						<LastWorldNavigatorButton icon={<PublicIcon />} label="World" />
 					</Stack>
 					<Divider orientation="vertical" sx={{ height: '25px' }} />

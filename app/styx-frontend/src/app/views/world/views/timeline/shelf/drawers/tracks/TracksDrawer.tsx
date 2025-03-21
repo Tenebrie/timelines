@@ -26,6 +26,7 @@ function TracksDrawerComponent() {
 			pulldownWidth={120}
 			pulldownLabel="Tracks"
 			minHeight={230}
+			maxHeight={window.innerHeight - 256}
 			persistentStateKey="tracksDrawerState/v1"
 			onResize={onResize.current}
 			eventHandler={<TracksDrawerHotkeys />}

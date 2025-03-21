@@ -76,7 +76,7 @@ export const WorldSidebar = () => {
 				sx={{
 					height: '100%',
 					position: 'relative',
-					width: panelOpen ? '300px' : '72px',
+					width: panelOpen ? '250px' : '72px',
 					flexShrink: 0,
 					transition: 'width 0.3s',
 				}}
@@ -129,9 +129,9 @@ export const WorldSidebar = () => {
 						zIndex: 3,
 						position: 'absolute',
 						borderRadius: 0,
-						width: '300px',
+						width: '250px',
 						height: '100%',
-						left: `${panelOpen ? 0 : -300}px`,
+						left: `${panelOpen ? 0 : -250}px`,
 						boxSizing: 'border-box',
 						transition: 'left 0.3s',
 						display: 'flex',

@@ -77,14 +77,28 @@ export const useAutosave = <T extends unknown[]>({ onSave, isSaving, isError, de
 	}, [])
 
 	const startedWaitingRef = useRef<boolean>(false)
+	const waitingStartTimeRef = useRef<number | null>(null)
 	useEffect(() => {
 		if (isSaving) {
 			setSavingState('waiting')
 			startedWaitingRef.current = true
+			waitingStartTimeRef.current = Date.now()
 			return
 		}
 
 		if (savingState === 'waiting' && !isSaving && startedWaitingRef.current) {
+			const timeSinceWaitingStart = Date.now() - (waitingStartTimeRef.current ?? 0)
+			const minimumWaitTime = 1000
+
+			if (timeSinceWaitingStart < minimumWaitTime) {
+				const remainingTime = minimumWaitTime - timeSinceWaitingStart
+				setTimeout(() => {
+					startedWaitingRef.current = false
+					setSavingState(isError ? 'error' : 'success')
+				}, remainingTime)
+				return
+			}
+
 			startedWaitingRef.current = false
 			setSavingState(isError ? 'error' : 'success')
 		}
@@ -146,5 +160,6 @@ export const useAutosave = <T extends unknown[]>({ onSave, isSaving, isError, de
 		manualSave: onManualSave,
 		cancelAutosave: onCancelAutosave,
 		savingState,
+		disabled: savingState === 'waiting',
 	}
 }

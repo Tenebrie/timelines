@@ -25,12 +25,12 @@ const IconContainer = styled.span`
 		position: absolute;
 		font-size: 1em !important;
 		opacity: 0;
-		transition: opacity 0.3s !important;
+		transition: opacity 0.2s !important;
 		transition-delay: 0s !important;
 
 		&.visible {
 			opacity: 1;
-			transition-delay: 0.3s !important;
+			transition-delay: 0.2s !important;
 		}
 
 		&.default {

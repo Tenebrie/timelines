@@ -66,20 +66,35 @@ export function UserDropdown({ user }: Props) {
 			>
 				<MenuItem disabled>Profile</MenuItem>
 				<Divider />
-				<MenuItem onClick={() => navigate({ to: '/profile' })}>
+				<MenuItem
+					onClick={() => {
+						navigate({ to: '/profile' })
+						popupState.close()
+					}}
+				>
 					<ListItemIcon>
 						<AccountCircle />
 					</ListItemIcon>
 					Profile
 				</MenuItem>
-				<MenuItem onClick={() => navigate({ to: '/profile/storage' })}>
+				<MenuItem
+					onClick={() => {
+						navigate({ to: '/profile/storage' })
+						popupState.close()
+					}}
+				>
 					<ListItemIcon>
 						<Storage />
 					</ListItemIcon>
 					Storage
 				</MenuItem>
 				<Divider />
-				<MenuItem onClick={onLogout}>
+				<MenuItem
+					onClick={() => {
+						onLogout()
+						popupState.close()
+					}}
+				>
 					<ListItemIcon>
 						<Logout />
 					</ListItemIcon>

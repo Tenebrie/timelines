@@ -3,6 +3,7 @@ import { createContext, ReactNode, useContext } from 'react'
 interface ResizeableDrawerContextProps {
 	height: number
 	minHeight: number
+	maxHeight: number
 	drawerVisible: boolean
 	preferredOpen: boolean
 	setDrawerHeight: (value: number) => void
@@ -15,6 +16,7 @@ type ProviderProps = {
 	children: ReactNode | ReactNode[]
 	height: number
 	minHeight: number
+	maxHeight: number
 	drawerVisible: boolean
 	preferredOpen: boolean
 	setDrawerHeight: (value: number) => void
@@ -25,6 +27,7 @@ export function ResizeableDrawerProvider({
 	children,
 	height,
 	minHeight,
+	maxHeight,
 	drawerVisible,
 	preferredOpen,
 	setDrawerHeight,
@@ -32,7 +35,15 @@ export function ResizeableDrawerProvider({
 }: ProviderProps) {
 	return (
 		<ResizeableDrawerContext.Provider
-			value={{ height, minHeight, drawerVisible, preferredOpen, setDrawerHeight, setDrawerVisible }}
+			value={{
+				height,
+				minHeight,
+				maxHeight,
+				drawerVisible,
+				preferredOpen,
+				setDrawerHeight,
+				setDrawerVisible,
+			}}
 		>
 			{children}
 		</ResizeableDrawerContext.Provider>

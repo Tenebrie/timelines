@@ -20,6 +20,10 @@ body {
 	-webkit-overflow-scrolling: touch;
 }
 
+.MuiButtonBase-root {
+	transition: background-color 0.2s, color 0.2s !important;
+}
+
 body.cursor-resizing-ns {
 	cursor: ns-resize !important;
 	user-select: none !important;

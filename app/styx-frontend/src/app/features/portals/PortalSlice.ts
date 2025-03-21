@@ -1,0 +1,57 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+
+import { PortalAuthority, PortalTypes } from './PortalAuthority'
+
+export const initialState = {
+	deliveryTargets: {
+		'navigator/contextButton': { key: null as string | null },
+	} satisfies Record<PortalTypes, { key: string | null }>,
+}
+
+export const portalSlice = createSlice({
+	name: 'portal',
+	initialState,
+	reducers: {
+		registerDeliveryTarget: (
+			state,
+			{ payload }: PayloadAction<{ type: PortalTypes; node: HTMLDivElement }>,
+		) => {
+			const key = Math.random().toString(36).substring(2, 15)
+			PortalAuthority.registerDeliveryTarget(payload.type, payload.node)
+			state.deliveryTargets[payload.type].key = key
+		},
+		unregisterDeliveryTarget: (state, { payload }: PayloadAction<{ type: PortalTypes }>) => {
+			PortalAuthority.unregisterDeliveryTarget(payload.type)
+			state.deliveryTargets[payload.type].key = null
+		},
+		findDeliveryTarget: (
+			_,
+			{ payload }: PayloadAction<{ type: PortalTypes; onFound: (node: HTMLDivElement) => void }>,
+		) => {
+			const node = PortalAuthority.findDeliveryTarget(payload.type)
+			if (node) {
+				payload.onFound(node)
+			}
+		},
+
+		registerSummonable: (_, { payload }: PayloadAction<{ type: PortalTypes; node: HTMLDivElement }>) => {
+			PortalAuthority.registerSummonable(payload.type, payload.node)
+		},
+		unregisterSummonable: (_, { payload }: PayloadAction<{ type: PortalTypes; node: HTMLDivElement }>) => {
+			PortalAuthority.unregisterSummonable(payload.type, payload.node)
+		},
+		summon: (
+			_,
+			{ payload }: PayloadAction<{ type: PortalTypes; onSummon: (node: HTMLDivElement) => void }>,
+		) => {
+			const summoned = PortalAuthority.summon(payload.type)
+			if (summoned) {
+				payload.onSummon(summoned)
+			}
+		},
+	},
+})
+
+export type PortalState = typeof initialState
+export const portalInitialState = initialState
+export const PortalReducer = portalSlice.reducer

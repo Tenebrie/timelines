@@ -26,12 +26,19 @@ const StyledInnerDraggerHorizontal = styled.div`
 
 type TopProps = {
 	minHeight?: number
+	maxHeight?: number
 	initialOpen?: boolean
 	initialHeight?: number
 	keepMounted?: boolean
 }
 
-export function useResizeGrabber({ minHeight, initialOpen, initialHeight, keepMounted }: TopProps = {}) {
+export function useResizeGrabber({
+	minHeight,
+	maxHeight,
+	initialOpen,
+	initialHeight,
+	keepMounted,
+}: TopProps = {}) {
 	const _isDraggingNow = useRef(false)
 	const [isDragging, _setIsDragging] = useState(false)
 	const [isDraggingChild, setIsDraggingChild] = useState(false)
@@ -103,6 +110,7 @@ export function useResizeGrabber({ minHeight, initialOpen, initialHeight, keepMo
 		height: _displayedHeight,
 		_isDraggingNow,
 		_minHeight: minHeight ?? 0,
+		_maxHeight: maxHeight ?? window.innerHeight - 256,
 		drawerVisible,
 		preferredOpen,
 		setVisible,
@@ -134,6 +142,7 @@ function ResizeGrabberComponent({
 	_setIsDragging,
 	_setDisplayedHeight,
 	_minHeight,
+	_maxHeight,
 	active,
 	drawerVisible,
 	_setVisibleInternal,
@@ -214,6 +223,9 @@ function ResizeGrabberComponent({
 			if (_currentContainerHeight.current < _minHeight) {
 				_setVisibleInternal(false, true)
 			}
+			if (_currentContainerHeight.current > _maxHeight) {
+				_setInternalHeight(_maxHeight)
+			}
 		}
 
 		const onMove = onMouseMove.current
@@ -235,6 +247,8 @@ function ResizeGrabberComponent({
 		triggerClick,
 		isVertical,
 		_setIsDragging,
+		_maxHeight,
+		_setInternalHeight,
 	])
 
 	// const { containerHeight } = useSelector(getTimelinePreferences)
@@ -256,8 +270,7 @@ function ResizeGrabberComponent({
 		})()
 		_setInternalHeight(value)
 
-		const maxHeight = window.innerHeight - 256
-		const constrainedValue = Math.min(maxHeight, Math.max(_minHeight, value))
+		const constrainedValue = Math.min(_maxHeight, Math.max(_minHeight, value))
 		_setDisplayedHeight(constrainedValue)
 
 		if (overflowHeight !== value - constrainedValue) {
@@ -282,6 +295,7 @@ function ResizeGrabberComponent({
 		_setInternalHeight,
 		isVertical,
 		position,
+		_maxHeight,
 	])
 
 	return (

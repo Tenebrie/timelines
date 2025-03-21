@@ -13,6 +13,7 @@ import usePersistentState from '@/app/hooks/usePersistentState'
 
 export function OutlinerDrawer() {
 	const minHeight = 300
+	const maxHeight = window.innerWidth * 0.6
 	const [preferences, setPreferences] = usePersistentState(
 		'mainWorldState/v1',
 		ResizeGrabberPreferencesSchema,
@@ -26,6 +27,7 @@ export function OutlinerDrawer() {
 		initialOpen: preferences.visible,
 		initialHeight: preferences.height,
 		minHeight,
+		maxHeight,
 	})
 	const { drawerVisible, contentVisible, height, overflowHeight, isDragging, setHeight, setVisible } =
 		grabberProps
@@ -47,6 +49,7 @@ export function OutlinerDrawer() {
 				drawerVisible={drawerVisible}
 				height={height}
 				minHeight={minHeight}
+				maxHeight={maxHeight}
 				preferredOpen={preferences.visible}
 				setDrawerHeight={setHeight}
 				setDrawerVisible={setVisible}

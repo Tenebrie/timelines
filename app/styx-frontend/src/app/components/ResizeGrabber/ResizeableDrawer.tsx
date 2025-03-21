@@ -18,6 +18,7 @@ type Props = {
 	pulldownWidth: number
 	pulldownLabel: ReactNode
 	minHeight: number
+	maxHeight: number
 	keepMounted?: boolean
 	persistentStateKey: string
 	defaultOpen?: boolean
@@ -31,6 +32,7 @@ export function ResizeableDrawer({
 	pulldownWidth,
 	pulldownLabel,
 	minHeight,
+	maxHeight,
 	keepMounted,
 	persistentStateKey,
 	defaultOpen,
@@ -49,6 +51,7 @@ export function ResizeableDrawer({
 
 	const grabberProps = useResizeGrabber({
 		minHeight,
+		maxHeight,
 		initialOpen: preferences.visible,
 		initialHeight: preferences.height,
 		keepMounted,
@@ -89,6 +92,7 @@ export function ResizeableDrawer({
 		<ResizeableDrawerProvider
 			height={height}
 			minHeight={minHeight}
+			maxHeight={maxHeight}
 			drawerVisible={drawerVisible}
 			preferredOpen={preferredOpen}
 			setDrawerHeight={setHeight}

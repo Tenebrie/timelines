@@ -5,7 +5,7 @@ import { memo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { BaseNavigator } from '@/app/features/navigation/components/BaseNavigator'
+import { NavigatorDeliveryDriver } from '@/app/features/navigation/components/NavigatorPortal'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { getOverviewPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
@@ -22,6 +22,7 @@ export function WorldNavigatorComponent() {
 	const dispatch = useDispatch()
 
 	const onToggleOverview = useCallback(() => {
+		console.log('onToggleOverview')
 		dispatch(setPanelOpen(!panelOpen))
 	}, [dispatch, panelOpen, setPanelOpen])
 
@@ -31,10 +32,10 @@ export function WorldNavigatorComponent() {
 	}, [navigate, scrollTimelineTo, timeOrigin])
 
 	return (
-		<BaseNavigator>
+		<NavigatorDeliveryDriver>
 			<Button onClick={onToggleOverview} aria-label="Toggle">
 				<Menu />
 			</Button>
-		</BaseNavigator>
+		</NavigatorDeliveryDriver>
 	)
 }

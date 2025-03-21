@@ -6,6 +6,7 @@ import { DragDropPortalSlot } from './features/dragDrop/components/GhostWrapper'
 import { LostConnectionAlert } from './features/liveUpdates/components/LostConnectionAlert'
 import { useLiveUpdates } from './features/liveUpdates/hooks/useLiveUpdates'
 import { ModalsRenderer } from './features/modals/ModalsRenderer'
+import { BaseNavigator } from './features/navigation/components/BaseNavigator'
 import { NavigationReceiverWrapper } from './features/navigation/components/NavigationReceiverWrapper'
 import { PageMetadata } from './features/pageMetadata/PageMetadata'
 import { useSavedPreferences } from './features/preferences/hooks/useSavedPreferences'
@@ -15,7 +16,8 @@ import { useShortcutManager } from './hooks/useShortcut/useShortcutManager'
 
 const Container = styled.div`
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
+	align-items: center;
 	width: 100vw;
 	min-height: 100vh;
 `
@@ -38,6 +40,7 @@ const App = () => {
 			<CustomThemeProvider>
 				<CustomThemeOverrides>
 					<Container>
+						<BaseNavigator />
 						<Outlet />
 						<ModalsRenderer />
 					</Container>

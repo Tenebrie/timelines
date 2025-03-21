@@ -3,6 +3,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { baseApi, BaseApiReducer } from '../api/base/baseApi'
 import { AuthReducer } from './features/auth/AuthSlice'
 import { ModalsReducer } from './features/modals/ModalsSlice'
+import { PortalReducer } from './features/portals/PortalSlice'
 import { PreferencesReducer } from './features/preferences/PreferencesSlice'
 import { deepMerge } from './utils/deepMerge'
 import { TimelineReducer } from './views/world/views/timeline/TimelineSlice'
@@ -12,6 +13,7 @@ import { WorldReducer } from './views/world/WorldSlice'
 const rootReducer = combineReducers({
 	api: BaseApiReducer,
 	auth: AuthReducer,
+	portal: PortalReducer,
 	modals: ModalsReducer,
 	world: WorldReducer,
 	preferences: PreferencesReducer,

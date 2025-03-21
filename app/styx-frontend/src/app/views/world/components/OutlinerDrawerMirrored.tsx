@@ -22,6 +22,7 @@ export function OutlinerDrawerMirrored() {
 		initialOpen: preferences.visible,
 		initialHeight: preferences.height,
 		minHeight: 300,
+		maxHeight: window.innerWidth * 0.4 - 252,
 	})
 	const { drawerVisible, contentVisible, height, overflowHeight, isDragging } = grabberProps
 
