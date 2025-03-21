@@ -1,7 +1,7 @@
+import { WorldEvent } from '@api/types/worldTypes'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { WorldEvent } from '@/api/types/types'
 import { isNull } from '@/app/utils/isNull'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 

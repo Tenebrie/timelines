@@ -1,4 +1,4 @@
-import { WorldCalendarType } from '@api/types/types'
+import { WorldCalendarType } from '@api/types/worldTypes'
 import { useCreateWorldMutation } from '@api/worldListApi'
 import Add from '@mui/icons-material/Add'
 import LoadingButton from '@mui/lab/LoadingButton'

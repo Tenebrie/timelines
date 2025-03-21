@@ -1,4 +1,4 @@
-import { ActorDetails } from '@api/types/types'
+import { ActorDetails } from '@api/types/worldTypes'
 import Edit from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'

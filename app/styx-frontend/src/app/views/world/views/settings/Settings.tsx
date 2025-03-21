@@ -1,4 +1,4 @@
-import { WorldBrief, WorldCalendarType } from '@api/types/types'
+import { WorldBrief, WorldCalendarType } from '@api/types/worldTypes'
 import { GetWorldCollaboratorsApiResponse } from '@api/worldCollaboratorsApi'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Divider from '@mui/material/Divider'

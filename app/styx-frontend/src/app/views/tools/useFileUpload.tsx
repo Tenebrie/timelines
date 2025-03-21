@@ -1,4 +1,4 @@
-import { AssetType } from '@api/types/types'
+import { AssetType } from '@api/types/assetTypes'
 import { useCallback } from 'react'
 
 import { useBucketFileUpload } from './useBucketFileUpload'

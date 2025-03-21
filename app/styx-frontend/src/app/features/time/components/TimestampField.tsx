@@ -1,3 +1,4 @@
+import { WorldCalendarType } from '@api/types/worldTypes'
 import CalendarMonth from '@mui/icons-material/CalendarMonth'
 import Clear from '@mui/icons-material/Clear'
 import Button from '@mui/material/Button'
@@ -6,8 +7,6 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import { useState } from 'react'
 import styled from 'styled-components'
-
-import { WorldCalendarType } from '@/api/types/types'
 
 import { useWorldTime } from '../hooks/useWorldTime'
 import { TimePicker } from './TimePicker'

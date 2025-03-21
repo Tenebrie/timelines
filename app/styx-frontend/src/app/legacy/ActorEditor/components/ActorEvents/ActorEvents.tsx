@@ -1,4 +1,4 @@
-import { Actor } from '@api/types/types'
+import { Actor } from '@api/types/worldTypes'
 import { useSelector } from 'react-redux'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'

@@ -1,4 +1,4 @@
-import { ActorDetails } from '@api/types/types'
+import { ActorDetails } from '@api/types/worldTypes'
 import { memo } from 'react'
 import { useSelector } from 'react-redux'
 

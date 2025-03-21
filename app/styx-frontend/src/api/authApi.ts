@@ -44,6 +44,7 @@ export type CheckAuthenticationApiResponse =
 				email: string
 				username: string
 				level: 'Free' | 'Premium' | 'Admin'
+				bio: string
 				avatarUrl?: string
 			}
 	  }
@@ -54,6 +55,7 @@ export type CreateAccountApiResponse = /** status 200  */ {
 		id: string
 		email: string
 		username: string
+		bio: string
 		level: 'Free' | 'Premium' | 'Admin'
 	}
 	sessionId: string
@@ -69,10 +71,25 @@ export type DeleteAccountApiResponse = unknown
 export type DeleteAccountApiArg = void
 export type PostLoginApiResponse = /** status 200  */ {
 	user: {
+		avatarUrl?: string
 		id: string
 		email: string
 		username: string
+		bio: string
 		level: 'Free' | 'Premium' | 'Admin'
+		avatar: null | {
+			id: string
+			createdAt: string
+			updatedAt: string
+			expiresAt?: null | string
+			ownerId: string
+			bucketKey: string
+			size: number
+			originalFileName: string
+			originalFileExtension: string
+			contentType: 'ImageConversion' | 'Avatar'
+			status: 'Pending' | 'Finalized' | 'Failed'
+		}
 	}
 	sessionId: string
 }

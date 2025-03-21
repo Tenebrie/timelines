@@ -1,4 +1,4 @@
-import { Actor, ActorDetails, MentionDetails } from '@api/types/types'
+import { Actor, ActorDetails, MentionDetails } from '@api/types/worldTypes'
 import { useMemo, useState } from 'react'
 
 import { generateSetter } from '@/app/utils/autosave/generateSetter'

@@ -1,4 +1,4 @@
-import { ActorDetails } from '@api/types/types'
+import { ActorDetails } from '@api/types/worldTypes'
 import ArrowBack from '@mui/icons-material/ArrowBack'
 import Delete from '@mui/icons-material/Delete'
 import LoadingButton from '@mui/lab/LoadingButton'

@@ -1,20 +1,14 @@
-import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
+import { Outlet } from '@tanstack/react-router'
 
-import { User } from '@/app/features/auth/AuthSlice'
+import { PageButton } from './components/PageButton'
 
-type Props = {
-	user: User
-}
-
-export function Profile({ user }: Props) {
+export function Profile() {
 	return (
-		<Container maxWidth="lg" sx={{ py: 4 }}>
+		<Container maxWidth="lg" sx={{ py: 4, height: '100%' }}>
 			<Stack direction="row" spacing={3}>
 				{/* Sidebar */}
 				<Paper sx={{ width: 250, p: 2 }} elevation={1}>
@@ -22,76 +16,14 @@ export function Profile({ user }: Props) {
 						Settings
 					</Typography>
 					<Stack spacing={1}>
-						<Button
-							fullWidth
-							sx={{
-								justifyContent: 'flex-start',
-								px: 2,
-								py: 1,
-								textTransform: 'none',
-								fontWeight: (theme) => theme.typography.fontWeightRegular,
-								'&.active': {
-									fontWeight: (theme) => theme.typography.fontWeightBold,
-									bgcolor: 'action.hover',
-								},
-							}}
-							className="active"
-						>
-							Public profile
-						</Button>
-						<Button
-							fullWidth
-							sx={{
-								justifyContent: 'flex-start',
-								px: 2,
-								py: 1,
-								textTransform: 'none',
-								fontWeight: (theme) => theme.typography.fontWeightRegular,
-							}}
-						>
-							Storage
-						</Button>
+						<PageButton label="Public profile" route="/profile/public" />
+						<PageButton label="Storage" route="/profile/storage" />
 					</Stack>
 				</Paper>
 
 				{/* Main Content */}
-				<Paper sx={{ flex: 1, p: 3, maxWidth: 800 }} elevation={1}>
-					<Typography variant="h5" sx={{ mb: 3 }}>
-						Public profile
-					</Typography>
-
-					<Stack direction="row" spacing={4}>
-						<Stack flex={1} spacing={3}>
-							<TextField
-								label="Email"
-								fullWidth
-								defaultValue={user.email}
-								disabled
-								helperText="Select a verified email to display"
-							/>
-							<TextField
-								label="Name"
-								fullWidth
-								defaultValue={user.username}
-								helperText="Your name may appear around the application where you contribute or are mentioned."
-							/>
-							<TextField
-								label="Bio"
-								fullWidth
-								multiline
-								rows={4}
-								defaultValue={user.id}
-								helperText="Tell us a little bit about yourself"
-							/>
-						</Stack>
-
-						<Stack alignItems="center" width={280}>
-							<Avatar src={user.avatarUrl} alt="Profile picture" sx={{ width: 260, height: 260, mb: 2 }} />
-							<Button variant="outlined" fullWidth>
-								Change picture
-							</Button>
-						</Stack>
-					</Stack>
+				<Paper sx={{ flex: 1, p: 3 }} elevation={1}>
+					<Outlet />
 				</Paper>
 			</Stack>
 		</Container>

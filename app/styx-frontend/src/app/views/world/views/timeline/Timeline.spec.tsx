@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { WorldDetails, WorldEvent } from '@api/types/types'
+import { WorldDetails, WorldEvent } from '@api/types/worldTypes'
 import { screen, waitFor } from '@testing-library/react'
 
 import { mockEventModel } from '@/api/mock/rheaApi.mock'

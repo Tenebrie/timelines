@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 
 import { getPrismaClient } from './dbClients/DatabaseClient'
@@ -18,6 +19,8 @@ export const UserService = {
 				level: true,
 				email: true,
 				username: true,
+				bio: true,
+				avatar: true,
 			},
 		})
 	},
@@ -35,6 +38,7 @@ export const UserService = {
 				level: true,
 				email: true,
 				username: true,
+				bio: true,
 			},
 		})
 		return user
@@ -63,6 +67,15 @@ export const UserService = {
 			where: {
 				id: userId,
 			},
+		})
+	},
+
+	updateUser: async (userId: string, body: Prisma.UserUpdateInput) => {
+		return getPrismaClient().user.update({
+			where: {
+				id: userId,
+			},
+			data: body,
 		})
 	},
 }

@@ -1,4 +1,4 @@
-import { MarkerType, TimelineEntity } from '@api/types/types'
+import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'

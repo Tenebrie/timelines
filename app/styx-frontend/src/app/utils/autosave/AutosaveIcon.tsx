@@ -1,6 +1,8 @@
 import Check from '@mui/icons-material/Check'
 import Error from '@mui/icons-material/Error'
 import MoreHoriz from '@mui/icons-material/MoreHoriz'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
 import { ReactElement } from 'react'
 import styled from 'styled-components'
 
@@ -43,7 +45,19 @@ export const AutosaveIcon = ({ savingState, isSaving, defaultIcon }: Subprops) =
 		<IconContainer>
 			<svg className={`${savingState === 'none' ? 'default visible' : 'default'}`}>{defaultIcon}</svg>
 			<MoreHoriz className={`${savingState === 'debounce' ? 'visible' : ''}`} />
-			<Check className={`${savingState === 'success' || isSaving ? 'visible' : ''}`} />
+			<Box
+				className={`${savingState === 'waiting' ? 'visible' : ''}`}
+				sx={{
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					height: '100%',
+					width: '100%',
+				}}
+			>
+				<CircularProgress size={16} color="inherit" />
+			</Box>
+			<Check className={`${savingState === 'success' ? 'visible' : ''}`} />
 			<Error className={`${savingState === 'error' ? 'visible' : ''}`} />
 		</IconContainer>
 	)

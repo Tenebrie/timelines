@@ -36,7 +36,7 @@ export const useAutosave = <T extends unknown[]>({ onSave, isSaving, isError, de
 					debouncedAutosave.current(...args)
 					return
 				}
-				setSavingState('waiting')
+				// setSavingState('waiting')
 				onSaveRef.current(...args)
 				lastSeenValue.current = null
 			},
@@ -64,7 +64,7 @@ export const useAutosave = <T extends unknown[]>({ onSave, isSaving, isError, de
 			if (isSavingRef.current) {
 				return
 			}
-			setSavingState('waiting')
+			// setSavingState('waiting')
 			onSaveRef.current(...args)
 			lastSeenValue.current = null
 		},
@@ -78,7 +78,8 @@ export const useAutosave = <T extends unknown[]>({ onSave, isSaving, isError, de
 
 	const startedWaitingRef = useRef<boolean>(false)
 	useEffect(() => {
-		if (savingState === 'waiting' && isSaving && !startedWaitingRef.current) {
+		if (isSaving) {
+			setSavingState('waiting')
 			startedWaitingRef.current = true
 			return
 		}
@@ -91,17 +92,17 @@ export const useAutosave = <T extends unknown[]>({ onSave, isSaving, isError, de
 
 	useEffect(() => {
 		savingStateRef.current = savingState
+		if (successTimeoutRef.current !== null) {
+			window.clearTimeout(successTimeoutRef.current)
+			successTimeoutRef.current = null
+		}
+
 		if (savingState === 'success' || savingState === 'error') {
 			successTimeoutRef.current = window.setTimeout(() => {
 				setSavingState('none')
 				successTimeoutRef.current = null
 			}, 3000)
 			return
-		}
-
-		if (successTimeoutRef.current !== null) {
-			window.clearTimeout(successTimeoutRef.current)
-			successTimeoutRef.current = null
 		}
 	}, [savingState])
 

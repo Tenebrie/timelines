@@ -1,5 +1,5 @@
-import { otherApi, useUpdateArticleMutation } from '@api/otherApi'
-import { MentionDetails } from '@api/types/types'
+import { MentionDetails } from '@api/types/worldTypes'
+import { useUpdateArticleMutation, worldWikiApi } from '@api/worldWikiApi'
 import { useSelector } from 'react-redux'
 
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
@@ -34,7 +34,7 @@ export const useEditArticle = () => {
 			}),
 		)
 		if (error) {
-			otherApi.util.invalidateTags(['worldWiki'])
+			worldWikiApi.util.invalidateTags(['worldWiki'])
 			return
 		}
 

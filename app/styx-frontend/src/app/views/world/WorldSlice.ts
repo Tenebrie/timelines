@@ -1,6 +1,3 @@
-import type { PayloadAction } from '@reduxjs/toolkit'
-import { createSlice } from '@reduxjs/toolkit'
-
 import {
 	ActorDetails,
 	MarkerType,
@@ -9,7 +6,10 @@ import {
 	WorldCalendarType,
 	WorldEvent,
 	WorldEventDelta,
-} from '@/api/types/types'
+} from '@api/types/worldTypes'
+import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
+
 import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
 
 import { ingestActor, ingestEvent } from '../../utils/ingestEntity'

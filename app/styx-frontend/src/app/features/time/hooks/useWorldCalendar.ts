@@ -1,6 +1,5 @@
+import { WorldCalendarType } from '@api/types/worldTypes'
 import { useCallback, useMemo } from 'react'
-
-import { WorldCalendarType } from '@/api/types/types'
 
 import { CalendarDefinition, SimpleCalendarUnits, TwelveCustomMonths } from '../types'
 

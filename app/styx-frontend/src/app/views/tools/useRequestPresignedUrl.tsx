@@ -1,4 +1,4 @@
-import { RequestPresignedUrlApiArg, useRequestPresignedUrlMutation } from '@api/otherApi'
+import { RequestPresignedUrlApiArg, useRequestPresignedUrlMutation } from '@api/assetApi'
 import { useCallback } from 'react'
 
 import { parseApiResponse } from '@/app/utils/parseApiResponse'

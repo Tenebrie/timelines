@@ -1,4 +1,4 @@
-import { WorldBrief } from '@api/types/types'
+import { WorldBrief } from '@api/types/worldTypes'
 import { UpdateWorldApiArg, useUpdateWorldMutation } from '@api/worldDetailsApi'
 import { useCallback, useEffect, useRef } from 'react'
 

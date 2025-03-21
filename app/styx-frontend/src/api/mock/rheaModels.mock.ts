@@ -3,9 +3,9 @@ import { v4 as getRandomId } from 'uuid'
 import { DeepPartial } from '@/app/utils/DeepPartial'
 
 import { User } from '../../app/features/auth/AuthSlice'
-import { ActorDetails, WorldBrief, WorldDetails, WorldEventDelta, WorldItem } from '../types/types'
-import { WorldEvent } from '../types/types'
 import { CollaboratingUser } from '../types/worldCollaboratorsTypes'
+import { ActorDetails, WorldBrief, WorldDetails, WorldEventDelta, WorldItem } from '../types/worldTypes'
+import { WorldEvent } from '../types/worldTypes'
 import { GetWorldInfoApiResponse } from '../worldDetailsApi'
 
 export const mockUserModel = (user: Partial<User> = {}): User => ({
@@ -13,6 +13,8 @@ export const mockUserModel = (user: Partial<User> = {}): User => ({
 	email: 'user@localhost',
 	username: 'User',
 	level: 'Free',
+	bio: 'My detailed bio',
+	avatarUrl: 'https://http.cat/images/404.jpg',
 	...user,
 })
 

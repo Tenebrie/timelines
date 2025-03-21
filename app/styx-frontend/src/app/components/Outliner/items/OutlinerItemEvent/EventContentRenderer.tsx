@@ -1,4 +1,4 @@
-import { Actor, WorldEvent } from '@api/types/types'
+import { Actor, WorldEvent } from '@api/types/worldTypes'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'

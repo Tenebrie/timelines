@@ -1,4 +1,4 @@
-import { MentionDetails, WorldEvent } from '@api/types/types'
+import { MentionDetails, WorldEvent } from '@api/types/worldTypes'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { generateSetter } from '@/app/utils/autosave/generateSetter'

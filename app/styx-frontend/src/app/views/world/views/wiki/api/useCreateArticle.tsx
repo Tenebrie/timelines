@@ -1,4 +1,4 @@
-import { otherApi, useCreateArticleMutation } from '@api/otherApi'
+import { useCreateArticleMutation, worldWikiApi } from '@api/worldWikiApi'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { AppDispatch } from '@/app/store'
@@ -26,7 +26,7 @@ export const useCreateArticle = () => {
 		}
 
 		dispatch(
-			otherApi.util.updateQueryData('getArticles', { worldId }, (articles) => {
+			worldWikiApi.util.updateQueryData('getArticles', { worldId }, (articles) => {
 				return articles.map((article) => {
 					if (article.id === response.id) {
 						return {

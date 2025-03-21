@@ -1,5 +1,6 @@
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import Logout from '@mui/icons-material/Logout'
+import Storage from '@mui/icons-material/Storage'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
@@ -69,7 +70,13 @@ export function UserDropdown({ user }: Props) {
 					<ListItemIcon>
 						<AccountCircle />
 					</ListItemIcon>
-					Account
+					Profile
+				</MenuItem>
+				<MenuItem onClick={() => navigate({ to: '/profile/storage' })}>
+					<ListItemIcon>
+						<Storage />
+					</ListItemIcon>
+					Storage
 				</MenuItem>
 				<Divider />
 				<MenuItem onClick={onLogout}>

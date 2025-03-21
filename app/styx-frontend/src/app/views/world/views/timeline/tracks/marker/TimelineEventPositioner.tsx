@@ -1,4 +1,4 @@
-import { MarkerType, TimelineEntity } from '@api/types/types'
+import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Close from '@mui/icons-material/Close'
 import { CSSProperties, memo } from 'react'
 import { useSelector } from 'react-redux'

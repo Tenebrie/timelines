@@ -1,4 +1,4 @@
-import { WorldBrief } from '@api/types/types'
+import { WorldBrief } from '@api/types/worldTypes'
 import Delete from '@mui/icons-material/Delete'
 import Edit from '@mui/icons-material/Edit'
 import Button from '@mui/material/Button'

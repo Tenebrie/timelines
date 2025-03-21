@@ -58,7 +58,11 @@ export const CloudStorageService = {
 			}
 		})()
 		const usedQuota = await AssetService.getUsedQuota(user.id)
-		return totalQuota - usedQuota
+		return {
+			remaining: totalQuota - usedQuota,
+			used: usedQuota,
+			total: totalQuota,
+		}
 	},
 
 	getUploadKey: (asset: Pick<Asset, 'id' | 'ownerId' | 'originalFileExtension' | 'contentType'>) => {
@@ -79,7 +83,7 @@ export const CloudStorageService = {
 
 		const usedQuota = await AssetService.getUsedQuota(user.id)
 		const totalQuota = await CloudStorageService.getUserRemainingQuota(user)
-		if (usedQuota + fileSize > totalQuota) {
+		if (usedQuota + fileSize > totalQuota.remaining) {
 			throw new BadRequestError('Insufficient storage quota')
 		}
 	},

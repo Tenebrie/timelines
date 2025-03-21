@@ -15,13 +15,16 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as ToolsImport } from './routes/tools'
 import { Route as RegisterImport } from './routes/register'
-import { Route as ProfileImport } from './routes/profile'
 import { Route as LoginImport } from './routes/login'
 import { Route as HomeImport } from './routes/home'
 import { Route as AdminImport } from './routes/admin'
 import { Route as IndexImport } from './routes/index'
+import { Route as ProfileIndexImport } from './routes/profile/index'
 import { Route as SecretMusicImport } from './routes/secret/music'
+import { Route as ProfileProfileImport } from './routes/profile/_profile'
 import { Route as WorldWorldIdWorldImport } from './routes/world.$worldId/_world'
+import { Route as ProfileProfileStorageImport } from './routes/profile/_profile.storage'
+import { Route as ProfileProfilePublicImport } from './routes/profile/_profile.public'
 import { Route as WorldWorldIdWorldTimelineImport } from './routes/world.$worldId/_world.timeline'
 import { Route as WorldWorldIdWorldSettingsImport } from './routes/world.$worldId/_world.settings'
 import { Route as WorldWorldIdWorldMindmapImport } from './routes/world.$worldId/_world.mindmap'
@@ -31,12 +34,19 @@ import { Route as WorldWorldIdWorldWikiWikiArticleIdImport } from './routes/worl
 
 // Create Virtual Routes
 
+const ProfileImport = createFileRoute('/profile')()
 const WorldWorldIdImport = createFileRoute('/world/$worldId')()
 const WorldWorldIdWorldWikiImport = createFileRoute(
   '/world/$worldId/_world/wiki',
 )()
 
 // Create/Update Routes
+
+const ProfileRoute = ProfileImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const ToolsRoute = ToolsImport.update({
   id: '/tools',
@@ -47,12 +57,6 @@ const ToolsRoute = ToolsImport.update({
 const RegisterRoute = RegisterImport.update({
   id: '/register',
   path: '/register',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const ProfileRoute = ProfileImport.update({
-  id: '/profile',
-  path: '/profile',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -86,15 +90,38 @@ const WorldWorldIdRoute = WorldWorldIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ProfileIndexRoute = ProfileIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProfileRoute,
+} as any)
+
 const SecretMusicRoute = SecretMusicImport.update({
   id: '/secret/music',
   path: '/secret/music',
   getParentRoute: () => rootRoute,
 } as any)
 
+const ProfileProfileRoute = ProfileProfileImport.update({
+  id: '/_profile',
+  getParentRoute: () => ProfileRoute,
+} as any)
+
 const WorldWorldIdWorldRoute = WorldWorldIdWorldImport.update({
   id: '/_world',
   getParentRoute: () => WorldWorldIdRoute,
+} as any)
+
+const ProfileProfileStorageRoute = ProfileProfileStorageImport.update({
+  id: '/storage',
+  path: '/storage',
+  getParentRoute: () => ProfileProfileRoute,
+} as any)
+
+const ProfileProfilePublicRoute = ProfileProfilePublicImport.update({
+  id: '/public',
+  path: '/public',
+  getParentRoute: () => ProfileProfileRoute,
 } as any)
 
 const WorldWorldIdWorldWikiRoute = WorldWorldIdWorldWikiImport.update({
@@ -172,13 +199,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileImport
-      parentRoute: typeof rootRoute
-    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -193,12 +213,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsImport
       parentRoute: typeof rootRoute
     }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileImport
+      parentRoute: typeof rootRoute
+    }
+    '/profile/_profile': {
+      id: '/profile/_profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileProfileImport
+      parentRoute: typeof ProfileRoute
+    }
     '/secret/music': {
       id: '/secret/music'
       path: '/secret/music'
       fullPath: '/secret/music'
       preLoaderRoute: typeof SecretMusicImport
       parentRoute: typeof rootRoute
+    }
+    '/profile/': {
+      id: '/profile/'
+      path: '/'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof ProfileIndexImport
+      parentRoute: typeof ProfileImport
+    }
+    '/profile/_profile/public': {
+      id: '/profile/_profile/public'
+      path: '/public'
+      fullPath: '/profile/public'
+      preLoaderRoute: typeof ProfileProfilePublicImport
+      parentRoute: typeof ProfileProfileImport
+    }
+    '/profile/_profile/storage': {
+      id: '/profile/_profile/storage'
+      path: '/storage'
+      fullPath: '/profile/storage'
+      preLoaderRoute: typeof ProfileProfileStorageImport
+      parentRoute: typeof ProfileProfileImport
     }
     '/world/$worldId': {
       id: '/world/$worldId'
@@ -268,6 +323,33 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
+interface ProfileProfileRouteChildren {
+  ProfileProfilePublicRoute: typeof ProfileProfilePublicRoute
+  ProfileProfileStorageRoute: typeof ProfileProfileStorageRoute
+}
+
+const ProfileProfileRouteChildren: ProfileProfileRouteChildren = {
+  ProfileProfilePublicRoute: ProfileProfilePublicRoute,
+  ProfileProfileStorageRoute: ProfileProfileStorageRoute,
+}
+
+const ProfileProfileRouteWithChildren = ProfileProfileRoute._addFileChildren(
+  ProfileProfileRouteChildren,
+)
+
+interface ProfileRouteChildren {
+  ProfileProfileRoute: typeof ProfileProfileRouteWithChildren
+  ProfileIndexRoute: typeof ProfileIndexRoute
+}
+
+const ProfileRouteChildren: ProfileRouteChildren = {
+  ProfileProfileRoute: ProfileProfileRouteWithChildren,
+  ProfileIndexRoute: ProfileIndexRoute,
+}
+
+const ProfileRouteWithChildren =
+  ProfileRoute._addFileChildren(ProfileRouteChildren)
+
 interface WorldWorldIdWorldWikiWikiRouteChildren {
   WorldWorldIdWorldWikiWikiArticleIdRoute: typeof WorldWorldIdWorldWikiWikiArticleIdRoute
   WorldWorldIdWorldWikiWikiIndexRoute: typeof WorldWorldIdWorldWikiWikiIndexRoute
@@ -332,10 +414,13 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
-  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/tools': typeof ToolsRoute
+  '/profile': typeof ProfileProfileRouteWithChildren
   '/secret/music': typeof SecretMusicRoute
+  '/profile/': typeof ProfileIndexRoute
+  '/profile/public': typeof ProfileProfilePublicRoute
+  '/profile/storage': typeof ProfileProfileStorageRoute
   '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
   '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
   '/world/$worldId/settings': typeof WorldWorldIdWorldSettingsRoute
@@ -350,10 +435,12 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
-  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/tools': typeof ToolsRoute
+  '/profile': typeof ProfileIndexRoute
   '/secret/music': typeof SecretMusicRoute
+  '/profile/public': typeof ProfileProfilePublicRoute
+  '/profile/storage': typeof ProfileProfileStorageRoute
   '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
   '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
   '/world/$worldId/settings': typeof WorldWorldIdWorldSettingsRoute
@@ -368,10 +455,14 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
-  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/tools': typeof ToolsRoute
+  '/profile': typeof ProfileRouteWithChildren
+  '/profile/_profile': typeof ProfileProfileRouteWithChildren
   '/secret/music': typeof SecretMusicRoute
+  '/profile/': typeof ProfileIndexRoute
+  '/profile/_profile/public': typeof ProfileProfilePublicRoute
+  '/profile/_profile/storage': typeof ProfileProfileStorageRoute
   '/world/$worldId': typeof WorldWorldIdRouteWithChildren
   '/world/$worldId/_world': typeof WorldWorldIdWorldRouteWithChildren
   '/world/$worldId/_world/mindmap': typeof WorldWorldIdWorldMindmapRoute
@@ -390,10 +481,13 @@ export interface FileRouteTypes {
     | '/admin'
     | '/home'
     | '/login'
-    | '/profile'
     | '/register'
     | '/tools'
+    | '/profile'
     | '/secret/music'
+    | '/profile/'
+    | '/profile/public'
+    | '/profile/storage'
     | '/world/$worldId'
     | '/world/$worldId/mindmap'
     | '/world/$worldId/settings'
@@ -407,10 +501,12 @@ export interface FileRouteTypes {
     | '/admin'
     | '/home'
     | '/login'
-    | '/profile'
     | '/register'
     | '/tools'
+    | '/profile'
     | '/secret/music'
+    | '/profile/public'
+    | '/profile/storage'
     | '/world/$worldId'
     | '/world/$worldId/mindmap'
     | '/world/$worldId/settings'
@@ -423,10 +519,14 @@ export interface FileRouteTypes {
     | '/admin'
     | '/home'
     | '/login'
-    | '/profile'
     | '/register'
     | '/tools'
+    | '/profile'
+    | '/profile/_profile'
     | '/secret/music'
+    | '/profile/'
+    | '/profile/_profile/public'
+    | '/profile/_profile/storage'
     | '/world/$worldId'
     | '/world/$worldId/_world'
     | '/world/$worldId/_world/mindmap'
@@ -444,9 +544,9 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
-  ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   ToolsRoute: typeof ToolsRoute
+  ProfileRoute: typeof ProfileRouteWithChildren
   SecretMusicRoute: typeof SecretMusicRoute
   WorldWorldIdRoute: typeof WorldWorldIdRouteWithChildren
 }
@@ -456,9 +556,9 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
-  ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   ToolsRoute: ToolsRoute,
+  ProfileRoute: ProfileRouteWithChildren,
   SecretMusicRoute: SecretMusicRoute,
   WorldWorldIdRoute: WorldWorldIdRouteWithChildren,
 }
@@ -477,9 +577,9 @@ export const routeTree = rootRoute
         "/admin",
         "/home",
         "/login",
-        "/profile",
         "/register",
         "/tools",
+        "/profile",
         "/secret/music",
         "/world/$worldId"
       ]
@@ -496,17 +596,41 @@ export const routeTree = rootRoute
     "/login": {
       "filePath": "login.tsx"
     },
-    "/profile": {
-      "filePath": "profile.tsx"
-    },
     "/register": {
       "filePath": "register.tsx"
     },
     "/tools": {
       "filePath": "tools.tsx"
     },
+    "/profile": {
+      "filePath": "profile",
+      "children": [
+        "/profile/_profile",
+        "/profile/"
+      ]
+    },
+    "/profile/_profile": {
+      "filePath": "profile/_profile.tsx",
+      "parent": "/profile",
+      "children": [
+        "/profile/_profile/public",
+        "/profile/_profile/storage"
+      ]
+    },
     "/secret/music": {
       "filePath": "secret/music.tsx"
+    },
+    "/profile/": {
+      "filePath": "profile/index.tsx",
+      "parent": "/profile"
+    },
+    "/profile/_profile/public": {
+      "filePath": "profile/_profile.public.tsx",
+      "parent": "/profile/_profile"
+    },
+    "/profile/_profile/storage": {
+      "filePath": "profile/_profile.storage.tsx",
+      "parent": "/profile/_profile"
     },
     "/world/$worldId": {
       "filePath": "world.$worldId",

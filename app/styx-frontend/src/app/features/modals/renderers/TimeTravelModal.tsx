@@ -1,3 +1,4 @@
+import { WorldCalendarType } from '@api/types/worldTypes'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import Divider from '@mui/material/Divider'
@@ -10,7 +11,6 @@ import { useNavigate } from '@tanstack/react-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { WorldCalendarType } from '@/api/types/types'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'

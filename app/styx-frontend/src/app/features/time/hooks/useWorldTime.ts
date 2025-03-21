@@ -1,7 +1,7 @@
+import { WorldCalendarType } from '@api/types/worldTypes'
 import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { WorldCalendarType } from '@/api/types/types'
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
 import { getWorldCalendarState } from '@/app/views/world/WorldSliceSelectors'
 

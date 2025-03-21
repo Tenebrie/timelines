@@ -1,4 +1,5 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
+import { AssetService } from '@src/services/AssetService'
 import { AuthorizationService } from '@src/services/AuthorizationService'
 import { CloudStorageService } from '@src/services/CloudStorageService'
 import {
@@ -12,6 +13,7 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
+import { assetTag } from './utils/tags'
 import { AssetTypeValidator } from './validators/AssetTypeValidator'
 
 const router = new Router()
@@ -20,6 +22,7 @@ router.get('/api/assets/:assetId', async (ctx) => {
 	useApiEndpoint({
 		name: 'getAsset',
 		description: 'Gets a presigned URL for an asset.',
+		tags: [assetTag],
 	})
 
 	const { assetId } = usePathParams(ctx, {
@@ -33,10 +36,23 @@ router.get('/api/assets/:assetId', async (ctx) => {
 	return { url }
 })
 
+router.get('/api/assets', async (ctx) => {
+	useApiEndpoint({
+		name: 'listUserAssets',
+		description: 'List all assets owned by the user.',
+		tags: [assetTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+	const assets = await AssetService.listUserAssets(user.id)
+	return { assets }
+})
+
 router.post('/api/assets/upload/presigned', async (ctx) => {
 	useApiEndpoint({
 		name: 'requestPresignedUrl',
 		description: 'Requests a presigned URL for a file upload.',
+		tags: [assetTag],
 	})
 
 	const { fileName, fileSize, assetType } = useRequestBody(ctx, {
@@ -67,6 +83,7 @@ router.post('/api/assets/upload/finalize', async (ctx) => {
 	useApiEndpoint({
 		name: 'finalizeAssetUpload',
 		description: 'Finalizes an asset upload.',
+		tags: [assetTag],
 	})
 
 	const { assetId } = useRequestBody(ctx, {

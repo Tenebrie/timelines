@@ -40,6 +40,7 @@ export type AdminGetUsersApiResponse = /** status 200  */ {
 		updatedAt: string
 		email: string
 		username: string
+		bio: string
 		level: 'Free' | 'Premium' | 'Admin'
 	}[]
 	page: number
@@ -61,6 +62,7 @@ export type AdminSetUserLevelApiResponse = /** status 200  */ {
 	email: string
 	username: string
 	password: string
+	bio: string
 	level: 'Free' | 'Premium' | 'Admin'
 	avatarId?: null | string
 }
@@ -78,6 +80,7 @@ export type AdminDeleteUserApiResponse = /** status 200  */ {
 	email: string
 	username: string
 	password: string
+	bio: string
 	level: 'Free' | 'Premium' | 'Admin'
 	avatarId?: null | string
 }

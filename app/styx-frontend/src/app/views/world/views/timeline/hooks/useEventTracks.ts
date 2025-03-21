@@ -1,5 +1,5 @@
-import { MarkerType, TimelineEntity, WorldEvent, WorldEventDelta } from '@api/types/types'
 import { WorldEventTrack } from '@api/types/worldEventTracksTypes'
+import { MarkerType, TimelineEntity, WorldEvent, WorldEventDelta } from '@api/types/worldTypes'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 

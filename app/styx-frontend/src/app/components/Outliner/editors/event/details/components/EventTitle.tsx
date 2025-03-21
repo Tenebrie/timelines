@@ -1,4 +1,4 @@
-import { WorldEvent } from '@api/types/types'
+import { WorldEvent } from '@api/types/worldTypes'
 import Button from '@mui/material/Button'
 import Input from '@mui/material/Input'
 import Stack from '@mui/material/Stack'

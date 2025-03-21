@@ -1,4 +1,4 @@
-import { RequestPresignedUrlApiResponse } from '@api/otherApi'
+import { RequestPresignedUrlApiResponse } from '@api/assetApi'
 import { useCallback } from 'react'
 
 type Props = {

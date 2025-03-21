@@ -1,4 +1,4 @@
-import { otherApi, useBulkDeleteArticlesMutation } from '@api/otherApi'
+import { useBulkDeleteArticlesMutation, worldWikiApi } from '@api/worldWikiApi'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
@@ -30,7 +30,7 @@ export const useDeleteArticles = () => {
 			}),
 		)
 		if (error) {
-			otherApi.util.invalidateTags(['worldWiki'])
+			worldWikiApi.util.invalidateTags(['worldWiki'])
 			return { response: null, error }
 		}
 

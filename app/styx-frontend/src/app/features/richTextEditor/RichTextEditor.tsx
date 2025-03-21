@@ -1,3 +1,4 @@
+import { MentionDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { Editor, useEditor } from '@tiptap/react'
 import { EditorContent } from '@tiptap/react'
@@ -5,7 +6,6 @@ import throttle from 'lodash.throttle'
 import { memo, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
-import { MentionDetails } from '@/api/types/types'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 

@@ -1,4 +1,4 @@
-import { MoveArticleApiArg, otherApi, useMoveArticleMutation } from '@api/otherApi'
+import { MoveArticleApiArg, useMoveArticleMutation, worldWikiApi } from '@api/worldWikiApi'
 import { useSelector } from 'react-redux'
 
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
@@ -29,7 +29,7 @@ export const useMoveArticle = () => {
 			}),
 		)
 		if (error) {
-			otherApi.util.invalidateTags(['worldWiki'])
+			worldWikiApi.util.invalidateTags(['worldWiki'])
 			return
 		}
 

@@ -1,4 +1,4 @@
-import { ActorDetails } from '@api/types/types'
+import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react'

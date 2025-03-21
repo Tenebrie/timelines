@@ -1,4 +1,4 @@
-import { ActorDetails } from '@api/types/types'
+import { ActorDetails } from '@api/types/worldTypes'
 import { useEffect } from 'react'
 
 import { useAutoRef } from '@/app/hooks/useAutoRef'

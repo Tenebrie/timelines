@@ -1,4 +1,4 @@
-import { Actor } from '@api/types/types'
+import { Actor } from '@api/types/worldTypes'
 import Avatar from '@mui/material/Avatar'
 import { useMemo } from 'react'
 

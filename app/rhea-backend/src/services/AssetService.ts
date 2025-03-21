@@ -10,6 +10,12 @@ export const AssetService = {
 		})
 	},
 
+	listUserAssets: async (userId: string) => {
+		return await getPrismaClient().asset.findMany({
+			where: { ownerId: userId },
+		})
+	},
+
 	createAsset: async (data: Prisma.AssetCreateInput) => {
 		return await getPrismaClient().asset.create({
 			data,

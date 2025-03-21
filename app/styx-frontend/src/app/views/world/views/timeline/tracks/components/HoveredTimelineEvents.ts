@@ -1,4 +1,4 @@
-import { MarkerType, TimelineEntity, WorldEvent } from '@api/types/types'
+import { MarkerType, TimelineEntity, WorldEvent } from '@api/types/worldTypes'
 import { useState } from 'react'
 
 import { dispatchEvent, useEventBusSubscribe } from '@/app/features/eventBus'

@@ -1,4 +1,4 @@
-import { otherApi, SwapArticlePositionsApiArg, useSwapArticlePositionsMutation } from '@api/otherApi'
+import { SwapArticlePositionsApiArg, useSwapArticlePositionsMutation, worldWikiApi } from '@api/worldWikiApi'
 import { useSelector } from 'react-redux'
 
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
@@ -34,7 +34,7 @@ export const useSwapArticlePositions = () => {
 			}),
 		)
 		if (error) {
-			otherApi.util.invalidateTags(['worldWiki'])
+			worldWikiApi.util.invalidateTags(['worldWiki'])
 			return
 		}
 

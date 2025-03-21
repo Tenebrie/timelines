@@ -1,8 +1,8 @@
 import { announcementListApi } from '@api/announcementListApi'
-import { otherApi } from '@api/otherApi'
 import { GetWorldInfoApiResponse, worldDetailsApi } from '@api/worldDetailsApi'
 import { worldEventTracksApi } from '@api/worldEventTracksApi'
 import { worldListApi } from '@api/worldListApi'
+import { worldWikiApi } from '@api/worldWikiApi'
 import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -75,7 +75,7 @@ export const useLiveMessageHandlers = () => {
 			forceUpdateArticle({ articleId: article.id })
 		},
 		[CalliopeToClientMessageType.WIKI_ARTICLE_DELETED]: () => {
-			dispatch(otherApi.util.invalidateTags(['worldWiki']))
+			dispatch(worldWikiApi.util.invalidateTags(['worldWiki']))
 		},
 	}
 

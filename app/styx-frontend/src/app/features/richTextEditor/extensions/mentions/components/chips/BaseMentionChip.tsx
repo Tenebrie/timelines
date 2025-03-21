@@ -1,4 +1,4 @@
-import { MentionedEntity } from '@api/types/types'
+import { MentionedEntity } from '@api/types/worldTypes'
 import Article from '@mui/icons-material/Article'
 import Event from '@mui/icons-material/Event'
 import Person from '@mui/icons-material/Person'

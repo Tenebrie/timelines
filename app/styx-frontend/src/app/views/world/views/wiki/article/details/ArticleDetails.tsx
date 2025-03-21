@@ -1,4 +1,4 @@
-import { MentionDetails } from '@api/types/types'
+import { MentionDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { useRef, useState } from 'react'
 

@@ -1,6 +1,5 @@
+import { ActorDetails, WorldEvent } from '@api/types/worldTypes'
 import { memo } from 'react'
-
-import { ActorDetails, WorldEvent } from '@/api/types/types'
 
 import { OutlinerItemActor } from './OutlinerItemActor'
 import { OutlinerItemEvent } from './OutlinerItemEvent'

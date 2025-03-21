@@ -1,6 +1,5 @@
+import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import { WikiArticle } from '@api/types/worldWikiTypes'
-
-import { MarkerType, TimelineEntity } from '@/api/types/types'
 
 import { TimelineTrack } from '../../views/world/views/timeline/hooks/useEventTracks'
 

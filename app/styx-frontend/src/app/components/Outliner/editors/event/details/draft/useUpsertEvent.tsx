@@ -1,4 +1,4 @@
-import { WorldEvent } from '@api/types/types'
+import { WorldEvent } from '@api/types/worldTypes'
 import { useSearch } from '@tanstack/react-router'
 import { useEffect } from 'react'
 

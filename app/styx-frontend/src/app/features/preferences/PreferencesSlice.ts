@@ -1,7 +1,6 @@
+import { Actor, WorldEvent } from '@api/types/worldTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
-
-import { Actor, WorldEvent } from '@/api/types/types'
 
 import { ScaleLevel } from '../../schema/ScaleLevel'
 import { loadPreferences, PreferencesKey } from './utils/loadPreferences'

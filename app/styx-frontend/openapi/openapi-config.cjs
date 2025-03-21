@@ -1,18 +1,21 @@
 'use strict'
 
 const tags = [
-	'worldList',
-	'worldSearch',
-	'worldDetails',
-	'worldThumbnail',
-	'worldEventTracks',
-	'worldCollaborators',
-	'auth',
-	'announcementList',
-	'adminUsers',
 	'actorList',
+	'adminUsers',
+	'announcementList',
+	'asset',
+	'auth',
+	'profile',
+	'worldWiki',
 	'worldEvent',
 	'worldEventDelta',
+	'worldEventTracks',
+	'worldList',
+	'worldDetails',
+	'worldCollaborators',
+	'worldSearch',
+	'worldThumbnail',
 ]
 
 const tagMatcher = (pattern) => {

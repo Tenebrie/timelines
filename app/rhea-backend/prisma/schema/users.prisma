@@ -17,6 +17,7 @@ model User {
     email    String @unique
     username String
     password String
+    bio      String @default("")
 
     level         UserLevel          @default(Free)
     notifications UserAnnouncement[]

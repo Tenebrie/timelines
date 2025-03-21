@@ -12,6 +12,7 @@ export const AdminService = {
 				email: true,
 				level: true,
 				username: true,
+				bio: true,
 				createdAt: true,
 				updatedAt: true,
 			},

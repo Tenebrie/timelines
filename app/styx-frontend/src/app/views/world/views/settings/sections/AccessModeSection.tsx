@@ -1,5 +1,5 @@
 import { useListWorldAccessModesQuery } from '@api/otherApi'
-import { WorldAccessMode, WorldBrief } from '@api/types/types'
+import { WorldAccessMode, WorldBrief } from '@api/types/worldTypes'
 import { useSetWorldAccessModeMutation } from '@api/worldDetailsApi'
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'

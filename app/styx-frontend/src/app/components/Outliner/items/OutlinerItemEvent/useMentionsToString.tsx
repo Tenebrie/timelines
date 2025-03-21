@@ -1,4 +1,4 @@
-import { Actor, MentionDetails } from '@api/types/types'
+import { Actor, MentionDetails } from '@api/types/worldTypes'
 import React from 'react'
 import { useSelector } from 'react-redux'
 

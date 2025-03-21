@@ -2,15 +2,12 @@ import { AUTH_COOKIE_NAME, UserAuthenticator } from '@src/middleware/auth/UserAu
 import { UserAuthenticatorWithAvatar } from '@src/middleware/auth/UserAuthenticatorWithAvatar'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
 import { AnnouncementService } from '@src/services/AnnouncementService'
-import { AssetService } from '@src/services/AssetService'
 import { CloudStorageService } from '@src/services/CloudStorageService'
 import {
 	BadRequestError,
 	EmailValidator,
 	NonEmptyStringValidator,
-	RequiredParam,
 	Router,
-	StringValidator,
 	UnauthorizedError,
 	useApiEndpoint,
 	useAuth,
@@ -52,6 +49,7 @@ router.get('/api/auth', async (ctx) => {
 			email: user.email,
 			username: user.username,
 			level: user.level,
+			bio: user.bio,
 			avatarUrl,
 		},
 	}
@@ -127,8 +125,13 @@ router.post('/api/auth/login', async (ctx) => {
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
 	})
 
+	const avatarUrl = user.avatar ? await CloudStorageService.getPresignedUrl(user.avatar) : undefined
+
 	return {
-		user,
+		user: {
+			...user,
+			avatarUrl,
+		},
 		sessionId,
 	}
 })
@@ -162,26 +165,6 @@ router.delete('/api/auth', async (ctx) => {
 		path: '/',
 		expires: new Date(),
 	})
-})
-
-router.post('/api/auth/avatar', async (ctx) => {
-	useApiEndpoint({
-		name: 'postAvatar',
-		summary: 'Avatar endpoint',
-		description: 'Sets the avatar for the current user',
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	const { assetId } = useRequestBody(ctx, {
-		assetId: RequiredParam(StringValidator),
-	})
-
-	const asset = await AssetService.setUserAvatar(user.id, assetId)
-
-	return {
-		avatar: asset,
-	}
 })
 
 export const AuthRouter = router

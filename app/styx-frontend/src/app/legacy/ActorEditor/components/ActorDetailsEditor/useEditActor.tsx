@@ -1,5 +1,5 @@
 import { UpdateActorApiArg, useUpdateActorMutation } from '@api/actorListApi'
-import { Actor } from '@api/types/types'
+import { Actor } from '@api/types/worldTypes'
 import { useCallback, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 

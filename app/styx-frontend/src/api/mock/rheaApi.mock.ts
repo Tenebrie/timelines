@@ -123,6 +123,7 @@ export const mockAuthenticatedUser = (server: SetupServer) =>
 				email: 'admin@localhost',
 				username: 'admin',
 				level: 'Admin',
+				bio: 'My detailed bio',
 			},
 		},
 	})

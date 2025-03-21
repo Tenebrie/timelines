@@ -1,6 +1,6 @@
 import { GetWorldInfoApiResponse } from '@api/worldDetailsApi'
 
-import { ActorDetails, WorldEvent, WorldEventDelta } from '../../api/types/types'
+import { ActorDetails, WorldEvent, WorldEventDelta } from '../../api/types/worldTypes'
 import { isNotNull } from './isNotNull'
 
 export const ingestActor = (rawActor: GetWorldInfoApiResponse['actors'][number]): ActorDetails => {

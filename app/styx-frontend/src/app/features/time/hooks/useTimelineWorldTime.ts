@@ -1,6 +1,6 @@
+import { WorldCalendarType } from '@api/types/worldTypes'
 import { useCallback, useDebugValue, useMemo } from 'react'
 
-import { WorldCalendarType } from '@/api/types/types'
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
 
 import { useTimelineLevelScalar } from './useTimelineLevelScalar'

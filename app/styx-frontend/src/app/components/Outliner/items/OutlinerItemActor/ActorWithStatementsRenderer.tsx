@@ -1,4 +1,4 @@
-import { ActorDetails, WorldEvent } from '@api/types/types'
+import { ActorDetails, WorldEvent } from '@api/types/worldTypes'
 import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
 import List from '@mui/material/List'

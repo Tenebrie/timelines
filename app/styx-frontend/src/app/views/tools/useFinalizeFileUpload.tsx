@@ -1,4 +1,4 @@
-import { FinalizeAssetUploadApiArg, useFinalizeAssetUploadMutation } from '@api/otherApi'
+import { FinalizeAssetUploadApiArg, useFinalizeAssetUploadMutation } from '@api/assetApi'
 import { useCallback } from 'react'
 
 import { parseApiResponse } from '@/app/utils/parseApiResponse'

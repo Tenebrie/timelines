@@ -1,4 +1,4 @@
-import { MarkerType, TimelineEntity } from '@api/types/types'
+import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Close from '@mui/icons-material/Close'
 import { useNavigate } from '@tanstack/react-router'
 import classNames from 'classnames'
