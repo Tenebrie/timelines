@@ -8,7 +8,6 @@ import { authSlice } from '../AuthSlice'
 import { getAuthState } from '../AuthSliceSelectors'
 
 type ReturnType = {
-	isAuthenticating: boolean
 	success: boolean
 	redirectTo?: '/home' | '/login' | '/register' | undefined
 }
@@ -37,28 +36,23 @@ export const useAuthCheck = (): ReturnType => {
 	}, [data, error, dispatch, setSessionId, setUser])
 
 	if (isAuthenticating) {
-		return { isAuthenticating, success: true }
+		return { success: true }
 	}
 
 	const publicRoutes = ['/login', '/register']
 	if (publicRoutes.some((r) => window.location.pathname.startsWith(r))) {
-		return { isAuthenticating, success: true }
+		return { success: true }
 	}
 
-	if (!user && data && !data.authenticated) {
-		return { isAuthenticating, success: false, redirectTo: '/login' }
-	}
-
-	if (isUnauthorized) {
-		return { isAuthenticating, success: false, redirectTo: '/home' }
+	if (window.location.pathname.startsWith('/world/') && !isUnauthorized) {
+		return { success: true }
 	}
 
 	if (user || (data && data.authenticated)) {
-		return { isAuthenticating, success: true }
+		return { success: true }
 	}
 
 	return {
-		isAuthenticating,
 		success: false,
 		redirectTo: '/login',
 	}

@@ -1,5 +1,6 @@
 enum AssetType {
-    Image
+    ImageConversion @map("Image")
+    Avatar
 }
 
 enum AssetStatus {
@@ -24,4 +25,6 @@ model Asset {
     originalFileExtension String
     contentType           AssetType
     status                AssetStatus @default(Pending)
+
+    avatarOf User? @relation("UserAvatar")
 }

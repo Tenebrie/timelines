@@ -1,7 +1,7 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
 import { SUPPORTED_IMAGE_FORMATS } from '@src/schema/ImageFormat'
 import { AssetService } from '@src/services/AssetService'
-import { CloudStorageService } from '@src/services/filesystem/CloudStorageService'
+import { CloudStorageService } from '@src/services/CloudStorageService'
 import { ImageService } from '@src/services/ImageService'
 import {
 	BadRequestError,

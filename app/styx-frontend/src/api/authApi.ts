@@ -44,11 +44,13 @@ export type CheckAuthenticationApiResponse =
 				email: string
 				username: string
 				level: 'Free' | 'Premium' | 'Admin'
+				avatarUrl?: string
 			}
 	  }
 export type CheckAuthenticationApiArg = void
 export type CreateAccountApiResponse = /** status 200  */ {
 	user: {
+		avatarUrl?: string
 		id: string
 		email: string
 		username: string

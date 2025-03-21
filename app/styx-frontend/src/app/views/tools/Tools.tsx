@@ -51,7 +51,7 @@ export function Tools() {
 			}
 
 			try {
-				const asset = await uploadFile(file, 'Image')
+				const asset = await uploadFile(file, 'ImageConversion')
 				const convertedAsset = await requestImageConversion({
 					assetId: asset.id,
 					format,

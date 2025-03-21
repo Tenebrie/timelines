@@ -25,6 +25,9 @@ model User {
     collaboratingIn CollaboratingUser[]
 
     assets Asset[]
+
+    avatar   Asset?  @relation("UserAvatar", fields: [avatarId], references: [id])
+    avatarId String? @unique
 }
 
 model CollaboratingUser {

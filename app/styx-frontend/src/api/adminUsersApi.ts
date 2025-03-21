@@ -62,6 +62,7 @@ export type AdminSetUserLevelApiResponse = /** status 200  */ {
 	username: string
 	password: string
 	level: 'Free' | 'Premium' | 'Admin'
+	avatarId?: null | string
 }
 export type AdminSetUserLevelApiArg = {
 	/** Any string value with at least one character */
@@ -78,6 +79,7 @@ export type AdminDeleteUserApiResponse = /** status 200  */ {
 	username: string
 	password: string
 	level: 'Free' | 'Premium' | 'Admin'
+	avatarId?: null | string
 }
 export type AdminDeleteUserApiArg = {
 	/** Any string value with at least one character */

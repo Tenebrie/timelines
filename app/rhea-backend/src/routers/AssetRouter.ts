@@ -1,6 +1,6 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
 import { AuthorizationService } from '@src/services/AuthorizationService'
-import { CloudStorageService } from '@src/services/filesystem/CloudStorageService'
+import { CloudStorageService } from '@src/services/CloudStorageService'
 import {
 	NumberValidator,
 	RequiredParam,
@@ -29,7 +29,7 @@ router.get('/api/assets/:assetId', async (ctx) => {
 	const user = await useAuth(ctx, UserAuthenticator)
 	await AuthorizationService.checkUserAssetAccess(user.id, assetId)
 
-	const url = await CloudStorageService.createDownloadPresignedUrl(assetId)
+	const url = await CloudStorageService.getPresignedUrl(assetId)
 	return { url }
 })
 

@@ -10,7 +10,6 @@ import { AnnouncementRouter } from './routers/AnnouncementRouter'
 import { AssetUploadRouter } from './routers/AssetRouter'
 import { AuthRouter } from './routers/AuthRouter'
 import { ConstantsRouter } from './routers/ConstantsRouter'
-import { FileSystemRouter } from './routers/FileSystemRouter'
 import { HealthRouter } from './routers/HealthRouter'
 import { ImageConversionRouter } from './routers/ImageConversionRouter'
 import { WorldEventRouter } from './routers/WorldEventRouter'
@@ -59,8 +58,6 @@ app
 	.use(AuthRouter.allowedMethods())
 	.use(ConstantsRouter.routes())
 	.use(ConstantsRouter.allowedMethods())
-	.use(FileSystemRouter.routes())
-	.use(FileSystemRouter.allowedMethods())
 	.use(HealthRouter.routes())
 	.use(HealthRouter.allowedMethods())
 	.use(ImageConversionRouter.routes())

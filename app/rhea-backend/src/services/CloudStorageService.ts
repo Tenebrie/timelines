@@ -4,8 +4,8 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { Asset, AssetStatus, AssetType, User, UserLevel } from '@prisma/client'
 import { BadRequestError } from 'moonflower'
 
-import { AssetService } from '../AssetService'
-import { SecretService } from '../SecretService'
+import { AssetService } from './AssetService'
+import { SecretService } from './SecretService'
 
 const BUCKET_ID = SecretService.getSecret('s3-bucket-id')
 
@@ -61,8 +61,8 @@ export const CloudStorageService = {
 		return totalQuota - usedQuota
 	},
 
-	getUploadKey: (asset: Pick<Asset, 'id' | 'ownerId' | 'originalFileExtension'>) => {
-		const bucketKey = `rhea/users/${asset.ownerId}/temp/${asset.id}`
+	getUploadKey: (asset: Pick<Asset, 'id' | 'ownerId' | 'originalFileExtension' | 'contentType'>) => {
+		const bucketKey = `rhea/users/${asset.ownerId}/${asset.contentType.toLowerCase()}/${asset.id}`
 		return CloudStorageService.appendFileExtension(bucketKey, asset.originalFileExtension)
 	},
 
@@ -109,6 +109,7 @@ export const CloudStorageService = {
 				id: assetId,
 				ownerId: userId,
 				originalFileExtension: extension,
+				contentType: assetType,
 			}),
 			expiresAt: new Date(Date.now() + 3600 * 1000), // 1 hour from now
 			owner: {
@@ -131,7 +132,6 @@ export const CloudStorageService = {
 	},
 
 	finalizeAssetUpload: async (assetId: string) => {
-		// Get asset from DB
 		const asset = await AssetService.getAsset(assetId)
 		if (!asset) {
 			throw new BadRequestError('Target asset is not valid')
@@ -152,7 +152,7 @@ export const CloudStorageService = {
 			)
 
 			// If we get here, file exists in S3. Mark as finalized.
-			return await AssetService.updateAssetStatus(assetId, AssetStatus.Finalized)
+			return await AssetService.updateAsset(assetId, { status: AssetStatus.Finalized })
 		} catch (error: unknown) {
 			if (error instanceof Error && error.name === 'NotFound') {
 				// File doesn't exist in S3
@@ -192,6 +192,7 @@ export const CloudStorageService = {
 				id: assetId,
 				ownerId: userId,
 				originalFileExtension: extension,
+				contentType: assetType,
 			}),
 			owner: {
 				connect: {
@@ -213,11 +214,18 @@ export const CloudStorageService = {
 		return await CloudStorageService.finalizeAssetUpload(assetId)
 	},
 
-	createDownloadPresignedUrl: async (assetId: string, expiresInSeconds: number = 3600) => {
-		const asset = await AssetService.getAsset(assetId)
-		if (!asset) {
-			throw new BadRequestError('Target asset is not valid')
-		}
+	getPresignedUrl: async (assetOrId: string | Asset, expiresInSeconds: number = 3600) => {
+		const asset = await (async () => {
+			if (typeof assetOrId === 'object') {
+				return assetOrId
+			}
+
+			const asset = await AssetService.getAsset(assetOrId)
+			if (!asset) {
+				throw new BadRequestError('Target asset is not valid')
+			}
+			return asset
+		})()
 
 		if (asset.status !== AssetStatus.Finalized) {
 			throw new BadRequestError('Asset is not ready for download')

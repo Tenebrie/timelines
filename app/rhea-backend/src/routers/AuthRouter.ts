@@ -1,11 +1,16 @@
 import { AUTH_COOKIE_NAME, UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
+import { UserAuthenticatorWithAvatar } from '@src/middleware/auth/UserAuthenticatorWithAvatar'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
 import { AnnouncementService } from '@src/services/AnnouncementService'
+import { AssetService } from '@src/services/AssetService'
+import { CloudStorageService } from '@src/services/CloudStorageService'
 import {
 	BadRequestError,
 	EmailValidator,
 	NonEmptyStringValidator,
+	RequiredParam,
 	Router,
+	StringValidator,
 	UnauthorizedError,
 	useApiEndpoint,
 	useAuth,
@@ -26,7 +31,7 @@ router.get('/api/auth', async (ctx) => {
 		tags: [authTag],
 	})
 
-	const user = await useOptionalAuth(ctx, UserAuthenticator)
+	const user = await useOptionalAuth(ctx, UserAuthenticatorWithAvatar)
 	const sessionId = ctx.sessionId ?? crypto.randomUUID()
 
 	if (!user) {
@@ -37,6 +42,7 @@ router.get('/api/auth', async (ctx) => {
 	}
 
 	UserService.touchUser(user.id)
+	const avatarUrl = user.avatar ? await CloudStorageService.getPresignedUrl(user.avatar) : undefined
 
 	return {
 		authenticated: true,
@@ -46,6 +52,7 @@ router.get('/api/auth', async (ctx) => {
 			email: user.email,
 			username: user.username,
 			level: user.level,
+			avatarUrl,
 		},
 	}
 })
@@ -86,7 +93,10 @@ router.post('/api/auth', async (ctx) => {
 	})
 
 	return {
-		user,
+		user: {
+			...user,
+			avatarUrl: undefined as string | undefined,
+		},
 		sessionId,
 	}
 })
@@ -152,6 +162,26 @@ router.delete('/api/auth', async (ctx) => {
 		path: '/',
 		expires: new Date(),
 	})
+})
+
+router.post('/api/auth/avatar', async (ctx) => {
+	useApiEndpoint({
+		name: 'postAvatar',
+		summary: 'Avatar endpoint',
+		description: 'Sets the avatar for the current user',
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { assetId } = useRequestBody(ctx, {
+		assetId: RequiredParam(StringValidator),
+	})
+
+	const asset = await AssetService.setUserAvatar(user.id, assetId)
+
+	return {
+		avatar: asset,
+	}
 })
 
 export const AuthRouter = router

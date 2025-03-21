@@ -15,14 +15,14 @@ const injectedRtkApi = api
 			finalizeAssetUpload: build.mutation<FinalizeAssetUploadApiResponse, FinalizeAssetUploadApiArg>({
 				query: (queryArg) => ({ url: `/api/assets/upload/finalize`, method: 'POST', body: queryArg.body }),
 			}),
+			postAvatar: build.mutation<PostAvatarApiResponse, PostAvatarApiArg>({
+				query: (queryArg) => ({ url: `/api/auth/avatar`, method: 'POST', body: queryArg.body }),
+			}),
 			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
 				query: () => ({ url: `/api/constants/admin-levels` }),
 			}),
 			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
 				query: () => ({ url: `/api/constants/world-access-modes` }),
-			}),
-			loadFile: build.query<LoadFileApiResponse, LoadFileApiArg>({
-				query: (queryArg) => ({ url: `/api/fs/image/${queryArg.format}/${queryArg.filename}` }),
 			}),
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
@@ -117,7 +117,7 @@ export type RequestPresignedUrlApiResponse = /** status 200  */ {
 		bucketKey: string
 		originalFileName: string
 		originalFileExtension: string
-		contentType: 'Image'
+		contentType: 'ImageConversion' | 'Avatar'
 	}
 	url: string
 	fields: {
@@ -128,7 +128,7 @@ export type RequestPresignedUrlApiArg = {
 	body: {
 		fileName: string
 		fileSize: number
-		assetType: 'Image'
+		assetType: 'ImageConversion' | 'Avatar'
 	}
 }
 export type FinalizeAssetUploadApiResponse = /** status 200  */ {
@@ -142,9 +142,26 @@ export type FinalizeAssetUploadApiResponse = /** status 200  */ {
 	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
-	contentType: 'Image'
+	contentType: 'ImageConversion' | 'Avatar'
 }
 export type FinalizeAssetUploadApiArg = {
+	body: {
+		assetId: string
+	}
+}
+export type PostAvatarApiResponse = /** status 200  */ {
+	avatar: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		email: string
+		username: string
+		password: string
+		level: 'Free' | 'Premium' | 'Admin'
+		avatarId?: null | string
+	}
+}
+export type PostAvatarApiArg = {
 	body: {
 		assetId: string
 	}
@@ -153,13 +170,6 @@ export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premiu
 export type AdminGetUserLevelsApiArg = void
 export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
 export type ListWorldAccessModesApiArg = void
-export type LoadFileApiResponse = unknown
-export type LoadFileApiArg = {
-	/** The image file extension */
-	format: 'png' | 'jpg' | 'jpeg' | 'gif' | 'webp'
-	/** Any string value */
-	filename: string
-}
 export type GetHealthApiResponse = unknown
 export type GetHealthApiArg = void
 export type GetSupportedImageFormatsApiResponse = /** status 200  */ {
@@ -177,12 +187,12 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
-	contentType: 'Image'
+	contentType: 'ImageConversion' | 'Avatar'
 }
 export type RequestImageConversionApiArg = {
 	body: {
 		assetId: string
-		format: 'png' | 'jpeg' | 'gif' | 'webp'
+		format: 'webp' | 'jpeg' | 'png' | 'gif'
 		width?: number
 		height?: number
 		quality?: number
@@ -219,6 +229,18 @@ export type GetArticlesApiArg = {
 	parentId?: null | string
 }
 export type CreateArticleApiResponse = /** status 200  */ {
+	children: {
+		worldId: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		icon: string
+		color: string
+		position: number
+		contentRich: string
+		parentId?: null | string
+	}[]
 	worldId: string
 	id: string
 	createdAt: string
@@ -238,6 +260,18 @@ export type CreateArticleApiArg = {
 	}
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
+	children: {
+		worldId: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		icon: string
+		color: string
+		position: number
+		contentRich: string
+		parentId?: null | string
+	}[]
 	worldId: string
 	id: string
 	createdAt: string
@@ -304,12 +338,11 @@ export const {
 	useLazyGetAssetQuery,
 	useRequestPresignedUrlMutation,
 	useFinalizeAssetUploadMutation,
+	usePostAvatarMutation,
 	useAdminGetUserLevelsQuery,
 	useLazyAdminGetUserLevelsQuery,
 	useListWorldAccessModesQuery,
 	useLazyListWorldAccessModesQuery,
-	useLoadFileQuery,
-	useLazyLoadFileQuery,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,
 	useGetSupportedImageFormatsQuery,

@@ -15,6 +15,7 @@ import { createFileRoute } from '@tanstack/react-router'
 import { Route as rootRoute } from './routes/__root'
 import { Route as ToolsImport } from './routes/tools'
 import { Route as RegisterImport } from './routes/register'
+import { Route as ProfileImport } from './routes/profile'
 import { Route as LoginImport } from './routes/login'
 import { Route as HomeImport } from './routes/home'
 import { Route as AdminImport } from './routes/admin'
@@ -46,6 +47,12 @@ const ToolsRoute = ToolsImport.update({
 const RegisterRoute = RegisterImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProfileRoute = ProfileImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -163,6 +170,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileImport
       parentRoute: typeof rootRoute
     }
     '/register': {
@@ -318,6 +332,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/tools': typeof ToolsRoute
   '/secret/music': typeof SecretMusicRoute
@@ -335,6 +350,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/tools': typeof ToolsRoute
   '/secret/music': typeof SecretMusicRoute
@@ -352,6 +368,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/tools': typeof ToolsRoute
   '/secret/music': typeof SecretMusicRoute
@@ -373,6 +390,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/home'
     | '/login'
+    | '/profile'
     | '/register'
     | '/tools'
     | '/secret/music'
@@ -389,6 +407,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/home'
     | '/login'
+    | '/profile'
     | '/register'
     | '/tools'
     | '/secret/music'
@@ -404,6 +423,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/home'
     | '/login'
+    | '/profile'
     | '/register'
     | '/tools'
     | '/secret/music'
@@ -424,6 +444,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
+  ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   ToolsRoute: typeof ToolsRoute
   SecretMusicRoute: typeof SecretMusicRoute
@@ -435,6 +456,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
+  ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   ToolsRoute: ToolsRoute,
   SecretMusicRoute: SecretMusicRoute,
@@ -455,6 +477,7 @@ export const routeTree = rootRoute
         "/admin",
         "/home",
         "/login",
+        "/profile",
         "/register",
         "/tools",
         "/secret/music",
@@ -472,6 +495,9 @@ export const routeTree = rootRoute
     },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/profile": {
+      "filePath": "profile.tsx"
     },
     "/register": {
       "filePath": "register.tsx"
