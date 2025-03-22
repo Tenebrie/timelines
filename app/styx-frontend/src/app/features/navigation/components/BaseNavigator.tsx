@@ -16,7 +16,7 @@ import { ThemeModeToggle } from '../../theming/components/ThemeModeToggle'
 import { CustomTheme, useCustomTheme } from '../../theming/hooks/useCustomTheme'
 import { LastWorldNavigatorButton } from './LastWorldNavigatorButton'
 import { NavigatorButton } from './NavigatorButton'
-import { NavigatorDeliveryTarget } from './NavigatorPortal'
+import { SummoningPortal } from './NavigatorPortal'
 
 const Container = styled(Paper)<{ $theme: CustomTheme }>`
 	width: calc(100% - 16px);
@@ -38,7 +38,8 @@ export const BaseNavigator = () => {
 			<Box>
 				<Stack direction="row" height="100%" gap={1} alignItems="center">
 					<Stack minWidth={173} direction="row" gap={1} sx={{ justifyContent: 'flex-end' }}>
-						<NavigatorDeliveryTarget />
+						{/* <NavigatorDeliveryTarget /> */}
+						<SummoningPortal />
 						<LastWorldNavigatorButton icon={<PublicIcon />} label="World" />
 					</Stack>
 					<Divider orientation="vertical" sx={{ height: '25px' }} />

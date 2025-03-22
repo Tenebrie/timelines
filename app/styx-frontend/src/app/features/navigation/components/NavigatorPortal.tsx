@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { portalSlice } from '../../portals/PortalSlice'
 import { getPortalState } from '../../portals/PortalSliceSelectors'
+import { researchSummonable } from '../../summonable/researchSummonable'
 
 export function NavigatorDeliveryDriver({ children }: { children: ReactNode }) {
 	const { deliveryTargets } = useSelector(getPortalState)
@@ -42,3 +43,7 @@ export function NavigatorDeliveryTarget() {
 		></Box>
 	)
 }
+
+export const { Summonable, SummoningPortal } = researchSummonable({
+	family: 'navigator/contextButton',
+})

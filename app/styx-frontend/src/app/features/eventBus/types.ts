@@ -29,7 +29,8 @@ export type AllowedEvents =
 	| 'richEditor/forceUpdateArticle'
 	| 'richEditor/requestFocus'
 	| 'richEditor/requestBlur'
-
+	| 'summonable/requestSummon'
+	| 'summonable/requestDismiss'
 type ScrollTimelineToParams =
 	| {
 			timestamp: number
@@ -81,4 +82,13 @@ export type EventParams = {
 	}
 	['richEditor/requestFocus']: void
 	['richEditor/requestBlur']: void
+	['summonable/requestSummon']: {
+		family: string
+		element: HTMLElement
+		event: { isHandled: boolean }
+	}
+	['summonable/requestDismiss']: {
+		family: string
+		element: HTMLElement
+	}
 }

@@ -40,7 +40,6 @@ export function LastWorldNavigatorButton({ icon, label }: Props) {
 			variant={isMatching ? 'contained' : 'text'}
 			sx={{
 				gap: 0.5,
-				border: '1px solid transparent',
 				padding: '8px 15px',
 			}}
 		>

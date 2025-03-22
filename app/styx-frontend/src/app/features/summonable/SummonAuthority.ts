@@ -1,5 +1,7 @@
 // Please forgive me for all the sins I am about to commit
 
+import { ElementType } from 'react'
+
 export type PortalTypes = 'navigator/contextButton'
 
 export type EventParams = {
@@ -9,7 +11,17 @@ export type EventParams = {
 declare global {
 	interface Document {
 		deliveryRepository: Partial<Record<PortalTypes, HTMLDivElement>>
-		summoningRepository: Record<string, HTMLDivElement[]>
+		summonWaitingList: Record<string, HTMLElement[]>
+		summonRepository: Record<
+			string,
+			{
+				id: string
+				Component: ElementType<{ id: string }>
+				element: HTMLElement | null
+				status: 'busy' | 'parked'
+				onTouched: () => void
+			}[]
+		>
 	}
 }
 
@@ -26,28 +38,6 @@ export const PortalAuthority = {
 		const repository = invokeDeliveryRepository()
 		return repository[type]
 	},
-
-	registerSummonable: (type: PortalTypes, node: HTMLDivElement) => {
-		const repository = invokeSummoningRepository()
-		if (!repository[type]) {
-			repository[type] = []
-		}
-		repository[type].push(node)
-	},
-	unregisterSummonable: (type: PortalTypes, node: HTMLDivElement) => {
-		const repository = invokeSummoningRepository()
-		if (!repository[type]) {
-			return
-		}
-		repository[type] = repository[type].filter((n) => n !== node)
-	},
-	summon: (type: PortalTypes) => {
-		const repository = invokeSummoningRepository()
-		if (!repository[type]) {
-			return
-		}
-		return repository[type].pop()
-	},
 }
 
 function invokeDeliveryRepository() {
@@ -58,10 +48,18 @@ function invokeDeliveryRepository() {
 	return document.deliveryRepository
 }
 
-function invokeSummoningRepository() {
-	if (!document.summoningRepository) {
-		document.summoningRepository = {}
+export function invokeSummoningRepository() {
+	if (!document.summonRepository) {
+		document.summonRepository = {}
 	}
 
-	return document.summoningRepository
+	return document.summonRepository
+}
+
+export function invokeSummonWaitingList() {
+	if (!document.summonWaitingList) {
+		document.summonWaitingList = {}
+	}
+
+	return document.summonWaitingList
 }
