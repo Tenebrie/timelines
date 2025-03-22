@@ -2,15 +2,8 @@
 
 import { ElementType } from 'react'
 
-export type PortalTypes = 'navigator/contextButton'
-
-export type EventParams = {
-	['navigator/contextButton']: void
-}
-
 declare global {
 	interface Document {
-		deliveryRepository: Partial<Record<PortalTypes, HTMLDivElement>>
 		summonWaitingList: Record<string, { target: HTMLElement; props: unknown }[]>
 		summonRepository: Record<
 			string,
@@ -23,29 +16,6 @@ declare global {
 			}[]
 		>
 	}
-}
-
-export const PortalAuthority = {
-	registerDeliveryTarget: (type: PortalTypes, node: HTMLDivElement) => {
-		const repository = invokeDeliveryRepository()
-		repository[type] = node
-	},
-	unregisterDeliveryTarget: (type: PortalTypes) => {
-		const repository = invokeDeliveryRepository()
-		delete repository[type]
-	},
-	findDeliveryTarget: (type: PortalTypes) => {
-		const repository = invokeDeliveryRepository()
-		return repository[type]
-	},
-}
-
-function invokeDeliveryRepository() {
-	if (!document.deliveryRepository) {
-		document.deliveryRepository = {}
-	}
-
-	return document.deliveryRepository
 }
 
 export function invokeSummoningRepository() {
