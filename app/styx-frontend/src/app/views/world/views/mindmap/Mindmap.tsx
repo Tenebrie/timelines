@@ -43,6 +43,9 @@ export function Mindmap() {
 			gridOffsetY: 0,
 			gridScale: 1,
 			scaleAdjustmentPending: 0,
+
+			deltaX: 0,
+			deltaY: 0,
 		}
 
 		// Throttle the update to avoid excessive recalculations.

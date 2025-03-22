@@ -51,7 +51,7 @@ export const World = () => {
 				style={{
 					position: 'relative',
 					width: '100%',
-					height: 'calc(100vh - 50.5px)',
+					height: '100%',
 					display: 'flex',
 					flexDirection: 'column',
 				}}

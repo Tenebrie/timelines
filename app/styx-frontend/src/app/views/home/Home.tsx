@@ -5,7 +5,7 @@ import { WorldList } from './components/WorldList/WorldList'
 
 export const Home = () => {
 	return (
-		<Stack width="100%" height="100%" alignItems="center" justifyContent="center">
+		<Stack width="100%" height="100%" alignItems="center">
 			<Container sx={{ marginTop: 4 }}>
 				<WorldList />
 			</Container>

@@ -87,7 +87,7 @@ export const Register = () => {
 	}
 
 	return (
-		<Stack justifyContent="center">
+		<Stack justifyContent="center" height="100%">
 			<Paper elevation={2}>
 				<Stack spacing={2} justifyContent="center" width="300px" padding={4}>
 					<Stack alignItems="center">

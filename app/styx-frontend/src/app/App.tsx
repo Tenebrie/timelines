@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box'
 import { Outlet } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import styled from 'styled-components'
@@ -41,7 +42,9 @@ const App = () => {
 				<CustomThemeOverrides>
 					<Container>
 						<BaseNavigator />
-						<Outlet />
+						<Box sx={{ width: '100%', height: 'calc(100vh - 50.5px)' }}>
+							<Outlet />
+						</Box>
 						<ModalsRenderer />
 					</Container>
 					<LostConnectionAlert server="rhea" />
