@@ -11,7 +11,7 @@ import { useCallback, useState } from 'react'
 import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
+import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { RichTextEditor } from '@/app/features/richTextEditor/RichTextEditor'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
@@ -93,7 +93,7 @@ export const ActorDetailsEditor = ({ actor }: Props) => {
 					initialValue={actor.color}
 					onChangeHex={(color) => setColor(color)}
 				/>
-				<RichTextEditorPortalSlot
+				<RichTextEditorSummoner
 					softKey={`${actor.id}/${descriptionKey}`}
 					value={descriptionRich}
 					onChange={onDescriptionChange}

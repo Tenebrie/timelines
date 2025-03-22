@@ -1,6 +1,6 @@
 import { researchSummonable } from '../../summonable/researchSummonable'
 
-export const { Summonable: NavigatorSummonable, SummoningPortal: NavigatorSummoningPortal } =
+export const { Summoner: NavigatorContextButtonSummoner, Summonable: SummonableNavigatorContextButton } =
 	researchSummonable({
 		family: 'navigator/contextButton',
 	})

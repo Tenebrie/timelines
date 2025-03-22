@@ -4,7 +4,7 @@ import { useRef, useState } from 'react'
 
 import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
+import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { OnChangeParams } from '@/app/features/richTextEditor/RichTextEditor'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
@@ -68,7 +68,7 @@ export const ArticleDetails = () => {
 
 	return (
 		<Box sx={{ ...scrollbars, height: '100%' }}>
-			<RichTextEditorPortalSlot
+			<RichTextEditorSummoner
 				softKey={`${article.id}-${key}`}
 				value={article.contentRich}
 				onChange={onChange}

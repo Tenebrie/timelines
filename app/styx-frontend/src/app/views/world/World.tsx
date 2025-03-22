@@ -7,7 +7,7 @@ import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
 import { ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage'
 
 import { useEventBusDispatch, useEventBusSubscribe } from '../../features/eventBus'
-import { RichTextEditorPortal } from '../../features/richTextEditor/portals/RichTextEditorPortal'
+import { SummonableRichTextEditor } from '../../features/richTextEditor/portals/RichTextEditorPortal'
 import { WorldSidebar } from './components/sidebar/WorldSidebar'
 import { WorldNavigator } from './components/WorldNavigator'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
@@ -64,7 +64,9 @@ export const World = () => {
 					</div>
 				</Stack>
 			</div>
-			<RichTextEditorPortal>{(props) => <RichTextEditorWithFallback {...props} />}</RichTextEditorPortal>
+			<SummonableRichTextEditor>
+				{(props) => <RichTextEditorWithFallback {...props} />}
+			</SummonableRichTextEditor>
 			<DeleteEventModal />
 			<DeleteEventDeltaModal />
 		</>

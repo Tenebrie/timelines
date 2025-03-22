@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
+import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { RichTextEditorProps } from '@/app/features/richTextEditor/RichTextEditor'
 
 import { ActorDraft } from '../draft/useActorDraft'
@@ -23,7 +23,7 @@ export const ActorDescription = ({ id, draft }: Props) => {
 	)
 
 	return (
-		<RichTextEditorPortalSlot
+		<RichTextEditorSummoner
 			softKey={`${id ?? 'no-key'}/${key}`}
 			value={descriptionRich}
 			onChange={onDescriptionChange}

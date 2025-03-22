@@ -12,7 +12,6 @@ export const useCreateArticle = () => {
 	const dispatch = useDispatch<AppDispatch>()
 
 	const commit = async ({ name }: { name: string }) => {
-		console.debug('Creating article:', name)
 		const { response, error } = parseApiResponse(
 			await createArticle({
 				worldId,

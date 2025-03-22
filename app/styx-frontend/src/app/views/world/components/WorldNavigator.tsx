@@ -3,7 +3,7 @@ import Button from '@mui/material/Button'
 import { memo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { NavigatorSummonable } from '@/app/features/navigation/components/NavigatorSummonables'
+import { SummonableNavigatorContextButton } from '@/app/features/navigation/components/NavigatorSummonables'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { getOverviewPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 
@@ -19,10 +19,10 @@ export function WorldNavigatorComponent() {
 	}, [dispatch, panelOpen, setPanelOpen])
 
 	return (
-		<NavigatorSummonable>
+		<SummonableNavigatorContextButton>
 			<Button onClick={onToggleOverview} aria-label="Toggle" sx={{ height: '100%' }}>
 				<Menu />
 			</Button>
-		</NavigatorSummonable>
+		</SummonableNavigatorContextButton>
 	)
 }
