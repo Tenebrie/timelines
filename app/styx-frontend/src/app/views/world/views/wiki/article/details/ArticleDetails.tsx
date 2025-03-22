@@ -4,7 +4,7 @@ import { useRef, useState } from 'react'
 
 import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortalSlot'
+import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { OnChangeParams } from '@/app/features/richTextEditor/RichTextEditor'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'

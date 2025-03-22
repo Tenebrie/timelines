@@ -31,6 +31,7 @@ export type AllowedEvents =
 	| 'richEditor/requestBlur'
 	| 'summonable/requestSummon'
 	| 'summonable/requestDismiss'
+
 type ScrollTimelineToParams =
 	| {
 			timestamp: number
@@ -86,6 +87,7 @@ export type EventParams = {
 		family: string
 		element: HTMLElement
 		event: { isHandled: boolean }
+		props: unknown
 	}
 	['summonable/requestDismiss']: {
 		family: string

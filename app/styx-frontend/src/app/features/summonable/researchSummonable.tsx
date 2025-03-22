@@ -1,4 +1,4 @@
-import Box from '@mui/material/Box'
+import Box, { BoxProps } from '@mui/material/Box'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
@@ -11,13 +11,13 @@ type Props = {
 	family: string
 }
 
-export function researchSummonable({ family }: Props) {
+export function researchSummonable<SummonableProps = void>({ family }: Props) {
 	const repository = invokeSummoningRepository()
 	const waitingList = invokeSummonWaitingList()
 	repository[family] = []
 	waitingList[family] = []
 
-	const summon = (target: HTMLElement) => {
+	const summon = (target: HTMLElement, props: unknown) => {
 		const event = { isHandled: false }
 		dispatchEvent({
 			event: 'summonable/requestSummon',
@@ -25,11 +25,12 @@ export function researchSummonable({ family }: Props) {
 				family,
 				element: target,
 				event,
+				props,
 			},
 		})
 
 		if (!event.isHandled) {
-			waitingList[family].push(target)
+			waitingList[family].push({ target, props })
 		}
 	}
 
@@ -42,44 +43,63 @@ export function researchSummonable({ family }: Props) {
 			},
 		})
 
-		waitingList[family] = waitingList[family].filter((e) => e !== element)
+		waitingList[family] = waitingList[family].filter((e) => e.target !== element)
 	}
 
-	function Summonable({ children }: { children: ReactNode }) {
+	function Summonable({ children }: { children: ReactNode | ((props: SummonableProps) => ReactNode) }) {
+		const [props, setProps] = useState<SummonableProps | undefined>(undefined)
 		const [targetElement, setTargetElement] = useState<HTMLElement | undefined>(undefined)
+
+		const propsRef = useAutoRef(props)
 		const targetElementRef = useAutoRef(targetElement)
 
 		useEventBusSubscribe({
 			event: 'summonable/requestSummon',
+			condition: (params) => params.family === family && targetElementRef.current === undefined,
 			callback: (params) => {
 				targetElementRef.current = params.element
 				setTargetElement(params.element)
+				setProps(params.props as SummonableProps)
+				propsRef.current = params.props as SummonableProps
 				params.event.isHandled = true
 			},
 		})
 
 		useEffect(() => {
-			const currentTarget = waitingList[family].pop()
-			setTargetElement(currentTarget)
-			targetElementRef.current = currentTarget
+			const currentSummoner = waitingList[family].pop()
+			if (currentSummoner) {
+				setProps(currentSummoner.props as SummonableProps)
+				setTargetElement(currentSummoner.target)
+				propsRef.current = currentSummoner.props as SummonableProps
+				targetElementRef.current = currentSummoner.target
+			}
 
 			return () => {
 				if (targetElementRef.current) {
-					waitingList[family].push(targetElementRef.current)
+					waitingList[family].push({
+						target: targetElementRef.current,
+						props: propsRef.current as SummonableProps,
+					})
 				}
 			}
-		}, [targetElementRef])
+		}, [propsRef, targetElementRef])
 
 		useEventBusSubscribe({
 			event: 'summonable/requestDismiss',
 			condition: (params) => params.family === family && params.element === targetElementRef.current,
 			callback: () => {
-				targetElementRef.current = undefined
-				setTargetElement(undefined)
-
 				const newTarget = waitingList[family].pop()
-				setTargetElement(newTarget)
-				targetElementRef.current = newTarget
+				if (newTarget) {
+					setProps(newTarget.props as SummonableProps)
+					propsRef.current = newTarget.props as SummonableProps
+					setTargetElement(newTarget.target)
+					targetElementRef.current = newTarget.target
+				} else {
+					setProps(undefined)
+					propsRef.current = undefined
+					setTargetElement(undefined)
+					targetElementRef.current = undefined
+				}
 			},
 		})
 
@@ -87,22 +107,35 @@ export function researchSummonable({ family }: Props) {
 			return null
 		}
 
-		return createPortal(children, targetElement)
+		return createPortal(
+			typeof children === 'function' ? children(props as SummonableProps) : children,
+			targetElement,
+		)
 	}
 
-	function SummoningPortal() {
+	function SummoningPortal(
+		data: SummonableProps extends void ? BoxProps : { props: SummonableProps } & BoxProps,
+	) {
 		const ref = useRef<HTMLDivElement | null>(null)
+
 		useEffect(() => {
 			const currentElement = ref.current
 			if (currentElement) {
-				summon(currentElement)
+				const props = 'props' in data ? data.props : undefined
+				summon(currentElement, props)
 				return () => {
 					release(currentElement)
 				}
 			}
-		}, [])
+		}, [data])
 
-		return <Box ref={ref}></Box>
+		// Remove the inner props
+		const boxProps = {
+			...data,
+			props: undefined,
+		}
+
+		return <Box ref={ref} {...boxProps} />
 	}
 
 	return {

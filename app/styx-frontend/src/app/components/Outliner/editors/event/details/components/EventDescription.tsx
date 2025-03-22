@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortalSlot'
+import { RichTextEditorPortalSlot } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { RichTextEditorProps } from '@/app/features/richTextEditor/RichTextEditor'
 
 import { EventDraft } from '../draft/useEventDraft'

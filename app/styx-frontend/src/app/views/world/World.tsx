@@ -1,6 +1,7 @@
 import Stack from '@mui/material/Stack'
 import { Outlet } from '@tanstack/react-router'
 
+import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
 import { ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage'
@@ -50,20 +51,20 @@ export const World = () => {
 				style={{
 					position: 'relative',
 					width: '100%',
-					height: '100vh',
+					height: 'calc(100vh - 50.5px)',
 					display: 'flex',
 					flexDirection: 'column',
 				}}
 			>
 				<WorldNavigator />
-				<Stack direction="row" width="100%" height="calc(100% - 50.5px)">
+				<Stack direction="row" width="100%" height="100%">
 					<WorldSidebar />
 					<div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
 						<Outlet />
 					</div>
 				</Stack>
 			</div>
-			<RichTextEditorPortal />
+			<RichTextEditorPortal>{(props) => <RichTextEditorWithFallback {...props} />}</RichTextEditorPortal>
 			<DeleteEventModal />
 			<DeleteEventDeltaModal />
 		</>

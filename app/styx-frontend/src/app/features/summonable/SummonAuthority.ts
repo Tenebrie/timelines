@@ -11,7 +11,7 @@ export type EventParams = {
 declare global {
 	interface Document {
 		deliveryRepository: Partial<Record<PortalTypes, HTMLDivElement>>
-		summonWaitingList: Record<string, HTMLElement[]>
+		summonWaitingList: Record<string, { target: HTMLElement; props: unknown }[]>
 		summonRepository: Record<
 			string,
 			{
