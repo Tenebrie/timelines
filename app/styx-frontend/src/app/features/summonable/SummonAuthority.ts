@@ -1,24 +1,19 @@
 // Please forgive me for all the sins I am about to commit
 
-import { ElementType } from 'react'
-
 declare global {
 	interface Document {
 		summonWaitingList: Record<string, { target: HTMLElement; props: unknown }[]>
 		summonRepository: Record<
 			string,
 			{
-				id: string
-				Component: ElementType<{ id: string }>
-				element: HTMLElement | null
+				target: HTMLElement | null
 				status: 'busy' | 'parked'
-				onTouched: () => void
 			}[]
 		>
 	}
 }
 
-export function invokeSummoningRepository() {
+export function invokeSummonRepository() {
 	if (!document.summonRepository) {
 		document.summonRepository = {}
 	}

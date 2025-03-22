@@ -40,6 +40,8 @@ export const BaseNavigator = () => {
 					<Stack minWidth={173} direction="row" gap={1} sx={{ justifyContent: 'flex-end' }}>
 						{/* <NavigatorDeliveryTarget /> */}
 						<NavigatorContextButtonSummoner />
+						<NavigatorContextButtonSummoner />
+						<NavigatorContextButtonSummoner />
 						<LastWorldNavigatorButton icon={<PublicIcon />} label="World" />
 					</Stack>
 					<Divider orientation="vertical" sx={{ height: '25px' }} />

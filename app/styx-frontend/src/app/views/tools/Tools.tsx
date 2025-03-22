@@ -29,8 +29,6 @@ export function Tools() {
 		format,
 	})
 
-	console.log(onFilesSelected)
-
 	const { data: formatData } = useGetSupportedImageFormatsQuery()
 
 	return (

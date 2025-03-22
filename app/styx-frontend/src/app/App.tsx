@@ -51,6 +51,7 @@ const App = () => {
 			<NavigationReceiverWrapper />
 			<DragDropPortalSlot />
 			<PageMetadata />
+			{/* <SummonableDebug /> */}
 		</div>
 	)
 }

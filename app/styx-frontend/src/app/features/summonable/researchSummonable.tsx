@@ -5,17 +5,63 @@ import { createPortal } from 'react-dom'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 
 import { dispatchEvent, useEventBusSubscribe } from '../eventBus'
-import { invokeSummoningRepository, invokeSummonWaitingList } from './SummonAuthority'
+import { SummonableErrorBoundary } from './SummonableErrorBoundary'
+import { invokeSummonRepository as invokeSummonRepository, invokeSummonWaitingList } from './SummonAuthority'
 
 type Props = {
 	family: string
 }
 
+/**
+ * Creates a pair of components, defining a Summoner and a Summonable.
+ *
+ * A Summoner is a component that can be used to summon a Summonable to its current location.
+ * A Summonable is a component that can be summoned by a Summoner.
+ *
+ * @example
+ * ```tsx
+ * const { Summoner, Summonable } = researchSummonable<MyProps>({
+ *   family: 'myComponent'
+ * });
+ *
+ * // Where you want the content to appear:
+ * <Summoner props={myProps}>
+ *   <Button>Click me</Button>
+ * </Summoner>
+ *
+ * // In your provider component:
+ * <Summonable>
+ *   {(props) => <MyComponent {...props} />}
+ * </Summonable>
+ * ```
+ *
+ * If you don't need to pass props to the summoned content, you can omit the generic parameter:
+ * @example
+ * ```tsx
+ * const { Summoner, Summonable } = researchSummonable({
+ *   family: 'myComponent'
+ * });
+ *
+ * // Where you want the content to appear:
+ * <Summoner>
+ *   <Button>Click me</Button>
+ * </Summoner>
+ *
+ * // In your provider component:
+ * <Summonable>
+ *   <MyComponent />
+ * </Summonable>
+ * ```
+ *
+ * @param options - Configuration options
+ * @param options.family - Unique identifier for this summonable family. Used to group related summoners and summonables.
+ * @returns Object containing Summoner and Summonable components
+ */
 export function researchSummonable<SummonableProps = void>({ family }: Props) {
-	const repository = invokeSummoningRepository()
+	const repository = invokeSummonRepository()
 	const waitingList = invokeSummonWaitingList()
-	repository[family] = []
 	waitingList[family] = []
+	repository[family] = []
 
 	const summon = (target: HTMLElement, initialProps: unknown) => {
 		const event = { isHandled: false }
@@ -53,6 +99,12 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 		waitingList[family] = waitingList[family].filter((e) => e.target !== element)
 	}
 
+	/**
+	 * Component that can be summoned to render content at a specific DOM location.
+	 * Manages the lifecycle of the summoned content and handles updates.
+	 *
+	 * @returns Rendered content or null if can' be summoned
+	 */
 	function Summonable({ children }: { children: ReactNode | ((props: SummonableProps) => ReactNode) }) {
 		const [props, setProps] = useState<SummonableProps | undefined>(undefined)
 		const [targetElement, setTargetElement] = useState<HTMLElement | undefined>(undefined)
@@ -62,7 +114,8 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 
 		useEventBusSubscribe({
 			event: 'summonable/requestSummon',
-			condition: (params) => params.family === family && targetElementRef.current === undefined,
+			condition: (params) =>
+				params.family === family && targetElementRef.current === undefined && !params.event.isHandled,
 			callback: (params) => {
 				targetElementRef.current = params.element
 				setTargetElement(params.element)
@@ -99,6 +152,26 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 			}
 		}, [propsRef, targetElementRef])
 
+		useEffect(() => {
+			const pushedObject = (() => {
+				if (targetElement) {
+					return {
+						target: targetElement,
+						status: 'busy' as const,
+					}
+				}
+				return {
+					target: null,
+					status: 'parked' as const,
+				}
+			})()
+			repository[family].push(pushedObject)
+
+			return () => {
+				repository[family].splice(repository[family].indexOf(pushedObject), 1)
+			}
+		}, [targetElement])
+
 		useEventBusSubscribe({
 			event: 'summonable/requestDismiss',
 			condition: (params) => params.family === family && params.element === targetElementRef.current,
@@ -123,11 +196,24 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 		}
 
 		return createPortal(
-			typeof children === 'function' ? children(props as SummonableProps) : children,
+			<SummonableErrorBoundary family={family}>
+				{typeof children === 'function' ? children(props as SummonableProps) : children}
+			</SummonableErrorBoundary>,
 			targetElement,
 		)
 	}
 
+	/**
+	 * Component that triggers the summoning of content.
+	 * When mounted, it registers itself as a summoner and manages updates to the summoned content.
+	 *
+	 * Passed props are provided to the wrapper (Box) component.
+	 * `.props` is provided to the summoned content.
+	 *
+	 * @param data - Component props
+	 * @param data.props - Props to pass to the summoned content
+	 * @returns Rendered component
+	 */
 	function Summoner(data: SummonableProps extends void ? BoxProps : { props: SummonableProps } & BoxProps) {
 		const ref = useRef<HTMLDivElement | null>(null)
 
