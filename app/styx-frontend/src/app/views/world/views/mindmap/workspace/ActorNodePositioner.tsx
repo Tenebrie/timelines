@@ -52,6 +52,7 @@ export function ActorNodePositioner({ actor }: Props) {
 			deltaX: 0,
 			deltaY: 0,
 		}
+		element.style.setProperty('--inner-transition-duration', '0.1s')
 
 		const handleMouseDown = (event: MouseEvent) => {
 			if (event.button !== 0) {
@@ -61,6 +62,7 @@ export function ActorNodePositioner({ actor }: Props) {
 			event.stopPropagation()
 			mouseState.isButtonDown = true
 			mouseState.gridScale = parseFloat(getComputedStyle(element).getPropertyValue('--grid-scale'))
+			element.style.setProperty('--inner-transition-duration', '0.00s')
 		}
 
 		const handleMouseUp = (event: MouseEvent) => {
@@ -75,6 +77,7 @@ export function ActorNodePositioner({ actor }: Props) {
 			mouseState.canClick = true
 			mouseState.deltaX = 0
 			mouseState.deltaY = 0
+			element.style.setProperty('--inner-transition-duration', '0.1s')
 		}
 
 		const handleMouseMove = (event: MouseEvent) => {
@@ -118,10 +121,10 @@ export function ActorNodePositioner({ actor }: Props) {
 				pointerEvents: 'auto',
 				background: theme.custom.palette.background.timeline,
 				position: 'absolute',
-				transform: `translate(calc(${position.x}px * var(--grid-scale)), calc(${position.y}px * var(--grid-scale)))`,
+				transform: `translate(calc(${position.x}px * var(--grid-scale) + var(--grid-offset-x)), calc(${position.y}px * var(--grid-scale) + var(--grid-offset-y)))`,
 				outline: '2px solid',
 				outlineColor: selectedNodes.includes(actor.id) ? theme.material.palette.primary.main : 'transparent',
-				transition: 'outline-color 0.2s ease-out',
+				transition: 'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out',
 				borderRadius: 2,
 			}}
 		>

@@ -62,6 +62,7 @@ export function Mindmap() {
 				'--small-grid-spacing': `${effectiveSmallSpacing}px`,
 				'--medium-grid-spacing': `${effectiveMediumSpacing}px`,
 				'--large-grid-spacing': `${effectiveLargeSpacing}px`,
+				'--transition-duration': `${mouseState.isDragging ? 0.0 : 0.1}s`,
 			} as CSSProperties
 
 			// Update the element's CSS variables.
@@ -71,6 +72,7 @@ export function Mindmap() {
 			element.style.setProperty('--small-grid-spacing', `${effectiveSmallSpacing}px`)
 			element.style.setProperty('--medium-grid-spacing', `${effectiveMediumSpacing}px`)
 			element.style.setProperty('--large-grid-spacing', `${effectiveLargeSpacing}px`)
+			element.style.setProperty('--transition-duration', `${mouseState.isDragging ? 0.0 : 0.1}s`)
 		}, 4)
 
 		const handleMouseDown = (event: MouseEvent) => {
@@ -81,6 +83,7 @@ export function Mindmap() {
 		const handleMouseUp = (event: MouseEvent) => {
 			if (event.button !== 0) return
 			mouseState.isDragging = false
+			update()
 		}
 
 		const handleMouseMove = (event: MouseEvent) => {
@@ -161,6 +164,7 @@ export function Mindmap() {
 							var(--small-grid-spacing) var(--small-grid-spacing),
 							var(--small-grid-spacing) var(--small-grid-spacing)
 						`,
+						transition: 'all var(--transition-duration) ease-out',
 					}}
 				/>
 				<Box
@@ -168,10 +172,11 @@ export function Mindmap() {
 						position: 'absolute',
 						width: '100%',
 						height: '100%',
-						left: 'var(--grid-offset-x)',
-						top: 'var(--grid-offset-y)',
+						// left: 'var(--grid-offset-x)',
+						// top: 'var(--grid-offset-y)',
 						pointerEvents: 'none',
 						zIndex: 2,
+						// transition: 'all 1s ease-out',
 					}}
 				>
 					<MindmapContent />
