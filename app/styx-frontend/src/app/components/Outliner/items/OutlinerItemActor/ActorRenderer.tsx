@@ -4,17 +4,15 @@ import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import { useNavigate } from '@tanstack/react-router'
-import cx from 'classnames'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { ActorAvatar } from '@/app/components/ActorAvatar/ActorAvatar'
+import { ShowHideChevron } from '@/app/components/ShowHideChevron'
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { StyledListItemButton, StyledListItemText } from '@/app/views/world/views/timeline/shelf/styles'
-
-import { ShowHideChevron } from './styles'
 
 type Props = {
 	actor: ActorDetails
@@ -40,7 +38,7 @@ export const ActorRenderer = ({ actor, collapsed }: Props) => {
 
 	const actions = [
 		<IconButton key={'collapse'} sx={{ marginRight: 2 }} onClick={onToggleOpen}>
-			<ShowHideChevron className={cx({ collapsed })} />
+			<ShowHideChevron collapsed={collapsed} />
 		</IconButton>,
 	]
 	if (!isReadOnly) {

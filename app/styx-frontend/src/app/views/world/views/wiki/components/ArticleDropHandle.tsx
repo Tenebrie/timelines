@@ -1,7 +1,10 @@
 import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
 import { useRef } from 'react'
 
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
+import { useDragDropStateWithRenders } from '@/app/features/dragDrop/hooks/useDragDropStateWithRenders'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 import { useMoveArticle } from '../api/useMoveArticle'
 
@@ -12,35 +15,45 @@ type Props = {
 }
 
 export function ArticleDropHandle({ position, parentId, marginLeft }: Props) {
+	const theme = useCustomTheme()
 	const [moveArticle] = useMoveArticle()
 
 	const ref = useRef<HTMLDivElement>(null)
 
+	const { isDragging } = useDragDropStateWithRenders()
+
 	useDragDropReceiver({
 		type: 'articleListItem',
 		receiverRef: ref,
-		onDrop: ({ params }) => {
-			const isMovingDown = position > params.article.position
-			const targetPosition = isMovingDown ? position - 1 : position
+		onDrop: ({ params }, event) => {
+			event.markHandled()
 			moveArticle({
 				articleId: params.article.id,
 				parentId,
-				position: targetPosition,
+				position: position - 1,
 			})
 		},
 	})
 
 	return (
-		<Box
+		<Stack
 			ref={ref}
+			data-testid={`ArticleDropHandle/${position}`}
 			sx={{
-				width: '100%',
+				width: 'calc(100% - 16px)',
 				height: '8px',
-				marginTop: '-6px',
+				padding: '0 8px',
 				zIndex: 2,
 				marginLeft,
-				'body.cursor-grabbing &:hover': { backgroundColor: 'red' },
+				alignItems: 'center',
+				justifyContent: 'center',
+				...(isDragging && {
+					'& > *': { backgroundColor: theme.custom.palette.background.softer },
+					'&:hover > *': { backgroundColor: theme.custom.palette.background.soft },
+				}),
 			}}
-		></Box>
+		>
+			<Box sx={{ width: '100%', height: '4px', transition: 'background-color 0.3s' }}></Box>
+		</Stack>
 	)
 }

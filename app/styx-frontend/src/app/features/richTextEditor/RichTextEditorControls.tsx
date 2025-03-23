@@ -22,7 +22,10 @@ type Props = {
 export const RichTextEditorControls = memo(RichTextEditorControlsComponent)
 
 export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props) {
-	const { readModeEnabled } = useSelector(getWikiPreferences)
+	const { readModeEnabled } = useSelector(
+		getWikiPreferences,
+		(a, b) => a.readModeEnabled === b.readModeEnabled,
+	)
 	const { isReadOnly } = useIsReadOnly()
 
 	const isReadMode = isReadOnly || (readModeEnabled && allowReadMode)

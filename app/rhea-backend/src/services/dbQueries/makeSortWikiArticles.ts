@@ -24,7 +24,7 @@ export const makeSortWikiArticles = async (worldId: string, prisma?: Prisma.Tran
 					id: article.id,
 				},
 				data: {
-					position: index,
+					position: index * 2,
 				},
 			})
 		}),

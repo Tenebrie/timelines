@@ -78,17 +78,17 @@ export type PostLoginApiResponse = /** status 200  */ {
 		bio: string
 		level: 'Free' | 'Premium' | 'Admin'
 		avatar: null | {
-			status: 'Pending' | 'Finalized' | 'Failed'
 			id: string
 			createdAt: string
 			updatedAt: string
-			ownerId: string
-			size: number
 			expiresAt?: null | string
+			ownerId: string
 			bucketKey: string
+			size: number
 			originalFileName: string
 			originalFileExtension: string
 			contentType: 'ImageConversion' | 'Avatar'
+			status: 'Pending' | 'Finalized' | 'Failed'
 		}
 	}
 	sessionId: string

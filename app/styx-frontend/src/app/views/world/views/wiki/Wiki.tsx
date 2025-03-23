@@ -39,12 +39,12 @@ export const Wiki = () => {
 					elevation={2}
 					data-testid="ArticleListWithHeader"
 				>
-					<Stack gap={1}>
+					<Stack gap={1} height={1}>
 						<Stack gap={1}>
 							<ArticleListHeader />
 							<Divider />
 						</Stack>
-						<ArticleList parentId={null} />
+						<ArticleList parentId={null} depth={0} />
 					</Stack>
 				</Paper>
 				<Paper

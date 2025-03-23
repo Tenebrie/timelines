@@ -19,6 +19,7 @@ export const AdminService = {
 			where: {
 				...(query
 					? {
+							deletedAt: null,
 							OR: [
 								{
 									email: {

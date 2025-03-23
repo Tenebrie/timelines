@@ -96,7 +96,10 @@ export const EditorContentBox = ({ editor, mode, className, readOnly }: EditorCo
 export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allowReadMode }: Props) => {
 	const theme = useCustomTheme()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
-	const { readModeEnabled } = useSelector(getWikiPreferences)
+	const { readModeEnabled } = useSelector(
+		getWikiPreferences,
+		(a, b) => a.readModeEnabled === b.readModeEnabled,
+	)
 
 	const onChangeRef = useRef(onChange)
 	useEffect(() => {

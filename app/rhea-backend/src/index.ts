@@ -20,6 +20,7 @@ import { WorldSearchRouter } from './routers/WorldSearchRouter'
 import { WorldThumbnailRouter } from './routers/WorldThumbnailRouter'
 import { WorldWikiRouter } from './routers/WorldWikiRouter'
 import { RedisService } from './services/RedisService'
+import { UserService } from './services/UserService'
 import { isRunningInTest } from './utils/isRunningInTest'
 
 export const app = new Koa()
@@ -92,4 +93,8 @@ if (!isRunningInTest()) {
 	RedisService.initRedisConnection()
 	app.listen(3000)
 	console.info('[RHEA] Server up')
+
+	setInterval(() => {
+		UserService.cleanUpDeletedUsers()
+	}, 60000)
 }

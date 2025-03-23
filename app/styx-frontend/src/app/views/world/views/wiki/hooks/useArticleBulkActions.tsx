@@ -12,7 +12,13 @@ type Props = {
 
 export const useArticleBulkActions = ({ article }: Props) => {
 	const { data: articles } = useListArticles()
-	const { isBulkSelecting, lastCheckedArticle, bulkActionArticles } = useSelector(getWikiState)
+	const { isBulkSelecting, lastCheckedArticle, bulkActionArticles } = useSelector(
+		getWikiState,
+		(a, b) =>
+			a.isBulkSelecting === b.isBulkSelecting &&
+			a.lastCheckedArticle === b.lastCheckedArticle &&
+			a.bulkActionArticles === b.bulkActionArticles,
+	)
 
 	const { setLastCheckedArticle, addToBulkSelection, removeFromBulkSelection } = wikiSlice.actions
 	const dispatch = useDispatch()

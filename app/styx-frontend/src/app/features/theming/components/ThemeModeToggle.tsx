@@ -9,7 +9,7 @@ import { preferencesSlice } from '../../preferences/PreferencesSlice'
 import { getUserPreferences } from '../../preferences/PreferencesSliceSelectors'
 
 export const ThemeModeToggle = () => {
-	const { colorMode } = useSelector(getUserPreferences)
+	const { colorMode } = useSelector(getUserPreferences, (a, b) => a.colorMode === b.colorMode)
 
 	const { setColorMode } = preferencesSlice.actions
 	const dispatch = useDispatch()

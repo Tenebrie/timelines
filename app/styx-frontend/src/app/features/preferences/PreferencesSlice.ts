@@ -1,4 +1,5 @@
 import { Actor, WorldEvent } from '@api/types/worldTypes'
+import { WikiArticle } from '@api/types/worldWikiTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
@@ -17,6 +18,10 @@ const saveToLocalStorage = (state: PreferencesState) => {
 				// Do not save expanded entities into storage as it may grow too large
 				expandedActors: [],
 				expandedEvents: [],
+			},
+			wiki: {
+				...state.wiki,
+				expandedFolders: [],
 			},
 		}),
 	)
@@ -112,6 +117,14 @@ export const preferencesSlice = createSlice({
 		/* Wiki */
 		setReadMode: (state, { payload }: PayloadAction<boolean>) => {
 			state.wiki.readModeEnabled = payload
+			saveToLocalStorage(state)
+		},
+		collapseWikiFolder: (state, { payload }: PayloadAction<WikiArticle>) => {
+			state.wiki.expandedFolders = state.wiki.expandedFolders.filter((id) => id !== payload.id)
+			saveToLocalStorage(state)
+		},
+		uncollapseWikiFolder: (state, { payload }: PayloadAction<WikiArticle>) => {
+			state.wiki.expandedFolders = [...new Set([...state.wiki.expandedFolders, payload.id])]
 			saveToLocalStorage(state)
 		},
 	},

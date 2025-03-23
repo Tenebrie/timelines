@@ -19,6 +19,7 @@ export const UserAuthenticatorWithAvatar = async (ctx: ParameterizedContext) => 
 		const user = await getPrismaClient().user.findFirst({
 			where: {
 				id: tokenPayload.id,
+				deletedAt: null,
 			},
 			include: {
 				avatar: true,

@@ -13,6 +13,7 @@ import { PageMetadata } from './features/pageMetadata/PageMetadata'
 import { useSavedPreferences } from './features/preferences/hooks/useSavedPreferences'
 import { CustomThemeOverrides } from './features/theming/components/CustomThemeOverrides'
 import { CustomThemeProvider } from './features/theming/context/CustomThemeProvider'
+import { useBrowserSpecificScrollbars } from './hooks/useBrowserSpecificScrollbars'
 import { useShortcutManager } from './hooks/useShortcut/useShortcutManager'
 
 const Container = styled.div`
@@ -27,6 +28,7 @@ const App = () => {
 	useLiveUpdates()
 	useSavedPreferences()
 	useShortcutManager()
+	const scrollbars = useBrowserSpecificScrollbars()
 
 	useEffect(() => {
 		if (process.env.NODE_ENV === 'development') {
@@ -42,7 +44,14 @@ const App = () => {
 				<CustomThemeOverrides>
 					<Container>
 						<BaseNavigator />
-						<Box sx={{ width: '100%', height: 'calc(100vh - 50.5px)' }}>
+						<Box
+							sx={{
+								width: '100%',
+								height: 'calc(100vh - 50.5px)',
+								overflowY: 'auto',
+								...scrollbars,
+							}}
+						>
 							<Outlet />
 						</Box>
 						<ModalsRenderer />

@@ -19,6 +19,7 @@ export const UserAuthenticator = async (ctx: ParameterizedContext) => {
 		const user = await getPrismaClient().user.findFirst({
 			where: {
 				id: tokenPayload.id,
+				deletedAt: null,
 			},
 		})
 		if (!user) {

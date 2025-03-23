@@ -7,12 +7,7 @@ const injectedRtkApi = api
 	.injectEndpoints({
 		endpoints: (build) => ({
 			getArticles: build.query<GetArticlesApiResponse, GetArticlesApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/wiki/articles`,
-					params: {
-						parentId: queryArg.parentId,
-					},
-				}),
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/wiki/articles` }),
 				providesTags: ['worldWiki'],
 			}),
 			createArticle: build.mutation<CreateArticleApiResponse, CreateArticleApiArg>({
@@ -46,14 +41,6 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldWiki'],
 			}),
-			swapArticlePositions: build.mutation<SwapArticlePositionsApiResponse, SwapArticlePositionsApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/wiki/article/swap`,
-					method: 'POST',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['worldWiki'],
-			}),
 			bulkDeleteArticles: build.mutation<BulkDeleteArticlesApiResponse, BulkDeleteArticlesApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/wiki/articles/delete`,
@@ -68,56 +55,54 @@ const injectedRtkApi = api
 export { injectedRtkApi as worldWikiApi }
 export type GetArticlesApiResponse = /** status 200  */ {
 	children: {
-		worldId: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		icon: string
 		color: string
-		position: number
 		contentRich: string
+		position: number
+		worldId: string
 		parentId?: null | string
 	}[]
-	worldId: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	icon: string
 	color: string
-	position: number
 	contentRich: string
+	position: number
+	worldId: string
 	parentId?: null | string
 }[]
 export type GetArticlesApiArg = {
 	/** Any string value */
 	worldId: string
-	/** Any string or null value */
-	parentId?: null | string
 }
 export type CreateArticleApiResponse = /** status 200  */ {
 	children: {
-		worldId: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		icon: string
 		color: string
-		position: number
 		contentRich: string
+		position: number
+		worldId: string
 		parentId?: null | string
 	}[]
-	worldId: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	icon: string
 	color: string
-	position: number
 	contentRich: string
+	position: number
+	worldId: string
 	parentId?: null | string
 }
 export type CreateArticleApiArg = {
@@ -129,26 +114,26 @@ export type CreateArticleApiArg = {
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
-		worldId: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		icon: string
 		color: string
-		position: number
 		contentRich: string
+		position: number
+		worldId: string
 		parentId?: null | string
 	}[]
-	worldId: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	icon: string
 	color: string
-	position: number
 	contentRich: string
+	position: number
+	worldId: string
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {
@@ -184,15 +169,6 @@ export type MoveArticleApiArg = {
 		position: number
 	}
 }
-export type SwapArticlePositionsApiResponse = unknown
-export type SwapArticlePositionsApiArg = {
-	/** Any string value */
-	worldId: string
-	body: {
-		articleA: string
-		articleB: string
-	}
-}
 export type BulkDeleteArticlesApiResponse = unknown
 export type BulkDeleteArticlesApiArg = {
 	/** Any string value */
@@ -208,6 +184,5 @@ export const {
 	useUpdateArticleMutation,
 	useDeleteArticleMutation,
 	useMoveArticleMutation,
-	useSwapArticlePositionsMutation,
 	useBulkDeleteArticlesMutation,
 } = injectedRtkApi

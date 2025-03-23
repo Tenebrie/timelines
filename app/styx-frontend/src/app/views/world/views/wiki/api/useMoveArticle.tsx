@@ -2,25 +2,17 @@ import { MoveArticleApiArg, useMoveArticleMutation, worldWikiApi } from '@api/wo
 import { useSelector } from 'react-redux'
 
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { useListArticles } from '@/app/views/world/api/useListArticles'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 import { useArticleApiCache } from './useArticleApiCache'
 
 export const useMoveArticle = () => {
 	const worldId = useSelector(getWorldIdState)
-	const { data: articles } = useListArticles()
 	const [moveArticle, params] = useMoveArticleMutation()
-	const { updateCachedArticle } = useArticleApiCache()
+	const { updateCachedArticlePosition } = useArticleApiCache()
 
 	const commit = async (data: MoveArticleApiArg['body']) => {
-		const article = articles?.find((article) => article.id === data.articleId)
-		if (article) {
-			// updateCachedArticle({
-			// 	id: article.id,
-			// 	position: data.position,
-			// })
-		}
+		updateCachedArticlePosition(data)
 
 		const { response, error } = parseApiResponse(
 			await moveArticle({

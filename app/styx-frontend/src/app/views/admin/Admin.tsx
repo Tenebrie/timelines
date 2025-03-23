@@ -21,7 +21,7 @@ import { SearchInput } from './components/SearchInput'
 import { UserAccessLevelDropdown } from './components/UserAccessLevelDropdown'
 import { DeleteUserModal } from './modals/DeleteUserModal'
 
-const pageSize = 14
+const pageSize = 18
 
 export const Admin = () => {
 	const [page, setPage] = useState(0)

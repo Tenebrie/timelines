@@ -9,6 +9,7 @@ export type DragDropStateType<T extends AllowedDraggableType> = {
 	params: DraggableParams[T]
 	targetPos: { x: number; y: number }
 	targetRootPos: { x: number; y: number }
+	isHandled: boolean
 }
 
 export const IsDragDropStateOfType = <T extends AllowedDraggableType>(

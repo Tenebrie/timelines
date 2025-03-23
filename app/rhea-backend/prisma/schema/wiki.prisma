@@ -29,7 +29,7 @@ model WikiArticle {
     world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
     worldId String
 
-    parent   WikiArticle?  @relation("ArticleHierarchy", fields: [parentId], references: [id])
+    parent   WikiArticle?  @relation("ArticleHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
     parentId String?
     children WikiArticle[] @relation("ArticleHierarchy")
 }

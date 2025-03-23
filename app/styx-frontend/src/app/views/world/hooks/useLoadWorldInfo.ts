@@ -50,7 +50,7 @@ export const useLoadWorldInfo = (worldId: string) => {
 
 	useEffect(() => {
 		dispatch(loadArticles({ articles: articles ?? [] }))
-	})
+	}, [articles, dispatch, loadArticles])
 
 	return {
 		isLoaded,

@@ -17,7 +17,10 @@ import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 
 export const ArticleListHeader = () => {
 	const { data: articles } = useListArticles()
-	const { readModeEnabled } = useSelector(getWikiPreferences)
+	const { readModeEnabled } = useSelector(
+		getWikiPreferences,
+		(a, b) => a.readModeEnabled === b.readModeEnabled,
+	)
 	const { isBulkSelecting, bulkActionArticles } = useSelector(getWikiState)
 	const { open: openArticleWizard } = useModal('articleWizard')
 	const { open: openDeleteArticleModal } = useModal('deleteArticleModal')

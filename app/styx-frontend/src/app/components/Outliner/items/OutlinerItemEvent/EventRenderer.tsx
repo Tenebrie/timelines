@@ -3,15 +3,14 @@ import Edit from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import { useNavigate } from '@tanstack/react-router'
-import cx from 'classnames'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { ShowHideChevron } from '@/app/components/ShowHideChevron'
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { StyledListItemButton } from '@/app/views/world/views/timeline/shelf/styles'
 
-import { ShowHideChevron } from '../OutlinerItemActor/styles'
 import { EventHeaderRenderer } from './EventHeaderRenderer'
 
 type Props = {
@@ -71,7 +70,7 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 						onClick={onToggleOpen}
 						aria-label="Expand or collapse"
 					>
-						<ShowHideChevron className={cx({ collapsed })} />
+						<ShowHideChevron collapsed={collapsed} />
 					</IconButton>
 				)
 		}

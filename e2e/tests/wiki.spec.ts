@@ -135,6 +135,80 @@ test.describe('Wiki', () => {
 			await page.waitForTimeout(100)
 			await expect(textbox).toHaveText('Hello TestActorHello UnrelatedActor')
 		})
+
+		test('moving articles and creating folders', async ({ page }) => {
+			// Prepare world
+			const world = await createWorld(page)
+			await createWikiArticle(page, world, { name: 'Parent article' })
+			await createWikiArticle(page, world, { name: 'Child article' })
+			await createWikiArticle(page, world, { name: 'Sibling article' })
+			await createWikiArticle(page, world, { name: 'Nested article' })
+			await navigateToWiki(page, world)
+
+			const childArticle = page.getByText('Child article')
+			const parentArticle = page.getByText('Parent article')
+			const siblingArticle = page.getByText('Sibling article')
+			const nestedArticle = page.getByText('Nested article')
+
+			// Perform drag and drop
+			await childArticle.dragTo(parentArticle)
+			await nestedArticle.dragTo(childArticle)
+			await siblingArticle.dragTo(parentArticle)
+
+			// Get references to all articles by their list item IDs
+			expect(page.getByTestId('ArticleListItem/Parent article/0')).toBeVisible()
+			expect(page.getByTestId('ArticleListItem/Child article/1')).toBeVisible()
+			expect(page.getByTestId('ArticleListItem/Sibling article/1')).toBeVisible()
+			expect(page.getByTestId('ArticleListItem/Nested article/2')).toBeVisible()
+			expect(
+				page
+					.getByTestId('ArticleListItem/Parent article/0')
+					.getByTestId('ArticleListItem/Child article/1')
+					.getByTestId('ArticleListItem/Nested article/2'),
+			).toBeVisible()
+
+			// Check icons
+			expect(page.getByTestId('ArticleListItem/Child article/1').getByTestId('FolderIcon')).toBeVisible()
+			expect(page.getByTestId('ArticleListItem/Sibling article/1').getByTestId('ArticleIcon')).toBeVisible()
+			expect(page.getByTestId('ArticleListItem/Nested article/2').getByTestId('ArticleIcon')).toBeVisible()
+
+			// Move nested article to sibling article
+			await nestedArticle.dragTo(siblingArticle)
+
+			// Check that nested article is now a child of sibling article
+			expect(page.getByTestId('ArticleListItem/Child article/1').getByTestId('ArticleIcon')).toBeVisible()
+			expect(page.getByTestId('ArticleListItem/Sibling article/1').getByTestId('FolderIcon')).toBeVisible()
+			expect(
+				page
+					.getByTestId('ArticleListItem/Parent article/0')
+					.getByTestId('ArticleListItem/Sibling article/1')
+					.getByTestId('ArticleListItem/Nested article/2'),
+			).toBeVisible()
+
+			// Move nested article to root
+			await nestedArticle.dragTo(page.getByTestId('ArticleList/0'))
+			expect(page.getByTestId('ArticleListItem/Nested article/0')).toBeVisible()
+		})
+
+		test('drag an article to drop handle -> article is moved', async ({ page }) => {
+			// Prepare world
+			const world = await createWorld(page)
+			await createWikiArticle(page, world, { name: 'First article' })
+			await createWikiArticle(page, world, { name: 'Second article' })
+			await navigateToWiki(page, world)
+
+			// Check that first article appears BEFORE second article
+			const list = page.getByTestId('ArticleList/0')
+			expect(list).toBeVisible()
+
+			expect(list.getByRole('button').nth(0)).toHaveText('First article')
+			expect(list.getByRole('button').nth(2)).toHaveText('Second article')
+
+			// Perform drag and drop
+			await page.getByText('Second article').dragTo(page.getByTestId('ArticleDropHandle/0'))
+			expect(list.getByRole('button').nth(0)).toHaveText('Second article')
+			expect(list.getByRole('button').nth(2)).toHaveText('First article')
+		})
 	})
 
 	test.describe('shortcuts', () => {

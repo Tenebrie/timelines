@@ -1,21 +1,23 @@
 import { MentionedEntity, WikiArticle } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient'
+import { BadRequestError } from 'moonflower'
 
+import { makeFetchArticleAncestorsQuery } from './dbQueries/makeFetchArticleAncestorsQuery'
 import { makeSortWikiArticles as makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticles'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
 import { MentionData, MentionsService } from './MentionsService'
 
 export const WikiService = {
-	listWikiArticles: async (
-		params: Pick<WikiArticle, 'worldId'> & { parentId: string | null | undefined },
-	) => {
+	listWikiArticles: async (params: Pick<WikiArticle, 'worldId'>) => {
 		return getPrismaClient().wikiArticle.findMany({
 			where: {
 				worldId: params.worldId,
-				...(params.parentId === undefined ? {} : { parentId: params.parentId }),
 			},
 			include: {
 				children: true,
+			},
+			orderBy: {
+				position: 'asc',
 			},
 		})
 	},
@@ -29,15 +31,22 @@ export const WikiService = {
 	},
 
 	createWikiArticle: async (params: Pick<WikiArticle, 'worldId' | 'name' | 'position'>) => {
-		return getPrismaClient().wikiArticle.create({
-			data: {
-				worldId: params.worldId,
-				name: params.name,
-				position: params.position,
-			},
-			include: {
-				children: true,
-			},
+		return getPrismaClient().$transaction(async (prisma) => {
+			const article = await prisma.wikiArticle.create({
+				data: {
+					worldId: params.worldId,
+					name: params.name,
+					position: params.position * 2,
+				},
+				include: {
+					children: true,
+				},
+			})
+
+			await makeSortWikiArticlesQuery(params.worldId, prisma)
+			await makeTouchWorldQuery(params.worldId, prisma)
+
+			return article
 		})
 	},
 
@@ -102,11 +111,18 @@ export const WikiService = {
 			})
 
 			if (!baseArticle) {
-				throw new Error('Article not found')
+				throw new BadRequestError('Article not found')
 			}
 
 			if (params.toParentId === baseArticle.id) {
-				throw new Error('Cannot move article to be its own parent')
+				throw new BadRequestError('Cannot move article to be its own parent')
+			}
+
+			if (params.toParentId) {
+				const ancestors = await makeFetchArticleAncestorsQuery(params.worldId, params.toParentId, prisma)
+				if (ancestors.includes(params.articleId)) {
+					throw new BadRequestError('Cannot move article to be its own descendant')
+				}
 			}
 
 			const article = await prisma.wikiArticle.update({
@@ -114,6 +130,7 @@ export const WikiService = {
 					id: params.articleId,
 				},
 				data: {
+					parentId: params.toParentId,
 					position: params.toPosition,
 				},
 				include: {
@@ -121,123 +138,11 @@ export const WikiService = {
 				},
 			})
 
-			const fromPosition = (() => {
-				if (params.toParentId && params.toParentId !== baseArticle.parentId) {
-					return undefined
-				}
-
-				return baseArticle.position
-			})()
-
-			const toPosition = params.toPosition
-			const targetParentId = params.toParentId ?? baseArticle.parentId
-
-			const selectRange = (() => {
-				if (fromPosition !== undefined && toPosition > fromPosition) {
-					return {
-						gt: fromPosition,
-						lte: toPosition,
-					}
-				}
-
-				return {
-					gte: toPosition,
-					lt: fromPosition,
-				}
-			})()
-
-			const movedSiblings = await prisma.wikiArticle.findMany({
-				where: {
-					parentId: targetParentId,
-					position: selectRange,
-					id: {
-						not: params.articleId,
-					},
-				},
-			})
-
-			await Promise.all(
-				movedSiblings.map((sibling) => {
-					return prisma.wikiArticle.update({
-						where: {
-							id: sibling.id,
-						},
-						data: {
-							position: sibling.position + (params.toPosition > baseArticle.position ? -1 : 1),
-						},
-					})
-				}),
-			)
-
-			if (params.toParentId !== undefined && params.toParentId !== baseArticle.parentId) {
-				await prisma.wikiArticle.update({
-					where: {
-						id: params.articleId,
-					},
-					data: {
-						parentId: params.toParentId,
-					},
-				})
-				await makeSortWikiArticlesQuery(params.worldId, prisma)
-			}
+			await makeSortWikiArticlesQuery(params.worldId, prisma)
 			const world = await makeTouchWorldQuery(params.worldId, prisma)
 
 			return { article, world }
 		})
-	},
-
-	swapWikiArticlePositions: async (params: { worldId: string; articleIdA: string; articleIdB: string }) => {
-		const [articleA, articleB] = await Promise.all([
-			getPrismaClient().wikiArticle.findFirst({
-				where: {
-					id: params.articleIdA,
-				},
-				include: {
-					children: true,
-				},
-			}),
-			getPrismaClient().wikiArticle.findFirst({
-				where: {
-					id: params.articleIdB,
-				},
-				include: {
-					children: true,
-				},
-			}),
-		])
-
-		if (!articleA || !articleB) {
-			throw new Error('One of the articles does not exist')
-		}
-
-		if (articleB.position === articleA.position) {
-			articleB.position += 1
-		}
-
-		const [updatedArticleA, updatedArticleB, world] = await getPrismaClient().$transaction([
-			getPrismaClient().wikiArticle.update({
-				where: {
-					id: params.articleIdA,
-				},
-				data: {
-					position: articleB.position,
-				},
-			}),
-			getPrismaClient().wikiArticle.update({
-				where: {
-					id: params.articleIdB,
-				},
-				data: {
-					position: articleA.position,
-				},
-			}),
-			makeTouchWorldQuery(params.worldId),
-		])
-		return {
-			world,
-			articleA: updatedArticleA,
-			articleB: updatedArticleB,
-		}
 	},
 
 	deleteWikiArticle: async ({ worldId, articleId }: { worldId: string; articleId: string }) => {

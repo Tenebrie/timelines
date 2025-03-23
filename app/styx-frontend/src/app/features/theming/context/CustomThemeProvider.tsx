@@ -23,7 +23,7 @@ export const CustomThemeProvider = ({ children, colorMode }: Props) => {
 }
 
 const AutomaticThemeProvider = ({ children }: Props) => {
-	const { colorMode } = useSelector(getUserPreferences)
+	const { colorMode } = useSelector(getUserPreferences, (a, b) => a.colorMode === b.colorMode)
 	const theme = useMemo(() => (colorMode === 'light' ? lightTheme : darkTheme), [colorMode])
 
 	return <ThemeProvider theme={theme}>{children}</ThemeProvider>

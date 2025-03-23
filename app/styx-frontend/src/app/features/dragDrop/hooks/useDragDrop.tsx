@@ -61,6 +61,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 				params,
 				targetPos: { x: event.clientX, y: event.clientY },
 				targetRootPos: { x: rootPos.current.x, y: rootPos.current.y },
+				isHandled: false,
 			})
 
 			setGhostElement(

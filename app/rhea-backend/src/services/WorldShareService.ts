@@ -47,6 +47,7 @@ export const WorldShareService = {
 				getPrismaClient().user.findFirst({
 					where: {
 						email,
+						deletedAt: null,
 					},
 				}),
 			),

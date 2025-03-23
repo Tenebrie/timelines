@@ -3,14 +3,10 @@ import { useSelector } from 'react-redux'
 
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-type Props = {
-	parentId?: string | null | undefined
-}
-
-export const useListArticles = ({ parentId }: Props = {}) => {
+export const useListArticles = () => {
 	const worldId = useSelector(getWorldIdState)
 	return useGetArticlesQuery(
-		{ worldId, parentId },
+		{ worldId },
 		{
 			skip: !worldId,
 		},

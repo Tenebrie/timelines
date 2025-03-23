@@ -9,7 +9,10 @@ import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { getWikiPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 
 export const ReadModeToggle = () => {
-	const { readModeEnabled } = useSelector(getWikiPreferences)
+	const { readModeEnabled } = useSelector(
+		getWikiPreferences,
+		(a, b) => a.readModeEnabled === b.readModeEnabled,
+	)
 
 	const { setReadMode } = preferencesSlice.actions
 	const dispatch = useDispatch()

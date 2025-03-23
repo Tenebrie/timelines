@@ -1,34 +1,59 @@
-import ListItemButton from '@mui/material/ListItemButton'
 import Stack from '@mui/material/Stack'
-import { useMemo } from 'react'
+import Typography from '@mui/material/Typography'
+import { memo, useRef } from 'react'
+import { useSelector } from 'react-redux'
 
-import { useListArticles } from '@/app/views/world/api/useListArticles'
+import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 
+import { useMoveArticle } from '../../api/useMoveArticle'
 import { ArticleDropHandle } from '../../components/ArticleDropHandle'
+import { getWikiState } from '../../WikiSliceSelectors'
 import { ArticleListItem } from './ArticleListItem'
 
 type Props = {
 	parentId: string | null
+	depth: number
 }
 
-export const ArticleList = ({ parentId }: Props) => {
-	const { data: articles } = useListArticles({ parentId })
+export const ArticleList = memo(ArticleListComponent)
 
-	const sortedArticles = useMemo(
-		() => [...(articles ?? [])].sort((a, b) => a.position - b.position),
-		[articles],
-	)
+export function ArticleListComponent({ parentId, depth }: Props) {
+	const [moveArticle] = useMoveArticle()
+
+	const { articles } = useSelector(getWikiState, (a, b) => a.articles === b.articles)
+
+	const sortedArticles = (articles ?? []).filter((article) => article.parentId === parentId)
+
+	const ref = useRef<HTMLDivElement>(null)
+	useDragDropReceiver({
+		type: 'articleListItem',
+		receiverRef: ref,
+		onDrop: ({ params }) => {
+			moveArticle({
+				articleId: params.article.id,
+				parentId: null,
+				position: 9999,
+			})
+		},
+	})
 
 	return (
-		<Stack direction="column" marginLeft={parentId ? 2 : 0}>
-			{sortedArticles.length === 0 && <ListItemButton>Nothing has been created yet!</ListItemButton>}
-			{sortedArticles.length > 0 && <ArticleDropHandle position={0} parentId={parentId} />}
+		<Stack
+			ref={ref}
+			direction="column"
+			height={1}
+			marginLeft={parentId ? 2 : 0}
+			data-testid={`ArticleList/${depth}`}
+		>
+			{sortedArticles.length === 0 && (
+				<Typography variant="body2" color="text.secondary">
+					Nothing has been created yet!
+				</Typography>
+			)}
 			{sortedArticles.map((article) => (
 				<span key={article.id}>
-					<ArticleListItem article={article} />
-					<ArticleDropHandle position={0} parentId={article.id} marginLeft={2} />
-					{article.children && article.children.length > 0 && <ArticleList parentId={article.id} />}
-					<ArticleDropHandle position={article.position + 1} parentId={parentId} />
+					<ArticleDropHandle position={article.position} parentId={parentId} />
+					<ArticleListItem article={article} depth={depth} />
 				</span>
 			))}
 		</Stack>

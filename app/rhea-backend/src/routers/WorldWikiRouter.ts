@@ -13,7 +13,6 @@ import {
 	useAuth,
 	useOptionalAuth,
 	usePathParams,
-	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
 
@@ -38,14 +37,10 @@ router.get('/api/world/:worldId/wiki/articles', async (ctx) => {
 		worldId: PathParam(StringValidator),
 	})
 
-	const { parentId } = useQueryParams(ctx, {
-		parentId: OptionalParam(NullableStringValidator),
-	})
-
 	await AuthorizationService.checkUserReadAccessById(user, worldId)
 
-	const articles = await WikiService.listWikiArticles({ worldId, parentId })
-	return articles.sort((a, b) => a.position - b.position)
+	const articles = await WikiService.listWikiArticles({ worldId })
+	return articles
 })
 
 router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
@@ -145,36 +140,6 @@ router.post('/api/world/:worldId/wiki/article/move', async (ctx) => {
 	})
 
 	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })
-})
-
-router.post('/api/world/:worldId/wiki/article/swap', async (ctx) => {
-	useApiEndpoint({
-		name: 'swapArticlePositions',
-		description: 'Swaps the position of two articles.',
-		tags: [worldWikiTag],
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	const { worldId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-	})
-
-	await AuthorizationService.checkUserWriteAccessById(user, worldId)
-
-	const params = useRequestBody(ctx, {
-		articleA: RequiredParam(StringValidator),
-		articleB: RequiredParam(StringValidator),
-	})
-
-	const { articleA, articleB } = await WikiService.swapWikiArticlePositions({
-		worldId,
-		articleIdA: params.articleA,
-		articleIdB: params.articleB,
-	})
-
-	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article: articleA })
-	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article: articleB })
 })
 
 router.delete('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {

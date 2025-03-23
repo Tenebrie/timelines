@@ -13,6 +13,7 @@ export const UserService = {
 		return getPrismaClient().user.findFirst({
 			where: {
 				email,
+				deletedAt: null,
 			},
 			select: {
 				id: true,
@@ -48,6 +49,7 @@ export const UserService = {
 		const user = await getPrismaClient().user.findFirst({
 			where: {
 				email,
+				deletedAt: null,
 			},
 		})
 
@@ -63,9 +65,12 @@ export const UserService = {
 	},
 
 	deleteUser: async (userId: string) => {
-		return getPrismaClient().user.delete({
+		return getPrismaClient().user.update({
 			where: {
 				id: userId,
+			},
+			data: {
+				deletedAt: new Date(),
 			},
 		})
 	},
@@ -74,8 +79,17 @@ export const UserService = {
 		return getPrismaClient().user.update({
 			where: {
 				id: userId,
+				deletedAt: null,
 			},
 			data: body,
+		})
+	},
+
+	cleanUpDeletedUsers: async () => {
+		return getPrismaClient().user.deleteMany({
+			where: {
+				deletedAt: { not: null },
+			},
 		})
 	},
 }

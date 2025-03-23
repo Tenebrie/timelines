@@ -11,24 +11,65 @@ export const useArticleApiCache = () => {
 
 	const updateCachedArticle = (data: Pick<WikiArticle, 'id'> & Partial<WikiArticle>) => {
 		dispatch(
-			worldWikiApi.util.updateQueryData('getArticles', { worldId, parentId: data.parentId }, (draft) => {
-				return draft.map((article) => {
-					if (article.id !== data.id) {
-						return article
-					}
+			worldWikiApi.util.updateQueryData('getArticles', { worldId }, (draft) => {
+				return draft
+					.map((article) => {
+						if (article.id !== data.id) {
+							return article
+						}
 
-					return {
-						...article,
-						...data,
-					}
-				})
+						return {
+							...article,
+							...data,
+						}
+					})
+					.sort((a, b) => a.position - b.position)
+			}),
+		)
+	}
+
+	const updateCachedArticlePosition = ({
+		articleId,
+		parentId,
+		position,
+	}: {
+		articleId: string
+		parentId?: null | string
+		position: number
+	}) => {
+		dispatch(
+			worldWikiApi.util.updateQueryData('getArticles', { worldId }, (draft) => {
+				const movedArticle = draft.find((article) => article.id === articleId)
+				if (!movedArticle) {
+					return
+				}
+
+				const oldParent =
+					movedArticle.parentId && draft.find((article) => article.id === movedArticle.parentId)
+
+				// Remove from old parent's children if exists
+				if (oldParent && oldParent.id !== parentId) {
+					oldParent.children = oldParent.children.filter((child) => child.id !== movedArticle.id)
+				}
+
+				// Update the article's position and parent
+				movedArticle.parentId = parentId
+				movedArticle.position = position
+
+				// If parent is being updated
+				const newParent = parentId && draft.find((article) => article.id === parentId)
+				if (newParent) {
+					newParent.children = [...newParent.children, { ...movedArticle }]
+				}
+
+				draft.sort((a, b) => a.position - b.position)
 			}),
 		)
 	}
 
 	const upsertCachedArticle = (data: WikiArticle) => {
 		dispatch(
-			worldWikiApi.util.updateQueryData('getArticles', { worldId, parentId: data.parentId }, (draft) => {
+			worldWikiApi.util.updateQueryData('getArticles', { worldId }, (draft) => {
 				if (!draft.some((article) => article.id === data.id)) {
 					draft.push(data)
 					return draft
@@ -49,7 +90,6 @@ export const useArticleApiCache = () => {
 	}
 
 	const removeCachedArticles = (articles: string[]) => {
-		// TODO: Fix, this is a bug for folders
 		dispatch(
 			worldWikiApi.util.updateQueryData('getArticles', { worldId }, (draft) => {
 				return draft.filter((article) => !articles.includes(article.id))
@@ -59,6 +99,7 @@ export const useArticleApiCache = () => {
 
 	return {
 		updateCachedArticle,
+		updateCachedArticlePosition,
 		upsertCachedArticle,
 		removeCachedArticles,
 	}

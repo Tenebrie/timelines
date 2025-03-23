@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { getUserPreferences } from '../features/preferences/PreferencesSliceSelectors'
 
 export const useBrowserSpecificScrollbars = () => {
-	const { colorMode } = useSelector(getUserPreferences)
+	const { colorMode } = useSelector(getUserPreferences, (a, b) => a.colorMode === b.colorMode)
 
 	return useMemo(() => {
 		const isChrome = navigator.userAgent.includes('Chrome')
