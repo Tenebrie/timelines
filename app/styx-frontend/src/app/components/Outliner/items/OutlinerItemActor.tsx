@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 import { getOutlinerPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 
-import { ActorWithStatementsRenderer } from './OutlinerItemActor/ActorWithStatementsRenderer'
+import { ActorWithContentRenderer } from './OutlinerItemActor/ActorWithContentRenderer'
 
 export const OutlinerItemActor = memo(OutlinerItemActorComponent)
 
@@ -19,10 +19,6 @@ function OutlinerItemActorComponent({ actor }: Props) {
 	)
 
 	return (
-		<ActorWithStatementsRenderer
-			collapsed={!expandedActors.includes(actor.id)}
-			actor={actor}
-			divider={true}
-		/>
+		<ActorWithContentRenderer collapsed={!expandedActors.includes(actor.id)} actor={actor} divider={true} />
 	)
 }

@@ -4,11 +4,11 @@ import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import { useCallback } from 'react'
 
+import { StyledListItemButton, ZebraWrapper } from '@/app/components/Outliner/items/OutlinerItemActor/styles'
 import { TrunkatedTypography } from '@/app/components/TrunkatedTypography'
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { RichTextEditorReadonly } from '@/app/features/richTextEditor/RichTextEditorReadonly'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { StyledListItemButton, ZebraWrapper } from '@/app/legacy/ActorEditor/components/ActorEvents/styles'
 import { isNotNull } from '@/app/utils/isNotNull'
 import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineState'
 

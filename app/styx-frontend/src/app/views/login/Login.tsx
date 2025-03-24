@@ -1,5 +1,6 @@
 import LoginRounded from '@mui/icons-material/LoginRounded'
 import LoadingButton from '@mui/lab/LoadingButton'
+import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
 import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
@@ -75,54 +76,56 @@ export const Login = () => {
 
 	return (
 		<Stack justifyContent="center" height="100%">
-			<Paper elevation={2}>
-				<Stack spacing={2} justifyContent="center" width="300px" padding={4}>
-					<Stack alignItems="center">
-						<TenebrieLogo />
+			<Container maxWidth="xs">
+				<Paper elevation={2}>
+					<Stack spacing={2} justifyContent="center" padding={4}>
+						<Stack alignItems="center">
+							<TenebrieLogo />
+						</Stack>
+						<Divider />
+						<Typography variant="h6" align="center" sx={{ padding: 1 }}>
+							Sign in to Timelines
+						</Typography>
+						<AlreadyLoggedInAlert parentSpacing={2} />
+						<FormErrorBanner errorState={errorState} />
+						<TextField
+							id="email"
+							autoComplete="username"
+							label="Email"
+							type="text"
+							value={email}
+							placeholder="example@timelines.com"
+							onChange={(event) => setEmail(event.target.value)}
+							autoFocus
+							onKeyDown={onEnterKey}
+							error={!!error && error.type === 'MISSING_EMAIL'}
+						/>
+						<TextField
+							id="password"
+							autoComplete="current-password"
+							label="Password"
+							type="password"
+							value={password}
+							placeholder="Your password"
+							onChange={(event) => setPassword(event.target.value)}
+							onKeyDown={onEnterKey}
+							error={!!error && error.type === 'MISSING_PASSWORD'}
+						/>
+						<LoadingButton
+							loading={isLoading}
+							variant="contained"
+							onClick={onLogin}
+							loadingPosition="center"
+							startIcon={<LoginRounded />}
+						>
+							<span>Sign In</span>
+						</LoadingButton>
+						<Link component={NavLink} to="/register">
+							Create a new account
+						</Link>
 					</Stack>
-					<Divider />
-					<Typography variant="h6" align="center" sx={{ padding: 1 }}>
-						Sign in to Timelines
-					</Typography>
-					<AlreadyLoggedInAlert parentSpacing={2} />
-					<FormErrorBanner errorState={errorState} />
-					<TextField
-						id="email"
-						autoComplete="username"
-						label="Email"
-						type="text"
-						value={email}
-						placeholder="example@timelines.com"
-						onChange={(event) => setEmail(event.target.value)}
-						autoFocus
-						onKeyDown={onEnterKey}
-						error={!!error && error.type === 'MISSING_EMAIL'}
-					/>
-					<TextField
-						id="password"
-						autoComplete="current-password"
-						label="Password"
-						type="password"
-						value={password}
-						placeholder="Your password"
-						onChange={(event) => setPassword(event.target.value)}
-						onKeyDown={onEnterKey}
-						error={!!error && error.type === 'MISSING_PASSWORD'}
-					/>
-					<LoadingButton
-						loading={isLoading}
-						variant="contained"
-						onClick={onLogin}
-						loadingPosition="center"
-						startIcon={<LoginRounded />}
-					>
-						<span>Sign In</span>
-					</LoadingButton>
-					<Link component={NavLink} to="/register">
-						Create a new account
-					</Link>
-				</Stack>
-			</Paper>
+				</Paper>
+			</Container>
 		</Stack>
 	)
 }

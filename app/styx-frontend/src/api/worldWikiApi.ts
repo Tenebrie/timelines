@@ -55,26 +55,26 @@ const injectedRtkApi = api
 export { injectedRtkApi as worldWikiApi }
 export type GetArticlesApiResponse = /** status 200  */ {
 	children: {
-		name: string
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
 		icon: string
 		color: string
-		contentRich: string
 		position: number
-		worldId: string
+		contentRich: string
 		parentId?: null | string
 	}[]
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	name: string
 	icon: string
 	color: string
-	contentRich: string
 	position: number
-	worldId: string
+	contentRich: string
 	parentId?: null | string
 }[]
 export type GetArticlesApiArg = {
@@ -83,26 +83,26 @@ export type GetArticlesApiArg = {
 }
 export type CreateArticleApiResponse = /** status 200  */ {
 	children: {
-		name: string
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
 		icon: string
 		color: string
-		contentRich: string
 		position: number
-		worldId: string
+		contentRich: string
 		parentId?: null | string
 	}[]
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	name: string
 	icon: string
 	color: string
-	contentRich: string
 	position: number
-	worldId: string
+	contentRich: string
 	parentId?: null | string
 }
 export type CreateArticleApiArg = {
@@ -114,26 +114,26 @@ export type CreateArticleApiArg = {
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
-		name: string
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
 		icon: string
 		color: string
-		contentRich: string
 		position: number
-		worldId: string
+		contentRich: string
 		parentId?: null | string
 	}[]
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	name: string
 	icon: string
 	color: string
-	contentRich: string
 	position: number
-	worldId: string
+	contentRich: string
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {

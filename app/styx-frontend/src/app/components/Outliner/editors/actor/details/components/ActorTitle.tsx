@@ -1,8 +1,9 @@
-import { ActorDetails } from '@api/types/worldTypes'
+import Close from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
 import Input from '@mui/material/Input'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
 import { ActorColorIconPicker } from '@/app/components/ColorIconPicker/ActorColorIconPicker'
@@ -11,13 +12,14 @@ import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { ActorDraft } from '../draft/useActorDraft'
 
 type Props = {
-	actor: ActorDetails
 	draft: ActorDraft
 }
 
-export const ActorTitle = ({ actor, draft }: Props) => {
+export const ActorTitle = ({ draft }: Props) => {
 	const [editing, setEditing] = useState(false)
 	const [name, setName] = useState(draft.name)
+
+	const navigate = useNavigate({ from: '/world/$worldId' })
 
 	const applyChanges = () => {
 		setEditing(false)
@@ -35,7 +37,7 @@ export const ActorTitle = ({ actor, draft }: Props) => {
 			setEditing(false)
 			setName(draft.name)
 		},
-		editing,
+		editing ? 2 : undefined,
 	)
 
 	useEffect(() => {
@@ -68,8 +70,14 @@ export const ActorTitle = ({ actor, draft }: Props) => {
 						onClick={() => setEditing(true)}
 					>
 						<Typography variant="h6" noWrap>
-							{name || actor.name || 'Unnamed actor'}
+							{name || '<Name>'}
 						</Typography>
+					</Button>
+					<Button
+						variant="text"
+						onClick={() => navigate({ search: (prev) => ({ ...prev, selection: [], new: false }) })}
+					>
+						<Close />
 					</Button>
 				</Stack>
 			)}
@@ -79,7 +87,7 @@ export const ActorTitle = ({ actor, draft }: Props) => {
 					value={name}
 					onChange={(event) => setName(event.target.value)}
 					onBlur={() => applyChanges()}
-					placeholder={'Custom name'}
+					placeholder={'Actor name, Actor title'}
 					role="textbox"
 					sx={{
 						width: '100%',

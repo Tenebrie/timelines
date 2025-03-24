@@ -19,7 +19,7 @@ export const SettingsSuspense = () => {
 	})
 
 	return (
-		<OutlinedContainer label="Settings" style={{ minWidth: '600px' }}>
+		<OutlinedContainer label="Settings" style={{ minWidth: '600px', borderRadius: '8px' }}>
 			{worldData && collaboratorsData && <Settings world={worldData} collaborators={collaboratorsData} />}
 			{(!worldData || !collaboratorsData) && <SettingsSkeleton />}
 		</OutlinedContainer>

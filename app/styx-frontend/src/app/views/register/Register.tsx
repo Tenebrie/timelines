@@ -1,5 +1,6 @@
 import AppRegistrationRounded from '@mui/icons-material/AppRegistrationRounded'
 import LoadingButton from '@mui/lab/LoadingButton'
+import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
 import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
@@ -88,72 +89,76 @@ export const Register = () => {
 
 	return (
 		<Stack justifyContent="center" height="100%">
-			<Paper elevation={2}>
-				<Stack spacing={2} justifyContent="center" width="300px" padding={4}>
-					<Stack alignItems="center">
-						<TenebrieLogo />
+			<Container maxWidth="xs">
+				<Paper elevation={2}>
+					<Stack spacing={2} justifyContent="center" width="300px" padding={4}>
+						<Stack alignItems="center">
+							<TenebrieLogo />
+						</Stack>
+						<Divider />
+						<Typography variant="h6" align="center" sx={{ padding: 1 }}>
+							Create an Account
+						</Typography>
+						<AlreadyLoggedInAlert parentSpacing={2} />
+						<FormErrorBanner errorState={errorState} />
+						<TextField
+							id="username"
+							autoComplete="username"
+							label="Email"
+							type="text"
+							value={email}
+							onChange={(event) => setEmail(event.target.value)}
+							autoFocus
+							onKeyDown={onEnterKey}
+							error={!!error && error.type === 'MISSING_EMAIL'}
+						/>
+						<TextField
+							id="display-name"
+							autoComplete="display-name"
+							label="Username"
+							type="text"
+							value={username}
+							onChange={(event) => setUsername(event.target.value)}
+							onKeyDown={onEnterKey}
+							error={!!error && error.type === 'MISSING_USERNAME'}
+						/>
+						<TextField
+							id="password"
+							autoComplete="new-password"
+							label="Password"
+							type="password"
+							value={password}
+							onChange={(event) => setPassword(event.target.value)}
+							onKeyDown={onEnterKey}
+							error={
+								!!error && (error.type === 'MISSING_PASSWORD' || error.type === 'PASSWORDS_DO_NOT_MATCH')
+							}
+						/>
+						<TextField
+							id="confirm-password"
+							autoComplete="new-password"
+							label="Confirm password"
+							type="password"
+							value={confirmPassword}
+							onChange={(event) => setConfirmPassword(event.target.value)}
+							onKeyDown={onEnterKey}
+							error={!!error && error.type === 'PASSWORDS_DO_NOT_MATCH'}
+						/>
+						<LoadingButton
+							loading={isLoading}
+							variant="contained"
+							onClick={onRegister}
+							loadingPosition="center"
+							startIcon={<AppRegistrationRounded />}
+						>
+							<span>Register</span>
+						</LoadingButton>
+						<Link component={NavLink} to="/login">
+							Already have an account? Sign in instead
+						</Link>
 					</Stack>
-					<Divider />
-					<Typography variant="h6" align="center" sx={{ padding: 1 }}>
-						Create an Account
-					</Typography>
-					<AlreadyLoggedInAlert parentSpacing={2} />
-					<FormErrorBanner errorState={errorState} />
-					<TextField
-						id="username"
-						autoComplete="username"
-						label="Email"
-						type="text"
-						value={email}
-						onChange={(event) => setEmail(event.target.value)}
-						autoFocus
-						onKeyDown={onEnterKey}
-						error={!!error && error.type === 'MISSING_EMAIL'}
-					/>
-					<TextField
-						id="display-name"
-						autoComplete="display-name"
-						label="Username"
-						type="text"
-						value={username}
-						onChange={(event) => setUsername(event.target.value)}
-						onKeyDown={onEnterKey}
-						error={!!error && error.type === 'MISSING_USERNAME'}
-					/>
-					<TextField
-						id="password"
-						autoComplete="new-password"
-						label="Password"
-						type="password"
-						value={password}
-						onChange={(event) => setPassword(event.target.value)}
-						onKeyDown={onEnterKey}
-						error={!!error && (error.type === 'MISSING_PASSWORD' || error.type === 'PASSWORDS_DO_NOT_MATCH')}
-					/>
-					<TextField
-						id="confirm-password"
-						autoComplete="new-password"
-						label="Confirm password"
-						type="password"
-						value={confirmPassword}
-						onChange={(event) => setConfirmPassword(event.target.value)}
-						onKeyDown={onEnterKey}
-						error={!!error && error.type === 'PASSWORDS_DO_NOT_MATCH'}
-					/>
-					<LoadingButton
-						loading={isLoading}
-						variant="contained"
-						onClick={onRegister}
-						loadingPosition="center"
-						startIcon={<AppRegistrationRounded />}
-					>
-						<span>Register</span>
-					</LoadingButton>
-					<Link component={NavLink} to="/login">
-						Already have an account? Sign in instead
-					</Link>
-				</Stack>
-			</Paper>
+				</Paper>
+			</Container>
 		</Stack>
 	)
 }

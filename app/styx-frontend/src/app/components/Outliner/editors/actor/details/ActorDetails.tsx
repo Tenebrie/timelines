@@ -7,6 +7,7 @@ import { memo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
+import { ManualErrorBanner } from '@/app/components/ManualErrorBanner'
 import { getEditingPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
@@ -48,7 +49,7 @@ export function ActorDetailsComponent() {
 				...useBrowserSpecificScrollbars(),
 			}}
 		>
-			<ActorTitle actor={actor} draft={draft} />
+			<ActorTitle draft={draft} />
 			<Divider />
 			<Box sx={{ paddingBottom: actorColorPickerOpen ? 1 : 0, transition: 'padding 300ms' }}>
 				<Collapse
@@ -62,6 +63,12 @@ export function ActorDetailsComponent() {
 					<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
 				</Collapse>
 			</Box>
+			<ManualErrorBanner
+				open={draft.description.length > 0 && draft.name.length === 0}
+				error="Actor must have a name"
+				marginBottom={2}
+				severity="info"
+			/>
 			<Box flexGrow={1} sx={{ marginTop: -1 }}>
 				<ActorDescription draft={draft} />
 			</Box>

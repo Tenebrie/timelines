@@ -25,7 +25,7 @@ export const useUpsertActor = (props: Props) => {
 
 	const { flushSave, autosave } = useAutosave({
 		onSave: async ({ draft, mode, onCreate }: Props) => {
-			if (!draft.isDirty) {
+			if (!draft.isDirty || !draft.name) {
 				return
 			}
 			draft.setDirty(false)

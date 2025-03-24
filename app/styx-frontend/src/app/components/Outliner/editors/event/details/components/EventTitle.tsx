@@ -1,8 +1,10 @@
 import { WorldEvent } from '@api/types/worldTypes'
+import Close from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
 import Input from '@mui/material/Input'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useMemo, useState } from 'react'
 
 import { EventColorIconPicker } from '@/app/components/ColorIconPicker/EventColorIconPicker'
@@ -20,6 +22,8 @@ type Props = {
 export const EventTitle = ({ event, draft }: Props) => {
 	const [editing, setEditing] = useState(false)
 	const [name, setName] = useState(draft.name)
+
+	const navigate = useNavigate({ from: '/world/$worldId' })
 
 	const applyChanges = () => {
 		setEditing(false)
@@ -86,6 +90,12 @@ export const EventTitle = ({ event, draft }: Props) => {
 						onClick={openTimeTravelModal}
 					>
 						{timeLabel}
+					</Button>
+					<Button
+						variant="text"
+						onClick={() => navigate({ search: (prev) => ({ ...prev, selection: [], new: false }) })}
+					>
+						<Close />
 					</Button>
 				</Stack>
 			)}
