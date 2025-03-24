@@ -30,7 +30,7 @@ export function ActorNodeHotkeys({ node }: Props) {
 				}),
 			})
 		},
-		selection.includes(node.id),
+		selection.includes(node.parentActorId!),
 	)
 	return null
 }

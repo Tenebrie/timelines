@@ -37,7 +37,7 @@ export function ActorNodePositioner({ actor, node }: Props) {
 		navigate({
 			search: (prev) => ({
 				...prev,
-				selection: [node.id],
+				selection: [actor.id],
 			}),
 		})
 	})
@@ -136,12 +136,12 @@ export function ActorNodePositioner({ actor, node }: Props) {
 				position: 'absolute',
 				transform: `translate(calc(${position.x}px * var(--grid-scale) + var(--grid-offset-x)), calc(${position.y}px * var(--grid-scale) + var(--grid-offset-y)))`,
 				outline: '2px solid',
-				outlineColor: selectedNodes.includes(node.id) ? theme.material.palette.primary.main : 'transparent',
+				outlineColor: selectedNodes.includes(actor.id) ? theme.material.palette.primary.main : 'transparent',
 				transition: 'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out',
 				borderRadius: 2,
 			}}
 		>
-			<ActorNode actor={actor} node={node} isSelected={selectedNodes.includes(node.id)} />
+			<ActorNode actor={actor} node={node} isSelected={selectedNodes.includes(actor.id)} />
 			<Box
 				sx={{
 					background: theme.custom.palette.background.softest,
