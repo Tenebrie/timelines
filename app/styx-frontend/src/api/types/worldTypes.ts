@@ -7,7 +7,6 @@ export type MentionedEntity = GetWorldInfoApiResponse['actors'][number]['mention
 export type MentionDetails = Pick<FullMentionDetails, 'targetId' | 'targetType'>
 export type Actor = Omit<ActorDetails, 'statements'>
 export type ActorDetails = GetWorldInfoApiResponse['actors'][number]
-export type ActorWithNode = Omit<ActorDetails, 'node'> & { node: NonNullable<ActorDetails['node']> }
 export type WorldItem = GetWorldsApiResponse['ownedWorlds'][number]
 export type WorldBrief = GetWorldBriefApiResponse
 export type WorldDetails = Omit<GetWorldInfoApiResponse, 'events'> & {
