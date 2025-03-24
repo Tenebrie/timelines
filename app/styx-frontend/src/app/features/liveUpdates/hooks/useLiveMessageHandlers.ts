@@ -1,4 +1,5 @@
 import { announcementListApi } from '@api/announcementListApi'
+import { otherApi } from '@api/otherApi'
 import { GetWorldInfoApiResponse, worldDetailsApi } from '@api/worldDetailsApi'
 import { worldEventTracksApi } from '@api/worldEventTracksApi'
 import { worldListApi } from '@api/worldListApi'
@@ -76,6 +77,9 @@ export const useLiveMessageHandlers = () => {
 		},
 		[CalliopeToClientMessageType.WIKI_ARTICLE_DELETED]: () => {
 			dispatch(worldWikiApi.util.invalidateTags(['worldWiki']))
+		},
+		[CalliopeToClientMessageType.MINDMAP_NODE_UPDATED]: (data) => {
+			dispatch(otherApi.util.invalidateTags(['mindmap']))
 		},
 	}
 

@@ -5,6 +5,18 @@ import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
 import { makeUpdateActorQuery, UpdateActorQueryParams } from './dbQueries/makeUpdateActorQuery'
 
 export const ActorService = {
+	findActor: async ({ worldId, actorId }: { worldId: string; actorId: string | null | undefined }) => {
+		if (!actorId) {
+			return null
+		}
+		return getPrismaClient().actor.findUnique({
+			where: { id: actorId, worldId },
+			include: {
+				node: true,
+			},
+		})
+	},
+
 	findActorsByIds: async (actorIds: string[]) => {
 		return getPrismaClient().actor.findMany({
 			where: {

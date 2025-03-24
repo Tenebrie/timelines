@@ -4,6 +4,8 @@ import { useRef } from 'react'
 import { useEffect } from 'react'
 import useEvent from 'react-use-event-hook'
 
+import { useNewNodeReceiver } from '../hooks/useNewNodeReceiver'
+
 export function MindmapClickArea() {
 	const navigate = useNavigate({ from: '/world/$worldId/mindmap' })
 
@@ -12,6 +14,7 @@ export function MindmapClickArea() {
 	})
 
 	const ref = useRef<HTMLDivElement>(null)
+	useNewNodeReceiver({ ref })
 
 	useEffect(() => {
 		const element = ref.current

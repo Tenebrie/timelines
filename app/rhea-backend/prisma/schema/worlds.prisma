@@ -43,6 +43,7 @@ model World {
     accessMode       WorldAccessMode     @default(Private)
     collaborators    CollaboratingUser[]
     worldEventTracks WorldEventTrack[]
+    mindmapNodes     MindmapNode[]
 }
 
 model WorldEvent {

@@ -1,3 +1,4 @@
+import { MindmapNode } from '@api/types/mindmapTypes'
 import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { useNavigate, useSearch } from '@tanstack/react-router'
@@ -7,18 +8,25 @@ import useEvent from 'react-use-event-hook'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 
+import { useUpdateMindmapNode } from '../api/useUpdateMindmapNode'
 import { ActorNode } from './ActorNode'
 
 type Props = {
 	actor: ActorDetails
+	node: MindmapNode
 }
 
-export function ActorNodePositioner({ actor }: Props) {
+export function ActorNodePositioner({ actor, node }: Props) {
 	const theme = useCustomTheme()
 	const navigate = useNavigate({ from: '/world/$worldId/mindmap' })
+	const [updateMindmapNode] = useUpdateMindmapNode()
 
-	const [position, setPosition] = useState({ x: Math.random() * 1000, y: Math.random() * 1000 })
+	const [position, setPosition] = useState({ x: node.positionX, y: node.positionY })
 	const positionRef = useAutoRef(position)
+
+	useEffect(() => {
+		setPosition({ x: node.positionX, y: node.positionY })
+	}, [node])
 
 	const selectedNodes = useSearch({
 		from: '/world/$worldId/_world/mindmap',
@@ -29,7 +37,7 @@ export function ActorNodePositioner({ actor }: Props) {
 		navigate({
 			search: (prev) => ({
 				...prev,
-				selection: [actor.id],
+				selection: [node.id],
 			}),
 		})
 	})
@@ -71,6 +79,11 @@ export function ActorNodePositioner({ actor }: Props) {
 			}
 			if (mouseState.canClick) {
 				onClick()
+			} else {
+				updateMindmapNode(node.id, {
+					positionX: positionRef.current.x,
+					positionY: positionRef.current.y,
+				})
 			}
 			mouseState.isButtonDown = false
 			mouseState.isDragging = false
@@ -112,7 +125,7 @@ export function ActorNodePositioner({ actor }: Props) {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [ref, positionRef, onClick])
+	}, [ref, positionRef, onClick, updateMindmapNode, node.id])
 
 	return (
 		<Box
@@ -123,12 +136,12 @@ export function ActorNodePositioner({ actor }: Props) {
 				position: 'absolute',
 				transform: `translate(calc(${position.x}px * var(--grid-scale) + var(--grid-offset-x)), calc(${position.y}px * var(--grid-scale) + var(--grid-offset-y)))`,
 				outline: '2px solid',
-				outlineColor: selectedNodes.includes(actor.id) ? theme.material.palette.primary.main : 'transparent',
+				outlineColor: selectedNodes.includes(node.id) ? theme.material.palette.primary.main : 'transparent',
 				transition: 'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out',
 				borderRadius: 2,
 			}}
 		>
-			<ActorNode actor={actor} isSelected={selectedNodes.includes(actor.id)} />
+			<ActorNode actor={actor} node={node} isSelected={selectedNodes.includes(node.id)} />
 			<Box
 				sx={{
 					background: theme.custom.palette.background.softest,

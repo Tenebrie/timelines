@@ -12,6 +12,7 @@ import { AuthRouter } from './routers/AuthRouter'
 import { ConstantsRouter } from './routers/ConstantsRouter'
 import { HealthRouter } from './routers/HealthRouter'
 import { ImageConversionRouter } from './routers/ImageConversionRouter'
+import { MindmapRouter } from './routers/MindmapRouter'
 import { ProfileRouter } from './routers/ProfileRouter'
 import { WorldEventRouter } from './routers/WorldEventRouter'
 import { WorldEventTrackRouter } from './routers/WorldEventTrackRouter'
@@ -64,6 +65,8 @@ app
 	.use(HealthRouter.allowedMethods())
 	.use(ImageConversionRouter.routes())
 	.use(ImageConversionRouter.allowedMethods())
+	.use(MindmapRouter.routes())
+	.use(MindmapRouter.allowedMethods())
 	.use(ProfileRouter.routes())
 	.use(ProfileRouter.allowedMethods())
 	.use(WorldEventRouter.routes())

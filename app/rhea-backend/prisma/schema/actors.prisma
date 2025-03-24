@@ -13,6 +13,8 @@ model Actor {
     mentions    Mention[] @relation("ActorMentionSource")
     mentionedIn Mention[] @relation("ActorMentionTarget")
 
+    node   MindmapNode?
+
     world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
     worldId String
 }

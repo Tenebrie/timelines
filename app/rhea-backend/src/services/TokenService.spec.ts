@@ -1,4 +1,11 @@
 import fs from 'fs'
+const originalExistsSync = fs.existsSync
+vi.spyOn(fs, 'existsSync').mockImplementation((...arg) => {
+	if (arg[0] === '/run/secrets/jwt-secret') {
+		return true
+	}
+	return originalExistsSync(...arg)
+})
 import { beforeEach, vi } from 'vitest'
 
 import { TokenService } from './TokenService'

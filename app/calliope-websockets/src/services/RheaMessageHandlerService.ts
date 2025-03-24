@@ -74,6 +74,10 @@ const handlers: RheaToCalliopeMessageHandlers = {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.ACTOR_UPDATED, ...ctx })
 	},
 
+	[RheaToCalliopeMessageType.MINDMAP_NODE_UPDATED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_NODE_UPDATED, ...ctx })
+	},
+
 	[RheaToCalliopeMessageType.WIKI_ARTICLE_UPDATED]: (ctx) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED, ...ctx })
 	},

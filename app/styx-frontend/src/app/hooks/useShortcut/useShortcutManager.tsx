@@ -8,6 +8,7 @@ export const Shortcut = {
 	Escape: 'Escape',
 	CreateNew: 'n',
 	EditSelected: 'e',
+	DeleteSelected: 'Delete|macos:Backspace',
 	TracksMenu: 'r',
 	ScrollTimelineLeft: 'j',
 	ScrollTimelineRight: 'l',
@@ -25,6 +26,7 @@ export const RegisteredShortcuts: Record<
 	[Shortcut.Escape]: [],
 	[Shortcut.CreateNew]: [],
 	[Shortcut.EditSelected]: [],
+	[Shortcut.DeleteSelected]: [],
 	[Shortcut.TracksMenu]: [],
 	[Shortcut.ScrollTimelineLeft]: [],
 	[Shortcut.ScrollTimelineRight]: [],
@@ -52,10 +54,22 @@ export const useShortcutManager = () => {
 		}
 
 		Object.values(Shortcut).forEach((shortcut) => {
-			const defKeys = shortcut.split('+')
+			const defKeys = shortcut
+				.split('|')
+				.filter((part) => {
+					if (part.startsWith('macos:')) {
+						return isMacOS()
+					}
+					return true
+				})
+				.map((part) => {
+					const colonIndex = part.indexOf(':')
+					return colonIndex === -1 ? part : part.slice(colonIndex + 1)
+				})
+				.flatMap((part) => part.split('+'))
 			const ctrlKeyNeeded = defKeys.some((key) => key === 'Ctrl')
 
-			if (ctrlKey === ctrlKeyNeeded && key === defKeys[defKeys.length - 1]) {
+			if (ctrlKey === ctrlKeyNeeded && defKeys.includes(key)) {
 				RegisteredShortcuts[shortcut]
 					.filter((shc) => shc.priority !== false)
 					.sort((a, b) => parsePriority(b.priority) - parsePriority(a.priority))[0]

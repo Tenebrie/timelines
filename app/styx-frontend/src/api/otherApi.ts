@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = [] as const
+export const addTagTypes = ['mindmap'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -26,6 +26,33 @@ const injectedRtkApi = api
 					query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
 				},
 			),
+			getMindmap: build.query<GetMindmapApiResponse, GetMindmapApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/mindmap` }),
+				providesTags: ['mindmap'],
+			}),
+			createNode: build.mutation<CreateNodeApiResponse, CreateNodeApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/node`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['mindmap'],
+			}),
+			updateNode: build.mutation<UpdateNodeApiResponse, UpdateNodeApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/node/${queryArg.nodeId}`,
+					method: 'PATCH',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['mindmap'],
+			}),
+			deleteNode: build.mutation<DeleteNodeApiResponse, DeleteNodeApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/node/${queryArg.nodeId}`,
+					method: 'DELETE',
+				}),
+				invalidatesTags: ['mindmap'],
+			}),
 		}),
 		overrideExisting: false,
 	})
@@ -62,6 +89,73 @@ export type RequestImageConversionApiArg = {
 		quality?: number
 	}
 }
+export type GetMindmapApiResponse = /** status 200  */ {
+	nodes: {
+		worldId: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		positionX: number
+		positionY: number
+		parentActorId?: null | string
+	}[]
+}
+export type GetMindmapApiArg = {
+	/** Any string value */
+	worldId: string
+}
+export type CreateNodeApiResponse = /** status 200  */ {
+	worldId: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	positionX: number
+	positionY: number
+	parentActorId?: null | string
+}
+export type CreateNodeApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		positionX: number
+		positionY: number
+		parentActorId?: string
+	}
+}
+export type UpdateNodeApiResponse = /** status 200  */ {
+	worldId: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	positionX: number
+	positionY: number
+	parentActorId?: null | string
+}
+export type UpdateNodeApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	nodeId: string
+	body: {
+		positionX?: number
+		positionY?: number
+	}
+}
+export type DeleteNodeApiResponse = /** status 200  */ {
+	worldId: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	positionX: number
+	positionY: number
+	parentActorId?: null | string
+}
+export type DeleteNodeApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	nodeId: string
+}
 export const {
 	useAdminGetUserLevelsQuery,
 	useLazyAdminGetUserLevelsQuery,
@@ -72,4 +166,9 @@ export const {
 	useGetSupportedImageFormatsQuery,
 	useLazyGetSupportedImageFormatsQuery,
 	useRequestImageConversionMutation,
+	useGetMindmapQuery,
+	useLazyGetMindmapQuery,
+	useCreateNodeMutation,
+	useUpdateNodeMutation,
+	useDeleteNodeMutation,
 } = injectedRtkApi
