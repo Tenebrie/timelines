@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box'
-import { ReactNode } from '@tanstack/react-router'
-import { useEffect, useRef } from 'react'
+import { ReactNode, useEffect, useRef } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { LineSpacing } from '@/app/utils/constants'

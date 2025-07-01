@@ -1,5 +1,5 @@
 import { mockToResponse, mockUser, mockWorld, withUserAuth, withWorld } from '@src/mock'
-import { vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('@src/services/SecretService', () => {
 	return {

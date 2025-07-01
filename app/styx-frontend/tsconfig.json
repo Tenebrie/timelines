@@ -1,18 +1,10 @@
 {
 	"compilerOptions": {
 		"target": "ESNext",
-		"lib": [
-			"dom",
-			"dom.iterable",
-			"esnext"
-		],
+		"lib": ["dom", "dom.iterable", "esnext"],
 		"paths": {
-			"@api/*": [
-				"./src/api/*"
-			],
-			"@/*": [
-				"./src/*"
-			],
+			"@api/*": ["./src/api/*"],
+			"@/*": ["./src/*"]
 		},
 		"allowJs": true,
 		"skipLibCheck": true,
@@ -24,20 +16,13 @@
 		"module": "esnext",
 		"incremental": true,
 		"tsBuildInfoFile": "build/.tsbuildinfo",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"noEmit": true,
 		"sourceMap": false,
 		"jsx": "react-jsx",
-		"types": [
-			"vite/client",
-			"vitest/globals",
-			"./node_modules/user-agent-data-types"
-		]
+		"types": ["vite/client", "vitest/globals", "./node_modules/user-agent-data-types"]
 	},
-	"include": [
-		"src",
-		"jest.config.ts", "dts/vite-env.d.ts",
-	]
+	"include": ["src", "dts/vite-env.d.ts"]
 }

@@ -71,10 +71,10 @@ export const DeleteEventModal = () => {
 			<ModalHeader>Delete Event</ModalHeader>
 			<Stack spacing={2}>
 				<div>
-					Attempting to permanently delete world event '<b>{targetEvent?.name}</b>'. This will also delete all
-					associated data points, if any are present.
+					Attempting to permanently delete world event &apos;<b>{targetEvent?.name}</b>&apos;. This will also
+					delete all associated data points, if any are present.
 				</div>
-				<div>This action can't be reverted!</div>
+				<div>This action can&apos;t be reverted!</div>
 				{deletionError && (
 					<div style={{ color: 'red' }}>
 						Unable to delete: <b>{deletionError}</b>

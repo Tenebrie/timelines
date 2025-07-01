@@ -2,6 +2,7 @@
 	"name": "calliope-websockets",
 	"version": "0.0.1",
 	"private": true,
+	"type": "module",
 	"description": "",
 	"license": "UNLICENSED",
 	"author": "",
@@ -11,7 +12,7 @@
 		"lint-fix": "eslint src/ --fix",
 		"prod": "node dist/index.js",
 		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline",
-		"start": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' src/index.ts",
+		"start": "nodemon --watch src --ext ts,js,json --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
 		"test": "jest",
 		"test:watch": "jest --watchAll"
 	},
@@ -62,9 +63,11 @@
 		"@types/jsonwebtoken": "^9.0.7",
 		"@types/koa": "^2.15.0",
 		"@types/koa-bodyparser": "^4.3.12",
+		"@types/koa-route": "^3.2.8",
 		"@types/koa-websocket": "^5.0.10",
 		"@types/koa__router": "^12.0.4",
 		"@types/mock-knex": "^0.4.8",
+		"@types/module-alias": "^2.0.4",
 		"@types/node": "^22.10.2",
 		"@types/supertest": "^6.0.2",
 		"@types/ws": "^8.5.10",
@@ -83,6 +86,7 @@
 		"ts-node": "^10.9.2",
 		"ts-node-dev": "^2.0.0",
 		"tsconfig-paths": "4.2.0",
+		"tsx": "^4.20.3",
 		"typescript": "^5.7.2"
 	}
 }

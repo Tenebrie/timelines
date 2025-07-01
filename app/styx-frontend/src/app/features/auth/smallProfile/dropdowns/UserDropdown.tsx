@@ -24,7 +24,7 @@ type Props = {
 export function UserDropdown({ user }: Props) {
 	const navigate = useNavigate()
 
-	const [logout, { isLoading }] = usePostLogoutMutation()
+	const [logout] = usePostLogoutMutation()
 	const { clearUser } = authSlice.actions
 	const dispatch = useDispatch()
 

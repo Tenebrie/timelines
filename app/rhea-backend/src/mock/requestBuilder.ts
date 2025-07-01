@@ -1,7 +1,7 @@
 import { CollaboratingUser, User, World } from '@prisma/client'
 import { AuthorizationService } from '@src/services/AuthorizationService'
 import request from 'supertest'
-import { vi } from 'vitest'
+import { beforeEach, vi } from 'vitest'
 
 import { app } from '..'
 import { withUserAuth } from './auth'

@@ -72,17 +72,17 @@ export const TimelineContextMenuComponent = () => {
 		openEventDrawer({})
 	}, [onClose, navigate, scrollTimelineTo, selectedTime, openEventDrawer])
 
-	const onReplaceSelectedEvent = useCallback(() => {
-		onClose()
-		if (!selectedMarker) {
-			return
-		}
-		// navigate({
-		// 	to: '/world/$worldId/timeline/delta/create/$eventId',
-		// 	params: { eventId: selectedMarker.eventId },
-		// 	search: (prev) => ({ ...prev, time: selectedTime }),
-		// })
-	}, [navigate, onClose, selectedMarker, selectedTime])
+	// const onReplaceSelectedEvent = useCallback(() => {
+	// 	onClose()
+	// 	if (!selectedMarker) {
+	// 		return
+	// 	}
+	// 	// navigate({
+	// 	// 	to: '/world/$worldId/timeline/delta/create/$eventId',
+	// 	// 	params: { eventId: selectedMarker.eventId },
+	// 	// 	search: (prev) => ({ ...prev, time: selectedTime }),
+	// 	// })
+	// }, [navigate, onClose, selectedMarker, selectedTime])
 
 	const onResolveSelectedEvent = useCallback(async () => {
 		if (!selectedMarker) {

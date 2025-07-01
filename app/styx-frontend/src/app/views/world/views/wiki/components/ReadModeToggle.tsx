@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack'
-import { useTheme } from '@mui/material/styles'
+import { Theme, useTheme } from '@mui/material/styles'
 import Switch from '@mui/material/Switch'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -38,7 +38,7 @@ export const ReadModeToggle = () => {
 	)
 }
 
-const MaterialUISwitch = styled(Switch)(({ theme }) => ({
+const MaterialUISwitch = styled(Switch)<{ theme: Theme }>(({ theme }) => ({
 	width: 62,
 	height: 34,
 	padding: 7,

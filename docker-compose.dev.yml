@@ -22,6 +22,7 @@ services:
             environment: development
         volumes:
             - ./app/styx-frontend/src:/app/styx/src:cached
+            - ./app/styx-frontend/node_modules/.tanstack/tmp-docker:/.tanstack/tmp:cached
             - ./app/styx-frontend/public:/app/styx/public:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached
             - type: bind

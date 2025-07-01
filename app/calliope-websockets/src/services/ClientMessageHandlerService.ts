@@ -3,7 +3,7 @@ import {
 	ClientToCalliopeMessageHandlers,
 	ClientToCalliopeMessageType,
 } from '@src/ts-shared/ClientToCalliopeMessage'
-import * as WebSocket from 'ws'
+import { WebSocket } from 'ws'
 
 import { WebsocketService } from './WebsocketService'
 

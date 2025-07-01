@@ -40,7 +40,7 @@ const IconContainer = styled.span`
 	}
 `
 
-export const AutosaveIcon = ({ savingState, isSaving, defaultIcon }: Subprops) => {
+export const AutosaveIcon = ({ savingState, defaultIcon }: Subprops) => {
 	return (
 		<IconContainer>
 			<svg className={`${savingState === 'none' ? 'default visible' : 'default'}`}>{defaultIcon}</svg>

@@ -1,5 +1,6 @@
 import './registerModuleAlias'
 
+import chalk from 'chalk'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'moonflower'
@@ -95,7 +96,7 @@ if (!isRunningInTest()) {
 
 	RedisService.initRedisConnection()
 	app.listen(3000)
-	console.info('[RHEA] Server up')
+	console.info(`${chalk.greenBright('[Rhea]')} Listening on port ${chalk.blueBright('3000')}`)
 
 	setInterval(() => {
 		UserService.cleanUpDeletedUsers()

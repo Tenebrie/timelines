@@ -1,11 +1,18 @@
-import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
+import tanstackRouter from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
+import path from 'path'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'vitest/config'
 
+const tanstackTempDir = path.resolve('node_modules/.tanstack')
+
 export default defineConfig({
 	base: '/',
-	plugins: [TanStackRouterVite({ autoCodeSplitting: true }), react(), viteTsconfigPaths()],
+	plugins: [
+		tanstackRouter({ autoCodeSplitting: true, tmpDir: tanstackTempDir }),
+		react(),
+		viteTsconfigPaths(),
+	],
 	resolve: {
 		alias: {
 			'@api': '/src/api',
@@ -24,9 +31,11 @@ export default defineConfig({
 	preview: {
 		port: 8080,
 		host: true,
+		allowedHosts: true,
 	},
 	server: {
 		port: 8080,
+		allowedHosts: true,
 		watch: {
 			usePolling: true,
 		},

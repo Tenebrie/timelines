@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom'
 
 import { configure } from '@testing-library/dom'
-import nodeFetch, { Request, Response } from 'node-fetch'
 
 console.debug = () => {}
 
@@ -20,8 +19,6 @@ configure({
 	},
 })
 
-Object.assign(globalThis, { fetch: nodeFetch, Request, Response })
-
 beforeAll(() => {
 	global.ResizeObserver = class ResizeObserver {
 		observe() {
@@ -34,7 +31,8 @@ beforeAll(() => {
 			// do nothing
 		}
 	}
-	global.requestIdleCallback = (callback: IdleRequestCallback, options?: IdleRequestOptions) => {
+
+	global.requestIdleCallback = (callback: IdleRequestCallback, _?: IdleRequestOptions) => {
 		const start = Date.now()
 		return setTimeout(() => {
 			callback({

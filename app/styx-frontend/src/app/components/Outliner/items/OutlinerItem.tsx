@@ -22,5 +22,5 @@ function OutlinerItemComponent({ index, actor, event }: Props) {
 	} else if (event) {
 		return <OutlinerItemEvent event={event} />
 	}
-	return <div>Error element (shouldn't render)</div>
+	return <div>Error element (shouldn&apos;t render)</div>
 }

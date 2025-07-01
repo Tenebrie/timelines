@@ -2,7 +2,6 @@ import Stack from '@mui/material/Stack'
 import { memo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useOutlinerTabs } from '@/app/components/Outliner/hooks/useOutlinerTabs'
 import { ContainedSpinner } from '@/app/features/skeleton/ContainedSpinner'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
@@ -13,7 +12,6 @@ export const OutlinerItemHeader = memo(OutlinerItemHeaderComponent)
 
 export function OutlinerItemHeaderComponent() {
 	const { search } = useSelector(getWorldState, (a, b) => a.search === b.search)
-	const { currentTab, setCurrentTab } = useOutlinerTabs()
 
 	return (
 		<Stack>

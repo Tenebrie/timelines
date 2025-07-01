@@ -62,10 +62,10 @@ export const DeleteUserModal = () => {
 			<ModalHeader>Delete User</ModalHeader>
 			<Stack spacing={2}>
 				<div>
-					Attempting to permanently delete user '<b>{targetUser?.username}</b>'. This will also delete all
-					their data.
+					Attempting to permanently delete user &apos;<b>{targetUser?.username}</b>&apos;. This will also
+					delete all their data.
 				</div>
-				<div>This action can't be reverted!</div>
+				<div>This action can&apos;t be reverted!</div>
 				{deletionError && (
 					<div style={{ color: 'red' }}>
 						Unable to delete: <b>{deletionError}</b>

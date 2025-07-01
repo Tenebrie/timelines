@@ -78,7 +78,7 @@ export const useLiveMessageHandlers = () => {
 		[CalliopeToClientMessageType.WIKI_ARTICLE_DELETED]: () => {
 			dispatch(worldWikiApi.util.invalidateTags(['worldWiki']))
 		},
-		[CalliopeToClientMessageType.MINDMAP_NODE_UPDATED]: (data) => {
+		[CalliopeToClientMessageType.MINDMAP_NODE_UPDATED]: (_) => {
 			dispatch(otherApi.util.invalidateTags(['mindmap']))
 		},
 	}

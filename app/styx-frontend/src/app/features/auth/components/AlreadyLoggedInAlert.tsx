@@ -19,7 +19,7 @@ export const AlreadyLoggedInAlert = ({ parentSpacing }: Props) => {
 			{!!user && (
 				<Collapse>
 					<Alert severity="success" style={{ marginBottom: parentSpacing * 8 }}>
-						It seems you've already logged in. Click{' '}
+						It seems you&apos;ve already logged in. Click{' '}
 						<Link component={NavLink} to="/home">
 							here
 						</Link>{' '}

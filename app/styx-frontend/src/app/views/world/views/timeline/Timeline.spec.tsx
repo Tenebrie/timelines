@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { WorldDetails, WorldEvent } from '@api/types/worldTypes'
 import { screen, waitFor } from '@testing-library/react'

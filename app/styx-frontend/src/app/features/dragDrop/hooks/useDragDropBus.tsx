@@ -5,13 +5,9 @@ type Props = {
 }
 
 export const useDragDropBusSubscribe = ({ callback }: Props) => {
-	const onEvent = useCallback<EventListener>(
-		// @ts-ignore
-		() => {
-			callback()
-		},
-		[callback],
-	)
+	const onEvent = useCallback<EventListener>(() => {
+		callback()
+	}, [callback])
 
 	useEffect(() => {
 		window.addEventListener('@timelines/dragDropStateUpdated', onEvent)

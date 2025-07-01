@@ -14,7 +14,7 @@ type WrapperProps = {
 	}
 }
 
-export const GhostWrapper = ({ children, initialLeft, initialTop, left, top, align }: WrapperProps) => {
+export const GhostWrapper = ({ children, left, top, align }: WrapperProps) => {
 	const parseAlign = (size: number, align: 'start' | 'center' | 'end') => {
 		switch (align) {
 			case 'start':

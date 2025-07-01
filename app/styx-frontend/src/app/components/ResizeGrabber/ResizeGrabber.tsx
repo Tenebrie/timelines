@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
-import { ReactNode } from '@tanstack/react-router'
 import throttle from 'lodash.throttle'
-import { memo, startTransition, useCallback, useEffect, useRef, useState } from 'react'
+import { memo, ReactNode, startTransition, useCallback, useEffect, useRef, useState } from 'react'
 import { MouseEvent as ReactMouseEvent } from 'react'
 import styled from 'styled-components'
 

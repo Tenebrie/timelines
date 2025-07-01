@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { act, render, renderHook, RenderHookOptions } from '@testing-library/react'

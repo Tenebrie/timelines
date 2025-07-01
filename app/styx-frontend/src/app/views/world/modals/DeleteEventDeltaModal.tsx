@@ -72,9 +72,9 @@ export const DeleteEventDeltaModal = () => {
 			<ModalHeader>Delete Data Point</ModalHeader>
 			<Stack spacing={2}>
 				<div>
-					Attempting to permanently delete data point '<b>{targetDelta?.name}</b>'.
+					Attempting to permanently delete data point &apos;<b>{targetDelta?.name}</b>&apos;.
 				</div>
-				<div>This action can't be reverted!</div>
+				<div>This action can&apos;t be reverted!</div>
 				{deletionError && (
 					<div style={{ color: 'red' }}>
 						Unable to delete: <b>{deletionError}</b>

@@ -65,7 +65,7 @@ export const DeleteWorldModal = () => {
 				<div>
 					Attempting to permanently delete world <b>{worldName}</b>.
 				</div>
-				<div>This action can't be reverted!</div>
+				<div>This action can&apos;t be reverted!</div>
 				{deletionError && (
 					<div style={{ color: 'red' }}>
 						Unable to delete: <b>{deletionError}</b>

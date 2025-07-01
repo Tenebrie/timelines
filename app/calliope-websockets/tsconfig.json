@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
     "declaration": true,
     "removeComments": true,
     "strict": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "target": "ES2022",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
@@ -15,11 +16,17 @@
     "skipLibCheck": true,
     "strictNullChecks": true,
     "noImplicitAny": false,
+    "noImplicitReturns": true,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@src/*": ["src/*"],
+      "@src/*": [
+        "src/*"
+      ],
+      "@ts-shared/*": [
+        "../ts-shared/src/*"
+      ]
     }
   },
   "include": [

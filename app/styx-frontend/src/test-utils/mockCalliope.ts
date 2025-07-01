@@ -1,6 +1,6 @@
-import { Server } from 'ws'
+import { WebSocketServer } from 'ws'
 
-const webSocketServer = new Server({
+const webSocketServer = new WebSocketServer({
 	port: 5000,
 })
 

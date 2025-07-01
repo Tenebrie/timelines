@@ -50,18 +50,18 @@ export const DeleteArticleModal = () => {
 			<Stack spacing={2}>
 				{articles.length === 1 && (
 					<div>
-						Attempting to permanently delete article '
-						<b>{baseArticles?.find((a) => a.id === articles[0])?.name}</b>'. This will also delete all related
-						data.
+						Attempting to permanently delete article &apos;
+						<b>{baseArticles?.find((a) => a.id === articles[0])?.name}</b>&apos;. This will also delete all
+						related data.
 					</div>
 				)}
 				{articles.length > 1 && (
 					<div>
-						Attempting to permanently delete '<b>{articles.length} articles</b>'. This will also delete all
-						related data.
+						Attempting to permanently delete &apos;<b>{articles.length} articles</b>&apos;. This will also
+						delete related data.
 					</div>
 				)}
-				<div>This action can't be reverted!</div>
+				<div>This action can&apos;t be reverted!</div>
 				{deletionError && (
 					<div style={{ color: 'red' }}>
 						Unable to delete: <b>{deletionError}</b>

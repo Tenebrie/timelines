@@ -1,5 +1,5 @@
 import { CollaboratingUser, World } from '@prisma/client'
-import { vi } from 'vitest'
+import { beforeEach, vi } from 'vitest'
 
 export const prismaMockRef = {
 	current: makePrismaClient({}),

@@ -1,5 +1,5 @@
 import type { User } from '@prisma/client'
-import * as jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 import { SecretService } from './SecretService'
 

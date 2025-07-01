@@ -105,7 +105,7 @@ export function SummonableDebug() {
 					Waiting List
 				</Typography>
 				{Object.entries(debugInfo.waitingList)
-					.filter(([_, items]) => items.length > 0)
+					.filter(([, items]) => items.length > 0)
 					.map(([family, items]) => (
 						<Box key={family} sx={{ mb: 2 }}>
 							<Typography variant="body2" sx={{ fontWeight: 'bold' }}>

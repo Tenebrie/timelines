@@ -1,9 +1,10 @@
 import './registerModuleAlias'
 
 import Koa from 'koa'
-import * as bodyParser from 'koa-bodyparser'
-import * as route from 'koa-route'
-import * as websocketify from 'koa-websocket'
+import bodyParser from 'koa-bodyparser'
+import route from 'koa-route'
+import websocketify from 'koa-websocket'
+import { WebSocket } from 'ws'
 
 import { ClientMessageHandlerService } from './services/ClientMessageHandlerService'
 import { initRedisConnection } from './services/RedisService'
@@ -15,7 +16,7 @@ import { AUTH_COOKIE_NAME } from './ts-shared/const/constants'
 const app = websocketify(new Koa())
 
 app.ws.use(
-	route.all('/live/:sessionId', function (ctx: websocketify.MiddlewareContext<Koa.DefaultState>) {
+	route.all('/live/:sessionId', function (ctx) {
 		try {
 			const authCookie = ctx.cookies.get(AUTH_COOKIE_NAME)
 			if (!authCookie) {
@@ -28,7 +29,8 @@ app.ws.use(
 				throw new Error('No session id')
 			}
 
-			ctx.websocket.on('message', (rawMessage) => {
+			const socket = ctx.websocket as WebSocket
+			socket.on('message', (rawMessage) => {
 				try {
 					const message = JSON.parse(rawMessage.toString()) as ClientToCalliopeMessage
 					ClientMessageHandlerService.handleMessage(message, userId, sessionId, ctx.websocket)
@@ -36,10 +38,10 @@ app.ws.use(
 					console.error('Error handling message', e)
 				}
 			})
-			ctx.websocket.on('close', () => {
+			socket.on('close', () => {
 				WebsocketService.unregisterSocket(userId, ctx.websocket)
 			})
-			ctx.websocket.on('error', () => {
+			socket.on('error', () => {
 				WebsocketService.unregisterSocket(userId, ctx.websocket)
 			})
 		} catch (e) {

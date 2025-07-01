@@ -32,7 +32,9 @@ router.get('/api/world/:worldId/thumbnail', async (ctx) => {
 	await AuthorizationService.checkUserReadAccessById(user, worldId)
 
 	const file = await new Promise<Buffer>((resolve) => {
-		resolve(fs.readFileSync(path.resolve(__dirname, '../assets/images/world-thumbnail-default.webp')))
+		resolve(
+			fs.readFileSync(path.resolve(import.meta.dirname, '../assets/images/world-thumbnail-default.webp')),
+		)
 	})
 	return useReturnValue(file, 200, 'image/webp')
 })
@@ -52,7 +54,9 @@ router.get('/api/world/:worldId/thumbnail/metadata', async (ctx) => {
 	await AuthorizationService.checkUserReadAccessById(user, worldId)
 
 	const file = await new Promise<Buffer>((resolve) => {
-		resolve(fs.readFileSync(path.resolve(__dirname, '../assets/images/world-thumbnail-default.webp')))
+		resolve(
+			fs.readFileSync(path.resolve(import.meta.dirname, '../assets/images/world-thumbnail-default.webp')),
+		)
 	})
 	const averageColor = await getAverageColor(file)
 	if (averageColor.error) {

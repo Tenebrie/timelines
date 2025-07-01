@@ -3,7 +3,6 @@ import Button from '@mui/material/Button'
 import styled, { CSSProperties } from 'styled-components'
 
 import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
-import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 type Props = {
 	icon: string
@@ -38,7 +37,6 @@ export const Marker = styled(Button)`
 `
 
 export function ColorIconPicker({ icon, color, onClick }: Props) {
-	const theme = useCustomTheme()
 	const { getIconPath } = useEventIcons()
 
 	const baseColor = color ?? '#000000'
