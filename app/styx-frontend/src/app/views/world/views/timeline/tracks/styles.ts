@@ -25,7 +25,6 @@ export const TrackContainer = styled.div<{ $height: number; $hoverBg: string; $a
 	height: ${(props) => props.$height}px;
 	display: flex;
 	flex-direction: row;
-	width: 100%;
 	align-items: flex-end;
 
 	pointer-events: auto;

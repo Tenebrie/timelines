@@ -13,6 +13,11 @@ import { isRunningInTest } from '@/test-utils/isRunningInTest'
 
 import { TimelineTrack } from '../hooks/useEventTracks'
 import { TimelineState } from '../utils/TimelineState'
+import {
+	CONTROLLED_SCROLLER_SIZE,
+	ControlledScroller,
+	EVENT_SCROLL_RESET_PERIOD,
+} from './components/ControlledScroller'
 import { TimelineTrackItemDragDrop } from './dragDrop/TimelineTrackItemDragDrop'
 import { TimelineEventTrackTitle } from './marker/TimelineEventTrackTitle'
 import { TimelineMarker } from './marker/TimelineMarker'
@@ -80,9 +85,12 @@ export function TimelineTracksItemComponent({
 				lastRecordedScroll.current = TimelineState.scroll
 				const markers = t.events
 					.filter((event) => {
-						const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + TimelineState.scroll
+						const position =
+							realTimeToScaledTime(Math.floor(event.markerPosition)) +
+							TimelineState.scroll -
+							CONTROLLED_SCROLLER_SIZE
 
-						return position >= -1000 && position <= width + 1000
+						return position >= -3000 && position <= width + 3000
 					})
 					.sort((a, b) => a.markerPosition - b.markerPosition)
 
@@ -134,16 +142,18 @@ export function TimelineTracksItemComponent({
 					background: theme.material.palette.primary.main,
 				}}
 			/>
-			{visibleMarkers.map((event) => (
-				<TimelineMarker
-					key={event.key}
-					marker={event}
-					visible={visible}
-					selected={selectedMarkers.some((marker) => marker.key === event.key)}
-					trackHeight={track.height}
-					realTimeToScaledTime={realTimeToScaledTime}
-				/>
-			))}
+			<ControlledScroller resetPeriod={EVENT_SCROLL_RESET_PERIOD}>
+				{visibleMarkers.map((event) => (
+					<TimelineMarker
+						key={event.key}
+						marker={event}
+						visible={visible}
+						selected={selectedMarkers.some((marker) => marker.key === event.key)}
+						trackHeight={track.height}
+						realTimeToScaledTime={realTimeToScaledTime}
+					/>
+				))}
+			</ControlledScroller>
 			<TimelineEventTrackTitle track={track} />
 			<TimelineTrackItemDragDrop
 				track={track}

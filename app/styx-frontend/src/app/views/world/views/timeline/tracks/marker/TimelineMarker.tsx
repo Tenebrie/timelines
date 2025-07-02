@@ -31,7 +31,6 @@ export function TimelineMarkerComponent({
 	return (
 		<Box
 			sx={{
-				position: 'absolute',
 				zIndex,
 				transition: 'z-index 0.3s',
 				transitionDelay: hovered ? '0.4s' : '0.15s',

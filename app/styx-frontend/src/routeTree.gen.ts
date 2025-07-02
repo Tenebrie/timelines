@@ -10,430 +10,318 @@
 
 import { createFileRoute } from '@tanstack/react-router'
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as ToolsRouteImport } from './routes/tools'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as HomeRouteImport } from './routes/home'
-import { Route as AdminRouteImport } from './routes/admin'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as ProfileIndexRouteImport } from './routes/profile/index'
-import { Route as SecretMusicRouteImport } from './routes/secret/music'
-import { Route as ProfileProfileRouteImport } from './routes/profile/_profile'
-import { Route as WorldWorldIdWorldRouteImport } from './routes/world.$worldId/_world'
-import { Route as ProfileProfileStorageRouteImport } from './routes/profile/_profile.storage'
-import { Route as ProfileProfilePublicRouteImport } from './routes/profile/_profile.public'
-import { Route as WorldWorldIdWorldTimelineRouteImport } from './routes/world.$worldId/_world.timeline'
-import { Route as WorldWorldIdWorldSettingsRouteImport } from './routes/world.$worldId/_world.settings'
-import { Route as WorldWorldIdWorldMindmapRouteImport } from './routes/world.$worldId/_world.mindmap'
-import { Route as WorldWorldIdWorldWikiWikiRouteImport } from './routes/world.$worldId/_world.wiki/_wiki'
-import { Route as WorldWorldIdWorldWikiWikiIndexRouteImport } from './routes/world.$worldId/_world.wiki/_wiki.index'
-import { Route as WorldWorldIdWorldWikiWikiArticleIdRouteImport } from './routes/world.$worldId/_world.wiki/_wiki.$articleId'
+// Import Routes
 
-const ProfileRouteImport = createFileRoute('/profile')()
-const WorldWorldIdRouteImport = createFileRoute('/world/$worldId')()
-const WorldWorldIdWorldWikiRouteImport = createFileRoute(
+import { Route as rootRoute } from './routes/__root'
+import { Route as ToolsImport } from './routes/tools'
+import { Route as RegisterImport } from './routes/register'
+import { Route as LoginImport } from './routes/login'
+import { Route as HomeImport } from './routes/home'
+import { Route as AdminImport } from './routes/admin'
+import { Route as IndexImport } from './routes/index'
+import { Route as ProfileIndexImport } from './routes/profile/index'
+import { Route as SecretMusicImport } from './routes/secret/music'
+import { Route as ProfileProfileImport } from './routes/profile/_profile'
+import { Route as WorldWorldIdWorldImport } from './routes/world.$worldId/_world'
+import { Route as ProfileProfileStorageImport } from './routes/profile/_profile.storage'
+import { Route as ProfileProfilePublicImport } from './routes/profile/_profile.public'
+import { Route as WorldWorldIdWorldTimelineImport } from './routes/world.$worldId/_world.timeline'
+import { Route as WorldWorldIdWorldSettingsImport } from './routes/world.$worldId/_world.settings'
+import { Route as WorldWorldIdWorldMindmapImport } from './routes/world.$worldId/_world.mindmap'
+import { Route as WorldWorldIdWorldWikiWikiImport } from './routes/world.$worldId/_world.wiki/_wiki'
+import { Route as WorldWorldIdWorldWikiWikiIndexImport } from './routes/world.$worldId/_world.wiki/_wiki.index'
+import { Route as WorldWorldIdWorldWikiWikiArticleIdImport } from './routes/world.$worldId/_world.wiki/_wiki.$articleId'
+
+// Create Virtual Routes
+
+const ProfileImport = createFileRoute('/profile')()
+const WorldWorldIdImport = createFileRoute('/world/$worldId')()
+const WorldWorldIdWorldWikiImport = createFileRoute(
   '/world/$worldId/_world/wiki',
 )()
 
-const ProfileRoute = ProfileRouteImport.update({
+// Create/Update Routes
+
+const ProfileRoute = ProfileImport.update({
   id: '/profile',
   path: '/profile',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const ToolsRoute = ToolsRouteImport.update({
+
+const ToolsRoute = ToolsImport.update({
   id: '/tools',
   path: '/tools',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const RegisterRoute = RegisterRouteImport.update({
+
+const RegisterRoute = RegisterImport.update({
   id: '/register',
   path: '/register',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const LoginRoute = LoginRouteImport.update({
+
+const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const HomeRoute = HomeRouteImport.update({
+
+const HomeRoute = HomeImport.update({
   id: '/home',
   path: '/home',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const AdminRoute = AdminRouteImport.update({
+
+const AdminRoute = AdminImport.update({
   id: '/admin',
   path: '/admin',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+
+const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const WorldWorldIdRoute = WorldWorldIdRouteImport.update({
+
+const WorldWorldIdRoute = WorldWorldIdImport.update({
   id: '/world/$worldId',
   path: '/world/$worldId',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const ProfileIndexRoute = ProfileIndexRouteImport.update({
+
+const ProfileIndexRoute = ProfileIndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ProfileRoute,
 } as any)
-const SecretMusicRoute = SecretMusicRouteImport.update({
+
+const SecretMusicRoute = SecretMusicImport.update({
   id: '/secret/music',
   path: '/secret/music',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const ProfileProfileRoute = ProfileProfileRouteImport.update({
+
+const ProfileProfileRoute = ProfileProfileImport.update({
   id: '/_profile',
   getParentRoute: () => ProfileRoute,
 } as any)
-const WorldWorldIdWorldRoute = WorldWorldIdWorldRouteImport.update({
+
+const WorldWorldIdWorldRoute = WorldWorldIdWorldImport.update({
   id: '/_world',
   getParentRoute: () => WorldWorldIdRoute,
 } as any)
-const ProfileProfileStorageRoute = ProfileProfileStorageRouteImport.update({
+
+const ProfileProfileStorageRoute = ProfileProfileStorageImport.update({
   id: '/storage',
   path: '/storage',
   getParentRoute: () => ProfileProfileRoute,
 } as any)
-const ProfileProfilePublicRoute = ProfileProfilePublicRouteImport.update({
+
+const ProfileProfilePublicRoute = ProfileProfilePublicImport.update({
   id: '/public',
   path: '/public',
   getParentRoute: () => ProfileProfileRoute,
 } as any)
-const WorldWorldIdWorldWikiRoute = WorldWorldIdWorldWikiRouteImport.update({
+
+const WorldWorldIdWorldWikiRoute = WorldWorldIdWorldWikiImport.update({
   id: '/wiki',
   path: '/wiki',
   getParentRoute: () => WorldWorldIdWorldRoute,
 } as any)
-const WorldWorldIdWorldTimelineRoute =
-  WorldWorldIdWorldTimelineRouteImport.update({
-    id: '/timeline',
-    path: '/timeline',
-    getParentRoute: () => WorldWorldIdWorldRoute,
-  } as any)
-const WorldWorldIdWorldSettingsRoute =
-  WorldWorldIdWorldSettingsRouteImport.update({
-    id: '/settings',
-    path: '/settings',
-    getParentRoute: () => WorldWorldIdWorldRoute,
-  } as any)
-const WorldWorldIdWorldMindmapRoute =
-  WorldWorldIdWorldMindmapRouteImport.update({
-    id: '/mindmap',
-    path: '/mindmap',
-    getParentRoute: () => WorldWorldIdWorldRoute,
-  } as any)
-const WorldWorldIdWorldWikiWikiRoute =
-  WorldWorldIdWorldWikiWikiRouteImport.update({
-    id: '/_wiki',
-    getParentRoute: () => WorldWorldIdWorldWikiRoute,
-  } as any)
+
+const WorldWorldIdWorldTimelineRoute = WorldWorldIdWorldTimelineImport.update({
+  id: '/timeline',
+  path: '/timeline',
+  getParentRoute: () => WorldWorldIdWorldRoute,
+} as any)
+
+const WorldWorldIdWorldSettingsRoute = WorldWorldIdWorldSettingsImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => WorldWorldIdWorldRoute,
+} as any)
+
+const WorldWorldIdWorldMindmapRoute = WorldWorldIdWorldMindmapImport.update({
+  id: '/mindmap',
+  path: '/mindmap',
+  getParentRoute: () => WorldWorldIdWorldRoute,
+} as any)
+
+const WorldWorldIdWorldWikiWikiRoute = WorldWorldIdWorldWikiWikiImport.update({
+  id: '/_wiki',
+  getParentRoute: () => WorldWorldIdWorldWikiRoute,
+} as any)
+
 const WorldWorldIdWorldWikiWikiIndexRoute =
-  WorldWorldIdWorldWikiWikiIndexRouteImport.update({
+  WorldWorldIdWorldWikiWikiIndexImport.update({
     id: '/',
     path: '/',
     getParentRoute: () => WorldWorldIdWorldWikiWikiRoute,
   } as any)
+
 const WorldWorldIdWorldWikiWikiArticleIdRoute =
-  WorldWorldIdWorldWikiWikiArticleIdRouteImport.update({
+  WorldWorldIdWorldWikiWikiArticleIdImport.update({
     id: '/$articleId',
     path: '/$articleId',
     getParentRoute: () => WorldWorldIdWorldWikiWikiRoute,
   } as any)
 
-export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
-  '/home': typeof HomeRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/tools': typeof ToolsRoute
-  '/profile': typeof ProfileProfileRouteWithChildren
-  '/secret/music': typeof SecretMusicRoute
-  '/profile/': typeof ProfileIndexRoute
-  '/profile/public': typeof ProfileProfilePublicRoute
-  '/profile/storage': typeof ProfileProfileStorageRoute
-  '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
-  '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
-  '/world/$worldId/settings': typeof WorldWorldIdWorldSettingsRoute
-  '/world/$worldId/timeline': typeof WorldWorldIdWorldTimelineRoute
-  '/world/$worldId/wiki': typeof WorldWorldIdWorldWikiWikiRouteWithChildren
-  '/world/$worldId/wiki/$articleId': typeof WorldWorldIdWorldWikiWikiArticleIdRoute
-  '/world/$worldId/wiki/': typeof WorldWorldIdWorldWikiWikiIndexRoute
-}
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
-  '/home': typeof HomeRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/tools': typeof ToolsRoute
-  '/profile': typeof ProfileIndexRoute
-  '/secret/music': typeof SecretMusicRoute
-  '/profile/public': typeof ProfileProfilePublicRoute
-  '/profile/storage': typeof ProfileProfileStorageRoute
-  '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
-  '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
-  '/world/$worldId/settings': typeof WorldWorldIdWorldSettingsRoute
-  '/world/$worldId/timeline': typeof WorldWorldIdWorldTimelineRoute
-  '/world/$worldId/wiki': typeof WorldWorldIdWorldWikiWikiIndexRoute
-  '/world/$worldId/wiki/$articleId': typeof WorldWorldIdWorldWikiWikiArticleIdRoute
-}
-export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
-  '/home': typeof HomeRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
-  '/tools': typeof ToolsRoute
-  '/profile': typeof ProfileRouteWithChildren
-  '/profile/_profile': typeof ProfileProfileRouteWithChildren
-  '/secret/music': typeof SecretMusicRoute
-  '/profile/': typeof ProfileIndexRoute
-  '/profile/_profile/public': typeof ProfileProfilePublicRoute
-  '/profile/_profile/storage': typeof ProfileProfileStorageRoute
-  '/world/$worldId': typeof WorldWorldIdRouteWithChildren
-  '/world/$worldId/_world': typeof WorldWorldIdWorldRouteWithChildren
-  '/world/$worldId/_world/mindmap': typeof WorldWorldIdWorldMindmapRoute
-  '/world/$worldId/_world/settings': typeof WorldWorldIdWorldSettingsRoute
-  '/world/$worldId/_world/timeline': typeof WorldWorldIdWorldTimelineRoute
-  '/world/$worldId/_world/wiki': typeof WorldWorldIdWorldWikiRouteWithChildren
-  '/world/$worldId/_world/wiki/_wiki': typeof WorldWorldIdWorldWikiWikiRouteWithChildren
-  '/world/$worldId/_world/wiki/_wiki/$articleId': typeof WorldWorldIdWorldWikiWikiArticleIdRoute
-  '/world/$worldId/_world/wiki/_wiki/': typeof WorldWorldIdWorldWikiWikiIndexRoute
-}
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/admin'
-    | '/home'
-    | '/login'
-    | '/register'
-    | '/tools'
-    | '/profile'
-    | '/secret/music'
-    | '/profile/'
-    | '/profile/public'
-    | '/profile/storage'
-    | '/world/$worldId'
-    | '/world/$worldId/mindmap'
-    | '/world/$worldId/settings'
-    | '/world/$worldId/timeline'
-    | '/world/$worldId/wiki'
-    | '/world/$worldId/wiki/$articleId'
-    | '/world/$worldId/wiki/'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/admin'
-    | '/home'
-    | '/login'
-    | '/register'
-    | '/tools'
-    | '/profile'
-    | '/secret/music'
-    | '/profile/public'
-    | '/profile/storage'
-    | '/world/$worldId'
-    | '/world/$worldId/mindmap'
-    | '/world/$worldId/settings'
-    | '/world/$worldId/timeline'
-    | '/world/$worldId/wiki'
-    | '/world/$worldId/wiki/$articleId'
-  id:
-    | '__root__'
-    | '/'
-    | '/admin'
-    | '/home'
-    | '/login'
-    | '/register'
-    | '/tools'
-    | '/profile'
-    | '/profile/_profile'
-    | '/secret/music'
-    | '/profile/'
-    | '/profile/_profile/public'
-    | '/profile/_profile/storage'
-    | '/world/$worldId'
-    | '/world/$worldId/_world'
-    | '/world/$worldId/_world/mindmap'
-    | '/world/$worldId/_world/settings'
-    | '/world/$worldId/_world/timeline'
-    | '/world/$worldId/_world/wiki'
-    | '/world/$worldId/_world/wiki/_wiki'
-    | '/world/$worldId/_world/wiki/_wiki/$articleId'
-    | '/world/$worldId/_world/wiki/_wiki/'
-  fileRoutesById: FileRoutesById
-}
-export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
-  HomeRoute: typeof HomeRoute
-  LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRoute
-  ToolsRoute: typeof ToolsRoute
-  ProfileRoute: typeof ProfileRouteWithChildren
-  SecretMusicRoute: typeof SecretMusicRoute
-  WorldWorldIdRoute: typeof WorldWorldIdRouteWithChildren
-}
+// Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tools': {
-      id: '/tools'
-      path: '/tools'
-      fullPath: '/tools'
-      preLoaderRoute: typeof ToolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeRouteImport
-      parentRoute: typeof rootRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
     }
     '/admin': {
       id: '/admin'
       path: '/admin'
       fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AdminImport
+      parentRoute: typeof rootRoute
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeImport
+      parentRoute: typeof rootRoute
     }
-    '/world/$worldId': {
-      id: '/world/$worldId'
-      path: '/world/$worldId'
-      fullPath: '/world/$worldId'
-      preLoaderRoute: typeof WorldWorldIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
     }
-    '/profile/': {
-      id: '/profile/'
-      path: '/'
-      fullPath: '/profile/'
-      preLoaderRoute: typeof ProfileIndexRouteImport
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterImport
+      parentRoute: typeof rootRoute
+    }
+    '/tools': {
+      id: '/tools'
+      path: '/tools'
+      fullPath: '/tools'
+      preLoaderRoute: typeof ToolsImport
+      parentRoute: typeof rootRoute
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileImport
+      parentRoute: typeof rootRoute
+    }
+    '/profile/_profile': {
+      id: '/profile/_profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileProfileImport
       parentRoute: typeof ProfileRoute
     }
     '/secret/music': {
       id: '/secret/music'
       path: '/secret/music'
       fullPath: '/secret/music'
-      preLoaderRoute: typeof SecretMusicRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof SecretMusicImport
+      parentRoute: typeof rootRoute
     }
-    '/profile/_profile': {
-      id: '/profile/_profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileProfileRouteImport
-      parentRoute: typeof ProfileRoute
-    }
-    '/world/$worldId/_world': {
-      id: '/world/$worldId/_world'
-      path: '/world/$worldId'
-      fullPath: '/world/$worldId'
-      preLoaderRoute: typeof WorldWorldIdWorldRouteImport
-      parentRoute: typeof WorldWorldIdRoute
-    }
-    '/profile/_profile/storage': {
-      id: '/profile/_profile/storage'
-      path: '/storage'
-      fullPath: '/profile/storage'
-      preLoaderRoute: typeof ProfileProfileStorageRouteImport
-      parentRoute: typeof ProfileProfileRoute
+    '/profile/': {
+      id: '/profile/'
+      path: '/'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof ProfileIndexImport
+      parentRoute: typeof ProfileImport
     }
     '/profile/_profile/public': {
       id: '/profile/_profile/public'
       path: '/public'
       fullPath: '/profile/public'
-      preLoaderRoute: typeof ProfileProfilePublicRouteImport
-      parentRoute: typeof ProfileProfileRoute
+      preLoaderRoute: typeof ProfileProfilePublicImport
+      parentRoute: typeof ProfileProfileImport
     }
-    '/world/$worldId/_world/wiki': {
-      id: '/world/$worldId/_world/wiki'
-      path: '/wiki'
-      fullPath: '/world/$worldId/wiki'
-      preLoaderRoute: typeof WorldWorldIdWorldWikiRouteImport
-      parentRoute: typeof WorldWorldIdWorldRoute
+    '/profile/_profile/storage': {
+      id: '/profile/_profile/storage'
+      path: '/storage'
+      fullPath: '/profile/storage'
+      preLoaderRoute: typeof ProfileProfileStorageImport
+      parentRoute: typeof ProfileProfileImport
     }
-    '/world/$worldId/_world/timeline': {
-      id: '/world/$worldId/_world/timeline'
-      path: '/timeline'
-      fullPath: '/world/$worldId/timeline'
-      preLoaderRoute: typeof WorldWorldIdWorldTimelineRouteImport
-      parentRoute: typeof WorldWorldIdWorldRoute
+    '/world/$worldId': {
+      id: '/world/$worldId'
+      path: '/world/$worldId'
+      fullPath: '/world/$worldId'
+      preLoaderRoute: typeof WorldWorldIdImport
+      parentRoute: typeof rootRoute
     }
-    '/world/$worldId/_world/settings': {
-      id: '/world/$worldId/_world/settings'
-      path: '/settings'
-      fullPath: '/world/$worldId/settings'
-      preLoaderRoute: typeof WorldWorldIdWorldSettingsRouteImport
-      parentRoute: typeof WorldWorldIdWorldRoute
+    '/world/$worldId/_world': {
+      id: '/world/$worldId/_world'
+      path: '/world/$worldId'
+      fullPath: '/world/$worldId'
+      preLoaderRoute: typeof WorldWorldIdWorldImport
+      parentRoute: typeof WorldWorldIdRoute
     }
     '/world/$worldId/_world/mindmap': {
       id: '/world/$worldId/_world/mindmap'
       path: '/mindmap'
       fullPath: '/world/$worldId/mindmap'
-      preLoaderRoute: typeof WorldWorldIdWorldMindmapRouteImport
-      parentRoute: typeof WorldWorldIdWorldRoute
+      preLoaderRoute: typeof WorldWorldIdWorldMindmapImport
+      parentRoute: typeof WorldWorldIdWorldImport
+    }
+    '/world/$worldId/_world/settings': {
+      id: '/world/$worldId/_world/settings'
+      path: '/settings'
+      fullPath: '/world/$worldId/settings'
+      preLoaderRoute: typeof WorldWorldIdWorldSettingsImport
+      parentRoute: typeof WorldWorldIdWorldImport
+    }
+    '/world/$worldId/_world/timeline': {
+      id: '/world/$worldId/_world/timeline'
+      path: '/timeline'
+      fullPath: '/world/$worldId/timeline'
+      preLoaderRoute: typeof WorldWorldIdWorldTimelineImport
+      parentRoute: typeof WorldWorldIdWorldImport
+    }
+    '/world/$worldId/_world/wiki': {
+      id: '/world/$worldId/_world/wiki'
+      path: '/wiki'
+      fullPath: '/world/$worldId/wiki'
+      preLoaderRoute: typeof WorldWorldIdWorldWikiImport
+      parentRoute: typeof WorldWorldIdWorldImport
     }
     '/world/$worldId/_world/wiki/_wiki': {
       id: '/world/$worldId/_world/wiki/_wiki'
       path: '/wiki'
       fullPath: '/world/$worldId/wiki'
-      preLoaderRoute: typeof WorldWorldIdWorldWikiWikiRouteImport
+      preLoaderRoute: typeof WorldWorldIdWorldWikiWikiImport
       parentRoute: typeof WorldWorldIdWorldWikiRoute
-    }
-    '/world/$worldId/_world/wiki/_wiki/': {
-      id: '/world/$worldId/_world/wiki/_wiki/'
-      path: '/'
-      fullPath: '/world/$worldId/wiki/'
-      preLoaderRoute: typeof WorldWorldIdWorldWikiWikiIndexRouteImport
-      parentRoute: typeof WorldWorldIdWorldWikiWikiRoute
     }
     '/world/$worldId/_world/wiki/_wiki/$articleId': {
       id: '/world/$worldId/_world/wiki/_wiki/$articleId'
       path: '/$articleId'
       fullPath: '/world/$worldId/wiki/$articleId'
-      preLoaderRoute: typeof WorldWorldIdWorldWikiWikiArticleIdRouteImport
-      parentRoute: typeof WorldWorldIdWorldWikiWikiRoute
+      preLoaderRoute: typeof WorldWorldIdWorldWikiWikiArticleIdImport
+      parentRoute: typeof WorldWorldIdWorldWikiWikiImport
+    }
+    '/world/$worldId/_world/wiki/_wiki/': {
+      id: '/world/$worldId/_world/wiki/_wiki/'
+      path: '/'
+      fullPath: '/world/$worldId/wiki/'
+      preLoaderRoute: typeof WorldWorldIdWorldWikiWikiIndexImport
+      parentRoute: typeof WorldWorldIdWorldWikiWikiImport
     }
   }
 }
+
+// Create and export the route tree
 
 interface ProfileProfileRouteChildren {
   ProfileProfilePublicRoute: typeof ProfileProfilePublicRoute
@@ -521,6 +409,148 @@ const WorldWorldIdRouteWithChildren = WorldWorldIdRoute._addFileChildren(
   WorldWorldIdRouteChildren,
 )
 
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/home': typeof HomeRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/tools': typeof ToolsRoute
+  '/profile': typeof ProfileProfileRouteWithChildren
+  '/secret/music': typeof SecretMusicRoute
+  '/profile/': typeof ProfileIndexRoute
+  '/profile/public': typeof ProfileProfilePublicRoute
+  '/profile/storage': typeof ProfileProfileStorageRoute
+  '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
+  '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
+  '/world/$worldId/settings': typeof WorldWorldIdWorldSettingsRoute
+  '/world/$worldId/timeline': typeof WorldWorldIdWorldTimelineRoute
+  '/world/$worldId/wiki': typeof WorldWorldIdWorldWikiWikiRouteWithChildren
+  '/world/$worldId/wiki/$articleId': typeof WorldWorldIdWorldWikiWikiArticleIdRoute
+  '/world/$worldId/wiki/': typeof WorldWorldIdWorldWikiWikiIndexRoute
+}
+
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/home': typeof HomeRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/tools': typeof ToolsRoute
+  '/profile': typeof ProfileIndexRoute
+  '/secret/music': typeof SecretMusicRoute
+  '/profile/public': typeof ProfileProfilePublicRoute
+  '/profile/storage': typeof ProfileProfileStorageRoute
+  '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
+  '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
+  '/world/$worldId/settings': typeof WorldWorldIdWorldSettingsRoute
+  '/world/$worldId/timeline': typeof WorldWorldIdWorldTimelineRoute
+  '/world/$worldId/wiki': typeof WorldWorldIdWorldWikiWikiIndexRoute
+  '/world/$worldId/wiki/$articleId': typeof WorldWorldIdWorldWikiWikiArticleIdRoute
+}
+
+export interface FileRoutesById {
+  __root__: typeof rootRoute
+  '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/home': typeof HomeRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
+  '/tools': typeof ToolsRoute
+  '/profile': typeof ProfileRouteWithChildren
+  '/profile/_profile': typeof ProfileProfileRouteWithChildren
+  '/secret/music': typeof SecretMusicRoute
+  '/profile/': typeof ProfileIndexRoute
+  '/profile/_profile/public': typeof ProfileProfilePublicRoute
+  '/profile/_profile/storage': typeof ProfileProfileStorageRoute
+  '/world/$worldId': typeof WorldWorldIdRouteWithChildren
+  '/world/$worldId/_world': typeof WorldWorldIdWorldRouteWithChildren
+  '/world/$worldId/_world/mindmap': typeof WorldWorldIdWorldMindmapRoute
+  '/world/$worldId/_world/settings': typeof WorldWorldIdWorldSettingsRoute
+  '/world/$worldId/_world/timeline': typeof WorldWorldIdWorldTimelineRoute
+  '/world/$worldId/_world/wiki': typeof WorldWorldIdWorldWikiRouteWithChildren
+  '/world/$worldId/_world/wiki/_wiki': typeof WorldWorldIdWorldWikiWikiRouteWithChildren
+  '/world/$worldId/_world/wiki/_wiki/$articleId': typeof WorldWorldIdWorldWikiWikiArticleIdRoute
+  '/world/$worldId/_world/wiki/_wiki/': typeof WorldWorldIdWorldWikiWikiIndexRoute
+}
+
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/home'
+    | '/login'
+    | '/register'
+    | '/tools'
+    | '/profile'
+    | '/secret/music'
+    | '/profile/'
+    | '/profile/public'
+    | '/profile/storage'
+    | '/world/$worldId'
+    | '/world/$worldId/mindmap'
+    | '/world/$worldId/settings'
+    | '/world/$worldId/timeline'
+    | '/world/$worldId/wiki'
+    | '/world/$worldId/wiki/$articleId'
+    | '/world/$worldId/wiki/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/admin'
+    | '/home'
+    | '/login'
+    | '/register'
+    | '/tools'
+    | '/profile'
+    | '/secret/music'
+    | '/profile/public'
+    | '/profile/storage'
+    | '/world/$worldId'
+    | '/world/$worldId/mindmap'
+    | '/world/$worldId/settings'
+    | '/world/$worldId/timeline'
+    | '/world/$worldId/wiki'
+    | '/world/$worldId/wiki/$articleId'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/home'
+    | '/login'
+    | '/register'
+    | '/tools'
+    | '/profile'
+    | '/profile/_profile'
+    | '/secret/music'
+    | '/profile/'
+    | '/profile/_profile/public'
+    | '/profile/_profile/storage'
+    | '/world/$worldId'
+    | '/world/$worldId/_world'
+    | '/world/$worldId/_world/mindmap'
+    | '/world/$worldId/_world/settings'
+    | '/world/$worldId/_world/timeline'
+    | '/world/$worldId/_world/wiki'
+    | '/world/$worldId/_world/wiki/_wiki'
+    | '/world/$worldId/_world/wiki/_wiki/$articleId'
+    | '/world/$worldId/_world/wiki/_wiki/'
+  fileRoutesById: FileRoutesById
+}
+
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  HomeRoute: typeof HomeRoute
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
+  ToolsRoute: typeof ToolsRoute
+  ProfileRoute: typeof ProfileRouteWithChildren
+  SecretMusicRoute: typeof SecretMusicRoute
+  WorldWorldIdRoute: typeof WorldWorldIdRouteWithChildren
+}
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
@@ -532,6 +562,127 @@ const rootRouteChildren: RootRouteChildren = {
   SecretMusicRoute: SecretMusicRoute,
   WorldWorldIdRoute: WorldWorldIdRouteWithChildren,
 }
-export const routeTree = rootRouteImport
+
+export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+/* ROUTE_MANIFEST_START
+{
+  "routes": {
+    "__root__": {
+      "filePath": "__root.tsx",
+      "children": [
+        "/",
+        "/admin",
+        "/home",
+        "/login",
+        "/register",
+        "/tools",
+        "/profile",
+        "/secret/music",
+        "/world/$worldId"
+      ]
+    },
+    "/": {
+      "filePath": "index.tsx"
+    },
+    "/admin": {
+      "filePath": "admin.tsx"
+    },
+    "/home": {
+      "filePath": "home.tsx"
+    },
+    "/login": {
+      "filePath": "login.tsx"
+    },
+    "/register": {
+      "filePath": "register.tsx"
+    },
+    "/tools": {
+      "filePath": "tools.tsx"
+    },
+    "/profile": {
+      "filePath": "profile",
+      "children": [
+        "/profile/_profile",
+        "/profile/"
+      ]
+    },
+    "/profile/_profile": {
+      "filePath": "profile/_profile.tsx",
+      "parent": "/profile",
+      "children": [
+        "/profile/_profile/public",
+        "/profile/_profile/storage"
+      ]
+    },
+    "/secret/music": {
+      "filePath": "secret/music.tsx"
+    },
+    "/profile/": {
+      "filePath": "profile/index.tsx",
+      "parent": "/profile"
+    },
+    "/profile/_profile/public": {
+      "filePath": "profile/_profile.public.tsx",
+      "parent": "/profile/_profile"
+    },
+    "/profile/_profile/storage": {
+      "filePath": "profile/_profile.storage.tsx",
+      "parent": "/profile/_profile"
+    },
+    "/world/$worldId": {
+      "filePath": "world.$worldId",
+      "children": [
+        "/world/$worldId/_world"
+      ]
+    },
+    "/world/$worldId/_world": {
+      "filePath": "world.$worldId/_world.tsx",
+      "parent": "/world/$worldId",
+      "children": [
+        "/world/$worldId/_world/mindmap",
+        "/world/$worldId/_world/settings",
+        "/world/$worldId/_world/timeline",
+        "/world/$worldId/_world/wiki"
+      ]
+    },
+    "/world/$worldId/_world/mindmap": {
+      "filePath": "world.$worldId/_world.mindmap.tsx",
+      "parent": "/world/$worldId/_world"
+    },
+    "/world/$worldId/_world/settings": {
+      "filePath": "world.$worldId/_world.settings.tsx",
+      "parent": "/world/$worldId/_world"
+    },
+    "/world/$worldId/_world/timeline": {
+      "filePath": "world.$worldId/_world.timeline.tsx",
+      "parent": "/world/$worldId/_world"
+    },
+    "/world/$worldId/_world/wiki": {
+      "filePath": "world.$worldId/_world.wiki",
+      "parent": "/world/$worldId/_world",
+      "children": [
+        "/world/$worldId/_world/wiki/_wiki"
+      ]
+    },
+    "/world/$worldId/_world/wiki/_wiki": {
+      "filePath": "world.$worldId/_world.wiki/_wiki.tsx",
+      "parent": "/world/$worldId/_world/wiki",
+      "children": [
+        "/world/$worldId/_world/wiki/_wiki/$articleId",
+        "/world/$worldId/_world/wiki/_wiki/"
+      ]
+    },
+    "/world/$worldId/_world/wiki/_wiki/$articleId": {
+      "filePath": "world.$worldId/_world.wiki/_wiki.$articleId.tsx",
+      "parent": "/world/$worldId/_world/wiki/_wiki"
+    },
+    "/world/$worldId/_world/wiki/_wiki/": {
+      "filePath": "world.$worldId/_world.wiki/_wiki.index.tsx",
+      "parent": "/world/$worldId/_world/wiki/_wiki"
+    }
+  }
+}
+ROUTE_MANIFEST_END */

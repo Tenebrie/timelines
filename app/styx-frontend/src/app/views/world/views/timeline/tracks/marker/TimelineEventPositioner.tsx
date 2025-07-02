@@ -13,6 +13,7 @@ import { LineSpacing } from '@/app/utils/constants'
 import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineState'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
+import { EVENT_SCROLL_RESET_PERIOD } from '../components/ControlledScroller'
 import { Group } from '../styles'
 import { Marker, MarkerIcon } from './styles'
 import { TimelineEvent } from './TimelineEvent'
@@ -96,11 +97,10 @@ function TimelineEventPositionerComponent({
 	useEventBusSubscribe({
 		event: 'timeline/onScroll',
 		callback: (newScroll) => {
-			const pos =
-				realTimeToScaledTime(Math.round(entity.markerPosition)) + newScroll - TimelineEventHeightPx / 2 + 1
-
-			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${pos}px`) {
-				ref.current?.style.setProperty('--position', `${pos}px`)
+			const pos = realTimeToScaledTime(Math.floor(entity.markerPosition)) - TimelineEventHeightPx / 2 + 1
+			const fixedPos = pos + Math.floor(newScroll / EVENT_SCROLL_RESET_PERIOD) * EVENT_SCROLL_RESET_PERIOD
+			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${fixedPos}px`) {
+				ref.current.style.setProperty('--position', `${fixedPos}px`)
 			}
 		},
 	})

@@ -6,6 +6,7 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineState'
 
+import { EVENT_SCROLL_RESET_PERIOD } from '../components/ControlledScroller'
 import { useHoveredTimelineMarker } from '../components/HoveredTimelineEvents'
 import { TimelineChain } from './TimelineChain'
 
@@ -28,9 +29,10 @@ export const TimelineChainPositionerComponent = ({ entity, visible, realTimeToSc
 			if (!chainVisible) {
 				return
 			}
-			const pos = realTimeToScaledTime(Math.floor(entity.markerPosition)) + newScroll
-			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${pos}px`) {
-				ref.current.style.setProperty('--position', `${pos}px`)
+			const pos = realTimeToScaledTime(Math.floor(entity.markerPosition))
+			const fixedPos = pos + Math.floor(newScroll / EVENT_SCROLL_RESET_PERIOD) * EVENT_SCROLL_RESET_PERIOD
+			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${fixedPos}px`) {
+				ref.current.style.setProperty('--position', `${fixedPos}px`)
 			}
 		},
 	})

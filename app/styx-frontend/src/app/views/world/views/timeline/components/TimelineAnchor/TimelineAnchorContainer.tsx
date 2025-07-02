@@ -4,13 +4,15 @@ import { ReactNode, useEffect, useRef } from 'react'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { LineSpacing } from '@/app/utils/constants'
 
+import { CONTROLLED_SCROLLER_SIZE, ControlledScroller } from '../../tracks/components/ControlledScroller'
 import { TimelineState } from '../../utils/TimelineState'
 import { TimelineSmallestPips } from './styles'
-import { ResetNumbersAfterEvery } from './TimelineAnchor'
 
 type Props = {
 	children: ReactNode | ReactNode[]
 }
+
+const RESET_PERIOD = 50
 
 export function TimelineAnchorContainer({ children }: Props) {
 	const ref = useRef<HTMLDivElement>(null)
@@ -18,11 +20,11 @@ export function TimelineAnchorContainer({ children }: Props) {
 	useEventBusSubscribe({
 		event: 'timeline/onScroll',
 		callback: (newScroll) => {
-			const fixedScroll = newScroll % ResetNumbersAfterEvery
-			if (lastSeenScroll.current === newScroll) {
+			const fixedScroll = Math.floor(newScroll / RESET_PERIOD) * RESET_PERIOD + CONTROLLED_SCROLLER_SIZE
+			if (lastSeenScroll.current === fixedScroll) {
 				return
 			}
-			lastSeenScroll.current = newScroll
+			lastSeenScroll.current = fixedScroll
 			ref.current?.style.setProperty('--scroll', `${fixedScroll}px`)
 			ref.current?.style.setProperty('--pip-scroll', `${-fixedScroll + (fixedScroll % LineSpacing)}px`)
 		},
@@ -33,23 +35,25 @@ export function TimelineAnchorContainer({ children }: Props) {
 			return
 		}
 		const newScroll = TimelineState.scroll
-		const fixedScroll = newScroll % ResetNumbersAfterEvery
+		const fixedScroll = Math.floor(newScroll / RESET_PERIOD) * RESET_PERIOD + CONTROLLED_SCROLLER_SIZE
 		ref.current?.style.setProperty('--scroll', `${fixedScroll}px`)
 		ref.current?.style.setProperty('--pip-scroll', `${-fixedScroll + (fixedScroll % LineSpacing)}px`)
 	}, [ref])
 
 	return (
-		<Box
-			ref={ref}
-			sx={{
-				position: 'absolute',
-				bottom: 0,
-				pointerEvents: 'none',
-				transform: 'translateX(var(--scroll))',
-			}}
-		>
-			<TimelineSmallestPips $lineSpacing={LineSpacing} />
-			{children}
-		</Box>
+		<ControlledScroller resetPeriod={RESET_PERIOD}>
+			<Box
+				ref={ref}
+				sx={{
+					position: 'absolute',
+					bottom: 0,
+					pointerEvents: 'none',
+					transform: 'translateX(var(--scroll))',
+				}}
+			>
+				<TimelineSmallestPips $lineSpacing={LineSpacing} />
+				{children}
+			</Box>
+		</ControlledScroller>
 	)
 }
