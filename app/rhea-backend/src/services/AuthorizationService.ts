@@ -1,8 +1,8 @@
 import { User, World } from '@prisma/client'
 import { UnauthorizedError } from 'moonflower/errors/UserFacingErrors'
 
-import { getPrismaClient } from './dbClients/DatabaseClient'
-import { WorldService } from './WorldService'
+import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { WorldService } from './WorldService.js'
 
 export const AuthorizationService = {
 	checkUserReadAccess: async (user: User | undefined, world: World) => {

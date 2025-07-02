@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
 
-import { getPrismaClient } from '../dbClients/DatabaseClient'
+import { getPrismaClient } from '../dbClients/DatabaseClient.js'
 
 export const makeTouchWorldQuery = (worldId: string, prisma?: Prisma.TransactionClient) => {
 	return getPrismaClient(prisma).world.update({

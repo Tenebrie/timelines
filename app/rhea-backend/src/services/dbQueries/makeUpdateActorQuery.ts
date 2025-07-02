@@ -1,7 +1,7 @@
 import { MentionedEntity, Prisma } from '@prisma/client'
 
-import { getPrismaClient } from '../dbClients/DatabaseClient'
-import { MentionData, MentionsService } from '../MentionsService'
+import { getPrismaClient } from '../dbClients/DatabaseClient.js'
+import { MentionData, MentionsService } from '../MentionsService.js'
 
 export type UpdateActorQueryParams = Omit<
 	Prisma.ActorUncheckedUpdateInput,

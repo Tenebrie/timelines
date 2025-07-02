@@ -1,6 +1,6 @@
 import { vi } from 'vitest'
 
-import { prismaMockRef } from './mock/utils/prismaMock'
+import { prismaMockRef } from './mock/utils/prismaMock.js'
 
 vi.mock('moonflower', async () => {
 	return {

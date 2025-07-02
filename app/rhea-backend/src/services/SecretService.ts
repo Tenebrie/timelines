@@ -1,4 +1,4 @@
-import { isRunningInTest } from '@src/utils/isRunningInTest'
+import { isRunningInTest } from '@src/utils/isRunningInTest.js'
 import fs from 'fs'
 
 const secretCache: Record<string, string> = {}

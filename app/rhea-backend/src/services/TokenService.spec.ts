@@ -8,7 +8,7 @@ vi.spyOn(fs, 'existsSync').mockImplementation((...arg) => {
 })
 import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { TokenService } from './TokenService'
+import { TokenService } from './TokenService.js'
 
 describe('TokenService', () => {
 	describe("With token in '/run/secrets/jwt-secret'", () => {

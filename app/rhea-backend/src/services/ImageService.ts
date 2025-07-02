@@ -1,4 +1,4 @@
-import { ImageFormat } from '@src/schema/ImageFormat'
+import { ImageFormat } from '@src/schema/ImageFormat.js'
 import { BadRequestError } from 'moonflower'
 import sharp from 'sharp'
 

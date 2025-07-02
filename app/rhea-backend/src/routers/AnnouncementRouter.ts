@@ -1,9 +1,9 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { AnnouncementService } from '@src/services/AnnouncementService'
-import { AuthorizationService } from '@src/services/AuthorizationService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { AnnouncementService } from '@src/services/AnnouncementService.js'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { PathParam, Router, StringValidator, useApiEndpoint, useAuth, usePathParams } from 'moonflower'
 
-import { announcementListTag } from './utils/tags'
+import { announcementListTag } from './utils/tags.js'
 
 const router = new Router()
 

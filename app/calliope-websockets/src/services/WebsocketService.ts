@@ -1,6 +1,6 @@
 import { WebSocket } from 'ws'
 
-import { CalliopeToClientMessage } from '../ts-shared/CalliopeToClientMessage'
+import { CalliopeToClientMessage } from '../ts-shared/CalliopeToClientMessage.js'
 
 // userId -> RegisteredClient
 const userListeners: Record<string, RegisteredClient[]> = {}

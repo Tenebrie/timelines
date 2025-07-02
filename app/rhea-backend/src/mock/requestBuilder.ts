@@ -1,12 +1,12 @@
 import { CollaboratingUser, User, World } from '@prisma/client'
-import { AuthorizationService } from '@src/services/AuthorizationService'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import request from 'supertest'
 import { beforeEach, vi } from 'vitest'
 
-import { app } from '..'
-import { withUserAuth } from './auth'
-import { mockCollaboratingUser, mockUser, mockWorld } from './mock'
-import { mockPrismaClient } from './utils/prismaMock'
+import { app } from '../index.js'
+import { withUserAuth } from './auth.js'
+import { mockCollaboratingUser, mockUser, mockWorld } from './mock.js'
+import { mockPrismaClient } from './utils/prismaMock.js'
 
 export const makeRequest = () => request(app.callback())
 export const sendGet = (...args: Parameters<ReturnType<typeof request>['get']>) => makeRequest().get(...args)

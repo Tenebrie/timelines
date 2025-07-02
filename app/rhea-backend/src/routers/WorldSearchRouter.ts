@@ -1,8 +1,8 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { WorldSearchService } from '@src/services/WorldSearchService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { WorldSearchService } from '@src/services/WorldSearchService.js'
 import { PathParam, Router, StringValidator, useApiEndpoint, useAuth, usePathParams } from 'moonflower'
 
-import { worldDetailsTag, worldSearchTag } from './utils/tags'
+import { worldDetailsTag, worldSearchTag } from './utils/tags.js'
 
 const router = new Router()
 

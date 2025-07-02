@@ -1,7 +1,7 @@
 import { AnnouncementType, User } from '@prisma/client'
 
-import { getPrismaClient } from './dbClients/DatabaseClient'
-import { RedisService } from './RedisService'
+import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { RedisService } from './RedisService.js'
 
 export const AnnouncementService = {
 	notify: async ({

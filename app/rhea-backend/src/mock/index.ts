@@ -1,3 +1,3 @@
-export * from './auth'
-export * from './mock'
-export * from './requestBuilder'
+export * from './auth.js'
+export * from './mock.js'
+export * from './requestBuilder.js'

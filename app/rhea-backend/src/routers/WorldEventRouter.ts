@@ -1,11 +1,11 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
-import { AuthorizationService } from '@src/services/AuthorizationService'
-import { EntityNameService } from '@src/services/EntityNameService'
-import { RedisService } from '@src/services/RedisService'
-import { ValidationService } from '@src/services/ValidationService'
-import { WorldEventDeltaService } from '@src/services/WorldEventDeltaService'
-import { WorldEventService } from '@src/services/WorldEventService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { EntityNameService } from '@src/services/EntityNameService.js'
+import { RedisService } from '@src/services/RedisService.js'
+import { ValidationService } from '@src/services/ValidationService.js'
+import { WorldEventDeltaService } from '@src/services/WorldEventDeltaService.js'
+import { WorldEventService } from '@src/services/WorldEventService.js'
 import {
 	BigIntValidator,
 	BooleanValidator,
@@ -21,15 +21,15 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { worldDetailsTag, worldEventDeltaTag, worldEventTag } from './utils/tags'
-import { ContentStringValidator } from './validators/ContentStringValidator'
-import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
-import { NullableEventTrackValidator } from './validators/NullableEventTrackValidator'
-import { NullableNameStringValidator } from './validators/NullableNameStringValidator'
-import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
-import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator'
-import { UuidStringValidator } from './validators/UuidStringValidator'
-import { WorldEventFieldValidator } from './validators/WorldEventFieldValidator'
+import { worldDetailsTag, worldEventDeltaTag, worldEventTag } from './utils/tags.js'
+import { ContentStringValidator } from './validators/ContentStringValidator.js'
+import { MentionsArrayValidator } from './validators/MentionsArrayValidator.js'
+import { NullableEventTrackValidator } from './validators/NullableEventTrackValidator.js'
+import { NullableNameStringValidator } from './validators/NullableNameStringValidator.js'
+import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator.js'
+import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator.js'
+import { UuidStringValidator } from './validators/UuidStringValidator.js'
+import { WorldEventFieldValidator } from './validators/WorldEventFieldValidator.js'
 
 const router = new Router().with(SessionMiddleware)
 

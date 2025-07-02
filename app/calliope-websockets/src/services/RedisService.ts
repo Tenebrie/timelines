@@ -1,7 +1,7 @@
-import { RedisChannel, RheaToCalliopeMessage } from '@src/ts-shared/RheaToCalliopeMessage'
+import { RedisChannel, RheaToCalliopeMessage } from '@src/ts-shared/RheaToCalliopeMessage.js'
 import { createClient } from 'redis'
 
-import { RheaMessageHandlerService } from './RheaMessageHandlerService'
+import { RheaMessageHandlerService } from './RheaMessageHandlerService.js'
 
 const client = createClient({
 	socket: {

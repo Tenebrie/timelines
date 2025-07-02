@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "ES2022",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "declaration": true,
     "removeComments": true,
     "strict": true,

@@ -1,11 +1,11 @@
 import { MentionedEntity, WikiArticle } from '@prisma/client'
-import { getPrismaClient } from '@src/services/dbClients/DatabaseClient'
+import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 import { BadRequestError } from 'moonflower'
 
-import { makeFetchArticleAncestorsQuery } from './dbQueries/makeFetchArticleAncestorsQuery'
-import { makeSortWikiArticles as makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticles'
-import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
-import { MentionData, MentionsService } from './MentionsService'
+import { makeFetchArticleAncestorsQuery } from './dbQueries/makeFetchArticleAncestorsQuery.js'
+import { makeSortWikiArticles as makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticles.js'
+import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
+import { MentionData, MentionsService } from './MentionsService.js'
 
 export const WikiService = {
 	listWikiArticles: async (params: Pick<WikiArticle, 'worldId'>) => {

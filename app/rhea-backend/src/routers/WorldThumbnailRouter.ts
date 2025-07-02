@@ -1,5 +1,5 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { AuthorizationService } from '@src/services/AuthorizationService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { getAverageColor } from 'fast-average-color-node'
 import * as fs from 'fs'
 import {
@@ -13,7 +13,7 @@ import {
 } from 'moonflower'
 import * as path from 'path'
 
-import { worldThumbnailTag } from './utils/tags'
+import { worldThumbnailTag } from './utils/tags.js'
 
 const router = new Router()
 

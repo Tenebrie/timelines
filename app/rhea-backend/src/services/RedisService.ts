@@ -5,8 +5,8 @@ import {
 	RedisChannel,
 	RheaToCalliopeMessage,
 	RheaToCalliopeMessageType,
-} from '../ts-shared/RheaToCalliopeMessage'
-import { getRedisClient, openRedisChannel } from './dbClients/RedisClient'
+} from '../ts-shared/RheaToCalliopeMessage.js'
+import { getRedisClient, openRedisChannel } from './dbClients/RedisClient.js'
 
 const calliope = openRedisChannel<RheaToCalliopeMessage>(RedisChannel.RHEA_TO_CALLIOPE)
 

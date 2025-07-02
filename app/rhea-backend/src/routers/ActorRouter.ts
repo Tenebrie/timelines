@@ -1,8 +1,8 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
-import { ActorService } from '@src/services/ActorService'
-import { AuthorizationService } from '@src/services/AuthorizationService'
-import { RedisService } from '@src/services/RedisService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
+import { ActorService } from '@src/services/ActorService.js'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { RedisService } from '@src/services/RedisService.js'
 import {
 	OptionalParam,
 	PathParam,
@@ -15,11 +15,11 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { actorListTag, worldDetailsTag } from './utils/tags'
-import { ContentStringValidator } from './validators/ContentStringValidator'
-import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
-import { NameStringValidator } from './validators/NameStringValidator'
-import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator'
+import { actorListTag, worldDetailsTag } from './utils/tags.js'
+import { ContentStringValidator } from './validators/ContentStringValidator.js'
+import { MentionsArrayValidator } from './validators/MentionsArrayValidator.js'
+import { NameStringValidator } from './validators/NameStringValidator.js'
+import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator.js'
 
 const router = new Router().with(SessionMiddleware)
 

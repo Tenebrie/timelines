@@ -1,5 +1,5 @@
 import { WorldAccessMode } from '@prisma/client'
-import { keysOf } from '@src/utils/keysOf'
+import { keysOf } from '@src/utils/keysOf.js'
 import { Router, useApiEndpoint } from 'moonflower'
 
 const router = new Router()
