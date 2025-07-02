@@ -1,5 +1,3 @@
-import './registerModuleAlias'
-
 import chalk from 'chalk'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
