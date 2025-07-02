@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
 
+import { eventBus } from './eventBus'
 import { AllowedEvents, EventParams } from './types'
 
 type Props<T extends AllowedEvents> = {
@@ -13,11 +14,7 @@ export const dispatchEvent = <T extends AllowedEvents>({
 	event: T
 	params: EventParams[T]
 }) => {
-	window.dispatchEvent(
-		new CustomEvent(`@timelines/${event}`, {
-			detail: params,
-		}),
-	)
+	eventBus.emit(event, params)
 }
 
 export const useEventBusDispatch = <T extends AllowedEvents>({ event }: Props<T>) => {

@@ -70,7 +70,7 @@ export const useTimelineNavigation = ({
 			if (isBusyRendering.current) {
 				return
 			}
-			const publicScroll = scroll + Math.pow(Math.abs(overscroll), 0.85) * Math.sign(overscroll)
+			const publicScroll = Math.round(scroll + Math.pow(Math.abs(overscroll), 0.85) * Math.sign(overscroll))
 
 			if (publicScroll === lastScroll.current) {
 				return
@@ -92,6 +92,9 @@ export const useTimelineNavigation = ({
 	}, [defaultSelectedTime])
 
 	const onMouseDown = useCallback((event: MouseEvent | TouchEvent) => {
+		if (event.shiftKey || event.ctrlKey || event.metaKey) {
+			return
+		}
 		if (checkIfClickBlocked(event.target)) {
 			return
 		}
@@ -113,6 +116,10 @@ export const useTimelineNavigation = ({
 
 	const onMouseMoveThrottled = useRef(
 		(event: MouseEvent | TouchEvent, minimumScroll: number, maximumScroll: number) => {
+			if (window.document.body.classList.contains('mouse-busy')) {
+				return
+			}
+
 			const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX
 			const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY
 			const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }
@@ -148,17 +155,6 @@ export const useTimelineNavigation = ({
 				mousePos.current = newPos
 			}
 		},
-	)
-
-	const onMouseMove = useCallback(
-		(event: MouseEvent) => {
-			if (window.document.body.classList.contains('mouse-busy')) {
-				return
-			}
-
-			onMouseMoveThrottled.current(event, minimumScroll, maximumScroll)
-		},
-		[minimumScroll, maximumScroll],
 	)
 
 	useEffect(() => {
@@ -362,6 +358,9 @@ export const useTimelineNavigation = ({
 	const [lastClickTime, setLastClickTime] = useState<number | null>(null)
 	const onTimelineClick = useCallback(
 		(event: MouseEvent) => {
+			if (event.shiftKey || event.ctrlKey || event.metaKey) {
+				return
+			}
 			const isClickBlocked = !canClick || window.document.body.classList.contains('mouse-busy')
 			const isTargetValid =
 				event.target === containerRef.current ||
@@ -439,6 +438,10 @@ export const useTimelineNavigation = ({
 			return
 		}
 
+		const onMouseMove = (event: MouseEvent) => {
+			onMouseMoveThrottled.current(event, minimumScroll, maximumScroll)
+		}
+
 		container.addEventListener('click', onTimelineClick)
 		container.addEventListener('mousedown', onMouseDown)
 		document.addEventListener('mousemove', onMouseMove)
@@ -460,7 +463,7 @@ export const useTimelineNavigation = ({
 			// container.removeEventListener('touchend', onMouseUp)
 			document.removeEventListener('mouseleave', onMouseUp)
 		}
-	}, [containerRef, onClick, onMouseDown, onMouseMove, onMouseUp, onTimelineClick, onWheel])
+	}, [containerRef, onClick, onMouseDown, onMouseUp, onTimelineClick, onWheel, minimumScroll, maximumScroll])
 
 	const startedScrollFrom = useRef(0)
 	const desiredScrollTo = useRef(0)
@@ -541,17 +544,15 @@ export const useTimelineNavigation = ({
 	useEventBusSubscribe({
 		event: 'timeline/requestScrollTo',
 		callback: (props) => {
-			startTransition(() => {
-				if ('rawScrollValue' in props) {
-					scrollTo({
-						timestamp: props.rawScrollValue,
-						useRawScroll: true,
-						skipAnim: props.skipAnim,
-					})
-				} else {
-					scrollTo(props)
-				}
-			})
+			if ('rawScrollValue' in props) {
+				scrollTo({
+					timestamp: props.rawScrollValue,
+					useRawScroll: true,
+					skipAnim: props.skipAnim,
+				})
+			} else {
+				scrollTo(props)
+			}
 		},
 	})
 

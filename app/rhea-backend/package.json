@@ -7,7 +7,7 @@
 	"license": "UNLICENSED",
 	"author": "",
 	"scripts": {
-		"build": "tsc -p . && copyfiles -u 2 src/assets/**/* dist/assets",
+		"build": "prisma generate && tsc -p . && copyfiles -u 2 src/assets/**/* dist/assets",
 		"lint": "eslint src/",
 		"lint-fix": "eslint src/ --fix",
 		"prisma:format": "prisma format",

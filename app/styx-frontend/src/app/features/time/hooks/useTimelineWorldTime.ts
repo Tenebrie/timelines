@@ -18,14 +18,14 @@ export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
 
 	const scaledTimeToRealTime = useCallback(
 		(time: number) => {
-			return time * scalar
+			return Math.round(time * scalar)
 		},
 		[scalar],
 	)
 
 	const realTimeToScaledTime = useCallback(
 		(time: number) => {
-			return time / scalar
+			return Math.round(time / scalar)
 		},
 		[scalar],
 	)

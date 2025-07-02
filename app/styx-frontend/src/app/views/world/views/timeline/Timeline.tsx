@@ -41,7 +41,7 @@ function TimelineComponent() {
 	})
 
 	return (
-		<Paper sx={{ height: '100%', borderRadius: 0, zIndex: 2 }}>
+		<Paper sx={{ height: '100%', borderRadius: 0, zIndex: 2, pointerEvents: 'auto' }}>
 			<TimelineWrapper>
 				<TimelineContainer ref={containerRef} onContextMenu={onContextMenu} $theme={theme}>
 					<Box
@@ -55,13 +55,20 @@ function TimelineComponent() {
 								<TimelineTracks containerWidth={containerWidth} />
 								<TimeMarker timestamp={selectedTime} />
 								<TimelineScaleLabel />
-								<TimelineAnchor containerWidth={containerWidth} />
 							</>
 						)}
 					</Box>
 				</TimelineContainer>
 				<TimelineControls />
 			</TimelineWrapper>
+			<Box style={{ opacity }} sx={{ transition: 'opacity 0.3s' }}>
+				{opacity > 0 && (
+					<>
+						<TimelineAnchor containerWidth={containerWidth} />
+					</>
+				)}
+			</Box>
+
 			<TimelineZoomReporter />
 			<TimelineEventListener containerWidth={containerWidth} />
 			<TimelinePrePositioner setOpacity={setOpacity} />

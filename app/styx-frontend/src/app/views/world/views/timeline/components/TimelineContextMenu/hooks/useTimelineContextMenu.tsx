@@ -22,6 +22,9 @@ export const useTimelineContextMenu = () => {
 
 	const onContextMenu = useCallback(
 		(event: React.MouseEvent) => {
+			if (event.shiftKey) {
+				return
+			}
 			event.preventDefault()
 			if (isOpen) {
 				dispatch(closeTimelineContextMenu())

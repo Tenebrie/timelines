@@ -1,5 +1,4 @@
 import { WorldEvent } from '@api/types/worldTypes'
-import Close from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
 import Input from '@mui/material/Input'
 import Stack from '@mui/material/Stack'
@@ -91,12 +90,14 @@ export const EventTitle = ({ event, draft }: Props) => {
 					>
 						{timeLabel}
 					</Button>
-					<Button
-						variant="text"
+					{/* TODO: Add close button without breaking the drawer */}
+					{/* <Button
+						variant="contained"
+						size="small"
 						onClick={() => navigate({ search: (prev) => ({ ...prev, selection: [], new: false }) })}
 					>
 						<Close />
-					</Button>
+					</Button> */}
 				</Stack>
 			)}
 			{editing && (

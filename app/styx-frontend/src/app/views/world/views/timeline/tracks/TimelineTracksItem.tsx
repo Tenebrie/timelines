@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { useSearch } from '@tanstack/react-router'
-import throttle from 'lodash.throttle'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -9,10 +8,10 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { getTimelineContextMenuState, getTimelineState } from '@/app/views/world/WorldSliceSelectors'
-import { isRunningInTest } from '@/test-utils/isRunningInTest'
 
 import { TimelineTrack } from '../hooks/useEventTracks'
 import { TimelineState } from '../utils/TimelineState'
+import { ControlledScroller, EVENT_SCROLL_RESET_PERIOD } from './components/ControlledScroller'
 import { TimelineTrackItemDragDrop } from './dragDrop/TimelineTrackItemDragDrop'
 import { TimelineEventTrackTitle } from './marker/TimelineEventTrackTitle'
 import { TimelineMarker } from './marker/TimelineMarker'
@@ -60,42 +59,39 @@ export function TimelineTracksItemComponent({
 	const lastRecordedScroll = useRef<number | null>(null)
 	const lastVisibleMarkers = useRef<(typeof track)['events']>([])
 	const updateVisibleMarkersThrottled = useRef(
-		throttle(
-			(
-				t: TimelineTrack,
-				width: number,
-				realTimeToScaledTime: Props['realTimeToScaledTime'],
-				forceUpdate: boolean,
-			) => {
-				const prevScroll = lastRecordedScroll.current
-				const staggerValue = track.position * (1000 / trackCount)
-				if (
-					!forceUpdate &&
-					prevScroll !== null &&
-					Math.abs(TimelineState.scroll - prevScroll + staggerValue) < 1000
-				) {
-					return
-				}
+		(
+			t: TimelineTrack,
+			width: number,
+			realTimeToScaledTime: Props['realTimeToScaledTime'],
+			forceUpdate: boolean,
+		) => {
+			const prevScroll = lastRecordedScroll.current
+			const staggerValue = track.position * (1000 / trackCount)
+			if (
+				!forceUpdate &&
+				prevScroll !== null &&
+				Math.abs(TimelineState.scroll - prevScroll + staggerValue) < 1000
+			) {
+				return
+			}
 
-				lastRecordedScroll.current = TimelineState.scroll
-				const markers = t.events
-					.filter((event) => {
-						const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + TimelineState.scroll
+			lastRecordedScroll.current = TimelineState.scroll
+			const markers = t.events
+				.filter((event) => {
+					const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + TimelineState.scroll
 
-						return position >= -1000 && position <= width + 1000
-					})
-					.sort((a, b) => a.markerPosition - b.markerPosition)
+					return position >= -3000 && position <= width + 3000
+				})
+				.sort((a, b) => a.markerPosition - b.markerPosition)
 
-				if (
-					markers.length !== lastVisibleMarkers.current.length ||
-					markers.some((marker, index) => marker !== lastVisibleMarkers.current[index])
-				) {
-					setVisibleMarkers(markers)
-					lastVisibleMarkers.current = markers
-				}
-			},
-			isRunningInTest() ? 0 : 1,
-		),
+			if (
+				markers.length !== lastVisibleMarkers.current.length ||
+				markers.some((marker, index) => marker !== lastVisibleMarkers.current[index])
+			) {
+				setVisibleMarkers(markers)
+				lastVisibleMarkers.current = markers
+			}
+		},
 	)
 
 	const updateVisibleMarkers = useCallback(() => {
@@ -104,7 +100,7 @@ export function TimelineTracksItemComponent({
 
 	useEffect(() => {
 		updateVisibleMarkersThrottled.current(track, containerWidth, realTimeToScaledTime, true)
-		updateVisibleMarkersThrottled.current.flush()
+		// updateVisibleMarkersThrottled.current.flush()
 	}, [containerWidth, realTimeToScaledTime, track, updateVisibleMarkers, scaleLevel])
 
 	useEventBusSubscribe({
@@ -134,16 +130,18 @@ export function TimelineTracksItemComponent({
 					background: theme.material.palette.primary.main,
 				}}
 			/>
-			{visibleMarkers.map((event) => (
-				<TimelineMarker
-					key={event.key}
-					marker={event}
-					visible={visible}
-					selected={selectedMarkers.some((marker) => marker.key === event.key)}
-					trackHeight={track.height}
-					realTimeToScaledTime={realTimeToScaledTime}
-				/>
-			))}
+			<ControlledScroller resetPeriod={EVENT_SCROLL_RESET_PERIOD}>
+				{visibleMarkers.map((event) => (
+					<TimelineMarker
+						key={event.key}
+						marker={event}
+						visible={visible}
+						selected={selectedMarkers.some((marker) => marker.key === event.key)}
+						trackHeight={track.height}
+						realTimeToScaledTime={realTimeToScaledTime}
+					/>
+				))}
+			</ControlledScroller>
 			<TimelineEventTrackTitle track={track} />
 			<TimelineTrackItemDragDrop
 				track={track}

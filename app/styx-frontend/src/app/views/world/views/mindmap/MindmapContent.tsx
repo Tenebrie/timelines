@@ -10,7 +10,6 @@ import { ActorNodePositioner } from './workspace/ActorNodePositioner'
 const ActorList = () => {
 	const { id: worldId, actors } = useSelector(getWorldState, (a, b) => a.id === b.id && a.actors === b.actors)
 	const { data } = useGetMindmapQuery({ worldId }, { skip: !worldId })
-	console.log(data)
 
 	const actorsWithNodes = useMemo(() => {
 		if (!data) {

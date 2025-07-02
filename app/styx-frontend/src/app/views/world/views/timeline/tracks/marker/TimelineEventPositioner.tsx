@@ -1,6 +1,6 @@
 import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Close from '@mui/icons-material/Close'
-import { CSSProperties, memo } from 'react'
+import { CSSProperties, memo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
@@ -13,6 +13,7 @@ import { LineSpacing } from '@/app/utils/constants'
 import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineState'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
+import { CONTROLLED_SCROLLER_SIZE, EVENT_SCROLL_RESET_PERIOD } from '../components/ControlledScroller'
 import { Group } from '../styles'
 import { Marker, MarkerIcon } from './styles'
 import { TimelineEvent } from './TimelineEvent'
@@ -87,20 +88,28 @@ function TimelineEventPositionerComponent({
 			</>
 		),
 	})
-	const position =
-		realTimeToScaledTime(Math.floor(entity.markerPosition)) +
-		TimelineState.scroll -
-		TimelineEventHeightPx / 2 +
-		1
+
+	const calculatePosition = useCallback(
+		(scroll: number) => {
+			const pos = realTimeToScaledTime(Math.floor(entity.markerPosition))
+			return (
+				pos +
+				Math.floor(scroll / EVENT_SCROLL_RESET_PERIOD) * EVENT_SCROLL_RESET_PERIOD +
+				CONTROLLED_SCROLLER_SIZE +
+				TimelineEventHeightPx / 2 +
+				1
+			)
+		},
+		[entity.markerPosition, realTimeToScaledTime],
+	)
+	const position = calculatePosition(TimelineState.scroll)
 
 	useEventBusSubscribe({
 		event: 'timeline/onScroll',
 		callback: (newScroll) => {
-			const pos =
-				realTimeToScaledTime(Math.round(entity.markerPosition)) + newScroll - TimelineEventHeightPx / 2 + 1
-
-			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${pos}px`) {
-				ref.current?.style.setProperty('--position', `${pos}px`)
+			const fixedPos = calculatePosition(newScroll)
+			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${fixedPos}px`) {
+				ref.current.style.setProperty('--position', `${fixedPos}px`)
 			}
 		},
 	})

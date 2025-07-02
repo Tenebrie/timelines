@@ -7,6 +7,11 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
+import {
+	CONTROLLED_SCROLLER_SIZE,
+	ControlledScroller,
+	EVENT_SCROLL_RESET_PERIOD,
+} from '../../tracks/components/ControlledScroller'
 import { TimelineState } from '../../utils/TimelineState'
 import { Container } from './styles'
 
@@ -31,8 +36,15 @@ export const TimeMarker = ({ timestamp }: Props) => {
 	const ref = useRef<HTMLDivElement | null>(null)
 	const updatePosition = useCallback(
 		(scroll: number) => {
-			const offset = Math.round(realTimeToScaledTime(timestamp)) + scroll
-			ref.current?.style.setProperty('--marker-scroll', `${offset}px`)
+			const offset = Math.round(realTimeToScaledTime(timestamp))
+			const scrollOffset =
+				offset +
+				Math.floor(scroll / EVENT_SCROLL_RESET_PERIOD) * EVENT_SCROLL_RESET_PERIOD +
+				CONTROLLED_SCROLLER_SIZE
+
+			if (ref.current && ref.current.style.getPropertyValue('--marker-scroll') !== `${scrollOffset}px`) {
+				ref.current.style.setProperty('--marker-scroll', `${scrollOffset}px`)
+			}
 		},
 		[realTimeToScaledTime, timestamp],
 	)
@@ -44,8 +56,10 @@ export const TimeMarker = ({ timestamp }: Props) => {
 	useEventBusSubscribe({ event: 'timeline/onScroll', callback: (newScroll) => updatePosition(newScroll) })
 
 	return (
-		<Box ref={ref} sx={{ height: '100%', transform: 'translateX(var(--marker-scroll))' }}>
-			<Container $theme={theme} className={`${isSwitchingScale || !isLoaded ? 'hidden' : ''}`} />
-		</Box>
+		<ControlledScroller resetPeriod={EVENT_SCROLL_RESET_PERIOD}>
+			<Box ref={ref} sx={{ height: '100%', transform: 'translateX(var(--marker-scroll))' }}>
+				<Container $theme={theme} className={`${isSwitchingScale || !isLoaded ? 'hidden' : ''}`} />
+			</Box>
+		</ControlledScroller>
 	)
 }

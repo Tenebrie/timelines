@@ -19,7 +19,7 @@ export const TimelineChainComponent = ({ entity, realTimeToScaledTime }: Props) 
 		<Box
 			style={{
 				bottom: height,
-				left: TimelineEventHeightPx / 2 - 16,
+				left: TimelineEventHeightPx / 2 + 24,
 			}}
 			sx={{
 				pointerEvents: 'none',
