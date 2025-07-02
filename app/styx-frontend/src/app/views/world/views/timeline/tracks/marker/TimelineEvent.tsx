@@ -77,6 +77,10 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 	}
 
 	const onContextMenu = (clickEvent: MouseEvent<HTMLDivElement>) => {
+		if (clickEvent.shiftKey) {
+			return
+		}
+
 		clickEvent.stopPropagation()
 		clickEvent.preventDefault()
 
@@ -119,7 +123,6 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 		return Marker
 	})()
 
-	// TODO: Split this marker for performance, it's horrible for css compilation
 	return (
 		<RenderedMarker
 			style={cssVariables}

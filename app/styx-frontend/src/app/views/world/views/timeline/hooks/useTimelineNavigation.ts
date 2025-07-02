@@ -92,6 +92,9 @@ export const useTimelineNavigation = ({
 	}, [defaultSelectedTime])
 
 	const onMouseDown = useCallback((event: MouseEvent | TouchEvent) => {
+		if (event.shiftKey || event.ctrlKey || event.metaKey) {
+			return
+		}
 		if (checkIfClickBlocked(event.target)) {
 			return
 		}
@@ -362,6 +365,9 @@ export const useTimelineNavigation = ({
 	const [lastClickTime, setLastClickTime] = useState<number | null>(null)
 	const onTimelineClick = useCallback(
 		(event: MouseEvent) => {
+			if (event.shiftKey || event.ctrlKey || event.metaKey) {
+				return
+			}
 			const isClickBlocked = !canClick || window.document.body.classList.contains('mouse-busy')
 			const isTargetValid =
 				event.target === containerRef.current ||

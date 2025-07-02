@@ -6,7 +6,7 @@ export const TimelineSmallestPips = styled.div<{ $lineSpacing: number }>`
 	position: absolute;
 	left: 0;
 	bottom: 0;
-	width: 120vw;
+	width: 200vw;
 	height: 10px;
 	background-image: linear-gradient(to right, gray 1px, transparent 1px);
 	background-size: ${(props) => props.$lineSpacing}px 100%;
@@ -27,8 +27,8 @@ export const DividerContainer = styled.div.attrs<{ offset: number }>((props) => 
 export const DividerLabel = styled.div<{ $theme: CustomTheme }>`
 	transform: translateX(-50%);
 	position: absolute;
-	top: 3px;
-	left: -50%;
+	z-index: 100;
+	top: -48px;
 	background: ${(props) => props.$theme.custom.palette.background.timelineHeader};
 	display: flex;
 	align-items: center;

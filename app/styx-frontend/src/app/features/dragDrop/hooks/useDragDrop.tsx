@@ -37,7 +37,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 	const { getState, setStateQuietly, setStateImmediately, clearState } = useDragDropState()
 
 	const onMouseDown = useCallback((event: MouseEvent) => {
-		if (!containerRef.current) {
+		if (!containerRef.current || event.shiftKey) {
 			return
 		}
 		window.document.body.classList.add('cursor-grabbing', 'mouse-busy')

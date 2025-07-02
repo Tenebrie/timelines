@@ -12,7 +12,7 @@ type Props = {
 	children: ReactNode | ReactNode[]
 }
 
-const RESET_PERIOD = 50
+const RESET_PERIOD = 600
 
 export function TimelineAnchorContainer({ children }: Props) {
 	const ref = useRef<HTMLDivElement>(null)
@@ -26,7 +26,10 @@ export function TimelineAnchorContainer({ children }: Props) {
 			}
 			lastSeenScroll.current = fixedScroll
 			ref.current?.style.setProperty('--scroll', `${fixedScroll}px`)
-			ref.current?.style.setProperty('--pip-scroll', `${-fixedScroll + (fixedScroll % LineSpacing)}px`)
+			ref.current?.style.setProperty(
+				'--pip-scroll',
+				`${-fixedScroll + CONTROLLED_SCROLLER_SIZE - RESET_PERIOD}px`,
+			)
 		},
 	})
 
@@ -37,7 +40,10 @@ export function TimelineAnchorContainer({ children }: Props) {
 		const newScroll = TimelineState.scroll
 		const fixedScroll = Math.floor(newScroll / RESET_PERIOD) * RESET_PERIOD + CONTROLLED_SCROLLER_SIZE
 		ref.current?.style.setProperty('--scroll', `${fixedScroll}px`)
-		ref.current?.style.setProperty('--pip-scroll', `${-fixedScroll + (fixedScroll % LineSpacing)}px`)
+		ref.current?.style.setProperty(
+			'--pip-scroll',
+			`${-fixedScroll + CONTROLLED_SCROLLER_SIZE - RESET_PERIOD}px`,
+		)
 	}, [ref])
 
 	return (

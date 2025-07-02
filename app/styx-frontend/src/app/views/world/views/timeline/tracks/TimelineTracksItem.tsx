@@ -13,11 +13,7 @@ import { isRunningInTest } from '@/test-utils/isRunningInTest'
 
 import { TimelineTrack } from '../hooks/useEventTracks'
 import { TimelineState } from '../utils/TimelineState'
-import {
-	CONTROLLED_SCROLLER_SIZE,
-	ControlledScroller,
-	EVENT_SCROLL_RESET_PERIOD,
-} from './components/ControlledScroller'
+import { ControlledScroller, EVENT_SCROLL_RESET_PERIOD } from './components/ControlledScroller'
 import { TimelineTrackItemDragDrop } from './dragDrop/TimelineTrackItemDragDrop'
 import { TimelineEventTrackTitle } from './marker/TimelineEventTrackTitle'
 import { TimelineMarker } from './marker/TimelineMarker'
@@ -85,10 +81,7 @@ export function TimelineTracksItemComponent({
 				lastRecordedScroll.current = TimelineState.scroll
 				const markers = t.events
 					.filter((event) => {
-						const position =
-							realTimeToScaledTime(Math.floor(event.markerPosition)) +
-							TimelineState.scroll -
-							CONTROLLED_SCROLLER_SIZE
+						const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + TimelineState.scroll
 
 						return position >= -3000 && position <= width + 3000
 					})

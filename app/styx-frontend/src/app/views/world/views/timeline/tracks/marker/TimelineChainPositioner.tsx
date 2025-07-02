@@ -1,12 +1,12 @@
 import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import { CSSProperties, memo, useRef } from 'react'
+import { CSSProperties, memo, useCallback, useRef } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineState'
 
-import { EVENT_SCROLL_RESET_PERIOD } from '../components/ControlledScroller'
+import { CONTROLLED_SCROLLER_SIZE, EVENT_SCROLL_RESET_PERIOD } from '../components/ControlledScroller'
 import { useHoveredTimelineMarker } from '../components/HoveredTimelineEvents'
 import { TimelineChain } from './TimelineChain'
 
@@ -16,9 +16,23 @@ type Props = {
 	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
-export const TimelineChainPositionerComponent = ({ entity, visible, realTimeToScaledTime }: Props) => {
+export const TimelineChainPositioner = memo(TimelineChainPositionerComponent)
+
+export function TimelineChainPositionerComponent({ entity, visible, realTimeToScaledTime }: Props) {
 	const ref = useRef<HTMLDivElement | null>(null)
-	const position = realTimeToScaledTime(Math.floor(entity.markerPosition)) + TimelineState.scroll
+
+	const calculatePosition = useCallback(
+		(scroll: number) => {
+			const pos = realTimeToScaledTime(Math.floor(entity.markerPosition))
+			return (
+				pos +
+				Math.floor(scroll / EVENT_SCROLL_RESET_PERIOD) * EVENT_SCROLL_RESET_PERIOD +
+				CONTROLLED_SCROLLER_SIZE
+			)
+		},
+		[entity.markerPosition, realTimeToScaledTime],
+	)
+	const position = calculatePosition(TimelineState.scroll)
 
 	const { hovered } = useHoveredTimelineMarker(entity)
 	const chainVisible = entity.markerType === 'issuedAt' || entity.markerType === 'deltaState' || hovered
@@ -29,8 +43,7 @@ export const TimelineChainPositionerComponent = ({ entity, visible, realTimeToSc
 			if (!chainVisible) {
 				return
 			}
-			const pos = realTimeToScaledTime(Math.floor(entity.markerPosition))
-			const fixedPos = pos + Math.floor(newScroll / EVENT_SCROLL_RESET_PERIOD) * EVENT_SCROLL_RESET_PERIOD
+			const fixedPos = calculatePosition(newScroll)
 			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${fixedPos}px`) {
 				ref.current.style.setProperty('--position', `${fixedPos}px`)
 			}
@@ -48,6 +61,7 @@ export const TimelineChainPositionerComponent = ({ entity, visible, realTimeToSc
 			}
 			sx={{
 				transform: 'translateX(var(--position))',
+				bottom: '0',
 				opacity: 'var(--opacity)',
 				position: 'absolute',
 				transition: 'opacity 0.3s',
@@ -58,5 +72,3 @@ export const TimelineChainPositionerComponent = ({ entity, visible, realTimeToSc
 		</Box>
 	)
 }
-
-export const TimelineChainPositioner = memo(TimelineChainPositionerComponent)

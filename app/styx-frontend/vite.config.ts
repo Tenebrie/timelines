@@ -4,7 +4,7 @@ import path from 'path'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'vitest/config'
 
-const tanstackTempDir = path.resolve('node_modules/.tanstack')
+const tanstackTempDir = process.env.TSR_TMP_DIR || path.resolve('node_modules/.tanstack')
 
 export default defineConfig({
 	base: '/',
