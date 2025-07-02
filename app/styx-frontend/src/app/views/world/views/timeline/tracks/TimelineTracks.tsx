@@ -50,7 +50,7 @@ export function TimelineTracksComponent(props: Props) {
 			sx={{
 				display: 'block',
 				position: 'absolute',
-				bottom: 52,
+				bottom: 32,
 				width: '100%',
 				maxHeight: 'calc(100% - 72px)',
 				overflowX: 'hidden',

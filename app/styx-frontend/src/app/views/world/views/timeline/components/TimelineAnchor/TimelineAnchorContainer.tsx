@@ -52,8 +52,8 @@ export function TimelineAnchorContainer({ children }: Props) {
 				ref={ref}
 				sx={{
 					position: 'absolute',
-					bottom: 0,
-					pointerEvents: 'none',
+					bottom: 32,
+					pointerEvents: 'auto',
 					transform: 'translateX(var(--scroll))',
 				}}
 			>

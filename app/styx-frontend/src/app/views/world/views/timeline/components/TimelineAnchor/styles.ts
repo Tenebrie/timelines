@@ -28,7 +28,7 @@ export const DividerLabel = styled.div<{ $theme: CustomTheme }>`
 	transform: translateX(-50%);
 	position: absolute;
 	z-index: 100;
-	top: -48px;
+	top: 2px;
 	background: ${(props) => props.$theme.custom.palette.background.timelineHeader};
 	display: flex;
 	align-items: center;

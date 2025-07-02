@@ -280,7 +280,7 @@ function TimelineAnchorLineComponent(props: Props) {
 			style={cssVariablesRef.current}
 			sx={{
 				position: 'absolute',
-				height: 2,
+				height: 0,
 				pointerEvents: 'none',
 				fontWeight: 'var(--font-weight)',
 				transform: `translateX(var(--divider-position))`,

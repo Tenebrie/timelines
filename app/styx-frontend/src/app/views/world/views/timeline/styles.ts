@@ -4,7 +4,7 @@ import { CustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 export const TimelineWrapper = styled.div`
 	width: 100%;
-	height: calc(100%);
+	height: calc(100% - 32px);
 	// padding-bottom: 32px;
 `
 
