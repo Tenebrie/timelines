@@ -1,5 +1,5 @@
-import { AdminAuthenticator } from '@src/middleware/auth/AdminAuthenticator'
-import { AdminService } from '@src/services/AdminService'
+import { AdminAuthenticator } from '@src/middleware/auth/AdminAuthenticator.js'
+import { AdminService } from '@src/services/AdminService.js'
 import {
 	NonEmptyStringValidator,
 	NumberValidator,
@@ -13,8 +13,8 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { adminUsersTag } from './utils/tags'
-import { UserLevelValidator } from './validators/UserLevelValidator'
+import { adminUsersTag } from './utils/tags.js'
+import { UserLevelValidator } from './validators/UserLevelValidator.js'
 
 const router = new Router().with(async (ctx) => {
 	const user = await useAuth(ctx, AdminAuthenticator)

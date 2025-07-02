@@ -1,4 +1,4 @@
-import { ImageFormatSchema, SUPPORTED_IMAGE_FORMATS } from '@src/schema/ImageFormat'
+import { ImageFormatSchema, SUPPORTED_IMAGE_FORMATS } from '@src/schema/ImageFormat.js'
 import { RequiredParam } from 'moonflower/validators/ParamWrappers'
 
 export const ImageFormatValidator = RequiredParam({

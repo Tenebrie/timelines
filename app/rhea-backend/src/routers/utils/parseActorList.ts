@@ -1,4 +1,4 @@
-import { ActorService } from '@src/services/ActorService'
+import { ActorService } from '@src/services/ActorService.js'
 import { BadRequestError } from 'moonflower'
 
 export const parseActorList = async (actorIds: string[] | undefined) => {

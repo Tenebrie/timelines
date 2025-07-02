@@ -2,10 +2,10 @@ import {
 	ClientToCalliopeMessage,
 	ClientToCalliopeMessageHandlers,
 	ClientToCalliopeMessageType,
-} from '@src/ts-shared/ClientToCalliopeMessage'
+} from '@src/ts-shared/ClientToCalliopeMessage.js'
 import { WebSocket } from 'ws'
 
-import { WebsocketService } from './WebsocketService'
+import { WebsocketService } from './WebsocketService.js'
 
 const handlers: ClientToCalliopeMessageHandlers = {
 	[ClientToCalliopeMessageType.INIT]: (_, userId, socket, sessionId) => {

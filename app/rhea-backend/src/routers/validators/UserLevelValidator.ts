@@ -1,5 +1,5 @@
 import { UserLevel } from '@prisma/client'
-import { keysOf } from '@src/utils/keysOf'
+import { keysOf } from '@src/utils/keysOf.js'
 import { RequiredParam } from 'moonflower/validators/ParamWrappers'
 
 export const UserLevelValidator = RequiredParam({

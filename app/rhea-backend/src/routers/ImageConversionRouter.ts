@@ -1,8 +1,8 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { SUPPORTED_IMAGE_FORMATS } from '@src/schema/ImageFormat'
-import { AssetService } from '@src/services/AssetService'
-import { CloudStorageService } from '@src/services/CloudStorageService'
-import { ImageService } from '@src/services/ImageService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { SUPPORTED_IMAGE_FORMATS } from '@src/schema/ImageFormat.js'
+import { AssetService } from '@src/services/AssetService.js'
+import { CloudStorageService } from '@src/services/CloudStorageService.js'
+import { ImageService } from '@src/services/ImageService.js'
 import {
 	BadRequestError,
 	NumberValidator,
@@ -15,7 +15,7 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { ImageFormatValidator } from './validators/ImageFormatValidator'
+import { ImageFormatValidator } from './validators/ImageFormatValidator.js'
 
 const router = new Router()
 

@@ -1,9 +1,9 @@
 import { WorldEvent } from '@prisma/client'
-import { definedProps } from '@src/utils/definedProps'
+import { definedProps } from '@src/utils/definedProps.js'
 import { BadRequestError } from 'moonflower'
 
-import { getPrismaClient } from './dbClients/DatabaseClient'
-import { WorldEventService } from './WorldEventService'
+import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { WorldEventService } from './WorldEventService.js'
 
 export const ValidationService = {
 	checkEventValidity: async (eventId: string) => {

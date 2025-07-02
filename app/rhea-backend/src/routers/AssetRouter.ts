@@ -1,7 +1,7 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { AssetService } from '@src/services/AssetService'
-import { AuthorizationService } from '@src/services/AuthorizationService'
-import { CloudStorageService } from '@src/services/CloudStorageService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { AssetService } from '@src/services/AssetService.js'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { CloudStorageService } from '@src/services/CloudStorageService.js'
 import {
 	NumberValidator,
 	RequiredParam,
@@ -13,8 +13,8 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { assetTag } from './utils/tags'
-import { AssetTypeValidator } from './validators/AssetTypeValidator'
+import { assetTag } from './utils/tags.js'
+import { AssetTypeValidator } from './validators/AssetTypeValidator.js'
 
 const router = new Router()
 

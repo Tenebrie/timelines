@@ -1,4 +1,4 @@
-import { mockToResponse, mockUser, mockWorld, withUserAuth, withWorld } from '@src/mock'
+import { mockToResponse, mockUser, mockWorld, withUserAuth, withWorld } from '@src/mock/index.js'
 import { describe, expect, it, vi } from 'vitest'
 
 vi.mock('@src/services/SecretService', () => {

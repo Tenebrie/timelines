@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
 
-import { getPrismaClient } from '../dbClients/DatabaseClient'
+import { getPrismaClient } from '../dbClients/DatabaseClient.js'
 
 export const makeFetchArticleAncestorsQuery = async (
 	worldId: string,

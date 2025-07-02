@@ -1,9 +1,9 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
-import { AuthorizationService } from '@src/services/AuthorizationService'
-import { RedisService } from '@src/services/RedisService'
-import { WorldService } from '@src/services/WorldService'
-import { WorldShareService } from '@src/services/WorldShareService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { RedisService } from '@src/services/RedisService.js'
+import { WorldService } from '@src/services/WorldService.js'
+import { WorldShareService } from '@src/services/WorldShareService.js'
 import {
 	BadRequestError,
 	NonEmptyStringValidator,
@@ -20,11 +20,11 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { worldCollaboratorsTag, worldDetailsTag, worldListTag } from './utils/tags'
-import { CollaboratorAccessValidator } from './validators/CollaboratorAccessValidator'
-import { StringArrayValidator } from './validators/StringArrayValidator'
-import { WorldAccessModeValidator } from './validators/WorldAccessModeValidator'
-import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator'
+import { worldCollaboratorsTag, worldDetailsTag, worldListTag } from './utils/tags.js'
+import { CollaboratorAccessValidator } from './validators/CollaboratorAccessValidator.js'
+import { StringArrayValidator } from './validators/StringArrayValidator.js'
+import { WorldAccessModeValidator } from './validators/WorldAccessModeValidator.js'
+import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator.js'
 
 const router = new Router().with(SessionMiddleware)
 

@@ -1,9 +1,9 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
-import { ActorService } from '@src/services/ActorService'
-import { AuthorizationService } from '@src/services/AuthorizationService'
-import { MindmapService } from '@src/services/MindmapService'
-import { RedisService } from '@src/services/RedisService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
+import { ActorService } from '@src/services/ActorService.js'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { MindmapService } from '@src/services/MindmapService.js'
+import { RedisService } from '@src/services/RedisService.js'
 import {
 	BadRequestError,
 	NumberValidator,
@@ -18,7 +18,7 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { mindmapTag } from './utils/tags'
+import { mindmapTag } from './utils/tags.js'
 
 const router = new Router().with(SessionMiddleware)
 

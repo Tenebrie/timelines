@@ -1,4 +1,4 @@
-import { ShapeOfHandlerWithSession, ShapeOfMessageWithSession } from './types'
+import { ShapeOfHandlerWithSession, ShapeOfMessageWithSession } from './types.js'
 
 export enum RedisChannel {
 	RHEA_TO_CALLIOPE = 'rheaToCalliope',

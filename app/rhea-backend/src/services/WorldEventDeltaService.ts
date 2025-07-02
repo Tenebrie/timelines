@@ -1,7 +1,7 @@
 import { WorldEventDelta } from '@prisma/client'
 
-import { getPrismaClient } from './dbClients/DatabaseClient'
-import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
+import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 
 export const WorldEventDeltaService = {
 	createEventDeltaState: async ({

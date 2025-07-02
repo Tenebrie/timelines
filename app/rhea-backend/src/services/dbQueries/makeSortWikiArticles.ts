@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
 
-import { getPrismaClient } from '../dbClients/DatabaseClient'
+import { getPrismaClient } from '../dbClients/DatabaseClient.js'
 
 export const makeSortWikiArticles = async (worldId: string, prisma?: Prisma.TransactionClient) => {
 	prisma = prisma ?? getPrismaClient()

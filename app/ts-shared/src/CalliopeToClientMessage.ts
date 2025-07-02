@@ -1,4 +1,4 @@
-import { EmptyObject, ShapeOfHandler, ShapeOfMessage } from './types'
+import { EmptyObject, ShapeOfHandler, ShapeOfMessage } from './types.js'
 
 export const WORLD_UPDATE_NAME = 'worldUpdate'
 

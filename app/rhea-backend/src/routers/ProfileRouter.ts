@@ -1,7 +1,7 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
-import { AssetService } from '@src/services/AssetService'
-import { CloudStorageService } from '@src/services/CloudStorageService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
+import { AssetService } from '@src/services/AssetService.js'
+import { CloudStorageService } from '@src/services/CloudStorageService.js'
 import {
 	NonEmptyStringValidator,
 	RequiredParam,
@@ -12,8 +12,8 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { UserService } from '../services/UserService'
-import { profileTag } from './utils/tags'
+import { UserService } from '../services/UserService.js'
+import { profileTag } from './utils/tags.js'
 
 const router = new Router().with(SessionMiddleware)
 

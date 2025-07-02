@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 
-import { getPrismaClient } from './dbClients/DatabaseClient'
-import { makeTouchUserQuery } from './dbQueries/makeTouchUserQuery'
+import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { makeTouchUserQuery } from './dbQueries/makeTouchUserQuery.js'
 
 export const UserService = {
 	touchUser: async (userId: string) => {

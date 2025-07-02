@@ -1,7 +1,7 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { AuthorizationService } from '@src/services/AuthorizationService'
-import { RedisService } from '@src/services/RedisService'
-import { WikiService } from '@src/services/WikiService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { RedisService } from '@src/services/RedisService.js'
+import { WikiService } from '@src/services/WikiService.js'
 import {
 	NumberValidator,
 	OptionalParam,
@@ -16,11 +16,11 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { SessionMiddleware } from '../middleware/SessionMiddleware'
-import { worldWikiTag } from './utils/tags'
-import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
-import { NullableStringValidator } from './validators/NullableStringValidator'
-import { StringArrayValidator } from './validators/StringArrayValidator'
+import { SessionMiddleware } from '../middleware/SessionMiddleware.js'
+import { worldWikiTag } from './utils/tags.js'
+import { MentionsArrayValidator } from './validators/MentionsArrayValidator.js'
+import { NullableStringValidator } from './validators/NullableStringValidator.js'
+import { StringArrayValidator } from './validators/StringArrayValidator.js'
 
 const router = new Router().with(SessionMiddleware)
 

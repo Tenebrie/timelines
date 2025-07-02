@@ -1,6 +1,6 @@
 import { UserLevel } from '@prisma/client'
 
-import { getPrismaClient } from './dbClients/DatabaseClient'
+import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const AdminService = {
 	listUsers: async ({ page, size, query }: { page?: number; size?: number; query?: string }) => {

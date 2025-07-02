@@ -1,8 +1,8 @@
-import { AUTH_COOKIE_NAME, UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { UserAuthenticatorWithAvatar } from '@src/middleware/auth/UserAuthenticatorWithAvatar'
-import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
-import { AnnouncementService } from '@src/services/AnnouncementService'
-import { CloudStorageService } from '@src/services/CloudStorageService'
+import { AUTH_COOKIE_NAME, UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { UserAuthenticatorWithAvatar } from '@src/middleware/auth/UserAuthenticatorWithAvatar.js'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
+import { AnnouncementService } from '@src/services/AnnouncementService.js'
+import { CloudStorageService } from '@src/services/CloudStorageService.js'
 import {
 	BadRequestError,
 	EmailValidator,
@@ -15,9 +15,9 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { TokenService } from '../services/TokenService'
-import { UserService } from '../services/UserService'
-import { adminUsersTag, announcementListTag, authTag, worldDetailsTag, worldListTag } from './utils/tags'
+import { TokenService } from '../services/TokenService.js'
+import { UserService } from '../services/UserService.js'
+import { adminUsersTag, announcementListTag, authTag, worldDetailsTag, worldListTag } from './utils/tags.js'
 
 const router = new Router().with(SessionMiddleware)
 

@@ -1,5 +1,5 @@
 import { User, World, WorldCalendarType } from '@prisma/client'
-import { getPrismaClient } from '@src/services/dbClients/DatabaseClient'
+import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 
 export const WorldService = {
 	createWorld: async (params: {

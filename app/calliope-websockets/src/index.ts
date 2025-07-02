@@ -6,12 +6,12 @@ import route from 'koa-route'
 import websocketify from 'koa-websocket'
 import { WebSocket } from 'ws'
 
-import { ClientMessageHandlerService } from './services/ClientMessageHandlerService'
-import { initRedisConnection } from './services/RedisService'
-import { TokenService } from './services/TokenService'
-import { WebsocketService } from './services/WebsocketService'
-import { ClientToCalliopeMessage } from './ts-shared/ClientToCalliopeMessage'
-import { AUTH_COOKIE_NAME } from './ts-shared/const/constants'
+import { ClientMessageHandlerService } from './services/ClientMessageHandlerService.js'
+import { initRedisConnection } from './services/RedisService.js'
+import { TokenService } from './services/TokenService.js'
+import { WebsocketService } from './services/WebsocketService.js'
+import { ClientToCalliopeMessage } from './ts-shared/ClientToCalliopeMessage.js'
+import { AUTH_COOKIE_NAME } from './ts-shared/const/constants.js'
 
 const app = websocketify(new Koa())
 

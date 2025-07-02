@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client'
-import { generateEntityNameFromText } from '@src/ts-shared/utils/generateEntityNameFromText'
+import { generateEntityNameFromText } from '@src/ts-shared/utils/generateEntityNameFromText.js'
 
-import { getPrismaClient } from '../dbClients/DatabaseClient'
-import { WorldEventService } from '../WorldEventService'
+import { getPrismaClient } from '../dbClients/DatabaseClient.js'
+import { WorldEventService } from '../WorldEventService.js'
 
 export const makeUpdateDeltaStateNamesQueries = ({
 	event,
