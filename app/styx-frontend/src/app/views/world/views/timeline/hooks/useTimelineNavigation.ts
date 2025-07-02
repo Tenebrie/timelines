@@ -3,7 +3,7 @@ import bezier from 'bezier-easing'
 import React, { startTransition, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventBus'
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
@@ -17,6 +17,7 @@ import { router } from '@/router'
 
 import { Position } from '../utils/Position'
 import { TimelineState } from '../utils/TimelineState'
+import { useNotifyTimelineScrolled } from './useNotifyTimelineScrolled'
 
 type Props = {
 	containerRef: React.RefObject<HTMLDivElement | null>
@@ -62,27 +63,19 @@ export const useTimelineNavigation = ({
 	const maximumScroll = useMemo(() => maximumTime / scalar / 1000 / 60, [scalar])
 
 	const lastScroll = useRef<number | null>(null)
-	const notifyTimelineScrolled = useEventBusDispatch({ event: 'timeline/onScroll' })
-	const isBusyRendering = useRef(false)
+	const notifyTimelineScrolled = useNotifyTimelineScrolled()
 
 	const setScroll = useCallback(
 		(scroll: number) => {
-			if (isBusyRendering.current) {
-				return
-			}
 			const publicScroll = Math.round(scroll + Math.pow(Math.abs(overscroll), 0.85) * Math.sign(overscroll))
 
 			if (publicScroll === lastScroll.current) {
 				return
 			}
-			isBusyRendering.current = true
 			lastScroll.current = publicScroll
 			TimelineState.scroll = publicScroll
 			TimelineState.scaleLevel = scaleLevel
 			notifyTimelineScrolled(publicScroll)
-			requestAnimationFrame(() => {
-				isBusyRendering.current = false
-			})
 		},
 		[notifyTimelineScrolled, overscroll, scaleLevel],
 	)

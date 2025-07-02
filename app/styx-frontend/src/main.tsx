@@ -1,7 +1,7 @@
 import './main.css'
 
 import { RouterProvider } from '@tanstack/react-router'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider as ReduxProvider } from 'react-redux'
 
@@ -28,10 +28,7 @@ const RouterWrapper = () => {
 }
 
 root.render(
-	<React.StrictMode>
-		<ReduxProvider store={store}>
-			<RouterWrapper />
-			{/* <TanStackRouterDevtools router={router} />  */}
-		</ReduxProvider>
-	</React.StrictMode>,
+	<ReduxProvider store={store}>
+		<RouterWrapper />
+	</ReduxProvider>,
 )

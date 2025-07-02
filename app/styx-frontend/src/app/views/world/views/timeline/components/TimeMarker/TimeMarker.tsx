@@ -40,7 +40,8 @@ export const TimeMarker = ({ timestamp }: Props) => {
 			const scrollOffset =
 				offset +
 				Math.floor(scroll / EVENT_SCROLL_RESET_PERIOD) * EVENT_SCROLL_RESET_PERIOD +
-				CONTROLLED_SCROLLER_SIZE
+				CONTROLLED_SCROLLER_SIZE +
+				40
 
 			if (ref.current && ref.current.style.getPropertyValue('--marker-scroll') !== `${scrollOffset}px`) {
 				ref.current.style.setProperty('--marker-scroll', `${scrollOffset}px`)
