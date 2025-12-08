@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Outliner } from '@/app/components/Outliner/Outliner'
 import { OutlinerOutlet } from '@/app/components/Outliner/OutlinerOutlet'
@@ -29,8 +29,16 @@ export function OutlinerDrawer() {
 		minHeight,
 		maxHeight,
 	})
-	const { drawerVisible, contentVisible, height, overflowHeight, isDragging, setHeight, setVisible } =
-		grabberProps
+	const {
+		drawerVisible,
+		contentVisible,
+		height,
+		overflowHeight,
+		isDragging,
+		isDraggingChild,
+		setHeight,
+		setVisible,
+	} = grabberProps
 
 	useEffect(() => {
 		setPreferences({ height, visible: drawerVisible })
@@ -42,6 +50,13 @@ export function OutlinerDrawer() {
 			setVisible(true)
 		},
 	})
+	const [draggerOutside, setDraggerOutside] = useState(false)
+	useEffect(() => {
+		if (isDragging || isDraggingChild) {
+			return
+		}
+		setDraggerOutside(drawerVisible)
+	}, [isDragging, isDraggingChild, drawerVisible])
 
 	return (
 		<>
@@ -58,6 +73,7 @@ export function OutlinerDrawer() {
 					style={{
 						width: grabberProps.height,
 						marginRight: drawerVisible ? `${overflowHeight}px` : `${-height}px`,
+						marginLeft: '1px',
 						transition: `margin-right ${isDragging ? 0 : 0.3}s`,
 					}}
 					sx={{ position: 'relative', flexShrink: 0, zIndex: 2 }}
@@ -68,13 +84,19 @@ export function OutlinerDrawer() {
 							position: 'absolute',
 							height: 1,
 							zIndex: 1,
-							transition: `right ${isDragging ? 0 : 0.3}s`,
-							marginLeft: -0.6,
+							transition: `right ${isDragging ? 0 : 0.3}s, margin-left ${0.3}s`,
+							marginLeft: draggerOutside ? 2 : -1,
 						}}
 					>
 						<ResizeGrabber {...grabberProps} active position={'right'} />
 					</Box>
-					<Box sx={{ height: 1, pointerEvents: grabberProps.isDragging ? 'none' : 'unset' }}>
+					<Box
+						sx={{
+							height: 1,
+							pointerEvents: grabberProps.isDragging ? 'none' : 'unset',
+							opacity: drawerVisible ? 1 : 0.5,
+						}}
+					>
 						<OutlinerOutlet />
 						{contentVisible && <Outliner />}
 					</Box>

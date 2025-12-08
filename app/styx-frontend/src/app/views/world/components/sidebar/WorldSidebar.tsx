@@ -34,14 +34,6 @@ export const WorldSidebar = () => {
 		navigate({ to: '/world/$worldId/timeline', search: true })
 	}
 
-	// const matchesOverview = useCheckRouteMatch('/world/$worldId/overview')
-	// const onOverviewClick = () => {
-	// 	navigate({
-	// 		to: '/world/$worldId/overview',
-	// 		search: true,
-	// 	})
-	// }
-
 	const matchesMindmap = useCheckRouteMatch('/world/$worldId/mindmap')
 	const onMindmapClick = () => {
 		navigate({

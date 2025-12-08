@@ -180,10 +180,6 @@ function ResizeGrabberComponent({
 		},
 	})
 
-	// const onMouseClick = (event: ReactMouseEvent) => {
-	// 	triggerClick(event, {})
-	// }
-
 	const onMouseMove = useRef(
 		throttle((event: MouseEvent) => {
 			const newMousePos = isVertical ? event.clientY : event.clientX
@@ -249,10 +245,6 @@ function ResizeGrabberComponent({
 		_maxHeight,
 		_setInternalHeight,
 	])
-
-	// const { containerHeight } = useSelector(getTimelinePreferences)
-	// const { setTimelineHeight } = preferencesSlice.actions
-	// const dispatch = useDispatch()
 
 	useEffect(() => {
 		if (!_isDraggingNow.current || mousePosition === 0) {

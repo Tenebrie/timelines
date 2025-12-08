@@ -57,6 +57,7 @@ export function TimelineTracksComponent(props: Props) {
 				overflowY: 'auto',
 				...useBrowserSpecificScrollbars(),
 			}}
+			onWheel={(e) => e.stopPropagation()}
 			className={'allow-timeline-click'}
 		>
 			<Box sx={{ height: `calc(${outlinerHeight}px - 32px)`, pointerEvents: 'none' }} />

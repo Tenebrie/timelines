@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import { useSearch } from '@tanstack/react-router'
-import { memo, useState } from 'react'
+import { memo, useRef, useState } from 'react'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
@@ -17,6 +17,7 @@ import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScal
 import { TimelineZoomReporter } from './components/TimelineZoomReporter'
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
 import { useTimelineDimensions } from './hooks/useTimelineDimensions'
+import { useTimelineHorizontalScroll } from './hooks/useTimelineHorizontalScroll'
 import { TimelineContainer, TimelineWrapper } from './styles'
 import { TimelineTracks } from './tracks/TimelineTracks'
 
@@ -30,7 +31,9 @@ function TimelineComponent() {
 
 	const theme = useCustomTheme()
 
+	const ref = useRef<HTMLDivElement | null>(null)
 	const [opacity, setOpacity] = useState(0)
+	const { onWheel } = useTimelineHorizontalScroll({ containerRef: ref })
 	const { onContextMenu } = useTimelineContextMenu()
 	const { containerRef, containerWidth } = useTimelineDimensions()
 
@@ -41,15 +44,14 @@ function TimelineComponent() {
 	})
 
 	return (
-		<Paper sx={{ height: '100%', borderRadius: 0, zIndex: 2, pointerEvents: 'auto' }}>
+		<Paper
+			ref={ref}
+			sx={{ height: '100%', borderRadius: 0, zIndex: 2, pointerEvents: 'auto' }}
+			onWheel={onWheel}
+		>
 			<TimelineWrapper>
 				<TimelineContainer ref={containerRef} onContextMenu={onContextMenu} $theme={theme}>
-					<Box
-						width={1}
-						height={1}
-						style={{ opacity }}
-						sx={{ transition: 'opacity 0.3s', pointerEvents: 'none' }}
-					>
+					<Box width={1} height={1} style={{ opacity }} sx={{ transition: 'opacity 0.3s' }}>
 						{opacity > 0 && (
 							<>
 								<TimelineTracks containerWidth={containerWidth} />
