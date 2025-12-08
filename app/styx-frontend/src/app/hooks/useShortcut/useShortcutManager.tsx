@@ -54,6 +54,9 @@ export const useShortcutManager = () => {
 		}
 
 		Object.values(Shortcut).forEach((shortcut) => {
+			if (shortcut === Shortcut.DeleteSelected && (isTargetingInput || isTargetingRichInput)) {
+				return
+			}
 			const defKeys = shortcut
 				.split('|')
 				.filter((part) => {
