@@ -1,4 +1,4 @@
-FROM node:22-alpine3.20
+FROM node:24-alpine3.20
 
 WORKDIR /app/ts-shared
 ADD ./app/ts-shared /app/ts-shared

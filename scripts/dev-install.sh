@@ -3,7 +3,7 @@
 cd "${0%/*}"
 cd ..
 
-. ./scripts/export-user-id.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up --build -d
+. ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up --build -d
 
 (cd app/rhea-backend && yarn prisma:migrate)
 exit_code=$?

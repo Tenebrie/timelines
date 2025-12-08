@@ -187,7 +187,7 @@ test.describe('Wiki', () => {
 
 			// Move nested article to root
 			await nestedArticle.dragTo(page.getByTestId('ArticleList/0'))
-			expect(page.getByTestId('ArticleListItem/Nested article/0')).toBeVisible()
+			await expect(page.getByTestId('ArticleListItem/Nested article/0')).toBeVisible()
 		})
 
 		test('drag an article to drop handle -> article is moved', async ({ page }) => {
@@ -199,10 +199,10 @@ test.describe('Wiki', () => {
 
 			// Check that first article appears BEFORE second article
 			const list = page.getByTestId('ArticleList/0')
-			expect(list).toBeVisible()
+			await expect(list).toBeVisible()
 
-			expect(list.getByRole('button').nth(0)).toHaveText('First article')
-			expect(list.getByRole('button').nth(2)).toHaveText('Second article')
+			await expect(list.getByRole('button').nth(0)).toHaveText('First article')
+			await expect(list.getByRole('button').nth(2)).toHaveText('Second article')
 
 			// Perform drag and drop
 			await page.getByText('Second article').dragTo(page.getByTestId('ArticleDropHandle/0'))

@@ -48,7 +48,8 @@ export const useTimelineHorizontalScroll = ({ containerRef }: Props) => {
 				return
 			}
 			event.preventDefault()
-			handleScroll(event.deltaY)
+			const sensitivity = isMacOS() ? 4 : 1
+			handleScroll(event.deltaY * sensitivity)
 		},
 		[handleScroll],
 	)
