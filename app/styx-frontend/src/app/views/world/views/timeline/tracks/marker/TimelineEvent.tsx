@@ -1,5 +1,6 @@
 import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Close from '@mui/icons-material/Close'
+import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useNavigate } from '@tanstack/react-router'
 import classNames from 'classnames'
@@ -147,6 +148,29 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 				<MarkerIcon className="icon">
 					<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
 				</MarkerIcon>
+			)}
+			{!entity.chainEntity && (
+				<Box
+					sx={{
+						position: 'absolute',
+						left: 'calc(100% + 8px)',
+						top: '50%',
+						transform: 'translateY(-50%)',
+						background: theme.custom.palette.background.timelineMarkerTail,
+						border: `1px solid ${color}`,
+						borderRadius: '6px',
+						padding: '4px 8px',
+						opacity: isHovered ? 1 : 0,
+						transition: 'opacity 0.2s',
+						pointerEvents: 'none',
+						whiteSpace: 'nowrap',
+						zIndex: 10,
+					}}
+				>
+					<Typography variant="caption" fontWeight={600}>
+						{entity.name}
+					</Typography>
+				</Box>
 			)}
 			<TimestampPopover $theme={theme} className={classNames({ visible: isHovered })}>
 				<Typography variant="caption">{timeToLabel(entity.markerPosition)}</Typography>
