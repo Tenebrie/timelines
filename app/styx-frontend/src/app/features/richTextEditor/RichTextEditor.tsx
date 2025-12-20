@@ -224,6 +224,7 @@ export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allo
 		event: 'richEditor/requestFocus',
 		callback: () => {
 			editor?.commands.focus()
+			editor?.commands.selectTextblockEnd()
 		},
 	})
 	useEventBusSubscribe({

@@ -1,5 +1,6 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { RichTextEditorProps } from '@/app/features/richTextEditor/RichTextEditor'
 
@@ -8,10 +9,12 @@ import { EventDraft } from '../draft/useEventDraft'
 type Props = {
 	id?: string
 	draft: EventDraft
+	autoFocus?: boolean
 }
 
-export const EventDescription = ({ id, draft }: Props) => {
+export const EventDescription = ({ id, draft, autoFocus }: Props) => {
 	const { key, descriptionRich, setDescription, setDescriptionRich, setMentions } = draft
+	const requestFocus = useEventBusDispatch({ event: 'richEditor/requestFocus' })
 
 	const onDescriptionChange = useCallback(
 		(params: Parameters<RichTextEditorProps['onChange']>[0]) => {
@@ -21,6 +24,15 @@ export const EventDescription = ({ id, draft }: Props) => {
 		},
 		[setDescription, setDescriptionRich, setMentions],
 	)
+
+	useEffect(() => {
+		if (autoFocus) {
+			// Small delay to ensure the editor is mounted
+			setTimeout(() => {
+				requestFocus()
+			}, 100)
+		}
+	}, [autoFocus, requestFocus])
 
 	return (
 		<RichTextEditorSummoner

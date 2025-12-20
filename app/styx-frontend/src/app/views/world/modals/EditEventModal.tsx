@@ -23,7 +23,7 @@ export const EditEventModal = () => {
 					flexDirection: 'column',
 				}}
 			>
-				<EventDetails />
+				<EventDetails autoFocus={isOpen} />
 				<ModalFooter>
 					<Button variant="contained" onClick={handleClose}>
 						Done

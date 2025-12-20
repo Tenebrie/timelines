@@ -16,9 +16,13 @@ import { EventDescription } from './components/EventDescription'
 import { EventTitle } from './components/EventTitle'
 import { useEventDraft } from './draft/useEventDraft'
 
+type Props = {
+	autoFocus?: boolean
+}
+
 export const EventDetails = memo(EventDetailsComponent)
 
-export function EventDetailsComponent() {
+export function EventDetailsComponent({ autoFocus }: Props) {
 	const { mode, event } = useCurrentOrNewEvent()
 	const draft = useEventDraft({ event })
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
@@ -61,7 +65,7 @@ export function EventDetailsComponent() {
 				</Collapse>
 			</Box>
 			<Box flexGrow={1} sx={{ marginTop: -1, height: 0 }}>
-				<EventDescription draft={draft} />
+				<EventDescription draft={draft} autoFocus={autoFocus} />
 			</Box>
 		</Stack>
 	)
