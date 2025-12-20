@@ -5,11 +5,9 @@ import Typography from '@mui/material/Typography'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
-import { useHoveredTimelineMarker } from '../components/HoveredTimelineEvents'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
@@ -19,35 +17,24 @@ type Props = {
 export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 	const theme = useCustomTheme()
 	const color = useEntityColor({ entity })
-	const { timeToLabel } = useWorldTime()
-	const { hovered, lastHovered } = useHoveredTimelineMarker(entity)
 
 	const rawDist = (() => {
 		if (entity.chainEntity) {
 			return realTimeToScaledTime(entity.chainEntity.markerPosition - entity.markerPosition)
 		}
-		if (entity.followingEntity) {
-			return Math.min(
-				350,
-				realTimeToScaledTime(entity.followingEntity.markerPosition - entity.markerPosition) - 25,
-			)
-		}
-		return 350
+		return 0
 	})()
 
 	const dist = (() => {
-		if (hovered) {
-			return 300
-		}
 		if (entity.markerType === 'revokedAt') {
 			return 0
 		}
 		return rawDist - TimelineEventHeightPx + 13
 	})()
 
-	const chainVisible = entity.markerType === 'issuedAt' || entity.markerType === 'deltaState' || hovered
+	const chainVisible = entity.markerType === 'issuedAt' || entity.markerType === 'deltaState'
 	const chainMarker = !!entity.chainEntity
-	const rightBorder = !chainMarker || hovered
+	const rightBorder = !chainMarker
 
 	return (
 		<Box
@@ -57,10 +44,8 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 				bottom: 0,
 				left: 0,
 				width: Math.max(0, dist) + (dist > 16 ? 16 : 0),
-				height: hovered ? 54 : 30,
+				height: 30,
 				overflow: 'hidden',
-				transition: 'height 0.3s, width 0.3s',
-				transitionDelay: hovered ? '0.4s' : '0s',
 			}}
 		>
 			<Box
@@ -78,8 +63,6 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 					borderLeft: `2px solid ${color}`,
 					borderRight: `2px solid ${color}`,
 					pointerEvents: 'none',
-					transition: 'width 0.3s, border-radius 0.3s, background 0.3s, opacity 0.3s',
-					transitionDelay: hovered ? '0.4s' : '0s',
 				}}
 			>
 				<Stack
@@ -94,29 +77,8 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 					<Typography variant="body2" sx={{ fontFamily: 'Inter' }} fontWeight={600} noWrap>
 						{entity.name}
 					</Typography>
-					{(hovered || lastHovered) && (
-						<Typography variant="caption" noWrap>
-							{timeToLabel(entity.markerPosition)}
-						</Typography>
-					)}
 				</Stack>
 			</Box>
-			{(hovered || lastHovered) && (
-				<Box
-					sx={{
-						position: 'absolute',
-						width: '100%',
-						height: '100%',
-						left: 0,
-						top: 0,
-						opacity: hovered ? 1 : 0,
-						backdropFilter: 'blur(8px)',
-						zIndex: -1,
-						transition: 'opacity 0.3s',
-						transitionDelay: hovered ? '0.4s' : '0s',
-					}}
-				/>
-			)}
 		</Box>
 	)
 }

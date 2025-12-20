@@ -156,3 +156,23 @@ export const Label = styled.div`
 	-webkit-backdrop-filter: blur(8px);
 	backdrop-filter: blur(8px);
 `
+
+export const TimestampPopover = styled.div<{ $theme: CustomTheme }>`
+	position: absolute;
+	bottom: calc(100% + 8px);
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 6px 12px;
+	background: ${(props) => props.$theme.custom.palette.background.timelineMarkerTail};
+	border: 1px solid ${(props) => props.$theme.material.palette.divider};
+	border-radius: 6px;
+	white-space: nowrap;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.2s;
+	z-index: 100;
+
+	&.visible {
+		opacity: 1;
+	}
+`

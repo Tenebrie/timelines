@@ -39,14 +39,15 @@ export const useTimelineExternalScroll = ({
 			}
 
 			const easing = bezier(0.5, 0, 0.5, 1)
-			const targetScroll = (() => {
-				if (useRawScroll) {
-					return timestamp
-				}
-				return Math.floor(
-					realTimeToScaledTime(-timestamp) + containerRef.current.getBoundingClientRect().width / 2,
-				)
-			})()
+			const targetScroll =
+				(() => {
+					if (useRawScroll) {
+						return timestamp
+					}
+					return Math.floor(
+						realTimeToScaledTime(-timestamp) + containerRef.current.getBoundingClientRect().width / 2,
+					)
+				})() + 40
 
 			const isScrollingAlready =
 				Math.abs(startedScrollFrom.current) > 0 || Math.abs(desiredScrollTo.current) > 0

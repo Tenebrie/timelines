@@ -9,7 +9,7 @@ import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLev
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { LineSpacing } from '@/app/utils/constants'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { TimelineTrack } from '@/app/views/world/views/timeline/hooks/useEventTracks'
+import { TimelineEventHeightPx, TimelineTrack } from '@/app/views/world/views/timeline/hooks/useEventTracks'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
@@ -176,7 +176,8 @@ export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
 			const entity = state.params.event
 			const roundingFactor = LineSpacing * getLevelScalar(scaleLevel)
 			const realTime =
-				scaledTimeToRealTime(state.targetPos.x - state.targetRootPos.x - 10) + entity.markerPosition
+				scaledTimeToRealTime(state.targetPos.x - state.targetRootPos.x - TimelineEventHeightPx / 2) +
+				entity.markerPosition
 			const roundedRealTime = Math.round(realTime / roundingFactor) * roundingFactor
 			if (entityIsOfType('issuedAt', entity)) {
 				moveEventIssuedAt(entity, roundedRealTime)

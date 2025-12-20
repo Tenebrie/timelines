@@ -1,13 +1,15 @@
 import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Close from '@mui/icons-material/Close'
+import Typography from '@mui/material/Typography'
 import { useNavigate } from '@tanstack/react-router'
 import classNames from 'classnames'
-import { CSSProperties, memo, MouseEvent } from 'react'
+import { CSSProperties, memo, MouseEvent, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
@@ -15,7 +17,7 @@ import { worldSlice } from '@/app/views/world/WorldSlice'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { HoveredTimelineEvents } from '../components/HoveredTimelineEvents'
-import { Marker, MarkerDelta, MarkerIcon, MarkerRevoked } from './styles'
+import { Marker, MarkerDelta, MarkerIcon, MarkerRevoked, TimestampPopover } from './styles'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
@@ -34,6 +36,8 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 	const { getIconPath } = useEventIcons()
 	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
 	const openEventDrawer = useEventBusDispatch({ event: 'timeline/eventEditor/requestOpen' })
+	const { timeToLabel } = useWorldTime()
+	const [isHovered, setIsHovered] = useState(false)
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
@@ -98,10 +102,12 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 
 	const onMouseEnter = () => {
 		HoveredTimelineEvents.hoverEvent(entity)
+		setIsHovered(true)
 	}
 
 	const onMouseLeave = () => {
 		HoveredTimelineEvents.unhoverEvent(entity)
+		setIsHovered(false)
 	}
 
 	const color = useEntityColor({ entity })
@@ -141,6 +147,9 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 					<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
 				</MarkerIcon>
 			)}
+			<TimestampPopover $theme={theme} className={classNames({ visible: isHovered })}>
+				<Typography variant="caption">{timeToLabel(entity.markerPosition)}</Typography>
+			</TimestampPopover>
 		</RenderedMarker>
 	)
 }

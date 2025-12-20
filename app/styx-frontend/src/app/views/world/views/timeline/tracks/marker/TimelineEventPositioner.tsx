@@ -1,12 +1,10 @@
 import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Close from '@mui/icons-material/Close'
 import { CSSProperties, memo, useCallback } from 'react'
-import { useSelector } from 'react-redux'
 
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
-import { getOverviewPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { LineSpacing } from '@/app/utils/constants'
@@ -37,7 +35,6 @@ function TimelineEventPositionerComponent({
 }: Props) {
 	const { getIconPath } = useEventIcons()
 	const theme = useCustomTheme()
-	const { panelOpen } = useSelector(getOverviewPreferences)
 
 	const cssVariables = {
 		'--border-color': 'gray',
@@ -54,7 +51,7 @@ function TimelineEventPositionerComponent({
 			left: 'center',
 		},
 		adjustPosition: (pos) => {
-			const scroll = TimelineState.scroll - (panelOpen ? 0 : 8)
+			const scroll = TimelineState.scroll - 8
 			const b = -scroll % LineSpacing
 			const posTimestamp = pos.x + b
 			const roundedValue = Math.round(posTimestamp / LineSpacing) * LineSpacing
@@ -73,7 +70,7 @@ function TimelineEventPositionerComponent({
 						width: '1px',
 						position: 'absolute',
 						top: 0,
-						left: '50%',
+						left: 'calc(50% - 1px)',
 						overflow: 'hidden',
 					}}
 				></div>
@@ -95,7 +92,7 @@ function TimelineEventPositionerComponent({
 			return (
 				pos +
 				Math.floor(scroll / EVENT_SCROLL_RESET_PERIOD) * EVENT_SCROLL_RESET_PERIOD +
-				CONTROLLED_SCROLLER_SIZE +
+				CONTROLLED_SCROLLER_SIZE -
 				TimelineEventHeightPx / 2 +
 				1
 			)

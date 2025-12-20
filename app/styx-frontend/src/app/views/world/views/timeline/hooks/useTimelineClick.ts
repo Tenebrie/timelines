@@ -56,7 +56,7 @@ export const useTimelineClick = ({
 				y: event.clientY - boundingRect.top,
 			}
 
-			const clickOffset = Math.round((point.x - scrollRef.current) / LineSpacing) * LineSpacing
+			const clickOffset = Math.round((point.x + 40 - scrollRef.current) / LineSpacing) * LineSpacing
 			let newSelectedTime = scaledTimeToRealTime(clickOffset)
 			// For scaleLevel = 4, round to the nearest month
 			if (scaleLevel === 4) {

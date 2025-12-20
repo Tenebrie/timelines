@@ -7,25 +7,16 @@ import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import { useNavigate } from '@tanstack/react-router'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { getOverviewPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
-import { WorldSidebarTitle } from './WorldSidebarTitle'
-
 export const WorldSidebar = () => {
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
-	const { panelOpen: panelOpenPreference } = useSelector(getOverviewPreferences)
-
-	const panelCanBeOpened = useMediaQuery('(min-width: 1400px)')
-
-	const panelOpen = panelOpenPreference && panelCanBeOpened
 
 	const navigate = useNavigate({ from: '/world/$worldId' })
 
@@ -68,7 +59,7 @@ export const WorldSidebar = () => {
 				sx={{
 					height: '100%',
 					position: 'relative',
-					width: panelOpen ? '250px' : '72px',
+					width: '72px',
 					flexShrink: 0,
 					transition: 'width 0.3s',
 				}}
@@ -80,7 +71,6 @@ export const WorldSidebar = () => {
 						borderRadius: 0,
 						width: '72px',
 						height: '100%',
-						left: `${panelOpen ? -72 : 0}px`,
 						boxSizing: 'border-box',
 						transition: 'left 0.3s',
 						display: 'flex',
@@ -116,59 +106,10 @@ export const WorldSidebar = () => {
 						{/* </StyledSmallButton> */}
 					</Stack>
 				</Paper>
-				<Paper
-					style={{
-						zIndex: 3,
-						position: 'absolute',
-						borderRadius: 0,
-						width: '250px',
-						height: '100%',
-						left: `${panelOpen ? 0 : -250}px`,
-						boxSizing: 'border-box',
-						transition: 'left 0.3s',
-						display: 'flex',
-						flexDirection: 'column',
-						gap: 8,
-						padding: 16,
-					}}
-					elevation={2}
-				>
-					<WorldSidebarTitle />
-					<Divider />
-					<StyledButton variant={getButtonStyle(matchesTimeline)} onClick={onTimelineClick}>
-						<Home /> Timeline
-					</StyledButton>
-					{/* <StyledButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}>
-						<ViewList /> Overview
-					</StyledButton> */}
-					<StyledButton variant={getButtonStyle(matchesMindmap)} onClick={onMindmapClick}>
-						<Person /> Actors
-					</StyledButton>
-					<StyledButton variant={getButtonStyle(matchesWiki)} onClick={onWikiClick}>
-						<AutoStories /> Wiki
-					</StyledButton>
-					{!isReadOnly && (
-						<>
-							<Divider />
-							<StyledButton variant={getButtonStyle(matchesSettings)} onClick={onSettingsClick}>
-								<Settings /> Settings
-							</StyledButton>
-						</>
-					)}
-					{/* <StyledButton> */}
-					{/* <Help /> Help */}
-					{/* </StyledButton> */}
-				</Paper>
 			</Box>
 		</>
 	)
 }
-
-const StyledButton = styled(Button)`
-	gap: 6px;
-	justify-content: flex-start !important;
-	padding: 8px 16px !important;
-`
 
 const StyledSmallButton = styled(Button)`
 	gap: 6px;

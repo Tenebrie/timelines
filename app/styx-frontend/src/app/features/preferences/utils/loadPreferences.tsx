@@ -36,7 +36,6 @@ export const PreferencesStateSchema = z.object({
 		.default({}),
 	overview: z
 		.object({
-			panelOpen: z.boolean().default(true),
 			actorsOpen: z.boolean().default(true),
 			actorsReversed: z.boolean().default(false),
 			eventsOpen: z.boolean().default(true),
