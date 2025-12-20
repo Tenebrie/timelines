@@ -3,6 +3,7 @@ import { RefObject, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { useTimelineNavigation } from '../hooks/useTimelineNavigation'
@@ -22,6 +23,7 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
+	const { open: openEditEventModal } = useModal('editEventModal')
 
 	const { setIsSwitchingScale, setScaleLevel, setTargetScaleLevel } = timelineSlice.actions
 	const dispatch = useDispatch()
@@ -40,10 +42,11 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 		(time: number, track: string | undefined) => {
 			scrollTimelineTo({ timestamp: time })
 			navigate({
-				search: (prev) => ({ ...prev, selection: [], new: undefined, track }),
+				search: (prev) => ({ ...prev, selection: [], time, new: true, track }),
 			})
+			openEditEventModal({ eventId: null })
 		},
-		[navigate, scrollTimelineTo],
+		[navigate, scrollTimelineTo, openEditEventModal],
 	)
 
 	const { scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({

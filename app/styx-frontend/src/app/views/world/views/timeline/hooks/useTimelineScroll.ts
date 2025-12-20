@@ -37,8 +37,8 @@ export const useTimelineScroll = ({ defaultScroll, scaleLevel, minimumScroll, ma
 			if (publicScroll === lastScroll.current) {
 				return
 			}
-			lastScroll.current = publicScroll
-			TimelineState.scroll = publicScroll
+			lastScroll.current = publicScroll - 40
+			TimelineState.scroll = publicScroll - 40
 			TimelineState.scaleLevel = scaleLevel
 			notifyTimelineScrolled(publicScroll)
 		},

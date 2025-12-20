@@ -48,7 +48,7 @@ export const TimelineContextMenuComponent = () => {
 
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
-	const openEventDrawer = useEventBusDispatch({ event: 'timeline/eventEditor/requestOpen' })
+	const { open: openEditEventModal } = useModal('editEventModal')
 
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 
@@ -66,11 +66,11 @@ export const TimelineContextMenuComponent = () => {
 		onClose()
 		navigate({
 			to: '/world/$worldId/timeline',
-			search: (prev) => ({ ...prev, time: selectedTime }),
+			search: (prev) => ({ ...prev, time: selectedTime, new: true }),
 		})
 		scrollTimelineTo({ timestamp: selectedTime })
-		openEventDrawer({})
-	}, [onClose, navigate, scrollTimelineTo, selectedTime, openEventDrawer])
+		openEditEventModal({ eventId: null })
+	}, [onClose, navigate, scrollTimelineTo, selectedTime, openEditEventModal])
 
 	// const onReplaceSelectedEvent = useCallback(() => {
 	// 	onClose()

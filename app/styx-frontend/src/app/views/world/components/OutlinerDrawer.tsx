@@ -8,7 +8,6 @@ import { ResizeableDrawerProvider } from '@/app/components/ResizeGrabber/Resizea
 import { ResizeGrabber, useResizeGrabber } from '@/app/components/ResizeGrabber/ResizeGrabber'
 import { ResizeGrabberOverlay } from '@/app/components/ResizeGrabber/ResizeGrabberOverlay'
 import { ResizeGrabberPreferencesSchema } from '@/app/components/ResizeGrabber/ResizeGrabberPreferencesSchema'
-import { useEventBusSubscribe } from '@/app/features/eventBus'
 import usePersistentState from '@/app/hooks/usePersistentState'
 
 export function OutlinerDrawer() {
@@ -44,12 +43,6 @@ export function OutlinerDrawer() {
 		setPreferences({ height, visible: drawerVisible })
 	}, [drawerVisible, height, setPreferences])
 
-	useEventBusSubscribe({
-		event: 'timeline/eventEditor/requestOpen',
-		callback: () => {
-			setVisible(true)
-		},
-	})
 	const [draggerOutside, setDraggerOutside] = useState(false)
 	useEffect(() => {
 		if (isDragging || isDraggingChild) {

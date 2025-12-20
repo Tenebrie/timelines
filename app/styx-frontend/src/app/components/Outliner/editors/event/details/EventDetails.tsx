@@ -42,9 +42,7 @@ export function EventDetailsComponent() {
 		<Stack
 			gap={1}
 			sx={{
-				height: 'calc(100% - 48px)',
-				padding: '24px 16px',
-				overflowY: 'auto',
+				height: '100%',
 				...useBrowserSpecificScrollbars(),
 			}}
 		>

@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
@@ -35,7 +36,7 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 
 	const { getIconPath } = useEventIcons()
 	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
-	const openEventDrawer = useEventBusDispatch({ event: 'timeline/eventEditor/requestOpen' })
+	const { open: openEditEventModal } = useModal('editEventModal')
 	const { timeToLabel } = useWorldTime()
 	const [isHovered, setIsHovered] = useState(false)
 
@@ -68,7 +69,7 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 				}),
 			})
 			scrollTimelineTo({ timestamp: entity.markerPosition })
-			openEventDrawer({})
+			openEditEventModal({ eventId: entity.eventId })
 		},
 		ignoreDelay: true,
 	})

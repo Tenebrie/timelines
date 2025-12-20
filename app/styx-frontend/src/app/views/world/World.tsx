@@ -13,6 +13,7 @@ import { WorldNavigator } from './components/WorldNavigator'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
 import { DeleteEventDeltaModal } from './modals/DeleteEventDeltaModal'
 import { DeleteEventModal } from './modals/DeleteEventModal'
+import { EditEventModal } from './modals/EditEventModal'
 
 export const World = () => {
 	const { worldId } = useStrictParams({
@@ -67,6 +68,7 @@ export const World = () => {
 			<SummonableRichTextEditor>
 				{(props) => <RichTextEditorWithFallback {...props} />}
 			</SummonableRichTextEditor>
+			<EditEventModal />
 			<DeleteEventModal />
 			<DeleteEventDeltaModal />
 		</>

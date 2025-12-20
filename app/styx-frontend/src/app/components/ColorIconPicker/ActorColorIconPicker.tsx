@@ -2,7 +2,6 @@ import { startTransition, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { ActorDraft } from '@/app/components/Outliner/editors/actor/details/draft/useActorDraft'
-import { useEventBusDispatch } from '@/app/features/eventBus'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { getEditingPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 
@@ -18,7 +17,6 @@ export function ActorColorIconPicker({ draft }: Props) {
 		(a, b) => a.actorColorPickerOpen === b.actorColorPickerOpen,
 	)
 
-	const openEventDrawer = useEventBusDispatch({ event: 'timeline/eventEditor/requestOpen' })
 	const { setActorColorPickerOpen } = preferencesSlice.actions
 	const dispatch = useDispatch()
 
@@ -26,8 +24,7 @@ export function ActorColorIconPicker({ draft }: Props) {
 		startTransition(() => {
 			dispatch(setActorColorPickerOpen(!actorColorPickerOpen))
 		})
-		openEventDrawer({ extraHeight: actorColorPickerOpen ? -135 : 135 })
-	}, [dispatch, actorColorPickerOpen, openEventDrawer, setActorColorPickerOpen])
+	}, [dispatch, actorColorPickerOpen, setActorColorPickerOpen])
 
 	return (
 		<>

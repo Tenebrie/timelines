@@ -66,6 +66,7 @@ export const EditorContentBox = ({ editor, mode, className, readOnly }: EditorCo
 				minHeight: '1rem',
 				height: '100%',
 				padding: mode === 'edit' ? '0 16px' : 'unset',
+				color: 'text.primary',
 
 				'& > p:first-of-type': {
 					paddingTop: '16px',
@@ -77,6 +78,7 @@ export const EditorContentBox = ({ editor, mode, className, readOnly }: EditorCo
 				padding: '6px 0px',
 				lineHeight: 1.5,
 				wordBreak: 'break-word',
+				color: 'text.primary',
 			},
 
 			'& li > p': {

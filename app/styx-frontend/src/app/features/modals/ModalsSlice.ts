@@ -26,6 +26,10 @@ const modals = {
 	},
 
 	/* World */
+	editEventModal: {
+		isOpen: false as boolean,
+		eventId: null as string | null,
+	},
 	eventWizard: {
 		isOpen: false as boolean,
 		timestamp: 0 as number,
