@@ -93,10 +93,6 @@ export const preferencesSlice = createSlice({
 		},
 
 		/* Overview */
-		setPanelOpen: (state, { payload }: PayloadAction<boolean>) => {
-			state.overview.panelOpen = payload
-			saveToLocalStorage(state)
-		},
 		setActorsOpen: (state, { payload }: PayloadAction<boolean>) => {
 			state.overview.actorsOpen = payload
 			saveToLocalStorage(state)
