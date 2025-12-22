@@ -1,5 +1,6 @@
+import { useUpdateArticleMutation } from '@api/otherApi'
 import { MentionDetails } from '@api/types/worldTypes'
-import { useUpdateArticleMutation, worldWikiApi } from '@api/worldWikiApi'
+import { worldWikiApi } from '@api/worldWikiApi'
 import { useSelector } from 'react-redux'
 
 import { parseApiResponse } from '@/app/utils/parseApiResponse'

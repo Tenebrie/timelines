@@ -6,8 +6,8 @@
 	"homepage": "https://timelines.tenebrie.com",
 	"scripts": {
 		"analyze": "source-map-explorer 'build/assets/*.js'",
-		"tsc": "tsc",
-		"build": "tsc && vite build",
+		"tsc": "tsc --noEmit",
+		"build": "tsc --noEmit && vite build",
 		"build:ci": "vite build",
 		"lint": "eslint",
 		"lint-fix": "eslint --fix",
