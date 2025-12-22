@@ -15,7 +15,7 @@ IMAGES=(
 )
 
 for i in "${!SERVICES[@]}"; do
-  docker service update --image "${IMAGES[$i]}" "${SERVICES[$i]}" &
+  docker service update --image "${IMAGES[$i]}" --detach=false "${SERVICES[$i]}" &
 done
 
 wait
