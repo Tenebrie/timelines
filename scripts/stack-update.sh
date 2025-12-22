@@ -18,8 +18,6 @@ IMAGES=(
 for i in "${!SERVICES[@]}"; do
   docker service update \
     --image "${IMAGES[$i]}" \
-    --update-failure-action pause \
-    --detach=false \
     "${SERVICES[$i]}" &
 done
 
@@ -38,7 +36,7 @@ done
 if $FAILED; then
   echo "Rolling back all services..."
   for svc in "${SERVICES[@]}"; do
-    docker service update --rollback --detach=false "$svc" &
+    docker service update --rollback "$svc" &
   done
   wait
   exit 1
