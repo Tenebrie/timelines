@@ -6,9 +6,43 @@ if [[ -z "$VERSION" ]]; then
     exit 1
 fi
 
-docker service update --image tenebrie/timelines-gatekeeper:${VERSION} timelines_gatekeeper
-docker service update --image tenebrie/timelines-rhea:${VERSION} timelines_rhea
-docker service update --image tenebrie/timelines-calliope:${VERSION} timelines_calliope
-docker service update --image tenebrie/timelines-styx:${VERSION} timelines_styx
+SERVICES=("timelines_rhea" "timelines_calliope" "timelines_styx" "timelines_gatekeeper")
+IMAGES=(
+  "tenebrie/timelines-rhea:${VERSION}"
+  "tenebrie/timelines-calliope:${VERSION}"
+  "tenebrie/timelines-styx:${VERSION}"
+  "tenebrie/timelines-gatekeeper:${VERSION}"
+)
 
+# Update all in parallel, pause on failure
+for i in "${!SERVICES[@]}"; do
+  docker service update \
+    --image "${IMAGES[$i]}" \
+    --update-failure-action pause \
+    --detach=false \
+    "${SERVICES[$i]}" &
+done
+
+wait
+
+# Check results
+FAILED=false
+for svc in "${SERVICES[@]}"; do
+  STATE=$(docker service inspect --format '{{.UpdateStatus.State}}' "$svc")
+  if [[ "$STATE" != "completed" ]]; then
+    echo "FAILED: $svc state is $STATE"
+    FAILED=true
+  fi
+done
+
+if $FAILED; then
+  echo "Rolling back all services..."
+  for svc in "${SERVICES[@]}"; do
+    docker service update --rollback --detach=false "$svc" &
+  done
+  wait
+  exit 1
+fi
+
+echo "All services updated successfully"
 docker system prune -f

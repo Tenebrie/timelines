@@ -9,7 +9,7 @@ import { AnnouncementRouter } from './routers/AnnouncementRouter.js'
 import { AssetUploadRouter } from './routers/AssetRouter.js'
 import { AuthRouter } from './routers/AuthRouter.js'
 import { ConstantsRouter } from './routers/ConstantsRouter.js'
-import { HealthRouter } from './routers/HealthRouter.js'
+import { HealthRouter, HealthStatus } from './routers/HealthRouter.js'
 import { ImageConversionRouter } from './routers/ImageConversionRouter.js'
 import { MindmapRouter } from './routers/MindmapRouter.js'
 import { ProfileRouter } from './routers/ProfileRouter.js'
@@ -95,6 +95,7 @@ if (!isRunningInTest()) {
 	RedisService.initRedisConnection()
 	app.listen(3000)
 	console.info(`${chalk.greenBright('[Rhea]')} Listening on port ${chalk.blueBright('3000')}`)
+	HealthStatus.markRheaAsReady()
 
 	setInterval(() => {
 		UserService.cleanUpDeletedUsers()

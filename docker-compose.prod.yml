@@ -58,9 +58,10 @@ services:
             - s3-access-key-secret
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-            interval: 30s
+            interval: 10s
             timeout: 10s
-            retries: 5
+            retries: 3
+            start_period: 30s
     calliope:
         image: tenebrie/timelines-calliope:${VERSION}
         build:

@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['mindmap'] as const
+export const addTagTypes = ['mindmap', 'worldWikiArticle'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -52,6 +52,14 @@ const injectedRtkApi = api
 					method: 'DELETE',
 				}),
 				invalidatesTags: ['mindmap'],
+			}),
+			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/wiki/article/${queryArg.articleId}`,
+					method: 'PATCH',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldWikiArticle'],
 			}),
 		}),
 		overrideExisting: false,
@@ -156,6 +164,46 @@ export type DeleteNodeApiArg = {
 	/** Any string value */
 	nodeId: string
 }
+export type UpdateArticleApiResponse = /** status 200  */ {
+	children: {
+		worldId: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		icon: string
+		color: string
+		position: number
+		contentRich: string
+		parentId?: null | string
+	}[]
+	worldId: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	icon: string
+	color: string
+	position: number
+	contentRich: string
+	parentId?: null | string
+}
+export type UpdateArticleApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	articleId: string
+	body: {
+		name?: string
+		icon?: string
+		color?: string
+		contentRich?: string
+		mentions?: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
+	}
+}
 export const {
 	useAdminGetUserLevelsQuery,
 	useLazyAdminGetUserLevelsQuery,
@@ -171,4 +219,5 @@ export const {
 	useCreateNodeMutation,
 	useUpdateNodeMutation,
 	useDeleteNodeMutation,
+	useUpdateArticleMutation,
 } = injectedRtkApi
