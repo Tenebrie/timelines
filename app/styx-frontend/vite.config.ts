@@ -8,6 +8,9 @@ const tanstackTempDir = process.env.TSR_TMP_DIR || path.resolve('node_modules/.t
 
 export default defineConfig({
 	base: '/',
+	define: {
+		__APP_VERSION__: JSON.stringify(process.env.VERSION ?? 'Dev'),
+	},
 	plugins: [
 		tanstackRouter({ autoCodeSplitting: true, tmpDir: tanstackTempDir }),
 		react(),

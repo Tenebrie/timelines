@@ -21,6 +21,8 @@ services:
         build:
             context: ./
             dockerfile: ./app/styx-frontend/Dockerfile.prod
+            args:
+                VERSION: ${VERSION}
         environment:
             NODE_ENV: production # Prod or staging
         command: yarn prod

@@ -1,5 +1,8 @@
 FROM node:24-alpine
 
+ARG VERSION=dev
+ENV VERSION=${VERSION}
+
 WORKDIR /app/styx
 
 ADD ./app/styx-frontend /app/styx

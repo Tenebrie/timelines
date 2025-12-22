@@ -11,7 +11,7 @@ export function Profile() {
 		<Container maxWidth="lg" sx={{ py: 4, height: '100%' }}>
 			<Stack direction="row" spacing={3}>
 				{/* Sidebar */}
-				<Paper sx={{ width: 250, p: 2 }} elevation={1}>
+				<Paper sx={{ width: 250, p: 2, display: 'flex', flexDirection: 'column' }} elevation={1}>
 					<Typography variant="subtitle2" color="textSecondary" sx={{ mb: 2 }}>
 						Settings
 					</Typography>
@@ -19,6 +19,15 @@ export function Profile() {
 						<PageButton label="Public profile" route="/profile/public" />
 						<PageButton label="Storage" route="/profile/storage" />
 					</Stack>
+
+					{/* Version marker */}
+					<Typography
+						variant="caption"
+						color="text.secondary"
+						sx={{ mt: 'auto', pt: 4, display: 'block', textAlign: 'center', opacity: 0.6 }}
+					>
+						Timelines {__APP_VERSION__}
+					</Typography>
 				</Paper>
 
 				{/* Main Content */}
