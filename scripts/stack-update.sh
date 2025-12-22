@@ -20,6 +20,18 @@ done
 
 wait
 
+# Wait for all services to finish updating
+echo "Waiting for rollouts to complete..."
+for svc in "${SERVICES[@]}"; do
+  while true; do
+    STATE=$(docker service inspect --format '{{.UpdateStatus.State}}' "$svc")
+    if [[ "$STATE" != "updating" ]]; then
+      break
+    fi
+    sleep 2
+  done
+done
+
 FAILED=false
 for svc in "${SERVICES[@]}"; do
   STATE=$(docker service inspect --format '{{.UpdateStatus.State}}' "$svc")
