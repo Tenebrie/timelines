@@ -28,25 +28,24 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 	)
 	const { isReadOnly } = useIsReadOnly()
 
-	// Force re-render when editor state changes
 	const [, setUpdateCounter] = useState(0)
+
+	const forceUpdate = () => {
+		setUpdateCounter((prev) => prev + 1)
+	}
 
 	useEffect(() => {
 		if (!editor) {
 			return
 		}
 
-		const handleUpdate = () => {
-			setUpdateCounter((prev) => prev + 1)
-		}
-
 		// Subscribe to editor events that should trigger re-renders
-		editor.on('update', handleUpdate)
-		editor.on('selectionUpdate', handleUpdate)
+		editor.on('update', forceUpdate)
+		editor.on('selectionUpdate', forceUpdate)
 
 		return () => {
-			editor.off('update', handleUpdate)
-			editor.off('selectionUpdate', handleUpdate)
+			editor.off('update', forceUpdate)
+			editor.off('selectionUpdate', forceUpdate)
 		}
 	}, [editor])
 
@@ -59,18 +58,22 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 
 	const onBoldClick = useCallback(() => {
 		editor?.chain().focus().toggleBold().run()
+		forceUpdate()
 	}, [editor])
 
 	const onItalicClick = useCallback(() => {
 		editor?.chain().focus().toggleItalic().run()
+		forceUpdate()
 	}, [editor])
 
 	const onUnderlineClick = useCallback(() => {
 		editor?.chain().focus().toggleUnderline().run()
+		forceUpdate()
 	}, [editor])
 
 	const onStrikeClick = useCallback(() => {
 		editor?.chain().focus().toggleStrike().run()
+		forceUpdate()
 	}, [editor])
 
 	const onMentionActorClick = useCallback(() => {
