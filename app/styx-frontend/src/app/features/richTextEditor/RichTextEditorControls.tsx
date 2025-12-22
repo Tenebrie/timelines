@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { Editor } from '@tiptap/react'
-import { memo, useCallback } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -27,6 +27,28 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 		(a, b) => a.readModeEnabled === b.readModeEnabled,
 	)
 	const { isReadOnly } = useIsReadOnly()
+
+	// Force re-render when editor state changes
+	const [, setUpdateCounter] = useState(0)
+
+	useEffect(() => {
+		if (!editor) {
+			return
+		}
+
+		const handleUpdate = () => {
+			setUpdateCounter((prev) => prev + 1)
+		}
+
+		// Subscribe to editor events that should trigger re-renders
+		editor.on('update', handleUpdate)
+		editor.on('selectionUpdate', handleUpdate)
+
+		return () => {
+			editor.off('update', handleUpdate)
+			editor.off('selectionUpdate', handleUpdate)
+		}
+	}, [editor])
 
 	const isReadMode = isReadOnly || (readModeEnabled && allowReadMode)
 

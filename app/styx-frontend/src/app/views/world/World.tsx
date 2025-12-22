@@ -20,7 +20,6 @@ export const World = () => {
 		from: '/world/$worldId',
 	})
 	const sendCalliopeMessage = useEventBusDispatch({ event: 'calliope/requestSendMessage' })
-	useLoadWorldInfo(worldId)
 
 	useEffectOnce(() => {
 		sendCalliopeMessage({
@@ -68,9 +67,18 @@ export const World = () => {
 			<SummonableRichTextEditor>
 				{(props) => <RichTextEditorWithFallback {...props} />}
 			</SummonableRichTextEditor>
+			<WorldLoader />
 			<EditEventModal />
 			<DeleteEventModal />
 			<DeleteEventDeltaModal />
 		</>
 	)
+}
+
+function WorldLoader() {
+	const { worldId } = useStrictParams({
+		from: '/world/$worldId',
+	})
+	useLoadWorldInfo(worldId)
+	return <></>
 }

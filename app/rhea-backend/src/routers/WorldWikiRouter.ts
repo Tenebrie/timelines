@@ -17,7 +17,7 @@ import {
 } from 'moonflower'
 
 import { SessionMiddleware } from '../middleware/SessionMiddleware.js'
-import { worldWikiTag } from './utils/tags.js'
+import { worldWikiArticleTag, worldWikiTag } from './utils/tags.js'
 import { MentionsArrayValidator } from './validators/MentionsArrayValidator.js'
 import { NullableStringValidator } from './validators/NullableStringValidator.js'
 import { StringArrayValidator } from './validators/StringArrayValidator.js'
@@ -79,7 +79,7 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 	useApiEndpoint({
 		name: 'updateArticle',
 		description: 'Updates an article in the wiki.',
-		tags: [worldWikiTag],
+		tags: [worldWikiArticleTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)

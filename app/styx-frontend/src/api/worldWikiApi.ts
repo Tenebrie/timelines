@@ -24,7 +24,6 @@ const injectedRtkApi = api
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['worldWiki'],
 			}),
 			deleteArticle: build.mutation<DeleteArticleApiResponse, DeleteArticleApiArg>({
 				query: (queryArg) => ({

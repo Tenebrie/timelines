@@ -1,5 +1,5 @@
 import Save from '@mui/icons-material/Save'
-import throttle from 'lodash.throttle'
+import debounce from 'lodash.debounce'
 import { ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 
 import { useAutoRef } from '@/app/hooks/useAutoRef'
@@ -21,13 +21,12 @@ export const useAutosave = <T extends unknown[]>({ onSave, isSaving, isError, de
 	const successTimeoutRef = useRef<number | null>(null)
 	const defaultIconRef = useRef<ReactElement | undefined>(defaultIcon)
 
-	// TODO: Figure out a more permanent solution
-	const autosaveDelay = 300
+	const autosaveDelay = 500
 
 	const onSaveRef = useAutoRef(onSave)
 	const isSavingRef = useAutoRef(isSaving)
 	const debouncedAutosave = useRef(
-		throttle(
+		debounce(
 			(...args: T) => {
 				if (savingStateRef.current !== 'debounce') {
 					return
@@ -64,7 +63,6 @@ export const useAutosave = <T extends unknown[]>({ onSave, isSaving, isError, de
 			if (isSavingRef.current) {
 				return
 			}
-			// setSavingState('waiting')
 			onSaveRef.current(...args)
 			lastSeenValue.current = null
 		},
