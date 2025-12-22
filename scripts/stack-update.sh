@@ -2,8 +2,8 @@
 set -e
 
 if [[ -z "$VERSION" ]]; then
-    echo "Must provide VERSION environment" 1>&2
-    exit 1
+  echo "Must provide VERSION environment" 1>&2
+  exit 1
 fi
 
 SERVICES=("timelines_rhea" "timelines_calliope" "timelines_styx" "timelines_gatekeeper")
@@ -14,21 +14,21 @@ IMAGES=(
   "tenebrie/timelines-gatekeeper:${VERSION}"
 )
 
-# Update all in parallel, pause on failure
 for i in "${!SERVICES[@]}"; do
-  docker service update \
-    --image "${IMAGES[$i]}" \
-    "${SERVICES[$i]}" &
+  docker service update --image "${IMAGES[$i]}" "${SERVICES[$i]}" &
 done
 
 wait
 
-# Check results
 FAILED=false
 for svc in "${SERVICES[@]}"; do
   STATE=$(docker service inspect --format '{{.UpdateStatus.State}}' "$svc")
   if [[ "$STATE" != "completed" ]]; then
     echo "FAILED: $svc state is $STATE"
+    echo "--- $svc task history ---"
+    docker service ps "$svc" --no-trunc --format "table {{.Name}}\t{{.CurrentState}}\t{{.Error}}"
+    echo "--- $svc recent logs ---"
+    docker service logs --tail 100 "$svc" 2>&1 || true
     FAILED=true
   fi
 done
