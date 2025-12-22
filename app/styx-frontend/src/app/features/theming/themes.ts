@@ -142,6 +142,7 @@ export const customLightTheme = {
 			text: 'rgb(21, 16, 11)',
 		},
 		outline: 'rgb(0 0 0 / 23%)',
+		outlineStrong: 'rgb(0 0 0 / 50%)',
 		background: {
 			hard: 'rgb(0 0 0 / 40%)',
 			harder: 'rgb(0 0 0 / 50%)',
@@ -166,6 +167,7 @@ export const customDarkTheme: typeof customLightTheme = {
 			text: 'white',
 		},
 		outline: 'rgb(255 255 255 / 23%)',
+		outlineStrong: 'rgb(255 255 255 / 50%)',
 		background: {
 			hard: 'rgb(255 255 255 / 40%)',
 			harder: 'rgb(255 255 255 / 50%)',

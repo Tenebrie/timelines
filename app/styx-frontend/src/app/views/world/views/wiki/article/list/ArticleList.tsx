@@ -42,7 +42,13 @@ export function ArticleListComponent({ parentId, depth }: Props) {
 			ref={ref}
 			direction="column"
 			height={1}
-			marginLeft={parentId ? 2 : 0}
+			sx={{
+				marginLeft: parentId ? 2 : 0,
+				marginRight: -0.5,
+				paddingRight: 1.5,
+				height: '100%',
+				overflowY: 'auto',
+			}}
 			data-testid={`ArticleList/${depth}`}
 		>
 			{sortedArticles.length === 0 && (

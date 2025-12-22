@@ -23,7 +23,6 @@ export const Wiki = () => {
 					justifyContent: 'center',
 					flexDirection: 'row',
 					margin: '0 16px',
-					gap: 2,
 				}}
 			>
 				<Paper
@@ -31,43 +30,46 @@ export const Wiki = () => {
 						padding: 2,
 						paddingTop: 3,
 						width: 'calc(100% - 64px)',
-						height: 'calc(100% - 128px)',
-						maxWidth: '350px',
+						height: 'calc(100% - 64px)',
+						maxWidth: '1350px',
 						maxHeight: 'calc(100% - 16px)',
-						overflowY: 'auto',
-					}}
-					elevation={2}
-					data-testid="ArticleListWithHeader"
-				>
-					<Stack gap={1} height={1}>
-						<Stack gap={1}>
-							<ArticleListHeader />
-							<Divider />
-						</Stack>
-						<ArticleList parentId={null} depth={0} />
-					</Stack>
-				</Paper>
-				<Paper
-					sx={{
-						padding: 2,
-						paddingTop: 3,
-						width: 'calc(100% - 64px)',
-						height: 'calc(100% - 128px)',
-						maxWidth: '1000px',
-						maxHeight: 'calc(100% - 16px)',
-						overflowY: 'auto',
+						display: 'flex',
+						flexDirection: 'row',
+						gap: 2,
 					}}
 					elevation={2}
 				>
-					{isArticle && (
-						<Stack gap={1} height={'calc(100%)'}>
+					<Stack
+						sx={{
+							width: '350px',
+							minWidth: '350px',
+						}}
+						data-testid="ArticleListWithHeader"
+					>
+						<Stack gap={1} height={1}>
 							<Stack gap={1}>
-								<ArticleDetailsTitle />
+								<ArticleListHeader />
 								<Divider />
 							</Stack>
-							<Box height={'calc(100% - 64px)'}>{<Outlet />}</Box>
+							<ArticleList parentId={null} depth={0} />
 						</Stack>
-					)}
+					</Stack>
+					<Stack
+						sx={{
+							flex: 1,
+							height: '100%',
+							overflowY: 'auto',
+						}}
+					>
+						{isArticle && (
+							<Stack gap={1} height={'calc(100%)'}>
+								<Stack gap={1}>
+									<ArticleDetailsTitle />
+								</Stack>
+								<Box height={'calc(100% - 44px)'}>{<Outlet />}</Box>
+							</Stack>
+						)}
+					</Stack>
 				</Paper>
 			</Stack>
 		</>

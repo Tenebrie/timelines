@@ -9,7 +9,7 @@ export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
 	height: 100%;
 
 	&:hover {
-		border: 1px solid ${({ $theme }) => $theme.material.palette.text.primary};
+		border: 1px solid ${({ $theme }) => $theme.custom.palette.outlineStrong};
 	}
 
 	body.cursor-grabbing &,
@@ -22,7 +22,6 @@ export const StyledContainer = styled(Box)<{ $theme: CustomTheme }>`
 
 	&:has(.content .ProseMirror-focused) {
 		border: 1px solid ${({ $theme }) => $theme.material.palette.primary.main};
-		outline: 1px solid ${({ $theme }) => $theme.material.palette.primary.main};
 	}
 
 	.tiptap p.is-editor-empty:first-child::before {

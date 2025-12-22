@@ -89,7 +89,7 @@ function ArticleListItemInnerComponent({
 					startIcon={icon}
 					variant={highlighted ? 'contained' : 'text'}
 					color="secondary"
-					sx={{ justifyContent: 'start', paddingLeft: 2 }}
+					sx={{ justifyContent: 'start', paddingLeft: 1.5 }}
 					fullWidth
 					onClick={onNavigate}
 				>

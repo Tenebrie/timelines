@@ -239,6 +239,7 @@ export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allo
 			sx={{
 				borderRadius: '6px',
 				minHeight: '128px',
+				background: isReadMode ? '' : '#00000011',
 				border: isReadMode ? '1px solid transparent' : '',
 				'&:hover': {
 					border: isReadMode ? '1px solid transparent' : '',
