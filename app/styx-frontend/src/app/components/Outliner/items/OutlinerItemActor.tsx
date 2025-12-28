@@ -28,7 +28,12 @@ function OutlinerItemActorComponent({ actor }: Props) {
 		},
 		ghostFactory: () => (
 			<Box sx={{ borderRadius: 2, filter: 'grayscale(1)' }}>
-				<ActorNodeContent actor={actor} isSelected={false} />
+				<ActorNodeContent
+					actor={actor}
+					isSelected={false}
+					onHeaderClick={() => {}}
+					onContentClick={() => {}}
+				/>
 			</Box>
 		),
 	})
