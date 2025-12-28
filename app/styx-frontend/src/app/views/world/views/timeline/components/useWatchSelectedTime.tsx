@@ -8,7 +8,7 @@ import { worldSlice } from '@/app/views/world/WorldSlice'
 export function useWatchSelectedTime() {
 	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
 	const search = useSearch({
-		from: '/world/$worldId/_world/timeline',
+		from: '/world/$worldId/_world',
 		select: (search) => ({
 			time: search.time,
 		}),

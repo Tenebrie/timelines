@@ -6,7 +6,7 @@ import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 export const useCurrentActor = () => {
 	const selectedActorIds = useSearch({
-		from: '/world/$worldId/_world/mindmap',
+		from: '/world/$worldId/_world',
 		select: (search) => search.selection,
 	})
 	const { actors } = useSelector(getWorldState, (a, b) => a.actors === b.actors)
@@ -15,7 +15,8 @@ export const useCurrentActor = () => {
 		if (selectedActorIds.length === 0) {
 			return undefined
 		}
-		return actors.find((m) => m.id === selectedActorIds[0])
+		const matchingActors = actors.filter((a) => selectedActorIds.includes(a.id))
+		return matchingActors[0]
 	}, [actors, selectedActorIds])
 
 	return {

@@ -24,7 +24,10 @@ export const useUpsertEvent = (props: Props) => {
 
 	const draftRef = useAutoRef(baseDraft)
 
-	const targetTrack = useSearch({ from: '/world/$worldId/_world/timeline', select: (search) => search.track })
+	const targetTrack = useSearch({
+		from: '/world/$worldId/_world',
+		select: (search) => search.track,
+	})
 
 	const { flushSave, autosave } = useAutosave({
 		onSave: async ({ draft, mode, onCreate }: Props) => {

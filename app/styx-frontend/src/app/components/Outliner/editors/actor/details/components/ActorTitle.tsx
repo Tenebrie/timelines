@@ -1,4 +1,3 @@
-import Close from '@mui/icons-material/Close'
 import Button from '@mui/material/Button'
 import Input from '@mui/material/Input'
 import Stack from '@mui/material/Stack'
@@ -72,12 +71,6 @@ export const ActorTitle = ({ draft }: Props) => {
 						<Typography variant="h6" noWrap>
 							{name || '<Name>'}
 						</Typography>
-					</Button>
-					<Button
-						variant="text"
-						onClick={() => navigate({ search: (prev) => ({ ...prev, selection: [], new: false }) })}
-					>
-						<Close />
 					</Button>
 				</Stack>
 			)}

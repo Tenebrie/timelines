@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux'
 
 import { ActorAvatar } from '@/app/components/ActorAvatar/ActorAvatar'
 import { ShowHideChevron } from '@/app/components/ShowHideChevron'
-import { useEventBusDispatch } from '@/app/features/eventBus'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { StyledListItemButton, StyledListItemText } from '@/app/views/world/views/timeline/shelf/styles'
@@ -26,7 +26,7 @@ export const ActorRenderer = ({ actor, collapsed }: Props) => {
 	const dispatch = useDispatch()
 	const { collapseActorInOutliner, uncollapseActorInOutliner } = preferencesSlice.actions
 
-	const openActorDrawer = useEventBusDispatch({ event: 'mindmap/actorEditor/requestOpen' })
+	const { open: openEditActorModal } = useModal('editActorModal')
 
 	const onToggleOpen = useCallback(() => {
 		if (collapsed) {
@@ -51,7 +51,7 @@ export const ActorRenderer = ({ actor, collapsed }: Props) => {
 						search: (prev) => ({ ...prev, selection: [actor.id] }),
 					})
 					requestIdleCallback(() => {
-						openActorDrawer({})
+						openEditActorModal({ actorId: actor.id })
 					})
 				}}
 			>

@@ -1,8 +1,8 @@
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
-import { useResizeableDrawer } from '@/app/components/ResizeGrabber/ResizeableDrawerContext'
 import { useEventBusDispatch } from '@/app/features/eventBus'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 export function ActorRouterHotkeys() {
@@ -11,44 +11,55 @@ export function ActorRouterHotkeys() {
 		select: (search) => ({ selectedMarkerIds: search.selection, creatingNew: search.new }),
 	})
 	const navigate = useNavigate({ from: '/world/$worldId/mindmap' })
-
-	const { drawerVisible, setDrawerVisible } = useResizeableDrawer()
+	const { open: openEditActorModal, isOpen: isModalOpen } = useModal('editActorModal')
 
 	const requestFocus = useEventBusDispatch({ event: 'richEditor/requestFocus' })
 	const requestBlur = useEventBusDispatch({ event: 'richEditor/requestBlur' })
+
+	// Track previous URL state to detect transitions
+	const prevStateRef = useRef({ creatingNew, selectedMarkerIds })
+
 	useEffect(() => {
-		if (!drawerVisible) {
+		if (!isModalOpen) {
 			requestBlur()
 		}
-	}, [drawerVisible, requestBlur])
+	}, [isModalOpen, requestBlur])
+
+	// Open modal when creating new actor
+	useEffect(() => {
+		const prev = prevStateRef.current
+
+		const wasNotCreating = !prev.creatingNew
+		const isNowCreating = creatingNew
+
+		if (!isModalOpen && wasNotCreating && isNowCreating) {
+			openEditActorModal({ actorId: null })
+			requestFocus()
+		}
+
+		// Update ref for next run
+		prevStateRef.current = { creatingNew, selectedMarkerIds }
+	}, [creatingNew, selectedMarkerIds, isModalOpen, openEditActorModal, requestFocus])
 
 	useShortcut(Shortcut.CreateNew, () => {
 		navigate({
 			to: '/world/$worldId/mindmap',
 			search: (prev) => ({ ...prev, selection: [], new: true }),
 		})
-		setDrawerVisible(true)
+		openEditActorModal({ actorId: null })
 		requestFocus()
-		setTimeout(() => {
-			setDrawerVisible(true)
-			requestFocus()
-		})
 	})
+
 	useShortcut(
 		Shortcut.EditSelected,
 		() => {
-			requestFocus()
-			setDrawerVisible(true)
+			if (selectedMarkerIds.length > 0) {
+				openEditActorModal({ actorId: selectedMarkerIds[0] })
+				requestFocus()
+			}
 		},
-		drawerVisible || selectedMarkerIds.length > 0,
+		selectedMarkerIds.length > 0,
 	)
-
-	// useEventBusSubscribe({
-	// 	event: 'mindmap/actorEditor/requestOpen',
-	// 	callback: () => {
-	// 		setDrawerVisible(true)
-	// 	},
-	// })
 
 	useShortcut(
 		Shortcut.Escape,

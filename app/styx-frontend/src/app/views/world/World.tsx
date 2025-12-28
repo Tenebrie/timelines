@@ -13,6 +13,7 @@ import { WorldNavigator } from './components/WorldNavigator'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
 import { DeleteEventDeltaModal } from './modals/DeleteEventDeltaModal'
 import { DeleteEventModal } from './modals/DeleteEventModal'
+import { EditActorModal } from './modals/EditActorModal'
 import { EditEventModal } from './modals/EditEventModal'
 
 export const World = () => {
@@ -67,7 +68,11 @@ export const World = () => {
 			<SummonableRichTextEditor>
 				{(props) => <RichTextEditorWithFallback {...props} />}
 			</SummonableRichTextEditor>
+			<SummonableRichTextEditor>
+				{(props) => <RichTextEditorWithFallback {...props} />}
+			</SummonableRichTextEditor>
 			<WorldLoader />
+			<EditActorModal />
 			<EditEventModal />
 			<DeleteEventModal />
 			<DeleteEventDeltaModal />

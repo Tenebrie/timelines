@@ -30,6 +30,10 @@ const modals = {
 		isOpen: false as boolean,
 		eventId: null as string | null,
 	},
+	editActorModal: {
+		isOpen: false as boolean,
+		actorId: null as string | null,
+	},
 	eventWizard: {
 		isOpen: false as boolean,
 		timestamp: 0 as number,

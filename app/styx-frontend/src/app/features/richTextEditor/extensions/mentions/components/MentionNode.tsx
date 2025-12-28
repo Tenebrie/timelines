@@ -1,6 +1,7 @@
 import { Node } from '@tiptap/core'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { createRoot, Root } from 'react-dom/client'
+import { Provider as ReduxProvider } from 'react-redux'
 
 import { dispatchEvent } from '@/app/features/eventBus'
 import { CustomThemeProvider } from '@/app/features/theming/context/CustomThemeProvider'
@@ -113,13 +114,15 @@ export const MentionNode = Node.create({
 					})
 
 					return (
-						<CustomThemeProvider colorMode={state.preferences.colorMode}>
-							{actorId ? <ActorMentionChip worldId={worldId} actorId={actorId} actors={actors} /> : null}
-							{eventId ? <EventMentionChip worldId={worldId} eventId={eventId} events={events} /> : null}
-							{articleId ? (
-								<ArticleMentionChip worldId={worldId} articleId={articleId} articles={articles} />
-							) : null}
-						</CustomThemeProvider>
+						<ReduxProvider store={store}>
+							<CustomThemeProvider colorMode={state.preferences.colorMode}>
+								{actorId ? <ActorMentionChip worldId={worldId} actorId={actorId} actors={actors} /> : null}
+								{eventId ? <EventMentionChip worldId={worldId} eventId={eventId} events={events} /> : null}
+								{articleId ? (
+									<ArticleMentionChip worldId={worldId} articleId={articleId} articles={articles} />
+								) : null}
+							</CustomThemeProvider>
+						</ReduxProvider>
 					)
 				}
 

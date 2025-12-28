@@ -10,6 +10,7 @@ const worldSearchSchema = z.object({
 	selection: z.array(z.string()).default([]),
 	time: z.number().min(-8640000000000000).max(8640000000000000).default(0),
 	scale: ScaleLevelSchema.default(loadPreferences().timeline.scaleLevel),
+	track: z.string().optional(),
 })
 
 export const Route = createFileRoute('/world/$worldId/_world')({

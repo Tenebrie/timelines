@@ -9,7 +9,7 @@ import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 export function EventRouterHotkeys() {
 	const { selectedMarkerIds, creatingNew } = useSearch({
-		from: '/world/$worldId/_world/timeline',
+		from: '/world/$worldId/_world',
 		select: (search) => ({ selectedMarkerIds: search.selection, creatingNew: search.new }),
 	})
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })

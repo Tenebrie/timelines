@@ -26,7 +26,7 @@ export const TimelineContextMenuComponent = () => {
 	const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
 
 	const selectedMarkers = useSearch({
-		from: '/world/$worldId/_world/timeline',
+		from: '/world/$worldId/_world',
 		select: (search) => search.selection,
 	})
 
