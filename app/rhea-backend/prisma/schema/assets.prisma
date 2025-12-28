@@ -1,0 +1,30 @@
+enum AssetType {
+    ImageConversion @map("Image")
+    Avatar
+}
+
+enum AssetStatus {
+    Pending
+    Finalized
+    Failed
+}
+
+model Asset {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    expiresAt DateTime?
+
+    owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    ownerId String
+
+    bucketKey String
+
+    size                  Int
+    originalFileName      String
+    originalFileExtension String
+    contentType           AssetType
+    status                AssetStatus @default(Pending)
+
+    avatarOf User? @relation("UserAvatar")
+}

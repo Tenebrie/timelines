@@ -1,12 +1,15 @@
 import { Prisma } from '@prisma/client'
-import { unwrapParam } from '@src/utils/unwrapParam'
+import { unwrapParam } from '@src/utils/unwrapParam.js'
 
-import { getPrismaClient } from './dbClients/DatabaseClient'
-import { fetchWorldEventDetailsOrThrow } from './dbQueries/fetchWorldEventDetailsOrThrow'
-import { fetchWorldEventOrThrow } from './dbQueries/fetchWorldEventOrThrow'
-import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
-import { makeUpdateDeltaStateNamesQueries } from './dbQueries/makeUpdateDeltaStateNamesQueries'
-import { makeUpdateWorldEventQuery, UpdateWorldEventQueryParams } from './dbQueries/makeUpdateWorldEventQuery'
+import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { fetchWorldEventDetailsOrThrow } from './dbQueries/fetchWorldEventDetailsOrThrow.js'
+import { fetchWorldEventOrThrow } from './dbQueries/fetchWorldEventOrThrow.js'
+import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
+import { makeUpdateDeltaStateNamesQueries } from './dbQueries/makeUpdateDeltaStateNamesQueries.js'
+import {
+	makeUpdateWorldEventQuery,
+	UpdateWorldEventQueryParams,
+} from './dbQueries/makeUpdateWorldEventQuery.js'
 
 export const WorldEventService = {
 	fetchWorldEvent: async (eventId: string) => {
@@ -87,7 +90,7 @@ export const WorldEventService = {
 
 	deleteWorldEvent: async ({ worldId, eventId }: { worldId: string; eventId: string }) => {
 		const [event, world] = await getPrismaClient().$transaction([
-			getPrismaClient().worldEvent.delete({
+			getPrismaClient().worldEvent.deleteMany({
 				where: {
 					id: eventId,
 				},

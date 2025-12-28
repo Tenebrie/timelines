@@ -13,16 +13,23 @@ model User {
     id        String   @id @unique @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
+    deletedAt DateTime?
 
     email    String @unique
     username String
     password String
+    bio      String @default("")
 
     level         UserLevel          @default(Free)
     notifications UserAnnouncement[]
 
     worlds          World[]
     collaboratingIn CollaboratingUser[]
+
+    assets Asset[]
+
+    avatar   Asset?  @relation("UserAvatar", fields: [avatarId], references: [id])
+    avatarId String? @unique
 }
 
 model CollaboratingUser {

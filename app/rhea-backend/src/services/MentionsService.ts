@@ -1,6 +1,6 @@
 import { Mention, MentionedEntity, Prisma } from '@prisma/client'
 
-import { getPrismaClient } from './dbClients/DatabaseClient'
+import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export type MentionData = Pick<Mention, 'targetId' | 'targetType'>
 

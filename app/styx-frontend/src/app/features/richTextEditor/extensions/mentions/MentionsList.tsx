@@ -1,3 +1,4 @@
+import { MentionedEntity } from '@api/types/worldTypes'
 import Article from '@mui/icons-material/Article'
 import Event from '@mui/icons-material/Event'
 import Person from '@mui/icons-material/Person'
@@ -7,11 +8,10 @@ import ListItemText from '@mui/material/ListItemText'
 import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
 import { Editor } from '@tiptap/react'
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { MentionedEntity } from '@/app/features/worldTimeline/types'
-import { useCreateArticle } from '@/app/features/worldWiki/api/useCreateArticle'
+import { useCreateArticle } from '@/app/views/world/views/wiki/api/useCreateArticle'
 
 import { useQuickCreateActor } from './api/useQuickCreateActor'
 import { useQuickCreateEvent } from './api/useQuickCreateEvent'
@@ -22,7 +22,9 @@ type Props = {
 	editor: Editor | null
 }
 
-export const MentionsList = ({ editor }: Props) => {
+export const MentionsList = memo(MentionsListComponent)
+
+export function MentionsListComponent({ editor }: Props) {
 	const [visible, setVisible] = useState(false)
 	const [pos, setPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 })
 	const [query, setQuery] = useState('')
@@ -38,7 +40,7 @@ export const MentionsList = ({ editor }: Props) => {
 	const lastItemIndex = quickCreateVisible ? mentions.length + 2 : mentions.length - 1
 
 	useEventBusSubscribe({
-		event: 'richEditor/openMentions',
+		event: 'richEditor/requestOpenMentions',
 		callback: ({ query, screenPosTop, screenPosLeft }) => {
 			if (!editor) {
 				return
@@ -52,13 +54,13 @@ export const MentionsList = ({ editor }: Props) => {
 		},
 	})
 	useEventBusSubscribe({
-		event: 'richEditor/updateMentions',
+		event: 'richEditor/requestUpdateMentions',
 		callback: ({ query }) => {
 			setQuery(query)
 		},
 	})
 	useEventBusSubscribe({
-		event: 'richEditor/closeMentions',
+		event: 'richEditor/requestCloseMentions',
 		callback: () => {
 			setVisible(false)
 			setSelectedIndex(0)
@@ -110,7 +112,7 @@ export const MentionsList = ({ editor }: Props) => {
 	}
 
 	useEventBusSubscribe({
-		event: 'richEditor/keyDown',
+		event: 'richEditor/onKeyDown',
 		callback: async ({ key, shiftKey }) => {
 			if (key === 'ArrowUp' || (key === 'Tab' && shiftKey)) {
 				setSelectedIndex((prev) => Math.max(prev - 1, 0))

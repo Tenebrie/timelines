@@ -1,6 +1,7 @@
-import { TimelineTrack } from '../worldTimeline/components/Timeline/components/TimelineTracks/hooks/useEventTracks'
-import { MarkerType, TimelineEntity } from '../worldTimeline/types'
-import { WikiArticle } from '../worldWiki/types'
+import { ActorDetails, MarkerType, TimelineEntity } from '@api/types/worldTypes'
+import { WikiArticle } from '@api/types/worldWikiTypes'
+
+import { TimelineTrack } from '../../views/world/views/timeline/hooks/useEventTracks'
 
 export type DraggableParams = {
 	['timelineEvent']: {
@@ -11,6 +12,9 @@ export type DraggableParams = {
 	}
 	['articleListItem']: {
 		article: WikiArticle
+	}
+	['newMindmapNode']: {
+		actor: ActorDetails
 	}
 }
 

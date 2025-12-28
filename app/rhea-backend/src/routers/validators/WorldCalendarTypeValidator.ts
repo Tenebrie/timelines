@@ -1,6 +1,6 @@
 import { WorldCalendarType } from '@prisma/client'
-import { keysOf } from '@src/utils/keysOf'
-import { RequiredParam } from 'moonflower'
+import { keysOf } from '@src/utils/keysOf.js'
+import { RequiredParam } from 'moonflower/validators/ParamWrappers'
 
 export const WorldCalendarTypeValidator = RequiredParam({
 	prevalidate: (v) => keysOf(WorldCalendarType).some((type) => type === (v ?? '').toUpperCase()),

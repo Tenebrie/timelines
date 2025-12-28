@@ -1,7 +1,8 @@
-import { useCallback, useMemo } from 'react'
+import { WorldCalendarType } from '@api/types/worldTypes'
+import { useCallback, useDebugValue, useMemo } from 'react'
 
-import { ScaleLevel } from '../../worldTimeline/components/Timeline/types'
-import { WorldCalendarType } from '../../worldTimeline/types'
+import { ScaleLevel } from '@/app/schema/ScaleLevel'
+
 import { useTimelineLevelScalar } from './useTimelineLevelScalar'
 
 type Props = {
@@ -10,20 +11,21 @@ type Props = {
 }
 
 export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
+	useDebugValue('useTimelineWorldTime')
 	const { getLevelScalar } = useTimelineLevelScalar()
 
 	const scalar = useMemo<number>(() => getLevelScalar(scaleLevel), [getLevelScalar, scaleLevel])
 
 	const scaledTimeToRealTime = useCallback(
 		(time: number) => {
-			return time * scalar
+			return Math.round(time * scalar)
 		},
 		[scalar],
 	)
 
 	const realTimeToScaledTime = useCallback(
 		(time: number) => {
-			return time / scalar
+			return Math.round(time / scalar)
 		},
 		[scalar],
 	)

@@ -1,25 +1,23 @@
-import { PrismaClient } from '@prisma/client'
-import { mockDeep } from 'jest-mock-extended'
+import { vi } from 'vitest'
 
-process.env.JWT_SECRET = 'secretkey'
+import { prismaMockRef } from './mock/utils/prismaMock.js'
 
-jest.mock('moonflower', () => {
+vi.mock('moonflower', async () => {
 	return {
 		__esModule: true, //    <----- this __esModule: true is important
-		...jest.requireActual('moonflower'),
+		...(await vi.importActual('moonflower')),
 	}
 })
 
-jest.mock('@src/services/dbClients/DatabaseClient', () => {
-	const mock = mockDeep<PrismaClient>()
+vi.mock('@src/services/dbClients/DatabaseClient', () => {
 	return {
 		__esModule: true,
-		DatabaseClient: mock,
-		getPrismaClient: () => mock,
+		DatabaseClient: prismaMockRef.current,
+		getPrismaClient: () => prismaMockRef.current,
 	}
 })
 
-jest.mock('@src/services/dbClients/RedisClient', () => {
+vi.mock('@src/services/dbClients/RedisClient', () => {
 	return {
 		__esModule: true,
 		getRedisClient: () => ({

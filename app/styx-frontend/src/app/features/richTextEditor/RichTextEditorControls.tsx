@@ -4,14 +4,14 @@ import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { Editor } from '@tiptap/react'
-import { useCallback } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { useIsReadOnly } from '@/hooks/useIsReadOnly'
+import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 
-import { getWikiPreferences } from '../preferences/selectors'
-import { ReadModeToggle } from '../worldWiki/components/ReadModeToggle/ReadModeToggle'
+import { ReadModeToggle } from '../../views/world/views/wiki/components/ReadModeToggle'
+import { getWikiPreferences } from '../preferences/PreferencesSliceSelectors'
 import { ActiveButtonIndicator } from './extensions/mentions/components/ActiveButtonIndicator'
 
 type Props = {
@@ -19,9 +19,35 @@ type Props = {
 	allowReadMode?: boolean
 }
 
-export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
-	const { readModeEnabled } = useSelector(getWikiPreferences)
+export const RichTextEditorControls = memo(RichTextEditorControlsComponent)
+
+export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props) {
+	const { readModeEnabled } = useSelector(
+		getWikiPreferences,
+		(a, b) => a.readModeEnabled === b.readModeEnabled,
+	)
 	const { isReadOnly } = useIsReadOnly()
+
+	const [, setUpdateCounter] = useState(0)
+
+	const forceUpdate = () => {
+		setUpdateCounter((prev) => prev + 1)
+	}
+
+	useEffect(() => {
+		if (!editor) {
+			return
+		}
+
+		// Subscribe to editor events that should trigger re-renders
+		editor.on('update', forceUpdate)
+		editor.on('selectionUpdate', forceUpdate)
+
+		return () => {
+			editor.off('update', forceUpdate)
+			editor.off('selectionUpdate', forceUpdate)
+		}
+	}, [editor])
 
 	const isReadMode = isReadOnly || (readModeEnabled && allowReadMode)
 
@@ -32,18 +58,22 @@ export const RichTextEditorControls = ({ editor, allowReadMode }: Props) => {
 
 	const onBoldClick = useCallback(() => {
 		editor?.chain().focus().toggleBold().run()
+		forceUpdate()
 	}, [editor])
 
 	const onItalicClick = useCallback(() => {
 		editor?.chain().focus().toggleItalic().run()
+		forceUpdate()
 	}, [editor])
 
 	const onUnderlineClick = useCallback(() => {
 		editor?.chain().focus().toggleUnderline().run()
+		forceUpdate()
 	}, [editor])
 
 	const onStrikeClick = useCallback(() => {
 		editor?.chain().focus().toggleStrike().run()
+		forceUpdate()
 	}, [editor])
 
 	const onMentionActorClick = useCallback(() => {

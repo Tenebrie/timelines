@@ -1,11 +1,14 @@
-import { CalliopeToClientMessage, CalliopeToClientMessageType } from '@src/ts-shared/CalliopeToClientMessage'
+import {
+	CalliopeToClientMessage,
+	CalliopeToClientMessageType,
+} from '@src/ts-shared/CalliopeToClientMessage.js'
 import {
 	RheaToCalliopeMessage,
 	RheaToCalliopeMessageHandlers,
 	RheaToCalliopeMessageType,
-} from '@src/ts-shared/RheaToCalliopeMessage'
+} from '@src/ts-shared/RheaToCalliopeMessage.js'
 
-import { WebsocketService } from './WebsocketService'
+import { WebsocketService } from './WebsocketService.js'
 
 /**
  * Relays a message to all sockets of a user
@@ -72,6 +75,10 @@ const handlers: RheaToCalliopeMessageHandlers = {
 
 	[RheaToCalliopeMessageType.ACTOR_UPDATED]: (ctx) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.ACTOR_UPDATED, ...ctx })
+	},
+
+	[RheaToCalliopeMessageType.MINDMAP_NODE_UPDATED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_NODE_UPDATED, ...ctx })
 	},
 
 	[RheaToCalliopeMessageType.WIKI_ARTICLE_UPDATED]: (ctx) => {

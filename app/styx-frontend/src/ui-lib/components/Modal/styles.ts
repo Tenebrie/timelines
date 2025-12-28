@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { CustomTheme } from '@/hooks/useCustomTheme'
+import { CustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 export const ModalWrapper = styled.div`
 	position: fixed;
@@ -25,7 +25,7 @@ export const ModalWrapper = styled.div`
 `
 
 export const ModalContainer = styled.div<{ $theme: CustomTheme }>`
-	padding: 32px 64px;
+	padding: 32px 32px;
 	max-width: 768px;
 	width: 100%;
 	background: ${(props) => props.$theme.custom.palette.background.modal};

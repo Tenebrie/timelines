@@ -1,9 +1,12 @@
-import { getPrismaClient } from '@src/services/dbClients/DatabaseClient'
-import { TokenService } from '@src/services/TokenService'
+import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
+import { TokenService } from '@src/services/TokenService.js'
 import { ParameterizedContext } from 'koa'
-import { NonEmptyStringValidator, RequiredParam, UnauthorizedError, useCookieParams } from 'moonflower'
+import { UnauthorizedError } from 'moonflower/errors/UserFacingErrors'
+import { useCookieParams } from 'moonflower/hooks/useCookieParams'
+import { NonEmptyStringValidator } from 'moonflower/validators/BuiltInValidators'
+import { RequiredParam } from 'moonflower/validators/ParamWrappers'
 
-import { AUTH_COOKIE_NAME } from '../../ts-shared/const/constants'
+import { AUTH_COOKIE_NAME } from '../../ts-shared/const/constants.js'
 export { AUTH_COOKIE_NAME }
 
 export const UserAuthenticator = async (ctx: ParameterizedContext) => {
@@ -16,6 +19,7 @@ export const UserAuthenticator = async (ctx: ParameterizedContext) => {
 		const user = await getPrismaClient().user.findFirst({
 			where: {
 				id: tokenPayload.id,
+				deletedAt: null,
 			},
 		})
 		if (!user) {

@@ -1,10 +1,10 @@
+import { Actor, WorldEvent } from '@api/types/worldTypes'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getWorldState } from '@/app/features/world/selectors'
-import { Actor, WorldEvent } from '@/app/features/worldTimeline/types'
-import { useListArticles } from '@/app/features/worldWiki/api/useListArticles'
-import { WikiArticle } from '@/app/features/worldWiki/types'
+import { WikiArticle } from '@/api/types/worldWikiTypes'
+import { useListArticles } from '@/app/views/world/api/useListArticles'
+import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 type Props = {
 	query: string

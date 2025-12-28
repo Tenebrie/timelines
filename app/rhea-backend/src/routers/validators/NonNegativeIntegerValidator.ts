@@ -1,4 +1,4 @@
-import { RequiredParam } from 'moonflower'
+import { RequiredParam } from 'moonflower/validators/ParamWrappers'
 
 export const NonNegativeIntegerValidator = RequiredParam({
 	parse: (v) => Number(String(v).trim()),

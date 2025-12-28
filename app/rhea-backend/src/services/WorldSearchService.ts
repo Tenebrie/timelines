@@ -1,4 +1,4 @@
-import { getPrismaClient } from '@src/services/dbClients/DatabaseClient'
+import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 
 export const WorldSearchService = {
 	async findEvents(worldId: string, query: string) {

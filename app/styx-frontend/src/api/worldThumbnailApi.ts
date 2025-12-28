@@ -1,4 +1,4 @@
-import { baseApi as api } from './baseApi'
+import { baseApi as api } from './base/baseApi'
 export const addTagTypes = ['worldThumbnail'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({

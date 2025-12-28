@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client'
 import { BadRequestError } from 'moonflower'
 
-import { getPrismaClient } from '../dbClients/DatabaseClient'
+import { getPrismaClient } from '../dbClients/DatabaseClient.js'
 
 export const fetchWorldEventDetailsOrThrow = async (eventId: string, prisma?: Prisma.TransactionClient) => {
 	const event = await getPrismaClient(prisma).worldEvent.findFirst({

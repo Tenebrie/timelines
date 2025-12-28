@@ -1,18 +1,21 @@
 'use strict'
 
 const tags = [
-	'worldList',
-	'worldSearch',
-	'worldDetails',
-	'worldThumbnail',
-	'worldEventTracks',
-	'worldCollaborators',
-	'auth',
-	'announcementList',
-	'adminUsers',
 	'actorList',
+	'adminUsers',
+	'announcementList',
+	'asset',
+	'auth',
+	'profile',
+	'worldWiki',
 	'worldEvent',
 	'worldEventDelta',
+	'worldEventTracks',
+	'worldList',
+	'worldDetails',
+	'worldCollaborators',
+	'worldSearch',
+	'worldThumbnail',
 ]
 
 const tagMatcher = (pattern) => {
@@ -33,7 +36,7 @@ const noTagMatcher = () => {
 
 const config = {
 	schemaFile: 'http://localhost:3000/api-json',
-	apiFile: '../src/api/baseApi.ts',
+	apiFile: '../src/api/base/baseApi.ts',
 	apiImport: 'baseApi',
 	outputFiles: tags.reduce(
 		(acc, tag) => {

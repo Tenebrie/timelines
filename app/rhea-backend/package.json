@@ -3,72 +3,52 @@
 	"version": "0.0.1",
 	"private": true,
 	"description": "",
+	"type": "module",
 	"license": "UNLICENSED",
 	"author": "",
 	"scripts": {
-		"build": "tsc -p . && copyfiles -u 2 src/assets/**/* dist/assets",
+		"build": "prisma generate && tsc -p . && tsc-alias -p tsconfig.json && copyfiles -u 2 src/assets/**/* dist/assets",
 		"lint": "eslint src/",
 		"lint-fix": "eslint src/ --fix",
 		"prisma:format": "prisma format",
 		"prisma:generate": "prisma generate",
+		"prisma:migrate": "DATABASE_URL=postgresql://docker:docker@localhost:5432/db?schema=public prisma migrate status",
 		"prisma:migrate:dev": "DATABASE_URL=postgresql://docker:docker@localhost:5432/db?schema=public prisma migrate dev",
 		"prisma:migrate:create": "DATABASE_URL=postgresql://docker:docker@localhost:5432/db?schema=public prisma migrate dev --create-only",
 		"prod": "node dist/index.js",
 		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline",
-		"start": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' src/index.ts",
-		"test": "jest",
-		"test:watch": "jest --watchAll"
+		"start": "nodemon --watch src --ext ts,js,json --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
+		"test": "vitest --run",
+		"test:watch": "vitest"
 	},
 	"lint-staged": {
 		"*.(ts)": "eslint --fix"
-	},
-	"jest": {
-		"collectCoverageFrom": [
-			"**/*.(t|j)s"
-		],
-		"coverageDirectory": "../coverage",
-		"moduleFileExtensions": [
-			"js",
-			"json",
-			"ts"
-		],
-		"moduleNameMapper": {
-			"^@src(.*)$": "<rootDir>/src$1"
-		},
-		"rootDir": "./",
-		"testEnvironment": "node",
-		"testRegex": ".*\\.spec\\.ts$",
-		"transform": {
-			"^.+\\.(t|j)s$": "ts-jest"
-		},
-		"setupFiles": [
-			"<rootDir>/src/setupTests.ts"
-		]
 	},
 	"prisma": {
 		"seed": "ts-node src/prisma/seed.ts"
 	},
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.758.0",
+		"@aws-sdk/s3-presigned-post": "^3.758.0",
+		"@aws-sdk/s3-request-presigner": "^3.758.0",
 		"@koa/router": "^13.1.0",
-		"@prisma/client": "6.0.1",
+		"@prisma/client": "^6.5.0",
 		"bcrypt": "^5.1.1",
 		"bcryptjs": "^2.4.3",
-		"chalk": "^5.3.0",
+		"chalk": "^5.4.1",
 		"dotenv": "^16.4.7",
 		"fast-average-color-node": "^3.1.0",
 		"http-status-codes": "^2.3.0",
 		"jsonwebtoken": "^9.0.2",
 		"koa": "^2.15.3",
 		"koa-bodyparser": "^4.4.1",
-		"lint-staged": "^15.2.11",
-		"module-alias": "^2.2.3",
-		"moonflower": "^0.10.6",
-		"nodemon": "^3.1.9",
+		"lint-staged": "^15.4.3",
+		"moonflower": "^1.2.0",
+		"nodemon": "^3.1.10",
 		"pg": "^8.13.1",
-		"prisma": "^6.0.1",
+		"prisma": "^6.5.0",
 		"redis": "^4.7.0",
 		"sharp": "^0.33.5",
-		"sqlite3": "^5.1.7",
 		"ts-morph": "^24.0.0",
 		"ws": "^8.18.0",
 		"zod": "^3.24.1"
@@ -76,7 +56,6 @@
 	"devDependencies": {
 		"@types/bcrypt": "^5.0.2",
 		"@types/bcryptjs": "^2.4.6",
-		"@types/jest": "29.5.14",
 		"@types/jsonwebtoken": "^9.0.7",
 		"@types/koa": "^2.15.0",
 		"@types/koa-bodyparser": "^4.3.12",
@@ -93,15 +72,16 @@
 		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-simple-import-sort": "^12.1.1",
 		"eslint-plugin-unused-imports": "^4.1.4",
-		"jest": "29.7.0",
-		"jest-mock-extended": "4.0.0-beta1",
+		"jsdom": "^26.0.0",
 		"prettier": "^3.4.2",
 		"source-map-support": "^0.5.20",
 		"supertest": "^7.0.0",
-		"ts-jest": "29.2.5",
 		"ts-node": "^10.9.2",
 		"ts-node-dev": "^2.0.0",
+		"tsc-alias": "^1.8.16",
 		"tsconfig-paths": "4.2.0",
-		"typescript": "^5.7.2"
+		"tsx": "^4.20.3",
+		"typescript": "^5.7.2",
+		"vitest": "^3.0.9"
 	}
 }

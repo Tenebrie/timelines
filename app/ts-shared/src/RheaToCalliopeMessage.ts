@@ -1,4 +1,4 @@
-import { ShapeOfHandlerWithSession, ShapeOfMessageWithSession } from './types'
+import { ShapeOfHandlerWithSession, ShapeOfMessageWithSession } from './types.js'
 
 export enum RedisChannel {
 	RHEA_TO_CALLIOPE = 'rheaToCalliope',
@@ -13,6 +13,7 @@ export enum RheaToCalliopeMessageType {
 	WORLD_EVENT_DELTA_UPDATED = 'worldEventDeltaUpdated',
 	WORLD_TRACKS_UPDATED = 'worldTracksUpdated',
 	ACTOR_UPDATED = 'actorUpdated',
+	MINDMAP_NODE_UPDATED = 'mindmapNodeUpdated',
 	WIKI_ARTICLE_UPDATED = 'wikiArticleUpdated',
 	WIKI_ARTICLE_DELETED = 'wikiArticleDeleted',
 }
@@ -57,6 +58,11 @@ export type RheaToCalliopeMessagePayload = {
 	}
 	[RheaToCalliopeMessageType.WIKI_ARTICLE_DELETED]: {
 		worldId: string
+	}
+	[RheaToCalliopeMessageType.MINDMAP_NODE_UPDATED]: {
+		worldId: string
+		// TODO: Type properly
+		node: string
 	}
 }
 

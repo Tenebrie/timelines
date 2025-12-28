@@ -1,7 +1,8 @@
+import { Prisma } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 
-import { getPrismaClient } from './dbClients/DatabaseClient'
-import { makeTouchUserQuery } from './dbQueries/makeTouchUserQuery'
+import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { makeTouchUserQuery } from './dbQueries/makeTouchUserQuery.js'
 
 export const UserService = {
 	touchUser: async (userId: string) => {
@@ -12,12 +13,15 @@ export const UserService = {
 		return getPrismaClient().user.findFirst({
 			where: {
 				email,
+				deletedAt: null,
 			},
 			select: {
 				id: true,
 				level: true,
 				email: true,
 				username: true,
+				bio: true,
+				avatar: true,
 			},
 		})
 	},
@@ -35,6 +39,7 @@ export const UserService = {
 				level: true,
 				email: true,
 				username: true,
+				bio: true,
 			},
 		})
 		return user
@@ -44,6 +49,7 @@ export const UserService = {
 		const user = await getPrismaClient().user.findFirst({
 			where: {
 				email,
+				deletedAt: null,
 			},
 		})
 
@@ -59,9 +65,30 @@ export const UserService = {
 	},
 
 	deleteUser: async (userId: string) => {
-		return getPrismaClient().user.delete({
+		return getPrismaClient().user.update({
 			where: {
 				id: userId,
+			},
+			data: {
+				deletedAt: new Date(),
+			},
+		})
+	},
+
+	updateUser: async (userId: string, body: Prisma.UserUpdateInput) => {
+		return getPrismaClient().user.update({
+			where: {
+				id: userId,
+				deletedAt: null,
+			},
+			data: body,
+		})
+	},
+
+	cleanUpDeletedUsers: async () => {
+		return getPrismaClient().user.deleteMany({
+			where: {
+				deletedAt: { not: null },
 			},
 		})
 	},

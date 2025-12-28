@@ -1,11 +1,12 @@
 import { CollaboratingUser, User, World } from '@prisma/client'
-import { AuthorizationService } from '@src/services/AuthorizationService'
-import * as request from 'supertest'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import request from 'supertest'
+import { beforeEach, vi } from 'vitest'
 
-import { app } from '..'
-import { withUserAuth } from './auth'
-import { mockCollaboratingUser, mockUser, mockWorld } from './mock'
-import { prismaMock } from './utils/prismaMock'
+import { app } from '../index.js'
+import { withUserAuth } from './auth.js'
+import { mockCollaboratingUser, mockUser, mockWorld } from './mock.js'
+import { mockPrismaClient } from './utils/prismaMock.js'
 
 export const makeRequest = () => request(app.callback())
 export const sendGet = (...args: Parameters<ReturnType<typeof request>['get']>) => makeRequest().get(...args)
@@ -17,21 +18,19 @@ export const sendDelete = (...args: Parameters<ReturnType<typeof request>['delet
 	makeRequest().delete(...args)
 
 export const withWorld = (world?: Partial<World>) => {
-	prismaMock.world.findFirst.mockResolvedValue(mockWorld(world))
-	prismaMock.world.findFirstOrThrow.mockResolvedValue(mockWorld(world))
+	mockPrismaClient({ world: mockWorld(world) })
 
 	return requestBuilder
 }
 
 export const withCollaboratingUser = (data?: Partial<CollaboratingUser>) => {
-	prismaMock.collaboratingUser.findFirst.mockResolvedValue(mockCollaboratingUser(data))
-	prismaMock.collaboratingUser.findFirstOrThrow.mockResolvedValue(mockCollaboratingUser(data))
+	mockPrismaClient({ collaboratingUser: mockCollaboratingUser(data) })
 
 	return requestBuilder
 }
 
 export const withWorldReadAccess = (mockedUser?: Partial<User>, mockedWorld?: Partial<World>) => {
-	jest.spyOn(AuthorizationService, 'checkUserReadAccessById').mockImplementation(async (user, worldId) => {
+	vi.spyOn(AuthorizationService, 'checkUserReadAccessById').mockImplementation(async (user, worldId) => {
 		if (user?.id === mockUser(mockedUser).id && worldId === mockWorld(mockedWorld).id) {
 			return
 		}
@@ -42,13 +41,13 @@ export const withWorldReadAccess = (mockedUser?: Partial<User>, mockedWorld?: Pa
 }
 
 export const withWorldWriteAccess = (mockedUser?: Partial<User>, mockedWorld?: Partial<World>) => {
-	jest.spyOn(AuthorizationService, 'checkUserReadAccessById').mockImplementation(async (user, worldId) => {
+	vi.spyOn(AuthorizationService, 'checkUserReadAccessById').mockImplementation(async (user, worldId) => {
 		if (user?.id === mockUser(mockedUser).id && worldId === mockWorld(mockedWorld).id) {
 			return
 		}
 		throw new Error('Unauthorized')
 	})
-	jest.spyOn(AuthorizationService, 'checkUserWriteAccessById').mockImplementation(async (user, worldId) => {
+	vi.spyOn(AuthorizationService, 'checkUserWriteAccessById').mockImplementation(async (user, worldId) => {
 		if (user?.id === mockUser(mockedUser).id && worldId === mockWorld(mockedWorld).id) {
 			return
 		}
@@ -71,5 +70,5 @@ export const requestBuilder = {
 }
 
 beforeEach(() => {
-	jest.restoreAllMocks()
+	vi.restoreAllMocks()
 })

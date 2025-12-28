@@ -1,10 +1,22 @@
 import { Prisma } from '@prisma/client'
 
-import { getPrismaClient } from './dbClients/DatabaseClient'
-import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery'
-import { makeUpdateActorQuery, UpdateActorQueryParams } from './dbQueries/makeUpdateActorQuery'
+import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
+import { makeUpdateActorQuery, UpdateActorQueryParams } from './dbQueries/makeUpdateActorQuery.js'
 
 export const ActorService = {
+	findActor: async ({ worldId, actorId }: { worldId: string; actorId: string | null | undefined }) => {
+		if (!actorId) {
+			return null
+		}
+		return getPrismaClient().actor.findUnique({
+			where: { id: actorId, worldId },
+			include: {
+				node: true,
+			},
+		})
+	},
+
 	findActorsByIds: async (actorIds: string[]) => {
 		return getPrismaClient().actor.findMany({
 			where: {

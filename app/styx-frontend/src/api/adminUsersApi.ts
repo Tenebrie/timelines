@@ -1,4 +1,4 @@
-import { baseApi as api } from './baseApi'
+import { baseApi as api } from './base/baseApi'
 export const addTagTypes = ['adminUsers'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
@@ -40,6 +40,7 @@ export type AdminGetUsersApiResponse = /** status 200  */ {
 		updatedAt: string
 		email: string
 		username: string
+		bio: string
 		level: 'Free' | 'Premium' | 'Admin'
 	}[]
 	page: number
@@ -58,10 +59,13 @@ export type AdminSetUserLevelApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	deletedAt?: null | string
 	email: string
 	username: string
 	password: string
+	bio: string
 	level: 'Free' | 'Premium' | 'Admin'
+	avatarId?: null | string
 }
 export type AdminSetUserLevelApiArg = {
 	/** Any string value with at least one character */
@@ -74,10 +78,13 @@ export type AdminDeleteUserApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	deletedAt?: null | string
 	email: string
 	username: string
 	password: string
+	bio: string
 	level: 'Free' | 'Premium' | 'Admin'
+	avatarId?: null | string
 }
 export type AdminDeleteUserApiArg = {
 	/** Any string value with at least one character */

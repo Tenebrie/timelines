@@ -1,8 +1,9 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { AuthorizationService } from '@src/services/AuthorizationService'
-import { RedisService } from '@src/services/RedisService'
-import { WikiService } from '@src/services/WikiService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { RedisService } from '@src/services/RedisService.js'
+import { WikiService } from '@src/services/WikiService.js'
 import {
+	NumberValidator,
 	OptionalParam,
 	PathParam,
 	RequiredParam,
@@ -15,13 +16,13 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { SessionMiddleware } from '../middleware/SessionMiddleware'
-import { MentionsArrayValidator } from './validators/MentionsArrayValidator'
-import { StringArrayValidator } from './validators/StringArrayValidator'
+import { SessionMiddleware } from '../middleware/SessionMiddleware.js'
+import { worldWikiArticleTag, worldWikiTag } from './utils/tags.js'
+import { MentionsArrayValidator } from './validators/MentionsArrayValidator.js'
+import { NullableStringValidator } from './validators/NullableStringValidator.js'
+import { StringArrayValidator } from './validators/StringArrayValidator.js'
 
 const router = new Router().with(SessionMiddleware)
-
-export const worldWikiTag = 'worldWiki'
 
 router.get('/api/world/:worldId/wiki/articles', async (ctx) => {
 	useApiEndpoint({
@@ -39,7 +40,7 @@ router.get('/api/world/:worldId/wiki/articles', async (ctx) => {
 	await AuthorizationService.checkUserReadAccessById(user, worldId)
 
 	const articles = await WikiService.listWikiArticles({ worldId })
-	return articles.sort((a, b) => a.position - b.position)
+	return articles
 })
 
 router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
@@ -78,7 +79,7 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 	useApiEndpoint({
 		name: 'updateArticle',
 		description: 'Updates an article in the wiki.',
-		tags: [worldWikiTag],
+		tags: [worldWikiArticleTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -92,6 +93,8 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 
 	const { name, contentRich, mentions } = useRequestBody(ctx, {
 		name: OptionalParam(StringValidator),
+		icon: OptionalParam(StringValidator),
+		color: OptionalParam(StringValidator),
 		contentRich: OptionalParam(StringValidator),
 		mentions: OptionalParam(MentionsArrayValidator),
 	})
@@ -108,10 +111,10 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 	return article
 })
 
-router.post('/api/world/:worldId/wiki/article/swap', async (ctx) => {
+router.post('/api/world/:worldId/wiki/article/move', async (ctx) => {
 	useApiEndpoint({
-		name: 'swapArticlePositions',
-		description: 'Swaps the position of two articles.',
+		name: 'moveArticle',
+		description: 'Moves an article to a new position.',
 		tags: [worldWikiTag],
 	})
 
@@ -124,18 +127,19 @@ router.post('/api/world/:worldId/wiki/article/swap', async (ctx) => {
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
 	const params = useRequestBody(ctx, {
-		articleA: RequiredParam(StringValidator),
-		articleB: RequiredParam(StringValidator),
+		articleId: RequiredParam(StringValidator),
+		parentId: OptionalParam(NullableStringValidator),
+		position: RequiredParam(NumberValidator),
 	})
 
-	const { articleA, articleB } = await WikiService.swapWikiArticlePositions({
+	const { article } = await WikiService.moveWikiArticle({
 		worldId,
-		articleIdA: params.articleA,
-		articleIdB: params.articleB,
+		articleId: params.articleId,
+		toPosition: params.position,
+		toParentId: params.parentId,
 	})
 
-	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article: articleA })
-	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article: articleB })
+	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })
 })
 
 router.delete('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {

@@ -1,1 +1,2 @@
-export const isRunningInTest = () => process.env.JEST_WORKER_ID !== undefined
+// @ts-ignore
+export const isRunningInTest = () => process.env.VITEST_WORKER_ID !== undefined

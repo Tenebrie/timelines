@@ -1,6 +1,6 @@
 import { BadRequestError } from 'moonflower'
 
-import { getPrismaClient } from '../dbClients/DatabaseClient'
+import { getPrismaClient } from '../dbClients/DatabaseClient.js'
 
 export const fetchWorldEventOrThrow = async (eventId: string) => {
 	const event = await getPrismaClient().worldEvent.findFirst({

@@ -1,45 +1,22 @@
-import Login from '@mui/icons-material/Login'
-import Logout from '@mui/icons-material/Logout'
-import LoadingButton from '@mui/lab/LoadingButton'
-import { useDispatch, useSelector } from 'react-redux'
+import { useCheckAuthenticationQuery } from '@api/authApi'
+import { useSelector } from 'react-redux'
 
-import { usePostLogoutMutation } from '@/api/authApi'
-import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { appRoutes, useAppRouter } from '@/router/routes/appRoutes'
-
-import { authSlice } from '../reducer'
-import { getAuthState } from '../selectors'
+import { getAuthState } from '../AuthSliceSelectors'
+import { GuestDropdown } from './dropdowns/GuestDropdown'
+import { SlowAuthDropdown } from './dropdowns/SlowAuthDropdown'
+import { UserDropdown } from './dropdowns/UserDropdown'
 
 export const SmallProfile = () => {
-	const { navigateTo } = useAppRouter()
-
-	const [logout, { isLoading }] = usePostLogoutMutation()
+	const { isLoading } = useCheckAuthenticationQuery()
 	const { user } = useSelector(getAuthState)
-	const { clearUser } = authSlice.actions
-	const dispatch = useDispatch()
 
-	const onLogin = async () => {
-		navigateTo({ target: appRoutes.login })
+	if (isLoading) {
+		return <SlowAuthDropdown />
 	}
 
-	const onLogout = async () => {
-		const { error } = parseApiResponse(await logout())
-		if (error) {
-			return
-		}
-		dispatch(clearUser())
-		navigateTo({ target: appRoutes.login })
+	if (!user) {
+		return <GuestDropdown />
 	}
 
-	return (
-		<LoadingButton
-			loading={isLoading}
-			color="secondary"
-			onClick={user ? onLogout : onLogin}
-			loadingPosition="start"
-			startIcon={user ? <Logout /> : <Login />}
-		>
-			<span style={{ minWidth: '58px' }}>{user ? 'Sign Out' : 'Sign In'}</span>
-		</LoadingButton>
-	)
+	return <UserDropdown user={user} />
 }

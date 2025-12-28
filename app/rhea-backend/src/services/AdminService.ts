@@ -1,6 +1,6 @@
 import { UserLevel } from '@prisma/client'
 
-import { getPrismaClient } from './dbClients/DatabaseClient'
+import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const AdminService = {
 	listUsers: async ({ page, size, query }: { page?: number; size?: number; query?: string }) => {
@@ -12,12 +12,14 @@ export const AdminService = {
 				email: true,
 				level: true,
 				username: true,
+				bio: true,
 				createdAt: true,
 				updatedAt: true,
 			},
 			where: {
 				...(query
 					? {
+							deletedAt: null,
 							OR: [
 								{
 									email: {

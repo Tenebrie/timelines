@@ -8,6 +8,9 @@ export const mockUser = (data?: Partial<User>): User => ({
 	password: 'qwerty1234',
 	createdAt: new Date(0),
 	updatedAt: new Date(0),
+	bio: 'bio',
+	avatarId: 'avatar-1111',
+	deletedAt: null,
 	...data,
 })
 

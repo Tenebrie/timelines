@@ -1,8 +1,6 @@
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { getWorldState } from '@/app/features/world/selectors'
-import { worldTimelineRoutes } from '@/router/routes/featureRoutes/worldTimelineRoutes'
-import { QueryParams } from '@/router/routes/QueryParams'
-import { QueryStrategy } from '@/router/types'
+import { useModal } from '@/app/features/modals/ModalsSlice'
+import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { BaseMentionChip } from './BaseMentionChip'
 
@@ -14,8 +12,9 @@ type Props = {
 
 export const ActorMentionChip = ({ worldId, actorId, actors }: Props) => {
 	const navigateTo = useEventBusDispatch({
-		event: 'navigate/worldTimeline',
+		event: 'world/requestNavigation',
 	})
+	const { open: openEditActorModal } = useModal('editActorModal')
 
 	const actor = actors.find((actor) => actor.id === actorId)
 	const actorName = actor ? `${actor.name}` : 'Unknown Actor'
@@ -26,10 +25,9 @@ export const ActorMentionChip = ({ worldId, actorId, actors }: Props) => {
 			return
 		}
 		navigateTo({
-			target: worldTimelineRoutes.actorEditor,
-			args: { worldId, actorId },
-			query: { [QueryParams.SELECTED_TIME]: QueryStrategy.Preserve },
+			search: (prev) => ({ ...prev, selection: [actorId] }),
 		})
+		openEditActorModal({ actorId: actor.id })
 	}
 
 	return <BaseMentionChip type="Actor" label={actorName} color={actorColor} onClick={onClick} />

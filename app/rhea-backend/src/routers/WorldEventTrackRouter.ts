@@ -1,8 +1,8 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
-import { AuthorizationService } from '@src/services/AuthorizationService'
-import { RedisService } from '@src/services/RedisService'
-import { WorldEventTrackService } from '@src/services/WorldEventTrackService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { RedisService } from '@src/services/RedisService.js'
+import { WorldEventTrackService } from '@src/services/WorldEventTrackService.js'
 import {
 	BooleanValidator,
 	OptionalParam,
@@ -17,12 +17,11 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { NameStringValidator } from './validators/NameStringValidator'
-import { NonNegativeIntegerValidator } from './validators/NonNegativeIntegerValidator'
+import { worldEventTracksTag } from './utils/tags.js'
+import { NameStringValidator } from './validators/NameStringValidator.js'
+import { NonNegativeIntegerValidator } from './validators/NonNegativeIntegerValidator.js'
 
 const router = new Router().with(SessionMiddleware)
-
-export const worldEventTracksTag = 'worldEventTracks'
 
 router.get('/api/world/:worldId/event-tracks', async (ctx) => {
 	useApiEndpoint({

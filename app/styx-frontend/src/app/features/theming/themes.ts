@@ -103,14 +103,14 @@ export const lightTheme = createTheme({
 		mode: 'light',
 		background: {
 			paper: '#fff',
-			default: 'hsl(119, 0%, 85%)',
+			default: 'hsl(200, 0%, 85%)',
 		},
 		primary: {
 			main: 'hsl(118, 28%, 37%)',
 			contrastText: '#fff',
 		},
 		secondary: {
-			main: 'hsl(20, 69%, 42%)',
+			main: 'hsl(20, 69.20%, 42.00%)',
 			contrastText: '#fff',
 		},
 	},
@@ -121,7 +121,8 @@ export const darkTheme = createTheme({
 	palette: {
 		mode: 'dark',
 		background: {
-			default: '#0a0908',
+			// default: '#0a0908',
+			default: '#22333b',
 			paper: 'hsl(199, 27%, 18%)',
 		},
 		primary: {
@@ -129,7 +130,7 @@ export const darkTheme = createTheme({
 			contrastText: '#0a0908',
 		},
 		secondary: {
-			main: 'hsl(20, 49%, 60%)',
+			main: 'hsl(20, 49.00%, 60.00%)',
 			contrastText: '#0a0908',
 		},
 	},
@@ -141,14 +142,21 @@ export const customLightTheme = {
 			text: 'rgb(21, 16, 11)',
 		},
 		outline: 'rgb(0 0 0 / 23%)',
+		outlineStrong: 'rgb(0 0 0 / 50%)',
 		background: {
+			hard: 'rgb(0 0 0 / 40%)',
+			harder: 'rgb(0 0 0 / 50%)',
+			hardest: 'rgb(0 0 0 / 70%)',
 			soft: 'rgb(0 0 0 / 10%)',
+			softer: 'rgb(0 0 0 / 5%)',
+			softest: 'rgb(0 0 0 / 2%)',
 			modal: '#eee',
-			timeline: '#fff',
+			timeline: 'hsl(200, 0%, 98%)',
 			timelineHeader: '#f3f3f3',
 			navigator: '#fff',
 			paperActual: '#fff',
 			timelineMarker: '#fff',
+			timelineMarkerTail: '#ddd',
 		},
 	},
 }
@@ -159,14 +167,21 @@ export const customDarkTheme: typeof customLightTheme = {
 			text: 'white',
 		},
 		outline: 'rgb(255 255 255 / 23%)',
+		outlineStrong: 'rgb(255 255 255 / 50%)',
 		background: {
+			hard: 'rgb(255 255 255 / 40%)',
+			harder: 'rgb(255 255 255 / 50%)',
+			hardest: 'rgb(255 255 255 / 70%)',
 			soft: 'rgb(255 255 255 / 10%)',
+			softer: 'rgb(255 255 255 / 5%)',
+			softest: 'rgb(255 255 255 / 2%)',
 			modal: '#22333b',
 			timeline: '#22333b',
 			timelineHeader: '#22333b',
 			navigator: '#22333b',
 			paperActual: '#324048',
 			timelineMarker: '#0a0908',
+			timelineMarkerTail: '#39484f',
 		},
 	},
 }

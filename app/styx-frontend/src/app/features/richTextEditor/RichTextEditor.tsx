@@ -1,19 +1,23 @@
+import { MentionDetails } from '@api/types/worldTypes'
+import Box from '@mui/material/Box'
 import { Editor, useEditor } from '@tiptap/react'
+import { EditorContent } from '@tiptap/react'
 import throttle from 'lodash.throttle'
-import { useEffect, useRef } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
-import { getWikiPreferences } from '../preferences/selectors'
-import { getWorldState } from '../world/selectors'
-import { MentionDetails } from '../worldTimeline/types'
+import { getWorldState } from '../../views/world/WorldSliceSelectors'
+import { useEventBusSubscribe } from '../eventBus'
+import { getWikiPreferences } from '../preferences/PreferencesSliceSelectors'
 import { EditorExtensions } from './extensions/config'
 import { FadeInOverlay } from './extensions/mentions/components/FadeInOverlay/FadeInOverlay'
 import { MentionNodeName } from './extensions/mentions/components/MentionNode'
 import { MentionsList } from './extensions/mentions/MentionsList'
 import { RichTextEditorControls } from './RichTextEditorControls'
-import { StyledContainer, StyledEditorContent } from './styles'
+import { StyledContainer } from './styles'
 
 type Props = {
 	value: string
@@ -30,10 +34,74 @@ export type OnChangeParams = {
 	mentions: MentionDetails[]
 }
 
-export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode }: Props) => {
+type EditorContentBoxProps = {
+	editor: Editor
+	mode: 'read' | 'edit'
+	className?: string
+	readOnly?: boolean
+}
+
+export const EditorContentBox = ({ editor, mode, className, readOnly }: EditorContentBoxProps) => (
+	<Box
+		component={EditorContent}
+		className={className}
+		editor={editor}
+		readOnly={readOnly}
+		sx={{
+			fontFamily: '"Roboto", sans-serif',
+			outline: 'none',
+			height: mode === 'edit' ? 'calc(100% - 48px)' : 'unset',
+			overflowY: 'auto',
+			display: 'flex',
+			flexDirection: 'column',
+
+			'& img': {
+				maxHeight: '400px',
+				maxWidth: '100%',
+			},
+
+			'& .ProseMirror': {
+				flex: 1,
+				outline: 'none',
+				minHeight: '1rem',
+				height: '100%',
+				padding: mode === 'edit' ? '0 16px' : 'unset',
+				color: 'text.primary',
+
+				'& > p:first-of-type': {
+					paddingTop: '16px',
+				},
+			},
+
+			'& p': {
+				margin: 0,
+				padding: '6px 0px',
+				lineHeight: 1.5,
+				wordBreak: 'break-word',
+				color: 'text.primary',
+			},
+
+			'& li > p': {
+				padding: '3px 0',
+			},
+
+			'& code': {
+				padding: '4px 8px',
+				borderRadius: '4px',
+				background: '#00000033',
+			},
+			...useBrowserSpecificScrollbars(),
+		}}
+	/>
+)
+
+export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allowReadMode }: Props) => {
 	const theme = useCustomTheme()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
-	const { readModeEnabled } = useSelector(getWikiPreferences)
+	const { readModeEnabled } = useSelector(
+		getWikiPreferences,
+		(a, b) => a.readModeEnabled === b.readModeEnabled,
+	)
 
 	const onChangeRef = useRef(onChange)
 	useEffect(() => {
@@ -81,8 +149,8 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 		content: value,
 		editable: !isReadMode,
 		extensions: EditorExtensions,
-		onUpdate({ editor }) {
-			if (editor.getHTML() === value) {
+		onUpdate({ editor, transaction }) {
+			if (editor.getHTML() === value || transaction.steps.length === 0) {
 				return
 			}
 			onChangeThrottled.current(editor)
@@ -152,11 +220,26 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 		editor?.setEditable(!isReadMode)
 	}, [editor, isReadMode])
 
+	useEventBusSubscribe({
+		event: 'richEditor/requestFocus',
+		callback: () => {
+			editor?.commands.focus()
+			editor?.commands.selectTextblockEnd()
+		},
+	})
+	useEventBusSubscribe({
+		event: 'richEditor/requestBlur',
+		callback: () => {
+			editor?.commands.blur()
+		},
+	})
+
 	return (
 		<StyledContainer
 			sx={{
 				borderRadius: '6px',
-				height: '100%',
+				minHeight: '128px',
+				background: isReadMode ? '' : '#00000011',
 				border: isReadMode ? '1px solid transparent' : '',
 				'&:hover': {
 					border: isReadMode ? '1px solid transparent' : '',
@@ -171,14 +254,11 @@ export const RichTextEditor = ({ value, softKey, onChange, onBlur, allowReadMode
 			}}
 		>
 			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode} />
-			<StyledEditorContent
-				className="content"
-				editor={editor}
-				placeholder="Content"
-				$mode={isReadMode ? 'read' : 'edit'}
-			/>
+			{editor && <EditorContentBox className="content" editor={editor} mode={isReadMode ? 'read' : 'edit'} />}
 			<MentionsList editor={editor} />
-			<FadeInOverlay key={softKey} isReadMode={isReadMode} />
+			<FadeInOverlay key={softKey} content={value} isReadMode={isReadMode} />
 		</StyledContainer>
 	)
 }
+
+export const RichTextEditor = memo(RichTextEditorComponent)

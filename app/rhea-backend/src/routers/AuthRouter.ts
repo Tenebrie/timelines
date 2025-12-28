@@ -1,6 +1,8 @@
-import { AUTH_COOKIE_NAME, UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
-import { AnnouncementService } from '@src/services/AnnouncementService'
+import { AUTH_COOKIE_NAME, UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { UserAuthenticatorWithAvatar } from '@src/middleware/auth/UserAuthenticatorWithAvatar.js'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
+import { AnnouncementService } from '@src/services/AnnouncementService.js'
+import { CloudStorageService } from '@src/services/CloudStorageService.js'
 import {
 	BadRequestError,
 	EmailValidator,
@@ -13,15 +15,11 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { TokenService } from '../services/TokenService'
-import { UserService } from '../services/UserService'
-import { adminUsersTag } from './AdminRouter'
-import { announcementListTag } from './AnnouncementRouter'
-import { worldDetailsTag, worldListTag } from './WorldRouter'
+import { TokenService } from '../services/TokenService.js'
+import { UserService } from '../services/UserService.js'
+import { adminUsersTag, announcementListTag, authTag, worldDetailsTag, worldListTag } from './utils/tags.js'
 
 const router = new Router().with(SessionMiddleware)
-
-export const authTag = 'auth'
 
 router.get('/api/auth', async (ctx) => {
 	useApiEndpoint({
@@ -30,7 +28,7 @@ router.get('/api/auth', async (ctx) => {
 		tags: [authTag],
 	})
 
-	const user = await useOptionalAuth(ctx, UserAuthenticator)
+	const user = await useOptionalAuth(ctx, UserAuthenticatorWithAvatar)
 	const sessionId = ctx.sessionId ?? crypto.randomUUID()
 
 	if (!user) {
@@ -41,6 +39,7 @@ router.get('/api/auth', async (ctx) => {
 	}
 
 	UserService.touchUser(user.id)
+	const avatarUrl = user.avatar ? await CloudStorageService.getPresignedUrl(user.avatar) : undefined
 
 	return {
 		authenticated: true,
@@ -50,6 +49,8 @@ router.get('/api/auth', async (ctx) => {
 			email: user.email,
 			username: user.username,
 			level: user.level,
+			bio: user.bio,
+			avatarUrl,
 		},
 	}
 })
@@ -90,7 +91,10 @@ router.post('/api/auth', async (ctx) => {
 	})
 
 	return {
-		user,
+		user: {
+			...user,
+			avatarUrl: undefined as string | undefined,
+		},
 		sessionId,
 	}
 })
@@ -121,8 +125,13 @@ router.post('/api/auth/login', async (ctx) => {
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
 	})
 
+	const avatarUrl = user.avatar ? await CloudStorageService.getPresignedUrl(user.avatar) : undefined
+
 	return {
-		user,
+		user: {
+			...user,
+			avatarUrl,
+		},
 		sessionId,
 	}
 })

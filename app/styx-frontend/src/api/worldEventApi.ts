@@ -1,4 +1,4 @@
-import { baseApi as api } from './baseApi'
+import { baseApi as api } from './base/baseApi'
 export const addTagTypes = ['worldEvent', 'worldDetails'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
@@ -94,9 +94,10 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	icon: string
+	color: string
 	descriptionRich: string
 	timestamp: string
-	icon: string
 	revokedAt?: null | string
 	customName: boolean
 	externalLink: string
@@ -107,16 +108,17 @@ export type CreateWorldEventApiArg = {
 	/** Any string value */
 	worldId: string
 	body: {
-		type: 'SCENE' | 'OTHER'
-		name: string
+		id?: string
+		name?: string
 		icon?: string
-		description?: string
+		color?: string
+		description: string
 		descriptionRich?: string
 		timestamp: string
 		revokedAt?: null | string
 		customName?: boolean
 		externalLink?: string
-		worldEventTrackId?: string
+		worldEventTrackId?: null | string
 		mentions?: {
 			targetId: string
 			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -169,9 +171,10 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	icon: string
+	color: string
 	descriptionRich: string
 	timestamp: string
-	icon: string
 	revokedAt?: null | string
 	customName: boolean
 	externalLink: string
@@ -187,6 +190,7 @@ export type UpdateWorldEventApiArg = {
 		modules?: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 		name?: string
 		icon?: string
+		color?: string
 		timestamp?: string
 		revokedAt?: null | string
 		description?: string
@@ -201,21 +205,7 @@ export type UpdateWorldEventApiArg = {
 	}
 }
 export type DeleteWorldEventApiResponse = /** status 200  */ {
-	description: string
-	type: 'SCENE' | 'OTHER'
-	worldId: string
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	descriptionRich: string
-	timestamp: string
-	icon: string
-	revokedAt?: null | string
-	customName: boolean
-	externalLink: string
-	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
-	worldEventTrackId?: null | string
+	count: number
 }
 export type DeleteWorldEventApiArg = {
 	/** Any string value */
@@ -231,9 +221,10 @@ export type RevokeWorldEventApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	icon: string
+	color: string
 	descriptionRich: string
 	timestamp: string
-	icon: string
 	revokedAt?: null | string
 	customName: boolean
 	externalLink: string
@@ -257,9 +248,10 @@ export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	icon: string
+	color: string
 	descriptionRich: string
 	timestamp: string
-	icon: string
 	revokedAt?: null | string
 	customName: boolean
 	externalLink: string

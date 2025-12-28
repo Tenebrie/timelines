@@ -1,6 +1,5 @@
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { getWikiState } from '@/app/features/worldWiki/selectors'
-import { worldWikiRoutes } from '@/router/routes/featureRoutes/worldWikiRoutes'
+import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 
 import { BaseMentionChip } from './BaseMentionChip'
 
@@ -12,7 +11,7 @@ type Props = {
 
 export const ArticleMentionChip = ({ worldId, articleId, articles }: Props) => {
 	const navigateTo = useEventBusDispatch({
-		event: 'navigate/articleDetails',
+		event: 'world/requestNavigation',
 	})
 
 	const article = articles.find((article) => article.id === articleId)
@@ -25,8 +24,8 @@ export const ArticleMentionChip = ({ worldId, articleId, articles }: Props) => {
 		}
 
 		navigateTo({
-			target: worldWikiRoutes.article,
-			args: { worldId, articleId },
+			to: '/world/$worldId/wiki/$articleId',
+			params: { worldId, articleId },
 		})
 	}
 

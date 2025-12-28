@@ -1,7 +1,7 @@
+import { WorldCalendarType } from '@api/types/worldTypes'
 import { useCallback, useMemo } from 'react'
 
-import { WorldCalendarType } from '../../worldTimeline/types'
-import { CalendarDefinition, SimpleCalendarUnits, TwelveCustomMonths } from './types'
+import { CalendarDefinition, SimpleCalendarUnits, TwelveCustomMonths } from '../types'
 
 export const useWorldCalendar = () => {
 	const defaultMonths = useMemo<TwelveCustomMonths>(

@@ -1,9 +1,9 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator'
-import { SessionMiddleware } from '@src/middleware/SessionMiddleware'
-import { AuthorizationService } from '@src/services/AuthorizationService'
-import { RedisService } from '@src/services/RedisService'
-import { WorldService } from '@src/services/WorldService'
-import { WorldShareService } from '@src/services/WorldShareService'
+import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { RedisService } from '@src/services/RedisService.js'
+import { WorldService } from '@src/services/WorldService.js'
+import { WorldShareService } from '@src/services/WorldShareService.js'
 import {
 	BadRequestError,
 	NonEmptyStringValidator,
@@ -20,16 +20,13 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { CollaboratorAccessValidator } from './validators/CollaboratorAccessValidator'
-import { StringArrayValidator } from './validators/StringArrayValidator'
-import { WorldAccessModeValidator } from './validators/WorldAccessModeValidator'
-import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator'
+import { worldCollaboratorsTag, worldDetailsTag, worldListTag } from './utils/tags.js'
+import { CollaboratorAccessValidator } from './validators/CollaboratorAccessValidator.js'
+import { StringArrayValidator } from './validators/StringArrayValidator.js'
+import { WorldAccessModeValidator } from './validators/WorldAccessModeValidator.js'
+import { WorldCalendarTypeValidator } from './validators/WorldCalendarTypeValidator.js'
 
 const router = new Router().with(SessionMiddleware)
-
-export const worldListTag = 'worldList'
-export const worldDetailsTag = 'worldDetails'
-export const worldCollaboratorsTag = 'worldCollaborators'
 
 router.get('/api/worlds', async (ctx) => {
 	useApiEndpoint({
@@ -67,24 +64,6 @@ router.post('/api/worlds', async (ctx) => {
 	return world
 })
 
-router.delete('/api/world/:worldId', async (ctx) => {
-	useApiEndpoint({
-		name: 'deleteWorld',
-		description: 'Destroys a world owned by the current user.',
-		tags: [worldListTag],
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	const { worldId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-	})
-
-	await AuthorizationService.checkUserWorldOwner(user, worldId)
-
-	return await WorldService.deleteWorld(worldId)
-})
-
 router.patch('/api/world/:worldId', async (ctx) => {
 	useApiEndpoint({
 		name: 'updateWorld',
@@ -111,6 +90,24 @@ router.patch('/api/world/:worldId', async (ctx) => {
 		worldId,
 		data: params,
 	})
+})
+
+router.delete('/api/world/:worldId', async (ctx) => {
+	useApiEndpoint({
+		name: 'deleteWorld',
+		description: 'Destroys a world owned by the current user.',
+		tags: [worldListTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+	})
+
+	await AuthorizationService.checkUserWorldOwner(user, worldId)
+
+	return await WorldService.deleteWorld(worldId)
 })
 
 router.get('/api/world/:worldId', async (ctx) => {

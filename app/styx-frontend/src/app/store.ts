@@ -1,28 +1,22 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
-import { baseApi } from '../api/baseApi'
-import adminReducer from './features/admin/reducer'
-import authReducer from './features/auth/reducer'
-import spinnyReducer from './features/demo/spinny/reducer'
-import modalsReducer from './features/modals/reducer'
-import preferencesReducer from './features/preferences/reducer'
-import worldReducer from './features/world/reducer'
-import worldListReducer from './features/worldList/reducer'
-import timelineReducer from './features/worldTimeline/components/Timeline/reducer'
-import wikiReducer from './features/worldWiki/reducer'
+import { baseApi, BaseApiReducer } from '../api/base/baseApi'
+import { AuthReducer } from './features/auth/AuthSlice'
+import { ModalsReducer } from './features/modals/ModalsSlice'
+import { PreferencesReducer } from './features/preferences/PreferencesSlice'
 import { deepMerge } from './utils/deepMerge'
+import { TimelineReducer } from './views/world/views/timeline/TimelineSlice'
+import { WikiReducer } from './views/world/views/wiki/WikiSlice'
+import { WorldReducer } from './views/world/WorldSlice'
 
 const rootReducer = combineReducers({
-	api: baseApi.reducer,
-	admin: adminReducer,
-	auth: authReducer,
-	modals: modalsReducer,
-	spinny: spinnyReducer,
-	world: worldReducer,
-	worldList: worldListReducer,
-	preferences: preferencesReducer,
-	timeline: timelineReducer,
-	wiki: wikiReducer,
+	api: BaseApiReducer,
+	auth: AuthReducer,
+	modals: ModalsReducer,
+	world: WorldReducer,
+	preferences: PreferencesReducer,
+	timeline: TimelineReducer,
+	wiki: WikiReducer,
 })
 
 const initialState = configureStore({ reducer: rootReducer }).getState()

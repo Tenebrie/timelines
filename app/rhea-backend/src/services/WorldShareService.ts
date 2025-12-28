@@ -1,8 +1,8 @@
 import { CollaboratorAccess } from '@prisma/client'
 import { BadRequestError } from 'moonflower'
 
-import { AnnouncementService } from './AnnouncementService'
-import { getPrismaClient } from './dbClients/DatabaseClient'
+import { AnnouncementService } from './AnnouncementService.js'
+import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const WorldShareService = {
 	listCollaborators: async ({ worldId }: { worldId: string }) => {
@@ -47,6 +47,7 @@ export const WorldShareService = {
 				getPrismaClient().user.findFirst({
 					where: {
 						email,
+						deletedAt: null,
 					},
 				}),
 			),

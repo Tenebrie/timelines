@@ -1,47 +1,78 @@
+import { ActorDetails, MarkerType, TimelineEntity, WorldEvent } from '@api/types/worldTypes'
+import type { NavigateOptions } from '@tanstack/react-router'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
-import type { useWorldTimelineRouter } from '@/router/routes/featureRoutes/worldTimelineRoutes'
-import { useWorldWikiRouter } from '@/router/routes/featureRoutes/worldWikiRoutes'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
-import { ActorDetails, WorldEvent } from '../worldTimeline/types'
-
 export type AllowedEvents =
-	| 'scrollTimelineLeft'
-	| 'scrollTimelineRight'
-	| 'sendCalliopeMessage'
-	| 'calliopeReconnected'
-	| 'timelineScrolled'
-	| 'richEditor/openMentions'
-	| 'richEditor/updateMentions'
-	| 'richEditor/closeMentions'
-	| 'richEditor/keyDown'
-	| 'navigate/worldTimeline'
-	| 'navigate/articleDetails'
+	| 'timeline/onScroll'
+	| 'timeline/onMarkerHovered'
+	| 'timeline/requestScrollTo'
+	| 'timeline/requestScrollLeft'
+	| 'timeline/requestScrollRight'
+	| 'timeline/requestZoom'
+	| 'timeline/eventDrawer/onResize'
+	| 'timeline/eventEditor/requestOpen'
+	| 'timeline/tracksDrawer/onResize'
+	| 'mindmap/actorEditor/requestOpen'
+	| 'world/requestNavigation'
+	| 'calliope/onReconnected'
+	| 'calliope/requestSendMessage'
+	| 'richEditor/onKeyDown'
+	| 'richEditor/requestOpenMentions'
+	| 'richEditor/requestUpdateMentions'
+	| 'richEditor/requestCloseMentions'
+	| 'richEditor/mentionRender/onStart'
+	| 'richEditor/mentionRender/onEnd'
 	| 'richEditor/forceUpdateEvent'
 	| 'richEditor/forceUpdateActor'
 	| 'richEditor/forceUpdateArticle'
-	| 'richEditor/mentionRender/start'
-	| 'richEditor/mentionRender/end'
+	| 'richEditor/requestFocus'
+	| 'richEditor/requestBlur'
+	| 'summonable/requestSummon'
+	| 'summonable/requestUpdate'
+	| 'summonable/requestDismiss'
+
+type ScrollTimelineToParams =
+	| {
+			timestamp: number
+			skipAnim?: boolean
+	  }
+	| {
+			rawScrollValue: number
+			skipAnim?: boolean
+	  }
 
 export type EventParams = {
-	['scrollTimelineLeft']: void
-	['scrollTimelineRight']: void
-	['sendCalliopeMessage']: ClientToCalliopeMessage
-	['calliopeReconnected']: void
-	['timelineScrolled']: void
-	['richEditor/openMentions']: { query: string; screenPosTop: number; screenPosLeft: number }
-	['richEditor/updateMentions']: { query: string }
-	['richEditor/closeMentions']: void
-	['richEditor/keyDown']: {
+	['timeline/onScroll']: number
+	['timeline/onMarkerHovered']: { marker: TimelineEntity<MarkerType>; hover: boolean }
+	['timeline/requestScrollTo']: ScrollTimelineToParams
+	['timeline/requestScrollLeft']: void
+	['timeline/requestScrollRight']: void
+	['timeline/requestZoom']: { direction: 'in' | 'out' }
+	['timeline/eventDrawer/onResize']: { height: number }
+	['timeline/eventEditor/requestOpen']: { extraHeight?: number }
+	['timeline/tracksDrawer/onResize']: { height: number }
+	['mindmap/actorEditor/requestOpen']: { extraHeight?: number }
+	['world/requestNavigation']: NavigateOptions
+	['calliope/onReconnected']: void
+	['calliope/requestSendMessage']: ClientToCalliopeMessage
+	['richEditor/onKeyDown']: {
 		key: string
 		ctrlKey: boolean
 		shiftKey: boolean
 		altKey: boolean
 		metaKey: boolean
 	}
-	['navigate/worldTimeline']: Parameters<ReturnType<typeof useWorldTimelineRouter>['navigateTo']>[0]
-	['navigate/articleDetails']: Parameters<ReturnType<typeof useWorldWikiRouter>['navigateTo']>[0]
+	['richEditor/requestOpenMentions']: { query: string; screenPosTop: number; screenPosLeft: number }
+	['richEditor/requestUpdateMentions']: { query: string }
+	['richEditor/requestCloseMentions']: void
+	['richEditor/mentionRender/onStart']: {
+		node: ProseMirrorNode
+	}
+	['richEditor/mentionRender/onEnd']: {
+		node: ProseMirrorNode
+	}
 	['richEditor/forceUpdateEvent']: {
 		event: WorldEvent
 	}
@@ -51,10 +82,21 @@ export type EventParams = {
 	['richEditor/forceUpdateArticle']: {
 		articleId: string
 	}
-	['richEditor/mentionRender/start']: {
-		node: ProseMirrorNode
+	['richEditor/requestFocus']: void
+	['richEditor/requestBlur']: void
+	['summonable/requestSummon']: {
+		family: string
+		element: HTMLElement
+		event: { isHandled: boolean }
+		props: unknown
 	}
-	['richEditor/mentionRender/end']: {
-		node: ProseMirrorNode
+	['summonable/requestUpdate']: {
+		family: string
+		element: HTMLElement
+		props: unknown
+	}
+	['summonable/requestDismiss']: {
+		family: string
+		element: HTMLElement
 	}
 }

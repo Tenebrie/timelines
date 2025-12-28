@@ -16,25 +16,31 @@ export const ProgressBar = ({ elementsRendering }: Props) => {
 	const maxValueRef = useRef(0)
 
 	useEventBusSubscribe({
-		event: 'richEditor/mentionRender/start',
-		callback: ({ node }) => {
+		event: 'richEditor/mentionRender/onStart',
+		callback: ({}) => {
 			maxValueRef.current = Math.max(maxValueRef.current, elementsRendering.current.length)
 			if (maxValueRef.current === 0) {
 				return
 			}
 			const currentValue =
 				((maxValueRef.current - elementsRendering.current.length) / maxValueRef.current) * 100
-			requestAnimationFrame(() => flushSync(() => setValue(currentValue)))
+			requestAnimationFrame(() =>
+				flushSync(() => {
+					setValue(currentValue)
+				}),
+			)
 			if (elementsRendering.current.length > 20 && !triggeredRef.current) {
 				triggeredRef.current = true
-				setOpacity(1)
+				requestAnimationFrame(() => {
+					setOpacity(1)
+				})
 			}
 		},
 	})
 
 	useEventBusSubscribe({
-		event: 'richEditor/mentionRender/end',
-		callback: ({ node }) => {
+		event: 'richEditor/mentionRender/onEnd',
+		callback: ({}) => {
 			if (maxValueRef.current === 0) {
 				return
 			}

@@ -1,7 +1,7 @@
 import { useEditor } from '@tiptap/react'
 
 import { ViewerExtensions } from './extensions/config'
-import { StyledEditorContent } from './styles'
+import { EditorContentBox } from './RichTextEditor'
 
 type Props = {
 	value: string
@@ -14,9 +14,9 @@ export const RichTextEditorReadonly = ({ value }: Props) => {
 		extensions: ViewerExtensions,
 	})
 
-	return (
-		<div>
-			<StyledEditorContent className="content" editor={editor} readOnly $mode="read" />
-		</div>
-	)
+	if (!editor) {
+		return null
+	}
+
+	return <EditorContentBox className="content" editor={editor} mode="read" readOnly />
 }

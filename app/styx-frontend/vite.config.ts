@@ -1,10 +1,21 @@
+import tanstackRouter from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
+import path from 'path'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'vitest/config'
 
+const tanstackTempDir = process.env.TSR_TMP_DIR || path.resolve('node_modules/.tanstack')
+
 export default defineConfig({
 	base: '/',
-	plugins: [react(), viteTsconfigPaths()],
+	define: {
+		__APP_VERSION__: JSON.stringify(process.env.VERSION ?? 'Dev'),
+	},
+	plugins: [
+		tanstackRouter({ autoCodeSplitting: true, tmpDir: tanstackTempDir }),
+		react(),
+		viteTsconfigPaths(),
+	],
 	resolve: {
 		alias: {
 			'@api': '/src/api',
@@ -14,19 +25,20 @@ export default defineConfig({
 	test: {
 		globals: true,
 		environment: 'jsdom',
-		setupFiles: 'src/setupTests.ts',
+		setupFiles: 'src/test-utils/setupTests.ts',
 		testTimeout: 15000,
 	},
 	build: {
 		outDir: 'build',
-		rollupOptions: {
-			output: {
-				manualChunks: () => 'everything',
-			},
-		},
+	},
+	preview: {
+		port: 8080,
+		host: true,
+		allowedHosts: true,
 	},
 	server: {
 		port: 8080,
+		allowedHosts: true,
 		watch: {
 			usePolling: true,
 		},

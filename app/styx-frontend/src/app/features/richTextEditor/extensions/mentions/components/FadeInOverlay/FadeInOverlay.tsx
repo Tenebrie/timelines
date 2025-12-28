@@ -2,16 +2,17 @@ import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { useEffect, useRef } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 import { createCubicBezier } from './createCubicBezier'
 import { ProgressBar } from './ProgressBar'
 
 type Props = {
+	content: string
 	isReadMode: boolean
 }
 
-export const FadeInOverlay = ({ isReadMode }: Props) => {
+export const FadeInOverlay = ({ content, isReadMode }: Props) => {
 	const theme = useCustomTheme()
 
 	const ref = useRef<HTMLDivElement | null>(null)
@@ -23,7 +24,7 @@ export const FadeInOverlay = ({ isReadMode }: Props) => {
 	const waitForRenderTimeoutRef = useRef<number | null>(null)
 
 	useEventBusSubscribe({
-		event: 'richEditor/mentionRender/start',
+		event: 'richEditor/mentionRender/onStart',
 		callback: ({ node }) => {
 			if (!progressElementsRendering.current.includes(node)) {
 				progressElementsRendering.current.push(node)
@@ -41,7 +42,7 @@ export const FadeInOverlay = ({ isReadMode }: Props) => {
 	})
 
 	useEventBusSubscribe({
-		event: 'richEditor/mentionRender/end',
+		event: 'richEditor/mentionRender/onEnd',
 		callback: ({ node }) => {
 			elementsRendering.current = elementsRendering.current.filter((element) => element !== node)
 			progressElementsRendering.current = progressElementsRendering.current.filter(
@@ -78,24 +79,19 @@ export const FadeInOverlay = ({ isReadMode }: Props) => {
 			}
 		}
 
-		if (waitForRenderTimeoutRef.current) {
-			clearInterval(waitForRenderTimeoutRef.current)
-		}
-		waitForRenderTimeoutRef.current = window.setInterval(() => {
-			if (elementsRendering.current.length > 0) {
-				return
-			}
-			inProgress.current = true
-			requestAnimationFrame(animate)
-			if (waitForRenderTimeoutRef.current) {
-				clearInterval(waitForRenderTimeoutRef.current)
-			}
-		}, 1)
+		const b = requestIdleCallback(
+			() => {
+				inProgress.current = true
+				requestAnimationFrame(animate)
+				if (waitForRenderTimeoutRef.current) {
+					clearInterval(waitForRenderTimeoutRef.current)
+				}
+			},
+			{ timeout: 500 },
+		)
 
 		return () => {
-			if (waitForRenderTimeoutRef.current) {
-				window.clearInterval(waitForRenderTimeoutRef.current)
-			}
+			cancelIdleCallback(b)
 		}
 	}, [])
 
@@ -121,6 +117,7 @@ export const FadeInOverlay = ({ isReadMode }: Props) => {
 				ref={ref}
 				className="overlay"
 				style={{
+					display: content.length === 0 ? 'none' : 'block',
 					pointerEvents: 'none',
 					position: 'absolute',
 					top: 52,

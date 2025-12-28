@@ -16,8 +16,9 @@
 		"migrate": "./scripts/dev-migrate.sh",
 		"db:seed": "(cd app/rhea-backend && DATABASE_URL=postgresql://docker:docker@localhost:5432/db?schema=public yarn prisma db seed)",
 		"docker": "yarn docker:start",
-		"docker:start": "docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up",
-		"docker:build": "docker compose -f docker-compose.common.yml -f docker-compose.dev.yml build",
+		"docker:start": ". ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up --build",
+		"docker:build": ". ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml build --no-cache",
+		"docker:down": ". ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml down",
 		"docker:update": "./scripts/dev-install.sh",
 		"docker:fullinstall": "./scripts/dev-fullinstall.sh",
 		"docker:prod:push": "./scripts/docker-prod-push.sh",
@@ -55,7 +56,7 @@
 		"*.(ts|json)": "eslint --fix"
 	},
 	"engines": {
-		"node": "20.x"
+		"node": "24.x"
 	},
 	"author": "Tenebrie",
 	"bugs": {

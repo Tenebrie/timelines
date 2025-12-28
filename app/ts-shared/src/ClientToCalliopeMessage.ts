@@ -1,6 +1,6 @@
-import * as WebSocket from 'ws'
+import { WebSocket } from 'ws'
 
-import { EmptyObject, ShapeOfMessage } from './types'
+import { EmptyObject, ShapeOfMessage } from './types.js'
 
 export const WORLD_UPDATE_NAME = 'worldUpdate'
 

@@ -1,6 +1,7 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
-import { useCustomTheme } from '@/hooks/useCustomTheme'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import { ModalContainer, ModalWrapper } from './styles'
 
@@ -17,23 +18,7 @@ const Modal = ({ visible, children, onClose }: Props) => {
 	const [isModalRendered, setIsModalRendered] = useState(false)
 	const [modalRenderTimeout, setModalRenderTimeout] = useState<number | null>(null)
 
-	const onEscapeKey = useCallback(
-		(event: KeyboardEvent) => {
-			if (!isModalVisible || event.key !== 'Escape') {
-				return
-			}
-
-			event.stopPropagation()
-			event.preventDefault()
-			onClose()
-		},
-		[isModalVisible, onClose],
-	)
-
-	useEffect(() => {
-		document.addEventListener('keydown', onEscapeKey)
-		return () => document.removeEventListener('keydown', onEscapeKey)
-	}, [onEscapeKey])
+	useShortcut(Shortcut.Escape, onClose, isModalVisible ? 10 : -1)
 
 	useEffect(() => {
 		if (isModalVisible && !isModalRendered) {

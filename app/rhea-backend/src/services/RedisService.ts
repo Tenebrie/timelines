@@ -1,12 +1,12 @@
-import { Actor, User, WikiArticle, WorldEvent, WorldEventDelta } from '@prisma/client'
+import { Actor, MindmapNode, User, WikiArticle, WorldEvent, WorldEventDelta } from '@prisma/client'
 import { ParameterizedContext } from 'koa'
 
 import {
 	RedisChannel,
 	RheaToCalliopeMessage,
 	RheaToCalliopeMessageType,
-} from '../ts-shared/RheaToCalliopeMessage'
-import { getRedisClient, openRedisChannel } from './dbClients/RedisClient'
+} from '../ts-shared/RheaToCalliopeMessage.js'
+import { getRedisClient, openRedisChannel } from './dbClients/RedisClient.js'
 
 const calliope = openRedisChannel<RheaToCalliopeMessage>(RedisChannel.RHEA_TO_CALLIOPE)
 
@@ -81,6 +81,20 @@ export const RedisService = {
 			data: {
 				worldId,
 				actor: JSON.stringify(actor),
+			},
+		})
+	},
+
+	notifyAboutMindmapNodeUpdate: (
+		ctx: ContextWithSessionId,
+		{ worldId, node }: { worldId: string; node: MindmapNode },
+	) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.MINDMAP_NODE_UPDATED,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
+				node: JSON.stringify(node),
 			},
 		})
 	},

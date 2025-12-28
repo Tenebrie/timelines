@@ -1,43 +1,28 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "paths": {
-      "@api/*": [
-        "./src/api/*"
-      ],
-      "@/*": [
-        "./src/*"
-      ],
-    },
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "incremental": true,
-    "tsBuildInfoFile": "build/.tsbuildinfo",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "sourceMap": false,
-    "jsx": "react-jsx",
-    "types": [
-      "vite/client",
-      "vitest/globals",
-      "./node_modules/user-agent-data-types"
-    ]
-  },
-  "include": [
-    "src",
-    "jest.config.ts",
-  ]
+	"compilerOptions": {
+		"target": "ESNext",
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"paths": {
+			"@api/*": ["./src/api/*"],
+			"@/*": ["./src/*"]
+		},
+		"allowJs": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"noFallthroughCasesInSwitch": true,
+		"module": "esnext",
+		"incremental": true,
+		"tsBuildInfoFile": "build/.tsbuildinfo",
+		"moduleResolution": "bundler",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"sourceMap": false,
+		"jsx": "react-jsx",
+		"types": ["vite/client", "vitest/globals", "./node_modules/user-agent-data-types"]
+	},
+	"include": ["src", "dts/vite-env.d.ts"]
 }

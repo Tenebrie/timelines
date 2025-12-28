@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client'
 
-import { getPrismaClient } from '../dbClients/DatabaseClient'
+import { getPrismaClient } from '../dbClients/DatabaseClient.js'
 
 export const makeSortWikiArticles = async (worldId: string, prisma?: Prisma.TransactionClient) => {
 	prisma = prisma ?? getPrismaClient()
@@ -24,7 +24,7 @@ export const makeSortWikiArticles = async (worldId: string, prisma?: Prisma.Tran
 					id: article.id,
 				},
 				data: {
-					position: index,
+					position: index * 2,
 				},
 			})
 		}),
