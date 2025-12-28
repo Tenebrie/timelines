@@ -101,8 +101,8 @@ export function Mindmap() {
 			const centerY = rect.height / 2
 
 			const oldScale = mouseState.gridScale
-			let newScale = oldScale * (1 - event.deltaY / 1000)
-			newScale = Math.min(Math.max(0.15, newScale), 10)
+			let newScale = oldScale * (1 - event.deltaY / 800)
+			newScale = Math.min(Math.max(0.25, newScale), 5)
 
 			const scaleFactor = Math.round(smallGridSpacing * newScale) / Math.round(smallGridSpacing * oldScale)
 			mouseState.gridOffsetX = centerX - scaleFactor * (centerX - mouseState.gridOffsetX)

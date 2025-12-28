@@ -81,7 +81,7 @@ router.patch('/api/world/:worldId/mindmap/node/:nodeId', async (ctx) => {
 	useApiEndpoint({
 		name: 'updateNode',
 		description: 'Updates the target node',
-		tags: [mindmapTag],
+		// tags: [mindmapTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)

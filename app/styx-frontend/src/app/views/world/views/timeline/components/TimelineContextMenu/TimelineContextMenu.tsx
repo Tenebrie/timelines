@@ -66,7 +66,7 @@ export const TimelineContextMenuComponent = () => {
 		onClose()
 		navigate({
 			to: '/world/$worldId/timeline',
-			search: (prev) => ({ ...prev, time: selectedTime, new: true }),
+			search: (prev) => ({ ...prev, time: selectedTime, new: true, selection: [] }),
 		})
 		scrollTimelineTo({ timestamp: selectedTime })
 		openEditEventModal({ eventId: null })

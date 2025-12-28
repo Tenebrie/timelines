@@ -44,7 +44,6 @@ const injectedRtkApi = api
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['mindmap'],
 			}),
 			deleteNode: build.mutation<DeleteNodeApiResponse, DeleteNodeApiArg>({
 				query: (queryArg) => ({

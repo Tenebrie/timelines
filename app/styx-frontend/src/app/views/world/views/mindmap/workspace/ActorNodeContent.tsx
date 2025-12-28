@@ -6,9 +6,11 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 type Props = {
 	actor: ActorDetails
 	isSelected: boolean
+	onHeaderClick: () => void
+	onContentClick: () => void
 }
 
-export function ActorNodeContent({ actor, isSelected }: Props) {
+export function ActorNodeContent({ actor, isSelected, onHeaderClick, onContentClick }: Props) {
 	const theme = useCustomTheme()
 
 	return (
@@ -18,21 +20,30 @@ export function ActorNodeContent({ actor, isSelected }: Props) {
 				borderRadius: 2,
 				overflow: 'hidden',
 				position: 'relative',
-				boxShadow: isSelected ? '0 4px 12px rgba(0,0,0,0.15)' : '0 2px 8px rgba(0,0,0,0.1)',
-				'&:hover': {
-					boxShadow: '0 6px 12px rgba(0,0,0,0.15)',
+				transition: 'box-shadow 0.2s ease-out, transform 0.2s ease-out',
+				'&:has([data-mindmap-header]:hover)': {
+					boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
 				},
 			}}
 		>
 			{/* Header */}
 			<Box
+				data-mindmap-header
+				onClick={(e) => {
+					onHeaderClick()
+				}}
 				sx={{
 					background: theme.custom.palette.background.soft,
 					padding: '8px 12px',
 					borderBottom: `1px solid ${theme.custom.palette.background.softer}`,
 					display: 'flex',
 					alignItems: 'center',
+					userSelect: 'none',
 					gap: 1,
+					cursor: 'grab',
+					'&:active': {
+						cursor: 'grabbing',
+					},
 				}}
 			>
 				<Box
@@ -65,14 +76,18 @@ export function ActorNodeContent({ actor, isSelected }: Props) {
 
 			{/* Content */}
 			<Box
+				data-mindmap-content
+				onClick={(e) => {
+					e.stopPropagation()
+					onContentClick()
+				}}
 				sx={{
 					padding: '12px',
 					background: theme.custom.palette.background.softest,
+					cursor: 'pointer',
+					transition: 'background 0.2s ease-out',
 					'&:hover': {
 						background: theme.custom.palette.background.softer,
-					},
-					'&:active': {
-						background: theme.custom.palette.background.soft,
 					},
 				}}
 			>
