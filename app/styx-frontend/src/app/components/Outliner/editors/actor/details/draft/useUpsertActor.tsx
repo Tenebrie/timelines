@@ -4,7 +4,6 @@ import { useEffect } from 'react'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { useCreateActor } from '@/app/views/world/api/useCreateActor'
-import { useDeleteActor } from '@/app/views/world/api/useDeleteActor'
 import { useUpdateActor } from '@/app/views/world/api/useUpdateActor'
 
 import { ActorDraft } from './useActorDraft'
@@ -19,7 +18,6 @@ export const useUpsertActor = (props: Props) => {
 	const { mode: baseMode, draft: baseDraft } = props
 	const [createActor, { isLoading: isCreating }] = useCreateActor()
 	const [updateActor, { isLoading: isUpdating }] = useUpdateActor()
-	const [deleteActor, { isLoading: isDeleting }] = useDeleteActor()
 
 	const draftRef = useAutoRef(baseDraft)
 
@@ -39,11 +37,9 @@ export const useUpsertActor = (props: Props) => {
 				}
 			} else if (hasSubstance && mode === 'edit') {
 				await updateActor(draft.id, draft.toPayload())
-			} else if (!hasSubstance && mode === 'edit') {
-				await deleteActor(draft.id)
 			}
 		},
-		isSaving: isCreating || isUpdating || isDeleting,
+		isSaving: isCreating || isUpdating,
 	})
 
 	useEffect(() => {

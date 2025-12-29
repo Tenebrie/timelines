@@ -1,5 +1,4 @@
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { useModal } from '@/app/features/modals/ModalsSlice'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { BaseMentionChip } from './BaseMentionChip'
@@ -10,11 +9,10 @@ type Props = {
 	actors: ReturnType<typeof getWorldState>['actors']
 }
 
-export const ActorMentionChip = ({ worldId, actorId, actors }: Props) => {
+export const ActorMentionChip = ({ actorId, actors }: Props) => {
 	const navigateTo = useEventBusDispatch({
 		event: 'world/requestNavigation',
 	})
-	const { open: openEditActorModal } = useModal('editActorModal')
 
 	const actor = actors.find((actor) => actor.id === actorId)
 	const actorName = actor ? `${actor.name}` : 'Unknown Actor'
@@ -25,9 +23,14 @@ export const ActorMentionChip = ({ worldId, actorId, actors }: Props) => {
 			return
 		}
 		navigateTo({
-			search: (prev) => ({ ...prev, selection: [actorId] }),
+			search: (prev) => {
+				const selection = [...(prev.selection ?? [])] as string[]
+				if (selection[selection.length - 1] !== actorId) {
+					selection.push(actorId)
+				}
+				return { ...prev, selection }
+			},
 		})
-		openEditActorModal({ actorId: actor.id })
 	}
 
 	return <BaseMentionChip type="Actor" label={actorName} color={actorColor} onClick={onClick} />

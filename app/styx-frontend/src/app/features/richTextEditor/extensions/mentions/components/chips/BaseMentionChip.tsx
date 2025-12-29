@@ -21,13 +21,6 @@ export const BaseMentionChip = ({ type, label, color, onClick }: Props) => {
 	const parsedColor = colorStringToHsl(color ?? '#000')
 	const theme = useCustomTheme()
 
-	// parsedColor.l = 1
-	// const textColor = getContrastTextColor(hslToHex(parsedColor.h, parsedColor.s, parsedColor.l))
-
-	// const typeColor = {
-	// 	...parsedColor,
-	// 	l: parsedColor.l > 0.5 ? parsedColor.l - 0.2 : parsedColor.l + 0.2,
-	// }
 	const typeColor = parsedColor
 	const iconColor = getContrastTextColor(hslToHex(typeColor.h, typeColor.s, typeColor.l))
 

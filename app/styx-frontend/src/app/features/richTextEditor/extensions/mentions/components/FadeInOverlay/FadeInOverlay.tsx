@@ -108,8 +108,8 @@ export const FadeInOverlay = ({ content, isReadMode }: Props) => {
 					background: linear-gradient(
 						to bottom,
 						transparent var(--grad-start),
-						${theme.custom.palette.background.paperActual} var(--grad-end),
-						${theme.custom.palette.background.paperActual} 100%
+						${theme.custom.palette.background.textEditorBackground} var(--grad-end),
+						${theme.custom.palette.background.textEditorBackground} 100%
 					);
 				}
 			`}</style>

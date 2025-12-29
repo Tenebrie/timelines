@@ -25,7 +25,7 @@ jobs:
         run: |
           COUNT=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"%s" | grep -cE '^(fix|feat|major):' || true)
           echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
-        
+
       - name: Generate Version Number
         id: version
         uses: paulhatch/semantic-version@v5.4.0
@@ -65,7 +65,7 @@ jobs:
             echo "missing=false" >> "$GITHUB_OUTPUT"
           else
             echo "missing=true" >> "$GITHUB_OUTPUT"
-          fi 
+          fi
 
       - name: Build & Publish
         if: steps.check-container.outputs.missing == 'true'
@@ -92,7 +92,7 @@ jobs:
       url: https://staging.tenebrie.com/
 
     steps:
-      - uses: actions/checkout@v4 
+      - uses: actions/checkout@v4
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
@@ -130,7 +130,7 @@ jobs:
       url: https://timelines.tenebrie.com/
 
     steps:
-      - uses: actions/checkout@v4 
+      - uses: actions/checkout@v4
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
@@ -143,7 +143,7 @@ jobs:
           echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H $(doctl compute droplet get prod-manager-1 --format PublicIPv4 --no-header) >> ~/.ssh/known_hosts
-        
+
       - name: Backup Database
         run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && ./scripts/stack-create-db-backup.sh timelines-prod"
 

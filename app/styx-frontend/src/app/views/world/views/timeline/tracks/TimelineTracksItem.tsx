@@ -7,7 +7,11 @@ import { useSelector } from 'react-redux'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { getTimelineContextMenuState, getTimelineState } from '@/app/views/world/WorldSliceSelectors'
+import {
+	getSelectedMarkerKeys,
+	getTimelineContextMenuState,
+	getTimelineState,
+} from '@/app/views/world/WorldSliceSelectors'
 
 import { TimelineTrack } from '../hooks/useEventTracks'
 import { TimelineState } from '../utils/TimelineState'
@@ -39,10 +43,11 @@ export function TimelineTracksItemComponent({
 	const dragDropReceiverRef = useRef<HTMLDivElement | null>(null)
 	const [isDragging, setIsDragging] = useState(false)
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
+	const selectedMarkerIds = useSelector(getSelectedMarkerKeys)
 	const theme = useCustomTheme()
-	const { selectedMarkerIds, trackActive } = useSearch({
+	const { trackActive } = useSearch({
 		from: '/world/$worldId/_world/timeline',
-		select: (search) => ({ selectedMarkerIds: search.selection, trackActive: search.track === track.id }),
+		select: (search) => ({ trackActive: search.track === track.id }),
 	})
 
 	const selectedMarkers = useMemo(
@@ -100,7 +105,6 @@ export function TimelineTracksItemComponent({
 
 	useEffect(() => {
 		updateVisibleMarkersThrottled.current(track, containerWidth, realTimeToScaledTime, true)
-		// updateVisibleMarkersThrottled.current.flush()
 	}, [containerWidth, realTimeToScaledTime, track, updateVisibleMarkers, scaleLevel])
 
 	useEventBusSubscribe({

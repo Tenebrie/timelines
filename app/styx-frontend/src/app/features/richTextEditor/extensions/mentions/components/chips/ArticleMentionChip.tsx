@@ -22,10 +22,12 @@ export const ArticleMentionChip = ({ worldId, articleId, articles }: Props) => {
 		if (!article) {
 			return
 		}
-
 		navigateTo({
 			to: '/world/$worldId/wiki/$articleId',
 			params: { worldId, articleId },
+			search: (prev) => {
+				return { ...prev, selection: [] }
+			},
 		})
 	}
 

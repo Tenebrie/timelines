@@ -48,7 +48,6 @@ export const TimelineContextMenuComponent = () => {
 
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
-	const { open: openEditEventModal } = useModal('editEventModal')
 
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 
@@ -66,23 +65,10 @@ export const TimelineContextMenuComponent = () => {
 		onClose()
 		navigate({
 			to: '/world/$worldId/timeline',
-			search: (prev) => ({ ...prev, time: selectedTime, new: true, selection: [] }),
+			search: (prev) => ({ ...prev, time: selectedTime, new: 'event', selection: [] }),
 		})
 		scrollTimelineTo({ timestamp: selectedTime })
-		openEditEventModal({ eventId: null })
-	}, [onClose, navigate, scrollTimelineTo, selectedTime, openEditEventModal])
-
-	// const onReplaceSelectedEvent = useCallback(() => {
-	// 	onClose()
-	// 	if (!selectedMarker) {
-	// 		return
-	// 	}
-	// 	// navigate({
-	// 	// 	to: '/world/$worldId/timeline/delta/create/$eventId',
-	// 	// 	params: { eventId: selectedMarker.eventId },
-	// 	// 	search: (prev) => ({ ...prev, time: selectedTime }),
-	// 	// })
-	// }, [navigate, onClose, selectedMarker, selectedTime])
+	}, [onClose, navigate, scrollTimelineTo, selectedTime])
 
 	const onResolveSelectedEvent = useCallback(async () => {
 		if (!selectedMarker) {

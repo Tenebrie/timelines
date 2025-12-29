@@ -88,12 +88,8 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 		editor.chain().focus().insertContent('@').run()
 	}, [editor])
 
-	// const onImageClick = useCallback(() => {
-	// 	editor?.chain().focus().setImage().run()
-	// }, [editor])
-
 	return (
-		<Paper sx={{ padding: '4px 8px' }}>
+		<Paper sx={{ padding: '4px 8px', borderRadius: '6px' }}>
 			<Stack direction="row" justifyContent="space-between">
 				<Stack direction="row" gap={0.75} flexWrap={'wrap'}>
 					{!isReadMode && (

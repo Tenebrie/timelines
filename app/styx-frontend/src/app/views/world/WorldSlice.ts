@@ -26,9 +26,8 @@ export const initialState = {
 	timeOrigin: 0,
 	createdAt: '0',
 	updatedAt: '0',
-	selectedActors: [] as string[],
-	selectedEvents: [] as string[],
-	selectedTimelineMarkers: [] as { id: string; eventId: string }[],
+	selectedTimelineMarkers: [] as { key: string; eventId: string }[],
+	selectedActorNodes: [] as { key: string; actorId: string }[],
 	isReadOnly: false as boolean,
 	accessMode: 'Private' as WorldAccessMode,
 
@@ -146,61 +145,48 @@ export const worldSlice = createSlice({
 		addActor: (state, { payload }: PayloadAction<ActorDetails>) => {
 			state.actors = state.actors.concat(payload).sort((a, b) => a.name.localeCompare(b.name))
 		},
-		addActorToSelection: (state, { payload }: PayloadAction<{ id: string; multiselect: boolean }>) => {
-			if (!payload.multiselect) {
-				state.selectedEvents = []
-				state.selectedActors = [payload.id]
-				return
-			}
-
-			if (state.selectedActors.includes(payload.id)) {
-				return
-			}
-			state.selectedActors = [...state.selectedActors, payload.id]
-		},
 		removeActor: (state, { payload }: PayloadAction<string>) => {
 			state.actors = state.actors.filter((e) => e.id !== payload)
 		},
-		removeActorFromSelection: (state, { payload }: PayloadAction<string>) => {
-			state.selectedActors = state.selectedActors.filter((event) => event !== payload)
-		},
-		addEventToSelection: (state, { payload }: PayloadAction<{ id: string; multiselect: boolean }>) => {
-			if (!payload.multiselect) {
-				state.selectedActors = []
-				state.selectedEvents = [payload.id]
-				return
-			}
-
-			if (state.selectedEvents.includes(payload.id)) {
-				return
-			}
-			state.selectedEvents = [...state.selectedEvents, payload.id]
-		},
-		removeEventFromSelection: (state, { payload }: PayloadAction<string>) => {
-			state.selectedEvents = state.selectedEvents.filter((event) => event !== payload)
-		},
 		addTimelineMarkerToSelection: (
 			state,
-			{ payload }: PayloadAction<{ id: string; eventId: string; multiselect: boolean }>,
+			{ payload }: PayloadAction<{ key: string; eventId: string; multiselect: boolean }>,
 		) => {
-			const record = { id: payload.id, eventId: payload.eventId }
+			const record = { key: payload.key, eventId: payload.eventId }
 			if (!payload.multiselect) {
 				state.selectedTimelineMarkers = [record]
 				return
 			}
 
-			if (state.selectedTimelineMarkers.some((m) => m.id === payload.id)) {
+			if (state.selectedTimelineMarkers.some((m) => m.key === payload.key)) {
 				return
 			}
 			state.selectedTimelineMarkers = [...state.selectedTimelineMarkers, record]
 		},
 		removeTimelineMarkerFromSelection: (state, { payload }: PayloadAction<string>) => {
-			state.selectedTimelineMarkers = state.selectedTimelineMarkers.filter((marker) => marker.id !== payload)
+			state.selectedTimelineMarkers = state.selectedTimelineMarkers.filter((marker) => marker.key !== payload)
+		},
+		addActorNodeToSelection: (
+			state,
+			{ payload }: PayloadAction<{ key: string; actorId: string; multiselect: boolean }>,
+		) => {
+			const record = { key: payload.key, actorId: payload.actorId }
+			if (!payload.multiselect) {
+				state.selectedActorNodes = [record]
+				return
+			}
+
+			if (state.selectedActorNodes.some((m) => m.key === payload.key)) {
+				return
+			}
+			state.selectedActorNodes = [...state.selectedActorNodes, record]
+		},
+		removeActorNodeFromSelection: (state, { payload }: PayloadAction<string>) => {
+			state.selectedActorNodes = state.selectedActorNodes.filter((marker) => marker.key !== payload)
 		},
 		clearSelections: (state) => {
-			state.selectedActors = []
-			state.selectedEvents = []
 			state.selectedTimelineMarkers = []
+			state.selectedActorNodes = []
 		},
 		setIsReadOnly: (state, { payload }: PayloadAction<boolean>) => {
 			state.isReadOnly = payload

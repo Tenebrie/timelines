@@ -1,19 +1,21 @@
 import { mockActorModel } from '@api/mock/rheaModels.mock'
+import { ActorDetails } from '@api/types/worldTypes'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
-import { useCurrentActor } from './useCurrentActor'
+type Props = {
+	editedActor?: ActorDetails | null
+}
 
-export const useCurrentOrNewActor = () => {
+export const useCurrentOrNewActor = ({ editedActor }: Props) => {
 	const { id: worldId } = useSelector(getWorldState, (a, b) => a.id === b.id)
-	const { actor: currentActor } = useCurrentActor()
 	const { actor, mode } = useMemo(
 		() => ({
 			actor:
-				currentActor ??
+				editedActor ??
 				mockActorModel({
 					worldId,
 					name: '',
@@ -22,9 +24,9 @@ export const useCurrentOrNewActor = () => {
 					description: '',
 					descriptionRich: '',
 				}),
-			mode: currentActor ? ('edit' as const) : ('create' as const),
+			mode: editedActor ? ('edit' as const) : ('create' as const),
 		}),
-		[currentActor, worldId],
+		[editedActor, worldId],
 	)
 	return {
 		id: actor.id,

@@ -168,52 +168,8 @@ export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allo
 			return
 		}
 
-		// 1. Capture the old content and selection before updating.
-		const oldText = editor.getText() // or editor.getHTML() depending on your use case
-		const { from, to } = editor.state.selection
-
-		// Extract up to 5 characters before and after the selection.
-		const leftContext = oldText.substring(Math.max(0, from - 5), from)
-		const rightContext = oldText.substring(to, to + 5)
-
-		// 2. Update the content with the new value.
 		const newText = currentValue.current
 		editor.commands.setContent(newText)
-
-		// 3. Try to find the matching positions in the new text.
-
-		// Find where the left context appears.
-		let newFrom = -1
-		if (leftContext.length > 0) {
-			const leftIndex = newText.indexOf(leftContext)
-			if (leftIndex !== -1) {
-				newFrom = leftIndex - leftContext.length + 2
-			}
-		}
-		// If not found, fallback to the old 'from'
-		if (newFrom === -1) {
-			newFrom = from
-		}
-
-		// Find the right context after newFrom.
-		let newTo = -1
-		if (rightContext.length > 0) {
-			const rightIndex = newText.indexOf(rightContext, newFrom)
-			if (rightIndex !== -1) {
-				newTo = rightIndex
-			}
-		}
-		// Fallback: try to preserve the original selection length.
-		if (newTo === -1) {
-			newTo = newFrom + (to - from)
-		}
-
-		// If the selection was just a caret, ensure both positions match.
-		if (from === to) {
-			newTo = newFrom
-		}
-
-		editor.commands.setTextSelection({ from: newFrom, to: newTo })
 	}, [editor, softKey])
 
 	useEffect(() => {

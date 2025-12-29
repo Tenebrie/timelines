@@ -1,13 +1,17 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
 import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import { useNavigate, useSearch } from '@tanstack/react-router'
-import { useEffect, useRef, useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
-import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
+import { useDoubleClick } from '@/app/hooks/useDoubleClick'
+import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
+import { worldSlice } from '@/app/views/world/WorldSlice'
+import { getSelectedNodeActorIds } from '@/app/views/world/WorldSliceSelectors'
 
 import { useUpdateMindmapNode } from '../api/useUpdateMindmapNode'
 import { ActorNode } from './ActorNode'
@@ -21,7 +25,6 @@ export function ActorNodePositioner({ actor, node }: Props) {
 	const theme = useCustomTheme()
 	const navigate = useNavigate({ from: '/world/$worldId/mindmap' })
 	const [updateMindmapNode] = useUpdateMindmapNode()
-	const { open: openEditActorModal } = useModal('editActorModal')
 
 	const [position, setPosition] = useState({ x: node.positionX, y: node.positionY })
 	const positionRef = useAutoRef(position)
@@ -30,18 +33,24 @@ export function ActorNodePositioner({ actor, node }: Props) {
 		setPosition({ x: node.positionX, y: node.positionY })
 	}, [node])
 
-	const selectedNodes = useSearch({
-		from: '/world/$worldId/_world/mindmap',
-		select: (search) => search.selection,
-	})
+	const selectedNodes = useSelector(getSelectedNodeActorIds)
+	const selected = useMemo(() => selectedNodes.includes(actor.id), [selectedNodes, actor.id])
+	const { addActorNodeToSelection, removeActorNodeFromSelection } = worldSlice.actions
+	const dispatch = useDispatch()
 
-	const onHeaderClick = useEvent(() => {
-		navigate({
-			search: (prev) => ({
-				...prev,
-				selection: [actor.id],
-			}),
-		})
+	const { triggerClick: onHeaderClick } = useDoubleClick<{ multiselect: boolean }>({
+		onClick: ({ multiselect }) => {
+			if (selected) {
+				dispatch(removeActorNodeFromSelection(node.id))
+			} else {
+				dispatch(addActorNodeToSelection({ key: node.id, actorId: actor.id, multiselect }))
+			}
+		},
+		onDoubleClick: () => {
+			onContentClick()
+			dispatch(addActorNodeToSelection({ key: node.id, actorId: actor.id, multiselect: false }))
+		},
+		ignoreDelay: true,
 	})
 
 	const onContentClick = useEvent(() => {
@@ -51,7 +60,6 @@ export function ActorNodePositioner({ actor, node }: Props) {
 				selection: [actor.id],
 			}),
 		})
-		openEditActorModal({ actorId: actor.id })
 	})
 
 	const ref = useRef<HTMLDivElement | null>(null)
@@ -67,7 +75,7 @@ export function ActorNodePositioner({ actor, node }: Props) {
 			positionX: positionRef.current.x,
 			positionY: positionRef.current.y,
 			gridScale: 1,
-			canClick: false,
+			canClick: true,
 
 			isDragging: false,
 			deltaX: 0,
@@ -165,7 +173,7 @@ export function ActorNodePositioner({ actor, node }: Props) {
 				transform: `translate(calc(${position.x}px * var(--grid-scale) + var(--grid-offset-x)), calc(${position.y}px * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))`,
 				transformOrigin: 'top left',
 				outline: '2px solid',
-				outlineColor: selectedNodes.includes(actor.id) ? theme.material.palette.primary.main : 'transparent',
+				outlineColor: selected ? theme.material.palette.primary.main : 'transparent',
 				transition:
 					'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out, outline-color 0.2s ease-out',
 				borderRadius: 2,
@@ -177,8 +185,7 @@ export function ActorNodePositioner({ actor, node }: Props) {
 			<ActorNode
 				actor={actor}
 				node={node}
-				isSelected={selectedNodes.includes(actor.id)}
-				onHeaderClick={onHeaderClick}
+				onHeaderClick={(e) => onHeaderClick(e, { multiselect: isMultiselectClick(e) })}
 				onContentClick={onContentClick}
 			/>
 		</Box>

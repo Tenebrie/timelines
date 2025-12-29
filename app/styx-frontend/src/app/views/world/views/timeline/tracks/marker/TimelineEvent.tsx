@@ -7,9 +7,7 @@ import classNames from 'classnames'
 import { CSSProperties, memo, MouseEvent, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
-import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
@@ -31,30 +29,21 @@ export const TimelineEvent = memo(TimelineEventComponent)
 
 export function TimelineEventComponent({ entity, selected }: Props) {
 	const dispatch = useDispatch()
-	const { openTimelineContextMenu } = worldSlice.actions
+	const { openTimelineContextMenu, addTimelineMarkerToSelection, removeTimelineMarkerFromSelection } =
+		worldSlice.actions
 
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 
 	const { getIconPath } = useEventIcons()
-	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
-	const { open: openEditEventModal } = useModal('editEventModal')
 	const { timeToLabel } = useWorldTime()
 	const [isHovered, setIsHovered] = useState(false)
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
 			if (selected) {
-				navigate({
-					search: (prev) => ({ ...prev, selection: prev.selection.filter((id) => id !== entity.key) }),
-				})
+				dispatch(removeTimelineMarkerFromSelection(entity.key))
 			} else {
-				navigate({
-					search: (prev) => ({
-						...prev,
-						selection: [...(multiselect ? prev.selection : []), entity.key],
-						track: entity.worldEventTrackId ?? undefined,
-					}),
-				})
+				dispatch(addTimelineMarkerToSelection({ ...entity, multiselect }))
 			}
 		},
 		onDoubleClick: ({ multiselect }) => {
@@ -69,8 +58,7 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 					selection: [...(multiselect ? prev.selection : []), entity.key],
 				}),
 			})
-			scrollTimelineTo({ timestamp: entity.markerPosition })
-			openEditEventModal({ eventId: entity.eventId })
+			dispatch(addTimelineMarkerToSelection({ ...entity, multiselect }))
 		},
 		ignoreDelay: true,
 	})

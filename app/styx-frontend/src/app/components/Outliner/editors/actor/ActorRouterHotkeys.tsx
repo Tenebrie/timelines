@@ -1,23 +1,19 @@
-import { useNavigate, useSearch } from '@tanstack/react-router'
-import { useEffect, useRef } from 'react'
+import { useNavigate } from '@tanstack/react-router'
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { getSelectedMarkerKeys } from '@/app/views/world/WorldSliceSelectors'
 
 export function ActorRouterHotkeys() {
-	const { selectedMarkerIds, creatingNew } = useSearch({
-		from: '/world/$worldId/_world/mindmap',
-		select: (search) => ({ selectedMarkerIds: search.selection, creatingNew: search.new }),
-	})
+	const selectedMarkerIds = useSelector(getSelectedMarkerKeys)
 	const navigate = useNavigate({ from: '/world/$worldId/mindmap' })
-	const { open: openEditActorModal, isOpen: isModalOpen } = useModal('editActorModal')
+	const { isOpen: isModalOpen } = useModal('editEventModal')
 
 	const requestFocus = useEventBusDispatch({ event: 'richEditor/requestFocus' })
 	const requestBlur = useEventBusDispatch({ event: 'richEditor/requestBlur' })
-
-	// Track previous URL state to detect transitions
-	const prevStateRef = useRef({ creatingNew, selectedMarkerIds })
 
 	useEffect(() => {
 		if (!isModalOpen) {
@@ -25,28 +21,11 @@ export function ActorRouterHotkeys() {
 		}
 	}, [isModalOpen, requestBlur])
 
-	// Open modal when creating new actor
-	useEffect(() => {
-		const prev = prevStateRef.current
-
-		const wasNotCreating = !prev.creatingNew
-		const isNowCreating = creatingNew
-
-		if (!isModalOpen && wasNotCreating && isNowCreating) {
-			openEditActorModal({ actorId: null })
-			requestFocus()
-		}
-
-		// Update ref for next run
-		prevStateRef.current = { creatingNew, selectedMarkerIds }
-	}, [creatingNew, selectedMarkerIds, isModalOpen, openEditActorModal, requestFocus])
-
 	useShortcut(Shortcut.CreateNew, () => {
 		navigate({
 			to: '/world/$worldId/mindmap',
-			search: (prev) => ({ ...prev, selection: [], new: true }),
+			search: (prev) => ({ ...prev, selection: [], new: 'actor' }),
 		})
-		openEditActorModal({ actorId: null })
 		requestFocus()
 	})
 
@@ -54,22 +33,13 @@ export function ActorRouterHotkeys() {
 		Shortcut.EditSelected,
 		() => {
 			if (selectedMarkerIds.length > 0) {
-				openEditActorModal({ actorId: selectedMarkerIds[0] })
-				requestFocus()
+				navigate({
+					to: '/world/$worldId/mindmap',
+					search: (prev) => ({ ...prev, selection: [selectedMarkerIds[0]] }),
+				})
 			}
 		},
 		selectedMarkerIds.length > 0,
-	)
-
-	useShortcut(
-		Shortcut.Escape,
-		() => {
-			navigate({
-				to: '/world/$worldId/mindmap',
-				search: (prev) => ({ ...prev, selection: [], new: undefined }),
-			})
-		},
-		selectedMarkerIds.length > 0 || creatingNew,
 	)
 
 	return <></>

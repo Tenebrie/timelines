@@ -1,14 +1,10 @@
-import { useSearch } from '@tanstack/react-router'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
+import { getSelectedMarkerKeys, getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 export const useCurrentEvent = () => {
-	const selectedMarkerIds = useSearch({
-		from: '/world/$worldId/_world',
-		select: (search) => search.selection,
-	})
+	const selectedMarkerIds = useSelector(getSelectedMarkerKeys)
 	const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
 	const { events } = useSelector(getWorldState, (a, b) => a.events === b.events)
 

@@ -2,7 +2,6 @@ import Button from '@mui/material/Button'
 import Input from '@mui/material/Input'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
 import { ActorColorIconPicker } from '@/app/components/ColorIconPicker/ActorColorIconPicker'
@@ -17,8 +16,6 @@ type Props = {
 export const ActorTitle = ({ draft }: Props) => {
 	const [editing, setEditing] = useState(false)
 	const [name, setName] = useState(draft.name)
-
-	const navigate = useNavigate({ from: '/world/$worldId' })
 
 	const applyChanges = () => {
 		setEditing(false)
