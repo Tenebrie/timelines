@@ -1,11 +1,10 @@
-import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { useNavigate } from '@tanstack/react-router'
 
 import { ActorDetails } from '@/app/components/Outliner/editors/actor/details/ActorDetails'
 import { EventDetails } from '@/app/components/Outliner/editors/event/details/EventDetails'
 import { useModal } from '@/app/features/modals/ModalsSlice'
-import Modal, { ModalFooter } from '@/ui-lib/components/Modal'
+import Modal from '@/ui-lib/components/Modal'
 
 import { EntityBreadcrumbs } from './EntityBreadcrumbs'
 import { useCurrentEntity } from './hooks/useCurrentEntity'
@@ -38,6 +37,16 @@ export const EditEventModal = () => {
 		})
 	}
 
+	const handleWorldClick = () => {
+		navigate({
+			search: (prev) => ({
+				...prev,
+				selection: [],
+				new: undefined,
+			}),
+		})
+	}
+
 	const currentEntity = useCurrentEntity()
 
 	return (
@@ -51,18 +60,17 @@ export const EditEventModal = () => {
 					flexDirection: 'column',
 				}}
 			>
-				<EntityBreadcrumbs entityStack={entityStack} onBreadcrumbClick={handleBreadcrumbClick} />
+				<EntityBreadcrumbs
+					entityStack={entityStack}
+					onBreadcrumbClick={handleBreadcrumbClick}
+					onWorldClick={handleWorldClick}
+					onClose={handleClose}
+				/>
 
 				{currentEntity?.type === 'event' && (
 					<EventDetails editedEvent={currentEntity.entity} autoFocus={isOpen} />
 				)}
 				{currentEntity?.type === 'actor' && <ActorDetails editedActor={currentEntity.entity} />}
-
-				<ModalFooter>
-					<Button variant="contained" onClick={handleClose}>
-						Done
-					</Button>
-				</ModalFooter>
 			</Stack>
 		</Modal>
 	)

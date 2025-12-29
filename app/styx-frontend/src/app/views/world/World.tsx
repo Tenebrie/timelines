@@ -132,14 +132,14 @@ function EntityModalReporter() {
 		if (node) {
 			const actor = actors.find((e) => e.id === node.parentActorId)
 			if (actor) {
-				open({ entityStack: [...selectedEntityIds, actor.id], creatingNew: null })
+				open({ entityStack: selectedEntityIds, creatingNew: null })
 				return
 			}
 		}
 
 		const actor = actors.find((a) => a.id === selectedEntityIds[0])
 		if (actor) {
-			open({ entityStack: [...selectedEntityIds, actor.id], creatingNew: null })
+			open({ entityStack: selectedEntityIds, creatingNew: null })
 			return
 		}
 

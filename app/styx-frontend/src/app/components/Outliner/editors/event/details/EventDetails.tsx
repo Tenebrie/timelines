@@ -1,7 +1,6 @@
 import { WorldEvent } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import Collapse from '@mui/material/Collapse'
-import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { useNavigate } from '@tanstack/react-router'
 import { memo } from 'react'
@@ -46,14 +45,13 @@ export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
 
 	return (
 		<Stack
-			gap={1}
+			gap={1.2}
 			sx={{
 				height: '100%',
 				...useBrowserSpecificScrollbars(),
 			}}
 		>
 			<EventTitle event={event} draft={draft} />
-			<Divider />
 			<Box sx={{ paddingBottom: eventColorPickerOpen ? 1 : 0, transition: 'padding 300ms' }}>
 				<Collapse
 					in={eventColorPickerOpen}

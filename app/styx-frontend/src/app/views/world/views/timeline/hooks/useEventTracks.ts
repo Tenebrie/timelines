@@ -38,8 +38,6 @@ const useEventTracks = ({ showHidden }: Props = {}): {
 	const { ghost: eventGhost } = useSelector(getEventCreatorState, (a, b) => a.ghost === b.ghost)
 	const { ghost: deltaGhost } = useSelector(getEventDeltaCreatorState, (a, b) => a.ghost === b.ghost)
 
-	// const isEventCreator = useCheckRouteMatch('/world/$worldId/timeline/event/create')
-	// const isDeltaCreator = useCheckRouteMatch('/world/$worldId/timeline/delta/create/$eventId')
 	const isEventCreator = false
 	const isDeltaCreator = false
 

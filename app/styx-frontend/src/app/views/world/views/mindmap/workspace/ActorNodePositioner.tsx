@@ -25,7 +25,6 @@ export function ActorNodePositioner({ actor, node }: Props) {
 	const theme = useCustomTheme()
 	const navigate = useNavigate({ from: '/world/$worldId/mindmap' })
 	const [updateMindmapNode] = useUpdateMindmapNode()
-	// const { open: openEditActorModal } = useModal('editActorModal')
 
 	const [position, setPosition] = useState({ x: node.positionX, y: node.positionY })
 	const positionRef = useAutoRef(position)
@@ -61,7 +60,6 @@ export function ActorNodePositioner({ actor, node }: Props) {
 				selection: [actor.id],
 			}),
 		})
-		// openEditActorModal({ actorId: actor.id })
 	})
 
 	const ref = useRef<HTMLDivElement | null>(null)

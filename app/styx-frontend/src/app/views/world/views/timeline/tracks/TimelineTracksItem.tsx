@@ -105,7 +105,6 @@ export function TimelineTracksItemComponent({
 
 	useEffect(() => {
 		updateVisibleMarkersThrottled.current(track, containerWidth, realTimeToScaledTime, true)
-		// updateVisibleMarkersThrottled.current.flush()
 	}, [containerWidth, realTimeToScaledTime, track, updateVisibleMarkers, scaleLevel])
 
 	useEventBusSubscribe({

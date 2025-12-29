@@ -1,7 +1,6 @@
 import { Actor } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import Collapse from '@mui/material/Collapse'
-import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { useNavigate } from '@tanstack/react-router'
 import { memo } from 'react'
@@ -46,15 +45,19 @@ export function ActorDetailsComponent({ editedActor }: Props) {
 
 	return (
 		<Stack
-			gap={1}
+			gap={1.2}
 			sx={{
 				height: '100%',
 				...useBrowserSpecificScrollbars(),
 			}}
 		>
 			<ActorTitle draft={draft} />
-			<Divider />
-			<Box sx={{ paddingBottom: actorColorPickerOpen ? 1 : 0, transition: 'padding 300ms' }}>
+			<Box
+				sx={{
+					marginBottom: actorColorPickerOpen ? 0 : 0,
+					transition: 'margin 300ms',
+				}}
+			>
 				<Collapse
 					in={actorColorPickerOpen}
 					sx={{ overflow: 'hidden' }}
@@ -66,12 +69,18 @@ export function ActorDetailsComponent({ editedActor }: Props) {
 					<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
 				</Collapse>
 			</Box>
-			<ManualErrorBanner
-				open={draft.description.length > 0 && draft.name.length === 0}
-				error="Actor must have a name"
-				marginBottom={2}
-				severity="info"
-			/>
+			<Box
+				sx={{
+					marginBottom: draft.description.length > 0 && draft.name.length === 0 ? 0 : -1.2,
+					transition: 'margin 300ms',
+				}}
+			>
+				<ManualErrorBanner
+					open={draft.description.length > 0 && draft.name.length === 0}
+					error="Actor must have a name"
+					severity="info"
+				/>
+			</Box>
 			<Box flexGrow={1} sx={{ marginTop: -1, height: 0 }}>
 				<ActorDescription draft={draft} />
 			</Box>
