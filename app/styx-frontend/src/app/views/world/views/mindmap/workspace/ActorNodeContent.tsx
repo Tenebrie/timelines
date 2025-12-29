@@ -5,12 +5,11 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 type Props = {
 	actor: ActorDetails
-	isSelected: boolean
-	onHeaderClick: () => void
+	onHeaderClick: (e: React.MouseEvent) => void
 	onContentClick: () => void
 }
 
-export function ActorNodeContent({ actor, isSelected, onHeaderClick, onContentClick }: Props) {
+export function ActorNodeContent({ actor, onHeaderClick, onContentClick }: Props) {
 	const theme = useCustomTheme()
 
 	return (
@@ -29,9 +28,7 @@ export function ActorNodeContent({ actor, isSelected, onHeaderClick, onContentCl
 			{/* Header */}
 			<Box
 				data-mindmap-header
-				onClick={(e) => {
-					onHeaderClick()
-				}}
+				onClick={onHeaderClick}
 				sx={{
 					background: theme.custom.palette.background.soft,
 					padding: '8px 12px',

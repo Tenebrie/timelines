@@ -3,6 +3,15 @@ import { createSelector } from '@reduxjs/toolkit'
 import { RootState } from '../../store'
 
 export const getWorldState = (state: RootState) => state.world
+export const getSelectedMarkerKeys = createSelector([getWorldState], (state) =>
+	state.selectedTimelineMarkers.map((marker) => marker.key),
+)
+export const getSelectedNodeKeys = createSelector([getWorldState], (state) =>
+	state.selectedActorNodes.map((node) => node.key),
+)
+export const getSelectedNodeActorIds = createSelector([getWorldState], (state) =>
+	state.selectedActorNodes.map((node) => node.actorId),
+)
 export const getWorldStateLoaded = createSelector([getWorldState], (state) => state.isLoaded)
 export const getWorldIdState = createSelector([getWorldState], (state) => state.id)
 export const getWorldCalendarState = createSelector([getWorldState], (state) => state.calendar)

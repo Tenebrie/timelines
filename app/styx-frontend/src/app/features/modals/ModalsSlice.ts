@@ -28,11 +28,7 @@ const modals = {
 	/* World */
 	editEventModal: {
 		isOpen: false as boolean,
-		eventId: null as string | null,
-	},
-	editActorModal: {
-		isOpen: false as boolean,
-		actorId: null as string | null,
+		entityStack: [] as string[],
 	},
 	eventWizard: {
 		isOpen: false as boolean,
@@ -94,14 +90,13 @@ export const modalsSlice = createSlice({
 	name: 'modals',
 	initialState,
 	reducers: {
-		openModal: <T extends StrongEntryOf<typeof modals>>(
+		updateModal: <T extends StrongEntryOf<typeof modals>>(
 			state: ModalsState,
 			{ payload }: PayloadAction<{ id: T['id']; data: T['data'] }>,
 		) => {
 			state[payload.id] = {
 				...state[payload.id],
 				...payload.data,
-				isOpen: true,
 			}
 		},
 
@@ -118,7 +113,7 @@ export const useModal = <T extends ValidModals>(id: T) => {
 		(data: Omit<(typeof modals)[T], 'isOpen'>) => {
 			const modalData = isEventObject(data) ? {} : data
 			dispatch(
-				modalsSlice.actions.openModal({
+				modalsSlice.actions.updateModal({
 					id,
 					data: {
 						...modalData,
@@ -133,9 +128,26 @@ export const useModal = <T extends ValidModals>(id: T) => {
 		dispatch(modalsSlice.actions.closeModal({ id }))
 	}, [dispatch, id])
 
+	const closeAndUpdate = useCallback(
+		(data: Omit<(typeof modals)[T], 'isOpen'>) => {
+			const modalData = isEventObject(data) ? {} : data
+			dispatch(
+				modalsSlice.actions.updateModal({
+					id,
+					data: {
+						...modalData,
+						isOpen: false,
+					},
+				}),
+			)
+		},
+		[dispatch, id],
+	)
+
 	return {
 		open,
 		close,
+		closeAndUpdate,
 		...state,
 	}
 }

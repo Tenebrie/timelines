@@ -1,3 +1,4 @@
+import { WorldEvent } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
@@ -17,13 +18,14 @@ import { EventTitle } from './components/EventTitle'
 import { useEventDraft } from './draft/useEventDraft'
 
 type Props = {
+	editedEvent: WorldEvent | null
 	autoFocus?: boolean
 }
 
 export const EventDetails = memo(EventDetailsComponent)
 
-export function EventDetailsComponent({ autoFocus }: Props) {
-	const { mode, event } = useCurrentOrNewEvent()
+export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
+	const { mode, event } = useCurrentOrNewEvent({ event: editedEvent })
 	const draft = useEventDraft({ event })
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 	const { eventColorPickerOpen } = useSelector(

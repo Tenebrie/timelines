@@ -31,7 +31,8 @@ export const TimelineEvent = memo(TimelineEventComponent)
 
 export function TimelineEventComponent({ entity, selected }: Props) {
 	const dispatch = useDispatch()
-	const { openTimelineContextMenu } = worldSlice.actions
+	const { openTimelineContextMenu, addTimelineMarkerToSelection, removeTimelineMarkerFromSelection } =
+		worldSlice.actions
 
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 
@@ -44,17 +45,19 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
 			if (selected) {
-				navigate({
-					search: (prev) => ({ ...prev, selection: prev.selection.filter((id) => id !== entity.key) }),
-				})
+				dispatch(removeTimelineMarkerFromSelection(entity.key))
+				// navigate({
+				// 	search: (prev) => ({ ...prev, selection: prev.selection.filter((id) => id !== entity.key) }),
+				// })
 			} else {
-				navigate({
-					search: (prev) => ({
-						...prev,
-						selection: [...(multiselect ? prev.selection : []), entity.key],
-						track: entity.worldEventTrackId ?? undefined,
-					}),
-				})
+				dispatch(addTimelineMarkerToSelection({ ...entity, multiselect }))
+				// navigate({
+				// 	search: (prev) => ({
+				// 		...prev,
+				// 		selection: [...(multiselect ? prev.selection : []), entity.key],
+				// 		track: entity.worldEventTrackId ?? undefined,
+				// 	}),
+				// })
 			}
 		},
 		onDoubleClick: ({ multiselect }) => {
@@ -69,8 +72,9 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 					selection: [...(multiselect ? prev.selection : []), entity.key],
 				}),
 			})
-			scrollTimelineTo({ timestamp: entity.markerPosition })
-			openEditEventModal({ eventId: entity.eventId })
+			dispatch(addTimelineMarkerToSelection({ ...entity, multiselect }))
+			// scrollTimelineTo({ timestamp: entity.markerPosition })
+			// openEditEventModal({ eventId: entity.eventId })
 		},
 		ignoreDelay: true,
 	})

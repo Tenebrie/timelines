@@ -1,3 +1,4 @@
+import { Actor } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
@@ -17,10 +18,14 @@ import { ActorTitle } from './components/ActorTitle'
 import { useActorDraft } from './draft/useActorDraft'
 import { useUpsertActor } from './draft/useUpsertActor'
 
+type Props = {
+	editedActor: Actor | null
+}
+
 export const ActorDetails = memo(ActorDetailsComponent)
 
-export function ActorDetailsComponent() {
-	const { mode, actor } = useCurrentOrNewActor()
+export function ActorDetailsComponent({ editedActor }: Props) {
+	const { mode, actor } = useCurrentOrNewActor({ editedActor })
 	const draft = useActorDraft({ actor })
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 	const { actorColorPickerOpen } = useSelector(
@@ -67,7 +72,7 @@ export function ActorDetailsComponent() {
 				marginBottom={2}
 				severity="info"
 			/>
-			<Box flexGrow={1} sx={{ marginTop: -1 }}>
+			<Box flexGrow={1} sx={{ marginTop: -1, height: 0 }}>
 				<ActorDescription draft={draft} />
 			</Box>
 		</Stack>

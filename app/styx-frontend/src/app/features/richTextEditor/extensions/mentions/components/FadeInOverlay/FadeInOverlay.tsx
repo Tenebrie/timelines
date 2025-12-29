@@ -56,7 +56,7 @@ export const FadeInOverlay = ({ content, isReadMode }: Props) => {
 			return
 		}
 		let startTime: number = 0
-		const duration = 500 // duration in ms
+		const duration = 300 // duration in ms
 		const easing = createCubicBezier(0.4, 0, 0.2, 1)
 
 		const animate = (timestamp: number) => {
@@ -108,8 +108,8 @@ export const FadeInOverlay = ({ content, isReadMode }: Props) => {
 					background: linear-gradient(
 						to bottom,
 						transparent var(--grad-start),
-						${theme.custom.palette.background.paperActual} var(--grad-end),
-						${theme.custom.palette.background.paperActual} 100%
+						${theme.custom.palette.background.textEditorBackground} var(--grad-end),
+						${theme.custom.palette.background.textEditorBackground} 100%
 					);
 				}
 			`}</style>

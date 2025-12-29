@@ -1,6 +1,10 @@
+import { useGetMindmapQuery } from '@api/otherApi'
 import Stack from '@mui/material/Stack'
-import { Outlet } from '@tanstack/react-router'
+import { Outlet, useSearch } from '@tanstack/react-router'
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
@@ -13,8 +17,8 @@ import { WorldNavigator } from './components/WorldNavigator'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
 import { DeleteEventDeltaModal } from './modals/DeleteEventDeltaModal'
 import { DeleteEventModal } from './modals/DeleteEventModal'
-import { EditActorModal } from './modals/EditActorModal'
 import { EditEventModal } from './modals/EditEventModal'
+import { getTimelineState, getWorldState } from './WorldSliceSelectors'
 
 export const World = () => {
 	const { worldId } = useStrictParams({
@@ -65,17 +69,18 @@ export const World = () => {
 					</div>
 				</Stack>
 			</div>
-			<SummonableRichTextEditor>
-				{(props) => <RichTextEditorWithFallback {...props} />}
-			</SummonableRichTextEditor>
-			<SummonableRichTextEditor>
-				{(props) => <RichTextEditorWithFallback {...props} />}
-			</SummonableRichTextEditor>
+			{Array(3)
+				.fill(0)
+				.map((_, index) => (
+					<SummonableRichTextEditor key={index}>
+						{(props) => <RichTextEditorWithFallback {...props} />}
+					</SummonableRichTextEditor>
+				))}
 			<WorldLoader />
-			<EditActorModal />
 			<EditEventModal />
 			<DeleteEventModal />
 			<DeleteEventDeltaModal />
+			<EntityModalReporter />
 		</>
 	)
 }
@@ -85,5 +90,61 @@ function WorldLoader() {
 		from: '/world/$worldId',
 	})
 	useLoadWorldInfo(worldId)
+	return <></>
+}
+
+function EntityModalReporter() {
+	const { isOpen, open, close } = useModal('editEventModal')
+	const selectedEntityIds = useSearch({
+		from: '/world/$worldId/_world',
+		select: (search) => search.selection,
+	})
+	const {
+		id: worldId,
+		events,
+		actors,
+	} = useSelector(getWorldState, (a, b) => a.id === b.id && a.events === b.events && a.actors === b.actors)
+	const { data: mindmapData } = useGetMindmapQuery({ worldId }, { skip: !worldId })
+	const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
+
+	useEffect(() => {
+		console.log('Effect poke')
+		if (selectedEntityIds.length === 0) {
+			close()
+			return
+		}
+
+		const event = events.find((e) => e.id === selectedEntityIds[0])
+		if (event) {
+			open({ entityStack: selectedEntityIds })
+			return
+		}
+
+		const marker = markers.find((m) => m.key === selectedEntityIds[0])
+		if (marker) {
+			const event = events.find((e) => e.id === marker.eventId)
+			if (event) {
+				open({ entityStack: selectedEntityIds })
+				return
+			}
+		}
+
+		const node = mindmapData?.nodes.find((n) => n.id === selectedEntityIds[0])
+		if (node) {
+			const actor = actors.find((e) => e.id === node.parentActorId)
+			if (actor) {
+				open({ entityStack: [...selectedEntityIds, actor.id] })
+				return
+			}
+		}
+
+		const actor = actors.find((a) => a.id === selectedEntityIds[0])
+		console.log(actor, selectedEntityIds)
+		if (actor) {
+			open({ entityStack: [...selectedEntityIds, actor.id] })
+			return
+		}
+	}, [actors, close, events, isOpen, markers, mindmapData?.nodes, open, selectedEntityIds])
+
 	return <></>
 }
