@@ -8,7 +8,6 @@ import { useDispatch } from 'react-redux'
 
 import { ShowHideChevron } from '@/app/components/ShowHideChevron'
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { useModal } from '@/app/features/modals/ModalsSlice'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { StyledListItemButton } from '@/app/views/world/views/timeline/shelf/styles'
 
@@ -26,7 +25,6 @@ type Props = {
 export const EventRenderer = ({ event, collapsed, owningActor, short, active, actions }: Props) => {
 	const navigate = useNavigate({ from: '/world/$worldId' })
 	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
-	const { open: openEditEventModal } = useModal('editEventModal')
 
 	const dispatch = useDispatch()
 	const { collapseEventInOutliner, uncollapseEventInOutliner } = preferencesSlice.actions
@@ -54,7 +52,6 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 								search: (prev) => ({ ...prev, selection: [`issuedAt-${event.id}`] }),
 							})
 							scrollTimelineTo({ timestamp: event.timestamp })
-							openEditEventModal({ eventId: event.id })
 						}}
 						aria-label="Edit"
 					>

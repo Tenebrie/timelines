@@ -9,7 +9,7 @@ type Props = {
 	actors: ReturnType<typeof getWorldState>['actors']
 }
 
-export const ActorMentionChip = ({ worldId, actorId, actors }: Props) => {
+export const ActorMentionChip = ({ actorId, actors }: Props) => {
 	const navigateTo = useEventBusDispatch({
 		event: 'world/requestNavigation',
 	})

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 
 import { eventBus } from './eventBus'
 import { AllowedEvents, EventParams } from './types'
@@ -10,7 +10,7 @@ type Props<T extends AllowedEvents> = {
 }
 
 export const useEventBusSubscribe = <T extends AllowedEvents>({ event, condition, callback }: Props<T>) => {
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (!event) {
 			return
 		}

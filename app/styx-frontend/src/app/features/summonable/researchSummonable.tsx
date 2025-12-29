@@ -1,5 +1,5 @@
 import Box, { BoxProps } from '@mui/material/Box'
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { useAutoRef } from '@/app/hooks/useAutoRef'
@@ -133,7 +133,7 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 			},
 		})
 
-		useEffect(() => {
+		useLayoutEffect(() => {
 			const currentSummoner = waitingList[family].pop()
 			if (currentSummoner) {
 				setProps(currentSummoner.props as SummonableProps)
@@ -219,7 +219,7 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 
 		const props = useMemo(() => ('props' in data ? data.props : undefined), [data])
 		const initialProps = useRef(props)
-		useEffect(() => {
+		useLayoutEffect(() => {
 			const currentElement = ref.current
 			if (currentElement) {
 				summon(currentElement, initialProps.current)

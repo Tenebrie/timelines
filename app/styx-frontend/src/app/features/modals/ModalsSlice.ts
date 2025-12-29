@@ -29,6 +29,7 @@ const modals = {
 	editEventModal: {
 		isOpen: false as boolean,
 		entityStack: [] as string[],
+		creatingNew: null as 'actor' | 'event' | null,
 	},
 	eventWizard: {
 		isOpen: false as boolean,

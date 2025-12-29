@@ -17,7 +17,7 @@ import { WorldNavigator } from './components/WorldNavigator'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
 import { DeleteEventDeltaModal } from './modals/DeleteEventDeltaModal'
 import { DeleteEventModal } from './modals/DeleteEventModal'
-import { EditEventModal } from './modals/EditEventModal'
+import { EditEventModal } from './modals/editEventModal/EditEventModal'
 import { getTimelineState, getWorldState } from './WorldSliceSelectors'
 
 export const World = () => {
@@ -95,9 +95,9 @@ function WorldLoader() {
 
 function EntityModalReporter() {
 	const { isOpen, open, close } = useModal('editEventModal')
-	const selectedEntityIds = useSearch({
+	const { selectedEntityIds, creatingNew } = useSearch({
 		from: '/world/$worldId/_world',
-		select: (search) => search.selection,
+		select: (search) => ({ selectedEntityIds: search.selection, creatingNew: search.new }),
 	})
 	const {
 		id: worldId,
@@ -108,15 +108,14 @@ function EntityModalReporter() {
 	const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
 
 	useEffect(() => {
-		console.log('Effect poke')
-		if (selectedEntityIds.length === 0) {
+		if (selectedEntityIds.length === 0 && !creatingNew) {
 			close()
 			return
 		}
 
 		const event = events.find((e) => e.id === selectedEntityIds[0])
 		if (event) {
-			open({ entityStack: selectedEntityIds })
+			open({ entityStack: selectedEntityIds, creatingNew: null })
 			return
 		}
 
@@ -124,7 +123,7 @@ function EntityModalReporter() {
 		if (marker) {
 			const event = events.find((e) => e.id === marker.eventId)
 			if (event) {
-				open({ entityStack: selectedEntityIds })
+				open({ entityStack: selectedEntityIds, creatingNew: null })
 				return
 			}
 		}
@@ -133,18 +132,22 @@ function EntityModalReporter() {
 		if (node) {
 			const actor = actors.find((e) => e.id === node.parentActorId)
 			if (actor) {
-				open({ entityStack: [...selectedEntityIds, actor.id] })
+				open({ entityStack: [...selectedEntityIds, actor.id], creatingNew: null })
 				return
 			}
 		}
 
 		const actor = actors.find((a) => a.id === selectedEntityIds[0])
-		console.log(actor, selectedEntityIds)
 		if (actor) {
-			open({ entityStack: [...selectedEntityIds, actor.id] })
+			open({ entityStack: [...selectedEntityIds, actor.id], creatingNew: null })
 			return
 		}
-	}, [actors, close, events, isOpen, markers, mindmapData?.nodes, open, selectedEntityIds])
+
+		if (creatingNew) {
+			open({ entityStack: [], creatingNew })
+			return
+		}
+	}, [actors, close, creatingNew, events, isOpen, markers, mindmapData?.nodes, open, selectedEntityIds])
 
 	return <></>
 }

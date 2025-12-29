@@ -9,11 +9,10 @@ type Props = {
 	events: ReturnType<typeof getWorldState>['events']
 }
 
-export const EventMentionChip = ({ worldId, eventId, events }: Props) => {
+export const EventMentionChip = ({ eventId, events }: Props) => {
 	const navigateTo = useEventBusDispatch({
 		event: 'world/requestNavigation',
 	})
-	// const { open: openEditEventModal } = useModal('editEventModal')
 
 	const event = events.find((event) => event.id === eventId)
 	const eventName = event ? `${event.name}` : 'Unknown Event'
@@ -32,7 +31,6 @@ export const EventMentionChip = ({ worldId, eventId, events }: Props) => {
 				return { ...prev, selection }
 			},
 		})
-		// openEditEventModal({ eventId: event.id })
 	}
 
 	return <BaseMentionChip type="Event" label={eventName} color={eventColor} onClick={onClick} />

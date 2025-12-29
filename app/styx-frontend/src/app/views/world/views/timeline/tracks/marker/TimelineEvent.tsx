@@ -7,9 +7,7 @@ import classNames from 'classnames'
 import { CSSProperties, memo, MouseEvent, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
-import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
@@ -37,8 +35,6 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 
 	const { getIconPath } = useEventIcons()
-	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
-	const { open: openEditEventModal } = useModal('editEventModal')
 	const { timeToLabel } = useWorldTime()
 	const [isHovered, setIsHovered] = useState(false)
 
@@ -46,18 +42,8 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 		onClick: ({ multiselect }) => {
 			if (selected) {
 				dispatch(removeTimelineMarkerFromSelection(entity.key))
-				// navigate({
-				// 	search: (prev) => ({ ...prev, selection: prev.selection.filter((id) => id !== entity.key) }),
-				// })
 			} else {
 				dispatch(addTimelineMarkerToSelection({ ...entity, multiselect }))
-				// navigate({
-				// 	search: (prev) => ({
-				// 		...prev,
-				// 		selection: [...(multiselect ? prev.selection : []), entity.key],
-				// 		track: entity.worldEventTrackId ?? undefined,
-				// 	}),
-				// })
 			}
 		},
 		onDoubleClick: ({ multiselect }) => {
@@ -73,8 +59,6 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 				}),
 			})
 			dispatch(addTimelineMarkerToSelection({ ...entity, multiselect }))
-			// scrollTimelineTo({ timestamp: entity.markerPosition })
-			// openEditEventModal({ eventId: entity.eventId })
 		},
 		ignoreDelay: true,
 	})

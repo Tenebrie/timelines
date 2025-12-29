@@ -5,7 +5,6 @@ import { useEffect } from 'react'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { useCreateEvent } from '@/app/views/world/api/useCreateEvent'
-import { useDeleteEvent } from '@/app/views/world/api/useDeleteEvent'
 import { useUpdateEvent } from '@/app/views/world/api/useUpdateEvent'
 
 import { EventDraft } from './useEventDraft'
@@ -20,7 +19,6 @@ export const useUpsertEvent = (props: Props) => {
 	const { mode: baseMode, draft: baseDraft } = props
 	const [createEvent, { isLoading: isCreating }] = useCreateEvent()
 	const [updateEvent, { isLoading: isUpdating }] = useUpdateEvent()
-	const [deleteEvent, { isLoading: isDeleting }] = useDeleteEvent()
 
 	const draftRef = useAutoRef(baseDraft)
 
@@ -47,11 +45,9 @@ export const useUpsertEvent = (props: Props) => {
 				}
 			} else if (hasSubstance && mode === 'edit') {
 				await updateEvent(draft.id, draft.toPayload())
-			} else if (!hasSubstance && mode === 'edit') {
-				await deleteEvent(draft.id)
 			}
 		},
-		isSaving: isCreating || isUpdating || isDeleting,
+		isSaving: isCreating || isUpdating,
 	})
 
 	useEffect(() => {
