@@ -29,15 +29,12 @@ export function LastWorldNavigatorButton({ icon, label }: Props) {
 		scrollTimelineTo({ timestamp: timeOrigin })
 	})
 
-	if (!isLoaded) {
-		return null
-	}
-
 	return (
 		<Button
 			aria-label={label}
 			onClick={onNavigate}
 			variant={isMatching ? 'contained' : 'text'}
+			disabled={!isLoaded}
 			sx={{
 				gap: 0.5,
 				padding: '8px 15px',
