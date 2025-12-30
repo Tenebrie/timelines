@@ -37,7 +37,7 @@ export const BaseNavigator = () => {
 		<Container $theme={theme}>
 			<Box>
 				<Stack direction="row" height="100%" gap={1} alignItems="center">
-					<Stack minWidth={173} direction="row" gap={1} sx={{ justifyContent: 'flex-end' }}>
+					<Stack minWidth={173} direction="row" gap={1} sx={{ justifyContent: 'flex-start' }}>
 						<WorldSelectorButton />
 						<LastWorldNavigatorButton icon={<PublicIcon />} label="World" />
 					</Stack>
