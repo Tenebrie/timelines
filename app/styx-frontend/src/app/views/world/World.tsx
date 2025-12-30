@@ -18,6 +18,7 @@ import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
 import { DeleteEventDeltaModal } from './modals/DeleteEventDeltaModal'
 import { DeleteEventModal } from './modals/DeleteEventModal'
 import { EditEventModal } from './modals/editEventModal/EditEventModal'
+import { MarkerTooltipSummoner } from './views/timeline/MarkerTooltip'
 import { getTimelineState, getWorldState } from './WorldSliceSelectors'
 
 export const World = () => {
@@ -81,6 +82,7 @@ export const World = () => {
 			<DeleteEventModal />
 			<DeleteEventDeltaModal />
 			<EntityModalReporter />
+			<MarkerTooltipSummoner />
 		</>
 	)
 }

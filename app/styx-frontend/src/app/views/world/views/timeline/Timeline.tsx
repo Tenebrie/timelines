@@ -54,8 +54,8 @@ function TimelineComponent() {
 					<Box width={1} height={1} style={{ opacity }} sx={{ transition: 'opacity 0.3s' }}>
 						{opacity > 0 && (
 							<>
-								<TimelineTracks containerWidth={containerWidth} />
 								<TimeMarker timestamp={selectedTime} />
+								<TimelineTracks containerWidth={containerWidth} />
 								<TimelineScaleLabel />
 							</>
 						)}
@@ -64,11 +64,7 @@ function TimelineComponent() {
 				<TimelineControls />
 			</TimelineWrapper>
 			<Box style={{ opacity }} sx={{ transition: 'opacity 0.3s' }}>
-				{opacity > 0 && (
-					<>
-						<TimelineAnchor containerWidth={containerWidth} />
-					</>
-				)}
+				{opacity > 0 && <TimelineAnchor containerWidth={containerWidth} />}
 			</Box>
 
 			<TimelineZoomReporter />
