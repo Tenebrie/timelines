@@ -15,7 +15,7 @@ export function MarkerTooltipSummoner() {
 				left: 0,
 			}}
 		>
-			{Array(50).fill(<Summoner />)}
+			{Array(5).fill(<Summoner />)}
 		</Box>
 	)
 }
