@@ -84,7 +84,7 @@ function WorldSelectorButtonComponent() {
 				}}
 			>
 				{ownedWorlds.length > 0 && (
-					<>
+					<div>
 						<MenuItem disabled sx={{ opacity: '1 !important' }}>
 							<Typography variant="caption" color="text.secondary">
 								Your worlds
@@ -100,10 +100,10 @@ function WorldSelectorButtonComponent() {
 								<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
 							</MenuItem>
 						))}
-					</>
+					</div>
 				)}
 				{contributableWorlds.length > 0 && (
-					<>
+					<div>
 						<MenuItem disabled sx={{ opacity: '1 !important' }}>
 							<Typography variant="caption" color="text.secondary">
 								Shared worlds
@@ -119,10 +119,10 @@ function WorldSelectorButtonComponent() {
 								<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
 							</MenuItem>
 						))}
-					</>
+					</div>
 				)}
 				{visibleWorlds.length > 0 && (
-					<>
+					<div>
 						<MenuItem disabled sx={{ opacity: '1 !important' }}>
 							<Typography variant="caption" color="text.secondary">
 								Guest worlds
@@ -138,7 +138,7 @@ function WorldSelectorButtonComponent() {
 								<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
 							</MenuItem>
 						))}
-					</>
+					</div>
 				)}
 			</Menu>
 		</>
