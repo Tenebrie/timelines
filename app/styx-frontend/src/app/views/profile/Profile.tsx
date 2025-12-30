@@ -26,7 +26,7 @@ export function Profile() {
 						color="text.secondary"
 						sx={{ mt: 'auto', pt: 4, display: 'block', textAlign: 'center', opacity: 0.6 }}
 					>
-						Timelines {__APP_VERSION__}
+						Build <b>{__APP_VERSION__}</b> <b>({new Date(__BUILD_TIME__).toLocaleString('sv-SE')})</b>
 					</Typography>
 				</Paper>
 

@@ -1,10 +1,10 @@
 import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Close from '@mui/icons-material/Close'
-import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import { useNavigate } from '@tanstack/react-router'
 import classNames from 'classnames'
-import { CSSProperties, memo, MouseEvent, useState } from 'react'
+import { CSSProperties, memo, MouseEvent, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
@@ -16,8 +16,9 @@ import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
+import { MarkerTooltipSummonable } from '../../MarkerTooltip'
 import { HoveredTimelineEvents } from '../components/HoveredTimelineEvents'
-import { Marker, MarkerDelta, MarkerIcon, MarkerRevoked, TimestampPopover } from './styles'
+import { Marker, MarkerDelta, MarkerIcon, MarkerRevoked } from './styles'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
@@ -37,6 +38,7 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 	const { getIconPath } = useEventIcons()
 	const { timeToLabel } = useWorldTime()
 	const [isHovered, setIsHovered] = useState(false)
+	const markerRef = useRef<HTMLDivElement>(null)
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
@@ -103,6 +105,20 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 	const color = useEntityColor({ entity })
 	const theme = useCustomTheme()
 
+	// Calculate absolute position for the timestamp box (above the marker)
+	const getTimestampBoxPosition = () => {
+		if (!markerRef.current) {
+			return { left: 0, top: 0 }
+		}
+		const rect = markerRef.current.getBoundingClientRect()
+		return {
+			left: rect.left + rect.width / 2, // Center horizontally
+			top: rect.top, // Position at the top of the marker
+		}
+	}
+
+	const timestampBoxPosition = getTimestampBoxPosition()
+
 	const cssVariables = {
 		'--border-color': color,
 		'--icon-path': `url(${getIconPath(entity.icon)})`,
@@ -121,6 +137,7 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 
 	return (
 		<RenderedMarker
+			ref={markerRef}
 			style={cssVariables}
 			onClick={onClick}
 			onContextMenu={onContextMenu}
@@ -137,32 +154,36 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 					<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
 				</MarkerIcon>
 			)}
-			{!entity.chainEntity && (
-				<Box
-					sx={{
-						position: 'absolute',
-						left: 'calc(100% + 8px)',
-						top: '50%',
-						transform: 'translateY(-50%)',
-						background: theme.custom.palette.background.timelineMarkerTail,
-						border: `1px solid ${color}`,
-						borderRadius: '6px',
-						padding: '4px 8px',
-						opacity: isHovered ? 1 : 0,
-						transition: 'opacity 0.2s',
-						pointerEvents: 'none',
-						whiteSpace: 'nowrap',
-						zIndex: 10,
-					}}
-				>
-					<Typography variant="caption" fontWeight={600}>
-						{entity.name}
-					</Typography>
-				</Box>
+			{true && (
+				<MarkerTooltipSummonable>
+					<Paper
+						elevation={4}
+						sx={{
+							position: 'absolute',
+							left: `${timestampBoxPosition.left}px`,
+							top: `${timestampBoxPosition.top}px`,
+							padding: '8px 12px',
+							opacity: isHovered ? 1 : 0,
+							transition: 'opacity 0.1s, transform 0.1s',
+							pointerEvents: 'none',
+							whiteSpace: 'nowrap',
+							zIndex: 10,
+							display: 'flex',
+							flexDirection: 'column',
+							gap: '4px',
+							alignItems: 'center',
+							transform: isHovered
+								? 'translate(-50%, calc(-100% - 8px))'
+								: 'translate(-50%, calc(-100% - 4px))',
+						}}
+					>
+						<Typography variant="caption">{timeToLabel(entity.markerPosition)}</Typography>
+						<Typography variant="caption" fontWeight={600}>
+							{entity.name}
+						</Typography>
+					</Paper>
+				</MarkerTooltipSummonable>
 			)}
-			<TimestampPopover $theme={theme} className={classNames({ visible: isHovered })}>
-				<Typography variant="caption">{timeToLabel(entity.markerPosition)}</Typography>
-			</TimestampPopover>
 		</RenderedMarker>
 	)
 }

@@ -13,11 +13,11 @@ import { ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage
 import { useEventBusDispatch, useEventBusSubscribe } from '../../features/eventBus'
 import { SummonableRichTextEditor } from '../../features/richTextEditor/portals/RichTextEditorPortal'
 import { WorldSidebar } from './components/sidebar/WorldSidebar'
-import { WorldNavigator } from './components/WorldNavigator'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
 import { DeleteEventDeltaModal } from './modals/DeleteEventDeltaModal'
 import { DeleteEventModal } from './modals/DeleteEventModal'
 import { EditEventModal } from './modals/editEventModal/EditEventModal'
+import { MarkerTooltipSummoner } from './views/timeline/MarkerTooltip'
 import { getTimelineState, getWorldState } from './WorldSliceSelectors'
 
 export const World = () => {
@@ -53,6 +53,7 @@ export const World = () => {
 	return (
 		<>
 			<div
+				key={worldId}
 				style={{
 					position: 'relative',
 					width: '100%',
@@ -61,7 +62,6 @@ export const World = () => {
 					flexDirection: 'column',
 				}}
 			>
-				<WorldNavigator />
 				<Stack direction="row" width="100%" height="100%">
 					<WorldSidebar />
 					<div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -81,6 +81,7 @@ export const World = () => {
 			<DeleteEventModal />
 			<DeleteEventDeltaModal />
 			<EntityModalReporter />
+			<MarkerTooltipSummoner />
 		</>
 	)
 }

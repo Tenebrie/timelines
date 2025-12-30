@@ -10,6 +10,7 @@ export default defineConfig({
 	base: '/',
 	define: {
 		__APP_VERSION__: JSON.stringify(process.env.VERSION ?? 'Dev'),
+		__BUILD_TIME__: JSON.stringify(new Date().toISOString()),
 	},
 	plugins: [
 		tanstackRouter({ autoCodeSplitting: true, tmpDir: tanstackTempDir }),
