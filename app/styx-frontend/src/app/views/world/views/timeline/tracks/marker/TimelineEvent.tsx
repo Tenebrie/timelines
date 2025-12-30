@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import { useNavigate } from '@tanstack/react-router'
 import classNames from 'classnames'
-import { CSSProperties, memo, MouseEvent, useRef, useState } from 'react'
+import { CSSProperties, memo, MouseEvent, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
@@ -135,6 +135,18 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 		return Marker
 	})()
 
+	const [isTooltipRendered, setIsTooltipRendered] = useState(false)
+	useEffect(() => {
+		if (isHovered) {
+			setIsTooltipRendered(true)
+		} else {
+			const timeout = setTimeout(() => {
+				setIsTooltipRendered(false)
+			}, 120)
+			return () => clearTimeout(timeout)
+		}
+	}, [isHovered])
+
 	return (
 		<RenderedMarker
 			ref={markerRef}
@@ -154,7 +166,7 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 					<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
 				</MarkerIcon>
 			)}
-			{true && (
+			{isTooltipRendered && (
 				<MarkerTooltipSummonable>
 					<Paper
 						elevation={4}

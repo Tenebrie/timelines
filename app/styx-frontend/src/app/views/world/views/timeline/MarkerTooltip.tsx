@@ -15,7 +15,11 @@ export function MarkerTooltipSummoner() {
 				left: 0,
 			}}
 		>
-			{Array(5).fill(<Summoner />)}
+			{Array(8)
+				.fill(0)
+				.map((_, index) => (
+					<Summoner key={index} />
+				))}
 		</Box>
 	)
 }

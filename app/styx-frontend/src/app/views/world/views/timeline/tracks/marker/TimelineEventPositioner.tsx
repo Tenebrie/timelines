@@ -111,7 +111,7 @@ function TimelineEventPositionerComponent({
 		},
 	})
 
-	const height = TimelineEventHeightPx * entity.markerHeight
+	const height = TimelineEventHeightPx * entity.markerHeight + 1
 
 	return (
 		<Group

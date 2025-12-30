@@ -133,7 +133,7 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 			},
 		})
 
-		useLayoutEffect(() => {
+		useEffect(() => {
 			const currentSummoner = waitingList[family].pop()
 			if (currentSummoner) {
 				setProps(currentSummoner.props as SummonableProps)
