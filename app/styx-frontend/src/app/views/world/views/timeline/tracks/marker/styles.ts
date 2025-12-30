@@ -17,7 +17,6 @@ export const BaseMarker = styled.div<{
 	border-radius: var(--border-radius);
 	background: ${(props) => props.$theme.custom.palette.background.timelineMarker};
 	cursor: pointer;
-	z-index: 5;
 	transition:
 		margin-bottom 0.3s,
 		border-color 0.3s,
