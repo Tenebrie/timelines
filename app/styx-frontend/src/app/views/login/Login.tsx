@@ -2,12 +2,11 @@ import LoginRounded from '@mui/icons-material/LoginRounded'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
-import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import { Link as NavLink, useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { KeyboardEvent, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -120,7 +119,7 @@ export const Login = () => {
 						>
 							<span>Sign In</span>
 						</LoadingButton>
-						<Link component={NavLink} to="/register">
+						<Link from="/" to="/register">
 							Create a new account
 						</Link>
 					</Stack>

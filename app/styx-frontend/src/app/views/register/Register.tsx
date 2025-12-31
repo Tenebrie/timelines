@@ -2,12 +2,11 @@ import AppRegistrationRounded from '@mui/icons-material/AppRegistrationRounded'
 import LoadingButton from '@mui/lab/LoadingButton'
 import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
-import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import { Link as NavLink, useNavigate } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { KeyboardEvent, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -153,7 +152,7 @@ export const Register = () => {
 						>
 							<span>Register</span>
 						</LoadingButton>
-						<Link component={NavLink} to="/login">
+						<Link from="/" to="/login">
 							Already have an account? Sign in instead
 						</Link>
 					</Stack>

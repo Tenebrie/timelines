@@ -16,10 +16,12 @@ export function GuestDropdown() {
 
 	const onLogin = async () => {
 		navigate({ to: '/login' })
+		popupState.close()
 	}
 
 	const onRegister = async () => {
 		navigate({ to: '/register' })
+		popupState.close()
 	}
 
 	return (
