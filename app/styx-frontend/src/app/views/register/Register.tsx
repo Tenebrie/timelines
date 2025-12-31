@@ -68,7 +68,6 @@ export const Register = () => {
 					<Stack
 						spacing={2}
 						justifyContent="center"
-						width="300px"
 						padding={4}
 						component="form"
 						onSubmit={(e) => {
@@ -85,15 +84,7 @@ export const Register = () => {
 						</Typography>
 						<AlreadyLoggedInAlert parentSpacing={2} />
 						<ApiErrorBanner apiState={createAccountState} />
-						<registerForm.AppField
-							name="email"
-							validators={{
-								onBlur: z
-									.string()
-									.min(1, 'Email is required')
-									.regex(/^[^\s@]+@[^\s@]+$/, 'Invalid email address'),
-							}}
-						>
+						<registerForm.AppField name="email">
 							{() => (
 								<BoundTextField
 									id="email"
@@ -110,12 +101,7 @@ export const Register = () => {
 								/>
 							)}
 						</registerForm.AppField>
-						<registerForm.AppField
-							name="username"
-							validators={{
-								onBlur: z.string().min(1, 'Username is required'),
-							}}
-						>
+						<registerForm.AppField name="username">
 							{() => (
 								<BoundTextField
 									id="username"
@@ -131,12 +117,7 @@ export const Register = () => {
 								/>
 							)}
 						</registerForm.AppField>
-						<registerForm.AppField
-							name="password"
-							validators={{
-								onBlur: z.string().min(12, 'Password must be at least 12 characters'),
-							}}
-						>
+						<registerForm.AppField name="password">
 							{() => (
 								<BoundTextField
 									id="password"

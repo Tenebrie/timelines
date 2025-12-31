@@ -109,7 +109,7 @@ export const Admin = () => {
 									{loggedInUser.id !== user.id && (
 										<>
 											<Button>Login as</Button>
-											<Button>Reset password</Button>
+											<Button>Set password</Button>
 											<Button onClick={() => openDeleteUserModal({ targetUser: user })}>Delete</Button>
 										</>
 									)}

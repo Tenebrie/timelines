@@ -72,15 +72,7 @@ export const Login = () => {
 						</Typography>
 						<AlreadyLoggedInAlert parentSpacing={2} />
 						<ApiErrorBanner apiState={loginState} />
-						<loginForm.AppField
-							name="email"
-							validators={{
-								onBlur: z
-									.string()
-									.min(1, 'Email is required')
-									.regex(/^[^\s@]+@[^\s@]+$/, 'Invalid email address'),
-							}}
-						>
+						<loginForm.AppField name="email">
 							{() => (
 								<BoundTextField
 									id="email"
@@ -98,12 +90,7 @@ export const Login = () => {
 								/>
 							)}
 						</loginForm.AppField>
-						<loginForm.AppField
-							name="password"
-							validators={{
-								onBlur: z.string().min(1, 'Password is required'),
-							}}
-						>
+						<loginForm.AppField name="password">
 							{() => (
 								<BoundTextField
 									id="password"

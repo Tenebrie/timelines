@@ -23,24 +23,12 @@ export function SecurityPage() {
 		defaultValues: {
 			currentPassword: '',
 			newPassword: '',
-			confirmPassword: '',
 		},
 		validators: {
-			onChange: z.object({
+			onSubmit: z.object({
 				currentPassword: z.string().min(1, 'Current password is required'),
 				newPassword: z.string().min(12, 'New password must be at least 12 characters'),
-				confirmPassword: z.string().min(1, 'Please confirm your password'),
 			}),
-			onSubmit: z
-				.object({
-					currentPassword: z.string().min(1, 'Current password is required'),
-					newPassword: z.string().min(12, 'New password must be at least 12 characters'),
-					confirmPassword: z.string().min(1, 'Please confirm your password'),
-				})
-				.refine((data) => data.newPassword === data.confirmPassword, {
-					message: "Passwords don't match",
-					path: ['confirmPassword'],
-				}),
 		},
 		onSubmit: async (data) => {
 			const result = await changePassword({
@@ -88,18 +76,7 @@ export function SecurityPage() {
 							label="New password"
 							type="password"
 							fullWidth
-							helperText="Must be at least 8 characters"
-						/>
-					)}
-				</passwordForm.AppField>
-
-				<passwordForm.AppField name="confirmPassword">
-					{() => (
-						<BoundTextField
-							label="Confirm new password"
-							type="password"
-							fullWidth
-							helperText="Re-enter your new password"
+							helperText="Must be at least 12 characters"
 						/>
 					)}
 				</passwordForm.AppField>
