@@ -3,6 +3,7 @@ import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AssetService } from '@src/services/AssetService.js'
 import { CloudStorageService } from '@src/services/CloudStorageService.js'
 import {
+	BadRequestError,
 	NonEmptyStringValidator,
 	RequiredParam,
 	Router,
@@ -69,6 +70,31 @@ router.post('/api/profile/avatar', async (ctx) => {
 
 	return {
 		avatar: asset,
+	}
+})
+
+router.post('/api/profile/password', async (ctx) => {
+	useApiEndpoint({
+		name: 'changePassword',
+		summary: 'Change password endpoint',
+		description: 'Changes the password for the current user',
+		tags: [profileTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { currentPassword, newPassword } = useRequestBody(ctx, {
+		currentPassword: NonEmptyStringValidator,
+		newPassword: NonEmptyStringValidator,
+	})
+
+	const success = await UserService.changePassword(user.id, currentPassword, newPassword)
+	if (!success) {
+		throw new BadRequestError('Current password is incorrect')
+	}
+
+	return {
+		success: true,
 	}
 })
 

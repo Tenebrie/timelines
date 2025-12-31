@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button'
+import ListItemIcon from '@mui/material/ListItemIcon'
 import { useNavigate } from '@tanstack/react-router'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
@@ -6,11 +7,12 @@ import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { FileRouteTypes } from '@/routeTree.gen'
 
 type Props = {
+	icon?: React.ReactNode
 	label: string
 	route: FileRouteTypes['to']
 }
 
-export function PageButton({ label, route }: Props) {
+export function PageButton({ icon, label, route }: Props) {
 	const theme = useCustomTheme()
 	const isActive = useCheckRouteMatch(route)
 	const navigate = useNavigate({ from: '/profile' })
@@ -34,6 +36,7 @@ export function PageButton({ label, route }: Props) {
 			}}
 			className={isActive ? 'active' : ''}
 		>
+			{icon && <ListItemIcon>{icon}</ListItemIcon>}
 			{label}
 		</Button>
 	)

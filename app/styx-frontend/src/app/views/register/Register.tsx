@@ -4,93 +4,85 @@ import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { KeyboardEvent, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { z } from 'zod'
 
 import { useCreateAccountMutation } from '@/api/authApi'
-import { FormErrorBanner } from '@/app/components/FormErrorBanner'
+import { ApiErrorBanner } from '@/app/components/ApiErrorBanner'
 import { TenebrieLogo } from '@/app/components/TenebrieLogo'
-import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { useErrorState } from '@/app/utils/useErrorState'
+import { BoundTextField } from '@/app/features/forms/components/BoundTextField'
+import { useAppForm } from '@/app/features/forms/useAppForm'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import { authSlice } from '../../features/auth/AuthSlice'
 import { AlreadyLoggedInAlert } from '../../features/auth/components/AlreadyLoggedInAlert'
 
 export const Register = () => {
-	const [email, setEmail] = useState('')
-	const [username, setUsername] = useState('')
-	const [password, setPassword] = useState('')
-	const [confirmPassword, setConfirmPassword] = useState('')
-
-	const { error, raiseError, clearError, errorState } = useErrorState<{
-		MISSING_EMAIL: string
-		MISSING_USERNAME: string
-		MISSING_PASSWORD: string
-		PASSWORDS_DO_NOT_MATCH: string
-		SERVER_SIDE_ERROR: string
-	}>()
-
 	const navigate = useNavigate()
-	const [createAccount, { isLoading }] = useCreateAccountMutation()
+	const [createAccount, createAccountState] = useCreateAccountMutation()
 
 	const { setUser, setSessionId } = authSlice.actions
 	const dispatch = useDispatch()
 
-	const onRegister = async () => {
-		if (!email) {
-			raiseError('MISSING_EMAIL', 'Missing email')
-			return
-		}
-		if (!username) {
-			raiseError('MISSING_USERNAME', 'Missing username')
-			return
-		}
-		if (!password) {
-			raiseError('MISSING_PASSWORD', 'Missing password')
-			return
-		}
-		if (!confirmPassword || password !== confirmPassword) {
-			raiseError('PASSWORDS_DO_NOT_MATCH', 'Passwords do not match')
-			return
-		}
-
-		clearError()
-		const { response, error } = parseApiResponse(
-			await createAccount({
+	const registerForm = useAppForm({
+		defaultValues: {
+			email: '',
+			username: '',
+			password: '',
+			confirmPassword: '',
+		},
+		validators: {
+			onSubmit: z
+				.object({
+					email: z
+						.string()
+						.min(1, 'Email is required')
+						.regex(/^[^\s@]+@[^\s@]+$/, 'Invalid email address'),
+					username: z.string().min(1, 'Username is required'),
+					password: z.string().min(12, 'Password must be at least 12 characters'),
+					confirmPassword: z.string().min(1, 'Please confirm your password'),
+				})
+				.refine((data) => data.password === data.confirmPassword, {
+					message: "Passwords don't match",
+					path: ['confirmPassword'],
+				}),
+		},
+		onSubmit: async (data) => {
+			const result = await createAccount({
 				body: {
-					email,
-					username,
-					password,
+					email: data.value.email,
+					username: data.value.username,
+					password: data.value.password,
 				},
-			}),
-		)
-		if (error) {
-			raiseError('SERVER_SIDE_ERROR', error.message)
-			return
-		}
-		dispatch(setUser(response.user))
-		dispatch(setSessionId(response.sessionId))
-		navigate({ to: '/home' })
-	}
+			})
 
-	useEffect(() => {
-		clearError()
-	}, [email, username, password, confirmPassword, clearError])
+			if ('data' in result && result.data) {
+				dispatch(setUser(result.data.user))
+				dispatch(setSessionId(result.data.sessionId))
+				navigate({ to: '/home' })
+			}
+		},
+	})
 
-	const onEnterKey = (event: KeyboardEvent) => {
-		if (event.key === 'Enter') {
-			onRegister()
-		}
-	}
+	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], registerForm.handleSubmit)
 
 	return (
 		<Stack justifyContent="center" height="100%">
 			<Container maxWidth="xs">
 				<Paper elevation={2}>
-					<Stack spacing={2} justifyContent="center" width="300px" padding={4}>
+					<Stack
+						spacing={2}
+						justifyContent="center"
+						width="300px"
+						padding={4}
+						component="form"
+						onSubmit={(e) => {
+							e.preventDefault()
+							registerForm.handleSubmit()
+						}}
+					>
 						<Stack alignItems="center">
 							<TenebrieLogo />
 						</Stack>
@@ -99,54 +91,80 @@ export const Register = () => {
 							Create an Account
 						</Typography>
 						<AlreadyLoggedInAlert parentSpacing={2} />
-						<FormErrorBanner errorState={errorState} />
-						<TextField
-							id="username"
-							autoComplete="username"
-							label="Email"
-							type="text"
-							value={email}
-							onChange={(event) => setEmail(event.target.value)}
-							autoFocus
-							onKeyDown={onEnterKey}
-							error={!!error && error.type === 'MISSING_EMAIL'}
-						/>
-						<TextField
-							id="display-name"
-							autoComplete="display-name"
-							label="Username"
-							type="text"
-							value={username}
-							onChange={(event) => setUsername(event.target.value)}
-							onKeyDown={onEnterKey}
-							error={!!error && error.type === 'MISSING_USERNAME'}
-						/>
-						<TextField
-							id="password"
-							autoComplete="new-password"
-							label="Password"
-							type="password"
-							value={password}
-							onChange={(event) => setPassword(event.target.value)}
-							onKeyDown={onEnterKey}
-							error={
-								!!error && (error.type === 'MISSING_PASSWORD' || error.type === 'PASSWORDS_DO_NOT_MATCH')
-							}
-						/>
-						<TextField
-							id="confirm-password"
-							autoComplete="new-password"
-							label="Confirm password"
-							type="password"
-							value={confirmPassword}
-							onChange={(event) => setConfirmPassword(event.target.value)}
-							onKeyDown={onEnterKey}
-							error={!!error && error.type === 'PASSWORDS_DO_NOT_MATCH'}
-						/>
+						<ApiErrorBanner apiState={createAccountState} />
+						<registerForm.AppField
+							name="email"
+							validators={{
+								onBlur: z
+									.string()
+									.min(1, 'Email is required')
+									.regex(/^[^\s@]+@[^\s@]+$/, 'Invalid email address'),
+							}}
+						>
+							{() => (
+								<BoundTextField
+									id="email"
+									autoComplete="username"
+									label="Email"
+									type="text"
+									autoFocus
+									fullWidth
+								/>
+							)}
+						</registerForm.AppField>
+						<registerForm.AppField
+							name="username"
+							validators={{
+								onBlur: z.string().min(1, 'Username is required'),
+							}}
+						>
+							{() => (
+								<BoundTextField
+									id="username"
+									autoComplete="display-name"
+									label="Username"
+									type="text"
+									fullWidth
+								/>
+							)}
+						</registerForm.AppField>
+						<registerForm.AppField
+							name="password"
+							validators={{
+								onBlur: z.string().min(12, 'Password must be at least 12 characters'),
+							}}
+						>
+							{() => (
+								<BoundTextField
+									id="password"
+									autoComplete="new-password"
+									label="Password"
+									type="password"
+									helperText="Must be at least 12 characters"
+									fullWidth
+								/>
+							)}
+						</registerForm.AppField>
+						<registerForm.AppField
+							name="confirmPassword"
+							validators={{
+								onBlur: z.string().min(1, 'Please confirm your password'),
+							}}
+						>
+							{() => (
+								<BoundTextField
+									id="confirm-password"
+									autoComplete="new-password"
+									label="Confirm password"
+									type="password"
+									fullWidth
+								/>
+							)}
+						</registerForm.AppField>
 						<Button
-							loading={isLoading}
+							loading={createAccountState.isLoading}
 							variant="contained"
-							onClick={onRegister}
+							type="submit"
 							loadingPosition="center"
 							startIcon={<AppRegistrationRounded />}
 						>

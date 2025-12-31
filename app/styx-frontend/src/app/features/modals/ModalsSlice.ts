@@ -81,6 +81,11 @@ const modals = {
 		isOpen: false as boolean,
 		articles: [] as string[],
 	},
+
+	/* Profile */
+	deleteAccountModal: {
+		isOpen: false as boolean,
+	},
 } as const
 
 export const initialState = modals

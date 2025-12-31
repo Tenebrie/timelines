@@ -32,6 +32,7 @@ export function BoundTextField(props: Props) {
 			{...props}
 			value={field.state.value}
 			onChange={(e) => field.handleChange(e.target.value)}
+			onBlur={field.handleBlur}
 			error={!!error}
 			helperText={helperText}
 		/>

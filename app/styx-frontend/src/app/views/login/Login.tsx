@@ -4,74 +4,59 @@ import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { KeyboardEvent, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { z } from 'zod'
 
 import { usePostLoginMutation } from '@/api/authApi'
-import { FormErrorBanner } from '@/app/components/FormErrorBanner'
+import { ApiErrorBanner } from '@/app/components/ApiErrorBanner'
 import { TenebrieLogo } from '@/app/components/TenebrieLogo'
-import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { useErrorState } from '@/app/utils/useErrorState'
+import { BoundTextField } from '@/app/features/forms/components/BoundTextField'
+import { useAppForm } from '@/app/features/forms/useAppForm'
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import { authSlice } from '../../features/auth/AuthSlice'
 import { AlreadyLoggedInAlert } from '../../features/auth/components/AlreadyLoggedInAlert'
 
 export const Login = () => {
-	const [email, setEmail] = useState('')
-	const [password, setPassword] = useState('')
-
-	const { error, raiseError, clearError, errorState } = useErrorState<{
-		MISSING_EMAIL: string
-		MISSING_PASSWORD: string
-		SERVER_SIDE_ERROR: string
-	}>()
-
 	const navigate = useNavigate()
-	const [login, { isLoading }] = usePostLoginMutation()
+	const [login, loginState] = usePostLoginMutation()
 
 	const { setUser, setSessionId } = authSlice.actions
 	const dispatch = useDispatch()
 
-	useEffect(() => {
-		clearError()
-	}, [clearError, email, password])
-
-	const onLogin = async () => {
-		if (!email) {
-			raiseError('MISSING_EMAIL', 'Missing email')
-			return
-		}
-		if (!password) {
-			raiseError('MISSING_PASSWORD', 'Missing password')
-			return
-		}
-
-		const { response, error } = parseApiResponse(
-			await login({
-				body: {
-					email,
-					password,
-				},
+	const loginForm = useAppForm({
+		defaultValues: {
+			email: '',
+			password: '',
+		},
+		validators: {
+			onSubmit: z.object({
+				email: z
+					.string()
+					.min(1, 'Email is required')
+					.regex(/^[^\s@]+@[^\s@]+$/, 'Invalid email address'),
+				password: z.string().min(1, 'Password is required'),
 			}),
-		)
-		if (error) {
-			raiseError('SERVER_SIDE_ERROR', error.message)
-			return
-		}
-		clearError()
-		dispatch(setUser(response.user))
-		dispatch(setSessionId(response.sessionId))
-		navigate({ to: '/home' })
-	}
+		},
+		onSubmit: async (data) => {
+			const result = await login({
+				body: {
+					email: data.value.email,
+					password: data.value.password,
+				},
+			})
 
-	const onEnterKey = (event: KeyboardEvent) => {
-		if (event.key === 'Enter') {
-			onLogin()
-		}
-	}
+			if ('data' in result && result.data) {
+				dispatch(setUser(result.data.user))
+				dispatch(setSessionId(result.data.sessionId))
+				navigate({ to: '/home' })
+			}
+		},
+	})
+
+	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], loginForm.handleSubmit)
 
 	return (
 		<Stack justifyContent="center" height="100%">
@@ -86,34 +71,49 @@ export const Login = () => {
 							Sign in to Timelines
 						</Typography>
 						<AlreadyLoggedInAlert parentSpacing={2} />
-						<FormErrorBanner errorState={errorState} />
-						<TextField
-							id="email"
-							autoComplete="username"
-							label="Email"
-							type="text"
-							value={email}
-							placeholder="example@timelines.com"
-							onChange={(event) => setEmail(event.target.value)}
-							autoFocus
-							onKeyDown={onEnterKey}
-							error={!!error && error.type === 'MISSING_EMAIL'}
-						/>
-						<TextField
-							id="password"
-							autoComplete="current-password"
-							label="Password"
-							type="password"
-							value={password}
-							placeholder="Your password"
-							onChange={(event) => setPassword(event.target.value)}
-							onKeyDown={onEnterKey}
-							error={!!error && error.type === 'MISSING_PASSWORD'}
-						/>
+						<ApiErrorBanner apiState={loginState} />
+						<loginForm.AppField
+							name="email"
+							validators={{
+								onBlur: z
+									.string()
+									.min(1, 'Email is required')
+									.regex(/^[^\s@]+@[^\s@]+$/, 'Invalid email address'),
+							}}
+						>
+							{() => (
+								<BoundTextField
+									id="email"
+									autoComplete="username"
+									label="Email"
+									type="text"
+									placeholder="example@timelines.com"
+									autoFocus
+									fullWidth
+								/>
+							)}
+						</loginForm.AppField>
+						<loginForm.AppField
+							name="password"
+							validators={{
+								onBlur: z.string().min(1, 'Password is required'),
+							}}
+						>
+							{() => (
+								<BoundTextField
+									id="password"
+									autoComplete="current-password"
+									label="Password"
+									type="password"
+									placeholder="Your password"
+									fullWidth
+								/>
+							)}
+						</loginForm.AppField>
 						<Button
-							loading={isLoading}
+							loading={loginState.isLoading}
 							variant="contained"
-							onClick={onLogin}
+							onClick={loginForm.handleSubmit}
 							loadingPosition="center"
 							startIcon={<LoginRounded />}
 						>
