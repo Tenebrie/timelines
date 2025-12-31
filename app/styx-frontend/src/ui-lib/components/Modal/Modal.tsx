@@ -19,7 +19,7 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick }: Props) => {
 	const [isModalRendered, setIsModalRendered] = useState(false)
 	const [modalRenderTimeout, setModalRenderTimeout] = useState<number | null>(null)
 
-	useShortcut(Shortcut.Escape, onClose, isModalVisible ? 1 : -1)
+	useShortcut(Shortcut.Escape, onClose, isModalVisible ? 10 : -1)
 
 	useEffect(() => {
 		if (isModalVisible && !isModalRendered) {
