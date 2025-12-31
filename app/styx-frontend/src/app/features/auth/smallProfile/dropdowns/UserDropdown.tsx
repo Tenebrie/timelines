@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux'
 
 import { usePostLogoutMutation } from '@/api/authApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 import { authSlice, User } from '../../AuthSlice'
 
@@ -23,6 +24,8 @@ type Props = {
 
 export function UserDropdown({ user }: Props) {
 	const navigate = useNavigate()
+	const isProfile = useCheckRouteMatch('/profile/public')
+	const isStorage = useCheckRouteMatch('/profile/storage')
 
 	const [logout] = usePostLogoutMutation()
 	const { clearUser } = authSlice.actions
@@ -71,6 +74,7 @@ export function UserDropdown({ user }: Props) {
 						navigate({ to: '/profile' })
 						popupState.close()
 					}}
+					selected={isProfile}
 				>
 					<ListItemIcon>
 						<AccountCircle />
@@ -82,6 +86,7 @@ export function UserDropdown({ user }: Props) {
 						navigate({ to: '/profile/storage' })
 						popupState.close()
 					}}
+					selected={isStorage}
 				>
 					<ListItemIcon>
 						<Storage />

@@ -9,9 +9,20 @@ import { PageButton } from './components/PageButton'
 export function Profile() {
 	return (
 		<Container maxWidth="lg" sx={{ py: 4, height: '100%' }}>
-			<Stack direction="row" spacing={3}>
+			<Stack direction="row" spacing={3} paddingBottom={3}>
 				{/* Sidebar */}
-				<Paper sx={{ width: 250, p: 2, display: 'flex', flexDirection: 'column' }} elevation={1}>
+				<Paper
+					sx={{
+						position: 'sticky',
+						width: 250,
+						p: 2,
+						top: 16,
+						display: 'flex',
+						flexDirection: 'column',
+						height: '100%',
+					}}
+					elevation={1}
+				>
 					<Typography variant="subtitle2" color="textSecondary" sx={{ mb: 2 }}>
 						Settings
 					</Typography>
