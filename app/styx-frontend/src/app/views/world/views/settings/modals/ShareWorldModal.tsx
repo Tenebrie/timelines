@@ -1,7 +1,6 @@
 import { CollaboratorAccess } from '@api/types/worldCollaboratorsTypes'
 import { useShareWorldMutation } from '@api/worldCollaboratorsApi'
 import Add from '@mui/icons-material/Add'
-import LoadingButton from '@mui/lab/LoadingButton'
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
@@ -130,17 +129,15 @@ export const ShareWorldModal = () => {
 				</FormControl>
 				<ModalFooter>
 					<Tooltip title={shortcutLabel} arrow placement="top">
-						<span>
-							<LoadingButton
-								loading={isLoading}
-								variant="contained"
-								onClick={onConfirm}
-								loadingPosition="start"
-								startIcon={<Add />}
-							>
-								<span>Confirm</span>
-							</LoadingButton>
-						</span>
+						<Button
+							loading={isLoading}
+							variant="contained"
+							onClick={onConfirm}
+							loadingPosition="start"
+							startIcon={<Add />}
+						>
+							<span>Confirm</span>
+						</Button>
 					</Tooltip>
 					<Button variant="outlined" onClick={close}>
 						Cancel

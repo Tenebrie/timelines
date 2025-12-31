@@ -1,5 +1,5 @@
 import AppRegistrationRounded from '@mui/icons-material/AppRegistrationRounded'
-import LoadingButton from '@mui/lab/LoadingButton'
+import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
@@ -143,7 +143,7 @@ export const Register = () => {
 							onKeyDown={onEnterKey}
 							error={!!error && error.type === 'PASSWORDS_DO_NOT_MATCH'}
 						/>
-						<LoadingButton
+						<Button
 							loading={isLoading}
 							variant="contained"
 							onClick={onRegister}
@@ -151,7 +151,7 @@ export const Register = () => {
 							startIcon={<AppRegistrationRounded />}
 						>
 							<span>Register</span>
-						</LoadingButton>
+						</Button>
 						<Link from="/" to="/login">
 							Already have an account? Sign in instead
 						</Link>

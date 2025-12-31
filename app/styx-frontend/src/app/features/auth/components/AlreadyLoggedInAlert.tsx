@@ -1,7 +1,6 @@
 import Alert from '@mui/material/Alert'
 import Collapse from '@mui/material/Collapse'
-import Link from '@mui/material/Link'
-import { Link as NavLink } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { useSelector } from 'react-redux'
 import { TransitionGroup } from 'react-transition-group'
 
@@ -20,7 +19,7 @@ export const AlreadyLoggedInAlert = ({ parentSpacing }: Props) => {
 				<Collapse>
 					<Alert severity="success" style={{ marginBottom: parentSpacing * 8 }}>
 						It seems you&apos;ve already logged in. Click{' '}
-						<Link component={NavLink} to="/home">
+						<Link from="/" to="/home">
 							here
 						</Link>{' '}
 						to continue to the app.

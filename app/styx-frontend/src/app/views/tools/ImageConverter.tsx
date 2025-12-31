@@ -80,17 +80,19 @@ export function ImageConverter() {
 					<Typography variant="subtitle2" color="text.secondary" gutterBottom>
 						Output Format
 					</Typography>
-					<Select
-						value={format}
-						onChange={(event) => setFormat(event.target.value as ImageFormat)}
-						sx={{ width: '100%' }}
-					>
-						{formatData?.formats.map((format) => (
-							<MenuItem key={format} value={format}>
-								{format.toUpperCase()}
-							</MenuItem>
-						))}
-					</Select>
+					{formatData && (
+						<Select
+							value={format}
+							onChange={(event) => setFormat(event.target.value as ImageFormat)}
+							sx={{ width: '100%' }}
+						>
+							{formatData?.formats.map((format) => (
+								<MenuItem key={format} value={format}>
+									{format.toUpperCase()}
+								</MenuItem>
+							))}
+						</Select>
+					)}
 				</Box>
 
 				<Stack direction="row" justifyContent="flex-end" sx={{ mt: 2 }}>

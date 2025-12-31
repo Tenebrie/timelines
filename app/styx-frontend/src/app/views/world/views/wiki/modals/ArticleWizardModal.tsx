@@ -1,5 +1,4 @@
 import Add from '@mui/icons-material/Add'
-import LoadingButton from '@mui/lab/LoadingButton'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
@@ -74,17 +73,15 @@ export const ArticleWizardModal = () => {
 			/>
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">
-					<span>
-						<LoadingButton
-							loading={isLoading}
-							variant="contained"
-							onClick={onConfirm}
-							loadingPosition="start"
-							startIcon={<Add />}
-						>
-							<span>Create</span>
-						</LoadingButton>
-					</span>
+					<Button
+						loading={isLoading}
+						variant="contained"
+						onClick={onConfirm}
+						loadingPosition="start"
+						startIcon={<Add />}
+					>
+						<span>Create</span>
+					</Button>
 				</Tooltip>
 				<Button variant="outlined" onClick={close}>
 					Cancel

@@ -1,6 +1,6 @@
 import { WorldBrief, WorldCalendarType } from '@api/types/worldTypes'
 import { GetWorldCollaboratorsApiResponse } from '@api/worldCollaboratorsApi'
-import LoadingButton from '@mui/lab/LoadingButton'
+import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
@@ -59,18 +59,16 @@ export const Settings = ({ world, collaborators }: Props) => {
 			<Divider />
 			<Stack direction="row" justifyContent="flex-end" gap={2}>
 				<Tooltip title={shortcutLabel} arrow placement="top">
-					<span>
-						<LoadingButton
-							loading={isSaving}
-							variant="outlined"
-							onClick={manualSave}
-							loadingPosition="start"
-							color={autosaveColor}
-							startIcon={autosaveIcon}
-						>
-							Save
-						</LoadingButton>
-					</span>
+					<Button
+						loading={isSaving}
+						variant="outlined"
+						onClick={manualSave}
+						loadingPosition="start"
+						color={autosaveColor}
+						startIcon={autosaveIcon}
+					>
+						Save
+					</Button>
 				</Tooltip>
 			</Stack>
 		</Stack>

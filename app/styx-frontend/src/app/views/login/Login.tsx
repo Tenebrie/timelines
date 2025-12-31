@@ -1,5 +1,5 @@
 import LoginRounded from '@mui/icons-material/LoginRounded'
-import LoadingButton from '@mui/lab/LoadingButton'
+import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
@@ -110,7 +110,7 @@ export const Login = () => {
 							onKeyDown={onEnterKey}
 							error={!!error && error.type === 'MISSING_PASSWORD'}
 						/>
-						<LoadingButton
+						<Button
 							loading={isLoading}
 							variant="contained"
 							onClick={onLogin}
@@ -118,7 +118,7 @@ export const Login = () => {
 							startIcon={<LoginRounded />}
 						>
 							<span>Sign In</span>
-						</LoadingButton>
+						</Button>
 						<Link from="/" to="/register">
 							Create a new account
 						</Link>

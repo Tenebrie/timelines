@@ -1,6 +1,5 @@
 import { useDeleteWorldMutation } from '@api/worldListApi'
 import Delete from '@mui/icons-material/Delete'
-import LoadingButton from '@mui/lab/LoadingButton'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
@@ -74,18 +73,16 @@ export const DeleteWorldModal = () => {
 			</Stack>
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">
-					<span>
-						<LoadingButton
-							loading={isLoading}
-							variant="contained"
-							color="error"
-							onClick={onConfirm}
-							loadingPosition="start"
-							startIcon={<Delete />}
-						>
-							<span>Confirm</span>
-						</LoadingButton>
-					</span>
+					<Button
+						loading={isLoading}
+						variant="contained"
+						color="error"
+						onClick={onConfirm}
+						loadingPosition="start"
+						startIcon={<Delete />}
+					>
+						<span>Confirm</span>
+					</Button>
 				</Tooltip>
 				<Button variant="outlined" onClick={onClose}>
 					Cancel
