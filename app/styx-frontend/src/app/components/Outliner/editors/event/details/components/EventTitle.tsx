@@ -35,7 +35,7 @@ export const EventTitle = ({ event, draft }: Props) => {
 			setEditing(false)
 			setName(draft.name)
 		},
-		editing,
+		editing ? 2 : -1,
 	)
 
 	const { timeToLabel } = useWorldTime()

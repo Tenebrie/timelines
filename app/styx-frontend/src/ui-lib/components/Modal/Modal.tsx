@@ -9,16 +9,17 @@ type Props = {
 	visible: boolean
 	children: React.ReactNode
 	onClose: () => void
+	closeOnBackdropClick?: boolean
 }
 
-const Modal = ({ visible, children, onClose }: Props) => {
+const Modal = ({ visible, children, onClose, closeOnBackdropClick }: Props) => {
 	const bodyRef = useRef<HTMLDivElement | null>(null)
 
 	const isModalVisible = visible
 	const [isModalRendered, setIsModalRendered] = useState(false)
 	const [modalRenderTimeout, setModalRenderTimeout] = useState<number | null>(null)
 
-	useShortcut(Shortcut.Escape, onClose, isModalVisible ? 10 : -1)
+	useShortcut(Shortcut.Escape, onClose, isModalVisible ? 1 : -1)
 
 	useEffect(() => {
 		if (isModalVisible && !isModalRendered) {
@@ -41,8 +42,11 @@ const Modal = ({ visible, children, onClose }: Props) => {
 	const theme = useCustomTheme()
 
 	return (
-		<ModalWrapper className={isModalVisible ? 'visible' : ''}>
-			<ModalContainer ref={bodyRef} $theme={theme}>
+		<ModalWrapper
+			className={isModalVisible ? 'visible' : ''}
+			onClick={closeOnBackdropClick ? onClose : undefined}
+		>
+			<ModalContainer ref={bodyRef} $theme={theme} onClick={(e) => e.stopPropagation()}>
 				{isModalRendered && children}
 			</ModalContainer>
 		</ModalWrapper>
