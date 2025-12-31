@@ -1,6 +1,17 @@
-import '@testing-library/jest-dom'
-
 import { configure } from '@testing-library/dom'
+import { fetch, Headers, Request, Response } from 'undici'
+
+// Force jsdom to use undici's fetch (which MSW can intercept)
+// @ts-expect-error 123
+globalThis.fetch = fetch
+// @ts-expect-error 123
+globalThis.Headers = Headers
+// @ts-expect-error 123
+globalThis.Request = Request
+// @ts-expect-error 123
+globalThis.Response = Response
+
+import '@testing-library/jest-dom'
 
 console.debug = () => {}
 

@@ -87,7 +87,7 @@
 		"lodash.debounce": "^4.0.8",
 		"lodash.throttle": "^4.1.1",
 		"material-ui-popup-state": "^5.3.3",
-		"msw": "^1.2.6",
+		"msw": "^2.12.7",
 		"prettier": "3.4.2",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",

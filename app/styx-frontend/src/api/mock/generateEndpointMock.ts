@@ -1,9 +1,9 @@
-import { type DefaultBodyType, rest } from 'msw'
+import { http, HttpResponse, type JsonBodyType } from 'msw'
 import type { SetupServer } from 'msw/node'
 
-type HttpMethod = keyof typeof rest
+type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete' | 'options' | 'head'
 
-export type MockParams<ResponseT extends DefaultBodyType> =
+export type MockParams<ResponseT extends JsonBodyType> =
 	| {
 			response: ResponseT
 	  }
@@ -11,15 +11,15 @@ export type MockParams<ResponseT extends DefaultBodyType> =
 			error: { status: number; message: string }
 	  }
 
-export const generateEndpointMock = (
+export const generateEndpointMock = <ResponseT extends JsonBodyType = JsonBodyType>(
 	server: SetupServer,
-	{ method, path, ...params }: { method: HttpMethod; path: string } & MockParams<DefaultBodyType>,
+	{ method, path, ...params }: { method: HttpMethod; path: string } & MockParams<ResponseT>,
 ) => {
 	let invocations: { jsonBody: unknown }[] = []
 
-	const handler = rest[method](path, async (req, res, ctx) => {
+	const handler = http[method]('http://fakelocalhost' + path, async ({ request }) => {
 		invocations.push({
-			jsonBody: req.method === 'POST' || req.method === 'PATCH' ? await req.json() : {},
+			jsonBody: request.method === 'POST' || request.method === 'PATCH' ? await request.json() : {},
 		})
 
 		const status = (() => {
@@ -31,16 +31,12 @@ export const generateEndpointMock = (
 			return 204
 		})()
 
-		const returnedResponse = (() => {
-			if ('error' in params) {
-				return params.error
-			} else if ('response' in params) {
-				return params.response
-			}
-			return undefined
-		})()
-
-		return res(ctx.status(status), ctx.json(returnedResponse))
+		if ('error' in params) {
+			return HttpResponse.json(params.error, { status })
+		} else if ('response' in params) {
+			return HttpResponse.json(params.response, { status })
+		}
+		return new HttpResponse(null, { status })
 	})
 	server.use(handler)
 

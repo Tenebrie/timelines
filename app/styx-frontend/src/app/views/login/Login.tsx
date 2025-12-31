@@ -90,6 +90,11 @@ export const Login = () => {
 									placeholder="example@timelines.com"
 									autoFocus
 									fullWidth
+									onChangeCallback={() => {
+										if (loginState.isError) {
+											loginState.reset()
+										}
+									}}
 								/>
 							)}
 						</loginForm.AppField>
@@ -107,13 +112,20 @@ export const Login = () => {
 									type="password"
 									placeholder="Your password"
 									fullWidth
+									onChangeCallback={() => {
+										if (loginState.isError) {
+											loginState.reset()
+										}
+									}}
 								/>
 							)}
 						</loginForm.AppField>
 						<Button
 							loading={loginState.isLoading}
 							variant="contained"
-							onClick={loginForm.handleSubmit}
+							onClick={() => {
+								loginForm.handleSubmit()
+							}}
 							loadingPosition="center"
 							startIcon={<LoginRounded />}
 						>

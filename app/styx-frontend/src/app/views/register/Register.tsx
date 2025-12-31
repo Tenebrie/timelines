@@ -31,23 +31,16 @@ export const Register = () => {
 			email: '',
 			username: '',
 			password: '',
-			confirmPassword: '',
 		},
 		validators: {
-			onSubmit: z
-				.object({
-					email: z
-						.string()
-						.min(1, 'Email is required')
-						.regex(/^[^\s@]+@[^\s@]+$/, 'Invalid email address'),
-					username: z.string().min(1, 'Username is required'),
-					password: z.string().min(12, 'Password must be at least 12 characters'),
-					confirmPassword: z.string().min(1, 'Please confirm your password'),
-				})
-				.refine((data) => data.password === data.confirmPassword, {
-					message: "Passwords don't match",
-					path: ['confirmPassword'],
-				}),
+			onSubmit: z.object({
+				email: z
+					.string()
+					.min(1, 'Email is required')
+					.regex(/^[^\s@]+@[^\s@]+$/, 'Invalid email address'),
+				username: z.string().min(1, 'Username is required'),
+				password: z.string().min(12, 'Password must be at least 12 characters'),
+			}),
 		},
 		onSubmit: async (data) => {
 			const result = await createAccount({
@@ -109,6 +102,11 @@ export const Register = () => {
 									type="text"
 									autoFocus
 									fullWidth
+									onChangeCallback={() => {
+										if (createAccountState.isError) {
+											createAccountState.reset()
+										}
+									}}
 								/>
 							)}
 						</registerForm.AppField>
@@ -125,6 +123,11 @@ export const Register = () => {
 									label="Username"
 									type="text"
 									fullWidth
+									onChangeCallback={() => {
+										if (createAccountState.isError) {
+											createAccountState.reset()
+										}
+									}}
 								/>
 							)}
 						</registerForm.AppField>
@@ -142,22 +145,11 @@ export const Register = () => {
 									type="password"
 									helperText="Must be at least 12 characters"
 									fullWidth
-								/>
-							)}
-						</registerForm.AppField>
-						<registerForm.AppField
-							name="confirmPassword"
-							validators={{
-								onBlur: z.string().min(1, 'Please confirm your password'),
-							}}
-						>
-							{() => (
-								<BoundTextField
-									id="confirm-password"
-									autoComplete="new-password"
-									label="Confirm password"
-									type="password"
-									fullWidth
+									onChangeCallback={() => {
+										if (createAccountState.isError) {
+											createAccountState.reset()
+										}
+									}}
 								/>
 							)}
 						</registerForm.AppField>

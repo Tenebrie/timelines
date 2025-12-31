@@ -3,10 +3,11 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 import { RootState } from '@/app/store'
 import { parseApiError } from '@/app/utils/parseApiError'
+import { isRunningInTest } from '@/test-utils/isRunningInTest'
 import { SESSION_HEADER_NAME } from '@/ts-shared/const/constants'
 
 const baseQuery = fetchBaseQuery({
-	baseUrl: '/',
+	baseUrl: isRunningInTest() ? 'http://fakelocalhost/' : '/',
 	prepareHeaders: (headers, { getState }) => {
 		const sessionId = (getState() as RootState).auth.sessionId
 		if (sessionId) {
@@ -16,7 +17,18 @@ const baseQuery = fetchBaseQuery({
 	},
 })
 
-const baseQueryWithRetry = retry(baseQuery, {
+// Wrap it to see what happens
+const debugBaseQuery: typeof baseQuery = async (args, api, extraOptions) => {
+	try {
+		const result = await baseQuery(args, api, extraOptions)
+		return result
+	} catch (e) {
+		console.log('fetchBaseQuery threw:', e)
+		throw e
+	}
+}
+
+const baseQueryWithRetry = retry(debugBaseQuery, {
 	backoff(attempt: number) {
 		const baseDelay = 1000 // base delay in ms
 		const delay = baseDelay * Math.pow(2, attempt) // exponential increase

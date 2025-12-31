@@ -4,7 +4,9 @@ import { mockGetAnnouncements, mockGetWorlds } from '../api/mock/rheaApi.mock'
 
 export const setupTestServer = () => {
 	const server = setupServer()
-	beforeAll(() => server.listen())
+	beforeAll(() => {
+		server.listen({ onUnhandledRequest: 'error' })
+	})
 	beforeEach(() => {
 		mockGetWorlds(server, {
 			response: {
