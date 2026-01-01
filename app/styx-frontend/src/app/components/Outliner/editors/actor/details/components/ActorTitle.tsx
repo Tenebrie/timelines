@@ -33,7 +33,7 @@ export const ActorTitle = ({ draft }: Props) => {
 			setEditing(false)
 			setName(draft.name)
 		},
-		editing ? 2 : undefined,
+		editing ? 11 : undefined,
 	)
 
 	useEffect(() => {

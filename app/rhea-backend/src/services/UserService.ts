@@ -85,6 +85,36 @@ export const UserService = {
 		})
 	},
 
+	changePassword: async (userId: string, currentPassword: string, newPassword: string) => {
+		const user = await getPrismaClient().user.findUnique({
+			where: {
+				id: userId,
+				deletedAt: null,
+			},
+		})
+
+		if (!user) {
+			return false
+		}
+
+		const passwordMatches = await bcrypt.compare(currentPassword, user.password)
+		if (!passwordMatches) {
+			return false
+		}
+
+		const hashedPassword = await bcrypt.hash(newPassword, 8)
+		await getPrismaClient().user.update({
+			where: {
+				id: userId,
+			},
+			data: {
+				password: hashedPassword,
+			},
+		})
+
+		return true
+	},
+
 	cleanUpDeletedUsers: async () => {
 		return getPrismaClient().user.deleteMany({
 			where: {

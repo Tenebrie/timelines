@@ -4,9 +4,12 @@ import { useMemo } from 'react'
 
 import { useFieldContext } from '../useAppForm'
 
-type Props = Omit<TextFieldProps, 'value' | 'onChange' | 'defaultValue'>
+type Props = Omit<TextFieldProps, 'value' | 'onChange' | 'defaultValue'> & {
+	onChangeCallback?: () => void
+}
 
 export function BoundTextField(props: Props) {
+	const { onChangeCallback, ...textFieldProps } = props
 	const field = useFieldContext<string>()
 
 	const error = useMemo(() => {
@@ -29,9 +32,13 @@ export function BoundTextField(props: Props) {
 
 	return (
 		<TextField
-			{...props}
+			{...textFieldProps}
 			value={field.state.value}
-			onChange={(e) => field.handleChange(e.target.value)}
+			onChange={(e) => {
+				field.handleChange(e.target.value)
+				onChangeCallback?.()
+			}}
+			onBlur={field.handleBlur}
 			error={!!error}
 			helperText={helperText}
 		/>

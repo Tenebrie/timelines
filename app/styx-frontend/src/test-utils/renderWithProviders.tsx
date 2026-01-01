@@ -1,6 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import { createRouter, RouterProvider } from '@tanstack/react-router'
+import { createMemoryHistory, createRouter, RouterProvider } from '@tanstack/react-router'
 import { act, render, renderHook, RenderHookOptions } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { ReactNode } from 'react'
@@ -10,11 +8,14 @@ import { routeTree } from '@/routeTree.gen'
 
 import { generateStore, RootState } from '../app/store'
 
-// Create a test router instance that uses your routeTree.
-const createTestRouter = () => {
+const createTestRouter = (initialPath: string = '/') => {
+	const history = createMemoryHistory({
+		initialEntries: [initialPath],
+	})
+
 	return createRouter({
 		routeTree,
-		// Optionally add any other test-specific options.
+		history,
 		defaultPreload: 'intent',
 	})
 }
@@ -30,23 +31,24 @@ export const renderWithProviders = (
 		store,
 		...render(
 			<ReduxProvider store={store}>
-				<RouterProvider router={router}>{node}</RouterProvider>
+				<RouterProvider router={router} />
+				{node}
 			</ReduxProvider>,
 		),
 	}
 }
 
-// If you need to render a page at a given route, you can push a URL first.
 export const renderWithRouter = async (
-	path: string, // pass in the path you want to test
+	path: string,
 	{ preloadedState }: { preloadedState?: Partial<RootState> } = {},
 ) => {
-	window.history.pushState({}, 'Test page', path)
 	const store = generateStore({ preloadedState })
-	const router = createTestRouter()
+	const router = createTestRouter(path)
+
 	const returnValue = {
 		user: userEvent.setup(),
 		store,
+		router,
 		...render(
 			<ReduxProvider store={store}>
 				<RouterProvider router={router} />
@@ -55,7 +57,7 @@ export const renderWithRouter = async (
 	}
 
 	await act(async () => {
-		// Wait for any async router preloading, if needed.
+		await router.load()
 	})
 
 	return returnValue
@@ -71,7 +73,8 @@ export const renderHookWithProviders = <Result, Props>(
 		...options,
 		wrapper: ({ children }) => (
 			<ReduxProvider store={store}>
-				<RouterProvider router={router}>{children}</RouterProvider>
+				<RouterProvider router={router} />
+				{children}
 			</ReduxProvider>
 		),
 	})

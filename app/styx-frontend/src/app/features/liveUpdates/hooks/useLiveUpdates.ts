@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { isRunningInTest } from '@/test-utils/isRunningInTest'
 import { CalliopeToClientMessage } from '@/ts-shared/CalliopeToClientMessage'
 import { ClientToCalliopeMessage, ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage'
 
@@ -49,6 +50,10 @@ export const useLiveUpdates = () => {
 		}
 
 		const initiateConnection = () => {
+			if (isRunningInTest()) {
+				return
+			}
+
 			if (
 				currentWebsocket.current &&
 				(currentWebsocket.current.readyState === currentWebsocket.current.CONNECTING ||

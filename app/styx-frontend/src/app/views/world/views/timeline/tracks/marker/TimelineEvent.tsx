@@ -142,7 +142,7 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 		} else {
 			const timeout = setTimeout(() => {
 				setIsTooltipRendered(false)
-			}, 120)
+			}, 180)
 			return () => clearTimeout(timeout)
 		}
 	}, [isHovered])
@@ -176,7 +176,7 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 							top: `${timestampBoxPosition.top}px`,
 							padding: '8px 12px',
 							opacity: isHovered ? 1 : 0,
-							transition: 'opacity 0.1s, transform 0.1s',
+							transition: 'opacity 0.15s, transform 0.15s',
 							pointerEvents: 'none',
 							whiteSpace: 'nowrap',
 							zIndex: 10,

@@ -10,16 +10,22 @@ import Stack from '@mui/material/Stack'
 import { useNavigate } from '@tanstack/react-router'
 import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+
 export function GuestDropdown() {
 	const navigate = useNavigate()
 	const popupState = usePopupState({ variant: 'popover', popupId: 'profile-menu' })
+	const isLogin = useCheckRouteMatch('/login')
+	const isRegister = useCheckRouteMatch('/register')
 
 	const onLogin = async () => {
 		navigate({ to: '/login' })
+		popupState.close()
 	}
 
 	const onRegister = async () => {
 		navigate({ to: '/register' })
+		popupState.close()
 	}
 
 	return (
@@ -49,13 +55,13 @@ export function GuestDropdown() {
 			>
 				<MenuItem disabled>Anonymous User</MenuItem>
 				<Divider />
-				<MenuItem onClick={onLogin}>
+				<MenuItem onClick={onLogin} selected={isLogin}>
 					<ListItemIcon>
 						<Login />
 					</ListItemIcon>
 					Login
 				</MenuItem>
-				<MenuItem onClick={onRegister}>
+				<MenuItem onClick={onRegister} selected={isRegister}>
 					<ListItemIcon>
 						<PersonAdd />
 					</ListItemIcon>

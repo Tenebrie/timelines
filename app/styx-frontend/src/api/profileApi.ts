@@ -18,6 +18,10 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/profile/avatar`, method: 'POST', body: queryArg.body }),
 				invalidatesTags: ['profile'],
 			}),
+			changePassword: build.mutation<ChangePasswordApiResponse, ChangePasswordApiArg>({
+				query: (queryArg) => ({ url: `/api/profile/password`, method: 'POST', body: queryArg.body }),
+				invalidatesTags: ['profile'],
+			}),
 		}),
 		overrideExisting: false,
 	})
@@ -69,9 +73,19 @@ export type PostAvatarApiArg = {
 		assetId: string
 	}
 }
+export type ChangePasswordApiResponse = /** status 200  */ {
+	success: boolean
+}
+export type ChangePasswordApiArg = {
+	body: {
+		currentPassword: string
+		newPassword: string
+	}
+}
 export const {
 	useGetStorageStatusQuery,
 	useLazyGetStorageStatusQuery,
 	useUpdateProfileMutation,
 	usePostAvatarMutation,
+	useChangePasswordMutation,
 } = injectedRtkApi

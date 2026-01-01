@@ -1,6 +1,5 @@
 import Delete from '@mui/icons-material/Delete'
 import Save from '@mui/icons-material/Save'
-import LoadingButton from '@mui/lab/LoadingButton'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
@@ -119,24 +118,22 @@ export const EventTrackEditModal = () => {
 				<Stack direction="row-reverse" justifyContent="space-between" width="100%">
 					<Stack direction="row-reverse" spacing={2}>
 						<Tooltip title={shortcutLabel} arrow placement="top">
-							<span>
-								<LoadingButton
-									loading={isUpdating}
-									variant="contained"
-									color="primary"
-									onClick={onConfirmUpdate}
-									loadingPosition="start"
-									startIcon={<Save />}
-								>
-									<span>Save</span>
-								</LoadingButton>
-							</span>
+							<Button
+								loading={isUpdating}
+								variant="contained"
+								color="primary"
+								onClick={onConfirmUpdate}
+								loadingPosition="start"
+								startIcon={<Save />}
+							>
+								<span>Save</span>
+							</Button>
 						</Tooltip>
 						<Button variant="outlined" onClick={onCloseAttempt}>
 							Cancel
 						</Button>
 					</Stack>
-					<LoadingButton
+					<Button
 						loading={isDeleting}
 						variant="contained"
 						color="error"
@@ -145,7 +142,7 @@ export const EventTrackEditModal = () => {
 						startIcon={<Delete />}
 					>
 						<span>Delete</span>
-					</LoadingButton>
+					</Button>
 				</Stack>
 			</ModalFooter>
 		</Modal>

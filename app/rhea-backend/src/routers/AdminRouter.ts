@@ -77,4 +77,22 @@ router.delete('/api/admin/users/:userId', async (ctx) => {
 	return await AdminService.deleteUser(userId)
 })
 
+router.post('/api/admin/users/:userId/password', async (ctx) => {
+	useApiEndpoint({
+		name: 'adminSetUserPassword',
+		description: 'Sets the password for the given user',
+		tags: [adminUsersTag],
+	})
+
+	const { userId } = usePathParams(ctx, {
+		userId: NonEmptyStringValidator,
+	})
+
+	const { password } = useRequestBody(ctx, {
+		password: NonEmptyStringValidator,
+	})
+
+	return await AdminService.setUserPassword(userId, password)
+})
+
 export const AdminRouter = router

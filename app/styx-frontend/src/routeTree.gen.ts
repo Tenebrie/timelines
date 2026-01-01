@@ -24,6 +24,7 @@ import { Route as ProfileProfileRouteImport } from './routes/profile/_profile'
 import { Route as WorldWorldIdWorldRouteImport } from './routes/world.$worldId/_world'
 import { Route as ToolsToolsImageConverterRouteImport } from './routes/tools/_tools.image-converter'
 import { Route as ProfileProfileStorageRouteImport } from './routes/profile/_profile.storage'
+import { Route as ProfileProfileSecurityRouteImport } from './routes/profile/_profile.security'
 import { Route as ProfileProfilePublicRouteImport } from './routes/profile/_profile.public'
 import { Route as WorldWorldIdWorldTimelineRouteImport } from './routes/world.$worldId/_world.timeline'
 import { Route as WorldWorldIdWorldSettingsRouteImport } from './routes/world.$worldId/_world.settings'
@@ -117,6 +118,11 @@ const ProfileProfileStorageRoute = ProfileProfileStorageRouteImport.update({
   path: '/storage',
   getParentRoute: () => ProfileProfileRoute,
 } as any)
+const ProfileProfileSecurityRoute = ProfileProfileSecurityRouteImport.update({
+  id: '/security',
+  path: '/security',
+  getParentRoute: () => ProfileProfileRoute,
+} as any)
 const ProfileProfilePublicRoute = ProfileProfilePublicRouteImport.update({
   id: '/public',
   path: '/public',
@@ -175,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/profile/': typeof ProfileIndexRoute
   '/tools/': typeof ToolsIndexRoute
   '/profile/public': typeof ProfileProfilePublicRoute
+  '/profile/security': typeof ProfileProfileSecurityRoute
   '/profile/storage': typeof ProfileProfileStorageRoute
   '/tools/image-converter': typeof ToolsToolsImageConverterRoute
   '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
@@ -195,6 +202,7 @@ export interface FileRoutesByTo {
   '/secret/music': typeof SecretMusicRoute
   '/tools': typeof ToolsIndexRoute
   '/profile/public': typeof ProfileProfilePublicRoute
+  '/profile/security': typeof ProfileProfileSecurityRoute
   '/profile/storage': typeof ProfileProfileStorageRoute
   '/tools/image-converter': typeof ToolsToolsImageConverterRoute
   '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
@@ -219,6 +227,7 @@ export interface FileRoutesById {
   '/profile/': typeof ProfileIndexRoute
   '/tools/': typeof ToolsIndexRoute
   '/profile/_profile/public': typeof ProfileProfilePublicRoute
+  '/profile/_profile/security': typeof ProfileProfileSecurityRoute
   '/profile/_profile/storage': typeof ProfileProfileStorageRoute
   '/tools/_tools/image-converter': typeof ToolsToolsImageConverterRoute
   '/world/$worldId': typeof WorldWorldIdRouteWithChildren
@@ -245,6 +254,7 @@ export interface FileRouteTypes {
     | '/profile/'
     | '/tools/'
     | '/profile/public'
+    | '/profile/security'
     | '/profile/storage'
     | '/tools/image-converter'
     | '/world/$worldId'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/secret/music'
     | '/tools'
     | '/profile/public'
+    | '/profile/security'
     | '/profile/storage'
     | '/tools/image-converter'
     | '/world/$worldId'
@@ -288,6 +299,7 @@ export interface FileRouteTypes {
     | '/profile/'
     | '/tools/'
     | '/profile/_profile/public'
+    | '/profile/_profile/security'
     | '/profile/_profile/storage'
     | '/tools/_tools/image-converter'
     | '/world/$worldId'
@@ -427,6 +439,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfileStorageRouteImport
       parentRoute: typeof ProfileProfileRoute
     }
+    '/profile/_profile/security': {
+      id: '/profile/_profile/security'
+      path: '/security'
+      fullPath: '/profile/security'
+      preLoaderRoute: typeof ProfileProfileSecurityRouteImport
+      parentRoute: typeof ProfileProfileRoute
+    }
     '/profile/_profile/public': {
       id: '/profile/_profile/public'
       path: '/public'
@@ -488,11 +507,13 @@ declare module '@tanstack/react-router' {
 
 interface ProfileProfileRouteChildren {
   ProfileProfilePublicRoute: typeof ProfileProfilePublicRoute
+  ProfileProfileSecurityRoute: typeof ProfileProfileSecurityRoute
   ProfileProfileStorageRoute: typeof ProfileProfileStorageRoute
 }
 
 const ProfileProfileRouteChildren: ProfileProfileRouteChildren = {
   ProfileProfilePublicRoute: ProfileProfilePublicRoute,
+  ProfileProfileSecurityRoute: ProfileProfileSecurityRoute,
   ProfileProfileStorageRoute: ProfileProfileStorageRoute,
 }
 

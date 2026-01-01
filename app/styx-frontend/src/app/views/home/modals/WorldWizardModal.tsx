@@ -1,7 +1,6 @@
 import { WorldCalendarType } from '@api/types/worldTypes'
 import { useCreateWorldMutation } from '@api/worldListApi'
 import Add from '@mui/icons-material/Add'
-import LoadingButton from '@mui/lab/LoadingButton'
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
@@ -141,17 +140,15 @@ export const WorldWizardModal = () => {
 				/>
 				<ModalFooter>
 					<Tooltip title={shortcutLabel} arrow placement="top">
-						<span>
-							<LoadingButton
-								loading={isLoading}
-								variant="contained"
-								onClick={onConfirm}
-								loadingPosition="start"
-								startIcon={<Add />}
-							>
-								<span>Confirm</span>
-							</LoadingButton>
-						</span>
+						<Button
+							loading={isLoading}
+							variant="contained"
+							onClick={onConfirm}
+							loadingPosition="start"
+							startIcon={<Add />}
+						>
+							<span>Confirm</span>
+						</Button>
 					</Tooltip>
 					<Button variant="outlined" onClick={close}>
 						Cancel

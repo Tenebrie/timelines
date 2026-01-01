@@ -1,5 +1,6 @@
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
+import { DeleteAccountModal } from '../../views/profile/modals/DeleteAccountModal'
 import { ArticleWizardModal } from '../../views/world/views/wiki/modals/ArticleWizardModal'
 import { DeleteArticleModal } from '../../views/world/views/wiki/modals/DeleteArticleModal'
 import { useModal } from './ModalsSlice'
@@ -21,6 +22,7 @@ export const ModalsRenderer = () => {
 			<TimeTravelModal />
 			<ArticleWizardModal />
 			<DeleteArticleModal />
+			<DeleteAccountModal />
 		</>
 	)
 }

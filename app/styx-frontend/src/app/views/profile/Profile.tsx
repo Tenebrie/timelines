@@ -1,3 +1,6 @@
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import LockResetIcon from '@mui/icons-material/LockReset'
+import StorageIcon from '@mui/icons-material/Storage'
 import Container from '@mui/material/Container'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
@@ -9,15 +12,27 @@ import { PageButton } from './components/PageButton'
 export function Profile() {
 	return (
 		<Container maxWidth="lg" sx={{ py: 4, height: '100%' }}>
-			<Stack direction="row" spacing={3}>
+			<Stack direction="row" spacing={3} paddingBottom={3}>
 				{/* Sidebar */}
-				<Paper sx={{ width: 250, p: 2, display: 'flex', flexDirection: 'column' }} elevation={1}>
+				<Paper
+					sx={{
+						position: 'sticky',
+						width: 250,
+						p: 2,
+						top: 16,
+						display: 'flex',
+						flexDirection: 'column',
+						height: '100%',
+					}}
+					elevation={1}
+				>
 					<Typography variant="subtitle2" color="textSecondary" sx={{ mb: 2 }}>
 						Settings
 					</Typography>
 					<Stack spacing={1}>
-						<PageButton label="Public profile" route="/profile/public" />
-						<PageButton label="Storage" route="/profile/storage" />
+						<PageButton icon={<AccountCircleIcon />} label="Public profile" route="/profile/public" />
+						<PageButton icon={<StorageIcon />} label="Storage" route="/profile/storage" />
+						<PageButton icon={<LockResetIcon />} label="Security" route="/profile/security" />
 					</Stack>
 
 					{/* Version marker */}

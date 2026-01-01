@@ -50,7 +50,7 @@ export const EditEventModal = () => {
 	const currentEntity = useCurrentEntity()
 
 	return (
-		<Modal visible={isOpen} onClose={handleClose}>
+		<Modal visible={isOpen} onClose={handleClose} closeOnBackdropClick>
 			<Stack
 				direction={'column'}
 				gap={2}

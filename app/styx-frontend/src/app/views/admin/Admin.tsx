@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button'
-import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import TableBody from '@mui/material/TableBody'
@@ -8,7 +7,7 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
-import { Link as NavLink } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -20,6 +19,7 @@ import { Pagination } from './components/Pagination'
 import { SearchInput } from './components/SearchInput'
 import { UserAccessLevelDropdown } from './components/UserAccessLevelDropdown'
 import { DeleteUserModal } from './modals/DeleteUserModal'
+import { SetPasswordModal } from './modals/SetPasswordModal'
 
 const pageSize = 18
 
@@ -36,6 +36,7 @@ export const Admin = () => {
 	const { user: loggedInUser } = useSelector(getAuthState)
 
 	const { open: openDeleteUserModal } = useModal('deleteUserModal')
+	const { open: openSetPasswordModal } = useModal('setPasswordModal')
 
 	const formatDate = useCallback((date: string) => {
 		return new Date(date).toLocaleString('en-US', {
@@ -91,7 +92,7 @@ export const Admin = () => {
 						{data.users.map((user) => (
 							<TableRow key={user.id} sx={{ height: '75px' }}>
 								<TableCell>
-									<Link component={NavLink} to={`/admin/${user.id}`}>
+									<Link from="/admin" to={`/${user.id}`}>
 										{user.email}
 									</Link>
 								</TableCell>
@@ -104,13 +105,13 @@ export const Admin = () => {
 								<TableCell>
 									{loggedInUser.id === user.id && (
 										<Typography variant="body2" color="gray" marginLeft={0.7}>
-											Despite everything, this is still you
+											Despite everything, it&apos;s still you
 										</Typography>
 									)}
 									{loggedInUser.id !== user.id && (
 										<>
 											<Button>Login as</Button>
-											<Button>Reset password</Button>
+											<Button onClick={() => openSetPasswordModal({ targetUser: user })}>Set password</Button>
 											<Button onClick={() => openDeleteUserModal({ targetUser: user })}>Delete</Button>
 										</>
 									)}
@@ -121,6 +122,7 @@ export const Admin = () => {
 				</TableContainer>
 			</Stack>
 			<DeleteUserModal />
+			<SetPasswordModal />
 		</Paper>
 	)
 }

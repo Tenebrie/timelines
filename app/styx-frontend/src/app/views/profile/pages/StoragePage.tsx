@@ -136,28 +136,30 @@ export function StoragePageAssets() {
 function StoragePageAssetsSkeleton() {
 	return (
 		<>
-			{[1, 2, 3, 4, 5, 6, 7, 8].map((index) => (
-				<TableRow key={index}>
-					<TableCell>
-						<Skeleton variant="text" width={200} height={20} />
-					</TableCell>
-					<TableCell>
-						<Skeleton variant="text" width={100} height={20} />
-					</TableCell>
-					<TableCell>
-						<Skeleton variant="text" width={80} height={20} />
-					</TableCell>
-					<TableCell>
-						<Skeleton variant="text" width={100} height={20} />
-					</TableCell>
-					<TableCell>
-						<Stack direction="row" spacing={1}>
-							<Skeleton variant="circular" width={32} height={32} />
-							<Skeleton variant="circular" width={32} height={32} />
-						</Stack>
-					</TableCell>
-				</TableRow>
-			))}
+			{Array(6)
+				.fill(0)
+				.map((_, index) => (
+					<TableRow key={index}>
+						<TableCell>
+							<Skeleton variant="text" width={200} height={20} />
+						</TableCell>
+						<TableCell>
+							<Skeleton variant="text" width={100} height={20} />
+						</TableCell>
+						<TableCell>
+							<Skeleton variant="text" width={80} height={20} />
+						</TableCell>
+						<TableCell>
+							<Skeleton variant="text" width={100} height={20} />
+						</TableCell>
+						<TableCell>
+							<Stack direction="row" spacing={1}>
+								<Skeleton variant="circular" width={32} height={32} />
+								<Skeleton variant="circular" width={32} height={32} />
+							</Stack>
+						</TableCell>
+					</TableRow>
+				))}
 		</>
 	)
 }

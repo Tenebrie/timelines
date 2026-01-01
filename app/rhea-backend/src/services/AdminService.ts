@@ -1,4 +1,5 @@
 import { UserLevel } from '@prisma/client'
+import * as bcrypt from 'bcrypt'
 
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
@@ -89,6 +90,18 @@ export const AdminService = {
 			},
 			data: {
 				level,
+			},
+		})
+	},
+
+	setUserPassword: async (userId: string, password: string) => {
+		const hashedPassword = await bcrypt.hash(password, 8)
+		return getPrismaClient().user.update({
+			where: {
+				id: userId,
+			},
+			data: {
+				password: hashedPassword,
 			},
 		})
 	},

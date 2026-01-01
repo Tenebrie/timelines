@@ -15,6 +15,10 @@ const modals = {
 		isOpen: false as boolean,
 		targetUser: null as User | null,
 	},
+	setPasswordModal: {
+		isOpen: false as boolean,
+		targetUser: null as User | null,
+	},
 
 	/* Event Tracks */
 	eventTrackWizard: {
@@ -80,6 +84,11 @@ const modals = {
 	deleteArticleModal: {
 		isOpen: false as boolean,
 		articles: [] as string[],
+	},
+
+	/* Profile */
+	deleteAccountModal: {
+		isOpen: false as boolean,
 	},
 } as const
 
