@@ -15,6 +15,10 @@ const modals = {
 		isOpen: false as boolean,
 		targetUser: null as User | null,
 	},
+	setPasswordModal: {
+		isOpen: false as boolean,
+		targetUser: null as User | null,
+	},
 
 	/* Event Tracks */
 	eventTrackWizard: {

@@ -19,6 +19,7 @@ import { Pagination } from './components/Pagination'
 import { SearchInput } from './components/SearchInput'
 import { UserAccessLevelDropdown } from './components/UserAccessLevelDropdown'
 import { DeleteUserModal } from './modals/DeleteUserModal'
+import { SetPasswordModal } from './modals/SetPasswordModal'
 
 const pageSize = 18
 
@@ -35,6 +36,7 @@ export const Admin = () => {
 	const { user: loggedInUser } = useSelector(getAuthState)
 
 	const { open: openDeleteUserModal } = useModal('deleteUserModal')
+	const { open: openSetPasswordModal } = useModal('setPasswordModal')
 
 	const formatDate = useCallback((date: string) => {
 		return new Date(date).toLocaleString('en-US', {
@@ -109,7 +111,7 @@ export const Admin = () => {
 									{loggedInUser.id !== user.id && (
 										<>
 											<Button>Login as</Button>
-											<Button>Set password</Button>
+											<Button onClick={() => openSetPasswordModal({ targetUser: user })}>Set password</Button>
 											<Button onClick={() => openDeleteUserModal({ targetUser: user })}>Delete</Button>
 										</>
 									)}
@@ -120,6 +122,7 @@ export const Admin = () => {
 				</TableContainer>
 			</Stack>
 			<DeleteUserModal />
+			<SetPasswordModal />
 		</Paper>
 	)
 }

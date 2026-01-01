@@ -29,6 +29,14 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/admin/users/${queryArg.userId}`, method: 'DELETE' }),
 				invalidatesTags: ['adminUsers'],
 			}),
+			adminSetUserPassword: build.mutation<AdminSetUserPasswordApiResponse, AdminSetUserPasswordApiArg>({
+				query: (queryArg) => ({
+					url: `/api/admin/users/${queryArg.userId}/password`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['adminUsers'],
+			}),
 		}),
 		overrideExisting: false,
 	})
@@ -90,9 +98,29 @@ export type AdminDeleteUserApiArg = {
 	/** Any string value with at least one character */
 	userId: string
 }
+export type AdminSetUserPasswordApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	deletedAt?: null | string
+	email: string
+	username: string
+	password: string
+	bio: string
+	level: 'Free' | 'Premium' | 'Admin'
+	avatarId?: null | string
+}
+export type AdminSetUserPasswordApiArg = {
+	/** Any string value with at least one character */
+	userId: string
+	body: {
+		password: string
+	}
+}
 export const {
 	useAdminGetUsersQuery,
 	useLazyAdminGetUsersQuery,
 	useAdminSetUserLevelMutation,
 	useAdminDeleteUserMutation,
+	useAdminSetUserPasswordMutation,
 } = injectedRtkApi
