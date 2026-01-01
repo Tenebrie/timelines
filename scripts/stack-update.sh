@@ -6,16 +6,15 @@ if [[ -z "$VERSION" ]]; then
   exit 1
 fi
 
-SERVICES=("timelines_rhea" "timelines_calliope" "timelines_styx" "timelines_gatekeeper")
+SERVICES=("timelines_rhea" "timelines_calliope" "timelines_styx")
 IMAGES=(
   "tenebrie/timelines-rhea:${VERSION}"
   "tenebrie/timelines-calliope:${VERSION}"
   "tenebrie/timelines-styx:${VERSION}"
-  "tenebrie/timelines-gatekeeper:${VERSION}"
 )
 
 for i in "${!SERVICES[@]}"; do
-  docker service update --image "${IMAGES[$i]}" --detach=false "${SERVICES[$i]}" &
+  docker service update --image "${IMAGES[$i]}" "${SERVICES[$i]}" &
 done
 
 wait
@@ -53,6 +52,8 @@ if $FAILED; then
   wait
   exit 1
 fi
+
+docker service update --image "tenebrie/timelines-gatekeeper:${VERSION}" "timelines_gatekeeper"
 
 echo "All services updated successfully"
 docker system prune -f
