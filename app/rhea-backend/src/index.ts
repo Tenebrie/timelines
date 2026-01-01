@@ -19,6 +19,7 @@ import { WorldRouter } from './routers/WorldRouter.js'
 import { WorldSearchRouter } from './routers/WorldSearchRouter.js'
 import { WorldThumbnailRouter } from './routers/WorldThumbnailRouter.js'
 import { WorldWikiRouter } from './routers/WorldWikiRouter.js'
+import { CloudStorageService } from './services/CloudStorageService.js'
 import { RedisService } from './services/RedisService.js'
 import { UserService } from './services/UserService.js'
 import { isRunningInTest } from './utils/isRunningInTest.js'
@@ -99,5 +100,6 @@ if (!isRunningInTest()) {
 
 	setInterval(() => {
 		UserService.cleanUpDeletedUsers()
+		CloudStorageService.cleanUpExpiredAssets()
 	}, 60000)
 }

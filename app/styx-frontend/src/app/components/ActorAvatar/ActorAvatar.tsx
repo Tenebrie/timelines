@@ -16,13 +16,13 @@ export const ActorAvatar = ({ actor }: Props) => {
 		return 'teal'
 	}, [actor])
 
-	const initials = useMemo(() => {
+	const initials = (() => {
 		const capitals = actor.name.replace(/[^A-Z]+/g, '')
 		if (capitals.length >= 2) {
 			return capitals.substring(0, 2)
 		}
 		return actor.name.substring(0, 2)
-	}, [actor])
+	})()
 
 	return <Avatar sx={{ color: getContrastTextColor(color), bgcolor: color }}>{initials}</Avatar>
 }

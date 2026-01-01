@@ -1,4 +1,10 @@
-import { GetObjectCommand, HeadObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import {
+	DeleteObjectCommand,
+	GetObjectCommand,
+	HeadObjectCommand,
+	PutObjectCommand,
+	S3Client,
+} from '@aws-sdk/client-s3'
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { Asset, AssetStatus, AssetType, User, UserLevel } from '@prisma/client'
@@ -243,5 +249,29 @@ export const CloudStorageService = {
 		const url = await getSignedUrl(s3Client, command, { expiresIn: expiresInSeconds })
 		const publicUrl = url.replace('s3-minio:9000', 'localhost')
 		return publicUrl
+	},
+
+	deleteAssetFile: async (asset: Asset) => {
+		await s3Client.send(
+			new DeleteObjectCommand({
+				Bucket: BUCKET_ID,
+				Key: asset.bucketKey,
+			}),
+		)
+		await AssetService.deleteAsset(asset.id)
+	},
+
+	cleanUpExpiredAssets: async () => {
+		const expiredAssets = await AssetService.getExpiredAssets(new Date())
+		if (expiredAssets.length > 0) {
+			console.info(`Cleaning up ${expiredAssets.length} expired assets`)
+		}
+		for (const asset of expiredAssets) {
+			try {
+				await CloudStorageService.deleteAssetFile(asset)
+			} catch (error) {
+				console.error(`Failed to delete asset ${asset.id}:`, error)
+			}
+		}
 	},
 }

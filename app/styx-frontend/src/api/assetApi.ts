@@ -10,6 +10,10 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/assets/${queryArg.assetId}` }),
 				providesTags: ['asset'],
 			}),
+			deleteAsset: build.mutation<DeleteAssetApiResponse, DeleteAssetApiArg>({
+				query: (queryArg) => ({ url: `/api/assets/${queryArg.assetId}`, method: 'DELETE' }),
+				invalidatesTags: ['asset'],
+			}),
 			listUserAssets: build.query<ListUserAssetsApiResponse, ListUserAssetsApiArg>({
 				query: () => ({ url: `/api/assets` }),
 				providesTags: ['asset'],
@@ -30,6 +34,11 @@ export type GetAssetApiResponse = /** status 200  */ {
 	url: string
 }
 export type GetAssetApiArg = {
+	/** Any string value */
+	assetId: string
+}
+export type DeleteAssetApiResponse = unknown
+export type DeleteAssetApiArg = {
 	/** Any string value */
 	assetId: string
 }
@@ -96,6 +105,7 @@ export type FinalizeAssetUploadApiArg = {
 export const {
 	useGetAssetQuery,
 	useLazyGetAssetQuery,
+	useDeleteAssetMutation,
 	useListUserAssetsQuery,
 	useLazyListUserAssetsQuery,
 	useRequestPresignedUrlMutation,

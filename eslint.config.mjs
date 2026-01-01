@@ -1,61 +1,55 @@
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-import { FlatCompat } from '@eslint/eslintrc'
-import js from '@eslint/js'
-import tsParser from '@typescript-eslint/parser'
+import eslintConfigPrettier from 'eslint-config-prettier'
+import muiPathImports from 'eslint-plugin-mui-path-imports'
+import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
+import react from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import unusedImports from 'eslint-plugin-unused-imports'
-import globals from 'globals'
+import tseslint from 'typescript-eslint'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const compat = new FlatCompat({
-	baseDirectory: __dirname,
-	recommendedConfig: js.configs.recommended,
-	allConfig: js.configs.all,
-})
-
-export default [
-	...compat.extends(
-		'eslint:recommended',
-		'plugin:@typescript-eslint/recommended',
-		'prettier',
-		'plugin:prettier/recommended',
-	),
+export default tseslint.config(
 	{
+		ignores: [
+			'app/calliope-websockets/dist',
+			'app/rhea-backend/dist',
+			'app/styx-frontend/build',
+			'app/ts-shared/dist',
+			'e2e/dist',
+			'*.gen.ts',
+			'node_modules',
+			'.husky',
+		],
+	},
+	{
+		extends: [...tseslint.configs.recommended],
+		files: ['**/*.{mjs,js,ts,tsx}'],
 		plugins: {
 			'simple-import-sort': simpleImportSort,
 			'unused-imports': unusedImports,
+			'no-relative-import-paths': noRelativeImportPaths,
+			'mui-path-imports': muiPathImports,
 		},
-
-		languageOptions: {
-			globals: {
-				...globals.node,
-				Atomics: 'readonly',
-				SharedArrayBuffer: 'readonly',
-			},
-
-			parser: tsParser,
-			ecmaVersion: 2018,
-			sourceType: 'module',
-		},
-
 		rules: {
 			'linebreak-style': ['error', 'unix'],
 			'no-tabs': 'off',
 			'no-trailing-spaces': 'off',
 			'no-unused-vars': 'off',
+			'@typescript-eslint/no-explicit-any': 'error',
 			'object-curly-spacing': 'off',
 			'no-case-declarations': 'off',
 			'space-before-function-paren': 'off',
-			'@typescript-eslint/no-unused-vars': 'off',
-			'@typescript-eslint/ban-ts-ignore': 'off',
-			'@typescript-eslint/ban-ts-comment': 'off',
 			'simple-import-sort/imports': 'error',
 			'simple-import-sort/exports': 'error',
 			'unused-imports/no-unused-imports': 'error',
 			'react/no-unescaped-entities': 'off',
+			'mui-path-imports/mui-path-imports': 'error',
+			'@typescript-eslint/no-unused-vars': 'off',
+
+			'no-relative-import-paths/no-relative-import-paths': [
+				'warn',
+				{ allowSameFolder: true, rootDir: 'src', prefix: '@', allowedDepth: 2 },
+			],
 
 			'unused-imports/no-unused-vars': [
 				'warn',
@@ -68,4 +62,27 @@ export default [
 			],
 		},
 	},
-]
+	{
+		ignores: ['app/rhea-backend/**'],
+		plugins: {
+			react,
+			'react-hooks': reactHooks,
+		},
+		extends: [react.configs.flat.recommended, react.configs.flat['jsx-runtime']],
+		rules: {
+			...reactHooks.configs['recommended-latest'].rules,
+			'react-hooks/set-state-in-effect': 'off',
+			'react-hooks/refs': 'off',
+			'react-hooks/immutability': 'off',
+			'react-hooks/preserve-manual-memoization': 'off',
+		},
+		files: ['**/*.{ts,tsx}'],
+		settings: {
+			react: {
+				version: '19.x',
+			},
+		},
+	},
+	eslintConfigPrettier,
+	eslintPluginPrettierRecommended,
+)

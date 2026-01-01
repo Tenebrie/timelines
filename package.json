@@ -37,10 +37,10 @@
 		"build:calliope": "(cd app/calliope-websockets && yarn build)"
 	},
 	"dependencies": {
-		"@typescript-eslint/eslint-plugin": "^8.18.0",
-		"@typescript-eslint/parser": "^8.18.0",
+		"@typescript-eslint/eslint-plugin": "^8.51.0",
+		"@typescript-eslint/parser": "^8.51.0",
 		"cloc": "^2.8.0",
-		"eslint": "^8.57.1",
+		"eslint": "^9.39.2",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-node": "^11.1.0",
 		"eslint-plugin-prettier": "^5.2.1",
@@ -64,6 +64,11 @@
 	},
 	"homepage": "https://github.com/tenebrie/timelines#readme",
 	"devDependencies": {
-		"husky": "^9.1.7"
+		"eslint-plugin-mui-path-imports": "^0.0.15",
+		"eslint-plugin-no-relative-import-paths": "^1.6.1",
+		"eslint-plugin-react": "^7.37.5",
+		"eslint-plugin-react-hooks": "^7.0.1",
+		"husky": "^9.1.7",
+		"typescript-eslint": "^8.51.0"
 	}
 }

@@ -29,6 +29,12 @@ export const AssetService = {
 		})
 	},
 
+	deleteAsset: async (assetId: string) => {
+		return await getPrismaClient().asset.delete({
+			where: { id: assetId },
+		})
+	},
+
 	setUserAvatar: async (userId: string, assetId: string) => {
 		return await getPrismaClient().$transaction(async (prisma) => {
 			const asset = await prisma.asset.findUnique({
@@ -64,5 +70,15 @@ export const AssetService = {
 			},
 		})
 		return result._sum.size ?? 0
+	},
+
+	getExpiredAssets: async (currentDate: Date) => {
+		return await getPrismaClient().asset.findMany({
+			where: {
+				expiresAt: {
+					lt: currentDate,
+				},
+			},
+		})
 	},
 }

@@ -16,7 +16,11 @@ import {
 import { assetTag } from './utils/tags.js'
 import { AssetTypeValidator } from './validators/AssetTypeValidator.js'
 
-const router = new Router()
+const router = new Router().with(async (ctx) => {
+	return {
+		user: await useAuth(ctx, UserAuthenticator),
+	}
+})
 
 router.get('/api/assets/:assetId', async (ctx) => {
 	useApiEndpoint({
@@ -29,11 +33,31 @@ router.get('/api/assets/:assetId', async (ctx) => {
 		assetId: RequiredParam(StringValidator),
 	})
 
-	const user = await useAuth(ctx, UserAuthenticator)
-	await AuthorizationService.checkUserAssetAccess(user.id, assetId)
+	await AuthorizationService.checkUserAssetAccess(ctx.user.id, assetId)
 
 	const url = await CloudStorageService.getPresignedUrl(assetId)
 	return { url }
+})
+
+router.delete('/api/assets/:assetId', async (ctx) => {
+	useApiEndpoint({
+		name: 'deleteAsset',
+		description: 'Deletes an asset owned by the user.',
+		tags: [assetTag],
+	})
+
+	const { assetId } = usePathParams(ctx, {
+		assetId: RequiredParam(StringValidator),
+	})
+
+	await AuthorizationService.checkUserAssetAccess(ctx.user.id, assetId)
+
+	const asset = await AssetService.getAsset(assetId)
+	if (!asset) {
+		throw new Error('Asset not found')
+	}
+
+	await CloudStorageService.deleteAssetFile(asset)
 })
 
 router.get('/api/assets', async (ctx) => {
@@ -43,8 +67,7 @@ router.get('/api/assets', async (ctx) => {
 		tags: [assetTag],
 	})
 
-	const user = await useAuth(ctx, UserAuthenticator)
-	const assets = await AssetService.listUserAssets(user.id)
+	const assets = await AssetService.listUserAssets(ctx.user.id)
 	return { assets }
 })
 
@@ -61,12 +84,10 @@ router.post('/api/assets/upload/presigned', async (ctx) => {
 		assetType: RequiredParam(AssetTypeValidator),
 	})
 
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	await CloudStorageService.ensureStorageQuota(user, fileSize)
+	await CloudStorageService.ensureStorageQuota(ctx.user, fileSize)
 
 	const { asset, url, fields } = await CloudStorageService.createUploadPresignedUrl({
-		userId: user.id,
+		userId: ctx.user.id,
 		fileName,
 		fileSize,
 		assetType,
@@ -90,8 +111,7 @@ router.post('/api/assets/upload/finalize', async (ctx) => {
 		assetId: RequiredParam(StringValidator),
 	})
 
-	const user = await useAuth(ctx, UserAuthenticator)
-	await AuthorizationService.checkUserAssetAccess(user.id, assetId)
+	await AuthorizationService.checkUserAssetAccess(ctx.user.id, assetId)
 	return await CloudStorageService.finalizeAssetUpload(assetId)
 })
 

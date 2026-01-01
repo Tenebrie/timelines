@@ -15,6 +15,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { formatBytes } from '@/app/utils/formatBytes'
 
 export function StoragePage() {
@@ -78,6 +79,7 @@ export function StoragePageQuota() {
 
 export function StoragePageAssets() {
 	const { data: assetsData, isLoading } = useListUserAssetsQuery()
+	const { open: openDeleteAssetModal } = useModal('deleteAssetModal')
 
 	return (
 		<Stack spacing={2}>
@@ -114,13 +116,17 @@ export function StoragePageAssets() {
 												}}
 											/>
 										</IconButton>
-										<IconButton size="small" sx={{ width: 32, height: 32 }}>
-											<DeleteIcon
-												sx={{ cursor: 'pointer', color: 'error.main' }}
-												onClick={() => {
-													// TODO: Implement delete
-												}}
-											/>
+										<IconButton
+											size="small"
+											sx={{ width: 32, height: 32 }}
+											onClick={() => {
+												openDeleteAssetModal({
+													assetId: asset.id,
+													assetName: `${asset.originalFileName}${asset.originalFileExtension ? `.${asset.originalFileExtension}` : ''}`,
+												})
+											}}
+										>
+											<DeleteIcon sx={{ cursor: 'pointer', color: 'error.main' }} />
 										</IconButton>
 									</Stack>
 								</TableCell>

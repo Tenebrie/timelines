@@ -90,6 +90,11 @@ const modals = {
 	deleteAccountModal: {
 		isOpen: false as boolean,
 	},
+	deleteAssetModal: {
+		isOpen: false as boolean,
+		assetId: '' as string,
+		assetName: '' as string,
+	},
 } as const
 
 export const initialState = modals
