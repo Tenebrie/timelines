@@ -35,6 +35,12 @@ services:
                 failure_action: pause
         secrets:
             - environment
+        healthcheck:
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080"]
+            interval: 1m30s
+            timeout: 30s
+            retries: 2
+            start_period: 30s
     rhea:
         image: tenebrie/timelines-rhea:${VERSION}
         build:
