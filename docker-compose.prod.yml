@@ -30,7 +30,7 @@ services:
             replicas: 2
             update_config:
                 order: start-first
-                parallelism: 1
+                parallelism: 2
                 delay: 10s
                 failure_action: pause
         secrets:
