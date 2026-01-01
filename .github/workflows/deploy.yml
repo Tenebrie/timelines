@@ -42,6 +42,9 @@ jobs:
     permissions:
       packages: write
       contents: write
+    strategy:
+      matrix:
+        service: [gatekeeper, styx, rhea, calliope]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -69,12 +72,22 @@ jobs:
 
       - name: Build & Publish
         if: steps.check-container.outputs.missing == 'true'
-        run: yarn docker:prod:push
+        run: |
+          docker compose -f docker-compose.common.yml -f docker-compose.prod.yml build ${{ matrix.service }}
+          docker push tenebrie/timelines-${{ matrix.service }}:${{ needs.check-commits.outputs.version }}
         env:
           VERSION: ${{ needs.check-commits.outputs.version }}
 
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [check-commits, prepare-containers]
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
       - name: Create a Release
-        if: steps.check-container.outputs.missing == 'true'
         uses: elgohr/Github-Release-Action@v5
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -85,7 +98,7 @@ jobs:
   deploy-staging:
     name: Deploy to Staging
     runs-on: ubuntu-latest
-    needs: [check-commits, prepare-containers]
+    needs: [check-commits, prepare-containers, create-release]
     if: ${{ github.ref_name == 'dev' }}
     environment:
       name: staging
@@ -123,7 +136,7 @@ jobs:
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
-    needs: [check-commits, prepare-containers]
+    needs: [check-commits, prepare-containers, create-release]
     if: ${{ github.ref_name == 'main' }}
     environment:
       name: production
