@@ -6,6 +6,8 @@ if [[ -z "$VERSION" ]]; then
   exit 1
 fi
 
+docker system prune -f
+
 SERVICES=("timelines_rhea" "timelines_calliope" "timelines_styx")
 IMAGES=(
   "tenebrie/timelines-rhea:${VERSION}"
