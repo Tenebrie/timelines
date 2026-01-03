@@ -6,6 +6,6 @@ WORKDIR /app/rhea
 
 ADD ./app/rhea-backend /app/rhea
 ADD ./app/ts-shared /app/ts-shared
-RUN yarn && yarn prisma:generate && yarn build && yarn prune-build-modules
+RUN yarn && yarn prisma generate && yarn build && yarn prune-build-modules
 
 EXPOSE 3000

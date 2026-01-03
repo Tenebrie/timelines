@@ -5,11 +5,11 @@ cd ..
 
 . ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up --build -d
 
-(cd app/rhea-backend && yarn prisma:migrate)
+(cd app/rhea-backend && yarn prisma migrate status)
 exit_code=$?
 
 if [ $exit_code -eq 1 ]; then
-   (cd app/rhea-backend && yarn prisma:migrate:dev)
+   (cd app/rhea-backend && yarn prisma migrate dev)
 
    docker exec $(docker ps -qf "name=^timelines[-_]rhea[-_][0-9]+") yarn prisma generate
    docker exec $(docker ps -qf "name=^timelines[-_]rhea[-_][0-9]+") touch src/index.ts

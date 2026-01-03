@@ -257,7 +257,7 @@ User
 **Adding a New Entity Type:**
 
 1. Define Prisma schema in `/app/rhea-backend/prisma/schema/`
-2. Run migration: `yarn prisma:migrate:dev`
+2. Run migration: `yarn prisma migrate dev`
 3. Create Zod validation schema in `/app/rhea-backend/src/schema/`
 4. Create Koa router in `/app/rhea-backend/src/routers/`
 5. Register router in `/app/rhea-backend/src/index.ts`
@@ -269,8 +269,7 @@ User
 ```bash
 yarn                          # Install dependencies
 yarn docker                   # Start all services
-yarn prisma:migrate:dev       # Run migrations
-yarn db:seed                  # Create default user (admin@localhost / q)
+yarn prisma migrate dev       # Run migrations
 ```
 
 **Quick Update (app running):**
@@ -373,7 +372,7 @@ yarn docker:fullinstall       # Nuclear option when things break
 **Common Issues:**
 
 - **Docker containers won't start**: Try `yarn docker:fullinstall`
-- **Prisma types out of sync**: Run `yarn prisma:generate`
+- **Prisma types out of sync**: Run `yarn prisma generate`
 - **Frontend API types outdated**: Run `yarn openapi`
 - **Database migration issues**: Check migration files in `/app/rhea-backend/prisma/migrations/`
 - **WebSocket not connecting**: Check Calliope logs and Redis connection

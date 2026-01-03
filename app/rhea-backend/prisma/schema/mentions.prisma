@@ -1,36 +1,36 @@
 enum MentionedEntity {
-    Actor
-    Event
-    Article
-    Tag
+  Actor
+  Event
+  Article
+  Tag
 }
 
 model Mention {
-    sourceId String
-    targetId String
+  sourceId String
+  targetId String
 
-    sourceType MentionedEntity
-    targetType MentionedEntity
+  sourceType MentionedEntity
+  targetType MentionedEntity
 
-    sourceActorId   String?
-    sourceEventId   String?
-    sourceArticleId String?
-    sourceTagId     String?
+  sourceActorId   String?
+  sourceEventId   String?
+  sourceArticleId String?
+  sourceTagId     String?
 
-    targetActorId   String?
-    targetEventId   String?
-    targetArticleId String?
-    targetTagId     String?
+  targetActorId   String?
+  targetEventId   String?
+  targetArticleId String?
+  targetTagId     String?
 
-    sourceActor   Actor?       @relation(fields: [sourceActorId], references: [id], onDelete: Cascade, name: "ActorMentionSource")
-    sourceEvent   WorldEvent?  @relation(fields: [sourceEventId], references: [id], onDelete: Cascade, name: "EventMentionSource")
-    sourceArticle WikiArticle? @relation(fields: [sourceArticleId], references: [id], onDelete: Cascade, name: "ArticleMentionSource")
-    sourceTag     Tag?         @relation(fields: [sourceTagId], references: [id], onDelete: Cascade, name: "TagMentionSource")
+  sourceActor   Actor?       @relation(fields: [sourceActorId], references: [id], onDelete: Cascade, name: "ActorMentionSource")
+  sourceEvent   WorldEvent?  @relation(fields: [sourceEventId], references: [id], onDelete: Cascade, name: "EventMentionSource")
+  sourceArticle WikiArticle? @relation(fields: [sourceArticleId], references: [id], onDelete: Cascade, name: "ArticleMentionSource")
+  sourceTag     Tag?         @relation(fields: [sourceTagId], references: [id], onDelete: Cascade, name: "TagMentionSource")
 
-    targetActor   Actor?       @relation(fields: [targetActorId], references: [id], onDelete: Cascade, name: "ActorMentionTarget")
-    targetEvent   WorldEvent?  @relation(fields: [targetEventId], references: [id], onDelete: Cascade, name: "EventMentionTarget")
-    targetArticle WikiArticle? @relation(fields: [targetArticleId], references: [id], onDelete: Cascade, name: "ArticleMentionTarget")
-    targetTag     Tag?         @relation(fields: [targetTagId], references: [id], onDelete: Cascade, name: "TagMentionTarget")
+  targetActor   Actor?       @relation(fields: [targetActorId], references: [id], onDelete: Cascade, name: "ActorMentionTarget")
+  targetEvent   WorldEvent?  @relation(fields: [targetEventId], references: [id], onDelete: Cascade, name: "EventMentionTarget")
+  targetArticle WikiArticle? @relation(fields: [targetArticleId], references: [id], onDelete: Cascade, name: "ArticleMentionTarget")
+  targetTag     Tag?         @relation(fields: [targetTagId], references: [id], onDelete: Cascade, name: "TagMentionTarget")
 
-    @@unique([sourceId, targetId])
+  @@unique([sourceId, targetId])
 }

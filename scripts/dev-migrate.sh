@@ -3,7 +3,7 @@
 cd "${0%/*}"
 cd ..
 
-(cd app/rhea-backend && yarn prisma:migrate:dev)
+(cd app/rhea-backend && yarn prisma migrate dev)
 docker exec -it $(docker ps -qf "name=^timelines[-_]rhea.[0-9]+" | head -n 1) yarn prisma generate
 docker exec -it $(docker ps -qf "name=^timelines[-_]rhea.[0-9]+" | head -n 1) touch src/index.ts
 

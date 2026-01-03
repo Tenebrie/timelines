@@ -85,7 +85,7 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
-	contentType: 'ImageConversion' | 'Avatar'
+	contentType: 'Image' | 'Avatar'
 }
 export type RequestImageConversionApiArg = {
 	body: {

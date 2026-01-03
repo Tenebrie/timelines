@@ -1,35 +1,35 @@
 model Tag {
-    id        String   @id @unique @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @default(now()) @updatedAt
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
-    name String
+  name String
 
-    mentions    Mention[] @relation("TagMentionSource")
-    mentionedIn Mention[] @relation("TagMentionTarget")
+  mentions    Mention[] @relation("TagMentionSource")
+  mentionedIn Mention[] @relation("TagMentionTarget")
 
-    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
-    worldId String
+  world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  worldId String
 }
 
 model WikiArticle {
-    id        String   @id @unique @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @default(now()) @updatedAt
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
-    name        String
-    icon        String @default("default")
-    color       String @default("#000000")
-    contentRich String @default("")
-    position    Int    @default(0)
+  name        String
+  icon        String @default("default")
+  color       String @default("#000000")
+  contentRich String @default("")
+  position    Int    @default(0)
 
-    mentions    Mention[] @relation("ArticleMentionSource")
-    mentionedIn Mention[] @relation("ArticleMentionTarget")
+  mentions    Mention[] @relation("ArticleMentionSource")
+  mentionedIn Mention[] @relation("ArticleMentionTarget")
 
-    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
-    worldId String
+  world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  worldId String
 
-    parent   WikiArticle?  @relation("ArticleHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
-    parentId String?
-    children WikiArticle[] @relation("ArticleHierarchy")
+  parent   WikiArticle?  @relation("ArticleHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId String?
+  children WikiArticle[] @relation("ArticleHierarchy")
 }

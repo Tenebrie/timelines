@@ -13,6 +13,7 @@ export default tseslint.config(
 		ignores: [
 			'app/calliope-websockets/dist',
 			'app/rhea-backend/dist',
+			'app/rhea-backend/prisma',
 			'app/styx-frontend/build',
 			'app/ts-shared/dist',
 			'e2e/dist',
@@ -23,7 +24,7 @@ export default tseslint.config(
 	},
 	{
 		extends: [...tseslint.configs.recommended],
-		files: ['**/*.{mjs,js,ts,tsx}'],
+		files: ['**/*.{mjs,js,ts,tsx,json}'],
 		plugins: {
 			'simple-import-sort': simpleImportSort,
 			'unused-imports': unusedImports,

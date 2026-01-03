@@ -6,8 +6,7 @@ In most cases, the following commands are enough to have the entire environment 
 
 `yarn` <!-- Install dependencies -->
 `yarn docker` <!-- Run containers -->
-`yarn prisma:migrate:dev` <!-- Run migrations -->
-`yarn db:seed` <!-- Create the default user -->
+`yarn prisma migrate dev` <!-- Run migrations -->
 
 The default admin user is `admin@localhost` with password `q`.
 

@@ -88,7 +88,7 @@ export type PostLoginApiResponse = /** status 200  */ {
 			bucketKey: string
 			originalFileName: string
 			originalFileExtension: string
-			contentType: 'ImageConversion' | 'Avatar'
+			contentType: 'Image' | 'Avatar'
 		}
 	}
 	sessionId: string

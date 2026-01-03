@@ -1,104 +1,104 @@
 enum WorldCalendarType {
-    COUNTUP
-    EARTH
-    PF2E
-    RIMWORLD
-    EXETHER
+  COUNTUP
+  EARTH
+  PF2E
+  RIMWORLD
+  EXETHER
 }
 
 enum WorldAccessMode {
-    Private
-    PublicRead
-    PublicEdit
+  Private
+  PublicRead
+  PublicEdit
 }
 
 enum WorldEventType {
-    SCENE
-    OTHER
+  SCENE
+  OTHER
 }
 
 enum WorldEventField {
-    EventIcon
-    TargetActors
-    MentionedActors
-    ExternalLink
+  EventIcon
+  TargetActors
+  MentionedActors
+  ExternalLink
 }
 
 model World {
-    id        String   @id @unique @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @default(now()) @updatedAt
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
-    name        String
-    description String            @default("")
-    actors      Actor[]
-    events      WorldEvent[]
-    articles    WikiArticle[]
-    tags        Tag[]
-    calendar    WorldCalendarType @default(COUNTUP)
-    timeOrigin  BigInt            @default(0)
+  name        String
+  description String            @default("")
+  actors      Actor[]
+  events      WorldEvent[]
+  articles    WikiArticle[]
+  tags        Tag[]
+  calendar    WorldCalendarType @default(COUNTUP)
+  timeOrigin  BigInt            @default(0)
 
-    owner            User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-    ownerId          String
-    accessMode       WorldAccessMode     @default(Private)
-    collaborators    CollaboratingUser[]
-    worldEventTracks WorldEventTrack[]
-    mindmapNodes     MindmapNode[]
+  owner            User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId          String
+  accessMode       WorldAccessMode     @default(Private)
+  collaborators    CollaboratingUser[]
+  worldEventTracks WorldEventTrack[]
+  mindmapNodes     MindmapNode[]
 }
 
 model WorldEvent {
-    id        String   @id @unique @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    type            WorldEventType
-    icon            String            @default("default")
-    color           String            @default("#000000")
-    name            String
-    timestamp       BigInt
-    revokedAt       BigInt?
-    description     String            @default("")
-    descriptionRich String            @default("")
-    customName      Boolean           @default(false)
-    externalLink    String            @default("")
-    extraFields     WorldEventField[]
+  type            WorldEventType
+  icon            String            @default("default")
+  color           String            @default("#000000")
+  name            String
+  timestamp       BigInt
+  revokedAt       BigInt?
+  description     String            @default("")
+  descriptionRich String            @default("")
+  customName      Boolean           @default(false)
+  externalLink    String            @default("")
+  extraFields     WorldEventField[]
 
-    mentions    Mention[] @relation("EventMentionSource")
-    mentionedIn Mention[] @relation("EventMentionTarget")
+  mentions    Mention[] @relation("EventMentionSource")
+  mentionedIn Mention[] @relation("EventMentionTarget")
 
-    deltaStates WorldEventDelta[]
+  deltaStates WorldEventDelta[]
 
-    world             World            @relation(fields: [worldId], references: [id], onDelete: Cascade)
-    track             WorldEventTrack? @relation(fields: [worldEventTrackId], references: [id], onDelete: Cascade)
-    worldId           String
-    worldEventTrackId String?
+  world             World            @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  track             WorldEventTrack? @relation(fields: [worldEventTrackId], references: [id], onDelete: Cascade)
+  worldId           String
+  worldEventTrackId String?
 }
 
 model WorldEventDelta {
-    id        String   @id @unique @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @default(now()) @updatedAt
-    timestamp BigInt
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  timestamp BigInt
 
-    name            String?
-    description     String?
-    descriptionRich String?
+  name            String?
+  description     String?
+  descriptionRich String?
 
-    worldEventId String
-    worldEvent   WorldEvent @relation(fields: [worldEventId], references: [id], onDelete: Cascade)
+  worldEventId String
+  worldEvent   WorldEvent @relation(fields: [worldEventId], references: [id], onDelete: Cascade)
 }
 
 model WorldEventTrack {
-    id        String   @id @unique @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @default(now()) @updatedAt
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
-    name     String
-    position Int
-    visible  Boolean @default(true)
+  name     String
+  position Int
+  visible  Boolean @default(true)
 
-    events WorldEvent[]
+  events WorldEvent[]
 
-    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
-    worldId String
+  world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  worldId String
 }

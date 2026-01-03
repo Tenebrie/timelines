@@ -1,0 +1,6 @@
+{
+  "search.exclude": {
+    "app/rhea-backend/prisma/client": true
+  }
+}
+

@@ -54,7 +54,7 @@ export type ListUserAssetsApiResponse = /** status 200  */ {
 		bucketKey: string
 		originalFileName: string
 		originalFileExtension: string
-		contentType: 'ImageConversion' | 'Avatar'
+		contentType: 'Image' | 'Avatar'
 	}[]
 }
 export type ListUserAssetsApiArg = void
@@ -70,7 +70,7 @@ export type RequestPresignedUrlApiResponse = /** status 200  */ {
 		bucketKey: string
 		originalFileName: string
 		originalFileExtension: string
-		contentType: 'ImageConversion' | 'Avatar'
+		contentType: 'Image' | 'Avatar'
 	}
 	url: string
 	fields: {
@@ -81,7 +81,7 @@ export type RequestPresignedUrlApiArg = {
 	body: {
 		fileName: string
 		fileSize: number
-		assetType: 'ImageConversion' | 'Avatar'
+		assetType: 'Image' | 'Avatar'
 	}
 }
 export type FinalizeAssetUploadApiResponse = /** status 200  */ {
@@ -95,7 +95,7 @@ export type FinalizeAssetUploadApiResponse = /** status 200  */ {
 	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
-	contentType: 'ImageConversion' | 'Avatar'
+	contentType: 'Image' | 'Avatar'
 }
 export type FinalizeAssetUploadApiArg = {
 	body: {
