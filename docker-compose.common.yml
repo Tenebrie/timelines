@@ -28,5 +28,11 @@ services:
             POSTGRES_USER: docker
             POSTGRES_PASSWORD: docker
             POSTGRES_DB: db
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U docker -d db"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
     redis:
         image: redis:7-alpine

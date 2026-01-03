@@ -90,6 +90,18 @@ services:
         restart: on-failure
         networks:
             - dev_network
+    rhea-migrate:
+        build:
+            context: ./
+            dockerfile: ./app/rhea-backend/Dockerfile
+        environment:
+            DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
+        depends_on:
+            rhea-postgres:
+                condition: service_healthy
+        command: sh -c "yarn prisma migrate dev && yarn prisma db seed"
+        networks:
+            - dev_network
     redis:
         ports:
             - "6379:6379"

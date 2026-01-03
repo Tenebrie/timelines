@@ -1,0 +1,8 @@
+enum FlagValue {
+  DatabaseSeeded
+  FirstUserLoggedIn
+}
+
+model Flags {
+  value FlagValue @id
+}

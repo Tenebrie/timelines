@@ -55,6 +55,11 @@ export type UserAnnouncement = Prisma.UserAnnouncementModel
  */
 export type Asset = Prisma.AssetModel
 /**
+ * Model Flags
+ * 
+ */
+export type Flags = Prisma.FlagsModel
+/**
  * Model Mention
  * 
  */

@@ -11,6 +11,7 @@
 export type * from './models/Actor.js'
 export type * from './models/UserAnnouncement.js'
 export type * from './models/Asset.js'
+export type * from './models/Flags.js'
 export type * from './models/Mention.js'
 export type * from './models/MindmapNode.js'
 export type * from './models/User.js'

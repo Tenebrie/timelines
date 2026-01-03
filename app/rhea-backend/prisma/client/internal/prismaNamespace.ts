@@ -387,6 +387,7 @@ export const ModelName = {
   Actor: 'Actor',
   UserAnnouncement: 'UserAnnouncement',
   Asset: 'Asset',
+  Flags: 'Flags',
   Mention: 'Mention',
   MindmapNode: 'MindmapNode',
   User: 'User',
@@ -412,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "actor" | "userAnnouncement" | "asset" | "mention" | "mindmapNode" | "user" | "collaboratingUser" | "tag" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack"
+    modelProps: "actor" | "userAnnouncement" | "asset" | "flags" | "mention" | "mindmapNode" | "user" | "collaboratingUser" | "tag" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -635,6 +636,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AssetCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AssetCountAggregateOutputType> | number
+        }
+      }
+    }
+    Flags: {
+      payload: Prisma.$FlagsPayload<ExtArgs>
+      fields: Prisma.FlagsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FlagsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlagsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FlagsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlagsPayload>
+        }
+        findFirst: {
+          args: Prisma.FlagsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlagsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FlagsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlagsPayload>
+        }
+        findMany: {
+          args: Prisma.FlagsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlagsPayload>[]
+        }
+        create: {
+          args: Prisma.FlagsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlagsPayload>
+        }
+        createMany: {
+          args: Prisma.FlagsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FlagsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlagsPayload>[]
+        }
+        delete: {
+          args: Prisma.FlagsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlagsPayload>
+        }
+        update: {
+          args: Prisma.FlagsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlagsPayload>
+        }
+        deleteMany: {
+          args: Prisma.FlagsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FlagsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FlagsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlagsPayload>[]
+        }
+        upsert: {
+          args: Prisma.FlagsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FlagsPayload>
+        }
+        aggregate: {
+          args: Prisma.FlagsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFlags>
+        }
+        groupBy: {
+          args: Prisma.FlagsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FlagsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FlagsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FlagsCountAggregateOutputType> | number
         }
       }
     }
@@ -1463,6 +1538,13 @@ export const AssetScalarFieldEnum = {
 export type AssetScalarFieldEnum = (typeof AssetScalarFieldEnum)[keyof typeof AssetScalarFieldEnum]
 
 
+export const FlagsScalarFieldEnum = {
+  value: 'value'
+} as const
+
+export type FlagsScalarFieldEnum = (typeof FlagsScalarFieldEnum)[keyof typeof FlagsScalarFieldEnum]
+
+
 export const MentionScalarFieldEnum = {
   sourceId: 'sourceId',
   targetId: 'targetId',
@@ -1732,6 +1814,20 @@ export type ListEnumAssetStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
+ * Reference to a field of type 'FlagValue'
+ */
+export type EnumFlagValueFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FlagValue'>
+    
+
+
+/**
+ * Reference to a field of type 'FlagValue[]'
+ */
+export type ListEnumFlagValueFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FlagValue[]'>
+    
+
+
+/**
  * Reference to a field of type 'MentionedEntity'
  */
 export type EnumMentionedEntityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MentionedEntity'>
@@ -1954,6 +2050,7 @@ export type GlobalOmitConfig = {
   actor?: Prisma.ActorOmit
   userAnnouncement?: Prisma.UserAnnouncementOmit
   asset?: Prisma.AssetOmit
+  flags?: Prisma.FlagsOmit
   mention?: Prisma.MentionOmit
   mindmapNode?: Prisma.MindmapNodeOmit
   user?: Prisma.UserOmit

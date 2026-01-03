@@ -10,7 +10,7 @@
 		"build": "prisma generate && tsc -p . && tsc-alias -p tsconfig.json && copyfiles -u 2 src/assets/**/* dist/assets",
 		"lint": "eslint src/",
 		"lint-fix": "eslint src/ --fix",
-		"prod": "node dist/index.js",
+		"prod": "node dist/src/index.js",
 		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline",
 		"start": "nodemon --watch src --ext ts,js,json --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
 		"test": "vitest --run",
@@ -18,9 +18,6 @@
 	},
 	"lint-staged": {
 		"*.(ts)": "eslint --fix"
-	},
-	"prisma": {
-		"seed": "ts-node src/prisma/seed.ts"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.758.0",

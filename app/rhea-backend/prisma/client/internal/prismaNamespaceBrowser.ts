@@ -54,6 +54,7 @@ export const ModelName = {
   Actor: 'Actor',
   UserAnnouncement: 'UserAnnouncement',
   Asset: 'Asset',
+  Flags: 'Flags',
   Mention: 'Mention',
   MindmapNode: 'MindmapNode',
   User: 'User',
@@ -126,6 +127,13 @@ export const AssetScalarFieldEnum = {
 } as const
 
 export type AssetScalarFieldEnum = (typeof AssetScalarFieldEnum)[keyof typeof AssetScalarFieldEnum]
+
+
+export const FlagsScalarFieldEnum = {
+  value: 'value'
+} as const
+
+export type FlagsScalarFieldEnum = (typeof FlagsScalarFieldEnum)[keyof typeof FlagsScalarFieldEnum]
 
 
 export const MentionScalarFieldEnum = {

@@ -10,6 +10,15 @@ const prisma = new PrismaClient({
 })
 
 async function main() {
+	const databaseSeededFlag = await prisma.flags.findFirst({
+		where: {
+			value: 'DatabaseSeeded',
+		},
+	})
+	if (databaseSeededFlag) {
+		return
+	}
+
 	const hashedPassword = await bcrypt.hash('q', 8)
 	await prisma.user.create({
 		data: {
@@ -17,6 +26,12 @@ async function main() {
 			username: 'Administrator',
 			password: hashedPassword,
 			level: 'Admin',
+		},
+	})
+
+	await prisma.flags.create({
+		data: {
+			value: 'DatabaseSeeded',
 		},
 	})
 }

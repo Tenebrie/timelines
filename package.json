@@ -18,6 +18,7 @@
 		"docker:start": ". ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up --build",
 		"docker:build": ". ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml build --no-cache",
 		"docker:down": ". ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml down",
+		"docker:destroy": ". ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml down -v --rmi all --remove-orphans",
 		"docker:update": "./scripts/dev-install.sh",
 		"docker:fullinstall": "./scripts/dev-fullinstall.sh",
 		"docker:prod:push": "./scripts/docker-prod-push.sh",

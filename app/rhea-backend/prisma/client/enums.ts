@@ -35,6 +35,14 @@ export const AssetStatus = {
 export type AssetStatus = (typeof AssetStatus)[keyof typeof AssetStatus]
 
 
+export const FlagValue = {
+  DatabaseSeeded: 'DatabaseSeeded',
+  FirstUserLoggedIn: 'FirstUserLoggedIn'
+} as const
+
+export type FlagValue = (typeof FlagValue)[keyof typeof FlagValue]
+
+
 export const MentionedEntity = {
   Actor: 'Actor',
   Event: 'Event',

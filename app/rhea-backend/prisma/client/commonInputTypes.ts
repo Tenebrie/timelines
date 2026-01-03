@@ -193,6 +193,23 @@ export type EnumAssetStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumAssetStatusFilter<$PrismaModel>
 }
 
+export type EnumFlagValueFilter<$PrismaModel = never> = {
+  equals?: $Enums.FlagValue | Prisma.EnumFlagValueFieldRefInput<$PrismaModel>
+  in?: $Enums.FlagValue[] | Prisma.ListEnumFlagValueFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FlagValue[] | Prisma.ListEnumFlagValueFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFlagValueFilter<$PrismaModel> | $Enums.FlagValue
+}
+
+export type EnumFlagValueWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.FlagValue | Prisma.EnumFlagValueFieldRefInput<$PrismaModel>
+  in?: $Enums.FlagValue[] | Prisma.ListEnumFlagValueFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FlagValue[] | Prisma.ListEnumFlagValueFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFlagValueWithAggregatesFilter<$PrismaModel> | $Enums.FlagValue
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumFlagValueFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumFlagValueFilter<$PrismaModel>
+}
+
 export type EnumMentionedEntityFilter<$PrismaModel = never> = {
   equals?: $Enums.MentionedEntity | Prisma.EnumMentionedEntityFieldRefInput<$PrismaModel>
   in?: $Enums.MentionedEntity[] | Prisma.ListEnumMentionedEntityFieldRefInput<$PrismaModel>
@@ -574,6 +591,23 @@ export type NestedEnumAssetStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumAssetStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumAssetStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumFlagValueFilter<$PrismaModel = never> = {
+  equals?: $Enums.FlagValue | Prisma.EnumFlagValueFieldRefInput<$PrismaModel>
+  in?: $Enums.FlagValue[] | Prisma.ListEnumFlagValueFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FlagValue[] | Prisma.ListEnumFlagValueFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFlagValueFilter<$PrismaModel> | $Enums.FlagValue
+}
+
+export type NestedEnumFlagValueWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.FlagValue | Prisma.EnumFlagValueFieldRefInput<$PrismaModel>
+  in?: $Enums.FlagValue[] | Prisma.ListEnumFlagValueFieldRefInput<$PrismaModel>
+  notIn?: $Enums.FlagValue[] | Prisma.ListEnumFlagValueFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumFlagValueWithAggregatesFilter<$PrismaModel> | $Enums.FlagValue
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumFlagValueFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumFlagValueFilter<$PrismaModel>
 }
 
 export type NestedEnumMentionedEntityFilter<$PrismaModel = never> = {
