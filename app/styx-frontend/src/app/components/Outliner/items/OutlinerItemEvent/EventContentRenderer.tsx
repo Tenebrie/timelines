@@ -21,7 +21,7 @@ type Props = {
 
 export const EventContentRenderer = ({ event, active }: Props) => {
 	const { timeToLabel } = useWorldTime()
-	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
+	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
 	const scrollTimelineToEvent = useCallback(() => {
 		const scroll = TimelineState.scroll

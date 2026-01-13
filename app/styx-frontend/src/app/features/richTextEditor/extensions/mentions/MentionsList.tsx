@@ -39,8 +39,7 @@ export function MentionsListComponent({ editor }: Props) {
 	const quickCreateVisible = query.length > 0
 	const lastItemIndex = quickCreateVisible ? mentions.length + 2 : mentions.length - 1
 
-	useEventBusSubscribe({
-		event: 'richEditor/requestOpenMentions',
+	useEventBusSubscribe['richEditor/requestOpenMentions']({
 		callback: ({ query, screenPosTop, screenPosLeft }) => {
 			if (!editor) {
 				return
@@ -53,14 +52,12 @@ export function MentionsListComponent({ editor }: Props) {
 			})
 		},
 	})
-	useEventBusSubscribe({
-		event: 'richEditor/requestUpdateMentions',
+	useEventBusSubscribe['richEditor/requestUpdateMentions']({
 		callback: ({ query }) => {
 			setQuery(query)
 		},
 	})
-	useEventBusSubscribe({
-		event: 'richEditor/requestCloseMentions',
+	useEventBusSubscribe['richEditor/requestCloseMentions']({
 		callback: () => {
 			setVisible(false)
 			setSelectedIndex(0)
@@ -111,9 +108,11 @@ export function MentionsListComponent({ editor }: Props) {
 			.run()
 	}
 
-	useEventBusSubscribe({
-		event: 'richEditor/onKeyDown',
-		callback: async ({ key, shiftKey }) => {
+	useEventBusSubscribe['richEditor/onKeyDown']({
+		callback: async ({ editor: targetEditor, key, shiftKey }) => {
+			if (targetEditor !== editor) {
+				return
+			}
 			if (key === 'ArrowUp' || (key === 'Tab' && shiftKey)) {
 				setSelectedIndex((prev) => Math.max(prev - 1, 0))
 			} else if (key === 'ArrowDown' || key === 'Tab') {
@@ -136,7 +135,7 @@ export function MentionsListComponent({ editor }: Props) {
 			setSelectedIndex(0)
 		}
 		oldMentions.current = mentions
-	}, [mentions])
+	}, [mentions, visible])
 
 	return (
 		<Paper

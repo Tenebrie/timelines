@@ -107,10 +107,7 @@ export const MentionNode = Node.create({
 
 				const Component = () => {
 					useEffectOnce(() => {
-						dispatchEvent({
-							event: 'richEditor/mentionRender/onEnd',
-							params: { node },
-						})
+						dispatchEvent['richEditor/mentionRender/onEnd']({ node })
 					})
 
 					return (
@@ -136,37 +133,22 @@ export const MentionNode = Node.create({
 				},
 				{ timeout: 100 },
 			)
-			dispatchEvent({
-				event: 'richEditor/mentionRender/onStart',
-				params: { node: initialNode },
-			})
+			dispatchEvent['richEditor/mentionRender/onStart']({ node: initialNode })
 
 			return {
 				dom,
 				update: (node) => {
-					dispatchEvent({
-						event: 'richEditor/mentionRender/onEnd',
-						params: { node: lastNode },
-					})
+					dispatchEvent['richEditor/mentionRender/onEnd']({ node: lastNode })
 					lastNode = node
-					dispatchEvent({
-						event: 'richEditor/mentionRender/onStart',
-						params: { node },
-					})
+					dispatchEvent['richEditor/mentionRender/onStart']({ node })
 					rerender(node)
 					return true
 				},
 				destroy: () => {
-					dispatchEvent({
-						event: 'richEditor/mentionRender/onEnd',
-						params: { node: lastNode },
-					})
+					dispatchEvent['richEditor/mentionRender/onEnd']({ node: lastNode })
 					requestIdleCallback(() => {
 						root?.unmount()
-						dispatchEvent({
-							event: 'richEditor/mentionRender/onEnd',
-							params: { node: lastNode },
-						})
+						dispatchEvent['richEditor/mentionRender/onEnd']({ node: lastNode })
 					})
 				},
 			}

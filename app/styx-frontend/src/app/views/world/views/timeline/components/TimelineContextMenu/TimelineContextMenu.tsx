@@ -47,7 +47,7 @@ export const TimelineContextMenuComponent = () => {
 	)
 
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
-	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
+	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()
 

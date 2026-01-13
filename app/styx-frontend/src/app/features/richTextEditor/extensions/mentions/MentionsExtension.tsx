@@ -1,3 +1,4 @@
+import { Editor } from '@tiptap/core'
 import { SuggestionOptions } from '@tiptap/suggestion'
 
 import { dispatchEvent } from '@/app/features/eventBus'
@@ -7,51 +8,52 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 	render: () => {
 		const state = {
 			isOpen: false,
+			editor: null as Editor | null,
 		}
 
 		return {
 			onStart: (props) => {
 				state.isOpen = true
+				state.editor = props.editor
 				const pos = props.editor.view.coordsAtPos(props.range.from)
-				dispatchEvent({
-					event: 'richEditor/requestOpenMentions',
-					params: {
-						query: props.query,
-						screenPosTop: pos.top,
-						screenPosLeft: pos.left,
-					},
+				dispatchEvent['richEditor/requestOpenMentions']({
+					query: props.query,
+					screenPosTop: pos.top,
+					screenPosLeft: pos.left,
 				})
 			},
 
 			onUpdate(props) {
-				dispatchEvent({
-					event: 'richEditor/requestUpdateMentions',
-					params: { query: props.query },
+				dispatchEvent['richEditor/requestUpdateMentions']({
+					query: props.query,
 				})
 			},
 
 			onKeyDown(props) {
-				if (!state.isOpen) {
+				if (!state.isOpen || !state.editor) {
 					return false
 				}
 				if (props.event.key === 'Escape') {
 					state.isOpen = false
-					dispatchEvent({
-						event: 'richEditor/requestCloseMentions',
-						params: undefined,
-					})
+					dispatchEvent['richEditor/requestCloseMentions']()
 					return true
 				}
+				dispatchEvent['richEditor/onKeyDown']({
+					editor: state.editor,
+					key: props.event.key,
+					ctrlKey: props.event.ctrlKey,
+					shiftKey: props.event.shiftKey,
+					altKey: props.event.altKey,
+					metaKey: props.event.metaKey,
+				})
 				if (['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'PageUp', 'PageDown'].includes(props.event.key)) {
-					dispatchEvent({
-						event: 'richEditor/onKeyDown',
-						params: {
-							key: props.event.key,
-							ctrlKey: props.event.ctrlKey,
-							shiftKey: props.event.shiftKey,
-							altKey: props.event.altKey,
-							metaKey: props.event.metaKey,
-						},
+					dispatchEvent['richEditor/onKeyDown']({
+						editor: state.editor,
+						key: props.event.key,
+						ctrlKey: props.event.ctrlKey,
+						shiftKey: props.event.shiftKey,
+						altKey: props.event.altKey,
+						metaKey: props.event.metaKey,
 					})
 					return true
 				}
@@ -60,10 +62,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 
 			onExit() {
 				state.isOpen = false
-				dispatchEvent({
-					event: 'richEditor/requestCloseMentions',
-					params: undefined,
-				})
+				dispatchEvent['richEditor/requestCloseMentions']()
 			},
 		}
 	},

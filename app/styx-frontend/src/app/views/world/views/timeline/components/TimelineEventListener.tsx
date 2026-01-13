@@ -13,7 +13,7 @@ type Props = {
 }
 
 export function TimelineEventListener({ containerWidth }: Props) {
-	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
+	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 
@@ -28,8 +28,8 @@ export function TimelineEventListener({ containerWidth }: Props) {
 		},
 		[scaledTimeToRealTime, scrollTimelineTo, containerWidth],
 	)
-	useEventBusSubscribe({ event: 'timeline/requestScrollLeft', callback: () => onScrollFullPage('left') })
-	useEventBusSubscribe({ event: 'timeline/requestScrollRight', callback: () => onScrollFullPage('right') })
+	useEventBusSubscribe['timeline/requestScrollLeft']({ callback: () => onScrollFullPage('left') })
+	useEventBusSubscribe['timeline/requestScrollRight']({ callback: () => onScrollFullPage('right') })
 
 	useShortcut(Shortcut.ScrollTimelineLeft, () => onScrollFullPage('left'))
 	useShortcut(Shortcut.ScrollTimelineRight, () => onScrollFullPage('right'))

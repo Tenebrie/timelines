@@ -53,7 +53,7 @@ export const TimeMarker = ({ timestamp }: Props) => {
 		updatePosition(TimelineState.scroll)
 	}, [timestamp, updatePosition])
 
-	useEventBusSubscribe({ event: 'timeline/onScroll', callback: (newScroll) => updatePosition(newScroll) })
+	useEventBusSubscribe['timeline/onScroll']({ callback: (newScroll) => updatePosition(newScroll) })
 
 	return (
 		<ControlledScroller resetPeriod={EVENT_SCROLL_RESET_PERIOD}>

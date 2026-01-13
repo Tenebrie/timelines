@@ -67,7 +67,7 @@ export const TimeTravelModal = () => {
 		},
 	})
 
-	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
+	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
 	const onConfirm = useCallback(() => {
 		if (!isOpen) {

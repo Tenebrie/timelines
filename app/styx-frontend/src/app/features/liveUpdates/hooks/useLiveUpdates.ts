@@ -18,15 +18,14 @@ export const useLiveUpdates = () => {
 	const currentWebsocket = useRef<WebSocket | null>(null)
 	const heartbeatInterval = useRef<number | null>(null)
 	const backoffLevel = useRef<number>(-1)
-	useEventBusSubscribe({
-		event: 'calliope/requestSendMessage',
+	useEventBusSubscribe['calliope/requestSendMessage']({
 		callback: (message) => {
 			if (currentWebsocket.current?.readyState === WebSocket.OPEN) {
 				currentWebsocket.current?.send(JSON.stringify(message))
 			}
 		},
 	})
-	const notifyAboutReconnect = useEventBusDispatch({ event: 'calliope/onReconnected' })
+	const notifyAboutReconnect = useEventBusDispatch['calliope/onReconnected']()
 
 	const { showCalliopeConnectionAlert, hideCalliopeConnectionAlert } = authSlice.actions
 	const dispatch = useDispatch()

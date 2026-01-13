@@ -27,9 +27,9 @@ export const useLiveMessageHandlers = () => {
 
 	const { upsertCachedArticle } = useArticleApiCache()
 
-	const forceUpdateActor = useEventBusDispatch({ event: 'richEditor/forceUpdateActor' })
-	const forceUpdateEvent = useEventBusDispatch({ event: 'richEditor/forceUpdateEvent' })
-	const forceUpdateArticle = useEventBusDispatch({ event: 'richEditor/forceUpdateArticle' })
+	const forceUpdateActor = useEventBusDispatch['richEditor/forceUpdateActor']()
+	const forceUpdateEvent = useEventBusDispatch['richEditor/forceUpdateEvent']()
+	const forceUpdateArticle = useEventBusDispatch['richEditor/forceUpdateArticle']()
 
 	const updatedAtRef = useAutoRef(currentUpdatedAt)
 

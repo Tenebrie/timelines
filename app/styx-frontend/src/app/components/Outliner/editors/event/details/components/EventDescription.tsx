@@ -14,7 +14,7 @@ type Props = {
 
 export const EventDescription = ({ id, draft, autoFocus }: Props) => {
 	const { key, descriptionRich, setDescription, setDescriptionRich, setMentions } = draft
-	const requestFocus = useEventBusDispatch({ event: 'richEditor/requestFocus' })
+	const requestFocus = useEventBusDispatch['richEditor/requestFocus']()
 
 	const onDescriptionChange = useCallback(
 		(params: Parameters<RichTextEditorProps['onChange']>[0]) => {

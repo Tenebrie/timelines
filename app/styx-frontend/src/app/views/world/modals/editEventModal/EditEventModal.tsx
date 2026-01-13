@@ -55,7 +55,7 @@ export const EditEventModal = () => {
 				direction={'column'}
 				gap={2}
 				sx={{
-					height: '80vh',
+					height: '91vh',
 					display: 'flex',
 					flexDirection: 'column',
 				}}
@@ -67,10 +67,12 @@ export const EditEventModal = () => {
 					onClose={handleClose}
 				/>
 
-				{currentEntity?.type === 'event' && (
-					<EventDetails editedEvent={currentEntity.entity} autoFocus={isOpen} />
-				)}
-				{currentEntity?.type === 'actor' && <ActorDetails editedActor={currentEntity.entity} />}
+				<Stack direction="row" width="100%" height="100%" flexDirection="column">
+					{currentEntity?.type === 'event' && (
+						<EventDetails editedEvent={currentEntity.entity} autoFocus={isOpen} />
+					)}
+					{currentEntity?.type === 'actor' && <ActorDetails editedActor={currentEntity.entity} />}
+				</Stack>
 			</Stack>
 		</Modal>
 	)

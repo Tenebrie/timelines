@@ -28,16 +28,14 @@ export function useOutlinerHeightListener({ ref }: Props) {
 		[ref],
 	)
 
-	useEventBusSubscribe({
-		event: 'timeline/tracksDrawer/onResize',
+	useEventBusSubscribe['timeline/tracksDrawer/onResize']({
 		callback: ({ height }) => {
 			tracksHeightRef.current = height
 			onResize(Math.max(entityHeightRef.current, height))
 		},
 	})
 
-	useEventBusSubscribe({
-		event: 'timeline/eventDrawer/onResize',
+	useEventBusSubscribe['timeline/eventDrawer/onResize']({
 		callback: ({ height }) => {
 			entityHeightRef.current = height
 			onResize(Math.max(tracksHeightRef.current, height))

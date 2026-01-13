@@ -12,8 +12,8 @@ export function ActorRouterHotkeys() {
 	const navigate = useNavigate({ from: '/world/$worldId/mindmap' })
 	const { isOpen: isModalOpen } = useModal('editEventModal')
 
-	const requestFocus = useEventBusDispatch({ event: 'richEditor/requestFocus' })
-	const requestBlur = useEventBusDispatch({ event: 'richEditor/requestBlur' })
+	const requestFocus = useEventBusDispatch['richEditor/requestFocus']()
+	const requestBlur = useEventBusDispatch['richEditor/requestBlur']()
 
 	useEffect(() => {
 		if (!isModalOpen) {

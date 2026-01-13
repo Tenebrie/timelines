@@ -101,8 +101,7 @@ function TimelineEventPositionerComponent({
 	)
 	const position = calculatePosition(TimelineState.scroll)
 
-	useEventBusSubscribe({
-		event: 'timeline/onScroll',
+	useEventBusSubscribe['timeline/onScroll']({
 		callback: (newScroll) => {
 			const fixedPos = calculatePosition(newScroll)
 			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${fixedPos}px`) {

@@ -176,15 +176,13 @@ export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allo
 		editor?.setEditable(!isReadMode)
 	}, [editor, isReadMode])
 
-	useEventBusSubscribe({
-		event: 'richEditor/requestFocus',
+	useEventBusSubscribe['richEditor/requestFocus']({
 		callback: () => {
 			editor?.commands.focus()
 			editor?.commands.selectTextblockEnd()
 		},
 	})
-	useEventBusSubscribe({
-		event: 'richEditor/requestBlur',
+	useEventBusSubscribe['richEditor/requestBlur']({
 		callback: () => {
 			editor?.commands.blur()
 		},

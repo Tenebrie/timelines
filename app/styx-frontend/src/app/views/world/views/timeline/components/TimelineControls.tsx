@@ -11,9 +11,9 @@ import { useEventBusDispatch } from '@/app/features/eventBus'
 export const TimelineControls = memo(TimelineControlsComponent)
 
 function TimelineControlsComponent() {
-	const requestZoom = useEventBusDispatch({ event: 'timeline/requestZoom' })
-	const scrollTimelineLeft = useEventBusDispatch({ event: 'timeline/requestScrollLeft' })
-	const scrollTimelineRight = useEventBusDispatch({ event: 'timeline/requestScrollRight' })
+	const requestZoom = useEventBusDispatch['timeline/requestZoom']()
+	const scrollTimelineLeft = useEventBusDispatch['timeline/requestScrollLeft']()
+	const scrollTimelineRight = useEventBusDispatch['timeline/requestScrollRight']()
 
 	const [hover, setHover] = useState(false)
 

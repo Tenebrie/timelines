@@ -107,8 +107,7 @@ export function TimelineTracksItemComponent({
 		updateVisibleMarkersThrottled.current(track, containerWidth, realTimeToScaledTime, true)
 	}, [containerWidth, realTimeToScaledTime, track, updateVisibleMarkers, scaleLevel])
 
-	useEventBusSubscribe({
-		event: 'timeline/onScroll',
+	useEventBusSubscribe['timeline/onScroll']({
 		callback: updateVisibleMarkers,
 	})
 

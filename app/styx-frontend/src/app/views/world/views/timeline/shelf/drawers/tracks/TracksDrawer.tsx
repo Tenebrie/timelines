@@ -11,7 +11,7 @@ import { TracksDrawerHotkeys } from './TracksDrawerHotkeys'
 export const TracksDrawer = memo(TracksDrawerComponent)
 
 function TracksDrawerComponent() {
-	const notifyAboutHeightChange = useEventBusDispatch({ event: 'timeline/tracksDrawer/onResize' })
+	const notifyAboutHeightChange = useEventBusDispatch['timeline/tracksDrawer/onResize']()
 
 	const onResize = useRef(
 		debounce((h: number, v: boolean) => {

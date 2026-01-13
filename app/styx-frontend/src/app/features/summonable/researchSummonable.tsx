@@ -65,14 +65,11 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 
 	const summon = (target: HTMLElement, initialProps: unknown) => {
 		const event = { isHandled: false }
-		dispatchEvent({
-			event: 'summonable/requestSummon',
-			params: {
-				family,
-				element: target,
-				event,
-				props: initialProps,
-			},
+		dispatchEvent['summonable/requestSummon']({
+			family,
+			element: target,
+			event,
+			props: initialProps,
 		})
 
 		if (!event.isHandled) {
@@ -81,19 +78,17 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 	}
 
 	const update = (target: HTMLElement, props: unknown) => {
-		dispatchEvent({
-			event: 'summonable/requestUpdate',
-			params: { family, element: target, props },
+		dispatchEvent['summonable/requestUpdate']({
+			family,
+			element: target,
+			props,
 		})
 	}
 
 	const release = (element: HTMLElement) => {
-		dispatchEvent({
-			event: 'summonable/requestDismiss',
-			params: {
-				family,
-				element,
-			},
+		dispatchEvent['summonable/requestDismiss']({
+			family,
+			element,
 		})
 
 		waitingList[family] = waitingList[family].filter((e) => e.target !== element)
@@ -112,8 +107,7 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 		const propsRef = useAutoRef(props)
 		const targetElementRef = useAutoRef(targetElement)
 
-		useEventBusSubscribe({
-			event: 'summonable/requestSummon',
+		useEventBusSubscribe['summonable/requestSummon']({
 			condition: (params) =>
 				params.family === family && targetElementRef.current === undefined && !params.event.isHandled,
 			callback: (params) => {
@@ -125,8 +119,7 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 			},
 		})
 
-		useEventBusSubscribe({
-			event: 'summonable/requestUpdate',
+		useEventBusSubscribe['summonable/requestUpdate']({
 			condition: (params) => params.family === family && params.element === targetElementRef.current,
 			callback: (params) => {
 				setProps(params.props as SummonableProps)
@@ -172,8 +165,7 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 			}
 		}, [targetElement])
 
-		useEventBusSubscribe({
-			event: 'summonable/requestDismiss',
+		useEventBusSubscribe['summonable/requestDismiss']({
 			condition: (params) => params.family === family && params.element === targetElementRef.current,
 			callback: () => {
 				const newTarget = waitingList[family].pop()

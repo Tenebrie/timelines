@@ -54,8 +54,7 @@ export const ArticleDetails = () => {
 		autosave()
 	}
 
-	useEventBusSubscribe({
-		event: 'richEditor/forceUpdateArticle',
+	useEventBusSubscribe['richEditor/forceUpdateArticle']({
 		condition: (data) => data.articleId === article?.id,
 		callback: () => setKey((prev) => prev + 1),
 	})

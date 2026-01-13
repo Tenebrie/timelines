@@ -26,7 +26,7 @@ export const ModalWrapper = styled.div`
 
 export const ModalContainer = styled.div<{ $theme: CustomTheme }>`
 	padding: 32px 32px;
-	max-width: 768px;
+	max-width: 900px;
 	width: 100%;
 	background: ${(props) => props.$theme.custom.palette.background.modal};
 	border-radius: 8px;

@@ -12,7 +12,7 @@ type Props = {
 export const useTimelineHorizontalScroll = ({ containerRef }: Props) => {
 	const velocityRef = useRef(0)
 	const animationFrameRef = useRef<number | null>(null)
-	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
+	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
 	const handleScroll = useCallback(
 		(deltaY: number) => {

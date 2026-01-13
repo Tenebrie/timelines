@@ -10,9 +10,7 @@ type Props = {
 }
 
 export const ActorMentionChip = ({ actorId, actors }: Props) => {
-	const navigateTo = useEventBusDispatch({
-		event: 'world/requestNavigation',
-	})
+	const navigateTo = useEventBusDispatch['world/requestNavigation']()
 
 	const actor = actors.find((actor) => actor.id === actorId)
 	const actorName = actor ? `${actor.name}` : 'Unknown Actor'

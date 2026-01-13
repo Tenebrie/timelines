@@ -39,8 +39,7 @@ export function TimelineChainPositionerComponent({ entity, visible, realTimeToSc
 	const { hovered } = useHoveredTimelineMarker(entity)
 	const chainVisible = entity.markerType === 'issuedAt' || entity.markerType === 'deltaState' || hovered
 
-	useEventBusSubscribe({
-		event: 'timeline/onScroll',
+	useEventBusSubscribe['timeline/onScroll']({
 		callback: (newScroll) => {
 			if (!chainVisible) {
 				return

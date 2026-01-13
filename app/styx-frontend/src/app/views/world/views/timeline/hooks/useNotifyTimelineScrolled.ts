@@ -3,7 +3,7 @@ import { useCallback, useRef } from 'react'
 import { useEventBusDispatch } from '@/app/features/eventBus/eventBusDispatch'
 
 export const useNotifyTimelineScrolled = () => {
-	const notifyTimelineScrolled = useEventBusDispatch({ event: 'timeline/onScroll' })
+	const notifyTimelineScrolled = useEventBusDispatch['timeline/onScroll']()
 	const animationFrameRef = useRef<number | null>(null)
 	const targetScrollRef = useRef<number>(0)
 	const currentScrollRef = useRef<number>(0)

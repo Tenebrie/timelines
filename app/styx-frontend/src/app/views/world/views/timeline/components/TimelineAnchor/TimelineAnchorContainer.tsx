@@ -17,8 +17,7 @@ const RESET_PERIOD = 600
 export function TimelineAnchorContainer({ children }: Props) {
 	const ref = useRef<HTMLDivElement>(null)
 	const lastSeenScroll = useRef(0)
-	useEventBusSubscribe({
-		event: 'timeline/onScroll',
+	useEventBusSubscribe['timeline/onScroll']({
 		callback: (newScroll) => {
 			const fixedScroll = Math.floor(newScroll / RESET_PERIOD) * RESET_PERIOD + CONTROLLED_SCROLLER_SIZE
 			if (lastSeenScroll.current === fixedScroll) {

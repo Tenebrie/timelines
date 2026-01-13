@@ -28,7 +28,7 @@ function EventTracksMenuComponent() {
 	const { open: openEventTrackEdit } = useModal('eventTrackEdit')
 	const { open: openEventTrackWizard } = useModal('eventTrackWizard')
 
-	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
+	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
 	const [updateTrack] = useUpdateWorldEventTrackMutation()
 

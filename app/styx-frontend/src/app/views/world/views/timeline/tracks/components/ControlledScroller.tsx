@@ -18,8 +18,7 @@ export const ControlledScroller = ({ children, resetPeriod }: Props) => {
 
 	const mod = useCallback((n: number, m: number) => ((n % m) + m) % m, [])
 
-	useEventBusSubscribe({
-		event: 'timeline/onScroll',
+	useEventBusSubscribe['timeline/onScroll']({
 		callback: (newScroll) => {
 			if (!ref.current) {
 				return

@@ -24,7 +24,7 @@ export const World = () => {
 	const { worldId } = useStrictParams({
 		from: '/world/$worldId',
 	})
-	const sendCalliopeMessage = useEventBusDispatch({ event: 'calliope/requestSendMessage' })
+	const sendCalliopeMessage = useEventBusDispatch['calliope/requestSendMessage']()
 
 	useEffectOnce(() => {
 		sendCalliopeMessage({
@@ -40,8 +40,7 @@ export const World = () => {
 		}
 	})
 
-	useEventBusSubscribe({
-		event: 'calliope/onReconnected',
+	useEventBusSubscribe['calliope/onReconnected']({
 		callback: () => {
 			sendCalliopeMessage({
 				type: ClientToCalliopeMessageType.WORLD_SUBSCRIBE,

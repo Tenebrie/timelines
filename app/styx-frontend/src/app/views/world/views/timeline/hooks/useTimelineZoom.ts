@@ -159,8 +159,7 @@ export const useTimelineZoom = ({
 
 	const [requestedZoom, setRequestedZoom] = useState<number>(0)
 
-	useEventBusSubscribe({
-		event: 'timeline/requestZoom',
+	useEventBusSubscribe['timeline/requestZoom']({
 		callback: (props) => {
 			setRequestedZoom(props.direction === 'in' ? -1 : 1)
 		},

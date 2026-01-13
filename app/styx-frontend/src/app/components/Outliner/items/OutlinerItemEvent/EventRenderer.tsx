@@ -24,7 +24,7 @@ type Props = {
 
 export const EventRenderer = ({ event, collapsed, owningActor, short, active, actions }: Props) => {
 	const navigate = useNavigate({ from: '/world/$worldId' })
-	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
+	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
 	const dispatch = useDispatch()
 	const { collapseEventInOutliner, uncollapseEventInOutliner } = preferencesSlice.actions

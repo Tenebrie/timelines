@@ -5,8 +5,7 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 export const useNavigationReceiver = () => {
 	const navigate = useNavigate({ from: '/world/$worldId' })
 
-	useEventBusSubscribe({
-		event: 'world/requestNavigation',
+	useEventBusSubscribe['world/requestNavigation']({
 		callback: (params) => {
 			navigate({
 				search: true,

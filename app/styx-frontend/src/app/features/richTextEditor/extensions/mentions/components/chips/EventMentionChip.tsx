@@ -10,9 +10,7 @@ type Props = {
 }
 
 export const EventMentionChip = ({ eventId, events }: Props) => {
-	const navigateTo = useEventBusDispatch({
-		event: 'world/requestNavigation',
-	})
+	const navigateTo = useEventBusDispatch['world/requestNavigation']()
 
 	const event = events.find((event) => event.id === eventId)
 	const eventName = event ? `${event.name}` : 'Unknown Event'

@@ -96,8 +96,7 @@ export const useTimelineExternalScroll = ({
 	)
 
 	/* External scrollTo */
-	useEventBusSubscribe({
-		event: 'timeline/requestScrollTo',
+	useEventBusSubscribe['timeline/requestScrollTo']({
 		callback: (props) => {
 			if ('rawScrollValue' in props) {
 				scrollTo({

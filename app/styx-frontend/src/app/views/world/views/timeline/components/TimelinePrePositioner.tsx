@@ -18,7 +18,7 @@ export function TimelinePrePositioner({ setOpacity }: Props) {
 		getWorldState,
 		(a, b) => a.calendar === b.calendar && a.timeOrigin === b.timeOrigin && a.isLoaded === b.isLoaded,
 	)
-	const scrollTimelineTo = useEventBusDispatch({ event: 'timeline/requestScrollTo' })
+	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
 	const isShown = useRef(false)
 	useEffect(() => {
