@@ -17,6 +17,7 @@ export const useActorDraft = ({ actor }: Props) => {
 	const [key, setKey] = useState(0)
 	const [id, setIdDirect] = useState<string>(actor.id)
 	const [name, setNameDirect] = useState<string>(actor.name)
+	const [icon, setIconDirect] = useState<string>(actor.icon)
 	const [title, setTitleDirect] = useState<string>(actor.title)
 	const [color, setColorDirect] = useState<string>(actor.color)
 	const [mentions, setMentionsDirect] = useState<MentionDetails[]>(actor.mentions)
@@ -27,6 +28,7 @@ export const useActorDraft = ({ actor }: Props) => {
 		() => ({
 			setId: generateSetter(setIdDirect, makeDirty),
 			setName: generateSetter(setNameDirect, makeDirty),
+			setIcon: generateSetter(setIconDirect, makeDirty),
 			setTitle: generateSetter(setTitleDirect, makeDirty),
 			setColor: generateSetter(setColorDirect, makeDirty),
 			setMentions: generateSetter(setMentionsDirect, makeDirty),
@@ -40,6 +42,7 @@ export const useActorDraft = ({ actor }: Props) => {
 		(loadedState: {
 			id: string
 			name: string
+			icon: string
 			title: string
 			color: string
 			mentions: MentionDetails[]
@@ -49,6 +52,7 @@ export const useActorDraft = ({ actor }: Props) => {
 			setDirty(false)
 			setters.setId(loadedState.id, { cleanSet: true })
 			setters.setName(loadedState.name, { cleanSet: true })
+			setters.setIcon(loadedState.icon, { cleanSet: true })
 			setters.setTitle(loadedState.title, { cleanSet: true })
 			setters.setColor(loadedState.color, { cleanSet: true })
 			setters.setMentions(loadedState.mentions, { cleanSet: true })
@@ -71,13 +75,14 @@ export const useActorDraft = ({ actor }: Props) => {
 		return {
 			id,
 			name,
+			icon,
 			title,
 			color,
 			mentions,
 			description,
 			descriptionRich,
 		}
-	}, [id, name, title, color, mentions, description, descriptionRich])
+	}, [id, name, icon, title, color, mentions, description, descriptionRich])
 
 	if (currentId.current !== actor.id) {
 		loadActor(actor)
@@ -88,6 +93,7 @@ export const useActorDraft = ({ actor }: Props) => {
 		key,
 		id,
 		name,
+		icon,
 		title,
 		color,
 		mentions,

@@ -1,15 +1,15 @@
 import { WorldEvent } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import Collapse from '@mui/material/Collapse'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { useNavigate } from '@tanstack/react-router'
 import { memo } from 'react'
-import { useSelector } from 'react-redux'
 
 import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
+import { IconPicker } from '@/app/components/IconPicker/IconPicker'
 import { useUpsertEvent } from '@/app/components/Outliner/editors/event/details/draft/useUpsertEvent'
 import { useCurrentOrNewEvent } from '@/app/components/Outliner/editors/event/details/hooks/useCurrentOrNewEvent'
-import { getEditingPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
+import { EntityEditorTabs } from '@/app/features/entityEditor/components/EntityEditorTabs'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
 import { EventDescription } from './components/EventDescription'
@@ -27,10 +27,6 @@ export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
 	const { mode, event } = useCurrentOrNewEvent({ event: editedEvent })
 	const draft = useEventDraft({ event })
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
-	const { eventColorPickerOpen } = useSelector(
-		getEditingPreferences,
-		(a, b) => a.eventColorPickerOpen === b.eventColorPickerOpen,
-	)
 
 	useUpsertEvent({
 		mode,
@@ -38,34 +34,31 @@ export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
 		onCreate: (createdEvent) => {
 			navigate({
 				to: '/world/$worldId/timeline',
-				search: (prev) => ({ ...prev, selection: [`issuedAt-${createdEvent.id}`] }),
+				search: (prev) => ({ ...prev, navi: [`issuedAt-${createdEvent.id}`] }),
 			})
 		},
 	})
 
 	return (
 		<Stack
-			gap={1.2}
+			gap={1}
 			sx={{
 				height: '100%',
 				...useBrowserSpecificScrollbars(),
 			}}
 		>
 			<EventTitle event={event} draft={draft} />
-			<Box sx={{ paddingBottom: eventColorPickerOpen ? 1 : 0, transition: 'padding 300ms' }}>
-				<Collapse
-					in={eventColorPickerOpen}
-					sx={{ overflow: 'hidden' }}
-					timeout={300}
-					easing={'ease-in-out'}
-					mountOnEnter
-					unmountOnExit
-				>
-					<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
-				</Collapse>
-			</Box>
-			<Box flexGrow={1} sx={{ marginTop: -1, height: 0 }}>
-				<EventDescription draft={draft} autoFocus={autoFocus} />
+			<Box flexGrow={1} height={0}>
+				<EntityEditorTabs
+					contentTab={<EventDescription draft={draft} autoFocus={autoFocus} />}
+					illustrationTab={
+						<Stack gap={2} sx={{ height: '100%', overflow: 'auto' }}>
+							<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
+							<Divider />
+							<IconPicker color={draft.color} defaultQuery={draft.icon} onSelect={draft.setIcon} />
+						</Stack>
+					}
+				/>
 			</Box>
 		</Stack>
 	)

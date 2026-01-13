@@ -1,3 +1,4 @@
+import { Icon } from '@iconify/react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import styled, { CSSProperties } from 'styled-components'
@@ -17,6 +18,7 @@ export const Marker = styled(Button)`
 	min-width: 1px !important;
 	border-radius: 6px;
 	cursor: pointer;
+	padding: 0;
 	transition:
 		border-color 0.3s,
 		background-color 0.3s;
@@ -55,7 +57,17 @@ export function ColorIconPicker({ icon, color, onClick }: Props) {
 			}}
 		>
 			<Marker style={cssVariables} onClick={onClick}>
-				<div className="icon"></div>
+				<Icon
+					icon={icon === 'default' ? 'mdi:leaf' : icon}
+					color={baseColor}
+					style={{
+						position: 'absolute',
+						top: '2px',
+						left: '2px',
+						width: 'calc(100% - 2px)',
+						height: 'calc(100% - 2px)',
+					}}
+				/>
 			</Marker>
 		</Box>
 	)

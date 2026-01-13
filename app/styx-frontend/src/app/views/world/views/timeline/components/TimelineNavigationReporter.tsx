@@ -30,7 +30,7 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 		(time: number, track: string | undefined) => {
 			navigate({
 				to: '/world/$worldId/timeline',
-				search: (prev) => ({ ...prev, selection: [], time, new: undefined, track }),
+				search: (prev) => ({ ...prev, navi: [], time, new: undefined, track }),
 			})
 		},
 		[navigate],
@@ -40,7 +40,7 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 		(time: number, track: string | undefined) => {
 			scrollTimelineTo({ timestamp: time })
 			navigate({
-				search: (prev) => ({ ...prev, selection: [], time, new: 'event', track }),
+				search: (prev) => ({ ...prev, navi: [], time, new: 'event', track }),
 			})
 		},
 		[navigate, scrollTimelineTo],

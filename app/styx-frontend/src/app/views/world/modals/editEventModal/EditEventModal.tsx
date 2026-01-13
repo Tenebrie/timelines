@@ -21,7 +21,7 @@ export const EditEventModal = () => {
 		navigate({
 			search: (prev) => ({
 				...prev,
-				selection: newStack,
+				navi: newStack,
 				new: undefined,
 			}),
 		})
@@ -32,7 +32,7 @@ export const EditEventModal = () => {
 		navigate({
 			search: (prev) => ({
 				...prev,
-				selection: newStack,
+				navi: newStack,
 			}),
 		})
 	}
@@ -41,7 +41,7 @@ export const EditEventModal = () => {
 		navigate({
 			search: (prev) => ({
 				...prev,
-				selection: [],
+				navi: [],
 				new: undefined,
 			}),
 		})
@@ -55,7 +55,7 @@ export const EditEventModal = () => {
 				direction={'column'}
 				gap={2}
 				sx={{
-					height: '91vh',
+					height: '95vh',
 					display: 'flex',
 					flexDirection: 'column',
 				}}

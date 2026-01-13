@@ -22,11 +22,11 @@ export const EventMentionChip = ({ eventId, events }: Props) => {
 		}
 		navigateTo({
 			search: (prev) => {
-				const selection = [...(prev.selection ?? [])] as string[]
-				if (selection[selection.length - 1] !== eventId) {
-					selection.push(eventId)
+				const navi = [...(prev.navi ?? [])] as string[]
+				if (navi.length === 0 || !navi[navi.length - 1].includes(eventId)) {
+					navi.push(eventId)
 				}
-				return { ...prev, selection }
+				return { ...prev, navi }
 			},
 		})
 	}

@@ -22,11 +22,11 @@ export const ActorMentionChip = ({ actorId, actors }: Props) => {
 		}
 		navigateTo({
 			search: (prev) => {
-				const selection = [...(prev.selection ?? [])] as string[]
-				if (selection[selection.length - 1] !== actorId) {
-					selection.push(actorId)
+				const navi = [...(prev.navi ?? [])] as string[]
+				if (navi.length === 0 || !navi[navi.length - 1].includes(actorId)) {
+					navi.push(actorId)
 				}
-				return { ...prev, selection }
+				return { ...prev, navi }
 			},
 		})
 	}

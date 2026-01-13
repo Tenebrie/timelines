@@ -30,7 +30,7 @@ export const EventDescription = ({ id, draft, autoFocus }: Props) => {
 			// Small delay to ensure the editor is mounted
 			setTimeout(() => {
 				requestFocus()
-			}, 100)
+			}, 1)
 		}
 	}, [autoFocus, requestFocus])
 

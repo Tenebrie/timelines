@@ -36,7 +36,7 @@ function CreateEventButton() {
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
 
 	const onClick = useEvent(() => {
-		navigate({ to: '/world/$worldId/timeline', search: (prev) => ({ ...prev, new: 'event', selection: [] }) })
+		navigate({ to: '/world/$worldId/timeline', search: (prev) => ({ ...prev, new: 'event', navi: [] }) })
 	})
 
 	return (

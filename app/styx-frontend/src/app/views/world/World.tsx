@@ -97,7 +97,7 @@ function EntityModalReporter() {
 	const { isOpen, open, close } = useModal('editEventModal')
 	const { selectedEntityIds, creatingNew } = useSearch({
 		from: '/world/$worldId/_world',
-		select: (search) => ({ selectedEntityIds: search.selection, creatingNew: search.new }),
+		select: (search) => ({ selectedEntityIds: search.navi, creatingNew: search.new }),
 	})
 	const {
 		id: worldId,

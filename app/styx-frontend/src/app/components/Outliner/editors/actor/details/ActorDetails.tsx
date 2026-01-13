@@ -1,13 +1,15 @@
 import { Actor } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import Collapse from '@mui/material/Collapse'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { useNavigate } from '@tanstack/react-router'
 import { memo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
+import { IconPicker } from '@/app/components/IconPicker/IconPicker'
 import { ManualErrorBanner } from '@/app/components/ManualErrorBanner'
+import { EntityEditorTabs } from '@/app/features/entityEditor/components/EntityEditorTabs'
 import { getEditingPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
@@ -38,14 +40,14 @@ export function ActorDetailsComponent({ editedActor }: Props) {
 		onCreate: (createdActor) => {
 			navigate({
 				to: '/world/$worldId/mindmap',
-				search: (prev) => ({ ...prev, selection: [createdActor.id] }),
+				search: (prev) => ({ ...prev, navi: [createdActor.id] }),
 			})
 		},
 	})
 
 	return (
 		<Stack
-			gap={1.2}
+			gap={1}
 			sx={{
 				height: '100%',
 				...useBrowserSpecificScrollbars(),
@@ -54,24 +56,7 @@ export function ActorDetailsComponent({ editedActor }: Props) {
 			<ActorTitle draft={draft} />
 			<Box
 				sx={{
-					marginBottom: actorColorPickerOpen ? 0 : 0,
-					transition: 'margin 300ms',
-				}}
-			>
-				<Collapse
-					in={actorColorPickerOpen}
-					sx={{ overflow: 'hidden' }}
-					timeout={300}
-					easing={'ease-in-out'}
-					mountOnEnter
-					unmountOnExit
-				>
-					<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
-				</Collapse>
-			</Box>
-			<Box
-				sx={{
-					marginBottom: draft.description.length > 0 && draft.name.length === 0 ? 0 : -1.2,
+					marginBottom: draft.description.length > 0 && draft.name.length === 0 ? -1.5 : -1,
 					transition: 'margin 300ms',
 				}}
 			>
@@ -81,8 +66,19 @@ export function ActorDetailsComponent({ editedActor }: Props) {
 					severity="info"
 				/>
 			</Box>
-			<Box flexGrow={1} sx={{ marginTop: -1, height: 0 }}>
-				<ActorDescription draft={draft} />
+			<Box flexGrow={1} height="100%">
+				<EntityEditorTabs
+					contentTab={<ActorDescription draft={draft} />}
+					illustrationTab={
+						<>
+							<Stack gap={2}>
+								<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
+								<Divider />
+								<IconPicker color={draft.color} defaultQuery={draft.icon} onSelect={draft.setIcon} />
+							</Stack>
+						</>
+					}
+				/>
 			</Box>
 		</Stack>
 	)

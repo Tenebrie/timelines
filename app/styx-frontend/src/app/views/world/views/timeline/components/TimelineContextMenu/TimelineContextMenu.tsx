@@ -4,7 +4,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { useNavigate, useSearch } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { memo, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -13,6 +13,7 @@ import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import {
+	getSelectedMarkerKeys,
 	getTimelineContextMenuState,
 	getTimelineState,
 	getWorldState,
@@ -23,12 +24,8 @@ import { useTimelineContextMenuRequests } from './hooks/useTimelineContextMenuRe
 export const TimelineContextMenuComponent = () => {
 	const { timeToLabel } = useWorldTime()
 	const { id: worldId } = useSelector(getWorldState, (a, b) => a.id === b.id)
+	const selectedMarkerIds = useSelector(getSelectedMarkerKeys)
 	const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
-
-	const selectedMarkers = useSearch({
-		from: '/world/$worldId/_world',
-		select: (search) => search.selection,
-	})
 
 	const { clearSelections } = worldSlice.actions
 	const {
@@ -40,10 +37,10 @@ export const TimelineContextMenuComponent = () => {
 
 	const selectedMarker = useMemo(
 		() =>
-			selectedMarkers.length === 1
-				? (markers.find((marker) => marker.key === selectedMarkers[0]) ?? null)
+			selectedMarkerIds.length === 1
+				? (markers.find((marker) => marker.key === selectedMarkerIds[0]) ?? null)
 				: null,
-		[markers, selectedMarkers],
+		[markers, selectedMarkerIds],
 	)
 
 	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
@@ -65,7 +62,7 @@ export const TimelineContextMenuComponent = () => {
 		onClose()
 		navigate({
 			to: '/world/$worldId/timeline',
-			search: (prev) => ({ ...prev, time: selectedTime, new: 'event', selection: [] }),
+			search: (prev) => ({ ...prev, time: selectedTime, new: 'event', navi: [] }),
 		})
 		scrollTimelineTo({ timestamp: selectedTime })
 	}, [onClose, navigate, scrollTimelineTo, selectedTime])
@@ -120,7 +117,7 @@ export const TimelineContextMenuComponent = () => {
 	const onUnselectAll = useCallback(() => {
 		dispatch(clearSelections())
 		navigate({
-			search: (prev) => ({ ...prev, selection: [] }),
+			search: (prev) => ({ ...prev, navi: [] }),
 		})
 		onClose()
 	}, [clearSelections, dispatch, navigate, onClose])
@@ -198,12 +195,12 @@ export const TimelineContextMenuComponent = () => {
 			{!targetedMarker && selectedMarker && <Divider />}
 
 			{/* Click on timeline with at least one selected */}
-			{!targetedMarker && selectedMarkers.length > 0 && (
+			{!targetedMarker && selectedMarkerIds.length > 0 && (
 				<MenuItem onClick={onUnselectAll}>
 					<ListItemText primary="Unselect all" />
 				</MenuItem>
 			)}
-			{!targetedMarker && selectedMarkers.length > 0 && <Divider />}
+			{!targetedMarker && selectedMarkerIds.length > 0 && <Divider />}
 
 			{/* Click on timeline */}
 			{!targetedMarker && (

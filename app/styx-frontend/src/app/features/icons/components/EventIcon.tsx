@@ -1,3 +1,4 @@
+import { Icon } from '@iconify/react'
 import { useTheme } from '@mui/material/styles'
 
 import { useEventIcons } from '../hooks/useEventIcons'
@@ -12,11 +13,12 @@ export const EventIcon = ({ name, height }: Props) => {
 	const { getIconPath } = useEventIcons()
 
 	return (
-		<img
-			style={{ filter: theme.palette.mode === 'light' ? 'invert()' : '' }}
-			src={getIconPath(name)}
-			alt={`${name} icon`}
-			height={typeof height === 'number' ? `${height}px` : height}
-		/>
+		<Icon icon={name === 'default' ? 'mdi:leaf' : name} width={height} height={height} />
+		// <img
+		// 	style={{ filter: theme.palette.mode === 'light' ? 'invert()' : '' }}
+		// 	src={getIconPath(name)}
+		// 	alt={`${name} icon`}
+		// 	height={typeof height === 'number' ? `${height}px` : height}
+		// />
 	)
 }

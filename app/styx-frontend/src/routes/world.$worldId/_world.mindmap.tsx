@@ -3,9 +3,7 @@ import { z } from 'zod'
 
 import { MindmapView } from '@/app/views/world/views/mindmap/MindmapView'
 
-const mindmapSearchSchema = z.object({
-	selection: z.array(z.string()).default([]),
-})
+const mindmapSearchSchema = z.object({})
 
 export const Route = createFileRoute('/world/$worldId/_world/mindmap')({
 	component: RouteComponent,

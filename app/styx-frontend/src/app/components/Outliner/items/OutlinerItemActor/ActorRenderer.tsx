@@ -45,10 +45,7 @@ export const ActorRenderer = ({ actor, collapsed }: Props) => {
 				onClick={() => {
 					navigate({
 						to: '/world/$worldId/mindmap',
-						search: (prev) => ({ ...prev, selection: [actor.id] }),
-					})
-					requestIdleCallback(() => {
-						// openEditActorModal({ actorId: actor.id })
+						search: (prev) => ({ ...prev, navi: [actor.id] }),
 					})
 				}}
 			>

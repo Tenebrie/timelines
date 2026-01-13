@@ -87,14 +87,6 @@ export const EventTitle = ({ event, draft }: Props) => {
 					>
 						{timeLabel}
 					</Button>
-					{/* TODO: Add close button without breaking the drawer */}
-					{/* <Button
-						variant="contained"
-						size="small"
-						onClick={() => navigate({ search: (prev) => ({ ...prev, selection: [], new: false }) })}
-					>
-						<Close />
-					</Button> */}
 				</Stack>
 			)}
 			{editing && (

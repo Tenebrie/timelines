@@ -12,7 +12,7 @@ type Props = {
 export function ActorNodeHotkeys({ node }: Props) {
 	const selection = useSearch({
 		from: '/world/$worldId/_world/mindmap',
-		select: (search) => search.selection,
+		select: (search) => search.navi,
 	})
 	const navigate = useNavigate({
 		from: '/world/$worldId/mindmap',
@@ -26,7 +26,7 @@ export function ActorNodeHotkeys({ node }: Props) {
 			navigate({
 				search: (prev) => ({
 					...prev,
-					selection: [],
+					navi: [],
 				}),
 			})
 		},

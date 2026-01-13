@@ -57,7 +57,7 @@ export function ActorNodePositioner({ actor, node }: Props) {
 		navigate({
 			search: (prev) => ({
 				...prev,
-				selection: [actor.id],
+				navi: [actor.id],
 			}),
 		})
 	})

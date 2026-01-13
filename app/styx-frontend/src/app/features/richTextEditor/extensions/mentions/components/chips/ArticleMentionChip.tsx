@@ -24,7 +24,7 @@ export const ArticleMentionChip = ({ worldId, articleId, articles }: Props) => {
 			to: '/world/$worldId/wiki/$articleId',
 			params: { worldId, articleId },
 			search: (prev) => {
-				return { ...prev, selection: [] }
+				return { ...prev, navi: [] }
 			},
 		})
 	}

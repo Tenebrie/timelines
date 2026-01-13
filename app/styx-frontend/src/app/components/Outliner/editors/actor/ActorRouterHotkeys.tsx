@@ -24,7 +24,7 @@ export function ActorRouterHotkeys() {
 	useShortcut(Shortcut.CreateNew, () => {
 		navigate({
 			to: '/world/$worldId/mindmap',
-			search: (prev) => ({ ...prev, selection: [], new: 'actor' }),
+			search: (prev) => ({ ...prev, navi: [], new: 'actor' }),
 		})
 		requestFocus()
 	})
@@ -35,7 +35,7 @@ export function ActorRouterHotkeys() {
 			if (selectedMarkerIds.length > 0) {
 				navigate({
 					to: '/world/$worldId/mindmap',
-					search: (prev) => ({ ...prev, selection: [selectedMarkerIds[0]] }),
+					search: (prev) => ({ ...prev, navi: [selectedMarkerIds[0]] }),
 				})
 			}
 		},

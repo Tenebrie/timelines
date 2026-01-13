@@ -49,7 +49,7 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 						onClick={() => {
 							navigate({
 								to: '/world/$worldId/timeline',
-								search: (prev) => ({ ...prev, selection: [`issuedAt-${event.id}`] }),
+								search: (prev) => ({ ...prev, navi: [`issuedAt-${event.id}`] }),
 							})
 							scrollTimelineTo({ timestamp: event.timestamp })
 						}}

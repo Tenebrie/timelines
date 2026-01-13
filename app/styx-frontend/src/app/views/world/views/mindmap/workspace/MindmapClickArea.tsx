@@ -10,7 +10,7 @@ export function MindmapClickArea() {
 	const navigate = useNavigate({ from: '/world/$worldId/mindmap' })
 
 	const onClick = useEvent(() => {
-		navigate({ search: (prev) => ({ ...prev, selection: [], new: undefined }) })
+		navigate({ search: (prev) => ({ ...prev, navi: [], new: undefined }) })
 	})
 
 	const ref = useRef<HTMLDivElement>(null)

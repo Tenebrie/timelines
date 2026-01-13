@@ -7,7 +7,7 @@ import { World } from '@/app/views/world/World'
 
 const worldSearchSchema = z.object({
 	new: z.enum(['event', 'actor']).optional(),
-	selection: z.array(z.string()).default([]),
+	navi: z.array(z.string()).default([]),
 	time: z.number().min(-8640000000000000).max(8640000000000000).default(0),
 	scale: ScaleLevelSchema.default(loadPreferences().timeline.scaleLevel),
 	track: z.string().optional(),

@@ -89,7 +89,7 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 	}, [editor])
 
 	return (
-		<Paper sx={{ padding: '4px 8px', borderRadius: '6px' }}>
+		<Paper sx={{ padding: '4px 8px', borderRadius: '5px' }}>
 			<Stack direction="row" justifyContent="space-between">
 				<Stack direction="row" gap={0.75} flexWrap={'wrap'}>
 					{!isReadMode && (

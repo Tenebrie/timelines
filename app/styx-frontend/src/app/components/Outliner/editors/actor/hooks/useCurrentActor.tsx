@@ -7,7 +7,7 @@ import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 export const useCurrentActor = () => {
 	const selectedActorIds = useSearch({
 		from: '/world/$worldId/_world',
-		select: (search) => search.selection,
+		select: (search) => search.navi,
 	})
 	const { actors } = useSelector(getWorldState, (a, b) => a.actors === b.actors)
 

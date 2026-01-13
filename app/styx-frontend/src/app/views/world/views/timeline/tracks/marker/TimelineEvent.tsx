@@ -1,4 +1,5 @@
 import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
+import { Icon } from '@iconify/react'
 import Close from '@mui/icons-material/Close'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
@@ -57,7 +58,7 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 				search: (prev) => ({
 					...prev,
 					time: entity.markerPosition,
-					selection: [...(multiselect ? prev.selection : []), entity.key],
+					navi: [...(multiselect ? prev.navi : []), entity.key],
 				}),
 			})
 			dispatch(addTimelineMarkerToSelection({ ...entity, multiselect }))
@@ -160,7 +161,19 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 				selected,
 			})}
 		>
-			<MarkerIcon className="icon image"></MarkerIcon>
+			{/* <MarkerIcon className="icon image"></MarkerIcon> */}
+			<Icon
+				icon={entity.icon === 'default' ? 'mdi:leaf' : entity.icon}
+				color={color}
+				style={{
+					position: 'absolute',
+					top: '0px',
+					left: '0px',
+					width: '100%',
+					height: '100%',
+					pointerEvents: 'none',
+				}}
+			/>
 			{entity.markerType === 'revokedAt' && (
 				<MarkerIcon className="icon">
 					<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
