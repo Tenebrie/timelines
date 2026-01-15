@@ -7,7 +7,7 @@ import InputLabel from '@mui/material/InputLabel'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Stack from '@mui/material/Stack'
 
-import { useDebouncedState } from '@/app/hooks/useDebouncedState'
+import { useStateWithDebounceCallback } from '@/app/hooks/useStateWithDebounceCallback'
 
 type Props = {
 	initialQuery: string
@@ -15,7 +15,7 @@ type Props = {
 }
 
 export const SearchInput = ({ initialQuery, onChange }: Props) => {
-	const [query, setQuery, setQueryInstant] = useDebouncedState({
+	const [query, setQuery, setQueryInstant] = useStateWithDebounceCallback({
 		initialValue: initialQuery,
 		onDebounce: onChange,
 	})

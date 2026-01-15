@@ -17,13 +17,12 @@ const baseQuery = fetchBaseQuery({
 	},
 })
 
-// Wrap it to see what happens
 const debugBaseQuery: typeof baseQuery = async (args, api, extraOptions) => {
 	try {
 		const result = await baseQuery(args, api, extraOptions)
 		return result
 	} catch (e) {
-		console.log('fetchBaseQuery threw:', e)
+		console.error('fetchBaseQuery:', e)
 		throw e
 	}
 }

@@ -25,57 +25,57 @@ export { injectedRtkApi as worldListApi }
 export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
 		collaborators: {
-			worldId: string
 			userId: string
 			access: 'ReadOnly' | 'Editing'
+			worldId: string
 		}[]
 		description: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		ownerId: string
 		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
-		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	contributableWorlds: {
 		collaborators: {
-			worldId: string
 			userId: string
 			access: 'ReadOnly' | 'Editing'
+			worldId: string
 		}[]
 		description: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		ownerId: string
 		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
-		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	visibleWorlds: {
 		collaborators: {
-			worldId: string
 			userId: string
 			access: 'ReadOnly' | 'Editing'
+			worldId: string
 		}[]
 		description: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		ownerId: string
 		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
-		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 }
 export type GetWorldsApiArg = void
 export type CreateWorldApiResponse = /** status 200  */ {
-	id: string
 	name: string
+	id: string
 }
 export type CreateWorldApiArg = {
 	body: {
@@ -87,13 +87,13 @@ export type CreateWorldApiArg = {
 }
 export type DeleteWorldApiResponse = /** status 200  */ {
 	description: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
+	ownerId: string
 	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
-	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type DeleteWorldApiArg = {

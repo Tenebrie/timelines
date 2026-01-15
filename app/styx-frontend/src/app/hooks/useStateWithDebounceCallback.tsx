@@ -3,24 +3,24 @@ import { useCallback, useRef, useState } from 'react'
 
 type Props<T> = {
 	initialValue: T
-	onDebounce?: (value: T) => void
-	delay?: number
+	onDebounce: (value: T) => void
+	debounceTimeout?: number
 }
 
-export const useDebouncedState = <T,>({ initialValue, onDebounce, delay }: Props<T>) => {
+export const useStateWithDebounceCallback = <T,>({ initialValue, onDebounce, debounceTimeout }: Props<T>) => {
 	const [value, setValue] = useState(initialValue)
-	const [nextValue, setNextValue] = useState(initialValue)
+	const [debouncedValue, setDebouncedValue] = useState(initialValue)
 
 	const setValueExternal = useCallback((newValue: T) => {
-		setNextValue(newValue)
+		setValue(newValue)
 		emitPageDebounced.current(newValue)
 	}, [])
 
 	const setValueInstant = useCallback(
 		(newValue: T) => {
 			setValue(newValue)
-			setNextValue(newValue)
-			onDebounce?.(newValue)
+			setDebouncedValue(newValue)
+			onDebounce(newValue)
 			emitPageDebounced.current.cancel()
 		},
 		[onDebounce],
@@ -28,10 +28,10 @@ export const useDebouncedState = <T,>({ initialValue, onDebounce, delay }: Props
 
 	const emitPageDebounced = useRef(
 		debounce((newValue: T) => {
-			setValue(newValue)
-			onDebounce?.(newValue)
-		}, delay ?? 500),
+			setDebouncedValue(newValue)
+			onDebounce(newValue)
+		}, debounceTimeout ?? 500),
 	)
 
-	return [value, nextValue, setValueExternal, setValueInstant] as const
+	return [value, setValueExternal, setValueInstant] as const
 }

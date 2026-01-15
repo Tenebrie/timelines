@@ -16,8 +16,8 @@ COPY ./app/styx-frontend/yarn.lock /app/styx/
 RUN chown -R ${DOCKER_UID}:${DOCKER_GID} /app/styx
 
 USER ${DOCKER_UID}:${DOCKER_GID}
-ENV HOME /
-ENV TSR_TMP_DIR /app/styx/src/node_modules/.tanstack/tmp-docker
+ENV HOME=/
+ENV TSR_TMP_DIR=/app/styx/src/node_modules/.tanstack/tmp-docker
 
 ADD --chown=${DOCKER_UID}:${DOCKER_GID} ./app/ts-shared /app/ts-shared
 RUN --mount=type=cache,target=/.cache,uid=${DOCKER_UID},gid=${DOCKER_GID} (cd /app/ts-shared && yarn)

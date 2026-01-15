@@ -1,6 +1,6 @@
 import MuiPagination from '@mui/material/Pagination'
 
-import { useDebouncedState } from '@/app/hooks/useDebouncedState'
+import { useStateWithDebounceCallback } from '@/app/hooks/useStateWithDebounceCallback'
 
 type Props = {
 	initialPage: number
@@ -9,7 +9,7 @@ type Props = {
 }
 
 export const Pagination = ({ initialPage, pageCount, onChange }: Props) => {
-	const [page, setPage] = useDebouncedState({
+	const [page, setPage] = useStateWithDebounceCallback({
 		initialValue: initialPage,
 		onDebounce: onChange,
 	})

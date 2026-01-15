@@ -1,3 +1,4 @@
+import { iconifyApi, IconifyApiReducer } from '@api/iconify/iconifyApi'
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 
 import { baseApi, BaseApiReducer } from '../api/base/baseApi'
@@ -11,6 +12,8 @@ import { WorldReducer } from './views/world/WorldSlice'
 
 const rootReducer = combineReducers({
 	api: BaseApiReducer,
+	iconifyApi: IconifyApiReducer,
+
 	auth: AuthReducer,
 	modals: ModalsReducer,
 	world: WorldReducer,
@@ -24,7 +27,8 @@ const initialState = configureStore({ reducer: rootReducer }).getState()
 export const generateStore = ({ preloadedState }: { preloadedState?: Partial<RootState> } = {}) =>
 	configureStore({
 		reducer: rootReducer,
-		middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
+		middleware: (getDefaultMiddleware) =>
+			getDefaultMiddleware().concat(baseApi.middleware, iconifyApi.middleware),
 		preloadedState: deepMerge(initialState, preloadedState ?? {}),
 	})
 

@@ -1,41 +1,36 @@
+import { GetIconifyIconsResponse, useGetIconifyIconsQuery } from '@api/iconify/iconifyApi'
 import { IconifyInfo } from '@iconify/types'
-import { useCallback, useState } from 'react'
-
-type IconifyResult = {
-	icons: string[]
-	limit: number
-	start: number
-	total: number
-	request: Record<string, string>
-	collections: Record<string, IconifyInfo>
-}
+import { useEffect, useState } from 'react'
 
 type ParsedResult = {
 	collections: (IconifyInfo & { icons: string[] })[]
 }
 
-export function useIconifySearch() {
-	const [results, setResults] = useState<ParsedResult | null>(null)
-
-	const search = useCallback(async (query: string) => {
-		if (!query || !query.trim()) {
-			setResults(null)
-			return
-		}
-		const apiTarget = 'https://api.iconify.design/'
-		const t = new URL('/search', apiTarget)
-		t.searchParams.set('query', query)
-
-		const res = await fetch(t.toString())
-		const data = (await res.json()) as IconifyResult
-
-		setResults(parseResult(data))
-	}, [])
-
-	return { search, results }
+type Props = {
+	query: string
 }
 
-function parseResult(data: IconifyResult): ParsedResult {
+export function useIconifySearch({ query }: Props) {
+	const [results, setResults] = useState<ParsedResult | null>(null)
+	const { data } = useGetIconifyIconsQuery(
+		{
+			query,
+		},
+		{
+			skip: query.trim().length === 0,
+		},
+	)
+
+	useEffect(() => {
+		if (data) {
+			setResults(parseResult(data))
+		}
+	}, [data])
+
+	return { results }
+}
+
+function parseResult(data: GetIconifyIconsResponse): ParsedResult {
 	const collections: ParsedResult['collections'] = []
 
 	for (const [key, value] of Object.entries(data.collections)) {

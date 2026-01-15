@@ -1,6 +1,7 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { IconsService } from '@src/services/IconsService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { WorldService } from '@src/services/WorldService.js'
 import { WorldShareService } from '@src/services/WorldShareService.js'
@@ -130,6 +131,21 @@ router.get('/api/world/:worldId', async (ctx) => {
 		...worldDetails,
 		isReadOnly: !(await AuthorizationService.canUserEditWorld(worldDetails, user)),
 	}
+})
+
+router.get('/api/world/:worldId/icons/events/common', async (ctx) => {
+	useApiEndpoint({
+		name: 'getCommonWorldEventIcons',
+		description: 'Returns commonly used event icons for a world.',
+		tags: [worldDetailsTag],
+	})
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+	})
+
+	const collections = await IconsService.getCommonWorldEventIcons(worldId)
+	return { collections }
 })
 
 router.get('/api/world/:worldId/brief', async (ctx) => {

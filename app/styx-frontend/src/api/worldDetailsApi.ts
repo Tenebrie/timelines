@@ -18,6 +18,13 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}` }),
 				providesTags: ['worldDetails'],
 			}),
+			getCommonWorldEventIcons: build.query<
+				GetCommonWorldEventIconsApiResponse,
+				GetCommonWorldEventIconsApiArg
+			>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/icons/events/common` }),
+				providesTags: ['worldDetails'],
+			}),
 			getWorldBrief: build.query<GetWorldBriefApiResponse, GetWorldBriefApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/brief` }),
 				providesTags: ['worldDetails'],
@@ -49,10 +56,10 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	isReadOnly: boolean
 	actors: {
 		mentions: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceId: string
+			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceActorId?: null | string
 			sourceEventId?: null | string
 			sourceArticleId?: null | string
@@ -63,10 +70,10 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		mentionedIn: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceId: string
+			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceActorId?: null | string
 			sourceEventId?: null | string
 			sourceArticleId?: null | string
@@ -77,11 +84,11 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		description: string
-		worldId: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		worldId: string
 		title: string
 		icon: string
 		color: string
@@ -89,10 +96,10 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	}[]
 	events: {
 		mentions: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceId: string
+			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceActorId?: null | string
 			sourceEventId?: null | string
 			sourceArticleId?: null | string
@@ -103,10 +110,10 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		mentionedIn: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceId: string
+			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceActorId?: null | string
 			sourceEventId?: null | string
 			sourceArticleId?: null | string
@@ -118,25 +125,25 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		}[]
 		deltaStates: {
 			description?: null | string
+			name?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
-			name?: null | string
-			descriptionRich?: null | string
 			timestamp: string
+			descriptionRich?: null | string
 			worldEventId: string
 		}[]
 		description: string
-		type: 'SCENE' | 'OTHER'
-		worldId: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		worldId: string
+		timestamp: string
 		icon: string
 		color: string
 		descriptionRich: string
-		timestamp: string
+		type: 'SCENE' | 'OTHER'
 		revokedAt?: null | string
 		customName: boolean
 		externalLink: string
@@ -144,28 +151,40 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		worldEventTrackId?: null | string
 	}[]
 	description: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
+	ownerId: string
 	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
-	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type GetWorldInfoApiArg = {
 	/** Any string value */
 	worldId: string
 }
+export type GetCommonWorldEventIconsApiResponse = /** status 200  */ {
+	collections: {
+		id: string
+		name: string
+		icons: string[]
+		count: number
+	}[]
+}
+export type GetCommonWorldEventIconsApiArg = {
+	/** Any string value */
+	worldId: string
+}
 export type GetWorldBriefApiResponse = /** status 200  */ {
 	description: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
+	ownerId: string
 	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
-	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type GetWorldBriefApiArg = {
@@ -184,6 +203,8 @@ export const {
 	useUpdateWorldMutation,
 	useGetWorldInfoQuery,
 	useLazyGetWorldInfoQuery,
+	useGetCommonWorldEventIconsQuery,
+	useLazyGetCommonWorldEventIconsQuery,
 	useGetWorldBriefQuery,
 	useLazyGetWorldBriefQuery,
 	useSetWorldAccessModeMutation,
