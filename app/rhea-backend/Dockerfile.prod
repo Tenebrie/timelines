@@ -26,6 +26,7 @@ WORKDIR /app/rhea
 # Copy only the built JavaScript and necessary runtime files
 COPY --from=builder /app/rhea/dist /app/rhea/dist
 COPY --from=builder /app/rhea/prisma /app/rhea/prisma
+COPY --from=builder /app/rhea/prisma.config.ts /app/rhea/prisma.config.ts
 COPY --from=builder /app/rhea/package.json /app/rhea/yarn.lock /app/rhea/
 
 # Moonflower needs these at runtime for OpenAPI generation
