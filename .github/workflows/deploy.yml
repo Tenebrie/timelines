@@ -119,6 +119,9 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H $(doctl compute droplet get staging-manager-1 --format PublicIPv4 --no-header) >> ~/.ssh/known_hosts
 
+      - name: Checkout branch
+        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && git fetch && git checkout dev && git pull"
+
       - name: Backup Database
         run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && ./scripts/stack-create-db-backup.sh timelines-staging"
 
@@ -126,7 +129,7 @@ jobs:
         run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"
 
       - name: Run migrations
-        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && git fetch && git checkout dev && git pull && ./scripts/stack-migrate.sh"
+        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && ./scripts/stack-migrate.sh"
 
       - name: Update deployment status
         run: |
@@ -157,6 +160,9 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H $(doctl compute droplet get prod-manager-1 --format PublicIPv4 --no-header) >> ~/.ssh/known_hosts
 
+      - name: Checkout branch
+        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && git fetch && git checkout main && git pull"
+
       - name: Backup Database
         run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && ./scripts/stack-create-db-backup.sh timelines-prod"
 
@@ -164,7 +170,7 @@ jobs:
         run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"
 
       - name: Run migrations
-        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && git fetch && git checkout main && git pull && ./scripts/stack-migrate.sh"
+        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && ./scripts/stack-migrate.sh"
 
       - name: Update deployment status
         run: |
