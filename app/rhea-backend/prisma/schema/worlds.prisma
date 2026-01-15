@@ -38,12 +38,13 @@ model World {
   calendar    WorldCalendarType @default(COUNTUP)
   timeOrigin  BigInt            @default(0)
 
-  owner            User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId          String
-  accessMode       WorldAccessMode     @default(Private)
-  collaborators    CollaboratingUser[]
-  worldEventTracks WorldEventTrack[]
-  mindmapNodes     MindmapNode[]
+  owner               User                 @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId             String
+  accessMode          WorldAccessMode      @default(Private)
+  collaborators       CollaboratingUser[]
+  mindmapNodes        MindmapNode[]
+  worldEventTracks    WorldEventTrack[]
+  worldCommonIconSets WorldCommonIconSet[]
 }
 
 model WorldEvent {

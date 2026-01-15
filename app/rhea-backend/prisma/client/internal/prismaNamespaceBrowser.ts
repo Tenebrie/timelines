@@ -55,6 +55,8 @@ export const ModelName = {
   UserAnnouncement: 'UserAnnouncement',
   Asset: 'Asset',
   Flags: 'Flags',
+  UserFavoriteIconSet: 'UserFavoriteIconSet',
+  WorldCommonIconSet: 'WorldCommonIconSet',
   Mention: 'Mention',
   MindmapNode: 'MindmapNode',
   User: 'User',
@@ -134,6 +136,24 @@ export const FlagsScalarFieldEnum = {
 } as const
 
 export type FlagsScalarFieldEnum = (typeof FlagsScalarFieldEnum)[keyof typeof FlagsScalarFieldEnum]
+
+
+export const UserFavoriteIconSetScalarFieldEnum = {
+  id: 'id',
+  iconSet: 'iconSet',
+  userId: 'userId'
+} as const
+
+export type UserFavoriteIconSetScalarFieldEnum = (typeof UserFavoriteIconSetScalarFieldEnum)[keyof typeof UserFavoriteIconSetScalarFieldEnum]
+
+
+export const WorldCommonIconSetScalarFieldEnum = {
+  id: 'id',
+  iconSet: 'iconSet',
+  worldId: 'worldId'
+} as const
+
+export type WorldCommonIconSetScalarFieldEnum = (typeof WorldCommonIconSetScalarFieldEnum)[keyof typeof WorldCommonIconSetScalarFieldEnum]
 
 
 export const MentionScalarFieldEnum = {

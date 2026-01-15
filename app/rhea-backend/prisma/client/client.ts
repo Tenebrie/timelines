@@ -60,6 +60,16 @@ export type Asset = Prisma.AssetModel
  */
 export type Flags = Prisma.FlagsModel
 /**
+ * Model UserFavoriteIconSet
+ * 
+ */
+export type UserFavoriteIconSet = Prisma.UserFavoriteIconSetModel
+/**
+ * Model WorldCommonIconSet
+ * 
+ */
+export type WorldCommonIconSet = Prisma.WorldCommonIconSetModel
+/**
  * Model Mention
  * 
  */

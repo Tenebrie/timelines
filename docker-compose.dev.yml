@@ -1,6 +1,7 @@
 version: '3.8'
 services:
     gatekeeper:
+        image: timelines-gatekeeper:dev
         stop_grace_period: 0s
         build:
             context: ./app/gatekeeper-proxy
@@ -8,6 +9,7 @@ services:
         networks:
             - dev_network
     styx:
+        image: timelines-styx:dev
         build:
             context: ./
             args:
@@ -35,6 +37,7 @@ services:
         tty: true
         restart: on-failure
     rhea:
+        image: timelines-rhea:dev
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile
@@ -60,6 +63,7 @@ services:
         tty: true
         restart: on-failure
     calliope:
+        image: timelines-calliope:dev
         build:
             context: ./
             dockerfile: ./app/calliope-websockets/Dockerfile
@@ -91,6 +95,7 @@ services:
         networks:
             - dev_network
     rhea-migrate:
+        image: timelines-rhea:dev
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile
@@ -99,7 +104,7 @@ services:
         depends_on:
             rhea-postgres:
                 condition: service_healthy
-        command: sh -c "yarn prisma migrate dev && yarn prisma db seed"
+        command: sh -c "yarn prisma migrate deploy && yarn prisma db seed"
         networks:
             - dev_network
     redis:

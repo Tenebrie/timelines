@@ -226,6 +226,7 @@ export type UserWhereInput = {
   worlds?: Prisma.WorldListRelationFilter
   collaboratingIn?: Prisma.CollaboratingUserListRelationFilter
   assets?: Prisma.AssetListRelationFilter
+  favoriteIconSets?: Prisma.UserFavoriteIconSetListRelationFilter
   avatar?: Prisma.XOR<Prisma.AssetNullableScalarRelationFilter, Prisma.AssetWhereInput> | null
 }
 
@@ -244,6 +245,7 @@ export type UserOrderByWithRelationInput = {
   worlds?: Prisma.WorldOrderByRelationAggregateInput
   collaboratingIn?: Prisma.CollaboratingUserOrderByRelationAggregateInput
   assets?: Prisma.AssetOrderByRelationAggregateInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetOrderByRelationAggregateInput
   avatar?: Prisma.AssetOrderByWithRelationInput
 }
 
@@ -265,6 +267,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   worlds?: Prisma.WorldListRelationFilter
   collaboratingIn?: Prisma.CollaboratingUserListRelationFilter
   assets?: Prisma.AssetListRelationFilter
+  favoriteIconSets?: Prisma.UserFavoriteIconSetListRelationFilter
   avatar?: Prisma.XOR<Prisma.AssetNullableScalarRelationFilter, Prisma.AssetWhereInput> | null
 }, "id" | "id" | "email" | "avatarId">
 
@@ -314,6 +317,7 @@ export type UserCreateInput = {
   worlds?: Prisma.WorldCreateNestedManyWithoutOwnerInput
   collaboratingIn?: Prisma.CollaboratingUserCreateNestedManyWithoutUserInput
   assets?: Prisma.AssetCreateNestedManyWithoutOwnerInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetCreateNestedManyWithoutUserInput
   avatar?: Prisma.AssetCreateNestedOneWithoutAvatarOfInput
 }
 
@@ -332,6 +336,7 @@ export type UserUncheckedCreateInput = {
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutOwnerInput
   collaboratingIn?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutUserInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutOwnerInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -348,6 +353,7 @@ export type UserUpdateInput = {
   worlds?: Prisma.WorldUpdateManyWithoutOwnerNestedInput
   collaboratingIn?: Prisma.CollaboratingUserUpdateManyWithoutUserNestedInput
   assets?: Prisma.AssetUpdateManyWithoutOwnerNestedInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUpdateManyWithoutUserNestedInput
   avatar?: Prisma.AssetUpdateOneWithoutAvatarOfNestedInput
 }
 
@@ -366,6 +372,7 @@ export type UserUncheckedUpdateInput = {
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutOwnerNestedInput
   collaboratingIn?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutUserNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutOwnerNestedInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -515,6 +522,20 @@ export type UserUncheckedUpdateOneWithoutAvatarNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAvatarInput, Prisma.UserUpdateWithoutAvatarInput>, Prisma.UserUncheckedUpdateWithoutAvatarInput>
 }
 
+export type UserCreateNestedOneWithoutFavoriteIconSetsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFavoriteIconSetsInput, Prisma.UserUncheckedCreateWithoutFavoriteIconSetsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFavoriteIconSetsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFavoriteIconSetsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFavoriteIconSetsInput, Prisma.UserUncheckedCreateWithoutFavoriteIconSetsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFavoriteIconSetsInput
+  upsert?: Prisma.UserUpsertWithoutFavoriteIconSetsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFavoriteIconSetsInput, Prisma.UserUpdateWithoutFavoriteIconSetsInput>, Prisma.UserUncheckedUpdateWithoutFavoriteIconSetsInput>
+}
+
 export type EnumUserLevelFieldUpdateOperationsInput = {
   set?: $Enums.UserLevel
 }
@@ -560,6 +581,7 @@ export type UserCreateWithoutNotificationsInput = {
   worlds?: Prisma.WorldCreateNestedManyWithoutOwnerInput
   collaboratingIn?: Prisma.CollaboratingUserCreateNestedManyWithoutUserInput
   assets?: Prisma.AssetCreateNestedManyWithoutOwnerInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetCreateNestedManyWithoutUserInput
   avatar?: Prisma.AssetCreateNestedOneWithoutAvatarOfInput
 }
 
@@ -577,6 +599,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutOwnerInput
   collaboratingIn?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutUserInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutOwnerInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -608,6 +631,7 @@ export type UserUpdateWithoutNotificationsInput = {
   worlds?: Prisma.WorldUpdateManyWithoutOwnerNestedInput
   collaboratingIn?: Prisma.CollaboratingUserUpdateManyWithoutUserNestedInput
   assets?: Prisma.AssetUpdateManyWithoutOwnerNestedInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUpdateManyWithoutUserNestedInput
   avatar?: Prisma.AssetUpdateOneWithoutAvatarOfNestedInput
 }
 
@@ -625,6 +649,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutOwnerNestedInput
   collaboratingIn?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutUserNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutOwnerNestedInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAssetsInput = {
@@ -640,6 +665,7 @@ export type UserCreateWithoutAssetsInput = {
   notifications?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
   worlds?: Prisma.WorldCreateNestedManyWithoutOwnerInput
   collaboratingIn?: Prisma.CollaboratingUserCreateNestedManyWithoutUserInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetCreateNestedManyWithoutUserInput
   avatar?: Prisma.AssetCreateNestedOneWithoutAvatarOfInput
 }
 
@@ -657,6 +683,7 @@ export type UserUncheckedCreateWithoutAssetsInput = {
   notifications?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutOwnerInput
   collaboratingIn?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutUserInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAssetsInput = {
@@ -678,6 +705,7 @@ export type UserCreateWithoutAvatarInput = {
   worlds?: Prisma.WorldCreateNestedManyWithoutOwnerInput
   collaboratingIn?: Prisma.CollaboratingUserCreateNestedManyWithoutUserInput
   assets?: Prisma.AssetCreateNestedManyWithoutOwnerInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAvatarInput = {
@@ -694,6 +722,7 @@ export type UserUncheckedCreateWithoutAvatarInput = {
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutOwnerInput
   collaboratingIn?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutUserInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutOwnerInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAvatarInput = {
@@ -725,6 +754,7 @@ export type UserUpdateWithoutAssetsInput = {
   notifications?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
   worlds?: Prisma.WorldUpdateManyWithoutOwnerNestedInput
   collaboratingIn?: Prisma.CollaboratingUserUpdateManyWithoutUserNestedInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUpdateManyWithoutUserNestedInput
   avatar?: Prisma.AssetUpdateOneWithoutAvatarOfNestedInput
 }
 
@@ -742,6 +772,7 @@ export type UserUncheckedUpdateWithoutAssetsInput = {
   notifications?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutOwnerNestedInput
   collaboratingIn?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutUserNestedInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutAvatarInput = {
@@ -769,6 +800,7 @@ export type UserUpdateWithoutAvatarInput = {
   worlds?: Prisma.WorldUpdateManyWithoutOwnerNestedInput
   collaboratingIn?: Prisma.CollaboratingUserUpdateManyWithoutUserNestedInput
   assets?: Prisma.AssetUpdateManyWithoutOwnerNestedInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAvatarInput = {
@@ -781,6 +813,91 @@ export type UserUncheckedUpdateWithoutAvatarInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   bio?: Prisma.StringFieldUpdateOperationsInput | string
   level?: Prisma.EnumUserLevelFieldUpdateOperationsInput | $Enums.UserLevel
+  notifications?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
+  worlds?: Prisma.WorldUncheckedUpdateManyWithoutOwnerNestedInput
+  collaboratingIn?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutUserNestedInput
+  assets?: Prisma.AssetUncheckedUpdateManyWithoutOwnerNestedInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutFavoriteIconSetsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  email: string
+  username: string
+  password: string
+  bio?: string
+  level?: $Enums.UserLevel
+  notifications?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
+  worlds?: Prisma.WorldCreateNestedManyWithoutOwnerInput
+  collaboratingIn?: Prisma.CollaboratingUserCreateNestedManyWithoutUserInput
+  assets?: Prisma.AssetCreateNestedManyWithoutOwnerInput
+  avatar?: Prisma.AssetCreateNestedOneWithoutAvatarOfInput
+}
+
+export type UserUncheckedCreateWithoutFavoriteIconSetsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  deletedAt?: Date | string | null
+  email: string
+  username: string
+  password: string
+  bio?: string
+  level?: $Enums.UserLevel
+  avatarId?: string | null
+  notifications?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
+  worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutOwnerInput
+  collaboratingIn?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutUserInput
+  assets?: Prisma.AssetUncheckedCreateNestedManyWithoutOwnerInput
+}
+
+export type UserCreateOrConnectWithoutFavoriteIconSetsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFavoriteIconSetsInput, Prisma.UserUncheckedCreateWithoutFavoriteIconSetsInput>
+}
+
+export type UserUpsertWithoutFavoriteIconSetsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFavoriteIconSetsInput, Prisma.UserUncheckedUpdateWithoutFavoriteIconSetsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFavoriteIconSetsInput, Prisma.UserUncheckedCreateWithoutFavoriteIconSetsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFavoriteIconSetsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFavoriteIconSetsInput, Prisma.UserUncheckedUpdateWithoutFavoriteIconSetsInput>
+}
+
+export type UserUpdateWithoutFavoriteIconSetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.EnumUserLevelFieldUpdateOperationsInput | $Enums.UserLevel
+  notifications?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
+  worlds?: Prisma.WorldUpdateManyWithoutOwnerNestedInput
+  collaboratingIn?: Prisma.CollaboratingUserUpdateManyWithoutUserNestedInput
+  assets?: Prisma.AssetUpdateManyWithoutOwnerNestedInput
+  avatar?: Prisma.AssetUpdateOneWithoutAvatarOfNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFavoriteIconSetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  bio?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.EnumUserLevelFieldUpdateOperationsInput | $Enums.UserLevel
+  avatarId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notifications?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutOwnerNestedInput
   collaboratingIn?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutUserNestedInput
@@ -800,6 +917,7 @@ export type UserCreateWithoutCollaboratingInInput = {
   notifications?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
   worlds?: Prisma.WorldCreateNestedManyWithoutOwnerInput
   assets?: Prisma.AssetCreateNestedManyWithoutOwnerInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetCreateNestedManyWithoutUserInput
   avatar?: Prisma.AssetCreateNestedOneWithoutAvatarOfInput
 }
 
@@ -817,6 +935,7 @@ export type UserUncheckedCreateWithoutCollaboratingInInput = {
   notifications?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
   worlds?: Prisma.WorldUncheckedCreateNestedManyWithoutOwnerInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutOwnerInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCollaboratingInInput = {
@@ -848,6 +967,7 @@ export type UserUpdateWithoutCollaboratingInInput = {
   notifications?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
   worlds?: Prisma.WorldUpdateManyWithoutOwnerNestedInput
   assets?: Prisma.AssetUpdateManyWithoutOwnerNestedInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUpdateManyWithoutUserNestedInput
   avatar?: Prisma.AssetUpdateOneWithoutAvatarOfNestedInput
 }
 
@@ -865,6 +985,7 @@ export type UserUncheckedUpdateWithoutCollaboratingInInput = {
   notifications?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
   worlds?: Prisma.WorldUncheckedUpdateManyWithoutOwnerNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutOwnerNestedInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWorldsInput = {
@@ -880,6 +1001,7 @@ export type UserCreateWithoutWorldsInput = {
   notifications?: Prisma.UserAnnouncementCreateNestedManyWithoutUserInput
   collaboratingIn?: Prisma.CollaboratingUserCreateNestedManyWithoutUserInput
   assets?: Prisma.AssetCreateNestedManyWithoutOwnerInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetCreateNestedManyWithoutUserInput
   avatar?: Prisma.AssetCreateNestedOneWithoutAvatarOfInput
 }
 
@@ -897,6 +1019,7 @@ export type UserUncheckedCreateWithoutWorldsInput = {
   notifications?: Prisma.UserAnnouncementUncheckedCreateNestedManyWithoutUserInput
   collaboratingIn?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutUserInput
   assets?: Prisma.AssetUncheckedCreateNestedManyWithoutOwnerInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWorldsInput = {
@@ -928,6 +1051,7 @@ export type UserUpdateWithoutWorldsInput = {
   notifications?: Prisma.UserAnnouncementUpdateManyWithoutUserNestedInput
   collaboratingIn?: Prisma.CollaboratingUserUpdateManyWithoutUserNestedInput
   assets?: Prisma.AssetUpdateManyWithoutOwnerNestedInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUpdateManyWithoutUserNestedInput
   avatar?: Prisma.AssetUpdateOneWithoutAvatarOfNestedInput
 }
 
@@ -945,6 +1069,7 @@ export type UserUncheckedUpdateWithoutWorldsInput = {
   notifications?: Prisma.UserAnnouncementUncheckedUpdateManyWithoutUserNestedInput
   collaboratingIn?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutUserNestedInput
   assets?: Prisma.AssetUncheckedUpdateManyWithoutOwnerNestedInput
+  favoriteIconSets?: Prisma.UserFavoriteIconSetUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -957,6 +1082,7 @@ export type UserCountOutputType = {
   worlds: number
   collaboratingIn: number
   assets: number
+  favoriteIconSets: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -964,6 +1090,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   worlds?: boolean | UserCountOutputTypeCountWorldsArgs
   collaboratingIn?: boolean | UserCountOutputTypeCountCollaboratingInArgs
   assets?: boolean | UserCountOutputTypeCountAssetsArgs
+  favoriteIconSets?: boolean | UserCountOutputTypeCountFavoriteIconSetsArgs
 }
 
 /**
@@ -1004,6 +1131,13 @@ export type UserCountOutputTypeCountAssetsArgs<ExtArgs extends runtime.Types.Ext
   where?: Prisma.AssetWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFavoriteIconSetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserFavoriteIconSetWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1020,6 +1154,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   worlds?: boolean | Prisma.User$worldsArgs<ExtArgs>
   collaboratingIn?: boolean | Prisma.User$collaboratingInArgs<ExtArgs>
   assets?: boolean | Prisma.User$assetsArgs<ExtArgs>
+  favoriteIconSets?: boolean | Prisma.User$favoriteIconSetsArgs<ExtArgs>
   avatar?: boolean | Prisma.User$avatarArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -1071,6 +1206,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   worlds?: boolean | Prisma.User$worldsArgs<ExtArgs>
   collaboratingIn?: boolean | Prisma.User$collaboratingInArgs<ExtArgs>
   assets?: boolean | Prisma.User$assetsArgs<ExtArgs>
+  favoriteIconSets?: boolean | Prisma.User$favoriteIconSetsArgs<ExtArgs>
   avatar?: boolean | Prisma.User$avatarArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1088,6 +1224,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     worlds: Prisma.$WorldPayload<ExtArgs>[]
     collaboratingIn: Prisma.$CollaboratingUserPayload<ExtArgs>[]
     assets: Prisma.$AssetPayload<ExtArgs>[]
+    favoriteIconSets: Prisma.$UserFavoriteIconSetPayload<ExtArgs>[]
     avatar: Prisma.$AssetPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1499,6 +1636,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   worlds<T extends Prisma.User$worldsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$worldsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   collaboratingIn<T extends Prisma.User$collaboratingInArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$collaboratingInArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CollaboratingUserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assets<T extends Prisma.User$assetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$assetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  favoriteIconSets<T extends Prisma.User$favoriteIconSetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$favoriteIconSetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserFavoriteIconSetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   avatar<T extends Prisma.User$avatarArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$avatarArgs<ExtArgs>>): Prisma.Prisma__AssetClient<runtime.Types.Result.GetResult<Prisma.$AssetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2028,6 +2166,30 @@ export type User$assetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.AssetScalarFieldEnum | Prisma.AssetScalarFieldEnum[]
+}
+
+/**
+ * User.favoriteIconSets
+ */
+export type User$favoriteIconSetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserFavoriteIconSet
+   */
+  select?: Prisma.UserFavoriteIconSetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserFavoriteIconSet
+   */
+  omit?: Prisma.UserFavoriteIconSetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserFavoriteIconSetInclude<ExtArgs> | null
+  where?: Prisma.UserFavoriteIconSetWhereInput
+  orderBy?: Prisma.UserFavoriteIconSetOrderByWithRelationInput | Prisma.UserFavoriteIconSetOrderByWithRelationInput[]
+  cursor?: Prisma.UserFavoriteIconSetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserFavoriteIconSetScalarFieldEnum | Prisma.UserFavoriteIconSetScalarFieldEnum[]
 }
 
 /**

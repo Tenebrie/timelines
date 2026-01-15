@@ -11,7 +11,6 @@ import { memo, useState } from 'react'
 import { useCallback } from 'react'
 
 import { useDebounce } from '@/app/hooks/useDebounce'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 import { useIconifySearch } from './useIconifySearch'
 
@@ -24,13 +23,13 @@ type Props = {
 }
 
 export function IconPickerComponent({ defaultQuery, ...props }: Props) {
-	const baseQuery =
-		defaultQuery === 'default'
-			? 'leaf'
-			: defaultQuery.includes(':')
-				? defaultQuery.split(':')[1]
-				: defaultQuery
-	const [query, setQuery] = useState(baseQuery)
+	// const baseQuery =
+	// 	defaultQuery === 'default'
+	// 		? 'leaf'
+	// 		: defaultQuery.includes(':')
+	// 			? defaultQuery.split(':')[1]
+	// 			: defaultQuery
+	const [query, setQuery] = useState('')
 	const { search, results } = useIconifySearch()
 
 	const debouncedSearch = useDebounce(search, 300)
@@ -42,9 +41,9 @@ export function IconPickerComponent({ defaultQuery, ...props }: Props) {
 		},
 		[debouncedSearch],
 	)
-	useEffectOnce(() => {
-		handleSearch(baseQuery)
-	})
+	// useEffectOnce(() => {
+	// handleSearch(baseQuery)
+	// })
 
 	return (
 		<Stack gap={2}>

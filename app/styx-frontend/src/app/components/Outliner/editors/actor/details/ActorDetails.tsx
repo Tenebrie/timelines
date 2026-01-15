@@ -66,17 +66,17 @@ export function ActorDetailsComponent({ editedActor }: Props) {
 					severity="info"
 				/>
 			</Box>
-			<Box flexGrow={1} height="100%">
+			<Box flexGrow={1} height={0} sx={{ marginRight: 0 }}>
 				<EntityEditorTabs
 					contentTab={<ActorDescription draft={draft} />}
 					illustrationTab={
-						<>
-							<Stack gap={2}>
+						<Stack gap={2} sx={{ height: '100%', overflow: 'auto', marginRight: -0.5 }}>
+							<Stack gap={2} sx={{ marginRight: 2 }}>
 								<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
 								<Divider />
 								<IconPicker color={draft.color} defaultQuery={draft.icon} onSelect={draft.setIcon} />
 							</Stack>
-						</>
+						</Stack>
 					}
 				/>
 			</Box>

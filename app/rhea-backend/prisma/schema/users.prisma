@@ -26,7 +26,8 @@ model User {
   worlds          World[]
   collaboratingIn CollaboratingUser[]
 
-  assets Asset[]
+  assets           Asset[]
+  favoriteIconSets UserFavoriteIconSet[]
 
   avatar   Asset?  @relation("UserAvatar", fields: [avatarId], references: [id])
   avatarId String? @unique

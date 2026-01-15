@@ -388,6 +388,8 @@ export const ModelName = {
   UserAnnouncement: 'UserAnnouncement',
   Asset: 'Asset',
   Flags: 'Flags',
+  UserFavoriteIconSet: 'UserFavoriteIconSet',
+  WorldCommonIconSet: 'WorldCommonIconSet',
   Mention: 'Mention',
   MindmapNode: 'MindmapNode',
   User: 'User',
@@ -413,7 +415,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "actor" | "userAnnouncement" | "asset" | "flags" | "mention" | "mindmapNode" | "user" | "collaboratingUser" | "tag" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack"
+    modelProps: "actor" | "userAnnouncement" | "asset" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "user" | "collaboratingUser" | "tag" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -710,6 +712,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.FlagsCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.FlagsCountAggregateOutputType> | number
+        }
+      }
+    }
+    UserFavoriteIconSet: {
+      payload: Prisma.$UserFavoriteIconSetPayload<ExtArgs>
+      fields: Prisma.UserFavoriteIconSetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserFavoriteIconSetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserFavoriteIconSetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserFavoriteIconSetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserFavoriteIconSetPayload>
+        }
+        findFirst: {
+          args: Prisma.UserFavoriteIconSetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserFavoriteIconSetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserFavoriteIconSetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserFavoriteIconSetPayload>
+        }
+        findMany: {
+          args: Prisma.UserFavoriteIconSetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserFavoriteIconSetPayload>[]
+        }
+        create: {
+          args: Prisma.UserFavoriteIconSetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserFavoriteIconSetPayload>
+        }
+        createMany: {
+          args: Prisma.UserFavoriteIconSetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserFavoriteIconSetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserFavoriteIconSetPayload>[]
+        }
+        delete: {
+          args: Prisma.UserFavoriteIconSetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserFavoriteIconSetPayload>
+        }
+        update: {
+          args: Prisma.UserFavoriteIconSetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserFavoriteIconSetPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserFavoriteIconSetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserFavoriteIconSetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserFavoriteIconSetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserFavoriteIconSetPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserFavoriteIconSetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserFavoriteIconSetPayload>
+        }
+        aggregate: {
+          args: Prisma.UserFavoriteIconSetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserFavoriteIconSet>
+        }
+        groupBy: {
+          args: Prisma.UserFavoriteIconSetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserFavoriteIconSetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserFavoriteIconSetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserFavoriteIconSetCountAggregateOutputType> | number
+        }
+      }
+    }
+    WorldCommonIconSet: {
+      payload: Prisma.$WorldCommonIconSetPayload<ExtArgs>
+      fields: Prisma.WorldCommonIconSetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorldCommonIconSetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldCommonIconSetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorldCommonIconSetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldCommonIconSetPayload>
+        }
+        findFirst: {
+          args: Prisma.WorldCommonIconSetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldCommonIconSetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorldCommonIconSetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldCommonIconSetPayload>
+        }
+        findMany: {
+          args: Prisma.WorldCommonIconSetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldCommonIconSetPayload>[]
+        }
+        create: {
+          args: Prisma.WorldCommonIconSetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldCommonIconSetPayload>
+        }
+        createMany: {
+          args: Prisma.WorldCommonIconSetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WorldCommonIconSetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldCommonIconSetPayload>[]
+        }
+        delete: {
+          args: Prisma.WorldCommonIconSetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldCommonIconSetPayload>
+        }
+        update: {
+          args: Prisma.WorldCommonIconSetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldCommonIconSetPayload>
+        }
+        deleteMany: {
+          args: Prisma.WorldCommonIconSetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WorldCommonIconSetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WorldCommonIconSetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldCommonIconSetPayload>[]
+        }
+        upsert: {
+          args: Prisma.WorldCommonIconSetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldCommonIconSetPayload>
+        }
+        aggregate: {
+          args: Prisma.WorldCommonIconSetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorldCommonIconSet>
+        }
+        groupBy: {
+          args: Prisma.WorldCommonIconSetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorldCommonIconSetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorldCommonIconSetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorldCommonIconSetCountAggregateOutputType> | number
         }
       }
     }
@@ -1545,6 +1695,24 @@ export const FlagsScalarFieldEnum = {
 export type FlagsScalarFieldEnum = (typeof FlagsScalarFieldEnum)[keyof typeof FlagsScalarFieldEnum]
 
 
+export const UserFavoriteIconSetScalarFieldEnum = {
+  id: 'id',
+  iconSet: 'iconSet',
+  userId: 'userId'
+} as const
+
+export type UserFavoriteIconSetScalarFieldEnum = (typeof UserFavoriteIconSetScalarFieldEnum)[keyof typeof UserFavoriteIconSetScalarFieldEnum]
+
+
+export const WorldCommonIconSetScalarFieldEnum = {
+  id: 'id',
+  iconSet: 'iconSet',
+  worldId: 'worldId'
+} as const
+
+export type WorldCommonIconSetScalarFieldEnum = (typeof WorldCommonIconSetScalarFieldEnum)[keyof typeof WorldCommonIconSetScalarFieldEnum]
+
+
 export const MentionScalarFieldEnum = {
   sourceId: 'sourceId',
   targetId: 'targetId',
@@ -2051,6 +2219,8 @@ export type GlobalOmitConfig = {
   userAnnouncement?: Prisma.UserAnnouncementOmit
   asset?: Prisma.AssetOmit
   flags?: Prisma.FlagsOmit
+  userFavoriteIconSet?: Prisma.UserFavoriteIconSetOmit
+  worldCommonIconSet?: Prisma.WorldCommonIconSetOmit
   mention?: Prisma.MentionOmit
   mindmapNode?: Prisma.MindmapNodeOmit
   user?: Prisma.UserOmit

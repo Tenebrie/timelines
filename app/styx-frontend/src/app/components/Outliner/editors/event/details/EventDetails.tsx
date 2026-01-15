@@ -52,10 +52,12 @@ export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
 				<EntityEditorTabs
 					contentTab={<EventDescription draft={draft} autoFocus={autoFocus} />}
 					illustrationTab={
-						<Stack gap={2} sx={{ height: '100%', overflow: 'auto' }}>
-							<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
-							<Divider />
-							<IconPicker color={draft.color} defaultQuery={draft.icon} onSelect={draft.setIcon} />
+						<Stack gap={2} sx={{ height: '100%', overflow: 'auto', marginRight: -0.5 }}>
+							<Stack gap={2} sx={{ marginRight: 2 }}>
+								<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
+								<Divider />
+								<IconPicker color={draft.color} defaultQuery={draft.icon} onSelect={draft.setIcon} />
+							</Stack>
 						</Stack>
 					}
 				/>

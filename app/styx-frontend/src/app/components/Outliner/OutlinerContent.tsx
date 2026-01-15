@@ -48,7 +48,7 @@ export function OutlinerContentComponent() {
 
 	return (
 		<OutlinedContainer
-			label="World state"
+			label="Outliner"
 			fullHeight
 			style={{ pointerEvents: 'auto' }}
 			secondaryLabel={<CreateEntityButton />}
