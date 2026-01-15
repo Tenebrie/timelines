@@ -28,6 +28,10 @@ COPY --from=builder /app/rhea/dist /app/rhea/dist
 COPY --from=builder /app/rhea/prisma /app/rhea/prisma
 COPY --from=builder /app/rhea/package.json /app/rhea/yarn.lock /app/rhea/
 
+# Moonflower needs these at runtime for OpenAPI generation
+COPY --from=builder /app/rhea/tsconfig.json /app/rhea/tsconfig.json
+COPY --from=builder /app/rhea/src /app/rhea/src
+
 # Copy only ts-shared source (no node_modules)
 COPY ./app/ts-shared/package.json /app/ts-shared/package.json
 COPY ./app/ts-shared/src /app/ts-shared/src
