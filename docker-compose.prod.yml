@@ -23,9 +23,7 @@ services:
             dockerfile: ./app/styx-frontend/Dockerfile.prod
             args:
                 VERSION: ${VERSION}
-        environment:
-            NODE_ENV: production # Prod or staging
-        command: yarn prod
+        # nginx runs automatically, no command needed
         deploy:
             replicas: 2
             update_config:

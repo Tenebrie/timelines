@@ -1,11 +1,32 @@
-FROM node:24-alpine
+# Build stage
+FROM node:24-alpine AS builder
 
 ARG VERSION=dev
 ENV VERSION=${VERSION}
 
-WORKDIR /app/styx
+WORKDIR /app
 
-ADD ./app/styx-frontend /app/styx
-ADD ./app/ts-shared /app/ts-shared
+# Copy and build ts-shared first
+COPY ./app/ts-shared /app/ts-shared
+RUN cd /app/ts-shared && yarn install --frozen-lockfile
+
+# Copy package files and install ALL dependencies (needed for build)
+COPY ./app/styx-frontend/package.json ./app/styx-frontend/yarn.lock /app/styx/
 COPY .prettierrc.js /app/styx
-RUN yarn && yarn build:ci && yarn prune-build-modules
+WORKDIR /app/styx
+RUN yarn install --frozen-lockfile
+
+# Copy source files and build
+COPY ./app/styx-frontend /app/styx
+RUN yarn build:ci
+
+# Production stage - use nginx to serve static files (much smaller!)
+FROM nginx:alpine
+
+# Copy built static files to nginx
+COPY --from=builder /app/styx/build /usr/share/nginx/html
+
+# Copy custom nginx config for SPA routing
+COPY ./app/styx-frontend/nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 8080

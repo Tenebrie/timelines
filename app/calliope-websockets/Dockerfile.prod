@@ -1,9 +1,35 @@
+# Build stage
+FROM node:24-alpine AS builder
+
+WORKDIR /app
+
+# Copy and build ts-shared first
+COPY ./app/ts-shared /app/ts-shared
+RUN cd /app/ts-shared && yarn install --frozen-lockfile
+
+# Copy package files and install ALL dependencies (needed for build)
+COPY ./app/calliope-websockets/package.json ./app/calliope-websockets/yarn.lock /app/calliope/
+WORKDIR /app/calliope
+RUN yarn install --frozen-lockfile
+
+# Copy source files and build
+COPY ./app/calliope-websockets /app/calliope
+RUN yarn build
+
+# Production stage
 FROM node:24-alpine
 
 WORKDIR /app/calliope
 
-ADD ./app/calliope-websockets /app/calliope
-ADD ./app/ts-shared /app/ts-shared
-RUN yarn && yarn build && yarn prune-build-modules
+# Copy only the built JavaScript
+COPY --from=builder /app/calliope/dist /app/calliope/dist
+COPY --from=builder /app/calliope/package.json /app/calliope/yarn.lock /app/calliope/
+
+# Copy only ts-shared source (no node_modules)
+COPY ./app/ts-shared/package.json /app/ts-shared/package.json
+COPY ./app/ts-shared/src /app/ts-shared/src
+
+# Install ONLY production dependencies
+RUN yarn install --production --frozen-lockfile && yarn cache clean
 
 EXPOSE 3000
