@@ -84,10 +84,10 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		description: string
-		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
 		worldId: string
 		title: string
 		icon: string
@@ -125,25 +125,25 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		}[]
 		deltaStates: {
 			description?: null | string
-			name?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
+			name?: null | string
 			timestamp: string
 			descriptionRich?: null | string
 			worldEventId: string
 		}[]
 		description: string
-		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
+		type: 'SCENE' | 'OTHER'
 		worldId: string
 		timestamp: string
 		icon: string
 		color: string
 		descriptionRich: string
-		type: 'SCENE' | 'OTHER'
 		revokedAt?: null | string
 		customName: boolean
 		externalLink: string
@@ -151,13 +151,13 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		worldEventTrackId?: null | string
 	}[]
 	description: string
-	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	ownerId: string
+	name: string
 	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
+	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type GetWorldInfoApiArg = {
@@ -170,6 +170,7 @@ export type GetCommonWorldEventIconsApiResponse = /** status 200  */ {
 		name: string
 		icons: string[]
 		count: number
+		procedural: boolean
 	}[]
 }
 export type GetCommonWorldEventIconsApiArg = {
@@ -178,13 +179,13 @@ export type GetCommonWorldEventIconsApiArg = {
 }
 export type GetWorldBriefApiResponse = /** status 200  */ {
 	description: string
-	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	ownerId: string
+	name: string
 	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
+	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type GetWorldBriefApiArg = {

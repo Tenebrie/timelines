@@ -1,13 +1,13 @@
 import { useGetCommonWorldEventIconsQuery } from '@api/worldDetailsApi'
-import Input from '@mui/material/Input'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useDebouncedState } from '@/app/hooks/useDebouncedState'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 import { IconCollection } from './components/IconCollection'
+import { IconSearchInput } from './components/IconSearchInput'
 import { useIconifySearch } from './useIconifySearch'
 
 export const IconPicker = memo(IconPickerComponent)
@@ -20,19 +20,32 @@ type Props = {
 
 export function IconPickerComponent(props: Props) {
 	const worldId = useSelector(getWorldIdState)
-	const [query, currentQuery, setQuery] = useDebouncedState({
-		initialValue: '',
-	})
+	const [query, setQuery] = useState('')
+
 	const { results } = useIconifySearch({ query })
 	const { data: commonEventIcons } = useGetCommonWorldEventIconsQuery({ worldId })
-	const shownIcons = query.length > 0 ? results : commonEventIcons
+	const shownFavoriteSets = query.length > 0 ? results?.collections.filter((set) => set.favorite) : []
+	const shownOtherSets =
+		query.length > 0 ? results?.collections.filter((set) => !set.favorite) : commonEventIcons?.collections
 
 	return (
 		<Stack gap={2}>
-			<Input value={currentQuery} onChange={(e) => setQuery(e.target.value)} placeholder="Search icons..." />
+			<IconSearchInput onQueryChange={setQuery} />
+			{shownFavoriteSets && shownFavoriteSets.length > 0 && (
+				<>
+					<Stack gap={1} direction="row" flexWrap="wrap">
+						{shownFavoriteSets?.map((collection) => (
+							<Stack key={collection.id} spacing={1} width="calc(50% - 8px)">
+								<IconCollection collection={collection} {...props} />
+							</Stack>
+						))}
+					</Stack>
+					<Divider />
+				</>
+			)}
 			<Stack gap={1} direction="row" flexWrap="wrap">
-				{shownIcons?.collections.map((collection) => (
-					<Stack key={collection.name} spacing={1} width="calc(50% - 8px)">
+				{shownOtherSets?.map((collection) => (
+					<Stack key={collection.id} spacing={1} width="calc(50% - 8px)">
 						<IconCollection collection={collection} {...props} />
 					</Stack>
 				))}

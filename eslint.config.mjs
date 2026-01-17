@@ -1,3 +1,4 @@
+import { defineConfig } from 'eslint/config'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import muiPathImports from 'eslint-plugin-mui-path-imports'
 import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths'
@@ -8,7 +9,9 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import unusedImports from 'eslint-plugin-unused-imports'
 import tseslint from 'typescript-eslint'
 
-export default tseslint.config(
+import noDirectContextAccess from './eslint-rules/no-direct-context-access.mjs'
+
+export default defineConfig(
 	{
 		ignores: [
 			'app/calliope-websockets/dist',
@@ -61,6 +64,20 @@ export default tseslint.config(
 					argsIgnorePattern: '^_',
 				},
 			],
+		},
+	},
+	{
+		// Custom rules for rhea-backend to enforce moonflower patterns
+		files: ['app/rhea-backend/src/routers/**/*.ts'],
+		plugins: {
+			timelines: {
+				rules: {
+					'no-direct-context-access': noDirectContextAccess,
+				},
+			},
+		},
+		rules: {
+			'timelines/no-direct-context-access': 'warn',
 		},
 	},
 	{

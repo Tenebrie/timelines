@@ -6,6 +6,7 @@ const tags = [
 	'announcementList',
 	'asset',
 	'auth',
+	'favoriteIcons',
 	'profile',
 	'worldWiki',
 	'worldEvent',

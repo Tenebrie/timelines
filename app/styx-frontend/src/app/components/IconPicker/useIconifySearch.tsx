@@ -1,9 +1,10 @@
+import { useGetFavoriteIconsQuery } from '@api/favoriteIconsApi'
 import { GetIconifyIconsResponse, useGetIconifyIconsQuery } from '@api/iconify/iconifyApi'
-import { IconifyInfo } from '@iconify/types'
-import { useEffect, useState } from 'react'
+import { IconCollection } from '@api/types/iconTypes'
+import { useCallback, useEffect, useState } from 'react'
 
 type ParsedResult = {
-	collections: (IconifyInfo & { icons: string[] })[]
+	collections: (IconCollection & { favorite: boolean })[]
 }
 
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
 }
 
 export function useIconifySearch({ query }: Props) {
+	const parseResult = useParseResult()
 	const [results, setResults] = useState<ParsedResult | null>(null)
 	const { data } = useGetIconifyIconsQuery(
 		{
@@ -25,22 +27,36 @@ export function useIconifySearch({ query }: Props) {
 		if (data) {
 			setResults(parseResult(data))
 		}
-	}, [data])
+	}, [data, parseResult])
 
 	return { results }
 }
 
-function parseResult(data: GetIconifyIconsResponse): ParsedResult {
-	const collections: ParsedResult['collections'] = []
+function useParseResult() {
+	const { data: favorites } = useGetFavoriteIconsQuery()
 
-	for (const [key, value] of Object.entries(data.collections)) {
-		collections.push({
-			...value,
-			icons: data.icons.filter((icon) => icon.startsWith(`${key}:`)),
-		})
-	}
+	return useCallback(
+		(data: GetIconifyIconsResponse): ParsedResult => {
+			function isFavorite(iconSetId: string) {
+				return favorites?.iconSets?.some((set) => set.id === iconSetId) ?? false
+			}
 
-	collections.sort((a, b) => b.icons.length - a.icons.length)
+			const collections: ParsedResult['collections'] = []
 
-	return { collections }
+			for (const [key, value] of Object.entries(data.collections)) {
+				collections.push({
+					...value,
+					id: key,
+					count: data.icons.length,
+					icons: data.icons.filter((icon) => icon.startsWith(`${key}:`)),
+					procedural: false,
+					favorite: isFavorite(key),
+				})
+			}
+			collections.sort((a, b) => Number(b.favorite) - Number(a.favorite) || b.icons.length - a.icons.length)
+
+			return { collections }
+		},
+		[favorites?.iconSets],
+	)
 }

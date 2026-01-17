@@ -10,10 +10,6 @@ const injectedRtkApi = api
 				query: () => ({ url: `/api/profile/storage` }),
 				providesTags: ['profile'],
 			}),
-			getFavoriteIcons: build.query<GetFavoriteIconsApiResponse, GetFavoriteIconsApiArg>({
-				query: () => ({ url: `/api/profile/icons/favorites` }),
-				providesTags: ['profile'],
-			}),
 			updateProfile: build.mutation<UpdateProfileApiResponse, UpdateProfileApiArg>({
 				query: (queryArg) => ({ url: `/api/profile`, method: 'PATCH', body: queryArg.body }),
 				invalidatesTags: ['profile'],
@@ -38,15 +34,6 @@ export type GetStorageStatusApiResponse = /** status 200  */ {
 	}
 }
 export type GetStorageStatusApiArg = void
-export type GetFavoriteIconsApiResponse = /** status 200  */ {
-	favorites: {
-		id: string
-		name: string
-		icons: string[]
-		count: number
-	}[]
-}
-export type GetFavoriteIconsApiArg = void
 export type UpdateProfileApiResponse = /** status 200  */ {
 	user: {
 		id: string
@@ -98,8 +85,6 @@ export type ChangePasswordApiArg = {
 export const {
 	useGetStorageStatusQuery,
 	useLazyGetStorageStatusQuery,
-	useGetFavoriteIconsQuery,
-	useLazyGetFavoriteIconsQuery,
 	useUpdateProfileMutation,
 	usePostAvatarMutation,
 	useChangePasswordMutation,

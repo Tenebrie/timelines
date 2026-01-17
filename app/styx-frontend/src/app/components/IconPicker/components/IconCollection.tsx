@@ -1,47 +1,53 @@
+import type { IconCollection } from '@api/types/iconTypes'
 import { Icon } from '@iconify/react'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
+import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
-import { useState } from 'react'
+import { useMemo } from 'react'
+
+import { FavoriteIconCollectionButton } from './FavoriteIconCollectionButton'
 
 type Props = {
-	collection: {
-		name: string
-		icons: string[]
-	}
+	collection: IconCollection
 	color: string
 	onSelect: (icon: string) => void
 }
 
 export function IconCollection({ collection, color, onSelect }: Props) {
-	const [favorite, setFavorite] = useState(false)
+	const targetLink = useMemo(() => {
+		return `https://icon-sets.iconify.design/${collection.id}/`
+	}, [collection])
 
 	return (
 		<>
 			<Typography variant="h6">
-				<span>{collection.name}</span>
-				<Button sx={{ p: 0.25, minWidth: 0, marginLeft: 0.25 }} onClick={() => setFavorite(!favorite)}>
-					{favorite && <FavoriteIcon />}
-					{!favorite && <FavoriteBorderIcon />}
-				</Button>
+				{collection.procedural && <span>{collection.name}</span>}
+				{!collection.procedural && (
+					<Link href={targetLink} underline="hover">
+						{collection.name}
+					</Link>
+				)}
+				<FavoriteIconCollectionButton collection={collection} />
 			</Typography>
 			<Stack direction="row" flexWrap="wrap" gap={1}>
 				{collection.icons.map((icon, index) => (
 					<Button key={index} onClick={() => onSelect(icon)} sx={{ padding: 0.25, minWidth: 'auto' }}>
-						<Box
-							sx={{
-								width: 36,
-								height: 36,
-								display: 'flex',
-								alignItems: 'center',
-								justifyContent: 'center',
-							}}
-						>
-							<Icon color={color} icon={icon} width={36} height={36} ssr />
-						</Box>
+						<Tooltip title={icon}>
+							<Box
+								sx={{
+									width: 36,
+									height: 36,
+									display: 'flex',
+									alignItems: 'center',
+									justifyContent: 'center',
+								}}
+							>
+								<Icon color={color} icon={icon} width={36} height={36} ssr />
+							</Box>
+						</Tooltip>
 					</Button>
 				))}
 			</Stack>

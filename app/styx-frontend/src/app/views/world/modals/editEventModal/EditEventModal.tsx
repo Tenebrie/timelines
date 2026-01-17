@@ -23,6 +23,8 @@ export const EditEventModal = () => {
 				...prev,
 				navi: newStack,
 				new: undefined,
+				tab: undefined,
+				iq: undefined,
 			}),
 		})
 	}

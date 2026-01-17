@@ -101,6 +101,6 @@
 		"user-agent-data-types": "^0.4.2",
 		"uuid": "^11.0.3",
 		"vite-bundle-analyzer": "^0.17.1",
-		"vitest": "^3.2.4"
+		"vitest": "^4.0.17"
 	}
 }

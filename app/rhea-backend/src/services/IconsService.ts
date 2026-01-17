@@ -2,10 +2,38 @@ import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { IconifyService } from './IconifyService.js'
 
 export const IconsService = {
-	getUserFavoriteIcons: async (userId: string) => {
-		return getPrismaClient().userFavoriteIconSet.findMany({
+	getUserFavoriteIconSets: async (userId: string) => {
+		const favorites = await getPrismaClient().userFavoriteIconSet.findMany({
 			where: {
 				userId,
+			},
+		})
+
+		const allCollections = await IconifyService.getCollections()
+
+		return favorites.map((collection) => ({
+			id: collection.iconSet,
+			name: allCollections[collection.iconSet]?.name ?? collection.iconSet,
+			icons: allCollections[collection.iconSet]?.samples ?? [],
+			count: allCollections[collection.iconSet]?.samples.length ?? 0,
+			procedural: false,
+		}))
+	},
+
+	addUserFavoriteIcon: async (userId: string, iconId: string) => {
+		return getPrismaClient().userFavoriteIconSet.create({
+			data: {
+				userId,
+				iconSet: iconId,
+			},
+		})
+	},
+
+	removeUserFavoriteIcon: async (userId: string, iconId: string) => {
+		return getPrismaClient().userFavoriteIconSet.deleteMany({
+			where: {
+				userId,
+				iconSet: iconId,
 			},
 		})
 	},
@@ -19,24 +47,16 @@ export const IconsService = {
 			take: 10,
 		})
 
-		const collections = new Map<string, { icons: string[]; count: number }>()
-		for (const icon of icons) {
-			const collectionId = icon.icon.split(':')[0]
-			const collection = collections.get(collectionId) || { icons: [], count: 0 }
-			collection.icons.push(icon.icon)
-			collection.count += icon._count.icon
-			collections.set(collectionId, collection)
-		}
-
-		const iconifyCollections = await IconifyService.getCollections()
-
-		return Array.from(collections.entries())
-			.map(([id, { icons, count }]) => ({
-				id,
-				name: iconifyCollections[id]?.name || id,
-				icons,
-				count,
-			}))
-			.sort((a, b) => b.count - a.count)
+		return [
+			{
+				id: 'common',
+				name: 'Commonly Used',
+				icons: icons
+					.sort((a, b) => b._count.icon - a._count.icon || a.icon.localeCompare(b.icon))
+					.map((icon) => icon.icon),
+				count: icons.length,
+				procedural: true,
+			},
+		]
 	},
 }

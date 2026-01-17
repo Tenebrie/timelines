@@ -2,7 +2,6 @@ import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AssetService } from '@src/services/AssetService.js'
 import { CloudStorageService } from '@src/services/CloudStorageService.js'
-import { IconsService } from '@src/services/IconsService.js'
 import {
 	BadRequestError,
 	NonEmptyStringValidator,
@@ -30,19 +29,6 @@ router.get('/api/profile/storage', async (ctx) => {
 	const user = await useAuth(ctx, UserAuthenticator)
 	const quota = await CloudStorageService.getUserRemainingQuota(user)
 	return { quota }
-})
-
-router.get('/api/profile/icons/favorites', async (ctx) => {
-	useApiEndpoint({
-		name: 'getFavoriteIcons',
-		summary: 'Get favorite icons',
-		description: 'Get a list of favorite icons for the current user',
-		tags: [profileTag],
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-	const favorites = await IconsService.getCommonWorldEventIcons(user.id)
-	return { favorites }
 })
 
 router.patch('/api/profile', async (ctx) => {

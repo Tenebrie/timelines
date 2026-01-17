@@ -10,6 +10,7 @@ import { AssetUploadRouter } from './routers/AssetRouter.js'
 import { AuthRouter } from './routers/AuthRouter.js'
 import { ConstantsRouter } from './routers/ConstantsRouter.js'
 import { HealthRouter, HealthStatus } from './routers/HealthRouter.js'
+import { IconsRouter } from './routers/IconsRouter.js'
 import { ImageConversionRouter } from './routers/ImageConversionRouter.js'
 import { MindmapRouter } from './routers/MindmapRouter.js'
 import { ProfileRouter } from './routers/ProfileRouter.js'
@@ -63,6 +64,8 @@ app
 	.use(ConstantsRouter.allowedMethods())
 	.use(HealthRouter.routes())
 	.use(HealthRouter.allowedMethods())
+	.use(IconsRouter.routes())
+	.use(IconsRouter.allowedMethods())
 	.use(ImageConversionRouter.routes())
 	.use(ImageConversionRouter.allowedMethods())
 	.use(MindmapRouter.routes())
