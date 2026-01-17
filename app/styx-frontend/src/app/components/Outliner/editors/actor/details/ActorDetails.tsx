@@ -1,6 +1,5 @@
 import { Actor } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { useNavigate } from '@tanstack/react-router'
 import { memo } from 'react'
@@ -73,7 +72,6 @@ export function ActorDetailsComponent({ editedActor }: Props) {
 						<Stack gap={2} sx={{ height: '100%', overflow: 'auto', marginRight: -0.5 }}>
 							<Stack gap={2} sx={{ marginRight: 2 }}>
 								<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
-								<Divider />
 								<IconPicker color={draft.color} defaultQuery={draft.icon} onSelect={draft.setIcon} />
 							</Stack>
 						</Stack>

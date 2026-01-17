@@ -33,10 +33,14 @@ export function useIconifySearch({ query }: Props) {
 }
 
 function useParseResult() {
-	const { data: favorites } = useGetFavoriteIconsQuery()
+	const { data: favorites, isLoading } = useGetFavoriteIconsQuery()
 
 	return useCallback(
 		(data: GetIconifyIconsResponse): ParsedResult => {
+			if (isLoading) {
+				return { collections: [] }
+			}
+
 			function isFavorite(iconSetId: string) {
 				return favorites?.iconSets?.some((set) => set.id === iconSetId) ?? false
 			}
@@ -57,6 +61,6 @@ function useParseResult() {
 
 			return { collections }
 		},
-		[favorites?.iconSets],
+		[favorites?.iconSets, isLoading],
 	)
 }

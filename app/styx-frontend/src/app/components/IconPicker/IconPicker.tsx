@@ -10,13 +10,13 @@ import { IconCollection } from './components/IconCollection'
 import { IconSearchInput } from './components/IconSearchInput'
 import { useIconifySearch } from './useIconifySearch'
 
-export const IconPicker = memo(IconPickerComponent)
-
 type Props = {
 	color: string
 	defaultQuery: string
 	onSelect: (icon: string) => void
 }
+
+export const IconPicker = memo(IconPickerComponent)
 
 export function IconPickerComponent(props: Props) {
 	const worldId = useSelector(getWorldIdState)
