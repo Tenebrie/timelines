@@ -21,13 +21,13 @@ export default defineConfig(
 			'app/ts-shared/dist',
 			'e2e/dist',
 			'*.gen.ts',
-			'node_modules', 
+			'node_modules',
 			'.husky',
 		],
 	},
 	{
 		extends: [...tseslint.configs.recommended],
-		files: ['**/*.json'],  
+		files: ['**/*.json'],
 		rules: {
 			'@typescript-eslint/no-unused-expressions': 'off',
 		},
