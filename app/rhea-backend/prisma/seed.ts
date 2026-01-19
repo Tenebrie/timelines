@@ -20,14 +20,18 @@ async function main() {
 	}
 
 	const hashedPassword = await bcrypt.hash('q', 8)
-	await prisma.user.create({
-		data: {
-			email: 'admin@localhost',
-			username: 'Administrator',
-			password: hashedPassword,
-			level: 'Admin',
-		},
-	})
+	try {
+		await prisma.user.create({
+			data: {
+				email: 'admin@localhost',
+				username: 'Administrator',
+				password: hashedPassword,
+				level: 'Admin',
+			},
+		})
+	} catch {
+		console.warn('Database has been seeded earlier.')
+	}
 
 	await prisma.flags.create({
 		data: {
