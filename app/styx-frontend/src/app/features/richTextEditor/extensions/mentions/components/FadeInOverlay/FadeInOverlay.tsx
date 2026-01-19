@@ -2,19 +2,17 @@ import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { useEffect, useRef } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 import { createCubicBezier } from './createCubicBezier'
 import { ProgressBar } from './ProgressBar'
 
 type Props = {
+	color: string
 	content: string
 	isReadMode: boolean
 }
 
-export const FadeInOverlay = ({ content, isReadMode }: Props) => {
-	const theme = useCustomTheme()
-
+export const FadeInOverlay = ({ content, isReadMode, color }: Props) => {
 	const ref = useRef<HTMLDivElement | null>(null)
 	const inProgress = useRef(false)
 	const capHitRef = useRef(false)
@@ -106,8 +104,8 @@ export const FadeInOverlay = ({ content, isReadMode }: Props) => {
 					background: linear-gradient(
 						to bottom,
 						transparent var(--grad-start),
-						${theme.custom.palette.background.textEditorBackground} var(--grad-end),
-						${theme.custom.palette.background.textEditorBackground} 100%
+						${color} var(--grad-end),
+						${color} 100%
 					);
 				}
 			`}</style>

@@ -54,6 +54,7 @@ export const Wiki = () => {
 							<ArticleList parentId={null} depth={0} />
 						</Stack>
 					</Stack>
+					{!isArticle && <Divider orientation="vertical" />}
 					<Stack
 						sx={{
 							flex: 1,

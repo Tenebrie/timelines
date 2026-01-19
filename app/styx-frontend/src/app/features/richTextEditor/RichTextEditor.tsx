@@ -210,7 +210,12 @@ export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allo
 			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode} />
 			{editor && <EditorContentBox className="content" editor={editor} mode={isReadMode ? 'read' : 'edit'} />}
 			<MentionsList editor={editor} />
-			<FadeInOverlay key={softKey} content={value} isReadMode={isReadMode} />
+			<FadeInOverlay
+				key={softKey}
+				content={value}
+				isReadMode={isReadMode}
+				color={theme.custom.palette.background.textEditorBackground}
+			/>
 		</StyledContainer>
 	)
 }

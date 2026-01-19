@@ -93,6 +93,7 @@ export default defineConfig(
 			'react-hooks/refs': 'off',
 			'react-hooks/immutability': 'off',
 			'react-hooks/preserve-manual-memoization': 'off',
+			'react/prop-types': 'off',
 		},
 		files: ['**/*.{ts,tsx}'],
 		settings: {

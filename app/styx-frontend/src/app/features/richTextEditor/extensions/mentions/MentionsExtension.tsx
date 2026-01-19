@@ -38,14 +38,6 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 					dispatchEvent['richEditor/requestCloseMentions']()
 					return true
 				}
-				dispatchEvent['richEditor/onKeyDown']({
-					editor: state.editor,
-					key: props.event.key,
-					ctrlKey: props.event.ctrlKey,
-					shiftKey: props.event.shiftKey,
-					altKey: props.event.altKey,
-					metaKey: props.event.metaKey,
-				})
 				if (['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'PageUp', 'PageDown'].includes(props.event.key)) {
 					dispatchEvent['richEditor/onKeyDown']({
 						editor: state.editor,
