@@ -12,10 +12,37 @@ export const useShortcut = (
 ) => {
 	useEffect(() => {
 		const shortcuts = Array.isArray(shortcutOrArray) ? shortcutOrArray : [shortcutOrArray]
+		const getActualPriority = (shortcut: (typeof Shortcut)[keyof typeof Shortcut]) => {
+			if (priority === false) {
+				return -1
+			}
+			if (priority === undefined) {
+				return 0
+			}
+			if (priority === true) {
+				return 1
+			}
+			if (priority <= 1) {
+				return priority
+			}
+
+			function isPriorityTaken(value: number) {
+				return shortcuts.some((shortcut) =>
+					RegisteredShortcuts[shortcut].some((registered) => registered.priority === value),
+				)
+			}
+
+			let currentValue = priority
+			while (isPriorityTaken(currentValue)) {
+				currentValue += 0.01
+			}
+			return currentValue
+		}
+
 		shortcuts.forEach((shortcut) => {
 			RegisteredShortcuts[shortcut].push({
 				callback,
-				priority: priority ?? 0,
+				priority: getActualPriority(shortcut),
 			})
 		})
 		return () => {

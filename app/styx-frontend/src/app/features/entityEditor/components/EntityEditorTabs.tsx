@@ -7,6 +7,7 @@ import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import { useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
+import useEvent from 'react-use-event-hook'
 
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
@@ -20,12 +21,12 @@ export function EntityEditorTabs({ contentTab, illustrationTab }: Props) {
 	const [tab, setTab] = useState(defaultTab)
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
-	const handleChange = (tab: number) => {
+	const handleChange = useEvent((tab: number) => {
 		setTab(tab)
 		navigate({
 			search: (prev) => ({ ...prev, tab }),
 		})
-	}
+	})
 
 	return (
 		<Stack direction="row" width="100%" height="100%" gap={1}>

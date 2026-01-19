@@ -8,7 +8,7 @@ import { ModalContainer, ModalWrapper } from './styles'
 type Props = {
 	visible: boolean
 	children: React.ReactNode
-	onClose: () => void
+	onClose: (reason: 'backdropClick' | 'escapeKey') => void
 	closeOnBackdropClick?: boolean
 }
 
@@ -19,7 +19,7 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick }: Props) => {
 	const [isModalRendered, setIsModalRendered] = useState(false)
 	const [modalRenderTimeout, setModalRenderTimeout] = useState<number | null>(null)
 
-	useShortcut(Shortcut.Escape, onClose, isModalVisible && ShortcutPriorities.MODAL)
+	useShortcut(Shortcut.Escape, () => onClose('escapeKey'), isModalVisible && ShortcutPriorities.MODAL)
 
 	useEffect(() => {
 		if (isModalVisible && !isModalRendered) {
@@ -44,7 +44,7 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick }: Props) => {
 	return (
 		<ModalWrapper
 			className={isModalVisible ? 'visible' : ''}
-			onClick={closeOnBackdropClick ? onClose : undefined}
+			onClick={closeOnBackdropClick ? () => onClose('backdropClick') : undefined}
 		>
 			<ModalContainer ref={bodyRef} $theme={theme} onClick={(e) => e.stopPropagation()}>
 				{isModalRendered && children}

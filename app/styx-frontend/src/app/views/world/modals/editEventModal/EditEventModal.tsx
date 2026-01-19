@@ -1,4 +1,5 @@
 import Stack from '@mui/material/Stack'
+import useEvent from 'react-use-event-hook'
 
 import { ActorDetails } from '@/app/components/Outliner/editors/actor/details/ActorDetails'
 import { EventDetails } from '@/app/components/Outliner/editors/event/details/EventDetails'
@@ -13,7 +14,7 @@ export const EditEventModal = () => {
 	const { isOpen, entityStack } = useModal('editEventModal')
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
-	const handleClose = () => {
+	const handleClose = useEvent(() => {
 		const newStack = [...entityStack]
 		if (entityStack.length > 0) {
 			newStack.pop()
@@ -27,9 +28,9 @@ export const EditEventModal = () => {
 				iq: undefined,
 			}),
 		})
-	}
+	})
 
-	const handleBreadcrumbClick = (targetIndex: number) => {
+	const handleBreadcrumbClick = useEvent((targetIndex: number) => {
 		const newStack = entityStack.slice(0, targetIndex + 1)
 		navigate({
 			search: (prev) => ({
@@ -37,9 +38,9 @@ export const EditEventModal = () => {
 				navi: newStack,
 			}),
 		})
-	}
+	})
 
-	const handleWorldClick = () => {
+	const handleWorldClick = useEvent(() => {
 		navigate({
 			search: (prev) => ({
 				...prev,
@@ -47,7 +48,7 @@ export const EditEventModal = () => {
 				new: undefined,
 			}),
 		})
-	}
+	})
 
 	const currentEntity = useCurrentEntity()
 
