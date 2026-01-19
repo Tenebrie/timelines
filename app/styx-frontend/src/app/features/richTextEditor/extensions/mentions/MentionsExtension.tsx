@@ -27,8 +27,11 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 			},
 
 			onUpdate(props) {
+				const pos = props.editor.view.coordsAtPos(props.range.from)
 				dispatchEvent['richEditor/requestUpdateMentions']({
 					query: props.query,
+					screenPosTop: pos.top,
+					screenPosLeft: pos.left,
 				})
 			},
 

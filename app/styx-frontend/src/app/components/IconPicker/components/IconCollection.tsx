@@ -21,6 +21,8 @@ export function IconCollection({ collection, color, onSelect }: Props) {
 		return `https://icon-sets.iconify.design/${collection.id}/`
 	}, [collection])
 
+	const displayedIcons = collection.icons.length >= 20 ? collection.icons : [...collection.icons, 'mdi:leaf']
+
 	return (
 		<>
 			<Typography variant="h6">
@@ -33,7 +35,7 @@ export function IconCollection({ collection, color, onSelect }: Props) {
 				<FavoriteIconCollectionButton collection={collection} />
 			</Typography>
 			<Stack direction="row" flexWrap="wrap" gap={1}>
-				{collection.icons.map((icon, index) => (
+				{displayedIcons.map((icon, index) => (
 					<Button key={index} onClick={() => onSelect(icon)} sx={{ padding: 0.25, minWidth: 'auto' }}>
 						<Tooltip title={icon}>
 							<Box

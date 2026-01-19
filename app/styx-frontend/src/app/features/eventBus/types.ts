@@ -42,7 +42,11 @@ export type EventParams = {
 		screenPosTop: number
 		screenPosLeft: number
 	}
-	'richEditor/requestUpdateMentions': { query: string }
+	'richEditor/requestUpdateMentions': {
+		query: string
+		screenPosTop: number
+		screenPosLeft: number
+	}
 	'richEditor/requestCloseMentions': void
 	'richEditor/mentionRender/onStart': { node: ProseMirrorNode }
 	'richEditor/mentionRender/onEnd': { node: ProseMirrorNode }

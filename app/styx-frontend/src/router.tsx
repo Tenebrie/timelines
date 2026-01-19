@@ -4,7 +4,7 @@ import { routeTree } from './routeTree.gen'
 
 export const router = createRouter({
 	routeTree,
-	defaultErrorComponent: ({ error }) => {
+	defaultErrorComponent: ({ error, reset }) => {
 		return (
 			<div
 				style={{
@@ -12,9 +12,10 @@ export const router = createRouter({
 					flexDirection: 'column',
 					alignItems: 'center',
 					justifyContent: 'center',
-					height: '100vh',
+					height: '100%',
 					gap: 16,
 					padding: 20,
+					background: '#1a1a1a',
 				}}
 			>
 				<h1 style={{ color: '#e57373', margin: 0 }}>Something went wrong</h1>
@@ -25,24 +26,29 @@ export const router = createRouter({
 						borderRadius: 8,
 						maxWidth: '80%',
 						overflow: 'auto',
+						color: '#fff',
 					}}
 				>
 					{error.message}
 				</pre>
-				<p style={{ color: '#888' }}>Fix the code, then click retry</p>
-				<button
-					onClick={() => window.location.reload()}
-					style={{
-						padding: '8px 16px',
-						background: '#4a9c6d',
-						color: 'white',
-						border: 'none',
-						borderRadius: 4,
-						cursor: 'pointer',
-					}}
-				>
-					Reload Page
-				</button>
+				<div style={{ display: 'flex', gap: 12 }}>
+					<button
+						onClick={() => {
+							reset()
+						}}
+						style={{
+							padding: '8px 16px',
+							background: '#4a9c6d',
+							color: 'white',
+							border: 'none',
+							borderRadius: 4,
+							cursor: 'pointer',
+							fontSize: 14,
+						}}
+					>
+						Reset
+					</button>
+				</div>
 			</div>
 		)
 	},

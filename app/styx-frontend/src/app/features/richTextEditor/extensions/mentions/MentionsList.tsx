@@ -66,8 +66,12 @@ export function MentionsListComponent({ editor }: Props) {
 		},
 	})
 	useEventBusSubscribe['richEditor/requestUpdateMentions']({
-		callback: ({ query }) => {
+		callback: ({ query, screenPosTop, screenPosLeft }) => {
 			setQuery(query)
+			setPos({
+				top: screenPosTop,
+				left: screenPosLeft,
+			})
 		},
 	})
 	useEventBusSubscribe['richEditor/requestCloseMentions']({

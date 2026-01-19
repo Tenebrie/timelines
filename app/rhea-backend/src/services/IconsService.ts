@@ -44,13 +44,13 @@ export const IconsService = {
 			where: { worldId, icon: { not: 'default' } },
 			_count: { icon: true },
 			orderBy: { _count: { icon: 'desc' } },
-			take: 10,
+			take: 20,
 		})
 
 		return [
 			{
 				id: 'common',
-				name: 'Commonly Used',
+				name: 'Commonly Used Here',
 				icons: icons
 					.sort((a, b) => b._count.icon - a._count.icon || a.icon.localeCompare(b.icon))
 					.map((icon) => icon.icon),
