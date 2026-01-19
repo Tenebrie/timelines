@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['worldDetails'] as const
+export const addTagTypes = ['worldDetails', 'worldCommonIcons'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -23,7 +23,7 @@ const injectedRtkApi = api
 				GetCommonWorldEventIconsApiArg
 			>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/icons/events/common` }),
-				providesTags: ['worldDetails'],
+				providesTags: ['worldDetails', 'worldCommonIcons'],
 			}),
 			getWorldBrief: build.query<GetWorldBriefApiResponse, GetWorldBriefApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/brief` }),

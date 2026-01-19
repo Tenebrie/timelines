@@ -21,7 +21,7 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { worldCollaboratorsTag, worldDetailsTag, worldListTag } from './utils/tags.js'
+import { worldCollaboratorsTag, worldCommonIconsTag, worldDetailsTag, worldListTag } from './utils/tags.js'
 import { CollaboratorAccessValidator } from './validators/CollaboratorAccessValidator.js'
 import { StringArrayValidator } from './validators/StringArrayValidator.js'
 import { WorldAccessModeValidator } from './validators/WorldAccessModeValidator.js'
@@ -137,7 +137,7 @@ router.get('/api/world/:worldId/icons/events/common', async (ctx) => {
 	useApiEndpoint({
 		name: 'getCommonWorldEventIcons',
 		description: 'Returns commonly used event icons for a world.',
-		tags: [worldDetailsTag],
+		tags: [worldDetailsTag, worldCommonIconsTag],
 	})
 
 	const { worldId } = usePathParams(ctx, {
