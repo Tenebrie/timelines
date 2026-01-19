@@ -39,13 +39,19 @@ export const IconsService = {
 	},
 
 	getCommonWorldEventIcons: async (worldId: string) => {
+		const iconLimit = 20
+
 		const icons = await getPrismaClient().worldEvent.groupBy({
 			by: ['icon'],
 			where: { worldId, icon: { not: 'default' } },
 			_count: { icon: true },
 			orderBy: { _count: { icon: 'desc' } },
-			take: 20,
+			take: iconLimit,
 		})
+
+		if (icons.length < iconLimit && !icons.some((icon) => icon.icon === 'mdi:leaf')) {
+			icons.push({ icon: 'mdi:leaf', _count: { icon: 1 } })
+		}
 
 		return [
 			{
