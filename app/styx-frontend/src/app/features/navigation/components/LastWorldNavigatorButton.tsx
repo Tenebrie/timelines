@@ -1,11 +1,11 @@
 import Button from '@mui/material/Button'
-import { useNavigate } from '@tanstack/react-router'
 import { ReactNode } from 'react'
 import { useSelector } from 'react-redux'
 import { useEvent } from 'react-use-event-hook'
 
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useEventBusDispatch } from '../../eventBus'
 
@@ -15,7 +15,7 @@ type Props = {
 }
 
 export function LastWorldNavigatorButton({ icon, label }: Props) {
-	const navigate = useNavigate()
+	const navigate = useStableNavigate()
 	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 	const isMatching = useCheckRouteMatch('/world/$worldId')
 

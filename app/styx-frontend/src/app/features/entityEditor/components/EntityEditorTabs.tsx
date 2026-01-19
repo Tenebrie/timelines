@@ -5,8 +5,10 @@ import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
-import { useNavigate, useSearch } from '@tanstack/react-router'
+import { useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
+
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 type Props = {
 	contentTab: React.ReactNode
@@ -16,7 +18,7 @@ type Props = {
 export function EntityEditorTabs({ contentTab, illustrationTab }: Props) {
 	const { tab: defaultTab } = useSearch({ from: '/world/$worldId/_world' })
 	const [tab, setTab] = useState(defaultTab)
-	const navigate = useNavigate({ from: '/world/$worldId' })
+	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	const handleChange = (tab: number) => {
 		setTab(tab)

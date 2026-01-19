@@ -21,13 +21,20 @@ export default defineConfig(
 			'app/ts-shared/dist',
 			'e2e/dist',
 			'*.gen.ts',
-			'node_modules',
+			'node_modules', 
 			'.husky',
 		],
 	},
 	{
 		extends: [...tseslint.configs.recommended],
-		files: ['**/*.{mjs,js,ts,tsx,json}'],
+		files: ['**/*.json'],  
+		rules: {
+			'@typescript-eslint/no-unused-expressions': 'off',
+		},
+	},
+	{
+		extends: [...tseslint.configs.recommended],
+		files: ['**/*.{mjs,js,ts,tsx}'],
 		plugins: {
 			'simple-import-sort': simpleImportSort,
 			'unused-imports': unusedImports,

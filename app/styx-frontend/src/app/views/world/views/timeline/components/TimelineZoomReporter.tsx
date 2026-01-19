@@ -1,12 +1,12 @@
-import { useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 export const TimelineZoomReporter = () => {
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
-	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
+	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
 
 	useEffect(() => {
 		navigate({

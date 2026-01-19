@@ -7,18 +7,18 @@ import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import { useNavigate } from '@tanstack/react-router'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 export const WorldSidebar = () => {
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 
-	const navigate = useNavigate({ from: '/world/$worldId' })
+	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	const matchesTimeline = useCheckRouteMatch('/world/$worldId/timeline')
 	const onTimelineClick = () => {

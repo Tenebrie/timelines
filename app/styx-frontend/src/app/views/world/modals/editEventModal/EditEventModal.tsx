@@ -1,9 +1,9 @@
 import Stack from '@mui/material/Stack'
-import { useNavigate } from '@tanstack/react-router'
 
 import { ActorDetails } from '@/app/components/Outliner/editors/actor/details/ActorDetails'
 import { EventDetails } from '@/app/components/Outliner/editors/event/details/EventDetails'
 import { useModal } from '@/app/features/modals/ModalsSlice'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal from '@/ui-lib/components/Modal'
 
 import { EntityBreadcrumbs } from './EntityBreadcrumbs'
@@ -11,7 +11,7 @@ import { useCurrentEntity } from './hooks/useCurrentEntity'
 
 export const EditEventModal = () => {
 	const { isOpen, entityStack } = useModal('editEventModal')
-	const navigate = useNavigate({ from: '/world/$worldId' })
+	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	const handleClose = () => {
 		const newStack = [...entityStack]

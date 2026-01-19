@@ -8,8 +8,6 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createFileRoute } from '@tanstack/react-router'
-
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
@@ -33,23 +31,6 @@ import { Route as WorldWorldIdWorldWikiWikiRouteImport } from './routes/world.$w
 import { Route as WorldWorldIdWorldWikiWikiIndexRouteImport } from './routes/world.$worldId/_world.wiki/_wiki.index'
 import { Route as WorldWorldIdWorldWikiWikiArticleIdRouteImport } from './routes/world.$worldId/_world.wiki/_wiki.$articleId'
 
-const ToolsRouteImport = createFileRoute('/tools')()
-const ProfileRouteImport = createFileRoute('/profile')()
-const WorldWorldIdRouteImport = createFileRoute('/world/$worldId')()
-const WorldWorldIdWorldWikiRouteImport = createFileRoute(
-  '/world/$worldId/_world/wiki',
-)()
-
-const ToolsRoute = ToolsRouteImport.update({
-  id: '/tools',
-  path: '/tools',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -75,24 +56,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorldWorldIdRoute = WorldWorldIdRouteImport.update({
-  id: '/world/$worldId',
-  path: '/world/$worldId',
+const ToolsIndexRoute = ToolsIndexRouteImport.update({
+  id: '/tools/',
+  path: '/tools/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ToolsIndexRoute = ToolsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ToolsRoute,
-} as any)
 const ProfileIndexRoute = ProfileIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ProfileRoute,
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsToolsRoute = ToolsToolsRouteImport.update({
-  id: '/_tools',
-  getParentRoute: () => ToolsRoute,
+  id: '/tools/_tools',
+  path: '/tools',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const SecretMusicRoute = SecretMusicRouteImport.update({
   id: '/secret/music',
@@ -100,12 +77,14 @@ const SecretMusicRoute = SecretMusicRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileProfileRoute = ProfileProfileRouteImport.update({
-  id: '/_profile',
-  getParentRoute: () => ProfileRoute,
+  id: '/profile/_profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const WorldWorldIdWorldRoute = WorldWorldIdWorldRouteImport.update({
-  id: '/_world',
-  getParentRoute: () => WorldWorldIdRoute,
+  id: '/world/$worldId/_world',
+  path: '/world/$worldId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsToolsImageConverterRoute =
   ToolsToolsImageConverterRouteImport.update({
@@ -128,11 +107,6 @@ const ProfileProfilePublicRoute = ProfileProfilePublicRouteImport.update({
   path: '/public',
   getParentRoute: () => ProfileProfileRoute,
 } as any)
-const WorldWorldIdWorldWikiRoute = WorldWorldIdWorldWikiRouteImport.update({
-  id: '/wiki',
-  path: '/wiki',
-  getParentRoute: () => WorldWorldIdWorldRoute,
-} as any)
 const WorldWorldIdWorldTimelineRoute =
   WorldWorldIdWorldTimelineRouteImport.update({
     id: '/timeline',
@@ -153,8 +127,9 @@ const WorldWorldIdWorldMindmapRoute =
   } as any)
 const WorldWorldIdWorldWikiWikiRoute =
   WorldWorldIdWorldWikiWikiRouteImport.update({
-    id: '/_wiki',
-    getParentRoute: () => WorldWorldIdWorldWikiRoute,
+    id: '/wiki/_wiki',
+    path: '/wiki',
+    getParentRoute: () => WorldWorldIdWorldRoute,
   } as any)
 const WorldWorldIdWorldWikiWikiIndexRoute =
   WorldWorldIdWorldWikiWikiIndexRouteImport.update({
@@ -209,8 +184,8 @@ export interface FileRoutesByTo {
   '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
   '/world/$worldId/settings': typeof WorldWorldIdWorldSettingsRoute
   '/world/$worldId/timeline': typeof WorldWorldIdWorldTimelineRoute
-  '/world/$worldId/wiki': typeof WorldWorldIdWorldWikiWikiIndexRoute
   '/world/$worldId/wiki/$articleId': typeof WorldWorldIdWorldWikiWikiArticleIdRoute
+  '/world/$worldId/wiki': typeof WorldWorldIdWorldWikiWikiIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -219,10 +194,8 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/profile': typeof ProfileRouteWithChildren
   '/profile/_profile': typeof ProfileProfileRouteWithChildren
   '/secret/music': typeof SecretMusicRoute
-  '/tools': typeof ToolsRouteWithChildren
   '/tools/_tools': typeof ToolsToolsRouteWithChildren
   '/profile/': typeof ProfileIndexRoute
   '/tools/': typeof ToolsIndexRoute
@@ -230,12 +203,10 @@ export interface FileRoutesById {
   '/profile/_profile/security': typeof ProfileProfileSecurityRoute
   '/profile/_profile/storage': typeof ProfileProfileStorageRoute
   '/tools/_tools/image-converter': typeof ToolsToolsImageConverterRoute
-  '/world/$worldId': typeof WorldWorldIdRouteWithChildren
   '/world/$worldId/_world': typeof WorldWorldIdWorldRouteWithChildren
   '/world/$worldId/_world/mindmap': typeof WorldWorldIdWorldMindmapRoute
   '/world/$worldId/_world/settings': typeof WorldWorldIdWorldSettingsRoute
   '/world/$worldId/_world/timeline': typeof WorldWorldIdWorldTimelineRoute
-  '/world/$worldId/_world/wiki': typeof WorldWorldIdWorldWikiRouteWithChildren
   '/world/$worldId/_world/wiki/_wiki': typeof WorldWorldIdWorldWikiWikiRouteWithChildren
   '/world/$worldId/_world/wiki/_wiki/$articleId': typeof WorldWorldIdWorldWikiWikiArticleIdRoute
   '/world/$worldId/_world/wiki/_wiki/': typeof WorldWorldIdWorldWikiWikiIndexRoute
@@ -282,8 +253,8 @@ export interface FileRouteTypes {
     | '/world/$worldId/mindmap'
     | '/world/$worldId/settings'
     | '/world/$worldId/timeline'
-    | '/world/$worldId/wiki'
     | '/world/$worldId/wiki/$articleId'
+    | '/world/$worldId/wiki'
   id:
     | '__root__'
     | '/'
@@ -291,10 +262,8 @@ export interface FileRouteTypes {
     | '/home'
     | '/login'
     | '/register'
-    | '/profile'
     | '/profile/_profile'
     | '/secret/music'
-    | '/tools'
     | '/tools/_tools'
     | '/profile/'
     | '/tools/'
@@ -302,12 +271,10 @@ export interface FileRouteTypes {
     | '/profile/_profile/security'
     | '/profile/_profile/storage'
     | '/tools/_tools/image-converter'
-    | '/world/$worldId'
     | '/world/$worldId/_world'
     | '/world/$worldId/_world/mindmap'
     | '/world/$worldId/_world/settings'
     | '/world/$worldId/_world/timeline'
-    | '/world/$worldId/_world/wiki'
     | '/world/$worldId/_world/wiki/_wiki'
     | '/world/$worldId/_world/wiki/_wiki/$articleId'
     | '/world/$worldId/_world/wiki/_wiki/'
@@ -319,28 +286,16 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
-  ProfileRoute: typeof ProfileRouteWithChildren
+  ProfileProfileRoute: typeof ProfileProfileRouteWithChildren
   SecretMusicRoute: typeof SecretMusicRoute
-  ToolsRoute: typeof ToolsRouteWithChildren
-  WorldWorldIdRoute: typeof WorldWorldIdRouteWithChildren
+  ToolsToolsRoute: typeof ToolsToolsRouteWithChildren
+  ProfileIndexRoute: typeof ProfileIndexRoute
+  ToolsIndexRoute: typeof ToolsIndexRoute
+  WorldWorldIdWorldRoute: typeof WorldWorldIdWorldRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/tools': {
-      id: '/tools'
-      path: '/tools'
-      fullPath: '/tools'
-      preLoaderRoute: typeof ToolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -376,33 +331,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/world/$worldId': {
-      id: '/world/$worldId'
-      path: '/world/$worldId'
-      fullPath: '/world/$worldId'
-      preLoaderRoute: typeof WorldWorldIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/tools/': {
       id: '/tools/'
-      path: '/'
+      path: '/tools'
       fullPath: '/tools/'
       preLoaderRoute: typeof ToolsIndexRouteImport
-      parentRoute: typeof ToolsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/profile/': {
       id: '/profile/'
-      path: '/'
+      path: '/profile'
       fullPath: '/profile/'
       preLoaderRoute: typeof ProfileIndexRouteImport
-      parentRoute: typeof ProfileRoute
+      parentRoute: typeof rootRouteImport
     }
     '/tools/_tools': {
       id: '/tools/_tools'
       path: '/tools'
       fullPath: '/tools'
       preLoaderRoute: typeof ToolsToolsRouteImport
-      parentRoute: typeof ToolsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/secret/music': {
       id: '/secret/music'
@@ -416,14 +364,14 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileProfileRouteImport
-      parentRoute: typeof ProfileRoute
+      parentRoute: typeof rootRouteImport
     }
     '/world/$worldId/_world': {
       id: '/world/$worldId/_world'
       path: '/world/$worldId'
       fullPath: '/world/$worldId'
       preLoaderRoute: typeof WorldWorldIdWorldRouteImport
-      parentRoute: typeof WorldWorldIdRoute
+      parentRoute: typeof rootRouteImport
     }
     '/tools/_tools/image-converter': {
       id: '/tools/_tools/image-converter'
@@ -453,13 +401,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfilePublicRouteImport
       parentRoute: typeof ProfileProfileRoute
     }
-    '/world/$worldId/_world/wiki': {
-      id: '/world/$worldId/_world/wiki'
-      path: '/wiki'
-      fullPath: '/world/$worldId/wiki'
-      preLoaderRoute: typeof WorldWorldIdWorldWikiRouteImport
-      parentRoute: typeof WorldWorldIdWorldRoute
-    }
     '/world/$worldId/_world/timeline': {
       id: '/world/$worldId/_world/timeline'
       path: '/timeline'
@@ -486,7 +427,7 @@ declare module '@tanstack/react-router' {
       path: '/wiki'
       fullPath: '/world/$worldId/wiki'
       preLoaderRoute: typeof WorldWorldIdWorldWikiWikiRouteImport
-      parentRoute: typeof WorldWorldIdWorldWikiRoute
+      parentRoute: typeof WorldWorldIdWorldRoute
     }
     '/world/$worldId/_world/wiki/_wiki/': {
       id: '/world/$worldId/_world/wiki/_wiki/'
@@ -521,19 +462,6 @@ const ProfileProfileRouteWithChildren = ProfileProfileRoute._addFileChildren(
   ProfileProfileRouteChildren,
 )
 
-interface ProfileRouteChildren {
-  ProfileProfileRoute: typeof ProfileProfileRouteWithChildren
-  ProfileIndexRoute: typeof ProfileIndexRoute
-}
-
-const ProfileRouteChildren: ProfileRouteChildren = {
-  ProfileProfileRoute: ProfileProfileRouteWithChildren,
-  ProfileIndexRoute: ProfileIndexRoute,
-}
-
-const ProfileRouteWithChildren =
-  ProfileRoute._addFileChildren(ProfileRouteChildren)
-
 interface ToolsToolsRouteChildren {
   ToolsToolsImageConverterRoute: typeof ToolsToolsImageConverterRoute
 }
@@ -545,18 +473,6 @@ const ToolsToolsRouteChildren: ToolsToolsRouteChildren = {
 const ToolsToolsRouteWithChildren = ToolsToolsRoute._addFileChildren(
   ToolsToolsRouteChildren,
 )
-
-interface ToolsRouteChildren {
-  ToolsToolsRoute: typeof ToolsToolsRouteWithChildren
-  ToolsIndexRoute: typeof ToolsIndexRoute
-}
-
-const ToolsRouteChildren: ToolsRouteChildren = {
-  ToolsToolsRoute: ToolsToolsRouteWithChildren,
-  ToolsIndexRoute: ToolsIndexRoute,
-}
-
-const ToolsRouteWithChildren = ToolsRoute._addFileChildren(ToolsRouteChildren)
 
 interface WorldWorldIdWorldWikiWikiRouteChildren {
   WorldWorldIdWorldWikiWikiArticleIdRoute: typeof WorldWorldIdWorldWikiWikiArticleIdRoute
@@ -575,47 +491,22 @@ const WorldWorldIdWorldWikiWikiRouteWithChildren =
     WorldWorldIdWorldWikiWikiRouteChildren,
   )
 
-interface WorldWorldIdWorldWikiRouteChildren {
-  WorldWorldIdWorldWikiWikiRoute: typeof WorldWorldIdWorldWikiWikiRouteWithChildren
-}
-
-const WorldWorldIdWorldWikiRouteChildren: WorldWorldIdWorldWikiRouteChildren = {
-  WorldWorldIdWorldWikiWikiRoute: WorldWorldIdWorldWikiWikiRouteWithChildren,
-}
-
-const WorldWorldIdWorldWikiRouteWithChildren =
-  WorldWorldIdWorldWikiRoute._addFileChildren(
-    WorldWorldIdWorldWikiRouteChildren,
-  )
-
 interface WorldWorldIdWorldRouteChildren {
   WorldWorldIdWorldMindmapRoute: typeof WorldWorldIdWorldMindmapRoute
   WorldWorldIdWorldSettingsRoute: typeof WorldWorldIdWorldSettingsRoute
   WorldWorldIdWorldTimelineRoute: typeof WorldWorldIdWorldTimelineRoute
-  WorldWorldIdWorldWikiRoute: typeof WorldWorldIdWorldWikiRouteWithChildren
+  WorldWorldIdWorldWikiWikiRoute: typeof WorldWorldIdWorldWikiWikiRouteWithChildren
 }
 
 const WorldWorldIdWorldRouteChildren: WorldWorldIdWorldRouteChildren = {
   WorldWorldIdWorldMindmapRoute: WorldWorldIdWorldMindmapRoute,
   WorldWorldIdWorldSettingsRoute: WorldWorldIdWorldSettingsRoute,
   WorldWorldIdWorldTimelineRoute: WorldWorldIdWorldTimelineRoute,
-  WorldWorldIdWorldWikiRoute: WorldWorldIdWorldWikiRouteWithChildren,
+  WorldWorldIdWorldWikiWikiRoute: WorldWorldIdWorldWikiWikiRouteWithChildren,
 }
 
 const WorldWorldIdWorldRouteWithChildren =
   WorldWorldIdWorldRoute._addFileChildren(WorldWorldIdWorldRouteChildren)
-
-interface WorldWorldIdRouteChildren {
-  WorldWorldIdWorldRoute: typeof WorldWorldIdWorldRouteWithChildren
-}
-
-const WorldWorldIdRouteChildren: WorldWorldIdRouteChildren = {
-  WorldWorldIdWorldRoute: WorldWorldIdWorldRouteWithChildren,
-}
-
-const WorldWorldIdRouteWithChildren = WorldWorldIdRoute._addFileChildren(
-  WorldWorldIdRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -623,10 +514,12 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
-  ProfileRoute: ProfileRouteWithChildren,
+  ProfileProfileRoute: ProfileProfileRouteWithChildren,
   SecretMusicRoute: SecretMusicRoute,
-  ToolsRoute: ToolsRouteWithChildren,
-  WorldWorldIdRoute: WorldWorldIdRouteWithChildren,
+  ToolsToolsRoute: ToolsToolsRouteWithChildren,
+  ProfileIndexRoute: ProfileIndexRoute,
+  ToolsIndexRoute: ToolsIndexRoute,
+  WorldWorldIdWorldRoute: WorldWorldIdWorldRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

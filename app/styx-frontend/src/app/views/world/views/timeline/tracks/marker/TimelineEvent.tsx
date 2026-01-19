@@ -3,7 +3,6 @@ import { Icon } from '@iconify/react'
 import Close from '@mui/icons-material/Close'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
-import { useNavigate } from '@tanstack/react-router'
 import classNames from 'classnames'
 import { CSSProperties, memo, MouseEvent, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -15,6 +14,7 @@ import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
 import { worldSlice } from '@/app/views/world/WorldSlice'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { MarkerTooltipSummonable } from '../../MarkerTooltip'
@@ -34,7 +34,7 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 	const { openTimelineContextMenu, addTimelineMarkerToSelection, removeTimelineMarkerFromSelection } =
 		worldSlice.actions
 
-	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
+	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
 
 	const { getIconPath } = useEventIcons()
 	const { timeToLabel } = useWorldTime()

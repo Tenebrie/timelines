@@ -9,13 +9,13 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
-import { useNavigate } from '@tanstack/react-router'
 import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useDispatch } from 'react-redux'
 
 import { usePostLogoutMutation } from '@/api/authApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { authSlice, User } from '../../AuthSlice'
 
@@ -24,7 +24,7 @@ type Props = {
 }
 
 export function UserDropdown({ user }: Props) {
-	const navigate = useNavigate()
+	const navigate = useStableNavigate()
 	const isProfile = useCheckRouteMatch('/profile/public')
 	const isStorage = useCheckRouteMatch('/profile/storage')
 	const isSecurity = useCheckRouteMatch('/profile/security')

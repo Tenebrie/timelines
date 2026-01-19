@@ -2,13 +2,13 @@ import Add from '@mui/icons-material/Add'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
-import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { isEntityNameValid } from '@/app/utils/isEntityNameValid'
 import { useCreateArticle } from '@/app/views/world/views/wiki/api/useCreateArticle'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const ArticleWizardModal = () => {
@@ -18,7 +18,7 @@ export const ArticleWizardModal = () => {
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
 
 	const [createArticle, { isLoading }] = useCreateArticle()
-	const navigate = useNavigate({ from: '/world/$worldId' })
+	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	useEffect(() => {
 		setNameValidationError(null)

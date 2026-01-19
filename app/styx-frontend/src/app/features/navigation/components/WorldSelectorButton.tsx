@@ -4,7 +4,6 @@ import Button from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-import { useNavigate } from '@tanstack/react-router'
 import { memo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -12,13 +11,14 @@ import { TrunkatedSpan } from '@/app/components/TrunkatedTypography'
 import { useWorldListData } from '@/app/views/home/hooks/useWorldListData'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 export const WorldSelectorButton = memo(WorldSelectorButtonComponent)
 
 function WorldSelectorButtonComponent() {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 	const open = Boolean(anchorEl)
-	const navigate = useNavigate()
+	const navigate = useStableNavigate()
 	const dispatch = useDispatch()
 	const { unloadWorld } = worldSlice.actions
 

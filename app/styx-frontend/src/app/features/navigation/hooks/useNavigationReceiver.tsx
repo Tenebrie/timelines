@@ -1,9 +1,8 @@
-import { useNavigate } from '@tanstack/react-router'
-
 import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 export const useNavigationReceiver = () => {
-	const navigate = useNavigate({ from: '/world/$worldId' })
+	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	useEventBusSubscribe['world/requestNavigation']({
 		callback: (params) => {

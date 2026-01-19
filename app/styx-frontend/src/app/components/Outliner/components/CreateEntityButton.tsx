@@ -1,10 +1,10 @@
 import Add from '@mui/icons-material/Add'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import { useNavigate } from '@tanstack/react-router'
 import useEvent from 'react-use-event-hook'
 
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 export function CreateEntityButton() {
 	const isTimeline = useCheckRouteMatch('/world/$worldId/timeline')
@@ -19,7 +19,7 @@ export function CreateEntityButton() {
 }
 
 function CreateActorButton() {
-	const navigate = useNavigate({ from: '/world/$worldId/mindmap' })
+	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
 
 	const onClick = useEvent(() => {
 		navigate({ to: '/world/$worldId/mindmap', search: (prev) => ({ ...prev, new: 'actor' }) })
@@ -33,7 +33,7 @@ function CreateActorButton() {
 }
 
 function CreateEventButton() {
-	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
+	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
 
 	const onClick = useEvent(() => {
 		navigate({ to: '/world/$worldId/timeline', search: (prev) => ({ ...prev, new: 'event', navi: [] }) })

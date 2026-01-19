@@ -3,7 +3,6 @@ import Edit from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import ListItemIcon from '@mui/material/ListItemIcon'
-import { useNavigate } from '@tanstack/react-router'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -12,6 +11,7 @@ import { ShowHideChevron } from '@/app/components/ShowHideChevron'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { StyledListItemButton, StyledListItemText } from '@/app/views/world/views/timeline/shelf/styles'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 type Props = {
 	actor: ActorDetails
@@ -19,7 +19,7 @@ type Props = {
 }
 
 export const ActorRenderer = ({ actor, collapsed }: Props) => {
-	const navigate = useNavigate({ from: '/world/$worldId' })
+	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	const { isReadOnly } = useIsReadOnly()
 	const dispatch = useDispatch()

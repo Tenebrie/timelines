@@ -5,15 +5,15 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
-import { useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const DeleteAccountModal = () => {
-	const navigate = useNavigate()
+	const navigate = useStableNavigate()
 	const [deleteAccount, { isLoading }] = useDeleteAccountMutation()
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 	const [confirmText, setConfirmText] = useState('')

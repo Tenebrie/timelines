@@ -135,6 +135,8 @@ services:
               source: ./app/rhea-backend/prisma.config.ts
               target: /app/rhea/prisma.config.ts
         depends_on:
+            rhea:
+                condition: service_started
             rhea-postgres:
                 condition: service_healthy
         command: sh -c "yarn prisma migrate deploy && yarn prisma db seed"

@@ -4,7 +4,6 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { useNavigate } from '@tanstack/react-router'
 import { memo, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -18,6 +17,7 @@ import {
 	getTimelineState,
 	getWorldState,
 } from '@/app/views/world/WorldSliceSelectors'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useTimelineContextMenuRequests } from './hooks/useTimelineContextMenuRequests'
 
@@ -43,7 +43,7 @@ export const TimelineContextMenuComponent = () => {
 		[markers, selectedMarkerIds],
 	)
 
-	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
+	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
 	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
 	const { revokeEventAt, unrevokeEventAt, isRequestInFlight } = useTimelineContextMenuRequests()

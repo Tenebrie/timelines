@@ -1,8 +1,8 @@
 import Button from '@mui/material/Button'
-import { useNavigate } from '@tanstack/react-router'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import { FileRouteTypes } from '@/routeTree.gen'
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 export function ToolButton({ label, route }: Props) {
 	const theme = useCustomTheme()
 	const isActive = useCheckRouteMatch(route)
-	const navigate = useNavigate({ from: '/tools' })
+	const navigate = useStableNavigate({ from: '/tools' })
 
 	return (
 		<Button

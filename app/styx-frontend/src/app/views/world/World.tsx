@@ -22,7 +22,7 @@ import { getTimelineState, getWorldState } from './WorldSliceSelectors'
 
 export const World = () => {
 	const { worldId } = useStrictParams({
-		from: '/world/$worldId',
+		from: '/world/$worldId/_world',
 	})
 	const sendCalliopeMessage = useEventBusDispatch['calliope/requestSendMessage']()
 
@@ -87,7 +87,7 @@ export const World = () => {
 
 function WorldLoader() {
 	const { worldId } = useStrictParams({
-		from: '/world/$worldId',
+		from: '/world/$worldId/_world',
 	})
 	useLoadWorldInfo(worldId)
 	return <></>

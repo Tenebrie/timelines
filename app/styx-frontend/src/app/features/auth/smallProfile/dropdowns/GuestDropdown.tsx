@@ -7,13 +7,13 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
-import { useNavigate } from '@tanstack/react-router'
 import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 export function GuestDropdown() {
-	const navigate = useNavigate()
+	const navigate = useStableNavigate()
 	const popupState = usePopupState({ variant: 'popover', popupId: 'profile-menu' })
 	const isLogin = useCheckRouteMatch('/login')
 	const isRegister = useCheckRouteMatch('/register')

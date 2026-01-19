@@ -1,7 +1,6 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
 import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
@@ -12,6 +11,7 @@ import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getSelectedNodeActorIds } from '@/app/views/world/WorldSliceSelectors'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useUpdateMindmapNode } from '../api/useUpdateMindmapNode'
 import { ActorNode } from './ActorNode'
@@ -23,7 +23,7 @@ type Props = {
 
 export function ActorNodePositioner({ actor, node }: Props) {
 	const theme = useCustomTheme()
-	const navigate = useNavigate({ from: '/world/$worldId/mindmap' })
+	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
 	const [updateMindmapNode] = useUpdateMindmapNode()
 
 	const [position, setPosition] = useState({ x: node.positionX, y: node.positionY })

@@ -7,7 +7,7 @@ import Checkbox from '@mui/material/Checkbox'
 import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
-import { useMatches, useNavigate } from '@tanstack/react-router'
+import { useMatches } from '@tanstack/react-router'
 import { bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { memo, useCallback, useMemo } from 'react'
 
@@ -15,6 +15,7 @@ import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { useArticleBulkActions } from '@/app/views/world/views/wiki/hooks/useArticleBulkActions'
 import { useArticleDragDrop } from '@/app/views/world/views/wiki/hooks/useArticleDragDrop'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { ArticleContextMenu } from '../../components/ArticleContextMenu'
 import { useArticleCollapseControls } from '../hooks/useArticleCollapseControls'
@@ -58,7 +59,7 @@ function ArticleListItemInnerComponent({
 	toggleOpen,
 	highlighted,
 }: Props & { expanded: boolean; toggleOpen: () => void; highlighted: boolean }) {
-	const navigate = useNavigate({ from: '/world/$worldId' })
+	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	const { isReadOnly } = useIsReadOnly()
 

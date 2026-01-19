@@ -3,11 +3,12 @@ import Search from '@mui/icons-material/Search'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
-import { useNavigate, useSearch } from '@tanstack/react-router'
+import { useSearch } from '@tanstack/react-router'
 import { memo } from 'react'
 
 import { useDebouncedState } from '@/app/hooks/useDebouncedState'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 export const IconSearchInput = memo(IconSearchInputComponent)
 
@@ -16,7 +17,7 @@ type Props = {
 }
 
 export function IconSearchInputComponent({ onQueryChange }: Props) {
-	const navigate = useNavigate({ from: '/world/$worldId' })
+	const navigate = useStableNavigate({ from: '/world/$worldId' })
 	const { iq } = useSearch({ from: '/world/$worldId/_world' })
 
 	const [, currentQuery, setQuery] = useDebouncedState({

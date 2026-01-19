@@ -13,7 +13,7 @@ export const WorldListEmptyState = ({ label }: Props) => {
 	const { open } = useModal('worldWizardModal')
 
 	return (
-		<OutlinedContainer label={label}>
+		<OutlinedContainer label={label} style={{ minWidth: 400, borderRadius: 8 }}>
 			<Stack direction="row" alignItems="center" gap={1} justifyContent={'center'}>
 				<ListItemButton>Nothing has been created yet!</ListItemButton>
 			</Stack>

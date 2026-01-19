@@ -1,9 +1,10 @@
-import { useNavigate, useSearch } from '@tanstack/react-router'
+import { useSearch } from '@tanstack/react-router'
 import { RefObject, useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useTimelineNavigation } from '../hooks/useTimelineNavigation'
 import { timelineSlice } from '../TimelineSlice'
@@ -20,7 +21,7 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 	})
 	const { timeOrigin } = useSelector(getWorldState, (a, b) => a.timeOrigin === b.timeOrigin)
 
-	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
+	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
 	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
 	const { setIsSwitchingScale, setScaleLevel, setTargetScaleLevel } = timelineSlice.actions

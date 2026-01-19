@@ -7,12 +7,12 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
-import { useNavigate } from '@tanstack/react-router'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 import { useEventBusDispatch } from '../../eventBus'
@@ -23,7 +23,7 @@ import { TimeTravelModalInfo } from './TimeTravelModalInfo'
 
 export const TimeTravelModal = () => {
 	const { isOpen, close } = useModal('timeTravelModal')
-	const navigate = useNavigate({ from: '/world/$worldId' })
+	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	const { selectedTime, calendar } = useSelector(
 		getWorldState,

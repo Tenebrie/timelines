@@ -1,16 +1,14 @@
 import { Actor } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { useNavigate } from '@tanstack/react-router'
 import { memo } from 'react'
-import { useSelector } from 'react-redux'
 
 import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
 import { IconPicker } from '@/app/components/IconPicker/IconPicker'
 import { ManualErrorBanner } from '@/app/components/ManualErrorBanner'
 import { EntityEditorTabs } from '@/app/features/entityEditor/components/EntityEditorTabs'
-import { getEditingPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useCurrentOrNewActor } from '../hooks/useCurrentOrNewActor'
 import { ActorDescription } from './components/ActorDescription'
@@ -27,11 +25,7 @@ export const ActorDetails = memo(ActorDetailsComponent)
 export function ActorDetailsComponent({ editedActor }: Props) {
 	const { mode, actor } = useCurrentOrNewActor({ editedActor })
 	const draft = useActorDraft({ actor })
-	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
-	const { actorColorPickerOpen } = useSelector(
-		getEditingPreferences,
-		(a, b) => a.actorColorPickerOpen === b.actorColorPickerOpen,
-	)
+	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
 
 	useUpsertActor({
 		mode,

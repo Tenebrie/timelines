@@ -14,12 +14,7 @@ const defaultTheme = ((): 'light' | 'dark' => {
 
 export const PreferencesStateSchema = z.object({
 	colorMode: z.union([z.literal('light'), z.literal('dark')]).default(defaultTheme),
-	editing: z
-		.object({
-			actorColorPickerOpen: z.boolean().default(false),
-			eventColorPickerOpen: z.boolean().default(false),
-		})
-		.default({}),
+	editing: z.object({}).default({}),
 	timeline: z
 		.object({
 			containerHeight: z.number().default(232),

@@ -2,7 +2,6 @@ import { Actor, WorldEvent } from '@api/types/worldTypes'
 import Edit from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
-import { useNavigate } from '@tanstack/react-router'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -10,6 +9,7 @@ import { ShowHideChevron } from '@/app/components/ShowHideChevron'
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { StyledListItemButton } from '@/app/views/world/views/timeline/shelf/styles'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { EventHeaderRenderer } from './EventHeaderRenderer'
 
@@ -23,7 +23,7 @@ type Props = {
 }
 
 export const EventRenderer = ({ event, collapsed, owningActor, short, active, actions }: Props) => {
-	const navigate = useNavigate({ from: '/world/$worldId' })
+	const navigate = useStableNavigate({ from: '/world/$worldId' })
 	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
 	const dispatch = useDispatch()

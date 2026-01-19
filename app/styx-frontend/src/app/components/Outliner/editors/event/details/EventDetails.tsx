@@ -1,7 +1,6 @@
 import { WorldEvent } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { useNavigate } from '@tanstack/react-router'
 import { memo } from 'react'
 
 import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
@@ -10,6 +9,7 @@ import { useUpsertEvent } from '@/app/components/Outliner/editors/event/details/
 import { useCurrentOrNewEvent } from '@/app/components/Outliner/editors/event/details/hooks/useCurrentOrNewEvent'
 import { EntityEditorTabs } from '@/app/features/entityEditor/components/EntityEditorTabs'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { EventDescription } from './components/EventDescription'
 import { EventTitle } from './components/EventTitle'
@@ -25,7 +25,7 @@ export const EventDetails = memo(EventDetailsComponent)
 export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
 	const { mode, event } = useCurrentOrNewEvent({ event: editedEvent })
 	const draft = useEventDraft({ event })
-	const navigate = useNavigate({ from: '/world/$worldId/timeline' })
+	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
 
 	useUpsertEvent({
 		mode,

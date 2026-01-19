@@ -1,7 +1,8 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
-import { useNavigate, useSearch } from '@tanstack/react-router'
+import { useSearch } from '@tanstack/react-router'
 
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useDeleteMindmapNode } from '../api/useDeleteMindmapNode'
 
@@ -14,7 +15,7 @@ export function ActorNodeHotkeys({ node }: Props) {
 		from: '/world/$worldId/_world/mindmap',
 		select: (search) => search.navi,
 	})
-	const navigate = useNavigate({
+	const navigate = useStableNavigate({
 		from: '/world/$worldId/mindmap',
 	})
 	const [deleteMindmapNode] = useDeleteMindmapNode()

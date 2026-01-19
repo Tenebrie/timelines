@@ -8,7 +8,6 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
-import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
@@ -19,6 +18,7 @@ import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { isEntityNameValid } from '@/app/utils/isEntityNameValid'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { worldSlice } from '@/app/views/world/WorldSlice'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const WorldWizardModal = () => {
@@ -31,7 +31,7 @@ export const WorldWizardModal = () => {
 	const { listAllCalendars } = useWorldCalendar()
 
 	const { isOpen, close } = useModal('worldWizardModal')
-	const navigate = useNavigate()
+	const navigate = useStableNavigate()
 
 	const [createWorld, { isLoading }] = useCreateWorldMutation()
 

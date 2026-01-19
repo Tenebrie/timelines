@@ -1,13 +1,14 @@
 import Box from '@mui/material/Box'
-import { useNavigate } from '@tanstack/react-router'
 import { useRef } from 'react'
 import { useEffect } from 'react'
 import useEvent from 'react-use-event-hook'
 
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
+
 import { useNewNodeReceiver } from '../hooks/useNewNodeReceiver'
 
 export function MindmapClickArea() {
-	const navigate = useNavigate({ from: '/world/$worldId/mindmap' })
+	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
 
 	const onClick = useEvent(() => {
 		navigate({ search: (prev) => ({ ...prev, navi: [], new: undefined }) })

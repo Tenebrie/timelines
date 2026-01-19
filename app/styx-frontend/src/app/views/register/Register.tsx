@@ -5,7 +5,7 @@ import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
 import { useDispatch } from 'react-redux'
 import { z } from 'zod'
 
@@ -15,12 +15,13 @@ import { TenebrieLogo } from '@/app/components/TenebrieLogo'
 import { BoundTextField } from '@/app/features/forms/components/BoundTextField'
 import { useAppForm } from '@/app/features/forms/useAppForm'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { authSlice } from '../../features/auth/AuthSlice'
 import { AlreadyLoggedInAlert } from '../../features/auth/components/AlreadyLoggedInAlert'
 
 export const Register = () => {
-	const navigate = useNavigate()
+	const navigate = useStableNavigate()
 	const [createAccount, createAccountState] = useCreateAccountMutation()
 
 	const { setUser, setSessionId } = authSlice.actions
