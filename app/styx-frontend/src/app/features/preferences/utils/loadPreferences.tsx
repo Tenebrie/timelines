@@ -14,11 +14,9 @@ const defaultTheme = ((): 'light' | 'dark' => {
 
 export const PreferencesStateSchema = z.object({
 	colorMode: z.union([z.literal('light'), z.literal('dark')]).default(defaultTheme),
-	editing: z.object({}).default({}),
-	timeline: z
+	iconSets: z
 		.object({
-			containerHeight: z.number().default(232),
-			scaleLevel: ScaleLevelSchema.default(0),
+			recent: z.array(z.string()).default([]),
 		})
 		.default({}),
 	outliner: z
@@ -35,6 +33,12 @@ export const PreferencesStateSchema = z.object({
 			actorsReversed: z.boolean().default(false),
 			eventsOpen: z.boolean().default(true),
 			eventsReversed: z.boolean().default(false),
+		})
+		.default({}),
+	timeline: z
+		.object({
+			containerHeight: z.number().default(232),
+			scaleLevel: ScaleLevelSchema.default(0),
 		})
 		.default({}),
 	wiki: z

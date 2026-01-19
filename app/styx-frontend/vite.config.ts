@@ -35,13 +35,15 @@ export default defineConfig({
 	preview: {
 		port: 8080,
 		host: true,
-		allowedHosts: true,
 	},
 	server: {
 		port: 8080,
-		allowedHosts: true,
+		host: true,
+		allowedHosts: ['styx'],
 		watch: {
 			usePolling: true,
+			interval: 100, // Poll every 100ms (default is 100, but explicit is better)
+			ignored: ['**/node_modules/**', '**/.git/**'],
 		},
 		hmr: {
 			port: 8080,

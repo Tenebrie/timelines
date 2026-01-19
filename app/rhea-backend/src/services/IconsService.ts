@@ -39,7 +39,7 @@ export const IconsService = {
 	},
 
 	getCommonWorldEventIcons: async (worldId: string) => {
-		const iconLimit = 20
+		const iconLimit = 24
 
 		const icons = await getPrismaClient().worldEvent.groupBy({
 			by: ['icon'],
@@ -56,7 +56,7 @@ export const IconsService = {
 		return [
 			{
 				id: 'common',
-				name: 'Commonly Used Here',
+				name: 'Commonly Used',
 				icons: icons
 					.sort((a, b) => b._count.icon - a._count.icon || a.icon.localeCompare(b.icon))
 					.map((icon) => icon.icon),

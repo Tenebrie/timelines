@@ -35,7 +35,7 @@ export function IconCollection({ collection, color, onSelect }: Props) {
 			<Stack direction="row" flexWrap="wrap" gap={1}>
 				{collection.icons.map((icon, index) => (
 					<Button key={index} onClick={() => onSelect(icon)} sx={{ padding: 0.25, minWidth: 'auto' }}>
-						<Tooltip title={icon}>
+						<Tooltip title={icon} disableInteractive>
 							<Box
 								sx={{
 									width: 36,

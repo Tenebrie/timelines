@@ -34,24 +34,22 @@ export const preferencesSlice = createSlice({
 		loadFromLocalStorage: (state) => {
 			const value = loadPreferences()
 			state['colorMode'] = value['colorMode']
-			state['timeline'] = value['timeline']
+			state['iconSets'] = value['iconSets']
 			state['outliner'] = value['outliner']
 			state['overview'] = value['overview']
+			state['timeline'] = value['timeline']
 			state['wiki'] = value['wiki']
 		},
 
+		/* Color Mode */
 		setColorMode: (state, { payload }: PayloadAction<'light' | 'dark'>) => {
 			state.colorMode = payload
 			saveToLocalStorage(state)
 		},
 
-		/* Timeline */
-		setTimelineHeight: (state, { payload }: PayloadAction<number>) => {
-			state.timeline.containerHeight = payload
-			saveToLocalStorage(state)
-		},
-		setScaleLevel: (state, { payload }: PayloadAction<ScaleLevel>) => {
-			state.timeline.scaleLevel = payload
+		/* Icon Sets */
+		setRecentIconSets: (state, { payload }: PayloadAction<string[]>) => {
+			state.iconSets.recent = payload
 			saveToLocalStorage(state)
 		},
 
@@ -96,6 +94,16 @@ export const preferencesSlice = createSlice({
 		},
 		setEventsReversed: (state, { payload }: PayloadAction<boolean>) => {
 			state.overview.eventsReversed = payload
+			saveToLocalStorage(state)
+		},
+
+		/* Timeline */
+		setTimelineHeight: (state, { payload }: PayloadAction<number>) => {
+			state.timeline.containerHeight = payload
+			saveToLocalStorage(state)
+		},
+		setScaleLevel: (state, { payload }: PayloadAction<ScaleLevel>) => {
+			state.timeline.scaleLevel = payload
 			saveToLocalStorage(state)
 		},
 

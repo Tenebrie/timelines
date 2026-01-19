@@ -3,11 +3,13 @@ import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { memo, useState } from 'react'
 import { useSelector } from 'react-redux'
+import useEvent from 'react-use-event-hook'
 
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 import { IconCollection } from './components/IconCollection'
 import { IconSearchInput } from './components/IconSearchInput'
+import { useRecentIconSets } from './hooks/useRecentIconSets'
 import { useIconifySearch } from './useIconifySearch'
 
 type Props = {
@@ -18,15 +20,36 @@ type Props = {
 
 export const IconPicker = memo(IconPickerComponent)
 
-export function IconPickerComponent(props: Props) {
+export function IconPickerComponent({ onSelect, ...props }: Props) {
 	const worldId = useSelector(getWorldIdState)
 	const [query, setQuery] = useState('')
+	const [recent, updateRecentIconSets] = useRecentIconSets()
 
 	const { results } = useIconifySearch({ query })
 	const { data: commonEventIcons } = useGetCommonWorldEventIconsQuery({ worldId })
 	const shownFavoriteSets = query.length > 0 ? results?.collections.filter((set) => set.favorite) : []
 	const shownOtherSets =
-		query.length > 0 ? results?.collections.filter((set) => !set.favorite) : commonEventIcons?.collections
+		query.length > 0
+			? results?.collections.filter((set) => !set.favorite)
+			: [
+					...(commonEventIcons?.collections ?? []),
+					...(recent.length > 0
+						? [
+								{
+									id: 'recent',
+									name: 'Recently Used',
+									icons: recent,
+									count: recent.length,
+									procedural: true,
+								},
+							]
+						: []),
+				]
+
+	const onIconSelected = useEvent((id: string) => {
+		updateRecentIconSets([id])
+		onSelect(id)
+	})
 
 	return (
 		<Stack gap={2}>
@@ -36,7 +59,7 @@ export function IconPickerComponent(props: Props) {
 					<Stack gap={1} direction="row" flexWrap="wrap">
 						{shownFavoriteSets?.map((collection) => (
 							<Stack key={collection.id} spacing={1} width="calc(50% - 8px)">
-								<IconCollection collection={collection} {...props} />
+								<IconCollection collection={collection} {...props} onSelect={onIconSelected} />
 							</Stack>
 						))}
 					</Stack>
@@ -46,7 +69,7 @@ export function IconPickerComponent(props: Props) {
 			<Stack gap={1} direction="row" flexWrap="wrap">
 				{shownOtherSets?.map((collection) => (
 					<Stack key={collection.id} spacing={1} width="calc(50% - 8px)">
-						<IconCollection collection={collection} {...props} />
+						<IconCollection collection={collection} {...props} onSelect={onIconSelected} />
 					</Stack>
 				))}
 			</Stack>
