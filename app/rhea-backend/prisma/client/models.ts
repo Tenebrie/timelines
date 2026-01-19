@@ -11,6 +11,7 @@
 export type * from './models/Actor.js'
 export type * from './models/UserAnnouncement.js'
 export type * from './models/Asset.js'
+export type * from './models/SavedColor.js'
 export type * from './models/Flags.js'
 export type * from './models/UserFavoriteIconSet.js'
 export type * from './models/WorldCommonIconSet.js'

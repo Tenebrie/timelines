@@ -579,10 +579,6 @@ export type EnumMentionedEntityFieldUpdateOperationsInput = {
   set?: $Enums.MentionedEntity
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type MentionCreateNestedManyWithoutSourceTagInput = {
   create?: Prisma.XOR<Prisma.MentionCreateWithoutSourceTagInput, Prisma.MentionUncheckedCreateWithoutSourceTagInput> | Prisma.MentionCreateWithoutSourceTagInput[] | Prisma.MentionUncheckedCreateWithoutSourceTagInput[]
   connectOrCreate?: Prisma.MentionCreateOrConnectWithoutSourceTagInput | Prisma.MentionCreateOrConnectWithoutSourceTagInput[]

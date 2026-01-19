@@ -14,6 +14,7 @@ import { IconsRouter } from './routers/IconsRouter.js'
 import { ImageConversionRouter } from './routers/ImageConversionRouter.js'
 import { MindmapRouter } from './routers/MindmapRouter.js'
 import { ProfileRouter } from './routers/ProfileRouter.js'
+import { WorldColorRouter } from './routers/WorldColorRouter.js'
 import { WorldEventRouter } from './routers/WorldEventRouter.js'
 import { WorldEventTrackRouter } from './routers/WorldEventTrackRouter.js'
 import { WorldRouter } from './routers/WorldRouter.js'
@@ -78,6 +79,8 @@ app
 	.use(WorldEventTrackRouter.allowedMethods())
 	.use(WorldRouter.routes())
 	.use(WorldRouter.allowedMethods())
+	.use(WorldColorRouter.routes())
+	.use(WorldColorRouter.allowedMethods())
 	.use(WorldSearchRouter.routes())
 	.use(WorldSearchRouter.allowedMethods())
 	.use(WorldThumbnailRouter.routes())

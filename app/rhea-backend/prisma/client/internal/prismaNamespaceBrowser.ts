@@ -54,6 +54,7 @@ export const ModelName = {
   Actor: 'Actor',
   UserAnnouncement: 'UserAnnouncement',
   Asset: 'Asset',
+  SavedColor: 'SavedColor',
   Flags: 'Flags',
   UserFavoriteIconSet: 'UserFavoriteIconSet',
   WorldCommonIconSet: 'WorldCommonIconSet',
@@ -129,6 +130,18 @@ export const AssetScalarFieldEnum = {
 } as const
 
 export type AssetScalarFieldEnum = (typeof AssetScalarFieldEnum)[keyof typeof AssetScalarFieldEnum]
+
+
+export const SavedColorScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  value: 'value',
+  label: 'label',
+  worldId: 'worldId'
+} as const
+
+export type SavedColorScalarFieldEnum = (typeof SavedColorScalarFieldEnum)[keyof typeof SavedColorScalarFieldEnum]
 
 
 export const FlagsScalarFieldEnum = {

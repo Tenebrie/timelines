@@ -45,6 +45,7 @@ model World {
   mindmapNodes        MindmapNode[]
   worldEventTracks    WorldEventTrack[]
   worldCommonIconSets WorldCommonIconSet[]
+  savedColors         SavedColor[]
 }
 
 model WorldEvent {

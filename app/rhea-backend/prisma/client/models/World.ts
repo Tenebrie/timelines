@@ -257,6 +257,7 @@ export type WorldWhereInput = {
   mindmapNodes?: Prisma.MindmapNodeListRelationFilter
   worldEventTracks?: Prisma.WorldEventTrackListRelationFilter
   worldCommonIconSets?: Prisma.WorldCommonIconSetListRelationFilter
+  savedColors?: Prisma.SavedColorListRelationFilter
 }
 
 export type WorldOrderByWithRelationInput = {
@@ -278,6 +279,7 @@ export type WorldOrderByWithRelationInput = {
   mindmapNodes?: Prisma.MindmapNodeOrderByRelationAggregateInput
   worldEventTracks?: Prisma.WorldEventTrackOrderByRelationAggregateInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetOrderByRelationAggregateInput
+  savedColors?: Prisma.SavedColorOrderByRelationAggregateInput
 }
 
 export type WorldWhereUniqueInput = Prisma.AtLeast<{
@@ -302,6 +304,7 @@ export type WorldWhereUniqueInput = Prisma.AtLeast<{
   mindmapNodes?: Prisma.MindmapNodeListRelationFilter
   worldEventTracks?: Prisma.WorldEventTrackListRelationFilter
   worldCommonIconSets?: Prisma.WorldCommonIconSetListRelationFilter
+  savedColors?: Prisma.SavedColorListRelationFilter
 }, "id" | "id">
 
 export type WorldOrderByWithAggregationInput = {
@@ -354,6 +357,7 @@ export type WorldCreateInput = {
   mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateInput = {
@@ -374,6 +378,7 @@ export type WorldUncheckedCreateInput = {
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUpdateInput = {
@@ -394,6 +399,7 @@ export type WorldUpdateInput = {
   mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateInput = {
@@ -414,6 +420,7 @@ export type WorldUncheckedUpdateInput = {
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateManyInput = {
@@ -522,6 +529,20 @@ export type WorldUpdateOneRequiredWithoutActorsNestedInput = {
   upsert?: Prisma.WorldUpsertWithoutActorsInput
   connect?: Prisma.WorldWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorldUpdateToOneWithWhereWithoutActorsInput, Prisma.WorldUpdateWithoutActorsInput>, Prisma.WorldUncheckedUpdateWithoutActorsInput>
+}
+
+export type WorldCreateNestedOneWithoutSavedColorsInput = {
+  create?: Prisma.XOR<Prisma.WorldCreateWithoutSavedColorsInput, Prisma.WorldUncheckedCreateWithoutSavedColorsInput>
+  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutSavedColorsInput
+  connect?: Prisma.WorldWhereUniqueInput
+}
+
+export type WorldUpdateOneRequiredWithoutSavedColorsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorldCreateWithoutSavedColorsInput, Prisma.WorldUncheckedCreateWithoutSavedColorsInput>
+  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutSavedColorsInput
+  upsert?: Prisma.WorldUpsertWithoutSavedColorsInput
+  connect?: Prisma.WorldWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorldUpdateToOneWithWhereWithoutSavedColorsInput, Prisma.WorldUpdateWithoutSavedColorsInput>, Prisma.WorldUncheckedUpdateWithoutSavedColorsInput>
 }
 
 export type WorldCreateNestedOneWithoutWorldCommonIconSetsInput = {
@@ -697,6 +718,7 @@ export type WorldCreateWithoutActorsInput = {
   mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutActorsInput = {
@@ -716,6 +738,7 @@ export type WorldUncheckedCreateWithoutActorsInput = {
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutActorsInput = {
@@ -751,6 +774,7 @@ export type WorldUpdateWithoutActorsInput = {
   mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutActorsInput = {
@@ -763,6 +787,103 @@ export type WorldUncheckedUpdateWithoutActorsInput = {
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
+  events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
+  articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
+  collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
+  mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
+  worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
+}
+
+export type WorldCreateWithoutSavedColorsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string
+  calendar?: $Enums.WorldCalendarType
+  timeOrigin?: bigint | number
+  accessMode?: $Enums.WorldAccessMode
+  actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
+  events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
+  articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  tags?: Prisma.TagCreateNestedManyWithoutWorldInput
+  owner: Prisma.UserCreateNestedOneWithoutWorldsInput
+  collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
+  mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
+  worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
+}
+
+export type WorldUncheckedCreateWithoutSavedColorsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string
+  calendar?: $Enums.WorldCalendarType
+  timeOrigin?: bigint | number
+  ownerId: string
+  accessMode?: $Enums.WorldAccessMode
+  actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
+  events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
+  articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
+  collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
+  mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
+  worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
+}
+
+export type WorldCreateOrConnectWithoutSavedColorsInput = {
+  where: Prisma.WorldWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorldCreateWithoutSavedColorsInput, Prisma.WorldUncheckedCreateWithoutSavedColorsInput>
+}
+
+export type WorldUpsertWithoutSavedColorsInput = {
+  update: Prisma.XOR<Prisma.WorldUpdateWithoutSavedColorsInput, Prisma.WorldUncheckedUpdateWithoutSavedColorsInput>
+  create: Prisma.XOR<Prisma.WorldCreateWithoutSavedColorsInput, Prisma.WorldUncheckedCreateWithoutSavedColorsInput>
+  where?: Prisma.WorldWhereInput
+}
+
+export type WorldUpdateToOneWithWhereWithoutSavedColorsInput = {
+  where?: Prisma.WorldWhereInput
+  data: Prisma.XOR<Prisma.WorldUpdateWithoutSavedColorsInput, Prisma.WorldUncheckedUpdateWithoutSavedColorsInput>
+}
+
+export type WorldUpdateWithoutSavedColorsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
+  actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
+  events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
+  articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
+  owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
+  collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
+  mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
+  worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
+}
+
+export type WorldUncheckedUpdateWithoutSavedColorsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
+  actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
@@ -789,6 +910,7 @@ export type WorldCreateWithoutWorldCommonIconSetsInput = {
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutWorldCommonIconSetsInput = {
@@ -808,6 +930,7 @@ export type WorldUncheckedCreateWithoutWorldCommonIconSetsInput = {
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutWorldCommonIconSetsInput = {
@@ -843,6 +966,7 @@ export type WorldUpdateWithoutWorldCommonIconSetsInput = {
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutWorldCommonIconSetsInput = {
@@ -862,6 +986,7 @@ export type WorldUncheckedUpdateWithoutWorldCommonIconSetsInput = {
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutMindmapNodesInput = {
@@ -881,6 +1006,7 @@ export type WorldCreateWithoutMindmapNodesInput = {
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutMindmapNodesInput = {
@@ -900,6 +1026,7 @@ export type WorldUncheckedCreateWithoutMindmapNodesInput = {
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutMindmapNodesInput = {
@@ -935,6 +1062,7 @@ export type WorldUpdateWithoutMindmapNodesInput = {
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutMindmapNodesInput = {
@@ -954,6 +1082,7 @@ export type WorldUncheckedUpdateWithoutMindmapNodesInput = {
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutOwnerInput = {
@@ -973,6 +1102,7 @@ export type WorldCreateWithoutOwnerInput = {
   mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutOwnerInput = {
@@ -992,6 +1122,7 @@ export type WorldUncheckedCreateWithoutOwnerInput = {
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutOwnerInput = {
@@ -1052,6 +1183,7 @@ export type WorldCreateWithoutCollaboratorsInput = {
   mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutCollaboratorsInput = {
@@ -1071,6 +1203,7 @@ export type WorldUncheckedCreateWithoutCollaboratorsInput = {
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutCollaboratorsInput = {
@@ -1106,6 +1239,7 @@ export type WorldUpdateWithoutCollaboratorsInput = {
   mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutCollaboratorsInput = {
@@ -1125,6 +1259,7 @@ export type WorldUncheckedUpdateWithoutCollaboratorsInput = {
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutTagsInput = {
@@ -1144,6 +1279,7 @@ export type WorldCreateWithoutTagsInput = {
   mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutTagsInput = {
@@ -1163,6 +1299,7 @@ export type WorldUncheckedCreateWithoutTagsInput = {
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutTagsInput = {
@@ -1198,6 +1335,7 @@ export type WorldUpdateWithoutTagsInput = {
   mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutTagsInput = {
@@ -1217,6 +1355,7 @@ export type WorldUncheckedUpdateWithoutTagsInput = {
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutArticlesInput = {
@@ -1236,6 +1375,7 @@ export type WorldCreateWithoutArticlesInput = {
   mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutArticlesInput = {
@@ -1255,6 +1395,7 @@ export type WorldUncheckedCreateWithoutArticlesInput = {
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutArticlesInput = {
@@ -1290,6 +1431,7 @@ export type WorldUpdateWithoutArticlesInput = {
   mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutArticlesInput = {
@@ -1309,6 +1451,7 @@ export type WorldUncheckedUpdateWithoutArticlesInput = {
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutEventsInput = {
@@ -1328,6 +1471,7 @@ export type WorldCreateWithoutEventsInput = {
   mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutEventsInput = {
@@ -1347,6 +1491,7 @@ export type WorldUncheckedCreateWithoutEventsInput = {
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutEventsInput = {
@@ -1382,6 +1527,7 @@ export type WorldUpdateWithoutEventsInput = {
   mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutEventsInput = {
@@ -1401,6 +1547,7 @@ export type WorldUncheckedUpdateWithoutEventsInput = {
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutWorldEventTracksInput = {
@@ -1420,6 +1567,7 @@ export type WorldCreateWithoutWorldEventTracksInput = {
   collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutWorldEventTracksInput = {
@@ -1439,6 +1587,7 @@ export type WorldUncheckedCreateWithoutWorldEventTracksInput = {
   collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutWorldEventTracksInput = {
@@ -1474,6 +1623,7 @@ export type WorldUpdateWithoutWorldEventTracksInput = {
   collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutWorldEventTracksInput = {
@@ -1493,6 +1643,7 @@ export type WorldUncheckedUpdateWithoutWorldEventTracksInput = {
   collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateManyOwnerInput = {
@@ -1523,6 +1674,7 @@ export type WorldUpdateWithoutOwnerInput = {
   mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutOwnerInput = {
@@ -1542,6 +1694,7 @@ export type WorldUncheckedUpdateWithoutOwnerInput = {
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateManyWithoutOwnerInput = {
@@ -1569,6 +1722,7 @@ export type WorldCountOutputType = {
   mindmapNodes: number
   worldEventTracks: number
   worldCommonIconSets: number
+  savedColors: number
 }
 
 export type WorldCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1580,6 +1734,7 @@ export type WorldCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   mindmapNodes?: boolean | WorldCountOutputTypeCountMindmapNodesArgs
   worldEventTracks?: boolean | WorldCountOutputTypeCountWorldEventTracksArgs
   worldCommonIconSets?: boolean | WorldCountOutputTypeCountWorldCommonIconSetsArgs
+  savedColors?: boolean | WorldCountOutputTypeCountSavedColorsArgs
 }
 
 /**
@@ -1648,6 +1803,13 @@ export type WorldCountOutputTypeCountWorldCommonIconSetsArgs<ExtArgs extends run
   where?: Prisma.WorldCommonIconSetWhereInput
 }
 
+/**
+ * WorldCountOutputType without action
+ */
+export type WorldCountOutputTypeCountSavedColorsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SavedColorWhereInput
+}
+
 
 export type WorldSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1668,6 +1830,7 @@ export type WorldSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   mindmapNodes?: boolean | Prisma.World$mindmapNodesArgs<ExtArgs>
   worldEventTracks?: boolean | Prisma.World$worldEventTracksArgs<ExtArgs>
   worldCommonIconSets?: boolean | Prisma.World$worldCommonIconSetsArgs<ExtArgs>
+  savedColors?: boolean | Prisma.World$savedColorsArgs<ExtArgs>
   _count?: boolean | Prisma.WorldCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["world"]>
 
@@ -1720,6 +1883,7 @@ export type WorldInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   mindmapNodes?: boolean | Prisma.World$mindmapNodesArgs<ExtArgs>
   worldEventTracks?: boolean | Prisma.World$worldEventTracksArgs<ExtArgs>
   worldCommonIconSets?: boolean | Prisma.World$worldCommonIconSetsArgs<ExtArgs>
+  savedColors?: boolean | Prisma.World$savedColorsArgs<ExtArgs>
   _count?: boolean | Prisma.WorldCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WorldIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1741,6 +1905,7 @@ export type $WorldPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     mindmapNodes: Prisma.$MindmapNodePayload<ExtArgs>[]
     worldEventTracks: Prisma.$WorldEventTrackPayload<ExtArgs>[]
     worldCommonIconSets: Prisma.$WorldCommonIconSetPayload<ExtArgs>[]
+    savedColors: Prisma.$SavedColorPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2155,6 +2320,7 @@ export interface Prisma__WorldClient<T, Null = never, ExtArgs extends runtime.Ty
   mindmapNodes<T extends Prisma.World$mindmapNodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$mindmapNodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MindmapNodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   worldEventTracks<T extends Prisma.World$worldEventTracksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$worldEventTracksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldEventTrackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   worldCommonIconSets<T extends Prisma.World$worldCommonIconSetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$worldCommonIconSetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldCommonIconSetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  savedColors<T extends Prisma.World$savedColorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$savedColorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedColorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2778,6 +2944,30 @@ export type World$worldCommonIconSetsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.WorldCommonIconSetScalarFieldEnum | Prisma.WorldCommonIconSetScalarFieldEnum[]
+}
+
+/**
+ * World.savedColors
+ */
+export type World$savedColorsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SavedColor
+   */
+  select?: Prisma.SavedColorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SavedColor
+   */
+  omit?: Prisma.SavedColorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SavedColorInclude<ExtArgs> | null
+  where?: Prisma.SavedColorWhereInput
+  orderBy?: Prisma.SavedColorOrderByWithRelationInput | Prisma.SavedColorOrderByWithRelationInput[]
+  cursor?: Prisma.SavedColorWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SavedColorScalarFieldEnum | Prisma.SavedColorScalarFieldEnum[]
 }
 
 /**

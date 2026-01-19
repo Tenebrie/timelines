@@ -55,6 +55,11 @@ export type UserAnnouncement = Prisma.UserAnnouncementModel
  */
 export type Asset = Prisma.AssetModel
 /**
+ * Model SavedColor
+ * 
+ */
+export type SavedColor = Prisma.SavedColorModel
+/**
  * Model Flags
  * 
  */

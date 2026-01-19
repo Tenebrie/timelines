@@ -387,6 +387,7 @@ export const ModelName = {
   Actor: 'Actor',
   UserAnnouncement: 'UserAnnouncement',
   Asset: 'Asset',
+  SavedColor: 'SavedColor',
   Flags: 'Flags',
   UserFavoriteIconSet: 'UserFavoriteIconSet',
   WorldCommonIconSet: 'WorldCommonIconSet',
@@ -415,7 +416,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "actor" | "userAnnouncement" | "asset" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "user" | "collaboratingUser" | "tag" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack"
+    modelProps: "actor" | "userAnnouncement" | "asset" | "savedColor" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "user" | "collaboratingUser" | "tag" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -638,6 +639,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AssetCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AssetCountAggregateOutputType> | number
+        }
+      }
+    }
+    SavedColor: {
+      payload: Prisma.$SavedColorPayload<ExtArgs>
+      fields: Prisma.SavedColorFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SavedColorFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedColorPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SavedColorFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedColorPayload>
+        }
+        findFirst: {
+          args: Prisma.SavedColorFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedColorPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SavedColorFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedColorPayload>
+        }
+        findMany: {
+          args: Prisma.SavedColorFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedColorPayload>[]
+        }
+        create: {
+          args: Prisma.SavedColorCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedColorPayload>
+        }
+        createMany: {
+          args: Prisma.SavedColorCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SavedColorCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedColorPayload>[]
+        }
+        delete: {
+          args: Prisma.SavedColorDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedColorPayload>
+        }
+        update: {
+          args: Prisma.SavedColorUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedColorPayload>
+        }
+        deleteMany: {
+          args: Prisma.SavedColorDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SavedColorUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SavedColorUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedColorPayload>[]
+        }
+        upsert: {
+          args: Prisma.SavedColorUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedColorPayload>
+        }
+        aggregate: {
+          args: Prisma.SavedColorAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSavedColor>
+        }
+        groupBy: {
+          args: Prisma.SavedColorGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedColorGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SavedColorCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedColorCountAggregateOutputType> | number
         }
       }
     }
@@ -1688,6 +1763,18 @@ export const AssetScalarFieldEnum = {
 export type AssetScalarFieldEnum = (typeof AssetScalarFieldEnum)[keyof typeof AssetScalarFieldEnum]
 
 
+export const SavedColorScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  value: 'value',
+  label: 'label',
+  worldId: 'worldId'
+} as const
+
+export type SavedColorScalarFieldEnum = (typeof SavedColorScalarFieldEnum)[keyof typeof SavedColorScalarFieldEnum]
+
+
 export const FlagsScalarFieldEnum = {
   value: 'value'
 } as const
@@ -2218,6 +2305,7 @@ export type GlobalOmitConfig = {
   actor?: Prisma.ActorOmit
   userAnnouncement?: Prisma.UserAnnouncementOmit
   asset?: Prisma.AssetOmit
+  savedColor?: Prisma.SavedColorOmit
   flags?: Prisma.FlagsOmit
   userFavoriteIconSet?: Prisma.UserFavoriteIconSetOmit
   worldCommonIconSet?: Prisma.WorldCommonIconSetOmit

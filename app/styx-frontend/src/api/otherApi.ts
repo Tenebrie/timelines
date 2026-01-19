@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['mindmap', 'worldWikiArticle'] as const
+export const addTagTypes = ['mindmap', 'WorldColor', 'worldWikiArticle'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -51,6 +51,25 @@ const injectedRtkApi = api
 					method: 'DELETE',
 				}),
 				invalidatesTags: ['mindmap'],
+			}),
+			getWorldColors: build.query<GetWorldColorsApiResponse, GetWorldColorsApiArg>({
+				query: (queryArg) => ({ url: `/api/worlds/${queryArg.worldId}/colors` }),
+				providesTags: ['WorldColor'],
+			}),
+			createWorldColor: build.mutation<CreateWorldColorApiResponse, CreateWorldColorApiArg>({
+				query: (queryArg) => ({
+					url: `/api/worlds/${queryArg.worldId}/colors`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['WorldColor'],
+			}),
+			deleteWorldColor: build.mutation<DeleteWorldColorApiResponse, DeleteWorldColorApiArg>({
+				query: (queryArg) => ({
+					url: `/api/worlds/${queryArg.worldId}/colors/${queryArg.colorId}`,
+					method: 'DELETE',
+				}),
+				invalidatesTags: ['WorldColor'],
 			}),
 			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
 				query: (queryArg) => ({
@@ -163,6 +182,41 @@ export type DeleteNodeApiArg = {
 	/** Any string value */
 	nodeId: string
 }
+export type GetWorldColorsApiResponse = /** status 200  */ {
+	worldId: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	value: string
+	label?: null | string
+}[]
+export type GetWorldColorsApiArg = {
+	/** Any string value with at least one character */
+	worldId: string
+}
+export type CreateWorldColorApiResponse = /** status 200  */ {
+	worldId: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	value: string
+	label?: null | string
+}
+export type CreateWorldColorApiArg = {
+	/** Any string value with at least one character */
+	worldId: string
+	body: {
+		value: string
+		label?: string
+	}
+}
+export type DeleteWorldColorApiResponse = unknown
+export type DeleteWorldColorApiArg = {
+	/** Any string value with at least one character */
+	worldId: string
+	/** Any string value with at least one character */
+	colorId: string
+}
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
 		worldId: string
@@ -218,5 +272,9 @@ export const {
 	useCreateNodeMutation,
 	useUpdateNodeMutation,
 	useDeleteNodeMutation,
+	useGetWorldColorsQuery,
+	useLazyGetWorldColorsQuery,
+	useCreateWorldColorMutation,
+	useDeleteWorldColorMutation,
 	useUpdateArticleMutation,
 } = injectedRtkApi

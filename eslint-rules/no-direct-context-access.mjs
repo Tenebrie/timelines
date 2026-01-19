@@ -13,7 +13,7 @@ export default {
 		type: 'problem',
 		docs: {
 			description:
-				'Disallow direct access to ctx.params, ctx.request.body, ctx.query in router handlers. Use moonflower hooks instead.',
+				'Disallow direct access to ctx.params, ctx.request.body, ctx.query, ctx.status in router handlers. Use moonflower hooks instead.',
 			category: 'Best Practices',
 			recommended: true,
 		},
@@ -24,6 +24,8 @@ export default {
 				'Do not access ctx.request.body directly. Use useRequestBody(ctx, { ... }) instead for validation and OpenAPI generation.',
 			noDirectQuery:
 				'Do not access ctx.query or ctx.request.query directly. Use useQueryParams(ctx, { ... }) instead for validation and OpenAPI generation.',
+			noDirectStatus:
+				'Do not set ctx.status directly. Return the appropriate value or use moonflower response helpers instead.',
 		},
 		schema: [],
 		fixable: null,
@@ -55,6 +57,19 @@ export default {
 					context.report({
 						node,
 						messageId: 'noDirectQuery',
+					})
+				}
+
+				// Check for ctx.status
+				if (
+					node.object.type === 'Identifier' &&
+					node.object.name === 'ctx' &&
+					node.property.type === 'Identifier' &&
+					node.property.name === 'status'
+				) {
+					context.report({
+						node,
+						messageId: 'noDirectStatus',
 					})
 				}
 
