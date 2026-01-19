@@ -14,6 +14,7 @@
 		"postinstall": "subpkg install && husky",
 		"openapi": "./scripts/dev-openapi.sh",
 		"migrate": "./scripts/dev-migrate.sh",
+		"dev": "yarn docker:start",
 		"docker": "yarn docker:start",
 		"docker:start": ". ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up --build",
 		"docker:build": ". ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml build --no-cache",

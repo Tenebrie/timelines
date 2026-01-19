@@ -1,17 +1,16 @@
 FROM node:24-alpine3.20
 
-WORKDIR /app/ts-shared
-
 ARG DOCKER_UID
 ARG DOCKER_GID
 
-ADD ./app/ts-shared /app/ts-shared
-RUN --mount=type=cache,target=/.cache yarn
+# Install ts-shared dependencies
+WORKDIR /app/ts-shared
+COPY ./app/ts-shared/package.json ./app/ts-shared/yarn.lock* ./
+RUN --mount=type=cache,target=/.cache yarn install
 
+# Install rhea dependencies
 WORKDIR /app/rhea
-
-ADD ./app/rhea-backend /app/rhea
-COPY --chown=${DOCKER_UID}:${DOCKER_GID} ./eslint.config.mjs /app/rhea/
-RUN --mount=type=cache,target=/.cache yarn
+COPY ./app/rhea-backend/package.json ./app/rhea-backend/yarn.lock* ./
+RUN --mount=type=cache,target=/.cache yarn install
 
 EXPOSE 3000

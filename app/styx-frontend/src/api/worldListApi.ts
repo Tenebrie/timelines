@@ -25,9 +25,9 @@ export { injectedRtkApi as worldListApi }
 export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
 		collaborators: {
+			worldId: string
 			userId: string
 			access: 'ReadOnly' | 'Editing'
-			worldId: string
 		}[]
 		description: string
 		id: string
@@ -41,9 +41,9 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	}[]
 	contributableWorlds: {
 		collaborators: {
+			worldId: string
 			userId: string
 			access: 'ReadOnly' | 'Editing'
-			worldId: string
 		}[]
 		description: string
 		id: string
@@ -57,9 +57,9 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	}[]
 	visibleWorlds: {
 		collaborators: {
+			worldId: string
 			userId: string
 			access: 'ReadOnly' | 'Editing'
-			worldId: string
 		}[]
 		description: string
 		id: string

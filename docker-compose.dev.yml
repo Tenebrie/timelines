@@ -29,13 +29,25 @@ services:
             - type: bind
               source: ./app/styx-frontend/vite.config.ts
               target: /app/styx/vite.config.ts
+            - type: bind
+              source: ./app/styx-frontend/tsconfig.json
+              target: /app/styx/tsconfig.json
+            - type: bind
+              source: ./app/styx-frontend/index.html
+              target: /app/styx/index.html
+            - type: bind
+              source: ./.prettierrc.js
+              target: /app/styx/.prettierrc.js
+            - type: bind
+              source: ./eslint.config.mjs
+              target: /app/styx/eslint.config.mjs
         ports:
             - 8080:8080
         networks:
             - dev_network
         command: yarn start
         tty: true
-        restart: on-failure
+        restart: unless-stopped
     rhea:
         image: timelines-rhea:dev
         build:
@@ -55,13 +67,22 @@ services:
             - ./app/rhea-backend/src:/app/rhea/src:cached
             - ./app/rhea-backend/prisma:/app/rhea/prisma:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached
+            - type: bind
+              source: ./eslint.config.mjs
+              target: /app/rhea/eslint.config.mjs
+            - type: bind
+              source: ./app/rhea-backend/prisma.config.ts
+              target: /app/rhea/prisma.config.ts
+            - type: bind
+              source: ./app/rhea-backend/tsconfig.json
+              target: /app/rhea/tsconfig.json
         ports:
             - 3000:3000
         networks:
             - dev_network
         command: yarn start
         tty: true
-        restart: on-failure
+        restart: unless-stopped
     calliope:
         image: timelines-calliope:dev
         build:
@@ -75,13 +96,19 @@ services:
         volumes:
             - ./app/calliope-websockets/src:/app/calliope/src:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached
+            - type: bind
+              source: ./eslint.config.mjs
+              target: /app/calliope/eslint.config.mjs
+            - type: bind
+              source: ./app/calliope-websockets/tsconfig.json
+              target: /app/calliope/tsconfig.json
         ports:
             - 3001:3001
         networks:
             - dev_network
         command: yarn start
         tty: true
-        restart: on-failure
+        restart: unless-stopped
     rhea-postgres:
         environment:
             POSTGRES_USER: docker
@@ -91,7 +118,7 @@ services:
             - 5432:5432
         volumes:
             - rhea-db:/var/lib/postgresql/data/:cached
-        restart: on-failure
+        restart: unless-stopped
         networks:
             - dev_network
     rhea-migrate:
@@ -101,6 +128,12 @@ services:
             dockerfile: ./app/rhea-backend/Dockerfile
         environment:
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
+        volumes:
+            - ./app/rhea-backend/prisma:/app/rhea/prisma:cached
+            - ./app/ts-shared/src:/app/ts-shared/src:cached
+            - type: bind
+              source: ./app/rhea-backend/prisma.config.ts
+              target: /app/rhea/prisma.config.ts
         depends_on:
             rhea-postgres:
                 condition: service_healthy

@@ -43,7 +43,7 @@ The development environment requires Node, Yarn and Docker to run.
 In most cases, the following commands are enough to have the entire environment up and running:
 
 - `yarn` <!-- Install dependencies -->
-- `yarn docker` <!-- Run containers -->
+- `yarn dev` <!-- Run dev environment through Docker -->
 
 The migrations are run automatically via a docker-compose task on environment start-up.
 

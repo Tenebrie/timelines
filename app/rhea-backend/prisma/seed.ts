@@ -1,5 +1,5 @@
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from './client/client.js'
 import * as bcrypt from 'bcrypt'
 
 const adapter = new PrismaPg({

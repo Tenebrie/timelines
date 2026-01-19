@@ -26,6 +26,6 @@
 			"@ts-shared/*": ["../ts-shared/src/*"]
 		}
 	},
-	"include": ["src/**/*"],
+	"include": ["src/**/*", "prisma/seed.ts"],
 	"exclude": ["prisma/client"]
 }

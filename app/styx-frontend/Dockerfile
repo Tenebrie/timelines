@@ -19,16 +19,11 @@ USER ${DOCKER_UID}:${DOCKER_GID}
 ENV HOME=/
 ENV TSR_TMP_DIR=/app/styx/src/node_modules/.tanstack/tmp-docker
 
-ADD --chown=${DOCKER_UID}:${DOCKER_GID} ./app/ts-shared /app/ts-shared
-RUN --mount=type=cache,target=/.cache,uid=${DOCKER_UID},gid=${DOCKER_GID} (cd /app/ts-shared && yarn)
+# Install ts-shared dependencies first
+COPY --chown=${DOCKER_UID}:${DOCKER_GID} ./app/ts-shared/package.json ./app/ts-shared/yarn.lock* /app/ts-shared/
+RUN --mount=type=cache,target=/.cache,uid=${DOCKER_UID},gid=${DOCKER_GID} (cd /app/ts-shared && yarn install)
 
-RUN --mount=type=cache,target=/.cache,uid=${DOCKER_UID},gid=${DOCKER_GID} yarn
-
-COPY --chown=${DOCKER_UID}:${DOCKER_GID} .prettierrc.js /app/styx
-
-COPY --chown=${DOCKER_UID}:${DOCKER_GID} ./eslint.config.mjs /app/styx/
-COPY --chown=${DOCKER_UID}:${DOCKER_GID} ./app/styx-frontend/index.html /app/styx/
-COPY --chown=${DOCKER_UID}:${DOCKER_GID} ./app/styx-frontend/tsconfig.json /app/styx/
-COPY --chown=${DOCKER_UID}:${DOCKER_GID} ./app/styx-frontend/vite.config.ts /app/styx/
+# Install styx dependencies
+RUN --mount=type=cache,target=/.cache,uid=${DOCKER_UID},gid=${DOCKER_GID} yarn install
 
 EXPOSE 8080
