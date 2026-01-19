@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import { ModalContainer, ModalWrapper } from './styles'
 
@@ -19,7 +19,7 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick }: Props) => {
 	const [isModalRendered, setIsModalRendered] = useState(false)
 	const [modalRenderTimeout, setModalRenderTimeout] = useState<number | null>(null)
 
-	useShortcut(Shortcut.Escape, onClose, isModalVisible ? 10 : -1)
+	useShortcut(Shortcut.Escape, onClose, isModalVisible && ShortcutPriorities.MODAL)
 
 	useEffect(() => {
 		if (isModalVisible && !isModalRendered) {

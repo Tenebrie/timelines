@@ -1,10 +1,9 @@
 import Stack from '@mui/material/Stack'
 import { useEffect, useMemo } from 'react'
 
-import { RegisteredShortcuts, ShortcutPriority } from './useShortcutManager'
-import { Shortcut } from './useShortcutManager'
+import { RegisteredShortcuts, Shortcut, ShortcutPriorities, ShortcutPriority } from './useShortcutManager'
 
-export { Shortcut }
+export { Shortcut, ShortcutPriorities }
 
 export const useShortcut = (
 	shortcutOrArray: (typeof Shortcut)[keyof typeof Shortcut] | (typeof Shortcut)[keyof typeof Shortcut][],

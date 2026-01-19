@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import { useEffect, useState } from 'react'
 
 import { ActorColorIconPicker } from '@/app/components/ColorIconPicker/ActorColorIconPicker'
-import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import { ActorDraft } from '../draft/useActorDraft'
 
@@ -33,7 +33,7 @@ export const ActorTitle = ({ draft }: Props) => {
 			setEditing(false)
 			setName(draft.name)
 		},
-		editing ? 11 : undefined,
+		editing && ShortcutPriorities.INPUT_FIELD,
 	)
 
 	useEffect(() => {

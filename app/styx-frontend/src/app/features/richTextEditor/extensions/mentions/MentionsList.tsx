@@ -11,6 +11,7 @@ import { Editor } from '@tiptap/react'
 import { memo, useEffect, useRef, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useCreateArticle } from '@/app/views/world/views/wiki/api/useCreateArticle'
 
 import { useQuickCreateActor } from './api/useQuickCreateActor'
@@ -38,6 +39,18 @@ export function MentionsListComponent({ editor }: Props) {
 
 	const quickCreateVisible = query.length > 0
 	const lastItemIndex = quickCreateVisible ? mentions.length + 2 : mentions.length - 1
+
+	// Handle closing through global shortcut system to avoid modal closing
+	useShortcut(
+		Shortcut.Escape,
+		() => {
+			if (visible) {
+				setVisible(false)
+				setSelectedIndex(0)
+			}
+		},
+		visible && ShortcutPriorities.MENTIONS,
+	)
 
 	useEventBusSubscribe['richEditor/requestOpenMentions']({
 		callback: ({ query, screenPosTop, screenPosLeft }) => {

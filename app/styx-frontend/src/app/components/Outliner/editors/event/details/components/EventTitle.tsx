@@ -8,7 +8,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { EventColorIconPicker } from '@/app/components/ColorIconPicker/EventColorIconPicker'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import { EventDraft } from '../draft/useEventDraft'
 
@@ -35,7 +35,7 @@ export const EventTitle = ({ event, draft }: Props) => {
 			setEditing(false)
 			setName(draft.name)
 		},
-		editing ? 11 : undefined,
+		editing && ShortcutPriorities.INPUT_FIELD,
 	)
 
 	const { timeToLabel } = useWorldTime()

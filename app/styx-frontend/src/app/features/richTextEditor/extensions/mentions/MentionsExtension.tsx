@@ -13,6 +13,9 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 
 		return {
 			onStart: (props) => {
+				if (!props.editor.view.hasFocus()) {
+					return
+				}
 				state.isOpen = true
 				state.editor = props.editor
 				const pos = props.editor.view.coordsAtPos(props.range.from)
@@ -34,6 +37,10 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 					return false
 				}
 				if (props.event.key === 'Escape') {
+					state.isOpen = false
+					return true
+				}
+				if (props.event.key === 'Backspace' && state.isOpen) {
 					state.isOpen = false
 					dispatchEvent['richEditor/requestCloseMentions']()
 					return true

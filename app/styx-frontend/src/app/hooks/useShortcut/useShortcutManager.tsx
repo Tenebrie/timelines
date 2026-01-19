@@ -14,6 +14,23 @@ export const Shortcut = {
 	ScrollTimelineRight: 'l',
 } as const
 
+/**
+ * Predefined priority levels for shortcuts.
+ * Higher priority shortcuts are executed first when multiple handlers are registered for the same key.
+ */
+export const ShortcutPriorities = {
+	/** Default priority for most shortcuts */
+	DEFAULT: 0,
+	/** Disabled - shortcut will not be executed */
+	DISABLED: -1,
+	/** Modal dialogs (should be closable before mentions menu) */
+	MODAL: 10,
+	/** Input fields being edited (should be closable before modal closes) */
+	INPUT_FIELD: 11,
+	/** Mentions/autocomplete dropdowns (should be closable before modal) */
+	MENTIONS: 20,
+} as const
+
 export type ShortcutPriority = number | boolean
 
 export const RegisteredShortcuts: Record<
