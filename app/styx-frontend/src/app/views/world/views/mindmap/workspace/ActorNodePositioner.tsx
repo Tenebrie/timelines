@@ -166,6 +166,8 @@ export function ActorNodePositioner({ actor, node }: Props) {
 	return (
 		<Box
 			ref={ref}
+			data-mindmap-node={node.id}
+			data-actor-id={actor.id}
 			sx={{
 				pointerEvents: 'auto',
 				background: theme.custom.palette.background.timeline,

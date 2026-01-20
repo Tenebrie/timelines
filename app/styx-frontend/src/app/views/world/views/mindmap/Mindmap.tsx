@@ -39,6 +39,7 @@ export function Mindmap() {
 
 		const mouseState = {
 			isDragging: false,
+			dragMode: 'select' as 'select' | 'pan',
 			gridOffsetX: 0,
 			gridOffsetY: 0,
 			gridScale: 1,
@@ -76,20 +77,37 @@ export function Mindmap() {
 		}, 4)
 
 		const handleMouseDown = (event: MouseEvent) => {
-			if (event.button !== 0) return
-			mouseState.isDragging = true
+			if (event.button === 0) {
+				mouseState.isDragging = true
+				mouseState.dragMode = 'select'
+			} else if (event.button === 2) {
+				mouseState.isDragging = true
+				mouseState.dragMode = 'pan'
+			}
 		}
 
 		const handleMouseUp = (event: MouseEvent) => {
-			if (event.button !== 0) return
-			mouseState.isDragging = false
+			if (!mouseState.isDragging) {
+				return
+			}
+			if (event.button === 0 && mouseState.dragMode === 'select') {
+				mouseState.isDragging = false
+			}
+			if (event.button === 2 && mouseState.dragMode === 'pan') {
+				mouseState.isDragging = false
+			}
 			update()
 		}
 
 		const handleMouseMove = (event: MouseEvent) => {
-			if (!mouseState.isDragging) return
-			mouseState.gridOffsetX += event.movementX
-			mouseState.gridOffsetY += event.movementY
+			if (!mouseState.isDragging) {
+				return
+			}
+
+			if (mouseState.dragMode === 'pan') {
+				mouseState.gridOffsetX += event.movementX
+				mouseState.gridOffsetY += event.movementY
+			}
 			update()
 		}
 
@@ -111,14 +129,20 @@ export function Mindmap() {
 			update()
 		}
 
+		const handleContextMenu = (event: MouseEvent) => {
+			event.preventDefault()
+		}
+
 		element.addEventListener('mousedown', handleMouseDown)
 		element.addEventListener('wheel', handleWheel, { passive: false })
+		element.addEventListener('contextmenu', handleContextMenu)
 		window.addEventListener('mousemove', handleMouseMove)
 		window.addEventListener('mouseup', handleMouseUp)
 
 		return () => {
 			element.removeEventListener('mousedown', handleMouseDown)
 			element.removeEventListener('wheel', handleWheel)
+			element.removeEventListener('contextmenu', handleContextMenu)
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}

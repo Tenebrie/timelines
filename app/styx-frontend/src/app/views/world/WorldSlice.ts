@@ -181,6 +181,15 @@ export const worldSlice = createSlice({
 			}
 			state.selectedActorNodes = [...state.selectedActorNodes, record]
 		},
+		setActorNodeSelection: (state, { payload }: PayloadAction<{ key: string; actorId: string }[]>) => {
+			if (
+				state.selectedActorNodes.length === payload.length &&
+				state.selectedActorNodes.every((node, index) => node.key === payload[index].key)
+			) {
+				return
+			}
+			state.selectedActorNodes = payload
+		},
 		removeActorNodeFromSelection: (state, { payload }: PayloadAction<string>) => {
 			state.selectedActorNodes = state.selectedActorNodes.filter((marker) => marker.key !== payload)
 		},
