@@ -1,6 +1,9 @@
 import { ActorDetails } from '@api/types/worldTypes'
+import { Icon } from '@iconify/react'
 import Box from '@mui/material/Box'
+import { useMemo } from 'react'
 
+import { ActorAvatar } from '@/app/components/ActorAvatar/ActorAvatar'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 type Props = {
@@ -12,10 +15,21 @@ type Props = {
 export function ActorNodeContent({ actor, onHeaderClick, onContentClick }: Props) {
 	const theme = useCustomTheme()
 
+	const description = useMemo(() => {
+		const firstParagraph = actor.description.split('\n')[0]
+		if (firstParagraph.length < actor.description.length - 1) {
+			return {
+				content: firstParagraph,
+				more: true,
+			}
+		}
+		return { content: firstParagraph }
+	}, [actor.description])
+
 	return (
 		<Box
 			sx={{
-				width: '200px',
+				width: '250px',
 				borderRadius: 2,
 				overflow: 'hidden',
 				position: 'relative',
@@ -43,23 +57,7 @@ export function ActorNodeContent({ actor, onHeaderClick, onContentClick }: Props
 					},
 				}}
 			>
-				<Box
-					sx={{
-						width: 24,
-						height: 24,
-						borderRadius: '50%',
-						background: actor.color,
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center',
-						color: theme.material.palette.primary.contrastText,
-						fontSize: '0.8rem',
-						fontWeight: 'bold',
-						flexShrink: 0,
-					}}
-				>
-					{actor.name[0]}
-				</Box>
+				<ActorAvatar actor={actor} sx={{ width: 24, height: 24, fontSize: '0.7rem' }} />
 				<Box
 					sx={{
 						fontWeight: 'bold',
@@ -69,6 +67,22 @@ export function ActorNodeContent({ actor, onHeaderClick, onContentClick }: Props
 				>
 					{actor.name}
 				</Box>
+				<Icon
+					icon={actor.icon === 'default' ? 'mdi:leaf' : actor.icon}
+					color={'#0a0908'}
+					style={{
+						opacity: theme.mode === 'dark' ? 0.5 : 0.25,
+						zIndex: -1,
+						position: 'absolute',
+						top: '0px',
+						right: '0px',
+						width: '100%',
+						height: '100%',
+						maxHeight: '75px',
+						maxWidth: '75px',
+						pointerEvents: 'none',
+					}}
+				/>
 			</Box>
 
 			{/* Content */}
@@ -79,6 +93,8 @@ export function ActorNodeContent({ actor, onHeaderClick, onContentClick }: Props
 					onContentClick()
 				}}
 				sx={{
+					fontSize: '0.8rem',
+					lineHeight: 1.4,
 					padding: '12px',
 					background: theme.custom.palette.background.softest,
 					cursor: 'pointer',
@@ -88,15 +104,12 @@ export function ActorNodeContent({ actor, onHeaderClick, onContentClick }: Props
 					},
 				}}
 			>
-				{actor.description && (
-					<Box
-						sx={{
-							fontSize: '0.8rem',
-							color: theme.material.palette.text.secondary,
-							lineHeight: 1.4,
-						}}
-					>
-						{actor.description}
+				<Box>
+					<div>{description.content}</div>
+				</Box>
+				{description.more && (
+					<Box sx={{ marginTop: 1, width: '100%', textAlign: 'center', fontWeight: 600 }}>
+						Click to see more
 					</Box>
 				)}
 			</Box>
