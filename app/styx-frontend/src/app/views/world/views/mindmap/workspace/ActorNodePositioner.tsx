@@ -96,6 +96,8 @@ export function ActorNodePositioner({ actor, node }: Props) {
 				return
 			}
 
+			mouseState.positionX = positionRef.current.x
+			mouseState.positionY = positionRef.current.y
 			mouseState.isButtonDown = true
 			mouseState.gridScale = parseFloat(getComputedStyle(element).getPropertyValue('--grid-scale'))
 			element.style.setProperty('--inner-transition-duration', '0.00s')
@@ -114,11 +116,17 @@ export function ActorNodePositioner({ actor, node }: Props) {
 				return
 			}
 
+			const snappedPosition = {
+				x: Math.round(positionRef.current.x / 10) * 10,
+				y: Math.round(positionRef.current.y / 10) * 10,
+			}
+
+			setPosition({ x: snappedPosition.x, y: snappedPosition.y })
+
 			updateMindmapNode(node.id, {
-				positionX: positionRef.current.x,
-				positionY: positionRef.current.y,
+				positionX: snappedPosition.x,
+				positionY: snappedPosition.y,
 			})
-			// event.currentTarget.style.cursor = 'grabbing'
 
 			mouseState.isButtonDown = false
 			mouseState.isDragging = false
@@ -135,7 +143,7 @@ export function ActorNodePositioner({ actor, node }: Props) {
 			mouseState.deltaX += event.movementX
 			mouseState.deltaY += event.movementY
 
-			if (!mouseState.isDragging && (Math.abs(mouseState.deltaX) > 5 || Math.abs(mouseState.deltaY) > 5)) {
+			if (!mouseState.isDragging && (Math.abs(mouseState.deltaX) > 3 || Math.abs(mouseState.deltaY) > 3)) {
 				mouseState.isDragging = true
 				mouseState.canClick = false
 			}

@@ -79,7 +79,7 @@ export const useTimelineClick = ({
 				lastClickTime === null ||
 				lastClickPos === null ||
 				currentTime - lastClickTime > 500 ||
-				Math.abs(point.x - lastClickPos) > 5
+				Math.abs(point.x - lastClickPos) > 3
 			) {
 				onClick(newSelectedTime, trackId)
 				setLastClickPos(point.x)

@@ -98,7 +98,7 @@ export function MindmapClickArea() {
 			mouseState.deltaX += event.movementX
 			mouseState.deltaY += event.movementY
 
-			if (mouseState.canClick && (Math.abs(mouseState.deltaX) > 5 || Math.abs(mouseState.deltaY) > 5)) {
+			if (mouseState.canClick && (Math.abs(mouseState.deltaX) > 3 || Math.abs(mouseState.deltaY) > 3)) {
 				mouseState.canClick = false
 				if (mouseState.buttonDownMode === 'select') {
 					const baseRect = element.getBoundingClientRect()
@@ -127,7 +127,9 @@ export function MindmapClickArea() {
 					if (now - mouseState.lastIntersectionCheckTimestamp >= 100) {
 						mouseState.lastIntersectionCheckTimestamp = now
 						const selectedNodes = checkNodeIntersection(ref.current, newRect)
-						dispatch(worldSlice.actions.setActorNodeSelection(selectedNodes))
+						requestIdleCallback(() => {
+							dispatch(worldSlice.actions.setActorNodeSelection(selectedNodes))
+						})
 					}
 
 					return newRect

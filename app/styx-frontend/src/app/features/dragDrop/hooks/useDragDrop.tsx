@@ -86,8 +86,8 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		(event: MouseEvent) => {
 			if (
 				isPreparingToDrag.current &&
-				(Math.abs(event.clientX - dragFromPos.current.x) > 5 ||
-					Math.abs(event.clientY - dragFromPos.current.y) > 5)
+				(Math.abs(event.clientX - dragFromPos.current.x) > 3 ||
+					Math.abs(event.clientY - dragFromPos.current.y) > 3)
 			) {
 				isPreparingToDrag.current = false
 				startDragging(event)
