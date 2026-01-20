@@ -1,4 +1,5 @@
 import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
+import { Icon } from '@iconify/react'
 import Close from '@mui/icons-material/Close'
 import { CSSProperties, memo, useCallback } from 'react'
 
@@ -75,7 +76,19 @@ function TimelineEventPositionerComponent({
 					}}
 				></div>
 				<Marker $theme={theme} style={cssVariables}>
-					<MarkerIcon className="icon image"></MarkerIcon>
+					{/* <MarkerIcon className="icon image"></MarkerIcon> */}
+					<Icon
+						icon={entity.icon === 'default' ? 'mdi:leaf' : entity.icon}
+						color="gray"
+						style={{
+							position: 'absolute',
+							top: '0px',
+							left: '0px',
+							width: '100%',
+							height: '100%',
+							pointerEvents: 'none',
+						}}
+					/>
 					{entity.markerType === 'revokedAt' && (
 						<MarkerIcon className="icon">
 							<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />

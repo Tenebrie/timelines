@@ -183,11 +183,11 @@ export type DeleteNodeApiArg = {
 	nodeId: string
 }
 export type GetWorldColorsApiResponse = /** status 200  */ {
+	value: string
 	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	value: string
 	label?: null | string
 }[]
 export type GetWorldColorsApiArg = {
@@ -195,11 +195,11 @@ export type GetWorldColorsApiArg = {
 	worldId: string
 }
 export type CreateWorldColorApiResponse = /** status 200  */ {
+	value: string
 	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	value: string
 	label?: null | string
 }
 export type CreateWorldColorApiArg = {
