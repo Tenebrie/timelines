@@ -1,7 +1,8 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
-import { useSearch } from '@tanstack/react-router'
+import { useSelector } from 'react-redux'
 
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { getSelectedNodeKeys } from '@/app/views/world/WorldSliceSelectors'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useDeleteMindmapNode } from '../api/useDeleteMindmapNode'
@@ -11,10 +12,7 @@ type Props = {
 }
 
 export function ActorNodeHotkeys({ node }: Props) {
-	const selection = useSearch({
-		from: '/world/$worldId/_world/mindmap',
-		select: (search) => search.navi,
-	})
+	const selection = useSelector(getSelectedNodeKeys)
 	const navigate = useStableNavigate({
 		from: '/world/$worldId/mindmap',
 	})
@@ -31,7 +29,7 @@ export function ActorNodeHotkeys({ node }: Props) {
 				}),
 			})
 		},
-		selection.includes(node.parentActorId!),
+		selection.includes(node.id),
 	)
 	return null
 }

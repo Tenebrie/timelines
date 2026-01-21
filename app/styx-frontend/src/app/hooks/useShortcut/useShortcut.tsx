@@ -11,11 +11,12 @@ export const useShortcut = (
 	priority?: ShortcutPriority,
 ) => {
 	useEffect(() => {
+		if (priority === -1 || priority === false) {
+			return
+		}
+
 		const shortcuts = Array.isArray(shortcutOrArray) ? shortcutOrArray : [shortcutOrArray]
 		const getActualPriority = (shortcut: (typeof Shortcut)[keyof typeof Shortcut]) => {
-			if (priority === false) {
-				return -1
-			}
 			if (priority === undefined) {
 				return 0
 			}
@@ -27,9 +28,7 @@ export const useShortcut = (
 			}
 
 			function isPriorityTaken(value: number) {
-				return shortcuts.some((shortcut) =>
-					RegisteredShortcuts[shortcut].some((registered) => registered.priority === value),
-				)
+				return RegisteredShortcuts[shortcut].some((registered) => registered.priority === value)
 			}
 
 			let currentValue = priority
