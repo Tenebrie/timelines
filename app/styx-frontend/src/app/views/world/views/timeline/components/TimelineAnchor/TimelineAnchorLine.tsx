@@ -9,9 +9,12 @@ import { ScaleLevel } from '@/app/schema/ScaleLevel'
 import { LineSpacing } from '@/app/utils/constants'
 import { keysOf } from '@/app/utils/keysOf'
 
+import { CONTROLLED_SCROLLER_SIZE } from '../../tracks/components/ControlledScroller'
 import { TimelineState } from '../../utils/TimelineState'
 import { DividerLabel } from './styles'
-import { ResetNumbersAfterEvery, TimelineAnchorPadding } from './TimelineAnchor'
+import { TimelineAnchorPadding } from './TimelineAnchor'
+
+const ANCHOR_RESET_PERIOD = 1000 // Must match TimelineAnchorContainer's RESET_PERIOD
 
 export const getPixelsPerLoop = ({ lineCount }: { lineCount: number }) => lineCount * LineSpacing
 
@@ -150,13 +153,14 @@ function TimelineAnchorLineComponent(props: Props) {
 				lineCount,
 				timelineScroll: scroll,
 			})
-			const loopOffset = loopIndex * getPixelsPerLoop({ lineCount })
-
-			const positionNormalizer =
-				Math.floor(Math.abs(scroll) / ResetNumbersAfterEvery) * ResetNumbersAfterEvery * Math.sign(scroll)
-			const dividerPosition = Math.round((rawIndex * LineSpacing) / 1 + loopOffset) + positionNormalizer
-
 			const index = rawIndex + loopIndex * lineCount
+
+			// Calculate position using chunked scroll like events do
+			const actualPosition = index * LineSpacing
+			const dividerPosition =
+				actualPosition +
+				Math.floor(scroll / ANCHOR_RESET_PERIOD) * ANCHOR_RESET_PERIOD +
+				CONTROLLED_SCROLLER_SIZE
 
 			const parsedTime = parseTime(scaledTimeToRealTime(index * LineSpacing))
 			const isStartOfMonth = parsedTime.monthDay === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
@@ -250,9 +254,6 @@ function TimelineAnchorLineComponent(props: Props) {
 
 	useEventBusSubscribe['timeline/onScroll']({
 		callback: (newScroll) => {
-			if (lastSeenScroll.current !== null && Math.abs(lastSeenScroll.current - newScroll) < 80) {
-				return
-			}
 			updateVariables(newScroll)
 			lastSeenScroll.current = newScroll
 		},

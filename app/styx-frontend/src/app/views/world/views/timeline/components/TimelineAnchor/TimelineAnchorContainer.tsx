@@ -12,7 +12,7 @@ type Props = {
 	children: ReactNode | ReactNode[]
 }
 
-const RESET_PERIOD = 600
+const RESET_PERIOD = 1000
 
 export function TimelineAnchorContainer({ children }: Props) {
 	const ref = useRef<HTMLDivElement>(null)
@@ -24,11 +24,9 @@ export function TimelineAnchorContainer({ children }: Props) {
 				return
 			}
 			lastSeenScroll.current = fixedScroll
-			ref.current?.style.setProperty('--scroll', `${fixedScroll}px`)
-			ref.current?.style.setProperty(
-				'--pip-scroll',
-				`${-fixedScroll + CONTROLLED_SCROLLER_SIZE - RESET_PERIOD}px`,
-			)
+			// Keep pip scroll within reasonable bounds using modulo of RESET_PERIOD
+			const pipScroll = ((-newScroll % RESET_PERIOD) + RESET_PERIOD) % RESET_PERIOD
+			ref.current?.style.setProperty('--pip-scroll', `${pipScroll}px`)
 		},
 	})
 
@@ -37,12 +35,9 @@ export function TimelineAnchorContainer({ children }: Props) {
 			return
 		}
 		const newScroll = TimelineState.scroll
-		const fixedScroll = Math.floor(newScroll / RESET_PERIOD) * RESET_PERIOD + CONTROLLED_SCROLLER_SIZE
-		ref.current?.style.setProperty('--scroll', `${fixedScroll}px`)
-		ref.current?.style.setProperty(
-			'--pip-scroll',
-			`${-fixedScroll + CONTROLLED_SCROLLER_SIZE - RESET_PERIOD}px`,
-		)
+		// Keep pip scroll within reasonable bounds using modulo of RESET_PERIOD
+		const pipScroll = ((-newScroll % RESET_PERIOD) + RESET_PERIOD) % RESET_PERIOD
+		ref.current?.style.setProperty('--pip-scroll', `${pipScroll}px`)
 	}, [ref])
 
 	return (
@@ -53,7 +48,7 @@ export function TimelineAnchorContainer({ children }: Props) {
 					position: 'absolute',
 					bottom: 32,
 					pointerEvents: 'auto',
-					transform: 'translateX(var(--scroll))',
+					background: 'red',
 				}}
 			>
 				<TimelineSmallestPips $lineSpacing={LineSpacing} />

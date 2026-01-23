@@ -17,6 +17,8 @@ export type MarkerWithHeight = TimelineEntity<MarkerType> & {
 export const OverviewMarker = memo(OverviewMarkerComponent)
 
 function OverviewMarkerComponent({ marker, minTime, maxTime, pixelsPerUnit }: OverviewMarkerProps) {
+	console.log('Render')
+
 	const leftPercent = ((marker.markerPosition - minTime) / (maxTime - minTime)) * 100
 	const bottomPos = `calc(${marker.overviewHeight * pixelsPerUnit}px + 4px)`
 
