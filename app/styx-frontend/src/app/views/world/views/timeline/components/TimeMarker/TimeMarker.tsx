@@ -57,7 +57,13 @@ export const TimeMarker = ({ timestamp }: Props) => {
 
 	return (
 		<ControlledScroller resetPeriod={EVENT_SCROLL_RESET_PERIOD}>
-			<Box ref={ref} sx={{ height: 'calc(100% - 1px)', transform: 'translateX(var(--marker-scroll))' }}>
+			<Box
+				ref={ref}
+				sx={{
+					height: 'calc(100% - 1px - 72px)',
+					transform: 'translateX(var(--marker-scroll)) translateY(66px)',
+				}}
+			>
 				<Container $theme={theme} className={`${isSwitchingScale || !isLoaded ? 'hidden' : ''}`} />
 			</Box>
 		</ControlledScroller>

@@ -6,7 +6,7 @@ import Stack from '@mui/material/Stack'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
 import { useSearch } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useEvent from 'react-use-event-hook'
 
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -19,6 +19,7 @@ type Props = {
 export function EntityEditorTabs({ contentTab, illustrationTab }: Props) {
 	const { tab: defaultTab } = useSearch({ from: '/world/$worldId/_world' })
 	const [tab, setTab] = useState(defaultTab)
+	const [mountedTabs, setMountedTabs] = useState<Set<number>>(new Set([defaultTab]))
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	const handleChange = useEvent((tab: number) => {
@@ -28,11 +29,18 @@ export function EntityEditorTabs({ contentTab, illustrationTab }: Props) {
 		})
 	})
 
+	// Track which tabs have been visited to mount them
+	useEffect(() => {
+		setMountedTabs((prev) => new Set(prev).add(tab))
+	}, [tab])
+
 	return (
 		<Stack direction="row" width="100%" height="100%" gap={1}>
-			<Box sx={{ height: '100%', width: '100%', display: tab === 0 ? 'block' : 'none' }}>{contentTab}</Box>
+			<Box sx={{ height: '100%', width: '100%', display: tab === 0 ? 'block' : 'none' }}>
+				{mountedTabs.has(0) && contentTab}
+			</Box>
 			<Box sx={{ height: '100%', width: '100%', display: tab === 1 ? 'block' : 'none' }}>
-				{illustrationTab}
+				{mountedTabs.has(1) && illustrationTab}
 			</Box>
 			{tab !== 0 && <Divider orientation="vertical" />}
 			<Tabs

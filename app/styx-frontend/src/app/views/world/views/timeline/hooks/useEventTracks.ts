@@ -165,7 +165,7 @@ const useEventTracks = ({ showHidden }: Props = {}): {
 					{
 						id: 'default',
 						name: 'Unassigned',
-						position: Infinity,
+						position: -Infinity,
 						baseModel: null,
 						visible: true,
 						height: 0,

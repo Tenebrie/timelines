@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { TrunkatedSpan } from '@/app/components/TrunkatedTypography'
 import { useWorldListData } from '@/app/views/home/hooks/useWorldListData'
 import { worldSlice } from '@/app/views/world/WorldSlice'
-import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
+import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 export const WorldSelectorButton = memo(WorldSelectorButtonComponent)
@@ -22,7 +22,7 @@ function WorldSelectorButtonComponent() {
 	const dispatch = useDispatch()
 	const { unloadWorld } = worldSlice.actions
 
-	const currentWorld = useSelector(getWorldState)
+	const currentWorldId = useSelector(getWorldIdState)
 	const { ownedWorlds, contributableWorlds, visibleWorlds } = useWorldListData()
 
 	const allWorlds = [...ownedWorlds, ...contributableWorlds, ...visibleWorlds]
@@ -37,7 +37,7 @@ function WorldSelectorButtonComponent() {
 	}
 
 	const handleWorldSelect = (world: WorldBrief) => {
-		if (world.id === currentWorld.id) {
+		if (world.id === currentWorldId) {
 			handleClose()
 			return
 		}
@@ -94,7 +94,7 @@ function WorldSelectorButtonComponent() {
 							<MenuItem
 								key={world.id}
 								onClick={() => handleWorldSelect(world)}
-								selected={currentWorld.id === world.id}
+								selected={currentWorldId === world.id}
 								data-hj-suppress
 							>
 								<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
@@ -113,7 +113,7 @@ function WorldSelectorButtonComponent() {
 							<MenuItem
 								key={world.id}
 								onClick={() => handleWorldSelect(world)}
-								selected={currentWorld.id === world.id}
+								selected={currentWorldId === world.id}
 								data-hj-suppress
 							>
 								<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
@@ -132,7 +132,7 @@ function WorldSelectorButtonComponent() {
 							<MenuItem
 								key={world.id}
 								onClick={() => handleWorldSelect(world)}
-								selected={currentWorld.id === world.id}
+								selected={currentWorldId === world.id}
 								data-hj-suppress
 							>
 								<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>

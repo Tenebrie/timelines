@@ -17,6 +17,7 @@ type ScrollTimelineToParams =
 
 export type EventParams = {
 	'timeline/onScroll': number
+	'timeline/onResize': { width: number; height: number }
 	'timeline/onMarkerHovered': { marker: TimelineEntity<MarkerType>; hover: boolean }
 	'timeline/requestScrollTo': ScrollTimelineToParams
 	'timeline/requestScrollLeft': void

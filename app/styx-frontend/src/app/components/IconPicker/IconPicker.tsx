@@ -32,7 +32,6 @@ export function IconPickerComponent({ onSelect, ...props }: Props) {
 		query.length > 0
 			? results?.collections.filter((set) => !set.favorite)
 			: [
-					...(commonEventIcons?.collections ?? []),
 					...(recent.length > 0
 						? [
 								{
@@ -44,6 +43,7 @@ export function IconPickerComponent({ onSelect, ...props }: Props) {
 								},
 							]
 						: []),
+					...(commonEventIcons?.collections ?? []),
 				]
 
 	const onIconSelected = useEvent((id: string) => {

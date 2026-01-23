@@ -7,11 +7,11 @@ type Props = {
 }
 
 export function useOutlinerHeightListener({ ref }: Props) {
-	const tracksHeightRef = useRef(300)
-	const entityHeightRef = useRef(300)
+	const tracksHeightRef = useRef(1)
+	const entityHeightRef = useRef(1)
 
-	const outlinerHeightRef = useRef(300)
-	const [outlinerHeight, setOutlinerHeight] = useState(300)
+	const outlinerHeightRef = useRef(1)
+	const [outlinerHeight, setOutlinerHeight] = useState(1)
 	const [needToScrollBy, setNeedToScrollBy] = useState(0)
 	const preResizeScroll = useRef(0)
 

@@ -23,7 +23,8 @@ export function TimelineEventListener({ containerWidth }: Props) {
 			const currentTimestamp = scaledTimeToRealTime(-TimelineState.scroll)
 			const sideScalar = side === 'left' ? -1 : 1
 			scrollTimelineTo({
-				timestamp: currentTimestamp + scaledTimeToRealTime(containerWidth * sideScalar + containerWidth / 2),
+				timestamp:
+					currentTimestamp + scaledTimeToRealTime((containerWidth / 2) * sideScalar + containerWidth / 2),
 			})
 		},
 		[scaledTimeToRealTime, scrollTimelineTo, containerWidth],

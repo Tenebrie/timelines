@@ -33,6 +33,8 @@ export function TimelineTracksComponent(props: Props) {
 			a.scaleLevel === b.scaleLevel &&
 			a.isSwitchingScale === b.isSwitchingScale,
 	)
+	const sortedTracks = [...allTracks].sort((a, b) => b.position - a.position)
+
 	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
 
@@ -52,7 +54,7 @@ export function TimelineTracksComponent(props: Props) {
 				position: 'absolute',
 				bottom: 32,
 				width: '100%',
-				maxHeight: 'calc(100% - 72px)',
+				maxHeight: 'calc(100% - 96px)',
 				overflowX: 'hidden',
 				overflowY: 'auto',
 				...useBrowserSpecificScrollbars(),
@@ -68,12 +70,12 @@ export function TimelineTracksComponent(props: Props) {
 					transition: 'opacity 0.3s',
 				}}
 			>
-				{allTracks.map((track) => (
+				{sortedTracks.map((track) => (
 					<Collapse in={track.visible} key={track.id} mountOnEnter unmountOnExit>
 						<TimelineTracksItem
 							visible={visible}
 							track={track}
-							trackCount={allTracks.length}
+							trackCount={sortedTracks.length}
 							contextMenuState={contextMenuState}
 							realTimeToScaledTime={realTimeToScaledTime}
 							{...props}

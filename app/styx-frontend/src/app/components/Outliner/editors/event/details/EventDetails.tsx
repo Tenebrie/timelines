@@ -1,6 +1,7 @@
 import { WorldEvent } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
+import { useRouter } from '@tanstack/react-router'
 import { memo } from 'react'
 
 import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
@@ -26,11 +27,16 @@ export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
 	const { mode, event } = useCurrentOrNewEvent({ event: editedEvent })
 	const draft = useEventDraft({ event })
 	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
+	const router = useRouter()
 
 	useUpsertEvent({
 		mode,
 		draft,
 		onCreate: (createdEvent) => {
+			const navi = router.state.location.search.navi
+			if (!navi || navi.length === 0 || navi[navi.length - 1] !== draft.id) {
+				return
+			}
 			navigate({
 				to: '/world/$worldId/timeline',
 				search: (prev) => ({ ...prev, navi: [`issuedAt-${createdEvent.id}`] }),
