@@ -16,13 +16,10 @@ type Props = {
 
 export const useTimelineScroll = ({ defaultScroll, scaleLevel, minimumScroll, maximumScroll }: Props) => {
 	const scrollRef = useRef(defaultScroll)
-	const overscrollRef = useRef(0)
-	const [overscroll, setOverscroll] = useState(0)
 	const draggingFrom = useRef<Position | null>(null)
 	const mousePos = useRef<Position>({ x: 0, y: 0 })
 	const isDraggingRef = useRef(false)
 	const [isDragging, setDragging] = useState(false)
-	const [canClick, setCanClick] = useState(true)
 
 	const boundingRectTop = useRef(0)
 	const boundingRectLeft = useRef(0)
@@ -32,7 +29,7 @@ export const useTimelineScroll = ({ defaultScroll, scaleLevel, minimumScroll, ma
 
 	const setScroll = useCallback(
 		(scroll: number) => {
-			const publicScroll = Math.round(scroll + Math.pow(Math.abs(overscroll), 0.85) * Math.sign(overscroll))
+			const publicScroll = Math.round(scroll)
 
 			if (publicScroll === lastScroll.current) {
 				return
@@ -42,11 +39,15 @@ export const useTimelineScroll = ({ defaultScroll, scaleLevel, minimumScroll, ma
 			TimelineState.scaleLevel = scaleLevel
 			notifyTimelineScrolled(publicScroll)
 		},
-		[notifyTimelineScrolled, overscroll, scaleLevel],
+		[notifyTimelineScrolled, scaleLevel],
 	)
 
 	const onMouseDown = useCallback((event: MouseEvent | TouchEvent) => {
 		if (event.shiftKey || event.ctrlKey || event.metaKey) {
+			return
+		}
+		// Only handle right-click (button 2) for dragging
+		if ('button' in event && event.button !== 2) {
 			return
 		}
 		if (checkIfClickBlocked(event.target)) {
@@ -58,7 +59,8 @@ export const useTimelineScroll = ({ defaultScroll, scaleLevel, minimumScroll, ma
 		boundingRectTop.current = boundingRect.top
 		boundingRectLeft.current = boundingRect.left
 		const newPos = { x: clientX - boundingRectLeft.current, y: clientY - boundingRectTop.current }
-		setCanClick(true)
+		// setCanClick(true)
+		TimelineState.canOpenContextMenu = true
 		mousePos.current = newPos
 		draggingFrom.current = newPos
 	}, [])
@@ -66,6 +68,7 @@ export const useTimelineScroll = ({ defaultScroll, scaleLevel, minimumScroll, ma
 	const onMouseUp = useCallback(() => {
 		setDragging(false)
 		draggingFrom.current = null
+		TimelineState.canOpenContextMenu = true
 	}, [])
 
 	const onMouseMoveThrottled = useRef(
@@ -84,27 +87,21 @@ export const useTimelineScroll = ({ defaultScroll, scaleLevel, minimumScroll, ma
 				const dist = Math.abs(newPos.x - draggingFrom.current.x)
 				if (dist >= 5) {
 					setDragging(true)
-					setCanClick(false)
+					// setCanClick(false)
+					TimelineState.canOpenContextMenu = false
 				}
 			}
 
 			if (isDraggingRef.current) {
-				const newScroll = scrollRef.current + newPos.x - mousePos.current.x + overscrollRef.current
-				let targetOverscroll = 0
+				const newScroll = scrollRef.current + newPos.x - mousePos.current.x
 				if (isFinite(minimumScroll) && newScroll < minimumScroll) {
 					scrollRef.current = minimumScroll
-					targetOverscroll = newScroll - minimumScroll
 				} else if (isFinite(maximumScroll) && newScroll > maximumScroll) {
 					scrollRef.current = maximumScroll
-					targetOverscroll = newScroll - maximumScroll
 				} else {
 					scrollRef.current = newScroll
-					targetOverscroll = 0
 				}
 
-				if (overscrollRef.current !== targetOverscroll) {
-					setOverscroll(targetOverscroll)
-				}
 				setScroll(scrollRef.current)
 				mousePos.current = newPos
 			}
@@ -112,28 +109,20 @@ export const useTimelineScroll = ({ defaultScroll, scaleLevel, minimumScroll, ma
 	)
 
 	useEffect(() => {
-		overscrollRef.current = overscroll
-	}, [overscroll])
-
-	useEffect(() => {
 		isDraggingRef.current = isDragging
 		if (isDragging) {
 			return
 		}
-		const interval = window.setInterval(() => {
-			setOverscroll((overscroll) => overscroll * 0.9)
-		}, 1)
-		return () => window.clearInterval(interval)
 	}, [isDragging])
 
 	return {
 		scrollRef,
-		canClick,
 		setScroll,
 		onMouseDown,
 		onMouseUp,
 		onMouseMoveThrottled,
 		minimumScroll,
 		maximumScroll,
+		isDraggingRef,
 	}
 }

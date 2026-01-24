@@ -10,6 +10,8 @@ import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorld
 import { LineSpacing } from '@/app/utils/constants'
 import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
+import { useTimelineAnchorDrag } from '../../hooks/useTimelineAnchorDrag'
+import { useTimelineHorizontalScroll } from '../../hooks/useTimelineHorizontalScroll'
 import { TimelineAnchorContainer } from './TimelineAnchorContainer'
 import { TimelineAnchorLine } from './TimelineAnchorLine'
 
@@ -23,12 +25,36 @@ export const TimelineAnchor = memo(TimelineAnchorComponent)
 
 function TimelineAnchorComponent({ containerWidth }: Props) {
 	const theme = useCustomTheme()
+	const containerRef = useRef<HTMLDivElement | null>(null)
 	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
 	const { scaleLevel, isSwitchingScale } = useSelector(
 		getTimelineState,
 		(a, b) => a.scaleLevel === b.scaleLevel && a.isSwitchingScale === b.isSwitchingScale,
 	)
 	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel, calendar })
+
+	// Drag-to-scroll functionality
+	const { isDragging, onMouseDown, onMouseMove, onMouseUp } = useTimelineAnchorDrag()
+
+	// Wheel scrolling
+	const { onWheel } = useTimelineHorizontalScroll({ containerRef })
+
+	// Set up mouse event listeners for dragging
+	useEffect(() => {
+		if (!isDragging) {
+			return
+		}
+
+		document.addEventListener('mousemove', onMouseMove)
+		document.addEventListener('mouseup', onMouseUp)
+		document.addEventListener('mouseleave', onMouseUp)
+
+		return () => {
+			document.removeEventListener('mousemove', onMouseMove)
+			document.removeEventListener('mouseup', onMouseUp)
+			document.removeEventListener('mouseleave', onMouseUp)
+		}
+	}, [isDragging, onMouseMove, onMouseUp])
 
 	const visible = !isSwitchingScale
 	const lineCount = useMemo(
@@ -62,12 +88,16 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 	return (
 		<Fade in={visible} appear timeout={300}>
 			<Box
+				ref={containerRef}
+				onMouseDown={onMouseDown}
+				onWheel={onWheel}
 				sx={{
 					position: 'absolute',
 					width: '100%',
 					height: '64px',
 					background: theme.custom.palette.background.timelineHeader,
-					cursor: 'grab',
+					cursor: isDragging ? 'grabbing' : 'grab',
+					userSelect: 'none',
 				}}
 			>
 				<Divider sx={{ width: '100%', position: 'absolute', bottom: '64px' }} />

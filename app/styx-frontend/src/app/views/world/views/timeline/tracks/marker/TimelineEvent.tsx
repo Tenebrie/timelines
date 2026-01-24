@@ -81,6 +81,16 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 		clickEvent.stopPropagation()
 		clickEvent.preventDefault()
 
+		// Prevent mouseup from closing the menu by stopping event propagation
+		const handleMouseUp = (e: globalThis.MouseEvent) => {
+			if (e.button === 2) {
+				e.stopPropagation()
+				e.preventDefault()
+			}
+			window.removeEventListener('mouseup', handleMouseUp, true)
+		}
+		window.addEventListener('mouseup', handleMouseUp, true)
+
 		dispatch(
 			openTimelineContextMenu({
 				selectedEvent: entity,
@@ -94,6 +104,10 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 	}
 
 	const onMouseEnter = () => {
+		// Don't show tooltips while selecting with box
+		if (window.document.body.classList.contains('mouse-busy')) {
+			return
+		}
 		HoveredTimelineEvents.hoverEvent(entity)
 		setIsHovered(true)
 	}
@@ -157,9 +171,11 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 			onMouseEnter={onMouseEnter}
 			onMouseLeave={onMouseLeave}
 			$theme={theme}
-			className={classNames({
+			className={classNames('block-timeline', {
 				selected,
 			})}
+			data-event-key={entity.key}
+			data-event-id={entity.eventId}
 		>
 			{/* <MarkerIcon className="icon image"></MarkerIcon> */}
 			<Icon

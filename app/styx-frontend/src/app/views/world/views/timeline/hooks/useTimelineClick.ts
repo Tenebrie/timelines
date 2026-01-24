@@ -8,7 +8,6 @@ type Props = {
 	containerRef: React.RefObject<HTMLDivElement | null>
 	scrollRef: React.RefObject<number>
 	scaleLevel: ScaleLevel
-	canClick: boolean
 	scaledTimeToRealTime: (time: number) => number
 	onClick: (time: number, trackId: string | undefined) => void
 	onDoubleClick: (time: number, trackId: string | undefined) => void
@@ -18,7 +17,6 @@ export const useTimelineClick = ({
 	containerRef,
 	scrollRef,
 	scaleLevel,
-	canClick,
 	scaledTimeToRealTime,
 	onClick,
 	onDoubleClick,
@@ -34,7 +32,7 @@ export const useTimelineClick = ({
 			if (event.shiftKey || event.ctrlKey || event.metaKey) {
 				return
 			}
-			const isClickBlocked = !canClick || window.document.body.classList.contains('mouse-busy')
+			const isClickBlocked = window.document.body.classList.contains('mouse-busy')
 			const isTargetValid =
 				event.target === containerRef.current ||
 				(event.target instanceof HTMLElement && event.target.classList.contains('allow-timeline-click'))
@@ -89,7 +87,6 @@ export const useTimelineClick = ({
 			}
 		},
 		[
-			canClick,
 			containerRef,
 			lastClickPos,
 			lastClickTime,

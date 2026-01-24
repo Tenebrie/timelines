@@ -63,7 +63,6 @@ export const useTimelineNavigation = ({
 		containerRef,
 		scrollRef: scrollHook.scrollRef,
 		scaleLevel: zoomHook.scaleLevel,
-		canClick: scrollHook.canClick,
 		scaledTimeToRealTime: zoomHook.scaledTimeToRealTime,
 		onClick,
 		onDoubleClick,

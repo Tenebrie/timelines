@@ -163,6 +163,15 @@ export const worldSlice = createSlice({
 			}
 			state.selectedTimelineMarkers = [...state.selectedTimelineMarkers, record]
 		},
+		setTimelineMarkerSelection: (state, { payload }: PayloadAction<{ key: string; eventId: string }[]>) => {
+			if (
+				state.selectedTimelineMarkers.length === payload.length &&
+				state.selectedTimelineMarkers.every((marker, index) => marker.key === payload[index].key)
+			) {
+				return
+			}
+			state.selectedTimelineMarkers = payload
+		},
 		removeTimelineMarkerFromSelection: (state, { payload }: PayloadAction<string>) => {
 			state.selectedTimelineMarkers = state.selectedTimelineMarkers.filter((marker) => marker.key !== payload)
 		},

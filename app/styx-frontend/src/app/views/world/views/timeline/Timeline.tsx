@@ -14,10 +14,10 @@ import { TimelineEventListener } from './components/TimelineEventListener'
 import { TimelineNavigationReporter } from './components/TimelineNavigationReporter'
 import { TimelinePrePositioner } from './components/TimelinePrePositioner'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
+import { TimelineSelectionBox } from './components/TimelineSelectionBox'
 import { TimelineZoomReporter } from './components/TimelineZoomReporter'
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
 import { useTimelineDimensions } from './hooks/useTimelineDimensions'
-import { useTimelineHorizontalScroll } from './hooks/useTimelineHorizontalScroll'
 import { TimelineContainer, TimelineWrapper } from './styles'
 import { TimelineTracks } from './tracks/TimelineTracks'
 
@@ -33,7 +33,6 @@ function TimelineComponent() {
 
 	const ref = useRef<HTMLDivElement | null>(null)
 	const [opacity, setOpacity] = useState(0)
-	const { onWheel } = useTimelineHorizontalScroll({ containerRef: ref })
 	const { onContextMenu } = useTimelineContextMenu()
 	const { containerRef, containerWidth } = useTimelineDimensions()
 
@@ -44,19 +43,21 @@ function TimelineComponent() {
 	})
 
 	return (
-		<Paper
-			ref={ref}
-			sx={{ height: '100%', borderRadius: 0, zIndex: 2, pointerEvents: 'auto' }}
-			onWheel={onWheel}
-		>
+		<Paper ref={ref} sx={{ height: '100%', borderRadius: 0, zIndex: 2, pointerEvents: 'auto' }}>
 			<TimelineWrapper>
-				<TimelineContainer ref={containerRef} onContextMenu={onContextMenu} $theme={theme}>
+				<TimelineContainer
+					ref={containerRef}
+					onContextMenu={(e) => e.preventDefault()}
+					onMouseUp={onContextMenu}
+					$theme={theme}
+				>
 					<Box width={1} height={1} style={{ opacity }} sx={{ transition: 'opacity 0.3s' }}>
 						{opacity > 0 && (
 							<>
 								<TimeMarker timestamp={selectedTime} />
 								<TimelineTracks containerWidth={containerWidth} />
 								<TimelineScaleLabel />
+								<TimelineSelectionBox containerRef={containerRef} />
 							</>
 						)}
 					</Box>

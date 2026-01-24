@@ -5,4 +5,5 @@ export const TimelineState = {
 	width: 0,
 	height: 0,
 	scaleLevel: 0 as ScaleLevel,
+	canOpenContextMenu: true,
 }

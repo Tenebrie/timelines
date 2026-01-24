@@ -6,6 +6,7 @@ import useEvent from 'react-use-event-hook'
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
+import { useTimelineHorizontalScroll } from '../hooks/useTimelineHorizontalScroll'
 import { OverviewCamera } from './OverviewCamera'
 import { MarkerWithHeight, OverviewMarker } from './OverviewMarker'
 
@@ -18,6 +19,9 @@ function TimelineOverviewComponent() {
 	)
 	const ref = useRef<HTMLDivElement>(null)
 	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
+
+	// Wheel scrolling
+	const { onWheel } = useTimelineHorizontalScroll({ containerRef: ref })
 
 	const areaSize = ref.current?.getBoundingClientRect().width ?? 100
 
@@ -97,6 +101,7 @@ function TimelineOverviewComponent() {
 			ref={ref}
 			data-overview-container
 			onMouseDown={handleOverviewMouseDown}
+			onWheel={onWheel}
 			sx={{
 				width: '100%',
 				height: '64px',

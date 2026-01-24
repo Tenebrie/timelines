@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { useCallback, useEffect, useRef } from 'react'
+import { memo, useCallback, useEffect, useRef } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 
@@ -13,7 +13,9 @@ type Props = {
 	resetPeriod: number
 }
 
-export const ControlledScroller = ({ children, resetPeriod }: Props) => {
+export const ControlledScroller = memo(ControlledScrollerComponent)
+
+function ControlledScrollerComponent({ children, resetPeriod }: Props) {
 	const ref = useRef<HTMLDivElement>(null)
 
 	const mod = useCallback((n: number, m: number) => ((n % m) + m) % m, [])

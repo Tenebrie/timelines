@@ -40,6 +40,10 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		if (!containerRef.current || event.shiftKey) {
 			return
 		}
+		// Only handle left-click (button 0) for dragging
+		if (event.button !== 0) {
+			return
+		}
 		window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
 		isPreparingToDrag.current = true
 		const boundingRect = containerRef.current.getBoundingClientRect()
