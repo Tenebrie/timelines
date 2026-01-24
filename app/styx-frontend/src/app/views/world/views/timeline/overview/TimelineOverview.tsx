@@ -61,9 +61,7 @@ function TimelineOverviewComponent() {
 		return { map, maxHeight: cumulativeHeight }
 	}, [tracks])
 
-	console.log('Render')
 	const heightSortedMarkers = useMemo((): MarkerWithHeight[] => {
-		console.log('sorted')
 		return markers
 			.map((marker) => {
 				const trackHeight = marker.worldEventTrackId

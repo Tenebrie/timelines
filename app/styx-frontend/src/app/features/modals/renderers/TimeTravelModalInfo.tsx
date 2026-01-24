@@ -25,13 +25,16 @@ export const TimeTravelModalInfo = () => {
 			<Button variant="outlined" onClick={() => setInfoOpen(!infoOpen)}>
 				{infoOpen ? 'Hide' : 'Show'} tutorial
 			</Button>
-			<Collapse in={infoOpen}>
+			<Collapse in={infoOpen} sx={{ maxHeight: 350, overflow: 'auto' }}>
 				<Typography sx={{ marginTop: theme.material.spacing(1) }}>
 					Write a selector to move to a specific time. Examples:
 				</Typography>
 				<Table
 					size="small"
-					sx={{ marginTop: theme.material.spacing(1), marginBottom: theme.material.spacing(2) }}
+					sx={{
+						marginTop: theme.material.spacing(1),
+						marginBottom: theme.material.spacing(2),
+					}}
 				>
 					<TableHead>
 						<TableRow>

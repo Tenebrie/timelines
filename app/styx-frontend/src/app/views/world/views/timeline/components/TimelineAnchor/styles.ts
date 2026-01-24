@@ -28,12 +28,12 @@ export const DividerLabel = styled.div<{ $theme: CustomTheme }>`
 	position: absolute;
 	z-index: 100;
 	top: 2px;
-	background: ${(props) => props.$theme.custom.palette.background.timelineHeader};
+	/* background: ${(props) => props.$theme.custom.palette.background.timelineHeader}; */
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	white-space: pre;
-	padding: 2px 16px;
-	border-radius: 8px;
+	padding: 2px 4px;
+	border-radius: 4px;
 	color: ${(props) => props.$theme.custom.palette.timelineAnchor.text};
 `

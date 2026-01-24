@@ -13,6 +13,7 @@ import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSel
 import { useTimelineAnchorDrag } from '../../hooks/useTimelineAnchorDrag'
 import { useTimelineHorizontalScroll } from '../../hooks/useTimelineHorizontalScroll'
 import { TimelineAnchorContainer } from './TimelineAnchorContainer'
+import { TimelineAnchorLabel } from './TimelineAnchorLabel'
 import { TimelineAnchorLine } from './TimelineAnchorLine'
 
 export const TimelineAnchorPadding = 150 // pixels
@@ -84,50 +85,52 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 		}
 	}, [calendar, lineCount, containerWidth, scaleLevel])
 
-	// TODO: Optimize Fade component being heavy?
 	return (
-		<Fade in={visible} appear timeout={300}>
-			<Box
-				ref={containerRef}
-				onMouseDown={onMouseDown}
-				onWheel={onWheel}
+		<Box
+			ref={containerRef}
+			onMouseDown={onMouseDown}
+			onWheel={onWheel}
+			sx={{
+				position: 'absolute',
+				width: '100%',
+				height: '64px',
+				background: theme.custom.palette.background.timelineHeader,
+				cursor: isDragging ? 'grabbing' : 'grab',
+				userSelect: 'none',
+			}}
+		>
+			<Divider sx={{ width: '100%', position: 'absolute', bottom: '64px' }} />
+			<Paper
 				sx={{
 					position: 'absolute',
-					width: '100%',
-					height: '64px',
-					background: theme.custom.palette.background.timelineHeader,
-					cursor: isDragging ? 'grabbing' : 'grab',
-					userSelect: 'none',
+					bottom: 0,
+					left: 0,
+					right: 0,
+					height: '32px',
+					borderRadius: 0,
 				}}
-			>
-				<Divider sx={{ width: '100%', position: 'absolute', bottom: '64px' }} />
-				<Paper
-					sx={{
-						position: 'absolute',
-						bottom: 0,
-						left: 0,
-						right: 0,
-						height: '32px',
-						borderRadius: 0,
-					}}
-				/>
-				<TimelineAnchorContainer>
-					{dividers.map((_, index) => (
-						<TimelineAnchorLine
-							key={`${index}`}
-							theme={theme}
-							index={index}
-							lineCount={lineCount}
-							scaleLevel={scaleLevel}
-							smallGroupSize={smallGroupSize}
-							mediumGroupSize={mediumGroupSize}
-							largeGroupSize={largeGroupSize}
-							scaledTimeToRealTime={scaledTimeToRealTime}
-							containerWidth={containerWidth}
-						/>
-					))}
-				</TimelineAnchorContainer>
-			</Box>
-		</Fade>
+			/>
+			<Fade in={visible} appear timeout={300}>
+				<Box>
+					<TimelineAnchorLabel />
+					<TimelineAnchorContainer>
+						{dividers.map((_, index) => (
+							<TimelineAnchorLine
+								key={`${index}`}
+								theme={theme}
+								index={index}
+								lineCount={lineCount}
+								scaleLevel={scaleLevel}
+								smallGroupSize={smallGroupSize}
+								mediumGroupSize={mediumGroupSize}
+								largeGroupSize={largeGroupSize}
+								scaledTimeToRealTime={scaledTimeToRealTime}
+								containerWidth={containerWidth}
+							/>
+						))}
+					</TimelineAnchorContainer>
+				</Box>
+			</Fade>
+		</Box>
 	)
 }
