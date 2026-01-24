@@ -52,9 +52,9 @@ export function TimelineTracksComponent(props: Props) {
 			sx={{
 				display: 'block',
 				position: 'absolute',
-				bottom: 32,
+				bottom: 0,
 				width: '100%',
-				maxHeight: 'calc(100% - 96px)',
+				maxHeight: 'calc(100% - 64px)',
 				overflowX: 'hidden',
 				overflowY: 'auto',
 				...useBrowserSpecificScrollbars(),

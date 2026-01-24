@@ -19,6 +19,7 @@ export type EventParams = {
 	'timeline/onScroll': number
 	'timeline/onResize': { width: number; height: number }
 	'timeline/onMarkerHovered': { marker: TimelineEntity<MarkerType>; hover: boolean }
+	'timeline/pips/forceUpdate': number
 	'timeline/requestScrollTo': ScrollTimelineToParams
 	'timeline/requestScrollLeft': void
 	'timeline/requestScrollRight': void

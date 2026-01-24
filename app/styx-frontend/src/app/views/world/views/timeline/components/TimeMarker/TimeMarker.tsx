@@ -60,8 +60,8 @@ export const TimeMarker = ({ timestamp }: Props) => {
 			<Box
 				ref={ref}
 				sx={{
-					height: 'calc(100% - 1px - 72px)',
-					transform: 'translateX(var(--marker-scroll)) translateY(66px)',
+					height: 'calc(100% - 1px)',
+					transform: 'translateX(var(--marker-scroll)) translateY(64px)',
 				}}
 			>
 				<Container $theme={theme} className={`${isSwitchingScale || !isLoaded ? 'hidden' : ''}`} />

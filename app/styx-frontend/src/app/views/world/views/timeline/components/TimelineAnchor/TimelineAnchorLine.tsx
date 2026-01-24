@@ -14,7 +14,7 @@ import { TimelineState } from '../../utils/TimelineState'
 import { DividerLabel } from './styles'
 import { TimelineAnchorPadding } from './TimelineAnchor'
 
-const ANCHOR_RESET_PERIOD = 1000 // Must match TimelineAnchorContainer's RESET_PERIOD
+export const ANCHOR_RESET_PERIOD = CONTROLLED_SCROLLER_SIZE / 10
 
 export const getPixelsPerLoop = ({ lineCount }: { lineCount: number }) => lineCount * LineSpacing
 
@@ -214,8 +214,9 @@ function TimelineAnchorLineComponent(props: Props) {
 				? timeToShortLabel(scaledTimeToRealTime(index * LineSpacing), scaleLevel, labelSize)
 				: null
 
+			const offset = labelSize === 'large' ? 2 : 0
 			const variables = {
-				'--divider-position': `${dividerPosition}px`,
+				'--divider-position': `${dividerPosition - offset}px`,
 				'--z-index': labelSize === 'large' ? 2 : labelSize === 'medium' ? 1 : 0,
 				'--font-weight': labelSize === 'large' ? 600 : labelSize === 'medium' ? 600 : 400,
 				'--divider-width': `${dividerWidth}px`,
@@ -254,8 +255,17 @@ function TimelineAnchorLineComponent(props: Props) {
 
 	useEventBusSubscribe['timeline/onScroll']({
 		callback: (newScroll) => {
+			if (lastSeenScroll.current !== null && Math.abs(lastSeenScroll.current - newScroll) < 80) {
+				return
+			}
 			updateVariables(newScroll)
 			lastSeenScroll.current = newScroll
+		},
+	})
+
+	useEventBusSubscribe['timeline/pips/forceUpdate']({
+		callback: (newScroll) => {
+			updateVariables(newScroll)
 		},
 	})
 

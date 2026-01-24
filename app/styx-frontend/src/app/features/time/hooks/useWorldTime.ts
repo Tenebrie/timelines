@@ -48,7 +48,8 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 			let time = rawTime * msPerUnit + calendarDefinition.baseOffset
 			if (Math.abs(time) >= maximumTime) {
 				time = maximumTime * Math.sign(time)
-			} else if (isNaN(time)) {
+			}
+			if (isNaN(time)) {
 				time = maximumTime
 			}
 			if (calendarDefinition.engine === 'SIMPLE') {
@@ -168,6 +169,14 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 
 	const timeToShortLabel = useCallback(
 		(rawTime: number, scaleLevel: ScaleLevel, groupSize: 'large' | 'medium' | 'small') => {
+			// Check if this timestamp would be out of range before parsing
+			const maxRawTime = (maximumTime - calendarDefinition.baseOffset) / msPerUnit
+			const minRawTime = (-maximumTime - calendarDefinition.baseOffset) / msPerUnit
+
+			if (rawTime > maxRawTime || rawTime < minRawTime) {
+				return null
+			}
+
 			const { year, monthName, monthNameShort, day, hour, minute } = parseTime(rawTime)
 			const padDay = String(day).padStart(2, '0')
 			const padHour = String(hour).padStart(2, '0')
@@ -217,7 +226,7 @@ export const useWorldTime = ({ calendar }: Props = {}) => {
 			}
 			return 'No label'
 		},
-		[months, parseTime],
+		[calendarDefinition.baseOffset, months, msPerUnit, parseTime],
 	)
 
 	const timeToShortestLabel = useCallback(

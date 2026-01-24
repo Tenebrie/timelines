@@ -22,10 +22,9 @@ function OverviewCameraComponent({ minTime, maxTime, overviewWidth }: Props) {
 	const { getLevelScalar } = useTimelineLevelScalar()
 	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
-	const [leftPercent, setLeftPercent] = useState(0)
-	const [widthPercent, setWidthPercent] = useState(0)
 	const [isDraggingCamera, setIsDraggingCamera] = useState(false)
 	const dragStartRef = useRef<{ mouseX: number; initialScroll: number } | null>(null)
+	const cameraRef = useRef<HTMLDivElement>(null)
 
 	const updatePosition = useEvent((scroll: number, currentScaleLevel = scaleLevel) => {
 		// Get the scalar for current zoom level (how many time units per pixel)
@@ -47,8 +46,11 @@ function OverviewCameraComponent({ minTime, maxTime, overviewWidth }: Props) {
 		const leftPositionPercent = ((timeAtLeftEdge - minTime) / totalTimeRange) * 100
 		const rightPositionPercent = ((timeAtRightEdge - minTime) / totalTimeRange) * 100
 
-		setLeftPercent(leftPositionPercent)
-		setWidthPercent(rightPositionPercent - leftPositionPercent)
+		// Update CSS variables directly on the DOM element to avoid React re-renders
+		if (cameraRef.current) {
+			cameraRef.current.style.setProperty('--camera-left', `${leftPositionPercent}%`)
+			cameraRef.current.style.setProperty('--camera-width', `${rightPositionPercent - leftPositionPercent}%`)
+		}
 	})
 
 	const handleCameraMouseDown = (e: React.MouseEvent) => {
@@ -124,19 +126,16 @@ function OverviewCameraComponent({ minTime, maxTime, overviewWidth }: Props) {
 		},
 	})
 
-	if (widthPercent <= 0 || isNaN(widthPercent)) {
-		return null
-	}
-
 	return (
 		<Box
+			ref={cameraRef}
 			onMouseDown={handleCameraMouseDown}
 			sx={{
-				width: `calc(${widthPercent}% + 1px)`,
+				width: 'calc(var(--camera-width, 0%) + 1px)',
 				height: '100%',
 				position: 'absolute',
 				top: 0,
-				left: `calc(${leftPercent}% + 1px)`,
+				left: 'calc(var(--camera-left, 0%) + 1px)',
 				background: 'rgba(255, 255, 255, 0.05)',
 				cursor: isDraggingCamera ? 'grabbing' : 'grab',
 				transition: 'background 0.2s',

@@ -1,5 +1,7 @@
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import Fade from '@mui/material/Fade'
+import Paper from '@mui/material/Paper'
 import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -12,7 +14,6 @@ import { TimelineAnchorContainer } from './TimelineAnchorContainer'
 import { TimelineAnchorLine } from './TimelineAnchorLine'
 
 export const TimelineAnchorPadding = 150 // pixels
-export const ResetNumbersAfterEvery = 3000000 // pixels of scrolling
 
 type Props = {
 	containerWidth: number
@@ -60,7 +61,26 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 	// TODO: Optimize Fade component being heavy?
 	return (
 		<Fade in={visible} appear timeout={300}>
-			<Box>
+			<Box
+				sx={{
+					position: 'absolute',
+					width: '100%',
+					height: '64px',
+					background: theme.custom.palette.background.timelineHeader,
+					cursor: 'grab',
+				}}
+			>
+				<Divider sx={{ width: '100%', position: 'absolute', bottom: '64px' }} />
+				<Paper
+					sx={{
+						position: 'absolute',
+						bottom: 0,
+						left: 0,
+						right: 0,
+						height: '32px',
+						borderRadius: 0,
+					}}
+				/>
 				<TimelineAnchorContainer>
 					{dividers.map((_, index) => (
 						<TimelineAnchorLine

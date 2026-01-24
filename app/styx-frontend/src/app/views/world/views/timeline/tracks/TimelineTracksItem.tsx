@@ -120,7 +120,9 @@ export function TimelineTracksItemComponent({
 			className={`${isDragging ? 'dragging' : ''} allow-timeline-click ${trackActive ? 'active' : ''}`}
 			data-trackid={track.id}
 		>
-			<Divider sx={{ position: 'absolute', bottom: 0, width: '100%', pointerEvents: 'none' }} />
+			{track.id !== 'default' && (
+				<Divider sx={{ position: 'absolute', bottom: 0, width: '100%', pointerEvents: 'none' }} />
+			)}
 			<Box
 				sx={{
 					position: 'absolute',

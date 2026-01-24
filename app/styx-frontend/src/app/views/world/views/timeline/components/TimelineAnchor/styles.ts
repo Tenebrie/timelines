@@ -4,13 +4,12 @@ import { CustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 export const TimelineSmallestPips = styled.div<{ $lineSpacing: number }>`
 	position: absolute;
-	left: 0;
-	bottom: 0;
-	width: 200vw;
+	left: 5000px;
+	bottom: 32px;
+	width: 10000px;
 	height: 10px;
 	background-image: linear-gradient(to right, gray 1px, transparent 1px);
 	background-size: ${(props) => props.$lineSpacing}px 100%;
-	transform: translateX(var(--pip-scroll));
 	transition: opacity 0.3s;
 `
 
