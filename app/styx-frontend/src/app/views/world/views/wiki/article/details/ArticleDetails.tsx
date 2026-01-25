@@ -6,6 +6,7 @@ import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { OnChangeParams } from '@/app/features/richTextEditor/RichTextEditor'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
 import { useEditArticle } from '@/app/views/world/views/wiki/api/useEditArticle'
@@ -18,6 +19,7 @@ type WikiArticleToSave = WikiArticle & {
 export const ArticleDetails = () => {
 	const { article } = useCurrentArticle()
 	const [editArticle, { isLoading: isSaving }] = useEditArticle()
+	const theme = useCustomTheme()
 
 	const [key, setKey] = useState(0)
 
@@ -72,6 +74,7 @@ export const ArticleDetails = () => {
 				value={article.contentRich}
 				onChange={onChange}
 				onBlur={manualSave}
+				fadeInOverlayColor={theme.custom.palette.background.textEditor}
 				allowReadMode
 			/>
 		</Box>

@@ -25,6 +25,7 @@ type Props = {
 	onChange: (params: OnChangeParams) => void
 	onBlur?: () => void
 	allowReadMode?: boolean
+	fadeInOverlayColor: string
 }
 export type RichTextEditorProps = Props
 
@@ -95,7 +96,14 @@ export const EditorContentBox = ({ editor, mode, className, readOnly }: EditorCo
 	/>
 )
 
-export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allowReadMode }: Props) => {
+export const RichTextEditorComponent = ({
+	value,
+	softKey,
+	onChange,
+	onBlur,
+	allowReadMode,
+	fadeInOverlayColor,
+}: Props) => {
 	const theme = useCustomTheme()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 	const { readModeEnabled } = useSelector(
@@ -193,7 +201,7 @@ export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allo
 			sx={{
 				borderRadius: '6px',
 				minHeight: '128px',
-				background: isReadMode ? '' : '#00000011',
+				background: isReadMode ? '' : theme.custom.palette.background.textEditor,
 				border: isReadMode ? '1px solid transparent' : '',
 				'&:hover': {
 					border: isReadMode ? '1px solid transparent' : '',
@@ -210,12 +218,7 @@ export const RichTextEditorComponent = ({ value, softKey, onChange, onBlur, allo
 			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode} />
 			{editor && <EditorContentBox className="content" editor={editor} mode={isReadMode ? 'read' : 'edit'} />}
 			<MentionsList editor={editor} />
-			<FadeInOverlay
-				key={softKey}
-				content={value}
-				isReadMode={isReadMode}
-				color={theme.custom.palette.background.textEditorBackground}
-			/>
+			<FadeInOverlay key={softKey} content={value} isReadMode={isReadMode} color={fadeInOverlayColor} />
 		</StyledContainer>
 	)
 }

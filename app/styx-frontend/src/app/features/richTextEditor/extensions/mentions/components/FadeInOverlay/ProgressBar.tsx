@@ -37,6 +37,7 @@ export const ProgressBar = ({ elementsRendering }: Props) => {
 		},
 	})
 
+	const timeoutRef = useRef<number | null>(null)
 	useEventBusSubscribe['richEditor/mentionRender/onEnd']({
 		callback: ({}) => {
 			if (maxValueRef.current === 0) {
@@ -45,13 +46,18 @@ export const ProgressBar = ({ elementsRendering }: Props) => {
 			const currentValue =
 				((maxValueRef.current - elementsRendering.current.length) / maxValueRef.current) * 100
 			requestAnimationFrame(() => flushSync(() => setValue(currentValue)))
-			if (elementsRendering.current.length === 0) {
-				setTimeout(() => {
+			if (elementsRendering.current.length <= 1) {
+				timeoutRef.current = window.setTimeout(() => {
 					setOpacity(0)
 				}, 300)
 			}
 		},
 	})
+	if (elementsRendering.current.length === 0 && !timeoutRef.current && opacity > 0) {
+		timeoutRef.current = window.setTimeout(() => {
+			setOpacity(0)
+		}, 300)
+	}
 
 	return (
 		<LinearProgress

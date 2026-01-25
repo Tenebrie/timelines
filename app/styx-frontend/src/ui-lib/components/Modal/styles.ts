@@ -1,3 +1,4 @@
+import Paper from '@mui/material/Paper'
 import styled from 'styled-components'
 
 import { CustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
@@ -24,12 +25,11 @@ export const ModalWrapper = styled.div`
 	}
 `
 
-export const ModalContainer = styled.div<{ $theme: CustomTheme }>`
+export const ModalContainer = styled(Paper)<{ $theme: CustomTheme }>`
 	padding: 16px 32px;
 	max-width: 860px;
 	width: 100%;
 	max-height: calc(100vh - 32px);
-	background: ${(props) => props.$theme.custom.palette.background.modal};
 	border-radius: 8px;
 	display: flex;
 	gap: 16px;
