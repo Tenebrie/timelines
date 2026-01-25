@@ -1,6 +1,5 @@
+import { SecretService } from '@src/ts-shared/node/services/SecretService.js'
 import jwt from 'jsonwebtoken'
-
-import { SecretService } from './SecretService.js'
 
 type TokenPayload = {
 	id: string

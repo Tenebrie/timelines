@@ -1,4 +1,6 @@
-import * as fs from 'fs'
+import fs from 'fs'
+
+import { isRunningInTest } from '../../utils/isRunningInTest.js'
 
 const secretCache: Record<string, string> = {}
 
@@ -11,19 +13,26 @@ type SecretName =
 	| 's3-access-key-secret'
 
 export const SecretService = {
+	writeToCache: (secretName: SecretName, value: string) => {
+		if (isRunningInTest()) {
+			return
+		}
+		secretCache[secretName] = value
+	},
+
 	getSecret: (secretName: SecretName) => {
 		if (secretCache[secretName]) {
 			return secretCache[secretName]
 		}
 		if (fs.existsSync(`/run/secrets/${secretName}`)) {
-			const key = fs.readFileSync(`/run/secrets/${secretName}`, 'utf8')
-			secretCache[secretName] = key
+			const key = fs.readFileSync(`/run/secrets/${secretName}`, 'utf8').trim()
+			SecretService.writeToCache(secretName, key)
 			return key
 		}
 		const envKey = secretName.replace(/-/g, '_')
 		const envValue = process.env[envKey] || process.env[secretName]
 		if (envValue) {
-			secretCache[secretName] = envValue
+			SecretService.writeToCache(secretName, envValue)
 			return envValue
 		}
 		throw new Error(`${secretName} is not defined!`)

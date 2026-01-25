@@ -3,9 +3,10 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
 	base: '/',
 	resolve: {
-		alias: {
-			'@src': '/src',
-		},
+		alias: [
+			{ find: '@src', replacement: '/src' },
+			{ find: /^@prisma\/client$/, replacement: '/prisma/client/client.ts' },
+		],
 	},
 	test: {
 		globals: true,

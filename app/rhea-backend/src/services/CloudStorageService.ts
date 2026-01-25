@@ -8,10 +8,10 @@ import {
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { Asset, AssetStatus, AssetType, User, UserLevel } from '@prisma/client'
+import { SecretService } from '@src/ts-shared/node/services/SecretService.js'
 import { BadRequestError } from 'moonflower'
 
 import { AssetService } from './AssetService.js'
-import { SecretService } from './SecretService.js'
 
 const BUCKET_ID = SecretService.getSecret('s3-bucket-id')
 

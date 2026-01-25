@@ -25,16 +25,10 @@ export const renderWithProviders = (
 	{ preloadedState }: { preloadedState?: Partial<RootState> } = {},
 ) => {
 	const store = generateStore({ preloadedState })
-	const router = createTestRouter()
 	return {
 		user: userEvent.setup(),
 		store,
-		...render(
-			<ReduxProvider store={store}>
-				<RouterProvider router={router} />
-				{node}
-			</ReduxProvider>,
-		),
+		...render(<ReduxProvider store={store}>{node}</ReduxProvider>),
 	}
 }
 

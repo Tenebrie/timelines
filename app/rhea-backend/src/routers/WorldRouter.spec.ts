@@ -1,7 +1,7 @@
 import { mockToResponse, mockUser, mockWorld, withUserAuth, withWorld } from '@src/mock/index.js'
 import { describe, expect, it, vi } from 'vitest'
 
-vi.mock('@src/services/SecretService', () => {
+vi.mock('@src/ts-shared/node/services/SecretService', () => {
 	return {
 		SecretService: {
 			getSecret: vi.fn((secretName) => {
