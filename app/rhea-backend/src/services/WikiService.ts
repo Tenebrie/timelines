@@ -9,17 +9,25 @@ import { MentionData, MentionsService } from './MentionsService.js'
 
 export const WikiService = {
 	listWikiArticles: async (params: Pick<WikiArticle, 'worldId'>) => {
-		return getPrismaClient().wikiArticle.findMany({
+		const articles = await getPrismaClient().wikiArticle.findMany({
 			where: {
 				worldId: params.worldId,
 			},
 			include: {
 				children: true,
 			},
+			omit: {
+				contentRich: true,
+			},
 			orderBy: {
 				position: 'asc',
 			},
 		})
+
+		return articles.map((a) => ({
+			...a,
+			contentRich: '',
+		}))
 	},
 
 	getArticleCount: async (params: Pick<WikiArticle, 'worldId'>) => {

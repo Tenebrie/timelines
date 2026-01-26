@@ -73,7 +73,7 @@ export const useLiveMessageHandlers = () => {
 		[CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED]: (data) => {
 			const article = JSON.parse(data.article) as WikiArticle
 			upsertCachedArticle(article)
-			forceUpdateArticle({ articleId: article.id })
+			// forceUpdateArticle({ articleId: article.id })
 		},
 		[CalliopeToClientMessageType.WIKI_ARTICLE_DELETED]: () => {
 			dispatch(worldWikiApi.util.invalidateTags(['worldWiki']))

@@ -41,6 +41,7 @@
 	},
 	"dependencies": {
 		"@koa/router": "^13.1.0",
+		"@y/websocket-server": "^0.1.1",
 		"chalk": "^5.3.0",
 		"dotenv": "^16.4.7",
 		"http-status-codes": "^2.3.0",
@@ -53,7 +54,8 @@
 		"nodemon": "^3.1.9",
 		"pg": "^8.13.1",
 		"redis": "^4.7.0",
-		"ws": "^8.18.0"
+		"ws": "^8.18.0",
+		"yjs": "^13.6.29"
 	},
 	"devDependencies": {
 		"@types/jest": "29.5.14",

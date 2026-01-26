@@ -219,26 +219,26 @@ export type DeleteWorldColorApiArg = {
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
-		worldId: string
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		icon: string
 		color: string
-		position: number
 		contentRich: string
+		position: number
+		worldId: string
 		parentId?: null | string
 	}[]
-	worldId: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	icon: string
 	color: string
-	position: number
 	contentRich: string
+	position: number
+	worldId: string
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {

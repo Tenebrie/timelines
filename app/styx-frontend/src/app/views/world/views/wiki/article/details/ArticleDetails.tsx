@@ -71,11 +71,15 @@ export const ArticleDetails = () => {
 		<Box sx={{ ...scrollbars, height: '100%' }}>
 			<RichTextEditorSummoner
 				softKey={`${article.id}-${key}`}
-				value={article.contentRich}
+				value={''}
 				onChange={onChange}
 				onBlur={manualSave}
 				fadeInOverlayColor={theme.custom.palette.background.textEditor}
 				allowReadMode
+				collaboration={{
+					worldId: article.worldId,
+					documentId: article.id,
+				}}
 			/>
 		</Box>
 	)

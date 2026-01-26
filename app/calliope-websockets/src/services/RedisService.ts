@@ -2,6 +2,7 @@ import { RedisChannel, RheaToCalliopeMessage } from '@src/ts-shared/RheaToCallio
 import { createClient } from 'redis'
 
 import { RheaMessageHandlerService } from './RheaMessageHandlerService.js'
+import { YjsSyncService, YjsUpdateMessage } from './YjsSyncService.js'
 
 const client = createClient({
 	socket: {
@@ -30,4 +31,21 @@ export const initRedisConnection = async () => {
 		const parsedMessage = JSON.parse(message) as RheaToCalliopeMessage
 		RheaMessageHandlerService.handleMessage(parsedMessage)
 	})
+
+	await client.subscribe(RedisChannel.CALLIOPE_YJS, (message) => {
+		try {
+			const parsedMessage = JSON.parse(message) as YjsUpdateMessage
+			YjsSyncService.handleMessage(parsedMessage)
+		} catch (err) {
+			console.error('Error applying Yjs update from Redis:', err)
+		}
+	})
+}
+
+export const RedisService = {
+	broadcastYjsDocumentUpdate: (message: YjsUpdateMessage) => {
+		client
+			.publish(RedisChannel.CALLIOPE_YJS, JSON.stringify(message))
+			.catch((err) => console.error('Error publishing Yjs update to Redis:', err))
+	},
 }

@@ -12,6 +12,7 @@ import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScro
 import { getWorldState } from '../../views/world/WorldSliceSelectors'
 import { useEventBusSubscribe } from '../eventBus'
 import { getWikiPreferences } from '../preferences/PreferencesSliceSelectors'
+import { useCollaboration } from './extensions/collaboration/useCollaboration'
 import { EditorExtensions } from './extensions/config'
 import { FadeInOverlay } from './extensions/mentions/components/FadeInOverlay/FadeInOverlay'
 import { MentionNodeName } from './extensions/mentions/components/MentionNode'
@@ -26,6 +27,11 @@ type Props = {
 	onBlur?: () => void
 	allowReadMode?: boolean
 	fadeInOverlayColor: string
+	// Collaboration params (optional)
+	collaboration?: {
+		worldId: string
+		documentId: string
+	}
 }
 export type RichTextEditorProps = Props
 
@@ -103,6 +109,7 @@ export const RichTextEditorComponent = ({
 	onBlur,
 	allowReadMode,
 	fadeInOverlayColor,
+	collaboration,
 }: Props) => {
 	const theme = useCustomTheme()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
@@ -110,6 +117,13 @@ export const RichTextEditorComponent = ({
 		getWikiPreferences,
 		(a, b) => a.readModeEnabled === b.readModeEnabled,
 	)
+
+	// Enable collaboration if params provided
+	const { extension: collaborationExtension, isReady: collabReady } = useCollaboration({
+		worldId: collaboration?.worldId ?? '',
+		documentId: collaboration?.documentId ?? '',
+		enabled: !!collaboration,
+	})
 
 	const onChangeRef = useRef(onChange)
 	useEffect(() => {
@@ -153,32 +167,29 @@ export const RichTextEditorComponent = ({
 
 	const isReadMode = (isReadOnly || (readModeEnabled && allowReadMode)) ?? false
 
-	const editor = useEditor({
-		content: value,
-		editable: !isReadMode,
-		extensions: EditorExtensions,
-		onUpdate({ editor, transaction }) {
-			if (editor.getHTML() === value || transaction.steps.length === 0) {
-				return
-			}
-			onChangeThrottled.current(editor)
+	// Add collaboration extension if enabled
+	const extensions = collaborationExtension ? [...EditorExtensions, collaborationExtension] : EditorExtensions
+
+	const editor = useEditor(
+		{
+			content: value,
+			editable: !isReadMode,
+			extensions,
+			onUpdate({ editor, transaction }) {
+				if (editor.getHTML() === value || transaction.steps.length === 0) {
+					return
+				}
+				onChangeThrottled.current(editor)
+			},
 		},
-	})
+		[collabReady],
+	)
 
 	const currentValue = useRef(value)
 
 	useEffect(() => {
 		currentValue.current = value
 	}, [value])
-
-	useEffect(() => {
-		if (!editor) {
-			return
-		}
-
-		const newText = currentValue.current
-		editor.commands.setContent(newText)
-	}, [editor, softKey])
 
 	useEffect(() => {
 		editor?.setEditable(!isReadMode)

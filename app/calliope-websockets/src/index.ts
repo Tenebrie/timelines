@@ -1,3 +1,4 @@
+import { setupWSConnection } from '@y/websocket-server/utils'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import route from 'koa-route'
@@ -8,6 +9,7 @@ import { ClientMessageHandlerService } from './services/ClientMessageHandlerServ
 import { initRedisConnection } from './services/RedisService.js'
 import { TokenService } from './services/TokenService.js'
 import { WebsocketService } from './services/WebsocketService.js'
+import { YjsSyncService } from './services/YjsSyncService.js'
 import { ClientToCalliopeMessage } from './ts-shared/ClientToCalliopeMessage.js'
 import { AUTH_COOKIE_NAME } from './ts-shared/const/constants.js'
 
@@ -45,6 +47,40 @@ app.ws.use(
 		} catch (e) {
 			console.error('Error establishing websocket session', e)
 			throw e
+		}
+	}),
+)
+
+app.ws.use(
+	route.all('/live/yjs/:worldId/:documentId', function (ctx) {
+		try {
+			const authCookie = ctx.cookies.get(AUTH_COOKIE_NAME)
+			if (!authCookie) {
+				throw new Error('No cookie provided')
+			}
+
+			TokenService.decodeJwtToken(authCookie)
+
+			const worldId = ctx.path.split('/')[3]
+			const documentId = ctx.path.split('/')[4]
+
+			if (!worldId || !documentId) {
+				throw new Error('Missing worldId or documentId')
+			}
+
+			// TODO: Check user has write access to this world
+			// const { id: userId } = TokenService.decodeJwtToken(authCookie)
+			// await AuthorizationService.checkUserWriteAccessById(userId, worldId)
+
+			const docName = `${worldId}:${documentId}`
+
+			setupWSConnection(ctx.websocket, ctx.req, { docName, gc: true })
+			YjsSyncService.setupDocumentListener(docName)
+
+			console.info(`Yjs WebSocket connected for document: ${docName}`)
+		} catch (e) {
+			console.error('Error establishing Yjs websocket', e)
+			ctx.websocket.close(4500, 'Internal server error')
 		}
 	}),
 )
