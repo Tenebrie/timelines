@@ -20,7 +20,7 @@ RUN yarn install --frozen-lockfile
 COPY ./app/styx-frontend /app/styx
 RUN yarn build:ci
 
-# Production stage - use nginx to serve static files (much smaller!)
+# Production stage - use nginx to serve static files
 FROM nginx:alpine
 
 # Copy built static files to nginx
