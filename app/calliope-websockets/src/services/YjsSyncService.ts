@@ -108,9 +108,16 @@ export const YjsSyncService = {
 		const doc = docs.get(docName)
 		if (doc) {
 			console.log('Update received', update)
-			Y.applyUpdate(doc, Buffer.from(update, 'base64'), UPDATE_MESSAGE_ORIGIN)
+			console.log(`[${docName}] Document found, applying update. Doc destroyed: ${doc.isDestroyed}`)
+			try {
+				Y.applyUpdate(doc, Buffer.from(update, 'base64'), UPDATE_MESSAGE_ORIGIN)
+				console.log(`[${docName}] Update applied successfully`)
+			} catch (err) {
+				console.error(`[${docName}] Error applying update:`, err)
+			}
 		} else {
 			console.log('No doc ' + docName)
+			console.log('Available docs:', Array.from(docs.keys()))
 		}
 	},
 
@@ -181,6 +188,7 @@ export const YjsSyncService = {
 
 		// Flush on document destroy (final save before cleanup)
 		doc.on('destroy', async () => {
+			attachedDocs.delete(doc)
 			console.info(`[${docName}] Document destroying, attempting final flush...`)
 
 			// Cancel any pending debounced save
