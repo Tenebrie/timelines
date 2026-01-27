@@ -1,8 +1,8 @@
-import { useCallback } from 'react'
+import { useSelector } from 'react-redux'
 
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
-import { RichTextEditorProps } from '@/app/features/richTextEditor/RichTextEditor'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 import { ActorDraft } from '../draft/useActorDraft'
 
@@ -12,24 +12,21 @@ type Props = {
 }
 
 export const ActorDescription = ({ id, draft }: Props) => {
-	const { key, descriptionRich, setDescription, setDescriptionRich, setMentions } = draft
+	const { key } = draft
+	const worldId = useSelector(getWorldIdState)
 	const theme = useCustomTheme()
-
-	const onDescriptionChange = useCallback(
-		(params: Parameters<RichTextEditorProps['onChange']>[0]) => {
-			setDescription(params.plainText)
-			setDescriptionRich(params.richText)
-			setMentions(params.mentions)
-		},
-		[setDescription, setDescriptionRich, setMentions],
-	)
 
 	return (
 		<RichTextEditorSummoner
 			softKey={`${id ?? 'no-key'}/${key}`}
-			value={descriptionRich}
-			onChange={onDescriptionChange}
+			value={''}
+			onChange={() => {}}
 			fadeInOverlayColor={theme.custom.palette.background.textEditor}
+			collaboration={{
+				worldId,
+				entityType: 'actor',
+				documentId: id ?? '',
+			}}
 		/>
 	)
 }

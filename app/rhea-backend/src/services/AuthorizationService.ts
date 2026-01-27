@@ -80,6 +80,38 @@ export const AuthorizationService = {
 		}
 	},
 
+	getUserAccessLevel: async (user: User, world: World) => {
+		try {
+			await AuthorizationService.checkUserWorldOwner(user, world.id)
+			return {
+				owner: true,
+				write: true,
+				read: true,
+			}
+		} catch {}
+		try {
+			await AuthorizationService.checkUserWriteAccess(user, world)
+			return {
+				owner: false,
+				write: true,
+				read: true,
+			}
+		} catch {}
+		try {
+			await AuthorizationService.checkUserReadAccess(user, world)
+			return {
+				owner: false,
+				write: false,
+				read: true,
+			}
+		} catch {}
+		return {
+			owner: false,
+			write: false,
+			read: false,
+		}
+	},
+
 	checkUserAnnouncementAccess: async (user: User, announcementId: string) => {
 		const count = await getPrismaClient().userAnnouncement.count({
 			where: {

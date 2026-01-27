@@ -20,9 +20,9 @@ const injectedRtkApi = api
 export { injectedRtkApi as announcementListApi }
 export type GetAnnouncementsApiResponse = /** status 200  */ {
 	description: string
-	type: 'Info' | 'Welcome' | 'WorldShared'
 	id: string
 	title: string
+	type: 'Info' | 'Welcome' | 'WorldShared'
 	userId: string
 	timestamp: string
 	isUnread: boolean

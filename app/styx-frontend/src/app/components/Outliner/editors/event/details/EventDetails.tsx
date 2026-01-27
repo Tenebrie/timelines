@@ -55,7 +55,7 @@ export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
 			<EventTitle event={event} draft={draft} />
 			<Box flexGrow={1} height={0}>
 				<EntityEditorTabs
-					contentTab={<EventDescription draft={draft} autoFocus={autoFocus} />}
+					contentTab={<EventDescription id={event?.id} draft={draft} autoFocus={autoFocus} />}
 					illustrationTab={
 						<Stack gap={2} sx={{ height: '100%', overflow: 'auto', marginRight: -0.5 }}>
 							<Stack gap={2} sx={{ marginRight: 2 }}>

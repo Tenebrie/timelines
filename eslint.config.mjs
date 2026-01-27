@@ -23,6 +23,7 @@ export default defineConfig(
 			'*.gen.ts',
 			'node_modules',
 			'.husky',
+			'app/calliope-websockets/src/api/rhea-api.ts',
 		],
 	},
 	{

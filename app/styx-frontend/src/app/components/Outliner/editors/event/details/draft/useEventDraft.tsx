@@ -1,4 +1,4 @@
-import { MentionDetails, WorldEvent } from '@api/types/worldTypes'
+import { WorldEvent } from '@api/types/worldTypes'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { generateSetter } from '@/app/utils/autosave/generateSetter'
@@ -22,9 +22,6 @@ export const useEventDraft = ({ event }: Props) => {
 	const [color, setColorDirect] = useState<string>(event.color)
 	const [timestamp, setTimestampDirect] = useState<number>(event.timestamp)
 	const [revokedAt, setRevokedAtDirect] = useState<number | undefined>(event.revokedAt)
-	const [mentions, setMentionsDirect] = useState<MentionDetails[]>(event.mentions)
-	const [description, setDescriptionDirect] = useState<string>(event.description)
-	const [descriptionRich, setDescriptionRichDirect] = useState<string>(event.descriptionRich)
 	const [customName, setCustomNameDirect] = useState<boolean>(event.customName)
 	const [externalLink, setExternalLink] = useState<string>(event.externalLink)
 
@@ -37,9 +34,6 @@ export const useEventDraft = ({ event }: Props) => {
 			setColor: generateSetter(setColorDirect, makeDirty),
 			setTimestamp: generateSetter(setTimestampDirect, makeDirty),
 			setRevokedAt: generateSetter(setRevokedAtDirect, makeDirty),
-			setMentions: generateSetter(setMentionsDirect, makeDirty),
-			setDescription: generateSetter(setDescriptionDirect, makeDirty),
-			setDescriptionRich: generateSetter(setDescriptionRichDirect, makeDirty),
 			setCustomNameEnabled: generateSetter(setCustomNameDirect, makeDirty),
 			setExternalLink: generateSetter(setExternalLink, makeDirty),
 		}),
@@ -50,12 +44,9 @@ export const useEventDraft = ({ event }: Props) => {
 		(loadedState: {
 			id: string
 			name: string
-			description: string
-			descriptionRich: string
 			timestamp: number
 			icon: string
 			color: string
-			mentions: MentionDetails[]
 			externalLink: string
 			customNameEnabled: boolean
 			revokedAt?: number | undefined
@@ -64,12 +55,9 @@ export const useEventDraft = ({ event }: Props) => {
 			setDirty(false)
 			setters.setId(loadedState.id, { cleanSet: true })
 			setters.setName(loadedState.name, { cleanSet: true })
-			setters.setDescription(loadedState.description, { cleanSet: true })
-			setters.setDescriptionRich(loadedState.descriptionRich, { cleanSet: true })
 			setters.setTimestamp(loadedState.timestamp, { cleanSet: true })
 			setters.setIcon(loadedState.icon, { cleanSet: true })
 			setters.setColor(loadedState.color, { cleanSet: true })
-			setters.setMentions(loadedState.mentions, { cleanSet: true })
 			setters.setExternalLink(loadedState.externalLink, { cleanSet: true })
 			setters.setCustomNameEnabled(loadedState.customNameEnabled, { cleanSet: true })
 			setters.setRevokedAt(loadedState.revokedAt, { cleanSet: true })
@@ -103,26 +91,10 @@ export const useEventDraft = ({ event }: Props) => {
 			color,
 			timestamp: String(timestamp),
 			revokedAt: revokedAt ? String(revokedAt) : null,
-			mentions,
-			description,
-			descriptionRich,
 			customNameEnabled: customName,
 			externalLink,
 		}
-	}, [
-		customName,
-		description,
-		descriptionRich,
-		externalLink,
-		icon,
-		color,
-		id,
-		mentions,
-		modules,
-		name,
-		revokedAt,
-		timestamp,
-	])
+	}, [customName, externalLink, icon, color, id, modules, name, revokedAt, timestamp])
 
 	if (currentId.current !== event.id) {
 		loadEvent(event)
@@ -138,9 +110,6 @@ export const useEventDraft = ({ event }: Props) => {
 		color,
 		timestamp,
 		revokedAt,
-		mentions,
-		description,
-		descriptionRich,
 		customNameEnabled: customName,
 		externalLink,
 		setDirty,

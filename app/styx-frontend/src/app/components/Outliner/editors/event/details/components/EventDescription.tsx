@@ -1,9 +1,11 @@
-import { useCallback, useEffect } from 'react'
+import { useGetWorldEventContentQuery } from '@api/worldEventApi'
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
-import { RichTextEditorProps } from '@/app/features/richTextEditor/RichTextEditor'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 import { EventDraft } from '../draft/useEventDraft'
 
@@ -14,18 +16,19 @@ type Props = {
 }
 
 export const EventDescription = ({ id, draft, autoFocus }: Props) => {
-	const { key, descriptionRich, setDescription, setDescriptionRich, setMentions } = draft
+	const { key } = draft
+	const worldId = useSelector(getWorldIdState)
 	const requestFocus = useEventBusDispatch['richEditor/requestFocus']()
-	const theme = useCustomTheme()
-
-	const onDescriptionChange = useCallback(
-		(params: Parameters<RichTextEditorProps['onChange']>[0]) => {
-			setDescription(params.plainText)
-			setDescriptionRich(params.richText)
-			setMentions(params.mentions)
+	const { data, isLoading } = useGetWorldEventContentQuery(
+		{
+			worldId,
+			eventId: id ?? '',
 		},
-		[setDescription, setDescriptionRich, setMentions],
+		{
+			skip: !id,
+		},
 	)
+	const theme = useCustomTheme()
 
 	useEffect(() => {
 		if (autoFocus) {
@@ -36,12 +39,22 @@ export const EventDescription = ({ id, draft, autoFocus }: Props) => {
 		}
 	}, [autoFocus, requestFocus])
 
+	if (!id) {
+		return null
+	}
+
 	return (
 		<RichTextEditorSummoner
 			softKey={`${id ?? 'no-key'}/${key}`}
-			value={descriptionRich}
-			onChange={onDescriptionChange}
+			value={data?.contentRich ?? ''}
+			onChange={() => {}}
 			fadeInOverlayColor={theme.custom.palette.background.textEditor}
+			collaboration={{
+				worldId,
+				entityType: 'event',
+				documentId: id ?? '',
+			}}
+			isLoading={isLoading}
 		/>
 	)
 }

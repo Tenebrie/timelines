@@ -10,6 +10,12 @@ const client = createClient({
 	},
 })
 
+const publisherClient = createClient({
+	socket: {
+		host: 'redis',
+	},
+})
+
 client.on('connect', () => {
 	console.info('Connection to Redis established!')
 })
@@ -24,6 +30,7 @@ client.on('error', (err) => {
 export const initRedisConnection = async () => {
 	console.info('Connecting to Redis...')
 	await client.connect()
+	await publisherClient.connect()
 
 	await client.subscribe(RedisChannel.RHEA_TO_CALLIOPE, (message, channel) => {
 		console.info(`Received message ${message} from ${channel}`)
@@ -44,7 +51,7 @@ export const initRedisConnection = async () => {
 
 export const RedisService = {
 	broadcastYjsDocumentUpdate: (message: YjsUpdateMessage) => {
-		client
+		publisherClient
 			.publish(RedisChannel.CALLIOPE_YJS, JSON.stringify(message))
 			.catch((err) => console.error('Error publishing Yjs update to Redis:', err))
 	},

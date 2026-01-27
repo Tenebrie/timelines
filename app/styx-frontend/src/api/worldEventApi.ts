@@ -6,6 +6,18 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
+			getWorldEventContent: build.query<GetWorldEventContentApiResponse, GetWorldEventContentApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/content` }),
+				providesTags: ['worldEvent'],
+			}),
+			putWorldEventContent: build.mutation<PutWorldEventContentApiResponse, PutWorldEventContentApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/content`,
+					method: 'PUT',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldEvent'],
+			}),
 			createWorldEvent: build.mutation<CreateWorldEventApiResponse, CreateWorldEventApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/event`,
@@ -48,6 +60,25 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as worldEventApi }
+export type GetWorldEventContentApiResponse = /** status 200  */ {
+	contentRich: string
+}
+export type GetWorldEventContentApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	eventId: string
+}
+export type PutWorldEventContentApiResponse = unknown
+export type PutWorldEventContentApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	eventId: string
+	body: {
+		content: string
+	}
+}
 export type CreateWorldEventApiResponse = /** status 200  */ {
 	mentions: {
 		targetId: string
@@ -88,15 +119,15 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 		worldEventId: string
 	}[]
 	description: string
-	type: 'SCENE' | 'OTHER'
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
 	icon: string
 	color: string
 	descriptionRich: string
+	type: 'SCENE' | 'OTHER'
 	timestamp: string
 	revokedAt?: null | string
 	customName: boolean
@@ -165,15 +196,15 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 		worldEventId: string
 	}[]
 	description: string
-	type: 'SCENE' | 'OTHER'
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
 	icon: string
 	color: string
 	descriptionRich: string
+	type: 'SCENE' | 'OTHER'
 	timestamp: string
 	revokedAt?: null | string
 	customName: boolean
@@ -215,15 +246,15 @@ export type DeleteWorldEventApiArg = {
 }
 export type RevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
-	type: 'SCENE' | 'OTHER'
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
 	icon: string
 	color: string
 	descriptionRich: string
+	type: 'SCENE' | 'OTHER'
 	timestamp: string
 	revokedAt?: null | string
 	customName: boolean
@@ -242,15 +273,15 @@ export type RevokeWorldEventApiArg = {
 }
 export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
-	type: 'SCENE' | 'OTHER'
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
 	icon: string
 	color: string
 	descriptionRich: string
+	type: 'SCENE' | 'OTHER'
 	timestamp: string
 	revokedAt?: null | string
 	customName: boolean
@@ -265,6 +296,9 @@ export type UnrevokeWorldEventApiArg = {
 	eventId: string
 }
 export const {
+	useGetWorldEventContentQuery,
+	useLazyGetWorldEventContentQuery,
+	usePutWorldEventContentMutation,
 	useCreateWorldEventMutation,
 	useUpdateWorldEventMutation,
 	useDeleteWorldEventMutation,

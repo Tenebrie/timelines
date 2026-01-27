@@ -30,9 +30,12 @@ type Props = {
 	// Collaboration params (optional)
 	collaboration?: {
 		worldId: string
+		entityType: 'actor' | 'event' | 'article'
 		documentId: string
 	}
+	isLoading?: boolean
 }
+
 export type RichTextEditorProps = Props
 
 export type OnChangeParams = {
@@ -110,6 +113,7 @@ export const RichTextEditorComponent = ({
 	allowReadMode,
 	fadeInOverlayColor,
 	collaboration,
+	isLoading,
 }: Props) => {
 	const theme = useCustomTheme()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
@@ -121,6 +125,7 @@ export const RichTextEditorComponent = ({
 	// Enable collaboration if params provided
 	const { extension: collaborationExtension, isReady: collabReady } = useCollaboration({
 		worldId: collaboration?.worldId ?? '',
+		entityType: collaboration?.entityType ?? 'actor',
 		documentId: collaboration?.documentId ?? '',
 		enabled: !!collaboration,
 	})
@@ -229,7 +234,13 @@ export const RichTextEditorComponent = ({
 			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode} />
 			{editor && <EditorContentBox className="content" editor={editor} mode={isReadMode ? 'read' : 'edit'} />}
 			<MentionsList editor={editor} />
-			<FadeInOverlay key={softKey} content={value} isReadMode={isReadMode} color={fadeInOverlayColor} />
+			<FadeInOverlay
+				key={softKey}
+				content={value}
+				isReadMode={isReadMode}
+				color={fadeInOverlayColor}
+				isLoading={isLoading ?? false}
+			/>
 		</StyledContainer>
 	)
 }

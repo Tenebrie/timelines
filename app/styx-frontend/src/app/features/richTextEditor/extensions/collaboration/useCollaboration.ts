@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
 
@@ -6,19 +6,24 @@ import { createCollaborationExtension, createCollaborationProvider } from './Col
 
 type UseCollaborationParams = {
 	worldId: string
+	entityType: 'actor' | 'event' | 'article'
 	documentId: string
 	enabled: boolean
 }
 
-/**
- * Hook to manage Yjs collaboration for a document
- * Returns the Collaboration extension to add to Tiptap editor
- */
-export const useCollaboration = ({ worldId, documentId, enabled }: UseCollaborationParams) => {
-	const [doc, setDoc] = useState<Y.Doc | null>(null)
-	const [provider, setProvider] = useState<WebsocketProvider | null>(null)
-	const [extension, setExtension] = useState<ReturnType<typeof createCollaborationExtension> | null>(null)
-	const [isReady, setIsReady] = useState(false)
+type ConnectionState = {
+	doc: Y.Doc
+	provider: WebsocketProvider
+	extension: ReturnType<typeof createCollaborationExtension>
+	key: string
+}
+
+export const useCollaboration = ({ worldId, entityType, documentId, enabled }: UseCollaborationParams) => {
+	const [isReady, setIsReady] = useState(!enabled)
+	const connectionRef = useRef<ConnectionState | null>(null)
+	const cleanupTimeoutRef = useRef<number | null>(null)
+
+	const key = `${worldId}:${entityType}:${documentId}`
 
 	useEffect(() => {
 		if (!enabled) {
@@ -26,32 +31,55 @@ export const useCollaboration = ({ worldId, documentId, enabled }: UseCollaborat
 			return
 		}
 
-		// Create Yjs doc and WebSocket provider
-		const { doc: yjsDoc, provider: wsProvider } = createCollaborationProvider(worldId, documentId)
-		setDoc(yjsDoc)
-		setProvider(wsProvider)
+		// Cancel pending cleanup from Strict Mode's first unmount
+		if (cleanupTimeoutRef.current !== null) {
+			clearTimeout(cleanupTimeoutRef.current)
+			cleanupTimeoutRef.current = null
+		}
 
-		const onSync = (isSynced: boolean) => {
-			if (isSynced) {
-				setIsReady(true)
+		// Reuse existing connection if params haven't changed
+		if (connectionRef.current?.key === key) {
+			return scheduleCleanup()
+		}
+
+		// Tear down old connection if params changed
+		if (connectionRef.current) {
+			destroyConnection(connectionRef.current)
+		}
+
+		// Create new connection
+		setIsReady(false)
+		const { doc, provider } = createCollaborationProvider(worldId, entityType, documentId)
+		const extension = createCollaborationExtension(doc)
+
+		connectionRef.current = { doc, provider, extension, key }
+		provider.on('sync', (synced: boolean) => synced && setIsReady(true))
+
+		return scheduleCleanup()
+
+		function scheduleCleanup() {
+			return () => {
+				cleanupTimeoutRef.current = window.setTimeout(() => {
+					if (connectionRef.current) {
+						destroyConnection(connectionRef.current)
+						connectionRef.current = null
+						setIsReady(false)
+					}
+				}, 50)
 			}
 		}
+	}, [key, enabled, worldId, entityType, documentId])
 
-		wsProvider.on('sync', onSync)
+	return {
+		doc: connectionRef.current?.doc ?? null,
+		provider: connectionRef.current?.provider ?? null,
+		extension: connectionRef.current?.extension ?? null,
+		isReady,
+	}
+}
 
-		// Create Tiptap extension
-		const collaborationExtension = createCollaborationExtension(yjsDoc)
-		setExtension(collaborationExtension)
-
-		// Cleanup on unmount
-		return () => {
-			wsProvider.off('sync', onSync)
-			wsProvider.disconnect()
-			wsProvider.destroy()
-			yjsDoc.destroy()
-			setIsReady(false)
-		}
-	}, [worldId, documentId, enabled])
-
-	return { doc, provider, extension, isReady }
+function destroyConnection({ doc, provider }: ConnectionState) {
+	provider.disconnect()
+	provider.destroy()
+	doc.destroy()
 }

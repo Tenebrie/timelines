@@ -8,6 +8,15 @@ import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { MentionData, MentionsService } from './MentionsService.js'
 
 export const WikiService = {
+	findArticleById: async ({ id, worldId }: { id: string; worldId: string }) => {
+		return getPrismaClient().wikiArticle.findFirst({
+			where: {
+				id,
+				worldId,
+			},
+		})
+	},
+
 	listWikiArticles: async (params: Pick<WikiArticle, 'worldId'>) => {
 		const articles = await getPrismaClient().wikiArticle.findMany({
 			where: {

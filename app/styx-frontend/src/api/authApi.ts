@@ -78,10 +78,10 @@ export type PostLoginApiResponse = /** status 200  */ {
 		bio: string
 		level: 'Free' | 'Premium' | 'Admin'
 		avatar: null | {
-			status: 'Pending' | 'Finalized' | 'Failed'
 			id: string
 			createdAt: string
 			updatedAt: string
+			status: 'Pending' | 'Finalized' | 'Failed'
 			ownerId: string
 			size: number
 			expiresAt?: null | string

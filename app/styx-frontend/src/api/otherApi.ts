@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['mindmap', 'WorldColor', 'worldWikiArticle'] as const
+export const addTagTypes = ['mindmap', 'worldWikiArticle', 'WorldColor'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -8,22 +8,27 @@ const injectedRtkApi = api
 		endpoints: (build) => ({
 			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
 				query: () => ({ url: `/api/constants/admin-levels` }),
+				providesTags: [],
 			}),
 			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
 				query: () => ({ url: `/api/constants/world-access-modes` }),
+				providesTags: [],
 			}),
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
+				providesTags: [],
 			}),
 			getSupportedImageFormats: build.query<
 				GetSupportedImageFormatsApiResponse,
 				GetSupportedImageFormatsApiArg
 			>({
 				query: () => ({ url: `/api/images/formats` }),
+				providesTags: [],
 			}),
 			requestImageConversion: build.mutation<RequestImageConversionApiResponse, RequestImageConversionApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
+					invalidatesTags: [],
 				},
 			),
 			getMindmap: build.query<GetMindmapApiResponse, GetMindmapApiArg>({
@@ -44,6 +49,7 @@ const injectedRtkApi = api
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
+				invalidatesTags: [],
 			}),
 			deleteNode: build.mutation<DeleteNodeApiResponse, DeleteNodeApiArg>({
 				query: (queryArg) => ({
@@ -51,6 +57,20 @@ const injectedRtkApi = api
 					method: 'DELETE',
 				}),
 				invalidatesTags: ['mindmap'],
+			}),
+			getWikiArticleContent: build.query<GetWikiArticleContentApiResponse, GetWikiArticleContentApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/article/${queryArg.articleId}/content`,
+				}),
+				providesTags: ['worldWikiArticle'],
+			}),
+			putWikiArticleContent: build.mutation<PutWikiArticleContentApiResponse, PutWikiArticleContentApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/article/${queryArg.articleId}/content`,
+					method: 'PUT',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldWikiArticle'],
 			}),
 			getWorldColors: build.query<GetWorldColorsApiResponse, GetWorldColorsApiArg>({
 				query: (queryArg) => ({ url: `/api/worlds/${queryArg.worldId}/colors` }),
@@ -79,6 +99,17 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldWikiArticle'],
 			}),
+			getUserWorldAccessLevel: build.query<GetUserWorldAccessLevelApiResponse, GetUserWorldAccessLevelApiArg>(
+				{
+					query: (queryArg) => ({
+						url: `/api/internal/auth/${queryArg.userId}`,
+						params: {
+							worldId: queryArg.worldId,
+						},
+					}),
+					providesTags: [],
+				},
+			),
 		}),
 		overrideExisting: false,
 	})
@@ -94,10 +125,10 @@ export type GetSupportedImageFormatsApiResponse = /** status 200  */ {
 }
 export type GetSupportedImageFormatsApiArg = void
 export type RequestImageConversionApiResponse = /** status 200  */ {
-	status: 'Pending' | 'Finalized' | 'Failed'
 	id: string
 	createdAt: string
 	updatedAt: string
+	status: 'Pending' | 'Finalized' | 'Failed'
 	ownerId: string
 	size: number
 	expiresAt?: null | string
@@ -117,10 +148,10 @@ export type RequestImageConversionApiArg = {
 }
 export type GetMindmapApiResponse = /** status 200  */ {
 	nodes: {
-		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		worldId: string
 		positionX: number
 		positionY: number
 		parentActorId?: null | string
@@ -131,10 +162,10 @@ export type GetMindmapApiArg = {
 	worldId: string
 }
 export type CreateNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
 	positionX: number
 	positionY: number
 	parentActorId?: null | string
@@ -149,10 +180,10 @@ export type CreateNodeApiArg = {
 	}
 }
 export type UpdateNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
 	positionX: number
 	positionY: number
 	parentActorId?: null | string
@@ -168,10 +199,10 @@ export type UpdateNodeApiArg = {
 	}
 }
 export type DeleteNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
 	positionX: number
 	positionY: number
 	parentActorId?: null | string
@@ -182,12 +213,31 @@ export type DeleteNodeApiArg = {
 	/** Any string value */
 	nodeId: string
 }
-export type GetWorldColorsApiResponse = /** status 200  */ {
-	value: string
+export type GetWikiArticleContentApiResponse = /** status 200  */ {
+	contentRich: string
+}
+export type GetWikiArticleContentApiArg = {
+	/** Any string value */
 	worldId: string
+	/** Any string value */
+	articleId: string
+}
+export type PutWikiArticleContentApiResponse = unknown
+export type PutWikiArticleContentApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	articleId: string
+	body: {
+		content: string
+	}
+}
+export type GetWorldColorsApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
+	value: string
 	label?: null | string
 }[]
 export type GetWorldColorsApiArg = {
@@ -195,11 +245,11 @@ export type GetWorldColorsApiArg = {
 	worldId: string
 }
 export type CreateWorldColorApiResponse = /** status 200  */ {
-	value: string
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
+	value: string
 	label?: null | string
 }
 export type CreateWorldColorApiArg = {
@@ -219,26 +269,26 @@ export type DeleteWorldColorApiArg = {
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
-		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
+		worldId: string
 		icon: string
 		color: string
 		contentRich: string
 		position: number
-		worldId: string
 		parentId?: null | string
 	}[]
-	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	name: string
+	worldId: string
 	icon: string
 	color: string
 	contentRich: string
 	position: number
-	worldId: string
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {
@@ -257,6 +307,17 @@ export type UpdateArticleApiArg = {
 		}[]
 	}
 }
+export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {
+	owner: boolean
+	write: boolean
+	read: boolean
+}
+export type GetUserWorldAccessLevelApiArg = {
+	/** Any string value with at least one character */
+	userId: string
+	/** Any string value with at least one character */
+	worldId: string
+}
 export const {
 	useAdminGetUserLevelsQuery,
 	useLazyAdminGetUserLevelsQuery,
@@ -272,9 +333,14 @@ export const {
 	useCreateNodeMutation,
 	useUpdateNodeMutation,
 	useDeleteNodeMutation,
+	useGetWikiArticleContentQuery,
+	useLazyGetWikiArticleContentQuery,
+	usePutWikiArticleContentMutation,
 	useGetWorldColorsQuery,
 	useLazyGetWorldColorsQuery,
 	useCreateWorldColorMutation,
 	useDeleteWorldColorMutation,
 	useUpdateArticleMutation,
+	useGetUserWorldAccessLevelQuery,
+	useLazyGetUserWorldAccessLevelQuery,
 } = injectedRtkApi
