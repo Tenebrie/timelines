@@ -40,6 +40,8 @@ export const initRedisConnection = async () => {
 	})
 
 	await client.subscribe(RedisChannel.CALLIOPE_YJS, (message) => {
+		console.info('[CALLIOPE_YJS] Received message from Redis!')
+		console.info('[CALLIOPE_YJS] YjsSyncService:', typeof YjsSyncService, YjsSyncService)
 		try {
 			const parsedMessage = JSON.parse(message) as YjsUpdateMessage
 			YjsSyncService.handleMessage(parsedMessage)

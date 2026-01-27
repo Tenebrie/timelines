@@ -152,7 +152,7 @@ export const YjsSyncService = {
 			schedulePersistence(docName, doc, metadata)
 
 			// If this is a local update (not from Redis), broadcast to other instances
-			console.log('Received message from ', origin)
+			console.log('Received message from ', typeof origin)
 			if (origin !== UPDATE_MESSAGE_ORIGIN) {
 				console.info(`[${docName}] Broadcasting update to other instances`)
 				RedisService.broadcastYjsDocumentUpdate({
