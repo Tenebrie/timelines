@@ -8,7 +8,6 @@ import { WebSocket } from 'ws'
 import { ClientMessageHandlerService } from './services/ClientMessageHandlerService.js'
 import { persistenceLeaderService } from './services/PersistenceLeaderService.js'
 import { initRedisConnection } from './services/RedisService.js'
-import { RheaService } from './services/RheaService.js'
 import { TokenService } from './services/TokenService.js'
 import { WebsocketService } from './services/WebsocketService.js'
 import { YjsSyncService } from './services/YjsSyncService.js'
@@ -73,21 +72,19 @@ app.ws.use(
 				throw new Error('Invalid entityType')
 			}
 
+			const docName = `${worldId}:${documentId}`
+			setupWSConnection(ctx.websocket, ctx.req, { docName, gc: true })
+
 			const { id: userId } = TokenService.decodeUserToken(authCookie)
 
-			await RheaService.checkUserAccess({ worldId, userId, level: 'write' })
-
-			const docName = `${worldId}:${documentId}`
-
-			YjsSyncService.registerDocumentMetadata({
-				docName,
+			await YjsSyncService.setupDocumentListener({
 				userId,
 				worldId,
 				entityId: documentId,
 				entityType: entityType as 'actor' | 'event' | 'article',
+				docName,
 			})
-
-			setupWSConnection(ctx.websocket, ctx.req, { docName, gc: true })
+			// await RheaService.checkUserAccess({ worldId, userId, level: 'write' })
 		} catch (e) {
 			console.error('Error establishing Yjs websocket', e)
 			ctx.websocket.close(4500, 'Internal server error')
