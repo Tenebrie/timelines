@@ -143,17 +143,17 @@ export const YjsSyncService = {
 				return
 			}
 
-			if (origin === UPDATE_MESSAGE_ORIGIN) {
-				// Schedule persistence (will try to acquire lock after debounce)
-				schedulePersistence(docName, doc, metadata)
-				return
-			}
+			// Always schedule persistence for any update (local or remote)
+			// The leader election will ensure only one instance actually saves
+			schedulePersistence(docName, doc, metadata)
 
-			// Broadcast to other Calliope instances
-			RedisService.broadcastYjsDocumentUpdate({
-				docName,
-				update: Buffer.from(update).toString('base64'),
-			})
+			// If this is a local update (not from Redis), broadcast to other instances
+			if (origin !== UPDATE_MESSAGE_ORIGIN) {
+				RedisService.broadcastYjsDocumentUpdate({
+					docName,
+					update: Buffer.from(update).toString('base64'),
+				})
+			}
 		})
 
 		const contentRich = await RheaService.fetchDocumentState({
