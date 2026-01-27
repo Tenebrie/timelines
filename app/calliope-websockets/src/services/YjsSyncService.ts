@@ -139,7 +139,13 @@ export const YjsSyncService = {
 		let initComplete = false
 
 		doc.on('update', async (update: Uint8Array, origin: unknown) => {
-			if (origin === UPDATE_MESSAGE_ORIGIN || !initComplete) {
+			if (!initComplete) {
+				return
+			}
+
+			if (origin === UPDATE_MESSAGE_ORIGIN) {
+				// Schedule persistence (will try to acquire lock after debounce)
+				schedulePersistence(docName, doc, metadata)
 				return
 			}
 
@@ -148,9 +154,6 @@ export const YjsSyncService = {
 				docName,
 				update: Buffer.from(update).toString('base64'),
 			})
-
-			// Schedule persistence (will try to acquire lock after debounce)
-			schedulePersistence(docName, doc, metadata)
 		})
 
 		const contentRich = await RheaService.fetchDocumentState({
