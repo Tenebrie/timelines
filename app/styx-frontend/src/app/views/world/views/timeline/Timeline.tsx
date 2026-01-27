@@ -51,7 +51,13 @@ function TimelineComponent() {
 					onMouseUp={onContextMenu}
 					$theme={theme}
 				>
-					<Box width={1} height={1} style={{ opacity }} sx={{ transition: 'opacity 0.3s' }}>
+					<Box
+						width={1}
+						height={1}
+						style={{ opacity }}
+						sx={{ transition: 'opacity 0.3s' }}
+						className="allow-timeline-click"
+					>
 						{opacity > 0 && (
 							<>
 								<TimeMarker timestamp={selectedTime} />
