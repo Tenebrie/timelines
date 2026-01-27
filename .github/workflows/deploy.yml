@@ -78,58 +78,6 @@ jobs:
         env:
           VERSION: ${{ needs.check-commits.outputs.version }}
 
-  backup-staging-db:
-    name: Backup Staging Database
-    runs-on: ubuntu-latest
-    needs: [check-commits]
-    if: ${{ needs.check-commits.outputs.count > 0 && github.ref_name == 'dev' }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H $(doctl compute droplet get staging-manager-1 --format PublicIPv4 --no-header) >> ~/.ssh/known_hosts
-
-      - name: Checkout branch
-        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && git fetch && git checkout dev && git pull"
-
-      - name: Backup Database
-        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && ./scripts/stack-create-db-backup.sh timelines-staging"
-
-  backup-production-db:
-    name: Backup Production Database
-    runs-on: ubuntu-latest
-    needs: [check-commits]
-    if: ${{ needs.check-commits.outputs.count > 0 && github.ref_name == 'main' }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H $(doctl compute droplet get prod-manager-1 --format PublicIPv4 --no-header) >> ~/.ssh/known_hosts
-
-      - name: Checkout branch
-        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && git fetch && git checkout main && git pull"
-
-      - name: Backup Database
-        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && ./scripts/stack-create-db-backup.sh timelines-prod"
-
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
@@ -150,7 +98,7 @@ jobs:
   deploy-staging:
     name: Deploy to Staging
     runs-on: ubuntu-latest
-    needs: [check-commits, prepare-containers, backup-staging-db, create-release]
+    needs: [check-commits, prepare-containers, create-release]
     if: ${{ github.ref_name == 'dev' }}
     environment:
       name: staging
@@ -174,6 +122,9 @@ jobs:
       - name: Checkout branch
         run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && git fetch && git checkout dev && git pull"
 
+      - name: Backup Database
+        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && ./scripts/stack-create-db-backup.sh timelines-staging"
+
       - name: Deploy to DigitalOcean
         run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"
 
@@ -188,7 +139,7 @@ jobs:
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
-    needs: [check-commits, prepare-containers, backup-production-db, create-release]
+    needs: [check-commits, prepare-containers, create-release]
     if: ${{ github.ref_name == 'main' }}
     environment:
       name: production
@@ -211,6 +162,9 @@ jobs:
 
       - name: Checkout branch
         run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && git fetch && git checkout main && git pull"
+
+      - name: Backup Database
+        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && ./scripts/stack-create-db-backup.sh timelines-prod"
 
       - name: Deploy to DigitalOcean
         run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"
