@@ -49,7 +49,7 @@ export const FadeInOverlay = ({ content, isReadMode, color, isLoading }: Props) 
 	})
 
 	useEffect(() => {
-		if (inProgress.current) {
+		if (inProgress.current || isLoading) {
 			return
 		}
 		let startTime: number = 0
@@ -90,7 +90,7 @@ export const FadeInOverlay = ({ content, isReadMode, color, isLoading }: Props) 
 		return () => {
 			cancelIdleCallback(b)
 		}
-	}, [])
+	}, [isLoading])
 
 	const height = isReadMode ? 'calc(100%)' : 'calc(100% - 52px)'
 	const width = isReadMode ? 'calc(100%)' : 'calc(100% - 8px)'

@@ -1,93 +1,21 @@
 import { docs } from '@y/websocket-server/utils'
-import { load } from 'cheerio'
-import { Element, Text } from 'domhandler'
 import * as Y from 'yjs'
 
 import { persistenceLeaderService } from './PersistenceLeaderService.js'
 import { RedisService } from './RedisService.js'
 import { RheaService } from './RheaService.js'
+import { htmlToYXml, yXmlToHtml } from './YjsParserService.js'
 
 const attachedDocs = new WeakSet<Y.Doc>()
 const UPDATE_MESSAGE_ORIGIN = 'calliope-internal'
 
 // Track debounce timers for each document
 const persistenceTimers = new Map<string, NodeJS.Timeout>()
-const DEBOUNCE_DELAY = 5000 // 5 seconds - wait for inactivity before attempting to save
+const DEBOUNCE_DELAY = 2000
 
 export type YjsUpdateMessage = {
 	docName: string
 	update: string
-}
-
-function htmlToYXml(html: string, parent: Y.XmlFragment | Y.XmlElement) {
-	const normalizedHtml = html.trim().startsWith('<') ? html : `<paragraph>${html}</paragraph>`
-
-	const $ = load(normalizedHtml, { xmlMode: true })
-	const root = $.root()
-
-	function processNode(node: Element, yParent: Y.XmlFragment | Y.XmlElement) {
-		node.childNodes.forEach((child) => {
-			if (child instanceof Text) {
-				const text = new Y.XmlText()
-				text.insert(0, child.data)
-				yParent.push([text])
-			} else if (child instanceof Element) {
-				const element = new Y.XmlElement(child.name)
-				// Copy attributes
-				if (child.attribs) {
-					Object.entries(child.attribs).forEach(([key, value]) => {
-						element.setAttribute(key, value)
-					})
-				}
-				// Process children recursively
-				if (child.childNodes && child.childNodes.length > 0) {
-					processNode(child, element)
-				}
-				yParent.push([element])
-			}
-		})
-	}
-
-	root.contents().each((_, elem) => {
-		if (elem instanceof Text) {
-			const text = new Y.XmlText()
-			text.insert(0, elem.data)
-			parent.push([text])
-		} else if (elem instanceof Element) {
-			const element = new Y.XmlElement(elem.name)
-			if (elem.attribs) {
-				Object.entries(elem.attribs).forEach(([key, value]) => {
-					element.setAttribute(key, value)
-				})
-			}
-			if (elem.childNodes && elem.childNodes.length > 0) {
-				processNode(elem, element)
-			}
-			parent.push([element])
-		}
-	})
-}
-
-function yXmlToHtml(fragment: Y.XmlFragment | Y.XmlElement): string {
-	let html = ''
-
-	fragment.forEach((item) => {
-		if (item instanceof Y.XmlText) {
-			html += item.toString()
-		} else if (item instanceof Y.XmlElement) {
-			html += `<${item.nodeName}`
-			// Add attributes
-			const attrs = item.getAttributes()
-			for (const [key, value] of Object.entries(attrs)) {
-				html += ` ${key}="${value}"`
-			}
-			html += '>'
-			html += yXmlToHtml(item)
-			html += `</${item.nodeName}>`
-		}
-	})
-
-	return html
 }
 
 /**

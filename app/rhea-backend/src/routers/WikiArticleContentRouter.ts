@@ -1,9 +1,11 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
 import { WikiService } from '@src/services/WikiService.js'
 import {
+	BadRequestError,
 	PathParam,
 	RequiredParam,
 	Router,
@@ -38,8 +40,12 @@ router.get('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 
 	const article = await WikiService.findArticleById({ id: articleId, worldId })
+	if (!article) {
+		throw new BadRequestError('Article not found')
+	}
+
 	return {
-		contentRich: article?.contentRich ?? '',
+		contentRich: article.contentRich,
 	}
 })
 
@@ -63,11 +69,13 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
 
-	await WikiService.updateWikiArticle({
+	const article = await WikiService.updateWikiArticle({
 		id: articleId,
 		contentRich: parsed.contentRich,
 		mentions: parsed.mentions,
 	})
+
+	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })
 })
 
 export const WikiArticleContentRouter = router

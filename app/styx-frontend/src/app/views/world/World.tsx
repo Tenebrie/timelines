@@ -14,6 +14,8 @@ import { useEventBusDispatch, useEventBusSubscribe } from '../../features/eventB
 import { SummonableRichTextEditor } from '../../features/richTextEditor/portals/RichTextEditorPortal'
 import { WorldSidebar } from './components/sidebar/WorldSidebar'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
+import { CreateActorModal } from './modals/CreateActorModal'
+import { CreateEventModal } from './modals/CreateEventModal'
 import { DeleteEventDeltaModal } from './modals/DeleteEventDeltaModal'
 import { DeleteEventModal } from './modals/DeleteEventModal'
 import { EditEventModal } from './modals/editEventModal/EditEventModal'
@@ -81,6 +83,8 @@ export const World = () => {
 			<DeleteEventDeltaModal />
 			<EntityModalReporter />
 			<MarkerTooltipSummoner />
+			<CreateEventModal />
+			<CreateActorModal />
 		</>
 	)
 }
@@ -95,6 +99,8 @@ function WorldLoader() {
 
 function EntityModalReporter() {
 	const { isOpen, open, close } = useModal('editEventModal')
+	const { open: openCreateEventModal, close: closeCreateEventModal } = useModal('createEventModal')
+	const { open: openCreateActorModal, close: closeCreateActorModal } = useModal('createActorModal')
 	const { selectedEntityIds, creatingNew } = useSearch({
 		from: '/world/$worldId/_world',
 		select: (search) => ({ selectedEntityIds: search.navi, creatingNew: search.new }),
@@ -110,11 +116,15 @@ function EntityModalReporter() {
 	useEffect(() => {
 		if (selectedEntityIds.length === 0 && !creatingNew) {
 			close()
+			closeCreateEventModal()
+			closeCreateActorModal()
 			return
 		}
 
 		const event = events.find((e) => e.id === selectedEntityIds[0])
 		if (event) {
+			closeCreateEventModal()
+			closeCreateActorModal()
 			open({ entityStack: selectedEntityIds, creatingNew: null })
 			return
 		}
@@ -123,6 +133,8 @@ function EntityModalReporter() {
 		if (marker) {
 			const event = events.find((e) => e.id === marker.eventId)
 			if (event) {
+				closeCreateEventModal()
+				closeCreateActorModal()
 				open({ entityStack: selectedEntityIds, creatingNew: null })
 				return
 			}
@@ -132,6 +144,8 @@ function EntityModalReporter() {
 		if (node) {
 			const actor = actors.find((e) => e.id === node.parentActorId)
 			if (actor) {
+				closeCreateEventModal()
+				closeCreateActorModal()
 				open({ entityStack: selectedEntityIds, creatingNew: null })
 				return
 			}
@@ -139,15 +153,36 @@ function EntityModalReporter() {
 
 		const actor = actors.find((a) => a.id === selectedEntityIds[0])
 		if (actor) {
+			closeCreateEventModal()
+			closeCreateActorModal()
 			open({ entityStack: selectedEntityIds, creatingNew: null })
 			return
 		}
 
-		if (creatingNew) {
-			open({ entityStack: [], creatingNew })
+		if (creatingNew === 'event') {
+			openCreateEventModal({})
 			return
 		}
-	}, [actors, close, creatingNew, events, isOpen, markers, mindmapData?.nodes, open, selectedEntityIds])
+
+		if (creatingNew === 'actor') {
+			openCreateActorModal({})
+			return
+		}
+	}, [
+		actors,
+		close,
+		closeCreateEventModal,
+		closeCreateActorModal,
+		creatingNew,
+		events,
+		isOpen,
+		markers,
+		mindmapData?.nodes,
+		open,
+		openCreateEventModal,
+		openCreateActorModal,
+		selectedEntityIds,
+	])
 
 	return <></>
 }

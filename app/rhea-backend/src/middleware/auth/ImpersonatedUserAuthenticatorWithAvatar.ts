@@ -34,7 +34,8 @@ export const ImpersonatedUserAuthenticatorWithAvatar = async (ctx: Parameterized
 			throw new UnauthorizedError('Invalid user')
 		}
 		return user
-	} catch {
+	} catch (error) {
+		console.error(error)
 		throw new UnauthorizedError('Invalid service auth token')
 	}
 }

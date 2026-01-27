@@ -2,8 +2,10 @@ import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { ActorService } from '@src/services/ActorService.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
 import {
+	BadRequestError,
 	PathParam,
 	RequiredParam,
 	Router,
@@ -38,8 +40,11 @@ router.get('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 
 	const actor = await ActorService.findActor({ worldId, actorId })
+	if (!actor) {
+		throw new BadRequestError('Actor not found')
+	}
 	return {
-		contentRich: actor?.description ?? '',
+		contentRich: actor.descriptionRich,
 	}
 })
 
@@ -63,7 +68,7 @@ router.put('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
 
-	await ActorService.updateActor({
+	const { actor } = await ActorService.updateActor({
 		worldId,
 		actorId,
 		params: {
@@ -72,6 +77,8 @@ router.put('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 			mentions: parsed.mentions,
 		},
 	})
+
+	RedisService.notifyAboutActorUpdate(ctx, { worldId, actor })
 })
 
 export const ActorContentRouter = router

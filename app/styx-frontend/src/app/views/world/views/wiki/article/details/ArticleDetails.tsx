@@ -1,24 +1,38 @@
 import Box from '@mui/material/Box'
-import { useState } from 'react'
+import debounce from 'lodash.debounce'
+import { useCallback, useRef } from 'react'
 
-import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
+import { useArticleApiCache } from '@/app/views/world/views/wiki/api/useArticleApiCache'
 import { useCurrentArticle } from '@/app/views/world/views/wiki/hooks/useCurrentArticle'
 
 export const ArticleDetails = () => {
 	const { article } = useCurrentArticle()
 	const theme = useCustomTheme()
+	const { updateCachedArticle } = useArticleApiCache()
 
-	const [key, setKey] = useState(0)
-
-	useEventBusSubscribe['richEditor/forceUpdateArticle']({
-		condition: (data) => data.articleId === article?.id,
-		callback: () => setKey((prev) => prev + 1),
-	})
+	const debouncedUpdate = useRef(
+		debounce((articleId: string, richText: string) => {
+			updateCachedArticle({
+				id: articleId,
+				contentRich: richText,
+			})
+		}, 2000),
+	)
 
 	const scrollbars = useBrowserSpecificScrollbars()
+
+	const handleChange = useCallback(
+		({ richText }: { richText: string }) => {
+			if (!article) {
+				return
+			}
+			debouncedUpdate.current(article.id, richText)
+		},
+		[article],
+	)
 
 	if (!article) {
 		return <></>
@@ -27,17 +41,15 @@ export const ArticleDetails = () => {
 	return (
 		<Box sx={{ ...scrollbars, height: '100%' }}>
 			<RichTextEditorSummoner
-				softKey={`${article.id}-${key}`}
+				softKey={`${article.id}`}
 				value={article.contentRich}
-				onChange={() => {}}
+				onChange={handleChange}
 				fadeInOverlayColor={theme.custom.palette.background.textEditor}
 				allowReadMode
 				collaboration={{
-					worldId: article.worldId,
 					entityType: 'article',
 					documentId: article.id,
 				}}
-				isLoading={true}
 			/>
 		</Box>
 	)

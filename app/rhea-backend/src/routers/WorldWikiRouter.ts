@@ -18,7 +18,6 @@ import {
 
 import { SessionMiddleware } from '../middleware/SessionMiddleware.js'
 import { worldWikiArticleTag, worldWikiTag } from './utils/tags.js'
-import { MentionsArrayValidator } from './validators/MentionsArrayValidator.js'
 import { NullableStringValidator } from './validators/NullableStringValidator.js'
 import { StringArrayValidator } from './validators/StringArrayValidator.js'
 
@@ -91,19 +90,15 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
-	const { name, contentRich, mentions } = useRequestBody(ctx, {
+	const { name } = useRequestBody(ctx, {
 		name: OptionalParam(StringValidator),
 		icon: OptionalParam(StringValidator),
 		color: OptionalParam(StringValidator),
-		contentRich: OptionalParam(StringValidator),
-		mentions: OptionalParam(MentionsArrayValidator),
 	})
 
 	const article = await WikiService.updateWikiArticle({
 		id: articleId,
 		name,
-		contentRich,
-		mentions,
 	})
 
 	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })

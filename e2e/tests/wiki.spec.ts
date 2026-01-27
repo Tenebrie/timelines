@@ -29,14 +29,17 @@ test.describe('Wiki', () => {
 			// Edit article
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 			await expect(textbox).toBeVisible()
+			await page.waitForTimeout(1000)
 
-			await textbox.fill('This is a test article')
+			await textbox.pressSequentially('This is a test article', { delay: 10 })
 			await page.waitForTimeout(1000)
 			await page.reload()
 			await expect(textbox).toBeVisible()
 			await expect(textbox).toHaveText('This is a test article')
+			await page.waitForTimeout(1000)
 
-			await textbox.fill('The text has been changed')
+			await textbox.selectText()
+			await textbox.pressSequentially('The text has been changed', { delay: 10 })
 			await page.waitForTimeout(1000)
 			await page.reload()
 			await expect(textbox).toBeVisible()
@@ -67,7 +70,8 @@ test.describe('Wiki', () => {
 			await expect(textbox).toHaveText('')
 
 			// Add mention
-			await textbox.fill('Hello @TestActor')
+			await textbox.pressSequentially('Hello @TestActor', { delay: 10 })
+			await page.waitForTimeout(100)
 			await page.keyboard.press('Enter')
 			await page.waitForTimeout(1000)
 
@@ -77,18 +81,21 @@ test.describe('Wiki', () => {
 			await expect(textbox).toHaveText('')
 
 			// Add mention
-			await textbox.fill('Also hi @UnrelatedActor')
+			await textbox.pressSequentially('Also hi @UnrelatedActor', { delay: 10 })
+			await page.waitForTimeout(100)
 			await page.keyboard.press('Enter')
 			await page.waitForTimeout(1000)
 
 			// Switch back to article A
 			await page.getByText('First article').click()
 			await expect(textbox).toBeVisible()
+			await page.waitForTimeout(1000)
 			await expect(textbox).toHaveText('Hello TestActor')
 
 			// Switch back to article B
 			await page.getByTestId('ArticleListWithHeader').getByText('Second article').click()
 			await expect(textbox).toBeVisible()
+			await page.waitForTimeout(1000)
 			await expect(textbox).toHaveText('Also hi UnrelatedActor')
 		})
 
@@ -106,12 +113,13 @@ test.describe('Wiki', () => {
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 			await expect(textbox).toBeVisible()
 			await expect(textbox).toHaveText('')
+			await page.waitForTimeout(1000)
 
 			// Add mentions
-			await textbox.fill('Hello @TestActor')
+			await textbox.pressSequentially('Hello @TestActor', { delay: 10 })
 			await page.keyboard.press('Enter')
 			await page.waitForTimeout(1000)
-			await textbox.pressSequentially('\nHello @UnrelatedActor')
+			await textbox.pressSequentially('\nHello @UnrelatedActor', { delay: 10 })
 			await page.keyboard.press('Enter')
 			await page.waitForTimeout(1000)
 
@@ -119,12 +127,12 @@ test.describe('Wiki', () => {
 			await page.getByText('Second article').click()
 			await expect(textbox).toBeVisible()
 			await expect(textbox).toHaveText('')
-			await page.waitForTimeout(100)
+			await page.waitForTimeout(1000)
 
 			// Switch back to article A
 			await page.getByTestId('ArticleListWithHeader').getByText('First article').click()
 			await expect(textbox).toBeVisible()
-			await expect(textbox).toHaveText('Hello TestActorHello UnrelatedActor')
+			await expect(textbox).toHaveText('Hello TestActor Hello UnrelatedActor')
 
 			// Edit article
 			await textbox.focus()
@@ -133,7 +141,7 @@ test.describe('Wiki', () => {
 			await textbox.press('ArrowUp')
 			await textbox.press('Enter')
 			await page.waitForTimeout(100)
-			await expect(textbox).toHaveText('Hello TestActorHello UnrelatedActor')
+			await expect(textbox).toHaveText('Hello TestActor Hello UnrelatedActor')
 		})
 
 		test('moving articles and creating folders', async ({ page }) => {
@@ -241,6 +249,8 @@ test.describe('Wiki', () => {
 	})
 
 	test.afterEach(async ({ page }) => {
+		// Flush the entity changes
+		await page.waitForTimeout(3000)
 		await deleteAccount(page)
 	})
 })

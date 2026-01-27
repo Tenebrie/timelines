@@ -2636,36 +2636,26 @@ export interface operations {
                     name?: string;
                     icon?: string;
                     color?: string;
-                    description: string;
-                    descriptionRich?: string;
+                    descriptionRich: string;
                     /** Format: bigint */
                     timestamp: string;
                     revokedAt?: null | string;
                     customName?: boolean;
                     externalLink?: string;
                     worldEventTrackId?: null | string;
-                    mentions?: {
-                        targetId: string;
-                        targetType: "Actor" | "Event" | "Article" | "Tag";
-                    }[];
                 };
                 "application/x-www-form-urlencoded": {
                     id?: string;
                     name?: string;
                     icon?: string;
                     color?: string;
-                    description: string;
-                    descriptionRich?: string;
+                    descriptionRich: string;
                     /** Format: bigint */
                     timestamp: string;
                     revokedAt?: null | string;
                     customName?: boolean;
                     externalLink?: string;
                     worldEventTrackId?: null | string;
-                    mentions?: {
-                        targetId: string;
-                        targetType: "Actor" | "Event" | "Article" | "Tag";
-                    }[];
                 };
             };
         };
@@ -2789,7 +2779,6 @@ export interface operations {
                     /** Format: bigint */
                     timestamp?: string;
                     revokedAt?: null | string;
-                    description?: string;
                     descriptionRich?: string;
                     mentions?: {
                         targetId: string;
@@ -2807,7 +2796,6 @@ export interface operations {
                     /** Format: bigint */
                     timestamp?: string;
                     revokedAt?: null | string;
-                    description?: string;
                     descriptionRich?: string;
                     mentions?: {
                         targetId: string;
@@ -3996,7 +3984,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        contentRich: string;
                         children: {
                             id: string;
                             /** Format: date-time */
@@ -4020,6 +4007,7 @@ export interface operations {
                         worldId: string;
                         icon: string;
                         color: string;
+                        contentRich: string;
                         position: number;
                         parentId?: null | string;
                     }[];

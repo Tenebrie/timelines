@@ -2,7 +2,10 @@ import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { ActorService } from '@src/services/ActorService.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { EntityNameService } from '@src/services/EntityNameService.js'
+import { MentionData } from '@src/services/MentionsService.js'
 import { RedisService } from '@src/services/RedisService.js'
+import { RichTextService } from '@src/services/RichTextService.js'
 import {
 	OptionalParam,
 	PathParam,
@@ -17,7 +20,6 @@ import {
 
 import { actorListTag, worldDetailsTag } from './utils/tags.js'
 import { ContentStringValidator } from './validators/ContentStringValidator.js'
-import { MentionsArrayValidator } from './validators/MentionsArrayValidator.js'
 import { NameStringValidator } from './validators/NameStringValidator.js'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator.js'
 
@@ -43,10 +45,25 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 		title: OptionalParam(OptionalNameStringValidator),
 		icon: OptionalParam(NameStringValidator),
 		color: OptionalParam(NameStringValidator),
-		mentions: OptionalParam(MentionsArrayValidator),
-		description: OptionalParam(ContentStringValidator),
 		descriptionRich: OptionalParam(ContentStringValidator),
 	})
+
+	let description: string | undefined
+	let descriptionRich: string | undefined
+	let mentions: MentionData[] | undefined
+	if (params.descriptionRich) {
+		const parsed = await RichTextService.parseContentString({
+			worldId,
+			contentString: params.descriptionRich,
+		})
+		params.name = EntityNameService.getEventCreateName({
+			name: params.name,
+			description: parsed.contentPlain,
+		})
+		description = parsed.contentPlain
+		descriptionRich = params.descriptionRich
+		mentions = parsed.mentions
+	}
 
 	const { actor, world } = await ActorService.createActor({
 		worldId,
@@ -55,6 +72,9 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 		},
 		updateData: {
 			...params,
+			description,
+			descriptionRich,
+			mentions,
 		},
 	})
 
@@ -84,12 +104,13 @@ router.patch('/api/world/:worldId/actor/:actorId', async (ctx) => {
 		title: OptionalParam(OptionalNameStringValidator),
 		icon: OptionalParam(NameStringValidator),
 		color: OptionalParam(NameStringValidator),
-		mentions: OptionalParam(MentionsArrayValidator),
-		description: OptionalParam(ContentStringValidator),
-		descriptionRich: OptionalParam(ContentStringValidator),
 	})
 
-	const { actor } = await ActorService.updateActor({ worldId, actorId, params })
+	const { actor } = await ActorService.updateActor({
+		worldId,
+		actorId,
+		params,
+	})
 
 	RedisService.notifyAboutActorUpdate(ctx, { worldId, actor })
 

@@ -43,7 +43,7 @@ export function EntityBreadcrumbs({
 		if (creatingNew === 'actor') {
 			return 'New actor'
 		}
-		return breadcrumbEntities[breadcrumbEntities.length - 1]?.name || 'Loading...'
+		return breadcrumbEntities[breadcrumbEntities.length - 1]?.name || '<Unnamed>'
 	})()
 
 	return (

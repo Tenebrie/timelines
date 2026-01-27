@@ -98,7 +98,6 @@ app.ws.use(
 	route.all('(.*)', async function (ctx) {
 		console.warn(`Rejected WebSocket connection to invalid path: ${ctx.path}`)
 		ctx.websocket.close(4404, `Invalid path: ${ctx.path}`)
-		throw new Error(`No WebSocket route found for path: ${ctx.path}`)
 	}),
 )
 

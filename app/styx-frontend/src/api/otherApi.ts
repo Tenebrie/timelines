@@ -8,27 +8,22 @@ const injectedRtkApi = api
 		endpoints: (build) => ({
 			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
 				query: () => ({ url: `/api/constants/admin-levels` }),
-				providesTags: [],
 			}),
 			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
 				query: () => ({ url: `/api/constants/world-access-modes` }),
-				providesTags: [],
 			}),
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
-				providesTags: [],
 			}),
 			getSupportedImageFormats: build.query<
 				GetSupportedImageFormatsApiResponse,
 				GetSupportedImageFormatsApiArg
 			>({
 				query: () => ({ url: `/api/images/formats` }),
-				providesTags: [],
 			}),
 			requestImageConversion: build.mutation<RequestImageConversionApiResponse, RequestImageConversionApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
-					invalidatesTags: [],
 				},
 			),
 			getMindmap: build.query<GetMindmapApiResponse, GetMindmapApiArg>({
@@ -49,7 +44,6 @@ const injectedRtkApi = api
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
-				invalidatesTags: [],
 			}),
 			deleteNode: build.mutation<DeleteNodeApiResponse, DeleteNodeApiArg>({
 				query: (queryArg) => ({
@@ -107,7 +101,6 @@ const injectedRtkApi = api
 							worldId: queryArg.worldId,
 						},
 					}),
-					providesTags: [],
 				},
 			),
 		}),
@@ -270,10 +263,10 @@ export type DeleteWorldColorApiArg = {
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
 		id: string
+		worldId: string
+		name: string
 		createdAt: string
 		updatedAt: string
-		name: string
-		worldId: string
 		icon: string
 		color: string
 		contentRich: string
@@ -281,10 +274,10 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 		parentId?: null | string
 	}[]
 	id: string
+	worldId: string
+	name: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	worldId: string
 	icon: string
 	color: string
 	contentRich: string
@@ -300,11 +293,6 @@ export type UpdateArticleApiArg = {
 		name?: string
 		icon?: string
 		color?: string
-		contentRich?: string
-		mentions?: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		}[]
 	}
 }
 export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {

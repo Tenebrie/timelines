@@ -82,7 +82,8 @@ export const MentionNode = Node.create({
 	},
 
 	renderText({ node }) {
-		return getActorName(node) ?? getEventName(node) ?? getArticleName(node) ?? 'Unknown entity'
+		const name = getActorName(node) ?? getEventName(node) ?? getArticleName(node) ?? 'Unknown entity'
+		return `[${name}]`
 	},
 
 	addNodeView() {

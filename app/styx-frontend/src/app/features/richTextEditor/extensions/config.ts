@@ -14,6 +14,7 @@ export const SharedExtensions: Extensions = [
 	// Starter kit
 	StarterKit.configure({
 		hardBreak: false,
+		history: false,
 	}),
 	// Support for underlined text
 	Underline,

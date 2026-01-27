@@ -1,5 +1,4 @@
 import { useUpdateArticleMutation } from '@api/otherApi'
-import { MentionDetails } from '@api/types/worldTypes'
 import { worldWikiApi } from '@api/worldWikiApi'
 import { useSelector } from 'react-redux'
 
@@ -13,13 +12,8 @@ export const useEditArticle = () => {
 	const [updateArticle, params] = useUpdateArticleMutation()
 	const { updateCachedArticle } = useArticleApiCache()
 
-	const edit = async (data: {
-		id: string
-		name?: string
-		contentRich?: string
-		newMentions?: MentionDetails[]
-	}) => {
-		const { id, name, contentRich, newMentions } = data
+	const edit = async (data: { id: string; name?: string }) => {
+		const { id, name } = data
 
 		updateCachedArticle(data)
 
@@ -29,8 +23,6 @@ export const useEditArticle = () => {
 				worldId,
 				body: {
 					name,
-					contentRich,
-					mentions: newMentions,
 				},
 			}),
 		)

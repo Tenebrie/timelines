@@ -26,7 +26,6 @@ export const TokenService = {
 			id: 'calliope',
 			email: 'calliope@localhost',
 			service: 'calliope',
-			iat: Math.floor(Date.now() / 1000),
 		}
 		const token = jwt.sign(payload, SecretService.getSecret('jwt-secret'))
 		TokenService.cachedServiceToken = token

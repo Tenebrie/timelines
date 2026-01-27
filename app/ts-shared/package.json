@@ -36,6 +36,14 @@
 		}
 	},
 	"dependencies": {
+		"@tiptap/core": "^3.17.1",
+		"@tiptap/extension-hard-break": "^3.17.1",
+		"@tiptap/extension-image": "^3.17.1",
+		"@tiptap/extension-mention": "^3.17.1",
+		"@tiptap/extension-underline": "^3.17.1",
+		"@tiptap/pm": "^3.17.1",
+		"@tiptap/starter-kit": "^3.17.1",
+		"@tiptap/suggestion": "^3.17.1",
 		"lint-staged": "^15.2.11",
 		"module-alias": "^2.2.2",
 		"ws": "^8.18.0"

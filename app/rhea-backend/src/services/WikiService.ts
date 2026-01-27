@@ -25,18 +25,12 @@ export const WikiService = {
 			include: {
 				children: true,
 			},
-			omit: {
-				contentRich: true,
-			},
 			orderBy: {
 				position: 'asc',
 			},
 		})
 
-		return articles.map((a) => ({
-			...a,
-			contentRich: '',
-		}))
+		return articles
 	},
 
 	getArticleCount: async (params: Pick<WikiArticle, 'worldId'>) => {
@@ -54,6 +48,7 @@ export const WikiService = {
 					worldId: params.worldId,
 					name: params.name,
 					position: params.position * 2,
+					contentRich: '<p></p>',
 				},
 				include: {
 					children: true,

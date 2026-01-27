@@ -16,7 +16,7 @@ import { useActorDraft } from './draft/useActorDraft'
 import { useUpsertActor } from './draft/useUpsertActor'
 
 type Props = {
-	editedActor: Actor | null
+	editedActor: Actor
 }
 
 export const ActorDetails = memo(ActorDetailsComponent)
@@ -46,21 +46,9 @@ export function ActorDetailsComponent({ editedActor }: Props) {
 			}}
 		>
 			<ActorTitle draft={draft} />
-			{/* <Box
-				sx={{
-					marginBottom: draft.description.length > 0 && draft.name.length === 0 ? -1.5 : -1,
-					transition: 'margin 300ms',
-				}}
-			>
-				<ManualErrorBanner
-					open={draft.description.length > 0 && draft.name.length === 0}
-					error="Actor must have a name"
-					severity="info"
-				/>
-			</Box> */}
 			<Box flexGrow={1} height={0} sx={{ marginRight: 0 }}>
 				<EntityEditorTabs
-					contentTab={<ActorDescription id={actor?.id ?? ''} draft={draft} />}
+					contentTab={<ActorDescription actor={actor} />}
 					illustrationTab={
 						<Stack gap={2} sx={{ height: '100%', overflow: 'auto', marginRight: -0.5 }}>
 							<Stack gap={2} sx={{ marginRight: 2 }}>

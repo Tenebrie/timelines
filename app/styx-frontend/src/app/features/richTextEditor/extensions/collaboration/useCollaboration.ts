@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
+
+import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 import { createCollaborationExtension, createCollaborationProvider } from './CollaborationExtension'
 
 type UseCollaborationParams = {
-	worldId: string
 	entityType: 'actor' | 'event' | 'article'
 	documentId: string
 	enabled: boolean
@@ -18,7 +20,8 @@ type ConnectionState = {
 	key: string
 }
 
-export const useCollaboration = ({ worldId, entityType, documentId, enabled }: UseCollaborationParams) => {
+export const useCollaboration = ({ entityType, documentId, enabled }: UseCollaborationParams) => {
+	const worldId = useSelector(getWorldIdState)
 	const [isReady, setIsReady] = useState(!enabled)
 	const connectionRef = useRef<ConnectionState | null>(null)
 	const cleanupTimeoutRef = useRef<number | null>(null)

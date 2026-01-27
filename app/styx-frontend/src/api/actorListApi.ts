@@ -66,10 +66,10 @@ export type PutActorContentApiArg = {
 }
 export type CreateActorApiResponse = /** status 200  */ {
 	mentions: {
-		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceId: string
+		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
@@ -80,10 +80,10 @@ export type CreateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	mentionedIn: {
-		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceId: string
+		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
@@ -94,11 +94,11 @@ export type CreateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 	title: string
 	icon: string
 	color: string
@@ -112,20 +112,15 @@ export type CreateActorApiArg = {
 		title?: string
 		icon?: string
 		color?: string
-		mentions?: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		}[]
-		description?: string
 		descriptionRich?: string
 	}
 }
 export type UpdateActorApiResponse = /** status 200  */ {
 	mentions: {
-		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceId: string
+		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
@@ -136,10 +131,10 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	mentionedIn: {
-		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceId: string
+		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
@@ -150,11 +145,11 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 	title: string
 	icon: string
 	color: string
@@ -170,21 +165,15 @@ export type UpdateActorApiArg = {
 		title?: string
 		icon?: string
 		color?: string
-		mentions?: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		}[]
-		description?: string
-		descriptionRich?: string
 	}
 }
 export type DeleteActorApiResponse = /** status 200  */ {
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 	title: string
 	icon: string
 	color: string

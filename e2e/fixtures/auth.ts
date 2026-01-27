@@ -1,8 +1,9 @@
 import { expect, Page } from '@playwright/test'
+import { randomBytes } from 'crypto'
 import { makeUrl } from 'tests/utils'
 
 export const createNewUser = async (page: Page) => {
-	const userId = `playwright-${Math.random().toString(16).slice(2)}`
+	const userId = `playwright-${Date.now()}-${randomBytes(8).toString('hex')}`
 
 	const accountData = {
 		email: `${userId}@localhost`,

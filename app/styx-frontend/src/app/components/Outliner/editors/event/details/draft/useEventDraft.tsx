@@ -94,7 +94,7 @@ export const useEventDraft = ({ event }: Props) => {
 			customNameEnabled: customName,
 			externalLink,
 		}
-	}, [customName, externalLink, icon, color, id, modules, name, revokedAt, timestamp])
+	}, [id, modules, name, icon, color, timestamp, revokedAt, customName, externalLink])
 
 	if (currentId.current !== event.id) {
 		loadEvent(event)
