@@ -27,7 +27,6 @@ export const useQuickCreateEvent = () => {
 					body: {
 						name: query,
 						color: getRandomEntityColor(),
-						description: query,
 						descriptionRich: query,
 						timestamp: '0',
 					},
