@@ -217,6 +217,8 @@ export const YjsSyncService = {
 					console.info(`[${docName}] Not leader on destroy, another instance will flush`)
 				}
 
+				persistenceLeaderService.release(docName)
+
 				// Clean up metadata
 				documentMetadata.delete(docName)
 			},

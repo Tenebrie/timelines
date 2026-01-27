@@ -101,6 +101,39 @@ export class PersistenceLeaderService {
 	}
 
 	/**
+	 * Release leadership for a document.
+	 * Uses Lua script for atomic delete-if-owner to prevent race conditions.
+	 */
+	async release(docName: string) {
+		await this.connect()
+
+		const lockKey = this.getLockKey(docName)
+
+		// Lua script for atomic delete-if-owner
+		// Only deletes if we still own the lock
+		const script = `
+			local key = KEYS[1]
+			local value = ARGV[1]
+			
+			if redis.call('GET', key) == value then
+				return redis.call('DEL', key)
+			end
+			return 0
+		`
+
+		const result = await this.redisClient.eval(script, {
+			keys: [lockKey],
+			arguments: [this.instanceId],
+		})
+
+		if (result === 1) {
+			console.debug(`[PersistenceLeader] Released leadership for: ${docName}`)
+		} else {
+			console.debug(`[PersistenceLeader] Not the leader for: ${docName}`)
+		}
+	}
+
+	/**
 	 * Cleanup on shutdown (no-op now since locks auto-expire).
 	 */
 	async shutdown() {
