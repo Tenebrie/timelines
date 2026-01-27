@@ -3,6 +3,7 @@ import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'moonflower'
 
+import { ActorContentRouter } from './routers/ActorContentRouter.js'
 import { ActorRouter } from './routers/ActorRouter.js'
 import { AdminRouter } from './routers/AdminRouter.js'
 import { AnnouncementRouter } from './routers/AnnouncementRouter.js'
@@ -12,9 +13,12 @@ import { ConstantsRouter } from './routers/ConstantsRouter.js'
 import { HealthRouter, HealthStatus } from './routers/HealthRouter.js'
 import { IconsRouter } from './routers/IconsRouter.js'
 import { ImageConversionRouter } from './routers/ImageConversionRouter.js'
+import { ClientAuthRouter } from './routers/internal/ClientAuthRouter.js'
 import { MindmapRouter } from './routers/MindmapRouter.js'
 import { ProfileRouter } from './routers/ProfileRouter.js'
+import { WikiArticleContentRouter } from './routers/WikiArticleContentRouter.js'
 import { WorldColorRouter } from './routers/WorldColorRouter.js'
+import { WorldEventContentRouter } from './routers/WorldEventContentRouter.js'
 import { WorldEventRouter } from './routers/WorldEventRouter.js'
 import { WorldEventTrackRouter } from './routers/WorldEventTrackRouter.js'
 import { WorldRouter } from './routers/WorldRouter.js'
@@ -51,6 +55,9 @@ app
 			enableTypes: ['text', 'json', 'form'],
 		}),
 	)
+	// Public routers
+	.use(ActorContentRouter.routes())
+	.use(ActorContentRouter.allowedMethods())
 	.use(ActorRouter.routes())
 	.use(ActorRouter.allowedMethods())
 	.use(AdminRouter.routes())
@@ -73,6 +80,10 @@ app
 	.use(MindmapRouter.allowedMethods())
 	.use(ProfileRouter.routes())
 	.use(ProfileRouter.allowedMethods())
+	.use(WikiArticleContentRouter.routes())
+	.use(WikiArticleContentRouter.allowedMethods())
+	.use(WorldEventContentRouter.routes())
+	.use(WorldEventContentRouter.allowedMethods())
 	.use(WorldEventRouter.routes())
 	.use(WorldEventRouter.allowedMethods())
 	.use(WorldEventTrackRouter.routes())
@@ -87,6 +98,9 @@ app
 	.use(WorldThumbnailRouter.allowedMethods())
 	.use(WorldWikiRouter.routes())
 	.use(WorldWikiRouter.allowedMethods())
+	// Internal use routers
+	.use(ClientAuthRouter.routes())
+	.use(ClientAuthRouter.allowedMethods())
 
 if (!isRunningInTest()) {
 	app.use(

@@ -1,47 +1,48 @@
-import { useCallback, useEffect } from 'react'
+import { WorldEvent } from '@api/types/worldTypes'
+import debounce from 'lodash.debounce'
+import { useRef } from 'react'
+import { useDispatch } from 'react-redux'
 
-import { useEventBusDispatch } from '@/app/features/eventBus'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
-import { RichTextEditorProps } from '@/app/features/richTextEditor/RichTextEditor'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-
-import { EventDraft } from '../draft/useEventDraft'
+import { worldSlice } from '@/app/views/world/WorldSlice'
 
 type Props = {
-	id?: string
-	draft: EventDraft
+	event: WorldEvent
 	autoFocus?: boolean
 }
 
-export const EventDescription = ({ id, draft, autoFocus }: Props) => {
-	const { key, descriptionRich, setDescription, setDescriptionRich, setMentions } = draft
-	const requestFocus = useEventBusDispatch['richEditor/requestFocus']()
+export const EventDescription = ({ event, autoFocus }: Props) => {
 	const theme = useCustomTheme()
 
-	const onDescriptionChange = useCallback(
-		(params: Parameters<RichTextEditorProps['onChange']>[0]) => {
-			setDescription(params.plainText)
-			setDescriptionRich(params.richText)
-			setMentions(params.mentions)
-		},
-		[setDescription, setDescriptionRich, setMentions],
-	)
+	const { updateEvent } = worldSlice.actions
+	const dispatch = useDispatch()
 
-	useEffect(() => {
-		if (autoFocus) {
-			// Small delay to ensure the editor is mounted
-			setTimeout(() => {
-				requestFocus()
-			}, 1)
-		}
-	}, [autoFocus, requestFocus])
+	const debouncedUpdate = useRef(
+		debounce((eventId: string, plainText: string, richText: string) => {
+			dispatch(
+				updateEvent({
+					id: eventId,
+					description: plainText,
+					descriptionRich: richText,
+				}),
+			)
+		}, 500),
+	)
 
 	return (
 		<RichTextEditorSummoner
-			softKey={`${id ?? 'no-key'}/${key}`}
-			value={descriptionRich}
-			onChange={onDescriptionChange}
+			softKey={event.id}
+			value={event.description}
+			onChange={({ plainText, richText }) => {
+				debouncedUpdate.current(event.id, plainText, richText)
+			}}
+			autoFocus={autoFocus}
 			fadeInOverlayColor={theme.custom.palette.background.textEditor}
+			collaboration={{
+				documentId: event.id,
+				entityType: 'event',
+			}}
 		/>
 	)
 }

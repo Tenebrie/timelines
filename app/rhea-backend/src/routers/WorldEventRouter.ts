@@ -3,6 +3,7 @@ import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { EntityNameService } from '@src/services/EntityNameService.js'
 import { RedisService } from '@src/services/RedisService.js'
+import { RichTextService } from '@src/services/RichTextService.js'
 import { ValidationService } from '@src/services/ValidationService.js'
 import { WorldEventDeltaService } from '@src/services/WorldEventDeltaService.js'
 import { WorldEventService } from '@src/services/WorldEventService.js'
@@ -23,7 +24,6 @@ import {
 
 import { worldDetailsTag, worldEventDeltaTag, worldEventTag } from './utils/tags.js'
 import { ContentStringValidator } from './validators/ContentStringValidator.js'
-import { MentionsArrayValidator } from './validators/MentionsArrayValidator.js'
 import { NullableEventTrackValidator } from './validators/NullableEventTrackValidator.js'
 import { NullableNameStringValidator } from './validators/NullableNameStringValidator.js'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator.js'
@@ -56,17 +56,22 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		name: OptionalParam(OptionalNameStringValidator),
 		icon: OptionalParam(OptionalNameStringValidator),
 		color: OptionalParam(OptionalNameStringValidator),
-		description: RequiredParam(ContentStringValidator),
-		descriptionRich: OptionalParam(ContentStringValidator),
+		descriptionRich: RequiredParam(ContentStringValidator),
 		timestamp: RequiredParam(BigIntValidator),
 		revokedAt: OptionalParam(NullableBigIntValidator),
 		customName: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(ContentStringValidator),
 		worldEventTrackId: OptionalParam(NullableEventTrackValidator),
-		mentions: OptionalParam(MentionsArrayValidator),
 	})
 
-	params.name = EntityNameService.getEventCreateName(params)
+	const parsed = await RichTextService.parseContentString({
+		worldId,
+		contentString: params.descriptionRich,
+	})
+	params.name = EntityNameService.getEventCreateName({
+		name: params.name,
+		description: parsed.contentPlain,
+	})
 
 	const { event, world } = await WorldEventService.createWorldEvent({
 		worldId,
@@ -76,7 +81,12 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 			type: 'SCENE',
 			timestamp: params.timestamp,
 		},
-		updateData: params,
+		updateData: {
+			...params,
+			description: parsed.contentPlain,
+			descriptionRich: parsed.contentRich,
+			mentions: parsed.mentions,
+		},
 	})
 
 	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
@@ -105,30 +115,31 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		color: OptionalParam(OptionalNameStringValidator),
 		timestamp: OptionalParam(BigIntValidator),
 		revokedAt: OptionalParam(NullableBigIntValidator),
-		description: OptionalParam(ContentStringValidator),
-		descriptionRich: OptionalParam(ContentStringValidator),
-		mentions: OptionalParam(MentionsArrayValidator),
 		customNameEnabled: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(OptionalURLStringValidator),
 		worldEventTrackId: OptionalParam(NullableEventTrackValidator),
 	})
 
+	await AuthorizationService.checkUserWriteAccessById(user, worldId)
+
+	const baseEvent = await WorldEventService.fetchWorldEvent(eventId)
+
 	const mappedParams = {
 		extraFields: params.modules,
-		name: EntityNameService.getEventUpdateName(params),
+		name: EntityNameService.getEventUpdateName({
+			...params,
+			description: baseEvent.description,
+			customNameEnabled: params.customNameEnabled ?? baseEvent.customName,
+		}),
 		icon: params.icon,
 		color: params.color,
 		timestamp: params.timestamp,
 		revokedAt: params.revokedAt,
-		description: params.description,
-		descriptionRich: params.descriptionRich,
 		customName: params.customNameEnabled,
 		externalLink: params.externalLink,
 		worldEventTrackId: params.worldEventTrackId,
-		mentions: params.mentions,
 	}
 
-	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 	await ValidationService.checkEventPatchValidity(eventId, mappedParams)
 
 	const { event } = await WorldEventService.updateWorldEvent({

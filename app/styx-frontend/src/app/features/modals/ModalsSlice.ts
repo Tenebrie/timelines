@@ -35,6 +35,12 @@ const modals = {
 		entityStack: [] as string[],
 		creatingNew: null as 'actor' | 'event' | null,
 	},
+	createEventModal: {
+		isOpen: false as boolean,
+	},
+	createActorModal: {
+		isOpen: false as boolean,
+	},
 	eventWizard: {
 		isOpen: false as boolean,
 		timestamp: 0 as number,

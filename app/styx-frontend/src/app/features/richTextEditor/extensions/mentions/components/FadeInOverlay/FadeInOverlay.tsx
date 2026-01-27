@@ -10,9 +10,10 @@ type Props = {
 	color: string
 	content: string
 	isReadMode: boolean
+	isLoading: boolean
 }
 
-export const FadeInOverlay = ({ content, isReadMode, color }: Props) => {
+export const FadeInOverlay = ({ content, isReadMode, color, isLoading }: Props) => {
 	const ref = useRef<HTMLDivElement | null>(null)
 	const inProgress = useRef(false)
 	const capHitRef = useRef(false)
@@ -48,7 +49,7 @@ export const FadeInOverlay = ({ content, isReadMode, color }: Props) => {
 	})
 
 	useEffect(() => {
-		if (inProgress.current) {
+		if (inProgress.current || isLoading) {
 			return
 		}
 		let startTime: number = 0
@@ -89,7 +90,7 @@ export const FadeInOverlay = ({ content, isReadMode, color }: Props) => {
 		return () => {
 			cancelIdleCallback(b)
 		}
-	}, [])
+	}, [isLoading])
 
 	const height = isReadMode ? 'calc(100%)' : 'calc(100% - 52px)'
 	const width = isReadMode ? 'calc(100%)' : 'calc(100% - 8px)'
@@ -113,7 +114,7 @@ export const FadeInOverlay = ({ content, isReadMode, color }: Props) => {
 				ref={ref}
 				className="overlay"
 				style={{
-					display: content.length === 0 ? 'none' : 'block',
+					display: content.length === 0 && !isLoading ? 'none' : 'block',
 					pointerEvents: 'none',
 					position: 'absolute',
 					top: 52,

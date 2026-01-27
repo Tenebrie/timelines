@@ -6,6 +6,18 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
+			getActorContent: build.query<GetActorContentApiResponse, GetActorContentApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content` }),
+				providesTags: ['actorList'],
+			}),
+			putActorContent: build.mutation<PutActorContentApiResponse, PutActorContentApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content`,
+					method: 'PUT',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['actorList'],
+			}),
 			createActor: build.mutation<CreateActorApiResponse, CreateActorApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/actors`,
@@ -33,12 +45,31 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as actorListApi }
+export type GetActorContentApiResponse = /** status 200  */ {
+	contentRich: string
+}
+export type GetActorContentApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	actorId: string
+}
+export type PutActorContentApiResponse = unknown
+export type PutActorContentApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	actorId: string
+	body: {
+		content: string
+	}
+}
 export type CreateActorApiResponse = /** status 200  */ {
 	mentions: {
-		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceId: string
+		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
@@ -49,10 +80,10 @@ export type CreateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	mentionedIn: {
-		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceId: string
+		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
@@ -81,20 +112,15 @@ export type CreateActorApiArg = {
 		title?: string
 		icon?: string
 		color?: string
-		mentions?: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		}[]
-		description?: string
 		descriptionRich?: string
 	}
 }
 export type UpdateActorApiResponse = /** status 200  */ {
 	mentions: {
-		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceId: string
+		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
@@ -105,10 +131,10 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	mentionedIn: {
-		targetId: string
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceId: string
+		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		sourceActorId?: null | string
 		sourceEventId?: null | string
 		sourceArticleId?: null | string
@@ -139,12 +165,6 @@ export type UpdateActorApiArg = {
 		title?: string
 		icon?: string
 		color?: string
-		mentions?: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		}[]
-		description?: string
-		descriptionRich?: string
 	}
 }
 export type DeleteActorApiResponse = /** status 200  */ {
@@ -165,4 +185,11 @@ export type DeleteActorApiArg = {
 	/** Any string value */
 	actorId: string
 }
-export const { useCreateActorMutation, useUpdateActorMutation, useDeleteActorMutation } = injectedRtkApi
+export const {
+	useGetActorContentQuery,
+	useLazyGetActorContentQuery,
+	usePutActorContentMutation,
+	useCreateActorMutation,
+	useUpdateActorMutation,
+	useDeleteActorMutation,
+} = injectedRtkApi

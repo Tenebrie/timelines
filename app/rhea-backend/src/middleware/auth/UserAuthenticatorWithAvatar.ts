@@ -1,21 +1,31 @@
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 import { TokenService } from '@src/services/TokenService.js'
 import { ParameterizedContext } from 'koa'
+import { useHeaderParams } from 'moonflower'
 import { UnauthorizedError } from 'moonflower/errors/UserFacingErrors'
 import { useCookieParams } from 'moonflower/hooks/useCookieParams'
 import { NonEmptyStringValidator } from 'moonflower/validators/BuiltInValidators'
-import { RequiredParam } from 'moonflower/validators/ParamWrappers'
+import { OptionalParam, RequiredParam } from 'moonflower/validators/ParamWrappers'
 
-import { AUTH_COOKIE_NAME } from '../../ts-shared/const/constants.js'
+import { AUTH_COOKIE_NAME, SERVICE_AUTH_TOKEN_HEADER } from '../../ts-shared/const/constants.js'
+import { ImpersonatedUserAuthenticatorWithAvatar } from './ImpersonatedUserAuthenticatorWithAvatar.js'
 export { AUTH_COOKIE_NAME }
 
 export const UserAuthenticatorWithAvatar = async (ctx: ParameterizedContext) => {
+	// If another service is impersonating a user
+	const { serviceAuthToken } = useHeaderParams(ctx, {
+		[SERVICE_AUTH_TOKEN_HEADER]: OptionalParam(NonEmptyStringValidator),
+	})
+	if (serviceAuthToken) {
+		return ImpersonatedUserAuthenticatorWithAvatar(ctx)
+	}
+
 	const { [AUTH_COOKIE_NAME]: token } = useCookieParams(ctx, {
 		[AUTH_COOKIE_NAME]: RequiredParam(NonEmptyStringValidator),
 	})
 
 	try {
-		const tokenPayload = TokenService.decodeJwtToken(token)
+		const tokenPayload = TokenService.decodeUserToken(token)
 		const user = await getPrismaClient().user.findFirst({
 			where: {
 				id: tokenPayload.id,

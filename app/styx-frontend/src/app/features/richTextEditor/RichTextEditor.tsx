@@ -1,17 +1,16 @@
 import { MentionDetails } from '@api/types/worldTypes'
-import Box from '@mui/material/Box'
 import { Editor, useEditor } from '@tiptap/react'
-import { EditorContent } from '@tiptap/react'
 import throttle from 'lodash.throttle'
 import { memo, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
 import { getWorldState } from '../../views/world/WorldSliceSelectors'
 import { useEventBusSubscribe } from '../eventBus'
 import { getWikiPreferences } from '../preferences/PreferencesSliceSelectors'
+import { EditorContentBox } from './components/EditorContentBox'
+import { useCollaboration } from './extensions/collaboration/useCollaboration'
 import { EditorExtensions } from './extensions/config'
 import { FadeInOverlay } from './extensions/mentions/components/FadeInOverlay/FadeInOverlay'
 import { MentionNodeName } from './extensions/mentions/components/MentionNode'
@@ -26,7 +25,15 @@ type Props = {
 	onBlur?: () => void
 	allowReadMode?: boolean
 	fadeInOverlayColor: string
+	// Collaboration params (optional)
+	collaboration?: {
+		entityType: 'actor' | 'event' | 'article'
+		documentId: string
+	}
+	autoFocus?: boolean
+	isLoading?: boolean
 }
+
 export type RichTextEditorProps = Props
 
 export type OnChangeParams = {
@@ -35,67 +42,6 @@ export type OnChangeParams = {
 	mentions: MentionDetails[]
 }
 
-type EditorContentBoxProps = {
-	editor: Editor
-	mode: 'read' | 'edit'
-	className?: string
-	readOnly?: boolean
-}
-
-export const EditorContentBox = ({ editor, mode, className, readOnly }: EditorContentBoxProps) => (
-	<Box
-		component={EditorContent}
-		className={className}
-		editor={editor}
-		readOnly={readOnly}
-		sx={{
-			fontFamily: '"Roboto", sans-serif',
-			outline: 'none',
-			height: mode === 'edit' ? 'calc(100% - 48px)' : 'unset',
-			overflowY: 'auto',
-			display: 'flex',
-			flexDirection: 'column',
-
-			'& img': {
-				maxHeight: '400px',
-				maxWidth: '100%',
-			},
-
-			'& .ProseMirror': {
-				flex: 1,
-				outline: 'none',
-				minHeight: '1rem',
-				height: '100%',
-				padding: mode === 'edit' ? '0 16px' : 'unset',
-				color: 'text.primary',
-
-				'& > p:first-of-type': {
-					paddingTop: '16px',
-				},
-			},
-
-			'& p': {
-				margin: 0,
-				padding: '6px 0px',
-				lineHeight: 1.5,
-				wordBreak: 'break-word',
-				color: 'text.primary',
-			},
-
-			'& li > p': {
-				padding: '3px 0',
-			},
-
-			'& code': {
-				padding: '4px 8px',
-				borderRadius: '4px',
-				background: '#00000033',
-			},
-			...useBrowserSpecificScrollbars(),
-		}}
-	/>
-)
-
 export const RichTextEditorComponent = ({
 	value,
 	softKey,
@@ -103,6 +49,9 @@ export const RichTextEditorComponent = ({
 	onBlur,
 	allowReadMode,
 	fadeInOverlayColor,
+	collaboration,
+	autoFocus,
+	isLoading,
 }: Props) => {
 	const theme = useCustomTheme()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
@@ -110,6 +59,13 @@ export const RichTextEditorComponent = ({
 		getWikiPreferences,
 		(a, b) => a.readModeEnabled === b.readModeEnabled,
 	)
+
+	// Enable collaboration if params provided
+	const { extension: collaborationExtension, isReady: collabReady } = useCollaboration({
+		enabled: !!collaboration,
+		documentId: collaboration?.documentId ?? '',
+		entityType: collaboration?.entityType ?? 'actor',
+	})
 
 	const onChangeRef = useRef(onChange)
 	useEffect(() => {
@@ -153,32 +109,30 @@ export const RichTextEditorComponent = ({
 
 	const isReadMode = (isReadOnly || (readModeEnabled && allowReadMode)) ?? false
 
-	const editor = useEditor({
-		content: value,
-		editable: !isReadMode,
-		extensions: EditorExtensions,
-		onUpdate({ editor, transaction }) {
-			if (editor.getHTML() === value || transaction.steps.length === 0) {
-				return
-			}
-			onChangeThrottled.current(editor)
+	// Add collaboration extension if enabled
+	const extensions = collaborationExtension ? [...EditorExtensions, collaborationExtension] : EditorExtensions
+
+	const editor = useEditor(
+		{
+			content: value,
+			editable: !isReadMode,
+			extensions,
+			autofocus: autoFocus ? 'end' : false,
+			onUpdate({ editor, transaction }) {
+				if (editor.getHTML() === value || transaction.steps.length === 0) {
+					return
+				}
+				onChangeThrottled.current(editor)
+			},
 		},
-	})
+		[collabReady],
+	)
 
 	const currentValue = useRef(value)
 
 	useEffect(() => {
 		currentValue.current = value
 	}, [value])
-
-	useEffect(() => {
-		if (!editor) {
-			return
-		}
-
-		const newText = currentValue.current
-		editor.commands.setContent(newText)
-	}, [editor, softKey])
 
 	useEffect(() => {
 		editor?.setEditable(!isReadMode)
@@ -218,7 +172,13 @@ export const RichTextEditorComponent = ({
 			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode} />
 			{editor && <EditorContentBox className="content" editor={editor} mode={isReadMode ? 'read' : 'edit'} />}
 			<MentionsList editor={editor} />
-			<FadeInOverlay key={softKey} content={value} isReadMode={isReadMode} color={fadeInOverlayColor} />
+			<FadeInOverlay
+				key={softKey}
+				content={value}
+				isReadMode={isReadMode}
+				color={fadeInOverlayColor}
+				isLoading={isLoading || !collabReady || false}
+			/>
 		</StyledContainer>
 	)
 }

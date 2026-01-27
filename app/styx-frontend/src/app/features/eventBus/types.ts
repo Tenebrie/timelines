@@ -1,4 +1,4 @@
-import { ActorDetails, MarkerType, TimelineEntity, WorldEvent } from '@api/types/worldTypes'
+import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import type { NavigateOptions } from '@tanstack/react-router'
 import { Editor } from '@tiptap/core'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
@@ -52,9 +52,6 @@ export type EventParams = {
 	'richEditor/requestCloseMentions': void
 	'richEditor/mentionRender/onStart': { node: ProseMirrorNode }
 	'richEditor/mentionRender/onEnd': { node: ProseMirrorNode }
-	'richEditor/forceUpdateEvent': { event: WorldEvent }
-	'richEditor/forceUpdateActor': { actor: ActorDetails }
-	'richEditor/forceUpdateArticle': { articleId: string }
 	'richEditor/requestFocus': void
 	'richEditor/requestBlur': void
 	'summonable/requestSummon': {

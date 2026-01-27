@@ -17,6 +17,8 @@ test.describe('Timeline', () => {
 		// Create event
 		const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 		await textbox.pressSequentially('Hello world', { delay: 100 })
+		await page.getByTestId('CreateEventModalConfirmButton').click()
+		await page.waitForTimeout(500)
 		await expect(page.getByTestId('TimelineMarker')).toBeVisible()
 		// TODO: Update assertions for the new design (use world state?)
 		// await expect(page.getByTestId('TimelineMarker')).toHaveText('Hello world')

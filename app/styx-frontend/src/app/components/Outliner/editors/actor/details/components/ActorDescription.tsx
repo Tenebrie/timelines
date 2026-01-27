@@ -1,35 +1,47 @@
-import { useCallback } from 'react'
+import { ActorDetails } from '@api/types/worldTypes'
+import debounce from 'lodash.debounce'
+import { useRef } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
-import { RichTextEditorProps } from '@/app/features/richTextEditor/RichTextEditor'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-
-import { ActorDraft } from '../draft/useActorDraft'
+import { worldSlice } from '@/app/views/world/WorldSlice'
 
 type Props = {
-	id?: string
-	draft: ActorDraft
+	actor: ActorDetails
 }
 
-export const ActorDescription = ({ id, draft }: Props) => {
-	const { key, descriptionRich, setDescription, setDescriptionRich, setMentions } = draft
+export const ActorDescription = ({ actor }: Props) => {
 	const theme = useCustomTheme()
 
-	const onDescriptionChange = useCallback(
-		(params: Parameters<RichTextEditorProps['onChange']>[0]) => {
-			setDescription(params.plainText)
-			setDescriptionRich(params.richText)
-			setMentions(params.mentions)
-		},
-		[setDescription, setDescriptionRich, setMentions],
+	const { updateActor } = worldSlice.actions
+	const dispatch = useDispatch()
+
+	const debouncedUpdate = useRef(
+		debounce((actorId: string, plainText: string, richText: string) => {
+			dispatch(
+				updateActor({
+					id: actorId,
+					description: plainText,
+					descriptionRich: richText,
+				}),
+			)
+		}, 500),
 	)
 
 	return (
 		<RichTextEditorSummoner
-			softKey={`${id ?? 'no-key'}/${key}`}
-			value={descriptionRich}
-			onChange={onDescriptionChange}
+			softKey={actor.id}
+			value={actor.descriptionRich}
+			onChange={({ plainText, richText }) => {
+				debouncedUpdate.current(actor.id, plainText, richText)
+			}}
+			autoFocus
 			fadeInOverlayColor={theme.custom.palette.background.textEditor}
+			collaboration={{
+				entityType: 'actor',
+				documentId: actor.id,
+			}}
 		/>
 	)
 }

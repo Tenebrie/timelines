@@ -43,7 +43,7 @@ describe('TokenService', () => {
 				id: '1111-2222-3333-4444',
 				email: 'admin@localhost',
 			})
-			const result = TokenService.decodeJwtToken(token)
+			const result = TokenService.decodeUserToken(token)
 			expect(result).toEqual(
 				expect.objectContaining({
 					id: '1111-2222-3333-4444',
@@ -55,7 +55,7 @@ describe('TokenService', () => {
 		it('verifies valid token', () => {
 			const token =
 				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExMTEtMjIyMi0zMzMzLTQ0NDQiLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsImlhdCI6MTcyOTc3NzIwMX0.gi7JbN4y3lH49vFJf_Z_3RoH9HPhZJVs6kznBobq0fY'
-			const result = TokenService.decodeJwtToken(token)
+			const result = TokenService.decodeUserToken(token)
 			expect(result).toEqual(
 				expect.objectContaining({
 					id: '1111-2222-3333-4444',
@@ -67,11 +67,11 @@ describe('TokenService', () => {
 		it('does not verify token with invalid key', () => {
 			const token =
 				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExMTEtMjIyMi0zMzMzLTQ0NDQiLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsImlhdCI6MTY4MDAzOTM1NX0.X2Xpm7MC4VShyZ7uiFi1IK2w1hPxCVTJSJp7NTsymVs'
-			expect(() => TokenService.decodeJwtToken(token)).toThrow()
+			expect(() => TokenService.decodeUserToken(token)).toThrow()
 		})
 
 		it('does not verify malformed token', () => {
-			expect(() => TokenService.decodeJwtToken('malformed')).toThrow()
+			expect(() => TokenService.decodeUserToken('malformed')).toThrow()
 		})
 	})
 
@@ -107,7 +107,7 @@ describe('TokenService', () => {
 				id: '1111-2222-3333-4444',
 				email: 'admin@localhost',
 			})
-			const result = TokenService.decodeJwtToken(token)
+			const result = TokenService.decodeUserToken(token)
 			expect(result).toEqual(
 				expect.objectContaining({
 					id: '1111-2222-3333-4444',
@@ -119,7 +119,7 @@ describe('TokenService', () => {
 		it('verifies valid token', () => {
 			const token =
 				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExMTEtMjIyMi0zMzMzLTQ0NDQiLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsImlhdCI6MTcyOTc3NzIwMX0.gi7JbN4y3lH49vFJf_Z_3RoH9HPhZJVs6kznBobq0fY'
-			const result = TokenService.decodeJwtToken(token)
+			const result = TokenService.decodeUserToken(token)
 			expect(result).toEqual(
 				expect.objectContaining({
 					id: '1111-2222-3333-4444',
@@ -131,11 +131,11 @@ describe('TokenService', () => {
 		it('does not verify token with invalid key', () => {
 			const token =
 				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExMTEtMjIyMi0zMzMzLTQ0NDQiLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsImlhdCI6MTY4MDAzOTM1NX0.X2Xpm7MC4VShyZ7uiFi1IK2w1hPxCVTJSJp7NTsymVs'
-			expect(() => TokenService.decodeJwtToken(token)).toThrow()
+			expect(() => TokenService.decodeUserToken(token)).toThrow()
 		})
 
 		it('does not verify malformed token', () => {
-			expect(() => TokenService.decodeJwtToken('malformed')).toThrow()
+			expect(() => TokenService.decodeUserToken('malformed')).toThrow()
 		})
 	})
 
@@ -167,7 +167,7 @@ describe('TokenService', () => {
 				id: '1111-2222-3333-4444',
 				email: 'admin@localhost',
 			})
-			const result = TokenService.decodeJwtToken(token)
+			const result = TokenService.decodeUserToken(token)
 			expect(result).toEqual(
 				expect.objectContaining({
 					id: '1111-2222-3333-4444',
@@ -179,7 +179,7 @@ describe('TokenService', () => {
 		it('verifies valid token', () => {
 			const token =
 				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExMTEtMjIyMi0zMzMzLTQ0NDQiLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsImlhdCI6MTcyOTc3NzIwMX0.gi7JbN4y3lH49vFJf_Z_3RoH9HPhZJVs6kznBobq0fY'
-			const result = TokenService.decodeJwtToken(token)
+			const result = TokenService.decodeUserToken(token)
 			expect(result).toEqual(
 				expect.objectContaining({
 					id: '1111-2222-3333-4444',
@@ -191,11 +191,11 @@ describe('TokenService', () => {
 		it('does not verify token with invalid key', () => {
 			const token =
 				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExMTEtMjIyMi0zMzMzLTQ0NDQiLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdCIsImlhdCI6MTY4MDAzOTM1NX0.X2Xpm7MC4VShyZ7uiFi1IK2w1hPxCVTJSJp7NTsymVs'
-			expect(() => TokenService.decodeJwtToken(token)).toThrow()
+			expect(() => TokenService.decodeUserToken(token)).toThrow()
 		})
 
 		it('does not verify malformed token', () => {
-			expect(() => TokenService.decodeJwtToken('malformed')).toThrow()
+			expect(() => TokenService.decodeUserToken('malformed')).toThrow()
 		})
 	})
 })

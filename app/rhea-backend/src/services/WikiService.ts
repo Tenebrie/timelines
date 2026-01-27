@@ -8,8 +8,17 @@ import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { MentionData, MentionsService } from './MentionsService.js'
 
 export const WikiService = {
+	findArticleById: async ({ id, worldId }: { id: string; worldId: string }) => {
+		return getPrismaClient().wikiArticle.findFirst({
+			where: {
+				id,
+				worldId,
+			},
+		})
+	},
+
 	listWikiArticles: async (params: Pick<WikiArticle, 'worldId'>) => {
-		return getPrismaClient().wikiArticle.findMany({
+		const articles = await getPrismaClient().wikiArticle.findMany({
 			where: {
 				worldId: params.worldId,
 			},
@@ -20,6 +29,8 @@ export const WikiService = {
 				position: 'asc',
 			},
 		})
+
+		return articles
 	},
 
 	getArticleCount: async (params: Pick<WikiArticle, 'worldId'>) => {
@@ -37,6 +48,7 @@ export const WikiService = {
 					worldId: params.worldId,
 					name: params.name,
 					position: params.position * 2,
+					contentRich: '<p></p>',
 				},
 				include: {
 					children: true,

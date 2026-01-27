@@ -9,6 +9,15 @@ export const UserService = {
 		return makeTouchUserQuery(userId)
 	},
 
+	findByIdInternal: async (id: string) => {
+		return getPrismaClient().user.findFirst({
+			where: {
+				id,
+				deletedAt: null,
+			},
+		})
+	},
+
 	findByEmail: async (email: string) => {
 		return getPrismaClient().user.findFirst({
 			where: {

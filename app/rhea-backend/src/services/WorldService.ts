@@ -2,6 +2,14 @@ import { User, World, WorldCalendarType } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 
 export const WorldService = {
+	findWorldByIdInternal: async (worldId: string) => {
+		return getPrismaClient().world.findFirst({
+			where: {
+				id: worldId,
+			},
+		})
+	},
+
 	createWorld: async (params: {
 		owner: User
 		name: string

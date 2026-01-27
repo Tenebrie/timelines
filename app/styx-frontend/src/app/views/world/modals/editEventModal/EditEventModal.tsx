@@ -71,10 +71,12 @@ export const EditEventModal = () => {
 				/>
 
 				<Stack direction="row" width="100%" height="100%" flexDirection="column">
-					{currentEntity?.type === 'event' && (
+					{currentEntity?.type === 'event' && currentEntity.entity && (
 						<EventDetails editedEvent={currentEntity.entity} autoFocus={isOpen} />
 					)}
-					{currentEntity?.type === 'actor' && <ActorDetails editedActor={currentEntity.entity} />}
+					{currentEntity?.type === 'actor' && currentEntity.entity && (
+						<ActorDetails editedActor={currentEntity.entity} />
+					)}
 				</Stack>
 			</Stack>
 		</Modal>

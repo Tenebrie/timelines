@@ -15,8 +15,7 @@ export const useCurrentOrNewEvent = ({ event: currentEvent }: Props) => {
 		getWorldState,
 		(a, b) => a.id === b.id && a.selectedTime === b.selectedTime,
 	)
-	// const { event: currentEvent } = useCurrentEvent()
-	const { event, mode } = useMemo(
+	const { event } = useMemo(
 		() => ({
 			event:
 				currentEvent ??
@@ -28,7 +27,6 @@ export const useCurrentOrNewEvent = ({ event: currentEvent }: Props) => {
 					descriptionRich: '',
 					timestamp: selectedTime,
 				}),
-			mode: currentEvent ? ('edit' as const) : ('create' as const),
 		}),
 		[currentEvent, selectedTime, worldId],
 	)
@@ -36,6 +34,5 @@ export const useCurrentOrNewEvent = ({ event: currentEvent }: Props) => {
 		id: event.id,
 		worldId,
 		event,
-		mode,
 	}
 }

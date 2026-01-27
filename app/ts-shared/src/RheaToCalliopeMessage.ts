@@ -2,6 +2,7 @@ import { ShapeOfHandlerWithSession, ShapeOfMessageWithSession } from './types.js
 
 export enum RedisChannel {
 	RHEA_TO_CALLIOPE = 'rheaToCalliope',
+	CALLIOPE_YJS = 'calliopeYjs',
 }
 
 export enum RheaToCalliopeMessageType {

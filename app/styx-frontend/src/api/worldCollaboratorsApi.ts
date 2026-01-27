@@ -30,11 +30,11 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as worldCollaboratorsApi }
 export type GetWorldCollaboratorsApiResponse = /** status 200  */ {
-	worldId: string
 	user: {
 		id: string
 		email: string
 	}
+	worldId: string
 	access: 'ReadOnly' | 'Editing'
 }[]
 export type GetWorldCollaboratorsApiArg = {

@@ -84,11 +84,11 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		description: string
-		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		worldId: string
 		title: string
 		icon: string
 		color: string
@@ -134,15 +134,15 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			worldEventId: string
 		}[]
 		description: string
-		type: 'SCENE' | 'OTHER'
-		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		worldId: string
 		icon: string
 		color: string
 		descriptionRich: string
+		type: 'SCENE' | 'OTHER'
 		timestamp: string
 		revokedAt?: null | string
 		customName: boolean

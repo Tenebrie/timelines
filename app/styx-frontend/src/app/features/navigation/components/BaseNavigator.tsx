@@ -42,7 +42,7 @@ export const BaseNavigator = () => {
 						<LastWorldNavigatorButton icon={<PublicIcon />} label="World" />
 					</Stack>
 					<Divider orientation="vertical" sx={{ height: '25px' }} />
-					<NavigatorButton route="/home" icon={<Home />} label="Home" />
+					<NavigatorButton route="/home" icon={<Home />} label="Home" disabled={!user} />
 					<NavigatorButton route="/tools" icon={<Construction />} label="Tools" />
 					{user?.level === 'Admin' && (
 						<NavigatorButton route="/admin" icon={<AdminPanelSettings />} label="Admin" />

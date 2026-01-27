@@ -78,7 +78,7 @@ export const EventTitle = ({ event, draft }: Props) => {
 						onClick={() => setEditing(true)}
 					>
 						<Typography variant="h6" noWrap>
-							{name || event.name || 'Create event'}
+							{name || event.name || '<Unnamed>'}
 						</Typography>
 					</Button>
 					<Button

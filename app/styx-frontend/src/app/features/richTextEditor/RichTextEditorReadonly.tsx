@@ -1,7 +1,7 @@
 import { useEditor } from '@tiptap/react'
 
+import { EditorContentBox } from './components/EditorContentBox'
 import { ViewerExtensions } from './extensions/config'
-import { EditorContentBox } from './RichTextEditor'
 
 type Props = {
 	value: string

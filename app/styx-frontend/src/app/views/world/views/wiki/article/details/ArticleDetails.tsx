@@ -1,67 +1,38 @@
-import { MentionDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import { useRef, useState } from 'react'
+import debounce from 'lodash.debounce'
+import { useCallback, useRef } from 'react'
 
-import { WikiArticle } from '@/api/types/worldWikiTypes'
-import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
-import { OnChangeParams } from '@/app/features/richTextEditor/RichTextEditor'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
-import { useAutosave } from '@/app/utils/autosave/useAutosave'
-import { useEditArticle } from '@/app/views/world/views/wiki/api/useEditArticle'
+import { useArticleApiCache } from '@/app/views/world/views/wiki/api/useArticleApiCache'
 import { useCurrentArticle } from '@/app/views/world/views/wiki/hooks/useCurrentArticle'
-
-type WikiArticleToSave = WikiArticle & {
-	newMentions: MentionDetails[]
-}
 
 export const ArticleDetails = () => {
 	const { article } = useCurrentArticle()
-	const [editArticle, { isLoading: isSaving }] = useEditArticle()
 	const theme = useCustomTheme()
+	const { updateCachedArticle } = useArticleApiCache()
 
-	const [key, setKey] = useState(0)
+	const debouncedUpdate = useRef(
+		debounce((articleId: string, richText: string) => {
+			updateCachedArticle({
+				id: articleId,
+				contentRich: richText,
+			})
+		}, 2000),
+	)
 
-	const articleToSave = useRef<WikiArticleToSave | null>(null)
+	const scrollbars = useBrowserSpecificScrollbars()
 
-	const { autosave, manualSave } = useAutosave({
-		onSave: () => {
-			const article = articleToSave.current
+	const handleChange = useCallback(
+		({ richText }: { richText: string }) => {
 			if (!article) {
 				return
 			}
-			editArticle({
-				id: article.id,
-				contentRich: article.contentRich,
-				newMentions: article.newMentions,
-			})
-			articleToSave.current = null
+			debouncedUpdate.current(article.id, richText)
 		},
-		isSaving,
-	})
-
-	const onChange = (params: OnChangeParams) => {
-		if (!article) {
-			return
-		}
-		articleToSave.current = {
-			...article,
-			contentRich: params.richText,
-			newMentions: params.mentions,
-		}
-		if (article.contentRich === params.richText) {
-			return
-		}
-		autosave()
-	}
-
-	useEventBusSubscribe['richEditor/forceUpdateArticle']({
-		condition: (data) => data.articleId === article?.id,
-		callback: () => setKey((prev) => prev + 1),
-	})
-
-	const scrollbars = useBrowserSpecificScrollbars()
+		[article],
+	)
 
 	if (!article) {
 		return <></>
@@ -70,12 +41,15 @@ export const ArticleDetails = () => {
 	return (
 		<Box sx={{ ...scrollbars, height: '100%' }}>
 			<RichTextEditorSummoner
-				softKey={`${article.id}-${key}`}
+				softKey={`${article.id}`}
 				value={article.contentRich}
-				onChange={onChange}
-				onBlur={manualSave}
+				onChange={handleChange}
 				fadeInOverlayColor={theme.custom.palette.background.textEditor}
 				allowReadMode
+				collaboration={{
+					entityType: 'article',
+					documentId: article.id,
+				}}
 			/>
 		</Box>
 	)

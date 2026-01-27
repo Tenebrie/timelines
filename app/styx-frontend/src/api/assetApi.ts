@@ -44,10 +44,10 @@ export type DeleteAssetApiArg = {
 }
 export type ListUserAssetsApiResponse = /** status 200  */ {
 	assets: {
-		status: 'Pending' | 'Finalized' | 'Failed'
 		id: string
 		createdAt: string
 		updatedAt: string
+		status: 'Pending' | 'Finalized' | 'Failed'
 		ownerId: string
 		size: number
 		expiresAt?: null | string
@@ -60,10 +60,10 @@ export type ListUserAssetsApiResponse = /** status 200  */ {
 export type ListUserAssetsApiArg = void
 export type RequestPresignedUrlApiResponse = /** status 200  */ {
 	asset: {
-		status: 'Pending' | 'Finalized' | 'Failed'
 		id: string
 		createdAt: string
 		updatedAt: string
+		status: 'Pending' | 'Finalized' | 'Failed'
 		ownerId: string
 		size: number
 		expiresAt?: null | string
@@ -85,10 +85,10 @@ export type RequestPresignedUrlApiArg = {
 	}
 }
 export type FinalizeAssetUploadApiResponse = /** status 200  */ {
-	status: 'Pending' | 'Finalized' | 'Failed'
 	id: string
 	createdAt: string
 	updatedAt: string
+	status: 'Pending' | 'Finalized' | 'Failed'
 	ownerId: string
 	size: number
 	expiresAt?: null | string

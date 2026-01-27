@@ -10,9 +10,10 @@ type Props = {
 	route: FileRouteTypes['to']
 	icon: ReactNode
 	label: string
+	disabled?: boolean
 }
 
-export function NavigatorButton({ route, icon, label }: Props) {
+export function NavigatorButton({ route, icon, label, disabled }: Props) {
 	const navigate = useStableNavigate()
 	const isMatching = useCheckRouteMatch(route)
 
@@ -30,6 +31,7 @@ export function NavigatorButton({ route, icon, label }: Props) {
 				border: 'none',
 				padding: '8px 15px',
 			}}
+			disabled={disabled}
 		>
 			{icon} {label}
 		</Button>

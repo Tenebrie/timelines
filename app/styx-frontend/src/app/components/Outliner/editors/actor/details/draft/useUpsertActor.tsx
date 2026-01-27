@@ -3,7 +3,6 @@ import { useEffect } from 'react'
 
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { useAutosave } from '@/app/utils/autosave/useAutosave'
-import { useCreateActor } from '@/app/views/world/api/useCreateActor'
 import { useUpdateActor } from '@/app/views/world/api/useUpdateActor'
 
 import { ActorDraft } from './useActorDraft'
@@ -16,30 +15,19 @@ type Props = {
 
 export const useUpsertActor = (props: Props) => {
 	const { mode: baseMode, draft: baseDraft } = props
-	const [createActor, { isLoading: isCreating }] = useCreateActor()
 	const [updateActor, { isLoading: isUpdating }] = useUpdateActor()
 
 	const draftRef = useAutoRef(baseDraft)
 
 	const { flushSave, autosave } = useAutosave({
-		onSave: async ({ draft, mode, onCreate }: Props) => {
+		onSave: async ({ draft }: Props) => {
 			if (!draft.isDirty || !draft.name) {
 				return
 			}
 			draft.setDirty(false)
-			const hasSubstance = draft.name.trim().length > 0 || draft.description.trim().length > 0
-			if (hasSubstance && mode === 'create') {
-				const createdEvent = await createActor({
-					...draft.toPayload(),
-				})
-				if (createdEvent) {
-					onCreate?.(createdEvent)
-				}
-			} else if (hasSubstance && mode === 'edit') {
-				await updateActor(draft.id, draft.toPayload())
-			}
+			await updateActor(draft.id, draft.toPayload())
 		},
-		isSaving: isCreating || isUpdating,
+		isSaving: isUpdating,
 	})
 
 	useEffect(() => {

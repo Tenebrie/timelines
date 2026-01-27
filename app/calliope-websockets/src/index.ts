@@ -1,3 +1,4 @@
+import { setupWSConnection } from '@y/websocket-server/utils'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import route from 'koa-route'
@@ -5,9 +6,12 @@ import websocketify from 'koa-websocket'
 import { WebSocket } from 'ws'
 
 import { ClientMessageHandlerService } from './services/ClientMessageHandlerService.js'
+import { persistenceLeaderService } from './services/PersistenceLeaderService.js'
 import { initRedisConnection } from './services/RedisService.js'
+import { RheaService } from './services/RheaService.js'
 import { TokenService } from './services/TokenService.js'
 import { WebsocketService } from './services/WebsocketService.js'
+import { YjsSyncService } from './services/YjsSyncService.js'
 import { ClientToCalliopeMessage } from './ts-shared/ClientToCalliopeMessage.js'
 import { AUTH_COOKIE_NAME } from './ts-shared/const/constants.js'
 
@@ -21,7 +25,7 @@ app.ws.use(
 				throw new Error('No cookie provided')
 			}
 
-			const { id: userId } = TokenService.decodeJwtToken(authCookie)
+			const { id: userId } = TokenService.decodeUserToken(authCookie)
 			const sessionId = ctx.path.split('/')[2]
 			if (!sessionId) {
 				throw new Error('No session id')
@@ -49,6 +53,54 @@ app.ws.use(
 	}),
 )
 
+app.ws.use(
+	route.all('/live/yjs/:worldId/:entityType/:documentId', async function (ctx) {
+		try {
+			const authCookie = ctx.cookies.get(AUTH_COOKIE_NAME)
+			if (!authCookie) {
+				throw new Error('No cookie provided')
+			}
+
+			const worldId = ctx.path.split('/')[3]
+			const entityType = ctx.path.split('/')[4]
+			const documentId = ctx.path.split('/')[5]
+
+			if (!worldId || !entityType || !documentId) {
+				throw new Error('Missing worldId, entityType, or documentId')
+			}
+
+			if (!['actor', 'event', 'article'].includes(entityType)) {
+				throw new Error('Invalid entityType')
+			}
+
+			const docName = `${worldId}:${documentId}`
+			setupWSConnection(ctx.websocket, ctx.req, { docName, gc: true })
+
+			const { id: userId } = TokenService.decodeUserToken(authCookie)
+
+			await RheaService.checkUserAccess({ worldId, userId, level: 'write' })
+
+			await YjsSyncService.setupDocumentListener({
+				userId,
+				worldId,
+				entityId: documentId,
+				entityType: entityType as 'actor' | 'event' | 'article',
+				docName,
+			})
+		} catch (e) {
+			console.error('Error establishing Yjs websocket', e)
+			ctx.websocket.close(4500, 'Internal server error')
+		}
+	}),
+)
+
+app.ws.use(
+	route.all('(.*)', async function (ctx) {
+		console.warn(`Rejected WebSocket connection to invalid path: ${ctx.path}`)
+		ctx.websocket.close(4404, `Invalid path: ${ctx.path}`)
+	}),
+)
+
 app.use(
 	bodyParser({
 		enableTypes: ['text', 'json', 'form'],
@@ -56,5 +108,18 @@ app.use(
 )
 
 initRedisConnection()
-app.listen(3001)
+persistenceLeaderService.connect()
+
+const server = app.listen(3001)
 console.info('Server up')
+
+// Graceful shutdown
+const shutdown = async () => {
+	console.info('Shutting down gracefully...')
+	await persistenceLeaderService.shutdown()
+	server.close()
+	process.exit(0)
+}
+
+process.on('SIGTERM', shutdown)
+process.on('SIGINT', shutdown)

@@ -12,6 +12,15 @@ import {
 } from './dbQueries/makeUpdateWorldEventQuery.js'
 
 export const WorldEventService = {
+	findEventById: async ({ id, worldId }: { id: string; worldId: string }) => {
+		return getPrismaClient().worldEvent.findFirst({
+			where: {
+				id,
+				worldId,
+			},
+		})
+	},
+
 	fetchWorldEvent: async (eventId: string) => {
 		return await fetchWorldEventOrThrow(eventId)
 	},

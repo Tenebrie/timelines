@@ -8,40 +8,23 @@
 	"author": "",
 	"scripts": {
 		"build": "tsc -p . && tsc-alias -p tsconfig.json",
+		"openapi": "openapi-typescript http://localhost:3000/api-json -o ./src/api/rhea-api.ts && yarn lint-fix",
 		"lint": "eslint src/",
 		"lint-fix": "eslint src/ --fix",
 		"prod": "node dist/index.js",
 		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline",
 		"start": "nodemon --watch src --ext ts,js,json --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
-		"test": "jest",
-		"test:watch": "jest --watchAll"
+		"test": "vitest --run",
+		"test:watch": "vitest"
 	},
 	"lint-staged": {
 		"*.(ts)": "eslint --fix"
 	},
-	"jest": {
-		"collectCoverageFrom": [
-			"**/*.(t|j)s"
-		],
-		"coverageDirectory": "../coverage",
-		"moduleFileExtensions": [
-			"js",
-			"json",
-			"ts"
-		],
-		"moduleNameMapper": {
-			"^@src(.*)$": "<rootDir>/src$1"
-		},
-		"rootDir": "./",
-		"testEnvironment": "node",
-		"testRegex": ".*\\.spec\\.ts$",
-		"transform": {
-			"^.+\\.(t|j)s$": "ts-jest"
-		}
-	},
 	"dependencies": {
 		"@koa/router": "^13.1.0",
+		"@y/websocket-server": "^0.1.1",
 		"chalk": "^5.3.0",
+		"cheerio": "^1.2.0",
 		"dotenv": "^16.4.7",
 		"http-status-codes": "^2.3.0",
 		"jsonwebtoken": "^9.0.2",
@@ -51,12 +34,13 @@
 		"koa-websocket": "^7.0.0",
 		"lint-staged": "^15.2.11",
 		"nodemon": "^3.1.9",
+		"openapi-fetch": "^0.15.0",
 		"pg": "^8.13.1",
 		"redis": "^4.7.0",
-		"ws": "^8.18.0"
+		"ws": "^8.18.0",
+		"yjs": "^13.6.29"
 	},
 	"devDependencies": {
-		"@types/jest": "29.5.14",
 		"@types/jsonwebtoken": "^9.0.7",
 		"@types/koa": "^2.15.0",
 		"@types/koa-bodyparser": "^4.3.12",
@@ -64,7 +48,7 @@
 		"@types/koa-websocket": "^5.0.10",
 		"@types/koa__router": "^12.0.4",
 		"@types/mock-knex": "^0.4.8",
-		"@types/node": "^22.10.2",
+		"@types/node": "^24.1.0",
 		"@types/supertest": "^6.0.2",
 		"@types/ws": "^8.5.10",
 		"@typescript-eslint/eslint-plugin": "^8.51.0",
@@ -74,16 +58,17 @@
 		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-simple-import-sort": "^12.1.1",
 		"eslint-plugin-unused-imports": "^4.1.4",
-		"jest": "29.7.0",
+		"jsdom": "^26.0.0",
+		"openapi-typescript": "^7.10.1",
 		"prettier": "^3.4.2",
 		"source-map-support": "^0.5.20",
 		"supertest": "^7.0.0",
-		"ts-jest": "29.2.5",
 		"ts-node": "^10.9.2",
 		"ts-node-dev": "^2.0.0",
 		"tsc-alias": "^1.8.16",
 		"tsconfig-paths": "4.2.0",
 		"tsx": "^4.20.3",
-		"typescript": "^5.7.2"
+		"typescript": "^5.7.2",
+		"vitest": "^3.0.9"
 	}
 }
