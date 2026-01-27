@@ -107,7 +107,10 @@ export const YjsSyncService = {
 		const { docName, update } = message
 		const doc = docs.get(docName)
 		if (doc) {
+			console.log('Update received', update)
 			Y.applyUpdate(doc, Buffer.from(update, 'base64'), UPDATE_MESSAGE_ORIGIN)
+		} else {
+			console.log('No doc ' + docName)
 		}
 	},
 
@@ -140,6 +143,7 @@ export const YjsSyncService = {
 
 		doc.on('update', async (update: Uint8Array, origin: unknown) => {
 			if (!initComplete) {
+				console.log('init nope')
 				return
 			}
 
