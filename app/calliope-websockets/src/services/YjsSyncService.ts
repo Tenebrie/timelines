@@ -1,4 +1,4 @@
-import { docs } from '@y/websocket-server/utils'
+import { docs, setPersistence } from '@y/websocket-server/utils'
 import * as Y from 'yjs'
 
 import { persistenceLeaderService } from './PersistenceLeaderService.js'
@@ -6,12 +6,20 @@ import { RedisService } from './RedisService.js'
 import { RheaService } from './RheaService.js'
 import { htmlToYXml, yXmlToHtml } from './YjsParserService.js'
 
-const attachedDocs = new WeakSet<Y.Doc>()
 const UPDATE_MESSAGE_ORIGIN = 'calliope-internal'
 
 // Track debounce timers for each document
 const persistenceTimers = new Map<string, NodeJS.Timeout>()
-const DEBOUNCE_DELAY = 2000
+const DEBOUNCE_DELAY = 1000
+
+// Store metadata per document for use in writeState hook
+type DocumentMetadata = {
+	userId: string
+	worldId: string
+	entityId: string
+	entityType: 'actor' | 'event' | 'article'
+}
+const documentMetadata = new Map<string, DocumentMetadata>()
 
 export type YjsUpdateMessage = {
 	docName: string
@@ -33,17 +41,6 @@ async function flushDocumentToRhea(
 	},
 ): Promise<boolean> {
 	// Check if document is still valid (not destroyed)
-	if (!docs.has(docName)) {
-		console.warn(`[${docName}] Document no longer exists, skipping flush`)
-		return false
-	}
-
-	// Check if document is destroyed
-	if (doc.isDestroyed) {
-		console.warn(`[${docName}] Document is destroyed, skipping flush`)
-		return false
-	}
-
 	try {
 		const fragment = doc.getXmlFragment('default')
 		const html = yXmlToHtml(fragment)
@@ -121,94 +118,94 @@ export const YjsSyncService = {
 		}
 	},
 
-	async setupDocumentListener({
+	registerDocumentMetadata({
+		docName,
 		userId,
 		worldId,
 		entityId,
 		entityType,
-		docName,
 	}: {
+		docName: string
 		userId: string
 		worldId: string
 		entityId: string
 		entityType: 'actor' | 'event' | 'article'
-		docName: string
 	}) {
-		const doc = docs.get(docName)
-		if (!doc) {
-			console.warn(`Cannot attach Redis sync: document ${docName} not found`)
-			return
-		}
+		documentMetadata.set(docName, { userId, worldId, entityId, entityType })
+	},
 
-		if (attachedDocs.has(doc)) {
-			return
-		}
+	setupGlobalHooks() {
+		setPersistence({
+			bindState: async (docName, doc) => {
+				const metadata = documentMetadata.get(docName)
+				if (!metadata) {
+					console.warn(`[${docName}] No metadata found in bindState, skipping setup`)
+					return
+				}
 
-		console.info(`[${docName}] Creating a new document...`)
-		const metadata = { userId, worldId, entityId, entityType }
-		let initComplete = false
+				console.info(`[${docName}] bindState: Setting up document...`)
 
-		doc.on('update', async (update: Uint8Array, origin: unknown) => {
-			if (!initComplete) {
-				console.log('init nope')
-				return
-			}
+				doc.on('update', async (update: Uint8Array, origin: unknown) => {
+					schedulePersistence(docName, doc, metadata)
 
-			// Always schedule persistence for any update (local or remote)
-			// The leader election will ensure only one instance actually saves
-			schedulePersistence(docName, doc, metadata)
-
-			// If this is a local update (not from Redis), broadcast to other instances
-			console.log('Received message from ', typeof origin)
-			if (origin !== UPDATE_MESSAGE_ORIGIN) {
-				console.info(`[${docName}] Broadcasting update to other instances`)
-				RedisService.broadcastYjsDocumentUpdate({
-					docName,
-					update: Buffer.from(update).toString('base64'),
+					// If this is a local update, broadcast to other instances
+					if (origin !== UPDATE_MESSAGE_ORIGIN) {
+						console.info(`[${docName}] Broadcasting update to other instances`)
+						RedisService.broadcastYjsDocumentUpdate({
+							docName,
+							update: Buffer.from(update).toString('base64'),
+						})
+					}
 				})
-			}
+
+				const contentRich = await RheaService.fetchDocumentState({
+					userId: metadata.userId,
+					worldId: metadata.worldId,
+					entityId: metadata.entityId,
+					entityType: metadata.entityType,
+				})
+
+				const fragment = doc.getXmlFragment('default')
+
+				if (contentRich) {
+					doc.transact(() => {
+						if (fragment.length === 0) {
+							htmlToYXml(contentRich, fragment)
+						}
+					})
+					console.info(`[${docName}] Initialized with content from database`)
+				}
+
+				console.info(`[${docName}] Document setup complete`)
+			},
+			writeState: async (docName, doc) => {
+				console.info(`[${docName}] writeState: Document destroying, attempting final flush...`)
+
+				// Cancel any pending debounced save
+				const timer = persistenceTimers.get(docName)
+				if (timer) {
+					clearTimeout(timer)
+					persistenceTimers.delete(docName)
+				}
+
+				const metadata = documentMetadata.get(docName)
+				if (!metadata) {
+					console.warn(`[${docName}] No metadata found, skipping flush`)
+					return
+				}
+
+				// Try to acquire leadership and flush immediately
+				const isLeader = await persistenceLeaderService.tryAcquireLeadership(docName)
+				if (isLeader) {
+					await flushDocumentToRhea(docName, doc, metadata)
+				} else {
+					console.info(`[${docName}] Not leader on destroy, another instance will flush`)
+				}
+
+				// Clean up metadata
+				documentMetadata.delete(docName)
+			},
+			provider: null,
 		})
-
-		const contentRich = await RheaService.fetchDocumentState({
-			userId,
-			worldId,
-			entityId,
-			entityType,
-		})
-
-		const fragment = doc.getXmlFragment('default')
-
-		// Only initialize if document is empty
-		if (fragment.length === 0 && contentRich) {
-			doc.transact(() => {
-				htmlToYXml(contentRich, fragment)
-			})
-			console.info(`[${docName}] Initialized with content from database`)
-		}
-
-		// Flush on document destroy (final save before cleanup)
-		doc.on('destroy', async () => {
-			attachedDocs.delete(doc)
-			console.info(`[${docName}] Document destroying, attempting final flush...`)
-
-			// Cancel any pending debounced save
-			const timer = persistenceTimers.get(docName)
-			if (timer) {
-				clearTimeout(timer)
-				persistenceTimers.delete(docName)
-			}
-
-			// Try to acquire leadership and flush immediately
-			const isLeader = await persistenceLeaderService.tryAcquireLeadership(docName)
-			if (isLeader) {
-				await flushDocumentToRhea(docName, doc, metadata)
-			} else {
-				console.info(`[${docName}] Not leader on destroy, another instance will flush`)
-			}
-		})
-
-		console.info(`[${docName}] Document created`)
-		initComplete = true
-		attachedDocs.add(doc)
 	},
 }

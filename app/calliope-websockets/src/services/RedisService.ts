@@ -32,16 +32,12 @@ export const initRedisConnection = async () => {
 	await client.connect()
 	await publisherClient.connect()
 
-	await client.subscribe(RedisChannel.RHEA_TO_CALLIOPE, (message, channel) => {
-		console.info(`Received message ${message} from ${channel}`)
-
+	await client.subscribe(RedisChannel.RHEA_TO_CALLIOPE, (message) => {
 		const parsedMessage = JSON.parse(message) as RheaToCalliopeMessage
 		RheaMessageHandlerService.handleMessage(parsedMessage)
 	})
 
 	await client.subscribe(RedisChannel.CALLIOPE_YJS, (message) => {
-		console.info('[CALLIOPE_YJS] Received message from Redis!')
-		console.info('[CALLIOPE_YJS] YjsSyncService:', typeof YjsSyncService, YjsSyncService)
 		try {
 			const parsedMessage = JSON.parse(message) as YjsUpdateMessage
 			YjsSyncService.handleMessage(parsedMessage)

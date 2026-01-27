@@ -73,20 +73,21 @@ app.ws.use(
 				throw new Error('Invalid entityType')
 			}
 
-			const docName = `${worldId}:${documentId}`
-			setupWSConnection(ctx.websocket, ctx.req, { docName, gc: true })
-
 			const { id: userId } = TokenService.decodeUserToken(authCookie)
 
 			await RheaService.checkUserAccess({ worldId, userId, level: 'write' })
 
-			await YjsSyncService.setupDocumentListener({
+			const docName = `${worldId}:${documentId}`
+
+			YjsSyncService.registerDocumentMetadata({
+				docName,
 				userId,
 				worldId,
 				entityId: documentId,
 				entityType: entityType as 'actor' | 'event' | 'article',
-				docName,
 			})
+
+			setupWSConnection(ctx.websocket, ctx.req, { docName, gc: true })
 		} catch (e) {
 			console.error('Error establishing Yjs websocket', e)
 			ctx.websocket.close(4500, 'Internal server error')
@@ -108,6 +109,7 @@ app.use(
 )
 
 initRedisConnection()
+YjsSyncService.setupGlobalHooks()
 persistenceLeaderService.connect()
 
 const server = app.listen(3001)
