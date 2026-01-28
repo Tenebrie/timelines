@@ -107,44 +107,67 @@ export const YjsSyncService = {
 		documentMetadata.set(docName, metadata)
 
 		// Load existing state: first try Redis, then fall back to database
+		// Use a lock to prevent race conditions when multiple instances start at the same time
 		console.info(`[${docName}] Loading state...`)
-		const existingUpdates = await RedisService.getDocumentUpdates(docName)
-		if (existingUpdates.length > 0) {
-			// Redis has updates - apply them
-			console.info(`[${docName}] Applying ${existingUpdates.length} updates from Redis`)
-			for (const update of existingUpdates) {
-				try {
-					Y.applyUpdate(doc, update, REDIS_ORIGIN)
-				} catch (err) {
-					console.error(`[${docName}] Error applying update from Redis:`, err)
-				}
-			}
-		} else {
-			// Redis empty - fetch initial state from database
-			console.info(`[${docName}] Redis empty, fetching from database...`)
-			try {
-				const contentRich = await RheaService.fetchDocumentState({
-					userId,
-					worldId,
-					entityId,
-					entityType,
-				})
-				if (contentRich && contentRich.trim() !== '') {
-					const fragment = doc.getXmlFragment('default')
-					doc.transact(() => {
-						htmlToYXml(contentRich, fragment)
-					}, REDIS_ORIGIN) // Use REDIS_ORIGIN to avoid broadcasting this initial load
-					console.info(`[${docName}] Loaded initial state from database`)
 
-					// Store the initial state to Redis so other instances get the same state
-					const stateUpdate = Y.encodeStateAsUpdate(doc)
-					await RedisService.appendDocumentUpdate(docName, stateUpdate)
-					console.info(`[${docName}] Stored initial state to Redis`)
-				} else {
-					console.info(`[${docName}] No content in database`)
+		const MAX_RETRIES = 20
+		const RETRY_DELAY_MS = 25
+
+		for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+			const existingUpdates = await RedisService.getDocumentUpdates(docName)
+
+			if (existingUpdates.length > 0) {
+				// Redis has updates - apply them
+				console.info(`[${docName}] Applying ${existingUpdates.length} updates from Redis`)
+				for (const update of existingUpdates) {
+					try {
+						Y.applyUpdate(doc, update, REDIS_ORIGIN)
+					} catch (err) {
+						console.error(`[${docName}] Error applying update from Redis:`, err)
+					}
 				}
-			} catch (err) {
-				console.error(`[${docName}] Failed to fetch from database:`, err)
+				break // Success, exit retry loop
+			}
+
+			// Redis empty - try to acquire lock to fetch from database
+			const gotLock = await RedisService.tryAcquireDocLock(docName)
+
+			if (gotLock) {
+				// We got the lock - fetch from DB
+				console.info(`[${docName}] Acquired lock, fetching from database...`)
+				try {
+					const contentRich = await RheaService.fetchDocumentState({
+						userId,
+						worldId,
+						entityId,
+						entityType,
+					})
+					if (contentRich && contentRich.trim() !== '') {
+						const fragment = doc.getXmlFragment('default')
+						doc.transact(() => {
+							htmlToYXml(contentRich, fragment)
+						}, REDIS_ORIGIN)
+						console.info(`[${docName}] Loaded initial state from database`)
+
+						// Store the initial state to Redis so other instances get the same state
+						const stateUpdate = Y.encodeStateAsUpdate(doc)
+						await RedisService.appendDocumentUpdate(docName, stateUpdate)
+						console.info(`[${docName}] Stored initial state to Redis`)
+					} else {
+						console.info(`[${docName}] No content in database`)
+					}
+				} catch (err) {
+					console.error(`[${docName}] Failed to fetch from database:`, err)
+				} finally {
+					await RedisService.releaseDocLock(docName)
+				}
+				break // Done, exit retry loop
+			} else {
+				// Another instance is loading - wait and retry
+				console.info(
+					`[${docName}] Lock held by another instance, waiting... (attempt ${attempt + 1}/${MAX_RETRIES})`,
+				)
+				await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS))
 			}
 		}
 
@@ -211,7 +234,7 @@ export const YjsSyncService = {
 					await flushDocumentToRhea(docName, doc, metadata)
 
 					// Clear Redis - state is persisted to database, no need to keep in Redis
-					await RedisService.deleteDocumentUpdates(docName)
+					// await RedisService.deleteDocumentUpdates(docName)
 				}
 
 				persistenceLeaderService.release(docName)

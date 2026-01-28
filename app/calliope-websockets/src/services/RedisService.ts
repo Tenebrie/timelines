@@ -29,6 +29,8 @@ client.on('error', (err) => {
 
 // Redis key prefix for Yjs document updates
 const YJS_DOC_KEY_PREFIX = 'yjs:doc:'
+const YJS_LOCK_KEY_PREFIX = 'yjs:lock:'
+const LOCK_TTL_MS = 5000 // Lock expires after 5 seconds
 
 export type YjsUpdateMessage = {
 	docName: string
@@ -94,6 +96,27 @@ export const RedisService = {
 	 */
 	deleteDocumentUpdates: async (docName: string): Promise<void> => {
 		const key = `${YJS_DOC_KEY_PREFIX}${docName}`
+		await publisherClient.del(key)
+	},
+
+	/**
+	 * Try to acquire a lock for initial document loading.
+	 * Returns true if lock acquired, false if another instance holds the lock.
+	 */
+	tryAcquireDocLock: async (docName: string): Promise<boolean> => {
+		const key = `${YJS_LOCK_KEY_PREFIX}${docName}`
+		const result = await publisherClient.set(key, '1', {
+			NX: true, // Only set if doesn't exist
+			PX: LOCK_TTL_MS, // Expire after TTL
+		})
+		return result === 'OK'
+	},
+
+	/**
+	 * Release the document loading lock.
+	 */
+	releaseDocLock: async (docName: string): Promise<void> => {
+		const key = `${YJS_LOCK_KEY_PREFIX}${docName}`
 		await publisherClient.del(key)
 	},
 }
