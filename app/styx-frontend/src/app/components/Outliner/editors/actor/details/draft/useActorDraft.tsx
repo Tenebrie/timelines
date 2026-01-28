@@ -14,6 +14,7 @@ export const useActorDraft = ({ actor }: Props) => {
 	const makeDirty = () => setDirty(true)
 
 	const currentId = useRef(actor.id)
+	const currentUpdatedAt = useRef(actor.updatedAt)
 	const [key, setKey] = useState(0)
 	const [id, setIdDirect] = useState<string>(actor.id)
 	const [name, setNameDirect] = useState<string>(actor.name)
@@ -47,8 +48,9 @@ export const useActorDraft = ({ actor }: Props) => {
 
 	const loadActor = useCallback(
 		(actor: ActorDetails) => {
-			loadState(actor)
 			currentId.current = actor.id
+			currentUpdatedAt.current = actor.updatedAt
+			loadState(actor)
 		},
 		[loadState],
 	)
@@ -67,6 +69,10 @@ export const useActorDraft = ({ actor }: Props) => {
 		loadActor(actor)
 	}
 
+	if (currentId.current === actor.id && actor.updatedAt > currentUpdatedAt.current) {
+		loadActor(actor)
+	}
+
 	return {
 		isDirty,
 		key,
@@ -79,6 +85,9 @@ export const useActorDraft = ({ actor }: Props) => {
 		...setters,
 		loadState,
 		loadActor,
+		resetUpdatedAt: (updatedAt: string) => {
+			currentUpdatedAt.current = updatedAt
+		},
 		toPayload,
 	}
 }

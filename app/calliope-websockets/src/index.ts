@@ -9,6 +9,7 @@ import { WebSocket } from 'ws'
 import { ClientMessageHandlerService } from './services/ClientMessageHandlerService.js'
 import { persistenceLeaderService } from './services/PersistenceLeaderService.js'
 import { initRedisConnection } from './services/RedisService.js'
+import { RheaService } from './services/RheaService.js'
 import { TokenService } from './services/TokenService.js'
 import { WebsocketService } from './services/WebsocketService.js'
 import { YjsSyncService } from './services/YjsSyncService.js'
@@ -47,14 +48,30 @@ app.ws.use(
 				WebsocketService.unregisterSocket(userId, ctx.websocket)
 			})
 		} catch (e) {
-			console.error('Error establishing websocket session', e)
-			throw e
+			const error = e instanceof Error ? e : new Error(String(e))
+			console.error('Error establishing websocket session', error)
+			ctx.websocket.close(4500, 'Error establishing socket: ' + error.message)
 		}
 	}),
 )
 
 app.ws.use(
 	route.all('/live/yjs/:worldId/:entityType/:documentId', async function (ctx) {
+		const messageQueue: { data: Buffer | ArrayBuffer | Buffer[]; isBinary: boolean }[] = []
+		let isSetupComplete = false
+
+		const originalOnMessage = ctx.websocket.onmessage
+		ctx.websocket.onmessage = (event) => {
+			if (!isSetupComplete) {
+				messageQueue.push({
+					data: event.data as Buffer | ArrayBuffer | Buffer[],
+					isBinary: typeof event.data !== 'string',
+				})
+			} else if (originalOnMessage) {
+				originalOnMessage.call(ctx.websocket, event)
+			}
+		}
+
 		try {
 			const authCookie = ctx.cookies.get(AUTH_COOKIE_NAME)
 			if (!authCookie) {
@@ -74,9 +91,9 @@ app.ws.use(
 			}
 
 			const docName = `${worldId}:${documentId}`
-			setupWSConnection(ctx.websocket, ctx.req, { docName, gc: true })
-
 			const { id: userId } = TokenService.decodeUserToken(authCookie)
+			await RheaService.checkUserAccess({ worldId, userId, level: 'write' })
+			setupWSConnection(ctx.websocket, ctx.req, { docName, gc: true })
 
 			await YjsSyncService.setupDocumentListener({
 				userId,
@@ -85,10 +102,17 @@ app.ws.use(
 				entityType: entityType as 'actor' | 'event' | 'article',
 				docName,
 			})
-			// await RheaService.checkUserAccess({ worldId, userId, level: 'write' })
+
+			// Replay queued messages
+			isSetupComplete = true
+			for (const queuedMessage of messageQueue) {
+				ctx.websocket.emit('message', queuedMessage.data, queuedMessage.isBinary)
+			}
+			messageQueue.length = 0
 		} catch (e) {
+			const error = e instanceof Error ? e : new Error(String(e))
 			console.error('Error establishing Yjs websocket', e)
-			ctx.websocket.close(4500, 'Internal server error')
+			ctx.websocket.close(4500, 'Error establishing socket: ' + error.message)
 		}
 	}),
 )

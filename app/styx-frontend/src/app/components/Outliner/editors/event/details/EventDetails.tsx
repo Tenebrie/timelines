@@ -44,8 +44,17 @@ export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
 					illustrationTab={
 						<Stack gap={2} sx={{ height: '100%', overflow: 'auto', marginRight: -0.5 }}>
 							<Stack gap={2} sx={{ marginRight: 2 }}>
-								<ColorPicker key={draft.id} initialValue={draft.color} onChangeHex={draft.setColor} />
-								<IconPicker color={draft.color} defaultQuery={draft.icon} onSelect={draft.setIcon} />
+								<ColorPicker
+									key={'color-' + draft.id + '-' + draft.key}
+									initialValue={draft.color}
+									onChangeHex={draft.setColor}
+								/>
+								<IconPicker
+									key={'icon-' + draft.id}
+									color={draft.color}
+									defaultQuery={draft.icon}
+									onSelect={draft.setIcon}
+								/>
 							</Stack>
 						</Stack>
 					}

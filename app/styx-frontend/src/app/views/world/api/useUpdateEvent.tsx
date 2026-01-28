@@ -1,3 +1,4 @@
+import { WorldEvent } from '@api/types/worldTypes'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -17,7 +18,7 @@ export const useUpdateEvent = () => {
 	const dispatch = useDispatch()
 
 	const perform = useCallback(
-		async (id: string, body: UpdateWorldEventApiArg['body']) => {
+		async (id: string, body: UpdateWorldEventApiArg['body'], onBeforeSave?: (event: WorldEvent) => void) => {
 			const { response, error } = parseApiResponse(
 				await updateWorldEvent({
 					worldId,
@@ -29,13 +30,15 @@ export const useUpdateEvent = () => {
 				return
 			}
 
+			const event = ingestEvent(response)
+			onBeforeSave?.(event)
+
 			// Invalidate common icons query cache if icon has changed
 			const oldIcon = events.find((e) => e.id === id)?.icon
 			if (body.icon !== undefined && body.icon !== oldIcon) {
 				dispatch(worldDetailsApi.util.invalidateTags([{ type: 'worldCommonIcons' }]))
 			}
 
-			const event = ingestEvent(response)
 			dispatch(updateEvent(event))
 
 			return event

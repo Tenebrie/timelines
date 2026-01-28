@@ -14,6 +14,7 @@ export const useEventDraft = ({ event }: Props) => {
 	const makeDirty = () => setDirty(true)
 
 	const currentId = useRef(event.id)
+	const currentUpdatedAt = useRef(event.updatedAt)
 	const [key, setKey] = useState(0)
 	const [id, setIdDirect] = useState<string>(event.id)
 	const [modules, setModulesDirect] = useState<typeof event.extraFields>(event.extraFields)
@@ -69,11 +70,12 @@ export const useEventDraft = ({ event }: Props) => {
 
 	const loadEvent = useCallback(
 		(event: WorldEvent) => {
+			currentId.current = event.id
+			currentUpdatedAt.current = event.updatedAt
 			loadState({
 				...event,
 				customNameEnabled: event.customName,
 			})
-			currentId.current = event.id
 		},
 		[loadState],
 	)
@@ -100,6 +102,10 @@ export const useEventDraft = ({ event }: Props) => {
 		loadEvent(event)
 	}
 
+	if (currentId.current === event.id && event.updatedAt > currentUpdatedAt.current) {
+		loadEvent(event)
+	}
+
 	return {
 		isDirty,
 		key,
@@ -117,6 +123,9 @@ export const useEventDraft = ({ event }: Props) => {
 		...setters,
 		loadState,
 		loadEvent,
+		resetUpdatedAt: (updatedAt: string) => {
+			currentUpdatedAt.current = updatedAt
+		},
 		toPayload,
 	}
 }

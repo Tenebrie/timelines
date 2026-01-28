@@ -15,6 +15,7 @@ import { CustomThemeOverrides } from './features/theming/components/CustomThemeO
 import { CustomThemeProvider } from './features/theming/context/CustomThemeProvider'
 import { useBrowserSpecificScrollbars } from './hooks/useBrowserSpecificScrollbars'
 import { useShortcutManager } from './hooks/useShortcut/useShortcutManager'
+import { TimelineZoomReporter } from './views/world/views/timeline/components/TimelineZoomReporter'
 
 const Container = styled.div`
 	display: flex;
@@ -63,6 +64,7 @@ const App = () => {
 			<NavigationReceiverWrapper />
 			<DragDropPortalSlot />
 			<PageMetadata />
+			<TimelineZoomReporter />
 			{/* <SummonableDebug /> */}
 		</div>
 	)
