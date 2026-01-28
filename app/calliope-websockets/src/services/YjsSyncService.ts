@@ -135,6 +135,11 @@ export const YjsSyncService = {
 						htmlToYXml(contentRich, fragment)
 					}, REDIS_ORIGIN) // Use REDIS_ORIGIN to avoid broadcasting this initial load
 					console.info(`[${docName}] Loaded initial state from database`)
+
+					// Store the initial state to Redis so other instances get the same state
+					const stateUpdate = Y.encodeStateAsUpdate(doc)
+					await RedisService.appendDocumentUpdate(docName, stateUpdate)
+					console.info(`[${docName}] Stored initial state to Redis`)
 				} else {
 					console.info(`[${docName}] No content in database`)
 				}
