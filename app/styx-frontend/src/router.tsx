@@ -12,10 +12,15 @@ export const router = createRouter({
 
 function DefaultErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 	useEffect(() => {
+		const callback = () => {
+			reset()
+		}
+
 		if (import.meta.hot) {
-			import.meta.hot.on('vite:afterUpdate', () => {
-				reset()
-			})
+			import.meta.hot.on('vite:afterUpdate', callback)
+		}
+		return () => {
+			import.meta.hot?.off('vite:afterUpdate', callback)
 		}
 	}, [reset])
 

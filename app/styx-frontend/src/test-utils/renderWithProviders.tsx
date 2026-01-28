@@ -29,7 +29,6 @@ export const renderWithProviders = (
 		user: userEvent.setup(),
 		store,
 		...render(<ReduxProvider store={store}>{node}</ReduxProvider>),
-		rerender: (newNode: ReactNode) => render(<ReduxProvider store={store}>{newNode}</ReduxProvider>),
 	}
 }
 

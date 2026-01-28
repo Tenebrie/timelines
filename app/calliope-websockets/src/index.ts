@@ -137,7 +137,6 @@ persistenceLeaderService.connect()
 const server = app.listen(3001)
 console.info(`${chalk.greenBright('[Calliope]')} Listening on port ${chalk.blueBright('3001')}`)
 
-// Graceful shutdown
 const shutdown = async () => {
 	console.info('Shutting down gracefully...')
 	await persistenceLeaderService.shutdown()

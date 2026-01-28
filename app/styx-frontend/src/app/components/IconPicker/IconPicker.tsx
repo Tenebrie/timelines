@@ -6,6 +6,7 @@ import { memo, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
+import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 import { IconCollection } from './components/IconCollection'
@@ -37,6 +38,10 @@ export function IconPickerComponent({ onSelect, ...props }: Props) {
 	useEffect(() => {
 		throttledUpdateRenderedColor(props.color)
 	}, [props.color, throttledUpdateRenderedColor])
+
+	useEffectOnce(() => {
+		return () => throttledUpdateRenderedColor.cancel()
+	})
 
 	const { results } = useIconifySearch({ query })
 	const { data: commonEventIcons } = useGetCommonWorldEventIconsQuery({ worldId })

@@ -2,7 +2,7 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import Slider from '@mui/material/Slider'
 import Stack from '@mui/material/Stack'
 import throttle from 'lodash.throttle'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
 type Props = {
@@ -48,11 +48,13 @@ export function ColorPickerSliders({
 		}, 50)
 	}, [onLightnessChange])
 
-	// useEffect(() => {
-	// 	setLocalHue(hue)
-	// 	setLocalSaturation(saturation)
-	// 	setLocalLightness(lightness)
-	// }, [hue, saturation, lightness])
+	useEffect(() => {
+		return () => {
+			throttledOnHueChange.cancel()
+			throttledOnSaturationChange.cancel()
+			throttledOnLightnessChange.cancel()
+		}
+	})
 
 	return (
 		<>
@@ -80,7 +82,9 @@ export function ColorPickerSliders({
 					type="number"
 					value={Math.round(hue)}
 					onChange={(event) => {
-						throttledOnHueChange(Math.max(0, Math.min(360, Math.round(Number(event.target.value)))))
+						const value = Math.max(0, Math.min(360, Math.round(Number(event.target.value))))
+						setLocalHue(value)
+						throttledOnHueChange(value)
 						resetInputValue()
 					}}
 				/>
@@ -102,9 +106,9 @@ export function ColorPickerSliders({
 					type="number"
 					value={Math.round(saturation / 10)}
 					onChange={(event) => {
-						throttledOnSaturationChange(
-							Math.max(0, Math.min(1000, Math.round(Number(event.target.value) * 10))),
-						)
+						const value = Math.max(0, Math.min(1000, Math.round(Number(event.target.value) * 10)))
+						setLocalSaturation(value)
+						throttledOnSaturationChange(value)
 						resetInputValue()
 					}}
 				/>
@@ -126,9 +130,9 @@ export function ColorPickerSliders({
 					type="number"
 					value={Math.round(lightness / 10)}
 					onChange={(event) => {
-						throttledOnLightnessChange(
-							Math.max(0, Math.min(1000, Math.round(Number(event.target.value) * 10))),
-						)
+						const value = Math.max(0, Math.min(1000, Math.round(Number(event.target.value) * 10)))
+						setLocalLightness(value)
+						throttledOnLightnessChange(value)
 						resetInputValue()
 					}}
 				/>
