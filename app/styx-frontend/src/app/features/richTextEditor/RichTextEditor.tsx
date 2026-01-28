@@ -61,15 +61,10 @@ export const RichTextEditorComponent = ({
 	)
 
 	// Enable collaboration if params provided
-	const {
-		extension: collaborationExtension,
-		isReady: collabReady,
-		needsInitialContent,
-	} = useCollaboration({
+	const { extension: collaborationExtension, isReady: collabReady } = useCollaboration({
 		enabled: !!collaboration,
 		documentId: collaboration?.documentId ?? '',
 		entityType: collaboration?.entityType ?? 'actor',
-		initialContent: value,
 	})
 
 	const onChangeRef = useRef(onChange)
@@ -138,13 +133,6 @@ export const RichTextEditorComponent = ({
 	useEffect(() => {
 		currentValue.current = value
 	}, [value])
-
-	// Populate Yjs doc with initial content if it was empty after sync
-	useEffect(() => {
-		if (needsInitialContent && editor && value) {
-			editor.commands.setContent(value)
-		}
-	}, [needsInitialContent, editor, value])
 
 	useEffect(() => {
 		editor?.setEditable(!isReadMode)

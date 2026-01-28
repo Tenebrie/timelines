@@ -4,7 +4,7 @@ import * as Y from 'yjs'
 import { persistenceLeaderService } from './PersistenceLeaderService.js'
 import { RedisService } from './RedisService.js'
 import { RheaService } from './RheaService.js'
-import { yXmlToHtml } from './YjsParserService.js'
+import { htmlToYXml, yXmlToHtml } from './YjsParserService.js'
 
 const attachedDocs = new WeakSet<Y.Doc>()
 
@@ -106,10 +106,11 @@ export const YjsSyncService = {
 		const metadata = { userId, worldId, entityId, entityType }
 		documentMetadata.set(docName, metadata)
 
-		// Load existing state from Redis before accepting client updates
-		console.info(`[${docName}] Loading state from Redis...`)
+		// Load existing state: first try Redis, then fall back to database
+		console.info(`[${docName}] Loading state...`)
 		const existingUpdates = await RedisService.getDocumentUpdates(docName)
 		if (existingUpdates.length > 0) {
+			// Redis has updates - apply them
 			console.info(`[${docName}] Applying ${existingUpdates.length} updates from Redis`)
 			for (const update of existingUpdates) {
 				try {
@@ -119,7 +120,27 @@ export const YjsSyncService = {
 				}
 			}
 		} else {
-			console.info(`[${docName}] No existing state in Redis`)
+			// Redis empty - fetch initial state from database
+			console.info(`[${docName}] Redis empty, fetching from database...`)
+			try {
+				const contentRich = await RheaService.fetchDocumentState({
+					userId,
+					worldId,
+					entityId,
+					entityType,
+				})
+				if (contentRich && contentRich.trim() !== '') {
+					const fragment = doc.getXmlFragment('default')
+					doc.transact(() => {
+						htmlToYXml(contentRich, fragment)
+					}, REDIS_ORIGIN) // Use REDIS_ORIGIN to avoid broadcasting this initial load
+					console.info(`[${docName}] Loaded initial state from database`)
+				} else {
+					console.info(`[${docName}] No content in database`)
+				}
+			} catch (err) {
+				console.error(`[${docName}] Failed to fetch from database:`, err)
+			}
 		}
 
 		// Listen for updates
