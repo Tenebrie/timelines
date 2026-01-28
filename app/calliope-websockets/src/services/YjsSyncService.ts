@@ -4,7 +4,7 @@ import * as Y from 'yjs'
 import { persistenceLeaderService } from './PersistenceLeaderService.js'
 import { RedisService } from './RedisService.js'
 import { RheaService } from './RheaService.js'
-import { htmlToYXml, yXmlToHtml } from './YjsParserService.js'
+import { yXmlToHtml } from './YjsParserService.js'
 
 const attachedDocs = new WeakSet<Y.Doc>()
 const UPDATE_MESSAGE_ORIGIN = 'calliope-internal'
@@ -168,22 +168,21 @@ export const YjsSyncService = {
 			}
 		})
 
-		const contentRich = await RheaService.fetchDocumentState({
-			userId,
-			worldId,
-			entityId,
-			entityType,
-		})
-
 		const fragment = doc.getXmlFragment('default')
 
 		// Only initialize if document is empty
-		if (fragment.length === 0 && contentRich) {
-			doc.transact(() => {
-				htmlToYXml(contentRich, fragment)
-			})
-			console.info(`[${docName}] Initialized with content from database`)
-		}
+		// if (fragment.length === 0) {
+		// 	const contentRich = await RheaService.fetchDocumentState({
+		// 		userId,
+		// 		worldId,
+		// 		entityId,
+		// 		entityType,
+		// 	})
+		// 	doc.transact(() => {
+		// 		htmlToYXml(contentRich, fragment)
+		// 	})
+		// 	console.info(`[${docName}] Initialized with content from database`)
+		// }
 
 		console.info(`[${docName}] Document created`)
 		initComplete = true

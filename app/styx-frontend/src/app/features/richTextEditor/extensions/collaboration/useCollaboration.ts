@@ -11,6 +11,7 @@ type UseCollaborationParams = {
 	entityType: 'actor' | 'event' | 'article'
 	documentId: string
 	enabled: boolean
+	initialContent?: string
 }
 
 type ConnectionState = {
@@ -20,9 +21,15 @@ type ConnectionState = {
 	key: string
 }
 
-export const useCollaboration = ({ entityType, documentId, enabled }: UseCollaborationParams) => {
+export const useCollaboration = ({
+	entityType,
+	documentId,
+	enabled,
+	initialContent,
+}: UseCollaborationParams) => {
 	const worldId = useSelector(getWorldIdState)
 	const [isReady, setIsReady] = useState(!enabled)
+	const [needsInitialContent, setNeedsInitialContent] = useState(false)
 	const connectionRef = useRef<ConnectionState | null>(null)
 	const cleanupTimeoutRef = useRef<number | null>(null)
 
@@ -52,11 +59,21 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 
 		// Create new connection
 		setIsReady(false)
+		setNeedsInitialContent(false)
 		const { doc, provider } = createCollaborationProvider(worldId, entityType, documentId)
 		const extension = createCollaborationExtension(doc)
 
 		connectionRef.current = { doc, provider, extension, key }
-		provider.on('sync', (synced: boolean) => synced && setIsReady(true))
+		provider.on('sync', (synced: boolean) => {
+			if (synced) {
+				// Check if doc is empty and we have initial content to populate
+				const fragment = doc.getXmlFragment('default')
+				if (fragment.length === 0 && initialContent && initialContent.trim() !== '') {
+					setNeedsInitialContent(true)
+				}
+				setIsReady(true)
+			}
+		})
 
 		return scheduleCleanup()
 
@@ -71,13 +88,14 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 				}, 50)
 			}
 		}
-	}, [key, enabled, worldId, entityType, documentId])
+	}, [key, enabled, worldId, entityType, documentId, initialContent])
 
 	return {
 		doc: connectionRef.current?.doc ?? null,
 		provider: connectionRef.current?.provider ?? null,
 		extension: connectionRef.current?.extension ?? null,
 		isReady,
+		needsInitialContent,
 	}
 }
 
