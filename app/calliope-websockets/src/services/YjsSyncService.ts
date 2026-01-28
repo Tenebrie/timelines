@@ -160,6 +160,14 @@ export const YjsSyncService = {
 			// If this is a local update (not from Redis), broadcast to other instances
 			console.log('Received message from ', typeof origin)
 			if (origin !== UPDATE_MESSAGE_ORIGIN) {
+				// Check if frontend signaled to skip broadcasting (initial content)
+				const meta = doc.getMap('meta')
+				if (meta.get('skipBroadcast') === true) {
+					meta.set('skipBroadcast', false)
+					console.info(`[${docName}] Skipping broadcast (initial content)`)
+					return
+				}
+
 				console.info(`[${docName}] Broadcasting update to other instances`)
 				RedisService.broadcastYjsDocumentUpdate({
 					docName,
@@ -168,9 +176,8 @@ export const YjsSyncService = {
 			}
 		})
 
-		const fragment = doc.getXmlFragment('default')
-
 		// Only initialize if document is empty
+		// const fragment = doc.getXmlFragment('default')
 		// if (fragment.length === 0) {
 		// 	const contentRich = await RheaService.fetchDocumentState({
 		// 		userId,

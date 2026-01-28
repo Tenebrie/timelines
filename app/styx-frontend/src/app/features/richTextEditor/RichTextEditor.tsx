@@ -62,6 +62,7 @@ export const RichTextEditorComponent = ({
 
 	// Enable collaboration if params provided
 	const {
+		doc: collaborationDoc,
 		extension: collaborationExtension,
 		isReady: collabReady,
 		needsInitialContent,
@@ -141,10 +142,12 @@ export const RichTextEditorComponent = ({
 
 	// Populate Yjs doc with initial content if it was empty after sync
 	useEffect(() => {
-		if (needsInitialContent && editor && value) {
+		if (needsInitialContent && editor && value && collaborationDoc) {
+			// Signal Calliope to skip broadcasting this update (it's initial content)
+			collaborationDoc.getMap('meta').set('skipBroadcast', true)
 			editor.commands.setContent(value)
 		}
-	}, [needsInitialContent, editor, value])
+	}, [needsInitialContent, editor, value, collaborationDoc])
 
 	useEffect(() => {
 		editor?.setEditable(!isReadMode)
