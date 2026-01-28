@@ -113,7 +113,6 @@ export type CreateActorApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
-	descriptionYjs?: null | string
 }
 export type CreateActorApiArg = {
 	/** Any string value */
@@ -165,7 +164,6 @@ export type UpdateActorApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
-	descriptionYjs?: null | string
 }
 export type UpdateActorApiArg = {
 	/** Any string value */

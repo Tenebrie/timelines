@@ -67,7 +67,6 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	contentRich: string
-	contentYjs?: null | string
 	position: number
 	parentId?: null | string
 }[]
@@ -97,7 +96,6 @@ export type CreateArticleApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	contentRich: string
-	contentYjs?: null | string
 	position: number
 	parentId?: null | string
 }

@@ -1,6 +1,6 @@
 import { RequiredParam } from 'moonflower/validators/ParamWrappers'
 
-const MAX_CONTENT_LENGTH = 32000
+const MAX_CONTENT_LENGTH = 131000
 
 export const ContentStringValidator = RequiredParam({
 	parse: (v) => String(v).trim(),

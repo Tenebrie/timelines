@@ -290,7 +290,6 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	contentRich: string
-	contentYjs?: null | string
 	position: number
 	parentId?: null | string
 }

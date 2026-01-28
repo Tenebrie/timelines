@@ -137,7 +137,6 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
-	descriptionYjs?: null | string
 	type: 'SCENE' | 'OTHER'
 	timestamp: string
 	revokedAt?: null | string
@@ -210,7 +209,6 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	icon: string
 	color: string
 	descriptionRich: string
-	descriptionYjs?: null | string
 	type: 'SCENE' | 'OTHER'
 	timestamp: string
 	revokedAt?: null | string

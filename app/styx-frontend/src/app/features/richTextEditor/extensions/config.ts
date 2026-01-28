@@ -1,3 +1,4 @@
+import CharacterCount from '@tiptap/extension-character-count'
 import { HardBreak } from '@tiptap/extension-hard-break'
 import ImageExtension from '@tiptap/extension-image'
 import Mention from '@tiptap/extension-mention'
@@ -26,6 +27,9 @@ export const SharedExtensions: Extensions = [
 				'Mod-Enter': () => false,
 			}
 		},
+	}),
+	CharacterCount.configure({
+		limit: 32000,
 	}),
 	// Support for actor mentions
 	MentionNode,
