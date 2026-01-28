@@ -2,7 +2,7 @@ import { RedisChannel, RheaToCalliopeMessage } from '@src/ts-shared/RheaToCallio
 import { createClient } from 'redis'
 
 import { RheaMessageHandlerService } from './RheaMessageHandlerService.js'
-import { YjsSyncService, YjsUpdateMessage } from './YjsSyncService.js'
+import { YjsSyncService } from './YjsSyncService.js'
 
 const client = createClient({
 	socket: {
@@ -27,6 +27,14 @@ client.on('error', (err) => {
 	}
 })
 
+// Redis key prefix for Yjs document updates
+const YJS_DOC_KEY_PREFIX = 'yjs:doc:'
+
+export type YjsUpdateMessage = {
+	docName: string
+	update: string
+}
+
 export const initRedisConnection = async () => {
 	console.info('Connecting to Redis...')
 	await client.connect()
@@ -37,20 +45,55 @@ export const initRedisConnection = async () => {
 		RheaMessageHandlerService.handleMessage(parsedMessage)
 	})
 
+	// Subscribe to Yjs updates from other Calliope instances
 	await client.subscribe(RedisChannel.CALLIOPE_YJS, (message) => {
 		try {
 			const parsedMessage = JSON.parse(message) as YjsUpdateMessage
-			YjsSyncService.handleMessage(parsedMessage)
+			const update = Buffer.from(parsedMessage.update, 'base64')
+			YjsSyncService.handleRemoteUpdate(parsedMessage.docName, update)
 		} catch (err) {
-			console.error('Error applying Yjs update from Redis:', err)
+			console.error('Error parsing Yjs update from Redis:', err)
 		}
 	})
 }
 
 export const RedisService = {
-	broadcastYjsDocumentUpdate: (message: YjsUpdateMessage) => {
+	/**
+	 * Broadcast a Yjs update to other Calliope instances via pub/sub.
+	 */
+	broadcastYjsUpdate: (docName: string, update: Uint8Array): void => {
+		const message: YjsUpdateMessage = {
+			docName,
+			update: Buffer.from(update).toString('base64'),
+		}
 		publisherClient
 			.publish(RedisChannel.CALLIOPE_YJS, JSON.stringify(message))
-			.catch((err) => console.error('Error publishing Yjs update to Redis:', err))
+			.catch((err) => console.error('Error broadcasting Yjs update:', err))
+	},
+
+	/**
+	 * Append a Yjs update to the document's update list in Redis (for persistence).
+	 */
+	appendDocumentUpdate: async (docName: string, update: Uint8Array): Promise<void> => {
+		const key = `${YJS_DOC_KEY_PREFIX}${docName}`
+		const base64Update = Buffer.from(update).toString('base64')
+		await publisherClient.rPush(key, base64Update)
+	},
+
+	/**
+	 * Get all stored updates for a document from Redis.
+	 */
+	getDocumentUpdates: async (docName: string): Promise<Uint8Array[]> => {
+		const key = `${YJS_DOC_KEY_PREFIX}${docName}`
+		const updates = await publisherClient.lRange(key, 0, -1)
+		return updates.map((base64) => Buffer.from(base64, 'base64'))
+	},
+
+	/**
+	 * Delete all updates for a document from Redis.
+	 */
+	deleteDocumentUpdates: async (docName: string): Promise<void> => {
+		const key = `${YJS_DOC_KEY_PREFIX}${docName}`
+		await publisherClient.del(key)
 	},
 }

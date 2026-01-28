@@ -7,13 +7,15 @@ import { RheaService } from './RheaService.js'
 import { yXmlToHtml } from './YjsParserService.js'
 
 const attachedDocs = new WeakSet<Y.Doc>()
-const UPDATE_MESSAGE_ORIGIN = 'calliope-internal'
 
-// Track debounce timers for each document
-const persistenceTimers = new Map<string, NodeJS.Timeout>()
-const DEBOUNCE_DELAY = 2000
+// Origin marker for updates from Redis (to avoid echo)
+const REDIS_ORIGIN = 'redis'
 
-// Store metadata per document for use in writeState hook
+// Track debounce timers for flushing to Rhea (database persistence)
+const rheaPersistenceTimers = new Map<string, NodeJS.Timeout>()
+const RHEA_DEBOUNCE_DELAY = 2000
+
+// Store metadata per document
 type DocumentMetadata = {
 	userId: string
 	worldId: string
@@ -22,24 +24,13 @@ type DocumentMetadata = {
 }
 const documentMetadata = new Map<string, DocumentMetadata>()
 
-export type YjsUpdateMessage = {
-	docName: string
-	update: string
-}
-
 /**
- * Safely flush document state to Rhea.
- * Returns true if flush succeeded, false otherwise.
+ * Flush document state to Rhea
  */
 async function flushDocumentToRhea(
 	docName: string,
 	doc: Y.Doc,
-	metadata: {
-		userId: string
-		worldId: string
-		entityId: string
-		entityType: 'actor' | 'event' | 'article'
-	},
+	metadata: DocumentMetadata,
 ): Promise<boolean> {
 	try {
 		const fragment = doc.getXmlFragment('default')
@@ -53,7 +44,7 @@ async function flushDocumentToRhea(
 			contentRich: html,
 		})
 
-		console.info(`[${docName}] Successfully flushed to Rhea`)
+		console.info(`[${docName}] Flushed to Rhea`)
 		return true
 	} catch (error) {
 		console.error(`[${docName}] Failed to flush to Rhea:`, error)
@@ -62,62 +53,32 @@ async function flushDocumentToRhea(
 }
 
 /**
- * Schedule a debounced save to Rhea backend.
- * After debounce expires, tries to acquire leadership and saves if successful.
- * This ensures we only save if we can acquire the lock at save time.
+ * Schedule a debounced save to Rhea.
  */
-async function schedulePersistence(
-	docName: string,
-	doc: Y.Doc,
-	metadata: {
-		userId: string
-		worldId: string
-		entityId: string
-		entityType: 'actor' | 'event' | 'article'
-	},
-) {
-	// Clear existing timer - restart the debounce
-	const existingTimer = persistenceTimers.get(docName)
+function scheduleRheaPersistence(docName: string, doc: Y.Doc, metadata: DocumentMetadata) {
+	const existingTimer = rheaPersistenceTimers.get(docName)
 	if (existingTimer) {
 		clearTimeout(existingTimer)
 	}
 
-	// Schedule new save after inactivity
 	const timer = setTimeout(async () => {
-		persistenceTimers.delete(docName)
+		rheaPersistenceTimers.delete(docName)
 
 		const isLeader = await persistenceLeaderService.tryAcquireLeadership(docName)
-		if (!isLeader) {
-			console.debug(`[${docName}] Not leader, skipping save`)
-			return
+		if (isLeader) {
+			await flushDocumentToRhea(docName, doc, metadata)
 		}
+	}, RHEA_DEBOUNCE_DELAY)
 
-		console.info(`[${docName}] Acquired leadership, flushing to Rhea...`)
-		await flushDocumentToRhea(docName, doc, metadata)
-	}, DEBOUNCE_DELAY)
-
-	persistenceTimers.set(docName, timer)
+	rheaPersistenceTimers.set(docName, timer)
 }
 
 export const YjsSyncService = {
-	handleMessage(message: YjsUpdateMessage) {
-		const { docName, update } = message
-		const doc = docs.get(docName)
-		if (doc) {
-			console.log('Update received', update)
-			console.log(`[${docName}] Document found, applying update. Doc destroyed: ${doc.isDestroyed}`)
-			try {
-				Y.applyUpdate(doc, Buffer.from(update, 'base64'), UPDATE_MESSAGE_ORIGIN)
-				console.log(`[${docName}] Update applied successfully`)
-			} catch (err) {
-				console.error(`[${docName}] Error applying update:`, err)
-			}
-		} else {
-			console.log('No doc ' + docName)
-			console.log('Available docs:', Array.from(docs.keys()))
-		}
-	},
-
+	/**
+	 * Set up a document for collaboration.
+	 * - Loads existing state from Redis (all stored updates)
+	 * - Listens for updates and stores them in Redis
+	 */
 	async setupDocumentListener({
 		userId,
 		worldId,
@@ -133,7 +94,7 @@ export const YjsSyncService = {
 	}) {
 		const doc = docs.get(docName)
 		if (!doc) {
-			console.warn(`Cannot attach Redis sync: document ${docName} not found`)
+			console.warn(`[${docName}] Document not found`)
 			return
 		}
 
@@ -142,91 +103,94 @@ export const YjsSyncService = {
 		}
 		attachedDocs.add(doc)
 
-		console.info(`[${docName}] Creating a new document...`)
 		const metadata = { userId, worldId, entityId, entityType }
 		documentMetadata.set(docName, metadata)
-		let initComplete = false
 
+		// Load existing state from Redis before accepting client updates
+		console.info(`[${docName}] Loading state from Redis...`)
+		const existingUpdates = await RedisService.getDocumentUpdates(docName)
+		if (existingUpdates.length > 0) {
+			console.info(`[${docName}] Applying ${existingUpdates.length} updates from Redis`)
+			for (const update of existingUpdates) {
+				try {
+					Y.applyUpdate(doc, update, REDIS_ORIGIN)
+				} catch (err) {
+					console.error(`[${docName}] Error applying update from Redis:`, err)
+				}
+			}
+		} else {
+			console.info(`[${docName}] No existing state in Redis`)
+		}
+
+		// Listen for updates
 		doc.on('update', async (update: Uint8Array, origin: unknown) => {
-			if (!initComplete) {
-				console.log('init nope')
+			// Schedule debounced flush to Rhea
+			scheduleRheaPersistence(docName, doc, metadata)
+
+			// Skip updates that came from Redis (to avoid echo)
+			if (origin === REDIS_ORIGIN) {
 				return
 			}
 
-			// Always schedule persistence for any update (local or remote)
-			// The leader election will ensure only one instance actually saves
-			schedulePersistence(docName, doc, metadata)
+			// Store update in Redis list (for new docs to load)
+			await RedisService.appendDocumentUpdate(docName, update)
 
-			// If this is a local update (not from Redis), broadcast to other instances
-			console.log('Received message from ', typeof origin)
-			if (origin !== UPDATE_MESSAGE_ORIGIN) {
-				// Check if frontend signaled to skip broadcasting (initial content)
-				const meta = doc.getMap('meta')
-				if (meta.get('skipBroadcast') === true) {
-					meta.set('skipBroadcast', false)
-					console.info(`[${docName}] Skipping broadcast (initial content)`)
-					return
-				}
-
-				console.info(`[${docName}] Broadcasting update to other instances`)
-				RedisService.broadcastYjsDocumentUpdate({
-					docName,
-					update: Buffer.from(update).toString('base64'),
-				})
-			}
+			// Broadcast to other Calliope instances (for real-time sync)
+			RedisService.broadcastYjsUpdate(docName, update)
 		})
 
-		// Only initialize if document is empty
-		// const fragment = doc.getXmlFragment('default')
-		// if (fragment.length === 0) {
-		// 	const contentRich = await RheaService.fetchDocumentState({
-		// 		userId,
-		// 		worldId,
-		// 		entityId,
-		// 		entityType,
-		// 	})
-		// 	doc.transact(() => {
-		// 		htmlToYXml(contentRich, fragment)
-		// 	})
-		// 	console.info(`[${docName}] Initialized with content from database`)
-		// }
-
-		console.info(`[${docName}] Document created`)
-		initComplete = true
+		console.info(`[${docName}] Document ready`)
 	},
 
+	/**
+	 * Handle incoming Yjs update from another Calliope instance.
+	 */
+	handleRemoteUpdate(docName: string, update: Uint8Array) {
+		const doc = docs.get(docName)
+		if (doc && !doc.isDestroyed) {
+			try {
+				Y.applyUpdate(doc, update, REDIS_ORIGIN)
+			} catch (err) {
+				console.error(`[${docName}] Error applying remote update:`, err)
+			}
+		}
+	},
+
+	/**
+	 * Set up global persistence hooks for document cleanup.
+	 */
 	setupGlobalHooks() {
 		setPersistence({
 			bindState: () => {},
 			writeState: async (docName, doc) => {
 				attachedDocs.delete(doc)
-				console.info(`[${docName}] Document destroying, attempting final flush...`)
+				console.info(`[${docName}] Document closing...`)
 
-				// Cancel any pending debounced save
-				const timer = persistenceTimers.get(docName)
+				// Cancel pending Rhea save
+				const timer = rheaPersistenceTimers.get(docName)
 				if (timer) {
 					clearTimeout(timer)
-					persistenceTimers.delete(docName)
+					rheaPersistenceTimers.delete(docName)
 				}
 
 				const metadata = documentMetadata.get(docName)
 				if (!metadata) {
-					console.warn(`[${docName}] No metadata found, skipping flush`)
+					console.warn(`[${docName}] No metadata, skipping final flush`)
 					return
 				}
 
-				// Try to acquire leadership and flush immediately
+				// Final flush to Rhea
 				const isLeader = await persistenceLeaderService.tryAcquireLeadership(docName)
 				if (isLeader) {
 					await flushDocumentToRhea(docName, doc, metadata)
-				} else {
-					console.info(`[${docName}] Not leader on destroy, another instance will flush`)
+
+					// Clear Redis - state is persisted to database, no need to keep in Redis
+					await RedisService.deleteDocumentUpdates(docName)
 				}
 
 				persistenceLeaderService.release(docName)
-
-				// Clean up metadata
 				documentMetadata.delete(docName)
+				console.info(`[${docName}] Document closed`)
 			},
 			provider: null,
 		})
