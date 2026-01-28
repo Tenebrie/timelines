@@ -11,6 +11,9 @@ const attachedDocs = new WeakSet<Y.Doc>()
 // Origin marker for updates from Redis (to avoid echo)
 const REDIS_ORIGIN = 'redis'
 
+// TTL refresh interval (30 seconds, must be less than Redis TTL of 60 seconds)
+const TTL_REFRESH_INTERVAL_MS = 30_000
+
 // Track debounce timers for flushing to Rhea (database persistence)
 const rheaPersistenceTimers = new Map<string, NodeJS.Timeout>()
 const RHEA_DEBOUNCE_DELAY = 2000
@@ -243,5 +246,14 @@ export const YjsSyncService = {
 			},
 			provider: null,
 		})
+
+		// Start periodic TTL refresh for all open documents
+		setInterval(() => {
+			for (const docName of docs.keys()) {
+				RedisService.refreshDocumentTTL(docName).catch((err) => {
+					console.error(`[${docName}] Failed to refresh TTL:`, err)
+				})
+			}
+		}, TTL_REFRESH_INTERVAL_MS)
 	},
 }

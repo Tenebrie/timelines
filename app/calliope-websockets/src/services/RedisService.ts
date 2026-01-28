@@ -31,6 +31,7 @@ client.on('error', (err) => {
 const YJS_DOC_KEY_PREFIX = 'yjs:doc:'
 const YJS_LOCK_KEY_PREFIX = 'yjs:lock:'
 const LOCK_TTL_MS = 5000 // Lock expires after 5 seconds
+const DOC_TTL_SECONDS = 60 // Document data expires after 60 seconds without refresh
 
 export type YjsUpdateMessage = {
 	docName: string
@@ -75,11 +76,13 @@ export const RedisService = {
 
 	/**
 	 * Append a Yjs update to the document's update list in Redis (for persistence).
+	 * Also refreshes the TTL on the document data.
 	 */
 	appendDocumentUpdate: async (docName: string, update: Uint8Array): Promise<void> => {
 		const key = `${YJS_DOC_KEY_PREFIX}${docName}`
 		const base64Update = Buffer.from(update).toString('base64')
 		await publisherClient.rPush(key, base64Update)
+		await publisherClient.expire(key, DOC_TTL_SECONDS)
 	},
 
 	/**
@@ -97,6 +100,15 @@ export const RedisService = {
 	deleteDocumentUpdates: async (docName: string): Promise<void> => {
 		const key = `${YJS_DOC_KEY_PREFIX}${docName}`
 		await publisherClient.del(key)
+	},
+
+	/**
+	 * Refresh the TTL on a document's data in Redis.
+	 * Call this periodically to keep the document alive while it's open.
+	 */
+	refreshDocumentTTL: async (docName: string): Promise<void> => {
+		const key = `${YJS_DOC_KEY_PREFIX}${docName}`
+		await publisherClient.expire(key, DOC_TTL_SECONDS)
 	},
 
 	/**
