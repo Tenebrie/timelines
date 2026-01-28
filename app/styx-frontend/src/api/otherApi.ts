@@ -55,6 +55,9 @@ const injectedRtkApi = api
 			getWikiArticleContent: build.query<GetWikiArticleContentApiResponse, GetWikiArticleContentApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/article/${queryArg.articleId}/content`,
+					params: {
+						acceptDeltas: queryArg.acceptDeltas,
+					},
 				}),
 				providesTags: ['worldWikiArticle'],
 			}),
@@ -121,7 +124,6 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	status: 'Pending' | 'Finalized' | 'Failed'
 	ownerId: string
 	size: number
 	expiresAt?: null | string
@@ -129,6 +131,7 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'Image' | 'Avatar'
+	status: 'Pending' | 'Finalized' | 'Failed'
 }
 export type RequestImageConversionApiArg = {
 	body: {
@@ -207,13 +210,17 @@ export type DeleteNodeApiArg = {
 	nodeId: string
 }
 export type GetWikiArticleContentApiResponse = /** status 200  */ {
-	contentRich: string
+	hasDeltas: boolean
+	contentHtml?: string
+	contentDeltas?: null | string
 }
 export type GetWikiArticleContentApiArg = {
 	/** Any string value */
 	worldId: string
 	/** Any string value */
 	articleId: string
+	/** Any boolean value */
+	acceptDeltas?: boolean
 }
 export type PutWikiArticleContentApiResponse = unknown
 export type PutWikiArticleContentApiArg = {
@@ -223,6 +230,7 @@ export type PutWikiArticleContentApiArg = {
 	articleId: string
 	body: {
 		content: string
+		contentDeltas?: string
 	}
 }
 export type GetWorldColorsApiResponse = /** status 200  */ {
@@ -263,24 +271,26 @@ export type DeleteWorldColorApiArg = {
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
 		id: string
-		worldId: string
-		name: string
 		createdAt: string
 		updatedAt: string
+		name: string
+		worldId: string
 		icon: string
 		color: string
 		contentRich: string
+		contentYjs?: null | string
 		position: number
 		parentId?: null | string
 	}[]
 	id: string
-	worldId: string
-	name: string
 	createdAt: string
 	updatedAt: string
+	name: string
+	worldId: string
 	icon: string
 	color: string
 	contentRich: string
+	contentYjs?: null | string
 	position: number
 	parentId?: null | string
 }

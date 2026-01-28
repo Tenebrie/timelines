@@ -117,12 +117,21 @@ export const RichTextEditorComponent = ({
 			content: value,
 			editable: !isReadMode,
 			extensions,
-			autofocus: autoFocus ? 'end' : false,
+			autofocus: false,
 			onUpdate({ editor, transaction }) {
 				if (editor.getHTML() === value || transaction.steps.length === 0) {
 					return
 				}
 				onChangeThrottled.current(editor)
+			},
+			onCreate({ editor }) {
+				if (!autoFocus) {
+					return
+				}
+
+				requestIdleCallback(() => {
+					editor.commands.focus('end')
+				})
 			},
 		},
 		[collabReady],

@@ -339,10 +339,6 @@ export type SavedColorOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type SavedColorCreateNestedManyWithoutWorldInput = {
   create?: Prisma.XOR<Prisma.SavedColorCreateWithoutWorldInput, Prisma.SavedColorUncheckedCreateWithoutWorldInput> | Prisma.SavedColorCreateWithoutWorldInput[] | Prisma.SavedColorUncheckedCreateWithoutWorldInput[]
   connectOrCreate?: Prisma.SavedColorCreateOrConnectWithoutWorldInput | Prisma.SavedColorCreateOrConnectWithoutWorldInput[]

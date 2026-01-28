@@ -1727,6 +1727,7 @@ export const ActorScalarFieldEnum = {
   color: 'color',
   description: 'description',
   descriptionRich: 'descriptionRich',
+  descriptionYjs: 'descriptionYjs',
   worldId: 'worldId'
 } as const
 
@@ -1875,6 +1876,7 @@ export const WikiArticleScalarFieldEnum = {
   icon: 'icon',
   color: 'color',
   contentRich: 'contentRich',
+  contentYjs: 'contentYjs',
   position: 'position',
   worldId: 'worldId',
   parentId: 'parentId'
@@ -1910,6 +1912,7 @@ export const WorldEventScalarFieldEnum = {
   revokedAt: 'revokedAt',
   description: 'description',
   descriptionRich: 'descriptionRich',
+  descriptionYjs: 'descriptionYjs',
   customName: 'customName',
   externalLink: 'externalLink',
   extraFields: 'extraFields',

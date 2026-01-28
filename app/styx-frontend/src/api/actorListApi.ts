@@ -7,7 +7,12 @@ const injectedRtkApi = api
 	.injectEndpoints({
 		endpoints: (build) => ({
 			getActorContent: build.query<GetActorContentApiResponse, GetActorContentApiArg>({
-				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content` }),
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content`,
+					params: {
+						acceptDeltas: queryArg.acceptDeltas,
+					},
+				}),
 				providesTags: ['actorList'],
 			}),
 			putActorContent: build.mutation<PutActorContentApiResponse, PutActorContentApiArg>({
@@ -46,13 +51,17 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as actorListApi }
 export type GetActorContentApiResponse = /** status 200  */ {
-	contentRich: string
+	hasDeltas: boolean
+	contentHtml?: string
+	contentDeltas?: null | string
 }
 export type GetActorContentApiArg = {
 	/** Any string value */
 	worldId: string
 	/** Any string value */
 	actorId: string
+	/** Any boolean value */
+	acceptDeltas?: boolean
 }
 export type PutActorContentApiResponse = unknown
 export type PutActorContentApiArg = {
@@ -62,6 +71,7 @@ export type PutActorContentApiArg = {
 	actorId: string
 	body: {
 		content: string
+		contentDeltas?: string
 	}
 }
 export type CreateActorApiResponse = /** status 200  */ {
@@ -94,15 +104,16 @@ export type CreateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	description: string
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
 	title: string
 	icon: string
 	color: string
 	descriptionRich: string
+	descriptionYjs?: null | string
 }
 export type CreateActorApiArg = {
 	/** Any string value */
@@ -145,15 +156,16 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	description: string
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
 	title: string
 	icon: string
 	color: string
 	descriptionRich: string
+	descriptionYjs?: null | string
 }
 export type UpdateActorApiArg = {
 	/** Any string value */
@@ -169,15 +181,16 @@ export type UpdateActorApiArg = {
 }
 export type DeleteActorApiResponse = /** status 200  */ {
 	description: string
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
 	title: string
 	icon: string
 	color: string
 	descriptionRich: string
+	descriptionYjs?: null | string
 }
 export type DeleteActorApiArg = {
 	/** Any string value */

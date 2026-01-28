@@ -18,10 +18,11 @@ model WikiArticle {
   updatedAt DateTime @default(now()) @updatedAt
 
   name        String
-  icon        String @default("default")
-  color       String @default("#000000")
-  contentRich String @default("")
-  position    Int    @default(0)
+  icon        String  @default("default")
+  color       String  @default("#000000")
+  contentRich String  @default("")
+  contentYjs  String?
+  position    Int     @default(0)
 
   mentions    Mention[] @relation("ArticleMentionSource")
   mentionedIn Mention[] @relation("ArticleMentionTarget")

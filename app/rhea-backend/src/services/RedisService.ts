@@ -43,14 +43,20 @@ export const RedisService = {
 
 	notifyAboutWorldEventUpdate: (
 		ctx: ContextWithSessionId,
-		{ worldId, event }: { worldId: string; event: WorldEvent },
+		{ worldId, event }: { worldId: string; event: Omit<WorldEvent, 'descriptionYjs'> },
 	) => {
+		const eventToSend = {
+			...event,
+			descriptionRich: undefined,
+		}
 		calliope.sendMessage({
 			type: RheaToCalliopeMessageType.WORLD_EVENT_UPDATED,
 			messageSourceSessionId: ctx.sessionId,
 			data: {
 				worldId,
-				event: JSON.stringify(event, (_, value) => (typeof value === 'bigint' ? value.toString() : value)),
+				event: JSON.stringify(eventToSend, (_, value) =>
+					typeof value === 'bigint' ? value.toString() : value,
+				),
 			},
 		})
 	},
@@ -73,14 +79,18 @@ export const RedisService = {
 
 	notifyAboutActorUpdate: (
 		ctx: ContextWithSessionId,
-		{ worldId, actor }: { worldId: string; actor: Actor },
+		{ worldId, actor }: { worldId: string; actor: Omit<Actor, 'descriptionYjs'> },
 	) => {
+		const actorToSend = {
+			...actor,
+			descriptionRich: undefined,
+		}
 		calliope.sendMessage({
 			type: RheaToCalliopeMessageType.ACTOR_UPDATED,
 			messageSourceSessionId: ctx.sessionId,
 			data: {
 				worldId,
-				actor: JSON.stringify(actor),
+				actor: JSON.stringify(actorToSend),
 			},
 		})
 	},
@@ -137,14 +147,18 @@ export const RedisService = {
 
 	notifyAboutWikiArticleUpdate: (
 		ctx: ContextWithSessionId,
-		{ worldId, article }: { worldId: string; article: WikiArticle },
+		{ worldId, article }: { worldId: string; article: Omit<WikiArticle, 'contentYjs'> },
 	) => {
+		const articleToSend = {
+			...article,
+			contentRich: undefined,
+		}
 		calliope.sendMessage({
 			type: RheaToCalliopeMessageType.WIKI_ARTICLE_UPDATED,
 			messageSourceSessionId: ctx.sessionId,
 			data: {
 				worldId,
-				article: JSON.stringify(article),
+				article: JSON.stringify(articleToSend),
 			},
 		})
 	},

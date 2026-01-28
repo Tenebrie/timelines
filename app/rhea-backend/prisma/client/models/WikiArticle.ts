@@ -42,6 +42,7 @@ export type WikiArticleMinAggregateOutputType = {
   icon: string | null
   color: string | null
   contentRich: string | null
+  contentYjs: string | null
   position: number | null
   worldId: string | null
   parentId: string | null
@@ -55,6 +56,7 @@ export type WikiArticleMaxAggregateOutputType = {
   icon: string | null
   color: string | null
   contentRich: string | null
+  contentYjs: string | null
   position: number | null
   worldId: string | null
   parentId: string | null
@@ -68,6 +70,7 @@ export type WikiArticleCountAggregateOutputType = {
   icon: number
   color: number
   contentRich: number
+  contentYjs: number
   position: number
   worldId: number
   parentId: number
@@ -91,6 +94,7 @@ export type WikiArticleMinAggregateInputType = {
   icon?: true
   color?: true
   contentRich?: true
+  contentYjs?: true
   position?: true
   worldId?: true
   parentId?: true
@@ -104,6 +108,7 @@ export type WikiArticleMaxAggregateInputType = {
   icon?: true
   color?: true
   contentRich?: true
+  contentYjs?: true
   position?: true
   worldId?: true
   parentId?: true
@@ -117,6 +122,7 @@ export type WikiArticleCountAggregateInputType = {
   icon?: true
   color?: true
   contentRich?: true
+  contentYjs?: true
   position?: true
   worldId?: true
   parentId?: true
@@ -217,6 +223,7 @@ export type WikiArticleGroupByOutputType = {
   icon: string
   color: string
   contentRich: string
+  contentYjs: string | null
   position: number
   worldId: string
   parentId: string | null
@@ -253,6 +260,7 @@ export type WikiArticleWhereInput = {
   icon?: Prisma.StringFilter<"WikiArticle"> | string
   color?: Prisma.StringFilter<"WikiArticle"> | string
   contentRich?: Prisma.StringFilter<"WikiArticle"> | string
+  contentYjs?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
   position?: Prisma.IntFilter<"WikiArticle"> | number
   worldId?: Prisma.StringFilter<"WikiArticle"> | string
   parentId?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
@@ -271,6 +279,7 @@ export type WikiArticleOrderByWithRelationInput = {
   icon?: Prisma.SortOrder
   color?: Prisma.SortOrder
   contentRich?: Prisma.SortOrder
+  contentYjs?: Prisma.SortOrderInput | Prisma.SortOrder
   position?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -292,6 +301,7 @@ export type WikiArticleWhereUniqueInput = Prisma.AtLeast<{
   icon?: Prisma.StringFilter<"WikiArticle"> | string
   color?: Prisma.StringFilter<"WikiArticle"> | string
   contentRich?: Prisma.StringFilter<"WikiArticle"> | string
+  contentYjs?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
   position?: Prisma.IntFilter<"WikiArticle"> | number
   worldId?: Prisma.StringFilter<"WikiArticle"> | string
   parentId?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
@@ -310,6 +320,7 @@ export type WikiArticleOrderByWithAggregationInput = {
   icon?: Prisma.SortOrder
   color?: Prisma.SortOrder
   contentRich?: Prisma.SortOrder
+  contentYjs?: Prisma.SortOrderInput | Prisma.SortOrder
   position?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   parentId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -331,6 +342,7 @@ export type WikiArticleScalarWhereWithAggregatesInput = {
   icon?: Prisma.StringWithAggregatesFilter<"WikiArticle"> | string
   color?: Prisma.StringWithAggregatesFilter<"WikiArticle"> | string
   contentRich?: Prisma.StringWithAggregatesFilter<"WikiArticle"> | string
+  contentYjs?: Prisma.StringNullableWithAggregatesFilter<"WikiArticle"> | string | null
   position?: Prisma.IntWithAggregatesFilter<"WikiArticle"> | number
   worldId?: Prisma.StringWithAggregatesFilter<"WikiArticle"> | string
   parentId?: Prisma.StringNullableWithAggregatesFilter<"WikiArticle"> | string | null
@@ -344,6 +356,7 @@ export type WikiArticleCreateInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetArticleInput
@@ -360,6 +373,7 @@ export type WikiArticleUncheckedCreateInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   worldId: string
   parentId?: string | null
@@ -376,6 +390,7 @@ export type WikiArticleUpdateInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
@@ -392,6 +407,7 @@ export type WikiArticleUncheckedUpdateInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -408,6 +424,7 @@ export type WikiArticleCreateManyInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   worldId: string
   parentId?: string | null
@@ -421,6 +438,7 @@ export type WikiArticleUpdateManyMutationInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
@@ -432,6 +450,7 @@ export type WikiArticleUncheckedUpdateManyInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -460,6 +479,7 @@ export type WikiArticleCountOrderByAggregateInput = {
   icon?: Prisma.SortOrder
   color?: Prisma.SortOrder
   contentRich?: Prisma.SortOrder
+  contentYjs?: Prisma.SortOrder
   position?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
@@ -477,6 +497,7 @@ export type WikiArticleMaxOrderByAggregateInput = {
   icon?: Prisma.SortOrder
   color?: Prisma.SortOrder
   contentRich?: Prisma.SortOrder
+  contentYjs?: Prisma.SortOrder
   position?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
@@ -490,6 +511,7 @@ export type WikiArticleMinOrderByAggregateInput = {
   icon?: Prisma.SortOrder
   color?: Prisma.SortOrder
   contentRich?: Prisma.SortOrder
+  contentYjs?: Prisma.SortOrder
   position?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   parentId?: Prisma.SortOrder
@@ -639,6 +661,7 @@ export type WikiArticleCreateWithoutMentionsInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetArticleInput
   world: Prisma.WorldCreateNestedOneWithoutArticlesInput
@@ -654,6 +677,7 @@ export type WikiArticleUncheckedCreateWithoutMentionsInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   worldId: string
   parentId?: string | null
@@ -674,6 +698,7 @@ export type WikiArticleCreateWithoutMentionedInInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceArticleInput
   world: Prisma.WorldCreateNestedOneWithoutArticlesInput
@@ -689,6 +714,7 @@ export type WikiArticleUncheckedCreateWithoutMentionedInInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   worldId: string
   parentId?: string | null
@@ -720,6 +746,7 @@ export type WikiArticleUpdateWithoutMentionsInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutArticlesNestedInput
@@ -735,6 +762,7 @@ export type WikiArticleUncheckedUpdateWithoutMentionsInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -761,6 +789,7 @@ export type WikiArticleUpdateWithoutMentionedInInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutArticlesNestedInput
@@ -776,6 +805,7 @@ export type WikiArticleUncheckedUpdateWithoutMentionedInInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -791,6 +821,7 @@ export type WikiArticleCreateWithoutChildrenInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetArticleInput
@@ -806,6 +837,7 @@ export type WikiArticleUncheckedCreateWithoutChildrenInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   worldId: string
   parentId?: string | null
@@ -826,6 +858,7 @@ export type WikiArticleCreateWithoutParentInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetArticleInput
@@ -841,6 +874,7 @@ export type WikiArticleUncheckedCreateWithoutParentInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   worldId: string
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceArticleInput
@@ -877,6 +911,7 @@ export type WikiArticleUpdateWithoutChildrenInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
@@ -892,6 +927,7 @@ export type WikiArticleUncheckedUpdateWithoutChildrenInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -926,6 +962,7 @@ export type WikiArticleScalarWhereInput = {
   icon?: Prisma.StringFilter<"WikiArticle"> | string
   color?: Prisma.StringFilter<"WikiArticle"> | string
   contentRich?: Prisma.StringFilter<"WikiArticle"> | string
+  contentYjs?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
   position?: Prisma.IntFilter<"WikiArticle"> | number
   worldId?: Prisma.StringFilter<"WikiArticle"> | string
   parentId?: Prisma.StringNullableFilter<"WikiArticle"> | string | null
@@ -939,6 +976,7 @@ export type WikiArticleCreateWithoutWorldInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceArticleInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetArticleInput
@@ -954,6 +992,7 @@ export type WikiArticleUncheckedCreateWithoutWorldInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   parentId?: string | null
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceArticleInput
@@ -995,6 +1034,7 @@ export type WikiArticleCreateManyParentInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   worldId: string
 }
@@ -1007,6 +1047,7 @@ export type WikiArticleUpdateWithoutParentInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
@@ -1022,6 +1063,7 @@ export type WikiArticleUncheckedUpdateWithoutParentInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
@@ -1037,6 +1079,7 @@ export type WikiArticleUncheckedUpdateManyWithoutParentInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -1049,6 +1092,7 @@ export type WikiArticleCreateManyWorldInput = {
   icon?: string
   color?: string
   contentRich?: string
+  contentYjs?: string | null
   position?: number
   parentId?: string | null
 }
@@ -1061,6 +1105,7 @@ export type WikiArticleUpdateWithoutWorldInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   mentions?: Prisma.MentionUpdateManyWithoutSourceArticleNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetArticleNestedInput
@@ -1076,6 +1121,7 @@ export type WikiArticleUncheckedUpdateWithoutWorldInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceArticleNestedInput
@@ -1091,6 +1137,7 @@ export type WikiArticleUncheckedUpdateManyWithoutWorldInput = {
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
+  contentYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   position?: Prisma.IntFieldUpdateOperationsInput | number
   parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -1152,6 +1199,7 @@ export type WikiArticleSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   icon?: boolean
   color?: boolean
   contentRich?: boolean
+  contentYjs?: boolean
   position?: boolean
   worldId?: boolean
   parentId?: boolean
@@ -1171,6 +1219,7 @@ export type WikiArticleSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   icon?: boolean
   color?: boolean
   contentRich?: boolean
+  contentYjs?: boolean
   position?: boolean
   worldId?: boolean
   parentId?: boolean
@@ -1186,6 +1235,7 @@ export type WikiArticleSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   icon?: boolean
   color?: boolean
   contentRich?: boolean
+  contentYjs?: boolean
   position?: boolean
   worldId?: boolean
   parentId?: boolean
@@ -1201,12 +1251,13 @@ export type WikiArticleSelectScalar = {
   icon?: boolean
   color?: boolean
   contentRich?: boolean
+  contentYjs?: boolean
   position?: boolean
   worldId?: boolean
   parentId?: boolean
 }
 
-export type WikiArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "icon" | "color" | "contentRich" | "position" | "worldId" | "parentId", ExtArgs["result"]["wikiArticle"]>
+export type WikiArticleOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "icon" | "color" | "contentRich" | "contentYjs" | "position" | "worldId" | "parentId", ExtArgs["result"]["wikiArticle"]>
 export type WikiArticleInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mentions?: boolean | Prisma.WikiArticle$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.WikiArticle$mentionedInArgs<ExtArgs>
@@ -1241,6 +1292,7 @@ export type $WikiArticlePayload<ExtArgs extends runtime.Types.Extensions.Interna
     icon: string
     color: string
     contentRich: string
+    contentYjs: string | null
     position: number
     worldId: string
     parentId: string | null
@@ -1679,6 +1731,7 @@ export interface WikiArticleFieldRefs {
   readonly icon: Prisma.FieldRef<"WikiArticle", 'String'>
   readonly color: Prisma.FieldRef<"WikiArticle", 'String'>
   readonly contentRich: Prisma.FieldRef<"WikiArticle", 'String'>
+  readonly contentYjs: Prisma.FieldRef<"WikiArticle", 'String'>
   readonly position: Prisma.FieldRef<"WikiArticle", 'Int'>
   readonly worldId: Prisma.FieldRef<"WikiArticle", 'String'>
   readonly parentId: Prisma.FieldRef<"WikiArticle", 'String'>

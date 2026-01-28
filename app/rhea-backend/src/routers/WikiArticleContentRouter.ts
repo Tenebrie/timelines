@@ -6,6 +6,8 @@ import { RichTextService } from '@src/services/RichTextService.js'
 import { WikiService } from '@src/services/WikiService.js'
 import {
 	BadRequestError,
+	BooleanValidator,
+	OptionalParam,
 	PathParam,
 	RequiredParam,
 	Router,
@@ -13,6 +15,7 @@ import {
 	useApiEndpoint,
 	useAuth,
 	usePathParams,
+	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
 
@@ -37,6 +40,10 @@ router.get('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 		articleId: PathParam(StringValidator),
 	})
 
+	const { acceptDeltas } = useQueryParams(ctx, {
+		acceptDeltas: OptionalParam(BooleanValidator),
+	})
+
 	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 
 	const article = await WikiService.findArticleById({ id: articleId, worldId })
@@ -45,7 +52,9 @@ router.get('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	}
 
 	return {
-		contentRich: article.contentRich,
+		hasDeltas: article.contentYjs ? true : false,
+		contentHtml: acceptDeltas && article.contentYjs ? undefined : article.contentRich,
+		contentDeltas: acceptDeltas ? article.contentYjs : undefined,
 	}
 })
 
@@ -63,8 +72,9 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
 
-	const { content } = useRequestBody(ctx, {
+	const { content, contentDeltas } = useRequestBody(ctx, {
 		content: RequiredParam(ContentStringValidator),
+		contentDeltas: OptionalParam(ContentStringValidator),
 	})
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
@@ -72,6 +82,7 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	const article = await WikiService.updateWikiArticle({
 		id: articleId,
 		contentRich: parsed.contentRich,
+		contentYjs: contentDeltas ?? null,
 		mentions: parsed.mentions,
 	})
 

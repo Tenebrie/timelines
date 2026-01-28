@@ -4,11 +4,12 @@ model Actor {
   updatedAt DateTime @default(now()) @updatedAt
 
   name            String
-  title           String @default("")
-  icon            String @default("default")
-  color           String @default("#000000")
-  description     String @default("")
-  descriptionRich String @default("")
+  title           String  @default("")
+  icon            String  @default("default")
+  color           String  @default("#000000")
+  description     String  @default("")
+  descriptionRich String  @default("")
+  descriptionYjs  String?
 
   mentions    Mention[] @relation("ActorMentionSource")
   mentionedIn Mention[] @relation("ActorMentionTarget")

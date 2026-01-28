@@ -33,7 +33,7 @@ export const EventDescription = ({ event, autoFocus }: Props) => {
 	return (
 		<RichTextEditorSummoner
 			softKey={event.id}
-			value={`${event.descriptionRich}`}
+			value={event.descriptionRich}
 			onChange={({ plainText, richText }) => {
 				debouncedUpdate.current(event.id, plainText, richText)
 			}}

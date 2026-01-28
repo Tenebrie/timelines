@@ -7,6 +7,8 @@ import { RichTextService } from '@src/services/RichTextService.js'
 import { ValidationService } from '@src/services/ValidationService.js'
 import { WorldEventService } from '@src/services/WorldEventService.js'
 import {
+	BooleanValidator,
+	OptionalParam,
 	PathParam,
 	RequiredParam,
 	Router,
@@ -14,6 +16,7 @@ import {
 	useApiEndpoint,
 	useAuth,
 	usePathParams,
+	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
 
@@ -38,13 +41,19 @@ router.get('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 		eventId: PathParam(StringValidator),
 	})
 
+	const { acceptDeltas } = useQueryParams(ctx, {
+		acceptDeltas: OptionalParam(BooleanValidator),
+	})
+
 	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 	await ValidationService.checkEventValidity(eventId)
 
 	const event = await WorldEventService.fetchWorldEvent(eventId)
 
 	return {
-		contentRich: event.descriptionRich,
+		hasDeltas: event.descriptionYjs ? true : false,
+		contentHtml: acceptDeltas && event.descriptionYjs ? undefined : event.descriptionRich,
+		contentDeltas: acceptDeltas ? event.descriptionYjs : undefined,
 	}
 })
 
@@ -63,8 +72,9 @@ router.put('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
 	await ValidationService.checkEventValidity(eventId)
 
-	const { content } = useRequestBody(ctx, {
+	const { content, contentDeltas } = useRequestBody(ctx, {
 		content: RequiredParam(ContentStringValidator),
+		contentDeltas: OptionalParam(ContentStringValidator),
 	})
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
@@ -83,6 +93,7 @@ router.put('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 			name: entityName,
 			description: parsed.contentPlain,
 			descriptionRich: parsed.contentRich,
+			descriptionYjs: contentDeltas ?? null,
 			mentions: parsed.mentions,
 		},
 	})

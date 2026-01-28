@@ -56,10 +56,10 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	isReadOnly: boolean
 	actors: {
 		mentions: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceId: string
+			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceActorId?: null | string
 			sourceEventId?: null | string
 			sourceArticleId?: null | string
@@ -70,10 +70,10 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		mentionedIn: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceId: string
+			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceActorId?: null | string
 			sourceEventId?: null | string
 			sourceArticleId?: null | string
@@ -93,13 +93,14 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		icon: string
 		color: string
 		descriptionRich: string
+		descriptionYjs?: null | string
 	}[]
 	events: {
 		mentions: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceId: string
+			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceActorId?: null | string
 			sourceEventId?: null | string
 			sourceArticleId?: null | string
@@ -110,10 +111,10 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		mentionedIn: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceId: string
+			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceActorId?: null | string
 			sourceEventId?: null | string
 			sourceArticleId?: null | string
@@ -142,6 +143,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		icon: string
 		color: string
 		descriptionRich: string
+		descriptionYjs?: null | string
 		type: 'SCENE' | 'OTHER'
 		timestamp: string
 		revokedAt?: null | string

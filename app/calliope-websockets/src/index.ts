@@ -1,4 +1,5 @@
 import { setupWSConnection } from '@y/websocket-server/utils'
+import chalk from 'chalk'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
 import route from 'koa-route'
@@ -110,7 +111,7 @@ YjsSyncService.setupGlobalHooks()
 persistenceLeaderService.connect()
 
 const server = app.listen(3001)
-console.info('Server up')
+console.info(`${chalk.greenBright('[Calliope]')} Listening on port ${chalk.blueBright('3001')}`)
 
 // Graceful shutdown
 const shutdown = async () => {

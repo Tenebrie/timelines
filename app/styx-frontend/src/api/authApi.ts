@@ -81,7 +81,6 @@ export type PostLoginApiResponse = /** status 200  */ {
 			id: string
 			createdAt: string
 			updatedAt: string
-			status: 'Pending' | 'Finalized' | 'Failed'
 			ownerId: string
 			size: number
 			expiresAt?: null | string
@@ -89,6 +88,7 @@ export type PostLoginApiResponse = /** status 200  */ {
 			originalFileName: string
 			originalFileExtension: string
 			contentType: 'Image' | 'Avatar'
+			status: 'Pending' | 'Finalized' | 'Failed'
 		}
 	}
 	sessionId: string

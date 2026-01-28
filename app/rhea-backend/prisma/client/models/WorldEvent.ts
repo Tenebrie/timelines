@@ -48,6 +48,7 @@ export type WorldEventMinAggregateOutputType = {
   revokedAt: bigint | null
   description: string | null
   descriptionRich: string | null
+  descriptionYjs: string | null
   customName: boolean | null
   externalLink: string | null
   worldId: string | null
@@ -66,6 +67,7 @@ export type WorldEventMaxAggregateOutputType = {
   revokedAt: bigint | null
   description: string | null
   descriptionRich: string | null
+  descriptionYjs: string | null
   customName: boolean | null
   externalLink: string | null
   worldId: string | null
@@ -84,6 +86,7 @@ export type WorldEventCountAggregateOutputType = {
   revokedAt: number
   description: number
   descriptionRich: number
+  descriptionYjs: number
   customName: number
   externalLink: number
   extraFields: number
@@ -115,6 +118,7 @@ export type WorldEventMinAggregateInputType = {
   revokedAt?: true
   description?: true
   descriptionRich?: true
+  descriptionYjs?: true
   customName?: true
   externalLink?: true
   worldId?: true
@@ -133,6 +137,7 @@ export type WorldEventMaxAggregateInputType = {
   revokedAt?: true
   description?: true
   descriptionRich?: true
+  descriptionYjs?: true
   customName?: true
   externalLink?: true
   worldId?: true
@@ -151,6 +156,7 @@ export type WorldEventCountAggregateInputType = {
   revokedAt?: true
   description?: true
   descriptionRich?: true
+  descriptionYjs?: true
   customName?: true
   externalLink?: true
   extraFields?: true
@@ -257,6 +263,7 @@ export type WorldEventGroupByOutputType = {
   revokedAt: bigint | null
   description: string
   descriptionRich: string
+  descriptionYjs: string | null
   customName: boolean
   externalLink: string
   extraFields: $Enums.WorldEventField[]
@@ -299,6 +306,7 @@ export type WorldEventWhereInput = {
   revokedAt?: Prisma.BigIntNullableFilter<"WorldEvent"> | bigint | number | null
   description?: Prisma.StringFilter<"WorldEvent"> | string
   descriptionRich?: Prisma.StringFilter<"WorldEvent"> | string
+  descriptionYjs?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
   customName?: Prisma.BoolFilter<"WorldEvent"> | boolean
   externalLink?: Prisma.StringFilter<"WorldEvent"> | string
   extraFields?: Prisma.EnumWorldEventFieldNullableListFilter<"WorldEvent">
@@ -323,6 +331,7 @@ export type WorldEventOrderByWithRelationInput = {
   revokedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
+  descriptionYjs?: Prisma.SortOrderInput | Prisma.SortOrder
   customName?: Prisma.SortOrder
   externalLink?: Prisma.SortOrder
   extraFields?: Prisma.SortOrder
@@ -350,6 +359,7 @@ export type WorldEventWhereUniqueInput = Prisma.AtLeast<{
   revokedAt?: Prisma.BigIntNullableFilter<"WorldEvent"> | bigint | number | null
   description?: Prisma.StringFilter<"WorldEvent"> | string
   descriptionRich?: Prisma.StringFilter<"WorldEvent"> | string
+  descriptionYjs?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
   customName?: Prisma.BoolFilter<"WorldEvent"> | boolean
   externalLink?: Prisma.StringFilter<"WorldEvent"> | string
   extraFields?: Prisma.EnumWorldEventFieldNullableListFilter<"WorldEvent">
@@ -374,6 +384,7 @@ export type WorldEventOrderByWithAggregationInput = {
   revokedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
+  descriptionYjs?: Prisma.SortOrderInput | Prisma.SortOrder
   customName?: Prisma.SortOrder
   externalLink?: Prisma.SortOrder
   extraFields?: Prisma.SortOrder
@@ -401,6 +412,7 @@ export type WorldEventScalarWhereWithAggregatesInput = {
   revokedAt?: Prisma.BigIntNullableWithAggregatesFilter<"WorldEvent"> | bigint | number | null
   description?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
   descriptionRich?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
+  descriptionYjs?: Prisma.StringNullableWithAggregatesFilter<"WorldEvent"> | string | null
   customName?: Prisma.BoolWithAggregatesFilter<"WorldEvent"> | boolean
   externalLink?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
   extraFields?: Prisma.EnumWorldEventFieldNullableListFilter<"WorldEvent">
@@ -420,6 +432,7 @@ export type WorldEventCreateInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -442,6 +455,7 @@ export type WorldEventUncheckedCreateInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -464,6 +478,7 @@ export type WorldEventUpdateInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -486,6 +501,7 @@ export type WorldEventUncheckedUpdateInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -508,6 +524,7 @@ export type WorldEventCreateManyInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -527,6 +544,7 @@ export type WorldEventUpdateManyMutationInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -544,6 +562,7 @@ export type WorldEventUncheckedUpdateManyInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -586,6 +605,7 @@ export type WorldEventCountOrderByAggregateInput = {
   revokedAt?: Prisma.SortOrder
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
+  descriptionYjs?: Prisma.SortOrder
   customName?: Prisma.SortOrder
   externalLink?: Prisma.SortOrder
   extraFields?: Prisma.SortOrder
@@ -610,6 +630,7 @@ export type WorldEventMaxOrderByAggregateInput = {
   revokedAt?: Prisma.SortOrder
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
+  descriptionYjs?: Prisma.SortOrder
   customName?: Prisma.SortOrder
   externalLink?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
@@ -628,6 +649,7 @@ export type WorldEventMinOrderByAggregateInput = {
   revokedAt?: Prisma.SortOrder
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
+  descriptionYjs?: Prisma.SortOrder
   customName?: Prisma.SortOrder
   externalLink?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
@@ -807,6 +829,7 @@ export type WorldEventCreateWithoutMentionsInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -828,6 +851,7 @@ export type WorldEventUncheckedCreateWithoutMentionsInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -854,6 +878,7 @@ export type WorldEventCreateWithoutMentionedInInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -875,6 +900,7 @@ export type WorldEventUncheckedCreateWithoutMentionedInInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -912,6 +938,7 @@ export type WorldEventUpdateWithoutMentionsInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -933,6 +960,7 @@ export type WorldEventUncheckedUpdateWithoutMentionsInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -965,6 +993,7 @@ export type WorldEventUpdateWithoutMentionedInInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -986,6 +1015,7 @@ export type WorldEventUncheckedUpdateWithoutMentionedInInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -1007,6 +1037,7 @@ export type WorldEventCreateWithoutWorldInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -1028,6 +1059,7 @@ export type WorldEventUncheckedCreateWithoutWorldInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -1078,6 +1110,7 @@ export type WorldEventScalarWhereInput = {
   revokedAt?: Prisma.BigIntNullableFilter<"WorldEvent"> | bigint | number | null
   description?: Prisma.StringFilter<"WorldEvent"> | string
   descriptionRich?: Prisma.StringFilter<"WorldEvent"> | string
+  descriptionYjs?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
   customName?: Prisma.BoolFilter<"WorldEvent"> | boolean
   externalLink?: Prisma.StringFilter<"WorldEvent"> | string
   extraFields?: Prisma.EnumWorldEventFieldNullableListFilter<"WorldEvent">
@@ -1097,6 +1130,7 @@ export type WorldEventCreateWithoutDeltaStatesInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -1118,6 +1152,7 @@ export type WorldEventUncheckedCreateWithoutDeltaStatesInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -1155,6 +1190,7 @@ export type WorldEventUpdateWithoutDeltaStatesInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -1176,6 +1212,7 @@ export type WorldEventUncheckedUpdateWithoutDeltaStatesInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -1197,6 +1234,7 @@ export type WorldEventCreateWithoutTrackInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -1218,6 +1256,7 @@ export type WorldEventUncheckedCreateWithoutTrackInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -1265,6 +1304,7 @@ export type WorldEventCreateManyWorldInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -1283,6 +1323,7 @@ export type WorldEventUpdateWithoutWorldInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -1304,6 +1345,7 @@ export type WorldEventUncheckedUpdateWithoutWorldInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -1325,6 +1367,7 @@ export type WorldEventUncheckedUpdateManyWithoutWorldInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -1343,6 +1386,7 @@ export type WorldEventCreateManyTrackInput = {
   revokedAt?: bigint | number | null
   description?: string
   descriptionRich?: string
+  descriptionYjs?: string | null
   customName?: boolean
   externalLink?: string
   extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
@@ -1361,6 +1405,7 @@ export type WorldEventUpdateWithoutTrackInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -1382,6 +1427,7 @@ export type WorldEventUncheckedUpdateWithoutTrackInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -1403,6 +1449,7 @@ export type WorldEventUncheckedUpdateManyWithoutTrackInput = {
   revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
   externalLink?: Prisma.StringFieldUpdateOperationsInput | string
   extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
@@ -1470,6 +1517,7 @@ export type WorldEventSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   revokedAt?: boolean
   description?: boolean
   descriptionRich?: boolean
+  descriptionYjs?: boolean
   customName?: boolean
   externalLink?: boolean
   extraFields?: boolean
@@ -1495,6 +1543,7 @@ export type WorldEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   revokedAt?: boolean
   description?: boolean
   descriptionRich?: boolean
+  descriptionYjs?: boolean
   customName?: boolean
   externalLink?: boolean
   extraFields?: boolean
@@ -1516,6 +1565,7 @@ export type WorldEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   revokedAt?: boolean
   description?: boolean
   descriptionRich?: boolean
+  descriptionYjs?: boolean
   customName?: boolean
   externalLink?: boolean
   extraFields?: boolean
@@ -1537,6 +1587,7 @@ export type WorldEventSelectScalar = {
   revokedAt?: boolean
   description?: boolean
   descriptionRich?: boolean
+  descriptionYjs?: boolean
   customName?: boolean
   externalLink?: boolean
   extraFields?: boolean
@@ -1544,7 +1595,7 @@ export type WorldEventSelectScalar = {
   worldEventTrackId?: boolean
 }
 
-export type WorldEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "type" | "icon" | "color" | "name" | "timestamp" | "revokedAt" | "description" | "descriptionRich" | "customName" | "externalLink" | "extraFields" | "worldId" | "worldEventTrackId", ExtArgs["result"]["worldEvent"]>
+export type WorldEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "type" | "icon" | "color" | "name" | "timestamp" | "revokedAt" | "description" | "descriptionRich" | "descriptionYjs" | "customName" | "externalLink" | "extraFields" | "worldId" | "worldEventTrackId", ExtArgs["result"]["worldEvent"]>
 export type WorldEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mentions?: boolean | Prisma.WorldEvent$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.WorldEvent$mentionedInArgs<ExtArgs>
@@ -1583,6 +1634,7 @@ export type $WorldEventPayload<ExtArgs extends runtime.Types.Extensions.Internal
     revokedAt: bigint | null
     description: string
     descriptionRich: string
+    descriptionYjs: string | null
     customName: boolean
     externalLink: string
     extraFields: $Enums.WorldEventField[]
@@ -2027,6 +2079,7 @@ export interface WorldEventFieldRefs {
   readonly revokedAt: Prisma.FieldRef<"WorldEvent", 'BigInt'>
   readonly description: Prisma.FieldRef<"WorldEvent", 'String'>
   readonly descriptionRich: Prisma.FieldRef<"WorldEvent", 'String'>
+  readonly descriptionYjs: Prisma.FieldRef<"WorldEvent", 'String'>
   readonly customName: Prisma.FieldRef<"WorldEvent", 'Boolean'>
   readonly externalLink: Prisma.FieldRef<"WorldEvent", 'String'>
   readonly extraFields: Prisma.FieldRef<"WorldEvent", 'WorldEventField[]'>

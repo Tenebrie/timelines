@@ -13,6 +13,9 @@ export const fetchWorldEventDetailsOrThrow = async (eventId: string, prisma?: Pr
 			mentionedIn: true,
 			deltaStates: true,
 		},
+		omit: {
+			descriptionYjs: true,
+		},
 	})
 	if (!event) {
 		throw new BadRequestError(`Unable to find event.`)

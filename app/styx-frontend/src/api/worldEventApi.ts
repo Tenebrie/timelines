@@ -7,7 +7,12 @@ const injectedRtkApi = api
 	.injectEndpoints({
 		endpoints: (build) => ({
 			getWorldEventContent: build.query<GetWorldEventContentApiResponse, GetWorldEventContentApiArg>({
-				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/content` }),
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/content`,
+					params: {
+						acceptDeltas: queryArg.acceptDeltas,
+					},
+				}),
 				providesTags: ['worldEvent'],
 			}),
 			putWorldEventContent: build.mutation<PutWorldEventContentApiResponse, PutWorldEventContentApiArg>({
@@ -61,13 +66,17 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as worldEventApi }
 export type GetWorldEventContentApiResponse = /** status 200  */ {
-	contentRich: string
+	hasDeltas: boolean
+	contentHtml?: string
+	contentDeltas?: null | string
 }
 export type GetWorldEventContentApiArg = {
 	/** Any string value */
 	worldId: string
 	/** Any string value */
 	eventId: string
+	/** Any boolean value */
+	acceptDeltas?: boolean
 }
 export type PutWorldEventContentApiResponse = unknown
 export type PutWorldEventContentApiArg = {
@@ -77,6 +86,7 @@ export type PutWorldEventContentApiArg = {
 	eventId: string
 	body: {
 		content: string
+		contentDeltas?: string
 	}
 }
 export type CreateWorldEventApiResponse = /** status 200  */ {
@@ -114,22 +124,23 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name?: null | string
-		timestamp: string
 		descriptionRich?: null | string
+		timestamp: string
 		worldEventId: string
 	}[]
 	description: string
 	id: string
-	worldId: string
 	createdAt: string
 	updatedAt: string
-	type: 'SCENE' | 'OTHER'
+	name: string
+	worldId: string
 	icon: string
 	color: string
-	name: string
+	descriptionRich: string
+	descriptionYjs?: null | string
+	type: 'SCENE' | 'OTHER'
 	timestamp: string
 	revokedAt?: null | string
-	descriptionRich: string
 	customName: boolean
 	externalLink: string
 	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
@@ -186,22 +197,23 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name?: null | string
-		timestamp: string
 		descriptionRich?: null | string
+		timestamp: string
 		worldEventId: string
 	}[]
 	description: string
 	id: string
-	worldId: string
 	createdAt: string
 	updatedAt: string
-	type: 'SCENE' | 'OTHER'
+	name: string
+	worldId: string
 	icon: string
 	color: string
-	name: string
+	descriptionRich: string
+	descriptionYjs?: null | string
+	type: 'SCENE' | 'OTHER'
 	timestamp: string
 	revokedAt?: null | string
-	descriptionRich: string
 	customName: boolean
 	externalLink: string
 	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
@@ -236,16 +248,17 @@ export type DeleteWorldEventApiArg = {
 export type RevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
 	id: string
-	worldId: string
 	createdAt: string
 	updatedAt: string
-	type: 'SCENE' | 'OTHER'
+	name: string
+	worldId: string
 	icon: string
 	color: string
-	name: string
+	descriptionRich: string
+	descriptionYjs?: null | string
+	type: 'SCENE' | 'OTHER'
 	timestamp: string
 	revokedAt?: null | string
-	descriptionRich: string
 	customName: boolean
 	externalLink: string
 	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
@@ -263,16 +276,17 @@ export type RevokeWorldEventApiArg = {
 export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
 	id: string
-	worldId: string
 	createdAt: string
 	updatedAt: string
-	type: 'SCENE' | 'OTHER'
+	name: string
+	worldId: string
 	icon: string
 	color: string
-	name: string
+	descriptionRich: string
+	descriptionYjs?: null | string
+	type: 'SCENE' | 'OTHER'
 	timestamp: string
 	revokedAt?: null | string
-	descriptionRich: string
 	customName: boolean
 	externalLink: string
 	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]

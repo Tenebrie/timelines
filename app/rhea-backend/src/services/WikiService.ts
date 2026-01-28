@@ -25,6 +25,9 @@ export const WikiService = {
 			include: {
 				children: true,
 			},
+			omit: {
+				contentYjs: true,
+			},
 			orderBy: {
 				position: 'asc',
 			},
@@ -48,10 +51,12 @@ export const WikiService = {
 					worldId: params.worldId,
 					name: params.name,
 					position: params.position * 2,
-					contentRich: '<p></p>',
 				},
 				include: {
 					children: true,
+				},
+				omit: {
+					contentYjs: true,
 				},
 			})
 
@@ -63,7 +68,7 @@ export const WikiService = {
 	},
 
 	updateWikiArticle: async (
-		params: Partial<Pick<WikiArticle, 'name' | 'contentRich'>> & {
+		params: Partial<Pick<WikiArticle, 'name' | 'contentRich' | 'contentYjs'>> & {
 			id: string
 			mentions?: MentionData[]
 		},
@@ -83,6 +88,7 @@ export const WikiService = {
 				data: {
 					name: params.name,
 					contentRich: params.contentRich,
+					contentYjs: params.contentYjs,
 					mentions: mentionedEntities
 						? {
 								set: mentionedEntities.map((mention) => ({
@@ -96,6 +102,9 @@ export const WikiService = {
 				},
 				include: {
 					children: true,
+				},
+				omit: {
+					contentYjs: true,
 				},
 			})
 

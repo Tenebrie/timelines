@@ -6,6 +6,8 @@ import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
 import {
 	BadRequestError,
+	BooleanValidator,
+	OptionalParam,
 	PathParam,
 	RequiredParam,
 	Router,
@@ -13,6 +15,7 @@ import {
 	useApiEndpoint,
 	useAuth,
 	usePathParams,
+	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
 
@@ -37,6 +40,10 @@ router.get('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 		actorId: PathParam(StringValidator),
 	})
 
+	const { acceptDeltas } = useQueryParams(ctx, {
+		acceptDeltas: OptionalParam(BooleanValidator),
+	})
+
 	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 
 	const actor = await ActorService.findActor({ worldId, actorId })
@@ -44,7 +51,9 @@ router.get('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 		throw new BadRequestError('Actor not found')
 	}
 	return {
-		contentRich: actor.descriptionRich,
+		hasDeltas: actor.descriptionYjs ? true : false,
+		contentHtml: acceptDeltas && actor.descriptionYjs ? undefined : actor.descriptionRich,
+		contentDeltas: acceptDeltas ? actor.descriptionYjs : undefined,
 	}
 })
 
@@ -62,8 +71,9 @@ router.put('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
 
-	const { content } = useRequestBody(ctx, {
+	const { content, contentDeltas } = useRequestBody(ctx, {
 		content: RequiredParam(ContentStringValidator),
+		contentDeltas: OptionalParam(ContentStringValidator),
 	})
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
@@ -74,6 +84,7 @@ router.put('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 		params: {
 			description: parsed.contentPlain,
 			descriptionRich: parsed.contentRich,
+			descriptionYjs: contentDeltas ?? null,
 			mentions: parsed.mentions,
 		},
 	})

@@ -1,3 +1,4 @@
+import { Logger } from '@src/utils/logger.js'
 import { randomUUID } from 'crypto'
 import { createClient, RedisClientType } from 'redis'
 
@@ -14,7 +15,7 @@ export class PersistenceLeaderService {
 		// Generate a stable, unique instance ID for this Calliope instance
 		// Prefer HOSTNAME (set by Docker/K8s), otherwise generate a UUID
 		this.instanceId = process.env.HOSTNAME || `calliope-${randomUUID()}`
-		console.info(`[PersistenceLeader] Instance ID: ${this.instanceId}`)
+		console.info(`Generated instance ID: ${this.instanceId}`)
 
 		this.redisClient = createClient({
 			socket: {
@@ -82,7 +83,7 @@ export class PersistenceLeaderService {
 		const success = result === 1
 
 		if (success) {
-			console.debug(`[PersistenceLeader] Acquired/renewed leadership for: ${docName}`)
+			Logger.yjsInfo(docName, `Acquired/renewed leadership`)
 		}
 
 		return success
@@ -127,9 +128,9 @@ export class PersistenceLeaderService {
 		})
 
 		if (result === 1) {
-			console.debug(`[PersistenceLeader] Released leadership for: ${docName}`)
+			Logger.yjsInfo(docName, `Released leadership`)
 		} else {
-			console.debug(`[PersistenceLeader] Not the leader for: ${docName}`)
+			Logger.yjsInfo(docName, `Not the leader, skipping`)
 		}
 	}
 

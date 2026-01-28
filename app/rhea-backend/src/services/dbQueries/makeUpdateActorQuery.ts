@@ -26,7 +26,7 @@ export const makeUpdateActorQuery = async ({
 		prisma,
 	)
 
-	const event = await getPrismaClient(prisma).actor.update({
+	const actor = await getPrismaClient(prisma).actor.update({
 		where: {
 			id: actorId,
 		},
@@ -47,9 +47,12 @@ export const makeUpdateActorQuery = async ({
 			mentions: true,
 			mentionedIn: true,
 		},
+		omit: {
+			descriptionYjs: true,
+		},
 	})
 
 	await MentionsService.clearOrphanedMentions(prisma)
 
-	return event
+	return actor
 }

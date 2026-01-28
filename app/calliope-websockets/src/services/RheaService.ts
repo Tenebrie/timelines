@@ -3,6 +3,7 @@ import createClient from 'openapi-fetch'
 
 import type { paths } from '../api/rhea-api.js'
 import { TokenService } from './TokenService.js'
+import { DocumentMetadata } from './YjsSyncService.js'
 
 const rheaClient = createClient<paths>({
 	baseUrl: 'http://rhea:3000',
@@ -39,22 +40,13 @@ export const RheaService = {
 		}
 	},
 
-	fetchDocumentState: async ({
-		userId,
-		worldId,
-		entityId,
-		entityType,
-	}: {
-		userId: string
-		worldId: string
-		entityId: string
-		entityType: 'actor' | 'event' | 'article'
-	}) => {
+	fetchDocumentState: async ({ userId, worldId, entityId, entityType }: DocumentMetadata) => {
 		const response = await (() => {
 			if (entityType === 'actor') {
 				return rheaClient['GET']('/api/world/{worldId}/actor/{actorId}/content', {
 					params: {
 						path: { worldId, actorId: entityId },
+						query: { acceptDeltas: true },
 					},
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -65,6 +57,7 @@ export const RheaService = {
 				return rheaClient['GET']('/api/world/{worldId}/event/{eventId}/content', {
 					params: {
 						path: { worldId, eventId: entityId },
+						query: { acceptDeltas: true },
 					},
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -75,6 +68,7 @@ export const RheaService = {
 				return rheaClient['GET']('/api/world/{worldId}/article/{articleId}/content', {
 					params: {
 						path: { worldId, articleId: entityId },
+						query: { acceptDeltas: true },
 					},
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -90,7 +84,7 @@ export const RheaService = {
 			throw new Error('Failed to fetch document state from Rhea: ')
 		}
 
-		return response.data.contentRich
+		return response.data
 	},
 
 	flushDocumentState: async ({
@@ -99,18 +93,20 @@ export const RheaService = {
 		entityId,
 		entityType,
 		contentRich,
+		contentDeltas,
 	}: {
 		userId: string
 		worldId: string
 		entityId: string
 		entityType: 'actor' | 'event' | 'article'
 		contentRich: string
+		contentDeltas: string
 	}) => {
 		const response = await (() => {
 			if (entityType === 'actor') {
 				return rheaClient['PUT']('/api/world/{worldId}/actor/{actorId}/content', {
 					params: { path: { worldId, actorId: entityId } },
-					body: { content: contentRich },
+					body: { content: contentRich, contentDeltas },
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
 						[IMPERSONATED_USER_HEADER]: userId,
@@ -119,7 +115,7 @@ export const RheaService = {
 			} else if (entityType === 'event') {
 				return rheaClient['PUT']('/api/world/{worldId}/event/{eventId}/content', {
 					params: { path: { worldId, eventId: entityId } },
-					body: { content: contentRich },
+					body: { content: contentRich, contentDeltas },
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
 						[IMPERSONATED_USER_HEADER]: userId,
@@ -128,7 +124,7 @@ export const RheaService = {
 			} else if (entityType === 'article') {
 				return rheaClient['PUT']('/api/world/{worldId}/article/{articleId}/content', {
 					params: { path: { worldId, articleId: entityId } },
-					body: { content: contentRich },
+					body: { content: contentRich, contentDeltas },
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
 						[IMPERSONATED_USER_HEADER]: userId,

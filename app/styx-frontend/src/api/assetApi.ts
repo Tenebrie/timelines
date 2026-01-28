@@ -47,7 +47,6 @@ export type ListUserAssetsApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		status: 'Pending' | 'Finalized' | 'Failed'
 		ownerId: string
 		size: number
 		expiresAt?: null | string
@@ -55,6 +54,7 @@ export type ListUserAssetsApiResponse = /** status 200  */ {
 		originalFileName: string
 		originalFileExtension: string
 		contentType: 'Image' | 'Avatar'
+		status: 'Pending' | 'Finalized' | 'Failed'
 	}[]
 }
 export type ListUserAssetsApiArg = void
@@ -63,7 +63,6 @@ export type RequestPresignedUrlApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		status: 'Pending' | 'Finalized' | 'Failed'
 		ownerId: string
 		size: number
 		expiresAt?: null | string
@@ -71,6 +70,7 @@ export type RequestPresignedUrlApiResponse = /** status 200  */ {
 		originalFileName: string
 		originalFileExtension: string
 		contentType: 'Image' | 'Avatar'
+		status: 'Pending' | 'Finalized' | 'Failed'
 	}
 	url: string
 	fields: {
@@ -88,7 +88,6 @@ export type FinalizeAssetUploadApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	status: 'Pending' | 'Finalized' | 'Failed'
 	ownerId: string
 	size: number
 	expiresAt?: null | string
@@ -96,6 +95,7 @@ export type FinalizeAssetUploadApiResponse = /** status 200  */ {
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'Image' | 'Avatar'
+	status: 'Pending' | 'Finalized' | 'Failed'
 }
 export type FinalizeAssetUploadApiArg = {
 	body: {

@@ -38,8 +38,7 @@ router.get('/api/world/:worldId/wiki/articles', async (ctx) => {
 
 	await AuthorizationService.checkUserReadAccessById(user, worldId)
 
-	const articles = await WikiService.listWikiArticles({ worldId })
-	return articles
+	return await WikiService.listWikiArticles({ worldId })
 })
 
 router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
