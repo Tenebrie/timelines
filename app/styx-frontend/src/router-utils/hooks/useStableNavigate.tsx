@@ -6,6 +6,7 @@ import {
 	RegisteredRouter,
 	UseNavigateResult,
 } from '@tanstack/router-core'
+import { useCallback } from 'react'
 
 /**
  * Tanstack useNavigate wrapper to fix regression reported since v1.121.34
@@ -26,18 +27,22 @@ export function useStableNavigate<
 >(_defaultOpts?: { from?: FromPathOption<TRouter, TDefaultFrom> }): UseNavigateResult<TDefaultFrom> {
 	const navigate = useBaseNavigate()
 
-	return <
-		TRouter extends AnyRouter = RegisteredRouter,
-		const TFrom extends string = TDefaultFrom,
-		const TTo extends string | undefined = undefined,
-		const TMaskFrom extends string = TFrom,
-		const TMaskTo extends string = '',
-	>(
-		args: NavigateOptions<TRouter, TFrom, TTo, TMaskFrom, TMaskTo>,
-	) => {
-		return navigate({
-			...args,
-			to: args.to ?? '.',
-		} as typeof args)
-	}
+	const func = useCallback(
+		<
+			TRouter extends AnyRouter = RegisteredRouter,
+			const TFrom extends string = TDefaultFrom,
+			const TTo extends string | undefined = undefined,
+			const TMaskFrom extends string = TFrom,
+			const TMaskTo extends string = '',
+		>(
+			args: NavigateOptions<TRouter, TFrom, TTo, TMaskFrom, TMaskTo>,
+		) => {
+			return navigate({
+				...args,
+				to: args.to ?? '.',
+			} as typeof args)
+		},
+		[navigate],
+	)
+	return func
 }

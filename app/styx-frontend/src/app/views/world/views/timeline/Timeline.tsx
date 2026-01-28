@@ -15,7 +15,6 @@ import { TimelineNavigationReporter } from './components/TimelineNavigationRepor
 import { TimelinePrePositioner } from './components/TimelinePrePositioner'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
 import { TimelineSelectionBox } from './components/TimelineSelectionBox'
-import { TimelineZoomReporter } from './components/TimelineZoomReporter'
 import { TimeMarker } from './components/TimeMarker/TimeMarker'
 import { useTimelineDimensions } from './hooks/useTimelineDimensions'
 import { TimelineContainer, TimelineWrapper } from './styles'
@@ -74,7 +73,6 @@ function TimelineComponent() {
 				{opacity > 0 && <TimelineAnchor containerWidth={containerWidth} />}
 			</Box>
 
-			<TimelineZoomReporter />
 			<TimelineEventListener containerWidth={containerWidth} />
 			<TimelinePrePositioner setOpacity={setOpacity} />
 			<TimelineNavigationReporter ref={containerRef} containerWidth={containerWidth} />

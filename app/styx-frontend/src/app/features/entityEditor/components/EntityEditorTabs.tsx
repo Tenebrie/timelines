@@ -49,8 +49,28 @@ export function EntityEditorTabs({ contentTab, illustrationTab }: Props) {
 				onChange={(_, newValue) => handleChange(newValue)}
 				sx={{ marginTop: 0 }}
 			>
-				<Tab value={0} icon={<DescriptionIcon />} sx={{ width: '100%', borderRadius: 0.75 }} />
-				<Tab value={1} icon={<PaletteIcon />} sx={{ width: '100%', borderRadius: 0.75 }} />
+				<Tab
+					value={0}
+					icon={<DescriptionIcon />}
+					sx={{
+						width: '100%',
+						borderRadius: 0.75,
+						'&:hover': {
+							backgroundColor: 'action.hover',
+						},
+					}}
+				/>
+				<Tab
+					value={1}
+					icon={<PaletteIcon />}
+					sx={{
+						width: '100%',
+						borderRadius: 0.75,
+						'&:hover': {
+							backgroundColor: 'action.hover',
+						},
+					}}
+				/>
 			</Tabs>
 		</Stack>
 	)

@@ -1,4 +1,5 @@
 import { UpdateActorApiArg, useUpdateActorMutation } from '@api/actorListApi'
+import { ActorDetails } from '@api/types/worldTypes'
 import { worldDetailsApi } from '@api/worldDetailsApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,7 +18,7 @@ export const useUpdateActor = () => {
 	const dispatch = useDispatch()
 
 	const perform = useCallback(
-		async (id: string, body: UpdateActorApiArg['body']) => {
+		async (id: string, body: UpdateActorApiArg['body'], onBeforeSave?: (actor: ActorDetails) => void) => {
 			const { response, error } = parseApiResponse(
 				await updateWorldActor({
 					worldId,
@@ -29,16 +30,18 @@ export const useUpdateActor = () => {
 				return
 			}
 
+			const actor = ingestActor(response)
+			onBeforeSave?.(actor)
+
 			// Invalidate common icons query cache if icon has changed
 			const oldIcon = actors.find((e) => e.id === id)?.icon
 			if (body.icon !== undefined && body.icon !== oldIcon) {
 				dispatch(worldDetailsApi.util.invalidateTags([{ type: 'worldCommonIcons' }]))
 			}
 
-			const event = ingestActor(response)
-			dispatch(updateActor(event))
+			dispatch(updateActor(actor))
 
-			return event
+			return actor
 		},
 		[dispatch, updateActor, updateWorldActor, worldId, actors],
 	)

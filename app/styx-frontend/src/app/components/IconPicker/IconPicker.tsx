@@ -1,10 +1,12 @@
 import { useGetCommonWorldEventIconsQuery } from '@api/worldDetailsApi'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
-import { memo, useState } from 'react'
+import debounce from 'lodash.debounce'
+import { memo, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
+import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 import { IconCollection } from './components/IconCollection'
@@ -24,6 +26,22 @@ export function IconPickerComponent({ onSelect, ...props }: Props) {
 	const worldId = useSelector(getWorldIdState)
 	const [query, setQuery] = useState('')
 	const [recent, updateRecentIconSets] = useRecentIconSets()
+
+	const [renderedColor, setRenderedColor] = useState<string>(props.color)
+	// whenever color changes, debounce changes to rendered color
+	const throttledUpdateRenderedColor = useMemo(() => {
+		return debounce((color: string) => {
+			setRenderedColor(color)
+		}, 100)
+	}, [])
+
+	useEffect(() => {
+		throttledUpdateRenderedColor(props.color)
+	}, [props.color, throttledUpdateRenderedColor])
+
+	useEffectOnce(() => {
+		return () => throttledUpdateRenderedColor.cancel()
+	})
 
 	const { results } = useIconifySearch({ query })
 	const { data: commonEventIcons } = useGetCommonWorldEventIconsQuery({ worldId })
@@ -59,7 +77,12 @@ export function IconPickerComponent({ onSelect, ...props }: Props) {
 					<Stack gap={1} direction="row" flexWrap="wrap">
 						{shownFavoriteSets?.map((collection) => (
 							<Stack key={collection.id} spacing={1} width="calc(50% - 8px)">
-								<IconCollection collection={collection} {...props} onSelect={onIconSelected} />
+								<IconCollection
+									collection={collection}
+									{...props}
+									color={renderedColor}
+									onSelect={onIconSelected}
+								/>
 							</Stack>
 						))}
 					</Stack>
@@ -69,7 +92,12 @@ export function IconPickerComponent({ onSelect, ...props }: Props) {
 			<Stack gap={1} direction="row" flexWrap="wrap">
 				{shownOtherSets?.map((collection) => (
 					<Stack key={collection.id} spacing={1} width="calc(50% - 8px)">
-						<IconCollection collection={collection} {...props} onSelect={onIconSelected} />
+						<IconCollection
+							collection={collection}
+							{...props}
+							color={renderedColor}
+							onSelect={onIconSelected}
+						/>
 					</Stack>
 				))}
 			</Stack>

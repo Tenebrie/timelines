@@ -20,12 +20,15 @@ export const useUpsertActor = (props: Props) => {
 	const draftRef = useAutoRef(baseDraft)
 
 	const { flushSave, autosave } = useAutosave({
-		onSave: async ({ draft }: Props) => {
+		onSave: async () => {
+			const draft = draftRef.current
 			if (!draft.isDirty || !draft.name) {
 				return
 			}
 			draft.setDirty(false)
-			await updateActor(draft.id, draft.toPayload())
+			await updateActor(draft.id, draft.toPayload(), (actor) => {
+				draft.resetUpdatedAt(actor.updatedAt)
+			})
 		},
 		isSaving: isUpdating,
 	})
@@ -34,9 +37,9 @@ export const useUpsertActor = (props: Props) => {
 		if (baseDraft.id !== draftRef.previous?.id) {
 			flushSave()
 		} else if (baseDraft.isDirty) {
-			autosave(props)
+			autosave()
 		}
-	}, [autosave, baseDraft, baseMode, draftRef, flushSave, props])
+	}, [autosave, baseDraft, baseMode, draftRef, flushSave])
 
 	useEffect(() => {
 		flushSave()
