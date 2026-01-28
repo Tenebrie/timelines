@@ -102,9 +102,6 @@ export const MentionNode = Node.create({
 				const articleId = node.attrs.componentProps.article as string | undefined
 				const state = store.getState()
 				const worldId = state.world.id
-				const actors = state.world.actors
-				const events = state.world.events
-				const articles = state.wiki.articles
 
 				const Component = () => {
 					useEffectOnce(() => {
@@ -114,11 +111,9 @@ export const MentionNode = Node.create({
 					return (
 						<ReduxProvider store={store}>
 							<CustomThemeProvider colorMode={state.preferences.colorMode}>
-								{actorId ? <ActorMentionChip worldId={worldId} actorId={actorId} actors={actors} /> : null}
-								{eventId ? <EventMentionChip worldId={worldId} eventId={eventId} events={events} /> : null}
-								{articleId ? (
-									<ArticleMentionChip worldId={worldId} articleId={articleId} articles={articles} />
-								) : null}
+								{actorId ? <ActorMentionChip worldId={worldId} actorId={actorId} /> : null}
+								{eventId ? <EventMentionChip worldId={worldId} eventId={eventId} /> : null}
+								{articleId ? <ArticleMentionChip worldId={worldId} articleId={articleId} /> : null}
 							</CustomThemeProvider>
 						</ReduxProvider>
 					)

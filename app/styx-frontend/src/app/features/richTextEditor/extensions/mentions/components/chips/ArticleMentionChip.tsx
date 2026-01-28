@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux'
+
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 
@@ -6,11 +8,11 @@ import { BaseMentionChip } from './BaseMentionChip'
 type Props = {
 	worldId: string
 	articleId: string
-	articles: ReturnType<typeof getWikiState>['articles']
 }
 
-export const ArticleMentionChip = ({ worldId, articleId, articles }: Props) => {
+export const ArticleMentionChip = ({ worldId, articleId }: Props) => {
 	const navigateTo = useEventBusDispatch['world/requestNavigation']()
+	const { articles } = useSelector(getWikiState, (a, b) => a.articles === b.articles)
 
 	const article = articles.find((article) => article.id === articleId)
 	const articleName = article ? `${article.name}` : 'Unknown Article'

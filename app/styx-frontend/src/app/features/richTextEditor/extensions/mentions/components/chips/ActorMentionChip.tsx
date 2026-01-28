@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux'
+
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
@@ -6,11 +8,11 @@ import { BaseMentionChip } from './BaseMentionChip'
 type Props = {
 	worldId: string
 	actorId: string
-	actors: ReturnType<typeof getWorldState>['actors']
 }
 
-export const ActorMentionChip = ({ actorId, actors }: Props) => {
+export const ActorMentionChip = ({ actorId }: Props) => {
 	const navigateTo = useEventBusDispatch['world/requestNavigation']()
+	const { actors } = useSelector(getWorldState, (a, b) => a.actors === b.actors)
 
 	const actor = actors.find((actor) => actor.id === actorId)
 	const actorName = actor ? `${actor.name}` : 'Unknown Actor'

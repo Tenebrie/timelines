@@ -30,8 +30,6 @@ export const EventDescription = ({ event, autoFocus }: Props) => {
 		}, 500),
 	)
 
-	console.log(event.descriptionRich)
-
 	return (
 		<RichTextEditorSummoner
 			softKey={event.id}
