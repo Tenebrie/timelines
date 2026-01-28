@@ -2,8 +2,10 @@ import OutlinedInput from '@mui/material/OutlinedInput'
 import Slider from '@mui/material/Slider'
 import Stack from '@mui/material/Stack'
 import throttle from 'lodash.throttle'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import styled from 'styled-components'
+
+import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 type Props = {
 	color: string
@@ -48,7 +50,7 @@ export function ColorPickerSliders({
 		}, 50)
 	}, [onLightnessChange])
 
-	useEffect(() => {
+	useEffectOnce(() => {
 		return () => {
 			throttledOnHueChange.cancel()
 			throttledOnSaturationChange.cancel()

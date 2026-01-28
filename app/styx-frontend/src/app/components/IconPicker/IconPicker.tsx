@@ -28,7 +28,7 @@ export function IconPickerComponent({ onSelect, ...props }: Props) {
 	const [recent, updateRecentIconSets] = useRecentIconSets()
 
 	const [renderedColor, setRenderedColor] = useState<string>(props.color)
-	// whenever color changes, throttle changes to rendered color
+	// whenever color changes, debounce changes to rendered color
 	const throttledUpdateRenderedColor = useMemo(() => {
 		return debounce((color: string) => {
 			setRenderedColor(color)
