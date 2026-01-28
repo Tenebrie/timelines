@@ -4,8 +4,70 @@ import { createNewUser, deleteAccount } from 'fixtures/auth'
 import { makeUrl } from './utils'
 
 test.describe('World management', () => {
+	let userData: Awaited<ReturnType<typeof createNewUser>>
 	test.beforeEach(async ({ page }) => {
-		await createNewUser(page)
+		userData = await createNewUser(page)
+	})
+
+	test('connects to live updates', async ({ page }) => {
+		await page.goto(makeUrl('/'))
+
+		await page.waitForEvent('websocket', (socket) => {
+			const url = new URL(socket.url())
+			return url.pathname.startsWith('/live')
+		})
+	})
+
+	test('disconnects from live updates after logout and connects when logs back', async ({ page }) => {
+		await page.goto(makeUrl('/'))
+
+		await page.waitForEvent('websocket', (socket) => {
+			const url = new URL(socket.url())
+			return url.pathname.startsWith('/live')
+		})
+
+		let socketReconnected = false
+		page.on('websocket', (socket) => {
+			if (!socketReconnected) {
+				const url = new URL(socket.url())
+				socketReconnected = url.pathname.startsWith('/live')
+			}
+		})
+
+		await page.getByText(userData.username).click()
+		await page.getByText('Logout').click()
+
+		await new Promise((resolve) => setTimeout(resolve, 2000))
+		expect(socketReconnected).toBeFalsy()
+
+		await page.getByLabel('Email').fill(userData.email)
+		await page.getByLabel('Password').fill(userData.password)
+
+		await page.getByText('Sign In', { exact: true }).click()
+
+		await page.waitForEvent('websocket', (socket) => {
+			const url = new URL(socket.url())
+			return url.pathname.startsWith('/live')
+		})
+	})
+
+	test('reconnects to live updates back if socket was closed', async ({ page }) => {
+		await page.routeWebSocket(/\/live/, (socket) => {
+			socket.connectToServer()
+			socket.close()
+		})
+
+		await page.goto(makeUrl('/'))
+
+		await page.waitForEvent('websocket', (socket) => {
+			const url = new URL(socket.url())
+			return url.pathname.startsWith('/live')
+		})
+
+		await page.waitForEvent('websocket', (socket) => {
+			const url = new URL(socket.url())
+			return url.pathname.startsWith('/live')
+		})
 	})
 
 	test('create world -> delete world flow', async ({ page }) => {

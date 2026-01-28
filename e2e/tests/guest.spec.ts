@@ -9,4 +9,20 @@ test.describe('Guest user', () => {
 		await expect(page).toHaveTitle(/Timelines/)
 		await expect(page.getByText('Sign in to Timelines')).toBeVisible()
 	})
+
+	test('does not initiate live connection', async ({ page }) => {
+		let socketRequestFound = false
+
+		page.on('websocket', (socket) => {
+			if (!socketRequestFound) {
+				const url = new URL(socket.url())
+				socketRequestFound = url.pathname.startsWith('/live')
+			}
+		})
+
+		await page.goto(makeUrl('/'))
+
+		await new Promise((resolve) => setTimeout(resolve, 2000))
+		expect(socketRequestFound).toBeFalsy()
+	})
 })

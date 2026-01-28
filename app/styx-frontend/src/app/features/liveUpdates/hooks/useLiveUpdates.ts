@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { isRunningInTest } from '@/test-utils/isRunningInTest'
 import { CalliopeToClientMessage } from '@/ts-shared/CalliopeToClientMessage'
 import { ClientToCalliopeMessage, ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage'
@@ -13,7 +14,7 @@ import { useLiveMessageHandlers } from './useLiveMessageHandlers'
 const expBackoffDelays = [50, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
 
 export const useLiveUpdates = () => {
-	const { sessionId } = useSelector(getAuthState)
+	const { sessionId, user } = useSelector(getAuthState)
 
 	const currentWebsocket = useRef<WebSocket | null>(null)
 	const heartbeatInterval = useRef<number | null>(null)
@@ -38,6 +39,8 @@ export const useLiveUpdates = () => {
 		}
 	}, [])
 
+	const userRef = useAutoRef(user)
+
 	const { initiateConnection } = useMemo(() => {
 		const reconnect = () => {
 			backoffLevel.current += 1
@@ -58,6 +61,10 @@ export const useLiveUpdates = () => {
 				(currentWebsocket.current.readyState === currentWebsocket.current.CONNECTING ||
 					currentWebsocket.current.readyState === currentWebsocket.current.OPEN)
 			) {
+				return
+			}
+
+			if (!userRef.current) {
 				return
 			}
 
@@ -105,9 +112,11 @@ export const useLiveUpdates = () => {
 				} else {
 					console.error('[ws] Connection lost. Reconnecting...')
 				}
-				dispatch(showCalliopeConnectionAlert())
 				clearHeartbeat()
-				reconnect()
+				if (userRef.current) {
+					dispatch(showCalliopeConnectionAlert())
+					reconnect()
+				}
 			}
 
 			socket.onerror = function (error) {
@@ -126,12 +135,19 @@ export const useLiveUpdates = () => {
 		notifyAboutReconnect,
 		sessionId,
 		showCalliopeConnectionAlert,
+		userRef,
 	])
 
 	useEffect(() => {
-		if (!sessionId) {
+		if (!sessionId || !user) {
 			return
 		}
 		initiateConnection()
-	}, [initiateConnection, sessionId])
+	}, [initiateConnection, sessionId, user])
+
+	useEffect(() => {
+		if (currentWebsocket.current && !user) {
+			currentWebsocket.current.close()
+		}
+	}, [user])
 }
