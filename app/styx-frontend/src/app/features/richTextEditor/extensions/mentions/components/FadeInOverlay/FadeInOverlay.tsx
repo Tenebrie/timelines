@@ -14,6 +14,7 @@ type Props = {
 }
 
 export const FadeInOverlay = ({ content, isReadMode, color, isLoading }: Props) => {
+	content = content ?? ''
 	const ref = useRef<HTMLDivElement | null>(null)
 	const inProgress = useRef(false)
 	const capHitRef = useRef(false)
