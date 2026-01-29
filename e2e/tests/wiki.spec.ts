@@ -162,27 +162,32 @@ test.describe('Wiki', () => {
 					.getByTestId('ArticleListItem/Nested article/2'),
 			).toBeVisible()
 
-			// Check icons
-			await expect(
-				page.getByTestId('ArticleListItem/Child article/1').getByTestId('FolderIcon'),
-			).toBeVisible()
-			await expect(
-				page.getByTestId('ArticleListItem/Sibling article/1').getByTestId('ArticleIcon'),
-			).toBeVisible()
-			await expect(
-				page.getByTestId('ArticleListItem/Nested article/2').getByTestId('ArticleIcon'),
-			).toBeVisible()
+			// Check item types (folder = has children, article = no children)
+			await expect(page.getByTestId('ArticleListItem/Child article/1')).toHaveAttribute(
+				'data-item-type',
+				'folder',
+			)
+			await expect(page.getByTestId('ArticleListItem/Sibling article/1')).toHaveAttribute(
+				'data-item-type',
+				'article',
+			)
+			await expect(page.getByTestId('ArticleListItem/Nested article/2')).toHaveAttribute(
+				'data-item-type',
+				'article',
+			)
 
 			// Move nested article to sibling article
 			await nestedArticle.dragTo(siblingArticle)
 
 			// Check that nested article is now a child of sibling article
-			await expect(
-				page.getByTestId('ArticleListItem/Child article/1').getByTestId('ArticleIcon'),
-			).toBeVisible()
-			await expect(
-				page.getByTestId('ArticleListItem/Sibling article/1').getByTestId('FolderIcon'),
-			).toBeVisible()
+			await expect(page.getByTestId('ArticleListItem/Child article/1')).toHaveAttribute(
+				'data-item-type',
+				'article',
+			)
+			await expect(page.getByTestId('ArticleListItem/Sibling article/1')).toHaveAttribute(
+				'data-item-type',
+				'folder',
+			)
 			await expect(
 				page
 					.getByTestId('ArticleListItem/Parent article/0')

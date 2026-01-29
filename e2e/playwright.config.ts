@@ -3,7 +3,9 @@ import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
 	testDir: './tests',
 	outputDir: './test-report/artifacts',
-	reporter: [['list'], ['html', { outputFolder: './test-report/html', open: 'never' }]],
+	reporter: process.env.CI
+		? [['blob', { outputDir: './test-report/blob' }], ['list']]
+		: [['list'], ['html', { outputFolder: './test-report/html', open: 'never' }]],
 	retries: 2,
 	fullyParallel: true,
 	// workers: 1,

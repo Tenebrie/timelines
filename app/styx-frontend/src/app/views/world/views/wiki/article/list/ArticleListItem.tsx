@@ -80,10 +80,14 @@ function ArticleListItemInnerComponent({
 	const popupState = usePopupState({ variant: 'popover', popupId: 'articleListItem' })
 	const { checkboxVisible, checked, onChange } = useArticleBulkActions({ article })
 
-	const icon = useMemo(() => (article.children?.length ? <Folder /> : <Article />), [article.children])
+	const isFolder = !!article.children?.length
+	const icon = useMemo(() => (isFolder ? <Folder /> : <Article />), [isFolder])
 
 	return (
-		<Box data-testid={`ArticleListItem/${article.name}/${depth}`}>
+		<Box
+			data-testid={`ArticleListItem/${article.name}/${depth}`}
+			data-item-type={isFolder ? 'folder' : 'article'}
+		>
 			<Stack ref={ref} direction="row" position={'relative'}>
 				{checkboxVisible && <Checkbox size="small" checked={checked} onChange={onChange}></Checkbox>}
 				<Button
