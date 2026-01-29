@@ -125,6 +125,17 @@ export const UserService = {
 	},
 
 	cleanUpDeletedUsers: async () => {
+		await getPrismaClient().user.updateMany({
+			where: {
+				deletionScheduledAt: {
+					lt: new Date(),
+				},
+			},
+			data: {
+				deletedAt: new Date(),
+			},
+		})
+
 		return getPrismaClient().user.deleteMany({
 			where: {
 				deletedAt: { not: null },
@@ -141,13 +152,14 @@ export const UserService = {
 	cleanUpTestUsers: async () => {
 		return getPrismaClient().user.updateMany({
 			where: {
+				deletedAt: null,
 				OR: [
 					{ email: { startsWith: 'playwright-', endsWith: '@localhost' } },
 					{ email: { startsWith: 'k6-loadtest-', endsWith: '@localhost' } },
 				],
 			},
 			data: {
-				deletedAt: new Date(),
+				deletionScheduledAt: new Date(Date.now() + 60 * 1000),
 			},
 		})
 	},
