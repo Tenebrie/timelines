@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       count: ${{ steps.calc.outputs.count }}
-      version: ${{ steps.version.outputs.version }}
+      version: ${{ github.ref_name == 'main' && steps.latest-tag.outputs.tag || steps.version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -26,14 +26,21 @@ jobs:
           COUNT=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:"%s" | grep -cE '^(fix|feat|major):' || true)
           echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
 
-      - name: Generate Version Number
+      - name: Get Latest Tag (Production)
+        id: latest-tag
+        if: ${{ github.ref_name == 'main' }}
+        run: |
+          TAG=$(git describe --tags --abbrev=0)
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+      - name: Generate Version Number (Staging)
         id: version
+        if: ${{ github.ref_name == 'dev' }}
         uses: paulhatch/semantic-version@v5.4.0
         with:
           major_pattern: 'major:'
           minor_pattern: 'feat:'
           version_format: 'v${major}.${minor}.${patch}'
-          bump_each_commit: ${{ github.ref_name == 'main' }}
 
   prepare-containers:
     name: Publish Containers
