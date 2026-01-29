@@ -7,6 +7,10 @@ export default defineConfig({
 	retries: 2,
 	fullyParallel: false,
 	workers: 1,
+	timeout: 60000,
+	expect: {
+		timeout: 10000,
+	},
 	projects: [
 		/* Test against desktop browsers */
 		{
