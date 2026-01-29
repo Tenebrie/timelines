@@ -42,7 +42,9 @@ test.describe('Wiki', () => {
 			await expect(textbox).toHaveText('The text has been changed')
 
 			// Delete article
-			await page.getByTestId('ArticleListWithHeader').getByTestId('MenuIcon').click()
+			const menuIcon = page.getByTestId('ArticleListWithHeader').getByTestId('MenuIcon')
+			await expect(menuIcon).toBeVisible()
+			await menuIcon.click()
 			await page.getByRole('menuitem').getByText('Delete').click()
 			await expect(page.getByText('Delete article', { exact: true })).toBeVisible()
 
@@ -151,11 +153,11 @@ test.describe('Wiki', () => {
 			await siblingArticle.dragTo(parentArticle)
 
 			// Get references to all articles by their list item IDs
-			expect(page.getByTestId('ArticleListItem/Parent article/0')).toBeVisible()
-			expect(page.getByTestId('ArticleListItem/Child article/1')).toBeVisible()
-			expect(page.getByTestId('ArticleListItem/Sibling article/1')).toBeVisible()
-			expect(page.getByTestId('ArticleListItem/Nested article/2')).toBeVisible()
-			expect(
+			await expect(page.getByTestId('ArticleListItem/Parent article/0')).toBeVisible()
+			await expect(page.getByTestId('ArticleListItem/Child article/1')).toBeVisible()
+			await expect(page.getByTestId('ArticleListItem/Sibling article/1')).toBeVisible()
+			await expect(page.getByTestId('ArticleListItem/Nested article/2')).toBeVisible()
+			await expect(
 				page
 					.getByTestId('ArticleListItem/Parent article/0')
 					.getByTestId('ArticleListItem/Child article/1')
@@ -163,17 +165,27 @@ test.describe('Wiki', () => {
 			).toBeVisible()
 
 			// Check icons
-			expect(page.getByTestId('ArticleListItem/Child article/1').getByTestId('FolderIcon')).toBeVisible()
-			expect(page.getByTestId('ArticleListItem/Sibling article/1').getByTestId('ArticleIcon')).toBeVisible()
-			expect(page.getByTestId('ArticleListItem/Nested article/2').getByTestId('ArticleIcon')).toBeVisible()
+			await expect(
+				page.getByTestId('ArticleListItem/Child article/1').getByTestId('FolderIcon'),
+			).toBeVisible()
+			await expect(
+				page.getByTestId('ArticleListItem/Sibling article/1').getByTestId('ArticleIcon'),
+			).toBeVisible()
+			await expect(
+				page.getByTestId('ArticleListItem/Nested article/2').getByTestId('ArticleIcon'),
+			).toBeVisible()
 
 			// Move nested article to sibling article
 			await nestedArticle.dragTo(siblingArticle)
 
 			// Check that nested article is now a child of sibling article
-			expect(page.getByTestId('ArticleListItem/Child article/1').getByTestId('ArticleIcon')).toBeVisible()
-			expect(page.getByTestId('ArticleListItem/Sibling article/1').getByTestId('FolderIcon')).toBeVisible()
-			expect(
+			await expect(
+				page.getByTestId('ArticleListItem/Child article/1').getByTestId('ArticleIcon'),
+			).toBeVisible()
+			await expect(
+				page.getByTestId('ArticleListItem/Sibling article/1').getByTestId('FolderIcon'),
+			).toBeVisible()
+			await expect(
 				page
 					.getByTestId('ArticleListItem/Parent article/0')
 					.getByTestId('ArticleListItem/Sibling article/1')

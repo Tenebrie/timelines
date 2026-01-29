@@ -91,7 +91,9 @@ test.describe('World management', () => {
 
 		// Navigate to settings
 		await page.getByText('Home').click()
-		await page.getByTestId('EditIcon').click()
+		const editIcon = page.getByTestId('EditIcon')
+		await expect(editIcon).toBeVisible()
+		await editIcon.click()
 		await page.waitForURL(/\/world\/[a-f0-9-]+\/settings/)
 		await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
 
