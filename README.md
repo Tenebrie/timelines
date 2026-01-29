@@ -1,16 +1,14 @@
 # Introduction
 
-**Production:** ![Build & Test](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml/badge.svg?branch=main)
-
-**Staging:** ![Build & Test](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml/badge.svg?branch=dev)
-
 Timelines is a worldbuilding and storytelling web application focused on the needs of writers, note-takers and anyone who finds it hard to keep track of the events in their fictional - or less so - worlds.
 
 ## Live Deployments
 
 - **Production**: https://timelines.tenebrie.com/
+  - ![Build & Test](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml/badge.svg?branch=main)
   - Manually deployed stable release
 - **Staging**: https://staging.tenebrie.com/
+  - ![Build & Test](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml/badge.svg?branch=dev)
   - Hot updated directly from the `dev` branch
 
 ## Technologies
