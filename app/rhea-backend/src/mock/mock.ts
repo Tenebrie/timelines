@@ -11,6 +11,7 @@ export const mockUser = (data?: Partial<User>): User => ({
 	bio: 'bio',
 	avatarId: 'avatar-1111',
 	deletedAt: null,
+	deletionScheduledAt: null,
 	...data,
 })
 
