@@ -106,10 +106,11 @@ jobs:
       - name: Run E2E tests
         working-directory: e2e
         run: |
-          docker compose -f docker-compose.yml run --rm \
+          docker run --rm \
             --network timelines_ci_network \
             -e TARGET_ENV=ci \
-            playwright
+            -v $(pwd)/test-report:/app/test-report \
+            $(docker compose build -q playwright)
 
       - name: Upload test report
         if: failure()
