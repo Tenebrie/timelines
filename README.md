@@ -1,5 +1,8 @@
 # Introduction
 
+[![Build & Test](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml/badge.svg)](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml)
+[![Deploy](https://github.com/Tenebrie/timelines/actions/workflows/deploy.yml/badge.svg)](https://github.com/Tenebrie/timelines/actions/workflows/deploy.yml)
+
 Timelines is a worldbuilding and storytelling web application focused on the needs of writers, note-takers and anyone who finds it hard to keep track of the events in their fictional - or less so - worlds.
 
 ## Live Deployments
