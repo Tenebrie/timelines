@@ -4,12 +4,11 @@ import IconButton from '@mui/material/IconButton'
 import Popover from '@mui/material/Popover'
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 
-import { useGetAnnouncementsQuery } from '@/api/announcementListApi'
-
 import { AnnouncementList } from './AnnouncementList'
+import { useGetAnnouncements } from './hooks/useGetAnnouncements'
 
 export const AnnouncementView = () => {
-	const { data } = useGetAnnouncementsQuery()
+	const { data } = useGetAnnouncements()
 	const popupState = usePopupState({ variant: 'popover', popupId: 'announcements' })
 
 	return (

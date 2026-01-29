@@ -81,6 +81,8 @@ router.post('/api/auth', async (ctx) => {
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
+		secure: ctx.request.protocol === 'https',
+		sameSite: 'lax',
 	})
 
 	AnnouncementService.notify({
@@ -123,6 +125,8 @@ router.post('/api/auth/login', async (ctx) => {
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
+		secure: ctx.request.protocol === 'https',
+		sameSite: 'lax',
 	})
 
 	const avatarUrl = user.avatar ? await CloudStorageService.getPresignedUrl(user.avatar) : undefined
