@@ -95,7 +95,7 @@ jobs:
         run: yarn test:calliope
 
   run-e2e:
-    name: E2E Tests (${{ matrix.browser }})
+    name: Playwright (${{ matrix.browser }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
