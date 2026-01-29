@@ -8,10 +8,8 @@ Timelines is a worldbuilding and storytelling web application focused on the nee
 ## Live Deployments
 
 - **Production**: https://timelines.tenebrie.com/
-  - ![Build & Test](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml/badge.svg?branch=main)
   - Manually deployed stable release
 - **Staging**: https://staging.tenebrie.com/
-  - ![Build & Test](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml/badge.svg?branch=dev)
   - Hot updated directly from the `dev` branch
 
 ## Technologies
