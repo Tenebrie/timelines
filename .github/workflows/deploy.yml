@@ -82,6 +82,7 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     needs: [check-commits, prepare-containers]
+    if: ${{ github.ref_name == 'dev' }}
     permissions:
       contents: write
     steps:
@@ -139,7 +140,7 @@ jobs:
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
-    needs: [check-commits, prepare-containers, create-release]
+    needs: [check-commits, prepare-containers]
     if: ${{ github.ref_name == 'main' }}
     environment:
       name: production
