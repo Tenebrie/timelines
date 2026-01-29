@@ -87,6 +87,7 @@ function ArticleListItemInnerComponent({
 			<Stack ref={ref} direction="row" position={'relative'}>
 				{checkboxVisible && <Checkbox size="small" checked={checked} onChange={onChange}></Checkbox>}
 				<Button
+					role="button"
 					startIcon={icon}
 					variant={highlighted ? 'contained' : 'text'}
 					color="secondary"
@@ -97,7 +98,12 @@ function ArticleListItemInnerComponent({
 					{article.name}
 				</Button>
 				{!isReadOnly && (
-					<IconButton color="secondary" {...bindTrigger(popupState)} sx={{ flexShrink: 0 }}>
+					<IconButton
+						aria-label="Article context menu"
+						color="secondary"
+						{...bindTrigger(popupState)}
+						sx={{ flexShrink: 0 }}
+					>
 						<Menu />
 					</IconButton>
 				)}

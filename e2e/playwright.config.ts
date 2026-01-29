@@ -5,8 +5,8 @@ export default defineConfig({
 	outputDir: './test-report/artifacts',
 	reporter: [['list'], ['html', { outputFolder: './test-report/html', open: 'never' }]],
 	retries: 2,
-	fullyParallel: false,
-	workers: 1,
+	fullyParallel: true,
+	// workers: 1,
 	timeout: 60000,
 	expect: {
 		timeout: 10000,
