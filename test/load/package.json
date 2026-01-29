@@ -1,7 +1,7 @@
 {
-	"name": "timelines-load-tests",
+	"name": "load-tests",
 	"version": "1.0.0",
-	"description": "k6 load testing suite for Timelines",
+	"description": "k6 load testing suite",
 	"scripts": {
 		"test": "k6 run src/smoke.ts",
 		"test:smoke": "k6 run src/smoke.ts",
