@@ -131,4 +131,24 @@ export const UserService = {
 			},
 		})
 	},
+
+	/**
+	 * Deletes test users created by Playwright e2e tests or k6 load tests.
+	 * Only matches emails exactly matching these patterns:
+	 * - playwright-{anything}@localhost
+	 * - k6-loadtest-{anything}@localhost
+	 */
+	cleanUpTestUsers: async () => {
+		return getPrismaClient().user.updateMany({
+			where: {
+				OR: [
+					{ email: { startsWith: 'playwright-', endsWith: '@localhost' } },
+					{ email: { startsWith: 'k6-loadtest-', endsWith: '@localhost' } },
+				],
+			},
+			data: {
+				deletedAt: new Date(),
+			},
+		})
+	},
 }

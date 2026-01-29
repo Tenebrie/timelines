@@ -1,0 +1,10 @@
+# Dependencies
+node_modules/
+
+# Test results
+results/
+*.json
+!package.json
+
+# Logs
+*.log

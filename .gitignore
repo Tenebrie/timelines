@@ -10,7 +10,7 @@ node_modules
 # testing
 coverage
 
-e2e/test-report
+test/e2e/test-report
 
 # production
 build

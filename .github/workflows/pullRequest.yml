@@ -122,11 +122,11 @@ jobs:
           echo "Services are ready!"
 
       - name: Build Playwright container
-        working-directory: e2e
+        working-directory: test/e2e
         run: docker build -t playwright-e2e .
 
       - name: Run E2E tests
-        working-directory: e2e
+        working-directory: test/e2e
         run: |
           docker run --rm \
             --network timelines_ci_network \
@@ -140,7 +140,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-${{ matrix.browser }}
-          path: e2e/test-report/
+          path: test/e2e/test-report/
 
       - name: Stop services
         if: always()

@@ -1,0 +1,11 @@
+services:
+  k6:
+    image: grafana/k6:latest
+    volumes:
+      - .:/scripts:ro
+    environment:
+      - BASE_URL=${BASE_URL:-https://timelines.tenebrie.com}
+      - TEST_USER_EMAIL=${TEST_USER_EMAIL:-}
+      - TEST_USER_PASSWORD=${TEST_USER_PASSWORD:-}
+    network_mode: host
+    working_dir: /scripts

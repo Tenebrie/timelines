@@ -289,7 +289,7 @@ yarn docker:fullinstall       # Nuclear option when things break
 - **Unit/Integration**: `yarn test` (runs styx + rhea tests)
 - **Frontend**: `yarn test:styx`
 - **Backend**: `yarn test:rhea`
-- **E2E**: `yarn test:e2e` (Playwright tests in `/e2e`)
+- **E2E**: `yarn test:e2e` (Playwright tests in `/test/e2e`)
 
 ## 🚀 Deployment
 

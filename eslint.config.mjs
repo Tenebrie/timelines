@@ -19,7 +19,7 @@ export default defineConfig(
 			'app/rhea-backend/prisma',
 			'app/styx-frontend/build',
 			'app/ts-shared/dist',
-			'e2e/dist',
+			'test/e2e/dist',
 			'*.gen.ts',
 			'node_modules',
 			'.husky',
