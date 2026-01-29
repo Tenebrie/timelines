@@ -1,14 +1,12 @@
 import { defineConfig, devices } from '@playwright/test'
 
-const isCI = !!process.env.CI
-
 export default defineConfig({
 	testDir: './tests',
 	outputDir: './test-report/artifacts',
 	reporter: [['list'], ['html', { outputFolder: './test-report/html', open: 'never' }]],
 	retries: 2,
-	fullyParallel: true,
-	workers: isCI ? 1 : undefined, // Sequential in CI, parallel locally
+	fullyParallel: false,
+	workers: 1,
 	projects: [
 		/* Test against desktop browsers */
 		{
