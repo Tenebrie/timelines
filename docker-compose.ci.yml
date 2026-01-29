@@ -1,4 +1,3 @@
-version: '3.8'
 services:
     gatekeeper:
         build:
@@ -82,7 +81,7 @@ services:
         depends_on:
             rhea-postgres:
                 condition: service_healthy
-        command: sh -c "yarn prisma migrate deploy && yarn prisma db seed"
+        command: sh -c "yarn prisma migrate deploy"
         networks:
             - ci_network
 

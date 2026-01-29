@@ -18,7 +18,7 @@ jobs:
         run: yarn
       - name: Build Styx
         run: yarn build:styx
-  
+
   build-rhea:
     name: Build Rhea
     runs-on: ubuntu-latest
@@ -52,32 +52,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 24.x
-        cache: 'yarn'
-    - name: Install dependencies
-      run: yarn
-    - name: Run Styx tests
-      run: yarn test:styx
-    
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn
+      - name: Run Styx tests
+        run: yarn test:styx
+
   test-rhea:
     name: Test Rhea (Backend)
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 24.x
-        cache: 'yarn'
-    - name: Install dependencies
-      run: yarn
-    - name: Generate Prisma client
-      run: yarn prisma generate
-    - name: Run Rhea tests
-      run: yarn test:rhea
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn
+      - name: Generate Prisma client
+        run: yarn prisma generate
+      - name: Run Rhea tests
+        run: yarn test:rhea
 
   run-e2e:
     name: Run E2E Tests
@@ -94,14 +94,14 @@ jobs:
           echo "Waiting for migrations to complete..."
           docker compose -f docker-compose.ci.yml logs -f rhea-migrate &
           timeout 120 bash -c 'while docker compose -f docker-compose.ci.yml ps rhea-migrate --status running | grep -q rhea-migrate; do sleep 2; done'
-          
+
           echo "Waiting for Rhea to be healthy..."
           timeout 60 bash -c 'until docker compose -f docker-compose.ci.yml exec -T rhea curl -sf http://localhost:3000/health; do sleep 2; done'
           echo "Services are ready!"
 
       - name: Build Playwright container
         working-directory: e2e
-        run: docker compose build playwright
+        run: docker build -t playwright-e2e .
 
       - name: Run E2E tests
         working-directory: e2e
@@ -110,7 +110,7 @@ jobs:
             --network timelines_ci_network \
             -e TARGET_ENV=ci \
             -v $(pwd)/test-report:/app/test-report \
-            $(docker compose build -q playwright)
+            playwright-e2e
 
       - name: Upload test report
         if: failure()
