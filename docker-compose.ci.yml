@@ -1,0 +1,126 @@
+version: '3.8'
+services:
+    gatekeeper:
+        build:
+            context: ./app/gatekeeper-proxy
+            dockerfile: ./Dockerfile.prod
+        networks:
+            - ci_network
+        ports:
+            - "80:80"
+
+    styx:
+        build:
+            context: ./
+            dockerfile: ./app/styx-frontend/Dockerfile.prod
+            args:
+                VERSION: ci
+        networks:
+            - ci_network
+
+    rhea:
+        build:
+            context: ./
+            dockerfile: ./app/rhea-backend/Dockerfile.prod
+        environment:
+            NODE_ENV: production
+            DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
+            jwt-secret: ci-secret-key
+            environment: ci
+            s3_endpoint: http://s3-minio:9000
+            s3_bucket_id: bucket
+            s3_access_key_id: devuser
+            s3_access_key_secret: devsecret
+        command: yarn prod
+        depends_on:
+            rhea-postgres:
+                condition: service_healthy
+        networks:
+            - ci_network
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+            interval: 5s
+            timeout: 5s
+            retries: 12
+            start_period: 30s
+
+    calliope:
+        build:
+            context: ./
+            dockerfile: ./app/calliope-websockets/Dockerfile.prod
+        environment:
+            NODE_ENV: production
+            jwt_secret: ci-secret-key
+            environment: ci
+        command: yarn prod
+        depends_on:
+            - redis
+        networks:
+            - ci_network
+
+    rhea-postgres:
+        image: postgres:15-alpine
+        environment:
+            POSTGRES_USER: docker
+            POSTGRES_PASSWORD: docker
+            POSTGRES_DB: db
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U docker -d db"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+            start_period: 10s
+        networks:
+            - ci_network
+
+    rhea-migrate:
+        build:
+            context: ./
+            dockerfile: ./app/rhea-backend/Dockerfile.prod
+        environment:
+            DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
+        depends_on:
+            rhea-postgres:
+                condition: service_healthy
+        command: sh -c "yarn prisma migrate deploy && yarn prisma db seed"
+        networks:
+            - ci_network
+
+    redis:
+        image: redis:7-alpine
+        networks:
+            - ci_network
+
+    s3-minio:
+        image: minio/minio
+        environment:
+            MINIO_ROOT_USER: admin
+            MINIO_ROOT_PASSWORD: adminpassword
+        command: server /data --console-address ":9001"
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+            interval: 5s
+            timeout: 5s
+            retries: 3
+        networks:
+            - ci_network
+
+    s3-minio-setup:
+        image: minio/mc
+        depends_on:
+            s3-minio:
+                condition: service_healthy
+        entrypoint: >
+            /bin/sh -c "
+                mc alias set minio-dev http://s3-minio:9000 admin adminpassword;
+                mc mb --ignore-existing minio-dev/bucket;
+                mc admin user add minio-dev devuser devsecret;
+                mc admin policy attach minio-dev readwrite --user devuser;
+                echo 'MinIO setup completed successfully';
+            "
+        networks:
+            - ci_network
+
+networks:
+    ci_network:
+        name: timelines_ci_network

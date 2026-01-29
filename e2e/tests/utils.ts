@@ -4,7 +4,7 @@ export const baseUrl = (() => {
 		return 'https://timelines.tenebrie.com'
 	} else if (env === 'staging') {
 		return 'https://staging.tenebrie.com'
-	} else if (env === 'local') {
+	} else if (env === 'local' || env === 'ci') {
 		return 'http://gatekeeper:80'
 	} else if (env === 'local_ui') {
 		return 'http://localhost'
