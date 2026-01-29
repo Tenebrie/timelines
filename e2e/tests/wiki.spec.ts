@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { expect, Page, test } from '@playwright/test'
 import { createNewUser, deleteAccount } from 'fixtures/auth'
 import { createWikiArticle, createWorld, navigateToWiki } from 'fixtures/world'
 
@@ -22,31 +22,27 @@ test.describe('Wiki', () => {
 			await expect(page.getByText('Create new article')).toBeVisible()
 
 			await page.getByLabel('Name').fill('Testing article')
-			await page.getByText('Create', { exact: true }).click()
+			await withYjsSocket(page, () => page.getByText('Create', { exact: true }).click())
 			await expect(page.getByText('Create new article')).not.toBeVisible()
 			await expect(page.getByTestId('ArticleTitle').getByText('Testing article')).toBeVisible()
 
 			// Edit article
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 			await expect(textbox).toBeVisible()
-			await page.waitForTimeout(1000)
 
-			await textbox.pressSequentially('This is a test article', { delay: 10 })
-			await page.waitForTimeout(1000)
-			await page.reload()
+			await textbox.fill('This is a test article')
+			await withYjsSocket(page, () => page.reload())
 			await expect(textbox).toBeVisible()
 			await expect(textbox).toHaveText('This is a test article')
-			await page.waitForTimeout(1000)
 
 			await textbox.selectText()
 			await textbox.pressSequentially('The text has been changed', { delay: 10 })
-			await page.waitForTimeout(1000)
-			await page.reload()
+			await withYjsSocket(page, () => page.reload())
 			await expect(textbox).toBeVisible()
 			await expect(textbox).toHaveText('The text has been changed')
 
 			// Delete article
-			await page.getByTestId('ArticleListWithHeader').getByTestId('MenuIcon').click()
+			await page.getByLabel('Article context menu').click()
 			await page.getByRole('menuitem').getByText('Delete').click()
 			await expect(page.getByText('Delete article', { exact: true })).toBeVisible()
 
@@ -70,32 +66,26 @@ test.describe('Wiki', () => {
 			await expect(textbox).toHaveText('')
 
 			// Add mention
+			await textbox.click()
 			await textbox.pressSequentially('Hello @TestActor', { delay: 10 })
-			await page.waitForTimeout(100)
-			await page.keyboard.press('Enter')
-			await page.waitForTimeout(1000)
+			await withCreatedActor(page, () => page.keyboard.press('Enter'))
 
 			// Switch to article B
-			await page.getByText('Second article').click()
-			await expect(textbox).toBeVisible()
+			await withYjsSocket(page, () => page.getByText('Second article').click())
 			await expect(textbox).toHaveText('')
 
 			// Add mention
 			await textbox.pressSequentially('Also hi @UnrelatedActor', { delay: 10 })
-			await page.waitForTimeout(100)
-			await page.keyboard.press('Enter')
-			await page.waitForTimeout(1000)
+			await withCreatedActor(page, () => page.keyboard.press('Enter'))
 
 			// Switch back to article A
-			await page.getByText('First article').click()
-			await expect(textbox).toBeVisible()
-			await page.waitForTimeout(1000)
+			await withYjsSocket(page, () => page.getByText('First article').click())
 			await expect(textbox).toHaveText('Hello TestActor')
 
 			// Switch back to article B
-			await page.getByTestId('ArticleListWithHeader').getByText('Second article').click()
-			await expect(textbox).toBeVisible()
-			await page.waitForTimeout(1000)
+			await withYjsSocket(page, () =>
+				page.getByTestId('ArticleListWithHeader').getByText('Second article').click(),
+			)
 			await expect(textbox).toHaveText('Also hi UnrelatedActor')
 		})
 
@@ -124,23 +114,20 @@ test.describe('Wiki', () => {
 			await page.waitForTimeout(1000)
 
 			// Switch to article B
-			await page.getByText('Second article').click()
-			await expect(textbox).toBeVisible()
+			await withYjsSocket(page, () => page.getByText('Second article').click())
 			await expect(textbox).toHaveText('')
-			await page.waitForTimeout(1000)
 
 			// Switch back to article A
-			await page.getByTestId('ArticleListWithHeader').getByText('First article').click()
-			await expect(textbox).toBeVisible()
+			await withYjsSocket(page, () =>
+				page.getByTestId('ArticleListWithHeader').getByText('First article').click(),
+			)
 			await expect(textbox).toHaveText('Hello TestActor Hello UnrelatedActor')
 
 			// Edit article
 			await textbox.focus()
 			await textbox.press('Home')
-			await page.waitForTimeout(1000)
 			await textbox.press('ArrowUp')
 			await textbox.press('Enter')
-			await page.waitForTimeout(100)
 			await expect(textbox).toHaveText('Hello TestActor Hello UnrelatedActor')
 		})
 
@@ -164,29 +151,44 @@ test.describe('Wiki', () => {
 			await siblingArticle.dragTo(parentArticle)
 
 			// Get references to all articles by their list item IDs
-			expect(page.getByTestId('ArticleListItem/Parent article/0')).toBeVisible()
-			expect(page.getByTestId('ArticleListItem/Child article/1')).toBeVisible()
-			expect(page.getByTestId('ArticleListItem/Sibling article/1')).toBeVisible()
-			expect(page.getByTestId('ArticleListItem/Nested article/2')).toBeVisible()
-			expect(
+			await expect(page.getByTestId('ArticleListItem/Parent article/0')).toBeVisible()
+			await expect(page.getByTestId('ArticleListItem/Child article/1')).toBeVisible()
+			await expect(page.getByTestId('ArticleListItem/Sibling article/1')).toBeVisible()
+			await expect(page.getByTestId('ArticleListItem/Nested article/2')).toBeVisible()
+			await expect(
 				page
 					.getByTestId('ArticleListItem/Parent article/0')
 					.getByTestId('ArticleListItem/Child article/1')
 					.getByTestId('ArticleListItem/Nested article/2'),
 			).toBeVisible()
 
-			// Check icons
-			expect(page.getByTestId('ArticleListItem/Child article/1').getByTestId('FolderIcon')).toBeVisible()
-			expect(page.getByTestId('ArticleListItem/Sibling article/1').getByTestId('ArticleIcon')).toBeVisible()
-			expect(page.getByTestId('ArticleListItem/Nested article/2').getByTestId('ArticleIcon')).toBeVisible()
+			// Check item types (folder = has children, article = no children)
+			await expect(page.getByTestId('ArticleListItem/Child article/1')).toHaveAttribute(
+				'data-item-type',
+				'folder',
+			)
+			await expect(page.getByTestId('ArticleListItem/Sibling article/1')).toHaveAttribute(
+				'data-item-type',
+				'article',
+			)
+			await expect(page.getByTestId('ArticleListItem/Nested article/2')).toHaveAttribute(
+				'data-item-type',
+				'article',
+			)
 
 			// Move nested article to sibling article
 			await nestedArticle.dragTo(siblingArticle)
 
 			// Check that nested article is now a child of sibling article
-			expect(page.getByTestId('ArticleListItem/Child article/1').getByTestId('ArticleIcon')).toBeVisible()
-			expect(page.getByTestId('ArticleListItem/Sibling article/1').getByTestId('FolderIcon')).toBeVisible()
-			expect(
+			await expect(page.getByTestId('ArticleListItem/Child article/1')).toHaveAttribute(
+				'data-item-type',
+				'article',
+			)
+			await expect(page.getByTestId('ArticleListItem/Sibling article/1')).toHaveAttribute(
+				'data-item-type',
+				'folder',
+			)
+			await expect(
 				page
 					.getByTestId('ArticleListItem/Parent article/0')
 					.getByTestId('ArticleListItem/Sibling article/1')
@@ -253,4 +255,25 @@ test.describe('Wiki', () => {
 		await page.waitForTimeout(3000)
 		await deleteAccount(page)
 	})
+
+	async function withYjsSocket(page: Page, action: () => unknown) {
+		const yjsRequest = page.waitForEvent('websocket', (ws) => {
+			return ws.url().includes('/live/yjs')
+		})
+		await action()
+		await yjsRequest
+		await page.waitForTimeout(100)
+	}
+
+	async function withCreatedActor(page: Page, action: () => unknown) {
+		const actorRequest = page.waitForRequest(
+			(req) => req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/actors/),
+		)
+		const worldUpdateRequest = page.waitForRequest(
+			(req) => req.method() === 'GET' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+/),
+		)
+		await action()
+		await actorRequest
+		await worldUpdateRequest
+	}
 })

@@ -34,12 +34,9 @@ export function UserDropdown({ user }: Props) {
 	const dispatch = useDispatch()
 
 	const onLogout = async () => {
-		const { error } = parseApiResponse(await logout())
-		if (error) {
-			return
-		}
 		dispatch(clearUser())
 		navigate({ to: '/login' })
+		parseApiResponse(await logout())
 	}
 
 	const popupState = usePopupState({ variant: 'popover', popupId: 'profile-menu' })

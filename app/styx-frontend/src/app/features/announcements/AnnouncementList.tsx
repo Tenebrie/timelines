@@ -8,10 +8,12 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useCallback, useRef } from 'react'
 
-import { useDismissAnnouncementMutation, useGetAnnouncementsQuery } from '@/api/announcementListApi'
+import { useDismissAnnouncementMutation } from '@/api/announcementListApi'
+
+import { useGetAnnouncements } from './hooks/useGetAnnouncements'
 
 export const AnnouncementList = () => {
-	const { data } = useGetAnnouncementsQuery()
+	const { data } = useGetAnnouncements()
 
 	const lastDismissedAnnouncement = useRef<string | null>(null)
 	const [dismissAnnouncement] = useDismissAnnouncementMutation()

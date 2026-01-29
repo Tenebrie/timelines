@@ -91,13 +91,13 @@ test.describe('World management', () => {
 
 		// Navigate to settings
 		await page.getByText('Home').click()
-		await page.getByTestId('EditIcon').click()
+		await page.getByLabel('Edit world button').click()
 		await page.waitForURL(/\/world\/[a-f0-9-]+\/settings/)
 		await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
 
 		// Delete world
 		await page.getByText('Home').click()
-		await page.getByTestId('DeleteIcon').click()
+		await page.getByLabel('Delete world button').click()
 		await expect(page.getByText('Delete world', { exact: true })).toBeVisible()
 
 		await page.getByText('Confirm').click()

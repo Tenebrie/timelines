@@ -74,10 +74,10 @@ export const WorldListSection = ({ worlds, label, showActions, showCreateButton 
 					</Tooltip>
 					{showActions && (
 						<Stack direction="row" gap={0.5}>
-							<Button onClick={() => onEdit(world.id)}>
+							<Button aria-label="Edit world button" onClick={() => onEdit(world.id)}>
 								<Edit />
 							</Button>
-							<Button onClick={() => onDelete(world)}>
+							<Button aria-label="Delete world button" onClick={() => onDelete(world)}>
 								<Delete />
 							</Button>
 						</Stack>

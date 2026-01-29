@@ -1,4 +1,4 @@
-import { load } from 'cheerio'
+import { Cheerio, load } from 'cheerio'
 import { Element, Text } from 'domhandler'
 import * as Y from 'yjs'
 
@@ -77,8 +77,7 @@ export function htmlToYXml(html: string, parent: Y.XmlFragment | Y.XmlElement) {
 
 	const $ = load(normalizedHtml, { xmlMode: false }) // Use HTML mode for proper parsing
 	const body = $('body')
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const content = (body.length > 0 ? body : $.root()) as any // Cheerio typing issue
+	const content = (body.length > 0 ? body : $.root()) as Cheerio<Element>
 
 	function processNode(node: Element, yParent: Y.XmlFragment | Y.XmlElement) {
 		node.childNodes.forEach((child) => {

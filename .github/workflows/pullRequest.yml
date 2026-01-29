@@ -3,6 +3,8 @@ name: Build & Test
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  push:
+    branches: [main, dev]
 
 jobs:
   build-styx:
@@ -18,7 +20,7 @@ jobs:
         run: yarn
       - name: Build Styx
         run: yarn build:styx
-  
+
   build-rhea:
     name: Build Rhea
     runs-on: ubuntu-latest
@@ -52,61 +54,93 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 24.x
-        cache: 'yarn'
-    - name: Install dependencies
-      run: yarn
-    - name: Run Styx tests
-      run: yarn test:styx
-    
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn
+      - name: Run Styx tests
+        run: yarn test:styx
+
   test-rhea:
     name: Test Rhea (Backend)
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 24.x
-        cache: 'yarn'
-    - name: Install dependencies
-      run: yarn
-    - name: Generate Prisma client
-      run: yarn prisma generate
-    - name: Run Rhea tests
-      run: yarn test:rhea
-
-  run-e2e:
-    name: Run E2E Tests
-    if: ${{ github.base_ref == 'main' }}
-    runs-on: ubuntu-latest
-    steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 24.x
           cache: 'yarn'
+      - name: Install dependencies
+        run: yarn
+      - name: Generate Prisma client
+        run: yarn prisma generate
+      - name: Run Rhea tests
+        run: yarn test:rhea
 
-      - name: Determine if tests should run
-        id: decide
+  test-calliope:
+    name: Test Calliope (Websockets)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: 'yarn'
+      - name: Install dependencies
+        run: yarn
+      - name: Run Calliope tests
+        run: yarn test:calliope
+
+  run-e2e:
+    name: Playwright (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start services
         run: |
-          if [ "${{ github.head_ref }}" == "dev" ]; then
-            echo "run_tests=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "run_tests=false" >> "$GITHUB_OUTPUT"
-            echo "Tests will only run on the dev -> main PRs, skipping..."
-          fi
+          docker compose -f docker-compose.ci.yml up -d --build
 
-      - name: Run E2E Tests
-        if: steps.decide.outputs.run_tests == 'true'
+      - name: Wait for services to be ready
+        run: |
+          echo "Waiting for migrations to complete..."
+          docker compose -f docker-compose.ci.yml logs -f rhea-migrate &
+          timeout 120 bash -c 'while docker compose -f docker-compose.ci.yml ps rhea-migrate --status running | grep -q rhea-migrate; do sleep 2; done'
+
+          echo "Waiting for Rhea to be healthy..."
+          timeout 60 bash -c 'until docker compose -f docker-compose.ci.yml exec -T rhea curl -sf http://localhost:3000/health; do sleep 2; done'
+          echo "Services are ready!"
+
+      - name: Build Playwright container
         working-directory: e2e
-        env:
-          XDG_CACHE_HOME: /tmp/.ffcache
+        run: docker build -t playwright-e2e .
+
+      - name: Run E2E tests
+        working-directory: e2e
         run: |
-          yarn
-          yarn build
-          yarn test:staging
+          docker run --rm \
+            --network timelines_ci_network \
+            -e TARGET_ENV=ci \
+            -v $(pwd)/test-report:/app/test-report \
+            playwright-e2e \
+            npx playwright test --config=playwright.ci.config.ts --project=${{ matrix.browser }}
+
+      - name: Upload test report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: e2e/test-report/
+
+      - name: Stop services
+        if: always()
+        run: docker compose -f docker-compose.ci.yml down -v

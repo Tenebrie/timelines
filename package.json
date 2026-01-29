@@ -29,6 +29,7 @@
 		"test": "yarn test:styx && yarn test:rhea && yarn test:e2e",
 		"test:styx": "cd app/styx-frontend && yarn test run",
 		"test:rhea": "cd app/rhea-backend && yarn test",
+		"test:calliope": "cd app/calliope-websockets && yarn test",
 		"test:e2e": "cd e2e && yarn test",
 		"test:e2e:run": "cd e2e && yarn test:local",
 		"build:styx": "cd app/styx-frontend && yarn build",
