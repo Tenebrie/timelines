@@ -3,6 +3,8 @@ name: Build & Test
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  push:
+    branches: [main, dev]
 
 jobs:
   build-styx:
