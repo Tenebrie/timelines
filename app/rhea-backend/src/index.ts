@@ -120,6 +120,7 @@ if (!isRunningInTest()) {
 
 	setInterval(() => {
 		UserService.cleanUpDeletedUsers()
+		UserService.cleanUpTestUsers()
 		CloudStorageService.cleanUpExpiredAssets()
 	}, 60000)
 }

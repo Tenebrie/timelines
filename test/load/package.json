@@ -1,0 +1,23 @@
+{
+	"name": "timelines-load-tests",
+	"version": "1.0.0",
+	"description": "k6 load testing suite for Timelines",
+	"scripts": {
+		"test": "k6 run src/smoke.ts",
+		"test:smoke": "k6 run src/smoke.ts",
+		"test:load": "k6 run src/load.ts",
+		"test:stress": "k6 run src/stress.ts",
+		"test:websocket": "k6 run src/websocket.ts",
+		"test:soak": "k6 run src/soak.ts",
+		"test:realistic": "k6 run src/realistic.ts",
+		"docker:smoke": "docker compose run --rm k6 run /scripts/src/smoke.ts",
+		"docker:load": "docker compose run --rm k6 run /scripts/src/load.ts",
+		"docker:stress": "docker compose run --rm k6 run /scripts/src/stress.ts",
+		"docker:websocket": "docker compose run --rm k6 run /scripts/src/websocket.ts",
+		"docker:soak": "docker compose run --rm k6 run /scripts/src/soak.ts",
+		"docker:realistic": "docker compose run --rm k6 run /scripts/src/realistic.ts"
+	},
+	"devDependencies": {
+		"@types/k6": "^0.54.0"
+	}
+}
