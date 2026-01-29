@@ -33,7 +33,7 @@ jobs:
           major_pattern: 'major:'
           minor_pattern: 'feat:'
           version_format: 'v${major}.${minor}.${patch}'
-          bump_each_commit: false
+          bump_each_commit: ${{ github.ref_name == 'main' }}
 
   prepare-containers:
     name: Publish Containers
