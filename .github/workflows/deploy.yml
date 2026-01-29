@@ -33,6 +33,7 @@ jobs:
           major_pattern: 'major:'
           minor_pattern: 'feat:'
           version_format: 'v${major}.${minor}.${patch}'
+          bump_each_commit: false
 
   prepare-containers:
     name: Publish Containers
