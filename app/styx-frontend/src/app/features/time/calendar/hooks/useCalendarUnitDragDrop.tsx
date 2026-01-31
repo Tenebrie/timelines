@@ -1,12 +1,13 @@
+import { CalendarDraftUnit } from '@api/types/calendarTypes'
+
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 
-import { CalendarUnit } from '../types'
 import { CalendarUnitListItem } from '../unitList/CalendarUnitListItem'
 import { useMoveCalendarUnit } from './useMoveCalendarUnit'
 
 type Props = {
-	unit: CalendarUnit
+	unit: CalendarDraftUnit
 }
 
 export const useCalendarUnitDragDrop = ({ unit }: Props) => {

@@ -15,7 +15,7 @@ type Props = {
 export function CalendarEditorView({ calendarId }: Props) {
 	const { data: calendar, isLoading } = useGetCalendarQuery({ calendarId })
 
-	const { setCalendar } = calendarEditorSlice.actions
+	const { setCalendarDraft: setCalendar } = calendarEditorSlice.actions
 	const dispatch = useDispatch()
 	useEffect(() => {
 		dispatch(setCalendar(calendar ?? null))

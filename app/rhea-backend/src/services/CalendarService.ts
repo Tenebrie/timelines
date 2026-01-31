@@ -61,6 +61,28 @@ export const CalendarService = {
 						position: 'asc',
 					},
 					include: {
+						children: {
+							orderBy: {
+								position: 'asc',
+							},
+						},
+					},
+				},
+			},
+		})
+	},
+
+	getWorldCalendar: async ({ calendarId }: { calendarId: string }) => {
+		const calendar = await getPrismaClient().calendar.findUniqueOrThrow({
+			where: {
+				id: calendarId,
+			},
+			include: {
+				units: {
+					orderBy: {
+						position: 'asc',
+					},
+					include: {
 						parents: {
 							orderBy: {
 								position: 'asc',
@@ -75,10 +97,6 @@ export const CalendarService = {
 				},
 			},
 		})
-	},
-
-	getWorldCalendar: async ({ calendarId }: { calendarId: string }) => {
-		const calendar = await CalendarService.getEditorCalendar({ calendarId })
 		return {
 			...calendar,
 			units: calendar.units.map((unit) => ({

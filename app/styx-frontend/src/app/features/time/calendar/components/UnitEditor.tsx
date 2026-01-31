@@ -2,6 +2,8 @@ import { UpdateCalendarUnitApiArg, useUpdateCalendarUnitMutation } from '@api/ca
 import { CalendarDraftUnit } from '@api/types/calendarTypes'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -14,6 +16,7 @@ import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import { getCalendarEditorState } from '../CalendarSliceSelectors'
 import { CalendarUnitPreview } from '../preview/CalendarUnitPreview'
+import { CalendarTimestampForm } from '../preview/components/CalendarTimestampForm'
 import { AddChildForm } from './AddChildForm'
 import { ChildrenList } from './ChildrenList'
 
@@ -64,6 +67,7 @@ export function UnitEditor({ unit }: Props) {
 			displayNameShort: body.displayNameShort ?? prev.displayNameShort,
 			displayNamePlural: body.displayNamePlural ?? prev.displayNamePlural,
 			dateFormatShorthand: body.dateFormatShorthand ?? prev.dateFormatShorthand,
+			displayFormat: body.displayFormat as CalendarDraftUnit['displayFormat'],
 		}))
 		onUpdateUnitThrottled(body)
 	})
@@ -74,11 +78,19 @@ export function UnitEditor({ unit }: Props) {
 		return null
 	}
 
+	const availableDisplayModes = [
+		{ id: 'Name', name: 'Name' },
+		{ id: 'NameOneIndexed', name: 'Name One Indexed' },
+		{ id: 'Numeric', name: 'Numeric' },
+		{ id: 'NumericOneIndexed', name: 'Numeric One Indexed' },
+		{ id: 'Hidden', name: 'Hidden' },
+	]
+
 	return (
 		<Stack gap={2} direction="row">
 			<Stack gap={2} sx={{ flex: 1 }}>
 				{/* Unit Details */}
-				<Stack gap={2}>
+				<Stack gap={2} direction="row">
 					<TextField
 						label="Name"
 						size="small"
@@ -86,6 +98,21 @@ export function UnitEditor({ unit }: Props) {
 						onChange={(e) => onUpdateUnit({ name: e.target.value })}
 						sx={{ flex: 1 }}
 					/>
+					<Select
+						size="small"
+						value={unitDraft.displayFormat}
+						onChange={(e) => {
+							onUpdateUnit({ displayFormat: e.target.value })
+						}}
+						sx={{ minWidth: 150 }}
+					>
+						{/* TODO: Dynamic enum values */}
+						{availableDisplayModes.map((u) => (
+							<MenuItem key={u.id} value={u.id}>
+								{u.name}
+							</MenuItem>
+						))}
+					</Select>
 				</Stack>
 				<Stack direction="row" gap={2}>
 					<TextField
@@ -147,12 +174,20 @@ export function UnitEditor({ unit }: Props) {
 			</Stack>
 
 			{/* Tree Preview */}
-			<Box sx={{ flex: 0.5 }}>
-				<Typography variant="subtitle2" gutterBottom>
-					Structure Preview
-				</Typography>
-				<CalendarUnitPreview unit={unit} />
-			</Box>
+			<Stack sx={{ flex: 0.5 }} gap={2}>
+				<Stack>
+					<Typography variant="subtitle2" gutterBottom>
+						Timestamp Format
+					</Typography>
+					<CalendarTimestampForm />
+				</Stack>
+				<Stack>
+					<Typography variant="subtitle2" gutterBottom>
+						Structure Preview
+					</Typography>
+					<CalendarUnitPreview unit={unit} />
+				</Stack>
+			</Stack>
 		</Stack>
 	)
 }

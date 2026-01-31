@@ -1,4 +1,5 @@
 import { useCreateCalendarUnitMutation } from '@api/calendarApi'
+import { CalendarDraftUnit } from '@api/types/calendarTypes'
 import Add from '@mui/icons-material/Add'
 import ArrowBack from '@mui/icons-material/ArrowBack'
 import Box from '@mui/material/Box'
@@ -14,11 +15,10 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getCalendarEditorState } from '../CalendarSliceSelectors'
-import { CalendarUnit } from '../types'
 import { CalendarUnitListItem } from './CalendarUnitListItem'
 
 type Props = {
-	selectedUnit: CalendarUnit | null
+	selectedUnit: CalendarDraftUnit | null
 	onSelectUnit: (unitId: string | undefined) => void
 }
 

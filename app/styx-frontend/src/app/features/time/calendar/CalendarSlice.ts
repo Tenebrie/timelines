@@ -1,17 +1,16 @@
+import { CalendarDraft } from '@api/types/calendarTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Calendar } from './types'
-
 export const initialState = {
-	calendar: null as Calendar | null,
+	calendar: null as CalendarDraft | null,
 }
 
 export const calendarEditorSlice = createSlice({
 	name: 'calendarEditor',
 	initialState,
 	reducers: {
-		setCalendar: (state, action: PayloadAction<Calendar | null>) => {
+		setCalendarDraft: (state, action: PayloadAction<CalendarDraft | null>) => {
 			state.calendar = action.payload
 		},
 	},

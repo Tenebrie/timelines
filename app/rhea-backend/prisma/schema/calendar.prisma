@@ -55,7 +55,14 @@ model CalendarUnitRelation {
 }
 
 enum CalendarUnitDisplayFormat {
+    // Month 0
     Name
+    // Month 1
+    NameOneIndexed
+    // 0
     Numeric
+    // 1
+    NumericOneIndexed
+    // Not displayed
     Hidden
 }

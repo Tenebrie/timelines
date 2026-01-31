@@ -1,6 +1,7 @@
 import { GetCalendarApiResponse, GetCalendarPreviewApiResponse } from '@api/calendarApi'
 
 export type Calendar = GetCalendarPreviewApiResponse
+export type CalendarUnit = Calendar['units'][number]
 export type CalendarDraft = GetCalendarApiResponse
 export type CalendarDraftUnit = CalendarDraft['units'][number]
 export type CalendarDraftUnitChildRelation = CalendarDraftUnit['children'][number]

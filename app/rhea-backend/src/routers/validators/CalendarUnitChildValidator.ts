@@ -10,7 +10,8 @@ const calendarUnitChildSchema = z.array(
 )
 
 export const CalendarUnitChildValidator = RequiredParam({
-	parse: (v) => calendarUnitChildSchema.parse(v) as z.infer<typeof calendarUnitChildSchema>,
+	// TODO: fix validation in Moonflower?
+	parse: (v) => JSON.parse(v!) as z.infer<typeof calendarUnitChildSchema>,
 	description: 'List of child calendar units with their labels and repeat counts',
 	errorMessage: 'Invalid calendar unit children format',
 })

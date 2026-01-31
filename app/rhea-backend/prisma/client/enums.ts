@@ -37,7 +37,9 @@ export type AssetStatus = (typeof AssetStatus)[keyof typeof AssetStatus]
 
 export const CalendarUnitDisplayFormat = {
   Name: 'Name',
+  NameOneIndexed: 'NameOneIndexed',
   Numeric: 'Numeric',
+  NumericOneIndexed: 'NumericOneIndexed',
   Hidden: 'Hidden'
 } as const
 

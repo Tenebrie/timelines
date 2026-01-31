@@ -1,4 +1,4 @@
-import { WorldAccessMode } from '@prisma/client'
+import { CalendarUnitDisplayFormat, WorldAccessMode } from '@prisma/client'
 import { keysOf } from '@src/utils/keysOf.js'
 import { Router, useApiEndpoint } from 'moonflower'
 
@@ -21,6 +21,15 @@ router.get('/api/constants/world-access-modes', async () => {
 	})
 
 	return keysOf(WorldAccessMode)
+})
+
+router.get('/api/constants/calendar-unit-display-formats', async () => {
+	useApiEndpoint({
+		name: 'listCalendarUnitDisplayFormats',
+		description: 'Lists all available calendar unit display formats.',
+	})
+
+	return keysOf(CalendarUnitDisplayFormat)
 })
 
 export const ConstantsRouter = router

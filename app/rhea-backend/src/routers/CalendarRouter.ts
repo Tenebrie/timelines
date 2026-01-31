@@ -1,3 +1,4 @@
+import { CalendarUnitDisplayFormat } from '@prisma/client'
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
@@ -118,7 +119,7 @@ router.patch('/api/calendar/:calendarId', async (ctx) => {
 
 	const { name, dateFormat } = useRequestBody(ctx, {
 		name: OptionalParam(NameStringValidator),
-		dateFormat: OptionalParam(StringValidator),
+		dateFormat: OptionalParam(NullableStringValidator),
 	})
 
 	await AuthorizationService.checkUserCalendarWriteAccessById(ctx.user, calendarId)
@@ -200,6 +201,8 @@ router.patch('/api/calendar/:calendarId/unit/:unitId', async (ctx) => {
 		displayNameShort: OptionalParam(NullableNameStringValidator),
 		displayNamePlural: OptionalParam(NullableNameStringValidator),
 		dateFormatShorthand: OptionalParam(NullableStringValidator),
+		// TODO: Validate enum properly
+		displayFormat: OptionalParam(StringValidator),
 		children: OptionalParam(CalendarUnitChildValidator),
 		position: OptionalParam(NumberValidator),
 	})
@@ -213,6 +216,7 @@ router.patch('/api/calendar/:calendarId/unit/:unitId', async (ctx) => {
 			displayNameShort: params.displayNameShort,
 			displayNamePlural: params.displayNamePlural,
 			dateFormatShorthand: params.dateFormatShorthand,
+			displayFormat: params.displayFormat as CalendarUnitDisplayFormat,
 			children: params.children,
 			position: params.position,
 		},

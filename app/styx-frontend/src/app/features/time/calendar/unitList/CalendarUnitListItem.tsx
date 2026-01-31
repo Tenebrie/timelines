@@ -1,4 +1,5 @@
 import { useDeleteCalendarUnitMutation } from '@api/calendarApi'
+import { CalendarDraftUnit } from '@api/types/calendarTypes'
 import Delete from '@mui/icons-material/Delete'
 import IconButton from '@mui/material/IconButton'
 import ListItemButton from '@mui/material/ListItemButton'
@@ -7,12 +8,11 @@ import { useSelector } from 'react-redux'
 
 import { getCalendarEditorState } from '../CalendarSliceSelectors'
 import { useCalendarUnitDragDrop } from '../hooks/useCalendarUnitDragDrop'
-import { CalendarUnit } from '../types'
 import { CalendarUnitListDropHandle } from './components/CalendarUnitListDropHandle'
 
 type Props = {
-	unit: CalendarUnit
-	selectedUnit: CalendarUnit | null
+	unit: CalendarDraftUnit
+	selectedUnit: CalendarDraftUnit | null
 	onSelectUnit: (unitId: string | undefined) => void
 }
 
