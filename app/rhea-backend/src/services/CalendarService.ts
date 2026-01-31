@@ -161,7 +161,7 @@ export const CalendarService = {
 		params: Omit<CalendarUnitUncheckedUpdateWithoutCalendarInput, 'calendar' | 'children'> & {
 			children:
 				| {
-						id: string
+						childUnitId: string
 						repeats: number
 						label?: string | null
 				  }[]
@@ -181,7 +181,7 @@ export const CalendarService = {
 								deleteMany: {},
 								createMany: {
 									data: params.children.map((child, index) => ({
-										childUnitId: child.id,
+										childUnitId: child.childUnitId,
 										label: child.label,
 										repeats: child.repeats,
 										position: index * 2,

@@ -116,7 +116,8 @@ function useFormatTimestamp({ calendar }: { calendar?: Calendar }) {
 				}
 			}
 
-			for (const char of calendar.dateFormat!) {
+			const dateFormat = calendar.dateFormat ?? ''
+			for (const char of dateFormat) {
 				if (char === current.symbol) {
 					current.count += 1
 				} else {
@@ -156,13 +157,26 @@ function useFormatTimestamp({ calendar }: { calendar?: Calendar }) {
 		}
 
 		const format = ({ timestamp }: { timestamp: number }) => {
-			return calendar.units
+			const roots = calendar.units
 				.filter((u) => u.parents.length === 0)
-				.map((unit) => {
-					const parsed = parseTimestamp({ unit, timestamp })
-					return formatParsed(parsed)
-				})[0]
-			// .join(' | ')
+				.map((rootUnit) => {
+					const parsed = parseTimestamp({ unit: rootUnit, timestamp })
+					return {
+						unit: rootUnit,
+						parsed,
+					}
+				})
+				.sort((a, b) => a.unit.position - b.unit.position)
+
+			const combinedTimeMap: ParsedTimestamp = new Map()
+			for (const root of roots) {
+				for (const [key, value] of root.parsed.entries()) {
+					if (!combinedTimeMap.has(key)) {
+						combinedTimeMap.set(key, value)
+					}
+				}
+			}
+			return formatParsed(combinedTimeMap)
 		}
 
 		return format

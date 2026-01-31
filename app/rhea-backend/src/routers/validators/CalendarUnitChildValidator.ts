@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 const calendarUnitChildSchema = z.array(
 	z.object({
-		id: z.string(),
+		childUnitId: z.string(),
 		label: z.string().optional().nullable(),
 		repeats: z.number().default(1),
 	}),
