@@ -49,9 +49,9 @@ export type GetWorldEventTracksApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	position: number
 	name: string
 	worldId: string
-	position: number
 	visible: boolean
 }[]
 export type GetWorldEventTracksApiArg = {

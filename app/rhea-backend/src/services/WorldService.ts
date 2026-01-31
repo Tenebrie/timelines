@@ -78,6 +78,15 @@ export const WorldService = {
 			},
 			include: {
 				collaborators: true,
+				calendars: {
+					include: {
+						units: {
+							include: {
+								children: true,
+							},
+						},
+					},
+				},
 			},
 		})
 
@@ -120,6 +129,15 @@ export const WorldService = {
 						deltaStates: {
 							orderBy: {
 								timestamp: 'asc',
+							},
+						},
+					},
+				},
+				calendars: {
+					include: {
+						units: {
+							include: {
+								children: true,
 							},
 						},
 					},

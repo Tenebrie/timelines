@@ -24,51 +24,153 @@ const injectedRtkApi = api
 export { injectedRtkApi as worldListApi }
 export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
+		calendars: {
+			units: {
+				children: {
+					id: string
+					createdAt: string
+					updatedAt: string
+					position: number
+					label?: null | string
+					repeats: number
+					parentUnitId: string
+					childUnitId: string
+				}[]
+				calendarId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				position: number
+				name: string
+				displayName?: null | string
+				displayNameShort?: null | string
+				displayNamePlural?: null | string
+				displayFormat: 'Name' | 'Numeric' | 'Hidden'
+				dateFormatShorthand?: null | string
+				duration: number
+			}[]
+			ownerId?: null | string
+			id: string
+			createdAt: string
+			updatedAt: string
+			position: number
+			name: string
+			dateFormat?: null | string
+			worldId?: null | string
+		}[]
 		collaborators: {
 			worldId: string
-			userId: string
 			access: 'ReadOnly' | 'Editing'
+			userId: string
 		}[]
-		description: string
+		ownerId: string
+		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+		description: string
 		timeOrigin: string
-		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	contributableWorlds: {
+		calendars: {
+			units: {
+				children: {
+					id: string
+					createdAt: string
+					updatedAt: string
+					position: number
+					label?: null | string
+					repeats: number
+					parentUnitId: string
+					childUnitId: string
+				}[]
+				calendarId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				position: number
+				name: string
+				displayName?: null | string
+				displayNameShort?: null | string
+				displayNamePlural?: null | string
+				displayFormat: 'Name' | 'Numeric' | 'Hidden'
+				dateFormatShorthand?: null | string
+				duration: number
+			}[]
+			ownerId?: null | string
+			id: string
+			createdAt: string
+			updatedAt: string
+			position: number
+			name: string
+			dateFormat?: null | string
+			worldId?: null | string
+		}[]
 		collaborators: {
 			worldId: string
-			userId: string
 			access: 'ReadOnly' | 'Editing'
+			userId: string
 		}[]
-		description: string
+		ownerId: string
+		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+		description: string
 		timeOrigin: string
-		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	visibleWorlds: {
+		calendars: {
+			units: {
+				children: {
+					id: string
+					createdAt: string
+					updatedAt: string
+					position: number
+					label?: null | string
+					repeats: number
+					parentUnitId: string
+					childUnitId: string
+				}[]
+				calendarId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				position: number
+				name: string
+				displayName?: null | string
+				displayNameShort?: null | string
+				displayNamePlural?: null | string
+				displayFormat: 'Name' | 'Numeric' | 'Hidden'
+				dateFormatShorthand?: null | string
+				duration: number
+			}[]
+			ownerId?: null | string
+			id: string
+			createdAt: string
+			updatedAt: string
+			position: number
+			name: string
+			dateFormat?: null | string
+			worldId?: null | string
+		}[]
 		collaborators: {
 			worldId: string
-			userId: string
 			access: 'ReadOnly' | 'Editing'
+			userId: string
 		}[]
-		description: string
+		ownerId: string
+		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+		description: string
 		timeOrigin: string
-		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 }
@@ -86,14 +188,14 @@ export type CreateWorldApiArg = {
 	}
 }
 export type DeleteWorldApiResponse = /** status 200  */ {
-	description: string
+	ownerId: string
+	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+	description: string
 	timeOrigin: string
-	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type DeleteWorldApiArg = {

@@ -1,4 +1,4 @@
-import { Actor, MindmapNode, User, WikiArticle, WorldEvent, WorldEventDelta } from '@prisma/client'
+import { Actor, Calendar, MindmapNode, User, WikiArticle, WorldEvent, WorldEventDelta } from '@prisma/client'
 import { ParameterizedContext } from 'koa'
 
 import {
@@ -91,6 +91,20 @@ export const RedisService = {
 			data: {
 				worldId,
 				actor: JSON.stringify(actorToSend),
+			},
+		})
+	},
+
+	notifyAboutCalendarUpdate: (
+		ctx: ContextWithSessionId,
+		{ worldId, calendar }: { worldId: string; calendar: Calendar },
+	) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.CALENDAR_UPDATED,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
+				calendar: JSON.stringify(calendar),
 			},
 		})
 	},

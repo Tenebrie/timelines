@@ -238,8 +238,8 @@ export type GetWorldColorsApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	worldId: string
-	value: string
 	label?: null | string
+	value: string
 }[]
 export type GetWorldColorsApiArg = {
 	/** Any string value with at least one character */
@@ -250,8 +250,8 @@ export type CreateWorldColorApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	worldId: string
-	value: string
 	label?: null | string
+	value: string
 }
 export type CreateWorldColorApiArg = {
 	/** Any string value with at least one character */
@@ -273,24 +273,24 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
+		position: number
 		name: string
 		worldId: string
 		icon: string
 		color: string
 		contentRich: string
 		contentYjs?: null | string
-		position: number
 		parentId?: null | string
 	}[]
 	id: string
 	createdAt: string
 	updatedAt: string
+	position: number
 	name: string
 	worldId: string
 	icon: string
 	color: string
 	contentRich: string
-	position: number
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {

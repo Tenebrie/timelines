@@ -16,9 +16,11 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToolsIndexRouteImport } from './routes/tools/index'
 import { Route as ProfileIndexRouteImport } from './routes/profile/index'
+import { Route as CalendarsIndexRouteImport } from './routes/calendars/index'
 import { Route as ToolsToolsRouteImport } from './routes/tools/_tools'
 import { Route as SecretMusicRouteImport } from './routes/secret/music'
 import { Route as ProfileProfileRouteImport } from './routes/profile/_profile'
+import { Route as CalendarsCalendarIdRouteImport } from './routes/calendars/$calendarId'
 import { Route as WorldWorldIdWorldRouteImport } from './routes/world.$worldId/_world'
 import { Route as ToolsToolsImageConverterRouteImport } from './routes/tools/_tools.image-converter'
 import { Route as ProfileProfileStorageRouteImport } from './routes/profile/_profile.storage'
@@ -66,6 +68,11 @@ const ProfileIndexRoute = ProfileIndexRouteImport.update({
   path: '/profile/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CalendarsIndexRoute = CalendarsIndexRouteImport.update({
+  id: '/calendars/',
+  path: '/calendars/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsToolsRoute = ToolsToolsRouteImport.update({
   id: '/tools/_tools',
   path: '/tools',
@@ -79,6 +86,11 @@ const SecretMusicRoute = SecretMusicRouteImport.update({
 const ProfileProfileRoute = ProfileProfileRouteImport.update({
   id: '/profile/_profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarsCalendarIdRoute = CalendarsCalendarIdRouteImport.update({
+  id: '/calendars/$calendarId',
+  path: '/calendars/$calendarId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorldWorldIdWorldRoute = WorldWorldIdWorldRouteImport.update({
@@ -150,9 +162,11 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/calendars/$calendarId': typeof CalendarsCalendarIdRoute
   '/profile': typeof ProfileProfileRouteWithChildren
   '/secret/music': typeof SecretMusicRoute
   '/tools': typeof ToolsToolsRouteWithChildren
+  '/calendars/': typeof CalendarsIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/tools/': typeof ToolsIndexRoute
   '/profile/public': typeof ProfileProfilePublicRoute
@@ -173,9 +187,11 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/calendars/$calendarId': typeof CalendarsCalendarIdRoute
   '/profile': typeof ProfileIndexRoute
   '/secret/music': typeof SecretMusicRoute
   '/tools': typeof ToolsIndexRoute
+  '/calendars': typeof CalendarsIndexRoute
   '/profile/public': typeof ProfileProfilePublicRoute
   '/profile/security': typeof ProfileProfileSecurityRoute
   '/profile/storage': typeof ProfileProfileStorageRoute
@@ -194,9 +210,11 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/calendars/$calendarId': typeof CalendarsCalendarIdRoute
   '/profile/_profile': typeof ProfileProfileRouteWithChildren
   '/secret/music': typeof SecretMusicRoute
   '/tools/_tools': typeof ToolsToolsRouteWithChildren
+  '/calendars/': typeof CalendarsIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/tools/': typeof ToolsIndexRoute
   '/profile/_profile/public': typeof ProfileProfilePublicRoute
@@ -219,9 +237,11 @@ export interface FileRouteTypes {
     | '/home'
     | '/login'
     | '/register'
+    | '/calendars/$calendarId'
     | '/profile'
     | '/secret/music'
     | '/tools'
+    | '/calendars/'
     | '/profile/'
     | '/tools/'
     | '/profile/public'
@@ -242,9 +262,11 @@ export interface FileRouteTypes {
     | '/home'
     | '/login'
     | '/register'
+    | '/calendars/$calendarId'
     | '/profile'
     | '/secret/music'
     | '/tools'
+    | '/calendars'
     | '/profile/public'
     | '/profile/security'
     | '/profile/storage'
@@ -262,9 +284,11 @@ export interface FileRouteTypes {
     | '/home'
     | '/login'
     | '/register'
+    | '/calendars/$calendarId'
     | '/profile/_profile'
     | '/secret/music'
     | '/tools/_tools'
+    | '/calendars/'
     | '/profile/'
     | '/tools/'
     | '/profile/_profile/public'
@@ -286,9 +310,11 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  CalendarsCalendarIdRoute: typeof CalendarsCalendarIdRoute
   ProfileProfileRoute: typeof ProfileProfileRouteWithChildren
   SecretMusicRoute: typeof SecretMusicRoute
   ToolsToolsRoute: typeof ToolsToolsRouteWithChildren
+  CalendarsIndexRoute: typeof CalendarsIndexRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
   ToolsIndexRoute: typeof ToolsIndexRoute
   WorldWorldIdWorldRoute: typeof WorldWorldIdWorldRouteWithChildren
@@ -345,6 +371,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/calendars/': {
+      id: '/calendars/'
+      path: '/calendars'
+      fullPath: '/calendars/'
+      preLoaderRoute: typeof CalendarsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/_tools': {
       id: '/tools/_tools'
       path: '/tools'
@@ -364,6 +397,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendars/$calendarId': {
+      id: '/calendars/$calendarId'
+      path: '/calendars/$calendarId'
+      fullPath: '/calendars/$calendarId'
+      preLoaderRoute: typeof CalendarsCalendarIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/world/$worldId/_world': {
@@ -514,9 +554,11 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  CalendarsCalendarIdRoute: CalendarsCalendarIdRoute,
   ProfileProfileRoute: ProfileProfileRouteWithChildren,
   SecretMusicRoute: SecretMusicRoute,
   ToolsToolsRoute: ToolsToolsRouteWithChildren,
+  CalendarsIndexRoute: CalendarsIndexRoute,
   ProfileIndexRoute: ProfileIndexRoute,
   ToolsIndexRoute: ToolsIndexRoute,
   WorldWorldIdWorldRoute: WorldWorldIdWorldRouteWithChildren,

@@ -226,6 +226,23 @@ export type EnumAssetStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumAssetStatusFilter<$PrismaModel>
 }
 
+export type EnumCalendarUnitDisplayFormatFilter<$PrismaModel = never> = {
+  equals?: $Enums.CalendarUnitDisplayFormat | Prisma.EnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
+  in?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel> | $Enums.CalendarUnitDisplayFormat
+}
+
+export type EnumCalendarUnitDisplayFormatWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CalendarUnitDisplayFormat | Prisma.EnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
+  in?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCalendarUnitDisplayFormatWithAggregatesFilter<$PrismaModel> | $Enums.CalendarUnitDisplayFormat
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel>
+}
+
 export type EnumFlagValueFilter<$PrismaModel = never> = {
   equals?: $Enums.FlagValue | Prisma.EnumFlagValueFieldRefInput<$PrismaModel>
   in?: $Enums.FlagValue[] | Prisma.ListEnumFlagValueFieldRefInput<$PrismaModel>
@@ -622,6 +639,23 @@ export type NestedEnumAssetStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumAssetStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumAssetStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel = never> = {
+  equals?: $Enums.CalendarUnitDisplayFormat | Prisma.EnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
+  in?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel> | $Enums.CalendarUnitDisplayFormat
+}
+
+export type NestedEnumCalendarUnitDisplayFormatWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CalendarUnitDisplayFormat | Prisma.EnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
+  in?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCalendarUnitDisplayFormatWithAggregatesFilter<$PrismaModel> | $Enums.CalendarUnitDisplayFormat
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel>
 }
 
 export type NestedEnumFlagValueFilter<$PrismaModel = never> = {

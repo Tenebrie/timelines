@@ -53,8 +53,8 @@ export const options: Options = {
 }
 
 export function setup(): void {
-	console.log(`Running load test against: ${BASE_URL}`)
-	console.log('This test will run for approximately 7 minutes')
+	console.debug(`Running load test against: ${BASE_URL}`)
+	console.debug('This test will run for approximately 7 minutes')
 }
 
 export default function (): void {
@@ -144,6 +144,6 @@ export default function (): void {
 }
 
 export function teardown(): void {
-	console.log('Load test complete')
-	console.log('Check the summary above for detailed metrics')
+	console.debug('Load test complete')
+	console.debug('Check the summary above for detailed metrics')
 }

@@ -53,9 +53,9 @@ interface SetupData {
 }
 
 export function setup(): SetupData {
-	console.log(`Running SOAK TEST against: ${BASE_URL}`)
-	console.log('⏱️  This test runs for approximately 30 minutes')
-	console.log('Monitoring for memory leaks and performance degradation...')
+	console.debug(`Running SOAK TEST against: ${BASE_URL}`)
+	console.debug('⏱️  This test runs for approximately 30 minutes')
+	console.debug('Monitoring for memory leaks and performance degradation...')
 	return {
 		startTime: Date.now(),
 	}
@@ -133,7 +133,7 @@ export default function (_data: SetupData): void {
 
 export function teardown(data: SetupData): void {
 	const duration = ((Date.now() - data.startTime) / 1000 / 60).toFixed(1)
-	console.log(`\nSoak test complete after ${duration} minutes`)
-	console.log('Review iteration_duration trend over time to detect degradation')
-	console.log('Check successful_iterations vs failed_iterations ratio')
+	console.debug(`\nSoak test complete after ${duration} minutes`)
+	console.debug('Review iteration_duration trend over time to detect degradation')
+	console.debug('Check successful_iterations vs failed_iterations ratio')
 }

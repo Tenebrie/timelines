@@ -387,6 +387,9 @@ export const ModelName = {
   Actor: 'Actor',
   UserAnnouncement: 'UserAnnouncement',
   Asset: 'Asset',
+  Calendar: 'Calendar',
+  CalendarUnit: 'CalendarUnit',
+  CalendarUnitRelation: 'CalendarUnitRelation',
   SavedColor: 'SavedColor',
   Flags: 'Flags',
   UserFavoriteIconSet: 'UserFavoriteIconSet',
@@ -416,7 +419,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "actor" | "userAnnouncement" | "asset" | "savedColor" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "user" | "collaboratingUser" | "tag" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack"
+    modelProps: "actor" | "userAnnouncement" | "asset" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "savedColor" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "user" | "collaboratingUser" | "tag" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -639,6 +642,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AssetCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AssetCountAggregateOutputType> | number
+        }
+      }
+    }
+    Calendar: {
+      payload: Prisma.$CalendarPayload<ExtArgs>
+      fields: Prisma.CalendarFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CalendarFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CalendarFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarPayload>
+        }
+        findFirst: {
+          args: Prisma.CalendarFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CalendarFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarPayload>
+        }
+        findMany: {
+          args: Prisma.CalendarFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarPayload>[]
+        }
+        create: {
+          args: Prisma.CalendarCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarPayload>
+        }
+        createMany: {
+          args: Prisma.CalendarCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CalendarCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarPayload>[]
+        }
+        delete: {
+          args: Prisma.CalendarDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarPayload>
+        }
+        update: {
+          args: Prisma.CalendarUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarPayload>
+        }
+        deleteMany: {
+          args: Prisma.CalendarDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CalendarUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CalendarUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarPayload>[]
+        }
+        upsert: {
+          args: Prisma.CalendarUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarPayload>
+        }
+        aggregate: {
+          args: Prisma.CalendarAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCalendar>
+        }
+        groupBy: {
+          args: Prisma.CalendarGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CalendarGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CalendarCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CalendarCountAggregateOutputType> | number
+        }
+      }
+    }
+    CalendarUnit: {
+      payload: Prisma.$CalendarUnitPayload<ExtArgs>
+      fields: Prisma.CalendarUnitFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CalendarUnitFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CalendarUnitFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitPayload>
+        }
+        findFirst: {
+          args: Prisma.CalendarUnitFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CalendarUnitFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitPayload>
+        }
+        findMany: {
+          args: Prisma.CalendarUnitFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitPayload>[]
+        }
+        create: {
+          args: Prisma.CalendarUnitCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitPayload>
+        }
+        createMany: {
+          args: Prisma.CalendarUnitCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CalendarUnitCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitPayload>[]
+        }
+        delete: {
+          args: Prisma.CalendarUnitDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitPayload>
+        }
+        update: {
+          args: Prisma.CalendarUnitUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitPayload>
+        }
+        deleteMany: {
+          args: Prisma.CalendarUnitDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CalendarUnitUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CalendarUnitUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitPayload>[]
+        }
+        upsert: {
+          args: Prisma.CalendarUnitUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitPayload>
+        }
+        aggregate: {
+          args: Prisma.CalendarUnitAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCalendarUnit>
+        }
+        groupBy: {
+          args: Prisma.CalendarUnitGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CalendarUnitGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CalendarUnitCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CalendarUnitCountAggregateOutputType> | number
+        }
+      }
+    }
+    CalendarUnitRelation: {
+      payload: Prisma.$CalendarUnitRelationPayload<ExtArgs>
+      fields: Prisma.CalendarUnitRelationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CalendarUnitRelationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitRelationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CalendarUnitRelationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitRelationPayload>
+        }
+        findFirst: {
+          args: Prisma.CalendarUnitRelationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitRelationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CalendarUnitRelationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitRelationPayload>
+        }
+        findMany: {
+          args: Prisma.CalendarUnitRelationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitRelationPayload>[]
+        }
+        create: {
+          args: Prisma.CalendarUnitRelationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitRelationPayload>
+        }
+        createMany: {
+          args: Prisma.CalendarUnitRelationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CalendarUnitRelationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitRelationPayload>[]
+        }
+        delete: {
+          args: Prisma.CalendarUnitRelationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitRelationPayload>
+        }
+        update: {
+          args: Prisma.CalendarUnitRelationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitRelationPayload>
+        }
+        deleteMany: {
+          args: Prisma.CalendarUnitRelationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CalendarUnitRelationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CalendarUnitRelationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitRelationPayload>[]
+        }
+        upsert: {
+          args: Prisma.CalendarUnitRelationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CalendarUnitRelationPayload>
+        }
+        aggregate: {
+          args: Prisma.CalendarUnitRelationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCalendarUnitRelation>
+        }
+        groupBy: {
+          args: Prisma.CalendarUnitRelationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CalendarUnitRelationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CalendarUnitRelationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CalendarUnitRelationCountAggregateOutputType> | number
         }
       }
     }
@@ -1764,6 +1989,52 @@ export const AssetScalarFieldEnum = {
 export type AssetScalarFieldEnum = (typeof AssetScalarFieldEnum)[keyof typeof AssetScalarFieldEnum]
 
 
+export const CalendarScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  position: 'position',
+  name: 'name',
+  dateFormat: 'dateFormat',
+  worldId: 'worldId',
+  ownerId: 'ownerId'
+} as const
+
+export type CalendarScalarFieldEnum = (typeof CalendarScalarFieldEnum)[keyof typeof CalendarScalarFieldEnum]
+
+
+export const CalendarUnitScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  position: 'position',
+  name: 'name',
+  displayName: 'displayName',
+  displayNameShort: 'displayNameShort',
+  displayNamePlural: 'displayNamePlural',
+  displayFormat: 'displayFormat',
+  dateFormatShorthand: 'dateFormatShorthand',
+  duration: 'duration',
+  calendarId: 'calendarId'
+} as const
+
+export type CalendarUnitScalarFieldEnum = (typeof CalendarUnitScalarFieldEnum)[keyof typeof CalendarUnitScalarFieldEnum]
+
+
+export const CalendarUnitRelationScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  label: 'label',
+  repeats: 'repeats',
+  position: 'position',
+  parentUnitId: 'parentUnitId',
+  childUnitId: 'childUnitId'
+} as const
+
+export type CalendarUnitRelationScalarFieldEnum = (typeof CalendarUnitRelationScalarFieldEnum)[keyof typeof CalendarUnitRelationScalarFieldEnum]
+
+
 export const SavedColorScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -2073,6 +2344,20 @@ export type ListEnumAssetStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
+ * Reference to a field of type 'CalendarUnitDisplayFormat'
+ */
+export type EnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CalendarUnitDisplayFormat'>
+    
+
+
+/**
+ * Reference to a field of type 'CalendarUnitDisplayFormat[]'
+ */
+export type ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CalendarUnitDisplayFormat[]'>
+    
+
+
+/**
  * Reference to a field of type 'FlagValue'
  */
 export type EnumFlagValueFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FlagValue'>
@@ -2309,6 +2594,9 @@ export type GlobalOmitConfig = {
   actor?: Prisma.ActorOmit
   userAnnouncement?: Prisma.UserAnnouncementOmit
   asset?: Prisma.AssetOmit
+  calendar?: Prisma.CalendarOmit
+  calendarUnit?: Prisma.CalendarUnitOmit
+  calendarUnitRelation?: Prisma.CalendarUnitRelationOmit
   savedColor?: Prisma.SavedColorOmit
   flags?: Prisma.FlagsOmit
   userFavoriteIconSet?: Prisma.UserFavoriteIconSetOmit

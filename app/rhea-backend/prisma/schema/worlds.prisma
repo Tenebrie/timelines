@@ -46,6 +46,7 @@ model World {
   worldEventTracks    WorldEventTrack[]
   worldCommonIconSets WorldCommonIconSet[]
   savedColors         SavedColor[]
+  calendars           Calendar[]
 }
 
 model WorldEvent {

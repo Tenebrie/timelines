@@ -2,12 +2,12 @@ import { Prisma } from '@prisma/client'
 
 import { getPrismaClient } from '../dbClients/DatabaseClient.js'
 
-export const makeSortWikiArticles = async (worldId: string, prisma?: Prisma.TransactionClient) => {
+export const makeSortCalendarUnitsQuery = async (calendarId: string, prisma?: Prisma.TransactionClient) => {
 	prisma = prisma ?? getPrismaClient()
 
-	const articles = await prisma.wikiArticle.findMany({
+	const units = await prisma.calendarUnit.findMany({
 		where: {
-			worldId,
+			calendarId,
 		},
 		orderBy: {
 			position: 'asc',
@@ -18,10 +18,10 @@ export const makeSortWikiArticles = async (worldId: string, prisma?: Prisma.Tran
 	})
 
 	return Promise.all(
-		articles.map((article, index) => {
-			return prisma.wikiArticle.update({
+		units.map((unit, index) => {
+			return prisma.calendarUnit.update({
 				where: {
-					id: article.id,
+					id: unit.id,
 				},
 				data: {
 					position: index * 2,

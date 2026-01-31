@@ -329,23 +329,11 @@ yarn docker:fullinstall       # Nuclear option when things break
 - React hooks for state management
 - Functional components only
 
-## 📝 Known Issues & Future Work
-
-**High Priority:**
-
-- Calendar v3: Complete rewrite to support custom time systems
-- Mindmap: Finish relationship visualization
-- Tiptap collaboration: Improve concurrent editing UX
-- WorldEventDelta: Modernize revision system
-
-**Planned Features:**
-
-- Character Map: Miro-like board for relationship editing
-- Enhanced calendar customization
-
 ## 🤖 AI Assistant Guidelines
 
 **When Working on This Codebase:**
+
+0. **Linter policy**: Treat TypeScript errors as CRITICAL errors. Always ensure code is type-safe. Always treat ESLint errors as important and fix them. Ignore Prettier formatting issues only - they will be auto-fixed.
 
 1. **Always remember**: World is the top-level container. All entities belong to a World and cannot escape it.
 
@@ -355,7 +343,7 @@ yarn docker:fullinstall       # Nuclear option when things break
 
 4. **For new features**: Consider whether it needs real-time sync via Calliope.
 
-5. **Type safety**: Never use `any`. Use Prisma types, generated API types, or define proper interfaces.
+5. **Type safety**: Never use `any`. Use Prisma types, generated API types, or define proper interfaces. Avoid type assertions.
 
 6. **Testing**: Add tests for business logic. E2E tests for user-facing features.
 

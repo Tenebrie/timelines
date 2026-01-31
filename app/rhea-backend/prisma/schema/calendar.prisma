@@ -1,0 +1,61 @@
+model Calendar {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+    position  Int
+
+    name  String
+    units CalendarUnit[]
+
+    dateFormat String?
+
+    // A calendar is owned by either a world or a user, and never both
+    world   World?  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+    owner   User?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    worldId String?
+    ownerId String?
+}
+
+model CalendarUnit {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+    position  Int
+
+    name              String
+    displayName       String?
+    displayNameShort  String?
+    displayNamePlural String?
+
+    displayFormat       CalendarUnitDisplayFormat @default(Name)
+    dateFormatShorthand String?
+
+    duration Int @default(1)
+
+    calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+    calendarId String
+
+    parents  CalendarUnitRelation[] @relation("ChildUnit")
+    children CalendarUnitRelation[] @relation("ParentUnit")
+}
+
+model CalendarUnitRelation {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
+    label    String?
+    repeats  Int     @default(1)
+    position Int
+
+    parentUnit   CalendarUnit @relation("ParentUnit", fields: [parentUnitId], references: [id], onDelete: Cascade)
+    childUnit    CalendarUnit @relation("ChildUnit", fields: [childUnitId], references: [id], onDelete: Cascade)
+    parentUnitId String
+    childUnitId  String
+}
+
+enum CalendarUnitDisplayFormat {
+    Name
+    Numeric
+    Hidden
+}

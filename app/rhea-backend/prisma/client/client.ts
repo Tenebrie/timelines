@@ -55,6 +55,21 @@ export type UserAnnouncement = Prisma.UserAnnouncementModel
  */
 export type Asset = Prisma.AssetModel
 /**
+ * Model Calendar
+ * 
+ */
+export type Calendar = Prisma.CalendarModel
+/**
+ * Model CalendarUnit
+ * 
+ */
+export type CalendarUnit = Prisma.CalendarUnitModel
+/**
+ * Model CalendarUnitRelation
+ * 
+ */
+export type CalendarUnitRelation = Prisma.CalendarUnitRelationModel
+/**
  * Model SavedColor
  * 
  */
