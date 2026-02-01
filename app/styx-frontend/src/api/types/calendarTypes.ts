@@ -1,21 +1,9 @@
 import { GetCalendarApiResponse, GetCalendarPreviewApiResponse } from '@api/calendarApi'
+import { ListCalendarUnitDisplayFormatsApiResponse } from '@api/otherApi'
 
 export type Calendar = GetCalendarPreviewApiResponse
 export type CalendarUnit = Calendar['units'][number]
 export type CalendarDraft = GetCalendarApiResponse
 export type CalendarDraftUnit = CalendarDraft['units'][number]
 export type CalendarDraftUnitChildRelation = CalendarDraftUnit['children'][number]
-
-// export type IngestedCalendar = {
-// 	id: string
-// 	createdAt: Date
-// 	updatedAt: Date
-// 	name: string
-// 	worldId?: string | null
-// 	ownerId?: string | null
-// 	units: IngestedCalendarUnit[]
-// }
-
-// export type IngestedCalendarUnit = {
-
-// }
+export type CalendarUnitDisplayType = ListCalendarUnitDisplayFormatsApiResponse[number]

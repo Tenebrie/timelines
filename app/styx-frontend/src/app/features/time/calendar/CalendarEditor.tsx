@@ -1,3 +1,4 @@
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { useSearch } from '@tanstack/react-router'
 import { useMemo } from 'react'
@@ -10,16 +11,21 @@ import { CalendarUnitList } from '@/app/features/time/calendar/unitList/Calendar
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { getCalendarEditorState } from './CalendarSliceSelectors'
+import { CalendarHeader } from './header/CalendarHeader'
 
 export type { CalendarChangeRequest } from './types'
 
 export function CalendarEditor() {
 	const { calendar } = useSelector(getCalendarEditorState)
-	const { unit: selectedUnitId } = useSearch({ from: '/calendars/$calendarId' })
+	const { unit: selectedUnitId } = useSearch({ from: '/calendar/$calendarId' })
 
-	const navigate = useStableNavigate({ from: '/calendars/$calendarId' })
+	const navigate = useStableNavigate({ from: '/calendar/$calendarId' })
 	const onSelectUnit = useEvent((unitId: string | undefined) => {
 		navigate({ search: (prev) => ({ ...prev, unit: unitId }) })
+	})
+
+	const onExit = useEvent(() => {
+		navigate({ to: '/calendar' })
 	})
 
 	const selectedUnit = useMemo(
@@ -29,13 +35,19 @@ export function CalendarEditor() {
 
 	return (
 		<Stack direction="row" sx={{ height: '100%', overflow: 'hidden' }}>
-			<CalendarUnitList selectedUnit={selectedUnit} onSelectUnit={onSelectUnit} />
-			<Stack sx={{ flex: 1, overflow: 'auto', p: 3 }}>
-				{selectedUnit ? (
-					<UnitEditor unit={selectedUnit} />
-				) : (
-					<EmptyState hasUnits={(calendar?.units.length ?? 0) > 0} />
-				)}
+			<CalendarUnitList selectedUnit={selectedUnit} onSelectUnit={onSelectUnit} onExit={onExit} />
+			<Stack sx={{ width: '100%' }}>
+				<Stack sx={{ p: 2 }}>
+					<CalendarHeader />
+				</Stack>
+				<Divider />
+				<Stack sx={{ flex: 1, overflow: 'auto', p: 3 }}>
+					{selectedUnit ? (
+						<UnitEditor key={selectedUnit.id} unit={selectedUnit} />
+					) : (
+						<EmptyState hasUnits={(calendar?.units.length ?? 0) > 0} />
+					)}
+				</Stack>
 			</Stack>
 		</Stack>
 	)

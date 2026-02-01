@@ -58,7 +58,7 @@ export const DeleteWorldModal = () => {
 	)
 
 	return (
-		<Modal visible={isOpen} onClose={onClose}>
+		<Modal visible={isOpen} onClose={onClose} closeOnBackdropClick>
 			<ModalHeader>Delete world</ModalHeader>
 			<Stack spacing={2}>
 				<div>

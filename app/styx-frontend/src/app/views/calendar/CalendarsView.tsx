@@ -6,7 +6,7 @@ import { CalendarListView } from './list/CalendarListView'
 export function CalendarsView() {
 	return (
 		<Stack width="100%" height="100%" alignItems="center">
-			<Container sx={{ marginTop: 4 }}>
+			<Container>
 				<CalendarListView />
 			</Container>
 		</Stack>

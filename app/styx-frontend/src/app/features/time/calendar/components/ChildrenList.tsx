@@ -95,7 +95,7 @@ export function ChildrenList({ parent }: Props) {
 								</MenuItem>
 							))}
 						</Select>
-						<Typography>×</Typography>
+						<Typography>x</Typography>
 						<TextField
 							size="small"
 							type="number"

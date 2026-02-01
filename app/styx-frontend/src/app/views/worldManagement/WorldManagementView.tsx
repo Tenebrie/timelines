@@ -3,10 +3,10 @@ import Stack from '@mui/material/Stack'
 
 import { WorldList } from './components/WorldList/WorldList'
 
-export const Home = () => {
+export const WorldManagementView = () => {
 	return (
-		<Stack width="100%" height="100%" alignItems="center">
-			<Container sx={{ marginTop: 4 }}>
+		<Stack width="100%" height="100%" alignItems="center" sx={{ overflowY: 'auto' }}>
+			<Container maxWidth="md" sx={{ py: 4 }}>
 				<WorldList />
 			</Container>
 		</Stack>

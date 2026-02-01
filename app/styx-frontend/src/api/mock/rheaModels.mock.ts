@@ -40,6 +40,7 @@ export const mockWorldItemModel = (world: Partial<WorldItem> = {}): WorldItem =>
 	ownerId: '1111-2222-3333-4444',
 	collaborators: [],
 	accessMode: 'Private',
+	calendars: [],
 	...world,
 })
 
@@ -122,6 +123,7 @@ export const mockApiWorldDetailsModel = (
 	timeOrigin: '0',
 	accessMode: 'Private',
 	isReadOnly: false,
+	calendars: [],
 	...world,
 })
 

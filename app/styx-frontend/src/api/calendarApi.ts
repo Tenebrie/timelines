@@ -265,7 +265,7 @@ export type UpdateCalendarUnitApiArg = {
 		displayNameShort?: null | string
 		displayNamePlural?: null | string
 		dateFormatShorthand?: null | string
-		displayFormat?: string
+		displayFormat?: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 		children?: {
 			repeats: number
 			childUnitId: string

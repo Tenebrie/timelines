@@ -97,7 +97,7 @@ export const WorldWizardModal = () => {
 
 	return (
 		<>
-			<Modal visible={isOpen} onClose={close}>
+			<Modal visible={isOpen} onClose={close} closeOnBackdropClick>
 				<ModalHeader>Create world</ModalHeader>
 				<TextField
 					label="Name"

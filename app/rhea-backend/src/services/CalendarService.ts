@@ -8,6 +8,7 @@ import {
 
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeSortCalendarUnitsQuery } from './dbQueries/makeSortCalendarUnitsQuery.js'
+import { makeTouchCalendarQuery } from './dbQueries/makeTouchCalendarQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 
 export const CalendarService = {
@@ -138,6 +139,7 @@ export const CalendarService = {
 			})
 
 			await CalendarService.computeCalendarUnitDurations({ calendarId }, dbClient)
+			await makeTouchCalendarQuery(calendarId, dbClient)
 
 			return dbClient.calendarUnit.findFirstOrThrow({
 				where: {
@@ -196,6 +198,7 @@ export const CalendarService = {
 			if (params.position !== undefined) {
 				await makeSortCalendarUnitsQuery(calendarId, dbClient)
 			}
+			await makeTouchCalendarQuery(calendarId, dbClient)
 
 			return dbClient.calendarUnit.findUniqueOrThrow({
 				where: {
@@ -233,6 +236,7 @@ export const CalendarService = {
 
 			await CalendarService.computeCalendarUnitDurations({ calendarId }, dbClient)
 			await makeSortCalendarUnitsQuery(calendarId, dbClient)
+			await makeTouchCalendarQuery(calendarId, dbClient)
 			return unit
 		})
 

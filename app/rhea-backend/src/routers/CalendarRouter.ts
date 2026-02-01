@@ -1,4 +1,3 @@
-import { CalendarUnitDisplayFormat } from '@prisma/client'
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
@@ -20,6 +19,7 @@ import {
 
 import { calendarTag } from './utils/tags.js'
 import { CalendarUnitChildValidator } from './validators/CalendarUnitChildValidator.js'
+import { CalendarUnitDisplayFormatValidator } from './validators/CalendarUnitDisplayFormatValidator.js'
 import { NameStringValidator } from './validators/NameStringValidator.js'
 import { NullableNameStringValidator } from './validators/NullableNameStringValidator.js'
 
@@ -201,8 +201,7 @@ router.patch('/api/calendar/:calendarId/unit/:unitId', async (ctx) => {
 		displayNameShort: OptionalParam(NullableNameStringValidator),
 		displayNamePlural: OptionalParam(NullableNameStringValidator),
 		dateFormatShorthand: OptionalParam(NullableStringValidator),
-		// TODO: Validate enum properly
-		displayFormat: OptionalParam(StringValidator),
+		displayFormat: OptionalParam(CalendarUnitDisplayFormatValidator),
 		children: OptionalParam(CalendarUnitChildValidator),
 		position: OptionalParam(NumberValidator),
 	})
@@ -216,7 +215,7 @@ router.patch('/api/calendar/:calendarId/unit/:unitId', async (ctx) => {
 			displayNameShort: params.displayNameShort,
 			displayNamePlural: params.displayNamePlural,
 			dateFormatShorthand: params.dateFormatShorthand,
-			displayFormat: params.displayFormat as CalendarUnitDisplayFormat,
+			displayFormat: params.displayFormat,
 			children: params.children,
 			position: params.position,
 		},

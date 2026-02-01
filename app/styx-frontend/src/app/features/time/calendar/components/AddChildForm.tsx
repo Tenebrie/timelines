@@ -74,14 +74,8 @@ export function AddChildForm({ parent }: Props) {
 					</MenuItem>
 				))}
 			</Select>
-			<Input
-				type="text"
-				placeholder={'Custom label'}
-				value={label}
-				onChange={(e) => setLabel(e.target.value)}
-			/>
 			<Stack direction="row" alignItems="center" gap={0.5}>
-				<Typography>×</Typography>
+				<Typography>x</Typography>
 			</Stack>
 			<TextField
 				size="small"
@@ -90,6 +84,12 @@ export function AddChildForm({ parent }: Props) {
 				onChange={(e) => setRepeats(Math.max(1, parseInt(e.target.value) || 1))}
 				sx={{ width: 80 }}
 				slotProps={{ htmlInput: { min: 1 } }}
+			/>
+			<Input
+				type="text"
+				placeholder={'Custom label'}
+				value={label}
+				onChange={(e) => setLabel(e.target.value)}
 			/>
 			<Button variant="outlined" startIcon={<Add />} onClick={handleAdd}>
 				Add

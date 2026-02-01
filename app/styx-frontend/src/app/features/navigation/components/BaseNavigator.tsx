@@ -1,6 +1,5 @@
 import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings'
 import Construction from '@mui/icons-material/Construction'
-import Home from '@mui/icons-material/Home'
 import PublicIcon from '@mui/icons-material/Public'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -14,6 +13,7 @@ import { getAuthState } from '../../auth/AuthSliceSelectors'
 import { SmallProfile } from '../../auth/smallProfile/SmallProfile'
 import { ThemeModeToggle } from '../../theming/components/ThemeModeToggle'
 import { CustomTheme, useCustomTheme } from '../../theming/hooks/useCustomTheme'
+import { HomeNavigatorButton } from './HomeNavigatorButton'
 import { LastWorldNavigatorButton } from './LastWorldNavigatorButton'
 import { NavigatorButton } from './NavigatorButton'
 import { WorldSelectorButton } from './WorldSelectorButton'
@@ -42,7 +42,7 @@ export const BaseNavigator = () => {
 						<LastWorldNavigatorButton icon={<PublicIcon />} label="World" />
 					</Stack>
 					<Divider orientation="vertical" sx={{ height: '25px' }} />
-					<NavigatorButton route="/home" icon={<Home />} label="Home" disabled={!user} />
+					<HomeNavigatorButton disabled={!user} />
 					<NavigatorButton route="/tools" icon={<Construction />} label="Tools" />
 					{user?.level === 'Admin' && (
 						<NavigatorButton route="/admin" icon={<AdminPanelSettings />} label="Admin" />

@@ -6,10 +6,10 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
-import List from '@mui/material/List'
 import Popover from '@mui/material/Popover'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
+import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -20,9 +20,10 @@ import { CalendarUnitListItem } from './CalendarUnitListItem'
 type Props = {
 	selectedUnit: CalendarDraftUnit | null
 	onSelectUnit: (unitId: string | undefined) => void
+	onExit?: () => void
 }
 
-export function CalendarUnitList({ selectedUnit, onSelectUnit }: Props) {
+export function CalendarUnitList({ selectedUnit, onSelectUnit, onExit }: Props) {
 	const { calendar } = useSelector(getCalendarEditorState)
 	const [newUnitName, setNewUnitName] = useState('')
 	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
@@ -62,8 +63,8 @@ export function CalendarUnitList({ selectedUnit, onSelectUnit }: Props) {
 	return (
 		<Box
 			sx={{
-				width: 200,
-				minWidth: 200,
+				width: 240,
+				minWidth: 240,
 				display: 'flex',
 				flexDirection: 'column',
 				borderRight: 1,
@@ -73,15 +74,15 @@ export function CalendarUnitList({ selectedUnit, onSelectUnit }: Props) {
 			}}
 		>
 			{/* Header with back button and calendar name */}
-			<Stack sx={{ p: 2, pb: 1 }}>
-				<Button
-					startIcon={<ArrowBack />}
-					onClick={() => onSelectUnit(undefined)}
-					sx={{ justifyContent: 'flex-start', mb: 1 }}
-				>
-					Back
-				</Button>
-				<Typography variant="h6" noWrap title={calendar.name}>
+			<Stack sx={{ px: 2, py: 1.5, gap: 1 }} direction="row" alignItems="center">
+				{onExit && (
+					<Tooltip title="Back to calendars" disableInteractive>
+						<IconButton size="small" onClick={() => onExit()} edge="start">
+							<ArrowBack fontSize="small" />
+						</IconButton>
+					</Tooltip>
+				)}
+				<Typography variant="subtitle1" fontWeight="bold" noWrap title={calendar.name}>
 					{calendar.name}
 				</Typography>
 			</Stack>
@@ -89,21 +90,34 @@ export function CalendarUnitList({ selectedUnit, onSelectUnit }: Props) {
 			<Divider />
 
 			{/* Time Units section */}
-			<Stack sx={{ p: 2, pb: 1 }} direction="row" alignItems="center" justifyContent="space-between">
-				<Typography variant="subtitle2" color="text.secondary">
+			<Stack sx={{ px: 2, py: 1.5 }} direction="row" alignItems="center" justifyContent="space-between">
+				<Typography variant="body2" color="text.secondary" fontWeight="medium">
 					Time Units
 				</Typography>
-				<IconButton size="small" onClick={handleOpenPopover}>
-					<Add />
+				<IconButton
+					size="small"
+					onClick={handleOpenPopover}
+					aria-label="Add time unit"
+					sx={{
+						bgcolor: 'action.hover',
+						'&:hover': {
+							bgcolor: 'action.selected',
+						},
+					}}
+				>
+					<Add fontSize="small" />
 				</IconButton>
 				<Popover
 					open={Boolean(anchorEl)}
 					anchorEl={anchorEl}
 					onClose={handleClosePopover}
-					anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+					anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+					transformOrigin={{ vertical: 'top', horizontal: 'right' }}
 				>
-					<Stack sx={{ p: 2, gap: 1, minWidth: 200 }}>
-						<Typography variant="subtitle2">New Time Unit</Typography>
+					<Stack sx={{ p: 2, gap: 1.5, minWidth: 220 }}>
+						<Typography variant="subtitle2" fontWeight="bold">
+							New Time Unit
+						</Typography>
 						<TextField
 							size="small"
 							placeholder="Unit name"
@@ -120,10 +134,14 @@ export function CalendarUnitList({ selectedUnit, onSelectUnit }: Props) {
 				</Popover>
 			</Stack>
 
-			<List sx={{ flex: 1, overflow: 'auto' }}>
+			<Divider />
+
+			<Stack sx={{ flex: 1, overflow: 'auto', py: 1 }}>
 				{units.length === 0 && (
-					<Typography variant="body2" color="text.secondary" sx={{ p: 2 }}>
-						No units created yet
+					<Typography variant="body2" color="text.secondary" sx={{ px: 2, py: 2, textAlign: 'center' }}>
+						No units created yet.
+						<br />
+						Click + to add one.
 					</Typography>
 				)}
 				{units.map((unit) => (
@@ -134,7 +152,7 @@ export function CalendarUnitList({ selectedUnit, onSelectUnit }: Props) {
 						onSelectUnit={onSelectUnit}
 					/>
 				))}
-			</List>
+			</Stack>
 		</Box>
 	)
 }

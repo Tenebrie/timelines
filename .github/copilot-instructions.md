@@ -243,6 +243,30 @@ User
 - `/src/ui-lib/` - Reusable UI components
 - `/ts-shared/` - Symlinked shared types
 
+**View Structure Convention:**
+
+Each view folder should follow this structure:
+
+- `ViewName.tsx` - The main view component (small top-level wrapper)
+- `components/` - Child components used by this view (one file per component)
+- `hooks/` - Custom hooks specific to this view
+- `utils/` - Utility functions specific to this view
+
+Example:
+
+```
+/src/app/views/home/
+├── HomeView.tsx           # Main view wrapper
+├── components/
+│   ├── DashboardHeader.tsx
+│   ├── SummaryCard.tsx
+│   └── RecentActivitySection.tsx
+├── hooks/
+│   └── useRecentActivity.ts
+└── utils/
+    └── formatTimeAgo.ts
+```
+
 **Backend:**
 
 - `/src/routers/` - Koa routers (ActorRouter, WorldRouter, etc.)
