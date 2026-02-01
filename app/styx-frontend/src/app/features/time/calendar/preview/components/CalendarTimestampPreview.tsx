@@ -16,12 +16,7 @@ export function CalendarTimestampPreview() {
 	return (
 		<Stack>
 			<Typography>Timestamp: {sliderValue}</Typography>
-			<Slider
-				value={sliderValue}
-				min={0}
-				max={2000000000}
-				onChange={(e, val) => setSliderValue(val as number)}
-			/>
+			<Slider value={sliderValue} min={0} max={160000} onChange={(e, val) => setSliderValue(val as number)} />
 			<Paper variant="outlined" sx={{ p: '12px', width: 'calc(100% - 24px)', bgcolor: 'background.default' }}>
 				{previewCalendar && formatTimestamp({ timestamp: sliderValue })}
 			</Paper>
@@ -41,16 +36,31 @@ function useFormatTimestamp({ calendar }: { calendar?: Calendar }) {
 			return () => ''
 		}
 
+		const sumNonHiddenChildren = (unit: CalendarUnit) => {
+			let sum = 0
+			for (const childRelation of unit.children) {
+				const childUnit = calendar.units.find((u) => u.id === childRelation.childUnitId)!
+				if (childUnit.displayFormat !== 'Hidden') {
+					sum += childRelation.repeats
+				} else {
+					sum += sumNonHiddenChildren(childUnit) * childRelation.repeats
+				}
+			}
+			return sum
+		}
+
 		const parseTimestamp = ({
 			outputMap,
 			unit,
 			customLabel,
 			timestamp,
+			extraDuration,
 		}: {
 			outputMap?: ParsedTimestamp
 			unit: CalendarUnit
 			customLabel?: string
 			timestamp: number
+			extraDuration: number
 		}) => {
 			outputMap =
 				outputMap ??
@@ -64,25 +74,38 @@ function useFormatTimestamp({ calendar }: { calendar?: Calendar }) {
 			const index = Math.floor(timestamp / unit.duration)
 			let remainder = timestamp % unit.duration
 
+			let myExtraDuration = 0
+			if (unit.displayFormat === 'Hidden') {
+				myExtraDuration += sumNonHiddenChildren(unit) * index
+				myExtraDuration += extraDuration
+			}
+
 			outputMap.set(unit.id, {
-				value: index,
+				value: index + (unit.displayFormat === 'Hidden' ? 0 : extraDuration),
 				customLabel,
 			})
 
 			if (unit.children.length === 0) {
 				return outputMap
 			}
+
 			for (const childRelation of unit.children) {
 				const childUnit = calendar.units.find((u) => u.id === childRelation.childUnitId)!
 				if (remainder < childUnit.duration * childRelation.repeats) {
 					return parseTimestamp({
 						outputMap,
 						unit: childUnit,
-						timestamp: unit.displayFormat === 'Hidden' ? timestamp : remainder,
+						timestamp: remainder,
+						extraDuration: myExtraDuration,
 						customLabel: childRelation.label ?? undefined,
 					})
 				}
 				remainder -= childUnit.duration * childRelation.repeats
+				if (childUnit.displayFormat !== 'Hidden') {
+					myExtraDuration += childRelation.repeats
+				} else {
+					myExtraDuration += childRelation.repeats * sumNonHiddenChildren(childUnit)
+				}
 			}
 			console.error('No child unit matched for remainder', remainder)
 			return outputMap
@@ -160,7 +183,11 @@ function useFormatTimestamp({ calendar }: { calendar?: Calendar }) {
 			const roots = calendar.units
 				.filter((u) => u.parents.length === 0)
 				.map((rootUnit) => {
-					const parsed = parseTimestamp({ unit: rootUnit, timestamp })
+					const parsed = parseTimestamp({
+						unit: rootUnit,
+						timestamp,
+						extraDuration: 0,
+					})
 					return {
 						unit: rootUnit,
 						parsed,

@@ -2402,8 +2402,8 @@ export interface operations {
                     dateFormatShorthand?: null | string;
                     displayFormat?: string;
                     children?: {
-                        id: string;
                         repeats: number;
+                        childUnitId: string;
                         label?: null | string;
                     }[];
                     position?: number;
@@ -2416,8 +2416,8 @@ export interface operations {
                     dateFormatShorthand?: null | string;
                     displayFormat?: string;
                     children?: {
-                        id: string;
                         repeats: number;
+                        childUnitId: string;
                         label?: null | string;
                     }[];
                     position?: number;

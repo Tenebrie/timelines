@@ -267,8 +267,8 @@ export type UpdateCalendarUnitApiArg = {
 		dateFormatShorthand?: null | string
 		displayFormat?: string
 		children?: {
-			id: string
 			repeats: number
+			childUnitId: string
 			label?: null | string
 		}[]
 		position?: number

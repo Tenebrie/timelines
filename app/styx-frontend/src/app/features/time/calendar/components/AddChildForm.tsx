@@ -45,7 +45,7 @@ export function AddChildForm({ parent }: Props) {
 				children: [
 					...parent.children,
 					{
-						id: selectedUnit.id,
+						childUnitId: selectedUnit.id,
 						label,
 						repeats,
 					},
