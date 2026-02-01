@@ -16,7 +16,12 @@ export function CalendarTimestampPreview() {
 	return (
 		<Stack>
 			<Typography>Timestamp: {sliderValue}</Typography>
-			<Slider value={sliderValue} min={0} max={160000} onChange={(e, val) => setSliderValue(val as number)} />
+			<Slider
+				value={sliderValue}
+				min={0}
+				max={1460970000}
+				onChange={(e, val) => setSliderValue(val as number)}
+			/>
 			<Paper variant="outlined" sx={{ p: '12px', width: 'calc(100% - 24px)', bgcolor: 'background.default' }}>
 				{previewCalendar && formatTimestamp({ timestamp: sliderValue })}
 			</Paper>
@@ -27,6 +32,7 @@ export function CalendarTimestampPreview() {
 type ParsedTimestamp = Map<string, ParsedTimestampEntry>
 type ParsedTimestampEntry = {
 	value: number
+	formatShorthand?: string
 	customLabel?: string
 }
 
@@ -55,12 +61,16 @@ function useFormatTimestamp({ calendar }: { calendar?: Calendar }) {
 			customLabel,
 			timestamp,
 			extraDuration,
+			franDuration,
 		}: {
 			outputMap?: ParsedTimestamp
 			unit: CalendarUnit
 			customLabel?: string
 			timestamp: number
+			// Non-consumed duration from hidden ancestors and siblings
 			extraDuration: number
+			// Duration from the last non-hidden sibling
+			franDuration: number
 		}) => {
 			outputMap =
 				outputMap ??
@@ -69,19 +79,15 @@ function useFormatTimestamp({ calendar }: { calendar?: Calendar }) {
 					{
 						value: number
 						customLabel?: string
+						formatShorthand: string
 					}
 				>()
 			const index = Math.floor(timestamp / unit.duration)
 			let remainder = timestamp % unit.duration
 
-			let myExtraDuration = 0
-			if (unit.displayFormat === 'Hidden') {
-				myExtraDuration += sumNonHiddenChildren(unit) * index
-				myExtraDuration += extraDuration
-			}
-
 			outputMap.set(unit.id, {
-				value: index + (unit.displayFormat === 'Hidden' ? 0 : extraDuration),
+				value: index + (unit.displayFormat === 'Hidden' ? 0 : extraDuration + franDuration),
+				formatShorthand: unit.dateFormatShorthand ?? undefined,
 				customLabel,
 			})
 
@@ -89,22 +95,36 @@ function useFormatTimestamp({ calendar }: { calendar?: Calendar }) {
 				return outputMap
 			}
 
-			for (const childRelation of unit.children) {
+			let myFranDuration = 0
+			let myExtraDuration = 0
+			if (unit.displayFormat === 'Hidden') {
+				myExtraDuration += sumNonHiddenChildren(unit) * index
+				myExtraDuration += extraDuration
+			}
+
+			let lastSeenChildName = null as string | null
+			for (let i = 0; i < unit.children.length; i++) {
+				const childRelation = unit.children[i]
 				const childUnit = calendar.units.find((u) => u.id === childRelation.childUnitId)!
 				if (remainder < childUnit.duration * childRelation.repeats) {
+					if (childUnit.displayFormat !== 'Hidden' && childUnit.displayName !== lastSeenChildName) {
+						myFranDuration = 0
+					}
 					return parseTimestamp({
 						outputMap,
 						unit: childUnit,
 						timestamp: remainder,
 						extraDuration: myExtraDuration,
+						franDuration: myFranDuration,
 						customLabel: childRelation.label ?? undefined,
 					})
 				}
+				lastSeenChildName = childUnit.displayName
 				remainder -= childUnit.duration * childRelation.repeats
-				if (childUnit.displayFormat !== 'Hidden') {
-					myExtraDuration += childRelation.repeats
-				} else {
+				if (childUnit.displayFormat === 'Hidden') {
 					myExtraDuration += childRelation.repeats * sumNonHiddenChildren(childUnit)
+				} else {
+					myFranDuration += childRelation.repeats
 				}
 			}
 			console.error('No child unit matched for remainder', remainder)
@@ -187,6 +207,7 @@ function useFormatTimestamp({ calendar }: { calendar?: Calendar }) {
 						unit: rootUnit,
 						timestamp,
 						extraDuration: 0,
+						franDuration: 0,
 					})
 					return {
 						unit: rootUnit,
@@ -195,11 +216,13 @@ function useFormatTimestamp({ calendar }: { calendar?: Calendar }) {
 				})
 				.sort((a, b) => a.unit.position - b.unit.position)
 
+			const seenKeys = new Set<string>()
 			const combinedTimeMap: ParsedTimestamp = new Map()
 			for (const root of roots) {
 				for (const [key, value] of root.parsed.entries()) {
-					if (!combinedTimeMap.has(key)) {
+					if (!combinedTimeMap.has(key) && value.formatShorthand && !seenKeys.has(value.formatShorthand)) {
 						combinedTimeMap.set(key, value)
+						seenKeys.add(value.formatShorthand)
 					}
 				}
 			}
