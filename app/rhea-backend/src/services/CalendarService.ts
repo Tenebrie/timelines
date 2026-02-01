@@ -52,7 +52,7 @@ export const CalendarService = {
 	},
 
 	getEditorCalendar: async ({ calendarId }: { calendarId: string }) => {
-		return await getPrismaClient().calendar.findUniqueOrThrow({
+		const calendar = await getPrismaClient().calendar.findUniqueOrThrow({
 			where: {
 				id: calendarId,
 			},
@@ -71,6 +71,10 @@ export const CalendarService = {
 				},
 			},
 		})
+
+		return {
+			...calendar,
+		}
 	},
 
 	getWorldCalendar: async ({ calendarId }: { calendarId: string }) => {
@@ -264,43 +268,70 @@ export const CalendarService = {
 			},
 		})
 
-		const cachedValues: Map<string, number> = new Map()
+		const cachedValues: Map<
+			string,
+			{
+				duration: number
+				depth: number
+			}
+		> = new Map()
 
-		function getTotalDuration(unit: (typeof allUnits)[number], depth: number): number {
+		function getTotalDuration(
+			unit: (typeof allUnits)[number],
+			depth: number,
+		): { duration: number; depth: number } {
 			if (depth > 25) {
 				throw new Error('Circular dependency in calendar unit definitions')
 			}
 
 			if (cachedValues.has(unit.id)) {
-				return cachedValues.get(unit.id)!
+				const cachedValue = cachedValues.get(unit.id)!
+				const newValue = {
+					duration: cachedValue.duration,
+					depth: Math.max(cachedValue.depth, depth),
+				}
+				cachedValues.set(unit.id, newValue)
+				return newValue
 			}
 
 			if (unit.children.length === 0) {
-				return 1 // Leaf nodes have implicit duration of 1
+				const newValue = {
+					// Leaf nodes have implicit duration of 1
+					duration: 1,
+					depth,
+				}
+				cachedValues.set(unit.id, newValue)
+				return newValue
 			}
 
 			let total = 0
 			for (const childRel of unit.children) {
 				const childUnit = allUnits.find((u) => u.id === childRel.childUnitId)
 				if (childUnit) {
-					total += getTotalDuration(childUnit, depth + 1) * childRel.repeats
+					const childData = getTotalDuration(childUnit, depth + 1)
+					total += childData.duration * childRel.repeats
 				}
 			}
 
-			cachedValues.set(unit.id, total)
-			return total
+			const newValue = {
+				duration: total,
+				depth,
+			}
+			cachedValues.set(unit.id, newValue)
+			return newValue
 		}
 
 		await Promise.all(
 			allUnits.map((unit) => {
-				const duration = getTotalDuration(unit, 0)
+				const parsedValue = getTotalDuration(unit, 0)
 
 				return dbClient.calendarUnit.update({
 					where: {
 						id: unit.id,
 					},
 					data: {
-						duration,
+						duration: parsedValue.duration,
+						treeDepth: parsedValue.depth,
 					},
 				})
 			}),

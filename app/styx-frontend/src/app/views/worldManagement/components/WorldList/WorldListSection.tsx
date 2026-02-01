@@ -110,6 +110,7 @@ export const WorldListSection = ({ worlds, label, showActions, showCreateButton 
 					return (
 						<ButtonBase
 							key={world.id}
+							component="div"
 							onClick={() => onLoad(world)}
 							sx={{
 								width: '100%',

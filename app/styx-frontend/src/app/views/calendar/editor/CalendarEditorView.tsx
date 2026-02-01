@@ -39,7 +39,7 @@ export function CalendarEditorView({ calendarId }: Props) {
 			padding="8px 24px"
 			sx={{ alignItems: 'center', justifyContent: 'center' }}
 		>
-			<Paper sx={{ width: '100%', maxWidth: '1500px', height: 'calc(100vh - 64px - 16px)' }}>
+			<Paper sx={{ width: '100%', maxWidth: '1500px', minHeight: 'calc(100vh - 64px - 16px)' }}>
 				<CalendarEditor />
 			</Paper>
 		</Stack>

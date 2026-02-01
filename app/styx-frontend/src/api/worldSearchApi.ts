@@ -45,27 +45,27 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		deltaStates: {
-			description?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name?: null | string
-			descriptionRich?: null | string
+			description?: null | string
 			timestamp: string
+			descriptionRich?: null | string
 			worldEventId: string
 		}[]
-		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		description: string
 		worldId: string
+		type: 'SCENE' | 'OTHER'
+		timestamp: string
 		icon: string
 		color: string
 		descriptionRich: string
 		descriptionYjs?: null | string
-		type: 'SCENE' | 'OTHER'
-		timestamp: string
 		revokedAt?: null | string
 		customName: boolean
 		externalLink: string
@@ -101,11 +101,11 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			targetArticleId?: null | string
 			targetTagId?: null | string
 		}[]
-		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		description: string
 		worldId: string
 		title: string
 		icon: string

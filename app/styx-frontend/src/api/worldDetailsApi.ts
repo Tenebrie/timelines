@@ -78,6 +78,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			displayFormat: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 			dateFormatShorthand?: null | string
 			duration: number
+			treeDepth: number
 		}[]
 		id: string
 		createdAt: string

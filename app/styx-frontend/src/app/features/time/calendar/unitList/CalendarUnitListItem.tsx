@@ -3,7 +3,9 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import { useSelector } from 'react-redux'
 
+import { getCalendarEditorState } from '../CalendarSliceSelectors'
 import { useCalendarUnitDragDrop } from '../hooks/useCalendarUnitDragDrop'
 import { CalendarUnitListDropHandle } from './components/CalendarUnitListDropHandle'
 import { DeleteUnitButton } from './components/DeleteUnitButton'
@@ -15,14 +17,65 @@ type Props = {
 }
 
 export function CalendarUnitListItem({ unit, selectedUnit, onSelectUnit }: Props) {
+	const { calendar } = useSelector(getCalendarEditorState)
 	const { ref, ghostElement } = useCalendarUnitDragDrop({ unit })
 	const isSelected = selectedUnit?.id === unit.id
+
+	const totalChildCount = (() => {
+		let total = 0
+		unit.children.forEach((child) => {
+			total += child.repeats
+		})
+		return total
+	})()
+
+	const unitLabel = (() => {
+		const labelList: string[] = []
+		if (unit.treeDepth === 0 && totalChildCount === 0) {
+			return 'Standalone unit'
+		}
+		if (unit.treeDepth === 0) {
+			labelList.push('Root unit')
+		}
+		if (totalChildCount > 0) {
+			const totalCount: Map<string, { name: string; count: number; plural: string }> = new Map()
+			unit.children.forEach((child) => {
+				const existingData = calendar?.units.find((unit) => unit.id === child.childUnitId)
+
+				if (!existingData) {
+					return
+				}
+				const nameToUse = existingData.displayName ?? existingData.name
+				const pluralNameToUse = existingData.displayNamePlural ?? existingData.name
+				const existing = totalCount.get(nameToUse)
+				if (existing) {
+					existing.count += child.repeats
+				} else {
+					totalCount.set(nameToUse, {
+						name: nameToUse,
+						count: child.repeats,
+						plural: pluralNameToUse,
+					})
+				}
+			})
+			const label = totalCount
+				.values()
+				.toArray()
+				.map((data) => `${data.count} ${data.count === 1 ? data.name : data.plural}`)
+				.join(', ')
+			labelList.push(label)
+		} else {
+			labelList.push('Base unit')
+		}
+		return labelList.join(' | ')
+	})()
 
 	return (
 		<>
 			<CalendarUnitListDropHandle position={unit.position} />
 			<Box ref={ref} sx={{ px: 0.5 }}>
 				<Button
+					component="div"
 					onClick={() => onSelectUnit(unit.id)}
 					sx={{
 						width: '100%',
@@ -53,7 +106,7 @@ export function CalendarUnitListItem({ unit, selectedUnit, onSelectUnit }: Props
 								{unit.name}
 							</Typography>
 							<Typography variant="caption" color="text.secondary">
-								{unit.children.length > 0 ? `${unit.children.length} children` : 'Base unit'}
+								{unitLabel}
 							</Typography>
 						</Stack>
 						<DeleteUnitButton unitId={unit.id} unitName={unit.name} />

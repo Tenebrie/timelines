@@ -8,19 +8,45 @@ import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
+import debounce from 'lodash.debounce'
 import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
+import { calendarEditorSlice } from '../CalendarSlice'
 import { getCalendarEditorState } from '../CalendarSliceSelectors'
 
 type Props = {
 	parent: CalendarDraftUnit
 }
 
+function useUpdateCalendarUnitDebounced() {
+	const [updateUnitMutation, data] = useUpdateCalendarUnitMutation()
+
+	const updateUnit = useMemo(
+		() =>
+			debounce(
+				(args: {
+					calendarId: string
+					unitId: string
+					body: { children: CalendarDraftUnitChildRelation[] }
+				}) => {
+					updateUnitMutation(args)
+				},
+				300,
+			),
+		[updateUnitMutation],
+	)
+
+	return [updateUnit, data] as const
+}
+
 export function ChildrenList({ parent }: Props) {
 	const { calendar } = useSelector(getCalendarEditorState)
-	const [updateUnit] = useUpdateCalendarUnitMutation()
+	const [updateUnit] = useUpdateCalendarUnitDebounced()
+	const dispatch = useDispatch()
+	const { updateUnitChildren } = calendarEditorSlice.actions
+
 	const availableUnits = useMemo(() => {
 		if (!calendar) {
 			return []
@@ -32,6 +58,9 @@ export function ChildrenList({ parent }: Props) {
 
 	const onUpdateChild = useEvent((relationId: string, updates: Partial<CalendarDraftUnitChildRelation>) => {
 		const newChildren = parent.children.map((c) => (c.id === relationId ? { ...c, ...updates } : c))
+		// Optimistic update
+		dispatch(updateUnitChildren({ unitId: parent.id, children: newChildren }))
+		// Debounced API call
 		updateUnit({
 			calendarId: parent.calendarId,
 			unitId: parent.id,
@@ -43,6 +72,9 @@ export function ChildrenList({ parent }: Props) {
 
 	const onDeleteChild = useEvent((relationId: string) => {
 		const newChildren = parent.children.filter((c) => c.id !== relationId)
+		// Optimistic update
+		dispatch(updateUnitChildren({ unitId: parent.id, children: newChildren }))
+		// Debounced API call
 		updateUnit({
 			calendarId: parent.calendarId,
 			unitId: parent.id,

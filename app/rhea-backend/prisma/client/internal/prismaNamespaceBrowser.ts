@@ -162,6 +162,7 @@ export const CalendarUnitScalarFieldEnum = {
   displayFormat: 'displayFormat',
   dateFormatShorthand: 'dateFormatShorthand',
   duration: 'duration',
+  treeDepth: 'treeDepth',
   calendarId: 'calendarId'
 } as const
 

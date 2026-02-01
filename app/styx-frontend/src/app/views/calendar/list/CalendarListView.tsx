@@ -146,6 +146,7 @@ export function CalendarListView() {
 							return (
 								<ButtonBase
 									key={calendar.id}
+									component="div"
 									onClick={() => onOpen(calendar.id)}
 									sx={{
 										width: '100%',

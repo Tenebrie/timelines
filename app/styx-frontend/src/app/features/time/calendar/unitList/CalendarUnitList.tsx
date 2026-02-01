@@ -1,7 +1,6 @@
 import { useCreateCalendarUnitMutation } from '@api/calendarApi'
 import { CalendarDraftUnit } from '@api/types/calendarTypes'
 import Add from '@mui/icons-material/Add'
-import ArrowBack from '@mui/icons-material/ArrowBack'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
@@ -9,7 +8,6 @@ import IconButton from '@mui/material/IconButton'
 import Popover from '@mui/material/Popover'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
-import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -69,26 +67,8 @@ export function CalendarUnitList({ selectedUnit, onSelectUnit, onExit }: Props) 
 				flexDirection: 'column',
 				borderRight: 1,
 				borderColor: 'divider',
-				height: '100%',
-				overflow: 'hidden',
 			}}
 		>
-			{/* Header with back button and calendar name */}
-			<Stack sx={{ px: 2, py: 1.5, gap: 1 }} direction="row" alignItems="center">
-				{onExit && (
-					<Tooltip title="Back to calendars" disableInteractive>
-						<IconButton size="small" onClick={() => onExit()} edge="start">
-							<ArrowBack fontSize="small" />
-						</IconButton>
-					</Tooltip>
-				)}
-				<Typography variant="subtitle1" fontWeight="bold" noWrap title={calendar.name}>
-					{calendar.name}
-				</Typography>
-			</Stack>
-
-			<Divider />
-
 			{/* Time Units section */}
 			<Stack sx={{ px: 2, py: 1.5 }} direction="row" alignItems="center" justifyContent="space-between">
 				<Typography variant="body2" color="text.secondary" fontWeight="medium">
@@ -113,6 +93,14 @@ export function CalendarUnitList({ selectedUnit, onSelectUnit, onExit }: Props) 
 					onClose={handleClosePopover}
 					anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
 					transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+					slotProps={{
+						paper: {
+							onAnimationEnd: (e) => {
+								const input = e.currentTarget.querySelector('input')
+								input?.focus()
+							},
+						},
+					}}
 				>
 					<Stack sx={{ p: 2, gap: 1.5, minWidth: 220 }}>
 						<Typography variant="subtitle2" fontWeight="bold">
@@ -124,7 +112,6 @@ export function CalendarUnitList({ selectedUnit, onSelectUnit, onExit }: Props) 
 							value={newUnitName}
 							onChange={(e) => setNewUnitName(e.target.value)}
 							onKeyDown={(e) => e.key === 'Enter' && onCreateUnit()}
-							autoFocus
 							fullWidth
 						/>
 						<Button variant="contained" size="small" onClick={onCreateUnit} disabled={!newUnitName.trim()}>

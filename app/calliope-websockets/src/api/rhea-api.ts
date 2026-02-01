@@ -1640,8 +1640,8 @@ export interface operations {
                         description: string;
                         id: string;
                         title: string;
-                        userId: string;
                         type: "Info" | "Welcome" | "WorldShared";
+                        userId: string;
                         /** Format: date-time */
                         timestamp: string;
                         isUnread: boolean;
@@ -1975,9 +1975,9 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 ownerId: string;
-                                size: number;
                                 expiresAt?: null | string;
                                 bucketKey: string;
+                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "Image" | "Avatar";
@@ -2123,6 +2123,7 @@ export interface operations {
                             displayFormat: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                             dateFormatShorthand?: null | string;
                             duration: number;
+                            treeDepth: number;
                         }[];
                         ownerId?: null | string;
                         id: string;
@@ -2273,6 +2274,7 @@ export interface operations {
                             displayFormat: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                             dateFormatShorthand?: null | string;
                             duration: number;
+                            treeDepth: number;
                         }[];
                         ownerId?: null | string;
                         id: string;
@@ -2336,6 +2338,7 @@ export interface operations {
                         displayFormat: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                         dateFormatShorthand?: null | string;
                         duration: number;
+                        treeDepth: number;
                     };
                 };
             };
@@ -2375,6 +2378,7 @@ export interface operations {
                         displayFormat: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                         dateFormatShorthand?: null | string;
                         duration: number;
+                        treeDepth: number;
                     };
                 };
             };
@@ -2457,6 +2461,7 @@ export interface operations {
                         displayFormat: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                         dateFormatShorthand?: null | string;
                         duration: number;
+                        treeDepth: number;
                     };
                 };
             };
@@ -3896,6 +3901,7 @@ export interface operations {
                                     displayFormat: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                                     dateFormatShorthand?: null | string;
                                     duration: number;
+                                    treeDepth: number;
                                 }[];
                                 id: string;
                                 /** Format: date-time */
@@ -3955,6 +3961,7 @@ export interface operations {
                                     displayFormat: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                                     dateFormatShorthand?: null | string;
                                     duration: number;
+                                    treeDepth: number;
                                 }[];
                                 id: string;
                                 /** Format: date-time */
@@ -4014,6 +4021,7 @@ export interface operations {
                                     displayFormat: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                                     dateFormatShorthand?: null | string;
                                     duration: number;
+                                    treeDepth: number;
                                 }[];
                                 id: string;
                                 /** Format: date-time */
@@ -4133,6 +4141,7 @@ export interface operations {
                                 displayFormat: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                                 dateFormatShorthand?: null | string;
                                 duration: number;
+                                treeDepth: number;
                             }[];
                             id: string;
                             /** Format: date-time */
@@ -4564,33 +4573,33 @@ export interface operations {
                                 targetTagId?: null | string;
                             }[];
                             deltaStates: {
-                                description?: null | string;
                                 id: string;
                                 /** Format: date-time */
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
                                 name?: null | string;
-                                descriptionRich?: null | string;
+                                description?: null | string;
                                 /** Format: bigint */
                                 timestamp: string;
+                                descriptionRich?: null | string;
                                 worldEventId: string;
                             }[];
-                            description: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            description: string;
                             worldId: string;
+                            type: "SCENE" | "OTHER";
+                            /** Format: bigint */
+                            timestamp: string;
                             icon: string;
                             color: string;
                             descriptionRich: string;
                             descriptionYjs?: null | string;
-                            type: "SCENE" | "OTHER";
-                            /** Format: bigint */
-                            timestamp: string;
                             revokedAt?: null | string;
                             customName: boolean;
                             externalLink: string;
@@ -4626,13 +4635,13 @@ export interface operations {
                                 targetArticleId?: null | string;
                                 targetTagId?: null | string;
                             }[];
-                            description: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            description: string;
                             worldId: string;
                             title: string;
                             icon: string;

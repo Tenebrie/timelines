@@ -34,19 +34,19 @@ export function CalendarEditor() {
 	)
 
 	return (
-		<Stack direction="row" sx={{ height: '100%', overflow: 'hidden' }}>
-			<CalendarUnitList selectedUnit={selectedUnit} onSelectUnit={onSelectUnit} onExit={onExit} />
-			<Stack sx={{ width: '100%' }}>
-				<Stack sx={{ p: 2 }}>
-					<CalendarHeader />
-				</Stack>
-				<Divider />
-				<Stack sx={{ flex: 1, overflow: 'auto', p: 3 }}>
-					{selectedUnit ? (
-						<UnitEditor key={selectedUnit.id} unit={selectedUnit} />
-					) : (
-						<EmptyState hasUnits={(calendar?.units.length ?? 0) > 0} />
-					)}
+		<Stack sx={{ padding: '16px 16px', minHeight: 'calc(100% - 32px)' }}>
+			<CalendarHeader onExit={onExit} />
+			<Divider />
+			<Stack direction="row" sx={{ flex: 1, alignItems: 'stretch' }}>
+				<CalendarUnitList selectedUnit={selectedUnit} onSelectUnit={onSelectUnit} onExit={onExit} />
+				<Stack sx={{ flex: 1 }}>
+					<Stack sx={{ p: '16px' }}>
+						{selectedUnit ? (
+							<UnitEditor key={selectedUnit.id} unit={selectedUnit} onClose={() => onSelectUnit(undefined)} />
+						) : (
+							<EmptyState hasUnits={(calendar?.units.length ?? 0) > 0} />
+						)}
+					</Stack>
 				</Stack>
 			</Stack>
 		</Stack>

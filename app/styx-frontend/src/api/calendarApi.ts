@@ -112,6 +112,7 @@ export type GetCalendarApiResponse = /** status 200  */ {
 		displayFormat: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 		dateFormatShorthand?: null | string
 		duration: number
+		treeDepth: number
 	}[]
 	ownerId?: null | string
 	id: string
@@ -192,6 +193,7 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 		displayFormat: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 		dateFormatShorthand?: null | string
 		duration: number
+		treeDepth: number
 	}[]
 	ownerId?: null | string
 	id: string
@@ -219,6 +221,7 @@ export type CreateCalendarUnitApiResponse = /** status 200  */ {
 	displayFormat: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 	dateFormatShorthand?: null | string
 	duration: number
+	treeDepth: number
 }
 export type CreateCalendarUnitApiArg = {
 	/** Any string value */
@@ -253,6 +256,7 @@ export type UpdateCalendarUnitApiResponse = /** status 200  */ {
 	displayFormat: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 	dateFormatShorthand?: null | string
 	duration: number
+	treeDepth: number
 }
 export type UpdateCalendarUnitApiArg = {
 	/** Any string value */
@@ -287,6 +291,7 @@ export type DeleteCalendarUnitApiResponse = /** status 200  */ {
 	displayFormat: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 	dateFormatShorthand?: null | string
 	duration: number
+	treeDepth: number
 }
 export type DeleteCalendarUnitApiArg = {
 	/** Any string value */

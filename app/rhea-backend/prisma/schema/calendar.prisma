@@ -30,7 +30,8 @@ model CalendarUnit {
     displayFormat       CalendarUnitDisplayFormat @default(Name)
     dateFormatShorthand String?
 
-    duration Int @default(1)
+    duration  Int @default(1)
+    treeDepth Int @default(1)
 
     calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
     calendarId String
