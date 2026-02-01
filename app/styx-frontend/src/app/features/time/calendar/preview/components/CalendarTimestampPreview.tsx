@@ -18,8 +18,8 @@ export function CalendarTimestampPreview() {
 			<Typography>Timestamp: {sliderValue}</Typography>
 			<Slider
 				value={sliderValue}
-				min={0}
-				max={1460970000}
+				min={-2103000}
+				max={2103000}
 				onChange={(e, val) => setSliderValue(val as number)}
 			/>
 			<Paper variant="outlined" sx={{ p: '12px', width: 'calc(100% - 24px)', bgcolor: 'background.default' }}>
