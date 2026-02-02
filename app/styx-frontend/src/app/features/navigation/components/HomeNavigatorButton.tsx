@@ -49,7 +49,7 @@ export function HomeNavigatorButton({ disabled }: Props) {
 		<>
 			<ButtonGroup variant={isAnyMatching ? 'contained' : 'text'} disabled={disabled} disableElevation>
 				<Button
-					aria-label="Home"
+					aria-label="Navigate to home"
 					onClick={handleHomeClick}
 					sx={{
 						gap: 0.5,
@@ -60,7 +60,7 @@ export function HomeNavigatorButton({ disabled }: Props) {
 				</Button>
 				<Button
 					ref={anchorRef}
-					aria-label="Open navigation menu"
+					aria-label="Home navigation menu"
 					onClick={handleMenuOpen}
 					sx={{
 						padding: '8px 4px',
@@ -82,19 +82,31 @@ export function HomeNavigatorButton({ disabled }: Props) {
 					horizontal: 'right',
 				}}
 			>
-				<MenuItem onClick={() => handleNavigate('/home')} selected={isHomeMatching}>
+				<MenuItem
+					aria-label="Navigate to home"
+					onClick={() => handleNavigate('/home')}
+					selected={isHomeMatching}
+				>
 					<ListItemIcon>
 						<Home fontSize="small" />
 					</ListItemIcon>
 					<ListItemText>Dashboard</ListItemText>
 				</MenuItem>
-				<MenuItem onClick={() => handleNavigate('/world')} selected={isWorldMatching}>
+				<MenuItem
+					aria-label="Navigate to worlds"
+					onClick={() => handleNavigate('/world')}
+					selected={isWorldMatching}
+				>
 					<ListItemIcon>
 						<Public fontSize="small" />
 					</ListItemIcon>
 					<ListItemText>Worlds</ListItemText>
 				</MenuItem>
-				<MenuItem onClick={() => handleNavigate('/calendar')} selected={isCalendarMatching}>
+				<MenuItem
+					aria-label="Navigate to calendars"
+					onClick={() => handleNavigate('/calendar')}
+					selected={isCalendarMatching}
+				>
 					<ListItemIcon>
 						<CalendarMonth fontSize="small" />
 					</ListItemIcon>
