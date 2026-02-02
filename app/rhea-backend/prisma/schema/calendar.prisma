@@ -4,6 +4,8 @@ model Calendar {
     updatedAt DateTime @default(now()) @updatedAt
     position  Int
 
+    originTime BigInt @default(0)
+
     name  String
     units CalendarUnit[]
 
@@ -27,8 +29,8 @@ model CalendarUnit {
     displayNameShort  String?
     displayNamePlural String?
 
-    displayFormat       CalendarUnitDisplayFormat @default(Name)
-    dateFormatShorthand String?
+    formatMode      CalendarUnitFormatMode @default(Name)
+    formatShorthand String?
 
     duration  Int @default(1)
     treeDepth Int @default(1)
@@ -55,7 +57,7 @@ model CalendarUnitRelation {
     childUnitId  String
 }
 
-enum CalendarUnitDisplayFormat {
+enum CalendarUnitFormatMode {
     // Month 0
     Name
     // Month 1

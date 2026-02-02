@@ -1,4 +1,5 @@
 import Divider from '@mui/material/Divider'
+import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { useSearch } from '@tanstack/react-router'
 import { useMemo } from 'react'
@@ -6,7 +7,7 @@ import { useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { EmptyState } from '@/app/features/time/calendar/components/EmptyState'
-import { UnitEditor } from '@/app/features/time/calendar/components/UnitEditor'
+import { CalendarUnitEditor } from '@/app/features/time/calendar/unitEditor/CalendarUnitEditor'
 import { CalendarUnitList } from '@/app/features/time/calendar/unitList/CalendarUnitList'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
@@ -38,14 +39,20 @@ export function CalendarEditor() {
 			<CalendarHeader onExit={onExit} />
 			<Divider />
 			<Stack direction="row" sx={{ flex: 1, alignItems: 'stretch' }}>
-				<CalendarUnitList selectedUnit={selectedUnit} onSelectUnit={onSelectUnit} onExit={onExit} />
+				<CalendarUnitList selectedUnit={selectedUnit} onSelectUnit={onSelectUnit} />
 				<Stack sx={{ flex: 1 }}>
-					<Stack sx={{ p: '16px' }}>
-						{selectedUnit ? (
-							<UnitEditor key={selectedUnit.id} unit={selectedUnit} onClose={() => onSelectUnit(undefined)} />
-						) : (
-							<EmptyState hasUnits={(calendar?.units.length ?? 0) > 0} />
-						)}
+					<Stack sx={{ p: '8px' }}>
+						<Paper variant="outlined" sx={{ p: '12px 8px' }}>
+							{selectedUnit ? (
+								<CalendarUnitEditor
+									key={selectedUnit.id}
+									unit={selectedUnit}
+									onClose={() => onSelectUnit(undefined)}
+								/>
+							) : (
+								<EmptyState hasUnits={(calendar?.units.length ?? 0) > 0} />
+							)}
+						</Paper>
 					</Stack>
 				</Stack>
 			</Stack>

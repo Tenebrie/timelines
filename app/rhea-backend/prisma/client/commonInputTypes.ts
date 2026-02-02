@@ -226,21 +226,48 @@ export type EnumAssetStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumAssetStatusFilter<$PrismaModel>
 }
 
-export type EnumCalendarUnitDisplayFormatFilter<$PrismaModel = never> = {
-  equals?: $Enums.CalendarUnitDisplayFormat | Prisma.EnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
-  in?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
-  notIn?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel> | $Enums.CalendarUnitDisplayFormat
+export type BigIntFilter<$PrismaModel = never> = {
+  equals?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  in?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
+  notIn?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
+  lt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  lte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  gt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  gte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBigIntFilter<$PrismaModel> | bigint | number
 }
 
-export type EnumCalendarUnitDisplayFormatWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.CalendarUnitDisplayFormat | Prisma.EnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
-  in?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
-  notIn?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumCalendarUnitDisplayFormatWithAggregatesFilter<$PrismaModel> | $Enums.CalendarUnitDisplayFormat
+export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  in?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
+  notIn?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
+  lt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  lte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  gt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  gte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel>
+  _avg?: Prisma.NestedFloatFilter<$PrismaModel>
+  _sum?: Prisma.NestedBigIntFilter<$PrismaModel>
+  _min?: Prisma.NestedBigIntFilter<$PrismaModel>
+  _max?: Prisma.NestedBigIntFilter<$PrismaModel>
+}
+
+export type EnumCalendarUnitFormatModeFilter<$PrismaModel = never> = {
+  equals?: $Enums.CalendarUnitFormatMode | Prisma.EnumCalendarUnitFormatModeFieldRefInput<$PrismaModel>
+  in?: $Enums.CalendarUnitFormatMode[] | Prisma.ListEnumCalendarUnitFormatModeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CalendarUnitFormatMode[] | Prisma.ListEnumCalendarUnitFormatModeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCalendarUnitFormatModeFilter<$PrismaModel> | $Enums.CalendarUnitFormatMode
+}
+
+export type EnumCalendarUnitFormatModeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CalendarUnitFormatMode | Prisma.EnumCalendarUnitFormatModeFieldRefInput<$PrismaModel>
+  in?: $Enums.CalendarUnitFormatMode[] | Prisma.ListEnumCalendarUnitFormatModeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CalendarUnitFormatMode[] | Prisma.ListEnumCalendarUnitFormatModeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCalendarUnitFormatModeWithAggregatesFilter<$PrismaModel> | $Enums.CalendarUnitFormatMode
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCalendarUnitFormatModeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCalendarUnitFormatModeFilter<$PrismaModel>
 }
 
 export type EnumFlagValueFilter<$PrismaModel = never> = {
@@ -318,17 +345,6 @@ export type EnumWorldCalendarTypeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumWorldCalendarTypeFilter<$PrismaModel> | $Enums.WorldCalendarType
 }
 
-export type BigIntFilter<$PrismaModel = never> = {
-  equals?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  in?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
-  notIn?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
-  lt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  lte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  gt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  gte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedBigIntFilter<$PrismaModel> | bigint | number
-}
-
 export type EnumWorldAccessModeFilter<$PrismaModel = never> = {
   equals?: $Enums.WorldAccessMode | Prisma.EnumWorldAccessModeFieldRefInput<$PrismaModel>
   in?: $Enums.WorldAccessMode[] | Prisma.ListEnumWorldAccessModeFieldRefInput<$PrismaModel>
@@ -344,22 +360,6 @@ export type EnumWorldCalendarTypeWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumWorldCalendarTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumWorldCalendarTypeFilter<$PrismaModel>
-}
-
-export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  in?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
-  notIn?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
-  lt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  lte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  gt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  gte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _avg?: Prisma.NestedFloatFilter<$PrismaModel>
-  _sum?: Prisma.NestedBigIntFilter<$PrismaModel>
-  _min?: Prisma.NestedBigIntFilter<$PrismaModel>
-  _max?: Prisma.NestedBigIntFilter<$PrismaModel>
 }
 
 export type EnumWorldAccessModeWithAggregatesFilter<$PrismaModel = never> = {
@@ -641,21 +641,48 @@ export type NestedEnumAssetStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumAssetStatusFilter<$PrismaModel>
 }
 
-export type NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel = never> = {
-  equals?: $Enums.CalendarUnitDisplayFormat | Prisma.EnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
-  in?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
-  notIn?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel> | $Enums.CalendarUnitDisplayFormat
+export type NestedBigIntFilter<$PrismaModel = never> = {
+  equals?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  in?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
+  notIn?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
+  lt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  lte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  gt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  gte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBigIntFilter<$PrismaModel> | bigint | number
 }
 
-export type NestedEnumCalendarUnitDisplayFormatWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.CalendarUnitDisplayFormat | Prisma.EnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
-  in?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
-  notIn?: $Enums.CalendarUnitDisplayFormat[] | Prisma.ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumCalendarUnitDisplayFormatWithAggregatesFilter<$PrismaModel> | $Enums.CalendarUnitDisplayFormat
+export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  in?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
+  notIn?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
+  lt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  lte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  gt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  gte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
   _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumCalendarUnitDisplayFormatFilter<$PrismaModel>
+  _avg?: Prisma.NestedFloatFilter<$PrismaModel>
+  _sum?: Prisma.NestedBigIntFilter<$PrismaModel>
+  _min?: Prisma.NestedBigIntFilter<$PrismaModel>
+  _max?: Prisma.NestedBigIntFilter<$PrismaModel>
+}
+
+export type NestedEnumCalendarUnitFormatModeFilter<$PrismaModel = never> = {
+  equals?: $Enums.CalendarUnitFormatMode | Prisma.EnumCalendarUnitFormatModeFieldRefInput<$PrismaModel>
+  in?: $Enums.CalendarUnitFormatMode[] | Prisma.ListEnumCalendarUnitFormatModeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CalendarUnitFormatMode[] | Prisma.ListEnumCalendarUnitFormatModeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCalendarUnitFormatModeFilter<$PrismaModel> | $Enums.CalendarUnitFormatMode
+}
+
+export type NestedEnumCalendarUnitFormatModeWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CalendarUnitFormatMode | Prisma.EnumCalendarUnitFormatModeFieldRefInput<$PrismaModel>
+  in?: $Enums.CalendarUnitFormatMode[] | Prisma.ListEnumCalendarUnitFormatModeFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CalendarUnitFormatMode[] | Prisma.ListEnumCalendarUnitFormatModeFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCalendarUnitFormatModeWithAggregatesFilter<$PrismaModel> | $Enums.CalendarUnitFormatMode
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCalendarUnitFormatModeFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCalendarUnitFormatModeFilter<$PrismaModel>
 }
 
 export type NestedEnumFlagValueFilter<$PrismaModel = never> = {
@@ -733,17 +760,6 @@ export type NestedEnumWorldCalendarTypeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumWorldCalendarTypeFilter<$PrismaModel> | $Enums.WorldCalendarType
 }
 
-export type NestedBigIntFilter<$PrismaModel = never> = {
-  equals?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  in?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
-  notIn?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
-  lt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  lte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  gt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  gte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedBigIntFilter<$PrismaModel> | bigint | number
-}
-
 export type NestedEnumWorldAccessModeFilter<$PrismaModel = never> = {
   equals?: $Enums.WorldAccessMode | Prisma.EnumWorldAccessModeFieldRefInput<$PrismaModel>
   in?: $Enums.WorldAccessMode[] | Prisma.ListEnumWorldAccessModeFieldRefInput<$PrismaModel>
@@ -759,22 +775,6 @@ export type NestedEnumWorldCalendarTypeWithAggregatesFilter<$PrismaModel = never
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumWorldCalendarTypeFilter<$PrismaModel>
   _max?: Prisma.NestedEnumWorldCalendarTypeFilter<$PrismaModel>
-}
-
-export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  in?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
-  notIn?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel>
-  lt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  lte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  gt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  gte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _avg?: Prisma.NestedFloatFilter<$PrismaModel>
-  _sum?: Prisma.NestedBigIntFilter<$PrismaModel>
-  _min?: Prisma.NestedBigIntFilter<$PrismaModel>
-  _max?: Prisma.NestedBigIntFilter<$PrismaModel>
 }
 
 export type NestedEnumWorldAccessModeWithAggregatesFilter<$PrismaModel = never> = {

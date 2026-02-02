@@ -38,7 +38,6 @@ export function DeleteUnitButton({ unitId, unitName }: Props) {
 			<Tooltip title="Delete unit" disableInteractive enterDelay={500}>
 				<IconButton
 					size="small"
-					color="error"
 					sx={{ opacity: 0.7, '&:hover': { opacity: 1 } }}
 					{...bindTrigger(popupState)}
 					onMouseDown={(e) => e.stopPropagation()}

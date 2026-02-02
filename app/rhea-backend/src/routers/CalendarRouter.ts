@@ -19,9 +19,9 @@ import {
 
 import { calendarTag } from './utils/tags.js'
 import { CalendarUnitChildValidator } from './validators/CalendarUnitChildValidator.js'
-import { CalendarUnitDisplayFormatValidator } from './validators/CalendarUnitDisplayFormatValidator.js'
+import { CalendarUnitFormatModeValidator } from './validators/CalendarUnitDisplayFormatValidator.js'
 import { NameStringValidator } from './validators/NameStringValidator.js'
-import { NullableNameStringValidator } from './validators/NullableNameStringValidator.js'
+import { NullableNameStringWithoutTrimValidator } from './validators/NullableNameStringWithoutTrimValidator.js'
 
 const router = new Router().with(SessionMiddleware).with(async (ctx) => {
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -154,9 +154,11 @@ router.post('/api/calendar/:calendarId/units', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		name: RequiredParam(NameStringValidator),
-		displayName: OptionalParam(NameStringValidator),
-		displayNameShort: OptionalParam(NameStringValidator),
-		displayNamePlural: OptionalParam(NameStringValidator),
+		displayName: OptionalParam(NullableNameStringWithoutTrimValidator),
+		displayNameShort: OptionalParam(NullableNameStringWithoutTrimValidator),
+		displayNamePlural: OptionalParam(NullableNameStringWithoutTrimValidator),
+		formatMode: OptionalParam(CalendarUnitFormatModeValidator),
+		formatShorthand: OptionalParam(NullableStringValidator),
 	})
 
 	const unitCount = await CalendarService.getCalendarUnitCount({ calendarId })
@@ -168,6 +170,8 @@ router.post('/api/calendar/:calendarId/units', async (ctx) => {
 			displayName: params.displayName,
 			displayNameShort: params.displayNameShort,
 			displayNamePlural: params.displayNamePlural,
+			formatMode: params.formatMode,
+			formatShorthand: params.formatShorthand,
 			position: unitCount + 1,
 		},
 	})
@@ -197,11 +201,11 @@ router.patch('/api/calendar/:calendarId/unit/:unitId', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		name: OptionalParam(NameStringValidator),
-		displayName: OptionalParam(NullableNameStringValidator),
-		displayNameShort: OptionalParam(NullableNameStringValidator),
-		displayNamePlural: OptionalParam(NullableNameStringValidator),
-		dateFormatShorthand: OptionalParam(NullableStringValidator),
-		displayFormat: OptionalParam(CalendarUnitDisplayFormatValidator),
+		displayName: OptionalParam(NullableNameStringWithoutTrimValidator),
+		displayNameShort: OptionalParam(NullableNameStringWithoutTrimValidator),
+		displayNamePlural: OptionalParam(NullableNameStringWithoutTrimValidator),
+		formatMode: OptionalParam(CalendarUnitFormatModeValidator),
+		formatShorthand: OptionalParam(NullableStringValidator),
 		children: OptionalParam(CalendarUnitChildValidator),
 		position: OptionalParam(NumberValidator),
 	})
@@ -214,8 +218,8 @@ router.patch('/api/calendar/:calendarId/unit/:unitId', async (ctx) => {
 			displayName: params.displayName,
 			displayNameShort: params.displayNameShort,
 			displayNamePlural: params.displayNamePlural,
-			dateFormatShorthand: params.dateFormatShorthand,
-			displayFormat: params.displayFormat,
+			formatMode: params.formatMode,
+			formatShorthand: params.formatShorthand,
 			children: params.children,
 			position: params.position,
 		},

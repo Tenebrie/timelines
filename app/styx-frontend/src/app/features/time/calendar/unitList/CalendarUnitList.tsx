@@ -18,10 +18,9 @@ import { CalendarUnitListItem } from './CalendarUnitListItem'
 type Props = {
 	selectedUnit: CalendarDraftUnit | null
 	onSelectUnit: (unitId: string | undefined) => void
-	onExit?: () => void
 }
 
-export function CalendarUnitList({ selectedUnit, onSelectUnit, onExit }: Props) {
+export function CalendarUnitList({ selectedUnit, onSelectUnit }: Props) {
 	const { calendar } = useSelector(getCalendarEditorState)
 	const [newUnitName, setNewUnitName] = useState('')
 	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
@@ -65,8 +64,10 @@ export function CalendarUnitList({ selectedUnit, onSelectUnit, onExit }: Props) 
 				minWidth: 240,
 				display: 'flex',
 				flexDirection: 'column',
-				borderRight: 1,
 				borderColor: 'divider',
+				position: 'sticky',
+				top: 0,
+				alignSelf: 'flex-start',
 			}}
 		>
 			{/* Time Units section */}

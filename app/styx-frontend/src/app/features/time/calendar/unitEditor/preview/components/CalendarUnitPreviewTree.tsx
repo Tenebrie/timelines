@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { useMemo } from 'react'
 
-import { useChildCalendarUnit } from '../../hooks/useChildCalendarUnit'
+import { useChildCalendarUnit } from '@/app/features/time/calendar/hooks/useChildCalendarUnit'
 
 type Props = {
 	unit: CalendarDraftUnit

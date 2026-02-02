@@ -689,14 +689,6 @@ export type EnumWorldCalendarTypeFieldUpdateOperationsInput = {
   set?: $Enums.WorldCalendarType
 }
 
-export type BigIntFieldUpdateOperationsInput = {
-  set?: bigint | number
-  increment?: bigint | number
-  decrement?: bigint | number
-  multiply?: bigint | number
-  divide?: bigint | number
-}
-
 export type EnumWorldAccessModeFieldUpdateOperationsInput = {
   set?: $Enums.WorldAccessMode
 }

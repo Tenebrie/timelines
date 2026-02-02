@@ -1,4 +1,3 @@
-import { useUpdateCalendarUnitMutation } from '@api/calendarApi'
 import { CalendarDraftUnit, CalendarDraftUnitChildRelation } from '@api/types/calendarTypes'
 import Delete from '@mui/icons-material/Delete'
 import Box from '@mui/material/Box'
@@ -8,40 +7,19 @@ import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import debounce from 'lodash.debounce'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
-import { calendarEditorSlice } from '../CalendarSlice'
-import { getCalendarEditorState } from '../CalendarSliceSelectors'
+import { useUpdateCalendarUnitDebounced } from '../../api/useUpdateCalendarUnitDebounced'
+import { calendarEditorSlice } from '../../CalendarSlice'
+import { getCalendarEditorState } from '../../CalendarSliceSelectors'
 
 type Props = {
 	parent: CalendarDraftUnit
 }
 
-function useUpdateCalendarUnitDebounced() {
-	const [updateUnitMutation, data] = useUpdateCalendarUnitMutation()
-
-	const updateUnit = useMemo(
-		() =>
-			debounce(
-				(args: {
-					calendarId: string
-					unitId: string
-					body: { children: CalendarDraftUnitChildRelation[] }
-				}) => {
-					updateUnitMutation(args)
-				},
-				300,
-			),
-		[updateUnitMutation],
-	)
-
-	return [updateUnit, data] as const
-}
-
-export function ChildrenList({ parent }: Props) {
+export function CalendarUnitChildList({ parent }: Props) {
 	const { calendar } = useSelector(getCalendarEditorState)
 	const [updateUnit] = useUpdateCalendarUnitDebounced()
 	const dispatch = useDispatch()
@@ -58,9 +36,6 @@ export function ChildrenList({ parent }: Props) {
 
 	const onUpdateChild = useEvent((relationId: string, updates: Partial<CalendarDraftUnitChildRelation>) => {
 		const newChildren = parent.children.map((c) => (c.id === relationId ? { ...c, ...updates } : c))
-		// Optimistic update
-		dispatch(updateUnitChildren({ unitId: parent.id, children: newChildren }))
-		// Debounced API call
 		updateUnit({
 			calendarId: parent.calendarId,
 			unitId: parent.id,
@@ -68,13 +43,12 @@ export function ChildrenList({ parent }: Props) {
 				children: newChildren,
 			},
 		})
+		dispatch(updateUnitChildren({ unitId: parent.id, children: newChildren }))
 	})
 
 	const onDeleteChild = useEvent((relationId: string) => {
 		const newChildren = parent.children.filter((c) => c.id !== relationId)
-		// Optimistic update
 		dispatch(updateUnitChildren({ unitId: parent.id, children: newChildren }))
-		// Debounced API call
 		updateUnit({
 			calendarId: parent.calendarId,
 			unitId: parent.id,
@@ -143,7 +117,12 @@ export function ChildrenList({ parent }: Props) {
 						<Typography variant="body2" color="text.secondary" sx={{ flex: 1 }}>
 							{childUnit && child.label && `(${child.label})`}
 						</Typography>
-						<IconButton size="small" onClick={() => onDeleteChild(child.id)}>
+						<IconButton
+							size="small"
+							onClick={() => onDeleteChild(child.id)}
+							color="error"
+							sx={{ opacity: 0.7, '&:hover': { opacity: 1 } }}
+						>
 							<Delete fontSize="small" />
 						</IconButton>
 					</Box>

@@ -10,7 +10,38 @@ type Props = {
 	onChange: (value: CalendarUnitDisplayType) => void
 }
 
-export function UnitDisplayModeDropdown({ value, onChange }: Props) {
+export const CalendarUnitFormatDefinitions: Record<
+	CalendarUnitDisplayType,
+	{ id: CalendarUnitDisplayType; name: string; description: string }
+> = {
+	Name: {
+		id: 'Name',
+		name: 'Name',
+		description: 'Show unit by name',
+	},
+	NameOneIndexed: {
+		id: 'NameOneIndexed',
+		name: 'Name (One Indexed)',
+		description: 'Show unit by name (one indexed)',
+	},
+	Numeric: {
+		id: 'Numeric',
+		name: 'Numeric',
+		description: 'Show unit as numeric',
+	},
+	NumericOneIndexed: {
+		id: 'NumericOneIndexed',
+		name: 'Numeric (One Indexed)',
+		description: 'Show unit as numeric (one indexed)',
+	},
+	Hidden: {
+		id: 'Hidden',
+		name: 'Hidden',
+		description: 'Hide unit',
+	},
+}
+
+export function CalendarUnitFormatModeDropdown({ value, onChange }: Props) {
 	// const { data: availableDisplayModes } = useListCalendarUnitDisplayFormatsQuery()
 
 	// export type ListCalendarUnitDisplayFormatsApiResponse = /** status 200  */ (
@@ -21,37 +52,7 @@ export function UnitDisplayModeDropdown({ value, onChange }: Props) {
 	// 	| 'Hidden'
 	// )[]
 
-	const formatDefinitions: Record<
-		CalendarUnitDisplayType,
-		{ id: CalendarUnitDisplayType; name: string; description: string }
-	> = {
-		Name: {
-			id: 'Name',
-			name: 'Name',
-			description: 'Show unit by name',
-		},
-		NameOneIndexed: {
-			id: 'NameOneIndexed',
-			name: 'Name (One Indexed)',
-			description: 'Show unit by name (one indexed)',
-		},
-		Numeric: {
-			id: 'Numeric',
-			name: 'Numeric',
-			description: 'Show unit as numeric',
-		},
-		NumericOneIndexed: {
-			id: 'NumericOneIndexed',
-			name: 'Numeric (One Indexed)',
-			description: 'Show unit as numeric (one indexed)',
-		},
-		Hidden: {
-			id: 'Hidden',
-			name: 'Hidden',
-			description: 'Hide unit',
-		},
-	}
-	const formats = Object.values(formatDefinitions)
+	const formats = Object.values(CalendarUnitFormatDefinitions)
 
 	// const formats = useMemo(() => {
 	// 	return availableDisplayModes?.map((mode) => ({
@@ -66,7 +67,7 @@ export function UnitDisplayModeDropdown({ value, onChange }: Props) {
 	}
 
 	return (
-		<FormControl>
+		<FormControl fullWidth>
 			<InputLabel>Unit mode</InputLabel>
 			<Select
 				label="Unit mode"
@@ -75,7 +76,7 @@ export function UnitDisplayModeDropdown({ value, onChange }: Props) {
 				onChange={(e) => {
 					onChange(e.target.value)
 				}}
-				renderValue={(value) => <div>{formatDefinitions[value]?.name}</div>}
+				renderValue={(value) => <div>{CalendarUnitFormatDefinitions[value]?.name}</div>}
 				sx={{ minWidth: 150 }}
 			>
 				{formats.map((u) => (

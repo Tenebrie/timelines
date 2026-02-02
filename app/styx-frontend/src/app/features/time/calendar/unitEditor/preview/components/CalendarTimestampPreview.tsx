@@ -5,8 +5,8 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 
-import { useFormatTimestamp } from '../../hooks/useFormatTimestamp'
-import { usePreviewCalendar } from '../../hooks/usePreviewCalendar'
+import { useFormatTimestamp } from '@/app/features/time/calendar/hooks/useFormatTimestamp'
+import { usePreviewCalendar } from '@/app/features/time/calendar/hooks/usePreviewCalendar'
 
 export function CalendarTimestampPreview() {
 	const [sliderValue, setSliderValue] = useState(0)

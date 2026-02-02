@@ -62,6 +62,11 @@ export const CalendarService = {
 						position: 'asc',
 					},
 					include: {
+						parents: {
+							orderBy: {
+								position: 'asc',
+							},
+						},
 						children: {
 							orderBy: {
 								position: 'asc',
@@ -106,9 +111,9 @@ export const CalendarService = {
 			...calendar,
 			units: calendar.units.map((unit) => ({
 				...unit,
-				displayName: (unit.displayName || unit.name.trim()).toLowerCase(),
-				displayNameShort: unit.displayNameShort || unit.name.trim().substring(0, 1).trim(),
-				displayNamePlural: (unit.displayNamePlural || unit.name.trim()).toLowerCase(),
+				displayName: (unit.displayName || unit.name).trim().toLowerCase(),
+				displayNameShort: (unit.displayNameShort || unit.name).trim().substring(0, 1).toLowerCase(),
+				displayNamePlural: (unit.displayNamePlural || unit.name).trim().toLowerCase(),
 			})),
 		}
 	},
@@ -268,73 +273,88 @@ export const CalendarService = {
 			},
 		})
 
-		const cachedValues: Map<
-			string,
-			{
-				duration: number
-				depth: number
-			}
-		> = new Map()
+		const durationCache: Map<string, number> = new Map()
 
-		function getTotalDuration(
-			unit: (typeof allUnits)[number],
-			depth: number,
-		): { duration: number; depth: number } {
+		function getTotalDuration(unit: (typeof allUnits)[number], depth: number): number {
 			if (depth > 25) {
 				throw new Error('Circular dependency in calendar unit definitions')
 			}
 
-			if (cachedValues.has(unit.id)) {
-				const cachedValue = cachedValues.get(unit.id)!
-				const newValue = {
-					duration: cachedValue.duration,
-					depth: Math.max(cachedValue.depth, depth),
-				}
-				cachedValues.set(unit.id, newValue)
-				return newValue
+			if (durationCache.has(unit.id)) {
+				return durationCache.get(unit.id)!
 			}
 
 			if (unit.children.length === 0) {
-				const newValue = {
-					// Leaf nodes have implicit duration of 1
-					duration: 1,
-					depth,
-				}
-				cachedValues.set(unit.id, newValue)
-				return newValue
+				// Leaf nodes have implicit duration of 1
+				durationCache.set(unit.id, 1)
+				return 1
 			}
 
 			let total = 0
 			for (const childRel of unit.children) {
 				const childUnit = allUnits.find((u) => u.id === childRel.childUnitId)
 				if (childUnit) {
-					const childData = getTotalDuration(childUnit, depth + 1)
-					total += childData.duration * childRel.repeats
+					total += getTotalDuration(childUnit, depth + 1) * childRel.repeats
 				}
 			}
 
-			const newValue = {
-				duration: total,
-				depth,
-			}
-			cachedValues.set(unit.id, newValue)
-			return newValue
+			durationCache.set(unit.id, total)
+			return total
 		}
 
-		await Promise.all(
-			allUnits.map((unit) => {
-				const parsedValue = getTotalDuration(unit, 0)
+		// Calculate all durations
+		for (const unit of allUnits) {
+			getTotalDuration(unit, 0)
+		}
 
-				return dbClient.calendarUnit.update({
+		const depthCache: Map<string, number> = new Map()
+
+		function propagateDepth(unit: (typeof allUnits)[number], currentDepth: number): void {
+			if (currentDepth > 25) {
+				throw new Error('Circular dependency in calendar unit definitions')
+			}
+
+			const existingDepth = depthCache.get(unit.id) ?? -1
+			if (currentDepth <= existingDepth) {
+				// Already visited at this depth or deeper, no need to continue
+				return
+			}
+
+			depthCache.set(unit.id, currentDepth)
+
+			// Propagate to all children
+			for (const childRel of unit.children) {
+				const childUnit = allUnits.find((u) => u.id === childRel.childUnitId)
+				if (childUnit) {
+					propagateDepth(childUnit, currentDepth + 1)
+				}
+			}
+		}
+
+		// Start traversal from each unit at depth 0
+		for (const unit of allUnits) {
+			propagateDepth(unit, 0)
+		}
+
+		// Combine results and update database
+		const values = allUnits.map((unit) => ({
+			unit,
+			duration: durationCache.get(unit.id) ?? 1,
+			depth: depthCache.get(unit.id) ?? 0,
+		}))
+
+		return Promise.all(
+			values.map((data) =>
+				dbClient.calendarUnit.update({
 					where: {
-						id: unit.id,
+						id: data.unit.id,
 					},
 					data: {
-						duration: parsedValue.duration,
-						treeDepth: parsedValue.depth,
+						duration: data.duration,
+						treeDepth: data.depth,
 					},
-				})
-			}),
+				}),
+			),
 		)
 	},
 }

@@ -4,6 +4,7 @@ import { RootState } from '../../store'
 
 const getRootPreferences = (state: RootState) => state.preferences
 
+export const getCalendarEditorPreferences = (state: RootState) => state.preferences.calendarEditor
 export const getUserPreferences = createSelector([getRootPreferences], (state) => ({
 	colorMode: state.colorMode,
 }))

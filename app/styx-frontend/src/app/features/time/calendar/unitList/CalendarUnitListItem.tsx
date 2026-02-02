@@ -31,9 +31,7 @@ export function CalendarUnitListItem({ unit, selectedUnit, onSelectUnit }: Props
 
 	const unitLabel = (() => {
 		const labelList: string[] = []
-		if (unit.treeDepth === 0 && totalChildCount === 0) {
-			return 'Standalone unit'
-		}
+
 		if (unit.treeDepth === 0) {
 			labelList.push('Root unit')
 		}
@@ -45,8 +43,14 @@ export function CalendarUnitListItem({ unit, selectedUnit, onSelectUnit }: Props
 				if (!existingData) {
 					return
 				}
-				const nameToUse = existingData.displayName ?? existingData.name
-				const pluralNameToUse = existingData.displayNamePlural ?? existingData.name
+				const nameToUse =
+					existingData.displayName && existingData.displayName.length > 0
+						? existingData.displayName
+						: existingData.name
+				const pluralNameToUse =
+					existingData.displayNamePlural && existingData.displayNamePlural.length > 0
+						? existingData.displayNamePlural
+						: existingData.name + 's'
 				const existing = totalCount.get(nameToUse)
 				if (existing) {
 					existing.count += child.repeats
@@ -67,7 +71,7 @@ export function CalendarUnitListItem({ unit, selectedUnit, onSelectUnit }: Props
 		} else {
 			labelList.push('Base unit')
 		}
-		return labelList.join(' | ')
+		return labelList
 	})()
 
 	return (
@@ -106,7 +110,9 @@ export function CalendarUnitListItem({ unit, selectedUnit, onSelectUnit }: Props
 								{unit.name}
 							</Typography>
 							<Typography variant="caption" color="text.secondary">
-								{unitLabel}
+								{unitLabel.map((label) => (
+									<div key={label}>{label}</div>
+								))}
 							</Typography>
 						</Stack>
 						<DeleteUnitButton unitId={unit.id} unitName={unit.name} />

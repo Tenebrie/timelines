@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
-import { getCalendarEditorState } from '../../CalendarSliceSelectors'
+import { getCalendarEditorState } from '@/app/features/time/calendar/CalendarSliceSelectors'
 
 export function CalendarTimestampForm() {
 	const [updateCalendar] = useUpdateCalendarMutation()

@@ -35,7 +35,7 @@ export const AssetStatus = {
 export type AssetStatus = (typeof AssetStatus)[keyof typeof AssetStatus]
 
 
-export const CalendarUnitDisplayFormat = {
+export const CalendarUnitFormatMode = {
   Name: 'Name',
   NameOneIndexed: 'NameOneIndexed',
   Numeric: 'Numeric',
@@ -43,7 +43,7 @@ export const CalendarUnitDisplayFormat = {
   Hidden: 'Hidden'
 } as const
 
-export type CalendarUnitDisplayFormat = (typeof CalendarUnitDisplayFormat)[keyof typeof CalendarUnitDisplayFormat]
+export type CalendarUnitFormatMode = (typeof CalendarUnitFormatMode)[keyof typeof CalendarUnitFormatMode]
 
 
 export const FlagValue = {

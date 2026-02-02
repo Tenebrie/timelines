@@ -141,6 +141,7 @@ export const CalendarScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   position: 'position',
+  originTime: 'originTime',
   name: 'name',
   dateFormat: 'dateFormat',
   worldId: 'worldId',
@@ -159,8 +160,8 @@ export const CalendarUnitScalarFieldEnum = {
   displayName: 'displayName',
   displayNameShort: 'displayNameShort',
   displayNamePlural: 'displayNamePlural',
-  displayFormat: 'displayFormat',
-  dateFormatShorthand: 'dateFormatShorthand',
+  formatMode: 'formatMode',
+  formatShorthand: 'formatShorthand',
   duration: 'duration',
   treeDepth: 'treeDepth',
   calendarId: 'calendarId'

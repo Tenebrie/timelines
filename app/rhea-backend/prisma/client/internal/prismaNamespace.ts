@@ -1994,6 +1994,7 @@ export const CalendarScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   position: 'position',
+  originTime: 'originTime',
   name: 'name',
   dateFormat: 'dateFormat',
   worldId: 'worldId',
@@ -2012,8 +2013,8 @@ export const CalendarUnitScalarFieldEnum = {
   displayName: 'displayName',
   displayNameShort: 'displayNameShort',
   displayNamePlural: 'displayNamePlural',
-  displayFormat: 'displayFormat',
-  dateFormatShorthand: 'dateFormatShorthand',
+  formatMode: 'formatMode',
+  formatShorthand: 'formatShorthand',
   duration: 'duration',
   treeDepth: 'treeDepth',
   calendarId: 'calendarId'
@@ -2345,16 +2346,30 @@ export type ListEnumAssetStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
- * Reference to a field of type 'CalendarUnitDisplayFormat'
+ * Reference to a field of type 'BigInt'
  */
-export type EnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CalendarUnitDisplayFormat'>
+export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
     
 
 
 /**
- * Reference to a field of type 'CalendarUnitDisplayFormat[]'
+ * Reference to a field of type 'BigInt[]'
  */
-export type ListEnumCalendarUnitDisplayFormatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CalendarUnitDisplayFormat[]'>
+export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CalendarUnitFormatMode'
+ */
+export type EnumCalendarUnitFormatModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CalendarUnitFormatMode'>
+    
+
+
+/**
+ * Reference to a field of type 'CalendarUnitFormatMode[]'
+ */
+export type ListEnumCalendarUnitFormatModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CalendarUnitFormatMode[]'>
     
 
 
@@ -2425,20 +2440,6 @@ export type EnumWorldCalendarTypeFieldRefInput<$PrismaModel> = FieldRefInputType
  * Reference to a field of type 'WorldCalendarType[]'
  */
 export type ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorldCalendarType[]'>
-    
-
-
-/**
- * Reference to a field of type 'BigInt'
- */
-export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
-    
-
-
-/**
- * Reference to a field of type 'BigInt[]'
- */
-export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
     
 
 

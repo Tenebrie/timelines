@@ -82,9 +82,9 @@ export type PostLoginApiResponse = /** status 200  */ {
 			createdAt: string
 			updatedAt: string
 			ownerId: string
+			size: number
 			expiresAt?: null | string
 			bucketKey: string
-			size: number
 			originalFileName: string
 			originalFileExtension: string
 			contentType: 'Image' | 'Avatar'

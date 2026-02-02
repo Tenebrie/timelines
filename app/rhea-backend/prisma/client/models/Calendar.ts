@@ -28,10 +28,12 @@ export type AggregateCalendar = {
 
 export type CalendarAvgAggregateOutputType = {
   position: number | null
+  originTime: number | null
 }
 
 export type CalendarSumAggregateOutputType = {
   position: number | null
+  originTime: bigint | null
 }
 
 export type CalendarMinAggregateOutputType = {
@@ -39,6 +41,7 @@ export type CalendarMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   position: number | null
+  originTime: bigint | null
   name: string | null
   dateFormat: string | null
   worldId: string | null
@@ -50,6 +53,7 @@ export type CalendarMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   position: number | null
+  originTime: bigint | null
   name: string | null
   dateFormat: string | null
   worldId: string | null
@@ -61,6 +65,7 @@ export type CalendarCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   position: number
+  originTime: number
   name: number
   dateFormat: number
   worldId: number
@@ -71,10 +76,12 @@ export type CalendarCountAggregateOutputType = {
 
 export type CalendarAvgAggregateInputType = {
   position?: true
+  originTime?: true
 }
 
 export type CalendarSumAggregateInputType = {
   position?: true
+  originTime?: true
 }
 
 export type CalendarMinAggregateInputType = {
@@ -82,6 +89,7 @@ export type CalendarMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   position?: true
+  originTime?: true
   name?: true
   dateFormat?: true
   worldId?: true
@@ -93,6 +101,7 @@ export type CalendarMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   position?: true
+  originTime?: true
   name?: true
   dateFormat?: true
   worldId?: true
@@ -104,6 +113,7 @@ export type CalendarCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   position?: true
+  originTime?: true
   name?: true
   dateFormat?: true
   worldId?: true
@@ -202,6 +212,7 @@ export type CalendarGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   position: number
+  originTime: bigint
   name: string
   dateFormat: string | null
   worldId: string | null
@@ -236,6 +247,7 @@ export type CalendarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Calendar"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Calendar"> | Date | string
   position?: Prisma.IntFilter<"Calendar"> | number
+  originTime?: Prisma.BigIntFilter<"Calendar"> | bigint | number
   name?: Prisma.StringFilter<"Calendar"> | string
   dateFormat?: Prisma.StringNullableFilter<"Calendar"> | string | null
   worldId?: Prisma.StringNullableFilter<"Calendar"> | string | null
@@ -250,6 +262,7 @@ export type CalendarOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  originTime?: Prisma.SortOrder
   name?: Prisma.SortOrder
   dateFormat?: Prisma.SortOrderInput | Prisma.SortOrder
   worldId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -267,6 +280,7 @@ export type CalendarWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Calendar"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Calendar"> | Date | string
   position?: Prisma.IntFilter<"Calendar"> | number
+  originTime?: Prisma.BigIntFilter<"Calendar"> | bigint | number
   name?: Prisma.StringFilter<"Calendar"> | string
   dateFormat?: Prisma.StringNullableFilter<"Calendar"> | string | null
   worldId?: Prisma.StringNullableFilter<"Calendar"> | string | null
@@ -281,6 +295,7 @@ export type CalendarOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  originTime?: Prisma.SortOrder
   name?: Prisma.SortOrder
   dateFormat?: Prisma.SortOrderInput | Prisma.SortOrder
   worldId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -300,6 +315,7 @@ export type CalendarScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Calendar"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Calendar"> | Date | string
   position?: Prisma.IntWithAggregatesFilter<"Calendar"> | number
+  originTime?: Prisma.BigIntWithAggregatesFilter<"Calendar"> | bigint | number
   name?: Prisma.StringWithAggregatesFilter<"Calendar"> | string
   dateFormat?: Prisma.StringNullableWithAggregatesFilter<"Calendar"> | string | null
   worldId?: Prisma.StringNullableWithAggregatesFilter<"Calendar"> | string | null
@@ -311,6 +327,7 @@ export type CalendarCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   position: number
+  originTime?: bigint | number
   name: string
   dateFormat?: string | null
   units?: Prisma.CalendarUnitCreateNestedManyWithoutCalendarInput
@@ -323,6 +340,7 @@ export type CalendarUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   position: number
+  originTime?: bigint | number
   name: string
   dateFormat?: string | null
   worldId?: string | null
@@ -335,6 +353,7 @@ export type CalendarUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   units?: Prisma.CalendarUnitUpdateManyWithoutCalendarNestedInput
@@ -347,6 +366,7 @@ export type CalendarUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -359,6 +379,7 @@ export type CalendarCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   position: number
+  originTime?: bigint | number
   name: string
   dateFormat?: string | null
   worldId?: string | null
@@ -370,6 +391,7 @@ export type CalendarUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -379,6 +401,7 @@ export type CalendarUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -390,6 +413,7 @@ export type CalendarCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  originTime?: Prisma.SortOrder
   name?: Prisma.SortOrder
   dateFormat?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
@@ -398,6 +422,7 @@ export type CalendarCountOrderByAggregateInput = {
 
 export type CalendarAvgOrderByAggregateInput = {
   position?: Prisma.SortOrder
+  originTime?: Prisma.SortOrder
 }
 
 export type CalendarMaxOrderByAggregateInput = {
@@ -405,6 +430,7 @@ export type CalendarMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  originTime?: Prisma.SortOrder
   name?: Prisma.SortOrder
   dateFormat?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
@@ -416,6 +442,7 @@ export type CalendarMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  originTime?: Prisma.SortOrder
   name?: Prisma.SortOrder
   dateFormat?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
@@ -424,6 +451,7 @@ export type CalendarMinOrderByAggregateInput = {
 
 export type CalendarSumOrderByAggregateInput = {
   position?: Prisma.SortOrder
+  originTime?: Prisma.SortOrder
 }
 
 export type CalendarScalarRelationFilter = {
@@ -439,6 +467,14 @@ export type CalendarListRelationFilter = {
 
 export type CalendarOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type BigIntFieldUpdateOperationsInput = {
+  set?: bigint | number
+  increment?: bigint | number
+  decrement?: bigint | number
+  multiply?: bigint | number
+  divide?: bigint | number
 }
 
 export type CalendarCreateNestedOneWithoutUnitsInput = {
@@ -544,6 +580,7 @@ export type CalendarCreateWithoutUnitsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   position: number
+  originTime?: bigint | number
   name: string
   dateFormat?: string | null
   world?: Prisma.WorldCreateNestedOneWithoutCalendarsInput
@@ -555,6 +592,7 @@ export type CalendarUncheckedCreateWithoutUnitsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   position: number
+  originTime?: bigint | number
   name: string
   dateFormat?: string | null
   worldId?: string | null
@@ -582,6 +620,7 @@ export type CalendarUpdateWithoutUnitsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   world?: Prisma.WorldUpdateOneWithoutCalendarsNestedInput
@@ -593,6 +632,7 @@ export type CalendarUncheckedUpdateWithoutUnitsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -604,6 +644,7 @@ export type CalendarCreateWithoutOwnerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   position: number
+  originTime?: bigint | number
   name: string
   dateFormat?: string | null
   units?: Prisma.CalendarUnitCreateNestedManyWithoutCalendarInput
@@ -615,6 +656,7 @@ export type CalendarUncheckedCreateWithoutOwnerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   position: number
+  originTime?: bigint | number
   name: string
   dateFormat?: string | null
   worldId?: string | null
@@ -655,6 +697,7 @@ export type CalendarScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Calendar"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Calendar"> | Date | string
   position?: Prisma.IntFilter<"Calendar"> | number
+  originTime?: Prisma.BigIntFilter<"Calendar"> | bigint | number
   name?: Prisma.StringFilter<"Calendar"> | string
   dateFormat?: Prisma.StringNullableFilter<"Calendar"> | string | null
   worldId?: Prisma.StringNullableFilter<"Calendar"> | string | null
@@ -666,6 +709,7 @@ export type CalendarCreateWithoutWorldInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   position: number
+  originTime?: bigint | number
   name: string
   dateFormat?: string | null
   units?: Prisma.CalendarUnitCreateNestedManyWithoutCalendarInput
@@ -677,6 +721,7 @@ export type CalendarUncheckedCreateWithoutWorldInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   position: number
+  originTime?: bigint | number
   name: string
   dateFormat?: string | null
   ownerId?: string | null
@@ -714,6 +759,7 @@ export type CalendarCreateManyOwnerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   position: number
+  originTime?: bigint | number
   name: string
   dateFormat?: string | null
   worldId?: string | null
@@ -724,6 +770,7 @@ export type CalendarUpdateWithoutOwnerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   units?: Prisma.CalendarUnitUpdateManyWithoutCalendarNestedInput
@@ -735,6 +782,7 @@ export type CalendarUncheckedUpdateWithoutOwnerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -746,6 +794,7 @@ export type CalendarUncheckedUpdateManyWithoutOwnerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -756,6 +805,7 @@ export type CalendarCreateManyWorldInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   position: number
+  originTime?: bigint | number
   name: string
   dateFormat?: string | null
   ownerId?: string | null
@@ -766,6 +816,7 @@ export type CalendarUpdateWithoutWorldInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   units?: Prisma.CalendarUnitUpdateManyWithoutCalendarNestedInput
@@ -777,6 +828,7 @@ export type CalendarUncheckedUpdateWithoutWorldInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -788,6 +840,7 @@ export type CalendarUncheckedUpdateManyWithoutWorldInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -829,6 +882,7 @@ export type CalendarSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   updatedAt?: boolean
   position?: boolean
+  originTime?: boolean
   name?: boolean
   dateFormat?: boolean
   worldId?: boolean
@@ -844,6 +898,7 @@ export type CalendarSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdAt?: boolean
   updatedAt?: boolean
   position?: boolean
+  originTime?: boolean
   name?: boolean
   dateFormat?: boolean
   worldId?: boolean
@@ -857,6 +912,7 @@ export type CalendarSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   createdAt?: boolean
   updatedAt?: boolean
   position?: boolean
+  originTime?: boolean
   name?: boolean
   dateFormat?: boolean
   worldId?: boolean
@@ -870,13 +926,14 @@ export type CalendarSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   position?: boolean
+  originTime?: boolean
   name?: boolean
   dateFormat?: boolean
   worldId?: boolean
   ownerId?: boolean
 }
 
-export type CalendarOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "position" | "name" | "dateFormat" | "worldId" | "ownerId", ExtArgs["result"]["calendar"]>
+export type CalendarOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "position" | "originTime" | "name" | "dateFormat" | "worldId" | "ownerId", ExtArgs["result"]["calendar"]>
 export type CalendarInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   units?: boolean | Prisma.Calendar$unitsArgs<ExtArgs>
   world?: boolean | Prisma.Calendar$worldArgs<ExtArgs>
@@ -904,6 +961,7 @@ export type $CalendarPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     createdAt: Date
     updatedAt: Date
     position: number
+    originTime: bigint
     name: string
     dateFormat: string | null
     worldId: string | null
@@ -1338,6 +1396,7 @@ export interface CalendarFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Calendar", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Calendar", 'DateTime'>
   readonly position: Prisma.FieldRef<"Calendar", 'Int'>
+  readonly originTime: Prisma.FieldRef<"Calendar", 'BigInt'>
   readonly name: Prisma.FieldRef<"Calendar", 'String'>
   readonly dateFormat: Prisma.FieldRef<"Calendar", 'String'>
   readonly worldId: Prisma.FieldRef<"Calendar", 'String'>

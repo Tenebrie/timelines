@@ -11,20 +11,35 @@ import Typography from '@mui/material/Typography'
 import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getCalendarEditorState } from '../CalendarSliceSelectors'
+import { getCalendarEditorState } from '../../CalendarSliceSelectors'
 
 type Props = {
 	parent: CalendarDraftUnit
 }
 
-export function AddChildForm({ parent }: Props) {
+export function CalendarUnitAddChildForm({ parent }: Props) {
 	const { calendar } = useSelector(getCalendarEditorState)
 	const availableUnits = useMemo(() => {
 		if (!calendar) {
 			return []
 		}
+		const ancestors = new Set<string>()
+		const gatherAncestors = (unitId: string) => {
+			const unit = calendar.units.find((u) => u.id === unitId)
+			if (!unit) {
+				return
+			}
+			for (const parents of unit.parents) {
+				if (!ancestors.has(parents.parentUnitId)) {
+					ancestors.add(parents.parentUnitId)
+					gatherAncestors(parents.parentUnitId)
+				}
+			}
+		}
+		gatherAncestors(parent.id)
+
 		return calendar.units.filter((u) => {
-			return u.id !== parent.id
+			return u.id !== parent.id && !ancestors.has(u.id)
 		})
 	}, [calendar, parent.id])
 
@@ -65,6 +80,14 @@ export function AddChildForm({ parent }: Props) {
 				onChange={(e) => {
 					const unit = availableUnits.find((u) => u.id === e.target.value) ?? null
 					setSelectedUnit(unit)
+				}}
+				disabled={availableUnits.length === 0}
+				displayEmpty
+				renderValue={(value) => {
+					if (availableUnits.length === 0) {
+						return <i>No units available</i>
+					}
+					return availableUnits.find((u) => u.id === value)?.name ?? ''
 				}}
 				sx={{ minWidth: 150 }}
 			>

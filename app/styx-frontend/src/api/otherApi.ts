@@ -12,11 +12,11 @@ const injectedRtkApi = api
 			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
 				query: () => ({ url: `/api/constants/world-access-modes` }),
 			}),
-			listCalendarUnitDisplayFormats: build.query<
-				ListCalendarUnitDisplayFormatsApiResponse,
-				ListCalendarUnitDisplayFormatsApiArg
+			listCalendarUnitFormatModes: build.query<
+				ListCalendarUnitFormatModesApiResponse,
+				ListCalendarUnitFormatModesApiArg
 			>({
-				query: () => ({ url: `/api/constants/calendar-unit-display-formats` }),
+				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
 			}),
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
@@ -120,14 +120,14 @@ export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premiu
 export type AdminGetUserLevelsApiArg = void
 export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
 export type ListWorldAccessModesApiArg = void
-export type ListCalendarUnitDisplayFormatsApiResponse = /** status 200  */ (
+export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
 	| 'Name'
 	| 'NameOneIndexed'
 	| 'Numeric'
 	| 'NumericOneIndexed'
 	| 'Hidden'
 )[]
-export type ListCalendarUnitDisplayFormatsApiArg = void
+export type ListCalendarUnitFormatModesApiArg = void
 export type GetHealthApiResponse = unknown
 export type GetHealthApiArg = void
 export type GetSupportedImageFormatsApiResponse = /** status 200  */ {
@@ -135,13 +135,13 @@ export type GetSupportedImageFormatsApiResponse = /** status 200  */ {
 }
 export type GetSupportedImageFormatsApiArg = void
 export type RequestImageConversionApiResponse = /** status 200  */ {
+	ownerId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	ownerId: string
-	size: number
 	expiresAt?: null | string
 	bucketKey: string
+	size: number
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'Image' | 'Avatar'
@@ -287,11 +287,11 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
+		position: number
 		name: string
 		worldId: string
 		icon: string
 		color: string
-		position: number
 		contentRich: string
 		contentYjs?: null | string
 		parentId?: null | string
@@ -299,11 +299,11 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	position: number
 	name: string
 	worldId: string
 	icon: string
 	color: string
-	position: number
 	contentRich: string
 	parentId?: null | string
 }
@@ -334,8 +334,8 @@ export const {
 	useLazyAdminGetUserLevelsQuery,
 	useListWorldAccessModesQuery,
 	useLazyListWorldAccessModesQuery,
-	useListCalendarUnitDisplayFormatsQuery,
-	useLazyListCalendarUnitDisplayFormatsQuery,
+	useListCalendarUnitFormatModesQuery,
+	useLazyListCalendarUnitFormatModesQuery,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,
 	useGetSupportedImageFormatsQuery,
