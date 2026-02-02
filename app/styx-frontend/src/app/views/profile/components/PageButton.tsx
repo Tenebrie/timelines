@@ -9,7 +9,7 @@ import { FileRouteTypes } from '@/routeTree.gen'
 type Props = {
 	icon?: React.ReactNode
 	label: string
-	route: FileRouteTypes['to']
+	route: FileRouteTypes['fullPaths']
 }
 
 export function PageButton({ icon, label, route }: Props) {
