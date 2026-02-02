@@ -18,7 +18,7 @@ export function ToolButton({ label, route }: Props) {
 	return (
 		<Button
 			fullWidth
-			onClick={() => navigate({ to: route })}
+			onClick={() => navigate({ to: route as FileRouteTypes['to'] })}
 			sx={{
 				justifyContent: 'flex-start',
 				px: 2,

@@ -1,8 +1,12 @@
 import { useNavigate as useBaseNavigate } from '@tanstack/react-router'
-import { AnyRouter, FromPathOption, NavigateOptions, RegisteredRouter } from '@tanstack/router-core'
+import {
+	AnyRouter,
+	FromPathOption,
+	NavigateOptions,
+	RegisteredRouter,
+	UseNavigateResult,
+} from '@tanstack/router-core'
 import { useCallback } from 'react'
-
-import { FileRouteTypes } from '@/routeTree.gen'
 
 /**
  * Tanstack useNavigate wrapper to fix regression reported since v1.121.34
@@ -20,7 +24,7 @@ import { FileRouteTypes } from '@/routeTree.gen'
 export function useStableNavigate<
 	TRouter extends AnyRouter = RegisteredRouter,
 	TDefaultFrom extends string = string,
->(_defaultOpts?: { from?: FromPathOption<TRouter, TDefaultFrom> }) {
+>(_defaultOpts?: { from?: FromPathOption<TRouter, TDefaultFrom> }): UseNavigateResult<TDefaultFrom> {
 	const navigate = useBaseNavigate()
 
 	const func = useCallback(
@@ -31,14 +35,12 @@ export function useStableNavigate<
 			const TMaskFrom extends string = TFrom,
 			const TMaskTo extends string = '',
 		>(
-			args: Omit<NavigateOptions<TRouter, TFrom, TTo, TMaskFrom, TMaskTo>, 'to'> & {
-				to: NavigateOptions<TRouter, TFrom, TTo, TMaskFrom, TMaskTo>['to'] | FileRouteTypes['fullPaths']
-			},
+			args: NavigateOptions<TRouter, TFrom, TTo, TMaskFrom, TMaskTo>,
 		) => {
 			return navigate({
 				...args,
 				to: args.to ?? '.',
-			} as never)
+			} as typeof args)
 		},
 		[navigate],
 	)
