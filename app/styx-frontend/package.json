@@ -16,6 +16,7 @@
 		"start": "vite --host --clearScreen false",
 		"preview": "vite build && vite preview",
 		"test": "vitest",
+		"test:coverage": "vitest run --coverage",
 		"prod": "serve -s build -l 8080"
 	},
 	"lint-staged": {
@@ -80,6 +81,7 @@
 		"@types/styled-components": "^5.1.24",
 		"@types/uuid": "^10.0.0",
 		"@types/ws": "^8.5.13",
+		"@vitest/coverage-v8": "^4.0.17",
 		"eslint": "^9.39.2",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-mui-path-imports": "^0.0.15",

@@ -29,34 +29,28 @@ export function useFormatTimestampUnits({
 
 	const parseTimestamp = ({
 		outputMap,
+		skippedChildCount,
 		unit,
 		customLabel,
 		timestamp,
 		extraDuration,
-		franDuration,
+		// franDuration,
 	}: {
 		outputMap?: ParsedTimestamp
+		skippedChildCount?: Map<string, number>
 		unit: CalendarUnit
 		customLabel?: string
 		timestamp: number
 		// Non-consumed duration from hidden ancestors and siblings
 		extraDuration: number
-		// Duration from the last non-hidden sibling
-		franDuration: number
 	}) => {
-		outputMap =
-			outputMap ??
-			new Map<
-				string,
-				{
-					value: number
-					customLabel?: string
-					formatShorthand?: string
-				}
-			>()
+		outputMap = outputMap ?? new Map()
+		skippedChildCount = skippedChildCount ?? new Map<string, number>()
+
 		const index = Math.floor(timestamp / unit.duration)
 		let remainder = timestamp % unit.duration
 
+		const franDuration = skippedChildCount.get(unit.displayName) ?? 0
 		outputMap.set(unit.id, {
 			value: index + (unit.formatMode === 'Hidden' ? 0 : extraDuration + franDuration),
 			formatShorthand: unit.formatShorthand ?? undefined,
@@ -67,14 +61,13 @@ export function useFormatTimestampUnits({
 			return outputMap
 		}
 
-		let myFranDuration = 0
+		// let myFranDuration = 0
 		let myExtraDuration = 0
 		if (unit.formatMode === 'Hidden') {
 			myExtraDuration += sumNonHiddenChildren(unit) * index
 			myExtraDuration += extraDuration
 		}
 
-		let lastSeenChildName = null as string | null
 		for (let i = 0; i < unit.children.length; i++) {
 			const childRelation = unit.children[i]
 			const childUnit = units.find((u) => u.id === childRelation.childUnitId)
@@ -82,24 +75,23 @@ export function useFormatTimestampUnits({
 				continue
 			}
 			if (remainder < childUnit.duration * childRelation.repeats) {
-				if (childUnit.formatMode !== 'Hidden' && childUnit.displayName !== lastSeenChildName) {
-					myFranDuration = 0
-				}
 				return parseTimestamp({
 					outputMap,
+					skippedChildCount,
 					unit: childUnit,
 					timestamp: remainder,
 					extraDuration: myExtraDuration,
-					franDuration: myFranDuration,
 					customLabel: childRelation.label ?? undefined,
 				})
 			}
-			lastSeenChildName = childUnit.displayName
 			remainder -= childUnit.duration * childRelation.repeats
 			if (childUnit.formatMode === 'Hidden') {
 				myExtraDuration += childRelation.repeats * sumNonHiddenChildren(childUnit)
 			} else {
-				myFranDuration += childRelation.repeats
+				skippedChildCount.set(
+					childUnit.displayName,
+					(skippedChildCount.get(childUnit.displayName) ?? 0) + childRelation.repeats,
+				)
 			}
 		}
 		console.error('No child unit matched for remainder', remainder)
@@ -118,14 +110,14 @@ export function useFormatTimestampUnits({
 			result: '',
 		}
 
-		const dateFormat = dateFormatString ?? ''
 		const flushCurrent = () => {
 			if (current.symbol.length === 0) {
 				return
 			}
 
 			const caseSensitive =
-				dateFormat.includes(current.symbol.toLowerCase()) && dateFormat.includes(current.symbol.toUpperCase())
+				dateFormatString.includes(current.symbol.toLowerCase()) &&
+				dateFormatString.includes(current.symbol.toUpperCase())
 			const unit = units.find((u) => {
 				if (!parsed.get(u.id)) {
 					return false
@@ -147,7 +139,7 @@ export function useFormatTimestampUnits({
 			}
 		}
 
-		for (const char of dateFormat) {
+		for (const char of dateFormatString) {
 			if (char === current.symbol) {
 				current.count += 1
 			} else {
@@ -194,7 +186,6 @@ export function useFormatTimestampUnits({
 					unit: rootUnit,
 					timestamp,
 					extraDuration: 0,
-					franDuration: 0,
 				})
 				return {
 					unit: rootUnit,
