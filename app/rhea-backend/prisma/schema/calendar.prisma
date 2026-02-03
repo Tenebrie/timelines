@@ -6,16 +6,18 @@ model Calendar {
 
     originTime BigInt @default(0)
 
-    name  String
-    units CalendarUnit[]
+    name        String
+    units       CalendarUnit[]
+    scaleLevels CalendarScaleLevel[]
+    calendarSeasons CalendarSeason[]
 
     dateFormat String?
 
     // A calendar is owned by either a world or a user, and never both
-    world   World?  @relation(fields: [worldId], references: [id], onDelete: Cascade)
-    owner   User?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-    worldId String?
-    ownerId String?
+    world           World?           @relation(fields: [worldId], references: [id], onDelete: Cascade)
+    owner           User?            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    worldId         String?
+    ownerId         String?
 }
 
 model CalendarUnit {
@@ -29,8 +31,9 @@ model CalendarUnit {
     displayNameShort  String?
     displayNamePlural String?
 
-    formatMode      CalendarUnitFormatMode @default(Name)
+    formatMode      CalendarUnitFormatMode     @default(Name)
     formatShorthand String?
+    negativeFormat  CalendarUnitNegativeFormat @default(MinusSign)
 
     duration  Int @default(1)
     treeDepth Int @default(1)
@@ -68,4 +71,43 @@ enum CalendarUnitFormatMode {
     NumericOneIndexed
     // Not displayed
     Hidden
+}
+
+enum CalendarUnitNegativeFormat {
+    MinusSign
+    AbsoluteValue
+}
+
+/**
+ * Scale levels
+ */
+model CalendarScaleLevel {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+    position  Int
+
+    name        String
+    description String?
+
+    scaleFactor Float @default(1.0)
+
+    calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+    calendarId String
+}
+
+/**
+ * Seasons
+ */
+model CalendarSeason {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+    position  Int
+
+    name        String
+    description String?
+
+    calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+    calendarId String
 }

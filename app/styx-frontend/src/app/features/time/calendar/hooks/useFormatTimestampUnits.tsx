@@ -34,7 +34,6 @@ export function useFormatTimestampUnits({
 		customLabel,
 		timestamp,
 		extraDuration,
-		// franDuration,
 	}: {
 		outputMap?: ParsedTimestamp
 		skippedChildCount?: Map<string, number>
@@ -50,6 +49,11 @@ export function useFormatTimestampUnits({
 		const index = Math.floor(timestamp / unit.duration)
 		let remainder = timestamp % unit.duration
 
+		// Handle negative timestamps
+		if (remainder < 0) {
+			remainder += unit.duration
+		}
+
 		const franDuration = skippedChildCount.get(unit.displayName) ?? 0
 		outputMap.set(unit.id, {
 			value: index + (unit.formatMode === 'Hidden' ? 0 : extraDuration + franDuration),
@@ -61,7 +65,6 @@ export function useFormatTimestampUnits({
 			return outputMap
 		}
 
-		// let myFranDuration = 0
 		let myExtraDuration = 0
 		if (unit.formatMode === 'Hidden') {
 			myExtraDuration += sumNonHiddenChildren(unit) * index
@@ -152,10 +155,15 @@ export function useFormatTimestampUnits({
 
 		function formatUnit(unit: CalendarUnit, entry: ParsedTimestampEntry, symbolCount: number) {
 			const value =
-				unit.formatMode === 'NameOneIndexed' || unit.formatMode === 'NumericOneIndexed'
+				(unit.formatMode === 'NameOneIndexed' || unit.formatMode === 'NumericOneIndexed') && entry.value >= 0
 					? entry.value + 1
 					: entry.value
-			const paddedValue = value.toString().padStart(symbolCount, '0')
+
+			// Handle negative numbers: pad the absolute value, then prepend the minus sign
+			const isNegative = value < 0
+			const absValue = Math.abs(value)
+			const paddedAbsValue = absValue.toString().padStart(symbolCount, '0')
+			const paddedValue = isNegative ? '-' + paddedAbsValue : paddedAbsValue
 
 			const isNumeric = unit.formatMode === 'Numeric' || unit.formatMode === 'NumericOneIndexed'
 			const isSymbolic = unit.formatMode === 'Name' || unit.formatMode === 'NameOneIndexed'

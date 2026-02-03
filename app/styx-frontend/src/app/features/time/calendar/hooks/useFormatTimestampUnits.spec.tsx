@@ -1634,4 +1634,348 @@ describe('useFormatTimestampUnits', () => {
 			expect(result.current({ timestamp: 9 })).toBe('0 10')
 		})
 	})
+
+	describe('negative timestamps', () => {
+		describe('simple calendar (days in months in years)', () => {
+			const createSimpleCalendar = () => {
+				const dayUnit = createUnit({
+					id: 'day',
+					name: 'Day',
+					displayName: 'Day',
+					displayNameShort: 'D',
+					duration: 1,
+					formatShorthand: 'd',
+					formatMode: 'NumericOneIndexed',
+					position: 2,
+					children: [],
+					parents: [createParentRelation('month', 'day', 30)],
+				})
+
+				const monthUnit = createUnit({
+					id: 'month',
+					name: 'Month',
+					displayName: 'Month',
+					displayNameShort: 'M',
+					duration: 30,
+					formatShorthand: 'm',
+					formatMode: 'NumericOneIndexed',
+					position: 1,
+					children: [createChildRelation('month', 'day', 30)],
+					parents: [createParentRelation('year', 'month', 12)],
+				})
+
+				const yearUnit = createUnit({
+					id: 'year',
+					name: 'Year',
+					displayName: 'Year',
+					displayNameShort: 'Y',
+					duration: 360, // 12 months * 30 days
+					formatShorthand: 'y',
+					formatMode: 'Numeric',
+					position: 0,
+					children: [createChildRelation('year', 'month', 12)],
+					parents: [],
+				})
+
+				return [yearUnit, monthUnit, dayUnit]
+			}
+
+			it('timestamp -1 is last day of previous year', () => {
+				const units = createSimpleCalendar()
+				const { result } = renderHook(() => useFormatTimestampUnits({ units, dateFormatString: 'y-mm-dd' }))
+
+				// timestamp -1 should be year -1, month 12, day 30
+				expect(result.current({ timestamp: -1 })).toBe('-1-12-30')
+			})
+
+			it('timestamp -30 is first day of last month of previous year', () => {
+				const units = createSimpleCalendar()
+				const { result } = renderHook(() => useFormatTimestampUnits({ units, dateFormatString: 'y-mm-dd' }))
+
+				// timestamp -30 should be year -1, month 12, day 1
+				expect(result.current({ timestamp: -30 })).toBe('-1-12-01')
+			})
+
+			it('timestamp -31 is last day of 11th month of previous year', () => {
+				const units = createSimpleCalendar()
+				const { result } = renderHook(() => useFormatTimestampUnits({ units, dateFormatString: 'y-mm-dd' }))
+
+				// timestamp -31 should be year -1, month 11, day 30
+				expect(result.current({ timestamp: -31 })).toBe('-1-11-30')
+			})
+
+			it('timestamp -360 is first day of previous year', () => {
+				const units = createSimpleCalendar()
+				const { result } = renderHook(() => useFormatTimestampUnits({ units, dateFormatString: 'y-mm-dd' }))
+
+				// timestamp -360 should be year -1, month 1, day 1
+				expect(result.current({ timestamp: -360 })).toBe('-1-01-01')
+			})
+
+			it('timestamp -361 is last day of year -2', () => {
+				const units = createSimpleCalendar()
+				const { result } = renderHook(() => useFormatTimestampUnits({ units, dateFormatString: 'y-mm-dd' }))
+
+				// timestamp -361 should be year -2, month 12, day 30
+				expect(result.current({ timestamp: -361 })).toBe('-2-12-30')
+			})
+		})
+
+		describe('calendar with hidden cycles (like Gregorian)', () => {
+			const createGregorianCalendar = () => {
+				// Actual Gregorian structure:
+				// 400-year cycle (hidden) = 146097 days
+				//   -> 3x 100-year cycle (hidden) = 36524 days each
+				//   -> 25x 4-year cycle (hidden) = 1461 days each
+				// 100-year cycle (hidden) = 36524 days
+				//   -> 24x 4-year cycle (hidden) = 1461 days each
+				//   -> 4x regular year = 365 days each
+				// 4-year cycle (hidden) = 1461 days
+				//   -> 3x regular year = 365 days
+				//   -> 1x leap year = 366 days
+				// Regular year = 365 days -> 12 months
+				// Leap year = 366 days -> 12 months
+
+				// For simplicity in tests, use simplified month structure (all 30 days)
+				// Regular year = 360 days, Leap year = 366 days
+				// 4-year cycle = 3*360 + 366 = 1446 days
+				// 100-year cycle = 24*1446 + 4*360 = 34704 + 1440 = 36144 days
+				// 400-year cycle = 3*36144 + 25*1446 = 108432 + 36150 = 144582 days
+
+				// Actually let's use real values for accuracy:
+				// Regular year = 365 days
+				// Leap year = 366 days
+				// 4-year cycle = 3*365 + 366 = 1461 days
+				// 100-year cycle = 24*1461 + 4*365 = 35064 + 1460 = 36524 days
+				// 400-year cycle = 3*36524 + 25*1461 = 109572 + 36525 = 146097 days
+
+				const MINUTE = 1
+				const HOUR = 60 * MINUTE
+				const DAY = 24 * HOUR
+				const REGULAR_YEAR = 365 * DAY
+				const LEAP_YEAR = 366 * DAY
+				const FOUR_YEAR_CYCLE = 3 * REGULAR_YEAR + LEAP_YEAR // 1461 days
+				const HUNDRED_YEAR_CYCLE = 24 * FOUR_YEAR_CYCLE + 4 * REGULAR_YEAR // 36524 days
+				const FOUR_HUNDRED_YEAR_CYCLE = 3 * HUNDRED_YEAR_CYCLE + 25 * FOUR_YEAR_CYCLE // 146097 days
+
+				const minuteUnit = createUnit({
+					id: 'minute',
+					name: 'Minute',
+					displayName: 'Minute',
+					duration: MINUTE,
+					formatShorthand: 'i',
+					formatMode: 'Numeric',
+					position: 5,
+					children: [],
+					parents: [createParentRelation('hour', 'minute', 60)],
+				})
+
+				const hourUnit = createUnit({
+					id: 'hour',
+					name: 'Hour',
+					displayName: 'Hour',
+					duration: HOUR,
+					formatShorthand: 'h',
+					formatMode: 'Numeric',
+					position: 4,
+					children: [createChildRelation('hour', 'minute', 60)],
+					parents: [createParentRelation('day', 'hour', 24)],
+				})
+
+				const dayUnit = createUnit({
+					id: 'day',
+					name: 'Day',
+					displayName: 'Day',
+					duration: DAY,
+					formatShorthand: 'd',
+					formatMode: 'NumericOneIndexed',
+					position: 3,
+					children: [createChildRelation('day', 'hour', 24)],
+					parents: [
+						createParentRelation('regularYear', 'day', 365),
+						createParentRelation('leapYear', 'day', 366),
+					],
+				})
+
+				const regularYearUnit = createUnit({
+					id: 'regularYear',
+					name: 'Regular year',
+					displayName: 'Year',
+					duration: REGULAR_YEAR,
+					formatShorthand: 'y',
+					formatMode: 'NumericOneIndexed',
+					position: 2,
+					children: [createChildRelation('regularYear', 'day', 365)],
+					parents: [
+						createParentRelation('fourYearCycle', 'regularYear', 3),
+						createParentRelation('hundredYearCycle', 'regularYear', 4),
+					],
+				})
+
+				const leapYearUnit = createUnit({
+					id: 'leapYear',
+					name: 'Leap year',
+					displayName: 'Year',
+					duration: LEAP_YEAR,
+					formatShorthand: 'y',
+					formatMode: 'NumericOneIndexed',
+					position: 2,
+					children: [createChildRelation('leapYear', 'day', 366)],
+					parents: [createParentRelation('fourYearCycle', 'leapYear', 1)],
+				})
+
+				const fourYearCycleUnit = createUnit({
+					id: 'fourYearCycle',
+					name: '4-year cycle',
+					displayName: '4-year cycle',
+					duration: FOUR_YEAR_CYCLE,
+					formatShorthand: null,
+					formatMode: 'Hidden',
+					position: 1,
+					children: [
+						createChildRelation('fourYearCycle', 'regularYear', 3, { position: 0 }),
+						createChildRelation('fourYearCycle', 'leapYear', 1, { position: 1 }),
+					],
+					parents: [
+						createParentRelation('hundredYearCycle', 'fourYearCycle', 24),
+						createParentRelation('fourHundredYearCycle', 'fourYearCycle', 25),
+					],
+				})
+
+				const hundredYearCycleUnit = createUnit({
+					id: 'hundredYearCycle',
+					name: '100-year cycle',
+					displayName: '100-year cycle',
+					duration: HUNDRED_YEAR_CYCLE,
+					formatShorthand: null,
+					formatMode: 'Hidden',
+					position: 1,
+					children: [
+						createChildRelation('hundredYearCycle', 'fourYearCycle', 24, { position: 0 }),
+						createChildRelation('hundredYearCycle', 'regularYear', 4, { position: 1 }),
+					],
+					parents: [createParentRelation('fourHundredYearCycle', 'hundredYearCycle', 3)],
+				})
+
+				const fourHundredYearCycleUnit = createUnit({
+					id: 'fourHundredYearCycle',
+					name: '400-year cycle',
+					displayName: '400-year cycle',
+					duration: FOUR_HUNDRED_YEAR_CYCLE,
+					formatShorthand: null,
+					formatMode: 'Hidden',
+					position: 0,
+					children: [
+						createChildRelation('fourHundredYearCycle', 'hundredYearCycle', 3, { position: 0 }),
+						createChildRelation('fourHundredYearCycle', 'fourYearCycle', 25, { position: 1 }),
+					],
+					parents: [],
+				})
+
+				return [
+					fourHundredYearCycleUnit,
+					hundredYearCycleUnit,
+					fourYearCycleUnit,
+					regularYearUnit,
+					leapYearUnit,
+					dayUnit,
+					hourUnit,
+					minuteUnit,
+				]
+			}
+
+			const MINUTE = 1
+			const HOUR = 60 * MINUTE
+			const DAY = 24 * HOUR
+			const REGULAR_YEAR = 365 * DAY
+			const LEAP_YEAR = 366 * DAY
+
+			it('timestamp 0 is year 1, day 1, 00:00', () => {
+				const units = createGregorianCalendar()
+				const { result } = renderHook(() =>
+					useFormatTimestampUnits({ units, dateFormatString: 'y/dd hh:ii' }),
+				)
+
+				expect(result.current({ timestamp: 0 })).toBe('1/01 00:00')
+			})
+
+			it('timestamp -1 is year 0, day 366, 23:59 (year 0 is a leap year)', () => {
+				const units = createGregorianCalendar()
+				const { result } = renderHook(() =>
+					useFormatTimestampUnits({ units, dateFormatString: 'y/ddd hh:ii' }),
+				)
+
+				// timestamp -1 is the last minute of year 0
+				// Year 0 is the 4th year of the previous 4-year cycle, which is a leap year (366 days)
+				expect(result.current({ timestamp: -1 })).toBe('0/366 23:59')
+			})
+
+			it('timestamp -LEAP_YEAR is year 0, day 1, 00:00', () => {
+				const units = createGregorianCalendar()
+				const { result } = renderHook(() =>
+					useFormatTimestampUnits({ units, dateFormatString: 'y/ddd hh:ii' }),
+				)
+
+				// Going back exactly 1 leap year (366 days) from start of year 1
+				expect(result.current({ timestamp: -LEAP_YEAR })).toBe('0/001 00:00')
+			})
+
+			it('timestamp -(LEAP_YEAR + 1) is year -1, day 365, 23:59', () => {
+				const units = createGregorianCalendar()
+				const { result } = renderHook(() =>
+					useFormatTimestampUnits({ units, dateFormatString: 'y/ddd hh:ii' }),
+				)
+
+				// Going back 1 leap year + 1 minute from start of year 1
+				// Year -1 is the 3rd year of the previous 4-year cycle = regular year (365 days)
+				expect(result.current({ timestamp: -(LEAP_YEAR + 1) })).toBe('-1/365 23:59')
+			})
+
+			it('timestamp -(LEAP_YEAR + REGULAR_YEAR) is year -1, day 1, 00:00', () => {
+				const units = createGregorianCalendar()
+				const { result } = renderHook(() =>
+					useFormatTimestampUnits({ units, dateFormatString: 'y/ddd hh:ii' }),
+				)
+
+				// Going back 1 leap year + 1 regular year from start of year 1
+				expect(result.current({ timestamp: -(LEAP_YEAR + REGULAR_YEAR) })).toBe('-1/001 00:00')
+			})
+
+			it('formats negative year with YYYY padding correctly', () => {
+				const units = createGregorianCalendar()
+				const { result } = renderHook(() =>
+					useFormatTimestampUnits({ units, dateFormatString: 'yyyy/ddd hh:ii' }),
+				)
+
+				// Year 0, last minute
+				expect(result.current({ timestamp: -1 })).toBe('0000/366 23:59')
+
+				// Going back further into negative years
+				// With yyyy format, negative years get the padding applied to the absolute value, then minus prepended
+				// So year -1 with yyyy becomes -0001 (minus + 4 digits)
+				expect(result.current({ timestamp: -LEAP_YEAR })).toBe('0000/001 00:00')
+				expect(result.current({ timestamp: -(LEAP_YEAR + 1) })).toBe('-0001/365 23:59')
+			})
+		})
+
+		describe('basic negative timestamp formatting', () => {
+			it('formats negative timestamp for simple day unit', () => {
+				const units: CalendarUnit[] = [
+					createUnit({
+						id: 'day',
+						name: 'Day',
+						duration: 1,
+						formatShorthand: 'd',
+						formatMode: 'Numeric',
+					}),
+				]
+
+				const { result } = renderHook(() => useFormatTimestampUnits({ units, dateFormatString: 'd' }))
+
+				expect(result.current({ timestamp: -1 })).toBe('-1')
+				expect(result.current({ timestamp: -5 })).toBe('-5')
+				expect(result.current({ timestamp: -100 })).toBe('-100')
+			})
+		})
+	})
 })
