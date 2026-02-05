@@ -3,6 +3,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import { memo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getCalendarEditorState } from '../CalendarSliceSelectors'
@@ -12,14 +13,15 @@ import { DeleteUnitButton } from './components/DeleteUnitButton'
 
 type Props = {
 	unit: CalendarDraftUnit
-	selectedUnit: CalendarDraftUnit | null
+	isSelected: boolean
 	onSelectUnit: (unitId: string | undefined) => void
 }
 
-export function CalendarUnitListItem({ unit, selectedUnit, onSelectUnit }: Props) {
+export const CalendarUnitListItem = memo(CalendarUnitListItemComponent)
+
+function CalendarUnitListItemComponent({ unit, isSelected, onSelectUnit }: Props) {
 	const { calendar } = useSelector(getCalendarEditorState)
 	const { ref, ghostElement } = useCalendarUnitDragDrop({ unit })
-	const isSelected = selectedUnit?.id === unit.id
 
 	const totalChildCount = (() => {
 		let total = 0

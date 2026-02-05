@@ -12,6 +12,7 @@ import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'
+import { useSelectedCalendarUnit } from '../../hooks/useSelectedCalendarUnit'
 
 type Props = {
 	parent: CalendarDraftUnit
@@ -46,6 +47,13 @@ export function CalendarUnitAddChildForm({ parent }: Props) {
 	const [selectedUnit, setSelectedUnit] = useState<CalendarDraftUnit | null>(availableUnits[0] ?? null)
 	const [label, setLabel] = useState('')
 	const [repeats, setRepeats] = useState(1)
+
+	useSelectedCalendarUnit({
+		unit: parent,
+		onChange: () => {
+			setSelectedUnit(null)
+		},
+	})
 
 	const [updateUnit] = useUpdateCalendarUnitMutation()
 

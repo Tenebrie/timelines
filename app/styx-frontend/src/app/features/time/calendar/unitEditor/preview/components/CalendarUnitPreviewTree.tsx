@@ -1,15 +1,16 @@
 import { CalendarDraftUnit, CalendarDraftUnitChildRelation } from '@api/types/calendarTypes'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { useChildCalendarUnit } from '@/app/features/time/calendar/hooks/useChildCalendarUnit'
 
 type Props = {
 	unit: CalendarDraftUnit
+	visible: boolean
 }
 
-type RecursiveProps = Props & {
+type RecursiveProps = Omit<Props, 'visible'> & {
 	depth: number
 	label?: string | null
 	repeats: number
@@ -18,7 +19,19 @@ type RecursiveProps = Props & {
 /**
  * Top level export
  */
-export function CalendarUnitPreviewTree({ unit }: Props) {
+export function CalendarUnitPreviewTree({ unit, visible }: Props) {
+	const [rendered, setRendered] = useState(visible)
+
+	useEffect(() => {
+		if (visible) {
+			setRendered(true)
+		}
+	}, [visible])
+
+	if (!rendered) {
+		return null
+	}
+
 	return <CalendarUnitPreviewRecursive depth={0} unit={unit} label={null} repeats={1} />
 }
 

@@ -44,11 +44,7 @@ export function CalendarEditor() {
 					<Stack sx={{ p: '8px' }}>
 						<Paper variant="outlined" sx={{ p: '12px 8px' }}>
 							{selectedUnit ? (
-								<CalendarUnitEditor
-									key={selectedUnit.id}
-									unit={selectedUnit}
-									onClose={() => onSelectUnit(undefined)}
-								/>
+								<CalendarUnitEditor unit={selectedUnit} onClose={() => onSelectUnit(undefined)} />
 							) : (
 								<EmptyState hasUnits={(calendar?.units.length ?? 0) > 0} />
 							)}

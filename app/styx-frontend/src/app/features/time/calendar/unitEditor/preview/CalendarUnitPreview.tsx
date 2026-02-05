@@ -56,7 +56,10 @@ export function CalendarUnitPreview({ unit }: Props) {
 						variant="outlined"
 						sx={{ p: '12px', width: 'calc(100% - 24px)', bgcolor: 'background.default' }}
 					>
-						<CalendarUnitPreviewTree unit={unit} />
+						<CalendarUnitPreviewTree
+							unit={unit}
+							visible={expandedUnitSections.includes(CalendarUnitEditorTab.Preview)}
+						/>
 					</Paper>
 				</Stack>
 			</AccordionDetails>

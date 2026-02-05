@@ -16,6 +16,7 @@ import { getCalendarEditorPreferences } from '@/app/features/preferences/Prefere
 
 import { useUpdateCalendarUnitDebounced } from '../../api/useUpdateCalendarUnitDebounced'
 import { usePreviewCalendar } from '../../hooks/usePreviewCalendar'
+import { useSelectedCalendarUnit } from '../../hooks/useSelectedCalendarUnit'
 import { CalendarUnitEditorTab } from '../CalendarUnitEditor'
 
 type Props = {
@@ -31,6 +32,15 @@ export function CalendarUnitDisplayNames({ unit }: Props) {
 	const [displayNameShort, setDisplayNameShort] = useState(unit.displayNameShort ?? '')
 
 	const dispatch = useDispatch()
+
+	useSelectedCalendarUnit({
+		unit,
+		onChange: (u) => {
+			setDisplayName(u.displayName ?? '')
+			setDisplayNamePlural(u.displayNamePlural ?? '')
+			setDisplayNameShort(u.displayNameShort ?? '')
+		},
+	})
 
 	const onUpdateUnit = useEvent((body: UpdateCalendarUnitApiArg['body']) => {
 		updateUnit({

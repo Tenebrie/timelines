@@ -42,25 +42,7 @@ export const CalendarUnitFormatDefinitions: Record<
 }
 
 export function CalendarUnitFormatModeDropdown({ value, onChange }: Props) {
-	// const { data: availableDisplayModes } = useListCalendarUnitDisplayFormatsQuery()
-
-	// export type ListCalendarUnitDisplayFormatsApiResponse = /** status 200  */ (
-	// 	| 'Name'
-	// 	| 'NameOneIndexed'
-	// 	| 'Numeric'
-	// 	| 'NumericOneIndexed'
-	// 	| 'Hidden'
-	// )[]
-
 	const formats = Object.values(CalendarUnitFormatDefinitions)
-
-	// const formats = useMemo(() => {
-	// 	return availableDisplayModes?.map((mode) => ({
-	// 		id: mode,
-	// 		name: mode,
-	// 		description: mode,
-	// 	}))
-	// }, [availableDisplayModes])
 
 	if (!formats) {
 		return null

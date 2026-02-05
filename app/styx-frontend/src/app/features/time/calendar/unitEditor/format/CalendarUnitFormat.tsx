@@ -18,6 +18,7 @@ import { getCalendarEditorPreferences } from '@/app/features/preferences/Prefere
 import { useUpdateCalendarUnitDebounced } from '../../api/useUpdateCalendarUnitDebounced'
 import { useFormatTimestampUnits } from '../../hooks/useFormatTimestampUnits'
 import { usePreviewCalendar } from '../../hooks/usePreviewCalendar'
+import { useSelectedCalendarUnit } from '../../hooks/useSelectedCalendarUnit'
 import { CalendarUnitEditorTab } from '../CalendarUnitEditor'
 import {
 	CalendarUnitFormatDefinitions,
@@ -34,6 +35,14 @@ export function CalendarUnitFormat({ unit }: Props) {
 
 	const [formatMode, setFormatMode] = useState(unit.formatMode)
 	const [formatShorthand, setFormatShorthand] = useState<string>(unit.formatShorthand ?? '')
+
+	useSelectedCalendarUnit({
+		unit,
+		onChange: (u) => {
+			setFormatMode(u.formatMode)
+			setFormatShorthand(u.formatShorthand ?? '')
+		},
+	})
 
 	const onUpdateUnit = useEvent((body: UpdateCalendarUnitApiArg['body']) => {
 		updateUnit({
@@ -76,6 +85,7 @@ export function CalendarUnitFormat({ unit }: Props) {
 			return 'No format shorthand set'
 		}
 		const formatName = CalendarUnitFormatDefinitions[previewUnit.formatMode]?.name || '???'
+		console.log(previewUnit)
 		return `Shorthand: "${previewUnit.formatShorthand}" | ${formatName}: ${format({ timestamp: 0 })}, ${format({ timestamp: unit.duration })}, ${format({ timestamp: unit.duration * 2 })}`
 	}, [previewCalendar, format, unit.duration, unit.id])
 

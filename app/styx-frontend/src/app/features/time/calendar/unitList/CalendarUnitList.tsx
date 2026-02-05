@@ -136,7 +136,7 @@ export function CalendarUnitList({ selectedUnit, onSelectUnit }: Props) {
 					<CalendarUnitListItem
 						key={unit.id}
 						unit={unit}
-						selectedUnit={selectedUnit}
+						isSelected={selectedUnit?.id === unit.id}
 						onSelectUnit={onSelectUnit}
 					/>
 				))}
