@@ -14,3 +14,10 @@ export type NewCalendarUnitRelation = {
 	label?: string | null
 	repeats: number
 }
+
+export enum CalendarEditorTab {
+	Info,
+	Units,
+	Presentation,
+	Intervals,
+}

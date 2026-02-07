@@ -1,4 +1,9 @@
-import { CalendarDraft, CalendarDraftUnit, CalendarDraftUnitChildRelation } from '@api/types/calendarTypes'
+import {
+	CalendarDraft,
+	CalendarDraftPresentation,
+	CalendarDraftUnit,
+	CalendarDraftUnitChildRelation,
+} from '@api/types/calendarTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
@@ -39,6 +44,22 @@ export const calendarEditorSlice = createSlice({
 			const unit = state.calendar.units.find((u) => u.id === action.payload.unitId)
 			if (unit) {
 				Object.assign(unit, action.payload.delta)
+			}
+		},
+
+		updatePresentation: (
+			state,
+			action: PayloadAction<{
+				presentationId: string
+				delta: Partial<CalendarDraftPresentation>
+			}>,
+		) => {
+			if (!state.calendar) {
+				return
+			}
+			const presentation = state.calendar.presentations.find((p) => p.id === action.payload.presentationId)
+			if (presentation) {
+				Object.assign(presentation, action.payload.delta)
 			}
 		},
 	},

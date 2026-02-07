@@ -12,12 +12,14 @@ export function CalendarTimestampPreview() {
 	const [sliderValue, setSliderValue] = useState(0)
 	const previewCalendar = usePreviewCalendar()
 
-	const formatTimestamp = useFormatTimestamp({ calendar: previewCalendar })
+	const formatTimestamp = useFormatTimestamp({
+		calendar: previewCalendar,
+	})
 
 	return (
 		<Stack>
 			<Stack direction="row" justifyContent="space-between">
-				<Typography>Timestamp:</Typography>
+				<Typography>Preview timestamp:</Typography>
 				<Input
 					size="small"
 					value={sliderValue}

@@ -1,3 +1,4 @@
+import { Calendar } from '@api/types/calendarTypes'
 import {
 	ActorDetails,
 	MarkerType,
@@ -23,6 +24,7 @@ export const initialState = {
 	events: [] as WorldEvent[],
 	actors: [] as ActorDetails[],
 	calendar: 'RIMWORLD' as WorldCalendarType,
+	calendars: [] as Calendar[],
 	timeOrigin: 0,
 	createdAt: '0',
 	updatedAt: '0',
@@ -78,6 +80,7 @@ export const worldSlice = createSlice({
 			state.actors = [...world.actors].sort((a, b) => a.name.localeCompare(b.name)).map((a) => ingestActor(a))
 			state.events = world.events.map((e) => ingestEvent(e))
 			state.calendar = world.calendar
+			state.calendars = world.calendars
 			state.timeOrigin = Number(world.timeOrigin)
 			state.createdAt = world.createdAt
 			state.updatedAt = world.updatedAt

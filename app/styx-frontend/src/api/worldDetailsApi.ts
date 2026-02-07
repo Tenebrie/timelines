@@ -56,6 +56,19 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	isReadOnly: boolean
 	calendars: {
 		units: {
+			displayName: string
+			displayNameShort: string
+			displayNamePlural: string
+			parents: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				position: number
+				label?: null | string
+				repeats: number
+				parentUnitId: string
+				childUnitId: string
+			}[]
 			children: {
 				id: string
 				createdAt: string
@@ -66,26 +79,41 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				parentUnitId: string
 				childUnitId: string
 			}[]
-			calendarId: string
+			name: string
 			id: string
 			createdAt: string
 			updatedAt: string
 			position: number
-			name: string
-			displayName?: null | string
-			displayNameShort?: null | string
-			displayNamePlural?: null | string
 			formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 			formatShorthand?: null | string
+			negativeFormat: 'MinusSign' | 'AbsoluteValue'
 			duration: number
 			treeDepth: number
+			calendarId: string
 		}[]
-		ownerId?: null | string
+		presentations: {
+			units: {
+				name: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				formatString: string
+				unitId: string
+				presentationId: string
+			}[]
+			name: string
+			id: string
+			createdAt: string
+			updatedAt: string
+			calendarId: string
+			scaleFactor: number
+		}[]
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		ownerId?: null | string
 		position: number
-		name: string
 		originTime: string
 		dateFormat?: null | string
 		worldId?: null | string
@@ -119,17 +147,17 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			targetArticleId?: null | string
 			targetTagId?: null | string
 		}[]
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		description: string
 		worldId: string
+		title: string
 		icon: string
 		color: string
 		descriptionRich: string
 		descriptionYjs?: null | string
-		title: string
 	}[]
 	events: {
 		mentions: {
@@ -161,41 +189,41 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		deltaStates: {
+			name?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
-			name?: null | string
 			description?: null | string
 			timestamp: string
 			descriptionRich?: null | string
 			worldEventId: string
 		}[]
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		description: string
 		worldId: string
-		type: 'SCENE' | 'OTHER'
+		timestamp: string
 		icon: string
 		color: string
-		timestamp: string
-		revokedAt?: null | string
 		descriptionRich: string
 		descriptionYjs?: null | string
+		type: 'SCENE' | 'OTHER'
+		revokedAt?: null | string
 		customName: boolean
 		externalLink: string
 		extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 		worldEventTrackId?: null | string
 	}[]
-	ownerId: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	description: string
+	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
+	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type GetWorldInfoApiArg = {
@@ -216,14 +244,14 @@ export type GetCommonWorldEventIconsApiArg = {
 	worldId: string
 }
 export type GetWorldBriefApiResponse = /** status 200  */ {
-	ownerId: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	description: string
+	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
+	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type GetWorldBriefApiArg = {

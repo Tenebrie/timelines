@@ -45,28 +45,28 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		deltaStates: {
+			description?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name?: null | string
-			description?: null | string
-			timestamp: string
 			descriptionRich?: null | string
+			timestamp: string
 			worldEventId: string
 		}[]
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		description: string
 		worldId: string
-		type: 'SCENE' | 'OTHER'
 		icon: string
 		color: string
-		timestamp: string
-		revokedAt?: null | string
 		descriptionRich: string
 		descriptionYjs?: null | string
+		type: 'SCENE' | 'OTHER'
+		timestamp: string
+		revokedAt?: null | string
 		customName: boolean
 		externalLink: string
 		extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
@@ -101,17 +101,17 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			targetArticleId?: null | string
 			targetTagId?: null | string
 		}[]
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		description: string
 		worldId: string
+		title: string
 		icon: string
 		color: string
 		descriptionRich: string
 		descriptionYjs?: null | string
-		title: string
 	}[]
 }
 export type SearchWorldApiArg = {

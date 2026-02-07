@@ -1,5 +1,5 @@
-import { useUpdateCalendarUnitMutation } from '@api/calendarApi'
-import { CalendarDraftUnit } from '@api/types/calendarTypes'
+import { useUpdateCalendarPresentationMutation } from '@api/calendarApi'
+import { CalendarDraftPresentation } from '@api/types/calendarTypes'
 import CloseIcon from '@mui/icons-material/Close'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
@@ -12,25 +12,25 @@ import { calendarEditorSlice } from '../../CalendarSlice'
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'
 
 type Props = {
-	unit: CalendarDraftUnit
+	presentation: CalendarDraftPresentation
 	onClose: () => void
 }
 
-export const CalendarUnitTitle = ({ unit, onClose }: Props) => {
+export const CalendarPresentationTitle = ({ presentation, onClose }: Props) => {
 	const { calendar } = useSelector(getCalendarEditorState)
-	const [editCalendarUnit] = useUpdateCalendarUnitMutation()
+	const [savePresentation] = useUpdateCalendarPresentationMutation()
 
-	const { updateUnit } = calendarEditorSlice.actions
+	const { updatePresentation } = calendarEditorSlice.actions
 	const dispatch = useDispatch()
 
 	const onSave = useEvent((name: string) => {
-		if (!calendar || name === unit.name || !name?.trim()) {
+		if (!calendar || name === presentation.name || !name?.trim()) {
 			return
 		}
-		dispatch(updateUnit({ unitId: unit.id, delta: { name } }))
-		editCalendarUnit({
+		dispatch(updatePresentation({ presentationId: presentation.id, delta: { name } }))
+		savePresentation({
 			calendarId: calendar.id,
-			unitId: unit.id,
+			presentationId: presentation.id,
 			body: { name },
 		})
 	})
@@ -51,9 +51,9 @@ export const CalendarUnitTitle = ({ unit, onClose }: Props) => {
 					</IconButton>
 				</Tooltip>
 			}
-			value={unit.name}
+			value={presentation.name}
 			onSave={onSave}
-			data-testid="CalendarUnitTitle"
+			data-testid="CalendarPresentationTitle"
 		/>
 	)
 }

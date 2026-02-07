@@ -23,7 +23,7 @@ export const useCalendarUnitDragDrop = ({ unit }: Props) => {
 
 	const { ref, ghostElement } = useDragDrop({
 		type: 'calendarUnit',
-		ghostFactory: () => <CalendarUnitListItem unit={unit} selectedUnit={null} onSelectUnit={() => {}} />,
+		ghostFactory: () => <CalendarUnitListItem unit={unit} isSelected={false} onSelectUnit={() => {}} />,
 		params: { unit },
 	})
 

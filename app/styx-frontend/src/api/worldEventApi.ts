@@ -119,27 +119,27 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	deltaStates: {
+		description?: null | string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name?: null | string
-		description?: null | string
-		timestamp: string
 		descriptionRich?: null | string
+		timestamp: string
 		worldEventId: string
 	}[]
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	description: string
 	worldId: string
-	type: 'SCENE' | 'OTHER'
 	icon: string
 	color: string
+	descriptionRich: string
+	type: 'SCENE' | 'OTHER'
 	timestamp: string
 	revokedAt?: null | string
-	descriptionRich: string
 	customName: boolean
 	externalLink: string
 	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
@@ -191,27 +191,27 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	deltaStates: {
+		description?: null | string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name?: null | string
-		description?: null | string
-		timestamp: string
 		descriptionRich?: null | string
+		timestamp: string
 		worldEventId: string
 	}[]
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	description: string
 	worldId: string
-	type: 'SCENE' | 'OTHER'
 	icon: string
 	color: string
+	descriptionRich: string
+	type: 'SCENE' | 'OTHER'
 	timestamp: string
 	revokedAt?: null | string
-	descriptionRich: string
 	customName: boolean
 	externalLink: string
 	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
@@ -244,19 +244,19 @@ export type DeleteWorldEventApiArg = {
 	eventId: string
 }
 export type RevokeWorldEventApiResponse = /** status 200  */ {
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	description: string
 	worldId: string
-	type: 'SCENE' | 'OTHER'
 	icon: string
 	color: string
-	timestamp: string
-	revokedAt?: null | string
 	descriptionRich: string
 	descriptionYjs?: null | string
+	type: 'SCENE' | 'OTHER'
+	timestamp: string
+	revokedAt?: null | string
 	customName: boolean
 	externalLink: string
 	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
@@ -272,19 +272,19 @@ export type RevokeWorldEventApiArg = {
 	}
 }
 export type UnrevokeWorldEventApiResponse = /** status 200  */ {
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	description: string
 	worldId: string
-	type: 'SCENE' | 'OTHER'
 	icon: string
 	color: string
-	timestamp: string
-	revokedAt?: null | string
 	descriptionRich: string
 	descriptionYjs?: null | string
+	type: 'SCENE' | 'OTHER'
+	timestamp: string
+	revokedAt?: null | string
 	customName: boolean
 	externalLink: string
 	extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]

@@ -15,7 +15,8 @@
 		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline",
 		"start": "vite --host --clearScreen false",
 		"preview": "vite build && vite preview",
-		"test": "vitest",
+		"test": "vitest --run",
+		"test:watch": "vitest",
 		"test:coverage": "vitest run --coverage",
 		"prod": "serve -s build -l 8080"
 	},

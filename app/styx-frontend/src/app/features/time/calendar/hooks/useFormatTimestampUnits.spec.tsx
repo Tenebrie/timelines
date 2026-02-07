@@ -1,70 +1,19 @@
 import { CalendarUnit } from '@api/types/calendarTypes'
 import { renderHook } from '@testing-library/react'
 
+import {
+	mockCalendarUnit,
+	mockCalendarUnitChildRelation,
+	mockCalendarUnitParentRelation,
+} from '@/api/mock/rheaModels.mock'
+
 import { useFormatTimestampUnits } from './useFormatTimestampUnits'
-
-type TestCalendarUnit = Omit<CalendarUnit, 'createdAt' | 'updatedAt' | 'calendarId' | 'treeDepth'> & {
-	createdAt?: string
-	updatedAt?: string
-	calendarId?: string
-	treeDepth?: number
-}
-
-const createUnit = (overrides: Partial<TestCalendarUnit> & { id: string; name: string }): CalendarUnit => ({
-	id: overrides.id,
-	name: overrides.name,
-	displayName: overrides.displayName ?? overrides.name,
-	displayNameShort: overrides.displayNameShort ?? overrides.name.substring(0, 1).toUpperCase(),
-	displayNamePlural: overrides.displayNamePlural ?? overrides.name + 's',
-	formatMode: overrides.formatMode ?? 'Numeric',
-	formatShorthand: overrides.formatShorthand ?? null,
-	duration: overrides.duration ?? 1,
-	position: overrides.position ?? 0,
-	children: overrides.children ?? [],
-	parents: overrides.parents ?? [],
-	createdAt: overrides.createdAt ?? '2024-01-01T00:00:00.000Z',
-	updatedAt: overrides.updatedAt ?? '2024-01-01T00:00:00.000Z',
-	calendarId: overrides.calendarId ?? 'calendar-1',
-	treeDepth: overrides.treeDepth ?? 0,
-})
-
-const createChildRelation = (
-	parentUnitId: string,
-	childUnitId: string,
-	repeats: number,
-	overrides: { label?: string; position?: number } = {},
-) => ({
-	id: `${parentUnitId}-${childUnitId}`,
-	createdAt: '2024-01-01T00:00:00.000Z',
-	updatedAt: '2024-01-01T00:00:00.000Z',
-	position: overrides.position ?? 0,
-	label: overrides.label ?? null,
-	repeats,
-	parentUnitId,
-	childUnitId,
-})
-
-const createParentRelation = (
-	parentUnitId: string,
-	childUnitId: string,
-	repeats: number,
-	overrides: { label?: string; position?: number } = {},
-) => ({
-	id: `${parentUnitId}-${childUnitId}`,
-	createdAt: '2024-01-01T00:00:00.000Z',
-	updatedAt: '2024-01-01T00:00:00.000Z',
-	position: overrides.position ?? 0,
-	label: overrides.label ?? null,
-	repeats,
-	parentUnitId,
-	childUnitId,
-})
 
 describe('useFormatTimestampUnits', () => {
 	describe('empty and invalid date format strings', () => {
 		it('returns "No date format specified" for empty or whitespace-only format strings', () => {
 			const units: CalendarUnit[] = [
-				createUnit({ id: 'day', name: 'Day', duration: 1, formatShorthand: 'd' }),
+				mockCalendarUnit({ id: 'day', name: 'Day', duration: 1, formatShorthand: 'd' }),
 			]
 
 			const testCases = ['', '   ', '\t\t', '\n']
@@ -78,7 +27,13 @@ describe('useFormatTimestampUnits', () => {
 	describe('basic numeric formatting', () => {
 		it('formats timestamp 0 as 0 for a simple day unit', () => {
 			const units: CalendarUnit[] = [
-				createUnit({ id: 'day', name: 'Day', duration: 1, formatShorthand: 'd', formatMode: 'Numeric' }),
+				mockCalendarUnit({
+					id: 'day',
+					name: 'Day',
+					duration: 1,
+					formatShorthand: 'd',
+					formatMode: 'Numeric',
+				}),
 			]
 
 			const { result } = renderHook(() => useFormatTimestampUnits({ units, dateFormatString: 'd' }))
@@ -88,7 +43,13 @@ describe('useFormatTimestampUnits', () => {
 
 		it('formats timestamp 5 as 5 for a simple day unit', () => {
 			const units: CalendarUnit[] = [
-				createUnit({ id: 'day', name: 'Day', duration: 1, formatShorthand: 'd', formatMode: 'Numeric' }),
+				mockCalendarUnit({
+					id: 'day',
+					name: 'Day',
+					duration: 1,
+					formatShorthand: 'd',
+					formatMode: 'Numeric',
+				}),
 			]
 
 			const { result } = renderHook(() => useFormatTimestampUnits({ units, dateFormatString: 'd' }))
@@ -98,7 +59,13 @@ describe('useFormatTimestampUnits', () => {
 
 		it('pads numbers when multiple format characters are used', () => {
 			const units: CalendarUnit[] = [
-				createUnit({ id: 'day', name: 'Day', duration: 1, formatShorthand: 'd', formatMode: 'Numeric' }),
+				mockCalendarUnit({
+					id: 'day',
+					name: 'Day',
+					duration: 1,
+					formatShorthand: 'd',
+					formatMode: 'Numeric',
+				}),
 			]
 
 			const { result } = renderHook(() => useFormatTimestampUnits({ units, dateFormatString: 'ddd' }))
@@ -108,7 +75,13 @@ describe('useFormatTimestampUnits', () => {
 
 		it('does not truncate numbers larger than padding', () => {
 			const units: CalendarUnit[] = [
-				createUnit({ id: 'day', name: 'Day', duration: 1, formatShorthand: 'd', formatMode: 'Numeric' }),
+				mockCalendarUnit({
+					id: 'day',
+					name: 'Day',
+					duration: 1,
+					formatShorthand: 'd',
+					formatMode: 'Numeric',
+				}),
 			]
 
 			const { result } = renderHook(() => useFormatTimestampUnits({ units, dateFormatString: 'dd' }))
@@ -120,7 +93,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('NumericOneIndexed format mode', () => {
 		it('formats timestamp 0 as 1 for one-indexed unit', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 1,
@@ -136,7 +109,7 @@ describe('useFormatTimestampUnits', () => {
 
 		it('formats timestamp 9 as 10 for one-indexed unit', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 1,
@@ -152,7 +125,7 @@ describe('useFormatTimestampUnits', () => {
 
 		it('pads one-indexed numbers correctly', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 1,
@@ -170,7 +143,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('Name format mode', () => {
 		it('shows short display name with single format character', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					displayName: 'Day',
@@ -188,7 +161,7 @@ describe('useFormatTimestampUnits', () => {
 
 		it('shows full display name with multiple format characters', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					displayName: 'Day',
@@ -208,7 +181,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('NameOneIndexed format mode', () => {
 		it('shows short display name with 1-indexed value', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					displayName: 'Day',
@@ -226,7 +199,7 @@ describe('useFormatTimestampUnits', () => {
 
 		it('shows full display name with multiple format characters and 1-indexed value', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					displayName: 'Day',
@@ -245,7 +218,7 @@ describe('useFormatTimestampUnits', () => {
 
 	describe('hierarchical calendar (days in months in years)', () => {
 		const createSimpleCalendar = () => {
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				displayName: 'Day',
@@ -255,10 +228,10 @@ describe('useFormatTimestampUnits', () => {
 				formatMode: 'NumericOneIndexed',
 				position: 2,
 				children: [],
-				parents: [createParentRelation('month', 'day', 30)],
+				parents: [mockCalendarUnitParentRelation('month', 'day', 30)],
 			})
 
-			const monthUnit = createUnit({
+			const monthUnit = mockCalendarUnit({
 				id: 'month',
 				name: 'Month',
 				displayName: 'Month',
@@ -267,11 +240,11 @@ describe('useFormatTimestampUnits', () => {
 				formatShorthand: 'm',
 				formatMode: 'NumericOneIndexed',
 				position: 1,
-				children: [createChildRelation('month', 'day', 30)],
-				parents: [createParentRelation('year', 'month', 12)],
+				children: [mockCalendarUnitChildRelation('month', 'day', 30)],
+				parents: [mockCalendarUnitParentRelation('year', 'month', 12)],
 			})
 
-			const yearUnit = createUnit({
+			const yearUnit = mockCalendarUnit({
 				id: 'year',
 				name: 'Year',
 				displayName: 'Year',
@@ -280,7 +253,7 @@ describe('useFormatTimestampUnits', () => {
 				formatShorthand: 'y',
 				formatMode: 'Numeric',
 				position: 0,
-				children: [createChildRelation('year', 'month', 12)],
+				children: [mockCalendarUnitChildRelation('year', 'month', 12)],
 				parents: [],
 			})
 
@@ -343,7 +316,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('format string with literal characters', () => {
 		it('preserves unrecognized characters in format string', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 1,
@@ -358,23 +331,23 @@ describe('useFormatTimestampUnits', () => {
 		})
 
 		it('handles format string with separators', () => {
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				duration: 1,
 				formatShorthand: 'd',
 				formatMode: 'Numeric',
 				children: [],
-				parents: [createParentRelation('month', 'day', 30)],
+				parents: [mockCalendarUnitParentRelation('month', 'day', 30)],
 			})
 
-			const monthUnit = createUnit({
+			const monthUnit = mockCalendarUnit({
 				id: 'month',
 				name: 'Month',
 				duration: 30,
 				formatShorthand: 'm',
 				formatMode: 'Numeric',
-				children: [createChildRelation('month', 'day', 30)],
+				children: [mockCalendarUnitChildRelation('month', 'day', 30)],
 				parents: [],
 			})
 
@@ -389,7 +362,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('case sensitivity', () => {
 		it('matches case-insensitively when format has only one case', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 1,
@@ -404,7 +377,7 @@ describe('useFormatTimestampUnits', () => {
 		})
 
 		it('matches case-sensitively when both cases are present in format', () => {
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				duration: 1,
@@ -414,7 +387,7 @@ describe('useFormatTimestampUnits', () => {
 				parents: [],
 			})
 
-			const decadeUnit = createUnit({
+			const decadeUnit = mockCalendarUnit({
 				id: 'decade',
 				name: 'Decade',
 				duration: 10,
@@ -437,33 +410,33 @@ describe('useFormatTimestampUnits', () => {
 	describe('Hidden format mode', () => {
 		it('hidden units pass their count to children', () => {
 			// Week is hidden, days show count within visible scope
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				duration: 1,
 				formatShorthand: 'd',
 				formatMode: 'Numeric',
 				children: [],
-				parents: [createParentRelation('week', 'day', 7)],
+				parents: [mockCalendarUnitParentRelation('week', 'day', 7)],
 			})
 
-			const weekUnit = createUnit({
+			const weekUnit = mockCalendarUnit({
 				id: 'week',
 				name: 'Week',
 				duration: 7,
 				formatShorthand: 'w',
 				formatMode: 'Hidden',
-				children: [createChildRelation('week', 'day', 7)],
-				parents: [createParentRelation('month', 'week', 4)],
+				children: [mockCalendarUnitChildRelation('week', 'day', 7)],
+				parents: [mockCalendarUnitParentRelation('month', 'week', 4)],
 			})
 
-			const monthUnit = createUnit({
+			const monthUnit = mockCalendarUnit({
 				id: 'month',
 				name: 'Month',
 				duration: 28,
 				formatShorthand: 'm',
 				formatMode: 'Numeric',
-				children: [createChildRelation('month', 'week', 4)],
+				children: [mockCalendarUnitChildRelation('month', 'week', 4)],
 				parents: [],
 			})
 
@@ -476,43 +449,43 @@ describe('useFormatTimestampUnits', () => {
 		})
 
 		it('multiple hidden levels accumulate correctly', () => {
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				duration: 1,
 				formatShorthand: 'd',
 				formatMode: 'Numeric',
 				children: [],
-				parents: [createParentRelation('week', 'day', 7)],
+				parents: [mockCalendarUnitParentRelation('week', 'day', 7)],
 			})
 
-			const weekUnit = createUnit({
+			const weekUnit = mockCalendarUnit({
 				id: 'week',
 				name: 'Week',
 				duration: 7,
 				formatShorthand: 'w',
 				formatMode: 'Hidden',
-				children: [createChildRelation('week', 'day', 7)],
-				parents: [createParentRelation('fortnight', 'week', 2)],
+				children: [mockCalendarUnitChildRelation('week', 'day', 7)],
+				parents: [mockCalendarUnitParentRelation('fortnight', 'week', 2)],
 			})
 
-			const fortnightUnit = createUnit({
+			const fortnightUnit = mockCalendarUnit({
 				id: 'fortnight',
 				name: 'Fortnight',
 				duration: 14,
 				formatShorthand: 'f',
 				formatMode: 'Hidden',
-				children: [createChildRelation('fortnight', 'week', 2)],
-				parents: [createParentRelation('month', 'fortnight', 2)],
+				children: [mockCalendarUnitChildRelation('fortnight', 'week', 2)],
+				parents: [mockCalendarUnitParentRelation('month', 'fortnight', 2)],
 			})
 
-			const monthUnit = createUnit({
+			const monthUnit = mockCalendarUnit({
 				id: 'month',
 				name: 'Month',
 				duration: 28,
 				formatShorthand: 'm',
 				formatMode: 'Numeric',
-				children: [createChildRelation('month', 'fortnight', 2)],
+				children: [mockCalendarUnitChildRelation('month', 'fortnight', 2)],
 				parents: [],
 			})
 
@@ -530,7 +503,7 @@ describe('useFormatTimestampUnits', () => {
 
 	describe('custom labels on child relations', () => {
 		it('uses custom label regardless of symbol count', () => {
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				duration: 1,
@@ -539,16 +512,16 @@ describe('useFormatTimestampUnits', () => {
 				displayName: 'Day',
 				displayNameShort: 'D',
 				children: [],
-				parents: [createParentRelation('month', 'day', 30, { label: 'Festival Day' })],
+				parents: [mockCalendarUnitParentRelation('month', 'day', 30, { label: 'Festival Day' })],
 			})
 
-			const monthUnit = createUnit({
+			const monthUnit = mockCalendarUnit({
 				id: 'month',
 				name: 'Month',
 				duration: 30,
 				formatShorthand: 'm',
 				formatMode: 'Numeric',
-				children: [createChildRelation('month', 'day', 30, { label: 'Festival Day' })],
+				children: [mockCalendarUnitChildRelation('month', 'day', 30, { label: 'Festival Day' })],
 				parents: [],
 			})
 
@@ -568,7 +541,7 @@ describe('useFormatTimestampUnits', () => {
 
 	describe('multiple root units', () => {
 		it('combines formatting from multiple independent roots', () => {
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				duration: 1,
@@ -579,7 +552,7 @@ describe('useFormatTimestampUnits', () => {
 				parents: [],
 			})
 
-			const hourUnit = createUnit({
+			const hourUnit = mockCalendarUnit({
 				id: 'hour',
 				name: 'Hour',
 				duration: 1,
@@ -599,7 +572,7 @@ describe('useFormatTimestampUnits', () => {
 		})
 
 		it('respects position ordering of root units', () => {
-			const alphaUnit = createUnit({
+			const alphaUnit = mockCalendarUnit({
 				id: 'alpha',
 				name: 'Alpha',
 				duration: 1,
@@ -610,7 +583,7 @@ describe('useFormatTimestampUnits', () => {
 				parents: [],
 			})
 
-			const betaUnit = createUnit({
+			const betaUnit = mockCalendarUnit({
 				id: 'beta',
 				name: 'Beta',
 				duration: 1,
@@ -621,7 +594,7 @@ describe('useFormatTimestampUnits', () => {
 				parents: [],
 			})
 
-			const gammaUnit = createUnit({
+			const gammaUnit = mockCalendarUnit({
 				id: 'gamma',
 				name: 'Gamma',
 				duration: 1,
@@ -643,7 +616,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('result capitalization', () => {
 		it('capitalizes first character of result', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'day',
 					displayName: 'day',
@@ -662,7 +635,7 @@ describe('useFormatTimestampUnits', () => {
 
 		it('handles empty result after formatting', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 1,
@@ -681,7 +654,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('units with no matching format shorthand', () => {
 		it('preserves format characters that do not match any unit', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 1,
@@ -699,7 +672,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('units with null formatShorthand', () => {
 		it('skips units with null formatShorthand', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 1,
@@ -717,7 +690,7 @@ describe('useFormatTimestampUnits', () => {
 
 	describe('complex calendar with multiple unit types', () => {
 		const createComplexCalendar = () => {
-			const secondUnit = createUnit({
+			const secondUnit = mockCalendarUnit({
 				id: 'second',
 				name: 'Second',
 				displayName: 'Second',
@@ -727,10 +700,10 @@ describe('useFormatTimestampUnits', () => {
 				formatMode: 'Numeric',
 				position: 3,
 				children: [],
-				parents: [createParentRelation('minute', 'second', 60)],
+				parents: [mockCalendarUnitParentRelation('minute', 'second', 60)],
 			})
 
-			const minuteUnit = createUnit({
+			const minuteUnit = mockCalendarUnit({
 				id: 'minute',
 				name: 'Minute',
 				displayName: 'Minute',
@@ -739,11 +712,11 @@ describe('useFormatTimestampUnits', () => {
 				formatShorthand: 'i',
 				formatMode: 'Numeric',
 				position: 2,
-				children: [createChildRelation('minute', 'second', 60)],
-				parents: [createParentRelation('hour', 'minute', 60)],
+				children: [mockCalendarUnitChildRelation('minute', 'second', 60)],
+				parents: [mockCalendarUnitParentRelation('hour', 'minute', 60)],
 			})
 
-			const hourUnit = createUnit({
+			const hourUnit = mockCalendarUnit({
 				id: 'hour',
 				name: 'Hour',
 				displayName: 'Hour',
@@ -752,11 +725,11 @@ describe('useFormatTimestampUnits', () => {
 				formatShorthand: 'h',
 				formatMode: 'Numeric',
 				position: 1,
-				children: [createChildRelation('hour', 'minute', 60)],
-				parents: [createParentRelation('day', 'hour', 24)],
+				children: [mockCalendarUnitChildRelation('hour', 'minute', 60)],
+				parents: [mockCalendarUnitParentRelation('day', 'hour', 24)],
 			})
 
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				displayName: 'Day',
@@ -765,7 +738,7 @@ describe('useFormatTimestampUnits', () => {
 				formatShorthand: 'd',
 				formatMode: 'NumericOneIndexed',
 				position: 0,
-				children: [createChildRelation('day', 'hour', 24)],
+				children: [mockCalendarUnitChildRelation('day', 'hour', 24)],
 				parents: [],
 			})
 
@@ -819,7 +792,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('edge cases', () => {
 		it('handles very large timestamps', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 1,
@@ -844,7 +817,7 @@ describe('useFormatTimestampUnits', () => {
 		it('continues counting when same displayName appears multiple times in children', () => {
 			// Scenario: Year has [5 Frans, 10 Frenas, 5 Frans]
 			// When we land in the SECOND set of Frans, count should continue from 5, not reset to 0
-			const franUnit = createUnit({
+			const franUnit = mockCalendarUnit({
 				id: 'fran',
 				name: 'Fran',
 				displayName: 'Fran',
@@ -852,10 +825,13 @@ describe('useFormatTimestampUnits', () => {
 				formatShorthand: 'f',
 				formatMode: 'NumericOneIndexed',
 				children: [],
-				parents: [createParentRelation('year', 'fran', 5), createParentRelation('year', 'fran', 5)],
+				parents: [
+					mockCalendarUnitParentRelation('year', 'fran', 5),
+					mockCalendarUnitParentRelation('year', 'fran', 5),
+				],
 			})
 
-			const frenaUnit = createUnit({
+			const frenaUnit = mockCalendarUnit({
 				id: 'frena',
 				name: 'Frena',
 				displayName: 'Frena',
@@ -863,10 +839,10 @@ describe('useFormatTimestampUnits', () => {
 				formatShorthand: 'r',
 				formatMode: 'NumericOneIndexed',
 				children: [],
-				parents: [createParentRelation('year', 'frena', 10)],
+				parents: [mockCalendarUnitParentRelation('year', 'frena', 10)],
 			})
 
-			const yearUnit = createUnit({
+			const yearUnit = mockCalendarUnit({
 				id: 'year',
 				name: 'Year',
 				displayName: 'Year',
@@ -875,9 +851,9 @@ describe('useFormatTimestampUnits', () => {
 				formatMode: 'Numeric',
 				position: 0,
 				children: [
-					createChildRelation('year', 'fran', 5, { position: 0 }), // Frans 1-5
-					createChildRelation('year', 'frena', 10, { position: 1 }), // Frenas 1-10
-					createChildRelation('year', 'fran', 5, { position: 2 }), // Frans 6-10 (continues!)
+					mockCalendarUnitChildRelation('year', 'fran', 5, { position: 0 }), // Frans 1-5
+					mockCalendarUnitChildRelation('year', 'frena', 10, { position: 1 }), // Frenas 1-10
+					mockCalendarUnitChildRelation('year', 'fran', 5, { position: 2 }), // Frans 6-10 (continues!)
 				],
 				parents: [],
 			})
@@ -904,7 +880,7 @@ describe('useFormatTimestampUnits', () => {
 
 		it('accumulates correctly with three occurrences of same displayName', () => {
 			// Year has [3 Days, 2 Nights, 3 Days, 2 Nights, 4 Days]
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				displayName: 'Day',
@@ -915,7 +891,7 @@ describe('useFormatTimestampUnits', () => {
 				parents: [],
 			})
 
-			const nightUnit = createUnit({
+			const nightUnit = mockCalendarUnit({
 				id: 'night',
 				name: 'Night',
 				displayName: 'Night',
@@ -926,7 +902,7 @@ describe('useFormatTimestampUnits', () => {
 				parents: [],
 			})
 
-			const yearUnit = createUnit({
+			const yearUnit = mockCalendarUnit({
 				id: 'year',
 				name: 'Year',
 				displayName: 'Year',
@@ -935,11 +911,11 @@ describe('useFormatTimestampUnits', () => {
 				formatMode: 'Numeric',
 				position: 0,
 				children: [
-					createChildRelation('year', 'day', 3, { position: 0 }), // Days 1-3
-					createChildRelation('year', 'night', 2, { position: 1 }), // Nights 1-2
-					createChildRelation('year', 'day', 3, { position: 2 }), // Days 4-6
-					createChildRelation('year', 'night', 2, { position: 3 }), // Nights 3-4
-					createChildRelation('year', 'day', 4, { position: 4 }), // Days 7-10
+					mockCalendarUnitChildRelation('year', 'day', 3, { position: 0 }), // Days 1-3
+					mockCalendarUnitChildRelation('year', 'night', 2, { position: 1 }), // Nights 1-2
+					mockCalendarUnitChildRelation('year', 'day', 3, { position: 2 }), // Days 4-6
+					mockCalendarUnitChildRelation('year', 'night', 2, { position: 3 }), // Nights 3-4
+					mockCalendarUnitChildRelation('year', 'day', 4, { position: 4 }), // Days 7-10
 				],
 				parents: [],
 			})
@@ -968,7 +944,7 @@ describe('useFormatTimestampUnits', () => {
 			// Year has [2 Days, 2 Nights, 2 Days]
 			// Days should accumulate (1,2 then 3,4)
 			// Nights should be independent (1,2)
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				displayName: 'Day',
@@ -979,7 +955,7 @@ describe('useFormatTimestampUnits', () => {
 				parents: [],
 			})
 
-			const nightUnit = createUnit({
+			const nightUnit = mockCalendarUnit({
 				id: 'night',
 				name: 'Night',
 				displayName: 'Night',
@@ -990,7 +966,7 @@ describe('useFormatTimestampUnits', () => {
 				parents: [],
 			})
 
-			const yearUnit = createUnit({
+			const yearUnit = mockCalendarUnit({
 				id: 'year',
 				name: 'Year',
 				displayName: 'Year',
@@ -999,9 +975,9 @@ describe('useFormatTimestampUnits', () => {
 				formatMode: 'Numeric',
 				position: 0,
 				children: [
-					createChildRelation('year', 'day', 2, { position: 0 }),
-					createChildRelation('year', 'night', 2, { position: 1 }),
-					createChildRelation('year', 'day', 2, { position: 2 }),
+					mockCalendarUnitChildRelation('year', 'day', 2, { position: 0 }),
+					mockCalendarUnitChildRelation('year', 'night', 2, { position: 1 }),
+					mockCalendarUnitChildRelation('year', 'day', 2, { position: 2 }),
 				],
 				parents: [],
 			})
@@ -1026,13 +1002,13 @@ describe('useFormatTimestampUnits', () => {
 	describe('child unit not found scenario', () => {
 		it('handles missing child unit gracefully', () => {
 			// Create a unit that references a non-existent child
-			const parentUnit = createUnit({
+			const parentUnit = mockCalendarUnit({
 				id: 'parent',
 				name: 'Parent',
 				duration: 10,
 				formatShorthand: 'p',
 				formatMode: 'Numeric',
-				children: [createChildRelation('parent', 'missing-child', 10)],
+				children: [mockCalendarUnitChildRelation('parent', 'missing-child', 10)],
 				parents: [],
 			})
 
@@ -1048,23 +1024,23 @@ describe('useFormatTimestampUnits', () => {
 	describe('formatting with different duration ratios', () => {
 		it('handles non-standard duration ratios', () => {
 			// Create a calendar with 13-hour days
-			const hourUnit = createUnit({
+			const hourUnit = mockCalendarUnit({
 				id: 'hour',
 				name: 'Hour',
 				duration: 1,
 				formatShorthand: 'h',
 				formatMode: 'Numeric',
 				children: [],
-				parents: [createParentRelation('day', 'hour', 13)],
+				parents: [mockCalendarUnitParentRelation('day', 'hour', 13)],
 			})
 
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				duration: 13,
 				formatShorthand: 'd',
 				formatMode: 'NumericOneIndexed',
-				children: [createChildRelation('day', 'hour', 13)],
+				children: [mockCalendarUnitChildRelation('day', 'hour', 13)],
 				parents: [],
 			})
 
@@ -1078,33 +1054,33 @@ describe('useFormatTimestampUnits', () => {
 
 		it('handles prime number durations', () => {
 			// 7 hours per day, 11 days per week
-			const hourUnit = createUnit({
+			const hourUnit = mockCalendarUnit({
 				id: 'hour',
 				name: 'Hour',
 				duration: 1,
 				formatShorthand: 'h',
 				formatMode: 'Numeric',
 				children: [],
-				parents: [createParentRelation('day', 'hour', 7)],
+				parents: [mockCalendarUnitParentRelation('day', 'hour', 7)],
 			})
 
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				duration: 7,
 				formatShorthand: 'd',
 				formatMode: 'Numeric',
-				children: [createChildRelation('day', 'hour', 7)],
-				parents: [createParentRelation('week', 'day', 11)],
+				children: [mockCalendarUnitChildRelation('day', 'hour', 7)],
+				parents: [mockCalendarUnitParentRelation('week', 'day', 11)],
 			})
 
-			const weekUnit = createUnit({
+			const weekUnit = mockCalendarUnit({
 				id: 'week',
 				name: 'Week',
 				duration: 77, // 7 * 11
 				formatShorthand: 'w',
 				formatMode: 'Numeric',
-				children: [createChildRelation('week', 'day', 11)],
+				children: [mockCalendarUnitChildRelation('week', 'day', 11)],
 				parents: [],
 			})
 
@@ -1120,7 +1096,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('duplicate format shorthands prevention', () => {
 		it('uses first matching shorthand when duplicates exist across roots', () => {
 			// Two roots with same shorthand - only first should be used
-			const rootA = createUnit({
+			const rootA = mockCalendarUnit({
 				id: 'root-a',
 				name: 'Root A',
 				duration: 1,
@@ -1131,7 +1107,7 @@ describe('useFormatTimestampUnits', () => {
 				parents: [],
 			})
 
-			const rootB = createUnit({
+			const rootB = mockCalendarUnit({
 				id: 'root-b',
 				name: 'Root B',
 				duration: 2,
@@ -1154,7 +1130,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('special characters in format string', () => {
 		it('handles format string with spaces', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 1,
@@ -1171,7 +1147,7 @@ describe('useFormatTimestampUnits', () => {
 
 		it('handles format string with punctuation', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 1,
@@ -1187,7 +1163,7 @@ describe('useFormatTimestampUnits', () => {
 
 		it('handles format string with numbers as literals', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 1,
@@ -1204,53 +1180,53 @@ describe('useFormatTimestampUnits', () => {
 
 	describe('deeply nested calendar hierarchies', () => {
 		it('handles 5-level deep hierarchy', () => {
-			const tickUnit = createUnit({
+			const tickUnit = mockCalendarUnit({
 				id: 'tick',
 				name: 'Tick',
 				duration: 1,
 				formatShorthand: 't',
 				formatMode: 'Numeric',
 				children: [],
-				parents: [createParentRelation('second', 'tick', 10)],
+				parents: [mockCalendarUnitParentRelation('second', 'tick', 10)],
 			})
 
-			const secondUnit = createUnit({
+			const secondUnit = mockCalendarUnit({
 				id: 'second',
 				name: 'Second',
 				duration: 10,
 				formatShorthand: 's',
 				formatMode: 'Numeric',
-				children: [createChildRelation('second', 'tick', 10)],
-				parents: [createParentRelation('minute', 'second', 60)],
+				children: [mockCalendarUnitChildRelation('second', 'tick', 10)],
+				parents: [mockCalendarUnitParentRelation('minute', 'second', 60)],
 			})
 
-			const minuteUnit = createUnit({
+			const minuteUnit = mockCalendarUnit({
 				id: 'minute',
 				name: 'Minute',
 				duration: 600,
 				formatShorthand: 'i',
 				formatMode: 'Numeric',
-				children: [createChildRelation('minute', 'second', 60)],
-				parents: [createParentRelation('hour', 'minute', 60)],
+				children: [mockCalendarUnitChildRelation('minute', 'second', 60)],
+				parents: [mockCalendarUnitParentRelation('hour', 'minute', 60)],
 			})
 
-			const hourUnit = createUnit({
+			const hourUnit = mockCalendarUnit({
 				id: 'hour',
 				name: 'Hour',
 				duration: 36000,
 				formatShorthand: 'h',
 				formatMode: 'Numeric',
-				children: [createChildRelation('hour', 'minute', 60)],
-				parents: [createParentRelation('day', 'hour', 24)],
+				children: [mockCalendarUnitChildRelation('hour', 'minute', 60)],
+				parents: [mockCalendarUnitParentRelation('day', 'hour', 24)],
 			})
 
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				duration: 864000,
 				formatShorthand: 'd',
 				formatMode: 'Numeric',
-				children: [createChildRelation('day', 'hour', 24)],
+				children: [mockCalendarUnitChildRelation('day', 'hour', 24)],
 				parents: [],
 			})
 
@@ -1269,7 +1245,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('minimal duration units', () => {
 		it('handles unit with duration 1 (smallest possible)', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'unit',
 					name: 'Unit',
 					duration: 1,
@@ -1288,7 +1264,7 @@ describe('useFormatTimestampUnits', () => {
 
 	describe('mixed format modes in hierarchy', () => {
 		it('formats hierarchy with Name parent and Numeric children', () => {
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				displayName: 'Day',
@@ -1297,10 +1273,10 @@ describe('useFormatTimestampUnits', () => {
 				formatShorthand: 'd',
 				formatMode: 'Numeric',
 				children: [],
-				parents: [createParentRelation('week', 'day', 7)],
+				parents: [mockCalendarUnitParentRelation('week', 'day', 7)],
 			})
 
-			const weekUnit = createUnit({
+			const weekUnit = mockCalendarUnit({
 				id: 'week',
 				name: 'Week',
 				displayName: 'Week',
@@ -1308,7 +1284,7 @@ describe('useFormatTimestampUnits', () => {
 				duration: 7,
 				formatShorthand: 'w',
 				formatMode: 'Name',
-				children: [createChildRelation('week', 'day', 7)],
+				children: [mockCalendarUnitChildRelation('week', 'day', 7)],
 				parents: [],
 			})
 
@@ -1321,33 +1297,33 @@ describe('useFormatTimestampUnits', () => {
 		})
 
 		it('formats hierarchy with Hidden intermediate and visible leaf', () => {
-			const hourUnit = createUnit({
+			const hourUnit = mockCalendarUnit({
 				id: 'hour',
 				name: 'Hour',
 				duration: 1,
 				formatShorthand: 'h',
 				formatMode: 'Numeric',
 				children: [],
-				parents: [createParentRelation('shift', 'hour', 8)],
+				parents: [mockCalendarUnitParentRelation('shift', 'hour', 8)],
 			})
 
-			const shiftUnit = createUnit({
+			const shiftUnit = mockCalendarUnit({
 				id: 'shift',
 				name: 'Shift',
 				duration: 8,
 				formatShorthand: 's',
 				formatMode: 'Hidden',
-				children: [createChildRelation('shift', 'hour', 8)],
-				parents: [createParentRelation('day', 'shift', 3)],
+				children: [mockCalendarUnitChildRelation('shift', 'hour', 8)],
+				parents: [mockCalendarUnitParentRelation('day', 'shift', 3)],
 			})
 
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				duration: 24,
 				formatShorthand: 'd',
 				formatMode: 'Numeric',
-				children: [createChildRelation('day', 'shift', 3)],
+				children: [mockCalendarUnitChildRelation('day', 'shift', 3)],
 				parents: [],
 			})
 
@@ -1362,23 +1338,23 @@ describe('useFormatTimestampUnits', () => {
 
 	describe('boundary conditions', () => {
 		it('handles exact unit boundary transitions', () => {
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				duration: 1,
 				formatShorthand: 'd',
 				formatMode: 'NumericOneIndexed',
 				children: [],
-				parents: [createParentRelation('month', 'day', 30)],
+				parents: [mockCalendarUnitParentRelation('month', 'day', 30)],
 			})
 
-			const monthUnit = createUnit({
+			const monthUnit = mockCalendarUnit({
 				id: 'month',
 				name: 'Month',
 				duration: 30,
 				formatShorthand: 'm',
 				formatMode: 'NumericOneIndexed',
-				children: [createChildRelation('month', 'day', 30)],
+				children: [mockCalendarUnitChildRelation('month', 'day', 30)],
 				parents: [],
 			})
 
@@ -1394,7 +1370,7 @@ describe('useFormatTimestampUnits', () => {
 
 		it('handles timestamp just before rollover', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 100,
@@ -1412,23 +1388,23 @@ describe('useFormatTimestampUnits', () => {
 
 	describe('consecutive format characters for different units', () => {
 		it('correctly separates consecutive different format characters', () => {
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				duration: 1,
 				formatShorthand: 'd',
 				formatMode: 'NumericOneIndexed',
 				children: [],
-				parents: [createParentRelation('month', 'day', 30)],
+				parents: [mockCalendarUnitParentRelation('month', 'day', 30)],
 			})
 
-			const monthUnit = createUnit({
+			const monthUnit = mockCalendarUnit({
 				id: 'month',
 				name: 'Month',
 				duration: 30,
 				formatShorthand: 'm',
 				formatMode: 'NumericOneIndexed',
-				children: [createChildRelation('month', 'day', 30)],
+				children: [mockCalendarUnitChildRelation('month', 'day', 30)],
 				parents: [],
 			})
 
@@ -1444,7 +1420,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('format with only padding', () => {
 		it('pads single digit values appropriately', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'number',
 					name: 'Number',
 					duration: 1,
@@ -1463,7 +1439,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('unicode and special display names', () => {
 		it('handles unicode display names', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					displayName: '日',
@@ -1481,7 +1457,7 @@ describe('useFormatTimestampUnits', () => {
 
 		it('handles emoji in display names', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					displayName: '🌞 Day',
@@ -1501,7 +1477,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('function reusability', () => {
 		it('returned format function can be called multiple times with different timestamps', () => {
 			const units: CalendarUnit[] = [
-				createUnit({
+				mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					duration: 1,
@@ -1523,7 +1499,7 @@ describe('useFormatTimestampUnits', () => {
 		it('returns empty string when formatting a Hidden unit directly', () => {
 			// When a Hidden unit is matched in the format string, it returns ''
 			// since it's neither Numeric nor Symbolic
-			const hiddenUnit = createUnit({
+			const hiddenUnit = mockCalendarUnit({
 				id: 'hidden',
 				name: 'Hidden Unit',
 				displayName: 'Hidden',
@@ -1543,7 +1519,7 @@ describe('useFormatTimestampUnits', () => {
 		})
 
 		it('Hidden unit in format string produces empty output alongside visible units', () => {
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				duration: 1,
@@ -1553,7 +1529,7 @@ describe('useFormatTimestampUnits', () => {
 				parents: [],
 			})
 
-			const hiddenUnit = createUnit({
+			const hiddenUnit = mockCalendarUnit({
 				id: 'hidden',
 				name: 'Hidden',
 				duration: 1,
@@ -1579,7 +1555,7 @@ describe('useFormatTimestampUnits', () => {
 			// Year -> [Hidden Week (contains 7 Days), 3 Days]
 			// When timestamp lands in the second set of Days, we skip the Hidden Week
 			// and should accumulate the 7 days from it
-			const dayUnit = createUnit({
+			const dayUnit = mockCalendarUnit({
 				id: 'day',
 				name: 'Day',
 				displayName: 'Day',
@@ -1587,21 +1563,24 @@ describe('useFormatTimestampUnits', () => {
 				formatShorthand: 'd',
 				formatMode: 'NumericOneIndexed',
 				children: [],
-				parents: [createParentRelation('week', 'day', 7), createParentRelation('year', 'day', 3)],
+				parents: [
+					mockCalendarUnitParentRelation('week', 'day', 7),
+					mockCalendarUnitParentRelation('year', 'day', 3),
+				],
 			})
 
-			const weekUnit = createUnit({
+			const weekUnit = mockCalendarUnit({
 				id: 'week',
 				name: 'Week',
 				displayName: 'Week',
 				duration: 7,
 				formatShorthand: 'w',
 				formatMode: 'Hidden', // Hidden!
-				children: [createChildRelation('week', 'day', 7)],
-				parents: [createParentRelation('year', 'week', 1)],
+				children: [mockCalendarUnitChildRelation('week', 'day', 7)],
+				parents: [mockCalendarUnitParentRelation('year', 'week', 1)],
 			})
 
-			const yearUnit = createUnit({
+			const yearUnit = mockCalendarUnit({
 				id: 'year',
 				name: 'Year',
 				displayName: 'Year',
@@ -1609,8 +1588,8 @@ describe('useFormatTimestampUnits', () => {
 				formatShorthand: 'y',
 				formatMode: 'Numeric',
 				children: [
-					createChildRelation('year', 'week', 1, { position: 0 }), // Hidden week with 7 days
-					createChildRelation('year', 'day', 3, { position: 1 }), // 3 more days
+					mockCalendarUnitChildRelation('year', 'week', 1, { position: 0 }), // Hidden week with 7 days
+					mockCalendarUnitChildRelation('year', 'day', 3, { position: 1 }), // 3 more days
 				],
 				parents: [],
 			})
@@ -1638,7 +1617,7 @@ describe('useFormatTimestampUnits', () => {
 	describe('negative timestamps', () => {
 		describe('simple calendar (days in months in years)', () => {
 			const createSimpleCalendar = () => {
-				const dayUnit = createUnit({
+				const dayUnit = mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					displayName: 'Day',
@@ -1648,10 +1627,10 @@ describe('useFormatTimestampUnits', () => {
 					formatMode: 'NumericOneIndexed',
 					position: 2,
 					children: [],
-					parents: [createParentRelation('month', 'day', 30)],
+					parents: [mockCalendarUnitParentRelation('month', 'day', 30)],
 				})
 
-				const monthUnit = createUnit({
+				const monthUnit = mockCalendarUnit({
 					id: 'month',
 					name: 'Month',
 					displayName: 'Month',
@@ -1660,11 +1639,11 @@ describe('useFormatTimestampUnits', () => {
 					formatShorthand: 'm',
 					formatMode: 'NumericOneIndexed',
 					position: 1,
-					children: [createChildRelation('month', 'day', 30)],
-					parents: [createParentRelation('year', 'month', 12)],
+					children: [mockCalendarUnitChildRelation('month', 'day', 30)],
+					parents: [mockCalendarUnitParentRelation('year', 'month', 12)],
 				})
 
-				const yearUnit = createUnit({
+				const yearUnit = mockCalendarUnit({
 					id: 'year',
 					name: 'Year',
 					displayName: 'Year',
@@ -1673,7 +1652,7 @@ describe('useFormatTimestampUnits', () => {
 					formatShorthand: 'y',
 					formatMode: 'Numeric',
 					position: 0,
-					children: [createChildRelation('year', 'month', 12)],
+					children: [mockCalendarUnitChildRelation('year', 'month', 12)],
 					parents: [],
 				})
 
@@ -1733,21 +1712,6 @@ describe('useFormatTimestampUnits', () => {
 				// 4-year cycle (hidden) = 1461 days
 				//   -> 3x regular year = 365 days
 				//   -> 1x leap year = 366 days
-				// Regular year = 365 days -> 12 months
-				// Leap year = 366 days -> 12 months
-
-				// For simplicity in tests, use simplified month structure (all 30 days)
-				// Regular year = 360 days, Leap year = 366 days
-				// 4-year cycle = 3*360 + 366 = 1446 days
-				// 100-year cycle = 24*1446 + 4*360 = 34704 + 1440 = 36144 days
-				// 400-year cycle = 3*36144 + 25*1446 = 108432 + 36150 = 144582 days
-
-				// Actually let's use real values for accuracy:
-				// Regular year = 365 days
-				// Leap year = 366 days
-				// 4-year cycle = 3*365 + 366 = 1461 days
-				// 100-year cycle = 24*1461 + 4*365 = 35064 + 1460 = 36524 days
-				// 400-year cycle = 3*36524 + 25*1461 = 109572 + 36525 = 146097 days
 
 				const MINUTE = 1
 				const HOUR = 60 * MINUTE
@@ -1758,7 +1722,7 @@ describe('useFormatTimestampUnits', () => {
 				const HUNDRED_YEAR_CYCLE = 24 * FOUR_YEAR_CYCLE + 4 * REGULAR_YEAR // 36524 days
 				const FOUR_HUNDRED_YEAR_CYCLE = 3 * HUNDRED_YEAR_CYCLE + 25 * FOUR_YEAR_CYCLE // 146097 days
 
-				const minuteUnit = createUnit({
+				const minuteUnit = mockCalendarUnit({
 					id: 'minute',
 					name: 'Minute',
 					displayName: 'Minute',
@@ -1767,10 +1731,10 @@ describe('useFormatTimestampUnits', () => {
 					formatMode: 'Numeric',
 					position: 5,
 					children: [],
-					parents: [createParentRelation('hour', 'minute', 60)],
+					parents: [mockCalendarUnitParentRelation('hour', 'minute', 60)],
 				})
 
-				const hourUnit = createUnit({
+				const hourUnit = mockCalendarUnit({
 					id: 'hour',
 					name: 'Hour',
 					displayName: 'Hour',
@@ -1778,11 +1742,11 @@ describe('useFormatTimestampUnits', () => {
 					formatShorthand: 'h',
 					formatMode: 'Numeric',
 					position: 4,
-					children: [createChildRelation('hour', 'minute', 60)],
-					parents: [createParentRelation('day', 'hour', 24)],
+					children: [mockCalendarUnitChildRelation('hour', 'minute', 60)],
+					parents: [mockCalendarUnitParentRelation('day', 'hour', 24)],
 				})
 
-				const dayUnit = createUnit({
+				const dayUnit = mockCalendarUnit({
 					id: 'day',
 					name: 'Day',
 					displayName: 'Day',
@@ -1790,14 +1754,14 @@ describe('useFormatTimestampUnits', () => {
 					formatShorthand: 'd',
 					formatMode: 'NumericOneIndexed',
 					position: 3,
-					children: [createChildRelation('day', 'hour', 24)],
+					children: [mockCalendarUnitChildRelation('day', 'hour', 24)],
 					parents: [
-						createParentRelation('regularYear', 'day', 365),
-						createParentRelation('leapYear', 'day', 366),
+						mockCalendarUnitParentRelation('regularYear', 'day', 365),
+						mockCalendarUnitParentRelation('leapYear', 'day', 366),
 					],
 				})
 
-				const regularYearUnit = createUnit({
+				const regularYearUnit = mockCalendarUnit({
 					id: 'regularYear',
 					name: 'Regular year',
 					displayName: 'Year',
@@ -1805,14 +1769,14 @@ describe('useFormatTimestampUnits', () => {
 					formatShorthand: 'y',
 					formatMode: 'NumericOneIndexed',
 					position: 2,
-					children: [createChildRelation('regularYear', 'day', 365)],
+					children: [mockCalendarUnitChildRelation('regularYear', 'day', 365)],
 					parents: [
-						createParentRelation('fourYearCycle', 'regularYear', 3),
-						createParentRelation('hundredYearCycle', 'regularYear', 4),
+						mockCalendarUnitParentRelation('fourYearCycle', 'regularYear', 3),
+						mockCalendarUnitParentRelation('hundredYearCycle', 'regularYear', 4),
 					],
 				})
 
-				const leapYearUnit = createUnit({
+				const leapYearUnit = mockCalendarUnit({
 					id: 'leapYear',
 					name: 'Leap year',
 					displayName: 'Year',
@@ -1820,11 +1784,11 @@ describe('useFormatTimestampUnits', () => {
 					formatShorthand: 'y',
 					formatMode: 'NumericOneIndexed',
 					position: 2,
-					children: [createChildRelation('leapYear', 'day', 366)],
-					parents: [createParentRelation('fourYearCycle', 'leapYear', 1)],
+					children: [mockCalendarUnitChildRelation('leapYear', 'day', 366)],
+					parents: [mockCalendarUnitParentRelation('fourYearCycle', 'leapYear', 1)],
 				})
 
-				const fourYearCycleUnit = createUnit({
+				const fourYearCycleUnit = mockCalendarUnit({
 					id: 'fourYearCycle',
 					name: '4-year cycle',
 					displayName: '4-year cycle',
@@ -1833,16 +1797,16 @@ describe('useFormatTimestampUnits', () => {
 					formatMode: 'Hidden',
 					position: 1,
 					children: [
-						createChildRelation('fourYearCycle', 'regularYear', 3, { position: 0 }),
-						createChildRelation('fourYearCycle', 'leapYear', 1, { position: 1 }),
+						mockCalendarUnitChildRelation('fourYearCycle', 'regularYear', 3, { position: 0 }),
+						mockCalendarUnitChildRelation('fourYearCycle', 'leapYear', 1, { position: 1 }),
 					],
 					parents: [
-						createParentRelation('hundredYearCycle', 'fourYearCycle', 24),
-						createParentRelation('fourHundredYearCycle', 'fourYearCycle', 25),
+						mockCalendarUnitParentRelation('hundredYearCycle', 'fourYearCycle', 24),
+						mockCalendarUnitParentRelation('fourHundredYearCycle', 'fourYearCycle', 25),
 					],
 				})
 
-				const hundredYearCycleUnit = createUnit({
+				const hundredYearCycleUnit = mockCalendarUnit({
 					id: 'hundredYearCycle',
 					name: '100-year cycle',
 					displayName: '100-year cycle',
@@ -1851,13 +1815,13 @@ describe('useFormatTimestampUnits', () => {
 					formatMode: 'Hidden',
 					position: 1,
 					children: [
-						createChildRelation('hundredYearCycle', 'fourYearCycle', 24, { position: 0 }),
-						createChildRelation('hundredYearCycle', 'regularYear', 4, { position: 1 }),
+						mockCalendarUnitChildRelation('hundredYearCycle', 'fourYearCycle', 24, { position: 0 }),
+						mockCalendarUnitChildRelation('hundredYearCycle', 'regularYear', 4, { position: 1 }),
 					],
-					parents: [createParentRelation('fourHundredYearCycle', 'hundredYearCycle', 3)],
+					parents: [mockCalendarUnitParentRelation('fourHundredYearCycle', 'hundredYearCycle', 3)],
 				})
 
-				const fourHundredYearCycleUnit = createUnit({
+				const fourHundredYearCycleUnit = mockCalendarUnit({
 					id: 'fourHundredYearCycle',
 					name: '400-year cycle',
 					displayName: '400-year cycle',
@@ -1866,8 +1830,8 @@ describe('useFormatTimestampUnits', () => {
 					formatMode: 'Hidden',
 					position: 0,
 					children: [
-						createChildRelation('fourHundredYearCycle', 'hundredYearCycle', 3, { position: 0 }),
-						createChildRelation('fourHundredYearCycle', 'fourYearCycle', 25, { position: 1 }),
+						mockCalendarUnitChildRelation('fourHundredYearCycle', 'hundredYearCycle', 3, { position: 0 }),
+						mockCalendarUnitChildRelation('fourHundredYearCycle', 'fourYearCycle', 25, { position: 1 }),
 					],
 					parents: [],
 				})
@@ -1907,7 +1871,7 @@ describe('useFormatTimestampUnits', () => {
 
 				// timestamp -1 is the last minute of year 0
 				// Year 0 is the 4th year of the previous 4-year cycle, which is a leap year (366 days)
-				expect(result.current({ timestamp: -1 })).toBe('0/366 23:59')
+				expect(result.current({ timestamp: -1 })).toBe('-1/366 23:59')
 			})
 
 			it('timestamp -LEAP_YEAR is year 0, day 1, 00:00', () => {
@@ -1917,7 +1881,7 @@ describe('useFormatTimestampUnits', () => {
 				)
 
 				// Going back exactly 1 leap year (366 days) from start of year 1
-				expect(result.current({ timestamp: -LEAP_YEAR })).toBe('0/001 00:00')
+				expect(result.current({ timestamp: -LEAP_YEAR })).toBe('-1/001 00:00')
 			})
 
 			it('timestamp -(LEAP_YEAR + 1) is year -1, day 365, 23:59', () => {
@@ -1928,7 +1892,7 @@ describe('useFormatTimestampUnits', () => {
 
 				// Going back 1 leap year + 1 minute from start of year 1
 				// Year -1 is the 3rd year of the previous 4-year cycle = regular year (365 days)
-				expect(result.current({ timestamp: -(LEAP_YEAR + 1) })).toBe('-1/365 23:59')
+				expect(result.current({ timestamp: -(LEAP_YEAR + 1) })).toBe('-2/365 23:59')
 			})
 
 			it('timestamp -(LEAP_YEAR + REGULAR_YEAR) is year -1, day 1, 00:00', () => {
@@ -1938,7 +1902,7 @@ describe('useFormatTimestampUnits', () => {
 				)
 
 				// Going back 1 leap year + 1 regular year from start of year 1
-				expect(result.current({ timestamp: -(LEAP_YEAR + REGULAR_YEAR) })).toBe('-1/001 00:00')
+				expect(result.current({ timestamp: -(LEAP_YEAR + REGULAR_YEAR) })).toBe('-2/001 00:00')
 			})
 
 			it('formats negative year with YYYY padding correctly', () => {
@@ -1948,20 +1912,20 @@ describe('useFormatTimestampUnits', () => {
 				)
 
 				// Year 0, last minute
-				expect(result.current({ timestamp: -1 })).toBe('0000/366 23:59')
+				expect(result.current({ timestamp: -1 })).toBe('-0001/366 23:59')
 
 				// Going back further into negative years
 				// With yyyy format, negative years get the padding applied to the absolute value, then minus prepended
 				// So year -1 with yyyy becomes -0001 (minus + 4 digits)
-				expect(result.current({ timestamp: -LEAP_YEAR })).toBe('0000/001 00:00')
-				expect(result.current({ timestamp: -(LEAP_YEAR + 1) })).toBe('-0001/365 23:59')
+				expect(result.current({ timestamp: -LEAP_YEAR })).toBe('-0001/001 00:00')
+				expect(result.current({ timestamp: -(LEAP_YEAR + 1) })).toBe('-0002/365 23:59')
 			})
 		})
 
 		describe('basic negative timestamp formatting', () => {
 			it('formats negative timestamp for simple day unit', () => {
 				const units: CalendarUnit[] = [
-					createUnit({
+					mockCalendarUnit({
 						id: 'day',
 						name: 'Day',
 						duration: 1,

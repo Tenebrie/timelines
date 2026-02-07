@@ -68,6 +68,7 @@ export function CalendarUnitFormat({ unit }: Props) {
 	const format = useFormatTimestampUnits({
 		units: previewUnits,
 		dateFormatString: (formatShorthand ?? '').repeat(2),
+		originTime: previewCalendar ? Number(previewCalendar.originTime) : 0,
 	})
 
 	const tooltip = useMemo(() => {
@@ -85,7 +86,6 @@ export function CalendarUnitFormat({ unit }: Props) {
 			return 'No format shorthand set'
 		}
 		const formatName = CalendarUnitFormatDefinitions[previewUnit.formatMode]?.name || '???'
-		console.log(previewUnit)
 		return `Shorthand: "${previewUnit.formatShorthand}" | ${formatName}: ${format({ timestamp: 0 })}, ${format({ timestamp: unit.duration })}, ${format({ timestamp: unit.duration * 2 })}`
 	}, [previewCalendar, format, unit.duration, unit.id])
 

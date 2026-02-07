@@ -49,6 +49,7 @@ export type CalendarUnitMinAggregateOutputType = {
   displayNamePlural: string | null
   formatMode: $Enums.CalendarUnitFormatMode | null
   formatShorthand: string | null
+  negativeFormat: $Enums.CalendarUnitNegativeFormat | null
   duration: number | null
   treeDepth: number | null
   calendarId: string | null
@@ -65,6 +66,7 @@ export type CalendarUnitMaxAggregateOutputType = {
   displayNamePlural: string | null
   formatMode: $Enums.CalendarUnitFormatMode | null
   formatShorthand: string | null
+  negativeFormat: $Enums.CalendarUnitNegativeFormat | null
   duration: number | null
   treeDepth: number | null
   calendarId: string | null
@@ -81,6 +83,7 @@ export type CalendarUnitCountAggregateOutputType = {
   displayNamePlural: number
   formatMode: number
   formatShorthand: number
+  negativeFormat: number
   duration: number
   treeDepth: number
   calendarId: number
@@ -111,6 +114,7 @@ export type CalendarUnitMinAggregateInputType = {
   displayNamePlural?: true
   formatMode?: true
   formatShorthand?: true
+  negativeFormat?: true
   duration?: true
   treeDepth?: true
   calendarId?: true
@@ -127,6 +131,7 @@ export type CalendarUnitMaxAggregateInputType = {
   displayNamePlural?: true
   formatMode?: true
   formatShorthand?: true
+  negativeFormat?: true
   duration?: true
   treeDepth?: true
   calendarId?: true
@@ -143,6 +148,7 @@ export type CalendarUnitCountAggregateInputType = {
   displayNamePlural?: true
   formatMode?: true
   formatShorthand?: true
+  negativeFormat?: true
   duration?: true
   treeDepth?: true
   calendarId?: true
@@ -246,6 +252,7 @@ export type CalendarUnitGroupByOutputType = {
   displayNamePlural: string | null
   formatMode: $Enums.CalendarUnitFormatMode
   formatShorthand: string | null
+  negativeFormat: $Enums.CalendarUnitNegativeFormat
   duration: number
   treeDepth: number
   calendarId: string
@@ -285,12 +292,14 @@ export type CalendarUnitWhereInput = {
   displayNamePlural?: Prisma.StringNullableFilter<"CalendarUnit"> | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFilter<"CalendarUnit"> | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.StringNullableFilter<"CalendarUnit"> | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFilter<"CalendarUnit"> | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFilter<"CalendarUnit"> | number
   treeDepth?: Prisma.IntFilter<"CalendarUnit"> | number
   calendarId?: Prisma.StringFilter<"CalendarUnit"> | string
   calendar?: Prisma.XOR<Prisma.CalendarScalarRelationFilter, Prisma.CalendarWhereInput>
   parents?: Prisma.CalendarUnitRelationListRelationFilter
   children?: Prisma.CalendarUnitRelationListRelationFilter
+  presentations?: Prisma.CalendarPresentationUnitListRelationFilter
 }
 
 export type CalendarUnitOrderByWithRelationInput = {
@@ -304,12 +313,14 @@ export type CalendarUnitOrderByWithRelationInput = {
   displayNamePlural?: Prisma.SortOrderInput | Prisma.SortOrder
   formatMode?: Prisma.SortOrder
   formatShorthand?: Prisma.SortOrderInput | Prisma.SortOrder
+  negativeFormat?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   treeDepth?: Prisma.SortOrder
   calendarId?: Prisma.SortOrder
   calendar?: Prisma.CalendarOrderByWithRelationInput
   parents?: Prisma.CalendarUnitRelationOrderByRelationAggregateInput
   children?: Prisma.CalendarUnitRelationOrderByRelationAggregateInput
+  presentations?: Prisma.CalendarPresentationUnitOrderByRelationAggregateInput
 }
 
 export type CalendarUnitWhereUniqueInput = Prisma.AtLeast<{
@@ -326,12 +337,14 @@ export type CalendarUnitWhereUniqueInput = Prisma.AtLeast<{
   displayNamePlural?: Prisma.StringNullableFilter<"CalendarUnit"> | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFilter<"CalendarUnit"> | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.StringNullableFilter<"CalendarUnit"> | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFilter<"CalendarUnit"> | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFilter<"CalendarUnit"> | number
   treeDepth?: Prisma.IntFilter<"CalendarUnit"> | number
   calendarId?: Prisma.StringFilter<"CalendarUnit"> | string
   calendar?: Prisma.XOR<Prisma.CalendarScalarRelationFilter, Prisma.CalendarWhereInput>
   parents?: Prisma.CalendarUnitRelationListRelationFilter
   children?: Prisma.CalendarUnitRelationListRelationFilter
+  presentations?: Prisma.CalendarPresentationUnitListRelationFilter
 }, "id" | "id">
 
 export type CalendarUnitOrderByWithAggregationInput = {
@@ -345,6 +358,7 @@ export type CalendarUnitOrderByWithAggregationInput = {
   displayNamePlural?: Prisma.SortOrderInput | Prisma.SortOrder
   formatMode?: Prisma.SortOrder
   formatShorthand?: Prisma.SortOrderInput | Prisma.SortOrder
+  negativeFormat?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   treeDepth?: Prisma.SortOrder
   calendarId?: Prisma.SortOrder
@@ -369,6 +383,7 @@ export type CalendarUnitScalarWhereWithAggregatesInput = {
   displayNamePlural?: Prisma.StringNullableWithAggregatesFilter<"CalendarUnit"> | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeWithAggregatesFilter<"CalendarUnit"> | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.StringNullableWithAggregatesFilter<"CalendarUnit"> | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatWithAggregatesFilter<"CalendarUnit"> | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntWithAggregatesFilter<"CalendarUnit"> | number
   treeDepth?: Prisma.IntWithAggregatesFilter<"CalendarUnit"> | number
   calendarId?: Prisma.StringWithAggregatesFilter<"CalendarUnit"> | string
@@ -385,11 +400,13 @@ export type CalendarUnitCreateInput = {
   displayNamePlural?: string | null
   formatMode?: $Enums.CalendarUnitFormatMode
   formatShorthand?: string | null
+  negativeFormat?: $Enums.CalendarUnitNegativeFormat
   duration?: number
   treeDepth?: number
   calendar: Prisma.CalendarCreateNestedOneWithoutUnitsInput
   parents?: Prisma.CalendarUnitRelationCreateNestedManyWithoutChildUnitInput
   children?: Prisma.CalendarUnitRelationCreateNestedManyWithoutParentUnitInput
+  presentations?: Prisma.CalendarPresentationUnitCreateNestedManyWithoutUnitInput
 }
 
 export type CalendarUnitUncheckedCreateInput = {
@@ -403,11 +420,13 @@ export type CalendarUnitUncheckedCreateInput = {
   displayNamePlural?: string | null
   formatMode?: $Enums.CalendarUnitFormatMode
   formatShorthand?: string | null
+  negativeFormat?: $Enums.CalendarUnitNegativeFormat
   duration?: number
   treeDepth?: number
   calendarId: string
   parents?: Prisma.CalendarUnitRelationUncheckedCreateNestedManyWithoutChildUnitInput
   children?: Prisma.CalendarUnitRelationUncheckedCreateNestedManyWithoutParentUnitInput
+  presentations?: Prisma.CalendarPresentationUnitUncheckedCreateNestedManyWithoutUnitInput
 }
 
 export type CalendarUnitUpdateInput = {
@@ -421,11 +440,13 @@ export type CalendarUnitUpdateInput = {
   displayNamePlural?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFieldUpdateOperationsInput | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   treeDepth?: Prisma.IntFieldUpdateOperationsInput | number
   calendar?: Prisma.CalendarUpdateOneRequiredWithoutUnitsNestedInput
   parents?: Prisma.CalendarUnitRelationUpdateManyWithoutChildUnitNestedInput
   children?: Prisma.CalendarUnitRelationUpdateManyWithoutParentUnitNestedInput
+  presentations?: Prisma.CalendarPresentationUnitUpdateManyWithoutUnitNestedInput
 }
 
 export type CalendarUnitUncheckedUpdateInput = {
@@ -439,11 +460,13 @@ export type CalendarUnitUncheckedUpdateInput = {
   displayNamePlural?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFieldUpdateOperationsInput | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   treeDepth?: Prisma.IntFieldUpdateOperationsInput | number
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   parents?: Prisma.CalendarUnitRelationUncheckedUpdateManyWithoutChildUnitNestedInput
   children?: Prisma.CalendarUnitRelationUncheckedUpdateManyWithoutParentUnitNestedInput
+  presentations?: Prisma.CalendarPresentationUnitUncheckedUpdateManyWithoutUnitNestedInput
 }
 
 export type CalendarUnitCreateManyInput = {
@@ -457,6 +480,7 @@ export type CalendarUnitCreateManyInput = {
   displayNamePlural?: string | null
   formatMode?: $Enums.CalendarUnitFormatMode
   formatShorthand?: string | null
+  negativeFormat?: $Enums.CalendarUnitNegativeFormat
   duration?: number
   treeDepth?: number
   calendarId: string
@@ -473,6 +497,7 @@ export type CalendarUnitUpdateManyMutationInput = {
   displayNamePlural?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFieldUpdateOperationsInput | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   treeDepth?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -488,6 +513,7 @@ export type CalendarUnitUncheckedUpdateManyInput = {
   displayNamePlural?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFieldUpdateOperationsInput | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   treeDepth?: Prisma.IntFieldUpdateOperationsInput | number
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -514,6 +540,7 @@ export type CalendarUnitCountOrderByAggregateInput = {
   displayNamePlural?: Prisma.SortOrder
   formatMode?: Prisma.SortOrder
   formatShorthand?: Prisma.SortOrder
+  negativeFormat?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   treeDepth?: Prisma.SortOrder
   calendarId?: Prisma.SortOrder
@@ -536,6 +563,7 @@ export type CalendarUnitMaxOrderByAggregateInput = {
   displayNamePlural?: Prisma.SortOrder
   formatMode?: Prisma.SortOrder
   formatShorthand?: Prisma.SortOrder
+  negativeFormat?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   treeDepth?: Prisma.SortOrder
   calendarId?: Prisma.SortOrder
@@ -552,6 +580,7 @@ export type CalendarUnitMinOrderByAggregateInput = {
   displayNamePlural?: Prisma.SortOrder
   formatMode?: Prisma.SortOrder
   formatShorthand?: Prisma.SortOrder
+  negativeFormat?: Prisma.SortOrder
   duration?: Prisma.SortOrder
   treeDepth?: Prisma.SortOrder
   calendarId?: Prisma.SortOrder
@@ -614,6 +643,10 @@ export type EnumCalendarUnitFormatModeFieldUpdateOperationsInput = {
   set?: $Enums.CalendarUnitFormatMode
 }
 
+export type EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput = {
+  set?: $Enums.CalendarUnitNegativeFormat
+}
+
 export type CalendarUnitCreateNestedOneWithoutChildrenInput = {
   create?: Prisma.XOR<Prisma.CalendarUnitCreateWithoutChildrenInput, Prisma.CalendarUnitUncheckedCreateWithoutChildrenInput>
   connectOrCreate?: Prisma.CalendarUnitCreateOrConnectWithoutChildrenInput
@@ -642,6 +675,20 @@ export type CalendarUnitUpdateOneRequiredWithoutParentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CalendarUnitUpdateToOneWithWhereWithoutParentsInput, Prisma.CalendarUnitUpdateWithoutParentsInput>, Prisma.CalendarUnitUncheckedUpdateWithoutParentsInput>
 }
 
+export type CalendarUnitCreateNestedOneWithoutPresentationsInput = {
+  create?: Prisma.XOR<Prisma.CalendarUnitCreateWithoutPresentationsInput, Prisma.CalendarUnitUncheckedCreateWithoutPresentationsInput>
+  connectOrCreate?: Prisma.CalendarUnitCreateOrConnectWithoutPresentationsInput
+  connect?: Prisma.CalendarUnitWhereUniqueInput
+}
+
+export type CalendarUnitUpdateOneRequiredWithoutPresentationsNestedInput = {
+  create?: Prisma.XOR<Prisma.CalendarUnitCreateWithoutPresentationsInput, Prisma.CalendarUnitUncheckedCreateWithoutPresentationsInput>
+  connectOrCreate?: Prisma.CalendarUnitCreateOrConnectWithoutPresentationsInput
+  upsert?: Prisma.CalendarUnitUpsertWithoutPresentationsInput
+  connect?: Prisma.CalendarUnitWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CalendarUnitUpdateToOneWithWhereWithoutPresentationsInput, Prisma.CalendarUnitUpdateWithoutPresentationsInput>, Prisma.CalendarUnitUncheckedUpdateWithoutPresentationsInput>
+}
+
 export type CalendarUnitCreateWithoutCalendarInput = {
   id?: string
   createdAt?: Date | string
@@ -653,10 +700,12 @@ export type CalendarUnitCreateWithoutCalendarInput = {
   displayNamePlural?: string | null
   formatMode?: $Enums.CalendarUnitFormatMode
   formatShorthand?: string | null
+  negativeFormat?: $Enums.CalendarUnitNegativeFormat
   duration?: number
   treeDepth?: number
   parents?: Prisma.CalendarUnitRelationCreateNestedManyWithoutChildUnitInput
   children?: Prisma.CalendarUnitRelationCreateNestedManyWithoutParentUnitInput
+  presentations?: Prisma.CalendarPresentationUnitCreateNestedManyWithoutUnitInput
 }
 
 export type CalendarUnitUncheckedCreateWithoutCalendarInput = {
@@ -670,10 +719,12 @@ export type CalendarUnitUncheckedCreateWithoutCalendarInput = {
   displayNamePlural?: string | null
   formatMode?: $Enums.CalendarUnitFormatMode
   formatShorthand?: string | null
+  negativeFormat?: $Enums.CalendarUnitNegativeFormat
   duration?: number
   treeDepth?: number
   parents?: Prisma.CalendarUnitRelationUncheckedCreateNestedManyWithoutChildUnitInput
   children?: Prisma.CalendarUnitRelationUncheckedCreateNestedManyWithoutParentUnitInput
+  presentations?: Prisma.CalendarPresentationUnitUncheckedCreateNestedManyWithoutUnitInput
 }
 
 export type CalendarUnitCreateOrConnectWithoutCalendarInput = {
@@ -716,6 +767,7 @@ export type CalendarUnitScalarWhereInput = {
   displayNamePlural?: Prisma.StringNullableFilter<"CalendarUnit"> | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFilter<"CalendarUnit"> | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.StringNullableFilter<"CalendarUnit"> | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFilter<"CalendarUnit"> | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFilter<"CalendarUnit"> | number
   treeDepth?: Prisma.IntFilter<"CalendarUnit"> | number
   calendarId?: Prisma.StringFilter<"CalendarUnit"> | string
@@ -732,10 +784,12 @@ export type CalendarUnitCreateWithoutChildrenInput = {
   displayNamePlural?: string | null
   formatMode?: $Enums.CalendarUnitFormatMode
   formatShorthand?: string | null
+  negativeFormat?: $Enums.CalendarUnitNegativeFormat
   duration?: number
   treeDepth?: number
   calendar: Prisma.CalendarCreateNestedOneWithoutUnitsInput
   parents?: Prisma.CalendarUnitRelationCreateNestedManyWithoutChildUnitInput
+  presentations?: Prisma.CalendarPresentationUnitCreateNestedManyWithoutUnitInput
 }
 
 export type CalendarUnitUncheckedCreateWithoutChildrenInput = {
@@ -749,10 +803,12 @@ export type CalendarUnitUncheckedCreateWithoutChildrenInput = {
   displayNamePlural?: string | null
   formatMode?: $Enums.CalendarUnitFormatMode
   formatShorthand?: string | null
+  negativeFormat?: $Enums.CalendarUnitNegativeFormat
   duration?: number
   treeDepth?: number
   calendarId: string
   parents?: Prisma.CalendarUnitRelationUncheckedCreateNestedManyWithoutChildUnitInput
+  presentations?: Prisma.CalendarPresentationUnitUncheckedCreateNestedManyWithoutUnitInput
 }
 
 export type CalendarUnitCreateOrConnectWithoutChildrenInput = {
@@ -771,10 +827,12 @@ export type CalendarUnitCreateWithoutParentsInput = {
   displayNamePlural?: string | null
   formatMode?: $Enums.CalendarUnitFormatMode
   formatShorthand?: string | null
+  negativeFormat?: $Enums.CalendarUnitNegativeFormat
   duration?: number
   treeDepth?: number
   calendar: Prisma.CalendarCreateNestedOneWithoutUnitsInput
   children?: Prisma.CalendarUnitRelationCreateNestedManyWithoutParentUnitInput
+  presentations?: Prisma.CalendarPresentationUnitCreateNestedManyWithoutUnitInput
 }
 
 export type CalendarUnitUncheckedCreateWithoutParentsInput = {
@@ -788,10 +846,12 @@ export type CalendarUnitUncheckedCreateWithoutParentsInput = {
   displayNamePlural?: string | null
   formatMode?: $Enums.CalendarUnitFormatMode
   formatShorthand?: string | null
+  negativeFormat?: $Enums.CalendarUnitNegativeFormat
   duration?: number
   treeDepth?: number
   calendarId: string
   children?: Prisma.CalendarUnitRelationUncheckedCreateNestedManyWithoutParentUnitInput
+  presentations?: Prisma.CalendarPresentationUnitUncheckedCreateNestedManyWithoutUnitInput
 }
 
 export type CalendarUnitCreateOrConnectWithoutParentsInput = {
@@ -821,10 +881,12 @@ export type CalendarUnitUpdateWithoutChildrenInput = {
   displayNamePlural?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFieldUpdateOperationsInput | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   treeDepth?: Prisma.IntFieldUpdateOperationsInput | number
   calendar?: Prisma.CalendarUpdateOneRequiredWithoutUnitsNestedInput
   parents?: Prisma.CalendarUnitRelationUpdateManyWithoutChildUnitNestedInput
+  presentations?: Prisma.CalendarPresentationUnitUpdateManyWithoutUnitNestedInput
 }
 
 export type CalendarUnitUncheckedUpdateWithoutChildrenInput = {
@@ -838,10 +900,12 @@ export type CalendarUnitUncheckedUpdateWithoutChildrenInput = {
   displayNamePlural?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFieldUpdateOperationsInput | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   treeDepth?: Prisma.IntFieldUpdateOperationsInput | number
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   parents?: Prisma.CalendarUnitRelationUncheckedUpdateManyWithoutChildUnitNestedInput
+  presentations?: Prisma.CalendarPresentationUnitUncheckedUpdateManyWithoutUnitNestedInput
 }
 
 export type CalendarUnitUpsertWithoutParentsInput = {
@@ -866,10 +930,12 @@ export type CalendarUnitUpdateWithoutParentsInput = {
   displayNamePlural?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFieldUpdateOperationsInput | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   treeDepth?: Prisma.IntFieldUpdateOperationsInput | number
   calendar?: Prisma.CalendarUpdateOneRequiredWithoutUnitsNestedInput
   children?: Prisma.CalendarUnitRelationUpdateManyWithoutParentUnitNestedInput
+  presentations?: Prisma.CalendarPresentationUnitUpdateManyWithoutUnitNestedInput
 }
 
 export type CalendarUnitUncheckedUpdateWithoutParentsInput = {
@@ -883,9 +949,103 @@ export type CalendarUnitUncheckedUpdateWithoutParentsInput = {
   displayNamePlural?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFieldUpdateOperationsInput | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   treeDepth?: Prisma.IntFieldUpdateOperationsInput | number
   calendarId?: Prisma.StringFieldUpdateOperationsInput | string
+  children?: Prisma.CalendarUnitRelationUncheckedUpdateManyWithoutParentUnitNestedInput
+  presentations?: Prisma.CalendarPresentationUnitUncheckedUpdateManyWithoutUnitNestedInput
+}
+
+export type CalendarUnitCreateWithoutPresentationsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  position: number
+  name: string
+  displayName?: string | null
+  displayNameShort?: string | null
+  displayNamePlural?: string | null
+  formatMode?: $Enums.CalendarUnitFormatMode
+  formatShorthand?: string | null
+  negativeFormat?: $Enums.CalendarUnitNegativeFormat
+  duration?: number
+  treeDepth?: number
+  calendar: Prisma.CalendarCreateNestedOneWithoutUnitsInput
+  parents?: Prisma.CalendarUnitRelationCreateNestedManyWithoutChildUnitInput
+  children?: Prisma.CalendarUnitRelationCreateNestedManyWithoutParentUnitInput
+}
+
+export type CalendarUnitUncheckedCreateWithoutPresentationsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  position: number
+  name: string
+  displayName?: string | null
+  displayNameShort?: string | null
+  displayNamePlural?: string | null
+  formatMode?: $Enums.CalendarUnitFormatMode
+  formatShorthand?: string | null
+  negativeFormat?: $Enums.CalendarUnitNegativeFormat
+  duration?: number
+  treeDepth?: number
+  calendarId: string
+  parents?: Prisma.CalendarUnitRelationUncheckedCreateNestedManyWithoutChildUnitInput
+  children?: Prisma.CalendarUnitRelationUncheckedCreateNestedManyWithoutParentUnitInput
+}
+
+export type CalendarUnitCreateOrConnectWithoutPresentationsInput = {
+  where: Prisma.CalendarUnitWhereUniqueInput
+  create: Prisma.XOR<Prisma.CalendarUnitCreateWithoutPresentationsInput, Prisma.CalendarUnitUncheckedCreateWithoutPresentationsInput>
+}
+
+export type CalendarUnitUpsertWithoutPresentationsInput = {
+  update: Prisma.XOR<Prisma.CalendarUnitUpdateWithoutPresentationsInput, Prisma.CalendarUnitUncheckedUpdateWithoutPresentationsInput>
+  create: Prisma.XOR<Prisma.CalendarUnitCreateWithoutPresentationsInput, Prisma.CalendarUnitUncheckedCreateWithoutPresentationsInput>
+  where?: Prisma.CalendarUnitWhereInput
+}
+
+export type CalendarUnitUpdateToOneWithWhereWithoutPresentationsInput = {
+  where?: Prisma.CalendarUnitWhereInput
+  data: Prisma.XOR<Prisma.CalendarUnitUpdateWithoutPresentationsInput, Prisma.CalendarUnitUncheckedUpdateWithoutPresentationsInput>
+}
+
+export type CalendarUnitUpdateWithoutPresentationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayNameShort?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayNamePlural?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formatMode?: Prisma.EnumCalendarUnitFormatModeFieldUpdateOperationsInput | $Enums.CalendarUnitFormatMode
+  formatShorthand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput | $Enums.CalendarUnitNegativeFormat
+  duration?: Prisma.IntFieldUpdateOperationsInput | number
+  treeDepth?: Prisma.IntFieldUpdateOperationsInput | number
+  calendar?: Prisma.CalendarUpdateOneRequiredWithoutUnitsNestedInput
+  parents?: Prisma.CalendarUnitRelationUpdateManyWithoutChildUnitNestedInput
+  children?: Prisma.CalendarUnitRelationUpdateManyWithoutParentUnitNestedInput
+}
+
+export type CalendarUnitUncheckedUpdateWithoutPresentationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayNameShort?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayNamePlural?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  formatMode?: Prisma.EnumCalendarUnitFormatModeFieldUpdateOperationsInput | $Enums.CalendarUnitFormatMode
+  formatShorthand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput | $Enums.CalendarUnitNegativeFormat
+  duration?: Prisma.IntFieldUpdateOperationsInput | number
+  treeDepth?: Prisma.IntFieldUpdateOperationsInput | number
+  calendarId?: Prisma.StringFieldUpdateOperationsInput | string
+  parents?: Prisma.CalendarUnitRelationUncheckedUpdateManyWithoutChildUnitNestedInput
   children?: Prisma.CalendarUnitRelationUncheckedUpdateManyWithoutParentUnitNestedInput
 }
 
@@ -900,6 +1060,7 @@ export type CalendarUnitCreateManyCalendarInput = {
   displayNamePlural?: string | null
   formatMode?: $Enums.CalendarUnitFormatMode
   formatShorthand?: string | null
+  negativeFormat?: $Enums.CalendarUnitNegativeFormat
   duration?: number
   treeDepth?: number
 }
@@ -915,10 +1076,12 @@ export type CalendarUnitUpdateWithoutCalendarInput = {
   displayNamePlural?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFieldUpdateOperationsInput | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   treeDepth?: Prisma.IntFieldUpdateOperationsInput | number
   parents?: Prisma.CalendarUnitRelationUpdateManyWithoutChildUnitNestedInput
   children?: Prisma.CalendarUnitRelationUpdateManyWithoutParentUnitNestedInput
+  presentations?: Prisma.CalendarPresentationUnitUpdateManyWithoutUnitNestedInput
 }
 
 export type CalendarUnitUncheckedUpdateWithoutCalendarInput = {
@@ -932,10 +1095,12 @@ export type CalendarUnitUncheckedUpdateWithoutCalendarInput = {
   displayNamePlural?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFieldUpdateOperationsInput | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   treeDepth?: Prisma.IntFieldUpdateOperationsInput | number
   parents?: Prisma.CalendarUnitRelationUncheckedUpdateManyWithoutChildUnitNestedInput
   children?: Prisma.CalendarUnitRelationUncheckedUpdateManyWithoutParentUnitNestedInput
+  presentations?: Prisma.CalendarPresentationUnitUncheckedUpdateManyWithoutUnitNestedInput
 }
 
 export type CalendarUnitUncheckedUpdateManyWithoutCalendarInput = {
@@ -949,6 +1114,7 @@ export type CalendarUnitUncheckedUpdateManyWithoutCalendarInput = {
   displayNamePlural?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   formatMode?: Prisma.EnumCalendarUnitFormatModeFieldUpdateOperationsInput | $Enums.CalendarUnitFormatMode
   formatShorthand?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  negativeFormat?: Prisma.EnumCalendarUnitNegativeFormatFieldUpdateOperationsInput | $Enums.CalendarUnitNegativeFormat
   duration?: Prisma.IntFieldUpdateOperationsInput | number
   treeDepth?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -961,11 +1127,13 @@ export type CalendarUnitUncheckedUpdateManyWithoutCalendarInput = {
 export type CalendarUnitCountOutputType = {
   parents: number
   children: number
+  presentations: number
 }
 
 export type CalendarUnitCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parents?: boolean | CalendarUnitCountOutputTypeCountParentsArgs
   children?: boolean | CalendarUnitCountOutputTypeCountChildrenArgs
+  presentations?: boolean | CalendarUnitCountOutputTypeCountPresentationsArgs
 }
 
 /**
@@ -992,6 +1160,13 @@ export type CalendarUnitCountOutputTypeCountChildrenArgs<ExtArgs extends runtime
   where?: Prisma.CalendarUnitRelationWhereInput
 }
 
+/**
+ * CalendarUnitCountOutputType without action
+ */
+export type CalendarUnitCountOutputTypeCountPresentationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CalendarPresentationUnitWhereInput
+}
+
 
 export type CalendarUnitSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1004,12 +1179,14 @@ export type CalendarUnitSelect<ExtArgs extends runtime.Types.Extensions.Internal
   displayNamePlural?: boolean
   formatMode?: boolean
   formatShorthand?: boolean
+  negativeFormat?: boolean
   duration?: boolean
   treeDepth?: boolean
   calendarId?: boolean
   calendar?: boolean | Prisma.CalendarDefaultArgs<ExtArgs>
   parents?: boolean | Prisma.CalendarUnit$parentsArgs<ExtArgs>
   children?: boolean | Prisma.CalendarUnit$childrenArgs<ExtArgs>
+  presentations?: boolean | Prisma.CalendarUnit$presentationsArgs<ExtArgs>
   _count?: boolean | Prisma.CalendarUnitCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["calendarUnit"]>
 
@@ -1024,6 +1201,7 @@ export type CalendarUnitSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   displayNamePlural?: boolean
   formatMode?: boolean
   formatShorthand?: boolean
+  negativeFormat?: boolean
   duration?: boolean
   treeDepth?: boolean
   calendarId?: boolean
@@ -1041,6 +1219,7 @@ export type CalendarUnitSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   displayNamePlural?: boolean
   formatMode?: boolean
   formatShorthand?: boolean
+  negativeFormat?: boolean
   duration?: boolean
   treeDepth?: boolean
   calendarId?: boolean
@@ -1058,16 +1237,18 @@ export type CalendarUnitSelectScalar = {
   displayNamePlural?: boolean
   formatMode?: boolean
   formatShorthand?: boolean
+  negativeFormat?: boolean
   duration?: boolean
   treeDepth?: boolean
   calendarId?: boolean
 }
 
-export type CalendarUnitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "position" | "name" | "displayName" | "displayNameShort" | "displayNamePlural" | "formatMode" | "formatShorthand" | "duration" | "treeDepth" | "calendarId", ExtArgs["result"]["calendarUnit"]>
+export type CalendarUnitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "position" | "name" | "displayName" | "displayNameShort" | "displayNamePlural" | "formatMode" | "formatShorthand" | "negativeFormat" | "duration" | "treeDepth" | "calendarId", ExtArgs["result"]["calendarUnit"]>
 export type CalendarUnitInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   calendar?: boolean | Prisma.CalendarDefaultArgs<ExtArgs>
   parents?: boolean | Prisma.CalendarUnit$parentsArgs<ExtArgs>
   children?: boolean | Prisma.CalendarUnit$childrenArgs<ExtArgs>
+  presentations?: boolean | Prisma.CalendarUnit$presentationsArgs<ExtArgs>
   _count?: boolean | Prisma.CalendarUnitCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CalendarUnitIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1083,6 +1264,7 @@ export type $CalendarUnitPayload<ExtArgs extends runtime.Types.Extensions.Intern
     calendar: Prisma.$CalendarPayload<ExtArgs>
     parents: Prisma.$CalendarUnitRelationPayload<ExtArgs>[]
     children: Prisma.$CalendarUnitRelationPayload<ExtArgs>[]
+    presentations: Prisma.$CalendarPresentationUnitPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1095,6 +1277,7 @@ export type $CalendarUnitPayload<ExtArgs extends runtime.Types.Extensions.Intern
     displayNamePlural: string | null
     formatMode: $Enums.CalendarUnitFormatMode
     formatShorthand: string | null
+    negativeFormat: $Enums.CalendarUnitNegativeFormat
     duration: number
     treeDepth: number
     calendarId: string
@@ -1495,6 +1678,7 @@ export interface Prisma__CalendarUnitClient<T, Null = never, ExtArgs extends run
   calendar<T extends Prisma.CalendarDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CalendarDefaultArgs<ExtArgs>>): Prisma.Prisma__CalendarClient<runtime.Types.Result.GetResult<Prisma.$CalendarPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   parents<T extends Prisma.CalendarUnit$parentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CalendarUnit$parentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarUnitRelationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   children<T extends Prisma.CalendarUnit$childrenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CalendarUnit$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarUnitRelationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  presentations<T extends Prisma.CalendarUnit$presentationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CalendarUnit$presentationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarPresentationUnitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1534,6 +1718,7 @@ export interface CalendarUnitFieldRefs {
   readonly displayNamePlural: Prisma.FieldRef<"CalendarUnit", 'String'>
   readonly formatMode: Prisma.FieldRef<"CalendarUnit", 'CalendarUnitFormatMode'>
   readonly formatShorthand: Prisma.FieldRef<"CalendarUnit", 'String'>
+  readonly negativeFormat: Prisma.FieldRef<"CalendarUnit", 'CalendarUnitNegativeFormat'>
   readonly duration: Prisma.FieldRef<"CalendarUnit", 'Int'>
   readonly treeDepth: Prisma.FieldRef<"CalendarUnit", 'Int'>
   readonly calendarId: Prisma.FieldRef<"CalendarUnit", 'String'>
@@ -1978,6 +2163,30 @@ export type CalendarUnit$childrenArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.CalendarUnitRelationScalarFieldEnum | Prisma.CalendarUnitRelationScalarFieldEnum[]
+}
+
+/**
+ * CalendarUnit.presentations
+ */
+export type CalendarUnit$presentationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CalendarPresentationUnit
+   */
+  select?: Prisma.CalendarPresentationUnitSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CalendarPresentationUnit
+   */
+  omit?: Prisma.CalendarPresentationUnitOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CalendarPresentationUnitInclude<ExtArgs> | null
+  where?: Prisma.CalendarPresentationUnitWhereInput
+  orderBy?: Prisma.CalendarPresentationUnitOrderByWithRelationInput | Prisma.CalendarPresentationUnitOrderByWithRelationInput[]
+  cursor?: Prisma.CalendarPresentationUnitWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CalendarPresentationUnitScalarFieldEnum | Prisma.CalendarPresentationUnitScalarFieldEnum[]
 }
 
 /**

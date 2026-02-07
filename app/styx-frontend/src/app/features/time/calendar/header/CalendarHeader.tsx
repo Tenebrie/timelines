@@ -24,6 +24,7 @@ function CalendarHeaderComponent({ onExit }: Props) {
 						<CalendarTimestampForm />
 					</Stack>
 				</Box>
+				<Divider orientation="vertical" flexItem />
 				<Box sx={{ flex: 1 }}>
 					<CalendarTimestampPreview />
 				</Box>

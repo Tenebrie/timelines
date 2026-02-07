@@ -78,15 +78,7 @@ export const WorldService = {
 			},
 			include: {
 				collaborators: true,
-				calendars: {
-					include: {
-						units: {
-							include: {
-								children: true,
-							},
-						},
-					},
-				},
+				calendars: true,
 			},
 		})
 
@@ -108,7 +100,7 @@ export const WorldService = {
 	},
 
 	findWorldDetails: async (worldId: string) => {
-		return getPrismaClient().world.findFirstOrThrow({
+		const world = await getPrismaClient().world.findFirstOrThrow({
 			where: {
 				id: worldId,
 			},
@@ -137,13 +129,31 @@ export const WorldService = {
 					include: {
 						units: {
 							include: {
+								parents: true,
 								children: true,
+							},
+						},
+						presentations: {
+							include: {
+								units: true,
 							},
 						},
 					},
 				},
 			},
 		})
+		return {
+			...world,
+			calendars: world.calendars.map((calendar) => ({
+				...calendar,
+				units: calendar.units.map((unit) => ({
+					...unit,
+					displayName: (unit.displayName || unit.name).trim().toLowerCase(),
+					displayNameShort: (unit.displayNameShort || unit.name).trim().substring(0, 1).toLowerCase(),
+					displayNamePlural: (unit.displayNamePlural || unit.name).trim().toLowerCase(),
+				})),
+			})),
+		}
 	},
 
 	findWorldBrief: async (worldId: string) => {

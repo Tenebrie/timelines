@@ -70,6 +70,28 @@ export type CalendarUnit = Prisma.CalendarUnitModel
  */
 export type CalendarUnitRelation = Prisma.CalendarUnitRelationModel
 /**
+ * Model CalendarPresentation
+ * *
+ *  * Calendar presentations
+ */
+export type CalendarPresentation = Prisma.CalendarPresentationModel
+/**
+ * Model CalendarPresentationUnit
+ * 
+ */
+export type CalendarPresentationUnit = Prisma.CalendarPresentationUnitModel
+/**
+ * Model CalendarSeason
+ * *
+ *  * Seasons
+ */
+export type CalendarSeason = Prisma.CalendarSeasonModel
+/**
+ * Model CalendarSeasonInterval
+ * 
+ */
+export type CalendarSeasonInterval = Prisma.CalendarSeasonIntervalModel
+/**
  * Model SavedColor
  * 
  */

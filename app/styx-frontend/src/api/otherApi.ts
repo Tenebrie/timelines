@@ -135,13 +135,13 @@ export type GetSupportedImageFormatsApiResponse = /** status 200  */ {
 }
 export type GetSupportedImageFormatsApiArg = void
 export type RequestImageConversionApiResponse = /** status 200  */ {
-	ownerId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	ownerId: string
+	size: number
 	expiresAt?: null | string
 	bucketKey: string
-	size: number
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'Image' | 'Avatar'
@@ -287,11 +287,11 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		position: number
 		name: string
 		worldId: string
 		icon: string
 		color: string
+		position: number
 		contentRich: string
 		contentYjs?: null | string
 		parentId?: null | string
@@ -299,11 +299,11 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	position: number
 	name: string
 	worldId: string
 	icon: string
 	color: string
+	position: number
 	contentRich: string
 	parentId?: null | string
 }

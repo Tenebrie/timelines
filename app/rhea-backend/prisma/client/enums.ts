@@ -46,6 +46,14 @@ export const CalendarUnitFormatMode = {
 export type CalendarUnitFormatMode = (typeof CalendarUnitFormatMode)[keyof typeof CalendarUnitFormatMode]
 
 
+export const CalendarUnitNegativeFormat = {
+  MinusSign: 'MinusSign',
+  AbsoluteValue: 'AbsoluteValue'
+} as const
+
+export type CalendarUnitNegativeFormat = (typeof CalendarUnitNegativeFormat)[keyof typeof CalendarUnitNegativeFormat]
+
+
 export const FlagValue = {
   DatabaseSeeded: 'DatabaseSeeded',
   FirstUserLoggedIn: 'FirstUserLoggedIn'

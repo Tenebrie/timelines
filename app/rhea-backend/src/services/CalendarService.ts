@@ -74,6 +74,15 @@ export const CalendarService = {
 						},
 					},
 				},
+				presentations: {
+					include: {
+						units: {
+							include: {
+								unit: true,
+							},
+						},
+					},
+				},
 			},
 		})
 
@@ -101,6 +110,15 @@ export const CalendarService = {
 						children: {
 							orderBy: {
 								position: 'asc',
+							},
+						},
+					},
+				},
+				presentations: {
+					include: {
+						units: {
+							include: {
+								unit: true,
 							},
 						},
 					},
@@ -252,6 +270,146 @@ export const CalendarService = {
 		return {
 			unit,
 		}
+	},
+
+	/**
+	 * Calendar Presentations
+	 */
+	createCalendarPresentation: async ({
+		calendarId,
+		params,
+	}: {
+		calendarId: string
+		params: {
+			name: string
+			scaleFactor?: number
+		}
+	}) => {
+		const presentation = await getPrismaClient().$transaction(async (dbClient) => {
+			const presentation = await dbClient.calendarPresentation.create({
+				data: {
+					name: params.name,
+					scaleFactor: params.scaleFactor ?? 1.0,
+					calendarId,
+				},
+				include: {
+					units: {
+						include: {
+							unit: true,
+						},
+					},
+				},
+			})
+
+			await makeTouchCalendarQuery(calendarId, dbClient)
+			return presentation
+		})
+
+		return { presentation }
+	},
+
+	updateCalendarPresentation: async ({
+		calendarId,
+		presentationId,
+		params,
+	}: {
+		calendarId: string
+		presentationId: string
+		params: {
+			name?: string
+			scaleFactor?: number
+			units?: { unitId: string; formatString: string }[]
+		}
+	}) => {
+		const presentation = await getPrismaClient().$transaction(async (dbClient) => {
+			// If units are being updated, we need to handle the replacement
+			if (params.units !== undefined) {
+				// Delete existing units
+				await dbClient.calendarPresentationUnit.deleteMany({
+					where: { presentationId },
+				})
+
+				// Get unit durations for sorting
+				const unitDurations = await dbClient.calendarUnit.findMany({
+					where: {
+						calendarId,
+						id: { in: params.units.map((u) => u.unitId) },
+					},
+					select: { id: true, duration: true },
+				})
+
+				const durationMap = new Map(unitDurations.map((u) => [u.id, u.duration]))
+
+				// Sort units by duration (descending - largest first)
+				const sortedUnits = [...params.units].sort((a, b) => {
+					const durationA = durationMap.get(a.unitId) ?? 0
+					const durationB = durationMap.get(b.unitId) ?? 0
+					return durationB - durationA
+				})
+
+				// Create new units
+				for (const unit of sortedUnits) {
+					const calendarUnit = await dbClient.calendarUnit.findFirst({
+						where: { id: unit.unitId, calendarId },
+					})
+					if (calendarUnit) {
+						await dbClient.calendarPresentationUnit.create({
+							data: {
+								presentationId,
+								unitId: unit.unitId,
+								name: calendarUnit.displayName || calendarUnit.name,
+								formatString: unit.formatString,
+							},
+						})
+					}
+				}
+			}
+
+			const presentation = await dbClient.calendarPresentation.update({
+				where: {
+					id: presentationId,
+					calendarId,
+				},
+				data: {
+					name: params.name,
+					scaleFactor: params.scaleFactor,
+				},
+				include: {
+					units: {
+						include: {
+							unit: true,
+						},
+					},
+				},
+			})
+
+			await makeTouchCalendarQuery(calendarId, dbClient)
+			return presentation
+		})
+
+		return { presentation }
+	},
+
+	deleteCalendarPresentation: async ({
+		calendarId,
+		presentationId,
+	}: {
+		calendarId: string
+		presentationId: string
+	}) => {
+		const presentation = await getPrismaClient().$transaction(async (dbClient) => {
+			const presentation = await dbClient.calendarPresentation.delete({
+				where: {
+					id: presentationId,
+					calendarId,
+				},
+			})
+
+			await makeTouchCalendarQuery(calendarId, dbClient)
+			return presentation
+		})
+
+		return { presentation }
 	},
 
 	computeCalendarUnitDurations: async (

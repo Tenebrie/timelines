@@ -3,6 +3,7 @@ import { v4 as getRandomId } from 'uuid'
 import { DeepPartial } from '@/app/utils/DeepPartial'
 
 import { User } from '../../app/features/auth/AuthSlice'
+import { GetCalendarPreviewApiResponse } from '../calendarApi'
 import { CollaboratingUser } from '../types/worldCollaboratorsTypes'
 import { ActorDetails, WorldBrief, WorldDetails, WorldEventDelta, WorldItem } from '../types/worldTypes'
 import { WorldEvent } from '../types/worldTypes'
@@ -150,4 +151,57 @@ export const mockApiEventModel = (
 	worldEventTrackId: null,
 	color: '#008080',
 	...statement,
+})
+
+export const mockCalendarUnit = (
+	overrides: Partial<GetCalendarPreviewApiResponse['units'][number]> & { id: string; name: string },
+): GetCalendarPreviewApiResponse['units'][number] => ({
+	calendarId: overrides.calendarId ?? 'calendar-1',
+	id: overrides.id,
+	createdAt: overrides.createdAt ?? '2024-01-01T00:00:00.000Z',
+	updatedAt: overrides.updatedAt ?? '2024-01-01T00:00:00.000Z',
+	position: overrides.position ?? 0,
+	name: overrides.name,
+	displayName: overrides.displayName ?? overrides.name,
+	displayNameShort: overrides.displayNameShort ?? overrides.name.substring(0, 1).toUpperCase(),
+	displayNamePlural: overrides.displayNamePlural ?? overrides.name + 's',
+	formatMode: overrides.formatMode ?? 'Numeric',
+	formatShorthand: overrides.formatShorthand ?? null,
+	negativeFormat: overrides.negativeFormat ?? 'MinusSign',
+	duration: overrides.duration ?? 1,
+	treeDepth: overrides.treeDepth ?? 0,
+	children: overrides.children ?? [],
+	parents: overrides.parents ?? [],
+})
+
+export const mockCalendarUnitChildRelation = (
+	parentUnitId: string,
+	childUnitId: string,
+	repeats: number,
+	overrides: Partial<GetCalendarPreviewApiResponse['units'][number]['children'][number]> = {},
+): GetCalendarPreviewApiResponse['units'][number]['children'][number] => ({
+	id: overrides.id ?? `${parentUnitId}-${childUnitId}`,
+	createdAt: overrides.createdAt ?? '2024-01-01T00:00:00.000Z',
+	updatedAt: overrides.updatedAt ?? '2024-01-01T00:00:00.000Z',
+	position: overrides.position ?? 0,
+	label: overrides.label ?? null,
+	repeats,
+	parentUnitId,
+	childUnitId,
+})
+
+export const mockCalendarUnitParentRelation = (
+	parentUnitId: string,
+	childUnitId: string,
+	repeats: number,
+	overrides: Partial<GetCalendarPreviewApiResponse['units'][number]['parents'][number]> = {},
+): GetCalendarPreviewApiResponse['units'][number]['parents'][number] => ({
+	id: overrides.id ?? `${parentUnitId}-${childUnitId}`,
+	createdAt: overrides.createdAt ?? '2024-01-01T00:00:00.000Z',
+	updatedAt: overrides.updatedAt ?? '2024-01-01T00:00:00.000Z',
+	position: overrides.position ?? 0,
+	label: overrides.label ?? null,
+	repeats,
+	parentUnitId,
+	childUnitId,
 })

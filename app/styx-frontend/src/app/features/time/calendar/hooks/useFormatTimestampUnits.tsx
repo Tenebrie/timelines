@@ -1,4 +1,6 @@
-import { CalendarUnit } from '@api/types/calendarTypes'
+import { CalendarDraftUnit, CalendarUnit } from '@api/types/calendarTypes'
+
+import { useParseTimestampToUnits } from './useParseTimestampToUnits'
 
 type ParsedTimestamp = Map<string, ParsedTimestampEntry>
 type ParsedTimestampEntry = {
@@ -10,96 +12,13 @@ type ParsedTimestampEntry = {
 export function useFormatTimestampUnits({
 	units,
 	dateFormatString,
+	originTime = 0,
 }: {
-	units: CalendarUnit[]
+	units: (CalendarUnit | CalendarDraftUnit)[]
 	dateFormatString: string
+	originTime?: number
 }) {
-	const sumNonHiddenChildren = (unit: CalendarUnit) => {
-		let sum = 0
-		for (const childRelation of unit.children) {
-			const childUnit = units.find((u) => u.id === childRelation.childUnitId)!
-			if (childUnit.formatMode !== 'Hidden') {
-				sum += childRelation.repeats
-			} else {
-				sum += sumNonHiddenChildren(childUnit) * childRelation.repeats
-			}
-		}
-		return sum
-	}
-
-	const parseTimestamp = ({
-		outputMap,
-		skippedChildCount,
-		unit,
-		customLabel,
-		timestamp,
-		extraDuration,
-	}: {
-		outputMap?: ParsedTimestamp
-		skippedChildCount?: Map<string, number>
-		unit: CalendarUnit
-		customLabel?: string
-		timestamp: number
-		// Non-consumed duration from hidden ancestors and siblings
-		extraDuration: number
-	}) => {
-		outputMap = outputMap ?? new Map()
-		skippedChildCount = skippedChildCount ?? new Map<string, number>()
-
-		const index = Math.floor(timestamp / unit.duration)
-		let remainder = timestamp % unit.duration
-
-		// Handle negative timestamps
-		if (remainder < 0) {
-			remainder += unit.duration
-		}
-
-		const franDuration = skippedChildCount.get(unit.displayName) ?? 0
-		outputMap.set(unit.id, {
-			value: index + (unit.formatMode === 'Hidden' ? 0 : extraDuration + franDuration),
-			formatShorthand: unit.formatShorthand ?? undefined,
-			customLabel,
-		})
-
-		if (unit.children.length === 0) {
-			return outputMap
-		}
-
-		let myExtraDuration = 0
-		if (unit.formatMode === 'Hidden') {
-			myExtraDuration += sumNonHiddenChildren(unit) * index
-			myExtraDuration += extraDuration
-		}
-
-		for (let i = 0; i < unit.children.length; i++) {
-			const childRelation = unit.children[i]
-			const childUnit = units.find((u) => u.id === childRelation.childUnitId)
-			if (!childUnit) {
-				continue
-			}
-			if (remainder < childUnit.duration * childRelation.repeats) {
-				return parseTimestamp({
-					outputMap,
-					skippedChildCount,
-					unit: childUnit,
-					timestamp: remainder,
-					extraDuration: myExtraDuration,
-					customLabel: childRelation.label ?? undefined,
-				})
-			}
-			remainder -= childUnit.duration * childRelation.repeats
-			if (childUnit.formatMode === 'Hidden') {
-				myExtraDuration += childRelation.repeats * sumNonHiddenChildren(childUnit)
-			} else {
-				skippedChildCount.set(
-					childUnit.displayName,
-					(skippedChildCount.get(childUnit.displayName) ?? 0) + childRelation.repeats,
-				)
-			}
-		}
-		console.error('No child unit matched for remainder', remainder)
-		return outputMap
-	}
+	const parse = useParseTimestampToUnits({ units })
 
 	const formatParsed = (parsed: ParsedTimestamp) => {
 		if (!dateFormatString || dateFormatString?.trim().length === 0) {
@@ -153,7 +72,11 @@ export function useFormatTimestampUnits({
 		}
 		flushCurrent()
 
-		function formatUnit(unit: CalendarUnit, entry: ParsedTimestampEntry, symbolCount: number) {
+		function formatUnit(
+			unit: CalendarUnit | CalendarDraftUnit,
+			entry: ParsedTimestampEntry,
+			symbolCount: number,
+		) {
 			const value =
 				(unit.formatMode === 'NameOneIndexed' || unit.formatMode === 'NumericOneIndexed') && entry.value >= 0
 					? entry.value + 1
@@ -187,32 +110,7 @@ export function useFormatTimestampUnits({
 	}
 
 	const format = ({ timestamp }: { timestamp: number }) => {
-		const roots = units
-			.filter((u) => u.parents.length === 0)
-			.map((rootUnit) => {
-				const parsed = parseTimestamp({
-					unit: rootUnit,
-					timestamp,
-					extraDuration: 0,
-				})
-				return {
-					unit: rootUnit,
-					parsed,
-				}
-			})
-			.sort((a, b) => a.unit.position - b.unit.position)
-
-		const seenKeys = new Set<string>()
-		const combinedTimeMap: ParsedTimestamp = new Map()
-		for (const root of roots) {
-			for (const [key, value] of root.parsed.entries()) {
-				if (!combinedTimeMap.has(key) && value.formatShorthand && !seenKeys.has(value.formatShorthand)) {
-					combinedTimeMap.set(key, value)
-					seenKeys.add(value.formatShorthand)
-				}
-			}
-		}
-		const formatted = formatParsed(combinedTimeMap)
+		const formatted = formatParsed(parse({ timestamp: timestamp + originTime }))
 		return formatted.substring(0, 1).toUpperCase() + formatted.substring(1)
 	}
 

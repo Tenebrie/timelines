@@ -253,6 +253,8 @@ export type CalendarWhereInput = {
   worldId?: Prisma.StringNullableFilter<"Calendar"> | string | null
   ownerId?: Prisma.StringNullableFilter<"Calendar"> | string | null
   units?: Prisma.CalendarUnitListRelationFilter
+  seasons?: Prisma.CalendarSeasonListRelationFilter
+  presentations?: Prisma.CalendarPresentationListRelationFilter
   world?: Prisma.XOR<Prisma.WorldNullableScalarRelationFilter, Prisma.WorldWhereInput> | null
   owner?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
@@ -268,6 +270,8 @@ export type CalendarOrderByWithRelationInput = {
   worldId?: Prisma.SortOrderInput | Prisma.SortOrder
   ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
   units?: Prisma.CalendarUnitOrderByRelationAggregateInput
+  seasons?: Prisma.CalendarSeasonOrderByRelationAggregateInput
+  presentations?: Prisma.CalendarPresentationOrderByRelationAggregateInput
   world?: Prisma.WorldOrderByWithRelationInput
   owner?: Prisma.UserOrderByWithRelationInput
 }
@@ -286,6 +290,8 @@ export type CalendarWhereUniqueInput = Prisma.AtLeast<{
   worldId?: Prisma.StringNullableFilter<"Calendar"> | string | null
   ownerId?: Prisma.StringNullableFilter<"Calendar"> | string | null
   units?: Prisma.CalendarUnitListRelationFilter
+  seasons?: Prisma.CalendarSeasonListRelationFilter
+  presentations?: Prisma.CalendarPresentationListRelationFilter
   world?: Prisma.XOR<Prisma.WorldNullableScalarRelationFilter, Prisma.WorldWhereInput> | null
   owner?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "id">
@@ -331,6 +337,8 @@ export type CalendarCreateInput = {
   name: string
   dateFormat?: string | null
   units?: Prisma.CalendarUnitCreateNestedManyWithoutCalendarInput
+  seasons?: Prisma.CalendarSeasonCreateNestedManyWithoutCalendarInput
+  presentations?: Prisma.CalendarPresentationCreateNestedManyWithoutCalendarInput
   world?: Prisma.WorldCreateNestedOneWithoutCalendarsInput
   owner?: Prisma.UserCreateNestedOneWithoutCalendarsInput
 }
@@ -346,6 +354,8 @@ export type CalendarUncheckedCreateInput = {
   worldId?: string | null
   ownerId?: string | null
   units?: Prisma.CalendarUnitUncheckedCreateNestedManyWithoutCalendarInput
+  seasons?: Prisma.CalendarSeasonUncheckedCreateNestedManyWithoutCalendarInput
+  presentations?: Prisma.CalendarPresentationUncheckedCreateNestedManyWithoutCalendarInput
 }
 
 export type CalendarUpdateInput = {
@@ -357,6 +367,8 @@ export type CalendarUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   units?: Prisma.CalendarUnitUpdateManyWithoutCalendarNestedInput
+  seasons?: Prisma.CalendarSeasonUpdateManyWithoutCalendarNestedInput
+  presentations?: Prisma.CalendarPresentationUpdateManyWithoutCalendarNestedInput
   world?: Prisma.WorldUpdateOneWithoutCalendarsNestedInput
   owner?: Prisma.UserUpdateOneWithoutCalendarsNestedInput
 }
@@ -372,6 +384,8 @@ export type CalendarUncheckedUpdateInput = {
   worldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   units?: Prisma.CalendarUnitUncheckedUpdateManyWithoutCalendarNestedInput
+  seasons?: Prisma.CalendarSeasonUncheckedUpdateManyWithoutCalendarNestedInput
+  presentations?: Prisma.CalendarPresentationUncheckedUpdateManyWithoutCalendarNestedInput
 }
 
 export type CalendarCreateManyInput = {
@@ -491,6 +505,34 @@ export type CalendarUpdateOneRequiredWithoutUnitsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CalendarUpdateToOneWithWhereWithoutUnitsInput, Prisma.CalendarUpdateWithoutUnitsInput>, Prisma.CalendarUncheckedUpdateWithoutUnitsInput>
 }
 
+export type CalendarCreateNestedOneWithoutPresentationsInput = {
+  create?: Prisma.XOR<Prisma.CalendarCreateWithoutPresentationsInput, Prisma.CalendarUncheckedCreateWithoutPresentationsInput>
+  connectOrCreate?: Prisma.CalendarCreateOrConnectWithoutPresentationsInput
+  connect?: Prisma.CalendarWhereUniqueInput
+}
+
+export type CalendarUpdateOneRequiredWithoutPresentationsNestedInput = {
+  create?: Prisma.XOR<Prisma.CalendarCreateWithoutPresentationsInput, Prisma.CalendarUncheckedCreateWithoutPresentationsInput>
+  connectOrCreate?: Prisma.CalendarCreateOrConnectWithoutPresentationsInput
+  upsert?: Prisma.CalendarUpsertWithoutPresentationsInput
+  connect?: Prisma.CalendarWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CalendarUpdateToOneWithWhereWithoutPresentationsInput, Prisma.CalendarUpdateWithoutPresentationsInput>, Prisma.CalendarUncheckedUpdateWithoutPresentationsInput>
+}
+
+export type CalendarCreateNestedOneWithoutSeasonsInput = {
+  create?: Prisma.XOR<Prisma.CalendarCreateWithoutSeasonsInput, Prisma.CalendarUncheckedCreateWithoutSeasonsInput>
+  connectOrCreate?: Prisma.CalendarCreateOrConnectWithoutSeasonsInput
+  connect?: Prisma.CalendarWhereUniqueInput
+}
+
+export type CalendarUpdateOneRequiredWithoutSeasonsNestedInput = {
+  create?: Prisma.XOR<Prisma.CalendarCreateWithoutSeasonsInput, Prisma.CalendarUncheckedCreateWithoutSeasonsInput>
+  connectOrCreate?: Prisma.CalendarCreateOrConnectWithoutSeasonsInput
+  upsert?: Prisma.CalendarUpsertWithoutSeasonsInput
+  connect?: Prisma.CalendarWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CalendarUpdateToOneWithWhereWithoutSeasonsInput, Prisma.CalendarUpdateWithoutSeasonsInput>, Prisma.CalendarUncheckedUpdateWithoutSeasonsInput>
+}
+
 export type CalendarCreateNestedManyWithoutOwnerInput = {
   create?: Prisma.XOR<Prisma.CalendarCreateWithoutOwnerInput, Prisma.CalendarUncheckedCreateWithoutOwnerInput> | Prisma.CalendarCreateWithoutOwnerInput[] | Prisma.CalendarUncheckedCreateWithoutOwnerInput[]
   connectOrCreate?: Prisma.CalendarCreateOrConnectWithoutOwnerInput | Prisma.CalendarCreateOrConnectWithoutOwnerInput[]
@@ -583,6 +625,8 @@ export type CalendarCreateWithoutUnitsInput = {
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
+  seasons?: Prisma.CalendarSeasonCreateNestedManyWithoutCalendarInput
+  presentations?: Prisma.CalendarPresentationCreateNestedManyWithoutCalendarInput
   world?: Prisma.WorldCreateNestedOneWithoutCalendarsInput
   owner?: Prisma.UserCreateNestedOneWithoutCalendarsInput
 }
@@ -597,6 +641,8 @@ export type CalendarUncheckedCreateWithoutUnitsInput = {
   dateFormat?: string | null
   worldId?: string | null
   ownerId?: string | null
+  seasons?: Prisma.CalendarSeasonUncheckedCreateNestedManyWithoutCalendarInput
+  presentations?: Prisma.CalendarPresentationUncheckedCreateNestedManyWithoutCalendarInput
 }
 
 export type CalendarCreateOrConnectWithoutUnitsInput = {
@@ -623,6 +669,8 @@ export type CalendarUpdateWithoutUnitsInput = {
   originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seasons?: Prisma.CalendarSeasonUpdateManyWithoutCalendarNestedInput
+  presentations?: Prisma.CalendarPresentationUpdateManyWithoutCalendarNestedInput
   world?: Prisma.WorldUpdateOneWithoutCalendarsNestedInput
   owner?: Prisma.UserUpdateOneWithoutCalendarsNestedInput
 }
@@ -637,6 +685,152 @@ export type CalendarUncheckedUpdateWithoutUnitsInput = {
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  seasons?: Prisma.CalendarSeasonUncheckedUpdateManyWithoutCalendarNestedInput
+  presentations?: Prisma.CalendarPresentationUncheckedUpdateManyWithoutCalendarNestedInput
+}
+
+export type CalendarCreateWithoutPresentationsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  position: number
+  originTime?: bigint | number
+  name: string
+  dateFormat?: string | null
+  units?: Prisma.CalendarUnitCreateNestedManyWithoutCalendarInput
+  seasons?: Prisma.CalendarSeasonCreateNestedManyWithoutCalendarInput
+  world?: Prisma.WorldCreateNestedOneWithoutCalendarsInput
+  owner?: Prisma.UserCreateNestedOneWithoutCalendarsInput
+}
+
+export type CalendarUncheckedCreateWithoutPresentationsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  position: number
+  originTime?: bigint | number
+  name: string
+  dateFormat?: string | null
+  worldId?: string | null
+  ownerId?: string | null
+  units?: Prisma.CalendarUnitUncheckedCreateNestedManyWithoutCalendarInput
+  seasons?: Prisma.CalendarSeasonUncheckedCreateNestedManyWithoutCalendarInput
+}
+
+export type CalendarCreateOrConnectWithoutPresentationsInput = {
+  where: Prisma.CalendarWhereUniqueInput
+  create: Prisma.XOR<Prisma.CalendarCreateWithoutPresentationsInput, Prisma.CalendarUncheckedCreateWithoutPresentationsInput>
+}
+
+export type CalendarUpsertWithoutPresentationsInput = {
+  update: Prisma.XOR<Prisma.CalendarUpdateWithoutPresentationsInput, Prisma.CalendarUncheckedUpdateWithoutPresentationsInput>
+  create: Prisma.XOR<Prisma.CalendarCreateWithoutPresentationsInput, Prisma.CalendarUncheckedCreateWithoutPresentationsInput>
+  where?: Prisma.CalendarWhereInput
+}
+
+export type CalendarUpdateToOneWithWhereWithoutPresentationsInput = {
+  where?: Prisma.CalendarWhereInput
+  data: Prisma.XOR<Prisma.CalendarUpdateWithoutPresentationsInput, Prisma.CalendarUncheckedUpdateWithoutPresentationsInput>
+}
+
+export type CalendarUpdateWithoutPresentationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  units?: Prisma.CalendarUnitUpdateManyWithoutCalendarNestedInput
+  seasons?: Prisma.CalendarSeasonUpdateManyWithoutCalendarNestedInput
+  world?: Prisma.WorldUpdateOneWithoutCalendarsNestedInput
+  owner?: Prisma.UserUpdateOneWithoutCalendarsNestedInput
+}
+
+export type CalendarUncheckedUpdateWithoutPresentationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  units?: Prisma.CalendarUnitUncheckedUpdateManyWithoutCalendarNestedInput
+  seasons?: Prisma.CalendarSeasonUncheckedUpdateManyWithoutCalendarNestedInput
+}
+
+export type CalendarCreateWithoutSeasonsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  position: number
+  originTime?: bigint | number
+  name: string
+  dateFormat?: string | null
+  units?: Prisma.CalendarUnitCreateNestedManyWithoutCalendarInput
+  presentations?: Prisma.CalendarPresentationCreateNestedManyWithoutCalendarInput
+  world?: Prisma.WorldCreateNestedOneWithoutCalendarsInput
+  owner?: Prisma.UserCreateNestedOneWithoutCalendarsInput
+}
+
+export type CalendarUncheckedCreateWithoutSeasonsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  position: number
+  originTime?: bigint | number
+  name: string
+  dateFormat?: string | null
+  worldId?: string | null
+  ownerId?: string | null
+  units?: Prisma.CalendarUnitUncheckedCreateNestedManyWithoutCalendarInput
+  presentations?: Prisma.CalendarPresentationUncheckedCreateNestedManyWithoutCalendarInput
+}
+
+export type CalendarCreateOrConnectWithoutSeasonsInput = {
+  where: Prisma.CalendarWhereUniqueInput
+  create: Prisma.XOR<Prisma.CalendarCreateWithoutSeasonsInput, Prisma.CalendarUncheckedCreateWithoutSeasonsInput>
+}
+
+export type CalendarUpsertWithoutSeasonsInput = {
+  update: Prisma.XOR<Prisma.CalendarUpdateWithoutSeasonsInput, Prisma.CalendarUncheckedUpdateWithoutSeasonsInput>
+  create: Prisma.XOR<Prisma.CalendarCreateWithoutSeasonsInput, Prisma.CalendarUncheckedCreateWithoutSeasonsInput>
+  where?: Prisma.CalendarWhereInput
+}
+
+export type CalendarUpdateToOneWithWhereWithoutSeasonsInput = {
+  where?: Prisma.CalendarWhereInput
+  data: Prisma.XOR<Prisma.CalendarUpdateWithoutSeasonsInput, Prisma.CalendarUncheckedUpdateWithoutSeasonsInput>
+}
+
+export type CalendarUpdateWithoutSeasonsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  units?: Prisma.CalendarUnitUpdateManyWithoutCalendarNestedInput
+  presentations?: Prisma.CalendarPresentationUpdateManyWithoutCalendarNestedInput
+  world?: Prisma.WorldUpdateOneWithoutCalendarsNestedInput
+  owner?: Prisma.UserUpdateOneWithoutCalendarsNestedInput
+}
+
+export type CalendarUncheckedUpdateWithoutSeasonsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  position?: Prisma.IntFieldUpdateOperationsInput | number
+  originTime?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  units?: Prisma.CalendarUnitUncheckedUpdateManyWithoutCalendarNestedInput
+  presentations?: Prisma.CalendarPresentationUncheckedUpdateManyWithoutCalendarNestedInput
 }
 
 export type CalendarCreateWithoutOwnerInput = {
@@ -648,6 +842,8 @@ export type CalendarCreateWithoutOwnerInput = {
   name: string
   dateFormat?: string | null
   units?: Prisma.CalendarUnitCreateNestedManyWithoutCalendarInput
+  seasons?: Prisma.CalendarSeasonCreateNestedManyWithoutCalendarInput
+  presentations?: Prisma.CalendarPresentationCreateNestedManyWithoutCalendarInput
   world?: Prisma.WorldCreateNestedOneWithoutCalendarsInput
 }
 
@@ -661,6 +857,8 @@ export type CalendarUncheckedCreateWithoutOwnerInput = {
   dateFormat?: string | null
   worldId?: string | null
   units?: Prisma.CalendarUnitUncheckedCreateNestedManyWithoutCalendarInput
+  seasons?: Prisma.CalendarSeasonUncheckedCreateNestedManyWithoutCalendarInput
+  presentations?: Prisma.CalendarPresentationUncheckedCreateNestedManyWithoutCalendarInput
 }
 
 export type CalendarCreateOrConnectWithoutOwnerInput = {
@@ -713,6 +911,8 @@ export type CalendarCreateWithoutWorldInput = {
   name: string
   dateFormat?: string | null
   units?: Prisma.CalendarUnitCreateNestedManyWithoutCalendarInput
+  seasons?: Prisma.CalendarSeasonCreateNestedManyWithoutCalendarInput
+  presentations?: Prisma.CalendarPresentationCreateNestedManyWithoutCalendarInput
   owner?: Prisma.UserCreateNestedOneWithoutCalendarsInput
 }
 
@@ -726,6 +926,8 @@ export type CalendarUncheckedCreateWithoutWorldInput = {
   dateFormat?: string | null
   ownerId?: string | null
   units?: Prisma.CalendarUnitUncheckedCreateNestedManyWithoutCalendarInput
+  seasons?: Prisma.CalendarSeasonUncheckedCreateNestedManyWithoutCalendarInput
+  presentations?: Prisma.CalendarPresentationUncheckedCreateNestedManyWithoutCalendarInput
 }
 
 export type CalendarCreateOrConnectWithoutWorldInput = {
@@ -774,6 +976,8 @@ export type CalendarUpdateWithoutOwnerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   units?: Prisma.CalendarUnitUpdateManyWithoutCalendarNestedInput
+  seasons?: Prisma.CalendarSeasonUpdateManyWithoutCalendarNestedInput
+  presentations?: Prisma.CalendarPresentationUpdateManyWithoutCalendarNestedInput
   world?: Prisma.WorldUpdateOneWithoutCalendarsNestedInput
 }
 
@@ -787,6 +991,8 @@ export type CalendarUncheckedUpdateWithoutOwnerInput = {
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   units?: Prisma.CalendarUnitUncheckedUpdateManyWithoutCalendarNestedInput
+  seasons?: Prisma.CalendarSeasonUncheckedUpdateManyWithoutCalendarNestedInput
+  presentations?: Prisma.CalendarPresentationUncheckedUpdateManyWithoutCalendarNestedInput
 }
 
 export type CalendarUncheckedUpdateManyWithoutOwnerInput = {
@@ -820,6 +1026,8 @@ export type CalendarUpdateWithoutWorldInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   units?: Prisma.CalendarUnitUpdateManyWithoutCalendarNestedInput
+  seasons?: Prisma.CalendarSeasonUpdateManyWithoutCalendarNestedInput
+  presentations?: Prisma.CalendarPresentationUpdateManyWithoutCalendarNestedInput
   owner?: Prisma.UserUpdateOneWithoutCalendarsNestedInput
 }
 
@@ -833,6 +1041,8 @@ export type CalendarUncheckedUpdateWithoutWorldInput = {
   dateFormat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   units?: Prisma.CalendarUnitUncheckedUpdateManyWithoutCalendarNestedInput
+  seasons?: Prisma.CalendarSeasonUncheckedUpdateManyWithoutCalendarNestedInput
+  presentations?: Prisma.CalendarPresentationUncheckedUpdateManyWithoutCalendarNestedInput
 }
 
 export type CalendarUncheckedUpdateManyWithoutWorldInput = {
@@ -853,10 +1063,14 @@ export type CalendarUncheckedUpdateManyWithoutWorldInput = {
 
 export type CalendarCountOutputType = {
   units: number
+  seasons: number
+  presentations: number
 }
 
 export type CalendarCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   units?: boolean | CalendarCountOutputTypeCountUnitsArgs
+  seasons?: boolean | CalendarCountOutputTypeCountSeasonsArgs
+  presentations?: boolean | CalendarCountOutputTypeCountPresentationsArgs
 }
 
 /**
@@ -876,6 +1090,20 @@ export type CalendarCountOutputTypeCountUnitsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.CalendarUnitWhereInput
 }
 
+/**
+ * CalendarCountOutputType without action
+ */
+export type CalendarCountOutputTypeCountSeasonsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CalendarSeasonWhereInput
+}
+
+/**
+ * CalendarCountOutputType without action
+ */
+export type CalendarCountOutputTypeCountPresentationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CalendarPresentationWhereInput
+}
+
 
 export type CalendarSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -888,6 +1116,8 @@ export type CalendarSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   worldId?: boolean
   ownerId?: boolean
   units?: boolean | Prisma.Calendar$unitsArgs<ExtArgs>
+  seasons?: boolean | Prisma.Calendar$seasonsArgs<ExtArgs>
+  presentations?: boolean | Prisma.Calendar$presentationsArgs<ExtArgs>
   world?: boolean | Prisma.Calendar$worldArgs<ExtArgs>
   owner?: boolean | Prisma.Calendar$ownerArgs<ExtArgs>
   _count?: boolean | Prisma.CalendarCountOutputTypeDefaultArgs<ExtArgs>
@@ -936,6 +1166,8 @@ export type CalendarSelectScalar = {
 export type CalendarOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "position" | "originTime" | "name" | "dateFormat" | "worldId" | "ownerId", ExtArgs["result"]["calendar"]>
 export type CalendarInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   units?: boolean | Prisma.Calendar$unitsArgs<ExtArgs>
+  seasons?: boolean | Prisma.Calendar$seasonsArgs<ExtArgs>
+  presentations?: boolean | Prisma.Calendar$presentationsArgs<ExtArgs>
   world?: boolean | Prisma.Calendar$worldArgs<ExtArgs>
   owner?: boolean | Prisma.Calendar$ownerArgs<ExtArgs>
   _count?: boolean | Prisma.CalendarCountOutputTypeDefaultArgs<ExtArgs>
@@ -953,6 +1185,8 @@ export type $CalendarPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "Calendar"
   objects: {
     units: Prisma.$CalendarUnitPayload<ExtArgs>[]
+    seasons: Prisma.$CalendarSeasonPayload<ExtArgs>[]
+    presentations: Prisma.$CalendarPresentationPayload<ExtArgs>[]
     world: Prisma.$WorldPayload<ExtArgs> | null
     owner: Prisma.$UserPayload<ExtArgs> | null
   }
@@ -1361,6 +1595,8 @@ readonly fields: CalendarFieldRefs;
 export interface Prisma__CalendarClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   units<T extends Prisma.Calendar$unitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Calendar$unitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarUnitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  seasons<T extends Prisma.Calendar$seasonsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Calendar$seasonsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarSeasonPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  presentations<T extends Prisma.Calendar$presentationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Calendar$presentationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarPresentationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   world<T extends Prisma.Calendar$worldArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Calendar$worldArgs<ExtArgs>>): Prisma.Prisma__WorldClient<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   owner<T extends Prisma.Calendar$ownerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Calendar$ownerArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1818,6 +2054,54 @@ export type Calendar$unitsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.CalendarUnitScalarFieldEnum | Prisma.CalendarUnitScalarFieldEnum[]
+}
+
+/**
+ * Calendar.seasons
+ */
+export type Calendar$seasonsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CalendarSeason
+   */
+  select?: Prisma.CalendarSeasonSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CalendarSeason
+   */
+  omit?: Prisma.CalendarSeasonOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CalendarSeasonInclude<ExtArgs> | null
+  where?: Prisma.CalendarSeasonWhereInput
+  orderBy?: Prisma.CalendarSeasonOrderByWithRelationInput | Prisma.CalendarSeasonOrderByWithRelationInput[]
+  cursor?: Prisma.CalendarSeasonWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CalendarSeasonScalarFieldEnum | Prisma.CalendarSeasonScalarFieldEnum[]
+}
+
+/**
+ * Calendar.presentations
+ */
+export type Calendar$presentationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CalendarPresentation
+   */
+  select?: Prisma.CalendarPresentationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CalendarPresentation
+   */
+  omit?: Prisma.CalendarPresentationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CalendarPresentationInclude<ExtArgs> | null
+  where?: Prisma.CalendarPresentationWhereInput
+  orderBy?: Prisma.CalendarPresentationOrderByWithRelationInput | Prisma.CalendarPresentationOrderByWithRelationInput[]
+  cursor?: Prisma.CalendarPresentationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CalendarPresentationScalarFieldEnum | Prisma.CalendarPresentationScalarFieldEnum[]
 }
 
 /**
