@@ -162,6 +162,9 @@ export const WorldService = {
 							include: {
 								units: true,
 							},
+							orderBy: {
+								scaleFactor: 'asc',
+							},
 						},
 						seasons: {
 							include: {

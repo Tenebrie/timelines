@@ -14,6 +14,7 @@ import { useTimelineAnchorDrag } from '../../hooks/useTimelineAnchorDrag'
 import { useTimelineHorizontalScroll } from '../../hooks/useTimelineHorizontalScroll'
 import { TimelineAnchorContainer } from './TimelineAnchorContainer'
 import { TimelineAnchorLabel } from './TimelineAnchorLabel'
+import { TimelineAnchorLine } from './TimelineAnchorLine'
 
 export const TimelineAnchorPadding = 150 // pixels
 
@@ -113,7 +114,7 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 				<Box>
 					<TimelineAnchorLabel />
 					<TimelineAnchorContainer>
-						{/* {dividers.map((_, index) => (
+						{dividers.map((_, index) => (
 							<TimelineAnchorLine
 								key={`${index}`}
 								theme={theme}
@@ -126,7 +127,7 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 								scaledTimeToRealTime={scaledTimeToRealTime}
 								containerWidth={containerWidth}
 							/>
-						))} */}
+						))}
 					</TimelineAnchorContainer>
 				</Box>
 			</Fade>

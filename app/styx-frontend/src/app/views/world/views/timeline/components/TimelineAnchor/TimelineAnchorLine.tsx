@@ -62,7 +62,7 @@ function TimelineAnchorLineComponent(props: Props) {
 		containerWidth,
 	} = props
 
-	const { parseTime, timeToShortLabel, units, presentation } = useWorldTime({ scaleLevel })
+	const { parseTime, timeToShortLabel, units, presentation, originTime } = useWorldTime()
 	const getDividerSize = useCallback(
 		({
 			isLargeGroup,
@@ -99,71 +99,74 @@ function TimelineAnchorLineComponent(props: Props) {
 
 	// TODO remove duplication
 	const getLabel = (scroll: number) => {
-		// const loopIndex = getLoop({
-		// 	index: rawIndex,
-		// 	lineCount,
-		// 	timelineScroll: scroll,
-		// })
+		const loopIndex = getLoop({
+			index: rawIndex,
+			lineCount,
+			timelineScroll: scroll,
+		})
+		const index = rawIndex + loopIndex * lineCount
 
-		// const index = rawIndex + loopIndex * lineCount
+		// Calculate position using chunked scroll like events do
+		const actualPosition = index * LineSpacing
+		const dividerPosition =
+			actualPosition +
+			Math.floor(scroll / ANCHOR_RESET_PERIOD) * ANCHOR_RESET_PERIOD +
+			CONTROLLED_SCROLLER_SIZE
 
-		// // const parsedTime = parseTime(scaledTimeToRealTime(index * LineSpacing))
-		// // const isStartOfMonth = parsedTime.monthDay === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
-		// // const isStartOfYear =
-		// // 	parsedTime.monthIndex === 0 && parsedTime.day === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
+		const timestamp = scaledTimeToRealTime(index * LineSpacing)
+		const parsedTime = parseTime({ timestamp: timestamp + originTime })
 
-		// const parsedTime = parseTime({ timestamp: scaledTimeToRealTime(index * LineSpacing) })
+		const largeUnit =
+			presentation.units.length > 0
+				? {
+						...presentation.units[0],
+						displayName: units.find((u) => u.id === presentation.units[0].unitId)?.displayName ?? '',
+					}
+				: null
+		const mediumUnit =
+			presentation.units.length > 1
+				? {
+						...presentation.units[1],
+						displayName: units.find((u) => u.id === presentation.units[1].unitId)?.displayName ?? '',
+					}
+				: null
+		const smallUnit =
+			presentation.units.length > 2
+				? {
+						...presentation.units[2],
+						displayName: units.find((u) => u.id === presentation.units[2].unitId)?.displayName ?? '',
+					}
+				: null
 
-		// const largeUnit =
-		// 	presentation.units.length > 0
-		// 		? {
-		// 				...presentation.units[0],
-		// 				displayName: units.find((u) => u.id === presentation.units[0].unitId)?.displayName ?? '',
-		// 			}
-		// 		: null
-		// const mediumUnit =
-		// 	presentation.units.length > 1
-		// 		? {
-		// 				...presentation.units[1],
-		// 				displayName: units.find((u) => u.id === presentation.units[1].unitId)?.displayName ?? '',
-		// 			}
-		// 		: null
-		// const smallUnit =
-		// 	presentation.units.length > 2
-		// 		? {
-		// 				...presentation.units[2],
-		// 				displayName: units.find((u) => u.id === presentation.units[2].unitId)?.displayName ?? '',
-		// 			}
-		// 		: null
+		const largeUnitValue =
+			parsedTime.values().find((e) => e.unit.displayName === largeUnit?.displayName)?.value ?? -1
+		const mediumUnitValue =
+			parsedTime.values().find((e) => e.unit.displayName === mediumUnit?.displayName)?.value ?? -1
+		const smallUnitValue =
+			parsedTime.values().find((e) => e.unit.displayName === smallUnit?.displayName)?.value ?? -1
 
-		// const isSmallGroup = parsedTime
-		// 	.values()
-		// 	.some((e) => e.unit.displayName === smallUnit?.displayName && e.value === 1)
-		// const isMediumGroup = parsedTime
-		// 	.values()
-		// 	.some((e) => e.unit.displayName === mediumUnit?.displayName && e.value === 1)
-		// const isLargeGroup = parsedTime
-		// 	.values()
-		// 	.some((e) => e.unit.displayName === largeUnit?.displayName && e.value === 1)
+		const isSmallGroup = smallUnitValue === 0
+		const isMediumGroup = mediumUnitValue === 0 && smallUnitValue === 0
+		const isLargeGroup = largeUnitValue === 0 && mediumUnitValue === 0 && smallUnitValue === 0
 
-		// const labelSize = (() => {
-		// 	if (isLargeGroup) {
-		// 		return 'large'
-		// 	}
-		// 	if (isMediumGroup) {
-		// 		return 'medium'
-		// 	}
-		// 	if (isSmallGroup) {
-		// 		return 'small'
-		// 	}
+		const labelSize = (() => {
+			if (isLargeGroup) {
+				return 'large'
+			}
+			if (isMediumGroup) {
+				return 'medium'
+			}
+			if (isSmallGroup) {
+				return 'small'
+			}
 
-		// 	return null
-		// })()
+			return null
+		})()
 
-		// return labelSize
-		// 	? timeToShortLabel(scaledTimeToRealTime(index * LineSpacing), scaleLevel, labelSize)
-		// 	: null
-		return ''
+		return labelSize
+			? timeToShortLabel(scaledTimeToRealTime(index * LineSpacing), scaleLevel, labelSize)
+			: null
+		// return ''
 	}
 
 	const [displayedLabel, setDisplayedLabel] = useState<string | null>(getLabel(TimelineState.scroll))
@@ -185,16 +188,8 @@ function TimelineAnchorLineComponent(props: Props) {
 				Math.floor(scroll / ANCHOR_RESET_PERIOD) * ANCHOR_RESET_PERIOD +
 				CONTROLLED_SCROLLER_SIZE
 
-			// const parsedTime = parseTime(scaledTimeToRealTime(index * LineSpacing))
-			// const isStartOfMonth = parsedTime.monthDay === 1 && parsedTime.hour === 0 && parsedTime.minute === 0
-			// const isStartOfYear =
-			// 	parsedTime.monthIndex === 0 &&
-			// 	parsedTime.day === 1 &&
-			// 	parsedTime.hour === 0 &&
-			// 	parsedTime.minute === 0
-
 			const timestamp = scaledTimeToRealTime(index * LineSpacing)
-			const parsedTime = parseTime({ timestamp })
+			const parsedTime = parseTime({ timestamp: timestamp + originTime })
 
 			const largeUnit =
 				presentation.units.length > 0
@@ -225,9 +220,9 @@ function TimelineAnchorLineComponent(props: Props) {
 			const smallUnitValue =
 				parsedTime.values().find((e) => e.unit.displayName === smallUnit?.displayName)?.value ?? -1
 
-			const isSmallGroup = false
-			const isMediumGroup = smallUnitValue === 0
-			const isLargeGroup = false
+			const isSmallGroup = smallUnitValue === 0
+			const isMediumGroup = mediumUnitValue === 0 && smallUnitValue === 0
+			const isLargeGroup = largeUnitValue === 0 && mediumUnitValue === 0 && smallUnitValue === 0
 
 			const labelSize = (() => {
 				if (isLargeGroup) {
@@ -257,9 +252,7 @@ function TimelineAnchorLineComponent(props: Props) {
 				isSmallGroup,
 			})
 
-			const label = labelSize
-				? timeToShortLabel(scaledTimeToRealTime(index * LineSpacing), scaleLevel, labelSize)
-				: null
+			const label = labelSize ? timeToShortLabel(timestamp, scaleLevel, labelSize) : null
 
 			const offset = labelSize === 'large' ? 2 : 0
 			const variables = {
@@ -286,15 +279,15 @@ function TimelineAnchorLineComponent(props: Props) {
 		},
 		[
 			getDividerSize,
-			largeGroupSize,
 			lineCount,
-			mediumGroupSize,
 			parseTime,
+			presentation.units,
 			rawIndex,
 			scaleLevel,
 			scaledTimeToRealTime,
-			smallGroupSize,
+			originTime,
 			timeToShortLabel,
+			units,
 		],
 	)
 

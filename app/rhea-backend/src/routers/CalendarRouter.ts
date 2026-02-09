@@ -330,9 +330,8 @@ router.patch('/api/calendar/:calendarId/presentation/:presentationId', async (ct
 		presentationId: PathParam(StringValidator),
 	})
 
-	const { name, scaleFactor, units } = useRequestBody(ctx, {
+	const { name, units } = useRequestBody(ctx, {
 		name: OptionalParam(NameStringValidator),
-		scaleFactor: OptionalParam(NumberValidator),
 		units: OptionalParam(CalendarPresentationUnitValidator),
 	})
 
@@ -341,7 +340,7 @@ router.patch('/api/calendar/:calendarId/presentation/:presentationId', async (ct
 	const { presentation } = await CalendarService.updateCalendarPresentation({
 		calendarId,
 		presentationId,
-		params: { name, scaleFactor, units },
+		params: { name, units },
 	})
 
 	const calendar = await CalendarService.getEditorCalendar({ calendarId })

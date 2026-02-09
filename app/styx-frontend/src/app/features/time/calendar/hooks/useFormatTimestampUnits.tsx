@@ -20,8 +20,8 @@ export function useFormatTimestampUnits({
 }) {
 	const parse = useParseTimestampToUnits({ units })
 
-	const formatParsed = (parsed: ParsedTimestamp) => {
-		if (!dateFormatString || dateFormatString?.trim().length === 0) {
+	const formatParsed = (parsed: ParsedTimestamp, dateFormat: string) => {
+		if (!dateFormat || dateFormat?.trim().length === 0) {
 			return 'No date format specified'
 		}
 
@@ -38,8 +38,7 @@ export function useFormatTimestampUnits({
 			}
 
 			const caseSensitive =
-				dateFormatString.includes(current.symbol.toLowerCase()) &&
-				dateFormatString.includes(current.symbol.toUpperCase())
+				dateFormat.includes(current.symbol.toLowerCase()) && dateFormat.includes(current.symbol.toUpperCase())
 			const unit = units.find((u) => {
 				if (!parsed.get(u.id)) {
 					return false
@@ -61,7 +60,7 @@ export function useFormatTimestampUnits({
 			}
 		}
 
-		for (const char of dateFormatString) {
+		for (const char of dateFormat) {
 			if (char === current.symbol) {
 				current.count += 1
 			} else {
@@ -109,8 +108,9 @@ export function useFormatTimestampUnits({
 		return current.result
 	}
 
-	const format = ({ timestamp }: { timestamp: number }) => {
-		const formatted = formatParsed(parse({ timestamp: timestamp + originTime }))
+	const format = ({ timestamp, dateFormat }: { timestamp: number; dateFormat?: string }) => {
+		const dateFormatToUse = dateFormat ?? dateFormatString
+		const formatted = formatParsed(parse({ timestamp: timestamp + originTime }), dateFormatToUse)
 		return formatted.substring(0, 1).toUpperCase() + formatted.substring(1)
 	}
 

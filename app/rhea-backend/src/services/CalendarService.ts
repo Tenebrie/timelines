@@ -91,6 +91,9 @@ export const CalendarService = {
 							},
 						},
 					},
+					orderBy: {
+						scaleFactor: 'asc',
+					},
 				},
 			},
 		})
@@ -130,6 +133,9 @@ export const CalendarService = {
 								unit: true,
 							},
 						},
+					},
+					orderBy: {
+						scaleFactor: 'asc',
 					},
 				},
 			},
@@ -332,7 +338,6 @@ export const CalendarService = {
 		presentationId: string
 		params: {
 			name?: string
-			scaleFactor?: number
 			units?: { unitId: string; formatString: string }[]
 		}
 	}) => {
@@ -380,6 +385,21 @@ export const CalendarService = {
 				}
 			}
 
+			const existingPresentation = await dbClient.calendarPresentation.findFirstOrThrow({
+				where: {
+					id: presentationId,
+				},
+				include: {
+					units: {
+						include: {
+							unit: true,
+						},
+					},
+				},
+			})
+			const scaleFactor =
+				existingPresentation.units.sort((a, b) => a.unit.duration - b.unit.duration)[0]?.unit.duration ?? 1
+
 			const presentation = await dbClient.calendarPresentation.update({
 				where: {
 					id: presentationId,
@@ -387,7 +407,7 @@ export const CalendarService = {
 				},
 				data: {
 					name: params.name,
-					scaleFactor: params.scaleFactor,
+					scaleFactor,
 				},
 				include: {
 					units: {

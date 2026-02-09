@@ -2,20 +2,17 @@ import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
-import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
+import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { useFormatTimestamp } from '../calendar/hooks/useFormatTimestamp'
 import { useParseTimestampToUnits } from '../calendar/hooks/useParseTimestampToUnits'
 import { useWorldCalendar } from './useWorldCalendar'
 
-type Props = {
-	scaleLevel?: ScaleLevel
-}
-
 export const maximumTime = 8640000000000000
 
-export const useWorldTime = ({ scaleLevel }: Props = {}) => {
+export const useWorldTime = () => {
 	// const worldCalendar = useSelector(getWorldCalendarState)
+	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const { calendars } = useSelector(getWorldState, (a, b) => a.calendars === b.calendars)
 	const worldCalendar = calendars[0] ?? {
 		units: [],
@@ -198,6 +195,7 @@ export const useWorldTime = ({ scaleLevel }: Props = {}) => {
 	return {
 		units: worldCalendar.units,
 		presentation,
+		originTime: worldCalendar.originTime,
 		parseTime,
 		timeToLabel,
 		timeToShortLabel,
