@@ -48,7 +48,7 @@ export type UpdateWorldApiArg = {
 	body: {
 		name?: string
 		description?: string
-		calendar?: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+		calendars?: string[]
 		timeOrigin?: number
 	}
 }

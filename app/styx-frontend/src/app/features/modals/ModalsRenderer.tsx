@@ -1,26 +1,31 @@
+import { useSelector } from 'react-redux'
+
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { DeleteAccountModal } from '../../views/profile/modals/DeleteAccountModal'
 import { DeleteAssetModal } from '../../views/profile/modals/DeleteAssetModal'
 import { ArticleWizardModal } from '../../views/world/views/wiki/modals/ArticleWizardModal'
 import { DeleteArticleModal } from '../../views/world/views/wiki/modals/DeleteArticleModal'
-import { useModal } from './ModalsSlice'
+// import { useModal } from './ModalsSlice'
 import { EventTrackEditModal } from './renderers/EventTrackEditModal'
 import { EventTrackWizardModal } from './renderers/EventTrackWizardModal'
 import { TimeTravelModal } from './renderers/TimeTravelModal'
 
 export const ModalsRenderer = () => {
-	const { open: openTimeTravelModal } = useModal('timeTravelModal')
+	const { isLoaded } = useSelector(getWorldState, (a, b) => a.id === b.id && a.isLoaded === b.isLoaded)
+	// const { open: openTimeTravelModal } = useModal('timeTravelModal')
 
+	// TODO: Fix time travel modal
 	useShortcut(Shortcut.Search, () => {
-		openTimeTravelModal({})
+		// openTimeTravelModal({})
 	})
 
 	return (
 		<>
 			<EventTrackEditModal />
 			<EventTrackWizardModal />
-			<TimeTravelModal />
+			{false && <TimeTravelModal />}
 			<ArticleWizardModal />
 			<DeleteArticleModal />
 			<DeleteAccountModal />

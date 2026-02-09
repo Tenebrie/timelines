@@ -9,8 +9,10 @@ export type Actor = Omit<ActorDetails, 'statements'>
 export type ActorDetails = GetWorldInfoApiResponse['actors'][number]
 export type WorldItem = GetWorldsApiResponse['ownedWorlds'][number]
 export type WorldBrief = GetWorldBriefApiResponse
-export type WorldDetails = Omit<GetWorldInfoApiResponse, 'events'> & {
+export type WorldDetails = Omit<GetWorldInfoApiResponse, 'events' | 'calendars' | 'timeOrigin'> & {
 	events: WorldEvent[]
+	calendars: WorldCalendar[]
+	timeOrigin: number
 }
 export type WorldEvent = Omit<
 	GetWorldInfoApiResponse['events'][number],
@@ -24,6 +26,9 @@ export type WorldEvent = Omit<
 }
 export type WorldEventDelta = WorldEvent['deltaStates'][number]
 export type WorldCalendarType = WorldDetails['calendar']
+export type WorldCalendar = Omit<GetWorldInfoApiResponse['calendars'][number], 'originTime'> & {
+	originTime: number
+}
 
 export type MarkerType = 'issuedAt' | 'deltaState' | 'revokedAt' | 'ghostEvent' | 'ghostDelta'
 /**

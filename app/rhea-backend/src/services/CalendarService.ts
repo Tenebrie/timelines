@@ -21,6 +21,15 @@ export const CalendarService = {
 		})
 	},
 
+	listWorldCalendars: async ({ worldId }: { worldId: string }) => {
+		return getPrismaClient().calendar.findMany({
+			where: {
+				ownerId: null,
+				worldId,
+			},
+		})
+	},
+
 	getCalendarUnitById: async ({ calendarId, unitId }: { calendarId: string; unitId: string }) => {
 		return getPrismaClient().calendarUnit.findFirstOrThrow({
 			where: {
@@ -246,8 +255,14 @@ export const CalendarService = {
 		}
 	},
 
-	deleteCalendar: async ({ calendarId }: { calendarId: string }) => {
-		return await getPrismaClient().calendar.delete({
+	deleteCalendar: async ({
+		calendarId,
+		prisma,
+	}: {
+		calendarId: string
+		prisma?: Prisma.TransactionClient
+	}) => {
+		return await getPrismaClient(prisma).calendar.delete({
 			where: { id: calendarId },
 		})
 	},
@@ -514,5 +529,192 @@ export const CalendarService = {
 				}),
 			),
 		)
+	},
+
+	assignCalendarsToWorld: async ({
+		prisma,
+		worldId,
+		calendarsIds,
+	}: {
+		prisma: Prisma.TransactionClient
+		worldId: string
+		calendarsIds: string[]
+	}) => {
+		const world = await prisma.world.findUniqueOrThrow({
+			where: {
+				id: worldId,
+			},
+			include: {
+				calendars: true,
+			},
+		})
+		for (const existingCalendar of world.calendars) {
+			await CalendarService.deleteCalendar({ calendarId: existingCalendar.id, prisma })
+		}
+
+		for (const calendarId of calendarsIds) {
+			const existingCalendar = await CalendarService.getEditorCalendar({ calendarId })
+
+			// If owned by the user, make a deep copy. Otherwise, reassign.
+			if (existingCalendar.ownerId !== null) {
+				await CalendarService.cloneCalendar({
+					calendarId,
+					worldId,
+					prisma,
+				})
+			} else {
+				await prisma.calendar.update({
+					where: {
+						id: calendarId,
+					},
+					data: {
+						worldId,
+					},
+				})
+			}
+		}
+	},
+
+	/**
+	 * Clone a calendar with all its units, relations, presentations, and seasons.
+	 * Creates a deep copy with new IDs, optionally assigning to a different world/owner.
+	 */
+	cloneCalendar: async ({
+		calendarId,
+		worldId,
+		ownerId,
+		prisma,
+	}: {
+		calendarId: string
+		worldId?: string | null
+		ownerId?: string | null
+		prisma?: Prisma.TransactionClient
+	}) => {
+		const tx = getPrismaClient(prisma)
+		// 1. Fetch original calendar with all nested relations
+		const original = await tx.calendar.findUniqueOrThrow({
+			where: { id: calendarId },
+			include: {
+				units: {
+					include: {
+						children: true,
+					},
+					orderBy: { position: 'asc' },
+				},
+				presentations: {
+					include: {
+						units: true,
+					},
+				},
+				seasons: {
+					include: {
+						intervals: true,
+					},
+					orderBy: { position: 'asc' },
+				},
+			},
+		})
+
+		// 2. Create the new calendar (without relations)
+		const newCalendar = await tx.calendar.create({
+			data: {
+				...original,
+				id: undefined,
+				units: {},
+				seasons: {},
+				presentations: {},
+				worldId: worldId ?? null,
+				ownerId: ownerId ?? null,
+			},
+		})
+
+		// 3. Create all units, tracking old ID → new ID
+		const unitIdMap = new Map<string, string>()
+		for (const unit of original.units) {
+			const newUnit = await tx.calendarUnit.create({
+				data: {
+					...unit,
+					id: undefined,
+					children: {},
+					calendarId: newCalendar.id,
+				},
+			})
+			unitIdMap.set(unit.id, newUnit.id)
+		}
+
+		// 4. Create unit relations using the ID map
+		for (const unit of original.units) {
+			for (const childRel of unit.children) {
+				const newParentId = unitIdMap.get(unit.id)
+				const newChildId = unitIdMap.get(childRel.childUnitId)
+				if (newParentId && newChildId) {
+					await tx.calendarUnitRelation.create({
+						data: {
+							...childRel,
+							id: undefined,
+							parentUnitId: newParentId,
+							childUnitId: newChildId,
+						},
+					})
+				}
+			}
+		}
+
+		// 5. Create presentations and their units
+		for (const presentation of original.presentations) {
+			const newPresentation = await tx.calendarPresentation.create({
+				data: {
+					...presentation,
+					id: undefined,
+					units: {},
+					calendarId: newCalendar.id,
+				},
+			})
+
+			for (const presUnit of presentation.units) {
+				const newUnitId = unitIdMap.get(presUnit.unitId)
+				if (newUnitId) {
+					await tx.calendarPresentationUnit.create({
+						data: {
+							...presUnit,
+							id: undefined,
+							presentationId: newPresentation.id,
+							unitId: newUnitId,
+						},
+					})
+				}
+			}
+		}
+
+		// 6. Create seasons and their intervals
+		for (const season of original.seasons) {
+			const newSeason = await tx.calendarSeason.create({
+				data: {
+					...season,
+					id: undefined,
+					intervals: {},
+					calendarId: newCalendar.id,
+				},
+			})
+
+			for (const interval of season.intervals) {
+				await tx.calendarSeasonInterval.create({
+					data: {
+						id: undefined,
+						seasonId: newSeason.id,
+						leftIndex: interval.leftIndex,
+						rightIndex: interval.rightIndex,
+					},
+				})
+			}
+		}
+
+		// Touch the world if assigned
+		const world = newCalendar.worldId ? await makeTouchWorldQuery(newCalendar.worldId, tx) : null
+
+		return {
+			calendar: newCalendar,
+			world,
+		}
 	},
 }

@@ -54,6 +54,8 @@ export const mockWorldDetailsModel = (world: Partial<WorldDetails> = {}): WorldD
 	...mockWorldItemModel(),
 	events: [],
 	actors: [],
+	calendars: [],
+	originTime: 0,
 	isReadOnly: false,
 	...world,
 })

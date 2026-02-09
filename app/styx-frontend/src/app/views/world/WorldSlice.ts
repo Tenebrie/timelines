@@ -1,9 +1,9 @@
-import { Calendar } from '@api/types/calendarTypes'
 import {
 	ActorDetails,
 	MarkerType,
 	TimelineEntity,
 	WorldAccessMode,
+	WorldCalendar,
 	WorldCalendarType,
 	WorldEvent,
 	WorldEventDelta,
@@ -13,7 +13,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
 
-import { ingestActor, ingestEvent } from '../../utils/ingestEntity'
+import { ingestWorld } from '../../utils/ingestEntity'
 
 export const initialState = {
 	isLoaded: false as boolean,
@@ -24,7 +24,7 @@ export const initialState = {
 	events: [] as WorldEvent[],
 	actors: [] as ActorDetails[],
 	calendar: 'RIMWORLD' as WorldCalendarType,
-	calendars: [] as Calendar[],
+	calendars: [] as WorldCalendar[],
 	timeOrigin: 0,
 	createdAt: '0',
 	updatedAt: '0',
@@ -72,20 +72,14 @@ export const worldSlice = createSlice({
 		},
 		loadWorld: (state, { payload }: PayloadAction<{ world: GetWorldInfoApiResponse }>) => {
 			const world = payload.world
+
+			const ingestedWorld = ingestWorld(world)
+			Object.entries(ingestedWorld).forEach(([key, value]) => {
+				Object.assign(state, { [key]: value })
+			})
+
 			state.isLoaded = true
 			state.isUnauthorized = false
-			state.id = world.id
-			state.name = world.name
-			state.description = world.description
-			state.actors = [...world.actors].sort((a, b) => a.name.localeCompare(b.name)).map((a) => ingestActor(a))
-			state.events = world.events.map((e) => ingestEvent(e))
-			state.calendar = world.calendar
-			state.calendars = world.calendars
-			state.timeOrigin = Number(world.timeOrigin)
-			state.createdAt = world.createdAt
-			state.updatedAt = world.updatedAt
-			state.isReadOnly = world.isReadOnly
-			state.accessMode = world.accessMode
 		},
 		unloadWorld: (state) => {
 			state.isLoaded = false

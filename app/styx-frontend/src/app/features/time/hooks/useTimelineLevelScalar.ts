@@ -7,6 +7,7 @@ export const useTimelineLevelScalar = () => {
 	const spacingMod = 10 / LineSpacing
 	const getLevelScalar = useCallback(
 		(forLevel: ScaleLevel) => {
+			// return 1
 			switch (forLevel) {
 				case -1:
 					return 0.1 * spacingMod

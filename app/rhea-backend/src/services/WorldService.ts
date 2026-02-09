@@ -1,5 +1,7 @@
-import { User, World, WorldCalendarType } from '@prisma/client'
+import { User, World } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
+
+import { CalendarService } from './CalendarService.js'
 
 export const WorldService = {
 	findWorldByIdInternal: async (worldId: string) => {
@@ -14,35 +16,58 @@ export const WorldService = {
 		owner: User
 		name: string
 		description?: string
-		calendar?: WorldCalendarType
+		calendars?: string[]
 		timeOrigin?: number
 	}) => {
-		return getPrismaClient().world.create({
-			data: {
-				name: params.name,
-				description: params.description,
-				ownerId: params.owner.id,
-				calendar: params.calendar ?? 'EARTH',
-				timeOrigin: params.timeOrigin,
-			},
-			select: {
-				id: true,
-				name: true,
-			},
+		return await getPrismaClient().$transaction(async (prisma) => {
+			const world = await prisma.world.create({
+				data: {
+					name: params.name,
+					description: params.description,
+					ownerId: params.owner.id,
+					timeOrigin: params.timeOrigin,
+				},
+				select: {
+					id: true,
+					name: true,
+				},
+			})
+
+			if (params.calendars) {
+				await CalendarService.assignCalendarsToWorld({
+					worldId: world.id,
+					calendarsIds: params.calendars,
+					prisma,
+				})
+			}
+			return world
 		})
 	},
 
 	updateWorld: async (params: {
 		worldId: string
-		data: Pick<Partial<World>, 'name' | 'description' | 'calendar' | 'accessMode'> & { timeOrigin?: number }
+		data: Pick<Partial<World>, 'name' | 'description' | 'accessMode'> & {
+			timeOrigin?: number
+			calendars?: string[]
+		}
 	}) => {
-		return getPrismaClient().world.update({
-			where: {
-				id: params.worldId,
-			},
-			data: {
-				...params.data,
-			},
+		await getPrismaClient().$transaction(async (prisma) => {
+			if (params.data.calendars) {
+				await CalendarService.assignCalendarsToWorld({
+					worldId: params.worldId,
+					calendarsIds: params.data.calendars,
+					prisma,
+				})
+			}
+
+			const { calendars: _, ...data } = params.data
+
+			await prisma.world.update({
+				where: {
+					id: params.worldId,
+				},
+				data,
+			})
 		})
 	},
 
@@ -136,6 +161,11 @@ export const WorldService = {
 						presentations: {
 							include: {
 								units: true,
+							},
+						},
+						seasons: {
+							include: {
+								intervals: true,
 							},
 						},
 					},

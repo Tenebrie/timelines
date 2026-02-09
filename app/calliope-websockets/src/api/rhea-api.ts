@@ -1078,6 +1078,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/world/{worldId}/calendars": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Lists all calendars accessible for the current user in a given world. */
+        get: operations["listWorldCalendars"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/world/{worldId}/search/{query}": {
         parameters: {
             query?: never;
@@ -4323,13 +4340,13 @@ export interface operations {
                 "application/json": {
                     name: string;
                     description?: string;
-                    calendar?: "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                    calendars?: string[];
                     timeOrigin?: number;
                 };
                 "application/x-www-form-urlencoded": {
                     name: string;
                     description?: string;
-                    calendar?: "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                    calendars?: string[];
                     timeOrigin?: number;
                 };
             };
@@ -4617,13 +4634,13 @@ export interface operations {
                 "application/json": {
                     name?: string;
                     description?: string;
-                    calendar?: "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                    calendars?: string[];
                     timeOrigin?: number;
                 };
                 "application/x-www-form-urlencoded": {
                     name?: string;
                     description?: string;
-                    calendar?: "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                    calendars?: string[];
                     timeOrigin?: number;
                 };
             };
@@ -4810,6 +4827,41 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    listWorldCalendars: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        name: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        ownerId?: null | string;
+                        position: number;
+                        /** Format: bigint */
+                        originTime: string;
+                        dateFormat?: null | string;
+                        worldId?: null | string;
+                    }[];
+                };
             };
         };
     };
@@ -5025,30 +5077,30 @@ export interface operations {
                 content: {
                     "application/json": {
                         children: {
+                            name: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            name: string;
+                            position: number;
                             worldId: string;
                             icon: string;
                             color: string;
-                            position: number;
                             contentRich: string;
                             contentYjs?: null | string;
                             parentId?: null | string;
                         }[];
+                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
+                        position: number;
                         worldId: string;
                         icon: string;
                         color: string;
-                        position: number;
                         contentRich: string;
                         parentId?: null | string;
                     }[];
@@ -5084,30 +5136,30 @@ export interface operations {
                 content: {
                     "application/json": {
                         children: {
+                            name: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            name: string;
+                            position: number;
                             worldId: string;
                             icon: string;
                             color: string;
-                            position: number;
                             contentRich: string;
                             contentYjs?: null | string;
                             parentId?: null | string;
                         }[];
+                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
+                        position: number;
                         worldId: string;
                         icon: string;
                         color: string;
-                        position: number;
                         contentRich: string;
                         parentId?: null | string;
                     };
@@ -5171,30 +5223,30 @@ export interface operations {
                 content: {
                     "application/json": {
                         children: {
+                            name: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            name: string;
+                            position: number;
                             worldId: string;
                             icon: string;
                             color: string;
-                            position: number;
                             contentRich: string;
                             contentYjs?: null | string;
                             parentId?: null | string;
                         }[];
+                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
+                        position: number;
                         worldId: string;
                         icon: string;
                         color: string;
-                        position: number;
                         contentRich: string;
                         parentId?: null | string;
                     };

@@ -1,19 +1,12 @@
-import { WorldCalendarType } from '@api/types/worldTypes'
 import { useCreateWorldMutation } from '@api/worldListApi'
 import Add from '@mui/icons-material/Add'
 import Button from '@mui/material/Button'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
-import { TimestampField } from '@/app/features/time/components/TimestampField'
-import { useWorldCalendar } from '@/app/features/time/hooks/useWorldCalendar'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { isEntityNameValid } from '@/app/utils/isEntityNameValid'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
@@ -21,14 +14,16 @@ import { worldSlice } from '@/app/views/world/WorldSlice'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
+import { SettingsCalendarSelector } from '../../world/views/settings/components/SettingsCalendarSelector'
+
 export const WorldWizardModal = () => {
 	const [name, setName] = useState('')
 	const [description, setDescription] = useState('')
-	const [calendar, setCalendar] = useState<WorldCalendarType>('EARTH')
+	const [calendars, setCalendars] = useState<string[]>([])
 	const [timeOrigin, setTimeOrigin] = useState<number>(0)
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
 
-	const { listAllCalendars } = useWorldCalendar()
+	// const { listAllCalendars } = useWorldCalendar()
 
 	const { isOpen, close } = useModal('worldWizardModal')
 	const navigate = useStableNavigate()
@@ -47,7 +42,7 @@ export const WorldWizardModal = () => {
 		onCleanup: () => {
 			setName('')
 			setDescription('')
-			setCalendar('EARTH')
+			setCalendars([])
 			setTimeOrigin(0)
 		},
 	})
@@ -68,7 +63,7 @@ export const WorldWizardModal = () => {
 				body: {
 					name,
 					description,
-					calendar,
+					calendars,
 					timeOrigin,
 				},
 			}),
@@ -114,30 +109,13 @@ export const WorldWizardModal = () => {
 					value={description}
 					onChange={(event) => setDescription(event.target.value)}
 				/>
-				<FormControl fullWidth>
-					<InputLabel id="world-calendar-label">Calendar</InputLabel>
-					<Select
-						value={calendar}
-						label="Calendar"
-						labelId="world-calendar-label"
-						onChange={(event) => {
-							setTimeOrigin(0)
-							setCalendar(event.target.value as WorldCalendarType)
-						}}
-					>
-						{listAllCalendars().map((option) => (
-							<MenuItem key={option.id} value={option.id}>
-								{option.displayName}
-							</MenuItem>
-						))}
-					</Select>
-				</FormControl>
-				<TimestampField
+				<SettingsCalendarSelector value={calendars[0]} onChange={(value) => setCalendars([value])} />
+				{/* <TimestampField
 					timestamp={timeOrigin}
 					onChange={setTimeOrigin}
 					label="Time Origin"
 					calendar={calendar}
-				/>
+				/> */}
 				<ModalFooter>
 					<Tooltip title={shortcutLabel} arrow placement="top">
 						<Button

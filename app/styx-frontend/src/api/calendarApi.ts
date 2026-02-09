@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['calendar'] as const
+export const addTagTypes = ['calendar', 'worldDetails'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -88,6 +88,10 @@ const injectedRtkApi = api
 					method: 'DELETE',
 				}),
 				invalidatesTags: ['calendar'],
+			}),
+			listWorldCalendars: build.query<ListWorldCalendarsApiResponse, ListWorldCalendarsApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/calendars` }),
+				providesTags: ['calendar', 'worldDetails'],
 			}),
 		}),
 		overrideExisting: false,
@@ -523,6 +527,21 @@ export type DeleteCalendarPresentationApiArg = {
 	/** Any string value */
 	presentationId: string
 }
+export type ListWorldCalendarsApiResponse = /** status 200  */ {
+	name: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	ownerId?: null | string
+	position: number
+	originTime: string
+	dateFormat?: null | string
+	worldId?: null | string
+}[]
+export type ListWorldCalendarsApiArg = {
+	/** Any string value */
+	worldId: string
+}
 export const {
 	useListCalendarsQuery,
 	useLazyListCalendarsQuery,
@@ -539,4 +558,6 @@ export const {
 	useCreateCalendarPresentationMutation,
 	useUpdateCalendarPresentationMutation,
 	useDeleteCalendarPresentationMutation,
+	useListWorldCalendarsQuery,
+	useLazyListWorldCalendarsQuery,
 } = injectedRtkApi
