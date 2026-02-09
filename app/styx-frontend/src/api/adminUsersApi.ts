@@ -68,6 +68,7 @@ export type AdminSetUserLevelApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	deletedAt?: null | string
+	deletionScheduledAt?: null | string
 	email: string
 	username: string
 	password: string
@@ -87,6 +88,7 @@ export type AdminDeleteUserApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	deletedAt?: null | string
+	deletionScheduledAt?: null | string
 	email: string
 	username: string
 	password: string
@@ -103,6 +105,7 @@ export type AdminSetUserPasswordApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	deletedAt?: null | string
+	deletionScheduledAt?: null | string
 	email: string
 	username: string
 	password: string

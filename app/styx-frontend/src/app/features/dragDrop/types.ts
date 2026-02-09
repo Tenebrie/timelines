@@ -1,3 +1,4 @@
+import { CalendarDraftUnit } from '@api/types/calendarTypes'
 import { ActorDetails, MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import { WikiArticle } from '@api/types/worldWikiTypes'
 
@@ -15,6 +16,9 @@ export type DraggableParams = {
 	}
 	['newMindmapNode']: {
 		actor: ActorDetails
+	}
+	['calendarUnit']: {
+		unit: CalendarDraftUnit
 	}
 }
 

@@ -47,27 +47,27 @@ const injectedRtkApi = api
 export { injectedRtkApi as worldWikiApi }
 export type GetArticlesApiResponse = /** status 200  */ {
 	children: {
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		position: number
 		worldId: string
 		icon: string
 		color: string
 		contentRich: string
 		contentYjs?: null | string
-		position: number
 		parentId?: null | string
 	}[]
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
+	position: number
 	worldId: string
 	icon: string
 	color: string
 	contentRich: string
-	position: number
 	parentId?: null | string
 }[]
 export type GetArticlesApiArg = {
@@ -76,27 +76,27 @@ export type GetArticlesApiArg = {
 }
 export type CreateArticleApiResponse = /** status 200  */ {
 	children: {
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		position: number
 		worldId: string
 		icon: string
 		color: string
 		contentRich: string
 		contentYjs?: null | string
-		position: number
 		parentId?: null | string
 	}[]
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
+	position: number
 	worldId: string
 	icon: string
 	color: string
 	contentRich: string
-	position: number
 	parentId?: null | string
 }
 export type CreateArticleApiArg = {

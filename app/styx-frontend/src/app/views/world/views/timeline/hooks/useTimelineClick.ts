@@ -21,7 +21,7 @@ export const useTimelineClick = ({
 	onClick,
 	onDoubleClick,
 }: Props) => {
-	const { parseTime, pickerToTimestamp } = useWorldTime()
+	const { parseTime } = useWorldTime()
 
 	const [selectedTime, setSelectedTime] = useState<number | null>(null)
 	const [lastClickPos, setLastClickPos] = useState<number | null>(null)
@@ -55,21 +55,21 @@ export const useTimelineClick = ({
 			}
 
 			const clickOffset = Math.round((point.x + 40 - scrollRef.current) / LineSpacing) * LineSpacing
-			let newSelectedTime = scaledTimeToRealTime(clickOffset)
+			const newSelectedTime = scaledTimeToRealTime(clickOffset)
 			// For scaleLevel = 4, round to the nearest month
-			if (scaleLevel === 4) {
-				const t = parseTime(newSelectedTime)
-				if (t.day >= 15) {
-					t.monthIndex += 1
-				}
-				newSelectedTime = pickerToTimestamp({
-					day: 0,
-					hour: 0,
-					minute: 0,
-					monthIndex: t.monthIndex,
-					year: t.year,
-				})
-			}
+			// if (scaleLevel === 4) {
+			// 	const t = parseTime(newSelectedTime)
+			// 	if (t.day >= 15) {
+			// 		t.monthIndex += 1
+			// 	}
+			// 	newSelectedTime = pickerToTimestamp({
+			// 		day: 0,
+			// 		hour: 0,
+			// 		minute: 0,
+			// 		monthIndex: t.monthIndex,
+			// 		year: t.year,
+			// 	})
+			// }
 			setSelectedTime(newSelectedTime)
 
 			const currentTime = Date.now()
@@ -86,18 +86,7 @@ export const useTimelineClick = ({
 				onDoubleClick(newSelectedTime, trackId)
 			}
 		},
-		[
-			containerRef,
-			lastClickPos,
-			lastClickTime,
-			onClick,
-			onDoubleClick,
-			parseTime,
-			pickerToTimestamp,
-			scaleLevel,
-			scaledTimeToRealTime,
-			scrollRef,
-		],
+		[containerRef, lastClickPos, lastClickTime, onClick, onDoubleClick, scaledTimeToRealTime, scrollRef],
 	)
 
 	return {

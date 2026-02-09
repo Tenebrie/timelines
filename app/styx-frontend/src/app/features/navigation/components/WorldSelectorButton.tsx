@@ -8,9 +8,9 @@ import { memo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { TrunkatedSpan } from '@/app/components/TrunkatedTypography'
-import { useWorldListData } from '@/app/views/home/hooks/useWorldListData'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
+import { useWorldListData } from '@/app/views/worldManagement/hooks/useWorldListData'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 export const WorldSelectorButton = memo(WorldSelectorButtonComponent)

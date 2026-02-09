@@ -71,7 +71,7 @@ test.describe('World management', () => {
 	})
 
 	test('create world -> delete world flow', async ({ page }) => {
-		await page.goto(makeUrl('/'))
+		await page.goto(makeUrl('/world'))
 
 		await expect(page.getByText('Nothing has been created yet!')).toBeVisible()
 		await expect(page.getByText('Create new world...')).toBeVisible()
@@ -90,13 +90,15 @@ test.describe('World management', () => {
 		// await expect(page.getByText('World description')).toBeVisible()
 
 		// Navigate to settings
-		await page.getByText('Home').click()
+		await page.getByLabel('Home navigation menu').click()
+		await page.getByLabel('Navigate to worlds').click()
 		await page.getByLabel('Edit world button').click()
 		await page.waitForURL(/\/world\/[a-f0-9-]+\/settings/)
 		await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
 
 		// Delete world
-		await page.getByText('Home').click()
+		await page.getByLabel('Home navigation menu').click()
+		await page.getByLabel('Navigate to worlds').click()
 		await page.getByLabel('Delete world button').click()
 		await expect(page.getByText('Delete world', { exact: true })).toBeVisible()
 

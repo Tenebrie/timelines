@@ -4,6 +4,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { ScaleLevel } from '../../schema/ScaleLevel'
+import { CalendarUnitEditorTab } from '../time/calendar/unitEditor/CalendarUnitEditor'
 import { loadPreferences, PreferencesKey } from './utils/loadPreferences'
 
 const initialState = loadPreferences() as Required<ReturnType<typeof loadPreferences>>
@@ -33,12 +34,29 @@ export const preferencesSlice = createSlice({
 	reducers: {
 		loadFromLocalStorage: (state) => {
 			const value = loadPreferences()
+			state['calendarEditor'] = value['calendarEditor']
 			state['colorMode'] = value['colorMode']
 			state['iconSets'] = value['iconSets']
 			state['outliner'] = value['outliner']
 			state['overview'] = value['overview']
 			state['timeline'] = value['timeline']
 			state['wiki'] = value['wiki']
+		},
+
+		/* Calendar Editor */
+		setExpandedCalendarUnitSections: (state, { payload }: PayloadAction<CalendarUnitEditorTab[]>) => {
+			state.calendarEditor.expandedUnitSections = payload
+			saveToLocalStorage(state)
+		},
+		toggleExpandedCalendarUnitSection: (state, { payload }: PayloadAction<CalendarUnitEditorTab>) => {
+			if (state.calendarEditor.expandedUnitSections.includes(payload)) {
+				state.calendarEditor.expandedUnitSections = state.calendarEditor.expandedUnitSections.filter(
+					(tab) => tab !== payload,
+				)
+			} else {
+				state.calendarEditor.expandedUnitSections = [...state.calendarEditor.expandedUnitSections, payload]
+			}
+			saveToLocalStorage(state)
 		},
 
 		/* Color Mode */

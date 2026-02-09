@@ -7,7 +7,7 @@ import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import { FileRouteTypes } from '@/routeTree.gen'
 
 type Props = {
-	route: FileRouteTypes['to']
+	route: FileRouteTypes['fullPaths']
 	icon: ReactNode
 	label: string
 	disabled?: boolean
@@ -18,7 +18,7 @@ export function NavigatorButton({ route, icon, label, disabled }: Props) {
 	const isMatching = useCheckRouteMatch(route)
 
 	const onNavigate = useEvent(() => {
-		navigate({ to: route })
+		navigate({ to: route as FileRouteTypes['to'] })
 	})
 
 	return (

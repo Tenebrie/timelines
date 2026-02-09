@@ -1,4 +1,5 @@
 import { announcementListApi } from '@api/announcementListApi'
+import { calendarApi } from '@api/calendarApi'
 import { otherApi } from '@api/otherApi'
 import { GetWorldInfoApiResponse, worldDetailsApi } from '@api/worldDetailsApi'
 import { worldEventTracksApi } from '@api/worldEventTracksApi'
@@ -61,6 +62,9 @@ export const useLiveMessageHandlers = () => {
 		[CalliopeToClientMessageType.ACTOR_UPDATED]: (data) => {
 			const actor = ingestActor(JSON.parse(data.actor) as GetWorldInfoApiResponse['actors'][number])
 			dispatch(updateActor(actor))
+		},
+		[CalliopeToClientMessageType.CALENDAR_UPDATED]: () => {
+			dispatch(calendarApi.util.invalidateTags(['calendar']))
 		},
 		[CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED]: (data) => {
 			const article = JSON.parse(data.article) as WikiArticle

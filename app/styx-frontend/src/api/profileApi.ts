@@ -40,6 +40,7 @@ export type UpdateProfileApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		deletedAt?: null | string
+		deletionScheduledAt?: null | string
 		email: string
 		username: string
 		password: string
@@ -60,6 +61,7 @@ export type PostAvatarApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		deletedAt?: null | string
+		deletionScheduledAt?: null | string
 		email: string
 		username: string
 		password: string

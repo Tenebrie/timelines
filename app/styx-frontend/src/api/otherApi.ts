@@ -12,6 +12,12 @@ const injectedRtkApi = api
 			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
 				query: () => ({ url: `/api/constants/world-access-modes` }),
 			}),
+			listCalendarUnitFormatModes: build.query<
+				ListCalendarUnitFormatModesApiResponse,
+				ListCalendarUnitFormatModesApiArg
+			>({
+				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
+			}),
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
 			}),
@@ -114,6 +120,14 @@ export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premiu
 export type AdminGetUserLevelsApiArg = void
 export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
 export type ListWorldAccessModesApiArg = void
+export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
+	| 'Name'
+	| 'NameOneIndexed'
+	| 'Numeric'
+	| 'NumericOneIndexed'
+	| 'Hidden'
+)[]
+export type ListCalendarUnitFormatModesApiArg = void
 export type GetHealthApiResponse = unknown
 export type GetHealthApiArg = void
 export type GetSupportedImageFormatsApiResponse = /** status 200  */ {
@@ -238,8 +252,8 @@ export type GetWorldColorsApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	worldId: string
-	value: string
 	label?: null | string
+	value: string
 }[]
 export type GetWorldColorsApiArg = {
 	/** Any string value with at least one character */
@@ -250,8 +264,8 @@ export type CreateWorldColorApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	worldId: string
-	value: string
 	label?: null | string
+	value: string
 }
 export type CreateWorldColorApiArg = {
 	/** Any string value with at least one character */
@@ -270,27 +284,27 @@ export type DeleteWorldColorApiArg = {
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		position: number
 		worldId: string
 		icon: string
 		color: string
 		contentRich: string
 		contentYjs?: null | string
-		position: number
 		parentId?: null | string
 	}[]
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
+	position: number
 	worldId: string
 	icon: string
 	color: string
 	contentRich: string
-	position: number
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {
@@ -320,6 +334,8 @@ export const {
 	useLazyAdminGetUserLevelsQuery,
 	useListWorldAccessModesQuery,
 	useLazyListWorldAccessModesQuery,
+	useListCalendarUnitFormatModesQuery,
+	useLazyListCalendarUnitFormatModesQuery,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,
 	useGetSupportedImageFormatsQuery,

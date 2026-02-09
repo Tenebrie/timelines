@@ -54,6 +54,13 @@ export const ModelName = {
   Actor: 'Actor',
   UserAnnouncement: 'UserAnnouncement',
   Asset: 'Asset',
+  Calendar: 'Calendar',
+  CalendarUnit: 'CalendarUnit',
+  CalendarUnitRelation: 'CalendarUnitRelation',
+  CalendarPresentation: 'CalendarPresentation',
+  CalendarPresentationUnit: 'CalendarPresentationUnit',
+  CalendarSeason: 'CalendarSeason',
+  CalendarSeasonInterval: 'CalendarSeasonInterval',
   SavedColor: 'SavedColor',
   Flags: 'Flags',
   UserFavoriteIconSet: 'UserFavoriteIconSet',
@@ -131,6 +138,105 @@ export const AssetScalarFieldEnum = {
 } as const
 
 export type AssetScalarFieldEnum = (typeof AssetScalarFieldEnum)[keyof typeof AssetScalarFieldEnum]
+
+
+export const CalendarScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  position: 'position',
+  originTime: 'originTime',
+  name: 'name',
+  dateFormat: 'dateFormat',
+  worldId: 'worldId',
+  ownerId: 'ownerId'
+} as const
+
+export type CalendarScalarFieldEnum = (typeof CalendarScalarFieldEnum)[keyof typeof CalendarScalarFieldEnum]
+
+
+export const CalendarUnitScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  position: 'position',
+  name: 'name',
+  displayName: 'displayName',
+  displayNameShort: 'displayNameShort',
+  displayNamePlural: 'displayNamePlural',
+  formatMode: 'formatMode',
+  formatShorthand: 'formatShorthand',
+  negativeFormat: 'negativeFormat',
+  duration: 'duration',
+  treeDepth: 'treeDepth',
+  calendarId: 'calendarId'
+} as const
+
+export type CalendarUnitScalarFieldEnum = (typeof CalendarUnitScalarFieldEnum)[keyof typeof CalendarUnitScalarFieldEnum]
+
+
+export const CalendarUnitRelationScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  label: 'label',
+  repeats: 'repeats',
+  position: 'position',
+  parentUnitId: 'parentUnitId',
+  childUnitId: 'childUnitId'
+} as const
+
+export type CalendarUnitRelationScalarFieldEnum = (typeof CalendarUnitRelationScalarFieldEnum)[keyof typeof CalendarUnitRelationScalarFieldEnum]
+
+
+export const CalendarPresentationScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  scaleFactor: 'scaleFactor',
+  calendarId: 'calendarId'
+} as const
+
+export type CalendarPresentationScalarFieldEnum = (typeof CalendarPresentationScalarFieldEnum)[keyof typeof CalendarPresentationScalarFieldEnum]
+
+
+export const CalendarPresentationUnitScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  formatString: 'formatString',
+  unitId: 'unitId',
+  presentationId: 'presentationId'
+} as const
+
+export type CalendarPresentationUnitScalarFieldEnum = (typeof CalendarPresentationUnitScalarFieldEnum)[keyof typeof CalendarPresentationUnitScalarFieldEnum]
+
+
+export const CalendarSeasonScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  position: 'position',
+  name: 'name',
+  formatShorthand: 'formatShorthand',
+  calendarId: 'calendarId'
+} as const
+
+export type CalendarSeasonScalarFieldEnum = (typeof CalendarSeasonScalarFieldEnum)[keyof typeof CalendarSeasonScalarFieldEnum]
+
+
+export const CalendarSeasonIntervalScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  leftIndex: 'leftIndex',
+  rightIndex: 'rightIndex',
+  seasonId: 'seasonId'
+} as const
+
+export type CalendarSeasonIntervalScalarFieldEnum = (typeof CalendarSeasonIntervalScalarFieldEnum)[keyof typeof CalendarSeasonIntervalScalarFieldEnum]
 
 
 export const SavedColorScalarFieldEnum = {

@@ -9,7 +9,7 @@ import { TimelineSmallestPips } from './styles'
 import { ANCHOR_RESET_PERIOD } from './TimelineAnchorLine'
 
 type Props = {
-	children: ReactNode | ReactNode[]
+	children?: ReactNode | ReactNode[]
 }
 
 const RESET_PERIOD = ANCHOR_RESET_PERIOD

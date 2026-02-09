@@ -43,8 +43,8 @@ export const options: Options = {
 }
 
 export function setup(): void {
-	console.log(`Running WebSocket test against: ${WS_URL}`)
-	console.log('Duration: approximately 5 minutes')
+	console.debug(`Running WebSocket test against: ${WS_URL}`)
+	console.debug('Duration: approximately 5 minutes')
 }
 
 export default function (): void {
@@ -140,6 +140,6 @@ export default function (): void {
 }
 
 export function teardown(): void {
-	console.log('WebSocket test complete')
-	console.log('Check ws_connections, ws_connections_failed, and ws_connect_time metrics')
+	console.debug('WebSocket test complete')
+	console.debug('Check ws_connections, ws_connections_failed, and ws_connect_time metrics')
 }
