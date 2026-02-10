@@ -7,6 +7,7 @@
 		"app/styx-frontend",
 		"app/rhea-backend",
 		"app/calliope-websockets",
+		"app/orpheus-mcp",
 		"app/ts-shared",
 		"test/e2e",
 		"test/load"

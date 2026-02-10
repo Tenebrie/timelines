@@ -23,6 +23,42 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['actorList'],
 			}),
+			getActorContentPage: build.query<GetActorContentPageApiResponse, GetActorContentPageApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content/pages/${queryArg.pageId}`,
+					params: {
+						acceptDeltas: queryArg.acceptDeltas,
+					},
+				}),
+				providesTags: ['actorList'],
+			}),
+			putActorContentPage: build.mutation<PutActorContentPageApiResponse, PutActorContentPageApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content/pages/${queryArg.pageId}`,
+					method: 'PUT',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['actorList'],
+			}),
+			deleteActorContentPage: build.mutation<DeleteActorContentPageApiResponse, DeleteActorContentPageApiArg>(
+				{
+					query: (queryArg) => ({
+						url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content/pages/${queryArg.pageId}`,
+						method: 'DELETE',
+					}),
+					invalidatesTags: ['actorList'],
+				},
+			),
+			createActorContentPage: build.mutation<CreateActorContentPageApiResponse, CreateActorContentPageApiArg>(
+				{
+					query: (queryArg) => ({
+						url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/content/pages`,
+						method: 'POST',
+						body: queryArg.body,
+					}),
+					invalidatesTags: ['actorList'],
+				},
+			),
 			createActor: build.mutation<CreateActorApiResponse, CreateActorApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/actors`,
@@ -74,8 +110,71 @@ export type PutActorContentApiArg = {
 		contentDeltas?: string
 	}
 }
+export type GetActorContentPageApiResponse = /** status 200  */ {
+	hasDeltas: boolean
+	contentHtml?: string
+	contentDeltas?: null | string
+}
+export type GetActorContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	actorId: string
+	/** Any string value */
+	pageId: string
+	/** Any boolean value */
+	acceptDeltas?: boolean
+}
+export type PutActorContentPageApiResponse = unknown
+export type PutActorContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	actorId: string
+	/** Any string value */
+	pageId: string
+	body: {
+		content: string
+		contentDeltas?: string
+	}
+}
+export type DeleteActorContentPageApiResponse = unknown
+export type DeleteActorContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	actorId: string
+	/** Any string value */
+	pageId: string
+}
+export type CreateActorContentPageApiResponse = /** status 200  */ {
+	description: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	descriptionRich: string
+	descriptionYjs?: null | string
+	parentActorId?: null | string
+	parentEventId?: null | string
+	parentArticleId?: null | string
+}
+export type CreateActorContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	actorId: string
+	body: {
+		name: string
+	}
+}
 export type CreateActorApiResponse = /** status 200  */ {
+	pages: {
+		id: string
+		name: string
+	}[]
 	mentions: {
+		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -90,6 +189,7 @@ export type CreateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	mentionedIn: {
+		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -126,7 +226,12 @@ export type CreateActorApiArg = {
 	}
 }
 export type UpdateActorApiResponse = /** status 200  */ {
+	pages: {
+		id: string
+		name: string
+	}[]
 	mentions: {
+		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -141,6 +246,7 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	mentionedIn: {
+		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -200,6 +306,11 @@ export const {
 	useGetActorContentQuery,
 	useLazyGetActorContentQuery,
 	usePutActorContentMutation,
+	useGetActorContentPageQuery,
+	useLazyGetActorContentPageQuery,
+	usePutActorContentPageMutation,
+	useDeleteActorContentPageMutation,
+	useCreateActorContentPageMutation,
 	useCreateActorMutation,
 	useUpdateActorMutation,
 	useDeleteActorMutation,

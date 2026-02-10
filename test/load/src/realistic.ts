@@ -58,9 +58,9 @@ let user: TestUser | null = null
 let userWorld: World | null = null
 
 export function setup(): void {
-	console.log(`🧑 Realistic user session test against: ${BASE_URL}`)
-	console.log('Each VU simulates one real user with natural behavior')
-	console.log('Duration: approximately 8.5 minutes')
+	console.info(`🧑 Realistic user session test against: ${BASE_URL}`)
+	console.info('Each VU simulates one real user with natural behavior')
+	console.info('Duration: approximately 8.5 minutes')
 }
 
 /**
@@ -135,7 +135,7 @@ export default function (): void {
  * Note: Won't run if test is interrupted (Ctrl+C)
  */
 export function teardown(): void {
-	console.log('Cleaning up test users...')
-	console.log('Note: If test was interrupted, orphaned users may remain.')
-	console.log('Consider a backend cleanup job for loadtest-* users.')
+	console.info('Cleaning up test users...')
+	console.info('Note: If test was interrupted, orphaned users may remain.')
+	console.info('Consider a backend cleanup job for loadtest-* users.')
 }

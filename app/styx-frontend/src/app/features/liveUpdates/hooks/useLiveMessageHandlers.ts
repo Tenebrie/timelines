@@ -72,6 +72,9 @@ export const useLiveMessageHandlers = () => {
 		[CalliopeToClientMessageType.MINDMAP_NODE_UPDATED]: (_) => {
 			dispatch(otherApi.util.invalidateTags(['mindmap']))
 		},
+		[CalliopeToClientMessageType.TAG_UPDATED]: () => {
+			dispatch(otherApi.util.invalidateTags(['tagList']))
+		},
 	}
 
 	const currentHandlersRef = useRef(messageHandlers)

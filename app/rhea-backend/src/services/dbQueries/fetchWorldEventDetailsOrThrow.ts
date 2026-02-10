@@ -12,6 +12,12 @@ export const fetchWorldEventDetailsOrThrow = async (eventId: string, prisma?: Pr
 			mentions: true,
 			mentionedIn: true,
 			deltaStates: true,
+			pages: {
+				select: {
+					id: true,
+					name: true,
+				},
+			},
 		},
 		omit: {
 			descriptionYjs: true,

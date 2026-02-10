@@ -1,4 +1,5 @@
 import { ActorService } from './ActorService.js'
+import { TagService } from './TagService.js'
 import { WikiService } from './WikiService.js'
 import { WorldEventService } from './WorldEventService.js'
 
@@ -9,7 +10,7 @@ export const EntityResolverService = {
 		entityId,
 	}: {
 		worldId: string
-		entityType: 'actor' | 'event' | 'article'
+		entityType: 'actor' | 'event' | 'article' | 'tag'
 		entityId: string
 	}) => {
 		if (entityType === 'actor') {
@@ -21,6 +22,9 @@ export const EntityResolverService = {
 		} else if (entityType === 'article') {
 			const article = await WikiService.findArticleById({ id: entityId, worldId })
 			return article?.name ?? ''
+		} else if (entityType === 'tag') {
+			const tag = await TagService.findTag({ worldId, tagId: entityId })
+			return tag?.name ?? ''
 		}
 		return ''
 	},

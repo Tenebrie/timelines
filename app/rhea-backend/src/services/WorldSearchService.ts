@@ -17,6 +17,14 @@ export const WorldSearchService = {
 							},
 						},
 					},
+					{
+						pages: {
+							some: {
+								name: { contains: query, mode: 'insensitive' },
+								description: { contains: query, mode: 'insensitive' },
+							},
+						},
+					},
 				],
 			},
 			orderBy: {
@@ -25,6 +33,12 @@ export const WorldSearchService = {
 			include: {
 				mentions: true,
 				mentionedIn: true,
+				pages: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
 				deltaStates: {
 					orderBy: {
 						timestamp: 'asc',
@@ -42,6 +56,68 @@ export const WorldSearchService = {
 				OR: [
 					{ name: { contains: query, mode: 'insensitive' } },
 					{ title: { contains: query, mode: 'insensitive' } },
+					{ description: { contains: query, mode: 'insensitive' } },
+					{
+						pages: {
+							some: {
+								name: { contains: query, mode: 'insensitive' },
+								description: { contains: query, mode: 'insensitive' },
+							},
+						},
+					},
+				],
+			},
+			include: {
+				mentions: true,
+				mentionedIn: true,
+				pages: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
+			},
+		})
+	},
+
+	async findArticles(worldId: string, query: string) {
+		const prisma = getPrismaClient()
+		return prisma.wikiArticle.findMany({
+			where: {
+				worldId,
+				OR: [
+					{ name: { contains: query, mode: 'insensitive' } },
+					{ contentRich: { contains: query, mode: 'insensitive' } },
+					{
+						pages: {
+							some: {
+								name: { contains: query, mode: 'insensitive' },
+								description: { contains: query, mode: 'insensitive' },
+							},
+						},
+					},
+				],
+			},
+			include: {
+				mentions: true,
+				mentionedIn: true,
+				pages: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
+			},
+		})
+	},
+
+	async findTags(worldId: string, query: string) {
+		const prisma = getPrismaClient()
+		return prisma.tag.findMany({
+			where: {
+				worldId,
+				OR: [
+					{ name: { contains: query, mode: 'insensitive' } },
 					{ description: { contains: query, mode: 'insensitive' } },
 				],
 			},

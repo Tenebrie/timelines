@@ -1,0 +1,14 @@
+model Tag {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
+    name        String
+    description String @default("")
+
+    mentions    Mention[] @relation("TagMentionSource")
+    mentionedIn Mention[] @relation("TagMentionTarget")
+
+    world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+    worldId String
+}

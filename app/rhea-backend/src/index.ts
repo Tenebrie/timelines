@@ -16,6 +16,7 @@ import { ImageConversionRouter } from './routers/ImageConversionRouter.js'
 import { ClientAuthRouter } from './routers/internal/ClientAuthRouter.js'
 import { MindmapRouter } from './routers/MindmapRouter.js'
 import { ProfileRouter } from './routers/ProfileRouter.js'
+import { TagRouter } from './routers/TagRouter.js'
 import { WikiArticleContentRouter } from './routers/WikiArticleContentRouter.js'
 import { WorldColorRouter } from './routers/WorldColorRouter.js'
 import { WorldEventContentRouter } from './routers/WorldEventContentRouter.js'
@@ -80,6 +81,8 @@ app
 	.use(MindmapRouter.allowedMethods())
 	.use(ProfileRouter.routes())
 	.use(ProfileRouter.allowedMethods())
+	.use(TagRouter.routes())
+	.use(TagRouter.allowedMethods())
 	.use(WikiArticleContentRouter.routes())
 	.use(WikiArticleContentRouter.allowedMethods())
 	.use(WorldEventContentRouter.routes())

@@ -29,6 +29,7 @@ export type TagMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   name: string | null
+  description: string | null
   worldId: string | null
 }
 
@@ -37,6 +38,7 @@ export type TagMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   name: string | null
+  description: string | null
   worldId: string | null
 }
 
@@ -45,6 +47,7 @@ export type TagCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   name: number
+  description: number
   worldId: number
   _all: number
 }
@@ -55,6 +58,7 @@ export type TagMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   name?: true
+  description?: true
   worldId?: true
 }
 
@@ -63,6 +67,7 @@ export type TagMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   name?: true
+  description?: true
   worldId?: true
 }
 
@@ -71,6 +76,7 @@ export type TagCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   name?: true
+  description?: true
   worldId?: true
   _all?: true
 }
@@ -152,6 +158,7 @@ export type TagGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   name: string
+  description: string
   worldId: string
   _count: TagCountAggregateOutputType | null
   _min: TagMinAggregateOutputType | null
@@ -181,6 +188,7 @@ export type TagWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Tag"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Tag"> | Date | string
   name?: Prisma.StringFilter<"Tag"> | string
+  description?: Prisma.StringFilter<"Tag"> | string
   worldId?: Prisma.StringFilter<"Tag"> | string
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
@@ -192,6 +200,7 @@ export type TagOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   mentions?: Prisma.MentionOrderByRelationAggregateInput
   mentionedIn?: Prisma.MentionOrderByRelationAggregateInput
@@ -206,6 +215,7 @@ export type TagWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Tag"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Tag"> | Date | string
   name?: Prisma.StringFilter<"Tag"> | string
+  description?: Prisma.StringFilter<"Tag"> | string
   worldId?: Prisma.StringFilter<"Tag"> | string
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
@@ -217,6 +227,7 @@ export type TagOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   _count?: Prisma.TagCountOrderByAggregateInput
   _max?: Prisma.TagMaxOrderByAggregateInput
@@ -231,6 +242,7 @@ export type TagScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Tag"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Tag"> | Date | string
   name?: Prisma.StringWithAggregatesFilter<"Tag"> | string
+  description?: Prisma.StringWithAggregatesFilter<"Tag"> | string
   worldId?: Prisma.StringWithAggregatesFilter<"Tag"> | string
 }
 
@@ -239,6 +251,7 @@ export type TagCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
+  description?: string
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceTagInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetTagInput
   world: Prisma.WorldCreateNestedOneWithoutTagsInput
@@ -249,6 +262,7 @@ export type TagUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
+  description?: string
   worldId: string
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceTagInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetTagInput
@@ -259,6 +273,7 @@ export type TagUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUpdateManyWithoutSourceTagNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetTagNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutTagsNestedInput
@@ -269,6 +284,7 @@ export type TagUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceTagNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetTagNestedInput
@@ -279,6 +295,7 @@ export type TagCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
+  description?: string
   worldId: string
 }
 
@@ -287,6 +304,7 @@ export type TagUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type TagUncheckedUpdateManyInput = {
@@ -294,6 +312,7 @@ export type TagUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -307,6 +326,7 @@ export type TagCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
 }
 
@@ -315,6 +335,7 @@ export type TagMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
 }
 
@@ -323,6 +344,7 @@ export type TagMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
 }
 
@@ -415,6 +437,7 @@ export type TagCreateWithoutMentionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
+  description?: string
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetTagInput
   world: Prisma.WorldCreateNestedOneWithoutTagsInput
 }
@@ -424,6 +447,7 @@ export type TagUncheckedCreateWithoutMentionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
+  description?: string
   worldId: string
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetTagInput
 }
@@ -438,6 +462,7 @@ export type TagCreateWithoutMentionedInInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
+  description?: string
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceTagInput
   world: Prisma.WorldCreateNestedOneWithoutTagsInput
 }
@@ -447,6 +472,7 @@ export type TagUncheckedCreateWithoutMentionedInInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
+  description?: string
   worldId: string
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceTagInput
 }
@@ -472,6 +498,7 @@ export type TagUpdateWithoutMentionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetTagNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutTagsNestedInput
 }
@@ -481,6 +508,7 @@ export type TagUncheckedUpdateWithoutMentionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetTagNestedInput
 }
@@ -501,6 +529,7 @@ export type TagUpdateWithoutMentionedInInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUpdateManyWithoutSourceTagNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutTagsNestedInput
 }
@@ -510,6 +539,7 @@ export type TagUncheckedUpdateWithoutMentionedInInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceTagNestedInput
 }
@@ -519,6 +549,7 @@ export type TagCreateWithoutWorldInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
+  description?: string
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceTagInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetTagInput
 }
@@ -528,6 +559,7 @@ export type TagUncheckedCreateWithoutWorldInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
+  description?: string
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceTagInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetTagInput
 }
@@ -566,6 +598,7 @@ export type TagScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Tag"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Tag"> | Date | string
   name?: Prisma.StringFilter<"Tag"> | string
+  description?: Prisma.StringFilter<"Tag"> | string
   worldId?: Prisma.StringFilter<"Tag"> | string
 }
 
@@ -574,6 +607,7 @@ export type TagCreateManyWorldInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name: string
+  description?: string
 }
 
 export type TagUpdateWithoutWorldInput = {
@@ -581,6 +615,7 @@ export type TagUpdateWithoutWorldInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUpdateManyWithoutSourceTagNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetTagNestedInput
 }
@@ -590,6 +625,7 @@ export type TagUncheckedUpdateWithoutWorldInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceTagNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetTagNestedInput
 }
@@ -599,6 +635,7 @@ export type TagUncheckedUpdateManyWithoutWorldInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -646,6 +683,7 @@ export type TagSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
+  description?: boolean
   worldId?: boolean
   mentions?: boolean | Prisma.Tag$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.Tag$mentionedInArgs<ExtArgs>
@@ -658,6 +696,7 @@ export type TagSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
+  description?: boolean
   worldId?: boolean
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tag"]>
@@ -667,6 +706,7 @@ export type TagSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
+  description?: boolean
   worldId?: boolean
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tag"]>
@@ -676,10 +716,11 @@ export type TagSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
+  description?: boolean
   worldId?: boolean
 }
 
-export type TagOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "worldId", ExtArgs["result"]["tag"]>
+export type TagOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "description" | "worldId", ExtArgs["result"]["tag"]>
 export type TagInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mentions?: boolean | Prisma.Tag$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.Tag$mentionedInArgs<ExtArgs>
@@ -705,6 +746,7 @@ export type $TagPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     createdAt: Date
     updatedAt: Date
     name: string
+    description: string
     worldId: string
   }, ExtArgs["result"]["tag"]>
   composites: {}
@@ -1136,6 +1178,7 @@ export interface TagFieldRefs {
   readonly createdAt: Prisma.FieldRef<"Tag", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Tag", 'DateTime'>
   readonly name: Prisma.FieldRef<"Tag", 'String'>
+  readonly description: Prisma.FieldRef<"Tag", 'String'>
   readonly worldId: Prisma.FieldRef<"Tag", 'String'>
 }
     

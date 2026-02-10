@@ -67,7 +67,7 @@ services:
             interval: 10s
             timeout: 10s
             retries: 3
-            start_period: 120s
+            start_period: 300s
     calliope:
         image: tenebrie/timelines-calliope:${VERSION}
         build:
@@ -78,6 +78,25 @@ services:
         command: yarn prod
         deploy:
             replicas: 2
+            update_config:
+                order: start-first
+                parallelism: 1
+                delay: 10s
+                failure_action: pause
+        secrets:
+            - jwt-secret
+            - environment
+    orpheus:
+        image: tenebrie/timelines-orpheus:${VERSION}
+        build:
+            context: ./
+            dockerfile: ./app/orpheus-mcp/Dockerfile.prod
+        environment:
+            NODE_ENV: production # Prod or staging
+            REQUIRE_OAUTH: "true"
+        command: yarn prod
+        deploy:
+            replicas: 1
             update_config:
                 order: start-first
                 parallelism: 1

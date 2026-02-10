@@ -6,13 +6,40 @@ if [[ -z "$VERSION" ]]; then
   exit 1
 fi
 
+STACK_VERSION=3
+STACK_VERSION_FILE="/var/lib/timelines/stack-version"
+
+# Check if we need to do a full deploy instead of update
+NEEDS_DEPLOY=false
+if [[ ! -f "$STACK_VERSION_FILE" ]]; then
+  echo "Stack version file not found, will run full deploy"
+  NEEDS_DEPLOY=true
+elif [[ "$(cat "$STACK_VERSION_FILE")" != "$STACK_VERSION" ]]; then
+  echo "Stack version changed ($(cat "$STACK_VERSION_FILE") -> $STACK_VERSION), will run full deploy"
+  NEEDS_DEPLOY=true
+fi
+
+if $NEEDS_DEPLOY; then
+  echo "Running stack-deploy.sh instead of update..."
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  "$SCRIPT_DIR/stack-deploy.sh"
+  
+  # Save the new stack version
+  mkdir -p "$(dirname "$STACK_VERSION_FILE")"
+  echo "$STACK_VERSION" > "$STACK_VERSION_FILE"
+  echo "Stack version saved: $STACK_VERSION"
+
+  exit 0
+fi
+
 docker system prune -f
 
-SERVICES=("timelines_rhea" "timelines_calliope" "timelines_styx")
+SERVICES=("timelines_rhea" "timelines_calliope" "timelines_styx" "timelines_orpheus")
 IMAGES=(
   "tenebrie/timelines-rhea:${VERSION}"
   "tenebrie/timelines-calliope:${VERSION}"
   "tenebrie/timelines-styx:${VERSION}"
+  "tenebrie/timelines-orpheus:${VERSION}"
 )
 
 for i in "${!SERVICES[@]}"; do

@@ -1,0 +1,21 @@
+model ContentPage {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
+    name String
+
+    description     String  @default("")
+    descriptionRich String  @default("")
+    descriptionYjs  String?
+
+    parentActorId   String?
+    parentEventId   String?
+    parentArticleId String?
+
+    parentActor   Actor?       @relation(fields: [parentActorId], references: [id], onDelete: Cascade, name: "ActorContentPage")
+    parentEvent   WorldEvent?  @relation(fields: [parentEventId], references: [id], onDelete: Cascade, name: "EventContentPage")
+    parentArticle WikiArticle? @relation(fields: [parentArticleId], references: [id], onDelete: Cascade, name: "ArticleContentPage")
+
+	mentions Mention[] @relation("PageMention")
+}

@@ -55,7 +55,12 @@ export type UpdateWorldApiArg = {
 export type GetWorldInfoApiResponse = /** status 200  */ {
 	isReadOnly: boolean
 	actors: {
+		pages: {
+			id: string
+			name: string
+		}[]
 		mentions: {
+			pageId?: null | string
 			sourceId: string
 			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -70,6 +75,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		mentionedIn: {
+			pageId?: null | string
 			sourceId: string
 			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -93,10 +99,14 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		icon: string
 		color: string
 		descriptionRich: string
-		descriptionYjs?: null | string
 	}[]
 	events: {
+		pages: {
+			id: string
+			name: string
+		}[]
 		mentions: {
+			pageId?: null | string
 			sourceId: string
 			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -111,6 +121,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		mentionedIn: {
+			pageId?: null | string
 			sourceId: string
 			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -143,7 +154,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		icon: string
 		color: string
 		descriptionRich: string
-		descriptionYjs?: null | string
 		type: 'SCENE' | 'OTHER'
 		timestamp: string
 		revokedAt?: null | string
@@ -151,6 +161,44 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		externalLink: string
 		extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 		worldEventTrackId?: null | string
+	}[]
+	tags: {
+		mentions: {
+			pageId?: null | string
+			sourceId: string
+			targetId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
+		}[]
+		mentionedIn: {
+			pageId?: null | string
+			sourceId: string
+			targetId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
+		}[]
+		description: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		worldId: string
 	}[]
 	description: string
 	id: string

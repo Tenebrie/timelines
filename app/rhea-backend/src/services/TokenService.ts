@@ -19,7 +19,7 @@ export const TokenService = {
 
 	decodeServiceToken: (token: string): ServiceTokenPayload => {
 		const payload = jwt.verify(token, SecretService.getSecret('jwt-secret')) as ServiceTokenPayload
-		if (payload.service !== 'rhea' && payload.service !== 'calliope') {
+		if (payload.service !== 'rhea' && payload.service !== 'calliope' && payload.service !== 'orpheus') {
 			throw new Error('Invalid service token')
 		}
 		return payload

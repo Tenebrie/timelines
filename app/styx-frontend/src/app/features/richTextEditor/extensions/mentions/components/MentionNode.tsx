@@ -8,9 +8,11 @@ import { CustomThemeProvider } from '@/app/features/theming/context/CustomThemeP
 import { store } from '@/app/store'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
+import { resolveEntityName } from '../hooks/resolveEntityName'
 import { ActorMentionChip } from './chips/ActorMentionChip'
 import { ArticleMentionChip } from './chips/ArticleMentionChip'
 import { EventMentionChip } from './chips/EventMentionChip'
+import { TagMentionChip } from './chips/TagMentionChip'
 
 export const MentionNodeName = 'mentionChip'
 
@@ -42,6 +44,21 @@ const getArticleName = (node: ProseMirrorNode) => {
 	return name
 }
 
+const getTagName = (node: ProseMirrorNode) => {
+	const tagId = node.attrs.componentProps.tag as string | undefined
+	if (!tagId) {
+		return null
+	}
+	const name = store.getState().world.tags.find((tag) => tag.id === tagId)?.name ?? 'Unknown tag'
+	return name
+}
+
+type MentionPropsType = {
+	actor?: string | boolean
+	event?: string | boolean
+	article?: string | boolean
+}
+
 export const MentionNode = Node.create({
 	name: MentionNodeName,
 
@@ -51,18 +68,38 @@ export const MentionNode = Node.create({
 
 	addAttributes() {
 		return {
-			componentProps: {
-				default: {
-					actor: null,
-					event: null,
-					article: null,
+			type: {
+				default: 'mention',
+				parseHTML: (element) => element.getAttribute('data-type') || 'mention',
+				renderHTML: (attributes) => ({
+					'data-type': attributes.type,
+				}),
+			},
+			name: {
+				default: null,
+				parseHTML: (element) => element.getAttribute('data-name'),
+				renderHTML: (attributes) => {
+					if (!attributes.name) return {}
+					return {
+						'data-name': attributes.name,
+					}
 				},
+			},
+			componentProps: {
+				default: {},
 				parseHTML: (element) => {
-					return JSON.parse(element.getAttribute('data-component-props') || '{}')
+					const props = JSON.parse(element.getAttribute('data-component-props') || '{}') as MentionPropsType
+					return props
 				},
 				renderHTML: (attributes) => {
+					// Only include non-null/non-false values
+					const props = attributes.componentProps as MentionPropsType
+					const filtered: MentionPropsType = {}
+					if (props.actor) filtered.actor = props.actor
+					if (props.event) filtered.event = props.event
+					if (props.article) filtered.article = props.article
 					return {
-						'data-component-props': JSON.stringify(attributes.componentProps),
+						'data-component-props': JSON.stringify(filtered),
 					}
 				},
 			},
@@ -72,7 +109,7 @@ export const MentionNode = Node.create({
 	parseHTML() {
 		return [
 			{
-				tag: 'span',
+				tag: 'span[data-component-props]',
 			},
 		]
 	},
@@ -82,7 +119,8 @@ export const MentionNode = Node.create({
 	},
 
 	renderText({ node }) {
-		const name = getActorName(node) ?? getEventName(node) ?? getArticleName(node) ?? 'Unknown entity'
+		const name =
+			getActorName(node) ?? getEventName(node) ?? getArticleName(node) ?? getTagName(node) ?? 'Unknown entity'
 		return `[${name}]`
 	},
 
@@ -90,6 +128,7 @@ export const MentionNode = Node.create({
 		return ({ node: initialNode }) => {
 			let root: Root | null = null
 			const dom = document.createElement('span')
+			dom.setAttribute('data-type', 'mention')
 
 			let lastNode: ProseMirrorNode = initialNode
 
@@ -100,8 +139,15 @@ export const MentionNode = Node.create({
 				const actorId = node.attrs.componentProps.actor as string | undefined
 				const eventId = node.attrs.componentProps.event as string | undefined
 				const articleId = node.attrs.componentProps.article as string | undefined
+				const tagId = node.attrs.componentProps.tag as string | undefined
 				const state = store.getState()
 				const worldId = state.world.id
+
+				const entityId = actorId ?? eventId ?? articleId ?? tagId
+				if (entityId) {
+					const entityName = resolveEntityName({ entityId })
+					dom.setAttribute('data-name', entityName)
+				}
 
 				const Component = () => {
 					useEffectOnce(() => {
@@ -114,6 +160,7 @@ export const MentionNode = Node.create({
 								{actorId ? <ActorMentionChip worldId={worldId} actorId={actorId} /> : null}
 								{eventId ? <EventMentionChip worldId={worldId} eventId={eventId} /> : null}
 								{articleId ? <ArticleMentionChip worldId={worldId} articleId={articleId} /> : null}
+								{tagId ? <TagMentionChip worldId={worldId} tagId={tagId} /> : null}
 							</CustomThemeProvider>
 						</ReduxProvider>
 					)

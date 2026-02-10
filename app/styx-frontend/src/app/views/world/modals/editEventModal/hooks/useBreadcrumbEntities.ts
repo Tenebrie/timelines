@@ -10,10 +10,6 @@ export function useBreadcrumbEntities(entityStack: string[]) {
 				return null
 			}
 
-			if (resolved.type === 'event') {
-				return { type: 'event', id: entityId, name: resolved.entity.name } as const
-			}
-
 			if (resolved.type === 'actor') {
 				const actorName = resolved.entity.title
 					? `${resolved.entity.name}, ${resolved.entity.title}`
@@ -21,7 +17,11 @@ export function useBreadcrumbEntities(entityStack: string[]) {
 				return { type: 'actor', id: entityId, name: actorName } as const
 			}
 
-			return null
+			return {
+				type: resolved.type,
+				id: entityId,
+				name: resolved.entity.name,
+			}
 		})
 		.filter((entity): entity is NonNullable<typeof entity> => entity !== null)
 }

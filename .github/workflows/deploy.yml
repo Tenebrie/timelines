@@ -52,7 +52,7 @@ jobs:
       contents: write
     strategy:
       matrix:
-        service: [gatekeeper, styx, rhea, calliope]
+        service: [gatekeeper, styx, rhea, calliope, orpheus]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -72,7 +72,7 @@ jobs:
       - name: Check Existing Container
         id: check-container
         run: |
-          if docker manifest inspect tenebrie/timelines-rhea:${{ needs.check-commits.outputs.version }} > /dev/null 2>&1; then
+          if docker manifest inspect tenebrie/timelines-${{ matrix.service }}:${{ needs.check-commits.outputs.version }} > /dev/null 2>&1; then
             echo "missing=false" >> "$GITHUB_OUTPUT"
           else
             echo "missing=true" >> "$GITHUB_OUTPUT"

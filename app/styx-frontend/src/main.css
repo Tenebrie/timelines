@@ -101,3 +101,10 @@ svg.mention-chip-article-icon {
 	top: 2px;
 	font-size: 17px;
 }
+
+svg.mention-chip-tag-icon {
+	position: absolute;
+	left: -1px;
+	top: 2px;
+	font-size: 17px;
+}

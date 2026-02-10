@@ -24,6 +24,14 @@ export const WikiService = {
 			},
 			include: {
 				children: true,
+				pages: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
+				mentions: true,
+				mentionedIn: true,
 			},
 			omit: {
 				contentYjs: true,

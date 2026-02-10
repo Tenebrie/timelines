@@ -109,7 +109,11 @@ function EntityModalReporter() {
 		id: worldId,
 		events,
 		actors,
-	} = useSelector(getWorldState, (a, b) => a.id === b.id && a.events === b.events && a.actors === b.actors)
+		tags,
+	} = useSelector(
+		getWorldState,
+		(a, b) => a.id === b.id && a.events === b.events && a.actors === b.actors && a.tags === b.tags,
+	)
 	const { data: mindmapData } = useGetMindmapQuery({ worldId }, { skip: !worldId })
 	const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
 
@@ -123,6 +127,14 @@ function EntityModalReporter() {
 
 		const event = events.find((e) => e.id === selectedEntityIds[0])
 		if (event) {
+			closeCreateEventModal()
+			closeCreateActorModal()
+			open({ entityStack: selectedEntityIds, creatingNew: null })
+			return
+		}
+
+		const tag = tags.find((t) => t.id === selectedEntityIds[0])
+		if (tag) {
 			closeCreateEventModal()
 			closeCreateActorModal()
 			open({ entityStack: selectedEntityIds, creatingNew: null })
@@ -182,6 +194,7 @@ function EntityModalReporter() {
 		openCreateEventModal,
 		openCreateActorModal,
 		selectedEntityIds,
+		tags,
 	])
 
 	return <></>

@@ -1,6 +1,7 @@
 import { MentionedEntity } from '@api/types/worldTypes'
 import Article from '@mui/icons-material/Article'
 import Event from '@mui/icons-material/Event'
+import LabelIcon from '@mui/icons-material/Label'
 import Person from '@mui/icons-material/Person'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
@@ -57,6 +58,7 @@ export const BaseMentionChip = ({ type, label, color, onClick }: Props) => {
 			{type === 'Actor' && <Person className="mention-chip-actor-icon" style={{ color: iconColor }} />}
 			{type === 'Event' && <Event className="mention-chip-event-icon" style={{ color: iconColor }} />}
 			{type === 'Article' && <Article className="mention-chip-article-icon" style={{ color: iconColor }} />}
+			{type === 'Tag' && <LabelIcon className="mention-chip-tag-icon" style={{ color: iconColor }} />}
 		</Stack>
 	)
 }

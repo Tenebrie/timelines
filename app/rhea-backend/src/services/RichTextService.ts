@@ -9,6 +9,7 @@ export type MentionNodeContent = {
 	actor: string | false
 	event: string | false
 	article: string | false
+	tag: string | false
 }
 
 export const RichTextService = {
@@ -79,6 +80,18 @@ export const RichTextService = {
 				mentions.push({
 					targetId: props.article,
 					targetType: MentionedEntity.Article,
+				})
+			}
+			if (props.tag) {
+				const tagName = await EntityResolverService.resolveEntityName({
+					worldId,
+					entityType: 'tag',
+					entityId: props.tag,
+				})
+				$(element).text(`[${tagName}]`)
+				mentions.push({
+					targetId: props.tag,
+					targetType: MentionedEntity.Tag,
 				})
 			}
 		}

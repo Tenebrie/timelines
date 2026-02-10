@@ -37,6 +37,7 @@ export type MentionMinAggregateOutputType = {
   targetEventId: string | null
   targetArticleId: string | null
   targetTagId: string | null
+  pageId: string | null
 }
 
 export type MentionMaxAggregateOutputType = {
@@ -52,6 +53,7 @@ export type MentionMaxAggregateOutputType = {
   targetEventId: string | null
   targetArticleId: string | null
   targetTagId: string | null
+  pageId: string | null
 }
 
 export type MentionCountAggregateOutputType = {
@@ -67,6 +69,7 @@ export type MentionCountAggregateOutputType = {
   targetEventId: number
   targetArticleId: number
   targetTagId: number
+  pageId: number
   _all: number
 }
 
@@ -84,6 +87,7 @@ export type MentionMinAggregateInputType = {
   targetEventId?: true
   targetArticleId?: true
   targetTagId?: true
+  pageId?: true
 }
 
 export type MentionMaxAggregateInputType = {
@@ -99,6 +103,7 @@ export type MentionMaxAggregateInputType = {
   targetEventId?: true
   targetArticleId?: true
   targetTagId?: true
+  pageId?: true
 }
 
 export type MentionCountAggregateInputType = {
@@ -114,6 +119,7 @@ export type MentionCountAggregateInputType = {
   targetEventId?: true
   targetArticleId?: true
   targetTagId?: true
+  pageId?: true
   _all?: true
 }
 
@@ -202,6 +208,7 @@ export type MentionGroupByOutputType = {
   targetEventId: string | null
   targetArticleId: string | null
   targetTagId: string | null
+  pageId: string | null
   _count: MentionCountAggregateOutputType | null
   _min: MentionMinAggregateOutputType | null
   _max: MentionMaxAggregateOutputType | null
@@ -238,6 +245,7 @@ export type MentionWhereInput = {
   targetEventId?: Prisma.StringNullableFilter<"Mention"> | string | null
   targetArticleId?: Prisma.StringNullableFilter<"Mention"> | string | null
   targetTagId?: Prisma.StringNullableFilter<"Mention"> | string | null
+  pageId?: Prisma.StringNullableFilter<"Mention"> | string | null
   sourceActor?: Prisma.XOR<Prisma.ActorNullableScalarRelationFilter, Prisma.ActorWhereInput> | null
   sourceEvent?: Prisma.XOR<Prisma.WorldEventNullableScalarRelationFilter, Prisma.WorldEventWhereInput> | null
   sourceArticle?: Prisma.XOR<Prisma.WikiArticleNullableScalarRelationFilter, Prisma.WikiArticleWhereInput> | null
@@ -246,6 +254,7 @@ export type MentionWhereInput = {
   targetEvent?: Prisma.XOR<Prisma.WorldEventNullableScalarRelationFilter, Prisma.WorldEventWhereInput> | null
   targetArticle?: Prisma.XOR<Prisma.WikiArticleNullableScalarRelationFilter, Prisma.WikiArticleWhereInput> | null
   targetTag?: Prisma.XOR<Prisma.TagNullableScalarRelationFilter, Prisma.TagWhereInput> | null
+  page?: Prisma.XOR<Prisma.ContentPageNullableScalarRelationFilter, Prisma.ContentPageWhereInput> | null
 }
 
 export type MentionOrderByWithRelationInput = {
@@ -261,6 +270,7 @@ export type MentionOrderByWithRelationInput = {
   targetEventId?: Prisma.SortOrderInput | Prisma.SortOrder
   targetArticleId?: Prisma.SortOrderInput | Prisma.SortOrder
   targetTagId?: Prisma.SortOrderInput | Prisma.SortOrder
+  pageId?: Prisma.SortOrderInput | Prisma.SortOrder
   sourceActor?: Prisma.ActorOrderByWithRelationInput
   sourceEvent?: Prisma.WorldEventOrderByWithRelationInput
   sourceArticle?: Prisma.WikiArticleOrderByWithRelationInput
@@ -269,6 +279,7 @@ export type MentionOrderByWithRelationInput = {
   targetEvent?: Prisma.WorldEventOrderByWithRelationInput
   targetArticle?: Prisma.WikiArticleOrderByWithRelationInput
   targetTag?: Prisma.TagOrderByWithRelationInput
+  page?: Prisma.ContentPageOrderByWithRelationInput
 }
 
 export type MentionWhereUniqueInput = Prisma.AtLeast<{
@@ -288,6 +299,7 @@ export type MentionWhereUniqueInput = Prisma.AtLeast<{
   targetEventId?: Prisma.StringNullableFilter<"Mention"> | string | null
   targetArticleId?: Prisma.StringNullableFilter<"Mention"> | string | null
   targetTagId?: Prisma.StringNullableFilter<"Mention"> | string | null
+  pageId?: Prisma.StringNullableFilter<"Mention"> | string | null
   sourceActor?: Prisma.XOR<Prisma.ActorNullableScalarRelationFilter, Prisma.ActorWhereInput> | null
   sourceEvent?: Prisma.XOR<Prisma.WorldEventNullableScalarRelationFilter, Prisma.WorldEventWhereInput> | null
   sourceArticle?: Prisma.XOR<Prisma.WikiArticleNullableScalarRelationFilter, Prisma.WikiArticleWhereInput> | null
@@ -296,6 +308,7 @@ export type MentionWhereUniqueInput = Prisma.AtLeast<{
   targetEvent?: Prisma.XOR<Prisma.WorldEventNullableScalarRelationFilter, Prisma.WorldEventWhereInput> | null
   targetArticle?: Prisma.XOR<Prisma.WikiArticleNullableScalarRelationFilter, Prisma.WikiArticleWhereInput> | null
   targetTag?: Prisma.XOR<Prisma.TagNullableScalarRelationFilter, Prisma.TagWhereInput> | null
+  page?: Prisma.XOR<Prisma.ContentPageNullableScalarRelationFilter, Prisma.ContentPageWhereInput> | null
 }, "sourceId_targetId">
 
 export type MentionOrderByWithAggregationInput = {
@@ -311,6 +324,7 @@ export type MentionOrderByWithAggregationInput = {
   targetEventId?: Prisma.SortOrderInput | Prisma.SortOrder
   targetArticleId?: Prisma.SortOrderInput | Prisma.SortOrder
   targetTagId?: Prisma.SortOrderInput | Prisma.SortOrder
+  pageId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.MentionCountOrderByAggregateInput
   _max?: Prisma.MentionMaxOrderByAggregateInput
   _min?: Prisma.MentionMinOrderByAggregateInput
@@ -332,6 +346,7 @@ export type MentionScalarWhereWithAggregatesInput = {
   targetEventId?: Prisma.StringNullableWithAggregatesFilter<"Mention"> | string | null
   targetArticleId?: Prisma.StringNullableWithAggregatesFilter<"Mention"> | string | null
   targetTagId?: Prisma.StringNullableWithAggregatesFilter<"Mention"> | string | null
+  pageId?: Prisma.StringNullableWithAggregatesFilter<"Mention"> | string | null
 }
 
 export type MentionCreateInput = {
@@ -347,6 +362,7 @@ export type MentionCreateInput = {
   targetEvent?: Prisma.WorldEventCreateNestedOneWithoutMentionedInInput
   targetArticle?: Prisma.WikiArticleCreateNestedOneWithoutMentionedInInput
   targetTag?: Prisma.TagCreateNestedOneWithoutMentionedInInput
+  page?: Prisma.ContentPageCreateNestedOneWithoutMentionsInput
 }
 
 export type MentionUncheckedCreateInput = {
@@ -362,6 +378,7 @@ export type MentionUncheckedCreateInput = {
   targetEventId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionUpdateInput = {
@@ -377,6 +394,7 @@ export type MentionUpdateInput = {
   targetEvent?: Prisma.WorldEventUpdateOneWithoutMentionedInNestedInput
   targetArticle?: Prisma.WikiArticleUpdateOneWithoutMentionedInNestedInput
   targetTag?: Prisma.TagUpdateOneWithoutMentionedInNestedInput
+  page?: Prisma.ContentPageUpdateOneWithoutMentionsNestedInput
 }
 
 export type MentionUncheckedUpdateInput = {
@@ -392,6 +410,7 @@ export type MentionUncheckedUpdateInput = {
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionCreateManyInput = {
@@ -407,6 +426,7 @@ export type MentionCreateManyInput = {
   targetEventId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionUpdateManyMutationInput = {
@@ -429,6 +449,7 @@ export type MentionUncheckedUpdateManyInput = {
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionListRelationFilter = {
@@ -459,6 +480,7 @@ export type MentionCountOrderByAggregateInput = {
   targetEventId?: Prisma.SortOrder
   targetArticleId?: Prisma.SortOrder
   targetTagId?: Prisma.SortOrder
+  pageId?: Prisma.SortOrder
 }
 
 export type MentionMaxOrderByAggregateInput = {
@@ -474,6 +496,7 @@ export type MentionMaxOrderByAggregateInput = {
   targetEventId?: Prisma.SortOrder
   targetArticleId?: Prisma.SortOrder
   targetTagId?: Prisma.SortOrder
+  pageId?: Prisma.SortOrder
 }
 
 export type MentionMinOrderByAggregateInput = {
@@ -489,6 +512,7 @@ export type MentionMinOrderByAggregateInput = {
   targetEventId?: Prisma.SortOrder
   targetArticleId?: Prisma.SortOrder
   targetTagId?: Prisma.SortOrder
+  pageId?: Prisma.SortOrder
 }
 
 export type MentionCreateNestedManyWithoutSourceActorInput = {
@@ -572,6 +596,48 @@ export type MentionUncheckedUpdateManyWithoutTargetActorNestedInput = {
   connect?: Prisma.MentionWhereUniqueInput | Prisma.MentionWhereUniqueInput[]
   update?: Prisma.MentionUpdateWithWhereUniqueWithoutTargetActorInput | Prisma.MentionUpdateWithWhereUniqueWithoutTargetActorInput[]
   updateMany?: Prisma.MentionUpdateManyWithWhereWithoutTargetActorInput | Prisma.MentionUpdateManyWithWhereWithoutTargetActorInput[]
+  deleteMany?: Prisma.MentionScalarWhereInput | Prisma.MentionScalarWhereInput[]
+}
+
+export type MentionCreateNestedManyWithoutPageInput = {
+  create?: Prisma.XOR<Prisma.MentionCreateWithoutPageInput, Prisma.MentionUncheckedCreateWithoutPageInput> | Prisma.MentionCreateWithoutPageInput[] | Prisma.MentionUncheckedCreateWithoutPageInput[]
+  connectOrCreate?: Prisma.MentionCreateOrConnectWithoutPageInput | Prisma.MentionCreateOrConnectWithoutPageInput[]
+  createMany?: Prisma.MentionCreateManyPageInputEnvelope
+  connect?: Prisma.MentionWhereUniqueInput | Prisma.MentionWhereUniqueInput[]
+}
+
+export type MentionUncheckedCreateNestedManyWithoutPageInput = {
+  create?: Prisma.XOR<Prisma.MentionCreateWithoutPageInput, Prisma.MentionUncheckedCreateWithoutPageInput> | Prisma.MentionCreateWithoutPageInput[] | Prisma.MentionUncheckedCreateWithoutPageInput[]
+  connectOrCreate?: Prisma.MentionCreateOrConnectWithoutPageInput | Prisma.MentionCreateOrConnectWithoutPageInput[]
+  createMany?: Prisma.MentionCreateManyPageInputEnvelope
+  connect?: Prisma.MentionWhereUniqueInput | Prisma.MentionWhereUniqueInput[]
+}
+
+export type MentionUpdateManyWithoutPageNestedInput = {
+  create?: Prisma.XOR<Prisma.MentionCreateWithoutPageInput, Prisma.MentionUncheckedCreateWithoutPageInput> | Prisma.MentionCreateWithoutPageInput[] | Prisma.MentionUncheckedCreateWithoutPageInput[]
+  connectOrCreate?: Prisma.MentionCreateOrConnectWithoutPageInput | Prisma.MentionCreateOrConnectWithoutPageInput[]
+  upsert?: Prisma.MentionUpsertWithWhereUniqueWithoutPageInput | Prisma.MentionUpsertWithWhereUniqueWithoutPageInput[]
+  createMany?: Prisma.MentionCreateManyPageInputEnvelope
+  set?: Prisma.MentionWhereUniqueInput | Prisma.MentionWhereUniqueInput[]
+  disconnect?: Prisma.MentionWhereUniqueInput | Prisma.MentionWhereUniqueInput[]
+  delete?: Prisma.MentionWhereUniqueInput | Prisma.MentionWhereUniqueInput[]
+  connect?: Prisma.MentionWhereUniqueInput | Prisma.MentionWhereUniqueInput[]
+  update?: Prisma.MentionUpdateWithWhereUniqueWithoutPageInput | Prisma.MentionUpdateWithWhereUniqueWithoutPageInput[]
+  updateMany?: Prisma.MentionUpdateManyWithWhereWithoutPageInput | Prisma.MentionUpdateManyWithWhereWithoutPageInput[]
+  deleteMany?: Prisma.MentionScalarWhereInput | Prisma.MentionScalarWhereInput[]
+}
+
+export type MentionUncheckedUpdateManyWithoutPageNestedInput = {
+  create?: Prisma.XOR<Prisma.MentionCreateWithoutPageInput, Prisma.MentionUncheckedCreateWithoutPageInput> | Prisma.MentionCreateWithoutPageInput[] | Prisma.MentionUncheckedCreateWithoutPageInput[]
+  connectOrCreate?: Prisma.MentionCreateOrConnectWithoutPageInput | Prisma.MentionCreateOrConnectWithoutPageInput[]
+  upsert?: Prisma.MentionUpsertWithWhereUniqueWithoutPageInput | Prisma.MentionUpsertWithWhereUniqueWithoutPageInput[]
+  createMany?: Prisma.MentionCreateManyPageInputEnvelope
+  set?: Prisma.MentionWhereUniqueInput | Prisma.MentionWhereUniqueInput[]
+  disconnect?: Prisma.MentionWhereUniqueInput | Prisma.MentionWhereUniqueInput[]
+  delete?: Prisma.MentionWhereUniqueInput | Prisma.MentionWhereUniqueInput[]
+  connect?: Prisma.MentionWhereUniqueInput | Prisma.MentionWhereUniqueInput[]
+  update?: Prisma.MentionUpdateWithWhereUniqueWithoutPageInput | Prisma.MentionUpdateWithWhereUniqueWithoutPageInput[]
+  updateMany?: Prisma.MentionUpdateManyWithWhereWithoutPageInput | Prisma.MentionUpdateManyWithWhereWithoutPageInput[]
   deleteMany?: Prisma.MentionScalarWhereInput | Prisma.MentionScalarWhereInput[]
 }
 
@@ -843,6 +909,7 @@ export type MentionCreateWithoutSourceActorInput = {
   targetEvent?: Prisma.WorldEventCreateNestedOneWithoutMentionedInInput
   targetArticle?: Prisma.WikiArticleCreateNestedOneWithoutMentionedInInput
   targetTag?: Prisma.TagCreateNestedOneWithoutMentionedInInput
+  page?: Prisma.ContentPageCreateNestedOneWithoutMentionsInput
 }
 
 export type MentionUncheckedCreateWithoutSourceActorInput = {
@@ -857,6 +924,7 @@ export type MentionUncheckedCreateWithoutSourceActorInput = {
   targetEventId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionCreateOrConnectWithoutSourceActorInput = {
@@ -881,6 +949,7 @@ export type MentionCreateWithoutTargetActorInput = {
   targetEvent?: Prisma.WorldEventCreateNestedOneWithoutMentionedInInput
   targetArticle?: Prisma.WikiArticleCreateNestedOneWithoutMentionedInInput
   targetTag?: Prisma.TagCreateNestedOneWithoutMentionedInInput
+  page?: Prisma.ContentPageCreateNestedOneWithoutMentionsInput
 }
 
 export type MentionUncheckedCreateWithoutTargetActorInput = {
@@ -895,6 +964,7 @@ export type MentionUncheckedCreateWithoutTargetActorInput = {
   targetEventId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionCreateOrConnectWithoutTargetActorInput = {
@@ -939,6 +1009,7 @@ export type MentionScalarWhereInput = {
   targetEventId?: Prisma.StringNullableFilter<"Mention"> | string | null
   targetArticleId?: Prisma.StringNullableFilter<"Mention"> | string | null
   targetTagId?: Prisma.StringNullableFilter<"Mention"> | string | null
+  pageId?: Prisma.StringNullableFilter<"Mention"> | string | null
 }
 
 export type MentionUpsertWithWhereUniqueWithoutTargetActorInput = {
@@ -957,6 +1028,62 @@ export type MentionUpdateManyWithWhereWithoutTargetActorInput = {
   data: Prisma.XOR<Prisma.MentionUpdateManyMutationInput, Prisma.MentionUncheckedUpdateManyWithoutTargetActorInput>
 }
 
+export type MentionCreateWithoutPageInput = {
+  sourceId: string
+  targetId: string
+  sourceType: $Enums.MentionedEntity
+  targetType: $Enums.MentionedEntity
+  sourceActor?: Prisma.ActorCreateNestedOneWithoutMentionsInput
+  sourceEvent?: Prisma.WorldEventCreateNestedOneWithoutMentionsInput
+  sourceArticle?: Prisma.WikiArticleCreateNestedOneWithoutMentionsInput
+  sourceTag?: Prisma.TagCreateNestedOneWithoutMentionsInput
+  targetActor?: Prisma.ActorCreateNestedOneWithoutMentionedInInput
+  targetEvent?: Prisma.WorldEventCreateNestedOneWithoutMentionedInInput
+  targetArticle?: Prisma.WikiArticleCreateNestedOneWithoutMentionedInInput
+  targetTag?: Prisma.TagCreateNestedOneWithoutMentionedInInput
+}
+
+export type MentionUncheckedCreateWithoutPageInput = {
+  sourceId: string
+  targetId: string
+  sourceType: $Enums.MentionedEntity
+  targetType: $Enums.MentionedEntity
+  sourceActorId?: string | null
+  sourceEventId?: string | null
+  sourceArticleId?: string | null
+  sourceTagId?: string | null
+  targetActorId?: string | null
+  targetEventId?: string | null
+  targetArticleId?: string | null
+  targetTagId?: string | null
+}
+
+export type MentionCreateOrConnectWithoutPageInput = {
+  where: Prisma.MentionWhereUniqueInput
+  create: Prisma.XOR<Prisma.MentionCreateWithoutPageInput, Prisma.MentionUncheckedCreateWithoutPageInput>
+}
+
+export type MentionCreateManyPageInputEnvelope = {
+  data: Prisma.MentionCreateManyPageInput | Prisma.MentionCreateManyPageInput[]
+  skipDuplicates?: boolean
+}
+
+export type MentionUpsertWithWhereUniqueWithoutPageInput = {
+  where: Prisma.MentionWhereUniqueInput
+  update: Prisma.XOR<Prisma.MentionUpdateWithoutPageInput, Prisma.MentionUncheckedUpdateWithoutPageInput>
+  create: Prisma.XOR<Prisma.MentionCreateWithoutPageInput, Prisma.MentionUncheckedCreateWithoutPageInput>
+}
+
+export type MentionUpdateWithWhereUniqueWithoutPageInput = {
+  where: Prisma.MentionWhereUniqueInput
+  data: Prisma.XOR<Prisma.MentionUpdateWithoutPageInput, Prisma.MentionUncheckedUpdateWithoutPageInput>
+}
+
+export type MentionUpdateManyWithWhereWithoutPageInput = {
+  where: Prisma.MentionScalarWhereInput
+  data: Prisma.XOR<Prisma.MentionUpdateManyMutationInput, Prisma.MentionUncheckedUpdateManyWithoutPageInput>
+}
+
 export type MentionCreateWithoutSourceTagInput = {
   sourceId: string
   targetId: string
@@ -969,6 +1096,7 @@ export type MentionCreateWithoutSourceTagInput = {
   targetEvent?: Prisma.WorldEventCreateNestedOneWithoutMentionedInInput
   targetArticle?: Prisma.WikiArticleCreateNestedOneWithoutMentionedInInput
   targetTag?: Prisma.TagCreateNestedOneWithoutMentionedInInput
+  page?: Prisma.ContentPageCreateNestedOneWithoutMentionsInput
 }
 
 export type MentionUncheckedCreateWithoutSourceTagInput = {
@@ -983,6 +1111,7 @@ export type MentionUncheckedCreateWithoutSourceTagInput = {
   targetEventId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionCreateOrConnectWithoutSourceTagInput = {
@@ -1007,6 +1136,7 @@ export type MentionCreateWithoutTargetTagInput = {
   targetActor?: Prisma.ActorCreateNestedOneWithoutMentionedInInput
   targetEvent?: Prisma.WorldEventCreateNestedOneWithoutMentionedInInput
   targetArticle?: Prisma.WikiArticleCreateNestedOneWithoutMentionedInInput
+  page?: Prisma.ContentPageCreateNestedOneWithoutMentionsInput
 }
 
 export type MentionUncheckedCreateWithoutTargetTagInput = {
@@ -1021,6 +1151,7 @@ export type MentionUncheckedCreateWithoutTargetTagInput = {
   targetActorId?: string | null
   targetEventId?: string | null
   targetArticleId?: string | null
+  pageId?: string | null
 }
 
 export type MentionCreateOrConnectWithoutTargetTagInput = {
@@ -1077,6 +1208,7 @@ export type MentionCreateWithoutSourceArticleInput = {
   targetEvent?: Prisma.WorldEventCreateNestedOneWithoutMentionedInInput
   targetArticle?: Prisma.WikiArticleCreateNestedOneWithoutMentionedInInput
   targetTag?: Prisma.TagCreateNestedOneWithoutMentionedInInput
+  page?: Prisma.ContentPageCreateNestedOneWithoutMentionsInput
 }
 
 export type MentionUncheckedCreateWithoutSourceArticleInput = {
@@ -1091,6 +1223,7 @@ export type MentionUncheckedCreateWithoutSourceArticleInput = {
   targetEventId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionCreateOrConnectWithoutSourceArticleInput = {
@@ -1115,6 +1248,7 @@ export type MentionCreateWithoutTargetArticleInput = {
   targetActor?: Prisma.ActorCreateNestedOneWithoutMentionedInInput
   targetEvent?: Prisma.WorldEventCreateNestedOneWithoutMentionedInInput
   targetTag?: Prisma.TagCreateNestedOneWithoutMentionedInInput
+  page?: Prisma.ContentPageCreateNestedOneWithoutMentionsInput
 }
 
 export type MentionUncheckedCreateWithoutTargetArticleInput = {
@@ -1129,6 +1263,7 @@ export type MentionUncheckedCreateWithoutTargetArticleInput = {
   targetActorId?: string | null
   targetEventId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionCreateOrConnectWithoutTargetArticleInput = {
@@ -1185,6 +1320,7 @@ export type MentionCreateWithoutSourceEventInput = {
   targetEvent?: Prisma.WorldEventCreateNestedOneWithoutMentionedInInput
   targetArticle?: Prisma.WikiArticleCreateNestedOneWithoutMentionedInInput
   targetTag?: Prisma.TagCreateNestedOneWithoutMentionedInInput
+  page?: Prisma.ContentPageCreateNestedOneWithoutMentionsInput
 }
 
 export type MentionUncheckedCreateWithoutSourceEventInput = {
@@ -1199,6 +1335,7 @@ export type MentionUncheckedCreateWithoutSourceEventInput = {
   targetEventId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionCreateOrConnectWithoutSourceEventInput = {
@@ -1223,6 +1360,7 @@ export type MentionCreateWithoutTargetEventInput = {
   targetActor?: Prisma.ActorCreateNestedOneWithoutMentionedInInput
   targetArticle?: Prisma.WikiArticleCreateNestedOneWithoutMentionedInInput
   targetTag?: Prisma.TagCreateNestedOneWithoutMentionedInInput
+  page?: Prisma.ContentPageCreateNestedOneWithoutMentionsInput
 }
 
 export type MentionUncheckedCreateWithoutTargetEventInput = {
@@ -1237,6 +1375,7 @@ export type MentionUncheckedCreateWithoutTargetEventInput = {
   targetActorId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionCreateOrConnectWithoutTargetEventInput = {
@@ -1293,6 +1432,7 @@ export type MentionCreateManySourceActorInput = {
   targetEventId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionCreateManyTargetActorInput = {
@@ -1307,6 +1447,7 @@ export type MentionCreateManyTargetActorInput = {
   targetEventId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionUpdateWithoutSourceActorInput = {
@@ -1321,6 +1462,7 @@ export type MentionUpdateWithoutSourceActorInput = {
   targetEvent?: Prisma.WorldEventUpdateOneWithoutMentionedInNestedInput
   targetArticle?: Prisma.WikiArticleUpdateOneWithoutMentionedInNestedInput
   targetTag?: Prisma.TagUpdateOneWithoutMentionedInNestedInput
+  page?: Prisma.ContentPageUpdateOneWithoutMentionsNestedInput
 }
 
 export type MentionUncheckedUpdateWithoutSourceActorInput = {
@@ -1335,6 +1477,7 @@ export type MentionUncheckedUpdateWithoutSourceActorInput = {
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionUncheckedUpdateManyWithoutSourceActorInput = {
@@ -1349,6 +1492,7 @@ export type MentionUncheckedUpdateManyWithoutSourceActorInput = {
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionUpdateWithoutTargetActorInput = {
@@ -1363,6 +1507,7 @@ export type MentionUpdateWithoutTargetActorInput = {
   targetEvent?: Prisma.WorldEventUpdateOneWithoutMentionedInNestedInput
   targetArticle?: Prisma.WikiArticleUpdateOneWithoutMentionedInNestedInput
   targetTag?: Prisma.TagUpdateOneWithoutMentionedInNestedInput
+  page?: Prisma.ContentPageUpdateOneWithoutMentionsNestedInput
 }
 
 export type MentionUncheckedUpdateWithoutTargetActorInput = {
@@ -1377,6 +1522,7 @@ export type MentionUncheckedUpdateWithoutTargetActorInput = {
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionUncheckedUpdateManyWithoutTargetActorInput = {
@@ -1388,6 +1534,67 @@ export type MentionUncheckedUpdateManyWithoutTargetActorInput = {
   sourceEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sourceTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type MentionCreateManyPageInput = {
+  sourceId: string
+  targetId: string
+  sourceType: $Enums.MentionedEntity
+  targetType: $Enums.MentionedEntity
+  sourceActorId?: string | null
+  sourceEventId?: string | null
+  sourceArticleId?: string | null
+  sourceTagId?: string | null
+  targetActorId?: string | null
+  targetEventId?: string | null
+  targetArticleId?: string | null
+  targetTagId?: string | null
+}
+
+export type MentionUpdateWithoutPageInput = {
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  targetId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
+  targetType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
+  sourceActor?: Prisma.ActorUpdateOneWithoutMentionsNestedInput
+  sourceEvent?: Prisma.WorldEventUpdateOneWithoutMentionsNestedInput
+  sourceArticle?: Prisma.WikiArticleUpdateOneWithoutMentionsNestedInput
+  sourceTag?: Prisma.TagUpdateOneWithoutMentionsNestedInput
+  targetActor?: Prisma.ActorUpdateOneWithoutMentionedInNestedInput
+  targetEvent?: Prisma.WorldEventUpdateOneWithoutMentionedInNestedInput
+  targetArticle?: Prisma.WikiArticleUpdateOneWithoutMentionedInNestedInput
+  targetTag?: Prisma.TagUpdateOneWithoutMentionedInNestedInput
+}
+
+export type MentionUncheckedUpdateWithoutPageInput = {
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  targetId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
+  targetType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
+  sourceActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type MentionUncheckedUpdateManyWithoutPageInput = {
+  sourceId?: Prisma.StringFieldUpdateOperationsInput | string
+  targetId?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
+  targetType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
+  sourceActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sourceTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  targetActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1405,6 +1612,7 @@ export type MentionCreateManySourceTagInput = {
   targetEventId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionCreateManyTargetTagInput = {
@@ -1419,6 +1627,7 @@ export type MentionCreateManyTargetTagInput = {
   targetActorId?: string | null
   targetEventId?: string | null
   targetArticleId?: string | null
+  pageId?: string | null
 }
 
 export type MentionUpdateWithoutSourceTagInput = {
@@ -1433,6 +1642,7 @@ export type MentionUpdateWithoutSourceTagInput = {
   targetEvent?: Prisma.WorldEventUpdateOneWithoutMentionedInNestedInput
   targetArticle?: Prisma.WikiArticleUpdateOneWithoutMentionedInNestedInput
   targetTag?: Prisma.TagUpdateOneWithoutMentionedInNestedInput
+  page?: Prisma.ContentPageUpdateOneWithoutMentionsNestedInput
 }
 
 export type MentionUncheckedUpdateWithoutSourceTagInput = {
@@ -1447,6 +1657,7 @@ export type MentionUncheckedUpdateWithoutSourceTagInput = {
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionUncheckedUpdateManyWithoutSourceTagInput = {
@@ -1461,6 +1672,7 @@ export type MentionUncheckedUpdateManyWithoutSourceTagInput = {
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionUpdateWithoutTargetTagInput = {
@@ -1475,6 +1687,7 @@ export type MentionUpdateWithoutTargetTagInput = {
   targetActor?: Prisma.ActorUpdateOneWithoutMentionedInNestedInput
   targetEvent?: Prisma.WorldEventUpdateOneWithoutMentionedInNestedInput
   targetArticle?: Prisma.WikiArticleUpdateOneWithoutMentionedInNestedInput
+  page?: Prisma.ContentPageUpdateOneWithoutMentionsNestedInput
 }
 
 export type MentionUncheckedUpdateWithoutTargetTagInput = {
@@ -1489,6 +1702,7 @@ export type MentionUncheckedUpdateWithoutTargetTagInput = {
   targetActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionUncheckedUpdateManyWithoutTargetTagInput = {
@@ -1503,6 +1717,7 @@ export type MentionUncheckedUpdateManyWithoutTargetTagInput = {
   targetActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionCreateManySourceArticleInput = {
@@ -1517,6 +1732,7 @@ export type MentionCreateManySourceArticleInput = {
   targetEventId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionCreateManyTargetArticleInput = {
@@ -1531,6 +1747,7 @@ export type MentionCreateManyTargetArticleInput = {
   targetActorId?: string | null
   targetEventId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionUpdateWithoutSourceArticleInput = {
@@ -1545,6 +1762,7 @@ export type MentionUpdateWithoutSourceArticleInput = {
   targetEvent?: Prisma.WorldEventUpdateOneWithoutMentionedInNestedInput
   targetArticle?: Prisma.WikiArticleUpdateOneWithoutMentionedInNestedInput
   targetTag?: Prisma.TagUpdateOneWithoutMentionedInNestedInput
+  page?: Prisma.ContentPageUpdateOneWithoutMentionsNestedInput
 }
 
 export type MentionUncheckedUpdateWithoutSourceArticleInput = {
@@ -1559,6 +1777,7 @@ export type MentionUncheckedUpdateWithoutSourceArticleInput = {
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionUncheckedUpdateManyWithoutSourceArticleInput = {
@@ -1573,6 +1792,7 @@ export type MentionUncheckedUpdateManyWithoutSourceArticleInput = {
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionUpdateWithoutTargetArticleInput = {
@@ -1587,6 +1807,7 @@ export type MentionUpdateWithoutTargetArticleInput = {
   targetActor?: Prisma.ActorUpdateOneWithoutMentionedInNestedInput
   targetEvent?: Prisma.WorldEventUpdateOneWithoutMentionedInNestedInput
   targetTag?: Prisma.TagUpdateOneWithoutMentionedInNestedInput
+  page?: Prisma.ContentPageUpdateOneWithoutMentionsNestedInput
 }
 
 export type MentionUncheckedUpdateWithoutTargetArticleInput = {
@@ -1601,6 +1822,7 @@ export type MentionUncheckedUpdateWithoutTargetArticleInput = {
   targetActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionUncheckedUpdateManyWithoutTargetArticleInput = {
@@ -1615,6 +1837,7 @@ export type MentionUncheckedUpdateManyWithoutTargetArticleInput = {
   targetActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionCreateManySourceEventInput = {
@@ -1629,6 +1852,7 @@ export type MentionCreateManySourceEventInput = {
   targetEventId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionCreateManyTargetEventInput = {
@@ -1643,6 +1867,7 @@ export type MentionCreateManyTargetEventInput = {
   targetActorId?: string | null
   targetArticleId?: string | null
   targetTagId?: string | null
+  pageId?: string | null
 }
 
 export type MentionUpdateWithoutSourceEventInput = {
@@ -1657,6 +1882,7 @@ export type MentionUpdateWithoutSourceEventInput = {
   targetEvent?: Prisma.WorldEventUpdateOneWithoutMentionedInNestedInput
   targetArticle?: Prisma.WikiArticleUpdateOneWithoutMentionedInNestedInput
   targetTag?: Prisma.TagUpdateOneWithoutMentionedInNestedInput
+  page?: Prisma.ContentPageUpdateOneWithoutMentionsNestedInput
 }
 
 export type MentionUncheckedUpdateWithoutSourceEventInput = {
@@ -1671,6 +1897,7 @@ export type MentionUncheckedUpdateWithoutSourceEventInput = {
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionUncheckedUpdateManyWithoutSourceEventInput = {
@@ -1685,6 +1912,7 @@ export type MentionUncheckedUpdateManyWithoutSourceEventInput = {
   targetEventId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionUpdateWithoutTargetEventInput = {
@@ -1699,6 +1927,7 @@ export type MentionUpdateWithoutTargetEventInput = {
   targetActor?: Prisma.ActorUpdateOneWithoutMentionedInNestedInput
   targetArticle?: Prisma.WikiArticleUpdateOneWithoutMentionedInNestedInput
   targetTag?: Prisma.TagUpdateOneWithoutMentionedInNestedInput
+  page?: Prisma.ContentPageUpdateOneWithoutMentionsNestedInput
 }
 
 export type MentionUncheckedUpdateWithoutTargetEventInput = {
@@ -1713,6 +1942,7 @@ export type MentionUncheckedUpdateWithoutTargetEventInput = {
   targetActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type MentionUncheckedUpdateManyWithoutTargetEventInput = {
@@ -1727,6 +1957,7 @@ export type MentionUncheckedUpdateManyWithoutTargetEventInput = {
   targetActorId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetArticleId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   targetTagId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1744,6 +1975,7 @@ export type MentionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   targetEventId?: boolean
   targetArticleId?: boolean
   targetTagId?: boolean
+  pageId?: boolean
   sourceActor?: boolean | Prisma.Mention$sourceActorArgs<ExtArgs>
   sourceEvent?: boolean | Prisma.Mention$sourceEventArgs<ExtArgs>
   sourceArticle?: boolean | Prisma.Mention$sourceArticleArgs<ExtArgs>
@@ -1752,6 +1984,7 @@ export type MentionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   targetEvent?: boolean | Prisma.Mention$targetEventArgs<ExtArgs>
   targetArticle?: boolean | Prisma.Mention$targetArticleArgs<ExtArgs>
   targetTag?: boolean | Prisma.Mention$targetTagArgs<ExtArgs>
+  page?: boolean | Prisma.Mention$pageArgs<ExtArgs>
 }, ExtArgs["result"]["mention"]>
 
 export type MentionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1767,6 +2000,7 @@ export type MentionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   targetEventId?: boolean
   targetArticleId?: boolean
   targetTagId?: boolean
+  pageId?: boolean
   sourceActor?: boolean | Prisma.Mention$sourceActorArgs<ExtArgs>
   sourceEvent?: boolean | Prisma.Mention$sourceEventArgs<ExtArgs>
   sourceArticle?: boolean | Prisma.Mention$sourceArticleArgs<ExtArgs>
@@ -1775,6 +2009,7 @@ export type MentionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   targetEvent?: boolean | Prisma.Mention$targetEventArgs<ExtArgs>
   targetArticle?: boolean | Prisma.Mention$targetArticleArgs<ExtArgs>
   targetTag?: boolean | Prisma.Mention$targetTagArgs<ExtArgs>
+  page?: boolean | Prisma.Mention$pageArgs<ExtArgs>
 }, ExtArgs["result"]["mention"]>
 
 export type MentionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1790,6 +2025,7 @@ export type MentionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   targetEventId?: boolean
   targetArticleId?: boolean
   targetTagId?: boolean
+  pageId?: boolean
   sourceActor?: boolean | Prisma.Mention$sourceActorArgs<ExtArgs>
   sourceEvent?: boolean | Prisma.Mention$sourceEventArgs<ExtArgs>
   sourceArticle?: boolean | Prisma.Mention$sourceArticleArgs<ExtArgs>
@@ -1798,6 +2034,7 @@ export type MentionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   targetEvent?: boolean | Prisma.Mention$targetEventArgs<ExtArgs>
   targetArticle?: boolean | Prisma.Mention$targetArticleArgs<ExtArgs>
   targetTag?: boolean | Prisma.Mention$targetTagArgs<ExtArgs>
+  page?: boolean | Prisma.Mention$pageArgs<ExtArgs>
 }, ExtArgs["result"]["mention"]>
 
 export type MentionSelectScalar = {
@@ -1813,9 +2050,10 @@ export type MentionSelectScalar = {
   targetEventId?: boolean
   targetArticleId?: boolean
   targetTagId?: boolean
+  pageId?: boolean
 }
 
-export type MentionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"sourceId" | "targetId" | "sourceType" | "targetType" | "sourceActorId" | "sourceEventId" | "sourceArticleId" | "sourceTagId" | "targetActorId" | "targetEventId" | "targetArticleId" | "targetTagId", ExtArgs["result"]["mention"]>
+export type MentionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"sourceId" | "targetId" | "sourceType" | "targetType" | "sourceActorId" | "sourceEventId" | "sourceArticleId" | "sourceTagId" | "targetActorId" | "targetEventId" | "targetArticleId" | "targetTagId" | "pageId", ExtArgs["result"]["mention"]>
 export type MentionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sourceActor?: boolean | Prisma.Mention$sourceActorArgs<ExtArgs>
   sourceEvent?: boolean | Prisma.Mention$sourceEventArgs<ExtArgs>
@@ -1825,6 +2063,7 @@ export type MentionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   targetEvent?: boolean | Prisma.Mention$targetEventArgs<ExtArgs>
   targetArticle?: boolean | Prisma.Mention$targetArticleArgs<ExtArgs>
   targetTag?: boolean | Prisma.Mention$targetTagArgs<ExtArgs>
+  page?: boolean | Prisma.Mention$pageArgs<ExtArgs>
 }
 export type MentionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sourceActor?: boolean | Prisma.Mention$sourceActorArgs<ExtArgs>
@@ -1835,6 +2074,7 @@ export type MentionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   targetEvent?: boolean | Prisma.Mention$targetEventArgs<ExtArgs>
   targetArticle?: boolean | Prisma.Mention$targetArticleArgs<ExtArgs>
   targetTag?: boolean | Prisma.Mention$targetTagArgs<ExtArgs>
+  page?: boolean | Prisma.Mention$pageArgs<ExtArgs>
 }
 export type MentionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sourceActor?: boolean | Prisma.Mention$sourceActorArgs<ExtArgs>
@@ -1845,6 +2085,7 @@ export type MentionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   targetEvent?: boolean | Prisma.Mention$targetEventArgs<ExtArgs>
   targetArticle?: boolean | Prisma.Mention$targetArticleArgs<ExtArgs>
   targetTag?: boolean | Prisma.Mention$targetTagArgs<ExtArgs>
+  page?: boolean | Prisma.Mention$pageArgs<ExtArgs>
 }
 
 export type $MentionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1858,6 +2099,7 @@ export type $MentionPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     targetEvent: Prisma.$WorldEventPayload<ExtArgs> | null
     targetArticle: Prisma.$WikiArticlePayload<ExtArgs> | null
     targetTag: Prisma.$TagPayload<ExtArgs> | null
+    page: Prisma.$ContentPagePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     sourceId: string
@@ -1872,6 +2114,7 @@ export type $MentionPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     targetEventId: string | null
     targetArticleId: string | null
     targetTagId: string | null
+    pageId: string | null
   }, ExtArgs["result"]["mention"]>
   composites: {}
 }
@@ -2274,6 +2517,7 @@ export interface Prisma__MentionClient<T, Null = never, ExtArgs extends runtime.
   targetEvent<T extends Prisma.Mention$targetEventArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Mention$targetEventArgs<ExtArgs>>): Prisma.Prisma__WorldEventClient<runtime.Types.Result.GetResult<Prisma.$WorldEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   targetArticle<T extends Prisma.Mention$targetArticleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Mention$targetArticleArgs<ExtArgs>>): Prisma.Prisma__WikiArticleClient<runtime.Types.Result.GetResult<Prisma.$WikiArticlePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   targetTag<T extends Prisma.Mention$targetTagArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Mention$targetTagArgs<ExtArgs>>): Prisma.Prisma__TagClient<runtime.Types.Result.GetResult<Prisma.$TagPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  page<T extends Prisma.Mention$pageArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Mention$pageArgs<ExtArgs>>): Prisma.Prisma__ContentPageClient<runtime.Types.Result.GetResult<Prisma.$ContentPagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2315,6 +2559,7 @@ export interface MentionFieldRefs {
   readonly targetEventId: Prisma.FieldRef<"Mention", 'String'>
   readonly targetArticleId: Prisma.FieldRef<"Mention", 'String'>
   readonly targetTagId: Prisma.FieldRef<"Mention", 'String'>
+  readonly pageId: Prisma.FieldRef<"Mention", 'String'>
 }
     
 
@@ -2860,6 +3105,25 @@ export type Mention$targetTagArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   include?: Prisma.TagInclude<ExtArgs> | null
   where?: Prisma.TagWhereInput
+}
+
+/**
+ * Mention.page
+ */
+export type Mention$pageArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ContentPage
+   */
+  select?: Prisma.ContentPageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ContentPage
+   */
+  omit?: Prisma.ContentPageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContentPageInclude<ExtArgs> | null
+  where?: Prisma.ContentPageWhereInput
 }
 
 /**
