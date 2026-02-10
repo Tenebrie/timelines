@@ -54,7 +54,7 @@ export function registerUpdateActorContentTool(server: McpServer) {
 								userId,
 								pageName,
 							})
-							result.push(`Page "${page.name}" has been created.`)
+							result.push(`Page "${newPage.name}" has been created.`)
 							return newPage
 						},
 					})

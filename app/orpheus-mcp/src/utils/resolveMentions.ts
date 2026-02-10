@@ -34,11 +34,17 @@ export function resolveMentions({
 	return [
 		{
 			type: 'text' as const,
-			text: 'Mentions: ' + mentions.map((m) => `${m.name} (${m.type})`).join(`, `),
+			text:
+				'Mentions: ' +
+				mentions.map((m) => `${m.name} (${m.type})`).join(`, `) +
+				(mentions.length === 0 ? '(None)' : ''),
 		},
 		{
 			type: 'text' as const,
-			text: 'Mentioned in: ' + reverseMentions.map((m) => `${m.name} (${m.type})`).join(`, `),
+			text:
+				'Mentioned in: ' +
+				reverseMentions.map((m) => `${m.name} (${m.type})`).join(`, `) +
+				(reverseMentions.length === 0 ? '(None)' : ''),
 		},
 	]
 }

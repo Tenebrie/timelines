@@ -67,14 +67,13 @@ export function registerGetActorDetailsTool(server: McpServer) {
 							type: 'text' as const,
 							text:
 								`Actor: ${actor.name}\n` +
-								`Title: ${actor.title || 'None'}\n` +
+								`Title: ${actor.title || '(None)'}\n` +
 								`Page: ${page?.name || '(Main content)'}\n\n` +
 								`${content.contentHtml || '(No content provided)'}`,
 						},
 						{
 							type: 'text' as const,
-							text:
-								'Pages supported! Existing pages: ' + actor.pages.map((page) => `"${page.name}"`).join(`, `),
+							text: 'Pages: ' + actor.pages.map((page) => `"${page.name}"`).join(`, `),
 						},
 						...mentionsOutput,
 					],

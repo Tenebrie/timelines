@@ -53,7 +53,7 @@ export function registerUpdateActorTool(server: McpServer) {
 							text:
 								`Actor updated successfully!\n` +
 								`Name: ${updatedActor.name}\n` +
-								`Title: ${updatedActor.title || 'None'}`,
+								`Title: ${updatedActor.title || '(None)'}`,
 						},
 					],
 				}
