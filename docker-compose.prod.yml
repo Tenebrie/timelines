@@ -105,12 +105,6 @@ services:
         secrets:
             - jwt-secret
             - environment
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
-            interval: 10s
-            timeout: 10s
-            retries: 3
-            start_period: 30s
     rhea-postgres:
         volumes:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached

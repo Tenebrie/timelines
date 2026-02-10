@@ -6,7 +6,7 @@ if [[ -z "$VERSION" ]]; then
   exit 1
 fi
 
-STACK_VERSION=1
+STACK_VERSION=2
 STACK_VERSION_FILE="/var/lib/timelines/stack-version"
 
 # Check if we need to do a full deploy instead of update
