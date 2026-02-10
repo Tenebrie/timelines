@@ -109,6 +109,33 @@ services:
         command: yarn start
         tty: true
         restart: unless-stopped
+    orpheus:
+        image: timelines-orpheus:dev
+        build:
+            context: ./
+            dockerfile: ./app/orpheus-mcp/Dockerfile
+        environment:
+            NODE_ENV: development
+            # Fake docker secrets
+            environment: development
+            jwt_secret: secretkey
+            REQUIRE_OAUTH: "false"
+        volumes:
+            - ./app/orpheus-mcp/src:/app/orpheus/src:cached
+            - ./app/ts-shared/src:/app/ts-shared/src:cached
+            - type: bind
+              source: ./eslint.config.mjs
+              target: /app/orpheus/eslint.config.mjs
+            - type: bind
+              source: ./app/orpheus-mcp/tsconfig.json
+              target: /app/orpheus/tsconfig.json
+        ports:
+            - 3002:3002
+        networks:
+            - dev_network
+        command: yarn start
+        tty: true
+        restart: unless-stopped
     rhea-postgres:
         environment:
             POSTGRES_USER: docker

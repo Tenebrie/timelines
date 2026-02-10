@@ -20,14 +20,16 @@ router.get('/api/world/:worldId/search/:query', async (ctx) => {
 		query: PathParam(StringValidator),
 	})
 
-	const [events, actors] = await Promise.all([
+	const [events, actors, articles] = await Promise.all([
 		WorldSearchService.findEvents(worldId, query),
 		WorldSearchService.findActors(worldId, query),
+		WorldSearchService.findArticles(worldId, query),
 	])
 
 	return {
 		events,
 		actors,
+		articles,
 	}
 })
 

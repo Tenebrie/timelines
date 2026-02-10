@@ -86,6 +86,31 @@ services:
         secrets:
             - jwt-secret
             - environment
+    orpheus:
+        image: tenebrie/timelines-orpheus:${VERSION}
+        build:
+            context: ./
+            dockerfile: ./app/orpheus-mcp/Dockerfile.prod
+        environment:
+            NODE_ENV: production # Prod or staging
+            REQUIRE_OAUTH: "true"
+        command: yarn prod
+        deploy:
+            replicas: 1
+            update_config:
+                order: start-first
+                parallelism: 1
+                delay: 10s
+                failure_action: pause
+        secrets:
+            - jwt-secret
+            - environment
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+            interval: 10s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
     rhea-postgres:
         volumes:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached
