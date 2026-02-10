@@ -1,18 +1,9 @@
-import type { User } from '@prisma/client'
 import { SecretService } from '@src/ts-shared/node/services/SecretService.js'
 import { ServiceTokenPayload } from '@src/ts-shared/node/types/ServiceTokenPayload.js'
 import { UserTokenPayload } from '@src/ts-shared/node/types/UserTokenPayload.js'
 import jwt from 'jsonwebtoken'
 
 export const TokenService = {
-	generateJwtToken: (user: Pick<User, 'id' | 'email'>): string => {
-		const payload: UserTokenPayload = {
-			id: user.id,
-			email: user.email,
-		}
-		return jwt.sign(payload, SecretService.getSecret('jwt-secret'))
-	},
-
 	decodeUserToken: (token: string): UserTokenPayload => {
 		return jwt.verify(token, SecretService.getSecret('jwt-secret')) as UserTokenPayload
 	},
@@ -23,5 +14,21 @@ export const TokenService = {
 			throw new Error('Invalid service token')
 		}
 		return payload
+	},
+
+	cachedServiceToken: null as string | null,
+	produceServiceToken: (): string => {
+		if (TokenService.cachedServiceToken) {
+			return TokenService.cachedServiceToken
+		}
+
+		const payload: ServiceTokenPayload = {
+			id: 'orpheus',
+			email: 'orpheus@localhost',
+			service: 'orpheus',
+		}
+		const token = jwt.sign(payload, SecretService.getSecret('jwt-secret'))
+		TokenService.cachedServiceToken = token
+		return token
 	},
 }

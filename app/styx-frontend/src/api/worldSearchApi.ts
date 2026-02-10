@@ -50,23 +50,23 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			createdAt: string
 			updatedAt: string
 			name?: null | string
-			descriptionRich?: null | string
 			timestamp: string
+			descriptionRich?: null | string
 			worldEventId: string
 		}[]
+		worldId: string
 		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
-		worldId: string
+		type: 'SCENE' | 'OTHER'
 		icon: string
 		color: string
-		descriptionRich: string
-		descriptionYjs?: null | string
-		type: 'SCENE' | 'OTHER'
+		name: string
 		timestamp: string
 		revokedAt?: null | string
+		descriptionRich: string
+		descriptionYjs?: null | string
 		customName: boolean
 		externalLink: string
 		extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
@@ -101,17 +101,58 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			targetArticleId?: null | string
 			targetTagId?: null | string
 		}[]
+		worldId: string
 		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
-		worldId: string
-		title: string
 		icon: string
 		color: string
+		name: string
 		descriptionRich: string
 		descriptionYjs?: null | string
+		title: string
+	}[]
+	articles: {
+		mentions: {
+			sourceId: string
+			targetId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
+		}[]
+		mentionedIn: {
+			sourceId: string
+			targetId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
+		}[]
+		worldId: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		icon: string
+		color: string
+		name: string
+		contentRich: string
+		contentYjs?: null | string
+		position: number
+		parentId?: null | string
 	}[]
 }
 export type SearchWorldApiArg = {

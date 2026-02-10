@@ -1,5 +1,5 @@
 export type ServiceTokenPayload = {
 	id: string
 	email: string
-	service?: 'rhea' | 'calliope'
+	service?: 'rhea' | 'calliope' | 'orpheus'
 }

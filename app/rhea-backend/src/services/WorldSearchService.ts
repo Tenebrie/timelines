@@ -51,4 +51,21 @@ export const WorldSearchService = {
 			},
 		})
 	},
+
+	async findArticles(worldId: string, query: string) {
+		const prisma = getPrismaClient()
+		return prisma.wikiArticle.findMany({
+			where: {
+				worldId,
+				OR: [
+					{ name: { contains: query, mode: 'insensitive' } },
+					{ contentRich: { contains: query, mode: 'insensitive' } },
+				],
+			},
+			include: {
+				mentions: true,
+				mentionedIn: true,
+			},
+		})
+	},
 }
