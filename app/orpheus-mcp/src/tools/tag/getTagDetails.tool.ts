@@ -55,6 +55,7 @@ export function registerGetTagDetailsTool(server: McpServer) {
 							type: 'text' as const,
 							text:
 								`Tag: ${tagDetails.name}\n` +
+								`ID: ${tag.id}\n` +
 								`Description: ${tagDetails.description || 'No description'}\n` +
 								`Mentioned by:\n${mentionedByText}`,
 						},

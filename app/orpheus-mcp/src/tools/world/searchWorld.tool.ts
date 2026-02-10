@@ -49,9 +49,12 @@ export function registerSearchWorldTool(server: McpServer) {
 					'',
 					'**Articles:**',
 					formatResults(data.articles, 'articles'),
+					'',
+					'**Tags:**',
+					formatResults(data.tags, 'tags'),
 				].join('\n')
 
-				const totalResults = data.events.length + data.actors.length + data.articles.length
+				const totalResults = data.events.length + data.actors.length + data.articles.length + data.tags.length
 				Logger.toolSuccess(TOOL_NAME, `Found ${totalResults} results for query "${args.query}"`)
 
 				return {

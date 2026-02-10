@@ -22,7 +22,11 @@ export function registerGetActorDetailsTool(server: McpServer) {
 		TOOL_NAME,
 		{
 			title: 'Get Actor Details',
-			description: 'Get details about a specific actor by name, including name, title, and description',
+			description: [
+				'Fetches actor info. Use pageName to get a specific page (e.g., "knowledge", "relationships").',
+				'Without pageName, returns main content.',
+				'Shows list of available pages at the bottom. If the specified page does not exist, an error will be returned.',
+			].join('\n'),
 			inputSchema,
 			annotations: {
 				readOnlyHint: true,
@@ -67,13 +71,17 @@ export function registerGetActorDetailsTool(server: McpServer) {
 							type: 'text' as const,
 							text:
 								`Actor: ${actor.name}\n` +
+								`ID: ${actor.id}\n` +
 								`Title: ${actor.title || '(None)'}\n` +
 								`Page: ${page?.name || '(Main content)'}\n\n` +
 								`${content.contentHtml || '(No content provided)'}`,
 						},
 						{
 							type: 'text' as const,
-							text: 'Pages: ' + actor.pages.map((page) => `"${page.name}"`).join(`, `),
+							text:
+								'Pages: ' +
+								actor.pages.map((page) => `"${page.name}"`).join(`, `) +
+								(actor.pages.length === 0 ? ' (None)' : ''),
 						},
 						...mentionsOutput,
 					],

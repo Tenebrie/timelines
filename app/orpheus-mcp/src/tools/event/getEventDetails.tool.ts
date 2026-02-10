@@ -57,6 +57,7 @@ export function registerGetEventDetailsTool(server: McpServer) {
 							type: 'text' as const,
 							text:
 								`Event: ${event.name}\n` +
+								`ID: ${event.id}\n` +
 								`Timestamp: ${event.timestamp}\n\n` +
 								`${content.contentHtml || 'No content'}`,
 						},

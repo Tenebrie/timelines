@@ -55,7 +55,10 @@ export function registerGetArticleDetailsTool(server: McpServer) {
 					content: [
 						{
 							type: 'text' as const,
-							text: `Article: ${article.name}\n\n` + `${content.contentHtml || 'No content'}`,
+							text:
+								`Article: ${article.name}\n` +
+								`ID: ${article.id}\n\n` +
+								`${content.contentHtml || 'No content'}`,
 						},
 						...mentionsOutput,
 					],

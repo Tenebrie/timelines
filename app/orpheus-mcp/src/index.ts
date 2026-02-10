@@ -54,7 +54,8 @@ function createServer() {
 		- Actors are characters, items, artifacts. They can typically move around, have relationships, be involved with events.
 		- Events are entities that happen at a specific point in time. They ALWAYS have a timestamp, and they may also have duration or end date.
 		- Articles (Wiki articles) are just text documents with anything that you would like to store there.
-		- Tags are labels that attach to actors, events or articles to group or organize them.
+		- Tags are labels you can mention in actor/article content to create queryable groupings.
+			Fetch tag details to see the ID (needed for mentions) and which entities reference this tag.
 		`,
 		},
 	)

@@ -24,11 +24,19 @@ export function registerUpdateActorContentTool(server: McpServer) {
 		TOOL_NAME,
 		{
 			title: 'Update Actor Content',
-			description: 'Update content for an existing actor. Finds or creates the content page if provided.',
+			description: [
+				"Updates actor content. Use pageName to target a specific page - creates it if it doesn't exist.",
+				'Without pageName, updates main content.',
+
+				'To mention another actor/tag in content, use:',
+				'<span data-component-props="{&quot;actor&quot;:&quot;ACTOR_ID&quot;}" data-type="mention" data-name="Display Name"></span>',
+				'<span data-component-props="{&quot;tag&quot;:&quot;TAG_ID&quot;}" data-type="mention" data-name="Tag Name"></span>',
+				'Note that data-component-props is an escaped JSON string. For example: {"actor":"ACTOR_ID"}, escaped, will produce the correct format.',
+
+				'Content is HTML. Use <p>, <ul>, <li>, <b> etc.',
+				'Mentions link entities together and show up in "Mentions" and "Mentioned in" fields.',
+			].join('\n'),
 			inputSchema,
-			annotations: {
-				idempotentHint: true,
-			},
 		},
 		async (args: z.infer<typeof inputSchema>, extra: ToolExtra) => {
 			try {
