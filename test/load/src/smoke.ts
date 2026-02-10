@@ -38,7 +38,7 @@ interface SetupData {
 }
 
 export function setup(): SetupData {
-	console.log(`Running smoke test against: ${BASE_URL}`)
+	console.info(`Running smoke test against: ${BASE_URL}`)
 
 	// Create a test user for authenticated endpoints
 	const user = createTestUser()
@@ -97,5 +97,5 @@ export function teardown(data: SetupData): void {
 		deleteTestUser(user.cookies)
 	}
 
-	console.log('Smoke test cleanup complete')
+	console.info('Smoke test cleanup complete')
 }

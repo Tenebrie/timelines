@@ -18,9 +18,13 @@ export function registerSetContextTool(server: McpServer) {
 	server.registerTool(
 		TOOL_NAME,
 		{
+			title: 'Set Context',
 			description:
 				'Set the world ID for this session. Use list_worlds to see available worlds, then set_context to select one to work in.',
 			inputSchema,
+			annotations: {
+				idempotentHint: true,
+			},
 		},
 		async (
 			args: z.infer<typeof inputSchema>,

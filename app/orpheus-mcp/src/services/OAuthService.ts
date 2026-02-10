@@ -28,7 +28,7 @@ export const OAuthService = {
 	registerClient: (clientName: string, redirectUris: string[]): string => {
 		const clientId = crypto.randomUUID()
 		registeredClients.set(clientId, { clientName, redirectUris })
-		console.log(`Registered new OAuth client: ${clientId} (${clientName})`)
+		console.info(`Registered new OAuth client: ${clientId} (${clientName})`)
 		return clientId
 	},
 

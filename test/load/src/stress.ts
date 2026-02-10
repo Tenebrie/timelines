@@ -53,9 +53,9 @@ export const options: Options = {
 }
 
 export function setup(): void {
-	console.log(`⚠️  STRESS TEST - Running against: ${BASE_URL}`)
-	console.log('This test will generate significant load!')
-	console.log('Duration: approximately 8 minutes')
+	console.info(`⚠️  STRESS TEST - Running against: ${BASE_URL}`)
+	console.info('This test will generate significant load!')
+	console.info('Duration: approximately 8 minutes')
 }
 
 export default function (): void {
@@ -122,6 +122,6 @@ export default function (): void {
 }
 
 export function teardown(): void {
-	console.log('Stress test complete')
-	console.log('Review the error_rate and timeouts metrics to identify breaking points')
+	console.info('Stress test complete')
+	console.info('Review the error_rate and timeouts metrics to identify breaking points')
 }

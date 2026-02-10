@@ -10,7 +10,13 @@ export function registerGetWorldDetailsTool(server: McpServer) {
 	server.registerTool(
 		TOOL_NAME,
 		{
-			description: 'Get details about the current world (events, actors, articles)',
+			title: 'Get World Details',
+			description:
+				'Get details about the current world (events, actors, articles). Use this to get overview of the stuff you have access to.',
+			annotations: {
+				readOnlyHint: true,
+				idempotentHint: true,
+			},
 		},
 		async (extra: ToolExtra) => {
 			try {
@@ -26,7 +32,7 @@ export function registerGetWorldDetailsTool(server: McpServer) {
 				const content =
 					'World details:\n' +
 					`Events: ${baseData.events.map((e) => e.name).join(', ') || 'None'}\n` +
-					`Actors: ${baseData.actors.map((a) => a.name).join(', ') || 'None'}\n` +
+					`Actors: ${baseData.actors.map((a) => `${a.name} (${a.title})`).join(', ') || 'None'}\n` +
 					`Articles: ${articles.map((a) => a.name).join(', ') || 'None'}\n` +
 					`Read-Only: ${baseData.isReadOnly ? 'Yes' : 'No'}`
 

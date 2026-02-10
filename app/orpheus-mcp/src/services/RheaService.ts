@@ -53,6 +53,36 @@ export const RheaService = {
 		return response.data
 	},
 
+	createWorld: async ({
+		userId,
+		name,
+		description,
+		timeOrigin,
+	}: {
+		userId: string
+		name: string
+		description?: string
+		timeOrigin?: number
+	}) => {
+		const response = await rheaClient['POST']('/api/worlds', {
+			body: {
+				name,
+				description,
+				calendar: 'EARTH',
+				timeOrigin,
+			},
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: userId,
+			},
+		})
+		if (!response.data || response.error) {
+			throw new Error('Failed to create world: ' + JSON.stringify(response.error))
+		}
+
+		return response.data
+	},
+
 	getWorldDetails: async ({ worldId, userId }: { worldId: string; userId: string }) => {
 		const response = await rheaClient['GET'](`/api/world/{worldId}`, {
 			params: {
@@ -254,7 +284,7 @@ export const RheaService = {
 	}: {
 		worldId: string
 		userId: string
-		name?: string
+		name: string
 		timestamp: string
 		descriptionRich: string
 	}) => {

@@ -26,17 +26,17 @@ function formatArgs(args: unknown): string {
 
 export const Logger = {
 	toolInvocation: (toolName: string, args: unknown) => {
-		console.log(
+		console.info(
 			`${COLORS.dim}[${formatTimestamp()}]${COLORS.reset} ` +
 				`${COLORS.cyan}${COLORS.bright}TOOL${COLORS.reset} ` +
 				`${COLORS.magenta}${toolName}${COLORS.reset} ` +
 				`${COLORS.dim}invoked with:${COLORS.reset}`,
 		)
-		console.log(`${COLORS.yellow}${formatArgs(args)}${COLORS.reset}`)
+		console.info(`${COLORS.yellow}${formatArgs(args)}${COLORS.reset}`)
 	},
 
 	toolSuccess: (toolName: string, resultPreview?: string) => {
-		console.log(
+		console.info(
 			`${COLORS.dim}[${formatTimestamp()}]${COLORS.reset} ` +
 				`${COLORS.green}${COLORS.bright}SUCCESS${COLORS.reset} ` +
 				`${COLORS.magenta}${toolName}${COLORS.reset}` +
@@ -45,7 +45,7 @@ export const Logger = {
 	},
 
 	toolError: (toolName: string, error: unknown) => {
-		console.log(
+		console.info(
 			`${COLORS.dim}[${formatTimestamp()}]${COLORS.reset} ` +
 				`${COLORS.red}${COLORS.bright}ERROR${COLORS.reset} ` +
 				`${COLORS.magenta}${toolName}${COLORS.reset} ` +
@@ -54,13 +54,13 @@ export const Logger = {
 	},
 
 	info: (message: string) => {
-		console.log(
+		console.info(
 			`${COLORS.dim}[${formatTimestamp()}]${COLORS.reset} ${COLORS.cyan}INFO${COLORS.reset} ${message}`,
 		)
 	},
 
 	debug: (message: string) => {
-		console.log(
+		console.info(
 			`${COLORS.dim}[${formatTimestamp()}]${COLORS.reset} ${COLORS.dim}DEBUG ${message}${COLORS.reset}`,
 		)
 	},
