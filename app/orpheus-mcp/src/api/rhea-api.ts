@@ -3117,6 +3117,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
+                        pages: {
+                            id: string;
+                            name: string;
+                        }[];
                         mentions: {
                             pageId?: null | string;
                             sourceId: string;
@@ -3257,6 +3261,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
+                        pages: {
+                            id: string;
+                            name: string;
+                        }[];
                         mentions: {
                             pageId?: null | string;
                             sourceId: string;

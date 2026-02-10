@@ -14,6 +14,7 @@ export enum CalliopeToClientMessageType {
 	MINDMAP_NODE_UPDATED = 'mindmapNodeUpdated',
 	WIKI_ARTICLE_UPDATED = 'wikiArticleUpdated',
 	WIKI_ARTICLE_DELETED = 'wikiArticleDeleted',
+	TAG_UPDATED = 'tagUpdated',
 }
 
 export type CalliopeToClientMessagePayload = {
@@ -56,6 +57,11 @@ export type CalliopeToClientMessagePayload = {
 		worldId: string
 		// TODO: Type properly
 		node: string
+	}
+	[CalliopeToClientMessageType.TAG_UPDATED]: {
+		worldId: string
+		// TODO: Type properly
+		tag: string
 	}
 }
 

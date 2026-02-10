@@ -90,6 +90,10 @@ export type PutWorldEventContentApiArg = {
 	}
 }
 export type CreateWorldEventApiResponse = /** status 200  */ {
+	pages: {
+		id: string
+		name: string
+	}[]
 	mentions: {
 		pageId?: null | string
 		sourceId: string
@@ -164,6 +168,10 @@ export type CreateWorldEventApiArg = {
 	}
 }
 export type UpdateWorldEventApiResponse = /** status 200  */ {
+	pages: {
+		id: string
+		name: string
+	}[]
 	mentions: {
 		pageId?: null | string
 		sourceId: string

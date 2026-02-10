@@ -88,6 +88,9 @@ const handlers: RheaToCalliopeMessageHandlers = {
 	[RheaToCalliopeMessageType.WIKI_ARTICLE_DELETED]: (ctx) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_ARTICLE_DELETED, ...ctx })
 	},
+	[RheaToCalliopeMessageType.TAG_UPDATED]: function (ctx): void {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.TAG_UPDATED, ...ctx })
+	},
 }
 
 export const RheaMessageHandlerService = {
