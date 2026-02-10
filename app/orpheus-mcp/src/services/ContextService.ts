@@ -1,18 +1,27 @@
 /**
  * Session-specific context for MCP connections.
  * Each MCP session gets its own context instance.
+ * Note: worldId is stored per-user, not per-session, to persist across sessions.
  */
 export interface SessionContext {
 	currentUserId: string | null
+}
+
+/**
+ * User-specific context that persists across sessions.
+ */
+export interface UserContext {
 	currentWorldId: string | null
 }
 
 /**
- * Manages per-session context for MCP tool invocations.
- * The MCP SDK provides sessionId in the extra parameter of tool handlers.
+ * Manages per-session and per-user context for MCP tool invocations.
+ * Session context (userId) is ephemeral and tied to the session lifecycle.
+ * User context (worldId) persists across sessions for the same user.
  */
 class ContextServiceImpl {
 	private sessions = new Map<string, SessionContext>()
+	private users = new Map<string, UserContext>()
 
 	/**
 	 * Get or create a session context
@@ -22,7 +31,6 @@ class ContextServiceImpl {
 		if (!session) {
 			session = {
 				currentUserId: null,
-				currentWorldId: null,
 			}
 			this.sessions.set(sessionId, session)
 		}
@@ -30,18 +38,37 @@ class ContextServiceImpl {
 	}
 
 	/**
-	 * Set the current world for a session
+	 * Get or create a user context
 	 */
-	setCurrentWorld(sessionId: string, worldId: string | null): void {
-		const session = this.getSession(sessionId)
-		session.currentWorldId = worldId
+	private getUserContext(userId: string): UserContext {
+		let userContext = this.users.get(userId)
+		if (!userContext) {
+			userContext = {
+				currentWorldId: null,
+			}
+			this.users.set(userId, userContext)
+		}
+		return userContext
 	}
 
 	/**
-	 * Get the current world for a session
+	 * Set the current world for a user (persists across sessions)
+	 */
+	setCurrentWorld(sessionId: string, worldId: string | null): void {
+		const userId = this.getCurrentUserIdOrThrow(sessionId)
+		const userContext = this.getUserContext(userId)
+		userContext.currentWorldId = worldId
+	}
+
+	/**
+	 * Get the current world for a user (persists across sessions)
 	 */
 	getCurrentWorld(sessionId: string): string | null {
-		return this.getSession(sessionId).currentWorldId
+		const userId = this.getCurrentUserId(sessionId)
+		if (!userId) {
+			return null
+		}
+		return this.getUserContext(userId).currentWorldId
 	}
 
 	getCurrentWorldOrThrow(sessionId: string): string {
@@ -76,7 +103,8 @@ class ContextServiceImpl {
 	}
 
 	/**
-	 * Clean up a session when it closes
+	 * Clean up a session when it closes.
+	 * Note: User context is NOT cleaned up to persist across sessions.
 	 */
 	removeSession(sessionId: string): void {
 		this.sessions.delete(sessionId)
@@ -87,6 +115,13 @@ class ContextServiceImpl {
 	 */
 	getSessionCount(): number {
 		return this.sessions.size
+	}
+
+	/**
+	 * Get the number of users with stored context (for debugging)
+	 */
+	getUserCount(): number {
+		return this.users.size
 	}
 }
 
