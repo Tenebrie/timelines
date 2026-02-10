@@ -8,6 +8,7 @@ import { CustomThemeProvider } from '@/app/features/theming/context/CustomThemeP
 import { store } from '@/app/store'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
+import { resolveEntityName } from '../hooks/resolveEntityName'
 import { ActorMentionChip } from './chips/ActorMentionChip'
 import { ArticleMentionChip } from './chips/ArticleMentionChip'
 import { EventMentionChip } from './chips/EventMentionChip'
@@ -42,6 +43,12 @@ const getArticleName = (node: ProseMirrorNode) => {
 	return name
 }
 
+type MentionPropsType = {
+	actor?: string | boolean
+	event?: string | boolean
+	article?: string | boolean
+}
+
 export const MentionNode = Node.create({
 	name: MentionNodeName,
 
@@ -51,18 +58,38 @@ export const MentionNode = Node.create({
 
 	addAttributes() {
 		return {
-			componentProps: {
-				default: {
-					actor: null,
-					event: null,
-					article: null,
+			type: {
+				default: 'mention',
+				parseHTML: (element) => element.getAttribute('data-type') || 'mention',
+				renderHTML: (attributes) => ({
+					'data-type': attributes.type,
+				}),
+			},
+			name: {
+				default: null,
+				parseHTML: (element) => element.getAttribute('data-name'),
+				renderHTML: (attributes) => {
+					if (!attributes.name) return {}
+					return {
+						'data-name': attributes.name,
+					}
 				},
+			},
+			componentProps: {
+				default: {},
 				parseHTML: (element) => {
-					return JSON.parse(element.getAttribute('data-component-props') || '{}')
+					const props = JSON.parse(element.getAttribute('data-component-props') || '{}') as MentionPropsType
+					return props
 				},
 				renderHTML: (attributes) => {
+					// Only include non-null/non-false values
+					const props = attributes.componentProps as MentionPropsType
+					const filtered: MentionPropsType = {}
+					if (props.actor) filtered.actor = props.actor
+					if (props.event) filtered.event = props.event
+					if (props.article) filtered.article = props.article
 					return {
-						'data-component-props': JSON.stringify(attributes.componentProps),
+						'data-component-props': JSON.stringify(filtered),
 					}
 				},
 			},
@@ -72,7 +99,7 @@ export const MentionNode = Node.create({
 	parseHTML() {
 		return [
 			{
-				tag: 'span',
+				tag: 'span[data-component-props]',
 			},
 		]
 	},
@@ -90,6 +117,7 @@ export const MentionNode = Node.create({
 		return ({ node: initialNode }) => {
 			let root: Root | null = null
 			const dom = document.createElement('span')
+			dom.setAttribute('data-type', 'mention')
 
 			let lastNode: ProseMirrorNode = initialNode
 
@@ -102,6 +130,12 @@ export const MentionNode = Node.create({
 				const articleId = node.attrs.componentProps.article as string | undefined
 				const state = store.getState()
 				const worldId = state.world.id
+
+				const entityId = actorId ?? eventId ?? articleId
+				if (entityId) {
+					const entityName = resolveEntityName({ entityId })
+					dom.setAttribute('data-name', entityName)
+				}
 
 				const Component = () => {
 					useEffectOnce(() => {

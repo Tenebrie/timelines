@@ -115,6 +115,12 @@ export function htmlToYXml(html: string, parent: Y.XmlFragment | Y.XmlElement) {
 					if (child.attribs) {
 						Object.entries(child.attribs).forEach(([key, value]) => {
 							// Special handling for mention chips (custom node)
+							if (key === 'data-name') {
+								element.setAttribute('name', value)
+							}
+							if (key === 'data-type') {
+								element.setAttribute('type', value)
+							}
 							if (key === 'data-component-props') {
 								try {
 									const parsed = JSON.parse(value)
@@ -255,7 +261,11 @@ export function htmlToYXml(html: string, parent: Y.XmlFragment | Y.XmlElement) {
 				if (elem.attribs) {
 					Object.entries(elem.attribs).forEach(([key, value]) => {
 						// Special handling for mention chips
-						if (key === 'data-component-props') {
+						if (key === 'data-name') {
+							element.setAttribute('name', value)
+						} else if (key === 'data-type') {
+							element.setAttribute('type', value)
+						} else if (key === 'data-component-props') {
 							try {
 								const parsed = JSON.parse(value)
 								element.setAttribute('componentProps', parsed)
@@ -368,7 +378,9 @@ export function yXmlToHtml(fragment: Y.XmlFragment | Y.XmlElement): string {
 				const serialized =
 					typeof componentProps === 'string' ? componentProps : JSON.stringify(componentProps)
 				const escaped = escapeHtmlAttribute(serialized)
-				html += `<span data-component-props="${escaped}"></span>`
+				const dataType = attrs.type ? ` data-type="${escapeHtmlAttribute(String(attrs.type))}"` : ''
+				const dataName = attrs.name ? ` data-name="${escapeHtmlAttribute(String(attrs.name))}"` : ''
+				html += `<span data-component-props="${escaped}"${dataType}${dataName}></span>`
 			}
 			// Headings - use level attribute
 			else if (semanticName === 'heading') {

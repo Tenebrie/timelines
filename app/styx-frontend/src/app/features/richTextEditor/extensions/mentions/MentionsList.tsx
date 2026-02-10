@@ -104,6 +104,9 @@ export function MentionsListComponent({ editor }: Props) {
 			return
 		}
 
+		// Determine the entity name for the mention
+		const entityId = createdEntityId ?? selectedMention.id
+
 		editor
 			.chain()
 			.focus()
@@ -114,10 +117,10 @@ export function MentionsListComponent({ editor }: Props) {
 			.insertContent({
 				type: MentionNodeName,
 				attrs: {
+					type: 'mention',
+					name: selectedMention?.name ?? query,
 					componentProps: {
-						actor: entityType === 'Actor' && (createdEntityId ?? selectedMention.id),
-						event: entityType === 'Event' && (createdEntityId ?? selectedMention.id),
-						article: entityType === 'Article' && (createdEntityId ?? selectedMention.id),
+						[entityType.toLowerCase()]: entityId,
 					},
 				},
 			})

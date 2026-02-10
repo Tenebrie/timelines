@@ -109,10 +109,16 @@ export const WorldService = {
 						mentions: true,
 						mentionedIn: true,
 					},
+					omit: {
+						descriptionYjs: true,
+					},
 				},
 				events: {
 					orderBy: {
 						timestamp: 'asc',
+					},
+					omit: {
+						descriptionYjs: true,
 					},
 					include: {
 						mentions: true,
