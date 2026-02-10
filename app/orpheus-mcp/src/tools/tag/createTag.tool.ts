@@ -18,7 +18,8 @@ export function registerCreateTagTool(server: McpServer) {
 		TOOL_NAME,
 		{
 			title: 'Create Tag',
-			description: 'Create a new tag in the current world with name and optional description',
+			description:
+				'Create a new tag in the current world with name and optional description. Tag name is human readable.',
 			inputSchema,
 		},
 		async (args: z.infer<typeof inputSchema>, extra: ToolExtra) => {

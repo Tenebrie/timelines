@@ -7,7 +7,7 @@ type Mention = {
 	targetId: string
 }
 
-export function resolveMentions({
+export function resolveSavedMentions({
 	entity,
 	worldData,
 	articleData,

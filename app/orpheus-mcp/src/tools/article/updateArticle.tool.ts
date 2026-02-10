@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -19,8 +20,19 @@ export function registerUpdateArticleTool(server: McpServer) {
 		TOOL_NAME,
 		{
 			title: 'Update Article',
-			description:
+			description: [
 				'Update an existing wiki article by name. Find the article by name and update its properties.',
+
+				'To mention another entity in content, use:',
+				'<span data-component-props="{&quot;actor&quot;:&quot;ACTOR_ID&quot;}" data-type="mention" data-name="Display Name"></span>',
+				'<span data-component-props="{&quot;tag&quot;:&quot;TAG_ID&quot;}" data-type="mention" data-name="Tag Name"></span>',
+				'Note that data-component-props is an escaped JSON string. For example: {"actor":"ACTOR_ID"}, escaped, will produce the correct format.',
+
+				'You may also use a shorthand syntax: @[Entity Name] that will be automatically resolved into an HTML tag.',
+
+				'Content is HTML. Use <p>, <ul>, <li>, <b> etc.',
+				'Mentions link entities together and show up in "Mentions" and "Mentioned in" fields.',
+			].join('\n'),
 			inputSchema,
 			annotations: {
 				idempotentHint: true,
@@ -35,8 +47,8 @@ export function registerUpdateArticleTool(server: McpServer) {
 				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
 				const { articleName, name, content } = args
 
-				const articles = await RheaService.getWorldArticles({ worldId, userId })
-				const article = findByName({ name: articleName, entities: articles })
+				const articleData = await RheaService.getWorldArticles({ worldId, userId })
+				const article = findByName({ name: articleName, entities: articleData })
 
 				let updatedName = article.name
 				if (name !== undefined) {
@@ -50,11 +62,18 @@ export function registerUpdateArticleTool(server: McpServer) {
 				}
 
 				if (content !== undefined) {
+					const worldData = await RheaService.getWorldDetails({ worldId, userId })
+					const parsedContent = await resolveShorthandMentions({
+						content,
+						worldData,
+						articleData,
+					})
+
 					await RheaService.updateArticleContent({
 						worldId,
 						articleId: article.id,
 						userId,
-						content,
+						content: parsedContent,
 					})
 				}
 

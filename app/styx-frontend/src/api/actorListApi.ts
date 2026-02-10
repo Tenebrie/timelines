@@ -169,6 +169,10 @@ export type CreateActorContentPageApiArg = {
 	}
 }
 export type CreateActorApiResponse = /** status 200  */ {
+	pages: {
+		id: string
+		name: string
+	}[]
 	mentions: {
 		pageId?: null | string
 		sourceId: string
@@ -222,6 +226,10 @@ export type CreateActorApiArg = {
 	}
 }
 export type UpdateActorApiResponse = /** status 200  */ {
+	pages: {
+		id: string
+		name: string
+	}[]
 	mentions: {
 		pageId?: null | string
 		sourceId: string

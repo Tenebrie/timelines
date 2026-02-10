@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -20,7 +21,19 @@ export function registerUpdateEventTool(server: McpServer) {
 		TOOL_NAME,
 		{
 			title: 'Update Event',
-			description: 'Update an existing event by name. Find the event by name and update its properties.',
+			description: [
+				'Update an existing event by name. Find the event by name and update its properties.',
+
+				'To mention another entity in content, use:',
+				'<span data-component-props="{&quot;actor&quot;:&quot;ACTOR_ID&quot;}" data-type="mention" data-name="Display Name"></span>',
+				'<span data-component-props="{&quot;tag&quot;:&quot;TAG_ID&quot;}" data-type="mention" data-name="Tag Name"></span>',
+				'Note that data-component-props is an escaped JSON string. For example: {"actor":"ACTOR_ID"}, escaped, will produce the correct format.',
+
+				'You may also use a shorthand syntax: @[Entity Name] that will be automatically resolved into an HTML tag.',
+
+				'Content is HTML. Use <p>, <ul>, <li>, <b> etc.',
+				'Mentions link entities together and show up in "Mentions" and "Mentioned in" fields.',
+			].join('\n'),
 			inputSchema,
 			annotations: {
 				idempotentHint: true,
@@ -47,11 +60,18 @@ export function registerUpdateEventTool(server: McpServer) {
 				})
 
 				if (description !== undefined) {
+					const articleData = await RheaService.getWorldArticles({ userId, worldId })
+					const parsedContent = await resolveShorthandMentions({
+						content: description,
+						worldData,
+						articleData,
+					})
+
 					await RheaService.updateEventContent({
 						worldId,
 						eventId: event.id,
 						userId,
-						content: description,
+						content: parsedContent,
 					})
 				}
 

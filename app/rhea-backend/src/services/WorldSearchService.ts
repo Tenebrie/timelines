@@ -17,6 +17,14 @@ export const WorldSearchService = {
 							},
 						},
 					},
+					{
+						pages: {
+							some: {
+								name: { contains: query, mode: 'insensitive' },
+								description: { contains: query, mode: 'insensitive' },
+							},
+						},
+					},
 				],
 			},
 			orderBy: {
@@ -43,6 +51,14 @@ export const WorldSearchService = {
 					{ name: { contains: query, mode: 'insensitive' } },
 					{ title: { contains: query, mode: 'insensitive' } },
 					{ description: { contains: query, mode: 'insensitive' } },
+					{
+						pages: {
+							some: {
+								name: { contains: query, mode: 'insensitive' },
+								description: { contains: query, mode: 'insensitive' },
+							},
+						},
+					},
 				],
 			},
 			include: {
@@ -60,6 +76,14 @@ export const WorldSearchService = {
 				OR: [
 					{ name: { contains: query, mode: 'insensitive' } },
 					{ contentRich: { contains: query, mode: 'insensitive' } },
+					{
+						pages: {
+							some: {
+								name: { contains: query, mode: 'insensitive' },
+								description: { contains: query, mode: 'insensitive' },
+							},
+						},
+					},
 				],
 			},
 			include: {

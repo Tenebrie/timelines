@@ -1396,6 +1396,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
+                        pages: {
+                            id: string;
+                            name: string;
+                        }[];
                         mentions: {
                             pageId?: null | string;
                             sourceId: string;
@@ -1516,6 +1520,10 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
+                        pages: {
+                            id: string;
+                            name: string;
+                        }[];
                         mentions: {
                             pageId?: null | string;
                             sourceId: string;
@@ -1748,8 +1756,8 @@ export interface operations {
                         description: string;
                         id: string;
                         title: string;
-                        type: "Info" | "Welcome" | "WorldShared";
                         userId: string;
+                        type: "Info" | "Welcome" | "WorldShared";
                         /** Format: date-time */
                         timestamp: string;
                         isUnread: boolean;
@@ -1844,9 +1852,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             ownerId: string;
+                            size: number;
                             expiresAt?: null | string;
                             bucketKey: string;
-                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "Image" | "Avatar";
@@ -1892,9 +1900,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             ownerId: string;
+                            size: number;
                             expiresAt?: null | string;
                             bucketKey: string;
-                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "Image" | "Avatar";
@@ -1939,9 +1947,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         ownerId: string;
+                        size: number;
                         expiresAt?: null | string;
                         bucketKey: string;
-                        size: number;
                         originalFileName: string;
                         originalFileExtension: string;
                         contentType: "Image" | "Avatar";
@@ -4304,11 +4312,10 @@ export interface operations {
                     "application/json": {
                         events: {
                             mentions: {
-                                pageId?: null | string;
                                 sourceId: string;
                                 targetId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                                sourceType: "Actor" | "Tag" | "Event" | "Article";
+                                targetType: "Actor" | "Tag" | "Event" | "Article";
                                 sourceActorId?: null | string;
                                 sourceEventId?: null | string;
                                 sourceArticleId?: null | string;
@@ -4317,13 +4324,13 @@ export interface operations {
                                 targetEventId?: null | string;
                                 targetArticleId?: null | string;
                                 targetTagId?: null | string;
+                                pageId?: null | string;
                             }[];
                             mentionedIn: {
-                                pageId?: null | string;
                                 sourceId: string;
                                 targetId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                                sourceType: "Actor" | "Tag" | "Event" | "Article";
+                                targetType: "Actor" | "Tag" | "Event" | "Article";
                                 sourceActorId?: null | string;
                                 sourceEventId?: null | string;
                                 sourceArticleId?: null | string;
@@ -4332,6 +4339,7 @@ export interface operations {
                                 targetEventId?: null | string;
                                 targetArticleId?: null | string;
                                 targetTagId?: null | string;
+                                pageId?: null | string;
                             }[];
                             deltaStates: {
                                 description?: null | string;
@@ -4341,27 +4349,27 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 name?: null | string;
-                                descriptionRich?: null | string;
                                 /** Format: bigint */
                                 timestamp: string;
+                                descriptionRich?: null | string;
                                 worldEventId: string;
                             }[];
+                            worldId: string;
                             description: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            name: string;
-                            worldId: string;
+                            type: "SCENE" | "OTHER";
                             icon: string;
                             color: string;
-                            descriptionRich: string;
-                            descriptionYjs?: null | string;
-                            type: "SCENE" | "OTHER";
+                            name: string;
                             /** Format: bigint */
                             timestamp: string;
                             revokedAt?: null | string;
+                            descriptionRich: string;
+                            descriptionYjs?: null | string;
                             customName: boolean;
                             externalLink: string;
                             extraFields: ("EventIcon" | "TargetActors" | "MentionedActors" | "ExternalLink")[];
@@ -4369,11 +4377,10 @@ export interface operations {
                         }[];
                         actors: {
                             mentions: {
-                                pageId?: null | string;
                                 sourceId: string;
                                 targetId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                                sourceType: "Actor" | "Tag" | "Event" | "Article";
+                                targetType: "Actor" | "Tag" | "Event" | "Article";
                                 sourceActorId?: null | string;
                                 sourceEventId?: null | string;
                                 sourceArticleId?: null | string;
@@ -4382,13 +4389,13 @@ export interface operations {
                                 targetEventId?: null | string;
                                 targetArticleId?: null | string;
                                 targetTagId?: null | string;
+                                pageId?: null | string;
                             }[];
                             mentionedIn: {
-                                pageId?: null | string;
                                 sourceId: string;
                                 targetId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                                sourceType: "Actor" | "Tag" | "Event" | "Article";
+                                targetType: "Actor" | "Tag" | "Event" | "Article";
                                 sourceActorId?: null | string;
                                 sourceEventId?: null | string;
                                 sourceArticleId?: null | string;
@@ -4397,28 +4404,28 @@ export interface operations {
                                 targetEventId?: null | string;
                                 targetArticleId?: null | string;
                                 targetTagId?: null | string;
+                                pageId?: null | string;
                             }[];
+                            worldId: string;
                             description: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            name: string;
-                            worldId: string;
-                            title: string;
                             icon: string;
                             color: string;
+                            name: string;
                             descriptionRich: string;
                             descriptionYjs?: null | string;
+                            title: string;
                         }[];
                         articles: {
                             mentions: {
-                                pageId?: null | string;
                                 sourceId: string;
                                 targetId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                                sourceType: "Actor" | "Tag" | "Event" | "Article";
+                                targetType: "Actor" | "Tag" | "Event" | "Article";
                                 sourceActorId?: null | string;
                                 sourceEventId?: null | string;
                                 sourceArticleId?: null | string;
@@ -4427,13 +4434,13 @@ export interface operations {
                                 targetEventId?: null | string;
                                 targetArticleId?: null | string;
                                 targetTagId?: null | string;
+                                pageId?: null | string;
                             }[];
                             mentionedIn: {
-                                pageId?: null | string;
                                 sourceId: string;
                                 targetId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                                sourceType: "Actor" | "Tag" | "Event" | "Article";
+                                targetType: "Actor" | "Tag" | "Event" | "Article";
                                 sourceActorId?: null | string;
                                 sourceEventId?: null | string;
                                 sourceArticleId?: null | string;
@@ -4442,16 +4449,17 @@ export interface operations {
                                 targetEventId?: null | string;
                                 targetArticleId?: null | string;
                                 targetTagId?: null | string;
+                                pageId?: null | string;
                             }[];
+                            worldId: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            name: string;
-                            worldId: string;
                             icon: string;
                             color: string;
+                            name: string;
                             contentRich: string;
                             contentYjs?: null | string;
                             position: number;
@@ -4459,11 +4467,10 @@ export interface operations {
                         }[];
                         tags: {
                             mentions: {
-                                pageId?: null | string;
                                 sourceId: string;
                                 targetId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                                sourceType: "Actor" | "Tag" | "Event" | "Article";
+                                targetType: "Actor" | "Tag" | "Event" | "Article";
                                 sourceActorId?: null | string;
                                 sourceEventId?: null | string;
                                 sourceArticleId?: null | string;
@@ -4472,13 +4479,13 @@ export interface operations {
                                 targetEventId?: null | string;
                                 targetArticleId?: null | string;
                                 targetTagId?: null | string;
+                                pageId?: null | string;
                             }[];
                             mentionedIn: {
-                                pageId?: null | string;
                                 sourceId: string;
                                 targetId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                                sourceType: "Actor" | "Tag" | "Event" | "Article";
+                                targetType: "Actor" | "Tag" | "Event" | "Article";
                                 sourceActorId?: null | string;
                                 sourceEventId?: null | string;
                                 sourceArticleId?: null | string;
@@ -4487,7 +4494,9 @@ export interface operations {
                                 targetEventId?: null | string;
                                 targetArticleId?: null | string;
                                 targetTagId?: null | string;
+                                pageId?: null | string;
                             }[];
+                            worldId: string;
                             description: string;
                             id: string;
                             /** Format: date-time */
@@ -4495,7 +4504,6 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
-                            worldId: string;
                         }[];
                     };
                 };

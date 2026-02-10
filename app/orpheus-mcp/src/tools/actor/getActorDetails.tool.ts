@@ -3,7 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
-import { resolveMentions } from '@src/utils/resolveMentions.js'
+import { resolveSavedMentions } from '@src/utils/resolveSavedMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -58,7 +58,7 @@ export function registerGetActorDetailsTool(server: McpServer) {
 					pageId: page?.id,
 				})
 
-				const mentionsOutput = resolveMentions({
+				const mentionsOutput = resolveSavedMentions({
 					entity: actor,
 					worldData,
 					articleData,
