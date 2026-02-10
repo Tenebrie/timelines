@@ -4,6 +4,7 @@ import crypto from 'crypto'
 // These are short-lived, so in-memory is fine for most cases
 const authorizationCodes = new Map<string, { userId: string; codeChallenge: string; expiresAt: number }>()
 const accessTokens = new Map<string, { userId: string; expiresAt: number }>()
+const registeredClients = new Map<string, { clientName: string; redirectUris: string[] }>()
 
 // Clean up expired entries periodically
 setInterval(() => {
@@ -19,6 +20,23 @@ setInterval(() => {
 export const OAuthService = {
 	loginEnforced: (): boolean => {
 		return process.env.REQUIRE_OAUTH !== 'false'
+	},
+
+	/**
+	 * Register a new OAuth client (RFC 7591 Dynamic Client Registration)
+	 */
+	registerClient: (clientName: string, redirectUris: string[]): string => {
+		const clientId = crypto.randomUUID()
+		registeredClients.set(clientId, { clientName, redirectUris })
+		console.log(`Registered new OAuth client: ${clientId} (${clientName})`)
+		return clientId
+	},
+
+	/**
+	 * Validate that a client_id is registered
+	 */
+	isClientRegistered: (clientId: string): boolean => {
+		return registeredClients.has(clientId)
 	},
 
 	/**
