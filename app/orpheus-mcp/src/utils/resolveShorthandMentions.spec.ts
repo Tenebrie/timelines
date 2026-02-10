@@ -83,6 +83,18 @@ describe('resolveShorthandMentions', () => {
 		)
 	})
 
+	it('resolves event mention inside an HTML tag', async () => {
+		const result = await resolveShorthandMentions({
+			content: '<p>During @[The Great Battle]</p>',
+			worldData: mockWorldData,
+			articleData: mockArticleData,
+		})
+
+		expect(result).toBe(
+			'<p>During <span data-component-props="{&quot;event&quot;:&quot;event-1&quot;}" data-type="mention" data-name="The Great Battle"></span></p>',
+		)
+	})
+
 	it('resolves multiple mentions in same content', async () => {
 		const result = await resolveShorthandMentions({
 			content: '@[Alice] met @[Bob] at @[The Great Battle]',
@@ -126,5 +138,19 @@ describe('resolveShorthandMentions', () => {
 				articleData: mockArticleData,
 			}),
 		).rejects.toThrow('Unable to resolve mention "@[Unknown Entity]"')
+	})
+
+	it('resolves complex content structure', async () => {
+		const content = `<h2>Head</h2><p> Paragraph</p><p> Mention is @[Lore Overview]. Post para. </p><p> Ppp </p><p></p>`
+
+		const result = await resolveShorthandMentions({
+			content,
+			worldData: mockWorldData,
+			articleData: mockArticleData,
+		})
+
+		expect(result).toBe(
+			`<h2>Head</h2><p> Paragraph</p><p> Mention is <span data-component-props="{&quot;article&quot;:&quot;article-1&quot;}" data-type="mention" data-name="Lore Overview"></span>. Post para. </p><p> Ppp </p><p></p>`,
+		)
 	})
 })

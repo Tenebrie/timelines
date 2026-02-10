@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { checkEventDoesNotExist } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -34,12 +35,24 @@ export function registerCreateEventTool(server: McpServer) {
 
 				await checkEventDoesNotExist({ name, userId, sessionId })
 
+				let parsedDescription = description
+				if (description) {
+					const worldData = await RheaService.getWorldDetails({ worldId, userId })
+					const articleData = await RheaService.getWorldArticles({ worldId, userId })
+					const parsedContent = await resolveShorthandMentions({
+						content: description,
+						worldData,
+						articleData,
+					})
+					parsedDescription = parsedContent
+				}
+
 				const event = await RheaService.createEvent({
 					worldId,
 					userId,
 					name,
 					timestamp,
-					descriptionRich: description || '',
+					descriptionRich: parsedDescription || '',
 				})
 
 				Logger.toolSuccess(TOOL_NAME, `Created event: ${event.name} (${event.id})`)
