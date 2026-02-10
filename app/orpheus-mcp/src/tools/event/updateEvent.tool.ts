@@ -12,7 +12,12 @@ const TOOL_NAME = 'update_event'
 const inputSchema = z.object({
 	eventName: z.string().describe('The name of the event to update'),
 	name: z.string().optional().describe('The new name for the event (optional)'),
-	timestamp: z.string().optional().describe('The new timestamp for the event (optional)'),
+	timestamp: z
+		.string()
+		.optional()
+		.describe(
+			'The new timestamp for the event (optional), as a bigint string, in minutes. Timestamp 0 is the beginning of the story.',
+		),
 	description: z.string().optional().describe('The new description in HTML format (optional)'),
 })
 

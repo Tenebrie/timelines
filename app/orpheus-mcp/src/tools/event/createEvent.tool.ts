@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { checkEventDoesNotExist } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -10,7 +11,11 @@ const TOOL_NAME = 'create_event'
 
 const inputSchema = z.object({
 	name: z.string().describe('The name of the event'),
-	timestamp: z.string().describe('The timestamp of the event (as a bigint string)'),
+	timestamp: z
+		.string()
+		.describe(
+			'The timestamp of the event (as a bigint string, in minutes). Timestamp 0 is the beginning of the story.',
+		),
 	description: z.string().optional().describe('The description of the event in HTML format (optional)'),
 })
 
@@ -34,12 +39,24 @@ export function registerCreateEventTool(server: McpServer) {
 
 				await checkEventDoesNotExist({ name, userId, sessionId })
 
+				let parsedDescription = description
+				if (description) {
+					const worldData = await RheaService.getWorldDetails({ worldId, userId })
+					const articleData = await RheaService.getWorldArticles({ worldId, userId })
+					const parsedContent = await resolveShorthandMentions({
+						content: description,
+						worldData,
+						articleData,
+					})
+					parsedDescription = parsedContent
+				}
+
 				const event = await RheaService.createEvent({
 					worldId,
 					userId,
 					name,
 					timestamp,
-					descriptionRich: description || '',
+					descriptionRich: parsedDescription || '',
 				})
 
 				Logger.toolSuccess(TOOL_NAME, `Created event: ${event.name} (${event.id})`)

@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { checkArticleDoesNotExist } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -39,11 +40,18 @@ export function registerCreateArticleTool(server: McpServer) {
 				})
 
 				if (content) {
+					const worldData = await RheaService.getWorldDetails({ worldId, userId })
+					const articleData = await RheaService.getWorldArticles({ worldId, userId })
+					const parsedContent = await resolveShorthandMentions({
+						content,
+						worldData,
+						articleData,
+					})
 					await RheaService.updateArticleContent({
 						worldId,
 						articleId: article.id,
 						userId,
-						content,
+						content: parsedContent,
 					})
 				}
 

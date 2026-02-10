@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { checkActorDoesNotExist } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -33,12 +34,24 @@ export function registerCreateActorTool(server: McpServer) {
 
 				await checkActorDoesNotExist({ name, userId, sessionId })
 
+				let parsedDescription = description
+				if (description) {
+					const worldData = await RheaService.getWorldDetails({ worldId, userId })
+					const articleData = await RheaService.getWorldArticles({ worldId, userId })
+					const parsedContent = await resolveShorthandMentions({
+						content: description,
+						worldData,
+						articleData,
+					})
+					parsedDescription = parsedContent
+				}
+
 				const actor = await RheaService.createActor({
 					worldId,
 					userId,
 					name,
 					title,
-					descriptionRich: description,
+					descriptionRich: parsedDescription,
 				})
 
 				Logger.toolSuccess(TOOL_NAME, `Created actor: ${actor.name} (${actor.id})`)
