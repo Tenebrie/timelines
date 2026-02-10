@@ -32,7 +32,7 @@ export function registerCreateEventTool(server: McpServer) {
 				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
 				const { name, timestamp, description } = args
 
-				checkEventDoesNotExist({ name, userId, sessionId })
+				await checkEventDoesNotExist({ name, userId, sessionId })
 
 				const event = await RheaService.createEvent({
 					worldId,

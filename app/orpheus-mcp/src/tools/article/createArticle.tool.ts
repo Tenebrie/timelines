@@ -30,7 +30,7 @@ export function registerCreateArticleTool(server: McpServer) {
 				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
 				const { name, content } = args
 
-				checkArticleDoesNotExist({ name, userId, sessionId })
+				await checkArticleDoesNotExist({ name, userId, sessionId })
 
 				const article = await RheaService.createArticle({
 					worldId,

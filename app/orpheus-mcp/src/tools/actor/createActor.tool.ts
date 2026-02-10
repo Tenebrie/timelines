@@ -31,7 +31,7 @@ export function registerCreateActorTool(server: McpServer) {
 				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
 				const { name, title, description } = args
 
-				checkActorDoesNotExist({ name, userId, sessionId })
+				await checkActorDoesNotExist({ name, userId, sessionId })
 
 				const actor = await RheaService.createActor({
 					worldId,
