@@ -1,6 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
+import { checkArticleDoesNotExist } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -16,6 +17,7 @@ export function registerCreateArticleTool(server: McpServer) {
 	server.registerTool(
 		TOOL_NAME,
 		{
+			title: 'Create Article',
 			description: 'Create a new wiki article in the current world with name and content',
 			inputSchema,
 		},
@@ -27,6 +29,8 @@ export function registerCreateArticleTool(server: McpServer) {
 				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
 				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
 				const { name, content } = args
+
+				checkArticleDoesNotExist({ name, userId, sessionId })
 
 				const article = await RheaService.createArticle({
 					worldId,

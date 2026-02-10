@@ -1,6 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
+import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -17,9 +18,13 @@ export function registerUpdateArticleTool(server: McpServer) {
 	server.registerTool(
 		TOOL_NAME,
 		{
+			title: 'Update Article',
 			description:
 				'Update an existing wiki article by name. Find the article by name and update its properties.',
 			inputSchema,
+			annotations: {
+				idempotentHint: true,
+			},
 		},
 		async (args: z.infer<typeof inputSchema>, extra: ToolExtra) => {
 			try {
@@ -31,19 +36,7 @@ export function registerUpdateArticleTool(server: McpServer) {
 				const { articleName, name, content } = args
 
 				const articles = await RheaService.getWorldArticles({ worldId, userId })
-				const article = articles.find((a) => a.name.toLowerCase() === articleName.toLowerCase())
-
-				if (!article) {
-					return {
-						content: [
-							{
-								type: 'text' as const,
-								text: `Article "${articleName}" not found in this world. Available articles: ${articles.map((a) => a.name).join(', ') || 'None'}`,
-							},
-						],
-						isError: true,
-					}
-				}
+				const article = findByName({ name: articleName, entities: articles })
 
 				let updatedName = article.name
 				if (name !== undefined) {

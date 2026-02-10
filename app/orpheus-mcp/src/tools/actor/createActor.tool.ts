@@ -1,6 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
+import { checkActorDoesNotExist } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -17,6 +18,7 @@ export function registerCreateActorTool(server: McpServer) {
 	server.registerTool(
 		TOOL_NAME,
 		{
+			title: 'Create Actor',
 			description: 'Create a new actor in the current world with name, title, and description',
 			inputSchema,
 		},
@@ -28,6 +30,8 @@ export function registerCreateActorTool(server: McpServer) {
 				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
 				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
 				const { name, title, description } = args
+
+				checkActorDoesNotExist({ name, userId, sessionId })
 
 				const actor = await RheaService.createActor({
 					worldId,

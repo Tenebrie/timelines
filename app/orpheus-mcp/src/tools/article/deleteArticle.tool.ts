@@ -1,6 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
+import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -15,8 +16,12 @@ export function registerDeleteArticleTool(server: McpServer) {
 	server.registerTool(
 		TOOL_NAME,
 		{
+			title: 'Delete Article',
 			description: 'Delete a wiki article by name from the current world',
 			inputSchema,
+			annotations: {
+				destructiveHint: true,
+			},
 		},
 		async (args: z.infer<typeof inputSchema>, extra: ToolExtra) => {
 			try {
@@ -28,19 +33,7 @@ export function registerDeleteArticleTool(server: McpServer) {
 				const { articleName } = args
 
 				const articles = await RheaService.getWorldArticles({ worldId, userId })
-				const article = articles.find((a) => a.name.toLowerCase() === articleName.toLowerCase())
-
-				if (!article) {
-					return {
-						content: [
-							{
-								type: 'text' as const,
-								text: `Article "${articleName}" not found in this world. Available articles: ${articles.map((a) => a.name).join(', ') || 'None'}`,
-							},
-						],
-						isError: true,
-					}
-				}
+				const article = findByName({ name: articleName, entities: articles })
 
 				await RheaService.deleteArticle({
 					worldId,

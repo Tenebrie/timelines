@@ -1,6 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
+import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -15,8 +16,13 @@ export function registerGetActorDetailsTool(server: McpServer) {
 	server.registerTool(
 		TOOL_NAME,
 		{
+			title: 'Get Actor Details',
 			description: 'Get details about a specific actor by name, including name, title, and description',
 			inputSchema,
+			annotations: {
+				readOnlyHint: true,
+				idempotentHint: true,
+			},
 		},
 		async (args: z.infer<typeof inputSchema>, extra: ToolExtra) => {
 			try {
@@ -32,20 +38,7 @@ export function registerGetActorDetailsTool(server: McpServer) {
 					userId,
 				})
 
-				const actor = worldData.actors.find((a) => a.name.toLowerCase() === actorName.toLowerCase())
-
-				if (!actor) {
-					Logger.toolError(TOOL_NAME, `Actor "${actorName}" not found`)
-					return {
-						content: [
-							{
-								type: 'text' as const,
-								text: `Actor "${actorName}" not found in this world. Available actors: ${worldData.actors.map((a) => a.name).join(', ') || 'None'}`,
-							},
-						],
-						isError: true,
-					}
-				}
+				const actor = findByName({ name: actorName, entities: worldData.actors })
 
 				const content = await RheaService.getActorContent({
 					worldId,

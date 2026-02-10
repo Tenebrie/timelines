@@ -16,8 +16,13 @@ export function registerListWorldsTool(server: McpServer) {
 	server.registerTool(
 		TOOL_NAME,
 		{
-			description: 'List all worlds the current user has access to.',
+			title: 'List Worlds',
+			description: 'List all worlds (projects) the current user has access to.',
 			inputSchema,
+			annotations: {
+				readOnlyHint: true,
+				idempotentHint: true,
+			},
 		},
 		async (args, extra: ToolExtra) => {
 			try {
@@ -44,8 +49,24 @@ export function registerListWorldsTool(server: McpServer) {
 				}))
 
 				const worldList = worlds.map((w) => `"${w.name}" (ID: ${w.id}, Access: ${w.accessMode})`).join('\n')
-
 				Logger.toolSuccess(TOOL_NAME, `Found ${worlds.length} worlds`)
+
+				if (worlds.length === 1) {
+					ContextService.setCurrentWorld(sessionId, worlds[0].id)
+					return {
+						content: [
+							{
+								type: 'text' as const,
+								text: `Your worlds:\n${worldList || 'No worlds found'}`,
+							},
+							{
+								type: 'text' as const,
+								text: `As there is only one world, it has been automatically set as current context.`,
+							},
+						],
+					}
+				}
+
 				return {
 					content: [
 						{

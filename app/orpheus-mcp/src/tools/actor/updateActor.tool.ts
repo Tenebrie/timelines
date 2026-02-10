@@ -1,6 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
+import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -18,8 +19,12 @@ export function registerUpdateActorTool(server: McpServer) {
 	server.registerTool(
 		TOOL_NAME,
 		{
+			title: 'Update Actor',
 			description: 'Update an existing actor by name. Find the actor by name and update its properties.',
 			inputSchema,
+			annotations: {
+				idempotentHint: true,
+			},
 		},
 		async (args: z.infer<typeof inputSchema>, extra: ToolExtra) => {
 			try {
@@ -31,19 +36,7 @@ export function registerUpdateActorTool(server: McpServer) {
 				const { actorName, name, title, description } = args
 
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })
-				const actor = worldData.actors.find((a) => a.name.toLowerCase() === actorName.toLowerCase())
-
-				if (!actor) {
-					return {
-						content: [
-							{
-								type: 'text' as const,
-								text: `Actor "${actorName}" not found in this world. Available actors: ${worldData.actors.map((a) => a.name).join(', ') || 'None'}`,
-							},
-						],
-						isError: true,
-					}
-				}
+				const actor = findByName({ name: actorName, entities: worldData.actors })
 
 				const updatedActor = await RheaService.updateActor({
 					worldId,

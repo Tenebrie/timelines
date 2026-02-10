@@ -11,7 +11,12 @@ export function registerGetContextTool(server: McpServer) {
 	server.registerTool(
 		TOOL_NAME,
 		{
+			title: 'Get Context',
 			description: 'Get the current session context, including the currently selected world (if any).',
+			annotations: {
+				readOnlyHint: true,
+				idempotentHint: true,
+			},
 		},
 		async (extra: RequestHandlerExtra<ServerRequest, ServerNotification>) => {
 			const sessionId = extra.sessionId ?? 'default'

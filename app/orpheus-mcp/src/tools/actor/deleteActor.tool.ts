@@ -1,6 +1,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
+import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -15,8 +16,12 @@ export function registerDeleteActorTool(server: McpServer) {
 	server.registerTool(
 		TOOL_NAME,
 		{
+			title: 'Delete Actor',
 			description: 'Delete an actor by name from the current world',
 			inputSchema,
+			annotations: {
+				destructiveHint: true,
+			},
 		},
 		async (args: z.infer<typeof inputSchema>, extra: ToolExtra) => {
 			try {
@@ -28,19 +33,7 @@ export function registerDeleteActorTool(server: McpServer) {
 				const { actorName } = args
 
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })
-				const actor = worldData.actors.find((a) => a.name.toLowerCase() === actorName.toLowerCase())
-
-				if (!actor) {
-					return {
-						content: [
-							{
-								type: 'text' as const,
-								text: `Actor "${actorName}" not found in this world. Available actors: ${worldData.actors.map((a) => a.name).join(', ') || 'None'}`,
-							},
-						],
-						isError: true,
-					}
-				}
+				const actor = findByName({ name: actorName, entities: worldData.actors })
 
 				await RheaService.deleteActor({
 					worldId,

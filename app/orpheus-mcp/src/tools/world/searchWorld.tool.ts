@@ -15,8 +15,13 @@ export function registerSearchWorldTool(server: McpServer) {
 	server.registerTool(
 		TOOL_NAME,
 		{
+			title: 'Search World',
 			description: 'Search for events, actors, and articles in the current world',
 			inputSchema,
+			annotations: {
+				readOnlyHint: true,
+				idempotentHint: true,
+			},
 		},
 		async (args, extra: ToolExtra) => {
 			try {
