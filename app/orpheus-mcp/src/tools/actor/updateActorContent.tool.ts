@@ -59,7 +59,6 @@ export function registerUpdateActorContentTool(server: McpServer) {
 					worldData,
 					articleData,
 				})
-				console.log(parsedContent)
 
 				const result: string[] = []
 				if (pageName) {

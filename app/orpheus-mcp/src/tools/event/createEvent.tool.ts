@@ -11,7 +11,11 @@ const TOOL_NAME = 'create_event'
 
 const inputSchema = z.object({
 	name: z.string().describe('The name of the event'),
-	timestamp: z.string().describe('The timestamp of the event (as a bigint string)'),
+	timestamp: z
+		.string()
+		.describe(
+			'The timestamp of the event (as a bigint string, in minutes). Timestamp 0 is the beginning of the story.',
+		),
 	description: z.string().optional().describe('The description of the event in HTML format (optional)'),
 })
 
