@@ -24,6 +24,7 @@ import {
 	handleAuthorize,
 	handleAuthorizePost,
 	handleOAuthMetadata,
+	handleRegister,
 	handleToken,
 	validateBearerToken,
 } from './utils/oauthHandlers.js'
@@ -99,7 +100,14 @@ async function main() {
 			return
 		}
 
-		if (url.pathname === '/oauth/authorize') {
+		// Dynamic Client Registration (RFC 7591)
+		if (url.pathname === '/register' && req.method === 'POST') {
+			await handleRegister(req, res)
+			return
+		}
+
+		// Authorization endpoint
+		if (url.pathname === '/authorize') {
 			if (req.method === 'GET') {
 				handleAuthorize(req, res)
 			} else if (req.method === 'POST') {
@@ -108,7 +116,8 @@ async function main() {
 			return
 		}
 
-		if (url.pathname === '/oauth/token' && req.method === 'POST') {
+		// Token endpoint
+		if (url.pathname === '/token' && req.method === 'POST') {
 			await handleToken(req, res)
 			return
 		}

@@ -6,7 +6,7 @@ if [[ -z "$VERSION" ]]; then
   exit 1
 fi
 
-STACK_VERSION=2
+STACK_VERSION=3
 STACK_VERSION_FILE="/var/lib/timelines/stack-version"
 
 # Check if we need to do a full deploy instead of update
@@ -28,6 +28,7 @@ if $NEEDS_DEPLOY; then
   mkdir -p "$(dirname "$STACK_VERSION_FILE")"
   echo "$STACK_VERSION" > "$STACK_VERSION_FILE"
   echo "Stack version saved: $STACK_VERSION"
+
   exit 0
 fi
 
