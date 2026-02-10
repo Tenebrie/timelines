@@ -33,6 +33,12 @@ export const WorldSearchService = {
 			include: {
 				mentions: true,
 				mentionedIn: true,
+				pages: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
 				deltaStates: {
 					orderBy: {
 						timestamp: 'asc',
@@ -64,6 +70,12 @@ export const WorldSearchService = {
 			include: {
 				mentions: true,
 				mentionedIn: true,
+				pages: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
 			},
 		})
 	},
@@ -89,6 +101,12 @@ export const WorldSearchService = {
 			include: {
 				mentions: true,
 				mentionedIn: true,
+				pages: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
 			},
 		})
 	},

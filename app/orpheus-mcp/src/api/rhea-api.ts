@@ -4311,6 +4311,10 @@ export interface operations {
                 content: {
                     "application/json": {
                         events: {
+                            pages: {
+                                id: string;
+                                name: string;
+                            }[];
                             mentions: {
                                 sourceId: string;
                                 targetId: string;
@@ -4376,6 +4380,10 @@ export interface operations {
                             worldEventTrackId?: null | string;
                         }[];
                         actors: {
+                            pages: {
+                                id: string;
+                                name: string;
+                            }[];
                             mentions: {
                                 sourceId: string;
                                 targetId: string;
@@ -4421,6 +4429,10 @@ export interface operations {
                             title: string;
                         }[];
                         articles: {
+                            pages: {
+                                id: string;
+                                name: string;
+                            }[];
                             mentions: {
                                 sourceId: string;
                                 targetId: string;

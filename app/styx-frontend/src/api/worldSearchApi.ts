@@ -16,6 +16,10 @@ const injectedRtkApi = api
 export { injectedRtkApi as worldSearchApi }
 export type SearchWorldApiResponse = /** status 200  */ {
 	events: {
+		pages: {
+			id: string
+			name: string
+		}[]
 		mentions: {
 			sourceId: string
 			targetId: string
@@ -75,6 +79,10 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		worldEventTrackId?: null | string
 	}[]
 	actors: {
+		pages: {
+			id: string
+			name: string
+		}[]
 		mentions: {
 			sourceId: string
 			targetId: string
@@ -118,6 +126,10 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		title: string
 	}[]
 	articles: {
+		pages: {
+			id: string
+			name: string
+		}[]
 		mentions: {
 			sourceId: string
 			targetId: string

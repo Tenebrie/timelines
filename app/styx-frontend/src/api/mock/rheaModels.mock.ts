@@ -52,6 +52,7 @@ export const mockWorldDetailsModel = (world: Partial<WorldDetails> = {}): WorldD
 	...mockWorldItemModel(),
 	events: [],
 	actors: [],
+	tags: [],
 	isReadOnly: false,
 	...world,
 })
@@ -69,6 +70,7 @@ export const mockActorModel = (actor: Partial<ActorDetails> = {}): ActorDetails 
 	mentionedIn: [],
 	icon: 'default',
 	color: '#008080',
+	pages: [],
 	...actor,
 })
 
@@ -91,6 +93,7 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	externalLink: '',
 	worldEventTrackId: null,
 	color: '#008080',
+	pages: [],
 	...statement,
 })
 
@@ -117,6 +120,7 @@ export const mockApiWorldDetailsModel = (
 	updatedAt: new Date(0).toISOString(),
 	actors: [],
 	events: [],
+	tags: [],
 	calendar: 'EARTH',
 	ownerId: 'user-1111',
 	timeOrigin: '0',
@@ -147,5 +151,6 @@ export const mockApiEventModel = (
 	externalLink: '',
 	worldEventTrackId: null,
 	color: '#008080',
+	pages: [],
 	...statement,
 })
