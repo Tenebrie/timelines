@@ -32,5 +32,8 @@ model Mention {
   targetArticle WikiArticle? @relation(fields: [targetArticleId], references: [id], onDelete: Cascade, name: "ArticleMentionTarget")
   targetTag     Tag?         @relation(fields: [targetTagId], references: [id], onDelete: Cascade, name: "TagMentionTarget")
 
+  pageId String?
+  page ContentPage?   @relation(fields: [pageId], references: [id], onDelete: Cascade, name: "PageMention")
+
   @@unique([sourceId, targetId])
 }

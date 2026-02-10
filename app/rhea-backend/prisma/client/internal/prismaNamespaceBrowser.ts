@@ -55,14 +55,15 @@ export const ModelName = {
   UserAnnouncement: 'UserAnnouncement',
   Asset: 'Asset',
   SavedColor: 'SavedColor',
+  ContentPage: 'ContentPage',
   Flags: 'Flags',
   UserFavoriteIconSet: 'UserFavoriteIconSet',
   WorldCommonIconSet: 'WorldCommonIconSet',
   Mention: 'Mention',
   MindmapNode: 'MindmapNode',
+  Tag: 'Tag',
   User: 'User',
   CollaboratingUser: 'CollaboratingUser',
-  Tag: 'Tag',
   WikiArticle: 'WikiArticle',
   World: 'World',
   WorldEvent: 'WorldEvent',
@@ -145,6 +146,22 @@ export const SavedColorScalarFieldEnum = {
 export type SavedColorScalarFieldEnum = (typeof SavedColorScalarFieldEnum)[keyof typeof SavedColorScalarFieldEnum]
 
 
+export const ContentPageScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  description: 'description',
+  descriptionRich: 'descriptionRich',
+  descriptionYjs: 'descriptionYjs',
+  parentActorId: 'parentActorId',
+  parentEventId: 'parentEventId',
+  parentArticleId: 'parentArticleId'
+} as const
+
+export type ContentPageScalarFieldEnum = (typeof ContentPageScalarFieldEnum)[keyof typeof ContentPageScalarFieldEnum]
+
+
 export const FlagsScalarFieldEnum = {
   value: 'value'
 } as const
@@ -182,7 +199,8 @@ export const MentionScalarFieldEnum = {
   targetActorId: 'targetActorId',
   targetEventId: 'targetEventId',
   targetArticleId: 'targetArticleId',
-  targetTagId: 'targetTagId'
+  targetTagId: 'targetTagId',
+  pageId: 'pageId'
 } as const
 
 export type MentionScalarFieldEnum = (typeof MentionScalarFieldEnum)[keyof typeof MentionScalarFieldEnum]
@@ -199,6 +217,18 @@ export const MindmapNodeScalarFieldEnum = {
 } as const
 
 export type MindmapNodeScalarFieldEnum = (typeof MindmapNodeScalarFieldEnum)[keyof typeof MindmapNodeScalarFieldEnum]
+
+
+export const TagScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  description: 'description',
+  worldId: 'worldId'
+} as const
+
+export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
@@ -225,17 +255,6 @@ export const CollaboratingUserScalarFieldEnum = {
 } as const
 
 export type CollaboratingUserScalarFieldEnum = (typeof CollaboratingUserScalarFieldEnum)[keyof typeof CollaboratingUserScalarFieldEnum]
-
-
-export const TagScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  name: 'name',
-  worldId: 'worldId'
-} as const
-
-export type TagScalarFieldEnum = (typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum]
 
 
 export const WikiArticleScalarFieldEnum = {

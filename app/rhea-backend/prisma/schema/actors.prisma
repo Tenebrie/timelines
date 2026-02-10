@@ -11,8 +11,9 @@ model Actor {
   descriptionRich String  @default("")
   descriptionYjs  String?
 
-  mentions    Mention[] @relation("ActorMentionSource")
-  mentionedIn Mention[] @relation("ActorMentionTarget")
+  pages       ContentPage[] @relation("ActorContentPage")
+  mentions    Mention[]     @relation("ActorMentionSource")
+  mentionedIn Mention[]     @relation("ActorMentionTarget")
 
   node MindmapNode?
 

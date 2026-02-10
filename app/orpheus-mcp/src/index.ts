@@ -7,8 +7,10 @@ import { ContextService } from './services/ContextService.js'
 import { OAuthService } from './services/OAuthService.js'
 import { registerCreateActorTool } from './tools/actor/createActor.tool.js'
 import { registerDeleteActorTool } from './tools/actor/deleteActor.tool.js'
+import { registerDeleteActorContentPageTool } from './tools/actor/deleteActorContentPage.tool.js'
 import { registerGetActorDetailsTool } from './tools/actor/getActorDetails.tool.js'
 import { registerUpdateActorTool } from './tools/actor/updateActor.tool.js'
+import { registerUpdateActorContentTool } from './tools/actor/updateActorContent.tool.js'
 import { registerCreateArticleTool } from './tools/article/createArticle.tool.js'
 import { registerDeleteArticleTool } from './tools/article/deleteArticle.tool.js'
 import { registerGetArticleDetailsTool } from './tools/article/getArticleDetails.tool.js'
@@ -19,6 +21,10 @@ import { registerCreateEventTool } from './tools/event/createEvent.tool.js'
 import { registerDeleteEventTool } from './tools/event/deleteEvent.tool.js'
 import { registerGetEventDetailsTool } from './tools/event/getEventDetails.tool.js'
 import { registerUpdateEventTool } from './tools/event/updateEvent.tool.js'
+import { registerCreateTagTool } from './tools/tag/createTag.tool.js'
+import { registerDeleteTagTool } from './tools/tag/deleteTag.tool.js'
+import { registerGetTagDetailsTool } from './tools/tag/getTagDetails.tool.js'
+import { registerUpdateTagTool } from './tools/tag/updateTag.tool.js'
 import { registerCreateWorldTool } from './tools/world/createWorld.tool.js'
 import { registerGetWorldDetailsTool } from './tools/world/getWorldDetails.tool.js'
 import { registerListWorldsTool } from './tools/world/listWorlds.tool.js'
@@ -48,6 +54,7 @@ function createServer() {
 		- Actors are characters, items, artifacts. They can typically move around, have relationships, be involved with events.
 		- Events are entities that happen at a specific point in time. They ALWAYS have a timestamp, and they may also have duration or end date.
 		- Articles (Wiki articles) are just text documents with anything that you would like to store there.
+		- Tags are labels that attach to actors, events or articles to group or organize them.
 		`,
 		},
 	)
@@ -64,7 +71,9 @@ function createServer() {
 	registerGetActorDetailsTool(server)
 	registerCreateActorTool(server)
 	registerUpdateActorTool(server)
+	registerUpdateActorContentTool(server)
 	registerDeleteActorTool(server)
+	registerDeleteActorContentPageTool(server)
 
 	// Event tools
 	registerGetEventDetailsTool(server)
@@ -77,6 +86,12 @@ function createServer() {
 	registerCreateArticleTool(server)
 	registerUpdateArticleTool(server)
 	registerDeleteArticleTool(server)
+
+	// Tag tools
+	registerGetTagDetailsTool(server)
+	registerCreateTagTool(server)
+	registerUpdateTagTool(server)
+	registerDeleteTagTool(server)
 
 	return server
 }

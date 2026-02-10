@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { resolveMentions } from '@src/utils/resolveMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -42,16 +43,21 @@ export function registerGetArticleDetailsTool(server: McpServer) {
 					userId,
 				})
 
+				const worldData = await RheaService.getWorldDetails({ worldId, userId })
+				const mentionsOutput = resolveMentions({
+					entity: article,
+					worldData,
+					articleData: articles,
+				})
+
 				Logger.toolSuccess(TOOL_NAME, `Found article "${article.name}"`)
 				return {
 					content: [
 						{
 							type: 'text' as const,
-							text:
-								`Article: ${article.name}\n` +
-								`ID: ${article.id}\n` +
-								`Content: ${content.contentHtml || 'No content'}`,
+							text: `Article: ${article.name}\n\n` + `${content.contentHtml || 'No content'}`,
 						},
+						...mentionsOutput,
 					],
 				}
 			} catch (error) {

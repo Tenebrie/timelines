@@ -3,6 +3,7 @@ import useEvent from 'react-use-event-hook'
 
 import { ActorDetails } from '@/app/components/Outliner/editors/actor/details/ActorDetails'
 import { EventDetails } from '@/app/components/Outliner/editors/event/details/EventDetails'
+import { TagDetails } from '@/app/components/Outliner/editors/tag/details/TagDetails'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal from '@/ui-lib/components/Modal'
@@ -76,6 +77,9 @@ export const EditEventModal = () => {
 					)}
 					{currentEntity?.type === 'actor' && currentEntity.entity && (
 						<ActorDetails editedActor={currentEntity.entity} />
+					)}
+					{currentEntity?.type === 'tag' && currentEntity.entity && (
+						<TagDetails editedTag={currentEntity.entity} />
 					)}
 				</Stack>
 			</Stack>

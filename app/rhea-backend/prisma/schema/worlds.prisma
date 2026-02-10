@@ -66,8 +66,9 @@ model WorldEvent {
   externalLink    String            @default("")
   extraFields     WorldEventField[]
 
-  mentions    Mention[] @relation("EventMentionSource")
-  mentionedIn Mention[] @relation("EventMentionTarget")
+  pages       ContentPage[] @relation("EventContentPage")
+  mentions    Mention[]     @relation("EventMentionSource")
+  mentionedIn Mention[]     @relation("EventMentionTarget")
 
   deltaStates WorldEventDelta[]
 

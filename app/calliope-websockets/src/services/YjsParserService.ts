@@ -373,7 +373,7 @@ export function yXmlToHtml(fragment: Y.XmlFragment | Y.XmlElement): string {
 			}
 			// Mention chip - convert to span with data-component-props
 			else if (semanticName === 'mentionChip') {
-				const componentProps = attrs.componentProps || { actor: null, event: null, article: null }
+				const componentProps = attrs.componentProps || { actor: null, event: null, article: null, tag: null }
 				// If already a string, use it; otherwise stringify
 				const serialized =
 					typeof componentProps === 'string' ? componentProps : JSON.stringify(componentProps)

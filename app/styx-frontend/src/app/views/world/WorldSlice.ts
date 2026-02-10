@@ -6,13 +6,14 @@ import {
 	WorldCalendarType,
 	WorldEvent,
 	WorldEventDelta,
+	WorldTag,
 } from '@api/types/worldTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
 
-import { ingestActor, ingestEvent } from '../../utils/ingestEntity'
+import { ingestActor, ingestEvent, ingestTag } from '../../utils/ingestEntity'
 
 export const initialState = {
 	isLoaded: false as boolean,
@@ -22,6 +23,7 @@ export const initialState = {
 	description: '' as string,
 	events: [] as WorldEvent[],
 	actors: [] as ActorDetails[],
+	tags: [] as WorldTag[],
 	calendar: 'RIMWORLD' as WorldCalendarType,
 	timeOrigin: 0,
 	createdAt: '0',
@@ -77,6 +79,7 @@ export const worldSlice = createSlice({
 			state.description = world.description
 			state.actors = [...world.actors].sort((a, b) => a.name.localeCompare(b.name)).map((a) => ingestActor(a))
 			state.events = world.events.map((e) => ingestEvent(e))
+			state.tags = world.tags.map((t) => ingestTag(t))
 			state.calendar = world.calendar
 			state.timeOrigin = Number(world.timeOrigin)
 			state.createdAt = world.createdAt
@@ -88,6 +91,8 @@ export const worldSlice = createSlice({
 			state.isLoaded = false
 			state.isUnauthorized = false
 			state.events = []
+			state.actors = []
+			state.tags = []
 			state.isReadOnly = false
 		},
 		setUnauthorized: (state, { payload }: PayloadAction<boolean>) => {
@@ -147,6 +152,24 @@ export const worldSlice = createSlice({
 		},
 		removeActor: (state, { payload }: PayloadAction<string>) => {
 			state.actors = state.actors.filter((e) => e.id !== payload)
+		},
+		addTag: (state, { payload }: PayloadAction<WorldTag>) => {
+			state.tags = state.tags.concat(payload)
+		},
+		updateTag: (state, { payload }: PayloadAction<Pick<WorldTag, 'id'> & Partial<WorldTag>>) => {
+			const tag = state.tags.find((t) => t.id === payload.id)
+			if (!tag) {
+				return
+			}
+
+			const newTag = {
+				...tag,
+				...payload,
+			}
+			state.tags.splice(state.tags.indexOf(tag), 1, newTag)
+		},
+		removeTag: (state, { payload }: PayloadAction<string>) => {
+			state.tags = state.tags.filter((e) => e.id !== payload)
 		},
 		addTimelineMarkerToSelection: (
 			state,

@@ -25,5 +25,11 @@ export function resolveEntityName({ entityId }: Props) {
 		return article.name
 	}
 
+	const tags = state.world.tags
+	const tag = tags.find((tag) => tag.id === entityId)
+	if (tag) {
+		return tag.name
+	}
+
 	return 'Unknown entity'
 }

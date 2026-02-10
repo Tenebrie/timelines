@@ -60,6 +60,11 @@ export type Asset = Prisma.AssetModel
  */
 export type SavedColor = Prisma.SavedColorModel
 /**
+ * Model ContentPage
+ * 
+ */
+export type ContentPage = Prisma.ContentPageModel
+/**
  * Model Flags
  * 
  */
@@ -85,6 +90,11 @@ export type Mention = Prisma.MentionModel
  */
 export type MindmapNode = Prisma.MindmapNodeModel
 /**
+ * Model Tag
+ * 
+ */
+export type Tag = Prisma.TagModel
+/**
  * Model User
  * 
  */
@@ -94,11 +104,6 @@ export type User = Prisma.UserModel
  * 
  */
 export type CollaboratingUser = Prisma.CollaboratingUserModel
-/**
- * Model Tag
- * 
- */
-export type Tag = Prisma.TagModel
 /**
  * Model WikiArticle
  * 

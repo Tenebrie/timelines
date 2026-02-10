@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { resolveMentions } from '@src/utils/resolveMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -10,6 +11,10 @@ const TOOL_NAME = 'get_actor_details'
 
 const inputSchema = z.object({
 	actorName: z.string().describe('The name of the actor to find'),
+	pageName: z
+		.string()
+		.optional()
+		.describe('The page of the actor content to fetch, if not provided, the main content will be fetched'),
 })
 
 export function registerGetActorDetailsTool(server: McpServer) {
@@ -37,13 +42,22 @@ export function registerGetActorDetailsTool(server: McpServer) {
 					worldId,
 					userId,
 				})
+				const articleData = await RheaService.getWorldArticles({ worldId, userId })
 
 				const actor = findByName({ name: actorName, entities: worldData.actors })
+				const page = args.pageName ? findByName({ name: args.pageName, entities: actor.pages }) : undefined
 
 				const content = await RheaService.getActorContent({
 					worldId,
 					actorId: actor.id,
 					userId,
+					pageId: page?.id,
+				})
+
+				const mentionsOutput = resolveMentions({
+					entity: actor,
+					worldData,
+					articleData,
 				})
 
 				Logger.toolSuccess(TOOL_NAME, `Found actor: ${actor.name}`)
@@ -53,10 +67,16 @@ export function registerGetActorDetailsTool(server: McpServer) {
 							type: 'text' as const,
 							text:
 								`Actor: ${actor.name}\n` +
-								`ID: ${actor.id}\n` +
 								`Title: ${actor.title || 'None'}\n` +
-								`Description: ${content.contentHtml || 'No description'}`,
+								`Page: ${page?.name || '(Main content)'}\n\n` +
+								`${content.contentHtml || '(No content provided)'}`,
 						},
+						{
+							type: 'text' as const,
+							text:
+								'Pages supported! Existing pages: ' + actor.pages.map((page) => `"${page.name}"`).join(`, `),
+						},
+						...mentionsOutput,
 					],
 				}
 			} catch (error) {
@@ -65,7 +85,7 @@ export function registerGetActorDetailsTool(server: McpServer) {
 					content: [
 						{
 							type: 'text' as const,
-							text: `Error fetching actor: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
+							text: `Error fetching actor details: ${error instanceof Error ? error.message : JSON.stringify(error)}`,
 						},
 					],
 					isError: true,

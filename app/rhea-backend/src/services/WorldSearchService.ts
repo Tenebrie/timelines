@@ -68,4 +68,21 @@ export const WorldSearchService = {
 			},
 		})
 	},
+
+	async findTags(worldId: string, query: string) {
+		const prisma = getPrismaClient()
+		return prisma.tag.findMany({
+			where: {
+				worldId,
+				OR: [
+					{ name: { contains: query, mode: 'insensitive' } },
+					{ description: { contains: query, mode: 'insensitive' } },
+				],
+			},
+			include: {
+				mentions: true,
+				mentionedIn: true,
+			},
+		})
+	},
 }

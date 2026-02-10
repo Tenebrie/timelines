@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['worldSearch', 'worldDetails'] as const
+export const addTagTypes = ['worldSearch', 'worldDetails', 'tagList'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -8,7 +8,7 @@ const injectedRtkApi = api
 		endpoints: (build) => ({
 			searchWorld: build.query<SearchWorldApiResponse, SearchWorldApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/search/${queryArg.query}` }),
-				providesTags: ['worldSearch', 'worldDetails'],
+				providesTags: ['worldSearch', 'worldDetails', 'tagList'],
 			}),
 		}),
 		overrideExisting: false,
@@ -17,6 +17,7 @@ export { injectedRtkApi as worldSearchApi }
 export type SearchWorldApiResponse = /** status 200  */ {
 	events: {
 		mentions: {
+			pageId?: null | string
 			sourceId: string
 			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -31,6 +32,7 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		mentionedIn: {
+			pageId?: null | string
 			sourceId: string
 			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -50,23 +52,23 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			createdAt: string
 			updatedAt: string
 			name?: null | string
-			timestamp: string
 			descriptionRich?: null | string
+			timestamp: string
 			worldEventId: string
 		}[]
-		worldId: string
 		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		type: 'SCENE' | 'OTHER'
+		name: string
+		worldId: string
 		icon: string
 		color: string
-		name: string
-		timestamp: string
-		revokedAt?: null | string
 		descriptionRich: string
 		descriptionYjs?: null | string
+		type: 'SCENE' | 'OTHER'
+		timestamp: string
+		revokedAt?: null | string
 		customName: boolean
 		externalLink: string
 		extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
@@ -74,6 +76,7 @@ export type SearchWorldApiResponse = /** status 200  */ {
 	}[]
 	actors: {
 		mentions: {
+			pageId?: null | string
 			sourceId: string
 			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -88,6 +91,7 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		mentionedIn: {
+			pageId?: null | string
 			sourceId: string
 			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -101,20 +105,21 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			targetArticleId?: null | string
 			targetTagId?: null | string
 		}[]
-		worldId: string
 		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
+		worldId: string
+		title: string
 		icon: string
 		color: string
-		name: string
 		descriptionRich: string
 		descriptionYjs?: null | string
-		title: string
 	}[]
 	articles: {
 		mentions: {
+			pageId?: null | string
 			sourceId: string
 			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -129,6 +134,7 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			targetTagId?: null | string
 		}[]
 		mentionedIn: {
+			pageId?: null | string
 			sourceId: string
 			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -142,17 +148,55 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			targetArticleId?: null | string
 			targetTagId?: null | string
 		}[]
-		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
+		worldId: string
 		icon: string
 		color: string
-		name: string
 		contentRich: string
 		contentYjs?: null | string
 		position: number
 		parentId?: null | string
+	}[]
+	tags: {
+		mentions: {
+			pageId?: null | string
+			sourceId: string
+			targetId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
+		}[]
+		mentionedIn: {
+			pageId?: null | string
+			sourceId: string
+			targetId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceActorId?: null | string
+			sourceEventId?: null | string
+			sourceArticleId?: null | string
+			sourceTagId?: null | string
+			targetActorId?: null | string
+			targetEventId?: null | string
+			targetArticleId?: null | string
+			targetTagId?: null | string
+		}[]
+		description: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		worldId: string
 	}[]
 }
 export type SearchWorldApiArg = {

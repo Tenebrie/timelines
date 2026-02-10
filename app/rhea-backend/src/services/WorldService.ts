@@ -99,13 +99,19 @@ export const WorldService = {
 	},
 
 	findWorldDetails: async (worldId: string) => {
-		return getPrismaClient().world.findFirstOrThrow({
+		return await getPrismaClient().world.findFirstOrThrow({
 			where: {
 				id: worldId,
 			},
 			include: {
 				actors: {
 					include: {
+						pages: {
+							select: {
+								id: true,
+								name: true,
+							},
+						},
 						mentions: true,
 						mentionedIn: true,
 					},
@@ -121,6 +127,12 @@ export const WorldService = {
 						descriptionYjs: true,
 					},
 					include: {
+						pages: {
+							select: {
+								id: true,
+								name: true,
+							},
+						},
 						mentions: true,
 						mentionedIn: true,
 						deltaStates: {
@@ -128,6 +140,12 @@ export const WorldService = {
 								timestamp: 'asc',
 							},
 						},
+					},
+				},
+				tags: {
+					include: {
+						mentions: true,
+						mentionedIn: true,
 					},
 				},
 			},

@@ -34,6 +34,7 @@ export function registerGetWorldDetailsTool(server: McpServer) {
 					`Events: ${baseData.events.map((e) => e.name).join(', ') || 'None'}\n` +
 					`Actors: ${baseData.actors.map((a) => `${a.name} (${a.title})`).join(', ') || 'None'}\n` +
 					`Articles: ${articles.map((a) => a.name).join(', ') || 'None'}\n` +
+					`Tags: ${baseData.tags.map((t) => t.name).join(', ') || 'None'}\n` +
 					`Read-Only: ${baseData.isReadOnly ? 'Yes' : 'No'}`
 
 				Logger.toolSuccess(TOOL_NAME, `Retrieved details for world ${worldId}`)

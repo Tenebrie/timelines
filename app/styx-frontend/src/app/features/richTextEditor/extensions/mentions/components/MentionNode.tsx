@@ -12,6 +12,7 @@ import { resolveEntityName } from '../hooks/resolveEntityName'
 import { ActorMentionChip } from './chips/ActorMentionChip'
 import { ArticleMentionChip } from './chips/ArticleMentionChip'
 import { EventMentionChip } from './chips/EventMentionChip'
+import { TagMentionChip } from './chips/TagMentionChip'
 
 export const MentionNodeName = 'mentionChip'
 
@@ -40,6 +41,15 @@ const getArticleName = (node: ProseMirrorNode) => {
 	}
 	const name =
 		store.getState().wiki.articles.find((article) => article.id === articleId)?.name ?? 'Unknown article'
+	return name
+}
+
+const getTagName = (node: ProseMirrorNode) => {
+	const tagId = node.attrs.componentProps.tag as string | undefined
+	if (!tagId) {
+		return null
+	}
+	const name = store.getState().world.tags.find((tag) => tag.id === tagId)?.name ?? 'Unknown tag'
 	return name
 }
 
@@ -109,7 +119,8 @@ export const MentionNode = Node.create({
 	},
 
 	renderText({ node }) {
-		const name = getActorName(node) ?? getEventName(node) ?? getArticleName(node) ?? 'Unknown entity'
+		const name =
+			getActorName(node) ?? getEventName(node) ?? getArticleName(node) ?? getTagName(node) ?? 'Unknown entity'
 		return `[${name}]`
 	},
 
@@ -128,10 +139,11 @@ export const MentionNode = Node.create({
 				const actorId = node.attrs.componentProps.actor as string | undefined
 				const eventId = node.attrs.componentProps.event as string | undefined
 				const articleId = node.attrs.componentProps.article as string | undefined
+				const tagId = node.attrs.componentProps.tag as string | undefined
 				const state = store.getState()
 				const worldId = state.world.id
 
-				const entityId = actorId ?? eventId ?? articleId
+				const entityId = actorId ?? eventId ?? articleId ?? tagId
 				if (entityId) {
 					const entityName = resolveEntityName({ entityId })
 					dom.setAttribute('data-name', entityName)
@@ -148,6 +160,7 @@ export const MentionNode = Node.create({
 								{actorId ? <ActorMentionChip worldId={worldId} actorId={actorId} /> : null}
 								{eventId ? <EventMentionChip worldId={worldId} eventId={eventId} /> : null}
 								{articleId ? <ArticleMentionChip worldId={worldId} articleId={articleId} /> : null}
+								{tagId ? <TagMentionChip worldId={worldId} tagId={tagId} /> : null}
 							</CustomThemeProvider>
 						</ReduxProvider>
 					)

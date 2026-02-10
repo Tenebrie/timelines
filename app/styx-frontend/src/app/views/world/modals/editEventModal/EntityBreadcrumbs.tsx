@@ -43,6 +43,12 @@ export function EntityBreadcrumbs({
 		if (creatingNew === 'actor') {
 			return 'New actor'
 		}
+		if (creatingNew === 'article') {
+			return 'New article'
+		}
+		if (creatingNew === 'tag') {
+			return 'New tag'
+		}
 		return breadcrumbEntities[breadcrumbEntities.length - 1]?.name || '<Unnamed>'
 	})()
 

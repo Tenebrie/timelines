@@ -91,6 +91,7 @@ export type PutWorldEventContentApiArg = {
 }
 export type CreateWorldEventApiResponse = /** status 200  */ {
 	mentions: {
+		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -105,6 +106,7 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	mentionedIn: {
+		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -163,6 +165,7 @@ export type CreateWorldEventApiArg = {
 }
 export type UpdateWorldEventApiResponse = /** status 200  */ {
 	mentions: {
+		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -177,6 +180,7 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	mentionedIn: {
+		pageId?: null | string
 		sourceId: string
 		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'

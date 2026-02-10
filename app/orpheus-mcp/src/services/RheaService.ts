@@ -122,20 +122,34 @@ export const RheaService = {
 		worldId,
 		actorId,
 		userId,
+		pageId,
 	}: {
 		worldId: string
 		actorId: string
 		userId: string
+		pageId?: string
 	}) => {
-		const response = await rheaClient['GET']('/api/world/{worldId}/actor/{actorId}/content', {
-			params: {
-				path: { worldId, actorId },
-			},
-			headers: {
-				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-				[IMPERSONATED_USER_HEADER]: userId,
-			},
-		})
+		const headers = {
+			[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+			[IMPERSONATED_USER_HEADER]: userId,
+		}
+		const response = await (() => {
+			if (pageId) {
+				return rheaClient['GET']('/api/world/{worldId}/actor/{actorId}/content/pages/{pageId}', {
+					params: {
+						path: { worldId, actorId, pageId },
+					},
+					headers,
+				})
+			}
+			return rheaClient['GET']('/api/world/{worldId}/actor/{actorId}/content', {
+				params: {
+					path: { worldId, actorId },
+				},
+				headers,
+			})
+		})()
+
 		if (!response.data || response.error) {
 			throw new Error('Failed to get actor content: ' + JSON.stringify(response.error))
 		}
@@ -227,6 +241,85 @@ export const RheaService = {
 			},
 			body: {
 				content,
+			},
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: userId,
+			},
+		})
+	},
+
+	createActorContentPage: async ({
+		worldId,
+		actorId,
+		userId,
+		pageName,
+	}: {
+		worldId: string
+		actorId: string
+		userId: string
+		pageName: string
+	}) => {
+		const response = await rheaClient['POST']('/api/world/{worldId}/actor/{actorId}/content/pages', {
+			params: {
+				path: { worldId, actorId },
+			},
+			body: {
+				name: pageName,
+			},
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: userId,
+			},
+		})
+		if (!response.data || response.error) {
+			throw new Error('Failed to create actor content page: ' + JSON.stringify(response.error))
+		}
+
+		return response.data
+	},
+
+	updateActorContentPage: async ({
+		worldId,
+		actorId,
+		userId,
+		content,
+		pageId,
+	}: {
+		worldId: string
+		actorId: string
+		userId: string
+		content: string
+		pageId: string
+	}) => {
+		await rheaClient['PUT']('/api/world/{worldId}/actor/{actorId}/content/pages/{pageId}', {
+			params: {
+				path: { worldId, actorId, pageId },
+			},
+			body: {
+				content,
+			},
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: userId,
+			},
+		})
+	},
+
+	deleteActorContentPage: async ({
+		worldId,
+		actorId,
+		userId,
+		pageId,
+	}: {
+		worldId: string
+		actorId: string
+		userId: string
+		pageId: string
+	}) => {
+		await rheaClient['DELETE']('/api/world/{worldId}/actor/{actorId}/content/pages/{pageId}', {
+			params: {
+				path: { worldId, actorId, pageId },
 			},
 			headers: {
 				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -515,6 +608,102 @@ export const RheaService = {
 		if (!response.data || response.error) {
 			throw new Error('Failed to search world: ' + JSON.stringify(response.error))
 		}
+
+		return response.data
+	},
+
+	// Tag methods
+	getTagDetails: async ({ worldId, tagId, userId }: { worldId: string; tagId: string; userId: string }) => {
+		const response = await rheaClient['GET']('/api/world/{worldId}/tag/{tagId}', {
+			params: {
+				path: { worldId, tagId },
+			},
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: userId,
+			},
+		})
+		if (!response.data || response.error) {
+			throw new Error('Failed to get tag details: ' + JSON.stringify(response.error))
+		}
+
+		return response.data
+	},
+
+	createTag: async ({
+		worldId,
+		userId,
+		name,
+		description,
+	}: {
+		worldId: string
+		userId: string
+		name: string
+		description?: string
+	}) => {
+		const response = await rheaClient['POST']('/api/world/{worldId}/tags', {
+			params: {
+				path: { worldId },
+			},
+			body: {
+				name,
+				description,
+			},
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: userId,
+			},
+		})
+		if (!response.data || response.error) {
+			throw new Error('Failed to create tag: ' + JSON.stringify(response.error))
+		}
+
+		return response.data
+	},
+
+	updateTag: async ({
+		worldId,
+		tagId,
+		userId,
+		name,
+		description,
+	}: {
+		worldId: string
+		tagId: string
+		userId: string
+		name?: string
+		description?: string
+	}) => {
+		const response = await rheaClient['PATCH']('/api/world/{worldId}/tag/{tagId}', {
+			params: {
+				path: { worldId, tagId },
+			},
+			body: {
+				name,
+				description,
+			},
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: userId,
+			},
+		})
+		if (!response.data || response.error) {
+			throw new Error('Failed to update tag: ' + JSON.stringify(response.error))
+		}
+
+		return response.data
+	},
+
+	deleteTag: async ({ worldId, tagId, userId }: { worldId: string; tagId: string; userId: string }) => {
+		const response = await rheaClient['DELETE']('/api/world/{worldId}/tag/{tagId}', {
+			params: {
+				path: { worldId, tagId },
+			},
+			headers: {
+				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
+				[IMPERSONATED_USER_HEADER]: userId,
+			},
+		})
 
 		return response.data
 	},

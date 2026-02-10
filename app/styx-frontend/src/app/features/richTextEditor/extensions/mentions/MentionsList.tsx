@@ -1,6 +1,7 @@
 import { MentionedEntity } from '@api/types/worldTypes'
 import Article from '@mui/icons-material/Article'
 import Event from '@mui/icons-material/Event'
+import LabelIcon from '@mui/icons-material/Label'
 import Person from '@mui/icons-material/Person'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -16,6 +17,7 @@ import { useCreateArticle } from '@/app/views/world/views/wiki/api/useCreateArti
 
 import { useQuickCreateActor } from './api/useQuickCreateActor'
 import { useQuickCreateEvent } from './api/useQuickCreateEvent'
+import { useQuickCreateTag } from './api/useQuickCreateTag'
 import { MentionNodeName } from './components/MentionNode'
 import { useDisplayedMentions } from './hooks/useDisplayedMentions'
 
@@ -36,9 +38,10 @@ export function MentionsListComponent({ editor }: Props) {
 	const createActor = useQuickCreateActor()
 	const createEvent = useQuickCreateEvent()
 	const [createArticle] = useCreateArticle()
+	const createTag = useQuickCreateTag()
 
 	const quickCreateVisible = query.length > 0
-	const lastItemIndex = quickCreateVisible ? mentions.length + 2 : mentions.length - 1
+	const lastItemIndex = quickCreateVisible ? mentions.length + 3 : mentions.length - 1
 
 	// Handle closing through global shortcut system to avoid modal closing
 	useShortcut(
@@ -98,6 +101,9 @@ export function MentionsListComponent({ editor }: Props) {
 		} else if (!selectedMention && index === mentions.length + 2) {
 			entityType = 'Article'
 			createdEntityId = (await createArticle({ name: query }))?.id
+		} else if (!selectedMention && index === mentions.length + 3) {
+			entityType = 'Tag'
+			createdEntityId = (await createTag({ query }))?.id
 		}
 
 		if (!selectedMention && !createdEntityId) {
@@ -137,7 +143,7 @@ export function MentionsListComponent({ editor }: Props) {
 				setSelectedIndex((prev) => Math.max(prev - 1, 0))
 			} else if (key === 'ArrowDown' || key === 'Tab') {
 				setSelectedIndex((prev) => {
-					return Math.min(prev + 1, mentions.length - (query.length > 0 ? -2 : 1))
+					return Math.min(prev + 1, mentions.length - (query.length > 0 ? -3 : 1))
 				})
 			} else if (key === 'Enter') {
 				await selectEntity(editor, selectedIndex)
@@ -179,6 +185,7 @@ export function MentionsListComponent({ editor }: Props) {
 						{mention.type === 'Actor' && <Person />}
 						{mention.type === 'Event' && <Event />}
 						{mention.type === 'Article' && <Article />}
+						{mention.type === 'Tag' && <LabelIcon />}
 					</ListItemIcon>
 					<ListItemText>
 						<b>{mention.type}:</b>&nbsp;{mention.name}
@@ -225,6 +232,18 @@ export function MentionsListComponent({ editor }: Props) {
 						</ListItemIcon>
 						<ListItemText>
 							<b>Article</b>
+						</ListItemText>
+					</MenuItem>
+					<MenuItem
+						selected={selectedIndex === mentions.length + 3}
+						onClick={() => selectEntity(editor, mentions.length + 3)}
+						sx={{ borderRadius: 1 }}
+					>
+						<ListItemIcon>
+							<LabelIcon />
+						</ListItemIcon>
+						<ListItemText>
+							<b>Tag</b>
 						</ListItemText>
 					</MenuItem>
 				</>

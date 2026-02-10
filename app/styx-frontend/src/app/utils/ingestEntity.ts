@@ -1,6 +1,6 @@
 import { GetWorldInfoApiResponse } from '@api/worldDetailsApi'
 
-import { ActorDetails, WorldEvent, WorldEventDelta } from '../../api/types/worldTypes'
+import { ActorDetails, WorldEvent, WorldEventDelta, WorldTag } from '../../api/types/worldTypes'
 import { isNotNull } from './isNotNull'
 
 export const ingestActor = (rawActor: GetWorldInfoApiResponse['actors'][number]): ActorDetails => {
@@ -24,5 +24,11 @@ export const ingestEventDelta = (
 	return {
 		...rawDelta,
 		timestamp: Number(rawDelta.timestamp),
+	}
+}
+
+export const ingestTag = (rawTag: GetWorldInfoApiResponse['tags'][number]): WorldTag => {
+	return {
+		...rawTag,
 	}
 }

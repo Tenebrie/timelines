@@ -38,6 +38,43 @@ export function findByName<T extends { name: string }>({ name, entities }: { nam
 	return matchingEntities[0]
 }
 
+export async function findByNameOrCreate<T extends { name: string }>({
+	name,
+	entities,
+	onCreate,
+}: {
+	name: string
+	entities: T[]
+	onCreate: () => Promise<T>
+}) {
+	const exactMatches = entities.filter((actor) => nameMatchesExactly({ query: name, entityName: actor.name }))
+	if (exactMatches.length > 1) {
+		throw new Error(`Multiple entities found exactly matching "${name}".`)
+	}
+
+	const matchingEntities = entities.filter((actor) =>
+		nameMatchesFuzzy({ query: name, entityName: actor.name }),
+	)
+
+	if (matchingEntities.length === 0) {
+		if (onCreate) {
+			return onCreate()
+		}
+	}
+
+	if (matchingEntities.length > 1 && exactMatches.length === 1) {
+		return exactMatches[0]
+	}
+
+	if (matchingEntities.length > 1 && exactMatches.length === 0) {
+		throw new Error(
+			`Multiple entities found fuzzy matching "${name}": ${matchingEntities.map((e) => e.name).join(', ')}`,
+		)
+	}
+
+	return matchingEntities[0]
+}
+
 export async function checkActorDoesNotExist({
 	name,
 	userId,
@@ -92,5 +129,22 @@ export async function checkEventDoesNotExist({
 	)
 	if (matchingEvent) {
 		throw new Error(`Event "${name}" already exists.`)
+	}
+}
+
+export async function checkTagDoesNotExist({
+	name,
+	userId,
+	sessionId,
+}: {
+	name: string
+	userId: string
+	sessionId: string
+}) {
+	const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
+	const worldData = await RheaService.getWorldDetails({ userId, worldId })
+	const matchingTag = worldData.tags.find((tag) => nameMatchesExactly({ query: name, entityName: tag.name }))
+	if (matchingTag) {
+		throw new Error(`Tag "${name}" already exists.`)
 	}
 }
