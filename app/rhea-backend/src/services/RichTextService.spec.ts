@@ -40,6 +40,7 @@ describe('RichTextService', () => {
 			actor: '00000000',
 			event: false,
 			article: false,
+			tag: false,
 		}
 		const contentString = `Mentions <span data-component-props="${toHtmlAttribute(mention)}"></span>`
 		const result = await RichTextService.parseContentString({ worldId: 'test-world', contentString })
@@ -67,6 +68,7 @@ describe('RichTextService', () => {
 			actor: false,
 			event: false,
 			article: '00000000',
+			tag: false,
 		}
 		const contentString = `Mentions <span data-component-props="${toHtmlAttribute(mention)}"></span>`
 		const result = await RichTextService.parseContentString({ worldId: 'test-world', contentString })
@@ -94,6 +96,7 @@ describe('RichTextService', () => {
 			actor: false,
 			event: '00000000',
 			article: false,
+			tag: false,
 		}
 		const contentString = `Mentions <span data-component-props="${toHtmlAttribute(mention)}"></span>`
 		const result = await RichTextService.parseContentString({ worldId: 'test-world', contentString })
