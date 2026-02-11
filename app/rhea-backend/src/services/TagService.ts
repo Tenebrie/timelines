@@ -55,13 +55,10 @@ export const TagService = {
 			},
 		})
 
-		console.log(tag?.mentionedIn)
-
 		if (!tag) {
 			return null
 		}
 
-		console.log(tag.mentionedIn)
 		const mentionedBy: MentionedByEntry[] = tag.mentionedIn.map((mention) => {
 			const source = mention.sourceActor ?? mention.sourceEvent ?? mention.sourceArticle ?? mention.sourceTag
 			return {
