@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { EntityResolverService } from './EntityResolverService.js'
 import { MentionNodeContent, RichTextService } from './RichTextService.js'
@@ -8,6 +8,10 @@ const toHtmlAttribute = (mention: MentionNodeContent): string => {
 }
 
 describe('RichTextService', () => {
+	beforeEach(() => {
+		vi.spyOn(RichTextService, 'isMentionValid').mockResolvedValue(true)
+	})
+
 	it('parses plain text correctly', async () => {
 		const contentString = 'Plain non-html text'
 		const result = await RichTextService.parseContentString({ worldId: 'test-world', contentString })
@@ -49,6 +53,37 @@ describe('RichTextService', () => {
 		expect(result.mentions).toEqual([
 			{
 				targetId: '00000000',
+				targetType: 'Actor',
+			},
+		])
+	})
+
+	it('silently excludes invalid mentions', async () => {
+		vi.spyOn(EntityResolverService, 'resolveEntityName').mockImplementation(
+			async ({ entityType, entityId }) => {
+				if (entityType === 'actor' && entityId === '00000001') {
+					return 'Named Actor'
+				} else if (entityType === 'actor') {
+					return 'Unknown Actor'
+				}
+				return ''
+			},
+		)
+		vi.spyOn(RichTextService, 'isMentionValid').mockResolvedValueOnce(false).mockResolvedValueOnce(true)
+
+		const mentionA: MentionNodeContent = {
+			actor: '00000000',
+		}
+		const mentionB: MentionNodeContent = {
+			actor: '00000001',
+		}
+		const contentString = `Mentions <span data-component-props="${toHtmlAttribute(mentionA)}"></span> and <span data-component-props="${toHtmlAttribute(mentionB)}"></span>`
+		const result = await RichTextService.parseContentString({ worldId: 'test-world', contentString })
+
+		expect(result.contentPlain).toBe('Mentions [Unknown Actor] and [Named Actor]')
+		expect(result.mentions).toEqual([
+			{
+				targetId: '00000001',
 				targetType: 'Actor',
 			},
 		])

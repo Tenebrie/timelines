@@ -110,6 +110,40 @@ services:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached
             - /mnt/volume_rhea_postgres/backups:/backups:cached
 
+    chronos:
+        image: tenebrie/timelines-chronos:${VERSION}
+        build:
+            context: ./app/chronos-backups
+            dockerfile: ./Dockerfile
+        environment:
+            BACKREST_DATA: /data
+            BACKREST_CONFIG: /config/config.json
+            XDG_CACHE_HOME: /cache
+        deploy:
+            replicas: 1
+            update_config:
+                order: stop-first
+                parallelism: 1
+                delay: 10s
+                failure_action: pause
+        secrets:
+            - s3-bucket-id
+            - s3-endpoint
+            - s3-access-key-id
+            - s3-access-key-secret
+        volumes:
+            - /mnt/volume_rhea_postgres/backrest/data:/data:cached
+            - /mnt/volume_rhea_postgres/backrest/config:/config:cached
+            - /mnt/volume_rhea_postgres/backrest/cache:/cache:cached
+        depends_on:
+            - rhea-postgres
+        healthcheck:
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:9898"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
+
 # See docs/Creating New Cluster.md
 secrets:
     jwt-secret:

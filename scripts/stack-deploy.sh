@@ -14,6 +14,7 @@ SERVICES=(
   "timelines_rhea"
   "timelines_calliope"
   "timelines_orpheus"
+  "timelines_chronos"
 )
 
 echo "Waiting for services to converge..."
