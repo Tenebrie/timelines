@@ -40,3 +40,11 @@ services:
             start_period: 30s
     redis:
         image: redis:7-alpine
+    chronos:
+        environment:
+            POSTGRES_HOST: rhea-postgres
+            POSTGRES_USER: docker
+            POSTGRES_PASSWORD: docker
+            POSTGRES_DB: db
+        depends_on:
+            - rhea-postgres

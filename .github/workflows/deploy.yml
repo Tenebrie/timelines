@@ -52,7 +52,7 @@ jobs:
       contents: write
     strategy:
       matrix:
-        service: [gatekeeper, styx, rhea, calliope, orpheus]
+        service: [gatekeeper, styx, rhea, calliope, orpheus, chronos]
     steps:
       - uses: actions/checkout@v4
         with:
