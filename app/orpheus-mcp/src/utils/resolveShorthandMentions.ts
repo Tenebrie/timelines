@@ -6,36 +6,27 @@ type MentionType = 'actor' | 'event' | 'tag' | 'article'
 
 type EntityWithId = { id: string; name: string }
 
-function findEntityByNameSoft<T extends EntityWithId>({
+type MatchResult<T> = {
+	exact: T[]
+	fuzzy: T[]
+}
+
+function findEntitiesByName<T extends EntityWithId>({
 	name,
 	entities,
 }: {
 	name: string
 	entities: T[]
-}): T | null {
+}): MatchResult<T> {
 	const exactMatches = entities.filter((entity) =>
 		nameMatchesExactly({ query: name, entityName: entity.name }),
 	)
-	if (exactMatches.length === 1) {
-		return exactMatches[0]
-	}
-	if (exactMatches.length > 1) {
-		throw new Error(
-			`Ambiguous mention "@[${name}]": multiple entities found with exact name match: ${exactMatches.map((e) => `"${e.name}"`).join(', ')}`,
-		)
-	}
-
 	const fuzzyMatches = entities.filter((entity) => nameMatchesFuzzy({ query: name, entityName: entity.name }))
-	if (fuzzyMatches.length === 1) {
-		return fuzzyMatches[0]
-	}
-	if (fuzzyMatches.length > 1) {
-		throw new Error(
-			`Ambiguous mention "@[${name}]": multiple entities found with fuzzy match: ${fuzzyMatches.map((e) => `"${e.name}"`).join(', ')}`,
-		)
-	}
 
-	return null
+	return {
+		exact: exactMatches,
+		fuzzy: fuzzyMatches,
+	}
 }
 
 function createMentionHtml({ type, id, name }: { type: MentionType; id: string; name: string }): string {
@@ -88,34 +79,57 @@ export async function resolveShorthandMentions({
 	for (let i = matches.length - 1; i >= 0; i--) {
 		const { fullMatch, entityName } = matches[i]
 
-		// Try to find the entity in each collection
-		const actor = findEntityByNameSoft({ name: entityName, entities: worldData.actors })
-		const event = findEntityByNameSoft({ name: entityName, entities: worldData.events })
-		const tag = findEntityByNameSoft({ name: entityName, entities: worldData.tags })
-		const article = findEntityByNameSoft({ name: entityName, entities: articleData })
+		// Find matches in each entity type
+		const actorMatches = findEntitiesByName({ name: entityName, entities: worldData.actors })
+		const eventMatches = findEntitiesByName({ name: entityName, entities: worldData.events })
+		const tagMatches = findEntitiesByName({ name: entityName, entities: worldData.tags })
+		const articleMatches = findEntitiesByName({ name: entityName, entities: articleData })
 
-		// Collect all matches across entity types
-		const foundEntities: { type: MentionType; entity: EntityWithId }[] = []
-		if (actor) foundEntities.push({ type: 'actor', entity: actor })
-		if (event) foundEntities.push({ type: 'event', entity: event })
-		if (tag) foundEntities.push({ type: 'tag', entity: tag })
-		if (article) foundEntities.push({ type: 'article', entity: article })
+		// Collect all exact matches across entity types
+		const exactMatches: { type: MentionType; entity: EntityWithId }[] = []
+		for (const entity of actorMatches.exact) exactMatches.push({ type: 'actor', entity })
+		for (const entity of eventMatches.exact) exactMatches.push({ type: 'event', entity })
+		for (const entity of tagMatches.exact) exactMatches.push({ type: 'tag', entity })
+		for (const entity of articleMatches.exact) exactMatches.push({ type: 'article', entity })
 
-		if (foundEntities.length === 0) {
+		// If we have exact matches, use them (priority over fuzzy)
+		if (exactMatches.length === 1) {
+			const { type, entity } = exactMatches[0]
+			const htmlMention = createMentionHtml({ type, id: entity.id, name: entity.name })
+			result = result.replace(fullMatch, htmlMention)
+			continue
+		}
+
+		if (exactMatches.length > 1) {
 			throw new Error(
-				`Unable to resolve mention "@[${entityName}]": no matching entity found in actors, events, tags, or articles.`,
+				`Ambiguous mention "@[${entityName}]": multiple entities found with exact name match: ${exactMatches.map((e) => `${e.type} "${e.entity.name}"`).join(', ')}. Please use a more specific name.`,
 			)
 		}
 
-		if (foundEntities.length > 1) {
+		// No exact matches, try fuzzy matches
+		const fuzzyMatches: { type: MentionType; entity: EntityWithId }[] = []
+		for (const entity of actorMatches.fuzzy) fuzzyMatches.push({ type: 'actor', entity })
+		for (const entity of eventMatches.fuzzy) fuzzyMatches.push({ type: 'event', entity })
+		for (const entity of tagMatches.fuzzy) fuzzyMatches.push({ type: 'tag', entity })
+		for (const entity of articleMatches.fuzzy) fuzzyMatches.push({ type: 'article', entity })
+
+		if (fuzzyMatches.length === 1) {
+			const { type, entity } = fuzzyMatches[0]
+			const htmlMention = createMentionHtml({ type, id: entity.id, name: entity.name })
+			result = result.replace(fullMatch, htmlMention)
+			continue
+		}
+
+		if (fuzzyMatches.length > 1) {
 			throw new Error(
-				`Ambiguous mention "@[${entityName}]": matches multiple entity types: ${foundEntities.map((e) => `${e.type} "${e.entity.name}"`).join(', ')}. Please use a more specific name.`,
+				`Ambiguous mention "@[${entityName}]": multiple entities found with fuzzy match: ${fuzzyMatches.map((e) => `${e.type} "${e.entity.name}"`).join(', ')}. Please use a more specific name.`,
 			)
 		}
 
-		const { type, entity } = foundEntities[0]
-		const htmlMention = createMentionHtml({ type, id: entity.id, name: entity.name })
-		result = result.replace(fullMatch, htmlMention)
+		// No matches found at all
+		throw new Error(
+			`Unable to resolve mention "@[${entityName}]": no matching entity found in actors, events, tags, or articles.`,
+		)
 	}
 
 	return result
