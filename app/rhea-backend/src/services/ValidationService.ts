@@ -6,25 +6,78 @@ import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { WorldEventService } from './WorldEventService.js'
 
 export const ValidationService = {
-	checkEventValidity: async (eventId: string) => {
+	isActorValid: async (actorId: string) => {
+		const count = await getPrismaClient().actor.count({
+			where: {
+				id: actorId,
+			},
+		})
+		return count > 0
+	},
+
+	isArticleValid: async (articleId: string) => {
+		const count = await getPrismaClient().wikiArticle.count({
+			where: {
+				id: articleId,
+			},
+		})
+		return count > 0
+	},
+
+	isEventValid: async (eventId: string) => {
 		const count = await getPrismaClient().worldEvent.count({
 			where: {
 				id: eventId,
 			},
 		})
-		if (count === 0) {
-			throw new BadRequestError('Event does not exist')
-		}
+		return count > 0
 	},
 
-	checkEventDeltaStateValidity: async (deltaId: string) => {
+	isEventDeltaStateValid: async (deltaId: string) => {
 		const count = await getPrismaClient().worldEventDelta.count({
 			where: {
 				id: deltaId,
 			},
 		})
-		if (count === 0) {
+		return count > 0
+	},
+
+	isTagValid: async (tagId: string) => {
+		const count = await getPrismaClient().tag.count({
+			where: {
+				id: tagId,
+			},
+		})
+		return count > 0
+	},
+
+	checkActorValidity: async (actorId: string) => {
+		if (!ValidationService.isActorValid(actorId)) {
+			throw new BadRequestError('Actor does not exist')
+		}
+	},
+
+	checkArticleValidity: async (articleId: string) => {
+		if (!ValidationService.isArticleValid(articleId)) {
+			throw new BadRequestError('Article does not exist')
+		}
+	},
+
+	checkEventValidity: async (eventId: string) => {
+		if (!ValidationService.isEventValid(eventId)) {
+			throw new BadRequestError('Event does not exist')
+		}
+	},
+
+	checkEventDeltaStateValidity: async (deltaId: string) => {
+		if (!ValidationService.isEventDeltaStateValid(deltaId)) {
 			throw new BadRequestError('Event delta state does not exist')
+		}
+	},
+
+	checkTagValidity: async (tagId: string) => {
+		if (!ValidationService.isTagValid(tagId)) {
+			throw new BadRequestError('Tag does not exist')
 		}
 	},
 
