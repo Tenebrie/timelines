@@ -21,12 +21,12 @@ export RESTIC_PASSWORD="timelines-backups"
 # Convert endpoint to restic S3 format
 # Restic needs: s3:http://host:port/bucket or s3:https://host/bucket
 if echo "$S3_ENDPOINT" | grep -q "^http://"; then
-    # HTTP (e.g., MinIO in dev): s3:http://s3-minio:9000/bucket/backrest
-    export RESTIC_REPOSITORY="s3:${S3_ENDPOINT}/${S3_BUCKET}/backrest"
+    # HTTP (e.g., MinIO in dev): s3:http://s3-minio:9000/bucket/rhea/backrest
+    export RESTIC_REPOSITORY="s3:${S3_ENDPOINT}/${S3_BUCKET}/rhea/backrest"
 else
-    # HTTPS (e.g., DigitalOcean Spaces): s3:s3.region.digitaloceanspaces.com/bucket/backrest
+    # HTTPS (e.g., DigitalOcean Spaces): s3:s3.region.digitaloceanspaces.com/bucket/rhea/backrest
     S3_HOST=$(echo "$S3_ENDPOINT" | sed 's|https://||')
-    export RESTIC_REPOSITORY="s3:${S3_HOST}/${S3_BUCKET}/backrest"
+    export RESTIC_REPOSITORY="s3:${S3_HOST}/${S3_BUCKET}/rhea/backrest"
 fi
 
 echo "Backrest starting..."

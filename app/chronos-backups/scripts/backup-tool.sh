@@ -39,10 +39,10 @@ setup_env() {
 
     # Convert endpoint to restic S3 format
     if echo "$S3_ENDPOINT" | grep -q "^http://"; then
-        export RESTIC_REPOSITORY="s3:${S3_ENDPOINT}/${S3_BUCKET}/backrest"
+        export RESTIC_REPOSITORY="s3:${S3_ENDPOINT}/${S3_BUCKET}/rhea/backrest"
     else
         S3_HOST=$(echo "$S3_ENDPOINT" | sed 's|https://||')
-        export RESTIC_REPOSITORY="s3:${S3_HOST}/${S3_BUCKET}/backrest"
+        export RESTIC_REPOSITORY="s3:${S3_HOST}/${S3_BUCKET}/rhea/backrest"
     fi
 }
 
