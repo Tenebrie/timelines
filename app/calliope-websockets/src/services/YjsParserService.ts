@@ -4,6 +4,7 @@ import * as Y from 'yjs'
 
 /**
  * Map HTML tags to Tiptap semantic node names
+ * NOTE: These must match Tiptap schema node names EXACTLY (camelCase)
  */
 const HTML_TO_SEMANTIC: Record<string, string> = {
 	p: 'paragraph',
@@ -22,10 +23,19 @@ const HTML_TO_SEMANTIC: Record<string, string> = {
 	br: 'hardBreak',
 	hr: 'horizontalRule',
 	img: 'image',
+	// Inline formatting - these are MARKS in Tiptap, applied to XmlText
+	b: 'bold',
+	strong: 'bold',
+	em: 'italic',
+	i: 'italic',
+	u: 'underline',
+	strike: 'strike',
+	s: 'strike',
 }
 
 /**
  * Map Tiptap semantic node names to HTML tags
+ * NOTE: These must match Tiptap schema node names EXACTLY (camelCase)
  */
 const SEMANTIC_TO_HTML: Record<string, string> = {
 	paragraph: 'p',
@@ -39,6 +49,10 @@ const SEMANTIC_TO_HTML: Record<string, string> = {
 	hardBreak: 'br',
 	horizontalRule: 'hr',
 	image: 'img',
+	bold: 'b',
+	italic: 'em',
+	underline: 'u',
+	strike: 'strike',
 	// Custom nodes
 	mentionChip: 'span',
 	externalImageNode: 'img',
@@ -48,7 +62,7 @@ const SEMANTIC_TO_HTML: Record<string, string> = {
  * Text marks that should be wrapped in HTML elements
  */
 const MARK_TO_HTML: Record<string, string> = {
-	bold: 'strong',
+	bold: 'b',
 	italic: 'em',
 	underline: 'u',
 	strike: 'strike',
@@ -70,7 +84,28 @@ function escapeHtmlText(text: string): string {
 }
 
 /**
+ * Tags that represent text formatting marks (not nodes)
+ */
+const MARK_TAGS = new Set(['strong', 'b', 'em', 'i', 'u', 'strike', 's', 'code', 'a'])
+
+/**
+ * Map HTML mark tags to Tiptap mark names
+ */
+const HTML_TAG_TO_MARK: Record<string, string> = {
+	strong: 'bold',
+	b: 'bold',
+	em: 'italic',
+	i: 'italic',
+	u: 'underline',
+	strike: 'strike',
+	s: 'strike',
+	code: 'code',
+	a: 'link',
+}
+
+/**
  * Convert HTML to Yjs XmlFragment structure using Tiptap semantic nodes
+ * Marks (bold, italic, etc.) are applied as formatting on Y.XmlText nodes
  */
 export function htmlToYXml(html: string, parent: Y.XmlFragment | Y.XmlElement) {
 	const normalizedHtml = html.trim().startsWith('<') ? html : `<p>${html}</p>`
@@ -79,229 +114,267 @@ export function htmlToYXml(html: string, parent: Y.XmlFragment | Y.XmlElement) {
 	const body = $('body')
 	const content = (body.length > 0 ? body : $.root()) as Cheerio<Element>
 
-	function processNode(node: Element, yParent: Y.XmlFragment | Y.XmlElement) {
-		node.childNodes.forEach((child) => {
-			if (child instanceof Text) {
-				const text = new Y.XmlText()
-				text.insert(0, child.data)
-				yParent.push([text])
-			} else if (child instanceof Element) {
-				// Skip html, head, body wrappers
-				if (['html', 'head', 'body'].includes(child.name)) {
-					if (child.childNodes && child.childNodes.length > 0) {
-						processNode(child, yParent)
+	/**
+	 * Extract text content with marks from an inline element
+	 * Returns array of { text, marks, linkAttrs? } objects
+	 */
+	function extractTextWithMarks(
+		node: Element | Text,
+		currentMarks: Record<string, boolean | Record<string, string>> = {},
+	): Array<{
+		text: string
+		marks: Record<string, boolean | Record<string, string>>
+		element?: Y.XmlElement
+	}> {
+		const results: Array<{
+			text: string
+			marks: Record<string, boolean | Record<string, string>>
+			element?: Y.XmlElement
+		}> = []
+
+		if (node instanceof Text) {
+			if (node.data) {
+				results.push({ text: node.data, marks: { ...currentMarks } })
+			}
+		} else if (node instanceof Element) {
+			// Check if this is a mention chip
+			if (node.name === 'span' && node.attribs?.['data-component-props']) {
+				// Create mention element
+				const element = new Y.XmlElement('mentionChip')
+				if (node.attribs['data-component-props']) {
+					try {
+						const parsed = JSON.parse(node.attribs['data-component-props'])
+						element.setAttribute('componentProps', parsed)
+					} catch {
+						element.setAttribute('componentProps', node.attribs['data-component-props'])
 					}
-					return
+				}
+				if (node.attribs['data-name']) {
+					element.setAttribute('name', node.attribs['data-name'])
+				}
+				if (node.attribs['data-type']) {
+					element.setAttribute('type', node.attribs['data-type'])
+				}
+				results.push({ text: '', marks: {}, element })
+			}
+			// Check if this is a mark tag (bold, italic, etc.)
+			else if (MARK_TAGS.has(node.name)) {
+				const markName = HTML_TAG_TO_MARK[node.name]
+				const newMarks = { ...currentMarks }
+
+				if (markName === 'link' && node.attribs) {
+					// Link mark includes href and other attributes
+					const linkAttrs: Record<string, string> = {}
+					if (node.attribs.href !== undefined) linkAttrs.href = node.attribs.href
+					if (node.attribs.target) linkAttrs.target = node.attribs.target
+					if (node.attribs.rel) linkAttrs.rel = node.attribs.rel
+					newMarks[markName] = linkAttrs
+				} else if (markName) {
+					newMarks[markName] = true
 				}
 
-				// Check if this is a mark element (inline formatting)
-				const isMarkElement = ['strong', 'em', 'u', 'strike', 'code', 'a'].includes(child.name)
-
-				if (isMarkElement) {
-					// This is a text mark - extract text and apply marks
-					extractMarkedText(child, yParent)
-				} else {
-					// Check if this is a mention chip (span with data-component-props)
-					const isMentionChip = child.name === 'span' && child.attribs?.['data-component-props']
-					const semanticName = isMentionChip ? 'mentionChip' : HTML_TO_SEMANTIC[child.name] || child.name
-					const element = new Y.XmlElement(semanticName)
-
-					// Special handling for heading levels
-					if (child.name.match(/^h[1-6]$/)) {
-						element.setAttribute('level', child.name[1])
-					}
-
-					// Handle special attributes
-					if (child.attribs) {
-						Object.entries(child.attribs).forEach(([key, value]) => {
-							// Special handling for mention chips (custom node)
-							if (key === 'data-name') {
-								element.setAttribute('name', value)
-							}
-							if (key === 'data-type') {
-								element.setAttribute('type', value)
-							}
-							if (key === 'data-component-props') {
-								try {
-									const parsed = JSON.parse(value)
-									element.setAttribute('componentProps', parsed)
-								} catch (e) {
-									console.error('Failed to parse data-component-props:', e)
-								}
-							}
-							// Handle image src/alt
-							else if (child.name === 'img') {
-								if (key === 'src') {
-									element.setAttribute('src', value)
-								}
-								if (key === 'alt') {
-									element.setAttribute('alt', value)
-								}
-							}
-							// Handle link href
-							else if (child.name === 'a' && key === 'href') {
-								element.setAttribute('href', value)
-							}
-							// Store other attributes as-is
-							else {
-								try {
-									const parsed = JSON.parse(value)
-									element.setAttribute(key, parsed)
-								} catch {
-									element.setAttribute(key, value)
-								}
-							}
-						})
-					}
-
-					// CRITICAL: Add element to parent FIRST (required by Yjs before adding children)
-					yParent.push([element])
-
-					// Then process children recursively
-					if (child.childNodes && child.childNodes.length > 0) {
-						processNode(child, element)
-					}
+				// Process children with the new marks
+				for (const child of node.childNodes) {
+					results.push(...extractTextWithMarks(child as Element | Text, newMarks))
 				}
 			}
-		})
-	}
-
-	/**
-	 * Extract text from potentially nested mark elements and collect all marks
-	 */
-	function extractMarkedText(
-		node: Element,
-		yParent: Y.XmlFragment | Y.XmlElement,
-		marks: Record<string, boolean | Record<string, unknown>> = {},
-	) {
-		// Add current mark to the stack
-		const markName = Object.keys(MARK_TO_HTML).find((k) => MARK_TO_HTML[k] === node.name)
-		if (markName) {
-			// If the element has attributes, store them as an object
-			// Otherwise, just set the mark to true
-			if (node.attribs && Object.keys(node.attribs).length > 0) {
-				// Filter out standard HTML attributes that aren't relevant to the mark
-				const relevantAttribs: Record<string, unknown> = {}
-				for (const [key, value] of Object.entries(node.attribs)) {
-					// Skip class, style, and other purely presentational attributes
-					if (!['class', 'style', 'id'].includes(key)) {
-						relevantAttribs[key] = value
-					}
+			// Plain span without data-component-props - just process children
+			else if (node.name === 'span') {
+				for (const child of node.childNodes) {
+					results.push(...extractTextWithMarks(child as Element | Text, currentMarks))
 				}
-
-				// Only store as object if there are relevant attributes
-				if (Object.keys(relevantAttribs).length > 0) {
-					marks = { ...marks, [markName]: relevantAttribs }
-				} else {
-					marks = { ...marks, [markName]: true }
+			}
+			// Other elements - should not happen in inline context but handle gracefully
+			else {
+				for (const child of node.childNodes) {
+					results.push(...extractTextWithMarks(child as Element | Text, currentMarks))
 				}
-			} else {
-				marks = { ...marks, [markName]: true }
 			}
 		}
 
-		node.childNodes.forEach((child) => {
-			if (child instanceof Text) {
-				if (child.data) {
-					// Create text node with all accumulated marks
+		return results
+	}
+
+	/**
+	 * Process inline content and add to parent element
+	 * Handles text with marks and mention chips
+	 */
+	function processInlineContent(node: Element, yParent: Y.XmlElement) {
+		for (const child of node.childNodes) {
+			const segments = extractTextWithMarks(child as Element | Text)
+
+			for (const segment of segments) {
+				if (segment.element) {
+					// This is a mention chip or other inline element
+					yParent.push([segment.element])
+				} else if (segment.text) {
+					// This is text with optional marks
 					const text = new Y.XmlText()
-					text.insert(0, child.data)
-					// Apply all marks at once
-					if (Object.keys(marks).length > 0) {
-						text.format(0, child.data.length, marks)
+					text.insert(0, segment.text)
+
+					// Apply marks
+					const markKeys = Object.keys(segment.marks)
+					if (markKeys.length > 0) {
+						const marks: Record<string, boolean | Record<string, string>> = {}
+						for (const markName of markKeys) {
+							marks[markName] = segment.marks[markName]
+						}
+						text.format(0, segment.text.length, marks)
 					}
+
 					yParent.push([text])
 				}
-			} else if (child instanceof Element) {
-				// Check if this is another mark element
-				const isNestedMark = ['strong', 'em', 'u', 'strike', 'code', 'a'].includes(child.name)
-				if (isNestedMark) {
-					// Recursively extract text with accumulated marks
-					extractMarkedText(child, yParent, marks)
-				} else {
-					// Non-mark element inside marks - this shouldn't happen in valid Tiptap HTML
-					// But handle it gracefully by processing as a regular node
-					processNode(child, yParent)
+			}
+		}
+	}
+
+	/**
+	 * Process block-level content
+	 */
+	function processBlock(node: Element, yParent: Y.XmlFragment | Y.XmlElement) {
+		// Skip html, head, body wrappers
+		if (['html', 'head', 'body'].includes(node.name)) {
+			for (const child of node.childNodes) {
+				if (child instanceof Element) {
+					processBlock(child, yParent)
 				}
 			}
-		})
+			return
+		}
+
+		const semanticName = HTML_TO_SEMANTIC[node.name] || node.name
+
+		// Handle lists (ul, ol)
+		if (node.name === 'ul' || node.name === 'ol') {
+			const list = new Y.XmlElement(semanticName)
+			yParent.push([list])
+
+			// Process list items
+			for (const child of node.childNodes) {
+				if (child instanceof Element && child.name === 'li') {
+					const listItem = new Y.XmlElement('listItem')
+					list.push([listItem])
+
+					// List item content should be wrapped in paragraph
+					const para = new Y.XmlElement('paragraph')
+					listItem.push([para])
+
+					// Process li children - but handle nested lists specially
+					for (const liChild of child.childNodes) {
+						if (liChild instanceof Element && (liChild.name === 'ul' || liChild.name === 'ol')) {
+							// Nested list goes directly in listItem, not in paragraph
+							processBlock(liChild, listItem)
+						} else if (liChild instanceof Element || liChild instanceof Text) {
+							// Inline content goes in paragraph
+							const segments = extractTextWithMarks(liChild as Element | Text)
+							for (const segment of segments) {
+								if (segment.element) {
+									para.push([segment.element])
+								} else if (segment.text) {
+									const text = new Y.XmlText()
+									text.insert(0, segment.text)
+									if (Object.keys(segment.marks).length > 0) {
+										text.format(0, segment.text.length, segment.marks)
+									}
+									para.push([text])
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		// Handle headings
+		else if (node.name.match(/^h[1-6]$/)) {
+			const heading = new Y.XmlElement('heading')
+			heading.setAttribute('level', node.name[1])
+			yParent.push([heading])
+			processInlineContent(node, heading)
+		}
+		// Handle paragraphs
+		else if (node.name === 'p') {
+			const para = new Y.XmlElement('paragraph')
+			yParent.push([para])
+			processInlineContent(node, para)
+		}
+		// Handle blockquote
+		else if (node.name === 'blockquote') {
+			const blockquote = new Y.XmlElement('blockquote')
+			yParent.push([blockquote])
+			// Blockquote can contain paragraphs or other blocks
+			for (const child of node.childNodes) {
+				if (child instanceof Text && child.data.trim()) {
+					// Wrap text in paragraph
+					const para = new Y.XmlElement('paragraph')
+					blockquote.push([para])
+					const text = new Y.XmlText()
+					text.insert(0, child.data)
+					para.push([text])
+				} else if (child instanceof Element) {
+					processBlock(child, blockquote)
+				}
+			}
+		}
+		// Handle pre/code blocks
+		else if (node.name === 'pre') {
+			const codeBlock = new Y.XmlElement('codeBlock')
+			yParent.push([codeBlock])
+			// Get all text content
+			const textContent = $(node).text()
+			if (textContent) {
+				const text = new Y.XmlText()
+				text.insert(0, textContent)
+				codeBlock.push([text])
+			}
+		}
+		// Handle br
+		else if (node.name === 'br') {
+			const hardBreak = new Y.XmlElement('hardBreak')
+			yParent.push([hardBreak])
+		}
+		// Handle hr
+		else if (node.name === 'hr') {
+			const hr = new Y.XmlElement('horizontalRule')
+			yParent.push([hr])
+		}
+		// Handle img
+		else if (node.name === 'img') {
+			const img = new Y.XmlElement('image')
+			if (node.attribs?.src) img.setAttribute('src', node.attribs.src)
+			if (node.attribs?.alt) img.setAttribute('alt', node.attribs.alt)
+			yParent.push([img])
+		}
+		// Handle generic div or other containers
+		else {
+			// Just process children
+			for (const child of node.childNodes) {
+				if (child instanceof Element) {
+					processBlock(child, yParent)
+				} else if (child instanceof Text && child.data.trim()) {
+					// Wrap loose text in paragraph
+					const para = new Y.XmlElement('paragraph')
+					yParent.push([para])
+					const text = new Y.XmlText()
+					text.insert(0, child.data)
+					para.push([text])
+				}
+			}
+		}
 	}
 
 	content.contents().each((_, elem) => {
 		if (elem instanceof Text) {
 			const trimmed = elem.data.trim()
 			if (trimmed) {
+				// Wrap loose text in paragraph
+				const para = new Y.XmlElement('paragraph')
+				parent.push([para])
 				const text = new Y.XmlText()
 				text.insert(0, elem.data)
-				parent.push([text])
+				para.push([text])
 			}
 		} else if (elem instanceof Element) {
-			// Skip html, head, body wrappers
-			if (['html', 'head', 'body'].includes(elem.name)) {
-				if (elem.childNodes && elem.childNodes.length > 0) {
-					processNode(elem, parent)
-				}
-				return
-			}
-
-			const isMarkElement = ['strong', 'em', 'u', 'strike', 'code', 'a'].includes(elem.name)
-			if (isMarkElement) {
-				extractMarkedText(elem, parent)
-			} else {
-				// Check if this is a mention chip (span with data-component-props)
-				const isMentionChip = elem.name === 'span' && elem.attribs?.['data-component-props']
-				const semanticName = isMentionChip ? 'mentionChip' : HTML_TO_SEMANTIC[elem.name] || elem.name
-				const element = new Y.XmlElement(semanticName)
-
-				// Special handling for heading levels
-				if (elem.name.match(/^h[1-6]$/)) {
-					element.setAttribute('level', elem.name[1])
-				}
-
-				if (elem.attribs) {
-					Object.entries(elem.attribs).forEach(([key, value]) => {
-						// Special handling for mention chips
-						if (key === 'data-name') {
-							element.setAttribute('name', value)
-						} else if (key === 'data-type') {
-							element.setAttribute('type', value)
-						} else if (key === 'data-component-props') {
-							try {
-								const parsed = JSON.parse(value)
-								element.setAttribute('componentProps', parsed)
-							} catch (e) {
-								console.error('Failed to parse data-component-props:', e)
-							}
-						}
-						// Handle image src/alt
-						else if (elem.name === 'img') {
-							if (key === 'src') {
-								element.setAttribute('src', value)
-							}
-							if (key === 'alt') {
-								element.setAttribute('alt', value)
-							}
-						}
-						// Store other attributes
-						else {
-							try {
-								const parsed = JSON.parse(value)
-								element.setAttribute(key, parsed)
-							} catch {
-								element.setAttribute(key, value)
-							}
-						}
-					})
-				}
-
-				// CRITICAL: Add element to parent FIRST (required by Yjs before adding children)
-				parent.push([element])
-
-				// Then process children
-				if (elem.childNodes && elem.childNodes.length > 0) {
-					processNode(elem, element)
-				}
-			}
+			processBlock(elem, parent)
 		}
 	})
 }

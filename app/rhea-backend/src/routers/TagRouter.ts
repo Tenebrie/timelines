@@ -124,7 +124,6 @@ router.get('/api/world/:worldId/tag/:tagId', async (ctx) => {
 	await AuthorizationService.checkUserReadAccessById(user, worldId)
 
 	const tag = await TagService.findTagWithMentions({ worldId, tagId })
-	console.log(tag)
 	if (!tag) {
 		throw new BadRequestError('Tag not found')
 	}

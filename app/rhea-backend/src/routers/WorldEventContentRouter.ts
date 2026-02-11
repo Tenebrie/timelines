@@ -78,7 +78,6 @@ router.put('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 	})
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
-	console.log(parsed.mentions)
 
 	const baseEvent = await WorldEventService.fetchWorldEvent(eventId)
 	const entityName = EntityNameService.getEventUpdateName({
@@ -98,7 +97,6 @@ router.put('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 			mentions: parsed.mentions,
 		},
 	})
-	console.log(event)
 
 	RedisService.notifyAboutWorldEventUpdate(ctx, { worldId, event })
 })
