@@ -121,7 +121,7 @@ export const YjsSyncService = {
 		for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
 			const existingUpdates = await RedisService.getDocumentUpdates(docName)
 
-			if (existingUpdates.length > 0 && false) {
+			if (existingUpdates.length > 0) {
 				// Redis has updates - apply them
 				Logger.yjsInfo(docName, `Applying ${existingUpdates.length} updates from Redis`)
 				for (const update of existingUpdates) {
