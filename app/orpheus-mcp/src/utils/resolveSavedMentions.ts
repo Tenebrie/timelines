@@ -2,19 +2,18 @@ import { RheaService } from '@src/services/RheaService.js'
 
 import { ResolvedMention, resolveEntityName } from './resolveEntityName.js'
 
-type Mention = {
-	sourceId: string
-	targetId: string
-}
-
 export function resolveSavedMentions({
 	entity,
 	worldData,
 	articleData,
 }: {
 	entity: {
-		mentions: Mention[]
-		mentionedIn: Mention[]
+		mentions: {
+			targetId: string
+		}[]
+		mentionedIn: {
+			sourceId: string
+		}[]
 	}
 	worldData: Awaited<ReturnType<typeof RheaService.getWorldDetails>>
 	articleData: Awaited<ReturnType<typeof RheaService.getWorldArticles>>
