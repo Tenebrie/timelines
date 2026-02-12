@@ -68,6 +68,8 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		worldId,
 		contentString: params.descriptionRich,
 	})
+
+	const userProvidedName = params.name
 	params.name = EntityNameService.getEventCreateName({
 		name: params.name,
 		description: parsed.contentPlain,
@@ -80,6 +82,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 			name: params.name,
 			type: 'SCENE',
 			timestamp: params.timestamp,
+			customName: !!userProvidedName,
 		},
 		updateData: {
 			...params,
@@ -123,13 +126,18 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
 	const baseEvent = await WorldEventService.fetchWorldEvent(eventId)
+	const customNameEnabled =
+		typeof params.customNameEnabled === 'boolean'
+			? params.customNameEnabled
+			: (params.name && !!params.name.trim()) || baseEvent.customName
 
 	const mappedParams = {
 		extraFields: params.modules,
 		name: EntityNameService.getEventUpdateName({
 			...params,
+			name: params.name ?? baseEvent.name,
 			description: baseEvent.description,
-			customNameEnabled: params.customNameEnabled ?? baseEvent.customName,
+			customNameEnabled,
 		}),
 		icon: params.icon,
 		color: params.color,
