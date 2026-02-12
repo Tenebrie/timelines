@@ -37,13 +37,12 @@ echo "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}"
 mkdir -p /data/backup /data/restore /config /cache
 
 # Generate config from template if it doesn't exist yet
-# if [ ! -f /config/config.json ]; then
-#     echo "No config found, generating from template..."
-#     envsubst < /config-template/config.json > /config/config.json
-# else
-#     echo "Using existing config from /config/config.json"
-# fi
-envsubst < /config-template/config.json > /config/config.json
+if [ ! -f /config/config.json ]; then
+    echo "No config found, generating from template..."
+    envsubst < /config-template/config.json > /config/config.json
+else
+    echo "Using existing config from /config/config.json"
+fi
 
 # Initialize the restic repository if it doesn't exist
 echo "Checking if repository exists..."
