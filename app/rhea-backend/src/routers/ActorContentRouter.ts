@@ -47,7 +47,7 @@ router.get('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 
 	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 
-	const actor = await ActorService.findActor({ worldId, actorId })
+	const actor = await ActorService.findActorWithContentDeltas({ worldId, actorId })
 	if (!actor) {
 		throw new BadRequestError('Actor not found')
 	}

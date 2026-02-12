@@ -599,6 +599,9 @@ export const RheaService = {
 		const response = await rheaClient['GET']('/api/world/{worldId}/search/{query}', {
 			params: {
 				path: { worldId, query },
+				query: {
+					mode: 'split_by_space',
+				},
 			},
 			headers: {
 				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),

@@ -4292,7 +4292,9 @@ export interface operations {
     };
     searchWorld: {
         parameters: {
-            query?: never;
+            query?: {
+                mode?: "string_match" | "split_by_space";
+            };
             header?: never;
             path: {
                 /** @description Any string value */
@@ -4310,16 +4312,64 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
+                        actors: {
+                            pages: {
+                                id: string;
+                                name: string;
+                            }[];
+                            mentions: {
+                                targetId: string;
+                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                            }[];
+                            node: null | {
+                                id: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                worldId: string;
+                                parentActorId?: null | string;
+                                positionX: number;
+                                positionY: number;
+                            };
+                            description: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            worldId: string;
+                            title: string;
+                            icon: string;
+                            color: string;
+                            descriptionRich: string;
+                        }[];
+                        articles: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            worldId: string;
+                            icon: string;
+                            color: string;
+                            contentRich: string;
+                            position: number;
+                            parentId?: null | string;
+                        }[];
                         events: {
                             pages: {
                                 id: string;
                                 name: string;
                             }[];
                             mentions: {
+                                pageId?: null | string;
                                 sourceId: string;
                                 targetId: string;
-                                sourceType: "Actor" | "Tag" | "Event" | "Article";
-                                targetType: "Actor" | "Tag" | "Event" | "Article";
+                                sourceType: "Actor" | "Event" | "Article" | "Tag";
+                                targetType: "Actor" | "Event" | "Article" | "Tag";
                                 sourceActorId?: null | string;
                                 sourceEventId?: null | string;
                                 sourceArticleId?: null | string;
@@ -4328,13 +4378,13 @@ export interface operations {
                                 targetEventId?: null | string;
                                 targetArticleId?: null | string;
                                 targetTagId?: null | string;
-                                pageId?: null | string;
                             }[];
                             mentionedIn: {
+                                pageId?: null | string;
                                 sourceId: string;
                                 targetId: string;
-                                sourceType: "Actor" | "Tag" | "Event" | "Article";
-                                targetType: "Actor" | "Tag" | "Event" | "Article";
+                                sourceType: "Actor" | "Event" | "Article" | "Tag";
+                                targetType: "Actor" | "Event" | "Article" | "Tag";
                                 sourceActorId?: null | string;
                                 sourceEventId?: null | string;
                                 sourceArticleId?: null | string;
@@ -4343,7 +4393,6 @@ export interface operations {
                                 targetEventId?: null | string;
                                 targetArticleId?: null | string;
                                 targetTagId?: null | string;
-                                pageId?: null | string;
                             }[];
                             deltaStates: {
                                 description?: null | string;
@@ -4353,162 +4402,32 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 name?: null | string;
+                                descriptionRich?: null | string;
                                 /** Format: bigint */
                                 timestamp: string;
-                                descriptionRich?: null | string;
                                 worldEventId: string;
                             }[];
-                            worldId: string;
                             description: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            type: "SCENE" | "OTHER";
+                            name: string;
+                            worldId: string;
                             icon: string;
                             color: string;
-                            name: string;
+                            descriptionRich: string;
+                            type: "SCENE" | "OTHER";
                             /** Format: bigint */
                             timestamp: string;
                             revokedAt?: null | string;
-                            descriptionRich: string;
-                            descriptionYjs?: null | string;
                             customName: boolean;
                             externalLink: string;
                             extraFields: ("EventIcon" | "TargetActors" | "MentionedActors" | "ExternalLink")[];
                             worldEventTrackId?: null | string;
                         }[];
-                        actors: {
-                            pages: {
-                                id: string;
-                                name: string;
-                            }[];
-                            mentions: {
-                                sourceId: string;
-                                targetId: string;
-                                sourceType: "Actor" | "Tag" | "Event" | "Article";
-                                targetType: "Actor" | "Tag" | "Event" | "Article";
-                                sourceActorId?: null | string;
-                                sourceEventId?: null | string;
-                                sourceArticleId?: null | string;
-                                sourceTagId?: null | string;
-                                targetActorId?: null | string;
-                                targetEventId?: null | string;
-                                targetArticleId?: null | string;
-                                targetTagId?: null | string;
-                                pageId?: null | string;
-                            }[];
-                            mentionedIn: {
-                                sourceId: string;
-                                targetId: string;
-                                sourceType: "Actor" | "Tag" | "Event" | "Article";
-                                targetType: "Actor" | "Tag" | "Event" | "Article";
-                                sourceActorId?: null | string;
-                                sourceEventId?: null | string;
-                                sourceArticleId?: null | string;
-                                sourceTagId?: null | string;
-                                targetActorId?: null | string;
-                                targetEventId?: null | string;
-                                targetArticleId?: null | string;
-                                targetTagId?: null | string;
-                                pageId?: null | string;
-                            }[];
-                            worldId: string;
-                            description: string;
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            icon: string;
-                            color: string;
-                            name: string;
-                            descriptionRich: string;
-                            descriptionYjs?: null | string;
-                            title: string;
-                        }[];
-                        articles: {
-                            pages: {
-                                id: string;
-                                name: string;
-                            }[];
-                            mentions: {
-                                sourceId: string;
-                                targetId: string;
-                                sourceType: "Actor" | "Tag" | "Event" | "Article";
-                                targetType: "Actor" | "Tag" | "Event" | "Article";
-                                sourceActorId?: null | string;
-                                sourceEventId?: null | string;
-                                sourceArticleId?: null | string;
-                                sourceTagId?: null | string;
-                                targetActorId?: null | string;
-                                targetEventId?: null | string;
-                                targetArticleId?: null | string;
-                                targetTagId?: null | string;
-                                pageId?: null | string;
-                            }[];
-                            mentionedIn: {
-                                sourceId: string;
-                                targetId: string;
-                                sourceType: "Actor" | "Tag" | "Event" | "Article";
-                                targetType: "Actor" | "Tag" | "Event" | "Article";
-                                sourceActorId?: null | string;
-                                sourceEventId?: null | string;
-                                sourceArticleId?: null | string;
-                                sourceTagId?: null | string;
-                                targetActorId?: null | string;
-                                targetEventId?: null | string;
-                                targetArticleId?: null | string;
-                                targetTagId?: null | string;
-                                pageId?: null | string;
-                            }[];
-                            worldId: string;
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            icon: string;
-                            color: string;
-                            name: string;
-                            contentRich: string;
-                            contentYjs?: null | string;
-                            position: number;
-                            parentId?: null | string;
-                        }[];
                         tags: {
-                            mentions: {
-                                sourceId: string;
-                                targetId: string;
-                                sourceType: "Actor" | "Tag" | "Event" | "Article";
-                                targetType: "Actor" | "Tag" | "Event" | "Article";
-                                sourceActorId?: null | string;
-                                sourceEventId?: null | string;
-                                sourceArticleId?: null | string;
-                                sourceTagId?: null | string;
-                                targetActorId?: null | string;
-                                targetEventId?: null | string;
-                                targetArticleId?: null | string;
-                                targetTagId?: null | string;
-                                pageId?: null | string;
-                            }[];
-                            mentionedIn: {
-                                sourceId: string;
-                                targetId: string;
-                                sourceType: "Actor" | "Tag" | "Event" | "Article";
-                                targetType: "Actor" | "Tag" | "Event" | "Article";
-                                sourceActorId?: null | string;
-                                sourceEventId?: null | string;
-                                sourceArticleId?: null | string;
-                                sourceTagId?: null | string;
-                                targetActorId?: null | string;
-                                targetEventId?: null | string;
-                                targetArticleId?: null | string;
-                                targetTagId?: null | string;
-                                pageId?: null | string;
-                            }[];
-                            worldId: string;
                             description: string;
                             id: string;
                             /** Format: date-time */
@@ -4516,6 +4435,7 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            worldId: string;
                         }[];
                     };
                 };

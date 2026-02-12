@@ -14,6 +14,26 @@ export const WikiService = {
 				id,
 				worldId,
 			},
+			omit: {
+				contentYjs: true,
+			},
+		})
+	},
+
+	findArticleByIdOrThrow: async ({ id, worldId }: { id: string; worldId: string }) => {
+		const article = await WikiService.findArticleById({ id, worldId })
+		if (!article) {
+			throw new BadRequestError('Article not found')
+		}
+		return article
+	},
+
+	findArticleByIdWithContentDeltas: async ({ id, worldId }: { id: string; worldId: string }) => {
+		return getPrismaClient().wikiArticle.findFirst({
+			where: {
+				id,
+				worldId,
+			},
 		})
 	},
 
