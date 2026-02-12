@@ -76,8 +76,18 @@ export const WorldSearchService = {
 				],
 			},
 			include: {
-				mentions: true,
-				mentionedIn: true,
+				mentions: {
+					select: {
+						targetId: true,
+						targetType: true,
+					},
+				},
+				mentionedIn: {
+					select: {
+						sourceId: true,
+						sourceType: true,
+					},
+				},
 				pages: {
 					select: {
 						id: true,
@@ -111,8 +121,18 @@ export const WorldSearchService = {
 				],
 			},
 			include: {
-				mentions: true,
-				mentionedIn: true,
+				mentions: {
+					select: {
+						targetId: true,
+						targetType: true,
+					},
+				},
+				mentionedIn: {
+					select: {
+						sourceId: true,
+						sourceType: true,
+					},
+				},
 				pages: {
 					select: {
 						id: true,
@@ -156,8 +176,18 @@ export const WorldSearchService = {
 				timestamp: 'asc',
 			},
 			include: {
-				mentions: true,
-				mentionedIn: true,
+				mentions: {
+					select: {
+						targetId: true,
+						targetType: true,
+					},
+				},
+				mentionedIn: {
+					select: {
+						sourceId: true,
+						sourceType: true,
+					},
+				},
 				pages: {
 					select: {
 						id: true,
@@ -187,8 +217,18 @@ export const WorldSearchService = {
 				],
 			},
 			include: {
-				mentions: true,
-				mentionedIn: true,
+				mentions: {
+					select: {
+						targetId: true,
+						targetType: true,
+					},
+				},
+				mentionedIn: {
+					select: {
+						sourceId: true,
+						sourceType: true,
+					},
+				},
 			},
 		})
 	},

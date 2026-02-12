@@ -50,8 +50,18 @@ export const WikiService = {
 						name: true,
 					},
 				},
-				mentions: true,
-				mentionedIn: true,
+				mentions: {
+					select: {
+						targetId: true,
+						targetType: true,
+					},
+				},
+				mentionedIn: {
+					select: {
+						sourceId: true,
+						sourceType: true,
+					},
+				},
 			},
 			omit: {
 				contentYjs: true,

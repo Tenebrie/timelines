@@ -112,8 +112,18 @@ export const WorldService = {
 								name: true,
 							},
 						},
-						mentions: true,
-						mentionedIn: true,
+						mentions: {
+							select: {
+								targetId: true,
+								targetType: true,
+							},
+						},
+						mentionedIn: {
+							select: {
+								sourceId: true,
+								sourceType: true,
+							},
+						},
 					},
 					omit: {
 						descriptionYjs: true,
@@ -133,8 +143,18 @@ export const WorldService = {
 								name: true,
 							},
 						},
-						mentions: true,
-						mentionedIn: true,
+						mentions: {
+							select: {
+								targetId: true,
+								targetType: true,
+							},
+						},
+						mentionedIn: {
+							select: {
+								sourceId: true,
+								sourceType: true,
+							},
+						},
 						deltaStates: {
 							orderBy: {
 								timestamp: 'asc',
@@ -144,8 +164,18 @@ export const WorldService = {
 				},
 				tags: {
 					include: {
-						mentions: true,
-						mentionedIn: true,
+						mentions: {
+							select: {
+								targetId: true,
+								targetType: true,
+							},
+						},
+						mentionedIn: {
+							select: {
+								sourceId: true,
+								sourceType: true,
+							},
+						},
 					},
 				},
 			},

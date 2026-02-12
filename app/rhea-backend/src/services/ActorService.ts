@@ -21,6 +21,12 @@ export const ActorService = {
 						targetType: true,
 					},
 				},
+				mentionedIn: {
+					select: {
+						sourceId: true,
+						sourceType: true,
+					},
+				},
 				pages: {
 					select: {
 						id: true,
@@ -60,6 +66,12 @@ export const ActorService = {
 					select: {
 						targetId: true,
 						targetType: true,
+					},
+				},
+				mentionedIn: {
+					select: {
+						sourceId: true,
+						sourceType: true,
 					},
 				},
 				pages: {

@@ -9,8 +9,18 @@ export const fetchWorldEventDetailsOrThrow = async (eventId: string, prisma?: Pr
 			id: eventId,
 		},
 		include: {
-			mentions: true,
-			mentionedIn: true,
+			mentions: {
+				select: {
+					targetId: true,
+					targetType: true,
+				},
+			},
+			mentionedIn: {
+				select: {
+					sourceId: true,
+					sourceType: true,
+				},
+			},
 			deltaStates: true,
 			pages: {
 				select: {

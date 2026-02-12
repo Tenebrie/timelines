@@ -51,6 +51,7 @@ export const mockActor = (data?: Partial<BaselineActor>): BaselineActor => ({
 	node: null,
 	description: 'Test Actor Description',
 	descriptionRich: '<p>Test Actor Description</p>',
+	mentionedIn: [],
 	...data,
 })
 

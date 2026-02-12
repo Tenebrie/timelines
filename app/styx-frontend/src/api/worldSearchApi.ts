@@ -29,32 +29,36 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			targetId: string
 			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
+		mentionedIn: {
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
 		node: null | {
+			worldId: string
 			id: string
 			createdAt: string
 			updatedAt: string
-			worldId: string
 			parentActorId?: null | string
 			positionX: number
 			positionY: number
 		}
-		description: string
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
 		title: string
 		icon: string
 		color: string
+		description: string
 		descriptionRich: string
 	}[]
 	articles: {
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
 		icon: string
 		color: string
 		contentRich: string
@@ -67,53 +71,31 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			name: string
 		}[]
 		mentions: {
-			pageId?: null | string
-			sourceId: string
 			targetId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-			sourceActorId?: null | string
-			sourceEventId?: null | string
-			sourceArticleId?: null | string
-			sourceTagId?: null | string
-			targetActorId?: null | string
-			targetEventId?: null | string
-			targetArticleId?: null | string
-			targetTagId?: null | string
 		}[]
 		mentionedIn: {
-			pageId?: null | string
 			sourceId: string
-			targetId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-			sourceActorId?: null | string
-			sourceEventId?: null | string
-			sourceArticleId?: null | string
-			sourceTagId?: null | string
-			targetActorId?: null | string
-			targetEventId?: null | string
-			targetArticleId?: null | string
-			targetTagId?: null | string
 		}[]
 		deltaStates: {
-			description?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name?: null | string
+			description?: null | string
 			descriptionRich?: null | string
 			timestamp: string
 			worldEventId: string
 		}[]
-		description: string
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
 		icon: string
 		color: string
+		description: string
 		descriptionRich: string
 		type: 'SCENE' | 'OTHER'
 		timestamp: string
@@ -124,12 +106,12 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		worldEventTrackId?: null | string
 	}[]
 	tags: {
-		description: string
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
+		description: string
 	}[]
 }
 export type SearchWorldApiArg = {
