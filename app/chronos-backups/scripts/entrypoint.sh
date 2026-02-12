@@ -31,7 +31,6 @@ fi
 
 echo "Backrest starting..."
 echo "Repository: ${RESTIC_REPOSITORY}"
-echo "AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}"
 
 # Ensure directories exist
 mkdir -p /data/backup /data/restore /config /cache
