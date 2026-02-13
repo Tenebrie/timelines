@@ -46,7 +46,7 @@ router.get('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 
 	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 
-	const article = await WikiService.findArticleById({ id: articleId, worldId })
+	const article = await WikiService.findArticleByIdWithContentDeltas({ id: articleId, worldId })
 	if (!article) {
 		throw new BadRequestError('Article not found')
 	}

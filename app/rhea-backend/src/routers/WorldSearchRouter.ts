@@ -1,10 +1,25 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
-import { WorldSearchService } from '@src/services/WorldSearchService.js'
-import { PathParam, Router, StringValidator, useApiEndpoint, useAuth, usePathParams } from 'moonflower'
+import { SearchModeShape, WorldSearchService } from '@src/services/WorldSearchService.js'
+import {
+	OptionalParam,
+	PathParam,
+	RequiredParam,
+	Router,
+	StringValidator,
+	useApiEndpoint,
+	useAuth,
+	usePathParams,
+	useQueryParams,
+} from 'moonflower'
+import { z } from 'zod'
 
 import { tagListTag, worldDetailsTag, worldSearchTag } from './utils/tags.js'
 
 const router = new Router()
+
+export const SearchModeValidator = RequiredParam<z.infer<typeof SearchModeShape>>({
+	parse: SearchModeShape.parse,
+})
 
 router.get('/api/world/:worldId/search/:query', async (ctx) => {
 	useApiEndpoint({
@@ -20,19 +35,16 @@ router.get('/api/world/:worldId/search/:query', async (ctx) => {
 		query: PathParam(StringValidator),
 	})
 
-	const [events, actors, articles, tags] = await Promise.all([
-		WorldSearchService.findEvents(worldId, query),
-		WorldSearchService.findActors(worldId, query),
-		WorldSearchService.findArticles(worldId, query),
-		WorldSearchService.findTags(worldId, query),
-	])
+	const { mode } = useQueryParams(ctx, {
+		mode: OptionalParam(SearchModeValidator),
+	})
 
-	return {
-		events,
-		actors,
-		articles,
-		tags,
-	}
+	return await WorldSearchService.search({
+		worldId,
+		query,
+		mode: mode ?? 'string_match',
+		include: ['actor', 'article', 'event', 'tag'],
+	})
 })
 
 export const WorldSearchRouter = router

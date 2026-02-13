@@ -21,12 +21,21 @@ export const ActorService = {
 						targetType: true,
 					},
 				},
+				mentionedIn: {
+					select: {
+						sourceId: true,
+						sourceType: true,
+					},
+				},
 				pages: {
 					select: {
 						id: true,
 						name: true,
 					},
 				},
+			},
+			omit: {
+				descriptionYjs: true,
 			},
 		})
 	},
@@ -37,6 +46,42 @@ export const ActorService = {
 			throw new Error('Actor not found')
 		}
 		return actor
+	},
+
+	findActorWithContentDeltas: async ({
+		worldId,
+		actorId,
+	}: {
+		worldId: string
+		actorId: string | null | undefined
+	}) => {
+		if (!actorId) {
+			return null
+		}
+		return getPrismaClient().actor.findUnique({
+			where: { id: actorId, worldId },
+			include: {
+				node: true,
+				mentions: {
+					select: {
+						targetId: true,
+						targetType: true,
+					},
+				},
+				mentionedIn: {
+					select: {
+						sourceId: true,
+						sourceType: true,
+					},
+				},
+				pages: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
+			},
+		})
 	},
 
 	getActorContentPage: async ({

@@ -7,7 +7,12 @@ const injectedRtkApi = api
 	.injectEndpoints({
 		endpoints: (build) => ({
 			searchWorld: build.query<SearchWorldApiResponse, SearchWorldApiArg>({
-				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/search/${queryArg.query}` }),
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/search/${queryArg.query}`,
+					params: {
+						mode: queryArg.mode,
+					},
+				}),
 				providesTags: ['worldSearch', 'worldDetails', 'tagList'],
 			}),
 		}),
@@ -15,200 +20,98 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as worldSearchApi }
 export type SearchWorldApiResponse = /** status 200  */ {
-	events: {
-		pages: {
-			id: string
-			name: string
-		}[]
-		mentions: {
-			sourceId: string
-			targetId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			sourceActorId?: null | string
-			sourceEventId?: null | string
-			sourceArticleId?: null | string
-			sourceTagId?: null | string
-			targetActorId?: null | string
-			targetEventId?: null | string
-			targetArticleId?: null | string
-			targetTagId?: null | string
-			pageId?: null | string
-		}[]
-		mentionedIn: {
-			sourceId: string
-			targetId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			sourceActorId?: null | string
-			sourceEventId?: null | string
-			sourceArticleId?: null | string
-			sourceTagId?: null | string
-			targetActorId?: null | string
-			targetEventId?: null | string
-			targetArticleId?: null | string
-			targetTagId?: null | string
-			pageId?: null | string
-		}[]
-		deltaStates: {
-			description?: null | string
-			id: string
-			createdAt: string
-			updatedAt: string
-			name?: null | string
-			timestamp: string
-			descriptionRich?: null | string
-			worldEventId: string
-		}[]
-		worldId: string
-		description: string
-		id: string
-		createdAt: string
-		updatedAt: string
-		type: 'SCENE' | 'OTHER'
-		icon: string
-		color: string
-		name: string
-		timestamp: string
-		revokedAt?: null | string
-		descriptionRich: string
-		descriptionYjs?: null | string
-		customName: boolean
-		externalLink: string
-		extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
-		worldEventTrackId?: null | string
-	}[]
 	actors: {
 		pages: {
 			id: string
 			name: string
 		}[]
 		mentions: {
-			sourceId: string
 			targetId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			sourceActorId?: null | string
-			sourceEventId?: null | string
-			sourceArticleId?: null | string
-			sourceTagId?: null | string
-			targetActorId?: null | string
-			targetEventId?: null | string
-			targetArticleId?: null | string
-			targetTagId?: null | string
-			pageId?: null | string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			targetId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			sourceActorId?: null | string
-			sourceEventId?: null | string
-			sourceArticleId?: null | string
-			sourceTagId?: null | string
-			targetActorId?: null | string
-			targetEventId?: null | string
-			targetArticleId?: null | string
-			targetTagId?: null | string
-			pageId?: null | string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
+		node: null | {
+			worldId: string
+			id: string
+			createdAt: string
+			updatedAt: string
+			parentActorId?: null | string
+			positionX: number
+			positionY: number
+		}
 		worldId: string
-		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
+		title: string
 		icon: string
 		color: string
-		name: string
+		description: string
 		descriptionRich: string
-		descriptionYjs?: null | string
-		title: string
 	}[]
 	articles: {
+		worldId: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		icon: string
+		color: string
+		contentRich: string
+		position: number
+		parentId?: null | string
+	}[]
+	events: {
 		pages: {
 			id: string
 			name: string
 		}[]
 		mentions: {
-			sourceId: string
 			targetId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			sourceActorId?: null | string
-			sourceEventId?: null | string
-			sourceArticleId?: null | string
-			sourceTagId?: null | string
-			targetActorId?: null | string
-			targetEventId?: null | string
-			targetArticleId?: null | string
-			targetTagId?: null | string
-			pageId?: null | string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			targetId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			sourceActorId?: null | string
-			sourceEventId?: null | string
-			sourceArticleId?: null | string
-			sourceTagId?: null | string
-			targetActorId?: null | string
-			targetEventId?: null | string
-			targetArticleId?: null | string
-			targetTagId?: null | string
-			pageId?: null | string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
+		deltaStates: {
+			id: string
+			createdAt: string
+			updatedAt: string
+			name?: null | string
+			description?: null | string
+			descriptionRich?: null | string
+			timestamp: string
+			worldEventId: string
 		}[]
 		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name: string
 		icon: string
 		color: string
-		name: string
-		contentRich: string
-		contentYjs?: null | string
-		position: number
-		parentId?: null | string
+		description: string
+		descriptionRich: string
+		type: 'SCENE' | 'OTHER'
+		timestamp: string
+		revokedAt?: null | string
+		customName: boolean
+		externalLink: string
+		extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
+		worldEventTrackId?: null | string
 	}[]
 	tags: {
-		mentions: {
-			sourceId: string
-			targetId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			sourceActorId?: null | string
-			sourceEventId?: null | string
-			sourceArticleId?: null | string
-			sourceTagId?: null | string
-			targetActorId?: null | string
-			targetEventId?: null | string
-			targetArticleId?: null | string
-			targetTagId?: null | string
-			pageId?: null | string
-		}[]
-		mentionedIn: {
-			sourceId: string
-			targetId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article'
-			sourceActorId?: null | string
-			sourceEventId?: null | string
-			sourceArticleId?: null | string
-			sourceTagId?: null | string
-			targetActorId?: null | string
-			targetEventId?: null | string
-			targetArticleId?: null | string
-			targetTagId?: null | string
-			pageId?: null | string
-		}[]
 		worldId: string
-		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		description: string
 	}[]
 }
 export type SearchWorldApiArg = {
@@ -216,5 +119,6 @@ export type SearchWorldApiArg = {
 	worldId: string
 	/** Any string value */
 	query: string
+	mode?: 'string_match' | 'split_by_space'
 }
 export const { useSearchWorldQuery, useLazySearchWorldQuery } = injectedRtkApi

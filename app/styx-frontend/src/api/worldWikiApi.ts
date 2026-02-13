@@ -51,34 +51,12 @@ export type GetArticlesApiResponse = /** status 200  */ {
 		name: string
 	}[]
 	mentions: {
-		pageId?: null | string
-		sourceId: string
 		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
 	}[]
 	mentionedIn: {
-		pageId?: null | string
 		sourceId: string
-		targetId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
 	}[]
 	children: {
 		id: string

@@ -8,7 +8,7 @@ import z from 'zod'
 const TOOL_NAME = 'search_world'
 
 const inputSchema = z.object({
-	query: z.string().describe('The search query to find events, actors, and articles'),
+	query: z.string().describe('The search query to find events, actors, and articles. Split by space.'),
 })
 
 export function registerSearchWorldTool(server: McpServer) {

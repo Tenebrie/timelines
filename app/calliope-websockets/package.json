@@ -7,6 +7,7 @@
 	"license": "GPL-3.0-or-later",
 	"author": "Tenebrie",
 	"scripts": {
+		"tsc": "tsc --noEmit",
 		"build": "tsc -p . && tsc-alias -p tsconfig.json",
 		"openapi": "openapi-typescript http://localhost:3000/api-json -o ./src/api/rhea-api.ts",
 		"lint": "eslint src/",

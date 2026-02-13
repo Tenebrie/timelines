@@ -3,7 +3,7 @@ import { MentionedEntity } from '@prisma/client'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 
-type MentionedByEntry = {
+export type MentionedByEntry = {
 	type: MentionedEntity
 	id: string
 	name: string
@@ -17,6 +17,14 @@ export const TagService = {
 		return getPrismaClient().tag.findUnique({
 			where: { id: tagId, worldId },
 		})
+	},
+
+	findTagOrThrow: async ({ worldId, tagId }: { worldId: string; tagId: string }) => {
+		const tag = await TagService.findTag({ worldId, tagId })
+		if (!tag) {
+			throw new Error(`Tag not found: ${tagId}`)
+		}
+		return tag
 	},
 
 	findTagWithMentions: async ({ worldId, tagId }: { worldId: string; tagId: string }) => {
