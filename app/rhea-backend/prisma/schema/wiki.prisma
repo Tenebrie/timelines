@@ -1,17 +1,3 @@
-model Tag {
-  id        String   @id @unique @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-
-  name String
-
-  mentions    Mention[] @relation("TagMentionSource")
-  mentionedIn Mention[] @relation("TagMentionTarget")
-
-  world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
-  worldId String
-}
-
 model WikiArticle {
   id        String   @id @unique @default(uuid())
   createdAt DateTime @default(now())
@@ -24,8 +10,9 @@ model WikiArticle {
   contentYjs  String?
   position    Int     @default(0)
 
-  mentions    Mention[] @relation("ArticleMentionSource")
-  mentionedIn Mention[] @relation("ArticleMentionTarget")
+  pages       ContentPage[] @relation("ArticleContentPage")
+  mentions    Mention[]     @relation("ArticleMentionSource")
+  mentionedIn Mention[]     @relation("ArticleMentionTarget")
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String

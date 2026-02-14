@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
 
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 import { createCollaborationExtension, createCollaborationProvider } from './CollaborationExtension'
@@ -25,8 +26,23 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 	const [isReady, setIsReady] = useState(!enabled)
 	const connectionRef = useRef<ConnectionState | null>(null)
 	const cleanupTimeoutRef = useRef<number | null>(null)
+	const [resetCounter, setResetCounter] = useState(0)
 
 	const key = `${worldId}:${entityType}:${documentId}`
+
+	const resetConnection = useCallback(() => {
+		if (connectionRef.current) {
+			destroyConnection(connectionRef.current)
+			connectionRef.current = null
+			setIsReady(false)
+		}
+		setResetCounter((c) => c + 1)
+	}, [])
+
+	useEventBusSubscribe['calliope/documentReset']({
+		condition: (data) => data.entityId === documentId,
+		callback: resetConnection,
+	})
 
 	useEffect(() => {
 		if (!enabled) {
@@ -75,7 +91,7 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 				}, 50)
 			}
 		}
-	}, [key, enabled, worldId, entityType, documentId])
+	}, [key, enabled, worldId, entityType, documentId, resetCounter])
 
 	return {
 		doc: connectionRef.current?.doc ?? null,

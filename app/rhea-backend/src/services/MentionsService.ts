@@ -15,22 +15,7 @@ export const MentionsService = {
 			return []
 		}
 
-		const mentionedActorIds = mentions.map((mention) => mention.targetId)
-		const mentionedActors = await getPrismaClient(prisma).actor.findMany({
-			where: {
-				id: {
-					in: mentionedActorIds,
-				},
-			},
-			select: {
-				id: true,
-			},
-		})
-		const validMentions = mentions.filter((mention) =>
-			mentionedActors.some((actor) => actor.id === mention.targetId),
-		)
-
-		const data = validMentions.map((mention) => {
+		const data = mentions.map((mention) => {
 			return {
 				sourceId: sourceId,
 				sourceType: sourceType,

@@ -3,7 +3,7 @@ import { GetWorldsApiResponse } from '@api/worldListApi'
 import { GetWorldBriefApiResponse, GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
 
 export type FullMentionDetails = GetWorldInfoApiResponse['actors'][number]['mentions'][number]
-export type MentionedEntity = GetWorldInfoApiResponse['actors'][number]['mentions'][number]['sourceType']
+export type MentionedEntity = GetWorldInfoApiResponse['actors'][number]['mentions'][number]['targetType']
 export type MentionDetails = Pick<FullMentionDetails, 'targetId' | 'targetType'>
 export type Actor = Omit<ActorDetails, 'statements'>
 export type ActorDetails = GetWorldInfoApiResponse['actors'][number]
@@ -29,6 +29,8 @@ export type WorldCalendarType = WorldDetails['calendar']
 export type WorldCalendar = Omit<GetWorldInfoApiResponse['calendars'][number], 'originTime'> & {
 	originTime: number
 }
+
+export type WorldTag = GetWorldInfoApiResponse['tags'][number]
 
 export type MarkerType = 'issuedAt' | 'deltaState' | 'revokedAt' | 'ghostEvent' | 'ghostDelta'
 /**
@@ -57,5 +59,4 @@ export type TimelineEntity<T extends MarkerType> = WorldEvent & {
 	followingEntity: TimelineEntity<MarkerType> | null
 }
 
-export type WorldEventModule = WorldEvent['extraFields'][number]
 export type WorldAccessMode = WorldBrief['accessMode']

@@ -6,6 +6,7 @@ import {
 	WorldDetails,
 	WorldEvent,
 	WorldEventDelta,
+	WorldTag,
 } from '../../api/types/worldTypes'
 import { isNotNull } from './isNotNull'
 
@@ -47,5 +48,11 @@ export const ingestCalendar = (rawCalendar: GetWorldInfoApiResponse['calendars']
 	return {
 		...rawCalendar,
 		originTime: Number(rawCalendar.originTime),
+	}
+}
+
+export const ingestTag = (rawTag: GetWorldInfoApiResponse['tags'][number]): WorldTag => {
+	return {
+		...rawTag,
 	}
 }

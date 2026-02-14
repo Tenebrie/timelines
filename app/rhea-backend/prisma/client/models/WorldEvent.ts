@@ -40,7 +40,6 @@ export type WorldEventMinAggregateOutputType = {
   id: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  type: $Enums.WorldEventType | null
   icon: string | null
   color: string | null
   name: string | null
@@ -49,8 +48,6 @@ export type WorldEventMinAggregateOutputType = {
   description: string | null
   descriptionRich: string | null
   descriptionYjs: string | null
-  customName: boolean | null
-  externalLink: string | null
   worldId: string | null
   worldEventTrackId: string | null
 }
@@ -59,7 +56,6 @@ export type WorldEventMaxAggregateOutputType = {
   id: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  type: $Enums.WorldEventType | null
   icon: string | null
   color: string | null
   name: string | null
@@ -68,8 +64,6 @@ export type WorldEventMaxAggregateOutputType = {
   description: string | null
   descriptionRich: string | null
   descriptionYjs: string | null
-  customName: boolean | null
-  externalLink: string | null
   worldId: string | null
   worldEventTrackId: string | null
 }
@@ -78,7 +72,6 @@ export type WorldEventCountAggregateOutputType = {
   id: number
   createdAt: number
   updatedAt: number
-  type: number
   icon: number
   color: number
   name: number
@@ -87,9 +80,6 @@ export type WorldEventCountAggregateOutputType = {
   description: number
   descriptionRich: number
   descriptionYjs: number
-  customName: number
-  externalLink: number
-  extraFields: number
   worldId: number
   worldEventTrackId: number
   _all: number
@@ -110,7 +100,6 @@ export type WorldEventMinAggregateInputType = {
   id?: true
   createdAt?: true
   updatedAt?: true
-  type?: true
   icon?: true
   color?: true
   name?: true
@@ -119,8 +108,6 @@ export type WorldEventMinAggregateInputType = {
   description?: true
   descriptionRich?: true
   descriptionYjs?: true
-  customName?: true
-  externalLink?: true
   worldId?: true
   worldEventTrackId?: true
 }
@@ -129,7 +116,6 @@ export type WorldEventMaxAggregateInputType = {
   id?: true
   createdAt?: true
   updatedAt?: true
-  type?: true
   icon?: true
   color?: true
   name?: true
@@ -138,8 +124,6 @@ export type WorldEventMaxAggregateInputType = {
   description?: true
   descriptionRich?: true
   descriptionYjs?: true
-  customName?: true
-  externalLink?: true
   worldId?: true
   worldEventTrackId?: true
 }
@@ -148,7 +132,6 @@ export type WorldEventCountAggregateInputType = {
   id?: true
   createdAt?: true
   updatedAt?: true
-  type?: true
   icon?: true
   color?: true
   name?: true
@@ -157,9 +140,6 @@ export type WorldEventCountAggregateInputType = {
   description?: true
   descriptionRich?: true
   descriptionYjs?: true
-  customName?: true
-  externalLink?: true
-  extraFields?: true
   worldId?: true
   worldEventTrackId?: true
   _all?: true
@@ -255,7 +235,6 @@ export type WorldEventGroupByOutputType = {
   id: string
   createdAt: Date
   updatedAt: Date
-  type: $Enums.WorldEventType
   icon: string
   color: string
   name: string
@@ -264,9 +243,6 @@ export type WorldEventGroupByOutputType = {
   description: string
   descriptionRich: string
   descriptionYjs: string | null
-  customName: boolean
-  externalLink: string
-  extraFields: $Enums.WorldEventField[]
   worldId: string
   worldEventTrackId: string | null
   _count: WorldEventCountAggregateOutputType | null
@@ -298,7 +274,6 @@ export type WorldEventWhereInput = {
   id?: Prisma.StringFilter<"WorldEvent"> | string
   createdAt?: Prisma.DateTimeFilter<"WorldEvent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorldEvent"> | Date | string
-  type?: Prisma.EnumWorldEventTypeFilter<"WorldEvent"> | $Enums.WorldEventType
   icon?: Prisma.StringFilter<"WorldEvent"> | string
   color?: Prisma.StringFilter<"WorldEvent"> | string
   name?: Prisma.StringFilter<"WorldEvent"> | string
@@ -307,11 +282,9 @@ export type WorldEventWhereInput = {
   description?: Prisma.StringFilter<"WorldEvent"> | string
   descriptionRich?: Prisma.StringFilter<"WorldEvent"> | string
   descriptionYjs?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
-  customName?: Prisma.BoolFilter<"WorldEvent"> | boolean
-  externalLink?: Prisma.StringFilter<"WorldEvent"> | string
-  extraFields?: Prisma.EnumWorldEventFieldNullableListFilter<"WorldEvent">
   worldId?: Prisma.StringFilter<"WorldEvent"> | string
   worldEventTrackId?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
+  pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
   deltaStates?: Prisma.WorldEventDeltaListRelationFilter
@@ -323,7 +296,6 @@ export type WorldEventOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  type?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   color?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -332,11 +304,9 @@ export type WorldEventOrderByWithRelationInput = {
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
   descriptionYjs?: Prisma.SortOrderInput | Prisma.SortOrder
-  customName?: Prisma.SortOrder
-  externalLink?: Prisma.SortOrder
-  extraFields?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   worldEventTrackId?: Prisma.SortOrderInput | Prisma.SortOrder
+  pages?: Prisma.ContentPageOrderByRelationAggregateInput
   mentions?: Prisma.MentionOrderByRelationAggregateInput
   mentionedIn?: Prisma.MentionOrderByRelationAggregateInput
   deltaStates?: Prisma.WorldEventDeltaOrderByRelationAggregateInput
@@ -351,7 +321,6 @@ export type WorldEventWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.WorldEventWhereInput | Prisma.WorldEventWhereInput[]
   createdAt?: Prisma.DateTimeFilter<"WorldEvent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorldEvent"> | Date | string
-  type?: Prisma.EnumWorldEventTypeFilter<"WorldEvent"> | $Enums.WorldEventType
   icon?: Prisma.StringFilter<"WorldEvent"> | string
   color?: Prisma.StringFilter<"WorldEvent"> | string
   name?: Prisma.StringFilter<"WorldEvent"> | string
@@ -360,11 +329,9 @@ export type WorldEventWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"WorldEvent"> | string
   descriptionRich?: Prisma.StringFilter<"WorldEvent"> | string
   descriptionYjs?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
-  customName?: Prisma.BoolFilter<"WorldEvent"> | boolean
-  externalLink?: Prisma.StringFilter<"WorldEvent"> | string
-  extraFields?: Prisma.EnumWorldEventFieldNullableListFilter<"WorldEvent">
   worldId?: Prisma.StringFilter<"WorldEvent"> | string
   worldEventTrackId?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
+  pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
   deltaStates?: Prisma.WorldEventDeltaListRelationFilter
@@ -376,7 +343,6 @@ export type WorldEventOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  type?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   color?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -385,9 +351,6 @@ export type WorldEventOrderByWithAggregationInput = {
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
   descriptionYjs?: Prisma.SortOrderInput | Prisma.SortOrder
-  customName?: Prisma.SortOrder
-  externalLink?: Prisma.SortOrder
-  extraFields?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   worldEventTrackId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.WorldEventCountOrderByAggregateInput
@@ -404,7 +367,6 @@ export type WorldEventScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WorldEvent"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"WorldEvent"> | Date | string
-  type?: Prisma.EnumWorldEventTypeWithAggregatesFilter<"WorldEvent"> | $Enums.WorldEventType
   icon?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
   color?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
   name?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
@@ -413,9 +375,6 @@ export type WorldEventScalarWhereWithAggregatesInput = {
   description?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
   descriptionRich?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
   descriptionYjs?: Prisma.StringNullableWithAggregatesFilter<"WorldEvent"> | string | null
-  customName?: Prisma.BoolWithAggregatesFilter<"WorldEvent"> | boolean
-  externalLink?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
-  extraFields?: Prisma.EnumWorldEventFieldNullableListFilter<"WorldEvent">
   worldId?: Prisma.StringWithAggregatesFilter<"WorldEvent"> | string
   worldEventTrackId?: Prisma.StringNullableWithAggregatesFilter<"WorldEvent"> | string | null
 }
@@ -424,7 +383,6 @@ export type WorldEventCreateInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -433,9 +391,7 @@ export type WorldEventCreateInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
+  pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
   deltaStates?: Prisma.WorldEventDeltaCreateNestedManyWithoutWorldEventInput
@@ -447,7 +403,6 @@ export type WorldEventUncheckedCreateInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -456,11 +411,9 @@ export type WorldEventUncheckedCreateInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
   worldId: string
   worldEventTrackId?: string | null
+  pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetEventInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedCreateNestedManyWithoutWorldEventInput
@@ -470,7 +423,6 @@ export type WorldEventUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -479,9 +431,7 @@ export type WorldEventUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
+  pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUpdateManyWithoutWorldEventNestedInput
@@ -493,7 +443,6 @@ export type WorldEventUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -502,11 +451,9 @@ export type WorldEventUncheckedUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedUpdateManyWithoutWorldEventNestedInput
@@ -516,7 +463,6 @@ export type WorldEventCreateManyInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -525,9 +471,6 @@ export type WorldEventCreateManyInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
   worldId: string
   worldEventTrackId?: string | null
 }
@@ -536,7 +479,6 @@ export type WorldEventUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -545,16 +487,12 @@ export type WorldEventUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
 }
 
 export type WorldEventUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -563,9 +501,6 @@ export type WorldEventUncheckedUpdateManyInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -585,19 +520,10 @@ export type WorldEventOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type EnumWorldEventFieldNullableListFilter<$PrismaModel = never> = {
-  equals?: $Enums.WorldEventField[] | Prisma.ListEnumWorldEventFieldFieldRefInput<$PrismaModel> | null
-  has?: $Enums.WorldEventField | Prisma.EnumWorldEventFieldFieldRefInput<$PrismaModel> | null
-  hasEvery?: $Enums.WorldEventField[] | Prisma.ListEnumWorldEventFieldFieldRefInput<$PrismaModel>
-  hasSome?: $Enums.WorldEventField[] | Prisma.ListEnumWorldEventFieldFieldRefInput<$PrismaModel>
-  isEmpty?: boolean
-}
-
 export type WorldEventCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  type?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   color?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -606,9 +532,6 @@ export type WorldEventCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
   descriptionYjs?: Prisma.SortOrder
-  customName?: Prisma.SortOrder
-  externalLink?: Prisma.SortOrder
-  extraFields?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   worldEventTrackId?: Prisma.SortOrder
 }
@@ -622,7 +545,6 @@ export type WorldEventMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  type?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   color?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -631,8 +553,6 @@ export type WorldEventMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
   descriptionYjs?: Prisma.SortOrder
-  customName?: Prisma.SortOrder
-  externalLink?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   worldEventTrackId?: Prisma.SortOrder
 }
@@ -641,7 +561,6 @@ export type WorldEventMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  type?: Prisma.SortOrder
   icon?: Prisma.SortOrder
   color?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -650,8 +569,6 @@ export type WorldEventMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   descriptionRich?: Prisma.SortOrder
   descriptionYjs?: Prisma.SortOrder
-  customName?: Prisma.SortOrder
-  externalLink?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   worldEventTrackId?: Prisma.SortOrder
 }
@@ -664,6 +581,22 @@ export type WorldEventSumOrderByAggregateInput = {
 export type WorldEventScalarRelationFilter = {
   is?: Prisma.WorldEventWhereInput
   isNot?: Prisma.WorldEventWhereInput
+}
+
+export type WorldEventCreateNestedOneWithoutPagesInput = {
+  create?: Prisma.XOR<Prisma.WorldEventCreateWithoutPagesInput, Prisma.WorldEventUncheckedCreateWithoutPagesInput>
+  connectOrCreate?: Prisma.WorldEventCreateOrConnectWithoutPagesInput
+  connect?: Prisma.WorldEventWhereUniqueInput
+}
+
+export type WorldEventUpdateOneWithoutPagesNestedInput = {
+  create?: Prisma.XOR<Prisma.WorldEventCreateWithoutPagesInput, Prisma.WorldEventUncheckedCreateWithoutPagesInput>
+  connectOrCreate?: Prisma.WorldEventCreateOrConnectWithoutPagesInput
+  upsert?: Prisma.WorldEventUpsertWithoutPagesInput
+  disconnect?: Prisma.WorldEventWhereInput | boolean
+  delete?: Prisma.WorldEventWhereInput | boolean
+  connect?: Prisma.WorldEventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorldEventUpdateToOneWithWhereWithoutPagesInput, Prisma.WorldEventUpdateWithoutPagesInput>, Prisma.WorldEventUncheckedUpdateWithoutPagesInput>
 }
 
 export type WorldEventCreateNestedOneWithoutMentionsInput = {
@@ -740,25 +673,12 @@ export type WorldEventUncheckedUpdateManyWithoutWorldNestedInput = {
   deleteMany?: Prisma.WorldEventScalarWhereInput | Prisma.WorldEventScalarWhereInput[]
 }
 
-export type WorldEventCreateextraFieldsInput = {
-  set: $Enums.WorldEventField[]
-}
-
-export type EnumWorldEventTypeFieldUpdateOperationsInput = {
-  set?: $Enums.WorldEventType
-}
-
 export type NullableBigIntFieldUpdateOperationsInput = {
   set?: bigint | number | null
   increment?: bigint | number
   decrement?: bigint | number
   multiply?: bigint | number
   divide?: bigint | number
-}
-
-export type WorldEventUpdateextraFieldsInput = {
-  set?: $Enums.WorldEventField[]
-  push?: $Enums.WorldEventField | $Enums.WorldEventField[]
 }
 
 export type WorldEventCreateNestedOneWithoutDeltaStatesInput = {
@@ -817,11 +737,10 @@ export type WorldEventUncheckedUpdateManyWithoutTrackNestedInput = {
   deleteMany?: Prisma.WorldEventScalarWhereInput | Prisma.WorldEventScalarWhereInput[]
 }
 
-export type WorldEventCreateWithoutMentionsInput = {
+export type WorldEventCreateWithoutPagesInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -830,9 +749,99 @@ export type WorldEventCreateWithoutMentionsInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
+  mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
+  mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
+  deltaStates?: Prisma.WorldEventDeltaCreateNestedManyWithoutWorldEventInput
+  world: Prisma.WorldCreateNestedOneWithoutEventsInput
+  track?: Prisma.WorldEventTrackCreateNestedOneWithoutEventsInput
+}
+
+export type WorldEventUncheckedCreateWithoutPagesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  icon?: string
+  color?: string
+  name: string
+  timestamp: bigint | number
+  revokedAt?: bigint | number | null
+  description?: string
+  descriptionRich?: string
+  descriptionYjs?: string | null
+  worldId: string
+  worldEventTrackId?: string | null
+  mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceEventInput
+  mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetEventInput
+  deltaStates?: Prisma.WorldEventDeltaUncheckedCreateNestedManyWithoutWorldEventInput
+}
+
+export type WorldEventCreateOrConnectWithoutPagesInput = {
+  where: Prisma.WorldEventWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorldEventCreateWithoutPagesInput, Prisma.WorldEventUncheckedCreateWithoutPagesInput>
+}
+
+export type WorldEventUpsertWithoutPagesInput = {
+  update: Prisma.XOR<Prisma.WorldEventUpdateWithoutPagesInput, Prisma.WorldEventUncheckedUpdateWithoutPagesInput>
+  create: Prisma.XOR<Prisma.WorldEventCreateWithoutPagesInput, Prisma.WorldEventUncheckedCreateWithoutPagesInput>
+  where?: Prisma.WorldEventWhereInput
+}
+
+export type WorldEventUpdateToOneWithWhereWithoutPagesInput = {
+  where?: Prisma.WorldEventWhereInput
+  data: Prisma.XOR<Prisma.WorldEventUpdateWithoutPagesInput, Prisma.WorldEventUncheckedUpdateWithoutPagesInput>
+}
+
+export type WorldEventUpdateWithoutPagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
+  mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
+  deltaStates?: Prisma.WorldEventDeltaUpdateManyWithoutWorldEventNestedInput
+  world?: Prisma.WorldUpdateOneRequiredWithoutEventsNestedInput
+  track?: Prisma.WorldEventTrackUpdateOneWithoutEventsNestedInput
+}
+
+export type WorldEventUncheckedUpdateWithoutPagesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceEventNestedInput
+  mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetEventNestedInput
+  deltaStates?: Prisma.WorldEventDeltaUncheckedUpdateManyWithoutWorldEventNestedInput
+}
+
+export type WorldEventCreateWithoutMentionsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  icon?: string
+  color?: string
+  name: string
+  timestamp: bigint | number
+  revokedAt?: bigint | number | null
+  description?: string
+  descriptionRich?: string
+  descriptionYjs?: string | null
+  pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
   deltaStates?: Prisma.WorldEventDeltaCreateNestedManyWithoutWorldEventInput
   world: Prisma.WorldCreateNestedOneWithoutEventsInput
@@ -843,7 +852,6 @@ export type WorldEventUncheckedCreateWithoutMentionsInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -852,11 +860,9 @@ export type WorldEventUncheckedCreateWithoutMentionsInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
   worldId: string
   worldEventTrackId?: string | null
+  pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentEventInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetEventInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedCreateNestedManyWithoutWorldEventInput
 }
@@ -870,7 +876,6 @@ export type WorldEventCreateWithoutMentionedInInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -879,9 +884,7 @@ export type WorldEventCreateWithoutMentionedInInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
+  pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
   deltaStates?: Prisma.WorldEventDeltaCreateNestedManyWithoutWorldEventInput
   world: Prisma.WorldCreateNestedOneWithoutEventsInput
@@ -892,7 +895,6 @@ export type WorldEventUncheckedCreateWithoutMentionedInInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -901,11 +903,9 @@ export type WorldEventUncheckedCreateWithoutMentionedInInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
   worldId: string
   worldEventTrackId?: string | null
+  pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceEventInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedCreateNestedManyWithoutWorldEventInput
 }
@@ -930,7 +930,6 @@ export type WorldEventUpdateWithoutMentionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -939,9 +938,7 @@ export type WorldEventUpdateWithoutMentionsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
+  pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUpdateManyWithoutWorldEventNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutEventsNestedInput
@@ -952,7 +949,6 @@ export type WorldEventUncheckedUpdateWithoutMentionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -961,11 +957,9 @@ export type WorldEventUncheckedUpdateWithoutMentionsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentEventNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedUpdateManyWithoutWorldEventNestedInput
 }
@@ -985,7 +979,6 @@ export type WorldEventUpdateWithoutMentionedInInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -994,9 +987,7 @@ export type WorldEventUpdateWithoutMentionedInInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
+  pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUpdateManyWithoutWorldEventNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutEventsNestedInput
@@ -1007,7 +998,6 @@ export type WorldEventUncheckedUpdateWithoutMentionedInInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1016,11 +1006,9 @@ export type WorldEventUncheckedUpdateWithoutMentionedInInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedUpdateManyWithoutWorldEventNestedInput
 }
@@ -1029,7 +1017,6 @@ export type WorldEventCreateWithoutWorldInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -1038,9 +1025,7 @@ export type WorldEventCreateWithoutWorldInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
+  pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
   deltaStates?: Prisma.WorldEventDeltaCreateNestedManyWithoutWorldEventInput
@@ -1051,7 +1036,6 @@ export type WorldEventUncheckedCreateWithoutWorldInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -1060,10 +1044,8 @@ export type WorldEventUncheckedCreateWithoutWorldInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
   worldEventTrackId?: string | null
+  pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetEventInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedCreateNestedManyWithoutWorldEventInput
@@ -1102,7 +1084,6 @@ export type WorldEventScalarWhereInput = {
   id?: Prisma.StringFilter<"WorldEvent"> | string
   createdAt?: Prisma.DateTimeFilter<"WorldEvent"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorldEvent"> | Date | string
-  type?: Prisma.EnumWorldEventTypeFilter<"WorldEvent"> | $Enums.WorldEventType
   icon?: Prisma.StringFilter<"WorldEvent"> | string
   color?: Prisma.StringFilter<"WorldEvent"> | string
   name?: Prisma.StringFilter<"WorldEvent"> | string
@@ -1111,9 +1092,6 @@ export type WorldEventScalarWhereInput = {
   description?: Prisma.StringFilter<"WorldEvent"> | string
   descriptionRich?: Prisma.StringFilter<"WorldEvent"> | string
   descriptionYjs?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
-  customName?: Prisma.BoolFilter<"WorldEvent"> | boolean
-  externalLink?: Prisma.StringFilter<"WorldEvent"> | string
-  extraFields?: Prisma.EnumWorldEventFieldNullableListFilter<"WorldEvent">
   worldId?: Prisma.StringFilter<"WorldEvent"> | string
   worldEventTrackId?: Prisma.StringNullableFilter<"WorldEvent"> | string | null
 }
@@ -1122,7 +1100,6 @@ export type WorldEventCreateWithoutDeltaStatesInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -1131,9 +1108,7 @@ export type WorldEventCreateWithoutDeltaStatesInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
+  pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
   world: Prisma.WorldCreateNestedOneWithoutEventsInput
@@ -1144,7 +1119,6 @@ export type WorldEventUncheckedCreateWithoutDeltaStatesInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -1153,11 +1127,9 @@ export type WorldEventUncheckedCreateWithoutDeltaStatesInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
   worldId: string
   worldEventTrackId?: string | null
+  pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetEventInput
 }
@@ -1182,7 +1154,6 @@ export type WorldEventUpdateWithoutDeltaStatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1191,9 +1162,7 @@ export type WorldEventUpdateWithoutDeltaStatesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
+  pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutEventsNestedInput
@@ -1204,7 +1173,6 @@ export type WorldEventUncheckedUpdateWithoutDeltaStatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1213,11 +1181,9 @@ export type WorldEventUncheckedUpdateWithoutDeltaStatesInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetEventNestedInput
 }
@@ -1226,7 +1192,6 @@ export type WorldEventCreateWithoutTrackInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -1235,9 +1200,7 @@ export type WorldEventCreateWithoutTrackInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
+  pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
   deltaStates?: Prisma.WorldEventDeltaCreateNestedManyWithoutWorldEventInput
@@ -1248,7 +1211,6 @@ export type WorldEventUncheckedCreateWithoutTrackInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -1257,10 +1219,8 @@ export type WorldEventUncheckedCreateWithoutTrackInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
   worldId: string
+  pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetEventInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedCreateNestedManyWithoutWorldEventInput
@@ -1296,7 +1256,6 @@ export type WorldEventCreateManyWorldInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -1305,9 +1264,6 @@ export type WorldEventCreateManyWorldInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
   worldEventTrackId?: string | null
 }
 
@@ -1315,7 +1271,6 @@ export type WorldEventUpdateWithoutWorldInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1324,9 +1279,7 @@ export type WorldEventUpdateWithoutWorldInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
+  pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUpdateManyWithoutWorldEventNestedInput
@@ -1337,7 +1290,6 @@ export type WorldEventUncheckedUpdateWithoutWorldInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1346,10 +1298,8 @@ export type WorldEventUncheckedUpdateWithoutWorldInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedUpdateManyWithoutWorldEventNestedInput
@@ -1359,7 +1309,6 @@ export type WorldEventUncheckedUpdateManyWithoutWorldInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1368,9 +1317,6 @@ export type WorldEventUncheckedUpdateManyWithoutWorldInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -1378,7 +1324,6 @@ export type WorldEventCreateManyTrackInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  type: $Enums.WorldEventType
   icon?: string
   color?: string
   name: string
@@ -1387,9 +1332,6 @@ export type WorldEventCreateManyTrackInput = {
   description?: string
   descriptionRich?: string
   descriptionYjs?: string | null
-  customName?: boolean
-  externalLink?: string
-  extraFields?: Prisma.WorldEventCreateextraFieldsInput | $Enums.WorldEventField[]
   worldId: string
 }
 
@@ -1397,7 +1339,6 @@ export type WorldEventUpdateWithoutTrackInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1406,9 +1347,7 @@ export type WorldEventUpdateWithoutTrackInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
+  pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUpdateManyWithoutWorldEventNestedInput
@@ -1419,7 +1358,6 @@ export type WorldEventUncheckedUpdateWithoutTrackInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1428,10 +1366,8 @@ export type WorldEventUncheckedUpdateWithoutTrackInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedUpdateManyWithoutWorldEventNestedInput
@@ -1441,7 +1377,6 @@ export type WorldEventUncheckedUpdateManyWithoutTrackInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  type?: Prisma.EnumWorldEventTypeFieldUpdateOperationsInput | $Enums.WorldEventType
   icon?: Prisma.StringFieldUpdateOperationsInput | string
   color?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1450,9 +1385,6 @@ export type WorldEventUncheckedUpdateManyWithoutTrackInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  customName?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  externalLink?: Prisma.StringFieldUpdateOperationsInput | string
-  extraFields?: Prisma.WorldEventUpdateextraFieldsInput | $Enums.WorldEventField[]
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -1462,12 +1394,14 @@ export type WorldEventUncheckedUpdateManyWithoutTrackInput = {
  */
 
 export type WorldEventCountOutputType = {
+  pages: number
   mentions: number
   mentionedIn: number
   deltaStates: number
 }
 
 export type WorldEventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  pages?: boolean | WorldEventCountOutputTypeCountPagesArgs
   mentions?: boolean | WorldEventCountOutputTypeCountMentionsArgs
   mentionedIn?: boolean | WorldEventCountOutputTypeCountMentionedInArgs
   deltaStates?: boolean | WorldEventCountOutputTypeCountDeltaStatesArgs
@@ -1481,6 +1415,13 @@ export type WorldEventCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.E
    * Select specific fields to fetch from the WorldEventCountOutputType
    */
   select?: Prisma.WorldEventCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * WorldEventCountOutputType without action
+ */
+export type WorldEventCountOutputTypeCountPagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ContentPageWhereInput
 }
 
 /**
@@ -1509,7 +1450,6 @@ export type WorldEventSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   id?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  type?: boolean
   icon?: boolean
   color?: boolean
   name?: boolean
@@ -1518,11 +1458,9 @@ export type WorldEventSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   description?: boolean
   descriptionRich?: boolean
   descriptionYjs?: boolean
-  customName?: boolean
-  externalLink?: boolean
-  extraFields?: boolean
   worldId?: boolean
   worldEventTrackId?: boolean
+  pages?: boolean | Prisma.WorldEvent$pagesArgs<ExtArgs>
   mentions?: boolean | Prisma.WorldEvent$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.WorldEvent$mentionedInArgs<ExtArgs>
   deltaStates?: boolean | Prisma.WorldEvent$deltaStatesArgs<ExtArgs>
@@ -1535,7 +1473,6 @@ export type WorldEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   id?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  type?: boolean
   icon?: boolean
   color?: boolean
   name?: boolean
@@ -1544,9 +1481,6 @@ export type WorldEventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   description?: boolean
   descriptionRich?: boolean
   descriptionYjs?: boolean
-  customName?: boolean
-  externalLink?: boolean
-  extraFields?: boolean
   worldId?: boolean
   worldEventTrackId?: boolean
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
@@ -1557,7 +1491,6 @@ export type WorldEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   id?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  type?: boolean
   icon?: boolean
   color?: boolean
   name?: boolean
@@ -1566,9 +1499,6 @@ export type WorldEventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   description?: boolean
   descriptionRich?: boolean
   descriptionYjs?: boolean
-  customName?: boolean
-  externalLink?: boolean
-  extraFields?: boolean
   worldId?: boolean
   worldEventTrackId?: boolean
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
@@ -1579,7 +1509,6 @@ export type WorldEventSelectScalar = {
   id?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  type?: boolean
   icon?: boolean
   color?: boolean
   name?: boolean
@@ -1588,15 +1517,13 @@ export type WorldEventSelectScalar = {
   description?: boolean
   descriptionRich?: boolean
   descriptionYjs?: boolean
-  customName?: boolean
-  externalLink?: boolean
-  extraFields?: boolean
   worldId?: boolean
   worldEventTrackId?: boolean
 }
 
-export type WorldEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "type" | "icon" | "color" | "name" | "timestamp" | "revokedAt" | "description" | "descriptionRich" | "descriptionYjs" | "customName" | "externalLink" | "extraFields" | "worldId" | "worldEventTrackId", ExtArgs["result"]["worldEvent"]>
+export type WorldEventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "icon" | "color" | "name" | "timestamp" | "revokedAt" | "description" | "descriptionRich" | "descriptionYjs" | "worldId" | "worldEventTrackId", ExtArgs["result"]["worldEvent"]>
 export type WorldEventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  pages?: boolean | Prisma.WorldEvent$pagesArgs<ExtArgs>
   mentions?: boolean | Prisma.WorldEvent$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.WorldEvent$mentionedInArgs<ExtArgs>
   deltaStates?: boolean | Prisma.WorldEvent$deltaStatesArgs<ExtArgs>
@@ -1616,6 +1543,7 @@ export type WorldEventIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 export type $WorldEventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "WorldEvent"
   objects: {
+    pages: Prisma.$ContentPagePayload<ExtArgs>[]
     mentions: Prisma.$MentionPayload<ExtArgs>[]
     mentionedIn: Prisma.$MentionPayload<ExtArgs>[]
     deltaStates: Prisma.$WorldEventDeltaPayload<ExtArgs>[]
@@ -1626,7 +1554,6 @@ export type $WorldEventPayload<ExtArgs extends runtime.Types.Extensions.Internal
     id: string
     createdAt: Date
     updatedAt: Date
-    type: $Enums.WorldEventType
     icon: string
     color: string
     name: string
@@ -1635,9 +1562,6 @@ export type $WorldEventPayload<ExtArgs extends runtime.Types.Extensions.Internal
     description: string
     descriptionRich: string
     descriptionYjs: string | null
-    customName: boolean
-    externalLink: string
-    extraFields: $Enums.WorldEventField[]
     worldId: string
     worldEventTrackId: string | null
   }, ExtArgs["result"]["worldEvent"]>
@@ -2034,6 +1958,7 @@ readonly fields: WorldEventFieldRefs;
  */
 export interface Prisma__WorldEventClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  pages<T extends Prisma.WorldEvent$pagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldEvent$pagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContentPagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mentions<T extends Prisma.WorldEvent$mentionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldEvent$mentionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mentionedIn<T extends Prisma.WorldEvent$mentionedInArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldEvent$mentionedInArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deltaStates<T extends Prisma.WorldEvent$deltaStatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldEvent$deltaStatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldEventDeltaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -2071,7 +1996,6 @@ export interface WorldEventFieldRefs {
   readonly id: Prisma.FieldRef<"WorldEvent", 'String'>
   readonly createdAt: Prisma.FieldRef<"WorldEvent", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"WorldEvent", 'DateTime'>
-  readonly type: Prisma.FieldRef<"WorldEvent", 'WorldEventType'>
   readonly icon: Prisma.FieldRef<"WorldEvent", 'String'>
   readonly color: Prisma.FieldRef<"WorldEvent", 'String'>
   readonly name: Prisma.FieldRef<"WorldEvent", 'String'>
@@ -2080,9 +2004,6 @@ export interface WorldEventFieldRefs {
   readonly description: Prisma.FieldRef<"WorldEvent", 'String'>
   readonly descriptionRich: Prisma.FieldRef<"WorldEvent", 'String'>
   readonly descriptionYjs: Prisma.FieldRef<"WorldEvent", 'String'>
-  readonly customName: Prisma.FieldRef<"WorldEvent", 'Boolean'>
-  readonly externalLink: Prisma.FieldRef<"WorldEvent", 'String'>
-  readonly extraFields: Prisma.FieldRef<"WorldEvent", 'WorldEventField[]'>
   readonly worldId: Prisma.FieldRef<"WorldEvent", 'String'>
   readonly worldEventTrackId: Prisma.FieldRef<"WorldEvent", 'String'>
 }
@@ -2478,6 +2399,30 @@ export type WorldEventDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many WorldEvents to delete.
    */
   limit?: number
+}
+
+/**
+ * WorldEvent.pages
+ */
+export type WorldEvent$pagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ContentPage
+   */
+  select?: Prisma.ContentPageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ContentPage
+   */
+  omit?: Prisma.ContentPageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ContentPageInclude<ExtArgs> | null
+  where?: Prisma.ContentPageWhereInput
+  orderBy?: Prisma.ContentPageOrderByWithRelationInput | Prisma.ContentPageOrderByWithRelationInput[]
+  cursor?: Prisma.ContentPageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ContentPageScalarFieldEnum | Prisma.ContentPageScalarFieldEnum[]
 }
 
 /**

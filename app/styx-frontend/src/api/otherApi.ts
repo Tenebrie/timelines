@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['mindmap', 'worldWikiArticle', 'WorldColor'] as const
+export const addTagTypes = ['mindmap', 'tagList', 'worldDetails', 'worldWikiArticle', 'WorldColor'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -57,6 +57,33 @@ const injectedRtkApi = api
 					method: 'DELETE',
 				}),
 				invalidatesTags: ['mindmap'],
+			}),
+			createTag: build.mutation<CreateTagApiResponse, CreateTagApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/tags`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['tagList', 'worldDetails'],
+			}),
+			updateTag: build.mutation<UpdateTagApiResponse, UpdateTagApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/tag/${queryArg.tagId}`,
+					method: 'PATCH',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['tagList'],
+			}),
+			deleteTag: build.mutation<DeleteTagApiResponse, DeleteTagApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/tag/${queryArg.tagId}`,
+					method: 'DELETE',
+				}),
+				invalidatesTags: ['tagList', 'worldDetails'],
+			}),
+			getTagDetails: build.query<GetTagDetailsApiResponse, GetTagDetailsApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/tag/${queryArg.tagId}` }),
+				providesTags: ['tagList'],
 			}),
 			getWikiArticleContent: build.query<GetWikiArticleContentApiResponse, GetWikiArticleContentApiArg>({
 				query: (queryArg) => ({
@@ -162,9 +189,9 @@ export type GetMindmapApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		worldId: string
+		parentActorId?: null | string
 		positionX: number
 		positionY: number
-		parentActorId?: null | string
 	}[]
 }
 export type GetMindmapApiArg = {
@@ -176,9 +203,9 @@ export type CreateNodeApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	worldId: string
+	parentActorId?: null | string
 	positionX: number
 	positionY: number
-	parentActorId?: null | string
 }
 export type CreateNodeApiArg = {
 	/** Any string value */
@@ -194,9 +221,9 @@ export type UpdateNodeApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	worldId: string
+	parentActorId?: null | string
 	positionX: number
 	positionY: number
-	parentActorId?: null | string
 }
 export type UpdateNodeApiArg = {
 	/** Any string value */
@@ -213,15 +240,157 @@ export type DeleteNodeApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	worldId: string
+	parentActorId?: null | string
 	positionX: number
 	positionY: number
-	parentActorId?: null | string
 }
 export type DeleteNodeApiArg = {
 	/** Any string value */
 	worldId: string
 	/** Any string value */
 	nodeId: string
+}
+export type CreateTagApiResponse = /** status 200  */ {
+	mentions: {
+		pageId?: null | string
+		sourceId: string
+		targetId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
+	}[]
+	mentionedIn: {
+		pageId?: null | string
+		sourceId: string
+		targetId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
+	}[]
+	description: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	worldId: string
+}
+export type CreateTagApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		name: string
+		description?: string
+	}
+}
+export type UpdateTagApiResponse = /** status 200  */ {
+	mentions: {
+		pageId?: null | string
+		sourceId: string
+		targetId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
+	}[]
+	mentionedIn: {
+		pageId?: null | string
+		sourceId: string
+		targetId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
+	}[]
+	description: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	worldId: string
+}
+export type UpdateTagApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	tagId: string
+	body: {
+		name?: string
+		description?: string
+	}
+}
+export type DeleteTagApiResponse = /** status 200  */ {
+	description: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	worldId: string
+}
+export type DeleteTagApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	tagId: string
+}
+export type GetTagDetailsApiResponse = /** status 200  */ {
+	mentionedBy: {
+		type: 'Actor' | 'Event' | 'Article' | 'Tag'
+		id: string
+		name: string
+	}[]
+	mentions: {
+		pageId?: null | string
+		sourceId: string
+		targetId: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		sourceActorId?: null | string
+		sourceEventId?: null | string
+		sourceArticleId?: null | string
+		sourceTagId?: null | string
+		targetActorId?: null | string
+		targetEventId?: null | string
+		targetArticleId?: null | string
+		targetTagId?: null | string
+	}[]
+	description: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	worldId: string
+}
+export type GetTagDetailsApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	tagId: string
 }
 export type GetWikiArticleContentApiResponse = /** status 200  */ {
 	hasDeltas: boolean
@@ -284,26 +453,26 @@ export type DeleteWorldColorApiArg = {
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
-		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		position: number
+		name: string
 		worldId: string
 		icon: string
 		color: string
+		position: number
 		contentRich: string
 		contentYjs?: null | string
 		parentId?: null | string
 	}[]
-	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	position: number
+	name: string
 	worldId: string
 	icon: string
 	color: string
+	position: number
 	contentRich: string
 	parentId?: null | string
 }
@@ -346,6 +515,11 @@ export const {
 	useCreateNodeMutation,
 	useUpdateNodeMutation,
 	useDeleteNodeMutation,
+	useCreateTagMutation,
+	useUpdateTagMutation,
+	useDeleteTagMutation,
+	useGetTagDetailsQuery,
+	useLazyGetTagDetailsQuery,
 	useGetWikiArticleContentQuery,
 	useLazyGetWikiArticleContentQuery,
 	usePutWikiArticleContentMutation,

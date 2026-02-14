@@ -16,8 +16,10 @@ export enum RheaToCalliopeMessageType {
 	ACTOR_UPDATED = 'actorUpdated',
 	CALENDAR_UPDATED = 'calendarUpdated',
 	MINDMAP_NODE_UPDATED = 'mindmapNodeUpdated',
+	TAG_UPDATED = 'tagUpdated',
 	WIKI_ARTICLE_UPDATED = 'wikiArticleUpdated',
 	WIKI_ARTICLE_DELETED = 'wikiArticleDeleted',
+	DOCUMENT_RESET = 'documentReset',
 }
 
 export type RheaToCalliopeMessagePayload = {
@@ -70,6 +72,15 @@ export type RheaToCalliopeMessagePayload = {
 		worldId: string
 		// TODO: Type properly
 		node: string
+	}
+	[RheaToCalliopeMessageType.TAG_UPDATED]: {
+		worldId: string
+		// TODO: Type properly
+		tag: string
+	}
+	[RheaToCalliopeMessageType.DOCUMENT_RESET]: {
+		worldId: string
+		entityId: string
 	}
 }
 

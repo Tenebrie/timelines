@@ -601,6 +601,20 @@ export type WorldUpdateOneRequiredWithoutMindmapNodesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorldUpdateToOneWithWhereWithoutMindmapNodesInput, Prisma.WorldUpdateWithoutMindmapNodesInput>, Prisma.WorldUncheckedUpdateWithoutMindmapNodesInput>
 }
 
+export type WorldCreateNestedOneWithoutTagsInput = {
+  create?: Prisma.XOR<Prisma.WorldCreateWithoutTagsInput, Prisma.WorldUncheckedCreateWithoutTagsInput>
+  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutTagsInput
+  connect?: Prisma.WorldWhereUniqueInput
+}
+
+export type WorldUpdateOneRequiredWithoutTagsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorldCreateWithoutTagsInput, Prisma.WorldUncheckedCreateWithoutTagsInput>
+  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutTagsInput
+  upsert?: Prisma.WorldUpsertWithoutTagsInput
+  connect?: Prisma.WorldWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorldUpdateToOneWithWhereWithoutTagsInput, Prisma.WorldUpdateWithoutTagsInput>, Prisma.WorldUncheckedUpdateWithoutTagsInput>
+}
+
 export type WorldCreateNestedManyWithoutOwnerInput = {
   create?: Prisma.XOR<Prisma.WorldCreateWithoutOwnerInput, Prisma.WorldUncheckedCreateWithoutOwnerInput> | Prisma.WorldCreateWithoutOwnerInput[] | Prisma.WorldUncheckedCreateWithoutOwnerInput[]
   connectOrCreate?: Prisma.WorldCreateOrConnectWithoutOwnerInput | Prisma.WorldCreateOrConnectWithoutOwnerInput[]
@@ -655,20 +669,6 @@ export type WorldUpdateOneRequiredWithoutCollaboratorsNestedInput = {
   upsert?: Prisma.WorldUpsertWithoutCollaboratorsInput
   connect?: Prisma.WorldWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorldUpdateToOneWithWhereWithoutCollaboratorsInput, Prisma.WorldUpdateWithoutCollaboratorsInput>, Prisma.WorldUncheckedUpdateWithoutCollaboratorsInput>
-}
-
-export type WorldCreateNestedOneWithoutTagsInput = {
-  create?: Prisma.XOR<Prisma.WorldCreateWithoutTagsInput, Prisma.WorldUncheckedCreateWithoutTagsInput>
-  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutTagsInput
-  connect?: Prisma.WorldWhereUniqueInput
-}
-
-export type WorldUpdateOneRequiredWithoutTagsNestedInput = {
-  create?: Prisma.XOR<Prisma.WorldCreateWithoutTagsInput, Prisma.WorldUncheckedCreateWithoutTagsInput>
-  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutTagsInput
-  upsert?: Prisma.WorldUpsertWithoutTagsInput
-  connect?: Prisma.WorldWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.WorldUpdateToOneWithWhereWithoutTagsInput, Prisma.WorldUpdateWithoutTagsInput>, Prisma.WorldUncheckedUpdateWithoutTagsInput>
 }
 
 export type WorldCreateNestedOneWithoutArticlesInput = {
@@ -1221,6 +1221,106 @@ export type WorldUncheckedUpdateWithoutMindmapNodesInput = {
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
 }
 
+export type WorldCreateWithoutTagsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string
+  calendar?: $Enums.WorldCalendarType
+  timeOrigin?: bigint | number
+  accessMode?: $Enums.WorldAccessMode
+  actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
+  events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
+  articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  owner: Prisma.UserCreateNestedOneWithoutWorldsInput
+  collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
+  mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
+  worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
+  calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
+}
+
+export type WorldUncheckedCreateWithoutTagsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string
+  calendar?: $Enums.WorldCalendarType
+  timeOrigin?: bigint | number
+  ownerId: string
+  accessMode?: $Enums.WorldAccessMode
+  actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
+  events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
+  articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
+  mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
+  worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
+  calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
+}
+
+export type WorldCreateOrConnectWithoutTagsInput = {
+  where: Prisma.WorldWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorldCreateWithoutTagsInput, Prisma.WorldUncheckedCreateWithoutTagsInput>
+}
+
+export type WorldUpsertWithoutTagsInput = {
+  update: Prisma.XOR<Prisma.WorldUpdateWithoutTagsInput, Prisma.WorldUncheckedUpdateWithoutTagsInput>
+  create: Prisma.XOR<Prisma.WorldCreateWithoutTagsInput, Prisma.WorldUncheckedCreateWithoutTagsInput>
+  where?: Prisma.WorldWhereInput
+}
+
+export type WorldUpdateToOneWithWhereWithoutTagsInput = {
+  where?: Prisma.WorldWhereInput
+  data: Prisma.XOR<Prisma.WorldUpdateWithoutTagsInput, Prisma.WorldUncheckedUpdateWithoutTagsInput>
+}
+
+export type WorldUpdateWithoutTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
+  actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
+  events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
+  articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
+  collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
+  mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
+  worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
+  calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
+}
+
+export type WorldUncheckedUpdateWithoutTagsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
+  actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
+  events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
+  articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
+  mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
+  worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
+  calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
+}
+
 export type WorldCreateWithoutOwnerInput = {
   id?: string
   createdAt?: Date | string
@@ -1397,106 +1497,6 @@ export type WorldUncheckedUpdateWithoutCollaboratorsInput = {
   events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
-  mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
-  worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
-  worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
-  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
-  calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
-}
-
-export type WorldCreateWithoutTagsInput = {
-  id?: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  name: string
-  description?: string
-  calendar?: $Enums.WorldCalendarType
-  timeOrigin?: bigint | number
-  accessMode?: $Enums.WorldAccessMode
-  actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
-  events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
-  articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
-  owner: Prisma.UserCreateNestedOneWithoutWorldsInput
-  collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
-  mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
-  worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
-  worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
-  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
-  calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
-}
-
-export type WorldUncheckedCreateWithoutTagsInput = {
-  id?: string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  name: string
-  description?: string
-  calendar?: $Enums.WorldCalendarType
-  timeOrigin?: bigint | number
-  ownerId: string
-  accessMode?: $Enums.WorldAccessMode
-  actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
-  events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
-  articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
-  collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
-  mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
-  worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
-  worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
-  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
-  calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
-}
-
-export type WorldCreateOrConnectWithoutTagsInput = {
-  where: Prisma.WorldWhereUniqueInput
-  create: Prisma.XOR<Prisma.WorldCreateWithoutTagsInput, Prisma.WorldUncheckedCreateWithoutTagsInput>
-}
-
-export type WorldUpsertWithoutTagsInput = {
-  update: Prisma.XOR<Prisma.WorldUpdateWithoutTagsInput, Prisma.WorldUncheckedUpdateWithoutTagsInput>
-  create: Prisma.XOR<Prisma.WorldCreateWithoutTagsInput, Prisma.WorldUncheckedCreateWithoutTagsInput>
-  where?: Prisma.WorldWhereInput
-}
-
-export type WorldUpdateToOneWithWhereWithoutTagsInput = {
-  where?: Prisma.WorldWhereInput
-  data: Prisma.XOR<Prisma.WorldUpdateWithoutTagsInput, Prisma.WorldUncheckedUpdateWithoutTagsInput>
-}
-
-export type WorldUpdateWithoutTagsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
-  timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
-  actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
-  events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
-  articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
-  owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
-  collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
-  mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
-  worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
-  worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
-  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
-  calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
-}
-
-export type WorldUncheckedUpdateWithoutTagsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
-  timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
-  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
-  accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
-  actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
-  events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
-  articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
-  collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput

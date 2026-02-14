@@ -2,7 +2,6 @@ import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { ActorService } from '@src/services/ActorService.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
-import { EntityNameService } from '@src/services/EntityNameService.js'
 import { MentionData } from '@src/services/MentionsService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
@@ -55,10 +54,6 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 		const parsed = await RichTextService.parseContentString({
 			worldId,
 			contentString: params.descriptionRich,
-		})
-		params.name = EntityNameService.getEventCreateName({
-			name: params.name,
-			description: parsed.contentPlain,
 		})
 		description = parsed.contentPlain
 		descriptionRich = params.descriptionRich

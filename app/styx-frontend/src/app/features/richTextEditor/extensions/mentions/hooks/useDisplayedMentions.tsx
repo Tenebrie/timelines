@@ -1,4 +1,4 @@
-import { Actor, WorldEvent } from '@api/types/worldTypes'
+import { Actor, WorldEvent, WorldTag } from '@api/types/worldTypes'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -13,9 +13,9 @@ type Props = {
 export const useDisplayedMentions = ({ query }: Props) => {
 	const { data: articles } = useListArticles()
 
-	const { actors, events } = useSelector(
+	const { actors, events, tags } = useSelector(
 		getWorldState,
-		(a, b) => a.actors === b.actors && a.events === b.events,
+		(a, b) => a.actors === b.actors && a.events === b.events && a.tags === b.tags,
 	)
 
 	const displayedMentions = useMemo(() => {
@@ -39,6 +39,10 @@ export const useDisplayedMentions = ({ query }: Props) => {
 			| {
 					type: 'Article'
 					article: WikiArticle
+			  }
+			| {
+					type: 'Tag'
+					tag: WorldTag
 			  }
 		)
 
@@ -66,21 +70,31 @@ export const useDisplayedMentions = ({ query }: Props) => {
 			updatedAt: new Date(article.updatedAt).getTime(),
 		}))
 
+		const allTags: Mention[] = tags.map((tag) => ({
+			id: tag.id,
+			name: tag.name,
+			type: 'Tag' as const,
+			tag,
+			updatedAt: new Date(tag.updatedAt).getTime(),
+		}))
+
 		if (!query) {
 			return ([] as Mention[])
 				.concat(allActors.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3))
 				.concat(allEvents.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3))
 				.concat(allArticles.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3))
+				.concat(allTags.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3))
 		}
 
 		return ([] as Mention[])
 			.concat(allActors)
 			.concat(allEvents)
 			.concat(allArticles)
+			.concat(allTags)
 			.filter((entity) => entity.name.toLowerCase().includes(query.toLowerCase()))
 			.sort((a, b) => b.updatedAt - a.updatedAt)
 			.slice(0, 5)
-	}, [actors, events, articles, query])
+	}, [actors, events, articles, tags, query])
 
 	return {
 		mentions: displayedMentions,

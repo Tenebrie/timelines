@@ -67,7 +67,7 @@ services:
             interval: 10s
             timeout: 10s
             retries: 3
-            start_period: 120s
+            start_period: 300s
     calliope:
         image: tenebrie/timelines-calliope:${VERSION}
         build:
@@ -86,10 +86,63 @@ services:
         secrets:
             - jwt-secret
             - environment
+    orpheus:
+        image: tenebrie/timelines-orpheus:${VERSION}
+        build:
+            context: ./
+            dockerfile: ./app/orpheus-mcp/Dockerfile.prod
+        environment:
+            NODE_ENV: production # Prod or staging
+            REQUIRE_OAUTH: "true"
+        command: yarn prod
+        deploy:
+            replicas: 1
+            update_config:
+                order: start-first
+                parallelism: 1
+                delay: 10s
+                failure_action: pause
+        secrets:
+            - jwt-secret
+            - environment
     rhea-postgres:
         volumes:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached
             - /mnt/volume_rhea_postgres/backups:/backups:cached
+
+    chronos:
+        image: tenebrie/timelines-chronos:${VERSION}
+        build:
+            context: ./app/chronos-backups
+            dockerfile: ./Dockerfile
+        environment:
+            BACKREST_DATA: /data
+            BACKREST_CONFIG: /config/config.json
+            XDG_CACHE_HOME: /cache
+        deploy:
+            replicas: 1
+            update_config:
+                order: stop-first
+                parallelism: 1
+                delay: 10s
+                failure_action: pause
+        secrets:
+            - s3-bucket-id
+            - s3-endpoint
+            - s3-access-key-id
+            - s3-access-key-secret
+        volumes:
+            - /mnt/volume_rhea_postgres/backrest/data:/data:cached
+            - /mnt/volume_rhea_postgres/backrest/config:/config:cached
+            - /mnt/volume_rhea_postgres/backrest/cache:/cache:cached
+        depends_on:
+            - rhea-postgres
+        healthcheck:
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:9898"]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
 
 # See docs/Creating New Cluster.md
 secrets:

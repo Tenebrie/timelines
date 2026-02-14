@@ -7,6 +7,7 @@ import {
 	WorldCalendarType,
 	WorldEvent,
 	WorldEventDelta,
+	WorldTag,
 } from '@api/types/worldTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
@@ -23,6 +24,7 @@ export const initialState = {
 	description: '' as string,
 	events: [] as WorldEvent[],
 	actors: [] as ActorDetails[],
+	tags: [] as WorldTag[],
 	calendar: 'RIMWORLD' as WorldCalendarType,
 	calendars: [] as WorldCalendar[],
 	timeOrigin: 0,
@@ -85,6 +87,8 @@ export const worldSlice = createSlice({
 			state.isLoaded = false
 			state.isUnauthorized = false
 			state.events = []
+			state.actors = []
+			state.tags = []
 			state.isReadOnly = false
 		},
 		setUnauthorized: (state, { payload }: PayloadAction<boolean>) => {
@@ -144,6 +148,24 @@ export const worldSlice = createSlice({
 		},
 		removeActor: (state, { payload }: PayloadAction<string>) => {
 			state.actors = state.actors.filter((e) => e.id !== payload)
+		},
+		addTag: (state, { payload }: PayloadAction<WorldTag>) => {
+			state.tags = state.tags.concat(payload)
+		},
+		updateTag: (state, { payload }: PayloadAction<Pick<WorldTag, 'id'> & Partial<WorldTag>>) => {
+			const tag = state.tags.find((t) => t.id === payload.id)
+			if (!tag) {
+				return
+			}
+
+			const newTag = {
+				...tag,
+				...payload,
+			}
+			state.tags.splice(state.tags.indexOf(tag), 1, newTag)
+		},
+		removeTag: (state, { payload }: PayloadAction<string>) => {
+			state.tags = state.tags.filter((e) => e.id !== payload)
 		},
 		addTimelineMarkerToSelection: (
 			state,

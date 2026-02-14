@@ -1,0 +1,35 @@
+# Build stage
+FROM node:24-alpine AS builder
+
+WORKDIR /app
+
+# Copy and build ts-shared first
+COPY ./app/ts-shared /app/ts-shared
+RUN cd /app/ts-shared && yarn install --frozen-lockfile
+
+# Copy package files and install ALL dependencies (needed for build)
+COPY ./app/orpheus-mcp/package.json ./app/orpheus-mcp/yarn.lock /app/orpheus/
+WORKDIR /app/orpheus
+RUN yarn install --frozen-lockfile
+
+# Copy source files and build
+COPY ./app/orpheus-mcp /app/orpheus
+RUN yarn build
+
+# Production stage
+FROM node:24-alpine
+
+WORKDIR /app/orpheus
+
+# Copy only the built JavaScript
+COPY --from=builder /app/orpheus/dist /app/orpheus/dist
+COPY --from=builder /app/orpheus/package.json /app/orpheus/yarn.lock /app/orpheus/
+
+# Copy only ts-shared source (no node_modules)
+COPY ./app/ts-shared/package.json /app/ts-shared/package.json
+COPY ./app/ts-shared/src /app/ts-shared/src
+
+# Install ONLY production dependencies
+RUN yarn install --production --frozen-lockfile && yarn cache clean
+
+EXPOSE 3002

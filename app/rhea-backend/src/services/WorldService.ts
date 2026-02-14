@@ -132,17 +132,55 @@ export const WorldService = {
 			include: {
 				actors: {
 					include: {
-						mentions: true,
-						mentionedIn: true,
+						pages: {
+							select: {
+								id: true,
+								name: true,
+							},
+						},
+						mentions: {
+							select: {
+								targetId: true,
+								targetType: true,
+							},
+						},
+						mentionedIn: {
+							select: {
+								sourceId: true,
+								sourceType: true,
+							},
+						},
+					},
+					omit: {
+						descriptionYjs: true,
 					},
 				},
 				events: {
 					orderBy: {
 						timestamp: 'asc',
 					},
+					omit: {
+						descriptionYjs: true,
+					},
 					include: {
-						mentions: true,
-						mentionedIn: true,
+						pages: {
+							select: {
+								id: true,
+								name: true,
+							},
+						},
+						mentions: {
+							select: {
+								targetId: true,
+								targetType: true,
+							},
+						},
+						mentionedIn: {
+							select: {
+								sourceId: true,
+								sourceType: true,
+							},
+						},
 						deltaStates: {
 							orderBy: {
 								timestamp: 'asc',
@@ -169,6 +207,22 @@ export const WorldService = {
 						seasons: {
 							include: {
 								intervals: true,
+							},
+						},
+					},
+				},
+				tags: {
+					include: {
+						mentions: {
+							select: {
+								targetId: true,
+								targetType: true,
+							},
+						},
+						mentionedIn: {
+							select: {
+								sourceId: true,
+								sourceType: true,
 							},
 						},
 					},

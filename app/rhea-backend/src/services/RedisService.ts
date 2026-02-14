@@ -1,4 +1,13 @@
-import { Actor, Calendar, MindmapNode, User, WikiArticle, WorldEvent, WorldEventDelta } from '@prisma/client'
+import {
+	Actor,
+	Calendar,
+	MindmapNode,
+	Tag,
+	User,
+	WikiArticle,
+	WorldEvent,
+	WorldEventDelta,
+} from '@prisma/client'
 import { ParameterizedContext } from 'koa'
 
 import {
@@ -123,6 +132,17 @@ export const RedisService = {
 		})
 	},
 
+	notifyAboutTagUpdate: (ctx: ContextWithSessionId, { worldId, tag }: { worldId: string; tag: Tag }) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.TAG_UPDATED,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
+				tag: JSON.stringify(tag),
+			},
+		})
+	},
+
 	notifyAboutWorldTracksUpdate: (
 		ctx: ContextWithSessionId,
 		{ worldId, timestamp }: { worldId: string; timestamp: Date },
@@ -183,6 +203,20 @@ export const RedisService = {
 			messageSourceSessionId: ctx.sessionId,
 			data: {
 				worldId,
+			},
+		})
+	},
+
+	notifyAboutDocumentReset: (
+		ctx: ContextWithSessionId,
+		{ worldId, entityId }: { worldId: string; entityId: string },
+	) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.DOCUMENT_RESET,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
+				entityId,
 			},
 		})
 	},

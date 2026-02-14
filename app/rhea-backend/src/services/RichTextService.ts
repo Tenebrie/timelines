@@ -1,14 +1,17 @@
 import { MentionedEntity } from '@prisma/client'
+import { asyncFilter } from '@src/utils/asyncFilter.js'
 import { load } from 'cheerio'
 import { AnyNode } from 'domhandler'
 
 import { EntityResolverService } from './EntityResolverService.js'
 import { MentionData } from './MentionsService.js'
+import { ValidationService } from './ValidationService.js'
 
 export type MentionNodeContent = {
-	actor: string | false
-	event: string | false
-	article: string | false
+	actor?: string | false
+	event?: string | false
+	article?: string | false
+	tag?: string | false
 }
 
 export const RichTextService = {
@@ -81,6 +84,18 @@ export const RichTextService = {
 					targetType: MentionedEntity.Article,
 				})
 			}
+			if (props.tag) {
+				const tagName = await EntityResolverService.resolveEntityName({
+					worldId,
+					entityType: 'tag',
+					entityId: props.tag,
+				})
+				$(element).text(`[${tagName}]`)
+				mentions.push({
+					targetId: props.tag,
+					targetType: MentionedEntity.Tag,
+				})
+			}
 		}
 
 		// Add double newlines after block elements for proper plain text formatting
@@ -92,10 +107,25 @@ export const RichTextService = {
 			.replace(/\n{3,}/g, '\n\n')
 			.trim()
 
+		const validMentions = await asyncFilter(mentions, RichTextService.isMentionValid)
+
 		return {
 			contentPlain,
 			contentRich: contentString,
-			mentions,
+			mentions: validMentions,
 		}
+	},
+
+	isMentionValid: async (mention: MentionData) => {
+		if (mention.targetType === 'Actor') {
+			return ValidationService.isActorValid(mention.targetId)
+		} else if (mention.targetType === 'Event') {
+			return ValidationService.isEventValid(mention.targetId)
+		} else if (mention.targetType === 'Article') {
+			return ValidationService.isArticleValid(mention.targetId)
+		} else if (mention.targetType === 'Tag') {
+			return ValidationService.isTagValid(mention.targetId)
+		}
+		return false
 	},
 }

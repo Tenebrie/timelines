@@ -109,6 +109,33 @@ services:
         command: yarn start
         tty: true
         restart: unless-stopped
+    orpheus:
+        image: timelines-orpheus:dev
+        build:
+            context: ./
+            dockerfile: ./app/orpheus-mcp/Dockerfile
+        environment:
+            NODE_ENV: development
+            # Fake docker secrets
+            environment: development
+            jwt_secret: secretkey
+            REQUIRE_OAUTH: "false"
+        volumes:
+            - ./app/orpheus-mcp/src:/app/orpheus/src:cached
+            - ./app/ts-shared/src:/app/ts-shared/src:cached
+            - type: bind
+              source: ./eslint.config.mjs
+              target: /app/orpheus/eslint.config.mjs
+            - type: bind
+              source: ./app/orpheus-mcp/tsconfig.json
+              target: /app/orpheus/tsconfig.json
+        ports:
+            - 3002:3002
+        networks:
+            - dev_network
+        command: yarn start
+        tty: true
+        restart: unless-stopped
     rhea-postgres:
         environment:
             POSTGRES_USER: docker
@@ -182,10 +209,43 @@ services:
             "
         networks:
             - dev_network
+    chronos:
+        image: timelines-chronos:dev
+        build:
+            context: ./app/chronos-backups
+            dockerfile: ./Dockerfile
+        environment:
+            # S3 connection (MinIO)
+            S3_ENDPOINT: http://s3-minio:9000
+            S3_BUCKET: bucket
+            S3_ACCESS_KEY_ID: devuser
+            S3_ACCESS_KEY_SECRET: devsecret
+            # Backrest config
+            BACKREST_DATA: /data
+            BACKREST_CONFIG: /config/config.json
+            BACKREST_PORT: 0.0.0.0:9898
+            XDG_CACHE_HOME: /cache
+        ports:
+            - "9898:9898"
+        volumes:
+            - backrest_data:/data:cached
+            - backrest_config:/config:cached
+            - backrest_cache:/cache:cached
+        depends_on:
+            rhea-postgres:
+                condition: service_healthy
+            s3-minio:
+                condition: service_healthy
+        networks:
+            - dev_network
+        restart: unless-stopped
 volumes:
     redis:
     rhea-db:
     minio_data:
+    backrest_data:
+    backrest_config:
+    backrest_cache:
 
 networks:
     dev_network:

@@ -46,6 +46,12 @@ export const makeUpdateActorQuery = async ({
 		include: {
 			mentions: true,
 			mentionedIn: true,
+			pages: {
+				select: {
+					id: true,
+					name: true,
+				},
+			},
 		},
 		omit: {
 			descriptionYjs: true,

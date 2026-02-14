@@ -25,7 +25,6 @@ export const EventTitle = ({ event, draft }: Props) => {
 		setEditing(false)
 		const trimmedName = name.trim()
 		draft.setName(trimmedName)
-		draft.setCustomNameEnabled(trimmedName.length > 0)
 	}
 
 	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], applyChanges, editing)
@@ -49,12 +48,8 @@ export const EventTitle = ({ event, draft }: Props) => {
 	const { open: openTimeTravelModal } = useModal('timeTravelModal')
 
 	useEffect(() => {
-		if (draft.customNameEnabled) {
-			setName(draft.name)
-		} else {
-			setName('')
-		}
-	}, [draft.customNameEnabled, draft.name])
+		setName(draft.name)
+	}, [draft.name])
 
 	if (!draft) {
 		return null

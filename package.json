@@ -7,6 +7,7 @@
 		"app/styx-frontend",
 		"app/rhea-backend",
 		"app/calliope-websockets",
+		"app/orpheus-mcp",
 		"app/ts-shared",
 		"test/e2e",
 		"test/load"
@@ -25,7 +26,7 @@
 		"docker:fullinstall": "./scripts/dev-fullinstall.sh",
 		"docker:prod:push": "./scripts/docker-prod-push.sh",
 		"docker:stop": "docker stop $(docker ps -a -q)",
-		"tsc": "(cd app/styx-frontend && yarn tsc) && (cd app/rhea-backend && yarn tsc)",
+		"tsc": "(cd app/styx-frontend && yarn tsc) && (cd app/rhea-backend && yarn tsc) && (cd app/calliope-websockets && yarn tsc) && (cd app/orpheus-mcp && yarn tsc)",
 		"prisma": "cd app/rhea-backend && yarn prisma",
 		"test": "yarn test:styx && yarn test:rhea && yarn test:e2e",
 		"test:styx": "cd app/styx-frontend && yarn test run",

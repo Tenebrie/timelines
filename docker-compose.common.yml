@@ -22,6 +22,10 @@ services:
         working_dir: /app/calliope
         depends_on:
             - redis
+    orpheus:
+        working_dir: /app/orpheus
+        depends_on:
+            - rhea
     rhea-postgres:
         image: postgres:15-alpine
         environment:
@@ -36,3 +40,11 @@ services:
             start_period: 30s
     redis:
         image: redis:7-alpine
+    chronos:
+        environment:
+            POSTGRES_HOST: rhea-postgres
+            POSTGRES_USER: docker
+            POSTGRES_PASSWORD: docker
+            POSTGRES_DB: db
+        depends_on:
+            - rhea-postgres

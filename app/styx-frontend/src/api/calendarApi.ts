@@ -506,7 +506,6 @@ export type UpdateCalendarPresentationApiArg = {
 	presentationId: string
 	body: {
 		name?: string
-		scaleFactor?: number
 		units?: {
 			unitId: string
 			formatString: string
@@ -528,15 +527,15 @@ export type DeleteCalendarPresentationApiArg = {
 	presentationId: string
 }
 export type ListWorldCalendarsApiResponse = /** status 200  */ {
-	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	name: string
+	worldId?: null | string
 	ownerId?: null | string
 	position: number
 	originTime: string
 	dateFormat?: null | string
-	worldId?: null | string
 }[]
 export type ListWorldCalendarsApiArg = {
 	/** Any string value */

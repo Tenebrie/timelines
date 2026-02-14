@@ -35,7 +35,7 @@ This is an unorganized doc with notes about what needs to be done for a new clus
   - `docker secret create jwt-secret /mnt/volume_secrets/keys/jwt-secret.txt`
 
 - Configure S3 storage using the access key from the previous step
-  - `echo "timelines-prod" | docker secret create s3-bucket-id -`
+  - `echo "BUCKET_ID" | docker secret create s3-bucket-id -`
   - `echo "https://fra1.digitaloceanspaces.com" | docker secret create s3-endpoint -`
   - `echo "..." | docker secret create s3-access-key-id -`
   - `echo "..." | docker secret create s3-access-key-secret -`
@@ -56,6 +56,8 @@ This is an unorganized doc with notes about what needs to be done for a new clus
   - `VERSION=v1.2.3 ./scripts/stack-update.sh`
 - Run migrations
   - `./scripts/stack-migrate.sh`
-- Setup DB backups
+- Create Chronos storage folders
+  - `mkdir -p /mnt/volume_rhea_postgres/backrest/{data,config,cache}`
+- (Deprecated) Setup DB backups
   - `crontab -e`
-  - `0 */6 * * * /root/timelines/scripts/stack-create-db-backup.sh BUCKET_NAME >> /var/log/stack-create-db-backup.log 2>&1`
+  - `0 */6 * * * /root/timelines/scripts/stack-create-db-backup.sh BUCKET_NAME >> /var/log/stack-create-db-backup.log 2>&1` 

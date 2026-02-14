@@ -192,6 +192,48 @@ export const YjsSyncService = {
 		}
 	},
 
+	/**
+	 * Reset a document: close all client connections, delete Redis cache, and clean up.
+	 * This forces all clients to disconnect and re-fetch the document state from the database.
+	 */
+	async resetDocument(worldId: string, entityId: string) {
+		const docName = `${worldId}:${entityId}`
+		Logger.yjsInfo(docName, `Document reset requested`)
+
+		// Cancel pending Rhea persistence timer
+		const timer = rheaPersistenceTimers.get(docName)
+		if (timer) {
+			clearTimeout(timer)
+			rheaPersistenceTimers.delete(docName)
+		}
+
+		// Delete cached updates from Redis
+		await RedisService.deleteDocumentUpdates(docName)
+
+		// Clean up metadata
+		documentMetadata.delete(docName)
+
+		// Close all client connections on this document (triggers cleanup in y-websocket-server)
+		const doc = docs.get(docName)
+		if (doc) {
+			attachedDocs.delete(doc)
+			const connections = Array.from(doc.conns.keys())
+			for (const conn of connections) {
+				try {
+					conn.close(4001, 'Document reset')
+				} catch {
+					// Connection may already be closed
+				}
+			}
+			Logger.yjsInfo(docName, `Closed ${connections.length} client connection(s)`)
+		}
+
+		// Release leadership if held
+		await persistenceLeaderService.release(docName)
+
+		Logger.yjsInfo(docName, `Document reset complete`)
+	},
+
 	async initializeFromRheaState({
 		doc,
 		docName,

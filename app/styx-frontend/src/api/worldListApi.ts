@@ -25,26 +25,26 @@ export { injectedRtkApi as worldListApi }
 export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
 		calendars: {
-			name: string
 			id: string
 			createdAt: string
 			updatedAt: string
+			name: string
+			worldId?: null | string
 			ownerId?: null | string
 			position: number
 			originTime: string
 			dateFormat?: null | string
-			worldId?: null | string
 		}[]
 		collaborators: {
 			worldId: string
-			access: 'ReadOnly' | 'Editing'
 			userId: string
+			access: 'ReadOnly' | 'Editing'
 		}[]
-		name: string
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		description: string
+		name: string
 		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
@@ -52,26 +52,26 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	}[]
 	contributableWorlds: {
 		calendars: {
-			name: string
 			id: string
 			createdAt: string
 			updatedAt: string
+			name: string
+			worldId?: null | string
 			ownerId?: null | string
 			position: number
 			originTime: string
 			dateFormat?: null | string
-			worldId?: null | string
 		}[]
 		collaborators: {
 			worldId: string
-			access: 'ReadOnly' | 'Editing'
 			userId: string
+			access: 'ReadOnly' | 'Editing'
 		}[]
-		name: string
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		description: string
+		name: string
 		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
@@ -79,26 +79,26 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	}[]
 	visibleWorlds: {
 		calendars: {
-			name: string
 			id: string
 			createdAt: string
 			updatedAt: string
+			name: string
+			worldId?: null | string
 			ownerId?: null | string
 			position: number
 			originTime: string
 			dateFormat?: null | string
-			worldId?: null | string
 		}[]
 		collaborators: {
 			worldId: string
-			access: 'ReadOnly' | 'Editing'
 			userId: string
+			access: 'ReadOnly' | 'Editing'
 		}[]
-		name: string
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		description: string
+		name: string
 		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
@@ -107,8 +107,8 @@ export type GetWorldsApiResponse = /** status 200  */ {
 }
 export type GetWorldsApiArg = void
 export type CreateWorldApiResponse = /** status 200  */ {
-	name: string
 	id: string
+	name: string
 }
 export type CreateWorldApiArg = {
 	body: {
@@ -119,11 +119,11 @@ export type CreateWorldApiArg = {
 	}
 }
 export type DeleteWorldApiResponse = /** status 200  */ {
-	name: string
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	description: string
+	name: string
 	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
