@@ -20,6 +20,7 @@ import { worldSlice } from '../WorldSlice'
 
 export const CreateEventModal = () => {
 	const { isOpen, close } = useModal('createEventModal')
+	const [descriptionPlain, setDescriptionPlain] = useState('')
 	const [descriptionRich, setDescriptionRich] = useState('')
 	const [creationError, setCreationError] = useState<string | null>(null)
 	const [createEvent, { isLoading }] = useCreateEvent()
@@ -39,6 +40,7 @@ export const CreateEventModal = () => {
 	useModalCleanup({
 		isOpen,
 		onCleanup: () => {
+			setDescriptionPlain('')
 			setDescriptionRich('')
 			setCreationError(null)
 		},
@@ -56,6 +58,7 @@ export const CreateEventModal = () => {
 		}
 
 		const createdEvent = await createEvent({
+			name: descriptionPlain.trim(),
 			descriptionRich: trimmedDescription,
 			timestamp: String(selectedTime),
 			color: getRandomEntityColor(),
@@ -135,6 +138,7 @@ export const CreateEventModal = () => {
 						value={descriptionRich}
 						autoFocus
 						onChange={(value) => {
+							setDescriptionPlain(value.plainText)
 							setDescriptionRich(value.richText)
 							setCreationError(null)
 						}}

@@ -355,13 +355,6 @@ export type EnumWorldAccessModeWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumWorldAccessModeFilter<$PrismaModel>
 }
 
-export type EnumWorldEventTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.WorldEventType | Prisma.EnumWorldEventTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.WorldEventType[] | Prisma.ListEnumWorldEventTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.WorldEventType[] | Prisma.ListEnumWorldEventTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumWorldEventTypeFilter<$PrismaModel> | $Enums.WorldEventType
-}
-
 export type BigIntNullableFilter<$PrismaModel = never> = {
   equals?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel> | null
   in?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel> | null
@@ -371,16 +364,6 @@ export type BigIntNullableFilter<$PrismaModel = never> = {
   gt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
   gte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
   not?: Prisma.NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
-}
-
-export type EnumWorldEventTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.WorldEventType | Prisma.EnumWorldEventTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.WorldEventType[] | Prisma.ListEnumWorldEventTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.WorldEventType[] | Prisma.ListEnumWorldEventTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumWorldEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.WorldEventType
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumWorldEventTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumWorldEventTypeFilter<$PrismaModel>
 }
 
 export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -753,13 +736,6 @@ export type NestedEnumWorldAccessModeWithAggregatesFilter<$PrismaModel = never> 
   _max?: Prisma.NestedEnumWorldAccessModeFilter<$PrismaModel>
 }
 
-export type NestedEnumWorldEventTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.WorldEventType | Prisma.EnumWorldEventTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.WorldEventType[] | Prisma.ListEnumWorldEventTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.WorldEventType[] | Prisma.ListEnumWorldEventTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumWorldEventTypeFilter<$PrismaModel> | $Enums.WorldEventType
-}
-
 export type NestedBigIntNullableFilter<$PrismaModel = never> = {
   equals?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel> | null
   in?: bigint[] | number[] | Prisma.ListBigIntFieldRefInput<$PrismaModel> | null
@@ -769,16 +745,6 @@ export type NestedBigIntNullableFilter<$PrismaModel = never> = {
   gt?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
   gte?: bigint | number | Prisma.BigIntFieldRefInput<$PrismaModel>
   not?: Prisma.NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
-}
-
-export type NestedEnumWorldEventTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.WorldEventType | Prisma.EnumWorldEventTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.WorldEventType[] | Prisma.ListEnumWorldEventTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.WorldEventType[] | Prisma.ListEnumWorldEventTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumWorldEventTypeWithAggregatesFilter<$PrismaModel> | $Enums.WorldEventType
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumWorldEventTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumWorldEventTypeFilter<$PrismaModel>
 }
 
 export type NestedBigIntNullableWithAggregatesFilter<$PrismaModel = never> = {

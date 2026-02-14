@@ -1,7 +1,6 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
-import { EntityNameService } from '@src/services/EntityNameService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
 import { ValidationService } from '@src/services/ValidationService.js'
@@ -79,18 +78,10 @@ router.put('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
 
-	const baseEvent = await WorldEventService.fetchWorldEvent(eventId)
-	const entityName = EntityNameService.getEventUpdateName({
-		name: baseEvent.name,
-		description: parsed.contentPlain,
-		customNameEnabled: baseEvent.customName,
-	})
-
 	const { event } = await WorldEventService.updateWorldEvent({
 		worldId,
 		eventId,
 		params: {
-			name: entityName,
 			description: parsed.contentPlain,
 			descriptionRich: parsed.contentRich,
 			descriptionYjs: contentDeltas ?? null,
@@ -99,6 +90,10 @@ router.put('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 	})
 
 	RedisService.notifyAboutWorldEventUpdate(ctx, { worldId, event })
+
+	if (!contentDeltas) {
+		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: eventId })
+	}
 })
 
 export const WorldEventContentRouter = router

@@ -31,6 +31,7 @@ export type EventParams = {
 	'world/requestNavigation': NavigateOptions
 	'calliope/onReconnected': void
 	'calliope/requestSendMessage': ClientToCalliopeMessage
+	'calliope/documentReset': { worldId: string; entityId: string }
 	'richEditor/onKeyDown': {
 		editor: Editor
 		key: string

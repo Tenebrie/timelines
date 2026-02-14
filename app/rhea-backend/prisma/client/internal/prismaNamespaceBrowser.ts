@@ -293,7 +293,6 @@ export const WorldEventScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  type: 'type',
   icon: 'icon',
   color: 'color',
   name: 'name',
@@ -302,9 +301,6 @@ export const WorldEventScalarFieldEnum = {
   description: 'description',
   descriptionRich: 'descriptionRich',
   descriptionYjs: 'descriptionYjs',
-  customName: 'customName',
-  externalLink: 'externalLink',
-  extraFields: 'extraFields',
   worldId: 'worldId',
   worldEventTrackId: 'worldEventTrackId'
 } as const

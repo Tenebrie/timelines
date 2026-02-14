@@ -1,7 +1,6 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
-import { EntityNameService } from '@src/services/EntityNameService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
 import { ValidationService } from '@src/services/ValidationService.js'
@@ -29,7 +28,6 @@ import { NullableNameStringValidator } from './validators/NullableNameStringVali
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator.js'
 import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator.js'
 import { UuidStringValidator } from './validators/UuidStringValidator.js'
-import { WorldEventFieldValidator } from './validators/WorldEventFieldValidator.js'
 
 const router = new Router().with(SessionMiddleware)
 
@@ -53,7 +51,7 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		id: OptionalParam(UuidStringValidator),
-		name: OptionalParam(OptionalNameStringValidator),
+		name: RequiredParam(OptionalNameStringValidator),
 		icon: OptionalParam(OptionalNameStringValidator),
 		color: OptionalParam(OptionalNameStringValidator),
 		descriptionRich: RequiredParam(ContentStringValidator),
@@ -69,20 +67,12 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		contentString: params.descriptionRich,
 	})
 
-	const userProvidedName = params.name
-	params.name = EntityNameService.getEventCreateName({
-		name: params.name,
-		description: parsed.contentPlain,
-	})
-
 	const { event, world } = await WorldEventService.createWorldEvent({
 		worldId,
 		createData: {
 			id: params.id,
 			name: params.name,
-			type: 'SCENE',
 			timestamp: params.timestamp,
-			customName: !!userProvidedName,
 		},
 		updateData: {
 			...params,
@@ -112,13 +102,11 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	})
 
 	const params = useRequestBody(ctx, {
-		modules: OptionalParam(WorldEventFieldValidator),
 		name: OptionalParam(OptionalNameStringValidator),
 		icon: OptionalParam(OptionalNameStringValidator),
 		color: OptionalParam(OptionalNameStringValidator),
 		timestamp: OptionalParam(BigIntValidator),
 		revokedAt: OptionalParam(NullableBigIntValidator),
-		customNameEnabled: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(OptionalURLStringValidator),
 		worldEventTrackId: OptionalParam(NullableEventTrackValidator),
 	})
@@ -126,24 +114,13 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
 	const baseEvent = await WorldEventService.fetchWorldEvent(eventId)
-	const customNameEnabled =
-		typeof params.customNameEnabled === 'boolean'
-			? params.customNameEnabled
-			: (params.name && !!params.name.trim()) || baseEvent.customName
 
 	const mappedParams = {
-		extraFields: params.modules,
-		name: EntityNameService.getEventUpdateName({
-			...params,
-			name: params.name ?? baseEvent.name,
-			description: baseEvent.description,
-			customNameEnabled,
-		}),
+		name: params.name ?? baseEvent.name,
 		icon: params.icon,
 		color: params.color,
 		timestamp: params.timestamp,
 		revokedAt: params.revokedAt,
-		customName: params.customNameEnabled,
 		externalLink: params.externalLink,
 		worldEventTrackId: params.worldEventTrackId,
 	}

@@ -54,5 +54,4 @@ export type TimelineEntity<T extends MarkerType> = WorldEvent & {
 	followingEntity: TimelineEntity<MarkerType> | null
 }
 
-export type WorldEventModule = WorldEvent['extraFields'][number]
 export type WorldAccessMode = WorldBrief['accessMode']

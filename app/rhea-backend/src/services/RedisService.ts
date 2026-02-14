@@ -183,4 +183,18 @@ export const RedisService = {
 			},
 		})
 	},
+
+	notifyAboutDocumentReset: (
+		ctx: ContextWithSessionId,
+		{ worldId, entityId }: { worldId: string; entityId: string },
+	) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.DOCUMENT_RESET,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
+				entityId,
+			},
+		})
+	},
 }

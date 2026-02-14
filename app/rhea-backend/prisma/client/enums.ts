@@ -88,21 +88,3 @@ export const WorldAccessMode = {
 } as const
 
 export type WorldAccessMode = (typeof WorldAccessMode)[keyof typeof WorldAccessMode]
-
-
-export const WorldEventType = {
-  SCENE: 'SCENE',
-  OTHER: 'OTHER'
-} as const
-
-export type WorldEventType = (typeof WorldEventType)[keyof typeof WorldEventType]
-
-
-export const WorldEventField = {
-  EventIcon: 'EventIcon',
-  TargetActors: 'TargetActors',
-  MentionedActors: 'MentionedActors',
-  ExternalLink: 'ExternalLink'
-} as const
-
-export type WorldEventField = (typeof WorldEventField)[keyof typeof WorldEventField]

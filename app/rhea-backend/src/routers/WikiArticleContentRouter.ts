@@ -87,6 +87,10 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	})
 
 	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })
+
+	if (!contentDeltas) {
+		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: articleId })
+	}
 })
 
 export const WikiArticleContentRouter = router

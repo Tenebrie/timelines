@@ -18,6 +18,8 @@ import {
 	CalliopeToClientMessageType,
 } from '@/ts-shared/CalliopeToClientMessage'
 
+import { useEventBusDispatch } from '../../eventBus'
+
 export const useLiveMessageHandlers = () => {
 	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState, (a, b) => a.updatedAt === b.updatedAt)
 	const { updateEvent, updateEventDelta, updateActor } = worldSlice.actions
@@ -26,6 +28,8 @@ export const useLiveMessageHandlers = () => {
 	const { upsertCachedArticle } = useArticleApiCache()
 
 	const updatedAtRef = useAutoRef(currentUpdatedAt)
+
+	const notifyAboutDocumentReset = useEventBusDispatch['calliope/documentReset']()
 
 	const messageHandlers: CalliopeToClientMessageHandler = {
 		[CalliopeToClientMessageType.ANNOUNCEMENT]: () => {
@@ -74,6 +78,9 @@ export const useLiveMessageHandlers = () => {
 		},
 		[CalliopeToClientMessageType.TAG_UPDATED]: () => {
 			dispatch(otherApi.util.invalidateTags(['tagList']))
+		},
+		[CalliopeToClientMessageType.DOCUMENT_RESET]: (data) => {
+			notifyAboutDocumentReset(data)
 		},
 	}
 
