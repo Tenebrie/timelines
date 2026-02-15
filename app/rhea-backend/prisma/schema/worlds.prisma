@@ -12,18 +12,6 @@ enum WorldAccessMode {
   PublicEdit
 }
 
-enum WorldEventType {
-  SCENE
-  OTHER
-}
-
-enum WorldEventField {
-  EventIcon
-  TargetActors
-  MentionedActors
-  ExternalLink
-}
-
 model World {
   id        String   @id @unique @default(uuid())
   createdAt DateTime @default(now())
@@ -53,7 +41,6 @@ model WorldEvent {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  type            WorldEventType
   icon            String            @default("default")
   color           String            @default("#000000")
   name            String
@@ -62,9 +49,6 @@ model WorldEvent {
   description     String            @default("")
   descriptionRich String            @default("")
   descriptionYjs  String?
-  customName      Boolean           @default(false)
-  externalLink    String            @default("")
-  extraFields     WorldEventField[]
 
   pages       ContentPage[] @relation("EventContentPage")
   mentions    Mention[]     @relation("EventMentionSource")

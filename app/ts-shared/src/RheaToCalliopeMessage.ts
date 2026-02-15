@@ -18,6 +18,7 @@ export enum RheaToCalliopeMessageType {
 	TAG_UPDATED = 'tagUpdated',
 	WIKI_ARTICLE_UPDATED = 'wikiArticleUpdated',
 	WIKI_ARTICLE_DELETED = 'wikiArticleDeleted',
+	DOCUMENT_RESET = 'documentReset',
 }
 
 export type RheaToCalliopeMessagePayload = {
@@ -70,6 +71,10 @@ export type RheaToCalliopeMessagePayload = {
 		worldId: string
 		// TODO: Type properly
 		tag: string
+	}
+	[RheaToCalliopeMessageType.DOCUMENT_RESET]: {
+		worldId: string
+		entityId: string
 	}
 }
 

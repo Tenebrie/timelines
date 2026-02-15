@@ -110,12 +110,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		icon: string
 		color: string
 		descriptionRich: string
-		type: 'SCENE' | 'OTHER'
 		timestamp: string
 		revokedAt?: null | string
-		customName: boolean
-		externalLink: string
-		extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 		worldEventTrackId?: null | string
 	}[]
 	tags: {

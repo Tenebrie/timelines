@@ -92,6 +92,10 @@ router.put('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 	})
 
 	RedisService.notifyAboutActorUpdate(ctx, { worldId, actor })
+
+	if (!contentDeltas) {
+		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: actorId })
+	}
 })
 
 router.get('/api/world/:worldId/actor/:actorId/content/pages/:pageId', async (ctx) => {
@@ -193,6 +197,10 @@ router.put('/api/world/:worldId/actor/:actorId/content/pages/:pageId', async (ct
 	})
 
 	RedisService.notifyAboutActorUpdate(ctx, { worldId, actor })
+
+	if (!contentDeltas) {
+		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: pageId })
+	}
 })
 
 router.delete('/api/world/:worldId/actor/:actorId/content/pages/:pageId', async (ctx) => {

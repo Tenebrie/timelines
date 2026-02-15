@@ -1,11 +1,9 @@
 import { Prisma } from '@prisma/client'
-import { unwrapParam } from '@src/utils/unwrapParam.js'
 
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { fetchWorldEventDetailsOrThrow } from './dbQueries/fetchWorldEventDetailsOrThrow.js'
 import { fetchWorldEventOrThrow } from './dbQueries/fetchWorldEventOrThrow.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
-import { makeUpdateDeltaStateNamesQueries } from './dbQueries/makeUpdateDeltaStateNamesQueries.js'
 import {
 	makeUpdateWorldEventQuery,
 	UpdateWorldEventQueryParams,
@@ -72,19 +70,11 @@ export const WorldEventService = {
 		eventId: string
 		params: UpdateWorldEventQueryParams
 	}) => {
-		const eventBeforeUpdate = await WorldEventService.fetchWorldEventWithDetails(eventId)
-
 		return getPrismaClient().$transaction(async (prisma) => {
 			await makeUpdateWorldEventQuery({
 				eventId,
 				params,
 				prisma,
-			})
-
-			await makeUpdateDeltaStateNamesQueries({
-				event: eventBeforeUpdate,
-				customName: unwrapParam(params.name),
-				customNameEnabled: unwrapParam(params.customName),
 			})
 
 			const world = await makeTouchWorldQuery(worldId, prisma)
@@ -121,14 +111,6 @@ export const WorldEventService = {
 		eventId: string
 		revokedAt: bigint
 	}) => {
-		const event = await getPrismaClient().worldEvent.findFirstOrThrow({
-			where: {
-				id: eventId,
-			},
-			select: {
-				extraFields: true,
-			},
-		})
 		const [statement, world] = await getPrismaClient().$transaction([
 			getPrismaClient().worldEvent.update({
 				where: {
@@ -136,7 +118,6 @@ export const WorldEventService = {
 				},
 				data: {
 					revokedAt,
-					extraFields: event.extraFields,
 				},
 			}),
 			makeTouchWorldQuery(worldId),

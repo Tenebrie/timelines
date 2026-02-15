@@ -9,6 +9,7 @@ import {
 } from '@src/ts-shared/RheaToCalliopeMessage.js'
 
 import { WebsocketService } from './WebsocketService.js'
+import { YjsSyncService } from './YjsSyncService.js'
 
 /**
  * Relays a message to all sockets of a user
@@ -90,6 +91,11 @@ const handlers: RheaToCalliopeMessageHandlers = {
 	},
 	[RheaToCalliopeMessageType.TAG_UPDATED]: function (ctx): void {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.TAG_UPDATED, ...ctx })
+	},
+
+	[RheaToCalliopeMessageType.DOCUMENT_RESET]: async (ctx) => {
+		await YjsSyncService.resetDocument(ctx.data.worldId, ctx.data.entityId)
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.DOCUMENT_RESET, ...ctx })
 	},
 }
 

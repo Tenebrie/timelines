@@ -1998,7 +1998,6 @@ export const WorldEventScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  type: 'type',
   icon: 'icon',
   color: 'color',
   name: 'name',
@@ -2007,9 +2006,6 @@ export const WorldEventScalarFieldEnum = {
   description: 'description',
   descriptionRich: 'descriptionRich',
   descriptionYjs: 'descriptionYjs',
-  customName: 'customName',
-  externalLink: 'externalLink',
-  extraFields: 'extraFields',
   worldId: 'worldId',
   worldEventTrackId: 'worldEventTrackId'
 } as const
@@ -2260,34 +2256,6 @@ export type EnumWorldAccessModeFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'WorldAccessMode[]'
  */
 export type ListEnumWorldAccessModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorldAccessMode[]'>
-    
-
-
-/**
- * Reference to a field of type 'WorldEventType'
- */
-export type EnumWorldEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorldEventType'>
-    
-
-
-/**
- * Reference to a field of type 'WorldEventType[]'
- */
-export type ListEnumWorldEventTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorldEventType[]'>
-    
-
-
-/**
- * Reference to a field of type 'WorldEventField[]'
- */
-export type ListEnumWorldEventFieldFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorldEventField[]'>
-    
-
-
-/**
- * Reference to a field of type 'WorldEventField'
- */
-export type EnumWorldEventFieldFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorldEventField'>
     
 
 

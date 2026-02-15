@@ -34,31 +34,31 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		node: null | {
-			worldId: string
 			id: string
 			createdAt: string
 			updatedAt: string
+			worldId: string
 			parentActorId?: null | string
 			positionX: number
 			positionY: number
 		}
-		worldId: string
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		worldId: string
 		title: string
 		icon: string
 		color: string
-		description: string
 		descriptionRich: string
 	}[]
 	articles: {
-		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		worldId: string
 		icon: string
 		color: string
 		contentRich: string
@@ -79,39 +79,35 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		deltaStates: {
+			description?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name?: null | string
-			description?: null | string
 			descriptionRich?: null | string
 			timestamp: string
 			worldEventId: string
 		}[]
-		worldId: string
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		worldId: string
 		icon: string
 		color: string
-		description: string
 		descriptionRich: string
-		type: 'SCENE' | 'OTHER'
 		timestamp: string
 		revokedAt?: null | string
-		customName: boolean
-		externalLink: string
-		extraFields: ('EventIcon' | 'TargetActors' | 'MentionedActors' | 'ExternalLink')[]
 		worldEventTrackId?: null | string
 	}[]
 	tags: {
-		worldId: string
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		description: string
+		worldId: string
 	}[]
 }
 export type SearchWorldApiArg = {
