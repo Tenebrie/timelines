@@ -1,6 +1,5 @@
 import Add from '@mui/icons-material/Add'
 import CalendarMonth from '@mui/icons-material/CalendarMonth'
-import Delete from '@mui/icons-material/Delete'
 import Edit from '@mui/icons-material/Edit'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -18,11 +17,14 @@ import Typography from '@mui/material/Typography'
 import { useCallback, useState } from 'react'
 
 import { useCreateCalendarMutation, useListCalendarsQuery } from '@/api/calendarApi'
+import { CalendarSelector } from '@/app/features/time/calendar/components/CalendarSelector'
+import { DeleteCalendarButton } from '@/app/views/calendar/list/components/DeleteCalendarButton'
 import { formatTimeAgo } from '@/app/views/home/utils/formatTimeAgo'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 export function CalendarListView() {
 	const [newCalendarName, setNewCalendarName] = useState('')
+	const [selectedTemplate, setSelectedTemplate] = useState<string | undefined>()
 	const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
 	const navigate = useStableNavigate()
 
@@ -30,15 +32,19 @@ export function CalendarListView() {
 	const [createCalendar, { isLoading: isCreating }] = useCreateCalendarMutation()
 
 	const handleCreateCalendar = useCallback(async () => {
-		if (!newCalendarName.trim()) return
+		if (!newCalendarName.trim()) {
+			return
+		}
 
-		const result = await createCalendar({ body: { name: newCalendarName.trim() } })
+		const result = await createCalendar({
+			body: { name: newCalendarName.trim(), templateId: selectedTemplate },
+		})
 		if ('data' in result && result.data) {
 			setNewCalendarName('')
 			setAnchorEl(null)
 			navigate({ to: '/calendar/$calendarId', params: { calendarId: result.data.id } })
 		}
-	}, [newCalendarName, createCalendar, navigate])
+	}, [newCalendarName, createCalendar, selectedTemplate, navigate])
 
 	const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget)
@@ -55,11 +61,6 @@ export function CalendarListView() {
 
 	const onEdit = (calendarId: string) => {
 		navigate({ to: '/calendar/$calendarId', params: { calendarId } })
-	}
-
-	const onDelete = (calendar: { id: string; name: string }) => {
-		// TODO: Add delete calendar modal
-		console.info('Delete calendar:', calendar)
 	}
 
 	if (isLoading) {
@@ -126,6 +127,12 @@ export function CalendarListView() {
 									autoFocus
 									fullWidth
 									disabled={isCreating}
+								/>
+								<CalendarSelector
+									label="Base Calendar"
+									value={selectedTemplate}
+									onChange={setSelectedTemplate}
+									allowEmpty
 								/>
 								<Button
 									variant="contained"
@@ -200,19 +207,7 @@ export function CalendarListView() {
 													<Edit fontSize="small" />
 												</IconButton>
 											</Tooltip>
-											<Tooltip title="Delete calendar" disableInteractive enterDelay={500}>
-												<IconButton
-													size="small"
-													aria-label="Delete calendar button"
-													onClick={(e) => {
-														e.stopPropagation()
-														onDelete(calendar)
-													}}
-													color="error"
-												>
-													<Delete fontSize="small" />
-												</IconButton>
-											</Tooltip>
+											<DeleteCalendarButton calendarId={calendar.id} calendarName={calendar.name} />
 										</Stack>
 									</Stack>
 								</ButtonBase>

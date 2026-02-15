@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client'
+import { TransactionClient } from 'prisma/client/internal/prismaNamespace.js'
 import {
 	CalendarUncheckedCreateInput,
 	CalendarUnitCreateManyCalendarInput,
@@ -176,7 +177,7 @@ export const CalendarService = {
 				data: {
 					...params,
 					calendarId,
-					position: params.position * 2,
+					position: params.position !== undefined ? params.position * 2 : undefined,
 				},
 			})
 
@@ -364,7 +365,7 @@ export const CalendarService = {
 				const sortedUnits = [...params.units].sort((a, b) => {
 					const durationA = durationMap.get(a.unitId) ?? 0
 					const durationB = durationMap.get(b.unitId) ?? 0
-					return durationB - durationA
+					return Number(durationB) - Number(durationA)
 				})
 
 				// Create new units
@@ -385,20 +386,7 @@ export const CalendarService = {
 				}
 			}
 
-			const existingPresentation = await dbClient.calendarPresentation.findFirstOrThrow({
-				where: {
-					id: presentationId,
-				},
-				include: {
-					units: {
-						include: {
-							unit: true,
-						},
-					},
-				},
-			})
-			const scaleFactor =
-				existingPresentation.units.sort((a, b) => a.unit.duration - b.unit.duration)[0]?.unit.duration ?? 1
+			await CalendarService.computePresentationFactor({ calendarId, presentationId, dbClient })
 
 			const presentation = await dbClient.calendarPresentation.update({
 				where: {
@@ -407,7 +395,6 @@ export const CalendarService = {
 				},
 				data: {
 					name: params.name,
-					scaleFactor,
 				},
 				include: {
 					units: {
@@ -423,6 +410,52 @@ export const CalendarService = {
 		})
 
 		return { presentation }
+	},
+
+	computePresentationFactor: async ({
+		calendarId,
+		presentationId,
+		dbClient,
+	}: {
+		calendarId: string
+		presentationId: string
+		dbClient: TransactionClient
+	}) => {
+		const existingPresentation = await dbClient.calendarPresentation.findFirstOrThrow({
+			where: {
+				calendarId,
+				id: presentationId,
+			},
+			include: {
+				units: {
+					include: {
+						unit: true,
+					},
+				},
+			},
+		})
+		const scaleFactor =
+			existingPresentation.units.sort((a, b) => Number(a.unit.duration) - Number(b.unit.duration))[0]?.unit
+				.duration ?? 1
+
+		await dbClient.calendarPresentation.update({
+			where: {
+				id: presentationId,
+				calendarId,
+			},
+			data: {
+				scaleFactor: Number(scaleFactor) * existingPresentation.compression,
+			},
+			include: {
+				units: {
+					include: {
+						unit: true,
+					},
+				},
+			},
+		})
+
+		await makeTouchCalendarQuery(calendarId, dbClient)
 	},
 
 	deleteCalendarPresentation: async ({
@@ -551,6 +584,28 @@ export const CalendarService = {
 		)
 	},
 
+	computeCalendarPresentationFactors: async ({
+		calendarId,
+		dbClient,
+	}: {
+		calendarId: string
+		dbClient: TransactionClient
+	}) => {
+		const presentations = await dbClient.calendarPresentation.findMany({
+			where: {
+				calendarId,
+			},
+		})
+
+		for (const presentation of presentations) {
+			await CalendarService.computePresentationFactor({
+				calendarId,
+				presentationId: presentation.id,
+				dbClient,
+			})
+		}
+	},
+
 	assignCalendarsToWorld: async ({
 		prisma,
 		worldId,
@@ -603,11 +658,13 @@ export const CalendarService = {
 		calendarId,
 		worldId,
 		ownerId,
+		name,
 		prisma,
 	}: {
 		calendarId: string
 		worldId?: string | null
 		ownerId?: string | null
+		name?: string
 		prisma?: Prisma.TransactionClient
 	}) => {
 		const tx = getPrismaClient(prisma)
@@ -647,6 +704,13 @@ export const CalendarService = {
 				ownerId: ownerId ?? null,
 			},
 		})
+
+		if (name) {
+			await tx.calendar.update({
+				where: { id: newCalendar.id },
+				data: { name },
+			})
+		}
 
 		// 3. Create all units, tracking old ID → new ID
 		const unitIdMap = new Map<string, string>()

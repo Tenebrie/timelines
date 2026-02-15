@@ -153,7 +153,11 @@ export const mockApiEventModel = (
 })
 
 export const mockCalendarUnit = (
-	overrides: Partial<GetCalendarPreviewApiResponse['units'][number]> & { id: string; name: string },
+	overrides: Omit<Partial<GetCalendarPreviewApiResponse['units'][number]>, 'duration'> & {
+		id: string
+		name: string
+		duration: number
+	},
 ): GetCalendarPreviewApiResponse['units'][number] => ({
 	calendarId: overrides.calendarId ?? 'calendar-1',
 	id: overrides.id,
@@ -167,7 +171,7 @@ export const mockCalendarUnit = (
 	formatMode: overrides.formatMode ?? 'Numeric',
 	formatShorthand: overrides.formatShorthand ?? null,
 	negativeFormat: overrides.negativeFormat ?? 'MinusSign',
-	duration: overrides.duration ?? 1,
+	duration: String(overrides.duration ?? 1),
 	treeDepth: overrides.treeDepth ?? 0,
 	children: overrides.children ?? [],
 	parents: overrides.parents ?? [],

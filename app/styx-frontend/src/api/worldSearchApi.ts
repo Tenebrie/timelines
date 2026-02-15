@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['worldSearch', 'worldDetails', 'tagList'] as const
+export const addTagTypes = ['worldSearch', 'worldDetails', 'worldTag'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -13,7 +13,7 @@ const injectedRtkApi = api
 						mode: queryArg.mode,
 					},
 				}),
-				providesTags: ['worldSearch', 'worldDetails', 'tagList'],
+				providesTags: ['worldSearch', 'worldDetails', 'worldTag'],
 			}),
 		}),
 		overrideExisting: false,

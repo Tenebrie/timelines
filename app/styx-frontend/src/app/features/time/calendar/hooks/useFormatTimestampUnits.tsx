@@ -37,8 +37,11 @@ export function useFormatTimestampUnits({
 				return
 			}
 
-			const caseSensitive =
+			const formatHasBothCases =
 				dateFormat.includes(current.symbol.toLowerCase()) && dateFormat.includes(current.symbol.toUpperCase())
+			const multipleUnitsShareLetter =
+				units.filter((u) => u.formatShorthand?.toLowerCase() === current.symbol.toLowerCase()).length > 1
+			const caseSensitive = formatHasBothCases || multipleUnitsShareLetter
 			const unit = units.find((u) => {
 				if (!parsed.get(u.id)) {
 					return false
@@ -110,7 +113,8 @@ export function useFormatTimestampUnits({
 
 	const format = ({ timestamp, dateFormat }: { timestamp: number; dateFormat?: string }) => {
 		const dateFormatToUse = dateFormat ?? dateFormatString
-		const formatted = formatParsed(parse({ timestamp: timestamp + originTime }), dateFormatToUse)
+		const parsed = parse({ timestamp: timestamp + originTime })
+		const formatted = formatParsed(parsed, dateFormatToUse)
 		return formatted.substring(0, 1).toUpperCase() + formatted.substring(1)
 	}
 

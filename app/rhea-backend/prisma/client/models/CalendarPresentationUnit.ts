@@ -20,8 +20,18 @@ export type CalendarPresentationUnitModel = runtime.Types.Result.DefaultSelectio
 
 export type AggregateCalendarPresentationUnit = {
   _count: CalendarPresentationUnitCountAggregateOutputType | null
+  _avg: CalendarPresentationUnitAvgAggregateOutputType | null
+  _sum: CalendarPresentationUnitSumAggregateOutputType | null
   _min: CalendarPresentationUnitMinAggregateOutputType | null
   _max: CalendarPresentationUnitMaxAggregateOutputType | null
+}
+
+export type CalendarPresentationUnitAvgAggregateOutputType = {
+  subdivision: number | null
+}
+
+export type CalendarPresentationUnitSumAggregateOutputType = {
+  subdivision: number | null
 }
 
 export type CalendarPresentationUnitMinAggregateOutputType = {
@@ -30,6 +40,7 @@ export type CalendarPresentationUnitMinAggregateOutputType = {
   updatedAt: Date | null
   name: string | null
   formatString: string | null
+  subdivision: number | null
   unitId: string | null
   presentationId: string | null
 }
@@ -40,6 +51,7 @@ export type CalendarPresentationUnitMaxAggregateOutputType = {
   updatedAt: Date | null
   name: string | null
   formatString: string | null
+  subdivision: number | null
   unitId: string | null
   presentationId: string | null
 }
@@ -50,11 +62,20 @@ export type CalendarPresentationUnitCountAggregateOutputType = {
   updatedAt: number
   name: number
   formatString: number
+  subdivision: number
   unitId: number
   presentationId: number
   _all: number
 }
 
+
+export type CalendarPresentationUnitAvgAggregateInputType = {
+  subdivision?: true
+}
+
+export type CalendarPresentationUnitSumAggregateInputType = {
+  subdivision?: true
+}
 
 export type CalendarPresentationUnitMinAggregateInputType = {
   id?: true
@@ -62,6 +83,7 @@ export type CalendarPresentationUnitMinAggregateInputType = {
   updatedAt?: true
   name?: true
   formatString?: true
+  subdivision?: true
   unitId?: true
   presentationId?: true
 }
@@ -72,6 +94,7 @@ export type CalendarPresentationUnitMaxAggregateInputType = {
   updatedAt?: true
   name?: true
   formatString?: true
+  subdivision?: true
   unitId?: true
   presentationId?: true
 }
@@ -82,6 +105,7 @@ export type CalendarPresentationUnitCountAggregateInputType = {
   updatedAt?: true
   name?: true
   formatString?: true
+  subdivision?: true
   unitId?: true
   presentationId?: true
   _all?: true
@@ -125,6 +149,18 @@ export type CalendarPresentationUnitAggregateArgs<ExtArgs extends runtime.Types.
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: CalendarPresentationUnitAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: CalendarPresentationUnitSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: CalendarPresentationUnitMinAggregateInputType
@@ -155,6 +191,8 @@ export type CalendarPresentationUnitGroupByArgs<ExtArgs extends runtime.Types.Ex
   take?: number
   skip?: number
   _count?: CalendarPresentationUnitCountAggregateInputType | true
+  _avg?: CalendarPresentationUnitAvgAggregateInputType
+  _sum?: CalendarPresentationUnitSumAggregateInputType
   _min?: CalendarPresentationUnitMinAggregateInputType
   _max?: CalendarPresentationUnitMaxAggregateInputType
 }
@@ -165,9 +203,12 @@ export type CalendarPresentationUnitGroupByOutputType = {
   updatedAt: Date
   name: string
   formatString: string
+  subdivision: number
   unitId: string
   presentationId: string
   _count: CalendarPresentationUnitCountAggregateOutputType | null
+  _avg: CalendarPresentationUnitAvgAggregateOutputType | null
+  _sum: CalendarPresentationUnitSumAggregateOutputType | null
   _min: CalendarPresentationUnitMinAggregateOutputType | null
   _max: CalendarPresentationUnitMaxAggregateOutputType | null
 }
@@ -196,6 +237,7 @@ export type CalendarPresentationUnitWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"CalendarPresentationUnit"> | Date | string
   name?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   formatString?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
+  subdivision?: Prisma.IntFilter<"CalendarPresentationUnit"> | number
   unitId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   presentationId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   unit?: Prisma.XOR<Prisma.CalendarUnitScalarRelationFilter, Prisma.CalendarUnitWhereInput>
@@ -208,6 +250,7 @@ export type CalendarPresentationUnitOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   formatString?: Prisma.SortOrder
+  subdivision?: Prisma.SortOrder
   unitId?: Prisma.SortOrder
   presentationId?: Prisma.SortOrder
   unit?: Prisma.CalendarUnitOrderByWithRelationInput
@@ -223,6 +266,7 @@ export type CalendarPresentationUnitWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"CalendarPresentationUnit"> | Date | string
   name?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   formatString?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
+  subdivision?: Prisma.IntFilter<"CalendarPresentationUnit"> | number
   unitId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   presentationId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   unit?: Prisma.XOR<Prisma.CalendarUnitScalarRelationFilter, Prisma.CalendarUnitWhereInput>
@@ -235,11 +279,14 @@ export type CalendarPresentationUnitOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   formatString?: Prisma.SortOrder
+  subdivision?: Prisma.SortOrder
   unitId?: Prisma.SortOrder
   presentationId?: Prisma.SortOrder
   _count?: Prisma.CalendarPresentationUnitCountOrderByAggregateInput
+  _avg?: Prisma.CalendarPresentationUnitAvgOrderByAggregateInput
   _max?: Prisma.CalendarPresentationUnitMaxOrderByAggregateInput
   _min?: Prisma.CalendarPresentationUnitMinOrderByAggregateInput
+  _sum?: Prisma.CalendarPresentationUnitSumOrderByAggregateInput
 }
 
 export type CalendarPresentationUnitScalarWhereWithAggregatesInput = {
@@ -251,6 +298,7 @@ export type CalendarPresentationUnitScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CalendarPresentationUnit"> | Date | string
   name?: Prisma.StringWithAggregatesFilter<"CalendarPresentationUnit"> | string
   formatString?: Prisma.StringWithAggregatesFilter<"CalendarPresentationUnit"> | string
+  subdivision?: Prisma.IntWithAggregatesFilter<"CalendarPresentationUnit"> | number
   unitId?: Prisma.StringWithAggregatesFilter<"CalendarPresentationUnit"> | string
   presentationId?: Prisma.StringWithAggregatesFilter<"CalendarPresentationUnit"> | string
 }
@@ -261,6 +309,7 @@ export type CalendarPresentationUnitCreateInput = {
   updatedAt?: Date | string
   name: string
   formatString: string
+  subdivision?: number
   unit: Prisma.CalendarUnitCreateNestedOneWithoutPresentationsInput
   presentation: Prisma.CalendarPresentationCreateNestedOneWithoutUnitsInput
 }
@@ -271,6 +320,7 @@ export type CalendarPresentationUnitUncheckedCreateInput = {
   updatedAt?: Date | string
   name: string
   formatString: string
+  subdivision?: number
   unitId: string
   presentationId: string
 }
@@ -281,6 +331,7 @@ export type CalendarPresentationUnitUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   formatString?: Prisma.StringFieldUpdateOperationsInput | string
+  subdivision?: Prisma.IntFieldUpdateOperationsInput | number
   unit?: Prisma.CalendarUnitUpdateOneRequiredWithoutPresentationsNestedInput
   presentation?: Prisma.CalendarPresentationUpdateOneRequiredWithoutUnitsNestedInput
 }
@@ -291,6 +342,7 @@ export type CalendarPresentationUnitUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   formatString?: Prisma.StringFieldUpdateOperationsInput | string
+  subdivision?: Prisma.IntFieldUpdateOperationsInput | number
   unitId?: Prisma.StringFieldUpdateOperationsInput | string
   presentationId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -301,6 +353,7 @@ export type CalendarPresentationUnitCreateManyInput = {
   updatedAt?: Date | string
   name: string
   formatString: string
+  subdivision?: number
   unitId: string
   presentationId: string
 }
@@ -311,6 +364,7 @@ export type CalendarPresentationUnitUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   formatString?: Prisma.StringFieldUpdateOperationsInput | string
+  subdivision?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type CalendarPresentationUnitUncheckedUpdateManyInput = {
@@ -319,6 +373,7 @@ export type CalendarPresentationUnitUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   formatString?: Prisma.StringFieldUpdateOperationsInput | string
+  subdivision?: Prisma.IntFieldUpdateOperationsInput | number
   unitId?: Prisma.StringFieldUpdateOperationsInput | string
   presentationId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -339,8 +394,13 @@ export type CalendarPresentationUnitCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   formatString?: Prisma.SortOrder
+  subdivision?: Prisma.SortOrder
   unitId?: Prisma.SortOrder
   presentationId?: Prisma.SortOrder
+}
+
+export type CalendarPresentationUnitAvgOrderByAggregateInput = {
+  subdivision?: Prisma.SortOrder
 }
 
 export type CalendarPresentationUnitMaxOrderByAggregateInput = {
@@ -349,6 +409,7 @@ export type CalendarPresentationUnitMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   formatString?: Prisma.SortOrder
+  subdivision?: Prisma.SortOrder
   unitId?: Prisma.SortOrder
   presentationId?: Prisma.SortOrder
 }
@@ -359,8 +420,13 @@ export type CalendarPresentationUnitMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   formatString?: Prisma.SortOrder
+  subdivision?: Prisma.SortOrder
   unitId?: Prisma.SortOrder
   presentationId?: Prisma.SortOrder
+}
+
+export type CalendarPresentationUnitSumOrderByAggregateInput = {
+  subdivision?: Prisma.SortOrder
 }
 
 export type CalendarPresentationUnitCreateNestedManyWithoutUnitInput = {
@@ -453,6 +519,7 @@ export type CalendarPresentationUnitCreateWithoutUnitInput = {
   updatedAt?: Date | string
   name: string
   formatString: string
+  subdivision?: number
   presentation: Prisma.CalendarPresentationCreateNestedOneWithoutUnitsInput
 }
 
@@ -462,6 +529,7 @@ export type CalendarPresentationUnitUncheckedCreateWithoutUnitInput = {
   updatedAt?: Date | string
   name: string
   formatString: string
+  subdivision?: number
   presentationId: string
 }
 
@@ -500,6 +568,7 @@ export type CalendarPresentationUnitScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"CalendarPresentationUnit"> | Date | string
   name?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   formatString?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
+  subdivision?: Prisma.IntFilter<"CalendarPresentationUnit"> | number
   unitId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   presentationId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
 }
@@ -510,6 +579,7 @@ export type CalendarPresentationUnitCreateWithoutPresentationInput = {
   updatedAt?: Date | string
   name: string
   formatString: string
+  subdivision?: number
   unit: Prisma.CalendarUnitCreateNestedOneWithoutPresentationsInput
 }
 
@@ -519,6 +589,7 @@ export type CalendarPresentationUnitUncheckedCreateWithoutPresentationInput = {
   updatedAt?: Date | string
   name: string
   formatString: string
+  subdivision?: number
   unitId: string
 }
 
@@ -554,6 +625,7 @@ export type CalendarPresentationUnitCreateManyUnitInput = {
   updatedAt?: Date | string
   name: string
   formatString: string
+  subdivision?: number
   presentationId: string
 }
 
@@ -563,6 +635,7 @@ export type CalendarPresentationUnitUpdateWithoutUnitInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   formatString?: Prisma.StringFieldUpdateOperationsInput | string
+  subdivision?: Prisma.IntFieldUpdateOperationsInput | number
   presentation?: Prisma.CalendarPresentationUpdateOneRequiredWithoutUnitsNestedInput
 }
 
@@ -572,6 +645,7 @@ export type CalendarPresentationUnitUncheckedUpdateWithoutUnitInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   formatString?: Prisma.StringFieldUpdateOperationsInput | string
+  subdivision?: Prisma.IntFieldUpdateOperationsInput | number
   presentationId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -581,6 +655,7 @@ export type CalendarPresentationUnitUncheckedUpdateManyWithoutUnitInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   formatString?: Prisma.StringFieldUpdateOperationsInput | string
+  subdivision?: Prisma.IntFieldUpdateOperationsInput | number
   presentationId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -590,6 +665,7 @@ export type CalendarPresentationUnitCreateManyPresentationInput = {
   updatedAt?: Date | string
   name: string
   formatString: string
+  subdivision?: number
   unitId: string
 }
 
@@ -599,6 +675,7 @@ export type CalendarPresentationUnitUpdateWithoutPresentationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   formatString?: Prisma.StringFieldUpdateOperationsInput | string
+  subdivision?: Prisma.IntFieldUpdateOperationsInput | number
   unit?: Prisma.CalendarUnitUpdateOneRequiredWithoutPresentationsNestedInput
 }
 
@@ -608,6 +685,7 @@ export type CalendarPresentationUnitUncheckedUpdateWithoutPresentationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   formatString?: Prisma.StringFieldUpdateOperationsInput | string
+  subdivision?: Prisma.IntFieldUpdateOperationsInput | number
   unitId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -617,6 +695,7 @@ export type CalendarPresentationUnitUncheckedUpdateManyWithoutPresentationInput 
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   formatString?: Prisma.StringFieldUpdateOperationsInput | string
+  subdivision?: Prisma.IntFieldUpdateOperationsInput | number
   unitId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -628,6 +707,7 @@ export type CalendarPresentationUnitSelect<ExtArgs extends runtime.Types.Extensi
   updatedAt?: boolean
   name?: boolean
   formatString?: boolean
+  subdivision?: boolean
   unitId?: boolean
   presentationId?: boolean
   unit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
@@ -640,6 +720,7 @@ export type CalendarPresentationUnitSelectCreateManyAndReturn<ExtArgs extends ru
   updatedAt?: boolean
   name?: boolean
   formatString?: boolean
+  subdivision?: boolean
   unitId?: boolean
   presentationId?: boolean
   unit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
@@ -652,6 +733,7 @@ export type CalendarPresentationUnitSelectUpdateManyAndReturn<ExtArgs extends ru
   updatedAt?: boolean
   name?: boolean
   formatString?: boolean
+  subdivision?: boolean
   unitId?: boolean
   presentationId?: boolean
   unit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
@@ -664,11 +746,12 @@ export type CalendarPresentationUnitSelectScalar = {
   updatedAt?: boolean
   name?: boolean
   formatString?: boolean
+  subdivision?: boolean
   unitId?: boolean
   presentationId?: boolean
 }
 
-export type CalendarPresentationUnitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "formatString" | "unitId" | "presentationId", ExtArgs["result"]["calendarPresentationUnit"]>
+export type CalendarPresentationUnitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "formatString" | "subdivision" | "unitId" | "presentationId", ExtArgs["result"]["calendarPresentationUnit"]>
 export type CalendarPresentationUnitInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   unit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
   presentation?: boolean | Prisma.CalendarPresentationDefaultArgs<ExtArgs>
@@ -694,6 +777,7 @@ export type $CalendarPresentationUnitPayload<ExtArgs extends runtime.Types.Exten
     updatedAt: Date
     name: string
     formatString: string
+    subdivision: number
     unitId: string
     presentationId: string
   }, ExtArgs["result"]["calendarPresentationUnit"]>
@@ -1126,6 +1210,7 @@ export interface CalendarPresentationUnitFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"CalendarPresentationUnit", 'DateTime'>
   readonly name: Prisma.FieldRef<"CalendarPresentationUnit", 'String'>
   readonly formatString: Prisma.FieldRef<"CalendarPresentationUnit", 'String'>
+  readonly subdivision: Prisma.FieldRef<"CalendarPresentationUnit", 'Int'>
   readonly unitId: Prisma.FieldRef<"CalendarPresentationUnit", 'String'>
   readonly presentationId: Prisma.FieldRef<"CalendarPresentationUnit", 'String'>
 }

@@ -88,7 +88,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 			formatShorthand?: null | string
 			negativeFormat: 'MinusSign' | 'AbsoluteValue'
-			duration: number
+			duration: string
 			treeDepth: number
 		}[]
 		presentations: {
@@ -100,6 +100,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				unitId: string
 				presentationId: string
 				formatString: string
+				subdivision: number
 			}[]
 			id: string
 			createdAt: string
@@ -107,6 +108,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			name: string
 			calendarId: string
 			scaleFactor: number
+			compression: number
 		}[]
 		seasons: {
 			intervals: {
@@ -216,7 +218,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
@@ -244,7 +246,7 @@ export type GetWorldBriefApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'

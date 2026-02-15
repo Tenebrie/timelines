@@ -332,7 +332,7 @@ export type CalendarCreateInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -347,7 +347,7 @@ export type CalendarUncheckedCreateInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -392,7 +392,7 @@ export type CalendarCreateManyInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -621,7 +621,7 @@ export type CalendarCreateWithoutUnitsInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -635,7 +635,7 @@ export type CalendarUncheckedCreateWithoutUnitsInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -693,7 +693,7 @@ export type CalendarCreateWithoutPresentationsInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -707,7 +707,7 @@ export type CalendarUncheckedCreateWithoutPresentationsInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -765,7 +765,7 @@ export type CalendarCreateWithoutSeasonsInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -779,7 +779,7 @@ export type CalendarUncheckedCreateWithoutSeasonsInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -837,7 +837,7 @@ export type CalendarCreateWithoutOwnerInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -851,7 +851,7 @@ export type CalendarUncheckedCreateWithoutOwnerInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -906,7 +906,7 @@ export type CalendarCreateWithoutWorldInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -920,7 +920,7 @@ export type CalendarUncheckedCreateWithoutWorldInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -960,7 +960,7 @@ export type CalendarCreateManyOwnerInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null
@@ -1010,7 +1010,7 @@ export type CalendarCreateManyWorldInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   originTime?: bigint | number
   name: string
   dateFormat?: string | null

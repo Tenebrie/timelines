@@ -313,7 +313,7 @@ export type CalendarUnitRelationCreateInput = {
   updatedAt?: Date | string
   label?: string | null
   repeats?: number
-  position: number
+  position?: number
   parentUnit: Prisma.CalendarUnitCreateNestedOneWithoutChildrenInput
   childUnit: Prisma.CalendarUnitCreateNestedOneWithoutParentsInput
 }
@@ -324,7 +324,7 @@ export type CalendarUnitRelationUncheckedCreateInput = {
   updatedAt?: Date | string
   label?: string | null
   repeats?: number
-  position: number
+  position?: number
   parentUnitId: string
   childUnitId: string
 }
@@ -357,7 +357,7 @@ export type CalendarUnitRelationCreateManyInput = {
   updatedAt?: Date | string
   label?: string | null
   repeats?: number
-  position: number
+  position?: number
   parentUnitId: string
   childUnitId: string
 }
@@ -525,7 +525,7 @@ export type CalendarUnitRelationCreateWithoutChildUnitInput = {
   updatedAt?: Date | string
   label?: string | null
   repeats?: number
-  position: number
+  position?: number
   parentUnit: Prisma.CalendarUnitCreateNestedOneWithoutChildrenInput
 }
 
@@ -535,7 +535,7 @@ export type CalendarUnitRelationUncheckedCreateWithoutChildUnitInput = {
   updatedAt?: Date | string
   label?: string | null
   repeats?: number
-  position: number
+  position?: number
   parentUnitId: string
 }
 
@@ -555,7 +555,7 @@ export type CalendarUnitRelationCreateWithoutParentUnitInput = {
   updatedAt?: Date | string
   label?: string | null
   repeats?: number
-  position: number
+  position?: number
   childUnit: Prisma.CalendarUnitCreateNestedOneWithoutParentsInput
 }
 
@@ -565,7 +565,7 @@ export type CalendarUnitRelationUncheckedCreateWithoutParentUnitInput = {
   updatedAt?: Date | string
   label?: string | null
   repeats?: number
-  position: number
+  position?: number
   childUnitId: string
 }
 
@@ -631,7 +631,7 @@ export type CalendarUnitRelationCreateManyChildUnitInput = {
   updatedAt?: Date | string
   label?: string | null
   repeats?: number
-  position: number
+  position?: number
   parentUnitId: string
 }
 
@@ -641,7 +641,7 @@ export type CalendarUnitRelationCreateManyParentUnitInput = {
   updatedAt?: Date | string
   label?: string | null
   repeats?: number
-  position: number
+  position?: number
   childUnitId: string
 }
 

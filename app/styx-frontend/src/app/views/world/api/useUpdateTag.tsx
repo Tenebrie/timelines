@@ -1,5 +1,5 @@
-import { useUpdateTagMutation } from '@api/otherApi'
 import { WorldTag } from '@api/types/worldTypes'
+import { useUpdateTagMutation } from '@api/worldTagApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 

@@ -128,6 +128,7 @@ router.get('/api/world/:worldId', async (ctx) => {
 		worldId: PathParam(StringValidator),
 	})
 
+	await WorldService.migrateLegacyCalendar(worldId)
 	const worldDetails = await WorldService.findWorldDetails(worldId)
 	const user = await useOptionalAuth(ctx, UserAuthenticator)
 

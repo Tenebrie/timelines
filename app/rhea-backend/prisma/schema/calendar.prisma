@@ -2,7 +2,7 @@ model Calendar {
     id        String   @id @unique @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
-    position  Int
+    position  Int      @default(0)
 
     originTime BigInt @default(0)
 
@@ -24,7 +24,7 @@ model CalendarUnit {
     id        String   @id @unique @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
-    position  Int
+    position  Int      @default(0)
 
     name              String
     displayName       String?
@@ -35,8 +35,8 @@ model CalendarUnit {
     formatShorthand String?
     negativeFormat  CalendarUnitNegativeFormat @default(MinusSign)
 
-    duration  Int @default(1)
-    treeDepth Int @default(1)
+    duration  BigInt @default(1)
+    treeDepth Int    @default(1)
 
     calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
     calendarId String
@@ -53,7 +53,7 @@ model CalendarUnitRelation {
 
     label    String?
     repeats  Int     @default(1)
-    position Int
+    position Int     @default(0)
 
     parentUnit   CalendarUnit @relation("ParentUnit", fields: [parentUnitId], references: [id], onDelete: Cascade)
     childUnit    CalendarUnit @relation("ChildUnit", fields: [childUnitId], references: [id], onDelete: Cascade)
@@ -87,7 +87,8 @@ model CalendarPresentation {
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
 
-    name String
+    name        String
+    compression Float  @default(1.0)
 
     scaleFactor Float                      @default(1.0)
     units       CalendarPresentationUnit[]
@@ -103,6 +104,7 @@ model CalendarPresentationUnit {
 
     name         String
     formatString String
+    subdivision  Int    @default(1)
 
     unit   CalendarUnit @relation(fields: [unitId], references: [id], onDelete: Cascade)
     unitId String
@@ -123,7 +125,7 @@ model CalendarSeason {
     name            String
     formatShorthand String?
 
-    intervals       CalendarSeasonInterval[]
+    intervals CalendarSeasonInterval[]
 
     calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
     calendarId String

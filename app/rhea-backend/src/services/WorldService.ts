@@ -2,6 +2,7 @@ import { User, World } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 
 import { CalendarService } from './CalendarService.js'
+import { CalendarTemplateService } from './CalendarTemplateService.js'
 
 export const WorldService = {
 	findWorldByIdInternal: async (worldId: string) => {
@@ -247,6 +248,66 @@ export const WorldService = {
 		return getPrismaClient().world.findFirstOrThrow({
 			where: {
 				id: worldId,
+			},
+		})
+	},
+
+	migrateLegacyCalendar: async (worldId: string) => {
+		const world = await getPrismaClient().world.findFirst({
+			where: {
+				id: worldId,
+				calendar: {
+					not: null,
+				},
+			},
+			include: {
+				calendars: true,
+			},
+		})
+
+		if (!world || !world.calendar) {
+			return
+		}
+
+		const templateId = (() => {
+			switch (world.calendar) {
+				case 'EARTH':
+				case 'COUNTUP':
+					return 'earth_2023'
+				case 'PF2E':
+					return 'pf2e_4723'
+				case 'RIMWORLD':
+					return 'rimworld'
+				case 'EXETHER':
+					return 'exether'
+			}
+		})()
+
+		console.info(`Migrating calendar for world ${worldId} from ${world.calendar} to ${templateId}`)
+
+		const { calendar } = await CalendarTemplateService.createTemplateCalendar({
+			worldId,
+			templateId,
+		})
+		await getPrismaClient().calendar.deleteMany({
+			where: {
+				id: {
+					in: world.calendars.map((c) => c.id),
+				},
+			},
+		})
+		await getPrismaClient().world.update({
+			where: {
+				id: worldId,
+			},
+			data: {
+				// TODO: SET THIS BEFORE MERGING FFS
+				// calendar: null,
+				calendars: {
+					connect: {
+						id: calendar.id,
+					},
+				},
 			},
 		})
 	},

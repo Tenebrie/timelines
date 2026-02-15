@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
@@ -6,7 +6,6 @@ import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSel
 
 import { useFormatTimestamp } from '../calendar/hooks/useFormatTimestamp'
 import { useParseTimestampToUnits } from '../calendar/hooks/useParseTimestampToUnits'
-import { useWorldCalendar } from './useWorldCalendar'
 
 export const maximumTime = 8640000000000000
 
@@ -19,18 +18,14 @@ export const useWorldTime = () => {
 		presentations: [],
 		originTime: 0,
 	}
-	const presentation = worldCalendar?.presentations[Number(scaleLevel)] ?? {
+	// Offset by 1 to allow zooming in by 1 from default
+	const presentation = worldCalendar?.presentations[Number(scaleLevel + 1)] ?? {
 		units: [],
 	}
 
-	const msPerUnit = useMemo(() => 60000, []) // Milliseconds per unit
-	const daysInYear = useMemo(() => 365.2422, [])
-	const hoursInDay = useMemo(() => 24, [])
-	const minutesInHour = useMemo(() => 60, [])
-
 	// const usedCalendar = useMemo<WorldCalendarType>(() => calendar ?? worldCalendar, [calendar, worldCalendar])
 
-	const { getCalendar } = useWorldCalendar()
+	// const { getCalendar } = useWorldCalendar()
 	// const calendarData = useMemo(() => getCalendar(usedCalendar), [getCalendar, usedCalendar])
 	// const calendarDefinition = useMemo(() => getCalendar(usedCalendar).definition, [getCalendar, usedCalendar])
 	// const months = useMemo(
@@ -157,8 +152,8 @@ export const useWorldTime = () => {
 		calendar: worldCalendar,
 	})
 	const timeToLabel = useCallback(
-		(rawTime: number) => {
-			return format({ timestamp: rawTime })
+		(rawTime: number, dateFormat?: string) => {
+			return format({ timestamp: rawTime, dateFormat })
 		},
 		[format],
 	)

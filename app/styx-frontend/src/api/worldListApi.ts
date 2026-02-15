@@ -45,7 +45,7 @@ export type GetWorldsApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
-		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+		calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
@@ -72,7 +72,7 @@ export type GetWorldsApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
-		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+		calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
@@ -99,7 +99,7 @@ export type GetWorldsApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
-		calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+		calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
@@ -124,7 +124,7 @@ export type DeleteWorldApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'

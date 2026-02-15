@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "World" ALTER COLUMN "calendar" DROP NOT NULL,
+ALTER COLUMN "calendar" DROP DEFAULT;

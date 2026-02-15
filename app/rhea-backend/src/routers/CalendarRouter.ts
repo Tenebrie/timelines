@@ -2,6 +2,7 @@ import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { CalendarService } from '@src/services/CalendarService.js'
+import { CalendarTemplateIdShape, CalendarTemplateService } from '@src/services/CalendarTemplateService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import {
 	BigIntValidator,
@@ -83,29 +84,39 @@ router.post('/api/calendars', async (ctx) => {
 		tags: [calendarTag],
 	})
 
-	const { name, worldId } = useRequestBody(ctx, {
+	const { name, templateId } = useRequestBody(ctx, {
 		name: RequiredParam(NameStringValidator),
-		worldId: OptionalParam(StringValidator),
+		templateId: OptionalParam(StringValidator),
 	})
 
-	if (worldId) {
-		await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
-	}
-
-	const { calendar, world } = await CalendarService.createCalendar({
-		params: {
+	const builtInTemplateId = CalendarTemplateIdShape.safeParse(templateId)
+	if (templateId && builtInTemplateId.success) {
+		const { calendar } = await CalendarTemplateService.createTemplateCalendar({
 			ownerId: ctx.user.id,
 			name,
-			worldId,
-			position: 0,
-		},
-	})
+			templateId: builtInTemplateId.data,
+		})
 
-	if (world && calendar.worldId) {
-		RedisService.notifyAboutWorldUpdate(ctx, { worldId: calendar.worldId, timestamp: world.updatedAt })
+		return calendar
+	} else if (templateId) {
+		const { calendar } = await CalendarService.cloneCalendar({
+			calendarId: templateId,
+			name,
+			ownerId: ctx.user.id,
+		})
+
+		return calendar
+	} else {
+		const { calendar } = await CalendarService.createCalendar({
+			params: {
+				ownerId: ctx.user.id,
+				name,
+				position: 0,
+			},
+		})
+
+		return calendar
 	}
-
-	return calendar
 })
 
 router.patch('/api/calendar/:calendarId', async (ctx) => {

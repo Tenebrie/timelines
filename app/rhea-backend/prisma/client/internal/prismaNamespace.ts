@@ -2418,6 +2418,7 @@ export const CalendarPresentationScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   name: 'name',
+  compression: 'compression',
   scaleFactor: 'scaleFactor',
   calendarId: 'calendarId'
 } as const
@@ -2431,6 +2432,7 @@ export const CalendarPresentationUnitScalarFieldEnum = {
   updatedAt: 'updatedAt',
   name: 'name',
   formatString: 'formatString',
+  subdivision: 'subdivision',
   unitId: 'unitId',
   presentationId: 'presentationId'
 } as const

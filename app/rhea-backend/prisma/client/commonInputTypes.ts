@@ -382,11 +382,11 @@ export type EnumCollaboratorAccessWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumCollaboratorAccessFilter<$PrismaModel>
 }
 
-export type EnumWorldCalendarTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.WorldCalendarType | Prisma.EnumWorldCalendarTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumWorldCalendarTypeFilter<$PrismaModel> | $Enums.WorldCalendarType
+export type EnumWorldCalendarTypeNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorldCalendarType | Prisma.EnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumWorldCalendarTypeNullableFilter<$PrismaModel> | $Enums.WorldCalendarType | null
 }
 
 export type EnumWorldAccessModeFilter<$PrismaModel = never> = {
@@ -396,14 +396,14 @@ export type EnumWorldAccessModeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumWorldAccessModeFilter<$PrismaModel> | $Enums.WorldAccessMode
 }
 
-export type EnumWorldCalendarTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.WorldCalendarType | Prisma.EnumWorldCalendarTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumWorldCalendarTypeWithAggregatesFilter<$PrismaModel> | $Enums.WorldCalendarType
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumWorldCalendarTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumWorldCalendarTypeFilter<$PrismaModel>
+export type EnumWorldCalendarTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorldCalendarType | Prisma.EnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumWorldCalendarTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.WorldCalendarType | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWorldCalendarTypeNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWorldCalendarTypeNullableFilter<$PrismaModel>
 }
 
 export type EnumWorldAccessModeWithAggregatesFilter<$PrismaModel = never> = {
@@ -813,11 +813,11 @@ export type NestedEnumCollaboratorAccessWithAggregatesFilter<$PrismaModel = neve
   _max?: Prisma.NestedEnumCollaboratorAccessFilter<$PrismaModel>
 }
 
-export type NestedEnumWorldCalendarTypeFilter<$PrismaModel = never> = {
-  equals?: $Enums.WorldCalendarType | Prisma.EnumWorldCalendarTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumWorldCalendarTypeFilter<$PrismaModel> | $Enums.WorldCalendarType
+export type NestedEnumWorldCalendarTypeNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorldCalendarType | Prisma.EnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumWorldCalendarTypeNullableFilter<$PrismaModel> | $Enums.WorldCalendarType | null
 }
 
 export type NestedEnumWorldAccessModeFilter<$PrismaModel = never> = {
@@ -827,14 +827,14 @@ export type NestedEnumWorldAccessModeFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumWorldAccessModeFilter<$PrismaModel> | $Enums.WorldAccessMode
 }
 
-export type NestedEnumWorldCalendarTypeWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.WorldCalendarType | Prisma.EnumWorldCalendarTypeFieldRefInput<$PrismaModel>
-  in?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel>
-  notIn?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumWorldCalendarTypeWithAggregatesFilter<$PrismaModel> | $Enums.WorldCalendarType
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumWorldCalendarTypeFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumWorldCalendarTypeFilter<$PrismaModel>
+export type NestedEnumWorldCalendarTypeNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorldCalendarType | Prisma.EnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
+  in?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumWorldCalendarTypeNullableWithAggregatesFilter<$PrismaModel> | $Enums.WorldCalendarType | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWorldCalendarTypeNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWorldCalendarTypeNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumWorldAccessModeWithAggregatesFilter<$PrismaModel = never> = {

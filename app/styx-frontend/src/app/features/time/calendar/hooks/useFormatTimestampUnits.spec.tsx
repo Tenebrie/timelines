@@ -405,6 +405,96 @@ describe('useFormatTimestampUnits', () => {
 			// D matches decade (timestamp 15 / 10 = 1), d matches day (timestamp 15 / 1 = 15)
 			expect(result.current({ timestamp: 15 })).toBe('1-15')
 		})
+
+		it('disambiguates by case when format only uses lowercase but two units share the letter', () => {
+			const minuteUnit = mockCalendarUnit({
+				id: 'minute',
+				name: 'Minute',
+				duration: 1,
+				formatShorthand: 'm',
+				formatMode: 'Numeric',
+				children: [],
+				parents: [mockCalendarUnitParentRelation('hour', 'minute', 60)],
+			})
+
+			const hourUnit = mockCalendarUnit({
+				id: 'hour',
+				name: 'Hour',
+				duration: 60,
+				formatShorthand: 'h',
+				formatMode: 'Numeric',
+				children: [mockCalendarUnitChildRelation('hour', 'minute', 60)],
+				parents: [mockCalendarUnitParentRelation('month', 'hour', 720)],
+			})
+
+			const monthUnit = mockCalendarUnit({
+				id: 'month',
+				name: 'Month',
+				duration: 43200, // 720 hours * 60 minutes
+				formatShorthand: 'M',
+				formatMode: 'Name',
+				displayName: 'January',
+				displayNameShort: 'Jan',
+				children: [mockCalendarUnitChildRelation('month', 'hour', 720)],
+				parents: [],
+			})
+
+			const { result } = renderHook(() =>
+				useFormatTimestampUnits({
+					units: [monthUnit, hourUnit, minuteUnit],
+					dateFormatString: 'hh:mm',
+				}),
+			)
+
+			// timestamp 61: hour = floor(61/60) = 1, minute = 61%60 = 1
+			// 'mm' should match minute (lowercase 'm'), not Month (uppercase 'M')
+			expect(result.current({ timestamp: 61 })).toBe('01:01')
+		})
+
+		it('disambiguates by case when format only uses uppercase but two units share the letter', () => {
+			const minuteUnit = mockCalendarUnit({
+				id: 'minute',
+				name: 'Minute',
+				duration: 1,
+				formatShorthand: 'm',
+				formatMode: 'Numeric',
+				children: [],
+				parents: [mockCalendarUnitParentRelation('hour', 'minute', 60)],
+			})
+
+			const hourUnit = mockCalendarUnit({
+				id: 'hour',
+				name: 'Hour',
+				duration: 60,
+				formatShorthand: 'h',
+				formatMode: 'Numeric',
+				children: [mockCalendarUnitChildRelation('hour', 'minute', 60)],
+				parents: [mockCalendarUnitParentRelation('month', 'hour', 720)],
+			})
+
+			const monthUnit = mockCalendarUnit({
+				id: 'month',
+				name: 'Month',
+				displayName: 'Month',
+				displayNameShort: 'Mon',
+				duration: 43200, // 720 hours * 60 minutes
+				formatShorthand: 'M',
+				formatMode: 'NameOneIndexed',
+				children: [mockCalendarUnitChildRelation('month', 'hour', 720)],
+				parents: [],
+			})
+
+			const { result } = renderHook(() =>
+				useFormatTimestampUnits({
+					units: [monthUnit, hourUnit, minuteUnit],
+					dateFormatString: 'M hh:mm',
+				}),
+			)
+
+			// timestamp 61: month = 0 (NameOneIndexed → 1), hour = 1, minute = 1
+			// 'M' should match Month (uppercase 'M'), 'mm' should match minute (lowercase 'm')
+			expect(result.current({ timestamp: 61 })).toBe('Mon 1 01:01')
+		})
 	})
 
 	describe('Hidden format mode', () => {

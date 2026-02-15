@@ -1,4 +1,4 @@
-import { useGetMindmapQuery } from '@api/otherApi'
+import { useGetMindmapQuery } from '@api/mindmapApi'
 import Stack from '@mui/material/Stack'
 import { Outlet, useSearch } from '@tanstack/react-router'
 import { useEffect } from 'react'

@@ -209,7 +209,7 @@ export type WorldGroupByOutputType = {
   updatedAt: Date
   name: string
   description: string
-  calendar: $Enums.WorldCalendarType
+  calendar: $Enums.WorldCalendarType | null
   timeOrigin: bigint
   ownerId: string
   accessMode: $Enums.WorldAccessMode
@@ -244,7 +244,7 @@ export type WorldWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"World"> | Date | string
   name?: Prisma.StringFilter<"World"> | string
   description?: Prisma.StringFilter<"World"> | string
-  calendar?: Prisma.EnumWorldCalendarTypeFilter<"World"> | $Enums.WorldCalendarType
+  calendar?: Prisma.EnumWorldCalendarTypeNullableFilter<"World"> | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFilter<"World"> | bigint | number
   ownerId?: Prisma.StringFilter<"World"> | string
   accessMode?: Prisma.EnumWorldAccessModeFilter<"World"> | $Enums.WorldAccessMode
@@ -267,7 +267,7 @@ export type WorldOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  calendar?: Prisma.SortOrder
+  calendar?: Prisma.SortOrderInput | Prisma.SortOrder
   timeOrigin?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   accessMode?: Prisma.SortOrder
@@ -293,7 +293,7 @@ export type WorldWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"World"> | Date | string
   name?: Prisma.StringFilter<"World"> | string
   description?: Prisma.StringFilter<"World"> | string
-  calendar?: Prisma.EnumWorldCalendarTypeFilter<"World"> | $Enums.WorldCalendarType
+  calendar?: Prisma.EnumWorldCalendarTypeNullableFilter<"World"> | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFilter<"World"> | bigint | number
   ownerId?: Prisma.StringFilter<"World"> | string
   accessMode?: Prisma.EnumWorldAccessModeFilter<"World"> | $Enums.WorldAccessMode
@@ -316,7 +316,7 @@ export type WorldOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  calendar?: Prisma.SortOrder
+  calendar?: Prisma.SortOrderInput | Prisma.SortOrder
   timeOrigin?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   accessMode?: Prisma.SortOrder
@@ -336,7 +336,7 @@ export type WorldScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"World"> | Date | string
   name?: Prisma.StringWithAggregatesFilter<"World"> | string
   description?: Prisma.StringWithAggregatesFilter<"World"> | string
-  calendar?: Prisma.EnumWorldCalendarTypeWithAggregatesFilter<"World"> | $Enums.WorldCalendarType
+  calendar?: Prisma.EnumWorldCalendarTypeNullableWithAggregatesFilter<"World"> | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntWithAggregatesFilter<"World"> | bigint | number
   ownerId?: Prisma.StringWithAggregatesFilter<"World"> | string
   accessMode?: Prisma.EnumWorldAccessModeWithAggregatesFilter<"World"> | $Enums.WorldAccessMode
@@ -348,7 +348,7 @@ export type WorldCreateInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
@@ -370,7 +370,7 @@ export type WorldUncheckedCreateInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   ownerId: string
   accessMode?: $Enums.WorldAccessMode
@@ -392,7 +392,7 @@ export type WorldUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
@@ -414,7 +414,7 @@ export type WorldUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
@@ -436,7 +436,7 @@ export type WorldCreateManyInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   ownerId: string
   accessMode?: $Enums.WorldAccessMode
@@ -448,7 +448,7 @@ export type WorldUpdateManyMutationInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
 }
@@ -459,7 +459,7 @@ export type WorldUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
@@ -685,8 +685,8 @@ export type WorldUpdateOneRequiredWithoutArticlesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorldUpdateToOneWithWhereWithoutArticlesInput, Prisma.WorldUpdateWithoutArticlesInput>, Prisma.WorldUncheckedUpdateWithoutArticlesInput>
 }
 
-export type EnumWorldCalendarTypeFieldUpdateOperationsInput = {
-  set?: $Enums.WorldCalendarType
+export type NullableEnumWorldCalendarTypeFieldUpdateOperationsInput = {
+  set?: $Enums.WorldCalendarType | null
 }
 
 export type EnumWorldAccessModeFieldUpdateOperationsInput = {
@@ -727,7 +727,7 @@ export type WorldCreateWithoutActorsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
   events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
@@ -748,7 +748,7 @@ export type WorldUncheckedCreateWithoutActorsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   ownerId: string
   accessMode?: $Enums.WorldAccessMode
@@ -785,7 +785,7 @@ export type WorldUpdateWithoutActorsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
@@ -806,7 +806,7 @@ export type WorldUncheckedUpdateWithoutActorsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
@@ -827,7 +827,7 @@ export type WorldCreateWithoutCalendarsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
@@ -848,7 +848,7 @@ export type WorldUncheckedCreateWithoutCalendarsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   ownerId: string
   accessMode?: $Enums.WorldAccessMode
@@ -885,7 +885,7 @@ export type WorldUpdateWithoutCalendarsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
@@ -906,7 +906,7 @@ export type WorldUncheckedUpdateWithoutCalendarsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
@@ -927,7 +927,7 @@ export type WorldCreateWithoutSavedColorsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
@@ -948,7 +948,7 @@ export type WorldUncheckedCreateWithoutSavedColorsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   ownerId: string
   accessMode?: $Enums.WorldAccessMode
@@ -985,7 +985,7 @@ export type WorldUpdateWithoutSavedColorsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
@@ -1006,7 +1006,7 @@ export type WorldUncheckedUpdateWithoutSavedColorsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
@@ -1027,7 +1027,7 @@ export type WorldCreateWithoutWorldCommonIconSetsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
@@ -1048,7 +1048,7 @@ export type WorldUncheckedCreateWithoutWorldCommonIconSetsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   ownerId: string
   accessMode?: $Enums.WorldAccessMode
@@ -1085,7 +1085,7 @@ export type WorldUpdateWithoutWorldCommonIconSetsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
@@ -1106,7 +1106,7 @@ export type WorldUncheckedUpdateWithoutWorldCommonIconSetsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
@@ -1127,7 +1127,7 @@ export type WorldCreateWithoutMindmapNodesInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
@@ -1148,7 +1148,7 @@ export type WorldUncheckedCreateWithoutMindmapNodesInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   ownerId: string
   accessMode?: $Enums.WorldAccessMode
@@ -1185,7 +1185,7 @@ export type WorldUpdateWithoutMindmapNodesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
@@ -1206,7 +1206,7 @@ export type WorldUncheckedUpdateWithoutMindmapNodesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
@@ -1227,7 +1227,7 @@ export type WorldCreateWithoutTagsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
@@ -1248,7 +1248,7 @@ export type WorldUncheckedCreateWithoutTagsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   ownerId: string
   accessMode?: $Enums.WorldAccessMode
@@ -1285,7 +1285,7 @@ export type WorldUpdateWithoutTagsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
@@ -1306,7 +1306,7 @@ export type WorldUncheckedUpdateWithoutTagsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
@@ -1327,7 +1327,7 @@ export type WorldCreateWithoutOwnerInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
@@ -1348,7 +1348,7 @@ export type WorldUncheckedCreateWithoutOwnerInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
@@ -1398,7 +1398,7 @@ export type WorldScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"World"> | Date | string
   name?: Prisma.StringFilter<"World"> | string
   description?: Prisma.StringFilter<"World"> | string
-  calendar?: Prisma.EnumWorldCalendarTypeFilter<"World"> | $Enums.WorldCalendarType
+  calendar?: Prisma.EnumWorldCalendarTypeNullableFilter<"World"> | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFilter<"World"> | bigint | number
   ownerId?: Prisma.StringFilter<"World"> | string
   accessMode?: Prisma.EnumWorldAccessModeFilter<"World"> | $Enums.WorldAccessMode
@@ -1410,7 +1410,7 @@ export type WorldCreateWithoutCollaboratorsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
@@ -1431,7 +1431,7 @@ export type WorldUncheckedCreateWithoutCollaboratorsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   ownerId: string
   accessMode?: $Enums.WorldAccessMode
@@ -1468,7 +1468,7 @@ export type WorldUpdateWithoutCollaboratorsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
@@ -1489,7 +1489,7 @@ export type WorldUncheckedUpdateWithoutCollaboratorsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
@@ -1510,7 +1510,7 @@ export type WorldCreateWithoutArticlesInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
@@ -1531,7 +1531,7 @@ export type WorldUncheckedCreateWithoutArticlesInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   ownerId: string
   accessMode?: $Enums.WorldAccessMode
@@ -1568,7 +1568,7 @@ export type WorldUpdateWithoutArticlesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
@@ -1589,7 +1589,7 @@ export type WorldUncheckedUpdateWithoutArticlesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
@@ -1610,7 +1610,7 @@ export type WorldCreateWithoutEventsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
@@ -1631,7 +1631,7 @@ export type WorldUncheckedCreateWithoutEventsInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   ownerId: string
   accessMode?: $Enums.WorldAccessMode
@@ -1668,7 +1668,7 @@ export type WorldUpdateWithoutEventsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
@@ -1689,7 +1689,7 @@ export type WorldUncheckedUpdateWithoutEventsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
@@ -1710,7 +1710,7 @@ export type WorldCreateWithoutWorldEventTracksInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
   actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
@@ -1731,7 +1731,7 @@ export type WorldUncheckedCreateWithoutWorldEventTracksInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   ownerId: string
   accessMode?: $Enums.WorldAccessMode
@@ -1768,7 +1768,7 @@ export type WorldUpdateWithoutWorldEventTracksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
@@ -1789,7 +1789,7 @@ export type WorldUncheckedUpdateWithoutWorldEventTracksInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
@@ -1810,7 +1810,7 @@ export type WorldCreateManyOwnerInput = {
   updatedAt?: Date | string
   name: string
   description?: string
-  calendar?: $Enums.WorldCalendarType
+  calendar?: $Enums.WorldCalendarType | null
   timeOrigin?: bigint | number
   accessMode?: $Enums.WorldAccessMode
 }
@@ -1821,7 +1821,7 @@ export type WorldUpdateWithoutOwnerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
@@ -1842,7 +1842,7 @@ export type WorldUncheckedUpdateWithoutOwnerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
   actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
@@ -1863,7 +1863,7 @@ export type WorldUncheckedUpdateManyWithoutOwnerInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  calendar?: Prisma.EnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
   timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
   accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
 }
@@ -2085,7 +2085,7 @@ export type $WorldPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     updatedAt: Date
     name: string
     description: string
-    calendar: $Enums.WorldCalendarType
+    calendar: $Enums.WorldCalendarType | null
     timeOrigin: bigint
     ownerId: string
     accessMode: $Enums.WorldAccessMode

@@ -487,6 +487,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/constants/calendar-templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Lists all built-in calendar templates */
+        get: operations["listCalendarTemplates"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/constants/calendar-unit-format-modes": {
         parameters: {
             query?: never;
@@ -1914,8 +1931,8 @@ export interface operations {
                         description: string;
                         id: string;
                         title: string;
-                        userId: string;
                         type: "Info" | "Welcome" | "WorldShared";
+                        userId: string;
                         /** Format: date-time */
                         timestamp: string;
                         isUnread: boolean;
@@ -2010,9 +2027,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             ownerId: string;
-                            size: number;
                             expiresAt?: null | string;
                             bucketKey: string;
+                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "Image" | "Avatar";
@@ -2058,9 +2075,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             ownerId: string;
-                            size: number;
                             expiresAt?: null | string;
                             bucketKey: string;
+                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "Image" | "Avatar";
@@ -2105,9 +2122,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         ownerId: string;
-                        size: number;
                         expiresAt?: null | string;
                         bucketKey: string;
+                        size: number;
                         originalFileName: string;
                         originalFileExtension: string;
                         contentType: "Image" | "Avatar";
@@ -2324,11 +2341,11 @@ export interface operations {
             content: {
                 "application/json": {
                     name: string;
-                    worldId?: string;
+                    templateId?: string;
                 };
                 "application/x-www-form-urlencoded": {
                     name: string;
-                    worldId?: string;
+                    templateId?: string;
                 };
             };
         };
@@ -2391,7 +2408,8 @@ export interface operations {
                                     formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                                     formatShorthand?: null | string;
                                     negativeFormat: "MinusSign" | "AbsoluteValue";
-                                    duration: number;
+                                    /** Format: bigint */
+                                    duration: string;
                                     treeDepth: number;
                                 };
                                 id: string;
@@ -2403,6 +2421,7 @@ export interface operations {
                                 unitId: string;
                                 presentationId: string;
                                 formatString: string;
+                                subdivision: number;
                             }[];
                             id: string;
                             /** Format: date-time */
@@ -2412,6 +2431,7 @@ export interface operations {
                             name: string;
                             calendarId: string;
                             scaleFactor: number;
+                            compression: number;
                         }[];
                         units: {
                             children: {
@@ -2452,7 +2472,8 @@ export interface operations {
                             formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                             formatShorthand?: null | string;
                             negativeFormat: "MinusSign" | "AbsoluteValue";
-                            duration: number;
+                            /** Format: bigint */
+                            duration: string;
                             treeDepth: number;
                         }[];
                         id: string;
@@ -2614,7 +2635,8 @@ export interface operations {
                             formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                             formatShorthand?: null | string;
                             negativeFormat: "MinusSign" | "AbsoluteValue";
-                            duration: number;
+                            /** Format: bigint */
+                            duration: string;
                             treeDepth: number;
                         }[];
                         presentations: {
@@ -2634,7 +2656,8 @@ export interface operations {
                                     formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                                     formatShorthand?: null | string;
                                     negativeFormat: "MinusSign" | "AbsoluteValue";
-                                    duration: number;
+                                    /** Format: bigint */
+                                    duration: string;
                                     treeDepth: number;
                                 };
                                 id: string;
@@ -2646,6 +2669,7 @@ export interface operations {
                                 unitId: string;
                                 presentationId: string;
                                 formatString: string;
+                                subdivision: number;
                             }[];
                             id: string;
                             /** Format: date-time */
@@ -2655,6 +2679,7 @@ export interface operations {
                             name: string;
                             calendarId: string;
                             scaleFactor: number;
+                            compression: number;
                         }[];
                         id: string;
                         /** Format: date-time */
@@ -2724,7 +2749,8 @@ export interface operations {
                         formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                         formatShorthand?: null | string;
                         negativeFormat: "MinusSign" | "AbsoluteValue";
-                        duration: number;
+                        /** Format: bigint */
+                        duration: string;
                         treeDepth: number;
                     };
                 };
@@ -2765,7 +2791,8 @@ export interface operations {
                         formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                         formatShorthand?: null | string;
                         negativeFormat: "MinusSign" | "AbsoluteValue";
-                        duration: number;
+                        /** Format: bigint */
+                        duration: string;
                         treeDepth: number;
                     };
                 };
@@ -2849,7 +2876,8 @@ export interface operations {
                         formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                         formatShorthand?: null | string;
                         negativeFormat: "MinusSign" | "AbsoluteValue";
-                        duration: number;
+                        /** Format: bigint */
+                        duration: string;
                         treeDepth: number;
                     };
                 };
@@ -2901,7 +2929,8 @@ export interface operations {
                                 formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                                 formatShorthand?: null | string;
                                 negativeFormat: "MinusSign" | "AbsoluteValue";
-                                duration: number;
+                                /** Format: bigint */
+                                duration: string;
                                 treeDepth: number;
                             };
                             id: string;
@@ -2913,6 +2942,7 @@ export interface operations {
                             unitId: string;
                             presentationId: string;
                             formatString: string;
+                            subdivision: number;
                         }[];
                         id: string;
                         /** Format: date-time */
@@ -2922,6 +2952,7 @@ export interface operations {
                         name: string;
                         calendarId: string;
                         scaleFactor: number;
+                        compression: number;
                     };
                 };
             };
@@ -2955,6 +2986,7 @@ export interface operations {
                         name: string;
                         calendarId: string;
                         scaleFactor: number;
+                        compression: number;
                     };
                 };
             };
@@ -3013,7 +3045,8 @@ export interface operations {
                                 formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                                 formatShorthand?: null | string;
                                 negativeFormat: "MinusSign" | "AbsoluteValue";
-                                duration: number;
+                                /** Format: bigint */
+                                duration: string;
                                 treeDepth: number;
                             };
                             id: string;
@@ -3025,6 +3058,7 @@ export interface operations {
                             unitId: string;
                             presentationId: string;
                             formatString: string;
+                            subdivision: number;
                         }[];
                         id: string;
                         /** Format: date-time */
@@ -3034,6 +3068,7 @@ export interface operations {
                         name: string;
                         calendarId: string;
                         scaleFactor: number;
+                        compression: number;
                     };
                 };
             };
@@ -3073,6 +3108,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": ("Private" | "PublicRead" | "PublicEdit")[];
+                };
+            };
+        };
+    };
+    listCalendarTemplates: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": ("earth_current" | "earth_2023" | "pf2e_current" | "pf2e_4723" | "rimworld" | "exether")[];
                 };
             };
         };
@@ -4651,7 +4705,7 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
-                            calendar: "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                            calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
                             /** Format: bigint */
                             timeOrigin: string;
                             ownerId: string;
@@ -4684,7 +4738,7 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
-                            calendar: "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                            calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
                             /** Format: bigint */
                             timeOrigin: string;
                             ownerId: string;
@@ -4717,7 +4771,7 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
-                            calendar: "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                            calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
                             /** Format: bigint */
                             timeOrigin: string;
                             ownerId: string;
@@ -4824,7 +4878,8 @@ export interface operations {
                                 formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                                 formatShorthand?: null | string;
                                 negativeFormat: "MinusSign" | "AbsoluteValue";
-                                duration: number;
+                                /** Format: bigint */
+                                duration: string;
                                 treeDepth: number;
                             }[];
                             presentations: {
@@ -4838,6 +4893,7 @@ export interface operations {
                                     unitId: string;
                                     presentationId: string;
                                     formatString: string;
+                                    subdivision: number;
                                 }[];
                                 id: string;
                                 /** Format: date-time */
@@ -4847,6 +4903,7 @@ export interface operations {
                                 name: string;
                                 calendarId: string;
                                 scaleFactor: number;
+                                compression: number;
                             }[];
                             seasons: {
                                 intervals: {
@@ -4975,7 +5032,7 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
-                        calendar: "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                        calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
                         /** Format: bigint */
                         timeOrigin: string;
                         ownerId: string;
@@ -5010,7 +5067,7 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
-                        calendar: "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                        calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
                         /** Format: bigint */
                         timeOrigin: string;
                         ownerId: string;
@@ -5110,7 +5167,7 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
-                        calendar: "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                        calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
                         /** Format: bigint */
                         timeOrigin: string;
                         ownerId: string;

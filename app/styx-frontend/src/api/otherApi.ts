@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['mindmap', 'tagList', 'worldDetails', 'worldWikiArticle', 'WorldColor'] as const
+export const addTagTypes = ['worldWikiArticle'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -11,6 +11,9 @@ const injectedRtkApi = api
 			}),
 			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
 				query: () => ({ url: `/api/constants/world-access-modes` }),
+			}),
+			listCalendarTemplates: build.query<ListCalendarTemplatesApiResponse, ListCalendarTemplatesApiArg>({
+				query: () => ({ url: `/api/constants/calendar-templates` }),
 			}),
 			listCalendarUnitFormatModes: build.query<
 				ListCalendarUnitFormatModesApiResponse,
@@ -32,58 +35,12 @@ const injectedRtkApi = api
 					query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
 				},
 			),
-			getMindmap: build.query<GetMindmapApiResponse, GetMindmapApiArg>({
-				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/mindmap` }),
-				providesTags: ['mindmap'],
-			}),
-			createNode: build.mutation<CreateNodeApiResponse, CreateNodeApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/node`,
-					method: 'POST',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['mindmap'],
-			}),
 			updateNode: build.mutation<UpdateNodeApiResponse, UpdateNodeApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/mindmap/node/${queryArg.nodeId}`,
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
-			}),
-			deleteNode: build.mutation<DeleteNodeApiResponse, DeleteNodeApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/node/${queryArg.nodeId}`,
-					method: 'DELETE',
-				}),
-				invalidatesTags: ['mindmap'],
-			}),
-			createTag: build.mutation<CreateTagApiResponse, CreateTagApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/tags`,
-					method: 'POST',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['tagList', 'worldDetails'],
-			}),
-			updateTag: build.mutation<UpdateTagApiResponse, UpdateTagApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/tag/${queryArg.tagId}`,
-					method: 'PATCH',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['tagList'],
-			}),
-			deleteTag: build.mutation<DeleteTagApiResponse, DeleteTagApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/tag/${queryArg.tagId}`,
-					method: 'DELETE',
-				}),
-				invalidatesTags: ['tagList', 'worldDetails'],
-			}),
-			getTagDetails: build.query<GetTagDetailsApiResponse, GetTagDetailsApiArg>({
-				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/tag/${queryArg.tagId}` }),
-				providesTags: ['tagList'],
 			}),
 			getWikiArticleContent: build.query<GetWikiArticleContentApiResponse, GetWikiArticleContentApiArg>({
 				query: (queryArg) => ({
@@ -101,25 +58,6 @@ const injectedRtkApi = api
 					body: queryArg.body,
 				}),
 				invalidatesTags: ['worldWikiArticle'],
-			}),
-			getWorldColors: build.query<GetWorldColorsApiResponse, GetWorldColorsApiArg>({
-				query: (queryArg) => ({ url: `/api/worlds/${queryArg.worldId}/colors` }),
-				providesTags: ['WorldColor'],
-			}),
-			createWorldColor: build.mutation<CreateWorldColorApiResponse, CreateWorldColorApiArg>({
-				query: (queryArg) => ({
-					url: `/api/worlds/${queryArg.worldId}/colors`,
-					method: 'POST',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['WorldColor'],
-			}),
-			deleteWorldColor: build.mutation<DeleteWorldColorApiResponse, DeleteWorldColorApiArg>({
-				query: (queryArg) => ({
-					url: `/api/worlds/${queryArg.worldId}/colors/${queryArg.colorId}`,
-					method: 'DELETE',
-				}),
-				invalidatesTags: ['WorldColor'],
 			}),
 			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
 				query: (queryArg) => ({
@@ -147,6 +85,15 @@ export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premiu
 export type AdminGetUserLevelsApiArg = void
 export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
 export type ListWorldAccessModesApiArg = void
+export type ListCalendarTemplatesApiResponse = /** status 200  */ (
+	| 'earth_current'
+	| 'earth_2023'
+	| 'pf2e_current'
+	| 'pf2e_4723'
+	| 'rimworld'
+	| 'exether'
+)[]
+export type ListCalendarTemplatesApiArg = void
 export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
 	| 'Name'
 	| 'NameOneIndexed'
@@ -183,39 +130,6 @@ export type RequestImageConversionApiArg = {
 		quality?: number
 	}
 }
-export type GetMindmapApiResponse = /** status 200  */ {
-	nodes: {
-		id: string
-		createdAt: string
-		updatedAt: string
-		worldId: string
-		parentActorId?: null | string
-		positionX: number
-		positionY: number
-	}[]
-}
-export type GetMindmapApiArg = {
-	/** Any string value */
-	worldId: string
-}
-export type CreateNodeApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	worldId: string
-	parentActorId?: null | string
-	positionX: number
-	positionY: number
-}
-export type CreateNodeApiArg = {
-	/** Any string value */
-	worldId: string
-	body: {
-		positionX: number
-		positionY: number
-		parentActorId?: string
-	}
-}
 export type UpdateNodeApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
@@ -234,163 +148,6 @@ export type UpdateNodeApiArg = {
 		positionX?: number
 		positionY?: number
 	}
-}
-export type DeleteNodeApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	worldId: string
-	parentActorId?: null | string
-	positionX: number
-	positionY: number
-}
-export type DeleteNodeApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	nodeId: string
-}
-export type CreateTagApiResponse = /** status 200  */ {
-	mentions: {
-		pageId?: null | string
-		sourceId: string
-		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
-	}[]
-	mentionedIn: {
-		pageId?: null | string
-		sourceId: string
-		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
-	}[]
-	description: string
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	worldId: string
-}
-export type CreateTagApiArg = {
-	/** Any string value */
-	worldId: string
-	body: {
-		name: string
-		description?: string
-	}
-}
-export type UpdateTagApiResponse = /** status 200  */ {
-	mentions: {
-		pageId?: null | string
-		sourceId: string
-		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
-	}[]
-	mentionedIn: {
-		pageId?: null | string
-		sourceId: string
-		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
-	}[]
-	description: string
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	worldId: string
-}
-export type UpdateTagApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	tagId: string
-	body: {
-		name?: string
-		description?: string
-	}
-}
-export type DeleteTagApiResponse = /** status 200  */ {
-	description: string
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	worldId: string
-}
-export type DeleteTagApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	tagId: string
-}
-export type GetTagDetailsApiResponse = /** status 200  */ {
-	mentionedBy: {
-		type: 'Actor' | 'Event' | 'Article' | 'Tag'
-		id: string
-		name: string
-	}[]
-	mentions: {
-		pageId?: null | string
-		sourceId: string
-		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
-	}[]
-	description: string
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	worldId: string
-}
-export type GetTagDetailsApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	tagId: string
 }
 export type GetWikiArticleContentApiResponse = /** status 200  */ {
 	hasDeltas: boolean
@@ -415,41 +172,6 @@ export type PutWikiArticleContentApiArg = {
 		content: string
 		contentDeltas?: string
 	}
-}
-export type GetWorldColorsApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	worldId: string
-	label?: null | string
-	value: string
-}[]
-export type GetWorldColorsApiArg = {
-	/** Any string value with at least one character */
-	worldId: string
-}
-export type CreateWorldColorApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	worldId: string
-	label?: null | string
-	value: string
-}
-export type CreateWorldColorApiArg = {
-	/** Any string value with at least one character */
-	worldId: string
-	body: {
-		value: string
-		label?: string
-	}
-}
-export type DeleteWorldColorApiResponse = unknown
-export type DeleteWorldColorApiArg = {
-	/** Any string value with at least one character */
-	worldId: string
-	/** Any string value with at least one character */
-	colorId: string
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
@@ -503,6 +225,8 @@ export const {
 	useLazyAdminGetUserLevelsQuery,
 	useListWorldAccessModesQuery,
 	useLazyListWorldAccessModesQuery,
+	useListCalendarTemplatesQuery,
+	useLazyListCalendarTemplatesQuery,
 	useListCalendarUnitFormatModesQuery,
 	useLazyListCalendarUnitFormatModesQuery,
 	useGetHealthQuery,
@@ -510,23 +234,10 @@ export const {
 	useGetSupportedImageFormatsQuery,
 	useLazyGetSupportedImageFormatsQuery,
 	useRequestImageConversionMutation,
-	useGetMindmapQuery,
-	useLazyGetMindmapQuery,
-	useCreateNodeMutation,
 	useUpdateNodeMutation,
-	useDeleteNodeMutation,
-	useCreateTagMutation,
-	useUpdateTagMutation,
-	useDeleteTagMutation,
-	useGetTagDetailsQuery,
-	useLazyGetTagDetailsQuery,
 	useGetWikiArticleContentQuery,
 	useLazyGetWikiArticleContentQuery,
 	usePutWikiArticleContentMutation,
-	useGetWorldColorsQuery,
-	useLazyGetWorldColorsQuery,
-	useCreateWorldColorMutation,
-	useDeleteWorldColorMutation,
 	useUpdateArticleMutation,
 	useGetUserWorldAccessLevelQuery,
 	useLazyGetUserWorldAccessLevelQuery,

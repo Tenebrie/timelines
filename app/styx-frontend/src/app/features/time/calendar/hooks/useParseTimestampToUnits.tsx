@@ -46,12 +46,12 @@ export function useParseTimestampToUnits({ units }: { units: CalendarDraftUnit[]
 			outputMap = outputMap ?? new Map()
 			skippedChildCount = skippedChildCount ?? new Map<string, number>()
 
-			const index = Math.floor(timestamp / unit.duration)
-			let remainder = timestamp % unit.duration
+			const index = Math.floor(timestamp / Number(unit.duration))
+			let remainder = timestamp % Number(unit.duration)
 
 			// Handle negative timestamps
 			if (remainder < 0) {
-				remainder += unit.duration
+				remainder += Number(unit.duration)
 			}
 
 			const unitKey = unit.displayName ?? unit.name
@@ -79,7 +79,7 @@ export function useParseTimestampToUnits({ units }: { units: CalendarDraftUnit[]
 				if (!childUnit) {
 					continue
 				}
-				if (remainder < childUnit.duration * childRelation.repeats) {
+				if (remainder < Number(childUnit.duration) * childRelation.repeats) {
 					return parseTimestamp({
 						outputMap,
 						skippedChildCount,
@@ -89,7 +89,7 @@ export function useParseTimestampToUnits({ units }: { units: CalendarDraftUnit[]
 						customLabel: childRelation.label ?? undefined,
 					})
 				}
-				remainder -= childUnit.duration * childRelation.repeats
+				remainder -= Number(childUnit.duration) * childRelation.repeats
 				if (childUnit.formatMode === 'Hidden') {
 					myExtraDuration += childRelation.repeats * sumNonHiddenChildren(childUnit)
 				} else {

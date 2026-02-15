@@ -123,7 +123,7 @@ export type CreateCalendarApiResponse = /** status 200  */ {
 export type CreateCalendarApiArg = {
 	body: {
 		name: string
-		worldId?: string
+		templateId?: string
 	}
 }
 export type GetCalendarApiResponse = /** status 200  */ {
@@ -142,7 +142,7 @@ export type GetCalendarApiResponse = /** status 200  */ {
 				formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 				formatShorthand?: null | string
 				negativeFormat: 'MinusSign' | 'AbsoluteValue'
-				duration: number
+				duration: string
 				treeDepth: number
 			}
 			id: string
@@ -152,6 +152,7 @@ export type GetCalendarApiResponse = /** status 200  */ {
 			unitId: string
 			presentationId: string
 			formatString: string
+			subdivision: number
 		}[]
 		id: string
 		createdAt: string
@@ -159,6 +160,7 @@ export type GetCalendarApiResponse = /** status 200  */ {
 		name: string
 		calendarId: string
 		scaleFactor: number
+		compression: number
 	}[]
 	units: {
 		children: {
@@ -193,7 +195,7 @@ export type GetCalendarApiResponse = /** status 200  */ {
 		formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 		formatShorthand?: null | string
 		negativeFormat: 'MinusSign' | 'AbsoluteValue'
-		duration: number
+		duration: string
 		treeDepth: number
 	}[]
 	id: string
@@ -279,7 +281,7 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 		formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 		formatShorthand?: null | string
 		negativeFormat: 'MinusSign' | 'AbsoluteValue'
-		duration: number
+		duration: string
 		treeDepth: number
 	}[]
 	presentations: {
@@ -297,7 +299,7 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 				formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 				formatShorthand?: null | string
 				negativeFormat: 'MinusSign' | 'AbsoluteValue'
-				duration: number
+				duration: string
 				treeDepth: number
 			}
 			id: string
@@ -307,6 +309,7 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 			unitId: string
 			presentationId: string
 			formatString: string
+			subdivision: number
 		}[]
 		id: string
 		createdAt: string
@@ -314,6 +317,7 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 		name: string
 		calendarId: string
 		scaleFactor: number
+		compression: number
 	}[]
 	id: string
 	createdAt: string
@@ -342,7 +346,7 @@ export type CreateCalendarUnitApiResponse = /** status 200  */ {
 	formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 	formatShorthand?: null | string
 	negativeFormat: 'MinusSign' | 'AbsoluteValue'
-	duration: number
+	duration: string
 	treeDepth: number
 }
 export type CreateCalendarUnitApiArg = {
@@ -380,7 +384,7 @@ export type UpdateCalendarUnitApiResponse = /** status 200  */ {
 	formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 	formatShorthand?: null | string
 	negativeFormat: 'MinusSign' | 'AbsoluteValue'
-	duration: number
+	duration: string
 	treeDepth: number
 }
 export type UpdateCalendarUnitApiArg = {
@@ -416,7 +420,7 @@ export type DeleteCalendarUnitApiResponse = /** status 200  */ {
 	formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 	formatShorthand?: null | string
 	negativeFormat: 'MinusSign' | 'AbsoluteValue'
-	duration: number
+	duration: string
 	treeDepth: number
 }
 export type DeleteCalendarUnitApiArg = {
@@ -440,7 +444,7 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 			formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 			formatShorthand?: null | string
 			negativeFormat: 'MinusSign' | 'AbsoluteValue'
-			duration: number
+			duration: string
 			treeDepth: number
 		}
 		id: string
@@ -450,6 +454,7 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 		unitId: string
 		presentationId: string
 		formatString: string
+		subdivision: number
 	}[]
 	id: string
 	createdAt: string
@@ -457,6 +462,7 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 	name: string
 	calendarId: string
 	scaleFactor: number
+	compression: number
 }
 export type CreateCalendarPresentationApiArg = {
 	/** Any string value */
@@ -481,7 +487,7 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 			formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 			formatShorthand?: null | string
 			negativeFormat: 'MinusSign' | 'AbsoluteValue'
-			duration: number
+			duration: string
 			treeDepth: number
 		}
 		id: string
@@ -491,6 +497,7 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 		unitId: string
 		presentationId: string
 		formatString: string
+		subdivision: number
 	}[]
 	id: string
 	createdAt: string
@@ -498,6 +505,7 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 	name: string
 	calendarId: string
 	scaleFactor: number
+	compression: number
 }
 export type UpdateCalendarPresentationApiArg = {
 	/** Any string value */
@@ -519,6 +527,7 @@ export type DeleteCalendarPresentationApiResponse = /** status 200  */ {
 	name: string
 	calendarId: string
 	scaleFactor: number
+	compression: number
 }
 export type DeleteCalendarPresentationApiArg = {
 	/** Any string value */

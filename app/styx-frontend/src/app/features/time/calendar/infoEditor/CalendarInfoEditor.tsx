@@ -74,11 +74,11 @@ export function CalendarInfoEditor() {
 									if (e.shiftKey) {
 										delta *= 10
 									}
-									if (e.ctrlKey) {
-										delta *= 100
+									if (e.ctrlKey || e.metaKey) {
+										delta *= 1000
 									}
 									if (e.altKey) {
-										delta *= 1000
+										delta *= 100000
 									}
 									onUpdateOriginTime(localOriginTime + direction * delta)
 									e.preventDefault() // Prevent default increment behavior
