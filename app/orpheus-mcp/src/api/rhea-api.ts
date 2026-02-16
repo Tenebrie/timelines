@@ -2266,9 +2266,9 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 ownerId: string;
-                                size: number;
                                 expiresAt?: null | string;
                                 bucketKey: string;
+                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "Image" | "Avatar";
@@ -2422,6 +2422,7 @@ export interface operations {
                                 presentationId: string;
                                 formatString: string;
                                 subdivision: number;
+                                labeledIndices: number[];
                             }[];
                             id: string;
                             /** Format: date-time */
@@ -2670,6 +2671,7 @@ export interface operations {
                                 presentationId: string;
                                 formatString: string;
                                 subdivision: number;
+                                labeledIndices: number[];
                             }[];
                             id: string;
                             /** Format: date-time */
@@ -2943,6 +2945,7 @@ export interface operations {
                             presentationId: string;
                             formatString: string;
                             subdivision: number;
+                            labeledIndices: number[];
                         }[];
                         id: string;
                         /** Format: date-time */
@@ -3059,6 +3062,7 @@ export interface operations {
                             presentationId: string;
                             formatString: string;
                             subdivision: number;
+                            labeledIndices: number[];
                         }[];
                         id: string;
                         /** Format: date-time */
@@ -3295,9 +3299,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         ownerId: string;
-                        size: number;
                         expiresAt?: null | string;
                         bucketKey: string;
+                        size: number;
                         originalFileName: string;
                         originalFileExtension: string;
                         contentType: "Image" | "Avatar";
@@ -4894,6 +4898,7 @@ export interface operations {
                                     presentationId: string;
                                     formatString: string;
                                     subdivision: number;
+                                    labeledIndices: number[];
                                 }[];
                                 id: string;
                                 /** Format: date-time */

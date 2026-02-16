@@ -101,6 +101,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				presentationId: string
 				formatString: string
 				subdivision: number
+				labeledIndices: number[]
 			}[]
 			id: string
 			createdAt: string

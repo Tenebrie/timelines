@@ -33,11 +33,17 @@ export function usePresentationUnit({ timestamp }: Props) {
 			// TODO: Sum leap year + regular year?
 			const value = parsedTime.values().find((e) => e.unit.displayName === unit.bucket)?.value ?? -1
 			console.log(value, unit.subdivision)
+			const isMatchingSubdivided = (() => {
+				if (unit.labeledIndices.length > 0) {
+					return unit.labeledIndices.includes(value)
+				}
+				return value % unit.subdivision === 0
+			})()
 			return {
 				value,
 				formatString: unit.formatString,
 				matchesExactly: value === 0,
-				matchesSubdivided: value % unit.subdivision === 0,
+				matchesSubdivided: isMatchingSubdivided,
 			}
 		},
 		[obtainUnit, parsedTime],

@@ -311,13 +311,14 @@ router.post('/api/calendar/:calendarId/presentations', async (ctx) => {
 	const { name, scaleFactor } = useRequestBody(ctx, {
 		name: RequiredParam(NameStringValidator),
 		scaleFactor: OptionalParam(NumberValidator),
+		baselineUnitId: OptionalParam(StringValidator),
 	})
 
 	await AuthorizationService.checkUserCalendarWriteAccessById(ctx.user, calendarId)
 
 	const { presentation } = await CalendarService.createCalendarPresentation({
 		calendarId,
-		params: { name, scaleFactor },
+		params: { name, scaleFactor, baselineUnitId },
 	})
 
 	const calendar = await CalendarService.getEditorCalendar({ calendarId })

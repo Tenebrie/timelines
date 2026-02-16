@@ -18,10 +18,16 @@ export const CalendarTemplateIdShape = z.enum(SupportedCalendarTemplates)
 export type CalendarTemplateId = z.infer<typeof CalendarTemplateIdShape>
 
 type CalendarMetadata = { formatString: string; originTime: number }
+type CommaSeparatedNumbers =
+	| `${number},${number}`
+	| `${number},${number},${number}`
+	| `${number},${number},${number},${number}`
+	| `${number},${number},${number},${number},${number}`
 type RelationString<Units extends string[]> = `${Units[number]} x${number}` | `${Units[number]}: ${string}`
 type PresentationString<Buckets extends string[]> =
 	| `${Buckets[number]}: ${string}`
 	| `${Buckets[number]} x${number}: ${string}`
+	| `${Buckets[number]} ${CommaSeparatedNumbers}: ${string}`
 type TemplateBuilder<Units extends string[], Buckets extends string[]> = {
 	setMetadata: (metadata: CalendarMetadata) => TemplateBuilder<Units, Buckets>
 
@@ -50,6 +56,7 @@ type TemplateBuilder<Units extends string[], Buckets extends string[]> = {
 		relations: PresentationString<Buckets>[],
 		properties?: {
 			compression: number
+			baselineUnit: Units[number]
 		},
 	) => TemplateBuilder<Units, Buckets>
 
@@ -72,6 +79,7 @@ type CalendarPresentationCreateData = {
 		name: string
 		formatString: string
 		subdivision: number
+		labeledIndices: number[]
 	}[]
 }
 
@@ -142,11 +150,14 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 			const units = relations.map((relation) => {
 				const relString = String(relation)
 				const [unitAndSubdivision, formatString] = relString.split(': ')
-				const [unitName, subdivision] = unitAndSubdivision.split(' x')
+				const [unitNameAndIndices, subdivision] = unitAndSubdivision.split(' x')
+				const [unitName, indicesString] = unitNameAndIndices.split(' ')
+				const labeledIndices = indicesString?.split(',').map((i) => Number(i.trim())) ?? []
 				return {
 					name: unitName,
 					formatString,
 					subdivision: Number(subdivision) || 1,
+					labeledIndices,
 				}
 			})
 			presentationCreateData.push({
@@ -224,6 +235,7 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 							name: unit.name,
 							formatString: unit.formatString,
 							subdivision: unit.subdivision,
+							labeledIndices: unit.labeledIndices,
 						},
 					})
 				}
@@ -332,9 +344,9 @@ export const CalendarTemplateService = {
 			.createUnit('29-day month', ['Day x29'])
 			.createUnit('30-day month', ['Day x30'])
 			.createUnit('31-day month', ['Day x31'])
-			.createUnit('Leap year', [
+			.createUnit('Regular year', [
 				'31-day month: January',
-				'29-day month: February',
+				'28-day month: February',
 				'31-day month: March',
 				'30-day month: April',
 				'31-day month: May',
@@ -346,9 +358,9 @@ export const CalendarTemplateService = {
 				'30-day month: November',
 				'31-day month: December',
 			])
-			.createUnit('Regular year', [
+			.createUnit('Leap year', [
 				'31-day month: January',
-				'28-day month: February',
+				'29-day month: February',
 				'31-day month: March',
 				'30-day month: April',
 				'31-day month: May',
@@ -405,36 +417,40 @@ export const CalendarTemplateService = {
 			.createPresentation('Minutes', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x10: hh:mm'])
 			.createPresentation('Hours 0', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
 				compression: 5,
+				baselineUnit: 'Minute',
 			})
 			.createPresentation('Hours 1', ['Day: MMM DD, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
 				compression: 20,
+				baselineUnit: 'Minute',
 			})
 			.createPresentation('Hours 2', ['Month: MMM DD, YYYY', 'Day: MMM DD', 'Hour x6: hh:mm'], {
 				compression: 1,
+				baselineUnit: 'Hour',
 			})
-			.createPresentation('Days', ['Month: MMM DD, YYYY', 'Day x7: M DD', 'Hour x24: '], {
+			.createPresentation('Days', ['Month: MMM DD, YYYY', 'Day 4,9,14,19,24: M DD', 'Hour x24: '], {
 				compression: 4,
+				baselineUnit: 'Hour',
 			})
-			.createPresentation('Quarters', ['Year: MMM DD, YYYY', 'Month: MMM', 'Day x7: '], {
+			.createPresentation('Quarters', ['Year: MMM YYYY', 'Month: MMM YYYY', 'Day 4,9,14,19,24: '], {
 				compression: 1,
+				baselineUnit: 'Day',
 			})
-			.createPresentation('Years', ['Year x4: YYYY', 'Year: YYYY', 'Month x6: '], {
-				compression: 1,
+			.createPresentation('Years', ['Year x4: YYYY', 'Year: YYYY', 'Day x365: '], {
+				compression: 182,
+				baselineUnit: 'Day',
 			})
 			.createPresentation('Decades', ['Year x10: YYYY', 'Year x4: YYYY', 'Year x4: '], {
-				compression: 1,
+				compression: 1 * 365,
+				baselineUnit: 'Day',
 			})
 			.createPresentation('Centuries', ['Year x1000: YYYY', 'Year x100: YYYY', 'Year x10: YYYY'], {
-				compression: 10,
+				compression: 10 * 365,
+				baselineUnit: 'Day',
 			})
 			.createPresentation('Millenia', ['Year x10000: YYYY', 'Year x1000: YYYY', 'Year x100: YYYY'], {
-				compression: 100,
+				compression: 100 * 365,
+				baselineUnit: 'Day',
 			})
-			// .createPresentation('Days', ['Year: MMM DD, YYYY', 'Month: MMM', 'Day: M DD'])
-			// .createPresentation('Weeks', ['Year: MMM DD, YYYY', 'Month: MMM', 'Day x4: M DD'], {
-			// compression: 2,
-			// })
-			// .createPresentation('Weeks 3', ['Year: MMM DD, YYYY', 'Month: hh:mm', 'Day x4: M dd'])
 			.build(prisma, calendarId)
 		return calendar
 	},

@@ -41,9 +41,10 @@ model CalendarUnit {
     calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
     calendarId String
 
-    parents       CalendarUnitRelation[]     @relation("ChildUnit")
-    children      CalendarUnitRelation[]     @relation("ParentUnit")
-    presentations CalendarPresentationUnit[]
+    parents         CalendarUnitRelation[]     @relation("ChildUnit")
+    children        CalendarUnitRelation[]     @relation("ParentUnit")
+    presentations   CalendarPresentationUnit[]
+    baselineUnitFor CalendarPresentation[]     @relation("BaselineUnit")
 }
 
 model CalendarUnitRelation {
@@ -93,6 +94,9 @@ model CalendarPresentation {
     scaleFactor Float                      @default(1.0)
     units       CalendarPresentationUnit[]
 
+    baselineUnit   CalendarUnit? @relation(name: "BaselineUnit", fields: [baselineUnitId], references: [id], onDelete: Cascade)
+    baselineUnitId String?
+
     calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
     calendarId String
 }
@@ -102,9 +106,10 @@ model CalendarPresentationUnit {
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
 
-    name         String
-    formatString String
-    subdivision  Int    @default(1)
+    name           String
+    formatString   String
+    subdivision    Int    @default(1)
+    labeledIndices Int[]  @default([])
 
     unit   CalendarUnit @relation(fields: [unitId], references: [id], onDelete: Cascade)
     unitId String

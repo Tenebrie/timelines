@@ -153,6 +153,7 @@ export type GetCalendarApiResponse = /** status 200  */ {
 			presentationId: string
 			formatString: string
 			subdivision: number
+			labeledIndices: number[]
 		}[]
 		id: string
 		createdAt: string
@@ -310,6 +311,7 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 			presentationId: string
 			formatString: string
 			subdivision: number
+			labeledIndices: number[]
 		}[]
 		id: string
 		createdAt: string
@@ -455,6 +457,7 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 		presentationId: string
 		formatString: string
 		subdivision: number
+		labeledIndices: number[]
 	}[]
 	id: string
 	createdAt: string
@@ -498,6 +501,7 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 		presentationId: string
 		formatString: string
 		subdivision: number
+		labeledIndices: number[]
 	}[]
 	id: string
 	createdAt: string
