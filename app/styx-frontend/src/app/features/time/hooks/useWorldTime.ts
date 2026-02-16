@@ -6,6 +6,7 @@ import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSel
 
 import { useFormatTimestamp } from '../calendar/hooks/useFormatTimestamp'
 import { useParseTimestampToUnits } from '../calendar/hooks/useParseTimestampToUnits'
+import { useParseUnitsToTimestamp } from '../calendar/hooks/useParseUnitsToTimestamp'
 
 export const maximumTime = 8640000000000000
 
@@ -148,6 +149,7 @@ export const useWorldTime = () => {
 	// )
 
 	const parseTime = useParseTimestampToUnits({ units: worldCalendar.units })
+	const unparseTime = useParseUnitsToTimestamp({ units: worldCalendar.units })
 	const format = useFormatTimestamp({
 		calendar: worldCalendar,
 	})
@@ -192,6 +194,7 @@ export const useWorldTime = () => {
 		presentation,
 		originTime: worldCalendar.originTime,
 		parseTime,
+		unparseTime,
 		timeToLabel,
 		timeToShortLabel,
 		timeToShortestLabel,

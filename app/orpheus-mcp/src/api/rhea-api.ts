@@ -2266,9 +2266,9 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 ownerId: string;
+                                size: number;
                                 expiresAt?: null | string;
                                 bucketKey: string;
-                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "Image" | "Avatar";
@@ -2433,6 +2433,7 @@ export interface operations {
                             calendarId: string;
                             scaleFactor: number;
                             compression: number;
+                            baselineUnitId?: null | string;
                         }[];
                         units: {
                             children: {
@@ -2682,6 +2683,7 @@ export interface operations {
                             calendarId: string;
                             scaleFactor: number;
                             compression: number;
+                            baselineUnitId?: null | string;
                         }[];
                         id: string;
                         /** Format: date-time */
@@ -2901,10 +2903,12 @@ export interface operations {
                 "application/json": {
                     name: string;
                     scaleFactor?: number;
+                    baselineUnitId?: string;
                 };
                 "application/x-www-form-urlencoded": {
                     name: string;
                     scaleFactor?: number;
+                    baselineUnitId?: string;
                 };
             };
         };
@@ -2947,6 +2951,25 @@ export interface operations {
                             subdivision: number;
                             labeledIndices: number[];
                         }[];
+                        baselineUnit: null | {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            calendarId: string;
+                            position: number;
+                            displayName?: null | string;
+                            displayNameShort?: null | string;
+                            displayNamePlural?: null | string;
+                            formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
+                            formatShorthand?: null | string;
+                            negativeFormat: "MinusSign" | "AbsoluteValue";
+                            /** Format: bigint */
+                            duration: string;
+                            treeDepth: number;
+                        };
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
@@ -2956,6 +2979,7 @@ export interface operations {
                         calendarId: string;
                         scaleFactor: number;
                         compression: number;
+                        baselineUnitId?: null | string;
                     };
                 };
             };
@@ -2990,6 +3014,7 @@ export interface operations {
                         calendarId: string;
                         scaleFactor: number;
                         compression: number;
+                        baselineUnitId?: null | string;
                     };
                 };
             };
@@ -3064,6 +3089,25 @@ export interface operations {
                             subdivision: number;
                             labeledIndices: number[];
                         }[];
+                        baselineUnit: null | {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            calendarId: string;
+                            position: number;
+                            displayName?: null | string;
+                            displayNameShort?: null | string;
+                            displayNamePlural?: null | string;
+                            formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
+                            formatShorthand?: null | string;
+                            negativeFormat: "MinusSign" | "AbsoluteValue";
+                            /** Format: bigint */
+                            duration: string;
+                            treeDepth: number;
+                        };
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
@@ -3073,6 +3117,7 @@ export interface operations {
                         calendarId: string;
                         scaleFactor: number;
                         compression: number;
+                        baselineUnitId?: null | string;
                     };
                 };
             };
@@ -4888,6 +4933,25 @@ export interface operations {
                             }[];
                             presentations: {
                                 units: {
+                                    unit: {
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        name: string;
+                                        calendarId: string;
+                                        position: number;
+                                        displayName?: null | string;
+                                        displayNameShort?: null | string;
+                                        displayNamePlural?: null | string;
+                                        formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
+                                        formatShorthand?: null | string;
+                                        negativeFormat: "MinusSign" | "AbsoluteValue";
+                                        /** Format: bigint */
+                                        duration: string;
+                                        treeDepth: number;
+                                    };
                                     id: string;
                                     /** Format: date-time */
                                     createdAt: string;
@@ -4900,6 +4964,25 @@ export interface operations {
                                     subdivision: number;
                                     labeledIndices: number[];
                                 }[];
+                                baselineUnit: null | {
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    calendarId: string;
+                                    position: number;
+                                    displayName?: null | string;
+                                    displayNameShort?: null | string;
+                                    displayNamePlural?: null | string;
+                                    formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
+                                    formatShorthand?: null | string;
+                                    negativeFormat: "MinusSign" | "AbsoluteValue";
+                                    /** Format: bigint */
+                                    duration: string;
+                                    treeDepth: number;
+                                };
                                 id: string;
                                 /** Format: date-time */
                                 createdAt: string;
@@ -4909,6 +4992,7 @@ export interface operations {
                                 calendarId: string;
                                 scaleFactor: number;
                                 compression: number;
+                                baselineUnitId?: null | string;
                             }[];
                             seasons: {
                                 intervals: {

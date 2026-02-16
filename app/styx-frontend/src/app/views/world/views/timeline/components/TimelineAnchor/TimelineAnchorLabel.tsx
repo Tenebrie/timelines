@@ -8,7 +8,7 @@ import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { getTimelineState, getWorldCalendarState } from '@/app/views/world/WorldSliceSelectors'
+import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 import { TimelineState } from '../../utils/TimelineState'
 
@@ -16,10 +16,9 @@ export const TimelineAnchorLabel = memo(TimelineAnchorLabelComponent)
 
 function TimelineAnchorLabelComponent() {
 	const theme = useCustomTheme()
-	const calendar = useSelector(getWorldCalendarState)
 	const { scaleLevel } = useSelector(getTimelineState)
 	const { timeToLabel } = useWorldTime()
-	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
+	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 	const labelRef = useRef<HTMLButtonElement>(null)
 
 	const { open: openTimeTravelModal } = useModal('timeTravelModal')

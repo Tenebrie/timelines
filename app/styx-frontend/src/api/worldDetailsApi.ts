@@ -93,6 +93,42 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		}[]
 		presentations: {
 			units: {
+				unit: {
+					displayName: string
+					displayNameShort: string
+					displayNamePlural: string
+					children: {
+						id: string
+						createdAt: string
+						updatedAt: string
+						position: number
+						label?: null | string
+						repeats: number
+						parentUnitId: string
+						childUnitId: string
+					}[]
+					parents: {
+						id: string
+						createdAt: string
+						updatedAt: string
+						position: number
+						label?: null | string
+						repeats: number
+						parentUnitId: string
+						childUnitId: string
+					}[]
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					calendarId: string
+					position: number
+					formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
+					formatShorthand?: null | string
+					negativeFormat: 'MinusSign' | 'AbsoluteValue'
+					duration: string
+					treeDepth: number
+				}
 				id: string
 				createdAt: string
 				updatedAt: string
@@ -103,6 +139,22 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				subdivision: number
 				labeledIndices: number[]
 			}[]
+			baselineUnit: null | {
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				calendarId: string
+				position: number
+				displayName?: null | string
+				displayNameShort?: null | string
+				displayNamePlural?: null | string
+				formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
+				formatShorthand?: null | string
+				negativeFormat: 'MinusSign' | 'AbsoluteValue'
+				duration: string
+				treeDepth: number
+			}
 			id: string
 			createdAt: string
 			updatedAt: string
@@ -110,6 +162,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			calendarId: string
 			scaleFactor: number
 			compression: number
+			baselineUnitId?: null | string
 		}[]
 		seasons: {
 			intervals: {

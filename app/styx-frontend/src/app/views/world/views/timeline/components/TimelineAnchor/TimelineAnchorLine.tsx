@@ -1,19 +1,19 @@
 import Box from '@mui/material/Box'
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { CustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { ScaleLevel } from '@/app/schema/ScaleLevel'
 import { LineSpacing } from '@/app/utils/constants'
 import { keysOf } from '@/app/utils/keysOf'
+import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 import { CONTROLLED_SCROLLER_SIZE } from '../../tracks/components/ControlledScroller'
 import { TimelineState } from '../../utils/TimelineState'
 import { DividerLabel } from './styles'
 import { TimelineAnchorPadding } from './TimelineAnchor'
 import { useAnchorLineLabel } from './useAnchorLineLabel'
-import { usePresentationUnit } from './usePresentationUnit'
 
 export const ANCHOR_RESET_PERIOD = CONTROLLED_SCROLLER_SIZE / 10
 
@@ -33,25 +33,17 @@ export const getLoop = ({
 	)
 
 type Props = {
-	// Theme to use for styling
 	theme: CustomTheme
-	// Raw index of the anchor line
-	index: number
-	// Total number of the anchor lines
-	lineCount: number
-	// Current level of scale
-	scaleLevel: ScaleLevel
-	scaledTimeToRealTime: ReturnType<typeof useTimelineWorldTime>['scaledTimeToRealTime']
-	smallGroupSize: number
-	mediumGroupSize: number
-	largeGroupSize: number
+	timestamp: number
+	size: 'large' | 'medium' | 'small'
 	containerWidth: number
+	formatString: string
 }
 
 export const TimelineAnchorLine = memo(TimelineAnchorLineComponent)
 
 function TimelineAnchorLineComponent(props: Props) {
-	const { theme, index: rawIndex, lineCount, scaleLevel, scaledTimeToRealTime, containerWidth } = props
+	const { theme, timestamp, size: labelSize, formatString, containerWidth } = props
 
 	const getDividerSize = useCallback(({ labelSize }: { labelSize: 'large' | 'medium' | 'small' | null }) => {
 		if (labelSize === 'large') {
@@ -64,18 +56,7 @@ function TimelineAnchorLineComponent(props: Props) {
 		return { width: 1, height: 1 }
 	}, [])
 
-	const [timelineScroll, setTimelineScroll] = useState(0)
-	const anchorLineIndex = useMemo(() => {
-		const loopIndex = getLoop({
-			index: rawIndex,
-			lineCount,
-			timelineScroll,
-		})
-		return rawIndex + loopIndex * lineCount
-	}, [lineCount, rawIndex, timelineScroll])
-
-	const timestamp = scaledTimeToRealTime(anchorLineIndex * LineSpacing)
-	const { labelSize, formatString } = usePresentationUnit({ timestamp })
+	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const { label, refreshLabel } = useAnchorLineLabel({ labelSize, timestamp, formatString })
 
 	const cssVariablesRef = useRef({
@@ -89,18 +70,12 @@ function TimelineAnchorLineComponent(props: Props) {
 	} as Record<string, unknown>)
 
 	const ref = useRef<HTMLDivElement>(null)
+	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel })
 
 	const updateVariables = useCallback(
 		(scroll: number) => {
-			const loopIndex = getLoop({
-				index: rawIndex,
-				lineCount,
-				timelineScroll: scroll,
-			})
-			const index = rawIndex + loopIndex * lineCount
-
 			// Calculate position using chunked scroll like events do
-			const actualPosition = index * LineSpacing
+			const actualPosition = realTimeToScaledTime(timestamp)
 			const dividerPosition =
 				actualPosition +
 				Math.floor(scroll / ANCHOR_RESET_PERIOD) * ANCHOR_RESET_PERIOD +
@@ -134,7 +109,7 @@ function TimelineAnchorLineComponent(props: Props) {
 
 			refreshLabel()
 		},
-		[rawIndex, lineCount, labelSize, getDividerSize, refreshLabel],
+		[realTimeToScaledTime, timestamp, labelSize, getDividerSize, refreshLabel],
 	)
 
 	const lastSeenScroll = useRef<number | null>(null)
@@ -145,7 +120,6 @@ function TimelineAnchorLineComponent(props: Props) {
 				return
 			}
 			updateVariables(newScroll)
-			setTimelineScroll(newScroll)
 			lastSeenScroll.current = newScroll
 		},
 	})

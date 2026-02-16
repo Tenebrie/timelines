@@ -2,19 +2,24 @@ import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Fade from '@mui/material/Fade'
 import Paper from '@mui/material/Paper'
-import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { EsotericDate } from '@/app/features/time/calendar/date/EsotericDate'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { LineSpacing } from '@/app/utils/constants'
 import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { useTimelineAnchorDrag } from '../../hooks/useTimelineAnchorDrag'
 import { useTimelineHorizontalScroll } from '../../hooks/useTimelineHorizontalScroll'
+import { TimelineState } from '../../utils/TimelineState'
 import { TimelineAnchorContainer } from './TimelineAnchorContainer'
 import { TimelineAnchorLabel } from './TimelineAnchorLabel'
 import { TimelineAnchorLine } from './TimelineAnchorLine'
+import { useStaggeredValue } from './useStaggeredValue'
 
 export const TimelineAnchorPadding = 150 // pixels
 
@@ -28,11 +33,13 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 	const theme = useCustomTheme()
 	const containerRef = useRef<HTMLDivElement | null>(null)
 	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
+	const { calendars } = useSelector(getWorldState, (a, b) => a.calendars === b.calendars)
+	const worldCalendar = calendars[0]
 	const { scaleLevel, isSwitchingScale } = useSelector(
 		getTimelineState,
 		(a, b) => a.scaleLevel === b.scaleLevel && a.isSwitchingScale === b.isSwitchingScale,
 	)
-	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel, calendar })
+	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
 	// Drag-to-scroll functionality
 	const { isDragging, onMouseDown, onMouseMove, onMouseUp } = useTimelineAnchorDrag()
@@ -59,18 +66,95 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 
 	const visible = !isSwitchingScale
 	const lineCount = useMemo(
-		() => Math.ceil(containerWidth / LineSpacing) + Math.ceil(TimelineAnchorPadding / LineSpacing) * 2,
+		() => Math.ceil(containerWidth / LineSpacing) + Math.ceil(TimelineAnchorPadding / LineSpacing) * 2 + 700,
 		[containerWidth],
 	)
 
-	const [dividers, setDividers] = useState(Array(lineCount).fill(0))
-	const { smallGroupSize, mediumGroupSize, largeGroupSize } = getTimelineMultipliers()
+	type DividerData = {
+		timestamp: number
+		size: 'large' | 'medium' | 'small'
+		formatString: string
+	}
+
+	const [dividers, setDividers] = useState<DividerData[]>([])
+	const { presentation } = useWorldTime()
+
+	const [staggeredScroll, setStaggeredScroll, forceSetStaggeredScroll] = useStaggeredValue({
+		value: TimelineState.scroll,
+		stagger: 500,
+	})
+
+	useEventBusSubscribe['timeline/onScroll']({
+		callback: (scroll) => {
+			if (!presentation.baselineUnit) {
+				throw new Error('No baseline')
+			}
+			setStaggeredScroll(scroll)
+		},
+	})
+
+	const regenerateDividers = useCallback(
+		(scroll: number) => {
+			if (presentation.units.length === 0) {
+				return
+			}
+
+			const currentTimestamp = scaledTimeToRealTime(-scroll + 40)
+			let baseDate = new EsotericDate(worldCalendar, currentTimestamp).floor(presentation.units[0].unit)
+			const valueToStep = baseDate.get(presentation.units[0].unit)!.value % presentation.units[0].subdivision
+			baseDate = baseDate.step(presentation.units[0].unit, -valueToStep)
+
+			const dividers: DividerData[] = []
+			presentation.units.forEach((presentationUnit, outerIndex) => {
+				const labelSize = (() => {
+					if (outerIndex === 0) {
+						return 'large'
+					} else if (outerIndex === 1) {
+						return 'medium'
+					} else {
+						return 'small'
+					}
+				})()
+
+				let date = new EsotericDate(baseDate)
+
+				for (let i = 0; i < lineCount; i++) {
+					const timestamp = date.getTimestamp()
+					const screenLeft = scaledTimeToRealTime(-TimelineState.scroll - 500)
+					const screenRight = screenLeft + scaledTimeToRealTime(containerWidth + 1000)
+					if (timestamp < screenLeft || timestamp > screenRight) {
+						date = date.step(presentationUnit.unit, presentationUnit.subdivision)
+						continue
+					}
+
+					const matchesIndices = (() => {
+						if (presentationUnit.labeledIndices.length === 0) {
+							return true
+						}
+						const parsed = new EsotericDate(worldCalendar, timestamp)
+						return presentationUnit.labeledIndices.includes(parsed.get(presentationUnit.unit)!.value)
+					})()
+
+					if (matchesIndices && !dividers.some((d) => d.timestamp === timestamp)) {
+						dividers.push({
+							timestamp,
+							size: labelSize,
+							formatString: presentationUnit.formatString,
+						})
+					}
+					date = date.step(presentationUnit.unit, presentationUnit.subdivision)
+				}
+			})
+			setDividers(dividers)
+		},
+		[containerWidth, lineCount, presentation.units, scaledTimeToRealTime, worldCalendar],
+	)
 
 	const lastLineCount = useRef(0)
 	const lastCalendar = useRef(calendar)
 	const lastContainerWidth = useRef(containerWidth)
 	const lastScaleLevel = useRef(scaleLevel)
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (
 			lineCount !== lastLineCount.current ||
 			calendar !== lastCalendar.current ||
@@ -81,9 +165,13 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 			lastCalendar.current = calendar
 			lastContainerWidth.current = containerWidth
 			lastScaleLevel.current = scaleLevel
-			setDividers(Array(lineCount).fill(0))
+			// forceSetRenderedTimestamp(TimelineState.scroll)
 		}
-	}, [calendar, lineCount, containerWidth, scaleLevel])
+	}, [calendar, lineCount, containerWidth, scaleLevel, forceSetStaggeredScroll])
+
+	useEffect(() => {
+		regenerateDividers(staggeredScroll)
+	}, [regenerateDividers, staggeredScroll])
 
 	return (
 		<Box
@@ -114,18 +202,12 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 				<Box>
 					<TimelineAnchorLabel />
 					<TimelineAnchorContainer>
-						{dividers.map((_, index) => (
+						{dividers.map((div) => (
 							<TimelineAnchorLine
-								key={`${index}`}
+								key={`${div.timestamp}`}
 								theme={theme}
-								index={index}
-								lineCount={lineCount}
-								scaleLevel={scaleLevel}
-								smallGroupSize={smallGroupSize}
-								mediumGroupSize={mediumGroupSize}
-								largeGroupSize={largeGroupSize}
-								scaledTimeToRealTime={scaledTimeToRealTime}
 								containerWidth={containerWidth}
+								{...div}
 							/>
 						))}
 					</TimelineAnchorContainer>

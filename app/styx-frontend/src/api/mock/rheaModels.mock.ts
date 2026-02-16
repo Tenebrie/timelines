@@ -5,7 +5,14 @@ import { DeepPartial } from '@/app/utils/DeepPartial'
 import { User } from '../../app/features/auth/AuthSlice'
 import { GetCalendarPreviewApiResponse } from '../calendarApi'
 import { CollaboratingUser } from '../types/worldCollaboratorsTypes'
-import { ActorDetails, WorldBrief, WorldDetails, WorldEventDelta, WorldItem } from '../types/worldTypes'
+import {
+	ActorDetails,
+	WorldBrief,
+	WorldCalendar,
+	WorldDetails,
+	WorldEventDelta,
+	WorldItem,
+} from '../types/worldTypes'
 import { WorldEvent } from '../types/worldTypes'
 import { GetWorldInfoApiResponse } from '../worldDetailsApi'
 
@@ -151,6 +158,21 @@ export const mockApiEventModel = (
 	pages: [],
 	...statement,
 })
+
+export function mockCalendar(overrides: Partial<WorldCalendar>): WorldCalendar {
+	return {
+		units: [],
+		presentations: [],
+		id: 'cal-1',
+		createdAt: '2024-01-01T00:00:00.000Z',
+		updatedAt: '2024-01-01T00:00:00.000Z',
+		name: 'Test Calendar',
+		position: 0,
+		originTime: 0,
+		seasons: [],
+		...overrides,
+	}
+}
 
 export const mockCalendarUnit = (
 	overrides: Omit<Partial<GetCalendarPreviewApiResponse['units'][number]>, 'duration'> & {

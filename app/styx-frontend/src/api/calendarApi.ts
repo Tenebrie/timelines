@@ -162,6 +162,7 @@ export type GetCalendarApiResponse = /** status 200  */ {
 		calendarId: string
 		scaleFactor: number
 		compression: number
+		baselineUnitId?: null | string
 	}[]
 	units: {
 		children: {
@@ -320,6 +321,7 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 		calendarId: string
 		scaleFactor: number
 		compression: number
+		baselineUnitId?: null | string
 	}[]
 	id: string
 	createdAt: string
@@ -459,6 +461,22 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 		subdivision: number
 		labeledIndices: number[]
 	}[]
+	baselineUnit: null | {
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		calendarId: string
+		position: number
+		displayName?: null | string
+		displayNameShort?: null | string
+		displayNamePlural?: null | string
+		formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
+		formatShorthand?: null | string
+		negativeFormat: 'MinusSign' | 'AbsoluteValue'
+		duration: string
+		treeDepth: number
+	}
 	id: string
 	createdAt: string
 	updatedAt: string
@@ -466,6 +484,7 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 	calendarId: string
 	scaleFactor: number
 	compression: number
+	baselineUnitId?: null | string
 }
 export type CreateCalendarPresentationApiArg = {
 	/** Any string value */
@@ -473,6 +492,7 @@ export type CreateCalendarPresentationApiArg = {
 	body: {
 		name: string
 		scaleFactor?: number
+		baselineUnitId?: string
 	}
 }
 export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
@@ -503,6 +523,22 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 		subdivision: number
 		labeledIndices: number[]
 	}[]
+	baselineUnit: null | {
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		calendarId: string
+		position: number
+		displayName?: null | string
+		displayNameShort?: null | string
+		displayNamePlural?: null | string
+		formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
+		formatShorthand?: null | string
+		negativeFormat: 'MinusSign' | 'AbsoluteValue'
+		duration: string
+		treeDepth: number
+	}
 	id: string
 	createdAt: string
 	updatedAt: string
@@ -510,6 +546,7 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 	calendarId: string
 	scaleFactor: number
 	compression: number
+	baselineUnitId?: null | string
 }
 export type UpdateCalendarPresentationApiArg = {
 	/** Any string value */
@@ -532,6 +569,7 @@ export type DeleteCalendarPresentationApiResponse = /** status 200  */ {
 	calendarId: string
 	scaleFactor: number
 	compression: number
+	baselineUnitId?: null | string
 }
 export type DeleteCalendarPresentationApiArg = {
 	/** Any string value */

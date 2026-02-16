@@ -315,6 +315,7 @@ export const CalendarService = {
 					calendarId,
 				},
 				include: {
+					baselineUnit: true,
 					units: {
 						include: {
 							unit: true,
@@ -397,6 +398,7 @@ export const CalendarService = {
 					name: params.name,
 				},
 				include: {
+					baselineUnit: true,
 					units: {
 						include: {
 							unit: true,
@@ -447,6 +449,7 @@ export const CalendarService = {
 				scaleFactor: Number(scaleFactor) * existingPresentation.compression,
 			},
 			include: {
+				baselineUnit: true,
 				units: {
 					include: {
 						unit: true,
@@ -680,7 +683,11 @@ export const CalendarService = {
 				},
 				presentations: {
 					include: {
-						units: true,
+						units: {
+							include: {
+								unit: true,
+							},
+						},
 					},
 				},
 				seasons: {
@@ -757,10 +764,11 @@ export const CalendarService = {
 
 			for (const presUnit of presentation.units) {
 				const newUnitId = unitIdMap.get(presUnit.unitId)
+				const { unit: _, ...data } = presUnit
 				if (newUnitId) {
 					await tx.calendarPresentationUnit.create({
 						data: {
-							...presUnit,
+							...data,
 							id: undefined,
 							presentationId: newPresentation.id,
 							unitId: newUnitId,

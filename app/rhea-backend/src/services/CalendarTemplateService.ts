@@ -54,7 +54,7 @@ type TemplateBuilder<Units extends string[], Buckets extends string[]> = {
 	createPresentation: (
 		name: string,
 		relations: PresentationString<Buckets>[],
-		properties?: {
+		properties: {
 			compression: number
 			baselineUnit: Units[number]
 		},
@@ -75,6 +75,7 @@ type CalendarUnitCreateData = {
 type CalendarPresentationCreateData = {
 	name: string
 	compression: number
+	baselineUnit: string
 	units: {
 		name: string
 		formatString: string
@@ -145,7 +146,7 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 		createPresentation: (
 			name: string,
 			relations: PresentationString<Buckets>[],
-			properties: { compression?: number } = {},
+			properties: { compression?: number; baselineUnit: Units[number] },
 		) => {
 			const units = relations.map((relation) => {
 				const relString = String(relation)
@@ -162,8 +163,9 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 			})
 			presentationCreateData.push({
 				name,
-				compression: properties.compression || 1,
 				units,
+				compression: properties.compression || 1,
+				baselineUnit: properties.baselineUnit,
 			})
 			return builder
 		},
@@ -213,11 +215,16 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 			}
 
 			for (const data of presentationCreateData) {
+				const baselineUnit = unitNameCache.get(data.baselineUnit)
+				if (!baselineUnit) {
+					throw new Error(`Invalid baseline unit for presentation ${data.name}.`)
+				}
 				const parent = await prisma.calendarPresentation.create({
 					data: {
 						calendarId,
 						name: data.name,
 						compression: data.compression,
+						baselineUnitId: baselineUnit.id,
 					},
 				})
 
@@ -414,8 +421,11 @@ export const CalendarTemplateService = {
 			.updateUnits(['4-year cycle', '100-year cycle', '400-year cycle'], {
 				formatMode: 'Hidden',
 			})
-			.createPresentation('Minutes', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x10: hh:mm'])
-			.createPresentation('Hours 0', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+			.createPresentation('Minutes', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x10: hh:mm'], {
+				compression: 1,
+				baselineUnit: 'Minute',
+			})
+			.createPresentation('Hours 0', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x10: '], {
 				compression: 5,
 				baselineUnit: 'Minute',
 			})
@@ -435,21 +445,21 @@ export const CalendarTemplateService = {
 				compression: 1,
 				baselineUnit: 'Day',
 			})
-			.createPresentation('Years', ['Year x4: YYYY', 'Year: YYYY', 'Day x365: '], {
-				compression: 182,
-				baselineUnit: 'Day',
+			.createPresentation('Years', ['Year x4: YYYY', 'Year: YYYY', 'Month x6: '], {
+				compression: 1,
+				baselineUnit: '30-day month',
 			})
-			.createPresentation('Decades', ['Year x10: YYYY', 'Year x4: YYYY', 'Year x4: '], {
-				compression: 1 * 365,
-				baselineUnit: 'Day',
+			.createPresentation('Decades', ['Year x40: YYYY', 'Year x4: YYYY', 'Month x6: '], {
+				compression: 6,
+				baselineUnit: '30-day month',
 			})
-			.createPresentation('Centuries', ['Year x1000: YYYY', 'Year x100: YYYY', 'Year x10: YYYY'], {
-				compression: 10 * 365,
-				baselineUnit: 'Day',
+			.createPresentation('Centuries', ['Year x400: YYYY', 'Year x20: YYYY', 'Year x5: '], {
+				compression: 5,
+				baselineUnit: 'Regular year',
 			})
 			.createPresentation('Millenia', ['Year x10000: YYYY', 'Year x1000: YYYY', 'Year x100: YYYY'], {
-				compression: 100 * 365,
-				baselineUnit: 'Day',
+				compression: 100,
+				baselineUnit: 'Regular year',
 			})
 			.build(prisma, calendarId)
 		return calendar
