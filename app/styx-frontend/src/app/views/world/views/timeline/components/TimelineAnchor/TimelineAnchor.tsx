@@ -19,7 +19,6 @@ import { TimelineAnchorContainer } from './TimelineAnchorContainer'
 import { TimelineAnchorLabel } from './TimelineAnchorLabel'
 import { TimelineAnchorLine } from './TimelineAnchorLine'
 import { useAnchorLines } from './useAnchorLines'
-import { useStaggeredValue } from './useStaggeredValue'
 
 export const TimelineAnchorPadding = 250 // pixels
 
@@ -73,11 +72,6 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 	})
 	const { presentation } = useWorldTime()
 
-	const [staggeredScroll, setStaggeredScroll, forceSetStaggeredScroll] = useStaggeredValue({
-		value: TimelineState.scroll,
-		stagger: 1,
-	})
-
 	useEventBusSubscribe['timeline/onScroll']({
 		callback: (scroll) => {
 			if (!presentation.baselineUnit) {
@@ -104,12 +98,7 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 			lastScaleLevel.current = scaleLevel
 			regenerateDividers(TimelineState.scroll)
 		}
-	}, [calendar, lineCount, containerWidth, scaleLevel, forceSetStaggeredScroll, regenerateDividers])
-
-	// useEffect(() => {
-	// 	updateDividers(staggeredScroll)
-	// 	// regenerateDividers(staggeredScroll)
-	// }, [staggeredScroll, updateDividers])
+	}, [calendar, lineCount, containerWidth, scaleLevel, regenerateDividers])
 
 	useEffectOnce(() => {
 		regenerateDividers(TimelineState.scroll)

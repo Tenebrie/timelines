@@ -11,6 +11,7 @@ export function parseTimestampSingleRoot({
 	customLabel,
 	timestamp,
 	extraDuration,
+	depth,
 }: {
 	outputMap?: ParsedTimestamp
 	skippedChildCount?: Map<string, number>
@@ -20,12 +21,14 @@ export function parseTimestampSingleRoot({
 	timestamp: number
 	// Non-consumed duration from hidden ancestors and siblings
 	extraDuration: number
+	depth: number
 }) {
 	outputMap = outputMap ?? new Map()
 	skippedChildCount = skippedChildCount ?? new Map<string, number>()
 
 	const index = Math.floor(timestamp / Number(unit.duration))
 	let remainder = timestamp % Number(unit.duration)
+	// console.log(depth, new Error())
 
 	// Handle negative timestamps
 	if (remainder < 0) {
@@ -66,6 +69,7 @@ export function parseTimestampSingleRoot({
 				timestamp: remainder,
 				extraDuration: myExtraDuration,
 				customLabel: childRelation.label ?? undefined,
+				depth: depth + 1,
 			})
 		}
 		remainder -= Number(childUnit.duration) * childRelation.repeats

@@ -79,10 +79,16 @@ export function useAnchorLines({ containerWidth }: Props) {
 			lastSeenScrollRef.current = scroll
 			lastSeenScaleLevelRef.current = scaleLevel
 
+			console.log('Regenerate')
+
 			const currentTimestamp = scaledTimeToRealTime(-scroll + 40)
 			let baseDate = new EsotericDate(worldCalendar, currentTimestamp).floor(presentation.units[0].unit)
 			const subdivision = presentation.units[0].subdivision
-			const valueToStep = baseDate.get(presentation.units[0].unit)!.value % subdivision
+			const entry = baseDate.get(presentation.units[0].unit)!
+			const isOneIndexed =
+				entry.unit.formatMode === 'NumericOneIndexed' || entry.unit.formatMode === 'NameOneIndexed'
+			const displayValue = isOneIndexed ? entry.value + 1 : entry.value
+			const valueToStep = displayValue % subdivision
 			baseDate = baseDate.step(presentation.units[0].unit, -valueToStep - subdivision)
 
 			const dividers: DividerData[][] = [[], [], [], []]
@@ -193,6 +199,7 @@ export function useAnchorLines({ containerWidth }: Props) {
 
 				if (direction === 1) {
 					while (date.getTimestamp() < screenRight) {
+						console.log('Stepping right')
 						const stepResult = stepDivider(date, presentationUnit, lastDivider.size)
 						date = stepResult.date
 						const dist = screenRight - date.getTimestamp()
@@ -209,6 +216,7 @@ export function useAnchorLines({ containerWidth }: Props) {
 					}
 				} else {
 					while (date.getTimestamp() > screenLeft) {
+						console.log('Stepping left')
 						const stepResult = stepDivider(date, presentationUnit, lastDivider.size, -1)
 						date = stepResult.date
 						const dist = screenLeft - date.getTimestamp()

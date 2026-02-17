@@ -1166,4 +1166,104 @@ describe('EsotericDate.step — with originTime (simulating Earth 2023)', () => 
 		const result = date.step(regularYear, 4)
 		expect(result.getTimestamp()).toBe(1470)
 	})
+
+	it('step +1000 years advances by exactly 1000 years of time', () => {
+		const date = new EsotericDate(calendarWithOrigin, 0).floor(regularYear)
+		const stepped = date.step(regularYear, 1000)
+
+		const gap = stepped.getTimestamp() - date.getTimestamp()
+
+		// 1000 years should be between 1000*360=360000 (all regular) and 1000*390=390000 (all leap)
+		expect(gap).toBeGreaterThan(360000)
+		expect(gap).toBeLessThan(390000)
+	})
+
+	it('step +1000 then get(Year) shows value advanced by exactly 1000', () => {
+		const date = new EsotericDate(calendarWithOrigin, 0).floor(regularYear)
+		const yearBefore = date.get(regularYear)!.value
+
+		const stepped = date.step(regularYear, 1000)
+		const yearAfter = stepped.get(regularYear)!.value
+
+		expect(yearAfter - yearBefore).toBe(1000)
+	})
+
+	it('repeated step +1000 always advances year value by exactly 1000', () => {
+		let date = new EsotericDate(calendarWithOrigin, 0).floor(regularYear)
+
+		for (let i = 0; i < 5; i++) {
+			const yearBefore = date.get(regularYear)!.value
+			date = date.step(regularYear, 1000)
+			const yearAfter = date.get(regularYear)!.value
+			expect(yearAfter - yearBefore, `Step ${i}: year should advance by 1000`).toBe(1000)
+		}
+	})
+
+	it('step +100 advances year value by exactly 100', () => {
+		const date = new EsotericDate(calendarWithOrigin, 0).floor(regularYear)
+		const yearBefore = date.get(regularYear)!.value
+		const stepped = date.step(regularYear, 100)
+		const yearAfter = stepped.get(regularYear)!.value
+		expect(yearAfter - yearBefore).toBe(100)
+	})
+
+	it('step +4 advances year value by exactly 4', () => {
+		const date = new EsotericDate(calendarWithOrigin, 0).floor(regularYear)
+		const yearBefore = date.get(regularYear)!.value
+		const stepped = date.step(regularYear, 4)
+		const yearAfter = stepped.get(regularYear)!.value
+		expect(yearAfter - yearBefore).toBe(4)
+	})
+
+	it('step -1000 decreases year value by exactly 1000', () => {
+		// Start at a known position well above year 1000
+		const date = new EsotericDate(calendarWithOrigin, 367500).floor(regularYear)
+		const yearBefore = date.get(regularYear)!.value
+
+		const stepped = date.step(regularYear, -1000)
+		const yearAfter = stepped.get(regularYear)!.value
+
+		expect(yearBefore - yearAfter).toBe(1000)
+	})
+
+	it('find smallest step that loses a year', () => {
+		const date = new EsotericDate(calendarWithOrigin, 0).floor(regularYear)
+		const yearBefore = date.get(regularYear)!.value
+		const failures: number[] = []
+		for (const n of [472, 473]) {
+			const stepped = date.step(regularYear, n)
+			const yearAfter = stepped.get(regularYear)!.value
+			const diff = yearAfter - yearBefore
+			if (diff !== n) {
+				failures.push(n)
+				console.log(
+					`step(+${n}): expected year ${yearBefore + n}, got ${yearAfter} (diff=${diff}), ts=${stepped.getTimestamp()}`,
+				)
+			}
+		}
+		expect(failures, `These step sizes lost years: ${failures.join(', ')}`).toEqual([])
+	})
+
+	it('step-by-1 around the 473 boundary to find where drift occurs', () => {
+		// Start at year 23 (0-indexed), step to year 475 one at a time, check each
+		let date = new EsotericDate(calendarWithOrigin, 0).floor(regularYear)
+		// First, jump to year 460 (known good range)
+		date = date.step(regularYear, 460)
+
+		// Now step by 1, logging each year value
+		const log: string[] = []
+		for (let i = 0; i < 20; i++) {
+			const prevYear = date.get(regularYear)!.value
+			const prevTs = date.getTimestamp()
+			date = date.step(regularYear, 1)
+			const newYear = date.get(regularYear)!.value
+			const newTs = date.getTimestamp()
+			const gap = newTs - prevTs
+			const yearDiff = newYear - prevYear
+			if (yearDiff !== 1) {
+				log.push(`Year ${prevYear}→${newYear} (diff=${yearDiff}, gap=${gap}, ts=${prevTs}→${newTs})`)
+			}
+		}
+		expect(log, `Step-by-1 drift detected:\n${log.join('\n')}`).toEqual([])
+	})
 })

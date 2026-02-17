@@ -9,6 +9,7 @@ export class EsotericDate {
 	private calendar: WorldCalendar
 	private timestamp: number
 	private unitById: Map<string, CalendarUnit>
+	private _parsedCache: ParsedTimestamp | null = null
 
 	constructor(calendar: WorldCalendar, timestamp: number)
 	constructor(date: EsotericDate)
@@ -17,6 +18,7 @@ export class EsotericDate {
 			this.calendar = calendarOrDate.calendar
 			this.timestamp = calendarOrDate.timestamp
 			this.unitById = calendarOrDate.unitById
+			this._parsedCache = calendarOrDate._parsedCache
 		} else {
 			this.calendar = calendarOrDate
 			this.timestamp = timestamp!
@@ -24,33 +26,29 @@ export class EsotericDate {
 		}
 	}
 
+	private parse(): ParsedTimestamp {
+		return (this._parsedCache ??= parseTimestampMultiRoot({
+			allUnits: this.calendar.units,
+			timestamp: this.timestamp + this.originTime,
+		}))
+	}
+
 	getTimestamp() {
 		return this.timestamp
 	}
 
 	format(formatString: string) {
-		const parsed = parseTimestampMultiRoot({
-			allUnits: this.calendar.units,
-			timestamp: this.timestamp,
-		})
-		return formatTimestampUnits(this.calendar.units, parsed, formatString)
+		return formatTimestampUnits(this.calendar.units, this.parse(), formatString)
 	}
 
 	getBucketId(unit: CalendarUnit) {
-		const parsed = parseTimestampMultiRoot({
-			allUnits: this.calendar.units,
-			timestamp: this.timestamp + this.originTime,
-		})
-		return parsed
+		return this.parse()
 			.values()
 			.find((entry) => entry.unit.displayName?.toLowerCase() === unit.displayName.toLowerCase())?.unit.id
 	}
 
 	get(unit: WorldCalendarUnit) {
-		const parsed = parseTimestampMultiRoot({
-			allUnits: this.calendar.units,
-			timestamp: this.timestamp + this.originTime,
-		})
+		const parsed = this.parse()
 		const bucketId = parsed
 			.values()
 			.find((entry) => entry.unit.displayName?.toLowerCase() === unit.displayName.toLowerCase())?.unit.id
@@ -61,11 +59,7 @@ export class EsotericDate {
 	}
 
 	getDuration(unit: CalendarUnit) {
-		const parsed = parseTimestampMultiRoot({
-			allUnits: this.calendar.units,
-			timestamp: this.timestamp + this.originTime,
-		})
-		return parsed.get(unit.id)?.unit.duration ?? 0
+		return this.parse().get(unit.id)?.unit.duration ?? 0
 	}
 
 	private get originTime(): number {
@@ -77,8 +71,7 @@ export class EsotericDate {
 			return new EsotericDate(this.calendar, this.timestamp)
 		}
 
-		const allUnits = this.calendar.units
-		const parsed = parseTimestampMultiRoot({ allUnits, timestamp: this.timestamp + this.originTime })
+		const parsed = this.parse()
 
 		// Find the target unit's entry via bucket matching (displayName)
 		const targetBucket = unit.displayName.toLowerCase()
@@ -94,10 +87,84 @@ export class EsotericDate {
 			throw new Error('Matched unit not found in calendar units: ' + targetEntry.unit.id)
 		}
 
+		// Resolve the child offset to preserve ONCE from the original timestamp,
+		// then step on the floored timestamp (which has no sub-unit offset to confuse recursion).
+		const floored = this.floor(unit)
+		const stepped = floored.stepFloored(unit, amount)
+
+		// Find the actual unit at the destination. The stepped position may be on a different
+		// concrete unit type (e.g. NormalYear vs LeapYear, or WorkHour vs BreakSlot).
+		// resolvePreservedChildren correctly handles child loss when the new unit lacks a child bucket.
+		const destUnit = stepped.resolveActualUnit(matchedUnit)
+
+		// Collect the original child values and resolve them in the destination unit's structure
+		const childValues = this.collectDescendantValues(parsed, matchedUnit)
+		const newChildOffset = this.resolveChildOffset(destUnit, childValues)
+
+		return new EsotericDate(this.calendar, stepped.timestamp + newChildOffset)
+	}
+
+	/**
+	 * Internal step that assumes `this` is already floored to the target unit.
+	 * All recursion happens on floored positions, so there are no children to
+	 * preserve or double-count. Child preservation is handled by the public step().
+	 */
+	private stepFloored(unit: WorldCalendarUnit, amount: number): EsotericDate {
+		if (amount === 0) {
+			return new EsotericDate(this.calendar, this.timestamp)
+		}
+
+		const allUnits = this.calendar.units
+		const parsed = this.parse()
+
+		// Find the target unit's entry via bucket matching (displayName)
+		const targetBucket = unit.displayName.toLowerCase()
+		const targetEntry = [...parsed.values()].find(
+			(entry) => (entry.unit.displayName ?? entry.unit.name).toLowerCase() === targetBucket,
+		)
+		if (!targetEntry) {
+			throw new Error('No bucket match for unit ' + unit.name)
+		}
+
+		const matchedUnit = this.unitById.get(targetEntry.unit.id)
+		if (!matchedUnit) {
+			throw new Error('Matched unit not found in calendar units: ' + targetEntry.unit.id)
+		}
+
+		// Bulk skip using the root cycle. The root cycle has a fixed duration that
+		// doesn't depend on position, so skipping N root cycles is always safe.
+		// This prevents O(amount) recursion for large steps.
+		const findRoot = (u: CalendarUnit): CalendarUnit => {
+			if (u.parents.length === 0) return u
+			const parentUnits = u.parents
+				.map((rel) => this.unitById.get(rel.parentUnitId))
+				.filter((p): p is CalendarUnit => !!p)
+			if (parentUnits.length === 0) return u
+			return findRoot(parentUnits.reduce((a, b) => (Number(a.duration) > Number(b.duration) ? a : b)))
+		}
+		const root = findRoot(matchedUnit)
+		// Only use root-cycle bulk skip when the root is NOT the immediate parent.
+		// When the root is the immediate parent, the overflow path handles it directly
+		// with correct slot-level arithmetic (which may differ from target-bucket counting
+		// when there are mixed non-hidden sibling types).
+		const isRootImmediateParent = matchedUnit.parents.some((rel) => rel.parentUnitId === root.id)
+		if (root.id !== matchedUnit.id && !isRootImmediateParent) {
+			const rootTargetSlots = this.countTargetSlotsInCycle(root, targetBucket)
+			if (rootTargetSlots > 0) {
+				const fullRootCycles = Math.trunc(amount / rootTargetSlots)
+				if (fullRootCycles !== 0) {
+					const remainder = amount - fullRootCycles * rootTargetSlots
+					const newTs = this.timestamp + fullRootCycles * Number(root.duration)
+					const jumped = new EsotericDate(this.calendar, newTs)
+					if (remainder === 0) {
+						return jumped
+					}
+					return jumped.stepFloored(unit, remainder)
+				}
+			}
+		}
+
 		// Find the parent of this unit.
-		// A unit can have multiple parents (e.g. Regular year is child of both 4-year-cycle and 100-year-cycle).
-		// We must determine which parent we're actually inside at the current timestamp by checking
-		// the actual hierarchy from root down.
 		const parentInfo = this.resolveActiveParent(matchedUnit, allUnits)
 		if (!parentInfo) {
 			// Root unit — no parent cycle to walk. Just add amount * duration.
@@ -105,6 +172,7 @@ export class EsotericDate {
 		}
 
 		const { parentUnit, parentCycleStart } = parentInfo
+		const parentDuration = Number(parentUnit.duration)
 
 		// Build the flat slot list for the parent's children.
 		type Slot = { unit: CalendarUnit; slotIndexInBucket: number }
@@ -141,13 +209,16 @@ export class EsotericDate {
 			currentSlotIndex = slots.length - 1
 		}
 
+		// Count how many effective steps of the target unit exist in one parent cycle.
+		// For non-hidden parents, every slot is a step.
+		// For hidden parents, only target-bucket slots inside them count.
+		const effectiveStepsPerCycle = this.countEffectiveStepsInCycle(parentUnit, targetBucket)
+
 		// Step forward (or backward) by amount slots
 		const newSlotIndex = currentSlotIndex + amount
 		const totalSlots = slots.length
 
 		// Check if any sibling slot is a Hidden unit that contains the target unit.
-		// If so, we can't use flat slot arithmetic because hidden siblings contain multiple
-		// instances of the target unit. Instead, use boundary-crossing recursion.
 		const hasHiddenSiblings = slots.some(
 			(s) =>
 				s.unit.formatMode === 'Hidden' &&
@@ -157,163 +228,229 @@ export class EsotericDate {
 				}),
 		)
 
-		// Check if the step would land on a Hidden sibling or cross the parent boundary.
-		// In either case, we can't use flat slot arithmetic — we must use boundary-crossing
-		// recursion to correctly resolve into/through hidden units.
-		const wouldLandOnHiddenSibling =
-			hasHiddenSiblings &&
-			newSlotIndex >= 0 &&
-			newSlotIndex < totalSlots &&
-			slots[newSlotIndex].unit.formatMode === 'Hidden'
+		// --- Within-cycle: step lands inside the current parent cycle ---
 
-		if (hasHiddenSiblings && (newSlotIndex < 0 || newSlotIndex >= totalSlots || wouldLandOnHiddenSibling)) {
-			// The step would cross into or past a hidden sibling, or land directly on one.
-			// Use boundary-crossing recursion: step to the edge of the current slot,
-			// then recurse from the boundary position.
+		if (hasHiddenSiblings) {
+			// When hidden siblings exist, we can't just use slot index arithmetic.
+			// Check if the step would land on a Hidden sibling.
+			const wouldLandOnHiddenSibling =
+				newSlotIndex >= 0 && newSlotIndex < totalSlots && slots[newSlotIndex].unit.formatMode === 'Hidden'
+
+			if (!wouldLandOnHiddenSibling && newSlotIndex >= 0 && newSlotIndex < totalSlots) {
+				// Lands cleanly on a non-hidden slot within this cycle
+				let newSlotStartOffset = 0
+				for (let i = 0; i < newSlotIndex; i++) {
+					newSlotStartOffset += Number(slots[i].unit.duration)
+				}
+				return new EsotericDate(this.calendar, parentCycleStart + newSlotStartOffset)
+			}
+
+			// Step crosses a hidden sibling or overflows — advance one slot at a time
 			if (amount > 0) {
-				// Forward: step to end of current slot, then recurse with remaining
 				const currentSlotDuration = Number(slots[currentSlotIndex].unit.duration)
 				const currentSlotStart = parentCycleStart + accumulatedOffset
 				const nextSlotStart = currentSlotStart + currentSlotDuration
-				const slotsConsumed = 1 // We consume the rest of the current slot (1 step)
+				const slotsConsumed = 1
 				const remaining = amount - slotsConsumed
 				if (remaining === 0) {
-					const childOffset2 = this.resolvePreservedChildren(matchedUnit, matchedUnit, parsed)
-					return new EsotericDate(this.calendar, nextSlotStart + childOffset2)
+					const dateAtBoundary = new EsotericDate(this.calendar, nextSlotStart)
+					return dateAtBoundary.floor(unit)
 				}
 				const dateAtBoundary = new EsotericDate(this.calendar, nextSlotStart)
-				const result = dateAtBoundary.step(unit, remaining)
-				return new EsotericDate(this.calendar, result.timestamp)
+				return dateAtBoundary.stepFloored(unit, remaining)
 			} else {
-				// Backward: step to start of current slot, then recurse with remaining
 				const currentSlotStart = parentCycleStart + accumulatedOffset
 				const prevEnd = currentSlotStart - 1
-				const slotsConsumed = 1 // We consume the current slot (1 step back to its start)
-				const remaining = amount + slotsConsumed // amount is negative, so this reduces magnitude
+				const slotsConsumed = 1
+				const remaining = amount + slotsConsumed
 				if (remaining === 0) {
-					// Land on the last instance of the target unit before our current slot
 					const dateAtBoundary = new EsotericDate(this.calendar, prevEnd)
-					const floored = dateAtBoundary.floor(unit)
-					const childOffset2 = this.resolvePreservedChildren(matchedUnit, matchedUnit, parsed)
-					return new EsotericDate(this.calendar, floored.timestamp + childOffset2)
+					return dateAtBoundary.floor(unit)
 				}
-				// Floor to the last target unit slot before our current slot, then recurse
 				const dateAtBoundary = new EsotericDate(this.calendar, prevEnd)
 				const floored = dateAtBoundary.floor(unit)
-				const result = floored.step(unit, remaining)
-				return new EsotericDate(this.calendar, result.timestamp)
+				return floored.stepFloored(unit, remaining)
 			}
 		}
 
-		// Calculate overflow into parent and wrapped position within the cycle
+		// No hidden siblings — pure slot index arithmetic works
+		if (newSlotIndex >= 0 && newSlotIndex < totalSlots) {
+			let newSlotStartOffset = 0
+			for (let i = 0; i < newSlotIndex; i++) {
+				newSlotStartOffset += Number(slots[i].unit.duration)
+			}
+			return new EsotericDate(this.calendar, parentCycleStart + newSlotStartOffset)
+		}
+
+		// --- Overflow: step goes past the current parent cycle ---
+		// Jump one parent cycle at a time because adjacent parent cycles
+		// may have different durations (e.g. 100-year-cycle vs 4-year-cycle x25).
+		// Use bulk skip only when we can verify same-parent-type siblings exist.
+
+		if (effectiveStepsPerCycle > 0) {
+			const slotsToEdge = amount > 0 ? totalSlots - currentSlotIndex : currentSlotIndex + 1
+			const remaining = amount > 0 ? amount - slotsToEdge : amount + slotsToEdge
+
+			if (amount > 0) {
+				const nextParentStart = parentCycleStart + parentDuration
+				if (remaining === 0) {
+					const dateAtBoundary = new EsotericDate(this.calendar, nextParentStart)
+					return dateAtBoundary.floor(unit)
+				}
+				const dateAtBoundary = new EsotericDate(this.calendar, nextParentStart)
+				return dateAtBoundary.stepFloored(unit, remaining)
+			} else {
+				const prevParentEnd = parentCycleStart - 1
+				const dateAtBoundary = new EsotericDate(this.calendar, prevParentEnd)
+				if (remaining === 0) {
+					return dateAtBoundary.floor(unit)
+				}
+				const flooredBoundary = dateAtBoundary.floor(unit)
+				return flooredBoundary.stepFloored(unit, remaining)
+			}
+		}
+
+		// Fallback: no target slots in cycle (shouldn't happen in practice)
 		const parentOverflow = Math.floor(newSlotIndex / totalSlots)
 		let wrappedSlotIndex = newSlotIndex % totalSlots
 		if (wrappedSlotIndex < 0) {
 			wrappedSlotIndex += totalSlots
 		}
 
-		const newSlot = slots[wrappedSlotIndex]
-
-		// Compute offset from parent cycle start to the start of the new slot
 		let newSlotStartOffset = 0
 		for (let i = 0; i < wrappedSlotIndex; i++) {
 			newSlotStartOffset += Number(slots[i].unit.duration)
 		}
 
-		// Preserve child values: clamp remainder to the new slot's duration,
-		// and resolve which children survive via bucket matching
-		const childOffset = this.resolvePreservedChildren(matchedUnit, newSlot.unit, parsed)
+		const newTimestamp = parentCycleStart + newSlotStartOffset + parentOverflow * parentDuration
+		return new EsotericDate(this.calendar, newTimestamp)
+	}
 
-		// Build the new timestamp: parent cycle start + new slot offset + preserved children
-		let newTimestamp = parentCycleStart + newSlotStartOffset + childOffset
+	/**
+	 * Find the actual concrete unit at the current timestamp, at the same hierarchy level
+	 * as the reference unit. We find the reference unit's parent, determine which parent
+	 * cycle instance contains this timestamp, then walk that cycle's children to find
+	 * which concrete slot (e.g. NormalYear vs LeapYear, WorkHour vs BreakSlot) we're in.
+	 * Falls back to the reference unit if no parent can be resolved.
+	 */
+	private resolveActualUnit(referenceUnit: CalendarUnit): CalendarUnit {
+		if (referenceUnit.parents.length === 0) {
+			return referenceUnit
+		}
 
-		// Handle parent overflow by recursing
-		if (parentOverflow !== 0) {
-			if (parentUnit.formatMode === 'Hidden') {
-				// Hidden parent overflow: the child stepped past the hidden parent boundary.
-				// Instead of wrapping within the hidden parent and shifting it, step to the
-				// boundary of the hidden parent and recursively step with remaining amount.
-				// This correctly handles cases where the next position after the hidden parent
-				// is a different unit type (e.g. trailing Regular years after 4-year-cycles).
-				if (parentOverflow > 0) {
-					// Forward: step to the first slot of the next position after this hidden parent
-					const parentDuration = Number(parentUnit.duration)
-					const nextParentStart = parentCycleStart + parentDuration
-					const dateAtBoundary = new EsotericDate(this.calendar, nextParentStart)
-					// We consumed (totalSlots - currentSlotIndex) slots to reach the boundary,
-					// leaving (amount - (totalSlots - currentSlotIndex)) remaining
-					const slotsToEnd = totalSlots - currentSlotIndex
-					const remaining = amount - slotsToEnd
-					if (remaining === 0) {
-						// Exactly at the boundary — preserve children
-						newTimestamp = nextParentStart + childOffset
-					} else {
-						const result = dateAtBoundary.step(unit, remaining)
-						newTimestamp = result.timestamp
+		// Find the parent unit. For units with multiple parents, find the immediate parent
+		// by picking the one with the smallest duration that still contains this unit.
+		const parentCandidates = referenceUnit.parents
+			.map((rel) => this.unitById.get(rel.parentUnitId))
+			.filter((u): u is CalendarUnit => !!u)
+
+		if (parentCandidates.length === 0) {
+			return referenceUnit
+		}
+
+		// Use the immediate parent (smallest duration among parents)
+		const parentUnit = parentCandidates.reduce((a, b) => (Number(a.duration) < Number(b.duration) ? a : b))
+
+		// Find where this parent cycle starts at the current timestamp
+		// Use the parent's own parent resolution to find the cycle start
+		const parentDuration = Number(parentUnit.duration)
+		const parentInfo = this.resolveActiveParent(parentUnit, this.calendar.units, this.timestamp)
+
+		let parentCycleStart: number
+		if (parentInfo) {
+			// The parent itself has a parent — find its start within the grandparent
+			const gpOffset = this.timestamp - parentInfo.parentCycleStart
+			let acc = 0
+			let found = false
+			for (const ch of parentInfo.parentUnit.children) {
+				const chUnit = this.unitById.get(ch.childUnitId)
+				if (!chUnit) continue
+				for (let r = 0; r < ch.repeats; r++) {
+					const d = Number(chUnit.duration)
+					if (acc + d > gpOffset) {
+						parentCycleStart = parentInfo.parentCycleStart + acc
+						found = true
+						break
 					}
-				} else {
-					// Backward: step to the last slot of the position before this hidden parent
-					const prevParentEnd = parentCycleStart - 1
-					const dateAtBoundary = new EsotericDate(this.calendar, prevParentEnd)
-					// We consumed (currentSlotIndex + 1) slots to reach the start boundary,
-					// so remaining = amount + currentSlotIndex + 1 (amount is negative)
-					const slotsToStart = currentSlotIndex + 1
-					const remaining = amount + slotsToStart
-					if (remaining === 0) {
-						// We want to land on the last slot of the previous position
-						const flooredBoundary = dateAtBoundary.floor(unit)
-						newTimestamp = flooredBoundary.timestamp + childOffset
-					} else {
-						// Floor to the last year-slot of the previous position, then step remaining
-						const flooredBoundary = dateAtBoundary.floor(unit)
-						const result = flooredBoundary.step(unit, remaining)
-						newTimestamp = result.timestamp
-					}
+					acc += d
 				}
-			} else {
-				// Visible parent overflow: the child stepped past its visible parent boundary.
-				// We use boundary-crossing recursion (same as hidden parents) to avoid the
-				// problem where wrapping the child index within the current parent and then
-				// stepping the parent separately loses the child position when the destination
-				// parent has a different number of children (e.g. 13-month leap year → 12-month
-				// regular year would lose month 12).
-				if (parentOverflow > 0) {
-					// Forward: step to the first slot of the next parent instance
-					const parentDuration = Number(parentUnit.duration)
-					const nextParentStart = parentCycleStart + parentDuration
-					const slotsToEnd = totalSlots - currentSlotIndex
-					const remaining = amount - slotsToEnd
-					if (remaining === 0) {
-						// Land on the first slot of the next parent, preserving children
-						const dateAtBoundary = new EsotericDate(this.calendar, nextParentStart)
-						const flooredBoundary = dateAtBoundary.floor(unit)
-						newTimestamp = flooredBoundary.timestamp + childOffset
-					} else {
-						const dateAtBoundary = new EsotericDate(this.calendar, nextParentStart)
-						const result = dateAtBoundary.step(unit, remaining)
-						newTimestamp = result.timestamp
-					}
-				} else {
-					// Backward: step to the last slot of the previous parent instance
-					const prevParentEnd = parentCycleStart - 1
-					const slotsToStart = currentSlotIndex + 1
-					const remaining = amount + slotsToStart
-					if (remaining === 0) {
-						// Land on the last slot of the previous parent, preserving children
-						const dateAtBoundary = new EsotericDate(this.calendar, prevParentEnd)
-						const flooredBoundary = dateAtBoundary.floor(unit)
-						newTimestamp = flooredBoundary.timestamp + childOffset
-					} else {
-						const dateAtBoundary = new EsotericDate(this.calendar, prevParentEnd)
-						const flooredBoundary = dateAtBoundary.floor(unit)
-						const result = flooredBoundary.step(unit, remaining)
-						newTimestamp = result.timestamp
-					}
+				if (found) break
+			}
+			if (!found) {
+				return referenceUnit
+			}
+		} else {
+			// Parent is root — cycle aligned to absolute 0
+			const absTs = this.timestamp + this.originTime
+			parentCycleStart = Math.floor(absTs / parentDuration) * parentDuration - this.originTime
+		}
+
+		// Walk children of the parent to find which slot contains this timestamp
+		const offsetWithinParent = this.timestamp - parentCycleStart!
+		let accumulatedOffset = 0
+		for (const childRelation of parentUnit.children) {
+			const childUnit = this.unitById.get(childRelation.childUnitId)
+			if (!childUnit) continue
+			for (let r = 0; r < childRelation.repeats; r++) {
+				const slotDuration = Number(childUnit.duration)
+				if (accumulatedOffset + slotDuration > offsetWithinParent) {
+					return childUnit
 				}
+				accumulatedOffset += slotDuration
 			}
 		}
 
-		return new EsotericDate(this.calendar, newTimestamp)
+		// Edge case: at exact end boundary → last slot
+		const lastRelation = parentUnit.children[parentUnit.children.length - 1]
+		const lastUnit = this.unitById.get(lastRelation.childUnitId)
+		return lastUnit ?? referenceUnit
+	}
+
+	/**
+	 * Count how many target-bucket slots exist in one cycle of the given parent unit,
+	 * including slots nested inside Hidden children.
+	 */
+	private countTargetSlotsInCycle(parentUnit: CalendarUnit, targetBucket: string): number {
+		let count = 0
+		for (const childRelation of parentUnit.children) {
+			const childUnit = this.unitById.get(childRelation.childUnitId)
+			if (!childUnit) continue
+			if (childUnit.displayName.toLowerCase() === targetBucket) {
+				count += childRelation.repeats
+			} else if (childUnit.formatMode === 'Hidden') {
+				// Recurse into hidden children to find nested target slots
+				count += this.countTargetSlotsInCycle(childUnit, targetBucket) * childRelation.repeats
+			}
+		}
+		return count
+	}
+
+	/**
+	 * Count how many effective steps of the target unit fit in one cycle of the
+	 * given parent unit. This mirrors the actual stepping logic:
+	 * - Target-matching children: each is 1 step
+	 * - Hidden children containing the target: recurse (transparent wrappers)
+	 * - Non-hidden, non-matching children: each is still 1 step (step advances
+	 *   through all sibling slots regardless of bucket)
+	 */
+	private countEffectiveStepsInCycle(parentUnit: CalendarUnit, targetBucket: string): number {
+		let count = 0
+		for (const childRelation of parentUnit.children) {
+			const childUnit = this.unitById.get(childRelation.childUnitId)
+			if (!childUnit) continue
+			if (childUnit.displayName.toLowerCase() === targetBucket) {
+				// Direct match: each repeat is 1 step
+				count += childRelation.repeats
+			} else if (childUnit.formatMode === 'Hidden') {
+				// Hidden wrapper: recurse to find steps inside
+				count += this.countEffectiveStepsInCycle(childUnit, targetBucket) * childRelation.repeats
+			} else {
+				// Non-hidden, non-matching sibling: each repeat is still 1 step
+				// because the step logic advances through all slots
+				count += childRelation.repeats
+			}
+		}
+		return count
 	}
 
 	/**
@@ -530,7 +667,7 @@ export class EsotericDate {
 	 */
 	floor(unit: WorldCalendarUnit): EsotericDate {
 		const allUnits = this.calendar.units
-		const parsed = parseTimestampMultiRoot({ allUnits, timestamp: this.timestamp + this.originTime })
+		const parsed = this.parse()
 
 		// Find the target unit's entry via bucket matching (displayName)
 		const targetBucket = unit.displayName.toLowerCase()

@@ -18,6 +18,7 @@ export function parseTimestampMultiRoot({
 				unit: rootUnit,
 				timestamp,
 				extraDuration: 0,
+				depth: 0,
 			})
 			return {
 				unit: rootUnit,
