@@ -157,8 +157,17 @@ export class EsotericDate {
 				}),
 		)
 
-		if (hasHiddenSiblings && (newSlotIndex < 0 || newSlotIndex >= totalSlots)) {
-			// The step would cross into or past a hidden sibling.
+		// Check if the step would land on a Hidden sibling or cross the parent boundary.
+		// In either case, we can't use flat slot arithmetic — we must use boundary-crossing
+		// recursion to correctly resolve into/through hidden units.
+		const wouldLandOnHiddenSibling =
+			hasHiddenSiblings &&
+			newSlotIndex >= 0 &&
+			newSlotIndex < totalSlots &&
+			slots[newSlotIndex].unit.formatMode === 'Hidden'
+
+		if (hasHiddenSiblings && (newSlotIndex < 0 || newSlotIndex >= totalSlots || wouldLandOnHiddenSibling)) {
+			// The step would cross into or past a hidden sibling, or land directly on one.
 			// Use boundary-crossing recursion: step to the edge of the current slot,
 			// then recurse from the boundary position.
 			if (amount > 0) {
@@ -262,10 +271,45 @@ export class EsotericDate {
 					}
 				}
 			} else {
-				// Visible parent — recurse to handle its own cycle structure
-				const dateAtNewPos = new EsotericDate(this.calendar, newTimestamp)
-				const adjusted = dateAtNewPos.step(parentUnit, parentOverflow)
-				newTimestamp = adjusted.timestamp
+				// Visible parent overflow: the child stepped past its visible parent boundary.
+				// We use boundary-crossing recursion (same as hidden parents) to avoid the
+				// problem where wrapping the child index within the current parent and then
+				// stepping the parent separately loses the child position when the destination
+				// parent has a different number of children (e.g. 13-month leap year → 12-month
+				// regular year would lose month 12).
+				if (parentOverflow > 0) {
+					// Forward: step to the first slot of the next parent instance
+					const parentDuration = Number(parentUnit.duration)
+					const nextParentStart = parentCycleStart + parentDuration
+					const slotsToEnd = totalSlots - currentSlotIndex
+					const remaining = amount - slotsToEnd
+					if (remaining === 0) {
+						// Land on the first slot of the next parent, preserving children
+						const dateAtBoundary = new EsotericDate(this.calendar, nextParentStart)
+						const flooredBoundary = dateAtBoundary.floor(unit)
+						newTimestamp = flooredBoundary.timestamp + childOffset
+					} else {
+						const dateAtBoundary = new EsotericDate(this.calendar, nextParentStart)
+						const result = dateAtBoundary.step(unit, remaining)
+						newTimestamp = result.timestamp
+					}
+				} else {
+					// Backward: step to the last slot of the previous parent instance
+					const prevParentEnd = parentCycleStart - 1
+					const slotsToStart = currentSlotIndex + 1
+					const remaining = amount + slotsToStart
+					if (remaining === 0) {
+						// Land on the last slot of the previous parent, preserving children
+						const dateAtBoundary = new EsotericDate(this.calendar, prevParentEnd)
+						const flooredBoundary = dateAtBoundary.floor(unit)
+						newTimestamp = flooredBoundary.timestamp + childOffset
+					} else {
+						const dateAtBoundary = new EsotericDate(this.calendar, prevParentEnd)
+						const flooredBoundary = dateAtBoundary.floor(unit)
+						const result = flooredBoundary.step(unit, remaining)
+						newTimestamp = result.timestamp
+					}
+				}
 			}
 		}
 

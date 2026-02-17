@@ -83,7 +83,7 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 			if (!presentation.baselineUnit) {
 				throw new Error('No baseline')
 			}
-			setStaggeredScroll(scroll)
+			updateDividers(scroll)
 		},
 	})
 
@@ -106,13 +106,12 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 		}
 	}, [calendar, lineCount, containerWidth, scaleLevel, forceSetStaggeredScroll, regenerateDividers])
 
-	useEffect(() => {
-		// updateDividers(staggeredScroll)
-		regenerateDividers(staggeredScroll)
-	}, [staggeredScroll])
+	// useEffect(() => {
+	// 	updateDividers(staggeredScroll)
+	// 	// regenerateDividers(staggeredScroll)
+	// }, [staggeredScroll, updateDividers])
 
 	useEffectOnce(() => {
-		console.log('Reg 1')
 		regenerateDividers(TimelineState.scroll)
 	})
 

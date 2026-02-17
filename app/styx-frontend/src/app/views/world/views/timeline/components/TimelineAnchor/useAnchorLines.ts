@@ -77,12 +77,10 @@ export function useAnchorLines({ containerWidth }: Props) {
 			}
 
 			lastSeenScrollRef.current = scroll
-			lastSeenScaleLevelRef.current = TimelineState.scaleLevel
-			console.log('Regenerate dividers at ', scroll)
+			lastSeenScaleLevelRef.current = scaleLevel
 
 			const currentTimestamp = scaledTimeToRealTime(-scroll + 40)
 			let baseDate = new EsotericDate(worldCalendar, currentTimestamp).floor(presentation.units[0].unit)
-			console.log(baseDate.getTimestamp())
 			const subdivision = presentation.units[0].subdivision
 			const valueToStep = baseDate.get(presentation.units[0].unit)!.value % subdivision
 			baseDate = baseDate.step(presentation.units[0].unit, -valueToStep - subdivision)
@@ -91,7 +89,6 @@ export function useAnchorLines({ containerWidth }: Props) {
 			const seenTimestamps = new Set<number>()
 			const screenLeft = scaledTimeToRealTime(-scroll - TimelineAnchorPadding)
 			const screenRight = screenLeft + scaledTimeToRealTime(containerWidth + TimelineAnchorPadding * 2)
-			console.log(screenLeft)
 
 			presentation.units.forEach((presentationUnit, outerIndex) => {
 				const labelSize =
@@ -114,14 +111,14 @@ export function useAnchorLines({ containerWidth }: Props) {
 						continue
 					}
 					if (timestamp > screenRight) {
-						// if (dividers[outerIndex].length === 0 && lastLeftDate) {
-						// 	dividers[outerIndex].push({
-						// 		timestamp: lastLeftDate.getTimestamp(),
-						// 		size: labelSize,
-						// 		unit: presentationUnit,
-						// 		formatString: presentationUnit.formatString,
-						// 	})
-						// }
+						if (dividers[outerIndex].length === 0 && lastLeftDate) {
+							dividers[outerIndex].push({
+								timestamp: lastLeftDate.getTimestamp(),
+								size: labelSize,
+								unit: presentationUnit,
+								formatString: presentationUnit.formatString,
+							})
+						}
 						break
 					}
 
@@ -140,32 +137,34 @@ export function useAnchorLines({ containerWidth }: Props) {
 			setDividers(dividers)
 			dividersRef.current = dividers
 		},
-		[containerWidth, presentation.units, scaledTimeToRealTime, stepDivider, worldCalendar],
+		[containerWidth, presentation.units, scaledTimeToRealTime, stepDivider, worldCalendar, scaleLevel],
 	)
 
 	const updateDividers = useCallback(
 		(scroll: number) => {
 			if (
-				dividers[0].length === 0 &&
-				dividers[1].length === 0 &&
-				dividers[2].length === 0 &&
-				dividers[3].length === 0
+				dividersRef.current[0].length === 0 &&
+				dividersRef.current[1].length === 0 &&
+				dividersRef.current[2].length === 0 &&
+				dividersRef.current[3].length === 0
 			) {
 				// regenerateDividers(scroll)
 				return
 			}
 
-			if (Math.abs(scroll - lastSeenScrollRef.current) < 20) {
-				console.log('DIFF', Math.abs(scroll - lastSeenScrollRef.current))
+			if (
+				Math.abs(scroll - lastSeenScrollRef.current) < 100 ||
+				lastSeenScaleLevelRef.current !== scaleLevel
+			) {
 				return
 			}
-			console.log('UPDATE', scroll, lastSeenScrollRef.current)
 
 			const direction = scroll < lastSeenScrollRef.current ? 1 : -1
 			lastSeenScrollRef.current = scroll
 
 			const screenLeft = scaledTimeToRealTime(-scroll - TimelineAnchorPadding)
 			const screenRight = screenLeft + scaledTimeToRealTime(containerWidth + TimelineAnchorPadding * 2 + 100)
+			const screenWidthInPixels = scaledTimeToRealTime(containerWidth)
 			const seenDividers = new Set<number>()
 			dividersRef.current.forEach((dividerGroup) => {
 				dividerGroup.forEach((divider) => {
@@ -193,28 +192,28 @@ export function useAnchorLines({ containerWidth }: Props) {
 				)
 
 				if (direction === 1) {
-					for (let i = 0; i < 10; i++) {
+					while (date.getTimestamp() < screenRight) {
 						const stepResult = stepDivider(date, presentationUnit, lastDivider.size)
 						date = stepResult.date
+						const dist = screenRight - date.getTimestamp()
+						if (Math.abs(dist) > screenWidthInPixels) {
+							break
+						}
 						if (stepResult.divider && !seenDividers.has(stepResult.divider.timestamp)) {
 							if (newDividers[outerIndex].length > 0 && newDividers[outerIndex][0].timestamp < screenLeft) {
 								newDividers[outerIndex].shift()
 							}
-							console.log('Adding right')
 							newDividers[outerIndex].push(stepResult.divider)
 							seenDividers.add(stepResult.divider.timestamp)
 						}
-						if (stepResult.date.getTimestamp() > screenRight) {
-							break
-						}
 					}
 				} else {
-					date = date.step(presentationUnit.unit, presentationUnit.subdivision * -9)
-					for (let i = 0; i < 15; i++) {
-						const stepResult = stepDivider(date, presentationUnit, lastDivider.size, 1)
+					while (date.getTimestamp() > screenLeft) {
+						const stepResult = stepDivider(date, presentationUnit, lastDivider.size, -1)
 						date = stepResult.date
-						if (stepResult.date.getTimestamp() < screenLeft) {
-							continue
+						const dist = screenLeft - date.getTimestamp()
+						if (Math.abs(dist) > screenWidthInPixels) {
+							break
 						}
 						if (stepResult.divider && !seenDividers.has(stepResult.divider.timestamp)) {
 							if (
@@ -223,18 +222,16 @@ export function useAnchorLines({ containerWidth }: Props) {
 							) {
 								newDividers[outerIndex].pop()
 							}
-							console.log('Adding left')
 							newDividers[outerIndex].unshift(stepResult.divider)
 							seenDividers.add(stepResult.divider.timestamp)
 						}
 					}
-					newDividers[outerIndex].sort((a, b) => a.timestamp - b.timestamp)
 				}
 			})
 			setDividers(newDividers)
 			dividersRef.current = newDividers
 		},
-		[containerWidth, dividers, presentation.units, scaledTimeToRealTime, stepDivider, worldCalendar],
+		[containerWidth, presentation.units, scaledTimeToRealTime, stepDivider, worldCalendar, scaleLevel],
 	)
 
 	return { dividers, regenerateDividers, updateDividers }
