@@ -112,8 +112,8 @@ function TimelineAnchorSlotComponent({ slotId, theme, containerWidth }: Props) {
 				}
 
 				// Remove extra followers
-				while (followersEl.children.length > followerCount) {
-					followersEl.removeChild(followersEl.lastChild!)
+				while (followersEl.children.length > followerCount && followersEl.lastChild) {
+					followersEl.removeChild(followersEl.lastChild)
 				}
 
 				// Only update follower indices if count changed (positions use CSS calc)

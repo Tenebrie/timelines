@@ -2,7 +2,7 @@ import { User, World } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 
 import { CalendarService } from './CalendarService.js'
-import { CalendarTemplateService } from './CalendarTemplateService.js'
+import { CalendarTemplateId, CalendarTemplateService } from './CalendarTemplateService.js'
 
 export const WorldService = {
 	findWorldByIdInternal: async (worldId: string) => {
@@ -294,7 +294,7 @@ export const WorldService = {
 			return
 		}
 
-		const templateId = (() => {
+		const templateId = ((): CalendarTemplateId => {
 			switch (world.calendar) {
 				case 'EARTH':
 				case 'COUNTUP':
@@ -326,8 +326,7 @@ export const WorldService = {
 				id: worldId,
 			},
 			data: {
-				// TODO: SET THIS BEFORE MERGING FFS
-				// calendar: null,
+				calendar: null,
 				calendars: {
 					connect: {
 						id: calendar.id,

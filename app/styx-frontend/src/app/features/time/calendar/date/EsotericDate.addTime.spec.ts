@@ -449,6 +449,167 @@ describe('EsotericDate.addTime', () => {
 		})
 	})
 
+	describe('stepping year clamps day when month shrinks (Feb 29 → Feb 28)', () => {
+		// Earth-like calendar with non-uniform months and Day → Hour → Minute hierarchy:
+		// Regular year: Jan(31) Feb(28) Mar(31) = 90 days
+		// Leap year:    Jan(31) Feb(29) Mar(31) = 91 days
+		// YearCycle (Hidden): RegularYear x3, LeapYear x1
+		// Each month has Day children, each Day has Hour x24, each Hour has Minute x60
+		// Day duration = 24*60 = 1440
+		const dayDur = 24 * 60
+		const minute = mockCalendarUnit({
+			id: 'minute',
+			name: 'Minute',
+			displayName: 'Minute',
+			duration: 1,
+			formatShorthand: 'i',
+			formatMode: 'Numeric',
+			parents: [mockCalendarUnitParentRelation('hour', 'minute', 60)],
+		})
+		const hour = mockCalendarUnit({
+			id: 'hour',
+			name: 'Hour',
+			displayName: 'Hour',
+			duration: 60,
+			formatShorthand: 'h',
+			formatMode: 'Numeric',
+			children: [mockCalendarUnitChildRelation('hour', 'minute', 60)],
+			parents: [mockCalendarUnitParentRelation('day', 'hour', 24)],
+		})
+		const day = mockCalendarUnit({
+			id: 'day',
+			name: 'Day',
+			displayName: 'Day',
+			duration: dayDur,
+			formatShorthand: 'd',
+			formatMode: 'NumericOneIndexed',
+			children: [mockCalendarUnitChildRelation('day', 'hour', 24)],
+			parents: [
+				mockCalendarUnitParentRelation('28-day-month', 'day', 28),
+				mockCalendarUnitParentRelation('29-day-month', 'day', 29),
+				mockCalendarUnitParentRelation('31-day-month', 'day', 31),
+			],
+		})
+		const day28Month = mockCalendarUnit({
+			id: '28-day-month',
+			name: '28-day month',
+			displayName: 'Month',
+			duration: 28 * dayDur,
+			formatShorthand: 'M',
+			formatMode: 'Name',
+			children: [mockCalendarUnitChildRelation('28-day-month', 'day', 28)],
+			parents: [mockCalendarUnitParentRelation('regular-year', '28-day-month', 1)],
+		})
+		const day29Month = mockCalendarUnit({
+			id: '29-day-month',
+			name: '29-day month',
+			displayName: 'Month',
+			duration: 29 * dayDur,
+			formatShorthand: 'M',
+			formatMode: 'Name',
+			children: [mockCalendarUnitChildRelation('29-day-month', 'day', 29)],
+			parents: [mockCalendarUnitParentRelation('leap-year', '29-day-month', 1)],
+		})
+		const day31Month = mockCalendarUnit({
+			id: '31-day-month',
+			name: '31-day month',
+			displayName: 'Month',
+			duration: 31 * dayDur,
+			formatShorthand: 'M',
+			formatMode: 'Name',
+			children: [mockCalendarUnitChildRelation('31-day-month', 'day', 31)],
+			parents: [
+				mockCalendarUnitParentRelation('regular-year', '31-day-month', 2),
+				mockCalendarUnitParentRelation('leap-year', '31-day-month', 2),
+			],
+		})
+		const regDur = (31 + 28 + 31) * dayDur // 90 * 1440 = 129600
+		const leapDur = (31 + 29 + 31) * dayDur // 91 * 1440 = 131040
+		const regularYear = mockCalendarUnit({
+			id: 'regular-year',
+			name: 'Regular year',
+			displayName: 'Year',
+			duration: regDur,
+			formatShorthand: 'Y',
+			formatMode: 'NumericOneIndexed',
+			children: [
+				mockCalendarUnitChildRelation('regular-year', '31-day-month', 1, { position: 0 }), // Jan
+				mockCalendarUnitChildRelation('regular-year', '28-day-month', 1, { position: 1 }), // Feb
+				mockCalendarUnitChildRelation('regular-year', '31-day-month', 1, { position: 2 }), // Mar
+			],
+			parents: [mockCalendarUnitParentRelation('year-cycle', 'regular-year', 3)],
+		})
+		const leapYear = mockCalendarUnit({
+			id: 'leap-year',
+			name: 'Leap year',
+			displayName: 'Year',
+			duration: leapDur,
+			formatShorthand: 'Y',
+			formatMode: 'NumericOneIndexed',
+			children: [
+				mockCalendarUnitChildRelation('leap-year', '31-day-month', 1, { position: 0 }), // Jan
+				mockCalendarUnitChildRelation('leap-year', '29-day-month', 1, { position: 1 }), // Feb
+				mockCalendarUnitChildRelation('leap-year', '31-day-month', 1, { position: 2 }), // Mar
+			],
+			parents: [mockCalendarUnitParentRelation('year-cycle', 'leap-year', 1)],
+		})
+		const cycleDur = 3 * regDur + leapDur
+		const yearCycle = mockCalendarUnit({
+			id: 'year-cycle',
+			name: 'YearCycle',
+			duration: cycleDur,
+			formatMode: 'Hidden',
+			children: [
+				mockCalendarUnitChildRelation('year-cycle', 'regular-year', 3, { position: 0 }),
+				mockCalendarUnitChildRelation('year-cycle', 'leap-year', 1, { position: 1 }),
+			],
+		})
+		const units: CalendarUnit[] = [
+			yearCycle,
+			regularYear,
+			leapYear,
+			day31Month,
+			day29Month,
+			day28Month,
+			day,
+			hour,
+			minute,
+		]
+		const calendar = makeCalendar(units)
+
+		it('stepping +1 year from leap Feb 29 22:35 clamps to regular Feb 28 22:35', () => {
+			// LeapYear starts at 3 * regDur
+			// Feb in LeapYear starts at leapYearStart + 31*dayDur (Jan)
+			// Feb 29 (0-indexed 28), hour 22, minute 35
+			const leapYearStart = 3 * regDur
+			const febStart = leapYearStart + 31 * dayDur
+			const ts = febStart + 28 * dayDur + 22 * 60 + 35
+			const date = new EsotericDate(calendar, ts)
+
+			const result = date.step(regularYear, 1)
+
+			// Should land in next cycle's RegularYear 0, Feb 28 (clamped from 29), hour 22, minute 35
+			// Next cycle starts at cycleDur
+			// Feb in RegularYear 0 starts at cycleDur + 31*dayDur
+			// Feb 28 = last day (0-indexed 27), hour 22, minute 35
+			const expected = cycleDur + 31 * dayDur + 27 * dayDur + 22 * 60 + 35
+			expect(result.getTimestamp()).toBe(expected)
+		})
+
+		it('stepping +1 year from leap Feb 15 10:00 preserves everything (no clamping needed)', () => {
+			const leapYearStart = 3 * regDur
+			const febStart = leapYearStart + 31 * dayDur
+			const ts = febStart + 14 * dayDur + 10 * 60
+			const date = new EsotericDate(calendar, ts)
+
+			const result = date.step(regularYear, 1)
+
+			// Next cycle RegularYear 0, Feb 15, hour 10
+			const expected = cycleDur + 31 * dayDur + 14 * dayDur + 10 * 60
+			expect(result.getTimestamp()).toBe(expected)
+		})
+	})
+
 	describe('negative timestamps', () => {
 		const minute = mockCalendarUnit({
 			id: 'minute',

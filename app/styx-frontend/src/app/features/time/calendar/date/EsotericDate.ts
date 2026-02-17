@@ -637,6 +637,9 @@ export class EsotericDate {
 		let offset = 0
 		let bucketCounter = 0
 
+		let lastMatchOffset = -1
+		let lastMatchUnit: CalendarUnit | null = null
+
 		for (const childRelation of parentUnit.children) {
 			const childUnit = this.unitById.get(childRelation.childUnitId)
 			if (!childUnit) continue
@@ -649,6 +652,9 @@ export class EsotericDate {
 						offset += this.resolveChildOffset(childUnit, childValues)
 						return offset
 					}
+					// Track the last matching slot in case bucketIndex exceeds capacity
+					lastMatchOffset = offset
+					lastMatchUnit = childUnit
 					offset += Number(childUnit.duration)
 					bucketCounter++
 				}
@@ -657,7 +663,11 @@ export class EsotericDate {
 			}
 		}
 
-		// bucketIndex exceeds capacity — return 0 (lose children)
+		// bucketIndex exceeds capacity — clamp to the last available slot
+		// and still resolve grandchild offsets so sub-unit values (e.g. hour, minute) are preserved
+		if (lastMatchUnit !== null && lastMatchOffset >= 0) {
+			return lastMatchOffset + this.resolveChildOffset(lastMatchUnit, childValues)
+		}
 		return 0
 	}
 

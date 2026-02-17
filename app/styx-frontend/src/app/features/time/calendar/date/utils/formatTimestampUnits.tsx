@@ -79,10 +79,10 @@ export function formatTimestampUnits(
 		const isNumeric = unit.formatMode === 'Numeric' || unit.formatMode === 'NumericOneIndexed'
 		const isSymbolic = unit.formatMode === 'Name' || unit.formatMode === 'NameOneIndexed'
 
-		if (entry.customLabel && symbolCount === 1) {
+		if (entry.customLabel && symbolCount === 1 && isSymbolic) {
 			// TODO: Short label
 			return entry.customLabel
-		} else if (entry.customLabel && symbolCount > 1) {
+		} else if (entry.customLabel && symbolCount > 1 && isSymbolic) {
 			return entry.customLabel
 		} else if (isSymbolic && symbolCount === 1) {
 			return unit.displayNameShort + ' ' + paddedValue

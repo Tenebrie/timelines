@@ -223,8 +223,6 @@ export function useAnchorLines({ containerWidth }: Props) {
 				return
 			}
 
-			console.log('REGEN')
-
 			lastSeenScrollRef.current = scroll
 			lastSeenScaleLevelRef.current = scaleLevel
 

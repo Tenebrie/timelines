@@ -8,6 +8,7 @@ import { getPrismaClient } from './dbClients/DatabaseClient.js'
 export const SupportedCalendarTemplates = [
 	'earth_current',
 	'earth_2023',
+	'martian',
 	'pf2e_current',
 	'pf2e_4723',
 	'rimworld',
@@ -291,6 +292,8 @@ export const CalendarTemplateService = {
 						return 'Quadrums Calendar (Rimworld)'
 					case 'exether':
 						return 'Exether Calendar'
+					case 'martian':
+						return 'Sol Calendar (Martian)'
 					default:
 						throw new Error(`No name specified for template: ${templateId}`)
 				}
@@ -312,12 +315,49 @@ export const CalendarTemplateService = {
 						calendarId: initialCalendar.id,
 						originTime: 1065047040 + originTime, // 2026-01-01 00:00
 					})
+					break
 				case 'earth_2023':
 					await this.populateEarthCalendar({
 						prisma: dbClient,
 						calendarId: initialCalendar.id,
 						originTime: 1063468800 + originTime, // 2023-01-01 00:00
 					})
+					break
+				case 'martian':
+					await this.populateMartianCalendar({
+						prisma: dbClient,
+						calendarId: initialCalendar.id,
+						originTime,
+					})
+					break
+				case 'pf2e_current':
+					await this.populatePf2eCalendar({
+						prisma: dbClient,
+						calendarId: initialCalendar.id,
+						originTime: 2485108800 + originTime, // 4726-01-01 00:00
+					})
+					break
+				case 'pf2e_4723':
+					await this.populatePf2eCalendar({
+						prisma: dbClient,
+						calendarId: initialCalendar.id,
+						originTime: 2483530560 + originTime, // 4723-01-01 00:00
+					})
+					break
+				case 'rimworld':
+					await this.populateRimworldCalendar({
+						prisma: dbClient,
+						calendarId: initialCalendar.id,
+						originTime: 475113600 + originTime, // 5500-01-01 00:00
+					})
+					break
+				case 'exether':
+					await this.populateExetherCalendar({
+						prisma: dbClient,
+						calendarId: initialCalendar.id,
+						originTime: 618631200 + originTime, // 1178-01-01 00:00
+					})
+					break
 			}
 
 			const calendar = await dbClient.calendar.findFirstOrThrow({
@@ -342,7 +382,7 @@ export const CalendarTemplateService = {
 		const calendar = await builder
 			.setMetadata({
 				originTime,
-				formatString: 'YYYY-MM-DD hh:mm',
+				formatString: 'hh:mm MM DD, YYYY',
 			})
 			.createUnit('Minute', [])
 			.createUnit('Hour', ['Minute x60'])
@@ -460,6 +500,561 @@ export const CalendarTemplateService = {
 			.createPresentation('Millenia', ['Year x10000: YYYY', 'Year x1000: YYYY', 'Year x500: '], {
 				compression: 100,
 				baselineUnit: 'Regular year',
+			})
+			.build(prisma, calendarId)
+		return calendar
+	},
+
+	async populateMartianCalendar({
+		prisma,
+		calendarId,
+		originTime,
+	}: {
+		prisma: TransactionClient
+		calendarId: string
+		originTime: number
+	}) {
+		const builder = makeCalendarBuilder()
+		const calendar = await builder
+			.setMetadata({
+				originTime,
+				formatString: 'hh:mm SS MM YYYY',
+			})
+			.createUnit('Minute', [])
+			.createUnit('Hour', ['Minute x60'])
+			.createUnit('Sol', ['Hour x24'])
+			.createUnit('6-sol week', [
+				'Sol: Sol Solis',
+				'Sol: Sol Lunae',
+				'Sol: Sol Martis',
+				'Sol: Sol Mercurii',
+				'Sol: Sol Jovis',
+				'Sol: Sol Veneris',
+			])
+			.createUnit('7-sol week', [
+				'Sol: Sol Solis',
+				'Sol: Sol Lunae',
+				'Sol: Sol Martis',
+				'Sol: Sol Mercurii',
+				'Sol: Sol Jovis',
+				'Sol: Sol Veneris',
+				'Sol: Sol Saturni',
+			])
+			.createUnit('27-sol month', ['7-sol week x3', '6-sol week x1'])
+			.createUnit('28-sol month', ['7-sol week x4'])
+			.createUnit('Regular year', [
+				'28-sol month: Sagittarius',
+				'28-sol month: Dhanus',
+				'28-sol month: Capricornus',
+				'28-sol month: Makara',
+				'28-sol month: Aquarius',
+				'27-sol month: Kumbha',
+				'28-sol month: Pisces',
+				'28-sol month: Mina',
+				'28-sol month: Aries',
+				'28-sol month: Mesha',
+				'28-sol month: Taurus',
+				'27-sol month: Rishabha',
+				'28-sol month: Gemini',
+				'28-sol month: Mithuna',
+				'28-sol month: Cancer',
+				'28-sol month: Karka',
+				'28-sol month: Leo',
+				'27-sol month: Simha',
+				'28-sol month: Virgo',
+				'28-sol month: Kanya',
+				'28-sol month: Libra',
+				'28-sol month: Tula',
+				'28-sol month: Scorpius',
+				'27-sol month: Vrishika',
+			])
+			.createUnit('Leap year', [
+				'28-sol month: Sagittarius',
+				'28-sol month: Dhanus',
+				'28-sol month: Capricornus',
+				'28-sol month: Makara',
+				'28-sol month: Aquarius',
+				'27-sol month: Kumbha',
+				'28-sol month: Pisces',
+				'28-sol month: Mina',
+				'28-sol month: Aries',
+				'28-sol month: Mesha',
+				'28-sol month: Taurus',
+				'27-sol month: Rishabha',
+				'28-sol month: Gemini',
+				'28-sol month: Mithuna',
+				'28-sol month: Cancer',
+				'28-sol month: Karka',
+				'28-sol month: Leo',
+				'27-sol month: Simha',
+				'28-sol month: Virgo',
+				'28-sol month: Kanya',
+				'28-sol month: Libra',
+				'28-sol month: Tula',
+				'28-sol month: Scorpius',
+				'28-sol month: Vrishika',
+			])
+			.createUnit('10-year cycle', [
+				'Leap year x1',
+				'Leap year x1',
+				'Regular year x1',
+				'Leap year x1',
+				'Regular year x1',
+				'Leap year x1',
+				'Regular year x1',
+				'Leap year x1',
+				'Regular year x1',
+				'Leap year x1',
+			])
+			.createUnit('200-year cycle', [
+				'Regular year x1',
+				'Leap year x1',
+				'Regular year x1',
+				'Leap year x1',
+				'Regular year x1',
+				'Leap year x1',
+				'Regular year x1',
+				'Leap year x1',
+				'Regular year x1',
+				'Leap year x1',
+				'10-year cycle x19',
+			])
+			.defineBuckets('Minute', 'Hour', 'Week', 'Sol', 'Month', 'Year')
+			.updateUnits(['Minute'], {
+				formatMode: 'Numeric',
+				formatShorthand: 'm',
+				displayName: 'Minute',
+				displayNameShort: 'min',
+				displayNamePlural: 'Minutes',
+			})
+			.updateUnits(['Hour'], {
+				formatMode: 'Numeric',
+				formatShorthand: 'h',
+				displayName: 'Hour',
+				displayNameShort: 'hr',
+				displayNamePlural: 'Hours',
+			})
+			.updateUnits(['Sol'], {
+				formatMode: 'NumericOneIndexed',
+				formatShorthand: 's',
+				displayName: 'Sol',
+				displayNameShort: 'Sol',
+				displayNamePlural: 'Sols',
+			})
+			.updateUnits(['6-sol week', '7-sol week'], {
+				formatMode: 'Hidden',
+				formatShorthand: 'W',
+				displayName: 'Week',
+				displayNameShort: 'Wk',
+				displayNamePlural: 'Weeks',
+			})
+			.updateUnits(['27-sol month', '28-sol month'], {
+				formatMode: 'Name',
+				formatShorthand: 'M',
+				displayName: 'Month',
+				displayNameShort: 'Mon',
+				displayNamePlural: 'Months',
+			})
+			.updateUnits(['Leap year', 'Regular year'], {
+				formatMode: 'Numeric',
+				formatShorthand: 'Y',
+				displayName: 'Year',
+				displayNameShort: 'Yr',
+				displayNamePlural: 'Years',
+			})
+			.updateUnits(['10-year cycle', '200-year cycle'], {
+				formatMode: 'Hidden',
+			})
+			.createPresentation('Minutes', ['Sol: SS MMM YYYY', 'Hour: hh:mm', 'Minute x10: hh:mm'], {
+				compression: 1,
+				baselineUnit: 'Minute',
+			})
+			.createPresentation('Hours 0', ['Sol: SS MMM YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+				compression: 5,
+				baselineUnit: 'Minute',
+			})
+			.createPresentation('Hours 1', ['Sol: SS MMM YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+				compression: 20,
+				baselineUnit: 'Minute',
+			})
+			.createPresentation('Hours 2', ['Month: SS MMM YYYY', 'Sol: SS MMM', 'Hour x6: hh:mm'], {
+				compression: 1,
+				baselineUnit: 'Hour',
+			})
+			.createPresentation('Days', ['Month: SS MMM YYYY', 'Sol 7,14,21: SS M', 'Hour x24: '], {
+				compression: 4,
+				baselineUnit: 'Hour',
+			})
+			.createPresentation('Quarters', ['Year: MMM YYYY', 'Month: MMM YYYY', 'Sol 7,14,21: '], {
+				compression: 1,
+				baselineUnit: 'Sol',
+			})
+			.createPresentation('Years', ['Year x4: YYYY', 'Year: YYYY', 'Month x6: '], {
+				compression: 1,
+				baselineUnit: '28-sol month',
+			})
+			.createPresentation('Decades', ['Year x40: YYYY', 'Year x4: YYYY', 'Month x12: '], {
+				compression: 6,
+				baselineUnit: '28-sol month',
+			})
+			.createPresentation('Centuries', ['Year x400: YYYY', 'Year x100: YYYY', 'Year x20: '], {
+				compression: 5,
+				baselineUnit: 'Regular year',
+			})
+			.createPresentation('Millenia', ['Year x4000: YYYY', 'Year x1000: YYYY', 'Year x200: '], {
+				compression: 100,
+				baselineUnit: 'Regular year',
+			})
+			.build(prisma, calendarId)
+		return calendar
+	},
+
+	async populatePf2eCalendar({
+		prisma,
+		calendarId,
+		originTime,
+	}: {
+		prisma: TransactionClient
+		calendarId: string
+		originTime: number
+	}) {
+		const builder = makeCalendarBuilder()
+		const calendar = await builder
+			.setMetadata({
+				originTime,
+				formatString: 'hh:mm DD MM, YYYY',
+			})
+			.createUnit('Minute', [])
+			.createUnit('Hour', ['Minute x60'])
+			.createUnit('Day', ['Hour x24'])
+			.createUnit('28-day month', ['Day x28'])
+			.createUnit('29-day month', ['Day x29'])
+			.createUnit('30-day month', ['Day x30'])
+			.createUnit('31-day month', ['Day x31'])
+			.createUnit('Regular year', [
+				'31-day month: Abadius',
+				'28-day month: Calistril',
+				'31-day month: Pharast',
+				'30-day month: Gozran',
+				'31-day month: Desnus',
+				'30-day month: Sarenith',
+				'31-day month: Erastus',
+				'31-day month: Arodus',
+				'30-day month: Rova',
+				'31-day month: Lamashan',
+				'30-day month: Neth',
+				'31-day month: Kuthona',
+			])
+			.createUnit('Leap year', [
+				'31-day month: Abadius',
+				'29-day month: Calistril',
+				'31-day month: Pharast',
+				'30-day month: Gozran',
+				'31-day month: Desnus',
+				'30-day month: Sarenith',
+				'31-day month: Erastus',
+				'31-day month: Arodus',
+				'30-day month: Rova',
+				'31-day month: Lamashan',
+				'30-day month: Neth',
+				'31-day month: Kuthona',
+			])
+			.createUnit('4-year cycle', ['Regular year x3', 'Leap year x1'])
+			.createUnit('100-year cycle', ['4-year cycle x24', 'Regular year x4'])
+			.createUnit('400-year cycle', ['100-year cycle x3', '4-year cycle x25'])
+			.defineBuckets('Minute', 'Hour', 'Day', 'Month', 'Year')
+			.updateUnits(['Minute'], {
+				formatMode: 'Numeric',
+				formatShorthand: 'm',
+				displayName: 'Minute',
+				displayNameShort: 'min',
+				displayNamePlural: 'Minutes',
+			})
+			.updateUnits(['Hour'], {
+				formatMode: 'Numeric',
+				formatShorthand: 'h',
+				displayName: 'Hour',
+				displayNameShort: 'hr',
+				displayNamePlural: 'Hours',
+			})
+			.updateUnits(['Day'], {
+				formatMode: 'NumericOneIndexed',
+				formatShorthand: 'd',
+				displayName: 'Day',
+				displayNameShort: 'd',
+				displayNamePlural: 'Days',
+			})
+			.updateUnits(['28-day month', '29-day month', '30-day month', '31-day month'], {
+				formatMode: 'Name',
+				formatShorthand: 'M',
+				displayName: 'Month',
+				displayNameShort: 'Mon',
+				displayNamePlural: 'Months',
+			})
+			.updateUnits(['Leap year', 'Regular year'], {
+				formatMode: 'NumericOneIndexed',
+				formatShorthand: 'Y',
+				displayName: 'Year',
+				displayNameShort: 'Yr',
+				displayNamePlural: 'Years',
+			})
+			.updateUnits(['4-year cycle', '100-year cycle', '400-year cycle'], {
+				formatMode: 'Hidden',
+			})
+			.createPresentation('Minutes', ['Day: DD MMM, YYYY', 'Hour: hh:mm', 'Minute x10: hh:mm'], {
+				compression: 1,
+				baselineUnit: 'Minute',
+			})
+			.createPresentation('Hours 0', ['Day: DD MMM, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+				compression: 5,
+				baselineUnit: 'Minute',
+			})
+			.createPresentation('Hours 1', ['Day: DD MMM, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+				compression: 20,
+				baselineUnit: 'Minute',
+			})
+			.createPresentation('Hours 2', ['Month: DD MMM, YYYY', 'Day: DD MMM', 'Hour x6: hh:mm'], {
+				compression: 1,
+				baselineUnit: 'Hour',
+			})
+			.createPresentation('Days', ['Month: DD MMM, YYYY', 'Day 5,10,15,20,25: DD M', 'Hour x24: '], {
+				compression: 4,
+				baselineUnit: 'Hour',
+			})
+			.createPresentation('Quarters', ['Year: MMM YYYY', 'Month: MMM YYYY', 'Day 5,10,15,20,25: '], {
+				compression: 1,
+				baselineUnit: 'Day',
+			})
+			.createPresentation('Years', ['Year x4: YYYY', 'Year: YYYY', 'Month x6: '], {
+				compression: 1,
+				baselineUnit: '30-day month',
+			})
+			.createPresentation('Decades', ['Year x40: YYYY', 'Year x4: YYYY', 'Month x12: '], {
+				compression: 6,
+				baselineUnit: '30-day month',
+			})
+			.createPresentation('Centuries', ['Year x400: YYYY', 'Year x100: YYYY', 'Year x20: '], {
+				compression: 5,
+				baselineUnit: 'Regular year',
+			})
+			.createPresentation('Millenia', ['Year x10000: YYYY', 'Year x1000: YYYY', 'Year x500: '], {
+				compression: 100,
+				baselineUnit: 'Regular year',
+			})
+			.build(prisma, calendarId)
+		return calendar
+	},
+
+	async populateRimworldCalendar({
+		prisma,
+		calendarId,
+		originTime,
+	}: {
+		prisma: TransactionClient
+		calendarId: string
+		originTime: number
+	}) {
+		const builder = makeCalendarBuilder()
+		const calendar = await builder
+			.setMetadata({
+				originTime,
+				formatString: 'hh:mm QQQ DD, YYYY',
+			})
+			.createUnit('Minute', [])
+			.createUnit('Hour', ['Minute x60'])
+			.createUnit('Day', ['Hour x24'])
+			.createUnit('Quadrum', ['Day x15'])
+			.createUnit('Year', ['Quadrum: Aprimay', 'Quadrum: Jugust', 'Quadrum: Septober', 'Quadrum: Decembary'])
+			.defineBuckets('Minute', 'Hour', 'Day', 'Quadrum', 'Year')
+			.updateUnits(['Minute'], {
+				formatMode: 'Numeric',
+				formatShorthand: 'm',
+				displayName: 'Minute',
+				displayNameShort: 'min',
+				displayNamePlural: 'Minutes',
+			})
+			.updateUnits(['Hour'], {
+				formatMode: 'Numeric',
+				formatShorthand: 'h',
+				displayName: 'Hour',
+				displayNameShort: 'hr',
+				displayNamePlural: 'Hours',
+			})
+			.updateUnits(['Day'], {
+				formatMode: 'NumericOneIndexed',
+				formatShorthand: 'd',
+				displayName: 'Day',
+				displayNameShort: 'd',
+				displayNamePlural: 'Days',
+			})
+			.updateUnits(['Quadrum'], {
+				formatMode: 'Name',
+				formatShorthand: 'Q',
+				displayName: 'Quadrum',
+				displayNameShort: 'Qd',
+				displayNamePlural: 'Quadrums',
+			})
+			.updateUnits(['Year'], {
+				formatMode: 'NumericOneIndexed',
+				formatShorthand: 'Y',
+				displayName: 'Year',
+				displayNameShort: 'Yr',
+				displayNamePlural: 'Years',
+			})
+			.createPresentation('Minutes', ['Day: QQQ DD, YYYY', 'Hour: hh:mm', 'Minute x10: hh:mm'], {
+				compression: 1,
+				baselineUnit: 'Minute',
+			})
+			.createPresentation('Hours 0', ['Day: QQQ DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+				compression: 5,
+				baselineUnit: 'Minute',
+			})
+			.createPresentation('Hours 1', ['Day: QQQ DD, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+				compression: 20,
+				baselineUnit: 'Minute',
+			})
+			.createPresentation('Hours 2', ['Quadrum: QQQ DD, YYYY', 'Day: QQQ DD', 'Hour x6: hh:mm'], {
+				compression: 1,
+				baselineUnit: 'Hour',
+			})
+			.createPresentation('Days', ['Quadrum: QQQ DD, YYYY', 'Day 5,10: Q DD', 'Hour x24: '], {
+				compression: 4,
+				baselineUnit: 'Hour',
+			})
+			.createPresentation('Quarters', ['Year: QQQ YYYY', 'Quadrum: QQQ YYYY', 'Day 5,10: '], {
+				compression: 1,
+				baselineUnit: 'Day',
+			})
+			.createPresentation('Years', ['Year x4: YYYY', 'Year: YYYY', 'Quadrum: '], {
+				compression: 1,
+				baselineUnit: 'Quadrum',
+			})
+			.createPresentation('Decades', ['Year x200: YYYY', 'Year x20: YYYY', 'Year x4: '], {
+				compression: 4,
+				baselineUnit: 'Quadrum',
+			})
+			.createPresentation('Centuries', ['Year x400: YYYY', 'Year x100: YYYY', 'Year x20: '], {
+				compression: 5,
+				baselineUnit: 'Year',
+			})
+			.createPresentation('Millenia', ['Year x10000: YYYY', 'Year x1000: YYYY', 'Year x500: '], {
+				compression: 100,
+				baselineUnit: 'Year',
+			})
+			.build(prisma, calendarId)
+		return calendar
+	},
+
+	async populateExetherCalendar({
+		prisma,
+		calendarId,
+		originTime,
+	}: {
+		prisma: TransactionClient
+		calendarId: string
+		originTime: number
+	}) {
+		const builder = makeCalendarBuilder()
+		const calendar = await builder
+			.setMetadata({
+				originTime,
+				formatString: 'hh:mm MM DD, YYYY',
+			})
+			.createUnit('Minute', [])
+			.createUnit('Hour', ['Minute x60'])
+			.createUnit('Day', ['Hour x24'])
+			.createUnit('28-day month', ['Day x28'])
+			.createUnit('30-day month', ['Day x30'])
+			.createUnit('31-day month', ['Day x31'])
+			.createUnit('Year', [
+				'31-day month: Frostmoot',
+				'28-day month: Deepsnow',
+				'31-day month: Winterwane',
+				'30-day month: Rainmoot',
+				'31-day month: Palesun',
+				'30-day month: Highsun',
+				'31-day month: Firemoot',
+				'31-day month: Firewane',
+				'30-day month: Lowsun',
+				'31-day month: Redfall',
+				'30-day month: Snowmoot',
+				'31-day month: Fellnight',
+			])
+			.defineBuckets('Minute', 'Hour', 'Day', 'Month', 'Year')
+			.updateUnits(['Minute'], {
+				formatMode: 'Numeric',
+				formatShorthand: 'm',
+				displayName: 'Minute',
+				displayNameShort: 'min',
+				displayNamePlural: 'Minutes',
+			})
+			.updateUnits(['Hour'], {
+				formatMode: 'Numeric',
+				formatShorthand: 'h',
+				displayName: 'Hour',
+				displayNameShort: 'hr',
+				displayNamePlural: 'Hours',
+			})
+			.updateUnits(['Day'], {
+				formatMode: 'NumericOneIndexed',
+				formatShorthand: 'd',
+				displayName: 'Day',
+				displayNameShort: 'd',
+				displayNamePlural: 'Days',
+			})
+			.updateUnits(['28-day month', '30-day month', '31-day month'], {
+				formatMode: 'Name',
+				formatShorthand: 'M',
+				displayName: 'Month',
+				displayNameShort: 'Mon',
+				displayNamePlural: 'Months',
+			})
+			.updateUnits(['Year'], {
+				formatMode: 'NumericOneIndexed',
+				formatShorthand: 'Y',
+				displayName: 'Year',
+				displayNameShort: 'Yr',
+				displayNamePlural: 'Years',
+			})
+			.createPresentation('Minutes', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x10: hh:mm'], {
+				compression: 1,
+				baselineUnit: 'Minute',
+			})
+			.createPresentation('Hours 0', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+				compression: 5,
+				baselineUnit: 'Minute',
+			})
+			.createPresentation('Hours 1', ['Day: MMM DD, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+				compression: 20,
+				baselineUnit: 'Minute',
+			})
+			.createPresentation('Hours 2', ['Month: MMM DD, YYYY', 'Day: MMM DD', 'Hour x6: hh:mm'], {
+				compression: 1,
+				baselineUnit: 'Hour',
+			})
+			.createPresentation('Days', ['Month: MMM DD, YYYY', 'Day 5,10,15,20,25: M DD', 'Hour x24: '], {
+				compression: 4,
+				baselineUnit: 'Hour',
+			})
+			.createPresentation('Quarters', ['Year: MMM YYYY', 'Month: MMM YYYY', 'Day 5,10,15,20,25: '], {
+				compression: 1,
+				baselineUnit: 'Day',
+			})
+			.createPresentation('Years', ['Year x4: YYYY', 'Year: YYYY', 'Month x6: '], {
+				compression: 1,
+				baselineUnit: '30-day month',
+			})
+			.createPresentation('Decades', ['Year x40: YYYY', 'Year x4: YYYY', 'Month x12: '], {
+				compression: 6,
+				baselineUnit: '30-day month',
+			})
+			.createPresentation('Centuries', ['Year x400: YYYY', 'Year x100: YYYY', 'Year x20: '], {
+				compression: 5,
+				baselineUnit: 'Year',
+			})
+			.createPresentation('Millenia', ['Year x10000: YYYY', 'Year x1000: YYYY', 'Year x500: '], {
+				compression: 100,
+				baselineUnit: 'Year',
 			})
 			.build(prisma, calendarId)
 		return calendar

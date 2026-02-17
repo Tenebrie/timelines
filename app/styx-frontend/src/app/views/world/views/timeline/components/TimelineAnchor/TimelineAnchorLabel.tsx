@@ -46,7 +46,7 @@ function TimelineAnchorLabelComponent() {
 				if (labelRef.current) {
 					labelRef.current.textContent = desiredLabel
 				}
-			}, 100),
+			}, 50),
 		[anchorTimestampsRef, calendar, presentation.smallestUnit.unit, scaledTimeToRealTime, timeToLabel],
 	)
 
