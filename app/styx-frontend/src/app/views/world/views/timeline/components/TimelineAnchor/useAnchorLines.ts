@@ -1,14 +1,17 @@
 import { WorldCalendarPresentation, WorldCalendarPresentationUnit } from '@api/types/worldTypes'
-import { useCallback, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useCallback, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { useEventBusDispatch } from '@/app/features/eventBus'
 import { EsotericDate } from '@/app/features/time/calendar/date/EsotericDate'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
+import { timelineSlice } from '../../TimelineSlice'
 import { TimelineState } from '../../utils/TimelineState'
 import { TimelineAnchorPadding } from './TimelineAnchor'
+import { SlotData } from './TimelineAnchorSlot'
 
 type LabelSize = 'large' | 'medium' | 'small' | 'smallest'
 type DividerData = {
@@ -17,6 +20,7 @@ type DividerData = {
 	unit: WorldCalendarPresentationUnit
 	followerCount: number
 	followerSpacing: number
+	followerDuration: number
 	formatString: string
 }
 
@@ -24,19 +28,155 @@ type Props = {
 	containerWidth: number
 }
 
+export const anchorSlotIds = Array.from({ length: 150 }, (_, i) => i)
+
 export function useAnchorLines({ containerWidth }: Props) {
-	const [dividers, setDividers] = useState<DividerData[][]>([[], [], [], []])
-	const [renderedDividers, setRenderedDividers] = useState<DividerData[]>([])
-	const dividersRef = useRef(dividers)
+	const dividers = useRef<DividerData[][]>([[], [], [], []])
+	const renderedDividersRef = useRef<DividerData[]>([])
 	const baseDateRef = useRef<EsotericDate | null>(null)
 	const { presentation } = useWorldTime()
 	const { calendars } = useSelector(getWorldState, (a, b) => a.calendars === b.calendars)
 	const worldCalendar = calendars[0]
 
+	const { setAnchorTimestamps } = timelineSlice.actions
+	const dispatch = useDispatch()
+
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 	const lastSeenScrollRef = useRef(0)
 	const lastSeenScaleLevelRef = useRef(TimelineState.scaleLevel)
+
+	// Slot management refs
+	const slotAssignmentsRef = useRef(new Map<number, SlotData | null>())
+	const timestampToSlotRef = useRef(new Map<number, number>())
+	const freeSlotsRef = useRef(new Set<number>(anchorSlotIds))
+
+	const emitSlotUpdate = useEventBusDispatch['timeline/anchor/updateSlot']()
+
+	// Sync slots with dividers - called directly, no React state involved
+	const syncSlots = useCallback(
+		(newDividers: DividerData[]) => {
+			const newTimestamps = new Set(newDividers.map((d) => d.timestamp))
+
+			// Find slots to free (dividers that no longer exist)
+			for (const [timestamp, slotId] of timestampToSlotRef.current) {
+				if (!newTimestamps.has(timestamp)) {
+					// Free this slot
+					freeSlotsRef.current.add(slotId)
+					timestampToSlotRef.current.delete(timestamp)
+					slotAssignmentsRef.current.set(slotId, null)
+					emitSlotUpdate({ slotId, data: null })
+				}
+			}
+
+			// Assign slots to new dividers or update existing ones
+			for (const div of newDividers) {
+				const existingSlot = timestampToSlotRef.current.get(div.timestamp)
+				const slotData: SlotData = {
+					timestamp: div.timestamp,
+					size: div.size,
+					formatString: div.formatString,
+					followerCount: div.followerCount,
+					followerSpacing: div.followerSpacing,
+				}
+
+				if (existingSlot !== undefined) {
+					// Check if data changed
+					const currentData = slotAssignmentsRef.current.get(existingSlot)
+					if (
+						currentData &&
+						currentData.timestamp === slotData.timestamp &&
+						currentData.size === slotData.size &&
+						currentData.formatString === slotData.formatString &&
+						currentData.followerCount === slotData.followerCount &&
+						currentData.followerSpacing === slotData.followerSpacing
+					) {
+						continue // No change, skip update
+					}
+					slotAssignmentsRef.current.set(existingSlot, slotData)
+					emitSlotUpdate({ slotId: existingSlot, data: slotData })
+				} else {
+					// Need a new slot
+					const freeSlot = freeSlotsRef.current.values().next().value
+					if (freeSlot === undefined) {
+						console.warn('No free slots available!')
+						continue
+					}
+					freeSlotsRef.current.delete(freeSlot)
+					timestampToSlotRef.current.set(div.timestamp, freeSlot)
+					slotAssignmentsRef.current.set(freeSlot, slotData)
+					emitSlotUpdate({ slotId: freeSlot, data: slotData })
+				}
+			}
+		},
+		[emitSlotUpdate],
+	)
+
+	const flattenDividers = useCallback((presentation: WorldCalendarPresentation, divs: DividerData[][]) => {
+		const flatDivs = divs.flat()
+		if (flatDivs.length === 0) {
+			return []
+		}
+		const smallDivider = (() => {
+			const small = flatDivs.find((d) => d.size === 'small')
+			if (small) {
+				return small
+			}
+			const medium = flatDivs.find((d) => d.size === 'medium')
+			if (medium) {
+				return medium
+			}
+			const large = flatDivs.find((d) => d.size === 'large')
+			if (large) {
+				return large
+			}
+			throw new Error('No suitable divider found')
+		})()
+
+		const subdividedFollowerDuration = presentation.compression * Number(smallDivider.unit.unit.duration)
+
+		const flatDividers = flatDivs.sort((a, b) => a.timestamp - b.timestamp)
+		return flatDividers
+			.map((div, index) => {
+				const next = flatDividers[index + 1]
+				if (!next) {
+					return div
+				}
+
+				const timeToNext = Math.abs(next.timestamp - div.timestamp)
+
+				const rawFollowerCount = Math.round(timeToNext / subdividedFollowerDuration) - 1
+				const followerCount = Math.min(50, rawFollowerCount)
+				return {
+					...div,
+					followerCount: followerCount,
+					followerSpacing: timeToNext / (followerCount + 1),
+					followerDuration: subdividedFollowerDuration,
+				}
+			})
+			.sort((a, b) => a.timestamp - b.timestamp)
+	}, [])
+
+	const flushDividers = useCallback(
+		(divs: DividerData[][]) => {
+			dividers.current = divs
+			const flatDivs = flattenDividers(presentation, divs)
+			renderedDividersRef.current = flatDivs
+
+			// Sync slots directly - no React state involved
+			syncSlots(flatDivs)
+
+			const divsWithFollowers: number[] = []
+			flatDivs.forEach((div) => {
+				divsWithFollowers.push(div.timestamp)
+				for (let i = 0; i < div.followerCount; i++) {
+					divsWithFollowers.push(div.timestamp + (i + 1) * div.followerDuration)
+				}
+			})
+			dispatch(setAnchorTimestamps(divsWithFollowers))
+		},
+		[dispatch, flattenDividers, presentation, setAnchorTimestamps, syncSlots],
+	)
 
 	const stepDivider = useCallback(
 		(
@@ -69,6 +209,7 @@ export function useAnchorLines({ containerWidth }: Props) {
 					unit: presentationUnit,
 					followerCount: 0,
 					followerSpacing: 0,
+					followerDuration: 0,
 					formatString: presentationUnit.formatString,
 				},
 			}
@@ -76,53 +217,13 @@ export function useAnchorLines({ containerWidth }: Props) {
 		[],
 	)
 
-	const flattenDividers = useCallback((presentation: WorldCalendarPresentation, divs: DividerData[][]) => {
-		const flatDivs = divs.flat()
-		if (flatDivs.length === 0) {
-			return []
-		}
-		const smallDivider = (() => {
-			const small = flatDivs.find((d) => d.size === 'small')
-			if (small) {
-				return small
-			}
-			const medium = flatDivs.find((d) => d.size === 'medium')
-			if (medium) {
-				return medium
-			}
-			const large = flatDivs.find((d) => d.size === 'large')
-			if (large) {
-				return large
-			}
-			throw new Error('No suitable divider found')
-		})()
-
-		const subdividedFollowerDuration = presentation.compression * Number(smallDivider.unit.unit.duration)
-
-		const flatDividers = flatDivs.sort((a, b) => a.timestamp - b.timestamp)
-		return flatDividers.map((div, index) => {
-			const next = flatDividers[index + 1]
-			if (!next) {
-				return div
-			}
-
-			const timeToNext = Math.abs(next.timestamp - div.timestamp)
-
-			const rawFollowerCount = Math.round(timeToNext / subdividedFollowerDuration) - 1
-			const followerCount = Math.min(50, rawFollowerCount)
-			return {
-				...div,
-				followerCount: followerCount,
-				followerSpacing: timeToNext / (followerCount + 1),
-			}
-		})
-	}, [])
-
 	const regenerateDividers = useCallback(
 		(scroll: number) => {
 			if (presentation.units.length === 0) {
 				return
 			}
+
+			console.log('REGEN')
 
 			lastSeenScrollRef.current = scroll
 			lastSeenScaleLevelRef.current = scaleLevel
@@ -174,17 +275,15 @@ export function useAnchorLines({ containerWidth }: Props) {
 				}
 			})
 
-			setDividers(dividers)
-			setRenderedDividers(flattenDividers(presentation, dividers))
-			dividersRef.current = dividers
+			flushDividers(dividers)
 		},
 		[
-			presentation,
+			presentation.units,
 			scaleLevel,
 			scaledTimeToRealTime,
 			worldCalendar,
 			containerWidth,
-			flattenDividers,
+			flushDividers,
 			stepDivider,
 		],
 	)
@@ -192,32 +291,35 @@ export function useAnchorLines({ containerWidth }: Props) {
 	const updateDividers = useCallback(
 		(scroll: number) => {
 			if (
-				dividersRef.current[0].length === 0 &&
-				dividersRef.current[1].length === 0 &&
-				dividersRef.current[2].length === 0 &&
-				dividersRef.current[3].length === 0
+				dividers.current[0].length === 0 &&
+				dividers.current[1].length === 0 &&
+				dividers.current[2].length === 0 &&
+				dividers.current[3].length === 0
 			) {
 				return
 			}
 
-			if (
-				Math.abs(scroll - lastSeenScrollRef.current) < 100 ||
-				lastSeenScaleLevelRef.current !== scaleLevel
-			) {
+			const scrollDiff = Math.abs(scroll - lastSeenScrollRef.current)
+			if (scrollDiff < 100 || lastSeenScaleLevelRef.current !== scaleLevel) {
 				return
 			}
 
 			const direction = scroll < lastSeenScrollRef.current ? 1 : -1
+			if (scrollDiff > 2000) {
+				regenerateDividers(scroll)
+				return
+			}
+
 			lastSeenScrollRef.current = scroll
 
 			const screenLeft = scaledTimeToRealTime(-scroll - TimelineAnchorPadding)
 			const screenRight = screenLeft + scaledTimeToRealTime(containerWidth + TimelineAnchorPadding * 2 + 100)
 			const screenWidthInPixels = scaledTimeToRealTime(containerWidth)
 			const newDividers: DividerData[][] = [
-				[...dividersRef.current[0]],
-				[...dividersRef.current[1]],
-				[...dividersRef.current[2]],
-				[...dividersRef.current[3]],
+				[...dividers.current[0]],
+				[...dividers.current[1]],
+				[...dividers.current[2]],
+				[...dividers.current[3]],
 			]
 
 			presentation.units.forEach((presentationUnit, outerIndex) => {
@@ -283,20 +385,18 @@ export function useAnchorLines({ containerWidth }: Props) {
 				})
 			}
 
-			setDividers(newDividers)
-			setRenderedDividers(flattenDividers(presentation, newDividers))
-			dividersRef.current = newDividers
+			flushDividers(newDividers)
 		},
 		[
 			scaleLevel,
 			scaledTimeToRealTime,
 			containerWidth,
-			presentation,
-			flattenDividers,
+			presentation.units,
+			flushDividers,
 			worldCalendar,
 			stepDivider,
 		],
 	)
 
-	return { dividers: renderedDividers, regenerateDividers, updateDividers }
+	return { regenerateDividers, updateDividers }
 }

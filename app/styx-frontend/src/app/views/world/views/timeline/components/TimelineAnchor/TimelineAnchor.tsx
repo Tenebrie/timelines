@@ -2,23 +2,18 @@ import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Fade from '@mui/material/Fade'
 import Paper from '@mui/material/Paper'
-import { memo, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { LineSpacing } from '@/app/utils/constants'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { useTimelineAnchorDrag } from '../../hooks/useTimelineAnchorDrag'
 import { useTimelineHorizontalScroll } from '../../hooks/useTimelineHorizontalScroll'
-import { TimelineState } from '../../utils/TimelineState'
 import { TimelineAnchorContainer } from './TimelineAnchorContainer'
 import { TimelineAnchorLabel } from './TimelineAnchorLabel'
-import { TimelineAnchorLine } from './TimelineAnchorLine'
-import { useAnchorLines } from './useAnchorLines'
+import { TimelineAnchorLineList } from './TimelineAnchorLineList'
 
 export const TimelineAnchorPadding = 250 // pixels
 
@@ -66,20 +61,7 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 		[containerWidth],
 	)
 
-	const { dividers, regenerateDividers, updateDividers } = useAnchorLines({
-		containerWidth,
-	})
-	const { presentation } = useWorldTime()
-
-	useEventBusSubscribe['timeline/onScroll']({
-		callback: (scroll) => {
-			if (!presentation.baselineUnit) {
-				throw new Error('No baseline')
-			}
-			updateDividers(scroll)
-		},
-	})
-
+	const [linesKey, setLinesKey] = useState(0)
 	const lastLineCount = useRef(0)
 	const lastCalendar = useRef(calendar)
 	const lastContainerWidth = useRef(containerWidth)
@@ -95,13 +77,10 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 			lastCalendar.current = calendar
 			lastContainerWidth.current = containerWidth
 			lastScaleLevel.current = scaleLevel
-			regenerateDividers(TimelineState.scroll)
+			setLinesKey((prevKey) => prevKey + 1)
+			// regenerateDividers(TimelineState.scroll)
 		}
-	}, [calendar, lineCount, containerWidth, scaleLevel, regenerateDividers])
-
-	useEffectOnce(() => {
-		regenerateDividers(TimelineState.scroll)
-	})
+	}, [calendar, lineCount, containerWidth, scaleLevel])
 
 	return (
 		<Box
@@ -132,14 +111,7 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 				<Box>
 					<TimelineAnchorLabel />
 					<TimelineAnchorContainer>
-						{dividers.map((div) => (
-							<TimelineAnchorLine
-								key={`${div.timestamp}`}
-								theme={theme}
-								containerWidth={containerWidth}
-								{...div}
-							/>
-						))}
+						<TimelineAnchorLineList key={linesKey} containerWidth={containerWidth} />
 					</TimelineAnchorContainer>
 				</Box>
 			</Fade>

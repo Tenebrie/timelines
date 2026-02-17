@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
@@ -18,11 +18,7 @@ export const useWorldTime = () => {
 	// const worldCalendar = useSelector(getWorldCalendarState)
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const { calendars } = useSelector(getWorldState, (a, b) => a.calendars === b.calendars)
-	const worldCalendar = calendars[0] ?? {
-		units: [],
-		presentations: [],
-		originTime: 0,
-	}
+	const worldCalendar = useMemo(() => calendars[0] ?? null, [calendars])
 	// Offset by 1 to allow zooming in by 1 from default
 	const presentation = worldCalendar?.presentations[Number(scaleLevel + 1)] ?? {
 		units: [],
@@ -152,8 +148,8 @@ export const useWorldTime = () => {
 	// 	[calendarDefinition, msPerUnit],
 	// )
 
-	const parseTime = useParseTimestampToUnits({ units: worldCalendar.units })
-	const unparseTime = useParseUnitsToTimestamp({ units: worldCalendar.units })
+	const parseTime = useParseTimestampToUnits({ units: worldCalendar?.units ?? [] })
+	const unparseTime = useParseUnitsToTimestamp({ units: worldCalendar?.units ?? [] })
 	const format = useFormatTimestamp({
 		calendar: worldCalendar,
 	})
@@ -167,8 +163,8 @@ export const useWorldTime = () => {
 	const timeToShortLabel = useCallback(
 		(rawTime: number, scaleLevel: ScaleLevel, groupSize: 'large' | 'medium' | 'small') => {
 			// Check if this timestamp would be out of range before parsing
-			const maxRawTime = THE_END - worldCalendar.originTime
-			const minRawTime = -THE_END - worldCalendar.originTime
+			const maxRawTime = THE_END - (worldCalendar?.originTime ?? 0)
+			const minRawTime = -THE_END - (worldCalendar?.originTime ?? 0)
 
 			if (rawTime > maxRawTime || rawTime < minRawTime) {
 				return null
@@ -176,13 +172,13 @@ export const useWorldTime = () => {
 
 			return format({ timestamp: rawTime })
 		},
-		[format, worldCalendar.originTime],
+		[format, worldCalendar],
 	)
 
 	const timeToShortestLabel = useCallback(
 		(rawTime: number, scaleLevel: ScaleLevel) => {
-			const maxRawTime = THE_END - worldCalendar.originTime
-			const minRawTime = -THE_END - worldCalendar.originTime
+			const maxRawTime = THE_END - (worldCalendar?.originTime ?? 0)
+			const minRawTime = -THE_END - (worldCalendar?.originTime ?? 0)
 
 			if (rawTime > maxRawTime || rawTime < minRawTime) {
 				return null
@@ -190,13 +186,21 @@ export const useWorldTime = () => {
 
 			return format({ timestamp: rawTime })
 		},
-		[format, worldCalendar.originTime],
+		[format, worldCalendar],
 	)
 
+	const richPresentation = useMemo(() => {
+		return {
+			...presentation,
+			smallestUnit: presentation.units[presentation.units.length - 1],
+		}
+	}, [presentation])
+
 	return {
-		units: worldCalendar.units,
-		presentation,
-		originTime: worldCalendar.originTime,
+		calendar: worldCalendar,
+		units: worldCalendar?.units ?? [],
+		presentation: richPresentation,
+		originTime: worldCalendar?.originTime ?? 0,
 		parseTime,
 		unparseTime,
 		timeToLabel,

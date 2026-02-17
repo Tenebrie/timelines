@@ -157,7 +157,7 @@ function TimelineAnchorLineComponent(props: Props) {
 								borderRadius: '4px 4px 0 0',
 								width: '1px',
 								height: '9px',
-								marginLeft: `calc(${(index + 1) * realTimeToScaledTime(followerSpacing)}px)`,
+								marginLeft: `calc(${realTimeToScaledTime((index + 1) * followerSpacing)}px)`,
 							}}
 						/>
 					))}

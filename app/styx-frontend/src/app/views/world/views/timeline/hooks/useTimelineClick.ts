@@ -1,8 +1,10 @@
 import { useCallback, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
-import { LineSpacing } from '@/app/utils/constants'
+import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
+import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 type Props = {
 	containerRef: React.RefObject<HTMLDivElement | null>
@@ -22,6 +24,7 @@ export const useTimelineClick = ({
 	onDoubleClick,
 }: Props) => {
 	const { parseTime } = useWorldTime()
+	const { anchorTimestamps: dividerTimestamps } = useSelector(getTimelineState)
 
 	const [selectedTime, setSelectedTime] = useState<number | null>(null)
 	const [lastClickPos, setLastClickPos] = useState<number | null>(null)
@@ -54,22 +57,9 @@ export const useTimelineClick = ({
 				y: event.clientY - boundingRect.top,
 			}
 
-			const clickOffset = Math.round((point.x + 40 - scrollRef.current) / LineSpacing) * LineSpacing
-			const newSelectedTime = scaledTimeToRealTime(clickOffset)
-			// For scaleLevel = 4, round to the nearest month
-			// if (scaleLevel === 4) {
-			// 	const t = parseTime(newSelectedTime)
-			// 	if (t.day >= 15) {
-			// 		t.monthIndex += 1
-			// 	}
-			// 	newSelectedTime = pickerToTimestamp({
-			// 		day: 0,
-			// 		hour: 0,
-			// 		minute: 0,
-			// 		monthIndex: t.monthIndex,
-			// 		year: t.year,
-			// 	})
-			// }
+			const clickOffset = scaledTimeToRealTime(point.x + 40 - scrollRef.current - 2)
+			const newSelectedTime = binarySearchForClosest(dividerTimestamps, clickOffset)
+
 			setSelectedTime(newSelectedTime)
 
 			const currentTime = Date.now()
@@ -86,7 +76,16 @@ export const useTimelineClick = ({
 				onDoubleClick(newSelectedTime, trackId)
 			}
 		},
-		[containerRef, lastClickPos, lastClickTime, onClick, onDoubleClick, scaledTimeToRealTime, scrollRef],
+		[
+			containerRef,
+			dividerTimestamps,
+			lastClickPos,
+			lastClickTime,
+			onClick,
+			onDoubleClick,
+			scaledTimeToRealTime,
+			scrollRef,
+		],
 	)
 
 	return {
