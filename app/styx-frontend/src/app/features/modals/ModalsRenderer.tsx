@@ -7,25 +7,26 @@ import { DeleteAccountModal } from '../../views/profile/modals/DeleteAccountModa
 import { DeleteAssetModal } from '../../views/profile/modals/DeleteAssetModal'
 import { ArticleWizardModal } from '../../views/world/views/wiki/modals/ArticleWizardModal'
 import { DeleteArticleModal } from '../../views/world/views/wiki/modals/DeleteArticleModal'
-// import { useModal } from './ModalsSlice'
+import { useModal } from './ModalsSlice'
 import { EventTrackEditModal } from './renderers/EventTrackEditModal'
 import { EventTrackWizardModal } from './renderers/EventTrackWizardModal'
 import { TimeTravelModal } from './renderers/TimeTravelModal'
 
 export const ModalsRenderer = () => {
 	const { isLoaded } = useSelector(getWorldState, (a, b) => a.id === b.id && a.isLoaded === b.isLoaded)
-	// const { open: openTimeTravelModal } = useModal('timeTravelModal')
+	const { open: openTimeTravelModal } = useModal('timeTravelModal')
 
-	// TODO: Fix time travel modal
 	useShortcut(Shortcut.Search, () => {
-		// openTimeTravelModal({})
+		if (isLoaded) {
+			openTimeTravelModal({})
+		}
 	})
 
 	return (
 		<>
 			<EventTrackEditModal />
 			<EventTrackWizardModal />
-			{false && <TimeTravelModal />}
+			<TimeTravelModal />
 			<ArticleWizardModal />
 			<DeleteArticleModal />
 			<DeleteAccountModal />
