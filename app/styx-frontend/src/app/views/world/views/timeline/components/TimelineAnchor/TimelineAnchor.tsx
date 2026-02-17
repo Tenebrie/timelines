@@ -66,7 +66,6 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 		[containerWidth],
 	)
 
-	// const [dividers, setDividers] = useState<DividerData[]>([])
 	const { dividers, regenerateDividers, updateDividers } = useAnchorLines({
 		containerWidth,
 	})
@@ -133,7 +132,7 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 				<Box>
 					<TimelineAnchorLabel />
 					<TimelineAnchorContainer>
-						{dividers.flat().map((div) => (
+						{dividers.map((div) => (
 							<TimelineAnchorLine
 								key={`${div.timestamp}`}
 								theme={theme}

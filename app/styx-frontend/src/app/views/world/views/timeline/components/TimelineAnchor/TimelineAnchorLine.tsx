@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { memo, useCallback, useEffect, useRef } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
@@ -21,12 +21,24 @@ type Props = {
 	size: 'large' | 'medium' | 'small' | 'smallest'
 	containerWidth: number
 	formatString: string
+	followerCount: number
+	followerSpacing: number
+	followingDivider: 'large' | 'medium' | 'small' | 'smallest'
 }
 
 export const TimelineAnchorLine = memo(TimelineAnchorLineComponent)
 
 function TimelineAnchorLineComponent(props: Props) {
-	const { theme, timestamp, size: labelSize, formatString, containerWidth } = props
+	const {
+		theme,
+		timestamp,
+		followerCount,
+		followerSpacing,
+		followingDivider,
+		size: labelSize,
+		formatString,
+		containerWidth,
+	} = props
 
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const { label, refreshLabel } = useAnchorLineLabel({ labelSize, timestamp, formatString })
@@ -60,14 +72,14 @@ function TimelineAnchorLineComponent(props: Props) {
 
 			const { width: dividerWidth, height: dividerHeight } = getDividerSize(labelSize)
 
-			const offset = labelSize === 'large' ? 2 : 0
+			const positionOffset = labelSize === 'large' ? -1.5 : 0
 			const variables = {
-				'--divider-position': `${dividerPosition - offset}px`,
+				'--divider-position': `${dividerPosition}px`,
 				'--z-index': labelSize === 'large' ? 2 : labelSize === 'medium' ? 1 : 0,
 				'--font-weight': labelSize === 'large' ? 600 : labelSize === 'medium' ? 600 : 400,
 				'--divider-width': `${dividerWidth}px`,
 				'--divider-height': `${dividerHeight * 8}px`,
-				'--divider-margin': `${-dividerWidth / 2}px`,
+				'--divider-margin': `${positionOffset}px`,
 			} as Record<string, unknown>
 
 			keysOf(variables).forEach((key) => {
@@ -106,6 +118,23 @@ function TimelineAnchorLineComponent(props: Props) {
 		updateVariables(TimelineState.scroll)
 	}, [containerWidth, updateVariables])
 
+	const followerOffset = useMemo(() => {
+		if (followerCount === 0) {
+			return 0
+		}
+		return (
+			(followingDivider === 'medium' ? 0 : followingDivider === 'large' ? 0 : 0) +
+			(labelSize === 'large' ? 0 : 0)
+		)
+	}, [followerCount, followingDivider, labelSize])
+
+	const followerSquish = useMemo(() => {
+		if (followerCount === 0) {
+			return 0
+		}
+		return 0
+	}, [followerCount, followingDivider, labelSize])
+
 	if (!label) {
 		return null
 	}
@@ -131,9 +160,26 @@ function TimelineAnchorLineComponent(props: Props) {
 					borderRadius: '4px 4px 0 0',
 					width: 'var(--divider-width)',
 					height: 'var(--divider-height)',
-					marginleft: 'var(--divider-margin)',
+					marginLeft: 'var(--divider-margin)',
 				}}
 			/>
+			{followerCount > 0 &&
+				Array(followerCount)
+					.fill(0)
+					.map((_, index) => (
+						<Box
+							key={index}
+							sx={{
+								position: 'absolute',
+								background: 'gray',
+								bottom: 0,
+								borderRadius: '4px 4px 0 0',
+								width: '1px',
+								height: '9px',
+								marginLeft: `calc(${(index + 1) * realTimeToScaledTime(followerSpacing) + followerOffset}px)`,
+							}}
+						/>
+					))}
 		</Box>
 	)
 }

@@ -425,7 +425,7 @@ export const CalendarTemplateService = {
 				compression: 1,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 0', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x10: '], {
+			.createPresentation('Hours 0', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
 				compression: 5,
 				baselineUnit: 'Minute',
 			})
@@ -449,15 +449,15 @@ export const CalendarTemplateService = {
 				compression: 1,
 				baselineUnit: '30-day month',
 			})
-			.createPresentation('Decades', ['Year x40: YYYY', 'Year x4: YYYY', 'Month x6: '], {
+			.createPresentation('Decades', ['Year x40: YYYY', 'Year x4: YYYY', 'Month x12: '], {
 				compression: 6,
 				baselineUnit: '30-day month',
 			})
-			.createPresentation('Centuries', ['Year x400: YYYY', 'Year x20: YYYY', 'Year x5: '], {
+			.createPresentation('Centuries', ['Year x400: YYYY', 'Year x100: YYYY', 'Year x20: '], {
 				compression: 5,
 				baselineUnit: 'Regular year',
 			})
-			.createPresentation('Millenia', ['Year x10000: YYYY', 'Year x1000: YYYY', 'Year x100: YYYY'], {
+			.createPresentation('Millenia', ['Year x10000: YYYY', 'Year x1000: YYYY', 'Year x500: '], {
 				compression: 100,
 				baselineUnit: 'Regular year',
 			})
