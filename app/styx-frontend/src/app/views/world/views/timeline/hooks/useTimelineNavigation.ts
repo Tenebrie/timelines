@@ -1,10 +1,8 @@
-import React, { useEffect, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useMemo, useState } from 'react'
 
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
-import { maximumTime } from '@/app/features/time/hooks/useWorldTime'
+import { THE_END } from '@/app/features/time/hooks/useWorldTime'
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
-import { getWorldCalendarState } from '@/app/views/world/WorldSliceSelectors'
 import { router } from '@/router'
 
 import { useTimelineClick } from './useTimelineClick'
@@ -31,14 +29,14 @@ export const useTimelineNavigation = ({
 	onDoubleClick,
 }: Props) => {
 	const { getLevelScalar } = useTimelineLevelScalar()
-	const calendar = useSelector(getWorldCalendarState)
 
 	const initialScaleLevel: ScaleLevel = router.state.location.search.scale ?? 0
 
 	// Scroll management
+	const [containerSize, setContainerSize] = useState(0)
 	const scalar = useMemo(() => getLevelScalar(initialScaleLevel), [getLevelScalar, initialScaleLevel])
-	const minimumScroll = useMemo(() => -maximumTime / scalar / 1000 / 60, [scalar])
-	const maximumScroll = useMemo(() => maximumTime / scalar / 1000 / 60, [scalar])
+	const minimumScroll = useMemo(() => -THE_END / scalar + containerSize, [containerSize, scalar])
+	const maximumScroll = useMemo(() => THE_END / scalar - 4, [scalar])
 
 	const scrollHook = useTimelineScroll({
 		defaultScroll,
@@ -54,7 +52,6 @@ export const useTimelineNavigation = ({
 		selectedTime: defaultSelectedTime,
 		scaleLimits,
 		initialScaleLevel,
-		calendar,
 		setScroll: scrollHook.setScroll,
 	})
 
@@ -98,6 +95,7 @@ export const useTimelineNavigation = ({
 			return
 		}
 
+		setContainerSize(container.getBoundingClientRect().width + 42)
 		const onMouseMove = (event: MouseEvent) => {
 			scrollHook.onMouseMoveThrottled.current(event, scrollHook.minimumScroll, scrollHook.maximumScroll)
 		}

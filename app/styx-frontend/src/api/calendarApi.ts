@@ -98,25 +98,25 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as calendarApi }
 export type ListCalendarsApiResponse = /** status 200  */ {
+	ownerId?: null | string
+	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	worldId?: null | string
-	ownerId?: null | string
 	position: number
+	name: string
 	originTime: string
 	dateFormat?: null | string
 }[]
 export type ListCalendarsApiArg = void
 export type CreateCalendarApiResponse = /** status 200  */ {
+	ownerId?: null | string
+	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	worldId?: null | string
-	ownerId?: null | string
 	position: number
+	name: string
 	originTime: string
 	dateFormat?: null | string
 }
@@ -130,12 +130,12 @@ export type GetCalendarApiResponse = /** status 200  */ {
 	presentations: {
 		units: {
 			unit: {
+				calendarId: string
 				id: string
 				createdAt: string
 				updatedAt: string
-				name: string
-				calendarId: string
 				position: number
+				name: string
 				displayName?: null | string
 				displayNameShort?: null | string
 				displayNamePlural?: null | string
@@ -145,21 +145,21 @@ export type GetCalendarApiResponse = /** status 200  */ {
 				duration: string
 				treeDepth: number
 			}
+			unitId: string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name: string
-			unitId: string
 			presentationId: string
 			formatString: string
 			subdivision: number
 			labeledIndices: number[]
 		}[]
+		calendarId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		calendarId: string
 		scaleFactor: number
 		compression: number
 		baselineUnitId?: null | string
@@ -185,12 +185,12 @@ export type GetCalendarApiResponse = /** status 200  */ {
 			parentUnitId: string
 			childUnitId: string
 		}[]
+		calendarId: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
-		calendarId: string
 		position: number
+		name: string
 		displayName?: null | string
 		displayNameShort?: null | string
 		displayNamePlural?: null | string
@@ -200,13 +200,13 @@ export type GetCalendarApiResponse = /** status 200  */ {
 		duration: string
 		treeDepth: number
 	}[]
+	ownerId?: null | string
+	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	worldId?: null | string
-	ownerId?: null | string
 	position: number
+	name: string
 	originTime: string
 	dateFormat?: null | string
 }
@@ -215,13 +215,13 @@ export type GetCalendarApiArg = {
 	calendarId: string
 }
 export type UpdateCalendarApiResponse = /** status 200  */ {
+	ownerId?: null | string
+	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	worldId?: null | string
-	ownerId?: null | string
 	position: number
+	name: string
 	originTime: string
 	dateFormat?: null | string
 }
@@ -235,13 +235,13 @@ export type UpdateCalendarApiArg = {
 	}
 }
 export type DeleteCalendarApiResponse = /** status 200  */ {
+	ownerId?: null | string
+	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	worldId?: null | string
-	ownerId?: null | string
 	position: number
+	name: string
 	originTime: string
 	dateFormat?: null | string
 }
@@ -274,12 +274,12 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 			parentUnitId: string
 			childUnitId: string
 		}[]
+		calendarId: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
-		calendarId: string
 		position: number
+		name: string
 		formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 		formatShorthand?: null | string
 		negativeFormat: 'MinusSign' | 'AbsoluteValue'
@@ -289,12 +289,12 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 	presentations: {
 		units: {
 			unit: {
+				calendarId: string
 				id: string
 				createdAt: string
 				updatedAt: string
-				name: string
-				calendarId: string
 				position: number
+				name: string
 				displayName?: null | string
 				displayNameShort?: null | string
 				displayNamePlural?: null | string
@@ -304,32 +304,32 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 				duration: string
 				treeDepth: number
 			}
+			unitId: string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name: string
-			unitId: string
 			presentationId: string
 			formatString: string
 			subdivision: number
 			labeledIndices: number[]
 		}[]
+		calendarId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		calendarId: string
 		scaleFactor: number
 		compression: number
 		baselineUnitId?: null | string
 	}[]
+	ownerId?: null | string
+	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	worldId?: null | string
-	ownerId?: null | string
 	position: number
+	name: string
 	originTime: string
 	dateFormat?: null | string
 }
@@ -338,12 +338,12 @@ export type GetCalendarPreviewApiArg = {
 	calendarId: string
 }
 export type CreateCalendarUnitApiResponse = /** status 200  */ {
+	calendarId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	calendarId: string
 	position: number
+	name: string
 	displayName?: null | string
 	displayNameShort?: null | string
 	displayNamePlural?: null | string
@@ -376,12 +376,12 @@ export type UpdateCalendarUnitApiResponse = /** status 200  */ {
 		parentUnitId: string
 		childUnitId: string
 	}[]
+	calendarId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	calendarId: string
 	position: number
+	name: string
 	displayName?: null | string
 	displayNameShort?: null | string
 	displayNamePlural?: null | string
@@ -412,12 +412,12 @@ export type UpdateCalendarUnitApiArg = {
 	}
 }
 export type DeleteCalendarUnitApiResponse = /** status 200  */ {
+	calendarId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	calendarId: string
 	position: number
+	name: string
 	displayName?: null | string
 	displayNameShort?: null | string
 	displayNamePlural?: null | string
@@ -436,12 +436,12 @@ export type DeleteCalendarUnitApiArg = {
 export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 	units: {
 		unit: {
+			calendarId: string
 			id: string
 			createdAt: string
 			updatedAt: string
-			name: string
-			calendarId: string
 			position: number
+			name: string
 			displayName?: null | string
 			displayNameShort?: null | string
 			displayNamePlural?: null | string
@@ -451,23 +451,23 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 			duration: string
 			treeDepth: number
 		}
+		unitId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		unitId: string
 		presentationId: string
 		formatString: string
 		subdivision: number
 		labeledIndices: number[]
 	}[]
 	baselineUnit: null | {
+		calendarId: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
-		calendarId: string
 		position: number
+		name: string
 		displayName?: null | string
 		displayNameShort?: null | string
 		displayNamePlural?: null | string
@@ -477,11 +477,11 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 		duration: string
 		treeDepth: number
 	}
+	calendarId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendarId: string
 	scaleFactor: number
 	compression: number
 	baselineUnitId?: null | string
@@ -492,18 +492,17 @@ export type CreateCalendarPresentationApiArg = {
 	body: {
 		name: string
 		scaleFactor?: number
-		baselineUnitId?: string
 	}
 }
 export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 	units: {
 		unit: {
+			calendarId: string
 			id: string
 			createdAt: string
 			updatedAt: string
-			name: string
-			calendarId: string
 			position: number
+			name: string
 			displayName?: null | string
 			displayNameShort?: null | string
 			displayNamePlural?: null | string
@@ -513,23 +512,23 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 			duration: string
 			treeDepth: number
 		}
+		unitId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		unitId: string
 		presentationId: string
 		formatString: string
 		subdivision: number
 		labeledIndices: number[]
 	}[]
 	baselineUnit: null | {
+		calendarId: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
-		calendarId: string
 		position: number
+		name: string
 		displayName?: null | string
 		displayNameShort?: null | string
 		displayNamePlural?: null | string
@@ -539,11 +538,11 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 		duration: string
 		treeDepth: number
 	}
+	calendarId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendarId: string
 	scaleFactor: number
 	compression: number
 	baselineUnitId?: null | string
@@ -562,11 +561,11 @@ export type UpdateCalendarPresentationApiArg = {
 	}
 }
 export type DeleteCalendarPresentationApiResponse = /** status 200  */ {
+	calendarId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendarId: string
 	scaleFactor: number
 	compression: number
 	baselineUnitId?: null | string

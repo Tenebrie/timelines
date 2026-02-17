@@ -5,7 +5,6 @@ import { CalendarService } from '@src/services/CalendarService.js'
 import { CalendarTemplateIdShape, CalendarTemplateService } from '@src/services/CalendarTemplateService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import {
-	BigIntValidator,
 	NullableStringValidator,
 	NumberValidator,
 	OptionalParam,
@@ -25,6 +24,7 @@ import { CalendarUnitChildValidator } from './validators/CalendarUnitChildValida
 import { CalendarUnitFormatModeValidator } from './validators/CalendarUnitDisplayFormatValidator.js'
 import { NameStringValidator } from './validators/NameStringValidator.js'
 import { NullableNameStringWithoutTrimValidator } from './validators/NullableNameStringWithoutTrimValidator.js'
+import { TimestampValidator } from './validators/TimestampValidator.js'
 
 const router = new Router().with(SessionMiddleware).with(async (ctx) => {
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -132,7 +132,7 @@ router.patch('/api/calendar/:calendarId', async (ctx) => {
 
 	const { name, dateFormat, originTime } = useRequestBody(ctx, {
 		name: OptionalParam(NameStringValidator),
-		originTime: OptionalParam(BigIntValidator),
+		originTime: OptionalParam(TimestampValidator),
 		dateFormat: OptionalParam(NullableStringValidator),
 	})
 
@@ -311,14 +311,13 @@ router.post('/api/calendar/:calendarId/presentations', async (ctx) => {
 	const { name, scaleFactor } = useRequestBody(ctx, {
 		name: RequiredParam(NameStringValidator),
 		scaleFactor: OptionalParam(NumberValidator),
-		baselineUnitId: OptionalParam(StringValidator),
 	})
 
 	await AuthorizationService.checkUserCalendarWriteAccessById(ctx.user, calendarId)
 
 	const { presentation } = await CalendarService.createCalendarPresentation({
 		calendarId,
-		params: { name, scaleFactor, baselineUnitId },
+		params: { name, scaleFactor },
 	})
 
 	const calendar = await CalendarService.getEditorCalendar({ calendarId })

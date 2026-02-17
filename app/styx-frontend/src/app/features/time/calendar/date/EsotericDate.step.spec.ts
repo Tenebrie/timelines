@@ -15,68 +15,144 @@ function makeCalendar(units: CalendarUnit[]): WorldCalendar {
 	return mockCalendar({ units })
 }
 
-describe('EsotericDate.step — nested hidden cycles (Earth-like calendar)', () => {
-	/**
-	 * Simplified Earth calendar structure:
-	 *   400-year cycle (hidden) → 100-year cycle x3, 4-year cycle x25
-	 *   100-year cycle (hidden) → 4-year cycle x24, Regular year x4
-	 *   4-year cycle  (hidden) → Regular year x3, Leap year x1
-	 *   Regular year (displayName "Year") → Month x12 (each 30 days for simplicity)
-	 *   Leap year    (displayName "Year") → Month x13 (each 30 days, extra month = leap)
-	 *
-	 * Durations:
-	 *   Month         = 30
-	 *   Regular year  = 12 * 30 = 360
-	 *   Leap year     = 13 * 30 = 390
-	 *   4-year cycle  = 3 * 360 + 390 = 1470
-	 *   100-year cycle = 24 * 1470 + 4 * 360 = 35280 + 1440 = 36720
-	 *   400-year cycle = 3 * 36720 + 25 * 1470 = 110160 + 36750 = 146910
-	 */
-
-	const month = mockCalendarUnit({
-		id: 'month',
-		name: 'Month',
-		displayName: 'month',
-		duration: 30,
-		formatShorthand: 'M',
+describe('nested hidden parents (Earth-like: BigCycle → YearCycle, with mixed children)', () => {
+	// YearCycle (Hidden) → [NormalYear x2, LeapYear x1], duration = 2*365 + 366 = 1096
+	// BigCycle (Hidden) → [YearCycle x2, NormalYear x1], duration = 2*1096 + 365 = 2557
+	// When stepping the YearCycle backward from the start of a BigCycle,
+	// it must land on the previous YearCycle, not on the trailing NormalYear.
+	const day = mockCalendarUnit({
+		id: 'day',
+		name: 'Day',
+		duration: 1,
+		formatShorthand: 'd',
 		parents: [
-			mockCalendarUnitParentRelation('regular-year', 'month', 12),
-			mockCalendarUnitParentRelation('leap-year', 'month', 13),
+			mockCalendarUnitParentRelation('normal-year', 'day', 365),
+			mockCalendarUnitParentRelation('leap-year', 'day', 366),
 		],
 	})
+	const normalYear = mockCalendarUnit({
+		id: 'normal-year',
+		name: 'NormalYear',
+		displayName: 'Year',
+		duration: 365,
+		formatShorthand: 'Y',
+		children: [mockCalendarUnitChildRelation('normal-year', 'day', 365)],
+		parents: [
+			mockCalendarUnitParentRelation('year-cycle', 'normal-year', 2),
+			mockCalendarUnitParentRelation('big-cycle', 'normal-year', 1),
+		],
+	})
+	const leapYear = mockCalendarUnit({
+		id: 'leap-year',
+		name: 'LeapYear',
+		displayName: 'Year',
+		duration: 366,
+		formatShorthand: 'Y',
+		children: [mockCalendarUnitChildRelation('leap-year', 'day', 366)],
+		parents: [mockCalendarUnitParentRelation('year-cycle', 'leap-year', 1)],
+	})
+	const yearCycle = mockCalendarUnit({
+		id: 'year-cycle',
+		name: 'YearCycle',
+		duration: 1096,
+		formatMode: 'Hidden',
+		children: [
+			mockCalendarUnitChildRelation('year-cycle', 'normal-year', 2, { position: 0 }),
+			mockCalendarUnitChildRelation('year-cycle', 'leap-year', 1, { position: 1 }),
+		],
+		parents: [mockCalendarUnitParentRelation('big-cycle', 'year-cycle', 2)],
+	})
+	const bigCycle = mockCalendarUnit({
+		id: 'big-cycle',
+		name: 'BigCycle',
+		duration: 2557,
+		formatMode: 'Hidden',
+		children: [
+			mockCalendarUnitChildRelation('big-cycle', 'year-cycle', 2, { position: 0 }),
+			mockCalendarUnitChildRelation('big-cycle', 'normal-year', 1, { position: 1 }),
+		],
+	})
+	const units: CalendarUnit[] = [bigCycle, yearCycle, normalYear, leapYear, day]
+	const calendar = makeCalendar(units)
 
+	it('stepping year -4 from start of BigCycle lands in previous BigCycle', () => {
+		// At start of BigCycle 1 = timestamp 2557, NormalYear 0 day 0 in YearCycle 0
+		// BigCycle 0 years in order:
+		//   Year 0: Normal (0), Year 1: Normal (365), Year 2: Leap (730) [YC0]
+		//   Year 3: Normal (1096), Year 4: Normal (1461), Year 5: Leap (1826) [YC1]
+		//   Year 6: Normal (2192) [trailing]
+		// step(Year, -4) from year 7 → year 3 = Normal at 1096
+		const date = new EsotericDate(calendar, 2557)
+		const result = date.step(normalYear, -4)
+		expect(result.getTimestamp()).toBe(1096)
+	})
+
+	it('stepping year +1 from start of BigCycle stays in correct slot', () => {
+		// At BigCycle boundary, step forward 1 year
+		const date = new EsotericDate(calendar, 2557)
+		const result = date.step(normalYear, 1)
+		// Should go to NormalYear 1 in YearCycle 0 of BigCycle 1 = 2557 + 365 = 2922
+		expect(result.getTimestamp()).toBe(2922)
+	})
+
+	it('stepping year -1 from start of BigCycle wraps to previous yearCycle last slot', () => {
+		// At start of BigCycle 1 (ts=2557), NormalYear 0 in YearCycle 0.
+		// step -1: goes to the last year in BigCycle 0.
+		// BigCycle 0's last year is the trailing NormalYear at 2192.
+		const date = new EsotericDate(calendar, 2557)
+		const result = date.step(normalYear, -1)
+		expect(result.getTimestamp()).toBe(2192)
+	})
+})
+
+describe('Earth-like full calendar (400-year cycle boundary stepping)', () => {
+	// Exact Earth calendar structure:
+	// Regular year = 365 days (duration: 365)
+	// Leap year = 366 days (duration: 366)
+	// 4-year cycle = Regular x3 + Leap x1 = 1461
+	// 100-year cycle = 4-year-cycle x24 + Regular x4 = 24*1461 + 4*365 = 35064 + 1460 = 36524
+	// 400-year cycle = 100-year-cycle x3 + 4-year-cycle x25 = 3*36524 + 25*1461 = 109572 + 36525 = 146097
+	// Using days as base unit (duration=1) for simplicity
+	const day = mockCalendarUnit({
+		id: 'day',
+		name: 'Day',
+		duration: 1,
+		formatShorthand: 'd',
+		formatMode: 'NumericOneIndexed',
+		displayName: 'Day',
+		parents: [
+			mockCalendarUnitParentRelation('regular-year', 'day', 365),
+			mockCalendarUnitParentRelation('leap-year', 'day', 366),
+		],
+	})
 	const regularYear = mockCalendarUnit({
 		id: 'regular-year',
-		name: 'RegularYear',
-		displayName: 'year',
-		duration: 360,
+		name: 'Regular year',
+		displayName: 'Year',
+		duration: 365,
 		formatShorthand: 'Y',
 		formatMode: 'NumericOneIndexed',
-		children: [mockCalendarUnitChildRelation('regular-year', 'month', 12)],
+		children: [mockCalendarUnitChildRelation('regular-year', 'day', 365)],
 		parents: [
 			mockCalendarUnitParentRelation('4-year-cycle', 'regular-year', 3),
 			mockCalendarUnitParentRelation('100-year-cycle', 'regular-year', 4),
 		],
 	})
-
 	const leapYear = mockCalendarUnit({
 		id: 'leap-year',
-		name: 'LeapYear',
-		displayName: 'year',
-		duration: 390,
+		name: 'Leap year',
+		displayName: 'Year',
+		duration: 366,
 		formatShorthand: 'Y',
 		formatMode: 'NumericOneIndexed',
-		children: [mockCalendarUnitChildRelation('leap-year', 'month', 13)],
+		children: [mockCalendarUnitChildRelation('leap-year', 'day', 366)],
 		parents: [mockCalendarUnitParentRelation('4-year-cycle', 'leap-year', 1)],
 	})
-
 	const fourYearCycle = mockCalendarUnit({
 		id: '4-year-cycle',
-		name: '4YearCycle',
-		displayName: '4YearCycle',
-		duration: 1470, // 3*360 + 390
+		name: '4-year cycle',
+		duration: 1461, // 3*365 + 366
 		formatMode: 'Hidden',
-		formatShorthand: '',
 		children: [
 			mockCalendarUnitChildRelation('4-year-cycle', 'regular-year', 3, { position: 0 }),
 			mockCalendarUnitChildRelation('4-year-cycle', 'leap-year', 1, { position: 1 }),
@@ -86,224 +162,408 @@ describe('EsotericDate.step — nested hidden cycles (Earth-like calendar)', () 
 			mockCalendarUnitParentRelation('400-year-cycle', '4-year-cycle', 25),
 		],
 	})
-
 	const hundredYearCycle = mockCalendarUnit({
 		id: '100-year-cycle',
-		name: '100YearCycle',
-		displayName: '100YearCycle',
-		duration: 36720, // 24*1470 + 4*360
+		name: '100-year cycle',
+		duration: 36524, // 24*1461 + 4*365
 		formatMode: 'Hidden',
-		formatShorthand: '',
 		children: [
 			mockCalendarUnitChildRelation('100-year-cycle', '4-year-cycle', 24, { position: 0 }),
 			mockCalendarUnitChildRelation('100-year-cycle', 'regular-year', 4, { position: 1 }),
 		],
 		parents: [mockCalendarUnitParentRelation('400-year-cycle', '100-year-cycle', 3)],
 	})
-
 	const fourHundredYearCycle = mockCalendarUnit({
 		id: '400-year-cycle',
-		name: '400YearCycle',
-		displayName: '400YearCycle',
-		duration: 146910, // 3*36720 + 25*1470
+		name: '400-year cycle',
+		duration: 146097, // 3*36524 + 25*1461
 		formatMode: 'Hidden',
-		formatShorthand: '',
 		children: [
 			mockCalendarUnitChildRelation('400-year-cycle', '100-year-cycle', 3, { position: 0 }),
 			mockCalendarUnitChildRelation('400-year-cycle', '4-year-cycle', 25, { position: 1 }),
 		],
 	})
-
-	const units: CalendarUnit[] = [
-		fourHundredYearCycle,
-		hundredYearCycle,
-		fourYearCycle,
-		regularYear,
-		leapYear,
-		month,
-	]
+	const units = [fourHundredYearCycle, hundredYearCycle, fourYearCycle, regularYear, leapYear, day]
 	const calendar = makeCalendar(units)
 
-	// Precomputed year start timestamps for the first 12 years:
-	// 4-year cycle pattern: Regular(360), Regular(360), Regular(360), Leap(390) = 1470
-	// Year 0: Regular, starts at 0
-	// Year 1: Regular, starts at 360
-	// Year 2: Regular, starts at 720
-	// Year 3: Leap,    starts at 1080
-	// Year 4: Regular, starts at 1470 (new 4-year cycle)
-	// Year 5: Regular, starts at 1830
-	// Year 6: Regular, starts at 2190
-	// Year 7: Leap,    starts at 2550
-	// Year 8: Regular, starts at 2940 (new 4-year cycle)
-	// Year 9: Regular, starts at 3300
-	// Year 10: Regular, starts at 3660
-	// Year 11: Leap,    starts at 4020
-	const yearStarts = [0, 360, 720, 1080, 1470, 1830, 2190, 2550, 2940, 3300, 3660, 4020]
+	// 400-year cycle starts at timestamp 0.
+	// Year 0 starts at 0.
+	// The 5th 400-year cycle starts at 5 * 146097 = 730485
+	// For testing, let's focus on the boundary of the 1st 400-year cycle (ts=146097)
 
-	describe('stepping year by year from timestamp 0 (simulating timeline anchors)', () => {
-		it('step through first 12 years sequentially, each landing at the correct start', () => {
-			let date = new EsotericDate(calendar, 0).floor(regularYear)
+	it('step(Year, 4) produces monotonically increasing timestamps across 400-year boundary', () => {
+		// Start a few 4-year-cycles before the boundary
+		// 400-year boundary at 146097
+		// 8 years before = 2 four-year-cycles = 2 * 1461 = 2922 before
+		const startTs = 146097 - 2922
+		let date = new EsotericDate(calendar, startTs)
+		const timestamps: number[] = [date.getTimestamp()]
 
-			for (let i = 0; i < 12; i++) {
-				expect(date.getTimestamp(), `Year ${i} should start at ${yearStarts[i]}`).toBe(yearStarts[i])
-				date = date.step(regularYear, 1)
-			}
-		})
+		// Step forward by 4 years at a time, collecting timestamps
+		for (let i = 0; i < 10; i++) {
+			date = date.step(regularYear, 4)
+			timestamps.push(date.getTimestamp())
+		}
+
+		// All timestamps should be monotonically increasing
+		for (let i = 1; i < timestamps.length; i++) {
+			expect(timestamps[i]).toBeGreaterThan(timestamps[i - 1])
+		}
 	})
 
-	describe('floor then step reproduces timeline anchor behavior', () => {
-		it('floor to year then step +1 lands at next year start', () => {
-			// Start mid-year 0 (month 5 = timestamp 150)
-			const date = new EsotericDate(calendar, 150)
-			const floored = date.floor(regularYear)
-			expect(floored.getTimestamp()).toBe(0)
+	it('step(Year, 1) produces monotonically increasing timestamps across 400-year boundary', () => {
+		// Start 4 years before the 400-year boundary
+		const startTs = 146097 - 1461
+		let date = new EsotericDate(calendar, startTs)
+		const timestamps: number[] = [date.getTimestamp()]
 
-			const next = floored.step(regularYear, 1)
-			expect(next.getTimestamp()).toBe(360) // Year 1 start
-		})
+		for (let i = 0; i < 12; i++) {
+			date = date.step(regularYear, 1)
+			timestamps.push(date.getTimestamp())
+		}
 
-		it('floor to year then step +1 across 4-year cycle boundary', () => {
-			// Start in Year 3 (Leap year), month 2 = 1080 + 60 = 1140
-			const date = new EsotericDate(calendar, 1140)
-			const floored = date.floor(regularYear)
-			expect(floored.getTimestamp()).toBe(1080) // Year 3 (Leap) start
-
-			const next = floored.step(regularYear, 1)
-			expect(next.getTimestamp()).toBe(1470) // Year 4 start (next 4-year cycle)
-		})
-
-		it('step +4 from year 0 lands at year 4 (crossing one full 4-year cycle)', () => {
-			const date = new EsotericDate(calendar, 0)
-			const result = date.step(regularYear, 4)
-			expect(result.getTimestamp()).toBe(1470)
-		})
-
-		it('step +8 from year 0 lands at year 8 (crossing two 4-year cycles)', () => {
-			const date = new EsotericDate(calendar, 0)
-			const result = date.step(regularYear, 8)
-			expect(result.getTimestamp()).toBe(2940)
-		})
+		for (let i = 1; i < timestamps.length; i++) {
+			expect(timestamps[i]).toBeGreaterThan(timestamps[i - 1])
+		}
 	})
 
-	describe('crossing 100-year cycle boundary', () => {
-		// 100-year cycle = 24 * 1470 + 4 * 360 = 36720
-		// Years 0-95 are in 4-year cycles (24 cycles × 4 years)
-		// Years 96-99 are Regular years (the tail of the 100-year cycle)
-		//
-		// Year 95 is the last year of the 24th 4-year cycle:
-		//   = 23 full 4-year cycles + 3 years into 24th cycle
-		//   = 23 * 1470 + 2 * 360 + 360 (wait, slot 3 is Leap)
-		//   Actually: year 95 = cycle 23 (0-indexed), slot 3 (Leap year)
-		//   = 23 * 1470 + 3 * 360 = 33810 + 1080 = 34890
-		//   But slot 3 is Leap year (not Regular), so:
-		//   year 92 = cycle 23, slot 0 (Regular) = 23 * 1470 = 33810
-		//   year 93 = cycle 23, slot 1 (Regular) = 33810 + 360 = 34170
-		//   year 94 = cycle 23, slot 2 (Regular) = 34170 + 360 = 34530
-		//   year 95 = cycle 23, slot 3 (Leap)    = 34530 + 360 = 34890 (nope)
-		// Wait: slots in 4-year-cycle are [Reg, Reg, Reg, Leap]
-		// year 92 = 23*1470 = 33810
-		// year 93 = 33810 + 360 = 34170
-		// year 94 = 34170 + 360 = 34530
-		// year 95 = 34530 + 360 = 34890 (this is the Leap year slot, duration 390)
-		// year 96 = 34890 + 390 = 35280 = 24*1470 (start of Regular year x4 tail)
-		// year 97 = 35280 + 360 = 35640
-		// year 98 = 35640 + 360 = 36000
-		// year 99 = 36000 + 360 = 36360
-		// year 100 = 36720 (start of next 100-year cycle)
-
-		it('step from year 95 (Leap) to year 96 (Regular, in tail section)', () => {
-			const date = new EsotericDate(calendar, 34890)
-			const result = date.step(regularYear, 1)
-			expect(result.getTimestamp()).toBe(35280)
-		})
-
-		it('step from year 96 to year 97 (both in tail section)', () => {
-			const date = new EsotericDate(calendar, 35280)
-			const result = date.step(regularYear, 1)
-			expect(result.getTimestamp()).toBe(35640)
-		})
-
-		it('step from year 99 to year 100 (crossing 100-year cycle boundary)', () => {
-			const date = new EsotericDate(calendar, 36360)
-			const result = date.step(regularYear, 1)
-			expect(result.getTimestamp()).toBe(36720)
-		})
-
-		it('step sequentially through years 94-101 all land correctly', () => {
-			const expectedStarts = [
-				34530, // year 94 (Regular, cycle 23 slot 2)
-				34890, // year 95 (Leap, cycle 23 slot 3)
-				35280, // year 96 (Regular, tail slot 0)
-				35640, // year 97 (Regular, tail slot 1)
-				36000, // year 98 (Regular, tail slot 2)
-				36360, // year 99 (Regular, tail slot 3)
-				36720, // year 100 (Regular, 2nd 100-year-cycle, cycle 0 slot 0)
-				37080, // year 101 (Regular, 2nd 100-year-cycle, cycle 0 slot 1)
-			]
-
-			let date = new EsotericDate(calendar, expectedStarts[0])
-			for (let i = 0; i < expectedStarts.length; i++) {
-				expect(date.getTimestamp(), `Year ${94 + i} should start at ${expectedStarts[i]}`).toBe(
-					expectedStarts[i],
-				)
-				if (i < expectedStarts.length - 1) {
-					date = date.step(regularYear, 1)
-				}
-			}
-		})
+	it('floor(Year) at 400-year boundary returns correct timestamp', () => {
+		// Just after the 400-year boundary
+		const date = new EsotericDate(calendar, 146097 + 10)
+		const floored = date.floor(regularYear)
+		expect(floored.getTimestamp()).toBe(146097)
 	})
 
-	describe('crossing 400-year cycle boundary', () => {
-		// 400-year cycle duration = 146910
-		// Last year of 400-year cycle:
-		// The 400-year cycle = 100-year cycle x3, 4-year cycle x25
-		// After 3 * 100-year cycles = 3 * 36720 = 110160
-		// Then 25 4-year cycles: years 300-399
-		// Year 399 = last year in last 4-year cycle = 110160 + 24*1470 + 1080 = 110160 + 35280 + 1080 = 146520
-		// It's a Leap year (slot 3 of 4-year cycle), duration 390
-		// Year 400 = 146520 + 390 = 146910 (start of next 400-year cycle)
+	it('get(Year).value at and around 400-year boundary', () => {
+		// Year at timestamp 0 should have value 0
+		const year0 = new EsotericDate(calendar, 0)
+		const val0 = year0.get(regularYear)!.value
 
-		it('step from year 399 to year 400 (crossing 400-year cycle boundary)', () => {
-			const date = new EsotericDate(calendar, 146520)
-			const result = date.step(regularYear, 1)
-			expect(result.getTimestamp()).toBe(146910)
-		})
+		// Year at 400-year boundary
+		const yearAtBoundary = new EsotericDate(calendar, 146097)
+		const valBoundary = yearAtBoundary.get(regularYear)!.value
+
+		// These should differ by 400
+		expect(valBoundary - val0).toBe(400)
 	})
 
-	describe('timeline-like sequential stepping from arbitrary position', () => {
-		it('floor then step 10 times produces monotonically increasing timestamps with correct gaps', () => {
-			// Start at timestamp 500 (somewhere in year 1)
-			const base = new EsotericDate(calendar, 500).floor(regularYear)
-			expect(base.getTimestamp()).toBe(360) // Year 1 start
+	it('baseDate alignment (value % 4) works at 400-year boundary', () => {
+		// This simulates what regenerateDividers does
+		const ts = 146097 // exact 400-year boundary
+		const date = new EsotericDate(calendar, ts)
+		const floored = date.floor(regularYear)
+		const value = floored.get(regularYear)!.value
+		const subdivision = 4
+		const valueToStep = value % subdivision
 
-			const timestamps: number[] = [base.getTimestamp()]
-			let date = base
-			for (let i = 0; i < 10; i++) {
-				date = date.step(regularYear, 1)
-				timestamps.push(date.getTimestamp())
-			}
+		// Step back to aligned position
+		const aligned = floored.step(regularYear, -valueToStep - subdivision)
 
-			// Verify monotonically increasing
-			for (let i = 1; i < timestamps.length; i++) {
-				expect(timestamps[i], `timestamp[${i}] should be > timestamp[${i - 1}]`).toBeGreaterThan(
-					timestamps[i - 1],
-				)
-			}
+		// Now step forward by 4 repeatedly and check we get correct timestamps
+		let current = aligned
+		const timestamps: number[] = []
+		for (let i = 0; i < 10; i++) {
+			current = current.step(regularYear, subdivision)
+			timestamps.push(current.getTimestamp())
+		}
 
-			// Verify each gap is either 360 (regular) or 390 (leap)
-			for (let i = 1; i < timestamps.length; i++) {
-				const gap = timestamps[i] - timestamps[i - 1]
-				expect(
-					gap === 360 || gap === 390,
-					`Gap between year ${i} and ${i - 1} should be 360 or 390, got ${gap}`,
-				).toBe(true)
-			}
+		// All timestamps should be monotonically increasing
+		for (let i = 1; i < timestamps.length; i++) {
+			expect(timestamps[i]).toBeGreaterThan(timestamps[i - 1])
+		}
 
-			// Verify specific expected timestamps
-			// From year 1: [360, 720, 1080, 1470, 1830, 2190, 2550, 2940, 3300, 3660, 4020]
-			const expected = [360, 720, 1080, 1470, 1830, 2190, 2550, 2940, 3300, 3660, 4020]
-			expect(timestamps).toEqual(expected)
+		// The boundary timestamp (146097) should be among the collected timestamps
+		// since year 400 should be a multiple of 4
+		expect(timestamps).toContain(146097)
+	})
+
+	it('step(Year, 4) around 100-year-cycle boundary within 400-year-cycle', () => {
+		// 100-year cycle boundary at 36524
+		const startTs = 36524 - 2922 // 8 years before
+		let date = new EsotericDate(calendar, startTs)
+		const timestamps: number[] = [date.getTimestamp()]
+
+		for (let i = 0; i < 10; i++) {
+			date = date.step(regularYear, 4)
+			timestamps.push(date.getTimestamp())
+		}
+
+		for (let i = 1; i < timestamps.length; i++) {
+			expect(timestamps[i]).toBeGreaterThan(timestamps[i - 1])
+		}
+	})
+
+	it('step(Year, 4) with real second-based durations across 400-year boundary', () => {
+		// Same structure but with realistic second-based durations
+		const dayS = mockCalendarUnit({
+			id: 'day-s',
+			name: 'Day',
+			duration: 86400,
+			formatShorthand: 'd',
+			formatMode: 'NumericOneIndexed',
+			displayName: 'Day',
+			parents: [
+				mockCalendarUnitParentRelation('regular-year-s', 'day-s', 365),
+				mockCalendarUnitParentRelation('leap-year-s', 'day-s', 366),
+			],
 		})
+		const regularYearS = mockCalendarUnit({
+			id: 'regular-year-s',
+			name: 'Regular year',
+			displayName: 'Year',
+			duration: 365 * 86400,
+			formatShorthand: 'Y',
+			formatMode: 'NumericOneIndexed',
+			children: [mockCalendarUnitChildRelation('regular-year-s', 'day-s', 365)],
+			parents: [
+				mockCalendarUnitParentRelation('4-year-cycle-s', 'regular-year-s', 3),
+				mockCalendarUnitParentRelation('100-year-cycle-s', 'regular-year-s', 4),
+			],
+		})
+		const leapYearS = mockCalendarUnit({
+			id: 'leap-year-s',
+			name: 'Leap year',
+			displayName: 'Year',
+			duration: 366 * 86400,
+			formatShorthand: 'Y',
+			formatMode: 'NumericOneIndexed',
+			children: [mockCalendarUnitChildRelation('leap-year-s', 'day-s', 366)],
+			parents: [mockCalendarUnitParentRelation('4-year-cycle-s', 'leap-year-s', 1)],
+		})
+		const fourYearCycleS = mockCalendarUnit({
+			id: '4-year-cycle-s',
+			name: '4-year cycle',
+			duration: (3 * 365 + 366) * 86400,
+			formatMode: 'Hidden',
+			children: [
+				mockCalendarUnitChildRelation('4-year-cycle-s', 'regular-year-s', 3, { position: 0 }),
+				mockCalendarUnitChildRelation('4-year-cycle-s', 'leap-year-s', 1, { position: 1 }),
+			],
+			parents: [
+				mockCalendarUnitParentRelation('100-year-cycle-s', '4-year-cycle-s', 24),
+				mockCalendarUnitParentRelation('400-year-cycle-s', '4-year-cycle-s', 25),
+			],
+		})
+		const hundredYearCycleS = mockCalendarUnit({
+			id: '100-year-cycle-s',
+			name: '100-year cycle',
+			duration: (24 * 1461 + 4 * 365) * 86400,
+			formatMode: 'Hidden',
+			children: [
+				mockCalendarUnitChildRelation('100-year-cycle-s', '4-year-cycle-s', 24, { position: 0 }),
+				mockCalendarUnitChildRelation('100-year-cycle-s', 'regular-year-s', 4, { position: 1 }),
+			],
+			parents: [mockCalendarUnitParentRelation('400-year-cycle-s', '100-year-cycle-s', 3)],
+		})
+		const fourHundredYearCycleS = mockCalendarUnit({
+			id: '400-year-cycle-s',
+			name: '400-year cycle',
+			duration: 146097 * 86400,
+			formatMode: 'Hidden',
+			children: [
+				mockCalendarUnitChildRelation('400-year-cycle-s', '100-year-cycle-s', 3, { position: 0 }),
+				mockCalendarUnitChildRelation('400-year-cycle-s', '4-year-cycle-s', 25, { position: 1 }),
+			],
+		})
+		const unitsS = [fourHundredYearCycleS, hundredYearCycleS, fourYearCycleS, regularYearS, leapYearS, dayS]
+		const calendarS = makeCalendar(unitsS)
+
+		// 400-year boundary in seconds
+		const boundary = 146097 * 86400
+		const startTs = boundary - 2922 * 86400 // 8 years before
+		let date = new EsotericDate(calendarS, startTs)
+		const timestamps: number[] = [date.getTimestamp()]
+
+		for (let i = 0; i < 10; i++) {
+			date = date.step(regularYearS, 4)
+			timestamps.push(date.getTimestamp())
+		}
+
+		for (let i = 1; i < timestamps.length; i++) {
+			expect(timestamps[i]).toBeGreaterThan(timestamps[i - 1])
+		}
+	})
+
+	it('step(Year, 4) with originTime across 400-year boundary', () => {
+		// Same calendar but with an originTime offset (simulating real Earth calendar)
+		const originTime = 1063468800 // Earth 2023 origin
+		const calendarWithOrigin = makeCalendar(units)
+		calendarWithOrigin.originTime = originTime
+
+		// The 400-year cycle boundary nearest to year 2000 at originTime...
+		// With originTime, the cycle alignment shifts.
+		// Let's find a 400-year boundary: it's at multiples of 146097 in absolute space.
+		// absolute timestamp = rawTimestamp + originTime
+		// So 400-year boundary is when (rawTimestamp + originTime) % 146097 == 0
+		// rawTimestamp = k * 146097 - originTime
+		// Find k such that rawTimestamp is near 0:
+		// k = ceil(originTime / 146097) = ceil(1063468800 / 146097) = ceil(7278.something) = 7279
+		// rawTimestamp = 7279 * 146097 - 1063468800
+		const k = Math.ceil(originTime / 146097)
+		const boundaryRaw = k * 146097 - originTime
+
+		const startTs = boundaryRaw - 2922 // 8 years before boundary
+		let date = new EsotericDate(calendarWithOrigin, startTs)
+		const timestamps: number[] = [date.getTimestamp()]
+
+		for (let i = 0; i < 10; i++) {
+			date = date.step(regularYear, 4)
+			timestamps.push(date.getTimestamp())
+		}
+
+		for (let i = 1; i < timestamps.length; i++) {
+			expect(timestamps[i]).toBeGreaterThan(timestamps[i - 1])
+		}
+	})
+
+	it('baseDate alignment with originTime at 400-year boundary', () => {
+		// Test the full regenerateDividers logic with originTime
+		const originTime = 1063468800
+		const calendarWithOrigin = makeCalendar(units)
+		calendarWithOrigin.originTime = originTime
+
+		const k = Math.ceil(originTime / 146097)
+		const boundaryRaw = k * 146097 - originTime
+
+		// Simulate being right at the boundary
+		const ts = boundaryRaw + 50
+		const date = new EsotericDate(calendarWithOrigin, ts)
+		const floored = date.floor(regularYear)
+		const value = floored.get(regularYear)!.value
+		const subdivision = 4
+		const valueToStep = value % subdivision
+
+		// Step back to aligned position
+		const aligned = floored.step(regularYear, -valueToStep - subdivision)
+
+		// Step forward and ensure monotonic
+		let current = aligned
+		const timestamps: number[] = []
+		for (let i = 0; i < 15; i++) {
+			current = current.step(regularYear, subdivision)
+			timestamps.push(current.getTimestamp())
+		}
+
+		for (let i = 1; i < timestamps.length; i++) {
+			expect(timestamps[i]).toBeGreaterThan(timestamps[i - 1])
+		}
+	})
+
+	it('step(Year, 1) across 100-year-cycle boundary - every step increments', () => {
+		// 100-year-cycle = 36524 days
+		// = 24 * 1461 (4-year-cycles) + 4 * 365 (tail regular years)
+		// = 35064 + 1460 = 36524
+		// Year 94 in the 100-year-cycle is the 3rd year in the last (24th) 4-year-cycle
+		// Year 95 is the Leap year at end of last 4-year-cycle
+		// Year 96 is first of the 4 trailing regular years
+		// Year 97 is second, etc.
+		// Year 100 = start of next 100-year-cycle
+
+		// Start at year 93 (in the 24th 4-year-cycle, which starts at 23*1461 = 33603)
+		// 23rd 4-year-cycle starts at 33603, contains 3 regular + 1 leap
+		// Year 92 = Regular year 0 of 24th 4yc = 33603
+		// Year 93 = Regular year 1 of 24th 4yc = 33603 + 365 = 33968
+		// Year 94 = Regular year 2 of 24th 4yc = 33968 + 365 = 34333
+		// Year 95 = Leap year of 24th 4yc = 34333 + 365 = 34698, ends at 34698 + 366 = 35064
+		// Year 96 = First tail Regular year = 35064
+		// Year 97 = 35064 + 365 = 35429
+		// Year 98 = 35429 + 365 = 35794
+		// Year 99 = 35794 + 365 = 36159
+		// Year 100 = 36524 (start of next 100-year-cycle)
+
+		const startTs = 33968 // Year 93
+		let date = new EsotericDate(calendar, startTs)
+
+		const results: { ts: number; value: number }[] = []
+		for (let i = 0; i < 10; i++) {
+			const ts = date.getTimestamp()
+			const value = date.get(regularYear)!.value
+			results.push({ ts, value })
+			date = date.step(regularYear, 1)
+		}
+
+		// Every timestamp must increase
+		for (let i = 1; i < results.length; i++) {
+			expect(results[i].ts).toBeGreaterThan(results[i - 1].ts)
+		}
+
+		// Check specific timestamps around the boundary
+		// Year 93 starts at 33968
+		expect(results[0].ts).toBe(33968)
+		// Year 94 starts at 34333
+		expect(results[1].ts).toBe(34333)
+		// Year 95 (Leap) starts at 34698
+		expect(results[2].ts).toBe(34698)
+		// Year 96 (first tail Regular) starts at 35064
+		expect(results[3].ts).toBe(35064)
+		// Year 97 starts at 35429
+		expect(results[4].ts).toBe(35429)
+	})
+
+	it('step(Year, 4) across 100-year-cycle boundary produces correct spacing', () => {
+		// Start at a position aligned to 4-year boundary before the 100-year boundary
+		// 100-year cycle boundary at 36524
+		// Start 12 years before
+		const startTs = 36524 - 12 * 365 - 3 * 1 // approximate, minus ~3 leap days
+		let date = new EsotericDate(calendar, startTs).floor(regularYear)
+
+		const results: { ts: number; value: number }[] = []
+		for (let i = 0; i < 8; i++) {
+			const ts = date.getTimestamp()
+			const value = date.get(regularYear)!.value
+			results.push({ ts, value })
+			date = date.step(regularYear, 4)
+		}
+
+		// Every timestamp must increase
+		for (let i = 1; i < results.length; i++) {
+			expect(results[i].ts).toBeGreaterThan(results[i - 1].ts)
+		}
+
+		// Each gap should be approximately 4 years (1460-1462 days for mixed regular/leap)
+		for (let i = 1; i < results.length; i++) {
+			const gap = results[i].ts - results[i - 1].ts
+			expect(gap).toBeGreaterThanOrEqual(4 * 365)
+			expect(gap).toBeLessThanOrEqual(4 * 366)
+		}
+	})
+
+	it('floor() at 100-year boundary tail Regular years', () => {
+		// At the 100-year boundary, the last 4 years are Regular years (not in any 4-year-cycle)
+		// 100-year cycle = 36524 days, so years 96-99 are the tail
+		// Let's find year 97 (the 2nd of the 4 trailing regular years)
+		// 24 4-year-cycles = 24 * 1461 = 35064 days
+		// Then Regular year 0 starts at 35064, year 1 at 35064+365=35429, year 2 at 35794, year 3 at 36159
+		const tailYear2Start = 35064 + 2 * 365 // year 98 in 0-indexed, "year 99" in 1-indexed
+		const date = new EsotericDate(calendar, tailYear2Start + 50) // mid-year
+		const floored = date.floor(regularYear)
+		expect(floored.getTimestamp()).toBe(tailYear2Start)
+	})
+
+	it('get(Year).value is correct for tail Regular years at 100-year boundary', () => {
+		// First tail regular year starts at day 35064
+		const tailYear0 = new EsotericDate(calendar, 35064)
+		const val0 = tailYear0.get(regularYear)!.value
+
+		// Second tail regular year
+		const tailYear1 = new EsotericDate(calendar, 35064 + 365)
+		const val1 = tailYear1.get(regularYear)!.value
+		expect(val1).toBe(val0 + 1)
+
+		// Third tail regular year
+		const tailYear2 = new EsotericDate(calendar, 35064 + 2 * 365)
+		const val2 = tailYear2.get(regularYear)!.value
+		expect(val2).toBe(val0 + 2)
+
+		// Fourth tail regular year
+		const tailYear3 = new EsotericDate(calendar, 35064 + 3 * 365)
+		const val3 = tailYear3.get(regularYear)!.value
+		expect(val3).toBe(val0 + 3)
+
+		// Year after 100-year cycle
+		const nextCycleYear = new EsotericDate(calendar, 36524)
+		const valNext = nextCycleYear.get(regularYear)!.value
+		expect(valNext).toBe(val0 + 4)
 	})
 })
 

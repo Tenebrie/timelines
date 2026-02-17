@@ -30,6 +30,7 @@ export type WorldCalendar = Omit<GetWorldInfoApiResponse['calendars'][number], '
 	originTime: number
 }
 export type WorldCalendarUnit = WorldCalendar['units'][number]
+export type WorldCalendarPresentationUnit = WorldCalendar['presentations'][number]['units'][number]
 
 export type WorldTag = GetWorldInfoApiResponse['tags'][number]
 

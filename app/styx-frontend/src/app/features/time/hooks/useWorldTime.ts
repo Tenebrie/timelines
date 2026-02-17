@@ -8,7 +8,11 @@ import { useFormatTimestamp } from '../calendar/hooks/useFormatTimestamp'
 import { useParseTimestampToUnits } from '../calendar/hooks/useParseTimestampToUnits'
 import { useParseUnitsToTimestamp } from '../calendar/hooks/useParseUnitsToTimestamp'
 
-export const maximumTime = 8640000000000000
+export const THE_END = 8640000000000000 // The end of time
+
+export function clampTime(timestamp: number) {
+	return Math.max(-THE_END, Math.min(timestamp, THE_END))
+}
 
 export const useWorldTime = () => {
 	// const worldCalendar = useSelector(getWorldCalendarState)
@@ -163,8 +167,8 @@ export const useWorldTime = () => {
 	const timeToShortLabel = useCallback(
 		(rawTime: number, scaleLevel: ScaleLevel, groupSize: 'large' | 'medium' | 'small') => {
 			// Check if this timestamp would be out of range before parsing
-			const maxRawTime = maximumTime - worldCalendar.originTime
-			const minRawTime = -maximumTime - worldCalendar.originTime
+			const maxRawTime = THE_END - worldCalendar.originTime
+			const minRawTime = -THE_END - worldCalendar.originTime
 
 			if (rawTime > maxRawTime || rawTime < minRawTime) {
 				return null
@@ -177,8 +181,8 @@ export const useWorldTime = () => {
 
 	const timeToShortestLabel = useCallback(
 		(rawTime: number, scaleLevel: ScaleLevel) => {
-			const maxRawTime = maximumTime - worldCalendar.originTime
-			const minRawTime = -maximumTime - worldCalendar.originTime
+			const maxRawTime = THE_END - worldCalendar.originTime
+			const minRawTime = -THE_END - worldCalendar.originTime
 
 			if (rawTime > maxRawTime || rawTime < minRawTime) {
 				return null

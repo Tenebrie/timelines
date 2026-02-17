@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from 'react'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 
 type Props = {
-	labelSize: 'large' | 'medium' | 'small' | null
+	labelSize: 'large' | 'medium' | 'small' | 'smallest' | null
 	timestamp: number
 	formatString: string
 }

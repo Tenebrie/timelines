@@ -29,7 +29,7 @@ export const TimeMarker = ({ timestamp }: Props) => {
 		getWorldState,
 		(a, b) => a.calendar === b.calendar && a.isLoaded === b.isLoaded,
 	)
-	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel, calendar })
+	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel })
 
 	const theme = useCustomTheme()
 

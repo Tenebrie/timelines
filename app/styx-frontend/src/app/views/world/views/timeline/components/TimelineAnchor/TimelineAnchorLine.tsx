@@ -5,37 +5,20 @@ import { useSelector } from 'react-redux'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { CustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { LineSpacing } from '@/app/utils/constants'
 import { keysOf } from '@/app/utils/keysOf'
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 import { CONTROLLED_SCROLLER_SIZE } from '../../tracks/components/ControlledScroller'
 import { TimelineState } from '../../utils/TimelineState'
 import { DividerLabel } from './styles'
-import { TimelineAnchorPadding } from './TimelineAnchor'
 import { useAnchorLineLabel } from './useAnchorLineLabel'
 
 export const ANCHOR_RESET_PERIOD = CONTROLLED_SCROLLER_SIZE / 10
 
-export const getPixelsPerLoop = ({ lineCount }: { lineCount: number }) => lineCount * LineSpacing
-
-export const getLoop = ({
-	index,
-	lineCount,
-	timelineScroll,
-}: {
-	index: number
-	lineCount: number
-	timelineScroll: number
-}) =>
-	-Math.floor(
-		(index * LineSpacing + timelineScroll + TimelineAnchorPadding) / getPixelsPerLoop({ lineCount }),
-	)
-
 type Props = {
 	theme: CustomTheme
 	timestamp: number
-	size: 'large' | 'medium' | 'small'
+	size: 'large' | 'medium' | 'small' | 'smallest'
 	containerWidth: number
 	formatString: string
 }
@@ -44,17 +27,6 @@ export const TimelineAnchorLine = memo(TimelineAnchorLineComponent)
 
 function TimelineAnchorLineComponent(props: Props) {
 	const { theme, timestamp, size: labelSize, formatString, containerWidth } = props
-
-	const getDividerSize = useCallback(({ labelSize }: { labelSize: 'large' | 'medium' | 'small' | null }) => {
-		if (labelSize === 'large') {
-			return { width: 5, height: 3 }
-		} else if (labelSize === 'medium') {
-			return { width: 2, height: 2.5 }
-		} else if (labelSize === 'small') {
-			return { width: 1, height: 2 }
-		}
-		return { width: 1, height: 1 }
-	}, [])
 
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const { label, refreshLabel } = useAnchorLineLabel({ labelSize, timestamp, formatString })
@@ -86,7 +58,7 @@ function TimelineAnchorLineComponent(props: Props) {
 				return
 			}
 
-			const { width: dividerWidth, height: dividerHeight } = getDividerSize({ labelSize })
+			const { width: dividerWidth, height: dividerHeight } = getDividerSize(labelSize)
 
 			const offset = labelSize === 'large' ? 2 : 0
 			const variables = {
@@ -109,7 +81,7 @@ function TimelineAnchorLineComponent(props: Props) {
 
 			refreshLabel()
 		},
-		[realTimeToScaledTime, timestamp, labelSize, getDividerSize, refreshLabel],
+		[realTimeToScaledTime, timestamp, labelSize, refreshLabel],
 	)
 
 	const lastSeenScroll = useRef<number | null>(null)
@@ -133,13 +105,6 @@ function TimelineAnchorLineComponent(props: Props) {
 	useEffect(() => {
 		updateVariables(TimelineState.scroll)
 	}, [containerWidth, updateVariables])
-
-	useEffect(() => {
-		if (!ref.current) {
-			return
-		}
-		updateVariables(TimelineState.scroll)
-	}, [updateVariables, ref, containerWidth])
 
 	if (!label) {
 		return null
@@ -171,4 +136,15 @@ function TimelineAnchorLineComponent(props: Props) {
 			/>
 		</Box>
 	)
+}
+
+function getDividerSize(labelSize: 'large' | 'medium' | 'small' | 'smallest' | null) {
+	if (labelSize === 'large') {
+		return { width: 5, height: 3 }
+	} else if (labelSize === 'medium') {
+		return { width: 2, height: 2.5 }
+	} else if (labelSize === 'small') {
+		return { width: 1, height: 2 }
+	}
+	return { width: 1, height: 1 }
 }
