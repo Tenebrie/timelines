@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import { memo, useCallback, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
@@ -23,7 +23,6 @@ type Props = {
 	formatString: string
 	followerCount: number
 	followerSpacing: number
-	followingDivider: 'large' | 'medium' | 'small' | 'smallest'
 }
 
 export const TimelineAnchorLine = memo(TimelineAnchorLineComponent)
@@ -34,7 +33,6 @@ function TimelineAnchorLineComponent(props: Props) {
 		timestamp,
 		followerCount,
 		followerSpacing,
-		followingDivider,
 		size: labelSize,
 		formatString,
 		containerWidth,
@@ -118,23 +116,6 @@ function TimelineAnchorLineComponent(props: Props) {
 		updateVariables(TimelineState.scroll)
 	}, [containerWidth, updateVariables])
 
-	const followerOffset = useMemo(() => {
-		if (followerCount === 0) {
-			return 0
-		}
-		return (
-			(followingDivider === 'medium' ? 0 : followingDivider === 'large' ? 0 : 0) +
-			(labelSize === 'large' ? 0 : 0)
-		)
-	}, [followerCount, followingDivider, labelSize])
-
-	const followerSquish = useMemo(() => {
-		if (followerCount === 0) {
-			return 0
-		}
-		return 0
-	}, [followerCount, followingDivider, labelSize])
-
 	if (!label) {
 		return null
 	}
@@ -176,7 +157,7 @@ function TimelineAnchorLineComponent(props: Props) {
 								borderRadius: '4px 4px 0 0',
 								width: '1px',
 								height: '9px',
-								marginLeft: `calc(${(index + 1) * realTimeToScaledTime(followerSpacing) + followerOffset}px)`,
+								marginLeft: `calc(${(index + 1) * realTimeToScaledTime(followerSpacing)}px)`,
 							}}
 						/>
 					))}

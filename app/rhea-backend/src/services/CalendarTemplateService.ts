@@ -437,11 +437,11 @@ export const CalendarTemplateService = {
 				compression: 1,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Days', ['Month: MMM DD, YYYY', 'Day 4,9,14,19,24: M DD', 'Hour x24: '], {
+			.createPresentation('Days', ['Month: MMM DD, YYYY', 'Day 5,10,15,20,25: M DD', 'Hour x24: '], {
 				compression: 4,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Quarters', ['Year: MMM YYYY', 'Month: MMM YYYY', 'Day 4,9,14,19,24: '], {
+			.createPresentation('Quarters', ['Year: MMM YYYY', 'Month: MMM YYYY', 'Day 5,10,15,20,25: '], {
 				compression: 1,
 				baselineUnit: 'Day',
 			})
