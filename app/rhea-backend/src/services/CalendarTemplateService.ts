@@ -300,7 +300,7 @@ export const CalendarTemplateService = {
 			switch (templateId) {
 				case 'earth_current':
 				case 'earth_2023':
-					return 'Earth Calendar'
+					return 'Gregorian Calendar (Earth)'
 				case 'pf2e_current':
 				case 'pf2e_4723':
 					return 'Golarion Calendar (Pathfinder)'
@@ -309,7 +309,7 @@ export const CalendarTemplateService = {
 				case 'exether':
 					return 'Exether Calendar'
 				case 'martian':
-					return 'Dorian Calendar (Martian)'
+					return 'Darian Calendar (Martian)'
 				default:
 					throw new Error(`No name specified for template: ${templateId}`)
 			}

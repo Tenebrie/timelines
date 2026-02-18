@@ -98,6 +98,7 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as calendarApi }
 export type ListCalendarsApiResponse = /** status 200  */ {
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
@@ -110,6 +111,7 @@ export type ListCalendarsApiResponse = /** status 200  */ {
 }[]
 export type ListCalendarsApiArg = void
 export type CreateCalendarApiResponse = /** status 200  */ {
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
@@ -200,6 +202,7 @@ export type GetCalendarApiResponse = /** status 200  */ {
 		duration: string
 		treeDepth: number
 	}[]
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
@@ -215,6 +218,7 @@ export type GetCalendarApiArg = {
 	calendarId: string
 }
 export type UpdateCalendarApiResponse = /** status 200  */ {
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
@@ -235,6 +239,7 @@ export type UpdateCalendarApiArg = {
 	}
 }
 export type DeleteCalendarApiResponse = /** status 200  */ {
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
@@ -323,6 +328,7 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 		compression: number
 		baselineUnitId?: null | string
 	}[]
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
@@ -577,6 +583,7 @@ export type DeleteCalendarPresentationApiArg = {
 	presentationId: string
 }
 export type ListWorldCalendarsApiResponse = /** status 200  */ {
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string

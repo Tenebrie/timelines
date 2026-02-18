@@ -87,9 +87,8 @@ export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'P
 export type ListWorldAccessModesApiArg = void
 export type ListCalendarTemplatesApiResponse = /** status 200  */ (
 	| 'earth_current'
-	| 'earth_2023'
+	| 'martian'
 	| 'pf2e_current'
-	| 'pf2e_4723'
 	| 'rimworld'
 	| 'exether'
 )[]

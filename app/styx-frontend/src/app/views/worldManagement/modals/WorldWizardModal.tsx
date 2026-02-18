@@ -7,14 +7,13 @@ import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
+import { CalendarSelector } from '@/app/features/time/calendar/components/CalendarSelector'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { isEntityNameValid } from '@/app/utils/isEntityNameValid'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
-
-import { SettingsCalendarSelector } from '../../world/views/settings/components/SettingsCalendarSelector'
 
 export const WorldWizardModal = () => {
 	const [name, setName] = useState('')
@@ -109,13 +108,7 @@ export const WorldWizardModal = () => {
 					value={description}
 					onChange={(event) => setDescription(event.target.value)}
 				/>
-				<SettingsCalendarSelector value={calendars[0]} onChange={(value) => setCalendars([value])} />
-				{/* <TimestampField
-					timestamp={timeOrigin}
-					onChange={setTimeOrigin}
-					label="Time Origin"
-					calendar={calendar}
-				/> */}
+				<CalendarSelector value={'earth_current'} onChange={(value) => setCalendars([value])} />
 				<ModalFooter>
 					<Tooltip title={shortcutLabel} arrow placement="top">
 						<Button

@@ -181,6 +181,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			position: number
 			formatShorthand?: null | string
 		}[]
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string

@@ -2371,6 +2371,7 @@ export const CalendarScalarFieldEnum = {
   position: 'position',
   originTime: 'originTime',
   name: 'name',
+  description: 'description',
   dateFormat: 'dateFormat',
   worldId: 'worldId',
   ownerId: 'ownerId'

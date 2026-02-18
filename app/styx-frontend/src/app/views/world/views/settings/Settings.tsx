@@ -6,13 +6,12 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 
+import { CalendarSelector } from '@/app/features/time/calendar/components/CalendarSelector'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useEditWorld } from '@/app/views/world/views/settings/api/useEditWorld'
 import { useSettingsDraft } from '@/app/views/world/views/settings/hooks/useSettingsDraft'
 import { AccessModeSection } from '@/app/views/world/views/settings/sections/AccessModeSection'
 import { CollaboratorsSection } from '@/app/views/world/views/settings/sections/CollaboratorsSection'
-
-import { SettingsCalendarSelector } from './components/SettingsCalendarSelector'
 
 type Props = {
 	world: WorldDetails
@@ -32,7 +31,7 @@ export const Settings = ({ world, collaborators }: Props) => {
 		<Stack gap={2} marginTop={1}>
 			<TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} />
 			<TextField label="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-			<SettingsCalendarSelector
+			<CalendarSelector
 				worldId={world.id}
 				value={state.calendars[0]}
 				onChange={(value) => state.setCalendars([value])}

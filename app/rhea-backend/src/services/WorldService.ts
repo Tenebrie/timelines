@@ -2,11 +2,7 @@ import { User, World } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 
 import { CalendarService } from './CalendarService.js'
-import {
-	CalendarTemplateId,
-	CalendarTemplateIdShape,
-	CalendarTemplateService,
-} from './CalendarTemplateService.js'
+import { CalendarTemplateId, CalendarTemplateService } from './CalendarTemplateService.js'
 
 export const WorldService = {
 	findWorldByIdInternal: async (worldId: string) => {
@@ -21,7 +17,7 @@ export const WorldService = {
 		owner: User
 		name: string
 		description?: string
-		calendar: CalendarTemplateId | string
+		calendars: string[]
 		timeOrigin?: number
 	}) => {
 		return await getPrismaClient().$transaction(async (dbClient) => {
@@ -38,20 +34,11 @@ export const WorldService = {
 				},
 			})
 
-			const parsedCalendarId = CalendarTemplateIdShape.safeParse(params.calendar)
-			if (parsedCalendarId.success) {
-				await CalendarTemplateService.createTemplateCalendar({
-					worldId: world.id,
-					templateId: parsedCalendarId.data,
-					dbClient,
-				})
-			} else {
-				await CalendarService.assignCalendarsToWorld({
-					worldId: world.id,
-					calendarsIds: [params.calendar],
-					prisma: dbClient,
-				})
-			}
+			await CalendarService.assignCalendarsToWorld({
+				worldId: world.id,
+				calendarsIds: params.calendars,
+				prisma: dbClient,
+			})
 			return world
 		})
 	},

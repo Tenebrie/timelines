@@ -7,6 +7,7 @@ import {
 	CalendarUpdateInput,
 } from 'prisma/client/models.js'
 
+import { CalendarTemplateIdShape, CalendarTemplateService } from './CalendarTemplateService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeSortCalendarUnitsQuery } from './dbQueries/makeSortCalendarUnitsQuery.js'
 import { makeTouchCalendarQuery } from './dbQueries/makeTouchCalendarQuery.js'
@@ -631,6 +632,17 @@ export const CalendarService = {
 		}
 
 		for (const calendarId of calendarsIds) {
+			const parsedCalendarId = CalendarTemplateIdShape.safeParse(calendarId)
+
+			if (parsedCalendarId.success) {
+				await CalendarTemplateService.createTemplateCalendar({
+					worldId,
+					templateId: parsedCalendarId.data,
+					dbClient: prisma,
+				})
+				continue
+			}
+
 			const existingCalendar = await CalendarService.getEditorCalendar({ calendarId })
 
 			// If owned by the user, make a deep copy. Otherwise, reassign.

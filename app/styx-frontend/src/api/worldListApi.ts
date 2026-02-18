@@ -25,6 +25,7 @@ export { injectedRtkApi as worldListApi }
 export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
 		calendars: {
+			description: string
 			id: string
 			createdAt: string
 			updatedAt: string
@@ -52,6 +53,7 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	}[]
 	contributableWorlds: {
 		calendars: {
+			description: string
 			id: string
 			createdAt: string
 			updatedAt: string
@@ -79,6 +81,7 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	}[]
 	visibleWorlds: {
 		calendars: {
+			description: string
 			id: string
 			createdAt: string
 			updatedAt: string
@@ -114,7 +117,7 @@ export type CreateWorldApiArg = {
 	body: {
 		name: string
 		description?: string
-		calendars?: string[]
+		calendar?: string
 		timeOrigin?: number
 	}
 }

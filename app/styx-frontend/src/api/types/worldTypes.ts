@@ -1,3 +1,4 @@
+import { ListCalendarTemplatesApiResponse } from '@api/otherApi'
 import { GetWorldsApiResponse } from '@api/worldListApi'
 
 import { GetWorldBriefApiResponse, GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
@@ -62,3 +63,4 @@ export type TimelineEntity<T extends MarkerType> = WorldEvent & {
 }
 
 export type WorldAccessMode = WorldBrief['accessMode']
+export type CalendarTemplateId = ListCalendarTemplatesApiResponse[number]
