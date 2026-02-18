@@ -12,9 +12,11 @@ Timelines is a worldbuilding and storytelling web application focused on the nee
 - **Staging**: https://staging.tenebrie.com/
   - Hot updated directly from the `dev` branch
 
-## Technologies
+## Architecture
 
-The application is built with a (suggestion of) microservice architecture using the following technologies:
+The application is built using the microservice architecture for Docker Swarm. The following diagram illustrates the main moving parts:
+
+![Architecture Diagram](docs/images/architecture.jpg)
 
 ### Frontend (Styx)
 - **[React](https://react.dev/)**
@@ -38,10 +40,6 @@ The application is built with a (suggestion of) microservice architecture using 
 ### Infrastructure
 - **[Docker](https://www.docker.com/)** + **[Docker Swarm](https://docs.docker.com/engine/swarm/)**
 - **[Nginx](https://nginx.org/)**
-
-## Architecture
-
-![Architecture Diagram](docs/images/architecture.jpg)
 
 # Running the app
 
