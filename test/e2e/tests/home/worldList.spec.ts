@@ -101,6 +101,7 @@ test.describe('World List', () => {
 		// Scramble the origin time
 		await page.getByLabel('Origin timestamp input').fill('1776777056')
 		await expect(page.getByLabel('Origin timestamp preview')).toHaveText('22:56 March 25, 3379')
+		await page.waitForRequest((req) => req.url().includes('/calendar/') && req.method() === 'PATCH')
 
 		// Create a world with the new calendar
 		await page.getByLabel('Home navigation menu').click()
