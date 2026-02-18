@@ -86,7 +86,7 @@ export function CalendarUnitFormat({ unit }: Props) {
 			return 'No format shorthand set'
 		}
 		const formatName = CalendarUnitFormatDefinitions[previewUnit.formatMode]?.name || '???'
-		return `Shorthand: "${previewUnit.formatShorthand}" | ${formatName}: ${format({ timestamp: 0 })}, ${format({ timestamp: unit.duration })}, ${format({ timestamp: unit.duration * 2 })}`
+		return `Shorthand: "${previewUnit.formatShorthand}" | ${formatName}: ${format({ timestamp: 0 })}, ${format({ timestamp: Number(unit.duration) })}, ${format({ timestamp: Number(unit.duration) * 2 })}`
 	}, [previewCalendar, format, unit.duration, unit.id])
 
 	const { expandedUnitSections } = useSelector(

@@ -20,7 +20,7 @@ export function CalendarUnitPreviewDuration({ unit }: Props) {
 
 	const units = calendar.units
 		.map((u) => {
-			const value = unit.duration / u.duration
+			const value = Number(u.duration) / Number(unit.duration)
 			const roundedValue = Math.round(value)
 			const isApproximate = !Number.isInteger(value)
 			return {

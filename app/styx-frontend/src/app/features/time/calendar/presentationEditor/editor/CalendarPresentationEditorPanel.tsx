@@ -100,7 +100,7 @@ export function CalendarPresentationEditorPanel({ presentation, onClose }: Props
 			const unitB = calendar.units.find((u) => u.id === b.unitId)
 			const durationA = unitA?.duration ?? 0
 			const durationB = unitB?.duration ?? 0
-			return durationB - durationA
+			return Number(durationB) - Number(durationA)
 		})
 	}
 

@@ -2,7 +2,11 @@ import { User, World } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 
 import { CalendarService } from './CalendarService.js'
-import { CalendarTemplateId, CalendarTemplateService } from './CalendarTemplateService.js'
+import {
+	CalendarTemplateId,
+	CalendarTemplateIdShape,
+	CalendarTemplateService,
+} from './CalendarTemplateService.js'
 
 export const WorldService = {
 	findWorldByIdInternal: async (worldId: string) => {
@@ -17,11 +21,11 @@ export const WorldService = {
 		owner: User
 		name: string
 		description?: string
-		calendars?: string[]
+		calendar: CalendarTemplateId | string
 		timeOrigin?: number
 	}) => {
-		return await getPrismaClient().$transaction(async (prisma) => {
-			const world = await prisma.world.create({
+		return await getPrismaClient().$transaction(async (dbClient) => {
+			const world = await dbClient.world.create({
 				data: {
 					name: params.name,
 					description: params.description,
@@ -34,11 +38,18 @@ export const WorldService = {
 				},
 			})
 
-			if (params.calendars) {
+			const parsedCalendarId = CalendarTemplateIdShape.safeParse(params.calendar)
+			if (parsedCalendarId.success) {
+				await CalendarTemplateService.createTemplateCalendar({
+					worldId: world.id,
+					templateId: parsedCalendarId.data,
+					dbClient,
+				})
+			} else {
 				await CalendarService.assignCalendarsToWorld({
 					worldId: world.id,
-					calendarsIds: params.calendars,
-					prisma,
+					calendarsIds: [params.calendar],
+					prisma: dbClient,
 				})
 			}
 			return world
@@ -240,6 +251,9 @@ export const WorldService = {
 				},
 			},
 		})
+		if (!world.calendar && !world.calendars) {
+			throw new Error('World does not have a calendar assigned')
+		}
 		return {
 			...world,
 			calendars: world.calendars.map((calendar) => ({
@@ -278,61 +292,64 @@ export const WorldService = {
 	},
 
 	migrateLegacyCalendar: async (worldId: string) => {
-		const world = await getPrismaClient().world.findFirst({
-			where: {
-				id: worldId,
-				calendar: {
-					not: null,
-				},
-			},
-			include: {
-				calendars: true,
-			},
-		})
-
-		if (!world || !world.calendar) {
-			return
-		}
-
-		const templateId = ((): CalendarTemplateId => {
-			switch (world.calendar) {
-				case 'EARTH':
-				case 'COUNTUP':
-					return 'earth_2023'
-				case 'PF2E':
-					return 'pf2e_4723'
-				case 'RIMWORLD':
-					return 'rimworld'
-				case 'EXETHER':
-					return 'exether'
-			}
-		})()
-
-		console.info(`Migrating calendar for world ${worldId} from ${world.calendar} to ${templateId}`)
-
-		const { calendar } = await CalendarTemplateService.createTemplateCalendar({
-			worldId,
-			templateId,
-		})
-		await getPrismaClient().calendar.deleteMany({
-			where: {
-				id: {
-					in: world.calendars.map((c) => c.id),
-				},
-			},
-		})
-		await getPrismaClient().world.update({
-			where: {
-				id: worldId,
-			},
-			data: {
-				calendar: null,
-				calendars: {
-					connect: {
-						id: calendar.id,
+		await getPrismaClient().$transaction(async (dbClient) => {
+			const world = await dbClient.world.findFirst({
+				where: {
+					id: worldId,
+					calendar: {
+						not: null,
 					},
 				},
-			},
+				include: {
+					calendars: true,
+				},
+			})
+
+			if (!world || !world.calendar) {
+				return
+			}
+
+			const templateId = ((): CalendarTemplateId => {
+				switch (world.calendar) {
+					case 'EARTH':
+					case 'COUNTUP':
+						return 'earth_2023'
+					case 'PF2E':
+						return 'pf2e_4723'
+					case 'RIMWORLD':
+						return 'rimworld'
+					case 'EXETHER':
+						return 'exether'
+				}
+			})()
+
+			console.info(`Migrating calendar for world ${worldId} from ${world.calendar} to ${templateId}`)
+
+			const { calendar } = await CalendarTemplateService.createTemplateCalendar({
+				worldId,
+				templateId,
+				dbClient,
+			})
+			await dbClient.calendar.deleteMany({
+				where: {
+					id: {
+						in: world.calendars.map((c) => c.id),
+					},
+				},
+			})
+			await dbClient.world.update({
+				where: {
+					id: worldId,
+				},
+				data: {
+					calendar: null,
+					calendars: {
+						connect: {
+							id: calendar.id,
+						},
+					},
+				},
+			})
 		})
 	},
 }

@@ -91,7 +91,7 @@ router.post('/api/calendars', async (ctx) => {
 
 	const builtInTemplateId = CalendarTemplateIdShape.safeParse(templateId)
 	if (templateId && builtInTemplateId.success) {
-		const { calendar } = await CalendarTemplateService.createTemplateCalendar({
+		const { calendar } = await CalendarTemplateService.createTemplateCalendarStandalone({
 			ownerId: ctx.user.id,
 			name,
 			templateId: builtInTemplateId.data,

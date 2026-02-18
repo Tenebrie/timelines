@@ -6,11 +6,7 @@ import { useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
-import {
-	getTimelineContextMenuState,
-	getTimelineState,
-	getWorldState,
-} from '@/app/views/world/WorldSliceSelectors'
+import { getTimelineContextMenuState, getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 import { TimelineContextMenu } from '../components/TimelineContextMenu/TimelineContextMenu'
 import { useOutlinerHeightListener } from './hooks/useOutlinerHeightListener'
@@ -35,13 +31,11 @@ export function TimelineTracksComponent(props: Props) {
 	)
 	const sortedTracks = [...allTracks].sort((a, b) => b.position - a.position)
 
-	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
 	const contextMenuState = useSelector(getTimelineContextMenuState)
 
 	const visible = !isSwitchingScale
 	const { realTimeToScaledTime } = useTimelineWorldTime({
 		scaleLevel,
-		calendar,
 	})
 
 	const { outlinerHeight } = useOutlinerHeightListener({ ref })

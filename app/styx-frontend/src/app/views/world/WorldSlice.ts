@@ -4,7 +4,6 @@ import {
 	TimelineEntity,
 	WorldAccessMode,
 	WorldCalendar,
-	WorldCalendarType,
 	WorldEvent,
 	WorldEventDelta,
 	WorldTag,
@@ -25,7 +24,6 @@ export const initialState = {
 	events: [] as WorldEvent[],
 	actors: [] as ActorDetails[],
 	tags: [] as WorldTag[],
-	calendar: 'RIMWORLD' as WorldCalendarType,
 	calendars: [] as WorldCalendar[],
 	timeOrigin: 0,
 	createdAt: '0',
@@ -79,6 +77,9 @@ export const worldSlice = createSlice({
 			Object.entries(ingestedWorld).forEach(([key, value]) => {
 				Object.assign(state, { [key]: value })
 			})
+			if (world.calendars.length === 0) {
+				throw new Error('World does not have a calendar!')
+			}
 
 			state.isLoaded = true
 			state.isUnauthorized = false

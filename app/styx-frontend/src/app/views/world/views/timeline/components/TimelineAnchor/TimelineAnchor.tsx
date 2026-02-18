@@ -6,8 +6,9 @@ import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'rea
 import { useSelector } from 'react-redux'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { LineSpacing } from '@/app/utils/constants'
-import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
+import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 import { useTimelineAnchorDrag } from '../../hooks/useTimelineAnchorDrag'
 import { useTimelineHorizontalScroll } from '../../hooks/useTimelineHorizontalScroll'
@@ -26,11 +27,11 @@ export const TimelineAnchor = memo(TimelineAnchorComponent)
 function TimelineAnchorComponent({ containerWidth }: Props) {
 	const theme = useCustomTheme()
 	const containerRef = useRef<HTMLDivElement | null>(null)
-	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
 	const { scaleLevel, isSwitchingScale } = useSelector(
 		getTimelineState,
 		(a, b) => a.scaleLevel === b.scaleLevel && a.isSwitchingScale === b.isSwitchingScale,
 	)
+	const { calendar } = useWorldTime()
 
 	// Drag-to-scroll functionality
 	const { isDragging, onMouseDown, onMouseMove, onMouseUp } = useTimelineAnchorDrag()
@@ -78,7 +79,6 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 			lastContainerWidth.current = containerWidth
 			lastScaleLevel.current = scaleLevel
 			setLinesKey((prevKey) => prevKey + 1)
-			// regenerateDividers(TimelineState.scroll)
 		}
 	}, [calendar, lineCount, containerWidth, scaleLevel])
 

@@ -263,13 +263,7 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 }
 
 export const CalendarTemplateService = {
-	async createTemplateCalendar({
-		ownerId,
-		worldId,
-		name,
-		originTime = 0,
-		templateId,
-	}: {
+	async createTemplateCalendarStandalone(props: {
 		ownerId?: string
 		worldId?: string
 		name?: string
@@ -277,96 +271,117 @@ export const CalendarTemplateService = {
 		templateId: CalendarTemplateId
 	}) {
 		return getPrismaClient().$transaction(async (dbClient) => {
-			const newCalendarName = (() => {
-				if (name) {
-					return name
-				}
-				switch (templateId) {
-					case 'earth_current':
-					case 'earth_2023':
-						return 'Earth Calendar'
-					case 'pf2e_current':
-					case 'pf2e_4723':
-						return 'Golarion Calendar (Pathfinder)'
-					case 'rimworld':
-						return 'Quadrums Calendar (Rimworld)'
-					case 'exether':
-						return 'Exether Calendar'
-					case 'martian':
-						return 'Sol Calendar (Martian)'
-					default:
-						throw new Error(`No name specified for template: ${templateId}`)
-				}
-			})()
-
-			const initialCalendar = await dbClient.calendar.create({
-				data: {
-					name: newCalendarName,
-					ownerId,
-					worldId,
-					position: 0,
-				},
+			return this.createTemplateCalendar({
+				...props,
+				dbClient,
 			})
+		})
+	},
 
+	async createTemplateCalendar({
+		ownerId,
+		worldId,
+		name,
+		originTime = 0,
+		templateId,
+		dbClient,
+	}: {
+		ownerId?: string
+		worldId?: string
+		name?: string
+		originTime?: number
+		templateId: CalendarTemplateId
+		dbClient: TransactionClient
+	}) {
+		const newCalendarName = (() => {
+			if (name) {
+				return name
+			}
 			switch (templateId) {
 				case 'earth_current':
-					await this.populateEarthCalendar({
-						prisma: dbClient,
-						calendarId: initialCalendar.id,
-						originTime: 1065047040 + originTime, // 2026-01-01 00:00
-					})
-					break
 				case 'earth_2023':
-					await this.populateEarthCalendar({
-						prisma: dbClient,
-						calendarId: initialCalendar.id,
-						originTime: 1063468800 + originTime, // 2023-01-01 00:00
-					})
-					break
-				case 'martian':
-					await this.populateMartianCalendar({
-						prisma: dbClient,
-						calendarId: initialCalendar.id,
-						originTime,
-					})
-					break
+					return 'Earth Calendar'
 				case 'pf2e_current':
-					await this.populatePf2eCalendar({
-						prisma: dbClient,
-						calendarId: initialCalendar.id,
-						originTime: 2485108800 + originTime, // 4726-01-01 00:00
-					})
-					break
 				case 'pf2e_4723':
-					await this.populatePf2eCalendar({
-						prisma: dbClient,
-						calendarId: initialCalendar.id,
-						originTime: 2483530560 + originTime, // 4723-01-01 00:00
-					})
-					break
+					return 'Golarion Calendar (Pathfinder)'
 				case 'rimworld':
-					await this.populateRimworldCalendar({
-						prisma: dbClient,
-						calendarId: initialCalendar.id,
-						originTime: 475113600 + originTime, // 5500-01-01 00:00
-					})
-					break
+					return 'Quadrums Calendar (Rimworld)'
 				case 'exether':
-					await this.populateExetherCalendar({
-						prisma: dbClient,
-						calendarId: initialCalendar.id,
-						originTime: 618631200 + originTime, // 1178-01-01 00:00
-					})
-					break
+					return 'Exether Calendar'
+				case 'martian':
+					return 'Sol Calendar (Martian)'
+				default:
+					throw new Error(`No name specified for template: ${templateId}`)
 			}
+		})()
 
-			const calendar = await dbClient.calendar.findFirstOrThrow({
-				where: {
-					id: initialCalendar.id,
-				},
-			})
-			return { calendar }
+		const initialCalendar = await dbClient.calendar.create({
+			data: {
+				name: newCalendarName,
+				ownerId,
+				worldId,
+				position: 0,
+			},
 		})
+
+		switch (templateId) {
+			case 'earth_current':
+				await this.populateEarthCalendar({
+					prisma: dbClient,
+					calendarId: initialCalendar.id,
+					originTime: 1065047040 + originTime, // 2026-01-01 00:00
+				})
+				break
+			case 'earth_2023':
+				await this.populateEarthCalendar({
+					prisma: dbClient,
+					calendarId: initialCalendar.id,
+					originTime: 1063468800 + originTime, // 2023-01-01 00:00
+				})
+				break
+			case 'martian':
+				await this.populateMartianCalendar({
+					prisma: dbClient,
+					calendarId: initialCalendar.id,
+					originTime,
+				})
+				break
+			case 'pf2e_current':
+				await this.populatePf2eCalendar({
+					prisma: dbClient,
+					calendarId: initialCalendar.id,
+					originTime: 2485108800 + originTime, // 4726-01-01 00:00
+				})
+				break
+			case 'pf2e_4723':
+				await this.populatePf2eCalendar({
+					prisma: dbClient,
+					calendarId: initialCalendar.id,
+					originTime: 2483530560 + originTime, // 4723-01-01 00:00
+				})
+				break
+			case 'rimworld':
+				await this.populateRimworldCalendar({
+					prisma: dbClient,
+					calendarId: initialCalendar.id,
+					originTime: 475113600 + originTime, // 5500-01-01 00:00
+				})
+				break
+			case 'exether':
+				await this.populateExetherCalendar({
+					prisma: dbClient,
+					calendarId: initialCalendar.id,
+					originTime: 618631200 + originTime, // 1178-01-01 00:00
+				})
+				break
+		}
+
+		const calendar = await dbClient.calendar.findFirstOrThrow({
+			where: {
+				id: initialCalendar.id,
+			},
+		})
+		return { calendar }
 	},
 
 	async populateEarthCalendar({

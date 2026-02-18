@@ -69,8 +69,8 @@ export function CalendarPresentationList({ selectedPresentation, onSelectPresent
 
 	// Sort presentations by smallest unit duration (biggest at top)
 	const sortedPresentations = [...(calendar?.presentations ?? [])].sort((a, b) => {
-		const minDurationA = Math.min(...a.units.map((u) => u.unit.duration), Infinity)
-		const minDurationB = Math.min(...b.units.map((u) => u.unit.duration), Infinity)
+		const minDurationA = Math.min(...a.units.map((u) => Number(u.unit.duration)), Infinity)
+		const minDurationB = Math.min(...b.units.map((u) => Number(u.unit.duration)), Infinity)
 		// If no units, put at top
 		if (minDurationA === Infinity && minDurationB === Infinity) return 0
 		if (minDurationA === Infinity) return -1

@@ -59,13 +59,14 @@ router.post('/api/worlds', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		name: RequiredParam(NonEmptyStringValidator),
 		description: OptionalParam(StringValidator),
-		calendars: OptionalParam(StringArrayValidator),
+		calendar: OptionalParam(StringValidator),
 		timeOrigin: OptionalParam(NumberValidator),
 	})
 
 	const world = await WorldService.createWorld({
 		owner: user,
 		...params,
+		calendar: params.calendar ?? 'earth_current',
 	})
 
 	return world

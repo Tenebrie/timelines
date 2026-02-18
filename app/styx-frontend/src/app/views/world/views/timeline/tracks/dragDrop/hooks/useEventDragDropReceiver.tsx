@@ -19,18 +19,11 @@ type Props = {
 }
 
 export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
-	const {
-		id: worldId,
-		events,
-		calendar,
-	} = useSelector(
-		getWorldState,
-		(a, b) => a.id === b.id && a.events === b.events && a.calendar === b.calendar,
-	)
+	const { id: worldId, events } = useSelector(getWorldState, (a, b) => a.id === b.id && a.events === b.events)
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const [updateWorldEvent] = useUpdateWorldEventMutation()
 	const [updateWorldEventDelta] = useUpdateWorldEventDeltaMutation()
-	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
+	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
 	const { updateEvent, updateEventDelta } = worldSlice.actions
 	const dispatch = useDispatch()

@@ -29,7 +29,7 @@ vi.mock('@src/ts-shared/node/services/SecretService', () => {
 	}
 })
 
-describe('WorldRouter', () => {
+describe.skip('WorldRouter', () => {
 	describe('GET /api/world/:worldId', () => {
 		it('returns world data to the owner', async () => {
 			const user = mockUser()

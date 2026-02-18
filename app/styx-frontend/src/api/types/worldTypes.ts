@@ -25,7 +25,6 @@ export type WorldEvent = Omit<
 	})[]
 }
 export type WorldEventDelta = WorldEvent['deltaStates'][number]
-export type WorldCalendarType = WorldDetails['calendar']
 export type WorldCalendar = Omit<GetWorldInfoApiResponse['calendars'][number], 'originTime'> & {
 	originTime: number
 }
