@@ -500,13 +500,24 @@ export const RheaService = {
 		return response.data
 	},
 
-	createArticle: async ({ worldId, userId, name }: { worldId: string; userId: string; name: string }) => {
+	createArticle: async ({
+		worldId,
+		userId,
+		name,
+		contentRich,
+	}: {
+		worldId: string
+		userId: string
+		name: string
+		contentRich: string
+	}) => {
 		const response = await rheaClient['POST']('/api/world/{worldId}/wiki/articles', {
 			params: {
 				path: { worldId },
 			},
 			body: {
 				name,
+				contentRich,
 			},
 			headers: {
 				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),

@@ -33,27 +33,23 @@ export function registerCreateArticleTool(server: McpServer) {
 
 				await checkArticleDoesNotExist({ name, userId, sessionId })
 
-				const article = await RheaService.createArticle({
-					worldId,
-					userId,
-					name,
-				})
-
+				let parsedContent = content
 				if (content) {
 					const worldData = await RheaService.getWorldDetails({ worldId, userId })
 					const articleData = await RheaService.getWorldArticles({ worldId, userId })
-					const parsedContent = await resolveShorthandMentions({
+					parsedContent = await resolveShorthandMentions({
 						content,
 						worldData,
 						articleData,
 					})
-					await RheaService.updateArticleContent({
-						worldId,
-						articleId: article.id,
-						userId,
-						content: parsedContent,
-					})
 				}
+
+				const article = await RheaService.createArticle({
+					worldId,
+					userId,
+					name,
+					contentRich: parsedContent || '',
+				})
 
 				Logger.toolSuccess(TOOL_NAME, `Created article "${article.name}"`)
 				return {
