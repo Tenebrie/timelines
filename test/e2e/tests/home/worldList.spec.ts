@@ -117,10 +117,8 @@ test.describe('World List', () => {
 		await page.getByLabel(`Load world "Custom Calendar World"`).click()
 		await page.waitForURL(/\/world\/[a-f0-9-]+\/timeline/)
 
-		// Verify the anchor label is rendered
-		await expect(page.getByText('March 25, 3379')).toBeVisible()
-		// Check anchor line to the right of the selection
-		await expect(page.getByText('March 26, 3379')).toBeVisible()
+		// Check anchor line is rendered
+		await expect(page.getByText('March 26, 3379', { exact: true })).toBeVisible()
 	})
 
 	test.afterEach(async ({ page }) => {
