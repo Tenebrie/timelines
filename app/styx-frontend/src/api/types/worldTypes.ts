@@ -63,4 +63,4 @@ export type TimelineEntity<T extends MarkerType> = WorldEvent & {
 }
 
 export type WorldAccessMode = WorldBrief['accessMode']
-export type CalendarTemplateId = ListCalendarTemplatesApiResponse[number]
+export type CalendarTemplateId = ListCalendarTemplatesApiResponse['keys'][number]

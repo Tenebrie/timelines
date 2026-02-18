@@ -167,6 +167,7 @@ export function mockCalendar(overrides: Partial<WorldCalendar>): WorldCalendar {
 		createdAt: '2024-01-01T00:00:00.000Z',
 		updatedAt: '2024-01-01T00:00:00.000Z',
 		name: 'Test Calendar',
+		description: '',
 		position: 0,
 		originTime: 0,
 		seasons: [],
