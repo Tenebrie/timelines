@@ -5,10 +5,107 @@ import { ParsedTimestamp } from './types'
 import { formatTimestampUnits } from './utils/formatTimestampUnits'
 import { parseTimestampMultiRoot } from './utils/parseTimestampMultiRoot'
 
+// ---------------------------------------------------------------------------
+// Internal types
+// ---------------------------------------------------------------------------
+
+interface ParentInfo {
+	parentUnit: CalendarUnit
+	/** Raw timestamp where the current instance of parentUnit starts */
+	parentCycleStart: number
+}
+
+interface Slot {
+	unit: CalendarUnit
+	/** Offset from parentCycleStart (not absolute) */
+	startOffset: number
+}
+
+// ---------------------------------------------------------------------------
+// Module-level calendar cache
+//
+// Keyed by `${calendar.id}:${calendar.updatedAt}` so it auto-invalidates
+// when the calendar is saved. Stores derived structures that are pure
+// functions of the calendar definition and never depend on timestamps.
+// ---------------------------------------------------------------------------
+
+interface CalendarCache {
+	/** Pre-built slot arrays for each parent unit, keyed by unit ID */
+	slotsByUnitId: Map<string, Slot[]>
+	/** countTargetSlotsInCycle results, keyed by `${unitId}:${targetBucket}` */
+	targetSlotCounts: Map<string, number>
+	/** Root ancestor for each unit, keyed by unit ID */
+	rootByUnitId: Map<string, CalendarUnit>
+	/** unitById map (avoids re-building per EsotericDate instance) */
+	unitById: Map<string, CalendarUnit>
+}
+
+const calendarCacheMap = new Map<string, CalendarCache>()
+
+function getCalendarCache(calendar: WorldCalendar): CalendarCache {
+	const key = `${calendar.id}:${calendar.updatedAt}`
+	const existing = calendarCacheMap.get(key)
+	if (existing) return existing
+
+	// Evict stale entries for the same calendar id (different updatedAt)
+	for (const k of calendarCacheMap.keys()) {
+		if (k.startsWith(`${calendar.id}:`)) {
+			calendarCacheMap.delete(k)
+		}
+	}
+
+	const unitById = new Map(calendar.units.map((u) => [u.id, u]))
+
+	// Pre-build slot arrays for every unit that has children
+	const slotsByUnitId = new Map<string, Slot[]>()
+	for (const unit of calendar.units) {
+		if (unit.children.length === 0) continue
+		const slots: Slot[] = []
+		let offset = 0
+		for (const rel of unit.children) {
+			const childUnit = unitById.get(rel.childUnitId)
+			if (!childUnit) continue
+			for (let r = 0; r < rel.repeats; r++) {
+				slots.push({ unit: childUnit, startOffset: offset })
+				offset += Number(childUnit.duration)
+			}
+		}
+		slotsByUnitId.set(unit.id, slots)
+	}
+
+	// Pre-compute root ancestors
+	const rootByUnitId = new Map<string, CalendarUnit>()
+	const findRootUncached = (unit: CalendarUnit): CalendarUnit => {
+		if (unit.parents.length === 0) return unit
+		const parents = unit.parents
+			.map((rel) => unitById.get(rel.parentUnitId))
+			.filter((u): u is CalendarUnit => !!u)
+		if (parents.length === 0) return unit
+		return findRootUncached(parents.reduce((a, b) => (Number(a.duration) > Number(b.duration) ? a : b)))
+	}
+	for (const unit of calendar.units) {
+		rootByUnitId.set(unit.id, findRootUncached(unit))
+	}
+
+	const cache: CalendarCache = {
+		slotsByUnitId,
+		targetSlotCounts: new Map(),
+		rootByUnitId,
+		unitById,
+	}
+	calendarCacheMap.set(key, cache)
+	return cache
+}
+
+// ---------------------------------------------------------------------------
+// EsotericDate
+// ---------------------------------------------------------------------------
+
 export class EsotericDate {
 	private calendar: WorldCalendar
 	private timestamp: number
-	private unitById: Map<string, CalendarUnit>
+	/** Shared with all EsotericDates on the same calendar version — never mutated */
+	readonly _cache: CalendarCache
 	private _parsedCache: ParsedTimestamp | null = null
 
 	constructor(calendar: WorldCalendar, timestamp: number)
@@ -17,581 +114,357 @@ export class EsotericDate {
 		if (calendarOrDate instanceof EsotericDate) {
 			this.calendar = calendarOrDate.calendar
 			this.timestamp = calendarOrDate.timestamp
-			this.unitById = calendarOrDate.unitById
+			this._cache = calendarOrDate._cache
 			this._parsedCache = calendarOrDate._parsedCache
 		} else {
 			this.calendar = calendarOrDate
 			this.timestamp = timestamp!
-			this.unitById = new Map(calendarOrDate.units.map((u) => [u.id, u]))
+			this._cache = getCalendarCache(calendarOrDate)
 		}
 	}
 
-	private parse(): ParsedTimestamp {
-		return (this._parsedCache ??= parseTimestampMultiRoot({
-			allUnits: this.calendar.units,
-			timestamp: this.timestamp + this.originTime,
-		}))
-	}
+	// -------------------------------------------------------------------------
+	// Public API
+	// -------------------------------------------------------------------------
 
-	getTimestamp() {
+	getTimestamp(): number {
 		return this.timestamp
 	}
 
-	format(formatString: string) {
+	format(formatString: string): string {
 		return formatTimestampUnits(this.calendar.units, this.parse(), formatString)
 	}
 
-	getBucketId(unit: CalendarUnit) {
-		return this.parse()
-			.values()
-			.find((entry) => entry.unit.displayName?.toLowerCase() === unit.displayName.toLowerCase())?.unit.id
+	getBucketId(unit: CalendarUnit): string | undefined {
+		return [...this.parse().values()].find((e) => this.sameBucket(e.unit, unit))?.unit.id
 	}
 
 	get(unit: WorldCalendarUnit) {
 		const parsed = this.parse()
-		const bucketId = parsed
-			.values()
-			.find((entry) => entry.unit.displayName?.toLowerCase() === unit.displayName.toLowerCase())?.unit.id
-		if (!bucketId) {
-			throw new Error('No bucketId match for unit ' + unit.name)
-		}
-		return parsed.get(bucketId)
+		const entry = [...parsed.values()].find((e) => this.sameBucket(e.unit, unit))
+		if (!entry) throw new Error('No bucket match for unit ' + unit.name)
+		return parsed.get(entry.unit.id)
 	}
 
-	getDuration(unit: CalendarUnit) {
-		return this.parse().get(unit.id)?.unit.duration ?? 0
+	getDuration(unit: CalendarUnit): number {
+		return Number(this.parse().get(unit.id)?.unit.duration) ?? 0
 	}
 
-	private get originTime(): number {
-		return this.calendar.originTime
-	}
-
+	/**
+	 * Step by `amount` instances of the given calendar unit type.
+	 * Sub-unit offsets (e.g. hour within a day) are preserved at the destination.
+	 */
 	step(unit: WorldCalendarUnit, amount: number = 1): EsotericDate {
 		if (amount === 0) {
 			return new EsotericDate(this.calendar, this.timestamp)
 		}
 
+		// Parse once and thread through all internal calls
 		const parsed = this.parse()
+		const matchedUnit = this.resolveMatchedUnit(unit, parsed)
 
-		// Find the target unit's entry via bucket matching (displayName)
-		const targetBucket = unit.displayName.toLowerCase()
-		const targetEntry = [...parsed.values()].find(
-			(entry) => (entry.unit.displayName ?? entry.unit.name).toLowerCase() === targetBucket,
-		)
-		if (!targetEntry) {
-			throw new Error('No bucket match for unit ' + unit.name)
-		}
-
-		const matchedUnit = this.unitById.get(targetEntry.unit.id)
-		if (!matchedUnit) {
-			throw new Error('Matched unit not found in calendar units: ' + targetEntry.unit.id)
-		}
-
-		// Resolve the child offset to preserve ONCE from the original timestamp,
-		// then step on the floored timestamp (which has no sub-unit offset to confuse recursion).
-		const floored = this.floor(unit)
-		const stepped = floored.stepFloored(unit, amount)
-
-		// Find the actual unit at the destination. The stepped position may be on a different
-		// concrete unit type (e.g. NormalYear vs LeapYear, or WorkHour vs BreakSlot).
-		// resolvePreservedChildren correctly handles child loss when the new unit lacks a child bucket.
+		const floored = this.floorInternal(matchedUnit)
+		const stepped = floored.stepFloored(unit, matchedUnit, amount)
 		const destUnit = stepped.resolveActualUnit(matchedUnit)
-
-		// Collect the original child values and resolve them in the destination unit's structure
 		const childValues = this.collectDescendantValues(parsed, matchedUnit)
-		const newChildOffset = this.resolveChildOffset(destUnit, childValues)
+		const childOffset = this.resolveChildOffset(destUnit, childValues)
 
-		return new EsotericDate(this.calendar, stepped.timestamp + newChildOffset)
+		return new EsotericDate(this.calendar, stepped.timestamp + childOffset)
 	}
 
 	/**
-	 * Internal step that assumes `this` is already floored to the target unit.
-	 * All recursion happens on floored positions, so there are no children to
-	 * preserve or double-count. Child preservation is handled by the public step().
+	 * Return a new EsotericDate rounded down to the start of the current
+	 * instance of the given unit.
 	 */
-	private stepFloored(unit: WorldCalendarUnit, amount: number): EsotericDate {
+	floor(unit: WorldCalendarUnit): EsotericDate {
+		const parsed = this.parse()
+		const matchedUnit = this.resolveMatchedUnit(unit, parsed)
+		return this.floorInternal(matchedUnit)
+	}
+
+	// -------------------------------------------------------------------------
+	// Internal floor (accepts pre-resolved unit, avoids re-parsing)
+	// -------------------------------------------------------------------------
+
+	private floorInternal(matchedUnit: CalendarUnit): EsotericDate {
+		const parentInfo = this.resolveActiveParent(matchedUnit)
+		if (!parentInfo) {
+			const duration = Number(matchedUnit.duration)
+			const absTs = this.timestamp + this.originTime
+			const floored = Math.floor(absTs / duration) * duration - this.originTime
+			return new EsotericDate(this.calendar, floored)
+		}
+
+		const { parentUnit, parentCycleStart } = parentInfo
+		const slots = this.getSlots(parentUnit)
+		const slot = this.findSlot(slots, parentCycleStart, this.timestamp)
+		return new EsotericDate(this.calendar, parentCycleStart + slot.startOffset)
+	}
+
+	// -------------------------------------------------------------------------
+	// Core stepping engine
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Step assuming `this` is already floored to the target unit.
+	 * Accepts pre-resolved matchedUnit and parsed to avoid redundant work.
+	 */
+	private stepFloored(unit: WorldCalendarUnit, matchedUnit: CalendarUnit, amount: number): EsotericDate {
 		if (amount === 0) {
 			return new EsotericDate(this.calendar, this.timestamp)
 		}
 
-		const allUnits = this.calendar.units
-		const parsed = this.parse()
-
-		// Find the target unit's entry via bucket matching (displayName)
-		const targetBucket = unit.displayName.toLowerCase()
-		const targetEntry = [...parsed.values()].find(
-			(entry) => (entry.unit.displayName ?? entry.unit.name).toLowerCase() === targetBucket,
-		)
-		if (!targetEntry) {
-			throw new Error('No bucket match for unit ' + unit.name)
-		}
-
-		const matchedUnit = this.unitById.get(targetEntry.unit.id)
-		if (!matchedUnit) {
-			throw new Error('Matched unit not found in calendar units: ' + targetEntry.unit.id)
-		}
-
-		// Bulk skip using the root cycle. The root cycle has a fixed duration that
-		// doesn't depend on position, so skipping N root cycles is always safe.
-		// This prevents O(amount) recursion for large steps.
-		const findRoot = (u: CalendarUnit): CalendarUnit => {
-			if (u.parents.length === 0) return u
-			const parentUnits = u.parents
-				.map((rel) => this.unitById.get(rel.parentUnitId))
-				.filter((p): p is CalendarUnit => !!p)
-			if (parentUnits.length === 0) return u
-			return findRoot(parentUnits.reduce((a, b) => (Number(a.duration) > Number(b.duration) ? a : b)))
-		}
-		const root = findRoot(matchedUnit)
-		// Only use root-cycle bulk skip when the root is NOT the immediate parent.
-		// When the root is the immediate parent, the overflow path handles it directly
-		// with correct slot-level arithmetic (which may differ from target-bucket counting
-		// when there are mixed non-hidden sibling types).
-		const isRootImmediateParent = matchedUnit.parents.some((rel) => rel.parentUnitId === root.id)
-		if (root.id !== matchedUnit.id && !isRootImmediateParent) {
-			const rootTargetSlots = this.countTargetSlotsInCycle(root, targetBucket)
-			if (rootTargetSlots > 0) {
-				const fullRootCycles = Math.trunc(amount / rootTargetSlots)
-				if (fullRootCycles !== 0) {
-					const remainder = amount - fullRootCycles * rootTargetSlots
-					const newTs = this.timestamp + fullRootCycles * Number(root.duration)
-					const jumped = new EsotericDate(this.calendar, newTs)
-					if (remainder === 0) {
-						return jumped
-					}
-					return jumped.stepFloored(unit, remainder)
-				}
-			}
-		}
-
-		// Find the parent of this unit.
-		const parentInfo = this.resolveActiveParent(matchedUnit, allUnits)
+		// Root unit: no parent, just multiply duration
+		const parentInfo = this.resolveActiveParent(matchedUnit)
 		if (!parentInfo) {
-			// Root unit — no parent cycle to walk. Just add amount * duration.
 			return new EsotericDate(this.calendar, this.timestamp + amount * Number(matchedUnit.duration))
 		}
 
 		const { parentUnit, parentCycleStart } = parentInfo
-		const parentDuration = Number(parentUnit.duration)
+		const targetBucket = this.bucketOf(unit)
 
-		// Build the flat slot list for the parent's children.
-		type Slot = { unit: CalendarUnit; slotIndexInBucket: number }
-		const slots: Slot[] = []
-		const bucketCounters = new Map<string, number>()
-		for (const childRelation of parentUnit.children) {
-			const childUnit = this.unitById.get(childRelation.childUnitId)
-			if (!childUnit) continue
-			const bucket = childUnit.displayName.toLowerCase()
-			for (let r = 0; r < childRelation.repeats; r++) {
-				const idx = bucketCounters.get(bucket) ?? 0
-				slots.push({ unit: childUnit, slotIndexInBucket: idx })
-				bucketCounters.set(bucket, idx + 1)
-			}
-		}
-
-		if (slots.length === 0) {
-			return new EsotericDate(this.calendar, this.timestamp)
-		}
-
-		// Find our current slot by walking the slot list using the offset within the parent cycle.
-		const offsetWithinParent = this.timestamp - parentCycleStart
-		let accumulatedOffset = 0
-		let currentSlotIndex = -1
-		for (let i = 0; i < slots.length; i++) {
-			const slotDuration = Number(slots[i].unit.duration)
-			if (accumulatedOffset + slotDuration > offsetWithinParent) {
-				currentSlotIndex = i
-				break
-			}
-			accumulatedOffset += slotDuration
-		}
-		if (currentSlotIndex === -1) {
-			currentSlotIndex = slots.length - 1
-		}
-
-		// Count how many effective steps of the target unit exist in one parent cycle.
-		// For non-hidden parents, every slot is a step.
-		// For hidden parents, only target-bucket slots inside them count.
-		const effectiveStepsPerCycle = this.countEffectiveStepsInCycle(parentUnit, targetBucket)
-
-		// Step forward (or backward) by amount slots
-		const newSlotIndex = currentSlotIndex + amount
-		const totalSlots = slots.length
-
-		// Check if any sibling slot is a Hidden unit that contains the target unit.
-		const hasHiddenSiblings = slots.some(
-			(s) =>
-				s.unit.formatMode === 'Hidden' &&
-				s.unit.children.some((ch) => {
-					const childUnit = this.unitById.get(ch.childUnitId)
-					return childUnit && childUnit.displayName.toLowerCase() === targetBucket
-				}),
-		)
-
-		// --- Within-cycle: step lands inside the current parent cycle ---
-
-		if (hasHiddenSiblings) {
-			// When hidden siblings exist, we can't just use slot index arithmetic.
-			// Check if the step would land on a Hidden sibling.
-			const wouldLandOnHiddenSibling =
-				newSlotIndex >= 0 && newSlotIndex < totalSlots && slots[newSlotIndex].unit.formatMode === 'Hidden'
-
-			if (!wouldLandOnHiddenSibling && newSlotIndex >= 0 && newSlotIndex < totalSlots) {
-				// Lands cleanly on a non-hidden slot within this cycle
-				let newSlotStartOffset = 0
-				for (let i = 0; i < newSlotIndex; i++) {
-					newSlotStartOffset += Number(slots[i].unit.duration)
+		// Bulk-skip whole root cycles when safe
+		const root = this._cache.rootByUnitId.get(matchedUnit.id) ?? matchedUnit
+		const isRootImmediateParent = matchedUnit.parents.some((rel) => rel.parentUnitId === root.id)
+		if (root.id !== matchedUnit.id && !isRootImmediateParent) {
+			const rootTargetSlots = this.countTargetSlotsInCycle(root, targetBucket)
+			if (rootTargetSlots > 0) {
+				const fullCycles = Math.trunc(amount / rootTargetSlots)
+				if (fullCycles !== 0) {
+					const remainder = amount - fullCycles * rootTargetSlots
+					const jumped = new EsotericDate(this.calendar, this.timestamp + fullCycles * Number(root.duration))
+					if (remainder === 0) return jumped
+					const jumpedMatchedUnit = jumped.resolveMatchedUnit(unit, jumped.parse())
+					return jumped.stepFloored(unit, jumpedMatchedUnit, remainder)
 				}
-				return new EsotericDate(this.calendar, parentCycleStart + newSlotStartOffset)
+			}
+		}
+
+		const slots = this.getSlots(parentUnit)
+		const currentSlot = this.findSlot(slots, parentCycleStart, this.timestamp)
+		const currentIndex = slots.indexOf(currentSlot)
+
+		return this.walkSlots(unit, amount, slots, currentIndex, parentUnit, parentCycleStart)
+	}
+
+	/**
+	 * Walk through the slot list, consuming steps toward `amount`.
+	 */
+	private walkSlots(
+		unit: WorldCalendarUnit,
+		amount: number,
+		slots: Slot[],
+		currentIndex: number,
+		parentUnit: CalendarUnit,
+		parentCycleStart: number,
+	): EsotericDate {
+		const targetBucket = this.bucketOf(unit)
+		const direction = amount > 0 ? 1 : -1
+		let remaining = amount
+		let slotIndex = currentIndex
+
+		while (remaining !== 0) {
+			const nextIndex = slotIndex + direction
+
+			// ---- Overflow: past the parent cycle boundary ----
+			if (nextIndex < 0 || nextIndex >= slots.length) {
+				const parentDuration = Number(parentUnit.duration)
+				const adjacentTs = direction > 0 ? parentCycleStart + parentDuration : parentCycleStart - 1
+
+				const adjacent = new EsotericDate(this.calendar, adjacentTs)
+				const adjacentParsed = adjacent.parse()
+				const adjacentMatchedUnit = adjacent.resolveMatchedUnit(unit, adjacentParsed)
+				const floored = adjacent.floorInternal(adjacentMatchedUnit)
+
+				if (remaining === direction) return floored
+				return floored.stepFloored(unit, adjacentMatchedUnit, remaining - direction)
 			}
 
-			// Step crosses a hidden sibling or overflows — advance one slot at a time
-			if (amount > 0) {
-				const currentSlotDuration = Number(slots[currentSlotIndex].unit.duration)
-				const currentSlotStart = parentCycleStart + accumulatedOffset
-				const nextSlotStart = currentSlotStart + currentSlotDuration
-				const slotsConsumed = 1
-				const remaining = amount - slotsConsumed
+			slotIndex = nextIndex
+			const slot = slots[slotIndex]
+
+			// ---- Hidden unit: recurse inside it transparently ----
+			if (slot.unit.formatMode === 'Hidden') {
+				const innerCount = this.countTargetSlotsInCycle(slot.unit, targetBucket)
+				if (innerCount === 0) continue
+
+				if (Math.abs(remaining) <= innerCount) {
+					const hiddenAbsStart = parentCycleStart + slot.startOffset
+					const enterTs = direction > 0 ? hiddenAbsStart : hiddenAbsStart + Number(slot.unit.duration) - 1
+					const entered = new EsotericDate(this.calendar, enterTs)
+					const enteredMatchedUnit = entered.resolveMatchedUnit(unit, entered.parse())
+					const enteredFloored = entered.floorInternal(enteredMatchedUnit)
+					return enteredFloored.stepFloored(unit, enteredMatchedUnit, remaining - direction)
+				}
+
+				remaining -= direction * innerCount
+				continue
+			}
+
+			// ---- Normal slot ----
+			if (this.bucketOf(slot.unit) === targetBucket) {
+				remaining -= direction
 				if (remaining === 0) {
-					const dateAtBoundary = new EsotericDate(this.calendar, nextSlotStart)
-					return dateAtBoundary.floor(unit)
+					return new EsotericDate(this.calendar, parentCycleStart + slot.startOffset)
 				}
-				const dateAtBoundary = new EsotericDate(this.calendar, nextSlotStart)
-				return dateAtBoundary.stepFloored(unit, remaining)
-			} else {
-				const currentSlotStart = parentCycleStart + accumulatedOffset
-				const prevEnd = currentSlotStart - 1
-				const slotsConsumed = 1
-				const remaining = amount + slotsConsumed
-				if (remaining === 0) {
-					const dateAtBoundary = new EsotericDate(this.calendar, prevEnd)
-					return dateAtBoundary.floor(unit)
-				}
-				const dateAtBoundary = new EsotericDate(this.calendar, prevEnd)
-				const floored = dateAtBoundary.floor(unit)
-				return floored.stepFloored(unit, remaining)
 			}
 		}
 
-		// No hidden siblings — pure slot index arithmetic works
-		if (newSlotIndex >= 0 && newSlotIndex < totalSlots) {
-			let newSlotStartOffset = 0
-			for (let i = 0; i < newSlotIndex; i++) {
-				newSlotStartOffset += Number(slots[i].unit.duration)
-			}
-			return new EsotericDate(this.calendar, parentCycleStart + newSlotStartOffset)
-		}
-
-		// --- Overflow: step goes past the current parent cycle ---
-		// Jump one parent cycle at a time because adjacent parent cycles
-		// may have different durations (e.g. 100-year-cycle vs 4-year-cycle x25).
-		// Use bulk skip only when we can verify same-parent-type siblings exist.
-
-		if (effectiveStepsPerCycle > 0) {
-			const slotsToEdge = amount > 0 ? totalSlots - currentSlotIndex : currentSlotIndex + 1
-			const remaining = amount > 0 ? amount - slotsToEdge : amount + slotsToEdge
-
-			if (amount > 0) {
-				const nextParentStart = parentCycleStart + parentDuration
-				if (remaining === 0) {
-					const dateAtBoundary = new EsotericDate(this.calendar, nextParentStart)
-					return dateAtBoundary.floor(unit)
-				}
-				const dateAtBoundary = new EsotericDate(this.calendar, nextParentStart)
-				return dateAtBoundary.stepFloored(unit, remaining)
-			} else {
-				const prevParentEnd = parentCycleStart - 1
-				const dateAtBoundary = new EsotericDate(this.calendar, prevParentEnd)
-				if (remaining === 0) {
-					return dateAtBoundary.floor(unit)
-				}
-				const flooredBoundary = dateAtBoundary.floor(unit)
-				return flooredBoundary.stepFloored(unit, remaining)
-			}
-		}
-
-		// Fallback: no target slots in cycle (shouldn't happen in practice)
-		const parentOverflow = Math.floor(newSlotIndex / totalSlots)
-		let wrappedSlotIndex = newSlotIndex % totalSlots
-		if (wrappedSlotIndex < 0) {
-			wrappedSlotIndex += totalSlots
-		}
-
-		let newSlotStartOffset = 0
-		for (let i = 0; i < wrappedSlotIndex; i++) {
-			newSlotStartOffset += Number(slots[i].unit.duration)
-		}
-
-		const newTimestamp = parentCycleStart + newSlotStartOffset + parentOverflow * parentDuration
-		return new EsotericDate(this.calendar, newTimestamp)
+		throw new Error('walkSlots: exhausted without reaching target')
 	}
 
-	/**
-	 * Find the actual concrete unit at the current timestamp, at the same hierarchy level
-	 * as the reference unit. We find the reference unit's parent, determine which parent
-	 * cycle instance contains this timestamp, then walk that cycle's children to find
-	 * which concrete slot (e.g. NormalYear vs LeapYear, WorkHour vs BreakSlot) we're in.
-	 * Falls back to the reference unit if no parent can be resolved.
-	 */
-	private resolveActualUnit(referenceUnit: CalendarUnit): CalendarUnit {
-		if (referenceUnit.parents.length === 0) {
-			return referenceUnit
-		}
+	// -------------------------------------------------------------------------
+	// Parent resolution
+	// -------------------------------------------------------------------------
 
-		// Find the parent unit. For units with multiple parents, find the immediate parent
-		// by picking the one with the smallest duration that still contains this unit.
-		const parentCandidates = referenceUnit.parents
-			.map((rel) => this.unitById.get(rel.parentUnitId))
-			.filter((u): u is CalendarUnit => !!u)
+	private resolveActiveParent(matchedUnit: CalendarUnit): ParentInfo | null {
+		if (matchedUnit.parents.length === 0) return null
 
-		if (parentCandidates.length === 0) {
-			return referenceUnit
-		}
+		const root = this._cache.rootByUnitId.get(matchedUnit.id) ?? matchedUnit
+		const rootDuration = Number(root.duration)
+		const absTs = this.timestamp + this.originTime
+		const rootOffset = ((absTs % rootDuration) + rootDuration) % rootDuration
+		const rootCycleStart = this.timestamp - rootOffset
 
-		// Use the immediate parent (smallest duration among parents)
-		const parentUnit = parentCandidates.reduce((a, b) => (Number(a.duration) < Number(b.duration) ? a : b))
-
-		// Find where this parent cycle starts at the current timestamp
-		// Use the parent's own parent resolution to find the cycle start
-		const parentDuration = Number(parentUnit.duration)
-		const parentInfo = this.resolveActiveParent(parentUnit, this.calendar.units, this.timestamp)
-
-		let parentCycleStart: number
-		if (parentInfo) {
-			// The parent itself has a parent — find its start within the grandparent
-			const gpOffset = this.timestamp - parentInfo.parentCycleStart
-			let acc = 0
-			let found = false
-			for (const ch of parentInfo.parentUnit.children) {
-				const chUnit = this.unitById.get(ch.childUnitId)
-				if (!chUnit) continue
-				for (let r = 0; r < ch.repeats; r++) {
-					const d = Number(chUnit.duration)
-					if (acc + d > gpOffset) {
-						parentCycleStart = parentInfo.parentCycleStart + acc
-						found = true
-						break
-					}
-					acc += d
-				}
-				if (found) break
-			}
-			if (!found) {
-				return referenceUnit
-			}
-		} else {
-			// Parent is root — cycle aligned to absolute 0
-			const absTs = this.timestamp + this.originTime
-			parentCycleStart = Math.floor(absTs / parentDuration) * parentDuration - this.originTime
-		}
-
-		// Walk children of the parent to find which slot contains this timestamp
-		const offsetWithinParent = this.timestamp - parentCycleStart!
-		let accumulatedOffset = 0
-		for (const childRelation of parentUnit.children) {
-			const childUnit = this.unitById.get(childRelation.childUnitId)
-			if (!childUnit) continue
-			for (let r = 0; r < childRelation.repeats; r++) {
-				const slotDuration = Number(childUnit.duration)
-				if (accumulatedOffset + slotDuration > offsetWithinParent) {
-					return childUnit
-				}
-				accumulatedOffset += slotDuration
-			}
-		}
-
-		// Edge case: at exact end boundary → last slot
-		const lastRelation = parentUnit.children[parentUnit.children.length - 1]
-		const lastUnit = this.unitById.get(lastRelation.childUnitId)
-		return lastUnit ?? referenceUnit
+		return this.walkDownToParent(root, matchedUnit, this.timestamp, rootCycleStart)
 	}
 
-	/**
-	 * Count how many target-bucket slots exist in one cycle of the given parent unit,
-	 * including slots nested inside Hidden children.
-	 */
-	private countTargetSlotsInCycle(parentUnit: CalendarUnit, targetBucket: string): number {
-		let count = 0
-		for (const childRelation of parentUnit.children) {
-			const childUnit = this.unitById.get(childRelation.childUnitId)
-			if (!childUnit) continue
-			if (childUnit.displayName.toLowerCase() === targetBucket) {
-				count += childRelation.repeats
-			} else if (childUnit.formatMode === 'Hidden') {
-				// Recurse into hidden children to find nested target slots
-				count += this.countTargetSlotsInCycle(childUnit, targetBucket) * childRelation.repeats
-			}
-		}
-		return count
-	}
-
-	/**
-	 * Count how many effective steps of the target unit fit in one cycle of the
-	 * given parent unit. This mirrors the actual stepping logic:
-	 * - Target-matching children: each is 1 step
-	 * - Hidden children containing the target: recurse (transparent wrappers)
-	 * - Non-hidden, non-matching children: each is still 1 step (step advances
-	 *   through all sibling slots regardless of bucket)
-	 */
-	private countEffectiveStepsInCycle(parentUnit: CalendarUnit, targetBucket: string): number {
-		let count = 0
-		for (const childRelation of parentUnit.children) {
-			const childUnit = this.unitById.get(childRelation.childUnitId)
-			if (!childUnit) continue
-			if (childUnit.displayName.toLowerCase() === targetBucket) {
-				// Direct match: each repeat is 1 step
-				count += childRelation.repeats
-			} else if (childUnit.formatMode === 'Hidden') {
-				// Hidden wrapper: recurse to find steps inside
-				count += this.countEffectiveStepsInCycle(childUnit, targetBucket) * childRelation.repeats
-			} else {
-				// Non-hidden, non-matching sibling: each repeat is still 1 step
-				// because the step logic advances through all slots
-				count += childRelation.repeats
-			}
-		}
-		return count
-	}
-
-	/**
-	 * Determine which parent cycle a unit is currently inside at the given timestamp.
-	 * A unit like "Regular year" can be a child of both "4-year-cycle" and "100-year-cycle".
-	 * We walk from the root cycle down through the hierarchy to find which parent slot
-	 * actually contains our unit at the current timestamp.
-	 * Returns null if no parent (root unit), otherwise returns the parent unit
-	 * and the absolute timestamp where the current instance of the parent cycle starts.
-	 *
-	 * The walk uses originTime so that raw timestamp 0 is correctly placed within
-	 * the cycle hierarchy (which is anchored at absolute timestamp 0, i.e. the epoch).
-	 */
-	private resolveActiveParent(
-		matchedUnit: CalendarUnit,
-		allUnits: CalendarUnit[],
-		timestamp?: number,
-	): { parentUnit: CalendarUnit; parentCycleStart: number } | null {
-		const ts = timestamp ?? this.timestamp
-
-		if (matchedUnit.parents.length === 0) {
-			return null
-		}
-
-		// Find the root ancestor of this unit
-		const findRoot = (unit: CalendarUnit): CalendarUnit => {
-			if (unit.parents.length === 0) return unit
-			// Pick the parent with the largest duration to find the root
-			const parentUnits = unit.parents
-				.map((rel) => this.unitById.get(rel.parentUnitId))
-				.filter((u): u is CalendarUnit => !!u)
-			if (parentUnits.length === 0) return unit
-			const largest = parentUnits.reduce((a, b) => (Number(a.duration) > Number(b.duration) ? a : b))
-			return findRoot(largest)
-		}
-
-		const root = findRoot(matchedUnit)
-		// The root cycle starts at ancestorCycleStart = -originTime in raw timestamp space.
-		// This ensures (rawTimestamp - (-originTime)) % rootDuration = (rawTimestamp + originTime) % rootDuration,
-		// correctly placing us within the absolute cycle structure.
-		return this.walkDownToFindParent(root, matchedUnit, ts, allUnits, -this.originTime)
-	}
-
-	/**
-	 * Walk down from `current` through the cycle hierarchy to find the immediate parent
-	 * of `target` at the given timestamp. Also tracks the absolute cycle start offset.
-	 */
-	private walkDownToFindParent(
+	private walkDownToParent(
 		current: CalendarUnit,
 		target: CalendarUnit,
 		timestamp: number,
-		allUnits: CalendarUnit[],
-		ancestorCycleStart: number,
-	): { parentUnit: CalendarUnit; parentCycleStart: number } | null {
-		if (current.children.length === 0) {
-			return null
+		currentCycleStart: number,
+	): ParentInfo | null {
+		if (current.children.length === 0) return null
+
+		const slots = this.getSlots(current)
+		const slot = this.findSlot(slots, currentCycleStart, timestamp)
+		const childStart = currentCycleStart + slot.startOffset
+
+		if (slot.unit.id === target.id) {
+			return { parentUnit: current, parentCycleStart: currentCycleStart }
 		}
 
-		const duration = Number(current.duration)
-		let offsetWithinCurrent = (timestamp - ancestorCycleStart) % duration
-		if (offsetWithinCurrent < 0) {
-			offsetWithinCurrent += duration
-		}
-		const currentCycleStart =
-			timestamp -
-			(((timestamp - ancestorCycleStart) % duration) +
-				((timestamp - ancestorCycleStart) % duration < 0 ? duration : 0))
+		return this.walkDownToParent(slot.unit, target, timestamp, childStart)
+	}
 
-		// Walk through children slots to find which one contains this offset
-		let accumulatedOffset = 0
-		for (const childRelation of current.children) {
-			const childUnit = this.unitById.get(childRelation.childUnitId)
+	// -------------------------------------------------------------------------
+	// Slot access (cached)
+	// -------------------------------------------------------------------------
+
+	/** Returns the pre-built slot array for a parent unit (never allocates). */
+	private getSlots(parentUnit: CalendarUnit): Slot[] {
+		return this._cache.slotsByUnitId.get(parentUnit.id) ?? []
+	}
+
+	private findSlot(slots: Slot[], parentCycleStart: number, timestamp: number): Slot {
+		if (slots.length === 0) throw new Error('findSlot: empty slot list')
+
+		const offsetWithinParent = timestamp - parentCycleStart
+
+		for (const slot of slots) {
+			if (offsetWithinParent < slot.startOffset + Number(slot.unit.duration)) {
+				return slot
+			}
+		}
+		return slots[slots.length - 1]
+	}
+
+	// -------------------------------------------------------------------------
+	// Unit resolution helpers
+	// -------------------------------------------------------------------------
+
+	private resolveActualUnit(referenceUnit: CalendarUnit): CalendarUnit {
+		if (referenceUnit.parents.length === 0) return referenceUnit
+
+		const targetBucket = this.bucketOf(referenceUnit)
+		const parsed = this.parse()
+
+		const entry = [...parsed.values()].find((e) => this.bucketOf(e.unit) === targetBucket)
+		if (entry) {
+			const matched = this._cache.unitById.get(entry.unit.id)
+			if (matched) return matched
+		}
+
+		const root = this._cache.rootByUnitId.get(referenceUnit.id) ?? referenceUnit
+		const rootDuration = Number(root.duration)
+		const absTs = this.timestamp + this.originTime
+		const rootOffset = ((absTs % rootDuration) + rootDuration) % rootDuration
+		const rootCycleStart = this.timestamp - rootOffset
+
+		const found = this.findBucketSlotFromRoot(root, targetBucket, this.timestamp, rootCycleStart)
+		return found ?? referenceUnit
+	}
+
+	private findBucketSlotFromRoot(
+		current: CalendarUnit,
+		targetBucket: string,
+		timestamp: number,
+		currentCycleStart: number,
+	): CalendarUnit | null {
+		if (this.bucketOf(current) === targetBucket) return current
+		if (current.children.length === 0) return null
+
+		const slots = this.getSlots(current)
+		const slot = this.findSlot(slots, currentCycleStart, timestamp)
+		const childStart = currentCycleStart + slot.startOffset
+
+		if (this.bucketOf(slot.unit) === targetBucket) return slot.unit
+
+		return this.findBucketSlotFromRoot(slot.unit, targetBucket, timestamp, childStart)
+	}
+
+	private resolveMatchedUnit(unit: WorldCalendarUnit, parsed: ParsedTimestamp): CalendarUnit {
+		const entry = [...parsed.values()].find((e) => this.sameBucket(e.unit, unit))
+		if (entry) {
+			const matched = this._cache.unitById.get(entry.unit.id)
+			if (matched) return matched
+		}
+
+		const fallback = [...this._cache.unitById.values()].find((u) => this.sameBucket(u, unit))
+		if (fallback) return fallback
+
+		throw new Error('No bucket match for unit ' + unit.name)
+	}
+
+	// -------------------------------------------------------------------------
+	// Counting helpers (cached)
+	// -------------------------------------------------------------------------
+
+	private countTargetSlotsInCycle(parentUnit: CalendarUnit, targetBucket: string): number {
+		const cacheKey = `${parentUnit.id}:${targetBucket}`
+		const cached = this._cache.targetSlotCounts.get(cacheKey)
+		if (cached !== undefined) return cached
+
+		let count = 0
+		for (const rel of parentUnit.children) {
+			const childUnit = this._cache.unitById.get(rel.childUnitId)
 			if (!childUnit) continue
-			for (let r = 0; r < childRelation.repeats; r++) {
-				const slotDuration = Number(childUnit.duration)
-				if (accumulatedOffset + slotDuration > offsetWithinCurrent) {
-					// Found the slot — is this our target?
-					if (childUnit.id === target.id) {
-						return { parentUnit: current, parentCycleStart: currentCycleStart }
-					}
-					// Not our target — recurse into this child with accumulated offset
-					const childCycleStart = currentCycleStart + accumulatedOffset
-					return this.walkDownToFindParent(childUnit, target, timestamp, allUnits, childCycleStart)
-				}
-				accumulatedOffset += slotDuration
+			if (this.bucketOf(childUnit) === targetBucket) {
+				count += rel.repeats
+			} else if (childUnit.formatMode === 'Hidden') {
+				count += this.countTargetSlotsInCycle(childUnit, targetBucket) * rel.repeats
 			}
 		}
 
-		// Edge case: at exact boundary → last slot
-		const lastChildRelation = current.children[current.children.length - 1]
-		const lastChildUnit = this.unitById.get(lastChildRelation.childUnitId)
-		if (lastChildUnit) {
-			if (lastChildUnit.id === target.id) {
-				return { parentUnit: current, parentCycleStart: currentCycleStart }
-			}
-			// Compute start of last slot
-			const lastSlotStart = currentCycleStart + accumulatedOffset - Number(lastChildUnit.duration)
-			return this.walkDownToFindParent(lastChildUnit, target, timestamp, allUnits, lastSlotStart)
-		}
-
-		return null
+		this._cache.targetSlotCounts.set(cacheKey, count)
+		return count
 	}
 
-	/**
-	 * Resolve what child offset to preserve when moving from one unit to another.
-	 * Walks the descendant hierarchy, matching by bucket (displayName).
-	 * Children that exist in the old unit but not the new unit are lost.
-	 */
-	private resolvePreservedChildren(
-		oldUnit: CalendarUnit,
-		newUnit: CalendarUnit,
-		parsed: ParsedTimestamp,
-	): number {
-		if (oldUnit.children.length === 0 || newUnit.children.length === 0) {
-			return 0
-		}
+	// -------------------------------------------------------------------------
+	// Child value preservation
+	// -------------------------------------------------------------------------
 
-		// Collect current child values from the parsed timestamp
-		const childValues = this.collectDescendantValues(parsed, oldUnit)
-
-		// Rebuild offset within the new unit using bucket-matched child values
-		return this.resolveChildOffset(newUnit, childValues)
-	}
-
-	/**
-	 * Collect displayName → value for all descendant units of the given unit.
-	 */
 	private collectDescendantValues(parsed: ParsedTimestamp, unit: CalendarUnit): Map<string, number> {
 		const result = new Map<string, number>()
 		const visit = (u: CalendarUnit) => {
-			for (const childRelation of u.children) {
-				const childUnit = this.unitById.get(childRelation.childUnitId)
+			for (const rel of u.children) {
+				const childUnit = this._cache.unitById.get(rel.childUnitId)
 				if (!childUnit) continue
-				const bucket = childUnit.displayName.toLowerCase()
+				const bucket = this.bucketOf(childUnit)
 				if (!result.has(bucket)) {
-					const childEntry = [...parsed.values()].find(
-						(e) => (e.unit.displayName ?? e.unit.name).toLowerCase() === bucket,
-					)
-					if (childEntry) {
-						result.set(bucket, childEntry.value)
-					}
+					const entry = [...parsed.values()].find((e) => this.bucketOf(e.unit) === bucket)
+					if (entry) result.set(bucket, entry.value)
 				}
 				visit(childUnit)
 			}
@@ -600,143 +473,79 @@ export class EsotericDate {
 		return result
 	}
 
-	/**
-	 * Given a target unit and a map of child bucket values to preserve,
-	 * compute the sub-unit offset within the target unit.
-	 */
 	private resolveChildOffset(unit: CalendarUnit, childValues: Map<string, number>): number {
 		if (unit.children.length === 0) return 0
-
-		// Find the first child bucket that has a value to preserve
-		for (const childRelation of unit.children) {
-			const childUnit = this.unitById.get(childRelation.childUnitId)
+		for (const rel of unit.children) {
+			const childUnit = this._cache.unitById.get(rel.childUnitId)
 			if (!childUnit) continue
-
-			const bucket = childUnit.displayName.toLowerCase()
-			const desiredValue = childValues.get(bucket)
-
-			if (desiredValue !== undefined) {
-				return this.findChildOffsetForBucketValue(unit, childUnit, desiredValue, childValues)
+			const desired = childValues.get(this.bucketOf(childUnit))
+			if (desired !== undefined) {
+				return this.findChildOffsetForBucketValue(unit, childUnit, desired, childValues)
 			}
 		}
-
 		return 0
 	}
 
-	/**
-	 * Find the offset within a parent for placing a child at a given bucket index,
-	 * including recursing for grandchildren.
-	 */
 	private findChildOffsetForBucketValue(
 		parentUnit: CalendarUnit,
 		targetChildUnit: CalendarUnit,
 		bucketIndex: number,
 		childValues: Map<string, number>,
 	): number {
-		const targetBucket = targetChildUnit.displayName.toLowerCase()
+		const targetBucket = this.bucketOf(targetChildUnit)
 		let offset = 0
 		let bucketCounter = 0
-
 		let lastMatchOffset = -1
 		let lastMatchUnit: CalendarUnit | null = null
 
-		for (const childRelation of parentUnit.children) {
-			const childUnit = this.unitById.get(childRelation.childUnitId)
+		for (const rel of parentUnit.children) {
+			const childUnit = this._cache.unitById.get(rel.childUnitId)
 			if (!childUnit) continue
 
-			const childBucket = childUnit.displayName.toLowerCase()
-			if (childBucket === targetBucket) {
-				for (let r = 0; r < childRelation.repeats; r++) {
+			if (this.bucketOf(childUnit) === targetBucket) {
+				for (let r = 0; r < rel.repeats; r++) {
 					if (bucketCounter === bucketIndex) {
-						// Found the target slot. Add grandchild offsets.
-						offset += this.resolveChildOffset(childUnit, childValues)
-						return offset
+						return offset + this.resolveChildOffset(childUnit, childValues)
 					}
-					// Track the last matching slot in case bucketIndex exceeds capacity
 					lastMatchOffset = offset
 					lastMatchUnit = childUnit
 					offset += Number(childUnit.duration)
 					bucketCounter++
 				}
 			} else {
-				offset += Number(childUnit.duration) * childRelation.repeats
+				offset += Number(childUnit.duration) * rel.repeats
 			}
 		}
 
-		// bucketIndex exceeds capacity — clamp to the last available slot
-		// and still resolve grandchild offsets so sub-unit values (e.g. hour, minute) are preserved
 		if (lastMatchUnit !== null && lastMatchOffset >= 0) {
 			return lastMatchOffset + this.resolveChildOffset(lastMatchUnit, childValues)
 		}
 		return 0
 	}
 
-	/**
-	 * Return a new EsotericDate rounded down to the start of the current instance
-	 * of the given unit. All sub-unit offset is stripped away.
-	 */
-	floor(unit: WorldCalendarUnit): EsotericDate {
-		const allUnits = this.calendar.units
-		const parsed = this.parse()
+	// -------------------------------------------------------------------------
+	// Misc
+	// -------------------------------------------------------------------------
 
-		// Find the target unit's entry via bucket matching (displayName)
-		const targetBucket = unit.displayName.toLowerCase()
-		const targetEntry = [...parsed.values()].find(
-			(entry) => (entry.unit.displayName ?? entry.unit.name).toLowerCase() === targetBucket,
-		)
-		if (!targetEntry) {
-			throw new Error('No bucket match for unit ' + unit.name)
-		}
+	private parse(): ParsedTimestamp {
+		return (this._parsedCache ??= parseTimestampMultiRoot({
+			allUnits: this.calendar.units,
+			timestamp: this.timestamp + this.originTime,
+		}))
+	}
 
-		const matchedUnit = this.unitById.get(targetEntry.unit.id)
-		if (!matchedUnit) {
-			throw new Error('Matched unit not found in calendar units: ' + targetEntry.unit.id)
-		}
+	private get originTime(): number {
+		return this.calendar.originTime
+	}
 
-		// Find the parent of this unit.
-		// Same as step(): for units with multiple parents, we walk down from the root
-		// to determine which parent we're actually inside at the current timestamp.
-		const parentInfo = this.resolveActiveParent(matchedUnit, allUnits)
-		if (!parentInfo) {
-			// Root unit — round down to the start of the current root cycle.
-			// Account for originTime: the cycle aligns to absolute timestamp 0,
-			// so we shift into absolute space, floor, then shift back.
-			const duration = Number(matchedUnit.duration)
-			const absTimestamp = this.timestamp + this.originTime
-			const floored = Math.floor(absTimestamp / duration) * duration - this.originTime
-			return new EsotericDate(this.calendar, floored)
-		}
+	private bucketOf(unit: { displayName?: string | null; name: string }): string {
+		return (unit.displayName ?? unit.name).toLowerCase()
+	}
 
-		const { parentUnit, parentCycleStart } = parentInfo
-
-		// Build the slot list and find our current slot
-		const slots: { unit: CalendarUnit }[] = []
-		for (const childRelation of parentUnit.children) {
-			const childUnit = this.unitById.get(childRelation.childUnitId)
-			if (!childUnit) continue
-			for (let r = 0; r < childRelation.repeats; r++) {
-				slots.push({ unit: childUnit })
-			}
-		}
-
-		// Find the current slot by walking the offset within the parent cycle
-		const offsetWithinParent = this.timestamp - parentCycleStart
-		let accumulatedOffset = 0
-		let currentSlotIndex = -1
-		for (let i = 0; i < slots.length; i++) {
-			const slotDuration = Number(slots[i].unit.duration)
-			if (accumulatedOffset + slotDuration > offsetWithinParent) {
-				currentSlotIndex = i
-				break
-			}
-			accumulatedOffset += slotDuration
-		}
-		if (currentSlotIndex === -1) {
-			currentSlotIndex = slots.length - 1
-			accumulatedOffset = Number(parentUnit.duration) - Number(slots[currentSlotIndex].unit.duration)
-		}
-
-		// The slot start offset is the accumulated offset up to the current slot
-		return new EsotericDate(this.calendar, parentCycleStart + accumulatedOffset)
+	private sameBucket(
+		a: { displayName?: string | null; name: string },
+		b: { displayName?: string | null; name: string },
+	): boolean {
+		return this.bucketOf(a) === this.bucketOf(b)
 	}
 }

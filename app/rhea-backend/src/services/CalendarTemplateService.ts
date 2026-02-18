@@ -309,7 +309,7 @@ export const CalendarTemplateService = {
 				case 'exether':
 					return 'Exether Calendar'
 				case 'martian':
-					return 'Sol Calendar (Martian)'
+					return 'Dorian Calendar (Martian)'
 				default:
 					throw new Error(`No name specified for template: ${templateId}`)
 			}

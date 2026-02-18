@@ -163,7 +163,7 @@ export function mockCalendar(overrides: Partial<WorldCalendar>): WorldCalendar {
 	return {
 		units: [],
 		presentations: [],
-		id: 'cal-1',
+		id: getRandomId(),
 		createdAt: '2024-01-01T00:00:00.000Z',
 		updatedAt: '2024-01-01T00:00:00.000Z',
 		name: 'Test Calendar',

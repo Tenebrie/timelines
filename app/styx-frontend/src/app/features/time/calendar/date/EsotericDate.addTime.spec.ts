@@ -135,27 +135,28 @@ describe('EsotericDate.addTime', () => {
 			expect(result.getTimestamp()).toBe(12)
 		})
 
-		it('steps from minute 4 (last in first batch) to subunit 0', () => {
-			// Minute 4 = slot index 4, offset = 4*3 = 12
-			// +1 → slot index 5 (subunit 0), offset = 5*3 = 15
+		it('steps from minute 4 (last in first batch) to minuteB 0 (first of second batch), skipping subunit', () => {
+			// Minute 4 = offset 4*3 = 12
+			// +1 minute → skips 10 subunit transparently → minuteB 0 = 5*3 + 10*1 = 25
 			const date = new EsotericDate(calendar, 12)
 			const result = date.step(minute, 1)
-			expect(result.getTimestamp()).toBe(15)
-		})
-
-		it('steps from subunit 9 (last subunit) to minute 5 (first of second batch)', () => {
-			// Subunit 9 = slot index 14, offset = 5*3 + 9*1 = 24
-			// +1 → slot index 15 (minuteB 0 = minute bucket 5), offset = 5*3 + 10*1 = 25
-			const date = new EsotericDate(calendar, 24)
-			const result = date.step(subunit, 1)
 			expect(result.getTimestamp()).toBe(25)
 		})
 
-		it('steps through all 18 slots wrap around to next hour', () => {
-			// From slot 0 (minute 0, timestamp 0), +18 should wrap to next hour
+		it('steps from subunit 9 (last subunit) overflows to next hour (no subunit in second batch)', () => {
+			// Subunit 9 = offset 5*3 + 9*1 = 24
+			// +1 subunit → no more subunit in this hour or next → overflow to next hour = 34
+			const date = new EsotericDate(calendar, 24)
+			const result = date.step(subunit, 1)
+			expect(result.getTimestamp()).toBe(34)
+		})
+
+		it('steps through 8 minute slots per hour, +18 minutes = 2 full hours + 2 extra', () => {
+			// 8 minute slots per hour (5 + 3). +18 = 2*8 full hours (lands at 68) + 2 more
+			// minute 1 of hour 2 = 68 + 3 = 71, minute 2 = 68 + 6 = 74
 			const date = new EsotericDate(calendar, 0)
 			const result = date.step(minute, 18)
-			expect(result.getTimestamp()).toBe(34) // next hour, minute 0
+			expect(result.getTimestamp()).toBe(74)
 		})
 
 		it('steps backward from minute 0 to previous hour last slot (minuteB 2 = minute 7)', () => {
@@ -312,7 +313,7 @@ describe('EsotericDate.addTime', () => {
 		const breakSlot = mockCalendarUnit({
 			id: 'break-slot',
 			name: 'BreakSlot',
-			displayName: 'Break',
+			displayName: 'Hour',
 			duration: 30,
 			formatShorthand: 'b',
 			parents: [mockCalendarUnitParentRelation('day', 'break-slot', 1)],
@@ -333,7 +334,7 @@ describe('EsotericDate.addTime', () => {
 
 		it('stepping from WorkHour 7 (last) with minute 25 to BreakSlot 0 loses minutes', () => {
 			// WorkHour 7, minute 25 = 7*60 + 25 = 445
-			// +1 → slot 8 (BreakSlot 0). BreakSlot has no Minute children → minute lost
+			// +1 → slot 8 (BreakSlot 0, same Hour bucket). BreakSlot has no Minute children → minute lost
 			// BreakSlot 0 = 8*60 = 480
 			const date = new EsotericDate(calendar, 445)
 			const result = date.step(workHour, 1)
