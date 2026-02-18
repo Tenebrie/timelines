@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useUpdateWorldEventMutation } from '@/api/worldEventApi'
 import { useUpdateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
-import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { LineSpacing } from '@/app/utils/constants'
+import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { TimelineEventHeightPx, TimelineTrack } from '@/app/views/world/views/timeline/hooks/useEventTracks'
+import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineState'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
@@ -161,23 +161,20 @@ export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
 		],
 	)
 
-	const { getLevelScalar } = useTimelineLevelScalar()
 	const { ref, getState } = useDragDropReceiver({
 		type: 'timelineEvent',
 		receiverRef,
 		onDrop: async (state) => {
 			const entity = state.params.event
-			const roundingFactor = LineSpacing * getLevelScalar(scaleLevel)
-			const realTime =
-				scaledTimeToRealTime(state.targetPos.x - state.targetRootPos.x - TimelineEventHeightPx / 2) +
-				entity.markerPosition
-			const roundedRealTime = Math.round(realTime / roundingFactor) * roundingFactor
+			const dx = state.targetPos.x - state.targetRootPos.x
+			const absoluteTimestamp = scaledTimeToRealTime(dx - TimelineEventHeightPx / 2) + entity.markerPosition
+			const snappedTimestamp = binarySearchForClosest(TimelineState.anchorTimestamps, absoluteTimestamp)
 			if (entityIsOfType('issuedAt', entity)) {
-				moveEventIssuedAt(entity, roundedRealTime)
+				moveEventIssuedAt(entity, snappedTimestamp)
 			} else if (entityIsOfType('revokedAt', entity)) {
-				moveEventRevokedAt(entity, roundedRealTime)
+				moveEventRevokedAt(entity, snappedTimestamp)
 			} else if (entityIsOfType('deltaState', entity)) {
-				moveEventDeltaState(entity, roundedRealTime)
+				moveEventDeltaState(entity, snappedTimestamp)
 			}
 		},
 	})

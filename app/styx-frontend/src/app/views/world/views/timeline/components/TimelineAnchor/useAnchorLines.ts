@@ -1,6 +1,6 @@
 import { WorldCalendarPresentation, WorldCalendarPresentationUnit } from '@api/types/worldTypes'
 import { useCallback, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { EsotericDate } from '@/app/features/time/calendar/date/EsotericDate'
@@ -8,7 +8,6 @@ import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorld
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
-import { timelineSlice } from '../../TimelineSlice'
 import { TimelineState } from '../../utils/TimelineState'
 import { TimelineAnchorPadding } from './TimelineAnchor'
 import { SlotData } from './TimelineAnchorSlot'
@@ -37,9 +36,6 @@ export function useAnchorLines({ containerWidth }: Props) {
 	const { presentation } = useWorldTime()
 	const { calendars } = useSelector(getWorldState, (a, b) => a.calendars === b.calendars)
 	const worldCalendar = calendars[0]
-
-	const { setAnchorTimestamps } = timelineSlice.actions
-	const dispatch = useDispatch()
 
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
@@ -173,9 +169,11 @@ export function useAnchorLines({ containerWidth }: Props) {
 					divsWithFollowers.push(div.timestamp + (i + 1) * div.followerDuration)
 				}
 			})
-			dispatch(setAnchorTimestamps(divsWithFollowers))
+
+			console.log(divsWithFollowers)
+			TimelineState.anchorTimestamps = divsWithFollowers
 		},
-		[dispatch, flattenDividers, presentation, setAnchorTimestamps, syncSlots],
+		[flattenDividers, presentation, syncSlots],
 	)
 
 	const stepDivider = useCallback(
@@ -391,6 +389,7 @@ export function useAnchorLines({ containerWidth }: Props) {
 			containerWidth,
 			presentation.units,
 			flushDividers,
+			regenerateDividers,
 			worldCalendar,
 			stepDivider,
 		],

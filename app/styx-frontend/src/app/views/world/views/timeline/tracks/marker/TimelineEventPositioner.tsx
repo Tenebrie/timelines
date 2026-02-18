@@ -2,14 +2,16 @@ import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import { Icon } from '@iconify/react'
 import Close from '@mui/icons-material/Close'
 import { CSSProperties, memo, useCallback } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { LineSpacing } from '@/app/utils/constants'
+import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
 import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineState'
+import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { CONTROLLED_SCROLLER_SIZE, EVENT_SCROLL_RESET_PERIOD } from '../components/ControlledScroller'
@@ -36,6 +38,8 @@ function TimelineEventPositionerComponent({
 }: Props) {
 	const { getIconPath } = useEventIcons()
 	const theme = useCustomTheme()
+	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
+	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
 	const cssVariables = {
 		'--border-color': 'gray',
@@ -51,14 +55,12 @@ function TimelineEventPositionerComponent({
 			top: 'center',
 			left: 'center',
 		},
-		adjustPosition: (pos) => {
-			const scroll = TimelineState.scroll - 8
-			const b = -scroll % LineSpacing
-			const posTimestamp = pos.x + b
-			const roundedValue = Math.round(posTimestamp / LineSpacing) * LineSpacing
-			const offset = -scroll % LineSpacing > LineSpacing / 2 ? scroll % LineSpacing : scroll % LineSpacing
+		adjustPosition: (pos, startingPos) => {
+			const dx = pos.x - startingPos.x
+			const absoluteTimestamp = entity.markerPosition + scaledTimeToRealTime(dx)
+			const snappedTimestamp = binarySearchForClosest(TimelineState.anchorTimestamps, absoluteTimestamp)
 			return {
-				x: roundedValue + offset,
+				x: startingPos.x + realTimeToScaledTime(snappedTimestamp - entity.markerPosition),
 				y: pos.y,
 			}
 		},

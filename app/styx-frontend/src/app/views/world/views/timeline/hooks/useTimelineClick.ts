@@ -1,15 +1,12 @@
 import { useCallback, useState } from 'react'
-import { useSelector } from 'react-redux'
 
-import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { ScaleLevel } from '@/app/schema/ScaleLevel'
 import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
-import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
+
+import { TimelineState } from '../utils/TimelineState'
 
 type Props = {
 	containerRef: React.RefObject<HTMLDivElement | null>
 	scrollRef: React.RefObject<number>
-	scaleLevel: ScaleLevel
 	scaledTimeToRealTime: (time: number) => number
 	onClick: (time: number, trackId: string | undefined) => void
 	onDoubleClick: (time: number, trackId: string | undefined) => void
@@ -18,14 +15,10 @@ type Props = {
 export const useTimelineClick = ({
 	containerRef,
 	scrollRef,
-	scaleLevel,
 	scaledTimeToRealTime,
 	onClick,
 	onDoubleClick,
 }: Props) => {
-	const { parseTime } = useWorldTime()
-	const { anchorTimestamps: dividerTimestamps } = useSelector(getTimelineState)
-
 	const [selectedTime, setSelectedTime] = useState<number | null>(null)
 	const [lastClickPos, setLastClickPos] = useState<number | null>(null)
 	const [lastClickTime, setLastClickTime] = useState<number | null>(null)
@@ -58,7 +51,7 @@ export const useTimelineClick = ({
 			}
 
 			const clickOffset = scaledTimeToRealTime(point.x + 40 - scrollRef.current - 2)
-			const newSelectedTime = binarySearchForClosest(dividerTimestamps, clickOffset)
+			const newSelectedTime = binarySearchForClosest(TimelineState.anchorTimestamps, clickOffset)
 
 			setSelectedTime(newSelectedTime)
 
@@ -76,16 +69,7 @@ export const useTimelineClick = ({
 				onDoubleClick(newSelectedTime, trackId)
 			}
 		},
-		[
-			containerRef,
-			dividerTimestamps,
-			lastClickPos,
-			lastClickTime,
-			onClick,
-			onDoubleClick,
-			scaledTimeToRealTime,
-			scrollRef,
-		],
+		[containerRef, lastClickPos, lastClickTime, onClick, onDoubleClick, scaledTimeToRealTime, scrollRef],
 	)
 
 	return {

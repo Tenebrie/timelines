@@ -10,7 +10,6 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { EsotericDate } from '@/app/features/time/calendar/date/EsotericDate'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
@@ -20,25 +19,21 @@ export const TimelineAnchorLabel = memo(TimelineAnchorLabelComponent)
 
 function TimelineAnchorLabelComponent() {
 	const theme = useCustomTheme()
-	const { scaleLevel, anchorTimestamps } = useSelector(
-		getTimelineState,
-		(a, b) => a.scaleLevel === b.scaleLevel && a.anchorTimestamps === b.anchorTimestamps,
-	)
+	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const { timeToLabel, calendar, presentation } = useWorldTime()
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 	const labelRef = useRef<HTMLButtonElement>(null)
-	const anchorTimestampsRef = useAutoRef(anchorTimestamps)
 
 	const { open: openTimeTravelModal } = useModal('timeTravelModal')
 
 	const updateLabel = useMemo(
 		() =>
 			throttle((scroll: number) => {
-				if (anchorTimestampsRef.current.length === 0) {
+				if (TimelineState.anchorTimestamps.length === 0) {
 					return
 				}
 				const currentTimestamp = scaledTimeToRealTime(-scroll + 40)
-				const snappedTime = binarySearchForClosest(anchorTimestampsRef.current, currentTimestamp)
+				const snappedTime = binarySearchForClosest(TimelineState.anchorTimestamps, currentTimestamp)
 				const flooredTime = new EsotericDate(calendar, snappedTime)
 					.floor(presentation.smallestUnit.unit)
 					.getTimestamp()
@@ -47,7 +42,7 @@ function TimelineAnchorLabelComponent() {
 					labelRef.current.textContent = desiredLabel
 				}
 			}, 50),
-		[anchorTimestampsRef, calendar, presentation.smallestUnit.unit, scaledTimeToRealTime, timeToLabel],
+		[calendar, presentation.smallestUnit.unit, scaledTimeToRealTime, timeToLabel],
 	)
 
 	useEffect(() => {
