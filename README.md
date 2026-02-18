@@ -39,6 +39,10 @@ The application is built with a (suggestion of) microservice architecture using 
 - **[Docker](https://www.docker.com/)** + **[Docker Swarm](https://docs.docker.com/engine/swarm/)**
 - **[Nginx](https://nginx.org/)**
 
+## Architecture
+
+![Architecture Diagram](docs/images/architecture.jpg)
+
 # Running the app
 
 The development environment requires Node, Yarn and Docker to run.
