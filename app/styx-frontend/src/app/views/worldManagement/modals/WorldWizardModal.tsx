@@ -4,33 +4,24 @@ import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { CalendarSelector } from '@/app/features/time/calendar/components/CalendarSelector'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { isEntityNameValid } from '@/app/utils/isEntityNameValid'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { worldSlice } from '@/app/views/world/WorldSlice'
-import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const WorldWizardModal = () => {
 	const [name, setName] = useState('')
 	const [description, setDescription] = useState('')
-	const [calendars, setCalendars] = useState<string[]>([])
+	const [calendars, setCalendars] = useState<string[]>(['earth_current'])
 	const [timeOrigin, setTimeOrigin] = useState<number>(0)
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
 
-	// const { listAllCalendars } = useWorldCalendar()
-
 	const { isOpen, close } = useModal('worldWizardModal')
-	const navigate = useStableNavigate()
 
 	const [createWorld, { isLoading }] = useCreateWorldMutation()
-
-	const dispatch = useDispatch()
-	const { unloadWorld } = worldSlice.actions
 
 	useEffect(() => {
 		setNameValidationError(null)
@@ -41,7 +32,7 @@ export const WorldWizardModal = () => {
 		onCleanup: () => {
 			setName('')
 			setDescription('')
-			setCalendars([])
+			setCalendars(['earth_current'])
 			setTimeOrigin(0)
 		},
 	})
@@ -57,7 +48,7 @@ export const WorldWizardModal = () => {
 			return
 		}
 
-		const { response, error } = parseApiResponse(
+		const { error } = parseApiResponse(
 			await createWorld({
 				body: {
 					name,
@@ -73,12 +64,6 @@ export const WorldWizardModal = () => {
 		}
 
 		close()
-		dispatch(unloadWorld())
-		navigate({
-			to: '/world/$worldId/timeline',
-			params: { worldId: response.id },
-			search: (prev) => ({ ...prev, time: timeOrigin }),
-		})
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(
@@ -108,7 +93,7 @@ export const WorldWizardModal = () => {
 					value={description}
 					onChange={(event) => setDescription(event.target.value)}
 				/>
-				<CalendarSelector value={'earth_current'} onChange={(value) => setCalendars([value])} />
+				<CalendarSelector value={calendars[0]} onChange={(value) => setCalendars([value])} />
 				<ModalFooter>
 					<Tooltip title={shortcutLabel} arrow placement="top">
 						<Button

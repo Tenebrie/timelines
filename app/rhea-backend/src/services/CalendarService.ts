@@ -627,11 +627,17 @@ export const CalendarService = {
 				calendars: true,
 			},
 		})
-		for (const existingCalendar of world.calendars) {
-			await CalendarService.deleteCalendar({ calendarId: existingCalendar.id, prisma })
+
+		const existingCalendarIds = world.calendars.map((c) => c.id)
+		const calendarsToRemove = existingCalendarIds.filter((id) => !calendarsIds.includes(id))
+		const calendarsToAdd = calendarsIds.filter((id) => !existingCalendarIds.includes(id))
+
+		// Remove unassigned calendars
+		for (const existingCalendar of calendarsToRemove) {
+			await CalendarService.deleteCalendar({ calendarId: existingCalendar, prisma })
 		}
 
-		for (const calendarId of calendarsIds) {
+		for (const calendarId of calendarsToAdd) {
 			const parsedCalendarId = CalendarTemplateIdShape.safeParse(calendarId)
 
 			if (parsedCalendarId.success) {

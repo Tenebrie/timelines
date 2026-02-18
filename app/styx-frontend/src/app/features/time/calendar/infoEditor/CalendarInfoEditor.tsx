@@ -61,6 +61,9 @@ export function CalendarInfoEditor() {
 					<Stack direction="row" justifyContent="space-between">
 						<Typography>Origin timestamp:</Typography>
 						<Input
+							inputProps={{
+								'aria-label': 'Origin timestamp input',
+							}}
 							size="small"
 							value={localOriginTime}
 							type="number"
@@ -94,6 +97,7 @@ export function CalendarInfoEditor() {
 					/>
 					<Paper
 						variant="outlined"
+						aria-label="Origin timestamp preview"
 						sx={{ p: '12px', width: 'calc(100% - 24px)', bgcolor: 'background.default' }}
 					>
 						{formatTimestamp({ timestamp: localOriginTime })}

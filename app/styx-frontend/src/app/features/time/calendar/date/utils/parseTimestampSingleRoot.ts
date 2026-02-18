@@ -28,7 +28,6 @@ export function parseTimestampSingleRoot({
 
 	const index = Math.floor(timestamp / Number(unit.duration))
 	let remainder = timestamp % Number(unit.duration)
-	// console.log(depth, new Error())
 
 	// Handle negative timestamps
 	if (remainder < 0) {

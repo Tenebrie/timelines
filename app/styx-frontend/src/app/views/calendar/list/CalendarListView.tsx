@@ -1,6 +1,5 @@
 import Add from '@mui/icons-material/Add'
 import CalendarMonth from '@mui/icons-material/CalendarMonth'
-import Edit from '@mui/icons-material/Edit'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import ButtonBase from '@mui/material/ButtonBase'
@@ -12,7 +11,6 @@ import Paper from '@mui/material/Paper'
 import Popover from '@mui/material/Popover'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
-import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { useCallback, useState } from 'react'
 
@@ -42,9 +40,8 @@ export function CalendarListView() {
 		if ('data' in result && result.data) {
 			setNewCalendarName('')
 			setAnchorEl(null)
-			navigate({ to: '/calendar/$calendarId', params: { calendarId: result.data.id } })
 		}
-	}, [newCalendarName, createCalendar, selectedTemplate, navigate])
+	}, [newCalendarName, createCalendar, selectedTemplate])
 
 	const handleOpenPopover = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget)
@@ -56,10 +53,6 @@ export function CalendarListView() {
 	}
 
 	const onOpen = (calendarId: string) => {
-		navigate({ to: '/calendar/$calendarId', params: { calendarId } })
-	}
-
-	const onEdit = (calendarId: string) => {
 		navigate({ to: '/calendar/$calendarId', params: { calendarId } })
 	}
 
@@ -119,8 +112,8 @@ export function CalendarListView() {
 									New Calendar
 								</Typography>
 								<TextField
+									label="Name"
 									size="small"
-									placeholder="Calendar name"
 									value={newCalendarName}
 									onChange={(e) => setNewCalendarName(e.target.value)}
 									onKeyDown={(e) => e.key === 'Enter' && handleCreateCalendar()}
@@ -129,7 +122,7 @@ export function CalendarListView() {
 									disabled={isCreating}
 								/>
 								<CalendarSelector
-									label="Base Calendar"
+									label="Template to copy"
 									value={selectedTemplate}
 									onChange={setSelectedTemplate}
 									allowEmpty
@@ -165,6 +158,7 @@ export function CalendarListView() {
 											bgcolor: 'action.hover',
 										},
 									}}
+									aria-label={`Load calendar "${calendar.name}"`}
 								>
 									<Stack
 										direction="row"
@@ -184,9 +178,16 @@ export function CalendarListView() {
 											>
 												{calendar.name}
 											</Typography>
-											<Typography variant="body2" color="text.secondary">
-												Updated {lastUpdated}
-											</Typography>
+											<Stack gap={0.5}>
+												{calendar.description && (
+													<Typography variant="body2" color="text.secondary">
+														{calendar.description}
+													</Typography>
+												)}
+												<Typography variant="body2" color="text.secondary">
+													Updated {lastUpdated}
+												</Typography>
+											</Stack>
 										</Stack>
 										<Stack
 											direction="row"
@@ -195,18 +196,6 @@ export function CalendarListView() {
 											onMouseDown={(e) => e.stopPropagation()}
 											sx={{ flexShrink: 0 }}
 										>
-											<Tooltip title="Edit calendar" disableInteractive enterDelay={500}>
-												<IconButton
-													size="small"
-													aria-label="Edit calendar button"
-													onClick={(e) => {
-														e.stopPropagation()
-														onEdit(calendar.id)
-													}}
-												>
-													<Edit fontSize="small" />
-												</IconButton>
-											</Tooltip>
 											<DeleteCalendarButton calendarId={calendar.id} calendarName={calendar.name} />
 										</Stack>
 									</Stack>

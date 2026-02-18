@@ -34,6 +34,7 @@ export function DeleteCalendarButton({ calendarId, calendarName }: Props) {
 						e.stopPropagation()
 						bindTrigger(popupState).onClick(e)
 					}}
+					color="secondary"
 				>
 					<Delete fontSize="small" />
 				</IconButton>

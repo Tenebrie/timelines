@@ -63,6 +63,7 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 	)
 
 	const [linesKey, setLinesKey] = useState(0)
+
 	const lastLineCount = useRef(0)
 	const lastCalendar = useRef(calendar)
 	const lastContainerWidth = useRef(containerWidth)

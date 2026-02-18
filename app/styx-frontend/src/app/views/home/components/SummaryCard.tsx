@@ -26,6 +26,7 @@ export function SummaryCard({ icon, title, items, onClick }: SummaryCardProps) {
 				borderRadius: 2,
 				height: '100%',
 			}}
+			aria-label={`${title} card`}
 		>
 			<Paper
 				elevation={2}

@@ -13,7 +13,7 @@ export const WorldList = () => {
 	return (
 		<>
 			<Stack gap={3}>
-				{ownedWorlds.length === 0 && isReady && <WorldListEmptyState label="Your worlds" />}
+				{ownedWorlds.length === 0 && isReady && <WorldListEmptyState label="Your Worlds" />}
 				{ownedWorlds.length > 0 && (
 					<WorldListSection worlds={ownedWorlds} label="Your Worlds" showCreateButton showActions />
 				)}

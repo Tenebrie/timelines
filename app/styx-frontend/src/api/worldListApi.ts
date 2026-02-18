@@ -117,7 +117,7 @@ export type CreateWorldApiArg = {
 	body: {
 		name: string
 		description?: string
-		calendar?: string
+		calendars?: string[]
 		timeOrigin?: number
 	}
 }

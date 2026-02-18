@@ -1,6 +1,5 @@
 import { useListCalendarsQuery, useListWorldCalendarsQuery } from '@api/calendarApi'
 import { useListCalendarTemplatesQuery } from '@api/otherApi'
-import { CalendarTemplateId } from '@api/types/worldTypes'
 import Divider from '@mui/material/Divider'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
@@ -58,6 +57,24 @@ export function CalendarSelector({ worldId, label, value, onChange, allowEmpty }
 		return null
 	}
 
+	const sectionDisplayData = [
+		allowEmpty,
+		userDefinedTemplates.length > 0,
+		currentWorldCalendars.length > 0,
+		templateCalendars.length > 0,
+	]
+
+	const showSection = (index: number) => {
+		return sectionDisplayData[index]
+	}
+
+	const showDivider = (index: number) => {
+		if (index === 0) {
+			return sectionDisplayData.slice(0, index + 1).some(Boolean)
+		}
+		return sectionDisplayData[index] && sectionDisplayData.slice(0, index).some(Boolean)
+	}
+
 	return (
 		<FormControl fullWidth>
 			<InputLabel id="world-calendar-label">{label ?? 'Calendar'}</InputLabel>
@@ -74,27 +91,27 @@ export function CalendarSelector({ worldId, label, value, onChange, allowEmpty }
 					}
 				}}
 			>
-				{allowEmpty && (
+				{showSection(0) && (
 					<MenuItem key={emptyOption.id} value={emptyOption.id}>
 						<ListItemText primary={emptyOption.name} secondary={emptyOption.description} />
 					</MenuItem>
 				)}
-				{userDefinedTemplates.length > 0 && allowEmpty && <Divider />}
-				{userDefinedTemplates.length > 0 && <StyledListHeader>Your Templates</StyledListHeader>}
+				{showDivider(1) && <Divider />}
+				{showSection(1) && <StyledListHeader>Your Templates</StyledListHeader>}
 				{userDefinedTemplates.map((option) => (
 					<MenuItem key={option.id} value={option.id}>
 						<ListItemText primary={option.name} secondary={option.description} />
 					</MenuItem>
 				))}
-				{currentWorldCalendars.length > 0 && <Divider />}
-				{currentWorldCalendars.length > 0 && <StyledListHeader>World</StyledListHeader>}
+				{showDivider(2) && <Divider />}
+				{showSection(2) && <StyledListHeader>World</StyledListHeader>}
 				{currentWorldCalendars.map((option) => (
 					<MenuItem key={option.id} value={option.id}>
 						<ListItemText primary={option.name} secondary={option.description} />
 					</MenuItem>
 				))}
-				{templateCalendars.length > 0 && <Divider />}
-				{templateCalendars.length > 0 && <StyledListHeader>Built-In Templates</StyledListHeader>}
+				{showDivider(3) && <Divider />}
+				{showSection(3) && <StyledListHeader>Built-In Templates</StyledListHeader>}
 				{templateCalendars.map((option) => (
 					<MenuItem key={option.id} value={option.id}>
 						<ListItemText primary={option.name} secondary={option.description} />
@@ -112,41 +129,11 @@ const StyledListHeader = styled(ListSubheader)({
 export function useTemplateCalendars() {
 	const { data: templateCalendars } = useListCalendarTemplatesQuery()
 
-	const templateDefinitions = useMemo<Record<CalendarTemplateId, { name: string; description: string }>>(
-		() => ({
-			earth_current: {
-				name: 'Gregorian Calendar (Earth)',
-				description: 'Commonly used in many cultures',
-			},
-			martian: {
-				name: 'Darian Calendar (Martian)',
-				description: 'A Sol-based Martian calendar',
-			},
-			pf2e_current: {
-				name: 'Golarion Calendar (Pathfinder)',
-				description: 'Used in tabletop RPG Pathfinder',
-			},
-			rimworld: {
-				name: 'Quadrum Calendar (RimWorld)',
-				description: 'Used in video game RimWorld',
-			},
-			exether: {
-				name: 'Exether Calendar',
-				description: 'Used in Victoria 3 mod Realms of Exether',
-			},
-		}),
-		[],
-	)
-
 	const data = useMemo(() => {
 		if (!templateCalendars) {
 			return []
 		}
-		return templateCalendars?.map((calendar) => ({
-			id: calendar,
-			name: templateDefinitions[calendar]?.name ?? String(calendar),
-			description: templateDefinitions[calendar]?.description ?? '',
-		}))
-	}, [templateCalendars, templateDefinitions])
+		return templateCalendars.templates
+	}, [templateCalendars])
 	return data
 }

@@ -55,6 +55,7 @@ export function TimelineTracksComponent(props: Props) {
 			}}
 			onWheel={(e) => e.stopPropagation()}
 			className={'allow-timeline-click'}
+			aria-label="Timeline tracks container"
 		>
 			<Box sx={{ height: `calc(${outlinerHeight}px - 32px)`, pointerEvents: 'none' }} />
 			<Box

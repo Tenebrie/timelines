@@ -170,7 +170,6 @@ export function useAnchorLines({ containerWidth }: Props) {
 				}
 			})
 
-			console.log(divsWithFollowers)
 			TimelineState.anchorTimestamps = divsWithFollowers
 		},
 		[flattenDividers, presentation, syncSlots],

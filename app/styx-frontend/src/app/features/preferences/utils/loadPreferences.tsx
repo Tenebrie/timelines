@@ -46,6 +46,7 @@ export const PreferencesStateSchema = z.object({
 		.object({
 			containerHeight: z.number().default(232),
 			scaleLevel: ScaleLevelSchema.default(0),
+			reduceAnimations: z.boolean().default(false),
 		})
 		.default({}),
 	wiki: z

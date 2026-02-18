@@ -1,5 +1,5 @@
 import { CalendarUnitFormatMode, WorldAccessMode } from '@prisma/client'
-import { CalendarTemplateId, SupportedCalendarTemplates } from '@src/services/CalendarTemplateService.js'
+import { CalendarTemplateService } from '@src/services/CalendarTemplateService.js'
 import { keysOf } from '@src/utils/keysOf.js'
 import { Router, useApiEndpoint } from 'moonflower'
 
@@ -30,12 +30,15 @@ router.get('/api/constants/calendar-templates', async () => {
 		description: 'Lists all built-in calendar templates',
 	})
 
-	const templates = SupportedCalendarTemplates.filter(
-		(template): template is Exclude<CalendarTemplateId, 'earth_2023' | 'pf2e_4723'> =>
-			template !== 'earth_2023' && template !== 'pf2e_4723',
-	)
+	const templates = CalendarTemplateService.getSupportedTemplates()
 
-	return templates
+	return {
+		keys: keysOf(templates),
+		templates: Object.entries(templates).map(([id, template]) => ({
+			id,
+			...template,
+		})),
+	}
 })
 
 router.get('/api/constants/calendar-unit-format-modes', async () => {

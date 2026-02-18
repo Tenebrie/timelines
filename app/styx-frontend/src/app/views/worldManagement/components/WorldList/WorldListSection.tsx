@@ -103,7 +103,6 @@ export const WorldListSection = ({ worlds, label, showActions, showCreateButton 
 			<Divider sx={{ mb: 2 }} />
 			<Stack gap={0.5}>
 				{worlds.map((world) => {
-					// TODO: Replace with actual data from API when available
 					const isShared = world.accessMode !== 'Private'
 					const lastUpdated = formatTimeAgo(new Date(world.updatedAt))
 
@@ -122,7 +121,7 @@ export const WorldListSection = ({ worlds, label, showActions, showCreateButton 
 									bgcolor: 'action.hover',
 								},
 							}}
-							data-hj-suppress
+							aria-label={`Load world "${world.name}"`}
 						>
 							<Stack direction="row" alignItems="center" justifyContent="space-between" width="100%" gap={1}>
 								<Stack flex={1} minWidth={0}>
@@ -137,9 +136,16 @@ export const WorldListSection = ({ worlds, label, showActions, showCreateButton 
 										{world.name}
 									</Typography>
 									<Stack direction="row" alignItems="center" gap={1}>
-										<Typography variant="body2" color="text.secondary">
-											Updated {lastUpdated}
-										</Typography>
+										<Stack gap={0.5}>
+											{world.description && (
+												<Typography variant="body2" color="text.secondary">
+													{world.description}
+												</Typography>
+											)}
+											<Typography variant="body2" color="text.secondary">
+												Updated {lastUpdated} | {world.calendars[0]?.name ?? ''}
+											</Typography>
+										</Stack>
 										{isShared && (
 											<Stack direction="row" alignItems="center" gap={0.5}>
 												<Group sx={{ fontSize: 14, color: 'text.secondary' }} />
@@ -161,11 +167,12 @@ export const WorldListSection = ({ worlds, label, showActions, showCreateButton 
 										<Tooltip title="Edit settings" disableInteractive enterDelay={500}>
 											<IconButton
 												size="small"
-												aria-label="Edit world button"
+												aria-label={`Edit world "${world.name}" button`}
 												onClick={(e) => {
 													e.stopPropagation()
 													onEdit(world.id)
 												}}
+												color="secondary"
 											>
 												<Edit fontSize="small" />
 											</IconButton>
@@ -173,12 +180,12 @@ export const WorldListSection = ({ worlds, label, showActions, showCreateButton 
 										<Tooltip title="Delete world" disableInteractive enterDelay={500}>
 											<IconButton
 												size="small"
-												aria-label="Delete world button"
+												aria-label={`Delete world "${world.name}" button`}
 												onClick={(e) => {
 													e.stopPropagation()
 													onDelete(world)
 												}}
-												color="error"
+												color="secondary"
 											>
 												<Delete fontSize="small" />
 											</IconButton>

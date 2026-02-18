@@ -61,6 +61,7 @@ export const World = () => {
 					height: '100%',
 					display: 'flex',
 					flexDirection: 'column',
+					overflow: 'hidden',
 				}}
 			>
 				<Stack direction="row" width="100%" height="100%">

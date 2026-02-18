@@ -1931,8 +1931,8 @@ export interface operations {
                         description: string;
                         id: string;
                         title: string;
-                        userId: string;
                         type: "Info" | "Welcome" | "WorldShared";
+                        userId: string;
                         /** Format: date-time */
                         timestamp: string;
                         isUnread: boolean;
@@ -2027,9 +2027,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             ownerId: string;
-                            size: number;
                             expiresAt?: null | string;
                             bucketKey: string;
+                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "Image" | "Avatar";
@@ -2075,9 +2075,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             ownerId: string;
-                            size: number;
                             expiresAt?: null | string;
                             bucketKey: string;
+                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "Image" | "Avatar";
@@ -2122,9 +2122,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         ownerId: string;
-                        size: number;
                         expiresAt?: null | string;
                         bucketKey: string;
+                        size: number;
                         originalFileName: string;
                         originalFileExtension: string;
                         contentType: "Image" | "Avatar";
@@ -3179,7 +3179,14 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": ("earth_current" | "martian" | "pf2e_current" | "rimworld" | "exether")[];
+                    "application/json": {
+                        keys: ("earth_current" | "martian" | "pf2e_current" | "rimworld" | "exether")[];
+                        templates: {
+                            name: string;
+                            description: string;
+                            id: string;
+                        }[];
+                    };
                 };
             };
         };
@@ -4850,13 +4857,13 @@ export interface operations {
                 "application/json": {
                     name: string;
                     description?: string;
-                    calendar?: string;
+                    calendars?: string[];
                     timeOrigin?: number;
                 };
                 "application/x-www-form-urlencoded": {
                     name: string;
                     description?: string;
-                    calendar?: string;
+                    calendars?: string[];
                     timeOrigin?: number;
                 };
             };

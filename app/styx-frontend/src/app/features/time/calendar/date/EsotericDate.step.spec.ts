@@ -1236,7 +1236,7 @@ describe('EsotericDate.step — with originTime (simulating Earth 2023)', () => 
 			const diff = yearAfter - yearBefore
 			if (diff !== n) {
 				failures.push(n)
-				console.log(
+				console.info(
 					`step(+${n}): expected year ${yearBefore + n}, got ${yearAfter} (diff=${diff}), ts=${stepped.getTimestamp()}`,
 				)
 			}

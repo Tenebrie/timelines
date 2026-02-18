@@ -17,6 +17,7 @@ export const SupportedCalendarTemplates = [
 export const CalendarTemplateIdShape = z.enum(SupportedCalendarTemplates)
 
 export type CalendarTemplateId = z.infer<typeof CalendarTemplateIdShape>
+export type PublicCalendarTemplateId = Exclude<CalendarTemplateId, 'earth_2023' | 'pf2e_4723'>
 
 type CalendarMetadata = { formatString: string; originTime: number }
 type CommaSeparatedNumbers =
@@ -263,6 +264,40 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 }
 
 export const CalendarTemplateService = {
+	getSupportedTemplates: (): Record<PublicCalendarTemplateId, { name: string; description: string }> => {
+		return {
+			earth_current: {
+				name: 'Gregorian Calendar (Earth)',
+				description: 'Commonly used in many cultures',
+			},
+			martian: {
+				name: 'Darian Calendar (Martian)',
+				description: 'A Sol-based Martian calendar',
+			},
+			pf2e_current: {
+				name: 'Golarion Calendar (Pathfinder)',
+				description: 'Used in tabletop RPG Pathfinder',
+			},
+			rimworld: {
+				name: 'Quadrum Calendar (RimWorld)',
+				description: 'Used in video game RimWorld',
+			},
+			exether: {
+				name: 'Exether Calendar',
+				description: 'Used in Victoria 3 mod Realms of Exether',
+			},
+		}
+	},
+
+	getSupportedTemplatesWithLegacy: (): Record<CalendarTemplateId, { name: string; description: string }> => {
+		const templates = CalendarTemplateService.getSupportedTemplates()
+		return {
+			...templates,
+			earth_2023: templates.earth_current,
+			pf2e_4723: templates.pf2e_current,
+		}
+	},
+
 	async createTemplateCalendarStandalone(props: {
 		ownerId?: string
 		worldId?: string
@@ -282,6 +317,7 @@ export const CalendarTemplateService = {
 		ownerId,
 		worldId,
 		name,
+		description,
 		originTime = 0,
 		templateId,
 		dbClient,
@@ -289,6 +325,7 @@ export const CalendarTemplateService = {
 		ownerId?: string
 		worldId?: string
 		name?: string
+		description?: string
 		originTime?: number
 		templateId: CalendarTemplateId
 		dbClient: TransactionClient
@@ -297,27 +334,20 @@ export const CalendarTemplateService = {
 			if (name) {
 				return name
 			}
-			switch (templateId) {
-				case 'earth_current':
-				case 'earth_2023':
-					return 'Gregorian Calendar (Earth)'
-				case 'pf2e_current':
-				case 'pf2e_4723':
-					return 'Golarion Calendar (Pathfinder)'
-				case 'rimworld':
-					return 'Quadrums Calendar (Rimworld)'
-				case 'exether':
-					return 'Exether Calendar'
-				case 'martian':
-					return 'Darian Calendar (Martian)'
-				default:
-					throw new Error(`No name specified for template: ${templateId}`)
+			return CalendarTemplateService.getSupportedTemplatesWithLegacy()[templateId].name
+		})()
+
+		const newCalendarDescription = (() => {
+			if (description) {
+				return description
 			}
+			return 'Copy of ' + CalendarTemplateService.getSupportedTemplatesWithLegacy()[templateId].name
 		})()
 
 		const initialCalendar = await dbClient.calendar.create({
 			data: {
 				name: newCalendarName,
+				description: newCalendarDescription,
 				ownerId,
 				worldId,
 				position: 0,
@@ -737,7 +767,7 @@ export const CalendarTemplateService = {
 		const calendar = await builder
 			.setMetadata({
 				originTime,
-				formatString: 'hh:mm DD MM, YYYY',
+				formatString: 'hh:mm MM DD, YYYY',
 			})
 			.createUnit('Minute', [])
 			.createUnit('Hour', ['Minute x60'])

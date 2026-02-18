@@ -124,6 +124,10 @@ export const preferencesSlice = createSlice({
 			state.timeline.scaleLevel = payload
 			saveToLocalStorage(state)
 		},
+		setReduceAnimations: (state, { payload }: PayloadAction<boolean>) => {
+			state.timeline.reduceAnimations = payload
+			saveToLocalStorage(state)
+		},
 
 		/* Wiki */
 		setReadMode: (state, { payload }: PayloadAction<boolean>) => {

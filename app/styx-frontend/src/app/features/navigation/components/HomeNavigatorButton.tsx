@@ -83,16 +83,6 @@ export function HomeNavigatorButton({ disabled }: Props) {
 				}}
 			>
 				<MenuItem
-					aria-label="Navigate to home"
-					onClick={() => handleNavigate('/home')}
-					selected={isHomeMatching}
-				>
-					<ListItemIcon>
-						<Home fontSize="small" />
-					</ListItemIcon>
-					<ListItemText>Dashboard</ListItemText>
-				</MenuItem>
-				<MenuItem
 					aria-label="Navigate to worlds"
 					onClick={() => handleNavigate('/world')}
 					selected={isWorldMatching}

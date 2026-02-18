@@ -57,6 +57,7 @@ function TimelineControlsComponent() {
 				color="primary"
 				onClick={() => requestZoom({ direction: 'in' })}
 				sx={{ marginBottom: 2, marginRight: 2 }}
+				aria-label="Zoom in timeline"
 			>
 				<ZoomIn />
 			</Fab>
@@ -72,15 +73,19 @@ function TimelineControlsComponent() {
 				}}
 			>
 				<Stack direction="row" gap={1}>
-					<Fab color="primary" onClick={() => scrollTimelineLeft()}>
+					<Fab color="primary" onClick={() => scrollTimelineLeft()} aria-label="Scroll timeline left">
 						<KeyboardDoubleArrowLeft />
 					</Fab>
-					<Fab color="primary" onClick={() => scrollTimelineRight()}>
+					<Fab color="primary" onClick={() => scrollTimelineRight()} aria-label="Scroll timeline right">
 						<KeyboardDoubleArrowRight />
 					</Fab>
 				</Stack>
 				<Stack direction="row" gap={1}>
-					<Fab color="primary" onClick={() => requestZoom({ direction: 'out' })}>
+					<Fab
+						color="primary"
+						onClick={() => requestZoom({ direction: 'out' })}
+						aria-label="Zoom out timeline"
+					>
 						<ZoomOut />
 					</Fab>
 					<Fab sx={{ visibility: 'hidden' }}></Fab>

@@ -46,7 +46,7 @@ function TimelineAnchorLabelComponent() {
 	)
 
 	useEffect(() => {
-		updateLabel(-TimelineState.scroll)
+		updateLabel(TimelineState.scroll)
 	}, [scaledTimeToRealTime, timeToLabel, updateLabel])
 
 	useEventBusSubscribe['timeline/onScroll']({

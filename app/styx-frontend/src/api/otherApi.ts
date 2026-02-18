@@ -85,13 +85,14 @@ export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premiu
 export type AdminGetUserLevelsApiArg = void
 export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
 export type ListWorldAccessModesApiArg = void
-export type ListCalendarTemplatesApiResponse = /** status 200  */ (
-	| 'earth_current'
-	| 'martian'
-	| 'pf2e_current'
-	| 'rimworld'
-	| 'exether'
-)[]
+export type ListCalendarTemplatesApiResponse = /** status 200  */ {
+	keys: ('earth_current' | 'martian' | 'pf2e_current' | 'rimworld' | 'exether')[]
+	templates: {
+		name: string
+		description: string
+		id: string
+	}[]
+}
 export type ListCalendarTemplatesApiArg = void
 export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
 	| 'Name'

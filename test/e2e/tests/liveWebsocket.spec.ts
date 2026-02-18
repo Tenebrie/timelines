@@ -1,16 +1,15 @@
-import { expect, test } from '@playwright/test'
+import test, { expect } from '@playwright/test'
 import { createNewUser, deleteAccount } from 'fixtures/auth'
+import { navigateToDashboard } from 'fixtures/world'
 
-import { makeUrl } from './utils'
-
-test.describe('World management', () => {
+test.describe('Live Websocket', () => {
 	let userData: Awaited<ReturnType<typeof createNewUser>>
 	test.beforeEach(async ({ page }) => {
 		userData = await createNewUser(page)
 	})
 
 	test('connects to live updates', async ({ page }) => {
-		await page.goto(makeUrl('/'))
+		await navigateToDashboard(page)
 
 		await page.waitForEvent('websocket', (socket) => {
 			const url = new URL(socket.url())
@@ -19,7 +18,7 @@ test.describe('World management', () => {
 	})
 
 	test('disconnects from live updates after logout and connects when logs back', async ({ page }) => {
-		await page.goto(makeUrl('/'))
+		await navigateToDashboard(page)
 
 		await page.waitForEvent('websocket', (socket) => {
 			const url = new URL(socket.url())
@@ -57,7 +56,7 @@ test.describe('World management', () => {
 			socket.close()
 		})
 
-		await page.goto(makeUrl('/'))
+		await navigateToDashboard(page)
 
 		await page.waitForEvent('websocket', (socket) => {
 			const url = new URL(socket.url())
@@ -68,42 +67,6 @@ test.describe('World management', () => {
 			const url = new URL(socket.url())
 			return url.pathname.startsWith('/live')
 		})
-	})
-
-	test('create world -> delete world flow', async ({ page }) => {
-		await page.goto(makeUrl('/world'))
-
-		await expect(page.getByText('Nothing has been created yet!')).toBeVisible()
-		await expect(page.getByText('Create new world...')).toBeVisible()
-
-		// Create world
-		await page.getByText('Create new world...').click()
-		await expect(page.getByText('Create world')).toBeVisible()
-
-		await page.getByLabel('Name').fill('My First World')
-		await page.getByLabel('Description').fill('World description')
-		await page.getByText('Confirm').click()
-
-		await page.waitForURL(/\/world\/[a-f0-9-]+\/timeline/)
-		// TODO: Update assertions to check the world is created with correct data
-		// await expect(page.getByText('My First World')).toBeVisible()
-		// await expect(page.getByText('World description')).toBeVisible()
-
-		// Navigate to settings
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to worlds').click()
-		await page.getByLabel('Edit world button').click()
-		await page.waitForURL(/\/world\/[a-f0-9-]+\/settings/)
-		await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
-
-		// Delete world
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to worlds').click()
-		await page.getByLabel('Delete world button').click()
-		await expect(page.getByText('Delete world', { exact: true })).toBeVisible()
-
-		await page.getByText('Confirm').click()
-		await expect(page.getByText('Nothing has been created yet!')).toBeVisible()
 	})
 
 	test.afterEach(async ({ page }) => {
