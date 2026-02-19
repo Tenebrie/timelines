@@ -1,7 +1,7 @@
 import { ListCalendarTemplatesApiResponse } from '@api/otherApi'
 import { GetWorldsApiResponse } from '@api/worldListApi'
 
-import { GetWorldBriefApiResponse, GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
+import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
 
 export type FullMentionDetails = GetWorldInfoApiResponse['actors'][number]['mentions'][number]
 export type MentionedEntity = GetWorldInfoApiResponse['actors'][number]['mentions'][number]['targetType']
@@ -9,7 +9,10 @@ export type MentionDetails = Pick<FullMentionDetails, 'targetId' | 'targetType'>
 export type Actor = Omit<ActorDetails, 'statements'>
 export type ActorDetails = GetWorldInfoApiResponse['actors'][number]
 export type WorldItem = GetWorldsApiResponse['ownedWorlds'][number]
-export type WorldBrief = GetWorldBriefApiResponse
+export type WorldBrief =
+	| GetWorldsApiResponse['ownedWorlds'][number]
+	| GetWorldsApiResponse['contributableWorlds'][number]
+	| GetWorldsApiResponse['visibleWorlds'][number]
 export type WorldDetails = Omit<GetWorldInfoApiResponse, 'events' | 'calendars' | 'timeOrigin'> & {
 	events: WorldEvent[]
 	calendars: WorldCalendar[]

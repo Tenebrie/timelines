@@ -34,7 +34,10 @@ export function CalendarTimestampPreview() {
 				onChange={(_, val) => setSliderValue(val as number)}
 			/>
 			<Paper variant="outlined" sx={{ p: '12px', width: 'calc(100% - 24px)', bgcolor: 'background.default' }}>
-				{previewCalendar && formatTimestamp({ timestamp: sliderValue })}
+				<Typography color="text.primary">
+					{previewCalendar && formatTimestamp({ timestamp: sliderValue })}
+					{!previewCalendar && '-'}
+				</Typography>
 			</Paper>
 		</Stack>
 	)

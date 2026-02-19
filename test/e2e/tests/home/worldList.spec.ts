@@ -16,7 +16,7 @@ test.describe('World List', () => {
 
 		await page.getByLabel('Name').fill('My First World')
 		await page.getByLabel('Description').fill('World description')
-		await page.getByText('Confirm').click()
+		await page.getByText('Create', { exact: true }).click()
 
 		await expect(page.getByLabel('Load world "My First World"')).toBeVisible()
 		await expect(page.getByText('My First World')).toBeVisible()
@@ -52,7 +52,7 @@ test.describe('World List', () => {
 			await page.getByLabel('Name').fill(worldName)
 			await page.getByLabel('Calendar').click()
 			await page.getByRole('option', { name: calendarId }).click()
-			await page.getByText('Confirm').click()
+			await page.getByText('Create', { exact: true }).click()
 
 			await page.getByLabel(`Load world "${worldName}"`).click()
 			await page.waitForURL(/\/world\/[a-f0-9-]+\/timeline/)
@@ -111,7 +111,7 @@ test.describe('World List', () => {
 		await page.getByLabel('Name').fill('Custom Calendar World')
 		await page.getByLabel('Calendar').click()
 		await page.getByRole('option', { name: 'Custom Calendar' }).click()
-		await page.getByText('Confirm').click()
+		await page.getByText('Create', { exact: true }).click()
 
 		// Navigate to the new world
 		await page.getByLabel(`Load world "Custom Calendar World"`).click()

@@ -1,12 +1,7 @@
 import { useDeleteCalendarMutation } from '@api/calendarApi'
-import Delete from '@mui/icons-material/Delete'
-import Button from '@mui/material/Button'
-import IconButton from '@mui/material/IconButton'
-import Popover from '@mui/material/Popover'
-import Stack from '@mui/material/Stack'
-import Tooltip from '@mui/material/Tooltip'
-import Typography from '@mui/material/Typography'
-import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
+import { usePopupState } from 'material-ui-popup-state/hooks'
+
+import { ConfirmPopoverButton } from '@/ui-lib/components/PopoverButton/ConfirmPopoverButton'
 
 type Props = {
 	calendarId: string
@@ -24,47 +19,17 @@ export function DeleteCalendarButton({ calendarId, calendarName }: Props) {
 
 	return (
 		<>
-			<Tooltip title="Delete calendar" disableInteractive enterDelay={500}>
-				<IconButton
-					size="small"
-					aria-label="Delete calendar button"
-					{...bindTrigger(popupState)}
-					onMouseDown={(e) => e.stopPropagation()}
-					onClick={(e) => {
-						e.stopPropagation()
-						bindTrigger(popupState).onClick(e)
-					}}
-					color="secondary"
-				>
-					<Delete fontSize="small" />
-				</IconButton>
-			</Tooltip>
-			<Popover
-				{...bindPopover(popupState)}
-				anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-				transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-				onClick={(e) => e.stopPropagation()}
-			>
-				<Stack spacing={1.5} sx={{ p: 2, maxWidth: 280 }}>
-					<Typography variant="body2">
-						Are you sure you want to delete <strong>{calendarName}</strong>?
-					</Typography>
-					<Stack direction="row" spacing={1} justifyContent="flex-end">
-						<Button size="small" onClick={() => popupState.close()}>
-							Cancel
-						</Button>
-						<Button
-							size="small"
-							variant="contained"
-							color="error"
-							onClick={handleDelete}
-							disabled={isLoading}
-						>
-							Delete
-						</Button>
-					</Stack>
-				</Stack>
-			</Popover>
+			<ConfirmPopoverButton
+				type="delete"
+				tooltip="Delete calendar"
+				onConfirm={handleDelete}
+				disabled={isLoading}
+				prompt={
+					<>
+						Are you sure you want to delete calendar <strong>{calendarName}</strong>?
+					</>
+				}
+			/>
 		</>
 	)
 }

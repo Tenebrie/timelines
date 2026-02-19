@@ -3,8 +3,6 @@ import { CalendarDraftUnit } from '@api/types/calendarTypes'
 import Add from '@mui/icons-material/Add'
 import Button from '@mui/material/Button'
 import Input from '@mui/material/Input'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -13,6 +11,7 @@ import { useSelector } from 'react-redux'
 
 import { getCalendarEditorState } from '@/app/features/time/calendar/CalendarSliceSelectors'
 import { useSelectedCalendarUnit } from '@/app/features/time/calendar/hooks/useSelectedCalendarUnit'
+import { NewEntityAutocomplete } from '@/ui-lib/components/Autocomplete/NewEntityAutocomplete'
 
 type Props = {
 	parent: CalendarDraftUnit
@@ -85,29 +84,14 @@ export function CalendarUnitAddChildForm({ parent }: Props) {
 
 	return (
 		<Stack direction="row" gap={1}>
-			<Select
-				size="small"
-				value={selectedUnit?.id ?? ''}
-				onChange={(e) => {
-					const unit = availableUnits.find((u) => u.id === e.target.value) ?? null
-					setSelectedUnit(unit)
-				}}
-				disabled={availableUnits.length === 0}
-				displayEmpty
-				renderValue={(value) => {
-					if (availableUnits.length === 0) {
-						return <i>No units available</i>
-					}
-					return availableUnits.find((u) => u.id === value)?.name ?? ''
-				}}
-				sx={{ minWidth: 150 }}
-			>
-				{availableUnits.map((u) => (
-					<MenuItem key={u.id} value={u.id}>
-						{u.name}
-					</MenuItem>
-				))}
-			</Select>
+			<NewEntityAutocomplete
+				value={selectedUnit}
+				label="Add unit"
+				options={availableUnits}
+				getOptionLabel={(option) => option.name}
+				onAdd={(unit) => setSelectedUnit(unit)}
+				sx={{ minWidth: 225 }}
+			/>
 			<Stack direction="row" alignItems="center" gap={0.5}>
 				<Typography>x</Typography>
 			</Stack>

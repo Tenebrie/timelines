@@ -100,7 +100,7 @@ export function CalendarInfoEditor() {
 						aria-label="Origin timestamp preview"
 						sx={{ p: '12px', width: 'calc(100% - 24px)', bgcolor: 'background.default' }}
 					>
-						{formatTimestamp({ timestamp: localOriginTime })}
+						<Typography color="text.primary">{formatTimestamp({ timestamp: localOriginTime })}</Typography>
 					</Paper>
 				</Stack>
 			</Paper>

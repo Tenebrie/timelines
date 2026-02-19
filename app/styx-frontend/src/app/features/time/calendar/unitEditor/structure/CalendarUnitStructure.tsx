@@ -54,13 +54,13 @@ export function CalendarUnitStructure({ unit }: Props) {
 			</AccordionSummary>
 			<AccordionDetails>
 				<Stack gap={2}>
+					<CalendarUnitAddChildForm parent={unit} />
 					{availableChildren.length > 0 && <CalendarUnitChildList key={unit.id} parent={unit} />}
 					{availableChildren.length === 0 && (
 						<Typography variant="body2" color="text.secondary">
 							No other units available to add as children.
 						</Typography>
 					)}
-					<CalendarUnitAddChildForm parent={unit} />
 				</Stack>
 			</AccordionDetails>
 		</Accordion>
