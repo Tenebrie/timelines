@@ -13,8 +13,8 @@ import { getCalendarEditorPreferences } from '@/app/features/preferences/Prefere
 
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'
 import { CalendarUnitEditorTab } from '../CalendarUnitEditor'
-import { CalendarUnitAddChildForm } from './CalendarUnitAddChildForm'
-import { CalendarUnitChildList } from './CalendarUnitChildList'
+import { CalendarUnitChildList } from './childList/CalendarUnitChildList'
+import { CalendarUnitAddChildForm } from './components/CalendarUnitAddChildForm'
 
 type Props = {
 	unit: CalendarDraftUnit

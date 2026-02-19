@@ -210,6 +210,7 @@ export const CalendarService = {
 						childUnitId: string
 						repeats: number
 						label?: string | null
+						shortLabel?: string | null
 				  }[]
 				| undefined
 		}
@@ -229,6 +230,7 @@ export const CalendarService = {
 									data: params.children.map((child, index) => ({
 										childUnitId: child.childUnitId,
 										label: child.label,
+										shortLabel: child.shortLabel,
 										repeats: child.repeats,
 										position: index * 2,
 									})),

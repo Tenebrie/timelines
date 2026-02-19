@@ -11,8 +11,8 @@ import Typography from '@mui/material/Typography'
 import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getCalendarEditorState } from '../../CalendarSliceSelectors'
-import { useSelectedCalendarUnit } from '../../hooks/useSelectedCalendarUnit'
+import { getCalendarEditorState } from '@/app/features/time/calendar/CalendarSliceSelectors'
+import { useSelectedCalendarUnit } from '@/app/features/time/calendar/hooks/useSelectedCalendarUnit'
 
 type Props = {
 	parent: CalendarDraftUnit
@@ -46,6 +46,7 @@ export function CalendarUnitAddChildForm({ parent }: Props) {
 
 	const [selectedUnit, setSelectedUnit] = useState<CalendarDraftUnit | null>(availableUnits[0] ?? null)
 	const [label, setLabel] = useState('')
+	const [shortLabel, setShortLabel] = useState('')
 	const [repeats, setRepeats] = useState(1)
 
 	useSelectedCalendarUnit({
@@ -69,7 +70,8 @@ export function CalendarUnitAddChildForm({ parent }: Props) {
 					...parent.children,
 					{
 						childUnitId: selectedUnit.id,
-						label,
+						label: label || null,
+						shortLabel: shortLabel || null,
 						repeats,
 					},
 				],
@@ -77,6 +79,7 @@ export function CalendarUnitAddChildForm({ parent }: Props) {
 		})
 
 		setLabel('')
+		setShortLabel('')
 		setRepeats(1)
 	}
 
@@ -118,9 +121,17 @@ export function CalendarUnitAddChildForm({ parent }: Props) {
 			/>
 			<Input
 				type="text"
-				placeholder={'Custom label'}
+				placeholder={'Label (e.g. January)'}
 				value={label}
 				onChange={(e) => setLabel(e.target.value)}
+				sx={{ minWidth: 140 }}
+			/>
+			<Input
+				type="text"
+				placeholder={'Short (e.g. Jan)'}
+				value={shortLabel}
+				onChange={(e) => setShortLabel(e.target.value)}
+				sx={{ minWidth: 120 }}
 			/>
 			<Button variant="outlined" startIcon={<Add />} onClick={handleAdd}>
 				Add

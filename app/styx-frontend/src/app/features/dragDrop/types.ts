@@ -1,4 +1,4 @@
-import { CalendarDraftUnit } from '@api/types/calendarTypes'
+import { CalendarDraftUnit, CalendarDraftUnitChildRelation } from '@api/types/calendarTypes'
 import { ActorDetails, MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import { WikiArticle } from '@api/types/worldWikiTypes'
 
@@ -19,6 +19,11 @@ export type DraggableParams = {
 	}
 	['calendarUnit']: {
 		unit: CalendarDraftUnit
+	}
+	['calendarUnitChild']: {
+		parentUnitId: string
+		child: CalendarDraftUnitChildRelation
+		index: number
 	}
 }
 

@@ -5,6 +5,7 @@ const calendarUnitChildSchema = z.array(
 	z.object({
 		childUnitId: z.string(),
 		label: z.string().optional().nullable(),
+		shortLabel: z.string().optional().nullable(),
 		repeats: z.number().default(1),
 	}),
 )

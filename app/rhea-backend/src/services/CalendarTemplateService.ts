@@ -92,7 +92,13 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 		formatString: '',
 	}
 	const unitCreateData: CalendarUnitCreateData[] = []
-	const unitRelationData: { to: string; from: string; repeats: number; customLabel?: string }[] = []
+	const unitRelationData: {
+		to: string
+		from: string
+		repeats: number
+		customLabel?: string
+		customLabelShort?: string
+	}[] = []
 	const presentationCreateData: CalendarPresentationCreateData[] = []
 
 	const builder: TemplateBuilder<Units, Buckets> = {
@@ -113,19 +119,30 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 				let to: string
 				let repeats: number
 				let customLabel: string | undefined = undefined
+				let customLabelShort: string | undefined = undefined
 				if (relString.includes(' x')) {
 					to = relString.split(' x')[0]
 					repeats = Number(relString.split(' x')[1])
 				} else {
 					to = relString.split(': ')[0]
-					customLabel = relString.split(': ')[1]
 					repeats = 1
+					const customLabelCombined = relString.split(': ')[1]
+					if (customLabelCombined) {
+						const match = customLabelCombined.match(/\(([^)]+)\)/)
+						if (match) {
+							customLabelShort = match[1]
+							customLabel = customLabelCombined.replace(match[0], '').trim()
+						} else {
+							customLabel = customLabelCombined
+						}
+					}
 				}
 				unitRelationData.push({
 					from: name,
 					to,
 					repeats,
 					customLabel,
+					customLabelShort,
 				})
 			}
 			return builder as TemplateBuilder<[...Units, NewUnit], Buckets>
@@ -212,6 +229,7 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 						childUnitId: childId,
 						repeats: data.repeats,
 						label: data.customLabel,
+						shortLabel: data.customLabelShort,
 					},
 				})
 			}
@@ -437,32 +455,32 @@ export const CalendarTemplateService = {
 			.createUnit('30-day month', ['Day x30'])
 			.createUnit('31-day month', ['Day x31'])
 			.createUnit('Regular year', [
-				'31-day month: January',
-				'28-day month: February',
-				'31-day month: March',
-				'30-day month: April',
-				'31-day month: May',
-				'30-day month: June',
-				'31-day month: July',
-				'31-day month: August',
-				'30-day month: September',
-				'31-day month: October',
-				'30-day month: November',
-				'31-day month: December',
+				'31-day month: January (Jan)',
+				'28-day month: February (Feb)',
+				'31-day month: March (Mar)',
+				'30-day month: April (Apr)',
+				'31-day month: May (May)',
+				'30-day month: June (Jun)',
+				'31-day month: July (Jul)',
+				'31-day month: August (Aug)',
+				'30-day month: September (Sep)',
+				'31-day month: October (Oct)',
+				'30-day month: November (Nov)',
+				'31-day month: December (Dec)',
 			])
 			.createUnit('Leap year', [
-				'31-day month: January',
-				'29-day month: February',
-				'31-day month: March',
-				'30-day month: April',
-				'31-day month: May',
-				'30-day month: June',
-				'31-day month: July',
-				'31-day month: August',
-				'30-day month: September',
-				'31-day month: October',
-				'30-day month: November',
-				'31-day month: December',
+				'31-day month: January (Jan)',
+				'29-day month: February (Feb)',
+				'31-day month: March (Mar)',
+				'30-day month: April (Apr)',
+				'31-day month: May (May)',
+				'30-day month: June (Jun)',
+				'31-day month: July (Jul)',
+				'31-day month: August (Aug)',
+				'30-day month: September (Sep)',
+				'31-day month: October (Oct)',
+				'30-day month: November (Nov)',
+				'31-day month: December (Dec)',
 			])
 			.createUnit('4-year cycle', ['Regular year x3', 'Leap year x1'])
 			.createUnit('100-year cycle', ['4-year cycle x24', 'Regular year x4'])
@@ -588,56 +606,56 @@ export const CalendarTemplateService = {
 			.createUnit('27-sol month', ['7-sol week x3', '6-sol week x1'])
 			.createUnit('28-sol month', ['7-sol week x4'])
 			.createUnit('Regular year', [
-				'28-sol month: Sagittarius',
-				'28-sol month: Dhanus',
-				'28-sol month: Capricornus',
-				'28-sol month: Makara',
-				'28-sol month: Aquarius',
-				'27-sol month: Kumbha',
-				'28-sol month: Pisces',
-				'28-sol month: Mina',
-				'28-sol month: Aries',
-				'28-sol month: Mesha',
-				'28-sol month: Taurus',
-				'27-sol month: Rishabha',
-				'28-sol month: Gemini',
-				'28-sol month: Mithuna',
-				'28-sol month: Cancer',
-				'28-sol month: Karka',
-				'28-sol month: Leo',
-				'27-sol month: Simha',
-				'28-sol month: Virgo',
-				'28-sol month: Kanya',
-				'28-sol month: Libra',
-				'28-sol month: Tula',
-				'28-sol month: Scorpius',
-				'27-sol month: Vrishika',
+				'28-sol month: Sagittarius (Sag)',
+				'28-sol month: Dhanus (Dha)',
+				'28-sol month: Capricornus (Cap)',
+				'28-sol month: Makara (Mak)',
+				'28-sol month: Aquarius (Aqu)',
+				'27-sol month: Kumbha (Kum)',
+				'28-sol month: Pisces (Pis)',
+				'28-sol month: Mina (Min)',
+				'28-sol month: Aries (Ari)',
+				'28-sol month: Mesha (Mes)',
+				'28-sol month: Taurus (Tau)',
+				'27-sol month: Rishabha (Ris)',
+				'28-sol month: Gemini (Gem)',
+				'28-sol month: Mithuna (Mit)',
+				'28-sol month: Cancer (Can)',
+				'28-sol month: Karka (Kar)',
+				'28-sol month: Leo (Leo)',
+				'27-sol month: Simha (Sim)',
+				'28-sol month: Virgo (Vir)',
+				'28-sol month: Kanya (Kan)',
+				'28-sol month: Libra (Lib)',
+				'28-sol month: Tula (Tul)',
+				'28-sol month: Scorpius (Sco)',
+				'27-sol month: Vrishika (Vri)',
 			])
 			.createUnit('Leap year', [
-				'28-sol month: Sagittarius',
-				'28-sol month: Dhanus',
-				'28-sol month: Capricornus',
-				'28-sol month: Makara',
-				'28-sol month: Aquarius',
-				'27-sol month: Kumbha',
-				'28-sol month: Pisces',
-				'28-sol month: Mina',
-				'28-sol month: Aries',
-				'28-sol month: Mesha',
-				'28-sol month: Taurus',
-				'27-sol month: Rishabha',
-				'28-sol month: Gemini',
-				'28-sol month: Mithuna',
-				'28-sol month: Cancer',
-				'28-sol month: Karka',
-				'28-sol month: Leo',
-				'27-sol month: Simha',
-				'28-sol month: Virgo',
-				'28-sol month: Kanya',
-				'28-sol month: Libra',
-				'28-sol month: Tula',
-				'28-sol month: Scorpius',
-				'28-sol month: Vrishika',
+				'28-sol month: Sagittarius (Sag)',
+				'28-sol month: Dhanus (Dha)',
+				'28-sol month: Capricornus (Cap)',
+				'28-sol month: Makara (Mak)',
+				'28-sol month: Aquarius (Aqu)',
+				'27-sol month: Kumbha (Kum)',
+				'28-sol month: Pisces (Pis)',
+				'28-sol month: Mina (Min)',
+				'28-sol month: Aries (Ari)',
+				'28-sol month: Mesha (Mes)',
+				'28-sol month: Taurus (Tau)',
+				'27-sol month: Rishabha (Ris)',
+				'28-sol month: Gemini (Gem)',
+				'28-sol month: Mithuna (Mit)',
+				'28-sol month: Cancer (Can)',
+				'28-sol month: Karka (Kar)',
+				'28-sol month: Leo (Leo)',
+				'27-sol month: Simha (Sim)',
+				'28-sol month: Virgo (Vir)',
+				'28-sol month: Kanya (Kan)',
+				'28-sol month: Libra (Lib)',
+				'28-sol month: Tula (Tul)',
+				'28-sol month: Scorpius (Sco)',
+				'28-sol month: Vrishika (Vri)',
 			])
 			.createUnit('10-year cycle', [
 				'Leap year x1',
@@ -777,32 +795,32 @@ export const CalendarTemplateService = {
 			.createUnit('30-day month', ['Day x30'])
 			.createUnit('31-day month', ['Day x31'])
 			.createUnit('Regular year', [
-				'31-day month: Abadius',
-				'28-day month: Calistril',
-				'31-day month: Pharast',
-				'30-day month: Gozran',
-				'31-day month: Desnus',
-				'30-day month: Sarenith',
-				'31-day month: Erastus',
-				'31-day month: Arodus',
-				'30-day month: Rova',
-				'31-day month: Lamashan',
-				'30-day month: Neth',
-				'31-day month: Kuthona',
+				'31-day month: Abadius (Aba)',
+				'28-day month: Calistril (Cal)',
+				'31-day month: Pharast (Pha)',
+				'30-day month: Gozran (Goz)',
+				'31-day month: Desnus (Des)',
+				'30-day month: Sarenith (Sar)',
+				'31-day month: Erastus (Era)',
+				'31-day month: Arodus (Aro)',
+				'30-day month: Rova (Rov)',
+				'31-day month: Lamashan (Lam)',
+				'30-day month: Neth (Net)',
+				'31-day month: Kuthona (Kut)',
 			])
 			.createUnit('Leap year', [
-				'31-day month: Abadius',
-				'29-day month: Calistril',
-				'31-day month: Pharast',
-				'30-day month: Gozran',
-				'31-day month: Desnus',
-				'30-day month: Sarenith',
-				'31-day month: Erastus',
-				'31-day month: Arodus',
-				'30-day month: Rova',
-				'31-day month: Lamashan',
-				'30-day month: Neth',
-				'31-day month: Kuthona',
+				'31-day month: Abadius (Aba)',
+				'29-day month: Calistril (Cal)',
+				'31-day month: Pharast (Pha)',
+				'30-day month: Gozran (Goz)',
+				'31-day month: Desnus (Des)',
+				'30-day month: Sarenith (Sar)',
+				'31-day month: Erastus (Era)',
+				'31-day month: Arodus (Aro)',
+				'30-day month: Rova (Rov)',
+				'31-day month: Lamashan (Lam)',
+				'30-day month: Neth (Net)',
+				'31-day month: Kuthona (Kut)',
 			])
 			.createUnit('4-year cycle', ['Regular year x3', 'Leap year x1'])
 			.createUnit('100-year cycle', ['4-year cycle x24', 'Regular year x4'])

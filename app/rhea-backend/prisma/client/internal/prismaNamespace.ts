@@ -2405,6 +2405,7 @@ export const CalendarUnitRelationScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   label: 'label',
+  shortLabel: 'shortLabel',
   repeats: 'repeats',
   position: 'position',
   parentUnitId: 'parentUnitId',

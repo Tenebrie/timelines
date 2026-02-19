@@ -173,6 +173,7 @@ export type GetCalendarApiResponse = /** status 200  */ {
 			updatedAt: string
 			position: number
 			label?: null | string
+			shortLabel?: null | string
 			repeats: number
 			parentUnitId: string
 			childUnitId: string
@@ -183,6 +184,7 @@ export type GetCalendarApiResponse = /** status 200  */ {
 			updatedAt: string
 			position: number
 			label?: null | string
+			shortLabel?: null | string
 			repeats: number
 			parentUnitId: string
 			childUnitId: string
@@ -265,6 +267,7 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 			updatedAt: string
 			position: number
 			label?: null | string
+			shortLabel?: null | string
 			repeats: number
 			parentUnitId: string
 			childUnitId: string
@@ -275,6 +278,7 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 			updatedAt: string
 			position: number
 			label?: null | string
+			shortLabel?: null | string
 			repeats: number
 			parentUnitId: string
 			childUnitId: string
@@ -378,6 +382,7 @@ export type UpdateCalendarUnitApiResponse = /** status 200  */ {
 		updatedAt: string
 		position: number
 		label?: null | string
+		shortLabel?: null | string
 		repeats: number
 		parentUnitId: string
 		childUnitId: string
@@ -413,6 +418,7 @@ export type UpdateCalendarUnitApiArg = {
 			repeats: number
 			childUnitId: string
 			label?: null | string
+			shortLabel?: null | string
 		}[]
 		position?: number
 	}

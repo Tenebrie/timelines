@@ -2446,6 +2446,7 @@ export interface operations {
                                 updatedAt: string;
                                 position: number;
                                 label?: null | string;
+                                shortLabel?: null | string;
                                 repeats: number;
                                 parentUnitId: string;
                                 childUnitId: string;
@@ -2458,6 +2459,7 @@ export interface operations {
                                 updatedAt: string;
                                 position: number;
                                 label?: null | string;
+                                shortLabel?: null | string;
                                 repeats: number;
                                 parentUnitId: string;
                                 childUnitId: string;
@@ -2615,6 +2617,7 @@ export interface operations {
                                 updatedAt: string;
                                 position: number;
                                 label?: null | string;
+                                shortLabel?: null | string;
                                 repeats: number;
                                 parentUnitId: string;
                                 childUnitId: string;
@@ -2627,6 +2630,7 @@ export interface operations {
                                 updatedAt: string;
                                 position: number;
                                 label?: null | string;
+                                shortLabel?: null | string;
                                 repeats: number;
                                 parentUnitId: string;
                                 childUnitId: string;
@@ -2834,6 +2838,7 @@ export interface operations {
                         repeats: number;
                         childUnitId: string;
                         label?: null | string;
+                        shortLabel?: null | string;
                     }[];
                     position?: number;
                 };
@@ -2848,6 +2853,7 @@ export interface operations {
                         repeats: number;
                         childUnitId: string;
                         label?: null | string;
+                        shortLabel?: null | string;
                     }[];
                     position?: number;
                 };
@@ -2868,6 +2874,7 @@ export interface operations {
                             updatedAt: string;
                             position: number;
                             label?: null | string;
+                            shortLabel?: null | string;
                             repeats: number;
                             parentUnitId: string;
                             childUnitId: string;
@@ -4914,6 +4921,7 @@ export interface operations {
                                     updatedAt: string;
                                     position: number;
                                     label?: null | string;
+                                    shortLabel?: null | string;
                                     repeats: number;
                                     parentUnitId: string;
                                     childUnitId: string;
@@ -4926,6 +4934,7 @@ export interface operations {
                                     updatedAt: string;
                                     position: number;
                                     label?: null | string;
+                                    shortLabel?: null | string;
                                     repeats: number;
                                     parentUnitId: string;
                                     childUnitId: string;
@@ -4959,6 +4968,7 @@ export interface operations {
                                             updatedAt: string;
                                             position: number;
                                             label?: null | string;
+                                            shortLabel?: null | string;
                                             repeats: number;
                                             parentUnitId: string;
                                             childUnitId: string;
@@ -4971,6 +4981,7 @@ export interface operations {
                                             updatedAt: string;
                                             position: number;
                                             label?: null | string;
+                                            shortLabel?: null | string;
                                             repeats: number;
                                             parentUnitId: string;
                                             childUnitId: string;

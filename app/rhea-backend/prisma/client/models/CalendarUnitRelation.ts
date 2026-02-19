@@ -41,6 +41,7 @@ export type CalendarUnitRelationMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   label: string | null
+  shortLabel: string | null
   repeats: number | null
   position: number | null
   parentUnitId: string | null
@@ -52,6 +53,7 @@ export type CalendarUnitRelationMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   label: string | null
+  shortLabel: string | null
   repeats: number | null
   position: number | null
   parentUnitId: string | null
@@ -63,6 +65,7 @@ export type CalendarUnitRelationCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   label: number
+  shortLabel: number
   repeats: number
   position: number
   parentUnitId: number
@@ -86,6 +89,7 @@ export type CalendarUnitRelationMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   label?: true
+  shortLabel?: true
   repeats?: true
   position?: true
   parentUnitId?: true
@@ -97,6 +101,7 @@ export type CalendarUnitRelationMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   label?: true
+  shortLabel?: true
   repeats?: true
   position?: true
   parentUnitId?: true
@@ -108,6 +113,7 @@ export type CalendarUnitRelationCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   label?: true
+  shortLabel?: true
   repeats?: true
   position?: true
   parentUnitId?: true
@@ -206,6 +212,7 @@ export type CalendarUnitRelationGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   label: string | null
+  shortLabel: string | null
   repeats: number
   position: number
   parentUnitId: string
@@ -240,6 +247,7 @@ export type CalendarUnitRelationWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"CalendarUnitRelation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalendarUnitRelation"> | Date | string
   label?: Prisma.StringNullableFilter<"CalendarUnitRelation"> | string | null
+  shortLabel?: Prisma.StringNullableFilter<"CalendarUnitRelation"> | string | null
   repeats?: Prisma.IntFilter<"CalendarUnitRelation"> | number
   position?: Prisma.IntFilter<"CalendarUnitRelation"> | number
   parentUnitId?: Prisma.StringFilter<"CalendarUnitRelation"> | string
@@ -253,6 +261,7 @@ export type CalendarUnitRelationOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   label?: Prisma.SortOrderInput | Prisma.SortOrder
+  shortLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   repeats?: Prisma.SortOrder
   position?: Prisma.SortOrder
   parentUnitId?: Prisma.SortOrder
@@ -269,6 +278,7 @@ export type CalendarUnitRelationWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"CalendarUnitRelation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalendarUnitRelation"> | Date | string
   label?: Prisma.StringNullableFilter<"CalendarUnitRelation"> | string | null
+  shortLabel?: Prisma.StringNullableFilter<"CalendarUnitRelation"> | string | null
   repeats?: Prisma.IntFilter<"CalendarUnitRelation"> | number
   position?: Prisma.IntFilter<"CalendarUnitRelation"> | number
   parentUnitId?: Prisma.StringFilter<"CalendarUnitRelation"> | string
@@ -282,6 +292,7 @@ export type CalendarUnitRelationOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   label?: Prisma.SortOrderInput | Prisma.SortOrder
+  shortLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   repeats?: Prisma.SortOrder
   position?: Prisma.SortOrder
   parentUnitId?: Prisma.SortOrder
@@ -301,6 +312,7 @@ export type CalendarUnitRelationScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"CalendarUnitRelation"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CalendarUnitRelation"> | Date | string
   label?: Prisma.StringNullableWithAggregatesFilter<"CalendarUnitRelation"> | string | null
+  shortLabel?: Prisma.StringNullableWithAggregatesFilter<"CalendarUnitRelation"> | string | null
   repeats?: Prisma.IntWithAggregatesFilter<"CalendarUnitRelation"> | number
   position?: Prisma.IntWithAggregatesFilter<"CalendarUnitRelation"> | number
   parentUnitId?: Prisma.StringWithAggregatesFilter<"CalendarUnitRelation"> | string
@@ -312,6 +324,7 @@ export type CalendarUnitRelationCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   label?: string | null
+  shortLabel?: string | null
   repeats?: number
   position?: number
   parentUnit: Prisma.CalendarUnitCreateNestedOneWithoutChildrenInput
@@ -323,6 +336,7 @@ export type CalendarUnitRelationUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   label?: string | null
+  shortLabel?: string | null
   repeats?: number
   position?: number
   parentUnitId: string
@@ -334,6 +348,7 @@ export type CalendarUnitRelationUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repeats?: Prisma.IntFieldUpdateOperationsInput | number
   position?: Prisma.IntFieldUpdateOperationsInput | number
   parentUnit?: Prisma.CalendarUnitUpdateOneRequiredWithoutChildrenNestedInput
@@ -345,6 +360,7 @@ export type CalendarUnitRelationUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repeats?: Prisma.IntFieldUpdateOperationsInput | number
   position?: Prisma.IntFieldUpdateOperationsInput | number
   parentUnitId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -356,6 +372,7 @@ export type CalendarUnitRelationCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   label?: string | null
+  shortLabel?: string | null
   repeats?: number
   position?: number
   parentUnitId: string
@@ -367,6 +384,7 @@ export type CalendarUnitRelationUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repeats?: Prisma.IntFieldUpdateOperationsInput | number
   position?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -376,6 +394,7 @@ export type CalendarUnitRelationUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repeats?: Prisma.IntFieldUpdateOperationsInput | number
   position?: Prisma.IntFieldUpdateOperationsInput | number
   parentUnitId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -397,6 +416,7 @@ export type CalendarUnitRelationCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  shortLabel?: Prisma.SortOrder
   repeats?: Prisma.SortOrder
   position?: Prisma.SortOrder
   parentUnitId?: Prisma.SortOrder
@@ -413,6 +433,7 @@ export type CalendarUnitRelationMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  shortLabel?: Prisma.SortOrder
   repeats?: Prisma.SortOrder
   position?: Prisma.SortOrder
   parentUnitId?: Prisma.SortOrder
@@ -424,6 +445,7 @@ export type CalendarUnitRelationMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   label?: Prisma.SortOrder
+  shortLabel?: Prisma.SortOrder
   repeats?: Prisma.SortOrder
   position?: Prisma.SortOrder
   parentUnitId?: Prisma.SortOrder
@@ -524,6 +546,7 @@ export type CalendarUnitRelationCreateWithoutChildUnitInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   label?: string | null
+  shortLabel?: string | null
   repeats?: number
   position?: number
   parentUnit: Prisma.CalendarUnitCreateNestedOneWithoutChildrenInput
@@ -534,6 +557,7 @@ export type CalendarUnitRelationUncheckedCreateWithoutChildUnitInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   label?: string | null
+  shortLabel?: string | null
   repeats?: number
   position?: number
   parentUnitId: string
@@ -554,6 +578,7 @@ export type CalendarUnitRelationCreateWithoutParentUnitInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   label?: string | null
+  shortLabel?: string | null
   repeats?: number
   position?: number
   childUnit: Prisma.CalendarUnitCreateNestedOneWithoutParentsInput
@@ -564,6 +589,7 @@ export type CalendarUnitRelationUncheckedCreateWithoutParentUnitInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   label?: string | null
+  shortLabel?: string | null
   repeats?: number
   position?: number
   childUnitId: string
@@ -603,6 +629,7 @@ export type CalendarUnitRelationScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"CalendarUnitRelation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalendarUnitRelation"> | Date | string
   label?: Prisma.StringNullableFilter<"CalendarUnitRelation"> | string | null
+  shortLabel?: Prisma.StringNullableFilter<"CalendarUnitRelation"> | string | null
   repeats?: Prisma.IntFilter<"CalendarUnitRelation"> | number
   position?: Prisma.IntFilter<"CalendarUnitRelation"> | number
   parentUnitId?: Prisma.StringFilter<"CalendarUnitRelation"> | string
@@ -630,6 +657,7 @@ export type CalendarUnitRelationCreateManyChildUnitInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   label?: string | null
+  shortLabel?: string | null
   repeats?: number
   position?: number
   parentUnitId: string
@@ -640,6 +668,7 @@ export type CalendarUnitRelationCreateManyParentUnitInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   label?: string | null
+  shortLabel?: string | null
   repeats?: number
   position?: number
   childUnitId: string
@@ -650,6 +679,7 @@ export type CalendarUnitRelationUpdateWithoutChildUnitInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repeats?: Prisma.IntFieldUpdateOperationsInput | number
   position?: Prisma.IntFieldUpdateOperationsInput | number
   parentUnit?: Prisma.CalendarUnitUpdateOneRequiredWithoutChildrenNestedInput
@@ -660,6 +690,7 @@ export type CalendarUnitRelationUncheckedUpdateWithoutChildUnitInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repeats?: Prisma.IntFieldUpdateOperationsInput | number
   position?: Prisma.IntFieldUpdateOperationsInput | number
   parentUnitId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -670,6 +701,7 @@ export type CalendarUnitRelationUncheckedUpdateManyWithoutChildUnitInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repeats?: Prisma.IntFieldUpdateOperationsInput | number
   position?: Prisma.IntFieldUpdateOperationsInput | number
   parentUnitId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -680,6 +712,7 @@ export type CalendarUnitRelationUpdateWithoutParentUnitInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repeats?: Prisma.IntFieldUpdateOperationsInput | number
   position?: Prisma.IntFieldUpdateOperationsInput | number
   childUnit?: Prisma.CalendarUnitUpdateOneRequiredWithoutParentsNestedInput
@@ -690,6 +723,7 @@ export type CalendarUnitRelationUncheckedUpdateWithoutParentUnitInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repeats?: Prisma.IntFieldUpdateOperationsInput | number
   position?: Prisma.IntFieldUpdateOperationsInput | number
   childUnitId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -700,6 +734,7 @@ export type CalendarUnitRelationUncheckedUpdateManyWithoutParentUnitInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   label?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shortLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repeats?: Prisma.IntFieldUpdateOperationsInput | number
   position?: Prisma.IntFieldUpdateOperationsInput | number
   childUnitId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -712,6 +747,7 @@ export type CalendarUnitRelationSelect<ExtArgs extends runtime.Types.Extensions.
   createdAt?: boolean
   updatedAt?: boolean
   label?: boolean
+  shortLabel?: boolean
   repeats?: boolean
   position?: boolean
   parentUnitId?: boolean
@@ -725,6 +761,7 @@ export type CalendarUnitRelationSelectCreateManyAndReturn<ExtArgs extends runtim
   createdAt?: boolean
   updatedAt?: boolean
   label?: boolean
+  shortLabel?: boolean
   repeats?: boolean
   position?: boolean
   parentUnitId?: boolean
@@ -738,6 +775,7 @@ export type CalendarUnitRelationSelectUpdateManyAndReturn<ExtArgs extends runtim
   createdAt?: boolean
   updatedAt?: boolean
   label?: boolean
+  shortLabel?: boolean
   repeats?: boolean
   position?: boolean
   parentUnitId?: boolean
@@ -751,13 +789,14 @@ export type CalendarUnitRelationSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   label?: boolean
+  shortLabel?: boolean
   repeats?: boolean
   position?: boolean
   parentUnitId?: boolean
   childUnitId?: boolean
 }
 
-export type CalendarUnitRelationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "label" | "repeats" | "position" | "parentUnitId" | "childUnitId", ExtArgs["result"]["calendarUnitRelation"]>
+export type CalendarUnitRelationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "label" | "shortLabel" | "repeats" | "position" | "parentUnitId" | "childUnitId", ExtArgs["result"]["calendarUnitRelation"]>
 export type CalendarUnitRelationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parentUnit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
   childUnit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
@@ -782,6 +821,7 @@ export type $CalendarUnitRelationPayload<ExtArgs extends runtime.Types.Extension
     createdAt: Date
     updatedAt: Date
     label: string | null
+    shortLabel: string | null
     repeats: number
     position: number
     parentUnitId: string
@@ -1215,6 +1255,7 @@ export interface CalendarUnitRelationFieldRefs {
   readonly createdAt: Prisma.FieldRef<"CalendarUnitRelation", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"CalendarUnitRelation", 'DateTime'>
   readonly label: Prisma.FieldRef<"CalendarUnitRelation", 'String'>
+  readonly shortLabel: Prisma.FieldRef<"CalendarUnitRelation", 'String'>
   readonly repeats: Prisma.FieldRef<"CalendarUnitRelation", 'Int'>
   readonly position: Prisma.FieldRef<"CalendarUnitRelation", 'Int'>
   readonly parentUnitId: Prisma.FieldRef<"CalendarUnitRelation", 'String'>

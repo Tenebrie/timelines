@@ -53,9 +53,10 @@ model CalendarUnitRelation {
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
 
-    label    String?
-    repeats  Int     @default(1)
-    position Int     @default(0)
+    label      String?
+    shortLabel String?
+    repeats    Int     @default(1)
+    position   Int     @default(0)
 
     parentUnit   CalendarUnit @relation("ParentUnit", fields: [parentUnitId], references: [id], onDelete: Cascade)
     childUnit    CalendarUnit @relation("ChildUnit", fields: [childUnitId], references: [id], onDelete: Cascade)
