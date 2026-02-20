@@ -37,11 +37,12 @@ service_msg() {
   docker service inspect --format '{{.UpdateStatus.State}}: {{.UpdateStatus.Message}}' "$1" 2>/dev/null || echo "unknown"
 }
 
-# Wait until none of the given services are in <wait_state>.
+# Wait until none of the given services are in any of the <wait_states>.
 # Prints labeled status lines only when the message changes.
 # Exits with error if the timeout is reached.
+# Usage: monitor_until_done "state1|state2" service1 service2 ...
 monitor_until_done() {
-  local wait_state="$1"; shift
+  local wait_states="$1"; shift
   local svcs=("$@")
   local iterations=0
 
@@ -60,14 +61,16 @@ monitor_until_done() {
         last_msg[$svc]="$msg"
       fi
 
-      [[ "$state" == "$wait_state" ]] && all_done=false
+      if [[ "$state" =~ ^(${wait_states})$ ]]; then
+        all_done=false
+      fi
     done
 
     $all_done && break
 
-    (( iterations++ ))
+    iterations=$((iterations + 1))
     if (( iterations >= MAX_WAIT_ITERATIONS )); then
-      echo "ERROR: Timed out waiting for services to leave state '${wait_state}'" >&2
+      echo "ERROR: Timed out waiting for services to leave state '${wait_states}'" >&2
       exit 1
     fi
 
@@ -96,7 +99,7 @@ rollback_services() {
   done
   echo ""
   echo "Waiting for rollbacks to complete..."
-  monitor_until_done "rollback_in_progress" "${svcs[@]}"
+  monitor_until_done "rollback_started|rollback_in_progress" "${svcs[@]}"
 }
 
 # ---------------------------------------------------------------------------
@@ -165,6 +168,14 @@ echo "[gatekeeper] Updating to tenebrie/timelines-gatekeeper:${VERSION}..."
 docker service update --detach --image "tenebrie/timelines-gatekeeper:${VERSION}" "$GATEKEEPER"
 echo "Waiting for gatekeeper rollout to complete..."
 monitor_until_done "updating" "$GATEKEEPER"
+
+gk_state=$(service_state "$GATEKEEPER")
+if [[ "$gk_state" != "completed" ]]; then
+  echo "FAILED: [gatekeeper] state is '${gk_state}'"
+  print_service_diagnostics "$GATEKEEPER"
+  rollback_services "$GATEKEEPER"
+  exit 1
+fi
 
 echo ""
 echo "All services updated successfully."
