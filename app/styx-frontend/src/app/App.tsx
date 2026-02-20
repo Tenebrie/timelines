@@ -4,6 +4,8 @@ import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { DragDropPortalSlot } from './features/dragDrop/components/GhostWrapper'
+import { EventBusProvider } from './features/eventBus'
+import { globalEventBus } from './features/eventBus/eventBus'
 import { LostConnectionAlert } from './features/liveUpdates/components/LostConnectionAlert'
 import { useLiveUpdates } from './features/liveUpdates/hooks/useLiveUpdates'
 import { ModalsRenderer } from './features/modals/ModalsRenderer'
@@ -41,31 +43,33 @@ const App = () => {
 
 	return (
 		<div className="App">
-			<CustomThemeProvider>
-				<CustomThemeOverrides>
-					<Container>
-						<BaseNavigator />
-						<Box
-							sx={{
-								width: '100%',
-								height: 'calc(100vh - 50.5px)',
-								overflowY: 'auto',
-								...scrollbars,
-							}}
-						>
-							<Outlet />
-						</Box>
-						<ModalsRenderer />
-					</Container>
-					<LostConnectionAlert server="rhea" />
-					<LostConnectionAlert server="calliope" />
-				</CustomThemeOverrides>
-			</CustomThemeProvider>
-			<NavigationReceiverWrapper />
-			<DragDropPortalSlot />
-			<PageMetadata />
-			<TimelineZoomReporter />
-			{/* <SummonableDebug /> */}
+			<EventBusProvider bus={globalEventBus}>
+				<CustomThemeProvider>
+					<CustomThemeOverrides>
+						<Container>
+							<BaseNavigator />
+							<Box
+								sx={{
+									width: '100%',
+									height: 'calc(100vh - 50.5px)',
+									overflowY: 'auto',
+									...scrollbars,
+								}}
+							>
+								<Outlet />
+							</Box>
+							<ModalsRenderer />
+						</Container>
+						<LostConnectionAlert server="rhea" />
+						<LostConnectionAlert server="calliope" />
+					</CustomThemeOverrides>
+				</CustomThemeProvider>
+				<NavigationReceiverWrapper />
+				<DragDropPortalSlot />
+				<PageMetadata />
+				<TimelineZoomReporter />
+				{/* <SummonableDebug /> */}
+			</EventBusProvider>
 		</div>
 	)
 }

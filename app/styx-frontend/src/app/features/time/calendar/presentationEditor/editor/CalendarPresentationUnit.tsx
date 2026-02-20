@@ -2,29 +2,24 @@ import { CalendarDraftPresentationUnit } from '@api/types/calendarTypes'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import { useCallback, useEffect, useState } from 'react'
+import debounce from 'lodash.debounce'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useDebouncedState } from '@/app/hooks/useDebouncedState'
 import { ConfirmPopoverButton } from '@/ui-lib/components/PopoverButton/ConfirmPopoverButton'
 
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'
 
 type Props = {
 	layer: CalendarDraftPresentationUnit
-	onFormatStringChange: (value: string) => void
-	onSubdivisionChange: (value: number) => void
+	onSave: (value: Partial<CalendarDraftPresentationUnit>) => void
 	onDelete: () => void
 	index: number
 }
 
-export function CalendarPresentationUnit({
-	layer,
-	onFormatStringChange,
-	onSubdivisionChange,
-	onDelete,
-	index,
-}: Props) {
+export const CalendarPresentationUnit = memo(CalendarPresentationUnitComponent)
+
+function CalendarPresentationUnitComponent({ layer, onSave, onDelete, index }: Props) {
 	const { calendar } = useSelector(getCalendarEditorState, (a, b) => a.calendar === b.calendar)
 	const backingUnit = calendar?.units.find((u) => u.id === layer.unitId) ?? null
 	if (!calendar || !backingUnit) {
@@ -33,36 +28,37 @@ export function CalendarPresentationUnit({
 
 	const name = backingUnit.displayName ?? backingUnit.name
 
+	const [subdivision, setSubdivision] = useState(layer.subdivision)
 	const [formatString, setFormatString] = useState(layer.formatString)
 
-	const saveSubdivision = useCallback(
-		(value: number) => {
-			if (isNaN(value) || value < 1) {
-				return
-			}
-			onSubdivisionChange(value)
-		},
-		[onSubdivisionChange],
-	)
-
-	const [, subdivision, setSubdivision, setSubdivisionInstant] = useDebouncedState({
-		initialValue: layer.subdivision,
-		onDebounce: saveSubdivision,
-	})
+	const onSaveDebounced = useMemo(() => {
+		return debounce((value: Partial<CalendarDraftPresentationUnit>) => {
+			onSave(value)
+		}, 300)
+	}, [onSave])
 
 	useEffect(() => {
+		setSubdivision(layer.subdivision)
 		setFormatString(layer.formatString)
-	}, [layer.formatString])
+	}, [layer.formatString, layer.subdivision])
 
 	const handleSubdivisionChange = useCallback(
 		(value: number) => {
 			if (isNaN(value) || value < 1) {
-				setSubdivisionInstant(layer.subdivision)
 				return
 			}
 			setSubdivision(value)
+			onSaveDebounced({ subdivision: value, formatString })
 		},
-		[layer.subdivision, setSubdivision, setSubdivisionInstant],
+		[formatString, onSaveDebounced],
+	)
+
+	const handleFormatStringChange = useCallback(
+		(value: string) => {
+			setFormatString(value)
+			onSaveDebounced({ subdivision, formatString: value })
+		},
+		[onSaveDebounced, subdivision],
 	)
 
 	const sizeLabel =
@@ -70,7 +66,6 @@ export function CalendarPresentationUnit({
 
 	return (
 		<Stack
-			key={layer.unitId}
 			direction="row"
 			alignItems="center"
 			gap={1}
@@ -100,9 +95,8 @@ export function CalendarPresentationUnit({
 				label="Format"
 				value={formatString}
 				onChange={(e) => {
-					setFormatString(e.target.value)
+					handleFormatStringChange(e.target.value)
 				}}
-				onBlur={() => onFormatStringChange(formatString)}
 				sx={{ flex: 1 }}
 			/>
 			<ConfirmPopoverButton

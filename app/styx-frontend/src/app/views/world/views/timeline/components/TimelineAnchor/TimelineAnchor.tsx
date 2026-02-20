@@ -20,11 +20,12 @@ export const TimelineAnchorPadding = 250 // pixels
 
 type Props = {
 	containerWidth: number
+	showCurrentTime?: boolean
 }
 
 export const TimelineAnchor = memo(TimelineAnchorComponent)
 
-function TimelineAnchorComponent({ containerWidth }: Props) {
+function TimelineAnchorComponent({ containerWidth, showCurrentTime }: Props) {
 	const theme = useCustomTheme()
 	const containerRef = useRef<HTMLDivElement | null>(null)
 	const { scaleLevel, isSwitchingScale } = useSelector(
@@ -110,7 +111,7 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 			/>
 			<Fade in={visible} appear timeout={300}>
 				<Box>
-					<TimelineAnchorLabel />
+					{showCurrentTime && <TimelineAnchorLabel />}
 					<TimelineAnchorContainer>
 						<TimelineAnchorLineList key={linesKey} containerWidth={containerWidth} />
 					</TimelineAnchorContainer>

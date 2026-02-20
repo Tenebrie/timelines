@@ -27,15 +27,14 @@ function ControlledScrollerComponent({ children, resetPeriod }: Props) {
 			}
 
 			ref.current.scrollTo({
-				left: Math.round(mod(-newScroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod + 42,
+				left: Math.round(mod(-newScroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod,
 			})
 		},
 	})
 
 	useEffect(() => {
 		ref.current?.scrollTo({
-			left:
-				Math.round(mod(-TimelineState.scroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod + 42,
+			left: Math.round(mod(-TimelineState.scroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod,
 		})
 	}, [mod, ref, resetPeriod])
 

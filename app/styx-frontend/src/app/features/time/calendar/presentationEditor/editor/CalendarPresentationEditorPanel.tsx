@@ -17,6 +17,7 @@ import { NewEntityAutocomplete } from '@/ui-lib/components/Autocomplete/NewEntit
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'
 import { CalendarPresentationTitle } from '../components/CalendarPresentationTitle'
 import { CalendarPresentationAddUnitForm } from './CalendarPresentationAddUnitForm'
+import { CalendarPresentationPreview } from './CalendarPresentationPreview'
 import { CalendarPresentationUnit } from './CalendarPresentationUnit'
 
 type Props = {
@@ -157,18 +158,9 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 		[localUnits, saveUnits],
 	)
 
-	const handleFormatStringChange = useCallback(
-		(unit: CalendarDraftPresentationUnit, value: string) => {
-			const newUnits = localUnits.map((u) => (u.id === unit.id ? { ...u, formatString: value } : u))
-			setLocalUnits(newUnits)
-			saveUnits(newUnits, [])
-		},
-		[localUnits, saveUnits],
-	)
-
-	const handleSubdivisionChange = useCallback(
-		(unit: CalendarDraftPresentationUnit, value: number) => {
-			const newUnits = localUnits.map((u) => (u.id === unit.id ? { ...u, subdivision: value } : u))
+	const handlePresentationUnitSave = useCallback(
+		(unit: CalendarDraftPresentationUnit, value: Partial<CalendarDraftPresentationUnit>) => {
+			const newUnits = localUnits.map((u) => (u.id === unit.id ? { ...u, ...value } : u))
 			setLocalUnits(newUnits)
 			saveUnits(newUnits, [])
 		},
@@ -269,11 +261,10 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 				<Stack gap={1}>
 					{sortedUnits.map((unit, index) => (
 						<CalendarPresentationUnit
-							key={unit.id}
+							key={unit.backingUnit!.id + index}
 							index={index}
 							layer={unit}
-							onFormatStringChange={(value) => handleFormatStringChange(unit, value)}
-							onSubdivisionChange={(value) => handleSubdivisionChange(unit, value)}
+							onSave={(value) => handlePresentationUnitSave(unit, value)}
 							onDelete={() => handleRemoveUnit(unit)}
 						/>
 					))}
@@ -285,6 +276,8 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 						not hidden.
 					</Typography>
 				)}
+
+				<CalendarPresentationPreview presentation={presentation} />
 			</Stack>
 		</Stack>
 	)

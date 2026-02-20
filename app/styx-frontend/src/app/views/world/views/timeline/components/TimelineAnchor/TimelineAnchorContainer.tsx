@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import { ReactNode, useRef } from 'react'
 
-import { dispatchEvent, useEventBusSubscribe } from '@/app/features/eventBus'
+import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventBus'
 
 import { ControlledScroller } from '../../tracks/components/ControlledScroller'
 import { ANCHOR_RESET_PERIOD } from './TimelineAnchorLine'
@@ -15,6 +15,7 @@ const RESET_PERIOD = ANCHOR_RESET_PERIOD
 export function TimelineAnchorContainer({ children }: Props) {
 	const ref = useRef<HTMLDivElement>(null)
 	const lastSeenScroll = useRef(0)
+	const forceUpdate = useEventBusDispatch['timeline/pips/forceUpdate']()
 	useEventBusSubscribe['timeline/onScroll']({
 		callback: (newScroll) => {
 			const fixedScroll = Math.floor(newScroll / RESET_PERIOD)
@@ -22,7 +23,7 @@ export function TimelineAnchorContainer({ children }: Props) {
 				return
 			}
 			lastSeenScroll.current = fixedScroll
-			dispatchEvent['timeline/pips/forceUpdate'](newScroll)
+			forceUpdate(newScroll)
 		},
 	})
 
