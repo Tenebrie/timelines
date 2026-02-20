@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button'
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 import { useEvent } from 'react-use-event-hook'
 
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
@@ -17,7 +17,10 @@ export function NavigatorButton({ route, icon, label, disabled }: Props) {
 	const navigate = useStableNavigate()
 	const isMatching = useCheckRouteMatch(route)
 
-	const onNavigate = useEvent(() => {
+	const onNavigate = useEvent((e: React.MouseEvent) => {
+		if (e.metaKey || e.ctrlKey) {
+			console.log('Boop')
+		}
 		navigate({ to: route as FileRouteTypes['to'] })
 	})
 
