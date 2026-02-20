@@ -1,3 +1,4 @@
+import EditIcon from '@mui/icons-material/Edit'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Input from '@mui/material/Input'
@@ -59,6 +60,16 @@ export function CalendarUnitRelationLabels({ label, shortLabel, onChange }: Prop
 				gap={0.5}
 				sx={{ flex: 1, marginTop: '4px', marginLeft: '8px' }}
 			>
+				<Box
+					sx={{
+						width: '24px',
+						marginLeft: '-4px',
+						marginTop: '1px',
+						color: 'text.secondary',
+					}}
+				>
+					<EditIcon fontSize="small" />
+				</Box>
 				<Input
 					autoFocus
 					size="small"
@@ -86,14 +97,15 @@ export function CalendarUnitRelationLabels({ label, shortLabel, onChange }: Prop
 				variant="text"
 				sx={{ padding: '10px 8px', justifyContent: 'flex-start', height: 1 }}
 				onClick={handleStartEdit}
+				startIcon={<EditIcon fontSize="small" />}
 			>
 				<Typography
 					variant="body2"
 					noWrap
-					color={hasLabels ? 'text.secondary' : 'text.disabled'}
+					color={'primary.main'}
 					sx={{ fontStyle: hasLabels ? 'normal' : 'italic' }}
 				>
-					{displayText ?? 'No labels'}
+					{displayText ?? 'Add label'}
 				</Typography>
 			</Button>
 		</Box>
