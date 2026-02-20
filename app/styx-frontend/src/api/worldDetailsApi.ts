@@ -58,8 +58,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		units: {
 			children: {
 				id: string
-				createdAt: string
-				updatedAt: string
 				position: number
 				label?: null | string
 				shortLabel?: null | string
@@ -69,8 +67,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			}[]
 			parents: {
 				id: string
-				createdAt: string
-				updatedAt: string
 				position: number
 				label?: null | string
 				shortLabel?: null | string
@@ -79,10 +75,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				childUnitId: string
 			}[]
 			id: string
-			createdAt: string
-			updatedAt: string
 			name: string
-			calendarId: string
 			position: number
 			displayName: string
 			displayNameShort: string
@@ -95,78 +88,17 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		}[]
 		presentations: {
 			units: {
-				unit: {
-					children: {
-						id: string
-						createdAt: string
-						updatedAt: string
-						position: number
-						label?: null | string
-						shortLabel?: null | string
-						repeats: number
-						parentUnitId: string
-						childUnitId: string
-					}[]
-					parents: {
-						id: string
-						createdAt: string
-						updatedAt: string
-						position: number
-						label?: null | string
-						shortLabel?: null | string
-						repeats: number
-						parentUnitId: string
-						childUnitId: string
-					}[]
-					id: string
-					createdAt: string
-					updatedAt: string
-					name: string
-					calendarId: string
-					position: number
-					displayName: string
-					displayNameShort: string
-					displayNamePlural: string
-					formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
-					formatShorthand?: null | string
-					negativeFormat: 'MinusSign' | 'AbsoluteValue'
-					duration: string
-					treeDepth: number
-				}
 				id: string
-				createdAt: string
-				updatedAt: string
 				name: string
 				unitId: string
-				presentationId: string
 				formatString: string
 				subdivision: number
 				labeledIndices: number[]
 			}[]
-			baselineUnit: null | {
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				calendarId: string
-				position: number
-				displayName?: null | string
-				displayNameShort?: null | string
-				displayNamePlural?: null | string
-				formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
-				formatShorthand?: null | string
-				negativeFormat: 'MinusSign' | 'AbsoluteValue'
-				duration: string
-				treeDepth: number
-			}
 			id: string
-			createdAt: string
-			updatedAt: string
 			name: string
-			calendarId: string
 			scaleFactor: number
 			compression: number
-			baselineUnitId?: null | string
 		}[]
 		seasons: {
 			intervals: {
@@ -178,20 +110,14 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				seasonId: string
 			}[]
 			id: string
-			createdAt: string
-			updatedAt: string
 			name: string
-			calendarId: string
 			position: number
 			formatShorthand?: null | string
 		}[]
 		description: string
 		id: string
-		createdAt: string
 		updatedAt: string
 		name: string
-		worldId?: null | string
-		ownerId?: null | string
 		position: number
 		originTime: string
 		dateFormat?: null | string

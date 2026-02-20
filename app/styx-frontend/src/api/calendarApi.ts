@@ -131,22 +131,6 @@ export type CreateCalendarApiArg = {
 export type GetCalendarApiResponse = /** status 200  */ {
 	presentations: {
 		units: {
-			unit: {
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				calendarId: string
-				position: number
-				displayName?: null | string
-				displayNameShort?: null | string
-				displayNamePlural?: null | string
-				formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
-				formatShorthand?: null | string
-				negativeFormat: 'MinusSign' | 'AbsoluteValue'
-				duration: string
-				treeDepth: number
-			}
 			id: string
 			createdAt: string
 			updatedAt: string
@@ -157,22 +141,6 @@ export type GetCalendarApiResponse = /** status 200  */ {
 			subdivision: number
 			labeledIndices: number[]
 		}[]
-		baselineUnit: null | {
-			id: string
-			createdAt: string
-			updatedAt: string
-			name: string
-			calendarId: string
-			position: number
-			displayName?: null | string
-			displayNameShort?: null | string
-			displayNamePlural?: null | string
-			formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
-			formatShorthand?: null | string
-			negativeFormat: 'MinusSign' | 'AbsoluteValue'
-			duration: string
-			treeDepth: number
-		}
 		id: string
 		createdAt: string
 		updatedAt: string
@@ -276,8 +244,6 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 	units: {
 		children: {
 			id: string
-			createdAt: string
-			updatedAt: string
 			position: number
 			label?: null | string
 			shortLabel?: null | string
@@ -287,8 +253,6 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 		}[]
 		parents: {
 			id: string
-			createdAt: string
-			updatedAt: string
 			position: number
 			label?: null | string
 			shortLabel?: null | string
@@ -297,10 +261,7 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 			childUnitId: string
 		}[]
 		id: string
-		createdAt: string
-		updatedAt: string
 		name: string
-		calendarId: string
 		position: number
 		displayName: string
 		displayNameShort: string
@@ -313,64 +274,36 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 	}[]
 	presentations: {
 		units: {
-			unit: {
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				calendarId: string
-				position: number
-				displayName?: null | string
-				displayNameShort?: null | string
-				displayNamePlural?: null | string
-				formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
-				formatShorthand?: null | string
-				negativeFormat: 'MinusSign' | 'AbsoluteValue'
-				duration: string
-				treeDepth: number
-			}
 			id: string
-			createdAt: string
-			updatedAt: string
 			name: string
 			unitId: string
-			presentationId: string
 			formatString: string
 			subdivision: number
 			labeledIndices: number[]
 		}[]
-		baselineUnit: null | {
+		id: string
+		name: string
+		scaleFactor: number
+		compression: number
+	}[]
+	seasons: {
+		intervals: {
 			id: string
 			createdAt: string
 			updatedAt: string
-			name: string
-			calendarId: string
-			position: number
-			displayName?: null | string
-			displayNameShort?: null | string
-			displayNamePlural?: null | string
-			formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
-			formatShorthand?: null | string
-			negativeFormat: 'MinusSign' | 'AbsoluteValue'
-			duration: string
-			treeDepth: number
-		}
+			leftIndex: number
+			rightIndex: number
+			seasonId: string
+		}[]
 		id: string
-		createdAt: string
-		updatedAt: string
 		name: string
-		calendarId: string
-		scaleFactor: number
-		compression: number
-		baselineUnitId?: null | string
+		position: number
+		formatShorthand?: null | string
 	}[]
 	description: string
 	id: string
-	createdAt: string
 	updatedAt: string
 	name: string
-	worldId?: null | string
-	ownerId?: null | string
 	position: number
 	originTime: string
 	dateFormat?: null | string
@@ -479,22 +412,6 @@ export type DeleteCalendarUnitApiArg = {
 }
 export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 	units: {
-		unit: {
-			id: string
-			createdAt: string
-			updatedAt: string
-			name: string
-			calendarId: string
-			position: number
-			displayName?: null | string
-			displayNameShort?: null | string
-			displayNamePlural?: null | string
-			formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
-			formatShorthand?: null | string
-			negativeFormat: 'MinusSign' | 'AbsoluteValue'
-			duration: string
-			treeDepth: number
-		}
 		id: string
 		createdAt: string
 		updatedAt: string
@@ -505,22 +422,6 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 		subdivision: number
 		labeledIndices: number[]
 	}[]
-	baselineUnit: null | {
-		id: string
-		createdAt: string
-		updatedAt: string
-		name: string
-		calendarId: string
-		position: number
-		displayName?: null | string
-		displayNameShort?: null | string
-		displayNamePlural?: null | string
-		formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
-		formatShorthand?: null | string
-		negativeFormat: 'MinusSign' | 'AbsoluteValue'
-		duration: string
-		treeDepth: number
-	}
 	id: string
 	createdAt: string
 	updatedAt: string
@@ -540,22 +441,6 @@ export type CreateCalendarPresentationApiArg = {
 }
 export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 	units: {
-		unit: {
-			id: string
-			createdAt: string
-			updatedAt: string
-			name: string
-			calendarId: string
-			position: number
-			displayName?: null | string
-			displayNameShort?: null | string
-			displayNamePlural?: null | string
-			formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
-			formatShorthand?: null | string
-			negativeFormat: 'MinusSign' | 'AbsoluteValue'
-			duration: string
-			treeDepth: number
-		}
 		id: string
 		createdAt: string
 		updatedAt: string
@@ -566,22 +451,6 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 		subdivision: number
 		labeledIndices: number[]
 	}[]
-	baselineUnit: null | {
-		id: string
-		createdAt: string
-		updatedAt: string
-		name: string
-		calendarId: string
-		position: number
-		displayName?: null | string
-		displayNameShort?: null | string
-		displayNamePlural?: null | string
-		formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
-		formatShorthand?: null | string
-		negativeFormat: 'MinusSign' | 'AbsoluteValue'
-		duration: string
-		treeDepth: number
-	}
 	id: string
 	createdAt: string
 	updatedAt: string

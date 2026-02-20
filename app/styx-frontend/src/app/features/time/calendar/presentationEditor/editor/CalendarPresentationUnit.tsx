@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useCallback, useEffect, useState } from 'react'
 
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useDebouncedState } from '@/app/hooks/useDebouncedState'
 import { ConfirmPopoverButton } from '@/ui-lib/components/PopoverButton/ConfirmPopoverButton'
 
@@ -22,7 +23,10 @@ export function CalendarPresentationUnit({
 	onDelete,
 	index,
 }: Props) {
-	const name = layer.unit.displayName ?? layer.unit.name
+	const { getBackingUnitOrThrow } = useWorldTime()
+
+	const backingUnit = getBackingUnitOrThrow(layer.unitId)
+	const name = backingUnit.displayName ?? backingUnit.name
 
 	const [formatString, setFormatString] = useState(layer.formatString)
 

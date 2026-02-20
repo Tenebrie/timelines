@@ -7,6 +7,27 @@ test.describe('Calendar List', () => {
 		await createNewUser(page)
 	})
 
+	test('create calendar -> delete calendar flow', async ({ page }) => {
+		await page.goto(makeUrl('/calendar'))
+
+		// Create calendar
+		await page.getByLabel('Create new calendar').click()
+		await page.getByLabel('Name').fill('My Test Calendar')
+		await page.getByLabel('Template to copy').click()
+		await page.getByRole('option', { name: 'Gregorian Calendar (Earth)' }).click()
+		await page.getByText('Create', { exact: true }).click()
+
+		await expect(page.getByLabel('Load calendar "My Test Calendar"')).toBeVisible()
+		await expect(page.getByText('My Test Calendar')).toBeVisible()
+
+		// Delete calendar
+		await page.getByLabel('Delete calendar').click()
+		await expect(page.getByText('Are you sure you want to delete calendar')).toBeVisible()
+		await page.getByRole('button', { name: 'Delete' }).click()
+
+		await expect(page.getByText('No calendars yet. Click the + button to create one!')).toBeVisible()
+	})
+
 	test('create calendars from different templates', async ({ page }) => {
 		await page.goto(makeUrl('/calendar'))
 

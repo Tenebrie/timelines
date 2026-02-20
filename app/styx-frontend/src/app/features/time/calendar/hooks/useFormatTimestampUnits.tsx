@@ -9,7 +9,7 @@ export function useFormatTimestampUnits({
 	dateFormatString,
 	originTime = 0,
 }: {
-	units: (CalendarUnit | CalendarDraftUnit)[]
+	units: CalendarUnit[] | CalendarDraftUnit[]
 	dateFormatString: string
 	originTime?: number
 }) {

@@ -3,7 +3,6 @@ import { memo, useMemo } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 import { TimelineState } from '../../utils/TimelineState'
@@ -24,7 +23,6 @@ function TimelineAnchorLineListComponent({ containerWidth }: Props) {
 	const { regenerateDividers, updateDividers } = useAnchorLines({
 		containerWidth,
 	})
-	const { presentation } = useWorldTime()
 
 	const updateDividersThrottled = useMemo(() => {
 		return throttle((scroll: number) => {
@@ -34,9 +32,6 @@ function TimelineAnchorLineListComponent({ containerWidth }: Props) {
 
 	useEventBusSubscribe['timeline/onScroll']({
 		callback: (scroll) => {
-			if (!presentation.baselineUnit) {
-				throw new Error('No baseline')
-			}
 			updateDividersThrottled(scroll)
 		},
 	})

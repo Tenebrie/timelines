@@ -164,7 +164,6 @@ export function mockCalendar(overrides: Partial<WorldCalendar>): WorldCalendar {
 		units: [],
 		presentations: [],
 		id: getRandomId(),
-		createdAt: '2024-01-01T00:00:00.000Z',
 		updatedAt: '2024-01-01T00:00:00.000Z',
 		name: 'Test Calendar',
 		description: '',
@@ -182,10 +181,7 @@ export const mockCalendarUnit = (
 		duration: number
 	},
 ): GetCalendarPreviewApiResponse['units'][number] => ({
-	calendarId: overrides.calendarId ?? 'calendar-1',
 	id: overrides.id,
-	createdAt: overrides.createdAt ?? '2024-01-01T00:00:00.000Z',
-	updatedAt: overrides.updatedAt ?? '2024-01-01T00:00:00.000Z',
 	position: overrides.position ?? 0,
 	name: overrides.name,
 	displayName: overrides.displayName ?? overrides.name,
@@ -207,8 +203,6 @@ export const mockCalendarUnitChildRelation = (
 	overrides: Partial<GetCalendarPreviewApiResponse['units'][number]['children'][number]> = {},
 ): GetCalendarPreviewApiResponse['units'][number]['children'][number] => ({
 	id: overrides.id ?? `${parentUnitId}-${childUnitId}`,
-	createdAt: overrides.createdAt ?? '2024-01-01T00:00:00.000Z',
-	updatedAt: overrides.updatedAt ?? '2024-01-01T00:00:00.000Z',
 	position: overrides.position ?? 0,
 	label: overrides.label ?? null,
 	repeats,
@@ -223,8 +217,6 @@ export const mockCalendarUnitParentRelation = (
 	overrides: Partial<GetCalendarPreviewApiResponse['units'][number]['parents'][number]> = {},
 ): GetCalendarPreviewApiResponse['units'][number]['parents'][number] => ({
 	id: overrides.id ?? `${parentUnitId}-${childUnitId}`,
-	createdAt: overrides.createdAt ?? '2024-01-01T00:00:00.000Z',
-	updatedAt: overrides.updatedAt ?? '2024-01-01T00:00:00.000Z',
 	position: overrides.position ?? 0,
 	label: overrides.label ?? null,
 	repeats,

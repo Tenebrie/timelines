@@ -38,6 +38,7 @@ export function PopoverButton({
 					{...bindTrigger(popupState)}
 					onMouseDown={(e) => e.stopPropagation()}
 					onClick={(e) => {
+						e.preventDefault()
 						e.stopPropagation()
 						bindTrigger(popupState).onClick(e)
 					}}

@@ -188,32 +188,59 @@ export const WorldService = {
 					},
 				},
 				calendars: {
+					omit: {
+						createdAt: true,
+						worldId: true,
+						ownerId: true,
+					},
 					include: {
 						units: {
+							omit: {
+								createdAt: true,
+								updatedAt: true,
+								calendarId: true,
+							},
 							include: {
-								parents: true,
-								children: true,
+								parents: {
+									omit: {
+										createdAt: true,
+										updatedAt: true,
+									},
+								},
+								children: {
+									omit: {
+										createdAt: true,
+										updatedAt: true,
+									},
+								},
 							},
 						},
 						presentations: {
+							omit: {
+								createdAt: true,
+								updatedAt: true,
+								calendarId: true,
+								baselineUnitId: true,
+							},
 							include: {
 								units: {
-									include: {
-										unit: {
-											include: {
-												parents: true,
-												children: true,
-											},
-										},
+									omit: {
+										createdAt: true,
+										updatedAt: true,
+										presentationId: true,
 									},
 								},
-								baselineUnit: true,
 							},
 							orderBy: {
 								scaleFactor: 'asc',
 							},
 						},
 						seasons: {
+							omit: {
+								createdAt: true,
+								updatedAt: true,
+								calendarId: true,
+							},
 							include: {
 								intervals: true,
 							},
@@ -246,13 +273,6 @@ export const WorldService = {
 			calendars: world.calendars.map((calendar) => ({
 				...calendar,
 				units: CalendarService.formatCalendarUnits(calendar.units),
-				presentations: calendar.presentations.map((presentation) => ({
-					...presentation,
-					units: presentation.units.map((rel) => ({
-						...rel,
-						unit: CalendarService.formatCalendarUnit(rel.unit),
-					})),
-				})),
 			})),
 		}
 	},

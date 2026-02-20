@@ -107,6 +107,7 @@ export function WorldListItem({ world, showActions }: Props) {
 									size="small"
 									aria-label={`Edit world "${world.name}" button`}
 									onClick={(e) => {
+										e.preventDefault()
 										e.stopPropagation()
 										onEdit(world.id)
 									}}
@@ -120,6 +121,7 @@ export function WorldListItem({ world, showActions }: Props) {
 									size="small"
 									aria-label={`Delete world "${world.name}" button`}
 									onClick={(e) => {
+										e.preventDefault()
 										e.stopPropagation()
 										onDelete(world)
 									}}

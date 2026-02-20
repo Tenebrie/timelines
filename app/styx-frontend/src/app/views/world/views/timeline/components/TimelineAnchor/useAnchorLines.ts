@@ -6,7 +6,7 @@ import { useEventBusDispatch } from '@/app/features/eventBus'
 import { EsotericDate } from '@/app/features/time/calendar/date/EsotericDate'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
+import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 import { TimelineState } from '../../utils/TimelineState'
 import { TimelineAnchorPadding } from './TimelineAnchor'
@@ -33,9 +33,7 @@ export function useAnchorLines({ containerWidth }: Props) {
 	const dividers = useRef<DividerData[][]>([[], [], [], []])
 	const renderedDividersRef = useRef<DividerData[]>([])
 	const baseDateRef = useRef<EsotericDate | null>(null)
-	const { presentation } = useWorldTime()
-	const { calendars } = useSelector(getWorldState, (a, b) => a.calendars === b.calendars)
-	const worldCalendar = calendars[0]
+	const { presentation, calendar } = useWorldTime()
 
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
@@ -108,50 +106,54 @@ export function useAnchorLines({ containerWidth }: Props) {
 		[emitSlotUpdate],
 	)
 
-	const flattenDividers = useCallback((presentation: WorldCalendarPresentation, divs: DividerData[][]) => {
-		const flatDivs = divs.flat()
-		if (flatDivs.length === 0) {
-			return []
-		}
-		const smallDivider = (() => {
-			const small = flatDivs.find((d) => d.size === 'small')
-			if (small) {
-				return small
+	const flattenDividers = useCallback(
+		(presentation: WorldCalendarPresentation, divs: DividerData[][]) => {
+			const flatDivs = divs.flat()
+			if (flatDivs.length === 0) {
+				return []
 			}
-			const medium = flatDivs.find((d) => d.size === 'medium')
-			if (medium) {
-				return medium
-			}
-			const large = flatDivs.find((d) => d.size === 'large')
-			if (large) {
-				return large
-			}
-			throw new Error('No suitable divider found')
-		})()
-
-		const subdividedFollowerDuration = presentation.compression * Number(smallDivider.unit.unit.duration)
-
-		const flatDividers = flatDivs.sort((a, b) => a.timestamp - b.timestamp)
-		return flatDividers
-			.map((div, index) => {
-				const next = flatDividers[index + 1]
-				if (!next) {
-					return div
+			const smallDivider = (() => {
+				const small = flatDivs.find((d) => d.size === 'small')
+				if (small) {
+					return small
 				}
-
-				const timeToNext = Math.abs(next.timestamp - div.timestamp)
-
-				const rawFollowerCount = Math.round(timeToNext / subdividedFollowerDuration) - 1
-				const followerCount = Math.min(50, rawFollowerCount)
-				return {
-					...div,
-					followerCount: followerCount,
-					followerSpacing: timeToNext / (followerCount + 1),
-					followerDuration: subdividedFollowerDuration,
+				const medium = flatDivs.find((d) => d.size === 'medium')
+				if (medium) {
+					return medium
 				}
-			})
-			.sort((a, b) => a.timestamp - b.timestamp)
-	}, [])
+				const large = flatDivs.find((d) => d.size === 'large')
+				if (large) {
+					return large
+				}
+				throw new Error('No suitable divider found')
+			})()
+
+			const backingUnit = calendar.units.find((u) => u.id === smallDivider.unit.unitId)!
+			const subdividedFollowerDuration = presentation.compression * Number(backingUnit.duration)
+
+			const flatDividers = flatDivs.sort((a, b) => a.timestamp - b.timestamp)
+			return flatDividers
+				.map((div, index) => {
+					const next = flatDividers[index + 1]
+					if (!next) {
+						return div
+					}
+
+					const timeToNext = Math.abs(next.timestamp - div.timestamp)
+
+					const rawFollowerCount = Math.round(timeToNext / subdividedFollowerDuration) - 1
+					const followerCount = Math.min(50, rawFollowerCount)
+					return {
+						...div,
+						followerCount: followerCount,
+						followerSpacing: timeToNext / (followerCount + 1),
+						followerDuration: subdividedFollowerDuration,
+					}
+				})
+				.sort((a, b) => a.timestamp - b.timestamp)
+		},
+		[calendar.units],
+	)
 
 	const flushDividers = useCallback(
 		(divs: DividerData[][]) => {
@@ -182,15 +184,16 @@ export function useAnchorLines({ containerWidth }: Props) {
 			labelSize: LabelSize,
 			direction = 1,
 		) => {
+			const backingUnit = calendar.units.find((u) => u.id === presentationUnit.unitId)!
 			const timestamp = date.getTimestamp()
 			const matchesIndices = (() => {
 				if (presentationUnit.labeledIndices.length === 0) {
 					return true
 				}
-				return presentationUnit.labeledIndices.includes(date.get(presentationUnit.unit)!.value)
+				return presentationUnit.labeledIndices.includes(date.get(backingUnit)!.value)
 			})()
 
-			const steppedDate = date.step(presentationUnit.unit, presentationUnit.subdivision * direction)
+			const steppedDate = date.step(backingUnit, presentationUnit.subdivision * direction)
 			if (!matchesIndices) {
 				return {
 					date: steppedDate,
@@ -211,7 +214,7 @@ export function useAnchorLines({ containerWidth }: Props) {
 				},
 			}
 		},
-		[],
+		[calendar.units],
 	)
 
 	const regenerateDividers = useCallback(
@@ -223,13 +226,15 @@ export function useAnchorLines({ containerWidth }: Props) {
 			lastSeenScrollRef.current = scroll
 			lastSeenScaleLevelRef.current = scaleLevel
 
+			const backingUnit = calendar.units.find((u) => u.id === presentation.units[0].unitId)!
+
 			const currentTimestamp = scaledTimeToRealTime(-scroll + 40)
-			let baseDate = new EsotericDate(worldCalendar, currentTimestamp).floor(presentation.units[0].unit)
+			let baseDate = new EsotericDate(calendar, currentTimestamp).floor(backingUnit)
 			baseDateRef.current = new EsotericDate(baseDate)
 			const subdivision = presentation.units[0].subdivision
-			const entry = baseDate.get(presentation.units[0].unit)!
+			const entry = baseDate.get(backingUnit)!
 			const valueToStep = ((entry.value % subdivision) + subdivision) % subdivision
-			baseDate = baseDate.step(presentation.units[0].unit, -valueToStep - subdivision)
+			baseDate = baseDate.step(backingUnit, -valueToStep - subdivision)
 
 			const dividers: DividerData[][] = [[], [], [], []]
 			const seenTimestamps = new Set<number>()
@@ -242,14 +247,16 @@ export function useAnchorLines({ containerWidth }: Props) {
 
 				let date = new EsotericDate(baseDate)
 
+				const innerBackingUnit = calendar.units.find((u) => u.id === presentationUnit.unitId)!
+
 				for (let i = 0; i < 1000; i++) {
 					const timestamp = date.getTimestamp()
 					if (timestamp < screenLeft) {
 						const dist = screenLeft - timestamp
-						if (dist > Number(presentationUnit.unit.duration) * presentationUnit.subdivision * 12) {
-							date = date.step(presentationUnit.unit, presentationUnit.subdivision * 10)
+						if (dist > Number(innerBackingUnit.duration) * presentationUnit.subdivision * 12) {
+							date = date.step(innerBackingUnit, presentationUnit.subdivision * 10)
 						} else {
-							date = date.step(presentationUnit.unit, presentationUnit.subdivision)
+							date = date.step(innerBackingUnit, presentationUnit.subdivision)
 						}
 						continue
 					}
@@ -275,8 +282,8 @@ export function useAnchorLines({ containerWidth }: Props) {
 		[
 			presentation.units,
 			scaleLevel,
+			calendar,
 			scaledTimeToRealTime,
-			worldCalendar,
 			containerWidth,
 			flushDividers,
 			stepDivider,
@@ -318,6 +325,7 @@ export function useAnchorLines({ containerWidth }: Props) {
 			]
 
 			presentation.units.forEach((presentationUnit, outerIndex) => {
+				const innerBackingUnit = calendar.units.find((u) => u.id === presentationUnit.unitId)!
 				const labelSize =
 					outerIndex === 0 ? 'large' : outerIndex === 1 ? 'medium' : outerIndex === 2 ? 'small' : 'smallest'
 				const lastDividerIndex = direction === 1 ? newDividers[outerIndex].length - 1 : 0
@@ -328,9 +336,9 @@ export function useAnchorLines({ containerWidth }: Props) {
 				} else {
 					lastDividerTimestamp = baseDateRef.current?.getTimestamp() ?? 0
 				}
-				let date = new EsotericDate(worldCalendar, lastDividerTimestamp)
+				let date = new EsotericDate(calendar, lastDividerTimestamp)
 				if (lastDivider) {
-					date = date.step(presentationUnit.unit, presentationUnit.subdivision * direction)
+					date = date.step(innerBackingUnit, presentationUnit.subdivision * direction)
 				}
 
 				if (direction === 1) {
@@ -389,7 +397,7 @@ export function useAnchorLines({ containerWidth }: Props) {
 			presentation.units,
 			flushDividers,
 			regenerateDividers,
-			worldCalendar,
+			calendar,
 			stepDivider,
 		],
 	)

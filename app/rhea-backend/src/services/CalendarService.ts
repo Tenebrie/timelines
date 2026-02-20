@@ -87,12 +87,7 @@ export const CalendarService = {
 				},
 				presentations: {
 					include: {
-						baselineUnit: true,
-						units: {
-							include: {
-								unit: true,
-							},
-						},
+						units: true,
 					},
 					orderBy: {
 						scaleFactor: 'asc',
@@ -111,35 +106,61 @@ export const CalendarService = {
 			where: {
 				id: calendarId,
 			},
+			omit: {
+				createdAt: true,
+				worldId: true,
+				ownerId: true,
+			},
 			include: {
 				units: {
-					orderBy: {
-						position: 'asc',
+					omit: {
+						createdAt: true,
+						updatedAt: true,
+						calendarId: true,
 					},
 					include: {
 						parents: {
-							orderBy: {
-								position: 'asc',
+							omit: {
+								createdAt: true,
+								updatedAt: true,
 							},
 						},
 						children: {
-							orderBy: {
-								position: 'asc',
+							omit: {
+								createdAt: true,
+								updatedAt: true,
 							},
 						},
 					},
 				},
 				presentations: {
+					omit: {
+						createdAt: true,
+						updatedAt: true,
+						calendarId: true,
+						baselineUnitId: true,
+					},
 					include: {
-						baselineUnit: true,
 						units: {
-							include: {
-								unit: true,
+							omit: {
+								createdAt: true,
+								updatedAt: true,
+								presentationId: true,
 							},
 						},
 					},
 					orderBy: {
 						scaleFactor: 'asc',
+					},
+				},
+				seasons: {
+					omit: {
+						createdAt: true,
+						updatedAt: true,
+						calendarId: true,
+					},
+					include: {
+						intervals: true,
 					},
 				},
 			},
@@ -315,12 +336,7 @@ export const CalendarService = {
 					calendarId,
 				},
 				include: {
-					baselineUnit: true,
-					units: {
-						include: {
-							unit: true,
-						},
-					},
+					units: true,
 				},
 			})
 
@@ -410,12 +426,7 @@ export const CalendarService = {
 					calendarId,
 				},
 				include: {
-					baselineUnit: true,
-					units: {
-						include: {
-							unit: true,
-						},
-					},
+					units: true,
 				},
 			})
 
@@ -441,12 +452,16 @@ export const CalendarService = {
 				id: presentationId,
 			},
 			include: {
-				baselineUnit: true,
 				units: {
 					include: {
-						unit: true,
+						unit: {
+							select: {
+								duration: true,
+							},
+						},
 					},
 				},
+				baselineUnit: true,
 			},
 		})
 		const scaleFactor = (() => {
@@ -471,12 +486,7 @@ export const CalendarService = {
 				scaleFactor: Number(scaleFactor) * existingPresentation.compression,
 			},
 			include: {
-				baselineUnit: true,
-				units: {
-					include: {
-						unit: true,
-					},
-				},
+				units: true,
 			},
 		})
 
@@ -849,7 +859,11 @@ export const CalendarService = {
 		}
 	},
 
-	formatCalendarUnit: <T extends CalendarUnit>(unit: T) => {
+	formatCalendarUnit: <
+		T extends Pick<CalendarUnit, 'name' | 'displayName' | 'displayNameShort' | 'displayNamePlural'>,
+	>(
+		unit: T,
+	) => {
 		return {
 			...unit,
 			displayName: (unit.displayName || unit.name).trim(),
@@ -858,7 +872,11 @@ export const CalendarService = {
 		}
 	},
 
-	formatCalendarUnits: <T extends CalendarUnit>(units: T[]) => {
+	formatCalendarUnits: <
+		T extends Pick<CalendarUnit, 'name' | 'displayName' | 'displayNameShort' | 'displayNamePlural'>,
+	>(
+		units: T[],
+	) => {
 		return units.map(CalendarService.formatCalendarUnit)
 	},
 }

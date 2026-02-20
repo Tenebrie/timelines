@@ -10,6 +10,7 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { EsotericDate } from '@/app/features/time/calendar/date/EsotericDate'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
+import { useWaitUntil } from '@/app/hooks/useWaitUntil'
 import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
@@ -34,20 +35,23 @@ function TimelineAnchorLabelComponent() {
 				}
 				const currentTimestamp = scaledTimeToRealTime(-scroll + 40)
 				const snappedTime = binarySearchForClosest(TimelineState.anchorTimestamps, currentTimestamp)
-				const flooredTime = new EsotericDate(calendar, snappedTime)
-					.floor(presentation.smallestUnit.unit)
-					.getTimestamp()
+				const smallestBackingUnit = calendar.units.find((u) => u.id === presentation.smallestUnit.unitId)!
+				const flooredTime = new EsotericDate(calendar, snappedTime).floor(smallestBackingUnit).getTimestamp()
 				const desiredLabel = timeToLabel(flooredTime)
 				if (labelRef.current) {
 					labelRef.current.textContent = desiredLabel
 				}
 			}, 50),
-		[calendar, presentation.smallestUnit.unit, scaledTimeToRealTime, timeToLabel],
+		[calendar, presentation.smallestUnit.unitId, scaledTimeToRealTime, timeToLabel],
 	)
 
+	const waitUntil = useWaitUntil()
 	useEffect(() => {
-		updateLabel(TimelineState.scroll)
-	}, [scaledTimeToRealTime, timeToLabel, updateLabel])
+		;(async () => {
+			await waitUntil(() => TimelineState.anchorTimestamps.length > 0)
+			updateLabel(TimelineState.scroll)
+		})()
+	}, [updateLabel, waitUntil])
 
 	useEventBusSubscribe['timeline/onScroll']({
 		callback: updateLabel,

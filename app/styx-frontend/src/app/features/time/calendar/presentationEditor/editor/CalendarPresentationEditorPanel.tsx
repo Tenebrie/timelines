@@ -29,7 +29,12 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 	const { calendar } = useSelector(getCalendarEditorState, (a, b) => a.calendar === b.calendar)
 	const [updatePresentation] = useUpdateCalendarPresentationMutation()
 
-	const [localUnits, setLocalUnits] = useState(presentation.units)
+	const [localUnits, setLocalUnits] = useState(
+		presentation.units.map((unit) => ({
+			...unit,
+			backingUnit: calendar?.units.find((u) => u.id === unit.unitId),
+		})),
+	)
 
 	const saveCompression = useCallback(
 		(value: number) => {
@@ -51,9 +56,14 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 	})
 
 	useEffect(() => {
-		setLocalUnits(presentation.units)
+		setLocalUnits(
+			presentation.units.map((unit) => ({
+				...unit,
+				backingUnit: calendar?.units.find((u) => u.id === unit.unitId),
+			})),
+		)
 		setLocalCompressionInstant(presentation.compression)
-	}, [presentation.units, presentation.compression, setLocalCompressionInstant])
+	}, [presentation.units, presentation.compression, setLocalCompressionInstant, calendar?.units])
 
 	// Get deduplicated visible units (by bucket)
 	const availableUnits = useMemo(() => {
@@ -89,7 +99,7 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 		}
 
 		// Find the smallest unit's duration in this presentation
-		const smallestDuration = Math.min(...localUnits.map((u) => Number(u.unit.duration)))
+		const smallestDuration = Math.min(...localUnits.map((u) => Number(u.backingUnit?.duration)))
 
 		// Return all units that have duration <= smallest duration
 		return calendar.units.filter((u) => Number(u.duration) <= smallestDuration)
@@ -193,7 +203,10 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 	const sortedUnits = useMemo(() => {
 		return localUnits
 			.slice()
-			.sort((a, b) => Number(a.unit.duration) * a.subdivision - Number(b.unit.duration) * b.subdivision)
+			.sort(
+				(a, b) =>
+					Number(a.backingUnit?.duration) * a.subdivision - Number(b.backingUnit?.duration) * b.subdivision,
+			)
 	}, [localUnits])
 
 	if (!calendar) {
