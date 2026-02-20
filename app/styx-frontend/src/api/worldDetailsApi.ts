@@ -48,12 +48,154 @@ export type UpdateWorldApiArg = {
 	body: {
 		name?: string
 		description?: string
-		calendar?: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+		calendars?: string[]
 		timeOrigin?: number
 	}
 }
 export type GetWorldInfoApiResponse = /** status 200  */ {
 	isReadOnly: boolean
+	calendars: {
+		units: {
+			displayName: string
+			displayNameShort: string
+			displayNamePlural: string
+			children: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				position: number
+				label?: null | string
+				shortLabel?: null | string
+				repeats: number
+				parentUnitId: string
+				childUnitId: string
+			}[]
+			parents: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				position: number
+				label?: null | string
+				shortLabel?: null | string
+				repeats: number
+				parentUnitId: string
+				childUnitId: string
+			}[]
+			id: string
+			createdAt: string
+			updatedAt: string
+			name: string
+			calendarId: string
+			position: number
+			formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
+			formatShorthand?: null | string
+			negativeFormat: 'MinusSign' | 'AbsoluteValue'
+			duration: string
+			treeDepth: number
+		}[]
+		presentations: {
+			units: {
+				unit: {
+					displayName: string
+					displayNameShort: string
+					displayNamePlural: string
+					children: {
+						id: string
+						createdAt: string
+						updatedAt: string
+						position: number
+						label?: null | string
+						shortLabel?: null | string
+						repeats: number
+						parentUnitId: string
+						childUnitId: string
+					}[]
+					parents: {
+						id: string
+						createdAt: string
+						updatedAt: string
+						position: number
+						label?: null | string
+						shortLabel?: null | string
+						repeats: number
+						parentUnitId: string
+						childUnitId: string
+					}[]
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					calendarId: string
+					position: number
+					formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
+					formatShorthand?: null | string
+					negativeFormat: 'MinusSign' | 'AbsoluteValue'
+					duration: string
+					treeDepth: number
+				}
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				unitId: string
+				presentationId: string
+				formatString: string
+				subdivision: number
+				labeledIndices: number[]
+			}[]
+			baselineUnit: null | {
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				calendarId: string
+				position: number
+				displayName?: null | string
+				displayNameShort?: null | string
+				displayNamePlural?: null | string
+				formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
+				formatShorthand?: null | string
+				negativeFormat: 'MinusSign' | 'AbsoluteValue'
+				duration: string
+				treeDepth: number
+			}
+			id: string
+			createdAt: string
+			updatedAt: string
+			name: string
+			calendarId: string
+			scaleFactor: number
+			compression: number
+			baselineUnitId?: null | string
+		}[]
+		seasons: {
+			intervals: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				leftIndex: number
+				rightIndex: number
+				seasonId: string
+			}[]
+			id: string
+			createdAt: string
+			updatedAt: string
+			name: string
+			calendarId: string
+			position: number
+			formatShorthand?: null | string
+		}[]
+		description: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		worldId?: null | string
+		ownerId?: null | string
+		position: number
+		originTime: string
+		dateFormat?: null | string
+	}[]
 	actors: {
 		pages: {
 			id: string
@@ -135,7 +277,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
@@ -163,7 +305,7 @@ export type GetWorldBriefApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'

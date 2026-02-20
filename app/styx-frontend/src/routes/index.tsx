@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
-import { Home } from '@/app/views/home/Home'
+import { WorldManagementView } from '@/app/views/worldManagement/WorldManagementView'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,
@@ -10,5 +10,5 @@ export const Route = createFileRoute('/')({
 })
 
 function RouteComponent() {
-	return <Home />
+	return <WorldManagementView />
 }

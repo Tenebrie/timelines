@@ -16,15 +16,11 @@ export const useDebouncedState = <T,>({ initialValue, onDebounce, delay }: Props
 		emitPageDebounced.current(newValue)
 	}, [])
 
-	const setValueInstant = useCallback(
-		(newValue: T) => {
-			setValue(newValue)
-			setNextValue(newValue)
-			onDebounce?.(newValue)
-			emitPageDebounced.current.cancel()
-		},
-		[onDebounce],
-	)
+	const setValueInstant = useCallback((newValue: T) => {
+		setValue(newValue)
+		setNextValue(newValue)
+		emitPageDebounced.current.cancel()
+	}, [])
 
 	const emitPageDebounced = useRef(
 		debounce((newValue: T) => {

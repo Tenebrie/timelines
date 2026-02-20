@@ -25,11 +25,8 @@ export const TimeMarker = ({ timestamp }: Props) => {
 		(a, b) =>
 			a.scroll === b.scroll && a.scaleLevel === b.scaleLevel && a.isSwitchingScale === b.isSwitchingScale,
 	)
-	const { calendar, isLoaded } = useSelector(
-		getWorldState,
-		(a, b) => a.calendar === b.calendar && a.isLoaded === b.isLoaded,
-	)
-	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel, calendar })
+	const { isLoaded } = useSelector(getWorldState, (a, b) => a.isLoaded === b.isLoaded)
+	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel })
 
 	const theme = useCustomTheme()
 

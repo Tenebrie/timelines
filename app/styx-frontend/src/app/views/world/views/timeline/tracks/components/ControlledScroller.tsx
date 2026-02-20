@@ -5,8 +5,8 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 
 import { TimelineState } from '../../utils/TimelineState'
 
-export const EVENT_SCROLL_RESET_PERIOD = 1000
-export const CONTROLLED_SCROLLER_SIZE = 10000
+export const EVENT_SCROLL_RESET_PERIOD = 10000
+export const CONTROLLED_SCROLLER_SIZE = 100000
 
 type Props = {
 	children: React.ReactNode
@@ -48,7 +48,7 @@ function ControlledScrollerComponent({ children, resetPeriod }: Props) {
 				width: '100%',
 				height: '100%',
 				overflowX: 'hidden',
-				overflowY: 'visible',
+				overflowY: 'hidden',
 				pointerEvents: 'none',
 			}}
 		>

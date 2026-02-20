@@ -28,7 +28,7 @@
 		"docker:stop": "docker stop $(docker ps -a -q)",
 		"tsc": "(cd app/styx-frontend && yarn tsc) && (cd app/rhea-backend && yarn tsc) && (cd app/calliope-websockets && yarn tsc) && (cd app/orpheus-mcp && yarn tsc)",
 		"prisma": "cd app/rhea-backend && yarn prisma",
-		"test": "yarn test:styx && yarn test:rhea && yarn test:e2e",
+		"test": "yarn test:styx && yarn test:rhea && yarn test:calliope && yarn test:e2e",
 		"test:styx": "cd app/styx-frontend && yarn test run",
 		"test:rhea": "cd app/rhea-backend && yarn test",
 		"test:calliope": "cd app/calliope-websockets && yarn test",

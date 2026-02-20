@@ -1,12 +1,11 @@
 import { startTransition, useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { WorldCalendarType } from '@/api/types/worldTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { maximumTime } from '@/app/features/time/hooks/useWorldTime'
+import { THE_END } from '@/app/features/time/hooks/useWorldTime'
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
 import clampToRange from '@/app/utils/clampToRange'
 import { rangeMap } from '@/app/utils/rangeMap'
@@ -17,7 +16,6 @@ type Props = {
 	selectedTime: number | null
 	scaleLimits: [ScaleLevel, ScaleLevel]
 	initialScaleLevel: ScaleLevel
-	calendar: WorldCalendarType
 	setScroll: (scroll: number) => void
 }
 
@@ -27,7 +25,6 @@ export const useTimelineZoom = ({
 	selectedTime,
 	scaleLimits,
 	initialScaleLevel,
-	calendar,
 	setScroll,
 }: Props) => {
 	const { getLevelScalar } = useTimelineLevelScalar()
@@ -43,7 +40,7 @@ export const useTimelineZoom = ({
 	const [scaleScroll, setScaleScroll] = useState(scaleLevel * 100)
 	const [targetScale, setTargetScale] = useState(scaleLevel)
 
-	const { realTimeToScaledTime, scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
+	const { realTimeToScaledTime, scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
 	useEffect(() => {
 		if (!readyToSwitchScale) {
@@ -84,6 +81,7 @@ export const useTimelineZoom = ({
 			['[32; 64)', 5],
 			['[64; 128)', 6],
 			['[128; 256)', 7],
+			['[256; 512)', 8],
 		])
 
 		if (newScaleLevel === null) {
@@ -92,8 +90,9 @@ export const useTimelineZoom = ({
 
 		const scalar = getLevelScalar(newScaleLevel)
 		const targetScroll = Math.floor(-timestampAtMouse / scalar + scrollIntoPos)
-		const newMinimumScroll = -maximumTime / scalar / 1000 / 60
-		const newMaximumScroll = maximumTime / scalar / 1000 / 60
+		const containerSize = containerRef.current?.getBoundingClientRect().width ?? 0
+		const newMinimumScroll = -THE_END / scalar + containerSize
+		const newMaximumScroll = THE_END / scalar - 4
 
 		let scrollToSet = targetScroll
 		if (isFinite(newMinimumScroll) && scrollToSet < newMinimumScroll) {

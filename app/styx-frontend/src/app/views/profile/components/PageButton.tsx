@@ -9,7 +9,7 @@ import { FileRouteTypes } from '@/routeTree.gen'
 type Props = {
 	icon?: React.ReactNode
 	label: string
-	route: FileRouteTypes['to']
+	route: FileRouteTypes['fullPaths']
 }
 
 export function PageButton({ icon, label, route }: Props) {
@@ -20,7 +20,7 @@ export function PageButton({ icon, label, route }: Props) {
 	return (
 		<Button
 			fullWidth
-			onClick={() => navigate({ to: route })}
+			onClick={() => navigate({ to: route as FileRouteTypes['to'] })}
 			sx={{
 				justifyContent: 'flex-start',
 				px: 2,

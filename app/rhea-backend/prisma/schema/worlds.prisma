@@ -18,13 +18,13 @@ model World {
   updatedAt DateTime @default(now()) @updatedAt
 
   name        String
-  description String            @default("")
+  description String             @default("")
   actors      Actor[]
   events      WorldEvent[]
   articles    WikiArticle[]
   tags        Tag[]
-  calendar    WorldCalendarType @default(COUNTUP)
-  timeOrigin  BigInt            @default(0)
+  calendar    WorldCalendarType?
+  timeOrigin  BigInt             @default(0)
 
   owner               User                 @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ownerId             String
@@ -34,6 +34,7 @@ model World {
   worldEventTracks    WorldEventTrack[]
   worldCommonIconSets WorldCommonIconSet[]
   savedColors         SavedColor[]
+  calendars           Calendar[]
 }
 
 model WorldEvent {
@@ -41,13 +42,13 @@ model WorldEvent {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  icon            String            @default("default")
-  color           String            @default("#000000")
+  icon            String  @default("default")
+  color           String  @default("#000000")
   name            String
   timestamp       BigInt
   revokedAt       BigInt?
-  description     String            @default("")
-  descriptionRich String            @default("")
+  description     String  @default("")
+  descriptionRich String  @default("")
   descriptionYjs  String?
 
   pages       ContentPage[] @relation("EventContentPage")

@@ -1,8 +1,10 @@
 import { announcementListApi } from '@api/announcementListApi'
-import { otherApi } from '@api/otherApi'
+import { calendarApi } from '@api/calendarApi'
+import { mindmapApi } from '@api/mindmapApi'
 import { GetWorldInfoApiResponse, worldDetailsApi } from '@api/worldDetailsApi'
 import { worldEventTracksApi } from '@api/worldEventTracksApi'
 import { worldListApi } from '@api/worldListApi'
+import { worldTagApi } from '@api/worldTagApi'
 import { worldWikiApi } from '@api/worldWikiApi'
 import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -66,6 +68,9 @@ export const useLiveMessageHandlers = () => {
 			const actor = ingestActor(JSON.parse(data.actor) as GetWorldInfoApiResponse['actors'][number])
 			dispatch(updateActor(actor))
 		},
+		[CalliopeToClientMessageType.CALENDAR_UPDATED]: () => {
+			dispatch(calendarApi.util.invalidateTags(['calendar']))
+		},
 		[CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED]: (data) => {
 			const article = JSON.parse(data.article) as WikiArticle
 			upsertCachedArticle(article)
@@ -74,10 +79,10 @@ export const useLiveMessageHandlers = () => {
 			dispatch(worldWikiApi.util.invalidateTags(['worldWiki']))
 		},
 		[CalliopeToClientMessageType.MINDMAP_NODE_UPDATED]: (_) => {
-			dispatch(otherApi.util.invalidateTags(['mindmap']))
+			dispatch(mindmapApi.util.invalidateTags(['mindmap']))
 		},
 		[CalliopeToClientMessageType.TAG_UPDATED]: () => {
-			dispatch(otherApi.util.invalidateTags(['tagList']))
+			dispatch(worldTagApi.util.invalidateTags(['worldTag']))
 		},
 		[CalliopeToClientMessageType.DOCUMENT_RESET]: (data) => {
 			notifyAboutDocumentReset(data)

@@ -35,6 +35,25 @@ export const AssetStatus = {
 export type AssetStatus = (typeof AssetStatus)[keyof typeof AssetStatus]
 
 
+export const CalendarUnitFormatMode = {
+  Name: 'Name',
+  NameOneIndexed: 'NameOneIndexed',
+  Numeric: 'Numeric',
+  NumericOneIndexed: 'NumericOneIndexed',
+  Hidden: 'Hidden'
+} as const
+
+export type CalendarUnitFormatMode = (typeof CalendarUnitFormatMode)[keyof typeof CalendarUnitFormatMode]
+
+
+export const CalendarUnitNegativeFormat = {
+  MinusSign: 'MinusSign',
+  AbsoluteValue: 'AbsoluteValue'
+} as const
+
+export type CalendarUnitNegativeFormat = (typeof CalendarUnitNegativeFormat)[keyof typeof CalendarUnitNegativeFormat]
+
+
 export const FlagValue = {
   DatabaseSeeded: 'DatabaseSeeded',
   FirstUserLoggedIn: 'FirstUserLoggedIn'

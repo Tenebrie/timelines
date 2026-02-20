@@ -2,14 +2,12 @@ import Box from '@mui/material/Box'
 import { ReactNode, useRef } from 'react'
 
 import { dispatchEvent, useEventBusSubscribe } from '@/app/features/eventBus'
-import { LineSpacing } from '@/app/utils/constants'
 
 import { ControlledScroller } from '../../tracks/components/ControlledScroller'
-import { TimelineSmallestPips } from './styles'
 import { ANCHOR_RESET_PERIOD } from './TimelineAnchorLine'
 
 type Props = {
-	children: ReactNode | ReactNode[]
+	children?: ReactNode | ReactNode[]
 }
 
 const RESET_PERIOD = ANCHOR_RESET_PERIOD
@@ -40,7 +38,7 @@ export function TimelineAnchorContainer({ children }: Props) {
 					pointerEvents: 'auto',
 				}}
 			>
-				<TimelineSmallestPips $lineSpacing={LineSpacing} />
+				{/* <TimelineSmallestPips $lineSpacing={LineSpacing} /> */}
 				{children}
 			</Box>
 		</ControlledScroller>

@@ -1,4 +1,5 @@
-import { WorldAccessMode } from '@prisma/client'
+import { CalendarUnitFormatMode, WorldAccessMode } from '@prisma/client'
+import { CalendarTemplateService } from '@src/services/CalendarTemplateService.js'
 import { keysOf } from '@src/utils/keysOf.js'
 import { Router, useApiEndpoint } from 'moonflower'
 
@@ -21,6 +22,32 @@ router.get('/api/constants/world-access-modes', async () => {
 	})
 
 	return keysOf(WorldAccessMode)
+})
+
+router.get('/api/constants/calendar-templates', async () => {
+	useApiEndpoint({
+		name: 'listCalendarTemplates',
+		description: 'Lists all built-in calendar templates',
+	})
+
+	const templates = CalendarTemplateService.getSupportedTemplates()
+
+	return {
+		keys: keysOf(templates),
+		templates: Object.entries(templates).map(([id, template]) => ({
+			id,
+			...template,
+		})),
+	}
+})
+
+router.get('/api/constants/calendar-unit-format-modes', async () => {
+	useApiEndpoint({
+		name: 'listCalendarUnitFormatModes',
+		description: 'Lists all available calendar unit format modes.',
+	})
+
+	return keysOf(CalendarUnitFormatMode)
 })
 
 export const ConstantsRouter = router

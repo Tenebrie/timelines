@@ -19,7 +19,11 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 		from: '/world/$worldId/_world',
 		select: (search) => search.time,
 	})
-	const { timeOrigin } = useSelector(getWorldState, (a, b) => a.timeOrigin === b.timeOrigin)
+	const { timeOrigin, calendars } = useSelector(
+		getWorldState,
+		(a, b) => a.calendars === b.calendars && a.timeOrigin === b.timeOrigin,
+	)
+	const worldCalendar = calendars[0] ?? { presentations: [] }
 
 	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
 	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
@@ -50,7 +54,7 @@ export function TimelineNavigationReporter({ ref, containerWidth }: Props) {
 	const { scaleLevel, targetScaleIndex, isSwitchingScale } = useTimelineNavigation({
 		containerRef: ref,
 		defaultScroll: Math.floor(containerWidth / 2) - timeOrigin,
-		scaleLimits: [-1, 7],
+		scaleLimits: [-1, worldCalendar.presentations.length - 2],
 		selectedTime,
 		onClick,
 		onDoubleClick,

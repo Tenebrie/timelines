@@ -1,4 +1,7 @@
+import { useSelector } from 'react-redux'
+
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { DeleteAccountModal } from '../../views/profile/modals/DeleteAccountModal'
 import { DeleteAssetModal } from '../../views/profile/modals/DeleteAssetModal'
@@ -10,10 +13,13 @@ import { EventTrackWizardModal } from './renderers/EventTrackWizardModal'
 import { TimeTravelModal } from './renderers/TimeTravelModal'
 
 export const ModalsRenderer = () => {
+	const { isLoaded } = useSelector(getWorldState, (a, b) => a.id === b.id && a.isLoaded === b.isLoaded)
 	const { open: openTimeTravelModal } = useModal('timeTravelModal')
 
 	useShortcut(Shortcut.Search, () => {
-		openTimeTravelModal({})
+		if (isLoaded) {
+			openTimeTravelModal({})
+		}
 	})
 
 	return (

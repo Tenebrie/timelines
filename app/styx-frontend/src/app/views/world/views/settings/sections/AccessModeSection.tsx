@@ -1,5 +1,5 @@
 import { useListWorldAccessModesQuery } from '@api/otherApi'
-import { WorldAccessMode, WorldBrief } from '@api/types/worldTypes'
+import { WorldAccessMode, WorldBrief, WorldDetails } from '@api/types/worldTypes'
 import { useSetWorldAccessModeMutation } from '@api/worldDetailsApi'
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
@@ -10,7 +10,7 @@ import Stack from '@mui/material/Stack'
 import { ReactNode, useCallback } from 'react'
 
 type Props = {
-	world: WorldBrief
+	world: WorldDetails
 }
 
 const translations: Record<WorldAccessMode, ReactNode> = {

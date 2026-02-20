@@ -2,21 +2,21 @@ import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Fade from '@mui/material/Fade'
 import Paper from '@mui/material/Paper'
-import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { LineSpacing } from '@/app/utils/constants'
-import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
+import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 import { useTimelineAnchorDrag } from '../../hooks/useTimelineAnchorDrag'
 import { useTimelineHorizontalScroll } from '../../hooks/useTimelineHorizontalScroll'
 import { TimelineAnchorContainer } from './TimelineAnchorContainer'
 import { TimelineAnchorLabel } from './TimelineAnchorLabel'
-import { TimelineAnchorLine } from './TimelineAnchorLine'
+import { TimelineAnchorLineList } from './TimelineAnchorLineList'
 
-export const TimelineAnchorPadding = 150 // pixels
+export const TimelineAnchorPadding = 250 // pixels
 
 type Props = {
 	containerWidth: number
@@ -27,12 +27,11 @@ export const TimelineAnchor = memo(TimelineAnchorComponent)
 function TimelineAnchorComponent({ containerWidth }: Props) {
 	const theme = useCustomTheme()
 	const containerRef = useRef<HTMLDivElement | null>(null)
-	const { calendar } = useSelector(getWorldState, (a, b) => a.calendar === b.calendar)
 	const { scaleLevel, isSwitchingScale } = useSelector(
 		getTimelineState,
 		(a, b) => a.scaleLevel === b.scaleLevel && a.isSwitchingScale === b.isSwitchingScale,
 	)
-	const { scaledTimeToRealTime, getTimelineMultipliers } = useTimelineWorldTime({ scaleLevel, calendar })
+	const { calendar } = useWorldTime()
 
 	// Drag-to-scroll functionality
 	const { isDragging, onMouseDown, onMouseMove, onMouseUp } = useTimelineAnchorDrag()
@@ -59,18 +58,17 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 
 	const visible = !isSwitchingScale
 	const lineCount = useMemo(
-		() => Math.ceil(containerWidth / LineSpacing) + Math.ceil(TimelineAnchorPadding / LineSpacing) * 2,
+		() => Math.ceil(containerWidth / LineSpacing) + Math.ceil(TimelineAnchorPadding / LineSpacing) * 2 + 1000,
 		[containerWidth],
 	)
 
-	const [dividers, setDividers] = useState(Array(lineCount).fill(0))
-	const { smallGroupSize, mediumGroupSize, largeGroupSize } = getTimelineMultipliers()
+	const [linesKey, setLinesKey] = useState(0)
 
 	const lastLineCount = useRef(0)
 	const lastCalendar = useRef(calendar)
 	const lastContainerWidth = useRef(containerWidth)
 	const lastScaleLevel = useRef(scaleLevel)
-	useEffect(() => {
+	useLayoutEffect(() => {
 		if (
 			lineCount !== lastLineCount.current ||
 			calendar !== lastCalendar.current ||
@@ -81,7 +79,7 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 			lastCalendar.current = calendar
 			lastContainerWidth.current = containerWidth
 			lastScaleLevel.current = scaleLevel
-			setDividers(Array(lineCount).fill(0))
+			setLinesKey((prevKey) => prevKey + 1)
 		}
 	}, [calendar, lineCount, containerWidth, scaleLevel])
 
@@ -114,20 +112,7 @@ function TimelineAnchorComponent({ containerWidth }: Props) {
 				<Box>
 					<TimelineAnchorLabel />
 					<TimelineAnchorContainer>
-						{dividers.map((_, index) => (
-							<TimelineAnchorLine
-								key={`${index}`}
-								theme={theme}
-								index={index}
-								lineCount={lineCount}
-								scaleLevel={scaleLevel}
-								smallGroupSize={smallGroupSize}
-								mediumGroupSize={mediumGroupSize}
-								largeGroupSize={largeGroupSize}
-								scaledTimeToRealTime={scaledTimeToRealTime}
-								containerWidth={containerWidth}
-							/>
-						))}
+						<TimelineAnchorLineList key={linesKey} containerWidth={containerWidth} />
 					</TimelineAnchorContainer>
 				</Box>
 			</Fade>

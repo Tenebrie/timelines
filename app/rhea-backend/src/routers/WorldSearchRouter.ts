@@ -13,7 +13,7 @@ import {
 } from 'moonflower'
 import { z } from 'zod'
 
-import { tagListTag, worldDetailsTag, worldSearchTag } from './utils/tags.js'
+import { tagEntityTag, worldDetailsTag, worldSearchTag } from './utils/tags.js'
 
 const router = new Router()
 
@@ -25,7 +25,7 @@ router.get('/api/world/:worldId/search/:query', async (ctx) => {
 	useApiEndpoint({
 		name: 'searchWorld',
 		description: 'Searches all eligible world entities.',
-		tags: [worldSearchTag, worldDetailsTag, tagListTag],
+		tags: [worldSearchTag, worldDetailsTag, tagEntityTag],
 	})
 
 	await useAuth(ctx, UserAuthenticator)
