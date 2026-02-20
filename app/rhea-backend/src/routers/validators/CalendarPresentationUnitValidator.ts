@@ -8,6 +8,7 @@ const calendarPresentationUnitSchema = z.array(
 		unitId: z.string(),
 		formatString: z.string().default(''),
 		subdivision: z.number().int().min(1).optional(),
+		labeledIndices: z.array(z.number().min(0)).optional(),
 	}),
 )
 

@@ -125,12 +125,18 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 				presentationId: presentation.id,
 				body: {
 					units: units
-						.map((u) => ({ unitId: u.unitId, formatString: u.formatString, subdivision: u.subdivision }))
+						.map((u) => ({
+							unitId: u.unitId,
+							formatString: u.formatString,
+							subdivision: u.subdivision,
+							labeledIndices: u.labeledIndices,
+						}))
 						.concat(
 							addedUnits.map((u) => ({
 								unitId: u.unitId,
 								formatString: u.formatString,
 								subdivision: u.subdivision ?? 1,
+								labeledIndices: u.labeledIndices ?? [],
 							})),
 						),
 				},
@@ -197,7 +203,7 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 			.slice()
 			.sort(
 				(a, b) =>
-					Number(a.backingUnit?.duration) * a.subdivision - Number(b.backingUnit?.duration) * b.subdivision,
+					Number(b.backingUnit?.duration) * b.subdivision - Number(a.backingUnit?.duration) * a.subdivision,
 			)
 	}, [localUnits])
 

@@ -2589,10 +2589,6 @@ export interface operations {
                         units: {
                             children: {
                                 id: string;
-                                /** Format: date-time */
-                                createdAt: string;
-                                /** Format: date-time */
-                                updatedAt: string;
                                 position: number;
                                 label?: null | string;
                                 shortLabel?: null | string;
@@ -2602,10 +2598,6 @@ export interface operations {
                             }[];
                             parents: {
                                 id: string;
-                                /** Format: date-time */
-                                createdAt: string;
-                                /** Format: date-time */
-                                updatedAt: string;
                                 position: number;
                                 label?: null | string;
                                 shortLabel?: null | string;
@@ -2614,12 +2606,7 @@ export interface operations {
                                 childUnitId: string;
                             }[];
                             id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
                             name: string;
-                            calendarId: string;
                             position: number;
                             displayName: string;
                             displayNameShort: string;
@@ -2634,37 +2621,39 @@ export interface operations {
                         presentations: {
                             units: {
                                 id: string;
-                                /** Format: date-time */
-                                createdAt: string;
-                                /** Format: date-time */
-                                updatedAt: string;
                                 name: string;
                                 unitId: string;
-                                presentationId: string;
                                 formatString: string;
                                 subdivision: number;
                                 labeledIndices: number[];
                             }[];
                             id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
                             name: string;
-                            calendarId: string;
                             scaleFactor: number;
                             compression: number;
                             baselineUnitId?: null | string;
                         }[];
+                        seasons: {
+                            intervals: {
+                                id: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                leftIndex: number;
+                                rightIndex: number;
+                                seasonId: string;
+                            }[];
+                            id: string;
+                            name: string;
+                            position: number;
+                            formatShorthand?: null | string;
+                        }[];
                         description: string;
                         id: string;
                         /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
                         updatedAt: string;
                         name: string;
-                        worldId?: null | string;
-                        ownerId?: null | string;
                         position: number;
                         /** Format: bigint */
                         originTime: string;
@@ -2975,6 +2964,7 @@ export interface operations {
                         unitId: string;
                         formatString: string;
                         subdivision?: number;
+                        labeledIndices?: number[];
                     }[];
                     compression?: number;
                     baselineUnitId?: null | string;
@@ -2985,6 +2975,7 @@ export interface operations {
                         unitId: string;
                         formatString: string;
                         subdivision?: number;
+                        labeledIndices?: number[];
                     }[];
                     compression?: number;
                     baselineUnitId?: null | string;
@@ -4804,10 +4795,15 @@ export interface operations {
                             units: {
                                 children: {
                                     id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
+                                    position: number;
+                                    label?: null | string;
+                                    shortLabel?: null | string;
+                                    repeats: number;
+                                    parentUnitId: string;
+                                    childUnitId: string;
+                                }[];
+                                parents: {
+                                    id: string;
                                     position: number;
                                     label?: null | string;
                                     shortLabel?: null | string;
@@ -4841,6 +4837,7 @@ export interface operations {
                                 name: string;
                                 scaleFactor: number;
                                 compression: number;
+                                baselineUnitId?: null | string;
                             }[];
                             seasons: {
                                 intervals: {
@@ -4860,8 +4857,12 @@ export interface operations {
                             }[];
                             description: string;
                             id: string;
+                            /** Format: date-time */
+                            updatedAt: string;
                             name: string;
                             position: number;
+                            /** Format: bigint */
+                            originTime: string;
                             dateFormat?: null | string;
                         }[];
                         actors: {

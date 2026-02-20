@@ -285,6 +285,7 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 		name: string
 		scaleFactor: number
 		compression: number
+		baselineUnitId?: null | string
 	}[]
 	seasons: {
 		intervals: {
@@ -471,6 +472,7 @@ export type UpdateCalendarPresentationApiArg = {
 			unitId: string
 			formatString: string
 			subdivision?: number
+			labeledIndices?: number[]
 		}[]
 		compression?: number
 		baselineUnitId?: null | string

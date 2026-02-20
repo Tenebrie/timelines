@@ -7,6 +7,7 @@ import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useCallback, useMemo, useRef, useState } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 import { Provider, useSelector } from 'react-redux'
 
 import { EventBusProvider } from '@/app/features/eventBus'
@@ -98,14 +99,16 @@ export function CalendarPresentationPreview({ presentation }: Props) {
 				<Typography variant="subtitle2">Preview</Typography>
 			</Stack>
 			<Box ref={containerRef} sx={{ position: 'relative', height: 64, overflow: 'hidden' }}>
-				{previewStore && containerWidth > 0 && (
-					<Provider store={previewStore}>
-						<EventBusProvider>
-							<PreviewScrollHandler containerWidth={containerWidth} />
-							<TimelineAnchor containerWidth={containerWidth} />
-						</EventBusProvider>
-					</Provider>
-				)}
+				<ErrorBoundary fallbackRender={() => <div>Error loading preview</div>}>
+					{previewStore && containerWidth > 0 && (
+						<Provider store={previewStore}>
+							<EventBusProvider>
+								<PreviewScrollHandler containerWidth={containerWidth} />
+								<TimelineAnchor containerWidth={containerWidth} />
+							</EventBusProvider>
+						</Provider>
+					)}
+				</ErrorBoundary>
 				{/* Skeleton */}
 				{!previewStore && (
 					<Box

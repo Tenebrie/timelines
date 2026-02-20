@@ -6,6 +6,7 @@ import debounce from 'lodash.debounce'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { ConfirmPopoverButton } from '@/ui-lib/components/PopoverButton/ConfirmPopoverButton'
 
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'
@@ -30,6 +31,8 @@ function CalendarPresentationUnitComponent({ layer, onSave, onDelete, index }: P
 
 	const [subdivision, setSubdivision] = useState(layer.subdivision)
 	const [formatString, setFormatString] = useState(layer.formatString)
+	const [labeledIndices, setLabeledIndices] = useState<number[]>(layer.labeledIndices)
+	const [labeledIndicesString, setLabeledIndicesString] = useState(layer.labeledIndices.join(', '))
 
 	const onSaveDebounced = useMemo(() => {
 		return debounce((value: Partial<CalendarDraftPresentationUnit>) => {
@@ -37,10 +40,19 @@ function CalendarPresentationUnitComponent({ layer, onSave, onDelete, index }: P
 		}, 300)
 	}, [onSave])
 
+	const currentLabeledIndices = useAutoRef(labeledIndices)
 	useEffect(() => {
 		setSubdivision(layer.subdivision)
 		setFormatString(layer.formatString)
-	}, [layer.formatString, layer.subdivision])
+
+		const oldIndicesParsed = currentLabeledIndices.current.slice().sort()
+		const newIndicesParsed = layer.labeledIndices.slice().sort()
+
+		if (JSON.stringify(oldIndicesParsed) !== JSON.stringify(newIndicesParsed)) {
+			setLabeledIndices(layer.labeledIndices)
+			// setLabeledIndicesString(newIndicesParsed.join(', '))
+		}
+	}, [layer.formatString, layer.subdivision, layer.labeledIndices, currentLabeledIndices])
 
 	const handleSubdivisionChange = useCallback(
 		(value: number) => {
@@ -48,21 +60,41 @@ function CalendarPresentationUnitComponent({ layer, onSave, onDelete, index }: P
 				return
 			}
 			setSubdivision(value)
-			onSaveDebounced({ subdivision: value, formatString })
+			onSaveDebounced({ subdivision: value, formatString, labeledIndices })
 		},
-		[formatString, onSaveDebounced],
+		[formatString, onSaveDebounced, labeledIndices],
 	)
 
 	const handleFormatStringChange = useCallback(
 		(value: string) => {
 			setFormatString(value)
-			onSaveDebounced({ subdivision, formatString: value })
+			onSaveDebounced({ subdivision, formatString: value, labeledIndices })
 		},
-		[onSaveDebounced, subdivision],
+		[onSaveDebounced, subdivision, labeledIndices],
+	)
+
+	const handleLabeledIndicesChange = useCallback(
+		(value: string) => {
+			setLabeledIndicesString(value)
+
+			const values = value.split(',').map((v) => Number(v.trim()))
+			if (
+				values.some((v) => isNaN(v)) ||
+				(values.length === 1 && values[0] === 0) ||
+				values.some((v) => v < 0)
+			) {
+				setLabeledIndices([])
+				onSaveDebounced({ subdivision, formatString, labeledIndices: [] })
+				return
+			}
+			setLabeledIndices(values)
+			onSaveDebounced({ subdivision, formatString, labeledIndices: values })
+		},
+		[formatString, onSaveDebounced, subdivision],
 	)
 
 	const sizeLabel =
-		index === 0 ? 'Small' : index === 1 ? 'Medium' : index === 2 ? 'Large' : `Level ${index + 1}`
+		index === 2 ? 'Small' : index === 1 ? 'Medium' : index === 0 ? 'Large' : `Level ${index + 1}`
 
 	return (
 		<Stack
@@ -96,6 +128,15 @@ function CalendarPresentationUnitComponent({ layer, onSave, onDelete, index }: P
 				value={formatString}
 				onChange={(e) => {
 					handleFormatStringChange(e.target.value)
+				}}
+				sx={{ flex: 1 }}
+			/>
+			<TextField
+				size="small"
+				label="Labeled Indices"
+				value={labeledIndicesString}
+				onChange={(e) => {
+					handleLabeledIndicesChange(e.target.value)
 				}}
 				sx={{ flex: 1 }}
 			/>

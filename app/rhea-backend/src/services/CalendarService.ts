@@ -138,7 +138,6 @@ export const CalendarService = {
 						createdAt: true,
 						updatedAt: true,
 						calendarId: true,
-						baselineUnitId: true,
 					},
 					include: {
 						units: {
@@ -356,7 +355,7 @@ export const CalendarService = {
 		presentationId: string
 		params: {
 			name?: string
-			units?: { unitId: string; formatString: string; subdivision?: number }[]
+			units?: { unitId: string; formatString: string; subdivision?: number; labeledIndices?: number[] }[]
 			compression?: number
 			baselineUnitId?: string | null
 		}
@@ -400,6 +399,7 @@ export const CalendarService = {
 								name: calendarUnit.displayName || calendarUnit.name,
 								formatString: unit.formatString,
 								subdivision: unit.subdivision ?? 1,
+								labeledIndices: unit.labeledIndices,
 							},
 						})
 					}

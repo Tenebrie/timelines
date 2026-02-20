@@ -220,7 +220,6 @@ export const WorldService = {
 								createdAt: true,
 								updatedAt: true,
 								calendarId: true,
-								baselineUnitId: true,
 							},
 							include: {
 								units: {
