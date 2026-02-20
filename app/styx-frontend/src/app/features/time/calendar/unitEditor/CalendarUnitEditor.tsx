@@ -21,7 +21,7 @@ export enum CalendarUnitEditorTab {
 	Preview = 'preview',
 }
 
-export function CalendarUnitEditor({ unit, onClose }: Props) {
+export function CalendarUnitEditor({ unit }: Props) {
 	const { calendar } = useSelector(getCalendarEditorState)
 
 	if (!calendar) {
@@ -32,7 +32,7 @@ export function CalendarUnitEditor({ unit, onClose }: Props) {
 		<Stack gap={2} direction="row">
 			<Stack sx={{ flex: 1 }}>
 				<Stack gap={1}>
-					<CalendarUnitTitle unit={unit} onClose={onClose} />
+					<CalendarUnitTitle unit={unit} />
 					<Divider />
 				</Stack>
 

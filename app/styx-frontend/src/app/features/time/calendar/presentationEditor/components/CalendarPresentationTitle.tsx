@@ -1,8 +1,5 @@
 import { useUpdateCalendarPresentationMutation } from '@api/calendarApi'
 import { CalendarDraftPresentation } from '@api/types/calendarTypes'
-import CloseIcon from '@mui/icons-material/Close'
-import IconButton from '@mui/material/IconButton'
-import Tooltip from '@mui/material/Tooltip'
 import { useDispatch, useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
@@ -13,10 +10,9 @@ import { getCalendarEditorState } from '../../CalendarSliceSelectors'
 
 type Props = {
 	presentation: CalendarDraftPresentation
-	onClose: () => void
 }
 
-export const CalendarPresentationTitle = ({ presentation, onClose }: Props) => {
+export const CalendarPresentationTitle = ({ presentation }: Props) => {
 	const { calendar } = useSelector(getCalendarEditorState)
 	const [savePresentation] = useUpdateCalendarPresentationMutation()
 
@@ -35,25 +31,5 @@ export const CalendarPresentationTitle = ({ presentation, onClose }: Props) => {
 		})
 	})
 
-	return (
-		<EditableTitle
-			startAdornment={
-				<Tooltip title="Close" disableInteractive enterDelay={400}>
-					<IconButton
-						size="small"
-						onClick={onClose}
-						edge="start"
-						sx={{
-							padding: '6px',
-						}}
-					>
-						<CloseIcon fontSize="small" />
-					</IconButton>
-				</Tooltip>
-			}
-			value={presentation.name}
-			onSave={onSave}
-			data-testid="CalendarPresentationTitle"
-		/>
-	)
+	return <EditableTitle value={presentation.name} onSave={onSave} data-testid="CalendarPresentationTitle" />
 }
