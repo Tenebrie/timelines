@@ -2426,6 +2426,25 @@ export interface operations {
                                 subdivision: number;
                                 labeledIndices: number[];
                             }[];
+                            baselineUnit: null | {
+                                id: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                name: string;
+                                calendarId: string;
+                                position: number;
+                                displayName?: null | string;
+                                displayNameShort?: null | string;
+                                displayNamePlural?: null | string;
+                                formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
+                                formatShorthand?: null | string;
+                                negativeFormat: "MinusSign" | "AbsoluteValue";
+                                /** Format: bigint */
+                                duration: string;
+                                treeDepth: number;
+                            };
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
@@ -2606,9 +2625,6 @@ export interface operations {
                 content: {
                     "application/json": {
                         units: {
-                            displayName: string;
-                            displayNameShort: string;
-                            displayNamePlural: string;
                             children: {
                                 id: string;
                                 /** Format: date-time */
@@ -2643,6 +2659,9 @@ export interface operations {
                             name: string;
                             calendarId: string;
                             position: number;
+                            displayName: string;
+                            displayNameShort: string;
+                            displayNamePlural: string;
                             formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                             formatShorthand?: null | string;
                             negativeFormat: "MinusSign" | "AbsoluteValue";
@@ -2683,6 +2702,25 @@ export interface operations {
                                 subdivision: number;
                                 labeledIndices: number[];
                             }[];
+                            baselineUnit: null | {
+                                id: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                name: string;
+                                calendarId: string;
+                                position: number;
+                                displayName?: null | string;
+                                displayNameShort?: null | string;
+                                displayNamePlural?: null | string;
+                                formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
+                                formatShorthand?: null | string;
+                                negativeFormat: "MinusSign" | "AbsoluteValue";
+                                /** Format: bigint */
+                                duration: string;
+                                treeDepth: number;
+                            };
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
@@ -4916,9 +4954,6 @@ export interface operations {
                         isReadOnly: boolean;
                         calendars: {
                             units: {
-                                displayName: string;
-                                displayNameShort: string;
-                                displayNamePlural: string;
                                 children: {
                                     id: string;
                                     /** Format: date-time */
@@ -4953,6 +4988,9 @@ export interface operations {
                                 name: string;
                                 calendarId: string;
                                 position: number;
+                                displayName: string;
+                                displayNameShort: string;
+                                displayNamePlural: string;
                                 formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                                 formatShorthand?: null | string;
                                 negativeFormat: "MinusSign" | "AbsoluteValue";
@@ -4963,9 +5001,6 @@ export interface operations {
                             presentations: {
                                 units: {
                                     unit: {
-                                        displayName: string;
-                                        displayNameShort: string;
-                                        displayNamePlural: string;
                                         children: {
                                             id: string;
                                             /** Format: date-time */
@@ -5000,6 +5035,9 @@ export interface operations {
                                         name: string;
                                         calendarId: string;
                                         position: number;
+                                        displayName: string;
+                                        displayNameShort: string;
+                                        displayNamePlural: string;
                                         formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
                                         formatShorthand?: null | string;
                                         negativeFormat: "MinusSign" | "AbsoluteValue";

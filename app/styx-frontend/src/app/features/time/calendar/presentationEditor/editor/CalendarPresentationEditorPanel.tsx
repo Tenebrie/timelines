@@ -21,12 +21,11 @@ import { CalendarPresentationUnit } from './CalendarPresentationUnit'
 
 type Props = {
 	presentation: CalendarDraftPresentation
-	onClose: () => void
 }
 
 export type NewUnitData = NonNullable<UpdateCalendarPresentationApiArg['body']['units']>[number]
 
-export function CalendarPresentationEditorPanel({ presentation, onClose }: Props) {
+export function CalendarPresentationEditorPanel({ presentation }: Props) {
 	const { calendar } = useSelector(getCalendarEditorState, (a, b) => a.calendar === b.calendar)
 	const [updatePresentation] = useUpdateCalendarPresentationMutation()
 
@@ -203,7 +202,7 @@ export function CalendarPresentationEditorPanel({ presentation, onClose }: Props
 
 	return (
 		<Stack gap={1}>
-			<CalendarPresentationTitle presentation={presentation} onClose={onClose} />
+			<CalendarPresentationTitle presentation={presentation} />
 			<Divider />
 
 			<Stack sx={{ p: '0 8px' }} gap={1}>

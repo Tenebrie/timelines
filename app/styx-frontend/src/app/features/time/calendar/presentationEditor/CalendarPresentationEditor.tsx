@@ -41,10 +41,7 @@ export function CalendarPresentationEditor() {
 				<Stack sx={{ p: '8px' }}>
 					<Paper variant="outlined" sx={{ p: '12px 8px' }}>
 						{selectedPresentation ? (
-							<CalendarPresentationEditorPanel
-								presentation={selectedPresentation}
-								onClose={() => onSelectPresentation(undefined)}
-							/>
+							<CalendarPresentationEditorPanel presentation={selectedPresentation} />
 						) : (
 							<PresentationEmptyState hasPresentations={(calendar.presentations.length ?? 0) > 0} />
 						)}

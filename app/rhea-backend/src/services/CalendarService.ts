@@ -849,7 +849,7 @@ export const CalendarService = {
 		}
 	},
 
-	formatCalendarUnit: (unit: CalendarUnit) => {
+	formatCalendarUnit: <T extends CalendarUnit>(unit: T) => {
 		return {
 			...unit,
 			displayName: (unit.displayName || unit.name).trim(),
@@ -858,7 +858,7 @@ export const CalendarService = {
 		}
 	},
 
-	formatCalendarUnits: (units: CalendarUnit[]) => {
+	formatCalendarUnits: <T extends CalendarUnit>(units: T[]) => {
 		return units.map(CalendarService.formatCalendarUnit)
 	},
 }

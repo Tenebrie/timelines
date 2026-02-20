@@ -56,9 +56,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	isReadOnly: boolean
 	calendars: {
 		units: {
-			displayName: string
-			displayNameShort: string
-			displayNamePlural: string
 			children: {
 				id: string
 				createdAt: string
@@ -87,6 +84,9 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			name: string
 			calendarId: string
 			position: number
+			displayName: string
+			displayNameShort: string
+			displayNamePlural: string
 			formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 			formatShorthand?: null | string
 			negativeFormat: 'MinusSign' | 'AbsoluteValue'
@@ -96,9 +96,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		presentations: {
 			units: {
 				unit: {
-					displayName: string
-					displayNameShort: string
-					displayNamePlural: string
 					children: {
 						id: string
 						createdAt: string
@@ -127,6 +124,9 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 					name: string
 					calendarId: string
 					position: number
+					displayName: string
+					displayNameShort: string
+					displayNamePlural: string
 					formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 					formatShorthand?: null | string
 					negativeFormat: 'MinusSign' | 'AbsoluteValue'
