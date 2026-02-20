@@ -52,7 +52,7 @@ function CalendarUnitListItemComponent({ unit, isSelected, onSelectUnit }: Props
 				const pluralNameToUse =
 					existingData.displayNamePlural && existingData.displayNamePlural.length > 0
 						? existingData.displayNamePlural
-						: existingData.name + 's'
+						: existingData.name
 				const existing = totalCount.get(nameToUse)
 				if (existing) {
 					existing.count += child.repeats

@@ -3,10 +3,12 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useCallback, useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
-import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useDebouncedState } from '@/app/hooks/useDebouncedState'
 import { ConfirmPopoverButton } from '@/ui-lib/components/PopoverButton/ConfirmPopoverButton'
+
+import { getCalendarEditorState } from '../../CalendarSliceSelectors'
 
 type Props = {
 	layer: CalendarDraftPresentationUnit
@@ -23,9 +25,12 @@ export function CalendarPresentationUnit({
 	onDelete,
 	index,
 }: Props) {
-	const { getBackingUnitOrThrow } = useWorldTime()
+	const { calendar } = useSelector(getCalendarEditorState, (a, b) => a.calendar === b.calendar)
+	const backingUnit = calendar?.units.find((u) => u.id === layer.unitId) ?? null
+	if (!calendar || !backingUnit) {
+		throw new Error('No calendar set or invalid backing unit')
+	}
 
-	const backingUnit = getBackingUnitOrThrow(layer.unitId)
 	const name = backingUnit.displayName ?? backingUnit.name
 
 	const [formatString, setFormatString] = useState(layer.formatString)

@@ -42,17 +42,6 @@ export const useWorldTime = () => {
 		}
 	}, [presentation])
 
-	const getBackingUnitOrThrow = useCallback(
-		(unitId: string) => {
-			const unit = worldCalendar?.units.find((u) => u.id === unitId) ?? null
-			if (!unit) {
-				throw new Error(`Unit with id ${unitId} not found`)
-			}
-			return unit
-		},
-		[worldCalendar],
-	)
-
 	return {
 		calendar: worldCalendar,
 		units: worldCalendar?.units ?? [],
@@ -60,6 +49,5 @@ export const useWorldTime = () => {
 		originTime: worldCalendar?.originTime ?? 0,
 		parseTime,
 		timeToLabel,
-		getBackingUnitOrThrow,
 	}
 }

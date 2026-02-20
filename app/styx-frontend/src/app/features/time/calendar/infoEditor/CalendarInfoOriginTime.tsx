@@ -128,7 +128,7 @@ export function CalendarInfoOriginTime() {
 				</Paper>
 				<Stack direction="row" justifyContent="flex-end" spacing={1} sx={{ mt: 1 }}>
 					<Button variant="outlined" startIcon={<UndoIcon />} onClick={onClear} disabled={!isDirty}>
-						Clear
+						Undo
 					</Button>
 					<Button
 						variant="contained"
