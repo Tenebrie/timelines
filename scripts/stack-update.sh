@@ -21,61 +21,20 @@ BACKEND_SERVICES=(
 )
 GATEKEEPER="timelines_gatekeeper"
 
-MAX_WAIT_ITERATIONS=300  # 300 * 2s = 10 minutes
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
 short_name() { echo "${1#timelines_}"; }
 
-service_state() {
-  docker service inspect --format '{{.UpdateStatus.State}}' "$1" 2>/dev/null || echo "unknown"
-}
-
-service_msg() {
-  docker service inspect --format '{{.UpdateStatus.State}}: {{.UpdateStatus.Message}}' "$1" 2>/dev/null || echo "unknown"
-}
-
-# Wait until none of the given services are in any of the <wait_states>.
-# Prints labeled status lines only when the message changes.
-# Exits with error if the timeout is reached.
-# Usage: monitor_until_done "state1|state2" service1 service2 ...
-monitor_until_done() {
-  local wait_states="$1"; shift
-  local svcs=("$@")
-  local iterations=0
-
-  declare -A last_msg
-
-  while true; do
-    local all_done=true
-
-    for svc in "${svcs[@]}"; do
-      local name; name=$(short_name "$svc")
-      local state; state=$(service_state "$svc")
-      local msg;   msg=$(service_msg "$svc")
-
-      if [[ "${last_msg[$svc]}" != "$msg" ]]; then
-        echo "[${name}] ${msg}"
-        last_msg[$svc]="$msg"
-      fi
-
-      if [[ "$state" =~ ^(${wait_states})$ ]]; then
-        all_done=false
-      fi
-    done
-
-    $all_done && break
-
-    iterations=$((iterations + 1))
-    if (( iterations >= MAX_WAIT_ITERATIONS )); then
-      echo "ERROR: Timed out waiting for services to leave state '${wait_states}'" >&2
-      exit 1
-    fi
-
-    sleep 2
-  done
+# Run a docker service update, prefixing every output line with [label].
+# Captures the exit code so we can check it after `wait`.
+labeled_update() {
+  local svc="$1"
+  local image="$2"
+  local name; name=$(short_name "$svc")
+  docker service update --image "$image" "$svc" 2>&1 \
+    | sed "s/^/[${name}] /" &
 }
 
 print_service_diagnostics() {
@@ -86,20 +45,6 @@ print_service_diagnostics() {
   docker service ps "$svc" --no-trunc --format "table {{.Name}}\t{{.CurrentState}}\t{{.Error}}"
   echo "--- [${name}] recent logs ---"
   docker service logs --tail 100 "$svc" 2>&1 || true
-}
-
-rollback_services() {
-  local svcs=("$@")
-  echo ""
-  echo "Rolling back..."
-  for svc in "${svcs[@]}"; do
-    local name; name=$(short_name "$svc")
-    echo "[${name}] Rolling back..."
-    docker service update --detach --rollback "$svc"
-  done
-  echo ""
-  echo "Waiting for rollbacks to complete..."
-  monitor_until_done "rollback_started|rollback_in_progress" "${svcs[@]}"
 }
 
 # ---------------------------------------------------------------------------
@@ -133,47 +78,55 @@ fi
 
 docker system prune -f
 
-# Kick off all backend updates in parallel
+# Kick off all backend updates in parallel, with labeled output
 echo "Starting backend updates (version: ${VERSION})..."
 for svc in "${BACKEND_SERVICES[@]}"; do
   name=$(short_name "$svc")
   image="tenebrie/timelines-${name}:${VERSION}"
-  echo "[${name}] Updating to ${image}..."
-  docker service update --detach --image "$image" "$svc"
+  labeled_update "$svc" "$image"
 done
 
-echo ""
-echo "Waiting for backend rollouts to complete..."
-monitor_until_done "updating" "${BACKEND_SERVICES[@]}"
+wait
 
 # Check for failures
-failed_services=()
+FAILED=false
 for svc in "${BACKEND_SERVICES[@]}"; do
-  state=$(service_state "$svc")
-  if [[ "$state" != "completed" ]]; then
-    echo "FAILED: [$(short_name "$svc")] state is '${state}'"
+  STATE=$(docker service inspect --format '{{.UpdateStatus.State}}' "$svc")
+  if [[ "$STATE" != "completed" ]]; then
+    echo "FAILED: [$(short_name "$svc")] state is '${STATE}'"
     print_service_diagnostics "$svc"
-    failed_services+=("$svc")
+    FAILED=true
   fi
 done
 
-if (( ${#failed_services[@]} > 0 )); then
-  rollback_services "${failed_services[@]}"
+if $FAILED; then
+  echo ""
+  echo "Rolling back failed services..."
+  for svc in "${BACKEND_SERVICES[@]}"; do
+    STATE=$(docker service inspect --format '{{.UpdateStatus.State}}' "$svc")
+    if [[ "$STATE" != "completed" ]]; then
+      name=$(short_name "$svc")
+      echo "[${name}] Rolling back..."
+      docker service update --rollback "$svc" 2>&1 | sed "s/^/[${name}] /" &
+    fi
+  done
+  wait
   exit 1
 fi
 
 # Update gatekeeper last, once all backends are confirmed healthy
 echo ""
-echo "[gatekeeper] Updating to tenebrie/timelines-gatekeeper:${VERSION}..."
-docker service update --detach --image "tenebrie/timelines-gatekeeper:${VERSION}" "$GATEKEEPER"
-echo "Waiting for gatekeeper rollout to complete..."
-monitor_until_done "updating" "$GATEKEEPER"
+name=$(short_name "$GATEKEEPER")
+echo "[${name}] Updating to tenebrie/timelines-gatekeeper:${VERSION}..."
+docker service update --image "tenebrie/timelines-gatekeeper:${VERSION}" "$GATEKEEPER" 2>&1 \
+  | sed "s/^/[${name}] /"
 
-gk_state=$(service_state "$GATEKEEPER")
-if [[ "$gk_state" != "completed" ]]; then
-  echo "FAILED: [gatekeeper] state is '${gk_state}'"
+GK_STATE=$(docker service inspect --format '{{.UpdateStatus.State}}' "$GATEKEEPER")
+if [[ "$GK_STATE" != "completed" ]]; then
+  echo "FAILED: [${name}] state is '${GK_STATE}'"
   print_service_diagnostics "$GATEKEEPER"
-  rollback_services "$GATEKEEPER"
+  echo "[${name}] Rolling back..."
+  docker service update --rollback "$GATEKEEPER" 2>&1 | sed "s/^/[${name}] /"
   exit 1
 fi
 
