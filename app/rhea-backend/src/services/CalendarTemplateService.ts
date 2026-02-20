@@ -202,7 +202,7 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 
 			const unitNameCache: Map<string, CalendarUnit> = new Map()
 			const unitBucketCache: Map<string, CalendarUnit[]> = new Map()
-			const unitsToCreate = unitCreateData.slice().reverse()
+			const unitsToCreate = unitCreateData
 			for (let i = 0; i < unitsToCreate.length; i++) {
 				const data = unitsToCreate[i]
 				const displayName = data.displayName ?? data.name
@@ -528,19 +528,19 @@ export const CalendarTemplateService = {
 				compression: 1,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 0', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+			.createPresentation('Hours', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
 				compression: 5,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 1', ['Day: MMM DD, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+			.createPresentation('Days', ['Day: MMM DD, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
 				compression: 20,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 2', ['Month: MMM DD, YYYY', 'Day: MMM DD', 'Hour x6: hh:mm'], {
+			.createPresentation('Weeks', ['Month: MMM DD, YYYY', 'Day: MMM DD', 'Hour x6: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Days', ['Month: MMM DD, YYYY', 'Day 5,10,15,20,25: M DD', 'Hour x24: '], {
+			.createPresentation('Months', ['Month: MMM DD, YYYY', 'Day 5,10,15,20,25: M DD', 'Hour x24: '], {
 				compression: 4,
 				baselineUnit: 'Hour',
 			})
@@ -732,19 +732,19 @@ export const CalendarTemplateService = {
 				compression: 1,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 0', ['Sol: SS MMM YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+			.createPresentation('Hours', ['Sol: SS MMM YYYY', 'Hour: hh:mm', 'Minute x30: '], {
 				compression: 5,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 1', ['Sol: SS MMM YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+			.createPresentation('Days', ['Sol: SS MMM YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
 				compression: 20,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 2', ['Month: SS MMM YYYY', 'Sol: SS MMM', 'Hour x6: hh:mm'], {
+			.createPresentation('Weeks', ['Month: SS MMM YYYY', 'Sol: SS MMM', 'Hour x6: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Days', ['Month: SS MMM YYYY', 'Sol 7,14,21: SS M', 'Hour x24: '], {
+			.createPresentation('Months', ['Month: SS MMM YYYY', 'Sol 7,14,21: SS M', 'Hour x24: '], {
 				compression: 4,
 				baselineUnit: 'Hour',
 			})
@@ -868,19 +868,19 @@ export const CalendarTemplateService = {
 				compression: 1,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 0', ['Day: DD MMM, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+			.createPresentation('Hours', ['Day: DD MMM, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
 				compression: 5,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 1', ['Day: DD MMM, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+			.createPresentation('Days', ['Day: DD MMM, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
 				compression: 20,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 2', ['Month: DD MMM, YYYY', 'Day: DD MMM', 'Hour x6: hh:mm'], {
+			.createPresentation('Weeks', ['Month: DD MMM, YYYY', 'Day: DD MMM', 'Hour x6: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Days', ['Month: DD MMM, YYYY', 'Day 5,10,15,20,25: DD M', 'Hour x24: '], {
+			.createPresentation('Months', ['Month: DD MMM, YYYY', 'Day 5,10,15,20,25: DD M', 'Hour x24: '], {
 				compression: 4,
 				baselineUnit: 'Hour',
 			})
@@ -968,27 +968,27 @@ export const CalendarTemplateService = {
 				compression: 1,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 0', ['Day: QQQ DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+			.createPresentation('Hours', ['Day: QQQ DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
 				compression: 5,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 1', ['Day: QQQ DD, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+			.createPresentation('Days', ['Day: QQQ DD, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
 				compression: 20,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 2', ['Quadrum: QQQ DD, YYYY', 'Day: QQQ DD', 'Hour x6: hh:mm'], {
+			.createPresentation('Weeks', ['Quadrum: QQQ DD, YYYY', 'Day: QQQ DD', 'Hour x6: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Days', ['Quadrum: QQQ DD, YYYY', 'Day 5,10: Q DD', 'Hour x24: '], {
+			.createPresentation('Quadrums', ['Quadrum: QQQ DD, YYYY', 'Day 5,10: Q DD', 'Hour x24: '], {
 				compression: 4,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Quarters', ['Year: QQQ YYYY', 'Quadrum: QQQ YYYY', 'Day 5,10: '], {
+			.createPresentation('Years', ['Year: QQQ YYYY', 'Quadrum: QQQ YYYY', 'Day 5,10: '], {
 				compression: 1,
 				baselineUnit: 'Day',
 			})
-			.createPresentation('Years', ['Year x4: YYYY', 'Year: YYYY', 'Quadrum: '], {
+			.createPresentation('Quad-Years', ['Year x4: YYYY', 'Year: YYYY', 'Quadrum: '], {
 				compression: 1,
 				baselineUnit: 'Quadrum',
 			})
@@ -1083,19 +1083,19 @@ export const CalendarTemplateService = {
 				compression: 1,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 0', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+			.createPresentation('Hours', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
 				compression: 5,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 1', ['Day: MMM DD, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+			.createPresentation('Days', ['Day: MMM DD, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
 				compression: 20,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours 2', ['Month: MMM DD, YYYY', 'Day: MMM DD', 'Hour x6: hh:mm'], {
+			.createPresentation('Weeks', ['Month: MMM DD, YYYY', 'Day: MMM DD', 'Hour x6: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Days', ['Month: MMM DD, YYYY', 'Day 5,10,15,20,25: M DD', 'Hour x24: '], {
+			.createPresentation('Months', ['Month: MMM DD, YYYY', 'Day 5,10,15,20,25: M DD', 'Hour x24: '], {
 				compression: 4,
 				baselineUnit: 'Hour',
 			})

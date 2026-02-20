@@ -3050,14 +3050,20 @@ export interface operations {
                     units?: {
                         unitId: string;
                         formatString: string;
+                        subdivision?: number;
                     }[];
+                    compression?: number;
+                    baselineUnitId?: null | string;
                 };
                 "application/x-www-form-urlencoded": {
                     name?: string;
                     units?: {
                         unitId: string;
                         formatString: string;
+                        subdivision?: number;
                     }[];
+                    compression?: number;
+                    baselineUnitId?: null | string;
                 };
             };
         };

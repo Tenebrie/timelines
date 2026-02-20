@@ -6,9 +6,13 @@ import {
 } from '@api/types/calendarTypes'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
+import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
+
+import { useDebouncedState } from '@/app/hooks/useDebouncedState'
+import { NewEntityAutocomplete } from '@/ui-lib/components/Autocomplete/NewEntityAutocomplete'
 
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'
 import { CalendarPresentationTitle } from '../components/CalendarPresentationTitle'
@@ -28,9 +32,29 @@ export function CalendarPresentationEditorPanel({ presentation, onClose }: Props
 
 	const [localUnits, setLocalUnits] = useState(presentation.units)
 
+	const saveCompression = useCallback(
+		(value: number) => {
+			if (!calendar || isNaN(value) || value <= 0) {
+				return
+			}
+			updatePresentation({
+				calendarId: calendar.id,
+				presentationId: presentation.id,
+				body: { compression: value },
+			})
+		},
+		[calendar, presentation.id, updatePresentation],
+	)
+
+	const [, localCompression, setLocalCompression, setLocalCompressionInstant] = useDebouncedState({
+		initialValue: presentation.compression,
+		onDebounce: saveCompression,
+	})
+
 	useEffect(() => {
 		setLocalUnits(presentation.units)
-	}, [presentation.units])
+		setLocalCompressionInstant(presentation.compression)
+	}, [presentation.units, presentation.compression, setLocalCompressionInstant])
 
 	// Get deduplicated visible units (by bucket)
 	const availableUnits = useMemo(() => {
@@ -59,6 +83,27 @@ export function CalendarPresentationEditorPanel({ presentation, onClose }: Props
 		return availableUnits.filter((u) => !addedUnitIds.has(u.id))
 	}, [availableUnits, localUnits])
 
+	// Get units that can be used as baseline (smaller or equal to smallest unit in presentation)
+	const baselineUnitOptions = useMemo(() => {
+		if (!calendar || localUnits.length === 0) {
+			return []
+		}
+
+		// Find the smallest unit's duration in this presentation
+		const smallestDuration = Math.min(...localUnits.map((u) => Number(u.unit.duration)))
+
+		// Return all units that have duration <= smallest duration
+		return calendar.units.filter((u) => Number(u.duration) <= smallestDuration)
+	}, [calendar, localUnits])
+
+	// Get the currently selected baseline unit
+	const selectedBaselineUnit = useMemo(() => {
+		if (!presentation.baselineUnitId || !calendar) {
+			return null
+		}
+		return calendar.units.find((u) => u.id === presentation.baselineUnitId) ?? null
+	}, [calendar, presentation.baselineUnitId])
+
 	const saveUnits = useCallback(
 		async (units: CalendarDraftPresentationUnit[], addedUnits: NewUnitData[]) => {
 			if (!calendar) {
@@ -69,7 +114,15 @@ export function CalendarPresentationEditorPanel({ presentation, onClose }: Props
 				calendarId: calendar.id,
 				presentationId: presentation.id,
 				body: {
-					units: units.map((u) => ({ unitId: u.unitId, formatString: u.formatString })).concat(addedUnits),
+					units: units
+						.map((u) => ({ unitId: u.unitId, formatString: u.formatString, subdivision: u.subdivision }))
+						.concat(
+							addedUnits.map((u) => ({
+								unitId: u.unitId,
+								formatString: u.formatString,
+								subdivision: u.subdivision ?? 1,
+							})),
+						),
 				},
 			})
 		},
@@ -88,7 +141,7 @@ export function CalendarPresentationEditorPanel({ presentation, onClose }: Props
 
 	const handleRemoveUnit = useCallback(
 		(unit: CalendarDraftPresentationUnit) => {
-			const newUnits = localUnits.filter((u) => u.unitId !== unit.unitId)
+			const newUnits = localUnits.filter((u) => u.id !== unit.id)
 			setLocalUnits(newUnits)
 			saveUnits(newUnits, [])
 		},
@@ -97,12 +150,52 @@ export function CalendarPresentationEditorPanel({ presentation, onClose }: Props
 
 	const handleFormatStringChange = useCallback(
 		(unit: CalendarDraftPresentationUnit, value: string) => {
-			const newUnits = localUnits.map((u) => (u.unitId === unit.unitId ? { ...u, formatString: value } : u))
+			const newUnits = localUnits.map((u) => (u.id === unit.id ? { ...u, formatString: value } : u))
 			setLocalUnits(newUnits)
 			saveUnits(newUnits, [])
 		},
 		[localUnits, saveUnits],
 	)
+
+	const handleSubdivisionChange = useCallback(
+		(unit: CalendarDraftPresentationUnit, value: number) => {
+			const newUnits = localUnits.map((u) => (u.id === unit.id ? { ...u, subdivision: value } : u))
+			setLocalUnits(newUnits)
+			saveUnits(newUnits, [])
+		},
+		[localUnits, saveUnits],
+	)
+
+	const handleCompressionChange = useCallback(
+		(value: number) => {
+			if (isNaN(value) || value <= 0) {
+				setLocalCompressionInstant(presentation.compression)
+				return
+			}
+			setLocalCompression(value)
+		},
+		[presentation.compression, setLocalCompression, setLocalCompressionInstant],
+	)
+
+	const handleBaselineUnitChange = useCallback(
+		(unit: CalendarDraftUnit | null) => {
+			if (!calendar) {
+				return
+			}
+			updatePresentation({
+				calendarId: calendar.id,
+				presentationId: presentation.id,
+				body: { baselineUnitId: unit?.id ?? null },
+			})
+		},
+		[calendar, presentation.id, updatePresentation],
+	)
+
+	const sortedUnits = useMemo(() => {
+		return localUnits
+			.slice()
+			.sort((a, b) => Number(a.unit.duration) * a.subdivision - Number(b.unit.duration) * b.subdivision)
+	}, [localUnits])
 
 	if (!calendar) {
 		return null
@@ -114,21 +207,61 @@ export function CalendarPresentationEditorPanel({ presentation, onClose }: Props
 			<Divider />
 
 			<Stack sx={{ p: '0 8px' }} gap={1}>
-				<Stack sx={{ mt: 1 }}>
-					<Typography variant="subtitle2">Units</Typography>
+				<Stack sx={{ mt: 1, opacity: 0.5 }}>
+					<Typography variant="subtitle2">Settings</Typography>
 					<Typography variant="body2" color="text.secondary">
-						Add time units to display on timeline pips at this zoom level. The format string controls how the
-						value is shown (e.g., &quot;YYYY&quot; for year, &quot;DD-MM&quot; for day-month).
+						Define the scale of this presentation level. A smallest timeline divider line will represent N
+						baseline units. If unset, will use the size of the small divider.
 					</Typography>
 				</Stack>
 
-				<CalendarPresentationAddUnitForm options={unitsNotInPresentation} onAddUnit={handleAddUnit} />
+				<Stack direction="row" gap={2} sx={{ mt: 1 }}>
+					<TextField
+						size="small"
+						type="number"
+						label="Step"
+						value={localCompression}
+						onChange={(e) => handleCompressionChange(Number(e.target.value))}
+						sx={{ width: 120 }}
+						slotProps={{ htmlInput: { min: 1, step: 1 } }}
+					/>
+					<NewEntityAutocomplete
+						label="Baseline unit"
+						options={baselineUnitOptions}
+						value={selectedBaselineUnit}
+						getOptionLabel={(u) => {
+							return u.name.charAt(0).toUpperCase() + u.name.slice(1)
+						}}
+						sx={{ width: 350 }}
+						onAdd={handleBaselineUnitChange}
+					/>
+				</Stack>
+
+				<Divider sx={{ mt: 2 }} />
+
+				<Stack sx={{ mt: 1, opacity: 0.5 }}>
+					<Typography variant="subtitle2">Units</Typography>
+					<Typography variant="body2" color="text.secondary">
+						Define the timeline divider levels for this presentation. Every step of this unit will render a
+						divider line with a given format.
+						<br />
+						Empty format is valid and will render a line without a label.
+					</Typography>
+				</Stack>
+
+				<CalendarPresentationAddUnitForm
+					limitReached={localUnits.length >= 3}
+					options={unitsNotInPresentation}
+					onAddUnit={handleAddUnit}
+				/>
 				<Stack gap={1}>
-					{localUnits.map((unit) => (
+					{sortedUnits.map((unit, index) => (
 						<CalendarPresentationUnit
-							key={unit.unitId}
+							key={unit.id}
+							index={index}
 							layer={unit}
 							onFormatStringChange={(value) => handleFormatStringChange(unit, value)}
+							onSubdivisionChange={(value) => handleSubdivisionChange(unit, value)}
 							onDelete={() => handleRemoveUnit(unit)}
 						/>
 					))}

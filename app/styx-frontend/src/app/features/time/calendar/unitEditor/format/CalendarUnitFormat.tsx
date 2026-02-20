@@ -5,6 +5,7 @@ import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -112,31 +113,41 @@ export function CalendarUnitFormat({ unit }: Props) {
 				</Typography>
 			</AccordionSummary>
 			<AccordionDetails>
-				<Stack gap={1} flexDirection="row">
-					<TextField
-						label="Format"
-						size="small"
-						slotProps={{
-							htmlInput: {
-								maxLength: 1,
-							},
-						}}
-						value={formatShorthand}
-						onChange={(e) => {
-							setFormatShorthand(e.target.value)
-							onUpdateUnit({ formatShorthand: e.target.value })
-						}}
-						sx={{ width: 100 }}
-					/>
-					<Box sx={{ flex: 1 }}>
-						<CalendarUnitFormatModeDropdown
-							value={formatMode}
-							onChange={(value) => {
-								setFormatMode(value)
-								onUpdateUnit({ formatMode: value })
+				<Stack gap={2}>
+					<Stack sx={{ opacity: 0.5 }}>
+						<Typography variant="subtitle2">Timestamp formatting</Typography>
+						<Typography variant="body2" color="text.secondary">
+							Specify this unit&apos;s shorthand letter that is used to reference it, and its behaviour when
+							formatting timestamps. Hidden units will never be shown in formatted dates.
+						</Typography>
+					</Stack>
+					<Divider />
+					<Stack gap={1} flexDirection="row">
+						<TextField
+							label="Format"
+							size="small"
+							slotProps={{
+								htmlInput: {
+									maxLength: 1,
+								},
 							}}
+							value={formatShorthand}
+							onChange={(e) => {
+								setFormatShorthand(e.target.value)
+								onUpdateUnit({ formatShorthand: e.target.value })
+							}}
+							sx={{ width: 100 }}
 						/>
-					</Box>
+						<Box sx={{ flex: 1 }}>
+							<CalendarUnitFormatModeDropdown
+								value={formatMode}
+								onChange={(value) => {
+									setFormatMode(value)
+									onUpdateUnit({ formatMode: value })
+								}}
+							/>
+						</Box>
+					</Stack>
 				</Stack>
 			</AccordionDetails>
 		</Accordion>

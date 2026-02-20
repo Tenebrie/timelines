@@ -19,7 +19,7 @@ type Props = {
 }
 
 export function CalendarPresentationList({ selectedPresentation, onSelectPresentation }: Props) {
-	const { calendar } = useSelector(getCalendarEditorState)
+	const { calendar } = useSelector(getCalendarEditorState, (a, b) => a.calendar === b.calendar)
 	const [newPresentationName, setNewPresentationName] = useState('')
 
 	const [createPresentation] = useCreateCalendarPresentationMutation()
@@ -40,14 +40,7 @@ export function CalendarPresentationList({ selectedPresentation, onSelectPresent
 
 	// Sort presentations by smallest unit duration (biggest at top)
 	const sortedPresentations = [...(calendar?.presentations ?? [])].sort((a, b) => {
-		const minDurationA = Math.min(...a.units.map((u) => Number(u.unit.duration)), Infinity)
-		const minDurationB = Math.min(...b.units.map((u) => Number(u.unit.duration)), Infinity)
-		// If no units, put at top
-		if (minDurationA === Infinity && minDurationB === Infinity) return 0
-		if (minDurationA === Infinity) return -1
-		if (minDurationB === Infinity) return 1
-		// Bigger duration = higher in list (descending)
-		return minDurationA - minDurationB
+		return a.scaleFactor - b.scaleFactor
 	})
 
 	if (!calendar) {

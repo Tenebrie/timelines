@@ -86,7 +86,7 @@ export function CalendarUnitAddChildForm({ parent }: Props) {
 		<Stack direction="row" gap={1}>
 			<NewEntityAutocomplete
 				value={selectedUnit}
-				label="Add unit"
+				placeholder={availableUnits.length > 0 ? 'Select unit' : 'No units available'}
 				options={availableUnits}
 				getOptionLabel={(option) => option.name}
 				onAdd={(unit) => setSelectedUnit(unit)}

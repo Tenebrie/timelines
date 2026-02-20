@@ -4,6 +4,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
@@ -90,6 +91,13 @@ export function CalendarUnitDisplayNames({ unit }: Props) {
 			</AccordionSummary>
 			<AccordionDetails>
 				<Stack gap={2}>
+					<Stack sx={{ opacity: 0.5 }}>
+						<Typography variant="subtitle2">Unit names</Typography>
+						<Typography variant="body2" color="text.secondary">
+							Defines the names this unit is formatted with as part of a time string.
+						</Typography>
+					</Stack>
+					<Divider />
 					<TextField
 						label="Display Name"
 						size="small"
@@ -100,7 +108,7 @@ export function CalendarUnitDisplayNames({ unit }: Props) {
 							setDisplayName(e.target.value)
 							onUpdateUnit({ displayName: e.target.value })
 						}}
-						helperText="Examples: 'Month', 'Day', 'Year'"
+						helperText={<b>Units with the same display names are counted together.</b>}
 					/>
 					<TextField
 						label="Plural Name"

@@ -1,4 +1,5 @@
 import { useUpdateCalendarMutation } from '@api/calendarApi'
+import Divider from '@mui/material/Divider'
 import Input from '@mui/material/Input'
 import Paper from '@mui/material/Paper'
 import Slider from '@mui/material/Slider'
@@ -10,6 +11,7 @@ import { useSelector } from 'react-redux'
 
 import { getCalendarEditorState } from '../CalendarSliceSelectors'
 import { useFormatTimestamp } from '../hooks/useFormatTimestamp'
+import { CalendarInfoPreview } from './CalendarInfoPreview'
 
 export function CalendarInfoEditor() {
 	const { calendar } = useSelector(getCalendarEditorState)
@@ -104,6 +106,10 @@ export function CalendarInfoEditor() {
 					</Paper>
 				</Stack>
 			</Paper>
+			<Stack>
+				<Divider />
+				<CalendarInfoPreview />
+			</Stack>
 		</Stack>
 	)
 }

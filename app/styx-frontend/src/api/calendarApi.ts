@@ -569,7 +569,10 @@ export type UpdateCalendarPresentationApiArg = {
 		units?: {
 			unitId: string
 			formatString: string
+			subdivision?: number
 		}[]
+		compression?: number
+		baselineUnitId?: null | string
 	}
 }
 export type DeleteCalendarPresentationApiResponse = /** status 200  */ {

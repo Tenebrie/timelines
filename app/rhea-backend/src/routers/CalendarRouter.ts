@@ -341,9 +341,11 @@ router.patch('/api/calendar/:calendarId/presentation/:presentationId', async (ct
 		presentationId: PathParam(StringValidator),
 	})
 
-	const { name, units } = useRequestBody(ctx, {
+	const { name, units, compression, baselineUnitId } = useRequestBody(ctx, {
 		name: OptionalParam(NameStringValidator),
 		units: OptionalParam(CalendarPresentationUnitValidator),
+		compression: OptionalParam(NumberValidator),
+		baselineUnitId: OptionalParam(NullableStringValidator),
 	})
 
 	await AuthorizationService.checkUserCalendarWriteAccessById(ctx.user, calendarId)
@@ -351,7 +353,7 @@ router.patch('/api/calendar/:calendarId/presentation/:presentationId', async (ct
 	const { presentation } = await CalendarService.updateCalendarPresentation({
 		calendarId,
 		presentationId,
-		params: { name, units },
+		params: { name, units, compression, baselineUnitId },
 	})
 
 	const calendar = await CalendarService.getEditorCalendar({ calendarId })

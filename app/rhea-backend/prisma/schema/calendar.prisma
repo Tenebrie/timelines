@@ -96,7 +96,7 @@ model CalendarPresentation {
     scaleFactor Float                      @default(1.0)
     units       CalendarPresentationUnit[]
 
-    baselineUnit   CalendarUnit? @relation(name: "BaselineUnit", fields: [baselineUnitId], references: [id], onDelete: Cascade)
+    baselineUnit   CalendarUnit? @relation(name: "BaselineUnit", fields: [baselineUnitId], references: [id], onDelete: SetNull)
     baselineUnitId String?
 
     calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)

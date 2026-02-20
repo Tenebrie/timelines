@@ -7,7 +7,6 @@ import { getCalendarEditorState } from '../CalendarSliceSelectors'
 import { CalendarUnitTitle } from './components/CalendarUnitTitle'
 import { CalendarUnitFormat } from './format/CalendarUnitFormat'
 import { CalendarUnitDisplayNames } from './names/CalendarUnitDisplayNames'
-import { CalendarUnitPreview } from './preview/CalendarUnitPreview'
 import { CalendarUnitStructure } from './structure/CalendarUnitStructure'
 
 type Props = {
@@ -40,7 +39,6 @@ export function CalendarUnitEditor({ unit, onClose }: Props) {
 				<CalendarUnitDisplayNames unit={unit} />
 				<CalendarUnitFormat unit={unit} />
 				<CalendarUnitStructure unit={unit} />
-				<CalendarUnitPreview unit={unit} />
 			</Stack>
 		</Stack>
 	)

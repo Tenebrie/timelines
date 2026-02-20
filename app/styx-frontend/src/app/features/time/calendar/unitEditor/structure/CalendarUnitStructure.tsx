@@ -3,6 +3,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useMemo } from 'react'
@@ -54,6 +55,17 @@ export function CalendarUnitStructure({ unit }: Props) {
 			</AccordionSummary>
 			<AccordionDetails>
 				<Stack gap={2}>
+					<Stack sx={{ opacity: 0.5 }}>
+						<Typography variant="subtitle2">Unit structure</Typography>
+						<Typography variant="body2" color="text.secondary">
+							Smaller units this unit is composed of. This defines the structure of the calendar and how
+							timestamps are broken down.
+							<br />
+							When formatted in a time string, custom labels will be used instead of the display name if
+							provided.
+						</Typography>
+					</Stack>
+					<Divider />
 					<CalendarUnitAddChildForm parent={unit} />
 					{availableChildren.length > 0 && <CalendarUnitChildList key={unit.id} parent={unit} />}
 					{availableChildren.length === 0 && (

@@ -87,6 +87,7 @@ export const CalendarService = {
 				},
 				presentations: {
 					include: {
+						baselineUnit: true,
 						units: {
 							include: {
 								unit: true,
@@ -130,6 +131,7 @@ export const CalendarService = {
 				},
 				presentations: {
 					include: {
+						baselineUnit: true,
 						units: {
 							include: {
 								unit: true,
@@ -343,7 +345,9 @@ export const CalendarService = {
 		presentationId: string
 		params: {
 			name?: string
-			units?: { unitId: string; formatString: string }[]
+			units?: { unitId: string; formatString: string; subdivision?: number }[]
+			compression?: number
+			baselineUnitId?: string | null
 		}
 	}) => {
 		const presentation = await getPrismaClient().$transaction(async (dbClient) => {
@@ -384,21 +388,31 @@ export const CalendarService = {
 								unitId: unit.unitId,
 								name: calendarUnit.displayName || calendarUnit.name,
 								formatString: unit.formatString,
+								subdivision: unit.subdivision ?? 1,
 							},
 						})
 					}
 				}
 			}
 
-			await CalendarService.computePresentationFactor({ calendarId, presentationId, dbClient })
-
-			const presentation = await dbClient.calendarPresentation.update({
+			await dbClient.calendarPresentation.update({
 				where: {
 					id: presentationId,
 					calendarId,
 				},
 				data: {
 					name: params.name,
+					compression: params.compression,
+					baselineUnitId: params.baselineUnitId,
+				},
+			})
+
+			await CalendarService.computePresentationFactor({ calendarId, presentationId, dbClient })
+
+			const updatedPresentation = await dbClient.calendarPresentation.findUniqueOrThrow({
+				where: {
+					id: presentationId,
+					calendarId,
 				},
 				include: {
 					baselineUnit: true,
@@ -411,7 +425,7 @@ export const CalendarService = {
 			})
 
 			await makeTouchCalendarQuery(calendarId, dbClient)
-			return presentation
+			return updatedPresentation
 		})
 
 		return { presentation }
@@ -432,6 +446,7 @@ export const CalendarService = {
 				id: presentationId,
 			},
 			include: {
+				baselineUnit: true,
 				units: {
 					include: {
 						unit: true,
@@ -439,9 +454,18 @@ export const CalendarService = {
 				},
 			},
 		})
-		const scaleFactor =
-			existingPresentation.units.sort((a, b) => Number(a.unit.duration) - Number(b.unit.duration))[0]?.unit
-				.duration ?? 1
+		const scaleFactor = (() => {
+			if (existingPresentation.baselineUnit) {
+				return existingPresentation.baselineUnit.duration
+			}
+			if (existingPresentation.units.length === 0) {
+				return 1
+			}
+			const sortedUnits = [...existingPresentation.units].sort(
+				(a, b) => Number(a.unit.duration) - Number(b.unit.duration),
+			)
+			return sortedUnits[0].unit.duration
+		})()
 
 		await dbClient.calendarPresentation.update({
 			where: {
