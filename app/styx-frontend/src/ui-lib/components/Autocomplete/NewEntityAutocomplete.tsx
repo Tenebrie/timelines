@@ -1,4 +1,3 @@
-import AddIcon from '@mui/icons-material/Add'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
 
@@ -28,16 +27,7 @@ export function NewEntityAutocomplete<T>({
 			options={options}
 			getOptionLabel={getOptionLabel}
 			renderInput={(params) => (
-				<TextField
-					{...params}
-					size="small"
-					label={label}
-					placeholder={placeholder}
-					InputProps={{
-						...params.InputProps,
-						startAdornment: <AddIcon fontSize="small" sx={{ ml: 1, mr: 0.5, color: 'text.secondary' }} />,
-					}}
-				/>
+				<TextField {...params} size="small" label={label} placeholder={placeholder}></TextField>
 			)}
 			onChange={(_, value) => {
 				onAdd(value)
