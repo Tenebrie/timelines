@@ -45,7 +45,8 @@ IMAGES=(
 for i in "${!SERVICES[@]}"; do
   NAME="${SERVICES[$i]#timelines_}"
   docker service update --image "${IMAGES[$i]}" "${SERVICES[$i]}" 2>&1 \
-    | awk -v tag="[${NAME}]" '!seen[$0]++ { print tag, $0; fflush() }' &
+    | tr '\r' '\n' \
+    | awk -v tag="[${NAME}]" 'NF && !seen[$0]++ { print tag, $0; fflush() }' &
 done
 
 wait
@@ -80,14 +81,16 @@ if $FAILED; then
   for svc in "${SERVICES[@]}"; do
     NAME="${svc#timelines_}"
     docker service update --rollback "$svc" 2>&1 \
-      | awk -v tag="[${NAME}]" '!seen[$0]++ { print tag, $0; fflush() }' &
+      | tr '\r' '\n' \
+      | awk -v tag="[${NAME}]" 'NF && !seen[$0]++ { print tag, $0; fflush() }' &
   done
   wait
   exit 1
 fi
 
 docker service update --image "tenebrie/timelines-gatekeeper:${VERSION}" "timelines_gatekeeper" 2>&1 \
-  | awk -v tag="[gatekeeper]" '!seen[$0]++ { print tag, $0; fflush() }'
+  | tr '\r' '\n' \
+  | awk -v tag="[gatekeeper]" 'NF && !seen[$0]++ { print tag, $0; fflush() }'
 
 echo "All services updated successfully"
 docker system prune -f
