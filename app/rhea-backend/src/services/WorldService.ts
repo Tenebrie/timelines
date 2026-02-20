@@ -245,25 +245,12 @@ export const WorldService = {
 			...world,
 			calendars: world.calendars.map((calendar) => ({
 				...calendar,
-				units: calendar.units.map((unit) => ({
-					...unit,
-					displayName: (unit.displayName || unit.name).trim().toLowerCase(),
-					displayNameShort: (unit.displayNameShort || unit.name).trim().substring(0, 1).toLowerCase(),
-					displayNamePlural: (unit.displayNamePlural || unit.name).trim().toLowerCase(),
-				})),
+				units: CalendarService.formatCalendarUnits(calendar.units),
 				presentations: calendar.presentations.map((presentation) => ({
 					...presentation,
 					units: presentation.units.map((rel) => ({
 						...rel,
-						unit: {
-							...rel.unit,
-							displayName: (rel.unit.displayName || rel.unit.name).trim().toLowerCase(),
-							displayNameShort: (rel.unit.displayNameShort || rel.unit.name)
-								.trim()
-								.substring(0, 1)
-								.toLowerCase(),
-							displayNamePlural: (rel.unit.displayNamePlural || rel.unit.name).trim().toLowerCase(),
-						},
+						unit: CalendarService.formatCalendarUnit(rel.unit),
 					})),
 				})),
 			})),

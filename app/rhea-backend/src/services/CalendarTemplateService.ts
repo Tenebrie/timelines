@@ -485,82 +485,82 @@ export const CalendarTemplateService = {
 			.createUnit('4-year cycle', ['Regular year x3', 'Leap year x1'])
 			.createUnit('100-year cycle', ['4-year cycle x24', 'Regular year x4'])
 			.createUnit('400-year cycle', ['100-year cycle x3', '4-year cycle x25'])
-			.defineBuckets('Minute', 'Hour', 'Day', 'Month', 'Year')
+			.defineBuckets('minute', 'hour', 'day', 'month', 'year')
 			.updateUnits(['Minute'], {
 				formatMode: 'Numeric',
 				formatShorthand: 'm',
-				displayName: 'Minute',
+				displayName: 'minute',
 				displayNameShort: 'min',
-				displayNamePlural: 'Minutes',
+				displayNamePlural: 'minutes',
 			})
 			.updateUnits(['Hour'], {
 				formatMode: 'Numeric',
 				formatShorthand: 'h',
-				displayName: 'Hour',
+				displayName: 'hour',
 				displayNameShort: 'hr',
-				displayNamePlural: 'Hours',
+				displayNamePlural: 'hours',
 			})
 			.updateUnits(['Day'], {
 				formatMode: 'NumericOneIndexed',
 				formatShorthand: 'd',
-				displayName: 'Day',
+				displayName: 'day',
 				displayNameShort: 'd',
-				displayNamePlural: 'Days',
+				displayNamePlural: 'days',
 			})
 			.updateUnits(['28-day month', '29-day month', '30-day month', '31-day month'], {
 				formatMode: 'Name',
 				formatShorthand: 'M',
-				displayName: 'Month',
-				displayNameShort: 'Mon',
-				displayNamePlural: 'Months',
+				displayName: 'month',
+				displayNameShort: 'mon',
+				displayNamePlural: 'months',
 			})
 			.updateUnits(['Leap year', 'Regular year'], {
 				formatMode: 'NumericOneIndexed',
 				formatShorthand: 'Y',
-				displayName: 'Year',
-				displayNameShort: 'Yr',
-				displayNamePlural: 'Years',
+				displayName: 'year',
+				displayNameShort: 'yr',
+				displayNamePlural: 'years',
 			})
 			.updateUnits(['4-year cycle', '100-year cycle', '400-year cycle'], {
 				formatMode: 'Hidden',
 			})
-			.createPresentation('Minutes', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x10: hh:mm'], {
+			.createPresentation('Minutes', ['day: MMM DD, YYYY', 'hour: hh:mm', 'minute x10: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+			.createPresentation('Hours', ['day: MMM DD, YYYY', 'hour: hh:mm', 'minute x30: '], {
 				compression: 5,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Days', ['Day: MMM DD, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+			.createPresentation('Days', ['day: MMM DD, YYYY', 'hour x6: hh:mm', 'minute x60: '], {
 				compression: 20,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Weeks', ['Month: MMM DD, YYYY', 'Day: MMM DD', 'Hour x6: hh:mm'], {
+			.createPresentation('Weeks', ['month: MMM DD, YYYY', 'day: MMM DD', 'hour x6: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Months', ['Month: MMM DD, YYYY', 'Day 5,10,15,20,25: M DD', 'Hour x24: '], {
+			.createPresentation('Months', ['month: MMM DD, YYYY', 'day 5,10,15,20,25: M DD', 'hour x24: '], {
 				compression: 4,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Quarters', ['Year: MMM YYYY', 'Month: MMM YYYY', 'Day 5,10,15,20,25: '], {
+			.createPresentation('Quarters', ['year: MMM YYYY', 'month: MMM YYYY', 'day 5,10,15,20,25: '], {
 				compression: 1,
 				baselineUnit: 'Day',
 			})
-			.createPresentation('Years', ['Year x4: YYYY', 'Year: YYYY', 'Month x6: '], {
+			.createPresentation('Years', ['year x4: YYYY', 'year: YYYY', 'month x6: '], {
 				compression: 1,
 				baselineUnit: '30-day month',
 			})
-			.createPresentation('Decades', ['Year x40: YYYY', 'Year x4: YYYY', 'Month x12: '], {
+			.createPresentation('Decades', ['year x40: YYYY', 'year x4: YYYY', 'month x12: '], {
 				compression: 6,
 				baselineUnit: '30-day month',
 			})
-			.createPresentation('Centuries', ['Year x400: YYYY', 'Year x100: YYYY', 'Year x20: '], {
+			.createPresentation('Centuries', ['year x400: YYYY', 'year x100: YYYY', 'year x20: '], {
 				compression: 5,
 				baselineUnit: 'Regular year',
 			})
-			.createPresentation('Millenia', ['Year x10000: YYYY', 'Year x1000: YYYY', 'Year x500: '], {
+			.createPresentation('Millenia', ['year x10000: YYYY', 'year x1000: YYYY', 'year x500: '], {
 				compression: 100,
 				baselineUnit: 'Regular year',
 			})
@@ -682,89 +682,89 @@ export const CalendarTemplateService = {
 				'Leap year x1',
 				'10-year cycle x19',
 			])
-			.defineBuckets('Minute', 'Hour', 'Week', 'Sol', 'Month', 'Year')
+			.defineBuckets('minute', 'hour', 'week', 'sol', 'month', 'year')
 			.updateUnits(['Minute'], {
 				formatMode: 'Numeric',
 				formatShorthand: 'm',
-				displayName: 'Minute',
+				displayName: 'minute',
 				displayNameShort: 'min',
-				displayNamePlural: 'Minutes',
+				displayNamePlural: 'minutes',
 			})
 			.updateUnits(['Hour'], {
 				formatMode: 'Numeric',
 				formatShorthand: 'h',
-				displayName: 'Hour',
+				displayName: 'hour',
 				displayNameShort: 'hr',
-				displayNamePlural: 'Hours',
+				displayNamePlural: 'hours',
 			})
 			.updateUnits(['Sol'], {
 				formatMode: 'NumericOneIndexed',
 				formatShorthand: 's',
-				displayName: 'Sol',
-				displayNameShort: 'Sol',
-				displayNamePlural: 'Sols',
+				displayName: 'sol',
+				displayNameShort: 'sol',
+				displayNamePlural: 'sols',
 			})
 			.updateUnits(['6-sol week', '7-sol week'], {
 				formatMode: 'Hidden',
 				formatShorthand: 'W',
-				displayName: 'Week',
-				displayNameShort: 'Wk',
-				displayNamePlural: 'Weeks',
+				displayName: 'week',
+				displayNameShort: 'wk',
+				displayNamePlural: 'weeks',
 			})
 			.updateUnits(['27-sol month', '28-sol month'], {
 				formatMode: 'Name',
 				formatShorthand: 'M',
-				displayName: 'Month',
-				displayNameShort: 'Mon',
-				displayNamePlural: 'Months',
+				displayName: 'month',
+				displayNameShort: 'mon',
+				displayNamePlural: 'months',
 			})
 			.updateUnits(['Leap year', 'Regular year'], {
 				formatMode: 'Numeric',
 				formatShorthand: 'Y',
-				displayName: 'Year',
-				displayNameShort: 'Yr',
-				displayNamePlural: 'Years',
+				displayName: 'year',
+				displayNameShort: 'yr',
+				displayNamePlural: 'years',
 			})
 			.updateUnits(['10-year cycle', '200-year cycle'], {
 				formatMode: 'Hidden',
 			})
-			.createPresentation('Minutes', ['Sol: SS MMM YYYY', 'Hour: hh:mm', 'Minute x10: hh:mm'], {
+			.createPresentation('Minutes', ['sol: SS MMM YYYY', 'hour: hh:mm', 'minute x10: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours', ['Sol: SS MMM YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+			.createPresentation('Hours', ['sol: SS MMM YYYY', 'hour: hh:mm', 'minute x30: '], {
 				compression: 5,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Days', ['Sol: SS MMM YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+			.createPresentation('Days', ['sol: SS MMM YYYY', 'hour x6: hh:mm', 'minute x60: '], {
 				compression: 20,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Weeks', ['Month: SS MMM YYYY', 'Sol: SS MMM', 'Hour x6: hh:mm'], {
+			.createPresentation('Weeks', ['month: SS MMM YYYY', 'sol: SS MMM', 'hour x6: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Months', ['Month: SS MMM YYYY', 'Sol 7,14,21: SS M', 'Hour x24: '], {
+			.createPresentation('Months', ['month: SS MMM YYYY', 'sol 7,14,21: SS M', 'hour x24: '], {
 				compression: 4,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Quarters', ['Year: MMM YYYY', 'Month: MMM YYYY', 'Sol 7,14,21: '], {
+			.createPresentation('Quarters', ['year: MMM YYYY', 'month: MMM YYYY', 'sol 7,14,21: '], {
 				compression: 1,
 				baselineUnit: 'Sol',
 			})
-			.createPresentation('Years', ['Year x4: YYYY', 'Year: YYYY', 'Month x6: '], {
+			.createPresentation('Years', ['year x4: YYYY', 'year: YYYY', 'month x6: '], {
 				compression: 1,
 				baselineUnit: '28-sol month',
 			})
-			.createPresentation('Decades', ['Year x40: YYYY', 'Year x4: YYYY', 'Month x12: '], {
+			.createPresentation('Decades', ['year x40: YYYY', 'year x4: YYYY', 'month x12: '], {
 				compression: 6,
 				baselineUnit: '28-sol month',
 			})
-			.createPresentation('Centuries', ['Year x400: YYYY', 'Year x100: YYYY', 'Year x20: '], {
+			.createPresentation('Centuries', ['year x400: YYYY', 'year x100: YYYY', 'year x20: '], {
 				compression: 5,
 				baselineUnit: 'Regular year',
 			})
-			.createPresentation('Millenia', ['Year x4000: YYYY', 'Year x1000: YYYY', 'Year x200: '], {
+			.createPresentation('Millenia', ['year x4000: YYYY', 'year x1000: YYYY', 'year x200: '], {
 				compression: 100,
 				baselineUnit: 'Regular year',
 			})
@@ -825,82 +825,82 @@ export const CalendarTemplateService = {
 			.createUnit('4-year cycle', ['Regular year x3', 'Leap year x1'])
 			.createUnit('100-year cycle', ['4-year cycle x24', 'Regular year x4'])
 			.createUnit('400-year cycle', ['100-year cycle x3', '4-year cycle x25'])
-			.defineBuckets('Minute', 'Hour', 'Day', 'Month', 'Year')
+			.defineBuckets('minute', 'hour', 'day', 'month', 'year')
 			.updateUnits(['Minute'], {
 				formatMode: 'Numeric',
 				formatShorthand: 'm',
-				displayName: 'Minute',
+				displayName: 'minute',
 				displayNameShort: 'min',
-				displayNamePlural: 'Minutes',
+				displayNamePlural: 'minutes',
 			})
 			.updateUnits(['Hour'], {
 				formatMode: 'Numeric',
 				formatShorthand: 'h',
-				displayName: 'Hour',
+				displayName: 'hour',
 				displayNameShort: 'hr',
-				displayNamePlural: 'Hours',
+				displayNamePlural: 'hours',
 			})
 			.updateUnits(['Day'], {
 				formatMode: 'NumericOneIndexed',
 				formatShorthand: 'd',
-				displayName: 'Day',
+				displayName: 'day',
 				displayNameShort: 'd',
-				displayNamePlural: 'Days',
+				displayNamePlural: 'days',
 			})
 			.updateUnits(['28-day month', '29-day month', '30-day month', '31-day month'], {
 				formatMode: 'Name',
 				formatShorthand: 'M',
-				displayName: 'Month',
-				displayNameShort: 'Mon',
-				displayNamePlural: 'Months',
+				displayName: 'month',
+				displayNameShort: 'mon',
+				displayNamePlural: 'months',
 			})
 			.updateUnits(['Leap year', 'Regular year'], {
 				formatMode: 'NumericOneIndexed',
 				formatShorthand: 'Y',
-				displayName: 'Year',
-				displayNameShort: 'Yr',
-				displayNamePlural: 'Years',
+				displayName: 'year',
+				displayNameShort: 'yr',
+				displayNamePlural: 'years',
 			})
 			.updateUnits(['4-year cycle', '100-year cycle', '400-year cycle'], {
 				formatMode: 'Hidden',
 			})
-			.createPresentation('Minutes', ['Day: DD MMM, YYYY', 'Hour: hh:mm', 'Minute x10: hh:mm'], {
+			.createPresentation('Minutes', ['day: DD MMM, YYYY', 'hour: hh:mm', 'minute x10: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours', ['Day: DD MMM, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+			.createPresentation('Hours', ['day: DD MMM, YYYY', 'hour: hh:mm', 'minute x30: '], {
 				compression: 5,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Days', ['Day: DD MMM, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+			.createPresentation('Days', ['day: DD MMM, YYYY', 'hour x6: hh:mm', 'minute x60: '], {
 				compression: 20,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Weeks', ['Month: DD MMM, YYYY', 'Day: DD MMM', 'Hour x6: hh:mm'], {
+			.createPresentation('Weeks', ['month: DD MMM, YYYY', 'day: DD MMM', 'hour x6: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Months', ['Month: DD MMM, YYYY', 'Day 5,10,15,20,25: DD M', 'Hour x24: '], {
+			.createPresentation('Months', ['month: DD MMM, YYYY', 'day 5,10,15,20,25: DD M', 'hour x24: '], {
 				compression: 4,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Quarters', ['Year: MMM YYYY', 'Month: MMM YYYY', 'Day 5,10,15,20,25: '], {
+			.createPresentation('Quarters', ['year: MMM YYYY', 'month: MMM YYYY', 'day 5,10,15,20,25: '], {
 				compression: 1,
 				baselineUnit: 'Day',
 			})
-			.createPresentation('Years', ['Year x4: YYYY', 'Year: YYYY', 'Month x6: '], {
+			.createPresentation('Years', ['year x4: YYYY', 'year: YYYY', 'month x6: '], {
 				compression: 1,
 				baselineUnit: '30-day month',
 			})
-			.createPresentation('Decades', ['Year x40: YYYY', 'Year x4: YYYY', 'Month x12: '], {
+			.createPresentation('Decades', ['year x40: YYYY', 'year x4: YYYY', 'month x12: '], {
 				compression: 6,
 				baselineUnit: '30-day month',
 			})
-			.createPresentation('Centuries', ['Year x400: YYYY', 'Year x100: YYYY', 'Year x20: '], {
+			.createPresentation('Centuries', ['year x400: YYYY', 'year x100: YYYY', 'year x20: '], {
 				compression: 5,
 				baselineUnit: 'Regular year',
 			})
-			.createPresentation('Millenia', ['Year x10000: YYYY', 'Year x1000: YYYY', 'Year x500: '], {
+			.createPresentation('Millenia', ['year x10000: YYYY', 'year x1000: YYYY', 'year x500: '], {
 				compression: 100,
 				baselineUnit: 'Regular year',
 			})
@@ -928,79 +928,79 @@ export const CalendarTemplateService = {
 			.createUnit('Day', ['Hour x24'])
 			.createUnit('Quadrum', ['Day x15'])
 			.createUnit('Year', ['Quadrum: Aprimay', 'Quadrum: Jugust', 'Quadrum: Septober', 'Quadrum: Decembary'])
-			.defineBuckets('Minute', 'Hour', 'Day', 'Quadrum', 'Year')
+			.defineBuckets('minute', 'hour', 'day', 'quadrum', 'year')
 			.updateUnits(['Minute'], {
 				formatMode: 'Numeric',
 				formatShorthand: 'm',
-				displayName: 'Minute',
+				displayName: 'minute',
 				displayNameShort: 'min',
-				displayNamePlural: 'Minutes',
+				displayNamePlural: 'minutes',
 			})
 			.updateUnits(['Hour'], {
 				formatMode: 'Numeric',
 				formatShorthand: 'h',
-				displayName: 'Hour',
+				displayName: 'hour',
 				displayNameShort: 'hr',
-				displayNamePlural: 'Hours',
+				displayNamePlural: 'hours',
 			})
 			.updateUnits(['Day'], {
 				formatMode: 'NumericOneIndexed',
 				formatShorthand: 'd',
-				displayName: 'Day',
+				displayName: 'day',
 				displayNameShort: 'd',
-				displayNamePlural: 'Days',
+				displayNamePlural: 'days',
 			})
 			.updateUnits(['Quadrum'], {
 				formatMode: 'Name',
 				formatShorthand: 'Q',
-				displayName: 'Quadrum',
-				displayNameShort: 'Qd',
-				displayNamePlural: 'Quadrums',
+				displayName: 'quadrum',
+				displayNameShort: 'qd',
+				displayNamePlural: 'quadrums',
 			})
 			.updateUnits(['Year'], {
 				formatMode: 'NumericOneIndexed',
 				formatShorthand: 'Y',
-				displayName: 'Year',
-				displayNameShort: 'Yr',
-				displayNamePlural: 'Years',
+				displayName: 'year',
+				displayNameShort: 'yr',
+				displayNamePlural: 'years',
 			})
-			.createPresentation('Minutes', ['Day: QQQ DD, YYYY', 'Hour: hh:mm', 'Minute x10: hh:mm'], {
+			.createPresentation('Minutes', ['day: QQQ DD, YYYY', 'hour: hh:mm', 'minute x10: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours', ['Day: QQQ DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+			.createPresentation('Hours', ['day: QQQ DD, YYYY', 'hour: hh:mm', 'minute x30: '], {
 				compression: 5,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Days', ['Day: QQQ DD, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+			.createPresentation('Days', ['day: QQQ DD, YYYY', 'hour x6: hh:mm', 'minute x60: '], {
 				compression: 20,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Weeks', ['Quadrum: QQQ DD, YYYY', 'Day: QQQ DD', 'Hour x6: hh:mm'], {
+			.createPresentation('Weeks', ['quadrum: QQQ DD, YYYY', 'day: QQQ DD', 'hour x6: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Quadrums', ['Quadrum: QQQ DD, YYYY', 'Day 5,10: Q DD', 'Hour x24: '], {
+			.createPresentation('Quadrums', ['quadrum: QQQ DD, YYYY', 'day 5,10: Q DD', 'hour x24: '], {
 				compression: 4,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Years', ['Year: QQQ YYYY', 'Quadrum: QQQ YYYY', 'Day 5,10: '], {
+			.createPresentation('Years', ['year: QQQ YYYY', 'quadrum: QQQ YYYY', 'day 5,10: '], {
 				compression: 1,
 				baselineUnit: 'Day',
 			})
-			.createPresentation('Quad-Years', ['Year x4: YYYY', 'Year: YYYY', 'Quadrum: '], {
+			.createPresentation('Quad-Years', ['year x4: YYYY', 'year: YYYY', 'quadrum: '], {
 				compression: 1,
 				baselineUnit: 'Quadrum',
 			})
-			.createPresentation('Decades', ['Year x200: YYYY', 'Year x20: YYYY', 'Year x4: '], {
+			.createPresentation('Decades', ['year x200: YYYY', 'year x20: YYYY', 'year x4: '], {
 				compression: 4,
 				baselineUnit: 'Quadrum',
 			})
-			.createPresentation('Centuries', ['Year x400: YYYY', 'Year x100: YYYY', 'Year x20: '], {
+			.createPresentation('Centuries', ['year x400: YYYY', 'year x100: YYYY', 'year x20: '], {
 				compression: 5,
 				baselineUnit: 'Year',
 			})
-			.createPresentation('Millenia', ['Year x10000: YYYY', 'Year x1000: YYYY', 'Year x500: '], {
+			.createPresentation('Millenia', ['year x10000: YYYY', 'year x1000: YYYY', 'year x500: '], {
 				compression: 100,
 				baselineUnit: 'Year',
 			})
@@ -1043,79 +1043,79 @@ export const CalendarTemplateService = {
 				'30-day month: Snowmoot',
 				'31-day month: Fellnight',
 			])
-			.defineBuckets('Minute', 'Hour', 'Day', 'Month', 'Year')
+			.defineBuckets('minute', 'hour', 'day', 'month', 'year')
 			.updateUnits(['Minute'], {
 				formatMode: 'Numeric',
 				formatShorthand: 'm',
-				displayName: 'Minute',
+				displayName: 'minute',
 				displayNameShort: 'min',
-				displayNamePlural: 'Minutes',
+				displayNamePlural: 'minutes',
 			})
 			.updateUnits(['Hour'], {
 				formatMode: 'Numeric',
 				formatShorthand: 'h',
-				displayName: 'Hour',
+				displayName: 'hour',
 				displayNameShort: 'hr',
-				displayNamePlural: 'Hours',
+				displayNamePlural: 'hours',
 			})
 			.updateUnits(['Day'], {
 				formatMode: 'NumericOneIndexed',
 				formatShorthand: 'd',
-				displayName: 'Day',
+				displayName: 'day',
 				displayNameShort: 'd',
-				displayNamePlural: 'Days',
+				displayNamePlural: 'days',
 			})
 			.updateUnits(['28-day month', '30-day month', '31-day month'], {
 				formatMode: 'Name',
 				formatShorthand: 'M',
-				displayName: 'Month',
-				displayNameShort: 'Mon',
-				displayNamePlural: 'Months',
+				displayName: 'month',
+				displayNameShort: 'mon',
+				displayNamePlural: 'months',
 			})
 			.updateUnits(['Year'], {
 				formatMode: 'NumericOneIndexed',
 				formatShorthand: 'Y',
-				displayName: 'Year',
-				displayNameShort: 'Yr',
-				displayNamePlural: 'Years',
+				displayName: 'year',
+				displayNameShort: 'yr',
+				displayNamePlural: 'years',
 			})
-			.createPresentation('Minutes', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x10: hh:mm'], {
+			.createPresentation('Minutes', ['day: MMM DD, YYYY', 'hour: hh:mm', 'minute x10: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Hours', ['Day: MMM DD, YYYY', 'Hour: hh:mm', 'Minute x30: '], {
+			.createPresentation('Hours', ['day: MMM DD, YYYY', 'hour: hh:mm', 'minute x30: '], {
 				compression: 5,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Days', ['Day: MMM DD, YYYY', 'Hour x6: hh:mm', 'Minute x60: '], {
+			.createPresentation('Days', ['day: MMM DD, YYYY', 'hour x6: hh:mm', 'minute x60: '], {
 				compression: 20,
 				baselineUnit: 'Minute',
 			})
-			.createPresentation('Weeks', ['Month: MMM DD, YYYY', 'Day: MMM DD', 'Hour x6: hh:mm'], {
+			.createPresentation('Weeks', ['month: MMM DD, YYYY', 'day: MMM DD', 'hour x6: hh:mm'], {
 				compression: 1,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Months', ['Month: MMM DD, YYYY', 'Day 5,10,15,20,25: M DD', 'Hour x24: '], {
+			.createPresentation('Months', ['month: MMM DD, YYYY', 'day 5,10,15,20,25: M DD', 'hour x24: '], {
 				compression: 4,
 				baselineUnit: 'Hour',
 			})
-			.createPresentation('Quarters', ['Year: MMM YYYY', 'Month: MMM YYYY', 'Day 5,10,15,20,25: '], {
+			.createPresentation('Quarters', ['year: MMM YYYY', 'month: MMM YYYY', 'day 5,10,15,20,25: '], {
 				compression: 1,
 				baselineUnit: 'Day',
 			})
-			.createPresentation('Years', ['Year x4: YYYY', 'Year: YYYY', 'Month x6: '], {
+			.createPresentation('Years', ['year x4: YYYY', 'year: YYYY', 'month x6: '], {
 				compression: 1,
 				baselineUnit: '30-day month',
 			})
-			.createPresentation('Decades', ['Year x40: YYYY', 'Year x4: YYYY', 'Month x12: '], {
+			.createPresentation('Decades', ['year x40: YYYY', 'year x4: YYYY', 'month x12: '], {
 				compression: 6,
 				baselineUnit: '30-day month',
 			})
-			.createPresentation('Centuries', ['Year x400: YYYY', 'Year x100: YYYY', 'Year x20: '], {
+			.createPresentation('Centuries', ['year x400: YYYY', 'year x100: YYYY', 'year x20: '], {
 				compression: 5,
 				baselineUnit: 'Year',
 			})
-			.createPresentation('Millenia', ['Year x10000: YYYY', 'Year x1000: YYYY', 'Year x500: '], {
+			.createPresentation('Millenia', ['year x10000: YYYY', 'year x1000: YYYY', 'year x500: '], {
 				compression: 100,
 				baselineUnit: 'Year',
 			})

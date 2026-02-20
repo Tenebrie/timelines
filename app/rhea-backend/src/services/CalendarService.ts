@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { CalendarUnit, Prisma } from '@prisma/client'
 import { TransactionClient } from 'prisma/client/internal/prismaNamespace.js'
 import {
 	CalendarUncheckedCreateInput,
@@ -146,12 +146,7 @@ export const CalendarService = {
 		})
 		return {
 			...calendar,
-			units: calendar.units.map((unit) => ({
-				...unit,
-				displayName: (unit.displayName || unit.name).trim().toLowerCase(),
-				displayNameShort: (unit.displayNameShort || unit.name).trim().substring(0, 1).toLowerCase(),
-				displayNamePlural: (unit.displayNamePlural || unit.name).trim().toLowerCase(),
-			})),
+			units: CalendarService.formatCalendarUnits(calendar.units),
 		}
 	},
 
@@ -852,5 +847,18 @@ export const CalendarService = {
 			calendar: newCalendar,
 			world,
 		}
+	},
+
+	formatCalendarUnit: (unit: CalendarUnit) => {
+		return {
+			...unit,
+			displayName: (unit.displayName || unit.name).trim(),
+			displayNameShort: unit.displayNameShort || unit.name.trim().substring(0, 1),
+			displayNamePlural: (unit.displayNamePlural || unit.name).trim() + 's',
+		}
+	},
+
+	formatCalendarUnits: (units: CalendarUnit[]) => {
+		return units.map(CalendarService.formatCalendarUnit)
 	},
 }

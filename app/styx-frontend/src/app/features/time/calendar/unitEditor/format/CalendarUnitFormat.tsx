@@ -124,7 +124,7 @@ export function CalendarUnitFormat({ unit }: Props) {
 					<Divider />
 					<Stack gap={1} flexDirection="row">
 						<TextField
-							label="Format"
+							label="Shorthand"
 							size="small"
 							slotProps={{
 								htmlInput: {

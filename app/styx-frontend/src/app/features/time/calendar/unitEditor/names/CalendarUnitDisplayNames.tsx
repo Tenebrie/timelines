@@ -111,7 +111,7 @@ export function CalendarUnitDisplayNames({ unit }: Props) {
 						helperText={<b>Units with the same display names are counted together.</b>}
 					/>
 					<TextField
-						label="Plural Name"
+						label="Display Name (Plural)"
 						size="small"
 						placeholder={unit.name + 's'}
 						value={displayNamePlural}
@@ -121,7 +121,7 @@ export function CalendarUnitDisplayNames({ unit }: Props) {
 						}}
 					/>
 					<TextField
-						label="Short Name"
+						label="Display Name (Short)"
 						size="small"
 						placeholder={unit.name.substring(0, 3).trim()}
 						value={displayNameShort}
