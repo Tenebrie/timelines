@@ -4,7 +4,6 @@ import Stack from '@mui/material/Stack'
 
 import { ListCalendarsApiResponse } from '@/api/calendarApi'
 import { GetWorldsApiResponse } from '@/api/worldListApi'
-import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { SummaryCard } from './SummaryCard'
 
@@ -19,16 +18,6 @@ export function SummaryCardsSection({
 	contributableWorlds,
 	calendars,
 }: SummaryCardsSectionProps) {
-	const navigate = useStableNavigate()
-
-	const handleWorldsClick = () => {
-		navigate({ to: '/world' })
-	}
-
-	const handleCalendarsClick = () => {
-		navigate({ to: '/calendar' })
-	}
-
 	return (
 		<Stack
 			direction={{ xs: 'column', sm: 'row' }}
@@ -42,17 +31,17 @@ export function SummaryCardsSection({
 			<SummaryCard
 				icon={<Public />}
 				title="Worlds"
+				navigateTo="/world"
 				items={[
 					{ label: 'Owned', count: ownedWorlds.length },
 					{ label: 'Contributing', count: contributableWorlds.length },
 				]}
-				onClick={handleWorldsClick}
 			/>
 			<SummaryCard
 				icon={<CalendarMonth />}
 				title="Calendars"
+				navigateTo="/calendar"
 				items={[{ label: 'Total', count: calendars?.length ?? 0 }]}
-				onClick={handleCalendarsClick}
 			/>
 		</Stack>
 	)

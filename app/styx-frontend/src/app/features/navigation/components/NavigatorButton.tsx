@@ -1,9 +1,8 @@
 import Button from '@mui/material/Button'
-import React, { ReactNode } from 'react'
-import { useEvent } from 'react-use-event-hook'
+import { Link } from '@tanstack/react-router'
+import { ReactNode } from 'react'
 
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
-import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import { FileRouteTypes } from '@/routeTree.gen'
 
 type Props = {
@@ -14,29 +13,23 @@ type Props = {
 }
 
 export function NavigatorButton({ route, icon, label, disabled }: Props) {
-	const navigate = useStableNavigate()
 	const isMatching = useCheckRouteMatch(route)
 
-	const onNavigate = useEvent((e: React.MouseEvent) => {
-		if (e.metaKey || e.ctrlKey) {
-			console.log('Boop')
-		}
-		navigate({ to: route as FileRouteTypes['to'] })
-	})
-
 	return (
-		<Button
-			aria-label={label}
-			onClick={onNavigate}
-			variant={isMatching ? 'contained' : 'text'}
-			sx={{
-				gap: 0.5,
-				border: 'none',
-				padding: '8px 15px',
-			}}
-			disabled={disabled}
-		>
-			{icon} {label}
-		</Button>
+		<Link to={route as FileRouteTypes['to']}>
+			<Button
+				aria-label={label}
+				variant={isMatching ? 'contained' : 'text'}
+				sx={{
+					gap: 0.5,
+					border: 'none',
+					padding: '8px 15px',
+					textDecoration: 'none',
+				}}
+				disabled={disabled}
+			>
+				{icon} {label}
+			</Button>
+		</Link>
 	)
 }

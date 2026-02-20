@@ -1,26 +1,21 @@
-import { WorldBrief } from '@api/types/worldTypes'
 import MenuIcon from '@mui/icons-material/Menu'
 import Button from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import { memo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
+import { NavigationLink } from '@/app/components/NavigationLink'
 import { TrunkatedSpan } from '@/app/components/TrunkatedTypography'
-import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 import { useWorldListData } from '@/app/views/worldManagement/hooks/useWorldListData'
-import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 export const WorldSelectorButton = memo(WorldSelectorButtonComponent)
 
 function WorldSelectorButtonComponent() {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 	const open = Boolean(anchorEl)
-	const navigate = useStableNavigate()
-	const dispatch = useDispatch()
-	const { unloadWorld } = worldSlice.actions
 
 	const currentWorldId = useSelector(getWorldIdState)
 	const { ownedWorlds, contributableWorlds, visibleWorlds } = useWorldListData()
@@ -36,23 +31,7 @@ function WorldSelectorButtonComponent() {
 		setAnchorEl(null)
 	}
 
-	const handleWorldSelect = (world: WorldBrief) => {
-		if (world.id === currentWorldId) {
-			handleClose()
-			return
-		}
-
-		dispatch(unloadWorld())
-		navigate({
-			to: '/world/$worldId/timeline',
-			params: {
-				worldId: world.id,
-			},
-			search: (prev) => ({
-				...prev,
-				time: parseInt(world.timeOrigin),
-			}),
-		})
+	const handleWorldSelect = () => {
 		handleClose()
 	}
 
@@ -77,7 +56,7 @@ function WorldSelectorButtonComponent() {
 						sx: {
 							marginTop: '6px',
 							maxHeight: 400,
-							minWidth: 200,
+							minWidth: 250,
 							zIndex: 25,
 						},
 					},
@@ -91,14 +70,11 @@ function WorldSelectorButtonComponent() {
 							</Typography>
 						</MenuItem>
 						{ownedWorlds.map((world) => (
-							<MenuItem
-								key={world.id}
-								onClick={() => handleWorldSelect(world)}
-								selected={currentWorldId === world.id}
-								data-hj-suppress
-							>
-								<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
-							</MenuItem>
+							<NavigationLink to="/world/$worldId/timeline" params={{ worldId: world.id }} key={world.id}>
+								<MenuItem onClick={handleWorldSelect} selected={currentWorldId === world.id}>
+									<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
+								</MenuItem>
+							</NavigationLink>
 						))}
 					</div>
 				)}
@@ -110,14 +86,11 @@ function WorldSelectorButtonComponent() {
 							</Typography>
 						</MenuItem>
 						{contributableWorlds.map((world) => (
-							<MenuItem
-								key={world.id}
-								onClick={() => handleWorldSelect(world)}
-								selected={currentWorldId === world.id}
-								data-hj-suppress
-							>
-								<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
-							</MenuItem>
+							<NavigationLink to="/world/$worldId/timeline" params={{ worldId: world.id }} key={world.id}>
+								<MenuItem onClick={handleWorldSelect} selected={currentWorldId === world.id} data-hj-suppress>
+									<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
+								</MenuItem>
+							</NavigationLink>
 						))}
 					</div>
 				)}
@@ -129,14 +102,11 @@ function WorldSelectorButtonComponent() {
 							</Typography>
 						</MenuItem>
 						{visibleWorlds.map((world) => (
-							<MenuItem
-								key={world.id}
-								onClick={() => handleWorldSelect(world)}
-								selected={currentWorldId === world.id}
-								data-hj-suppress
-							>
-								<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
-							</MenuItem>
+							<NavigationLink to="/world/$worldId/timeline" params={{ worldId: world.id }} key={world.id}>
+								<MenuItem onClick={handleWorldSelect} selected={currentWorldId === world.id} data-hj-suppress>
+									<TrunkatedSpan $lines={1}>{world.name}</TrunkatedSpan>
+								</MenuItem>
+							</NavigationLink>
 						))}
 					</div>
 				)}

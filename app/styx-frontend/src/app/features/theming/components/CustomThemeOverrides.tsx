@@ -19,11 +19,11 @@ export const CustomThemeOverrides = ({ children }: Props) => {
 			borderRadius: 1,
 			backgroundColor: theme.material.palette.primary.main,
 		},
-		a: {
+		'a:not(.MuiButtonBase-root):not(.navigation-link)': {
 			color: theme.material.palette.primary.main,
 			transition: 'color 0.5s',
 		},
-		'a:hover': {
+		'a:not(.MuiButtonBase-root):not(.navigation-link):hover': {
 			color: theme.material.palette.secondary.main,
 			transition: 'color 0s',
 		},

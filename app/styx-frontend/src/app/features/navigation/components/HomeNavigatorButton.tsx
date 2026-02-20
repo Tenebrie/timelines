@@ -10,15 +10,14 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { useRef, useState } from 'react'
 
+import { NavigationLink } from '@/app/components/NavigationLink'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
-import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 type Props = {
 	disabled?: boolean
 }
 
 export function HomeNavigatorButton({ disabled }: Props) {
-	const navigate = useStableNavigate()
 	const [menuOpen, setMenuOpen] = useState(false)
 	const anchorRef = useRef<HTMLButtonElement>(null)
 
@@ -28,10 +27,6 @@ export function HomeNavigatorButton({ disabled }: Props) {
 
 	const isAnyMatching = isHomeMatching || isWorldMatching || isCalendarMatching
 
-	const handleHomeClick = () => {
-		navigate({ to: '/home' })
-	}
-
 	const handleMenuOpen = () => {
 		setMenuOpen(true)
 	}
@@ -40,24 +35,21 @@ export function HomeNavigatorButton({ disabled }: Props) {
 		setMenuOpen(false)
 	}
 
-	const handleNavigate = (route: '/home' | '/world' | '/calendar') => {
-		navigate({ to: route })
-		setMenuOpen(false)
-	}
-
 	return (
 		<>
 			<ButtonGroup variant={isAnyMatching ? 'contained' : 'text'} disabled={disabled} disableElevation>
-				<Button
-					aria-label="Navigate to home"
-					onClick={handleHomeClick}
-					sx={{
-						gap: 0.5,
-						padding: '8px 15px',
-					}}
-				>
-					<Home /> Home
-				</Button>
+				<NavigationLink to="/home">
+					<Button
+						aria-label="Navigate to home"
+						sx={{
+							gap: 0.5,
+							padding: '8px 15px',
+						}}
+					>
+						<Home /> Home
+					</Button>
+				</NavigationLink>
+
 				<Button
 					ref={anchorRef}
 					aria-label="Home navigation menu"
@@ -82,26 +74,26 @@ export function HomeNavigatorButton({ disabled }: Props) {
 					horizontal: 'right',
 				}}
 			>
-				<MenuItem
-					aria-label="Navigate to worlds"
-					onClick={() => handleNavigate('/world')}
-					selected={isWorldMatching}
-				>
-					<ListItemIcon>
-						<Public fontSize="small" />
-					</ListItemIcon>
-					<ListItemText>Worlds</ListItemText>
-				</MenuItem>
-				<MenuItem
-					aria-label="Navigate to calendars"
-					onClick={() => handleNavigate('/calendar')}
-					selected={isCalendarMatching}
-				>
-					<ListItemIcon>
-						<CalendarMonth fontSize="small" />
-					</ListItemIcon>
-					<ListItemText>Calendars</ListItemText>
-				</MenuItem>
+				<NavigationLink to="/world">
+					<MenuItem aria-label="Navigate to worlds" onClick={handleMenuClose} selected={isWorldMatching}>
+						<ListItemIcon>
+							<Public fontSize="small" />
+						</ListItemIcon>
+						<ListItemText>Worlds</ListItemText>
+					</MenuItem>
+				</NavigationLink>
+				<NavigationLink to="/calendar">
+					<MenuItem
+						aria-label="Navigate to calendars"
+						onClick={handleMenuClose}
+						selected={isCalendarMatching}
+					>
+						<ListItemIcon>
+							<CalendarMonth fontSize="small" />
+						</ListItemIcon>
+						<ListItemText>Calendars</ListItemText>
+					</MenuItem>
+				</NavigationLink>
 			</Menu>
 		</>
 	)
