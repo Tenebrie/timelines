@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
+import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 import {
 	CONTROLLED_SCROLLER_SIZE,
@@ -25,7 +25,6 @@ export const TimeMarker = ({ timestamp }: Props) => {
 		(a, b) =>
 			a.scroll === b.scroll && a.scaleLevel === b.scaleLevel && a.isSwitchingScale === b.isSwitchingScale,
 	)
-	const { isLoaded } = useSelector(getWorldState, (a, b) => a.isLoaded === b.isLoaded)
 	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel })
 
 	const theme = useCustomTheme()
