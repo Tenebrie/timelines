@@ -50,8 +50,11 @@ export const useTimelineClick = ({
 				y: event.clientY - boundingRect.top,
 			}
 
-			const clickOffset = scaledTimeToRealTime(point.x + 40 - scrollRef.current - 2)
-			const newSelectedTime = binarySearchForClosest(TimelineState.anchorTimestamps, clickOffset)
+			const clickOffset = scaledTimeToRealTime(point.x - scrollRef.current - 2)
+			let newSelectedTime = clickOffset
+			if (TimelineState.anchorTimestamps.length > 0) {
+				newSelectedTime = binarySearchForClosest(TimelineState.anchorTimestamps, clickOffset)
+			}
 
 			setSelectedTime(newSelectedTime)
 

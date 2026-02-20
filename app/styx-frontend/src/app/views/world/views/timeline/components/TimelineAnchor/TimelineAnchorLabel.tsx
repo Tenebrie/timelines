@@ -35,14 +35,17 @@ function TimelineAnchorLabelComponent() {
 				}
 				const currentTimestamp = scaledTimeToRealTime(-scroll + 40)
 				const snappedTime = binarySearchForClosest(TimelineState.anchorTimestamps, currentTimestamp)
-				const smallestBackingUnit = calendar.units.find((u) => u.id === presentation.smallestUnit.unitId)!
+				const smallestBackingUnit = calendar.units.find((u) => u.id === presentation.smallestUnit?.unitId)
+				if (!smallestBackingUnit) {
+					return
+				}
 				const flooredTime = new EsotericDate(calendar, snappedTime).floor(smallestBackingUnit).getTimestamp()
 				const desiredLabel = timeToLabel(flooredTime)
 				if (labelRef.current) {
 					labelRef.current.textContent = desiredLabel
 				}
 			}, 50),
-		[calendar, presentation.smallestUnit.unitId, scaledTimeToRealTime, timeToLabel],
+		[calendar, presentation.smallestUnit?.unitId, scaledTimeToRealTime, timeToLabel],
 	)
 
 	const waitUntil = useWaitUntil()
@@ -81,7 +84,7 @@ function TimelineAnchorLabelComponent() {
 				onClick={openTimeTravelModal}
 				sx={{ fontSize: 16, borderRadius: 0, padding: '2px 16px 2px 16px', height: '100%', width: '100%' }}
 			>
-				Label
+				...
 			</Button>
 		</Paper>
 	)

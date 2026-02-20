@@ -128,9 +128,12 @@ export function useAnchorLines({ containerWidth }: Props) {
 				throw new Error('No suitable divider found')
 			})()
 
-			const backingUnit = calendar.units.find(
-				(u) => u.id === (presentation.baselineUnitId ?? smallDivider.unit.unitId),
-			)!
+			const baselineUnit = calendar.units.find((u) => u.id === presentation.baselineUnitId)
+			const smallDividerUnit = calendar.units.find((u) => u.id === smallDivider.unit.unitId)
+			const backingUnit = baselineUnit ?? smallDividerUnit
+			if (!backingUnit) {
+				return []
+			}
 			const subdividedFollowerDuration = presentation.compression * Number(backingUnit.duration)
 
 			const flatDividers = flatDivs.sort((a, b) => a.timestamp - b.timestamp)
