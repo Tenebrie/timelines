@@ -1,7 +1,16 @@
 # Timelines - AI Context & Architecture Guide
 
-**Last Updated**: December 29, 2025  
+**Last Updated**: February 21, 2026
 **Project**: Collaborative worldbuilding and timeline management application
+
+## Work Ethics
+
+1. **Failure is an option**: Prefer to admit the task has failed rather than to continue down a path that is clearly not working.
+2. **Questions are acceptable**: If you're unsure about something, ask! It's better to clarify than to make assumptions. Consider appending the new context to this document.
+3. **Do not steal ownership**: Your job is to help, not to control the codebase. Stick to established patterns, avoid rewrites and keep the user agency in mind.
+4. **Suggest improvements**: If you spot an objective improvement - bring it up for discussion. Do not start large refactoring without approval.
+5. **Keep clear expectations**: This is a hobby project with a single developer behind it. There is no dev team or revenue.
+6. **Consider more than one option**: When faced with a difficult task, consider multiple possibilites, sources of a bug or implementation paths. Always choose the best of those options.
 
 ## 🎯 Project Purpose
 
@@ -296,16 +305,12 @@ yarn docker                   # Start all services
 yarn prisma migrate dev       # Run migrations
 ```
 
+Hot reload is supported across the entire application.
+
 **Quick Update (app running):**
 
 ```bash
 yarn docker:update            # Rebuild containers with changes
-```
-
-**Full Reinstall:**
-
-```bash
-yarn docker:fullinstall       # Nuclear option when things break
 ```
 
 ### Testing
