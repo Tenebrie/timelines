@@ -27,6 +27,16 @@ export type EventParams = {
 	'timeline/eventDrawer/onResize': { height: number }
 	'timeline/eventEditor/requestOpen': { extraHeight?: number }
 	'timeline/tracksDrawer/onResize': { height: number }
+	'timeline/anchor/updateSlot': {
+		slotId: number
+		data: {
+			timestamp: number
+			size: 'large' | 'medium' | 'small' | 'smallest'
+			formatString: string
+			followerCount: number
+			followerSpacing: number
+		} | null
+	}
 	'mindmap/actorEditor/requestOpen': { extraHeight?: number }
 	'world/requestNavigation': NavigateOptions
 	'calliope/onReconnected': void

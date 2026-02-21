@@ -13,6 +13,7 @@ import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/ho
 import { useDispatch } from 'react-redux'
 
 import { usePostLogoutMutation } from '@/api/authApi'
+import { NavigationLink } from '@/app/components/NavigationLink'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -68,43 +69,46 @@ export function UserDropdown({ user }: Props) {
 			>
 				<MenuItem disabled>Profile</MenuItem>
 				<Divider />
-				<MenuItem
-					onClick={() => {
-						navigate({ to: '/profile' })
-						popupState.close()
-					}}
-					selected={isProfile}
-				>
-					<ListItemIcon>
-						<AccountCircle />
-					</ListItemIcon>
-					Profile
-				</MenuItem>
-				<MenuItem
-					onClick={() => {
-						navigate({ to: '/profile/storage' })
-						popupState.close()
-					}}
-					selected={isStorage}
-				>
-					<ListItemIcon>
-						<Storage />
-					</ListItemIcon>
-					Storage
-				</MenuItem>
-				<MenuItem
-					onClick={() => {
-						navigate({ to: '/profile/security' })
-						popupState.close()
-					}}
-					selected={isSecurity}
-				>
-					<ListItemIcon>
-						<LockResetIcon />
-					</ListItemIcon>
-					Security
-				</MenuItem>
-				<Divider />
+				<NavigationLink to="/profile">
+					<MenuItem
+						onClick={() => {
+							popupState.close()
+						}}
+						selected={isProfile}
+					>
+						<ListItemIcon>
+							<AccountCircle />
+						</ListItemIcon>
+						Profile
+					</MenuItem>
+				</NavigationLink>
+				<NavigationLink to="/profile/storage">
+					<MenuItem
+						onClick={() => {
+							popupState.close()
+						}}
+						selected={isStorage}
+					>
+						<ListItemIcon>
+							<Storage />
+						</ListItemIcon>
+						Storage
+					</MenuItem>
+				</NavigationLink>
+				<NavigationLink to="/profile/security">
+					<MenuItem
+						onClick={() => {
+							popupState.close()
+						}}
+						selected={isSecurity}
+					>
+						<ListItemIcon>
+							<LockResetIcon />
+						</ListItemIcon>
+						Security
+					</MenuItem>
+				</NavigationLink>
+				<Divider sx={{ my: 1 }} />
 				<MenuItem
 					onClick={() => {
 						onLogout()

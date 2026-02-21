@@ -91,7 +91,6 @@ export const ShareWorldModal = () => {
 					}}
 					options={[]}
 					freeSolo
-					data-hj-suppress
 					filterOptions={(options, params) => {
 						const filtered = filter(options, params)
 

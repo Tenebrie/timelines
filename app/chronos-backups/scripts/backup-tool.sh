@@ -98,13 +98,27 @@ cmd_backup() {
     echo ""
     
     # Step 1: Dump the database
-    echo -e "${YELLOW}Step 1/2: Dumping database...${NC}"
+    echo -e "${YELLOW}Step 1/3: Dumping database...${NC}"
     /scripts/pre-backup.sh
     
     # Step 2: Create restic snapshot
     echo ""
-    echo -e "${YELLOW}Step 2/2: Creating snapshot...${NC}"
+    echo -e "${YELLOW}Step 2/3: Creating snapshot...${NC}"
     restic -r "${RESTIC_REPOSITORY}" backup /data/backup
+    
+    # Step 3: Apply retention policy to keep the repository tidy
+    # This ensures manual backups are also cleaned up by the same policy
+    # that governs scheduled backups.
+    echo ""
+    echo -e "${YELLOW}Step 3/3: Applying retention policy...${NC}"
+    restic -r "${RESTIC_REPOSITORY}" forget \
+        --keep-last 4 \
+        --keep-hourly 24 \
+        --keep-daily 7 \
+        --keep-weekly 4 \
+        --keep-monthly 12 \
+        --keep-yearly 3 \
+        --prune
     
     echo ""
     echo -e "${GREEN}Backup completed successfully!${NC}"

@@ -1,4 +1,4 @@
-import { useGetMindmapQuery } from '@api/otherApi'
+import { useGetMindmapQuery } from '@api/mindmapApi'
 import Stack from '@mui/material/Stack'
 import { Outlet, useSearch } from '@tanstack/react-router'
 import { useEffect } from 'react'
@@ -61,6 +61,7 @@ export const World = () => {
 					height: '100%',
 					display: 'flex',
 					flexDirection: 'column',
+					overflow: 'hidden',
 				}}
 			>
 				<Stack direction="row" width="100%" height="100%">

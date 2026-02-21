@@ -1,4 +1,4 @@
-import { useGetMindmapQuery } from '@api/otherApi'
+import { useGetMindmapQuery } from '@api/mindmapApi'
 import { useSelector } from 'react-redux'
 
 import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'

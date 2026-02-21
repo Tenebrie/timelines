@@ -5,6 +5,7 @@ import { baseApi, BaseApiReducer } from '../api/base/baseApi'
 import { AuthReducer } from './features/auth/AuthSlice'
 import { ModalsReducer } from './features/modals/ModalsSlice'
 import { PreferencesReducer } from './features/preferences/PreferencesSlice'
+import { CalendarEditorReducer } from './features/time/calendar/CalendarSlice'
 import { deepMerge } from './utils/deepMerge'
 import { TimelineReducer } from './views/world/views/timeline/TimelineSlice'
 import { WikiReducer } from './views/world/views/wiki/WikiSlice'
@@ -13,6 +14,8 @@ import { WorldReducer } from './views/world/WorldSlice'
 const rootReducer = combineReducers({
 	api: BaseApiReducer,
 	iconifyApi: IconifyApiReducer,
+
+	calendarEditor: CalendarEditorReducer,
 
 	auth: AuthReducer,
 	modals: ModalsReducer,

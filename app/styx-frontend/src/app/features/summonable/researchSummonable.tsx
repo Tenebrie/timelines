@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom'
 
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 
-import { dispatchEvent, useEventBusSubscribe } from '../eventBus'
+import { dispatchGlobalEvent, useEventBusSubscribe } from '../eventBus'
 import { SummonableErrorBoundary } from './SummonableErrorBoundary'
 import { invokeSummonRepository as invokeSummonRepository, invokeSummonWaitingList } from './SummonAuthority'
 
@@ -65,7 +65,7 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 
 	const summon = (target: HTMLElement, initialProps: unknown) => {
 		const event = { isHandled: false }
-		dispatchEvent['summonable/requestSummon']({
+		dispatchGlobalEvent['summonable/requestSummon']({
 			family,
 			element: target,
 			event,
@@ -78,7 +78,7 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 	}
 
 	const update = (target: HTMLElement, props: unknown) => {
-		dispatchEvent['summonable/requestUpdate']({
+		dispatchGlobalEvent['summonable/requestUpdate']({
 			family,
 			element: target,
 			props,
@@ -86,7 +86,7 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 	}
 
 	const release = (element: HTMLElement) => {
-		dispatchEvent['summonable/requestDismiss']({
+		dispatchGlobalEvent['summonable/requestDismiss']({
 			family,
 			element,
 		})

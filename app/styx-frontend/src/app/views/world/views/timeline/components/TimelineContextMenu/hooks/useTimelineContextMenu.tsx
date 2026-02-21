@@ -5,17 +5,12 @@ import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorld
 import { LineSpacing } from '@/app/utils/constants'
 import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineState'
 import { worldSlice } from '@/app/views/world/WorldSlice'
-import {
-	getTimelineContextMenuState,
-	getTimelineState,
-	getWorldCalendarState,
-} from '@/app/views/world/WorldSliceSelectors'
+import { getTimelineContextMenuState, getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 export const useTimelineContextMenu = () => {
 	const { isOpen } = useSelector(getTimelineContextMenuState, (a, b) => a.isOpen === b.isOpen)
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
-	const calendar = useSelector(getWorldCalendarState)
-	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
+	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
 	const dispatch = useDispatch()
 	const { openTimelineContextMenu, closeTimelineContextMenu } = worldSlice.actions

@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Outliner } from '@/app/components/Outliner/Outliner'
 import { OutlinerOutlet } from '@/app/components/Outliner/OutlinerOutlet'
@@ -51,6 +51,24 @@ export function OutlinerDrawer() {
 		setDraggerOutside(drawerVisible)
 	}, [isDragging, isDraggingChild, drawerVisible])
 
+	const lastSeenHeight = useRef(drawerVisible ? height : 0)
+	const animatingRef = useRef(false)
+	if (!isDragging) {
+		if (drawerVisible) {
+			lastSeenHeight.current = height
+		} else {
+			animatingRef.current = true
+			setTimeout(() => {
+				lastSeenHeight.current = 0
+				animatingRef.current = false
+			}, 300)
+		}
+	}
+
+	const placeholderStyles = {
+		width: `${lastSeenHeight.current}px`,
+	}
+
 	return (
 		<>
 			<ResizeableDrawerProvider
@@ -63,7 +81,20 @@ export function OutlinerDrawer() {
 				setDrawerVisible={setVisible}
 			>
 				<Paper
+					sx={{
+						...placeholderStyles,
+						height: '100%',
+						flexShrink: 0,
+						marginLeft: '1px',
+					}}
+					elevation={0}
+				/>
+				<Paper
 					style={{
+						position: 'absolute' as const,
+						height: '100%',
+						right: 0,
+						bottom: 0,
 						width: grabberProps.height,
 						marginRight: drawerVisible ? `${overflowHeight}px` : `${-height}px`,
 						marginLeft: '1px',

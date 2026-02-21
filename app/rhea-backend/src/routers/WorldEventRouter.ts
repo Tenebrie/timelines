@@ -7,9 +7,7 @@ import { ValidationService } from '@src/services/ValidationService.js'
 import { WorldEventDeltaService } from '@src/services/WorldEventDeltaService.js'
 import { WorldEventService } from '@src/services/WorldEventService.js'
 import {
-	BigIntValidator,
 	BooleanValidator,
-	NullableBigIntValidator,
 	OptionalParam,
 	PathParam,
 	RequiredParam,
@@ -27,6 +25,7 @@ import { NullableEventTrackValidator } from './validators/NullableEventTrackVali
 import { NullableNameStringValidator } from './validators/NullableNameStringValidator.js'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator.js'
 import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator.js'
+import { NullableTimestampValidator, TimestampValidator } from './validators/TimestampValidator.js'
 import { UuidStringValidator } from './validators/UuidStringValidator.js'
 
 const router = new Router().with(SessionMiddleware)
@@ -55,8 +54,8 @@ router.post('/api/world/:worldId/event', async (ctx) => {
 		icon: OptionalParam(OptionalNameStringValidator),
 		color: OptionalParam(OptionalNameStringValidator),
 		descriptionRich: RequiredParam(ContentStringValidator),
-		timestamp: RequiredParam(BigIntValidator),
-		revokedAt: OptionalParam(NullableBigIntValidator),
+		timestamp: RequiredParam(TimestampValidator),
+		revokedAt: OptionalParam(NullableTimestampValidator),
 		customName: OptionalParam(BooleanValidator),
 		externalLink: OptionalParam(ContentStringValidator),
 		worldEventTrackId: OptionalParam(NullableEventTrackValidator),
@@ -105,8 +104,8 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		name: OptionalParam(OptionalNameStringValidator),
 		icon: OptionalParam(OptionalNameStringValidator),
 		color: OptionalParam(OptionalNameStringValidator),
-		timestamp: OptionalParam(BigIntValidator),
-		revokedAt: OptionalParam(NullableBigIntValidator),
+		timestamp: OptionalParam(TimestampValidator),
+		revokedAt: OptionalParam(NullableTimestampValidator),
 		externalLink: OptionalParam(OptionalURLStringValidator),
 		worldEventTrackId: OptionalParam(NullableEventTrackValidator),
 	})
@@ -177,7 +176,7 @@ router.post('/api/world/:worldId/event/:eventId/revoke', async (ctx) => {
 	})
 
 	const { revokedAt } = useRequestBody(ctx, {
-		revokedAt: RequiredParam(BigIntValidator),
+		revokedAt: RequiredParam(TimestampValidator),
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
@@ -240,7 +239,7 @@ router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
 	})
 
 	const params = useRequestBody(ctx, {
-		timestamp: RequiredParam(BigIntValidator),
+		timestamp: RequiredParam(TimestampValidator),
 		name: RequiredParam(NullableNameStringValidator),
 		description: RequiredParam(NullableNameStringValidator),
 		descriptionRich: RequiredParam(NullableNameStringValidator),
@@ -276,7 +275,7 @@ router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =>
 	})
 
 	const params = useRequestBody(ctx, {
-		timestamp: OptionalParam(BigIntValidator),
+		timestamp: OptionalParam(TimestampValidator),
 		name: OptionalParam(NullableNameStringValidator),
 		description: OptionalParam(NullableNameStringValidator),
 		descriptionRich: OptionalParam(NullableNameStringValidator),

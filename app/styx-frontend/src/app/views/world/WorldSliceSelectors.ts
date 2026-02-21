@@ -14,7 +14,6 @@ export const getSelectedNodeActorIds = createSelector([getWorldState], (state) =
 )
 export const getWorldStateLoaded = createSelector([getWorldState], (state) => state.isLoaded)
 export const getWorldIdState = createSelector([getWorldState], (state) => state.id)
-export const getWorldCalendarState = createSelector([getWorldState], (state) => state.calendar)
 export const getWorldRouterState = createSelector([getWorldState], (state) => ({
 	id: state.id,
 	isReadOnly: state.isReadOnly,

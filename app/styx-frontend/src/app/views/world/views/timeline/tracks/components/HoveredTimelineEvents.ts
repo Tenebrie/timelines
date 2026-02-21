@@ -1,7 +1,7 @@
 import { MarkerType, TimelineEntity, WorldEvent } from '@api/types/worldTypes'
 import { useState } from 'react'
 
-import { dispatchEvent, useEventBusSubscribe } from '@/app/features/eventBus'
+import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 
 export const HoveredTimelineEvents = {
 	events: [] as WorldEvent[],
@@ -13,14 +13,14 @@ export const HoveredTimelineEvents = {
 
 	hoverEvent: (marker: TimelineEntity<MarkerType>) => {
 		HoveredTimelineEvents.events.push(marker)
-		dispatchEvent['timeline/onMarkerHovered']({ hover: true, marker })
+		dispatchGlobalEvent['timeline/onMarkerHovered']({ hover: true, marker })
 	},
 
 	unhoverEvent: (marker: TimelineEntity<MarkerType>) => {
 		HoveredTimelineEvents.events = HoveredTimelineEvents.events.filter(
 			(hoveredEvent) => hoveredEvent.id !== marker.id,
 		)
-		dispatchEvent['timeline/onMarkerHovered']({ hover: false, marker })
+		dispatchGlobalEvent['timeline/onMarkerHovered']({ hover: false, marker })
 	},
 
 	hoverEdgeScroller: (side: 'left' | 'right') => {

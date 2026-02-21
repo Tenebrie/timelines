@@ -16,7 +16,7 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { tagListTag, worldDetailsTag } from './utils/tags.js'
+import { tagEntityTag, worldDetailsTag } from './utils/tags.js'
 import { NameStringValidator } from './validators/NameStringValidator.js'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator.js'
 
@@ -26,7 +26,7 @@ router.post('/api/world/:worldId/tags', async (ctx) => {
 	useApiEndpoint({
 		name: 'createTag',
 		description: 'Creates a new tag',
-		tags: [tagListTag, worldDetailsTag],
+		tags: [tagEntityTag, worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -56,7 +56,7 @@ router.patch('/api/world/:worldId/tag/:tagId', async (ctx) => {
 	useApiEndpoint({
 		name: 'updateTag',
 		description: 'Updates the target tag',
-		tags: [tagListTag],
+		tags: [tagEntityTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -88,7 +88,7 @@ router.delete('/api/world/:worldId/tag/:tagId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteTag',
 		description: 'Deletes the target tag',
-		tags: [tagListTag, worldDetailsTag],
+		tags: [tagEntityTag, worldDetailsTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)
@@ -111,7 +111,7 @@ router.get('/api/world/:worldId/tag/:tagId', async (ctx) => {
 	useApiEndpoint({
 		name: 'getTagDetails',
 		description: 'Fetches the details of a tag, including all entities that mention it',
-		tags: [tagListTag],
+		tags: [tagEntityTag],
 	})
 
 	const user = await useAuth(ctx, UserAuthenticator)

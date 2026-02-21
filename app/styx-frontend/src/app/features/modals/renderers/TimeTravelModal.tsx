@@ -1,4 +1,4 @@
-import { WorldCalendarType } from '@api/types/worldTypes'
+import { WorldCalendar } from '@api/types/worldTypes'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
 import Divider from '@mui/material/Divider'
@@ -25,15 +25,12 @@ export const TimeTravelModal = () => {
 	const { isOpen, close } = useModal('timeTravelModal')
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
-	const { selectedTime, calendar } = useSelector(
-		getWorldState,
-		(a, b) => a.selectedTime === b.selectedTime && a.calendar === b.calendar,
-	)
+	const { selectedTime } = useSelector(getWorldState, (a, b) => a.selectedTime === b.selectedTime)
 
-	const { timeToLabel } = useWorldTime()
+	const { timeToLabel, calendar } = useWorldTime()
 	const { applySelector } = useTimeSelector({ rawTime: selectedTime })
 
-	const calendarRef = useRef<WorldCalendarType>(null)
+	const calendarRef = useRef<WorldCalendar>(null)
 	const selectorRef = useRef<HTMLInputElement | null>(null)
 	const [timeSelector, setTimeSelector] = useState('')
 	const [targetTime, setTargetTime] = useState(selectedTime)

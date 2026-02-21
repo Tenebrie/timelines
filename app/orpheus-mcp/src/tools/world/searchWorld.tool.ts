@@ -35,7 +35,7 @@ export function registerSearchWorldTool(server: McpServer) {
 
 				const formatResults = (items: Array<{ id: string; name: string }>, type: string) => {
 					if (items.length === 0) return `No ${type} found`
-					return items.map((item) => `- ${item.name} (ID: ${item.id})`).join('\n')
+					return items.map((item) => `- ${item.name}`).join('\n')
 				}
 
 				const content = [

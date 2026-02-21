@@ -1,15 +1,24 @@
+import { WorldCalendar, WorldCalendarUnit } from '@api/types/worldTypes'
+
+type TimeBucket = {
+	bucket: string
+	names: string[]
+	unit: WorldCalendarUnit
+	toTimeMatchPattern: RegExp
+	toDeltaMatchPattern: RegExp
+
+	labeledMatchPatterns: {
+		index: number
+		pattern: RegExp
+	}[]
+}
+
 type TimeDelta = {
-	toYear: number | null
-	toMonth: number | null
-	toDay: number | null
-	toHour: number | null
-	toMinute: number | null
-	deltaYears: number
-	deltaMonths: number
-	deltaWeeks: number
-	deltaDays: number
-	deltaHours: number
-	deltaMinutes: number
+	priority: number
+	unit: WorldCalendarUnit | null
+	set: number | null
+	add: number
+	exact?: boolean
 }
 
 const parseNumber = (str: string) => {
@@ -19,112 +28,100 @@ const parseNumber = (str: string) => {
 	return 0
 }
 
-const parseTime = (time: string) => {
-	const parts = time.split(':')
-	return {
-		toHour: parts[0].includes('x') ? undefined : parseNumber(parts[0]),
-		toMinute: parts[1].includes('x') ? undefined : parseNumber(parts[1]),
-	}
-}
-
-const parseDate = (date: string) => {
-	const parts = date.split('-')
-	const year = parts[0].includes('x') ? undefined : parseNumber(parts[0])
-	const month = parts[1].includes('x') || parts[1].match(/^[0]+$/) ? undefined : parseNumber(parts[1]) - 1
-	const day = parts[2].includes('x') || parts[2].match(/^[0]+$/) ? undefined : parseNumber(parts[2]) - 1
-	return {
-		toYear: year,
-		toMonth: month,
-		toDay: day,
-	}
-}
-
-export const parseTimeSelector = (timeSelector: string): TimeDelta => {
+export const parseTimeSelector = (calendar: WorldCalendar, timeSelector: string): TimeDelta[] => {
 	const parts = timeSelector.split(' ')
-	return parts
-		.flatMap<Partial<TimeDelta>>((partial) => {
-			const num = partial.replace(/[^-0-9\\.]/g, '')
-			if (partial.match(/(y|year)[0-9]+!/)) {
-				return {
-					toYear: parseNumber(num),
-					toMonth: 0,
-					toDay: 0,
-					toHour: 0,
-					toMinute: 0,
-				}
-			} else if (partial.match(/(M|month)[0-9]+!/)) {
-				return {
-					toMonth: parseNumber(num) - 1,
-					toDay: 0,
-					toHour: 0,
-					toMinute: 0,
-				}
-			} else if (partial.match(/(d|day)[0-9]+!/)) {
-				return {
-					toDay: parseNumber(num) - 1,
-					toHour: 0,
-					toMinute: 0,
-				}
-			} else if (partial.match(/(h|hour)[0-9]+!/)) {
-				return {
-					toHour: parseNumber(num),
-					toMinute: 0,
-				}
-			} else if (partial.match(/(y|year)[0-9]+/)) {
-				return { toYear: parseNumber(num) }
-			} else if (partial.match(/(M|month)[0-9]+/)) {
-				return { toMonth: parseNumber(num) - 1 }
-			} else if (partial.match(/(d|day)[0-9]+/)) {
-				return { toDay: parseNumber(num) - 1 }
-			} else if (partial.match(/(h|hour)[0-9]+/)) {
-				return { toHour: parseNumber(num) }
-			} else if (partial.match(/(m|minute)[0-9]+!?/)) {
-				return { toMinute: parseNumber(num) }
-			} else if (partial.match(/[0-9]+(y|year|years)/)) {
-				return { deltaYears: parseNumber(num) }
-			} else if (partial.match(/[-0-9]+(M|month|months)/)) {
-				return { deltaMonths: parseNumber(num) }
-			} else if (partial.match(/[-0-9]+(w|week|weeks)/)) {
-				return { deltaWeeks: parseNumber(num) }
-			} else if (partial.match(/[-0-9]+(d|day|days)/)) {
-				return { deltaDays: parseNumber(num) }
-			} else if (partial.match(/[-0-9]+(h|hour|hours)/)) {
-				return { deltaHours: parseNumber(num) }
-			} else if (partial.match(/[-0-9]+(m|min|minute|minutes)/)) {
-				return { deltaMinutes: parseNumber(num) }
-			} else if (partial.match(/[0-9x]{2}:[0-9x]{2}/)) {
-				return { ...parseTime(partial) }
-			} else if (partial.match(/[0-9]+-[0-9]+-[0-9]+/)) {
-				return { ...parseDate(partial) }
+	const buckets = calendar.units
+		.filter((unit) => unit.formatShorthand && unit.formatMode !== 'Hidden')
+		.map((unit) => {
+			const isCaseSensitive = calendar.units.some(
+				(u) =>
+					u.formatShorthand?.toLowerCase() === unit.formatShorthand?.toLowerCase() &&
+					u.displayName !== unit.displayName,
+			)
+
+			const names = [unit.displayName.toLowerCase(), unit.displayNameShort.toLowerCase()].filter(
+				(name) => name.length > 1,
+			)
+			const customLabels = unit.parents
+				.filter((rel) => !!rel.label)
+				.map((rel) => ({
+					index: calendar.units
+						.find((u) => u.id === rel.parentUnitId)!
+						.children.findIndex((c) => c.id === rel.id),
+					pattern: new RegExp(`^${rel.label}!?$`, 'i'),
+				}))
+
+			if (isCaseSensitive) {
+				names.push(unit.formatShorthand!)
+			} else {
+				names.push(unit.formatShorthand!.toLowerCase())
+				names.push(unit.formatShorthand!.toUpperCase())
 			}
-			return {}
-		})
-		.reduce<TimeDelta>(
-			(acc, curr) => ({
-				toYear: curr.toYear ?? acc.toYear,
-				toMonth: curr.toMonth ?? acc.toMonth,
-				toDay: curr.toDay ?? acc.toDay,
-				toHour: curr.toHour ?? acc.toHour,
-				toMinute: curr.toMinute ?? acc.toMinute,
-				deltaYears: acc.deltaYears + (curr.deltaYears ?? 0),
-				deltaMonths: acc.deltaMonths + (curr.deltaMonths ?? 0),
-				deltaWeeks: acc.deltaWeeks + (curr.deltaWeeks ?? 0),
-				deltaDays: acc.deltaDays + (curr.deltaDays ?? 0),
-				deltaHours: acc.deltaHours + (curr.deltaHours ?? 0),
-				deltaMinutes: acc.deltaMinutes + (curr.deltaMinutes ?? 0),
-			}),
-			{
-				toYear: null,
-				toMonth: null,
-				toDay: null,
-				toHour: null,
-				toMinute: null,
-				deltaYears: 0,
-				deltaMonths: 0,
-				deltaWeeks: 0,
-				deltaDays: 0,
-				deltaHours: 0,
-				deltaMinutes: 0,
-			},
-		)
+
+			const toTimeMatchPattern = new RegExp(`^(${names.join('|')})[-0-9]+!?$`)
+			const toDeltaMatchPattern = new RegExp(`^[-0-9]+(${names.join('|')})!?$`)
+			return {
+				bucket: unit.displayName.toLowerCase(),
+				names,
+				unit,
+				toTimeMatchPattern,
+				toDeltaMatchPattern,
+				labeledMatchPatterns: customLabels,
+			}
+		}) satisfies TimeBucket[]
+
+	return parts.map<TimeDelta>((partial) => {
+		const num = partial.replace(/[^-0-9\\.]/g, '')
+		const exact = partial.endsWith('!')
+
+		const toLabeledMatch = buckets
+			.flatMap((parent) =>
+				parent.labeledMatchPatterns.map((label) => ({
+					...label,
+					parent,
+				})),
+			)
+			.find((label) => label.pattern.test(partial))
+
+		if (toLabeledMatch) {
+			return {
+				bucket: toLabeledMatch.parent.bucket,
+				priority: Number(toLabeledMatch.parent.unit.duration),
+				unit: toLabeledMatch.parent.unit,
+				set: toLabeledMatch.index,
+				add: 0,
+				exact,
+			}
+		}
+
+		const toTimeMatch = buckets.find((bucket) => bucket.toTimeMatchPattern.test(partial))
+		if (toTimeMatch) {
+			return {
+				bucket: toTimeMatch.bucket,
+				priority: Number(toTimeMatch.unit.duration),
+				unit: toTimeMatch.unit,
+				set: parseNumber(num),
+				add: 0,
+				exact,
+			}
+		}
+
+		const toDeltaMatch = buckets.find((bucket) => bucket.toDeltaMatchPattern.test(partial))
+		if (toDeltaMatch) {
+			return {
+				bucket: toDeltaMatch.bucket,
+				priority: Number(toDeltaMatch.unit.duration),
+				unit: toDeltaMatch.unit,
+				set: null,
+				add: parseNumber(num),
+				exact,
+			}
+		}
+		return {
+			priority: 0,
+			set: null,
+			unit: null,
+			add: 0,
+		}
+	})
 }

@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/core'
 import { SuggestionOptions } from '@tiptap/suggestion'
 
-import { dispatchEvent } from '@/app/features/eventBus'
+import { dispatchGlobalEvent } from '@/app/features/eventBus'
 
 export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 	allowSpaces: true,
@@ -19,7 +19,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 				state.isOpen = true
 				state.editor = props.editor
 				const pos = props.editor.view.coordsAtPos(props.range.from)
-				dispatchEvent['richEditor/requestOpenMentions']({
+				dispatchGlobalEvent['richEditor/requestOpenMentions']({
 					query: props.query,
 					screenPosTop: pos.top,
 					screenPosLeft: pos.left,
@@ -28,7 +28,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 
 			onUpdate(props) {
 				const pos = props.editor.view.coordsAtPos(props.range.from)
-				dispatchEvent['richEditor/requestUpdateMentions']({
+				dispatchGlobalEvent['richEditor/requestUpdateMentions']({
 					query: props.query,
 					screenPosTop: pos.top,
 					screenPosLeft: pos.left,
@@ -45,11 +45,11 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 				}
 				if (props.event.key === 'Backspace' && state.isOpen) {
 					state.isOpen = false
-					dispatchEvent['richEditor/requestCloseMentions']()
+					dispatchGlobalEvent['richEditor/requestCloseMentions']()
 					return true
 				}
 				if (['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'PageUp', 'PageDown'].includes(props.event.key)) {
-					dispatchEvent['richEditor/onKeyDown']({
+					dispatchGlobalEvent['richEditor/onKeyDown']({
 						editor: state.editor,
 						key: props.event.key,
 						ctrlKey: props.event.ctrlKey,
@@ -64,7 +64,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 
 			onExit() {
 				state.isOpen = false
-				dispatchEvent['richEditor/requestCloseMentions']()
+				dispatchGlobalEvent['richEditor/requestCloseMentions']()
 			},
 		}
 	},

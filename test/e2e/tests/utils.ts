@@ -1,5 +1,5 @@
 export const baseUrl = (() => {
-	const env = process.env.TARGET_ENV
+	const env = process.env.TARGET_ENV ?? 'local_ui'
 	if (env === 'prod') {
 		return 'https://timelines.tenebrie.com'
 	} else if (env === 'staging') {

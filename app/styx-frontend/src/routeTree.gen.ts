@@ -14,22 +14,25 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as WorldIndexRouteImport } from './routes/world/index'
 import { Route as ToolsIndexRouteImport } from './routes/tools/index'
 import { Route as ProfileIndexRouteImport } from './routes/profile/index'
+import { Route as CalendarIndexRouteImport } from './routes/calendar/index'
 import { Route as ToolsToolsRouteImport } from './routes/tools/_tools'
 import { Route as SecretMusicRouteImport } from './routes/secret/music'
 import { Route as ProfileProfileRouteImport } from './routes/profile/_profile'
-import { Route as WorldWorldIdWorldRouteImport } from './routes/world.$worldId/_world'
+import { Route as CalendarCalendarIdRouteImport } from './routes/calendar/$calendarId'
+import { Route as WorldWorldIdWorldRouteImport } from './routes/world/$worldId/_world'
 import { Route as ToolsToolsImageConverterRouteImport } from './routes/tools/_tools.image-converter'
 import { Route as ProfileProfileStorageRouteImport } from './routes/profile/_profile.storage'
 import { Route as ProfileProfileSecurityRouteImport } from './routes/profile/_profile.security'
 import { Route as ProfileProfilePublicRouteImport } from './routes/profile/_profile.public'
-import { Route as WorldWorldIdWorldTimelineRouteImport } from './routes/world.$worldId/_world.timeline'
-import { Route as WorldWorldIdWorldSettingsRouteImport } from './routes/world.$worldId/_world.settings'
-import { Route as WorldWorldIdWorldMindmapRouteImport } from './routes/world.$worldId/_world.mindmap'
-import { Route as WorldWorldIdWorldWikiWikiRouteImport } from './routes/world.$worldId/_world.wiki/_wiki'
-import { Route as WorldWorldIdWorldWikiWikiIndexRouteImport } from './routes/world.$worldId/_world.wiki/_wiki.index'
-import { Route as WorldWorldIdWorldWikiWikiArticleIdRouteImport } from './routes/world.$worldId/_world.wiki/_wiki.$articleId'
+import { Route as WorldWorldIdWorldTimelineRouteImport } from './routes/world/$worldId/_world.timeline'
+import { Route as WorldWorldIdWorldSettingsRouteImport } from './routes/world/$worldId/_world.settings'
+import { Route as WorldWorldIdWorldMindmapRouteImport } from './routes/world/$worldId/_world.mindmap'
+import { Route as WorldWorldIdWorldWikiWikiRouteImport } from './routes/world/$worldId/_world.wiki/_wiki'
+import { Route as WorldWorldIdWorldWikiWikiIndexRouteImport } from './routes/world/$worldId/_world.wiki/_wiki.index'
+import { Route as WorldWorldIdWorldWikiWikiArticleIdRouteImport } from './routes/world/$worldId/_world.wiki/_wiki.$articleId'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -56,6 +59,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorldIndexRoute = WorldIndexRouteImport.update({
+  id: '/world/',
+  path: '/world/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsIndexRoute = ToolsIndexRouteImport.update({
   id: '/tools/',
   path: '/tools/',
@@ -64,6 +72,11 @@ const ToolsIndexRoute = ToolsIndexRouteImport.update({
 const ProfileIndexRoute = ProfileIndexRouteImport.update({
   id: '/profile/',
   path: '/profile/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarIndexRoute = CalendarIndexRouteImport.update({
+  id: '/calendar/',
+  path: '/calendar/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsToolsRoute = ToolsToolsRouteImport.update({
@@ -79,6 +92,11 @@ const SecretMusicRoute = SecretMusicRouteImport.update({
 const ProfileProfileRoute = ProfileProfileRouteImport.update({
   id: '/profile/_profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarCalendarIdRoute = CalendarCalendarIdRouteImport.update({
+  id: '/calendar/$calendarId',
+  path: '/calendar/$calendarId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const WorldWorldIdWorldRoute = WorldWorldIdWorldRouteImport.update({
@@ -150,11 +168,14 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile': typeof ProfileProfileRouteWithChildren
   '/secret/music': typeof SecretMusicRoute
   '/tools': typeof ToolsToolsRouteWithChildren
+  '/calendar/': typeof CalendarIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/tools/': typeof ToolsIndexRoute
+  '/world/': typeof WorldIndexRoute
   '/profile/public': typeof ProfileProfilePublicRoute
   '/profile/security': typeof ProfileProfileSecurityRoute
   '/profile/storage': typeof ProfileProfileStorageRoute
@@ -173,9 +194,12 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile': typeof ProfileIndexRoute
   '/secret/music': typeof SecretMusicRoute
   '/tools': typeof ToolsIndexRoute
+  '/calendar': typeof CalendarIndexRoute
+  '/world': typeof WorldIndexRoute
   '/profile/public': typeof ProfileProfilePublicRoute
   '/profile/security': typeof ProfileProfileSecurityRoute
   '/profile/storage': typeof ProfileProfileStorageRoute
@@ -194,11 +218,14 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile/_profile': typeof ProfileProfileRouteWithChildren
   '/secret/music': typeof SecretMusicRoute
   '/tools/_tools': typeof ToolsToolsRouteWithChildren
+  '/calendar/': typeof CalendarIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/tools/': typeof ToolsIndexRoute
+  '/world/': typeof WorldIndexRoute
   '/profile/_profile/public': typeof ProfileProfilePublicRoute
   '/profile/_profile/security': typeof ProfileProfileSecurityRoute
   '/profile/_profile/storage': typeof ProfileProfileStorageRoute
@@ -219,11 +246,14 @@ export interface FileRouteTypes {
     | '/home'
     | '/login'
     | '/register'
+    | '/calendar/$calendarId'
     | '/profile'
     | '/secret/music'
     | '/tools'
+    | '/calendar/'
     | '/profile/'
     | '/tools/'
+    | '/world/'
     | '/profile/public'
     | '/profile/security'
     | '/profile/storage'
@@ -242,9 +272,12 @@ export interface FileRouteTypes {
     | '/home'
     | '/login'
     | '/register'
+    | '/calendar/$calendarId'
     | '/profile'
     | '/secret/music'
     | '/tools'
+    | '/calendar'
+    | '/world'
     | '/profile/public'
     | '/profile/security'
     | '/profile/storage'
@@ -262,11 +295,14 @@ export interface FileRouteTypes {
     | '/home'
     | '/login'
     | '/register'
+    | '/calendar/$calendarId'
     | '/profile/_profile'
     | '/secret/music'
     | '/tools/_tools'
+    | '/calendar/'
     | '/profile/'
     | '/tools/'
+    | '/world/'
     | '/profile/_profile/public'
     | '/profile/_profile/security'
     | '/profile/_profile/storage'
@@ -286,11 +322,14 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  CalendarCalendarIdRoute: typeof CalendarCalendarIdRoute
   ProfileProfileRoute: typeof ProfileProfileRouteWithChildren
   SecretMusicRoute: typeof SecretMusicRoute
   ToolsToolsRoute: typeof ToolsToolsRouteWithChildren
+  CalendarIndexRoute: typeof CalendarIndexRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
   ToolsIndexRoute: typeof ToolsIndexRoute
+  WorldIndexRoute: typeof WorldIndexRoute
   WorldWorldIdWorldRoute: typeof WorldWorldIdWorldRouteWithChildren
 }
 
@@ -331,6 +370,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/world/': {
+      id: '/world/'
+      path: '/world'
+      fullPath: '/world/'
+      preLoaderRoute: typeof WorldIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/': {
       id: '/tools/'
       path: '/tools'
@@ -343,6 +389,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile/'
       preLoaderRoute: typeof ProfileIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar/': {
+      id: '/calendar/'
+      path: '/calendar'
+      fullPath: '/calendar/'
+      preLoaderRoute: typeof CalendarIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/_tools': {
@@ -364,6 +417,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar/$calendarId': {
+      id: '/calendar/$calendarId'
+      path: '/calendar/$calendarId'
+      fullPath: '/calendar/$calendarId'
+      preLoaderRoute: typeof CalendarCalendarIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/world/$worldId/_world': {
@@ -514,11 +574,14 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  CalendarCalendarIdRoute: CalendarCalendarIdRoute,
   ProfileProfileRoute: ProfileProfileRouteWithChildren,
   SecretMusicRoute: SecretMusicRoute,
   ToolsToolsRoute: ToolsToolsRouteWithChildren,
+  CalendarIndexRoute: CalendarIndexRoute,
   ProfileIndexRoute: ProfileIndexRoute,
   ToolsIndexRoute: ToolsIndexRoute,
+  WorldIndexRoute: WorldIndexRoute,
   WorldWorldIdWorldRoute: WorldWorldIdWorldRouteWithChildren,
 }
 export const routeTree = rootRouteImport

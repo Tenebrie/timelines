@@ -2,6 +2,8 @@ import { z } from 'zod'
 
 import { ScaleLevelSchema } from '@/app/schema/ScaleLevel'
 
+import { CalendarUnitEditorTab } from '../../time/calendar/unitEditor/CalendarUnitEditor'
+
 export const PreferencesKey = 'userPreferences/v2'
 
 const defaultTheme = ((): 'light' | 'dark' => {
@@ -13,6 +15,11 @@ const defaultTheme = ((): 'light' | 'dark' => {
 })()
 
 export const PreferencesStateSchema = z.object({
+	calendarEditor: z
+		.object({
+			expandedUnitSections: z.array(z.nativeEnum(CalendarUnitEditorTab)).default([]),
+		})
+		.default({}),
 	colorMode: z.union([z.literal('light'), z.literal('dark')]).default(defaultTheme),
 	iconSets: z
 		.object({
@@ -39,6 +46,7 @@ export const PreferencesStateSchema = z.object({
 		.object({
 			containerHeight: z.number().default(232),
 			scaleLevel: ScaleLevelSchema.default(0),
+			reduceAnimations: z.boolean().default(false),
 		})
 		.default({}),
 	wiki: z

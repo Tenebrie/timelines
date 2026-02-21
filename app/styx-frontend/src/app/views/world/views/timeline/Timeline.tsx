@@ -70,7 +70,7 @@ function TimelineComponent() {
 				<TimelineControls />
 			</TimelineWrapper>
 			<Box style={{ opacity }} sx={{ transition: 'opacity 0.3s' }}>
-				{opacity > 0 && <TimelineAnchor containerWidth={containerWidth} />}
+				{opacity > 0 && <TimelineAnchor containerWidth={containerWidth} showCurrentTime />}
 			</Box>
 
 			<TimelineEventListener containerWidth={containerWidth} />

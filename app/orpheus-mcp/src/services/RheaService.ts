@@ -6,6 +6,10 @@ import { TokenService } from './TokenService.js'
 
 const rheaClient = createClient<paths>({
 	baseUrl: 'http://rhea:3000',
+	// Late-bind fetch so that MSW can intercept requests in tests.
+	// openapi-fetch captures the fetch reference at createClient() time,
+	// which is before MSW patches globalThis.fetch.
+	fetch: (...args) => globalThis.fetch(...args),
 })
 
 type PermissionLevel =
@@ -500,13 +504,24 @@ export const RheaService = {
 		return response.data
 	},
 
-	createArticle: async ({ worldId, userId, name }: { worldId: string; userId: string; name: string }) => {
+	createArticle: async ({
+		worldId,
+		userId,
+		name,
+		contentRich,
+	}: {
+		worldId: string
+		userId: string
+		name: string
+		contentRich: string
+	}) => {
 		const response = await rheaClient['POST']('/api/world/{worldId}/wiki/articles', {
 			params: {
 				path: { worldId },
 			},
 			body: {
 				name,
+				contentRich,
 			},
 			headers: {
 				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),

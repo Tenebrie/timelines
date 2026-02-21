@@ -1,4 +1,3 @@
-import { WorldCalendarType } from '@api/types/worldTypes'
 import { useCallback, useDebugValue, useMemo } from 'react'
 
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
@@ -7,7 +6,6 @@ import { useTimelineLevelScalar } from './useTimelineLevelScalar'
 
 type Props = {
 	scaleLevel: ScaleLevel
-	calendar: WorldCalendarType
 }
 
 export const useTimelineWorldTime = ({ scaleLevel }: Props) => {

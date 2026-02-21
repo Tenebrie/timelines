@@ -2,7 +2,7 @@ import { AllowedEvents, EventParams } from './types'
 
 type Listener<T> = (payload: T) => void
 
-class EventBus {
+export class EventBus {
 	#map = new Map<AllowedEvents, Set<Listener<unknown>>>()
 
 	on<T extends AllowedEvents>(event: T, fn: Listener<EventParams[T]>) {
@@ -21,4 +21,4 @@ class EventBus {
 	}
 }
 
-export const eventBus = new EventBus()
+export const globalEventBus = new EventBus()

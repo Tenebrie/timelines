@@ -1,13 +1,15 @@
 import throttle from 'lodash.throttle'
 import { useEffect, useRef, useState } from 'react'
 
-import { dispatchEvent } from '@/app/features/eventBus'
+import { dispatchGlobalEvent, useEventBusDispatch } from '@/app/features/eventBus'
 
 import { TimelineState } from '../utils/TimelineState'
 
 export const useTimelineDimensions = () => {
 	const containerRef = useRef<HTMLDivElement | null>(null)
 	const [width, setWidth] = useState<number>(window.innerWidth)
+
+	const onTimelineResize = useEventBusDispatch['timeline/onResize']()
 
 	useEffect(() => {
 		if (!containerRef.current) {
@@ -18,11 +20,11 @@ export const useTimelineDimensions = () => {
 
 		TimelineState.width = rect.width
 		TimelineState.height = rect.height
-		dispatchEvent['timeline/onResize']({
+		onTimelineResize({
 			width: rect.width,
 			height: rect.height,
 		})
-	}, [containerRef])
+	}, [containerRef, onTimelineResize])
 
 	const onResize = useRef(
 		throttle(() => {
@@ -34,7 +36,7 @@ export const useTimelineDimensions = () => {
 
 			TimelineState.width = rect.width
 			TimelineState.height = rect.height
-			dispatchEvent['timeline/onResize']({
+			dispatchGlobalEvent['timeline/onResize']({
 				width: rect.width,
 				height: rect.height,
 			})

@@ -6,4 +6,5 @@ export const TimelineState = {
 	height: 0,
 	scaleLevel: 0 as ScaleLevel,
 	canOpenContextMenu: true,
+	anchorTimestamps: [] as number[],
 }

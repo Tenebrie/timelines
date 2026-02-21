@@ -5,8 +5,8 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 
 import { TimelineState } from '../../utils/TimelineState'
 
-export const EVENT_SCROLL_RESET_PERIOD = 1000
-export const CONTROLLED_SCROLLER_SIZE = 10000
+export const EVENT_SCROLL_RESET_PERIOD = 10000
+export const CONTROLLED_SCROLLER_SIZE = 100000
 
 type Props = {
 	children: React.ReactNode
@@ -27,15 +27,14 @@ function ControlledScrollerComponent({ children, resetPeriod }: Props) {
 			}
 
 			ref.current.scrollTo({
-				left: Math.round(mod(-newScroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod + 42,
+				left: Math.round(mod(-newScroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod,
 			})
 		},
 	})
 
 	useEffect(() => {
 		ref.current?.scrollTo({
-			left:
-				Math.round(mod(-TimelineState.scroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod + 42,
+			left: Math.round(mod(-TimelineState.scroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod,
 		})
 	}, [mod, ref, resetPeriod])
 
@@ -48,7 +47,7 @@ function ControlledScrollerComponent({ children, resetPeriod }: Props) {
 				width: '100%',
 				height: '100%',
 				overflowX: 'hidden',
-				overflowY: 'visible',
+				overflowY: 'hidden',
 				pointerEvents: 'none',
 			}}
 		>

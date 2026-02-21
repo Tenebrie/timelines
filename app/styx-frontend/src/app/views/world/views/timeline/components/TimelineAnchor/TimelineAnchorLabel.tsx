@@ -1,14 +1,18 @@
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
-import { memo, useEffect, useRef } from 'react'
+import throttle from 'lodash.throttle'
+import { memo, useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { EsotericDate } from '@/app/features/time/calendar/date/EsotericDate'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { getTimelineState, getWorldCalendarState } from '@/app/views/world/WorldSliceSelectors'
+import { useWaitUntil } from '@/app/hooks/useWaitUntil'
+import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
+import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 import { TimelineState } from '../../utils/TimelineState'
 
@@ -16,29 +20,44 @@ export const TimelineAnchorLabel = memo(TimelineAnchorLabelComponent)
 
 function TimelineAnchorLabelComponent() {
 	const theme = useCustomTheme()
-	const calendar = useSelector(getWorldCalendarState)
-	const { scaleLevel } = useSelector(getTimelineState)
-	const { timeToLabel } = useWorldTime()
-	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel, calendar })
+	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
+	const { timeToLabel, calendar, presentation } = useWorldTime()
+	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 	const labelRef = useRef<HTMLButtonElement>(null)
 
 	const { open: openTimeTravelModal } = useModal('timeTravelModal')
 
+	const updateLabel = useMemo(
+		() =>
+			throttle((scroll: number) => {
+				if (TimelineState.anchorTimestamps.length === 0) {
+					return
+				}
+				const currentTimestamp = scaledTimeToRealTime(-scroll + 40)
+				const snappedTime = binarySearchForClosest(TimelineState.anchorTimestamps, currentTimestamp)
+				const smallestBackingUnit = calendar.units.find((u) => u.id === presentation.smallestUnit?.unitId)
+				if (!smallestBackingUnit) {
+					return
+				}
+				const flooredTime = new EsotericDate(calendar, snappedTime).floor(smallestBackingUnit).getTimestamp()
+				const desiredLabel = timeToLabel(flooredTime)
+				if (labelRef.current) {
+					labelRef.current.textContent = desiredLabel
+				}
+			}, 50),
+		[calendar, presentation.smallestUnit?.unitId, scaledTimeToRealTime, timeToLabel],
+	)
+
+	const waitUntil = useWaitUntil()
 	useEffect(() => {
-		const currentTimestamp = scaledTimeToRealTime(-TimelineState.scroll + 40)
-		if (labelRef.current) {
-			labelRef.current.textContent = timeToLabel(currentTimestamp)
-		}
-	}, [scaledTimeToRealTime, timeToLabel])
+		;(async () => {
+			await waitUntil(() => TimelineState.anchorTimestamps.length > 0)
+			updateLabel(TimelineState.scroll)
+		})()
+	}, [updateLabel, waitUntil])
 
 	useEventBusSubscribe['timeline/onScroll']({
-		callback: (scroll) => {
-			const currentTimestamp = scaledTimeToRealTime(-scroll + 40)
-			const desiredLabel = timeToLabel(currentTimestamp)
-			if (labelRef.current) {
-				labelRef.current.textContent = desiredLabel
-			}
-		},
+		callback: updateLabel,
 	})
 
 	return (
@@ -65,7 +84,7 @@ function TimelineAnchorLabelComponent() {
 				onClick={openTimeTravelModal}
 				sx={{ fontSize: 16, borderRadius: 0, padding: '2px 16px 2px 16px', height: '100%', width: '100%' }}
 			>
-				Label
+				...
 			</Button>
 		</Paper>
 	)
