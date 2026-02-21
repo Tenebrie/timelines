@@ -1,4 +1,4 @@
-name: Build & Test
+name: Pull Request
 
 on:
   pull_request:
@@ -8,102 +8,43 @@ on:
     branches: [dev]
 
 jobs:
-  build-styx:
-    name: Build Styx
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.x
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn
-      - name: Build Styx
-        run: yarn build:styx
-
-  build-rhea:
-    name: Build Rhea
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.x
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn
-      - name: Build Rhea
-        run: yarn build:rhea
-
-  build-calliope:
-    name: Build Calliope
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.x
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn
-      - name: Build Calliope
-        run: yarn build:calliope
-
-  test-styx:
-    name: Test Styx (Frontend)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.x
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn
-      - name: Run Styx tests
-        run: yarn test:styx
-
-  test-rhea:
-    name: Test Rhea (Backend)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.x
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn
-      - name: Generate Prisma client
-        run: yarn prisma generate
-      - name: Run Rhea tests
-        run: yarn test:rhea
-
-  test-calliope:
-    name: Test Calliope (Websockets)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.x
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn
-      - name: Run Calliope tests
-        run: yarn test:calliope
-
-  run-e2e:
-    name: Playwright (${{ matrix.browser }})
+  test:
+    name: Build & Test (${{ matrix.service }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, firefox]
+        service: [Styx, Rhea, Calliope, Orpheus]
+    env:
+      SCRIPT: ''
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: 'yarn'
+      - name: Set script name
+        run: echo "SCRIPT=$(echo '${{ matrix.service }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
+      - name: Install dependencies
+        run: yarn
+      - name: Build ${{ matrix.service }}
+        run: yarn build:$SCRIPT
+      - name: Run ${{ matrix.service }} tests
+        run: yarn test:$SCRIPT
+      - name: Lint ${{ matrix.service }}
+        run: yarn lint:$SCRIPT
+
+  run-e2e:
+    name: Playwright (${{ matrix.name }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Chromium
+            browser: chromium
+          - name: Firefox
+            browser: firefox
     steps:
       - uses: actions/checkout@v4
 

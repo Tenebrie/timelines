@@ -6,6 +6,10 @@ import { TokenService } from './TokenService.js'
 
 const rheaClient = createClient<paths>({
 	baseUrl: 'http://rhea:3000',
+	// Late-bind fetch so that MSW can intercept requests in tests.
+	// openapi-fetch captures the fetch reference at createClient() time,
+	// which is before MSW patches globalThis.fetch.
+	fetch: (...args) => globalThis.fetch(...args),
 })
 
 type PermissionLevel =

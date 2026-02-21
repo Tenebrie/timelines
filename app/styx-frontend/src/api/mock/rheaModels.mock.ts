@@ -203,6 +203,7 @@ export const mockCalendarUnitChildRelation = (
 	overrides: Partial<GetCalendarPreviewApiResponse['units'][number]['children'][number]> = {},
 ): GetCalendarPreviewApiResponse['units'][number]['children'][number] => ({
 	id: overrides.id ?? `${parentUnitId}-${childUnitId}`,
+	calendarId: overrides.calendarId ?? 'calendar-1111',
 	position: overrides.position ?? 0,
 	label: overrides.label ?? null,
 	repeats,
@@ -217,6 +218,7 @@ export const mockCalendarUnitParentRelation = (
 	overrides: Partial<GetCalendarPreviewApiResponse['units'][number]['parents'][number]> = {},
 ): GetCalendarPreviewApiResponse['units'][number]['parents'][number] => ({
 	id: overrides.id ?? `${parentUnitId}-${childUnitId}`,
+	calendarId: overrides.calendarId ?? 'calendar-1111',
 	position: overrides.position ?? 0,
 	label: overrides.label ?? null,
 	repeats,

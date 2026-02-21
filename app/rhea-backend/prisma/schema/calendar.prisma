@@ -15,6 +15,7 @@ model Calendar {
     dateFormat String?
 
     // A calendar is owned by either a world or a user, and never both
+    // Enforced by an SQL level constraint
     world   World?  @relation(fields: [worldId], references: [id], onDelete: Cascade)
     owner   User?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
     worldId String?
@@ -22,7 +23,7 @@ model Calendar {
 }
 
 model CalendarUnit {
-    id        String   @id @unique @default(uuid())
+    id        String   @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
     position  Int      @default(0)
@@ -46,10 +47,12 @@ model CalendarUnit {
     children        CalendarUnitRelation[]     @relation("ParentUnit")
     presentations   CalendarPresentationUnit[]
     baselineUnitFor CalendarPresentation[]     @relation("BaselineUnit")
+
+    @@id([calendarId, id])
 }
 
 model CalendarUnitRelation {
-    id        String   @id @unique @default(uuid())
+    id        String   @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
 
@@ -58,10 +61,13 @@ model CalendarUnitRelation {
     repeats    Int     @default(1)
     position   Int     @default(0)
 
-    parentUnit   CalendarUnit @relation("ParentUnit", fields: [parentUnitId], references: [id], onDelete: Cascade)
-    childUnit    CalendarUnit @relation("ChildUnit", fields: [childUnitId], references: [id], onDelete: Cascade)
+    calendarId   String
+    parentUnit   CalendarUnit @relation("ParentUnit", fields: [calendarId, parentUnitId], references: [calendarId, id], onDelete: Cascade)
+    childUnit    CalendarUnit @relation("ChildUnit", fields: [calendarId, childUnitId], references: [calendarId, id], onDelete: Cascade)
     parentUnitId String
     childUnitId  String
+
+    @@id([calendarId, id])
 }
 
 enum CalendarUnitFormatMode {
@@ -86,7 +92,7 @@ enum CalendarUnitNegativeFormat {
  * Calendar presentations
  */
 model CalendarPresentation {
-    id        String   @id @unique @default(uuid())
+    id        String   @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
 
@@ -96,15 +102,17 @@ model CalendarPresentation {
     scaleFactor Float                      @default(1.0)
     units       CalendarPresentationUnit[]
 
-    baselineUnit   CalendarUnit? @relation(name: "BaselineUnit", fields: [baselineUnitId], references: [id], onDelete: SetNull)
+    calendarId     String
+    baselineUnit   CalendarUnit? @relation(name: "BaselineUnit", fields: [calendarId, baselineUnitId], references: [calendarId, id], onDelete: NoAction)
     baselineUnitId String?
 
-    calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
-    calendarId String
+    calendar Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+
+    @@id([calendarId, id])
 }
 
 model CalendarPresentationUnit {
-    id        String   @id @unique @default(uuid())
+    id        String   @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
 
@@ -113,18 +121,21 @@ model CalendarPresentationUnit {
     subdivision    Int    @default(1)
     labeledIndices Int[]  @default([])
 
-    unit   CalendarUnit @relation(fields: [unitId], references: [id], onDelete: Cascade)
-    unitId String
+    calendarId String
+    unit       CalendarUnit @relation(fields: [calendarId, unitId], references: [calendarId, id], onDelete: Cascade)
+    unitId     String
 
-    presentation   CalendarPresentation @relation(fields: [presentationId], references: [id], onDelete: Cascade)
+    presentation   CalendarPresentation @relation(fields: [calendarId, presentationId], references: [calendarId, id], onDelete: Cascade)
     presentationId String
+
+    @@id([calendarId, id])
 }
 
 /**
  * Seasons
  */
 model CalendarSeason {
-    id        String   @id @unique @default(uuid())
+    id        String   @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
     position  Int
@@ -136,16 +147,21 @@ model CalendarSeason {
 
     calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
     calendarId String
+
+    @@id([calendarId, id])
 }
 
 model CalendarSeasonInterval {
-    id        String   @id @unique @default(uuid())
+    id        String   @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
 
     leftIndex  Int
     rightIndex Int
 
-    season   CalendarSeason @relation(fields: [seasonId], references: [id], onDelete: Cascade)
-    seasonId String
+    calendarId String
+    season     CalendarSeason @relation(fields: [calendarId, seasonId], references: [calendarId, id], onDelete: Cascade)
+    seasonId   String
+
+    @@id([calendarId, id])
 }

@@ -326,10 +326,11 @@ export type CalendarUnitOrderByWithRelationInput = {
 }
 
 export type CalendarUnitWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  calendarId_id?: Prisma.CalendarUnitCalendarIdIdCompoundUniqueInput
   AND?: Prisma.CalendarUnitWhereInput | Prisma.CalendarUnitWhereInput[]
   OR?: Prisma.CalendarUnitWhereInput[]
   NOT?: Prisma.CalendarUnitWhereInput | Prisma.CalendarUnitWhereInput[]
+  id?: Prisma.StringFilter<"CalendarUnit"> | string
   createdAt?: Prisma.DateTimeFilter<"CalendarUnit"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalendarUnit"> | Date | string
   position?: Prisma.IntFilter<"CalendarUnit"> | number
@@ -348,7 +349,7 @@ export type CalendarUnitWhereUniqueInput = Prisma.AtLeast<{
   children?: Prisma.CalendarUnitRelationListRelationFilter
   presentations?: Prisma.CalendarPresentationUnitListRelationFilter
   baselineUnitFor?: Prisma.CalendarPresentationListRelationFilter
-}, "id" | "id">
+}, "calendarId_id">
 
 export type CalendarUnitOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -534,6 +535,11 @@ export type CalendarUnitListRelationFilter = {
 
 export type CalendarUnitOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type CalendarUnitCalendarIdIdCompoundUniqueInput = {
+  calendarId: string
+  id: string
 }
 
 export type CalendarUnitCountOrderByAggregateInput = {

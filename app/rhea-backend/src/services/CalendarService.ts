@@ -33,10 +33,9 @@ export const CalendarService = {
 	},
 
 	getCalendarUnitById: async ({ calendarId, unitId }: { calendarId: string; unitId: string }) => {
-		return getPrismaClient().calendarUnit.findFirstOrThrow({
+		return getPrismaClient().calendarUnit.findUniqueOrThrow({
 			where: {
-				id: unitId,
-				calendarId,
+				calendarId_id: { calendarId, id: unitId },
 			},
 		})
 	},
@@ -124,13 +123,22 @@ export const CalendarService = {
 								createdAt: true,
 								updatedAt: true,
 							},
+							orderBy: {
+								position: 'asc',
+							},
 						},
 						children: {
 							omit: {
 								createdAt: true,
 								updatedAt: true,
 							},
+							orderBy: {
+								position: 'asc',
+							},
 						},
+					},
+					orderBy: {
+						position: 'asc',
 					},
 				},
 				presentations: {
@@ -235,8 +243,10 @@ export const CalendarService = {
 		const unit = await getPrismaClient().$transaction(async (dbClient) => {
 			await dbClient.calendarUnit.update({
 				where: {
-					id: unitId,
-					calendarId,
+					calendarId_id: {
+						id: unitId,
+						calendarId,
+					},
 				},
 				data: {
 					...params,
@@ -265,7 +275,7 @@ export const CalendarService = {
 
 			return dbClient.calendarUnit.findUniqueOrThrow({
 				where: {
-					id: unitId,
+					calendarId_id: { calendarId, id: unitId },
 				},
 				include: {
 					children: {
@@ -296,10 +306,18 @@ export const CalendarService = {
 
 	deleteCalendarUnit: async ({ calendarId, unitId }: { calendarId: string; unitId: string }) => {
 		const unit = await getPrismaClient().$transaction(async (dbClient) => {
+			await dbClient.calendarPresentation.updateMany({
+				where: {
+					baselineUnitId: unitId,
+				},
+				data: {
+					baselineUnitId: null,
+				},
+			})
+
 			const unit = await dbClient.calendarUnit.delete({
 				where: {
-					id: unitId,
-					calendarId,
+					calendarId_id: { calendarId, id: unitId },
 				},
 			})
 
@@ -394,6 +412,7 @@ export const CalendarService = {
 					if (calendarUnit) {
 						await dbClient.calendarPresentationUnit.create({
 							data: {
+								calendarId,
 								presentationId,
 								unitId: unit.unitId,
 								name: calendarUnit.displayName || calendarUnit.name,
@@ -408,8 +427,7 @@ export const CalendarService = {
 
 			await dbClient.calendarPresentation.update({
 				where: {
-					id: presentationId,
-					calendarId,
+					calendarId_id: { calendarId, id: presentationId },
 				},
 				data: {
 					name: params.name,
@@ -422,8 +440,7 @@ export const CalendarService = {
 
 			const updatedPresentation = await dbClient.calendarPresentation.findUniqueOrThrow({
 				where: {
-					id: presentationId,
-					calendarId,
+					calendarId_id: { calendarId, id: presentationId },
 				},
 				include: {
 					units: true,
@@ -479,8 +496,7 @@ export const CalendarService = {
 
 		await dbClient.calendarPresentation.update({
 			where: {
-				id: presentationId,
-				calendarId,
+				calendarId_id: { calendarId, id: presentationId },
 			},
 			data: {
 				scaleFactor: Number(scaleFactor) * existingPresentation.compression,
@@ -503,8 +519,7 @@ export const CalendarService = {
 		const presentation = await getPrismaClient().$transaction(async (dbClient) => {
 			const presentation = await dbClient.calendarPresentation.delete({
 				where: {
-					id: presentationId,
-					calendarId,
+					calendarId_id: { calendarId, id: presentationId },
 				},
 			})
 
@@ -608,7 +623,7 @@ export const CalendarService = {
 			values.map((data) =>
 				dbClient.calendarUnit.update({
 					where: {
-						id: data.unit.id,
+						calendarId_id: { calendarId, id: data.unit.id },
 					},
 					data: {
 						duration: data.duration,
@@ -704,7 +719,9 @@ export const CalendarService = {
 
 	/**
 	 * Clone a calendar with all its units, relations, presentations, and seasons.
-	 * Creates a deep copy with new IDs, optionally assigning to a different world/owner.
+	 * With scoped composite keys (calendarId, id), cloning is trivial:
+	 * just copy all rows with the same internal IDs under a new calendarId.
+	 * No ID remapping needed.
 	 */
 	cloneCalendar: async ({
 		calendarId,
@@ -720,6 +737,7 @@ export const CalendarService = {
 		prisma?: Prisma.TransactionClient
 	}) => {
 		const tx = getPrismaClient(prisma)
+
 		// 1. Fetch original calendar with all nested relations
 		const original = await tx.calendar.findUniqueOrThrow({
 			where: { id: calendarId },
@@ -732,11 +750,7 @@ export const CalendarService = {
 				},
 				presentations: {
 					include: {
-						units: {
-							include: {
-								unit: true,
-							},
-						},
+						units: true,
 					},
 				},
 				seasons: {
@@ -753,6 +767,7 @@ export const CalendarService = {
 			data: {
 				...original,
 				id: undefined,
+				name: name ?? original.name,
 				units: {},
 				seasons: {},
 				presentations: {},
@@ -761,90 +776,67 @@ export const CalendarService = {
 			},
 		})
 
-		if (name) {
-			await tx.calendar.update({
-				where: { id: newCalendar.id },
-				data: { name },
-			})
-		}
+		const newCalendarId = newCalendar.id
 
-		// 3. Create all units, tracking old ID → new ID
-		const unitIdMap = new Map<string, string>()
+		// 3. Copy all units
 		for (const unit of original.units) {
-			const newUnit = await tx.calendarUnit.create({
+			await tx.calendarUnit.create({
 				data: {
 					...unit,
-					id: undefined,
 					children: {},
-					calendarId: newCalendar.id,
+					calendarId: newCalendarId,
 				},
 			})
-			unitIdMap.set(unit.id, newUnit.id)
 		}
 
-		// 4. Create unit relations using the ID map
+		// 4. Copy unit relations
 		for (const unit of original.units) {
 			for (const childRel of unit.children) {
-				const newParentId = unitIdMap.get(unit.id)
-				const newChildId = unitIdMap.get(childRel.childUnitId)
-				if (newParentId && newChildId) {
-					await tx.calendarUnitRelation.create({
-						data: {
-							...childRel,
-							id: undefined,
-							parentUnitId: newParentId,
-							childUnitId: newChildId,
-						},
-					})
-				}
+				await tx.calendarUnitRelation.create({
+					data: {
+						...childRel,
+						calendarId: newCalendarId,
+					},
+				})
 			}
 		}
 
-		// 5. Create presentations and their units
+		// 5. Copy presentations
 		for (const presentation of original.presentations) {
-			const newPresentation = await tx.calendarPresentation.create({
+			await tx.calendarPresentation.create({
 				data: {
 					...presentation,
-					id: undefined,
 					units: {},
-					calendarId: newCalendar.id,
+					calendarId: newCalendarId,
 				},
 			})
 
+			// Copy presentation units
 			for (const presUnit of presentation.units) {
-				const newUnitId = unitIdMap.get(presUnit.unitId)
-				const { unit: _, ...data } = presUnit
-				if (newUnitId) {
-					await tx.calendarPresentationUnit.create({
-						data: {
-							...data,
-							id: undefined,
-							presentationId: newPresentation.id,
-							unitId: newUnitId,
-						},
-					})
-				}
+				await tx.calendarPresentationUnit.create({
+					data: {
+						...presUnit,
+						calendarId: newCalendarId,
+					},
+				})
 			}
 		}
 
-		// 6. Create seasons and their intervals
+		// 6. Copy seasons and their intervals
 		for (const season of original.seasons) {
-			const newSeason = await tx.calendarSeason.create({
+			await tx.calendarSeason.create({
 				data: {
 					...season,
-					id: undefined,
 					intervals: {},
-					calendarId: newCalendar.id,
+					calendarId: newCalendarId,
 				},
 			})
 
 			for (const interval of season.intervals) {
 				await tx.calendarSeasonInterval.create({
 					data: {
-						id: undefined,
-						seasonId: newSeason.id,
-						leftIndex: interval.leftIndex,
-						rightIndex: interval.rightIndex,
+						...interval,
+						calendarId: newCalendarId,
 					},
 				})
 			}

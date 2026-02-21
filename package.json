@@ -33,11 +33,17 @@
 		"test:styx": "cd app/styx-frontend && yarn test run",
 		"test:rhea": "cd app/rhea-backend && yarn test",
 		"test:calliope": "cd app/calliope-websockets && yarn test",
+		"test:orpheus": "cd app/orpheus-mcp && yarn test",
 		"test:e2e": "cd test/e2e && yarn test",
 		"test:e2e:run": "cd test/e2e && yarn test:local",
 		"build:styx": "cd app/styx-frontend && yarn build",
 		"build:rhea": "cd app/rhea-backend && yarn build",
-		"build:calliope": "cd app/calliope-websockets && yarn build"
+		"build:calliope": "cd app/calliope-websockets && yarn build",
+		"build:orpheus": "cd app/orpheus-mcp && yarn build",
+		"lint:styx": "cd app/styx-frontend && yarn lint",
+		"lint:rhea": "cd app/rhea-backend && yarn lint",
+		"lint:calliope": "cd app/calliope-websockets && yarn lint",
+		"lint:orpheus": "cd app/orpheus-mcp && yarn lint"
 	},
 	"dependencies": {
 		"@typescript-eslint/eslint-plugin": "^8.51.0",

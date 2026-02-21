@@ -43,6 +43,7 @@ export type CalendarPresentationUnitMinAggregateOutputType = {
   name: string | null
   formatString: string | null
   subdivision: number | null
+  calendarId: string | null
   unitId: string | null
   presentationId: string | null
 }
@@ -54,6 +55,7 @@ export type CalendarPresentationUnitMaxAggregateOutputType = {
   name: string | null
   formatString: string | null
   subdivision: number | null
+  calendarId: string | null
   unitId: string | null
   presentationId: string | null
 }
@@ -66,6 +68,7 @@ export type CalendarPresentationUnitCountAggregateOutputType = {
   formatString: number
   subdivision: number
   labeledIndices: number
+  calendarId: number
   unitId: number
   presentationId: number
   _all: number
@@ -89,6 +92,7 @@ export type CalendarPresentationUnitMinAggregateInputType = {
   name?: true
   formatString?: true
   subdivision?: true
+  calendarId?: true
   unitId?: true
   presentationId?: true
 }
@@ -100,6 +104,7 @@ export type CalendarPresentationUnitMaxAggregateInputType = {
   name?: true
   formatString?: true
   subdivision?: true
+  calendarId?: true
   unitId?: true
   presentationId?: true
 }
@@ -112,6 +117,7 @@ export type CalendarPresentationUnitCountAggregateInputType = {
   formatString?: true
   subdivision?: true
   labeledIndices?: true
+  calendarId?: true
   unitId?: true
   presentationId?: true
   _all?: true
@@ -211,6 +217,7 @@ export type CalendarPresentationUnitGroupByOutputType = {
   formatString: string
   subdivision: number
   labeledIndices: number[]
+  calendarId: string
   unitId: string
   presentationId: string
   _count: CalendarPresentationUnitCountAggregateOutputType | null
@@ -246,6 +253,7 @@ export type CalendarPresentationUnitWhereInput = {
   formatString?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   subdivision?: Prisma.IntFilter<"CalendarPresentationUnit"> | number
   labeledIndices?: Prisma.IntNullableListFilter<"CalendarPresentationUnit">
+  calendarId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   unitId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   presentationId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   unit?: Prisma.XOR<Prisma.CalendarUnitScalarRelationFilter, Prisma.CalendarUnitWhereInput>
@@ -260,6 +268,7 @@ export type CalendarPresentationUnitOrderByWithRelationInput = {
   formatString?: Prisma.SortOrder
   subdivision?: Prisma.SortOrder
   labeledIndices?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   unitId?: Prisma.SortOrder
   presentationId?: Prisma.SortOrder
   unit?: Prisma.CalendarUnitOrderByWithRelationInput
@@ -267,21 +276,23 @@ export type CalendarPresentationUnitOrderByWithRelationInput = {
 }
 
 export type CalendarPresentationUnitWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  calendarId_id?: Prisma.CalendarPresentationUnitCalendarIdIdCompoundUniqueInput
   AND?: Prisma.CalendarPresentationUnitWhereInput | Prisma.CalendarPresentationUnitWhereInput[]
   OR?: Prisma.CalendarPresentationUnitWhereInput[]
   NOT?: Prisma.CalendarPresentationUnitWhereInput | Prisma.CalendarPresentationUnitWhereInput[]
+  id?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   createdAt?: Prisma.DateTimeFilter<"CalendarPresentationUnit"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalendarPresentationUnit"> | Date | string
   name?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   formatString?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   subdivision?: Prisma.IntFilter<"CalendarPresentationUnit"> | number
   labeledIndices?: Prisma.IntNullableListFilter<"CalendarPresentationUnit">
+  calendarId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   unitId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   presentationId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   unit?: Prisma.XOR<Prisma.CalendarUnitScalarRelationFilter, Prisma.CalendarUnitWhereInput>
   presentation?: Prisma.XOR<Prisma.CalendarPresentationScalarRelationFilter, Prisma.CalendarPresentationWhereInput>
-}, "id" | "id">
+}, "calendarId_id">
 
 export type CalendarPresentationUnitOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -291,6 +302,7 @@ export type CalendarPresentationUnitOrderByWithAggregationInput = {
   formatString?: Prisma.SortOrder
   subdivision?: Prisma.SortOrder
   labeledIndices?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   unitId?: Prisma.SortOrder
   presentationId?: Prisma.SortOrder
   _count?: Prisma.CalendarPresentationUnitCountOrderByAggregateInput
@@ -311,6 +323,7 @@ export type CalendarPresentationUnitScalarWhereWithAggregatesInput = {
   formatString?: Prisma.StringWithAggregatesFilter<"CalendarPresentationUnit"> | string
   subdivision?: Prisma.IntWithAggregatesFilter<"CalendarPresentationUnit"> | number
   labeledIndices?: Prisma.IntNullableListFilter<"CalendarPresentationUnit">
+  calendarId?: Prisma.StringWithAggregatesFilter<"CalendarPresentationUnit"> | string
   unitId?: Prisma.StringWithAggregatesFilter<"CalendarPresentationUnit"> | string
   presentationId?: Prisma.StringWithAggregatesFilter<"CalendarPresentationUnit"> | string
 }
@@ -335,6 +348,7 @@ export type CalendarPresentationUnitUncheckedCreateInput = {
   formatString: string
   subdivision?: number
   labeledIndices?: Prisma.CalendarPresentationUnitCreatelabeledIndicesInput | number[]
+  calendarId: string
   unitId: string
   presentationId: string
 }
@@ -359,6 +373,7 @@ export type CalendarPresentationUnitUncheckedUpdateInput = {
   formatString?: Prisma.StringFieldUpdateOperationsInput | string
   subdivision?: Prisma.IntFieldUpdateOperationsInput | number
   labeledIndices?: Prisma.CalendarPresentationUnitUpdatelabeledIndicesInput | number[]
+  calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   unitId?: Prisma.StringFieldUpdateOperationsInput | string
   presentationId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -371,6 +386,7 @@ export type CalendarPresentationUnitCreateManyInput = {
   formatString: string
   subdivision?: number
   labeledIndices?: Prisma.CalendarPresentationUnitCreatelabeledIndicesInput | number[]
+  calendarId: string
   unitId: string
   presentationId: string
 }
@@ -393,6 +409,7 @@ export type CalendarPresentationUnitUncheckedUpdateManyInput = {
   formatString?: Prisma.StringFieldUpdateOperationsInput | string
   subdivision?: Prisma.IntFieldUpdateOperationsInput | number
   labeledIndices?: Prisma.CalendarPresentationUnitUpdatelabeledIndicesInput | number[]
+  calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   unitId?: Prisma.StringFieldUpdateOperationsInput | string
   presentationId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -415,6 +432,11 @@ export type IntNullableListFilter<$PrismaModel = never> = {
   isEmpty?: boolean
 }
 
+export type CalendarPresentationUnitCalendarIdIdCompoundUniqueInput = {
+  calendarId: string
+  id: string
+}
+
 export type CalendarPresentationUnitCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -423,6 +445,7 @@ export type CalendarPresentationUnitCountOrderByAggregateInput = {
   formatString?: Prisma.SortOrder
   subdivision?: Prisma.SortOrder
   labeledIndices?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   unitId?: Prisma.SortOrder
   presentationId?: Prisma.SortOrder
 }
@@ -439,6 +462,7 @@ export type CalendarPresentationUnitMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   formatString?: Prisma.SortOrder
   subdivision?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   unitId?: Prisma.SortOrder
   presentationId?: Prisma.SortOrder
 }
@@ -450,6 +474,7 @@ export type CalendarPresentationUnitMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   formatString?: Prisma.SortOrder
   subdivision?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   unitId?: Prisma.SortOrder
   presentationId?: Prisma.SortOrder
 }
@@ -611,6 +636,7 @@ export type CalendarPresentationUnitScalarWhereInput = {
   formatString?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   subdivision?: Prisma.IntFilter<"CalendarPresentationUnit"> | number
   labeledIndices?: Prisma.IntNullableListFilter<"CalendarPresentationUnit">
+  calendarId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   unitId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
   presentationId?: Prisma.StringFilter<"CalendarPresentationUnit"> | string
 }
@@ -761,6 +787,7 @@ export type CalendarPresentationUnitSelect<ExtArgs extends runtime.Types.Extensi
   formatString?: boolean
   subdivision?: boolean
   labeledIndices?: boolean
+  calendarId?: boolean
   unitId?: boolean
   presentationId?: boolean
   unit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
@@ -775,6 +802,7 @@ export type CalendarPresentationUnitSelectCreateManyAndReturn<ExtArgs extends ru
   formatString?: boolean
   subdivision?: boolean
   labeledIndices?: boolean
+  calendarId?: boolean
   unitId?: boolean
   presentationId?: boolean
   unit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
@@ -789,6 +817,7 @@ export type CalendarPresentationUnitSelectUpdateManyAndReturn<ExtArgs extends ru
   formatString?: boolean
   subdivision?: boolean
   labeledIndices?: boolean
+  calendarId?: boolean
   unitId?: boolean
   presentationId?: boolean
   unit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
@@ -803,11 +832,12 @@ export type CalendarPresentationUnitSelectScalar = {
   formatString?: boolean
   subdivision?: boolean
   labeledIndices?: boolean
+  calendarId?: boolean
   unitId?: boolean
   presentationId?: boolean
 }
 
-export type CalendarPresentationUnitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "formatString" | "subdivision" | "labeledIndices" | "unitId" | "presentationId", ExtArgs["result"]["calendarPresentationUnit"]>
+export type CalendarPresentationUnitOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "formatString" | "subdivision" | "labeledIndices" | "calendarId" | "unitId" | "presentationId", ExtArgs["result"]["calendarPresentationUnit"]>
 export type CalendarPresentationUnitInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   unit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
   presentation?: boolean | Prisma.CalendarPresentationDefaultArgs<ExtArgs>
@@ -835,6 +865,7 @@ export type $CalendarPresentationUnitPayload<ExtArgs extends runtime.Types.Exten
     formatString: string
     subdivision: number
     labeledIndices: number[]
+    calendarId: string
     unitId: string
     presentationId: string
   }, ExtArgs["result"]["calendarPresentationUnit"]>
@@ -1269,6 +1300,7 @@ export interface CalendarPresentationUnitFieldRefs {
   readonly formatString: Prisma.FieldRef<"CalendarPresentationUnit", 'String'>
   readonly subdivision: Prisma.FieldRef<"CalendarPresentationUnit", 'Int'>
   readonly labeledIndices: Prisma.FieldRef<"CalendarPresentationUnit", 'Int[]'>
+  readonly calendarId: Prisma.FieldRef<"CalendarPresentationUnit", 'String'>
   readonly unitId: Prisma.FieldRef<"CalendarPresentationUnit", 'String'>
   readonly presentationId: Prisma.FieldRef<"CalendarPresentationUnit", 'String'>
 }

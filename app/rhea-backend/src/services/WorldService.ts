@@ -206,13 +206,22 @@ export const WorldService = {
 										createdAt: true,
 										updatedAt: true,
 									},
+									orderBy: {
+										position: 'asc',
+									},
 								},
 								children: {
 									omit: {
 										createdAt: true,
 										updatedAt: true,
 									},
+									orderBy: {
+										position: 'asc',
+									},
 								},
+							},
+							orderBy: {
+								position: 'asc',
 							},
 						},
 						presentations: {
