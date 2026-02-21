@@ -10,5 +10,9 @@ export default defineConfig({
 		environment: 'node',
 		testTimeout: 15000,
 		setupFiles: 'src/test-utils/setupTests.ts',
+		coverage: {
+			provider: 'v8',
+			reporter: 'text',
+		},
 	},
 })

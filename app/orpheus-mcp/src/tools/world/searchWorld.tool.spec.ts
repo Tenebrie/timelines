@@ -1,7 +1,6 @@
-import { Client } from '@modelcontextprotocol/sdk/client/index.js'
-import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js'
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
+import { Client } from '@modelcontextprotocol/sdk/client'
 import { ContextService } from '@src/services/ContextService.js'
+import { setupMockClient } from '@src/test-utils/setupMockClient.js'
 import { setupTestServer } from '@src/test-utils/setupTestServer.js'
 import { beforeEach, describe, expect, it } from 'vitest'
 
@@ -14,14 +13,9 @@ describe('search_world tool', () => {
 	let client: Client
 
 	beforeEach(async () => {
-		const mcpServer = new McpServer({ name: 'test-server', version: '0.0.1' })
-		registerSearchWorldTool(mcpServer)
-
-		const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair()
-		await mcpServer.connect(serverTransport)
-
-		client = new Client({ name: 'test-client', version: '0.0.1' })
-		await client.connect(clientTransport)
+		client = await setupMockClient((server) => {
+			registerSearchWorldTool(server)
+		})
 
 		// Set up session context so the tool can find worldId and userId
 		ContextService.setCurrentUserId('default', 'user-123')
