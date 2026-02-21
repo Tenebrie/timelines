@@ -19,7 +19,7 @@ type Props = {
 
 export const WorldListSection = ({ worlds, label, showActions, showCreateButton }: Props) => {
 	const sortedWorlds = useMemo(() => {
-		return [...worlds].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+		return [...worlds].sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
 	}, [worlds])
 
 	return (

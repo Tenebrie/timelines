@@ -111,7 +111,7 @@ export function WorldListItem({ world, showActions }: Props) {
 										e.stopPropagation()
 										onEdit(world.id)
 									}}
-									color="secondary"
+									sx={{ opacity: 0.7, '&:hover': { opacity: 1 } }}
 								>
 									<EditIcon fontSize="small" />
 								</IconButton>
@@ -125,7 +125,7 @@ export function WorldListItem({ world, showActions }: Props) {
 										e.stopPropagation()
 										onDelete(world)
 									}}
-									color="secondary"
+									sx={{ opacity: 0.7, '&:hover': { opacity: 1 } }}
 								>
 									<DeleteIcon fontSize="small" />
 								</IconButton>

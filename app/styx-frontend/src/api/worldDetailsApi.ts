@@ -58,6 +58,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		units: {
 			children: {
 				id: string
+				calendarId: string
 				position: number
 				label?: null | string
 				shortLabel?: null | string
@@ -67,6 +68,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			}[]
 			parents: {
 				id: string
+				calendarId: string
 				position: number
 				label?: null | string
 				shortLabel?: null | string
@@ -90,6 +92,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			units: {
 				id: string
 				name: string
+				calendarId: string
 				unitId: string
 				formatString: string
 				subdivision: number
@@ -106,6 +109,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				id: string
 				createdAt: string
 				updatedAt: string
+				calendarId: string
 				leftIndex: number
 				rightIndex: number
 				seasonId: string

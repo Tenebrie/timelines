@@ -250,10 +250,11 @@ export type CalendarSeasonOrderByWithRelationInput = {
 }
 
 export type CalendarSeasonWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  calendarId_id?: Prisma.CalendarSeasonCalendarIdIdCompoundUniqueInput
   AND?: Prisma.CalendarSeasonWhereInput | Prisma.CalendarSeasonWhereInput[]
   OR?: Prisma.CalendarSeasonWhereInput[]
   NOT?: Prisma.CalendarSeasonWhereInput | Prisma.CalendarSeasonWhereInput[]
+  id?: Prisma.StringFilter<"CalendarSeason"> | string
   createdAt?: Prisma.DateTimeFilter<"CalendarSeason"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalendarSeason"> | Date | string
   position?: Prisma.IntFilter<"CalendarSeason"> | number
@@ -262,7 +263,7 @@ export type CalendarSeasonWhereUniqueInput = Prisma.AtLeast<{
   calendarId?: Prisma.StringFilter<"CalendarSeason"> | string
   intervals?: Prisma.CalendarSeasonIntervalListRelationFilter
   calendar?: Prisma.XOR<Prisma.CalendarScalarRelationFilter, Prisma.CalendarWhereInput>
-}, "id" | "id">
+}, "calendarId_id">
 
 export type CalendarSeasonOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -373,6 +374,11 @@ export type CalendarSeasonListRelationFilter = {
 
 export type CalendarSeasonOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type CalendarSeasonCalendarIdIdCompoundUniqueInput = {
+  calendarId: string
+  id: string
 }
 
 export type CalendarSeasonCountOrderByAggregateInput = {

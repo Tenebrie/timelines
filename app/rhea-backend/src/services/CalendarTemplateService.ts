@@ -217,14 +217,19 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 				unitBucketCache.set(displayName, [...(unitBucketCache.get(displayName) ?? []), unit])
 			}
 
+			const positionCounters: Map<string, number> = new Map()
 			for (const data of unitRelationData) {
 				const parentId = unitNameCache.get(data.from)?.id
 				const childId = unitNameCache.get(data.to)?.id
 				if (!parentId || !childId) {
 					throw new Error(`Invalid relation from ${data.from} to ${data.to}. One of the units was not found.`)
 				}
+				const position = positionCounters.get(parentId) ?? 0
+				positionCounters.set(parentId, position + 1)
 				await prisma.calendarUnitRelation.create({
 					data: {
+						calendarId,
+						position,
 						parentUnitId: parentId,
 						childUnitId: childId,
 						repeats: data.repeats,
@@ -257,6 +262,7 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 					}
 					await prisma.calendarPresentationUnit.create({
 						data: {
+							calendarId,
 							presentationId: parent.id,
 							unitId,
 							name: unit.name,

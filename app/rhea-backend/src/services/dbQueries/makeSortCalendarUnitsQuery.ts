@@ -21,7 +21,7 @@ export const makeSortCalendarUnitsQuery = async (calendarId: string, prisma?: Pr
 		units.map((unit, index) => {
 			return prisma.calendarUnit.update({
 				where: {
-					id: unit.id,
+					calendarId_id: { calendarId, id: unit.id },
 				},
 				data: {
 					position: index * 2,

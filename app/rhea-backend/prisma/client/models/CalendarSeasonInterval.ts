@@ -42,6 +42,7 @@ export type CalendarSeasonIntervalMinAggregateOutputType = {
   updatedAt: Date | null
   leftIndex: number | null
   rightIndex: number | null
+  calendarId: string | null
   seasonId: string | null
 }
 
@@ -51,6 +52,7 @@ export type CalendarSeasonIntervalMaxAggregateOutputType = {
   updatedAt: Date | null
   leftIndex: number | null
   rightIndex: number | null
+  calendarId: string | null
   seasonId: string | null
 }
 
@@ -60,6 +62,7 @@ export type CalendarSeasonIntervalCountAggregateOutputType = {
   updatedAt: number
   leftIndex: number
   rightIndex: number
+  calendarId: number
   seasonId: number
   _all: number
 }
@@ -81,6 +84,7 @@ export type CalendarSeasonIntervalMinAggregateInputType = {
   updatedAt?: true
   leftIndex?: true
   rightIndex?: true
+  calendarId?: true
   seasonId?: true
 }
 
@@ -90,6 +94,7 @@ export type CalendarSeasonIntervalMaxAggregateInputType = {
   updatedAt?: true
   leftIndex?: true
   rightIndex?: true
+  calendarId?: true
   seasonId?: true
 }
 
@@ -99,6 +104,7 @@ export type CalendarSeasonIntervalCountAggregateInputType = {
   updatedAt?: true
   leftIndex?: true
   rightIndex?: true
+  calendarId?: true
   seasonId?: true
   _all?: true
 }
@@ -195,6 +201,7 @@ export type CalendarSeasonIntervalGroupByOutputType = {
   updatedAt: Date
   leftIndex: number
   rightIndex: number
+  calendarId: string
   seasonId: string
   _count: CalendarSeasonIntervalCountAggregateOutputType | null
   _avg: CalendarSeasonIntervalAvgAggregateOutputType | null
@@ -227,6 +234,7 @@ export type CalendarSeasonIntervalWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"CalendarSeasonInterval"> | Date | string
   leftIndex?: Prisma.IntFilter<"CalendarSeasonInterval"> | number
   rightIndex?: Prisma.IntFilter<"CalendarSeasonInterval"> | number
+  calendarId?: Prisma.StringFilter<"CalendarSeasonInterval"> | string
   seasonId?: Prisma.StringFilter<"CalendarSeasonInterval"> | string
   season?: Prisma.XOR<Prisma.CalendarSeasonScalarRelationFilter, Prisma.CalendarSeasonWhereInput>
 }
@@ -237,22 +245,25 @@ export type CalendarSeasonIntervalOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   leftIndex?: Prisma.SortOrder
   rightIndex?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   seasonId?: Prisma.SortOrder
   season?: Prisma.CalendarSeasonOrderByWithRelationInput
 }
 
 export type CalendarSeasonIntervalWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  calendarId_id?: Prisma.CalendarSeasonIntervalCalendarIdIdCompoundUniqueInput
   AND?: Prisma.CalendarSeasonIntervalWhereInput | Prisma.CalendarSeasonIntervalWhereInput[]
   OR?: Prisma.CalendarSeasonIntervalWhereInput[]
   NOT?: Prisma.CalendarSeasonIntervalWhereInput | Prisma.CalendarSeasonIntervalWhereInput[]
+  id?: Prisma.StringFilter<"CalendarSeasonInterval"> | string
   createdAt?: Prisma.DateTimeFilter<"CalendarSeasonInterval"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalendarSeasonInterval"> | Date | string
   leftIndex?: Prisma.IntFilter<"CalendarSeasonInterval"> | number
   rightIndex?: Prisma.IntFilter<"CalendarSeasonInterval"> | number
+  calendarId?: Prisma.StringFilter<"CalendarSeasonInterval"> | string
   seasonId?: Prisma.StringFilter<"CalendarSeasonInterval"> | string
   season?: Prisma.XOR<Prisma.CalendarSeasonScalarRelationFilter, Prisma.CalendarSeasonWhereInput>
-}, "id" | "id">
+}, "calendarId_id">
 
 export type CalendarSeasonIntervalOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -260,6 +271,7 @@ export type CalendarSeasonIntervalOrderByWithAggregationInput = {
   updatedAt?: Prisma.SortOrder
   leftIndex?: Prisma.SortOrder
   rightIndex?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   seasonId?: Prisma.SortOrder
   _count?: Prisma.CalendarSeasonIntervalCountOrderByAggregateInput
   _avg?: Prisma.CalendarSeasonIntervalAvgOrderByAggregateInput
@@ -277,6 +289,7 @@ export type CalendarSeasonIntervalScalarWhereWithAggregatesInput = {
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"CalendarSeasonInterval"> | Date | string
   leftIndex?: Prisma.IntWithAggregatesFilter<"CalendarSeasonInterval"> | number
   rightIndex?: Prisma.IntWithAggregatesFilter<"CalendarSeasonInterval"> | number
+  calendarId?: Prisma.StringWithAggregatesFilter<"CalendarSeasonInterval"> | string
   seasonId?: Prisma.StringWithAggregatesFilter<"CalendarSeasonInterval"> | string
 }
 
@@ -295,6 +308,7 @@ export type CalendarSeasonIntervalUncheckedCreateInput = {
   updatedAt?: Date | string
   leftIndex: number
   rightIndex: number
+  calendarId: string
   seasonId: string
 }
 
@@ -313,6 +327,7 @@ export type CalendarSeasonIntervalUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftIndex?: Prisma.IntFieldUpdateOperationsInput | number
   rightIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   seasonId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -322,6 +337,7 @@ export type CalendarSeasonIntervalCreateManyInput = {
   updatedAt?: Date | string
   leftIndex: number
   rightIndex: number
+  calendarId: string
   seasonId: string
 }
 
@@ -339,6 +355,7 @@ export type CalendarSeasonIntervalUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   leftIndex?: Prisma.IntFieldUpdateOperationsInput | number
   rightIndex?: Prisma.IntFieldUpdateOperationsInput | number
+  calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   seasonId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -352,12 +369,18 @@ export type CalendarSeasonIntervalOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type CalendarSeasonIntervalCalendarIdIdCompoundUniqueInput = {
+  calendarId: string
+  id: string
+}
+
 export type CalendarSeasonIntervalCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   leftIndex?: Prisma.SortOrder
   rightIndex?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   seasonId?: Prisma.SortOrder
 }
 
@@ -372,6 +395,7 @@ export type CalendarSeasonIntervalMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   leftIndex?: Prisma.SortOrder
   rightIndex?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   seasonId?: Prisma.SortOrder
 }
 
@@ -381,6 +405,7 @@ export type CalendarSeasonIntervalMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   leftIndex?: Prisma.SortOrder
   rightIndex?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   seasonId?: Prisma.SortOrder
 }
 
@@ -482,6 +507,7 @@ export type CalendarSeasonIntervalScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"CalendarSeasonInterval"> | Date | string
   leftIndex?: Prisma.IntFilter<"CalendarSeasonInterval"> | number
   rightIndex?: Prisma.IntFilter<"CalendarSeasonInterval"> | number
+  calendarId?: Prisma.StringFilter<"CalendarSeasonInterval"> | string
   seasonId?: Prisma.StringFilter<"CalendarSeasonInterval"> | string
 }
 
@@ -525,6 +551,7 @@ export type CalendarSeasonIntervalSelect<ExtArgs extends runtime.Types.Extension
   updatedAt?: boolean
   leftIndex?: boolean
   rightIndex?: boolean
+  calendarId?: boolean
   seasonId?: boolean
   season?: boolean | Prisma.CalendarSeasonDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["calendarSeasonInterval"]>
@@ -535,6 +562,7 @@ export type CalendarSeasonIntervalSelectCreateManyAndReturn<ExtArgs extends runt
   updatedAt?: boolean
   leftIndex?: boolean
   rightIndex?: boolean
+  calendarId?: boolean
   seasonId?: boolean
   season?: boolean | Prisma.CalendarSeasonDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["calendarSeasonInterval"]>
@@ -545,6 +573,7 @@ export type CalendarSeasonIntervalSelectUpdateManyAndReturn<ExtArgs extends runt
   updatedAt?: boolean
   leftIndex?: boolean
   rightIndex?: boolean
+  calendarId?: boolean
   seasonId?: boolean
   season?: boolean | Prisma.CalendarSeasonDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["calendarSeasonInterval"]>
@@ -555,10 +584,11 @@ export type CalendarSeasonIntervalSelectScalar = {
   updatedAt?: boolean
   leftIndex?: boolean
   rightIndex?: boolean
+  calendarId?: boolean
   seasonId?: boolean
 }
 
-export type CalendarSeasonIntervalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "leftIndex" | "rightIndex" | "seasonId", ExtArgs["result"]["calendarSeasonInterval"]>
+export type CalendarSeasonIntervalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "leftIndex" | "rightIndex" | "calendarId" | "seasonId", ExtArgs["result"]["calendarSeasonInterval"]>
 export type CalendarSeasonIntervalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   season?: boolean | Prisma.CalendarSeasonDefaultArgs<ExtArgs>
 }
@@ -580,6 +610,7 @@ export type $CalendarSeasonIntervalPayload<ExtArgs extends runtime.Types.Extensi
     updatedAt: Date
     leftIndex: number
     rightIndex: number
+    calendarId: string
     seasonId: string
   }, ExtArgs["result"]["calendarSeasonInterval"]>
   composites: {}
@@ -1010,6 +1041,7 @@ export interface CalendarSeasonIntervalFieldRefs {
   readonly updatedAt: Prisma.FieldRef<"CalendarSeasonInterval", 'DateTime'>
   readonly leftIndex: Prisma.FieldRef<"CalendarSeasonInterval", 'Int'>
   readonly rightIndex: Prisma.FieldRef<"CalendarSeasonInterval", 'Int'>
+  readonly calendarId: Prisma.FieldRef<"CalendarSeasonInterval", 'String'>
   readonly seasonId: Prisma.FieldRef<"CalendarSeasonInterval", 'String'>
 }
     

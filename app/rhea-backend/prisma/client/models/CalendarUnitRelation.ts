@@ -44,6 +44,7 @@ export type CalendarUnitRelationMinAggregateOutputType = {
   shortLabel: string | null
   repeats: number | null
   position: number | null
+  calendarId: string | null
   parentUnitId: string | null
   childUnitId: string | null
 }
@@ -56,6 +57,7 @@ export type CalendarUnitRelationMaxAggregateOutputType = {
   shortLabel: string | null
   repeats: number | null
   position: number | null
+  calendarId: string | null
   parentUnitId: string | null
   childUnitId: string | null
 }
@@ -68,6 +70,7 @@ export type CalendarUnitRelationCountAggregateOutputType = {
   shortLabel: number
   repeats: number
   position: number
+  calendarId: number
   parentUnitId: number
   childUnitId: number
   _all: number
@@ -92,6 +95,7 @@ export type CalendarUnitRelationMinAggregateInputType = {
   shortLabel?: true
   repeats?: true
   position?: true
+  calendarId?: true
   parentUnitId?: true
   childUnitId?: true
 }
@@ -104,6 +108,7 @@ export type CalendarUnitRelationMaxAggregateInputType = {
   shortLabel?: true
   repeats?: true
   position?: true
+  calendarId?: true
   parentUnitId?: true
   childUnitId?: true
 }
@@ -116,6 +121,7 @@ export type CalendarUnitRelationCountAggregateInputType = {
   shortLabel?: true
   repeats?: true
   position?: true
+  calendarId?: true
   parentUnitId?: true
   childUnitId?: true
   _all?: true
@@ -215,6 +221,7 @@ export type CalendarUnitRelationGroupByOutputType = {
   shortLabel: string | null
   repeats: number
   position: number
+  calendarId: string
   parentUnitId: string
   childUnitId: string
   _count: CalendarUnitRelationCountAggregateOutputType | null
@@ -250,6 +257,7 @@ export type CalendarUnitRelationWhereInput = {
   shortLabel?: Prisma.StringNullableFilter<"CalendarUnitRelation"> | string | null
   repeats?: Prisma.IntFilter<"CalendarUnitRelation"> | number
   position?: Prisma.IntFilter<"CalendarUnitRelation"> | number
+  calendarId?: Prisma.StringFilter<"CalendarUnitRelation"> | string
   parentUnitId?: Prisma.StringFilter<"CalendarUnitRelation"> | string
   childUnitId?: Prisma.StringFilter<"CalendarUnitRelation"> | string
   parentUnit?: Prisma.XOR<Prisma.CalendarUnitScalarRelationFilter, Prisma.CalendarUnitWhereInput>
@@ -264,6 +272,7 @@ export type CalendarUnitRelationOrderByWithRelationInput = {
   shortLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   repeats?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   parentUnitId?: Prisma.SortOrder
   childUnitId?: Prisma.SortOrder
   parentUnit?: Prisma.CalendarUnitOrderByWithRelationInput
@@ -271,21 +280,23 @@ export type CalendarUnitRelationOrderByWithRelationInput = {
 }
 
 export type CalendarUnitRelationWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
+  calendarId_id?: Prisma.CalendarUnitRelationCalendarIdIdCompoundUniqueInput
   AND?: Prisma.CalendarUnitRelationWhereInput | Prisma.CalendarUnitRelationWhereInput[]
   OR?: Prisma.CalendarUnitRelationWhereInput[]
   NOT?: Prisma.CalendarUnitRelationWhereInput | Prisma.CalendarUnitRelationWhereInput[]
+  id?: Prisma.StringFilter<"CalendarUnitRelation"> | string
   createdAt?: Prisma.DateTimeFilter<"CalendarUnitRelation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"CalendarUnitRelation"> | Date | string
   label?: Prisma.StringNullableFilter<"CalendarUnitRelation"> | string | null
   shortLabel?: Prisma.StringNullableFilter<"CalendarUnitRelation"> | string | null
   repeats?: Prisma.IntFilter<"CalendarUnitRelation"> | number
   position?: Prisma.IntFilter<"CalendarUnitRelation"> | number
+  calendarId?: Prisma.StringFilter<"CalendarUnitRelation"> | string
   parentUnitId?: Prisma.StringFilter<"CalendarUnitRelation"> | string
   childUnitId?: Prisma.StringFilter<"CalendarUnitRelation"> | string
   parentUnit?: Prisma.XOR<Prisma.CalendarUnitScalarRelationFilter, Prisma.CalendarUnitWhereInput>
   childUnit?: Prisma.XOR<Prisma.CalendarUnitScalarRelationFilter, Prisma.CalendarUnitWhereInput>
-}, "id" | "id">
+}, "calendarId_id">
 
 export type CalendarUnitRelationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -295,6 +306,7 @@ export type CalendarUnitRelationOrderByWithAggregationInput = {
   shortLabel?: Prisma.SortOrderInput | Prisma.SortOrder
   repeats?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   parentUnitId?: Prisma.SortOrder
   childUnitId?: Prisma.SortOrder
   _count?: Prisma.CalendarUnitRelationCountOrderByAggregateInput
@@ -315,6 +327,7 @@ export type CalendarUnitRelationScalarWhereWithAggregatesInput = {
   shortLabel?: Prisma.StringNullableWithAggregatesFilter<"CalendarUnitRelation"> | string | null
   repeats?: Prisma.IntWithAggregatesFilter<"CalendarUnitRelation"> | number
   position?: Prisma.IntWithAggregatesFilter<"CalendarUnitRelation"> | number
+  calendarId?: Prisma.StringWithAggregatesFilter<"CalendarUnitRelation"> | string
   parentUnitId?: Prisma.StringWithAggregatesFilter<"CalendarUnitRelation"> | string
   childUnitId?: Prisma.StringWithAggregatesFilter<"CalendarUnitRelation"> | string
 }
@@ -339,6 +352,7 @@ export type CalendarUnitRelationUncheckedCreateInput = {
   shortLabel?: string | null
   repeats?: number
   position?: number
+  calendarId: string
   parentUnitId: string
   childUnitId: string
 }
@@ -363,6 +377,7 @@ export type CalendarUnitRelationUncheckedUpdateInput = {
   shortLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repeats?: Prisma.IntFieldUpdateOperationsInput | number
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   parentUnitId?: Prisma.StringFieldUpdateOperationsInput | string
   childUnitId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -375,6 +390,7 @@ export type CalendarUnitRelationCreateManyInput = {
   shortLabel?: string | null
   repeats?: number
   position?: number
+  calendarId: string
   parentUnitId: string
   childUnitId: string
 }
@@ -397,6 +413,7 @@ export type CalendarUnitRelationUncheckedUpdateManyInput = {
   shortLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   repeats?: Prisma.IntFieldUpdateOperationsInput | number
   position?: Prisma.IntFieldUpdateOperationsInput | number
+  calendarId?: Prisma.StringFieldUpdateOperationsInput | string
   parentUnitId?: Prisma.StringFieldUpdateOperationsInput | string
   childUnitId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -411,6 +428,11 @@ export type CalendarUnitRelationOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
+export type CalendarUnitRelationCalendarIdIdCompoundUniqueInput = {
+  calendarId: string
+  id: string
+}
+
 export type CalendarUnitRelationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -419,6 +441,7 @@ export type CalendarUnitRelationCountOrderByAggregateInput = {
   shortLabel?: Prisma.SortOrder
   repeats?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   parentUnitId?: Prisma.SortOrder
   childUnitId?: Prisma.SortOrder
 }
@@ -436,6 +459,7 @@ export type CalendarUnitRelationMaxOrderByAggregateInput = {
   shortLabel?: Prisma.SortOrder
   repeats?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   parentUnitId?: Prisma.SortOrder
   childUnitId?: Prisma.SortOrder
 }
@@ -448,6 +472,7 @@ export type CalendarUnitRelationMinOrderByAggregateInput = {
   shortLabel?: Prisma.SortOrder
   repeats?: Prisma.SortOrder
   position?: Prisma.SortOrder
+  calendarId?: Prisma.SortOrder
   parentUnitId?: Prisma.SortOrder
   childUnitId?: Prisma.SortOrder
 }
@@ -632,6 +657,7 @@ export type CalendarUnitRelationScalarWhereInput = {
   shortLabel?: Prisma.StringNullableFilter<"CalendarUnitRelation"> | string | null
   repeats?: Prisma.IntFilter<"CalendarUnitRelation"> | number
   position?: Prisma.IntFilter<"CalendarUnitRelation"> | number
+  calendarId?: Prisma.StringFilter<"CalendarUnitRelation"> | string
   parentUnitId?: Prisma.StringFilter<"CalendarUnitRelation"> | string
   childUnitId?: Prisma.StringFilter<"CalendarUnitRelation"> | string
 }
@@ -750,6 +776,7 @@ export type CalendarUnitRelationSelect<ExtArgs extends runtime.Types.Extensions.
   shortLabel?: boolean
   repeats?: boolean
   position?: boolean
+  calendarId?: boolean
   parentUnitId?: boolean
   childUnitId?: boolean
   parentUnit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
@@ -764,6 +791,7 @@ export type CalendarUnitRelationSelectCreateManyAndReturn<ExtArgs extends runtim
   shortLabel?: boolean
   repeats?: boolean
   position?: boolean
+  calendarId?: boolean
   parentUnitId?: boolean
   childUnitId?: boolean
   parentUnit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
@@ -778,6 +806,7 @@ export type CalendarUnitRelationSelectUpdateManyAndReturn<ExtArgs extends runtim
   shortLabel?: boolean
   repeats?: boolean
   position?: boolean
+  calendarId?: boolean
   parentUnitId?: boolean
   childUnitId?: boolean
   parentUnit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
@@ -792,11 +821,12 @@ export type CalendarUnitRelationSelectScalar = {
   shortLabel?: boolean
   repeats?: boolean
   position?: boolean
+  calendarId?: boolean
   parentUnitId?: boolean
   childUnitId?: boolean
 }
 
-export type CalendarUnitRelationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "label" | "shortLabel" | "repeats" | "position" | "parentUnitId" | "childUnitId", ExtArgs["result"]["calendarUnitRelation"]>
+export type CalendarUnitRelationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "label" | "shortLabel" | "repeats" | "position" | "calendarId" | "parentUnitId" | "childUnitId", ExtArgs["result"]["calendarUnitRelation"]>
 export type CalendarUnitRelationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parentUnit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
   childUnit?: boolean | Prisma.CalendarUnitDefaultArgs<ExtArgs>
@@ -824,6 +854,7 @@ export type $CalendarUnitRelationPayload<ExtArgs extends runtime.Types.Extension
     shortLabel: string | null
     repeats: number
     position: number
+    calendarId: string
     parentUnitId: string
     childUnitId: string
   }, ExtArgs["result"]["calendarUnitRelation"]>
@@ -1258,6 +1289,7 @@ export interface CalendarUnitRelationFieldRefs {
   readonly shortLabel: Prisma.FieldRef<"CalendarUnitRelation", 'String'>
   readonly repeats: Prisma.FieldRef<"CalendarUnitRelation", 'Int'>
   readonly position: Prisma.FieldRef<"CalendarUnitRelation", 'Int'>
+  readonly calendarId: Prisma.FieldRef<"CalendarUnitRelation", 'String'>
   readonly parentUnitId: Prisma.FieldRef<"CalendarUnitRelation", 'String'>
   readonly childUnitId: Prisma.FieldRef<"CalendarUnitRelation", 'String'>
 }

@@ -2401,6 +2401,7 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 name: string;
+                                calendarId: string;
                                 unitId: string;
                                 presentationId: string;
                                 formatString: string;
@@ -2425,6 +2426,7 @@ export interface operations {
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
+                                calendarId: string;
                                 position: number;
                                 label?: null | string;
                                 shortLabel?: null | string;
@@ -2438,6 +2440,7 @@ export interface operations {
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
+                                calendarId: string;
                                 position: number;
                                 label?: null | string;
                                 shortLabel?: null | string;
@@ -2589,6 +2592,7 @@ export interface operations {
                         units: {
                             children: {
                                 id: string;
+                                calendarId: string;
                                 position: number;
                                 label?: null | string;
                                 shortLabel?: null | string;
@@ -2598,6 +2602,7 @@ export interface operations {
                             }[];
                             parents: {
                                 id: string;
+                                calendarId: string;
                                 position: number;
                                 label?: null | string;
                                 shortLabel?: null | string;
@@ -2622,6 +2627,7 @@ export interface operations {
                             units: {
                                 id: string;
                                 name: string;
+                                calendarId: string;
                                 unitId: string;
                                 formatString: string;
                                 subdivision: number;
@@ -2640,6 +2646,7 @@ export interface operations {
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
+                                calendarId: string;
                                 leftIndex: number;
                                 rightIndex: number;
                                 seasonId: string;
@@ -2823,6 +2830,7 @@ export interface operations {
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
+                            calendarId: string;
                             position: number;
                             label?: null | string;
                             shortLabel?: null | string;
@@ -2888,6 +2896,7 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            calendarId: string;
                             unitId: string;
                             presentationId: string;
                             formatString: string;
@@ -2996,6 +3005,7 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            calendarId: string;
                             unitId: string;
                             presentationId: string;
                             formatString: string;
@@ -4795,6 +4805,7 @@ export interface operations {
                             units: {
                                 children: {
                                     id: string;
+                                    calendarId: string;
                                     position: number;
                                     label?: null | string;
                                     shortLabel?: null | string;
@@ -4804,6 +4815,7 @@ export interface operations {
                                 }[];
                                 parents: {
                                     id: string;
+                                    calendarId: string;
                                     position: number;
                                     label?: null | string;
                                     shortLabel?: null | string;
@@ -4828,6 +4840,7 @@ export interface operations {
                                 units: {
                                     id: string;
                                     name: string;
+                                    calendarId: string;
                                     unitId: string;
                                     formatString: string;
                                     subdivision: number;
@@ -4846,6 +4859,7 @@ export interface operations {
                                     createdAt: string;
                                     /** Format: date-time */
                                     updatedAt: string;
+                                    calendarId: string;
                                     leftIndex: number;
                                     rightIndex: number;
                                     seasonId: string;

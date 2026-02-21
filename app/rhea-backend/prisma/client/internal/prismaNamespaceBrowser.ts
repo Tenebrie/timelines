@@ -185,6 +185,7 @@ export const CalendarUnitRelationScalarFieldEnum = {
   shortLabel: 'shortLabel',
   repeats: 'repeats',
   position: 'position',
+  calendarId: 'calendarId',
   parentUnitId: 'parentUnitId',
   childUnitId: 'childUnitId'
 } as const
@@ -199,8 +200,8 @@ export const CalendarPresentationScalarFieldEnum = {
   name: 'name',
   compression: 'compression',
   scaleFactor: 'scaleFactor',
-  baselineUnitId: 'baselineUnitId',
-  calendarId: 'calendarId'
+  calendarId: 'calendarId',
+  baselineUnitId: 'baselineUnitId'
 } as const
 
 export type CalendarPresentationScalarFieldEnum = (typeof CalendarPresentationScalarFieldEnum)[keyof typeof CalendarPresentationScalarFieldEnum]
@@ -214,6 +215,7 @@ export const CalendarPresentationUnitScalarFieldEnum = {
   formatString: 'formatString',
   subdivision: 'subdivision',
   labeledIndices: 'labeledIndices',
+  calendarId: 'calendarId',
   unitId: 'unitId',
   presentationId: 'presentationId'
 } as const
@@ -240,6 +242,7 @@ export const CalendarSeasonIntervalScalarFieldEnum = {
   updatedAt: 'updatedAt',
   leftIndex: 'leftIndex',
   rightIndex: 'rightIndex',
+  calendarId: 'calendarId',
   seasonId: 'seasonId'
 } as const
 
