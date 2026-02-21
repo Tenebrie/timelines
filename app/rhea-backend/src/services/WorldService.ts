@@ -237,6 +237,9 @@ export const WorldService = {
 										updatedAt: true,
 										presentationId: true,
 									},
+									orderBy: {
+										position: 'asc',
+									},
 								},
 							},
 							orderBy: {

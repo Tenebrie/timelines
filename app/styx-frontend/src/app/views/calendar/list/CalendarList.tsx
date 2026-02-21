@@ -14,7 +14,9 @@ import { CalendarListCreateNewButton } from './CalendarListCreateNewButton'
 import { CalendarListItem } from './CalendarListItem'
 
 export function CalendarList() {
-	const { data: calendars, isLoading } = useListCalendarsQuery()
+	const { data: calendars, isLoading } = useListCalendarsQuery(undefined, {
+		refetchOnMountOrArgChange: true,
+	})
 
 	const sortedCalendars = useMemo(() => {
 		if (!calendars) {

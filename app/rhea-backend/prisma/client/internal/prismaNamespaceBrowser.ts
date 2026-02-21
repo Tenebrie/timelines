@@ -211,6 +211,7 @@ export const CalendarPresentationUnitScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  position: 'position',
   name: 'name',
   formatString: 'formatString',
   subdivision: 'subdivision',

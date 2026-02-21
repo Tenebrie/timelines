@@ -87,12 +87,6 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 		return units
 	}, [calendar])
 
-	// Get units not yet added to the presentation
-	const unitsNotInPresentation = useMemo(() => {
-		const addedUnitIds = new Set(localUnits.map((u) => u.unitId))
-		return availableUnits.filter((u) => !addedUnitIds.has(u.id))
-	}, [availableUnits, localUnits])
-
 	// Get units that can be used as baseline (smaller or equal to smallest unit in presentation)
 	const baselineUnitOptions = useMemo(() => {
 		if (!calendar || localUnits.length === 0) {
@@ -261,7 +255,7 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 
 				<CalendarPresentationAddUnitForm
 					limitReached={localUnits.length >= 3}
-					options={unitsNotInPresentation}
+					options={availableUnits}
 					onAddUnit={handleAddUnit}
 				/>
 				<Stack gap={1}>
@@ -276,7 +270,7 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 					))}
 				</Stack>
 
-				{localUnits.length === 0 && unitsNotInPresentation.length === 0 && (
+				{localUnits.length === 0 && availableUnits.length === 0 && (
 					<Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
 						No visible units available. Create some units in the Time Units tab first, and make sure they are
 						not hidden.

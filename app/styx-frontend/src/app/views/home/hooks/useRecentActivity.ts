@@ -12,10 +12,10 @@ export type RecentActivity = {
 }
 
 export function useRecentActivity() {
-	const { ownedWorlds, contributableWorlds, isFetching: isWorldsFetching } = useWorldListData()
+	const { ownedWorlds, contributableWorlds, isLoading: isWorldsLoading } = useWorldListData()
 	const { data: calendars, isLoading: isCalendarsLoading } = useListCalendarsQuery()
 
-	const isLoading = isWorldsFetching || isCalendarsLoading
+	const isLoading = isWorldsLoading || isCalendarsLoading
 
 	const recentActivity = useMemo(() => {
 		const activities: RecentActivity[] = []

@@ -253,7 +253,8 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 					},
 				})
 
-				for (const unit of data.units) {
+				for (let i = 0; i < data.units.length; i++) {
+					const unit = data.units[i]
 					const unitId = unitBucketCache.get(unit.name)?.[0]?.id
 					if (!unitId) {
 						throw new Error(
@@ -264,6 +265,7 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 						data: {
 							calendarId,
 							presentationId: parent.id,
+							position: i * 2,
 							unitId,
 							name: unit.name,
 							formatString: unit.formatString,

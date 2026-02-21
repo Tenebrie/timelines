@@ -5,11 +5,13 @@ import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
 
 export const useWorldListData = () => {
 	const { user } = useSelector(getAuthState)
-	const { data, isFetching } = useGetWorldsQuery(undefined, {
+	const { data, isFetching, isLoading } = useGetWorldsQuery(undefined, {
 		skip: !user,
+		refetchOnMountOrArgChange: true,
 	})
 
 	return {
+		isLoading,
 		isFetching,
 		isReady: !!data,
 		ownedWorlds: data?.ownedWorlds ?? [],

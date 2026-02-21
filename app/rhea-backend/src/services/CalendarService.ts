@@ -86,7 +86,11 @@ export const CalendarService = {
 				},
 				presentations: {
 					include: {
-						units: true,
+						units: {
+							orderBy: {
+								position: 'asc',
+							},
+						},
 					},
 					orderBy: {
 						scaleFactor: 'asc',
@@ -153,6 +157,9 @@ export const CalendarService = {
 								createdAt: true,
 								updatedAt: true,
 								presentationId: true,
+							},
+							orderBy: {
+								position: 'asc',
 							},
 						},
 					},
@@ -405,7 +412,8 @@ export const CalendarService = {
 				})
 
 				// Create new units
-				for (const unit of sortedUnits) {
+				for (let i = 0; i < sortedUnits.length; i++) {
+					const unit = sortedUnits[i]
 					const calendarUnit = await dbClient.calendarUnit.findFirst({
 						where: { id: unit.unitId, calendarId },
 					})
@@ -414,6 +422,7 @@ export const CalendarService = {
 							data: {
 								calendarId,
 								presentationId,
+								position: i * 2,
 								unitId: unit.unitId,
 								name: calendarUnit.displayName || calendarUnit.name,
 								formatString: unit.formatString,
@@ -463,10 +472,9 @@ export const CalendarService = {
 		presentationId: string
 		dbClient: TransactionClient
 	}) => {
-		const existingPresentation = await dbClient.calendarPresentation.findFirstOrThrow({
+		const existingPresentation = await dbClient.calendarPresentation.findUniqueOrThrow({
 			where: {
-				calendarId,
-				id: presentationId,
+				calendarId_id: { calendarId, id: presentationId },
 			},
 			include: {
 				units: {
