@@ -8,61 +8,31 @@ on:
     branches: [dev]
 
 jobs:
-  build:
-    name: Build ${{ matrix.name }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: Styx
-            script: build:styx
-          - name: Rhea
-            script: build:rhea
-          - name: Calliope
-            script: build:calliope
-          - name: Orpheus
-            script: build:orpheus
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.x
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn
-      - name: Build ${{ matrix.name }}
-        run: yarn ${{ matrix.script }}
-
   test:
-    name: Test ${{ matrix.name }}
+    name: Build & Test (${{ matrix.service }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: Styx
-            script: test:styx
-          - name: Rhea
-            script: test:rhea
-            prisma: true
-          - name: Calliope
-            script: test:calliope
-          - name: Orpheus
-            script: test:orpheus
+        service: [Styx, Rhea, Calliope, Orpheus]
+    env:
+      SCRIPT: ''
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 24.x
           cache: 'yarn'
+      - name: Set script name
+        run: echo "SCRIPT=$(echo '${{ matrix.service }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
       - name: Install dependencies
         run: yarn
-      - name: Generate Prisma client
-        if: matrix.prisma
-        run: yarn prisma generate
-      - name: Run ${{ matrix.name }} tests
-        run: yarn ${{ matrix.script }}
+      - name: Build ${{ matrix.service }}
+        run: yarn build:$SCRIPT
+      - name: Run ${{ matrix.service }} tests
+        run: yarn test:$SCRIPT
+      - name: Lint ${{ matrix.service }}
+        run: yarn lint:$SCRIPT
 
   run-e2e:
     name: Playwright (${{ matrix.name }})
