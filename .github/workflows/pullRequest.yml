@@ -8,9 +8,21 @@ on:
     branches: [dev]
 
 jobs:
-  build-styx:
-    name: Build Styx
+  build:
+    name: Build ${{ matrix.name }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Styx
+            script: build:styx
+          - name: Rhea
+            script: build:rhea
+          - name: Calliope
+            script: build:calliope
+          - name: Orpheus
+            script: build:orpheus
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,56 +31,25 @@ jobs:
           cache: 'yarn'
       - name: Install dependencies
         run: yarn
-      - name: Build Styx
-        run: yarn build:styx
+      - name: Build ${{ matrix.name }}
+        run: yarn ${{ matrix.script }}
 
-  build-rhea:
-    name: Build Rhea
+  test:
+    name: Test ${{ matrix.name }}
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.x
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn
-      - name: Build Rhea
-        run: yarn build:rhea
-
-  build-calliope:
-    name: Build Calliope
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.x
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn
-      - name: Build Calliope
-        run: yarn build:calliope
-
-  test-styx:
-    name: Test Styx (Frontend)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.x
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn
-      - name: Run Styx tests
-        run: yarn test:styx
-
-  test-rhea:
-    name: Test Rhea (Backend)
-    runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Styx
+            script: test:styx
+          - name: Rhea
+            script: test:rhea
+            prisma: true
+          - name: Calliope
+            script: test:calliope
+          - name: Orpheus
+            script: test:orpheus
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -78,32 +59,22 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Generate Prisma client
+        if: matrix.prisma
         run: yarn prisma generate
-      - name: Run Rhea tests
-        run: yarn test:rhea
-
-  test-calliope:
-    name: Test Calliope (Websockets)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24.x
-          cache: 'yarn'
-      - name: Install dependencies
-        run: yarn
-      - name: Run Calliope tests
-        run: yarn test:calliope
+      - name: Run ${{ matrix.name }} tests
+        run: yarn ${{ matrix.script }}
 
   run-e2e:
-    name: Playwright (${{ matrix.browser }})
+    name: Playwright (${{ matrix.name }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, firefox]
+        include:
+          - name: Chromium
+            browser: chromium
+          - name: Firefox
+            browser: firefox
     steps:
       - uses: actions/checkout@v4
 
