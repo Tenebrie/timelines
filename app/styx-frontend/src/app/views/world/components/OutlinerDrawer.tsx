@@ -100,7 +100,7 @@ export function OutlinerDrawer() {
 						marginLeft: '1px',
 						transition: `margin-right ${isDragging ? 0 : 0.3}s`,
 					}}
-					sx={{ position: 'relative', flexShrink: 0, zIndex: 2 }}
+					sx={{ position: 'relative', flexShrink: 0, zIndex: isDragging ? 3 : 2 }}
 					elevation={2}
 				>
 					<Box

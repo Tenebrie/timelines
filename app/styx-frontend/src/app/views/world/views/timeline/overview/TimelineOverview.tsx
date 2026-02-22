@@ -107,7 +107,7 @@ function TimelineOverviewComponent() {
 				top: 0,
 				background: '#00000022',
 				cursor: 'pointer',
-				zIndex: 1,
+				zIndex: 3,
 				borderBottom: `1px solid #ffffff22`,
 			}}
 		>
