@@ -92,23 +92,24 @@ function TimelineAnchorComponent({ containerWidth, showCurrentTime }: Props) {
 			sx={{
 				position: 'absolute',
 				width: '100%',
-				height: '64px',
+				height: '96px',
 				background: theme.custom.palette.background.timelineHeader,
 				cursor: isDragging ? 'grabbing' : 'grab',
 				userSelect: 'none',
 			}}
 		>
-			<Divider sx={{ width: '100%', position: 'absolute', bottom: '64px' }} />
+			<Divider sx={{ width: '100%', position: 'absolute', bottom: '96px' }} />
 			<Paper
 				sx={{
 					position: 'absolute',
 					bottom: 0,
 					left: 0,
 					right: 0,
-					height: '32px',
+					height: '64px',
 					borderRadius: 0,
 				}}
 			/>
+			<Divider sx={{ width: '100%', position: 'absolute', bottom: '32px' }} />
 			<Fade in={visible} appear timeout={300}>
 				<Box>
 					{showCurrentTime && <TimelineAnchorLabel />}

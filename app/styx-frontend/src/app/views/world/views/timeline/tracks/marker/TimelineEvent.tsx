@@ -1,6 +1,7 @@
 import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import { Icon } from '@iconify/react'
 import Close from '@mui/icons-material/Close'
+import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import classNames from 'classnames'
@@ -19,7 +20,7 @@ import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 import { MarkerTooltipSummonable } from '../../MarkerTooltip'
 import { HoveredTimelineEvents } from '../components/HoveredTimelineEvents'
-import { Marker, MarkerDelta, MarkerIcon, MarkerRevoked } from './styles'
+import { Marker, MarkerIcon } from './styles'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
@@ -117,7 +118,7 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 		setIsHovered(false)
 	}
 
-	const color = useEntityColor({ entity })
+	const color = useEntityColor({ id: entity.eventId, color: entity.color })
 	const theme = useCustomTheme()
 
 	// Calculate absolute position for the timestamp box (above the marker)
@@ -141,15 +142,6 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 		'--border-radius': '6px',
 	} as CSSProperties
 
-	const RenderedMarker = (() => {
-		if (entity.markerType === 'deltaState') {
-			return MarkerDelta
-		} else if (entity.markerType === 'revokedAt') {
-			return MarkerRevoked
-		}
-		return Marker
-	})()
-
 	const [isTooltipRendered, setIsTooltipRendered] = useState(false)
 	useEffect(() => {
 		if (isHovered) {
@@ -163,7 +155,7 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 	}, [isHovered])
 
 	return (
-		<RenderedMarker
+		<Marker
 			ref={markerRef}
 			style={cssVariables}
 			onClick={onClick}
@@ -225,6 +217,47 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 					</Paper>
 				</MarkerTooltipSummonable>
 			)}
-		</RenderedMarker>
+			<Box
+				className="hover-highlight"
+				sx={{
+					width: 'calc(100% + 4px)',
+					height: 'calc(100% + 4px)',
+					background: 'rgba(255, 255, 255, 0.0)',
+					borderRadius: '4px',
+					transition: 'opacity 0.3s, background 0.3s',
+					position: 'absolute',
+					top: '-2px',
+					left: '-2px',
+				}}
+			/>
+			<Box
+				className="active-highlight"
+				sx={{
+					width: 'calc(100% + 4px)',
+					height: 'calc(100% + 4px)',
+					background: 'rgba(255, 255, 255, 0.0)',
+					borderRadius: '4px',
+					transition: 'opacity 0.3s, background 0.3s',
+					position: 'absolute',
+					top: '-2px',
+					left: '-2px',
+				}}
+			/>
+			<Box
+				className="selection-highlight"
+				sx={{
+					width: 'calc(100% + 4px)',
+					height: 'calc(100% + 4px)',
+					background: color,
+					opacity: 0,
+					borderRadius: '4px',
+					transition: 'opacity 0.3s, background 0.3s',
+					position: 'absolute',
+					filter: 'brightness(2) saturate(5)',
+					top: '-2px',
+					left: '-2px',
+				}}
+			/>
+		</Marker>
 	)
 }

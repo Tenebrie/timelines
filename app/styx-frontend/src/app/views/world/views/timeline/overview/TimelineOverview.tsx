@@ -13,17 +13,15 @@ import { MarkerWithHeight, OverviewMarker } from './OverviewMarker'
 export const TimelineOverview = memo(TimelineOverviewComponent)
 
 function TimelineOverviewComponent() {
-	const { markers, tracks } = useSelector(
+	const { markers, tracks, containerWidth } = useSelector(
 		getTimelineState,
-		(a, b) => a.markers === b.markers && a.tracks === b.tracks,
+		(a, b) => a.markers === b.markers && a.tracks === b.tracks && a.containerWidth === b.containerWidth,
 	)
 	const ref = useRef<HTMLDivElement>(null)
 	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
 	// Wheel scrolling
 	const { onWheel } = useTimelineHorizontalScroll({ containerRef: ref })
-
-	const areaSize = ref.current?.getBoundingClientRect().width ?? 100
 
 	const sortedMarkers = useMemo(
 		() => [...markers].sort((a, b) => a.markerPosition - b.markerPosition),
@@ -85,6 +83,7 @@ function TimelineOverviewComponent() {
 			return
 		}
 
+		const areaSize = Math.max(containerWidth, 1)
 		const rect = ref.current.getBoundingClientRect()
 		const clickX = e.clientX - rect.left - 3
 		const totalTimeRange = maxTime - minTime
@@ -121,7 +120,7 @@ function TimelineOverviewComponent() {
 					pixelsPerUnit={pixelsPerUnit}
 				/>
 			))}
-			<OverviewCamera minTime={minTime} maxTime={maxTime} overviewWidth={areaSize} />
+			<OverviewCamera minTime={minTime} maxTime={maxTime} />
 		</Box>
 	)
 }

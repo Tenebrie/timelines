@@ -22,6 +22,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 				dispatchGlobalEvent['richEditor/requestOpenMentions']({
 					query: props.query,
 					screenPosTop: pos.top,
+					screenPosBottom: pos.bottom,
 					screenPosLeft: pos.left,
 				})
 			},
@@ -31,6 +32,7 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 				dispatchGlobalEvent['richEditor/requestUpdateMentions']({
 					query: props.query,
 					screenPosTop: pos.top,
+					screenPosBottom: pos.bottom,
 					screenPosLeft: pos.left,
 				})
 			},

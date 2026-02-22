@@ -53,11 +53,13 @@ export type EventParams = {
 	'richEditor/requestOpenMentions': {
 		query: string
 		screenPosTop: number
+		screenPosBottom: number
 		screenPosLeft: number
 	}
 	'richEditor/requestUpdateMentions': {
 		query: string
 		screenPosTop: number
+		screenPosBottom: number
 		screenPosLeft: number
 	}
 	'richEditor/requestCloseMentions': void

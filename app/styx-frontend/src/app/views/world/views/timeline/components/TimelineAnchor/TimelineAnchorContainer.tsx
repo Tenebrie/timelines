@@ -32,7 +32,7 @@ export function TimelineAnchorContainer({ children }: Props) {
 			<Box
 				ref={ref}
 				sx={{
-					height: 32,
+					height: 64,
 					width: '100%',
 					position: 'absolute',
 					bottom: 0,

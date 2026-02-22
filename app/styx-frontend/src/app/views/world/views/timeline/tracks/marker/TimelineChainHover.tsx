@@ -16,7 +16,7 @@ type Props = {
 
 export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 	const theme = useCustomTheme()
-	const color = useEntityColor({ entity })
+	const color = useEntityColor({ id: entity.eventId, color: entity.color })
 
 	const rawDist = (() => {
 		if (entity.chainEntity) {

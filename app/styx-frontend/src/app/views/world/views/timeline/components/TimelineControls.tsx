@@ -45,7 +45,7 @@ function TimelineControlsComponent() {
 		<Stack
 			sx={{
 				position: 'absolute',
-				bottom: 48,
+				bottom: 0,
 				right: 0,
 				paddingTop: 10,
 				paddingLeft: 1,

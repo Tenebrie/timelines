@@ -99,7 +99,7 @@ export const TimeTravelModal = () => {
 	)
 
 	return (
-		<Modal visible={isOpen} onClose={close}>
+		<Modal visible={isOpen} onClose={close} closeOnBackdropClick>
 			<ModalHeader>Move to time</ModalHeader>
 			<TextField
 				label="Selector"

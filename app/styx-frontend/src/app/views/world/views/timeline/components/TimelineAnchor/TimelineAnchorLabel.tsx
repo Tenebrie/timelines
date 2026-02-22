@@ -24,6 +24,7 @@ function TimelineAnchorLabelComponent() {
 	const { timeToLabel, calendar, presentation } = useWorldTime()
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 	const labelRef = useRef<HTMLButtonElement>(null)
+	const containerRef = useRef<HTMLDivElement>(null)
 
 	const { open: openTimeTravelModal } = useModal('timeTravelModal')
 
@@ -33,7 +34,8 @@ function TimelineAnchorLabelComponent() {
 				if (TimelineState.anchorTimestamps.length === 0) {
 					return
 				}
-				const currentTimestamp = scaledTimeToRealTime(-scroll + 40)
+				const containerWidth = containerRef.current?.offsetWidth ?? 0
+				const currentTimestamp = scaledTimeToRealTime(-scroll + containerWidth / 2)
 				const snappedTime = binarySearchForClosest(TimelineState.anchorTimestamps, currentTimestamp)
 				const smallestBackingUnit = calendar.units.find((u) => u.id === presentation.smallestUnit?.unitId)
 				if (!smallestBackingUnit) {
@@ -62,11 +64,13 @@ function TimelineAnchorLabelComponent() {
 
 	return (
 		<Paper
+			ref={containerRef}
 			elevation={1}
 			sx={{
 				position: 'absolute',
 				left: 0,
 				bottom: 0,
+				width: '100%',
 				height: 32,
 				display: 'flex',
 				alignItems: 'center',
@@ -75,7 +79,6 @@ function TimelineAnchorLabelComponent() {
 				boxShadow: 'none',
 				zIndex: 1,
 				background: theme.custom.palette.timelineAnchor,
-				borderRight: `2px solid ${theme.custom.palette.outlineStrong}`,
 			}}
 		>
 			<Button

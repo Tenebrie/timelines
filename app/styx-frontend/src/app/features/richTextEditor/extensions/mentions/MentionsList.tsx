@@ -9,7 +9,7 @@ import ListItemText from '@mui/material/ListItemText'
 import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
 import { Editor } from '@tiptap/react'
-import { memo, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
@@ -29,7 +29,11 @@ export const MentionsList = memo(MentionsListComponent)
 
 export function MentionsListComponent({ editor }: Props) {
 	const [visible, setVisible] = useState(false)
-	const [pos, setPos] = useState<{ top: number; left: number }>({ top: 0, left: 0 })
+	const [pos, setPos] = useState<{ top: number; bottom: number; left: number }>({
+		top: 0,
+		bottom: 0,
+		left: 0,
+	})
 	const [query, setQuery] = useState('')
 	const [selectedIndex, setSelectedIndex] = useState(0)
 
@@ -56,7 +60,7 @@ export function MentionsListComponent({ editor }: Props) {
 	)
 
 	useEventBusSubscribe['richEditor/requestOpenMentions']({
-		callback: ({ query, screenPosTop, screenPosLeft }) => {
+		callback: ({ query, screenPosTop, screenPosBottom, screenPosLeft }) => {
 			if (!editor) {
 				return
 			}
@@ -64,15 +68,17 @@ export function MentionsListComponent({ editor }: Props) {
 			setQuery(query)
 			setPos({
 				top: screenPosTop,
+				bottom: screenPosBottom,
 				left: screenPosLeft,
 			})
 		},
 	})
 	useEventBusSubscribe['richEditor/requestUpdateMentions']({
-		callback: ({ query, screenPosTop, screenPosLeft }) => {
+		callback: ({ query, screenPosTop, screenPosBottom, screenPosLeft }) => {
 			setQuery(query)
 			setPos({
 				top: screenPosTop,
+				bottom: screenPosBottom,
 				left: screenPosLeft,
 			})
 		},
@@ -163,12 +169,37 @@ export function MentionsListComponent({ editor }: Props) {
 		oldMentions.current = mentions
 	}, [mentions, visible])
 
+	const [adjustedTop, setAdjustedTop] = useState(pos.top)
+	const paperRef = useRef<HTMLDivElement>(null)
+
+	const recalculatePosition = useCallback(() => {
+		const el = paperRef.current
+		if (!el || !visible) {
+			return
+		}
+
+		const belowTop = pos.bottom
+		const elHeight = el.offsetHeight
+
+		if (belowTop + elHeight > window.innerHeight) {
+			// Position above the cursor
+			setAdjustedTop(Math.max(0, pos.top - elHeight))
+		} else {
+			setAdjustedTop(belowTop)
+		}
+	}, [pos.top, pos.bottom, visible])
+
+	useLayoutEffect(() => {
+		recalculatePosition()
+	}, [recalculatePosition, mentions.length, query])
+
 	return (
 		<Paper
+			ref={paperRef}
 			sx={{
 				zIndex: 10,
 				position: 'fixed',
-				top: `calc(${pos.top}px + 1.5rem)`,
+				top: adjustedTop,
 				left: pos.left,
 				display: visible ? 'block' : 'none',
 				minWidth: '200px',

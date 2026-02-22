@@ -12,13 +12,15 @@ import { TimelineState } from '../utils/TimelineState'
 type Props = {
 	minTime: number
 	maxTime: number
-	overviewWidth: number
 }
 
 export const OverviewCamera = memo(OverviewCameraComponent)
 
-function OverviewCameraComponent({ minTime, maxTime, overviewWidth }: Props) {
-	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
+function OverviewCameraComponent({ minTime, maxTime }: Props) {
+	const { scaleLevel, containerWidth } = useSelector(
+		getTimelineState,
+		(a, b) => a.scaleLevel === b.scaleLevel && a.containerWidth === b.containerWidth,
+	)
 	const { getLevelScalar } = useTimelineLevelScalar()
 	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
@@ -81,7 +83,7 @@ function OverviewCameraComponent({ minTime, maxTime, overviewWidth }: Props) {
 
 			// Convert overview pixels to time units
 			const totalTimeRange = maxTime - minTime
-			const timePerOverviewPixel = totalTimeRange / overviewWidth
+			const timePerOverviewPixel = totalTimeRange / containerWidth
 
 			// Convert time units to timeline scroll pixels
 			const scalar = getLevelScalar(scaleLevel)
@@ -107,11 +109,11 @@ function OverviewCameraComponent({ minTime, maxTime, overviewWidth }: Props) {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [isDraggingCamera, overviewWidth, minTime, maxTime, scaleLevel, getLevelScalar, scrollTimelineTo])
+	}, [isDraggingCamera, containerWidth, minTime, maxTime, scaleLevel, getLevelScalar, scrollTimelineTo])
 
 	useEffect(() => {
 		updatePosition(TimelineState.scroll, scaleLevel)
-	}, [scaleLevel, updatePosition, minTime, maxTime, overviewWidth])
+	}, [scaleLevel, updatePosition, minTime, maxTime, containerWidth])
 
 	useEventBusSubscribe['timeline/onScroll']({
 		callback: (scroll) => {

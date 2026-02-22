@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { LineSpacing } from '@/app/utils/constants'
+import { checkIfClickBlocked } from '@/app/views/world/views/timeline/utils/checkIfClickBlocked'
 import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineState'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getTimelineContextMenuState, getTimelineState } from '@/app/views/world/WorldSliceSelectors'
@@ -21,6 +22,9 @@ export const useTimelineContextMenu = () => {
 				return
 			}
 			if (!TimelineState.canOpenContextMenu) {
+				return
+			}
+			if (checkIfClickBlocked(event.target)) {
 				return
 			}
 			event.preventDefault()
