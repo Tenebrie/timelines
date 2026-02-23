@@ -125,8 +125,11 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 	)
 
 	const onMouseUp = useCallback(() => {
-		isDraggingNow.current = false
 		isPreparingToDrag.current = false
+		if (!isDraggingNow.current) {
+			return
+		}
+		isDraggingNow.current = false
 		setGhostElement(null)
 		clearState()
 		setTimeout(() => {

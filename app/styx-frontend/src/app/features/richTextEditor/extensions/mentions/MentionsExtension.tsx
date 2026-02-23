@@ -45,11 +45,6 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 					state.isOpen = false
 					return true
 				}
-				if (props.event.key === 'Backspace' && state.isOpen) {
-					state.isOpen = false
-					dispatchGlobalEvent['richEditor/requestCloseMentions']()
-					return true
-				}
 				if (['ArrowUp', 'ArrowDown', 'Enter', 'Tab', 'PageUp', 'PageDown'].includes(props.event.key)) {
 					dispatchGlobalEvent['richEditor/onKeyDown']({
 						editor: state.editor,

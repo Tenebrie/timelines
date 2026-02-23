@@ -502,12 +502,14 @@ export const CalendarService = {
 			return sortedUnits[0].unit.duration
 		})()
 
+		const factor = Number(scaleFactor) * existingPresentation.compression
+
 		await dbClient.calendarPresentation.update({
 			where: {
 				calendarId_id: { calendarId, id: presentationId },
 			},
 			data: {
-				scaleFactor: Number(scaleFactor) * existingPresentation.compression,
+				scaleFactor: factor,
 			},
 			include: {
 				units: true,

@@ -17,7 +17,7 @@ import { ANCHOR_RESET_PERIOD } from './TimelineAnchorLine'
 const FollowersContainerStyled = styled('div')({
 	'& .timeline-follower': {
 		position: 'absolute',
-		background: 'gray',
+		borderLeft: '1px solid gray',
 		bottom: 0,
 		borderRadius: '4px 4px 0 0',
 		width: '1px',
@@ -57,6 +57,8 @@ function TimelineAnchorSlotComponent({ slotId, theme, containerWidth }: Props) {
 	const followersRef = useRef<HTMLDivElement>(null)
 	const { realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel })
 
+	const previousCssRef = useRef<string>('')
+
 	const updateDOM = useCallback(
 		(scroll: number) => {
 			const el = ref.current
@@ -78,19 +80,23 @@ function TimelineAnchorSlotComponent({ slotId, theme, containerWidth }: Props) {
 				CONTROLLED_SCROLLER_SIZE
 
 			const { width: dividerWidth, height: dividerHeight } = getDividerSize(labelSize)
-			const positionOffset = labelSize === 'large' ? -1.5 : 0
 			const fontWeight = labelSize === 'large' || labelSize === 'medium' ? '600' : '400'
 
 			// Batch all CSS variable updates to minimize reflows
 			el.style.cssText = `
 				--slot-visibility: visible;
-				--slot-position: ${dividerPosition}px;
+				--slot-position: ${Math.round(dividerPosition)}px;
 				--slot-font-weight: ${fontWeight};
 				--divider-width: ${dividerWidth}px;
 				--divider-height: ${dividerHeight * 8}px;
-				--divider-margin: ${positionOffset}px;
+				--divider-margin: ${-dividerWidth}px;
 				--follower-spacing: ${realTimeToScaledTime(followerSpacing)}px;
 			`
+
+			if (previousCssRef.current === el.style.cssText) {
+				return
+			}
+			previousCssRef.current = el.style.cssText
 
 			// Update label text (only textContent, no style changes)
 			if (labelRef.current) {
@@ -179,14 +185,12 @@ function TimelineAnchorSlotComponent({ slotId, theme, containerWidth }: Props) {
 				style={{
 					transform: 'translateX(-50%)',
 					position: 'absolute',
-					zIndex: 100,
 					top: 0,
-					height: '28px',
+					height: '30px',
 					display: 'flex',
 					alignItems: 'center',
 					justifyContent: 'center',
 					whiteSpace: 'pre',
-					padding: '2px 4px',
 					borderRadius: '4px',
 					color: theme.custom.palette.timelineAnchor.text,
 				}}
@@ -194,12 +198,13 @@ function TimelineAnchorSlotComponent({ slotId, theme, containerWidth }: Props) {
 			<div
 				style={{
 					position: 'absolute',
-					background: 'gray',
+					borderLeft: 'var(--divider-width, 1px) solid gray',
+					borderRight: 'var(--divider-width, 1px) solid gray',
 					bottom: 0,
 					borderRadius: '4px 4px 0 0',
-					width: 'var(--divider-width, 1px)',
+					width: '0',
 					height: 'var(--divider-height, 8px)',
-					marginLeft: 'var(--divider-margin, 0)',
+					marginLeft: 'var(--divider-margin, 0px)',
 				}}
 			/>
 			<FollowersContainer ref={followersRef} />
@@ -209,7 +214,7 @@ function TimelineAnchorSlotComponent({ slotId, theme, containerWidth }: Props) {
 
 function getDividerSize(labelSize: 'large' | 'medium' | 'small' | 'smallest') {
 	if (labelSize === 'large') {
-		return { width: 5, height: 3 }
+		return { width: 4, height: 3 }
 	} else if (labelSize === 'medium') {
 		return { width: 2, height: 2.5 }
 	} else if (labelSize === 'small') {

@@ -67,18 +67,23 @@ function TimelineEventPositionerComponent({
 		ghostFactory: () => (
 			<>
 				<div
+					ref={(el) => {
+						if (el) {
+							const rect = el.getBoundingClientRect()
+							el.style.height = `${window.innerHeight - rect.top - 10}px`
+						}
+					}}
 					style={{
-						height: '100vh',
-						background: 'gray',
-						width: '1px',
+						width: 0,
+						borderLeft: '1px solid gray',
+						borderRight: '1px solid gray',
 						position: 'absolute',
 						top: 0,
-						left: 'calc(50% - 1px)',
+						left: '50%',
 						overflow: 'hidden',
 					}}
 				></div>
 				<Marker $theme={theme} style={cssVariables}>
-					{/* <MarkerIcon className="icon image"></MarkerIcon> */}
 					<Icon
 						icon={entity.icon === 'default' ? 'mdi:leaf' : entity.icon}
 						color="gray"

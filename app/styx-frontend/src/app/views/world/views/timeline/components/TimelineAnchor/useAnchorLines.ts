@@ -151,7 +151,7 @@ export function useAnchorLines({ containerWidth }: Props) {
 					return {
 						...div,
 						followerCount: followerCount,
-						followerSpacing: timeToNext / (followerCount + 1),
+						followerSpacing: Math.round(timeToNext / (followerCount + 1)),
 						followerDuration: subdividedFollowerDuration,
 					}
 				})
