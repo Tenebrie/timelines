@@ -40,7 +40,7 @@ export const WorldSidebar = () => {
 			>
 				<Paper
 					style={{
-						zIndex: 3,
+						zIndex: 7,
 						position: 'absolute',
 						borderRadius: 0,
 						width: '72px',
