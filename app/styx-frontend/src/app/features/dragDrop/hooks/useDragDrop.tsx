@@ -96,30 +96,31 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 				isPreparingToDrag.current = false
 				startDragging(event)
 			}
-
-			if (isDraggingNow.current) {
-				const basePos = { x: event.clientX, y: event.clientY }
-				const pos = adjustPosition ? adjustPosition(basePos, rootPos.current) : basePos
-				setStateQuietly({
-					...getState()!,
-					targetPos: pos,
-				})
-				// TODO: Do not recreate the ghost every frame
-				setGhostElement(
-					<GhostWrapper
-						initialLeft={rootPos.current.x}
-						initialTop={rootPos.current.y}
-						left={pos.x}
-						top={pos.y}
-						align={{
-							top: ghostAlign?.top ?? 'start',
-							left: ghostAlign?.left ?? 'start',
-						}}
-					>
-						{ghostFactory()}
-					</GhostWrapper>,
-				)
+			if (!isDraggingNow.current) {
+				return
 			}
+
+			const basePos = { x: event.clientX, y: event.clientY }
+			const pos = adjustPosition ? adjustPosition(basePos, rootPos.current) : basePos
+			setStateQuietly({
+				...getState()!,
+				targetPos: pos,
+			})
+			// TODO: Do not recreate the ghost every frame
+			setGhostElement(
+				<GhostWrapper
+					initialLeft={rootPos.current.x}
+					initialTop={rootPos.current.y}
+					left={pos.x}
+					top={pos.y}
+					align={{
+						top: ghostAlign?.top ?? 'start',
+						left: ghostAlign?.left ?? 'start',
+					}}
+				>
+					{ghostFactory()}
+				</GhostWrapper>,
+			)
 		},
 		[adjustPosition, getState, ghostFactory, setStateQuietly, startDragging, ghostAlign],
 	)

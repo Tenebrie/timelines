@@ -39,7 +39,6 @@ export function TimelineAnchorContainer({ children }: Props) {
 					pointerEvents: 'auto',
 				}}
 			>
-				{/* <TimelineSmallestPips $lineSpacing={LineSpacing} /> */}
 				{children}
 			</Box>
 		</ControlledScroller>

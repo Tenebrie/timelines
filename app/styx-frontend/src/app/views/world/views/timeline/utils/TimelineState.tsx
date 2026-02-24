@@ -1,5 +1,7 @@
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
 
+import { DividerData } from '../components/TimelineAnchor/useAnchorLines'
+
 export const TimelineState = {
 	scroll: 0,
 	width: 0,
@@ -7,4 +9,5 @@ export const TimelineState = {
 	scaleLevel: 0 as ScaleLevel,
 	canOpenContextMenu: true,
 	anchorTimestamps: [] as number[],
+	anchorTimestampExtended: [] as DividerData[],
 }

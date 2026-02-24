@@ -1,9 +1,10 @@
 import Box from '@mui/material/Box'
 import { styled } from '@mui/material/styles'
-import { forwardRef, memo, useCallback, useEffect, useRef } from 'react'
+import { memo, useCallback, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { EventParams } from '@/app/features/eventBus/types'
 import { CustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
@@ -11,10 +12,11 @@ import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 import { CONTROLLED_SCROLLER_SIZE } from '../../tracks/components/ControlledScroller'
 import { TimelineState } from '../../utils/TimelineState'
+import { ElementPool } from './ElementPool'
 import { ANCHOR_RESET_PERIOD } from './TimelineAnchorLine'
 
 // Styled container for followers - uses CSS calc for positions based on CSS variables
-const FollowersContainerStyled = styled('div')({
+const FollowersContainer = styled('div')({
 	'& .timeline-follower': {
 		position: 'absolute',
 		borderLeft: '1px solid gray',
@@ -27,16 +29,9 @@ const FollowersContainerStyled = styled('div')({
 	},
 })
 
-const FollowersContainer = forwardRef<HTMLDivElement>((_, ref) => <FollowersContainerStyled ref={ref} />)
-FollowersContainer.displayName = 'FollowersContainer'
+export type SlotData = EventParams['timeline/anchor/updateSlot']['data'] | null
 
-export type SlotData = {
-	timestamp: number
-	size: 'large' | 'medium' | 'small' | 'smallest'
-	formatString: string
-	followerCount: number
-	followerSpacing: number
-} | null
+const followerPool = new ElementPool()
 
 type Props = {
 	slotId: number
@@ -82,8 +77,7 @@ function TimelineAnchorSlotComponent({ slotId, theme, containerWidth }: Props) {
 			const { width: dividerWidth, height: dividerHeight } = getDividerSize(labelSize)
 			const fontWeight = labelSize === 'large' || labelSize === 'medium' ? '600' : '400'
 
-			// Batch all CSS variable updates to minimize reflows
-			el.style.cssText = `
+			const newStyleString = `
 				--slot-visibility: visible;
 				--slot-position: ${Math.round(dividerPosition)}px;
 				--slot-font-weight: ${fontWeight};
@@ -93,15 +87,17 @@ function TimelineAnchorSlotComponent({ slotId, theme, containerWidth }: Props) {
 				--follower-spacing: ${realTimeToScaledTime(followerSpacing)}px;
 			`
 
-			if (previousCssRef.current === el.style.cssText) {
+			if (previousCssRef.current === newStyleString) {
 				return
 			}
-			previousCssRef.current = el.style.cssText
+			previousCssRef.current = newStyleString
+
+			el.style.cssText = newStyleString
 
 			// Update label text (only textContent, no style changes)
 			if (labelRef.current) {
 				const label = formatString ? timeToLabel(timestamp, formatString) : ' '
-				labelRef.current.textContent = label
+				labelRef.current.firstChild!.nodeValue = label
 			}
 
 			// Update followers
@@ -111,7 +107,7 @@ function TimelineAnchorSlotComponent({ slotId, theme, containerWidth }: Props) {
 
 				// Add missing followers
 				for (let i = existingFollowers; i < followerCount; i++) {
-					const follower = document.createElement('div')
+					const follower = followerPool.rent()
 					follower.className = 'timeline-follower'
 					follower.style.setProperty('--follower-index', String(i + 1))
 					followersEl.appendChild(follower)
@@ -119,13 +115,14 @@ function TimelineAnchorSlotComponent({ slotId, theme, containerWidth }: Props) {
 
 				// Remove extra followers
 				while (followersEl.children.length > followerCount && followersEl.lastChild) {
-					followersEl.removeChild(followersEl.lastChild)
+					const follower = followersEl.lastChild as HTMLDivElement
+					followerPool.release(follower)
 				}
 
 				// Only update follower indices if count changed (positions use CSS calc)
 				if (existingFollowers !== followerCount) {
 					for (let i = 0; i < followerCount; i++) {
-						const follower = followersEl.children[i] as HTMLElement
+						const follower = followersEl.children[i] as HTMLDivElement
 						follower.style.setProperty('--follower-index', String(i + 1))
 					}
 				}
@@ -194,7 +191,9 @@ function TimelineAnchorSlotComponent({ slotId, theme, containerWidth }: Props) {
 					borderRadius: '4px',
 					color: theme.custom.palette.timelineAnchor.text,
 				}}
-			/>
+			>
+				{/* Empty text node for direct updates */}{' '}
+			</div>
 			<div
 				style={{
 					position: 'absolute',

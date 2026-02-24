@@ -13,7 +13,7 @@ import { TimelineAnchorPadding } from './TimelineAnchor'
 import { SlotData } from './TimelineAnchorSlot'
 
 type LabelSize = 'large' | 'medium' | 'small' | 'smallest'
-type DividerData = {
+export type DividerData = {
 	timestamp: number
 	size: LabelSize
 	unit: WorldCalendarPresentationUnit
@@ -43,7 +43,7 @@ export function useAnchorLines({ containerWidth }: Props) {
 	// Slot management refs
 	const slotAssignmentsRef = useRef(new Map<number, SlotData | null>())
 	const timestampToSlotRef = useRef(new Map<number, number>())
-	const freeSlotsRef = useRef(new Set<number>(anchorSlotIds))
+	const freeSlotsRef = useRef<number[]>([...anchorSlotIds])
 
 	const emitSlotUpdate = useEventBusDispatch['timeline/anchor/updateSlot']()
 
@@ -56,7 +56,7 @@ export function useAnchorLines({ containerWidth }: Props) {
 			for (const [timestamp, slotId] of timestampToSlotRef.current) {
 				if (!newTimestamps.has(timestamp)) {
 					// Free this slot
-					freeSlotsRef.current.add(slotId)
+					freeSlotsRef.current.unshift(slotId)
 					timestampToSlotRef.current.delete(timestamp)
 					slotAssignmentsRef.current.set(slotId, null)
 					emitSlotUpdate({ slotId, data: null })
@@ -91,12 +91,11 @@ export function useAnchorLines({ containerWidth }: Props) {
 					emitSlotUpdate({ slotId: existingSlot, data: slotData })
 				} else {
 					// Need a new slot
-					const freeSlot = freeSlotsRef.current.values().next().value
+					const freeSlot = freeSlotsRef.current.shift()
 					if (freeSlot === undefined) {
 						console.warn('No free slots available!')
 						continue
 					}
-					freeSlotsRef.current.delete(freeSlot)
 					timestampToSlotRef.current.set(div.timestamp, freeSlot)
 					slotAssignmentsRef.current.set(freeSlot, slotData)
 					emitSlotUpdate({ slotId: freeSlot, data: slotData })
@@ -170,14 +169,27 @@ export function useAnchorLines({ containerWidth }: Props) {
 			syncSlots(flatDivs)
 
 			const divsWithFollowers: number[] = []
+			const divsWithFollowersExtended: (typeof TimelineState)['anchorTimestampExtended'] = []
 			flatDivs.forEach((div) => {
 				divsWithFollowers.push(div.timestamp)
+				divsWithFollowersExtended.push(div)
 				for (let i = 0; i < div.followerCount; i++) {
+					const timestamp = div.timestamp + (i + 1) * div.followerDuration
 					divsWithFollowers.push(div.timestamp + (i + 1) * div.followerDuration)
+					divsWithFollowersExtended.push({
+						timestamp,
+						size: 'smallest',
+						unit: div.unit,
+						followerCount: 0,
+						followerSpacing: 0,
+						followerDuration: 0,
+						formatString: '',
+					})
 				}
 			})
 
 			TimelineState.anchorTimestamps = divsWithFollowers
+			TimelineState.anchorTimestampExtended = divsWithFollowersExtended
 		},
 		[flattenDividers, presentation, syncSlots],
 	)

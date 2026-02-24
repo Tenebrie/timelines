@@ -182,6 +182,20 @@ export class EsotericDate {
 		return this.floorInternal(matchedUnit)
 	}
 
+	/**
+	 * Return a new EsotericDate rounded to the nearest instance of the
+	 * given unit (rounds to the closer of floor and ceil).
+	 */
+	round(unit: WorldCalendarUnit): EsotericDate {
+		const parsed = this.parse()
+		const matchedUnit = this.resolveMatchedUnit(unit, parsed)
+		const floored = this.floorInternal(matchedUnit)
+		const ceiled = floored.stepFloored(unit, matchedUnit, 1)
+		const distToFloor = this.timestamp - floored.timestamp
+		const distToCeil = ceiled.timestamp - this.timestamp
+		return distToCeil < distToFloor ? ceiled : floored
+	}
+
 	// -------------------------------------------------------------------------
 	// Internal floor (accepts pre-resolved unit, avoids re-parsing)
 	// -------------------------------------------------------------------------

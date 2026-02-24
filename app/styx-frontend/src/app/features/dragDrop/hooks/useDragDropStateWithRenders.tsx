@@ -17,17 +17,17 @@ export const useDragDropStateWithRenders = () => {
 		setState: (state: DragDropStateType<AllowedDraggableType>) => {
 			setTimeout(() => {
 				DragDropState.current = state
-				notifyBus()
+				notifyBus(state)
 			}, 1)
 		},
 		setStateImmediately: (state: DragDropStateType<AllowedDraggableType>) => {
 			DragDropState.current = state
-			notifyBus()
+			notifyBus(state)
 		},
 		clearState: () => {
 			setTimeout(() => {
 				DragDropState.current = null
-				notifyBus()
+				notifyBus(state)
 			}, 1)
 		},
 	}

@@ -19,6 +19,7 @@ function ControlledScrollerComponent({ children, resetPeriod }: Props) {
 	const ref = useRef<HTMLDivElement>(null)
 
 	const mod = useCallback((n: number, m: number) => ((n % m) + m) % m, [])
+	const scrollValueRef = useRef(0)
 
 	useEventBusSubscribe['timeline/onScroll']({
 		callback: (newScroll) => {
@@ -26,21 +27,23 @@ function ControlledScrollerComponent({ children, resetPeriod }: Props) {
 				return
 			}
 
-			ref.current.scrollTo({
-				left: Math.round(mod(-newScroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod,
-			})
+			scrollValueRef.current =
+				Math.round(mod(-newScroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod
+			ref.current.style.transform = `translateX(${-scrollValueRef.current}px)`
 		},
 	})
 
 	useEffect(() => {
-		ref.current?.scrollTo({
-			left: Math.round(mod(-TimelineState.scroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod,
-		})
+		if (!ref.current) {
+			return
+		}
+		scrollValueRef.current =
+			Math.round(mod(-TimelineState.scroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod
+		ref.current.style.transform = `translateX(${-scrollValueRef.current}px)`
 	}, [mod, ref, resetPeriod])
 
 	return (
 		<Box
-			ref={ref}
 			sx={{
 				position: 'absolute',
 				bottom: 0,
@@ -51,7 +54,16 @@ function ControlledScrollerComponent({ children, resetPeriod }: Props) {
 				pointerEvents: 'none',
 			}}
 		>
-			<Box sx={{ width: `${CONTROLLED_SCROLLER_SIZE * 2}px`, height: '100%' }}>{children}</Box>
+			<Box
+				ref={ref}
+				sx={{
+					width: `${CONTROLLED_SCROLLER_SIZE * 2}px`,
+					height: '100%',
+					willChange: 'transform',
+				}}
+			>
+				{children}
+			</Box>
 		</Box>
 	)
 }

@@ -15,6 +15,7 @@ import { useTimelineHorizontalScroll } from '../../hooks/useTimelineHorizontalSc
 import { TimelineAnchorContainer } from './TimelineAnchorContainer'
 import { TimelineAnchorLabel } from './TimelineAnchorLabel'
 import { TimelineAnchorLineList } from './TimelineAnchorLineList'
+import { TimelineAnchorTargetReticle } from './TimelineAnchorTargetReticle'
 
 export const TimelineAnchorPadding = 250 // pixels
 
@@ -114,6 +115,7 @@ function TimelineAnchorComponent({ containerWidth, showCurrentTime }: Props) {
 				<Box>
 					{showCurrentTime && <TimelineAnchorLabel />}
 					<TimelineAnchorContainer>
+						<TimelineAnchorTargetReticle />
 						<TimelineAnchorLineList key={linesKey} containerWidth={containerWidth} />
 					</TimelineAnchorContainer>
 				</Box>

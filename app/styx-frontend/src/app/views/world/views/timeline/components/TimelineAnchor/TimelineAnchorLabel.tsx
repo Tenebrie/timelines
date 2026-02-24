@@ -40,10 +40,10 @@ function TimelineAnchorLabelComponent() {
 				if (!smallestBackingUnit) {
 					return
 				}
-				const flooredTime = new EsotericDate(calendar, snappedTime).floor(smallestBackingUnit).getTimestamp()
+				const flooredTime = new EsotericDate(calendar, snappedTime).round(smallestBackingUnit).getTimestamp()
 				const desiredLabel = timeToLabel(flooredTime)
-				if (labelRef.current) {
-					labelRef.current.textContent = desiredLabel
+				if (labelRef.current && labelRef.current.firstChild) {
+					labelRef.current.firstChild.nodeValue = desiredLabel
 				}
 
 				if (isDragging) {
@@ -56,7 +56,7 @@ function TimelineAnchorLabelComponent() {
 					const clampedLeft = Math.max(minLeft, Math.min(maxLeft, rawLeft))
 					labelRef.current?.style.setProperty('left', `${clampedLeft}px`)
 				}
-			}, 5),
+			}, 50),
 		[calendar, presentation.smallestUnit?.unitId, realTimeToScaledTime, timeToLabel],
 	)
 

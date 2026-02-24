@@ -6,6 +6,7 @@ import { ScaleLevel } from '@/app/schema/ScaleLevel'
 import { router } from '@/router'
 
 import { useTimelineClick } from './useTimelineClick'
+import { useTimelineDragAutoScroll } from './useTimelineDragAutoScroll'
 import { useTimelineExternalScroll } from './useTimelineExternalScroll'
 import { useTimelineScroll } from './useTimelineScroll'
 import { useTimelineWheel } from './useTimelineWheel'
@@ -43,6 +44,10 @@ export const useTimelineNavigation = ({
 		scaleLevel: initialScaleLevel,
 		minimumScroll,
 		maximumScroll,
+	})
+
+	useTimelineDragAutoScroll({
+		containerRef,
 	})
 
 	// Zoom management
