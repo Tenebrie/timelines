@@ -20,6 +20,8 @@ export default defineConfig(
 			'app/styx-frontend/build',
 			'app/orpheus-mcp/dist',
 			'app/ts-shared/dist',
+			'app/thetis-landing/dist',
+			'.astro',
 			'test/e2e/dist',
 			'*.gen.ts',
 			'node_modules',
@@ -112,6 +114,17 @@ export default defineConfig(
 			},
 		},
 	},
+	{
+		files: ['app/thetis-landing/**/*.astro'],
+		languageOptions: {
+			parser: astroEslintParser,
+			parserOptions: {
+				parser: '@typescript-eslint/parser',
+				extraFileExtensions: ['.astro'],
+			},
+		},
+	},
+	...eslintPluginAstro.configs['flat/recommended'],
 	eslintConfigPrettier,
 	eslintPluginPrettierRecommended,
 )
