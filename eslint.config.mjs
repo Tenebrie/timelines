@@ -1,5 +1,7 @@
+import astroEslintParser from 'astro-eslint-parser'
 import { defineConfig } from 'eslint/config'
 import eslintConfigPrettier from 'eslint-config-prettier'
+import eslintPluginAstro from 'eslint-plugin-astro'
 import muiPathImports from 'eslint-plugin-mui-path-imports'
 import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
@@ -21,13 +23,15 @@ export default defineConfig(
 			'app/orpheus-mcp/dist',
 			'app/ts-shared/dist',
 			'app/thetis-landing/dist',
-			'.astro',
+			'app/thetis-landing/.astro',
 			'test/e2e/dist',
 			'*.gen.ts',
 			'node_modules',
 			'.husky',
 			'app/calliope-websockets/src/api/rhea-api.ts',
 			'app/orpheus-mcp/src/api/rhea-api.ts',
+			'app/thetis-landing/src/components/common/BasicScripts.astro',
+			'app/thetis-landing/src/components/common/ApplyColorMode.astro',
 		],
 	},
 	{
@@ -114,8 +118,13 @@ export default defineConfig(
 			},
 		},
 	},
+	...eslintPluginAstro.configs['flat/recommended'],
 	{
 		files: ['app/thetis-landing/**/*.astro'],
+		ignores: [
+			'app/thetis-landing/src/components/common/BasicScripts.astro',
+			'app/thetis-landing/src/components/common/Image.astro',
+		],
 		languageOptions: {
 			parser: astroEslintParser,
 			parserOptions: {
@@ -124,7 +133,6 @@ export default defineConfig(
 			},
 		},
 	},
-	...eslintPluginAstro.configs['flat/recommended'],
 	eslintConfigPrettier,
 	eslintPluginPrettierRecommended,
 )

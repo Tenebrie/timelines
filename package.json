@@ -51,6 +51,7 @@
 		"cloc": "^2.8.0",
 		"eslint": "^9.39.2",
 		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-astro": "^1.6.0",
 		"eslint-plugin-node": "^11.1.0",
 		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-simple-import-sort": "^12.1.1",
@@ -73,10 +74,12 @@
 	},
 	"homepage": "https://github.com/tenebrie/timelines#readme",
 	"devDependencies": {
+		"astro-eslint-parser": "^1.2.2",
 		"eslint-plugin-mui-path-imports": "^0.0.15",
 		"eslint-plugin-no-relative-import-paths": "^1.6.1",
 		"eslint-plugin-react": "^7.37.5",
 		"eslint-plugin-react-hooks": "^7.0.1",
+		"prettier-plugin-astro": "^0.14.1",
 		"husky": "^9.1.7",
 		"typescript-eslint": "^8.51.0"
 	}

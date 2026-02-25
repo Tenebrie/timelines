@@ -10,7 +10,7 @@
 		"build": "tsc --noEmit && vite build",
 		"build:ci": "vite build",
 		"lint": "eslint",
-		"lint-fix": "eslint --fix",
+		"lint:fix": "eslint --fix",
 		"openapi": "npx @rtk-query/codegen-openapi ./openapi/openapi-config.cjs && yarn eslint src/api --fix",
 		"prune-build-modules": "yarn install --production --ignore-scripts --prefer-offline",
 		"start": "vite --host --clearScreen false",

@@ -8,7 +8,7 @@
 	"author": "",
 	"scripts": {
 		"lint": "eslint src/",
-		"lint-fix": "eslint src/ --fix"
+		"lint:fix": "eslint src/ --fix"
 	},
 	"lint-staged": {
 		"*.(ts)": "eslint --fix"
