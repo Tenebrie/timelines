@@ -5,9 +5,9 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
-import { TimelineState } from '../../utils/TimelineState'
-import { TimelineAnchorSlot } from './TimelineAnchorSlot'
-import { anchorSlotIds, useAnchorLines } from './useAnchorLines'
+import { TimelineState } from '../utils/TimelineState'
+import { anchorSlotIds, useAnchorLines } from './hooks/useAnchorLines'
+import { TimelineAnchorLinesItem } from './TimelineAnchorLinesItem'
 
 export const TimelineAnchorPadding = 250 // pixels
 
@@ -15,9 +15,9 @@ type Props = {
 	containerWidth: number
 }
 
-export const TimelineAnchorLineList = memo(TimelineAnchorLineListComponent)
+export const TimelineAnchorLines = memo(TimelineAnchorLinesComponent)
 
-function TimelineAnchorLineListComponent({ containerWidth }: Props) {
+function TimelineAnchorLinesComponent({ containerWidth }: Props) {
 	const theme = useCustomTheme()
 
 	const { regenerateDividers, updateDividers } = useAnchorLines({
@@ -43,7 +43,7 @@ function TimelineAnchorLineListComponent({ containerWidth }: Props) {
 	return (
 		<>
 			{anchorSlotIds.map((slotId) => (
-				<TimelineAnchorSlot key={slotId} slotId={slotId} theme={theme} containerWidth={containerWidth} />
+				<TimelineAnchorLinesItem key={slotId} slotId={slotId} theme={theme} containerWidth={containerWidth} />
 			))}
 		</>
 	)

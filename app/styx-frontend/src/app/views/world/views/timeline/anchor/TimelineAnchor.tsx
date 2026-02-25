@@ -10,12 +10,12 @@ import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { LineSpacing } from '@/app/utils/constants'
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
-import { useTimelineAnchorDrag } from '../../hooks/useTimelineAnchorDrag'
-import { useTimelineHorizontalScroll } from '../../hooks/useTimelineHorizontalScroll'
-import { TimelineAnchorContainer } from './TimelineAnchorContainer'
-import { TimelineAnchorLabel } from './TimelineAnchorLabel'
-import { TimelineAnchorLineList } from './TimelineAnchorLineList'
-import { TimelineAnchorTargetReticle } from './TimelineAnchorTargetReticle'
+import { useTimelineAnchorDrag } from '../hooks/useTimelineAnchorDrag'
+import { useTimelineHorizontalScroll } from '../hooks/useTimelineHorizontalScroll'
+import { TimelineAnchorCurrentTime } from './components/TimelineAnchorCurrentTime'
+import { TimelineAnchorTargetReticle } from './components/TimelineAnchorTargetReticle'
+import { TimelineAnchorLines } from './TimelineAnchorLines'
+import { TimelineAnchorScroller } from './TimelineAnchorScroller'
 
 export const TimelineAnchorPadding = 250 // pixels
 
@@ -113,11 +113,11 @@ function TimelineAnchorComponent({ containerWidth, showCurrentTime }: Props) {
 			<Divider sx={{ width: '100%', position: 'absolute', bottom: '32px' }} />
 			<Fade in={visible} appear timeout={300}>
 				<Box>
-					{showCurrentTime && <TimelineAnchorLabel />}
-					<TimelineAnchorContainer>
+					{showCurrentTime && <TimelineAnchorCurrentTime />}
+					<TimelineAnchorScroller>
 						<TimelineAnchorTargetReticle />
-						<TimelineAnchorLineList key={linesKey} containerWidth={containerWidth} />
-					</TimelineAnchorContainer>
+						<TimelineAnchorLines key={linesKey} containerWidth={containerWidth} />
+					</TimelineAnchorScroller>
 				</Box>
 			</Fade>
 		</Box>

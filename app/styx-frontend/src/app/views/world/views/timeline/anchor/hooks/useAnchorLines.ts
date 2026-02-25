@@ -8,9 +8,9 @@ import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorld
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
+import { TimelineAnchorPadding } from '../../anchor/TimelineAnchor'
+import { SlotData } from '../../anchor/TimelineAnchorLinesItem'
 import { TimelineState } from '../../utils/TimelineState'
-import { TimelineAnchorPadding } from './TimelineAnchor'
-import { SlotData } from './TimelineAnchorSlot'
 
 type LabelSize = 'large' | 'medium' | 'small' | 'smallest'
 export type DividerData = {

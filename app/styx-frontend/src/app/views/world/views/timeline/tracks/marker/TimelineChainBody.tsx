@@ -2,50 +2,40 @@ import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import { memo } from 'react'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
 
 type Props = {
 	entity: TimelineEntity<MarkerType>
-	realTimeToScaledTime: ReturnType<typeof useTimelineWorldTime>['realTimeToScaledTime']
 }
 
-export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
+export const TimelineChainBody = memo(TimelineChainBodyComponent)
+
+function TimelineChainBodyComponent({ entity }: Props) {
 	const theme = useCustomTheme()
 	const color = useEntityColor({ id: entity.eventId, color: entity.color })
-
-	const rawDist = (() => {
-		if (entity.chainEntity) {
-			return realTimeToScaledTime(entity.chainEntity.markerPosition - entity.markerPosition)
-		}
-		return 0
-	})()
-
-	const dist = (() => {
-		if (entity.markerType === 'revokedAt') {
-			return 0
-		}
-		return rawDist - TimelineEventHeightPx + 13
-	})()
 
 	const chainVisible = entity.markerType === 'issuedAt' || entity.markerType === 'deltaState'
 	const chainMarker = !!entity.chainEntity
 	const rightBorder = !chainMarker
+	const height = TimelineEventHeightPx * entity.markerHeight + 4
 
 	return (
 		<Box
 			data-testid="TimelineMarkerChain"
 			sx={{
 				position: 'absolute',
-				bottom: 0,
-				left: 0,
-				width: Math.max(0, dist) + (dist > 16 ? 16 : 0),
+				left: TimelineEventHeightPx / 2 + 24,
+				bottom: height,
+				width: 'var(--anchor-length)',
 				height: 30,
 				overflow: 'hidden',
+				transform: `translateX(var(--align-offset))`,
+				pointerEvents: 'none',
 			}}
 		>
 			<Box
@@ -56,7 +46,7 @@ export function TimelineChainHover({ entity, realTimeToScaledTime }: Props) {
 					paddingRight: '-8px',
 					background: theme.custom.palette.background.timelineMarkerTail,
 					display: 'flex',
-					opacity: dist > 1 && chainVisible ? 1 : 0,
+					opacity: chainVisible ? 1 : 0,
 					paddingLeft: '20px',
 					borderRadius: `8px ${rightBorder ? 8 : 0}px ${rightBorder ? 8 : 2}px 0px`,
 					borderTop: `2px solid ${color}`,

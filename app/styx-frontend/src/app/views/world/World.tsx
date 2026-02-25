@@ -19,7 +19,7 @@ import { CreateEventModal } from './modals/CreateEventModal'
 import { DeleteEventDeltaModal } from './modals/DeleteEventDeltaModal'
 import { DeleteEventModal } from './modals/DeleteEventModal'
 import { EditEventModal } from './modals/editEventModal/EditEventModal'
-import { MarkerTooltipSummoner } from './views/timeline/MarkerTooltip'
+import { MarkerTooltipSummoner } from './views/timeline/utils/MarkerTooltip'
 import { getTimelineState, getWorldState } from './WorldSliceSelectors'
 
 export const World = () => {

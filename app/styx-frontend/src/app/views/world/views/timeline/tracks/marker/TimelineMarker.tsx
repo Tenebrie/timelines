@@ -1,15 +1,26 @@
 import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
-import Box from '@mui/material/Box'
-import { memo } from 'react'
+import { Icon } from '@iconify/react'
+import Close from '@mui/icons-material/Close'
+import { CSSProperties, memo, useCallback } from 'react'
+import { useSelector } from 'react-redux'
 
+import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
+import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
+import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
+import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineState'
+import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
-import { useHoveredTimelineMarker } from '../components/HoveredTimelineEvents'
-import { TimelineChainPositioner } from './TimelineChainPositioner'
-import { TimelineEventPositioner } from './TimelineEventPositioner'
+import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
+import { CONTROLLED_SCROLLER_SIZE, EVENT_SCROLL_RESET_PERIOD } from '../components/ControlledScroller'
+import { Group } from '../styles'
+import { Marker, MarkerIcon } from './styles'
+import { TimelineMarkerBody } from './TimelineMarkerBody'
 
 type Props = {
-	marker: TimelineEntity<MarkerType>
+	entity: TimelineEntity<MarkerType>
 	visible: boolean
 	selected: boolean
 	trackHeight: number
@@ -18,36 +29,96 @@ type Props = {
 
 export const TimelineMarker = memo(TimelineMarkerComponent)
 
-export function TimelineMarkerComponent({
-	marker,
-	visible,
-	selected,
-	trackHeight,
-	realTimeToScaledTime,
-}: Props) {
-	const { hovered } = useHoveredTimelineMarker(marker)
-	const zIndex = hovered ? 3 : 1
+function TimelineMarkerComponent({ entity, visible, selected, trackHeight, realTimeToScaledTime }: Props) {
+	const { getIconPath } = useEventIcons()
+	const theme = useCustomTheme()
+	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
+	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
+
+	const cssVariables = {
+		'--border-color': 'gray',
+		'--icon-path': `url(${getIconPath(entity.icon)})`,
+		'--marker-size': `${TimelineEventHeightPx - 6}px`,
+		'--border-radius': entity.markerType === 'deltaState' ? '50%' : '4px',
+	} as CSSProperties
+
+	const { ref, isDragging, ghostElement } = useDragDrop({
+		type: 'timelineEvent',
+		params: { event: entity },
+		ghostAlign: {
+			top: 'center',
+			left: 'center',
+		},
+		adjustPosition: (pos, startingPos) => {
+			const dx = pos.x - startingPos.x
+			const absoluteTimestamp = entity.markerPosition + scaledTimeToRealTime(dx)
+			const snappedTimestamp = binarySearchForClosest(TimelineState.anchorTimestamps, absoluteTimestamp)
+			return {
+				x: startingPos.x + realTimeToScaledTime(snappedTimestamp - entity.markerPosition),
+				y: pos.y,
+			}
+		},
+		ghostFactory: () => (
+			<>
+				<Marker $theme={theme} style={cssVariables}>
+					<Icon
+						icon={entity.icon === 'default' ? 'mdi:leaf' : entity.icon}
+						color="gray"
+						style={{
+							position: 'absolute',
+							top: '0px',
+							left: '0px',
+							width: '100%',
+							height: '100%',
+							pointerEvents: 'none',
+						}}
+					/>
+					{entity.markerType === 'revokedAt' && (
+						<MarkerIcon className="icon">
+							<Close sx={{ width: 'calc(100% - 2px)', height: 'calc(100% - 2px)' }} />
+						</MarkerIcon>
+					)}
+				</Marker>
+			</>
+		),
+	})
+
+	const calculatePosition = useCallback(
+		(scroll: number) => {
+			const pos = realTimeToScaledTime(Math.floor(entity.markerPosition))
+			return (
+				pos +
+				Math.floor(scroll / EVENT_SCROLL_RESET_PERIOD) * EVENT_SCROLL_RESET_PERIOD +
+				CONTROLLED_SCROLLER_SIZE -
+				TimelineEventHeightPx / 2 +
+				1
+			)
+		},
+		[entity.markerPosition, realTimeToScaledTime],
+	)
+	const position = calculatePosition(TimelineState.scroll)
+
+	useEventBusSubscribe['timeline/onScroll']({
+		callback: (newScroll) => {
+			const fixedPos = calculatePosition(newScroll)
+			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${fixedPos}px`) {
+				ref.current.style.setProperty('--position', `${fixedPos}px`)
+			}
+		},
+	})
+
+	const height = TimelineEventHeightPx * entity.markerHeight + 1
 
 	return (
-		<Box
-			sx={{
-				zIndex,
-				transition: 'z-index 0.3s',
-				transitionDelay: hovered ? '0.4s' : '0.15s',
-			}}
+		<Group
+			data-testid="TimelineMarker"
+			ref={ref}
+			style={{ '--position': `${position}px` } as CSSProperties}
+			$height={height}
+			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''} timeline-marker-scroll`}
 		>
-			<TimelineChainPositioner
-				entity={marker}
-				visible={visible}
-				realTimeToScaledTime={realTimeToScaledTime}
-			/>
-			<TimelineEventPositioner
-				entity={marker}
-				visible={visible}
-				selected={selected}
-				trackHeight={trackHeight}
-				realTimeToScaledTime={realTimeToScaledTime}
-			/>
-		</Box>
+			<TimelineMarkerBody entity={entity} trackHeight={trackHeight} selected={selected} />
+			{ghostElement}
+		</Group>
 	)
 }

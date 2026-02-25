@@ -1,6 +1,6 @@
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
 
-import { DividerData } from '../components/TimelineAnchor/useAnchorLines'
+import { DividerData } from '../anchor/hooks/useAnchorLines'
 
 export const TimelineState = {
 	scroll: 0,

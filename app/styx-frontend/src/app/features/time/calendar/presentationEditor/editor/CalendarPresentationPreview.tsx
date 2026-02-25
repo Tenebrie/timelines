@@ -15,7 +15,7 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
 import { generateStore } from '@/app/store'
 import { ingestCalendar } from '@/app/utils/ingestEntity'
-import { TimelineAnchor } from '@/app/views/world/views/timeline/components/TimelineAnchor/TimelineAnchor'
+import { TimelineAnchor } from '@/app/views/world/views/timeline/anchor/TimelineAnchor'
 import { timelineInitialState } from '@/app/views/world/views/timeline/TimelineSlice'
 import { worldInitialState } from '@/app/views/world/WorldSlice'
 

@@ -4,7 +4,7 @@ import { memo, RefObject, useEffect, useMemo } from 'react'
 import { IsDragDropStateOfType } from '@/app/features/dragDrop/DragDropState'
 import { useDragDropStateWithRenders } from '@/app/features/dragDrop/hooks/useDragDropStateWithRenders'
 
-import { TimelineTrack } from '../../hooks/useEventTracks'
+import { TimelineTrack } from '../hooks/useEventTracks'
 import { useEventDragDropReceiver } from './hooks/useEventDragDropReceiver'
 import { useTrackDragDropReceiver } from './hooks/useTrackDragDropReceiver'
 
@@ -14,7 +14,7 @@ type Props = {
 	onDragChanged: (isDragging: boolean) => void
 }
 
-const TimelineTrackItemDragDropComponent = ({ track, receiverRef, onDragChanged }: Props) => {
+const TimelineTracksItemDragDropComponent = ({ track, receiverRef, onDragChanged }: Props) => {
 	const { isDragging, state } = useDragDropStateWithRenders()
 
 	const isHighlighted = useMemo(
@@ -51,4 +51,4 @@ const TimelineTrackItemDragDropComponent = ({ track, receiverRef, onDragChanged 
 	)
 }
 
-export const TimelineTrackItemDragDrop = memo(TimelineTrackItemDragDropComponent)
+export const TimelineTracksItemDragDrop = memo(TimelineTracksItemDragDropComponent)

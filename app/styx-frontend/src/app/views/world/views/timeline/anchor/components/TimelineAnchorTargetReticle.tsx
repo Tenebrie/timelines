@@ -7,10 +7,10 @@ import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorld
 import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
-import { useAnchorTimeDragDrop } from '../../hooks/useAnchorTimeDragDrop'
 import { CONTROLLED_SCROLLER_SIZE } from '../../tracks/components/ControlledScroller'
 import { TimelineState } from '../../utils/TimelineState'
-import { ANCHOR_RESET_PERIOD } from './TimelineAnchorLine'
+import { useAnchorTimeDragDrop } from '../hooks/useAnchorTimeDragDrop'
+import { ANCHOR_RESET_PERIOD } from '../TimelineAnchorLinesItem'
 
 export const TimelineAnchorTargetReticle = memo(TimelineAnchorTargetReticleComponent)
 

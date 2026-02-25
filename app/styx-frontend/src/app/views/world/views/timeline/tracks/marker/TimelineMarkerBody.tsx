@@ -18,7 +18,7 @@ import { worldSlice } from '@/app/views/world/WorldSlice'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { TimelineEventHeightPx } from '../../hooks/useEventTracks'
-import { MarkerTooltipSummonable } from '../../MarkerTooltip'
+import { MarkerTooltipSummonable } from '../../utils/MarkerTooltip'
 import { HoveredTimelineEvents } from '../components/HoveredTimelineEvents'
 import { Marker, MarkerIcon } from './styles'
 
@@ -28,9 +28,9 @@ type Props = {
 	trackHeight: number
 }
 
-export const TimelineEvent = memo(TimelineEventComponent)
+export const TimelineMarkerBody = memo(TimelineMarkerBodyComponent)
 
-export function TimelineEventComponent({ entity, selected }: Props) {
+export function TimelineMarkerBodyComponent({ entity, selected }: Props) {
 	const dispatch = useDispatch()
 	const { openTimelineContextMenu, addTimelineMarkerToSelection, removeTimelineMarkerFromSelection } =
 		worldSlice.actions
@@ -169,7 +169,6 @@ export function TimelineEventComponent({ entity, selected }: Props) {
 			data-event-key={entity.key}
 			data-event-id={entity.eventId}
 		>
-			{/* <MarkerIcon className="icon image"></MarkerIcon> */}
 			<Icon
 				icon={entity.icon === 'default' ? 'mdi:leaf' : entity.icon}
 				color={color}

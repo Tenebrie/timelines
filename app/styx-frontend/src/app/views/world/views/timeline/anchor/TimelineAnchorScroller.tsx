@@ -3,8 +3,8 @@ import { ReactNode, useRef } from 'react'
 
 import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventBus'
 
-import { ControlledScroller } from '../../tracks/components/ControlledScroller'
-import { ANCHOR_RESET_PERIOD } from './TimelineAnchorLine'
+import { ControlledScroller } from '../tracks/components/ControlledScroller'
+import { ANCHOR_RESET_PERIOD } from './TimelineAnchorLinesItem'
 
 type Props = {
 	children?: ReactNode | ReactNode[]
@@ -12,7 +12,7 @@ type Props = {
 
 const RESET_PERIOD = ANCHOR_RESET_PERIOD
 
-export function TimelineAnchorContainer({ children }: Props) {
+export function TimelineAnchorScroller({ children }: Props) {
 	const ref = useRef<HTMLDivElement>(null)
 	const lastSeenScroll = useRef(0)
 	const forceUpdate = useEventBusDispatch['timeline/pips/forceUpdate']()

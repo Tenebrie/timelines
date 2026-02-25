@@ -7,7 +7,7 @@ import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
-import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
+import { TimelineAnchor } from './anchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
 import { TimelineControls } from './components/TimelineControls'
 import { TimelineEventListener } from './components/TimelineEventListener'

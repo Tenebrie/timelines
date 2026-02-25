@@ -14,12 +14,12 @@ import { useWaitUntil } from '@/app/hooks/useWaitUntil'
 import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
-import { useAnchorTimeDragDrop } from '../../hooks/useAnchorTimeDragDrop'
 import { TimelineState } from '../../utils/TimelineState'
+import { useAnchorTimeDragDrop } from '../hooks/useAnchorTimeDragDrop'
 
-export const TimelineAnchorLabel = memo(TimelineAnchorLabelComponent)
+export const TimelineAnchorCurrentTime = memo(TimelineAnchorCurrentTimeComponent)
 
-function TimelineAnchorLabelComponent() {
+function TimelineAnchorCurrentTimeComponent() {
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const { timeToLabel, calendar, presentation } = useWorldTime()
 	const { scaledTimeToRealTime, realTimeToScaledTime } = useTimelineWorldTime({ scaleLevel })

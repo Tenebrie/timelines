@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useRef } from 'react'
 
-import { useAnchorTimeDragDrop } from './useAnchorTimeDragDrop'
+import { useAnchorTimeDragDrop } from '../anchor/hooks/useAnchorTimeDragDrop'
 
 type Props = {
 	containerRef: RefObject<HTMLDivElement | null>

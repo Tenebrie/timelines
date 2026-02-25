@@ -10,10 +10,11 @@ import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorld
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
-import { CONTROLLED_SCROLLER_SIZE } from '../../tracks/components/ControlledScroller'
-import { TimelineState } from '../../utils/TimelineState'
-import { ElementPool } from './ElementPool'
-import { ANCHOR_RESET_PERIOD } from './TimelineAnchorLine'
+import { CONTROLLED_SCROLLER_SIZE } from '../tracks/components/ControlledScroller'
+import { TimelineState } from '../utils/TimelineState'
+import { ElementPool } from './utils/ElementPool'
+
+export const ANCHOR_RESET_PERIOD = CONTROLLED_SCROLLER_SIZE / 10
 
 // Styled container for followers - uses CSS calc for positions based on CSS variables
 const FollowersContainer = styled('div')({
@@ -39,9 +40,9 @@ type Props = {
 	containerWidth: number
 }
 
-export const TimelineAnchorSlot = memo(TimelineAnchorSlotComponent)
+export const TimelineAnchorLinesItem = memo(TimelineAnchorLinesItemComponent)
 
-function TimelineAnchorSlotComponent({ slotId, theme, containerWidth }: Props) {
+function TimelineAnchorLinesItemComponent({ slotId, theme, containerWidth }: Props) {
 	const dataRef = useRef<SlotData>(null)
 
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
