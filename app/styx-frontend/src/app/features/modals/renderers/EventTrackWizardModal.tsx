@@ -78,7 +78,7 @@ export const EventTrackWizardModal = () => {
 	)
 
 	return (
-		<Modal visible={isOpen} onClose={close}>
+		<Modal visible={isOpen} onClose={close} closeOnBackdropClick>
 			<ModalHeader>Create new event track</ModalHeader>
 			<TextField
 				label="Name"

@@ -94,6 +94,13 @@ const baseTheme: Partial<Theme> = {
 				},
 			},
 		},
+		MuiMenu: {
+			styleOverrides: {
+				root: ({ ownerState }) => ({
+					pointerEvents: ownerState.open ? 'auto' : 'none',
+				}),
+			},
+		},
 	},
 }
 

@@ -142,6 +142,7 @@ export const MentionNode = Node.create({
 				const tagId = node.attrs.componentProps.tag as string | undefined
 				const state = store.getState()
 				const worldId = state.world.id
+				const fallbackName = node.attrs.name
 
 				const entityId = actorId ?? eventId ?? articleId ?? tagId
 				if (entityId) {
@@ -157,10 +158,18 @@ export const MentionNode = Node.create({
 					return (
 						<ReduxProvider store={store}>
 							<CustomThemeProvider colorMode={state.preferences.colorMode}>
-								{actorId ? <ActorMentionChip worldId={worldId} actorId={actorId} /> : null}
-								{eventId ? <EventMentionChip worldId={worldId} eventId={eventId} /> : null}
-								{articleId ? <ArticleMentionChip worldId={worldId} articleId={articleId} /> : null}
-								{tagId ? <TagMentionChip worldId={worldId} tagId={tagId} /> : null}
+								{actorId ? (
+									<ActorMentionChip worldId={worldId} actorId={actorId} fallbackName={fallbackName} />
+								) : null}
+								{eventId ? (
+									<EventMentionChip worldId={worldId} eventId={eventId} fallbackName={fallbackName} />
+								) : null}
+								{articleId ? (
+									<ArticleMentionChip worldId={worldId} articleId={articleId} fallbackName={fallbackName} />
+								) : null}
+								{tagId ? (
+									<TagMentionChip worldId={worldId} tagId={tagId} fallbackName={fallbackName} />
+								) : null}
 							</CustomThemeProvider>
 						</ReduxProvider>
 					)

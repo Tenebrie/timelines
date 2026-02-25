@@ -105,17 +105,21 @@ export const useTimelineNavigation = ({
 		}
 
 		container.addEventListener('click', clickHook.onTimelineClick)
+		container.addEventListener('mousedown', clickHook.onMouseDown)
 		container.addEventListener('mousedown', scrollHook.onMouseDown)
 		document.addEventListener('mousemove', onMouseMove)
 		document.addEventListener('mouseup', scrollHook.onMouseUp)
+		document.addEventListener('mouseup', clickHook.onMouseUp)
 		document.addEventListener('mouseleave', scrollHook.onMouseUp)
 		container.addEventListener('wheel', onWheel)
 
 		return () => {
 			container.removeEventListener('click', clickHook.onTimelineClick)
+			container.removeEventListener('mousedown', clickHook.onMouseDown)
 			container.removeEventListener('mousedown', scrollHook.onMouseDown)
 			document.removeEventListener('mousemove', onMouseMove)
 			document.removeEventListener('mouseup', scrollHook.onMouseUp)
+			document.removeEventListener('mouseup', clickHook.onMouseUp)
 			document.removeEventListener('mouseleave', scrollHook.onMouseUp)
 			container.removeEventListener('wheel', onWheel)
 		}

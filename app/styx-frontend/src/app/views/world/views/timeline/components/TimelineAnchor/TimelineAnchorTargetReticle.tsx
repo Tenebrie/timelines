@@ -2,6 +2,7 @@ import Box from '@mui/material/Box'
 import { memo, useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
@@ -14,6 +15,7 @@ import { ANCHOR_RESET_PERIOD } from './TimelineAnchorLine'
 export const TimelineAnchorTargetReticle = memo(TimelineAnchorTargetReticleComponent)
 
 function TimelineAnchorTargetReticleComponent() {
+	const theme = useCustomTheme()
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const { realTimeToScaledTime, scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
@@ -54,7 +56,7 @@ function TimelineAnchorTargetReticleComponent() {
 
 		el.style.height = '28px'
 		el.style.opacity = '1'
-		el.style.borderLeft = `${width}px solid red`
+		el.style.borderLeft = `${width}px solid ${theme.material.palette.secondary.main}`
 	}
 
 	const ref = useRef<HTMLDivElement>(null)
@@ -75,14 +77,6 @@ function TimelineAnchorTargetReticleComponent() {
 			ref.current?.style.setProperty('height', '0px')
 		},
 	})
-
-	// useEventBusSubscribe['timeline/onScroll']({
-	// 	callback: (scroll) => {
-	// 		// const containerWidth = containerRef.current?.offsetWidth ?? 0
-	// 		// const currentTimestamp = scaledTimeToRealTime(-scroll + containerWidth / 2)
-	// 		// updateLabel({ timestamp: currentTimestamp, isDragging: false })
-	// 	},
-	// })
 
 	return (
 		<Box

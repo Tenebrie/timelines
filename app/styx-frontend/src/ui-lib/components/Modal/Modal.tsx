@@ -12,7 +12,7 @@ type Props = {
 	closeOnBackdropClick?: boolean
 }
 
-const Modal = ({ visible, children, onClose, closeOnBackdropClick }: Props) => {
+const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Props) => {
 	const bodyRef = useRef<HTMLDivElement | null>(null)
 
 	const isModalVisible = visible

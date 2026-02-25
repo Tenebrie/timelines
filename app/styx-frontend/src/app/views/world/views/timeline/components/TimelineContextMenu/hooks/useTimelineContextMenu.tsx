@@ -21,7 +21,7 @@ export const useTimelineContextMenu = () => {
 			if (event.shiftKey || event.button !== 2) {
 				return
 			}
-			if (!TimelineState.canOpenContextMenu) {
+			if (!TimelineState.canOpenContextMenu || window.document.body.classList.contains('mouse-busy')) {
 				return
 			}
 			if (checkIfClickBlocked(event.target)) {

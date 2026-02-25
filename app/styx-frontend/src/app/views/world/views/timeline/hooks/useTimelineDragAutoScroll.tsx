@@ -1,7 +1,5 @@
 import { RefObject, useEffect, useRef } from 'react'
 
-import { useEventBusDispatch } from '@/app/features/eventBus'
-
 import { useAnchorTimeDragDrop } from './useAnchorTimeDragDrop'
 
 type Props = {
@@ -9,7 +7,8 @@ type Props = {
 }
 
 export function useTimelineDragAutoScroll({ containerRef }: Props) {
-	const requestScrollTo = useEventBusDispatch['timeline/requestScrollTo']()
+	// TODO: Fix dropping not working after scrolling
+	// const requestScrollTo = useEventBusDispatch['timeline/requestScrollTo']()
 
 	const scrollValueRef = useRef(0)
 	const currentIntervalRef = useRef(0)

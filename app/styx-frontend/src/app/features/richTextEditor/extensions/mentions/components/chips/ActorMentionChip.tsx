@@ -9,14 +9,15 @@ import { BaseMentionChip } from './BaseMentionChip'
 type Props = {
 	worldId: string
 	actorId: string
+	fallbackName?: string
 }
 
-export const ActorMentionChip = ({ actorId }: Props) => {
+export const ActorMentionChip = ({ actorId, fallbackName }: Props) => {
 	const navigateTo = useEventBusDispatch['world/requestNavigation']()
 	const { actors } = useSelector(getWorldState, (a, b) => a.actors === b.actors)
 
 	const actor = actors.find((actor) => actor.id === actorId)
-	const actorName = actor ? `${actor.name}` : 'Unknown Actor'
+	const actorName = actor ? `${actor.name}` : `Deleted Actor (${fallbackName ?? 'Unknown'})`
 	const actorColor = useEntityColor({ id: actorId, color: actor?.color })
 
 	const onClick = () => {

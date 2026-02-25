@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
+import { useDragDropBusSubscribe } from '@/app/features/dragDrop/hooks/useDragDropBus'
 import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
 
 import { TimelineState } from '../utils/TimelineState'
@@ -23,8 +24,20 @@ export const useTimelineClick = ({
 	const [lastClickPos, setLastClickPos] = useState<number | null>(null)
 	const [lastClickTime, setLastClickTime] = useState<number | null>(null)
 
+	// Did we receive mouse down?
+	const isClickingRef = useRef(false)
+
+	useDragDropBusSubscribe({
+		callback: () => {
+			isClickingRef.current = false
+		},
+	})
+
 	const onTimelineClick = useCallback(
 		(event: MouseEvent) => {
+			if (!isClickingRef.current) {
+				return
+			}
 			if (event.shiftKey || event.ctrlKey || event.metaKey) {
 				return
 			}
@@ -75,9 +88,25 @@ export const useTimelineClick = ({
 		[containerRef, lastClickPos, lastClickTime, onClick, onDoubleClick, scaledTimeToRealTime, scrollRef],
 	)
 
+	const onMouseDown = useCallback((event: MouseEvent) => {
+		if (event.button === 0) {
+			isClickingRef.current = true
+		} else {
+			isClickingRef.current = false
+		}
+	}, [])
+
+	const onMouseUp = useCallback(() => {
+		requestAnimationFrame(() => {
+			isClickingRef.current = false
+		})
+	}, [])
+
 	return {
 		selectedTime,
 		setSelectedTime,
 		onTimelineClick,
+		onMouseDown,
+		onMouseUp,
 	}
 }

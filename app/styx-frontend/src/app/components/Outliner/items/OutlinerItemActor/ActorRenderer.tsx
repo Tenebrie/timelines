@@ -1,4 +1,5 @@
 import { ActorDetails } from '@api/types/worldTypes'
+import DeleteIcon from '@mui/icons-material/Delete'
 import Edit from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
@@ -8,6 +9,7 @@ import { useDispatch } from 'react-redux'
 
 import { ActorAvatar } from '@/app/components/ActorAvatar/ActorAvatar'
 import { ShowHideChevron } from '@/app/components/ShowHideChevron'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { StyledListItemButton, StyledListItemText } from '@/app/views/world/views/timeline/shelf/styles'
@@ -20,6 +22,7 @@ type Props = {
 
 export const ActorRenderer = ({ actor, collapsed }: Props) => {
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
+	const { open: openDeleteActorModal } = useModal('deleteActorModal')
 
 	const { isReadOnly } = useIsReadOnly()
 	const dispatch = useDispatch()
@@ -39,6 +42,11 @@ export const ActorRenderer = ({ actor, collapsed }: Props) => {
 		</IconButton>,
 	]
 	if (!isReadOnly) {
+		actions.push(
+			<IconButton key={'delete'} onClick={() => openDeleteActorModal({ target: actor })}>
+				<DeleteIcon />
+			</IconButton>,
+		)
 		actions.push(
 			<IconButton
 				key={'edit'}

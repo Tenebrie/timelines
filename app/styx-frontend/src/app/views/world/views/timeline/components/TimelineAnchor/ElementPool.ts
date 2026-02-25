@@ -1,10 +1,4 @@
 export class ElementPool {
-	constructor() {
-		setInterval(() => {
-			console.log('Current pool size:', this.pool.length)
-		}, 1000)
-	}
-
 	private pool: HTMLDivElement[] = []
 
 	rent(): HTMLDivElement {
@@ -17,6 +11,8 @@ export class ElementPool {
 
 	release(element: HTMLDivElement) {
 		element.parentNode?.removeChild(element)
-		this.pool.push(element)
+		if (this.pool.length < 100) {
+			this.pool.push(element)
+		}
 	}
 }

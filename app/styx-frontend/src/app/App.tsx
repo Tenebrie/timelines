@@ -41,6 +41,20 @@ const App = () => {
 		}
 	}, [])
 
+	useEffect(() => {
+		const clearMouseBusy = () => {
+			setTimeout(() => {
+				window.document.body.classList.remove('mouse-busy')
+			}, 1)
+		}
+		window.addEventListener('mouseup', clearMouseBusy)
+		window.addEventListener('mouseleave', clearMouseBusy)
+		return () => {
+			window.removeEventListener('mouseup', clearMouseBusy)
+			window.removeEventListener('mouseleave', clearMouseBusy)
+		}
+	})
+
 	return (
 		<div className="App">
 			<EventBusProvider bus={globalEventBus}>

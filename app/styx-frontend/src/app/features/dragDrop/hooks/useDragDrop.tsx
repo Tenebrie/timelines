@@ -1,5 +1,7 @@
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+
 import { GhostWrapper } from '../components/GhostWrapper'
 import { AllowedDraggableType, DraggableParams } from '../types'
 import { useDragDropState } from './useDragDropState'
@@ -44,7 +46,6 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		if (event.button !== 0) {
 			return
 		}
-		window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
 		isPreparingToDrag.current = true
 		const boundingRect = containerRef.current.getBoundingClientRect()
 		rootPos.current = {
@@ -67,6 +68,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 				targetRootPos: { x: rootPos.current.x, y: rootPos.current.y },
 				isHandled: false,
 			})
+			window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
 
 			setGhostElement(
 				<GhostWrapper
@@ -137,6 +139,14 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 			window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
 		}, 1)
 	}, [clearState])
+
+	useShortcut(
+		Shortcut.Escape,
+		() => {
+			onMouseUp()
+		},
+		!!ghostElement,
+	)
 
 	const attachEvents = useCallback(() => {
 		const container = containerRef.current

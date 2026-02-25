@@ -25,7 +25,7 @@ function OutlinerItemEventComponent({ event }: Props) {
 		if (isReadOnly) {
 			return ['collapse'] as const
 		}
-		return ['edit', 'collapse'] as const
+		return ['edit', 'delete', 'collapse'] as const
 	}, [isReadOnly])
 
 	const { expandedEvents } = useSelector(

@@ -86,6 +86,7 @@ export const World = () => {
 			<MarkerTooltipSummoner />
 			<CreateEventModal />
 			<CreateActorModal />
+			{/* <DeleteActorModal /> */}
 		</>
 	)
 }

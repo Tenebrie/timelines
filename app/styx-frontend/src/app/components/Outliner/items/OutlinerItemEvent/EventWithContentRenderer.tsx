@@ -15,7 +15,7 @@ type Props = {
 	active: boolean
 	divider: boolean
 	collapsed: boolean
-	actions: readonly ('edit' | 'collapse')[]
+	actions: readonly ('edit' | 'delete' | 'collapse')[]
 }
 
 export const EventWithContentRenderer = memo(EventWithContentRendererComponent)

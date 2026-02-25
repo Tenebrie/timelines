@@ -164,7 +164,10 @@ export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
 	const { ref, getState } = useDragDropReceiver({
 		type: 'timelineEvent',
 		receiverRef,
-		onDrop: async (state) => {
+		onDrop: async (state, event) => {
+			if (event.mouseEvent?.button !== 0) {
+				return
+			}
 			const entity = state.params.event
 			const dx = state.targetPos.x - state.targetRootPos.x
 			const absoluteTimestamp = scaledTimeToRealTime(dx - TimelineEventHeightPx / 2) + entity.markerPosition

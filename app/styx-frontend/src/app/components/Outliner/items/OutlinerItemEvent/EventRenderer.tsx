@@ -1,4 +1,5 @@
 import { Actor, WorldEvent } from '@api/types/worldTypes'
+import DeleteIcon from '@mui/icons-material/Delete'
 import Edit from '@mui/icons-material/Edit'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
@@ -6,7 +7,7 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { ShowHideChevron } from '@/app/components/ShowHideChevron'
-import { useEventBusDispatch } from '@/app/features/eventBus'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { StyledListItemButton } from '@/app/views/world/views/timeline/shelf/styles'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -19,12 +20,12 @@ type Props = {
 	owningActor: Actor | null
 	short: boolean
 	active: boolean
-	actions: readonly ('edit' | 'collapse')[]
+	actions: readonly ('edit' | 'delete' | 'collapse')[]
 }
 
 export const EventRenderer = ({ event, collapsed, owningActor, short, active, actions }: Props) => {
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
-	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
+	const { open: openDeleteEventModal } = useModal('deleteEventModal')
 
 	const dispatch = useDispatch()
 	const { collapseEventInOutliner, uncollapseEventInOutliner } = preferencesSlice.actions
@@ -51,11 +52,20 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 								to: '/world/$worldId/timeline',
 								search: (prev) => ({ ...prev, navi: [`issuedAt-${event.id}`] }),
 							})
-							scrollTimelineTo({ timestamp: event.timestamp })
 						}}
 						aria-label="Edit"
 					>
 						<Edit />
+					</IconButton>
+				)
+			case 'delete':
+				return (
+					<IconButton
+						key={'delete'}
+						onClick={() => openDeleteEventModal({ target: event })}
+						aria-label="Delete"
+					>
+						<DeleteIcon />
 					</IconButton>
 				)
 			case 'collapse':
