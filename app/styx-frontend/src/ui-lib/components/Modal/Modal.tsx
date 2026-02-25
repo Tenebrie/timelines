@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
-import { ModalContainer, ModalWrapper } from './styles'
+import { ModalBackdrop, ModalContainer } from './styles'
 
 type Props = {
 	visible: boolean
@@ -44,6 +44,7 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 
 	const onMouseDown = useCallback(
 		(e: React.MouseEvent<HTMLDivElement>) => {
+			console.log('MOUSE DOWN 1')
 			if (!closeOnBackdropClick || e.button !== 0) {
 				return
 			}
@@ -66,7 +67,8 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 	)
 
 	return (
-		<ModalWrapper
+		<ModalBackdrop
+			data-testid="modal-backdrop"
 			className={isModalVisible ? 'visible' : ''}
 			onMouseDown={onMouseDown}
 			onMouseUp={onMouseUp}
@@ -75,13 +77,16 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 			<ModalContainer
 				ref={bodyRef}
 				$theme={theme}
-				onMouseDown={(e) => e.stopPropagation()}
+				onMouseDown={(e) => {
+					e.stopPropagation()
+					console.log('MOUSE DOWN 2')
+				}}
 				onMouseUp={(e) => e.stopPropagation()}
 				onClick={(e) => e.stopPropagation()}
 			>
 				{isModalRendered && children}
 			</ModalContainer>
-		</ModalWrapper>
+		</ModalBackdrop>
 	)
 }
 

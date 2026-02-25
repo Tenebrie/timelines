@@ -52,6 +52,7 @@ export function PopoverButton({
 				transformOrigin={{ horizontal: 'right', vertical: 'top' }}
 				onMouseDown={(e) => e.stopPropagation()}
 				onClick={(e) => e.stopPropagation()}
+				aria-label={`${tooltip} popover`}
 				slotProps={{
 					paper: {
 						sx: {
