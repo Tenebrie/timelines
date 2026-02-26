@@ -4,7 +4,9 @@ services:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile.prod
         networks:
-            - ci_network
+            ci_network:
+                aliases:
+                    - app.gatekeeper
         ports:
             - "80:80"
 

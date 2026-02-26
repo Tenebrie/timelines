@@ -7,7 +7,9 @@ services:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile
         networks:
-            - dev_network
+            dev_network:
+                aliases:
+                    - app.gatekeeper
     styx:
         image: timelines-styx:dev
         build:
