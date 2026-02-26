@@ -157,7 +157,7 @@ services:
               source: ./app/thetis-landing/tsconfig.json
               target: /app/thetis/tsconfig.json
         ports:
-            - 4321:4321
+            - 8081:8081
         networks:
             - dev_network
         command: yarn dev

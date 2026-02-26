@@ -105,6 +105,24 @@ services:
         secrets:
             - jwt-secret
             - environment
+    thetis:
+        image: tenebrie/timelines-thetis:${VERSION}
+        build:
+            context: ./
+            dockerfile: ./app/thetis-landing/Dockerfile.prod
+        deploy:
+            replicas: 1
+            update_config:
+                order: start-first
+                parallelism: 1
+                delay: 10s
+                failure_action: pause
+        healthcheck:
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:8081"]
+            interval: 1m30s
+            timeout: 30s
+            retries: 2
+            start_period: 30s
     rhea-postgres:
         volumes:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached

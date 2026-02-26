@@ -57,6 +57,13 @@ services:
         networks:
             - ci_network
 
+    thetis:
+        build:
+            context: ./
+            dockerfile: ./app/thetis-landing/Dockerfile.prod
+        networks:
+            - ci_network
+
     rhea-postgres:
         image: postgres:15-alpine
         environment:

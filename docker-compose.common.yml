@@ -5,6 +5,7 @@ services:
             - styx
             - rhea
             - calliope
+            - thetis
         ports:
             - 80:80
             - 443:443
