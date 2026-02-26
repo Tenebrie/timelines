@@ -55,7 +55,7 @@ export const Register = () => {
 			if ('data' in result && result.data) {
 				dispatch(setUser(result.data.user))
 				dispatch(setSessionId(result.data.sessionId))
-				navigate({ to: '/home' })
+				navigate({ to: '/' })
 			}
 		},
 	})

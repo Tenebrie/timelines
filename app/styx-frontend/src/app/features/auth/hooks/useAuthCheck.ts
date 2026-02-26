@@ -10,7 +10,7 @@ import { getAuthState } from '../AuthSliceSelectors'
 
 type ReturnType = {
 	success: boolean
-	redirectTo?: '/home' | '/login' | '/register' | undefined
+	redirectTo?: '/' | '/login' | '/register' | undefined
 }
 
 export const useAuthCheck = (): ReturnType => {

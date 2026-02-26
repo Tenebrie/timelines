@@ -1,5 +1,7 @@
 ---
 import Layout from '~/layouts/PageLayout.astro'
+import { Image } from 'astro:assets'
+import devPhoto from '~/assets/images/dev-photo.jpg'
 
 import Hero from '~/components/widgets/Hero.astro'
 import Features from '~/components/widgets/Features.astro'
@@ -809,23 +811,47 @@ const metadata = {
 			<div
 				class="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 rounded-xl border border-gray-200 dark:border-slate-700/40 bg-gray-50/50 dark:bg-slate-800/30 p-8 md:p-12 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
 			>
-				<!-- Avatar / placeholder -->
 				<div class="shrink-0">
 					<div
-						class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-primary/20 border-2 border-primary/30 flex items-center justify-center text-primary text-4xl md:text-5xl font-bold select-none"
+						class="w-[6.5rem] h-[6.5rem] md:w-[8.5rem] md:h-[8.5rem] rounded-full p-[3px]"
+						style="background: linear-gradient(-45deg, #9f44ef, #ef4444);"
 					>
-						T
+						<Image
+							src={devPhoto}
+							alt="Maija, the developer of Neverkin"
+							class="w-full h-full rounded-full object-cover"
+							width={128}
+							height={128}
+						/>
 					</div>
 				</div>
 
-				<!-- Text -->
 				<div class="text-center md:text-left">
 					<p class="text-primary font-bold uppercase tracking-widest text-sm mb-2">A word from the dev</p>
 					<h2 class="text-2xl md:text-3xl font-bold tracking-tight dark:text-white mb-4">
-						Fancy tagline goes here.
+						Fancy tagline goes here
 					</h2>
 					<div class="text-gray-600 dark:text-slate-400 space-y-3 text-base md:text-lg leading-relaxed">
-						<p>Something emotional is loading here, please stay patient...</p>
+						<p>
+							Hello and welcome to Neverkin! I'm Maija - the founder and solo dev behind this app, as well as
+							a mermaid, musician and a dungeon master. Neverkin has been my hobby project since early 2022,
+							and I'm happy to finally share it with you!
+						</p>
+						<p>
+							I take maintainability, architecture and security seriously, and Neverkin is optimized for
+							long-term maintenance and development experience. I have even built a little custom framework to
+							support it!
+						</p>
+						<p>
+							If you encounter issues or have ideas for new features, please don't hesitate to reach out or
+							submit a pull request! Contributions are very welcome, and if you're a dev, you should be able
+							to get a local dev environment up and running in a single command.
+						</p>
+						<p>
+							Neverkin is free from ads and credit cards, and I'm committed to keeping it that way. If you
+							wish to support the project, the best thing you can do today is to share it with those who might
+							find it useful!
+						</p>
 					</div>
 					<div class="mt-6 flex flex-wrap gap-4 justify-center md:justify-start">
 						<a

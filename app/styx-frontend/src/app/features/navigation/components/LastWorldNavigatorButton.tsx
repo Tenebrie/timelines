@@ -17,7 +17,7 @@ export function LastWorldNavigatorButton({ icon, label }: Props) {
 	const { id, isLoaded } = useSelector(getWorldState, (a, b) => a.id === b.id && a.isLoaded === b.isLoaded)
 
 	return (
-		<Link to="/world/$worldId/timeline" params={{ worldId: id }}>
+		<Link to="/world/$worldId/timeline" params={{ worldId: id }} disabled={!isLoaded}>
 			<Button
 				aria-label={label}
 				variant={isMatching ? 'contained' : 'text'}
