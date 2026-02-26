@@ -136,6 +136,33 @@ services:
         command: yarn start
         tty: true
         restart: unless-stopped
+    thetis:
+        image: timelines-thetis:dev
+        build:
+            context: ./
+            dockerfile: ./app/thetis-landing/Dockerfile
+        environment:
+            NODE_ENV: development
+        volumes:
+            - ./app/thetis-landing/src:/app/thetis/src:cached
+            - ./app/thetis-landing/public:/app/thetis/public:cached
+            - ./app/thetis-landing/vendor:/app/thetis/vendor:cached
+            - type: bind
+              source: ./app/thetis-landing/astro.config.ts
+              target: /app/thetis/astro.config.ts
+            - type: bind
+              source: ./app/thetis-landing/tailwind.config.js
+              target: /app/thetis/tailwind.config.js
+            - type: bind
+              source: ./app/thetis-landing/tsconfig.json
+              target: /app/thetis/tsconfig.json
+        ports:
+            - 4321:4321
+        networks:
+            - dev_network
+        command: yarn dev
+        tty: true
+        restart: unless-stopped
     rhea-postgres:
         environment:
             POSTGRES_USER: docker
@@ -246,6 +273,7 @@ volumes:
     backrest_data:
     backrest_config:
     backrest_cache:
+
 
 networks:
     dev_network:

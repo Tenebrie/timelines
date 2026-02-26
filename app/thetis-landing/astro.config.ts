@@ -25,6 +25,10 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 export default defineConfig({
 	output: 'static',
 
+	server: {
+		host: '0.0.0.0',
+	},
+
 	integrations: [
 		tailwind({
 			applyBaseStyles: false,
@@ -74,6 +78,9 @@ export default defineConfig({
 
 	image: {
 		domains: ['cdn.pixabay.com'],
+		service: {
+			entrypoint: 'astro/assets/services/noop',
+		},
 	},
 
 	markdown: {

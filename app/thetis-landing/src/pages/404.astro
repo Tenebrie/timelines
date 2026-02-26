@@ -2,22 +2,28 @@
 import Layout from '~/layouts/Layout.astro'
 import { getHomePermalink } from '~/utils/permalinks'
 
-const title = `Error 404`
+const title = `Page Not Found`
 ---
 
 <Layout metadata={{ title }}>
 	<section class="flex items-center h-full p-16">
 		<div class="container flex flex-col items-center justify-center px-5 mx-auto my-8">
 			<div class="max-w-md text-center">
-				<h2 class="mb-8 font-bold text-9xl">
+				<h2 class="mb-4 font-bold text-9xl">
 					<span class="sr-only">Error</span>
-					<span class="text-primary">404</span>
+					<span
+						class="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent"
+						>404</span
+					>
 				</h2>
-				<p class="text-3xl font-semibold md:text-3xl">Sorry, we couldn't find this page.</p>
+				<p class="text-2xl font-semibold md:text-3xl mb-2">This page has been lost to the void.</p>
 				<p class="mt-4 mb-8 text-lg text-muted dark:text-slate-400">
-					But dont worry, you can find plenty of other things on our homepage.
+					Even the best cartographers miss a turn sometimes. Let's get you back to charted
+					territory.
 				</p>
-				<a rel="noopener noreferrer" href={getHomePermalink()} class="btn ml-4">Back to homepage</a>
+				<a rel="noopener noreferrer" href={getHomePermalink()} class="btn btn-primary ml-4"
+					>Return to Neverkin</a
+				>
 			</div>
 		</div>
 	</section>

@@ -1,17 +1,10 @@
-FROM node:lts AS base
-WORKDIR /app
+FROM node:24-alpine
 
-FROM base AS deps
-COPY package*.json ./
-RUN npm install
+WORKDIR /app/thetis
 
-FROM base AS build
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-RUN npm run build
+COPY ./app/thetis-landing/package.json /app/thetis/
+COPY ./app/thetis-landing/yarn.lock /app/thetis/
 
-FROM nginx:stable-alpine AS deploy
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+RUN yarn install
 
-EXPOSE 8080
+EXPOSE 4321

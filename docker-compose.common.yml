@@ -26,6 +26,8 @@ services:
         working_dir: /app/orpheus
         depends_on:
             - rhea
+    thetis:
+        working_dir: /app/thetis
     rhea-postgres:
         image: postgres:15-alpine
         environment:
@@ -33,7 +35,7 @@ services:
             POSTGRES_PASSWORD: docker
             POSTGRES_DB: db
         healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U docker -d db"]
+            test: [ "CMD-SHELL", "pg_isready -U docker -d db" ]
             interval: 5s
             timeout: 5s
             retries: 5
