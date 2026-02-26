@@ -134,7 +134,7 @@ describe('<Login />', () => {
 
 			await user.click(screen.getByRole('button', { name: /sign in/i }))
 
-			expect(router.state.location.pathname).toEqual('/home')
+			expect(router.state.location.pathname).toEqual('/')
 			expect(store.getState().auth.user).toBeTruthy()
 		})
 

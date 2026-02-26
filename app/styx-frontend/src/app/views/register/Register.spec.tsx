@@ -102,7 +102,7 @@ describe('<Register />', () => {
 
 			await user.click(screen.getByText('Register'))
 
-			expect(router.state.location.pathname).toEqual('/home')
+			expect(router.state.location.pathname).toEqual('/')
 			expect(store.getState().auth.user).toEqual({
 				id: '1111-2222-3333',
 				email: 'admin@localhost',
