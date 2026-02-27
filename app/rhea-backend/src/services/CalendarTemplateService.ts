@@ -2,6 +2,7 @@ import { Calendar, CalendarUnit } from '@prisma/client'
 import { TransactionClient } from 'prisma/client/internal/prismaNamespace.js'
 import { z } from 'zod'
 
+import { CalendarPresentationService } from './CalendarPresentationService.js'
 import { CalendarService } from './CalendarService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
@@ -277,7 +278,7 @@ function makeCalendarBuilder<Units extends never[], Buckets extends never[]>() {
 			}
 
 			await CalendarService.computeCalendarUnitDurations({ calendarId }, prisma)
-			await CalendarService.computeCalendarPresentationFactors({ calendarId, dbClient: prisma })
+			await CalendarPresentationService.computeCalendarPresentationFactors({ calendarId, dbClient: prisma })
 
 			return prisma.calendar.findUniqueOrThrow({
 				where: {

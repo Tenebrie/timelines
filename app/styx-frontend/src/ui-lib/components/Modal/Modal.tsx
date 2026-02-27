@@ -44,7 +44,6 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 
 	const onMouseDown = useCallback(
 		(e: React.MouseEvent<HTMLDivElement>) => {
-			console.log('MOUSE DOWN 1')
 			if (!closeOnBackdropClick || e.button !== 0) {
 				return
 			}
@@ -79,7 +78,6 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 				$theme={theme}
 				onMouseDown={(e) => {
 					e.stopPropagation()
-					console.log('MOUSE DOWN 2')
 				}}
 				onMouseUp={(e) => e.stopPropagation()}
 				onClick={(e) => e.stopPropagation()}

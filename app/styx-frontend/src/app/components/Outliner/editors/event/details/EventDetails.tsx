@@ -42,7 +42,7 @@ export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
 				<EntityEditorTabs
 					contentTab={<EventDescription event={event} autoFocus={autoFocus} />}
 					illustrationTab={
-						<Stack gap={2} sx={{ height: '100%', overflow: 'auto', marginRight: -0.5 }}>
+						<Stack gap={2} sx={{ height: '100%', overflow: 'auto', marginLeft: 1, marginRight: -0.5 }}>
 							<Stack gap={2} sx={{ marginRight: 2 }}>
 								<ColorPicker
 									key={'color-' + draft.id + '-' + draft.key}

@@ -1,25 +1,25 @@
+import { useDeleteActorMutation } from '@api/actorListApi'
 import Delete from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import { useState } from 'react'
 
-import { useDeleteWorldEventMutation } from '@/api/worldEventApi'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
-export const DeleteEventModal = () => {
-	const [deleteWorldEvent, { isLoading }] = useDeleteWorldEventMutation()
+export const DeleteActorModal = () => {
+	const [deleteActor, { isLoading }] = useDeleteActorMutation()
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 
 	const { worldId } = useStrictParams({
 		from: '/world/$worldId/_world',
 	})
 
-	const { isOpen, target: targetEvent, close } = useModal('deleteEventModal')
+	const { isOpen, target: targetActor, close } = useModal('deleteActorModal')
 
 	useModalCleanup({
 		isOpen,
@@ -29,14 +29,14 @@ export const DeleteEventModal = () => {
 	})
 
 	const onConfirm = async () => {
-		if (!isOpen || !targetEvent) {
+		if (!isOpen || !targetActor) {
 			return
 		}
 
 		const { error } = parseApiResponse(
-			await deleteWorldEvent({
+			await deleteActor({
 				worldId,
-				eventId: targetEvent.id,
+				actorId: targetActor.id,
 			}),
 		)
 		if (error) {
@@ -64,11 +64,10 @@ export const DeleteEventModal = () => {
 
 	return (
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
-			<ModalHeader>Delete Event</ModalHeader>
+			<ModalHeader>Delete Actor</ModalHeader>
 			<Stack spacing={2}>
 				<div>
-					Attempting to permanently delete world event &apos;<b>{targetEvent?.name}</b>&apos;. This will also
-					delete all associated data points, if any are present.
+					Attempting to permanently delete actor &apos;<b>{targetActor?.name}</b>&apos;.
 				</div>
 				<div>This action can&apos;t be reverted!</div>
 				{deletionError && (
