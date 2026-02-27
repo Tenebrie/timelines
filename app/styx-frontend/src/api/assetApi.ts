@@ -47,8 +47,8 @@ export type ListUserAssetsApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		expiresAt?: null | string
 		ownerId: string
+		expiresAt?: null | string
 		bucketKey: string
 		size: number
 		originalFileName: string
@@ -63,8 +63,8 @@ export type RequestPresignedUrlApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		expiresAt?: null | string
 		ownerId: string
+		expiresAt?: null | string
 		bucketKey: string
 		size: number
 		originalFileName: string
@@ -88,8 +88,8 @@ export type FinalizeAssetUploadApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	expiresAt?: null | string
 	ownerId: string
+	expiresAt?: null | string
 	bucketKey: string
 	size: number
 	originalFileName: string

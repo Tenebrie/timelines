@@ -112,10 +112,10 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	expiresAt?: null | string
 	ownerId: string
-	bucketKey: string
 	size: number
+	expiresAt?: null | string
+	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'ImageConversion' | 'Avatar'
@@ -135,9 +135,9 @@ export type UpdateNodeApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	worldId: string
+	parentActorId?: null | string
 	positionX: number
 	positionY: number
-	parentActorId?: null | string
 }
 export type UpdateNodeApiArg = {
 	/** Any string value */
@@ -180,9 +180,9 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 		updatedAt: string
 		name: string
 		worldId: string
-		position: number
 		icon: string
 		color: string
+		position: number
 		contentRich: string
 		contentYjs?: null | string
 		parentId?: null | string
@@ -192,9 +192,9 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	updatedAt: string
 	name: string
 	worldId: string
-	position: number
 	icon: string
 	color: string
+	position: number
 	contentRich: string
 	parentId?: null | string
 }

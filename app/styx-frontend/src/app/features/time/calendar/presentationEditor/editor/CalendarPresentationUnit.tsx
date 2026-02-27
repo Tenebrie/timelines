@@ -29,6 +29,8 @@ function CalendarPresentationUnitComponent({ layer, onSave, onDelete, index }: P
 
 	const name = backingUnit.displayName ?? backingUnit.name
 
+	const layerIdRef = useAutoRef(layer.id)
+
 	const [subdivision, setSubdivision] = useState(layer.subdivision)
 	const [formatString, setFormatString] = useState(layer.formatString)
 	const [labeledIndices, setLabeledIndices] = useState<number[]>(layer.labeledIndices)
@@ -37,7 +39,7 @@ function CalendarPresentationUnitComponent({ layer, onSave, onDelete, index }: P
 	const onSaveDebounced = useMemo(() => {
 		return debounce((value: Partial<CalendarDraftPresentationUnit>) => {
 			onSave(value)
-		}, 300)
+		}, 700)
 	}, [onSave])
 
 	const currentLabeledIndices = useAutoRef(labeledIndices)
@@ -50,9 +52,21 @@ function CalendarPresentationUnitComponent({ layer, onSave, onDelete, index }: P
 
 		if (JSON.stringify(oldIndicesParsed) !== JSON.stringify(newIndicesParsed)) {
 			setLabeledIndices(layer.labeledIndices)
-			// setLabeledIndicesString(newIndicesParsed.join(', '))
 		}
-	}, [layer.formatString, layer.subdivision, layer.labeledIndices, currentLabeledIndices])
+
+		if (layerIdRef.previous !== layer.id) {
+			setLabeledIndicesString(layer.labeledIndices.join(', '))
+		}
+	}, [
+		layer.id,
+		layer.formatString,
+		layer.subdivision,
+		layer.labeledIndices,
+		currentLabeledIndices,
+		layerIdRef,
+		onSaveDebounced,
+		layer.updatedAt,
+	])
 
 	const handleSubdivisionChange = useCallback(
 		(value: number) => {

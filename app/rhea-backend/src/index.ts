@@ -9,6 +9,7 @@ import { AdminRouter } from './routers/AdminRouter.js'
 import { AnnouncementRouter } from './routers/AnnouncementRouter.js'
 import { AssetUploadRouter } from './routers/AssetRouter.js'
 import { AuthRouter } from './routers/AuthRouter.js'
+import { CalendarPresentationRouter } from './routers/CalendarPresentationRouter.js'
 import { CalendarRouter } from './routers/CalendarRouter.js'
 import { ConstantsRouter } from './routers/ConstantsRouter.js'
 import { HealthRouter, HealthStatus } from './routers/HealthRouter.js'
@@ -72,6 +73,8 @@ app
 	.use(AuthRouter.allowedMethods())
 	.use(CalendarRouter.routes())
 	.use(CalendarRouter.allowedMethods())
+	.use(CalendarPresentationRouter.routes())
+	.use(CalendarPresentationRouter.allowedMethods())
 	.use(ConstantsRouter.routes())
 	.use(ConstantsRouter.allowedMethods())
 	.use(HealthRouter.routes())

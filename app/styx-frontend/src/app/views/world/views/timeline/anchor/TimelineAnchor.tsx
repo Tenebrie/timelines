@@ -94,6 +94,7 @@ function TimelineAnchorComponent({ containerWidth, showCurrentTime }: Props) {
 				position: 'absolute',
 				width: '100%',
 				height: '96px',
+				transition: 'background-color 0.3s',
 				background: theme.custom.palette.background.timelineHeader,
 				cursor: isDragging ? 'grabbing' : 'grab',
 				userSelect: 'none',

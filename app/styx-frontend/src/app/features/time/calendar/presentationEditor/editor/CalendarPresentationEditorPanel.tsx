@@ -15,6 +15,9 @@ import { useDebouncedState } from '@/app/hooks/useDebouncedState'
 import { NewEntityAutocomplete } from '@/ui-lib/components/Autocomplete/NewEntityAutocomplete'
 
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'
+import { useCreateCalendarPresentationUnit } from '../api/useCreateCalendarPresentationUnit'
+import { useDeleteCalendarPresentationUnit } from '../api/useDeleteCalendarPresentationUnit'
+import { useUpdateCalendarPresentationUnit } from '../api/useUpdateCalendarPresentationUnit'
 import { CalendarPresentationTitle } from '../components/CalendarPresentationTitle'
 import { CalendarPresentationAddUnitForm } from './CalendarPresentationAddUnitForm'
 import { CalendarPresentationPreview } from './CalendarPresentationPreview'
@@ -29,6 +32,9 @@ export type NewUnitData = NonNullable<UpdateCalendarPresentationApiArg['body']['
 export function CalendarPresentationEditorPanel({ presentation }: Props) {
 	const { calendar } = useSelector(getCalendarEditorState, (a, b) => a.calendar === b.calendar)
 	const [updatePresentation] = useUpdateCalendarPresentationMutation()
+	const [createUnit] = useCreateCalendarPresentationUnit({ presentationId: presentation.id })
+	const [updateUnit] = useUpdateCalendarPresentationUnit({ presentationId: presentation.id })
+	const [deleteUnit] = useDeleteCalendarPresentationUnit({ presentationId: presentation.id })
 
 	const [localUnits, setLocalUnits] = useState(
 		presentation.units.map((unit) => ({
@@ -108,63 +114,32 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 		return calendar.units.find((u) => u.id === presentation.baselineUnitId) ?? null
 	}, [calendar, presentation.baselineUnitId])
 
-	const saveUnits = useCallback(
-		async (units: CalendarDraftPresentationUnit[], addedUnits: NewUnitData[]) => {
-			if (!calendar) {
-				return
-			}
-
-			await updatePresentation({
-				calendarId: calendar.id,
-				presentationId: presentation.id,
-				body: {
-					units: units
-						.map((u) => ({
-							unitId: u.unitId,
-							formatString: u.formatString,
-							subdivision: u.subdivision,
-							labeledIndices: u.labeledIndices,
-						}))
-						.concat(
-							addedUnits.map((u) => ({
-								unitId: u.unitId,
-								formatString: u.formatString,
-								subdivision: u.subdivision ?? 1,
-								labeledIndices: u.labeledIndices ?? [],
-							})),
-						),
-				},
-			})
-		},
-		[calendar, presentation.id, updatePresentation],
-	)
-
 	const handleAddUnit = useCallback(
 		(unit: NewUnitData) => {
 			if (!calendar) {
 				return
 			}
-			saveUnits(localUnits, [unit])
+			createUnit(unit)
 		},
-		[calendar, localUnits, saveUnits],
+		[calendar, createUnit],
 	)
 
 	const handleRemoveUnit = useCallback(
 		(unit: CalendarDraftPresentationUnit) => {
 			const newUnits = localUnits.filter((u) => u.id !== unit.id)
 			setLocalUnits(newUnits)
-			saveUnits(newUnits, [])
+			deleteUnit(unit.id)
 		},
-		[localUnits, saveUnits],
+		[deleteUnit, localUnits],
 	)
 
-	const handlePresentationUnitSave = useCallback(
+	const handleUpdateUnit = useCallback(
 		(unit: CalendarDraftPresentationUnit, value: Partial<CalendarDraftPresentationUnit>) => {
 			const newUnits = localUnits.map((u) => (u.id === unit.id ? { ...u, ...value } : u))
 			setLocalUnits(newUnits)
-			saveUnits(newUnits, [])
+			updateUnit(unit.id, value)
 		},
-		[localUnits, saveUnits],
+		[localUnits, updateUnit],
 	)
 
 	const handleCompressionChange = useCallback(
@@ -264,7 +239,7 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 							key={unit.backingUnit!.id + index}
 							index={index}
 							layer={unit}
-							onSave={(value) => handlePresentationUnitSave(unit, value)}
+							onSave={(value) => handleUpdateUnit(unit, value)}
 							onDelete={() => handleRemoveUnit(unit)}
 						/>
 					))}

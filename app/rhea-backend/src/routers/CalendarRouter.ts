@@ -19,7 +19,6 @@ import {
 } from 'moonflower'
 
 import { calendarTag } from './utils/tags.js'
-import { CalendarPresentationUnitValidator } from './validators/CalendarPresentationUnitValidator.js'
 import { CalendarUnitChildValidator } from './validators/CalendarUnitChildValidator.js'
 import { CalendarUnitFormatModeValidator } from './validators/CalendarUnitDisplayFormatValidator.js'
 import { NameStringValidator } from './validators/NameStringValidator.js'
@@ -292,105 +291,6 @@ router.delete('/api/calendar/:calendarId/unit/:unitId', async (ctx) => {
 		RedisService.notifyAboutCalendarUpdate(ctx, { worldId: calendar.worldId, calendar })
 	}
 	return unit
-})
-
-/**
- * Calendar Presentations
- */
-router.post('/api/calendar/:calendarId/presentations', async (ctx) => {
-	useApiEndpoint({
-		name: 'createCalendarPresentation',
-		description: 'Creates a new calendar presentation',
-		tags: [calendarTag],
-	})
-
-	const { calendarId } = usePathParams(ctx, {
-		calendarId: PathParam(StringValidator),
-	})
-
-	const { name, scaleFactor } = useRequestBody(ctx, {
-		name: RequiredParam(NameStringValidator),
-		scaleFactor: OptionalParam(NumberValidator),
-	})
-
-	await AuthorizationService.checkUserCalendarWriteAccessById(ctx.user, calendarId)
-
-	const { presentation } = await CalendarService.createCalendarPresentation({
-		calendarId,
-		params: { name, scaleFactor },
-	})
-
-	const calendar = await CalendarService.getEditorCalendar({ calendarId })
-
-	if (calendar.worldId) {
-		RedisService.notifyAboutCalendarUpdate(ctx, { worldId: calendar.worldId, calendar })
-	}
-
-	return presentation
-})
-
-router.patch('/api/calendar/:calendarId/presentation/:presentationId', async (ctx) => {
-	useApiEndpoint({
-		name: 'updateCalendarPresentation',
-		description: 'Updates the target calendar presentation',
-		tags: [calendarTag],
-	})
-
-	const { calendarId, presentationId } = usePathParams(ctx, {
-		calendarId: PathParam(StringValidator),
-		presentationId: PathParam(StringValidator),
-	})
-
-	const { name, units, compression, baselineUnitId } = useRequestBody(ctx, {
-		name: OptionalParam(NameStringValidator),
-		units: OptionalParam(CalendarPresentationUnitValidator),
-		compression: OptionalParam(NumberValidator),
-		baselineUnitId: OptionalParam(NullableStringValidator),
-	})
-
-	await AuthorizationService.checkUserCalendarWriteAccessById(ctx.user, calendarId)
-
-	const { presentation } = await CalendarService.updateCalendarPresentation({
-		calendarId,
-		presentationId,
-		params: { name, units, compression, baselineUnitId },
-	})
-
-	const calendar = await CalendarService.getEditorCalendar({ calendarId })
-
-	if (calendar.worldId) {
-		RedisService.notifyAboutCalendarUpdate(ctx, { worldId: calendar.worldId, calendar })
-	}
-
-	return presentation
-})
-
-router.delete('/api/calendar/:calendarId/presentation/:presentationId', async (ctx) => {
-	useApiEndpoint({
-		name: 'deleteCalendarPresentation',
-		description: 'Deletes the target calendar presentation',
-		tags: [calendarTag],
-	})
-
-	const { calendarId, presentationId } = usePathParams(ctx, {
-		calendarId: PathParam(StringValidator),
-		presentationId: PathParam(StringValidator),
-	})
-
-	await AuthorizationService.checkUserCalendarWriteAccessById(ctx.user, calendarId)
-
-	const { presentation } = await CalendarService.deleteCalendarPresentation({
-		calendarId,
-		presentationId,
-	})
-
-	const calendar = await CalendarService.getEditorCalendar({ calendarId })
-
-	if (calendar.worldId) {
-		RedisService.notifyAboutCalendarUpdate(ctx, { worldId: calendar.worldId, calendar })
-	}
-
-	return presentation
 })
 
 export const CalendarRouter = router

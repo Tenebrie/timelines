@@ -44,6 +44,7 @@ function TimelineChainBodyComponent({ entity }: Props) {
 					width: `calc(100% - 24px - ${rightBorder ? 0 : 10}px)`,
 					height: 'calc(100% - 2px)',
 					paddingRight: '-8px',
+					transition: 'color 0.3s, background-color 0.3s',
 					background: theme.custom.palette.background.timelineMarkerTail,
 					display: 'flex',
 					opacity: chainVisible ? 1 : 0,

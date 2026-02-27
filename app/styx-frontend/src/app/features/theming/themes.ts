@@ -165,7 +165,7 @@ export const customLightTheme = {
 			softer: 'rgb(60 40 120 / 4%)',
 			softest: 'rgb(60 40 120 / 2%)',
 			textEditor: '#fff',
-			timeline: 'hsl(250, 25%, 97%)',
+			timeline: '#eae9f2',
 			timelineHeader: 'hsl(250, 20%, 93%)',
 			navigator: '#fff',
 			timelineMarker: '#fff',
