@@ -35,7 +35,13 @@ export default defineConfig({
 		tailwind({
 			applyBaseStyles: false,
 		}),
-		sitemap(),
+		sitemap({
+			customPages: [
+				'https://neverkin.com/',
+				'https://app.neverkin.com/login',
+				'https://app.neverkin.com/register',
+			],
+		}),
 		mdx(),
 		icon({
 			include: {
