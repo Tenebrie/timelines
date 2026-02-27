@@ -16,17 +16,43 @@ import Testimonials from '~/components/widgets/Testimonials.astro'
 const metadata = {
 	title: 'Neverkin — Collaborative Worldbuilding for Writers & Game Masters',
 	ignoreTitleTemplate: true,
+	description:
+		'The free, open-source collaborative worldbuilding platform. Organize timelines, characters, lore, and interconnected stories in real-time — built for writers, game masters, and creators.',
 }
 ---
 
 <Layout metadata={metadata}>
+	<!-- JSON-LD Structured Data for SEO -->
+	<script is:inline type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "SoftwareApplication",
+			"name": "Neverkin",
+			"applicationCategory": "ProductivityApplication",
+			"operatingSystem": "Web",
+			"url": "https://neverkin.com",
+			"description": "The free, open-source collaborative worldbuilding platform. Organize timelines, characters, lore, and interconnected stories in real-time.",
+			"offers": {
+				"@type": "Offer",
+				"price": "0",
+				"priceCurrency": "USD"
+			},
+			"author": {
+				"@type": "Person",
+				"name": "Maija L.",
+				"url": "https://github.com/tenebrie"
+			},
+			"license": "https://opensource.org/licenses/GPL-3.0"
+		}
+	</script>
+
 	<!-- ==================== HERO ==================== -->
 	<Hero
 		actions={[
 			{
 				variant: 'primary',
 				text: 'Start Building Your World',
-				href: '#app',
+				href: 'https://app.neverkin.com',
 				icon: 'tabler:sparkles',
 			},
 			{ text: 'See How It Works', href: '#how-it-works' },
@@ -1154,7 +1180,7 @@ const metadata = {
 			{
 				variant: 'primary',
 				text: "Start Building — It's Free",
-				href: '#app',
+				href: 'https://app.neverkin.com',
 				icon: 'tabler:sparkles',
 			},
 			{

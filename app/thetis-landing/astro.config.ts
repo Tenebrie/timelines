@@ -24,6 +24,7 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 
 export default defineConfig({
 	output: 'static',
+	site: 'https://neverkin.com',
 
 	server: {
 		host: '0.0.0.0',

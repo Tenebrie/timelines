@@ -278,9 +278,10 @@ import { UI } from 'astrowind:config'
 
 <script is:inline>
 	function rewriteAppLinks() {
+		if (window.location.hostname === 'neverkin.com') return
 		var appUrl = window.location.protocol + '//app.' + window.location.host
-		document.querySelectorAll('a[href="#app"]').forEach(function (link) {
-			link.href = appUrl
+		document.querySelectorAll('a[href^="https://app.neverkin.com"]').forEach(function (link) {
+			link.href = appUrl + link.getAttribute('href').replace('https://app.neverkin.com', '')
 		})
 	}
 

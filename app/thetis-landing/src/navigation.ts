@@ -24,8 +24,8 @@ export const headerData = {
 		},
 	],
 	actions: [
-		{ text: 'Login', href: '#app' },
-		{ text: 'Get Started', href: '#app' },
+		{ text: 'Login', href: 'https://app.neverkin.com' },
+		{ text: 'Get Started', href: 'https://app.neverkin.com' },
 	],
 }
 
