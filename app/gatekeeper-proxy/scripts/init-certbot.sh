@@ -11,6 +11,7 @@ fi
 
 certbot --nginx --non-interactive --agree-tos \
 	--no-eff-email \
+	--expand \
 	--email 'kos94ok@gmail.com' \
 	$DOMAINS
 
