@@ -18,7 +18,7 @@ export function ToolsView() {
 						</Typography>
 						<Stack spacing={1}>
 							<ToolButton label="Image converter" route="/tools/image-converter" />
-							<ToolButton label="QR generator" route="/tools/qr-generator" />
+							<ToolButton label="QR code generator" route="/tools/qr-generator" />
 						</Stack>
 					</Paper>
 				</Stack>

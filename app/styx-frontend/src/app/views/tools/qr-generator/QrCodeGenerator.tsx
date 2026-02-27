@@ -22,17 +22,23 @@ export function QrCodeGenerator() {
 	const [text, setText] = useState(window.location.href)
 	const [size, setSize] = useState(300)
 	const [errorLevel, setErrorLevel] = useState<ErrorCorrectionLevel>('M')
-	const canvasRef = useRef<HTMLCanvasElement>(null)
+	const previewCanvasRef = useRef<HTMLCanvasElement>(null)
+	const downloadCanvasRef = useRef<HTMLCanvasElement>(null)
 	const [svgString, setSvgString] = useState('')
 
 	const debouncedText = useDebounce(text, 300)
 
 	useEffect(() => {
 		if (!debouncedText) {
-			const canvas = canvasRef.current
+			const canvas = previewCanvasRef.current
+			const downloadCanvas = downloadCanvasRef.current
 			if (canvas) {
 				const ctx = canvas.getContext('2d')
 				ctx?.clearRect(0, 0, canvas.width, canvas.height)
+			}
+			if (downloadCanvas) {
+				const ctx = downloadCanvas.getContext('2d')
+				ctx?.clearRect(0, 0, downloadCanvas.width, downloadCanvas.height)
 			}
 			setSvgString('')
 			return
@@ -49,14 +55,15 @@ export function QrCodeGenerator() {
 			width: 384,
 		}
 
-		QRCode.toCanvas(canvasRef.current!, debouncedText, canvasOpts).catch(console.error)
+		QRCode.toCanvas(previewCanvasRef.current!, debouncedText, canvasOpts).catch(console.error)
+		QRCode.toCanvas(downloadCanvasRef.current!, debouncedText, opts).catch(console.error)
 		QRCode.toString(debouncedText, { ...opts, type: 'svg' })
 			.then(setSvgString)
 			.catch(console.error)
 	}, [debouncedText, size, errorLevel])
 
 	const downloadPng = useCallback(() => {
-		const canvas = canvasRef.current
+		const canvas = downloadCanvasRef.current
 		if (!canvas) {
 			return
 		}
@@ -131,10 +138,11 @@ export function QrCodeGenerator() {
 					overflow: 'scroll',
 				}}
 			>
-				{hasContent ? (
-					<canvas ref={canvasRef} />
-				) : (
-					<Typography color="text.secondary">Enter text to generate a QR code</Typography>
+				{hasContent && (
+					<>
+						<canvas ref={previewCanvasRef} />
+						<canvas ref={downloadCanvasRef} style={{ display: 'none' }} />
+					</>
 				)}
 			</Box>
 
