@@ -56,7 +56,12 @@ export function QrCodeGenerator() {
 		}
 
 		QRCode.toCanvas(previewCanvasRef.current!, debouncedText, canvasOpts).catch(console.error)
-		QRCode.toCanvas(downloadCanvasRef.current!, debouncedText, opts).catch(console.error)
+		QRCode.toCanvas(downloadCanvasRef.current!, debouncedText, opts)
+			.catch(console.error)
+			.then(() => {
+				downloadCanvasRef.current!.style.width = '100%'
+				downloadCanvasRef.current!.style.height = '100%'
+			})
 		QRCode.toString(debouncedText, { ...opts, type: 'svg' })
 			.then(setSvgString)
 			.catch(console.error)
@@ -135,13 +140,17 @@ export function QrCodeGenerator() {
 					bgcolor: 'white',
 					minHeight: 384,
 					alignItems: 'center',
-					overflow: 'scroll',
+					overflow: 'hidden',
+					position: 'relative',
 				}}
 			>
 				{hasContent && (
 					<>
 						<canvas ref={previewCanvasRef} />
-						<canvas ref={downloadCanvasRef} style={{ display: 'none' }} />
+						<canvas
+							ref={downloadCanvasRef}
+							style={{ width: '100%', height: '100%', opacity: '0', position: 'absolute' }}
+						/>
 					</>
 				)}
 			</Box>

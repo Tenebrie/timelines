@@ -11,7 +11,7 @@ metadata:
   title:
     default: Neverkin
     template: '%s — Neverkin'
-  description: 'The collaborative worldbuilding platform for writers, game masters, and creators. Organize timelines, characters, lore, and stories — all in one beautiful space.'
+  description: 'The collaborative worldbuilding platform for writers, game masters, and creators. Organize timelines, characters, lore, and stories in real-time with your friends.'
   robots:
     index: true
     follow: true
