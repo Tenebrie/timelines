@@ -10,16 +10,18 @@ export function ToolsView() {
 	return (
 		<Container maxWidth="lg" sx={{ py: 4, height: '100%' }}>
 			<Stack direction="row" spacing={3}>
-				{/* Sidebar */}
-				<Paper sx={{ width: 250, p: 2 }} elevation={1}>
-					<Typography variant="subtitle2" color="textSecondary" sx={{ mb: 2 }}>
-						Tools
-					</Typography>
-					<Stack spacing={1}>
-						<ToolButton label="Image converter" route="/tools/image-converter" />
-					</Stack>
-				</Paper>
-
+				<Stack>
+					{/* Sidebar */}
+					<Paper sx={{ width: 250, p: 2 }} elevation={1}>
+						<Typography variant="subtitle2" color="textSecondary" sx={{ mb: 2 }}>
+							Tools
+						</Typography>
+						<Stack spacing={1}>
+							<ToolButton label="Image converter" route="/tools/image-converter" />
+							<ToolButton label="QR generator" route="/tools/qr-generator" />
+						</Stack>
+					</Paper>
+				</Stack>
 				{/* Main Content */}
 				<Paper sx={{ flex: 1, p: 3 }} elevation={1}>
 					<Outlet />

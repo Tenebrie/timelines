@@ -22,6 +22,7 @@ import { Route as SecretMusicRouteImport } from './routes/secret/music'
 import { Route as ProfileProfileRouteImport } from './routes/profile/_profile'
 import { Route as CalendarCalendarIdRouteImport } from './routes/calendar/$calendarId'
 import { Route as WorldWorldIdWorldRouteImport } from './routes/world/$worldId/_world'
+import { Route as ToolsToolsQrGeneratorRouteImport } from './routes/tools/_tools.qr-generator'
 import { Route as ToolsToolsImageConverterRouteImport } from './routes/tools/_tools.image-converter'
 import { Route as ProfileProfileStorageRouteImport } from './routes/profile/_profile.storage'
 import { Route as ProfileProfileSecurityRouteImport } from './routes/profile/_profile.security'
@@ -98,6 +99,11 @@ const WorldWorldIdWorldRoute = WorldWorldIdWorldRouteImport.update({
   path: '/world/$worldId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsToolsQrGeneratorRoute = ToolsToolsQrGeneratorRouteImport.update({
+  id: '/qr-generator',
+  path: '/qr-generator',
+  getParentRoute: () => ToolsToolsRoute,
+} as any)
 const ToolsToolsImageConverterRoute =
   ToolsToolsImageConverterRouteImport.update({
     id: '/image-converter',
@@ -173,6 +179,7 @@ export interface FileRoutesByFullPath {
   '/profile/security': typeof ProfileProfileSecurityRoute
   '/profile/storage': typeof ProfileProfileStorageRoute
   '/tools/image-converter': typeof ToolsToolsImageConverterRoute
+  '/tools/qr-generator': typeof ToolsToolsQrGeneratorRoute
   '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
   '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
   '/world/$worldId/settings': typeof WorldWorldIdWorldSettingsRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/profile/security': typeof ProfileProfileSecurityRoute
   '/profile/storage': typeof ProfileProfileStorageRoute
   '/tools/image-converter': typeof ToolsToolsImageConverterRoute
+  '/tools/qr-generator': typeof ToolsToolsQrGeneratorRoute
   '/world/$worldId': typeof WorldWorldIdWorldRouteWithChildren
   '/world/$worldId/mindmap': typeof WorldWorldIdWorldMindmapRoute
   '/world/$worldId/settings': typeof WorldWorldIdWorldSettingsRoute
@@ -221,6 +229,7 @@ export interface FileRoutesById {
   '/profile/_profile/security': typeof ProfileProfileSecurityRoute
   '/profile/_profile/storage': typeof ProfileProfileStorageRoute
   '/tools/_tools/image-converter': typeof ToolsToolsImageConverterRoute
+  '/tools/_tools/qr-generator': typeof ToolsToolsQrGeneratorRoute
   '/world/$worldId/_world': typeof WorldWorldIdWorldRouteWithChildren
   '/world/$worldId/_world/mindmap': typeof WorldWorldIdWorldMindmapRoute
   '/world/$worldId/_world/settings': typeof WorldWorldIdWorldSettingsRoute
@@ -248,6 +257,7 @@ export interface FileRouteTypes {
     | '/profile/security'
     | '/profile/storage'
     | '/tools/image-converter'
+    | '/tools/qr-generator'
     | '/world/$worldId'
     | '/world/$worldId/mindmap'
     | '/world/$worldId/settings'
@@ -271,6 +281,7 @@ export interface FileRouteTypes {
     | '/profile/security'
     | '/profile/storage'
     | '/tools/image-converter'
+    | '/tools/qr-generator'
     | '/world/$worldId'
     | '/world/$worldId/mindmap'
     | '/world/$worldId/settings'
@@ -295,6 +306,7 @@ export interface FileRouteTypes {
     | '/profile/_profile/security'
     | '/profile/_profile/storage'
     | '/tools/_tools/image-converter'
+    | '/tools/_tools/qr-generator'
     | '/world/$worldId/_world'
     | '/world/$worldId/_world/mindmap'
     | '/world/$worldId/_world/settings'
@@ -413,6 +425,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorldWorldIdWorldRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/_tools/qr-generator': {
+      id: '/tools/_tools/qr-generator'
+      path: '/qr-generator'
+      fullPath: '/tools/qr-generator'
+      preLoaderRoute: typeof ToolsToolsQrGeneratorRouteImport
+      parentRoute: typeof ToolsToolsRoute
+    }
     '/tools/_tools/image-converter': {
       id: '/tools/_tools/image-converter'
       path: '/image-converter'
@@ -504,10 +523,12 @@ const ProfileProfileRouteWithChildren = ProfileProfileRoute._addFileChildren(
 
 interface ToolsToolsRouteChildren {
   ToolsToolsImageConverterRoute: typeof ToolsToolsImageConverterRoute
+  ToolsToolsQrGeneratorRoute: typeof ToolsToolsQrGeneratorRoute
 }
 
 const ToolsToolsRouteChildren: ToolsToolsRouteChildren = {
   ToolsToolsImageConverterRoute: ToolsToolsImageConverterRoute,
+  ToolsToolsQrGeneratorRoute: ToolsToolsQrGeneratorRoute,
 }
 
 const ToolsToolsRouteWithChildren = ToolsToolsRoute._addFileChildren(
