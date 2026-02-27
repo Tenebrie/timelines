@@ -113,7 +113,7 @@ export const AdminService = {
 	},
 
 	setUserPassword: async (userId: string, password: string) => {
-		const hashedPassword = await bcrypt.hash(password, 8)
+		const hashedPassword = await bcrypt.hash(password, 12)
 		return getPrismaClient().user.update({
 			where: {
 				id: userId,

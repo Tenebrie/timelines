@@ -1,6 +1,7 @@
 import { WebSocket } from 'ws'
 
 import { CalliopeToClientMessage } from '../ts-shared/CalliopeToClientMessage.js'
+import { RheaService } from './RheaService.js'
 
 // userId -> RegisteredClient
 const userListeners: Record<string, RegisteredClient[]> = {}
@@ -39,7 +40,8 @@ export const WebsocketService = {
 			})
 	},
 
-	registerWorldClient: (worldId: string, userId: string, sessionId: string, socket: WebSocket) => {
+	registerWorldClient: async (worldId: string, userId: string, sessionId: string, socket: WebSocket) => {
+		await RheaService.checkUserAccess({ worldId, userId, level: 'read' })
 		const newClient: RegisteredClient = {
 			socket,
 			userId,
@@ -66,7 +68,7 @@ export const WebsocketService = {
 
 	findClientsByWorldId: (worldId: string) => {
 		return Object.entries(worldListeners)
-			.filter(([key]) => key.endsWith(`${worldId}`))
+			.filter(([key]) => key.endsWith(`/${worldId}`))
 			.flatMap(([, clients]) => clients)
 	},
 }

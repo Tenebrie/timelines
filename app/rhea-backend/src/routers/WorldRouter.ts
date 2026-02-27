@@ -152,6 +152,9 @@ router.get('/api/world/:worldId/icons/events/common', async (ctx) => {
 		worldId: PathParam(StringValidator),
 	})
 
+	const user = await useAuth(ctx, UserAuthenticator)
+	await AuthorizationService.checkUserReadAccessById(user, worldId)
+
 	const collections = await IconsService.getCommonWorldEventIcons(worldId)
 	return { collections }
 })
@@ -292,6 +295,8 @@ router.get('/api/world/:worldId/calendars', async (ctx) => {
 	const { worldId } = usePathParams(ctx, {
 		worldId: PathParam(StringValidator),
 	})
+
+	await AuthorizationService.checkUserReadAccessById(user, worldId)
 
 	const userCalendars = await CalendarService.listUserCalendars({ ownerId: user.id })
 	const worldCalendars = await CalendarService.listWorldCalendars({ worldId })

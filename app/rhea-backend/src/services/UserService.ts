@@ -36,7 +36,7 @@ export const UserService = {
 	},
 
 	register: async (email: string, username: string, password: string) => {
-		const hashedPassword = await bcrypt.hash(password, 8)
+		const hashedPassword = await bcrypt.hash(password, 12)
 		const user = await getPrismaClient().user.create({
 			data: {
 				email,
@@ -111,7 +111,7 @@ export const UserService = {
 			return false
 		}
 
-		const hashedPassword = await bcrypt.hash(newPassword, 8)
+		const hashedPassword = await bcrypt.hash(newPassword, 12)
 		await getPrismaClient().user.update({
 			where: {
 				id: userId,

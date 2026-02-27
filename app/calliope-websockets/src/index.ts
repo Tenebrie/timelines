@@ -48,9 +48,8 @@ app.ws.use(
 				WebsocketService.unregisterSocket(userId, ctx.websocket)
 			})
 		} catch (e) {
-			const error = e instanceof Error ? e : new Error(String(e))
-			console.error('Error establishing websocket session', error)
-			ctx.websocket.close(4500, 'Error establishing socket: ' + error.message)
+			console.error('Error establishing websocket session:', e)
+			ctx.websocket.close(4500, 'Error establishing socket')
 		}
 	}),
 )
@@ -110,9 +109,8 @@ app.ws.use(
 			}
 			messageQueue.length = 0
 		} catch (e) {
-			const error = e instanceof Error ? e : new Error(String(e))
-			console.error('Error establishing Yjs websocket', e)
-			ctx.websocket.close(4500, 'Error establishing socket: ' + error.message)
+			console.error('Error establishing Yjs websocket:', e)
+			ctx.websocket.close(4500, 'Error establishing socket')
 		}
 	}),
 )

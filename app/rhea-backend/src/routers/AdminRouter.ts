@@ -73,7 +73,7 @@ router.post('/api/admin/user/:userId/impersonate', async (ctx) => {
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
-		secure: ctx.request.protocol === 'https',
+		secure: ctx.headers['x-forwarded-proto'] === 'https',
 		sameSite: 'lax',
 	})
 
@@ -114,7 +114,7 @@ router.delete('/api/admin/users/:userId', async (ctx) => {
 	return await AdminService.deleteUser(userId)
 })
 
-router.patch('/api/admin/users/:userId/password', async (ctx) => {
+router.patch('/api/admin/users/:userId', async (ctx) => {
 	useApiEndpoint({
 		name: 'adminUpdateUser',
 		description: 'Updates the user information for the given user',
