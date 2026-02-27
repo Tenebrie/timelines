@@ -4,15 +4,15 @@
 ENV=$(cat /run/secrets/environment)
 
 if [ "$ENV" == "staging" ]; then
-  DOMAIN="staging.tenebrie.com"
+  DOMAINS="-d staging.tenebrie.com -d staging.neverkin.com -d app.staging.neverkin.com"
 else
-  DOMAIN="timelines.tenebrie.com"
+  DOMAINS="-d timelines.tenebrie.com -d neverkin.com -d app.neverkin.com"
 fi
 
 certbot --nginx --non-interactive --agree-tos \
 	--no-eff-email \
 	--email 'kos94ok@gmail.com' \
-	--domains "$DOMAIN"
+	$DOMAINS
 
 service nginx status
 service nginx stop

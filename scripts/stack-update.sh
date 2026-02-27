@@ -6,7 +6,7 @@ if [[ -z "$VERSION" ]]; then
   exit 1
 fi
 
-STACK_VERSION=6
+STACK_VERSION=7
 STACK_VERSION_FILE="/var/lib/timelines/stack-version"
 
 # Check if we need to do a full deploy instead of update
@@ -34,12 +34,13 @@ fi
 
 docker system prune -f
 
-SERVICES=("timelines_rhea" "timelines_calliope" "timelines_styx" "timelines_orpheus")
+SERVICES=("timelines_rhea" "timelines_calliope" "timelines_styx" "timelines_orpheus" "timelines_thetis")
 IMAGES=(
   "tenebrie/timelines-rhea:${VERSION}"
   "tenebrie/timelines-calliope:${VERSION}"
   "tenebrie/timelines-styx:${VERSION}"
   "tenebrie/timelines-orpheus:${VERSION}"
+  "tenebrie/timelines-thetis:${VERSION}"
 )
 
 for i in "${!SERVICES[@]}"; do

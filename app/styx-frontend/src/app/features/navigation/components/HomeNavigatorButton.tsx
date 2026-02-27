@@ -12,6 +12,7 @@ import { useRef, useState } from 'react'
 
 import { NavigationLink } from '@/app/components/NavigationLink'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+import { useCheckRouteMatchExact } from '@/router-utils/hooks/useCheckRouteMatchExact'
 
 type Props = {
 	disabled?: boolean
@@ -21,7 +22,7 @@ export function HomeNavigatorButton({ disabled }: Props) {
 	const [menuOpen, setMenuOpen] = useState(false)
 	const anchorRef = useRef<HTMLButtonElement>(null)
 
-	const isHomeMatching = useCheckRouteMatch('/home')
+	const isHomeMatching = useCheckRouteMatchExact('/')
 	const isWorldMatching = useCheckRouteMatch('/world/')
 	const isCalendarMatching = useCheckRouteMatch('/calendar/')
 
@@ -38,7 +39,7 @@ export function HomeNavigatorButton({ disabled }: Props) {
 	return (
 		<>
 			<ButtonGroup variant={isAnyMatching ? 'contained' : 'text'} disabled={disabled} disableElevation>
-				<NavigationLink to="/home">
+				<NavigationLink to="/">
 					<Button
 						aria-label="Navigate to home"
 						sx={{

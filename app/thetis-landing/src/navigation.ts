@@ -24,8 +24,8 @@ export const headerData = {
 		},
 	],
 	actions: [
-		{ text: 'Login', href: 'http://localhost', target: '_blank' },
-		{ text: 'Get Started', href: 'http://localhost', target: '_blank' },
+		{ text: 'Login', href: '#app' },
+		{ text: 'Get Started', href: '#app' },
 	],
 }
 

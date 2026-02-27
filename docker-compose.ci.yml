@@ -4,7 +4,9 @@ services:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile.prod
         networks:
-            - ci_network
+            ci_network:
+                aliases:
+                    - app.gatekeeper
         ports:
             - "80:80"
 
@@ -54,6 +56,13 @@ services:
         command: yarn prod
         depends_on:
             - redis
+        networks:
+            - ci_network
+
+    thetis:
+        build:
+            context: ./
+            dockerfile: ./app/thetis-landing/Dockerfile.prod
         networks:
             - ci_network
 

@@ -275,3 +275,15 @@ import { UI } from 'astrowind:config'
 		Observer.start()
 	})
 </script>
+
+<script is:inline>
+	function rewriteAppLinks() {
+		var appUrl = window.location.protocol + '//app.' + window.location.host
+		document.querySelectorAll('a[href="#app"]').forEach(function (link) {
+			link.href = appUrl
+		})
+	}
+
+	rewriteAppLinks()
+	document.addEventListener('astro:after-swap', rewriteAppLinks)
+</script>

@@ -5,9 +5,9 @@ export const baseUrl = (() => {
 	} else if (env === 'staging') {
 		return 'https://staging.tenebrie.com'
 	} else if (env === 'local' || env === 'ci') {
-		return 'http://gatekeeper:80'
+		return 'http://app.gatekeeper:80'
 	} else if (env === 'local_ui') {
-		return 'http://localhost'
+		return 'http://app.localhost'
 	}
 	throw new Error(`Unknown TARGET_ENV: ${env}`)
 })()

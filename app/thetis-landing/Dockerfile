@@ -7,4 +7,4 @@ COPY ./app/thetis-landing/yarn.lock /app/thetis/
 
 RUN yarn install
 
-EXPOSE 4321
+EXPOSE 8081
