@@ -98,26 +98,26 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as calendarApi }
 export type ListCalendarsApiResponse = /** status 200  */ {
-	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId?: null | string
 	ownerId?: null | string
+	description: string
+	worldId?: null | string
 	position: number
 	originTime: string
 	dateFormat?: null | string
 }[]
 export type ListCalendarsApiArg = void
 export type CreateCalendarApiResponse = /** status 200  */ {
-	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId?: null | string
 	ownerId?: null | string
+	description: string
+	worldId?: null | string
 	position: number
 	originTime: string
 	dateFormat?: null | string
@@ -137,6 +137,7 @@ export type GetCalendarApiResponse = /** status 200  */ {
 			name: string
 			calendarId: string
 			unitId: string
+			position: number
 			presentationId: string
 			formatString: string
 			subdivision: number
@@ -191,13 +192,13 @@ export type GetCalendarApiResponse = /** status 200  */ {
 		duration: string
 		treeDepth: number
 	}[]
-	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId?: null | string
 	ownerId?: null | string
+	description: string
+	worldId?: null | string
 	position: number
 	originTime: string
 	dateFormat?: null | string
@@ -207,13 +208,13 @@ export type GetCalendarApiArg = {
 	calendarId: string
 }
 export type UpdateCalendarApiResponse = /** status 200  */ {
-	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId?: null | string
 	ownerId?: null | string
+	description: string
+	worldId?: null | string
 	position: number
 	originTime: string
 	dateFormat?: null | string
@@ -228,13 +229,13 @@ export type UpdateCalendarApiArg = {
 	}
 }
 export type DeleteCalendarApiResponse = /** status 200  */ {
-	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId?: null | string
 	ownerId?: null | string
+	description: string
+	worldId?: null | string
 	position: number
 	originTime: string
 	dateFormat?: null | string
@@ -247,6 +248,8 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 	units: {
 		children: {
 			id: string
+			createdAt: string
+			updatedAt: string
 			calendarId: string
 			position: number
 			label?: null | string
@@ -257,6 +260,8 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 		}[]
 		parents: {
 			id: string
+			createdAt: string
+			updatedAt: string
 			calendarId: string
 			position: number
 			label?: null | string
@@ -280,9 +285,13 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 	presentations: {
 		units: {
 			id: string
+			createdAt: string
+			updatedAt: string
 			name: string
 			calendarId: string
 			unitId: string
+			position: number
+			presentationId: string
 			formatString: string
 			subdivision: number
 			labeledIndices: number[]
@@ -308,10 +317,10 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 		position: number
 		formatShorthand?: null | string
 	}[]
-	description: string
 	id: string
 	updatedAt: string
 	name: string
+	description: string
 	position: number
 	originTime: string
 	dateFormat?: null | string
@@ -427,6 +436,7 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 		name: string
 		calendarId: string
 		unitId: string
+		position: number
 		presentationId: string
 		formatString: string
 		subdivision: number
@@ -457,6 +467,7 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 		name: string
 		calendarId: string
 		unitId: string
+		position: number
 		presentationId: string
 		formatString: string
 		subdivision: number
@@ -505,13 +516,13 @@ export type DeleteCalendarPresentationApiArg = {
 	presentationId: string
 }
 export type ListWorldCalendarsApiResponse = /** status 200  */ {
-	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId?: null | string
 	ownerId?: null | string
+	description: string
+	worldId?: null | string
 	position: number
 	originTime: string
 	dateFormat?: null | string

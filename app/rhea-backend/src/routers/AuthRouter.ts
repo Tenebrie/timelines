@@ -89,7 +89,7 @@ router.post('/api/auth', async (ctx) => {
 		type: 'Welcome',
 		userId: user.id,
 		title: 'Welcome!',
-		description: 'Welcome to Timelines!',
+		description: 'Welcome to Neverkin!',
 	})
 
 	return {

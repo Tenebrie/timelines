@@ -35,9 +35,12 @@ const App = () => {
 
 	useEffect(() => {
 		if (process.env.NODE_ENV === 'development') {
-			window.document.title = 'Timelines (Dev)'
-		} else if (window.location.hostname === 'staging.tenebrie.com') {
-			window.document.title = 'Timelines (Staging)'
+			window.document.title = 'Neverkin (Dev)'
+		} else if (
+			window.location.hostname === 'staging.tenebrie.com' ||
+			window.location.hostname === 'staging.neverkin.com'
+		) {
+			window.document.title = 'Neverkin (Staging)'
 		}
 	}, [])
 

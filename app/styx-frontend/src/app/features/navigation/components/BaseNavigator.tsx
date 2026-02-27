@@ -25,6 +25,7 @@ const Container = styled(Paper)<{ $theme: CustomTheme }>`
 	display: flex;
 	justify-content: space-between;
 	border-radius: 0 !important;
+	transition: background-color 1.3s;
 	z-index: 10;
 	padding: 4px 8px;
 `
@@ -43,7 +44,7 @@ export const BaseNavigator = () => {
 					</Stack>
 					<Divider orientation="vertical" sx={{ height: '25px' }} />
 					<HomeNavigatorButton disabled={!user} />
-					<NavigatorButton route="/tools" icon={<Construction />} label="Tools" />
+					<NavigatorButton route="/tools" icon={<Construction />} label="Tools" disabled={!user} />
 					{user?.level === 'Admin' && (
 						<NavigatorButton route="/admin" icon={<AdminPanelSettings />} label="Admin" />
 					)}

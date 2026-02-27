@@ -47,13 +47,13 @@ export type ListUserAssetsApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		ownerId: string
 		expiresAt?: null | string
+		ownerId: string
 		bucketKey: string
 		size: number
 		originalFileName: string
 		originalFileExtension: string
-		contentType: 'Image' | 'Avatar'
+		contentType: 'ImageConversion' | 'Avatar'
 		status: 'Pending' | 'Finalized' | 'Failed'
 	}[]
 }
@@ -63,13 +63,13 @@ export type RequestPresignedUrlApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		ownerId: string
 		expiresAt?: null | string
+		ownerId: string
 		bucketKey: string
 		size: number
 		originalFileName: string
 		originalFileExtension: string
-		contentType: 'Image' | 'Avatar'
+		contentType: 'ImageConversion' | 'Avatar'
 		status: 'Pending' | 'Finalized' | 'Failed'
 	}
 	url: string
@@ -81,20 +81,20 @@ export type RequestPresignedUrlApiArg = {
 	body: {
 		fileName: string
 		fileSize: number
-		assetType: 'Image' | 'Avatar'
+		assetType: 'ImageConversion' | 'Avatar'
 	}
 }
 export type FinalizeAssetUploadApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	ownerId: string
 	expiresAt?: null | string
+	ownerId: string
 	bucketKey: string
 	size: number
 	originalFileName: string
 	originalFileExtension: string
-	contentType: 'Image' | 'Avatar'
+	contentType: 'ImageConversion' | 'Avatar'
 	status: 'Pending' | 'Finalized' | 'Failed'
 }
 export type FinalizeAssetUploadApiArg = {

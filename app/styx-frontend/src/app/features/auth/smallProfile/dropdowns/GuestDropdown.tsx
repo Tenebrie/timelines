@@ -16,7 +16,7 @@ export function GuestDropdown() {
 	const navigate = useStableNavigate()
 	const popupState = usePopupState({ variant: 'popover', popupId: 'profile-menu' })
 	const isLogin = useCheckRouteMatch('/login')
-	const isRegister = useCheckRouteMatch('/register')
+	const isRegister = useCheckRouteMatch('/create-account')
 
 	const onLogin = async () => {
 		navigate({ to: '/login' })
@@ -24,7 +24,7 @@ export function GuestDropdown() {
 	}
 
 	const onRegister = async () => {
-		navigate({ to: '/register' })
+		navigate({ to: '/create-account' })
 		popupState.close()
 	}
 

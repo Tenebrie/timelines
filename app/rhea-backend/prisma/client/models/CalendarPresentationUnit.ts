@@ -348,7 +348,7 @@ export type CalendarPresentationUnitCreateInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   name: string
   formatString: string
   subdivision?: number
@@ -361,7 +361,7 @@ export type CalendarPresentationUnitUncheckedCreateInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   name: string
   formatString: string
   subdivision?: number
@@ -402,7 +402,7 @@ export type CalendarPresentationUnitCreateManyInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   name: string
   formatString: string
   subdivision?: number
@@ -609,7 +609,7 @@ export type CalendarPresentationUnitCreateWithoutUnitInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   name: string
   formatString: string
   subdivision?: number
@@ -621,7 +621,7 @@ export type CalendarPresentationUnitUncheckedCreateWithoutUnitInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   name: string
   formatString: string
   subdivision?: number
@@ -676,7 +676,7 @@ export type CalendarPresentationUnitCreateWithoutPresentationInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   name: string
   formatString: string
   subdivision?: number
@@ -688,7 +688,7 @@ export type CalendarPresentationUnitUncheckedCreateWithoutPresentationInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   name: string
   formatString: string
   subdivision?: number
@@ -726,7 +726,7 @@ export type CalendarPresentationUnitCreateManyUnitInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   name: string
   formatString: string
   subdivision?: number
@@ -774,7 +774,7 @@ export type CalendarPresentationUnitCreateManyPresentationInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  position: number
+  position?: number
   name: string
   formatString: string
   subdivision?: number

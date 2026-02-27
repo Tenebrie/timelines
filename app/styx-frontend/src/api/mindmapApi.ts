@@ -35,9 +35,9 @@ export type GetMindmapApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		worldId: string
-		parentActorId?: null | string
 		positionX: number
 		positionY: number
+		parentActorId?: null | string
 	}[]
 }
 export type GetMindmapApiArg = {
@@ -49,9 +49,9 @@ export type CreateNodeApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	worldId: string
-	parentActorId?: null | string
 	positionX: number
 	positionY: number
+	parentActorId?: null | string
 }
 export type CreateNodeApiArg = {
 	/** Any string value */
@@ -67,9 +67,9 @@ export type DeleteNodeApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	worldId: string
-	parentActorId?: null | string
 	positionX: number
 	positionY: number
+	parentActorId?: null | string
 }
 export type DeleteNodeApiArg = {
 	/** Any string value */

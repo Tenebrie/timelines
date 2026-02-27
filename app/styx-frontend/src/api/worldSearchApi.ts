@@ -21,32 +21,32 @@ const injectedRtkApi = api
 export { injectedRtkApi as worldSearchApi }
 export type SearchWorldApiResponse = /** status 200  */ {
 	actors: {
-		pages: {
-			id: string
-			name: string
-		}[]
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetType: 'Tag' | 'Actor' | 'Event' | 'Article'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceType: 'Tag' | 'Actor' | 'Event' | 'Article'
+		}[]
+		pages: {
+			id: string
+			name: string
 		}[]
 		node: null | {
 			id: string
 			createdAt: string
 			updatedAt: string
 			worldId: string
-			parentActorId?: null | string
 			positionX: number
 			positionY: number
+			parentActorId?: null | string
 		}
-		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		description: string
 		worldId: string
 		title: string
 		icon: string
@@ -59,40 +59,40 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		updatedAt: string
 		name: string
 		worldId: string
+		position: number
 		icon: string
 		color: string
-		position: number
 		contentRich: string
 		parentId?: null | string
 	}[]
 	events: {
+		mentions: {
+			targetId: string
+			targetType: 'Tag' | 'Actor' | 'Event' | 'Article'
+		}[]
+		mentionedIn: {
+			sourceId: string
+			sourceType: 'Tag' | 'Actor' | 'Event' | 'Article'
+		}[]
 		pages: {
 			id: string
 			name: string
 		}[]
-		mentions: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		}[]
-		mentionedIn: {
-			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		}[]
 		deltaStates: {
-			description?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name?: null | string
+			description?: null | string
 			descriptionRich?: null | string
 			timestamp: string
 			worldEventId: string
 		}[]
-		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		description: string
 		worldId: string
 		icon: string
 		color: string
@@ -102,11 +102,11 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		worldEventTrackId?: null | string
 	}[]
 	tags: {
-		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		description: string
 		worldId: string
 	}[]
 }

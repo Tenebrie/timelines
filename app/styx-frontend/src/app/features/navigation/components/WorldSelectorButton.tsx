@@ -11,12 +11,15 @@ import { TrunkatedSpan } from '@/app/components/TrunkatedTypography'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 import { useWorldListData } from '@/app/views/worldManagement/hooks/useWorldListData'
 
+import { getAuthState } from '../../auth/AuthSliceSelectors'
+
 export const WorldSelectorButton = memo(WorldSelectorButtonComponent)
 
 function WorldSelectorButtonComponent() {
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 	const open = Boolean(anchorEl)
 
+	const { user } = useSelector(getAuthState)
 	const currentWorldId = useSelector(getWorldIdState)
 	const { ownedWorlds, contributableWorlds, visibleWorlds } = useWorldListData()
 
@@ -40,7 +43,7 @@ function WorldSelectorButtonComponent() {
 			<Button
 				aria-label="Select world"
 				onClick={handleClick}
-				disabled={!hasWorlds}
+				disabled={!hasWorlds || !user}
 				sx={{
 					padding: '8px 15px',
 				}}

@@ -9,8 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as RegisterRouteImport } from './routes/register'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as CreateAccountRouteImport } from './routes/create-account'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorldIndexRouteImport } from './routes/world/index'
@@ -33,14 +33,14 @@ import { Route as WorldWorldIdWorldWikiWikiRouteImport } from './routes/world/$w
 import { Route as WorldWorldIdWorldWikiWikiIndexRouteImport } from './routes/world/$worldId/_world.wiki/_wiki.index'
 import { Route as WorldWorldIdWorldWikiWikiArticleIdRouteImport } from './routes/world/$worldId/_world.wiki/_wiki.$articleId'
 
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreateAccountRoute = CreateAccountRouteImport.update({
+  id: '/create-account',
+  path: '/create-account',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -159,8 +159,8 @@ const WorldWorldIdWorldWikiWikiArticleIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/create-account': typeof CreateAccountRoute
   '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
   '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile': typeof ProfileProfileRouteWithChildren
   '/secret/music': typeof SecretMusicRoute
@@ -184,8 +184,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/create-account': typeof CreateAccountRoute
   '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
   '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile': typeof ProfileIndexRoute
   '/secret/music': typeof SecretMusicRoute
@@ -207,8 +207,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/create-account': typeof CreateAccountRoute
   '/login': typeof LoginRoute
-  '/register': typeof RegisterRoute
   '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile/_profile': typeof ProfileProfileRouteWithChildren
   '/secret/music': typeof SecretMusicRoute
@@ -234,8 +234,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/create-account'
     | '/login'
-    | '/register'
     | '/calendar/$calendarId'
     | '/profile'
     | '/secret/music'
@@ -259,8 +259,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/create-account'
     | '/login'
-    | '/register'
     | '/calendar/$calendarId'
     | '/profile'
     | '/secret/music'
@@ -281,8 +281,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/create-account'
     | '/login'
-    | '/register'
     | '/calendar/$calendarId'
     | '/profile/_profile'
     | '/secret/music'
@@ -307,8 +307,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  CreateAccountRoute: typeof CreateAccountRoute
   LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRoute
   CalendarCalendarIdRoute: typeof CalendarCalendarIdRoute
   ProfileProfileRoute: typeof ProfileProfileRouteWithChildren
   SecretMusicRoute: typeof SecretMusicRoute
@@ -322,18 +322,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create-account': {
+      id: '/create-account'
+      path: '/create-account'
+      fullPath: '/create-account'
+      preLoaderRoute: typeof CreateAccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -551,8 +551,8 @@ const WorldWorldIdWorldRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  CreateAccountRoute: CreateAccountRoute,
   LoginRoute: LoginRoute,
-  RegisterRoute: RegisterRoute,
   CalendarCalendarIdRoute: CalendarCalendarIdRoute,
   ProfileProfileRoute: ProfileProfileRouteWithChildren,
   SecretMusicRoute: SecretMusicRoute,

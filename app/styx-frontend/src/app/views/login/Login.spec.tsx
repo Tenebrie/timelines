@@ -58,7 +58,7 @@ describe('<Login />', () => {
 
 			await user.click(screen.getByText('Create a new account'))
 
-			expect(router.state.location.pathname).toEqual('/register')
+			expect(router.state.location.pathname).toEqual('/create-account')
 		})
 
 		it('sends login request', async () => {

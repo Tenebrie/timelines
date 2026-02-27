@@ -2,7 +2,6 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Input from '@mui/material/Input'
 import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
@@ -10,6 +9,7 @@ import { useState } from 'react'
 import { RequestImageConversionApiArg, useGetSupportedImageFormatsQuery } from '@/api/otherApi'
 import { FilePickerButton } from '@/app/components/FilePickerButton'
 import { FormErrorBanner } from '@/app/components/FormErrorBanner'
+import { LoadingSelect } from '@/ui-lib/components/LoadingSelect/LoadingSelect'
 
 import { useImageConversion } from './hooks/useImageConversion'
 
@@ -80,19 +80,18 @@ export function ImageConverter() {
 					<Typography variant="subtitle2" color="text.secondary" gutterBottom>
 						Output Format
 					</Typography>
-					{formatData && (
-						<Select
-							value={format}
-							onChange={(event) => setFormat(event.target.value as ImageFormat)}
-							sx={{ width: '100%' }}
-						>
-							{formatData?.formats.map((format) => (
-								<MenuItem key={format} value={format}>
-									{format.toUpperCase()}
-								</MenuItem>
-							))}
-						</Select>
-					)}
+					<LoadingSelect
+						value={format}
+						isLoading={!formatData}
+						onChange={(event) => setFormat(event.target.value as ImageFormat)}
+						sx={{ width: '100%' }}
+					>
+						{formatData?.formats.map((format) => (
+							<MenuItem key={format} value={format}>
+								{format.toUpperCase()}
+							</MenuItem>
+						))}
+					</LoadingSelect>
 				</Box>
 
 				<Stack direction="row" justifyContent="flex-end" sx={{ mt: 2 }}>

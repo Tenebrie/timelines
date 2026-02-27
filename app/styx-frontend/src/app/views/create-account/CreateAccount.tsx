@@ -20,7 +20,7 @@ import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import { authSlice } from '../../features/auth/AuthSlice'
 import { AlreadyLoggedInAlert } from '../../features/auth/components/AlreadyLoggedInAlert'
 
-export const Register = () => {
+export const CreateAccount = () => {
 	const navigate = useStableNavigate()
 	const [createAccount, createAccountState] = useCreateAccountMutation()
 
@@ -154,4 +154,4 @@ export const Register = () => {
 	)
 }
 
-export default Register
+export default CreateAccount

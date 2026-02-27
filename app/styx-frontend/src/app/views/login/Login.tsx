@@ -69,7 +69,7 @@ export const Login = () => {
 						</Stack>
 						<Divider />
 						<Typography variant="h6" align="center" sx={{ padding: 1 }}>
-							Sign in to Timelines
+							Sign in to Neverkin
 						</Typography>
 						<AlreadyLoggedInAlert parentSpacing={2} />
 						<ApiErrorBanner apiState={loginState} />
@@ -80,7 +80,7 @@ export const Login = () => {
 									autoComplete="username"
 									label="Email"
 									type="text"
-									placeholder="example@timelines.com"
+									placeholder="example@neverkin.com"
 									autoFocus
 									fullWidth
 									onChangeCallback={() => {
@@ -119,7 +119,7 @@ export const Login = () => {
 						>
 							<span>Sign In</span>
 						</Button>
-						<Link from="/" to="/register">
+						<Link from="/" to="/create-account">
 							Create a new account
 						</Link>
 					</Stack>

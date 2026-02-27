@@ -10,7 +10,7 @@ import { getAuthState } from '../AuthSliceSelectors'
 
 type ReturnType = {
 	success: boolean
-	redirectTo?: '/' | '/login' | '/register' | undefined
+	redirectTo?: '/' | '/login' | '/create-account' | undefined
 }
 
 export const useAuthCheck = (): ReturnType => {
@@ -45,7 +45,7 @@ export const useAuthCheck = (): ReturnType => {
 		return { success: true }
 	}
 
-	const publicRoutes = ['/login', '/register']
+	const publicRoutes = ['/login', '/create-account']
 	if (publicRoutes.some((r) => window.location.pathname.startsWith(r))) {
 		return { success: true }
 	}

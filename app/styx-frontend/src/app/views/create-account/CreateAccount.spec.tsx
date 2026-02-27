@@ -8,14 +8,14 @@ import { authInitialState } from '../../features/auth/AuthSlice'
 
 const server = setupTestServer()
 
-describe('<Register />', () => {
+describe('<CreateAccount />', () => {
 	describe('with navigation', () => {
 		beforeEach(() => {
 			mockNonAuthenticatedUser(server)
 		})
 
 		it('renders the registration form at the correct path', async () => {
-			await renderWithRouter('/register')
+			await renderWithRouter('/create-account')
 
 			expect(screen.getByLabelText('Email')).toBeInTheDocument()
 			expect(screen.getByLabelText('Username')).toBeInTheDocument()
@@ -24,13 +24,13 @@ describe('<Register />', () => {
 		})
 
 		it("does not render the 'continue to app' alert when not logged in", async () => {
-			await renderWithRouter('/register')
+			await renderWithRouter('/create-account')
 
 			expect(screen.queryByText(/It seems you've already logged in/)).not.toBeInTheDocument()
 		})
 
 		it("if logged in, renders the 'continue to app' alert", async () => {
-			await renderWithRouter('/register', {
+			await renderWithRouter('/create-account', {
 				preloadedState: {
 					auth: {
 						...authInitialState,
@@ -48,8 +48,8 @@ describe('<Register />', () => {
 			expect(screen.getByText(/It seems you've already logged in/)).toBeInTheDocument()
 		})
 
-		it('navigates to registration on link click', async () => {
-			const { user, router } = await renderWithRouter('/register')
+		it('navigates to login on link click', async () => {
+			const { user, router } = await renderWithRouter('/create-account')
 
 			await user.click(screen.getByText('Already have an account? Sign in instead'))
 			expect(router.state.location.pathname).toEqual('/login')
@@ -69,7 +69,7 @@ describe('<Register />', () => {
 				},
 			})
 
-			const { user } = await renderWithRouter('/register')
+			const { user } = await renderWithRouter('/create-account')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Username'), 'admin')
@@ -94,7 +94,7 @@ describe('<Register />', () => {
 				},
 			})
 
-			const { user, store, router } = await renderWithRouter('/register')
+			const { user, store, router } = await renderWithRouter('/create-account')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Username'), 'admin')
@@ -113,7 +113,7 @@ describe('<Register />', () => {
 		})
 
 		it('prints error when email is missing', async () => {
-			const { user } = await renderWithRouter('/register')
+			const { user } = await renderWithRouter('/create-account')
 
 			await user.type(screen.getByLabelText('Username'), 'admin')
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')
@@ -124,7 +124,7 @@ describe('<Register />', () => {
 		})
 
 		it('prints error when username is missing', async () => {
-			const { user } = await renderWithRouter('/register')
+			const { user } = await renderWithRouter('/create-account')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Password'), 'securepassword123')
@@ -135,7 +135,7 @@ describe('<Register />', () => {
 		})
 
 		it('prints error when password is missing', async () => {
-			const { user } = await renderWithRouter('/register')
+			const { user } = await renderWithRouter('/create-account')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Username'), 'admin')
@@ -153,7 +153,7 @@ describe('<Register />', () => {
 				},
 			})
 
-			const { user, router } = await renderWithRouter('/register')
+			const { user, router } = await renderWithRouter('/create-account')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Username'), 'admin')
@@ -163,7 +163,7 @@ describe('<Register />', () => {
 
 			expect(await screen.findByText('Unable to create account')).toBeInTheDocument()
 
-			expect(router.state.location.pathname).toEqual('/register')
+			expect(router.state.location.pathname).toEqual('/create-account')
 		})
 
 		it('recovers from error when user starts typing', async () => {
@@ -174,7 +174,7 @@ describe('<Register />', () => {
 				},
 			})
 
-			const { user } = await renderWithRouter('/register')
+			const { user } = await renderWithRouter('/create-account')
 
 			await user.type(screen.getByLabelText('Email'), 'admin@localhost')
 			await user.type(screen.getByLabelText('Username'), 'admin')

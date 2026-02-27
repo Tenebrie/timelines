@@ -87,7 +87,7 @@ export type PostLoginApiResponse = /** status 200  */ {
 			bucketKey: string
 			originalFileName: string
 			originalFileExtension: string
-			contentType: 'Image' | 'Avatar'
+			contentType: 'ImageConversion' | 'Avatar'
 			status: 'Pending' | 'Finalized' | 'Failed'
 		}
 	}

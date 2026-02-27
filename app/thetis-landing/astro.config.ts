@@ -39,7 +39,7 @@ export default defineConfig({
 			customPages: [
 				'https://neverkin.com/',
 				'https://app.neverkin.com/login',
-				'https://app.neverkin.com/register',
+				'https://app.neverkin.com/create-account',
 			],
 		}),
 		mdx(),
