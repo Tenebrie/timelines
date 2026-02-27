@@ -1,11 +1,11 @@
 import { AdminGetUsersApiResponse } from '@api/adminUsersApi'
-import { useAdminUpdateUser } from '@api/hooks/useAdminUpdateUser'
 import EditIcon from '@mui/icons-material/Edit'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 
+import { useAdminUpdateUser } from '@/app/views/admin/api/useAdminUpdateUser'
 import { PopoverButton } from '@/ui-lib/components/PopoverButton/PopoverButton'
 
 type Props = {
@@ -14,6 +14,7 @@ type Props = {
 
 export function UserEmailPopoverButton({ user }: Props) {
 	const [email, setEmail] = useState(user.email)
+	const [error, setError] = useState<string | null>(null)
 
 	const [updateUser, { isLoading }] = useAdminUpdateUser()
 
@@ -22,6 +23,8 @@ export function UserEmailPopoverButton({ user }: Props) {
 			size="small"
 			icon={<EditIcon fontSize="small" />}
 			tooltip="Edit email"
+			onCleanup={() => setError(null)}
+			autofocus
 			popoverBody={() => (
 				<>
 					<Typography variant="subtitle2" fontWeight="bold">
@@ -31,7 +34,10 @@ export function UserEmailPopoverButton({ user }: Props) {
 						label="New email"
 						size="small"
 						value={email}
-						onChange={(e) => setEmail(e.target.value)}
+						onChange={(e) => {
+							setEmail(e.target.value)
+							setError(null)
+						}}
 						onKeyDown={async (e) => {
 							if (e.key !== 'Enter') {
 								return
@@ -41,10 +47,14 @@ export function UserEmailPopoverButton({ user }: Props) {
 							})
 							if (returnValue.response) {
 								close()
+							} else {
+								setError(returnValue.error.message)
 							}
 						}}
 						autoFocus
 						fullWidth
+						helperText={error}
+						error={!!error}
 						disabled={isLoading}
 					/>
 				</>
@@ -63,6 +73,8 @@ export function UserEmailPopoverButton({ user }: Props) {
 							})
 							if (returnValue.response) {
 								close()
+							} else {
+								setError(returnValue.error.message)
 							}
 						}}
 						startIcon={<EditIcon fontSize="small" />}

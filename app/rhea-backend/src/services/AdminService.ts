@@ -76,6 +76,14 @@ export const AdminService = {
 		}
 	},
 
+	getUserByEmail: async (email: string) => {
+		return getPrismaClient().user.findUnique({
+			where: {
+				email,
+			},
+		})
+	},
+
 	deleteUser: async (userId: string) => {
 		return getPrismaClient().user.delete({
 			where: {

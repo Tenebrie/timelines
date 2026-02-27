@@ -14,6 +14,7 @@ type Props = {
 	buttonSx?: Parameters<typeof IconButton>['0']['sx']
 	popoverSx?: Parameters<typeof Stack>['0']['sx']
 	autofocus?: boolean
+	onCleanup?: () => void
 }
 
 export function PopoverButton({
@@ -25,6 +26,7 @@ export function PopoverButton({
 	buttonSx,
 	popoverSx = { gap: 1.5, p: 2 },
 	autofocus,
+	onCleanup,
 }: Props) {
 	const popupState = usePopupState({ variant: 'popover', popupId: tooltip })
 
@@ -40,6 +42,7 @@ export function PopoverButton({
 					onClick={(e) => {
 						e.preventDefault()
 						e.stopPropagation()
+						onCleanup?.()
 						bindTrigger(popupState).onClick(e)
 					}}
 				>

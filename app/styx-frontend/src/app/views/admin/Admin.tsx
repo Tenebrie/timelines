@@ -15,6 +15,7 @@ import { useAdminGetUsersQuery } from '@/api/adminUsersApi'
 import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 
+import { useAdminImpersonateUser } from './api/useAdminImpersonateUser'
 import { Pagination } from './components/Pagination'
 import { SearchInput } from './components/SearchInput'
 import { UserAccessLevelDropdown } from './components/UserAccessLevelDropdown'
@@ -38,6 +39,7 @@ export const Admin = () => {
 
 	const { open: openDeleteUserModal } = useModal('deleteUserModal')
 	const { open: openSetPasswordModal } = useModal('setPasswordModal')
+	const [impersonateUser] = useAdminImpersonateUser()
 
 	const formatDate = useCallback((date: string) => {
 		return new Date(date).toLocaleString('en-US', {
@@ -92,11 +94,13 @@ export const Admin = () => {
 					<TableBody>
 						{data.users.map((user) => (
 							<TableRow key={user.id} sx={{ height: '75px' }}>
-								<TableCell sx={{ gap: 1, display: 'flex', alignItems: 'center' }}>
-									<Link from="/admin" to={`/${user.id}`}>
-										<b>{user.email}</b>
-									</Link>
-									<UserEmailPopoverButton user={user} />
+								<TableCell>
+									<Stack gap={1} direction="row" alignItems="center">
+										<Link from="/admin" to={`/${user.id}`}>
+											<b>{user.email}</b>
+										</Link>
+										<UserEmailPopoverButton user={user} />
+									</Stack>
 								</TableCell>
 								<TableCell>{user.username}</TableCell>
 								<TableCell>
@@ -112,7 +116,7 @@ export const Admin = () => {
 									)}
 									{loggedInUser.id !== user.id && (
 										<>
-											<Button>Login as</Button>
+											<Button onClick={() => impersonateUser(user.id)}>Login as</Button>
 											<Button onClick={() => openSetPasswordModal({ targetUser: user })}>Set password</Button>
 											<Button onClick={() => openDeleteUserModal({ targetUser: user })}>Delete</Button>
 										</>

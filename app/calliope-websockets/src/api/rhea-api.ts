@@ -110,6 +110,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/user/{userId}/impersonate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Admin impersonate user endpoint
+         * @description Allows admin to impersonate another user by their user ID. Returns a new nested session token for the impersonated user.
+         */
+        post: operations["adminImpersonateUser"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/users/{userId}/level": {
         parameters: {
             query?: never;
@@ -1823,6 +1843,44 @@ export interface operations {
             };
         };
     };
+    adminImpersonateUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        user: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            deletedAt?: null | string;
+                            deletionScheduledAt?: null | string;
+                            email: string;
+                            username: string;
+                            password: string;
+                            bio: string;
+                            level: "Free" | "Premium" | "Admin";
+                            avatarId?: null | string;
+                        };
+                    };
+                };
+            };
+        };
+    };
     adminSetUserLevel: {
         parameters: {
             query?: never;
@@ -2016,8 +2074,8 @@ export interface operations {
                         description: string;
                         id: string;
                         title: string;
-                        type: "Info" | "Welcome" | "WorldShared";
                         userId: string;
+                        type: "Info" | "Welcome" | "WorldShared";
                         /** Format: date-time */
                         timestamp: string;
                         isUnread: boolean;
@@ -2112,9 +2170,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             ownerId: string;
+                            size: number;
                             expiresAt?: null | string;
                             bucketKey: string;
-                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "ImageConversion" | "Avatar";
@@ -2160,9 +2218,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             ownerId: string;
+                            size: number;
                             expiresAt?: null | string;
                             bucketKey: string;
-                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "ImageConversion" | "Avatar";
@@ -2207,9 +2265,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         ownerId: string;
+                        size: number;
                         expiresAt?: null | string;
                         bucketKey: string;
-                        size: number;
                         originalFileName: string;
                         originalFileExtension: string;
                         contentType: "ImageConversion" | "Avatar";
@@ -2350,10 +2408,10 @@ export interface operations {
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
-                                ownerId: string;
-                                size: number;
                                 expiresAt?: null | string;
+                                ownerId: string;
                                 bucketKey: string;
+                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "ImageConversion" | "Avatar";
@@ -2375,11 +2433,15 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            204: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": {
+                        redirectTo: "login" | "admin";
+                    };
+                };
             };
         };
     };

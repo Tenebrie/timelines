@@ -22,8 +22,8 @@ export type GetAnnouncementsApiResponse = /** status 200  */ {
 	description: string
 	id: string
 	title: string
-	type: 'Info' | 'Welcome' | 'WorldShared'
 	userId: string
+	type: 'Info' | 'Welcome' | 'WorldShared'
 	timestamp: string
 	isUnread: boolean
 }[]

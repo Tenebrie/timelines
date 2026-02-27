@@ -13,6 +13,15 @@ export const TokenService = {
 		return jwt.sign(payload, SecretService.getSecret('jwt-secret'))
 	},
 
+	generateImpersonatedJwtToken: (adminId: string, user: Pick<User, 'id' | 'email'>): string => {
+		const payload: UserTokenPayload = {
+			id: user.id,
+			email: user.email,
+			impersonatingAdminId: adminId,
+		}
+		return jwt.sign(payload, SecretService.getSecret('jwt-secret'))
+	},
+
 	decodeUserToken: (token: string): UserTokenPayload => {
 		return jwt.verify(token, SecretService.getSecret('jwt-secret')) as UserTokenPayload
 	},
