@@ -131,23 +131,23 @@ const injectedRtkApi = api
 export { injectedRtkApi as calendarApi }
 export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 	units: {
-		calendarId: string
-		presentationId: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		position: number
 		name: string
+		calendarId: string
+		presentationId: string
+		position: number
 		formatString: string
 		subdivision: number
 		labeledIndices: number[]
 		unitId: string
 	}[]
-	calendarId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	calendarId: string
 	compression: number
 	scaleFactor: number
 	baselineUnitId?: null | string
@@ -162,23 +162,23 @@ export type CreateCalendarPresentationApiArg = {
 }
 export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 	units: {
-		calendarId: string
-		presentationId: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		position: number
 		name: string
+		calendarId: string
+		presentationId: string
+		position: number
 		formatString: string
 		subdivision: number
 		labeledIndices: number[]
 		unitId: string
 	}[]
-	calendarId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	calendarId: string
 	compression: number
 	scaleFactor: number
 	baselineUnitId?: null | string
@@ -190,22 +190,16 @@ export type UpdateCalendarPresentationApiArg = {
 	presentationId: string
 	body: {
 		name?: string
-		units?: {
-			formatString: string
-			unitId: string
-			subdivision?: number
-			labeledIndices?: number[]
-		}[]
 		compression?: number
 		baselineUnitId?: null | string
 	}
 }
 export type DeleteCalendarPresentationApiResponse = /** status 200  */ {
-	calendarId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	calendarId: string
 	compression: number
 	scaleFactor: number
 	baselineUnitId?: null | string
@@ -217,13 +211,13 @@ export type DeleteCalendarPresentationApiArg = {
 	presentationId: string
 }
 export type CreateCalendarPresentationUnitApiResponse = /** status 200  */ {
-	calendarId: string
-	presentationId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	position: number
 	name: string
+	calendarId: string
+	presentationId: string
+	position: number
 	formatString: string
 	subdivision: number
 	labeledIndices: number[]
@@ -242,13 +236,13 @@ export type CreateCalendarPresentationUnitApiArg = {
 	}
 }
 export type UpdateCalendarPresentationUnitApiResponse = /** status 200  */ {
-	calendarId: string
-	presentationId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	position: number
 	name: string
+	calendarId: string
+	presentationId: string
+	position: number
 	formatString: string
 	subdivision: number
 	labeledIndices: number[]
@@ -268,13 +262,13 @@ export type UpdateCalendarPresentationUnitApiArg = {
 	}
 }
 export type DeleteCalendarPresentationUnitApiResponse = /** status 200  */ {
-	calendarId: string
-	presentationId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	position: number
 	name: string
+	calendarId: string
+	presentationId: string
+	position: number
 	formatString: string
 	subdivision: number
 	labeledIndices: number[]
@@ -320,29 +314,6 @@ export type CreateCalendarApiArg = {
 	}
 }
 export type GetCalendarApiResponse = /** status 200  */ {
-	presentations: {
-		units: {
-			id: string
-			createdAt: string
-			updatedAt: string
-			name: string
-			calendarId: string
-			unitId: string
-			position: number
-			formatString: string
-			subdivision: number
-			labeledIndices: number[]
-			presentationId: string
-		}[]
-		id: string
-		createdAt: string
-		updatedAt: string
-		name: string
-		calendarId: string
-		scaleFactor: number
-		compression: number
-		baselineUnitId?: null | string
-	}[]
 	units: {
 		children: {
 			id: string
@@ -382,6 +353,29 @@ export type GetCalendarApiResponse = /** status 200  */ {
 		negativeFormat: 'MinusSign' | 'AbsoluteValue'
 		duration: string
 		treeDepth: number
+	}[]
+	presentations: {
+		units: {
+			id: string
+			createdAt: string
+			updatedAt: string
+			name: string
+			calendarId: string
+			presentationId: string
+			position: number
+			formatString: string
+			subdivision: number
+			labeledIndices: number[]
+			unitId: string
+		}[]
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		calendarId: string
+		compression: number
+		scaleFactor: number
+		baselineUnitId?: null | string
 	}[]
 	description: string
 	id: string
@@ -480,17 +474,17 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 			updatedAt: string
 			name: string
 			calendarId: string
-			unitId: string
+			presentationId: string
 			position: number
 			formatString: string
 			subdivision: number
 			labeledIndices: number[]
-			presentationId: string
+			unitId: string
 		}[]
 		id: string
 		name: string
-		scaleFactor: number
 		compression: number
+		scaleFactor: number
 		baselineUnitId?: null | string
 	}[]
 	seasons: {

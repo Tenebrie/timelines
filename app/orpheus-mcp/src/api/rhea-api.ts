@@ -158,7 +158,8 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
+        /** @description Updates the user information for the given user */
+        patch: operations["adminUpdateUser"];
         trace?: never;
     };
     "/api/announcements": {
@@ -1948,6 +1949,55 @@ export interface operations {
             };
         };
     };
+    adminUpdateUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    email?: string;
+                    username?: string;
+                    bio?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    email?: string;
+                    username?: string;
+                    bio?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        deletedAt?: null | string;
+                        deletionScheduledAt?: null | string;
+                        email: string;
+                        username: string;
+                        password: string;
+                        bio: string;
+                        level: "Free" | "Premium" | "Admin";
+                        avatarId?: null | string;
+                    };
+                };
+            };
+        };
+    };
     getAnnouncements: {
         parameters: {
             query?: never;
@@ -2363,27 +2413,27 @@ export interface operations {
                 content: {
                     "application/json": {
                         units: {
-                            calendarId: string;
-                            presentationId: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            position: number;
                             name: string;
+                            calendarId: string;
+                            presentationId: string;
+                            position: number;
                             formatString: string;
                             subdivision: number;
                             labeledIndices: number[];
                             unitId: string;
                         }[];
-                        calendarId: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        calendarId: string;
                         compression: number;
                         scaleFactor: number;
                         baselineUnitId?: null | string;
@@ -2412,13 +2462,13 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        calendarId: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        calendarId: string;
                         compression: number;
                         scaleFactor: number;
                         baselineUnitId?: null | string;
@@ -2443,23 +2493,11 @@ export interface operations {
             content: {
                 "application/json": {
                     name?: string;
-                    units?: {
-                        formatString: string;
-                        unitId: string;
-                        subdivision?: number;
-                        labeledIndices?: number[];
-                    }[];
                     compression?: number;
                     baselineUnitId?: null | string;
                 };
                 "application/x-www-form-urlencoded": {
                     name?: string;
-                    units?: {
-                        formatString: string;
-                        unitId: string;
-                        subdivision?: number;
-                        labeledIndices?: number[];
-                    }[];
                     compression?: number;
                     baselineUnitId?: null | string;
                 };
@@ -2473,27 +2511,27 @@ export interface operations {
                 content: {
                     "application/json": {
                         units: {
-                            calendarId: string;
-                            presentationId: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            position: number;
                             name: string;
+                            calendarId: string;
+                            presentationId: string;
+                            position: number;
                             formatString: string;
                             subdivision: number;
                             labeledIndices: number[];
                             unitId: string;
                         }[];
-                        calendarId: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        calendarId: string;
                         compression: number;
                         scaleFactor: number;
                         baselineUnitId?: null | string;
@@ -2537,15 +2575,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        calendarId: string;
-                        presentationId: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        position: number;
                         name: string;
+                        calendarId: string;
+                        presentationId: string;
+                        position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
@@ -2577,15 +2615,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        calendarId: string;
-                        presentationId: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        position: number;
                         name: string;
+                        calendarId: string;
+                        presentationId: string;
+                        position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
@@ -2630,15 +2668,15 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        calendarId: string;
-                        presentationId: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        position: number;
                         name: string;
+                        calendarId: string;
+                        presentationId: string;
+                        position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
@@ -2743,33 +2781,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        presentations: {
-                            units: {
-                                id: string;
-                                /** Format: date-time */
-                                createdAt: string;
-                                /** Format: date-time */
-                                updatedAt: string;
-                                name: string;
-                                calendarId: string;
-                                unitId: string;
-                                position: number;
-                                formatString: string;
-                                subdivision: number;
-                                labeledIndices: number[];
-                                presentationId: string;
-                            }[];
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name: string;
-                            calendarId: string;
-                            scaleFactor: number;
-                            compression: number;
-                            baselineUnitId?: null | string;
-                        }[];
                         units: {
                             children: {
                                 id: string;
@@ -2816,6 +2827,33 @@ export interface operations {
                             /** Format: bigint */
                             duration: string;
                             treeDepth: number;
+                        }[];
+                        presentations: {
+                            units: {
+                                id: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                name: string;
+                                calendarId: string;
+                                presentationId: string;
+                                position: number;
+                                formatString: string;
+                                subdivision: number;
+                                labeledIndices: number[];
+                                unitId: string;
+                            }[];
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            calendarId: string;
+                            compression: number;
+                            scaleFactor: number;
+                            baselineUnitId?: null | string;
                         }[];
                         description: string;
                         id: string;
@@ -2991,17 +3029,17 @@ export interface operations {
                                 updatedAt: string;
                                 name: string;
                                 calendarId: string;
-                                unitId: string;
+                                presentationId: string;
                                 position: number;
                                 formatString: string;
                                 subdivision: number;
                                 labeledIndices: number[];
-                                presentationId: string;
+                                unitId: string;
                             }[];
                             id: string;
                             name: string;
-                            scaleFactor: number;
                             compression: number;
+                            scaleFactor: number;
                             baselineUnitId?: null | string;
                         }[];
                         seasons: {
@@ -4090,8 +4128,8 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         worldId: string;
-                        value: string;
                         label?: null | string;
+                        value: string;
                     }[];
                 };
             };
@@ -4132,8 +4170,8 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         worldId: string;
-                        value: string;
                         label?: null | string;
+                        value: string;
                     };
                 };
             };
@@ -5051,17 +5089,17 @@ export interface operations {
                                     updatedAt: string;
                                     name: string;
                                     calendarId: string;
-                                    unitId: string;
+                                    presentationId: string;
                                     position: number;
                                     formatString: string;
                                     subdivision: number;
                                     labeledIndices: number[];
-                                    presentationId: string;
+                                    unitId: string;
                                 }[];
                                 id: string;
                                 name: string;
-                                scaleFactor: number;
                                 compression: number;
+                                scaleFactor: number;
                                 baselineUnitId?: null | string;
                             }[];
                             seasons: {

@@ -99,17 +99,17 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				updatedAt: string
 				name: string
 				calendarId: string
-				unitId: string
+				presentationId: string
 				position: number
 				formatString: string
 				subdivision: number
 				labeledIndices: number[]
-				presentationId: string
+				unitId: string
 			}[]
 			id: string
 			name: string
-			scaleFactor: number
 			compression: number
+			scaleFactor: number
 			baselineUnitId?: null | string
 		}[]
 		seasons: {

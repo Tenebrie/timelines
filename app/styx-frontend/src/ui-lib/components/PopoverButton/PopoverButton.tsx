@@ -23,7 +23,7 @@ export function PopoverButton({
 	popoverBody,
 	popoverAction,
 	buttonSx,
-	popoverSx,
+	popoverSx = { gap: 1.5, p: 2 },
 	autofocus,
 }: Props) {
 	const popupState = usePopupState({ variant: 'popover', popupId: tooltip })

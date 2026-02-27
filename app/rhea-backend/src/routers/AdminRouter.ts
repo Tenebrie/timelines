@@ -1,6 +1,7 @@
 import { AdminAuthenticator } from '@src/middleware/auth/AdminAuthenticator.js'
 import { AdminService } from '@src/services/AdminService.js'
 import {
+	EmailValidator,
 	NonEmptyStringValidator,
 	NumberValidator,
 	OptionalParam,
@@ -75,6 +76,26 @@ router.delete('/api/admin/users/:userId', async (ctx) => {
 	})
 
 	return await AdminService.deleteUser(userId)
+})
+
+router.patch('/api/admin/users/:userId/password', async (ctx) => {
+	useApiEndpoint({
+		name: 'adminUpdateUser',
+		description: 'Updates the user information for the given user',
+		tags: [adminUsersTag],
+	})
+
+	const { userId } = usePathParams(ctx, {
+		userId: NonEmptyStringValidator,
+	})
+
+	const { email, username, bio } = useRequestBody(ctx, {
+		email: OptionalParam(EmailValidator),
+		username: OptionalParam(StringValidator),
+		bio: OptionalParam(StringValidator),
+	})
+
+	return await AdminService.updateUser(userId, { email, username, bio })
 })
 
 router.post('/api/admin/users/:userId/password', async (ctx) => {

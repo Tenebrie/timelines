@@ -18,6 +18,7 @@ import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Pagination } from './components/Pagination'
 import { SearchInput } from './components/SearchInput'
 import { UserAccessLevelDropdown } from './components/UserAccessLevelDropdown'
+import { UserEmailPopoverButton } from './components/UserEmailPopoverButton'
 import { DeleteUserModal } from './modals/DeleteUserModal'
 import { SetPasswordModal } from './modals/SetPasswordModal'
 
@@ -91,10 +92,11 @@ export const Admin = () => {
 					<TableBody>
 						{data.users.map((user) => (
 							<TableRow key={user.id} sx={{ height: '75px' }}>
-								<TableCell>
+								<TableCell sx={{ gap: 1, display: 'flex', alignItems: 'center' }}>
 									<Link from="/admin" to={`/${user.id}`}>
-										{user.email}
+										<b>{user.email}</b>
 									</Link>
+									<UserEmailPopoverButton user={user} />
 								</TableCell>
 								<TableCell>{user.username}</TableCell>
 								<TableCell>

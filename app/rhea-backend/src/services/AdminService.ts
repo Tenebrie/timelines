@@ -1,5 +1,6 @@
 import { UserLevel } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
+import { UserUncheckedUpdateInput } from 'prisma/client/models.js'
 
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
@@ -91,6 +92,15 @@ export const AdminService = {
 			data: {
 				level,
 			},
+		})
+	},
+
+	updateUser: async (userId: string, data: UserUncheckedUpdateInput) => {
+		return getPrismaClient().user.update({
+			where: {
+				id: userId,
+			},
+			data,
 		})
 	},
 
