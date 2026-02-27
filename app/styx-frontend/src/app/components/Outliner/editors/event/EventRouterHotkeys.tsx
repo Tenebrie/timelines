@@ -1,3 +1,4 @@
+import { useUnrevokeWorldEventMutation } from '@api/worldEventApi'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -13,6 +14,7 @@ export function EventRouterHotkeys() {
 	const { isOpen: isModalOpen } = useModal('editEventModal')
 	const { open: openDeleteModal } = useModal('deleteEventModal')
 	const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
+	const [unrevokeWorldEvent] = useUnrevokeWorldEventMutation()
 
 	const requestFocus = useEventBusDispatch['richEditor/requestFocus']()
 	const requestBlur = useEventBusDispatch['richEditor/requestBlur']()
@@ -55,9 +57,17 @@ export function EventRouterHotkeys() {
 			if (!target) {
 				return
 			}
-			openDeleteModal({
-				target: markers.find((e) => e.key === selectedMarkerIds[0])!,
-			})
+
+			if (target.markerType === 'issuedAt') {
+				openDeleteModal({
+					target,
+				})
+			} else if (target.markerType === 'revokedAt') {
+				unrevokeWorldEvent({
+					worldId: target.worldId,
+					eventId: target.eventId,
+				})
+			}
 		},
 		selectedMarkerIds.length > 0,
 	)
