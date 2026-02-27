@@ -4,7 +4,7 @@
 <head>
 	<style>
 		html {
-			background-color: hsl(197, 20%, 90%);
+			background-color: hsl(250, 25%, 93%);
 		}
 
 		@media (prefers-color-scheme: dark) {
@@ -41,5 +41,19 @@
 	<div id="root"></div>
 	<script type="module" src="src/main.tsx"></script>
 </body>
+
+<script>
+	try {
+		const colorMode = JSON.parse(localStorage.getItem("userPreferences/v2")).colorMode
+		if (colorMode === "dark") {
+			document.documentElement.style.background = '#0f0e1a';
+		}
+		else if (colorMode === "light") {
+			document.documentElement.style.background = 'hsl(250, 25%, 93%)';
+		}
+	} catch {
+		// Ignore
+	}
+</script>
 
 </html>
