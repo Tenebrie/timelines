@@ -10,7 +10,7 @@ export const useDragDropState = () => {
 		setState: (state: DragDropStateType<AllowedDraggableType>) => {
 			setTimeout(() => {
 				DragDropState.current = state
-				notifyBus()
+				notifyBus(state)
 			}, 1)
 		},
 		setStateQuietly: (state: DragDropStateType<AllowedDraggableType>) => {
@@ -20,12 +20,12 @@ export const useDragDropState = () => {
 		},
 		setStateImmediately: (state: DragDropStateType<AllowedDraggableType>) => {
 			DragDropState.current = state
-			notifyBus()
+			notifyBus(state)
 		},
 		clearState: () => {
 			setTimeout(() => {
 				DragDropState.current = null
-				notifyBus()
+				notifyBus(null)
 			}, 1)
 		},
 	}

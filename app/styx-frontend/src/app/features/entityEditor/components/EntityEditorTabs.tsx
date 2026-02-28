@@ -35,11 +35,11 @@ export function EntityEditorTabs({ contentTab, illustrationTab }: Props) {
 	}, [tab])
 
 	return (
-		<Stack direction="row" width="100%" height="100%" gap={1}>
+		<Stack direction="row" width="100%" height="100%" gap={1} sx={{ flex: 1 }}>
 			<Box sx={{ height: '100%', width: '100%', display: tab === 0 ? 'block' : 'none' }}>
 				{mountedTabs.has(0) && contentTab}
 			</Box>
-			<Box sx={{ height: '100%', width: '100%', display: tab === 1 ? 'block' : 'none' }}>
+			<Box sx={{ height: '100%', width: '100%', display: tab === 1 ? 'block' : 'none', marginLeft: -1 }}>
 				{mountedTabs.has(1) && illustrationTab}
 			</Box>
 			{tab !== 0 && <Divider orientation="vertical" />}

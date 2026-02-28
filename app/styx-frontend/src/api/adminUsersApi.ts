@@ -17,6 +17,10 @@ const injectedRtkApi = api
 				}),
 				providesTags: ['adminUsers'],
 			}),
+			adminImpersonateUser: build.mutation<AdminImpersonateUserApiResponse, AdminImpersonateUserApiArg>({
+				query: (queryArg) => ({ url: `/api/admin/user/${queryArg.userId}/impersonate`, method: 'POST' }),
+				invalidatesTags: ['adminUsers'],
+			}),
 			adminSetUserLevel: build.mutation<AdminSetUserLevelApiResponse, AdminSetUserLevelApiArg>({
 				query: (queryArg) => ({
 					url: `/api/admin/users/${queryArg.userId}/level`,
@@ -27,6 +31,14 @@ const injectedRtkApi = api
 			}),
 			adminDeleteUser: build.mutation<AdminDeleteUserApiResponse, AdminDeleteUserApiArg>({
 				query: (queryArg) => ({ url: `/api/admin/users/${queryArg.userId}`, method: 'DELETE' }),
+				invalidatesTags: ['adminUsers'],
+			}),
+			adminUpdateUser: build.mutation<AdminUpdateUserApiResponse, AdminUpdateUserApiArg>({
+				query: (queryArg) => ({
+					url: `/api/admin/users/${queryArg.userId}`,
+					method: 'PATCH',
+					body: queryArg.body,
+				}),
 				invalidatesTags: ['adminUsers'],
 			}),
 			adminSetUserPassword: build.mutation<AdminSetUserPasswordApiResponse, AdminSetUserPasswordApiArg>({
@@ -62,6 +74,25 @@ export type AdminGetUsersApiArg = {
 	size?: number
 	/** Any string value */
 	query?: string
+}
+export type AdminImpersonateUserApiResponse = /** status 200  */ {
+	user: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		deletedAt?: null | string
+		deletionScheduledAt?: null | string
+		email: string
+		username: string
+		password: string
+		bio: string
+		level: 'Free' | 'Premium' | 'Admin'
+		avatarId?: null | string
+	}
+}
+export type AdminImpersonateUserApiArg = {
+	/** Any string value with at least one character */
+	userId: string
 }
 export type AdminSetUserLevelApiResponse = /** status 200  */ {
 	id: string
@@ -100,6 +131,28 @@ export type AdminDeleteUserApiArg = {
 	/** Any string value with at least one character */
 	userId: string
 }
+export type AdminUpdateUserApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	deletedAt?: null | string
+	deletionScheduledAt?: null | string
+	email: string
+	username: string
+	password: string
+	bio: string
+	level: 'Free' | 'Premium' | 'Admin'
+	avatarId?: null | string
+}
+export type AdminUpdateUserApiArg = {
+	/** Any string value with at least one character */
+	userId: string
+	body: {
+		email?: string
+		username?: string
+		bio?: string
+	}
+}
 export type AdminSetUserPasswordApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
@@ -123,7 +176,9 @@ export type AdminSetUserPasswordApiArg = {
 export const {
 	useAdminGetUsersQuery,
 	useLazyAdminGetUsersQuery,
+	useAdminImpersonateUserMutation,
 	useAdminSetUserLevelMutation,
 	useAdminDeleteUserMutation,
+	useAdminUpdateUserMutation,
 	useAdminSetUserPasswordMutation,
 } = injectedRtkApi

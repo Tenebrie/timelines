@@ -68,6 +68,28 @@ export const AuthorizationService = {
 		await AuthorizationService.checkUserWriteAccess(user, worldBrief)
 	},
 
+	checkUserCalendarReadAccessById: async (user: User, calendarId: string) => {
+		const calendar = await getPrismaClient().calendar.findUniqueOrThrow({
+			where: { id: calendarId },
+		})
+		if (calendar.worldId) {
+			await AuthorizationService.checkUserReadAccessById(user, calendar.worldId)
+		} else if (calendar.ownerId !== user.id) {
+			throw new UnauthorizedError('No access to this calendar')
+		}
+	},
+
+	checkUserCalendarWriteAccessById: async (user: User, calendarId: string) => {
+		const calendar = await getPrismaClient().calendar.findUniqueOrThrow({
+			where: { id: calendarId },
+		})
+		if (calendar.worldId) {
+			await AuthorizationService.checkUserWriteAccessById(user, calendar.worldId)
+		} else if (calendar.ownerId !== user.id) {
+			throw new UnauthorizedError('No access to this calendar')
+		}
+	},
+
 	checkUserWorldOwner: async (user: User, worldId: string) => {
 		const count = await getPrismaClient().world.count({
 			where: {

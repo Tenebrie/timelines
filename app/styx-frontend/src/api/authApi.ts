@@ -87,7 +87,7 @@ export type PostLoginApiResponse = /** status 200  */ {
 			bucketKey: string
 			originalFileName: string
 			originalFileExtension: string
-			contentType: 'Image' | 'Avatar'
+			contentType: 'ImageConversion' | 'Avatar'
 			status: 'Pending' | 'Finalized' | 'Failed'
 		}
 	}
@@ -99,7 +99,9 @@ export type PostLoginApiArg = {
 		password: string
 	}
 }
-export type PostLogoutApiResponse = unknown
+export type PostLogoutApiResponse = /** status 200  */ {
+	redirectTo: 'admin' | 'login'
+}
 export type PostLogoutApiArg = void
 export const {
 	useCheckAuthenticationQuery,

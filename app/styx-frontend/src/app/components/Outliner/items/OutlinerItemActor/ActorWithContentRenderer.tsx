@@ -3,8 +3,8 @@ import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
 import { memo } from 'react'
 
-import { EventContentRenderer } from './ActorContentRenderer'
-import { ActorRenderer } from './ActorRenderer'
+import { ActorContentRenderer } from './ActorContentRenderer'
+import { ActorHeaderRenderer } from './ActorRenderer'
 
 type Props = {
 	actor: ActorDetails
@@ -17,9 +17,9 @@ export const ActorWithContentRenderer = memo(ActorWithContentRendererComponent)
 function ActorWithContentRendererComponent({ actor, collapsed, divider }: Props) {
 	return (
 		<>
-			<ActorRenderer actor={actor} collapsed={collapsed} />
+			<ActorHeaderRenderer actor={actor} collapsed={collapsed} />
 			<Collapse in={!collapsed}>
-				<EventContentRenderer actor={actor} active />
+				<ActorContentRenderer actor={actor} active />
 			</Collapse>
 			{divider && <Divider />}
 		</>

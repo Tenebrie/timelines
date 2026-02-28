@@ -1,4 +1,4 @@
-import { WorldBrief } from '@api/types/worldTypes'
+import { WorldDetails } from '@api/types/worldTypes'
 import { UpdateWorldApiArg, useUpdateWorldMutation } from '@api/worldDetailsApi'
 import { useCallback, useEffect, useRef } from 'react'
 
@@ -7,12 +7,12 @@ import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useSettingsDraft } from '@/app/views/world/views/settings/hooks/useSettingsDraft'
 
 type Props = {
-	world: WorldBrief
+	world: WorldDetails
 	state: ReturnType<typeof useSettingsDraft>
 }
 
 export const useEditWorld = ({ world, state }: Props) => {
-	const { name, description, calendar, isDirty, setName, setDescription, setCalendar, setDirty } = state
+	const { name, description, calendars, isDirty, setName, setDescription, setCalendars, setDirty } = state
 
 	const lastSavedAt = useRef(new Date(world.updatedAt))
 
@@ -20,12 +20,15 @@ export const useEditWorld = ({ world, state }: Props) => {
 		if (new Date(world.updatedAt) > lastSavedAt.current) {
 			setName(world.name, { cleanSet: true })
 			setDescription(world.description, { cleanSet: true })
-			setCalendar(world.calendar, { cleanSet: true })
+			setCalendars(
+				world.calendars.map((c) => c.id),
+				{ cleanSet: true },
+			)
 
 			setDirty(false)
 			lastSavedAt.current = new Date(world.updatedAt)
 		}
-	}, [world, setName, setDescription, setCalendar, setDirty])
+	}, [world, setName, setDescription, setCalendars, setDirty])
 
 	const [updateWorld, { isLoading: isSaving, isError }] = useUpdateWorldMutation()
 
@@ -56,7 +59,7 @@ export const useEditWorld = ({ world, state }: Props) => {
 			sendUpdate({
 				name,
 				description,
-				calendar,
+				calendars,
 			}),
 		isSaving,
 		isError,

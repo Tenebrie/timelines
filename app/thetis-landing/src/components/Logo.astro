@@ -1,0 +1,10 @@
+---
+import { SITE } from 'astrowind:config'
+import { Image } from 'astro:assets'
+import logoSvg from '~/assets/images/neverkin-logo.svg'
+---
+
+<span class="self-center flex items-center rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold whitespace-nowrap">
+	<Image src={logoSvg} alt={`${SITE?.name} logo`} class="h-10 w-10 -mr-2 mb-2.5" width={42} height={42} />
+	<span class="text-gray-900 dark:text-white">{SITE?.name}</span>
+</span>

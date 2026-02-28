@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
+import { useEntityColor } from '@/app/utils/colors/useEntityColor'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { BaseMentionChip } from './BaseMentionChip'
@@ -8,15 +9,16 @@ import { BaseMentionChip } from './BaseMentionChip'
 type Props = {
 	worldId: string
 	actorId: string
+	fallbackName?: string
 }
 
-export const ActorMentionChip = ({ actorId }: Props) => {
+export const ActorMentionChip = ({ actorId, fallbackName }: Props) => {
 	const navigateTo = useEventBusDispatch['world/requestNavigation']()
 	const { actors } = useSelector(getWorldState, (a, b) => a.actors === b.actors)
 
 	const actor = actors.find((actor) => actor.id === actorId)
-	const actorName = actor ? `${actor.name}` : 'Unknown Actor'
-	const actorColor = actor ? actor.color : undefined
+	const actorName = actor ? `${actor.name}` : `Deleted Actor (${fallbackName ?? 'Unknown'})`
+	const actorColor = useEntityColor({ id: actorId, color: actor?.color })
 
 	const onClick = () => {
 		if (!actor) {

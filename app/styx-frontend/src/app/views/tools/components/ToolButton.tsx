@@ -7,7 +7,7 @@ import { FileRouteTypes } from '@/routeTree.gen'
 
 type Props = {
 	label: string
-	route: FileRouteTypes['to']
+	route: FileRouteTypes['fullPaths']
 }
 
 export function ToolButton({ label, route }: Props) {
@@ -18,7 +18,7 @@ export function ToolButton({ label, route }: Props) {
 	return (
 		<Button
 			fullWidth
-			onClick={() => navigate({ to: route })}
+			onClick={() => navigate({ to: route as FileRouteTypes['to'] })}
 			sx={{
 				justifyContent: 'flex-start',
 				px: 2,

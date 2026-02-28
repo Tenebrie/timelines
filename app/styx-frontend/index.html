@@ -4,12 +4,12 @@
 <head>
 	<style>
 		html {
-			background-color: hsl(197, 20%, 90%);
+			background-color: hsl(250, 25%, 93%);
 		}
 
 		@media (prefers-color-scheme: dark) {
 			html {
-				background-color: #0a1929;
+				background-color: #0f0e1a;
 			}
 		}
 	</style>
@@ -33,7 +33,7 @@
 			user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
 		-->
 	<link rel="manifest" href="/manifest.json" />
-	<title>Timelines</title>
+	<title>Neverkin</title>
 </head>
 
 <body>
@@ -41,5 +41,19 @@
 	<div id="root"></div>
 	<script type="module" src="src/main.tsx"></script>
 </body>
+
+<script>
+	try {
+		const colorMode = JSON.parse(localStorage.getItem("userPreferences/v2")).colorMode
+		if (colorMode === "dark") {
+			document.documentElement.style.background = '#0f0e1a';
+		}
+		else if (colorMode === "light") {
+			document.documentElement.style.background = 'hsl(250, 25%, 93%)';
+		}
+	} catch {
+		// Ignore
+	}
+</script>
 
 </html>

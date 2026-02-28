@@ -1,4 +1,4 @@
-import { useGetMindmapQuery } from '@api/otherApi'
+import { useGetMindmapQuery } from '@api/mindmapApi'
 import Box from '@mui/material/Box'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'

@@ -1,4 +1,4 @@
-import { useCreateTagMutation } from '@api/otherApi'
+import { useCreateTagMutation } from '@api/worldTagApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 

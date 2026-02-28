@@ -8,7 +8,6 @@ import { useDeleteWorldEventMutation } from '@/api/worldEventApi'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
@@ -16,7 +15,6 @@ export const DeleteEventModal = () => {
 	const [deleteWorldEvent, { isLoading }] = useDeleteWorldEventMutation()
 	const [deletionError, setDeletionError] = useState<string | null>(null)
 
-	const navigate = useStableNavigate({ from: '/world/$worldId' })
 	const { worldId } = useStrictParams({
 		from: '/world/$worldId/_world',
 	})
@@ -47,7 +45,6 @@ export const DeleteEventModal = () => {
 		}
 
 		close()
-		navigate({ to: '/world/$worldId/timeline', search: true })
 	}
 
 	const onCloseAttempt = () => {

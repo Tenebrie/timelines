@@ -1,0 +1,168 @@
+model Calendar {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+    position  Int      @default(0)
+
+    originTime BigInt @default(0)
+
+    name          String
+    description   String                 @default("")
+    units         CalendarUnit[]
+    seasons       CalendarSeason[]
+    presentations CalendarPresentation[]
+
+    dateFormat String?
+
+    // A calendar is owned by either a world or a user, and never both
+    // Enforced by an SQL level constraint
+    world   World?  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+    owner   User?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+    worldId String?
+    ownerId String?
+}
+
+model CalendarUnit {
+    id        String   @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+    position  Int      @default(0)
+
+    name              String
+    displayName       String?
+    displayNameShort  String?
+    displayNamePlural String?
+
+    formatMode      CalendarUnitFormatMode     @default(Name)
+    formatShorthand String?
+    negativeFormat  CalendarUnitNegativeFormat @default(MinusSign)
+
+    duration  BigInt @default(1)
+    treeDepth Int    @default(1)
+
+    calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+    calendarId String
+
+    parents         CalendarUnitRelation[]     @relation("ChildUnit")
+    children        CalendarUnitRelation[]     @relation("ParentUnit")
+    presentations   CalendarPresentationUnit[]
+    baselineUnitFor CalendarPresentation[]     @relation("BaselineUnit")
+
+    @@id([calendarId, id])
+}
+
+model CalendarUnitRelation {
+    id        String   @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
+    label      String?
+    shortLabel String?
+    repeats    Int     @default(1)
+    position   Int     @default(0)
+
+    calendarId   String
+    parentUnit   CalendarUnit @relation("ParentUnit", fields: [calendarId, parentUnitId], references: [calendarId, id], onDelete: Cascade)
+    childUnit    CalendarUnit @relation("ChildUnit", fields: [calendarId, childUnitId], references: [calendarId, id], onDelete: Cascade)
+    parentUnitId String
+    childUnitId  String
+
+    @@id([calendarId, id])
+}
+
+enum CalendarUnitFormatMode {
+    // Month 0
+    Name
+    // Month 1
+    NameOneIndexed
+    // 0
+    Numeric
+    // 1
+    NumericOneIndexed
+    // Not displayed
+    Hidden
+}
+
+enum CalendarUnitNegativeFormat {
+    MinusSign
+    AbsoluteValue
+}
+
+/**
+ * Calendar presentations
+ */
+model CalendarPresentation {
+    id        String   @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
+    name        String
+    compression Float  @default(1.0)
+
+    scaleFactor Float                      @default(1.0)
+    units       CalendarPresentationUnit[]
+
+    calendarId     String
+    baselineUnit   CalendarUnit? @relation(name: "BaselineUnit", fields: [calendarId, baselineUnitId], references: [calendarId, id], onDelete: NoAction)
+    baselineUnitId String?
+
+    calendar Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+
+    @@id([calendarId, id])
+}
+
+model CalendarPresentationUnit {
+    id        String   @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+    position  Int      @default(0)
+
+    name           String
+    formatString   String
+    subdivision    Int    @default(1)
+    labeledIndices Int[]  @default([])
+
+    calendarId String
+    unit       CalendarUnit @relation(fields: [calendarId, unitId], references: [calendarId, id], onDelete: Cascade)
+    unitId     String
+
+    presentation   CalendarPresentation @relation(fields: [calendarId, presentationId], references: [calendarId, id], onDelete: Cascade)
+    presentationId String
+
+    @@id([calendarId, id])
+}
+
+/**
+ * Seasons
+ */
+model CalendarSeason {
+    id        String   @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+    position  Int
+
+    name            String
+    formatShorthand String?
+
+    intervals CalendarSeasonInterval[]
+
+    calendar   Calendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+    calendarId String
+
+    @@id([calendarId, id])
+}
+
+model CalendarSeasonInterval {
+    id        String   @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now()) @updatedAt
+
+    leftIndex  Int
+    rightIndex Int
+
+    calendarId String
+    season     CalendarSeason @relation(fields: [calendarId, seasonId], references: [calendarId, id], onDelete: Cascade)
+    seasonId   String
+
+    @@id([calendarId, id])
+}

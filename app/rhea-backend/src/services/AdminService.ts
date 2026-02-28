@@ -1,5 +1,6 @@
 import { UserLevel } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
+import { UserUncheckedUpdateInput } from 'prisma/client/models.js'
 
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
@@ -75,6 +76,14 @@ export const AdminService = {
 		}
 	},
 
+	getUserByEmail: async (email: string) => {
+		return getPrismaClient().user.findUnique({
+			where: {
+				email,
+			},
+		})
+	},
+
 	deleteUser: async (userId: string) => {
 		return getPrismaClient().user.delete({
 			where: {
@@ -94,8 +103,17 @@ export const AdminService = {
 		})
 	},
 
+	updateUser: async (userId: string, data: UserUncheckedUpdateInput) => {
+		return getPrismaClient().user.update({
+			where: {
+				id: userId,
+			},
+			data,
+		})
+	},
+
 	setUserPassword: async (userId: string, password: string) => {
-		const hashedPassword = await bcrypt.hash(password, 8)
+		const hashedPassword = await bcrypt.hash(password, 12)
 		return getPrismaClient().user.update({
 			where: {
 				id: userId,

@@ -215,7 +215,8 @@ async function main() {
 			res.end(JSON.stringify({ error: 'Invalid or missing session ID' }))
 		} else if (url.pathname === '/health') {
 			res.writeHead(200, { 'Content-Type': 'application/json' })
-			res.end(JSON.stringify({ status: 'ok', transport: 'streamable-http', sessions: transports.size }))
+			res.end(JSON.stringify({ status: 'ok' }))
+			// res.end(JSON.stringify({ status: 'ok', transport: 'streamable-http', sessions: transports.size }))
 		} else {
 			res.writeHead(404, { 'Content-Type': 'application/json' })
 			res.end(JSON.stringify({ error: 'Not found' }))

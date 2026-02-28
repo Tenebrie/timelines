@@ -7,10 +7,11 @@ import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
-import { TimelineAnchor } from './components/TimelineAnchor/TimelineAnchor'
+import { TimelineAnchor } from './anchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
 import { TimelineControls } from './components/TimelineControls'
 import { TimelineEventListener } from './components/TimelineEventListener'
+import { TimelineHotkeys } from './components/TimelineHotkeys'
 import { TimelineNavigationReporter } from './components/TimelineNavigationReporter'
 import { TimelinePrePositioner } from './components/TimelinePrePositioner'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
@@ -70,12 +71,13 @@ function TimelineComponent() {
 				<TimelineControls />
 			</TimelineWrapper>
 			<Box style={{ opacity }} sx={{ transition: 'opacity 0.3s' }}>
-				{opacity > 0 && <TimelineAnchor containerWidth={containerWidth} />}
+				{opacity > 0 && <TimelineAnchor containerWidth={containerWidth} showCurrentTime />}
 			</Box>
 
 			<TimelineEventListener containerWidth={containerWidth} />
 			<TimelinePrePositioner setOpacity={setOpacity} />
 			<TimelineNavigationReporter ref={containerRef} containerWidth={containerWidth} />
+			<TimelineHotkeys />
 		</Paper>
 	)
 }

@@ -86,7 +86,9 @@ function EventTracksMenuComponent() {
 					<Typography variant="h6" noWrap>
 						{'Event tracks'}
 					</Typography>
-					<Button onClick={onCreate}>Create new track...</Button>
+					<Button data-testid="AddTrackButton" onClick={onCreate}>
+						Create new track...
+					</Button>
 				</Stack>
 			</Stack>
 			<Divider />

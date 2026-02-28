@@ -10,7 +10,16 @@ export const TokenService = {
 			id: user.id,
 			email: user.email,
 		}
-		return jwt.sign(payload, SecretService.getSecret('jwt-secret'))
+		return jwt.sign(payload, SecretService.getSecret('jwt-secret'), { expiresIn: '365d' })
+	},
+
+	generateImpersonatedJwtToken: (adminId: string, user: Pick<User, 'id' | 'email'>): string => {
+		const payload: UserTokenPayload = {
+			id: user.id,
+			email: user.email,
+			impersonatingAdminId: adminId,
+		}
+		return jwt.sign(payload, SecretService.getSecret('jwt-secret'), { expiresIn: '365d' })
 	},
 
 	decodeUserToken: (token: string): UserTokenPayload => {

@@ -94,6 +94,13 @@ const baseTheme: Partial<Theme> = {
 				},
 			},
 		},
+		MuiMenu: {
+			styleOverrides: {
+				root: ({ ownerState }) => ({
+					pointerEvents: ownerState.open ? 'auto' : 'none',
+				}),
+			},
+		},
 	},
 }
 
@@ -103,14 +110,18 @@ export const lightTheme = createTheme({
 		mode: 'light',
 		background: {
 			paper: '#fff',
-			default: 'hsl(200, 0%, 85%)',
+			default: 'hsl(250, 25%, 93%)',
 		},
 		primary: {
-			main: 'hsl(118, 28%, 37%)',
+			main: 'hsl(258, 45%, 48%)',
 			contrastText: '#fff',
 		},
 		secondary: {
-			main: 'hsl(20, 69.20%, 42.00%)',
+			main: 'hsl(200, 50%, 42%)',
+			contrastText: '#fff',
+		},
+		error: {
+			main: '#9d0000',
 			contrastText: '#fff',
 		},
 	},
@@ -121,17 +132,20 @@ export const darkTheme = createTheme({
 	palette: {
 		mode: 'dark',
 		background: {
-			// default: '#0a0908',
-			default: '#22333b',
-			paper: 'hsl(199, 27%, 18%)',
+			default: '#0f0e1a',
+			paper: 'hsl(252, 25%, 14%)',
 		},
 		primary: {
-			main: 'hsl(118, 38%, 60%)',
-			contrastText: '#0a0908',
+			main: 'hsl(258, 55%, 65%)',
+			contrastText: '#f0ecff',
 		},
 		secondary: {
-			main: 'hsl(20, 49.00%, 60.00%)',
-			contrastText: '#0a0908',
+			main: 'hsl(200, 55%, 55%)',
+			contrastText: '#0f0e1a',
+		},
+		error: {
+			main: '#f07070',
+			contrastText: '#0f0e1a',
 		},
 	},
 })
@@ -141,21 +155,21 @@ export const customLightTheme = {
 		timelineAnchor: {
 			text: 'rgb(21, 16, 11)',
 		},
-		outline: 'rgb(0 0 0 / 23%)',
-		outlineStrong: 'rgb(0 0 0 / 50%)',
+		outline: 'rgb(60 40 120 / 18%)',
+		outlineStrong: 'rgb(60 40 120 / 40%)',
 		background: {
-			hard: 'rgb(0 0 0 / 40%)',
-			harder: 'rgb(0 0 0 / 50%)',
-			hardest: 'rgb(0 0 0 / 70%)',
-			soft: 'rgb(0 0 0 / 10%)',
-			softer: 'rgb(0 0 0 / 5%)',
-			softest: 'rgb(0 0 0 / 2%)',
+			hard: 'rgb(60 40 120 / 30%)',
+			harder: 'rgb(60 40 120 / 40%)',
+			hardest: 'rgb(60 40 120 / 60%)',
+			soft: 'rgb(60 40 120 / 8%)',
+			softer: 'rgb(60 40 120 / 4%)',
+			softest: 'rgb(60 40 120 / 2%)',
 			textEditor: '#fff',
-			timeline: 'hsl(200, 0%, 98%)',
-			timelineHeader: '#f3f3f3',
+			timeline: '#eae9f2',
+			timelineHeader: 'hsl(250, 20%, 93%)',
 			navigator: '#fff',
 			timelineMarker: '#fff',
-			timelineMarkerTail: '#ddd',
+			timelineMarkerTail: 'hsl(250, 15%, 82%)',
 		},
 	},
 }
@@ -165,21 +179,21 @@ export const customDarkTheme: typeof customLightTheme = {
 		timelineAnchor: {
 			text: 'white',
 		},
-		outline: 'rgb(255 255 255 / 23%)',
-		outlineStrong: 'rgb(255 255 255 / 50%)',
+		outline: 'rgb(180 170 220 / 18%)',
+		outlineStrong: 'rgb(180 170 220 / 40%)',
 		background: {
-			hard: 'rgb(255 255 255 / 40%)',
-			harder: 'rgb(255 255 255 / 50%)',
-			hardest: 'rgb(255 255 255 / 70%)',
-			soft: 'rgb(255 255 255 / 10%)',
-			softer: 'rgb(255 255 255 / 5%)',
-			softest: 'rgb(255 255 255 / 2%)',
-			textEditor: '#22333b',
-			timeline: '#22333b',
-			timelineHeader: '#22333b',
-			navigator: '#22333b',
-			timelineMarker: '#0a0908',
-			timelineMarkerTail: '#39484f',
+			hard: 'rgb(180 170 220 / 30%)',
+			harder: 'rgb(180 170 220 / 40%)',
+			hardest: 'rgb(180 170 220 / 60%)',
+			soft: 'rgb(180 170 220 / 8%)',
+			softer: 'rgb(180 170 220 / 4%)',
+			softest: 'rgb(180 170 220 / 2%)',
+			textEditor: 'hsl(252, 25%, 14%)',
+			timeline: '#0f0e1a',
+			timelineHeader: '#16142a',
+			navigator: '#16142a',
+			timelineMarker: '#0f0e1a',
+			timelineMarkerTail: 'hsl(252, 20%, 28%)',
 		},
 	},
 }

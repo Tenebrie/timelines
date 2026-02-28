@@ -1,15 +1,22 @@
 import { Actor, WorldEvent } from '@api/types/worldTypes'
-import Edit from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import MenuIcon from '@mui/icons-material/Menu'
 import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import MenuItem from '@mui/material/MenuItem'
+import MenuList from '@mui/material/MenuList'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { ShowHideChevron } from '@/app/components/ShowHideChevron'
-import { useEventBusDispatch } from '@/app/features/eventBus'
+import { useModal } from '@/app/features/modals/ModalsSlice'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { StyledListItemButton } from '@/app/views/world/views/timeline/shelf/styles'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
+import { PopoverButton } from '@/ui-lib/components/PopoverButton/PopoverButton'
 
 import { EventHeaderRenderer } from './EventHeaderRenderer'
 
@@ -24,7 +31,7 @@ type Props = {
 
 export const EventRenderer = ({ event, collapsed, owningActor, short, active, actions }: Props) => {
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
-	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
+	const { open: openDeleteEventModal } = useModal('deleteEventModal')
 
 	const dispatch = useDispatch()
 	const { collapseEventInOutliner, uncollapseEventInOutliner } = preferencesSlice.actions
@@ -44,19 +51,43 @@ export const EventRenderer = ({ event, collapsed, owningActor, short, active, ac
 		switch (action) {
 			case 'edit':
 				return (
-					<IconButton
-						key={'edit'}
-						onClick={() => {
-							navigate({
-								to: '/world/$worldId/timeline',
-								search: (prev) => ({ ...prev, navi: [`issuedAt-${event.id}`] }),
-							})
-							scrollTimelineTo({ timestamp: event.timestamp })
-						}}
-						aria-label="Edit"
-					>
-						<Edit />
-					</IconButton>
+					<PopoverButton
+						key={'menu'}
+						icon={<MenuIcon />}
+						aria-label="Menu"
+						size="small"
+						tooltip="Show actions"
+						popoverAction={() => null}
+						popoverBody={({ close }) => (
+							<MenuList>
+								<MenuItem
+									onClick={() => {
+										navigate({
+											to: '/world/$worldId/timeline',
+											search: (prev) => ({ ...prev, navi: [`issuedAt-${event.id}`] }),
+										})
+										close()
+									}}
+								>
+									<ListItemIcon>
+										<EditIcon />
+									</ListItemIcon>
+									<ListItemText>Edit</ListItemText>
+								</MenuItem>
+								<MenuItem
+									onClick={() => {
+										openDeleteEventModal({ target: event })
+										close()
+									}}
+								>
+									<ListItemIcon>
+										<DeleteIcon />
+									</ListItemIcon>
+									<ListItemText>Delete</ListItemText>
+								</MenuItem>
+							</MenuList>
+						)}
+					/>
 				)
 			case 'collapse':
 				return (

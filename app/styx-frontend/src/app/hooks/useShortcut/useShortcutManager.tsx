@@ -12,6 +12,12 @@ export const Shortcut = {
 	TracksMenu: 'r',
 	ScrollTimelineLeft: 'j',
 	ScrollTimelineRight: 'l',
+	NudgeLeft: 'ArrowLeft',
+	NudgeRight: 'ArrowRight',
+	LargeNudgeLeft: 'Shift+ArrowLeft',
+	LargeNudgeRight: 'Shift+ArrowRight',
+	AscendMarkerTrack: 'ArrowUp',
+	DescendMarkerTrack: 'ArrowDown',
 } as const
 
 /**
@@ -20,15 +26,15 @@ export const Shortcut = {
  */
 export const ShortcutPriorities = {
 	/** Default priority for most shortcuts */
-	DEFAULT: 0,
+	Default: 0,
 	/** Disabled - shortcut will not be executed */
-	DISABLED: -1,
+	Disabled: -1,
 	/** Modal dialogs (should be closable before mentions menu) */
-	MODAL: 10,
+	Modal: 10,
 	/** Input fields being edited (should be closable before modal closes) */
-	INPUT_FIELD: 11,
+	InputField: 11,
 	/** Mentions/autocomplete dropdowns (should be closable before modal) */
-	MENTIONS: 20,
+	Mentions: 20,
 } as const
 
 export type ShortcutPriority = number | boolean
@@ -47,6 +53,12 @@ export const RegisteredShortcuts: Record<
 	[Shortcut.TracksMenu]: [],
 	[Shortcut.ScrollTimelineLeft]: [],
 	[Shortcut.ScrollTimelineRight]: [],
+	[Shortcut.NudgeLeft]: [],
+	[Shortcut.NudgeRight]: [],
+	[Shortcut.LargeNudgeLeft]: [],
+	[Shortcut.LargeNudgeRight]: [],
+	[Shortcut.AscendMarkerTrack]: [],
+	[Shortcut.DescendMarkerTrack]: [],
 }
 
 export const useShortcutManager = () => {
@@ -56,15 +68,21 @@ export const useShortcutManager = () => {
 
 	const onKeyDown = useCallback((event: KeyboardEvent) => {
 		const key = event.key
-		if (!key) {
+		if (!key || key === 'Ctrl' || key === 'Shift' || key === 'Alt' || key === 'Meta') {
 			return
 		}
 		const ctrlKey = isMacOS() ? event.metaKey : event.ctrlKey
+		const shiftKey = event.shiftKey
 
 		const isTargetingInput =
 			event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement
 		const isTargetingRichInput = event.target instanceof HTMLElement && event.target.isContentEditable
-		const isSingleKeyShortcut = key.length === 1
+		const isSingleKeyShortcut =
+			key.length === 1 ||
+			key === 'ArrowLeft' ||
+			key === 'ArrowRight' ||
+			key === 'ArrowUp' ||
+			key === 'ArrowDown'
 
 		if (isSingleKeyShortcut && (isTargetingInput || isTargetingRichInput)) {
 			return
@@ -88,13 +106,16 @@ export const useShortcutManager = () => {
 				})
 				.flatMap((part) => part.split('+'))
 			const ctrlKeyNeeded = defKeys.some((key) => key === 'Ctrl')
+			const shiftKeyNeeded = defKeys.some((key) => key === 'Shift')
 
-			if (ctrlKey === ctrlKeyNeeded && defKeys.includes(key)) {
-				RegisteredShortcuts[shortcut]
+			if (ctrlKey === ctrlKeyNeeded && shiftKey === shiftKeyNeeded && defKeys.includes(key)) {
+				const callback = RegisteredShortcuts[shortcut]
 					.filter((shc) => shc.priority !== false)
 					.sort((a, b) => parsePriority(b.priority) - parsePriority(a.priority))[0]
-					?.callback()
-				event.preventDefault()
+				if (callback) {
+					callback.callback()
+					event.preventDefault()
+				}
 			}
 		})
 	}, [])

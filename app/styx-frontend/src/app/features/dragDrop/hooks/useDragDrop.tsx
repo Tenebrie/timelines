@@ -1,5 +1,7 @@
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 
+import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+
 import { GhostWrapper } from '../components/GhostWrapper'
 import { AllowedDraggableType, DraggableParams } from '../types'
 import { useDragDropState } from './useDragDropState'
@@ -44,7 +46,6 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		if (event.button !== 0) {
 			return
 		}
-		window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
 		isPreparingToDrag.current = true
 		const boundingRect = containerRef.current.getBoundingClientRect()
 		rootPos.current = {
@@ -67,6 +68,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 				targetRootPos: { x: rootPos.current.x, y: rootPos.current.y },
 				isHandled: false,
 			})
+			window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
 
 			setGhostElement(
 				<GhostWrapper
@@ -96,43 +98,55 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 				isPreparingToDrag.current = false
 				startDragging(event)
 			}
-
-			if (isDraggingNow.current) {
-				const basePos = { x: event.clientX, y: event.clientY }
-				const pos = adjustPosition ? adjustPosition(basePos, rootPos.current) : basePos
-				setStateQuietly({
-					...getState()!,
-					targetPos: pos,
-				})
-				// TODO: Do not recreate the ghost every frame
-				setGhostElement(
-					<GhostWrapper
-						initialLeft={rootPos.current.x}
-						initialTop={rootPos.current.y}
-						left={pos.x}
-						top={pos.y}
-						align={{
-							top: ghostAlign?.top ?? 'start',
-							left: ghostAlign?.left ?? 'start',
-						}}
-					>
-						{ghostFactory()}
-					</GhostWrapper>,
-				)
+			if (!isDraggingNow.current) {
+				return
 			}
+
+			const basePos = { x: event.clientX, y: event.clientY }
+			const pos = adjustPosition ? adjustPosition(basePos, rootPos.current) : basePos
+			setStateQuietly({
+				...getState()!,
+				targetPos: pos,
+			})
+			// TODO: Do not recreate the ghost every frame
+			setGhostElement(
+				<GhostWrapper
+					initialLeft={rootPos.current.x}
+					initialTop={rootPos.current.y}
+					left={pos.x}
+					top={pos.y}
+					align={{
+						top: ghostAlign?.top ?? 'start',
+						left: ghostAlign?.left ?? 'start',
+					}}
+				>
+					{ghostFactory()}
+				</GhostWrapper>,
+			)
 		},
 		[adjustPosition, getState, ghostFactory, setStateQuietly, startDragging, ghostAlign],
 	)
 
 	const onMouseUp = useCallback(() => {
-		isDraggingNow.current = false
 		isPreparingToDrag.current = false
+		if (!isDraggingNow.current) {
+			return
+		}
+		isDraggingNow.current = false
 		setGhostElement(null)
 		clearState()
 		setTimeout(() => {
 			window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
 		}, 1)
 	}, [clearState])
+
+	useShortcut(
+		Shortcut.Escape,
+		() => {
+			onMouseUp()
+		},
+		!!ghostElement,
+	)
 
 	const attachEvents = useCallback(() => {
 		const container = containerRef.current

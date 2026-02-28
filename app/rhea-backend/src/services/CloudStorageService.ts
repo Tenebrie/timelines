@@ -136,7 +136,7 @@ export const CloudStorageService = {
 			Expires: 1800, // 30 minutes
 		})
 
-		const publicUrl = url.replace('s3-minio:9000', 'localhost')
+		const publicUrl = url.replace('s3-minio:9000', 'app.localhost')
 
 		return { asset, url: publicUrl, fields: fields as Record<string, string> }
 	},
@@ -247,7 +247,7 @@ export const CloudStorageService = {
 		})
 
 		const url = await getSignedUrl(s3Client, command, { expiresIn: expiresInSeconds })
-		const publicUrl = url.replace('s3-minio:9000', 'localhost')
+		const publicUrl = url.replace('s3-minio:9000', 'app.localhost')
 		return publicUrl
 	},
 

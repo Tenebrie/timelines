@@ -1,6 +1,7 @@
+import { ListCalendarTemplatesApiResponse } from '@api/otherApi'
 import { GetWorldsApiResponse } from '@api/worldListApi'
 
-import { GetWorldBriefApiResponse, GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
+import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
 
 export type FullMentionDetails = GetWorldInfoApiResponse['actors'][number]['mentions'][number]
 export type MentionedEntity = GetWorldInfoApiResponse['actors'][number]['mentions'][number]['targetType']
@@ -8,9 +9,14 @@ export type MentionDetails = Pick<FullMentionDetails, 'targetId' | 'targetType'>
 export type Actor = Omit<ActorDetails, 'statements'>
 export type ActorDetails = GetWorldInfoApiResponse['actors'][number]
 export type WorldItem = GetWorldsApiResponse['ownedWorlds'][number]
-export type WorldBrief = GetWorldBriefApiResponse
-export type WorldDetails = Omit<GetWorldInfoApiResponse, 'events'> & {
+export type WorldBrief =
+	| GetWorldsApiResponse['ownedWorlds'][number]
+	| GetWorldsApiResponse['contributableWorlds'][number]
+	| GetWorldsApiResponse['visibleWorlds'][number]
+export type WorldDetails = Omit<GetWorldInfoApiResponse, 'events' | 'calendars' | 'timeOrigin'> & {
 	events: WorldEvent[]
+	calendars: WorldCalendar[]
+	timeOrigin: number
 }
 export type WorldEvent = Omit<
 	GetWorldInfoApiResponse['events'][number],
@@ -23,7 +29,12 @@ export type WorldEvent = Omit<
 	})[]
 }
 export type WorldEventDelta = WorldEvent['deltaStates'][number]
-export type WorldCalendarType = WorldDetails['calendar']
+export type WorldCalendar = Omit<GetWorldInfoApiResponse['calendars'][number], 'originTime'> & {
+	originTime: number
+}
+export type WorldCalendarUnit = WorldCalendar['units'][number]
+export type WorldCalendarPresentation = WorldCalendar['presentations'][number]
+export type WorldCalendarPresentationUnit = WorldCalendar['presentations'][number]['units'][number]
 
 export type WorldTag = GetWorldInfoApiResponse['tags'][number]
 
@@ -55,3 +66,4 @@ export type TimelineEntity<T extends MarkerType> = WorldEvent & {
 }
 
 export type WorldAccessMode = WorldBrief['accessMode']
+export type CalendarTemplateId = ListCalendarTemplatesApiResponse['keys'][number]

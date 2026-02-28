@@ -10,6 +10,7 @@ export const initialState = {
 	isSwitchingScale: false,
 	scaleLevel: 0 as ScaleLevel,
 	targetScaleLevel: 0 as ScaleLevel,
+	containerWidth: 0 as number,
 	loadingTracks: true,
 	// Only those with `visible: true`
 	tracks: [] as TimelineTrack[],
@@ -35,6 +36,9 @@ export const timelineSlice = createSlice({
 		},
 		setTargetScaleLevel: (state, { payload }: PayloadAction<ScaleLevel>) => {
 			state.targetScaleLevel = payload
+		},
+		setContainerWidth: (state, { payload }: PayloadAction<number>) => {
+			state.containerWidth = payload
 		},
 		setTracks: (
 			state,

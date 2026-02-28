@@ -25,6 +25,7 @@ model User {
   notifications UserAnnouncement[]
 
   worlds          World[]
+  calendars       Calendar[]
   collaboratingIn CollaboratingUser[]
 
   assets           Asset[]

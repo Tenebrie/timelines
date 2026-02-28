@@ -48,12 +48,93 @@ export type UpdateWorldApiArg = {
 	body: {
 		name?: string
 		description?: string
-		calendar?: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+		calendars?: string[]
 		timeOrigin?: number
 	}
 }
 export type GetWorldInfoApiResponse = /** status 200  */ {
 	isReadOnly: boolean
+	calendars: {
+		units: {
+			children: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				calendarId: string
+				position: number
+				label?: null | string
+				shortLabel?: null | string
+				repeats: number
+				parentUnitId: string
+				childUnitId: string
+			}[]
+			parents: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				calendarId: string
+				position: number
+				label?: null | string
+				shortLabel?: null | string
+				repeats: number
+				parentUnitId: string
+				childUnitId: string
+			}[]
+			id: string
+			name: string
+			position: number
+			displayName: string
+			displayNameShort: string
+			displayNamePlural: string
+			formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
+			formatShorthand?: null | string
+			negativeFormat: 'MinusSign' | 'AbsoluteValue'
+			duration: string
+			treeDepth: number
+		}[]
+		presentations: {
+			units: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				calendarId: string
+				presentationId: string
+				position: number
+				formatString: string
+				subdivision: number
+				labeledIndices: number[]
+				unitId: string
+			}[]
+			id: string
+			name: string
+			compression: number
+			scaleFactor: number
+			baselineUnitId?: null | string
+		}[]
+		seasons: {
+			intervals: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				calendarId: string
+				leftIndex: number
+				rightIndex: number
+				seasonId: string
+			}[]
+			id: string
+			name: string
+			position: number
+			formatShorthand?: null | string
+		}[]
+		description: string
+		id: string
+		updatedAt: string
+		name: string
+		position: number
+		originTime: string
+		dateFormat?: null | string
+	}[]
 	actors: {
 		pages: {
 			id: string
@@ -135,7 +216,7 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
@@ -163,7 +244,7 @@ export type GetWorldBriefApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendar: 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'

@@ -1,40 +1,63 @@
+import { useCreateWorldShareLinkMutation } from '@api/otherApi'
 import { CollaboratorAccess } from '@api/types/worldCollaboratorsTypes'
-import { useShareWorldMutation } from '@api/worldCollaboratorsApi'
 import Add from '@mui/icons-material/Add'
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete'
+import RefreshIcon from '@mui/icons-material/Refresh'
 import Button from '@mui/material/Button'
 import FormControl from '@mui/material/FormControl'
+import IconButton from '@mui/material/IconButton'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
+import Paper from '@mui/material/Paper'
 import Select from '@mui/material/Select'
+import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
-import { useState } from 'react'
+import Typography from '@mui/material/Typography'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import dayjs, { Dayjs } from 'dayjs'
+import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
-import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useCollaboratorAccess } from '@/app/views/world/views/settings/hooks/useCollaboratorAccess'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
+import { useShareSlug } from '../hooks/useWorldShareSlug'
+
 export const ShareWorldModal = () => {
-	const [emails, setEmails] = useState<{ value: string; label: string }[]>([])
+	const [slug, setSlug] = useState('')
+	const [label, setLabel] = useState('')
 	const [access, setAccess] = useState<CollaboratorAccess>('ReadOnly')
+	const [expirationDate, setExpirationDate] = useState<Dayjs | null>(dayjs().add(1, 'month'))
 
 	const { listAllLevels } = useCollaboratorAccess()
-	const worldId = useSelector(getWorldIdState)
 
 	const { isOpen, close } = useModal('shareWorldModal')
 
-	const [shareWorld, { isLoading }] = useShareWorldMutation()
+	const [createShareLink, { isLoading }] = useCreateWorldShareLinkMutation()
+	const worldId = useSelector(getWorldIdState)
+
+	const { currentSlug, randomSlug, error, validate: validateSlug, reset: resetSlug } = useShareSlug()
+
+	const currentLink = useMemo(() => {
+		const origin = window.location.origin.replace('//app.', '//')
+		return `${origin}/share/${currentSlug}`
+	}, [currentSlug])
+
+	const currentLabel = useMemo(() => {
+		return label || currentSlug
+	}, [label, currentSlug])
 
 	useModalCleanup({
 		isOpen,
 		onCleanup: () => {
-			setEmails([])
+			resetSlug()
+			setSlug('')
+			setLabel('')
 			setAccess('ReadOnly')
+			setExpirationDate(dayjs().add(7, 'day'))
 		},
 	})
 
@@ -43,19 +66,15 @@ export const ShareWorldModal = () => {
 			return
 		}
 
-		const { error } = parseApiResponse(
-			await shareWorld({
-				worldId,
-				body: {
-					userEmails: emails.map((email) => email.value),
-					access,
-				},
-			}),
-		)
-		if (error) {
-			return
-		}
-
+		await createShareLink({
+			worldId,
+			body: {
+				slug: currentSlug,
+				label: currentLabel,
+				expiresAt: expirationDate?.toISOString(),
+				accessMode: access,
+			},
+		})
 		close()
 	}
 
@@ -67,47 +86,44 @@ export const ShareWorldModal = () => {
 		isOpen ? 1 : -1,
 	)
 
-	const filter = createFilterOptions<{ value: string; label: string }>()
-
 	return (
 		<>
 			<Modal visible={isOpen} onClose={close}>
 				<ModalHeader>Share world</ModalHeader>
-				<Autocomplete
-					multiple
-					value={emails}
-					onChange={(_, newValue) => {
-						setEmails(
-							newValue.map((email) => {
-								if (typeof email === 'string') {
-									return {
-										value: email,
-										label: email,
-									}
-								}
-								return email
-							}),
-						)
+				<Paper variant="outlined" sx={{ p: '12px', paddingRight: '8px', bgcolor: 'background.default' }}>
+					<Stack direction="row" justifyContent="space-between" alignItems="center">
+						<Typography>{currentLink}</Typography>
+						<IconButton
+							size="small"
+							sx={{ margin: -1, marginRight: 0 }}
+							onClick={() => {
+								resetSlug()
+								setSlug('')
+							}}
+						>
+							<RefreshIcon fontSize="small" />
+						</IconButton>
+					</Stack>
+				</Paper>
+				<TextField
+					label="Share link label (Optional)"
+					value={label}
+					onChange={(e) => setLabel(e.target.value)}
+					fullWidth
+					placeholder={currentLabel}
+					helperText="Name of the link to help identify it later"
+				/>
+				<TextField
+					label="Custom link (Optional)"
+					value={slug}
+					onChange={(e) => {
+						setSlug(e.target.value)
+						validateSlug(e.target.value)
 					}}
-					options={[]}
-					freeSolo
-					data-hj-suppress
-					filterOptions={(options, params) => {
-						const filtered = filter(options, params)
-
-						const { inputValue } = params
-						// Suggest the creation of a new value
-						const isExisting = options.some((option) => inputValue === option.label)
-						if (inputValue !== '' && !isExisting) {
-							filtered.push({
-								value: inputValue,
-								label: `Add "${inputValue}"`,
-							})
-						}
-
-						return filtered
-					}}
-					renderInput={(params) => <TextField {...params} label="Emails" />}
+					placeholder={randomSlug}
+					fullWidth
+					error={!!error}
+					helperText={error}
 				/>
 				<FormControl fullWidth>
 					<InputLabel id="share-access-label">Access</InputLabel>
@@ -127,16 +143,22 @@ export const ShareWorldModal = () => {
 						))}
 					</Select>
 				</FormControl>
+				<DatePicker
+					label="Expiration date"
+					value={expirationDate}
+					onChange={(newValue) => setExpirationDate(newValue)}
+				/>
 				<ModalFooter>
 					<Tooltip title={shortcutLabel} arrow placement="top">
 						<Button
+							disabled={!isOpen}
 							loading={isLoading}
 							variant="contained"
 							onClick={onConfirm}
 							loadingPosition="start"
 							startIcon={<Add />}
 						>
-							<span>Confirm</span>
+							<span>Create link</span>
 						</Button>
 					</Tooltip>
 					<Button variant="outlined" onClick={close}>

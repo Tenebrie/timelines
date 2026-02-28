@@ -1,13 +1,12 @@
-import React, { useEffect, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect, useMemo, useState } from 'react'
 
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
-import { maximumTime } from '@/app/features/time/hooks/useWorldTime'
+import { THE_END } from '@/app/features/time/hooks/useWorldTime'
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
-import { getWorldCalendarState } from '@/app/views/world/WorldSliceSelectors'
 import { router } from '@/router'
 
 import { useTimelineClick } from './useTimelineClick'
+import { useTimelineDragAutoScroll } from './useTimelineDragAutoScroll'
 import { useTimelineExternalScroll } from './useTimelineExternalScroll'
 import { useTimelineScroll } from './useTimelineScroll'
 import { useTimelineWheel } from './useTimelineWheel'
@@ -31,20 +30,24 @@ export const useTimelineNavigation = ({
 	onDoubleClick,
 }: Props) => {
 	const { getLevelScalar } = useTimelineLevelScalar()
-	const calendar = useSelector(getWorldCalendarState)
 
 	const initialScaleLevel: ScaleLevel = router.state.location.search.scale ?? 0
 
 	// Scroll management
+	const [containerSize, setContainerSize] = useState(0)
 	const scalar = useMemo(() => getLevelScalar(initialScaleLevel), [getLevelScalar, initialScaleLevel])
-	const minimumScroll = useMemo(() => -maximumTime / scalar / 1000 / 60, [scalar])
-	const maximumScroll = useMemo(() => maximumTime / scalar / 1000 / 60, [scalar])
+	const minimumScroll = useMemo(() => -THE_END / scalar + containerSize, [containerSize, scalar])
+	const maximumScroll = useMemo(() => THE_END / scalar - 4, [scalar])
 
 	const scrollHook = useTimelineScroll({
 		defaultScroll,
 		scaleLevel: initialScaleLevel,
 		minimumScroll,
 		maximumScroll,
+	})
+
+	useTimelineDragAutoScroll({
+		containerRef,
 	})
 
 	// Zoom management
@@ -54,7 +57,6 @@ export const useTimelineNavigation = ({
 		selectedTime: defaultSelectedTime,
 		scaleLimits,
 		initialScaleLevel,
-		calendar,
 		setScroll: scrollHook.setScroll,
 	})
 
@@ -62,7 +64,6 @@ export const useTimelineNavigation = ({
 	const clickHook = useTimelineClick({
 		containerRef,
 		scrollRef: scrollHook.scrollRef,
-		scaleLevel: zoomHook.scaleLevel,
 		scaledTimeToRealTime: zoomHook.scaledTimeToRealTime,
 		onClick,
 		onDoubleClick,
@@ -98,22 +99,27 @@ export const useTimelineNavigation = ({
 			return
 		}
 
+		setContainerSize(container.getBoundingClientRect().width + 42)
 		const onMouseMove = (event: MouseEvent) => {
 			scrollHook.onMouseMoveThrottled.current(event, scrollHook.minimumScroll, scrollHook.maximumScroll)
 		}
 
 		container.addEventListener('click', clickHook.onTimelineClick)
+		container.addEventListener('mousedown', clickHook.onMouseDown)
 		container.addEventListener('mousedown', scrollHook.onMouseDown)
 		document.addEventListener('mousemove', onMouseMove)
 		document.addEventListener('mouseup', scrollHook.onMouseUp)
+		document.addEventListener('mouseup', clickHook.onMouseUp)
 		document.addEventListener('mouseleave', scrollHook.onMouseUp)
 		container.addEventListener('wheel', onWheel)
 
 		return () => {
 			container.removeEventListener('click', clickHook.onTimelineClick)
+			container.removeEventListener('mousedown', clickHook.onMouseDown)
 			container.removeEventListener('mousedown', scrollHook.onMouseDown)
 			document.removeEventListener('mousemove', onMouseMove)
 			document.removeEventListener('mouseup', scrollHook.onMouseUp)
+			document.removeEventListener('mouseup', clickHook.onMouseUp)
 			document.removeEventListener('mouseleave', scrollHook.onMouseUp)
 			container.removeEventListener('wheel', onWheel)
 		}

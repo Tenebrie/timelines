@@ -1,6 +1,11 @@
 import { AdminAuthenticator } from '@src/middleware/auth/AdminAuthenticator.js'
+import { AUTH_COOKIE_NAME } from '@src/middleware/auth/UserAuthenticatorWithAvatar.js'
 import { AdminService } from '@src/services/AdminService.js'
+import { TokenService } from '@src/services/TokenService.js'
+import { UserService } from '@src/services/UserService.js'
 import {
+	BadRequestError,
+	EmailValidator,
 	NonEmptyStringValidator,
 	NumberValidator,
 	OptionalParam,
@@ -45,6 +50,38 @@ router.get('/api/admin/users', async (ctx) => {
 	return users
 })
 
+router.post('/api/admin/user/:userId/impersonate', async (ctx) => {
+	useApiEndpoint({
+		name: 'adminImpersonateUser',
+		summary: 'Admin impersonate user endpoint',
+		description:
+			'Allows admin to impersonate another user by their user ID. Returns a new nested session token for the impersonated user.',
+		tags: [adminUsersTag],
+	})
+
+	const { userId } = usePathParams(ctx, {
+		userId: NonEmptyStringValidator,
+	})
+
+	const user = await UserService.findByIdInternal(userId)
+	if (!user) {
+		throw new BadRequestError('User with the provided ID does not exist')
+	}
+
+	const token = TokenService.generateImpersonatedJwtToken(ctx.user.id, user)
+
+	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
+		path: '/',
+		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
+		secure: ctx.headers['x-forwarded-proto'] === 'https',
+		sameSite: 'lax',
+	})
+
+	return {
+		user,
+	}
+})
+
 router.post('/api/admin/users/:userId/level', async (ctx) => {
 	useApiEndpoint({
 		name: 'adminSetUserLevel',
@@ -75,6 +112,33 @@ router.delete('/api/admin/users/:userId', async (ctx) => {
 	})
 
 	return await AdminService.deleteUser(userId)
+})
+
+router.patch('/api/admin/users/:userId', async (ctx) => {
+	useApiEndpoint({
+		name: 'adminUpdateUser',
+		description: 'Updates the user information for the given user',
+		tags: [adminUsersTag],
+	})
+
+	const { userId } = usePathParams(ctx, {
+		userId: NonEmptyStringValidator,
+	})
+
+	const { email, username, bio } = useRequestBody(ctx, {
+		email: OptionalParam(EmailValidator),
+		username: OptionalParam(StringValidator),
+		bio: OptionalParam(StringValidator),
+	})
+
+	if (email) {
+		const existingUser = await AdminService.getUserByEmail(email)
+		if (existingUser && existingUser.id !== userId) {
+			throw new BadRequestError('Email is already in use')
+		}
+	}
+
+	return await AdminService.updateUser(userId, { email, username, bio })
 })
 
 router.post('/api/admin/users/:userId/password', async (ctx) => {

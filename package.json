@@ -8,6 +8,7 @@
 		"app/rhea-backend",
 		"app/calliope-websockets",
 		"app/orpheus-mcp",
+		"app/thetis-landing",
 		"app/ts-shared",
 		"test/e2e",
 		"test/load"
@@ -27,16 +28,23 @@
 		"docker:prod:push": "./scripts/docker-prod-push.sh",
 		"docker:stop": "docker stop $(docker ps -a -q)",
 		"tsc": "(cd app/styx-frontend && yarn tsc) && (cd app/rhea-backend && yarn tsc) && (cd app/calliope-websockets && yarn tsc) && (cd app/orpheus-mcp && yarn tsc)",
+		"lint": "(cd app/styx-frontend && yarn lint) && (cd app/rhea-backend && yarn lint) && (cd app/calliope-websockets && yarn lint) && (cd app/orpheus-mcp && yarn lint)",
+		"test": "yarn test:styx && yarn test:rhea && yarn test:calliope && yarn test:orpheus && yarn test:e2e",
 		"prisma": "cd app/rhea-backend && yarn prisma",
-		"test": "yarn test:styx && yarn test:rhea && yarn test:e2e",
 		"test:styx": "cd app/styx-frontend && yarn test run",
 		"test:rhea": "cd app/rhea-backend && yarn test",
 		"test:calliope": "cd app/calliope-websockets && yarn test",
+		"test:orpheus": "cd app/orpheus-mcp && yarn test",
 		"test:e2e": "cd test/e2e && yarn test",
 		"test:e2e:run": "cd test/e2e && yarn test:local",
 		"build:styx": "cd app/styx-frontend && yarn build",
 		"build:rhea": "cd app/rhea-backend && yarn build",
-		"build:calliope": "cd app/calliope-websockets && yarn build"
+		"build:calliope": "cd app/calliope-websockets && yarn build",
+		"build:orpheus": "cd app/orpheus-mcp && yarn build",
+		"lint:styx": "cd app/styx-frontend && yarn lint",
+		"lint:rhea": "cd app/rhea-backend && yarn lint",
+		"lint:calliope": "cd app/calliope-websockets && yarn lint",
+		"lint:orpheus": "cd app/orpheus-mcp && yarn lint"
 	},
 	"dependencies": {
 		"@typescript-eslint/eslint-plugin": "^8.51.0",
@@ -44,6 +52,7 @@
 		"cloc": "^2.8.0",
 		"eslint": "^9.39.2",
 		"eslint-config-prettier": "^9.1.0",
+		"eslint-plugin-astro": "^1.6.0",
 		"eslint-plugin-node": "^11.1.0",
 		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-simple-import-sort": "^12.1.1",
@@ -66,10 +75,12 @@
 	},
 	"homepage": "https://github.com/tenebrie/timelines#readme",
 	"devDependencies": {
+		"astro-eslint-parser": "^1.2.2",
 		"eslint-plugin-mui-path-imports": "^0.0.15",
 		"eslint-plugin-no-relative-import-paths": "^1.6.1",
 		"eslint-plugin-react": "^7.37.5",
 		"eslint-plugin-react-hooks": "^7.0.1",
+		"prettier-plugin-astro": "^0.14.1",
 		"husky": "^9.1.7",
 		"typescript-eslint": "^8.51.0"
 	}

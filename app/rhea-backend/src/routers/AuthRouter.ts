@@ -7,10 +7,12 @@ import {
 	BadRequestError,
 	EmailValidator,
 	NonEmptyStringValidator,
+	RequiredParam,
 	Router,
 	UnauthorizedError,
 	useApiEndpoint,
 	useAuth,
+	useCookieParams,
 	useOptionalAuth,
 	useRequestBody,
 } from 'moonflower'
@@ -81,7 +83,7 @@ router.post('/api/auth', async (ctx) => {
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
-		secure: ctx.request.protocol === 'https',
+		secure: ctx.headers['x-forwarded-proto'] === 'https',
 		sameSite: 'lax',
 	})
 
@@ -89,7 +91,7 @@ router.post('/api/auth', async (ctx) => {
 		type: 'Welcome',
 		userId: user.id,
 		title: 'Welcome!',
-		description: 'Welcome to Timelines!',
+		description: 'Welcome to Neverkin!',
 	})
 
 	return {
@@ -125,7 +127,7 @@ router.post('/api/auth/login', async (ctx) => {
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
-		secure: ctx.request.protocol === 'https',
+		secure: ctx.headers['x-forwarded-proto'] === 'https',
 		sameSite: 'lax',
 	})
 
@@ -148,10 +150,46 @@ router.post('/api/auth/logout', async (ctx) => {
 		tags: [authTag, worldListTag, worldDetailsTag, announcementListTag],
 	})
 
-	ctx.cookies.set(AUTH_COOKIE_NAME, '', {
-		path: '/',
-		expires: new Date(),
+	await useAuth(ctx, UserAuthenticator)
+
+	const { [AUTH_COOKIE_NAME]: token } = useCookieParams(ctx, {
+		[AUTH_COOKIE_NAME]: RequiredParam(NonEmptyStringValidator),
 	})
+
+	const tokenPayload = TokenService.decodeUserToken(token)
+
+	// Normal user logout - clear the auth cookie
+	if (!tokenPayload.impersonatingAdminId) {
+		ctx.cookies.set(AUTH_COOKIE_NAME, '', {
+			path: '/',
+			expires: new Date(),
+			secure: ctx.headers['x-forwarded-proto'] === 'https',
+			sameSite: 'lax',
+		})
+
+		return {
+			redirectTo: 'login' as 'login' | 'admin',
+		}
+	}
+
+	// Restore the impersonating admin session
+	const admin = await UserService.findByIdInternal(tokenPayload.impersonatingAdminId)
+	if (!admin) {
+		throw new UnauthorizedError('Invalid impersonation token')
+	}
+	const newToken = TokenService.generateJwtToken({
+		id: admin.id,
+		email: admin.email,
+	})
+	ctx.cookies.set(AUTH_COOKIE_NAME, newToken, {
+		path: '/',
+		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
+		secure: ctx.headers['x-forwarded-proto'] === 'https',
+		sameSite: 'lax',
+	})
+	return {
+		redirectTo: 'admin' as 'login' | 'admin',
+	}
 })
 
 router.delete('/api/auth', async (ctx) => {
@@ -168,6 +206,8 @@ router.delete('/api/auth', async (ctx) => {
 	ctx.cookies.set(AUTH_COOKIE_NAME, '', {
 		path: '/',
 		expires: new Date(),
+		secure: ctx.headers['x-forwarded-proto'] === 'https',
+		sameSite: 'lax',
 	})
 })
 

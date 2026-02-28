@@ -29,7 +29,7 @@ export function Profile() {
 					<Typography variant="subtitle2" color="textSecondary" sx={{ mb: 2 }}>
 						Settings
 					</Typography>
-					<Stack spacing={1}>
+					<Stack gap={1}>
 						<PageButton icon={<AccountCircleIcon />} label="Public profile" route="/profile/public" />
 						<PageButton icon={<StorageIcon />} label="Storage" route="/profile/storage" />
 						<PageButton icon={<LockResetIcon />} label="Security" route="/profile/security" />

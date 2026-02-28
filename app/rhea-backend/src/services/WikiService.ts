@@ -3,7 +3,7 @@ import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 import { BadRequestError } from 'moonflower'
 
 import { makeFetchArticleAncestorsQuery } from './dbQueries/makeFetchArticleAncestorsQuery.js'
-import { makeSortWikiArticles as makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticles.js'
+import { makeSortWikiArticlesQuery as makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { MentionData, MentionsService } from './MentionsService.js'
 

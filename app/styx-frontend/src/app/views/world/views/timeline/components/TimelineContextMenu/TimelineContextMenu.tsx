@@ -75,7 +75,7 @@ export const TimelineContextMenuComponent = () => {
 		await revokeEventAt({
 			worldId,
 			eventId: selectedMarker.eventId,
-			revokedAt: selectedTime,
+			revokedAt: Math.max(selectedTime, selectedMarker.markerPosition + 1),
 		})
 
 		onClose()

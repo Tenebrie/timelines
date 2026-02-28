@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['mindmap', 'tagList', 'worldDetails', 'worldWikiArticle', 'WorldColor'] as const
+export const addTagTypes = ['worldWikiArticle', 'worldShareLink'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -11,6 +11,15 @@ const injectedRtkApi = api
 			}),
 			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
 				query: () => ({ url: `/api/constants/world-access-modes` }),
+			}),
+			listCalendarTemplates: build.query<ListCalendarTemplatesApiResponse, ListCalendarTemplatesApiArg>({
+				query: () => ({ url: `/api/constants/calendar-templates` }),
+			}),
+			listCalendarUnitFormatModes: build.query<
+				ListCalendarUnitFormatModesApiResponse,
+				ListCalendarUnitFormatModesApiArg
+			>({
+				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
 			}),
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
@@ -26,58 +35,12 @@ const injectedRtkApi = api
 					query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
 				},
 			),
-			getMindmap: build.query<GetMindmapApiResponse, GetMindmapApiArg>({
-				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/mindmap` }),
-				providesTags: ['mindmap'],
-			}),
-			createNode: build.mutation<CreateNodeApiResponse, CreateNodeApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/node`,
-					method: 'POST',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['mindmap'],
-			}),
 			updateNode: build.mutation<UpdateNodeApiResponse, UpdateNodeApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/mindmap/node/${queryArg.nodeId}`,
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
-			}),
-			deleteNode: build.mutation<DeleteNodeApiResponse, DeleteNodeApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/node/${queryArg.nodeId}`,
-					method: 'DELETE',
-				}),
-				invalidatesTags: ['mindmap'],
-			}),
-			createTag: build.mutation<CreateTagApiResponse, CreateTagApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/tags`,
-					method: 'POST',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['tagList', 'worldDetails'],
-			}),
-			updateTag: build.mutation<UpdateTagApiResponse, UpdateTagApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/tag/${queryArg.tagId}`,
-					method: 'PATCH',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['tagList'],
-			}),
-			deleteTag: build.mutation<DeleteTagApiResponse, DeleteTagApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/tag/${queryArg.tagId}`,
-					method: 'DELETE',
-				}),
-				invalidatesTags: ['tagList', 'worldDetails'],
-			}),
-			getTagDetails: build.query<GetTagDetailsApiResponse, GetTagDetailsApiArg>({
-				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/tag/${queryArg.tagId}` }),
-				providesTags: ['tagList'],
 			}),
 			getWikiArticleContent: build.query<GetWikiArticleContentApiResponse, GetWikiArticleContentApiArg>({
 				query: (queryArg) => ({
@@ -96,24 +59,47 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldWikiArticle'],
 			}),
-			getWorldColors: build.query<GetWorldColorsApiResponse, GetWorldColorsApiArg>({
-				query: (queryArg) => ({ url: `/api/worlds/${queryArg.worldId}/colors` }),
-				providesTags: ['WorldColor'],
+			listWorldShareLinks: build.query<ListWorldShareLinksApiResponse, ListWorldShareLinksApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/share-links` }),
+				providesTags: ['worldShareLink'],
 			}),
-			createWorldColor: build.mutation<CreateWorldColorApiResponse, CreateWorldColorApiArg>({
+			generateFreeWorldShareLink: build.mutation<
+				GenerateFreeWorldShareLinkApiResponse,
+				GenerateFreeWorldShareLinkApiArg
+			>({
 				query: (queryArg) => ({
-					url: `/api/worlds/${queryArg.worldId}/colors`,
+					url: `/api/world/${queryArg.worldId}/share-link/generate`,
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['WorldColor'],
 			}),
-			deleteWorldColor: build.mutation<DeleteWorldColorApiResponse, DeleteWorldColorApiArg>({
+			createWorldShareLink: build.mutation<CreateWorldShareLinkApiResponse, CreateWorldShareLinkApiArg>({
 				query: (queryArg) => ({
-					url: `/api/worlds/${queryArg.worldId}/colors/${queryArg.colorId}`,
+					url: `/api/world/${queryArg.worldId}/share-link`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldShareLink'],
+			}),
+			expireWorldShareLink: build.mutation<ExpireWorldShareLinkApiResponse, ExpireWorldShareLinkApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/share-link/${queryArg.shareLinkId}/expire`,
+					method: 'POST',
+				}),
+				invalidatesTags: ['worldShareLink'],
+			}),
+			deleteWorldShareLink: build.mutation<DeleteWorldShareLinkApiResponse, DeleteWorldShareLinkApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/share-link/${queryArg.shareLinkId}`,
 					method: 'DELETE',
 				}),
-				invalidatesTags: ['WorldColor'],
+				invalidatesTags: ['worldShareLink'],
+			}),
+			visitWorldShareLink: build.query<VisitWorldShareLinkApiResponse, VisitWorldShareLinkApiArg>({
+				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}` }),
+			}),
+			acceptWorldShareLink: build.mutation<AcceptWorldShareLinkApiResponse, AcceptWorldShareLinkApiArg>({
+				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}/accept`, method: 'POST' }),
 			}),
 			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
 				query: (queryArg) => ({
@@ -141,6 +127,23 @@ export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premiu
 export type AdminGetUserLevelsApiArg = void
 export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
 export type ListWorldAccessModesApiArg = void
+export type ListCalendarTemplatesApiResponse = /** status 200  */ {
+	keys: ('earth_current' | 'martian' | 'pf2e_current' | 'rimworld' | 'exether')[]
+	templates: {
+		name: string
+		description: string
+		id: string
+	}[]
+}
+export type ListCalendarTemplatesApiArg = void
+export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
+	| 'Name'
+	| 'NameOneIndexed'
+	| 'Numeric'
+	| 'NumericOneIndexed'
+	| 'Hidden'
+)[]
+export type ListCalendarUnitFormatModesApiArg = void
 export type GetHealthApiResponse = unknown
 export type GetHealthApiArg = void
 export type GetSupportedImageFormatsApiResponse = /** status 200  */ {
@@ -157,7 +160,7 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
-	contentType: 'Image' | 'Avatar'
+	contentType: 'ImageConversion' | 'Avatar'
 	status: 'Pending' | 'Finalized' | 'Failed'
 }
 export type RequestImageConversionApiArg = {
@@ -167,39 +170,6 @@ export type RequestImageConversionApiArg = {
 		width?: number
 		height?: number
 		quality?: number
-	}
-}
-export type GetMindmapApiResponse = /** status 200  */ {
-	nodes: {
-		id: string
-		createdAt: string
-		updatedAt: string
-		worldId: string
-		parentActorId?: null | string
-		positionX: number
-		positionY: number
-	}[]
-}
-export type GetMindmapApiArg = {
-	/** Any string value */
-	worldId: string
-}
-export type CreateNodeApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	worldId: string
-	parentActorId?: null | string
-	positionX: number
-	positionY: number
-}
-export type CreateNodeApiArg = {
-	/** Any string value */
-	worldId: string
-	body: {
-		positionX: number
-		positionY: number
-		parentActorId?: string
 	}
 }
 export type UpdateNodeApiResponse = /** status 200  */ {
@@ -220,163 +190,6 @@ export type UpdateNodeApiArg = {
 		positionX?: number
 		positionY?: number
 	}
-}
-export type DeleteNodeApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	worldId: string
-	parentActorId?: null | string
-	positionX: number
-	positionY: number
-}
-export type DeleteNodeApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	nodeId: string
-}
-export type CreateTagApiResponse = /** status 200  */ {
-	mentions: {
-		pageId?: null | string
-		sourceId: string
-		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
-	}[]
-	mentionedIn: {
-		pageId?: null | string
-		sourceId: string
-		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
-	}[]
-	description: string
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	worldId: string
-}
-export type CreateTagApiArg = {
-	/** Any string value */
-	worldId: string
-	body: {
-		name: string
-		description?: string
-	}
-}
-export type UpdateTagApiResponse = /** status 200  */ {
-	mentions: {
-		pageId?: null | string
-		sourceId: string
-		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
-	}[]
-	mentionedIn: {
-		pageId?: null | string
-		sourceId: string
-		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
-	}[]
-	description: string
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	worldId: string
-}
-export type UpdateTagApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	tagId: string
-	body: {
-		name?: string
-		description?: string
-	}
-}
-export type DeleteTagApiResponse = /** status 200  */ {
-	description: string
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	worldId: string
-}
-export type DeleteTagApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	tagId: string
-}
-export type GetTagDetailsApiResponse = /** status 200  */ {
-	mentionedBy: {
-		type: 'Actor' | 'Event' | 'Article' | 'Tag'
-		id: string
-		name: string
-	}[]
-	mentions: {
-		pageId?: null | string
-		sourceId: string
-		targetId: string
-		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		sourceActorId?: null | string
-		sourceEventId?: null | string
-		sourceArticleId?: null | string
-		sourceTagId?: null | string
-		targetActorId?: null | string
-		targetEventId?: null | string
-		targetArticleId?: null | string
-		targetTagId?: null | string
-	}[]
-	description: string
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	worldId: string
-}
-export type GetTagDetailsApiArg = {
-	/** Any string value */
-	worldId: string
-	/** Any string value */
-	tagId: string
 }
 export type GetWikiArticleContentApiResponse = /** status 200  */ {
 	hasDeltas: boolean
@@ -402,64 +215,115 @@ export type PutWikiArticleContentApiArg = {
 		contentDeltas?: string
 	}
 }
-export type GetWorldColorsApiResponse = /** status 200  */ {
+export type ListWorldShareLinksApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
-	updatedAt: string
 	worldId: string
-	value: string
-	label?: null | string
+	accessMode: 'ReadOnly' | 'Editing'
+	expiresAt: null | string
+	label: null | string
+	slug: string
+	usageCount: number
 }[]
-export type GetWorldColorsApiArg = {
-	/** Any string value with at least one character */
+export type ListWorldShareLinksApiArg = {
+	/** Any string value */
 	worldId: string
 }
-export type CreateWorldColorApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	worldId: string
-	value: string
-	label?: null | string
+export type GenerateFreeWorldShareLinkApiResponse = /** status 200  */ {
+	slug: string
+	preferredSlugFree: boolean
 }
-export type CreateWorldColorApiArg = {
-	/** Any string value with at least one character */
+export type GenerateFreeWorldShareLinkApiArg = {
+	/** Any string value */
 	worldId: string
 	body: {
-		value: string
-		label?: string
+		preferredSlug?: string
 	}
 }
-export type DeleteWorldColorApiResponse = unknown
-export type DeleteWorldColorApiArg = {
-	/** Any string value with at least one character */
+export type CreateWorldShareLinkApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
 	worldId: string
-	/** Any string value with at least one character */
-	colorId: string
+	accessMode: 'ReadOnly' | 'Editing'
+	expiresAt?: null | string
+	label?: null | string
+	slug: string
+	usageCount: number
+}
+export type CreateWorldShareLinkApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		slug: string
+		label: string
+		expiresAt?: string
+		accessMode: 'ReadOnly' | 'Editing'
+	}
+}
+export type ExpireWorldShareLinkApiResponse = unknown
+export type ExpireWorldShareLinkApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	shareLinkId: string
+}
+export type DeleteWorldShareLinkApiResponse = unknown
+export type DeleteWorldShareLinkApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	shareLinkId: string
+}
+export type VisitWorldShareLinkApiResponse = /** status 200  */ {
+	world: {
+		id: string
+		name: string
+		description: string
+	}
+	linkAccess: 'ReadOnly' | 'Editing'
+	alreadyHasAccess: boolean
+}
+export type VisitWorldShareLinkApiArg = {
+	/** Any string value */
+	slug: string
+}
+export type AcceptWorldShareLinkApiResponse = /** status 200  */ {
+	world: {
+		id: string
+		name: string
+		description: string
+	}
+	linkAccess: 'ReadOnly' | 'Editing'
+	alreadyHasAccess: boolean
+}
+export type AcceptWorldShareLinkApiArg = {
+	/** Any string value */
+	slug: string
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
 		id: string
-		worldId: string
 		createdAt: string
 		updatedAt: string
+		name: string
+		worldId: string
 		icon: string
 		color: string
-		name: string
+		position: number
 		contentRich: string
 		contentYjs?: null | string
-		position: number
 		parentId?: null | string
 	}[]
 	id: string
-	worldId: string
 	createdAt: string
 	updatedAt: string
+	name: string
+	worldId: string
 	icon: string
 	color: string
-	name: string
-	contentRich: string
 	position: number
+	contentRich: string
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {
@@ -489,28 +353,28 @@ export const {
 	useLazyAdminGetUserLevelsQuery,
 	useListWorldAccessModesQuery,
 	useLazyListWorldAccessModesQuery,
+	useListCalendarTemplatesQuery,
+	useLazyListCalendarTemplatesQuery,
+	useListCalendarUnitFormatModesQuery,
+	useLazyListCalendarUnitFormatModesQuery,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,
 	useGetSupportedImageFormatsQuery,
 	useLazyGetSupportedImageFormatsQuery,
 	useRequestImageConversionMutation,
-	useGetMindmapQuery,
-	useLazyGetMindmapQuery,
-	useCreateNodeMutation,
 	useUpdateNodeMutation,
-	useDeleteNodeMutation,
-	useCreateTagMutation,
-	useUpdateTagMutation,
-	useDeleteTagMutation,
-	useGetTagDetailsQuery,
-	useLazyGetTagDetailsQuery,
 	useGetWikiArticleContentQuery,
 	useLazyGetWikiArticleContentQuery,
 	usePutWikiArticleContentMutation,
-	useGetWorldColorsQuery,
-	useLazyGetWorldColorsQuery,
-	useCreateWorldColorMutation,
-	useDeleteWorldColorMutation,
+	useListWorldShareLinksQuery,
+	useLazyListWorldShareLinksQuery,
+	useGenerateFreeWorldShareLinkMutation,
+	useCreateWorldShareLinkMutation,
+	useExpireWorldShareLinkMutation,
+	useDeleteWorldShareLinkMutation,
+	useVisitWorldShareLinkQuery,
+	useLazyVisitWorldShareLinkQuery,
+	useAcceptWorldShareLinkMutation,
 	useUpdateArticleMutation,
 	useGetUserWorldAccessLevelQuery,
 	useLazyGetUserWorldAccessLevelQuery,

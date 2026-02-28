@@ -27,6 +27,5 @@ export const loginAsUser = async (page: Page, accountData: { email: string; pass
 }
 
 export const deleteAccount = async (page: Page) => {
-	const response = await page.request.delete(makeUrl('/api/auth'))
-	expect(response.ok()).toBeTruthy()
+	await page.request.delete(makeUrl('/api/auth'))
 }

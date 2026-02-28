@@ -8,14 +8,15 @@ import { BaseMentionChip } from './BaseMentionChip'
 type Props = {
 	worldId: string
 	tagId: string
+	fallbackName?: string
 }
 
-export const TagMentionChip = ({ tagId }: Props) => {
+export const TagMentionChip = ({ tagId, fallbackName }: Props) => {
 	const navigateTo = useEventBusDispatch['world/requestNavigation']()
 	const { tags } = useSelector(getWorldState, (a, b) => a.tags === b.tags)
 
 	const tag = tags.find((tag) => tag.id === tagId)
-	const tagName = tag ? `${tag.name}` : 'Unknown Tag'
+	const tagName = tag ? `${tag.name}` : `Deleted Tag (${fallbackName ?? 'Unknown'})`
 	const tagColor = tag ? '#255' : undefined
 
 	const onClick = () => {
