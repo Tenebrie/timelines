@@ -9,7 +9,6 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
-import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
 import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineState'
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
@@ -36,8 +35,6 @@ function TimelineMarkerComponent({ entity, visible, selected, trackHeight, realT
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
-	const markerPositionRef = useAutoRef(entity.markerPosition)
-
 	const cssVariables = {
 		'--border-color': 'gray',
 		'--icon-path': `url(${getIconPath(entity.icon)})`,
@@ -54,10 +51,10 @@ function TimelineMarkerComponent({ entity, visible, selected, trackHeight, realT
 		},
 		adjustPosition: (pos, startingPos) => {
 			const dx = pos.x - startingPos.x
-			const absoluteTimestamp = markerPositionRef.current + scaledTimeToRealTime(dx)
+			const absoluteTimestamp = entity.markerPosition + scaledTimeToRealTime(dx)
 			const snappedTimestamp = binarySearchForClosest(TimelineState.anchorTimestamps, absoluteTimestamp)
 			return {
-				x: startingPos.x + realTimeToScaledTime(snappedTimestamp - markerPositionRef.current),
+				x: startingPos.x + realTimeToScaledTime(snappedTimestamp - entity.markerPosition),
 				y: pos.y,
 			}
 		},
@@ -103,20 +100,9 @@ function TimelineMarkerComponent({ entity, visible, selected, trackHeight, realT
 
 	useEventBusSubscribe['timeline/onScroll']({
 		callback: (newScroll) => {
-			const fixedPos = calculatePosition(newScroll, markerPositionRef.current)
+			const fixedPos = calculatePosition(newScroll, entity.markerPosition)
 			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${fixedPos}px`) {
 				ref.current.style.setProperty('--position', `${fixedPos}px`)
-			}
-		},
-	})
-
-	useEventBusSubscribe['timeline/marker/incrementalUpdate']({
-		condition: ({ key }) => key === entity.key,
-		callback: ({ markerPosition }) => {
-			markerPositionRef.current = markerPosition
-			const currentPosition = calculatePosition(TimelineState.scroll, markerPositionRef.current)
-			if (ref.current && ref.current.style.getPropertyValue('--position') !== `${currentPosition}px`) {
-				ref.current.style.setProperty('--position', `${currentPosition}px`)
 			}
 		},
 	})

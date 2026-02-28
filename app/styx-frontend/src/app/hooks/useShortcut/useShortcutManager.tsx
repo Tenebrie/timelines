@@ -14,6 +14,8 @@ export const Shortcut = {
 	ScrollTimelineRight: 'l',
 	NudgeLeft: 'ArrowLeft',
 	NudgeRight: 'ArrowRight',
+	LargeNudgeLeft: 'Shift+ArrowLeft',
+	LargeNudgeRight: 'Shift+ArrowRight',
 	AscendMarkerTrack: 'ArrowUp',
 	DescendMarkerTrack: 'ArrowDown',
 } as const
@@ -53,6 +55,8 @@ export const RegisteredShortcuts: Record<
 	[Shortcut.ScrollTimelineRight]: [],
 	[Shortcut.NudgeLeft]: [],
 	[Shortcut.NudgeRight]: [],
+	[Shortcut.LargeNudgeLeft]: [],
+	[Shortcut.LargeNudgeRight]: [],
 	[Shortcut.AscendMarkerTrack]: [],
 	[Shortcut.DescendMarkerTrack]: [],
 }
@@ -64,10 +68,11 @@ export const useShortcutManager = () => {
 
 	const onKeyDown = useCallback((event: KeyboardEvent) => {
 		const key = event.key
-		if (!key) {
+		if (!key || key === 'Ctrl' || key === 'Shift' || key === 'Alt' || key === 'Meta') {
 			return
 		}
 		const ctrlKey = isMacOS() ? event.metaKey : event.ctrlKey
+		const shiftKey = event.shiftKey
 
 		const isTargetingInput =
 			event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement
@@ -96,13 +101,16 @@ export const useShortcutManager = () => {
 				})
 				.flatMap((part) => part.split('+'))
 			const ctrlKeyNeeded = defKeys.some((key) => key === 'Ctrl')
+			const shiftKeyNeeded = defKeys.some((key) => key === 'Shift')
 
-			if (ctrlKey === ctrlKeyNeeded && defKeys.includes(key)) {
-				RegisteredShortcuts[shortcut]
+			if (ctrlKey === ctrlKeyNeeded && shiftKey === shiftKeyNeeded && defKeys.includes(key)) {
+				const callback = RegisteredShortcuts[shortcut]
 					.filter((shc) => shc.priority !== false)
 					.sort((a, b) => parsePriority(b.priority) - parsePriority(a.priority))[0]
-					?.callback()
-				event.preventDefault()
+				if (callback) {
+					callback.callback()
+					event.preventDefault()
+				}
 			}
 		})
 	}, [])
