@@ -56,7 +56,7 @@ export function MentionsListComponent({ editor }: Props) {
 				setSelectedIndex(0)
 			}
 		},
-		visible && ShortcutPriorities.MENTIONS,
+		visible && ShortcutPriorities.Mentions,
 	)
 
 	useEventBusSubscribe['richEditor/requestOpenMentions']({

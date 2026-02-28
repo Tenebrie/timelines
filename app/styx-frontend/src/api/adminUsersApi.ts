@@ -35,7 +35,7 @@ const injectedRtkApi = api
 			}),
 			adminUpdateUser: build.mutation<AdminUpdateUserApiResponse, AdminUpdateUserApiArg>({
 				query: (queryArg) => ({
-					url: `/api/admin/users/${queryArg.userId}/password`,
+					url: `/api/admin/users/${queryArg.userId}`,
 					method: 'PATCH',
 					body: queryArg.body,
 				}),

@@ -1,8 +1,8 @@
 import { useGetMindmapQuery } from '@api/mindmapApi'
 import { useSelector } from 'react-redux'
 
-import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
-import { getTimelineState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
+import { store } from '@/app/store'
+import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 export function useEntityResolver() {
 	const {
@@ -15,8 +15,8 @@ export function useEntityResolver() {
 		(a, b) => a.id === b.id && a.events === b.events && a.actors === b.actors && a.tags === b.tags,
 	)
 	const { data: mindmapData } = useGetMindmapQuery({ worldId }, { skip: !worldId })
-	const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
-	const { articles } = useSelector(getWikiState, (a, b) => a.articles === b.articles)
+	// const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
+	// const { articles } = useSelector(getWikiState, (a, b) => a.articles === b.articles)
 
 	const resolveEntity = (entityId: string) => {
 		const event = events.find((e) => e.id === entityId)
@@ -24,6 +24,8 @@ export function useEntityResolver() {
 			return { type: 'event', entity: event } as const
 		}
 
+		const markers = store.getState().timeline.markers
+		const articles = store.getState().wiki.articles
 		const marker = markers.find((m) => m.key === entityId)
 		if (marker) {
 			const event = events.find((e) => e.id === marker.eventId)

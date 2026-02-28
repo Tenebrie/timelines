@@ -49,6 +49,7 @@ export const ActorHeaderRenderer = ({ actor, collapsed }: Props) => {
 	if (!isReadOnly) {
 		actions.push(
 			<PopoverButton
+				key={'menu'}
 				icon={<MenuIcon />}
 				aria-label="Menu"
 				size="small"

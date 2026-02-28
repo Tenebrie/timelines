@@ -1,6 +1,8 @@
 import { useCallback, useDebugValue, useMemo } from 'react'
+import { useSelector } from 'react-redux'
 
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
+import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 import { useTimelineLevelScalar } from './useTimelineLevelScalar'
 
@@ -98,4 +100,9 @@ export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
 		scaledTimeToRealTime,
 		realTimeToScaledTime,
 	}
+}
+
+export const useCurrentTimelineWorldTime = () => {
+	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
+	return useTimelineWorldTime({ scaleLevel })
 }

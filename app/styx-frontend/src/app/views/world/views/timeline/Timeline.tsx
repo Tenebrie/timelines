@@ -11,6 +11,7 @@ import { TimelineAnchor } from './anchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'
 import { TimelineControls } from './components/TimelineControls'
 import { TimelineEventListener } from './components/TimelineEventListener'
+import { TimelineHotkeys } from './components/TimelineHotkeys'
 import { TimelineNavigationReporter } from './components/TimelineNavigationReporter'
 import { TimelinePrePositioner } from './components/TimelinePrePositioner'
 import { TimelineScaleLabel } from './components/TimelineScaleLabel/TimelineScaleLabel'
@@ -76,6 +77,7 @@ function TimelineComponent() {
 			<TimelineEventListener containerWidth={containerWidth} />
 			<TimelinePrePositioner setOpacity={setOpacity} />
 			<TimelineNavigationReporter ref={containerRef} containerWidth={containerWidth} />
+			<TimelineHotkeys />
 		</Paper>
 	)
 }

@@ -19,7 +19,7 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 	const [isModalRendered, setIsModalRendered] = useState(false)
 	const [modalRenderTimeout, setModalRenderTimeout] = useState<number | null>(null)
 
-	useShortcut(Shortcut.Escape, () => onClose('escapeKey'), isModalVisible && ShortcutPriorities.MODAL)
+	useShortcut(Shortcut.Escape, () => onClose('escapeKey'), isModalVisible && ShortcutPriorities.Modal)
 
 	useEffect(() => {
 		setTimeout(() => {

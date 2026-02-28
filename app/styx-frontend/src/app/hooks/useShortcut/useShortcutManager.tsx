@@ -12,6 +12,10 @@ export const Shortcut = {
 	TracksMenu: 'r',
 	ScrollTimelineLeft: 'j',
 	ScrollTimelineRight: 'l',
+	NudgeLeft: 'ArrowLeft',
+	NudgeRight: 'ArrowRight',
+	AscendMarkerTrack: 'ArrowUp',
+	DescendMarkerTrack: 'ArrowDown',
 } as const
 
 /**
@@ -20,15 +24,15 @@ export const Shortcut = {
  */
 export const ShortcutPriorities = {
 	/** Default priority for most shortcuts */
-	DEFAULT: 0,
+	Default: 0,
 	/** Disabled - shortcut will not be executed */
-	DISABLED: -1,
+	Disabled: -1,
 	/** Modal dialogs (should be closable before mentions menu) */
-	MODAL: 10,
+	Modal: 10,
 	/** Input fields being edited (should be closable before modal closes) */
-	INPUT_FIELD: 11,
+	InputField: 11,
 	/** Mentions/autocomplete dropdowns (should be closable before modal) */
-	MENTIONS: 20,
+	Mentions: 20,
 } as const
 
 export type ShortcutPriority = number | boolean
@@ -47,6 +51,10 @@ export const RegisteredShortcuts: Record<
 	[Shortcut.TracksMenu]: [],
 	[Shortcut.ScrollTimelineLeft]: [],
 	[Shortcut.ScrollTimelineRight]: [],
+	[Shortcut.NudgeLeft]: [],
+	[Shortcut.NudgeRight]: [],
+	[Shortcut.AscendMarkerTrack]: [],
+	[Shortcut.DescendMarkerTrack]: [],
 }
 
 export const useShortcutManager = () => {

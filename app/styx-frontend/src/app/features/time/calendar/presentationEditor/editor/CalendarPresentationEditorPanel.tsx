@@ -1,4 +1,4 @@
-import { UpdateCalendarPresentationApiArg, useUpdateCalendarPresentationMutation } from '@api/calendarApi'
+import { CreateCalendarPresentationUnitApiArg, useUpdateCalendarPresentationMutation } from '@api/calendarApi'
 import {
 	CalendarDraftPresentation,
 	CalendarDraftPresentationUnit,
@@ -27,7 +27,7 @@ type Props = {
 	presentation: CalendarDraftPresentation
 }
 
-export type NewUnitData = NonNullable<UpdateCalendarPresentationApiArg['body']['units']>[number]
+export type NewUnitData = NonNullable<CreateCalendarPresentationUnitApiArg['body']>
 
 export function CalendarPresentationEditorPanel({ presentation }: Props) {
 	const { calendar } = useSelector(getCalendarEditorState, (a, b) => a.calendar === b.calendar)
