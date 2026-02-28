@@ -24,6 +24,7 @@
 		"*.(ts|tsx)": "eslint --fix"
 	},
 	"dependencies": {
+		"@mui/x-date-pickers": "^8.27.2",
 		"@tanstack/react-form": "^1.27.7",
 		"@tanstack/react-router": "^1.147.3",
 		"@tiptap/core": "^2.11.5",
@@ -44,6 +45,7 @@
 		"bezier-easing": "^2.1.0",
 		"classnames": "^2.3.2",
 		"cost-of-modules": "^1.0.1",
+		"dayjs": "^1.11.19",
 		"openapi-types": "^12.1.3",
 		"qrcode": "^1.5.4",
 		"react-error-boundary": "^5.0.0",
@@ -66,8 +68,8 @@
 		"@emotion/styled": "^11.14.0",
 		"@iconify/react": "^6.0.2",
 		"@iconify/types": "^2.0.0",
-		"@mui/icons-material": "^7.1.2",
-		"@mui/material": "^7.1.2",
+		"@mui/icons-material": "^7.3.8",
+		"@mui/material": "^7.3.8",
 		"@reduxjs/toolkit": "^2.4.0",
 		"@rtk-query/codegen-openapi": "^2.0.0",
 		"@tanstack/router-plugin": "^1.147.3",

@@ -1,5 +1,6 @@
 import { CollaboratorAccess } from '@prisma/client'
 import { BadRequestError } from 'moonflower'
+import { WorldShareLinkUncheckedCreateInput } from 'prisma/client/models.js'
 
 import { AnnouncementService } from './AnnouncementService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
@@ -115,6 +116,98 @@ export const WorldShareService = {
 					userId,
 					worldId,
 				},
+			},
+		})
+	},
+
+	generateRandomSlug: async ({ preferredSlug }: { preferredSlug?: string }) => {
+		if (preferredSlug) {
+			const existingLink = await getPrismaClient().worldShareLink.findFirst({
+				where: {
+					slug: preferredSlug,
+				},
+			})
+			if (!existingLink) {
+				return {
+					slug: preferredSlug,
+					preferredSlugFree: true,
+				}
+			}
+		}
+
+		const maxIterations = 10
+		for (let i = 0; i < maxIterations; i++) {
+			const slug = Math.random().toString(36).slice(2, 10)
+
+			const existingLink = await getPrismaClient().worldShareLink.findFirst({
+				where: {
+					slug,
+				},
+			})
+
+			if (!existingLink) {
+				return {
+					slug,
+					preferredSlugFree: false,
+				}
+			}
+		}
+		throw new BadRequestError('Unable to generate a unique slug for the share link. Please try again.')
+	},
+
+	listShareLinks: async (worldId: string) => {
+		return getPrismaClient().worldShareLink.findMany({
+			where: {
+				worldId,
+			},
+			select: {
+				id: true,
+				worldId: true,
+				slug: true,
+				label: true,
+				expiresAt: true,
+				accessMode: true,
+				createdAt: true,
+				usageCount: true,
+			},
+		})
+	},
+
+	createShareLink: async ({
+		worldId,
+		body,
+	}: {
+		worldId: string
+		body: Omit<WorldShareLinkUncheckedCreateInput, 'slug' | 'worldId'> & { slug?: string }
+	}) => {
+		const slug = body.slug ?? crypto.randomUUID()
+
+		const shareLink = await getPrismaClient().worldShareLink.create({
+			data: {
+				...body,
+				worldId,
+				slug,
+			},
+		})
+
+		return shareLink
+	},
+
+	revokeShareLink: async (shareLinkId: string) => {
+		await getPrismaClient().worldShareLink.update({
+			where: {
+				id: shareLinkId,
+			},
+			data: {
+				expiresAt: new Date(),
+			},
+		})
+	},
+
+	deleteShareLink: async (shareLinkId: string) => {
+		await getPrismaClient().worldShareLink.delete({
+			where: {
+				id: shareLinkId,
 			},
 		})
 	},

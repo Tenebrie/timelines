@@ -6,9 +6,10 @@ import InputLabel from '@mui/material/InputLabel'
 import ListItemText from '@mui/material/ListItemText'
 import ListSubheader from '@mui/material/ListSubheader'
 import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
 import { useMemo } from 'react'
 import styled from 'styled-components'
+
+import { LoadingSelect } from '@/ui-lib/components/LoadingSelect/LoadingSelect'
 
 type Props = {
 	worldId?: string
@@ -53,10 +54,6 @@ export function CalendarSelector({ worldId, label, value, onChange, allowEmpty }
 		return [...empty, ...usedCalendars, ...templateCalendars]
 	}, [allowEmpty, emptyOption, templateCalendars, usedCalendars])
 
-	if (!usedCalendars) {
-		return null
-	}
-
 	const sectionDisplayData = [
 		allowEmpty,
 		userDefinedTemplates.length > 0,
@@ -78,7 +75,8 @@ export function CalendarSelector({ worldId, label, value, onChange, allowEmpty }
 	return (
 		<FormControl fullWidth>
 			<InputLabel id="world-calendar-label">{label ?? 'Calendar'}</InputLabel>
-			<Select
+			<LoadingSelect
+				isLoading={!usedCalendars}
 				value={value ?? emptyOption.id}
 				renderValue={(id) => <span>{allCalendars.find((option) => option.id === id)?.name}</span>}
 				label={label ?? 'Calendar'}
@@ -117,7 +115,7 @@ export function CalendarSelector({ worldId, label, value, onChange, allowEmpty }
 						<ListItemText primary={option.name} secondary={option.description} />
 					</MenuItem>
 				))}
-			</Select>
+			</LoadingSelect>
 		</FormControl>
 	)
 }

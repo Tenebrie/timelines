@@ -1,4 +1,6 @@
 import Box from '@mui/material/Box'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { Outlet } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import styled from 'styled-components'
@@ -61,31 +63,33 @@ const App = () => {
 	return (
 		<div className="App">
 			<EventBusProvider bus={globalEventBus}>
-				<CustomThemeProvider>
-					<CustomThemeOverrides>
-						<Container>
-							<BaseNavigator />
-							<Box
-								sx={{
-									width: '100%',
-									height: 'calc(100vh - 50.5px)',
-									overflowY: 'auto',
-									...scrollbars,
-								}}
-							>
-								<Outlet />
-							</Box>
-							<ModalsRenderer />
-						</Container>
-						<LostConnectionAlert server="rhea" />
-						<LostConnectionAlert server="calliope" />
-					</CustomThemeOverrides>
-				</CustomThemeProvider>
-				<NavigationReceiverWrapper />
-				<DragDropPortalSlot />
-				<PageMetadata />
-				<TimelineZoomReporter />
-				{/* <SummonableDebug /> */}
+				<LocalizationProvider dateAdapter={AdapterDayjs}>
+					<CustomThemeProvider>
+						<CustomThemeOverrides>
+							<Container>
+								<BaseNavigator />
+								<Box
+									sx={{
+										width: '100%',
+										height: 'calc(100vh - 50.5px)',
+										overflowY: 'auto',
+										...scrollbars,
+									}}
+								>
+									<Outlet />
+								</Box>
+								<ModalsRenderer />
+							</Container>
+							<LostConnectionAlert server="rhea" />
+							<LostConnectionAlert server="calliope" />
+						</CustomThemeOverrides>
+					</CustomThemeProvider>
+					<NavigationReceiverWrapper />
+					<DragDropPortalSlot />
+					<PageMetadata />
+					<TimelineZoomReporter />
+					{/* <SummonableDebug /> */}
+				</LocalizationProvider>
 			</EventBusProvider>
 		</div>
 	)

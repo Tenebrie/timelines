@@ -47,10 +47,10 @@ export type ListUserAssetsApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		ownerId: string
-		size: number
 		expiresAt?: null | string
+		ownerId: string
 		bucketKey: string
+		size: number
 		originalFileName: string
 		originalFileExtension: string
 		contentType: 'ImageConversion' | 'Avatar'
@@ -63,10 +63,10 @@ export type RequestPresignedUrlApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		ownerId: string
-		size: number
 		expiresAt?: null | string
+		ownerId: string
 		bucketKey: string
+		size: number
 		originalFileName: string
 		originalFileExtension: string
 		contentType: 'ImageConversion' | 'Avatar'
@@ -88,10 +88,10 @@ export type FinalizeAssetUploadApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	ownerId: string
-	size: number
 	expiresAt?: null | string
+	ownerId: string
 	bucketKey: string
+	size: number
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'ImageConversion' | 'Avatar'

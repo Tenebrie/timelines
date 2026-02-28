@@ -26,6 +26,7 @@ import { WorldEventRouter } from './routers/WorldEventRouter.js'
 import { WorldEventTrackRouter } from './routers/WorldEventTrackRouter.js'
 import { WorldRouter } from './routers/WorldRouter.js'
 import { WorldSearchRouter } from './routers/WorldSearchRouter.js'
+import { WorldShareRouter } from './routers/WorldShareRouter.js'
 import { WorldThumbnailRouter } from './routers/WorldThumbnailRouter.js'
 import { WorldWikiRouter } from './routers/WorldWikiRouter.js'
 import { CloudStorageService } from './services/CloudStorageService.js'
@@ -105,6 +106,8 @@ app
 	.use(WorldColorRouter.allowedMethods())
 	.use(WorldSearchRouter.routes())
 	.use(WorldSearchRouter.allowedMethods())
+	.use(WorldShareRouter.routes())
+	.use(WorldShareRouter.allowedMethods())
 	.use(WorldThumbnailRouter.routes())
 	.use(WorldThumbnailRouter.allowedMethods())
 	.use(WorldWikiRouter.routes())

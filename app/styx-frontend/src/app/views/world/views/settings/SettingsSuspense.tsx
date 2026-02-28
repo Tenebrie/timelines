@@ -1,12 +1,10 @@
 import { WorldDetails } from '@api/types/worldTypes'
 import { useGetWorldCollaboratorsQuery } from '@api/worldCollaboratorsApi'
 import { useGetWorldInfoQuery } from '@api/worldDetailsApi'
-import Stack from '@mui/material/Stack'
 import { useParams } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 
 import { OutlinedContainer } from '@/app/components/OutlinedContainer'
-import { LoadingSpinner } from '@/app/features/skeleton/LoadingSpinner'
 import { ingestWorld } from '@/app/utils/ingestEntity'
 
 import { Settings } from './Settings'
@@ -27,18 +25,13 @@ export const SettingsSuspense = () => {
 		worldId,
 	})
 
+	if (!worldData || !collaboratorsData) {
+		return null
+	}
+
 	return (
 		<OutlinedContainer label="Settings" style={{ minWidth: '600px', borderRadius: '8px' }}>
-			{worldData && collaboratorsData && <Settings world={worldData} collaborators={collaboratorsData} />}
-			{(!worldData || !collaboratorsData) && <SettingsSkeleton />}
+			<Settings world={worldData} collaborators={collaboratorsData} />
 		</OutlinedContainer>
-	)
-}
-
-const SettingsSkeleton = () => {
-	return (
-		<Stack alignItems="center" justifyContent="center">
-			<LoadingSpinner />
-		</Stack>
 	)
 }

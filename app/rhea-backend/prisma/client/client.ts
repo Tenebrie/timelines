@@ -166,3 +166,8 @@ export type WorldEventDelta = Prisma.WorldEventDeltaModel
  * 
  */
 export type WorldEventTrack = Prisma.WorldEventTrackModel
+/**
+ * Model WorldShareLink
+ * 
+ */
+export type WorldShareLink = Prisma.WorldShareLinkModel

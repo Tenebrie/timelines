@@ -1257,6 +1257,91 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/world/{worldId}/share-links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Lists all share links for a world. */
+        get: operations["listWorldShareLinks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/share-link/generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Generates a random free share link. */
+        post: operations["generateFreeWorldShareLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/share-link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates a new share link for a world. */
+        post: operations["createWorldShareLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/share-link/{shareLinkId}/expire": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Immediately expires a share link for a world. */
+        post: operations["expireWorldShareLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/share-link/{shareLinkId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Deletes a share link for a world. */
+        delete: operations["deleteWorldShareLink"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/world/{worldId}/thumbnail": {
         parameters: {
             query?: never;
@@ -2071,11 +2156,11 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
+                        type: "Info" | "Welcome" | "WorldShared";
+                        userId: string;
+                        title: string;
                         description: string;
                         id: string;
-                        title: string;
-                        userId: string;
-                        type: "Info" | "Welcome" | "WorldShared";
                         /** Format: date-time */
                         timestamp: string;
                         isUnread: boolean;
@@ -2169,10 +2254,10 @@ export interface operations {
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            ownerId: string;
-                            size: number;
                             expiresAt?: null | string;
+                            ownerId: string;
                             bucketKey: string;
+                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "ImageConversion" | "Avatar";
@@ -2217,10 +2302,10 @@ export interface operations {
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            ownerId: string;
-                            size: number;
                             expiresAt?: null | string;
+                            ownerId: string;
                             bucketKey: string;
+                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "ImageConversion" | "Avatar";
@@ -2264,10 +2349,10 @@ export interface operations {
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        ownerId: string;
-                        size: number;
                         expiresAt?: null | string;
+                        ownerId: string;
                         bucketKey: string;
+                        size: number;
                         originalFileName: string;
                         originalFileExtension: string;
                         contentType: "ImageConversion" | "Avatar";
@@ -2408,10 +2493,10 @@ export interface operations {
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
-                                ownerId: string;
-                                size: number;
                                 expiresAt?: null | string;
+                                ownerId: string;
                                 bucketKey: string;
+                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "ImageConversion" | "Avatar";
@@ -2439,7 +2524,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        redirectTo: "admin" | "login";
+                        redirectTo: "login" | "admin";
                     };
                 };
             };
@@ -2475,12 +2560,12 @@ export interface operations {
                 content: {
                     "application/json": {
                         units: {
+                            name: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            name: string;
                             calendarId: string;
                             presentationId: string;
                             position: number;
@@ -2489,12 +2574,12 @@ export interface operations {
                             labeledIndices: number[];
                             unitId: string;
                         }[];
+                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
                         calendarId: string;
                         compression: number;
                         scaleFactor: number;
@@ -2524,12 +2609,12 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
+                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
                         calendarId: string;
                         compression: number;
                         scaleFactor: number;
@@ -2573,12 +2658,12 @@ export interface operations {
                 content: {
                     "application/json": {
                         units: {
+                            name: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            name: string;
                             calendarId: string;
                             presentationId: string;
                             position: number;
@@ -2587,12 +2672,12 @@ export interface operations {
                             labeledIndices: number[];
                             unitId: string;
                         }[];
+                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
                         calendarId: string;
                         compression: number;
                         scaleFactor: number;
@@ -2637,12 +2722,12 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
+                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
                         calendarId: string;
                         presentationId: string;
                         position: number;
@@ -2677,12 +2762,12 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
+                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
                         calendarId: string;
                         presentationId: string;
                         position: number;
@@ -2730,12 +2815,12 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
+                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        name: string;
                         calendarId: string;
                         presentationId: string;
                         position: number;
@@ -5703,6 +5788,165 @@ export interface operations {
                         }[];
                     };
                 };
+            };
+        };
+    };
+    listWorldShareLinks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        accessMode: "ReadOnly" | "Editing";
+                        worldId: string;
+                        label: null | string;
+                        slug: string;
+                        expiresAt: null | string;
+                        usageCount: number;
+                    }[];
+                };
+            };
+        };
+    };
+    generateFreeWorldShareLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    preferredSlug?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    preferredSlug?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        slug: string;
+                        preferredSlugFree: boolean;
+                    };
+                };
+            };
+        };
+    };
+    createWorldShareLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    slug: string;
+                    label: string;
+                    expiresAt?: string;
+                    accessMode: "ReadOnly" | "Editing";
+                };
+                "application/x-www-form-urlencoded": {
+                    slug: string;
+                    label: string;
+                    expiresAt?: string;
+                    accessMode: "ReadOnly" | "Editing";
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        accessMode: "ReadOnly" | "Editing";
+                        worldId: string;
+                        label?: null | string;
+                        slug: string;
+                        expiresAt?: null | string;
+                        usageCount: number;
+                    };
+                };
+            };
+        };
+    };
+    expireWorldShareLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                shareLinkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteWorldShareLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                shareLinkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

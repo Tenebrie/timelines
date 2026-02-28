@@ -1,4 +1,5 @@
-import Delete from '@mui/icons-material/Delete'
+import DeleteIcon from '@mui/icons-material/DeleteOutline'
+import TimelapseIcon from '@mui/icons-material/Timelapse'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { ReactNode } from 'react'
@@ -6,15 +7,15 @@ import { ReactNode } from 'react'
 import { PopoverButton } from './PopoverButton'
 
 type Props = {
-	type: 'delete'
+	type: 'expire' | 'delete'
 	prompt: ReactNode
 	tooltip: string
 	disabled?: boolean
 	onConfirm: () => void | boolean | Promise<void | boolean>
 }
 
-export function ConfirmPopoverButton({ prompt, tooltip, disabled, onConfirm }: Props) {
-	const icon = <Delete fontSize="small" />
+export function ConfirmPopoverButton({ type, prompt, tooltip, disabled, onConfirm }: Props) {
+	const icon = type === 'delete' ? <DeleteIcon fontSize="small" /> : <TimelapseIcon fontSize="small" />
 
 	return (
 		<PopoverButton
@@ -41,7 +42,7 @@ export function ConfirmPopoverButton({ prompt, tooltip, disabled, onConfirm }: P
 						startIcon={icon}
 						disabled={disabled}
 					>
-						Delete
+						{type === 'delete' ? 'Delete' : 'Expire now'}
 					</Button>
 				</>
 			)}

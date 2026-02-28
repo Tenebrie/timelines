@@ -131,10 +131,10 @@ const injectedRtkApi = api
 export { injectedRtkApi as calendarApi }
 export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 	units: {
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		calendarId: string
 		presentationId: string
 		position: number
@@ -143,10 +143,10 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 		labeledIndices: number[]
 		unitId: string
 	}[]
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	calendarId: string
 	compression: number
 	scaleFactor: number
@@ -162,10 +162,10 @@ export type CreateCalendarPresentationApiArg = {
 }
 export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 	units: {
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		calendarId: string
 		presentationId: string
 		position: number
@@ -174,10 +174,10 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 		labeledIndices: number[]
 		unitId: string
 	}[]
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	calendarId: string
 	compression: number
 	scaleFactor: number
@@ -195,10 +195,10 @@ export type UpdateCalendarPresentationApiArg = {
 	}
 }
 export type DeleteCalendarPresentationApiResponse = /** status 200  */ {
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	calendarId: string
 	compression: number
 	scaleFactor: number
@@ -211,10 +211,10 @@ export type DeleteCalendarPresentationApiArg = {
 	presentationId: string
 }
 export type CreateCalendarPresentationUnitApiResponse = /** status 200  */ {
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	calendarId: string
 	presentationId: string
 	position: number
@@ -236,10 +236,10 @@ export type CreateCalendarPresentationUnitApiArg = {
 	}
 }
 export type UpdateCalendarPresentationUnitApiResponse = /** status 200  */ {
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	calendarId: string
 	presentationId: string
 	position: number
@@ -262,10 +262,10 @@ export type UpdateCalendarPresentationUnitApiArg = {
 	}
 }
 export type DeleteCalendarPresentationUnitApiResponse = /** status 200  */ {
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	calendarId: string
 	presentationId: string
 	position: number

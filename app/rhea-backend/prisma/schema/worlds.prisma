@@ -35,6 +35,7 @@ model World {
   worldCommonIconSets WorldCommonIconSet[]
   savedColors         SavedColor[]
   calendars           Calendar[]
+  shareLinks          WorldShareLink[]
 }
 
 model WorldEvent {
@@ -87,6 +88,22 @@ model WorldEventTrack {
   visible  Boolean @default(true)
 
   events WorldEvent[]
+
+  world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
+  worldId String
+}
+
+model WorldShareLink {
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  slug       String   @unique
+  label      String?
+  expiresAt  DateTime?
+  accessMode CollaboratorAccess
+
+  usageCount Int @default(0)
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String

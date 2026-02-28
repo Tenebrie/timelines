@@ -1,3 +1,4 @@
+import { useListWorldShareLinksQuery } from '@api/otherApi'
 import { WorldDetails } from '@api/types/worldTypes'
 import { GetWorldCollaboratorsApiResponse } from '@api/worldCollaboratorsApi'
 import Button from '@mui/material/Button'
@@ -13,6 +14,8 @@ import { useSettingsDraft } from '@/app/views/world/views/settings/hooks/useSett
 import { AccessModeSection } from '@/app/views/world/views/settings/sections/AccessModeSection'
 import { CollaboratorsSection } from '@/app/views/world/views/settings/sections/CollaboratorsSection'
 
+import { ShareLinksSection } from './sections/ShareLinksSection'
+
 type Props = {
 	world: WorldDetails
 	collaborators: GetWorldCollaboratorsApiResponse
@@ -22,6 +25,8 @@ export const Settings = ({ world, collaborators }: Props) => {
 	const state = useSettingsDraft({ world })
 	const { name, description, setName, setDescription } = state
 	const { isSaving, manualSave, autosaveIcon, autosaveColor } = useEditWorld({ world, state })
+
+	const { data: shareLinks } = useListWorldShareLinksQuery({ worldId: world.id })
 
 	const { largeLabel: shortcutLabel } = useShortcut(Shortcut.CtrlEnter, () => {
 		manualSave()
@@ -39,8 +44,16 @@ export const Settings = ({ world, collaborators }: Props) => {
 			<Divider />
 			<AccessModeSection world={world} />
 			<Divider />
-			<CollaboratorsSection worldId={world.id} collaborators={collaborators} />
-			<Divider />
+			{collaborators && collaborators.length > 0 && (
+				<Stack gap={2}>
+					<CollaboratorsSection worldId={world.id} collaborators={collaborators} />
+					<Divider />
+				</Stack>
+			)}
+			<Stack gap={2}>
+				<ShareLinksSection worldId={world.id} links={shareLinks ?? []} />
+				<Divider />
+			</Stack>
 			<Stack direction="row" justifyContent="flex-end" gap={2}>
 				<Tooltip title={shortcutLabel} arrow placement="top">
 					<Button

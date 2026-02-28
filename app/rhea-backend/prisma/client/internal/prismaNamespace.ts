@@ -408,7 +408,8 @@ export const ModelName = {
   World: 'World',
   WorldEvent: 'WorldEvent',
   WorldEventDelta: 'WorldEventDelta',
-  WorldEventTrack: 'WorldEventTrack'
+  WorldEventTrack: 'WorldEventTrack',
+  WorldShareLink: 'WorldShareLink'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -424,7 +425,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "actor" | "userAnnouncement" | "asset" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "tag" | "user" | "collaboratingUser" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack"
+    modelProps: "actor" | "userAnnouncement" | "asset" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "tag" | "user" | "collaboratingUser" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2278,6 +2279,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WorldShareLink: {
+      payload: Prisma.$WorldShareLinkPayload<ExtArgs>
+      fields: Prisma.WorldShareLinkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorldShareLinkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldShareLinkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorldShareLinkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldShareLinkPayload>
+        }
+        findFirst: {
+          args: Prisma.WorldShareLinkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldShareLinkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorldShareLinkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldShareLinkPayload>
+        }
+        findMany: {
+          args: Prisma.WorldShareLinkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldShareLinkPayload>[]
+        }
+        create: {
+          args: Prisma.WorldShareLinkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldShareLinkPayload>
+        }
+        createMany: {
+          args: Prisma.WorldShareLinkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WorldShareLinkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldShareLinkPayload>[]
+        }
+        delete: {
+          args: Prisma.WorldShareLinkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldShareLinkPayload>
+        }
+        update: {
+          args: Prisma.WorldShareLinkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldShareLinkPayload>
+        }
+        deleteMany: {
+          args: Prisma.WorldShareLinkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WorldShareLinkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WorldShareLinkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldShareLinkPayload>[]
+        }
+        upsert: {
+          args: Prisma.WorldShareLinkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldShareLinkPayload>
+        }
+        aggregate: {
+          args: Prisma.WorldShareLinkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorldShareLink>
+        }
+        groupBy: {
+          args: Prisma.WorldShareLinkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorldShareLinkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorldShareLinkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorldShareLinkCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2674,6 +2749,21 @@ export const WorldEventTrackScalarFieldEnum = {
 export type WorldEventTrackScalarFieldEnum = (typeof WorldEventTrackScalarFieldEnum)[keyof typeof WorldEventTrackScalarFieldEnum]
 
 
+export const WorldShareLinkScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  slug: 'slug',
+  label: 'label',
+  expiresAt: 'expiresAt',
+  accessMode: 'accessMode',
+  usageCount: 'usageCount',
+  worldId: 'worldId'
+} as const
+
+export type WorldShareLinkScalarFieldEnum = (typeof WorldShareLinkScalarFieldEnum)[keyof typeof WorldShareLinkScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3054,6 +3144,7 @@ export type GlobalOmitConfig = {
   worldEvent?: Prisma.WorldEventOmit
   worldEventDelta?: Prisma.WorldEventDeltaOmit
   worldEventTrack?: Prisma.WorldEventTrackOmit
+  worldShareLink?: Prisma.WorldShareLinkOmit
 }
 
 /* Types for Logging */

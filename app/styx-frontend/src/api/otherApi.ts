@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['worldWikiArticle'] as const
+export const addTagTypes = ['worldWikiArticle', 'worldShareLink'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -58,6 +58,42 @@ const injectedRtkApi = api
 					body: queryArg.body,
 				}),
 				invalidatesTags: ['worldWikiArticle'],
+			}),
+			listWorldShareLinks: build.query<ListWorldShareLinksApiResponse, ListWorldShareLinksApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/share-links` }),
+				providesTags: ['worldShareLink'],
+			}),
+			generateFreeWorldShareLink: build.mutation<
+				GenerateFreeWorldShareLinkApiResponse,
+				GenerateFreeWorldShareLinkApiArg
+			>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/share-link/generate`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+			}),
+			createWorldShareLink: build.mutation<CreateWorldShareLinkApiResponse, CreateWorldShareLinkApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/share-link`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldShareLink'],
+			}),
+			expireWorldShareLink: build.mutation<ExpireWorldShareLinkApiResponse, ExpireWorldShareLinkApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/share-link/${queryArg.shareLinkId}/expire`,
+					method: 'POST',
+				}),
+				invalidatesTags: ['worldShareLink'],
+			}),
+			deleteWorldShareLink: build.mutation<DeleteWorldShareLinkApiResponse, DeleteWorldShareLinkApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/share-link/${queryArg.shareLinkId}`,
+					method: 'DELETE',
+				}),
+				invalidatesTags: ['worldShareLink'],
 			}),
 			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
 				query: (queryArg) => ({
@@ -173,6 +209,66 @@ export type PutWikiArticleContentApiArg = {
 		contentDeltas?: string
 	}
 }
+export type ListWorldShareLinksApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	accessMode: 'ReadOnly' | 'Editing'
+	worldId: string
+	label: null | string
+	slug: string
+	expiresAt: null | string
+	usageCount: number
+}[]
+export type ListWorldShareLinksApiArg = {
+	/** Any string value */
+	worldId: string
+}
+export type GenerateFreeWorldShareLinkApiResponse = /** status 200  */ {
+	slug: string
+	preferredSlugFree: boolean
+}
+export type GenerateFreeWorldShareLinkApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		preferredSlug?: string
+	}
+}
+export type CreateWorldShareLinkApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	accessMode: 'ReadOnly' | 'Editing'
+	worldId: string
+	label?: null | string
+	slug: string
+	expiresAt?: null | string
+	usageCount: number
+}
+export type CreateWorldShareLinkApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		slug: string
+		label: string
+		expiresAt?: string
+		accessMode: 'ReadOnly' | 'Editing'
+	}
+}
+export type ExpireWorldShareLinkApiResponse = unknown
+export type ExpireWorldShareLinkApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	shareLinkId: string
+}
+export type DeleteWorldShareLinkApiResponse = unknown
+export type DeleteWorldShareLinkApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	shareLinkId: string
+}
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
 		id: string
@@ -238,6 +334,12 @@ export const {
 	useGetWikiArticleContentQuery,
 	useLazyGetWikiArticleContentQuery,
 	usePutWikiArticleContentMutation,
+	useListWorldShareLinksQuery,
+	useLazyListWorldShareLinksQuery,
+	useGenerateFreeWorldShareLinkMutation,
+	useCreateWorldShareLinkMutation,
+	useExpireWorldShareLinkMutation,
+	useDeleteWorldShareLinkMutation,
 	useUpdateArticleMutation,
 	useGetUserWorldAccessLevelQuery,
 	useLazyGetUserWorldAccessLevelQuery,
