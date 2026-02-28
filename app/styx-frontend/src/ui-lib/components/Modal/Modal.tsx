@@ -15,11 +15,17 @@ type Props = {
 const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Props) => {
 	const bodyRef = useRef<HTMLDivElement | null>(null)
 
-	const isModalVisible = visible
+	const [isModalVisible, setIsModalVisible] = useState(false)
 	const [isModalRendered, setIsModalRendered] = useState(false)
 	const [modalRenderTimeout, setModalRenderTimeout] = useState<number | null>(null)
 
 	useShortcut(Shortcut.Escape, () => onClose('escapeKey'), isModalVisible && ShortcutPriorities.MODAL)
+
+	useEffect(() => {
+		setTimeout(() => {
+			setIsModalVisible(visible)
+		}, 1)
+	}, [visible])
 
 	useEffect(() => {
 		if (isModalVisible && !isModalRendered) {

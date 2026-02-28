@@ -23,6 +23,7 @@ export function UserEmailPopoverButton({ user }: Props) {
 			size="small"
 			icon={<EditIcon fontSize="small" />}
 			tooltip="Edit email"
+			popoverSx={{ gap: 1.5, p: 2 }}
 			onCleanup={() => setError(null)}
 			autofocus
 			popoverBody={() => (

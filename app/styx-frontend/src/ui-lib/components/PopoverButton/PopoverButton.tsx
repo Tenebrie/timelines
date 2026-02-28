@@ -24,7 +24,7 @@ export function PopoverButton({
 	popoverBody,
 	popoverAction,
 	buttonSx,
-	popoverSx = { gap: 1.5, p: 2 },
+	popoverSx,
 	autofocus,
 	onCleanup,
 }: Props) {
