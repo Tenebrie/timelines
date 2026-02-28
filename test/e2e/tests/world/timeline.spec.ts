@@ -29,6 +29,7 @@ test.describe('Timeline', () => {
 		await expect(textbox).toHaveText('Hello world')
 
 		// Edit event
+		await page.waitForTimeout(100)
 		await textbox.pressSequentially(' - extra text', { delay: 100 })
 		await expect(textbox).toHaveText('Hello world - extra text')
 
