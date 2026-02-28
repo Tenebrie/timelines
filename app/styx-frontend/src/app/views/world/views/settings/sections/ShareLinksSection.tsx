@@ -32,7 +32,8 @@ export function ShareLinksSection({ worldId, links }: Props) {
 	const [deleteLink] = useDeleteWorldShareLinkMutation()
 
 	const copyLink = (slug: string) => {
-		navigator.clipboard.writeText(`${window.location.origin}/share/${slug}`)
+		const origin = window.location.origin.replace('//app.', '//')
+		navigator.clipboard.writeText(`${origin}/share/${slug}`)
 		setCopiedSlug(slug)
 		setTimeout(() => setCopiedSlug(null), 2000)
 	}
@@ -93,7 +94,8 @@ export function ShareLinksSection({ worldId, links }: Props) {
 				</Typography>
 			)}
 			{sortedLinks.map((link) => {
-				const url = `${window.location.origin}/share/${link.slug}`
+				const origin = window.location.origin.replace('//app.', '//')
+				const url = `${origin}/share/${link.slug}`
 				const isExpired = link.expiresAt ? new Date(link.expiresAt) < new Date() : false
 
 				const createdAt = formatTimeAgo(new Date(link.createdAt))

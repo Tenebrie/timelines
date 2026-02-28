@@ -1,4 +1,4 @@
-import { useCreateWorldShareLinkMutation, useGenerateFreeWorldShareLinkMutation } from '@api/otherApi'
+import { useCreateWorldShareLinkMutation } from '@api/otherApi'
 import { CollaboratorAccess } from '@api/types/worldCollaboratorsTypes'
 import Add from '@mui/icons-material/Add'
 import RefreshIcon from '@mui/icons-material/Refresh'
@@ -15,92 +15,16 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import dayjs, { Dayjs } from 'dayjs'
-import debounce from 'lodash.debounce'
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
-import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { useCollaboratorAccess } from '@/app/views/world/views/settings/hooks/useCollaboratorAccess'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
-function useShareSlug() {
-	const [randomSlug, setRandomSlug] = useState('')
-	const [preferredSlug, setPreferredSlug] = useState('')
-	const [error, setError] = useState<string | null>(null)
-	const worldId = useSelector(getWorldIdState)
-
-	const [generateSlug] = useGenerateFreeWorldShareLinkMutation()
-
-	const currentSlug = useMemo(() => {
-		return preferredSlug || randomSlug
-	}, [preferredSlug, randomSlug])
-
-	const checkSlugAvailability = useCallback(
-		async (slug: string) => {
-			const result = parseApiResponse(await generateSlug({ worldId, body: { preferredSlug: slug } }))
-			if (result.error) {
-				return { slug: null, preferredSlugFree: false }
-			}
-			return result.response
-		},
-		[generateSlug, worldId],
-	)
-
-	const validate = useCallback(
-		async (slug: string) => {
-			if (!slug) {
-				setPreferredSlug('')
-				setError(null)
-				return
-			}
-
-			const slugRegex = /^[a-zA-Z0-9-_]+$/
-			if (!slugRegex.test(slug)) {
-				setError('Only letters, numbers, hyphens and underscores are allowed')
-				return
-			}
-
-			if (slug.length < 4 || slug.length > 64) {
-				setError('Custom link must be between 4 and 64 characters')
-				return
-			}
-
-			setError(null)
-			const result = await checkSlugAvailability(slug)
-			if (result.preferredSlugFree) {
-				setPreferredSlug(slug)
-			} else {
-				setError('This link is already taken')
-			}
-		},
-		[checkSlugAvailability],
-	)
-
-	const validateDebounced = useMemo(() => {
-		return debounce(validate, 500)
-	}, [validate])
-
-	const reset = useCallback(async () => {
-		setPreferredSlug('')
-		setError(null)
-		const newRandomSlug = Math.random().toString(36).slice(2, 10)
-		setRandomSlug(newRandomSlug)
-		const result = await checkSlugAvailability(newRandomSlug)
-		if (!result.preferredSlugFree && result.slug) {
-			setRandomSlug(result.slug)
-		}
-	}, [checkSlugAvailability])
-
-	useEffectOnce(() => {
-		reset()
-	})
-
-	return { currentSlug, randomSlug, error, validate: validateDebounced, reset }
-}
+import { useShareSlug } from '../hooks/useWorldShareSlug'
 
 export const ShareWorldModal = () => {
 	const [slug, setSlug] = useState('')
@@ -118,7 +42,8 @@ export const ShareWorldModal = () => {
 	const { currentSlug, randomSlug, error, validate: validateSlug, reset: resetSlug } = useShareSlug()
 
 	const currentLink = useMemo(() => {
-		return `${window.location.origin}/share/${currentSlug}`
+		const origin = window.location.origin.replace('//app.', '//')
+		return `${origin}/share/${currentSlug}`
 	}, [currentSlug])
 
 	const currentLabel = useMemo(() => {
