@@ -5,7 +5,12 @@ import { SettingsSuspense } from '@/app/views/world/views/settings/SettingsSuspe
 
 export const Settings = () => {
 	return (
-		<Stack sx={{ marginTop: 4, alignItems: 'center' }}>
+		<Stack
+			position="relative"
+			width="100%"
+			alignItems="center"
+			sx={{ paddingY: '16px', overflowY: 'scroll' }}
+		>
 			<SettingsSuspense />
 			<ShareWorldModal />
 		</Stack>

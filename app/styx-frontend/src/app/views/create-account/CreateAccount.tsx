@@ -2,10 +2,11 @@ import AppRegistrationRounded from '@mui/icons-material/AppRegistrationRounded'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
+import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { Link } from '@tanstack/react-router'
+import { Link as NavLink } from '@tanstack/react-router'
 import { useDispatch } from 'react-redux'
 import { z } from 'zod'
 
@@ -15,6 +16,7 @@ import { TenebrieLogo } from '@/app/components/TenebrieLogo'
 import { BoundTextField } from '@/app/features/forms/components/BoundTextField'
 import { useAppForm } from '@/app/features/forms/useAppForm'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { getSessionStorageItem, removeSessionStorageItem } from '@/app/utils/sessionStorage'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { authSlice } from '../../features/auth/AuthSlice'
@@ -55,6 +57,14 @@ export const CreateAccount = () => {
 			if ('data' in result && result.data) {
 				dispatch(setUser(result.data.user))
 				dispatch(setSessionId(result.data.sessionId))
+
+				const visitedShareLinkSlug = getSessionStorageItem<string>('visitedShareLinkSlug')
+				if (visitedShareLinkSlug) {
+					removeSessionStorageItem('visitedShareLinkSlug')
+					navigate({ to: `/share/${visitedShareLinkSlug}` })
+					return
+				}
+
 				navigate({ to: '/' })
 			}
 		},
@@ -135,18 +145,21 @@ export const CreateAccount = () => {
 								/>
 							)}
 						</registerForm.AppField>
-						<Button
-							loading={createAccountState.isLoading}
-							variant="contained"
-							type="submit"
-							loadingPosition="center"
-							startIcon={<AppRegistrationRounded />}
-						>
-							<span>Register</span>
-						</Button>
-						<Link from="/" to="/login">
-							Already have an account? Sign in instead
-						</Link>
+						<Stack spacing={2} alignItems="center">
+							<Button
+								loading={createAccountState.isLoading}
+								variant="contained"
+								type="submit"
+								loadingPosition="center"
+								startIcon={<AppRegistrationRounded />}
+								fullWidth
+							>
+								<span>Register</span>
+							</Button>
+							<Link component={NavLink} from="/" to="/login" variant="body2" sx={{ textDecoration: 'none' }}>
+								Already have an account? Sign in instead
+							</Link>
+						</Stack>
 					</Stack>
 				</Paper>
 			</Container>

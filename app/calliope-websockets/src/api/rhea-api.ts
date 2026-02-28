@@ -1172,23 +1172,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/share": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Shares the world with the target users. */
-        post: operations["shareWorld"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/world/{worldId}/access": {
         parameters: {
             query?: never;
@@ -1337,6 +1320,40 @@ export interface paths {
         post?: never;
         /** @description Deletes a share link for a world. */
         delete: operations["deleteWorldShareLink"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/share-link-visit/{slug}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Provides information to add the user to collaborators via a share link. */
+        get: operations["visitWorldShareLink"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/share-link-visit/{slug}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Accepts a world share link and adds the user as a collaborator. */
+        post: operations["acceptWorldShareLink"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -2156,11 +2173,11 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        type: "Info" | "Welcome" | "WorldShared";
-                        userId: string;
-                        title: string;
                         description: string;
                         id: string;
+                        title: string;
+                        userId: string;
+                        type: "Info" | "Welcome" | "WorldShared";
                         /** Format: date-time */
                         timestamp: string;
                         isUnread: boolean;
@@ -2254,10 +2271,10 @@ export interface operations {
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            expiresAt?: null | string;
                             ownerId: string;
-                            bucketKey: string;
                             size: number;
+                            expiresAt?: null | string;
+                            bucketKey: string;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "ImageConversion" | "Avatar";
@@ -2302,10 +2319,10 @@ export interface operations {
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            expiresAt?: null | string;
                             ownerId: string;
-                            bucketKey: string;
                             size: number;
+                            expiresAt?: null | string;
+                            bucketKey: string;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "ImageConversion" | "Avatar";
@@ -2349,10 +2366,10 @@ export interface operations {
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        expiresAt?: null | string;
                         ownerId: string;
-                        bucketKey: string;
                         size: number;
+                        expiresAt?: null | string;
+                        bucketKey: string;
                         originalFileName: string;
                         originalFileExtension: string;
                         contentType: "ImageConversion" | "Avatar";
@@ -2493,10 +2510,10 @@ export interface operations {
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
-                                expiresAt?: null | string;
                                 ownerId: string;
-                                bucketKey: string;
                                 size: number;
+                                expiresAt?: null | string;
+                                bucketKey: string;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "ImageConversion" | "Avatar";
@@ -2524,7 +2541,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        redirectTo: "login" | "admin";
+                        redirectTo: "admin" | "login";
                     };
                 };
             };
@@ -2560,12 +2577,12 @@ export interface operations {
                 content: {
                     "application/json": {
                         units: {
-                            name: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
+                            name: string;
                             calendarId: string;
                             presentationId: string;
                             position: number;
@@ -2574,12 +2591,12 @@ export interface operations {
                             labeledIndices: number[];
                             unitId: string;
                         }[];
-                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
                         calendarId: string;
                         compression: number;
                         scaleFactor: number;
@@ -2609,12 +2626,12 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
                         calendarId: string;
                         compression: number;
                         scaleFactor: number;
@@ -2658,12 +2675,12 @@ export interface operations {
                 content: {
                     "application/json": {
                         units: {
-                            name: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
+                            name: string;
                             calendarId: string;
                             presentationId: string;
                             position: number;
@@ -2672,12 +2689,12 @@ export interface operations {
                             labeledIndices: number[];
                             unitId: string;
                         }[];
-                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
                         calendarId: string;
                         compression: number;
                         scaleFactor: number;
@@ -2722,12 +2739,12 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
                         calendarId: string;
                         presentationId: string;
                         position: number;
@@ -2762,12 +2779,12 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
                         calendarId: string;
                         presentationId: string;
                         position: number;
@@ -2815,12 +2832,12 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
                         calendarId: string;
                         presentationId: string;
                         position: number;
@@ -5543,37 +5560,6 @@ export interface operations {
             };
         };
     };
-    shareWorld: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    userEmails: string[];
-                    access: "ReadOnly" | "Editing";
-                };
-                "application/x-www-form-urlencoded": {
-                    userEmails: string[];
-                    access: "ReadOnly" | "Editing";
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     setWorldAccessMode: {
         parameters: {
             query?: never;
@@ -5947,6 +5933,66 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    visitWorldShareLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        world: {
+                            id: string;
+                            name: string;
+                            description: string;
+                        };
+                        linkAccess: "ReadOnly" | "Editing";
+                        alreadyHasAccess: boolean;
+                    };
+                };
+            };
+        };
+    };
+    acceptWorldShareLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                slug: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        world: {
+                            id: string;
+                            name: string;
+                            description: string;
+                        };
+                        linkAccess: "ReadOnly" | "Editing";
+                        alreadyHasAccess: boolean;
+                    };
+                };
             };
         };
     };

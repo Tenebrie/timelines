@@ -18,9 +18,11 @@ export const WorldList = () => {
 					<WorldListSection worlds={ownedWorlds} label="Your Worlds" showCreateButton showActions />
 				)}
 				{contributableWorlds.length > 0 && (
-					<WorldListSection worlds={contributableWorlds} label="Shared With You" />
+					<WorldListSection worlds={contributableWorlds} label="Shared Worlds (Contributor)" />
 				)}
-				{visibleWorlds.length > 0 && <WorldListSection worlds={visibleWorlds} label="Public Worlds" />}
+				{visibleWorlds.length > 0 && (
+					<WorldListSection worlds={visibleWorlds} label="Shared Worlds (Reader)" />
+				)}
 			</Stack>
 			<WorldWizardModal />
 			<DeleteWorldModal />

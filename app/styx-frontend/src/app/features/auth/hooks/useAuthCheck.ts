@@ -45,7 +45,7 @@ export const useAuthCheck = (): ReturnType => {
 		return { success: true }
 	}
 
-	const publicRoutes = ['/login', '/create-account']
+	const publicRoutes = ['/login', '/create-account', '/share/']
 	if (publicRoutes.some((r) => window.location.pathname.startsWith(r))) {
 		return { success: true }
 	}

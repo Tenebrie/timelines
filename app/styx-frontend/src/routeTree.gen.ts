@@ -18,6 +18,7 @@ import { Route as ToolsIndexRouteImport } from './routes/tools/index'
 import { Route as ProfileIndexRouteImport } from './routes/profile/index'
 import { Route as CalendarIndexRouteImport } from './routes/calendar/index'
 import { Route as ToolsToolsRouteImport } from './routes/tools/_tools'
+import { Route as ShareShareLinkSlugRouteImport } from './routes/share/$shareLinkSlug'
 import { Route as SecretMusicRouteImport } from './routes/secret/music'
 import { Route as ProfileProfileRouteImport } from './routes/profile/_profile'
 import { Route as CalendarCalendarIdRouteImport } from './routes/calendar/$calendarId'
@@ -77,6 +78,11 @@ const CalendarIndexRoute = CalendarIndexRouteImport.update({
 const ToolsToolsRoute = ToolsToolsRouteImport.update({
   id: '/tools/_tools',
   path: '/tools',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShareShareLinkSlugRoute = ShareShareLinkSlugRouteImport.update({
+  id: '/share/$shareLinkSlug',
+  path: '/share/$shareLinkSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SecretMusicRoute = SecretMusicRouteImport.update({
@@ -170,6 +176,7 @@ export interface FileRoutesByFullPath {
   '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile': typeof ProfileProfileRouteWithChildren
   '/secret/music': typeof SecretMusicRoute
+  '/share/$shareLinkSlug': typeof ShareShareLinkSlugRoute
   '/tools': typeof ToolsToolsRouteWithChildren
   '/calendar/': typeof CalendarIndexRoute
   '/profile/': typeof ProfileIndexRoute
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile': typeof ProfileIndexRoute
   '/secret/music': typeof SecretMusicRoute
+  '/share/$shareLinkSlug': typeof ShareShareLinkSlugRoute
   '/tools': typeof ToolsIndexRoute
   '/calendar': typeof CalendarIndexRoute
   '/world': typeof WorldIndexRoute
@@ -220,6 +228,7 @@ export interface FileRoutesById {
   '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile/_profile': typeof ProfileProfileRouteWithChildren
   '/secret/music': typeof SecretMusicRoute
+  '/share/$shareLinkSlug': typeof ShareShareLinkSlugRoute
   '/tools/_tools': typeof ToolsToolsRouteWithChildren
   '/calendar/': typeof CalendarIndexRoute
   '/profile/': typeof ProfileIndexRoute
@@ -248,6 +257,7 @@ export interface FileRouteTypes {
     | '/calendar/$calendarId'
     | '/profile'
     | '/secret/music'
+    | '/share/$shareLinkSlug'
     | '/tools'
     | '/calendar/'
     | '/profile/'
@@ -274,6 +284,7 @@ export interface FileRouteTypes {
     | '/calendar/$calendarId'
     | '/profile'
     | '/secret/music'
+    | '/share/$shareLinkSlug'
     | '/tools'
     | '/calendar'
     | '/world'
@@ -297,6 +308,7 @@ export interface FileRouteTypes {
     | '/calendar/$calendarId'
     | '/profile/_profile'
     | '/secret/music'
+    | '/share/$shareLinkSlug'
     | '/tools/_tools'
     | '/calendar/'
     | '/profile/'
@@ -324,6 +336,7 @@ export interface RootRouteChildren {
   CalendarCalendarIdRoute: typeof CalendarCalendarIdRoute
   ProfileProfileRoute: typeof ProfileProfileRouteWithChildren
   SecretMusicRoute: typeof SecretMusicRoute
+  ShareShareLinkSlugRoute: typeof ShareShareLinkSlugRoute
   ToolsToolsRoute: typeof ToolsToolsRouteWithChildren
   CalendarIndexRoute: typeof CalendarIndexRoute
   ProfileIndexRoute: typeof ProfileIndexRoute
@@ -395,6 +408,13 @@ declare module '@tanstack/react-router' {
       path: '/tools'
       fullPath: '/tools'
       preLoaderRoute: typeof ToolsToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/share/$shareLinkSlug': {
+      id: '/share/$shareLinkSlug'
+      path: '/share/$shareLinkSlug'
+      fullPath: '/share/$shareLinkSlug'
+      preLoaderRoute: typeof ShareShareLinkSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/secret/music': {
@@ -577,6 +597,7 @@ const rootRouteChildren: RootRouteChildren = {
   CalendarCalendarIdRoute: CalendarCalendarIdRoute,
   ProfileProfileRoute: ProfileProfileRouteWithChildren,
   SecretMusicRoute: SecretMusicRoute,
+  ShareShareLinkSlugRoute: ShareShareLinkSlugRoute,
   ToolsToolsRoute: ToolsToolsRouteWithChildren,
   CalendarIndexRoute: CalendarIndexRoute,
   ProfileIndexRoute: ProfileIndexRoute,

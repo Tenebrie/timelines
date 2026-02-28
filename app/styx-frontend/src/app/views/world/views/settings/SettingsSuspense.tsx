@@ -30,7 +30,15 @@ export const SettingsSuspense = () => {
 	}
 
 	return (
-		<OutlinedContainer label="Settings" style={{ minWidth: '600px', borderRadius: '8px' }}>
+		<OutlinedContainer
+			label="Settings"
+			style={{
+				width: '100%',
+				height: 'fit-content',
+				borderRadius: '8px',
+				overflow: 'visible',
+			}}
+		>
 			<Settings world={worldData} collaborators={collaboratorsData} />
 		</OutlinedContainer>
 	)

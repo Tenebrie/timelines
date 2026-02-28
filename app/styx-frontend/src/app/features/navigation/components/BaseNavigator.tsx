@@ -8,6 +8,8 @@ import Stack from '@mui/material/Stack'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+
 import { AnnouncementView } from '../../announcements/AnnouncementView'
 import { getAuthState } from '../../auth/AuthSliceSelectors'
 import { SmallProfile } from '../../auth/smallProfile/SmallProfile'
@@ -33,6 +35,11 @@ const Container = styled(Paper)<{ $theme: CustomTheme }>`
 export const BaseNavigator = () => {
 	const { user } = useSelector(getAuthState)
 	const theme = useCustomTheme()
+
+	const isShareLinkRoute = useCheckRouteMatch('/share/$shareLinkSlug')
+	if (isShareLinkRoute && !user) {
+		return null
+	}
 
 	return (
 		<Container $theme={theme}>

@@ -57,6 +57,18 @@ function useShareSlug() {
 				setError(null)
 				return
 			}
+
+			const slugRegex = /^[a-zA-Z0-9-_]+$/
+			if (!slugRegex.test(slug)) {
+				setError('Only letters, numbers, hyphens and underscores are allowed')
+				return
+			}
+
+			if (slug.length < 4 || slug.length > 64) {
+				setError('Custom link must be between 4 and 64 characters')
+				return
+			}
+
 			setError(null)
 			const result = await checkSlugAvailability(slug)
 			if (result.preferredSlugFree) {
@@ -74,6 +86,7 @@ function useShareSlug() {
 
 	const reset = useCallback(async () => {
 		setPreferredSlug('')
+		setError(null)
 		const newRandomSlug = Math.random().toString(36).slice(2, 10)
 		setRandomSlug(newRandomSlug)
 		const result = await checkSlugAvailability(newRandomSlug)
@@ -128,18 +141,15 @@ export const ShareWorldModal = () => {
 			return
 		}
 
-		const { error } = parseApiResponse(
-			await createShareLink({
-				worldId,
-				body: {
-					slug: currentSlug,
-					label: currentLabel,
-					expiresAt: expirationDate?.toISOString(),
-					accessMode: access,
-				},
-			}),
-		)
-
+		await createShareLink({
+			worldId,
+			body: {
+				slug: currentSlug,
+				label: currentLabel,
+				expiresAt: expirationDate?.toISOString(),
+				accessMode: access,
+			},
+		})
 		close()
 	}
 
@@ -158,7 +168,14 @@ export const ShareWorldModal = () => {
 				<Paper variant="outlined" sx={{ p: '12px', paddingRight: '8px', bgcolor: 'background.default' }}>
 					<Stack direction="row" justifyContent="space-between" alignItems="center">
 						<Typography>{currentLink}</Typography>
-						<IconButton size="small" sx={{ margin: -1, marginRight: 0 }} onClick={resetSlug}>
+						<IconButton
+							size="small"
+							sx={{ margin: -1, marginRight: 0 }}
+							onClick={() => {
+								resetSlug()
+								setSlug('')
+							}}
+						>
 							<RefreshIcon fontSize="small" />
 						</IconButton>
 					</Stack>

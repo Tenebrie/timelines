@@ -1,8 +1,8 @@
-import { CollaboratorAccess } from '@prisma/client'
+import { User } from '@prisma/client'
 import { BadRequestError } from 'moonflower'
 import { WorldShareLinkUncheckedCreateInput } from 'prisma/client/models.js'
 
-import { AnnouncementService } from './AnnouncementService.js'
+import { AuthorizationService } from './AuthorizationService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const WorldShareService = {
@@ -24,81 +24,6 @@ export const WorldShareService = {
 		})
 	},
 
-	addCollaborators: async ({
-		worldId,
-		userEmails,
-		access,
-	}: {
-		worldId: string
-		userEmails: string[]
-		access: CollaboratorAccess
-	}) => {
-		const world = await getPrismaClient().world.findFirst({
-			where: {
-				id: worldId,
-			},
-		})
-
-		if (!world) {
-			throw new BadRequestError(`Unable to find world.`)
-		}
-
-		const userResults = await Promise.allSettled(
-			userEmails.map((email) =>
-				getPrismaClient().user.findFirst({
-					where: {
-						email,
-						deletedAt: null,
-					},
-				}),
-			),
-		)
-
-		const users = userResults.flatMap((user) => {
-			if (user.status === 'rejected' || user.value === null) {
-				return []
-			}
-			return user.value
-		})
-
-		if (users.length === 0) {
-			return { users }
-		}
-
-		await getPrismaClient().$transaction([
-			getPrismaClient().collaboratingUser.deleteMany(
-				...users.map((user) => ({
-					where: {
-						AND: {
-							userId: user.id,
-							worldId: worldId,
-						},
-					},
-				})),
-			),
-			getPrismaClient().collaboratingUser.createMany(
-				...users.map((user) => ({
-					data: {
-						userId: user.id,
-						worldId,
-						access,
-					},
-				})),
-			),
-		])
-
-		await AnnouncementService.notifyMany(
-			users.map((user) => ({
-				type: 'WorldShared',
-				userId: user.id,
-				title: 'Collaboration invite',
-				description: 'Someone has shared their World with you!',
-			})),
-		)
-
-		return { users }
-	},
-
 	removeCollaborator: async ({ worldId, userId }: { worldId: string; userId: string }) => {
 		const world = await getPrismaClient().world.findFirst({
 			where: {
@@ -118,6 +43,90 @@ export const WorldShareService = {
 				},
 			},
 		})
+	},
+
+	validateLinkBySlug: async (slug: string, currentUser: User | undefined) => {
+		const link = await getPrismaClient().worldShareLink.findFirst({
+			where: {
+				slug,
+				expiresAt: {
+					gt: new Date(),
+				},
+			},
+			select: {
+				accessMode: true,
+				world: true,
+			},
+		})
+
+		if (!link) {
+			throw new BadRequestError('Invalid or expired share link.')
+		}
+
+		if (currentUser) {
+			const accessLevel = await AuthorizationService.getUserAccessLevel(currentUser, link.world)
+			if (
+				(link.accessMode === 'ReadOnly' && accessLevel.read) ||
+				(link.accessMode === 'Editing' && accessLevel.write)
+			) {
+				return {
+					world: {
+						id: link.world.id,
+						name: link.world.name,
+						description: link.world.description,
+					},
+					linkAccess: link.accessMode,
+					alreadyHasAccess: true,
+				}
+			}
+		}
+
+		return {
+			world: {
+				id: link.world.id,
+				name: link.world.name,
+				description: link.world.description,
+			},
+			linkAccess: link.accessMode,
+			alreadyHasAccess: false,
+		}
+	},
+
+	acceptLinkBySlug: async ({ slug, user }: { slug: string; user: User }) => {
+		const link = await WorldShareService.validateLinkBySlug(slug, user)
+		if (link.alreadyHasAccess) {
+			return link
+		}
+
+		const worldId = link.world.id
+
+		await getPrismaClient().$transaction(async (dbClient) => {
+			await dbClient.collaboratingUser.deleteMany({
+				where: {
+					userId: user.id,
+					worldId,
+				},
+			})
+			await dbClient.collaboratingUser.create({
+				data: {
+					userId: user.id,
+					worldId,
+					access: link.linkAccess,
+				},
+			})
+			await dbClient.worldShareLink.update({
+				where: {
+					slug,
+				},
+				data: {
+					usageCount: {
+						increment: 1,
+					},
+				},
+			})
+		})
+
+		return link
 	},
 
 	generateRandomSlug: async ({ preferredSlug }: { preferredSlug?: string }) => {

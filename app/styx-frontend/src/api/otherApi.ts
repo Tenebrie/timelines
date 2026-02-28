@@ -95,6 +95,12 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldShareLink'],
 			}),
+			visitWorldShareLink: build.query<VisitWorldShareLinkApiResponse, VisitWorldShareLinkApiArg>({
+				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}` }),
+			}),
+			acceptWorldShareLink: build.mutation<AcceptWorldShareLinkApiResponse, AcceptWorldShareLinkApiArg>({
+				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}/accept`, method: 'POST' }),
+			}),
 			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/wiki/article/${queryArg.articleId}`,
@@ -269,6 +275,32 @@ export type DeleteWorldShareLinkApiArg = {
 	/** Any string value */
 	shareLinkId: string
 }
+export type VisitWorldShareLinkApiResponse = /** status 200  */ {
+	world: {
+		id: string
+		name: string
+		description: string
+	}
+	linkAccess: 'ReadOnly' | 'Editing'
+	alreadyHasAccess: boolean
+}
+export type VisitWorldShareLinkApiArg = {
+	/** Any string value */
+	slug: string
+}
+export type AcceptWorldShareLinkApiResponse = /** status 200  */ {
+	world: {
+		id: string
+		name: string
+		description: string
+	}
+	linkAccess: 'ReadOnly' | 'Editing'
+	alreadyHasAccess: boolean
+}
+export type AcceptWorldShareLinkApiArg = {
+	/** Any string value */
+	slug: string
+}
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
 		id: string
@@ -340,6 +372,9 @@ export const {
 	useCreateWorldShareLinkMutation,
 	useExpireWorldShareLinkMutation,
 	useDeleteWorldShareLinkMutation,
+	useVisitWorldShareLinkQuery,
+	useLazyVisitWorldShareLinkQuery,
+	useAcceptWorldShareLinkMutation,
 	useUpdateArticleMutation,
 	useGetUserWorldAccessLevelQuery,
 	useLazyGetUserWorldAccessLevelQuery,

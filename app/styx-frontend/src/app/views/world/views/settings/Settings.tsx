@@ -33,7 +33,7 @@ export const Settings = ({ world, collaborators }: Props) => {
 	})
 
 	return (
-		<Stack gap={2} marginTop={1}>
+		<Stack gap={2} marginTop={1} minWidth="600px">
 			<TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} />
 			<TextField label="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
 			<CalendarSelector

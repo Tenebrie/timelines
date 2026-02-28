@@ -7,7 +7,6 @@ import { RedisService } from '@src/services/RedisService.js'
 import { WorldService } from '@src/services/WorldService.js'
 import { WorldShareService } from '@src/services/WorldShareService.js'
 import {
-	BadRequestError,
 	NonEmptyStringValidator,
 	NumberValidator,
 	OptionalParam,
@@ -29,7 +28,6 @@ import {
 	worldDetailsTag,
 	worldListTag,
 } from './utils/tags.js'
-import { CollaboratorAccessValidator } from './validators/CollaboratorAccessValidator.js'
 import { StringArrayValidator } from './validators/StringArrayValidator.js'
 import { WorldAccessModeValidator } from './validators/WorldAccessModeValidator.js'
 
@@ -194,37 +192,6 @@ router.get('/api/world/:worldId/collaborators', async (ctx) => {
 	await AuthorizationService.checkUserWorldOwner(user, worldId)
 
 	return await WorldShareService.listCollaborators({ worldId })
-})
-
-router.post('/api/world/:worldId/share', async (ctx) => {
-	useApiEndpoint({
-		name: 'shareWorld',
-		description: 'Shares the world with the target users.',
-		tags: [worldCollaboratorsTag],
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	const { worldId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-	})
-
-	const { userEmails, access } = useRequestBody(ctx, {
-		userEmails: RequiredParam(StringArrayValidator),
-		access: RequiredParam(CollaboratorAccessValidator),
-	})
-
-	if (userEmails.length > 20) {
-		throw new BadRequestError('Unable to share to more than 20 users at once.')
-	}
-
-	await AuthorizationService.checkUserWorldOwner(user, worldId)
-
-	const { users } = await WorldShareService.addCollaborators({ worldId, userEmails, access })
-
-	RedisService.notifyAboutWorldShared(ctx, {
-		users,
-	})
 })
 
 router.post('/api/world/:worldId/access', async (ctx) => {

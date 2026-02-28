@@ -13,7 +13,7 @@ import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { formatTimeAgo } from '@/app/views/home/utils/formatTimeAgo'
@@ -57,6 +57,21 @@ export function ShareLinksSection({ worldId, links }: Props) {
 		})
 	}, [openShareWorldModal, worldId])
 
+	const sortedLinks = useMemo(() => {
+		return [...links].sort((a, b) => {
+			const aExpired = a.expiresAt ? new Date(a.expiresAt) < new Date() : false
+			const bExpired = b.expiresAt ? new Date(b.expiresAt) < new Date() : false
+
+			if (aExpired && !bExpired) {
+				return 1
+			}
+			if (!aExpired && bExpired) {
+				return -1
+			}
+			return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+		})
+	}, [links])
+
 	return (
 		<Stack gap={2}>
 			<Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -72,12 +87,12 @@ export function ShareLinksSection({ worldId, links }: Props) {
 					Create new share link
 				</Button>
 			</Stack>
-			{links.length === 0 && (
+			{sortedLinks.length === 0 && (
 				<Typography variant="body2" color="text.secondary">
 					<b>Nothing shared yet!</b>
 				</Typography>
 			)}
-			{links.map((link) => {
+			{sortedLinks.map((link) => {
 				const url = `${window.location.origin}/share/${link.slug}`
 				const isExpired = link.expiresAt ? new Date(link.expiresAt) < new Date() : false
 
@@ -127,6 +142,11 @@ export function ShareLinksSection({ worldId, links }: Props) {
 										{isExpired ? 'Expired' : 'Expires'} {expiresAt}
 									</Typography>
 								)}
+								{link.usageCount > 0 && (
+									<Typography variant="caption" color="text.secondary">
+										This link has been used {link.usageCount} {link.usageCount === 1 ? 'time' : 'times'}
+									</Typography>
+								)}
 							</Stack>
 						</Stack>
 
@@ -152,7 +172,7 @@ export function ShareLinksSection({ worldId, links }: Props) {
 								<ConfirmPopoverButton
 									type="delete"
 									tooltip="Delete link"
-									prompt="Are you sure you want to delete this link? Users clicking this link will see an error instead of the expiration message."
+									prompt="Are you sure you want to permanently remove this link from this list?"
 									onConfirm={() => handleDeleteLink(link)}
 								/>
 							)}
