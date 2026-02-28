@@ -3,14 +3,13 @@ import Button from '@mui/material/Button'
 import Input from '@mui/material/Input'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { EventColorIconPicker } from '@/app/components/ColorIconPicker/EventColorIconPicker'
-import { useModal } from '@/app/features/modals/ModalsSlice'
-import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import { EventDraft } from '../draft/useEventDraft'
+import { EventTimePopover } from './EventTimePopover'
 
 type Props = {
 	event: WorldEvent
@@ -36,16 +35,6 @@ export const EventTitle = ({ event, draft }: Props) => {
 		},
 		editing && ShortcutPriorities.InputField,
 	)
-
-	const { timeToLabel } = useWorldTime()
-	const timeLabel = useMemo(() => {
-		if (!draft) {
-			return ''
-		}
-		return timeToLabel(draft.timestamp)
-	}, [timeToLabel, draft])
-
-	const { open: openTimeTravelModal } = useModal('timeTravelModal')
 
 	useEffect(() => {
 		setName(draft.name)
@@ -76,12 +65,7 @@ export const EventTitle = ({ event, draft }: Props) => {
 							{name || event.name || '<Unnamed>'}
 						</Typography>
 					</Button>
-					<Button
-						sx={{ padding: '4px 12px', textWrap: 'nowrap', flexShrink: 0 }}
-						onClick={openTimeTravelModal}
-					>
-						{timeLabel}
-					</Button>
+					<EventTimePopover draft={draft} />
 				</Stack>
 			)}
 			{editing && (
