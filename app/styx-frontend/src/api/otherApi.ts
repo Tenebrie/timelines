@@ -218,11 +218,11 @@ export type PutWikiArticleContentApiArg = {
 export type ListWorldShareLinksApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
-	accessMode: 'ReadOnly' | 'Editing'
 	worldId: string
+	accessMode: 'ReadOnly' | 'Editing'
+	expiresAt: null | string
 	label: null | string
 	slug: string
-	expiresAt: null | string
 	usageCount: number
 }[]
 export type ListWorldShareLinksApiArg = {
@@ -244,11 +244,11 @@ export type CreateWorldShareLinkApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	accessMode: 'ReadOnly' | 'Editing'
 	worldId: string
+	accessMode: 'ReadOnly' | 'Editing'
+	expiresAt?: null | string
 	label?: null | string
 	slug: string
-	expiresAt?: null | string
 	usageCount: number
 }
 export type CreateWorldShareLinkApiArg = {

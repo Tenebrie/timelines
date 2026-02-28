@@ -77,7 +77,12 @@ export const useShortcutManager = () => {
 		const isTargetingInput =
 			event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement
 		const isTargetingRichInput = event.target instanceof HTMLElement && event.target.isContentEditable
-		const isSingleKeyShortcut = key.length === 1
+		const isSingleKeyShortcut =
+			key.length === 1 ||
+			key === 'ArrowLeft' ||
+			key === 'ArrowRight' ||
+			key === 'ArrowUp' ||
+			key === 'ArrowDown'
 
 		if (isSingleKeyShortcut && (isTargetingInput || isTargetingRichInput)) {
 			return
