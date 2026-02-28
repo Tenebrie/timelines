@@ -86,6 +86,9 @@ export function TimelineHotkeys() {
 			}
 
 			const [marker, pushingBoth] = (() => {
+				if (!event.revokedAt) {
+					return [startingMarker, false] as const
+				}
 				if (allMarkers.every((m) => selectedTimelineMarkers.map((marker) => marker.key).includes(m))) {
 					if (step > 0) {
 						return [

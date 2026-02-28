@@ -64,10 +64,12 @@ function TimelineAnchorCurrentTimeComponent() {
 	useEffect(() => {
 		;(async () => {
 			await waitUntil(() => TimelineState.anchorTimestamps.length > 0 && containerRef.current !== null)
-			updateLabel({ timestamp: TimelineState.scroll, isDragging: false })
+			const containerWidth = containerRef.current?.offsetWidth ?? 0
+			const currentTimestamp = scaledTimeToRealTime(-TimelineState.scroll + containerWidth / 2)
+			updateLabel({ timestamp: currentTimestamp, isDragging: false })
 			labelRef.current?.style.setProperty('left', `${0}px`)
 		})()
-	}, [updateLabel, waitUntil])
+	}, [scaledTimeToRealTime, updateLabel, waitUntil])
 
 	useAnchorTimeDragDrop({
 		onTimeChange: (dragPosition) => {

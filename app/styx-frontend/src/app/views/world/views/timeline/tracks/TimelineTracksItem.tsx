@@ -142,6 +142,7 @@ export function TimelineTracksItemComponent({
 			$activeBg={theme.custom.palette.background.softer}
 			className={`${isDragging ? 'dragging' : ''} allow-timeline-click ${trackActive ? 'active' : ''}`}
 			data-trackid={track.id}
+			data-testid="TimelineTrack"
 		>
 			{track.id !== 'default' && (
 				<Divider sx={{ position: 'absolute', bottom: 0, width: '100%', pointerEvents: 'none' }} />

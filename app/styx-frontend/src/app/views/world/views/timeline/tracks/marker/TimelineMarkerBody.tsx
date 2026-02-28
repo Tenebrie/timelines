@@ -189,6 +189,7 @@ export function TimelineMarkerBodyComponent({ entity, selected }: Props) {
 			{isTooltipRendered && (
 				<MarkerTooltipSummonable>
 					<Paper
+						role="tooltip"
 						elevation={4}
 						sx={{
 							position: 'absolute',

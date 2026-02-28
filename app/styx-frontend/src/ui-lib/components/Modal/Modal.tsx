@@ -73,7 +73,7 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 
 	return (
 		<ModalBackdrop
-			data-testid="modal-backdrop"
+			data-testid="ModalBackdrop"
 			className={isModalVisible ? 'visible' : ''}
 			onMouseDown={onMouseDown}
 			onMouseUp={onMouseUp}
