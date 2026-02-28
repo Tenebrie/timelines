@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventBus'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
@@ -128,6 +129,8 @@ function OverviewCameraComponent({ minTime, maxTime }: Props) {
 		},
 	})
 
+	const theme = useCustomTheme()
+
 	return (
 		<Box
 			ref={cameraRef}
@@ -138,14 +141,15 @@ function OverviewCameraComponent({ minTime, maxTime }: Props) {
 				position: 'absolute',
 				top: 0,
 				left: 'calc(var(--camera-left, 0%) + 1px)',
-				background: 'rgba(255, 255, 255, 0.05)',
+				background: theme.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
 				cursor: isDraggingCamera ? 'grabbing' : 'grab',
 				transition: 'background 0.2s',
 				'[data-overview-container]:hover &': {
-					background: 'rgba(255, 255, 255, 0.10)',
+					background: theme.mode === 'dark' ? 'rgba(255, 255, 255, 0.10)' : 'rgba(0, 0, 0, 0.10)',
 				},
 				'&:hover': {
-					background: 'rgba(255, 255, 255, 0.15) !important',
+					background:
+						theme.mode === 'dark' ? 'rgba(255, 255, 255, 0.15) !important' : 'rgba(0, 0, 0, 0.15) !important',
 				},
 			}}
 		/>
