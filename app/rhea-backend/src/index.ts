@@ -51,6 +51,8 @@ useApiHeader({
 	version: '1.0.0',
 })
 
+app.proxy = true
+
 app
 	.use(HttpErrorHandler)
 	.use(
