@@ -261,8 +261,6 @@ services:
             - backrest_config:/config:cached
             - backrest_cache:/cache:cached
         depends_on:
-            rhea-postgres:
-                condition: service_healthy
             s3-minio:
                 condition: service_healthy
         networks:
