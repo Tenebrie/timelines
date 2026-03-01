@@ -59,6 +59,20 @@ services:
         networks:
             - ci_network
 
+    orpheus:
+        build:
+            context: ./
+            dockerfile: ./app/orpheus-mcp/Dockerfile.prod
+        environment:
+            NODE_ENV: production
+            REQUIRE_OAUTH: "true"
+        command: yarn prod
+        depends_on:
+            rhea:
+                condition: service_healthy
+        networks:
+            - ci_network
+
     thetis:
         build:
             context: ./
