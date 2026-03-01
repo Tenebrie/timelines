@@ -29,9 +29,10 @@ test.describe('Timeline View', () => {
 		await expect(textbox).toHaveText('Hello world')
 
 		// Edit event
-		await page.waitForTimeout(100)
+		await page.waitForTimeout(250)
 		await textbox.pressSequentially(' - extra text', { delay: 100 })
 		await expect(textbox).toHaveText('Hello world - extra text')
+		await page.waitForTimeout(250)
 
 		// Close event
 		await page.keyboard.press('Escape')
@@ -40,6 +41,7 @@ test.describe('Timeline View', () => {
 		// Reopen event (should have the updated text)
 		await page.getByTestId('TimelineMarker').click()
 		await page.getByTestId('TimelineMarker').click()
+		await page.waitForTimeout(100)
 		await expect(textbox).toHaveText('Hello world - extra text')
 
 		// Click outside to close
