@@ -2,7 +2,7 @@ import test, { expect } from '@playwright/test'
 import { createNewUser, deleteAccount } from 'fixtures/auth'
 import { navigateToTimeline } from 'fixtures/world'
 
-test.describe('Timeline', () => {
+test.describe('Timeline View', () => {
 	test.beforeEach(async ({ page }) => {
 		await createNewUser(page)
 	})
@@ -260,7 +260,7 @@ test.describe('Timeline', () => {
 		await page.keyboard.down('Shift')
 		for (let i = 0; i < 20; i++) {
 			await page.keyboard.press('ArrowRight')
-			await page.waitForTimeout(10)
+			await page.waitForTimeout(50)
 		}
 		await page.keyboard.up('Shift')
 

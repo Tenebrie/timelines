@@ -3,7 +3,7 @@ import { createNewUser, deleteAccount } from 'fixtures/auth'
 
 import { makeUrl } from '../utils'
 
-test.describe('World List', () => {
+test.describe('World List View', () => {
 	test.beforeEach(async ({ page }) => {
 		await createNewUser(page)
 	})

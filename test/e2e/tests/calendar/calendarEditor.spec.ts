@@ -1,7 +1,7 @@
 import test from '@playwright/test'
 import { createNewUser, deleteAccount } from 'fixtures/auth'
 
-test.describe('Calendar Editor', () => {
+test.describe('Calendar Editor View', () => {
 	test.beforeEach(async ({ page }) => {
 		await createNewUser(page)
 	})
