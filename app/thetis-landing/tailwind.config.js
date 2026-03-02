@@ -17,6 +17,7 @@ export default {
 				sans: ['var(--aw-font-sans, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
 				serif: ['var(--aw-font-serif, ui-serif)', ...defaultTheme.fontFamily.serif],
 				heading: ['var(--aw-font-heading, ui-sans-serif)', ...defaultTheme.fontFamily.sans],
+				logo: ['var(--aw-font-logo)', ...defaultTheme.fontFamily.serif],
 			},
 
 			animation: {

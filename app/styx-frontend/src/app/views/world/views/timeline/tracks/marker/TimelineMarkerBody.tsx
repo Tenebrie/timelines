@@ -8,7 +8,6 @@ import classNames from 'classnames'
 import { CSSProperties, memo, MouseEvent, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
@@ -37,7 +36,6 @@ export function TimelineMarkerBodyComponent({ entity, selected }: Props) {
 
 	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
 
-	const { getIconPath } = useEventIcons()
 	const { timeToLabel } = useWorldTime()
 	const [isHovered, setIsHovered] = useState(false)
 	const markerRef = useRef<HTMLDivElement>(null)
@@ -137,7 +135,6 @@ export function TimelineMarkerBodyComponent({ entity, selected }: Props) {
 
 	const cssVariables = {
 		'--border-color': color,
-		'--icon-path': `url(${getIconPath(entity.icon)})`,
 		'--marker-size': `${TimelineEventHeightPx - 6}px`,
 		'--border-radius': '6px',
 	} as CSSProperties

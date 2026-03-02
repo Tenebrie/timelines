@@ -1,10 +1,14 @@
 ---
 import { SITE } from 'astrowind:config'
 import { Image } from 'astro:assets'
-import logoSvg from '~/assets/images/neverkin-logo.svg'
+import logoSvg from '~/assets/images/neverkin-logo-dragon.webp'
 ---
 
-<span class="self-center flex items-center rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-bold whitespace-nowrap">
-	<Image src={logoSvg} alt={`${SITE?.name} logo`} class="h-10 w-10 -mr-2 mb-2.5" width={42} height={42} />
-	<span class="text-gray-900 dark:text-white">{SITE?.name}</span>
+<span
+	class="self-center flex items-center rtl:ml-0 rtl:mr-2 text-2xl md:text-xl font-logo font-bold whitespace-nowrap"
+>
+	<Image src={logoSvg} alt={`${SITE?.name} logo`} class="h-14 w-auto object-contain mr-1 mb-0" />
+	<span class="text-gray-900 dark:text-white" style="font-size: 26px">
+		<span class="text-brand-gradient">Neverkin</span>
+	</span>
 </span>

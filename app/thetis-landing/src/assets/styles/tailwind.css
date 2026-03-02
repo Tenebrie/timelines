@@ -7,6 +7,17 @@
     background-color: var(--aw-color-bg-page);
   }
 
+  .text-brand-gradient {
+    background-image: var(--aw-brand-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .bg-brand-gradient {
+    background-image: var(--aw-brand-gradient);
+  }
+
   .bg-dark {
     background-color: var(--aw-color-bg-page-dark);
   }
