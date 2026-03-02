@@ -70,7 +70,7 @@ jobs:
         working-directory: test/e2e
         run: |
           docker run --rm \
-            --network timelines_ci_network \
+            --network neverkin-playwright \
             -e TARGET_ENV=ci \
             -v $(pwd)/test-report:/app/test-report \
             playwright-e2e \
