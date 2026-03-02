@@ -5,15 +5,21 @@ import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 if (process.env.NODE_ENV === 'development') {
-	window.document.title = 'Timelines (Dev)'
-} else if (window.location.hostname === 'staging.tenebrie.com') {
-	window.document.title = 'Timelines (Staging)'
+	window.document.title = 'Neverkin (Dev)'
+} else if (
+	window.location.hostname === 'staging.tenebrie.com' ||
+	window.location.hostname === 'staging.neverkin.com'
+) {
+	window.document.title = 'Neverkin (Staging)'
 }
 
 const getEnvTag = () => {
 	if (process.env.NODE_ENV === 'development') {
 		return 'Dev: '
-	} else if (window.location.hostname === 'staging.tenebrie.com') {
+	} else if (
+		window.location.hostname === 'staging.tenebrie.com' ||
+		window.location.hostname === 'staging.neverkin.com'
+	) {
 		return 'Staging: '
 	}
 	return ''
@@ -28,7 +34,7 @@ export const usePageMetadata = () => {
 
 	const update = useCallback(() => {
 		const envTag = getEnvTag()
-		const name = isWorldOpen ? worldName : 'Timelines'
+		const name = isWorldOpen ? worldName : 'Neverkin'
 		const title = `${envTag}${name}`
 		window.document.title = title
 

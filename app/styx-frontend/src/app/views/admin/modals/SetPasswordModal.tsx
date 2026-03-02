@@ -14,6 +14,7 @@ import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/compo
 export const SetPasswordModal = () => {
 	const [setUserPassword, { isLoading }] = useAdminSetUserPasswordMutation()
 	const [password, setPassword] = useState('')
+	const [confirmationValue, setConfirmationValue] = useState('')
 	const [error, setError] = useState<string | null>(null)
 
 	const { isOpen, targetUser, close } = useModal('setPasswordModal')
@@ -22,6 +23,7 @@ export const SetPasswordModal = () => {
 		isOpen,
 		onCleanup: () => {
 			setPassword('')
+			setConfirmationValue('')
 			setError(null)
 		},
 	})
@@ -67,12 +69,16 @@ export const SetPasswordModal = () => {
 		isOpen ? 1 : -1,
 	)
 
+	if (!targetUser) {
+		return null
+	}
+
 	return (
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
 			<ModalHeader>Set Password</ModalHeader>
 			<Stack spacing={2}>
 				<div>
-					Setting password for user &apos;<b>{targetUser?.username}</b>&apos;.
+					Setting password for user &apos;<b>{targetUser.username}</b>&apos; | <b>{targetUser.email}</b>
 				</div>
 				<TextField
 					label="New Password"
@@ -84,6 +90,14 @@ export const SetPasswordModal = () => {
 					error={!!error}
 					helperText={error}
 				/>
+				<TextField
+					label="Confirm User Email"
+					value={confirmationValue}
+					placeholder={targetUser.email}
+					onChange={(e) => setConfirmationValue(e.target.value)}
+					fullWidth
+					helperText="Type the user email to confirm this action"
+				/>
 			</Stack>
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">
@@ -94,6 +108,7 @@ export const SetPasswordModal = () => {
 						onClick={onConfirm}
 						loadingPosition="start"
 						startIcon={<Key />}
+						disabled={confirmationValue.trim() !== targetUser.email || !password.trim() || !isOpen}
 					>
 						<span>Set Password</span>
 					</Button>

@@ -1,7 +1,9 @@
 import bezier from 'bezier-easing'
 import { useCallback, useRef } from 'react'
+import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { getTimelinePreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 
 type Props = {
 	containerRef: React.RefObject<HTMLDivElement | null>
@@ -23,6 +25,11 @@ export const useTimelineExternalScroll = ({
 	const startedScrollFrom = useRef(0)
 	const desiredScrollTo = useRef(0)
 	const smoothScrollStartedAtTime = useRef(new Date())
+
+	const { reduceAnimations } = useSelector(
+		getTimelinePreferences,
+		(a, b) => a.reduceAnimations === b.reduceAnimations,
+	)
 
 	const scrollTo = useCallback(
 		({
@@ -83,7 +90,7 @@ export const useTimelineExternalScroll = ({
 				}
 			}
 
-			if (skipAnim) {
+			if (skipAnim || reduceAnimations) {
 				scrollRef.current = desiredScrollTo.current
 				setScroll(scrollRef.current)
 				startedScrollFrom.current = 0
@@ -92,7 +99,15 @@ export const useTimelineExternalScroll = ({
 				requestAnimationFrame(callback)
 			}
 		},
-		[containerRef, minimumScroll, maximumScroll, realTimeToScaledTime, setScroll, scrollRef],
+		[
+			containerRef,
+			scrollRef,
+			minimumScroll,
+			maximumScroll,
+			realTimeToScaledTime,
+			reduceAnimations,
+			setScroll,
+		],
 	)
 
 	/* External scrollTo */

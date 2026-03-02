@@ -15,7 +15,7 @@ import {
 	useCreateWorldColorMutation,
 	useDeleteWorldColorMutation,
 	useGetWorldColorsQuery,
-} from '@/api/otherApi'
+} from '@/api/worldColorApi'
 import { colorStringToHsl } from '@/app/utils/colors/colorStringToHsl'
 import { hslToHex } from '@/app/utils/colors/hslToHex'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'

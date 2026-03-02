@@ -150,6 +150,7 @@ const useEventTracks = ({ showHidden }: Props = {}): {
 	}, [events, eventGhost, isEventCreator, deltaGhost, isDeltaCreator])
 
 	const { data: tracks, isLoading } = useListEventTracks()
+	const validTrackIds = useMemo(() => new Set(tracks?.map((t) => t.id)), [tracks])
 	const tracksWithEvents = useMemo(
 		() =>
 			(tracks ?? [])
@@ -176,6 +177,9 @@ const useEventTracks = ({ showHidden }: Props = {}): {
 					const events = eventGroups.filter(
 						(event) =>
 							event.worldEventTrackId === track.id ||
+							(event.worldEventTrackId &&
+								!validTrackIds.has(event.worldEventTrackId) &&
+								track.id === 'default') ||
 							(event.worldEventTrackId === null && track.id === 'default'),
 					)
 
@@ -184,7 +188,7 @@ const useEventTracks = ({ showHidden }: Props = {}): {
 						events,
 					}
 				}),
-		[eventGroups, tracks],
+		[eventGroups, tracks, validTrackIds],
 	)
 	const tracksWithHeights = useMemo(
 		(): typeof tracksWithEvents => calculateMarkerHeights(tracksWithEvents),

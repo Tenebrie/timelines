@@ -49,7 +49,21 @@ export function TimelineSelectionBox({ containerRef }: Props) {
 			lastIntersectionCheckTimestamp: 0,
 		}
 
+		const cancelDrag = () => {
+			setSelectionRect((prev) => ({
+				...prev,
+				visible: false,
+			}))
+			mouseState.canClick = false
+			mouseState.deltaX = 0
+			mouseState.deltaY = 0
+		}
+
 		const handleMouseDown = (event: MouseEvent) => {
+			if (event.button === 2) {
+				cancelDrag()
+				return
+			}
 			// Only handle left-click (button 0) for selection
 			if (event.button !== 0) {
 				return
@@ -65,6 +79,7 @@ export function TimelineSelectionBox({ containerRef }: Props) {
 			) {
 				return
 			}
+			mouseState.canClick = true
 			mouseState.isButtonDown = true
 			event.preventDefault()
 		}
@@ -88,14 +103,8 @@ export function TimelineSelectionBox({ containerRef }: Props) {
 				}
 			}
 
-			setSelectionRect((prev) => ({
-				...prev,
-				visible: false,
-			}))
+			cancelDrag()
 			mouseState.isButtonDown = false
-			mouseState.canClick = true
-			mouseState.deltaX = 0
-			mouseState.deltaY = 0
 		}
 
 		const handleMouseMove = (event: MouseEvent) => {

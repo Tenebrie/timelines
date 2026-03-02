@@ -27,7 +27,7 @@ export const TokenService = {
 			email: 'calliope@localhost',
 			service: 'calliope',
 		}
-		const token = jwt.sign(payload, SecretService.getSecret('jwt-secret'))
+		const token = jwt.sign(payload, SecretService.getSecret('jwt-secret'), { expiresIn: '365d' })
 		TokenService.cachedServiceToken = token
 		return token
 	},

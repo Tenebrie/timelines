@@ -1,9 +1,13 @@
 import Box from '@mui/material/Box'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { Outlet } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { DragDropPortalSlot } from './features/dragDrop/components/GhostWrapper'
+import { EventBusProvider } from './features/eventBus'
+import { globalEventBus } from './features/eventBus/eventBus'
 import { LostConnectionAlert } from './features/liveUpdates/components/LostConnectionAlert'
 import { useLiveUpdates } from './features/liveUpdates/hooks/useLiveUpdates'
 import { ModalsRenderer } from './features/modals/ModalsRenderer'
@@ -33,39 +37,60 @@ const App = () => {
 
 	useEffect(() => {
 		if (process.env.NODE_ENV === 'development') {
-			window.document.title = 'Timelines (Dev)'
-		} else if (window.location.hostname === 'staging.tenebrie.com') {
-			window.document.title = 'Timelines (Staging)'
+			window.document.title = 'Neverkin (Dev)'
+		} else if (
+			window.location.hostname === 'staging.tenebrie.com' ||
+			window.location.hostname === 'staging.neverkin.com'
+		) {
+			window.document.title = 'Neverkin (Staging)'
 		}
 	}, [])
 
+	useEffect(() => {
+		const clearMouseBusy = () => {
+			setTimeout(() => {
+				window.document.body.classList.remove('mouse-busy')
+			}, 1)
+		}
+		window.addEventListener('mouseup', clearMouseBusy)
+		window.addEventListener('mouseleave', clearMouseBusy)
+		return () => {
+			window.removeEventListener('mouseup', clearMouseBusy)
+			window.removeEventListener('mouseleave', clearMouseBusy)
+		}
+	})
+
 	return (
 		<div className="App">
-			<CustomThemeProvider>
-				<CustomThemeOverrides>
-					<Container>
-						<BaseNavigator />
-						<Box
-							sx={{
-								width: '100%',
-								height: 'calc(100vh - 50.5px)',
-								overflowY: 'auto',
-								...scrollbars,
-							}}
-						>
-							<Outlet />
-						</Box>
-						<ModalsRenderer />
-					</Container>
-					<LostConnectionAlert server="rhea" />
-					<LostConnectionAlert server="calliope" />
-				</CustomThemeOverrides>
-			</CustomThemeProvider>
-			<NavigationReceiverWrapper />
-			<DragDropPortalSlot />
-			<PageMetadata />
-			<TimelineZoomReporter />
-			{/* <SummonableDebug /> */}
+			<EventBusProvider bus={globalEventBus}>
+				<LocalizationProvider dateAdapter={AdapterDayjs}>
+					<CustomThemeProvider>
+						<CustomThemeOverrides>
+							<Container>
+								<BaseNavigator />
+								<Box
+									sx={{
+										width: '100%',
+										height: 'calc(100vh - 50.5px)',
+										overflowY: 'auto',
+										...scrollbars,
+									}}
+								>
+									<Outlet />
+								</Box>
+								<ModalsRenderer />
+							</Container>
+							<LostConnectionAlert server="rhea" />
+							<LostConnectionAlert server="calliope" />
+						</CustomThemeOverrides>
+					</CustomThemeProvider>
+					<NavigationReceiverWrapper />
+					<DragDropPortalSlot />
+					<PageMetadata />
+					<TimelineZoomReporter />
+					{/* <SummonableDebug /> */}
+				</LocalizationProvider>
+			</EventBusProvider>
 		</div>
 	)
 }

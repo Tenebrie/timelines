@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
-import { ModalContainer, ModalWrapper } from './styles'
+import { ModalBackdrop, ModalContainer } from './styles'
 
 type Props = {
 	visible: boolean
@@ -12,14 +12,20 @@ type Props = {
 	closeOnBackdropClick?: boolean
 }
 
-const Modal = ({ visible, children, onClose, closeOnBackdropClick }: Props) => {
+const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Props) => {
 	const bodyRef = useRef<HTMLDivElement | null>(null)
 
-	const isModalVisible = visible
+	const [isModalVisible, setIsModalVisible] = useState(false)
 	const [isModalRendered, setIsModalRendered] = useState(false)
 	const [modalRenderTimeout, setModalRenderTimeout] = useState<number | null>(null)
 
-	useShortcut(Shortcut.Escape, () => onClose('escapeKey'), isModalVisible && ShortcutPriorities.MODAL)
+	useShortcut(Shortcut.Escape, () => onClose('escapeKey'), isModalVisible && ShortcutPriorities.Modal)
+
+	useEffect(() => {
+		setTimeout(() => {
+			setIsModalVisible(visible)
+		}, 1)
+	}, [visible])
 
 	useEffect(() => {
 		if (isModalVisible && !isModalRendered) {
@@ -40,16 +46,51 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick }: Props) => {
 	}, [isModalRendered, isModalVisible])
 
 	const theme = useCustomTheme()
+	const isClickingRef = useRef(false)
+
+	const onMouseDown = useCallback(
+		(e: React.MouseEvent<HTMLDivElement>) => {
+			if (!closeOnBackdropClick || e.button !== 0) {
+				return
+			}
+			isClickingRef.current = true
+		},
+		[closeOnBackdropClick],
+	)
+
+	const onMouseUp = useCallback(
+		(e: React.MouseEvent<HTMLDivElement>) => {
+			if (!closeOnBackdropClick || e.button !== 0 || !isClickingRef.current) {
+				return
+			}
+			if (isClickingRef.current) {
+				onClose('backdropClick')
+			}
+			isClickingRef.current = false
+		},
+		[closeOnBackdropClick, onClose],
+	)
 
 	return (
-		<ModalWrapper
+		<ModalBackdrop
+			data-testid="ModalBackdrop"
 			className={isModalVisible ? 'visible' : ''}
-			onClick={closeOnBackdropClick ? () => onClose('backdropClick') : undefined}
+			onMouseDown={onMouseDown}
+			onMouseUp={onMouseUp}
+			onMouseLeave={() => (isClickingRef.current = false)}
 		>
-			<ModalContainer ref={bodyRef} $theme={theme} onClick={(e) => e.stopPropagation()}>
+			<ModalContainer
+				ref={bodyRef}
+				$theme={theme}
+				onMouseDown={(e) => {
+					e.stopPropagation()
+				}}
+				onMouseUp={(e) => e.stopPropagation()}
+				onClick={(e) => e.stopPropagation()}
+			>
 				{isModalRendered && children}
 			</ModalContainer>
-		</ModalWrapper>
+		</ModalBackdrop>
 	)
 }
 

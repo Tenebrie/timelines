@@ -11,43 +11,17 @@ import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { NavigationLink } from '@/app/components/NavigationLink'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
-import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 export const WorldSidebar = () => {
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 
-	const navigate = useStableNavigate({ from: '/world/$worldId' })
-
 	const matchesTimeline = useCheckRouteMatch('/world/$worldId/timeline')
-	const onTimelineClick = () => {
-		navigate({ to: '/world/$worldId/timeline', search: true })
-	}
-
 	const matchesMindmap = useCheckRouteMatch('/world/$worldId/mindmap')
-	const onMindmapClick = () => {
-		navigate({
-			to: '/world/$worldId/mindmap',
-			search: true,
-		})
-	}
-
 	const matchesWiki = useCheckRouteMatch('/world/$worldId/wiki')
-	const onWikiClick = () => {
-		navigate({
-			to: '/world/$worldId/wiki',
-			search: true,
-		})
-	}
-
 	const matchesSettings = useCheckRouteMatch('/world/$worldId/settings')
-	const onSettingsClick = () => {
-		navigate({
-			to: '/world/$worldId/settings',
-			search: true,
-		})
-	}
 
 	const getButtonStyle = useCallback((matches: boolean) => {
 		return matches ? 'contained' : 'text'
@@ -66,7 +40,7 @@ export const WorldSidebar = () => {
 			>
 				<Paper
 					style={{
-						zIndex: 3,
+						zIndex: 7,
 						position: 'absolute',
 						borderRadius: 0,
 						width: '72px',
@@ -81,24 +55,32 @@ export const WorldSidebar = () => {
 					elevation={2}
 				>
 					<Stack sx={{ gap: '8px', flexDirection: 'column' }}>
-						<StyledSmallButton variant={getButtonStyle(matchesTimeline)} onClick={onTimelineClick}>
-							<Home />
-						</StyledSmallButton>
+						<NavigationLink to="/world/$worldId/timeline" search={true} from="/world/$worldId">
+							<StyledSmallButton variant={getButtonStyle(matchesTimeline)}>
+								<Home />
+							</StyledSmallButton>
+						</NavigationLink>
 						{/* <StyledSmallButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}> 
 							<ViewList />
 						</StyledSmallButton> */}
-						<StyledSmallButton variant={getButtonStyle(matchesMindmap)} onClick={onMindmapClick}>
-							<Person />
-						</StyledSmallButton>
-						<StyledSmallButton variant={getButtonStyle(matchesWiki)} onClick={onWikiClick}>
-							<AutoStories />
-						</StyledSmallButton>
+						<NavigationLink to="/world/$worldId/mindmap" search={true} from="/world/$worldId">
+							<StyledSmallButton variant={getButtonStyle(matchesMindmap)}>
+								<Person />
+							</StyledSmallButton>
+						</NavigationLink>
+						<NavigationLink to="/world/$worldId/wiki" search={true} from="/world/$worldId">
+							<StyledSmallButton variant={getButtonStyle(matchesWiki)}>
+								<AutoStories />
+							</StyledSmallButton>
+						</NavigationLink>
 						{!isReadOnly && (
 							<>
 								<Divider />
-								<StyledSmallButton variant={getButtonStyle(matchesSettings)} onClick={onSettingsClick}>
-									<Settings />
-								</StyledSmallButton>
+								<NavigationLink to="/world/$worldId/settings" search={true} from="/world/$worldId">
+									<StyledSmallButton variant={getButtonStyle(matchesSettings)}>
+										<Settings />
+									</StyledSmallButton>
+								</NavigationLink>
 							</>
 						)}
 						{/* <StyledSmallButton> */}

@@ -10,6 +10,9 @@ export const TimelineZoomReporter = () => {
 	const isRouteMatch = useCheckRouteMatch('/world/$worldId/timeline')
 	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
 
+	// TODO: Scale level changes to history
+	// TODO: Do not push the same scale level multiple times (first load bug)
+	// TODO: Delete when selected marker is revoke to unrevoke instead of delete event
 	useEffect(() => {
 		if (!isRouteMatch) {
 			return

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { CustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
-export const ModalWrapper = styled.div`
+export const ModalBackdrop = styled.div`
 	position: fixed;
 	top: 0;
 	left: 0;

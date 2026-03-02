@@ -55,17 +55,12 @@ export const CreateActorModal = () => {
 		}
 
 		close()
-
-		// Navigate to the newly created actor
-		setTimeout(() => {
-			navigate({
-				search: (prev) => ({
-					...prev,
-					navi: [`actor-${createdActor.id}`],
-					new: undefined,
-				}),
-			})
-		}, 100)
+		navigate({
+			search: (prev) => ({
+				...prev,
+				new: undefined,
+			}),
+		})
 	}
 
 	const onCloseAttempt = () => {
@@ -73,6 +68,12 @@ export const CreateActorModal = () => {
 			return
 		}
 		close()
+		navigate({
+			search: (prev) => ({
+				...prev,
+				new: undefined,
+			}),
+		})
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], onConfirm, isOpen)

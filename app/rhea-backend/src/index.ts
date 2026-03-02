@@ -9,6 +9,8 @@ import { AdminRouter } from './routers/AdminRouter.js'
 import { AnnouncementRouter } from './routers/AnnouncementRouter.js'
 import { AssetUploadRouter } from './routers/AssetRouter.js'
 import { AuthRouter } from './routers/AuthRouter.js'
+import { CalendarPresentationRouter } from './routers/CalendarPresentationRouter.js'
+import { CalendarRouter } from './routers/CalendarRouter.js'
 import { ConstantsRouter } from './routers/ConstantsRouter.js'
 import { HealthRouter, HealthStatus } from './routers/HealthRouter.js'
 import { IconsRouter } from './routers/IconsRouter.js'
@@ -24,6 +26,8 @@ import { WorldEventRouter } from './routers/WorldEventRouter.js'
 import { WorldEventTrackRouter } from './routers/WorldEventTrackRouter.js'
 import { WorldRouter } from './routers/WorldRouter.js'
 import { WorldSearchRouter } from './routers/WorldSearchRouter.js'
+import { WorldShareRouter } from './routers/WorldShareRouter.js'
+import { WorldShareVisitRouter } from './routers/WorldShareVisitRouter.js'
 import { WorldThumbnailRouter } from './routers/WorldThumbnailRouter.js'
 import { WorldWikiRouter } from './routers/WorldWikiRouter.js'
 import { CloudStorageService } from './services/CloudStorageService.js'
@@ -49,6 +53,8 @@ useApiHeader({
 	version: '1.0.0',
 })
 
+app.proxy = true
+
 app
 	.use(HttpErrorHandler)
 	.use(
@@ -69,6 +75,10 @@ app
 	.use(AssetUploadRouter.allowedMethods())
 	.use(AuthRouter.routes())
 	.use(AuthRouter.allowedMethods())
+	.use(CalendarRouter.routes())
+	.use(CalendarRouter.allowedMethods())
+	.use(CalendarPresentationRouter.routes())
+	.use(CalendarPresentationRouter.allowedMethods())
 	.use(ConstantsRouter.routes())
 	.use(ConstantsRouter.allowedMethods())
 	.use(HealthRouter.routes())
@@ -97,6 +107,10 @@ app
 	.use(WorldColorRouter.allowedMethods())
 	.use(WorldSearchRouter.routes())
 	.use(WorldSearchRouter.allowedMethods())
+	.use(WorldShareRouter.routes())
+	.use(WorldShareRouter.allowedMethods())
+	.use(WorldShareVisitRouter.routes())
+	.use(WorldShareVisitRouter.allowedMethods())
 	.use(WorldThumbnailRouter.routes())
 	.use(WorldThumbnailRouter.allowedMethods())
 	.use(WorldWikiRouter.routes())

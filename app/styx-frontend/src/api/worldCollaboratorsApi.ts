@@ -10,14 +10,6 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/collaborators` }),
 				providesTags: ['worldCollaborators'],
 			}),
-			shareWorld: build.mutation<ShareWorldApiResponse, ShareWorldApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/share`,
-					method: 'POST',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['worldCollaborators'],
-			}),
 			unshareWorld: build.mutation<UnshareWorldApiResponse, UnshareWorldApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/share/${queryArg.userId}`,
@@ -41,15 +33,6 @@ export type GetWorldCollaboratorsApiArg = {
 	/** Any string value */
 	worldId: string
 }
-export type ShareWorldApiResponse = unknown
-export type ShareWorldApiArg = {
-	/** Any string value */
-	worldId: string
-	body: {
-		userEmails: string[]
-		access: 'ReadOnly' | 'Editing'
-	}
-}
 export type UnshareWorldApiResponse = unknown
 export type UnshareWorldApiArg = {
 	/** Any string value */
@@ -57,9 +40,5 @@ export type UnshareWorldApiArg = {
 	/** Any string value */
 	userId: string
 }
-export const {
-	useGetWorldCollaboratorsQuery,
-	useLazyGetWorldCollaboratorsQuery,
-	useShareWorldMutation,
-	useUnshareWorldMutation,
-} = injectedRtkApi
+export const { useGetWorldCollaboratorsQuery, useLazyGetWorldCollaboratorsQuery, useUnshareWorldMutation } =
+	injectedRtkApi

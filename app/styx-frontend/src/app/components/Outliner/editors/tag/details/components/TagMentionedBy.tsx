@@ -1,4 +1,4 @@
-import { useGetTagDetailsQuery } from '@api/otherApi'
+import { useGetTagDetailsQuery } from '@api/worldTagApi'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Stack from '@mui/material/Stack'

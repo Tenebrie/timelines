@@ -25,12 +25,14 @@
 				"clock": "LOCAL"
 			},
 			"retention": {
-				"policyKeepLastN": 4,
-				"policyKeepHourly": 24,
-				"policyKeepDaily": 7,
-				"policyKeepWeekly": 4,
-				"policyKeepMonthly": 12,
-				"policyKeepYearly": 3
+				"policyTimeBucketed": {
+					"keepLastN": 4,
+					"hourly": 24,
+					"daily": 7,
+					"weekly": 4,
+					"monthly": 12,
+					"yearly": 3
+				}
 			},
 			"hooks": [
 				{

@@ -22,7 +22,7 @@ export const useLoadWorldInfo = (worldId: string) => {
 
 	const isLoaded = useSelector(getWorldStateLoaded)
 
-	const { loadWorld, setUnauthorized } = worldSlice.actions
+	const { loadWorld, unloadWorld, setUnauthorized } = worldSlice.actions
 	const { loadArticles } = wikiSlice.actions
 	const dispatch = useDispatch()
 
@@ -31,6 +31,10 @@ export const useLoadWorldInfo = (worldId: string) => {
 			dispatch(setUnauthorized(true))
 		}
 	}, [dispatch, error, setUnauthorized])
+
+	useEffect(() => {
+		dispatch(unloadWorld())
+	}, [dispatch, unloadWorld, worldId])
 
 	useEffect(() => {
 		if (!data) {

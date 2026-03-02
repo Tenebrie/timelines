@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useCheckAuthenticationQuery } from '@/api/authApi'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
+import { preferencesSlice } from '../../preferences/PreferencesSlice'
 import { authSlice } from '../AuthSlice'
 import { getAuthState } from '../AuthSliceSelectors'
 
 type ReturnType = {
 	success: boolean
-	redirectTo?: '/home' | '/login' | '/register' | undefined
+	redirectTo?: '/' | '/login' | '/create-account' | undefined
 }
 
 export const useAuthCheck = (): ReturnType => {
@@ -22,6 +23,7 @@ export const useAuthCheck = (): ReturnType => {
 			a.isLoaded === b.isLoaded && a.accessMode === b.accessMode && a.isUnauthorized === b.isUnauthorized,
 	)
 	const { setUser, setSessionId } = authSlice.actions
+	const { setReduceAnimations } = preferencesSlice.actions
 	const dispatch = useDispatch()
 
 	useEffect(() => {
@@ -32,14 +34,18 @@ export const useAuthCheck = (): ReturnType => {
 		dispatch(setSessionId(data.sessionId))
 		if (data.authenticated && 'user' in data) {
 			dispatch(setUser(data.user))
+			const email = data.user.email
+			if (email.endsWith('@localhost') && email.startsWith('playwright-')) {
+				dispatch(setReduceAnimations(true))
+			}
 		}
-	}, [data, error, dispatch, setSessionId, setUser])
+	}, [data, error, dispatch, setSessionId, setUser, setReduceAnimations])
 
 	if (isAuthenticating) {
 		return { success: true }
 	}
 
-	const publicRoutes = ['/login', '/register']
+	const publicRoutes = ['/login', '/create-account', '/share/']
 	if (publicRoutes.some((r) => window.location.pathname.startsWith(r))) {
 		return { success: true }
 	}

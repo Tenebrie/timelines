@@ -2,7 +2,10 @@ import crypto from 'crypto'
 
 // In-memory store for OAuth flow (for production, consider Redis or DB)
 // These are short-lived, so in-memory is fine for most cases
-const authorizationCodes = new Map<string, { userId: string; codeChallenge: string; expiresAt: number }>()
+const authorizationCodes = new Map<
+	string,
+	{ userId: string; codeChallenge: string; expiresAt: number; clientId: string; redirectUri: string }
+>()
 const accessTokens = new Map<string, { userId: string; expiresAt: number }>()
 const registeredClients = new Map<string, { clientName: string; redirectUris: string[] }>()
 
@@ -20,6 +23,11 @@ setInterval(() => {
 export const OAuthService = {
 	loginEnforced: (): boolean => {
 		return process.env.REQUIRE_OAUTH !== 'false'
+	},
+
+	validateRedirectUri: (clientId: string, redirectUri: string): boolean => {
+		const client = registeredClients.get(clientId)
+		return !!client && client.redirectUris.includes(redirectUri)
 	},
 
 	/**
@@ -42,11 +50,23 @@ export const OAuthService = {
 	/**
 	 * Generate an authorization code for PKCE flow
 	 */
-	createAuthorizationCode: (userId: string, codeChallenge: string): string => {
+	createAuthorizationCode: ({
+		userId,
+		codeChallenge,
+		clientId,
+		redirectUri,
+	}: {
+		userId: string
+		codeChallenge: string
+		clientId: string
+		redirectUri: string
+	}): string => {
 		const code = crypto.randomUUID()
 		authorizationCodes.set(code, {
 			userId,
 			codeChallenge,
+			clientId,
+			redirectUri,
 			expiresAt: Date.now() + 10 * 60 * 1000, // 10 minutes
 		})
 		return code
@@ -55,11 +75,27 @@ export const OAuthService = {
 	/**
 	 * Exchange authorization code for access token (with PKCE verification)
 	 */
-	exchangeCodeForToken: (code: string, codeVerifier: string): string | null => {
+	exchangeCodeForToken: ({
+		code,
+		codeVerifier,
+		clientId,
+		redirectUri,
+	}: {
+		code: string
+		codeVerifier: string
+		clientId: string
+		redirectUri: string
+	}): string | null => {
 		const authData = authorizationCodes.get(code)
-		if (!authData) return null
+		if (!authData) {
+			return null
+		}
 		if (authData.expiresAt < Date.now()) {
 			authorizationCodes.delete(code)
+			return null
+		}
+
+		if (authData.clientId !== clientId || authData.redirectUri !== redirectUri) {
 			return null
 		}
 

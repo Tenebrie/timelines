@@ -1,13 +1,13 @@
-import { WorldCalendarType } from '@api/types/worldTypes'
 import { useCallback, useDebugValue, useMemo } from 'react'
+import { useSelector } from 'react-redux'
 
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
+import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'
 
 import { useTimelineLevelScalar } from './useTimelineLevelScalar'
 
 type Props = {
 	scaleLevel: ScaleLevel
-	calendar: WorldCalendarType
 }
 
 export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
@@ -100,4 +100,9 @@ export const useTimelineWorldTime = ({ scaleLevel }: Props) => {
 		scaledTimeToRealTime,
 		realTimeToScaledTime,
 	}
+}
+
+export const useCurrentTimelineWorldTime = () => {
+	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
+	return useTimelineWorldTime({ scaleLevel })
 }

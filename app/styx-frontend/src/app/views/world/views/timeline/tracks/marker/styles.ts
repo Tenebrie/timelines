@@ -26,83 +26,14 @@ export const BaseMarker = styled.div<{
 `
 
 export const Marker = styled(BaseMarker)`
-	&:hover > .icon {
-		color: ${(props) => (props.$theme.mode === 'dark' ? colors.green[500] : colors.green[800])};
+	&:hover > .hover-highlight {
+		background: ${(props) => (props.$theme.mode === 'dark' ? '#ffffff20' : '#00000030')};
 	}
-	&:hover > .image {
-		background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[500] : colors.green[800])};
+	&:active > .active-highlight {
+		background: ${(props) => (props.$theme.mode === 'dark' ? '#ffffff20' : '#00000030')};
 	}
-	&:active > .icon {
-		color: ${(props) => (props.$theme.mode === 'dark' ? colors.green[600] : colors.green[900])};
-	}
-	&:active > .image {
-		background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[600] : colors.green[900])};
-	}
-	&.edited {
-		box-shadow: ${(props) => {
-			const color = props.$theme.mode === 'dark' ? colors.green[500] : colors.green[900]
-			return `0 0 4px 4px ${color}`
-		}};
-	}
-	&.selected {
-		background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[500] : colors.green[900])};
-		& > .icon {
-			background: ${(props) => (props.$theme.mode === 'dark' ? colors.green[900] : colors.green[500])};
-		}
-	}
-`
-
-export const MarkerDelta = styled(Marker)`
-	&:hover > .icon {
-		color: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[900])};
-	}
-	&:hover > .image {
-		background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[900])};
-	}
-	&:active > .icon {
-		color: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[600] : colors.yellow['A100'])};
-	}
-	&:active > .image {
-		background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[600] : colors.yellow['A100'])};
-	}
-	&.edited {
-		box-shadow: ${(props) => {
-			const color = props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[700]
-			return `0 0 4px 4px ${color}`
-		}};
-	}
-	&.selected {
-		background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[500] : colors.yellow[900])};
-		& > .icon {
-			background: ${(props) => (props.$theme.mode === 'dark' ? colors.yellow[900] : colors.yellow[500])};
-		}
-	}
-`
-
-export const MarkerRevoked = styled(Marker)`
-	&:hover > .icon {
-		color: ${(props) => (props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900])};
-	}
-	&:hover > .image {
-		background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900])};
-	}
-	&:active > .icon {
-		color: ${(props) => (props.$theme.mode === 'dark' ? colors.red[500] : colors.red['A100'])};
-	}
-	&:active > .image {
-		background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[500] : colors.red['A100'])};
-	}
-	&.edited {
-		box-shadow: ${(props) => {
-			const color = props.$theme.mode === 'dark' ? colors.red[400] : colors.red[900]
-			return `0 0 4px 4px ${color}`
-		}};
-	}
-	&.selected {
-		background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[300] : colors.red[900])};
-		& > .icon {
-			background: ${(props) => (props.$theme.mode === 'dark' ? colors.red[900] : colors.red[300])};
-		}
+	&.selected > .selection-highlight {
+		opacity: 0.3;
 	}
 `
 
@@ -116,6 +47,7 @@ export const MarkerIcon = styled.div`
 	width: calc(100%);
 	height: calc(100%);
 	display: flex;
+	border-radius: inherit;
 	align-items: center;
 	justify-content: center;
 	transition:

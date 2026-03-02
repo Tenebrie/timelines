@@ -1,4 +1,4 @@
-import { useGetMindmapQuery } from '@api/otherApi'
+import { useGetMindmapQuery } from '@api/mindmapApi'
 import Stack from '@mui/material/Stack'
 import { Outlet, useSearch } from '@tanstack/react-router'
 import { useEffect } from 'react'
@@ -16,10 +16,11 @@ import { WorldSidebar } from './components/sidebar/WorldSidebar'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
 import { CreateActorModal } from './modals/CreateActorModal'
 import { CreateEventModal } from './modals/CreateEventModal'
+import { DeleteActorModal } from './modals/DeleteActorModal'
 import { DeleteEventDeltaModal } from './modals/DeleteEventDeltaModal'
 import { DeleteEventModal } from './modals/DeleteEventModal'
 import { EditEventModal } from './modals/editEventModal/EditEventModal'
-import { MarkerTooltipSummoner } from './views/timeline/MarkerTooltip'
+import { MarkerTooltipSummoner } from './views/timeline/utils/MarkerTooltip'
 import { getTimelineState, getWorldState } from './WorldSliceSelectors'
 
 export const World = () => {
@@ -61,6 +62,7 @@ export const World = () => {
 					height: '100%',
 					display: 'flex',
 					flexDirection: 'column',
+					overflow: 'hidden',
 				}}
 			>
 				<Stack direction="row" width="100%" height="100%">
@@ -85,6 +87,7 @@ export const World = () => {
 			<MarkerTooltipSummoner />
 			<CreateEventModal />
 			<CreateActorModal />
+			<DeleteActorModal />
 		</>
 	)
 }

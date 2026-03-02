@@ -1,4 +1,4 @@
-import { useSearch } from '@tanstack/react-router'
+import { useParams, useSearch } from '@tanstack/react-router'
 import { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -14,15 +14,19 @@ export function TimelinePrePositioner({ setOpacity }: Props) {
 		from: '/world/$worldId/_world',
 		select: (search) => search.time,
 	})
-	const { isLoaded } = useSelector(
+	const viewedWorldId = useParams({
+		from: '/world/$worldId/_world',
+		select: (params) => params.worldId,
+	})
+	const { id: loadedWorldId, isLoaded } = useSelector(
 		getWorldState,
-		(a, b) => a.calendar === b.calendar && a.timeOrigin === b.timeOrigin && a.isLoaded === b.isLoaded,
+		(a, b) => a.id === b.id && a.timeOrigin === b.timeOrigin && a.isLoaded === b.isLoaded,
 	)
 	const scrollTimelineTo = useEventBusDispatch['timeline/requestScrollTo']()
 
 	const isShown = useRef(false)
 	useEffect(() => {
-		if (isShown.current || !isLoaded) {
+		if (isShown.current || !isLoaded || viewedWorldId !== loadedWorldId) {
 			return
 		}
 		isShown.current = true
@@ -33,7 +37,7 @@ export function TimelinePrePositioner({ setOpacity }: Props) {
 		requestIdleCallback(() => {
 			setOpacity(1)
 		})
-	}, [isLoaded, scrollTimelineTo, selectedTime, setOpacity])
+	}, [isLoaded, loadedWorldId, scrollTimelineTo, selectedTime, setOpacity, viewedWorldId])
 
 	return null
 }

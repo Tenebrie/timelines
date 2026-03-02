@@ -8,14 +8,15 @@ import { BaseMentionChip } from './BaseMentionChip'
 type Props = {
 	worldId: string
 	articleId: string
+	fallbackName?: string
 }
 
-export const ArticleMentionChip = ({ worldId, articleId }: Props) => {
+export const ArticleMentionChip = ({ worldId, articleId, fallbackName }: Props) => {
 	const navigateTo = useEventBusDispatch['world/requestNavigation']()
 	const { articles } = useSelector(getWikiState, (a, b) => a.articles === b.articles)
 
 	const article = articles.find((article) => article.id === articleId)
-	const articleName = article ? `${article.name}` : 'Unknown Article'
+	const articleName = article ? `${article.name}` : `Deleted Article (${fallbackName ?? 'Unknown'})`
 	const articleColor = article ? '#525' : undefined
 
 	const onClick = () => {

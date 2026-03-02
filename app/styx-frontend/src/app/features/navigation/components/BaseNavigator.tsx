@@ -1,6 +1,5 @@
 import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings'
 import Construction from '@mui/icons-material/Construction'
-import Home from '@mui/icons-material/Home'
 import PublicIcon from '@mui/icons-material/Public'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -9,11 +8,14 @@ import Stack from '@mui/material/Stack'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+
 import { AnnouncementView } from '../../announcements/AnnouncementView'
 import { getAuthState } from '../../auth/AuthSliceSelectors'
 import { SmallProfile } from '../../auth/smallProfile/SmallProfile'
 import { ThemeModeToggle } from '../../theming/components/ThemeModeToggle'
 import { CustomTheme, useCustomTheme } from '../../theming/hooks/useCustomTheme'
+import { HomeNavigatorButton } from './HomeNavigatorButton'
 import { LastWorldNavigatorButton } from './LastWorldNavigatorButton'
 import { NavigatorButton } from './NavigatorButton'
 import { WorldSelectorButton } from './WorldSelectorButton'
@@ -25,6 +27,7 @@ const Container = styled(Paper)<{ $theme: CustomTheme }>`
 	display: flex;
 	justify-content: space-between;
 	border-radius: 0 !important;
+	transition: background-color 1.3s;
 	z-index: 10;
 	padding: 4px 8px;
 `
@@ -32,6 +35,11 @@ const Container = styled(Paper)<{ $theme: CustomTheme }>`
 export const BaseNavigator = () => {
 	const { user } = useSelector(getAuthState)
 	const theme = useCustomTheme()
+
+	const isShareLinkRoute = useCheckRouteMatch('/share/$shareLinkSlug')
+	if (isShareLinkRoute && !user) {
+		return null
+	}
 
 	return (
 		<Container $theme={theme}>
@@ -42,8 +50,8 @@ export const BaseNavigator = () => {
 						<LastWorldNavigatorButton icon={<PublicIcon />} label="World" />
 					</Stack>
 					<Divider orientation="vertical" sx={{ height: '25px' }} />
-					<NavigatorButton route="/home" icon={<Home />} label="Home" disabled={!user} />
-					<NavigatorButton route="/tools" icon={<Construction />} label="Tools" />
+					<HomeNavigatorButton disabled={!user} />
+					<NavigatorButton route="/tools" icon={<Construction />} label="Tools" disabled={!user} />
 					{user?.level === 'Admin' && (
 						<NavigatorButton route="/admin" icon={<AdminPanelSettings />} label="Admin" />
 					)}

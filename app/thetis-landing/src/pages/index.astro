@@ -1,0 +1,1204 @@
+---
+import Layout from '~/layouts/PageLayout.astro'
+import { Image } from 'astro:assets'
+import devPhoto from '~/assets/images/dev-photo.jpg'
+
+import Hero from '~/components/widgets/Hero.astro'
+import Features from '~/components/widgets/Features.astro'
+import Features2 from '~/components/widgets/Features2.astro'
+import Steps from '~/components/widgets/Steps.astro'
+import Content from '~/components/widgets/Content.astro'
+import FAQs from '~/components/widgets/FAQs.astro'
+import Stats from '~/components/widgets/Stats.astro'
+import CallToAction from '~/components/widgets/CallToAction.astro'
+import Testimonials from '~/components/widgets/Testimonials.astro'
+
+const metadata = {
+	title: 'Neverkin — Collaborative Worldbuilding for Writers & Game Masters',
+	ignoreTitleTemplate: true,
+	description:
+		'The free, open-source collaborative worldbuilding platform. Organize timelines, characters, lore, and interconnected stories in real-time — built for writers, game masters, and creators.',
+}
+---
+
+<Layout metadata={metadata}>
+	<!-- JSON-LD Structured Data for SEO -->
+	<script is:inline type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "SoftwareApplication",
+			"name": "Neverkin",
+			"applicationCategory": "ProductivityApplication",
+			"operatingSystem": "Web",
+			"url": "https://neverkin.com",
+			"description": "The free, open-source collaborative worldbuilding platform. Organize timelines, characters, lore, and interconnected stories in real-time.",
+			"offers": {
+				"@type": "Offer",
+				"price": "0",
+				"priceCurrency": "USD"
+			},
+			"author": {
+				"@type": "Person",
+				"name": "Maija L.",
+				"url": "https://github.com/tenebrie"
+			},
+			"license": "https://opensource.org/licenses/GPL-3.0"
+		}
+	</script>
+
+	<!-- ==================== HERO ==================== -->
+	<Hero
+		actions={[
+			{
+				variant: 'primary',
+				text: 'Start Building Your World',
+				href: 'https://app.neverkin.com',
+				icon: 'tabler:sparkles',
+			},
+			{ text: 'See How It Works', href: '#how-it-works' },
+		]}
+	>
+		<Fragment slot="title">
+			Every great story deserves<br />
+			<span class="text-primary">a world that remembers</span>
+		</Fragment>
+
+		<Fragment slot="subtitle">
+			<span class="hidden sm:inline">
+				<span class="font-semibold">Neverkin</span> is the collaborative worldbuilding platform for writers, game
+				masters, and creators.</span
+			>
+			<span class="block mb-1 sm:hidden font-bold text-primary">Neverkin: Your worlds, organized.</span>
+			Manage your timelines, characters, lore, and interconnected stories - all in real-time with your friends.
+		</Fragment>
+
+		<Fragment slot="content">
+			<div
+				class="mt-8 flex justify-center intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+			>
+				<div
+					class="relative w-full max-w-4xl rounded-2xl border border-slate-700/30 bg-[#0c0e18]/90 shadow-2xl shadow-purple-900/20 overflow-hidden ring-1 ring-white/[0.03]"
+				>
+					<!-- App top bar -->
+					<div class="flex items-center gap-3 px-4 py-2 border-b border-slate-700/20 bg-slate-900/30">
+						<span class="text-xs font-semibold text-white bg-purple-600/70 px-3 py-1 rounded-md tracking-wide"
+							>World</span
+						>
+						<span class="text-xs text-slate-700">&middot;</span>
+						<span class="text-xs text-slate-500">Home</span>
+						<span class="text-xs text-slate-700">&middot;</span>
+						<span class="text-xs text-slate-500">Tools</span>
+						<div class="flex-1"></div>
+						<div class="w-7 h-7 rounded-full bg-slate-700/40 flex items-center justify-center">
+							<svg class="w-3.5 h-3.5 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+								<path
+									fill-rule="evenodd"
+									d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+									clip-rule="evenodd"></path>
+							</svg>
+						</div>
+					</div>
+					<div class="flex">
+						<!-- Left sidebar icons -->
+						<div class="hidden md:flex flex-col items-center gap-2 py-4 px-2.5 border-r border-slate-700/20">
+							<div class="w-10 h-10 rounded-lg bg-purple-500/12 flex items-center justify-center">
+								<svg
+									class="w-[18px] h-[18px] text-purple-400/80"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.5"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M2.25 12l8.954-8.955a1.126 1.126 0 011.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+									></path>
+								</svg>
+							</div>
+							<div class="w-10 h-10 rounded-lg bg-slate-800/30 flex items-center justify-center">
+								<svg
+									class="w-[18px] h-[18px] text-slate-600"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.5"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
+									></path>
+								</svg>
+							</div>
+							<div class="w-10 h-10 rounded-lg bg-slate-800/30 flex items-center justify-center">
+								<svg
+									class="w-[18px] h-[18px] text-slate-600"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.5"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+									></path>
+								</svg>
+							</div>
+						</div>
+						<!-- Main timeline area -->
+						<div class="flex-1 px-4 py-4 md:px-5 md:py-5">
+							<div class="text-xs font-medium text-slate-400 mb-4 tracking-wide uppercase">Tracks</div>
+							<!-- Tracks container -->
+							<div class="relative py-2">
+								<!-- Vertical playhead -->
+								<div
+									class="absolute top-0 bottom-0 left-[42%] sm:left-[calc(42%+32px)] w-px bg-slate-500/25 z-10"
+								>
+								</div>
+								<!-- Track rows -->
+								<div class="space-y-4">
+									<!-- Track: Main Plot -->
+									<div class="flex items-center gap-3">
+										<span
+											class="text-[11px] text-slate-600 w-16 text-right shrink-0 hidden sm:block font-medium"
+											>Main Plot</span
+										>
+										<div class="flex-1 relative h-7">
+											<div
+												class="absolute left-0 right-0 top-1/2 h-[2px] -translate-y-1/2 bg-purple-500/50 rounded-full"
+											>
+											</div>
+											<div
+												class="absolute w-6 h-6 rounded bg-purple-600/60 border border-purple-400/30 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-purple-900/30"
+												style="left: 12%"
+											>
+												<span>&#x2694;&#xFE0F;</span>
+											</div>
+											<div
+												class="absolute w-6 h-6 rounded bg-purple-600/60 border border-purple-400/30 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-purple-900/30"
+												style="left: 36%"
+											>
+												<span>&#x1F525;</span>
+											</div>
+											<div
+												class="absolute w-6 h-6 rounded bg-purple-600/60 border border-purple-400/30 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-purple-900/30"
+												style="left: 62%"
+											>
+												<span>&#x1F4DC;</span>
+											</div>
+											<div
+												class="absolute w-6 h-6 rounded bg-purple-600/60 border border-purple-400/30 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-purple-900/30"
+												style="left: 82%"
+											>
+												<span>&#x2694;&#xFE0F;</span>
+											</div>
+										</div>
+									</div>
+									<!-- Track: Kael's Arc -->
+									<div class="flex items-center gap-3">
+										<span
+											class="text-[11px] text-slate-600 w-16 text-right shrink-0 hidden sm:block font-medium"
+											>Kael's Arc</span
+										>
+										<div class="flex-1 relative h-7">
+											<div
+												class="absolute left-0 right-0 top-1/2 h-[2px] -translate-y-1/2 bg-pink-500/40 rounded-full"
+											>
+											</div>
+											<div
+												class="absolute w-6 h-6 rounded bg-pink-600/50 border border-pink-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-pink-900/30"
+												style="left: 24%"
+											>
+												<span>&#x1F5E1;&#xFE0F;</span>
+											</div>
+											<div
+												class="absolute w-6 h-6 rounded bg-pink-600/50 border border-pink-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-pink-900/30"
+												style="left: 48%"
+											>
+												<span>&#x2764;&#xFE0F;</span>
+											</div>
+											<div
+												class="absolute w-6 h-6 rounded bg-pink-600/50 border border-pink-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-pink-900/30"
+												style="left: 70%"
+											>
+												<span>&#x1F49B;</span>
+											</div>
+										</div>
+									</div>
+									<!-- Track: World -->
+									<div class="flex items-center gap-3">
+										<span
+											class="text-[11px] text-slate-600 w-16 text-right shrink-0 hidden sm:block font-medium"
+											>World</span
+										>
+										<div class="flex-1 relative h-7">
+											<div
+												class="absolute left-0 right-0 top-1/2 h-[2px] -translate-y-1/2 bg-teal-500/40 rounded-full"
+											>
+											</div>
+											<div
+												class="absolute w-6 h-6 rounded bg-teal-600/50 border border-teal-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-teal-900/30"
+												style="left: 8%"
+											>
+												<span>&#x1F319;</span>
+											</div>
+											<div
+												class="absolute w-6 h-6 rounded bg-teal-600/50 border border-teal-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-teal-900/30"
+												style="left: 28%"
+											>
+												<span>&#x2699;&#xFE0F;</span>
+											</div>
+											<div
+												class="absolute w-6 h-6 rounded bg-teal-600/50 border border-teal-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-teal-900/30"
+												style="left: 55%"
+											>
+												<span>&#x2620;&#xFE0F;</span>
+											</div>
+											<div
+												class="absolute w-6 h-6 rounded bg-teal-600/50 border border-teal-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-teal-900/30"
+												style="left: 73%"
+											>
+												<span>&#x1F319;</span>
+											</div>
+											<div
+												class="absolute w-6 h-6 rounded bg-teal-600/50 border border-teal-400/25 top-1/2 -translate-y-1/2 -translate-x-1/2 flex items-center justify-center text-[10px] shadow-sm shadow-teal-900/30"
+												style="left: 92%"
+											>
+												<span>&#x26A1;</span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Year axis -->
+								<div class="mt-4 pt-2 border-t border-slate-700/15 sm:ml-[76px]">
+									<div class="flex justify-between text-[10px] text-slate-700">
+										<span>Year 800</span>
+										<span>820</span>
+										<span>840</span>
+										<span class="text-purple-400/80 font-semibold">847</span>
+										<span>860</span>
+										<span>880</span>
+										<span>900</span>
+									</div>
+								</div>
+							</div>
+							<!-- Status text -->
+							<div class="text-center mt-3 pb-1">
+								<span class="text-xs text-purple-400/50 tracking-wide"
+									>Year 847, Age of Storms &mdash; The Fall of Everheim</span
+								>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</Fragment>
+		<Fragment slot="bg">
+			<div class="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-transparent to-transparent"></div>
+			<div
+				class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-purple-600/5 rounded-full blur-3xl"
+			>
+			</div>
+		</Fragment>
+	</Hero>
+
+	<!-- ==================== STATS / HIGHLIGHTS ==================== -->
+	<Stats
+		stats={[
+			{ title: 'No Paywalls', amount: '100% Free', icon: 'tabler:heart' },
+			{ title: 'No Artificial Limitations', amount: 'Unlimited', icon: 'tabler:infinity' },
+			{ title: 'Of Active Development', amount: '4+ Years', icon: 'tabler:code' },
+			{ title: 'Performance Focus', amount: '240+ fps', icon: 'tabler:bolt' },
+		]}
+	/>
+
+	<!-- ==================== KEY FEATURES ==================== -->
+	<Features
+		id="features"
+		tagline="Core Features"
+		title="Everything you need to build living worlds"
+		subtitle="Neverkin brings structure to the creative chaos of worldbuilding — without getting in the way of your imagination."
+		items={[
+			{
+				title: 'Interactive Timelines',
+				description:
+					'Plot events on a visual timeline across billions of years. See how storylines interact, overlap, and evolve across time.',
+				icon: 'tabler:timeline',
+			},
+			// {
+			// 	title: 'Deep Character Management',
+			// 	description:
+			// 		'Create rich character profiles with relationships, arcs, and a visual mindmap showing how everyone connects.',
+			// 	icon: 'tabler:users',
+			// },
+			{
+				title: 'Living Wiki',
+				description:
+					'Build a hierarchical wiki for your lore. Cross-reference characters, events, locations - everything links to everything.',
+				icon: 'tabler:book',
+			},
+			{
+				title: 'Real-Time Collaboration',
+				description:
+					'Invite co-authors and collaborators. Edit simultaneously with live sync - perfect for writing groups and TTRPG tables.',
+				icon: 'tabler:arrows-exchange',
+			},
+			{
+				title: 'Custom Calendars',
+				description:
+					"Earth years too boring? Define your own wild calendar and unprecedented time units. It's not just a reflavor. Esoteric calendars allowed.",
+				icon: 'tabler:calendar',
+			},
+			{
+				title: 'AI Integration',
+				description:
+					'Connect your favorite AI assistant via the built-in MCP server. Let AI agents create events and write down your notes - all hands-free.',
+				icon: 'tabler:robot',
+			},
+			{
+				title: 'Free & Open Source',
+				description:
+					"No hidden costs, no feature gates, no vendor lock-in. Self-host or use the hosted version. It's a tool, not a product.",
+				icon: 'tabler:lock-open',
+			},
+		]}
+	/>
+
+	<!-- ==================== SHOWCASE: TIMELINE ==================== -->
+	<Content
+		isReversed
+		tagline="Showcase"
+		id="showcase"
+		title="Weave your narrative threads into a tapestry"
+		items={[
+			{
+				title: 'Multi-track timelines',
+				description:
+					'Organize events into separate storyline tracks - main plot, character arcs, background events - all on one visual canvas.',
+			},
+			{
+				title: 'Near-infinite duration',
+				description:
+					"Tell an epic story across billions of years of history. Scroll across millennia like it's nothing.",
+			},
+			{
+				title: 'Flexible calendar systems',
+				description:
+					'Ships with Earth, Dorian, Golarion, Rimworld calendar presets and more. Modify a template or define your own time system from scratch.',
+			},
+		]}
+	>
+		<Fragment slot="content">
+			<h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+				Timelines that tell a story
+			</h3>
+			See the full sweep of your world's history at a glance, from creation myths to yesterday's tavern brawl.
+		</Fragment>
+
+		<Fragment slot="bg">
+			<div class="absolute inset-0 bg-purple-950/20 dark:bg-purple-950/30"></div>
+		</Fragment>
+
+		<Fragment slot="image">
+			<div
+				class="rounded-xl border border-slate-700/50 bg-slate-900/80 backdrop-blur-sm shadow-xl overflow-hidden p-5"
+			>
+				<div class="space-y-3">
+					<div class="flex items-center gap-3 mb-4">
+						<div class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></div>
+						<span class="text-sm text-slate-300 font-medium">The War of Shattered Crowns</span>
+					</div>
+					<div class="flex items-center gap-3">
+						<span class="text-xs text-slate-500 w-20 text-right shrink-0">Main Plot</span>
+						<div
+							class="flex-1 h-8 rounded bg-gradient-to-r from-purple-600/40 to-purple-500/20 border border-purple-500/30 flex items-center px-3"
+						>
+							<span class="text-xs text-purple-200 truncate"
+								>Siege of Ironhold → Treaty Broken → Final Battle</span
+							>
+						</div>
+					</div>
+					<div class="flex items-center gap-3">
+						<span class="text-xs text-slate-500 w-20 text-right shrink-0">Kael's Arc</span>
+						<div class="flex-1 flex gap-1">
+							<div
+								class="h-8 rounded bg-gradient-to-r from-violet-600/40 to-violet-500/20 border border-violet-500/30 flex items-center px-3 w-1/3"
+							>
+								<span class="text-xs text-violet-200 truncate">Exile</span>
+							</div>
+							<div
+								class="h-8 rounded bg-gradient-to-r from-violet-600/40 to-violet-500/20 border border-violet-500/30 flex items-center px-3 w-2/3"
+							>
+								<span class="text-xs text-violet-200 truncate">Return & Redemption</span>
+							</div>
+						</div>
+					</div>
+					<div class="flex items-center gap-3">
+						<span class="text-xs text-slate-500 w-20 text-right shrink-0">Background</span>
+						<div class="flex-1 flex gap-1">
+							<div
+								class="h-8 rounded bg-gradient-to-r from-cyan-600/30 to-cyan-500/10 border border-cyan-500/20 flex items-center px-3 w-1/4"
+							>
+								<span class="text-xs text-cyan-200 truncate">Famine</span>
+							</div>
+							<div
+								class="h-8 rounded bg-gradient-to-r from-cyan-600/30 to-cyan-500/10 border border-cyan-500/20 flex items-center px-3 w-1/2"
+							>
+								<span class="text-xs text-cyan-200 truncate">Plague Spreads</span>
+							</div>
+							<div
+								class="h-8 rounded bg-gradient-to-r from-pink-600/30 to-pink-500/10 border border-pink-500/20 flex items-center px-3 w-1/4"
+							>
+								<span class="text-xs text-pink-200 truncate">Eclipse</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</Fragment>
+	</Content>
+
+	<!-- ==================== SHOWCASE: CHARACTERS ==================== -->
+	<Content
+		isAfterContent
+		items={[
+			{
+				title: 'Relationship visualization',
+				description:
+					'See how characters, factions, and locations connect on an interactive mindmap. Spot plot holes before your readers do.',
+			},
+			{
+				title: 'Rich text profiles',
+				description:
+					'Full rich-text editor for character bios, backstories, motivations, and secrets. With cross-references to events and other characters.',
+			},
+			{
+				title: 'Tags & mentions',
+				description:
+					'Tag characters in events, wiki articles, and other characters. Navigation is instant — click through your world like a wiki.',
+			},
+		]}
+	>
+		<Fragment slot="content">
+			<h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+				Characters that feel alive
+			</h3>
+			Give each character the depth they deserve, then see how they fit into the bigger picture.
+		</Fragment>
+
+		<Fragment slot="bg">
+			<div class="absolute inset-0 bg-purple-950/20 dark:bg-purple-950/30"></div>
+		</Fragment>
+
+		<Fragment slot="image">
+			<div
+				class="rounded-xl border border-slate-700/50 bg-slate-900/80 backdrop-blur-sm shadow-xl overflow-hidden p-5"
+			>
+				<div class="grid grid-cols-2 gap-3">
+					<div class="bg-slate-800/60 rounded-lg p-4 border border-violet-500/20">
+						<div class="flex items-center gap-3 mb-3">
+							<div
+								class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center text-white text-sm font-bold"
+							>
+								K
+							</div>
+							<div>
+								<div class="text-sm font-semibold text-slate-200">Kael Stormblade</div>
+								<div class="text-xs text-slate-400">Exiled Knight · Human</div>
+							</div>
+						</div>
+						<div class="text-xs text-slate-400 leading-relaxed">
+							Former champion of the Iron Council, now seeking redemption after a choice that cost
+							thousands...
+						</div>
+						<div class="flex gap-1.5 mt-3 flex-wrap">
+							<span class="text-[10px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-300">Antagonist→Ally</span
+							>
+							<span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300">Main Cast</span
+							>
+						</div>
+					</div>
+					<div class="bg-slate-800/60 rounded-lg p-4 border border-pink-500/20">
+						<div class="flex items-center gap-3 mb-3">
+							<div
+								class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-rose-700 flex items-center justify-center text-white text-sm font-bold"
+							>
+								E
+							</div>
+							<div>
+								<div class="text-sm font-semibold text-slate-200">Elena Nightwhisper</div>
+								<div class="text-xs text-slate-400">Shadow Mage · Elf</div>
+							</div>
+						</div>
+						<div class="text-xs text-slate-400 leading-relaxed">
+							The last of the Whispering Order, carrying secrets that could reshape the continent...
+						</div>
+						<div class="flex gap-1.5 mt-3 flex-wrap">
+							<span class="text-[10px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">Protagonist</span>
+							<span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300">Main Cast</span
+							>
+						</div>
+					</div>
+				</div>
+				<div class="mt-4 bg-slate-800/40 rounded-lg p-3 border border-slate-700/30">
+					<div class="text-xs text-slate-500 mb-2">Relationships</div>
+					<div class="flex items-center gap-2 text-xs">
+						<span class="text-violet-300">Kael</span>
+						<span class="flex-1 border-b border-dashed border-pink-500/40"></span>
+						<span class="text-[10px] text-pink-300 px-2 py-0.5 bg-pink-500/10 rounded">Rivals → Allies</span>
+						<span class="flex-1 border-b border-dashed border-pink-500/40"></span>
+						<span class="text-pink-300">Elena</span>
+					</div>
+				</div>
+			</div>
+		</Fragment>
+	</Content>
+
+	<!-- ==================== SHOWCASE: WIKI ==================== -->
+	<Content
+		isReversed
+		isAfterContent
+		items={[
+			{
+				title: 'Hierarchical structure',
+				description:
+					"Organize articles in a nested tree — like folders for your world's knowledge. Drag, rearrange, nest as deep as you need.",
+			},
+			{
+				title: 'Bidirectional linking',
+				description:
+					'Mention any entity anywhere. Every link is tracked both ways — see what references a character, event, or article.',
+			},
+			{
+				title: 'Rich text editing',
+				description:
+					'A modern editor that supports formatting, embedded images, tables, and more. Write your lore in comfort. Shared with collaborators in real-time.',
+			},
+		]}
+	>
+		<Fragment slot="content">
+			<h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+				A living encyclopedia for your world
+			</h3>
+			Build lore that grows with your project — always connected, always searchable.
+		</Fragment>
+
+		<Fragment slot="bg">
+			<div class="absolute inset-0 bg-purple-950/20 dark:bg-purple-950/30"></div>
+		</Fragment>
+
+		<Fragment slot="image">
+			<div
+				class="rounded-xl border border-slate-700/50 bg-slate-900/80 backdrop-blur-sm shadow-xl overflow-hidden p-5"
+			>
+				<div class="grid grid-cols-3 gap-3">
+					<div class="col-span-1 space-y-1">
+						<div class="text-xs text-slate-500 uppercase tracking-wider font-semibold mb-2">Wiki</div>
+						<div class="text-sm text-primary font-medium pl-2 py-1 border-l-2 border-primary">Geography</div>
+						<div class="text-xs text-slate-400 pl-5 py-0.5">The Shattered Isles</div>
+						<div class="text-xs text-slate-400 pl-5 py-0.5">Ironhold Mountains</div>
+						<div class="text-xs text-slate-400 pl-5 py-0.5">The Whispering Sea</div>
+						<div class="text-sm text-slate-300 pl-2 py-1 mt-1">History</div>
+						<div class="text-sm text-slate-300 pl-2 py-1">Magic Systems</div>
+						<div class="text-sm text-slate-300 pl-2 py-1">Factions</div>
+					</div>
+					<div class="col-span-2 bg-slate-800/40 rounded-lg p-4 border border-slate-700/30">
+						<div class="text-base font-semibold text-slate-200 mb-2">The Shattered Isles</div>
+						<div class="text-xs text-slate-400 leading-relaxed mb-3">
+							An archipelago of seven major islands, once a single landmass before the Cataclysm of Year 312.
+							Each island developed unique cultures after their separation...
+						</div>
+						<div class="text-xs text-slate-400 leading-relaxed mb-3">
+							Home to the <span class="text-primary underline decoration-primary/30"
+								>Free Cities Alliance</span
+							> and the enigmatic <span class="text-pink-300 underline decoration-pink-300/30"
+								>Whispering Order</span
+							>.
+						</div>
+						<div class="border-t border-slate-700/30 pt-2 mt-3">
+							<div class="text-[10px] text-slate-500">
+								Referenced by: 14 events · 8 characters · 3 articles
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</Fragment>
+	</Content>
+
+	<!-- ==================== HOW IT WORKS ==================== -->
+	<Steps
+		id="how-it-works"
+		title="Get your world off the ground in minutes"
+		items={[
+			{
+				title: 'Step 1: <span class="font-medium">Create your world</span>',
+				description:
+					"Sign up and create your first world in seconds. Give it a name, pick a calendar system (or create your own), and you're ready to go.",
+				icon: 'tabler:planet',
+			},
+			{
+				title: 'Step 2: <span class="font-medium">Add your story elements</span>',
+				description:
+					'Start populating your world with characters, events, and wiki articles. Everything cross-references automatically - just mention an entity to link it.',
+				icon: 'tabler:pencil',
+			},
+			{
+				title: 'Step 3: <span class="font-medium">Invite collaborators</span>',
+				description:
+					"Share your world with co-authors, players, or friends. Set permissions - read-only observers or full editing access. Changes sync in real-time. Edit the same article like it's a Google Doc.",
+				icon: 'tabler:users-group',
+			},
+			{
+				title: 'Have fun with your creative pursuits!',
+				icon: 'tabler:sparkles',
+			},
+		]}
+	/>
+
+	<!-- ==================== USE CASES ==================== -->
+	<Features2
+		tagline="Who Is It For?"
+		title="Built for creators of every kind"
+		subtitle="Whether you're a novelist with a 12-book saga or a GM running a weekly session, Neverkin adapts to your workflow."
+		items={[
+			{
+				title: 'Novelists & Authors',
+				description:
+					'Track character arcs, plot threads, and world history across multi-book series without losing your mind.',
+				icon: 'tabler:writing',
+			},
+			{
+				title: 'Game Masters',
+				description:
+					'Organize your campaign: NPCs, factions, session events, and lore. Share what players need, keep secrets hidden.',
+				icon: 'tabler:dice',
+			},
+			{
+				title: 'Screenwriters',
+				description:
+					'Map out episode timelines, character relationships, and narrative arcs for complex storytelling.',
+				icon: 'tabler:movie',
+			},
+			{
+				title: 'Writing Groups',
+				description:
+					'Collaborate on shared universes in real-time. Everyone sees the same world, always in sync.',
+				icon: 'tabler:messages',
+			},
+			{
+				title: 'Worldbuilders',
+				description:
+					'Build worlds for the sheer joy of it. Custom calendars, deep lore, and interconnected histories.',
+				icon: 'tabler:world',
+			},
+			{
+				title: 'Indie Game Devs',
+				description:
+					"Organize your game's narrative design — quests, characters, lore entries, branching storylines.",
+				icon: 'tabler:device-gamepad-2',
+			},
+		]}
+	>
+		<Fragment slot="bg">
+			<div class="absolute inset-0 bg-purple-950/20 dark:bg-purple-950/30"></div>
+		</Fragment>
+	</Features2>
+
+	<!-- ==================== TESTIMONIALS ==================== -->
+	<Testimonials
+		tagline="Community Voices"
+		title="Creators love building with Neverkin"
+		subtitle="Here's what our community has to say about organizing their fictional universes."
+		testimonials={[
+			{
+				testimonial: 'Time to add another feature! In-and-out, 5 minute coding adventure.',
+				name: 'Maija L.',
+				job: 'Neverkin Developer',
+			},
+			{
+				testimonial: 'I have stress-tested the app a little bit...',
+				name: 'Nessa T.',
+				job: 'Game Master',
+			},
+			{
+				testimonial: "Snorf! Fwf~ Pff! Fweh~ (Translation: 'I really like this')",
+				name: 'Ari V.',
+				job: 'Main Tank',
+			},
+			{
+				testimonial: 'This is the best app ever, and I have totally said that!',
+				name: 'Fake Guy',
+				job: 'Totally Real',
+			},
+		]}
+	/>
+
+	<!-- ==================== PRICING COMPARISON ==================== -->
+	<div id="pricing" class="py-16 md:py-20">
+		<div class="max-w-5xl mx-auto px-4 sm:px-6">
+			<div class="text-center mb-12">
+				<p class="text-primary font-bold uppercase tracking-widest text-sm mb-2">Comparison</p>
+				<h2 class="text-4xl md:text-5xl font-bold tracking-tight dark:text-white mb-4">
+					You can't pay even if you wanted to
+				</h2>
+				<p class="text-lg text-gray-600 dark:text-slate-400 max-w-2xl mx-auto">
+					Most worldbuilding platforms lock features behind paid tiers. Neverkin does not know what a credit
+					card is.
+				</p>
+			</div>
+
+			<div
+				class="overflow-hidden rounded-xl border border-gray-200 dark:border-slate-700/50 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+			>
+				<table class="w-full text-left text-sm md:text-base">
+					<thead>
+						<tr class="border-b border-gray-200 dark:border-slate-700/50 bg-gray-50 dark:bg-slate-800/50">
+							<th class="py-4 px-4 md:px-6 font-medium text-gray-500 dark:text-slate-400 w-[40%]"></th>
+							<th
+								class="py-4 px-3 md:px-4 text-center font-semibold text-gray-400 dark:text-slate-500 w-[20%]"
+							>
+								<span class="text-xs md:text-sm uppercase tracking-wider">Others (Free)</span>
+							</th>
+							<th class="py-4 px-3 md:px-4 text-center w-[20%]">
+								<span
+									class="inline-block bg-primary/15 text-primary font-bold text-xs md:text-sm uppercase tracking-wider px-3 py-1 rounded-md"
+									>Neverkin</span
+								>
+							</th>
+							<th
+								class="py-4 px-3 md:px-4 text-center font-semibold text-gray-400 dark:text-slate-500 w-[20%]"
+							>
+								<span class="text-xs md:text-sm uppercase tracking-wider">Others ($10–15/mo)</span>
+							</th>
+						</tr>
+					</thead>
+					<tbody class="dark:text-slate-300">
+						<tr class="border-b border-gray-100 dark:border-slate-700/30">
+							<td class="py-3.5 px-4 md:px-6 font-medium">Events, characters & articles</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-gray-400 dark:text-slate-500">Limited</td>
+							<td class="py-3.5 px-3 md:px-4 text-center font-semibold text-primary">Unlimited</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-gray-400 dark:text-slate-500"
+								>More, but capped</td
+							>
+						</tr>
+						<tr class="border-b border-gray-100 dark:border-slate-700/30">
+							<td class="py-3.5 px-4 md:px-6 font-medium">Custom calendars</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-red-400/70">✗</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-green-400">✓</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-gray-400 dark:text-slate-500">Partial</td>
+						</tr>
+						<tr class="border-b border-gray-100 dark:border-slate-700/30">
+							<td class="py-3.5 px-4 md:px-6 font-medium">Real-time collaboration</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-red-400/70">✗</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-green-400">✓</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-gray-400 dark:text-slate-500">Paid add-on</td>
+						</tr>
+						<tr class="border-b border-gray-100 dark:border-slate-700/30">
+							<td class="py-3.5 px-4 md:px-6 font-medium">Ads & branding</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-gray-400 dark:text-slate-500">Yes</td>
+							<td class="py-3.5 px-3 md:px-4 text-center font-semibold text-primary">None</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-gray-400 dark:text-slate-500">Removed</td>
+						</tr>
+						<tr class="border-b border-gray-100 dark:border-slate-700/30">
+							<td class="py-3.5 px-4 md:px-6 font-medium">Self-hosting</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-red-400/70">✗</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-green-400">✓</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-red-400/70">✗</td>
+						</tr>
+						<tr>
+							<td class="py-3.5 px-4 md:px-6 font-medium">Open source</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-red-400/70">✗</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-green-400">✓</td>
+							<td class="py-3.5 px-3 md:px-4 text-center text-red-400/70">✗</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr class="border-t border-gray-200 dark:border-slate-700/50 bg-gray-50/50 dark:bg-slate-800/30">
+							<td class="py-4 px-4 md:px-6 font-bold dark:text-white">Price</td>
+							<td class="py-4 px-3 md:px-4 text-center font-semibold text-gray-400 dark:text-slate-500">$0</td
+							>
+							<td class="py-4 px-3 md:px-4 text-center font-bold text-primary text-lg">$0</td>
+							<td class="py-4 px-3 md:px-4 text-center font-semibold text-gray-400 dark:text-slate-500"
+								>$10–15/mo</td
+							>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!-- ==================== ABOUT THE DEVELOPER ==================== -->
+	<div class="py-16 md:py-20">
+		<div class="max-w-5xl mx-auto px-4 sm:px-6">
+			<div
+				class="flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-12 rounded-xl border border-gray-200 dark:border-slate-700/40 bg-gray-50/50 dark:bg-slate-800/30 p-8 md:p-12 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade"
+			>
+				<div class="shrink-0">
+					<div
+						class="w-[6.5rem] h-[6.5rem] md:w-[8.5rem] md:h-[8.5rem] rounded-full p-[3px]"
+						style="background: linear-gradient(-45deg, #9f44ef, #ef4444);"
+					>
+						<Image
+							src={devPhoto}
+							alt="Maija, the developer of Neverkin"
+							class="w-full h-full rounded-full object-cover"
+							width={128}
+							height={128}
+						/>
+					</div>
+				</div>
+
+				<div class="text-center md:text-left">
+					<p class="text-primary font-bold uppercase tracking-widest text-sm mb-2">A word from the dev</p>
+					<h2 class="text-2xl md:text-3xl font-bold tracking-tight dark:text-white mb-4">
+						Fancy tagline goes here
+					</h2>
+					<div class="text-gray-600 dark:text-slate-400 space-y-3 text-base md:text-lg leading-relaxed">
+						<p>
+							Hello and welcome to Neverkin! I'm Maija - the founder and solo dev behind this app, as well as
+							a mermaid, musician and a dungeon master. Neverkin has been my hobby project since early 2022,
+							and I'm happy to finally share it with you!
+						</p>
+						<p>
+							I take maintainability, architecture and security seriously, and Neverkin is optimized for
+							long-term maintenance and development experience. I have even built a little custom framework to
+							support it!
+						</p>
+						<p>
+							If you encounter issues or have ideas for new features, please don't hesitate to reach out or
+							submit a pull request! Contributions are very welcome, and if you're a dev, you should be able
+							to get a local dev environment up and running in a single command.
+						</p>
+						<p>
+							Neverkin is free from ads and credit cards, and I'm committed to keeping it that way. If you
+							wish to support the project, the best thing you can do today is to share it with those who might
+							find it useful!
+						</p>
+					</div>
+					<div class="mt-6 flex flex-wrap gap-4 justify-center md:justify-start">
+						<a
+							href="https://github.com/tenebrie/timelines"
+							target="_blank"
+							class="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+						>
+							<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"
+								><path
+									d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+								></path></svg
+							>
+							View on GitHub
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- ==================== FAQ ==================== -->
+	<FAQs
+		id="faq"
+		title="Frequently Asked Questions"
+		subtitle="Everything you need to know about Neverkin — no lore check required."
+		tagline="FAQ"
+		classes={{ container: 'max-w-6xl' }}
+		items={[
+			{
+				title: 'Is Neverkin really free?',
+				description:
+					'Yes! Neverkin is open source under the GPL-3.0 license. You can use the hosted version for free, or self-host it on your own server. There are no premium paywalls or feature gates.',
+			},
+			{
+				title: 'Can I use custom calendars for my fictional world?',
+				description:
+					'Absolutely. Any calendar system is supported — you define the months, days, hours, and epochs. Neverkin also ships with presets for Earth, Pathfinder 2e, Rimworld, and others as common starting points, but these are not special cases — the system is fully flexible.',
+			},
+			{
+				title: 'How does real-time collaboration work?',
+				description:
+					'When you invite collaborators to your world, they can view or edit based on the permissions you set. All changes sync instantly via WebSockets — every connected user sees updates in real-time.',
+			},
+			{
+				title: 'Can I keep parts of my world private?',
+				description:
+					'All your data is private by default — nothing is visible to anyone unless you explicitly share it. You can invite collaborators with read-only or editing access, or make a world publicly visible if you choose.',
+			},
+			{
+				title: 'Is my data safe? Can I export it?',
+				description:
+					'Your data is stored securely. Since Neverkin is open source, you can also self-host and maintain full control.',
+			},
+			{
+				title: "I'm a developer. Can I contribute?",
+				description:
+					'I would love that! Neverkin has been built with development experience in mind. Check out the <a href="https://github.com/tenebrie/timelines" class="text-primary hover:underline">GitHub repository</a> to get started.',
+			},
+		]}
+	/>
+
+	<!-- ==================== DASHBOARD PREVIEW ==================== -->
+	<Content isReversed id="preview">
+		<Fragment slot="content">
+			<h3 class="text-2xl font-bold tracking-tight dark:text-white sm:text-3xl mb-2">
+				This is what's waiting for you
+			</h3>
+			No setup wizards. No credit cards. Create an account and you're here - your creative universe, ready to fill.
+		</Fragment>
+
+		<Fragment slot="bg">
+			<div class="absolute inset-0 bg-purple-950/20 dark:bg-purple-950/30"></div>
+		</Fragment>
+
+		<Fragment slot="image">
+			<div
+				class="rounded-2xl border border-[rgb(180_170_220/18%)] bg-[#0f0e1a] shadow-2xl shadow-purple-900/20 overflow-hidden ring-1 ring-white/[0.03]"
+			>
+				<!-- Top nav bar -->
+				<div
+					class="flex items-center gap-3 px-4 py-2 border-b border-[rgb(180_170_220/12%)] bg-[hsl(252,25%,14%)]"
+				>
+					<span class="text-xs font-semibold text-white bg-purple-500/70 px-2.5 py-0.5 rounded-md">World</span
+					>
+					<span class="text-xs text-slate-400">Home</span>
+					<span class="text-xs text-slate-600">&middot;</span>
+					<span class="text-xs text-slate-500">Tools</span>
+					<div class="flex-1"></div>
+					<div class="w-6 h-6 rounded-full bg-[rgb(180_170_220/10%)] flex items-center justify-center">
+						<svg class="w-3 h-3 text-slate-400" fill="currentColor" viewBox="0 0 20 20">
+							<path
+								fill-rule="evenodd"
+								d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+								clip-rule="evenodd"></path>
+						</svg>
+					</div>
+				</div>
+
+				<!-- Dashboard body -->
+				<div class="px-5 py-4">
+					<div class="text-base font-bold text-white mb-0.5">Dashboard</div>
+					<div class="text-[11px] text-slate-400 mb-4">
+						Welcome back! Here's an overview of your creative universe.
+					</div>
+
+					<!-- Stat cards row -->
+					<div class="grid grid-cols-2 gap-3 mb-4">
+						<div class="rounded-lg border border-[rgb(180_170_220/14%)] bg-[hsl(252,25%,14%)] p-3">
+							<div class="flex items-center gap-2 mb-2.5">
+								<div class="w-8 h-8 rounded-lg bg-purple-500/80 flex items-center justify-center">
+									<svg
+										class="w-4 h-4 text-white"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="1.5"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M20.893 13.393l-1.135-1.135a2.252 2.252 0 01-.421-.585l-1.08-2.16a.414.414 0 00-.663-.107.827.827 0 01-.812.21l-1.273-.363a.89.89 0 00-.738 1.595l.587.39c.59.395.674 1.23.172 1.732l-.2.2c-.212.212-.33.498-.33.796v.41c0 .409-.11.809-.32 1.158l-1.315 2.191a2.11 2.11 0 01-1.81 1.025 1.055 1.055 0 01-1.055-1.055v-1.172c0-.92-.56-1.747-1.414-2.089l-.655-.261a2.25 2.25 0 01-1.383-2.46l.007-.042a2.25 2.25 0 01.29-.787l.09-.15a2.25 2.25 0 012.37-1.048l1.178.236a1.125 1.125 0 001.302-.795l.208-.73a1.125 1.125 0 00-.578-1.315l-.665-.332-.091.091a2.25 2.25 0 01-1.591.659h-.18c-.249 0-.487.1-.662.274a.931.931 0 01-1.458-1.137l1.411-2.353a2.25 2.25 0 00.286-.76m11.928 9.869A9 9 0 008.965 3.525m11.928 9.868A9 9 0 118.965 3.525"
+										></path>
+									</svg>
+								</div>
+								<div>
+									<div class="text-xl font-bold text-white leading-none">15</div>
+									<div class="text-[11px] text-slate-400">Worlds</div>
+								</div>
+								<div class="flex-1"></div>
+								<svg
+									class="w-4 h-4 text-slate-600"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.5"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
+								</svg>
+							</div>
+							<div class="border-t border-[rgb(180_170_220/10%)] pt-2 space-y-1">
+								<div class="flex justify-between text-[11px]">
+									<span class="text-slate-500">Owned</span>
+									<span class="text-slate-300">15</span>
+								</div>
+								<div class="flex justify-between text-[11px]">
+									<span class="text-slate-500">Contributing</span>
+									<span class="text-slate-300">0</span>
+								</div>
+							</div>
+						</div>
+						<div class="rounded-lg border border-[rgb(180_170_220/14%)] bg-[hsl(252,25%,14%)] p-3">
+							<div class="flex items-center gap-2 mb-2.5">
+								<div class="w-8 h-8 rounded-lg bg-blue-500/70 flex items-center justify-center">
+									<svg
+										class="w-4 h-4 text-white"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="1.5"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"
+										></path>
+									</svg>
+								</div>
+								<div>
+									<div class="text-xl font-bold text-white leading-none">6</div>
+									<div class="text-[11px] text-slate-400">Calendars</div>
+								</div>
+								<div class="flex-1"></div>
+								<svg
+									class="w-4 h-4 text-slate-600"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.5"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
+								</svg>
+							</div>
+							<div class="border-t border-[rgb(180_170_220/10%)] pt-2 space-y-1">
+								<div class="flex justify-between text-[11px]">
+									<span class="text-slate-500">Total</span>
+									<span class="text-slate-300">6</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Recent Activity -->
+					<div class="rounded-lg border border-[rgb(180_170_220/14%)] bg-[hsl(252,25%,14%)] p-3">
+						<div class="text-sm font-semibold text-white mb-2">Recent Activity</div>
+						<div class="space-y-0">
+							<div class="flex items-center gap-2.5 py-2 border-t border-[rgb(180_170_220/8%)]">
+								<div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
+									<svg
+										class="w-3.5 h-3.5 text-purple-300"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"
+										></path>
+									</svg>
+								</div>
+								<div class="flex-1 min-w-0">
+									<div class="text-xs font-medium text-slate-200">The Shattered Isles</div>
+									<div class="text-[10px] text-slate-500">World updated</div>
+								</div>
+								<span class="text-[10px] text-slate-600 shrink-0">21 hours ago</span>
+							</div>
+							<div class="flex items-center gap-2.5 py-2 border-t border-[rgb(180_170_220/8%)]">
+								<div class="w-7 h-7 rounded-lg bg-green-500/20 flex items-center justify-center">
+									<svg
+										class="w-3.5 h-3.5 text-green-300"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"
+										></path>
+									</svg>
+								</div>
+								<div class="flex-1 min-w-0">
+									<div class="text-xs font-medium text-slate-200">Age of Storms</div>
+									<div class="text-[10px] text-slate-500">Calendar updated</div>
+								</div>
+								<span class="text-[10px] text-slate-600 shrink-0">2 days ago</span>
+							</div>
+							<div class="flex items-center gap-2.5 py-2 border-t border-[rgb(180_170_220/8%)]">
+								<div class="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
+									<svg
+										class="w-3.5 h-3.5 text-purple-300"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"
+										></path>
+									</svg>
+								</div>
+								<div class="flex-1 min-w-0">
+									<div class="text-xs font-medium text-slate-200">War of Shattered Crowns</div>
+									<div class="text-[10px] text-slate-500">World updated</div>
+								</div>
+								<span class="text-[10px] text-slate-600 shrink-0">3 days ago</span>
+							</div>
+							<div class="flex items-center gap-2.5 py-2 border-t border-[rgb(180_170_220/8%)]">
+								<div class="w-7 h-7 rounded-lg bg-green-500/20 flex items-center justify-center">
+									<svg
+										class="w-3.5 h-3.5 text-green-300"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"
+										></path>
+									</svg>
+								</div>
+								<div class="flex-1 min-w-0">
+									<div class="text-xs font-medium text-slate-200">Golarion Standard</div>
+									<div class="text-[10px] text-slate-500">Calendar updated</div>
+								</div>
+								<span class="text-[10px] text-slate-600 shrink-0">5 days ago</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</Fragment>
+	</Content>
+
+	<!-- ==================== FINAL CTA ==================== -->
+	<CallToAction
+		actions={[
+			{
+				variant: 'primary',
+				text: "Start Building — It's Free",
+				href: 'https://app.neverkin.com',
+				icon: 'tabler:sparkles',
+			},
+			{
+				variant: 'secondary',
+				text: 'View on GitHub',
+				href: 'https://github.com/tenebrie/timelines',
+				icon: 'tabler:brand-github',
+			},
+		]}
+	>
+		<Fragment slot="title">
+			Ready to give your world<br class="hidden sm:inline" /> the home it deserves?
+		</Fragment>
+
+		<Fragment slot="subtitle">
+			Organize your stories, characters, and timelines in one place - for free.<br
+				class="hidden md:inline"
+			/>Open source. Built for storytellers.
+		</Fragment>
+	</CallToAction>
+</Layout>

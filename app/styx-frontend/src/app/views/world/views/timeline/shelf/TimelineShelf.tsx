@@ -5,7 +5,7 @@ import { TracksDrawer } from './drawers/tracks/TracksDrawer'
 export const TimelineShelf = () => {
 	return (
 		<Stack
-			sx={{ position: 'absolute', width: 'calc(100% - 64px)', zIndex: 2, top: 0, pointerEvents: 'none' }}
+			sx={{ position: 'absolute', width: 'calc(100% - 64px)', zIndex: 4, top: 0, pointerEvents: 'none' }}
 			justifyContent="flex-start"
 			flexDirection="row"
 			padding={'0 32px'}

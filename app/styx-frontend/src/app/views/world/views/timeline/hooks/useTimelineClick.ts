@@ -1,13 +1,13 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
-import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { ScaleLevel } from '@/app/schema/ScaleLevel'
-import { LineSpacing } from '@/app/utils/constants'
+import { useDragDropBusSubscribe } from '@/app/features/dragDrop/hooks/useDragDropBus'
+import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
+
+import { TimelineState } from '../utils/TimelineState'
 
 type Props = {
 	containerRef: React.RefObject<HTMLDivElement | null>
 	scrollRef: React.RefObject<number>
-	scaleLevel: ScaleLevel
 	scaledTimeToRealTime: (time: number) => number
 	onClick: (time: number, trackId: string | undefined) => void
 	onDoubleClick: (time: number, trackId: string | undefined) => void
@@ -16,19 +16,28 @@ type Props = {
 export const useTimelineClick = ({
 	containerRef,
 	scrollRef,
-	scaleLevel,
 	scaledTimeToRealTime,
 	onClick,
 	onDoubleClick,
 }: Props) => {
-	const { parseTime, pickerToTimestamp } = useWorldTime()
-
 	const [selectedTime, setSelectedTime] = useState<number | null>(null)
 	const [lastClickPos, setLastClickPos] = useState<number | null>(null)
 	const [lastClickTime, setLastClickTime] = useState<number | null>(null)
 
+	// Did we receive mouse down?
+	const isClickingRef = useRef(false)
+
+	useDragDropBusSubscribe({
+		callback: () => {
+			isClickingRef.current = false
+		},
+	})
+
 	const onTimelineClick = useCallback(
 		(event: MouseEvent) => {
+			if (!isClickingRef.current) {
+				return
+			}
 			if (event.shiftKey || event.ctrlKey || event.metaKey) {
 				return
 			}
@@ -54,22 +63,12 @@ export const useTimelineClick = ({
 				y: event.clientY - boundingRect.top,
 			}
 
-			const clickOffset = Math.round((point.x + 40 - scrollRef.current) / LineSpacing) * LineSpacing
-			let newSelectedTime = scaledTimeToRealTime(clickOffset)
-			// For scaleLevel = 4, round to the nearest month
-			if (scaleLevel === 4) {
-				const t = parseTime(newSelectedTime)
-				if (t.day >= 15) {
-					t.monthIndex += 1
-				}
-				newSelectedTime = pickerToTimestamp({
-					day: 0,
-					hour: 0,
-					minute: 0,
-					monthIndex: t.monthIndex,
-					year: t.year,
-				})
+			const clickOffset = scaledTimeToRealTime(point.x - scrollRef.current - 2)
+			let newSelectedTime = clickOffset
+			if (TimelineState.anchorTimestamps.length > 0) {
+				newSelectedTime = binarySearchForClosest(TimelineState.anchorTimestamps, clickOffset)
 			}
+
 			setSelectedTime(newSelectedTime)
 
 			const currentTime = Date.now()
@@ -86,23 +85,28 @@ export const useTimelineClick = ({
 				onDoubleClick(newSelectedTime, trackId)
 			}
 		},
-		[
-			containerRef,
-			lastClickPos,
-			lastClickTime,
-			onClick,
-			onDoubleClick,
-			parseTime,
-			pickerToTimestamp,
-			scaleLevel,
-			scaledTimeToRealTime,
-			scrollRef,
-		],
+		[containerRef, lastClickPos, lastClickTime, onClick, onDoubleClick, scaledTimeToRealTime, scrollRef],
 	)
+
+	const onMouseDown = useCallback((event: MouseEvent) => {
+		if (event.button === 0) {
+			isClickingRef.current = true
+		} else {
+			isClickingRef.current = false
+		}
+	}, [])
+
+	const onMouseUp = useCallback(() => {
+		requestAnimationFrame(() => {
+			isClickingRef.current = false
+		})
+	}, [])
 
 	return {
 		selectedTime,
 		setSelectedTime,
 		onTimelineClick,
+		onMouseDown,
+		onMouseUp,
 	}
 }

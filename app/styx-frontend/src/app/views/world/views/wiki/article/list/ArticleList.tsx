@@ -4,6 +4,7 @@ import { memo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
+import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
 import { useMoveArticle } from '../../api/useMoveArticle'
 import { ArticleDropHandle } from '../../components/ArticleDropHandle'
@@ -48,6 +49,7 @@ export function ArticleListComponent({ parentId, depth }: Props) {
 				paddingRight: 1.5,
 				height: '100%',
 				overflowY: 'auto',
+				...useBrowserSpecificScrollbars(),
 			}}
 			data-testid={`ArticleList/${depth}`}
 		>

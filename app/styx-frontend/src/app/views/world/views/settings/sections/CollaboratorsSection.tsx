@@ -1,7 +1,6 @@
 import { GetWorldCollaboratorsApiResponse, useUnshareWorldMutation } from '@api/worldCollaboratorsApi'
 import Cancel from '@mui/icons-material/Cancel'
 import Delete from '@mui/icons-material/Delete'
-import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -10,20 +9,15 @@ import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import { useCallback, useState } from 'react'
 
-import { useModal } from '@/app/features/modals/ModalsSlice'
-
 type Props = {
 	worldId: string
 	collaborators: GetWorldCollaboratorsApiResponse
 }
 
 export const CollaboratorsSection = ({ worldId, collaborators }: Props) => {
-	const { open: openShareWorldModal } = useModal('shareWorldModal')
-
 	const [removeCollaborator] = useUnshareWorldMutation()
 
 	const [removingUser, setRemovingUser] = useState<string | null>(null)
-
 	const onDelete = useCallback(
 		(collaborator: (typeof collaborators)[number]) => {
 			if (removingUser === collaborator.user.id) {
@@ -38,12 +32,6 @@ export const CollaboratorsSection = ({ worldId, collaborators }: Props) => {
 		},
 		[removeCollaborator, removingUser, worldId],
 	)
-
-	const onShareWorld = useCallback(() => {
-		openShareWorldModal({
-			worldId,
-		})
-	}, [openShareWorldModal, worldId])
 
 	return (
 		<>
@@ -74,7 +62,6 @@ export const CollaboratorsSection = ({ worldId, collaborators }: Props) => {
 					))}
 				</List>
 			)}
-			<Button onClick={onShareWorld}>Share world with specific people...</Button>
 		</>
 	)
 }

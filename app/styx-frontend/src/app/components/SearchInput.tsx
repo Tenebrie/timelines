@@ -21,7 +21,7 @@ export const SearchInput = ({ initialQuery, onChange }: Props) => {
 	})
 
 	return (
-		<Stack direction="row">
+		<Stack direction="row" sx={{ paddingTop: 0.5 }}>
 			<FormControl variant="outlined" size="small">
 				<InputLabel htmlFor="searchInput">Search</InputLabel>
 				<OutlinedInput

@@ -1,16 +1,27 @@
-import { MarkerType, TimelineEntity } from '@api/types/worldTypes'
+import { useCallback, useMemo } from 'react'
 
-import { useStringColor } from './useStringColor'
+import { useStringColorResolver } from './useStringColor'
 
 type Props = {
-	entity: TimelineEntity<MarkerType>
+	id: string
+	color: string | undefined
 }
 
-export function useEntityColor({ entity }: Props) {
-	const legacyColor = useStringColor(entity.eventId)
-	if (entity.color && entity.color !== '#000000') {
-		return entity.color
-	}
-	const color = entity.color
-	return color === '#000000' ? legacyColor : color
+export function useEntityColor({ id, color }: Props) {
+	const resolver = useEntityColorResolver()
+	return useMemo(() => resolver({ id, color }), [id, color, resolver])
+}
+
+export function useEntityColorResolver() {
+	const colorResolver = useStringColorResolver()
+	return useCallback(
+		({ id, color }: Props) => {
+			const legacyColor = colorResolver(id)
+			if (color && color !== '#000000') {
+				return color
+			}
+			return color === '#000000' ? legacyColor : color
+		},
+		[colorResolver],
+	)
 }

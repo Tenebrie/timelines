@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import { useSearch } from '@tanstack/react-router'
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
@@ -16,8 +16,6 @@ import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
-import { worldSlice } from '../WorldSlice'
-
 export const CreateEventModal = () => {
 	const { isOpen, close } = useModal('createEventModal')
 	const [descriptionPlain, setDescriptionPlain] = useState('')
@@ -28,9 +26,6 @@ export const CreateEventModal = () => {
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	const { selectedTime } = useSelector(getWorldState, (a, b) => a.selectedTime === b.selectedTime)
-
-	const { setTimelineMarkerSelection } = worldSlice.actions
-	const dispatch = useDispatch()
 
 	const targetTrack = useSearch({
 		from: '/world/$worldId/_world',
@@ -70,27 +65,12 @@ export const CreateEventModal = () => {
 			return
 		}
 
-		const markerKey = `issuedAt-${createdEvent.id}`
 		navigate({
 			search: (prev) => ({
 				...prev,
-				navi: [markerKey],
 				new: undefined,
 			}),
 		})
-
-		dispatch(
-			setTimelineMarkerSelection([
-				{
-					key: markerKey,
-					eventId: createdEvent.id,
-				},
-			]),
-		)
-
-		setTimeout(() => {
-			close()
-		}, 150)
 	}
 
 	const onCloseAttempt = () => {

@@ -1,5 +1,5 @@
 import debounce from 'lodash.debounce'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 type Props<T> = {
 	initialValue: T
@@ -11,26 +11,30 @@ export const useDebouncedState = <T,>({ initialValue, onDebounce, delay }: Props
 	const [value, setValue] = useState(initialValue)
 	const [nextValue, setNextValue] = useState(initialValue)
 
-	const setValueExternal = useCallback((newValue: T) => {
-		setNextValue(newValue)
-		emitPageDebounced.current(newValue)
-	}, [])
+	const emitPageDebounced = useMemo(
+		() =>
+			debounce((newValue: T) => {
+				setValue(newValue)
+				onDebounce?.(newValue)
+			}, delay ?? 500),
+		[delay, onDebounce],
+	)
+
+	const setValueExternal = useCallback(
+		(newValue: T) => {
+			setNextValue(newValue)
+			emitPageDebounced(newValue)
+		},
+		[emitPageDebounced],
+	)
 
 	const setValueInstant = useCallback(
 		(newValue: T) => {
 			setValue(newValue)
 			setNextValue(newValue)
-			onDebounce?.(newValue)
-			emitPageDebounced.current.cancel()
+			emitPageDebounced.cancel()
 		},
-		[onDebounce],
-	)
-
-	const emitPageDebounced = useRef(
-		debounce((newValue: T) => {
-			setValue(newValue)
-			onDebounce?.(newValue)
-		}, delay ?? 500),
+		[emitPageDebounced],
 	)
 
 	return [value, nextValue, setValueExternal, setValueInstant] as const

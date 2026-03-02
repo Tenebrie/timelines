@@ -7,7 +7,10 @@ services:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile
         networks:
-            - dev_network
+            dev-playwright:
+                aliases:
+                    - app.gatekeeper
+                    
     styx:
         image: timelines-styx:dev
         build:
@@ -43,11 +46,10 @@ services:
               target: /app/styx/eslint.config.mjs
         ports:
             - 8080:8080
-        networks:
-            - dev_network
         command: yarn start
         tty: true
         restart: unless-stopped
+
     rhea:
         image: timelines-rhea:dev
         build:
@@ -78,11 +80,10 @@ services:
               target: /app/rhea/tsconfig.json
         ports:
             - 3000:3000
-        networks:
-            - dev_network
         command: yarn start
         tty: true
         restart: unless-stopped
+
     calliope:
         image: timelines-calliope:dev
         build:
@@ -104,11 +105,10 @@ services:
               target: /app/calliope/tsconfig.json
         ports:
             - 3001:3001
-        networks:
-            - dev_network
         command: yarn start
         tty: true
         restart: unless-stopped
+
     orpheus:
         image: timelines-orpheus:dev
         build:
@@ -131,11 +131,36 @@ services:
               target: /app/orpheus/tsconfig.json
         ports:
             - 3002:3002
-        networks:
-            - dev_network
         command: yarn start
         tty: true
         restart: unless-stopped
+
+    thetis:
+        image: timelines-thetis:dev
+        build:
+            context: ./
+            dockerfile: ./app/thetis-landing/Dockerfile
+        environment:
+            NODE_ENV: development
+        volumes:
+            - ./app/thetis-landing/src:/app/thetis/src:cached
+            - ./app/thetis-landing/public:/app/thetis/public:cached
+            - ./app/thetis-landing/vendor:/app/thetis/vendor:cached
+            - type: bind
+              source: ./app/thetis-landing/astro.config.ts
+              target: /app/thetis/astro.config.ts
+            - type: bind
+              source: ./app/thetis-landing/tailwind.config.js
+              target: /app/thetis/tailwind.config.js
+            - type: bind
+              source: ./app/thetis-landing/tsconfig.json
+              target: /app/thetis/tsconfig.json
+        ports:
+            - 8081:8081
+        command: yarn dev
+        tty: true
+        restart: unless-stopped
+
     rhea-postgres:
         environment:
             POSTGRES_USER: docker
@@ -146,8 +171,7 @@ services:
         volumes:
             - rhea-db:/var/lib/postgresql/data/:cached
         restart: unless-stopped
-        networks:
-            - dev_network
+
     rhea-migrate:
         image: timelines-rhea:dev
         build:
@@ -168,12 +192,12 @@ services:
                 condition: service_healthy
         command: sh -c "yarn prisma migrate deploy && yarn prisma db seed"
         networks:
-            - dev_network
+            - backend-rhea-db
+
     redis:
         ports:
             - "6379:6379"
-        networks:
-            - dev_network
+
     s3-minio:
         image: minio/minio
         ports:
@@ -193,7 +217,8 @@ services:
             timeout: 5s
             retries: 3
         networks:
-            - dev_network
+            - dev-minio
+
     s3-minio-setup:
         image: minio/mc
         depends_on:
@@ -208,7 +233,8 @@ services:
                 echo 'MinIO setup completed successfully';
             "
         networks:
-            - dev_network
+            - dev-minio
+
     chronos:
         image: timelines-chronos:dev
         build:
@@ -237,7 +263,7 @@ services:
             s3-minio:
                 condition: service_healthy
         networks:
-            - dev_network
+            - dev-minio
         restart: unless-stopped
 volumes:
     redis:
@@ -248,5 +274,6 @@ volumes:
     backrest_cache:
 
 networks:
-    dev_network:
-        name: timelines_dev_network
+    dev-minio:
+    dev-playwright:
+        name: neverkin-playwright

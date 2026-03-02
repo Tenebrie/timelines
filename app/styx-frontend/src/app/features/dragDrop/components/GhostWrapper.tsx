@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack'
-import { createRef, memo, ReactNode, useState } from 'react'
+import { createRef, memo, ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 
 type WrapperProps = {
@@ -15,19 +15,16 @@ type WrapperProps = {
 }
 
 export const GhostWrapper = ({ children, left, top, align }: WrapperProps) => {
-	const parseAlign = (size: number, align: 'start' | 'center' | 'end') => {
+	const getTransformAlign = (align: 'start' | 'center' | 'end') => {
 		switch (align) {
 			case 'start':
-				return '0'
+				return '0%'
 			case 'center':
-				return `-${size / 2}px`
+				return '-50%'
 			case 'end':
-				return `-${size}px`
+				return '-100%'
 		}
 	}
-
-	const [width, setWidth] = useState(0)
-	const [height, setHeight] = useState(0)
 
 	if (!portalSlotRef.current) {
 		return null
@@ -38,17 +35,9 @@ export const GhostWrapper = ({ children, left, top, align }: WrapperProps) => {
 			style={{
 				pointerEvents: 'none',
 				position: 'absolute',
-				transform: `translate(${left}px, ${top}px)`,
-				top: parseAlign(height, align.top),
-				left: parseAlign(width, align.left),
-			}}
-			ref={(ref) => {
-				if (!ref) {
-					return
-				}
-				const rect = ref.getBoundingClientRect()
-				setWidth(rect.width)
-				setHeight(rect.height)
+				transform: `translate(${Math.round(left)}px, ${Math.round(top)}px) translate(${getTransformAlign(align.left)}, ${getTransformAlign(align.top)})`,
+				transition: 'transform 0.05s ease-out',
+				willChange: 'transform',
 			}}
 		>
 			{children}
@@ -71,7 +60,7 @@ function DragDropPortalSlotComponent() {
 				pointerEvents: 'none',
 				width: '100%',
 				height: '100%',
-				zIndex: 1000,
+				zIndex: 3,
 				overflow: 'hidden',
 			}}
 		>

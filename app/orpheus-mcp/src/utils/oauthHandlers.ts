@@ -79,6 +79,13 @@ export const handleAuthorize = (req: http.IncomingMessage, res: http.ServerRespo
 		return
 	}
 
+	if (!OAuthService.validateRedirectUri(clientId, redirectUri)) {
+		jsonResponse(res, 400, {
+			error: 'invalid_client',
+		})
+		return
+	}
+
 	if (codeChallengeMethod !== 'S256') {
 		jsonResponse(res, 400, {
 			error: 'invalid_request',
@@ -87,35 +94,7 @@ export const handleAuthorize = (req: http.IncomingMessage, res: http.ServerRespo
 		return
 	}
 
-	// Show a simple HTML form for login
-	const html = `
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Authorize MCP Access</title>
-	<style>
-		body { font-family: system-ui; max-width: 400px; margin: 100px auto; padding: 20px; }
-		input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
-		button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; cursor: pointer; }
-		button:hover { background: #0056b3; }
-		.error { color: #dc3545; margin-bottom: 10px; }
-	</style>
-</head>
-<body>
-	<h2>Authorize MCP Access</h2>
-	<p>Claude is requesting access to your Timelines data. Please log in to authorize.</p>
-	<form method="POST" action="/authorize">
-		<input type="hidden" name="client_id" value="${clientId}">
-		<input type="hidden" name="redirect_uri" value="${redirectUri}">
-		<input type="hidden" name="state" value="${state || ''}">
-		<input type="hidden" name="code_challenge" value="${codeChallenge}">
-		<input type="email" name="email" placeholder="Email" required>
-		<input type="password" name="password" placeholder="Password" required>
-		<button type="submit">Log in & Authorize</button>
-	</form>
-</body>
-</html>
-`
+	const html = getLoginPageHtml({ clientId, redirectUri, state, codeChallenge })
 	res.writeHead(200, { 'Content-Type': 'text/html' })
 	res.end(html)
 }
@@ -132,7 +111,7 @@ export const handleAuthorizePost = async (req: http.IncomingMessage, res: http.S
 	const codeChallenge = body.get('code_challenge')
 	const clientId = body.get('client_id')
 
-	if (!email || !password || !redirectUri || !codeChallenge) {
+	if (!email || !password || !redirectUri || !codeChallenge || !clientId) {
 		jsonResponse(res, 400, { error: 'invalid_request' })
 		return
 	}
@@ -144,34 +123,13 @@ export const handleAuthorizePost = async (req: http.IncomingMessage, res: http.S
 
 	if (loginResponse.error || !loginResponse.data) {
 		// Show error page with login form again
-		const html = `
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Authorize MCP Access</title>
-	<style>
-		body { font-family: system-ui; max-width: 400px; margin: 100px auto; padding: 20px; }
-		input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
-		button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; cursor: pointer; }
-		button:hover { background: #0056b3; }
-		.error { color: #dc3545; margin-bottom: 10px; padding: 10px; background: #f8d7da; border-radius: 4px; }
-	</style>
-</head>
-<body>
-	<h2>Authorize MCP Access</h2>
-	<div class="error">Invalid email or password. Please try again.</div>
-	<form method="POST" action="/authorize">
-		<input type="hidden" name="client_id" value="${clientId || ''}">
-		<input type="hidden" name="redirect_uri" value="${redirectUri}">
-		<input type="hidden" name="state" value="${state || ''}">
-		<input type="hidden" name="code_challenge" value="${codeChallenge}">
-		<input type="email" name="email" placeholder="Email" value="${email}" required>
-		<input type="password" name="password" placeholder="Password" required>
-		<button type="submit">Log in & Authorize</button>
-	</form>
-</body>
-</html>
-`
+		const html = getLoginPageHtml({
+			clientId,
+			redirectUri,
+			state,
+			codeChallenge,
+			errorMessage: 'Invalid email or password. Please try again.',
+		})
 		res.writeHead(200, { 'Content-Type': 'text/html' })
 		res.end(html)
 		return
@@ -179,7 +137,12 @@ export const handleAuthorizePost = async (req: http.IncomingMessage, res: http.S
 
 	// Login successful - create authorization code with the real user ID
 	const userId = loginResponse.data.user.id
-	const code = OAuthService.createAuthorizationCode(userId, codeChallenge)
+	const code = OAuthService.createAuthorizationCode({
+		userId,
+		codeChallenge,
+		clientId,
+		redirectUri,
+	})
 	const redirectUrl = new URL(redirectUri)
 	redirectUrl.searchParams.set('code', code)
 	if (state) redirectUrl.searchParams.set('state', state)
@@ -196,6 +159,8 @@ export const handleToken = async (req: http.IncomingMessage, res: http.ServerRes
 	const grantType = body.get('grant_type')
 	const code = body.get('code')
 	const codeVerifier = body.get('code_verifier')
+	const clientId = body.get('client_id')
+	const redirectUri = body.get('redirect_uri')
 
 	// Validate grant type
 	if (grantType !== 'authorization_code') {
@@ -204,13 +169,21 @@ export const handleToken = async (req: http.IncomingMessage, res: http.ServerRes
 	}
 
 	// Validate required parameters
-	if (!code || !codeVerifier) {
-		jsonResponse(res, 400, { error: 'invalid_request', error_description: 'Missing code or code_verifier' })
+	if (!code || !codeVerifier || !clientId || !redirectUri) {
+		jsonResponse(res, 400, {
+			error: 'invalid_request',
+			error_description: 'Missing code, code_verifier, client_id, or redirect_uri',
+		})
 		return
 	}
 
 	// Exchange code for token
-	const accessToken = OAuthService.exchangeCodeForToken(code, codeVerifier)
+	const accessToken = OAuthService.exchangeCodeForToken({
+		code,
+		codeVerifier,
+		clientId,
+		redirectUri,
+	})
 	if (!accessToken) {
 		jsonResponse(res, 400, {
 			error: 'invalid_grant',
@@ -269,4 +242,51 @@ export const handleRegister = async (req: http.IncomingMessage, res: http.Server
 			error_description: 'Invalid registration request',
 		})
 	}
+}
+
+function getLoginPageHtml({
+	clientId,
+	redirectUri,
+	state,
+	codeChallenge,
+	errorMessage,
+}: {
+	clientId: string
+	redirectUri: string
+	state: string | null
+	codeChallenge: string
+	errorMessage?: string
+}): string {
+	const escapeHtml = (s: string) =>
+		s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+
+	return `
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Authorize MCP Access</title>
+	<style>
+		body { font-family: system-ui; max-width: 400px; margin: 100px auto; padding: 20px; }
+		input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+		button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; cursor: pointer; }
+		button:hover { background: #0056b3; }
+		.error { color: #dc3545; margin-bottom: 10px; }
+	</style>
+</head>
+<body>
+	<h2>Authorize MCP Access</h2>
+	${errorMessage ? `<div class="error">${escapeHtml(errorMessage)}</div>` : ''}
+	<p>Your agent is requesting access to your Timelines data. Please log in to authorize.</p>
+	<form method="POST" action="/authorize">
+		<input type="hidden" name="client_id" value="${escapeHtml(clientId)}">
+		<input type="hidden" name="redirect_uri" value="${escapeHtml(redirectUri)}">
+		<input type="hidden" name="state" value="${escapeHtml(state || '')}">
+		<input type="hidden" name="code_challenge" value="${escapeHtml(codeChallenge)}">
+		<input type="email" name="email" placeholder="Email" required>
+		<input type="password" name="password" placeholder="Password" required>
+		<button type="submit">Log in & Authorize</button>
+	</form>
+</body>
+</html>
+`
 }

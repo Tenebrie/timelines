@@ -33,6 +33,43 @@ export type UserAnnouncement = Prisma.UserAnnouncementModel
  */
 export type Asset = Prisma.AssetModel
 /**
+ * Model Calendar
+ * 
+ */
+export type Calendar = Prisma.CalendarModel
+/**
+ * Model CalendarUnit
+ * 
+ */
+export type CalendarUnit = Prisma.CalendarUnitModel
+/**
+ * Model CalendarUnitRelation
+ * 
+ */
+export type CalendarUnitRelation = Prisma.CalendarUnitRelationModel
+/**
+ * Model CalendarPresentation
+ * *
+ *  * Calendar presentations
+ */
+export type CalendarPresentation = Prisma.CalendarPresentationModel
+/**
+ * Model CalendarPresentationUnit
+ * 
+ */
+export type CalendarPresentationUnit = Prisma.CalendarPresentationUnitModel
+/**
+ * Model CalendarSeason
+ * *
+ *  * Seasons
+ */
+export type CalendarSeason = Prisma.CalendarSeasonModel
+/**
+ * Model CalendarSeasonInterval
+ * 
+ */
+export type CalendarSeasonInterval = Prisma.CalendarSeasonIntervalModel
+/**
  * Model SavedColor
  * 
  */
@@ -107,3 +144,8 @@ export type WorldEventDelta = Prisma.WorldEventDeltaModel
  * 
  */
 export type WorldEventTrack = Prisma.WorldEventTrackModel
+/**
+ * Model WorldShareLink
+ * 
+ */
+export type WorldShareLink = Prisma.WorldShareLinkModel

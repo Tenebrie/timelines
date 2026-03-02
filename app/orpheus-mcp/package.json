@@ -11,11 +11,12 @@
 		"build": "tsc -p . && tsc-alias -p tsconfig.json",
 		"openapi": "openapi-typescript http://localhost:3000/api-json -o ./src/api/rhea-api.ts",
 		"lint": "eslint src/",
-		"lint-fix": "eslint src/ --fix",
+		"lint:fix": "eslint src/ --fix",
 		"prod": "node dist/index.js",
 		"start": "nodemon --watch src --ext ts,js,json --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
 		"test": "vitest --run",
-		"test:watch": "vitest"
+		"test:watch": "vitest",
+		"test:coverage": "vitest run --coverage"
 	},
 	"lint-staged": {
 		"*.(ts)": "eslint --fix"
@@ -34,18 +35,20 @@
 		"@types/node": "^24.1.0",
 		"@typescript-eslint/eslint-plugin": "^8.51.0",
 		"@typescript-eslint/parser": "^8.51.0",
+		"@vitest/coverage-v8": "^4.0.18",
 		"eslint": "^9.39.2",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-simple-import-sort": "^12.1.1",
 		"eslint-plugin-unused-imports": "^4.1.4",
+		"lint-staged": "^15.2.11",
+		"msw": "^2.12.10",
 		"nodemon": "^3.1.9",
 		"openapi-typescript": "^7.6.1",
-		"lint-staged": "^15.2.11",
 		"prettier": "^3.4.2",
 		"tsc-alias": "^1.8.10",
 		"tsx": "^4.19.4",
 		"typescript": "^5.7.3",
-		"vitest": "^3.0.5"
+		"vitest": "^4.0.18"
 	}
 }

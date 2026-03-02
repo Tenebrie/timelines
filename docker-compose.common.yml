@@ -1,45 +1,83 @@
 version: '3.8'
+
+networks:
+  frontend-styx:
+  frontend-thetis:
+  backend-rhea:
+  backend-rhea-db:
+  backend-calliope:
+  backend-orpheus:
+  backend-redis:
+
 services:
     gatekeeper:
         depends_on:
             - styx
             - rhea
             - calliope
+            - thetis
         ports:
             - 80:80
             - 443:443
         tty: false
+        networks:
+            - frontend-styx
+            - frontend-thetis
+            - backend-rhea
+            - backend-calliope
+            - backend-orpheus
     styx:
         working_dir: /app/styx
         depends_on:
             - rhea
+        networks:
+            - frontend-styx
     rhea:
         working_dir: /app/rhea
         depends_on:
             - rhea-postgres
             - redis
+        networks:
+            - backend-rhea
+            - backend-rhea-db
+            - backend-redis
     calliope:
         working_dir: /app/calliope
         depends_on:
             - redis
+        networks:
+            - backend-rhea
+            - backend-calliope
+            - backend-redis
     orpheus:
         working_dir: /app/orpheus
         depends_on:
             - rhea
+        networks:
+            - backend-rhea
+            - backend-orpheus
+    thetis:
+        working_dir: /app/thetis
+        networks:
+            - frontend-thetis
     rhea-postgres:
         image: postgres:15-alpine
         environment:
             POSTGRES_USER: docker
             POSTGRES_PASSWORD: docker
             POSTGRES_DB: db
+        networks:
+            - backend-rhea-db
         healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U docker -d db"]
+            test: [ "CMD-SHELL", "pg_isready -U docker -d db" ]
             interval: 5s
             timeout: 5s
             retries: 5
             start_period: 30s
     redis:
         image: redis:7-alpine
+        networks:
+            - backend-redis
     chronos:
         environment:
             POSTGRES_HOST: rhea-postgres
@@ -48,3 +86,5 @@ services:
             POSTGRES_DB: db
         depends_on:
             - rhea-postgres
+        networks:
+            - backend-rhea-db

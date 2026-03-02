@@ -16,10 +16,10 @@ import {
 import { TimelineTrack } from '../hooks/useEventTracks'
 import { TimelineState } from '../utils/TimelineState'
 import { ControlledScroller, EVENT_SCROLL_RESET_PERIOD } from './components/ControlledScroller'
-import { TimelineTrackItemDragDrop } from './dragDrop/TimelineTrackItemDragDrop'
 import { TimelineEventTrackTitle } from './marker/TimelineEventTrackTitle'
-import { TimelineMarker } from './marker/TimelineMarker'
+import { TimelineMarkerWithChain } from './marker/TimelineMarkerWithChain'
 import { TrackContainer } from './styles'
+import { TimelineTracksItemDragDrop } from './TimelineTracksItemDragDrop'
 
 type Props = {
 	track: TimelineTrack
@@ -71,7 +71,8 @@ export function TimelineTracksItemComponent({
 			forceUpdate: boolean,
 		) => {
 			const prevScroll = lastRecordedScroll.current
-			const staggerValue = track.position * (1000 / trackCount)
+			const staggerPosition = Math.abs(track.position) === Infinity ? 0 : track.position
+			const staggerValue = staggerPosition * (1000 / trackCount)
 			if (
 				!forceUpdate &&
 				prevScroll !== null &&
@@ -84,8 +85,30 @@ export function TimelineTracksItemComponent({
 			const markers = t.events
 				.filter((event) => {
 					const position = realTimeToScaledTime(Math.floor(event.markerPosition)) + TimelineState.scroll
+					if (position >= -1250 && position <= width + 1250) {
+						return true
+					}
 
-					return position >= -3000 && position <= width + 3000
+					if (!event.chainEntity) {
+						return false
+					}
+
+					const chainBasePosition = event.chainEntity.markerPosition
+					const chainPosition = realTimeToScaledTime(Math.floor(chainBasePosition)) + TimelineState.scroll
+
+					if (chainPosition >= -1250 && chainPosition <= width + 1250) {
+						return true
+					}
+					return position < 0 && chainPosition > 0
+				})
+				.filter((event) => {
+					if (!event.followingEntity) {
+						return true
+					}
+
+					const diff = event.followingEntity?.markerPosition - event.markerPosition
+					const pixelsToNext = realTimeToScaledTime(diff)
+					return pixelsToNext >= 1
 				})
 				.sort((a, b) => a.markerPosition - b.markerPosition)
 
@@ -119,6 +142,7 @@ export function TimelineTracksItemComponent({
 			$activeBg={theme.custom.palette.background.softer}
 			className={`${isDragging ? 'dragging' : ''} allow-timeline-click ${trackActive ? 'active' : ''}`}
 			data-trackid={track.id}
+			data-testid="TimelineTrack"
 		>
 			{track.id !== 'default' && (
 				<Divider sx={{ position: 'absolute', bottom: 0, width: '100%', pointerEvents: 'none' }} />
@@ -137,7 +161,7 @@ export function TimelineTracksItemComponent({
 			/>
 			<ControlledScroller resetPeriod={EVENT_SCROLL_RESET_PERIOD}>
 				{visibleMarkers.map((event) => (
-					<TimelineMarker
+					<TimelineMarkerWithChain
 						key={event.key}
 						marker={event}
 						visible={visible}
@@ -148,7 +172,7 @@ export function TimelineTracksItemComponent({
 				))}
 			</ControlledScroller>
 			<TimelineEventTrackTitle track={track} />
-			<TimelineTrackItemDragDrop
+			<TimelineTracksItemDragDrop
 				track={track}
 				receiverRef={dragDropReceiverRef}
 				onDragChanged={setIsDragging}

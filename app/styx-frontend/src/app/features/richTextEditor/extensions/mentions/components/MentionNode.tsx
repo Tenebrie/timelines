@@ -3,7 +3,7 @@ import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { createRoot, Root } from 'react-dom/client'
 import { Provider as ReduxProvider } from 'react-redux'
 
-import { dispatchEvent } from '@/app/features/eventBus'
+import { dispatchGlobalEvent } from '@/app/features/eventBus'
 import { CustomThemeProvider } from '@/app/features/theming/context/CustomThemeProvider'
 import { store } from '@/app/store'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
@@ -142,6 +142,7 @@ export const MentionNode = Node.create({
 				const tagId = node.attrs.componentProps.tag as string | undefined
 				const state = store.getState()
 				const worldId = state.world.id
+				const fallbackName = node.attrs.name
 
 				const entityId = actorId ?? eventId ?? articleId ?? tagId
 				if (entityId) {
@@ -151,16 +152,24 @@ export const MentionNode = Node.create({
 
 				const Component = () => {
 					useEffectOnce(() => {
-						dispatchEvent['richEditor/mentionRender/onEnd']({ node })
+						dispatchGlobalEvent['richEditor/mentionRender/onEnd']({ node })
 					})
 
 					return (
 						<ReduxProvider store={store}>
 							<CustomThemeProvider colorMode={state.preferences.colorMode}>
-								{actorId ? <ActorMentionChip worldId={worldId} actorId={actorId} /> : null}
-								{eventId ? <EventMentionChip worldId={worldId} eventId={eventId} /> : null}
-								{articleId ? <ArticleMentionChip worldId={worldId} articleId={articleId} /> : null}
-								{tagId ? <TagMentionChip worldId={worldId} tagId={tagId} /> : null}
+								{actorId ? (
+									<ActorMentionChip worldId={worldId} actorId={actorId} fallbackName={fallbackName} />
+								) : null}
+								{eventId ? (
+									<EventMentionChip worldId={worldId} eventId={eventId} fallbackName={fallbackName} />
+								) : null}
+								{articleId ? (
+									<ArticleMentionChip worldId={worldId} articleId={articleId} fallbackName={fallbackName} />
+								) : null}
+								{tagId ? (
+									<TagMentionChip worldId={worldId} tagId={tagId} fallbackName={fallbackName} />
+								) : null}
 							</CustomThemeProvider>
 						</ReduxProvider>
 					)
@@ -176,22 +185,22 @@ export const MentionNode = Node.create({
 				},
 				{ timeout: 100 },
 			)
-			dispatchEvent['richEditor/mentionRender/onStart']({ node: initialNode })
+			dispatchGlobalEvent['richEditor/mentionRender/onStart']({ node: initialNode })
 
 			return {
 				dom,
 				update: (node) => {
-					dispatchEvent['richEditor/mentionRender/onEnd']({ node: lastNode })
+					dispatchGlobalEvent['richEditor/mentionRender/onEnd']({ node: lastNode })
 					lastNode = node
-					dispatchEvent['richEditor/mentionRender/onStart']({ node })
+					dispatchGlobalEvent['richEditor/mentionRender/onStart']({ node })
 					rerender(node)
 					return true
 				},
 				destroy: () => {
-					dispatchEvent['richEditor/mentionRender/onEnd']({ node: lastNode })
+					dispatchGlobalEvent['richEditor/mentionRender/onEnd']({ node: lastNode })
 					requestIdleCallback(() => {
 						root?.unmount()
-						dispatchEvent['richEditor/mentionRender/onEnd']({ node: lastNode })
+						dispatchGlobalEvent['richEditor/mentionRender/onEnd']({ node: lastNode })
 					})
 				},
 			}

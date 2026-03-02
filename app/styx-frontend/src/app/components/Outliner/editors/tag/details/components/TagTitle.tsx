@@ -30,7 +30,7 @@ export const TagTitle = ({ draft }: Props) => {
 			setEditing(false)
 			setName(draft.name)
 		},
-		editing && ShortcutPriorities.INPUT_FIELD,
+		editing && ShortcutPriorities.InputField,
 	)
 
 	useEffect(() => {

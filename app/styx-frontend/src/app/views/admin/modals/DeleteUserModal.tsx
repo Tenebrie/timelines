@@ -1,6 +1,7 @@
 import Delete from '@mui/icons-material/Delete'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
+import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import { useState } from 'react'
 
@@ -12,7 +13,9 @@ import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/compo
 
 export const DeleteUserModal = () => {
 	const [deleteUser, { isLoading }] = useAdminDeleteUserMutation()
+
 	const [deletionError, setDeletionError] = useState<string | null>(null)
+	const [confirmationValue, setConfirmationValue] = useState('')
 
 	const { isOpen, targetUser, close } = useModal('deleteUserModal')
 
@@ -56,13 +59,17 @@ export const DeleteUserModal = () => {
 		isOpen ? 1 : -1,
 	)
 
+	if (!targetUser) {
+		return null
+	}
+
 	return (
 		<Modal visible={isOpen} onClose={onCloseAttempt}>
 			<ModalHeader>Delete User</ModalHeader>
 			<Stack spacing={2}>
 				<div>
-					Attempting to permanently delete user &apos;<b>{targetUser?.username}</b>&apos;. This will also
-					delete all their data.
+					Attempting to permanently delete user &apos;<b>{targetUser.username}</b>&apos; |{' '}
+					<b>{targetUser.email}</b>
 				</div>
 				<div>This action can&apos;t be reverted!</div>
 				{deletionError && (
@@ -70,6 +77,14 @@ export const DeleteUserModal = () => {
 						Unable to delete: <b>{deletionError}</b>
 					</div>
 				)}
+				<TextField
+					label="Confirm User Email"
+					value={confirmationValue}
+					placeholder={targetUser.email}
+					onChange={(e) => setConfirmationValue(e.target.value)}
+					fullWidth
+					helperText="Type the user email to confirm this action"
+				/>
 			</Stack>
 			<ModalFooter>
 				<Tooltip title={shortcutLabel} arrow placement="top">
@@ -80,6 +95,7 @@ export const DeleteUserModal = () => {
 						onClick={onConfirm}
 						loadingPosition="start"
 						startIcon={<Delete />}
+						disabled={confirmationValue.trim() !== targetUser.email || !isOpen}
 					>
 						<span>Confirm</span>
 					</Button>

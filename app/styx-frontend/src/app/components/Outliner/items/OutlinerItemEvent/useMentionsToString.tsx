@@ -1,47 +1,48 @@
 import { Actor, MentionDetails } from '@api/types/worldTypes'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useEntityColorResolver } from '@/app/utils/colors/useEntityColor'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 export const useMentionsToString = () => {
-	const { actors: baseActors } = useSelector(getWorldState, (a, b) => a.actors === b.actors)
+	const { actors: baseActors, events: baseEvents } = useSelector(
+		getWorldState,
+		(a, b) => a.actors === b.actors && a.events === b.events,
+	)
 
-	const mentionsToString = (
-		data: MentionDetails[],
-		owningActor: Actor | null,
-		maxActorsDisplayed: number,
-	) => {
-		const mentions = data.map((m) => m.targetId)
-		const actors = baseActors.filter((a) => a.id !== owningActor?.id).filter((a) => mentions.includes(a.id))
+	const getEntityColor = useEntityColorResolver()
 
-		const actorToColor = (actor: Actor) => {
-			if (actor.color) {
-				return actor.color
+	const mentionsToString = useCallback(
+		(data: MentionDetails[], owningActor: Actor | null, maxActorsDisplayed: number) => {
+			const mentions = data.map((m) => m.targetId)
+			const actors = baseActors.filter((a) => a.id !== owningActor?.id).filter((a) => mentions.includes(a.id))
+			const events = baseEvents.filter((e) => mentions.includes(e.id))
+
+			const shownMentions = [...actors, ...events]
+
+			if (shownMentions.length === 0) {
+				return ''
+			} else if (shownMentions.length <= maxActorsDisplayed) {
+				return shownMentions.map((actor, index) => (
+					<React.Fragment key={actor.id}>
+						<span style={{ color: getEntityColor(actor) }}>{actor.name}</span>
+						{index < shownMentions.length - 1 ? ' & ' : ''}
+					</React.Fragment>
+				))
+			} else {
+				return shownMentions.slice(0, maxActorsDisplayed - 1).map((actor, index) => (
+					<React.Fragment key={actor.id}>
+						<span style={{ color: getEntityColor(actor) }}>{actor.name}</span>
+						{index < maxActorsDisplayed - 2
+							? ' & '
+							: ` & (and ${shownMentions.length - maxActorsDisplayed + 1} more...)`}
+					</React.Fragment>
+				))
 			}
-			return ''
-		}
-
-		if (actors.length === 0) {
-			return ''
-		} else if (actors.length <= maxActorsDisplayed) {
-			return actors.map((actor, index) => (
-				<React.Fragment key={actor.id}>
-					<span style={{ color: actorToColor(actor) }}>{actor.name}</span>
-					{index < actors.length - 1 ? ' & ' : ''}
-				</React.Fragment>
-			))
-		} else {
-			return actors.slice(0, maxActorsDisplayed - 1).map((actor, index) => (
-				<React.Fragment key={actor.id}>
-					<span style={{ color: actorToColor(actor) }}>{actor.name}</span>
-					{index < maxActorsDisplayed - 2
-						? ' & '
-						: ` & (and ${actors.length - maxActorsDisplayed + 1} more...)`}
-				</React.Fragment>
-			))
-		}
-	}
+		},
+		[baseActors, baseEvents, getEntityColor],
+	)
 
 	return mentionsToString
 }

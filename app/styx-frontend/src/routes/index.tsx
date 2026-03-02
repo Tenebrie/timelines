@@ -1,14 +1,11 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
-import { Home } from '@/app/views/home/Home'
+import { HomeView } from '@/app/views/home/HomeView'
 
 export const Route = createFileRoute('/')({
 	component: RouteComponent,
-	beforeLoad: async () => {
-		throw redirect({ to: '/home' })
-	},
 })
 
 function RouteComponent() {
-	return <Home />
+	return <HomeView />
 }

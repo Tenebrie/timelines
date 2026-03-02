@@ -15,7 +15,7 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-const worldColorTag = 'WorldColor'
+import { worldColorTag } from './utils/tags.js'
 
 const router = new Router().with(SessionMiddleware)
 

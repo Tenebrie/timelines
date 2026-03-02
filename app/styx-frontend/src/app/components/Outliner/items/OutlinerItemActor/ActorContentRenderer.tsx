@@ -12,7 +12,7 @@ type Props = {
 	active: boolean
 }
 
-export const EventContentRenderer = ({ actor, active }: Props) => {
+export const ActorContentRenderer = ({ actor, active }: Props) => {
 	const paragraphs =
 		actor.description.length > 0 ? [actor.descriptionRich] : ['<i>No description provided.</i>']
 

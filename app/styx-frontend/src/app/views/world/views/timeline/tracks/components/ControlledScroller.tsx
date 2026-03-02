@@ -5,8 +5,8 @@ import { useEventBusSubscribe } from '@/app/features/eventBus'
 
 import { TimelineState } from '../../utils/TimelineState'
 
-export const EVENT_SCROLL_RESET_PERIOD = 1000
-export const CONTROLLED_SCROLLER_SIZE = 10000
+export const EVENT_SCROLL_RESET_PERIOD = 10000
+export const CONTROLLED_SCROLLER_SIZE = 100000
 
 type Props = {
 	children: React.ReactNode
@@ -19,6 +19,7 @@ function ControlledScrollerComponent({ children, resetPeriod }: Props) {
 	const ref = useRef<HTMLDivElement>(null)
 
 	const mod = useCallback((n: number, m: number) => ((n % m) + m) % m, [])
+	const scrollValueRef = useRef(0)
 
 	useEventBusSubscribe['timeline/onScroll']({
 		callback: (newScroll) => {
@@ -26,33 +27,43 @@ function ControlledScrollerComponent({ children, resetPeriod }: Props) {
 				return
 			}
 
-			ref.current.scrollTo({
-				left: Math.round(mod(-newScroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod + 42,
-			})
+			scrollValueRef.current =
+				Math.round(mod(-newScroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod
+			ref.current.style.transform = `translateX(${-scrollValueRef.current}px)`
 		},
 	})
 
 	useEffect(() => {
-		ref.current?.scrollTo({
-			left:
-				Math.round(mod(-TimelineState.scroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod + 42,
-		})
+		if (!ref.current) {
+			return
+		}
+		scrollValueRef.current =
+			Math.round(mod(-TimelineState.scroll - 1, resetPeriod)) + CONTROLLED_SCROLLER_SIZE - resetPeriod
+		ref.current.style.transform = `translateX(${-scrollValueRef.current}px)`
 	}, [mod, ref, resetPeriod])
 
 	return (
 		<Box
-			ref={ref}
 			sx={{
 				position: 'absolute',
 				bottom: 0,
 				width: '100%',
 				height: '100%',
 				overflowX: 'hidden',
-				overflowY: 'visible',
+				overflowY: 'hidden',
 				pointerEvents: 'none',
 			}}
 		>
-			<Box sx={{ width: `${CONTROLLED_SCROLLER_SIZE * 2}px`, height: '100%' }}>{children}</Box>
+			<Box
+				ref={ref}
+				sx={{
+					width: `${CONTROLLED_SCROLLER_SIZE * 2}px`,
+					height: '100%',
+					willChange: 'transform',
+				}}
+			>
+				{children}
+			</Box>
 		</Box>
 	)
 }
