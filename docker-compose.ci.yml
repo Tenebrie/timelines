@@ -4,7 +4,7 @@ services:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile.prod
         networks:
-            ci_network:
+            ci-playwright:
                 aliases:
                     - app.gatekeeper
         ports:
@@ -17,7 +17,7 @@ services:
             args:
                 VERSION: ci
         networks:
-            - ci_network
+            - ci-playwright
 
     rhea:
         build:
@@ -37,7 +37,7 @@ services:
             rhea-postgres:
                 condition: service_healthy
         networks:
-            - ci_network
+            - ci-playwright
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
             interval: 5s
@@ -57,7 +57,7 @@ services:
         depends_on:
             - redis
         networks:
-            - ci_network
+            - ci-playwright
 
     orpheus:
         build:
@@ -71,14 +71,14 @@ services:
             rhea:
                 condition: service_healthy
         networks:
-            - ci_network
+            - ci-playwright
 
     thetis:
         build:
             context: ./
             dockerfile: ./app/thetis-landing/Dockerfile.prod
         networks:
-            - ci_network
+            - ci-playwright
 
     rhea-postgres:
         image: postgres:15-alpine
@@ -93,7 +93,7 @@ services:
             retries: 5
             start_period: 10s
         networks:
-            - ci_network
+            - ci-playwright
 
     rhea-migrate:
         build:
@@ -106,12 +106,12 @@ services:
                 condition: service_healthy
         command: sh -c "yarn prisma migrate deploy"
         networks:
-            - ci_network
+            - ci-playwright
 
     redis:
         image: redis:7-alpine
         networks:
-            - ci_network
+            - ci-playwright
 
     s3-minio:
         image: minio/minio
@@ -125,7 +125,7 @@ services:
             timeout: 5s
             retries: 3
         networks:
-            - ci_network
+            - ci-playwright
 
     s3-minio-setup:
         image: minio/mc
@@ -141,8 +141,8 @@ services:
                 echo 'MinIO setup completed successfully';
             "
         networks:
-            - ci_network
+            - ci-playwright
 
 networks:
-    ci_network:
-        name: timelines_ci_network
+    ci-playwright:
+        name: neverkin-playwright
