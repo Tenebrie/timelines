@@ -163,15 +163,14 @@ async function main() {
 		}
 
 		if (url.pathname === '/mcp') {
-			// Validate OAuth token if required
-			let authenticatedUserId: string | null = null
-			if (OAuthService.loginEnforced()) {
-				authenticatedUserId = validateBearerToken(req)
-				if (!authenticatedUserId) {
-					res.writeHead(401, { 'Content-Type': 'application/json' })
-					res.end(JSON.stringify({ error: 'unauthorized', error_description: 'Valid Bearer token required' }))
-					return
-				}
+			// Try to validate OAuth token (use it if provided, require it if enforced)
+			const authenticatedUserId: string | null = validateBearerToken(req)
+			if (OAuthService.loginEnforced() && !authenticatedUserId) {
+				res.writeHead(401, { 'Content-Type': 'application/json' })
+				res.end(JSON.stringify({ error: 'unauthorized', error_description: 'Valid Bearer token required' }))
+				return
+			}
+			if (authenticatedUserId) {
 				console.info(`Authenticated request from user: ${authenticatedUserId}`)
 			}
 

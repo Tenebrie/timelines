@@ -1,6 +1,8 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { MentionData } from '@src/services/MentionsService.js'
 import { RedisService } from '@src/services/RedisService.js'
+import { RichTextService } from '@src/services/RichTextService.js'
 import { WikiService } from '@src/services/WikiService.js'
 import {
 	NumberValidator,
@@ -18,6 +20,7 @@ import {
 
 import { SessionMiddleware } from '../middleware/SessionMiddleware.js'
 import { worldWikiArticleTag, worldWikiTag } from './utils/tags.js'
+import { ContentStringValidator } from './validators/ContentStringValidator.js'
 import { NullableStringValidator } from './validators/NullableStringValidator.js'
 import { StringArrayValidator } from './validators/StringArrayValidator.js'
 
@@ -56,16 +59,30 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
-	const { name } = useRequestBody(ctx, {
+	const { name, contentRich } = useRequestBody(ctx, {
 		name: RequiredParam(StringValidator),
+		contentRich: OptionalParam(ContentStringValidator),
 	})
+
+	let parsedContentRich: string | undefined
+	let mentions: MentionData[] | undefined
+	if (contentRich) {
+		const parsed = await RichTextService.parseContentString({
+			worldId,
+			contentString: contentRich,
+		})
+		parsedContentRich = contentRich
+		mentions = parsed.mentions
+	}
 
 	const articleCount = await WikiService.getArticleCount({ worldId })
 
 	const article = await WikiService.createWikiArticle({
 		worldId,
 		name,
+		contentRich: parsedContentRich ?? '',
 		position: articleCount,
+		mentions,
 	})
 
 	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })
