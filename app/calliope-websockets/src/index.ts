@@ -122,6 +122,16 @@ app.ws.use(
 	}),
 )
 
+app.use(async (ctx, next) => {
+	if (ctx.path === '/calliope/health') {
+		ctx.set('Content-Type', 'text/plain; charset=utf-8')
+		ctx.status = 200
+		ctx.body = 'OK'
+	} else {
+		await next()
+	}
+})
+
 app.use(
 	bodyParser({
 		enableTypes: ['text', 'json', 'form'],
