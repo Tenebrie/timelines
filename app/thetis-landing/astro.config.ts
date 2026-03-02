@@ -40,6 +40,7 @@ export default defineConfig({
 				'https://neverkin.com/',
 				'https://app.neverkin.com/login',
 				'https://app.neverkin.com/create-account',
+				'https://status.neverkin.com/',
 			],
 		}),
 		mdx(),

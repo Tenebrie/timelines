@@ -44,6 +44,7 @@ export const footerData = {
 			title: 'Resources',
 			links: [
 				{ text: 'GitHub', href: 'https://github.com/tenebrie/timelines' },
+				{ text: 'Status', href: 'https://status.neverkin.com' },
 				// { text: 'Changelog', href: '#' },
 				// { text: 'Roadmap', href: '#' },
 			],
