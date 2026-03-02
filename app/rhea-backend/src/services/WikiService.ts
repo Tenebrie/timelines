@@ -82,12 +82,17 @@ export const WikiService = {
 		})
 	},
 
-	createWikiArticle: async (params: Pick<WikiArticle, 'worldId' | 'name' | 'position'>) => {
+	createWikiArticle: async (
+		params: Pick<WikiArticle, 'worldId' | 'name' | 'contentRich' | 'position'> & {
+			mentions?: MentionData[]
+		},
+	) => {
 		return getPrismaClient().$transaction(async (prisma) => {
 			const article = await prisma.wikiArticle.create({
 				data: {
 					worldId: params.worldId,
 					name: params.name,
+					contentRich: params.contentRich,
 					position: params.position * 2,
 				},
 				include: {
@@ -97,6 +102,8 @@ export const WikiService = {
 					contentYjs: true,
 				},
 			})
+
+			await MentionsService.createMentions(article.id, MentionedEntity.Article, params.mentions, prisma)
 
 			await makeSortWikiArticlesQuery(params.worldId, prisma)
 			await makeTouchWorldQuery(params.worldId, prisma)
