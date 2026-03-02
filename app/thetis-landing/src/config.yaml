@@ -22,10 +22,6 @@ metadata:
         width: 1200
         height: 628
     type: website
-  twitter:
-    handle: '@neverkin'
-    site: '@neverkin'
-    cardType: summary_large_image
 
 i18n:
   language: en
