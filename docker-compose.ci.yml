@@ -51,7 +51,7 @@ services:
             dockerfile: ./app/calliope-websockets/Dockerfile.prod
         environment:
             NODE_ENV: production
-            jwt_secret: ci-secret-key
+            jwt-secret: ci-secret-key
             environment: ci
         command: yarn prod
         depends_on:
@@ -66,6 +66,7 @@ services:
         environment:
             NODE_ENV: production
             REQUIRE_OAUTH: "true"
+            jwt-secret: ci-secret-key
         command: yarn prod
         depends_on:
             rhea:
