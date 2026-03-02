@@ -6,7 +6,6 @@ import { useSelector } from 'react-redux'
 
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { useEventIcons } from '@/app/features/icons/hooks/useEventIcons'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
@@ -30,14 +29,12 @@ type Props = {
 export const TimelineMarker = memo(TimelineMarkerComponent)
 
 function TimelineMarkerComponent({ entity, visible, selected, trackHeight, realTimeToScaledTime }: Props) {
-	const { getIconPath } = useEventIcons()
 	const theme = useCustomTheme()
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
 	const cssVariables = {
 		'--border-color': 'gray',
-		'--icon-path': `url(${getIconPath(entity.icon)})`,
 		'--marker-size': `${TimelineEventHeightPx - 6}px`,
 		'--border-radius': entity.markerType === 'deltaState' ? '50%' : '4px',
 	} as CSSProperties

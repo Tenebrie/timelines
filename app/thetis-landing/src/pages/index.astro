@@ -60,15 +60,17 @@ const metadata = {
 	>
 		<Fragment slot="title">
 			Every great story deserves<br />
-			<span class="text-primary">a world that remembers</span>
+			<span class="text-brand-gradient">a world that remembers</span>
 		</Fragment>
 
 		<Fragment slot="subtitle">
 			<span class="hidden sm:inline">
-				<span class="font-semibold">Neverkin</span> is the collaborative worldbuilding platform for writers, game
-				masters, and creators.</span
+				<span class="font-semibold text-brand-gradient">Neverkin</span> is the collaborative worldbuilding platform
+				for writers, game masters, and creators.</span
 			>
-			<span class="block mb-1 sm:hidden font-bold text-primary">Neverkin: Your worlds, organized.</span>
+			<span class="block mb-1 sm:hidden font-bold"
+				><span class="text-brand-gradient">Neverkin</span>: Your worlds, organized.</span
+			>
 			Manage your timelines, characters, lore, and interconnected stories - all in real-time with your friends.
 		</Fragment>
 
@@ -740,7 +742,7 @@ const metadata = {
 	<div id="pricing" class="py-16 md:py-20">
 		<div class="max-w-5xl mx-auto px-4 sm:px-6">
 			<div class="text-center mb-12">
-				<p class="text-primary font-bold uppercase tracking-widest text-sm mb-2">Comparison</p>
+				<p class="text-brand-gradient font-bold uppercase tracking-widest text-sm mb-2">Comparison</p>
 				<h2 class="text-4xl md:text-5xl font-bold tracking-tight dark:text-white mb-4">
 					You can't pay even if you wanted to
 				</h2>
@@ -840,7 +842,7 @@ const metadata = {
 				<div class="shrink-0">
 					<div
 						class="w-[6.5rem] h-[6.5rem] md:w-[8.5rem] md:h-[8.5rem] rounded-full p-[3px]"
-						style="background: linear-gradient(-45deg, #9f44ef, #ef4444);"
+						style="background: var(--aw-brand-gradient);"
 					>
 						<Image
 							src={devPhoto}
@@ -853,7 +855,9 @@ const metadata = {
 				</div>
 
 				<div class="text-center md:text-left">
-					<p class="text-primary font-bold uppercase tracking-widest text-sm mb-2">A word from the dev</p>
+					<p class="text-brand-gradient font-bold uppercase tracking-widest text-sm mb-2">
+						A word from the dev
+					</p>
 					<h2 class="text-2xl md:text-3xl font-bold tracking-tight dark:text-white mb-4">
 						Fancy tagline goes here
 					</h2>

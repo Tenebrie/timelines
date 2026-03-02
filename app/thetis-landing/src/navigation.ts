@@ -44,15 +44,15 @@ export const footerData = {
 			title: 'Resources',
 			links: [
 				{ text: 'GitHub', href: 'https://github.com/tenebrie/timelines' },
-				{ text: 'Changelog', href: '#' },
-				{ text: 'Roadmap', href: '#' },
+				// { text: 'Changelog', href: '#' },
+				// { text: 'Roadmap', href: '#' },
 			],
 		},
 		{
 			title: 'Community',
 			links: [
-				{ text: 'Discord', href: '#' },
-				{ text: 'Reddit', href: '#' },
+				// { text: 'Discord', href: '#' },
+				// { text: 'Reddit', href: '#' },
 				{ text: 'Contribute', href: 'https://github.com/tenebrie/timelines' },
 			],
 		},
@@ -70,7 +70,7 @@ export const footerData = {
 	],
 	socialLinks: [
 		{ ariaLabel: 'GitHub', icon: 'tabler:brand-github', href: 'https://github.com/tenebrie/timelines' },
-		{ ariaLabel: 'Discord', icon: 'tabler:brand-discord', href: '#' },
+		// { ariaLabel: 'Discord', icon: 'tabler:brand-discord', href: '#' },
 	],
 	footNote: `
     <span class="text-muted">© 2022–2026 Neverkin. Open source under <a class="text-primary hover:underline" href="https://github.com/tenebrie/timelines">GPL-3.0</a>.</span>

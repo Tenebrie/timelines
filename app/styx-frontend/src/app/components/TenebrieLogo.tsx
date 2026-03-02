@@ -11,10 +11,6 @@ type Props = {
 export const TenebrieLogo = ({ sizeScalar: providedSizeScalar }: Props) => {
 	const sizeScalar = providedSizeScalar ?? 1
 	return (
-		<Logo
-			src="/logo-celestial-bow.webp"
-			alt="Neverkin Logo"
-			style={{ height: 155 * sizeScalar, marginLeft: -0 }}
-		/>
+		<Logo src="/logo-dragon.webp" alt="Neverkin Logo" style={{ height: 155 * sizeScalar, marginLeft: -0 }} />
 	)
 }
