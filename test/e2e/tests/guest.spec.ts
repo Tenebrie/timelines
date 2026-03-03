@@ -25,4 +25,28 @@ test.describe('Guest user', () => {
 		await new Promise((resolve) => setTimeout(resolve, 2000))
 		expect(socketRequestFound).toBeFalsy()
 	})
+
+	test('is able to log in as guest', async ({ page }) => {
+		await page.goto(makeUrl('/'))
+
+		await page.getByText('Login as a guest').click()
+
+		await page.getByLabel('Home navigation menu').click()
+		await page.getByLabel('Navigate to worlds').click()
+
+		await page.getByLabel('Create new world').click()
+		await page.getByLabel('Name').fill('Guest world')
+		await page.getByText('Create', { exact: true }).click()
+
+		await expect(page.getByLabel('Load world "Guest world"')).toBeVisible()
+
+		await page.getByTestId('UserDropdownButton').click()
+		await page.getByText('Security', { exact: true }).click()
+		await page.getByText('Delete account').click()
+		await page.getByTestId('DeleteAccountConfirmationInput').getByRole('textbox').fill('DELETE')
+		await page.getByText('Delete my account').click()
+
+		await page.waitForURL(makeUrl('/login'))
+		expect(page.getByText("It seems you've already logged in.")).not.toBeVisible()
+	})
 })

@@ -55,6 +55,7 @@ export function UserDropdown({ user }: Props) {
 				startIcon={<Avatar sx={{ height: 32, width: 32 }} src={user.avatarUrl} />}
 				{...bindTrigger(popupState)}
 				sx={{ padding: '5px 15px' }}
+				data-testid="UserDropdownButton"
 			>
 				{user.username}
 			</Button>
