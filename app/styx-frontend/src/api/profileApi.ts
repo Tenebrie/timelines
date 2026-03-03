@@ -30,7 +30,7 @@ export type GetStorageStatusApiResponse = /** status 200  */ {
 	quota: {
 		remaining: number
 		used: number
-		total?: number
+		total: number
 	}
 }
 export type GetStorageStatusApiArg = void

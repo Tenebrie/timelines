@@ -35,32 +35,32 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		}[]
 		node: null | {
 			id: string
+			worldId: string
 			createdAt: string
 			updatedAt: string
-			worldId: string
 			parentActorId?: null | string
 			positionX: number
 			positionY: number
 		}
+		description: string
 		id: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
-		name: string
-		description: string
-		worldId: string
 		icon: string
 		color: string
+		name: string
 		descriptionRich: string
 		title: string
 	}[]
 	articles: {
 		id: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
-		name: string
-		worldId: string
 		icon: string
 		color: string
+		name: string
 		position: number
 		contentRich: string
 		parentId?: null | string
@@ -79,35 +79,35 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		deltaStates: {
+			description?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name?: null | string
-			description?: null | string
 			timestamp: string
 			descriptionRich?: null | string
 			worldEventId: string
 		}[]
+		description: string
 		id: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
-		name: string
-		description: string
-		worldId: string
 		icon: string
 		color: string
+		name: string
 		timestamp: string
 		revokedAt?: null | string
 		descriptionRich: string
 		worldEventTrackId?: null | string
 	}[]
 	tags: {
+		description: string
 		id: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		description: string
-		worldId: string
 	}[]
 }
 export type SearchWorldApiArg = {

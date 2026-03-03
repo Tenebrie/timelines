@@ -103,23 +103,23 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
 	deltaStates: {
+		description?: null | string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name?: null | string
-		description?: null | string
 		timestamp: string
 		descriptionRich?: null | string
 		worldEventId: string
 	}[]
+	description: string
 	id: string
+	worldId: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	description: string
-	worldId: string
 	icon: string
 	color: string
+	name: string
 	timestamp: string
 	revokedAt?: null | string
 	descriptionRich: string
@@ -155,23 +155,23 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
 	deltaStates: {
+		description?: null | string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name?: null | string
-		description?: null | string
 		timestamp: string
 		descriptionRich?: null | string
 		worldEventId: string
 	}[]
+	description: string
 	id: string
+	worldId: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	description: string
-	worldId: string
 	icon: string
 	color: string
+	name: string
 	timestamp: string
 	revokedAt?: null | string
 	descriptionRich: string
@@ -202,14 +202,14 @@ export type DeleteWorldEventApiArg = {
 	eventId: string
 }
 export type RevokeWorldEventApiResponse = /** status 200  */ {
+	description: string
 	id: string
+	worldId: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	description: string
-	worldId: string
 	icon: string
 	color: string
+	name: string
 	timestamp: string
 	revokedAt?: null | string
 	descriptionRich: string
@@ -226,14 +226,14 @@ export type RevokeWorldEventApiArg = {
 	}
 }
 export type UnrevokeWorldEventApiResponse = /** status 200  */ {
+	description: string
 	id: string
+	worldId: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	description: string
-	worldId: string
 	icon: string
 	color: string
+	name: string
 	timestamp: string
 	revokedAt?: null | string
 	descriptionRich: string

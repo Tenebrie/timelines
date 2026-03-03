@@ -156,17 +156,17 @@ export type GetSupportedImageFormatsApiResponse = /** status 200  */ {
 }
 export type GetSupportedImageFormatsApiArg = void
 export type RequestImageConversionApiResponse = /** status 200  */ {
+	ownerId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	ownerId: string
-	size: number
+	status: 'Pending' | 'Finalized' | 'Failed'
 	expiresAt?: null | string
 	bucketKey: string
+	size: number
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'ImageConversion' | 'Avatar'
-	status: 'Pending' | 'Finalized' | 'Failed'
 }
 export type RequestImageConversionApiArg = {
 	body: {
@@ -178,13 +178,13 @@ export type RequestImageConversionApiArg = {
 	}
 }
 export type UpdateNodeApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
-	parentActorId?: null | string
 	positionX: number
 	positionY: number
+	parentActorId?: null | string
 }
 export type UpdateNodeApiArg = {
 	/** Any string value */
@@ -222,12 +222,12 @@ export type PutWikiArticleContentApiArg = {
 }
 export type ListWorldShareLinksApiResponse = /** status 200  */ {
 	id: string
-	createdAt: string
-	expiresAt: null | string
 	worldId: string
+	createdAt: string
 	accessMode: 'ReadOnly' | 'Editing'
 	label: null | string
 	slug: string
+	expiresAt: null | string
 	usageCount: number
 }[]
 export type ListWorldShareLinksApiArg = {
@@ -247,13 +247,13 @@ export type GenerateFreeWorldShareLinkApiArg = {
 }
 export type CreateWorldShareLinkApiResponse = /** status 200  */ {
 	id: string
+	worldId: string
 	createdAt: string
 	updatedAt: string
-	expiresAt?: null | string
-	worldId: string
 	accessMode: 'ReadOnly' | 'Editing'
 	label?: null | string
 	slug: string
+	expiresAt?: null | string
 	usageCount: number
 }
 export type CreateWorldShareLinkApiArg = {
@@ -309,24 +309,24 @@ export type AcceptWorldShareLinkApiArg = {
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
 		id: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
-		name: string
-		worldId: string
 		icon: string
 		color: string
+		name: string
 		position: number
 		contentRich: string
 		contentYjs?: null | string
 		parentId?: null | string
 	}[]
 	id: string
+	worldId: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	worldId: string
 	icon: string
 	color: string
+	name: string
 	position: number
 	contentRich: string
 	parentId?: null | string

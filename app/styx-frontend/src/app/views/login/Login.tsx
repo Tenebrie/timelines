@@ -12,11 +12,13 @@ import { z } from 'zod'
 import { usePostLoginMutation } from '@/api/authApi'
 import { ApiErrorBanner } from '@/app/components/ApiErrorBanner'
 import { TenebrieLogo } from '@/app/components/TenebrieLogo'
+import { GoogleLoginButton } from '@/app/features/auth/components/GoogleLoginButton'
 import { useGuestLogin } from '@/app/features/auth/hooks/useGuestLogin'
 import { useHandleUserLogin } from '@/app/features/auth/hooks/useHandleUserLogin'
 import { BoundTextField } from '@/app/features/forms/components/BoundTextField'
 import { useAppForm } from '@/app/features/forms/useAppForm'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { Info } from '@/ui-lib/components/Info/Info'
 
 import { AlreadyLoggedInAlert } from '../../features/auth/components/AlreadyLoggedInAlert'
@@ -54,6 +56,8 @@ export const Login = () => {
 			}
 		},
 	})
+
+	useEffectOnce(() => {})
 
 	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], loginForm.handleSubmit)
 
@@ -146,6 +150,7 @@ export const Login = () => {
 									</Link>
 									<Info value="Guest account are fully functional, but temporary. You can start exploring the app with a single click." />
 								</Stack>
+								<GoogleLoginButton />
 							</Stack>
 						</Stack>
 					</Stack>

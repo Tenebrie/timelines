@@ -22,6 +22,10 @@ const injectedRtkApi = api
 				query: () => ({ url: `/api/auth/guest`, method: 'POST' }),
 				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
 			}),
+			loginWithGoogle: build.mutation<LoginWithGoogleApiResponse, LoginWithGoogleApiArg>({
+				query: (queryArg) => ({ url: `/api/auth/google`, method: 'POST', body: queryArg.body }),
+				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
+			}),
 			postLogin: build.mutation<PostLoginApiResponse, PostLoginApiArg>({
 				query: (queryArg) => ({ url: `/api/auth/login`, method: 'POST', body: queryArg.body }),
 				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList', 'adminUsers'],
@@ -85,6 +89,22 @@ export type CreateGuestAccountApiResponse = /** status 200  */ {
 	sessionId: string
 }
 export type CreateGuestAccountApiArg = void
+export type LoginWithGoogleApiResponse = /** status 200  */ {
+	user: {
+		avatarUrl?: string
+		id: string
+		email: string
+		username: string
+		bio: string
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
+	}
+	sessionId: string
+}
+export type LoginWithGoogleApiArg = {
+	body: {
+		googleToken: string
+	}
+}
 export type PostLoginApiResponse = /** status 200  */ {
 	user: {
 		avatarUrl?: string
@@ -125,6 +145,7 @@ export const {
 	useCreateAccountMutation,
 	useDeleteAccountMutation,
 	useCreateGuestAccountMutation,
+	useLoginWithGoogleMutation,
 	usePostLoginMutation,
 	usePostLogoutMutation,
 } = injectedRtkApi

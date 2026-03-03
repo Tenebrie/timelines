@@ -12,6 +12,7 @@ import { z } from 'zod'
 import { useCreateAccountMutation } from '@/api/authApi'
 import { ApiErrorBanner } from '@/app/components/ApiErrorBanner'
 import { TenebrieLogo } from '@/app/components/TenebrieLogo'
+import { GoogleLoginButton } from '@/app/features/auth/components/GoogleLoginButton'
 import { useGuestLogin } from '@/app/features/auth/hooks/useGuestLogin'
 import { useHandleUserLogin } from '@/app/features/auth/hooks/useHandleUserLogin'
 import { BoundTextField } from '@/app/features/forms/components/BoundTextField'
@@ -171,6 +172,7 @@ export const CreateAccount = () => {
 									</Link>
 									<Info value="Guest account are fully functional, but temporary. You can start exploring the app with a single click." />
 								</Stack>
+								<GoogleLoginButton />
 							</Stack>
 						</Stack>
 					</Stack>
