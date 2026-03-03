@@ -15,8 +15,8 @@ export const headerData = {
 			href: getPermalink('/#how-it-works'),
 		},
 		{
-			text: 'Pricing',
-			href: getPermalink('/#pricing'),
+			text: 'Comparison',
+			href: getPermalink('/#comparison'),
 		},
 		{
 			text: 'FAQ',
