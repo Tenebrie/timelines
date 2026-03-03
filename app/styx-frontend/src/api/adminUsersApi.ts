@@ -61,7 +61,7 @@ export type AdminGetUsersApiResponse = /** status 200  */ {
 		email: string
 		username: string
 		bio: string
-		level: 'Free' | 'Premium' | 'Admin'
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 	}[]
 	page: number
 	size: number
@@ -86,7 +86,7 @@ export type AdminImpersonateUserApiResponse = /** status 200  */ {
 		username: string
 		password: string
 		bio: string
-		level: 'Free' | 'Premium' | 'Admin'
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 		avatarId?: null | string
 	}
 }
@@ -104,14 +104,14 @@ export type AdminSetUserLevelApiResponse = /** status 200  */ {
 	username: string
 	password: string
 	bio: string
-	level: 'Free' | 'Premium' | 'Admin'
+	level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 	avatarId?: null | string
 }
 export type AdminSetUserLevelApiArg = {
 	/** Any string value with at least one character */
 	userId: string
 	body: {
-		level: 'Free' | 'Premium' | 'Admin'
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 	}
 }
 export type AdminDeleteUserApiResponse = /** status 200  */ {
@@ -124,7 +124,7 @@ export type AdminDeleteUserApiResponse = /** status 200  */ {
 	username: string
 	password: string
 	bio: string
-	level: 'Free' | 'Premium' | 'Admin'
+	level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 	avatarId?: null | string
 }
 export type AdminDeleteUserApiArg = {
@@ -141,7 +141,7 @@ export type AdminUpdateUserApiResponse = /** status 200  */ {
 	username: string
 	password: string
 	bio: string
-	level: 'Free' | 'Premium' | 'Admin'
+	level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 	avatarId?: null | string
 }
 export type AdminUpdateUserApiArg = {
@@ -163,7 +163,7 @@ export type AdminSetUserPasswordApiResponse = /** status 200  */ {
 	username: string
 	password: string
 	bio: string
-	level: 'Free' | 'Premium' | 'Admin'
+	level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 	avatarId?: null | string
 }
 export type AdminSetUserPasswordApiArg = {

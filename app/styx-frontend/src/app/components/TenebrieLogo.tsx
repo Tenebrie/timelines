@@ -14,3 +14,13 @@ export const TenebrieLogo = ({ sizeScalar: providedSizeScalar }: Props) => {
 		<Logo src="/logo-dragon.webp" alt="Neverkin Logo" style={{ height: 155 * sizeScalar, marginLeft: -0 }} />
 	)
 }
+
+export const TenebrieLogoInline = () => {
+	return (
+		<Logo
+			src="/logo-dragon.webp"
+			alt="Neverkin Logo"
+			style={{ display: 'inline-block', marginLeft: 0, height: '2em', marginTop: '-0.15em' }}
+		/>
+	)
+}

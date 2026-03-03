@@ -1,4 +1,5 @@
 enum UserLevel {
+  Guest
   Free
   Premium
   Admin

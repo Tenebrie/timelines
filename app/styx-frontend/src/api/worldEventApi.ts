@@ -103,26 +103,26 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
 	deltaStates: {
-		description?: null | string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name?: null | string
-		descriptionRich?: null | string
+		description?: null | string
 		timestamp: string
+		descriptionRich?: null | string
 		worldEventId: string
 	}[]
-	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	description: string
 	worldId: string
 	icon: string
 	color: string
-	descriptionRich: string
 	timestamp: string
 	revokedAt?: null | string
+	descriptionRich: string
 	worldEventTrackId?: null | string
 }
 export type CreateWorldEventApiArg = {
@@ -155,26 +155,26 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
 	deltaStates: {
-		description?: null | string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name?: null | string
-		descriptionRich?: null | string
+		description?: null | string
 		timestamp: string
+		descriptionRich?: null | string
 		worldEventId: string
 	}[]
-	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	description: string
 	worldId: string
 	icon: string
 	color: string
-	descriptionRich: string
 	timestamp: string
 	revokedAt?: null | string
+	descriptionRich: string
 	worldEventTrackId?: null | string
 }
 export type UpdateWorldEventApiArg = {
@@ -202,18 +202,18 @@ export type DeleteWorldEventApiArg = {
 	eventId: string
 }
 export type RevokeWorldEventApiResponse = /** status 200  */ {
-	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	description: string
 	worldId: string
 	icon: string
 	color: string
-	descriptionRich: string
-	descriptionYjs?: null | string
 	timestamp: string
 	revokedAt?: null | string
+	descriptionRich: string
+	descriptionYjs?: null | string
 	worldEventTrackId?: null | string
 }
 export type RevokeWorldEventApiArg = {
@@ -226,18 +226,18 @@ export type RevokeWorldEventApiArg = {
 	}
 }
 export type UnrevokeWorldEventApiResponse = /** status 200  */ {
-	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	description: string
 	worldId: string
 	icon: string
 	color: string
-	descriptionRich: string
-	descriptionYjs?: null | string
 	timestamp: string
 	revokedAt?: null | string
+	descriptionRich: string
+	descriptionYjs?: null | string
 	worldEventTrackId?: null | string
 }
 export type UnrevokeWorldEventApiArg = {

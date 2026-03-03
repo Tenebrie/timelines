@@ -18,6 +18,10 @@ const injectedRtkApi = api
 				query: () => ({ url: `/api/auth`, method: 'DELETE' }),
 				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
 			}),
+			createGuestAccount: build.mutation<CreateGuestAccountApiResponse, CreateGuestAccountApiArg>({
+				query: () => ({ url: `/api/auth/guest`, method: 'POST' }),
+				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
+			}),
 			postLogin: build.mutation<PostLoginApiResponse, PostLoginApiArg>({
 				query: (queryArg) => ({ url: `/api/auth/login`, method: 'POST', body: queryArg.body }),
 				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList', 'adminUsers'],
@@ -43,7 +47,7 @@ export type CheckAuthenticationApiResponse =
 				id: string
 				email: string
 				username: string
-				level: 'Free' | 'Premium' | 'Admin'
+				level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 				bio: string
 				avatarUrl?: string
 			}
@@ -56,7 +60,7 @@ export type CreateAccountApiResponse = /** status 200  */ {
 		email: string
 		username: string
 		bio: string
-		level: 'Free' | 'Premium' | 'Admin'
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 	}
 	sessionId: string
 }
@@ -69,6 +73,18 @@ export type CreateAccountApiArg = {
 }
 export type DeleteAccountApiResponse = unknown
 export type DeleteAccountApiArg = void
+export type CreateGuestAccountApiResponse = /** status 200  */ {
+	user: {
+		avatarUrl?: string
+		id: string
+		email: string
+		username: string
+		bio: string
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
+	}
+	sessionId: string
+}
+export type CreateGuestAccountApiArg = void
 export type PostLoginApiResponse = /** status 200  */ {
 	user: {
 		avatarUrl?: string
@@ -76,15 +92,15 @@ export type PostLoginApiResponse = /** status 200  */ {
 		email: string
 		username: string
 		bio: string
-		level: 'Free' | 'Premium' | 'Admin'
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 		avatar: null | {
 			id: string
 			createdAt: string
 			updatedAt: string
-			ownerId: string
-			size: number
 			expiresAt?: null | string
+			ownerId: string
 			bucketKey: string
+			size: number
 			originalFileName: string
 			originalFileExtension: string
 			contentType: 'ImageConversion' | 'Avatar'
@@ -100,7 +116,7 @@ export type PostLoginApiArg = {
 	}
 }
 export type PostLogoutApiResponse = /** status 200  */ {
-	redirectTo: 'admin' | 'login'
+	redirectTo: 'login' | 'admin'
 }
 export type PostLogoutApiArg = void
 export const {
@@ -108,6 +124,7 @@ export const {
 	useLazyCheckAuthenticationQuery,
 	useCreateAccountMutation,
 	useDeleteAccountMutation,
+	useCreateGuestAccountMutation,
 	usePostLoginMutation,
 	usePostLogoutMutation,
 } = injectedRtkApi

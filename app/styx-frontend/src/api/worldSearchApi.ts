@@ -42,16 +42,16 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			positionX: number
 			positionY: number
 		}
-		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		description: string
 		worldId: string
-		title: string
 		icon: string
 		color: string
 		descriptionRich: string
+		title: string
 	}[]
 	articles: {
 		id: string
@@ -79,34 +79,34 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		deltaStates: {
-			description?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name?: null | string
-			descriptionRich?: null | string
+			description?: null | string
 			timestamp: string
+			descriptionRich?: null | string
 			worldEventId: string
 		}[]
-		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		description: string
 		worldId: string
 		icon: string
 		color: string
-		descriptionRich: string
 		timestamp: string
 		revokedAt?: null | string
+		descriptionRich: string
 		worldEventTrackId?: null | string
 	}[]
 	tags: {
-		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		description: string
 		worldId: string
 	}[]
 }

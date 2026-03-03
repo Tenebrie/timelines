@@ -82,7 +82,42 @@ router.post('/api/auth', async (ctx) => {
 
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
-		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
+		expires: new Date(Date.now() + 365 * 24 * 3600 * 1000),
+		secure: ctx.headers['x-forwarded-proto'] === 'https',
+		sameSite: 'lax',
+	})
+
+	AnnouncementService.notify({
+		type: 'Welcome',
+		userId: user.id,
+		title: 'Welcome!',
+		description: 'Welcome to Neverkin!',
+	})
+
+	return {
+		user: {
+			...user,
+			avatarUrl: undefined as string | undefined,
+		},
+		sessionId,
+	}
+})
+
+router.post('/api/auth/guest', async (ctx) => {
+	useApiEndpoint({
+		name: 'createGuestAccount',
+		summary: 'Guest registration endpoint',
+		description: 'Creates a new guest user account with temporary credentials',
+		tags: [authTag, worldListTag, worldDetailsTag, announcementListTag],
+	})
+
+	const user = await UserService.registerGuest()
+	const token = TokenService.generateJwtToken(user)
+	const sessionId = ctx.sessionId ?? crypto.randomUUID()
+
+	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
+		path: '/',
+		expires: new Date(Date.now() + 72 * 3600 * 1000),
 		secure: ctx.headers['x-forwarded-proto'] === 'https',
 		sameSite: 'lax',
 	})

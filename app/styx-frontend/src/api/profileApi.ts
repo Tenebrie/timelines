@@ -30,7 +30,7 @@ export type GetStorageStatusApiResponse = /** status 200  */ {
 	quota: {
 		remaining: number
 		used: number
-		total: number
+		total?: number
 	}
 }
 export type GetStorageStatusApiArg = void
@@ -45,7 +45,7 @@ export type UpdateProfileApiResponse = /** status 200  */ {
 		username: string
 		password: string
 		bio: string
-		level: 'Free' | 'Premium' | 'Admin'
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 		avatarId?: null | string
 	}
 }
@@ -66,7 +66,7 @@ export type PostAvatarApiResponse = /** status 200  */ {
 		username: string
 		password: string
 		bio: string
-		level: 'Free' | 'Premium' | 'Admin'
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 		avatarId?: null | string
 	}
 }
