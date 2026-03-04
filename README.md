@@ -11,6 +11,8 @@
 
 Neverkin is an open-source collaborative writing and worldbuilding app for storytellers, DMs, writers and novelists. Organize timelines, characters, lore, and interconnected stories online in real-time.
 
+Formerly known internally as Timelines, which is a name still used across the repository.
+
 ## Live Deployments
 
 - **Production**: https://neverkin.com/
