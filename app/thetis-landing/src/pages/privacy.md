@@ -7,7 +7,7 @@ _Last updated_: March 2026
 
 ## Introduction
 
-This Privacy Policy describes how the Neverkin platform ("Service") collects, uses, and protects your information. Neverkin is an open-source project committed to transparency and user privacy.
+This Privacy Policy describes how the Neverkin app ("Service") collects, uses, and protects your information. Neverkin is an open-source project committed to transparency and user privacy.
 
 ## Information We Collect
 
