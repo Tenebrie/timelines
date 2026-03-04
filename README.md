@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://neverkin.com/">
-    <img src="docs/images/neverkin-logo-title-dark.webp" alt="Neverkin Logo"  width="400">
+    <img src="docs/images/neverkin-logo-title-dark.webp" alt="Neverkin Logo" width="400"><br>
   </a>
 </p>
 
