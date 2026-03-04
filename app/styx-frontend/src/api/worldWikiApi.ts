@@ -60,24 +60,24 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	}[]
 	children: {
 		id: string
-		worldId: string
 		createdAt: string
 		updatedAt: string
+		name: string
+		worldId: string
 		icon: string
 		color: string
-		name: string
 		position: number
 		contentRich: string
 		contentYjs?: null | string
 		parentId?: null | string
 	}[]
 	id: string
-	worldId: string
 	createdAt: string
 	updatedAt: string
+	name: string
+	worldId: string
 	icon: string
 	color: string
-	name: string
 	position: number
 	contentRich: string
 	parentId?: null | string
@@ -89,24 +89,24 @@ export type GetArticlesApiArg = {
 export type CreateArticleApiResponse = /** status 200  */ {
 	children: {
 		id: string
-		worldId: string
 		createdAt: string
 		updatedAt: string
+		name: string
+		worldId: string
 		icon: string
 		color: string
-		name: string
 		position: number
 		contentRich: string
 		contentYjs?: null | string
 		parentId?: null | string
 	}[]
 	id: string
-	worldId: string
 	createdAt: string
 	updatedAt: string
+	name: string
+	worldId: string
 	icon: string
 	color: string
-	name: string
 	position: number
 	contentRich: string
 	parentId?: null | string

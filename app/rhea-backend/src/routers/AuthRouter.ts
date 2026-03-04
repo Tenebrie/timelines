@@ -25,7 +25,7 @@ import { adminUsersTag, announcementListTag, authTag, worldDetailsTag, worldList
 
 const router = new Router().with(SessionMiddleware)
 
-router.get('/api/auth', async (ctx) => {
+router.get('/api/auth/check', async (ctx) => {
 	useApiEndpoint({
 		name: 'checkAuthentication',
 		description: 'Checks if the user has a valid login credentials',

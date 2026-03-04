@@ -31,13 +31,13 @@ const injectedRtkApi = api
 export { injectedRtkApi as mindmapApi }
 export type GetMindmapApiResponse = /** status 200  */ {
 	nodes: {
-		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		worldId: string
+		parentActorId?: null | string
 		positionX: number
 		positionY: number
-		parentActorId?: null | string
 	}[]
 }
 export type GetMindmapApiArg = {
@@ -45,13 +45,13 @@ export type GetMindmapApiArg = {
 	worldId: string
 }
 export type CreateNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
+	parentActorId?: null | string
 	positionX: number
 	positionY: number
-	parentActorId?: null | string
 }
 export type CreateNodeApiArg = {
 	/** Any string value */
@@ -63,13 +63,13 @@ export type CreateNodeApiArg = {
 	}
 }
 export type DeleteNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
+	parentActorId?: null | string
 	positionX: number
 	positionY: number
-	parentActorId?: null | string
 }
 export type DeleteNodeApiArg = {
 	/** Any string value */
