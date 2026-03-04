@@ -1,0 +1,161 @@
+---
+import Headline from '~/components/ui/Headline.astro'
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro'
+import Button from '~/components/ui/Button.astro'
+import type { Widget, Headline as HeadlineProps } from '~/types'
+
+export interface Props extends Omit<HeadlineProps, 'classes'>, Widget {}
+
+const {
+	title = await Astro.slots.render('title'),
+	subtitle = await Astro.slots.render('subtitle'),
+	tagline = await Astro.slots.render('tagline'),
+
+	id,
+	isDark = false,
+	classes = {},
+	bg = await Astro.slots.render('bg'),
+} = Astro.props
+---
+
+<WidgetWrapper
+	id={id}
+	isDark={isDark}
+	containerClass={`max-w-7xl mx-auto ${classes?.container ?? ''}`}
+	bg={bg}
+>
+	<Headline title={title} subtitle={subtitle} tagline={tagline} />
+
+	<div
+		class="flex flex-col max-w-xl mx-auto rounded-lg backdrop-blur border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900 shadow p-4 sm:p-6 lg:p-8 w-full"
+	>
+		<form id="contact-form-element">
+			<div class="mb-6">
+				<label for="name" class="block text-sm font-medium mb-2">Name (optional)</label>
+				<input
+					type="text"
+					name="name"
+					id="name"
+					autocomplete="name"
+					placeholder="Your name"
+					maxlength="1024"
+					class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
+				/>
+			</div>
+
+			<div class="mb-6">
+				<label for="email" class="block text-sm font-medium mb-2">Email (optional)</label>
+				<input
+					type="email"
+					name="email"
+					id="email"
+					autocomplete="email"
+					placeholder="your@email.com"
+					maxlength="1024"
+					class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
+				/>
+			</div>
+
+			<div>
+				<label for="message" class="block text-sm font-medium mb-2">
+					Message <span class="text-red-500">*</span>
+				</label>
+				<textarea
+					id="message"
+					name="message"
+					rows={6}
+					placeholder="What's on your mind?"
+					required
+					maxlength="4096"
+					class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
+				></textarea>
+			</div>
+
+			<div id="form-status" class="mt-4 text-center hidden"></div>
+
+			<div class="mt-10 grid">
+				<Button variant="primary" type="submit" id="submit-button"> Send Message </Button>
+			</div>
+		</form>
+	</div>
+</WidgetWrapper>
+
+<script is:inline>
+	function initContactForm() {
+		const form = document.getElementById('contact-form-element')
+		if (!form) return
+
+		form.addEventListener('submit', function (e) {
+			e.preventDefault()
+
+			const name = document.getElementById('name').value.trim()
+			const email = document.getElementById('email').value.trim()
+			const message = document.getElementById('message').value.trim()
+			const statusEl = document.getElementById('form-status')
+			const submitButton = document.getElementById('submit-button')
+
+			if (!message) {
+				statusEl.className = 'mt-4 text-center text-red-500'
+				statusEl.textContent = 'Please enter a message.'
+				return
+			}
+
+			if (name.length > 1024) {
+				statusEl.className = 'mt-4 text-center text-red-500'
+				statusEl.textContent = 'Name must be at most 1024 characters.'
+				return
+			}
+
+			if (email.length > 1024) {
+				statusEl.className = 'mt-4 text-center text-red-500'
+				statusEl.textContent = 'Email must be at most 1024 characters.'
+				return
+			}
+
+			if (message.length > 4096) {
+				statusEl.className = 'mt-4 text-center text-red-500'
+				statusEl.textContent = 'Message must be at most 4096 characters.'
+				return
+			}
+
+			submitButton.disabled = true
+			submitButton.textContent = 'Sending...'
+			statusEl.className = 'mt-4 text-center text-muted'
+			statusEl.textContent = ''
+
+			let apiBase = 'https://app.neverkin.com'
+			if (window.location.hostname !== 'neverkin.com') {
+				apiBase = window.location.protocol + '//app.' + window.location.host
+			}
+
+			const body = { message: message, source: 'thetis' }
+			if (name) body.name = name
+			if (email) body.email = email
+
+			fetch(apiBase + '/api/contact', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include',
+				body: JSON.stringify(body),
+			})
+				.then(function (res) {
+					if (!res.ok) throw new Error('Request failed')
+
+					statusEl.className = 'mt-4 text-center text-green-500 font-semibold'
+					statusEl.textContent = 'Thank you! Your message has been sent.'
+					form.reset()
+				})
+				.catch(function () {
+					statusEl.className = 'mt-4 text-center text-red-500'
+					statusEl.textContent = 'Something went wrong. Please try again later.'
+				})
+				.finally(function () {
+					submitButton.disabled = false
+					submitButton.textContent = 'Send Message'
+				})
+		})
+	}
+
+	initContactForm()
+	document.addEventListener('astro:after-swap', initContactForm)
+</script>

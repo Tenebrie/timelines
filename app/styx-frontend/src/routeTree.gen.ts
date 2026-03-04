@@ -28,6 +28,7 @@ import { Route as ToolsToolsImageConverterRouteImport } from './routes/tools/_to
 import { Route as ProfileProfileStorageRouteImport } from './routes/profile/_profile.storage'
 import { Route as ProfileProfileSecurityRouteImport } from './routes/profile/_profile.security'
 import { Route as ProfileProfilePublicRouteImport } from './routes/profile/_profile.public'
+import { Route as ProfileProfileFeedbackRouteImport } from './routes/profile/_profile.feedback'
 import { Route as WorldWorldIdWorldTimelineRouteImport } from './routes/world/$worldId/_world.timeline'
 import { Route as WorldWorldIdWorldSettingsRouteImport } from './routes/world/$worldId/_world.settings'
 import { Route as WorldWorldIdWorldMindmapRouteImport } from './routes/world/$worldId/_world.mindmap'
@@ -131,6 +132,11 @@ const ProfileProfilePublicRoute = ProfileProfilePublicRouteImport.update({
   path: '/public',
   getParentRoute: () => ProfileProfileRoute,
 } as any)
+const ProfileProfileFeedbackRoute = ProfileProfileFeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
+  getParentRoute: () => ProfileProfileRoute,
+} as any)
 const WorldWorldIdWorldTimelineRoute =
   WorldWorldIdWorldTimelineRouteImport.update({
     id: '/timeline',
@@ -182,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/profile/': typeof ProfileIndexRoute
   '/tools/': typeof ToolsIndexRoute
   '/world/': typeof WorldIndexRoute
+  '/profile/feedback': typeof ProfileProfileFeedbackRoute
   '/profile/public': typeof ProfileProfilePublicRoute
   '/profile/security': typeof ProfileProfileSecurityRoute
   '/profile/storage': typeof ProfileProfileStorageRoute
@@ -207,6 +214,7 @@ export interface FileRoutesByTo {
   '/tools': typeof ToolsIndexRoute
   '/calendar': typeof CalendarIndexRoute
   '/world': typeof WorldIndexRoute
+  '/profile/feedback': typeof ProfileProfileFeedbackRoute
   '/profile/public': typeof ProfileProfilePublicRoute
   '/profile/security': typeof ProfileProfileSecurityRoute
   '/profile/storage': typeof ProfileProfileStorageRoute
@@ -234,6 +242,7 @@ export interface FileRoutesById {
   '/profile/': typeof ProfileIndexRoute
   '/tools/': typeof ToolsIndexRoute
   '/world/': typeof WorldIndexRoute
+  '/profile/_profile/feedback': typeof ProfileProfileFeedbackRoute
   '/profile/_profile/public': typeof ProfileProfilePublicRoute
   '/profile/_profile/security': typeof ProfileProfileSecurityRoute
   '/profile/_profile/storage': typeof ProfileProfileStorageRoute
@@ -263,6 +272,7 @@ export interface FileRouteTypes {
     | '/profile/'
     | '/tools/'
     | '/world/'
+    | '/profile/feedback'
     | '/profile/public'
     | '/profile/security'
     | '/profile/storage'
@@ -288,6 +298,7 @@ export interface FileRouteTypes {
     | '/tools'
     | '/calendar'
     | '/world'
+    | '/profile/feedback'
     | '/profile/public'
     | '/profile/security'
     | '/profile/storage'
@@ -314,6 +325,7 @@ export interface FileRouteTypes {
     | '/profile/'
     | '/tools/'
     | '/world/'
+    | '/profile/_profile/feedback'
     | '/profile/_profile/public'
     | '/profile/_profile/security'
     | '/profile/_profile/storage'
@@ -480,6 +492,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfilePublicRouteImport
       parentRoute: typeof ProfileProfileRoute
     }
+    '/profile/_profile/feedback': {
+      id: '/profile/_profile/feedback'
+      path: '/feedback'
+      fullPath: '/profile/feedback'
+      preLoaderRoute: typeof ProfileProfileFeedbackRouteImport
+      parentRoute: typeof ProfileProfileRoute
+    }
     '/world/$worldId/_world/timeline': {
       id: '/world/$worldId/_world/timeline'
       path: '/timeline'
@@ -526,12 +545,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface ProfileProfileRouteChildren {
+  ProfileProfileFeedbackRoute: typeof ProfileProfileFeedbackRoute
   ProfileProfilePublicRoute: typeof ProfileProfilePublicRoute
   ProfileProfileSecurityRoute: typeof ProfileProfileSecurityRoute
   ProfileProfileStorageRoute: typeof ProfileProfileStorageRoute
 }
 
 const ProfileProfileRouteChildren: ProfileProfileRouteChildren = {
+  ProfileProfileFeedbackRoute: ProfileProfileFeedbackRoute,
   ProfileProfilePublicRoute: ProfileProfilePublicRoute,
   ProfileProfileSecurityRoute: ProfileProfileSecurityRoute,
   ProfileProfileStorageRoute: ProfileProfileStorageRoute,

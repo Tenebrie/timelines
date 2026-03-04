@@ -11,6 +11,7 @@ type SecretName =
 	| 's3-bucket-id'
 	| 's3-access-key-id'
 	| 's3-access-key-secret'
+	| 'webhook-contact-form-url'
 
 export const SecretService = {
 	writeToCache: (secretName: SecretName, value: string) => {

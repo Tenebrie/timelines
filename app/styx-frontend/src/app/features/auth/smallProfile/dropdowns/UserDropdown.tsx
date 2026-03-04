@@ -1,4 +1,5 @@
 import AccountCircle from '@mui/icons-material/AccountCircle'
+import FeedbackIcon from '@mui/icons-material/Feedback'
 import LockResetIcon from '@mui/icons-material/LockReset'
 import Logout from '@mui/icons-material/Logout'
 import Storage from '@mui/icons-material/Storage'
@@ -29,6 +30,7 @@ export function UserDropdown({ user }: Props) {
 	const isProfile = useCheckRouteMatch('/profile/public')
 	const isStorage = useCheckRouteMatch('/profile/storage')
 	const isSecurity = useCheckRouteMatch('/profile/security')
+	const isFeedback = useCheckRouteMatch('/profile/feedback')
 
 	const [logout] = usePostLogoutMutation()
 	const { clearUser } = authSlice.actions
@@ -114,6 +116,19 @@ export function UserDropdown({ user }: Props) {
 							<LockResetIcon />
 						</ListItemIcon>
 						Security
+					</MenuItem>
+				</NavigationLink>
+				<NavigationLink to="/profile/feedback">
+					<MenuItem
+						onClick={() => {
+							popupState.close()
+						}}
+						selected={isFeedback}
+					>
+						<ListItemIcon>
+							<FeedbackIcon />
+						</ListItemIcon>
+						Feedback
 					</MenuItem>
 				</NavigationLink>
 				<Divider sx={{ my: 1 }} />

@@ -1,4 +1,5 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import FeedbackIcon from '@mui/icons-material/Feedback'
 import LockResetIcon from '@mui/icons-material/LockReset'
 import StorageIcon from '@mui/icons-material/Storage'
 import Container from '@mui/material/Container'
@@ -33,6 +34,7 @@ export function Profile() {
 						<PageButton icon={<AccountCircleIcon />} label="Public profile" route="/profile/public" />
 						<PageButton icon={<StorageIcon />} label="Storage" route="/profile/storage" />
 						<PageButton icon={<LockResetIcon />} label="Security" route="/profile/security" />
+						<PageButton icon={<FeedbackIcon />} label="Feedback" route="/profile/feedback" />
 					</Stack>
 
 					{/* Version marker */}

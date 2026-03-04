@@ -57,4 +57,4 @@ We may update this Privacy Policy from time to time. Changes will be reflected b
 
 ## Contact
 
-For privacy-related questions, please open an issue on our [GitHub repository](https://github.com/tenebrie/timelines).
+For privacy-related questions, please [get in touch](/contact) or open an issue on the [GitHub repository](https://github.com/tenebrie/timelines).

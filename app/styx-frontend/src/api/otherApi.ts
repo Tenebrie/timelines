@@ -21,6 +21,11 @@ const injectedRtkApi = api
 			>({
 				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
 			}),
+			sendContactFormMessage: build.mutation<SendContactFormMessageApiResponse, SendContactFormMessageApiArg>(
+				{
+					query: (queryArg) => ({ url: `/api/contact`, method: 'POST', body: queryArg.body }),
+				},
+			),
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
 			}),
@@ -147,6 +152,15 @@ export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
 	| 'Hidden'
 )[]
 export type ListCalendarUnitFormatModesApiArg = void
+export type SendContactFormMessageApiResponse = unknown
+export type SendContactFormMessageApiArg = {
+	body: {
+		name?: string
+		email?: string
+		message: string
+		source?: string
+	}
+}
 export type GetHealthApiResponse = unknown
 export type GetHealthApiArg = void
 export type GetApiHealthApiResponse = unknown
@@ -362,6 +376,7 @@ export const {
 	useLazyListCalendarTemplatesQuery,
 	useListCalendarUnitFormatModesQuery,
 	useLazyListCalendarUnitFormatModesQuery,
+	useSendContactFormMessageMutation,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,
 	useGetApiHealthQuery,
