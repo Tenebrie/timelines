@@ -1,5 +1,7 @@
 <p align="center">
-  <img src="docs/images/neverkin-logo-title-dark.webp" alt="Neverkin Logo" width="400">
+  <a href="https://neverkin.com/">
+    <img src="docs/images/neverkin-logo-title-dark.webp" alt="Neverkin Logo"  width="400">
+  </a>
 </p>
 
 # Introduction
