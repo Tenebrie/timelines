@@ -285,7 +285,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/auth": {
+    "/api/auth/check": {
         parameters: {
             query?: never;
             header?: never;
@@ -294,6 +294,22 @@ export interface paths {
         };
         /** @description Checks if the user has a valid login credentials */
         get: operations["checkAuthentication"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
         put?: never;
         /**
          * Registration endpoint
@@ -305,6 +321,46 @@ export interface paths {
          * @description Deletes the current user account
          */
         delete: operations["deleteAccount"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/guest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Guest registration endpoint
+         * @description Creates a new guest user account with temporary credentials
+         */
+        post: operations["createGuestAccount"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/auth/google": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Google login endpoint
+         * @description Logs in a user using the Google JWT token
+         */
+        post: operations["loginWithGoogle"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -586,6 +642,23 @@ export interface paths {
         };
         /** @description Check the health of the server. */
         get: operations["getHealth"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Check the health of the server (API endpoint). */
+        get: operations["getApiHealth"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1935,7 +2008,7 @@ export interface operations {
                             email: string;
                             username: string;
                             bio: string;
-                            level: "Free" | "Premium" | "Admin";
+                            level: "Guest" | "Free" | "Premium" | "Admin";
                         }[];
                         page: number;
                         size: number;
@@ -1975,7 +2048,7 @@ export interface operations {
                             username: string;
                             password: string;
                             bio: string;
-                            level: "Free" | "Premium" | "Admin";
+                            level: "Guest" | "Free" | "Premium" | "Admin";
                             avatarId?: null | string;
                         };
                     };
@@ -1996,10 +2069,10 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    level: "Free" | "Premium" | "Admin";
+                    level: "Guest" | "Free" | "Premium" | "Admin";
                 };
                 "application/x-www-form-urlencoded": {
-                    level: "Free" | "Premium" | "Admin";
+                    level: "Guest" | "Free" | "Premium" | "Admin";
                 };
             };
         };
@@ -2021,7 +2094,7 @@ export interface operations {
                         username: string;
                         password: string;
                         bio: string;
-                        level: "Free" | "Premium" | "Admin";
+                        level: "Guest" | "Free" | "Premium" | "Admin";
                         avatarId?: null | string;
                     };
                 };
@@ -2057,7 +2130,7 @@ export interface operations {
                         username: string;
                         password: string;
                         bio: string;
-                        level: "Free" | "Premium" | "Admin";
+                        level: "Guest" | "Free" | "Premium" | "Admin";
                         avatarId?: null | string;
                     };
                 };
@@ -2106,7 +2179,7 @@ export interface operations {
                         username: string;
                         password: string;
                         bio: string;
-                        level: "Free" | "Premium" | "Admin";
+                        level: "Guest" | "Free" | "Premium" | "Admin";
                         avatarId?: null | string;
                     };
                 };
@@ -2151,7 +2224,7 @@ export interface operations {
                         username: string;
                         password: string;
                         bio: string;
-                        level: "Free" | "Premium" | "Admin";
+                        level: "Guest" | "Free" | "Premium" | "Admin";
                         avatarId?: null | string;
                     };
                 };
@@ -2403,7 +2476,7 @@ export interface operations {
                             id: string;
                             email: string;
                             username: string;
-                            level: "Free" | "Premium" | "Admin";
+                            level: "Guest" | "Free" | "Premium" | "Admin";
                             bio: string;
                             avatarUrl?: string;
                         };
@@ -2446,7 +2519,7 @@ export interface operations {
                             email: string;
                             username: string;
                             bio: string;
-                            level: "Free" | "Premium" | "Admin";
+                            level: "Guest" | "Free" | "Premium" | "Admin";
                         };
                         sessionId: string;
                     };
@@ -2468,6 +2541,73 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    createGuestAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        user: {
+                            avatarUrl?: string;
+                            id: string;
+                            email: string;
+                            username: string;
+                            bio: string;
+                            level: "Guest" | "Free" | "Premium" | "Admin";
+                        };
+                        sessionId: string;
+                    };
+                };
+            };
+        };
+    };
+    loginWithGoogle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    googleToken: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    googleToken: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        user: {
+                            avatarUrl?: string;
+                            id: string;
+                            email: string;
+                            username: string;
+                            bio: string;
+                            level: "Guest" | "Free" | "Premium" | "Admin";
+                        };
+                        sessionId: string;
+                    };
+                };
             };
         };
     };
@@ -2503,7 +2643,7 @@ export interface operations {
                             email: string;
                             username: string;
                             bio: string;
-                            level: "Free" | "Premium" | "Admin";
+                            level: "Guest" | "Free" | "Premium" | "Admin";
                             avatar: null | {
                                 id: string;
                                 /** Format: date-time */
@@ -3529,6 +3669,25 @@ export interface operations {
             };
         };
     };
+    getApiHealth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+        };
+    };
     getFavoriteIcons: {
         parameters: {
             query?: never;
@@ -3888,7 +4047,7 @@ export interface operations {
                             username: string;
                             password: string;
                             bio: string;
-                            level: "Free" | "Premium" | "Admin";
+                            level: "Guest" | "Free" | "Premium" | "Admin";
                             avatarId?: null | string;
                         };
                     };
@@ -3932,7 +4091,7 @@ export interface operations {
                             username: string;
                             password: string;
                             bio: string;
-                            level: "Free" | "Premium" | "Admin";
+                            level: "Guest" | "Free" | "Premium" | "Admin";
                             avatarId?: null | string;
                         };
                     };
@@ -6134,9 +6293,11 @@ export interface operations {
             content: {
                 "application/json": {
                     name: string;
+                    contentRich?: string;
                 };
                 "application/x-www-form-urlencoded": {
                     name: string;
+                    contentRich?: string;
                 };
             };
         };

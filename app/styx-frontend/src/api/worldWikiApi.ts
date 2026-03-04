@@ -116,6 +116,7 @@ export type CreateArticleApiArg = {
 	worldId: string
 	body: {
 		name: string
+		contentRich?: string
 	}
 }
 export type DeleteArticleApiResponse = unknown

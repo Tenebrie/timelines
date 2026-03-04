@@ -73,6 +73,7 @@ export type MentionedEntity = (typeof MentionedEntity)[keyof typeof MentionedEnt
 
 
 export const UserLevel = {
+  Guest: 'Guest',
   Free: 'Free',
   Premium: 'Premium',
   Admin: 'Admin'

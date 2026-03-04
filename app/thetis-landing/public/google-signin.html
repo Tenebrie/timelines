@@ -1,0 +1,86 @@
+<!-- Horrible google hack as app.localhost is not a valid JS origin - according to Google - so it would not work in dev -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<style>
+		* { margin: 0; padding: 0; }
+		html, body {
+			background: transparent;
+			overflow: hidden;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+		}
+		#google-signin-button {
+			opacity: 0;
+		}
+	</style>
+	<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+	<div id="google-signin-button"></div>
+	<script>
+		function handleCredentialResponse(response) {
+			// Send the credential to the parent window (app.localhost / app.neverkin.com)
+			window.parent.postMessage(
+				{ type: 'google-signin-credential', credential: response.credential },
+				'*'
+			);
+		}
+
+		function initGoogleSignIn() {
+			google.accounts.id.initialize({
+				client_id: '783181279687-ulsogj24f0k3pkr3rq8itb0fckhdj693.apps.googleusercontent.com',
+				callback: handleCredentialResponse,
+			});
+			var btn = document.getElementById('google-signin-button');
+			google.accounts.id.renderButton(btn, {
+				type: 'icon',
+				shape: 'circle',
+				theme: 'outline',
+				size: 'medium',
+			});
+			// Google's renderButton injects its own iframe. Wait for that iframe
+			// to have non-zero dimensions (meaning it finished rendering).
+			var attempts = 0;
+			var poll = setInterval(function () {
+				attempts++;
+				var innerIframe = btn.querySelector('iframe');
+				if (innerIframe && innerIframe.offsetHeight > 0) {
+					clearInterval(poll);
+					btn.style.opacity = '1';
+					window.parent.postMessage({ type: 'google-signin-ready' }, '*');
+				} else if (attempts > 100) {
+					clearInterval(poll);
+					// Show it anyway after 5s as fallback
+					btn.style.opacity = '1';
+					window.parent.postMessage({ type: 'google-signin-ready' }, '*');
+				}
+			}, 50);
+		}
+
+		// Wait for the GSI script to load
+		if (typeof google !== 'undefined' && google.accounts) {
+			initGoogleSignIn();
+		} else {
+			window.addEventListener('load', function () {
+				// Small delay to ensure GSI is fully ready
+				var attempts = 0;
+				var interval = setInterval(function () {
+					attempts++;
+					if (typeof google !== 'undefined' && google.accounts) {
+						clearInterval(interval);
+						initGoogleSignIn();
+					} else if (attempts > 50) {
+						clearInterval(interval);
+					}
+				}, 100);
+			});
+		}
+	</script>
+</body>
+</html>

@@ -7,27 +7,26 @@ import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { Link as NavLink } from '@tanstack/react-router'
-import { useDispatch } from 'react-redux'
 import { z } from 'zod'
 
 import { useCreateAccountMutation } from '@/api/authApi'
 import { ApiErrorBanner } from '@/app/components/ApiErrorBanner'
 import { TenebrieLogo } from '@/app/components/TenebrieLogo'
+import { GoogleLoginButton } from '@/app/features/auth/components/GoogleLoginButton'
+import { useGuestLogin } from '@/app/features/auth/hooks/useGuestLogin'
+import { useHandleUserLogin } from '@/app/features/auth/hooks/useHandleUserLogin'
 import { BoundTextField } from '@/app/features/forms/components/BoundTextField'
 import { useAppForm } from '@/app/features/forms/useAppForm'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
-import { getSessionStorageItem, removeSessionStorageItem } from '@/app/utils/sessionStorage'
-import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
+import { Info } from '@/ui-lib/components/Info/Info'
 
-import { authSlice } from '../../features/auth/AuthSlice'
 import { AlreadyLoggedInAlert } from '../../features/auth/components/AlreadyLoggedInAlert'
 
 export const CreateAccount = () => {
-	const navigate = useStableNavigate()
 	const [createAccount, createAccountState] = useCreateAccountMutation()
 
-	const { setUser, setSessionId } = authSlice.actions
-	const dispatch = useDispatch()
+	const handleUserLogin = useHandleUserLogin()
+	const [handleGuestLogin] = useGuestLogin()
 
 	const registerForm = useAppForm({
 		defaultValues: {
@@ -55,17 +54,7 @@ export const CreateAccount = () => {
 			})
 
 			if ('data' in result && result.data) {
-				dispatch(setUser(result.data.user))
-				dispatch(setSessionId(result.data.sessionId))
-
-				const visitedShareLinkSlug = getSessionStorageItem<string>('visitedShareLinkSlug')
-				if (visitedShareLinkSlug) {
-					removeSessionStorageItem('visitedShareLinkSlug')
-					navigate({ to: `/share/${visitedShareLinkSlug}` })
-					return
-				}
-
-				navigate({ to: '/' })
+				handleUserLogin(result.data)
 			}
 		},
 	})
@@ -156,9 +145,35 @@ export const CreateAccount = () => {
 							>
 								<span>Register</span>
 							</Button>
-							<Link component={NavLink} from="/" to="/login" variant="body2" sx={{ textDecoration: 'none' }}>
-								Already have an account? Sign in instead
-							</Link>
+							<Stack spacing={1} alignItems="center">
+								<Link
+									component={NavLink}
+									from="/"
+									to="/login"
+									variant="body2"
+									sx={{ textDecoration: 'none' }}
+								>
+									Already have an account? Sign in instead
+								</Link>
+								<Typography variant="body2" color="text.secondary">
+									- or -
+								</Typography>
+								<Stack direction="row" gap={0.5} justifyContent="center" alignItems="center">
+									<Link
+										component="a"
+										variant="body2"
+										onClick={(e) => {
+											e.preventDefault()
+											handleGuestLogin()
+										}}
+										sx={{ textDecoration: 'none', cursor: 'pointer' }}
+									>
+										Login as a guest{' '}
+									</Link>
+									<Info value="Guest account are fully functional, but temporary. You can start exploring the app with a single click." />
+								</Stack>
+								<GoogleLoginButton />
+							</Stack>
 						</Stack>
 					</Stack>
 				</Paper>

@@ -16,7 +16,7 @@ export function NavigatorButton({ route, icon, label, disabled }: Props) {
 	const isMatching = useCheckRouteMatch(route)
 
 	return (
-		<Link to={route as FileRouteTypes['to']}>
+		<Link to={route as FileRouteTypes['to']} disabled={disabled}>
 			<Button
 				aria-label={label}
 				variant={isMatching ? 'contained' : 'text'}

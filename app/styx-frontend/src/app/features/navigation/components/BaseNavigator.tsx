@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
+import { TenebrieLogoInline } from '@/app/components/TenebrieLogo'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 import { AnnouncementView } from '../../announcements/AnnouncementView'
@@ -16,6 +17,7 @@ import { SmallProfile } from '../../auth/smallProfile/SmallProfile'
 import { ThemeModeToggle } from '../../theming/components/ThemeModeToggle'
 import { CustomTheme, useCustomTheme } from '../../theming/hooks/useCustomTheme'
 import { HomeNavigatorButton } from './HomeNavigatorButton'
+import { LandingPageNavigatorButton } from './LandingPageNavigatorButton'
 import { LastWorldNavigatorButton } from './LastWorldNavigatorButton'
 import { NavigatorButton } from './NavigatorButton'
 import { WorldSelectorButton } from './WorldSelectorButton'
@@ -44,22 +46,25 @@ export const BaseNavigator = () => {
 	return (
 		<Container $theme={theme}>
 			<Box>
-				<Stack direction="row" height="100%" gap={1} alignItems="center">
-					<Stack minWidth={173} direction="row" gap={1} sx={{ justifyContent: 'flex-start' }}>
-						<WorldSelectorButton />
-						<LastWorldNavigatorButton icon={<PublicIcon />} label="World" />
+				{user && (
+					<Stack direction="row" height="100%" gap={1} alignItems="center">
+						<Stack minWidth={173} direction="row" gap={1} sx={{ justifyContent: 'flex-start' }}>
+							<WorldSelectorButton />
+							<LastWorldNavigatorButton icon={<PublicIcon />} label="World" />
+						</Stack>
+						<Divider orientation="vertical" sx={{ height: '25px' }} />
+						<HomeNavigatorButton disabled={!user} />
+						<NavigatorButton route="/tools" icon={<Construction />} label="Tools" disabled={!user} />
+						{user?.level === 'Admin' && (
+							<NavigatorButton route="/admin" icon={<AdminPanelSettings />} label="Admin" />
+						)}
 					</Stack>
-					<Divider orientation="vertical" sx={{ height: '25px' }} />
-					<HomeNavigatorButton disabled={!user} />
-					<NavigatorButton route="/tools" icon={<Construction />} label="Tools" disabled={!user} />
-					{user?.level === 'Admin' && (
-						<NavigatorButton route="/admin" icon={<AdminPanelSettings />} label="Admin" />
-					)}
-				</Stack>
+				)}
+				{!user && <LandingPageNavigatorButton icon={<TenebrieLogoInline />} label="Neverkin" />}
 			</Box>
 			<Stack direction="row" gap={2} alignItems="center" height={1}>
 				<ThemeModeToggle />
-				<AnnouncementView />
+				{user && <AnnouncementView />}
 				<Divider orientation="vertical" sx={{ height: '25px' }} />
 				<SmallProfile />
 			</Stack>

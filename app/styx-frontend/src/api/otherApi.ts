@@ -24,6 +24,9 @@ const injectedRtkApi = api
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
 			}),
+			getApiHealth: build.query<GetApiHealthApiResponse, GetApiHealthApiArg>({
+				query: () => ({ url: `/api/health` }),
+			}),
 			getSupportedImageFormats: build.query<
 				GetSupportedImageFormatsApiResponse,
 				GetSupportedImageFormatsApiArg
@@ -146,6 +149,8 @@ export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
 export type ListCalendarUnitFormatModesApiArg = void
 export type GetHealthApiResponse = unknown
 export type GetHealthApiArg = void
+export type GetApiHealthApiResponse = unknown
+export type GetApiHealthApiArg = void
 export type GetSupportedImageFormatsApiResponse = /** status 200  */ {
 	formats: ('webp' | 'jpeg' | 'png' | 'gif')[]
 }
@@ -359,6 +364,8 @@ export const {
 	useLazyListCalendarUnitFormatModesQuery,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,
+	useGetApiHealthQuery,
+	useLazyGetApiHealthQuery,
 	useGetSupportedImageFormatsQuery,
 	useLazyGetSupportedImageFormatsQuery,
 	useRequestImageConversionMutation,

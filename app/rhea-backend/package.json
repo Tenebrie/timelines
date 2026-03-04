@@ -32,6 +32,7 @@
 		"cheerio": "^1.2.0",
 		"dotenv": "^16.4.7",
 		"fast-average-color-node": "^3.1.0",
+		"google-auth-library": "^10.6.1",
 		"http-status-codes": "^2.3.0",
 		"jsonwebtoken": "^9.0.2",
 		"koa": "^2.15.3",

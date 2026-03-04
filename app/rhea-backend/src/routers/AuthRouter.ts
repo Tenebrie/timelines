@@ -3,12 +3,14 @@ import { UserAuthenticatorWithAvatar } from '@src/middleware/auth/UserAuthentica
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AnnouncementService } from '@src/services/AnnouncementService.js'
 import { CloudStorageService } from '@src/services/CloudStorageService.js'
+import { GoogleService } from '@src/services/GoogleService.js'
 import {
 	BadRequestError,
 	EmailValidator,
 	NonEmptyStringValidator,
 	RequiredParam,
 	Router,
+	StringValidator,
 	UnauthorizedError,
 	useApiEndpoint,
 	useAuth,
@@ -23,7 +25,7 @@ import { adminUsersTag, announcementListTag, authTag, worldDetailsTag, worldList
 
 const router = new Router().with(SessionMiddleware)
 
-router.get('/api/auth', async (ctx) => {
+router.get('/api/auth/check', async (ctx) => {
 	useApiEndpoint({
 		name: 'checkAuthentication',
 		description: 'Checks if the user has a valid login credentials',
@@ -82,7 +84,7 @@ router.post('/api/auth', async (ctx) => {
 
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
-		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
+		expires: new Date(Date.now() + 365 * 24 * 3600 * 1000),
 		secure: ctx.headers['x-forwarded-proto'] === 'https',
 		sameSite: 'lax',
 	})
@@ -93,6 +95,91 @@ router.post('/api/auth', async (ctx) => {
 		title: 'Welcome!',
 		description: 'Welcome to Neverkin!',
 	})
+
+	return {
+		user: {
+			...user,
+			avatarUrl: undefined as string | undefined,
+		},
+		sessionId,
+	}
+})
+
+router.post('/api/auth/guest', async (ctx) => {
+	useApiEndpoint({
+		name: 'createGuestAccount',
+		summary: 'Guest registration endpoint',
+		description: 'Creates a new guest user account with temporary credentials',
+		tags: [authTag, worldListTag, worldDetailsTag, announcementListTag],
+	})
+
+	const user = await UserService.registerGuest()
+	const token = TokenService.generateJwtToken(user)
+	const sessionId = ctx.sessionId ?? crypto.randomUUID()
+
+	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
+		path: '/',
+		expires: new Date(Date.now() + 72 * 3600 * 1000),
+		secure: ctx.headers['x-forwarded-proto'] === 'https',
+		sameSite: 'lax',
+	})
+
+	AnnouncementService.notify({
+		type: 'Welcome',
+		userId: user.id,
+		title: 'Welcome!',
+		description: 'Welcome to Neverkin!',
+	})
+
+	return {
+		user: {
+			...user,
+			avatarUrl: undefined as string | undefined,
+		},
+		sessionId,
+	}
+})
+
+router.post('/api/auth/google', async (ctx) => {
+	useApiEndpoint({
+		name: 'loginWithGoogle',
+		summary: 'Google login endpoint',
+		description: 'Logs in a user using the Google JWT token',
+		tags: [authTag, worldListTag, worldDetailsTag, announcementListTag],
+	})
+
+	const { googleToken } = useRequestBody(ctx, {
+		googleToken: StringValidator,
+	})
+
+	const { email, name } = await GoogleService.validateJwt(googleToken)
+
+	const existingUser = await UserService.findByEmail(email)
+	const user = await (async () => {
+		if (existingUser) {
+			return existingUser
+		} else {
+			return await UserService.register(email, name, 'unset')
+		}
+	})()
+	const token = TokenService.generateJwtToken(user)
+	const sessionId = ctx.sessionId ?? crypto.randomUUID()
+
+	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
+		path: '/',
+		expires: new Date(Date.now() + 365 * 24 * 3600 * 1000),
+		secure: ctx.headers['x-forwarded-proto'] === 'https',
+		sameSite: 'lax',
+	})
+
+	if (!existingUser) {
+		AnnouncementService.notify({
+			type: 'Welcome',
+			userId: user.id,
+			title: 'Welcome!',
+			description: 'Welcome to Neverkin!',
+		})
+	}
 
 	return {
 		user: {

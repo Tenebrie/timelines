@@ -6,7 +6,9 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 
+import { authSlice } from '@/app/features/auth/AuthSlice'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -19,6 +21,9 @@ export const DeleteAccountModal = () => {
 	const [confirmText, setConfirmText] = useState('')
 
 	const { isOpen, close } = useModal('deleteAccountModal')
+
+	const { clearUser } = authSlice.actions
+	const dispatch = useDispatch()
 
 	useModalCleanup({
 		isOpen,
@@ -40,6 +45,7 @@ export const DeleteAccountModal = () => {
 		}
 
 		close()
+		dispatch(clearUser())
 		navigate({ from: '/', to: '/login' })
 	}
 
@@ -78,6 +84,7 @@ export const DeleteAccountModal = () => {
 					To confirm deletion, please type <strong>DELETE</strong> below:
 				</div>
 				<TextField
+					data-testid="DeleteAccountConfirmationInput"
 					autoFocus
 					fullWidth
 					value={confirmText}
@@ -88,7 +95,11 @@ export const DeleteAccountModal = () => {
 				/>
 			</Stack>
 			<ModalFooter>
-				<Tooltip title={canConfirm ? shortcutLabel : 'Type DELETE to confirm'} arrow placement="top">
+				<Tooltip
+					title={canConfirm ? shortcutLabel : 'Please fill the confirmation text'}
+					arrow
+					placement="top"
+				>
 					<Button
 						loading={isLoading}
 						variant="contained"

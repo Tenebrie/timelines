@@ -41,6 +41,7 @@ export const CloudStorageService = {
 	getUserSingleFileLimit: async (user: User) => {
 		const megabyte = 1024 * 1024 // 1 MB
 		switch (user.level) {
+			case UserLevel.Guest:
 			case UserLevel.Free:
 				return 10 * megabyte
 			case UserLevel.Premium:
@@ -55,6 +56,7 @@ export const CloudStorageService = {
 			const megabyte = 1024 * 1024 // 1 MB
 			const gigabyte = megabyte * 1024 // 1 GB
 			switch (user.level) {
+				case UserLevel.Guest:
 				case UserLevel.Free:
 					return 100 * megabyte
 				case UserLevel.Premium:

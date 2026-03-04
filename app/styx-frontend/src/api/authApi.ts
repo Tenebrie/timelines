@@ -7,7 +7,7 @@ const injectedRtkApi = api
 	.injectEndpoints({
 		endpoints: (build) => ({
 			checkAuthentication: build.query<CheckAuthenticationApiResponse, CheckAuthenticationApiArg>({
-				query: () => ({ url: `/api/auth` }),
+				query: () => ({ url: `/api/auth/check` }),
 				providesTags: ['auth'],
 			}),
 			createAccount: build.mutation<CreateAccountApiResponse, CreateAccountApiArg>({
@@ -16,6 +16,14 @@ const injectedRtkApi = api
 			}),
 			deleteAccount: build.mutation<DeleteAccountApiResponse, DeleteAccountApiArg>({
 				query: () => ({ url: `/api/auth`, method: 'DELETE' }),
+				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
+			}),
+			createGuestAccount: build.mutation<CreateGuestAccountApiResponse, CreateGuestAccountApiArg>({
+				query: () => ({ url: `/api/auth/guest`, method: 'POST' }),
+				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
+			}),
+			loginWithGoogle: build.mutation<LoginWithGoogleApiResponse, LoginWithGoogleApiArg>({
+				query: (queryArg) => ({ url: `/api/auth/google`, method: 'POST', body: queryArg.body }),
 				invalidatesTags: ['auth', 'worldList', 'worldDetails', 'announcementList'],
 			}),
 			postLogin: build.mutation<PostLoginApiResponse, PostLoginApiArg>({
@@ -43,7 +51,7 @@ export type CheckAuthenticationApiResponse =
 				id: string
 				email: string
 				username: string
-				level: 'Free' | 'Premium' | 'Admin'
+				level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 				bio: string
 				avatarUrl?: string
 			}
@@ -56,7 +64,7 @@ export type CreateAccountApiResponse = /** status 200  */ {
 		email: string
 		username: string
 		bio: string
-		level: 'Free' | 'Premium' | 'Admin'
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 	}
 	sessionId: string
 }
@@ -69,6 +77,34 @@ export type CreateAccountApiArg = {
 }
 export type DeleteAccountApiResponse = unknown
 export type DeleteAccountApiArg = void
+export type CreateGuestAccountApiResponse = /** status 200  */ {
+	user: {
+		avatarUrl?: string
+		id: string
+		email: string
+		username: string
+		bio: string
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
+	}
+	sessionId: string
+}
+export type CreateGuestAccountApiArg = void
+export type LoginWithGoogleApiResponse = /** status 200  */ {
+	user: {
+		avatarUrl?: string
+		id: string
+		email: string
+		username: string
+		bio: string
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
+	}
+	sessionId: string
+}
+export type LoginWithGoogleApiArg = {
+	body: {
+		googleToken: string
+	}
+}
 export type PostLoginApiResponse = /** status 200  */ {
 	user: {
 		avatarUrl?: string
@@ -76,7 +112,7 @@ export type PostLoginApiResponse = /** status 200  */ {
 		email: string
 		username: string
 		bio: string
-		level: 'Free' | 'Premium' | 'Admin'
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 		avatar: null | {
 			id: string
 			createdAt: string
@@ -108,6 +144,8 @@ export const {
 	useLazyCheckAuthenticationQuery,
 	useCreateAccountMutation,
 	useDeleteAccountMutation,
+	useCreateGuestAccountMutation,
+	useLoginWithGoogleMutation,
 	usePostLoginMutation,
 	usePostLogoutMutation,
 } = injectedRtkApi

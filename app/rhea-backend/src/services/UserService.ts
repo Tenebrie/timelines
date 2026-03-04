@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { Prisma, UserLevel } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
@@ -51,6 +51,31 @@ export const UserService = {
 				bio: true,
 			},
 		})
+		return user
+	},
+
+	registerGuest: async () => {
+		const randomSuffix = crypto.randomUUID().split('-')[0]
+		const email = `guest-${randomSuffix}@localhost`
+		const username = `Guest ${randomSuffix}`
+		const user = await getPrismaClient().user.create({
+			data: {
+				email,
+				username,
+				password: 'guest',
+				level: UserLevel.Guest,
+				// Automatically remove in 72 hours
+				deletionScheduledAt: new Date(Date.now() + 72 * 60 * 60 * 1000),
+			},
+			select: {
+				id: true,
+				level: true,
+				email: true,
+				username: true,
+				bio: true,
+			},
+		})
+
 		return user
 	},
 
