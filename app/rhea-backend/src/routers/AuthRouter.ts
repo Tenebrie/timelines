@@ -82,10 +82,8 @@ router.post('/api/auth', async (ctx) => {
 	const token = TokenService.generateJwtToken(user)
 	const sessionId = ctx.sessionId ?? crypto.randomUUID()
 
-	const cookieHost = ctx.request.host.replace(/^app\./, '')
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
-		domain: cookieHost,
 		expires: new Date(Date.now() + 365 * 24 * 3600 * 1000),
 		secure: ctx.headers['x-forwarded-proto'] === 'https',
 		sameSite: 'lax',
@@ -119,10 +117,8 @@ router.post('/api/auth/guest', async (ctx) => {
 	const token = TokenService.generateJwtToken(user)
 	const sessionId = ctx.sessionId ?? crypto.randomUUID()
 
-	const cookieHost = ctx.request.host.replace(/^app\./, '')
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
-		domain: cookieHost,
 		expires: new Date(Date.now() + 72 * 3600 * 1000),
 		secure: ctx.headers['x-forwarded-proto'] === 'https',
 		sameSite: 'lax',
@@ -169,10 +165,8 @@ router.post('/api/auth/google', async (ctx) => {
 	const token = TokenService.generateJwtToken(user)
 	const sessionId = ctx.sessionId ?? crypto.randomUUID()
 
-	const cookieHost = ctx.request.host.replace(/^app\./, '')
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
-		domain: cookieHost,
 		expires: new Date(Date.now() + 365 * 24 * 3600 * 1000),
 		secure: ctx.headers['x-forwarded-proto'] === 'https',
 		sameSite: 'lax',
@@ -217,10 +211,8 @@ router.post('/api/auth/login', async (ctx) => {
 	const token = TokenService.generateJwtToken(user)
 	const sessionId = ctx.sessionId ?? crypto.randomUUID()
 
-	const cookieHost = ctx.request.host.replace(/^app\./, '')
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
-		domain: cookieHost,
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
 		secure: ctx.headers['x-forwarded-proto'] === 'https',
 		sameSite: 'lax',
@@ -253,13 +245,10 @@ router.post('/api/auth/logout', async (ctx) => {
 
 	const tokenPayload = TokenService.decodeUserToken(token)
 
-	const cookieHost = ctx.request.host.replace(/^app\./, '')
-
 	// Normal user logout - clear the auth cookie
 	if (!tokenPayload.impersonatingAdminId) {
 		ctx.cookies.set(AUTH_COOKIE_NAME, '', {
 			path: '/',
-			domain: cookieHost,
 			expires: new Date(),
 			secure: ctx.headers['x-forwarded-proto'] === 'https',
 			sameSite: 'lax',
@@ -281,7 +270,6 @@ router.post('/api/auth/logout', async (ctx) => {
 	})
 	ctx.cookies.set(AUTH_COOKIE_NAME, newToken, {
 		path: '/',
-		domain: cookieHost,
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
 		secure: ctx.headers['x-forwarded-proto'] === 'https',
 		sameSite: 'lax',
@@ -302,10 +290,8 @@ router.delete('/api/auth', async (ctx) => {
 	const user = await useAuth(ctx, UserAuthenticator)
 	await UserService.deleteUser(user.id)
 
-	const cookieHost = ctx.request.host.replace(/^app\./, '')
 	ctx.cookies.set(AUTH_COOKIE_NAME, '', {
 		path: '/',
-		domain: cookieHost,
 		expires: new Date(),
 		secure: ctx.headers['x-forwarded-proto'] === 'https',
 		sameSite: 'lax',
