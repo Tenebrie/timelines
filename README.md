@@ -1,4 +1,8 @@
-![Logo](docs/images/neverkin-logo-title-dark.webp)
+<p align="center">
+  <a href="https://neverkin.com/">
+    <img src="docs/images/neverkin-logo-title-dark.webp" alt="Neverkin Logo" width="400"><br>
+  </a>
+</p>
 
 # Introduction
 
@@ -6,6 +10,8 @@
 [![Deploy](https://github.com/Tenebrie/timelines/actions/workflows/deploy.yml/badge.svg)](https://github.com/Tenebrie/timelines/actions/workflows/deploy.yml)
 
 Neverkin is an open-source collaborative writing and worldbuilding app for storytellers, DMs, writers and novelists. Organize timelines, characters, lore, and interconnected stories online in real-time.
+
+Formerly known internally as Timelines, which is a name still used across the repository.
 
 ## Live Deployments
 
