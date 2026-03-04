@@ -3,6 +3,11 @@ import { useGoogleAuth } from '../hooks/useGoogleAuth'
 export function GoogleLoginButton() {
 	const { ready: googleReady } = useGoogleAuth()
 
+	const isLegacyDomain = location.hostname.endsWith('.tenebrie.com')
+	if (isLegacyDomain) {
+		return null
+	}
+
 	return (
 		<iframe
 			src={getGoogleSignInIframeSrc()}
