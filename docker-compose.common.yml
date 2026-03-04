@@ -16,9 +16,7 @@ services:
             - rhea
             - calliope
             - thetis
-        ports:
-            - 80:80
-            - 443:443
+
         tty: false
         networks:
             - frontend-styx

@@ -7,11 +7,11 @@ _Last updated_: March 2026
 
 ## Welcome to Neverkin
 
-These Terms of Service ("Terms") govern your use of the Neverkin platform ("Service"), operated as an open-source project. By accessing or using Neverkin, you agree to be bound by these Terms.
+These Terms of Service ("Terms") govern your use of the Neverkin app ("Service"), operated as an open-source project. By accessing or using Neverkin, you agree to be bound by these Terms.
 
 ## The Service
 
-Neverkin is a free, open-source collaborative worldbuilding platform. It is provided as-is, without warranty, as a community project.
+Neverkin is a free, open-source collaborative worldbuilding web application. It is provided as-is, without warranty, as a community project.
 
 ### Your Account
 
@@ -51,4 +51,4 @@ We may update these Terms from time to time. Continued use of the Service consti
 
 ## Contact
 
-For questions about these Terms, please open an issue on the [GitHub repository](https://github.com/tenebrie/timelines).
+For questions about these Terms, please [get in touch](/contact) or open an issue on the [GitHub repository](https://github.com/tenebrie/timelines).

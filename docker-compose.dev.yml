@@ -3,6 +3,8 @@ services:
     gatekeeper:
         image: timelines-gatekeeper:dev
         stop_grace_period: 0s
+        ports:
+            - "127.0.0.1:80:80"
         build:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile

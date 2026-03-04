@@ -1,15 +1,23 @@
+<p align="center">
+  <a href="https://neverkin.com/">
+    <img src="docs/images/neverkin-logo-title-dark.webp" alt="Neverkin Logo" width="400"><br>
+  </a>
+</p>
+
 # Introduction
 
 [![Build & Test](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml/badge.svg)](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml)
 [![Deploy](https://github.com/Tenebrie/timelines/actions/workflows/deploy.yml/badge.svg)](https://github.com/Tenebrie/timelines/actions/workflows/deploy.yml)
 
-Timelines is a worldbuilding and storytelling web application focused on the needs of writers, note-takers and anyone who finds it hard to keep track of the events in their fictional - or less so - worlds.
+Neverkin is an open-source collaborative writing and worldbuilding app for storytellers, DMs, writers and novelists. Organize timelines, characters, lore, and interconnected stories online in real-time.
+
+Formerly known internally as Timelines, which is a name still used across the repository.
 
 ## Live Deployments
 
-- **Production**: https://timelines.tenebrie.com/
+- **Production**: https://neverkin.com/
   - Manually deployed stable release
-- **Staging**: https://staging.tenebrie.com/
+- **Staging**: https://staging.neverkin.com/
   - Hot updated directly from the `dev` branch
 
 ## Architecture
@@ -56,7 +64,7 @@ The default admin user is `admin@localhost` with password `q`.
 
 ## Useful commands
 
-For a quick update on a running environment after a dependency update, change to Prisma types, creating a new migration, change to tsconfig.json or another change to package.json, use the following:
+For a quick update on a running environment after a dependency update, change to Prisma types, creating a new migration, change to tsconfig.json or another change to package.json, you can either just restart the containers, or use the following:
 
 ```sh
 yarn docker:update
@@ -66,8 +74,8 @@ yarn docker:update
 
 ---
 
-To bring an older environment up-to-speed, or when something goes wrong, use the following command:
+In case of issues with containers, try a full rebuild without cache:
 
 ```sh
-yarn docker:fullinstall
+yarn docker:build
 ```

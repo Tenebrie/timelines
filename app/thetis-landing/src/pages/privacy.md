@@ -7,7 +7,7 @@ _Last updated_: March 2026
 
 ## Introduction
 
-This Privacy Policy describes how the Neverkin platform ("Service") collects, uses, and protects your information. Neverkin is an open-source project committed to transparency and user privacy.
+This Privacy Policy describes how the Neverkin app ("Service") collects, uses, and protects your information. Neverkin is an open-source project committed to transparency and user privacy.
 
 ## Information We Collect
 
@@ -57,4 +57,4 @@ We may update this Privacy Policy from time to time. Changes will be reflected b
 
 ## Contact
 
-For privacy-related questions, please open an issue on our [GitHub repository](https://github.com/tenebrie/timelines).
+For privacy-related questions, please [get in touch](/contact) or open an issue on the [GitHub repository](https://github.com/tenebrie/timelines).

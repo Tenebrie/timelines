@@ -55,6 +55,7 @@ export const footerData = {
 				// { text: 'Discord', href: '#' },
 				// { text: 'Reddit', href: '#' },
 				{ text: 'Contribute', href: 'https://github.com/tenebrie/timelines' },
+				{ text: 'Contact Us', href: getPermalink('/contact') },
 			],
 		},
 		{

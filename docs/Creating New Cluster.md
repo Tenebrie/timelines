@@ -40,6 +40,9 @@ This is an unorganized doc with notes about what needs to be done for a new clus
   - `echo "..." | docker secret create s3-access-key-id -`
   - `echo "..." | docker secret create s3-access-key-secret -`
 
+- (Optional) Create a contact form webhook url secret
+  - `echo "your-webhook" | docker secret create webhook-contact-form-url -`
+
 ### Setup app
 
 - Clone the Timelines repository
@@ -60,4 +63,4 @@ This is an unorganized doc with notes about what needs to be done for a new clus
   - `mkdir -p /mnt/volume_rhea_postgres/backrest/{data,config,cache}`
 - (Deprecated) Setup DB backups
   - `crontab -e`
-  - `0 */6 * * * /root/timelines/scripts/stack-create-db-backup.sh BUCKET_NAME >> /var/log/stack-create-db-backup.log 2>&1` 
+  - `0 */6 * * * /root/timelines/scripts/stack-create-db-backup.sh BUCKET_NAME >> /var/log/stack-create-db-backup.log 2>&1`

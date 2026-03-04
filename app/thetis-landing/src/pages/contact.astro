@@ -1,0 +1,17 @@
+---
+import Layout from '~/layouts/PageLayout.astro'
+import ContactForm from '~/components/widgets/ContactForm.astro'
+
+const metadata = {
+	title: 'Contact Us',
+	description: 'Get in touch with the Neverkin team. Send us your feedback, questions, or feature requests.',
+}
+---
+
+<Layout metadata={metadata}>
+	<ContactForm
+		title="Get in Touch"
+		subtitle="Have feedback, a question, or a feature request? We'd love to hear from you."
+		id="contact-form"
+	/>
+</Layout>

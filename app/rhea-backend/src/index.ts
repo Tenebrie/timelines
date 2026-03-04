@@ -12,6 +12,7 @@ import { AuthRouter } from './routers/AuthRouter.js'
 import { CalendarPresentationRouter } from './routers/CalendarPresentationRouter.js'
 import { CalendarRouter } from './routers/CalendarRouter.js'
 import { ConstantsRouter } from './routers/ConstantsRouter.js'
+import { ContactFormRouter } from './routers/ContactFormRouter.js'
 import { HealthRouter, HealthStatus } from './routers/HealthRouter.js'
 import { IconsRouter } from './routers/IconsRouter.js'
 import { ImageConversionRouter } from './routers/ImageConversionRouter.js'
@@ -81,6 +82,8 @@ app
 	.use(CalendarPresentationRouter.allowedMethods())
 	.use(ConstantsRouter.routes())
 	.use(ConstantsRouter.allowedMethods())
+	.use(ContactFormRouter.routes())
+	.use(ContactFormRouter.allowedMethods())
 	.use(HealthRouter.routes())
 	.use(HealthRouter.allowedMethods())
 	.use(IconsRouter.routes())
