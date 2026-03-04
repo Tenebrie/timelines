@@ -1,4 +1,6 @@
-![Logo](docs/images/neverkin-logo-title-dark.webp)
+<p align="center">
+  <img src="docs/images/neverkin-logo-title-dark.webp" alt="Neverkin Logo" width="400">
+</p>
 
 # Introduction
 
