@@ -46,7 +46,7 @@ test.describe('Guest user', () => {
 		await page.getByTestId('DeleteAccountConfirmationInput').getByRole('textbox').fill('DELETE')
 		await page.getByText('Delete my account').click()
 
-		await page.waitForURL(makeUrl('/login'))
+		await page.waitForURL(makeUrl('/login').replace(':80', ''))
 		expect(page.getByText("It seems you've already logged in.")).not.toBeVisible()
 	})
 })
