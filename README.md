@@ -1,3 +1,5 @@
+![Logo](docs/images/neverkin-logo-title-dark.webp)
+
 # Introduction
 
 [![Build & Test](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml/badge.svg)](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml)
