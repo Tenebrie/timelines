@@ -31,7 +31,6 @@ services:
             dockerfile: ./app/styx-frontend/Dockerfile.prod
             args:
                 VERSION: ${VERSION}
-        # nginx runs automatically, no command needed
         deploy:
             replicas: 2
             update_config:
