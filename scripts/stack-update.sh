@@ -34,8 +34,8 @@ fi
 
 docker system prune -f
 
-ALL_SERVICES=("timelines_rhea" "timelines_calliope" "timelines_styx" "timelines_orpheus" "timelines_thetis" "timelines_chronos")
-ALL_IMAGES=(
+SERVICES=("timelines_rhea" "timelines_calliope" "timelines_styx" "timelines_orpheus" "timelines_thetis" "timelines_chronos")
+IMAGES=(
   "tenebrie/timelines-rhea:${VERSION}"
   "tenebrie/timelines-calliope:${VERSION}"
   "tenebrie/timelines-styx:${VERSION}"
@@ -43,21 +43,6 @@ ALL_IMAGES=(
   "tenebrie/timelines-thetis:${VERSION}"
   "tenebrie/timelines-chronos:${VERSION}"
 )
-
-# Pull images and only update services where the image content actually changed
-SERVICES=()
-IMAGES=()
-for i in "${!ALL_SERVICES[@]}"; do
-  docker pull "${ALL_IMAGES[$i]}" > /dev/null 2>&1
-  NEW_DIGEST=$(docker image inspect --format '{{index .RepoDigests 0}}' "${ALL_IMAGES[$i]}" | grep -o 'sha256:[a-f0-9]*')
-  CURRENT_DIGEST=$(docker service inspect --format '{{.Spec.TaskTemplate.ContainerSpec.Image}}' "${ALL_SERVICES[$i]}" | grep -o 'sha256:[a-f0-9]*')
-  if [[ -n "$NEW_DIGEST" && "$NEW_DIGEST" == "$CURRENT_DIGEST" ]]; then
-    echo "Skipping ${ALL_SERVICES[$i]}: image unchanged"
-  else
-    SERVICES+=("${ALL_SERVICES[$i]}")
-    IMAGES+=("${ALL_IMAGES[$i]}")
-  fi
-done
 
 for i in "${!SERVICES[@]}"; do
   docker service update --image "${IMAGES[$i]}" "${SERVICES[$i]}" &
@@ -99,14 +84,7 @@ if $FAILED; then
   exit 1
 fi
 
-docker pull "tenebrie/timelines-gatekeeper:${VERSION}" > /dev/null 2>&1
-NEW_DIGEST=$(docker image inspect --format '{{index .RepoDigests 0}}' "tenebrie/timelines-gatekeeper:${VERSION}" | grep -o 'sha256:[a-f0-9]*')
-CURRENT_DIGEST=$(docker service inspect --format '{{.Spec.TaskTemplate.ContainerSpec.Image}}' "timelines_gatekeeper" | grep -o 'sha256:[a-f0-9]*')
-if [[ -n "$NEW_DIGEST" && "$NEW_DIGEST" == "$CURRENT_DIGEST" ]]; then
-  echo "Skipping timelines_gatekeeper: image unchanged"
-else
-  docker service update --image "tenebrie/timelines-gatekeeper:${VERSION}" "timelines_gatekeeper"
-fi
+docker service update --image "tenebrie/timelines-gatekeeper:${VERSION}" "timelines_gatekeeper"
 
 echo "All services updated successfully"
 docker system prune -f
