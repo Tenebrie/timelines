@@ -61,6 +61,10 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldEvent', 'worldDetails'],
 			}),
+			getWorldEventBacklinks: build.query<GetWorldEventBacklinksApiResponse, GetWorldEventBacklinksApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/event/${queryArg.eventId}/backlinks` }),
+				providesTags: ['worldEvent'],
+			}),
 		}),
 		overrideExisting: false,
 	})
@@ -108,21 +112,21 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name?: null | string
-		descriptionRich?: null | string
 		timestamp: string
+		descriptionRich?: null | string
 		worldEventId: string
 	}[]
 	description: string
 	id: string
+	worldId: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	worldId: string
 	icon: string
 	color: string
-	descriptionRich: string
+	name: string
 	timestamp: string
 	revokedAt?: null | string
+	descriptionRich: string
 	worldEventTrackId?: null | string
 }
 export type CreateWorldEventApiArg = {
@@ -160,21 +164,21 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name?: null | string
-		descriptionRich?: null | string
 		timestamp: string
+		descriptionRich?: null | string
 		worldEventId: string
 	}[]
 	description: string
 	id: string
+	worldId: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	worldId: string
 	icon: string
 	color: string
-	descriptionRich: string
+	name: string
 	timestamp: string
 	revokedAt?: null | string
+	descriptionRich: string
 	worldEventTrackId?: null | string
 }
 export type UpdateWorldEventApiArg = {
@@ -204,16 +208,16 @@ export type DeleteWorldEventApiArg = {
 export type RevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
 	id: string
+	worldId: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	worldId: string
 	icon: string
 	color: string
-	descriptionRich: string
-	descriptionYjs?: null | string
+	name: string
 	timestamp: string
 	revokedAt?: null | string
+	descriptionRich: string
+	descriptionYjs?: null | string
 	worldEventTrackId?: null | string
 }
 export type RevokeWorldEventApiArg = {
@@ -228,19 +232,30 @@ export type RevokeWorldEventApiArg = {
 export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
 	id: string
+	worldId: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	worldId: string
 	icon: string
 	color: string
-	descriptionRich: string
-	descriptionYjs?: null | string
+	name: string
 	timestamp: string
 	revokedAt?: null | string
+	descriptionRich: string
+	descriptionYjs?: null | string
 	worldEventTrackId?: null | string
 }
 export type UnrevokeWorldEventApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	eventId: string
+}
+export type GetWorldEventBacklinksApiResponse = /** status 200  */ {
+	type: 'Actor' | 'Event' | 'Article' | 'Tag'
+	id: string
+	name: string
+}[]
+export type GetWorldEventBacklinksApiArg = {
 	/** Any string value */
 	worldId: string
 	/** Any string value */
@@ -255,4 +270,6 @@ export const {
 	useDeleteWorldEventMutation,
 	useRevokeWorldEventMutation,
 	useUnrevokeWorldEventMutation,
+	useGetWorldEventBacklinksQuery,
+	useLazyGetWorldEventBacklinksQuery,
 } = injectedRtkApi

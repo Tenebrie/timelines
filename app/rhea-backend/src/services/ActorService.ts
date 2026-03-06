@@ -5,6 +5,7 @@ import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { makeUpdateActorQuery, UpdateActorQueryParams } from './dbQueries/makeUpdateActorQuery.js'
 import { MentionData, MentionsService } from './MentionsService.js'
+import { MentionedByEntry } from './TagService.js'
 
 export const ActorService = {
 	findActor: async ({ worldId, actorId }: { worldId: string; actorId: string | null | undefined }) => {
@@ -325,5 +326,44 @@ export const ActorService = {
 			actor,
 			world,
 		}
+	},
+
+	findActorBacklinks: async ({ worldId, actorId }: { worldId: string; actorId: string }) => {
+		const actor = await getPrismaClient().actor.findUnique({
+			where: { id: actorId, worldId },
+			include: {
+				mentionedIn: {
+					include: {
+						sourceActor: {
+							select: { id: true, name: true },
+						},
+						sourceEvent: {
+							select: { id: true, name: true },
+						},
+						sourceArticle: {
+							select: { id: true, name: true },
+						},
+						sourceTag: {
+							select: { id: true, name: true },
+						},
+					},
+				},
+			},
+		})
+
+		if (!actor) {
+			return null
+		}
+
+		const mentionedBy: MentionedByEntry[] = actor.mentionedIn.map((mention) => {
+			const source = mention.sourceActor ?? mention.sourceEvent ?? mention.sourceArticle ?? mention.sourceTag
+			return {
+				type: mention.sourceType,
+				id: source?.id ?? mention.sourceId,
+				name: source?.name ?? 'Unknown',
+			}
+		})
+
+		return mentionedBy
 	},
 }

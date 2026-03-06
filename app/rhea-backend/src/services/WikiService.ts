@@ -6,6 +6,7 @@ import { makeFetchArticleAncestorsQuery } from './dbQueries/makeFetchArticleAnce
 import { makeSortWikiArticlesQuery as makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { MentionData, MentionsService } from './MentionsService.js'
+import { MentionedByEntry } from './TagService.js'
 
 export const WikiService = {
 	findArticleById: async ({ id, worldId }: { id: string; worldId: string }) => {
@@ -245,5 +246,44 @@ export const WikiService = {
 				world,
 			}
 		})
+	},
+
+	findArticleBacklinks: async ({ worldId, articleId }: { worldId: string; articleId: string }) => {
+		const article = await getPrismaClient().wikiArticle.findFirst({
+			where: { id: articleId, worldId },
+			include: {
+				mentionedIn: {
+					include: {
+						sourceActor: {
+							select: { id: true, name: true },
+						},
+						sourceEvent: {
+							select: { id: true, name: true },
+						},
+						sourceArticle: {
+							select: { id: true, name: true },
+						},
+						sourceTag: {
+							select: { id: true, name: true },
+						},
+					},
+				},
+			},
+		})
+
+		if (!article) {
+			return null
+		}
+
+		const mentionedBy: MentionedByEntry[] = article.mentionedIn.map((mention) => {
+			const source = mention.sourceActor ?? mention.sourceEvent ?? mention.sourceArticle ?? mention.sourceTag
+			return {
+				type: mention.sourceType,
+				id: source?.id ?? mention.sourceId,
+				name: source?.name ?? 'Unknown',
+			}
+		})
+
+		return mentionedBy
 	},
 }

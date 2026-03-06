@@ -1,3 +1,4 @@
+import { WikiArticle } from '@api/types/worldWikiTypes'
 import Box from '@mui/material/Box'
 import debounce from 'lodash.debounce'
 import { useCallback, useRef } from 'react'
@@ -6,10 +7,12 @@ import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/Ri
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useArticleApiCache } from '@/app/views/world/views/wiki/api/useArticleApiCache'
-import { useCurrentArticle } from '@/app/views/world/views/wiki/hooks/useCurrentArticle'
 
-export const ArticleDetails = () => {
-	const { article } = useCurrentArticle()
+type Props = {
+	article: WikiArticle
+}
+
+export const ArticleDescription = ({ article }: Props) => {
 	const theme = useCustomTheme()
 	const { updateCachedArticle } = useArticleApiCache()
 

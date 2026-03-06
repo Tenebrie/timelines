@@ -5,11 +5,12 @@ import { memo } from 'react'
 
 import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
 import { IconPicker } from '@/app/components/IconPicker/IconPicker'
-import { useUpsertEvent } from '@/app/components/Outliner/editors/event/details/draft/useUpsertEvent'
-import { useCurrentOrNewEvent } from '@/app/components/Outliner/editors/event/details/hooks/useCurrentOrNewEvent'
-import { EntityEditorTabs } from '@/app/features/entityEditor/components/EntityEditorTabs'
+import { EntityEditorTabs } from '@/app/features/entityEditor/common/EntityEditorTabs'
+import { useUpsertEvent } from '@/app/features/entityEditor/event/details/draft/useUpsertEvent'
+import { useCurrentOrNewEvent } from '@/app/features/entityEditor/event/details/hooks/useCurrentOrNewEvent'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
+import { EventBacklinks } from './components/EventBacklinks'
 import { EventDescription } from './components/EventDescription'
 import { EventTitle } from './components/EventTitle'
 import { useEventDraft } from './draft/useEventDraft'
@@ -58,6 +59,7 @@ export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
 							</Stack>
 						</Stack>
 					}
+					backlinksTab={<EventBacklinks eventId={event.id} />}
 				/>
 			</Box>
 		</Stack>

@@ -17,10 +17,10 @@ import { useArticleBulkActions } from '@/app/views/world/views/wiki/hooks/useArt
 import { useArticleDragDrop } from '@/app/views/world/views/wiki/hooks/useArticleDragDrop'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
-import { ArticleContextMenu } from '../../components/ArticleContextMenu'
-import { useArticleCollapseControls } from '../hooks/useArticleCollapseControls'
+import { ArticleContextMenu } from '../components/ArticleContextMenu'
 import { ArticleList } from './ArticleList'
 import { ArticleListItemCollapse } from './ArticleListItemCollapse'
+import { useArticleCollapseControls } from './hooks/useArticleCollapseControls'
 
 type Props = {
 	article: WikiArticle

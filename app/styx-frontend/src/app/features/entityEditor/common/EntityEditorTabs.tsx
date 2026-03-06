@@ -1,10 +1,12 @@
 import DescriptionIcon from '@mui/icons-material/Description'
+import LinkIcon from '@mui/icons-material/Link'
 import PaletteIcon from '@mui/icons-material/Palette'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
+import Tooltip from '@mui/material/Tooltip'
 import { useSearch } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import useEvent from 'react-use-event-hook'
@@ -13,10 +15,11 @@ import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 type Props = {
 	contentTab: React.ReactNode
-	illustrationTab: React.ReactNode
+	illustrationTab?: React.ReactNode
+	backlinksTab?: React.ReactNode
 }
 
-export function EntityEditorTabs({ contentTab, illustrationTab }: Props) {
+export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab }: Props) {
 	const { tab: defaultTab } = useSearch({ from: '/world/$worldId/_world' })
 	const [tab, setTab] = useState(defaultTab)
 	const [mountedTabs, setMountedTabs] = useState<Set<number>>(new Set([defaultTab]))
@@ -34,6 +37,10 @@ export function EntityEditorTabs({ contentTab, illustrationTab }: Props) {
 		setMountedTabs((prev) => new Set(prev).add(tab))
 	}, [tab])
 
+	useEffect(() => {
+		setTab(defaultTab)
+	}, [defaultTab])
+
 	return (
 		<Stack direction="row" width="100%" height="100%" gap={1} sx={{ flex: 1 }}>
 			<Box sx={{ height: '100%', width: '100%', display: tab === 0 ? 'block' : 'none' }}>
@@ -42,6 +49,9 @@ export function EntityEditorTabs({ contentTab, illustrationTab }: Props) {
 			<Box sx={{ height: '100%', width: '100%', display: tab === 1 ? 'block' : 'none', marginLeft: -1 }}>
 				{mountedTabs.has(1) && illustrationTab}
 			</Box>
+			<Box sx={{ height: '100%', width: '100%', display: tab === 2 ? 'block' : 'none', marginLeft: -1 }}>
+				{mountedTabs.has(2) && backlinksTab}
+			</Box>
 			{tab !== 0 && <Divider orientation="vertical" />}
 			<Tabs
 				orientation="vertical"
@@ -49,28 +59,47 @@ export function EntityEditorTabs({ contentTab, illustrationTab }: Props) {
 				onChange={(_, newValue) => handleChange(newValue)}
 				sx={{ marginTop: 0 }}
 			>
-				<Tab
-					value={0}
-					icon={<DescriptionIcon />}
-					sx={{
-						width: '100%',
-						borderRadius: 0.75,
-						'&:hover': {
-							backgroundColor: 'action.hover',
-						},
-					}}
-				/>
-				<Tab
-					value={1}
-					icon={<PaletteIcon />}
-					sx={{
-						width: '100%',
-						borderRadius: 0.75,
-						'&:hover': {
-							backgroundColor: 'action.hover',
-						},
-					}}
-				/>
+				<Tooltip title="Content tab" disableInteractive placement="right" enterDelay={300}>
+					<Tab
+						value={0}
+						icon={<DescriptionIcon />}
+						sx={{
+							width: '100%',
+							borderRadius: 0.75,
+							'&:hover': {
+								backgroundColor: 'action.hover',
+							},
+						}}
+					/>
+				</Tooltip>
+				<Tooltip title="Illustration tab" disableInteractive placement="right" enterDelay={300}>
+					<Tab
+						value={1}
+						icon={<PaletteIcon />}
+						sx={{
+							width: '100%',
+							borderRadius: 0.75,
+							display: illustrationTab ? 'block' : 'none',
+							'&:hover': {
+								backgroundColor: 'action.hover',
+							},
+						}}
+					/>
+				</Tooltip>
+				<Tooltip title="Backlinks tab" disableInteractive placement="right" enterDelay={300}>
+					<Tab
+						value={2}
+						icon={<LinkIcon sx={{ marginTop: 0.5 }} />}
+						sx={{
+							width: '100%',
+							borderRadius: 0.75,
+							display: backlinksTab ? 'block' : 'none',
+							'&:hover': {
+								backgroundColor: 'action.hover',
+							},
+						}}
+					/>
+				</Tooltip>
 			</Tabs>
 		</Stack>
 	)

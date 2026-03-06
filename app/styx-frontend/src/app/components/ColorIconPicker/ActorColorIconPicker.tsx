@@ -1,4 +1,4 @@
-import { ActorDraft } from '@/app/components/Outliner/editors/actor/details/draft/useActorDraft'
+import { ActorDraft } from '@/app/features/entityEditor/actor/details/draft/useActorDraft'
 
 import { ColorIconPicker } from './ColorIconPicker'
 

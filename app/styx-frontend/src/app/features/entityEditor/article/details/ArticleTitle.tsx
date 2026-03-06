@@ -1,3 +1,4 @@
+import { WikiArticle } from '@api/types/worldWikiTypes'
 import Button from '@mui/material/Button'
 import Input from '@mui/material/Input'
 import Stack from '@mui/material/Stack'
@@ -6,10 +7,12 @@ import { useEffect, useState } from 'react'
 
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useEditArticle } from '@/app/views/world/views/wiki/api/useEditArticle'
-import { useCurrentArticle } from '@/app/views/world/views/wiki/hooks/useCurrentArticle'
 
-export const ArticleDetailsTitle = () => {
-	const { article } = useCurrentArticle()
+type Props = {
+	article: WikiArticle
+}
+
+export function ArticleTitle({ article }: Props) {
 	const [editArticle] = useEditArticle()
 
 	const [editing, setEditing] = useState(false)

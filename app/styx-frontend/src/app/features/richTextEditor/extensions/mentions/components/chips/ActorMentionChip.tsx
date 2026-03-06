@@ -30,7 +30,7 @@ export const ActorMentionChip = ({ actorId, fallbackName }: Props) => {
 				if (navi.length === 0 || !navi[navi.length - 1].includes(actorId)) {
 					navi.push(actorId)
 				}
-				return { ...prev, navi }
+				return { ...prev, navi, tab: 0 }
 			},
 		})
 	}

@@ -29,7 +29,7 @@ export const TagMentionChip = ({ tagId, fallbackName }: Props) => {
 				if (navi.length === 0 || !navi[navi.length - 1].includes(tagId)) {
 					navi.push(tagId)
 				}
-				return { ...prev, navi }
+				return { ...prev, navi, tab: 0 }
 			},
 		})
 	}

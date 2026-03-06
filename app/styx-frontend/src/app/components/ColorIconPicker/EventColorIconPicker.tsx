@@ -1,4 +1,4 @@
-import { EventDraft } from '@/app/components/Outliner/editors/event/details/draft/useEventDraft'
+import { EventDraft } from '@/app/features/entityEditor/event/details/draft/useEventDraft'
 
 import { ColorIconPicker } from './ColorIconPicker'
 

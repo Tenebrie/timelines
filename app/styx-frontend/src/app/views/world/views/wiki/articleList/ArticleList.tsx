@@ -6,9 +6,9 @@ import { useSelector } from 'react-redux'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 
-import { useMoveArticle } from '../../api/useMoveArticle'
-import { ArticleDropHandle } from '../../components/ArticleDropHandle'
-import { getWikiState } from '../../WikiSliceSelectors'
+import { useMoveArticle } from '../api/useMoveArticle'
+import { ArticleDropHandle } from '../components/ArticleDropHandle'
+import { getWikiState } from '../WikiSliceSelectors'
 import { ArticleListItem } from './ArticleListItem'
 
 type Props = {

@@ -82,6 +82,10 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['actorList', 'worldDetails'],
 			}),
+			getActorBacklinks: build.query<GetActorBacklinksApiResponse, GetActorBacklinksApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/backlinks` }),
+				providesTags: ['actorList'],
+			}),
 		}),
 		overrideExisting: false,
 	})
@@ -204,11 +208,11 @@ export type CreateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 	title: string
 	icon: string
 	color: string
@@ -261,11 +265,11 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 	title: string
 	icon: string
 	color: string
@@ -285,11 +289,11 @@ export type UpdateActorApiArg = {
 }
 export type DeleteActorApiResponse = /** status 200  */ {
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 	title: string
 	icon: string
 	color: string
@@ -297,6 +301,17 @@ export type DeleteActorApiResponse = /** status 200  */ {
 	descriptionYjs?: null | string
 }
 export type DeleteActorApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	actorId: string
+}
+export type GetActorBacklinksApiResponse = /** status 200  */ {
+	type: 'Actor' | 'Event' | 'Article' | 'Tag'
+	id: string
+	name: string
+}[]
+export type GetActorBacklinksApiArg = {
 	/** Any string value */
 	worldId: string
 	/** Any string value */
@@ -314,4 +329,6 @@ export const {
 	useCreateActorMutation,
 	useUpdateActorMutation,
 	useDeleteActorMutation,
+	useGetActorBacklinksQuery,
+	useLazyGetActorBacklinksQuery,
 } = injectedRtkApi

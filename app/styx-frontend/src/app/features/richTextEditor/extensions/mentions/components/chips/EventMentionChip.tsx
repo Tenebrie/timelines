@@ -30,7 +30,7 @@ export const EventMentionChip = ({ eventId, fallbackName }: Props) => {
 				if (navi.length === 0 || !navi[navi.length - 1].includes(eventId)) {
 					navi.push(eventId)
 				}
-				return { ...prev, navi }
+				return { ...prev, navi, tab: 0 }
 			},
 		})
 	}

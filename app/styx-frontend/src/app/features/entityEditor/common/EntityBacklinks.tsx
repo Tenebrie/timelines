@@ -1,4 +1,4 @@
-import { useGetTagDetailsQuery } from '@api/worldTagApi'
+import { GetTagDetailsApiResponse } from '@api/worldTagApi'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Stack from '@mui/material/Stack'
@@ -12,13 +12,12 @@ import { TagMentionChip } from '@/app/features/richTextEditor/extensions/mention
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 type Props = {
-	tagId: string
+	isLoading: boolean
+	mentions: GetTagDetailsApiResponse['mentionedBy']
 }
 
-export const TagMentionedBy = ({ tagId }: Props) => {
+export const EntityBacklinks = ({ mentions, isLoading }: Props) => {
 	const { id: worldId } = useSelector(getWorldState, (a, b) => a.id === b.id)
-
-	const { data, isLoading } = useGetTagDetailsQuery({ worldId, tagId }, { refetchOnMountOrArgChange: true })
 
 	if (isLoading) {
 		return (
@@ -28,16 +27,14 @@ export const TagMentionedBy = ({ tagId }: Props) => {
 		)
 	}
 
-	const mentionedBy = data?.mentionedBy ?? []
-
-	if (mentionedBy.length === 0) {
+	if (mentions.length === 0) {
 		return (
 			<Stack gap={1}>
 				<Typography variant="subtitle2" color="text.secondary">
 					Mentioned by
 				</Typography>
 				<Typography variant="body2" color="text.secondary" sx={{ fontStyle: 'italic' }}>
-					No entities mention this tag yet.
+					No mentions to show!
 				</Typography>
 			</Stack>
 		)
@@ -49,7 +46,7 @@ export const TagMentionedBy = ({ tagId }: Props) => {
 				Mentioned by
 			</Typography>
 			<Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-				{mentionedBy.map((entity) => {
+				{mentions.map((entity) => {
 					if (entity.type === 'Actor') {
 						return <ActorMentionChip key={entity.id} worldId={worldId} actorId={entity.id} />
 					}
