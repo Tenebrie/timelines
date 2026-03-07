@@ -17,7 +17,6 @@ export const ModalBackdrop = styled.div`
 	z-index: 1000;
 	opacity: 0;
 	pointer-events: none;
-	transition: opacity 0.3s;
 
 	&.visible {
 		opacity: 1;

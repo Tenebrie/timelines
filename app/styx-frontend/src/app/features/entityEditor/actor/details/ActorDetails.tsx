@@ -5,11 +5,12 @@ import { memo } from 'react'
 
 import { ColorPicker } from '@/app/components/ColorPicker/ColorPicker'
 import { IconPicker } from '@/app/components/IconPicker/IconPicker'
-import { EntityEditorTabs } from '@/app/features/entityEditor/components/EntityEditorTabs'
+import { EntityEditorTabs } from '@/app/features/entityEditor/common/EntityEditorTabs'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useCurrentOrNewActor } from '../hooks/useCurrentOrNewActor'
+import { ActorBacklinks } from './components/ActorBacklinks'
 import { ActorDescription } from './components/ActorDescription'
 import { ActorTitle } from './components/ActorTitle'
 import { useActorDraft } from './draft/useActorDraft'
@@ -66,6 +67,7 @@ export function ActorDetailsComponent({ editedActor }: Props) {
 							</Stack>
 						</Stack>
 					}
+					backlinksTab={<ActorBacklinks actorId={actor.id} />}
 				/>
 			</Box>
 		</Stack>

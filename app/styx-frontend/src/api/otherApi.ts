@@ -117,6 +117,12 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldWikiArticle'],
 			}),
+			getArticleBacklinks: build.query<GetArticleBacklinksApiResponse, GetArticleBacklinksApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/wiki/article/${queryArg.articleId}/backlinks`,
+				}),
+				providesTags: ['worldWikiArticle'],
+			}),
 			getUserWorldAccessLevel: build.query<GetUserWorldAccessLevelApiResponse, GetUserWorldAccessLevelApiArg>(
 				{
 					query: (queryArg) => ({
@@ -323,26 +329,26 @@ export type AcceptWorldShareLinkApiArg = {
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
 		id: string
+		worldId: string
+		name: string
 		createdAt: string
 		updatedAt: string
-		name: string
-		worldId: string
 		icon: string
 		color: string
-		position: number
 		contentRich: string
 		contentYjs?: null | string
+		position: number
 		parentId?: null | string
 	}[]
 	id: string
+	worldId: string
+	name: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	worldId: string
 	icon: string
 	color: string
-	position: number
 	contentRich: string
+	position: number
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {
@@ -355,6 +361,17 @@ export type UpdateArticleApiArg = {
 		icon?: string
 		color?: string
 	}
+}
+export type GetArticleBacklinksApiResponse = /** status 200  */ {
+	type: 'Actor' | 'Event' | 'Article' | 'Tag'
+	id: string
+	name: string
+}[]
+export type GetArticleBacklinksApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	articleId: string
 }
 export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {
 	owner: boolean
@@ -398,6 +415,8 @@ export const {
 	useLazyVisitWorldShareLinkQuery,
 	useAcceptWorldShareLinkMutation,
 	useUpdateArticleMutation,
+	useGetArticleBacklinksQuery,
+	useLazyGetArticleBacklinksQuery,
 	useGetUserWorldAccessLevelQuery,
 	useLazyGetUserWorldAccessLevelQuery,
 } = injectedRtkApi

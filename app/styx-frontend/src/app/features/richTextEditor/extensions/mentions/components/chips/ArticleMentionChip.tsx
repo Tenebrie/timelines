@@ -24,10 +24,12 @@ export const ArticleMentionChip = ({ worldId, articleId, fallbackName }: Props) 
 			return
 		}
 		navigateTo({
-			to: '/world/$worldId/wiki/$articleId',
-			params: { worldId, articleId },
 			search: (prev) => {
-				return { ...prev, navi: [] }
+				const navi = [...(prev.navi ?? [])] as string[]
+				if (navi.length === 0 || !navi[navi.length - 1].includes(articleId)) {
+					navi.push(articleId)
+				}
+				return { ...prev, navi, tab: 0 }
 			},
 		})
 	}

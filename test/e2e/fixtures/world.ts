@@ -1,6 +1,7 @@
 import { expect, Page } from '@playwright/test'
+import { makeUrl } from 'tests/utils'
 
-import { makeUrl } from '../tests/utils'
+import { withCreatedActor, withCreatedArticle, withCreatedEvent } from './withRequest'
 
 export const createWorld = async (page: Page) => {
 	const worldData = {
@@ -34,6 +35,18 @@ export const navigateToTimeline = async (
 	return { world: worldData }
 }
 
+export const navigateToMindmap = async (
+	page: Page,
+	worldData: 'createWorld' | Awaited<ReturnType<typeof createWorld>>,
+) => {
+	if (worldData === 'createWorld') {
+		worldData = await createWorld(page)
+	}
+
+	await page.goto(makeUrl(`/world/${worldData.id}/mindmap`))
+	return { world: worldData }
+}
+
 export const navigateToWiki = async (
 	page: Page,
 	worldData: 'createWorld' | Awaited<ReturnType<typeof createWorld>>,
@@ -44,6 +57,40 @@ export const navigateToWiki = async (
 
 	await page.goto(makeUrl(`/world/${worldData.id}/wiki`))
 	return { world: worldData }
+}
+
+export async function closeModal(page: Page) {
+	await page.getByTestId('ModalBackdrop').click({ position: { x: 0, y: 0 } })
+}
+
+export async function createEvent(page: Page, title: string) {
+	await page.getByTestId('NavigateToTimeline').click()
+	await page.getByText('Create event').click()
+	await page.getByTestId('ModalBackdrop').getByRole('textbox').fill(title)
+	await withCreatedEvent(
+		page,
+		async () => await page.getByTestId('ModalBackdrop').getByText('Create', { exact: true }).click(),
+	)
+}
+
+export async function createActor(page: Page, name: string) {
+	await page.getByTestId('NavigateToMindmap').click()
+	await page.getByText('Create actor').click()
+	await page.getByTestId('ModalBackdrop').getByRole('textbox').fill(name)
+	await withCreatedActor(
+		page,
+		async () => await page.getByTestId('ModalBackdrop').getByText('Create', { exact: true }).click(),
+	)
+}
+
+export async function createArticle(page: Page, name: string) {
+	await page.getByTestId('NavigateToWiki').click()
+	await page.getByText('Create article').click()
+	await page.getByTestId('ModalBackdrop').getByLabel('Name').fill(name)
+	await withCreatedArticle(
+		page,
+		async () => await page.getByTestId('ModalBackdrop').getByText('Create', { exact: true }).click(),
+	)
 }
 
 export const createWikiArticle = async (

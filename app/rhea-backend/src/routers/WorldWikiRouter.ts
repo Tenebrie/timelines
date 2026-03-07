@@ -5,6 +5,7 @@ import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
 import { WikiService } from '@src/services/WikiService.js'
 import {
+	BadRequestError,
 	NumberValidator,
 	OptionalParam,
 	PathParam,
@@ -196,6 +197,30 @@ router.post('/api/world/:worldId/wiki/articles/delete', async (ctx) => {
 	await WikiService.bulkDeleteWikiArticles({ worldId, articles })
 
 	RedisService.notifyAboutWikiArticleDeletion(ctx, { worldId })
+})
+
+router.get('/api/world/:worldId/wiki/article/:articleId/backlinks', async (ctx) => {
+	useApiEndpoint({
+		name: 'getArticleBacklinks',
+		description: 'Fetches the list of entities that mention the specified wiki article.',
+		tags: [worldWikiArticleTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId, articleId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+		articleId: PathParam(StringValidator),
+	})
+
+	await AuthorizationService.checkUserReadAccessById(user, worldId)
+
+	const backlinks = await WikiService.findArticleBacklinks({ worldId, articleId })
+	if (!backlinks) {
+		throw new BadRequestError('Article not found')
+	}
+
+	return backlinks
 })
 
 export const WorldWikiRouter = router

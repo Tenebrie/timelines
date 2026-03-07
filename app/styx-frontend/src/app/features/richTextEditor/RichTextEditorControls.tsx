@@ -3,6 +3,7 @@ import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+import { useSearch } from '@tanstack/react-router'
 import { Editor } from '@tiptap/react'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -22,6 +23,7 @@ type Props = {
 export const RichTextEditorControls = memo(RichTextEditorControlsComponent)
 
 export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props) {
+	const { navi } = useSearch({ from: '/world/$worldId/_world' })
 	const { readModeEnabled } = useSelector(
 		getWikiPreferences,
 		(a, b) => a.readModeEnabled === b.readModeEnabled,
@@ -49,7 +51,7 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 		}
 	}, [editor])
 
-	const isReadMode = isReadOnly || (readModeEnabled && allowReadMode)
+	const isReadMode = isReadOnly || (readModeEnabled && allowReadMode && navi.length === 0)
 
 	const isBold = editor?.isActive('bold') ?? false
 	const isItalic = editor?.isActive('italic') ?? false
@@ -135,7 +137,7 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 						</Stack>
 					)}
 				</Stack>
-				{allowReadMode && !isReadOnly && <ReadModeToggle />}
+				{allowReadMode && navi.length === 0 && !isReadOnly && <ReadModeToggle />}
 			</Stack>
 		</Paper>
 	)

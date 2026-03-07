@@ -47,13 +47,11 @@ export const ArticleWizardModal = () => {
 		close()
 
 		if (response) {
-			setTimeout(() => {
-				navigate({
-					to: '/world/$worldId/wiki/$articleId',
-					params: { articleId: response.id },
-					search: true,
-				})
-			}, 100)
+			navigate({
+				to: '/world/$worldId/wiki/$articleId',
+				params: { articleId: response.id },
+				search: true,
+			})
 		}
 	}
 

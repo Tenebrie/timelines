@@ -1,4 +1,6 @@
 import { WorldBrief } from '@api/types/worldTypes'
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
+import CalendarIcon from '@mui/icons-material/CalendarMonth'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import GroupIcon from '@mui/icons-material/Group'
@@ -19,7 +21,7 @@ type Props = {
 }
 
 export function WorldListItem({ world, showActions }: Props) {
-	const isShared = world.accessMode !== 'Private'
+	const isShared = world.accessMode !== 'Private' || world.collaborators.length > 0
 	const lastUpdated = formatTimeAgo(new Date(world.updatedAt))
 
 	const navigate = useStableNavigate()
@@ -81,17 +83,19 @@ export function WorldListItem({ world, showActions }: Props) {
 									</Typography>
 								)}
 								<Typography variant="body2" color="text.secondary">
-									Updated {lastUpdated} | {world.calendars[0]?.name ?? ''}
+									<Stack direction="row" display={'inline-flex'} alignItems={'center'} gap={0.5}>
+										<AccessTimeIcon sx={{ fontSize: 14, color: 'text.secondary' }} /> Updated {lastUpdated} |{' '}
+										<CalendarIcon sx={{ fontSize: 14, color: 'text.secondary' }} />{' '}
+										{world.calendars[0]?.name ?? ''}{' '}
+										{isShared && (
+											<>
+												| <GroupIcon sx={{ fontSize: 14, color: 'text.secondary' }} /> Shared
+											</>
+										)}
+									</Stack>
 								</Typography>
 							</Stack>
-							{isShared && (
-								<Stack direction="row" alignItems="center" gap={0.5}>
-									<GroupIcon sx={{ fontSize: 14, color: 'text.secondary' }} />
-									<Typography variant="body2" color="text.secondary">
-										Shared
-									</Typography>
-								</Stack>
-							)}
+							{isShared && <Stack direction="row" alignItems="center" gap={0.5}></Stack>}
 						</Stack>
 					</Stack>
 					{showActions && (
