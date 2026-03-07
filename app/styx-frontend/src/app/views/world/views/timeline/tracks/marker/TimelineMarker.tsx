@@ -108,11 +108,12 @@ function TimelineMarkerComponent({ entity, visible, selected, trackHeight, realT
 
 	return (
 		<Group
-			data-testid="TimelineMarker"
+			data-testid={`TimelineMarker`}
+			data-entity-name={entity.name}
 			ref={ref}
 			style={{ '--position': `${position}px` } as CSSProperties}
 			$height={height}
-			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''} timeline-marker-scroll`}
+			className={`${visible ? 'visible' : ''} ${isDragging ? 'dragging' : ''} timeline-marker`}
 		>
 			<TimelineMarkerBody entity={entity} trackHeight={trackHeight} selected={selected} />
 			{ghostElement}

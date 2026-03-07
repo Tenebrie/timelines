@@ -62,6 +62,7 @@ export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab }: 
 				<Tooltip title="Content tab" disableInteractive placement="right" enterDelay={300}>
 					<Tab
 						value={0}
+						data-testid="EntityEditorContentTab"
 						icon={<DescriptionIcon />}
 						sx={{
 							width: '100%',
@@ -75,6 +76,7 @@ export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab }: 
 				<Tooltip title="Illustration tab" disableInteractive placement="right" enterDelay={300}>
 					<Tab
 						value={1}
+						data-testid="EntityEditorIllustrationTab"
 						icon={<PaletteIcon />}
 						sx={{
 							width: '100%',
@@ -89,6 +91,7 @@ export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab }: 
 				<Tooltip title="Backlinks tab" disableInteractive placement="right" enterDelay={300}>
 					<Tab
 						value={2}
+						data-testid="EntityEditorBacklinksTab"
 						icon={<LinkIcon sx={{ marginTop: 0.5 }} />}
 						sx={{
 							width: '100%',

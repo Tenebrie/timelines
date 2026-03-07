@@ -55,7 +55,12 @@ export const WorldSidebar = () => {
 					elevation={2}
 				>
 					<Stack sx={{ gap: '8px', flexDirection: 'column' }}>
-						<NavigationLink to="/world/$worldId/timeline" search={true} from="/world/$worldId">
+						<NavigationLink
+							to="/world/$worldId/timeline"
+							search={true}
+							from="/world/$worldId"
+							data-testid="NavigateToTimeline"
+						>
 							<StyledSmallButton variant={getButtonStyle(matchesTimeline)}>
 								<Home />
 							</StyledSmallButton>
@@ -63,12 +68,22 @@ export const WorldSidebar = () => {
 						{/* <StyledSmallButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}> 
 							<ViewList />
 						</StyledSmallButton> */}
-						<NavigationLink to="/world/$worldId/mindmap" search={true} from="/world/$worldId">
+						<NavigationLink
+							to="/world/$worldId/mindmap"
+							search={true}
+							from="/world/$worldId"
+							data-testid="NavigateToMindmap"
+						>
 							<StyledSmallButton variant={getButtonStyle(matchesMindmap)}>
 								<Person />
 							</StyledSmallButton>
 						</NavigationLink>
-						<NavigationLink to="/world/$worldId/wiki" search={true} from="/world/$worldId">
+						<NavigationLink
+							to="/world/$worldId/wiki"
+							search={true}
+							from="/world/$worldId"
+							data-testid="NavigateToWiki"
+						>
 							<StyledSmallButton variant={getButtonStyle(matchesWiki)}>
 								<AutoStories />
 							</StyledSmallButton>
@@ -76,7 +91,12 @@ export const WorldSidebar = () => {
 						{!isReadOnly && (
 							<>
 								<Divider />
-								<NavigationLink to="/world/$worldId/settings" search={true} from="/world/$worldId">
+								<NavigationLink
+									to="/world/$worldId/settings"
+									search={true}
+									from="/world/$worldId"
+									data-testid="NavigateToSettings"
+								>
 									<StyledSmallButton variant={getButtonStyle(matchesSettings)}>
 										<Settings />
 									</StyledSmallButton>
