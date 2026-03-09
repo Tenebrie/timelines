@@ -17,6 +17,7 @@ export enum CalliopeToClientMessageType {
 	WIKI_ARTICLE_DELETED = 'wikiArticleDeleted',
 	TAG_UPDATED = 'tagUpdated',
 	DOCUMENT_RESET = 'documentReset',
+	IMAGE_GENERATION_UPDATED = 'imageGenerationUpdated',
 }
 
 export type CalliopeToClientMessagePayload = {
@@ -73,6 +74,10 @@ export type CalliopeToClientMessagePayload = {
 	[CalliopeToClientMessageType.DOCUMENT_RESET]: {
 		worldId: string
 		entityId: string
+	}
+	[CalliopeToClientMessageType.IMAGE_GENERATION_UPDATED]: {
+		assetId: string
+		status: string
 	}
 }
 

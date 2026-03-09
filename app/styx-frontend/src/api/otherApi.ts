@@ -179,14 +179,17 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	ownerId: string
-	size: number
 	expiresAt?: null | string
+	ownerId: string
 	bucketKey: string
+	size: number
 	originalFileName: string
 	originalFileExtension: string
-	contentType: 'ImageConversion' | 'Avatar'
+	contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
 	status: 'Pending' | 'Finalized' | 'Failed'
+	contentDescription?: null | string
+	imageWidth?: null | number
+	imageHeight?: null | number
 }
 export type RequestImageConversionApiArg = {
 	body: {
@@ -329,26 +332,26 @@ export type AcceptWorldShareLinkApiArg = {
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
 		id: string
-		worldId: string
-		name: string
 		createdAt: string
 		updatedAt: string
+		name: string
+		worldId: string
 		icon: string
 		color: string
+		position: number
 		contentRich: string
 		contentYjs?: null | string
-		position: number
 		parentId?: null | string
 	}[]
 	id: string
-	worldId: string
-	name: string
 	createdAt: string
 	updatedAt: string
+	name: string
+	worldId: string
 	icon: string
 	color: string
-	contentRich: string
 	position: number
+	contentRich: string
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {

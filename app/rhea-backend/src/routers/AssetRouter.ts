@@ -13,7 +13,7 @@ import {
 	useRequestBody,
 } from 'moonflower'
 
-import { assetTag } from './utils/tags.js'
+import { assetTag, imageGenerationTag } from './utils/tags.js'
 import { AssetTypeValidator } from './validators/AssetTypeValidator.js'
 
 const router = new Router().with(async (ctx) => {
@@ -43,7 +43,7 @@ router.delete('/api/assets/:assetId', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteAsset',
 		description: 'Deletes an asset owned by the user.',
-		tags: [assetTag],
+		tags: [assetTag, imageGenerationTag],
 	})
 
 	const { assetId } = usePathParams(ctx, {

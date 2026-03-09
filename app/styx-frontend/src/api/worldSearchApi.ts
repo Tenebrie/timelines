@@ -61,8 +61,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		worldId: string
 		icon: string
 		color: string
-		contentRich: string
 		position: number
+		contentRich: string
 		parentId?: null | string
 	}[]
 	events: {

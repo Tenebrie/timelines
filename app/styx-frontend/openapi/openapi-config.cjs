@@ -10,6 +10,7 @@ const tags = [
 	'favoriteIcons',
 	'profile',
 	'mindmap',
+	'imageGeneration',
 	'worldTag',
 	'worldColor',
 	'worldWiki',

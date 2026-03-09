@@ -70,6 +70,7 @@ services:
             - s3-access-key-id
             - s3-access-key-secret
             - webhook-contact-form-url
+            - imagen-google-api-key
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
             interval: 10s
@@ -185,4 +186,6 @@ secrets:
     s3-access-key-secret:
         external: true
     webhook-contact-form-url:
+        external: true
+    imagen-google-api-key:
         external: true

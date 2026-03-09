@@ -123,8 +123,11 @@ export type PostLoginApiResponse = /** status 200  */ {
 			bucketKey: string
 			originalFileName: string
 			originalFileExtension: string
-			contentType: 'ImageConversion' | 'Avatar'
+			contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
 			status: 'Pending' | 'Finalized' | 'Failed'
+			contentDescription?: null | string
+			imageWidth?: null | number
+			imageHeight?: null | number
 		}
 	}
 	sessionId: string

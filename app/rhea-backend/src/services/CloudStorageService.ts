@@ -13,6 +13,19 @@ import { BadRequestError } from 'moonflower'
 
 import { AssetService } from './AssetService.js'
 
+const extensionToContentType: Record<string, string> = {
+	png: 'image/png',
+	jpg: 'image/jpeg',
+	jpeg: 'image/jpeg',
+	gif: 'image/gif',
+	webp: 'image/webp',
+	svg: 'image/svg+xml',
+}
+
+function getContentType(extension: string): string {
+	return extensionToContentType[extension.toLowerCase()] ?? 'application/octet-stream'
+}
+
 const BUCKET_ID = SecretService.getSecret('s3-bucket-id')
 
 const s3Client = new S3Client({
@@ -219,6 +232,7 @@ export const CloudStorageService = {
 				Bucket: BUCKET_ID,
 				Key: asset.bucketKey,
 				Body: fileBuffer,
+				ContentType: getContentType(extension),
 			}),
 		)
 
@@ -246,6 +260,8 @@ export const CloudStorageService = {
 		const command = new GetObjectCommand({
 			Bucket: BUCKET_ID,
 			Key: asset.bucketKey,
+			ResponseContentDisposition: 'inline',
+			ResponseContentType: getContentType(asset.originalFileExtension),
 		})
 
 		const url = await getSignedUrl(s3Client, command, { expiresIn: expiresInSeconds })
@@ -261,6 +277,43 @@ export const CloudStorageService = {
 			}),
 		)
 		await AssetService.deleteAsset(asset.id)
+	},
+
+	uploadGeneratedImage: async ({
+		assetId,
+		fileBuffer,
+		imageWidth,
+		imageHeight,
+	}: {
+		assetId: string
+		userId: string
+		fileName: string
+		fileBuffer: Buffer
+		imageWidth?: number
+		imageHeight?: number
+	}): Promise<Asset> => {
+		const asset = await AssetService.getAsset(assetId)
+		if (!asset) {
+			throw new Error(`Asset ${assetId} not found`)
+		}
+
+		// Upload file to S3
+		await s3Client.send(
+			new PutObjectCommand({
+				Bucket: BUCKET_ID,
+				Key: asset.bucketKey,
+				Body: fileBuffer,
+				ContentType: getContentType(asset.originalFileExtension),
+			}),
+		)
+
+		// Update asset with final size, dimensions, and mark as Finalized
+		return await AssetService.updateAsset(assetId, {
+			size: fileBuffer.length,
+			status: AssetStatus.Finalized,
+			imageWidth: imageWidth ?? null,
+			imageHeight: imageHeight ?? null,
+		})
 	},
 
 	cleanUpExpiredAssets: async () => {
