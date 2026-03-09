@@ -6,13 +6,6 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
-			getImageGenerationModels: build.query<
-				GetImageGenerationModelsApiResponse,
-				GetImageGenerationModelsApiArg
-			>({
-				query: () => ({ url: `/api/images/generate/models` }),
-				providesTags: ['imageGeneration'],
-			}),
 			requestImageGeneration: build.mutation<RequestImageGenerationApiResponse, RequestImageGenerationApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/images/generate`, method: 'POST', body: queryArg.body }),
@@ -36,13 +29,6 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as imageGenerationApi }
-export type GetImageGenerationModelsApiResponse = /** status 200  */ {
-	models: {
-		id: string
-		name: string
-	}[]
-}
-export type GetImageGenerationModelsApiArg = void
 export type RequestImageGenerationApiResponse = /** status 200  */ {
 	assets: {
 		id: string
@@ -83,8 +69,6 @@ export type GetImageGenerationHistoryApiArg = {
 	size?: number
 }
 export const {
-	useGetImageGenerationModelsQuery,
-	useLazyGetImageGenerationModelsQuery,
 	useRequestImageGenerationMutation,
 	useGetImageGenerationHistoryQuery,
 	useLazyGetImageGenerationHistoryQuery,

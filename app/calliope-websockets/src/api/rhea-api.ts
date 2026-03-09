@@ -650,6 +650,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/constants/image-generation-models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns a list of available AI image generation models. */
+        get: operations["listImageGenerationModels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/contact": {
         parameters: {
             query?: never;
@@ -773,23 +790,6 @@ export interface paths {
         put?: never;
         /** @description Requests an image conversion. */
         post: operations["requestImageConversion"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/images/generate/models": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns a list of available AI image generation models. */
-        get: operations["getImageGenerationModels"];
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -3809,6 +3809,30 @@ export interface operations {
             };
         };
     };
+    listImageGenerationModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        models: {
+                            id: string;
+                            name: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
     sendContactFormMessage: {
         parameters: {
             query?: never;
@@ -4004,10 +4028,10 @@ export interface operations {
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        expiresAt?: null | string;
                         ownerId: string;
-                        bucketKey: string;
                         size: number;
+                        expiresAt?: null | string;
+                        bucketKey: string;
                         originalFileName: string;
                         originalFileExtension: string;
                         contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
@@ -4015,30 +4039,6 @@ export interface operations {
                         contentDescription?: null | string;
                         imageWidth?: null | number;
                         imageHeight?: null | number;
-                    };
-                };
-            };
-        };
-    };
-    getImageGenerationModels: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        models: {
-                            id: string;
-                            name: string;
-                        }[];
                     };
                 };
             };

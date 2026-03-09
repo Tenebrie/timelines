@@ -1,3 +1,4 @@
+import { useListImageGenerationModelsQuery } from '@api/otherApi'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
@@ -7,7 +8,6 @@ import Typography from '@mui/material/Typography'
 import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { useGetImageGenerationModelsQuery } from '@/api/imageGenerationApi'
 import { FormErrorBanner } from '@/app/components/FormErrorBanner'
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { useDebounce } from '@/app/hooks/useDebounce'
@@ -40,7 +40,7 @@ export function ImageGenerator() {
 		Array<{ base64: string; mimeType: string; name: string }>
 	>([])
 
-	const { data: modelData } = useGetImageGenerationModelsQuery()
+	const { data: modelData } = useListImageGenerationModelsQuery()
 	const { generate, isGenerating, errorState } = useImageGeneration()
 
 	// Auto-select first model when data loads

@@ -21,6 +21,12 @@ const injectedRtkApi = api
 			>({
 				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
 			}),
+			listImageGenerationModels: build.query<
+				ListImageGenerationModelsApiResponse,
+				ListImageGenerationModelsApiArg
+			>({
+				query: () => ({ url: `/api/constants/image-generation-models` }),
+			}),
 			sendContactFormMessage: build.mutation<SendContactFormMessageApiResponse, SendContactFormMessageApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/contact`, method: 'POST', body: queryArg.body }),
@@ -158,6 +164,13 @@ export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
 	| 'Hidden'
 )[]
 export type ListCalendarUnitFormatModesApiArg = void
+export type ListImageGenerationModelsApiResponse = /** status 200  */ {
+	models: {
+		id: string
+		name: string
+	}[]
+}
+export type ListImageGenerationModelsApiArg = void
 export type SendContactFormMessageApiResponse = unknown
 export type SendContactFormMessageApiArg = {
 	body: {
@@ -179,10 +192,10 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	expiresAt?: null | string
 	ownerId: string
-	bucketKey: string
 	size: number
+	expiresAt?: null | string
+	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
@@ -396,6 +409,8 @@ export const {
 	useLazyListCalendarTemplatesQuery,
 	useListCalendarUnitFormatModesQuery,
 	useLazyListCalendarUnitFormatModesQuery,
+	useListImageGenerationModelsQuery,
+	useLazyListImageGenerationModelsQuery,
 	useSendContactFormMessageMutation,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,

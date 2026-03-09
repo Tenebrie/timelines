@@ -21,24 +21,6 @@ import { ReferenceImagesArrayValidator } from './validators/ReferenceImagesArray
 const router = new Router()
 
 /**
- * GET /api/images/generate/models
- * Returns the list of available Imagen models.
- */
-router.get('/api/images/generate/models', async (ctx) => {
-	useApiEndpoint({
-		name: 'getImageGenerationModels',
-		description: 'Returns a list of available AI image generation models.',
-		tags: [imageGenerationTag],
-	})
-
-	await useAuth(ctx, PremiumAuthenticator)
-
-	return {
-		models: await ImageGenerationService.listModels(),
-	}
-})
-
-/**
  * POST /api/images/generate
  * Accepts prompt, model, optional reference images, and number of images.
  * Creates Pending assets and responds immediately.

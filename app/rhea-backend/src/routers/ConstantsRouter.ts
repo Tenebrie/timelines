@@ -1,7 +1,9 @@
 import { CalendarUnitFormatMode, WorldAccessMode } from '@prisma/client'
+import { PremiumAuthenticator } from '@src/middleware/auth/PremiumAuthenticator.js'
 import { CalendarTemplateService } from '@src/services/CalendarTemplateService.js'
+import { ImageGenerationService } from '@src/services/ImageGenerationService.js'
 import { keysOf } from '@src/utils/keysOf.js'
-import { Router, useApiEndpoint } from 'moonflower'
+import { Router, useApiEndpoint, useAuth } from 'moonflower'
 
 const router = new Router()
 
@@ -48,6 +50,19 @@ router.get('/api/constants/calendar-unit-format-modes', async () => {
 	})
 
 	return keysOf(CalendarUnitFormatMode)
+})
+
+router.get('/api/constants/image-generation-models', async (ctx) => {
+	useApiEndpoint({
+		name: 'listImageGenerationModels',
+		description: 'Returns a list of available AI image generation models.',
+	})
+
+	await useAuth(ctx, PremiumAuthenticator)
+
+	return {
+		models: await ImageGenerationService.listModels(),
+	}
 })
 
 export const ConstantsRouter = router
