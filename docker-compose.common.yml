@@ -16,7 +16,6 @@ services:
             - rhea
             - calliope
             - thetis
-
         tty: false
         networks:
             - frontend-styx

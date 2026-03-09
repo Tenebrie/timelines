@@ -21,6 +21,12 @@ const injectedRtkApi = api
 			>({
 				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
 			}),
+			listImageGenerationModels: build.query<
+				ListImageGenerationModelsApiResponse,
+				ListImageGenerationModelsApiArg
+			>({
+				query: () => ({ url: `/api/constants/image-generation-models` }),
+			}),
 			sendContactFormMessage: build.mutation<SendContactFormMessageApiResponse, SendContactFormMessageApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/contact`, method: 'POST', body: queryArg.body }),
@@ -158,6 +164,13 @@ export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
 	| 'Hidden'
 )[]
 export type ListCalendarUnitFormatModesApiArg = void
+export type ListImageGenerationModelsApiResponse = /** status 200  */ {
+	models: {
+		id: string
+		name: string
+	}[]
+}
+export type ListImageGenerationModelsApiArg = void
 export type SendContactFormMessageApiResponse = unknown
 export type SendContactFormMessageApiArg = {
 	body: {
@@ -185,8 +198,11 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
-	contentType: 'ImageConversion' | 'Avatar'
+	contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
 	status: 'Pending' | 'Finalized' | 'Failed'
+	contentDescription?: null | string
+	imageWidth?: null | number
+	imageHeight?: null | number
 }
 export type RequestImageConversionApiArg = {
 	body: {
@@ -329,26 +345,26 @@ export type AcceptWorldShareLinkApiArg = {
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
 		id: string
-		worldId: string
-		name: string
 		createdAt: string
 		updatedAt: string
+		name: string
+		worldId: string
 		icon: string
 		color: string
+		position: number
 		contentRich: string
 		contentYjs?: null | string
-		position: number
 		parentId?: null | string
 	}[]
 	id: string
-	worldId: string
-	name: string
 	createdAt: string
 	updatedAt: string
+	name: string
+	worldId: string
 	icon: string
 	color: string
-	contentRich: string
 	position: number
+	contentRich: string
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {
@@ -393,6 +409,8 @@ export const {
 	useLazyListCalendarTemplatesQuery,
 	useListCalendarUnitFormatModesQuery,
 	useLazyListCalendarUnitFormatModesQuery,
+	useListImageGenerationModelsQuery,
+	useLazyListImageGenerationModelsQuery,
 	useSendContactFormMessageMutation,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,

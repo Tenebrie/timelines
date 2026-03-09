@@ -220,4 +220,24 @@ export const RedisService = {
 			},
 		})
 	},
+
+	notifyAboutImageGeneration: ({
+		userId,
+		assetId,
+		status,
+	}: {
+		userId: string
+		assetId: string
+		status: string
+	}) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.IMAGE_GENERATION_UPDATED,
+			messageSourceSessionId: undefined,
+			data: {
+				userId,
+				assetId,
+				status,
+			},
+		})
+	},
 }

@@ -50,6 +50,13 @@ const handlers: RheaToCalliopeMessageHandlers = {
 		})
 	},
 
+	[RheaToCalliopeMessageType.IMAGE_GENERATION_UPDATED]: (ctx) => {
+		relayMessageToUserSockets({
+			type: CalliopeToClientMessageType.IMAGE_GENERATION_UPDATED,
+			...ctx,
+		})
+	},
+
 	[RheaToCalliopeMessageType.WORLD_SHARED]: (ctx) => {
 		relayMessageToUserSockets({ type: CalliopeToClientMessageType.WORLD_SHARED, ...ctx })
 	},

@@ -650,6 +650,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/constants/image-generation-models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns a list of available AI image generation models. */
+        get: operations["listImageGenerationModels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/contact": {
         parameters: {
             query?: never;
@@ -773,6 +790,40 @@ export interface paths {
         put?: never;
         /** @description Requests an image conversion. */
         post: operations["requestImageConversion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/images/generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Requests AI image generation. Returns immediately with pending asset IDs. */
+        post: operations["requestImageGeneration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/images/generate/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns the list of AI-generated images for the current user. */
+        get: operations["getImageGenerationHistory"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1905,13 +1956,13 @@ export interface operations {
                             targetTagId?: null | string;
                         }[];
                         description: string;
-                        worldId: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        worldId: string;
                         title: string;
                         icon: string;
                         color: string;
@@ -1942,13 +1993,13 @@ export interface operations {
                 content: {
                     "application/json": {
                         description: string;
-                        worldId: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        worldId: string;
                         title: string;
                         icon: string;
                         color: string;
@@ -2029,13 +2080,13 @@ export interface operations {
                             targetTagId?: null | string;
                         }[];
                         description: string;
-                        worldId: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        worldId: string;
                         title: string;
                         icon: string;
                         color: string;
@@ -2446,8 +2497,11 @@ export interface operations {
                             bucketKey: string;
                             originalFileName: string;
                             originalFileExtension: string;
-                            contentType: "ImageConversion" | "Avatar";
+                            contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
                             status: "Pending" | "Finalized" | "Failed";
+                            contentDescription?: null | string;
+                            imageWidth?: null | number;
+                            imageHeight?: null | number;
                         }[];
                     };
                 };
@@ -2466,12 +2520,12 @@ export interface operations {
                 "application/json": {
                     fileName: string;
                     fileSize: number;
-                    assetType: "ImageConversion" | "Avatar";
+                    assetType: "ImageConversion" | "Avatar" | "ImageGeneration";
                 };
                 "application/x-www-form-urlencoded": {
                     fileName: string;
                     fileSize: number;
-                    assetType: "ImageConversion" | "Avatar";
+                    assetType: "ImageConversion" | "Avatar" | "ImageGeneration";
                 };
             };
         };
@@ -2494,8 +2548,11 @@ export interface operations {
                             bucketKey: string;
                             originalFileName: string;
                             originalFileExtension: string;
-                            contentType: "ImageConversion" | "Avatar";
+                            contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
                             status: "Pending" | "Finalized" | "Failed";
+                            contentDescription?: null | string;
+                            imageWidth?: null | number;
+                            imageHeight?: null | number;
                         };
                         url: string;
                         fields: {
@@ -2541,8 +2598,11 @@ export interface operations {
                         bucketKey: string;
                         originalFileName: string;
                         originalFileExtension: string;
-                        contentType: "ImageConversion" | "Avatar";
+                        contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
                         status: "Pending" | "Finalized" | "Failed";
+                        contentDescription?: null | string;
+                        imageWidth?: null | number;
+                        imageHeight?: null | number;
                     };
                 };
             };
@@ -2752,8 +2812,11 @@ export interface operations {
                                 bucketKey: string;
                                 originalFileName: string;
                                 originalFileExtension: string;
-                                contentType: "ImageConversion" | "Avatar";
+                                contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
                                 status: "Pending" | "Finalized" | "Failed";
+                                contentDescription?: null | string;
+                                imageWidth?: null | number;
+                                imageHeight?: null | number;
                             };
                         };
                         sessionId: string;
@@ -3746,6 +3809,30 @@ export interface operations {
             };
         };
     };
+    listImageGenerationModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        models: {
+                            id: string;
+                            name: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
     sendContactFormMessage: {
         parameters: {
             query?: never;
@@ -3947,8 +4034,95 @@ export interface operations {
                         bucketKey: string;
                         originalFileName: string;
                         originalFileExtension: string;
-                        contentType: "ImageConversion" | "Avatar";
+                        contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
                         status: "Pending" | "Finalized" | "Failed";
+                        contentDescription?: null | string;
+                        imageWidth?: null | number;
+                        imageHeight?: null | number;
+                    };
+                };
+            };
+        };
+    };
+    requestImageGeneration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    prompt: string;
+                    model: string;
+                    numberOfImages?: number;
+                    referenceImages?: {
+                        base64: string;
+                        mimeType: string;
+                    }[];
+                };
+                "application/x-www-form-urlencoded": {
+                    prompt: string;
+                    model: string;
+                    numberOfImages?: number;
+                    referenceImages?: {
+                        base64: string;
+                        mimeType: string;
+                    }[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        assets: {
+                            id: string;
+                            status: "Pending" | "Finalized" | "Failed";
+                            createdAt: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    getImageGenerationHistory: {
+        parameters: {
+            query?: {
+                /** @description Any numeric value */
+                page?: number;
+                /** @description Any numeric value */
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        assets: {
+                            id: string;
+                            status: "Pending" | "Finalized" | "Failed";
+                            createdAt: string;
+                            originalFileName: string;
+                            originalFileExtension: string;
+                            contentDescription?: null | string;
+                            imageWidth?: null | number;
+                            imageHeight?: null | number;
+                        }[];
+                        page: number;
+                        size: number;
+                        pageCount: number;
                     };
                 };
             };
@@ -4781,25 +4955,25 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name?: null | string;
+                            descriptionRich?: null | string;
                             /** Format: bigint */
                             timestamp: string;
-                            descriptionRich?: null | string;
                             worldEventId: string;
                         }[];
                         description: string;
                         id: string;
-                        worldId: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
+                        worldId: string;
                         icon: string;
                         color: string;
-                        name: string;
+                        descriptionRich: string;
                         /** Format: bigint */
                         timestamp: string;
                         revokedAt?: null | string;
-                        descriptionRich: string;
                         worldEventTrackId?: null | string;
                     };
                 };
@@ -4895,25 +5069,25 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name?: null | string;
+                            descriptionRich?: null | string;
                             /** Format: bigint */
                             timestamp: string;
-                            descriptionRich?: null | string;
                             worldEventId: string;
                         }[];
                         description: string;
                         id: string;
-                        worldId: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
+                        worldId: string;
                         icon: string;
                         color: string;
-                        name: string;
+                        descriptionRich: string;
                         /** Format: bigint */
                         timestamp: string;
                         revokedAt?: null | string;
-                        descriptionRich: string;
                         worldEventTrackId?: null | string;
                     };
                 };
@@ -4953,19 +5127,19 @@ export interface operations {
                     "application/json": {
                         description: string;
                         id: string;
-                        worldId: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
+                        worldId: string;
                         icon: string;
                         color: string;
-                        name: string;
+                        descriptionRich: string;
+                        descriptionYjs?: null | string;
                         /** Format: bigint */
                         timestamp: string;
                         revokedAt?: null | string;
-                        descriptionRich: string;
-                        descriptionYjs?: null | string;
                         worldEventTrackId?: null | string;
                     };
                 };
@@ -4994,19 +5168,19 @@ export interface operations {
                     "application/json": {
                         description: string;
                         id: string;
-                        worldId: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
+                        worldId: string;
                         icon: string;
                         color: string;
-                        name: string;
+                        descriptionRich: string;
+                        descriptionYjs?: null | string;
                         /** Format: bigint */
                         timestamp: string;
                         revokedAt?: null | string;
-                        descriptionRich: string;
-                        descriptionYjs?: null | string;
                         worldEventTrackId?: null | string;
                     };
                 };
@@ -5085,9 +5259,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name?: null | string;
+                        descriptionRich?: null | string;
                         /** Format: bigint */
                         timestamp: string;
-                        descriptionRich?: null | string;
                         worldEventId: string;
                     };
                 };
@@ -5140,9 +5314,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name?: null | string;
+                        descriptionRich?: null | string;
                         /** Format: bigint */
                         timestamp: string;
-                        descriptionRich?: null | string;
                         worldEventId: string;
                     };
                 };
@@ -6031,8 +6205,8 @@ export interface operations {
                             worldId: string;
                             icon: string;
                             color: string;
-                            contentRich: string;
                             position: number;
+                            contentRich: string;
                             parentId?: null | string;
                         }[];
                         events: {
@@ -6405,30 +6579,30 @@ export interface operations {
                         }[];
                         children: {
                             id: string;
-                            worldId: string;
-                            name: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
+                            name: string;
+                            worldId: string;
                             icon: string;
                             color: string;
+                            position: number;
                             contentRich: string;
                             contentYjs?: null | string;
-                            position: number;
                             parentId?: null | string;
                         }[];
                         id: string;
-                        worldId: string;
-                        name: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
+                        worldId: string;
                         icon: string;
                         color: string;
-                        contentRich: string;
                         position: number;
+                        contentRich: string;
                         parentId?: null | string;
                     }[];
                 };
@@ -6466,30 +6640,30 @@ export interface operations {
                     "application/json": {
                         children: {
                             id: string;
-                            worldId: string;
-                            name: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
+                            name: string;
+                            worldId: string;
                             icon: string;
                             color: string;
+                            position: number;
                             contentRich: string;
                             contentYjs?: null | string;
-                            position: number;
                             parentId?: null | string;
                         }[];
                         id: string;
-                        worldId: string;
-                        name: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
+                        worldId: string;
                         icon: string;
                         color: string;
-                        contentRich: string;
                         position: number;
+                        contentRich: string;
                         parentId?: null | string;
                     };
                 };
@@ -6553,30 +6727,30 @@ export interface operations {
                     "application/json": {
                         children: {
                             id: string;
-                            worldId: string;
-                            name: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
+                            name: string;
+                            worldId: string;
                             icon: string;
                             color: string;
+                            position: number;
                             contentRich: string;
                             contentYjs?: null | string;
-                            position: number;
                             parentId?: null | string;
                         }[];
                         id: string;
-                        worldId: string;
-                        name: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        name: string;
+                        worldId: string;
                         icon: string;
                         color: string;
-                        contentRich: string;
                         position: number;
+                        contentRich: string;
                         parentId?: null | string;
                     };
                 };

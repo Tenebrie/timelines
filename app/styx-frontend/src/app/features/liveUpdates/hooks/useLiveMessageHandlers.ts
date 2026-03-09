@@ -1,5 +1,6 @@
 import { announcementListApi } from '@api/announcementListApi'
 import { calendarApi } from '@api/calendarApi'
+import { imageGenerationApi } from '@api/imageGenerationApi'
 import { mindmapApi } from '@api/mindmapApi'
 import { GetWorldInfoApiResponse, worldDetailsApi } from '@api/worldDetailsApi'
 import { worldEventTracksApi } from '@api/worldEventTracksApi'
@@ -36,6 +37,9 @@ export const useLiveMessageHandlers = () => {
 	const messageHandlers: CalliopeToClientMessageHandler = {
 		[CalliopeToClientMessageType.ANNOUNCEMENT]: () => {
 			dispatch(announcementListApi.util.invalidateTags(['announcementList']))
+		},
+		[CalliopeToClientMessageType.IMAGE_GENERATION_UPDATED]: () => {
+			dispatch(imageGenerationApi.util.invalidateTags(['imageGeneration']))
 		},
 		[CalliopeToClientMessageType.WORLD_UPDATED]: (data) => {
 			if (new Date(updatedAtRef.current) < new Date(data.timestamp)) {

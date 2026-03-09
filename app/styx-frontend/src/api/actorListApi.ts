@@ -208,11 +208,11 @@ export type CreateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	description: string
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
 	title: string
 	icon: string
 	color: string
@@ -265,11 +265,11 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	description: string
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
 	title: string
 	icon: string
 	color: string
@@ -289,11 +289,11 @@ export type UpdateActorApiArg = {
 }
 export type DeleteActorApiResponse = /** status 200  */ {
 	description: string
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
 	title: string
 	icon: string
 	color: string

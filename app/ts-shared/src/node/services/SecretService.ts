@@ -12,6 +12,7 @@ type SecretName =
 	| 's3-access-key-id'
 	| 's3-access-key-secret'
 	| 'webhook-contact-form-url'
+	| 'imagen-google-api-key'
 
 export const SecretService = {
 	writeToCache: (secretName: SecretName, value: string) => {

@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['asset'] as const
+export const addTagTypes = ['asset', 'imageGeneration'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -12,7 +12,7 @@ const injectedRtkApi = api
 			}),
 			deleteAsset: build.mutation<DeleteAssetApiResponse, DeleteAssetApiArg>({
 				query: (queryArg) => ({ url: `/api/assets/${queryArg.assetId}`, method: 'DELETE' }),
-				invalidatesTags: ['asset'],
+				invalidatesTags: ['asset', 'imageGeneration'],
 			}),
 			listUserAssets: build.query<ListUserAssetsApiResponse, ListUserAssetsApiArg>({
 				query: () => ({ url: `/api/assets` }),
@@ -53,8 +53,11 @@ export type ListUserAssetsApiResponse = /** status 200  */ {
 		bucketKey: string
 		originalFileName: string
 		originalFileExtension: string
-		contentType: 'ImageConversion' | 'Avatar'
+		contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
 		status: 'Pending' | 'Finalized' | 'Failed'
+		contentDescription?: null | string
+		imageWidth?: null | number
+		imageHeight?: null | number
 	}[]
 }
 export type ListUserAssetsApiArg = void
@@ -69,8 +72,11 @@ export type RequestPresignedUrlApiResponse = /** status 200  */ {
 		bucketKey: string
 		originalFileName: string
 		originalFileExtension: string
-		contentType: 'ImageConversion' | 'Avatar'
+		contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
 		status: 'Pending' | 'Finalized' | 'Failed'
+		contentDescription?: null | string
+		imageWidth?: null | number
+		imageHeight?: null | number
 	}
 	url: string
 	fields: {
@@ -81,7 +87,7 @@ export type RequestPresignedUrlApiArg = {
 	body: {
 		fileName: string
 		fileSize: number
-		assetType: 'ImageConversion' | 'Avatar'
+		assetType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
 	}
 }
 export type FinalizeAssetUploadApiResponse = /** status 200  */ {
@@ -94,8 +100,11 @@ export type FinalizeAssetUploadApiResponse = /** status 200  */ {
 	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
-	contentType: 'ImageConversion' | 'Avatar'
+	contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
 	status: 'Pending' | 'Finalized' | 'Failed'
+	contentDescription?: null | string
+	imageWidth?: null | number
+	imageHeight?: null | number
 }
 export type FinalizeAssetUploadApiArg = {
 	body: {

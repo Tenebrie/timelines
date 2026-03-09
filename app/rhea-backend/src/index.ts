@@ -16,6 +16,7 @@ import { ContactFormRouter } from './routers/ContactFormRouter.js'
 import { HealthRouter, HealthStatus } from './routers/HealthRouter.js'
 import { IconsRouter } from './routers/IconsRouter.js'
 import { ImageConversionRouter } from './routers/ImageConversionRouter.js'
+import { ImageGenerationRouter } from './routers/ImageGenerationRouter.js'
 import { ClientAuthRouter } from './routers/internal/ClientAuthRouter.js'
 import { MindmapRouter } from './routers/MindmapRouter.js'
 import { ProfileRouter } from './routers/ProfileRouter.js'
@@ -61,6 +62,7 @@ app
 	.use(
 		bodyParser({
 			enableTypes: ['text', 'json', 'form'],
+			jsonLimit: '5mb',
 		}),
 	)
 	// Public routers
@@ -90,6 +92,8 @@ app
 	.use(IconsRouter.allowedMethods())
 	.use(ImageConversionRouter.routes())
 	.use(ImageConversionRouter.allowedMethods())
+	.use(ImageGenerationRouter.routes())
+	.use(ImageGenerationRouter.allowedMethods())
 	.use(MindmapRouter.routes())
 	.use(MindmapRouter.allowedMethods())
 	.use(ProfileRouter.routes())

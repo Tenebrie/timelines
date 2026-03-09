@@ -55,6 +55,11 @@ export const PreferencesStateSchema = z.object({
 			expandedFolders: z.array(z.string()).default([]),
 		})
 		.default({}),
+	imageGenerator: z
+		.object({
+			lastPrompt: z.string().default(''),
+		})
+		.default({}),
 })
 
 export const loadPreferences = () => {
