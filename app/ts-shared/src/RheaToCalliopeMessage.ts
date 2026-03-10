@@ -20,6 +20,7 @@ export enum RheaToCalliopeMessageType {
 	WIKI_ARTICLE_UPDATED = 'wikiArticleUpdated',
 	WIKI_ARTICLE_DELETED = 'wikiArticleDeleted',
 	DOCUMENT_RESET = 'documentReset',
+	IMAGE_GENERATION_UPDATED = 'imageGenerationUpdated',
 }
 
 export type RheaToCalliopeMessagePayload = {
@@ -81,6 +82,11 @@ export type RheaToCalliopeMessagePayload = {
 	[RheaToCalliopeMessageType.DOCUMENT_RESET]: {
 		worldId: string
 		entityId: string
+	}
+	[RheaToCalliopeMessageType.IMAGE_GENERATION_UPDATED]: {
+		userId: string
+		assetId: string
+		status: string
 	}
 }
 

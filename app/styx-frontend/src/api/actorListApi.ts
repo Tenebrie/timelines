@@ -82,6 +82,10 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['actorList', 'worldDetails'],
 			}),
+			getActorBacklinks: build.query<GetActorBacklinksApiResponse, GetActorBacklinksApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/actor/${queryArg.actorId}/backlinks` }),
+				providesTags: ['actorList'],
+			}),
 		}),
 		overrideExisting: false,
 	})
@@ -302,6 +306,17 @@ export type DeleteActorApiArg = {
 	/** Any string value */
 	actorId: string
 }
+export type GetActorBacklinksApiResponse = /** status 200  */ {
+	type: 'Actor' | 'Event' | 'Article' | 'Tag'
+	id: string
+	name: string
+}[]
+export type GetActorBacklinksApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	actorId: string
+}
 export const {
 	useGetActorContentQuery,
 	useLazyGetActorContentQuery,
@@ -314,4 +329,6 @@ export const {
 	useCreateActorMutation,
 	useUpdateActorMutation,
 	useDeleteActorMutation,
+	useGetActorBacklinksQuery,
+	useLazyGetActorBacklinksQuery,
 } = injectedRtkApi

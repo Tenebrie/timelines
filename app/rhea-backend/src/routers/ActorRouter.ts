@@ -6,6 +6,7 @@ import { MentionData } from '@src/services/MentionsService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
 import {
+	BadRequestError,
 	OptionalParam,
 	PathParam,
 	RequiredParam,
@@ -133,6 +134,30 @@ router.delete('/api/world/:worldId/actor/:actorId', async (ctx) => {
 	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
 
 	return actor
+})
+
+router.get('/api/world/:worldId/actor/:actorId/backlinks', async (ctx) => {
+	useApiEndpoint({
+		name: 'getActorBacklinks',
+		description: 'Fetches the list of entities that mention the specified actor.',
+		tags: [actorListTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId, actorId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+		actorId: PathParam(StringValidator),
+	})
+
+	await AuthorizationService.checkUserReadAccessById(user, worldId)
+
+	const backlinks = await ActorService.findActorBacklinks({ worldId, actorId })
+	if (!backlinks) {
+		throw new BadRequestError('Actor not found')
+	}
+
+	return backlinks
 })
 
 export const ActorRouter = router

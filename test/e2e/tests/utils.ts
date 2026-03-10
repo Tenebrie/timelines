@@ -12,7 +12,7 @@ export const baseUrl = (() => {
 	throw new Error(`Unknown TARGET_ENV: ${env}`)
 })()
 
-export const makeUrl = (path: string) => {
+export function makeUrl(path: string) {
 	if (path.startsWith('/')) {
 		return `${baseUrl}${path}`
 	} else {

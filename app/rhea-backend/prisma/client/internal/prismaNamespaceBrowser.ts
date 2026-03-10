@@ -136,7 +136,10 @@ export const AssetScalarFieldEnum = {
   originalFileName: 'originalFileName',
   originalFileExtension: 'originalFileExtension',
   contentType: 'contentType',
-  status: 'status'
+  status: 'status',
+  contentDescription: 'contentDescription',
+  imageWidth: 'imageWidth',
+  imageHeight: 'imageHeight'
 } as const
 
 export type AssetScalarFieldEnum = (typeof AssetScalarFieldEnum)[keyof typeof AssetScalarFieldEnum]

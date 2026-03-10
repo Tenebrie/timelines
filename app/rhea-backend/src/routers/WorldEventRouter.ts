@@ -7,6 +7,7 @@ import { ValidationService } from '@src/services/ValidationService.js'
 import { WorldEventDeltaService } from '@src/services/WorldEventDeltaService.js'
 import { WorldEventService } from '@src/services/WorldEventService.js'
 import {
+	BadRequestError,
 	BooleanValidator,
 	OptionalParam,
 	PathParam,
@@ -328,6 +329,30 @@ router.delete('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) =
 	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
 
 	return deltaState
+})
+
+router.get('/api/world/:worldId/event/:eventId/backlinks', async (ctx) => {
+	useApiEndpoint({
+		name: 'getWorldEventBacklinks',
+		description: 'Fetches the list of entities that mention the specified world event.',
+		tags: [worldEventTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId, eventId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+		eventId: PathParam(StringValidator),
+	})
+
+	await AuthorizationService.checkUserReadAccessById(user, worldId)
+
+	const backlinks = await WorldEventService.findEventBacklinks({ worldId, eventId })
+	if (!backlinks) {
+		throw new BadRequestError('Event not found')
+	}
+
+	return backlinks
 })
 
 export const WorldEventRouter = router

@@ -21,6 +21,12 @@ const injectedRtkApi = api
 			>({
 				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
 			}),
+			listImageGenerationModels: build.query<
+				ListImageGenerationModelsApiResponse,
+				ListImageGenerationModelsApiArg
+			>({
+				query: () => ({ url: `/api/constants/image-generation-models` }),
+			}),
 			sendContactFormMessage: build.mutation<SendContactFormMessageApiResponse, SendContactFormMessageApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/contact`, method: 'POST', body: queryArg.body }),
@@ -117,6 +123,12 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldWikiArticle'],
 			}),
+			getArticleBacklinks: build.query<GetArticleBacklinksApiResponse, GetArticleBacklinksApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/wiki/article/${queryArg.articleId}/backlinks`,
+				}),
+				providesTags: ['worldWikiArticle'],
+			}),
 			getUserWorldAccessLevel: build.query<GetUserWorldAccessLevelApiResponse, GetUserWorldAccessLevelApiArg>(
 				{
 					query: (queryArg) => ({
@@ -152,6 +164,13 @@ export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
 	| 'Hidden'
 )[]
 export type ListCalendarUnitFormatModesApiArg = void
+export type ListImageGenerationModelsApiResponse = /** status 200  */ {
+	models: {
+		id: string
+		name: string
+	}[]
+}
+export type ListImageGenerationModelsApiArg = void
 export type SendContactFormMessageApiResponse = unknown
 export type SendContactFormMessageApiArg = {
 	body: {
@@ -179,8 +198,11 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
-	contentType: 'ImageConversion' | 'Avatar'
+	contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
 	status: 'Pending' | 'Finalized' | 'Failed'
+	contentDescription?: null | string
+	imageWidth?: null | number
+	imageHeight?: null | number
 }
 export type RequestImageConversionApiArg = {
 	body: {
@@ -356,6 +378,17 @@ export type UpdateArticleApiArg = {
 		color?: string
 	}
 }
+export type GetArticleBacklinksApiResponse = /** status 200  */ {
+	type: 'Actor' | 'Event' | 'Article' | 'Tag'
+	id: string
+	name: string
+}[]
+export type GetArticleBacklinksApiArg = {
+	/** Any string value */
+	worldId: string
+	/** Any string value */
+	articleId: string
+}
 export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {
 	owner: boolean
 	write: boolean
@@ -376,6 +409,8 @@ export const {
 	useLazyListCalendarTemplatesQuery,
 	useListCalendarUnitFormatModesQuery,
 	useLazyListCalendarUnitFormatModesQuery,
+	useListImageGenerationModelsQuery,
+	useLazyListImageGenerationModelsQuery,
 	useSendContactFormMessageMutation,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,
@@ -398,6 +433,8 @@ export const {
 	useLazyVisitWorldShareLinkQuery,
 	useAcceptWorldShareLinkMutation,
 	useUpdateArticleMutation,
+	useGetArticleBacklinksQuery,
+	useLazyGetArticleBacklinksQuery,
 	useGetUserWorldAccessLevelQuery,
 	useLazyGetUserWorldAccessLevelQuery,
 } = injectedRtkApi

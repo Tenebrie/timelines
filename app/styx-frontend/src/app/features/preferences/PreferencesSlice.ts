@@ -41,6 +41,7 @@ export const preferencesSlice = createSlice({
 			state['overview'] = value['overview']
 			state['timeline'] = value['timeline']
 			state['wiki'] = value['wiki']
+			state['imageGenerator'] = value['imageGenerator']
 		},
 
 		/* Calendar Editor */
@@ -140,6 +141,12 @@ export const preferencesSlice = createSlice({
 		},
 		uncollapseWikiFolder: (state, { payload }: PayloadAction<WikiArticle>) => {
 			state.wiki.expandedFolders = [...new Set([...state.wiki.expandedFolders, payload.id])]
+			saveToLocalStorage(state)
+		},
+
+		/* Image Generator */
+		setImageGeneratorPrompt: (state, { payload }: PayloadAction<string>) => {
+			state.imageGenerator.lastPrompt = payload
 			saveToLocalStorage(state)
 		},
 	},

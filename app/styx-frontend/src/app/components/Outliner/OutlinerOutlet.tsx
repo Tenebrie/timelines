@@ -1,7 +1,7 @@
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
-import { ActorRouterHotkeys } from './editors/actor/ActorRouterHotkeys'
-import { EventRouterHotkeys } from './editors/event/EventRouterHotkeys'
+import { ActorRouterHotkeys } from '../../features/entityEditor/actor/ActorRouterHotkeys'
+import { EventRouterHotkeys } from '../../features/entityEditor/event/EventRouterHotkeys'
 
 export function OutlinerOutlet() {
 	const isTimeline = useCheckRouteMatch('/world/$worldId/timeline')

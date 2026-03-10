@@ -28,10 +28,14 @@ export type AggregateAsset = {
 
 export type AssetAvgAggregateOutputType = {
   size: number | null
+  imageWidth: number | null
+  imageHeight: number | null
 }
 
 export type AssetSumAggregateOutputType = {
   size: number | null
+  imageWidth: number | null
+  imageHeight: number | null
 }
 
 export type AssetMinAggregateOutputType = {
@@ -46,6 +50,9 @@ export type AssetMinAggregateOutputType = {
   originalFileExtension: string | null
   contentType: $Enums.AssetType | null
   status: $Enums.AssetStatus | null
+  contentDescription: string | null
+  imageWidth: number | null
+  imageHeight: number | null
 }
 
 export type AssetMaxAggregateOutputType = {
@@ -60,6 +67,9 @@ export type AssetMaxAggregateOutputType = {
   originalFileExtension: string | null
   contentType: $Enums.AssetType | null
   status: $Enums.AssetStatus | null
+  contentDescription: string | null
+  imageWidth: number | null
+  imageHeight: number | null
 }
 
 export type AssetCountAggregateOutputType = {
@@ -74,16 +84,23 @@ export type AssetCountAggregateOutputType = {
   originalFileExtension: number
   contentType: number
   status: number
+  contentDescription: number
+  imageWidth: number
+  imageHeight: number
   _all: number
 }
 
 
 export type AssetAvgAggregateInputType = {
   size?: true
+  imageWidth?: true
+  imageHeight?: true
 }
 
 export type AssetSumAggregateInputType = {
   size?: true
+  imageWidth?: true
+  imageHeight?: true
 }
 
 export type AssetMinAggregateInputType = {
@@ -98,6 +115,9 @@ export type AssetMinAggregateInputType = {
   originalFileExtension?: true
   contentType?: true
   status?: true
+  contentDescription?: true
+  imageWidth?: true
+  imageHeight?: true
 }
 
 export type AssetMaxAggregateInputType = {
@@ -112,6 +132,9 @@ export type AssetMaxAggregateInputType = {
   originalFileExtension?: true
   contentType?: true
   status?: true
+  contentDescription?: true
+  imageWidth?: true
+  imageHeight?: true
 }
 
 export type AssetCountAggregateInputType = {
@@ -126,6 +149,9 @@ export type AssetCountAggregateInputType = {
   originalFileExtension?: true
   contentType?: true
   status?: true
+  contentDescription?: true
+  imageWidth?: true
+  imageHeight?: true
   _all?: true
 }
 
@@ -227,6 +253,9 @@ export type AssetGroupByOutputType = {
   originalFileExtension: string
   contentType: $Enums.AssetType
   status: $Enums.AssetStatus
+  contentDescription: string | null
+  imageWidth: number | null
+  imageHeight: number | null
   _count: AssetCountAggregateOutputType | null
   _avg: AssetAvgAggregateOutputType | null
   _sum: AssetSumAggregateOutputType | null
@@ -264,6 +293,9 @@ export type AssetWhereInput = {
   originalFileExtension?: Prisma.StringFilter<"Asset"> | string
   contentType?: Prisma.EnumAssetTypeFilter<"Asset"> | $Enums.AssetType
   status?: Prisma.EnumAssetStatusFilter<"Asset"> | $Enums.AssetStatus
+  contentDescription?: Prisma.StringNullableFilter<"Asset"> | string | null
+  imageWidth?: Prisma.IntNullableFilter<"Asset"> | number | null
+  imageHeight?: Prisma.IntNullableFilter<"Asset"> | number | null
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   avatarOf?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
@@ -280,6 +312,9 @@ export type AssetOrderByWithRelationInput = {
   originalFileExtension?: Prisma.SortOrder
   contentType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  contentDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageWidth?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageHeight?: Prisma.SortOrderInput | Prisma.SortOrder
   owner?: Prisma.UserOrderByWithRelationInput
   avatarOf?: Prisma.UserOrderByWithRelationInput
 }
@@ -299,6 +334,9 @@ export type AssetWhereUniqueInput = Prisma.AtLeast<{
   originalFileExtension?: Prisma.StringFilter<"Asset"> | string
   contentType?: Prisma.EnumAssetTypeFilter<"Asset"> | $Enums.AssetType
   status?: Prisma.EnumAssetStatusFilter<"Asset"> | $Enums.AssetStatus
+  contentDescription?: Prisma.StringNullableFilter<"Asset"> | string | null
+  imageWidth?: Prisma.IntNullableFilter<"Asset"> | number | null
+  imageHeight?: Prisma.IntNullableFilter<"Asset"> | number | null
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   avatarOf?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "id">
@@ -315,6 +353,9 @@ export type AssetOrderByWithAggregationInput = {
   originalFileExtension?: Prisma.SortOrder
   contentType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  contentDescription?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageWidth?: Prisma.SortOrderInput | Prisma.SortOrder
+  imageHeight?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AssetCountOrderByAggregateInput
   _avg?: Prisma.AssetAvgOrderByAggregateInput
   _max?: Prisma.AssetMaxOrderByAggregateInput
@@ -337,6 +378,9 @@ export type AssetScalarWhereWithAggregatesInput = {
   originalFileExtension?: Prisma.StringWithAggregatesFilter<"Asset"> | string
   contentType?: Prisma.EnumAssetTypeWithAggregatesFilter<"Asset"> | $Enums.AssetType
   status?: Prisma.EnumAssetStatusWithAggregatesFilter<"Asset"> | $Enums.AssetStatus
+  contentDescription?: Prisma.StringNullableWithAggregatesFilter<"Asset"> | string | null
+  imageWidth?: Prisma.IntNullableWithAggregatesFilter<"Asset"> | number | null
+  imageHeight?: Prisma.IntNullableWithAggregatesFilter<"Asset"> | number | null
 }
 
 export type AssetCreateInput = {
@@ -350,6 +394,9 @@ export type AssetCreateInput = {
   originalFileExtension: string
   contentType: $Enums.AssetType
   status?: $Enums.AssetStatus
+  contentDescription?: string | null
+  imageWidth?: number | null
+  imageHeight?: number | null
   owner: Prisma.UserCreateNestedOneWithoutAssetsInput
   avatarOf?: Prisma.UserCreateNestedOneWithoutAvatarInput
 }
@@ -366,6 +413,9 @@ export type AssetUncheckedCreateInput = {
   originalFileExtension: string
   contentType: $Enums.AssetType
   status?: $Enums.AssetStatus
+  contentDescription?: string | null
+  imageWidth?: number | null
+  imageHeight?: number | null
   avatarOf?: Prisma.UserUncheckedCreateNestedOneWithoutAvatarInput
 }
 
@@ -380,6 +430,9 @@ export type AssetUpdateInput = {
   originalFileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   contentType?: Prisma.EnumAssetTypeFieldUpdateOperationsInput | $Enums.AssetType
   status?: Prisma.EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+  contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   owner?: Prisma.UserUpdateOneRequiredWithoutAssetsNestedInput
   avatarOf?: Prisma.UserUpdateOneWithoutAvatarNestedInput
 }
@@ -396,6 +449,9 @@ export type AssetUncheckedUpdateInput = {
   originalFileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   contentType?: Prisma.EnumAssetTypeFieldUpdateOperationsInput | $Enums.AssetType
   status?: Prisma.EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+  contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   avatarOf?: Prisma.UserUncheckedUpdateOneWithoutAvatarNestedInput
 }
 
@@ -411,6 +467,9 @@ export type AssetCreateManyInput = {
   originalFileExtension: string
   contentType: $Enums.AssetType
   status?: $Enums.AssetStatus
+  contentDescription?: string | null
+  imageWidth?: number | null
+  imageHeight?: number | null
 }
 
 export type AssetUpdateManyMutationInput = {
@@ -424,6 +483,9 @@ export type AssetUpdateManyMutationInput = {
   originalFileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   contentType?: Prisma.EnumAssetTypeFieldUpdateOperationsInput | $Enums.AssetType
   status?: Prisma.EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+  contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AssetUncheckedUpdateManyInput = {
@@ -438,6 +500,9 @@ export type AssetUncheckedUpdateManyInput = {
   originalFileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   contentType?: Prisma.EnumAssetTypeFieldUpdateOperationsInput | $Enums.AssetType
   status?: Prisma.EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+  contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AssetCountOrderByAggregateInput = {
@@ -452,10 +517,15 @@ export type AssetCountOrderByAggregateInput = {
   originalFileExtension?: Prisma.SortOrder
   contentType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  contentDescription?: Prisma.SortOrder
+  imageWidth?: Prisma.SortOrder
+  imageHeight?: Prisma.SortOrder
 }
 
 export type AssetAvgOrderByAggregateInput = {
   size?: Prisma.SortOrder
+  imageWidth?: Prisma.SortOrder
+  imageHeight?: Prisma.SortOrder
 }
 
 export type AssetMaxOrderByAggregateInput = {
@@ -470,6 +540,9 @@ export type AssetMaxOrderByAggregateInput = {
   originalFileExtension?: Prisma.SortOrder
   contentType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  contentDescription?: Prisma.SortOrder
+  imageWidth?: Prisma.SortOrder
+  imageHeight?: Prisma.SortOrder
 }
 
 export type AssetMinOrderByAggregateInput = {
@@ -484,10 +557,15 @@ export type AssetMinOrderByAggregateInput = {
   originalFileExtension?: Prisma.SortOrder
   contentType?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  contentDescription?: Prisma.SortOrder
+  imageWidth?: Prisma.SortOrder
+  imageHeight?: Prisma.SortOrder
 }
 
 export type AssetSumOrderByAggregateInput = {
   size?: Prisma.SortOrder
+  imageWidth?: Prisma.SortOrder
+  imageHeight?: Prisma.SortOrder
 }
 
 export type AssetListRelationFilter = {
@@ -523,6 +601,14 @@ export type EnumAssetTypeFieldUpdateOperationsInput = {
 
 export type EnumAssetStatusFieldUpdateOperationsInput = {
   set?: $Enums.AssetStatus
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type AssetCreateNestedManyWithoutOwnerInput = {
@@ -594,6 +680,9 @@ export type AssetCreateWithoutOwnerInput = {
   originalFileExtension: string
   contentType: $Enums.AssetType
   status?: $Enums.AssetStatus
+  contentDescription?: string | null
+  imageWidth?: number | null
+  imageHeight?: number | null
   avatarOf?: Prisma.UserCreateNestedOneWithoutAvatarInput
 }
 
@@ -608,6 +697,9 @@ export type AssetUncheckedCreateWithoutOwnerInput = {
   originalFileExtension: string
   contentType: $Enums.AssetType
   status?: $Enums.AssetStatus
+  contentDescription?: string | null
+  imageWidth?: number | null
+  imageHeight?: number | null
   avatarOf?: Prisma.UserUncheckedCreateNestedOneWithoutAvatarInput
 }
 
@@ -632,6 +724,9 @@ export type AssetCreateWithoutAvatarOfInput = {
   originalFileExtension: string
   contentType: $Enums.AssetType
   status?: $Enums.AssetStatus
+  contentDescription?: string | null
+  imageWidth?: number | null
+  imageHeight?: number | null
   owner: Prisma.UserCreateNestedOneWithoutAssetsInput
 }
 
@@ -647,6 +742,9 @@ export type AssetUncheckedCreateWithoutAvatarOfInput = {
   originalFileExtension: string
   contentType: $Enums.AssetType
   status?: $Enums.AssetStatus
+  contentDescription?: string | null
+  imageWidth?: number | null
+  imageHeight?: number | null
 }
 
 export type AssetCreateOrConnectWithoutAvatarOfInput = {
@@ -685,6 +783,9 @@ export type AssetScalarWhereInput = {
   originalFileExtension?: Prisma.StringFilter<"Asset"> | string
   contentType?: Prisma.EnumAssetTypeFilter<"Asset"> | $Enums.AssetType
   status?: Prisma.EnumAssetStatusFilter<"Asset"> | $Enums.AssetStatus
+  contentDescription?: Prisma.StringNullableFilter<"Asset"> | string | null
+  imageWidth?: Prisma.IntNullableFilter<"Asset"> | number | null
+  imageHeight?: Prisma.IntNullableFilter<"Asset"> | number | null
 }
 
 export type AssetUpsertWithoutAvatarOfInput = {
@@ -709,6 +810,9 @@ export type AssetUpdateWithoutAvatarOfInput = {
   originalFileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   contentType?: Prisma.EnumAssetTypeFieldUpdateOperationsInput | $Enums.AssetType
   status?: Prisma.EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+  contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   owner?: Prisma.UserUpdateOneRequiredWithoutAssetsNestedInput
 }
 
@@ -724,6 +828,9 @@ export type AssetUncheckedUpdateWithoutAvatarOfInput = {
   originalFileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   contentType?: Prisma.EnumAssetTypeFieldUpdateOperationsInput | $Enums.AssetType
   status?: Prisma.EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+  contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type AssetCreateManyOwnerInput = {
@@ -737,6 +844,9 @@ export type AssetCreateManyOwnerInput = {
   originalFileExtension: string
   contentType: $Enums.AssetType
   status?: $Enums.AssetStatus
+  contentDescription?: string | null
+  imageWidth?: number | null
+  imageHeight?: number | null
 }
 
 export type AssetUpdateWithoutOwnerInput = {
@@ -750,6 +860,9 @@ export type AssetUpdateWithoutOwnerInput = {
   originalFileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   contentType?: Prisma.EnumAssetTypeFieldUpdateOperationsInput | $Enums.AssetType
   status?: Prisma.EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+  contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   avatarOf?: Prisma.UserUpdateOneWithoutAvatarNestedInput
 }
 
@@ -764,6 +877,9 @@ export type AssetUncheckedUpdateWithoutOwnerInput = {
   originalFileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   contentType?: Prisma.EnumAssetTypeFieldUpdateOperationsInput | $Enums.AssetType
   status?: Prisma.EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+  contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   avatarOf?: Prisma.UserUncheckedUpdateOneWithoutAvatarNestedInput
 }
 
@@ -778,6 +894,9 @@ export type AssetUncheckedUpdateManyWithoutOwnerInput = {
   originalFileExtension?: Prisma.StringFieldUpdateOperationsInput | string
   contentType?: Prisma.EnumAssetTypeFieldUpdateOperationsInput | $Enums.AssetType
   status?: Prisma.EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+  contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 
@@ -794,6 +913,9 @@ export type AssetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   originalFileExtension?: boolean
   contentType?: boolean
   status?: boolean
+  contentDescription?: boolean
+  imageWidth?: boolean
+  imageHeight?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   avatarOf?: boolean | Prisma.Asset$avatarOfArgs<ExtArgs>
 }, ExtArgs["result"]["asset"]>
@@ -810,6 +932,9 @@ export type AssetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   originalFileExtension?: boolean
   contentType?: boolean
   status?: boolean
+  contentDescription?: boolean
+  imageWidth?: boolean
+  imageHeight?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["asset"]>
 
@@ -825,6 +950,9 @@ export type AssetSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   originalFileExtension?: boolean
   contentType?: boolean
   status?: boolean
+  contentDescription?: boolean
+  imageWidth?: boolean
+  imageHeight?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["asset"]>
 
@@ -840,9 +968,12 @@ export type AssetSelectScalar = {
   originalFileExtension?: boolean
   contentType?: boolean
   status?: boolean
+  contentDescription?: boolean
+  imageWidth?: boolean
+  imageHeight?: boolean
 }
 
-export type AssetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "expiresAt" | "ownerId" | "bucketKey" | "size" | "originalFileName" | "originalFileExtension" | "contentType" | "status", ExtArgs["result"]["asset"]>
+export type AssetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "expiresAt" | "ownerId" | "bucketKey" | "size" | "originalFileName" | "originalFileExtension" | "contentType" | "status" | "contentDescription" | "imageWidth" | "imageHeight", ExtArgs["result"]["asset"]>
 export type AssetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   avatarOf?: boolean | Prisma.Asset$avatarOfArgs<ExtArgs>
@@ -872,6 +1003,9 @@ export type $AssetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     originalFileExtension: string
     contentType: $Enums.AssetType
     status: $Enums.AssetStatus
+    contentDescription: string | null
+    imageWidth: number | null
+    imageHeight: number | null
   }, ExtArgs["result"]["asset"]>
   composites: {}
 }
@@ -1308,6 +1442,9 @@ export interface AssetFieldRefs {
   readonly originalFileExtension: Prisma.FieldRef<"Asset", 'String'>
   readonly contentType: Prisma.FieldRef<"Asset", 'AssetType'>
   readonly status: Prisma.FieldRef<"Asset", 'AssetStatus'>
+  readonly contentDescription: Prisma.FieldRef<"Asset", 'String'>
+  readonly imageWidth: Prisma.FieldRef<"Asset", 'Int'>
+  readonly imageHeight: Prisma.FieldRef<"Asset", 'Int'>
 }
     
 

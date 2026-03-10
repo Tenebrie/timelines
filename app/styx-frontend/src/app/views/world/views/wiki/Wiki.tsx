@@ -4,11 +4,12 @@ import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { Outlet } from '@tanstack/react-router'
 
+import { ArticleDetails } from '@/app/features/entityEditor/article/details/ArticleDetails'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
-import { ArticleDetailsTitle } from './article/details/ArticleDetailsTitle'
-import { ArticleList } from './article/list/ArticleList'
-import { ArticleListHeader } from './article/list/ArticleListHeader'
+import { ArticleList } from './articleList/ArticleList'
+import { ArticleListHeader } from './articleList/ArticleListHeader'
+import { useCurrentArticle } from './hooks/useCurrentArticle'
 
 export const Wiki = () => {
 	const isArticle = useCheckRouteMatch('/world/$worldId/wiki/$articleId')
@@ -64,10 +65,7 @@ export const Wiki = () => {
 					>
 						{isArticle && (
 							<Stack gap={1} height={'calc(100%)'}>
-								<Stack gap={1}>
-									<ArticleDetailsTitle />
-								</Stack>
-								<Box height={'calc(100% - 44px)'}>{<Outlet />}</Box>
+								<Box height={'calc(100% - 1px)'}>{<Outlet />}</Box>
 							</Stack>
 						)}
 					</Stack>
@@ -75,4 +73,13 @@ export const Wiki = () => {
 			</Stack>
 		</>
 	)
+}
+
+export function CurrentArticleDetails() {
+	const { article } = useCurrentArticle()
+	if (!article) {
+		return null
+	}
+
+	return <ArticleDetails article={article} />
 }

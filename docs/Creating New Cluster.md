@@ -43,6 +43,9 @@ This is an unorganized doc with notes about what needs to be done for a new clus
 - (Optional) Create a contact form webhook url secret
   - `echo "your-webhook" | docker secret create webhook-contact-form-url -`
 
+- (Optional) Create a Gemini image generation API key secret
+  - `echo "your-api-key" | docker secret create imagen-google-api-key -`
+
 ### Setup app
 
 - Clone the Timelines repository

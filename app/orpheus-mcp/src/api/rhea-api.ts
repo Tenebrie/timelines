@@ -93,6 +93,23 @@ export interface paths {
         patch: operations["updateActor"];
         trace?: never;
     };
+    "/api/world/{worldId}/actor/{actorId}/backlinks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetches the list of entities that mention the specified actor. */
+        get: operations["getActorBacklinks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/users": {
         parameters: {
             query?: never;
@@ -633,6 +650,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/constants/image-generation-models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns a list of available AI image generation models. */
+        get: operations["listImageGenerationModels"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/contact": {
         parameters: {
             query?: never;
@@ -756,6 +790,40 @@ export interface paths {
         put?: never;
         /** @description Requests an image conversion. */
         post: operations["requestImageConversion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/images/generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Requests AI image generation. Returns immediately with pending asset IDs. */
+        post: operations["requestImageGeneration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/images/generate/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns the list of AI-generated images for the current user. */
+        get: operations["getImageGenerationHistory"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1103,6 +1171,23 @@ export interface paths {
         head?: never;
         /** @description Updates the target world event delta state */
         patch: operations["updateWorldEventDelta"];
+        trace?: never;
+    };
+    "/api/world/{worldId}/event/{eventId}/backlinks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetches the list of entities that mention the specified world event. */
+        get: operations["getWorldEventBacklinks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/world/{worldId}/event-tracks": {
@@ -1553,6 +1638,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/world/{worldId}/wiki/article/{articleId}/backlinks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetches the list of entities that mention the specified wiki article. */
+        get: operations["getArticleBacklinks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/internal/auth/{userId}": {
         parameters: {
             query?: never;
@@ -1994,6 +2096,34 @@ export interface operations {
             };
         };
     };
+    getActorBacklinks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                actorId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        type: "Actor" | "Event" | "Article" | "Tag";
+                        id: string;
+                        name: string;
+                    }[];
+                };
+            };
+        };
+    };
     adminGetUsers: {
         parameters: {
             query?: {
@@ -2367,8 +2497,11 @@ export interface operations {
                             bucketKey: string;
                             originalFileName: string;
                             originalFileExtension: string;
-                            contentType: "ImageConversion" | "Avatar";
+                            contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
                             status: "Pending" | "Finalized" | "Failed";
+                            contentDescription?: null | string;
+                            imageWidth?: null | number;
+                            imageHeight?: null | number;
                         }[];
                     };
                 };
@@ -2387,12 +2520,12 @@ export interface operations {
                 "application/json": {
                     fileName: string;
                     fileSize: number;
-                    assetType: "ImageConversion" | "Avatar";
+                    assetType: "ImageConversion" | "Avatar" | "ImageGeneration";
                 };
                 "application/x-www-form-urlencoded": {
                     fileName: string;
                     fileSize: number;
-                    assetType: "ImageConversion" | "Avatar";
+                    assetType: "ImageConversion" | "Avatar" | "ImageGeneration";
                 };
             };
         };
@@ -2415,8 +2548,11 @@ export interface operations {
                             bucketKey: string;
                             originalFileName: string;
                             originalFileExtension: string;
-                            contentType: "ImageConversion" | "Avatar";
+                            contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
                             status: "Pending" | "Finalized" | "Failed";
+                            contentDescription?: null | string;
+                            imageWidth?: null | number;
+                            imageHeight?: null | number;
                         };
                         url: string;
                         fields: {
@@ -2462,8 +2598,11 @@ export interface operations {
                         bucketKey: string;
                         originalFileName: string;
                         originalFileExtension: string;
-                        contentType: "ImageConversion" | "Avatar";
+                        contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
                         status: "Pending" | "Finalized" | "Failed";
+                        contentDescription?: null | string;
+                        imageWidth?: null | number;
+                        imageHeight?: null | number;
                     };
                 };
             };
@@ -2673,8 +2812,11 @@ export interface operations {
                                 bucketKey: string;
                                 originalFileName: string;
                                 originalFileExtension: string;
-                                contentType: "ImageConversion" | "Avatar";
+                                contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
                                 status: "Pending" | "Finalized" | "Failed";
+                                contentDescription?: null | string;
+                                imageWidth?: null | number;
+                                imageHeight?: null | number;
                             };
                         };
                         sessionId: string;
@@ -3667,6 +3809,30 @@ export interface operations {
             };
         };
     };
+    listImageGenerationModels: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        models: {
+                            id: string;
+                            name: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
     sendContactFormMessage: {
         parameters: {
             query?: never;
@@ -3868,8 +4034,93 @@ export interface operations {
                         bucketKey: string;
                         originalFileName: string;
                         originalFileExtension: string;
-                        contentType: "ImageConversion" | "Avatar";
+                        contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
                         status: "Pending" | "Finalized" | "Failed";
+                        contentDescription?: null | string;
+                        imageWidth?: null | number;
+                        imageHeight?: null | number;
+                    };
+                };
+            };
+        };
+    };
+    requestImageGeneration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    prompt: string;
+                    model: string;
+                    referenceImages?: {
+                        base64: string;
+                        mimeType: string;
+                    }[];
+                };
+                "application/x-www-form-urlencoded": {
+                    prompt: string;
+                    model: string;
+                    referenceImages?: {
+                        base64: string;
+                        mimeType: string;
+                    }[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        assets: {
+                            id: string;
+                            status: "Pending" | "Finalized" | "Failed";
+                            createdAt: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    getImageGenerationHistory: {
+        parameters: {
+            query?: {
+                /** @description Any numeric value */
+                page?: number;
+                /** @description Any numeric value */
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        assets: {
+                            id: string;
+                            status: "Pending" | "Finalized" | "Failed";
+                            createdAt: string;
+                            originalFileName: string;
+                            originalFileExtension: string;
+                            contentDescription?: null | string;
+                            imageWidth?: null | number;
+                            imageHeight?: null | number;
+                        }[];
+                        page: number;
+                        size: number;
+                        pageCount: number;
                     };
                 };
             };
@@ -5066,6 +5317,34 @@ export interface operations {
                         timestamp: string;
                         worldEventId: string;
                     };
+                };
+            };
+        };
+    };
+    getWorldEventBacklinks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        type: "Actor" | "Event" | "Article" | "Tag";
+                        id: string;
+                        name: string;
+                    }[];
                 };
             };
         };
@@ -6535,6 +6814,34 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    getArticleBacklinks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                articleId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        type: "Actor" | "Event" | "Article" | "Tag";
+                        id: string;
+                        name: string;
+                    }[];
+                };
             };
         };
     };

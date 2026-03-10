@@ -9,6 +9,7 @@ services:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile
         networks:
+            dev-minio:
             dev-playwright:
                 aliases:
                     - app.gatekeeper
@@ -85,6 +86,8 @@ services:
         command: yarn start
         tty: true
         restart: unless-stopped
+        networks:
+            - dev-minio
 
     calliope:
         image: timelines-calliope:dev

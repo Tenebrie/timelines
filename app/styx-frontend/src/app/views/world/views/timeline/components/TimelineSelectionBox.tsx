@@ -196,7 +196,7 @@ function checkMarkerIntersection(
 	if (!parentElement) {
 		return []
 	}
-	const markers = document.querySelectorAll('[data-testid="TimelineMarker"]')
+	const markers = document.querySelectorAll('.timeline-marker')
 	const selectedMarkerIds = new Set<string>()
 
 	// Normalize selection box coordinates (handle negative width/height)

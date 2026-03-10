@@ -3,13 +3,23 @@ import { BadRequestError } from 'moonflower'
 import sharp from 'sharp'
 
 export const ImageService = {
-	validateImage: async (image: Buffer) => {
+	validateImage: async (
+		image: Buffer,
+	): Promise<{
+		buffer: Buffer
+		width?: number
+		height?: number
+	}> => {
 		try {
 			const metadata = await sharp(image).metadata()
 			if (!metadata.format) {
 				throw new BadRequestError('Unsupported image format')
 			}
-			return metadata
+			return {
+				buffer: image,
+				width: metadata.width,
+				height: metadata.height,
+			}
 		} catch (error) {
 			console.info('Supplied file is not an image', error)
 			throw new BadRequestError('Supplied file is not an image')
