@@ -112,13 +112,11 @@ export const ImageGenerationService = {
 	requestGeneration: async ({
 		prompt,
 		model,
-		numberOfImages,
 		userId,
 		referenceImages,
 	}: {
 		prompt: string
 		model: string
-		numberOfImages: number
 		userId: string
 		referenceImages: { base64: string; mimeType: string }[]
 	}): Promise<Asset[]> => {
@@ -126,38 +124,33 @@ export const ImageGenerationService = {
 		const dateStr = now.toISOString().replace(/T/, '-').replace(/:/g, '-').split('.')[0]
 		const expiresAt = new Date(now.getTime() + 28 * 24 * 60 * 60 * 1000) // 4 weeks
 
-		const imagesToGenerate = Math.min(Math.max(numberOfImages, 1), 4)
 		const pendingAssets: Asset[] = []
-		for (let i = 0; i < imagesToGenerate; i++) {
-			const fileName =
-				imagesToGenerate > 1 ? `NeverkinImage-${dateStr}-${i + 1}.png` : `NeverkinImage-${dateStr}.png`
+		const fileName = `NeverkinImage-${dateStr}.png`
 
-			const assetId = crypto.randomUUID()
+		const assetId = crypto.randomUUID()
 
-			const asset = await AssetService.createAsset({
+		const asset = await AssetService.createAsset({
+			id: assetId,
+			size: 0,
+			originalFileName: fileName.replace(/\.png$/, ''),
+			originalFileExtension: 'png',
+			contentType: 'ImageGeneration',
+			status: 'Pending',
+			expiresAt,
+			contentDescription: prompt,
+			bucketKey: CloudStorageService.getUploadKey({
 				id: assetId,
-				size: 0,
-				originalFileName: fileName.replace(/\.png$/, ''),
+				ownerId: userId,
 				originalFileExtension: 'png',
 				contentType: 'ImageGeneration',
-				status: 'Pending',
-				expiresAt,
-				contentDescription: prompt,
-				bucketKey: CloudStorageService.getUploadKey({
-					id: assetId,
-					ownerId: userId,
-					originalFileExtension: 'png',
-					contentType: 'ImageGeneration',
-				}),
-				owner: {
-					connect: { id: userId },
-				},
-			})
+			}),
+			owner: {
+				connect: { id: userId },
+			},
+		})
 
-			pendingAssets.push(asset)
-		}
+		pendingAssets.push(asset)
 
-		// Fire-and-forget: generate images asynchronously
 		void (async () => {
 			for (const asset of pendingAssets) {
 				try {

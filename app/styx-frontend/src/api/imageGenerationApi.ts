@@ -40,7 +40,6 @@ export type RequestImageGenerationApiArg = {
 	body: {
 		prompt: string
 		model: string
-		numberOfImages?: number
 		referenceImages?: {
 			base64: string
 			mimeType: string

@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton'
 import Popover from '@mui/material/Popover'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 type ReferenceImage = {
 	base64: string
@@ -19,13 +19,56 @@ type Props = {
 	disabledReason?: string
 }
 
-const MAX_REFERENCE_IMAGES = 3
-const MAX_FILE_SIZE = 1 * 1024 * 1024 // 1MB
+const MAX_REFERENCE_IMAGES = 5
+const MAX_FILE_SIZE = 8 * 1024 * 1024 // 8MB
 
 export function ReferenceImagePicker({ referenceImages, onReferenceImagesChange, disabledReason }: Props) {
 	const [hoverAnchor, setHoverAnchor] = useState<HTMLElement | null>(null)
 	const [hoverImage, setHoverImage] = useState<ReferenceImage | null>(null)
 	const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+	const referenceImagesRef = useRef(referenceImages)
+	referenceImagesRef.current = referenceImages
+
+	useEffect(() => {
+		if (disabledReason) return
+
+		const handlePaste = async (e: ClipboardEvent) => {
+			const items = e.clipboardData?.items
+			if (!items) return
+
+			const imageFiles: File[] = []
+			for (const item of items) {
+				if (item.type.startsWith('image/')) {
+					const file = item.getAsFile()
+					if (file) imageFiles.push(file)
+				}
+			}
+			if (imageFiles.length === 0) return
+
+			const remainingSlots = MAX_REFERENCE_IMAGES - referenceImagesRef.current.length
+			if (remainingSlots <= 0) return
+
+			const filesToProcess = imageFiles.slice(0, remainingSlots)
+			const newImages: ReferenceImage[] = []
+			for (const file of filesToProcess) {
+				if (file.size > MAX_FILE_SIZE) continue
+				const base64 = await fileToBase64(file)
+				newImages.push({
+					base64,
+					mimeType: file.type,
+					name: file.name || 'pasted-image',
+				})
+			}
+
+			if (newImages.length > 0) {
+				onReferenceImagesChange([...referenceImagesRef.current, ...newImages])
+			}
+		}
+
+		document.addEventListener('paste', handlePaste)
+		return () => document.removeEventListener('paste', handlePaste)
+	}, [disabledReason, onReferenceImagesChange])
 
 	const handleThumbnailEnter = (e: React.MouseEvent<HTMLElement>, img: ReferenceImage) => {
 		const target = e.currentTarget
@@ -36,7 +79,9 @@ export function ReferenceImagePicker({ referenceImages, onReferenceImagesChange,
 	}
 
 	const handleThumbnailLeave = () => {
-		if (hoverTimeout.current) clearTimeout(hoverTimeout.current)
+		if (hoverTimeout.current) {
+			clearTimeout(hoverTimeout.current)
+		}
 		setHoverAnchor(null)
 	}
 
@@ -78,7 +123,7 @@ export function ReferenceImagePicker({ referenceImages, onReferenceImagesChange,
 	return (
 		<Box>
 			<Typography variant="subtitle2" color="text.secondary" gutterBottom>
-				Reference images (optional, max {MAX_REFERENCE_IMAGES}, up to 1MB each)
+				Reference images (optional, max {MAX_REFERENCE_IMAGES}, up to 8MB each)
 			</Typography>
 
 			{disabledReason && (
@@ -94,6 +139,14 @@ export function ReferenceImagePicker({ referenceImages, onReferenceImagesChange,
 							component="img"
 							src={`data:${img.mimeType};base64,${img.base64}`}
 							alt={img.name}
+							onClick={() => openBase64InNewTab(img.base64, img.mimeType)}
+							onMouseDown={(e) => {
+								if (e.button !== 1) {
+									return
+								}
+								e.preventDefault()
+								openBase64InNewTab(img.base64, img.mimeType)
+							}}
 							onMouseEnter={(e) => handleThumbnailEnter(e, img)}
 							onMouseLeave={handleThumbnailLeave}
 							sx={{
@@ -101,6 +154,7 @@ export function ReferenceImagePicker({ referenceImages, onReferenceImagesChange,
 								height: '100%',
 								objectFit: 'cover',
 								borderRadius: 1,
+								cursor: 'pointer',
 							}}
 						/>
 						<IconButton
@@ -170,6 +224,17 @@ export function ReferenceImagePicker({ referenceImages, onReferenceImagesChange,
 			</Popover>
 		</Box>
 	)
+}
+
+function openBase64InNewTab(base64: string, mimeType: string) {
+	const byteChars = atob(base64)
+	const byteArray = new Uint8Array(byteChars.length)
+	for (let i = 0; i < byteChars.length; i++) {
+		byteArray[i] = byteChars.charCodeAt(i)
+	}
+	const blob = new Blob([byteArray], { type: mimeType })
+	const url = URL.createObjectURL(blob)
+	window.open(url, '_blank', 'noopener,noreferrer')
 }
 
 function fileToBase64(file: File): Promise<string> {

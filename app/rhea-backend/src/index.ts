@@ -62,7 +62,7 @@ app
 	.use(
 		bodyParser({
 			enableTypes: ['text', 'json', 'form'],
-			jsonLimit: '5mb',
+			jsonLimit: '15mb',
 		}),
 	)
 	// Public routers

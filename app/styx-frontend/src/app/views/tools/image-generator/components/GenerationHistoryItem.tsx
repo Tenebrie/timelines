@@ -93,6 +93,14 @@ export function GenerationHistoryItem({ asset, onDelete }: Props) {
 							component="img"
 							src={downloadUrl}
 							alt={asset.contentDescription ?? 'Generated image'}
+							onClick={() => window.open(downloadUrl, '_blank', 'noopener,noreferrer')}
+							onMouseDown={(e) => {
+								if (e.button !== 1) {
+									return
+								}
+								e.preventDefault()
+								window.open(downloadUrl, '_blank', 'noopener,noreferrer')
+							}}
 							onMouseEnter={handleThumbnailEnter}
 							onMouseLeave={handleThumbnailLeave}
 							onLoad={() => setImageLoaded(true)}
@@ -102,6 +110,7 @@ export function GenerationHistoryItem({ asset, onDelete }: Props) {
 								objectFit: 'cover',
 								borderRadius: 1,
 								flexShrink: 0,
+								cursor: 'pointer',
 								...(!imageLoaded && { position: 'absolute', visibility: 'hidden' }),
 							}}
 						/>

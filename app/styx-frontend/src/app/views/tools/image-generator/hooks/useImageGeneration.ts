@@ -12,12 +12,10 @@ export function useImageGeneration() {
 		async ({
 			prompt,
 			model,
-			numberOfImages,
 			referenceImages,
 		}: {
 			prompt: string
 			model: string
-			numberOfImages: number
 			referenceImages: Array<{ base64: string; mimeType: string }>
 		}) => {
 			clearError()
@@ -27,7 +25,6 @@ export function useImageGeneration() {
 					body: {
 						prompt,
 						model,
-						numberOfImages,
 						referenceImages: referenceImages.length > 0 ? referenceImages : undefined,
 					},
 				}).unwrap()

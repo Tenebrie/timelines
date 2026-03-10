@@ -1,4 +1,5 @@
 import { useListImageGenerationModelsQuery } from '@api/otherApi'
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
@@ -35,7 +36,6 @@ export function ImageGenerator() {
 
 	const [prompt, setPrompt] = useState(savedPrompt)
 	const [model, setModel] = useState('')
-	const [numberOfImages, setNumberOfImages] = useState(1)
 	const [referenceImages, setReferenceImages] = useState<
 		Array<{ base64: string; mimeType: string; name: string }>
 	>([])
@@ -52,7 +52,6 @@ export function ImageGenerator() {
 		await generate({
 			prompt,
 			model,
-			numberOfImages,
 			referenceImages: referenceImages.map(({ base64, mimeType }) => ({ base64, mimeType })),
 		})
 	}
@@ -82,8 +81,8 @@ export function ImageGenerator() {
 						}}
 						placeholder="Describe the image you want to generate..."
 						fullWidth
-						inputProps={{ maxLength: 2000 }}
-						helperText={`${prompt.length}/2000`}
+						inputProps={{ maxLength: 8192 }}
+						helperText={`${prompt.length}/8192`}
 					/>
 				</Box>
 
@@ -106,25 +105,6 @@ export function ImageGenerator() {
 					</LoadingSelect>
 				</Box>
 
-				{/* Number of images */}
-				<Box>
-					<Typography variant="subtitle2" color="text.secondary" gutterBottom>
-						Number of images
-					</Typography>
-					<LoadingSelect
-						value={numberOfImages}
-						isLoading={false}
-						onChange={(e) => setNumberOfImages(Number(e.target.value))}
-						fullWidth
-					>
-						{[1, 2, 3, 4].map((n) => (
-							<MenuItem key={n} value={n}>
-								{n}
-							</MenuItem>
-						))}
-					</LoadingSelect>
-				</Box>
-
 				{/* Reference images */}
 				<ReferenceImagePicker
 					referenceImages={referenceImages}
@@ -138,8 +118,14 @@ export function ImageGenerator() {
 
 				{/* Generate button */}
 				<Stack direction="row" justifyContent="flex-end">
-					<Button variant="contained" onClick={handleGenerate} disabled={!canGenerate}>
-						{isGenerating ? 'Generating...' : 'Generate'}
+					<Button
+						startIcon={<AutoAwesomeIcon />}
+						variant="contained"
+						onClick={handleGenerate}
+						disabled={!canGenerate}
+						loading={isGenerating}
+					>
+						Generate
 					</Button>
 				</Stack>
 			</Stack>

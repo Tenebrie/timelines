@@ -20,12 +20,6 @@ import { ReferenceImagesArrayValidator } from './validators/ReferenceImagesArray
 
 const router = new Router()
 
-/**
- * POST /api/images/generate
- * Accepts prompt, model, optional reference images, and number of images.
- * Creates Pending assets and responds immediately.
- * Asynchronously generates images via Google AI and uploads to S3.
- */
 router.post('/api/images/generate', async (ctx) => {
 	useApiEndpoint({
 		name: 'requestImageGeneration',
@@ -35,18 +29,17 @@ router.post('/api/images/generate', async (ctx) => {
 
 	const user = await useAuth(ctx, PremiumAuthenticator)
 
-	const { prompt, model, numberOfImages, referenceImages } = useRequestBody(ctx, {
+	const { prompt, model, referenceImages } = useRequestBody(ctx, {
 		prompt: RequiredParam(StringValidator),
 		model: RequiredParam(StringValidator),
-		numberOfImages: OptionalParam(NumberValidator),
 		referenceImages: OptionalParam(ReferenceImagesArrayValidator),
 	})
 
 	if (!prompt || prompt.trim().length === 0) {
 		throw new BadRequestError('Prompt is required')
 	}
-	if (prompt.length > 2000) {
-		throw new BadRequestError('Prompt must be 2000 characters or fewer')
+	if (prompt.length > 8192) {
+		throw new BadRequestError('Prompt must be 8192 characters or fewer')
 	}
 
 	const availableModels = await ImageGenerationService.listModels()
@@ -58,14 +51,14 @@ router.post('/api/images/generate', async (ctx) => {
 	if (references.length > 5) {
 		throw new BadRequestError('Maximum 5 reference images allowed')
 	}
-	const MAX_REF_SIZE = 1 * 1024 * 1024 // 1MB
+	const MAX_REF_SIZE = 8 * 1024 * 1024 // 8MB
 	for (const ref of references) {
 		if (!ref.base64 || !ref.mimeType) {
 			throw new BadRequestError('Each reference image must have base64 and mimeType')
 		}
 		const sizeInBytes = Buffer.byteLength(ref.base64, 'base64')
 		if (sizeInBytes > MAX_REF_SIZE) {
-			throw new BadRequestError('Each reference image must be 1MB or smaller')
+			throw new BadRequestError('Each reference image must be 8MB or smaller')
 		}
 	}
 
@@ -77,7 +70,6 @@ router.post('/api/images/generate', async (ctx) => {
 	const pendingAssets = await ImageGenerationService.requestGeneration({
 		prompt,
 		model,
-		numberOfImages: numberOfImages ?? 1,
 		userId: user.id,
 		referenceImages: references,
 	})

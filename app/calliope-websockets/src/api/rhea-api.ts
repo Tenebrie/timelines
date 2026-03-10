@@ -4056,7 +4056,6 @@ export interface operations {
                 "application/json": {
                     prompt: string;
                     model: string;
-                    numberOfImages?: number;
                     referenceImages?: {
                         base64: string;
                         mimeType: string;
@@ -4065,7 +4064,6 @@ export interface operations {
                 "application/x-www-form-urlencoded": {
                     prompt: string;
                     model: string;
-                    numberOfImages?: number;
                     referenceImages?: {
                         base64: string;
                         mimeType: string;
