@@ -128,13 +128,17 @@ app
 
 if (!isRunningInTest()) {
 	app.use(
-		initOpenApiEngine({
-			tsconfigPath: './tsconfig.json',
-			logLevel: 'info',
-			sourceFileDiscovery: {
-				rootPath: './src/routers',
-			},
-		}),
+		initOpenApiEngine(
+			process.env.NODE_ENV === 'production'
+				? { specPath: './dist/apiSpec.json' }
+				: {
+						tsconfigPath: './tsconfig.json',
+						logLevel: 'info',
+						sourceFileDiscovery: {
+							rootPath: './src/routers',
+						},
+					},
+		),
 	)
 
 	RedisService.initRedisConnection()

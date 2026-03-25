@@ -16,6 +16,9 @@ RUN yarn install --frozen-lockfile
 COPY ./app/rhea-backend /app/rhea
 RUN yarn build
 
+# Generate OpenAPI spec at build time
+RUN yarn moonflower openapi dist/apiSpec.json
+
 # Production stage
 FROM node:24-alpine3.20
 
@@ -28,14 +31,6 @@ COPY --from=builder /app/rhea/dist /app/rhea/dist
 COPY --from=builder /app/rhea/prisma /app/rhea/prisma
 COPY --from=builder /app/rhea/prisma.config.ts /app/rhea/prisma.config.ts
 COPY --from=builder /app/rhea/package.json /app/rhea/yarn.lock /app/rhea/
-
-# Moonflower needs these at runtime for OpenAPI generation
-COPY --from=builder /app/rhea/tsconfig.json /app/rhea/tsconfig.json
-COPY --from=builder /app/rhea/src /app/rhea/src
-
-# Copy only ts-shared source (no node_modules)
-COPY ./app/ts-shared/package.json /app/ts-shared/package.json
-COPY ./app/ts-shared/src /app/ts-shared/src
 
 # Install ONLY production dependencies
 RUN yarn install --production --frozen-lockfile && yarn cache clean
