@@ -4,6 +4,8 @@ import { memo, ReactNode, startTransition, useCallback, useEffect, useRef, useSt
 import { MouseEvent as ReactMouseEvent } from 'react'
 import styled from 'styled-components'
 
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+
 import { useAutoRef } from '../../hooks/useAutoRef'
 import { useDoubleClick } from '../../hooks/useDoubleClick'
 
@@ -11,7 +13,6 @@ const StyledInnerDragger = styled.div`
 	width: calc(100% - 32px);
 	max-width: 96px;
 	height: 4px;
-	background: rgba(0, 0, 0, 0.4);
 	border-radius: 2px;
 `
 
@@ -19,7 +20,6 @@ const StyledInnerDraggerHorizontal = styled.div`
 	height: calc(100% - 32px);
 	max-height: 96px;
 	width: 4px;
-	background: rgba(0, 0, 0, 0.4);
 	border-radius: 2px;
 `
 
@@ -158,6 +158,7 @@ function ResizeGrabberComponent({
 	const [mousePosition, setMousePosition] = useState(0)
 	const mouseLastSeenPosition = useRef(0)
 	const _currentContainerHeight = useAutoRef(_internalHeight)
+	const theme = useCustomTheme()
 
 	const drawerVisibleRef = useAutoRef(drawerVisible)
 
@@ -311,12 +312,16 @@ function ResizeGrabberComponent({
 					alignItems: 'center',
 					justifyContent: 'center',
 					zIndex: 1,
+					'& > *': {
+						background: theme.mode === 'dark' ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.4)',
+						transition: 'background 0.3s',
+					},
 					// TODO: Optimize selector
 					'&:hover > *': {
-						background: 'rgba(0, 0, 0, 0.6)',
+						background: theme.mode === 'dark' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
 					},
 					'&:active > *': {
-						background: 'rgba(0, 0, 0, 0.8)',
+						background: theme.mode === 'dark' ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)',
 					},
 					...(position === 'top' && {
 						width: '100%',
