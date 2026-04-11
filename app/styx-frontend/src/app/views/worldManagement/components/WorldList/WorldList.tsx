@@ -2,7 +2,6 @@ import Stack from '@mui/material/Stack'
 
 import { WorldListEmptyState } from '@/app/views/worldManagement/components/WorldListEmptyState'
 import { DeleteWorldModal } from '@/app/views/worldManagement/modals/DeleteWorldModal'
-import { WorldWizardModal } from '@/app/views/worldManagement/modals/WorldWizardModal'
 
 import { useWorldListData } from '../../hooks/useWorldListData'
 import { WorldListSection } from './WorldListSection'
@@ -24,7 +23,6 @@ export const WorldList = () => {
 					<WorldListSection worlds={visibleWorlds} label="Shared Worlds (Reader)" />
 				)}
 			</Stack>
-			<WorldWizardModal />
 			<DeleteWorldModal />
 		</>
 	)

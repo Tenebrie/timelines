@@ -70,7 +70,18 @@ export function FeedbackPage() {
 			<form.AppField name="name">{() => <BoundTextField label="Name (Optional)" fullWidth />}</form.AppField>
 
 			<form.AppField name="email">
-				{() => <BoundTextField label="Contact Email (Optional)" type="email" fullWidth />}
+				{() => (
+					<BoundTextField
+						label="Contact Email (Optional)"
+						type="email"
+						fullWidth
+						helperText={
+							form.getFieldValue('email').trim().length === 0
+								? 'Without a contact email, we will not be able to respond.'
+								: ''
+						}
+					/>
+				)}
 			</form.AppField>
 
 			<form.AppField name="message">

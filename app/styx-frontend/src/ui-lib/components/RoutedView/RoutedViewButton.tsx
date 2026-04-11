@@ -1,0 +1,43 @@
+import Button from '@mui/material/Button'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import { FileRouteTypes } from '@tanstack/react-router'
+
+import { NavigationLink } from '@/app/components/NavigationLink'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+
+type Props = {
+	icon?: React.ReactNode
+	label: string
+	route: FileRouteTypes['fullPaths']
+}
+
+export function RoutedViewButton({ icon, label, route }: Props) {
+	const theme = useCustomTheme()
+	const isActive = useCheckRouteMatch(route)
+
+	return (
+		<NavigationLink to={route as FileRouteTypes['to']}>
+			<Button
+				fullWidth
+				sx={{
+					justifyContent: 'flex-start',
+					px: 2,
+					py: 1,
+					fontWeight: theme.material.typography.fontWeightRegular,
+					'&.active': {
+						fontWeight: theme.material.typography.fontWeightBold,
+						bgcolor: theme.custom.palette.background.softer,
+						'&:hover': {
+							bgcolor: theme.custom.palette.background.soft,
+						},
+					},
+				}}
+				className={isActive ? 'active' : ''}
+			>
+				{icon && <ListItemIcon>{icon}</ListItemIcon>}
+				{label}
+			</Button>
+		</NavigationLink>
+	)
+}

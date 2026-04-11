@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { ReactNode } from 'react'
 
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+import { useCheckRouteMatchExact } from '@/router-utils/hooks/useCheckRouteMatchExact'
 import { FileRouteTypes } from '@/routeTree.gen'
 
 type Props = {
@@ -10,10 +11,13 @@ type Props = {
 	icon: ReactNode
 	label: string
 	disabled?: boolean
+	iconOnly?: boolean
 }
 
-export function NavigatorButton({ route, icon, label, disabled }: Props) {
-	const isMatching = useCheckRouteMatch(route)
+export function NavigatorButton({ route, icon, label, disabled, iconOnly }: Props) {
+	const isMatchingLoose = useCheckRouteMatch(route)
+	const isMatchingExact = useCheckRouteMatchExact(route)
+	const isMatching = route === '/' ? isMatchingExact : isMatchingLoose
 
 	return (
 		<Link to={route as FileRouteTypes['to']} disabled={disabled}>
@@ -24,11 +28,12 @@ export function NavigatorButton({ route, icon, label, disabled }: Props) {
 					gap: 0.5,
 					border: 'none',
 					padding: '8px 15px',
+					minWidth: iconOnly ? 'auto' : undefined,
 					textDecoration: 'none',
 				}}
 				disabled={disabled}
 			>
-				{icon} {label}
+				{icon} {!iconOnly && label}
 			</Button>
 		</Link>
 	)

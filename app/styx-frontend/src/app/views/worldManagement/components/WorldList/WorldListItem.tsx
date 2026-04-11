@@ -82,7 +82,7 @@ export function WorldListItem({ world, showActions }: Props) {
 										{world.description}
 									</Typography>
 								)}
-								<Typography variant="body2" color="text.secondary">
+								<Typography variant="body2" color="text.secondary" component={'div'}>
 									<Stack direction="row" display={'inline-flex'} alignItems={'center'} gap={0.5}>
 										<AccessTimeIcon sx={{ fontSize: 14, color: 'text.secondary' }} /> Updated {lastUpdated} |{' '}
 										<CalendarIcon sx={{ fontSize: 14, color: 'text.secondary' }} />{' '}

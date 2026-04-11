@@ -3,7 +3,10 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useCallback, useEffect, useState } from 'react'
 
-import { CalendarSelector } from '@/app/features/time/calendar/components/CalendarSelector'
+import {
+	CalendarSelector,
+	useTemplateCalendars,
+} from '@/app/features/time/calendar/components/CalendarSelector'
 import { isEntityNameValid } from '@/app/utils/isEntityNameValid'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { CreatePopoverButton } from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
@@ -11,7 +14,11 @@ import { CreatePopoverButton } from '@/ui-lib/components/PopoverButton/CreatePop
 export function WorldListCreateNewButton() {
 	const [name, setName] = useState('')
 	const [description, setDescription] = useState('')
-	const [calendars, setCalendars] = useState<string[]>(['earth_current'])
+	const [calendars, setCalendars] = useState<string[]>([])
+	const calendarTemplates = useTemplateCalendars()
+	useEffect(() => {
+		setCalendars(calendarTemplates.length > 0 ? [calendarTemplates[0].id] : [])
+	}, [calendarTemplates])
 
 	const [error, setError] = useState<string | null>(null)
 
@@ -44,8 +51,8 @@ export function WorldListCreateNewButton() {
 
 		setName('')
 		setDescription('')
-		setCalendars(['earth_current'])
-	}, [name, description, createWorld, calendars])
+		setCalendars(calendarTemplates.length > 0 ? [calendarTemplates[0].id] : [])
+	}, [name, description, createWorld, calendars, calendarTemplates])
 
 	return (
 		<CreatePopoverButton
@@ -57,12 +64,11 @@ export function WorldListCreateNewButton() {
 			}}
 			popoverBody={({ close }) => (
 				<>
-					<Typography variant="subtitle2" fontWeight="bold">
+					<Typography variant="subtitle1" fontWeight="bold">
 						New World
 					</Typography>
 					<TextField
 						label="Name"
-						size="small"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
 						onKeyDown={(e) => {
@@ -80,7 +86,6 @@ export function WorldListCreateNewButton() {
 					/>
 					<TextField
 						label="Description"
-						size="small"
 						value={description}
 						onChange={(e) => setDescription(e.target.value)}
 						onKeyDown={(e) => {

@@ -16,9 +16,10 @@ import { useCheckRouteMatchExact } from '@/router-utils/hooks/useCheckRouteMatch
 
 type Props = {
 	disabled?: boolean
+	iconOnly?: boolean
 }
 
-export function HomeNavigatorButton({ disabled }: Props) {
+export function HomeNavigatorButton({ disabled, iconOnly }: Props) {
 	const [menuOpen, setMenuOpen] = useState(false)
 	const anchorRef = useRef<HTMLButtonElement>(null)
 
@@ -44,10 +45,11 @@ export function HomeNavigatorButton({ disabled }: Props) {
 						aria-label="Navigate to home"
 						sx={{
 							gap: 0.5,
-							padding: '8px 15px',
+							padding: iconOnly ? '8px' : '8px 15px',
+							minWidth: iconOnly ? 'auto' : undefined,
 						}}
 					>
-						<Home /> Home
+						<Home /> {!iconOnly && 'Home'}
 					</Button>
 				</NavigationLink>
 

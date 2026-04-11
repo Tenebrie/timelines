@@ -13,7 +13,7 @@ export function LoadingSelect<Value = unknown>(props: LoadingSelectProps<Value>)
 
 	if (isLoading) {
 		return (
-			<Select disabled displayEmpty {...rest}>
+			<Select disabled displayEmpty {...rest} value={''}>
 				<MenuItem disabled></MenuItem>
 			</Select>
 		)

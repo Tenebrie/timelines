@@ -11,9 +11,10 @@ import { getAuthState } from '../../auth/AuthSliceSelectors'
 type Props = {
 	icon: ReactNode
 	label: string
+	iconOnly?: boolean
 }
 
-export function LastWorldNavigatorButton({ icon, label }: Props) {
+export function LastWorldNavigatorButton({ icon, label, iconOnly }: Props) {
 	const isMatching = useCheckRouteMatch('/world/$worldId')
 
 	const { id, isLoaded } = useSelector(getWorldState, (a, b) => a.id === b.id && a.isLoaded === b.isLoaded)
@@ -28,9 +29,10 @@ export function LastWorldNavigatorButton({ icon, label }: Props) {
 				sx={{
 					gap: 0.5,
 					padding: '8px 15px',
+					minWidth: iconOnly ? 'auto' : undefined,
 				}}
 			>
-				{icon} {label}
+				{icon} {!iconOnly && label}
 			</Button>
 		</Link>
 	)

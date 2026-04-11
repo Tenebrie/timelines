@@ -2,7 +2,9 @@ import MenuIcon from '@mui/icons-material/Menu'
 import Button from '@mui/material/Button'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { memo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -16,6 +18,9 @@ import { getAuthState } from '../../auth/AuthSliceSelectors'
 export const WorldSelectorButton = memo(WorldSelectorButtonComponent)
 
 function WorldSelectorButtonComponent() {
+	const muiTheme = useTheme()
+	const isNarrow = useMediaQuery(muiTheme.breakpoints.down('md'))
+
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 	const open = Boolean(anchorEl)
 
@@ -46,6 +51,7 @@ function WorldSelectorButtonComponent() {
 				disabled={!hasWorlds || !user}
 				sx={{
 					padding: '8px 15px',
+					minWidth: isNarrow ? 'auto' : undefined,
 				}}
 			>
 				<MenuIcon />
