@@ -48,7 +48,7 @@ export function UserDropdown({ user }: Props) {
 			return
 		}
 		if (result.response.redirectTo === 'admin') {
-			navigate({ to: '/admin', reloadDocument: true })
+			navigate({ to: '/admin/users', reloadDocument: true })
 		} else {
 			dispatch(clearUser())
 			navigate({ to: '/login' })

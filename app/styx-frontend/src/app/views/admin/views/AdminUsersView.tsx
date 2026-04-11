@@ -1,24 +1,18 @@
-import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import Typography from '@mui/material/Typography'
-import { Link } from '@tanstack/react-router'
 import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useAdminGetUsersQuery } from '@/api/adminUsersApi'
 import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
-import { useModal } from '@/app/features/modals/ModalsSlice'
 
-import { useAdminImpersonateUser } from '../api/useAdminImpersonateUser'
+import { AdminUserRow } from '../components/AdminUserRow'
 import { Pagination } from '../components/Pagination'
 import { SearchInput } from '../components/SearchInput'
-import { UserAccessLevelDropdown } from '../components/UserAccessLevelDropdown'
-import { UserEmailPopoverButton } from '../components/UserEmailPopoverButton'
 import { DeleteUserModal } from '../modals/DeleteUserModal'
 import { SetPasswordModal } from '../modals/SetPasswordModal'
 
@@ -35,10 +29,6 @@ export function AdminUsersView() {
 	})
 
 	const { user: loggedInUser } = useSelector(getAuthState)
-
-	const { open: openDeleteUserModal } = useModal('deleteUserModal')
-	const { open: openSetPasswordModal } = useModal('setPasswordModal')
-	const [impersonateUser] = useAdminImpersonateUser()
 
 	const formatDate = useCallback((date: string) => {
 		return new Date(date).toLocaleString('en-US', {
@@ -84,44 +74,19 @@ export function AdminUsersView() {
 						<TableRow>
 							<TableCell width={250}>Email</TableCell>
 							<TableCell width={200}>Username</TableCell>
-							<TableCell width={205}>Level</TableCell>
+							<TableCell width={82}>Level</TableCell>
 							<TableCell width={160}>Created At</TableCell>
 							<TableCell width={160}>Updated At</TableCell>
-							<TableCell width={270}>Actions</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
 						{data.users.map((user) => (
-							<TableRow key={user.id} sx={{ height: '75px' }}>
-								<TableCell>
-									<Stack gap={1} direction="row" alignItems="center">
-										<Link from="/admin" to={`/${user.id}`}>
-											<b>{user.email}</b>
-										</Link>
-										<UserEmailPopoverButton user={user} />
-									</Stack>
-								</TableCell>
-								<TableCell>{user.username}</TableCell>
-								<TableCell>
-									<UserAccessLevelDropdown user={user} />
-								</TableCell>
-								<TableCell>{formatDate(user.createdAt)}</TableCell>
-								<TableCell>{formatDate(user.updatedAt)}</TableCell>
-								<TableCell>
-									{loggedInUser.id === user.id && (
-										<Typography variant="body2" color="gray" marginLeft={0.7}>
-											Despite everything, it&apos;s still you
-										</Typography>
-									)}
-									{loggedInUser.id !== user.id && (
-										<>
-											<Button onClick={() => impersonateUser(user.id)}>Login as</Button>
-											<Button onClick={() => openSetPasswordModal({ targetUser: user })}>Set password</Button>
-											<Button onClick={() => openDeleteUserModal({ targetUser: user })}>Delete</Button>
-										</>
-									)}
-								</TableCell>
-							</TableRow>
+							<AdminUserRow
+								key={user.id}
+								user={user}
+								isLoggedInUser={loggedInUser.id === user.id}
+								formatDate={formatDate}
+							/>
 						))}
 					</TableBody>
 				</TableContainer>
