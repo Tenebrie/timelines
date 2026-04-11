@@ -54,6 +54,9 @@ const {
 					maxlength="1024"
 					class="py-3 px-4 block w-full text-md rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-900"
 				/>
+				<p id="email-helper" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+					Without a contact email, we will not be able to respond.
+				</p>
 			</div>
 
 			<div>
@@ -84,6 +87,14 @@ const {
 	function initContactForm() {
 		const form = document.getElementById('contact-form-element')
 		if (!form) return
+
+		const emailInput = document.getElementById('email')
+		const emailHelper = document.getElementById('email-helper')
+		if (emailInput && emailHelper) {
+			emailInput.addEventListener('input', function () {
+				emailHelper.style.display = emailInput.value.trim().length > 0 ? 'none' : ''
+			})
+		}
 
 		form.addEventListener('submit', function (e) {
 			e.preventDefault()
