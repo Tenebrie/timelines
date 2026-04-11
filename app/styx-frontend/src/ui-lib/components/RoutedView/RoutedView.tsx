@@ -35,7 +35,7 @@ export function RoutedView({ label, routes, footer }: Props) {
 				<Paper
 					sx={{
 						position: isSmallScreen ? 'static' : 'sticky',
-						width: isSmallScreen ? 'calc(100% - 32px)' : 250,
+						width: isSmallScreen ? 'calc(100% - 32px)' : 240,
 						p: 2,
 						top: 16,
 						display: 'flex',

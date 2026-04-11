@@ -72,7 +72,7 @@ export function AdminDashboardView() {
 	const { auditStats } = data
 
 	return (
-		<Stack padding={3} gap={2.5} width="100%" maxWidth={900} alignSelf="center">
+		<Stack gap={2.5} width="100%" alignSelf="center">
 			<Section icon={<Groups color="primary" />} title="Active Users">
 				<StatCard label="Daily" value={data.dailyActiveUsers} sub="Last 24 hours" />
 				<StatCard label="Weekly" value={data.weeklyActiveUsers} sub="Last 7 days" />
