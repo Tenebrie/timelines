@@ -214,10 +214,10 @@ export type RequestImageConversionApiArg = {
 	}
 }
 export type UpdateNodeApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
 	parentActorId?: null | string
 	positionX: number
 	positionY: number
@@ -257,9 +257,9 @@ export type PutWikiArticleContentApiArg = {
 	}
 }
 export type ListWorldShareLinksApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
-	worldId: string
 	accessMode: 'ReadOnly' | 'Editing'
 	expiresAt: null | string
 	label: null | string
@@ -282,10 +282,10 @@ export type GenerateFreeWorldShareLinkApiArg = {
 	}
 }
 export type CreateWorldShareLinkApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
 	accessMode: 'ReadOnly' | 'Editing'
 	expiresAt?: null | string
 	label?: null | string
@@ -344,11 +344,11 @@ export type AcceptWorldShareLinkApiArg = {
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
 		icon: string
 		color: string
 		position: number
@@ -356,11 +356,11 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 		contentYjs?: null | string
 		parentId?: null | string
 	}[]
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 	icon: string
 	color: string
 	position: number

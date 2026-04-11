@@ -69,11 +69,11 @@ export type CreateTagApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 }
 export type CreateTagApiArg = {
 	/** Any string value */
@@ -115,11 +115,11 @@ export type UpdateTagApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 }
 export type UpdateTagApiArg = {
 	/** Any string value */
@@ -133,11 +133,11 @@ export type UpdateTagApiArg = {
 }
 export type DeleteTagApiResponse = /** status 200  */ {
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 }
 export type DeleteTagApiArg = {
 	/** Any string value */
@@ -167,11 +167,11 @@ export type GetTagDetailsApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 }
 export type GetTagDetailsApiArg = {
 	/** Any string value */

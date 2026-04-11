@@ -1,5 +1,4 @@
 import Button from '@mui/material/Button'
-import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
@@ -15,17 +14,17 @@ import { useAdminGetUsersQuery } from '@/api/adminUsersApi'
 import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 
-import { useAdminImpersonateUser } from './api/useAdminImpersonateUser'
-import { Pagination } from './components/Pagination'
-import { SearchInput } from './components/SearchInput'
-import { UserAccessLevelDropdown } from './components/UserAccessLevelDropdown'
-import { UserEmailPopoverButton } from './components/UserEmailPopoverButton'
-import { DeleteUserModal } from './modals/DeleteUserModal'
-import { SetPasswordModal } from './modals/SetPasswordModal'
+import { useAdminImpersonateUser } from '../api/useAdminImpersonateUser'
+import { Pagination } from '../components/Pagination'
+import { SearchInput } from '../components/SearchInput'
+import { UserAccessLevelDropdown } from '../components/UserAccessLevelDropdown'
+import { UserEmailPopoverButton } from '../components/UserEmailPopoverButton'
+import { DeleteUserModal } from '../modals/DeleteUserModal'
+import { SetPasswordModal } from '../modals/SetPasswordModal'
 
 const pageSize = 18
 
-export const Admin = () => {
+export function AdminUsersView() {
 	const [page, setPage] = useState(0)
 	const [query, setQuery] = useState('')
 
@@ -58,7 +57,7 @@ export const Admin = () => {
 	}
 
 	return (
-		<Paper elevation={2} sx={{ marginTop: 4 }}>
+		<>
 			<Stack
 				sx={{ padding: '16px 16px' }}
 				direction="row"
@@ -129,6 +128,6 @@ export const Admin = () => {
 			</Stack>
 			<DeleteUserModal />
 			<SetPasswordModal />
-		</Paper>
+		</>
 	)
 }

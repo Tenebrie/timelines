@@ -17,11 +17,14 @@ import { Route as WorldIndexRouteImport } from './routes/world/index'
 import { Route as ToolsIndexRouteImport } from './routes/tools/index'
 import { Route as ProfileIndexRouteImport } from './routes/profile/index'
 import { Route as CalendarIndexRouteImport } from './routes/calendar/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ToolsToolsRouteImport } from './routes/tools/_tools'
 import { Route as ShareShareLinkSlugRouteImport } from './routes/share/$shareLinkSlug'
 import { Route as SecretMusicRouteImport } from './routes/secret/music'
 import { Route as ProfileProfileRouteImport } from './routes/profile/_profile'
 import { Route as CalendarCalendarIdRouteImport } from './routes/calendar/$calendarId'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as WorldWorldIdWorldRouteImport } from './routes/world/$worldId/_world'
 import { Route as ToolsToolsQrGeneratorRouteImport } from './routes/tools/_tools.qr-generator'
 import { Route as ToolsToolsImageGeneratorRouteImport } from './routes/tools/_tools.image-generator'
@@ -77,6 +80,11 @@ const CalendarIndexRoute = CalendarIndexRouteImport.update({
   path: '/calendar/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ToolsToolsRoute = ToolsToolsRouteImport.update({
   id: '/tools/_tools',
   path: '/tools',
@@ -101,6 +109,16 @@ const CalendarCalendarIdRoute = CalendarCalendarIdRouteImport.update({
   id: '/calendar/$calendarId',
   path: '/calendar/$calendarId',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AdminRoute,
 } as any)
 const WorldWorldIdWorldRoute = WorldWorldIdWorldRouteImport.update({
   id: '/world/$worldId/_world',
@@ -183,14 +201,17 @@ const WorldWorldIdWorldWikiWikiArticleIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/create-account': typeof CreateAccountRoute
   '/login': typeof LoginRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/users': typeof AdminUsersRoute
   '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile': typeof ProfileProfileRouteWithChildren
   '/secret/music': typeof SecretMusicRoute
   '/share/$shareLinkSlug': typeof ShareShareLinkSlugRoute
   '/tools': typeof ToolsToolsRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
   '/calendar/': typeof CalendarIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/tools/': typeof ToolsIndexRoute
@@ -212,14 +233,16 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
   '/create-account': typeof CreateAccountRoute
   '/login': typeof LoginRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/users': typeof AdminUsersRoute
   '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile': typeof ProfileIndexRoute
   '/secret/music': typeof SecretMusicRoute
   '/share/$shareLinkSlug': typeof ShareShareLinkSlugRoute
   '/tools': typeof ToolsIndexRoute
+  '/admin': typeof AdminIndexRoute
   '/calendar': typeof CalendarIndexRoute
   '/world': typeof WorldIndexRoute
   '/profile/feedback': typeof ProfileProfileFeedbackRoute
@@ -239,14 +262,17 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/create-account': typeof CreateAccountRoute
   '/login': typeof LoginRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/users': typeof AdminUsersRoute
   '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile/_profile': typeof ProfileProfileRouteWithChildren
   '/secret/music': typeof SecretMusicRoute
   '/share/$shareLinkSlug': typeof ShareShareLinkSlugRoute
   '/tools/_tools': typeof ToolsToolsRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
   '/calendar/': typeof CalendarIndexRoute
   '/profile/': typeof ProfileIndexRoute
   '/tools/': typeof ToolsIndexRoute
@@ -273,11 +299,14 @@ export interface FileRouteTypes {
     | '/admin'
     | '/create-account'
     | '/login'
+    | '/admin/audit'
+    | '/admin/users'
     | '/calendar/$calendarId'
     | '/profile'
     | '/secret/music'
     | '/share/$shareLinkSlug'
     | '/tools'
+    | '/admin/'
     | '/calendar/'
     | '/profile/'
     | '/tools/'
@@ -299,14 +328,16 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/admin'
     | '/create-account'
     | '/login'
+    | '/admin/audit'
+    | '/admin/users'
     | '/calendar/$calendarId'
     | '/profile'
     | '/secret/music'
     | '/share/$shareLinkSlug'
     | '/tools'
+    | '/admin'
     | '/calendar'
     | '/world'
     | '/profile/feedback'
@@ -328,11 +359,14 @@ export interface FileRouteTypes {
     | '/admin'
     | '/create-account'
     | '/login'
+    | '/admin/audit'
+    | '/admin/users'
     | '/calendar/$calendarId'
     | '/profile/_profile'
     | '/secret/music'
     | '/share/$shareLinkSlug'
     | '/tools/_tools'
+    | '/admin/'
     | '/calendar/'
     | '/profile/'
     | '/tools/'
@@ -355,7 +389,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   CreateAccountRoute: typeof CreateAccountRoute
   LoginRoute: typeof LoginRoute
   CalendarCalendarIdRoute: typeof CalendarCalendarIdRoute
@@ -428,6 +462,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalendarIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/tools/_tools': {
       id: '/tools/_tools'
       path: '/tools'
@@ -462,6 +503,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/calendar/$calendarId'
       preLoaderRoute: typeof CalendarCalendarIdRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/world/$worldId/_world': {
       id: '/world/$worldId/_world'
@@ -564,6 +619,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminAuditRoute: typeof AdminAuditRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAuditRoute: AdminAuditRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 interface ProfileProfileRouteChildren {
   ProfileProfileFeedbackRoute: typeof ProfileProfileFeedbackRoute
   ProfileProfilePublicRoute: typeof ProfileProfilePublicRoute
@@ -634,7 +703,7 @@ const WorldWorldIdWorldRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   CreateAccountRoute: CreateAccountRoute,
   LoginRoute: LoginRoute,
   CalendarCalendarIdRoute: CalendarCalendarIdRoute,

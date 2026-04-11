@@ -5,19 +5,23 @@ import { FileRouteTypes } from '@tanstack/react-router'
 import { NavigationLink } from '@/app/components/NavigationLink'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
+import { useCheckRouteMatchExact } from '@/router-utils/hooks/useCheckRouteMatchExact'
+
+import { RouteItem } from './RoutedView'
 
 type Props = {
-	icon?: React.ReactNode
-	label: string
-	route: FileRouteTypes['fullPaths']
+	route: RouteItem
 }
 
-export function RoutedViewButton({ icon, label, route }: Props) {
+export function RoutedViewButton({ route }: Props) {
+	const { icon, label, path } = route
 	const theme = useCustomTheme()
-	const isActive = useCheckRouteMatch(route)
+	const isActiveLoose = useCheckRouteMatch(path)
+	const isActiveExact = useCheckRouteMatchExact(path)
+	const isActive = route.exact ? isActiveExact : isActiveLoose
 
 	return (
-		<NavigationLink to={route as FileRouteTypes['to']}>
+		<NavigationLink to={path as FileRouteTypes['to']}>
 			<Button
 				fullWidth
 				sx={{

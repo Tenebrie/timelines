@@ -12,13 +12,16 @@ import { RoutedViewButton } from './RoutedViewButton'
 
 type Props = {
 	label?: string
-	routes: {
-		icon?: React.ReactNode
-		label: string
-		route: FileRouteTypes['fullPaths']
-		isRendered?: boolean
-	}[]
+	routes: RouteItem[]
 	footer?: React.ReactNode
+}
+
+export type RouteItem = {
+	icon?: React.ReactNode
+	label: string
+	exact?: boolean
+	path: FileRouteTypes['fullPaths']
+	isRendered?: boolean
 }
 
 export function RoutedView({ label, routes, footer }: Props) {
@@ -50,12 +53,7 @@ export function RoutedView({ label, routes, footer }: Props) {
 						{routes
 							.filter((route) => route.isRendered != false)
 							.map((route) => (
-								<RoutedViewButton
-									key={route.route}
-									icon={route.icon}
-									label={route.label}
-									route={route.route}
-								/>
+								<RoutedViewButton key={route.path} route={route} />
 							))}
 					</Stack>
 

@@ -2,6 +2,7 @@ import { AUTH_COOKIE_NAME, UserAuthenticator } from '@src/middleware/auth/UserAu
 import { UserAuthenticatorWithAvatar } from '@src/middleware/auth/UserAuthenticatorWithAvatar.js'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AnnouncementService } from '@src/services/AnnouncementService.js'
+import { AuditLogService } from '@src/services/AuditLogService.js'
 import { CloudStorageService } from '@src/services/CloudStorageService.js'
 import { GoogleService } from '@src/services/GoogleService.js'
 import {
@@ -96,6 +97,13 @@ router.post('/api/auth', async (ctx) => {
 		description: 'Welcome to Neverkin!',
 	})
 
+	AuditLogService.append(ctx, {
+		action: 'UserCreateAccount',
+		data: {
+			userId: user.id,
+		},
+	})
+
 	return {
 		user: {
 			...user,
@@ -129,6 +137,13 @@ router.post('/api/auth/guest', async (ctx) => {
 		userId: user.id,
 		title: 'Welcome!',
 		description: 'Welcome to Neverkin!',
+	})
+
+	AuditLogService.append(ctx, {
+		action: 'GuestCreateAccount',
+		data: {
+			userId: user.id,
+		},
 	})
 
 	return {
@@ -181,6 +196,13 @@ router.post('/api/auth/google', async (ctx) => {
 		})
 	}
 
+	AuditLogService.append(ctx, {
+		action: 'UserLoginWithGoogle',
+		data: {
+			userId: user.id,
+		},
+	})
+
 	return {
 		user: {
 			...user,
@@ -205,6 +227,12 @@ router.post('/api/auth/login', async (ctx) => {
 
 	const user = await UserService.login(body.email, body.password)
 	if (!user) {
+		AuditLogService.append(ctx, {
+			action: 'UserLoginFailed',
+			data: {
+				email: body.email,
+			},
+		})
 		throw new UnauthorizedError('Email or password do not match')
 	}
 
@@ -216,6 +244,13 @@ router.post('/api/auth/login', async (ctx) => {
 		expires: new Date(new Date().getTime() + 365 * 24 * 3600 * 1000),
 		secure: ctx.headers['x-forwarded-proto'] === 'https',
 		sameSite: 'lax',
+	})
+
+	AuditLogService.append(ctx, {
+		action: 'UserLoginWithPassword',
+		data: {
+			userId: user.id,
+		},
 	})
 
 	const avatarUrl = user.avatar ? await CloudStorageService.getPresignedUrl(user.avatar) : undefined
@@ -289,6 +324,13 @@ router.delete('/api/auth', async (ctx) => {
 
 	const user = await useAuth(ctx, UserAuthenticator)
 	await UserService.deleteUser(user.id)
+
+	AuditLogService.append(ctx, {
+		action: 'UserDeleteAccount',
+		data: {
+			userId: user.id,
+		},
+	})
 
 	ctx.cookies.set(AUTH_COOKIE_NAME, '', {
 		path: '/',

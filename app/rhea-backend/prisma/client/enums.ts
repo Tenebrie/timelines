@@ -36,6 +36,23 @@ export const AssetStatus = {
 export type AssetStatus = (typeof AssetStatus)[keyof typeof AssetStatus]
 
 
+export const AuditAction = {
+  UserCreateAccount: 'UserCreateAccount',
+  UserLoginWithPassword: 'UserLoginWithPassword',
+  UserLoginWithGoogle: 'UserLoginWithGoogle',
+  UserLoginFailed: 'UserLoginFailed',
+  UserDeleteAccount: 'UserDeleteAccount',
+  GuestCreateAccount: 'GuestCreateAccount',
+  AdminImpersonateUser: 'AdminImpersonateUser',
+  AdminUpdateUser: 'AdminUpdateUser',
+  AdminSetUserLevel: 'AdminSetUserLevel',
+  AdminSetUserPassword: 'AdminSetUserPassword',
+  AdminDeleteUser: 'AdminDeleteUser'
+} as const
+
+export type AuditAction = (typeof AuditAction)[keyof typeof AuditAction]
+
+
 export const CalendarUnitFormatMode = {
   Name: 'Name',
   NameOneIndexed: 'NameOneIndexed',

@@ -117,11 +117,11 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 		worldEventId: string
 	}[]
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 	icon: string
 	color: string
 	descriptionRich: string
@@ -169,11 +169,11 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 		worldEventId: string
 	}[]
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 	icon: string
 	color: string
 	descriptionRich: string
@@ -207,11 +207,11 @@ export type DeleteWorldEventApiArg = {
 }
 export type RevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 	icon: string
 	color: string
 	descriptionRich: string
@@ -231,11 +231,11 @@ export type RevokeWorldEventApiArg = {
 }
 export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 	icon: string
 	color: string
 	descriptionRich: string

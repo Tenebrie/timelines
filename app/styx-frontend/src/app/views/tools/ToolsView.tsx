@@ -12,9 +12,9 @@ export function ToolsView() {
 		<RoutedView
 			label="Tools"
 			routes={[
-				{ label: 'Image converter', route: '/tools/image-converter' },
-				{ label: 'QR code generator', route: '/tools/qr-generator' },
-				{ label: 'AI image generator', route: '/tools/image-generator', isRendered: isPremium },
+				{ label: 'Image converter', path: '/tools/image-converter' },
+				{ label: 'QR code generator', path: '/tools/qr-generator' },
+				{ label: 'AI image generator', path: '/tools/image-generator', isRendered: isPremium },
 			]}
 		/>
 	)

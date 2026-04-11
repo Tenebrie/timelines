@@ -13,10 +13,10 @@ export function ProfileView() {
 			<RoutedView
 				label="Settings"
 				routes={[
-					{ icon: <AccountCircleIcon />, label: 'Public profile', route: '/profile/public' },
-					{ icon: <StorageIcon />, label: 'Storage', route: '/profile/storage' },
-					{ icon: <LockResetIcon />, label: 'Security', route: '/profile/security' },
-					{ icon: <FeedbackIcon />, label: 'Feedback', route: '/profile/feedback' },
+					{ icon: <AccountCircleIcon />, label: 'Public profile', path: '/profile/public' },
+					{ icon: <StorageIcon />, label: 'Storage', path: '/profile/storage' },
+					{ icon: <LockResetIcon />, label: 'Security', path: '/profile/security' },
+					{ icon: <FeedbackIcon />, label: 'Feedback', path: '/profile/feedback' },
 				]}
 				footer={
 					<Typography

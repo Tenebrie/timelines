@@ -5,6 +5,45 @@ import { UserUncheckedUpdateInput } from 'prisma/client/models.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const AdminService = {
+	listUserActivityStats: async () => {
+		const dailyActiveUsers = await getPrismaClient().user.aggregate({
+			where: {
+				updatedAt: {
+					gte: new Date(new Date().setDate(new Date().getDate() - 1)),
+				},
+			},
+			_count: {
+				id: true,
+			},
+		})
+
+		const weeklyActiveUsers = await getPrismaClient().user.aggregate({
+			where: {
+				updatedAt: {
+					gte: new Date(new Date().setDate(new Date().getDate() - 7)),
+				},
+			},
+			_count: {
+				id: true,
+			},
+		})
+		const monthlyActiveUsers = await getPrismaClient().user.aggregate({
+			where: {
+				updatedAt: {
+					gte: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+				},
+			},
+			_count: {
+				id: true,
+			},
+		})
+		return {
+			dailyActiveUsers: dailyActiveUsers._count.id,
+			weeklyActiveUsers: weeklyActiveUsers._count.id,
+			monthlyActiveUsers: monthlyActiveUsers._count.id,
+		}
+	},
+
 	listUsers: async ({ page, size, query }: { page?: number; size?: number; query?: string }) => {
 		const actualPage = page ?? 0
 		const actualSize = Math.min(size ?? 20, 100)

@@ -1,6 +1,7 @@
 import { AdminAuthenticator } from '@src/middleware/auth/AdminAuthenticator.js'
 import { AUTH_COOKIE_NAME } from '@src/middleware/auth/UserAuthenticatorWithAvatar.js'
 import { AdminService } from '@src/services/AdminService.js'
+import { AuditLogService } from '@src/services/AuditLogService.js'
 import { TokenService } from '@src/services/TokenService.js'
 import { UserService } from '@src/services/UserService.js'
 import {
@@ -26,6 +27,44 @@ const router = new Router().with(async (ctx) => {
 	return {
 		user,
 	}
+})
+
+router.get('/api/admin/dashboard', async () => {
+	useApiEndpoint({
+		name: 'adminGetDashboard',
+		description: 'Gets dashboard information for the admin panel',
+		tags: [adminUsersTag],
+	})
+
+	const userActivityStats = await AdminService.listUserActivityStats()
+	const auditStats = await AuditLogService.getStats({ days: 30 })
+
+	return {
+		...userActivityStats,
+		auditStats,
+	}
+})
+
+router.get('/api/admin/audit', async (ctx) => {
+	useApiEndpoint({
+		name: 'adminGetAuditLogs',
+		description: 'Fetch audit logs',
+		tags: [adminUsersTag],
+	})
+
+	const { page, size, query } = useQueryParams(ctx, {
+		page: OptionalParam(NumberValidator),
+		size: OptionalParam(NumberValidator),
+		query: OptionalParam(StringValidator),
+	})
+
+	const auditLogs = await AuditLogService.getLogs({
+		page,
+		size,
+		query,
+	})
+
+	return auditLogs
 })
 
 router.get('/api/admin/users', async (ctx) => {
@@ -77,6 +116,14 @@ router.post('/api/admin/user/:userId/impersonate', async (ctx) => {
 		sameSite: 'lax',
 	})
 
+	AuditLogService.append(ctx, {
+		action: 'AdminImpersonateUser',
+		data: {
+			adminUserId: ctx.user.id,
+			impersonatedUserId: user.id,
+		},
+	})
+
 	return {
 		user,
 	}
@@ -97,6 +144,14 @@ router.post('/api/admin/users/:userId/level', async (ctx) => {
 		level: UserLevelValidator,
 	})
 
+	AuditLogService.append(ctx, {
+		action: 'AdminSetUserLevel',
+		data: {
+			userId,
+			level,
+		},
+	})
+
 	return await AdminService.setUserLevel(userId, level)
 })
 
@@ -109,6 +164,13 @@ router.delete('/api/admin/users/:userId', async (ctx) => {
 
 	const { userId } = usePathParams(ctx, {
 		userId: NonEmptyStringValidator,
+	})
+
+	AuditLogService.append(ctx, {
+		action: 'AdminDeleteUser',
+		data: {
+			userId,
+		},
 	})
 
 	return await AdminService.deleteUser(userId)
@@ -138,6 +200,18 @@ router.patch('/api/admin/users/:userId', async (ctx) => {
 		}
 	}
 
+	AuditLogService.append(ctx, {
+		action: 'AdminUpdateUser',
+		data: {
+			userId,
+			fields: {
+				email,
+				username,
+				bio,
+			},
+		},
+	})
+
 	return await AdminService.updateUser(userId, { email, username, bio })
 })
 
@@ -154,6 +228,13 @@ router.post('/api/admin/users/:userId/password', async (ctx) => {
 
 	const { password } = useRequestBody(ctx, {
 		password: NonEmptyStringValidator,
+	})
+
+	AuditLogService.append(ctx, {
+		action: 'AdminSetUserPassword',
+		data: {
+			userId,
+		},
 	})
 
 	return await AdminService.setUserPassword(userId, password)

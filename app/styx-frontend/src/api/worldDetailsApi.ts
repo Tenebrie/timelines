@@ -149,11 +149,11 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		description: string
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
 		title: string
 		icon: string
 		color: string
@@ -183,11 +183,11 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			worldEventId: string
 		}[]
 		description: string
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
 		icon: string
 		color: string
 		descriptionRich: string
@@ -205,11 +205,11 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		description: string
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
 	}[]
 	description: string
 	id: string

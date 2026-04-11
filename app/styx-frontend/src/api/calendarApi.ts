@@ -284,11 +284,11 @@ export type DeleteCalendarPresentationUnitApiArg = {
 }
 export type ListCalendarsApiResponse = /** status 200  */ {
 	description: string
+	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId?: null | string
 	ownerId?: null | string
 	position: number
 	originTime: string
@@ -297,11 +297,11 @@ export type ListCalendarsApiResponse = /** status 200  */ {
 export type ListCalendarsApiArg = void
 export type CreateCalendarApiResponse = /** status 200  */ {
 	description: string
+	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId?: null | string
 	ownerId?: null | string
 	position: number
 	originTime: string
@@ -378,11 +378,11 @@ export type GetCalendarApiResponse = /** status 200  */ {
 		baselineUnitId?: null | string
 	}[]
 	description: string
+	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId?: null | string
 	ownerId?: null | string
 	position: number
 	originTime: string
@@ -394,11 +394,11 @@ export type GetCalendarApiArg = {
 }
 export type UpdateCalendarApiResponse = /** status 200  */ {
 	description: string
+	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId?: null | string
 	ownerId?: null | string
 	position: number
 	originTime: string
@@ -415,11 +415,11 @@ export type UpdateCalendarApiArg = {
 }
 export type DeleteCalendarApiResponse = /** status 200  */ {
 	description: string
+	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId?: null | string
 	ownerId?: null | string
 	position: number
 	originTime: string
@@ -615,11 +615,11 @@ export type DeleteCalendarUnitApiArg = {
 }
 export type ListWorldCalendarsApiResponse = /** status 200  */ {
 	description: string
+	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId?: null | string
 	ownerId?: null | string
 	position: number
 	originTime: string

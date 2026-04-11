@@ -59,11 +59,11 @@ export type GetArticlesApiResponse = /** status 200  */ {
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
 	children: {
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
 		icon: string
 		color: string
 		position: number
@@ -71,11 +71,11 @@ export type GetArticlesApiResponse = /** status 200  */ {
 		contentYjs?: null | string
 		parentId?: null | string
 	}[]
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 	icon: string
 	color: string
 	position: number
@@ -88,11 +88,11 @@ export type GetArticlesApiArg = {
 }
 export type CreateArticleApiResponse = /** status 200  */ {
 	children: {
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
 		icon: string
 		color: string
 		position: number
@@ -100,11 +100,11 @@ export type CreateArticleApiResponse = /** status 200  */ {
 		contentYjs?: null | string
 		parentId?: null | string
 	}[]
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
 	icon: string
 	color: string
 	position: number
