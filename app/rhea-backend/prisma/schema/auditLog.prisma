@@ -1,0 +1,26 @@
+enum AuditAction {
+    UserCreateAccount
+    UserLoginWithPassword
+    UserLoginWithGoogle
+    UserLoginFailed
+    UserDeleteAccount
+
+    GuestCreateAccount
+
+    AdminImpersonateUser
+    AdminUpdateUser
+    AdminSetUserLevel
+    AdminSetUserPassword
+    AdminDeleteUser
+}
+
+model AuditLog {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+
+    userEmail String?
+    requestIp String
+
+    action AuditAction
+    data   Json
+}

@@ -70,9 +70,6 @@ const modals = {
 	},
 
 	/* WorldList */
-	worldWizardModal: {
-		isOpen: false as boolean,
-	},
 	shareWorldModal: {
 		isOpen: false as boolean,
 		worldId: '' as string,

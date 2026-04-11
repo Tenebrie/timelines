@@ -58,12 +58,12 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`
 	<div class="absolute inset-0"></div>
 	<div
 		class:list={[
-			'relative text-default py-3 px-3 md:px-6 mx-auto w-full',
+			'relative text-default py-3 px-3 lg:px-6 mx-auto w-full',
 			{
-				'md:flex md:justify-between': position !== 'center',
+				'lg:flex lg:justify-between': position !== 'center',
 			},
 			{
-				'md:grid md:grid-cols-3 md:items-center': position === 'center',
+				'lg:grid lg:grid-cols-3 lg:items-center': position === 'center',
 			},
 			{
 				'max-w-7xl': !isFullWidth,
@@ -74,16 +74,27 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`
 			<a class="flex items-center" href={getHomePermalink()}>
 				<Logo />
 			</a>
-			<div class="flex items-center md:hidden">
+			<div class="flex items-center lg:hidden">
+				{
+					actions?.length ? (
+						<span class="mr-2 hidden" data-aw-mobile-actions>
+							{actions.map((btnProps) => (
+								<Button {...btnProps} class="ml-2 py-2 px-4 font-semibold shadow-none text-sm w-auto" />
+							))}
+						</span>
+					) : (
+						''
+					)
+				}
 				<ToggleMenu />
 			</div>
 		</div>
 		<nav
-			class="items-center w-full md:w-auto hidden md:flex md:mx-5 text-default overflow-y-auto overflow-x-hidden md:overflow-y-visible md:overflow-x-auto md:justify-self-center"
+			class="items-center w-full lg:w-auto hidden lg:flex lg:mx-5 text-default overflow-y-auto overflow-x-hidden lg:overflow-y-visible lg:overflow-x-auto lg:justify-self-center"
 			aria-label="Main navigation"
 		>
 			<ul
-				class="flex flex-col md:flex-row md:self-center w-full md:w-auto text-xl md:text-[0.9375rem] tracking-[0.01rem] font-medium md:justify-center"
+				class="flex flex-col lg:flex-row lg:self-center w-full lg:w-auto text-xl lg:text-[0.9375rem] tracking-[0.01rem] font-medium lg:justify-center"
 			>
 				{
 					links.map(({ text, href, links }) => (
@@ -97,15 +108,15 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`
 										{text}{' '}
 										<Icon
 											name="tabler:chevron-down"
-											class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden md:inline"
+											class="w-3.5 h-3.5 ml-0.5 rtl:ml-0 rtl:mr-0.5 hidden lg:inline"
 										/>
 									</button>
-									<ul class="dropdown-menu md:backdrop-blur-md dark:md:bg-dark rounded md:absolute pl-4 md:pl-0 md:hidden font-medium md:bg-white/90 md:min-w-[200px] drop-shadow-xl">
+									<ul class="dropdown-menu lg:backdrop-blur-md dark:lg:bg-dark rounded lg:absolute pl-4 lg:pl-0 lg:hidden font-medium lg:bg-white/90 lg:min-w-[200px] drop-shadow-xl">
 										{links.map(({ text: text2, href: href2 }) => (
 											<li>
 												<a
 													class:list={[
-														'first:rounded-t last:rounded-b md:hover:bg-gray-100 hover:text-link dark:hover:text-white dark:hover:bg-gray-700 py-2 px-5 block whitespace-no-wrap',
+														'first:rounded-t last:rounded-b lg:hover:bg-gray-100 hover:text-link dark:hover:text-white dark:hover:bg-gray-700 py-2 px-5 block whitespace-no-wrap',
 														{ 'aw-link-active': href2 === currentPath },
 													]}
 													href={href2}
@@ -135,12 +146,12 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`
 		<div
 			class:list={[
 				{ 'ml-auto rtl:ml-0 rtl:mr-auto': position === 'left' },
-				'hidden md:self-center md:flex items-center md:mb-0 fixed w-full md:w-auto md:static justify-end left-0 rtl:left-auto rtl:right-0 bottom-0 p-3 md:p-0 md:justify-self-end',
+				'hidden lg:self-center lg:flex items-center lg:mb-0 w-full lg:w-auto justify-end p-3 lg:p-0 lg:justify-self-end',
 			]}
 		>
-			<div class="items-center flex justify-between w-full md:w-auto">
+			<div class="items-center flex justify-between w-full lg:w-auto">
 				<div class="flex">
-					{showToggleTheme && <ToggleTheme iconClass="w-6 h-6 md:w-5 md:h-5 md:inline-block" />}
+					{showToggleTheme && <ToggleTheme iconClass="w-6 h-6 lg:w-5 lg:h-5 lg:inline-block" />}
 					{
 						showRssFeed && (
 							<a
@@ -159,7 +170,7 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`
 							{actions.map((btnProps) => (
 								<Button
 									{...btnProps}
-									class="ml-2 py-2.5 px-5.5 md:px-6 font-semibold shadow-none text-sm w-auto"
+									class="ml-2 py-2.5 px-5.5 lg:px-6 font-semibold shadow-none text-sm w-auto"
 								/>
 							))}
 						</span>

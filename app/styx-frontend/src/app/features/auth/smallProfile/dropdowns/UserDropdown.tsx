@@ -7,9 +7,12 @@ import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Stack from '@mui/material/Stack'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { useDispatch } from 'react-redux'
 
@@ -32,6 +35,9 @@ export function UserDropdown({ user }: Props) {
 	const isSecurity = useCheckRouteMatch('/profile/security')
 	const isFeedback = useCheckRouteMatch('/profile/feedback')
 
+	const theme = useTheme()
+	const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
+
 	const [logout] = usePostLogoutMutation()
 	const { clearUser } = authSlice.actions
 	const dispatch = useDispatch()
@@ -42,7 +48,7 @@ export function UserDropdown({ user }: Props) {
 			return
 		}
 		if (result.response.redirectTo === 'admin') {
-			navigate({ to: '/admin', reloadDocument: true })
+			navigate({ to: '/admin/users', reloadDocument: true })
 		} else {
 			dispatch(clearUser())
 			navigate({ to: '/login' })
@@ -53,14 +59,21 @@ export function UserDropdown({ user }: Props) {
 
 	return (
 		<Stack direction="row" alignItems="center" spacing={1}>
-			<Button
-				startIcon={<Avatar sx={{ height: 32, width: 32 }} src={user.avatarUrl} />}
-				{...bindTrigger(popupState)}
-				sx={{ padding: '5px 15px' }}
-				data-testid="UserDropdownButton"
-			>
-				{user.username}
-			</Button>
+			{isSmallScreen && (
+				<Button {...bindTrigger(popupState)} sx={{ padding: '5px 15px' }} data-testid="UserDropdownButton">
+					<Avatar sx={{ height: 32, width: 32 }} src={user.avatarUrl} />
+				</Button>
+			)}
+			{!isSmallScreen && (
+				<Button
+					startIcon={<Avatar sx={{ height: 32, width: 32 }} src={user.avatarUrl} />}
+					{...bindTrigger(popupState)}
+					sx={{ padding: '5px 15px' }}
+					data-testid="UserDropdownButton"
+				>
+					{user.username}
+				</Button>
+			)}
 			<Menu
 				{...bindMenu(popupState)}
 				sx={{
@@ -77,7 +90,9 @@ export function UserDropdown({ user }: Props) {
 					horizontal: 'right',
 				}}
 			>
-				<MenuItem disabled>Profile</MenuItem>
+				<MenuItem disabled>
+					<ListItemText primary={user.username} secondary={user.email} />
+				</MenuItem>
 				<Divider />
 				<NavigationLink to="/profile">
 					<MenuItem

@@ -1,10 +1,13 @@
 import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings'
 import Construction from '@mui/icons-material/Construction'
+import HomeIcon from '@mui/icons-material/Home'
 import PublicIcon from '@mui/icons-material/Public'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -37,6 +40,8 @@ const Container = styled(Paper)<{ $theme: CustomTheme }>`
 export const BaseNavigator = () => {
 	const { user } = useSelector(getAuthState)
 	const theme = useCustomTheme()
+	const muiTheme = useTheme()
+	const isNarrow = useMediaQuery(muiTheme.breakpoints.down('md'))
 
 	const isShareLinkRoute = useCheckRouteMatch('/share/$shareLinkSlug')
 	if (isShareLinkRoute && !user) {
@@ -48,15 +53,38 @@ export const BaseNavigator = () => {
 			<Box>
 				{user && (
 					<Stack direction="row" height="100%" gap={1} alignItems="center">
-						<Stack minWidth={173} direction="row" gap={1} sx={{ justifyContent: 'flex-start' }}>
-							<WorldSelectorButton />
-							<LastWorldNavigatorButton icon={<PublicIcon />} label="World" />
-						</Stack>
-						<Divider orientation="vertical" sx={{ height: '25px' }} />
-						<HomeNavigatorButton disabled={!user} />
-						<NavigatorButton route="/tools" icon={<Construction />} label="Tools" disabled={!user} />
+						{isNarrow && (
+							<>
+								<WorldSelectorButton />
+								<LastWorldNavigatorButton icon={<PublicIcon />} label="World" iconOnly />
+								<Divider orientation="vertical" sx={{ height: '25px' }} />
+								<NavigatorButton route="/" icon={<HomeIcon />} label="Home" iconOnly />
+							</>
+						)}
+						{!isNarrow && (
+							<>
+								<Stack minWidth={173} direction="row" gap={1} sx={{ justifyContent: 'flex-start' }}>
+									<WorldSelectorButton />
+									<LastWorldNavigatorButton icon={<PublicIcon />} label="World" />
+								</Stack>
+								<Divider orientation="vertical" sx={{ height: '25px' }} />
+								<HomeNavigatorButton disabled={!user} />
+							</>
+						)}
+						<NavigatorButton
+							route="/tools"
+							icon={<Construction />}
+							label="Tools"
+							disabled={!user}
+							iconOnly={isNarrow}
+						/>
 						{user?.level === 'Admin' && (
-							<NavigatorButton route="/admin" icon={<AdminPanelSettings />} label="Admin" />
+							<NavigatorButton
+								route="/admin"
+								icon={<AdminPanelSettings />}
+								label="Admin"
+								iconOnly={isNarrow}
+							/>
 						)}
 					</Stack>
 				)}

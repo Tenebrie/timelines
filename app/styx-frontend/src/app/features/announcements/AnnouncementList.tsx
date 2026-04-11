@@ -31,7 +31,7 @@ export const AnnouncementList = () => {
 	return (
 		<List sx={{ marginX: 1, marginY: 0.5 }}>
 			{(!data || data?.length === 0) && (
-				<Stack marginX={1} marginY={0.5} gap={2} alignItems="center">
+				<Stack marginX={1} marginY={0.5} gap={2} alignItems="center" direction="row">
 					<Check />
 					<Typography>All clear!</Typography>
 				</Stack>

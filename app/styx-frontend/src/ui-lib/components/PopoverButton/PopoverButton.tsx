@@ -71,7 +71,7 @@ export function PopoverButton({
 					},
 				}}
 			>
-				<Stack sx={{ ...popoverSx }}>
+				<Stack sx={{ ...popoverSx, gap: 2 }}>
 					{popoverBody({ close: popupState.close })}
 					<Stack direction="row" spacing={1} justifyContent="flex-end">
 						{popoverAction({ close: popupState.close })}

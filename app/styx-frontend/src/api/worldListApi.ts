@@ -26,11 +26,11 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
 		calendars: {
 			description: string
+			worldId?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name: string
-			worldId?: null | string
 			ownerId?: null | string
 			position: number
 			originTime: string
@@ -54,11 +54,11 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	contributableWorlds: {
 		calendars: {
 			description: string
+			worldId?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name: string
-			worldId?: null | string
 			ownerId?: null | string
 			position: number
 			originTime: string
@@ -82,11 +82,11 @@ export type GetWorldsApiResponse = /** status 200  */ {
 	visibleWorlds: {
 		calendars: {
 			description: string
+			worldId?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name: string
-			worldId?: null | string
 			ownerId?: null | string
 			position: number
 			originTime: string

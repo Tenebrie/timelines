@@ -6,6 +6,21 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
+			adminGetDashboard: build.query<AdminGetDashboardApiResponse, AdminGetDashboardApiArg>({
+				query: () => ({ url: `/api/admin/dashboard` }),
+				providesTags: ['adminUsers'],
+			}),
+			adminGetAuditLogs: build.query<AdminGetAuditLogsApiResponse, AdminGetAuditLogsApiArg>({
+				query: (queryArg) => ({
+					url: `/api/admin/audit`,
+					params: {
+						page: queryArg.page,
+						size: queryArg.size,
+						query: queryArg.query,
+					},
+				}),
+				providesTags: ['adminUsers'],
+			}),
 			adminGetUsers: build.query<AdminGetUsersApiResponse, AdminGetUsersApiArg>({
 				query: (queryArg) => ({
 					url: `/api/admin/users`,
@@ -53,6 +68,55 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as adminUsersApi }
+export type AdminGetDashboardApiResponse = /** status 200  */ {
+	auditStats: {
+		guestAccountsCreated: number
+		userAccountsCreated: number
+		passwordLogins: number
+		googleLogins: number
+		failedLogins: number
+		accountsDeleted: number
+		adminImpersonations: number
+		uniqueUserLogins: number
+		totalEvents: number
+	}
+	dailyActiveUsers: number
+	weeklyActiveUsers: number
+	monthlyActiveUsers: number
+}
+export type AdminGetDashboardApiArg = void
+export type AdminGetAuditLogsApiResponse = /** status 200  */ {
+	logs: {
+		data: string
+		id: string
+		createdAt: string
+		requestIp: string
+		userEmail?: null | string
+		action:
+			| 'UserCreateAccount'
+			| 'UserLoginWithPassword'
+			| 'UserLoginWithGoogle'
+			| 'UserLoginFailed'
+			| 'UserDeleteAccount'
+			| 'GuestCreateAccount'
+			| 'AdminImpersonateUser'
+			| 'AdminUpdateUser'
+			| 'AdminSetUserLevel'
+			| 'AdminSetUserPassword'
+			| 'AdminDeleteUser'
+	}[]
+	page: number
+	size: number
+	pageCount: number
+}
+export type AdminGetAuditLogsApiArg = {
+	/** Any numeric value */
+	page?: number
+	/** Any numeric value */
+	size?: number
+	/** Any string value */
+	query?: string
+}
 export type AdminGetUsersApiResponse = /** status 200  */ {
 	users: {
 		id: string
@@ -174,6 +238,10 @@ export type AdminSetUserPasswordApiArg = {
 	}
 }
 export const {
+	useAdminGetDashboardQuery,
+	useLazyAdminGetDashboardQuery,
+	useAdminGetAuditLogsQuery,
+	useLazyAdminGetAuditLogsQuery,
 	useAdminGetUsersQuery,
 	useLazyAdminGetUsersQuery,
 	useAdminImpersonateUserMutation,

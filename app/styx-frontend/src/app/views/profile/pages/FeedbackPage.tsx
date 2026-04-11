@@ -1,6 +1,8 @@
 import { useSendContactFormMessageMutation } from '@api/otherApi'
+import { Icon } from '@iconify/react'
 import SendIcon from '@mui/icons-material/Send'
 import Alert from '@mui/material/Alert'
+import Button from '@mui/material/Button'
 import Collapse from '@mui/material/Collapse'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
@@ -63,14 +65,27 @@ export function FeedbackPage() {
 				<Divider />
 			</Stack>
 
-			<Typography variant="body2" color="text.secondary">
-				Have a question, suggestion, or found a bug? Get in touch here!
-			</Typography>
+			<Stack direction="row" justifyContent={'space-between'} alignItems={'center'}>
+				<Typography variant="body2" color="text.secondary">
+					Have a question, suggestion, or found a bug? Get in touch here!
+				</Typography>
+			</Stack>
 
 			<form.AppField name="name">{() => <BoundTextField label="Name (Optional)" fullWidth />}</form.AppField>
 
 			<form.AppField name="email">
-				{() => <BoundTextField label="Contact Email (Optional)" type="email" fullWidth />}
+				{() => (
+					<BoundTextField
+						label="Contact Email (Optional)"
+						type="email"
+						fullWidth
+						helperText={
+							form.getFieldValue('email').trim().length === 0
+								? 'Without a contact email, we will not be able to respond.'
+								: ''
+						}
+					/>
+				)}
 			</form.AppField>
 
 			<form.AppField name="message">
@@ -86,6 +101,16 @@ export function FeedbackPage() {
 			</Collapse>
 
 			<Stack direction="row" spacing={2} justifyContent="flex-end">
+				<Button
+					variant="outlined"
+					color="secondary"
+					startIcon={<Icon icon="tabler:brand-discord" width={20} />}
+					href="https://discord.gg/rD3KdXmqDP"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					Join our Discord
+				</Button>
 				<SaveButton
 					variant="contained"
 					sx={{ minWidth: 100 }}

@@ -1,14 +1,21 @@
 import { useCreateCalendarMutation } from '@api/calendarApi'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-import { CalendarSelector } from '@/app/features/time/calendar/components/CalendarSelector'
+import {
+	CalendarSelector,
+	useTemplateCalendars,
+} from '@/app/features/time/calendar/components/CalendarSelector'
 import { CreatePopoverButton } from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
 
 export function CalendarListCreateNewButton() {
 	const [newCalendarName, setNewCalendarName] = useState('')
 	const [selectedTemplate, setSelectedTemplate] = useState<string | undefined>()
+	const calendarTemplates = useTemplateCalendars()
+	useEffect(() => {
+		setSelectedTemplate(calendarTemplates.length > 0 ? calendarTemplates[0].id : undefined)
+	}, [calendarTemplates])
 
 	const [createCalendar, { isLoading: isCreating }] = useCreateCalendarMutation()
 
@@ -40,7 +47,6 @@ export function CalendarListCreateNewButton() {
 					</Typography>
 					<TextField
 						label="Name"
-						size="small"
 						value={newCalendarName}
 						onChange={(e) => setNewCalendarName(e.target.value)}
 						onKeyDown={(e) => {
