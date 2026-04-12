@@ -25,7 +25,7 @@
 		"@aws-sdk/s3-request-presigner": "^3.758.0",
 		"@google/genai": "^1.44.0",
 		"@koa/router": "^13.1.0",
-		"@prisma/adapter-pg": "^7.2.0",
+		"@prisma/adapter-pg": "^7.7.0",
 		"@prisma/client": "^7.2.0",
 		"bcrypt": "^5.1.1",
 		"bcryptjs": "^2.4.3",
