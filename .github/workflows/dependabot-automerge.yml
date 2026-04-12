@@ -23,6 +23,6 @@ jobs:
           fi
           for pr in $prs; do
             echo "Processing $pr"
-            gh pr review --approve "$pr"
-            gh pr merge --auto --squash "$pr"
+            gh pr review --approve "$pr" || echo "  Failed to approve $pr"
+            gh pr merge --auto --squash "$pr" || echo "  Failed to auto-merge $pr"
           done

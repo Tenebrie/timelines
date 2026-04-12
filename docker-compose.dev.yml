@@ -69,6 +69,7 @@ services:
             s3_access_key_id: devuser
             s3_access_key_secret: devsecret
         volumes:
+            - rhea-db:/mnt/volume_rhea_postgres:ro
             - ./app/rhea-backend/src:/app/rhea/src:cached
             - ./app/rhea-backend/prisma:/app/rhea/prisma:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached

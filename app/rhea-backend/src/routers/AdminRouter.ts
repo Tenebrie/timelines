@@ -2,6 +2,7 @@ import { AdminAuthenticator } from '@src/middleware/auth/AdminAuthenticator.js'
 import { AUTH_COOKIE_NAME } from '@src/middleware/auth/UserAuthenticatorWithAvatar.js'
 import { AdminService } from '@src/services/AdminService.js'
 import { AuditLogService } from '@src/services/AuditLogService.js'
+import { FileSystemService } from '@src/services/FileSystemService.js'
 import { TokenService } from '@src/services/TokenService.js'
 import { UserService } from '@src/services/UserService.js'
 import {
@@ -38,10 +39,12 @@ router.get('/api/admin/dashboard', async () => {
 
 	const userActivityStats = await AdminService.listUserActivityStats()
 	const auditStats = await AuditLogService.getStats({ days: 30 })
+	const fileSystemStats = await FileSystemService.getStorageStats()
 
 	return {
 		...userActivityStats,
 		auditStats,
+		fileSystemStats,
 	}
 })
 

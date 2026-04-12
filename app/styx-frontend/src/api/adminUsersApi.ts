@@ -80,6 +80,18 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 		uniqueUserLogins: number
 		totalEvents: number
 	}
+	fileSystemStats: {
+		root: {
+			free: number
+			total: number
+			summary: string
+		}
+		database: {
+			free: number
+			total: number
+			summary: string
+		}
+	}
 	dailyActiveUsers: number
 	weeklyActiveUsers: number
 	monthlyActiveUsers: number

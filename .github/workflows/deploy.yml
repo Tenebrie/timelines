@@ -16,7 +16,7 @@ jobs:
       count: ${{ steps.calc.outputs.count }}
       version: ${{ github.ref_name == 'main' && steps.latest-tag.outputs.tag || steps.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -54,7 +54,7 @@ jobs:
       matrix:
         service: [gatekeeper, styx, rhea, calliope, orpheus, chronos, thetis]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -64,7 +64,7 @@ jobs:
           cache: 'yarn'
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3.3.0
+        uses: docker/login-action@v4.1.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -94,7 +94,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Create a Release
         uses: elgohr/Github-Release-Action@v5
@@ -114,7 +114,7 @@ jobs:
       url: https://staging.tenebrie.com/
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
@@ -158,7 +158,7 @@ jobs:
       url: https://timelines.tenebrie.com/
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2

@@ -583,8 +583,8 @@ export type UpdateCalendarUnitApiArg = {
 		formatMode?: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 		formatShorthand?: null | string
 		children?: {
-			repeats: number
 			childUnitId: string
+			repeats: number
 			label?: null | string
 			shortLabel?: null | string
 		}[]

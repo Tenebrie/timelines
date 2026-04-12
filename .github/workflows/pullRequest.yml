@@ -18,7 +18,7 @@ jobs:
     env:
       SCRIPT: ''
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 24.x
@@ -46,7 +46,7 @@ jobs:
           - name: Firefox
             browser: firefox
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Start services
         run: |
