@@ -37,7 +37,7 @@
 		"@typescript-eslint/parser": "^8.58.1",
 		"@vitest/coverage-v8": "^4.0.18",
 		"eslint": "^9.39.2",
-		"eslint-config-prettier": "^9.1.0",
+		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-simple-import-sort": "^12.1.1",
 		"eslint-plugin-unused-imports": "^4.1.4",
