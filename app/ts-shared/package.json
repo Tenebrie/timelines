@@ -23,7 +23,7 @@
 		"@tiptap/starter-kit": "^3.17.1",
 		"@tiptap/suggestion": "^3.17.1",
 		"lint-staged": "^15.2.11",
-		"module-alias": "^2.2.2",
+		"module-alias": "^2.3.4",
 		"ws": "^8.18.0"
 	},
 	"devDependencies": {
