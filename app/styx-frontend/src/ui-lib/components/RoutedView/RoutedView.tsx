@@ -29,7 +29,7 @@ export function RoutedView({ label, routes, footer }: Props) {
 	const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
 
 	return (
-		<Container maxWidth="xl" sx={{ py: 4, height: '100%' }}>
+		<Container maxWidth="xl" sx={{ py: 4, height: '100%', ...(isSmallScreen ? { px: 0.5, py: 1 } : {}) }}>
 			<Stack direction={isSmallScreen ? 'column' : 'row'} spacing={3} paddingBottom={3}>
 				{/* Sidebar */}
 				<Paper

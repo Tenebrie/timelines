@@ -26,7 +26,7 @@ const Container = styled.div`
 	flex-direction: column;
 	align-items: center;
 	width: 100vw;
-	min-height: 100vh;
+	min-height: 100dvh;
 `
 
 const App = () => {
@@ -71,7 +71,7 @@ const App = () => {
 								<Box
 									sx={{
 										width: '100%',
-										height: 'calc(100vh - 50.5px)',
+										height: 'calc(100dvh - 50.5px)',
 										overflowY: 'auto',
 										...scrollbars,
 									}}

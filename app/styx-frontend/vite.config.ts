@@ -38,14 +38,13 @@ export default defineConfig({
 	},
 	preview: {
 		port: 8080,
-		host: true,
+		host: '0.0.0.0',
 	},
 	server: {
 		port: 8080,
-		host: true,
+		host: '0.0.0.0',
 		allowedHosts: ['styx'],
 		hmr: {
-			port: 8080,
 			clientPort: 8080,
 		},
 	},
