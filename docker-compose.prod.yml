@@ -62,6 +62,8 @@ services:
                 parallelism: 1
                 delay: 10s
                 failure_action: pause
+        volumes:
+            - /mnt/volume_rhea_postgres:/mnt/volume_rhea_postgres:ro
         secrets:
             - jwt-secret
             - environment
