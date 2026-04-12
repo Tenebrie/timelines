@@ -1,0 +1,93 @@
+version: 2
+
+updates:
+  # Root monorepo (Yarn workspaces)
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+
+  # Styx - Frontend
+  - package-ecosystem: 'npm'
+    directory: '/app/styx-frontend'
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'docker'
+    directory: '/app/styx-frontend'
+    schedule:
+      interval: 'weekly'
+
+  # Rhea - Backend
+  - package-ecosystem: 'npm'
+    directory: '/app/rhea-backend'
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'docker'
+    directory: '/app/rhea-backend'
+    schedule:
+      interval: 'weekly'
+
+  # Calliope - WebSockets
+  - package-ecosystem: 'npm'
+    directory: '/app/calliope-websockets'
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'docker'
+    directory: '/app/calliope-websockets'
+    schedule:
+      interval: 'weekly'
+
+  # Orpheus - MCP
+  - package-ecosystem: 'npm'
+    directory: '/app/orpheus-mcp'
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'docker'
+    directory: '/app/orpheus-mcp'
+    schedule:
+      interval: 'weekly'
+
+  # Thetis - Landing Page
+  - package-ecosystem: 'npm'
+    directory: '/app/thetis-landing'
+    schedule:
+      interval: 'weekly'
+
+  - package-ecosystem: 'docker'
+    directory: '/app/thetis-landing'
+    schedule:
+      interval: 'weekly'
+
+  # ts-shared - Shared Types
+  - package-ecosystem: 'npm'
+    directory: '/app/ts-shared'
+    schedule:
+      interval: 'weekly'
+
+  # Gatekeeper - Nginx Proxy
+  - package-ecosystem: 'docker'
+    directory: '/app/gatekeeper-proxy'
+    schedule:
+      interval: 'weekly'
+
+  # Chronos - Backups
+  - package-ecosystem: 'docker'
+    directory: '/app/chronos-backups'
+    schedule:
+      interval: 'weekly'
+
+  # E2E Tests
+  - package-ecosystem: 'npm'
+    directory: '/test/e2e'
+    schedule:
+      interval: 'weekly'
+
+  # GitHub Actions
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
