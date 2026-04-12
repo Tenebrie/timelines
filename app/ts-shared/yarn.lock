@@ -1076,10 +1076,10 @@ minimist@^1.2.6:
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
 
-module-alias@^2.2.2:
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/module-alias/-/module-alias-2.2.3.tgz#ec2e85c68973bda6ab71ce7c93b763ec96053221"
-  integrity sha512-23g5BFj4zdQL/b6tor7Ji+QY4pEfNH784BMslY9Qb0UnJWRAt+lQGLYmRaM0KDBwIG23ffEBELhZDP2rhi9f/Q==
+module-alias@^2.3.4:
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/module-alias/-/module-alias-2.3.4.tgz#7c2b0442ba1114744e97288963db637859db4094"
+  integrity sha512-bOclZt8hkpuGgSSoG07PKmvzTizROilUTvLNyrMqvlC9snhs7y7GzjNWAVbISIOlhCP1T14rH1PDAV9iNyBq/w==
 
 ms@^2.1.3:
   version "2.1.3"
