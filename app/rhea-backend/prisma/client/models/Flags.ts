@@ -130,7 +130,7 @@ export type FlagsGroupByOutputType = {
   _max: FlagsMaxAggregateOutputType | null
 }
 
-type GetFlagsGroupByPayload<T extends FlagsGroupByArgs> = Prisma.PrismaPromise<
+export type GetFlagsGroupByPayload<T extends FlagsGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<FlagsGroupByOutputType, T['by']> &
       {
@@ -827,6 +827,11 @@ export type FlagsFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Skip the first `n` Flags.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Flags.
+   */
   distinct?: Prisma.FlagsScalarFieldEnum | Prisma.FlagsScalarFieldEnum[]
 }
 

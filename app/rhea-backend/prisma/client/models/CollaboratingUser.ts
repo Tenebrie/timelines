@@ -144,7 +144,7 @@ export type CollaboratingUserGroupByOutputType = {
   _max: CollaboratingUserMaxAggregateOutputType | null
 }
 
-type GetCollaboratingUserGroupByPayload<T extends CollaboratingUserGroupByArgs> = Prisma.PrismaPromise<
+export type GetCollaboratingUserGroupByPayload<T extends CollaboratingUserGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CollaboratingUserGroupByOutputType, T['by']> &
       {
@@ -1170,6 +1170,11 @@ export type CollaboratingUserFindManyArgs<ExtArgs extends runtime.Types.Extensio
    * Skip the first `n` CollaboratingUsers.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CollaboratingUsers.
+   */
   distinct?: Prisma.CollaboratingUserScalarFieldEnum | Prisma.CollaboratingUserScalarFieldEnum[]
 }
 

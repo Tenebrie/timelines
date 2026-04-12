@@ -214,7 +214,7 @@ export type MentionGroupByOutputType = {
   _max: MentionMaxAggregateOutputType | null
 }
 
-type GetMentionGroupByPayload<T extends MentionGroupByArgs> = Prisma.PrismaPromise<
+export type GetMentionGroupByPayload<T extends MentionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MentionGroupByOutputType, T['by']> &
       {
@@ -2756,6 +2756,11 @@ export type MentionFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Skip the first `n` Mentions.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Mentions.
+   */
   distinct?: Prisma.MentionScalarFieldEnum | Prisma.MentionScalarFieldEnum[]
 }
 

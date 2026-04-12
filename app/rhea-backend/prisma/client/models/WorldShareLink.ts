@@ -220,7 +220,7 @@ export type WorldShareLinkGroupByOutputType = {
   _max: WorldShareLinkMaxAggregateOutputType | null
 }
 
-type GetWorldShareLinkGroupByPayload<T extends WorldShareLinkGroupByArgs> = Prisma.PrismaPromise<
+export type GetWorldShareLinkGroupByPayload<T extends WorldShareLinkGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<WorldShareLinkGroupByOutputType, T['by']> &
       {
@@ -1306,6 +1306,11 @@ export type WorldShareLinkFindManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Skip the first `n` WorldShareLinks.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of WorldShareLinks.
+   */
   distinct?: Prisma.WorldShareLinkScalarFieldEnum | Prisma.WorldShareLinkScalarFieldEnum[]
 }
 

@@ -210,7 +210,7 @@ export type MindmapNodeGroupByOutputType = {
   _max: MindmapNodeMaxAggregateOutputType | null
 }
 
-type GetMindmapNodeGroupByPayload<T extends MindmapNodeGroupByArgs> = Prisma.PrismaPromise<
+export type GetMindmapNodeGroupByPayload<T extends MindmapNodeGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MindmapNodeGroupByOutputType, T['by']> &
       {
@@ -1341,6 +1341,11 @@ export type MindmapNodeFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` MindmapNodes.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of MindmapNodes.
+   */
   distinct?: Prisma.MindmapNodeScalarFieldEnum | Prisma.MindmapNodeScalarFieldEnum[]
 }
 

@@ -144,7 +144,7 @@ export type WorldCommonIconSetGroupByOutputType = {
   _max: WorldCommonIconSetMaxAggregateOutputType | null
 }
 
-type GetWorldCommonIconSetGroupByPayload<T extends WorldCommonIconSetGroupByArgs> = Prisma.PrismaPromise<
+export type GetWorldCommonIconSetGroupByPayload<T extends WorldCommonIconSetGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<WorldCommonIconSetGroupByOutputType, T['by']> &
       {
@@ -1052,6 +1052,11 @@ export type WorldCommonIconSetFindManyArgs<ExtArgs extends runtime.Types.Extensi
    * Skip the first `n` WorldCommonIconSets.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of WorldCommonIconSets.
+   */
   distinct?: Prisma.WorldCommonIconSetScalarFieldEnum | Prisma.WorldCommonIconSetScalarFieldEnum[]
 }
 

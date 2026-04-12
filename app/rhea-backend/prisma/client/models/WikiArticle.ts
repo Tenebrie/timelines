@@ -234,7 +234,7 @@ export type WikiArticleGroupByOutputType = {
   _max: WikiArticleMaxAggregateOutputType | null
 }
 
-type GetWikiArticleGroupByPayload<T extends WikiArticleGroupByArgs> = Prisma.PrismaPromise<
+export type GetWikiArticleGroupByPayload<T extends WikiArticleGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<WikiArticleGroupByOutputType, T['by']> &
       {
@@ -2071,6 +2071,11 @@ export type WikiArticleFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` WikiArticles.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of WikiArticles.
+   */
   distinct?: Prisma.WikiArticleScalarFieldEnum | Prisma.WikiArticleScalarFieldEnum[]
 }
 
