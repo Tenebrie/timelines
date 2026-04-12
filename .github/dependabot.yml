@@ -1,13 +1,13 @@
 version: 2
 
 updates:
-  # Root monorepo (Yarn workspaces)
+  # Root
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
       interval: 'weekly'
 
-  # Styx - Frontend
+  # Styx
   - package-ecosystem: 'npm'
     directory: '/app/styx-frontend'
     schedule:
@@ -18,7 +18,7 @@ updates:
     schedule:
       interval: 'weekly'
 
-  # Rhea - Backend
+  # Rhea
   - package-ecosystem: 'npm'
     directory: '/app/rhea-backend'
     schedule:
@@ -29,7 +29,7 @@ updates:
     schedule:
       interval: 'weekly'
 
-  # Calliope - WebSockets
+  # Calliope
   - package-ecosystem: 'npm'
     directory: '/app/calliope-websockets'
     schedule:
@@ -40,7 +40,7 @@ updates:
     schedule:
       interval: 'weekly'
 
-  # Orpheus - MCP
+  # Orpheus
   - package-ecosystem: 'npm'
     directory: '/app/orpheus-mcp'
     schedule:
@@ -51,7 +51,7 @@ updates:
     schedule:
       interval: 'weekly'
 
-  # Thetis - Landing Page
+  # Thetis
   - package-ecosystem: 'npm'
     directory: '/app/thetis-landing'
     schedule:
@@ -62,19 +62,19 @@ updates:
     schedule:
       interval: 'weekly'
 
-  # ts-shared - Shared Types
+  # ts-shared
   - package-ecosystem: 'npm'
     directory: '/app/ts-shared'
     schedule:
       interval: 'weekly'
 
-  # Gatekeeper - Nginx Proxy
+  # Gatekeeper
   - package-ecosystem: 'docker'
     directory: '/app/gatekeeper-proxy'
     schedule:
       interval: 'weekly'
 
-  # Chronos - Backups
+  # Chronos
   - package-ecosystem: 'docker'
     directory: '/app/chronos-backups'
     schedule:
