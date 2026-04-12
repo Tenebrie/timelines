@@ -6,12 +6,18 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
+    groups:
+      npm-minor-patch:
+        update-types: ['minor', 'patch']
 
   # Styx
   - package-ecosystem: 'npm'
     directory: '/app/styx-frontend'
     schedule:
       interval: 'weekly'
+    groups:
+      npm-minor-patch:
+        update-types: ['minor', 'patch']
 
   - package-ecosystem: 'docker'
     directory: '/app/styx-frontend'
@@ -23,6 +29,9 @@ updates:
     directory: '/app/rhea-backend'
     schedule:
       interval: 'weekly'
+    groups:
+      npm-minor-patch:
+        update-types: ['minor', 'patch']
 
   - package-ecosystem: 'docker'
     directory: '/app/rhea-backend'
@@ -34,6 +43,9 @@ updates:
     directory: '/app/calliope-websockets'
     schedule:
       interval: 'weekly'
+    groups:
+      npm-minor-patch:
+        update-types: ['minor', 'patch']
 
   - package-ecosystem: 'docker'
     directory: '/app/calliope-websockets'
@@ -45,6 +57,9 @@ updates:
     directory: '/app/orpheus-mcp'
     schedule:
       interval: 'weekly'
+    groups:
+      npm-minor-patch:
+        update-types: ['minor', 'patch']
 
   - package-ecosystem: 'docker'
     directory: '/app/orpheus-mcp'
@@ -56,6 +71,9 @@ updates:
     directory: '/app/thetis-landing'
     schedule:
       interval: 'weekly'
+    groups:
+      npm-minor-patch:
+        update-types: ['minor', 'patch']
 
   - package-ecosystem: 'docker'
     directory: '/app/thetis-landing'
@@ -67,6 +85,9 @@ updates:
     directory: '/app/ts-shared'
     schedule:
       interval: 'weekly'
+    groups:
+      npm-minor-patch:
+        update-types: ['minor', 'patch']
 
   # Gatekeeper
   - package-ecosystem: 'docker'
@@ -85,9 +106,15 @@ updates:
     directory: '/test/e2e'
     schedule:
       interval: 'weekly'
+    groups:
+      npm-minor-patch:
+        update-types: ['minor', 'patch']
 
   # GitHub Actions
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
       interval: 'weekly'
+    groups:
+      actions-minor-patch:
+        update-types: ['minor', 'patch']
