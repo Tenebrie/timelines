@@ -5,5 +5,5 @@ cd "${0%/*}"
 TOTAL='\033[0;36m'
 NC='\033[0m'
 echo -e "${TOTAL} [[Total]]"
-npx cloc ../app/styx-frontend/src/ ../app/rhea-backend/src/ ../app/calliope-websockets/src
+npx cloc ../app/styx-frontend/src/ ../app/rhea-backend/src/ ../app/calliope-websockets/src ../app/thetis-landing/src ../app/orpheus-mcp/src
 echo -e "${NC}"
