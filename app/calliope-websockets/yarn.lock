@@ -3137,17 +3137,17 @@ only@~0.0.2:
   resolved "https://registry.npmjs.org/only/-/only-0.0.2.tgz"
   integrity sha512-Fvw+Jemq5fjjyWz6CpKx6w9s7xxqo3+JCyM0WXWeCSOboZ8ABkyvP8ID4CZuChA/wxSx+XSJmdOm8rGVyJ1hdQ==
 
-openapi-fetch@^0.15.0:
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/openapi-fetch/-/openapi-fetch-0.15.0.tgz#4ec17389d3ea159f9d3761eab06a401c813704f5"
-  integrity sha512-OjQUdi61WO4HYhr9+byCPMj0+bgste/LtSBEcV6FzDdONTs7x0fWn8/ndoYwzqCsKWIxEZwo4FN/TG1c1rI8IQ==
+openapi-fetch@^0.17.0:
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/openapi-fetch/-/openapi-fetch-0.17.0.tgz#0c392afbeed2c95a12056a50a8e6180c77c9ced3"
+  integrity sha512-PsbZR1wAPcG91eEthKhN+Zn92FMHxv+/faECIwjXdxfTODGSGegYv0sc1Olz+HYPvKOuoXfp+0pA2XVt2cI0Ig==
   dependencies:
-    openapi-typescript-helpers "^0.0.15"
+    openapi-typescript-helpers "^0.1.0"
 
-openapi-typescript-helpers@^0.0.15:
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/openapi-typescript-helpers/-/openapi-typescript-helpers-0.0.15.tgz#96ffa762a5e01ef66a661b163d5f1109ed1967ed"
-  integrity sha512-opyTPaunsklCBpTK8JGef6mfPhLSnyy5a0IN9vKtx3+4aExf+KxEqYwIy3hqkedXIB97u357uLMJsOnm3GVjsw==
+openapi-typescript-helpers@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/openapi-typescript-helpers/-/openapi-typescript-helpers-0.1.0.tgz#2102a2ea1c473cb1cfe19f87c662ff053fbb1d70"
+  integrity sha512-OKTGPthhivLw/fHz6c3OPtg72vi86qaMlqbJuVJ23qOvQ+53uw1n7HdmkJFibloF7QEjDrDkzJiOJuockM/ljw==
 
 openapi-typescript@^7.10.1:
   version "7.10.1"
