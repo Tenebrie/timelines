@@ -117,10 +117,10 @@ export type PostLoginApiResponse = /** status 200  */ {
 			id: string
 			createdAt: string
 			updatedAt: string
-			size: number
 			expiresAt?: null | string
 			ownerId: string
 			bucketKey: string
+			size: number
 			originalFileName: string
 			originalFileExtension: string
 			contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
@@ -139,7 +139,7 @@ export type PostLoginApiArg = {
 	}
 }
 export type PostLogoutApiResponse = /** status 200  */ {
-	redirectTo: 'admin' | 'login'
+	redirectTo: 'login' | 'admin'
 }
 export type PostLogoutApiArg = void
 export const {

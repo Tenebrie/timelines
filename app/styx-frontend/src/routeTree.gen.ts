@@ -24,6 +24,7 @@ import { Route as SecretMusicRouteImport } from './routes/secret/music'
 import { Route as ProfileProfileRouteImport } from './routes/profile/_profile'
 import { Route as CalendarCalendarIdRouteImport } from './routes/calendar/$calendarId'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
+import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as WorldWorldIdWorldRouteImport } from './routes/world/$worldId/_world'
 import { Route as ToolsToolsQrGeneratorRouteImport } from './routes/tools/_tools.qr-generator'
@@ -113,6 +114,11 @@ const CalendarCalendarIdRoute = CalendarCalendarIdRouteImport.update({
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
   path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNotificationsRoute = AdminNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAuditRoute = AdminAuditRouteImport.update({
@@ -205,6 +211,7 @@ export interface FileRoutesByFullPath {
   '/create-account': typeof CreateAccountRoute
   '/login': typeof LoginRoute
   '/admin/audit': typeof AdminAuditRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/users': typeof AdminUsersRoute
   '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile': typeof ProfileProfileRouteWithChildren
@@ -236,6 +243,7 @@ export interface FileRoutesByTo {
   '/create-account': typeof CreateAccountRoute
   '/login': typeof LoginRoute
   '/admin/audit': typeof AdminAuditRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/users': typeof AdminUsersRoute
   '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile': typeof ProfileIndexRoute
@@ -266,6 +274,7 @@ export interface FileRoutesById {
   '/create-account': typeof CreateAccountRoute
   '/login': typeof LoginRoute
   '/admin/audit': typeof AdminAuditRoute
+  '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/users': typeof AdminUsersRoute
   '/calendar/$calendarId': typeof CalendarCalendarIdRoute
   '/profile/_profile': typeof ProfileProfileRouteWithChildren
@@ -300,6 +309,7 @@ export interface FileRouteTypes {
     | '/create-account'
     | '/login'
     | '/admin/audit'
+    | '/admin/notifications'
     | '/admin/users'
     | '/calendar/$calendarId'
     | '/profile'
@@ -331,6 +341,7 @@ export interface FileRouteTypes {
     | '/create-account'
     | '/login'
     | '/admin/audit'
+    | '/admin/notifications'
     | '/admin/users'
     | '/calendar/$calendarId'
     | '/profile'
@@ -360,6 +371,7 @@ export interface FileRouteTypes {
     | '/create-account'
     | '/login'
     | '/admin/audit'
+    | '/admin/notifications'
     | '/admin/users'
     | '/calendar/$calendarId'
     | '/profile/_profile'
@@ -511,6 +523,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/notifications': {
+      id: '/admin/notifications'
+      path: '/notifications'
+      fullPath: '/admin/notifications'
+      preLoaderRoute: typeof AdminNotificationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/audit': {
       id: '/admin/audit'
       path: '/audit'
@@ -621,12 +640,14 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAuditRoute: typeof AdminAuditRoute
+  AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAuditRoute: AdminAuditRoute,
+  AdminNotificationsRoute: AdminNotificationsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }

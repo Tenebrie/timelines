@@ -90,12 +90,7 @@ router.post('/api/auth', async (ctx) => {
 		sameSite: 'lax',
 	})
 
-	AnnouncementService.notify({
-		type: 'Welcome',
-		userId: user.id,
-		title: 'Welcome!',
-		description: 'Welcome to Neverkin!',
-	})
+	AnnouncementService.sendWelcomeNotification(user.id)
 
 	AuditLogService.append(ctx, {
 		action: 'UserCreateAccount',
@@ -132,12 +127,7 @@ router.post('/api/auth/guest', async (ctx) => {
 		sameSite: 'lax',
 	})
 
-	AnnouncementService.notify({
-		type: 'Welcome',
-		userId: user.id,
-		title: 'Welcome!',
-		description: 'Welcome to Neverkin!',
-	})
+	AnnouncementService.sendWelcomeNotification(user.id)
 
 	AuditLogService.append(ctx, {
 		action: 'GuestCreateAccount',
@@ -188,12 +178,7 @@ router.post('/api/auth/google', async (ctx) => {
 	})
 
 	if (!existingUser) {
-		AnnouncementService.notify({
-			type: 'Welcome',
-			userId: user.id,
-			title: 'Welcome!',
-			description: 'Welcome to Neverkin!',
-		})
+		AnnouncementService.sendWelcomeNotification(user.id)
 	}
 
 	AuditLogService.append(ctx, {

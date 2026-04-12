@@ -19,6 +19,7 @@ import { ImageConversionRouter } from './routers/ImageConversionRouter.js'
 import { ImageGenerationRouter } from './routers/ImageGenerationRouter.js'
 import { ClientAuthRouter } from './routers/internal/ClientAuthRouter.js'
 import { MindmapRouter } from './routers/MindmapRouter.js'
+import { NotificationRouter } from './routers/NotificationRouter.js'
 import { ProfileRouter } from './routers/ProfileRouter.js'
 import { TagRouter } from './routers/TagRouter.js'
 import { WikiArticleContentRouter } from './routers/WikiArticleContentRouter.js'
@@ -96,6 +97,8 @@ app
 	.use(ImageGenerationRouter.allowedMethods())
 	.use(MindmapRouter.routes())
 	.use(MindmapRouter.allowedMethods())
+	.use(NotificationRouter.routes())
+	.use(NotificationRouter.allowedMethods())
 	.use(ProfileRouter.routes())
 	.use(ProfileRouter.allowedMethods())
 	.use(TagRouter.routes())

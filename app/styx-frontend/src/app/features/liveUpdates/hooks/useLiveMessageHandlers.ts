@@ -33,10 +33,12 @@ export const useLiveMessageHandlers = () => {
 	const updatedAtRef = useAutoRef(currentUpdatedAt)
 
 	const notifyAboutDocumentReset = useEventBusDispatch['calliope/documentReset']()
+	const notifyAboutAnnouncement = useEventBusDispatch['calliope/announcementReceived']()
 
 	const messageHandlers: CalliopeToClientMessageHandler = {
 		[CalliopeToClientMessageType.ANNOUNCEMENT]: () => {
 			dispatch(announcementListApi.util.invalidateTags(['announcementList']))
+			notifyAboutAnnouncement()
 		},
 		[CalliopeToClientMessageType.IMAGE_GENERATION_UPDATED]: () => {
 			dispatch(imageGenerationApi.util.invalidateTags(['imageGeneration']))
