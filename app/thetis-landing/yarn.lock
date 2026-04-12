@@ -20,68 +20,79 @@
   resolved "https://registry.yarnpkg.com/@antfu/utils/-/utils-8.1.1.tgz#95b1947d292a9a2efffba2081796dcaa05ecedfb"
   integrity sha512-Mex9nXf9vR6AhcXmMrlz/HVgYYZpVGJ6YlPgwl7UnaFpnshXs6EK/oa5Gpf3CzENMjkvEx2tQtntGnb7UtSTOQ==
 
-"@astro-community/astro-embed-baseline-status@^0.2.1":
+"@astro-community/astro-embed-baseline-status@^0.2.2":
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-baseline-status/-/astro-embed-baseline-status-0.2.2.tgz#f42b6ec6dcad7d9878e5f6328d49fd2f648d9671"
   integrity sha512-07TBEb+xQWWZfMuoHohcZv/r2VSB80/1xN5iLhzSqavLmdsMyebEnbc6tvw3yMkxvX9IBLduNA5SxvVkpmowNQ==
   dependencies:
     "@astro-community/astro-embed-utils" "^0.2.0"
 
-"@astro-community/astro-embed-bluesky@^0.1.5":
+"@astro-community/astro-embed-bluesky@^0.1.6":
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-bluesky/-/astro-embed-bluesky-0.1.6.tgz#7d4a948961d3c4f708c086267c65474a63713ece"
   integrity sha512-3y6Y3cRelLnR9AYMItmEAjcr83KAEa6WvsxQ1eHq1cPBzICXknuzphaZlmQZ+QG5NTtmEJD+2lQWrFba/BfM1A==
   dependencies:
     "@atproto/api" "^0.13.14"
 
-"@astro-community/astro-embed-integration@^0.8.3":
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-integration/-/astro-embed-integration-0.8.3.tgz#87d07d88afda9cc1d2fa6df18d828a6d9a3a292c"
-  integrity sha512-lJfPOiol8lTay5kJHT3C4CmM6shF6mF2YZR2tSpM4F+D1tj26PZ937r0iHhUcOLPeQPmczZbs9Tx1WwDY4SjOQ==
+"@astro-community/astro-embed-gist@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-gist/-/astro-embed-gist-0.1.0.tgz#b29b523b5675ec993de2e33f97b3d1e4dd59c8cc"
+  integrity sha512-wP3EoBZZjDoPLH6TZzem8jDJxOuweDoK5zWmSra0QBKz3Lry1tZGCwKII5mlnOL2AmTKLrfqrBXTxSGwb7AimQ==
   dependencies:
-    "@astro-community/astro-embed-bluesky" "^0.1.5"
-    "@astro-community/astro-embed-link-preview" "^0.2.3"
-    "@astro-community/astro-embed-twitter" "^0.5.9"
-    "@astro-community/astro-embed-vimeo" "^0.3.11"
-    "@astro-community/astro-embed-youtube" "^0.5.9"
-    "@types/unist" "^2.0.0"
+    "@astro-community/astro-embed-utils" "^0.2.0"
+
+"@astro-community/astro-embed-integration@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-integration/-/astro-embed-integration-0.11.0.tgz#f8da8702acc533eb608ed36d56a3db324d0386e8"
+  integrity sha512-xmwXN8039zUT0/lBO2GUr8cm5t/v+9Fh8QkPUhTWy+A7RR0+PwT1M3PBm8q01A1rK9q0myOyFHEcSOp+WkH5tg==
+  dependencies:
+    "@astro-community/astro-embed-bluesky" "^0.1.6"
+    "@astro-community/astro-embed-gist" "^0.1.0"
+    "@astro-community/astro-embed-link-preview" "^0.3.0"
+    "@astro-community/astro-embed-mastodon" "^0.1.0"
+    "@astro-community/astro-embed-twitter" "^0.5.10"
+    "@astro-community/astro-embed-vimeo" "^0.3.12"
+    "@astro-community/astro-embed-youtube" "^0.5.10"
+    "@types/unist" "^3.0.3"
     astro-auto-import "^0.4.5"
-    unist-util-select "^4.0.1"
+    unist-util-select "^5.1.0"
 
-"@astro-community/astro-embed-link-preview@^0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-link-preview/-/astro-embed-link-preview-0.2.3.tgz#4b4c104a73650d55ef2dbb600be309d3d714975e"
-  integrity sha512-TLnZOihoQhXOCybvbzE/ImqFkGgG5zSJeWIj+PytM41Q/uhU6w19LD571qmWADf0Grv/u7LtorR1PB6ijQnazQ==
+"@astro-community/astro-embed-link-preview@^0.3.0":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-link-preview/-/astro-embed-link-preview-0.3.1.tgz#e293aa6988232a5c6c37eb37a3b88ec895b6c569"
+  integrity sha512-TI++efm08+kJqxqA7bvxBr7+Zt4yCceA6s3wvAQJ87eiaxbLqAFUSQ+paQD66ET9dIC+IuKzHOMwsoDfqBidYw==
   dependencies:
-    "@astro-community/astro-embed-utils" "^0.1.5"
+    "@astro-community/astro-embed-utils" "^0.2.0"
+    "@parse5/tools" "^0.7.0"
+    parse5 "^8.0.0"
 
-"@astro-community/astro-embed-twitter@^0.5.9":
+"@astro-community/astro-embed-mastodon@^0.1.0":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-mastodon/-/astro-embed-mastodon-0.1.1.tgz#b6b4c2176a56236636eab527399830be9e696155"
+  integrity sha512-g5Mt1H6GxjkIvXC0HcKqLanZgXHu1e0vNqiQJ8ckryPKmbijYPfhGJYJLPHxE6PaFEA5tmwcmJouVcMPMjf2Kg==
+  dependencies:
+    "@astro-community/astro-embed-utils" "^0.2.0"
+
+"@astro-community/astro-embed-twitter@^0.5.10":
   version "0.5.11"
   resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-twitter/-/astro-embed-twitter-0.5.11.tgz#ff7af89445ba80207dbd77a422c14cc617b054ff"
   integrity sha512-6cmyQY4LVVJj6x7qC6XrhWcxNffLvR+QGE/iw5HTOtAn60AStr6u+IX2Txpy6N6bta0DLjGqhTBhkC3NxmVKJg==
   dependencies:
     "@astro-community/astro-embed-utils" "^0.2.0"
 
-"@astro-community/astro-embed-utils@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-utils/-/astro-embed-utils-0.1.5.tgz#79feb93f22ece4167720cfd74ea1460927e2bdd8"
-  integrity sha512-0RlP7J1YEWrguWDfEDsm4uDCXk4FKn0HHakmSOSwHLg6YR8WNEN/LGMGhhsxLc/mDqO2lRh1VqfJy+yPLLkzsQ==
-  dependencies:
-    linkedom "^0.18.12"
-
 "@astro-community/astro-embed-utils@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-utils/-/astro-embed-utils-0.2.0.tgz#7526face009eaab1ea3cf3a231c1098034d6dcaf"
   integrity sha512-Ia70AMCFOUOSoaMfMaK7Ovk7VyIY4opwzBJoA6GeL+omkvpFwDbSWmA8MOiMF4gJC0j/1dgrEir+txIb+WvsCA==
 
-"@astro-community/astro-embed-vimeo@^0.3.11":
+"@astro-community/astro-embed-vimeo@^0.3.12":
   version "0.3.12"
   resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-vimeo/-/astro-embed-vimeo-0.3.12.tgz#afddfe86fd6a3da61b7917bc438b6b134c0fdd2d"
   integrity sha512-VLNcsniT5qZ/7GaSGFWnX4ar0qcGyAYB1HQnAH362Zjqs0QI2he9u1nWv1kEx4xr3fZVxl6D2QuNN4xKtd8/ig==
   dependencies:
     "@astro-community/astro-embed-utils" "^0.2.0"
 
-"@astro-community/astro-embed-youtube@^0.5.9":
+"@astro-community/astro-embed-youtube@^0.5.10":
   version "0.5.10"
   resolved "https://registry.yarnpkg.com/@astro-community/astro-embed-youtube/-/astro-embed-youtube-0.5.10.tgz#ba41ecc5a806ae8e8837856f0455bfbfe128ccfb"
   integrity sha512-hVlx77KQLjKzElVQnrU5znQ5/E60keVSAPrhuWvQQHuqva5auJtt8YBpOThkwDMuEKXjQybEF1/3C07RZ8MAOQ==
@@ -1302,6 +1313,11 @@
   resolved "https://registry.yarnpkg.com/@oslojs/encoding/-/encoding-1.1.0.tgz#55f3d9a597430a01f2a5ef63c6b42f769f9ce34e"
   integrity sha512-70wQhgYmndg4GCPxPPxPGevRKqTIJ2Nh4OkiMWmDAVYsTQ+Ta7Sq+rPevXyXGdzr30/qZBnyOalCszoMxlyldQ==
 
+"@parse5/tools@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@parse5/tools/-/tools-0.7.0.tgz#5b434822d225bca3a4ec0bcabb1e140ec43a184e"
+  integrity sha512-JDvrGhc8kYBq7/SM4obJkpgwWo6pRjF/fo9CCaiJyVOkDf203Ciq2UF6TjzCFXKs7Q/zS2sS4deyBx0XzRvh9Q==
+
 "@pkgr/core@^0.2.9":
   version "0.2.9"
   resolved "https://registry.yarnpkg.com/@pkgr/core/-/core-0.2.9.tgz#d229a7b7f9dac167a156992ef23c7f023653f53b"
@@ -1638,7 +1654,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/unist@*", "@types/unist@^3.0.0":
+"@types/unist@*", "@types/unist@^3.0.0", "@types/unist@^3.0.3":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-3.0.3.tgz#acaab0f919ce69cce629c2d4ed2eb4adc1b6c20c"
   integrity sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==
@@ -1958,18 +1974,20 @@ astro-compress@2.3.8:
     svgo "3.3.2"
     terser "5.39.0"
 
-astro-embed@^0.9.0:
-  version "0.9.2"
-  resolved "https://registry.yarnpkg.com/astro-embed/-/astro-embed-0.9.2.tgz#5baf99deddd685d3766f31fd10843ed4ab8a2248"
-  integrity sha512-MUeNrfnNgcrV9E8WqEW9IYK8+Y3etDLyyi8Uf35rM5WJ53wkh511ye9oi15taJuqOaYRk2hQ9P5G2+/JS1Mjxg==
+astro-embed@^0.12.0:
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/astro-embed/-/astro-embed-0.12.0.tgz#74400a76555fb8d7eb28bd186fcbb14738c6e719"
+  integrity sha512-Hp/zfIFsibBSCXEC09Lk38uYq5IJyXClbNASiT/06fqrMvgWJzPEPvtnCEo1qIw8hxIh+4+esAJoktu5YKRIEA==
   dependencies:
-    "@astro-community/astro-embed-baseline-status" "^0.2.1"
-    "@astro-community/astro-embed-bluesky" "^0.1.5"
-    "@astro-community/astro-embed-integration" "^0.8.3"
-    "@astro-community/astro-embed-link-preview" "^0.2.3"
-    "@astro-community/astro-embed-twitter" "^0.5.9"
-    "@astro-community/astro-embed-vimeo" "^0.3.11"
-    "@astro-community/astro-embed-youtube" "^0.5.9"
+    "@astro-community/astro-embed-baseline-status" "^0.2.2"
+    "@astro-community/astro-embed-bluesky" "^0.1.6"
+    "@astro-community/astro-embed-gist" "^0.1.0"
+    "@astro-community/astro-embed-integration" "^0.11.0"
+    "@astro-community/astro-embed-link-preview" "^0.3.0"
+    "@astro-community/astro-embed-mastodon" "^0.1.0"
+    "@astro-community/astro-embed-twitter" "^0.5.10"
+    "@astro-community/astro-embed-vimeo" "^0.3.12"
+    "@astro-community/astro-embed-youtube" "^0.5.10"
 
 astro-eslint-parser@^1.2.2, astro-eslint-parser@^1.3.0:
   version "1.3.0"
@@ -2474,10 +2492,10 @@ css-select@^5.1.0:
     domutils "^3.0.1"
     nth-check "^2.0.1"
 
-css-selector-parser@^1.0.0:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/css-selector-parser/-/css-selector-parser-1.4.1.tgz#03f9cb8a81c3e5ab2c51684557d5aaf6d2569759"
-  integrity sha512-HYPSb7y/Z7BNDCOrakL4raGO2zltZkbeXyAd6Tg9obzix6QhzxCotdBl6VT0Dv4vZfJGVz3WL/xaEI9Ly3ul0g==
+css-selector-parser@^3.0.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/css-selector-parser/-/css-selector-parser-3.3.0.tgz#1a34220d76762c929ae99993df5a60721f505082"
+  integrity sha512-Y2asgMGFqJKF4fq4xHDSlFYIkeVfRsm69lQC1q9kbEsH5XtnINTMrweLkjYMeaUgiXBy/uvKeO/a1JHTNnmB2g==
 
 css-tree@^2.3.1:
   version "2.3.1"
@@ -2519,11 +2537,6 @@ csso@5.0.5, csso@^5.0.5:
   integrity sha512-0LrrStPOdJj+SPCCrGhzryycLjwcgUSHBtxNA8aIDxf0GLsRh1cKYhB00Gd1lDOS4yGH69+SNn13+TWbVHETFQ==
   dependencies:
     css-tree "~2.2.0"
-
-cssom@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/cssom/-/cssom-0.5.0.tgz#d254fa92cd8b6fbd83811b9fbaed34663cc17c36"
-  integrity sha512-iKuQcq+NdHqlAcwUY0o/HL69XQrUaQdMjmStJ8JFmUaiiQErlhrmuigkg/CU4E2J0IyUKUrMAgl36TvN67MqTw==
 
 debug@^4.0.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4, debug@^4.4.0, debug@^4.4.3:
   version "4.4.3"
@@ -3385,7 +3398,7 @@ hepburn@^1.2.0:
   resolved "https://registry.yarnpkg.com/hepburn/-/hepburn-1.2.2.tgz#c3a8fa9d705469ad05cf9922ee4ad135b45770b4"
   integrity sha512-DeykBc4XmfAWsnN+Y1Svi9uaQnnz21Q/ARuGWvIBxP1iUFeMIWL41DfVkgTh7tU23LFIbmIBO2Bk17BTPu0kVA==
 
-html-escaper@3.0.3, html-escaper@^3.0.3:
+html-escaper@3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/html-escaper/-/html-escaper-3.0.3.tgz#4d336674652beb1dcbc29ef6b6ba7f6be6fdfed6"
   integrity sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ==
@@ -3408,7 +3421,7 @@ html-void-elements@^3.0.0:
   resolved "https://registry.yarnpkg.com/html-void-elements/-/html-void-elements-3.0.0.tgz#fc9dbd84af9e747249034d4d62602def6517f1d7"
   integrity sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==
 
-htmlparser2@^10.0.0, htmlparser2@^10.1.0:
+htmlparser2@^10.1.0:
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/htmlparser2/-/htmlparser2-10.1.0.tgz#fe3f2e12c73b6e462d4e10395db9c1119e4d6ae4"
   integrity sha512-VTZkM9GWRAtEpveh7MSF6SjjrpNVNNVJfFup7xTY3UpFtm67foy9HDVXneLtFVt4pMz5kZtgNcvCniNFb1hlEQ==
@@ -3725,17 +3738,6 @@ lines-and-columns@^1.1.6:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
-
-linkedom@^0.18.12:
-  version "0.18.12"
-  resolved "https://registry.yarnpkg.com/linkedom/-/linkedom-0.18.12.tgz#a8b1a1942b567dcb1888093df311055da1349a14"
-  integrity sha512-jalJsOwIKuQJSeTvsgzPe9iJzyfVaEJiEXl+25EkKevsULHvMJzpNqwvj1jOESWdmgKDiXObyjOYwlUqG7wo1Q==
-  dependencies:
-    css-select "^5.1.0"
-    cssom "^0.5.0"
-    html-escaper "^3.0.3"
-    htmlparser2 "^10.0.0"
-    uhyphen "^0.2.0"
 
 lite-youtube-embed@^0.3.4:
   version "0.3.4"
@@ -4688,6 +4690,13 @@ parse5@^7.0.0, parse5@^7.3.0:
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/parse5/-/parse5-7.3.0.tgz#d7e224fa72399c7a175099f45fc2ad024b05ec05"
   integrity sha512-IInvU7fabl34qmi9gY8XOVxhYyMyuH2xUNpb2q8/Y+7552KlejkRvqvD19nMoUW/uQGGbqNpA6Tufu5FL5BZgw==
+  dependencies:
+    entities "^6.0.0"
+
+parse5@^8.0.0:
+  version "8.0.0"
+  resolved "https://registry.yarnpkg.com/parse5/-/parse5-8.0.0.tgz#aceb267f6b15f9b6e6ba9e35bfdd481fc2167b12"
+  integrity sha512-9m4m5GSgXjL4AjumKzq1Fgfp3Z8rsvjRNbnkVwfu2ImRqE5D0LnY2QfDen18FSY9C573YU5XxSapdHZTZ2WolA==
   dependencies:
     entities "^6.0.0"
 
@@ -5735,11 +5744,6 @@ ufo@^1.6.1, ufo@^1.6.3:
   resolved "https://registry.yarnpkg.com/ufo/-/ufo-1.6.3.tgz#799666e4e88c122a9659805e30b9dc071c3aed4f"
   integrity sha512-yDJTmhydvl5lJzBmy/hyOAA0d+aqCBuwl818haVdYCRrWV84o7YyeVm4QlVHStqNrrJSTb6jKuFAVqAFsr+K3Q==
 
-uhyphen@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/uhyphen/-/uhyphen-0.2.0.tgz#8fdf0623314486e020a3c00ee5cc7a12fe722b81"
-  integrity sha512-qz3o9CHXmJJPGBdqzab7qAYuW8kQGKNEuoHFYrBwV6hWIMcpAmxDLXojcHfFr9US1Pe6zUswEIJIbLI610fuqA==
-
 uint8arrays@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/uint8arrays/-/uint8arrays-3.0.0.tgz#260869efb8422418b6f04e3fac73a3908175c63b"
@@ -5844,13 +5848,14 @@ unist-util-remove-position@^5.0.0:
     "@types/unist" "^3.0.0"
     unist-util-visit "^5.0.0"
 
-unist-util-select@^4.0.1:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/unist-util-select/-/unist-util-select-4.0.3.tgz#861b403e273d9f677685dd9edefc663dbe1bf517"
-  integrity sha512-1074+K9VyR3NyUz3lgNtHKm7ln+jSZXtLJM4E22uVuoFn88a/Go2pX8dusrt/W+KWH1ncn8jcd8uCQuvXb/fXA==
+unist-util-select@^5.1.0:
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/unist-util-select/-/unist-util-select-5.1.0.tgz#92db10df0d03d2e598f9d782bfc6d4b99b2057eb"
+  integrity sha512-4A5mfokSHG/rNQ4g7gSbdEs+H586xyd24sdJqF1IWamqrLHvYb+DH48fzxowyOhOfK7YSqX+XlCojAyuuyyT2A==
   dependencies:
-    "@types/unist" "^2.0.0"
-    css-selector-parser "^1.0.0"
+    "@types/unist" "^3.0.0"
+    css-selector-parser "^3.0.0"
+    devlop "^1.1.0"
     nth-check "^2.0.0"
     zwitch "^2.0.0"
 
