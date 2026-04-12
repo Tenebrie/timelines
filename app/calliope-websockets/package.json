@@ -39,7 +39,7 @@
 		"pg": "^8.13.1",
 		"redis": "^4.7.0",
 		"ws": "^8.18.0",
-		"yjs": "^13.6.29"
+		"yjs": "^13.6.30"
 	},
 	"devDependencies": {
 		"@types/jsonwebtoken": "^9.0.7",
