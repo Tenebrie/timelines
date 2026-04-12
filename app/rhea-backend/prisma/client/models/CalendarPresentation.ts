@@ -218,7 +218,7 @@ export type CalendarPresentationGroupByOutputType = {
   _max: CalendarPresentationMaxAggregateOutputType | null
 }
 
-type GetCalendarPresentationGroupByPayload<T extends CalendarPresentationGroupByArgs> = Prisma.PrismaPromise<
+export type GetCalendarPresentationGroupByPayload<T extends CalendarPresentationGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CalendarPresentationGroupByOutputType, T['by']> &
       {
@@ -1555,6 +1555,11 @@ export type CalendarPresentationFindManyArgs<ExtArgs extends runtime.Types.Exten
    * Skip the first `n` CalendarPresentations.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CalendarPresentations.
+   */
   distinct?: Prisma.CalendarPresentationScalarFieldEnum | Prisma.CalendarPresentationScalarFieldEnum[]
 }
 

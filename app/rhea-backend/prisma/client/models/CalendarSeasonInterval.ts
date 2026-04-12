@@ -210,7 +210,7 @@ export type CalendarSeasonIntervalGroupByOutputType = {
   _max: CalendarSeasonIntervalMaxAggregateOutputType | null
 }
 
-type GetCalendarSeasonIntervalGroupByPayload<T extends CalendarSeasonIntervalGroupByArgs> = Prisma.PrismaPromise<
+export type GetCalendarSeasonIntervalGroupByPayload<T extends CalendarSeasonIntervalGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CalendarSeasonIntervalGroupByOutputType, T['by']> &
       {
@@ -1239,6 +1239,11 @@ export type CalendarSeasonIntervalFindManyArgs<ExtArgs extends runtime.Types.Ext
    * Skip the first `n` CalendarSeasonIntervals.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CalendarSeasonIntervals.
+   */
   distinct?: Prisma.CalendarSeasonIntervalScalarFieldEnum | Prisma.CalendarSeasonIntervalScalarFieldEnum[]
 }
 

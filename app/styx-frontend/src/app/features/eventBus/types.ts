@@ -42,6 +42,8 @@ export type EventParams = {
 	'calliope/onReconnected': void
 	'calliope/requestSendMessage': ClientToCalliopeMessage
 	'calliope/documentReset': { worldId: string; entityId: string }
+	'calliope/announcementReceived': void
+	'announcements/requestOpen': void
 	'richEditor/onKeyDown': {
 		editor: Editor
 		key: string

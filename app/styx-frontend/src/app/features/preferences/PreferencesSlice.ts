@@ -34,6 +34,7 @@ export const preferencesSlice = createSlice({
 	reducers: {
 		loadFromLocalStorage: (state) => {
 			const value = loadPreferences()
+			state['admin'] = value['admin']
 			state['calendarEditor'] = value['calendarEditor']
 			state['colorMode'] = value['colorMode']
 			state['iconSets'] = value['iconSets']
@@ -42,6 +43,21 @@ export const preferencesSlice = createSlice({
 			state['timeline'] = value['timeline']
 			state['wiki'] = value['wiki']
 			state['imageGenerator'] = value['imageGenerator']
+		},
+
+		/* Admin */
+		setAdminNotificationTitle: (state, { payload }: PayloadAction<string>) => {
+			state.admin.notificationTitle = payload
+			saveToLocalStorage(state)
+		},
+		setAdminNotificationDescription: (state, { payload }: PayloadAction<string>) => {
+			state.admin.notificationDescription = payload
+			saveToLocalStorage(state)
+		},
+		clearAdminNotificationDraft: (state) => {
+			state.admin.notificationTitle = ''
+			state.admin.notificationDescription = ''
+			saveToLocalStorage(state)
 		},
 
 		/* Calendar Editor */

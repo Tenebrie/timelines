@@ -61,7 +61,7 @@ export function RoutedView({ label, routes, footer }: Props) {
 				</Paper>
 
 				{/* Main Content */}
-				<Paper sx={{ flex: 1, p: 3 }} elevation={1}>
+				<Paper sx={{ flex: 1, p: 3, minWidth: 0 }} elevation={1}>
 					<Outlet />
 				</Paper>
 			</Stack>

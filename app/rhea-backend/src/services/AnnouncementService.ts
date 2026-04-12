@@ -55,4 +55,51 @@ export const AnnouncementService = {
 			},
 		})
 	},
+
+	dismissAll: ({ user }: { user: User }) => {
+		return getPrismaClient().userAnnouncement.deleteMany({
+			where: {
+				userId: user.id,
+			},
+		})
+	},
+
+	broadcastNotification: async ({
+		title,
+		description,
+		testRun,
+	}: {
+		title: string
+		description: string
+		testRun: boolean
+	}) => {
+		const users = await getPrismaClient().user.findMany({
+			select: { id: true },
+			where: {
+				deletedAt: null,
+				...(testRun ? { level: 'Admin' } : {}),
+			},
+		})
+
+		const announcements = users.map((user) => ({
+			type: 'Info' as const,
+			userId: user.id,
+			title,
+			description,
+		}))
+
+		await AnnouncementService.notifyMany(announcements)
+
+		return { recipientCount: users.length }
+	},
+
+	sendWelcomeNotification: async (userId: string) => {
+		AnnouncementService.notify({
+			type: 'Welcome',
+			userId,
+			title: 'Welcome!',
+			description:
+				'Welcome to Neverkin!\nExplore on your own, or join our Discord community for support.\n\nJoin at https://discord.gg/rD3KdXmqDP',
+		})
+	},
 }

@@ -104,6 +104,7 @@ export type AdminGetAuditLogsApiResponse = /** status 200  */ {
 			| 'AdminSetUserLevel'
 			| 'AdminSetUserPassword'
 			| 'AdminDeleteUser'
+			| 'AdminBroadcastNotification'
 	}[]
 	page: number
 	size: number

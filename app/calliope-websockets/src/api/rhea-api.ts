@@ -244,7 +244,8 @@ export interface paths {
         get: operations["getAnnouncements"];
         put?: never;
         post?: never;
-        delete?: never;
+        /** @description Permanently hides all announcements for the user. */
+        delete: operations["dismissAllAnnouncements"];
         options?: never;
         head?: never;
         patch?: never;
@@ -914,6 +915,23 @@ export interface paths {
         head?: never;
         /** @description Updates the target node */
         patch: operations["updateNode"];
+        trace?: never;
+    };
+    "/api/admin/notifications/broadcast": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Broadcasts a notification to all users. Defaults to test mode (admin-only) if fullRun is not provided. */
+        post: operations["adminBroadcastNotification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/profile/storage": {
@@ -2221,7 +2239,7 @@ export interface operations {
                             createdAt: string;
                             requestIp: string;
                             userEmail?: null | string;
-                            action: "UserCreateAccount" | "UserLoginWithPassword" | "UserLoginWithGoogle" | "UserLoginFailed" | "UserDeleteAccount" | "GuestCreateAccount" | "AdminImpersonateUser" | "AdminUpdateUser" | "AdminSetUserLevel" | "AdminSetUserPassword" | "AdminDeleteUser";
+                            action: "UserCreateAccount" | "UserLoginWithPassword" | "UserLoginWithGoogle" | "UserLoginFailed" | "UserDeleteAccount" | "GuestCreateAccount" | "AdminImpersonateUser" | "AdminUpdateUser" | "AdminSetUserLevel" | "AdminSetUserPassword" | "AdminDeleteUser" | "AdminBroadcastNotification";
                         }[];
                         page: number;
                         size: number;
@@ -2500,16 +2518,33 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
+                        type: "Info" | "Welcome" | "WorldShared";
+                        userId: string;
+                        title: string;
                         description: string;
                         id: string;
-                        title: string;
-                        userId: string;
-                        type: "Info" | "Welcome" | "WorldShared";
                         /** Format: date-time */
                         timestamp: string;
                         isUnread: boolean;
                     }[];
                 };
+            };
+        };
+    };
+    dismissAllAnnouncements: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -2913,10 +2948,10 @@ export interface operations {
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
-                                size: number;
                                 expiresAt?: null | string;
                                 ownerId: string;
                                 bucketKey: string;
+                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
@@ -2947,7 +2982,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        redirectTo: "admin" | "login";
+                        redirectTo: "login" | "admin";
                     };
                 };
             };
@@ -4386,6 +4421,41 @@ export interface operations {
                         parentActorId?: null | string;
                         positionX: number;
                         positionY: number;
+                    };
+                };
+            };
+        };
+    };
+    adminBroadcastNotification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    title: string;
+                    description: string;
+                    fullRun?: boolean;
+                };
+                "application/x-www-form-urlencoded": {
+                    title: string;
+                    description: string;
+                    fullRun?: boolean;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        recipientCount: number;
+                        mode: string;
                     };
                 };
             };

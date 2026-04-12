@@ -252,7 +252,7 @@ export type WorldEventGroupByOutputType = {
   _max: WorldEventMaxAggregateOutputType | null
 }
 
-type GetWorldEventGroupByPayload<T extends WorldEventGroupByArgs> = Prisma.PrismaPromise<
+export type GetWorldEventGroupByPayload<T extends WorldEventGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<WorldEventGroupByOutputType, T['by']> &
       {
@@ -2202,6 +2202,11 @@ export type WorldEventFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` WorldEvents.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of WorldEvents.
+   */
   distinct?: Prisma.WorldEventScalarFieldEnum | Prisma.WorldEventScalarFieldEnum[]
 }
 

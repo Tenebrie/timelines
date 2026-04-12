@@ -15,6 +15,12 @@ const defaultTheme = ((): 'light' | 'dark' => {
 })()
 
 export const PreferencesStateSchema = z.object({
+	admin: z
+		.object({
+			notificationTitle: z.string().default(''),
+			notificationDescription: z.string().default(''),
+		})
+		.default({}),
 	calendarEditor: z
 		.object({
 			expandedUnitSections: z.array(z.nativeEnum(CalendarUnitEditorTab)).default([]),

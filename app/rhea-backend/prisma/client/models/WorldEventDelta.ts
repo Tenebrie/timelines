@@ -213,7 +213,7 @@ export type WorldEventDeltaGroupByOutputType = {
   _max: WorldEventDeltaMaxAggregateOutputType | null
 }
 
-type GetWorldEventDeltaGroupByPayload<T extends WorldEventDeltaGroupByArgs> = Prisma.PrismaPromise<
+export type GetWorldEventDeltaGroupByPayload<T extends WorldEventDeltaGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<WorldEventDeltaGroupByOutputType, T['by']> &
       {
@@ -1271,6 +1271,11 @@ export type WorldEventDeltaFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` WorldEventDeltas.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of WorldEventDeltas.
+   */
   distinct?: Prisma.WorldEventDeltaScalarFieldEnum | Prisma.WorldEventDeltaScalarFieldEnum[]
 }
 

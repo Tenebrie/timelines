@@ -144,7 +144,7 @@ export type UserFavoriteIconSetGroupByOutputType = {
   _max: UserFavoriteIconSetMaxAggregateOutputType | null
 }
 
-type GetUserFavoriteIconSetGroupByPayload<T extends UserFavoriteIconSetGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserFavoriteIconSetGroupByPayload<T extends UserFavoriteIconSetGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserFavoriteIconSetGroupByOutputType, T['by']> &
       {
@@ -1052,6 +1052,11 @@ export type UserFavoriteIconSetFindManyArgs<ExtArgs extends runtime.Types.Extens
    * Skip the first `n` UserFavoriteIconSets.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of UserFavoriteIconSets.
+   */
   distinct?: Prisma.UserFavoriteIconSetScalarFieldEnum | Prisma.UserFavoriteIconSetScalarFieldEnum[]
 }
 

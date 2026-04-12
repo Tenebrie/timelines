@@ -37,4 +37,16 @@ router.delete('/api/announcements/:id', async (ctx) => {
 	await AnnouncementService.dismiss({ id })
 })
 
+router.delete('/api/announcements', async (ctx) => {
+	useApiEndpoint({
+		name: 'dismissAllAnnouncements',
+		description: 'Permanently hides all announcements for the user.',
+		tags: [announcementListTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	await AnnouncementService.dismissAll({ user })
+})
+
 export const AnnouncementRouter = router

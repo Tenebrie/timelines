@@ -47,7 +47,8 @@ export const AuditAction = {
   AdminUpdateUser: 'AdminUpdateUser',
   AdminSetUserLevel: 'AdminSetUserLevel',
   AdminSetUserPassword: 'AdminSetUserPassword',
-  AdminDeleteUser: 'AdminDeleteUser'
+  AdminDeleteUser: 'AdminDeleteUser',
+  AdminBroadcastNotification: 'AdminBroadcastNotification'
 } as const
 
 export type AuditAction = (typeof AuditAction)[keyof typeof AuditAction]
