@@ -53,14 +53,7 @@ export const BaseNavigator = () => {
 			<Box>
 				{user && (
 					<Stack direction="row" height="100%" gap={1} alignItems="center">
-						{isNarrow && (
-							<>
-								<WorldSelectorButton />
-								<LastWorldNavigatorButton icon={<PublicIcon />} label="World" iconOnly />
-								<Divider orientation="vertical" sx={{ height: '25px' }} />
-								<NavigatorButton route="/" icon={<HomeIcon />} label="Home" iconOnly />
-							</>
-						)}
+						{isNarrow && <NavigatorButton route="/" icon={<HomeIcon />} label="Home" iconOnly />}
 						{!isNarrow && (
 							<>
 								<Stack minWidth={173} direction="row" gap={1} sx={{ justifyContent: 'flex-start' }}>
@@ -92,7 +85,7 @@ export const BaseNavigator = () => {
 			</Box>
 			<Stack direction="row" gap={2} alignItems="center" height={1}>
 				<ThemeModeToggle />
-				{user && <AnnouncementView />}
+				{user && !isNarrow && <AnnouncementView />}
 				<Divider orientation="vertical" sx={{ height: '25px' }} />
 				<SmallProfile />
 			</Stack>

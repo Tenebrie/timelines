@@ -15,6 +15,7 @@ import { User } from '@/app/features/auth/AuthSlice'
 import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
 import { BoundTextField } from '@/app/features/forms/components/BoundTextField'
 import { useAppForm } from '@/app/features/forms/useAppForm'
+import { useMobileLayout } from '@/app/hooks/useMobileLayout'
 
 export function PublicProfilePage() {
 	const { user } = useSelector(getAuthState)
@@ -33,6 +34,7 @@ type Props = {
 function InternalComponent({ user }: Props) {
 	const [updateProfile, apiState] = useUpdateProfile()
 	const { isLoading, isError } = apiState
+	const { isMobile } = useMobileLayout()
 
 	const form = useAppForm({
 		defaultValues: {
@@ -101,14 +103,16 @@ function InternalComponent({ user }: Props) {
 					</Stack>
 				</Stack>
 
-				<Stack direction="row" spacing={4}>
-					<Stack alignItems="center" width={280}>
-						<Avatar src={user.avatarUrl} alt="Profile picture" sx={{ width: 260, height: 260, mb: 2 }} />
-						<Button variant="outlined" fullWidth disabled>
-							Change picture
-						</Button>
+				{!isMobile && (
+					<Stack direction="row" spacing={4}>
+						<Stack alignItems="center" width={280}>
+							<Avatar src={user.avatarUrl} alt="Profile picture" sx={{ width: 260, height: 260, mb: 2 }} />
+							<Button variant="outlined" fullWidth disabled>
+								Change picture
+							</Button>
+						</Stack>
 					</Stack>
-				</Stack>
+				)}
 			</Stack>
 		</Stack>
 	)

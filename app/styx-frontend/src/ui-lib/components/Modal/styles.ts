@@ -8,7 +8,7 @@ export const ModalBackdrop = styled.div`
 	top: 0;
 	left: 0;
 	width: 100vw;
-	height: 100vh;
+	height: 100dvh;
 	box-sizing: border-box;
 	display: flex;
 	align-items: center;
@@ -28,7 +28,7 @@ export const ModalContainer = styled(Paper)<{ $theme: CustomTheme }>`
 	padding: 16px 32px;
 	max-width: 860px;
 	width: 100%;
-	max-height: calc(100vh - 32px);
+	max-height: calc(100dvh - 32px);
 	border-radius: 8px;
 	display: flex;
 	gap: 16px;
