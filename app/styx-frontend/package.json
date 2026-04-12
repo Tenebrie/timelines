@@ -80,7 +80,7 @@
 		"@types/google.accounts": "^0.0.18",
 		"@types/lodash.debounce": "^4.0.7",
 		"@types/lodash.throttle": "^4.1.7",
-		"@types/node": "^22.10.2",
+		"@types/node": "^25.6.0",
 		"@types/node-fetch": "^2.6.13",
 		"@types/react": "^19.2.14",
 		"@types/react-dom": "^19.2.3",
