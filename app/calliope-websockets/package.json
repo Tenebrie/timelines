@@ -22,7 +22,7 @@
 		"*.(ts)": "eslint --fix"
 	},
 	"dependencies": {
-		"@koa/router": "^13.1.0",
+		"@koa/router": "^15.4.0",
 		"@y/websocket-server": "^0.1.1",
 		"chalk": "^5.6.2",
 		"cheerio": "^1.2.0",
