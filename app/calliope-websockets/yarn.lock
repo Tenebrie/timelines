@@ -814,10 +814,10 @@
     "@types/koa" "*"
     path-to-regexp "^1.7.0"
 
-"@types/koa-websocket@^5.0.10":
-  version "5.0.10"
-  resolved "https://registry.npmjs.org/@types/koa-websocket/-/koa-websocket-5.0.10.tgz"
-  integrity sha512-yaqbFuyrw4eFchCHdOiyF1uhSe0nRv6xFAvVlxoG8Fq2/h+0IDjka3DyN2hJt29m6jr3+nlgsPTGh/Hd/tZmIg==
+"@types/koa-websocket@^5.0.11":
+  version "5.0.11"
+  resolved "https://registry.yarnpkg.com/@types/koa-websocket/-/koa-websocket-5.0.11.tgz#247fa00a0cf96e6a18164bbf51de1e56ed0bd63d"
+  integrity sha512-KDim94AtU0SNNqDy/xVelPwuU0G9xnn6pZ2CrBYPAJwAGl6xUdFOc3iQIxyVB/+oG2otPUzC/VnmSTBo52EhgQ==
   dependencies:
     "@types/koa" "*"
     "@types/koa-compose" "*"
