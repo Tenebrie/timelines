@@ -12,6 +12,7 @@ enum AuditAction {
     AdminSetUserLevel
     AdminSetUserPassword
     AdminDeleteUser
+    AdminBroadcastNotification
 }
 
 model AuditLog {

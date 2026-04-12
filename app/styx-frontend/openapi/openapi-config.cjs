@@ -2,6 +2,7 @@
 
 const tags = [
 	'actorList',
+	'adminNotifications',
 	'adminUsers',
 	'announcementList',
 	'asset',

@@ -5,6 +5,7 @@ import { Outlet } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 
+import { AnnouncementSnackbar } from './features/announcements/AnnouncementSnackbar'
 import { DragDropPortalSlot } from './features/dragDrop/components/GhostWrapper'
 import { EventBusProvider } from './features/eventBus'
 import { globalEventBus } from './features/eventBus/eventBus'
@@ -82,6 +83,7 @@ const App = () => {
 							</Container>
 							<LostConnectionAlert server="rhea" />
 							<LostConnectionAlert server="calliope" />
+							<AnnouncementSnackbar />
 						</CustomThemeOverrides>
 					</CustomThemeProvider>
 					<NavigationReceiverWrapper />
