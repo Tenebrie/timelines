@@ -76,7 +76,7 @@
 		"tsc-alias": "^1.8.16",
 		"tsconfig-paths": "4.2.0",
 		"ts-morph": "^27.0.2",
-		"tsx": "^4.20.3",
+		"tsx": "^4.21.0",
 		"typescript": "^5.7.2",
 		"vitest": "^3.0.9"
 	}
