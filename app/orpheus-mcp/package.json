@@ -26,29 +26,29 @@
 		"@types/jsonwebtoken": "^9.0.10",
 		"@types/ws": "^8.5.10",
 		"chalk": "^5.6.2",
-		"dotenv": "^17.2.4",
+		"dotenv": "^17.4.2",
 		"jsonwebtoken": "^9.0.3",
 		"openapi-fetch": "^0.17.0",
 		"zod": "^4.3.6"
 	},
 	"devDependencies": {
 		"@types/node": "^25.6.0",
-		"@typescript-eslint/eslint-plugin": "^8.51.0",
+		"@typescript-eslint/eslint-plugin": "^8.58.1",
 		"@typescript-eslint/parser": "^8.58.1",
-		"@vitest/coverage-v8": "^4.0.18",
+		"@vitest/coverage-v8": "^4.1.4",
 		"eslint": "^9.39.2",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-simple-import-sort": "^13.0.0",
 		"eslint-plugin-unused-imports": "^4.1.4",
 		"lint-staged": "^16.4.0",
-		"msw": "^2.12.10",
-		"nodemon": "^3.1.9",
-		"openapi-typescript": "^7.6.1",
-		"prettier": "^3.4.2",
+		"msw": "^2.13.2",
+		"nodemon": "^3.1.14",
+		"openapi-typescript": "^7.13.0",
+		"prettier": "^3.8.2",
 		"tsc-alias": "^1.8.10",
 		"tsx": "^4.19.4",
 		"typescript": "^5.7.3",
-		"vitest": "^4.0.18"
+		"vitest": "^4.1.4"
 	}
 }
