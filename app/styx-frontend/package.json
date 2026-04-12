@@ -89,7 +89,7 @@
 		"@types/ws": "^8.5.13",
 		"@vitest/coverage-v8": "^4.1.4",
 		"eslint": "^9.39.2",
-		"eslint-config-prettier": "^9.1.0",
+		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-mui-path-imports": "^0.0.15",
 		"eslint-plugin-no-relative-import-paths": "^1.5.5",
 		"eslint-plugin-prettier": "^5.5.5",
