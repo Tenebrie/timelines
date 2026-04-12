@@ -15,19 +15,19 @@
 		"test:staging:ui": "TARGET_ENV=staging playwright test --ui"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.58.0",
+		"@playwright/test": "^1.59.1",
 		"@types/node": "^25.6.0",
-		"@typescript-eslint/eslint-plugin": "^8.51.0",
+		"@typescript-eslint/eslint-plugin": "^8.58.1",
 		"@typescript-eslint/parser": "^8.58.1",
 		"cloc": "^2.8.0",
 		"eslint": "^9.39.2",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-node": "^11.1.0",
-		"eslint-plugin-prettier": "^5.2.1",
+		"eslint-plugin-prettier": "^5.5.5",
 		"eslint-plugin-simple-import-sort": "^13.0.0",
 		"eslint-plugin-unused-imports": "^4.4.1",
-		"prettier": "^3.4.2",
-		"serve": "^14.2.4",
+		"prettier": "^3.8.2",
+		"serve": "^14.2.6",
 		"typescript": "^5.9.3"
 	},
 	"engines": {
