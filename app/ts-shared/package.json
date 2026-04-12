@@ -39,6 +39,6 @@
 		"prettier": "^3.8.2",
 		"source-map-support": "^0.5.20",
 		"tsconfig-paths": "4.2.0",
-		"typescript": "^5.9.3"
+		"typescript": "^6.0.2"
 	}
 }
