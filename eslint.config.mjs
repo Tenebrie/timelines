@@ -3,7 +3,7 @@ import { defineConfig } from 'eslint/config'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import eslintPluginAstro from 'eslint-plugin-astro'
 import muiPathImports from 'eslint-plugin-mui-path-imports'
-import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths'
+// import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -47,7 +47,7 @@ export default defineConfig(
 		plugins: {
 			'simple-import-sort': simpleImportSort,
 			'unused-imports': unusedImports,
-			'no-relative-import-paths': noRelativeImportPaths,
+			// 'no-relative-import-paths': noRelativeImportPaths,
 			'mui-path-imports': muiPathImports,
 		},
 		rules: {
@@ -66,10 +66,10 @@ export default defineConfig(
 			'mui-path-imports/mui-path-imports': 'error',
 			'@typescript-eslint/no-unused-vars': 'off',
 
-			'no-relative-import-paths/no-relative-import-paths': [
-				'warn',
-				{ allowSameFolder: true, rootDir: 'src', prefix: '@', allowedDepth: 2 },
-			],
+			// 'no-relative-import-paths/no-relative-import-paths': [
+			// 	'warn',
+			// 	{ allowSameFolder: true, rootDir: 'src', prefix: '@', allowedDepth: 2 },
+			// ],
 
 			'unused-imports/no-unused-vars': [
 				'warn',

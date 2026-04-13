@@ -1,7 +1,6 @@
 import tanstackRouter from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
-import viteTsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'vitest/config'
 
 const tanstackTempDir = process.env.TSR_TMP_DIR || path.resolve('node_modules/.tanstack')
@@ -12,12 +11,9 @@ export default defineConfig({
 		__APP_VERSION__: JSON.stringify(process.env.VERSION ?? 'Dev'),
 		__BUILD_TIME__: JSON.stringify(new Date().toISOString()),
 	},
-	plugins: [
-		tanstackRouter({ autoCodeSplitting: true, tmpDir: tanstackTempDir }),
-		react(),
-		viteTsconfigPaths(),
-	],
+	plugins: [tanstackRouter({ autoCodeSplitting: true, tmpDir: tanstackTempDir }), react()],
 	resolve: {
+		tsconfigPaths: true,
 		alias: {
 			'@api': '/src/api',
 			'@': '/src',
