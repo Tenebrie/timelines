@@ -1,5 +1,5 @@
 # Build stage
-FROM node:24-alpine AS builder
+FROM node:25-alpine AS builder
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ COPY ./app/calliope-websockets /app/calliope
 RUN yarn build
 
 # Production stage
-FROM node:24-alpine
+FROM node:25-alpine
 
 WORKDIR /app/calliope
 
