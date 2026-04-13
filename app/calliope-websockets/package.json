@@ -49,7 +49,7 @@
 		"@types/koa-websocket": "^5.0.11",
 		"@types/koa__router": "^12.0.5",
 		"@types/mock-knex": "^0.4.8",
-		"@types/node": "^24.1.0",
+		"@types/node": "^25.6.0",
 		"@types/supertest": "^7.2.0",
 		"@types/ws": "^8.18.1",
 		"@typescript-eslint/eslint-plugin": "^8.58.1",
