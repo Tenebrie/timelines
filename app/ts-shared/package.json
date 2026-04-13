@@ -22,7 +22,7 @@
 		"@tiptap/pm": "^3.22.3",
 		"@tiptap/starter-kit": "^3.22.3",
 		"@tiptap/suggestion": "^3.22.3",
-		"lint-staged": "^15.2.11",
+		"lint-staged": "^16.4.0",
 		"module-alias": "^2.3.4",
 		"ws": "^8.20.0"
 	},
