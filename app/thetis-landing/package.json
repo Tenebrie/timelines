@@ -30,7 +30,7 @@
 		"@astrojs/mdx": "^4.3.3",
 		"@astrojs/partytown": "^2.1.6",
 		"@astrojs/tailwind": "^6.0.2",
-		"@eslint/js": "^9.33.0",
+		"@eslint/js": "^10.0.1",
 		"@iconify-json/flat-color-icons": "^1.2.1",
 		"@iconify-json/tabler": "^1.2.33",
 		"@tailwindcss/typography": "^0.5.16",
