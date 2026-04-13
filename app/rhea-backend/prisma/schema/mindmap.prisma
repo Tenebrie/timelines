@@ -9,6 +9,30 @@ model MindmapNode {
   parentActor   Actor?  @relation(fields: [parentActorId], references: [id], onDelete: Cascade)
   parentActorId String? @unique
 
+  links    MindmapLink[] @relation("MindmapLinkSource")
+  linkedBy MindmapLink[] @relation("MindmapLinkTarget")
+
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String
+}
+
+enum MindmapLinkDirection {
+  Normal
+  Reversed
+  TwoWay
+}
+
+model MindmapLink {
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  sourceNode   MindmapNode @relation("MindmapLinkSource", fields: [sourceNodeId], references: [id], onDelete: Cascade)
+  sourceNodeId String
+
+  targetNode   MindmapNode @relation("MindmapLinkTarget", fields: [targetNodeId], references: [id], onDelete: Cascade)
+  targetNodeId String
+
+  direction MindmapLinkDirection @default(Normal)
+  content   String               @default("")
 }

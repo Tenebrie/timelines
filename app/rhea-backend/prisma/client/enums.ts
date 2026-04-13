@@ -91,6 +91,15 @@ export const MentionedEntity = {
 export type MentionedEntity = (typeof MentionedEntity)[keyof typeof MentionedEntity]
 
 
+export const MindmapLinkDirection = {
+  Normal: 'Normal',
+  Reversed: 'Reversed',
+  TwoWay: 'TwoWay'
+} as const
+
+export type MindmapLinkDirection = (typeof MindmapLinkDirection)[keyof typeof MindmapLinkDirection]
+
+
 export const UserLevel = {
   Guest: 'Guest',
   Free: 'Free',

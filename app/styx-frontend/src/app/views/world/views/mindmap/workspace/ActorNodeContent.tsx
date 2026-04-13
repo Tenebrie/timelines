@@ -29,6 +29,7 @@ export function ActorNodeContent({ actor, onHeaderClick, onContentClick }: Props
 	return (
 		<Box
 			sx={{
+				userSelect: 'none',
 				width: '250px',
 				borderRadius: 2,
 				overflow: 'hidden',

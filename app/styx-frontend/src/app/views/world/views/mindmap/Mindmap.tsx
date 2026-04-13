@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
+import { useTheme } from '@mui/material/styles'
 import throttle from 'lodash.throttle'
 import { CSSProperties, useEffect, useRef } from 'react'
 
@@ -148,6 +149,9 @@ export function Mindmap() {
 		}
 	}, [largeGridSpacing, mediumGridSpacing, ref])
 
+	const theme = useTheme()
+	const lineColor = theme.palette.divider
+
 	return (
 		<Stack sx={{ width: '100%', height: '100%' }}>
 			<Box
@@ -171,14 +175,14 @@ export function Mindmap() {
 						backgroundPosition: 'var(--grid-offset-x) var(--grid-offset-y)',
 						backgroundImage: `
 							/* Large grid lines */
-							linear-gradient(to right, rgba(0, 0, 0, 1) ${largeLineThickness}px, transparent ${largeLineThickness}px),
-							linear-gradient(to bottom, rgba(0, 0, 0, 1) ${largeLineThickness}px, transparent ${largeLineThickness}px),
+							linear-gradient(to right, ${lineColor} ${largeLineThickness}px, transparent ${largeLineThickness}px),
+							linear-gradient(to bottom, ${lineColor} ${largeLineThickness}px, transparent ${largeLineThickness}px),
 							/* Medium grid lines */
-							linear-gradient(to right, rgba(0, 0, 0, 1) ${mediumLineThickness}px, transparent ${mediumLineThickness}px),
-							linear-gradient(to bottom, rgba(0, 0, 0, 1) ${mediumLineThickness}px, transparent ${mediumLineThickness}px),
+							linear-gradient(to right, ${lineColor} ${mediumLineThickness}px, transparent ${mediumLineThickness}px),
+							linear-gradient(to bottom, ${lineColor} ${mediumLineThickness}px, transparent ${mediumLineThickness}px),
 							/* Small grid lines */
-							linear-gradient(to right, rgba(0, 0, 0, 1) ${smallLineThickness}px, transparent ${smallLineThickness}px),
-							linear-gradient(to bottom, rgba(0, 0, 0, 1) ${smallLineThickness}px, transparent ${smallLineThickness}px)
+							linear-gradient(to right, ${lineColor} ${smallLineThickness}px, transparent ${smallLineThickness}px),
+							linear-gradient(to bottom, ${lineColor} ${smallLineThickness}px, transparent ${smallLineThickness}px)
 						`,
 						backgroundSize: `
 							var(--large-grid-spacing) var(--large-grid-spacing),

@@ -8,45 +8,55 @@ const injectedRtkApi = api
 		endpoints: (build) => ({
 			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
 				query: () => ({ url: `/api/constants/admin-levels` }),
+				providesTags: [],
 			}),
 			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
 				query: () => ({ url: `/api/constants/world-access-modes` }),
+				providesTags: [],
 			}),
 			listCalendarTemplates: build.query<ListCalendarTemplatesApiResponse, ListCalendarTemplatesApiArg>({
 				query: () => ({ url: `/api/constants/calendar-templates` }),
+				providesTags: [],
 			}),
 			listCalendarUnitFormatModes: build.query<
 				ListCalendarUnitFormatModesApiResponse,
 				ListCalendarUnitFormatModesApiArg
 			>({
 				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
+				providesTags: [],
 			}),
 			listImageGenerationModels: build.query<
 				ListImageGenerationModelsApiResponse,
 				ListImageGenerationModelsApiArg
 			>({
 				query: () => ({ url: `/api/constants/image-generation-models` }),
+				providesTags: [],
 			}),
 			sendContactFormMessage: build.mutation<SendContactFormMessageApiResponse, SendContactFormMessageApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/contact`, method: 'POST', body: queryArg.body }),
+					invalidatesTags: [],
 				},
 			),
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
+				providesTags: [],
 			}),
 			getApiHealth: build.query<GetApiHealthApiResponse, GetApiHealthApiArg>({
 				query: () => ({ url: `/api/health` }),
+				providesTags: [],
 			}),
 			getSupportedImageFormats: build.query<
 				GetSupportedImageFormatsApiResponse,
 				GetSupportedImageFormatsApiArg
 			>({
 				query: () => ({ url: `/api/images/formats` }),
+				providesTags: [],
 			}),
 			requestImageConversion: build.mutation<RequestImageConversionApiResponse, RequestImageConversionApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
+					invalidatesTags: [],
 				},
 			),
 			updateNode: build.mutation<UpdateNodeApiResponse, UpdateNodeApiArg>({
@@ -55,6 +65,7 @@ const injectedRtkApi = api
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
+				invalidatesTags: [],
 			}),
 			getWikiArticleContent: build.query<GetWikiArticleContentApiResponse, GetWikiArticleContentApiArg>({
 				query: (queryArg) => ({
@@ -86,6 +97,7 @@ const injectedRtkApi = api
 					method: 'POST',
 					body: queryArg.body,
 				}),
+				invalidatesTags: [],
 			}),
 			createWorldShareLink: build.mutation<CreateWorldShareLinkApiResponse, CreateWorldShareLinkApiArg>({
 				query: (queryArg) => ({
@@ -111,9 +123,11 @@ const injectedRtkApi = api
 			}),
 			visitWorldShareLink: build.query<VisitWorldShareLinkApiResponse, VisitWorldShareLinkApiArg>({
 				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}` }),
+				providesTags: [],
 			}),
 			acceptWorldShareLink: build.mutation<AcceptWorldShareLinkApiResponse, AcceptWorldShareLinkApiArg>({
 				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}/accept`, method: 'POST' }),
+				invalidatesTags: [],
 			}),
 			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
 				query: (queryArg) => ({
@@ -137,6 +151,7 @@ const injectedRtkApi = api
 							worldId: queryArg.worldId,
 						},
 					}),
+					providesTags: [],
 				},
 			),
 		}),
@@ -192,10 +207,10 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	ownerId: string
-	size: number
 	expiresAt?: null | string
+	ownerId: string
 	bucketKey: string
+	size: number
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
@@ -214,18 +229,16 @@ export type RequestImageConversionApiArg = {
 	}
 }
 export type UpdateNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	parentActorId?: null | string
+	worldId: string
 	positionX: number
 	positionY: number
+	parentActorId?: null | string
 }
 export type UpdateNodeApiArg = {
-	/** Any string value */
 	worldId: string
-	/** Any string value */
 	nodeId: string
 	body: {
 		positionX?: number

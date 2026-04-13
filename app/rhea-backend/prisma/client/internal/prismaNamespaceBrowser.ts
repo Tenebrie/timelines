@@ -17,8 +17,8 @@
 
 import * as runtime from "@prisma/client/runtime/index-browser"
 
-export type * from '../models.ts'
-export type * from './prismaNamespace.ts'
+export type * from '../models.js'
+export type * from './prismaNamespace.js'
 
 export const Decimal = runtime.Decimal
 
@@ -69,6 +69,7 @@ export const ModelName = {
   WorldCommonIconSet: 'WorldCommonIconSet',
   Mention: 'Mention',
   MindmapNode: 'MindmapNode',
+  MindmapLink: 'MindmapLink',
   Tag: 'Tag',
   User: 'User',
   CollaboratingUser: 'CollaboratingUser',
@@ -350,6 +351,19 @@ export const MindmapNodeScalarFieldEnum = {
 } as const
 
 export type MindmapNodeScalarFieldEnum = (typeof MindmapNodeScalarFieldEnum)[keyof typeof MindmapNodeScalarFieldEnum]
+
+
+export const MindmapLinkScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sourceNodeId: 'sourceNodeId',
+  targetNodeId: 'targetNodeId',
+  direction: 'direction',
+  content: 'content'
+} as const
+
+export type MindmapLinkScalarFieldEnum = (typeof MindmapLinkScalarFieldEnum)[keyof typeof MindmapLinkScalarFieldEnum]
 
 
 export const TagScalarFieldEnum = {

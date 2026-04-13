@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
+import { ActorLinkPositioner } from './workspace/ActorLinkPositioner'
 import { ActorNodePositioner } from './workspace/ActorNodePositioner'
 
 const ActorList = () => {
@@ -31,12 +32,36 @@ const ActorList = () => {
 			.map((node) => node as NonNullable<typeof node>)
 	}, [data, actors])
 
+	const nodeLinks = useMemo(() => {
+		if (!data) {
+			return []
+		}
+
+		return data.links
+			.map((link) => {
+				const sourceNode = actorsWithNodes.find((node) => node.id === link.sourceNodeId)
+				const targetNode = actorsWithNodes.find((node) => node.id === link.targetNodeId)
+				if (!sourceNode || !targetNode) {
+					return null
+				}
+				return {
+					...link,
+					sourceNode,
+					targetNode,
+				}
+			})
+			.filter((link): link is NonNullable<typeof link> => link !== null)
+	}, [data, actorsWithNodes])
+
 	if (!data) {
 		return null
 	}
 
 	return (
 		<>
+			{nodeLinks.map((link) => (
+				<ActorLinkPositioner key={link.id} link={link} source={link.sourceNode} target={link.targetNode} />
+			))}
 			{actorsWithNodes.map((wrapper) => (
 				<ActorNodePositioner key={wrapper.id} actor={wrapper.actor} node={wrapper.node} />
 			))}

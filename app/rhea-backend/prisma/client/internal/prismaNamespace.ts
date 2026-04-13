@@ -16,10 +16,10 @@
  */
 
 import * as runtime from "@prisma/client/runtime/client"
-import type * as Prisma from "../models.ts"
-import { type PrismaClient } from "./class.ts"
+import type * as Prisma from "../models.js"
+import { type PrismaClient } from "./class.js"
 
-export type * from '../models.ts'
+export type * from '../models.js'
 
 export type DMMF = typeof runtime.DMMF
 
@@ -402,6 +402,7 @@ export const ModelName = {
   WorldCommonIconSet: 'WorldCommonIconSet',
   Mention: 'Mention',
   MindmapNode: 'MindmapNode',
+  MindmapLink: 'MindmapLink',
   Tag: 'Tag',
   User: 'User',
   CollaboratingUser: 'CollaboratingUser',
@@ -426,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "actor" | "userAnnouncement" | "asset" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "tag" | "user" | "collaboratingUser" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
+    modelProps: "actor" | "userAnnouncement" | "asset" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1762,6 +1763,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MindmapLink: {
+      payload: Prisma.$MindmapLinkPayload<ExtArgs>
+      fields: Prisma.MindmapLinkFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MindmapLinkFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MindmapLinkFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkPayload>
+        }
+        findFirst: {
+          args: Prisma.MindmapLinkFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MindmapLinkFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkPayload>
+        }
+        findMany: {
+          args: Prisma.MindmapLinkFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkPayload>[]
+        }
+        create: {
+          args: Prisma.MindmapLinkCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkPayload>
+        }
+        createMany: {
+          args: Prisma.MindmapLinkCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MindmapLinkCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkPayload>[]
+        }
+        delete: {
+          args: Prisma.MindmapLinkDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkPayload>
+        }
+        update: {
+          args: Prisma.MindmapLinkUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkPayload>
+        }
+        deleteMany: {
+          args: Prisma.MindmapLinkDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MindmapLinkUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MindmapLinkUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkPayload>[]
+        }
+        upsert: {
+          args: Prisma.MindmapLinkUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkPayload>
+        }
+        aggregate: {
+          args: Prisma.MindmapLinkAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMindmapLink>
+        }
+        groupBy: {
+          args: Prisma.MindmapLinkGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MindmapLinkGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MindmapLinkCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MindmapLinkCountAggregateOutputType> | number
+        }
+      }
+    }
     Tag: {
       payload: Prisma.$TagPayload<ExtArgs>
       fields: Prisma.TagFieldRefs
@@ -2723,6 +2798,19 @@ export const MindmapNodeScalarFieldEnum = {
 export type MindmapNodeScalarFieldEnum = (typeof MindmapNodeScalarFieldEnum)[keyof typeof MindmapNodeScalarFieldEnum]
 
 
+export const MindmapLinkScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  sourceNodeId: 'sourceNodeId',
+  targetNodeId: 'targetNodeId',
+  direction: 'direction',
+  content: 'content'
+} as const
+
+export type MindmapLinkScalarFieldEnum = (typeof MindmapLinkScalarFieldEnum)[keyof typeof MindmapLinkScalarFieldEnum]
+
+
 export const TagScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -3104,6 +3192,20 @@ export type ListEnumMentionedEntityFieldRefInput<$PrismaModel> = FieldRefInputTy
 
 
 /**
+ * Reference to a field of type 'MindmapLinkDirection'
+ */
+export type EnumMindmapLinkDirectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MindmapLinkDirection'>
+    
+
+
+/**
+ * Reference to a field of type 'MindmapLinkDirection[]'
+ */
+export type ListEnumMindmapLinkDirectionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MindmapLinkDirection[]'>
+    
+
+
+/**
  * Reference to a field of type 'UserLevel'
  */
 export type EnumUserLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserLevel'>
@@ -3271,6 +3373,7 @@ export type GlobalOmitConfig = {
   worldCommonIconSet?: Prisma.WorldCommonIconSetOmit
   mention?: Prisma.MentionOmit
   mindmapNode?: Prisma.MindmapNodeOmit
+  mindmapLink?: Prisma.MindmapLinkOmit
   tag?: Prisma.TagOmit
   user?: Prisma.UserOmit
   collaboratingUser?: Prisma.CollaboratingUserOmit

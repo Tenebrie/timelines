@@ -1,12 +1,12 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
 import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
+import { dispatchGlobalEvent } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
 import { worldSlice } from '@/app/views/world/WorldSlice'
@@ -26,11 +26,15 @@ export function ActorNodePositioner({ actor, node }: Props) {
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
 	const [updateMindmapNode] = useUpdateMindmapNode()
 
-	const [position, setPosition] = useState({ x: node.positionX, y: node.positionY })
-	const positionRef = useAutoRef(position)
+	const positionRef = useRef({ x: node.positionX, y: node.positionY })
 
 	useEffect(() => {
-		setPosition({ x: node.positionX, y: node.positionY })
+		positionRef.current = { x: node.positionX, y: node.positionY }
+		const el = ref.current
+		if (el) {
+			el.style.setProperty('--node-x', `${node.positionX}px`)
+			el.style.setProperty('--node-y', `${node.positionY}px`)
+		}
 	}, [node])
 
 	const selectedNodes = useSelector(getSelectedNodeActorIds)
@@ -62,7 +66,7 @@ export function ActorNodePositioner({ actor, node }: Props) {
 		})
 	})
 
-	const ref = useRef<HTMLDivElement | null>(null)
+	const ref = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		const element = ref.current
@@ -89,7 +93,7 @@ export function ActorNodePositioner({ actor, node }: Props) {
 			}
 			event.stopPropagation()
 
-			// Don't start dragging if clicking on content (but header is ok for dragging)
+			// Don't start dragging if clicking on content (but header is fine for dragging)
 			const target = event.target as HTMLElement
 			const contentElement = element.querySelector('[data-mindmap-content]')
 			if (contentElement?.contains(target)) {
@@ -121,7 +125,9 @@ export function ActorNodePositioner({ actor, node }: Props) {
 				y: Math.round(positionRef.current.y / 10) * 10,
 			}
 
-			setPosition({ x: snappedPosition.x, y: snappedPosition.y })
+			positionRef.current = snappedPosition
+			element.style.setProperty('--node-x', `${snappedPosition.x}px`)
+			element.style.setProperty('--node-y', `${snappedPosition.y}px`)
 
 			updateMindmapNode(node.id, {
 				positionX: snappedPosition.x,
@@ -151,7 +157,14 @@ export function ActorNodePositioner({ actor, node }: Props) {
 			if (mouseState.isDragging) {
 				mouseState.positionX += mouseState.deltaX / mouseState.gridScale
 				mouseState.positionY += mouseState.deltaY / mouseState.gridScale
-				setPosition({ x: mouseState.positionX, y: mouseState.positionY })
+				positionRef.current = { x: mouseState.positionX, y: mouseState.positionY }
+				element.style.setProperty('--node-x', `${mouseState.positionX}px`)
+				element.style.setProperty('--node-y', `${mouseState.positionY}px`)
+				dispatchGlobalEvent['mindmap/node/onMove']({
+					nodeId: node.id,
+					positionX: mouseState.positionX,
+					positionY: mouseState.positionY,
+				})
 
 				mouseState.deltaX = 0
 				mouseState.deltaY = 0
@@ -169,18 +182,25 @@ export function ActorNodePositioner({ actor, node }: Props) {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [ref, positionRef, updateMindmapNode, node.id])
+	}, [positionRef, updateMindmapNode, node.id])
 
 	return (
 		<Box
 			ref={ref}
 			data-mindmap-node={node.id}
 			data-actor-id={actor.id}
+			style={
+				{
+					'--node-x': `${node.positionX}px`,
+					'--node-y': `${node.positionY}px`,
+				} as React.CSSProperties
+			}
 			sx={{
 				pointerEvents: 'auto',
 				background: theme.custom.palette.background.timeline,
 				position: 'absolute',
-				transform: `translate(calc(${position.x}px * var(--grid-scale) + var(--grid-offset-x)), calc(${position.y}px * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))`,
+				transform:
+					'translate(calc(var(--node-x) * var(--grid-scale) + var(--grid-offset-x)), calc(var(--node-y) * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))',
 				transformOrigin: 'top left',
 				outline: '2px solid',
 				outlineColor: selected ? theme.material.palette.primary.main : 'transparent',

@@ -10,8 +10,8 @@
  */
 
 import type * as runtime from "@prisma/client/runtime/client"
-import * as $Enums from "./enums.ts"
-import type * as Prisma from "./internal/prismaNamespace.ts"
+import * as $Enums from "./enums.js"
+import type * as Prisma from "./internal/prismaNamespace.js"
 
 
 export type StringFilter<$PrismaModel = never> = {
@@ -441,6 +441,23 @@ export type EnumMentionedEntityWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumMentionedEntityFilter<$PrismaModel>
   _max?: Prisma.NestedEnumMentionedEntityFilter<$PrismaModel>
+}
+
+export type EnumMindmapLinkDirectionFilter<$PrismaModel = never> = {
+  equals?: $Enums.MindmapLinkDirection | Prisma.EnumMindmapLinkDirectionFieldRefInput<$PrismaModel>
+  in?: $Enums.MindmapLinkDirection[] | Prisma.ListEnumMindmapLinkDirectionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MindmapLinkDirection[] | Prisma.ListEnumMindmapLinkDirectionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMindmapLinkDirectionFilter<$PrismaModel> | $Enums.MindmapLinkDirection
+}
+
+export type EnumMindmapLinkDirectionWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MindmapLinkDirection | Prisma.EnumMindmapLinkDirectionFieldRefInput<$PrismaModel>
+  in?: $Enums.MindmapLinkDirection[] | Prisma.ListEnumMindmapLinkDirectionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MindmapLinkDirection[] | Prisma.ListEnumMindmapLinkDirectionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMindmapLinkDirectionWithAggregatesFilter<$PrismaModel> | $Enums.MindmapLinkDirection
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMindmapLinkDirectionFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMindmapLinkDirectionFilter<$PrismaModel>
 }
 
 export type EnumUserLevelFilter<$PrismaModel = never> = {
@@ -940,6 +957,23 @@ export type NestedEnumMentionedEntityWithAggregatesFilter<$PrismaModel = never> 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumMentionedEntityFilter<$PrismaModel>
   _max?: Prisma.NestedEnumMentionedEntityFilter<$PrismaModel>
+}
+
+export type NestedEnumMindmapLinkDirectionFilter<$PrismaModel = never> = {
+  equals?: $Enums.MindmapLinkDirection | Prisma.EnumMindmapLinkDirectionFieldRefInput<$PrismaModel>
+  in?: $Enums.MindmapLinkDirection[] | Prisma.ListEnumMindmapLinkDirectionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MindmapLinkDirection[] | Prisma.ListEnumMindmapLinkDirectionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMindmapLinkDirectionFilter<$PrismaModel> | $Enums.MindmapLinkDirection
+}
+
+export type NestedEnumMindmapLinkDirectionWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.MindmapLinkDirection | Prisma.EnumMindmapLinkDirectionFieldRefInput<$PrismaModel>
+  in?: $Enums.MindmapLinkDirection[] | Prisma.ListEnumMindmapLinkDirectionFieldRefInput<$PrismaModel>
+  notIn?: $Enums.MindmapLinkDirection[] | Prisma.ListEnumMindmapLinkDirectionFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumMindmapLinkDirectionWithAggregatesFilter<$PrismaModel> | $Enums.MindmapLinkDirection
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumMindmapLinkDirectionFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumMindmapLinkDirectionFilter<$PrismaModel>
 }
 
 export type NestedEnumUserLevelFilter<$PrismaModel = never> = {
