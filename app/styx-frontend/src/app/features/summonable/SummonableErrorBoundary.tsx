@@ -8,7 +8,7 @@ interface Props {
 	family: string
 }
 
-function ErrorFallback({ error, family }: { error: Error; family: string }) {
+function ErrorFallback({ error, family }: { error: unknown; family: string }) {
 	return (
 		<Box
 			sx={{
@@ -20,7 +20,7 @@ function ErrorFallback({ error, family }: { error: Error; family: string }) {
 			}}
 		>
 			<Typography variant="body2" color="error">
-				Error in summonable {family}: {error.message}
+				Error in summonable {family}: {error instanceof Error ? error.message : String(error)}
 			</Typography>
 		</Box>
 	)
