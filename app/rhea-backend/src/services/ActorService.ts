@@ -355,7 +355,7 @@ export const ActorService = {
 					id: actorId,
 				},
 			})
-			const world = await makeTouchWorldQuery(worldId)
+			const world = await makeTouchWorldQuery(worldId, prisma)
 			const updatedMentions = await prisma.mention.findMany({
 				where: {
 					sourceActorId: actorId,

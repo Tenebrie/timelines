@@ -16,7 +16,12 @@ export const WikiService = {
 				worldId,
 			},
 			include: {
-				children: true,
+				children: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
 				mentions: {
 					select: {
 						targetId: true,
@@ -65,7 +70,12 @@ export const WikiService = {
 				worldId: params.worldId,
 			},
 			include: {
-				children: true,
+				children: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
 				pages: {
 					select: {
 						id: true,
@@ -118,7 +128,12 @@ export const WikiService = {
 					position: params.position * 2,
 				},
 				include: {
-					children: true,
+					children: {
+						select: {
+							id: true,
+							name: true,
+						},
+					},
 				},
 				omit: {
 					contentYjs: true,
@@ -174,7 +189,12 @@ export const WikiService = {
 						: undefined,
 				},
 				include: {
-					children: true,
+					children: {
+						select: {
+							id: true,
+							name: true,
+						},
+					},
 				},
 				omit: {
 					contentYjs: true,
@@ -239,7 +259,12 @@ export const WikiService = {
 					position: params.toPosition,
 				},
 				include: {
-					children: true,
+					children: {
+						select: {
+							id: true,
+							name: true,
+						},
+					},
 				},
 			})
 

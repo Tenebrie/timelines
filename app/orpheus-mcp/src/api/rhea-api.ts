@@ -2533,8 +2533,8 @@ export interface operations {
                         description: string;
                         id: string;
                         title: string;
-                        userId: string;
                         type: "Info" | "Welcome" | "WorldShared";
+                        userId: string;
                         /** Format: date-time */
                         timestamp: string;
                         isUnread: boolean;
@@ -2961,9 +2961,9 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 ownerId: string;
-                                size: number;
                                 expiresAt?: null | string;
                                 bucketKey: string;
+                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
@@ -2994,7 +2994,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        redirectTo: "admin" | "login";
+                        redirectTo: "login" | "admin";
                     };
                 };
             };
@@ -6374,19 +6374,8 @@ export interface operations {
                                 sourceType: "Actor" | "Event" | "Article" | "Tag";
                             }[];
                             children: {
-                                worldId: string;
                                 id: string;
-                                /** Format: date-time */
-                                createdAt: string;
-                                /** Format: date-time */
-                                updatedAt: string;
                                 name: string;
-                                icon: string;
-                                color: string;
-                                position: number;
-                                contentRich: string;
-                                contentYjs?: null | string;
-                                parentId?: null | string;
                             }[];
                             worldId: string;
                             id: string;
@@ -6778,19 +6767,8 @@ export interface operations {
                             sourceType: "Actor" | "Event" | "Article" | "Tag";
                         }[];
                         children: {
-                            worldId: string;
                             id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
                             name: string;
-                            icon: string;
-                            color: string;
-                            position: number;
-                            contentRich: string;
-                            contentYjs?: null | string;
-                            parentId?: null | string;
                         }[];
                         worldId: string;
                         id: string;
@@ -6839,19 +6817,8 @@ export interface operations {
                 content: {
                     "application/json": {
                         children: {
-                            worldId: string;
                             id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
                             name: string;
-                            icon: string;
-                            color: string;
-                            position: number;
-                            contentRich: string;
-                            contentYjs?: null | string;
-                            parentId?: null | string;
                         }[];
                         worldId: string;
                         id: string;
@@ -6926,19 +6893,8 @@ export interface operations {
                 content: {
                     "application/json": {
                         children: {
-                            worldId: string;
                             id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
                             name: string;
-                            icon: string;
-                            color: string;
-                            position: number;
-                            contentRich: string;
-                            contentYjs?: null | string;
-                            parentId?: null | string;
                         }[];
                         worldId: string;
                         id: string;

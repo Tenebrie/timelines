@@ -14,33 +14,22 @@ import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
 import { useCreateEvent } from '@/app/views/world/api/useCreateEvent'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
-import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
+import Modal, { ModalFooter, ModalHeader } from '@/ui-lib/components/Modal'
 
 export const CreateEventModal = () => {
-	const { isOpen, close } = useModal('createEventModal')
+	const { isOpen, closeWithCleanup } = useModal('createEventModal')
 	const [descriptionPlain, setDescriptionPlain] = useState('')
 	const [descriptionRich, setDescriptionRich] = useState('')
 	const [creationError, setCreationError] = useState<string | null>(null)
 	const [createEvent, { isLoading }] = useCreateEvent()
 	const theme = useCustomTheme()
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
-	const [editorKey, setEditorKey] = useState(0)
 
 	const { selectedTime } = useSelector(getWorldState, (a, b) => a.selectedTime === b.selectedTime)
 
 	const targetTrack = useSearch({
 		from: '/world/$worldId/_world',
 		select: (search) => search.track,
-	})
-
-	useModalCleanup({
-		isOpen,
-		onCleanup: () => {
-			setDescriptionPlain('')
-			setDescriptionRich('')
-			setCreationError(null)
-			setEditorKey((prev) => prev + 1)
-		},
 	})
 
 	const onConfirm = async () => {
@@ -67,6 +56,12 @@ export const CreateEventModal = () => {
 			return
 		}
 
+		closeWithCleanup(() => {
+			setDescriptionPlain('')
+			setDescriptionRich('')
+			setCreationError(null)
+			console.log('Clean here')
+		})
 		navigate({
 			search: (prev) => ({
 				...prev,
@@ -79,7 +74,12 @@ export const CreateEventModal = () => {
 		if (isLoading) {
 			return
 		}
-		close()
+		closeWithCleanup(() => {
+			setDescriptionPlain('')
+			setDescriptionRich('')
+			setCreationError(null)
+			console.log('Clean here 2')
+		})
 		navigate({
 			search: (prev) => ({
 				...prev,
@@ -116,7 +116,7 @@ export const CreateEventModal = () => {
 					}}
 				>
 					<RichTextEditorSummoner
-						softKey={`create-event-modal-${editorKey}`}
+						softKey="create-event-modal"
 						value={descriptionRich}
 						autoFocus
 						onChange={(value) => {

@@ -14,11 +14,15 @@ const saveToLocalStorage = (state: PreferencesState) => {
 		PreferencesKey,
 		JSON.stringify({
 			...state,
+			calendarEditor: {
+				expandedUnitSections: [],
+			},
 			outliner: {
 				...state.outliner,
 				// Do not save expanded entities into storage as it may grow too large
 				expandedActors: [],
 				expandedEvents: [],
+				expandedTags: [],
 			},
 			wiki: {
 				...state.wiki,

@@ -143,14 +143,6 @@ export const RichTextEditorComponent = ({
 		[collabReady],
 	)
 
-	const previousSoftKey = useRef(softKey)
-	useEffect(() => {
-		if (softKey !== previousSoftKey.current) {
-			editor.commands.setContent(value)
-			previousSoftKey.current = softKey
-		}
-	}, [editor.commands, softKey, value])
-
 	const currentValue = useRef(value)
 
 	useEffect(() => {

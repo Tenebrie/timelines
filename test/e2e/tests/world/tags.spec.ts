@@ -26,7 +26,7 @@ test.describe('World Tags', () => {
 		await page.getByTestId('ModalBackdrop').getByText('Create', { exact: true }).click()
 		await page.waitForTimeout(500)
 
-		expect(page.getByText('Tag with 1 mention')).toBeVisible()
+		await expect(page.getByText('Tag with 1 mention')).toBeVisible()
 
 		// Open event
 		await page.getByTestId('TimelineMarker').click()
@@ -44,8 +44,8 @@ test.describe('World Tags', () => {
 
 		await expect(page.getByTestId('TimelineMarker')).not.toBeVisible()
 
-		expect(page.getByText('New Tag')).toBeVisible()
-		expect(page.getByText('Tag with 0 mentions')).toBeVisible()
+		await expect(page.getByText('New Tag')).toBeVisible()
+		await expect(page.getByText('Tag with 0 mentions')).toBeVisible()
 
 		// Delete tag
 		await page.getByLabel('Show actions').click()
@@ -53,8 +53,8 @@ test.describe('World Tags', () => {
 		await page.getByTestId('ModalBackdrop').getByText('Confirm').click()
 		await page.waitForTimeout(500)
 
-		expect(page.getByText('New Tag')).not.toBeVisible()
-		expect(page.getByText('Tag with 0 mentions')).not.toBeVisible()
+		await expect(page.getByText('New Tag')).not.toBeVisible()
+		await expect(page.getByText('Tag with 0 mentions')).not.toBeVisible()
 	})
 
 	test.afterEach(async ({ page }) => {
