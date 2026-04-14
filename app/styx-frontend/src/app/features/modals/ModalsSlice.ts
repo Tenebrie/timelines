@@ -5,7 +5,6 @@ import { createSlice } from '@reduxjs/toolkit'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { store } from '@/app/store'
 import { isEventObject } from '@/app/utils/isEventObject'
 
 import { User } from '../auth/AuthSlice'
@@ -166,11 +165,11 @@ export const useModal = <T extends ValidModals>(id: T) => {
 	}, [dispatch, id])
 
 	const closeWithCleanup = useCallback(
-		(onClose: () => void) => {
+		(onClose: () => void, isOpened: () => boolean) => {
 			dispatch(modalsSlice.actions.closeModal({ id }))
 			if (onClose) {
 				setTimeout(() => {
-					if (!store.getState().modals[id].isOpen) {
+					if (!isOpened()) {
 						onClose()
 					}
 				}, animationDuration + 5)

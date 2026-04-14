@@ -10,6 +10,7 @@ import { useModal } from '@/app/features/modals/ModalsSlice'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { store } from '@/app/store'
 import { getRandomEntityColor } from '@/app/utils/colors/getRandomEntityColor'
 import { useCreateEvent } from '@/app/views/world/api/useCreateEvent'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
@@ -56,12 +57,14 @@ export const CreateEventModal = () => {
 			return
 		}
 
-		closeWithCleanup(() => {
-			setDescriptionPlain('')
-			setDescriptionRich('')
-			setCreationError(null)
-			console.log('Clean here')
-		})
+		closeWithCleanup(
+			() => {
+				setDescriptionPlain('')
+				setDescriptionRich('')
+				setCreationError(null)
+			},
+			() => store.getState().modals['createEventModal'].isOpen,
+		)
 		navigate({
 			search: (prev) => ({
 				...prev,
@@ -74,12 +77,14 @@ export const CreateEventModal = () => {
 		if (isLoading) {
 			return
 		}
-		closeWithCleanup(() => {
-			setDescriptionPlain('')
-			setDescriptionRich('')
-			setCreationError(null)
-			console.log('Clean here 2')
-		})
+		closeWithCleanup(
+			() => {
+				setDescriptionPlain('')
+				setDescriptionRich('')
+				setCreationError(null)
+			},
+			() => store.getState().modals['createEventModal'].isOpen,
+		)
 		navigate({
 			search: (prev) => ({
 				...prev,

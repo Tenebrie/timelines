@@ -36,6 +36,7 @@ export const generateStore = ({ preloadedState }: { preloadedState?: Partial<Roo
 	})
 
 export const store = generateStore()
+export const getGlobalStore = () => store
 
 export type RootState = typeof initialState
 export type AppDispatch = typeof store.dispatch
