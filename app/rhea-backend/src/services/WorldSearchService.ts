@@ -121,6 +121,7 @@ export const WorldSearchService = {
 				],
 			},
 			include: {
+				children: true,
 				mentions: {
 					select: {
 						targetId: true,

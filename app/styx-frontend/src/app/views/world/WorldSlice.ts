@@ -8,6 +8,7 @@ import {
 	WorldEventDelta,
 	WorldTag,
 } from '@api/types/worldTypes'
+import { WikiArticle } from '@api/types/worldWikiTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
@@ -37,8 +38,10 @@ export const initialState = {
 		query: null as string | null,
 		isLoading: false as boolean,
 		results: {
+			articles: [] as WikiArticle[],
 			events: [] as WorldEvent[],
 			actors: [] as ActorDetails[],
+			tags: [] as WorldTag[],
 		},
 	},
 

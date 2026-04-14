@@ -54,6 +54,31 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		descriptionRich: string
 	}[]
 	articles: {
+		pages: {
+			id: string
+			name: string
+		}[]
+		mentions: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
+		mentionedIn: {
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
+		children: {
+			worldId: string
+			id: string
+			createdAt: string
+			updatedAt: string
+			name: string
+			icon: string
+			color: string
+			contentRich: string
+			contentYjs?: null | string
+			position: number
+			parentId?: null | string
+		}[]
 		worldId: string
 		id: string
 		createdAt: string
@@ -61,8 +86,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		name: string
 		icon: string
 		color: string
-		position: number
 		contentRich: string
+		position: number
 		parentId?: null | string
 	}[]
 	events: {
@@ -102,6 +127,14 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		worldEventTrackId?: null | string
 	}[]
 	tags: {
+		mentions: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
+		mentionedIn: {
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
 		description: string
 		worldId: string
 		id: string

@@ -1,5 +1,5 @@
 import { WorldEventTrack } from '@api/types/worldEventTracksTypes'
-import { ActorDetails, WorldEvent, WorldEventDelta } from '@api/types/worldTypes'
+import { ActorDetails, WorldEvent, WorldEventDelta, WorldTag } from '@api/types/worldTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 import { useCallback } from 'react'
@@ -52,6 +52,10 @@ const modals = {
 	deleteEventModal: {
 		isOpen: false as boolean,
 		target: null as WorldEvent | null,
+	},
+	deleteTagModal: {
+		isOpen: false as boolean,
+		target: null as WorldTag | null,
 	},
 	deleteEventDeltaModal: {
 		isOpen: false as boolean,

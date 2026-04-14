@@ -88,7 +88,6 @@ export const TimeTravelModal = () => {
 
 		if (selectedTimelineMarkers.length > 0 && moveMarkersValue) {
 			const result = moveMarkers(targetTime - initialTime)
-			console.log(targetTime - initialTime)
 			if (result.error) {
 				setError(result.error)
 				return

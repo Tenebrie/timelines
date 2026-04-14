@@ -24,6 +24,7 @@ export const CreateEventModal = () => {
 	const [createEvent, { isLoading }] = useCreateEvent()
 	const theme = useCustomTheme()
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
+	const [editorKey, setEditorKey] = useState(0)
 
 	const { selectedTime } = useSelector(getWorldState, (a, b) => a.selectedTime === b.selectedTime)
 
@@ -38,6 +39,7 @@ export const CreateEventModal = () => {
 			setDescriptionPlain('')
 			setDescriptionRich('')
 			setCreationError(null)
+			setEditorKey((prev) => prev + 1)
 		},
 	})
 
@@ -114,7 +116,7 @@ export const CreateEventModal = () => {
 					}}
 				>
 					<RichTextEditorSummoner
-						softKey="create-event-modal"
+						softKey={`create-event-modal-${editorKey}`}
 						value={descriptionRich}
 						autoFocus
 						onChange={(value) => {

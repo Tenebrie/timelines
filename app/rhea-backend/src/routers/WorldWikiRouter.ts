@@ -113,7 +113,7 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 		color: OptionalParam(StringValidator),
 	})
 
-	const article = await WikiService.updateWikiArticle({
+	const { article } = await WikiService.updateWikiArticle({
 		id: articleId,
 		name,
 	})
@@ -170,9 +170,10 @@ router.delete('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
-	await WikiService.deleteWikiArticle({ worldId, articleId })
+	const { updatedMentions } = await WikiService.deleteWikiArticle({ worldId, articleId })
 
 	RedisService.notifyAboutWikiArticleDeletion(ctx, { worldId })
+	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
 })
 
 router.post('/api/world/:worldId/wiki/articles/delete', async (ctx) => {

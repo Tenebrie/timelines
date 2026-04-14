@@ -102,13 +102,14 @@ router.patch('/api/world/:worldId/actor/:actorId', async (ctx) => {
 		color: OptionalParam(NameStringValidator),
 	})
 
-	const { actor } = await ActorService.updateActor({
+	const { actor, updatedMentions } = await ActorService.updateActor({
 		worldId,
 		actorId,
 		params,
 	})
 
 	RedisService.notifyAboutActorUpdate(ctx, { worldId, actor })
+	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
 
 	return actor
 })

@@ -15,6 +15,27 @@ export const WikiService = {
 				id,
 				worldId,
 			},
+			include: {
+				children: true,
+				mentions: {
+					select: {
+						targetId: true,
+						targetType: true,
+					},
+				},
+				mentionedIn: {
+					select: {
+						sourceId: true,
+						sourceType: true,
+					},
+				},
+				pages: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
+			},
 			omit: {
 				contentYjs: true,
 			},
@@ -120,6 +141,12 @@ export const WikiService = {
 		},
 	) => {
 		return getPrismaClient().$transaction(async (prisma) => {
+			const previousMentions = await prisma.mention.findMany({
+				where: {
+					sourceArticleId: params.id,
+				},
+			})
+
 			const mentionedEntities = await MentionsService.createMentions(
 				params.id,
 				MentionedEntity.Article,
@@ -154,10 +181,21 @@ export const WikiService = {
 				},
 			})
 
+			const updatedMentions = [...previousMentions, ...mentionedEntities].filter((mention) => {
+				return (
+					!previousMentions.some(
+						(prev) => prev.sourceId === mention.sourceId && prev.targetId === mention.targetId,
+					) ||
+					!mentionedEntities.some(
+						(updated) => updated.sourceId === mention.sourceId && updated.targetId === mention.targetId,
+					)
+				)
+			})
+
 			await MentionsService.clearOrphanedMentions(prisma)
 			await makeTouchWorldQuery(updatedArticle.worldId, prisma)
 
-			return updatedArticle
+			return { article: updatedArticle, updatedMentions }
 		})
 	},
 
@@ -223,8 +261,15 @@ export const WikiService = {
 			await makeSortWikiArticlesQuery(worldId, prisma)
 			const world = await makeTouchWorldQuery(worldId, prisma)
 
+			const updatedMentions = await prisma.mention.findMany({
+				where: {
+					sourceArticleId: articleId,
+				},
+			})
+
 			return {
 				world,
+				updatedMentions,
 			}
 		})
 	},

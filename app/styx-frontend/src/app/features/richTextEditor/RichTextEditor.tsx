@@ -78,22 +78,28 @@ export const RichTextEditorComponent = ({
 			editor.state.doc.descendants((node) => {
 				if (node.type.name === MentionNodeName) {
 					const actorId = node.attrs.componentProps.actor as string | undefined
-					const eventId = node.attrs.componentProps.event as string | undefined
 					const articleId = node.attrs.componentProps.article as string | undefined
+					const eventId = node.attrs.componentProps.event as string | undefined
+					const tagId = node.attrs.componentProps.tag as string | undefined
 					if (actorId) {
 						mentions.push({
 							targetId: node.attrs.componentProps.actor as string,
 							targetType: 'Actor',
+						})
+					} else if (articleId) {
+						mentions.push({
+							targetId: node.attrs.componentProps.article as string,
+							targetType: 'Article',
 						})
 					} else if (eventId) {
 						mentions.push({
 							targetId: node.attrs.componentProps.event as string,
 							targetType: 'Event',
 						})
-					} else if (articleId) {
+					} else if (tagId) {
 						mentions.push({
-							targetId: node.attrs.componentProps.article as string,
-							targetType: 'Article',
+							targetId: node.attrs.componentProps.tag as string,
+							targetType: 'Tag',
 						})
 					}
 				}
@@ -136,6 +142,14 @@ export const RichTextEditorComponent = ({
 		},
 		[collabReady],
 	)
+
+	const previousSoftKey = useRef(softKey)
+	useEffect(() => {
+		if (softKey !== previousSoftKey.current) {
+			editor.commands.setContent(value)
+			previousSoftKey.current = softKey
+		}
+	}, [editor.commands, softKey, value])
 
 	const currentValue = useRef(value)
 

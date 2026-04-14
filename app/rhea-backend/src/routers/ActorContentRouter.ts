@@ -80,7 +80,7 @@ router.put('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
 
-	const { actor } = await ActorService.updateActor({
+	const { actor, updatedMentions } = await ActorService.updateActor({
 		worldId,
 		actorId,
 		params: {
@@ -92,6 +92,7 @@ router.put('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 	})
 
 	RedisService.notifyAboutActorUpdate(ctx, { worldId, actor })
+	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
 
 	if (!contentDeltas) {
 		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: actorId })
@@ -184,7 +185,7 @@ router.put('/api/world/:worldId/actor/:actorId/content/pages/:pageId', async (ct
 		throw new Error('Page not found')
 	}
 
-	const actor = await ActorService.updateActorContentPage({
+	const { actor, updatedMentions } = await ActorService.updateActorContentPage({
 		worldId,
 		actorId,
 		pageId,
@@ -197,6 +198,7 @@ router.put('/api/world/:worldId/actor/:actorId/content/pages/:pageId', async (ct
 	})
 
 	RedisService.notifyAboutActorUpdate(ctx, { worldId, actor })
+	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
 
 	if (!contentDeltas) {
 		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: pageId })
@@ -218,13 +220,14 @@ router.delete('/api/world/:worldId/actor/:actorId/content/pages/:pageId', async 
 
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
 
-	const actor = await ActorService.deleteActorContentPage({
+	const { actor, updatedMentions } = await ActorService.deleteActorContentPage({
 		worldId,
 		actorId,
 		pageId,
 	})
 
 	RedisService.notifyAboutActorUpdate(ctx, { worldId, actor })
+	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
 })
 
 export const ActorContentRouter = router

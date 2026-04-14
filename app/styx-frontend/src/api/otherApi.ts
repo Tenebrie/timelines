@@ -8,45 +8,55 @@ const injectedRtkApi = api
 		endpoints: (build) => ({
 			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
 				query: () => ({ url: `/api/constants/admin-levels` }),
+				providesTags: [],
 			}),
 			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
 				query: () => ({ url: `/api/constants/world-access-modes` }),
+				providesTags: [],
 			}),
 			listCalendarTemplates: build.query<ListCalendarTemplatesApiResponse, ListCalendarTemplatesApiArg>({
 				query: () => ({ url: `/api/constants/calendar-templates` }),
+				providesTags: [],
 			}),
 			listCalendarUnitFormatModes: build.query<
 				ListCalendarUnitFormatModesApiResponse,
 				ListCalendarUnitFormatModesApiArg
 			>({
 				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
+				providesTags: [],
 			}),
 			listImageGenerationModels: build.query<
 				ListImageGenerationModelsApiResponse,
 				ListImageGenerationModelsApiArg
 			>({
 				query: () => ({ url: `/api/constants/image-generation-models` }),
+				providesTags: [],
 			}),
 			sendContactFormMessage: build.mutation<SendContactFormMessageApiResponse, SendContactFormMessageApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/contact`, method: 'POST', body: queryArg.body }),
+					invalidatesTags: [],
 				},
 			),
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
+				providesTags: [],
 			}),
 			getApiHealth: build.query<GetApiHealthApiResponse, GetApiHealthApiArg>({
 				query: () => ({ url: `/api/health` }),
+				providesTags: [],
 			}),
 			getSupportedImageFormats: build.query<
 				GetSupportedImageFormatsApiResponse,
 				GetSupportedImageFormatsApiArg
 			>({
 				query: () => ({ url: `/api/images/formats` }),
+				providesTags: [],
 			}),
 			requestImageConversion: build.mutation<RequestImageConversionApiResponse, RequestImageConversionApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/images/convert`, method: 'POST', body: queryArg.body }),
+					invalidatesTags: [],
 				},
 			),
 			updateNode: build.mutation<UpdateNodeApiResponse, UpdateNodeApiArg>({
@@ -55,6 +65,7 @@ const injectedRtkApi = api
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
+				invalidatesTags: [],
 			}),
 			getWikiArticleContent: build.query<GetWikiArticleContentApiResponse, GetWikiArticleContentApiArg>({
 				query: (queryArg) => ({
@@ -86,6 +97,7 @@ const injectedRtkApi = api
 					method: 'POST',
 					body: queryArg.body,
 				}),
+				invalidatesTags: [],
 			}),
 			createWorldShareLink: build.mutation<CreateWorldShareLinkApiResponse, CreateWorldShareLinkApiArg>({
 				query: (queryArg) => ({
@@ -111,9 +123,11 @@ const injectedRtkApi = api
 			}),
 			visitWorldShareLink: build.query<VisitWorldShareLinkApiResponse, VisitWorldShareLinkApiArg>({
 				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}` }),
+				providesTags: [],
 			}),
 			acceptWorldShareLink: build.mutation<AcceptWorldShareLinkApiResponse, AcceptWorldShareLinkApiArg>({
 				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}/accept`, method: 'POST' }),
+				invalidatesTags: [],
 			}),
 			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
 				query: (queryArg) => ({
@@ -137,6 +151,7 @@ const injectedRtkApi = api
 							worldId: queryArg.worldId,
 						},
 					}),
+					providesTags: [],
 				},
 			),
 		}),
@@ -351,9 +366,9 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 		name: string
 		icon: string
 		color: string
-		position: number
 		contentRich: string
 		contentYjs?: null | string
+		position: number
 		parentId?: null | string
 	}[]
 	worldId: string
@@ -363,8 +378,8 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	name: string
 	icon: string
 	color: string
-	position: number
 	contentRich: string
+	position: number
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {

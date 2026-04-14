@@ -32,7 +32,7 @@ export type GetWorldThumbnailMetadataApiResponse = /** status 200  */ {
 		rgba: string
 		hex: string
 		hexa: string
-		value: (number | number | number | number)[]
+		value: number[]
 		isDark: boolean
 		isLight: boolean
 	}
