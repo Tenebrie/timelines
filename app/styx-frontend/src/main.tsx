@@ -38,11 +38,11 @@ root.render(
 	</React.StrictMode>,
 )
 
-function DevErrorFallback({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) {
+function DevErrorFallback({ error, resetErrorBoundary }: { error: unknown; resetErrorBoundary: () => void }) {
 	return (
 		<div style={{ padding: 20, color: 'red' }}>
 			<h2>Dev Error</h2>
-			<pre>{error.message}</pre>
+			<pre>{error instanceof Error ? error.message : String(error)}</pre>
 			<button onClick={resetErrorBoundary}>Retry</button>
 		</div>
 	)

@@ -54,6 +54,22 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		descriptionRich: string
 	}[]
 	articles: {
+		pages: {
+			id: string
+			name: string
+		}[]
+		mentions: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
+		mentionedIn: {
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
+		children: {
+			id: string
+			name: string
+		}[]
 		worldId: string
 		id: string
 		createdAt: string
@@ -102,6 +118,14 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		worldEventTrackId?: null | string
 	}[]
 	tags: {
+		mentions: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
+		mentionedIn: {
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+		}[]
 		description: string
 		worldId: string
 		id: string

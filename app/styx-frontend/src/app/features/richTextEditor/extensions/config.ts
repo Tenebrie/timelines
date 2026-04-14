@@ -3,7 +3,6 @@ import { HardBreak } from '@tiptap/extension-hard-break'
 import ImageExtension from '@tiptap/extension-image'
 import Mention from '@tiptap/extension-mention'
 import Placeholder from '@tiptap/extension-placeholder'
-import Underline from '@tiptap/extension-underline'
 import { Extensions } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -15,10 +14,8 @@ export const SharedExtensions: Extensions = [
 	// Starter kit
 	StarterKit.configure({
 		hardBreak: false,
-		history: false,
+		undoRedo: false,
 	}),
-	// Support for underlined text
-	Underline,
 	// Support for hard breaks (Shift + Enter)
 	HardBreak.extend({
 		addKeyboardShortcuts() {

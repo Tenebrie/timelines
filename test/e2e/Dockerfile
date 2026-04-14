@@ -1,5 +1,4 @@
-# Use the official Playwright image which has all required dependencies
-FROM mcr.microsoft.com/playwright:v1.58.0-noble
+FROM mcr.microsoft.com/playwright:v1.59.1-noble
 RUN npm install -g npm@11.8.0
 
 WORKDIR /app

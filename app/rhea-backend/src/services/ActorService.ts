@@ -144,7 +144,7 @@ export const ActorService = {
 				},
 			})
 
-			const actor = await makeUpdateActorQuery({
+			const { actor } = await makeUpdateActorQuery({
 				actorId: baseActor.id,
 				params: updateData,
 				prisma,
@@ -169,7 +169,7 @@ export const ActorService = {
 		params: UpdateActorQueryParams
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
-			const actor = await makeUpdateActorQuery({
+			const { actor, updatedMentions } = await makeUpdateActorQuery({
 				actorId,
 				params,
 				prisma,
@@ -178,6 +178,7 @@ export const ActorService = {
 			return {
 				world,
 				actor,
+				updatedMentions,
 			}
 		})
 	},
@@ -231,6 +232,13 @@ export const ActorService = {
 	}) => {
 		const { mentions, ...data } = params
 		return getPrismaClient().$transaction(async (prisma) => {
+			const previousMentions = await prisma.mention.findMany({
+				where: {
+					sourceActorId: actorId,
+					pageId,
+				},
+			})
+
 			const mentionedEntities = await MentionsService.createMentions(
 				actorId,
 				MentionedEntity.Actor,
@@ -238,7 +246,7 @@ export const ActorService = {
 				prisma,
 			)
 
-			const page = await prisma.actor.update({
+			const actor = await prisma.actor.update({
 				where: {
 					id: actorId,
 					worldId,
@@ -265,9 +273,23 @@ export const ActorService = {
 				},
 			})
 
+			const updatedMentions = [...previousMentions, ...mentionedEntities].filter((mention) => {
+				return (
+					!previousMentions.some(
+						(prev) => prev.sourceId === mention.sourceId && prev.targetId === mention.targetId,
+					) ||
+					!mentionedEntities.some(
+						(updated) => updated.sourceId === mention.sourceId && updated.targetId === mention.targetId,
+					)
+				)
+			})
+
 			await MentionsService.clearOrphanedMentions(prisma)
 
-			return page
+			return {
+				actor,
+				updatedMentions,
+			}
 		})
 	},
 
@@ -280,52 +302,72 @@ export const ActorService = {
 		actorId: string
 		pageId: string
 	}) => {
-		return getPrismaClient().actor.update({
-			where: {
-				id: actorId,
-				worldId,
-			},
-			data: {
-				pages: {
-					delete: {
-						id: pageId,
+		return await getPrismaClient().$transaction(async (prisma) => {
+			const actor = await prisma.actor.update({
+				where: {
+					id: actorId,
+					worldId,
+				},
+				data: {
+					pages: {
+						delete: {
+							id: pageId,
+						},
 					},
 				},
-			},
-			include: {
-				node: true,
-				mentions: {
-					select: {
-						targetId: true,
-						targetType: true,
+				include: {
+					node: true,
+					mentions: {
+						select: {
+							targetId: true,
+							targetType: true,
+						},
+					},
+					pages: {
+						select: {
+							id: true,
+							name: true,
+						},
+						orderBy: {
+							createdAt: 'asc',
+						},
 					},
 				},
-				pages: {
-					select: {
-						id: true,
-						name: true,
-					},
-					orderBy: {
-						createdAt: 'asc',
-					},
+			})
+			const updatedMentions = await prisma.mention.findMany({
+				where: {
+					sourceActorId: actorId,
+					pageId,
 				},
-			},
+			})
+
+			return {
+				actor,
+				updatedMentions,
+			}
 		})
 	},
 
 	deleteActor: async ({ worldId, actorId }: { worldId: string; actorId: string }) => {
-		const [actor, world] = await getPrismaClient().$transaction([
-			getPrismaClient().actor.delete({
+		return await getPrismaClient().$transaction(async (prisma) => {
+			const actor = await prisma.actor.delete({
 				where: {
 					id: actorId,
 				},
-			}),
-			makeTouchWorldQuery(worldId),
-		])
-		return {
-			actor,
-			world,
-		}
+			})
+			const world = await makeTouchWorldQuery(worldId, prisma)
+			const updatedMentions = await prisma.mention.findMany({
+				where: {
+					sourceActorId: actorId,
+				},
+			})
+
+			return {
+				actor,
+				world,
+				updatedMentions,
+			}
+		})
 	},
 
 	findActorBacklinks: async ({ worldId, actorId }: { worldId: string; actorId: string }) => {

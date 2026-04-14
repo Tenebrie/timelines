@@ -44,7 +44,9 @@ export const OutlinerSearch = () => {
 				query: searchValue,
 				results: {
 					actors: data.actors,
+					articles: data.articles,
 					events: data.events.map((event) => ingestEvent(event)),
+					tags: data.tags,
 				},
 			}),
 		)

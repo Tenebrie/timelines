@@ -30,6 +30,8 @@ export function PopoverButton({
 }: Props) {
 	const popupState = usePopupState({ variant: 'popover', popupId: tooltip })
 
+	const popoverActionResult = popoverAction({ close: popupState.close })
+
 	return (
 		<>
 			<Tooltip title={tooltip} disableInteractive enterDelay={500}>
@@ -73,9 +75,11 @@ export function PopoverButton({
 			>
 				<Stack sx={{ ...popoverSx, gap: 2 }}>
 					{popoverBody({ close: popupState.close })}
-					<Stack direction="row" spacing={1} justifyContent="flex-end">
-						{popoverAction({ close: popupState.close })}
-					</Stack>
+					{popoverActionResult && (
+						<Stack direction="row" spacing={1} justifyContent="flex-end">
+							{popoverActionResult}
+						</Stack>
+					)}
 				</Stack>
 			</Popover>
 		</>

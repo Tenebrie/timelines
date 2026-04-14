@@ -55,8 +55,9 @@ const getTagName = (node: ProseMirrorNode) => {
 
 type MentionPropsType = {
 	actor?: string | boolean
-	event?: string | boolean
 	article?: string | boolean
+	event?: string | boolean
+	tag?: string | boolean
 }
 
 export const MentionNode = Node.create({
@@ -98,6 +99,7 @@ export const MentionNode = Node.create({
 					if (props.actor) filtered.actor = props.actor
 					if (props.event) filtered.event = props.event
 					if (props.article) filtered.article = props.article
+					if (props.tag) filtered.tag = props.tag
 					return {
 						'data-component-props': JSON.stringify(filtered),
 					}
