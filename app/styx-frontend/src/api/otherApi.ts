@@ -366,9 +366,9 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 		name: string
 		icon: string
 		color: string
+		position: number
 		contentRich: string
 		contentYjs?: null | string
-		position: number
 		parentId?: null | string
 	}[]
 	worldId: string
@@ -378,8 +378,8 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	name: string
 	icon: string
 	color: string
-	contentRich: string
 	position: number
+	contentRich: string
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {

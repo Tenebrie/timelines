@@ -74,9 +74,9 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			name: string
 			icon: string
 			color: string
+			position: number
 			contentRich: string
 			contentYjs?: null | string
-			position: number
 			parentId?: null | string
 		}[]
 		worldId: string
@@ -86,8 +86,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		name: string
 		icon: string
 		color: string
-		contentRich: string
 		position: number
+		contentRich: string
 		parentId?: null | string
 	}[]
 	events: {

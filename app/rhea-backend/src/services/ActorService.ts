@@ -144,7 +144,7 @@ export const ActorService = {
 				},
 			})
 
-			const actor = await makeUpdateActorQuery({
+			const { actor } = await makeUpdateActorQuery({
 				actorId: baseActor.id,
 				params: updateData,
 				prisma,

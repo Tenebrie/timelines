@@ -66,9 +66,9 @@ export type GetArticlesApiResponse = /** status 200  */ {
 		name: string
 		icon: string
 		color: string
+		position: number
 		contentRich: string
 		contentYjs?: null | string
-		position: number
 		parentId?: null | string
 	}[]
 	worldId: string
@@ -78,8 +78,8 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	name: string
 	icon: string
 	color: string
-	contentRich: string
 	position: number
+	contentRich: string
 	parentId?: null | string
 }[]
 export type GetArticlesApiArg = {
@@ -95,9 +95,9 @@ export type CreateArticleApiResponse = /** status 200  */ {
 		name: string
 		icon: string
 		color: string
+		position: number
 		contentRich: string
 		contentYjs?: null | string
-		position: number
 		parentId?: null | string
 	}[]
 	worldId: string
@@ -107,8 +107,8 @@ export type CreateArticleApiResponse = /** status 200  */ {
 	name: string
 	icon: string
 	color: string
-	contentRich: string
 	position: number
+	contentRich: string
 	parentId?: null | string
 }
 export type CreateArticleApiArg = {
