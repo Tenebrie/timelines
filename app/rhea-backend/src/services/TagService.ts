@@ -16,6 +16,20 @@ export const TagService = {
 		}
 		return getPrismaClient().tag.findUnique({
 			where: { id: tagId, worldId },
+			include: {
+				mentions: {
+					select: {
+						targetId: true,
+						targetType: true,
+					},
+				},
+				mentionedIn: {
+					select: {
+						sourceId: true,
+						sourceType: true,
+					},
+				},
+			},
 		})
 	},
 
@@ -145,8 +159,18 @@ export const TagService = {
 					description: params.description,
 				},
 				include: {
-					mentions: true,
-					mentionedIn: true,
+					mentions: {
+						select: {
+							targetId: true,
+							targetType: true,
+						},
+					},
+					mentionedIn: {
+						select: {
+							sourceId: true,
+							sourceType: true,
+						},
+					},
 				},
 			})
 

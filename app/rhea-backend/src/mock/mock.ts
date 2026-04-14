@@ -66,6 +66,10 @@ export const mockWikiArticle = (data?: Partial<BaselineArticle>): BaselineArticl
 	position: 0,
 	parentId: null,
 	contentRich: 'Test Article Content',
+	mentions: [],
+	mentionedIn: [],
+	pages: [],
+	children: [],
 	...data,
 })
 
@@ -96,6 +100,8 @@ export const mockTag = (data?: Partial<BaselineTag>): BaselineTag => ({
 	worldId: 'world-1111',
 	name: 'Test Tag',
 	description: 'Tag description',
+	mentions: [],
+	mentionedIn: [],
 	...data,
 })
 

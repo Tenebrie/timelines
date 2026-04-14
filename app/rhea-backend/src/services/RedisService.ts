@@ -1,8 +1,8 @@
 import {
 	Actor,
 	Calendar,
+	Mention,
 	MindmapNode,
-	Tag,
 	User,
 	WikiArticle,
 	WorldEvent,
@@ -16,6 +16,8 @@ import {
 	RheaToCalliopeMessageType,
 } from '../ts-shared/RheaToCalliopeMessage.js'
 import { getRedisClient, openRedisChannel } from './dbClients/RedisClient.js'
+import { TagService } from './TagService.js'
+import { BaselineTag } from './types.js'
 
 const calliope = openRedisChannel<RheaToCalliopeMessage>(RedisChannel.RHEA_TO_CALLIOPE)
 
@@ -68,6 +70,20 @@ export const RedisService = {
 				),
 			},
 		})
+	},
+
+	notifyAboutUpdatedMentions: (
+		ctx: ContextWithSessionId,
+		{ worldId, mentions }: { worldId: string; mentions: Mention[] },
+	) => {
+		mentions
+			.filter((mention) => mention.targetType === 'Tag')
+			.forEach(async (mention) => {
+				RedisService.notifyAboutTagUpdate(ctx, {
+					worldId,
+					tag: await TagService.findTagOrThrow({ worldId, tagId: mention.targetId }),
+				})
+			})
 	},
 
 	notifyAboutWorldEventDeltaUpdate: (
@@ -132,7 +148,10 @@ export const RedisService = {
 		})
 	},
 
-	notifyAboutTagUpdate: (ctx: ContextWithSessionId, { worldId, tag }: { worldId: string; tag: Tag }) => {
+	notifyAboutTagUpdate: (
+		ctx: ContextWithSessionId,
+		{ worldId, tag }: { worldId: string; tag: BaselineTag },
+	) => {
 		calliope.sendMessage({
 			type: RheaToCalliopeMessageType.TAG_UPDATED,
 			messageSourceSessionId: ctx.sessionId,

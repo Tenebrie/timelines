@@ -20,7 +20,7 @@ export const ArticleDetails = ({ article }: Props) => {
 		<Stack
 			gap={1}
 			sx={{
-				height: '100%',
+				height: 'calc(100% - 1px)',
 				...scrollbars,
 			}}
 		>

@@ -59,17 +59,8 @@ export type GetArticlesApiResponse = /** status 200  */ {
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
 	children: {
-		worldId: string
 		id: string
-		createdAt: string
-		updatedAt: string
 		name: string
-		icon: string
-		color: string
-		position: number
-		contentRich: string
-		contentYjs?: null | string
-		parentId?: null | string
 	}[]
 	worldId: string
 	id: string
@@ -88,17 +79,8 @@ export type GetArticlesApiArg = {
 }
 export type CreateArticleApiResponse = /** status 200  */ {
 	children: {
-		worldId: string
 		id: string
-		createdAt: string
-		updatedAt: string
 		name: string
-		icon: string
-		color: string
-		position: number
-		contentRich: string
-		contentYjs?: null | string
-		parentId?: null | string
 	}[]
 	worldId: string
 	id: string

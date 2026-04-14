@@ -19,6 +19,11 @@ export const makeUpdateActorQuery = async ({
 	params: UpdateActorQueryParams
 	prisma?: Prisma.TransactionClient
 }) => {
+	const previousMentions = await getPrismaClient(prisma).mention.findMany({
+		where: {
+			sourceActorId: actorId,
+		},
+	})
 	const mentionedEntities = await MentionsService.createMentions(
 		actorId,
 		MentionedEntity.Actor,
@@ -60,5 +65,16 @@ export const makeUpdateActorQuery = async ({
 
 	await MentionsService.clearOrphanedMentions(prisma)
 
-	return actor
+	const updatedMentions = [...previousMentions, ...mentionedEntities].filter((mention) => {
+		return (
+			!previousMentions.some(
+				(prev) => prev.sourceId === mention.sourceId && prev.targetId === mention.targetId,
+			) ||
+			!mentionedEntities.some(
+				(updated) => updated.sourceId === mention.sourceId && updated.targetId === mention.targetId,
+			)
+		)
+	})
+
+	return { actor, updatedMentions }
 }

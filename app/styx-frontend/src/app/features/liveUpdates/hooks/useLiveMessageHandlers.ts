@@ -2,6 +2,7 @@ import { announcementListApi } from '@api/announcementListApi'
 import { calendarApi } from '@api/calendarApi'
 import { imageGenerationApi } from '@api/imageGenerationApi'
 import { mindmapApi } from '@api/mindmapApi'
+import { WorldTag } from '@api/types/worldTypes'
 import { GetWorldInfoApiResponse, worldDetailsApi } from '@api/worldDetailsApi'
 import { worldEventTracksApi } from '@api/worldEventTracksApi'
 import { worldListApi } from '@api/worldListApi'
@@ -25,7 +26,7 @@ import { useEventBusDispatch } from '../../eventBus'
 
 export const useLiveMessageHandlers = () => {
 	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState, (a, b) => a.updatedAt === b.updatedAt)
-	const { updateEvent, updateEventDelta, updateActor } = worldSlice.actions
+	const { updateEvent, updateEventDelta, updateActor, updateTag } = worldSlice.actions
 	const dispatch = useDispatch()
 
 	const { upsertCachedArticle } = useArticleApiCache()
@@ -87,7 +88,8 @@ export const useLiveMessageHandlers = () => {
 		[CalliopeToClientMessageType.MINDMAP_NODE_UPDATED]: (_) => {
 			dispatch(mindmapApi.util.invalidateTags(['mindmap']))
 		},
-		[CalliopeToClientMessageType.TAG_UPDATED]: () => {
+		[CalliopeToClientMessageType.TAG_UPDATED]: (data) => {
+			dispatch(updateTag(JSON.parse(data.tag) as WorldTag))
 			dispatch(worldTagApi.util.invalidateTags(['worldTag']))
 		},
 		[CalliopeToClientMessageType.DOCUMENT_RESET]: (data) => {

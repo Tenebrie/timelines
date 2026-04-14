@@ -72,18 +72,42 @@ export const WorldEventService = {
 		params: UpdateWorldEventQueryParams
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
+			const previousMentions = await prisma.mention.findMany({
+				where: {
+					sourceEventId: eventId,
+				},
+			})
+
 			await makeUpdateWorldEventQuery({
 				eventId,
 				params,
 				prisma,
 			})
 
+			const currentMentions = await prisma.mention.findMany({
+				where: {
+					sourceEventId: eventId,
+				},
+			})
+
 			const world = await makeTouchWorldQuery(worldId, prisma)
 			const event = await fetchWorldEventDetailsOrThrow(eventId, prisma)
+
+			const updatedMentions = [...previousMentions, ...currentMentions].filter((mention) => {
+				return (
+					!previousMentions.some(
+						(prev) => prev.sourceId === mention.sourceId && prev.targetId === mention.targetId,
+					) ||
+					!currentMentions.some(
+						(updated) => updated.sourceId === mention.sourceId && updated.targetId === mention.targetId,
+					)
+				)
+			})
 
 			return {
 				world,
 				event,
+				updatedMentions,
 			}
 		})
 	},
