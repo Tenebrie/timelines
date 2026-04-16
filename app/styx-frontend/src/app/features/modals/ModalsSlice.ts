@@ -1,13 +1,14 @@
 import { WorldEventTrack } from '@api/types/worldEventTracksTypes'
-import { ActorDetails, WorldEvent, WorldEventDelta } from '@api/types/worldTypes'
+import { ActorDetails, WorldEvent, WorldEventDelta, WorldTag } from '@api/types/worldTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { isEventObject } from '@/app/utils/isEventObject'
 
 import { User } from '../auth/AuthSlice'
+import { getTimelinePreferences } from '../preferences/PreferencesSliceSelectors'
 
 const modals = {
 	/* Admin */
@@ -56,6 +57,10 @@ const modals = {
 	deleteEventModal: {
 		isOpen: false as boolean,
 		target: null as WorldEvent | null,
+	},
+	deleteTagModal: {
+		isOpen: false as boolean,
+		target: null as WorldTag | null,
 	},
 	deleteEventDeltaModal: {
 		isOpen: false as boolean,
@@ -130,6 +135,11 @@ export const modalsSlice = createSlice({
 
 export const useModal = <T extends ValidModals>(id: T) => {
 	const state = useSelector((state: { modals: ModalsState }) => state.modals[id])
+	const { reduceAnimations } = useSelector(
+		getTimelinePreferences,
+		(a, b) => a.reduceAnimations === b.reduceAnimations,
+	)
+
 	const dispatch = useDispatch()
 	const open = useCallback(
 		(data: Omit<(typeof modals)[T], 'isOpen'>) => {
@@ -146,9 +156,31 @@ export const useModal = <T extends ValidModals>(id: T) => {
 		},
 		[dispatch, id],
 	)
+
+	const animationDuration = useMemo(() => {
+		if (reduceAnimations) {
+			return 0
+		}
+		return 300
+	}, [reduceAnimations])
+
 	const close = useCallback(() => {
 		dispatch(modalsSlice.actions.closeModal({ id }))
 	}, [dispatch, id])
+
+	const closeWithCleanup = useCallback(
+		(onClose: () => void, isOpened: () => boolean) => {
+			dispatch(modalsSlice.actions.closeModal({ id }))
+			if (onClose) {
+				setTimeout(() => {
+					if (!isOpened()) {
+						onClose()
+					}
+				}, animationDuration + 5)
+			}
+		},
+		[dispatch, id, animationDuration],
+	)
 
 	const closeAndUpdate = useCallback(
 		(data: Omit<(typeof modals)[T], 'isOpen'>) => {
@@ -169,6 +201,7 @@ export const useModal = <T extends ValidModals>(id: T) => {
 	return {
 		open,
 		close,
+		closeWithCleanup,
 		closeAndUpdate,
 		...state,
 	}

@@ -8,6 +8,7 @@ import {
 	WorldEventDelta,
 	WorldTag,
 } from '@api/types/worldTypes'
+import { WikiArticle } from '@api/types/worldWikiTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
@@ -37,8 +38,10 @@ export const initialState = {
 		query: null as string | null,
 		isLoading: false as boolean,
 		results: {
+			articles: [] as WikiArticle[],
 			events: [] as WorldEvent[],
 			actors: [] as ActorDetails[],
+			tags: [] as WorldTag[],
 		},
 	},
 
@@ -132,6 +135,9 @@ export const worldSlice = createSlice({
 			}
 			event.deltaStates.splice(event.deltaStates.indexOf(delta), 1, newDelta)
 		},
+		addActor: (state, { payload }: PayloadAction<ActorDetails>) => {
+			state.actors = state.actors.concat(payload).sort((a, b) => a.name.localeCompare(b.name))
+		},
 		updateActor: (state, { payload }: PayloadAction<Pick<ActorDetails, 'id'> & Partial<ActorDetails>>) => {
 			const actor = state.actors.find((e) => e.id === payload.id)
 			if (!actor) {
@@ -143,9 +149,6 @@ export const worldSlice = createSlice({
 				...payload,
 			}
 			state.actors.splice(state.actors.indexOf(actor), 1, newActor)
-		},
-		addActor: (state, { payload }: PayloadAction<ActorDetails>) => {
-			state.actors = state.actors.concat(payload).sort((a, b) => a.name.localeCompare(b.name))
 		},
 		removeActor: (state, { payload }: PayloadAction<string>) => {
 			state.actors = state.actors.filter((e) => e.id !== payload)

@@ -2673,8 +2673,8 @@ export interface operations {
                         description: string;
                         id: string;
                         title: string;
-                        userId: string;
                         type: "Info" | "Welcome" | "WorldShared";
+                        userId: string;
                         /** Format: date-time */
                         timestamp: string;
                         isUnread: boolean;
@@ -3105,8 +3105,8 @@ export interface operations {
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
-                                expiresAt?: null | string;
                                 ownerId: string;
+                                expiresAt?: null | string;
                                 bucketKey: string;
                                 size: number;
                                 originalFileName: string;
@@ -5084,34 +5084,12 @@ export interface operations {
                 content: {
                     "application/json": {
                         mentions: {
-                            pageId?: null | string;
-                            sourceId: string;
                             targetId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag";
                             targetType: "Actor" | "Event" | "Article" | "Tag";
-                            sourceActorId?: null | string;
-                            sourceEventId?: null | string;
-                            sourceArticleId?: null | string;
-                            sourceTagId?: null | string;
-                            targetActorId?: null | string;
-                            targetEventId?: null | string;
-                            targetArticleId?: null | string;
-                            targetTagId?: null | string;
                         }[];
                         mentionedIn: {
-                            pageId?: null | string;
                             sourceId: string;
-                            targetId: string;
                             sourceType: "Actor" | "Event" | "Article" | "Tag";
-                            targetType: "Actor" | "Event" | "Article" | "Tag";
-                            sourceActorId?: null | string;
-                            sourceEventId?: null | string;
-                            sourceArticleId?: null | string;
-                            sourceTagId?: null | string;
-                            targetActorId?: null | string;
-                            targetEventId?: null | string;
-                            targetArticleId?: null | string;
-                            targetTagId?: null | string;
                         }[];
                         description: string;
                         worldId: string;
@@ -6657,6 +6635,22 @@ export interface operations {
                             descriptionRich: string;
                         }[];
                         articles: {
+                            pages: {
+                                id: string;
+                                name: string;
+                            }[];
+                            mentions: {
+                                targetId: string;
+                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                            }[];
+                            mentionedIn: {
+                                sourceId: string;
+                                sourceType: "Actor" | "Event" | "Article" | "Tag";
+                            }[];
+                            children: {
+                                id: string;
+                                name: string;
+                            }[];
                             worldId: string;
                             id: string;
                             /** Format: date-time */
@@ -6713,6 +6707,14 @@ export interface operations {
                             worldEventTrackId?: null | string;
                         }[];
                         tags: {
+                            mentions: {
+                                targetId: string;
+                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                            }[];
+                            mentionedIn: {
+                                sourceId: string;
+                                sourceType: "Actor" | "Event" | "Article" | "Tag";
+                            }[];
                             description: string;
                             worldId: string;
                             id: string;
@@ -7039,19 +7041,8 @@ export interface operations {
                             sourceType: "Actor" | "Event" | "Article" | "Tag";
                         }[];
                         children: {
-                            worldId: string;
                             id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
                             name: string;
-                            icon: string;
-                            color: string;
-                            position: number;
-                            contentRich: string;
-                            contentYjs?: null | string;
-                            parentId?: null | string;
                         }[];
                         worldId: string;
                         id: string;
@@ -7100,19 +7091,8 @@ export interface operations {
                 content: {
                     "application/json": {
                         children: {
-                            worldId: string;
                             id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
                             name: string;
-                            icon: string;
-                            color: string;
-                            position: number;
-                            contentRich: string;
-                            contentYjs?: null | string;
-                            parentId?: null | string;
                         }[];
                         worldId: string;
                         id: string;
@@ -7187,19 +7167,8 @@ export interface operations {
                 content: {
                     "application/json": {
                         children: {
-                            worldId: string;
                             id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
                             name: string;
-                            icon: string;
-                            color: string;
-                            position: number;
-                            contentRich: string;
-                            contentYjs?: null | string;
-                            parentId?: null | string;
                         }[];
                         worldId: string;
                         id: string;

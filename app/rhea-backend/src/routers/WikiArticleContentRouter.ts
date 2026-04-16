@@ -79,7 +79,7 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
 
-	const article = await WikiService.updateWikiArticle({
+	const { article, updatedMentions } = await WikiService.updateWikiArticle({
 		id: articleId,
 		contentRich: parsed.contentRich,
 		contentYjs: contentDeltas ?? null,
@@ -87,6 +87,7 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	})
 
 	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })
+	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
 
 	if (!contentDeltas) {
 		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: articleId })

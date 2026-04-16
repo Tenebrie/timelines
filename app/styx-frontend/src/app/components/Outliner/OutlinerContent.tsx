@@ -13,6 +13,7 @@ import { CreateEntityButton } from './components/CreateEntityButton'
 import { OutlinerEmptyState } from './components/OutlinerEmptyState'
 import { useVisibleActors } from './hooks/useVisibleActors'
 import { useVisibleEvents } from './hooks/useVisibleEvents'
+import { useVisibleTags } from './hooks/useVisibleTags'
 import { OutlinerItem } from './items/OutlinerItem'
 
 export const OutlinerContent = memo(OutlinerContentComponent)
@@ -33,6 +34,7 @@ export function OutlinerContentComponent() {
 		timestamp: selectedTime,
 		includeInactive: revokedVisible,
 	})
+	const allVisibleTags = useVisibleTags()
 
 	const totalCount = (() => {
 		let total = 1
@@ -42,6 +44,7 @@ export function OutlinerContentComponent() {
 		if (eventsVisible) {
 			total += allVisibleEvents.length
 		}
+		total += allVisibleTags.length
 		return total
 	})()
 	const scrollerVisible = totalCount > 1 || !!search.query
@@ -97,7 +100,20 @@ export function OutlinerContentComponent() {
 							})()
 							return allVisibleEvents[index]
 						})()
-						return <OutlinerItem index={rawIndex} actor={actor} event={event} />
+						const tag = (() => {
+							const index = (() => {
+								let acc = rawIndex - 1
+								if (eventsVisible) {
+									acc -= allVisibleEvents.length
+								}
+								if (actorsVisible) {
+									acc -= allVisibleActors.length
+								}
+								return acc
+							})()
+							return allVisibleTags[index]
+						})()
+						return <OutlinerItem index={rawIndex} actor={actor} event={event} tag={tag} />
 					}}
 				/>
 			</Box>

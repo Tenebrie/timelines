@@ -55,7 +55,10 @@ export const useArticleDragDrop = ({ article }: Props) => {
 				// Always the last position
 				position: 9999,
 			})
-			forceOpen()
+
+			setTimeout(() => {
+				forceOpen()
+			}, 1)
 		},
 	})
 

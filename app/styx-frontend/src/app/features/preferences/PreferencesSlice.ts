@@ -1,4 +1,4 @@
-import { Actor, WorldEvent } from '@api/types/worldTypes'
+import { Actor, WorldEvent, WorldTag } from '@api/types/worldTypes'
 import { WikiArticle } from '@api/types/worldWikiTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
@@ -14,11 +14,15 @@ const saveToLocalStorage = (state: PreferencesState) => {
 		PreferencesKey,
 		JSON.stringify({
 			...state,
+			calendarEditor: {
+				expandedUnitSections: [],
+			},
 			outliner: {
 				...state.outliner,
 				// Do not save expanded entities into storage as it may grow too large
 				expandedActors: [],
 				expandedEvents: [],
+				expandedTags: [],
 			},
 			wiki: {
 				...state.wiki,
@@ -111,6 +115,14 @@ export const preferencesSlice = createSlice({
 		},
 		uncollapseEventInOutliner: (state, { payload }: PayloadAction<WorldEvent>) => {
 			state.outliner.expandedEvents = [...new Set([...state.outliner.expandedEvents, payload.id])]
+			saveToLocalStorage(state)
+		},
+		collapseTagInOutliner: (state, { payload }: PayloadAction<WorldTag>) => {
+			state.outliner.expandedTags = state.outliner.expandedTags.filter((id) => id !== payload.id)
+			saveToLocalStorage(state)
+		},
+		uncollapseTagInOutliner: (state, { payload }: PayloadAction<WorldTag>) => {
+			state.outliner.expandedTags = [...new Set([...state.outliner.expandedTags, payload.id])]
 			saveToLocalStorage(state)
 		},
 

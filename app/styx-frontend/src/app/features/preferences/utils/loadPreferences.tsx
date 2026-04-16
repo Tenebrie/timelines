@@ -38,6 +38,7 @@ export const PreferencesStateSchema = z.object({
 			showInactiveStatements: z.boolean().default(false),
 			expandedActors: z.array(z.string()).default([]),
 			expandedEvents: z.array(z.string()).default([]),
+			expandedTags: z.array(z.string()).default([]),
 		})
 		.default({}),
 	overview: z

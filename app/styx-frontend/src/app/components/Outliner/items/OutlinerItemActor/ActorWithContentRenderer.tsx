@@ -4,7 +4,7 @@ import Divider from '@mui/material/Divider'
 import { memo } from 'react'
 
 import { ActorContentRenderer } from './ActorContentRenderer'
-import { ActorHeaderRenderer } from './ActorRenderer'
+import { ActorHeaderRenderer } from './ActorHeaderRenderer'
 
 type Props = {
 	actor: ActorDetails

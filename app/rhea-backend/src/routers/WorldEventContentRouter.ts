@@ -78,7 +78,7 @@ router.put('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
 
-	const { event } = await WorldEventService.updateWorldEvent({
+	const { event, updatedMentions } = await WorldEventService.updateWorldEvent({
 		worldId,
 		eventId,
 		params: {
@@ -90,6 +90,7 @@ router.put('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 	})
 
 	RedisService.notifyAboutWorldEventUpdate(ctx, { worldId, event })
+	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
 
 	if (!contentDeltas) {
 		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: eventId })
