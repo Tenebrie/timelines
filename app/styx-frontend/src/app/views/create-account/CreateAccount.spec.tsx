@@ -112,6 +112,7 @@ describe('<CreateAccount />', () => {
 				username: 'admin',
 				level: 'Admin',
 				bio: 'Test bio',
+				featureFlags: [],
 			})
 		})
 
