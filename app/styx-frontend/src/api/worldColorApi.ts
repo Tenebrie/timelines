@@ -30,10 +30,10 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as worldColorApi }
 export type GetWorldColorsApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
 	value: string
 	label?: null | string
 }[]
@@ -42,10 +42,10 @@ export type GetWorldColorsApiArg = {
 	worldId: string
 }
 export type CreateWorldColorApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
 	value: string
 	label?: null | string
 }

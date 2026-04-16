@@ -54,35 +54,35 @@ const injectedRtkApi = api
 export { injectedRtkApi as mindmapApi }
 export type GetMindmapApiResponse = /** status 200  */ {
 	nodes: {
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		worldId: string
+		parentActorId?: null | string
 		positionX: number
 		positionY: number
-		parentActorId?: null | string
 	}[]
 	links: {
 		id: string
 		createdAt: string
 		updatedAt: string
+		content: string
 		sourceNodeId: string
 		targetNodeId: string
 		direction: 'Normal' | 'Reversed' | 'TwoWay'
-		content: string
 	}[]
 }
 export type GetMindmapApiArg = {
 	worldId: string
 }
 export type CreateNodeApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	parentActorId?: null | string
 	positionX: number
 	positionY: number
-	parentActorId?: null | string
 }
 export type CreateNodeApiArg = {
 	worldId: string
@@ -93,13 +93,13 @@ export type CreateNodeApiArg = {
 	}
 }
 export type DeleteNodeApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	parentActorId?: null | string
 	positionX: number
 	positionY: number
-	parentActorId?: null | string
 }
 export type DeleteNodeApiArg = {
 	worldId: string
@@ -109,10 +109,10 @@ export type CreateMindmapLinkApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	content: string
 	sourceNodeId: string
 	targetNodeId: string
 	direction: 'Normal' | 'Reversed' | 'TwoWay'
-	content: string
 }
 export type CreateMindmapLinkApiArg = {
 	worldId: string
@@ -125,10 +125,10 @@ export type UpdateMindmapLinkApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	content: string
 	sourceNodeId: string
 	targetNodeId: string
 	direction: 'Normal' | 'Reversed' | 'TwoWay'
-	content: string
 }
 export type UpdateMindmapLinkApiArg = {
 	worldId: string
@@ -142,10 +142,10 @@ export type DeleteMindmapLinkApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	content: string
 	sourceNodeId: string
 	targetNodeId: string
 	direction: 'Normal' | 'Reversed' | 'TwoWay'
-	content: string
 }
 export type DeleteMindmapLinkApiArg = {
 	worldId: string

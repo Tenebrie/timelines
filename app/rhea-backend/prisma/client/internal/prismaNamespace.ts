@@ -406,6 +406,7 @@ export const ModelName = {
   Tag: 'Tag',
   User: 'User',
   CollaboratingUser: 'CollaboratingUser',
+  FeatureFlagEntry: 'FeatureFlagEntry',
   WikiArticle: 'WikiArticle',
   World: 'World',
   WorldEvent: 'WorldEvent',
@@ -427,7 +428,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "actor" | "userAnnouncement" | "asset" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
+    modelProps: "actor" | "userAnnouncement" | "asset" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "featureFlagEntry" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2059,6 +2060,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    FeatureFlagEntry: {
+      payload: Prisma.$FeatureFlagEntryPayload<ExtArgs>
+      fields: Prisma.FeatureFlagEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FeatureFlagEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureFlagEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FeatureFlagEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureFlagEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.FeatureFlagEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureFlagEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FeatureFlagEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureFlagEntryPayload>
+        }
+        findMany: {
+          args: Prisma.FeatureFlagEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureFlagEntryPayload>[]
+        }
+        create: {
+          args: Prisma.FeatureFlagEntryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureFlagEntryPayload>
+        }
+        createMany: {
+          args: Prisma.FeatureFlagEntryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FeatureFlagEntryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureFlagEntryPayload>[]
+        }
+        delete: {
+          args: Prisma.FeatureFlagEntryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureFlagEntryPayload>
+        }
+        update: {
+          args: Prisma.FeatureFlagEntryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureFlagEntryPayload>
+        }
+        deleteMany: {
+          args: Prisma.FeatureFlagEntryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FeatureFlagEntryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FeatureFlagEntryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureFlagEntryPayload>[]
+        }
+        upsert: {
+          args: Prisma.FeatureFlagEntryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeatureFlagEntryPayload>
+        }
+        aggregate: {
+          args: Prisma.FeatureFlagEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeatureFlagEntry>
+        }
+        groupBy: {
+          args: Prisma.FeatureFlagEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeatureFlagEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FeatureFlagEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeatureFlagEntryCountAggregateOutputType> | number
+        }
+      }
+    }
     WikiArticle: {
       payload: Prisma.$WikiArticlePayload<ExtArgs>
       fields: Prisma.WikiArticleFieldRefs
@@ -2849,6 +2924,17 @@ export const CollaboratingUserScalarFieldEnum = {
 export type CollaboratingUserScalarFieldEnum = (typeof CollaboratingUserScalarFieldEnum)[keyof typeof CollaboratingUserScalarFieldEnum]
 
 
+export const FeatureFlagEntryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  flag: 'flag'
+} as const
+
+export type FeatureFlagEntryScalarFieldEnum = (typeof FeatureFlagEntryScalarFieldEnum)[keyof typeof FeatureFlagEntryScalarFieldEnum]
+
+
 export const WikiArticleScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -3234,6 +3320,20 @@ export type ListEnumCollaboratorAccessFieldRefInput<$PrismaModel> = FieldRefInpu
 
 
 /**
+ * Reference to a field of type 'FeatureFlag'
+ */
+export type EnumFeatureFlagFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeatureFlag'>
+    
+
+
+/**
+ * Reference to a field of type 'FeatureFlag[]'
+ */
+export type ListEnumFeatureFlagFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeatureFlag[]'>
+    
+
+
+/**
  * Reference to a field of type 'WorldCalendarType'
  */
 export type EnumWorldCalendarTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorldCalendarType'>
@@ -3377,6 +3477,7 @@ export type GlobalOmitConfig = {
   tag?: Prisma.TagOmit
   user?: Prisma.UserOmit
   collaboratingUser?: Prisma.CollaboratingUserOmit
+  featureFlagEntry?: Prisma.FeatureFlagEntryOmit
   wikiArticle?: Prisma.WikiArticleOmit
   world?: Prisma.WorldOmit
   worldEvent?: Prisma.WorldEventOmit

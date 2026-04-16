@@ -6,7 +6,7 @@ import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
 export type FullMentionDetails = GetWorldInfoApiResponse['actors'][number]['mentions'][number]
 export type MentionedEntity = GetWorldInfoApiResponse['actors'][number]['mentions'][number]['targetType']
 export type MentionDetails = Pick<FullMentionDetails, 'targetId' | 'targetType'>
-export type Actor = Omit<ActorDetails, 'statements'>
+export type Actor = ActorDetails
 export type ActorDetails = GetWorldInfoApiResponse['actors'][number]
 export type WorldItem = GetWorldsApiResponse['ownedWorlds'][number]
 export type WorldBrief =

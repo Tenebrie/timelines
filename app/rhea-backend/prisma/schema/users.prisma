@@ -28,6 +28,7 @@ model User {
   worlds          World[]
   calendars       Calendar[]
   collaboratingIn CollaboratingUser[]
+  featureFlags    FeatureFlagEntry[]
 
   assets           Asset[]
   favoriteIconSets UserFavoriteIconSet[]
@@ -45,4 +46,21 @@ model CollaboratingUser {
   worldId String
 
   @@id([userId, worldId])
+}
+
+enum FeatureFlag {
+  MindmapRework
+}
+
+model FeatureFlagEntry {
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?
+
+  flag FeatureFlag
+
+  @@index([userId, flag])
 }

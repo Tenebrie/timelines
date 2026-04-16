@@ -50,10 +50,10 @@ export type CreateWorldEventDeltaApiArg = {
 }
 export type UpdateWorldEventDeltaApiResponse = /** status 200  */ {
 	description?: null | string
-	name?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
+	name?: null | string
 	descriptionRich?: null | string
 	timestamp: string
 	worldEventId: string
@@ -74,10 +74,10 @@ export type UpdateWorldEventDeltaApiArg = {
 }
 export type DeleteWorldEventDeltaApiResponse = /** status 200  */ {
 	description?: null | string
-	name?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
+	name?: null | string
 	descriptionRich?: null | string
 	timestamp: string
 	worldEventId: string

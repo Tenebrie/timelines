@@ -94,34 +94,34 @@ export type PutWorldEventContentApiArg = {
 	}
 }
 export type CreateWorldEventApiResponse = /** status 200  */ {
+	pages: {
+		id: string
+		name: string
+	}[]
 	mentions: {
 		targetId: string
-		targetType: 'Tag' | 'Actor' | 'Event' | 'Article'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
 	mentionedIn: {
 		sourceId: string
-		sourceType: 'Tag' | 'Actor' | 'Event' | 'Article'
-	}[]
-	pages: {
-		name: string
-		id: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
 	deltaStates: {
 		description?: null | string
-		name?: null | string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name?: null | string
 		descriptionRich?: null | string
 		timestamp: string
 		worldEventId: string
 	}[]
 	description: string
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	name: string
 	icon: string
 	color: string
 	descriptionRich: string
@@ -146,34 +146,34 @@ export type CreateWorldEventApiArg = {
 	}
 }
 export type UpdateWorldEventApiResponse = /** status 200  */ {
+	pages: {
+		id: string
+		name: string
+	}[]
 	mentions: {
 		targetId: string
-		targetType: 'Tag' | 'Actor' | 'Event' | 'Article'
+		targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
 	mentionedIn: {
 		sourceId: string
-		sourceType: 'Tag' | 'Actor' | 'Event' | 'Article'
-	}[]
-	pages: {
-		name: string
-		id: string
+		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
 	deltaStates: {
 		description?: null | string
-		name?: null | string
 		id: string
 		createdAt: string
 		updatedAt: string
+		name?: null | string
 		descriptionRich?: null | string
 		timestamp: string
 		worldEventId: string
 	}[]
 	description: string
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	name: string
 	icon: string
 	color: string
 	descriptionRich: string
@@ -207,11 +207,11 @@ export type DeleteWorldEventApiArg = {
 }
 export type RevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	name: string
 	icon: string
 	color: string
 	descriptionRich: string
@@ -231,11 +231,11 @@ export type RevokeWorldEventApiArg = {
 }
 export type UnrevokeWorldEventApiResponse = /** status 200  */ {
 	description: string
-	name: string
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	name: string
 	icon: string
 	color: string
 	descriptionRich: string
@@ -251,7 +251,7 @@ export type UnrevokeWorldEventApiArg = {
 	eventId: string
 }
 export type GetWorldEventBacklinksApiResponse = /** status 200  */ {
-	type: 'Tag' | 'Actor' | 'Event' | 'Article'
+	type: 'Actor' | 'Event' | 'Article' | 'Tag'
 	id: string
 	name: string
 }[]

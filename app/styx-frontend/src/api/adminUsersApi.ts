@@ -6,6 +6,14 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
+			adminGetFeatureFlags: build.query<AdminGetFeatureFlagsApiResponse, AdminGetFeatureFlagsApiArg>({
+				query: (queryArg) => ({ url: `/api/admin/feature-flags/${queryArg.userId}` }),
+				providesTags: ['adminUsers'],
+			}),
+			adminSetFeatureFlag: build.mutation<AdminSetFeatureFlagApiResponse, AdminSetFeatureFlagApiArg>({
+				query: (queryArg) => ({ url: `/api/admin/feature-flags`, method: 'POST', body: queryArg.body }),
+				invalidatesTags: ['adminUsers'],
+			}),
 			adminGetDashboard: build.query<AdminGetDashboardApiResponse, AdminGetDashboardApiArg>({
 				query: () => ({ url: `/api/admin/dashboard` }),
 				providesTags: ['adminUsers'],
@@ -68,6 +76,18 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as adminUsersApi }
+export type AdminGetFeatureFlagsApiResponse = /** status 200  */ 'MindmapRework'[]
+export type AdminGetFeatureFlagsApiArg = {
+	userId: string
+}
+export type AdminSetFeatureFlagApiResponse = unknown
+export type AdminSetFeatureFlagApiArg = {
+	body: {
+		flag: 'MindmapRework'
+		userId: string
+		enable: boolean
+	}
+}
 export type AdminGetDashboardApiResponse = /** status 200  */ {
 	auditStats: {
 		guestAccountsCreated: number
@@ -251,6 +271,9 @@ export type AdminSetUserPasswordApiArg = {
 	}
 }
 export const {
+	useAdminGetFeatureFlagsQuery,
+	useLazyAdminGetFeatureFlagsQuery,
+	useAdminSetFeatureFlagMutation,
 	useAdminGetDashboardQuery,
 	useLazyAdminGetDashboardQuery,
 	useAdminGetAuditLogsQuery,

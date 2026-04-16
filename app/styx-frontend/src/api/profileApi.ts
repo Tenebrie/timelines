@@ -36,12 +36,12 @@ export type GetStorageStatusApiResponse = /** status 200  */ {
 export type GetStorageStatusApiArg = void
 export type UpdateProfileApiResponse = /** status 200  */ {
 	user: {
-		email: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		deletedAt?: null | string
 		deletionScheduledAt?: null | string
+		email: string
 		username: string
 		password: string
 		bio: string
@@ -57,12 +57,12 @@ export type UpdateProfileApiArg = {
 }
 export type PostAvatarApiResponse = /** status 200  */ {
 	avatar: {
-		email: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		deletedAt?: null | string
 		deletionScheduledAt?: null | string
+		email: string
 		username: string
 		password: string
 		bio: string

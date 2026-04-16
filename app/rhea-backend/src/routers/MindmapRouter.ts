@@ -128,6 +128,10 @@ router.post('/api/world/:worldId/mindmap/link', async (ctx) => {
 		targetNodeId: z.string(),
 	})
 
+	if (params.sourceNodeId === params.targetNodeId) {
+		throw new BadRequestError('Source and target nodes cannot be the same')
+	}
+
 	const link = await MindmapService.createLink(params)
 
 	return link

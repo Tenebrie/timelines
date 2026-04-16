@@ -156,6 +156,7 @@ export function Mindmap() {
 		<Stack sx={{ width: '100%', height: '100%' }}>
 			<Box
 				ref={ref}
+				data-mindmap-grid
 				style={variables.current}
 				sx={{
 					position: 'absolute',

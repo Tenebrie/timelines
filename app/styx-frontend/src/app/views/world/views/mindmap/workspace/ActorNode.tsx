@@ -8,11 +8,10 @@ import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropRe
 import { useNodeLinking } from '../hooks/useNodeLinking'
 import { ActorNodeContent } from './ActorNodeContent'
 import { ActorNodeHotkeys } from './ActorNodeHotkeys'
-import { ActorNodeLinkMaker } from './ActorNodeLinkMaker'
 
 type Props = {
-	actor: ActorDetails
 	node: MindmapNode
+	actor: ActorDetails
 	onHeaderClick: (e: React.MouseEvent) => void
 	onContentClick: () => void
 }
@@ -30,10 +29,12 @@ export function ActorNode({ actor, node, onHeaderClick, onContentClick }: Props)
 	return (
 		<Box ref={ref}>
 			<ActorNodeHotkeys node={node} />
-			<ActorNodeContent actor={actor} onHeaderClick={onHeaderClick} onContentClick={onContentClick} />
-			<Box sx={{ position: 'absolute', right: 16, top: 16 }}>
-				<ActorNodeLinkMaker node={node} />
-			</Box>
+			<ActorNodeContent
+				node={node}
+				actor={actor}
+				onHeaderClick={onHeaderClick}
+				onContentClick={onContentClick}
+			/>
 		</Box>
 	)
 }

@@ -134,6 +134,12 @@ export function ActorNodePositioner({ actor, node }: Props) {
 				positionY: snappedPosition.y,
 			})
 
+			dispatchGlobalEvent['mindmap/node/onMove']({
+				nodeId: node.id,
+				positionX: snappedPosition.x,
+				positionY: snappedPosition.y,
+			})
+
 			mouseState.isButtonDown = false
 			mouseState.isDragging = false
 			mouseState.deltaX = 0

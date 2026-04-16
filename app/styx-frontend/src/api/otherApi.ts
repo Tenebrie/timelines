@@ -32,6 +32,10 @@ const injectedRtkApi = api
 				query: () => ({ url: `/api/constants/image-generation-models` }),
 				providesTags: [],
 			}),
+			listFeatureFlags: build.query<ListFeatureFlagsApiResponse, ListFeatureFlagsApiArg>({
+				query: () => ({ url: `/api/constants/feature-flags` }),
+				providesTags: [],
+			}),
 			sendContactFormMessage: build.mutation<SendContactFormMessageApiResponse, SendContactFormMessageApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/contact`, method: 'POST', body: queryArg.body }),
@@ -186,6 +190,10 @@ export type ListImageGenerationModelsApiResponse = /** status 200  */ {
 	}[]
 }
 export type ListImageGenerationModelsApiArg = void
+export type ListFeatureFlagsApiResponse = /** status 200  */ {
+	featureFlags: 'MindmapRework'[]
+}
+export type ListFeatureFlagsApiArg = void
 export type SendContactFormMessageApiResponse = unknown
 export type SendContactFormMessageApiArg = {
 	body: {
@@ -207,10 +215,10 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	expiresAt?: null | string
 	ownerId: string
-	bucketKey: string
 	size: number
+	expiresAt?: null | string
+	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
@@ -229,13 +237,13 @@ export type RequestImageConversionApiArg = {
 	}
 }
 export type UpdateNodeApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	worldId: string
+	parentActorId?: null | string
 	positionX: number
 	positionY: number
-	parentActorId?: null | string
 }
 export type UpdateNodeApiArg = {
 	worldId: string
@@ -424,6 +432,8 @@ export const {
 	useLazyListCalendarUnitFormatModesQuery,
 	useListImageGenerationModelsQuery,
 	useLazyListImageGenerationModelsQuery,
+	useListFeatureFlagsQuery,
+	useLazyListFeatureFlagsQuery,
 	useSendContactFormMessageMutation,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,
