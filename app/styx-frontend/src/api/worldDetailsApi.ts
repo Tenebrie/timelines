@@ -100,11 +100,11 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				name: string
 				calendarId: string
 				presentationId: string
+				unitId: string
 				position: number
 				formatString: string
 				subdivision: number
 				labeledIndices: number[]
-				unitId: string
 			}[]
 			id: string
 			name: string

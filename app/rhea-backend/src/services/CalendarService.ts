@@ -1,11 +1,11 @@
 import { CalendarUnit, Prisma } from '@prisma/client'
+
 import {
 	CalendarUncheckedCreateInput,
 	CalendarUnitCreateManyCalendarInput,
 	CalendarUnitUncheckedUpdateWithoutCalendarInput,
 	CalendarUpdateInput,
-} from 'prisma/client/models.js'
-
+} from '../../prisma/client/models.js'
 import { CalendarTemplateIdShape, CalendarTemplateService } from './CalendarTemplateService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeSortCalendarUnitsQuery } from './dbQueries/makeSortCalendarUnitsQuery.js'

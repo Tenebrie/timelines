@@ -1,6 +1,6 @@
 import { CalendarUnitFormatMode } from '@prisma/client'
 import { keysOf } from '@src/utils/keysOf.js'
-import { RequiredParam } from 'moonflower/validators/ParamWrappers'
+import { RequiredParam } from 'moonflower'
 
 export const CalendarUnitFormatModeValidator = RequiredParam({
 	prevalidate: (v) => keysOf(CalendarUnitFormatMode).some((type) => type === (v ?? '')),

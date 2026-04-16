@@ -1,4 +1,4 @@
-import { CalendarUnitFormatMode, WorldAccessMode } from '@prisma/client'
+import { CalendarUnitFormatMode, FeatureFlag, WorldAccessMode } from '@prisma/client'
 import { PremiumAuthenticator } from '@src/middleware/auth/PremiumAuthenticator.js'
 import { CalendarTemplateService } from '@src/services/CalendarTemplateService.js'
 import { ImageGenerationService } from '@src/services/ImageGenerationService.js'
@@ -62,6 +62,17 @@ router.get('/api/constants/image-generation-models', async (ctx) => {
 
 	return {
 		models: await ImageGenerationService.listModels(),
+	}
+})
+
+router.get('/api/constants/feature-flags', async () => {
+	useApiEndpoint({
+		name: 'listFeatureFlags',
+		description: 'Returns a list of available feature flags.',
+	})
+
+	return {
+		featureFlags: keysOf(FeatureFlag),
 	}
 })
 

@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 import { ActorNodePositioner } from './workspace/ActorNodePositioner'
+import { MindmapWireLayer } from './workspace/MindmapWireLayer'
 
 const ActorList = () => {
 	const { id: worldId, actors } = useSelector(getWorldState, (a, b) => a.id === b.id && a.actors === b.actors)
@@ -37,6 +38,7 @@ const ActorList = () => {
 
 	return (
 		<>
+			<MindmapWireLayer actorsWithNodes={actorsWithNodes} />
 			{actorsWithNodes.map((wrapper) => (
 				<ActorNodePositioner key={wrapper.id} actor={wrapper.actor} node={wrapper.node} />
 			))}

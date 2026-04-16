@@ -4,7 +4,7 @@ import {
 	SupportedCalendarTemplates,
 } from '@src/services/CalendarTemplateService.js'
 import { keysOf } from '@src/utils/keysOf.js'
-import { RequiredParam } from 'moonflower/validators/ParamWrappers'
+import { RequiredParam } from 'moonflower'
 
 export const CalendarTemplateIdValidator = RequiredParam<CalendarTemplateId>({
 	parse: CalendarTemplateIdShape.parse,

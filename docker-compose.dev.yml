@@ -196,7 +196,7 @@ services:
                 condition: service_started
             rhea-postgres:
                 condition: service_healthy
-        command: sh -c "yarn prisma generate && yarn prisma migrate deploy && yarn prisma db seed"
+        command: sh -c "yarn prisma migrate deploy && yarn prisma db seed"
         networks:
             - backend-rhea-db
 

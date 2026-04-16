@@ -1,18 +1,23 @@
+import { MindmapNode } from '@api/types/mindmapTypes'
 import { ActorDetails } from '@api/types/worldTypes'
 import { Icon } from '@iconify/react'
 import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
 import { useMemo } from 'react'
 
 import { ActorAvatar } from '@/app/components/ActorAvatar/ActorAvatar'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
+import { MindmapNodePort } from './MindmapNodePort'
+
 type Props = {
+	node?: MindmapNode
 	actor: ActorDetails
 	onHeaderClick: (e: React.MouseEvent) => void
 	onContentClick: () => void
 }
 
-export function ActorNodeContent({ actor, onHeaderClick, onContentClick }: Props) {
+export function ActorNodeContent({ node, actor, onHeaderClick, onContentClick }: Props) {
 	const theme = useCustomTheme()
 
 	const description = useMemo(() => {
@@ -29,6 +34,7 @@ export function ActorNodeContent({ actor, onHeaderClick, onContentClick }: Props
 	return (
 		<Box
 			sx={{
+				userSelect: 'none',
 				width: '250px',
 				borderRadius: 2,
 				overflow: 'hidden',
@@ -57,32 +63,55 @@ export function ActorNodeContent({ actor, onHeaderClick, onContentClick }: Props
 					},
 				}}
 			>
-				<ActorAvatar actor={actor} sx={{ width: 24, height: 24, fontSize: '0.7rem' }} />
-				<Box
+				<Stack
 					sx={{
-						fontWeight: 'bold',
-						fontSize: '0.9rem',
-						color: theme.material.palette.text.primary,
+						flexDirection: 'row',
+						width: '100%',
+						alignItems: 'center',
+						justifyContent: 'space-between',
+						gap: 1,
 					}}
 				>
-					{actor.name}
-				</Box>
-				<Icon
-					icon={actor.icon === 'default' ? 'mdi:leaf' : actor.icon}
-					color={'#0a0908'}
-					style={{
-						opacity: theme.mode === 'dark' ? 0.5 : 0.25,
-						zIndex: -1,
-						position: 'absolute',
-						top: '0px',
-						right: '0px',
-						width: '100%',
-						height: '100%',
-						maxHeight: '75px',
-						maxWidth: '75px',
-						pointerEvents: 'none',
-					}}
-				/>
+					<Stack
+						sx={{
+							flexDirection: 'row',
+							alignItems: 'center',
+							gap: 1,
+						}}
+					>
+						<ActorAvatar actor={actor} sx={{ width: 24, height: 24, fontSize: '0.7rem' }} />
+						<Box
+							sx={{
+								fontWeight: 'bold',
+								fontSize: '0.9rem',
+								color: theme.material.palette.text.primary,
+							}}
+						>
+							{actor.name}
+						</Box>
+						<Icon
+							icon={actor.icon === 'default' ? 'mdi:leaf' : actor.icon}
+							color={'#0a0908'}
+							style={{
+								opacity: theme.mode === 'dark' ? 0.5 : 0.25,
+								zIndex: -1,
+								position: 'absolute',
+								top: '0px',
+								right: '0px',
+								width: '100%',
+								height: '100%',
+								maxHeight: '75px',
+								maxWidth: '75px',
+								pointerEvents: 'none',
+							}}
+						/>
+					</Stack>
+					{node && (
+						<Stack flexShrink={0}>
+							<MindmapNodePort node={node} actor={actor} />
+						</Stack>
+					)}
+				</Stack>
 			</Box>
 
 			{/* Content */}

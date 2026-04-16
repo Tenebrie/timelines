@@ -1,7 +1,7 @@
 import { AuditAction } from '@prisma/client'
 import { DefaultContext, DefaultState, ParameterizedContext } from 'koa'
-import { AuditLogUncheckedCreateInput, AuditLogWhereInput } from 'prisma/client/models.js'
 
+import { AuditLogUncheckedCreateInput, AuditLogWhereInput } from '../../prisma/client/models.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const AuditLogService = {

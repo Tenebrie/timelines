@@ -20,6 +20,10 @@ const modals = {
 		isOpen: false as boolean,
 		targetUser: null as User | null,
 	},
+	featureFlagModal: {
+		isOpen: false as boolean,
+		targetUser: null as User | null,
+	},
 
 	/* Event Tracks */
 	eventTrackWizard: {

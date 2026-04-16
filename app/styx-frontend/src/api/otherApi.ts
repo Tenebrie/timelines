@@ -32,6 +32,10 @@ const injectedRtkApi = api
 				query: () => ({ url: `/api/constants/image-generation-models` }),
 				providesTags: [],
 			}),
+			listFeatureFlags: build.query<ListFeatureFlagsApiResponse, ListFeatureFlagsApiArg>({
+				query: () => ({ url: `/api/constants/feature-flags` }),
+				providesTags: [],
+			}),
 			sendContactFormMessage: build.mutation<SendContactFormMessageApiResponse, SendContactFormMessageApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/contact`, method: 'POST', body: queryArg.body }),
@@ -186,6 +190,10 @@ export type ListImageGenerationModelsApiResponse = /** status 200  */ {
 	}[]
 }
 export type ListImageGenerationModelsApiArg = void
+export type ListFeatureFlagsApiResponse = /** status 200  */ {
+	featureFlags: 'MindmapRework'[]
+}
+export type ListFeatureFlagsApiArg = void
 export type SendContactFormMessageApiResponse = unknown
 export type SendContactFormMessageApiArg = {
 	body: {
@@ -238,9 +246,7 @@ export type UpdateNodeApiResponse = /** status 200  */ {
 	positionY: number
 }
 export type UpdateNodeApiArg = {
-	/** Any string value */
 	worldId: string
-	/** Any string value */
 	nodeId: string
 	body: {
 		positionX?: number
@@ -417,6 +423,8 @@ export const {
 	useLazyListCalendarUnitFormatModesQuery,
 	useListImageGenerationModelsQuery,
 	useLazyListImageGenerationModelsQuery,
+	useListFeatureFlagsQuery,
+	useLazyListFeatureFlagsQuery,
 	useSendContactFormMessageMutation,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,

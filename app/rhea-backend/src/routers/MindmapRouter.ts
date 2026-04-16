@@ -1,26 +1,16 @@
-import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { MindmapLinkDirection } from '@prisma/client'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
+import { UserAuthMiddleware } from '@src/middleware/UserAuthMiddleware.js'
 import { ActorService } from '@src/services/ActorService.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { MindmapService } from '@src/services/MindmapService.js'
 import { RedisService } from '@src/services/RedisService.js'
-import {
-	BadRequestError,
-	NumberValidator,
-	OptionalParam,
-	PathParam,
-	RequiredParam,
-	Router,
-	StringValidator,
-	useApiEndpoint,
-	useAuth,
-	usePathParams,
-	useRequestBody,
-} from 'moonflower'
+import { BadRequestError, Router, useApiEndpoint, usePathParams, useRequestBody } from 'moonflower'
+import z from 'zod'
 
 import { mindmapTag } from './utils/tags.js'
 
-const router = new Router().with(SessionMiddleware)
+const router = new Router().with(SessionMiddleware).with(UserAuthMiddleware)
 
 router.get('/api/world/:worldId/mindmap', async (ctx) => {
 	useApiEndpoint({
@@ -29,16 +19,15 @@ router.get('/api/world/:worldId/mindmap', async (ctx) => {
 		tags: [mindmapTag],
 	})
 
-	const user = await useAuth(ctx, UserAuthenticator)
-
 	const { worldId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
+		worldId: z.string(),
 	})
 
-	await AuthorizationService.checkUserReadAccessById(user, worldId)
+	await AuthorizationService.checkUserReadAccessById(ctx.user, worldId)
 
 	return {
 		nodes: await MindmapService.getNodes(worldId),
+		links: await MindmapService.getLinks(worldId),
 	}
 })
 
@@ -49,18 +38,16 @@ router.post('/api/world/:worldId/mindmap/node', async (ctx) => {
 		tags: [mindmapTag],
 	})
 
-	const user = await useAuth(ctx, UserAuthenticator)
-
 	const { worldId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
+		worldId: z.string(),
 	})
 
-	await AuthorizationService.checkUserWriteAccessById(user, worldId)
+	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
 
 	const params = useRequestBody(ctx, {
-		positionX: RequiredParam(NumberValidator),
-		positionY: RequiredParam(NumberValidator),
-		parentActorId: OptionalParam(StringValidator),
+		positionX: z.number(),
+		positionY: z.number(),
+		parentActorId: z.string().optional(),
 	})
 
 	const parentActor = await ActorService.findActor({ worldId, actorId: params.parentActorId })
@@ -84,18 +71,16 @@ router.patch('/api/world/:worldId/mindmap/node/:nodeId', async (ctx) => {
 		// tags: [mindmapTag],
 	})
 
-	const user = await useAuth(ctx, UserAuthenticator)
-
 	const { worldId, nodeId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-		nodeId: PathParam(StringValidator),
+		worldId: z.string(),
+		nodeId: z.string(),
 	})
 
-	await AuthorizationService.checkUserWriteAccessById(user, worldId)
+	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
 
 	const params = useRequestBody(ctx, {
-		positionX: OptionalParam(NumberValidator),
-		positionY: OptionalParam(NumberValidator),
+		positionX: z.number().optional(),
+		positionY: z.number().optional(),
 	})
 
 	const node = await MindmapService.updateNode(nodeId, params)
@@ -111,20 +96,90 @@ router.delete('/api/world/:worldId/mindmap/node/:nodeId', async (ctx) => {
 		tags: [mindmapTag],
 	})
 
-	const user = await useAuth(ctx, UserAuthenticator)
-
 	const { worldId, nodeId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-		nodeId: PathParam(StringValidator),
+		worldId: z.string(),
+		nodeId: z.string(),
 	})
 
-	await AuthorizationService.checkUserWriteAccessById(user, worldId)
+	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
 
 	const node = await MindmapService.deleteNode(nodeId)
 
 	RedisService.notifyAboutMindmapNodeUpdate(ctx, { worldId, node })
 
 	return node
+})
+
+router.post('/api/world/:worldId/mindmap/link', async (ctx) => {
+	useApiEndpoint({
+		name: 'createMindmapLink',
+		description: 'Creates a new mindmap link between two nodes',
+		tags: [mindmapTag],
+	})
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: z.string(),
+	})
+
+	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+
+	const params = useRequestBody(ctx, {
+		sourceNodeId: z.string(),
+		targetNodeId: z.string(),
+	})
+
+	if (params.sourceNodeId === params.targetNodeId) {
+		throw new BadRequestError('Source and target nodes cannot be the same')
+	}
+
+	const link = await MindmapService.createLink(params)
+
+	return link
+})
+
+router.patch('/api/world/:worldId/mindmap/link/:linkId', async (ctx) => {
+	useApiEndpoint({
+		name: 'updateMindmapLink',
+		description: 'Updates the target mindmap link',
+		tags: [mindmapTag],
+	})
+
+	const { worldId, linkId } = usePathParams(ctx, {
+		worldId: z.string(),
+		linkId: z.string(),
+	})
+
+	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+
+	const params = useRequestBody(ctx, {
+		direction: z.enum(MindmapLinkDirection).optional(),
+		content: z.string().optional(),
+	})
+
+	const link = await MindmapService.updateLink(linkId, params)
+	RedisService.notifyAboutMindmapLinkUpdate(ctx, { worldId, link })
+
+	return link
+})
+
+router.delete('/api/world/:worldId/mindmap/link/:linkId', async (ctx) => {
+	useApiEndpoint({
+		name: 'deleteMindmapLink',
+		description: 'Deletes the target mindmap link',
+		tags: [mindmapTag],
+	})
+
+	const { worldId, linkId } = usePathParams(ctx, {
+		worldId: z.string(),
+		linkId: z.string(),
+	})
+
+	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+
+	const link = await MindmapService.deleteLink(linkId)
+	RedisService.notifyAboutMindmapLinkUpdate(ctx, { worldId, link })
+
+	return link
 })
 
 export const MindmapRouter = router

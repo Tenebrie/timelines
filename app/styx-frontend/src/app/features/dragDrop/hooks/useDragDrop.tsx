@@ -13,7 +13,7 @@ type Props<T extends AllowedDraggableType> = {
 		top?: 'start' | 'center' | 'end'
 		left?: 'start' | 'center' | 'end'
 	}
-	ghostFactory: () => ReactNode
+	ghostFactory: (event: MouseEvent) => ReactNode
 	adjustPosition?: (
 		pos: { x: number; y: number },
 		startingPos: { x: number; y: number },
@@ -81,7 +81,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 						left: ghostAlign?.left ?? 'start',
 					}}
 				>
-					{ghostFactory()}
+					{ghostFactory(event)}
 				</GhostWrapper>,
 			)
 		},
@@ -120,7 +120,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 						left: ghostAlign?.left ?? 'start',
 					}}
 				>
-					{ghostFactory()}
+					{ghostFactory(event)}
 				</GhostWrapper>,
 			)
 		},
@@ -139,6 +139,17 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 			window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
 		}, 1)
 	}, [clearState])
+
+	const onRightClick = useCallback(
+		(event: MouseEvent) => {
+			if (!isDraggingNow.current) {
+				return
+			}
+			onMouseUp()
+			event.preventDefault()
+		},
+		[onMouseUp],
+	)
 
 	useShortcut(
 		Shortcut.Escape,
@@ -169,14 +180,18 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		if (disabled) {
 			return
 		}
+		window.addEventListener('contextmenu', onRightClick)
 		window.addEventListener('mouseup', onMouseUp)
 		window.addEventListener('mousemove', onMouseMove)
+		window.addEventListener('blur', onMouseUp)
 
 		return () => {
+			window.removeEventListener('contextmenu', onRightClick)
 			window.removeEventListener('mouseup', onMouseUp)
 			window.removeEventListener('mousemove', onMouseMove)
+			window.removeEventListener('blur', onMouseUp)
 		}
-	}, [onMouseMove, onMouseUp, disabled])
+	}, [onMouseMove, onMouseUp, onRightClick, disabled])
 
 	return {
 		ref: containerRef,

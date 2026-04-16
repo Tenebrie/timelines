@@ -1,4 +1,4 @@
-import { RequiredParam } from 'moonflower/validators/ParamWrappers'
+import { RequiredParam } from 'moonflower'
 
 export const ActualNullableBooleanValidator = RequiredParam({
 	prevalidate: (v) => v === '0' || v === '1' || v === 'false' || v === 'true' || v === null,

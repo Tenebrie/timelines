@@ -1,7 +1,7 @@
 import { User } from '@prisma/client'
 import { BadRequestError } from 'moonflower'
-import { WorldShareLinkUncheckedCreateInput } from 'prisma/client/models.js'
 
+import { WorldShareLinkUncheckedCreateInput } from '../../prisma/client/models.js'
 import { AuthorizationService } from './AuthorizationService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 

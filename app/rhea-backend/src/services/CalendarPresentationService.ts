@@ -2,8 +2,7 @@ import {
 	CalendarPresentationUnitUncheckedCreateInput,
 	CalendarPresentationUnitUncheckedUpdateManyInput,
 	TransactionClient,
-} from 'prisma/client/internal/prismaNamespace.js'
-
+} from '../../prisma/client/internal/prismaNamespace.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeTouchCalendarQuery } from './dbQueries/makeTouchCalendarQuery.js'
 
