@@ -105,6 +105,7 @@ router.post('/api/auth', async (ctx) => {
 	return {
 		user: {
 			...user,
+			featureFlags: await FeatureFlagService.listUserFeatureFlags(user.id),
 			avatarUrl: undefined as string | undefined,
 		},
 		sessionId,
@@ -142,6 +143,7 @@ router.post('/api/auth/guest', async (ctx) => {
 	return {
 		user: {
 			...user,
+			featureFlags: await FeatureFlagService.listUserFeatureFlags(user.id),
 			avatarUrl: undefined as string | undefined,
 		},
 		sessionId,
@@ -194,6 +196,7 @@ router.post('/api/auth/google', async (ctx) => {
 	return {
 		user: {
 			...user,
+			featureFlags: existingUser ? await FeatureFlagService.listUserFeatureFlags(user.id) : [],
 			avatarUrl: undefined as string | undefined,
 		},
 		sessionId,
@@ -246,6 +249,7 @@ router.post('/api/auth/login', async (ctx) => {
 	return {
 		user: {
 			...user,
+			featureFlags: await FeatureFlagService.listUserFeatureFlags(user.id),
 			avatarUrl,
 		},
 		sessionId,

@@ -14,6 +14,7 @@ import { AdminUserRow } from '../components/AdminUserRow'
 import { Pagination } from '../components/Pagination'
 import { SearchInput } from '../components/SearchInput'
 import { DeleteUserModal } from '../modals/DeleteUserModal'
+import { FeatureFlagModal } from '../modals/FeatureFlagModal'
 import { SetPasswordModal } from '../modals/SetPasswordModal'
 
 const pageSize = 18
@@ -92,6 +93,7 @@ export function AdminUsersView() {
 				</TableContainer>
 			</Stack>
 			<DeleteUserModal />
+			<FeatureFlagModal />
 			<SetPasswordModal />
 		</>
 	)

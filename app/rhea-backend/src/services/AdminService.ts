@@ -1,7 +1,7 @@
 import { UserLevel } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
-import { UserUncheckedUpdateInput } from 'prisma/client/models.js'
 
+import { UserUncheckedUpdateInput } from '../../prisma/client/models.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const AdminService = {
@@ -56,6 +56,11 @@ export const AdminService = {
 				bio: true,
 				createdAt: true,
 				updatedAt: true,
+				featureFlags: {
+					select: {
+						flag: true,
+					},
+				},
 			},
 			where: {
 				...(query
@@ -108,7 +113,10 @@ export const AdminService = {
 			},
 		})
 		return {
-			users: result,
+			users: result.map((user) => ({
+				...user,
+				featureFlags: user.featureFlags.map((entry) => entry.flag),
+			})),
 			page: actualPage,
 			size: actualSize,
 			pageCount: Math.ceil(rowCount._count.id / actualSize),
@@ -116,11 +124,27 @@ export const AdminService = {
 	},
 
 	getUserByEmail: async (email: string) => {
-		return getPrismaClient().user.findUnique({
+		const user = await getPrismaClient().user.findUnique({
 			where: {
 				email,
 			},
+			include: {
+				featureFlags: {
+					select: {
+						flag: true,
+					},
+				},
+			},
 		})
+
+		if (!user) {
+			return null
+		}
+
+		return {
+			...user,
+			featureFlags: user.featureFlags.map((entry) => entry.flag),
+		}
 	},
 
 	deleteUser: async (userId: string) => {

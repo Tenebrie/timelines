@@ -152,6 +152,7 @@ export type AdminGetAuditLogsApiArg = {
 }
 export type AdminGetUsersApiResponse = /** status 200  */ {
 	users: {
+		featureFlags: 'MindmapRework'[]
 		id: string
 		createdAt: string
 		updatedAt: string

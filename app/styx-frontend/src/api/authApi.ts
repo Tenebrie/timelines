@@ -60,6 +60,7 @@ export type CheckAuthenticationApiResponse =
 export type CheckAuthenticationApiArg = void
 export type CreateAccountApiResponse = /** status 200  */ {
 	user: {
+		featureFlags: 'MindmapRework'[]
 		avatarUrl?: string
 		id: string
 		email: string
@@ -80,6 +81,7 @@ export type DeleteAccountApiResponse = unknown
 export type DeleteAccountApiArg = void
 export type CreateGuestAccountApiResponse = /** status 200  */ {
 	user: {
+		featureFlags: 'MindmapRework'[]
 		avatarUrl?: string
 		id: string
 		email: string
@@ -92,6 +94,7 @@ export type CreateGuestAccountApiResponse = /** status 200  */ {
 export type CreateGuestAccountApiArg = void
 export type LoginWithGoogleApiResponse = /** status 200  */ {
 	user: {
+		featureFlags: 'MindmapRework'[]
 		avatarUrl?: string
 		id: string
 		email: string
@@ -108,6 +111,7 @@ export type LoginWithGoogleApiArg = {
 }
 export type PostLoginApiResponse = /** status 200  */ {
 	user: {
+		featureFlags: 'MindmapRework'[]
 		avatarUrl?: string
 		id: string
 		email: string

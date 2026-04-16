@@ -2423,6 +2423,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         users: {
+                            featureFlags: "MindmapRework"[];
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
@@ -2964,6 +2965,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         user: {
+                            featureFlags: "MindmapRework"[];
                             avatarUrl?: string;
                             id: string;
                             email: string;
@@ -3010,6 +3012,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         user: {
+                            featureFlags: "MindmapRework"[];
                             avatarUrl?: string;
                             id: string;
                             email: string;
@@ -3048,6 +3051,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         user: {
+                            featureFlags: "MindmapRework"[];
                             avatarUrl?: string;
                             id: string;
                             email: string;
@@ -3088,6 +3092,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         user: {
+                            featureFlags: "MindmapRework"[];
                             avatarUrl?: string;
                             id: string;
                             email: string;
