@@ -1,4 +1,4 @@
-import { RequiredParam } from 'moonflower/validators/ParamWrappers'
+import { RequiredParam } from 'moonflower'
 
 export const Base64ImageValidator = RequiredParam({
 	prevalidate: (v) => typeof v === 'string' && v.length > 0,

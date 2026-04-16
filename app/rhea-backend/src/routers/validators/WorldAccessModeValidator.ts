@@ -1,6 +1,6 @@
 import { WorldAccessMode } from '@prisma/client'
 import { keysOf } from '@src/utils/keysOf.js'
-import { RequiredParam } from 'moonflower/validators/ParamWrappers'
+import { RequiredParam } from 'moonflower'
 
 export const WorldAccessModeValidator = RequiredParam({
 	prevalidate: (v) => keysOf(WorldAccessMode).some((type) => type === (v ?? '')),

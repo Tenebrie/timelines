@@ -1,6 +1,6 @@
 import { CollaboratorAccess } from '@prisma/client'
 import { keysOf } from '@src/utils/keysOf.js'
-import { RequiredParam } from 'moonflower/validators/ParamWrappers'
+import { RequiredParam } from 'moonflower'
 
 export const CollaboratorAccessValidator = RequiredParam({
 	prevalidate: (v) => keysOf(CollaboratorAccess).some((type) => type === (v ?? '')),
