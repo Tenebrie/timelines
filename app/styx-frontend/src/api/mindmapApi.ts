@@ -25,6 +25,29 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['mindmap'],
 			}),
+			createMindmapLink: build.mutation<CreateMindmapLinkApiResponse, CreateMindmapLinkApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/link`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['mindmap'],
+			}),
+			updateMindmapLink: build.mutation<UpdateMindmapLinkApiResponse, UpdateMindmapLinkApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/link/${queryArg.linkId}`,
+					method: 'PATCH',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['mindmap'],
+			}),
+			deleteMindmapLink: build.mutation<DeleteMindmapLinkApiResponse, DeleteMindmapLinkApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/link/${queryArg.linkId}`,
+					method: 'DELETE',
+				}),
+				invalidatesTags: ['mindmap'],
+			}),
 		}),
 		overrideExisting: false,
 	})
@@ -39,9 +62,17 @@ export type GetMindmapApiResponse = /** status 200  */ {
 		positionX: number
 		positionY: number
 	}[]
+	links: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		content: string
+		sourceNodeId: string
+		targetNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
+	}[]
 }
 export type GetMindmapApiArg = {
-	/** Any string value */
 	worldId: string
 }
 export type CreateNodeApiResponse = /** status 200  */ {
@@ -54,7 +85,6 @@ export type CreateNodeApiResponse = /** status 200  */ {
 	positionY: number
 }
 export type CreateNodeApiArg = {
-	/** Any string value */
 	worldId: string
 	body: {
 		positionX: number
@@ -72,10 +102,61 @@ export type DeleteNodeApiResponse = /** status 200  */ {
 	positionY: number
 }
 export type DeleteNodeApiArg = {
-	/** Any string value */
 	worldId: string
-	/** Any string value */
 	nodeId: string
 }
-export const { useGetMindmapQuery, useLazyGetMindmapQuery, useCreateNodeMutation, useDeleteNodeMutation } =
-	injectedRtkApi
+export type CreateMindmapLinkApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	content: string
+	sourceNodeId: string
+	targetNodeId: string
+	direction: 'Normal' | 'Reversed' | 'TwoWay'
+}
+export type CreateMindmapLinkApiArg = {
+	worldId: string
+	body: {
+		sourceNodeId: string
+		targetNodeId: string
+	}
+}
+export type UpdateMindmapLinkApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	content: string
+	sourceNodeId: string
+	targetNodeId: string
+	direction: 'Normal' | 'Reversed' | 'TwoWay'
+}
+export type UpdateMindmapLinkApiArg = {
+	worldId: string
+	linkId: string
+	body: {
+		direction?: 'Normal' | 'Reversed' | 'TwoWay'
+		content?: string
+	}
+}
+export type DeleteMindmapLinkApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	content: string
+	sourceNodeId: string
+	targetNodeId: string
+	direction: 'Normal' | 'Reversed' | 'TwoWay'
+}
+export type DeleteMindmapLinkApiArg = {
+	worldId: string
+	linkId: string
+}
+export const {
+	useGetMindmapQuery,
+	useLazyGetMindmapQuery,
+	useCreateNodeMutation,
+	useDeleteNodeMutation,
+	useCreateMindmapLinkMutation,
+	useUpdateMindmapLinkMutation,
+	useDeleteMindmapLinkMutation,
+} = injectedRtkApi

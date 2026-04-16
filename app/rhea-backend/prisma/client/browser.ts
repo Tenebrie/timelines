@@ -13,10 +13,10 @@
  * 🟢 You can import this file directly.
  */
 
-import * as Prisma from './internal/prismaNamespaceBrowser.ts'
+import * as Prisma from './internal/prismaNamespaceBrowser.js'
 export { Prisma }
-export * as $Enums from './enums.ts'
-export * from './enums.ts';
+export * as $Enums from './enums.js'
+export * from './enums.js';
 /**
  * Model Actor
  * 
@@ -110,6 +110,11 @@ export type Mention = Prisma.MentionModel
  */
 export type MindmapNode = Prisma.MindmapNodeModel
 /**
+ * Model MindmapLink
+ * 
+ */
+export type MindmapLink = Prisma.MindmapLinkModel
+/**
  * Model Tag
  * 
  */
@@ -124,6 +129,11 @@ export type User = Prisma.UserModel
  * 
  */
 export type CollaboratingUser = Prisma.CollaboratingUserModel
+/**
+ * Model FeatureFlagEntry
+ * 
+ */
+export type FeatureFlagEntry = Prisma.FeatureFlagEntryModel
 /**
  * Model WikiArticle
  * 

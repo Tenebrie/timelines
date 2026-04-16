@@ -2,6 +2,7 @@ import {
 	Actor,
 	Calendar,
 	Mention,
+	MindmapLink,
 	MindmapNode,
 	User,
 	WikiArticle,
@@ -144,6 +145,20 @@ export const RedisService = {
 			data: {
 				worldId,
 				node: JSON.stringify(node),
+			},
+		})
+	},
+
+	notifyAboutMindmapLinkUpdate: (
+		ctx: ContextWithSessionId,
+		{ worldId, link }: { worldId: string; link: MindmapLink },
+	) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.MINDMAP_LINK_UPDATED,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
+				link: JSON.stringify(link),
 			},
 		})
 	},

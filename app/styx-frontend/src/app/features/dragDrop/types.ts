@@ -1,4 +1,5 @@
 import { CalendarDraftUnit, CalendarDraftUnitChildRelation } from '@api/types/calendarTypes'
+import { MindmapNode } from '@api/types/mindmapTypes'
 import { ActorDetails, MarkerType, TimelineEntity } from '@api/types/worldTypes'
 import { WikiArticle } from '@api/types/worldWikiTypes'
 
@@ -24,6 +25,9 @@ export type DraggableParams = {
 		parentUnitId: string
 		child: CalendarDraftUnitChildRelation
 		index: number
+	}
+	['actorNodeLinking']: {
+		sourceNode: MindmapNode
 	}
 }
 

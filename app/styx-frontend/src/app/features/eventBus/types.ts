@@ -38,6 +38,11 @@ export type EventParams = {
 		} | null
 	}
 	'mindmap/actorEditor/requestOpen': { extraHeight?: number }
+	'mindmap/node/onMove': {
+		nodeId: string
+		positionX: number
+		positionY: number
+	}
 	'world/requestNavigation': NavigateOptions
 	'calliope/onReconnected': void
 	'calliope/requestSendMessage': ClientToCalliopeMessage

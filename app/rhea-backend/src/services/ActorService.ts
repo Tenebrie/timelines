@@ -1,6 +1,6 @@
 import { MentionedEntity, Prisma } from '@prisma/client'
-import { ContentPageUpdateWithoutParentActorInput } from 'prisma/client/models.js'
 
+import { ContentPageUpdateWithoutParentActorInput } from '../../prisma/client/models.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { makeUpdateActorQuery, UpdateActorQueryParams } from './dbQueries/makeUpdateActorQuery.js'

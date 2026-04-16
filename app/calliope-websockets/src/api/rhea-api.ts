@@ -110,6 +110,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/feature-flags/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Gets the feature flags for a user */
+        get: operations["adminGetFeatureFlags"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/feature-flags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Sets a feature flag for a user or globally */
+        post: operations["adminSetFeatureFlag"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/dashboard": {
         parameters: {
             query?: never;
@@ -702,6 +736,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/constants/feature-flags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns a list of available feature flags. */
+        get: operations["listFeatureFlags"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/contact": {
         parameters: {
             query?: never;
@@ -915,6 +966,41 @@ export interface paths {
         head?: never;
         /** @description Updates the target node */
         patch: operations["updateNode"];
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/link": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates a new mindmap link between two nodes */
+        post: operations["createMindmapLink"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/link/{linkId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Deletes the target mindmap link */
+        delete: operations["deleteMindmapLink"];
+        options?: never;
+        head?: never;
+        /** @description Updates the target mindmap link */
+        patch: operations["updateMindmapLink"];
         trace?: never;
     };
     "/api/admin/notifications/broadcast": {
@@ -2176,6 +2262,59 @@ export interface operations {
             };
         };
     };
+    adminGetFeatureFlags: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": "MindmapRework"[];
+                };
+            };
+        };
+    };
+    adminSetFeatureFlag: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    flag: "MindmapRework";
+                    userId: string;
+                    enable: boolean;
+                };
+                "application/x-www-form-urlencoded": {
+                    /** @enum {string} */
+                    flag: "MindmapRework";
+                    userId: string;
+                    enable: boolean;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     adminGetDashboard: {
         parameters: {
             query?: never;
@@ -2284,6 +2423,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         users: {
+                            featureFlags: "MindmapRework"[];
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
@@ -2789,6 +2929,7 @@ export interface operations {
                             level: "Guest" | "Free" | "Premium" | "Admin";
                             bio: string;
                             avatarUrl?: string;
+                            featureFlags: "MindmapRework"[];
                         };
                     };
                 };
@@ -2824,6 +2965,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         user: {
+                            featureFlags: "MindmapRework"[];
                             avatarUrl?: string;
                             id: string;
                             email: string;
@@ -2870,6 +3012,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         user: {
+                            featureFlags: "MindmapRework"[];
                             avatarUrl?: string;
                             id: string;
                             email: string;
@@ -2908,6 +3051,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         user: {
+                            featureFlags: "MindmapRework"[];
                             avatarUrl?: string;
                             id: string;
                             email: string;
@@ -2948,6 +3092,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         user: {
+                            featureFlags: "MindmapRework"[];
                             avatarUrl?: string;
                             id: string;
                             email: string;
@@ -3038,11 +3183,11 @@ export interface operations {
                             name: string;
                             calendarId: string;
                             presentationId: string;
+                            unitId: string;
                             position: number;
                             formatString: string;
                             subdivision: number;
                             labeledIndices: number[];
-                            unitId: string;
                         }[];
                         id: string;
                         /** Format: date-time */
@@ -3136,11 +3281,11 @@ export interface operations {
                             name: string;
                             calendarId: string;
                             presentationId: string;
+                            unitId: string;
                             position: number;
                             formatString: string;
                             subdivision: number;
                             labeledIndices: number[];
-                            unitId: string;
                         }[];
                         id: string;
                         /** Format: date-time */
@@ -3200,11 +3345,11 @@ export interface operations {
                         name: string;
                         calendarId: string;
                         presentationId: string;
+                        unitId: string;
                         position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
-                        unitId: string;
                     };
                 };
             };
@@ -3240,11 +3385,11 @@ export interface operations {
                         name: string;
                         calendarId: string;
                         presentationId: string;
+                        unitId: string;
                         position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
-                        unitId: string;
                     };
                 };
             };
@@ -3293,11 +3438,11 @@ export interface operations {
                         name: string;
                         calendarId: string;
                         presentationId: string;
+                        unitId: string;
                         position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
-                        unitId: string;
                     };
                 };
             };
@@ -3361,21 +3506,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        description: string;
-                        worldId?: null | string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        ownerId?: null | string;
-                        position: number;
-                        /** Format: bigint */
-                        originTime: string;
-                        dateFormat?: null | string;
-                    };
+                    "text/plain": string | boolean | number | Record<string, never> | unknown[];
                 };
             };
         };
@@ -3455,11 +3586,11 @@ export interface operations {
                                 name: string;
                                 calendarId: string;
                                 presentationId: string;
+                                unitId: string;
                                 position: number;
                                 formatString: string;
                                 subdivision: number;
                                 labeledIndices: number[];
-                                unitId: string;
                             }[];
                             id: string;
                             /** Format: date-time */
@@ -3647,11 +3778,11 @@ export interface operations {
                                 name: string;
                                 calendarId: string;
                                 presentationId: string;
+                                unitId: string;
                                 position: number;
                                 formatString: string;
                                 subdivision: number;
                                 labeledIndices: number[];
-                                unitId: string;
                             }[];
                             id: string;
                             name: string;
@@ -3987,6 +4118,27 @@ export interface operations {
             };
         };
     };
+    listFeatureFlags: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        featureFlags: "MindmapRework"[];
+                    };
+                };
+            };
+        };
+    };
     sendContactFormMessage: {
         parameters: {
             query?: never;
@@ -4285,7 +4437,6 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Any string value */
                 worldId: string;
             };
             cookie?: never;
@@ -4309,6 +4460,17 @@ export interface operations {
                             positionX: number;
                             positionY: number;
                         }[];
+                        links: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                        }[];
                     };
                 };
             };
@@ -4319,7 +4481,6 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Any string value */
                 worldId: string;
             };
             cookie?: never;
@@ -4364,9 +4525,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Any string value */
                 worldId: string;
-                /** @description Any string value */
                 nodeId: string;
             };
             cookie?: never;
@@ -4398,9 +4557,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Any string value */
                 worldId: string;
-                /** @description Any string value */
                 nodeId: string;
             };
             cookie?: never;
@@ -4433,6 +4590,123 @@ export interface operations {
                         parentActorId?: null | string;
                         positionX: number;
                         positionY: number;
+                    };
+                };
+            };
+        };
+    };
+    createMindmapLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    sourceNodeId: string;
+                    targetNodeId: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    sourceNodeId: string;
+                    targetNodeId: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        content: string;
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                        direction: "Normal" | "Reversed" | "TwoWay";
+                    };
+                };
+            };
+        };
+    };
+    deleteMindmapLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                linkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        content: string;
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                        direction: "Normal" | "Reversed" | "TwoWay";
+                    };
+                };
+            };
+        };
+    };
+    updateMindmapLink: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                linkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    direction?: "Normal" | "Reversed" | "TwoWay";
+                    content?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    direction?: "Normal" | "Reversed" | "TwoWay";
+                    content?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        content: string;
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                        direction: "Normal" | "Reversed" | "TwoWay";
                     };
                 };
             };
@@ -4918,8 +5192,8 @@ export interface operations {
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        label?: null | string;
                         value: string;
+                        label?: null | string;
                     }[];
                 };
             };
@@ -4960,8 +5234,8 @@ export interface operations {
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        label?: null | string;
                         value: string;
+                        label?: null | string;
                     };
                 };
             };
@@ -5908,11 +6182,11 @@ export interface operations {
                                     name: string;
                                     calendarId: string;
                                     presentationId: string;
+                                    unitId: string;
                                     position: number;
                                     formatString: string;
                                     subdivision: number;
                                     labeledIndices: number[];
-                                    unitId: string;
                                 }[];
                                 id: string;
                                 name: string;

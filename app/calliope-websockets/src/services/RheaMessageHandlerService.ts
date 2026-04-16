@@ -93,6 +93,10 @@ const handlers: RheaToCalliopeMessageHandlers = {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_NODE_UPDATED, ...ctx })
 	},
 
+	[RheaToCalliopeMessageType.MINDMAP_LINK_UPDATED]: async (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_LINK_UPDATED, ...ctx })
+	},
+
 	[RheaToCalliopeMessageType.WIKI_ARTICLE_UPDATED]: (ctx) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_ARTICLE_UPDATED, ...ctx })
 	},

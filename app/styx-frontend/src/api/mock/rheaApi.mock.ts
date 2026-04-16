@@ -124,6 +124,7 @@ export const mockAuthenticatedUser = (server: SetupServer) =>
 				username: 'admin',
 				level: 'Admin',
 				bio: 'My detailed bio',
+				featureFlags: [],
 			},
 		},
 	})

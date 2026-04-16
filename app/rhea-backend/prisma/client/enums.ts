@@ -91,6 +91,15 @@ export const MentionedEntity = {
 export type MentionedEntity = (typeof MentionedEntity)[keyof typeof MentionedEntity]
 
 
+export const MindmapLinkDirection = {
+  Normal: 'Normal',
+  Reversed: 'Reversed',
+  TwoWay: 'TwoWay'
+} as const
+
+export type MindmapLinkDirection = (typeof MindmapLinkDirection)[keyof typeof MindmapLinkDirection]
+
+
 export const UserLevel = {
   Guest: 'Guest',
   Free: 'Free',
@@ -107,6 +116,13 @@ export const CollaboratorAccess = {
 } as const
 
 export type CollaboratorAccess = (typeof CollaboratorAccess)[keyof typeof CollaboratorAccess]
+
+
+export const FeatureFlag = {
+  MindmapRework: 'MindmapRework'
+} as const
+
+export type FeatureFlag = (typeof FeatureFlag)[keyof typeof FeatureFlag]
 
 
 export const WorldCalendarType = {

@@ -23,6 +23,7 @@ export const mockUserModel = (user: Partial<User> = {}): User => ({
 	level: 'Free',
 	bio: 'My detailed bio',
 	avatarUrl: 'https://http.cat/images/404.jpg',
+	featureFlags: [],
 	...user,
 })
 

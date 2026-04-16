@@ -13,6 +13,7 @@ export enum CalliopeToClientMessageType {
 	ACTOR_UPDATED = 'actorUpdated',
 	CALENDAR_UPDATED = 'calendarUpdated',
 	MINDMAP_NODE_UPDATED = 'mindmapNodeUpdated',
+	MINDMAP_LINK_UPDATED = 'mindmapLinkUpdated',
 	WIKI_ARTICLE_UPDATED = 'wikiArticleUpdated',
 	WIKI_ARTICLE_DELETED = 'wikiArticleDeleted',
 	TAG_UPDATED = 'tagUpdated',
@@ -65,6 +66,11 @@ export type CalliopeToClientMessagePayload = {
 		worldId: string
 		// TODO: Type properly
 		node: string
+	}
+	[CalliopeToClientMessageType.MINDMAP_LINK_UPDATED]: {
+		worldId: string
+		// TODO: Type properly
+		link: string
 	}
 	[CalliopeToClientMessageType.TAG_UPDATED]: {
 		worldId: string

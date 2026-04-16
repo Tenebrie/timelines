@@ -1,7 +1,7 @@
 import { Calendar, CalendarUnit } from '@prisma/client'
-import { TransactionClient } from 'prisma/client/internal/prismaNamespace.js'
 import { z } from 'zod'
 
+import { TransactionClient } from '../../prisma/client/internal/prismaNamespace.js'
 import { CalendarPresentationService } from './CalendarPresentationService.js'
 import { CalendarService } from './CalendarService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'

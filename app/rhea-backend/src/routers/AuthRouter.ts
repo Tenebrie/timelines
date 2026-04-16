@@ -4,6 +4,7 @@ import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AnnouncementService } from '@src/services/AnnouncementService.js'
 import { AuditLogService } from '@src/services/AuditLogService.js'
 import { CloudStorageService } from '@src/services/CloudStorageService.js'
+import { FeatureFlagService } from '@src/services/FeatureFlagService.js'
 import { GoogleService } from '@src/services/GoogleService.js'
 import {
 	BadRequestError,
@@ -45,6 +46,7 @@ router.get('/api/auth/check', async (ctx) => {
 
 	UserService.touchUser(user.id)
 	const avatarUrl = user.avatar ? await CloudStorageService.getPresignedUrl(user.avatar) : undefined
+	const featureFlags = await FeatureFlagService.listUserFeatureFlags(user.id)
 
 	return {
 		authenticated: true,
@@ -56,6 +58,7 @@ router.get('/api/auth/check', async (ctx) => {
 			level: user.level,
 			bio: user.bio,
 			avatarUrl,
+			featureFlags,
 		},
 	}
 })
@@ -102,6 +105,7 @@ router.post('/api/auth', async (ctx) => {
 	return {
 		user: {
 			...user,
+			featureFlags: await FeatureFlagService.listUserFeatureFlags(user.id),
 			avatarUrl: undefined as string | undefined,
 		},
 		sessionId,
@@ -139,6 +143,7 @@ router.post('/api/auth/guest', async (ctx) => {
 	return {
 		user: {
 			...user,
+			featureFlags: await FeatureFlagService.listUserFeatureFlags(user.id),
 			avatarUrl: undefined as string | undefined,
 		},
 		sessionId,
@@ -191,6 +196,7 @@ router.post('/api/auth/google', async (ctx) => {
 	return {
 		user: {
 			...user,
+			featureFlags: existingUser ? await FeatureFlagService.listUserFeatureFlags(user.id) : [],
 			avatarUrl: undefined as string | undefined,
 		},
 		sessionId,
@@ -243,6 +249,7 @@ router.post('/api/auth/login', async (ctx) => {
 	return {
 		user: {
 			...user,
+			featureFlags: await FeatureFlagService.listUserFeatureFlags(user.id),
 			avatarUrl,
 		},
 		sessionId,

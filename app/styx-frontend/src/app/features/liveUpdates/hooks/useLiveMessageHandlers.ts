@@ -88,6 +88,9 @@ export const useLiveMessageHandlers = () => {
 		[CalliopeToClientMessageType.MINDMAP_NODE_UPDATED]: (_) => {
 			dispatch(mindmapApi.util.invalidateTags(['mindmap']))
 		},
+		[CalliopeToClientMessageType.MINDMAP_LINK_UPDATED]: (_) => {
+			dispatch(mindmapApi.util.invalidateTags(['mindmap']))
+		},
 		[CalliopeToClientMessageType.TAG_UPDATED]: (data) => {
 			dispatch(updateTag(JSON.parse(data.tag) as WorldTag))
 			dispatch(worldTagApi.util.invalidateTags(['worldTag']))

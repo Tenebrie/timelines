@@ -26,4 +26,28 @@ export const MindmapService = {
 			where: { id: nodeId },
 		})
 	},
+
+	async getLinks(worldId: string) {
+		return getPrismaClient().mindmapLink.findMany({
+			where: {
+				sourceNode: { worldId },
+			},
+		})
+	},
+	async createLink(data: Prisma.MindmapLinkUncheckedCreateInput) {
+		return getPrismaClient().mindmapLink.create({
+			data,
+		})
+	},
+	async updateLink(linkId: string, params: Prisma.MindmapLinkUpdateInput) {
+		return getPrismaClient().mindmapLink.update({
+			where: { id: linkId },
+			data: params,
+		})
+	},
+	async deleteLink(linkId: string) {
+		return getPrismaClient().mindmapLink.delete({
+			where: { id: linkId },
+		})
+	},
 }
