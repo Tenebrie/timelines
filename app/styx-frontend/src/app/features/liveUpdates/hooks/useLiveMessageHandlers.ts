@@ -2,6 +2,7 @@ import { announcementListApi } from '@api/announcementListApi'
 import { calendarApi } from '@api/calendarApi'
 import { imageGenerationApi } from '@api/imageGenerationApi'
 import { mindmapApi } from '@api/mindmapApi'
+import { FeatureFlag } from '@api/types/otherTypes'
 import { WorldTag } from '@api/types/worldTypes'
 import { GetWorldInfoApiResponse, worldDetailsApi } from '@api/worldDetailsApi'
 import { worldEventTracksApi } from '@api/worldEventTracksApi'
@@ -22,10 +23,12 @@ import {
 	CalliopeToClientMessageType,
 } from '@/ts-shared/CalliopeToClientMessage'
 
+import { authSlice } from '../../auth/AuthSlice'
 import { useEventBusDispatch } from '../../eventBus'
 
 export const useLiveMessageHandlers = () => {
 	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState, (a, b) => a.updatedAt === b.updatedAt)
+	const { updateUser } = authSlice.actions
 	const { updateEvent, updateEventDelta, updateActor, updateTag } = worldSlice.actions
 	const dispatch = useDispatch()
 
@@ -86,10 +89,16 @@ export const useLiveMessageHandlers = () => {
 			dispatch(worldWikiApi.util.invalidateTags(['worldWiki']))
 		},
 		[CalliopeToClientMessageType.MINDMAP_NODE_UPDATED]: (_) => {
-			dispatch(mindmapApi.util.invalidateTags(['mindmap']))
+			dispatch(mindmapApi.util.invalidateTags(['mindmapNode']))
 		},
-		[CalliopeToClientMessageType.MINDMAP_LINK_UPDATED]: (_) => {
-			dispatch(mindmapApi.util.invalidateTags(['mindmap']))
+		[CalliopeToClientMessageType.MINDMAP_NODES_DELETED]: (_) => {
+			dispatch(mindmapApi.util.invalidateTags(['mindmapNode']))
+		},
+		[CalliopeToClientMessageType.MINDMAP_WIRE_UPDATED]: (_) => {
+			dispatch(mindmapApi.util.invalidateTags(['mindmapWire']))
+		},
+		[CalliopeToClientMessageType.MINDMAP_WIRES_DELETED]: (_) => {
+			dispatch(mindmapApi.util.invalidateTags(['mindmapWire']))
 		},
 		[CalliopeToClientMessageType.TAG_UPDATED]: (data) => {
 			dispatch(updateTag(JSON.parse(data.tag) as WorldTag))
@@ -97,6 +106,9 @@ export const useLiveMessageHandlers = () => {
 		},
 		[CalliopeToClientMessageType.DOCUMENT_RESET]: (data) => {
 			notifyAboutDocumentReset(data)
+		},
+		[CalliopeToClientMessageType.FEATURE_FLAGS_CHANGED]: (data) => {
+			dispatch(updateUser({ featureFlags: data.flags as FeatureFlag[] }))
 		},
 	}
 

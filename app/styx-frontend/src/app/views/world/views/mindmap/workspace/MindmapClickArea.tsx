@@ -1,197 +1,79 @@
 import Box from '@mui/material/Box'
-import { useRef, useState } from 'react'
-import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
-import { useAutoRef } from '@/app/hooks/useAutoRef'
-import { worldSlice } from '@/app/views/world/WorldSlice'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
+import { SelectionBox, SelectionRect } from '@/ui-lib/components/SelectionBox/SelectionBox'
 
 import { useNewNodeReceiver } from '../hooks/useNewNodeReceiver'
+import { mindmapSlice } from '../MindmapSlice'
+import { getMindmapState } from '../MindmapSliceSelectors'
 
 export function MindmapClickArea() {
-	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
-	const dispatch = useDispatch()
-
-	const onClick = useEvent(() => {
-		navigate({ search: (prev) => ({ ...prev, navi: [], new: undefined }) })
-		dispatch(worldSlice.actions.clearSelections())
-	})
-
 	const ref = useRef<HTMLDivElement>(null)
 	useNewNodeReceiver({ ref })
-
-	const [selectionRect, setSelectionRect] = useState<{
-		visible: boolean
-		x: number
-		y: number
-		width: number
-		height: number
-	}>({
-		visible: false,
-		x: 0,
-		y: 0,
-		width: 0,
-		height: 0,
-	})
-	const selectionRectRef = useAutoRef(selectionRect)
-
-	useEffect(() => {
-		const element = ref.current
-		if (!element) {
-			return
-		}
-
-		const mouseState = {
-			isButtonDown: false,
-			buttonDownMode: 'select' as 'select' | 'pan',
-
-			canClick: true,
-			deltaX: 0,
-			deltaY: 0,
-			lastIntersectionCheckTimestamp: 0,
-		}
-
-		const handleMouseDown = (event: MouseEvent) => {
-			if (event.button === 0) {
-				mouseState.isButtonDown = true
-				mouseState.buttonDownMode = 'select'
-				event.preventDefault()
-			} else if (event.button === 2) {
-				mouseState.isButtonDown = true
-				mouseState.buttonDownMode = 'pan'
-				event.preventDefault()
-			}
-			event.preventDefault()
-		}
-
-		const handleMouseUp = (event: MouseEvent) => {
-			if ((event.button !== 0 && event.button !== 2) || !mouseState.isButtonDown) {
-				return
-			}
-			if (mouseState.canClick) {
-				onClick()
-			}
-
-			// Finalize selection on mouse up
-			if (mouseState.buttonDownMode === 'select' && selectionRectRef.current.visible) {
-				const selectedNodes = checkNodeIntersection(ref.current, selectionRectRef.current)
-				dispatch(worldSlice.actions.setActorNodeSelection(selectedNodes))
-			}
-
-			setSelectionRect((prev) => ({
-				...prev,
-				visible: false,
-			}))
-			mouseState.isButtonDown = false
-			mouseState.canClick = true
-			mouseState.deltaX = 0
-			mouseState.deltaY = 0
-		}
-
-		const handleMouseMove = (event: MouseEvent) => {
-			if (!mouseState.isButtonDown) {
-				return
-			}
-
-			mouseState.deltaX += event.movementX
-			mouseState.deltaY += event.movementY
-
-			if (mouseState.canClick && (Math.abs(mouseState.deltaX) > 3 || Math.abs(mouseState.deltaY) > 3)) {
-				mouseState.canClick = false
-				if (mouseState.buttonDownMode === 'select') {
-					const baseRect = element.getBoundingClientRect()
-					const x = event.clientX - mouseState.deltaX - baseRect.left - 1
-					const y = event.clientY - mouseState.deltaY - baseRect.top - 3
-					setSelectionRect({
-						visible: true,
-						x,
-						y,
-						width: mouseState.deltaX - 1,
-						height: mouseState.deltaY,
-					})
-				}
-				mouseState.deltaX = 0
-				mouseState.deltaY = 0
-			} else if (!mouseState.canClick && mouseState.buttonDownMode === 'select') {
-				setSelectionRect((prev) => {
-					const newRect = {
-						...prev,
-						width: prev.width + event.movementX,
-						height: prev.height + event.movementY,
-					}
-
-					// Throttle intersection checks to reduce rerenders
-					const now = Date.now()
-					if (now - mouseState.lastIntersectionCheckTimestamp >= 100) {
-						mouseState.lastIntersectionCheckTimestamp = now
-						const selectedNodes = checkNodeIntersection(ref.current, newRect)
-						requestIdleCallback(() => {
-							dispatch(worldSlice.actions.setActorNodeSelection(selectedNodes))
-						})
-					}
-
-					return newRect
-				})
-			}
-		}
-
-		element.addEventListener('mousedown', handleMouseDown)
-		window.addEventListener('mousemove', handleMouseMove)
-		window.addEventListener('mouseup', handleMouseUp)
-
-		return () => {
-			element.removeEventListener('mousedown', handleMouseDown)
-			window.removeEventListener('mousemove', handleMouseMove)
-			window.removeEventListener('mouseup', handleMouseUp)
-		}
-	}, [onClick, selectionRectRef, dispatch])
 
 	return (
 		<>
 			<Box ref={ref} sx={{ position: 'absolute', width: '100%', height: '100%', top: 0, left: 0 }}></Box>
-			<MindmapSelectionBox {...selectionRect} />
+			<MindmapSelectionBox ref={ref} />
 		</>
 	)
 }
 
-type SelectionBoxProps = {
-	visible: boolean
-	x: number
-	y: number
-	width: number
-	height: number
-}
+function MindmapSelectionBox({ ref }: { ref: React.RefObject<HTMLDivElement | null> }) {
+	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
+	const { selectedNodes, selectedWires } = useSelector(
+		getMindmapState,
+		(a, b) => a.selectedNodes === b.selectedNodes && a.selectedWires === b.selectedWires,
+	)
+	const dispatch = useDispatch()
 
-function MindmapSelectionBox({ visible, x, y, width, height }: SelectionBoxProps) {
-	const actualX = width < 0 ? x + width : x
-	const actualY = height < 0 ? y + height : y
-	const actualWidth = Math.abs(width)
-	const actualHeight = Math.abs(height)
+	const onClick = useEvent(() => {
+		navigate({ search: (prev) => ({ ...prev, navi: [], new: undefined }) })
+		dispatch(mindmapSlice.actions.clearSelections())
+	})
+
+	const onUpdateSelection = useEvent((rect: SelectionRect) => {
+		const newSelectedNodes = checkNodeIntersection(ref.current, rect)
+		const newSelectedWires = checkWireIntersection(ref.current, rect)
+
+		const nodesChanged =
+			selectedNodes.length !== newSelectedNodes.length ||
+			!selectedNodes.every((node) => newSelectedNodes.some((newNode) => newNode.key === node.key))
+		const wiresChanged =
+			selectedWires.length !== newSelectedWires.length ||
+			!selectedWires.every((wireId, i) => wireId === newSelectedWires[i])
+
+		if (nodesChanged) {
+			dispatch(mindmapSlice.actions.setNodeSelection(newSelectedNodes))
+		}
+		if (wiresChanged) {
+			dispatch(mindmapSlice.actions.setWireSelection(newSelectedWires))
+		}
+	})
+
+	const onFinalizeSelection = useEvent((rect: SelectionRect) => {
+		const selectedNodes = checkNodeIntersection(ref.current, rect)
+		const selectedWireIds = checkWireIntersection(ref.current, rect)
+		requestAnimationFrame(() => {
+			dispatch(mindmapSlice.actions.setNodeSelection(selectedNodes))
+			dispatch(mindmapSlice.actions.setWireSelection(selectedWireIds))
+		})
+	})
 
 	return (
-		<Box
-			sx={{
-				zIndex: 1000,
-				backgroundColor: '#fff3',
-				position: 'absolute',
-				top: `${actualY}px`,
-				left: `${actualX}px`,
-				width: `${actualWidth}px`,
-				height: `${actualHeight}px`,
-				opacity: visible ? 1 : 0,
-				pointerEvents: 'none',
-				transition: visible ? 'none' : 'opacity 0.4s',
-			}}
+		<SelectionBox
+			ref={ref}
+			onClick={onClick}
+			onUpdateSelection={onUpdateSelection}
+			onFinalizeSelection={onFinalizeSelection}
 		/>
 	)
 }
 
-function checkNodeIntersection(
-	parentElement: HTMLElement | null,
-	selectionBox: { x: number; y: number; width: number; height: number },
-) {
+function checkNodeIntersection(parentElement: HTMLElement | null, selectionBox: SelectionRect) {
 	if (!parentElement) {
 		return []
 	}
@@ -228,4 +110,40 @@ function checkNodeIntersection(
 	})
 
 	return Array.from(selectedNodeIds).map((str) => JSON.parse(str) as { key: string; actorId: string })
+}
+
+function checkWireIntersection(parentElement: HTMLElement | null, selectionBox: SelectionRect) {
+	if (!parentElement) {
+		return []
+	}
+	const wires = document.querySelectorAll('[data-mindmap-wire]')
+	const selectedWireIds: string[] = []
+
+	const boxLeft = selectionBox.width < 0 ? selectionBox.x + selectionBox.width : selectionBox.x
+	const boxTop = selectionBox.height < 0 ? selectionBox.y + selectionBox.height : selectionBox.y
+	const boxRight = boxLeft + Math.abs(selectionBox.width)
+	const boxBottom = boxTop + Math.abs(selectionBox.height)
+
+	const containerRect = parentElement.getBoundingClientRect()
+
+	wires.forEach((wireElement) => {
+		const rect = wireElement.getBoundingClientRect()
+
+		const wireLeft = rect.left - containerRect.left
+		const wireTop = rect.top - containerRect.top
+		const wireRight = wireLeft + rect.width
+		const wireBottom = wireTop + rect.height
+
+		const intersects =
+			boxLeft < wireRight && boxRight > wireLeft && boxTop < wireBottom && boxBottom > wireTop
+
+		if (intersects) {
+			const wireId = wireElement.getAttribute('data-mindmap-wire')
+			if (wireId) {
+				selectedWireIds.push(wireId)
+			}
+		}
+	})
+
+	return selectedWireIds
 }

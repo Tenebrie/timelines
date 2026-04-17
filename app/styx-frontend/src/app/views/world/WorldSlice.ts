@@ -30,7 +30,6 @@ export const initialState = {
 	createdAt: '0',
 	updatedAt: '0',
 	selectedTimelineMarkers: [] as { key: string; eventId: string }[],
-	selectedActorNodes: [] as { key: string; actorId: string }[],
 	isReadOnly: false as boolean,
 	accessMode: 'Private' as WorldAccessMode,
 
@@ -198,36 +197,8 @@ export const worldSlice = createSlice({
 		removeTimelineMarkerFromSelection: (state, { payload }: PayloadAction<string>) => {
 			state.selectedTimelineMarkers = state.selectedTimelineMarkers.filter((marker) => marker.key !== payload)
 		},
-		addActorNodeToSelection: (
-			state,
-			{ payload }: PayloadAction<{ key: string; actorId: string; multiselect: boolean }>,
-		) => {
-			const record = { key: payload.key, actorId: payload.actorId }
-			if (!payload.multiselect) {
-				state.selectedActorNodes = [record]
-				return
-			}
-
-			if (state.selectedActorNodes.some((m) => m.key === payload.key)) {
-				return
-			}
-			state.selectedActorNodes = [...state.selectedActorNodes, record]
-		},
-		setActorNodeSelection: (state, { payload }: PayloadAction<{ key: string; actorId: string }[]>) => {
-			if (
-				state.selectedActorNodes.length === payload.length &&
-				state.selectedActorNodes.every((node, index) => node.key === payload[index].key)
-			) {
-				return
-			}
-			state.selectedActorNodes = payload
-		},
-		removeActorNodeFromSelection: (state, { payload }: PayloadAction<string>) => {
-			state.selectedActorNodes = state.selectedActorNodes.filter((marker) => marker.key !== payload)
-		},
 		clearSelections: (state) => {
 			state.selectedTimelineMarkers = []
-			state.selectedActorNodes = []
 		},
 		setIsReadOnly: (state, { payload }: PayloadAction<boolean>) => {
 			state.isReadOnly = payload

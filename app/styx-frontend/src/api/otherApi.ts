@@ -63,14 +63,6 @@ const injectedRtkApi = api
 					invalidatesTags: [],
 				},
 			),
-			updateNode: build.mutation<UpdateNodeApiResponse, UpdateNodeApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/node/${queryArg.nodeId}`,
-					method: 'PATCH',
-					body: queryArg.body,
-				}),
-				invalidatesTags: [],
-			}),
 			getWikiArticleContent: build.query<GetWikiArticleContentApiResponse, GetWikiArticleContentApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/article/${queryArg.articleId}/content`,
@@ -234,23 +226,6 @@ export type RequestImageConversionApiArg = {
 		width?: number
 		height?: number
 		quality?: number
-	}
-}
-export type UpdateNodeApiResponse = /** status 200  */ {
-	worldId: string
-	id: string
-	createdAt: string
-	updatedAt: string
-	parentActorId?: null | string
-	positionX: number
-	positionY: number
-}
-export type UpdateNodeApiArg = {
-	worldId: string
-	nodeId: string
-	body: {
-		positionX?: number
-		positionY?: number
 	}
 }
 export type GetWikiArticleContentApiResponse = /** status 200  */ {
@@ -433,7 +408,6 @@ export const {
 	useGetSupportedImageFormatsQuery,
 	useLazyGetSupportedImageFormatsQuery,
 	useRequestImageConversionMutation,
-	useUpdateNodeMutation,
 	useGetWikiArticleContentQuery,
 	useLazyGetWikiArticleContentQuery,
 	usePutWikiArticleContentMutation,

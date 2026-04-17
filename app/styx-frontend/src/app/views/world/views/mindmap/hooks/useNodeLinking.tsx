@@ -4,15 +4,15 @@ import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getWorldIdState } from '../../../WorldSliceSelectors'
-import { useCreateMindmapLink } from '../api/useCreateMindmapLink'
-import { useDeleteMindmapLink } from '../api/useDeleteMindmapLink'
+import { useCreateMindmapWire } from '../api/useCreateMindmapWire'
+import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
 
 export function useNodeLinking() {
 	const worldId = useSelector(getWorldIdState)
 	const { data } = useGetMindmapQuery({ worldId }, { skip: !worldId })
 
-	const [createMindmapLink] = useCreateMindmapLink()
-	const [deleteMindmapLink] = useDeleteMindmapLink()
+	const [createMindmapLink] = useCreateMindmapWire()
+	const [deleteMindmapLink] = useDeleteMindmapWires()
 
 	const createLink = useCallback(
 		({ source, target }: { source: MindmapNode; target: MindmapNode }) => {
@@ -20,13 +20,13 @@ export function useNodeLinking() {
 				return
 			}
 
-			const existingLink = data.links.find(
+			const existingLink = data.wires.find(
 				(link) =>
 					(link.sourceNodeId === source.id && link.targetNodeId === target.id) ||
 					(link.sourceNodeId === target.id && link.targetNodeId === source.id),
 			)
 			if (existingLink) {
-				return deleteMindmapLink(existingLink.id)
+				return deleteMindmapLink([existingLink.id])
 			}
 			const newLink = createMindmapLink({
 				sourceNodeId: source.id,

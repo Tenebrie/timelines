@@ -40,21 +40,21 @@ export function ActorNodeContent({ node, actor, onHeaderClick, onContentClick }:
 				overflow: 'hidden',
 				position: 'relative',
 				transition: 'box-shadow 0.2s ease-out, transform 0.2s ease-out',
-				'&:has([data-mindmap-header]:hover)': {
-					boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
-				},
+				'&:has([data-mindmap-header]:hover):not(:has([data-mindmap-port]:hover)):not(:has(body.cursor-grabbing))':
+					{
+						boxShadow: '0 6px 16px rgba(0,0,0,0.2)',
+					},
 			}}
 		>
 			{/* Header */}
-			<Box
+			<Stack
 				data-mindmap-header
 				onClick={onHeaderClick}
 				sx={{
 					background: theme.custom.palette.background.soft,
-					padding: '8px 12px',
+					padding: '8px 0 8px 12px',
 					borderBottom: `1px solid ${theme.custom.palette.background.softer}`,
-					display: 'flex',
-					alignItems: 'center',
+					flexDirection: 'row',
 					userSelect: 'none',
 					gap: 1,
 					cursor: 'grab',
@@ -89,6 +89,7 @@ export function ActorNodeContent({ node, actor, onHeaderClick, onContentClick }:
 						>
 							{actor.name}
 						</Box>
+
 						<Icon
 							icon={actor.icon === 'default' ? 'mdi:leaf' : actor.icon}
 							color={'#0a0908'}
@@ -97,7 +98,7 @@ export function ActorNodeContent({ node, actor, onHeaderClick, onContentClick }:
 								zIndex: -1,
 								position: 'absolute',
 								top: '0px',
-								right: '0px',
+								right: '36px',
 								width: '100%',
 								height: '100%',
 								maxHeight: '75px',
@@ -106,13 +107,13 @@ export function ActorNodeContent({ node, actor, onHeaderClick, onContentClick }:
 							}}
 						/>
 					</Stack>
-					{node && (
-						<Stack flexShrink={0}>
-							<MindmapNodePort node={node} actor={actor} />
-						</Stack>
-					)}
 				</Stack>
-			</Box>
+				{node && (
+					<Stack sx={{ marginTop: '-8px', marginBottom: '-9px' }} flexShrink={0}>
+						<MindmapNodePort node={node} actor={actor} />
+					</Stack>
+				)}
+			</Stack>
 
 			{/* Content */}
 			<Box
