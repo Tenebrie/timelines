@@ -18,6 +18,7 @@ import { PageMetadata } from './features/pageMetadata/PageMetadata'
 import { useSavedPreferences } from './features/preferences/hooks/useSavedPreferences'
 import { CustomThemeOverrides } from './features/theming/components/CustomThemeOverrides'
 import { CustomThemeProvider } from './features/theming/context/CustomThemeProvider'
+import { UndoRedoManager } from './features/undoRedo/UndoRedoManager'
 import { useBrowserSpecificScrollbars } from './hooks/useBrowserSpecificScrollbars'
 import { useShortcutManager } from './hooks/useShortcut/useShortcutManager'
 import { TimelineZoomReporter } from './views/world/views/timeline/components/TimelineZoomReporter'
@@ -90,6 +91,7 @@ const App = () => {
 					<DragDropPortalSlot />
 					<PageMetadata />
 					<TimelineZoomReporter />
+					<UndoRedoManager />
 					{/* <SummonableDebug /> */}
 				</LocalizationProvider>
 			</EventBusProvider>

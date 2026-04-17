@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['mindmap'] as const
+export const addTagTypes = ['mindmap', 'mindmapNode', 'mindmapWire'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -8,45 +8,59 @@ const injectedRtkApi = api
 		endpoints: (build) => ({
 			getMindmap: build.query<GetMindmapApiResponse, GetMindmapApiArg>({
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/mindmap` }),
-				providesTags: ['mindmap'],
+				providesTags: ['mindmap', 'mindmapNode', 'mindmapWire'],
 			}),
 			createNode: build.mutation<CreateNodeApiResponse, CreateNodeApiArg>({
 				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/node`,
+					url: `/api/world/${queryArg.worldId}/mindmap/nodes`,
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['mindmap'],
+				invalidatesTags: ['mindmap', 'mindmapNode'],
 			}),
-			deleteNode: build.mutation<DeleteNodeApiResponse, DeleteNodeApiArg>({
+			deleteNodes: build.mutation<DeleteNodesApiResponse, DeleteNodesApiArg>({
 				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/node/${queryArg.nodeId}`,
+					url: `/api/world/${queryArg.worldId}/mindmap/nodes`,
 					method: 'DELETE',
+					params: {
+						nodes: queryArg.nodes,
+					},
 				}),
-				invalidatesTags: ['mindmap'],
+				invalidatesTags: ['mindmap', 'mindmapNode'],
 			}),
-			createMindmapLink: build.mutation<CreateMindmapLinkApiResponse, CreateMindmapLinkApiArg>({
+			updateNode: build.mutation<UpdateNodeApiResponse, UpdateNodeApiArg>({
 				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/link`,
-					method: 'POST',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['mindmap'],
-			}),
-			updateMindmapLink: build.mutation<UpdateMindmapLinkApiResponse, UpdateMindmapLinkApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/link/${queryArg.linkId}`,
+					url: `/api/world/${queryArg.worldId}/mindmap/nodes/${queryArg.nodeId}`,
 					method: 'PATCH',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['mindmap'],
+				invalidatesTags: [],
 			}),
-			deleteMindmapLink: build.mutation<DeleteMindmapLinkApiResponse, DeleteMindmapLinkApiArg>({
+			createMindmapWire: build.mutation<CreateMindmapWireApiResponse, CreateMindmapWireApiArg>({
 				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/link/${queryArg.linkId}`,
-					method: 'DELETE',
+					url: `/api/world/${queryArg.worldId}/mindmap/wires`,
+					method: 'POST',
+					body: queryArg.body,
 				}),
-				invalidatesTags: ['mindmap'],
+				invalidatesTags: [],
+			}),
+			deleteMindmapWires: build.mutation<DeleteMindmapWiresApiResponse, DeleteMindmapWiresApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/wires`,
+					method: 'DELETE',
+					params: {
+						wires: queryArg.wires,
+					},
+				}),
+				invalidatesTags: [],
+			}),
+			updateMindmapWire: build.mutation<UpdateMindmapWireApiResponse, UpdateMindmapWireApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/wires/${queryArg.wireId}`,
+					method: 'PATCH',
+					body: queryArg.body,
+				}),
+				invalidatesTags: [],
 			}),
 		}),
 		overrideExisting: false,
@@ -54,109 +68,114 @@ const injectedRtkApi = api
 export { injectedRtkApi as mindmapApi }
 export type GetMindmapApiResponse = /** status 200  */ {
 	nodes: {
-		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		parentActorId?: null | string
+		worldId: string
 		positionX: number
 		positionY: number
+		parentActorId?: null | string
 	}[]
-	links: {
+	wires: {
 		id: string
 		createdAt: string
 		updatedAt: string
-		content: string
 		sourceNodeId: string
 		targetNodeId: string
 		direction: 'Normal' | 'Reversed' | 'TwoWay'
+		content: string
 	}[]
 }
 export type GetMindmapApiArg = {
 	worldId: string
 }
 export type CreateNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	parentActorId?: null | string
+	worldId: string
 	positionX: number
 	positionY: number
+	parentActorId?: null | string
 }
 export type CreateNodeApiArg = {
 	worldId: string
 	body: {
+		id?: string
 		positionX: number
 		positionY: number
 		parentActorId?: string
 	}
 }
-export type DeleteNodeApiResponse = /** status 200  */ {
+export type DeleteNodesApiResponse = /** status 200  */ {
+	count: number
+}
+export type DeleteNodesApiArg = {
 	worldId: string
+	nodes: string[]
+}
+export type UpdateNodeApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	parentActorId?: null | string
+	worldId: string
 	positionX: number
 	positionY: number
+	parentActorId?: null | string
 }
-export type DeleteNodeApiArg = {
+export type UpdateNodeApiArg = {
 	worldId: string
 	nodeId: string
+	body: {
+		positionX?: number
+		positionY?: number
+	}
 }
-export type CreateMindmapLinkApiResponse = /** status 200  */ {
+export type CreateMindmapWireApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	content: string
 	sourceNodeId: string
 	targetNodeId: string
 	direction: 'Normal' | 'Reversed' | 'TwoWay'
+	content: string
 }
-export type CreateMindmapLinkApiArg = {
+export type CreateMindmapWireApiArg = {
 	worldId: string
 	body: {
 		sourceNodeId: string
 		targetNodeId: string
 	}
 }
-export type UpdateMindmapLinkApiResponse = /** status 200  */ {
+export type DeleteMindmapWiresApiResponse = /** status 200  */ string[]
+export type DeleteMindmapWiresApiArg = {
+	worldId: string
+	wires: string[]
+}
+export type UpdateMindmapWireApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	content: string
 	sourceNodeId: string
 	targetNodeId: string
 	direction: 'Normal' | 'Reversed' | 'TwoWay'
+	content: string
 }
-export type UpdateMindmapLinkApiArg = {
+export type UpdateMindmapWireApiArg = {
 	worldId: string
-	linkId: string
+	wireId: string
 	body: {
 		direction?: 'Normal' | 'Reversed' | 'TwoWay'
 		content?: string
 	}
 }
-export type DeleteMindmapLinkApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	content: string
-	sourceNodeId: string
-	targetNodeId: string
-	direction: 'Normal' | 'Reversed' | 'TwoWay'
-}
-export type DeleteMindmapLinkApiArg = {
-	worldId: string
-	linkId: string
-}
 export const {
 	useGetMindmapQuery,
 	useLazyGetMindmapQuery,
 	useCreateNodeMutation,
-	useDeleteNodeMutation,
-	useCreateMindmapLinkMutation,
-	useUpdateMindmapLinkMutation,
-	useDeleteMindmapLinkMutation,
+	useDeleteNodesMutation,
+	useUpdateNodeMutation,
+	useCreateMindmapWireMutation,
+	useDeleteMindmapWiresMutation,
+	useUpdateMindmapWireMutation,
 } = injectedRtkApi

@@ -16,7 +16,9 @@ export enum RheaToCalliopeMessageType {
 	ACTOR_UPDATED = 'actorUpdated',
 	CALENDAR_UPDATED = 'calendarUpdated',
 	MINDMAP_NODE_UPDATED = 'mindmapNodeUpdated',
-	MINDMAP_LINK_UPDATED = 'mindmapLinkUpdated',
+	MINDMAP_NODES_DELETED = 'mindmapNodesDeleted',
+	MINDMAP_WIRE_UPDATED = 'mindmapWireUpdated',
+	MINDMAP_WIRES_DELETED = 'mindmapWiresDeleted',
 	TAG_UPDATED = 'tagUpdated',
 	WIKI_ARTICLE_UPDATED = 'wikiArticleUpdated',
 	WIKI_ARTICLE_DELETED = 'wikiArticleDeleted',
@@ -76,10 +78,18 @@ export type RheaToCalliopeMessagePayload = {
 		// TODO: Type properly
 		node: string
 	}
-	[RheaToCalliopeMessageType.MINDMAP_LINK_UPDATED]: {
+	[RheaToCalliopeMessageType.MINDMAP_NODES_DELETED]: {
+		worldId: string
+		nodes: string[] // Node IDs
+	}
+	[RheaToCalliopeMessageType.MINDMAP_WIRE_UPDATED]: {
 		worldId: string
 		// TODO: Type properly
-		link: string
+		wire: string
+	}
+	[RheaToCalliopeMessageType.MINDMAP_WIRES_DELETED]: {
+		worldId: string
+		wires: string[] // Wire IDs
 	}
 	[RheaToCalliopeMessageType.TAG_UPDATED]: {
 		worldId: string

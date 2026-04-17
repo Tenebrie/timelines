@@ -137,11 +137,11 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 		name: string
 		calendarId: string
 		presentationId: string
-		unitId: string
 		position: number
 		formatString: string
 		subdivision: number
 		labeledIndices: number[]
+		unitId: string
 	}[]
 	id: string
 	createdAt: string
@@ -168,11 +168,11 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 		name: string
 		calendarId: string
 		presentationId: string
-		unitId: string
 		position: number
 		formatString: string
 		subdivision: number
 		labeledIndices: number[]
+		unitId: string
 	}[]
 	id: string
 	createdAt: string
@@ -217,11 +217,11 @@ export type CreateCalendarPresentationUnitApiResponse = /** status 200  */ {
 	name: string
 	calendarId: string
 	presentationId: string
-	unitId: string
 	position: number
 	formatString: string
 	subdivision: number
 	labeledIndices: number[]
+	unitId: string
 }
 export type CreateCalendarPresentationUnitApiArg = {
 	/** Any string value */
@@ -242,11 +242,11 @@ export type UpdateCalendarPresentationUnitApiResponse = /** status 200  */ {
 	name: string
 	calendarId: string
 	presentationId: string
-	unitId: string
 	position: number
 	formatString: string
 	subdivision: number
 	labeledIndices: number[]
+	unitId: string
 }
 export type UpdateCalendarPresentationUnitApiArg = {
 	/** Any string value */
@@ -268,11 +268,11 @@ export type DeleteCalendarPresentationUnitApiResponse = /** status 200  */ {
 	name: string
 	calendarId: string
 	presentationId: string
-	unitId: string
 	position: number
 	formatString: string
 	subdivision: number
 	labeledIndices: number[]
+	unitId: string
 }
 export type DeleteCalendarPresentationUnitApiArg = {
 	/** Any string value */
@@ -295,7 +295,18 @@ export type ListCalendarsApiResponse = /** status 200  */ {
 	dateFormat?: null | string
 }[]
 export type ListCalendarsApiArg = void
-export type CreateCalendarApiResponse = unknown
+export type CreateCalendarApiResponse = /** status 200  */ {
+	description: string
+	worldId?: null | string
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	ownerId?: null | string
+	position: number
+	originTime: string
+	dateFormat?: null | string
+}
 export type CreateCalendarApiArg = {
 	body: {
 		name: string
@@ -351,11 +362,11 @@ export type GetCalendarApiResponse = /** status 200  */ {
 			name: string
 			calendarId: string
 			presentationId: string
-			unitId: string
 			position: number
 			formatString: string
 			subdivision: number
 			labeledIndices: number[]
+			unitId: string
 		}[]
 		id: string
 		createdAt: string
@@ -464,11 +475,11 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 			name: string
 			calendarId: string
 			presentationId: string
-			unitId: string
 			position: number
 			formatString: string
 			subdivision: number
 			labeledIndices: number[]
+			unitId: string
 		}[]
 		id: string
 		name: string

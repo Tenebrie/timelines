@@ -89,10 +89,16 @@ export const useLiveMessageHandlers = () => {
 			dispatch(worldWikiApi.util.invalidateTags(['worldWiki']))
 		},
 		[CalliopeToClientMessageType.MINDMAP_NODE_UPDATED]: (_) => {
-			dispatch(mindmapApi.util.invalidateTags(['mindmap']))
+			dispatch(mindmapApi.util.invalidateTags(['mindmapNode']))
 		},
-		[CalliopeToClientMessageType.MINDMAP_LINK_UPDATED]: (_) => {
-			dispatch(mindmapApi.util.invalidateTags(['mindmap']))
+		[CalliopeToClientMessageType.MINDMAP_NODES_DELETED]: (_) => {
+			dispatch(mindmapApi.util.invalidateTags(['mindmapNode']))
+		},
+		[CalliopeToClientMessageType.MINDMAP_WIRE_UPDATED]: (_) => {
+			dispatch(mindmapApi.util.invalidateTags(['mindmapWire']))
+		},
+		[CalliopeToClientMessageType.MINDMAP_WIRES_DELETED]: (_) => {
+			dispatch(mindmapApi.util.invalidateTags(['mindmapWire']))
 		},
 		[CalliopeToClientMessageType.TAG_UPDATED]: (data) => {
 			dispatch(updateTag(JSON.parse(data.tag) as WorldTag))
