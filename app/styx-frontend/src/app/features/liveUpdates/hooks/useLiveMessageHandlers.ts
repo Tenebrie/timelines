@@ -2,6 +2,7 @@ import { announcementListApi } from '@api/announcementListApi'
 import { calendarApi } from '@api/calendarApi'
 import { imageGenerationApi } from '@api/imageGenerationApi'
 import { mindmapApi } from '@api/mindmapApi'
+import { FeatureFlag } from '@api/types/otherTypes'
 import { WorldTag } from '@api/types/worldTypes'
 import { GetWorldInfoApiResponse, worldDetailsApi } from '@api/worldDetailsApi'
 import { worldEventTracksApi } from '@api/worldEventTracksApi'
@@ -22,10 +23,12 @@ import {
 	CalliopeToClientMessageType,
 } from '@/ts-shared/CalliopeToClientMessage'
 
+import { authSlice } from '../../auth/AuthSlice'
 import { useEventBusDispatch } from '../../eventBus'
 
 export const useLiveMessageHandlers = () => {
 	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState, (a, b) => a.updatedAt === b.updatedAt)
+	const { updateUser } = authSlice.actions
 	const { updateEvent, updateEventDelta, updateActor, updateTag } = worldSlice.actions
 	const dispatch = useDispatch()
 
@@ -97,6 +100,9 @@ export const useLiveMessageHandlers = () => {
 		},
 		[CalliopeToClientMessageType.DOCUMENT_RESET]: (data) => {
 			notifyAboutDocumentReset(data)
+		},
+		[CalliopeToClientMessageType.FEATURE_FLAGS_CHANGED]: (data) => {
+			dispatch(updateUser({ featureFlags: data.flags as FeatureFlag[] }))
 		},
 	}
 

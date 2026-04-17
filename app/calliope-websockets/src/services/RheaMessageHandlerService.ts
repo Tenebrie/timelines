@@ -112,6 +112,10 @@ const handlers: RheaToCalliopeMessageHandlers = {
 		await YjsSyncService.resetDocument(ctx.data.worldId, ctx.data.entityId)
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.DOCUMENT_RESET, ...ctx })
 	},
+
+	[RheaToCalliopeMessageType.FEATURE_FLAGS_CHANGED]: (ctx) => {
+		relayMessageToUserSockets({ type: CalliopeToClientMessageType.FEATURE_FLAGS_CHANGED, ...ctx })
+	},
 }
 
 export const RheaMessageHandlerService = {

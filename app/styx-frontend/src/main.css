@@ -24,17 +24,20 @@ body {
 	transition: background-color 0.2s, color 0.2s !important;
 }
 
-body.cursor-resizing-ns {
+body.cursor-resizing-ns,
+body.cursor-resizing-ns * {
 	cursor: ns-resize !important;
 	user-select: none !important;
 }
 
-body.cursor-resizing-ew {
+body.cursor-resizing-ew,
+body.cursor-resizing-ew * {
 	cursor: ew-resize !important;
 	user-select: none !important;
 }
 
-body.cursor-grabbing {
+body.cursor-grabbing,
+body.cursor-grabbing * {
 	cursor: grabbing !important;
 	user-select: none !important;
 }

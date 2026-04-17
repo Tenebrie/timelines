@@ -19,6 +19,7 @@ export enum CalliopeToClientMessageType {
 	TAG_UPDATED = 'tagUpdated',
 	DOCUMENT_RESET = 'documentReset',
 	IMAGE_GENERATION_UPDATED = 'imageGenerationUpdated',
+	FEATURE_FLAGS_CHANGED = 'featureFlagsChanged',
 }
 
 export type CalliopeToClientMessagePayload = {
@@ -84,6 +85,10 @@ export type CalliopeToClientMessagePayload = {
 	[CalliopeToClientMessageType.IMAGE_GENERATION_UPDATED]: {
 		assetId: string
 		status: string
+	}
+	[CalliopeToClientMessageType.FEATURE_FLAGS_CHANGED]: {
+		userId: string
+		flags: string[]
 	}
 }
 

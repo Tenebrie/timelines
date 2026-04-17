@@ -274,4 +274,15 @@ export const RedisService = {
 			},
 		})
 	},
+
+	notifyAboutFeatureFlags: ({ userId, flags }: { userId: string; flags: string[] }) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.FEATURE_FLAGS_CHANGED,
+			messageSourceSessionId: undefined,
+			data: {
+				userId,
+				flags,
+			},
+		})
+	},
 }

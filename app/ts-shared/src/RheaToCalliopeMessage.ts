@@ -22,6 +22,7 @@ export enum RheaToCalliopeMessageType {
 	WIKI_ARTICLE_DELETED = 'wikiArticleDeleted',
 	DOCUMENT_RESET = 'documentReset',
 	IMAGE_GENERATION_UPDATED = 'imageGenerationUpdated',
+	FEATURE_FLAGS_CHANGED = 'featureFlagsChanged',
 }
 
 export type RheaToCalliopeMessagePayload = {
@@ -93,6 +94,10 @@ export type RheaToCalliopeMessagePayload = {
 		userId: string
 		assetId: string
 		status: string
+	}
+	[RheaToCalliopeMessageType.FEATURE_FLAGS_CHANGED]: {
+		userId: string
+		flags: string[]
 	}
 }
 
