@@ -33,7 +33,7 @@
 		"koa-bodyparser": "^4.4.1",
 		"koa-route": "^4.0.1",
 		"koa-websocket": "^7.0.0",
-		"lint-staged": "^15.2.11",
+		"lint-staged": "^16.4.0",
 		"nodemon": "^3.1.14",
 		"openapi-fetch": "^0.17.0",
 		"pg": "^8.20.0",
