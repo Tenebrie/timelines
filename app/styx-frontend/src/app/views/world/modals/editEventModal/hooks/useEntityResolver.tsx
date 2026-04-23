@@ -30,7 +30,7 @@ export function useEntityResolver() {
 		if (marker) {
 			const event = events.find((e) => e.id === marker.eventId)
 			if (event) {
-				return { type: 'event', entity: event } as const
+				return { type: 'event', entity: event, node: null } as const
 			}
 		}
 
@@ -38,27 +38,38 @@ export function useEntityResolver() {
 		if (node) {
 			const actor = actors.find((e) => e.id === node.parentActorId)
 			if (actor) {
-				return { type: 'actor', entity: actor } as const
+				return { type: 'actor', entity: actor, node } as const
 			}
 		}
 
 		const actor = actors.find((a) => a.id === entityId)
 		if (actor) {
-			return { type: 'actor', entity: actor } as const
+			return { type: 'actor', entity: actor, node: null } as const
 		}
 
 		const article = articles.find((a) => a.id === entityId)
 		if (article) {
-			return { type: 'article', entity: article } as const
+			return { type: 'article', entity: article, node: null } as const
 		}
 
 		const tag = tags.find((t) => t.id === entityId)
 		if (tag) {
-			return { type: 'tag', entity: tag } as const
+			return { type: 'tag', entity: tag, node: null } as const
 		}
 
 		return null
 	}
 
-	return { resolveEntity }
+	const resolveNode = (nodeId: string) => {
+		const node = mindmapData?.nodes.find((n) => n.id === nodeId)
+		if (node) {
+			const actor = actors.find((e) => e.id === node.parentActorId)
+			if (actor) {
+				return { type: 'actor', entity: actor } as const
+			}
+		}
+		return null
+	}
+
+	return { resolveEntity, resolveNode }
 }
