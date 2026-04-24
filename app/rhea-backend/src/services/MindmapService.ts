@@ -21,9 +21,12 @@ export const MindmapService = {
 			data: params,
 		})
 	},
-	async deleteNode(nodeId: string) {
-		return getPrismaClient().mindmapNode.delete({
-			where: { id: nodeId },
+	async deleteNodes(worldId: string, nodeIds: string[]) {
+		return getPrismaClient().mindmapNode.deleteMany({
+			where: {
+				id: { in: nodeIds },
+				worldId,
+			},
 		})
 	},
 
@@ -45,9 +48,12 @@ export const MindmapService = {
 			data: params,
 		})
 	},
-	async deleteLink(linkId: string) {
-		return getPrismaClient().mindmapLink.delete({
-			where: { id: linkId },
+	async deleteLinks(worldId: string, linkIds: string[]) {
+		return getPrismaClient().mindmapLink.deleteMany({
+			where: {
+				id: { in: linkIds },
+				sourceNode: { worldId },
+			},
 		})
 	},
 }

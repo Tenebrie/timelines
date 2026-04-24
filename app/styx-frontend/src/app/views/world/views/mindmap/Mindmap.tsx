@@ -6,6 +6,7 @@ import { CSSProperties, useEffect, useRef } from 'react'
 
 import { MindmapContent } from './MindmapContent'
 import { MindmapClickArea } from './workspace/MindmapClickArea'
+import { MindmapHotkeys } from './workspace/MindmapHotkeys'
 
 export function Mindmap() {
 	// Small grid: the base grid
@@ -211,6 +212,7 @@ export function Mindmap() {
 					<MindmapContent />
 				</Box>
 			</Box>
+			<MindmapHotkeys />
 		</Stack>
 	)
 }

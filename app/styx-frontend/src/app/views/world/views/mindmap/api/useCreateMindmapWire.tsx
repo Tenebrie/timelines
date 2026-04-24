@@ -1,4 +1,4 @@
-import { CreateMindmapLinkApiArg, mindmapApi, useCreateMindmapLinkMutation } from '@api/mindmapApi'
+import { CreateMindmapWireApiArg, mindmapApi, useCreateMindmapWireMutation } from '@api/mindmapApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -6,17 +6,17 @@ import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-export const useCreateMindmapLink = () => {
+export function useCreateMindmapWire() {
 	const worldId = useSelector(getWorldIdState)
 	const dispatch = useDispatch<AppDispatch>()
-	const [createMindmapLink, state] = useCreateMindmapLinkMutation()
+	const [createMindmapWire, state] = useCreateMindmapWireMutation()
 
-	const updateCachedLinks = useCallback(
-		(body: CreateMindmapLinkApiArg['body']) => {
+	const updateCachedWires = useCallback(
+		(id: string, body: CreateMindmapWireApiArg['body']) => {
 			return dispatch(
 				mindmapApi.util.updateQueryData('getMindmap', { worldId }, (draft) => {
-					draft.links.push({
-						id: crypto.randomUUID(),
+					draft.wires.push({
+						id,
 						createdAt: new Date().toISOString(),
 						updatedAt: new Date().toISOString(),
 						sourceNodeId: body.sourceNodeId,
@@ -31,22 +31,23 @@ export const useCreateMindmapLink = () => {
 	)
 
 	const perform = useCallback(
-		async (body: CreateMindmapLinkApiArg['body']) => {
-			const patchResult = updateCachedLinks(body)
+		async (body: CreateMindmapWireApiArg['body']) => {
+			const patchResult = updateCachedWires('temp', body)
 
 			const { response, error } = parseApiResponse(
-				await createMindmapLink({
+				await createMindmapWire({
 					worldId,
 					body,
 				}),
 			)
+			patchResult.undo()
 			if (error) {
-				patchResult.undo()
 				return
 			}
+			updateCachedWires(response.id, body)
 			return response
 		},
-		[createMindmapLink, updateCachedLinks, worldId],
+		[createMindmapWire, updateCachedWires, worldId],
 	)
 
 	return [perform, state] as const
