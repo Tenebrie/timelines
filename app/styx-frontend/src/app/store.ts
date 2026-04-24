@@ -6,7 +6,9 @@ import { AuthReducer } from './features/auth/AuthSlice'
 import { ModalsReducer } from './features/modals/ModalsSlice'
 import { PreferencesReducer } from './features/preferences/PreferencesSlice'
 import { CalendarEditorReducer } from './features/time/calendar/CalendarSlice'
+import { UndoRedoReducer } from './features/undoRedo/UndoRedoSlice'
 import { deepMerge } from './utils/deepMerge'
+import { MindmapReducer } from './views/world/views/mindmap/MindmapSlice'
 import { TimelineReducer } from './views/world/views/timeline/TimelineSlice'
 import { WikiReducer } from './views/world/views/wiki/WikiSlice'
 import { WorldReducer } from './views/world/WorldSlice'
@@ -18,11 +20,13 @@ const rootReducer = combineReducers({
 	calendarEditor: CalendarEditorReducer,
 
 	auth: AuthReducer,
+	mindmap: MindmapReducer,
 	modals: ModalsReducer,
 	world: WorldReducer,
 	preferences: PreferencesReducer,
 	timeline: TimelineReducer,
 	wiki: WikiReducer,
+	undoRedo: UndoRedoReducer,
 })
 
 const initialState = configureStore({ reducer: rootReducer }).getState()

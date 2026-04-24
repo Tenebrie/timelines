@@ -4758,10 +4758,10 @@ mkdirp@^1.0.3, mkdirp@^1.0.4:
   resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-moonflower@^1.4.3:
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/moonflower/-/moonflower-1.4.3.tgz#5c8225430f74b6bb71ce140570c4a8331ade44bf"
-  integrity sha512-DUBLp+miuMzYdwA2yn4GGclM3sCCVNmBuMIBm36lpF6YU6nTorDmOAV7T1cQ3UVMxLvMwKAbZDcSS6agumJveQ==
+moonflower@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/moonflower/-/moonflower-1.4.5.tgz#3e9f409bf82ac3a4e46d26072b0edce66e30abcc"
+  integrity sha512-xJ2TWk1ZVRzPLUWLf2NIGRU1DLACnRHJQTfQR20cnxaA15mAUadvq404NVBdUEivX3BIAxAlbXD1w8VoIn1OqQ==
   dependencies:
     yargs "^17.7.2"
 

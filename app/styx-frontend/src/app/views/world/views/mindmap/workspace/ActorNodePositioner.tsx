@@ -9,11 +9,11 @@ import { dispatchGlobalEvent } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
-import { worldSlice } from '@/app/views/world/WorldSlice'
-import { getSelectedNodeActorIds } from '@/app/views/world/WorldSliceSelectors'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useUpdateMindmapNode } from '../api/useUpdateMindmapNode'
+import { mindmapSlice } from '../MindmapSlice'
+import { getSelectedNodeActorIds } from '../MindmapSliceSelectors'
 import { ActorNode } from './ActorNode'
 
 type Props = {
@@ -39,20 +39,20 @@ export function ActorNodePositioner({ actor, node }: Props) {
 
 	const selectedNodes = useSelector(getSelectedNodeActorIds)
 	const selected = useMemo(() => selectedNodes.includes(actor.id), [selectedNodes, actor.id])
-	const { addActorNodeToSelection, removeActorNodeFromSelection } = worldSlice.actions
+	const { addNodeToSelection, removeNodeFromSelection } = mindmapSlice.actions
 	const dispatch = useDispatch()
 
 	const { triggerClick: onHeaderClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
 			if (selected) {
-				dispatch(removeActorNodeFromSelection(node.id))
+				dispatch(removeNodeFromSelection(node.id))
 			} else {
-				dispatch(addActorNodeToSelection({ key: node.id, actorId: actor.id, multiselect }))
+				dispatch(addNodeToSelection({ key: node.id, actorId: actor.id, multiselect }))
 			}
 		},
 		onDoubleClick: () => {
 			onContentClick()
-			dispatch(addActorNodeToSelection({ key: node.id, actorId: actor.id, multiselect: false }))
+			dispatch(addNodeToSelection({ key: node.id, actorId: actor.id, multiselect: false }))
 		},
 		ignoreDelay: true,
 	})

@@ -1,6 +1,7 @@
 import { FeatureFlag } from '@prisma/client'
 import { AdminAuthenticator } from '@src/middleware/auth/AdminAuthenticator.js'
 import { FeatureFlagService } from '@src/services/FeatureFlagService.js'
+import { RedisService } from '@src/services/RedisService.js'
 import { Router, useApiEndpoint, useAuth, usePathParams, useRequestBody } from 'moonflower'
 import z from 'zod'
 
@@ -45,6 +46,8 @@ router.post('/api/admin/feature-flags', async (ctx) => {
 	} else {
 		await FeatureFlagService.removeForUser({ flag, userId })
 	}
+	const currentFlags = await FeatureFlagService.listUserFeatureFlags(userId)
+	RedisService.notifyAboutFeatureFlags({ userId, flags: currentFlags })
 })
 
 export const AdminFeatureFlagRouter = router

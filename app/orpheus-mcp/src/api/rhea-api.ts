@@ -933,7 +933,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/mindmap/node": {
+    "/api/world/{worldId}/mindmap/nodes": {
         parameters: {
             query?: never;
             header?: never;
@@ -944,13 +944,14 @@ export interface paths {
         put?: never;
         /** @description Creates a new node */
         post: operations["createNode"];
-        delete?: never;
+        /** @description Deletes the target nodes */
+        delete: operations["deleteNodes"];
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/mindmap/node/{nodeId}": {
+    "/api/world/{worldId}/mindmap/nodes/{nodeId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -960,15 +961,14 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** @description Deletes the target node */
-        delete: operations["deleteNode"];
+        delete?: never;
         options?: never;
         head?: never;
         /** @description Updates the target node */
         patch: operations["updateNode"];
         trace?: never;
     };
-    "/api/world/{worldId}/mindmap/link": {
+    "/api/world/{worldId}/mindmap/wires": {
         parameters: {
             query?: never;
             header?: never;
@@ -977,15 +977,16 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Creates a new mindmap link between two nodes */
-        post: operations["createMindmapLink"];
-        delete?: never;
+        /** @description Creates a new mindmap wire between two nodes */
+        post: operations["createMindmapWire"];
+        /** @description Deletes specified mindmap wires */
+        delete: operations["deleteMindmapWires"];
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/mindmap/link/{linkId}": {
+    "/api/world/{worldId}/mindmap/wires/{wireId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -995,12 +996,11 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** @description Deletes the target mindmap link */
-        delete: operations["deleteMindmapLink"];
+        delete?: never;
         options?: never;
         head?: never;
-        /** @description Updates the target mindmap link */
-        patch: operations["updateMindmapLink"];
+        /** @description Updates the target mindmap wire */
+        patch: operations["updateMindmapWire"];
         trace?: never;
     };
     "/api/admin/notifications/broadcast": {
@@ -2673,8 +2673,8 @@ export interface operations {
                         description: string;
                         id: string;
                         title: string;
-                        type: "Info" | "Welcome" | "WorldShared";
                         userId: string;
+                        type: "Info" | "Welcome" | "WorldShared";
                         /** Format: date-time */
                         timestamp: string;
                         isUnread: boolean;
@@ -3106,9 +3106,9 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 ownerId: string;
+                                size: number;
                                 expiresAt?: null | string;
                                 bucketKey: string;
-                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
@@ -3139,7 +3139,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        redirectTo: "login" | "admin";
+                        redirectTo: "admin" | "login";
                     };
                 };
             };
@@ -3183,11 +3183,11 @@ export interface operations {
                             name: string;
                             calendarId: string;
                             presentationId: string;
-                            unitId: string;
                             position: number;
                             formatString: string;
                             subdivision: number;
                             labeledIndices: number[];
+                            unitId: string;
                         }[];
                         id: string;
                         /** Format: date-time */
@@ -3281,11 +3281,11 @@ export interface operations {
                             name: string;
                             calendarId: string;
                             presentationId: string;
-                            unitId: string;
                             position: number;
                             formatString: string;
                             subdivision: number;
                             labeledIndices: number[];
+                            unitId: string;
                         }[];
                         id: string;
                         /** Format: date-time */
@@ -3345,11 +3345,11 @@ export interface operations {
                         name: string;
                         calendarId: string;
                         presentationId: string;
-                        unitId: string;
                         position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
+                        unitId: string;
                     };
                 };
             };
@@ -3385,11 +3385,11 @@ export interface operations {
                         name: string;
                         calendarId: string;
                         presentationId: string;
-                        unitId: string;
                         position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
+                        unitId: string;
                     };
                 };
             };
@@ -3438,11 +3438,11 @@ export interface operations {
                         name: string;
                         calendarId: string;
                         presentationId: string;
-                        unitId: string;
                         position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
+                        unitId: string;
                     };
                 };
             };
@@ -3506,7 +3506,21 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "text/plain": string | boolean | number | Record<string, never> | unknown[];
+                    "application/json": {
+                        description: string;
+                        worldId?: null | string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        ownerId?: null | string;
+                        position: number;
+                        /** Format: bigint */
+                        originTime: string;
+                        dateFormat?: null | string;
+                    };
                 };
             };
         };
@@ -3586,11 +3600,11 @@ export interface operations {
                                 name: string;
                                 calendarId: string;
                                 presentationId: string;
-                                unitId: string;
                                 position: number;
                                 formatString: string;
                                 subdivision: number;
                                 labeledIndices: number[];
+                                unitId: string;
                             }[];
                             id: string;
                             /** Format: date-time */
@@ -3778,11 +3792,11 @@ export interface operations {
                                 name: string;
                                 calendarId: string;
                                 presentationId: string;
-                                unitId: string;
                                 position: number;
                                 formatString: string;
                                 subdivision: number;
                                 labeledIndices: number[];
+                                unitId: string;
                             }[];
                             id: string;
                             name: string;
@@ -4450,26 +4464,26 @@ export interface operations {
                 content: {
                     "application/json": {
                         nodes: {
-                            worldId: string;
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            parentActorId?: null | string;
+                            worldId: string;
                             positionX: number;
                             positionY: number;
+                            parentActorId?: null | string;
                         }[];
-                        links: {
+                        wires: {
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            content: string;
                             sourceNodeId: string;
                             targetNodeId: string;
                             direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
                         }[];
                     };
                 };
@@ -4488,11 +4502,13 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
+                    id?: string;
                     positionX: number;
                     positionY: number;
                     parentActorId?: string;
                 };
                 "application/x-www-form-urlencoded": {
+                    id?: string;
                     positionX: number;
                     positionY: number;
                     parentActorId?: string;
@@ -4506,27 +4522,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        worldId: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        parentActorId?: null | string;
+                        worldId: string;
                         positionX: number;
                         positionY: number;
+                        parentActorId?: null | string;
                     };
                 };
             };
         };
     };
-    deleteNode: {
+    deleteNodes: {
         parameters: {
-            query?: never;
+            query: {
+                nodes: string[];
+            };
             header?: never;
             path: {
                 worldId: string;
-                nodeId: string;
             };
             cookie?: never;
         };
@@ -4538,15 +4555,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        parentActorId?: null | string;
-                        positionX: number;
-                        positionY: number;
+                        count: number;
                     };
                 };
             };
@@ -4581,21 +4590,21 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        worldId: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        parentActorId?: null | string;
+                        worldId: string;
                         positionX: number;
                         positionY: number;
+                        parentActorId?: null | string;
                     };
                 };
             };
         };
     };
-    createMindmapLink: {
+    createMindmapWire: {
         parameters: {
             query?: never;
             header?: never;
@@ -4628,22 +4637,23 @@ export interface operations {
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        content: string;
                         sourceNodeId: string;
                         targetNodeId: string;
                         direction: "Normal" | "Reversed" | "TwoWay";
+                        content: string;
                     };
                 };
             };
         };
     };
-    deleteMindmapLink: {
+    deleteMindmapWires: {
         parameters: {
-            query?: never;
+            query: {
+                wires: string[];
+            };
             header?: never;
             path: {
                 worldId: string;
-                linkId: string;
             };
             cookie?: never;
         };
@@ -4654,28 +4664,18 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        content: string;
-                        sourceNodeId: string;
-                        targetNodeId: string;
-                        direction: "Normal" | "Reversed" | "TwoWay";
-                    };
+                    "application/json": string[];
                 };
             };
         };
     };
-    updateMindmapLink: {
+    updateMindmapWire: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 worldId: string;
-                linkId: string;
+                wireId: string;
             };
             cookie?: never;
         };
@@ -4703,10 +4703,10 @@ export interface operations {
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        content: string;
                         sourceNodeId: string;
                         targetNodeId: string;
                         direction: "Normal" | "Reversed" | "TwoWay";
+                        content: string;
                     };
                 };
             };
@@ -6182,11 +6182,11 @@ export interface operations {
                                     name: string;
                                     calendarId: string;
                                     presentationId: string;
-                                    unitId: string;
                                     position: number;
                                     formatString: string;
                                     subdivision: number;
                                     labeledIndices: number[];
+                                    unitId: string;
                                 }[];
                                 id: string;
                                 name: string;

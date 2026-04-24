@@ -7,7 +7,6 @@ import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropRe
 
 import { useNodeLinking } from '../hooks/useNodeLinking'
 import { ActorNodeContent } from './ActorNodeContent'
-import { ActorNodeHotkeys } from './ActorNodeHotkeys'
 
 type Props = {
 	node: MindmapNode
@@ -28,7 +27,6 @@ export function ActorNode({ actor, node, onHeaderClick, onContentClick }: Props)
 
 	return (
 		<Box ref={ref}>
-			<ActorNodeHotkeys node={node} />
 			<ActorNodeContent
 				node={node}
 				actor={actor}

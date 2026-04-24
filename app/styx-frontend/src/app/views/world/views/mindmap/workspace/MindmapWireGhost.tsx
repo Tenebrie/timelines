@@ -220,9 +220,6 @@ export function MindmapWireGhost({ existingWires }: Props) {
 				<g ref={srcPortRef} transform={`translate(${src.x}, ${src.y})`}>
 					<circle cx="0" cy="0" r="4" fill={strokeColorStart} strokeWidth="0" />
 				</g>
-				<g ref={tgtPortRef} transform={`translate(${src.x}, ${src.y})`}>
-					<circle cx="0" cy="0" r="4" fill={strokeColorEnd} strokeWidth="0" />
-				</g>
 			</g>
 		</svg>
 	)

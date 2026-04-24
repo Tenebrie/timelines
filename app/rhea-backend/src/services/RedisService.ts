@@ -149,16 +149,44 @@ export const RedisService = {
 		})
 	},
 
-	notifyAboutMindmapLinkUpdate: (
+	notifyAboutMindmapNodesDelete: (
 		ctx: ContextWithSessionId,
-		{ worldId, link }: { worldId: string; link: MindmapLink },
+		{ worldId, nodes }: { worldId: string; nodes: string[] },
 	) => {
 		calliope.sendMessage({
-			type: RheaToCalliopeMessageType.MINDMAP_LINK_UPDATED,
+			type: RheaToCalliopeMessageType.MINDMAP_NODES_DELETED,
 			messageSourceSessionId: ctx.sessionId,
 			data: {
 				worldId,
-				link: JSON.stringify(link),
+				nodes,
+			},
+		})
+	},
+
+	notifyAboutMindmapWireUpdate: (
+		ctx: ContextWithSessionId,
+		{ worldId, wire }: { worldId: string; wire: MindmapLink },
+	) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.MINDMAP_WIRE_UPDATED,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
+				wire: JSON.stringify(wire),
+			},
+		})
+	},
+
+	notifyAboutMindmapWiresDelete: (
+		ctx: ContextWithSessionId,
+		{ worldId, wires }: { worldId: string; wires: string[] },
+	) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.MINDMAP_WIRES_DELETED,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
+				wires,
 			},
 		})
 	},
@@ -271,6 +299,17 @@ export const RedisService = {
 				userId,
 				assetId,
 				status,
+			},
+		})
+	},
+
+	notifyAboutFeatureFlags: ({ userId, flags }: { userId: string; flags: string[] }) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.FEATURE_FLAGS_CHANGED,
+			messageSourceSessionId: undefined,
+			data: {
+				userId,
+				flags,
 			},
 		})
 	},

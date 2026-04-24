@@ -115,15 +115,43 @@ export function pickEdgePoints(
 	return { x1: src.x, y1: src.y, x2: tgt.x, y2: tgt.y, nx1: src.nx, ny1: src.ny, nx2: tgt.nx, ny2: tgt.ny }
 }
 
+function computeBias(ep: WireEndpoints) {
+	const dist = Math.hypot(ep.x2 - ep.x1, ep.y2 - ep.y1)
+	return Math.min(Math.max(20, dist * 0.4), 400)
+}
+
 export function buildPathD(ep: WireEndpoints) {
 	const { x1, y1, x2, y2, nx1, ny1, nx2, ny2 } = ep
-	const dist = Math.hypot(x2 - x1, y2 - y1)
-
-	const bias = Math.min(Math.max(20, dist * 0.4), 400)
+	const bias = computeBias(ep)
 
 	const cx1 = x1 + nx1 * bias
 	const cy1 = y1 + ny1 * bias
 	const cx2 = x2 + nx2 * bias
 	const cy2 = y2 + ny2 * bias
 	return `M ${x1},${y1} C ${cx1},${cy1} ${cx2},${cy2} ${x2},${y2}`
+}
+
+export function pathMidpoint(ep: WireEndpoints): { x: number; y: number } {
+	const { x1, y1, x2, y2, nx1, ny1, nx2, ny2 } = ep
+	const bias = computeBias(ep)
+
+	const cx1 = x1 + nx1 * bias
+	const cy1 = y1 + ny1 * bias
+	const cx2 = x2 + nx2 * bias
+	const cy2 = y2 + ny2 * bias
+
+	// Cubic bezier at t=0.5: B(0.5) = P0/8 + 3*P1/8 + 3*P2/8 + P3/8
+	const x = (x1 + 3 * cx1 + 3 * cx2 + x2) / 8
+	const y = (y1 + 3 * cy1 + 3 * cy2 + y2) / 8
+	return { x, y }
+}
+
+export function arrowPath(x: number, y: number, nx: number, ny: number, size = 8): string {
+	const px = -ny
+	const py = nx
+	const leftX = x - nx * size + px * size * 0.4
+	const leftY = y - ny * size + py * size * 0.4
+	const rightX = x - nx * size - px * size * 0.4
+	const rightY = y - ny * size - py * size * 0.4
+	return `M ${leftX},${leftY} L ${x},${y} L ${rightX},${rightY}`
 }

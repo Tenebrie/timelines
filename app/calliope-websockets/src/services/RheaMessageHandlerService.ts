@@ -92,9 +92,15 @@ const handlers: RheaToCalliopeMessageHandlers = {
 	[RheaToCalliopeMessageType.MINDMAP_NODE_UPDATED]: (ctx) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_NODE_UPDATED, ...ctx })
 	},
+	[RheaToCalliopeMessageType.MINDMAP_NODES_DELETED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_NODES_DELETED, ...ctx })
+	},
 
-	[RheaToCalliopeMessageType.MINDMAP_LINK_UPDATED]: async (ctx) => {
-		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_LINK_UPDATED, ...ctx })
+	[RheaToCalliopeMessageType.MINDMAP_WIRE_UPDATED]: async (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_WIRE_UPDATED, ...ctx })
+	},
+	[RheaToCalliopeMessageType.MINDMAP_WIRES_DELETED]: async (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_WIRES_DELETED, ...ctx })
 	},
 
 	[RheaToCalliopeMessageType.WIKI_ARTICLE_UPDATED]: (ctx) => {
@@ -111,6 +117,10 @@ const handlers: RheaToCalliopeMessageHandlers = {
 	[RheaToCalliopeMessageType.DOCUMENT_RESET]: async (ctx) => {
 		await YjsSyncService.resetDocument(ctx.data.worldId, ctx.data.entityId)
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.DOCUMENT_RESET, ...ctx })
+	},
+
+	[RheaToCalliopeMessageType.FEATURE_FLAGS_CHANGED]: (ctx) => {
+		relayMessageToUserSockets({ type: CalliopeToClientMessageType.FEATURE_FLAGS_CHANGED, ...ctx })
 	},
 }
 

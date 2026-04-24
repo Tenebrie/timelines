@@ -1,4 +1,4 @@
-import { mindmapApi, UpdateNodeApiArg, useUpdateNodeMutation } from '@api/mindmapApi'
+import { mindmapApi, UpdateMindmapWireApiArg, useUpdateMindmapWireMutation } from '@api/mindmapApi'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -6,22 +6,22 @@ import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-export const useUpdateMindmapNode = () => {
+export function useUpdateMindmapWire() {
 	const worldId = useSelector(getWorldIdState)
 	const dispatch = useDispatch<AppDispatch>()
-	const [updateMindmapNode, state] = useUpdateNodeMutation()
+	const [updateMindmapWire, state] = useUpdateMindmapWireMutation()
 
-	const updateCachedNode = useCallback(
-		(nodeId: string, body: UpdateNodeApiArg['body']) => {
+	const updateCachedWire = useCallback(
+		(wireId: string, body: UpdateMindmapWireApiArg['body']) => {
 			return dispatch(
 				mindmapApi.util.updateQueryData('getMindmap', { worldId }, (draft) => {
-					const node = draft.nodes.find((n) => n.id === nodeId)
-					if (node) {
-						if (body.positionX !== undefined) {
-							node.positionX = body.positionX
+					const wire = draft.wires.find((w) => w.id === wireId)
+					if (wire) {
+						if (body.direction !== undefined) {
+							wire.direction = body.direction
 						}
-						if (body.positionY !== undefined) {
-							node.positionY = body.positionY
+						if (body.content !== undefined) {
+							wire.content = body.content
 						}
 					}
 				}),
@@ -31,13 +31,13 @@ export const useUpdateMindmapNode = () => {
 	)
 
 	const perform = useCallback(
-		async (nodeId: string, body: UpdateNodeApiArg['body']) => {
-			const patchResult = updateCachedNode(nodeId, body)
+		async (wireId: string, body: UpdateMindmapWireApiArg['body']) => {
+			const patchResult = updateCachedWire(wireId, body)
 
 			const { response, error } = parseApiResponse(
-				await updateMindmapNode({
+				await updateMindmapWire({
 					worldId,
-					nodeId,
+					wireId,
 					body,
 				}),
 			)
@@ -47,7 +47,7 @@ export const useUpdateMindmapNode = () => {
 			}
 			return response
 		},
-		[updateCachedNode, updateMindmapNode, worldId],
+		[updateCachedWire, updateMindmapWire, worldId],
 	)
 
 	return [perform, state] as const
