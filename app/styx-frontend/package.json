@@ -107,7 +107,7 @@
 		"react-dom": "^19.2.5",
 		"react-redux": "^9.1.2",
 		"styled-components": "^6.4.0",
-		"typescript": "^5.8.3",
+		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.58.1",
 		"undici": "^7.1.0",
 		"user-agent-data-types": "^0.4.3",
