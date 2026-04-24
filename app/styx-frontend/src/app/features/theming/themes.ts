@@ -138,6 +138,9 @@ export const darkTheme = createTheme({
 		primary: {
 			main: 'hsl(258, 55%, 65%)',
 			contrastText: '#f0ecff',
+			// TODO: Explore orange primary
+			// main: 'hsla(31, 100%, 50%, 1.00)',
+			// contrastText: '#000000ff',
 		},
 		secondary: {
 			main: 'hsl(200, 55%, 55%)',
