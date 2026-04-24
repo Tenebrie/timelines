@@ -4,7 +4,6 @@ import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { useEffect, useRef } from 'react'
 
-import { useFeatureFlag } from '@/app/features/auth/hooks/useFeatureFlags'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
@@ -42,11 +41,6 @@ export function MindmapNodePort({ node, actor }: Props) {
 			box.removeEventListener('mousedown', onMouseDown)
 		}
 	}, [node.id, ref])
-
-	const featureEnabled = useFeatureFlag('MindmapRework')
-	if (!featureEnabled) {
-		return null
-	}
 
 	return (
 		<>
