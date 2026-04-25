@@ -144,8 +144,13 @@ export function SavedColors({ currentColor, onSelectColor }: Props) {
 						</Tooltip>
 					)
 				})}
-				<Tooltip title="Save current color">
-					<Button size="small" onClick={handleAddColor} sx={{ width: 30, height: 30, minWidth: 'unset' }}>
+				<Tooltip title="Save current color" disableInteractive enterDelay={500}>
+					<Button
+						size="small"
+						onClick={handleAddColor}
+						sx={{ width: 30, height: 30, minWidth: 'unset' }}
+						color="secondary"
+					>
 						<AddIcon />
 					</Button>
 				</Tooltip>

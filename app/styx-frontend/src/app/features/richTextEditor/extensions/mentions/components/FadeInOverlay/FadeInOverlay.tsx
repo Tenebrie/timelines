@@ -93,7 +93,7 @@ export const FadeInOverlay = ({ content, isReadMode, color, isLoading }: Props) 
 		}
 	}, [isLoading])
 
-	const height = isReadMode ? 'calc(100%)' : 'calc(100% - 52px)'
+	const height = isReadMode ? 'calc(100% - 52px)' : 'calc(100% - 52px)'
 	const width = isReadMode ? 'calc(100%)' : 'calc(100% - 8px)'
 
 	return (

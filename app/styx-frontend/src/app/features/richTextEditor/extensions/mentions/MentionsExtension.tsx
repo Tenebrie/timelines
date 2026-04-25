@@ -13,9 +13,6 @@ export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 
 		return {
 			onStart: (props) => {
-				if (!props.editor.view.hasFocus()) {
-					return
-				}
 				state.isOpen = true
 				state.editor = props.editor
 				const pos = props.editor.view.coordsAtPos(props.range.from)

@@ -28,7 +28,7 @@ export function MindmapWirePopoverEditor({
 	direction,
 	setDirection,
 }: MindmapWireState) {
-	const { resolveEntity, resolveNode } = useEntityResolver()
+	const { resolveEntity } = useEntityResolver()
 
 	useEffect(() => {
 		setLabel(currentWire?.content ?? '')

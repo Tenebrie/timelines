@@ -23,7 +23,7 @@ test.describe('Wiki Collaboration', () => {
 		await page.getByLabel('Name').fill('Testing article')
 		await page.getByText('Create', { exact: true }).click()
 		await expect(page.getByText('Create new article')).not.toBeVisible()
-		await expect(page.getByTestId('ArticleTitle').getByText('Testing article')).toBeVisible()
+		await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
 		await secondaryPage.getByText('Testing article').click()
 

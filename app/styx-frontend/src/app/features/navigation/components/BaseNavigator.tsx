@@ -1,6 +1,5 @@
 import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings'
 import Construction from '@mui/icons-material/Construction'
-import HomeIcon from '@mui/icons-material/Home'
 import PublicIcon from '@mui/icons-material/Public'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -19,6 +18,7 @@ import { getAuthState } from '../../auth/AuthSliceSelectors'
 import { SmallProfile } from '../../auth/smallProfile/SmallProfile'
 import { ThemeModeToggle } from '../../theming/components/ThemeModeToggle'
 import { CustomTheme, useCustomTheme } from '../../theming/hooks/useCustomTheme'
+import { HamburgerMenu } from './HamburgerMenu'
 import { HomeNavigatorButton } from './HomeNavigatorButton'
 import { LandingPageNavigatorButton } from './LandingPageNavigatorButton'
 import { LastWorldNavigatorButton } from './LastWorldNavigatorButton'
@@ -53,7 +53,7 @@ export const BaseNavigator = () => {
 			<Box>
 				{user && (
 					<Stack direction="row" height="100%" gap={1} alignItems="center">
-						{isNarrow && <NavigatorButton route="/" icon={<HomeIcon />} label="Home" iconOnly />}
+						{isNarrow && <HamburgerMenu />}
 						{!isNarrow && (
 							<>
 								<Stack minWidth={173} direction="row" gap={1} sx={{ justifyContent: 'flex-start' }}>
@@ -64,20 +64,11 @@ export const BaseNavigator = () => {
 								<HomeNavigatorButton disabled={!user} />
 							</>
 						)}
-						<NavigatorButton
-							route="/tools"
-							icon={<Construction />}
-							label="Tools"
-							disabled={!user}
-							iconOnly={isNarrow}
-						/>
-						{user?.level === 'Admin' && (
-							<NavigatorButton
-								route="/admin"
-								icon={<AdminPanelSettings />}
-								label="Admin"
-								iconOnly={isNarrow}
-							/>
+						{!isNarrow && (
+							<NavigatorButton route="/tools" icon={<Construction />} label="Tools" disabled={!user} />
+						)}
+						{!isNarrow && user?.level === 'Admin' && (
+							<NavigatorButton route="/admin" icon={<AdminPanelSettings />} label="Admin" />
 						)}
 					</Stack>
 				)}

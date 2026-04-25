@@ -1,26 +1,35 @@
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
 import Input from '@mui/material/Input'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { ReactNode, useEffect, useState } from 'react'
 import useEvent from 'react-use-event-hook'
 
-import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 type Props = {
 	value: string
+	displayValue?: string
 	onSave?: (value: string) => void
 	startAdornment?: ReactNode
+	endAdornment?: ReactNode
+	placeholder?: string
 }
 
-export const EditableTitle = ({ value, onSave, startAdornment }: Props) => {
+export const EditableTitle = ({
+	value,
+	displayValue,
+	onSave,
+	startAdornment,
+	endAdornment,
+	placeholder,
+}: Props) => {
 	const [editing, setEditing] = useState(false)
 	const [currentTitle, setCurrentTitle] = useState(value)
 
 	const applyChanges = useEvent(() => {
 		setEditing(false)
-		if (currentTitle === value || !currentTitle?.trim()) {
+		if (currentTitle === value) {
 			return
 		}
 		if (onSave) {
@@ -35,7 +44,7 @@ export const EditableTitle = ({ value, onSave, startAdornment }: Props) => {
 			setEditing(false)
 			setCurrentTitle(value)
 		},
-		editing,
+		editing && ShortcutPriorities.InputField,
 	)
 
 	useEffect(() => {
@@ -49,7 +58,7 @@ export const EditableTitle = ({ value, onSave, startAdornment }: Props) => {
 
 	return (
 		<Stack
-			gap={1}
+			data-testid="EditableTitle"
 			direction="row"
 			alignItems="center"
 			justifyContent="center"
@@ -57,7 +66,6 @@ export const EditableTitle = ({ value, onSave, startAdornment }: Props) => {
 			sx={{ height: '32px' }}
 		>
 			{startAdornment}
-			{startAdornment && <Divider orientation="vertical" sx={{ height: 24 }} />}
 			{!editing && (
 				<Stack direction="row" justifyContent="space-between" width="100%">
 					<Button
@@ -66,9 +74,10 @@ export const EditableTitle = ({ value, onSave, startAdornment }: Props) => {
 						onClick={onStartEdit}
 					>
 						<Typography variant="h6" noWrap>
-							{value}
+							{displayValue ?? value}
 						</Typography>
 					</Button>
+					{endAdornment}
 				</Stack>
 			)}
 			{editing && (
@@ -77,6 +86,7 @@ export const EditableTitle = ({ value, onSave, startAdornment }: Props) => {
 					value={currentTitle}
 					onChange={(event) => setCurrentTitle(event.target.value)}
 					onBlur={() => applyChanges()}
+					placeholder={placeholder}
 					role="textbox"
 					sx={{
 						width: '100%',

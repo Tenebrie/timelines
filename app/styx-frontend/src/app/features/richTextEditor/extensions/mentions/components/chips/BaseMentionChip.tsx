@@ -1,7 +1,7 @@
 import { MentionedEntity } from '@api/types/worldTypes'
-import Article from '@mui/icons-material/Article'
+import Article from '@mui/icons-material/ArticleOutlined'
 import Event from '@mui/icons-material/Event'
-import LabelIcon from '@mui/icons-material/Label'
+import LabelIcon from '@mui/icons-material/LocalOfferOutlined'
 import Person from '@mui/icons-material/Person'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
@@ -31,10 +31,11 @@ export const BaseMentionChip = ({ type, label, color, onClick }: Props) => {
 	const colorAngle = 15
 
 	return (
-		<Stack direction="row" spacing={1} display={'inline'} position={'relative'}>
+		<Stack direction="row" spacing={1} display={'inline'} position={'relative'} sx={{ marginTop: '-1px' }}>
 			<Chip
 				size="small"
 				sx={{
+					borderRadius: '4px',
 					height: '1.6em',
 					'& .MuiChip-label': { fontSize: '1em', height: '1.6em' },
 					// color: textColor,
