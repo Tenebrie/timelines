@@ -21,6 +21,7 @@ import { CustomThemeProvider } from './features/theming/context/CustomThemeProvi
 import { UndoRedoManager } from './features/undoRedo/UndoRedoManager'
 import { useBrowserSpecificScrollbars } from './hooks/useBrowserSpecificScrollbars'
 import { useShortcutManager } from './hooks/useShortcut/useShortcutManager'
+import { MentionPortalHost } from './views/world/components/MentionPortalHost'
 import { TimelineZoomReporter } from './views/world/views/timeline/components/TimelineZoomReporter'
 
 const Container = styled.div`
@@ -85,6 +86,7 @@ const App = () => {
 							<LostConnectionAlert server="rhea" />
 							<LostConnectionAlert server="calliope" />
 							<AnnouncementSnackbar />
+							<MentionPortalHost />
 						</CustomThemeOverrides>
 					</CustomThemeProvider>
 					<NavigationReceiverWrapper />
