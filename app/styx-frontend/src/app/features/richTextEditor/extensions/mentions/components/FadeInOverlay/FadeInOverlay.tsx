@@ -79,7 +79,7 @@ export const FadeInOverlay = ({ content, isReadMode, color, isLoading }: Props) 
 					clearInterval(waitForRenderTimeoutRef.current)
 				}
 			},
-			{ timeout: 500 },
+			{ timeout: 50 },
 		)
 
 		return () => {
