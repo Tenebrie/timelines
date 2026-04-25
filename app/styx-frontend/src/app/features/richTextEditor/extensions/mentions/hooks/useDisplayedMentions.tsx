@@ -10,6 +10,29 @@ type Props = {
 	query: string
 }
 
+export type Mention = {
+	id: string
+	name: string
+	updatedAt: number
+} & (
+	| {
+			type: 'Actor'
+			actor: Actor
+	  }
+	| {
+			type: 'Event'
+			event: WorldEvent
+	  }
+	| {
+			type: 'Article'
+			article: WikiArticle
+	  }
+	| {
+			type: 'Tag'
+			tag: WorldTag
+	  }
+)
+
 export const useDisplayedMentions = ({ query }: Props) => {
 	const { data: articles } = useListArticles()
 
@@ -18,33 +41,16 @@ export const useDisplayedMentions = ({ query }: Props) => {
 		(a, b) => a.actors === b.actors && a.events === b.events && a.tags === b.tags,
 	)
 
-	const displayedMentions = useMemo(() => {
+	const { mentions, actorCount, eventCount, articleCount, tagCount } = useMemo(() => {
 		if (!articles) {
-			return []
+			return {
+				mentions: [],
+				actorCount: 0,
+				eventCount: 0,
+				articleCount: 0,
+				tagCount: 0,
+			}
 		}
-
-		type Mention = {
-			id: string
-			name: string
-			updatedAt: number
-		} & (
-			| {
-					type: 'Actor'
-					actor: Actor
-			  }
-			| {
-					type: 'Event'
-					event: WorldEvent
-			  }
-			| {
-					type: 'Article'
-					article: WikiArticle
-			  }
-			| {
-					type: 'Tag'
-					tag: WorldTag
-			  }
-		)
 
 		const allActors: Mention[] = actors.map((actor) => ({
 			id: actor.id,
@@ -79,24 +85,48 @@ export const useDisplayedMentions = ({ query }: Props) => {
 		}))
 
 		if (!query) {
-			return ([] as Mention[])
-				.concat(allActors.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3))
-				.concat(allEvents.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3))
-				.concat(allArticles.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3))
-				.concat(allTags.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3))
+			return {
+				mentions: ([] as Mention[])
+					.concat(allActors.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3))
+					.concat(allEvents.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3))
+					.concat(allArticles.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3))
+					.concat(allTags.sort((a, b) => b.updatedAt - a.updatedAt).slice(0, 3)),
+				actorCount: allActors.length,
+				eventCount: allEvents.length,
+				articleCount: allArticles.length,
+				tagCount: allTags.length,
+			}
 		}
 
-		return ([] as Mention[])
-			.concat(allActors)
-			.concat(allEvents)
-			.concat(allArticles)
-			.concat(allTags)
-			.filter((entity) => entity.name.toLowerCase().includes(query.toLowerCase()))
+		const filteredActors = allActors.filter((actor) => actor.name.toLowerCase().includes(query.toLowerCase()))
+		const filteredEvents = allEvents.filter((event) => event.name.toLowerCase().includes(query.toLowerCase()))
+		const filteredArticles = allArticles.filter((article) =>
+			article.name.toLowerCase().includes(query.toLowerCase()),
+		)
+		const filteredTags = allTags.filter((tag) => tag.name.toLowerCase().includes(query.toLowerCase()))
+
+		const mentions = ([] as Mention[])
+			.concat(filteredActors)
+			.concat(filteredEvents)
+			.concat(filteredArticles)
+			.concat(filteredTags)
 			.sort((a, b) => b.updatedAt - a.updatedAt)
 			.slice(0, 5)
+
+		return {
+			mentions,
+			actorCount: filteredActors.length,
+			eventCount: filteredEvents.length,
+			articleCount: filteredArticles.length,
+			tagCount: filteredTags.length,
+		}
 	}, [actors, events, articles, tags, query])
 
 	return {
-		mentions: displayedMentions,
+		mentions,
+		actorCount,
+		eventCount,
+		articleCount,
+		tagCount,
 	}
 }

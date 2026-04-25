@@ -1,17 +1,12 @@
 import { MentionedEntity } from '@api/types/worldTypes'
-import Article from '@mui/icons-material/Article'
-import Event from '@mui/icons-material/Event'
-import LabelIcon from '@mui/icons-material/Label'
-import Person from '@mui/icons-material/Person'
 import Divider from '@mui/material/Divider'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
+import Stack from '@mui/material/Stack'
 import { Editor } from '@tiptap/react'
 import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useCreateArticle } from '@/app/views/world/views/wiki/api/useCreateArticle'
 
@@ -19,7 +14,10 @@ import { useQuickCreateActor } from './api/useQuickCreateActor'
 import { useQuickCreateEvent } from './api/useQuickCreateEvent'
 import { useQuickCreateTag } from './api/useQuickCreateTag'
 import { MentionNodeName } from './components/MentionNode'
-import { useDisplayedMentions } from './hooks/useDisplayedMentions'
+import { Mention, useDisplayedMentions } from './hooks/useDisplayedMentions'
+import { MentionsListItem } from './MentionsListItem'
+import { MentionsListItemQuickCreate } from './MentionsListItemQuickCreate'
+import { MentionsListSectionHeader } from './MentionsListSectionHeader'
 
 type Props = {
 	editor: Editor | null
@@ -37,7 +35,7 @@ export function MentionsListComponent({ editor }: Props) {
 	const [query, setQuery] = useState('')
 	const [selectedIndex, setSelectedIndex] = useState(0)
 
-	const { mentions } = useDisplayedMentions({ query })
+	const { mentions, actorCount, eventCount, articleCount, tagCount } = useDisplayedMentions({ query })
 
 	const createActor = useQuickCreateActor()
 	const createEvent = useQuickCreateEvent()
@@ -146,10 +144,14 @@ export function MentionsListComponent({ editor }: Props) {
 				return
 			}
 			if (key === 'ArrowUp' || (key === 'Tab' && shiftKey)) {
-				setSelectedIndex((prev) => Math.max(prev - 1, 0))
-			} else if (key === 'ArrowDown' || key === 'Tab') {
 				setSelectedIndex((prev) => {
-					return Math.min(prev + 1, mentions.length - (query.length > 0 ? -3 : 1))
+					return prev > 0 ? prev - 1 : lastItemIndex
+				})
+			} else if (key === 'ArrowDown' || key === 'Tab') {
+				const maxIndex = mentions.length - (query.length > 0 ? -3 : 1)
+				setSelectedIndex((prev) => {
+					const targetIndex = prev + 1 > maxIndex ? 0 : prev + 1
+					return targetIndex
 				})
 			} else if (key === 'Enter') {
 				await selectEntity(editor, selectedIndex)
@@ -170,6 +172,7 @@ export function MentionsListComponent({ editor }: Props) {
 	}, [mentions, visible])
 
 	const [adjustedTop, setAdjustedTop] = useState(pos.top)
+	const [adjustedLeft, setAdjustedLeft] = useState(pos.left)
 	const paperRef = useRef<HTMLDivElement>(null)
 
 	const recalculatePosition = useCallback(() => {
@@ -178,105 +181,121 @@ export function MentionsListComponent({ editor }: Props) {
 			return
 		}
 
-		const belowTop = pos.bottom
+		const elWidth = el.offsetWidth
 		const elHeight = el.offsetHeight
 
-		if (belowTop + elHeight > window.innerHeight) {
+		const currentLeft = pos.left
+		const currentBottom = pos.bottom
+
+		if (currentLeft + elWidth > window.innerWidth) {
+			setAdjustedLeft(Math.max(0, pos.left - (currentLeft + elWidth - window.innerWidth)))
+		} else {
+			setAdjustedLeft(currentLeft)
+		}
+
+		if (currentBottom + elHeight > window.innerHeight) {
 			// Position above the cursor
 			setAdjustedTop(Math.max(0, pos.top - elHeight))
 		} else {
-			setAdjustedTop(belowTop)
+			setAdjustedTop(currentBottom)
 		}
-	}, [pos.top, pos.bottom, visible])
+	}, [visible, pos.bottom, pos.left, pos.top])
 
 	useLayoutEffect(() => {
 		recalculatePosition()
 	}, [recalculatePosition, mentions.length, query])
 
+	const mentionTypes = [
+		{
+			label: 'Actors',
+			mentions: mentions.filter((m) => m.type === 'Actor') as Mention[],
+			indexStart: 0,
+			totalCount: actorCount,
+		},
+	]
+	mentionTypes.push({
+		label: 'Events',
+		mentions: mentions.filter((m) => m.type === 'Event'),
+		indexStart: mentionTypes.reduce((acc, type) => acc + type.mentions.length, 0),
+		totalCount: eventCount,
+	})
+	mentionTypes.push({
+		label: 'Articles',
+		mentions: mentions.filter((m) => m.type === 'Article'),
+		indexStart: mentionTypes.reduce((acc, type) => acc + type.mentions.length, 0),
+		totalCount: articleCount,
+	})
+	mentionTypes.push({
+		label: 'Tags',
+		mentions: mentions.filter((m) => m.type === 'Tag'),
+		indexStart: mentionTypes.reduce((acc, type) => acc + type.mentions.length, 0),
+		totalCount: tagCount,
+	})
+	const theme = useCustomTheme()
+
 	return (
 		<Paper
 			ref={paperRef}
 			sx={{
+				outline: `1px solid ${theme.material.palette.divider}`,
 				zIndex: 10,
 				position: 'fixed',
 				top: adjustedTop,
-				left: pos.left,
+				left: adjustedLeft,
 				display: visible ? 'block' : 'none',
-				minWidth: '200px',
+				minWidth: '350px',
 			}}
 		>
-			{mentions.map((mention, index) => (
-				<MenuItem
-					selected={selectedIndex === index}
-					key={mention.id}
-					onClick={() => selectEntity(editor, index)}
-					sx={{ borderRadius: 1 }}
-				>
-					<ListItemIcon>
-						{mention.type === 'Actor' && <Person />}
-						{mention.type === 'Event' && <Event />}
-						{mention.type === 'Article' && <Article />}
-						{mention.type === 'Tag' && <LabelIcon />}
-					</ListItemIcon>
-					<ListItemText>
-						<b>{mention.type}:</b>&nbsp;{mention.name}
-					</ListItemText>
-				</MenuItem>
-			))}
+			{mentionTypes
+				.filter((type) => type.mentions.length > 0)
+				.map((type) => (
+					<Stack gap={0} key={type.label}>
+						<MentionsListSectionHeader
+							label={type.label}
+							key={type.label}
+							mentionCount={type.totalCount}
+							disableGutter={type.indexStart === 0}
+						/>
+						<Divider style={{ marginBottom: 0 }} />
+						{type.mentions.map((mention, index) => (
+							<MentionsListItem
+								key={mention.id}
+								mention={mention}
+								query={query}
+								selected={selectedIndex === index + type.indexStart}
+								onClick={() => selectEntity(editor, index + type.indexStart)}
+							/>
+						))}
+					</Stack>
+				))}
 			{query.trim().length > 0 && (
 				<>
-					{mentions.length > 0 && <Divider />}
-					<MenuItem disabled>
-						<ListItemText>Create new</ListItemText>
-					</MenuItem>
-					<MenuItem
+					<MentionsListSectionHeader label="Quick create" disableGutter={mentions.length === 0} />
+					<Divider style={{ marginBottom: 0 }} />
+					<MentionsListItemQuickCreate
+						type="Actor"
 						selected={selectedIndex === mentions.length}
 						onClick={() => selectEntity(editor, mentions.length)}
-						sx={{ borderRadius: 1 }}
-					>
-						<ListItemIcon>
-							<Person />
-						</ListItemIcon>
-						<ListItemText>
-							<b>Actor</b>
-						</ListItemText>
-					</MenuItem>
-					<MenuItem
+						query={query}
+					/>
+					<MentionsListItemQuickCreate
+						type="Event"
 						selected={selectedIndex === mentions.length + 1}
 						onClick={() => selectEntity(editor, mentions.length + 1)}
-						sx={{ borderRadius: 1 }}
-					>
-						<ListItemIcon>
-							<Event />
-						</ListItemIcon>
-						<ListItemText>
-							<b>Event</b>
-						</ListItemText>
-					</MenuItem>
-					<MenuItem
+						query={query}
+					/>
+					<MentionsListItemQuickCreate
+						type="Article"
 						selected={selectedIndex === mentions.length + 2}
 						onClick={() => selectEntity(editor, mentions.length + 2)}
-						sx={{ borderRadius: 1 }}
-					>
-						<ListItemIcon>
-							<Article />
-						</ListItemIcon>
-						<ListItemText>
-							<b>Article</b>
-						</ListItemText>
-					</MenuItem>
-					<MenuItem
+						query={query}
+					/>
+					<MentionsListItemQuickCreate
+						type="Tag"
 						selected={selectedIndex === mentions.length + 3}
 						onClick={() => selectEntity(editor, mentions.length + 3)}
-						sx={{ borderRadius: 1 }}
-					>
-						<ListItemIcon>
-							<LabelIcon />
-						</ListItemIcon>
-						<ListItemText>
-							<b>Tag</b>
-						</ListItemText>
-					</MenuItem>
+						query={query}
+					/>
 				</>
 			)}
 		</Paper>

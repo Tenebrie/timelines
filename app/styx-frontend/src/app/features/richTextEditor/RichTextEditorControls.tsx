@@ -12,6 +12,7 @@ import styled from 'styled-components'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 
 import { ReadModeToggle } from '../../views/world/views/wiki/components/ReadModeToggle'
+import { dispatchGlobalEvent } from '../eventBus'
 import { getWikiPreferences } from '../preferences/PreferencesSliceSelectors'
 import { ActiveButtonIndicator } from './extensions/mentions/components/ActiveButtonIndicator'
 
@@ -88,6 +89,13 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 			editor.chain().focus().insertContent(' ').run()
 		}
 		editor.chain().focus().insertContent('@').run()
+		const visualPos = editor.view.coordsAtPos(editor.state.selection.from)
+		dispatchGlobalEvent['richEditor/requestOpenMentions']({
+			query: '',
+			screenPosTop: visualPos.top,
+			screenPosBottom: visualPos.bottom,
+			screenPosLeft: visualPos.left,
+		})
 	}, [editor])
 
 	return (
