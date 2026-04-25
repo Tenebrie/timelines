@@ -121,14 +121,14 @@ test.describe('Wiki View', () => {
 			await withYjsSocket(page, () =>
 				page.getByTestId('ArticleListWithHeader').getByText('First article').click(),
 			)
-			await expect(textbox).toHaveText('Hello TestActor Hello UnrelatedActor')
+			await expect(textbox).toHaveText('Hello TestActorHello UnrelatedActor')
 
 			// Edit article
 			await textbox.focus()
 			await textbox.press('Home')
 			await textbox.press('ArrowUp')
 			await textbox.press('Enter')
-			await expect(textbox).toHaveText('Hello TestActor Hello UnrelatedActor')
+			await expect(textbox).toHaveText('Hello TestActorHello UnrelatedActor')
 		})
 
 		test('moving articles and creating folders', async ({ page }) => {
