@@ -134,7 +134,6 @@ export function MentionsListComponent({ editor }: Props) {
 					},
 				},
 			})
-			.insertContent(' ')
 			.run()
 	}
 

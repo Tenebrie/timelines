@@ -24,7 +24,7 @@ test.describe('Wiki View', () => {
 			await page.getByLabel('Name').fill('Testing article')
 			await withYjsSocket(page, () => page.getByText('Create', { exact: true }).click())
 			await expect(page.getByText('Create new article')).not.toBeVisible()
-			await expect(page.getByTestId('ArticleTitle').getByText('Testing article')).toBeVisible()
+			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
 			// Edit article
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
@@ -121,14 +121,14 @@ test.describe('Wiki View', () => {
 			await withYjsSocket(page, () =>
 				page.getByTestId('ArticleListWithHeader').getByText('First article').click(),
 			)
-			await expect(textbox).toHaveText('Hello TestActor Hello UnrelatedActor')
+			await expect(textbox).toHaveText('Hello TestActorHello UnrelatedActor')
 
 			// Edit article
 			await textbox.focus()
 			await textbox.press('Home')
 			await textbox.press('ArrowUp')
 			await textbox.press('Enter')
-			await expect(textbox).toHaveText('Hello TestActor Hello UnrelatedActor')
+			await expect(textbox).toHaveText('Hello TestActorHello UnrelatedActor')
 		})
 
 		test('moving articles and creating folders', async ({ page }) => {
@@ -229,7 +229,7 @@ test.describe('Wiki View', () => {
 			await page.getByText('Create article').click()
 			await page.getByLabel('Name').fill('Testing article')
 			await withYjsSocket(page, () => page.getByText('Create', { exact: true }).click())
-			await expect(page.getByTestId('ArticleTitle').getByText('Testing article')).toBeVisible()
+			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
 			// Click into the editor
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
@@ -242,6 +242,31 @@ test.describe('Wiki View', () => {
 
 			// Expect the mentions list to be visible with Quick create options
 			await expect(page.getByText('Quick create')).toBeVisible()
+		})
+
+		test('clicking @Mention button and pressing Enter inserts a mention', async ({ page }) => {
+			await navigateToWiki(page, 'createWorld')
+
+			// Create article
+			await page.getByText('Create article').click()
+			await page.getByLabel('Name').fill('Testing article')
+			await withYjsSocket(page, () => page.getByText('Create', { exact: true }).click())
+			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
+
+			// Click into the editor and type some text
+			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
+			await expect(textbox).toBeVisible()
+			await textbox.click()
+			await textbox.pressSequentially('Hello ', { delay: 10 })
+
+			// Click the @Mention button, type a name, and press Enter to create
+			await page.getByRole('button', { name: '@Mention' }).click()
+			await page.keyboard.type('NewActor', { delay: 10 })
+			await expect(page.getByText('Quick create')).toBeVisible()
+			await withCreatedActor(page, () => page.keyboard.press('Enter'))
+
+			// Expect the mention to be inserted (not a newline)
+			await expect(textbox).toHaveText('Hello NewActor')
 		})
 	})
 
@@ -256,7 +281,7 @@ test.describe('Wiki View', () => {
 			await page.getByLabel('Name').fill('Testing article')
 			await page.keyboard.press('Enter')
 			await expect(page.getByText('Create new article')).not.toBeVisible()
-			await expect(page.getByTestId('ArticleTitle').getByText('Testing article')).toBeVisible()
+			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 		})
 
 		test('create article with full shortcut', async ({ page }) => {
@@ -270,7 +295,7 @@ test.describe('Wiki View', () => {
 			await page.keyboard.press('Control+Enter')
 
 			await expect(page.getByText('Create new article')).not.toBeVisible()
-			await expect(page.getByTestId('ArticleTitle').getByText('Testing article')).toBeVisible()
+			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 		})
 	})
 

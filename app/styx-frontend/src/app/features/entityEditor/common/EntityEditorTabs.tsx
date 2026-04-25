@@ -17,10 +17,12 @@ type Props = {
 	contentTab: React.ReactNode
 	illustrationTab?: React.ReactNode
 	backlinksTab?: React.ReactNode
+	isWikiTab?: boolean
 }
 
-export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab }: Props) {
-	const { tab: defaultTab } = useSearch({ from: '/world/$worldId/_world' })
+export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab, isWikiTab }: Props) {
+	const { tab: defaultModalTab, wikiTab: defaultWikiTab } = useSearch({ from: '/world/$worldId/_world' })
+	const defaultTab = isWikiTab ? defaultWikiTab : defaultModalTab
 	const [tab, setTab] = useState(defaultTab)
 	const [mountedTabs, setMountedTabs] = useState<Set<number>>(new Set([defaultTab]))
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
@@ -28,7 +30,10 @@ export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab }: 
 	const handleChange = useEvent((tab: number) => {
 		setTab(tab)
 		navigate({
-			search: (prev) => ({ ...prev, tab }),
+			search: (prev) => {
+				const tabKey = isWikiTab ? 'wikiTab' : 'tab'
+				return { ...prev, [tabKey]: tab }
+			},
 		})
 	})
 
@@ -46,10 +51,10 @@ export function EntityEditorTabs({ contentTab, illustrationTab, backlinksTab }: 
 			<Box sx={{ height: '100%', width: '100%', display: tab === 0 ? 'block' : 'none' }}>
 				{mountedTabs.has(0) && contentTab}
 			</Box>
-			<Box sx={{ height: '100%', width: '100%', display: tab === 1 ? 'block' : 'none', marginLeft: -1 }}>
+			<Box sx={{ height: '100%', width: 'calc(100%)', display: tab === 1 ? 'block' : 'none' }}>
 				{mountedTabs.has(1) && illustrationTab}
 			</Box>
-			<Box sx={{ height: '100%', width: '100%', display: tab === 2 ? 'block' : 'none', marginLeft: -1 }}>
+			<Box sx={{ height: '100%', width: 'calc(100%)', display: tab === 2 ? 'block' : 'none' }}>
 				{mountedTabs.has(2) && backlinksTab}
 			</Box>
 			{tab !== 0 && <Divider orientation="vertical" />}

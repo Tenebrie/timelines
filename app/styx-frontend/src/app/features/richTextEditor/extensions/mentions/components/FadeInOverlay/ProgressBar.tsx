@@ -1,12 +1,11 @@
 import LinearProgress from '@mui/material/LinearProgress'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 import { RefObject, useRef, useState } from 'react'
-import { flushSync } from 'react-dom'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 
 type Props = {
-	elementsRendering: RefObject<ProseMirrorNode[]>
+	elementsRendering: RefObject<Set<ProseMirrorNode>>
 }
 
 export const ProgressBar = ({ elementsRendering }: Props) => {
@@ -14,47 +13,45 @@ export const ProgressBar = ({ elementsRendering }: Props) => {
 	const [opacity, setOpacity] = useState(0)
 	const triggeredRef = useRef(false)
 	const maxValueRef = useRef(0)
+	const rafIdRef = useRef(0)
+
+	const scheduleProgressUpdate = () => {
+		if (rafIdRef.current) return
+		rafIdRef.current = requestAnimationFrame(() => {
+			rafIdRef.current = 0
+			const size = elementsRendering.current.size
+			if (maxValueRef.current === 0) return
+			const currentValue = ((maxValueRef.current - size) / maxValueRef.current) * 100
+			setValue(currentValue)
+			if (size <= 1 && !hideTimeoutRef.current) {
+				hideTimeoutRef.current = window.setTimeout(() => {
+					setOpacity(0)
+				}, 300)
+			}
+		})
+	}
 
 	useEventBusSubscribe['richEditor/mentionRender/onStart']({
-		callback: ({}) => {
-			maxValueRef.current = Math.max(maxValueRef.current, elementsRendering.current.length)
-			if (maxValueRef.current === 0) {
-				return
-			}
-			const currentValue =
-				((maxValueRef.current - elementsRendering.current.length) / maxValueRef.current) * 100
-			requestAnimationFrame(() =>
-				flushSync(() => {
-					setValue(currentValue)
-				}),
-			)
-			if (elementsRendering.current.length > 20 && !triggeredRef.current) {
+		callback: () => {
+			maxValueRef.current = Math.max(maxValueRef.current, elementsRendering.current.size)
+			if (elementsRendering.current.size > 20 && !triggeredRef.current) {
 				triggeredRef.current = true
 				requestAnimationFrame(() => {
 					setOpacity(1)
 				})
 			}
+			scheduleProgressUpdate()
 		},
 	})
 
-	const timeoutRef = useRef<number | null>(null)
+	const hideTimeoutRef = useRef<number | null>(null)
 	useEventBusSubscribe['richEditor/mentionRender/onEnd']({
-		callback: ({}) => {
-			if (maxValueRef.current === 0) {
-				return
-			}
-			const currentValue =
-				((maxValueRef.current - elementsRendering.current.length) / maxValueRef.current) * 100
-			requestAnimationFrame(() => flushSync(() => setValue(currentValue)))
-			if (elementsRendering.current.length <= 1) {
-				timeoutRef.current = window.setTimeout(() => {
-					setOpacity(0)
-				}, 300)
-			}
+		callback: () => {
+			scheduleProgressUpdate()
 		},
 	})
-	if (elementsRendering.current.length === 0 && !timeoutRef.current && opacity > 0) {
-		timeoutRef.current = window.setTimeout(() => {
+	if (elementsRendering.current.size === 0 && !hideTimeoutRef.current && opacity > 0) {
+		hideTimeoutRef.current = window.setTimeout(() => {
 			setOpacity(0)
 		}, 300)
 	}

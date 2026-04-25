@@ -78,7 +78,7 @@ export function ColorPickerComponent({ initialValue, onChangeHex, onChangeHsl }:
 						<Stack direction="column" sx={{ width: '50%', height: '100%' }} gap={1}>
 							<div
 								style={{
-									backgroundColor: lightTheme.palette.background.paper,
+									backgroundColor: lightTheme({ reduceAnimations: false }).palette.background.paper,
 									width: '100%',
 									height: '100%',
 									borderRadius: '4px',
@@ -91,7 +91,7 @@ export function ColorPickerComponent({ initialValue, onChangeHex, onChangeHsl }:
 							</div>
 							<div
 								style={{
-									backgroundColor: darkTheme.palette.background.paper,
+									backgroundColor: darkTheme({ reduceAnimations: false }).palette.background.paper,
 									width: '100%',
 									height: '100%',
 									borderRadius: '4px',

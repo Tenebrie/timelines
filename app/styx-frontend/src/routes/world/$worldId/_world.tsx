@@ -13,6 +13,7 @@ const worldSearchSchema = z.object({
 	scale: ScaleLevelSchema.default(loadPreferences().timeline.scaleLevel),
 	track: z.string().optional(),
 	tab: z.number().min(0).max(2).default(0),
+	wikiTab: z.number().min(0).max(2).default(0),
 	iq: z.string().optional(), // Icon search query
 })
 

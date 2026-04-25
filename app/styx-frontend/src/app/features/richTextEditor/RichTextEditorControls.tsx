@@ -1,4 +1,3 @@
-import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
@@ -10,6 +9,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
+import { Button } from '@/ui-lib/components/Button/Button'
 
 import { ReadModeToggle } from '../../views/world/views/wiki/components/ReadModeToggle'
 import { dispatchGlobalEvent } from '../eventBus'
@@ -45,6 +45,7 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 		// Subscribe to editor events that should trigger re-renders
 		editor.on('update', forceUpdate)
 		editor.on('selectionUpdate', forceUpdate)
+		editor.on('transaction', forceUpdate)
 
 		return () => {
 			editor.off('update', forceUpdate)
@@ -99,30 +100,42 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 	}, [editor])
 
 	return (
-		<Paper sx={{ padding: '4px 8px', borderRadius: '5px' }}>
+		<Paper
+			sx={{
+				borderRadius: '6px 6px 0 0',
+				backgroundImage: (theme) =>
+					theme.palette.mode === 'dark'
+						? 'linear-gradient(rgba(255,255,255,0.043), rgba(255,255,255,0.043))'
+						: 'none',
+				boxShadow: (theme) =>
+					theme.palette.mode === 'light'
+						? '0 2px 4px -1px rgba(0,0,0,0.07), 0 1px 2px -1px rgba(0,0,0,0.02)'
+						: 'none',
+			}}
+		>
 			<Stack direction="row" justifyContent="space-between">
-				<Stack direction="row" gap={0.75} flexWrap={'wrap'}>
+				<Stack direction="row" flexWrap={'wrap'}>
 					{!isReadMode && (
 						<>
-							<Tooltip title="Bold">
+							<Tooltip title="Bold" disableInteractive enterDelay={500}>
 								<StyledSmallButton onClick={onBoldClick} color="secondary">
 									<b>B</b>
 									<ActiveButtonIndicator active={isBold} />
 								</StyledSmallButton>
 							</Tooltip>
-							<Tooltip title="Italic">
+							<Tooltip title="Italic" disableInteractive enterDelay={500}>
 								<StyledSmallButton onClick={onItalicClick} color="secondary">
 									<i>I</i>
 									<ActiveButtonIndicator active={isItalic} />
 								</StyledSmallButton>
 							</Tooltip>
-							<Tooltip title="Underline">
+							<Tooltip title="Underline" disableInteractive enterDelay={500}>
 								<StyledSmallButton onClick={onUnderlineClick} color="secondary">
 									<u>U</u>
 									<ActiveButtonIndicator active={isUnderline} />
 								</StyledSmallButton>
 							</Tooltip>
-							<Tooltip title="Strikethrough">
+							<Tooltip title="Strikethrough" disableInteractive enterDelay={500}>
 								<StyledSmallButton
 									onClick={onStrikeClick}
 									color="secondary"
@@ -138,21 +151,30 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 						</>
 					)}
 					{isReadMode && (
-						<Stack sx={{ height: '100%', alignItems: 'center' }} direction="row">
+						<Stack sx={{ height: '44px', alignItems: 'center', paddingLeft: '16px' }} direction="row">
 							<Typography variant="body2" color="gray" sx={{ fontStyle: 'italic' }}>
 								Read mode
 							</Typography>
 						</Stack>
 					)}
 				</Stack>
-				{allowReadMode && navi.length === 0 && !isReadOnly && <ReadModeToggle />}
+				<Stack
+					sx={{
+						alignSelf: 'stretch',
+						alignItems: 'center',
+						justifyContent: 'center',
+					}}
+				>
+					{allowReadMode && !isReadOnly && <ReadModeToggle />}
+				</Stack>
 			</Stack>
 		</Paper>
 	)
 }
 
 const StyledSmallButton = styled(Button)`
-	min-width: 32px !important;
+	min-height: 44px !important;
+	min-width: 40px !important;
 	padding: 0;
 	font-family: 'Roboto Mono' !important;
 `

@@ -2,7 +2,11 @@ import { createTheme, Theme } from '@mui/material/styles'
 
 const commonTheme = createTheme()
 
-const baseTheme: Partial<Theme> = {
+type Props = {
+	reduceAnimations: boolean
+}
+
+const baseTheme: (props: Props) => Partial<Theme> = ({ reduceAnimations }) => ({
 	shape: {
 		borderRadius: 8,
 	},
@@ -94,64 +98,91 @@ const baseTheme: Partial<Theme> = {
 				},
 			},
 		},
+		MuiPopover: {
+			styleOverrides: {
+				paper: {
+					...(reduceAnimations
+						? {
+								transition: 'none !important',
+								animation: 'none !important',
+							}
+						: {}),
+					willChange: 'transform',
+				},
+				root: ({ ownerState }) => ({
+					pointerEvents: ownerState.open ? 'auto' : 'none',
+				}),
+			},
+		},
 		MuiMenu: {
 			styleOverrides: {
+				paper: {
+					...(reduceAnimations
+						? {
+								transition: 'none !important',
+								animation: 'none !important',
+							}
+						: {}),
+					willChange: 'transform',
+				},
 				root: ({ ownerState }) => ({
 					pointerEvents: ownerState.open ? 'auto' : 'none',
 				}),
 			},
 		},
 	},
-}
-
-export const lightTheme = createTheme({
-	...baseTheme,
-	palette: {
-		mode: 'light',
-		background: {
-			paper: '#fff',
-			default: 'hsl(250, 25%, 93%)',
-		},
-		primary: {
-			main: 'hsl(258, 45%, 48%)',
-			contrastText: '#fff',
-		},
-		secondary: {
-			main: 'hsl(200, 50%, 42%)',
-			contrastText: '#fff',
-		},
-		error: {
-			main: '#9d0000',
-			contrastText: '#fff',
-		},
-	},
 })
 
-export const darkTheme = createTheme({
-	...baseTheme,
-	palette: {
-		mode: 'dark',
-		background: {
-			default: '#0f0e1a',
-			paper: 'hsl(252, 25%, 14%)',
+export const lightTheme = (props: Props) =>
+	createTheme({
+		...baseTheme(props),
+		palette: {
+			mode: 'light',
+			background: {
+				paper: '#fff',
+				default: 'hsl(250, 25%, 93%)',
+			},
+			primary: {
+				main: 'hsl(258, 45%, 48%)',
+				contrastText: '#fff',
+			},
+			secondary: {
+				main: 'hsl(200, 50%, 42%)',
+				contrastText: '#fff',
+			},
+			error: {
+				main: '#9d0000',
+				contrastText: '#fff',
+			},
 		},
-		primary: {
-			main: 'hsl(258, 55%, 65%)',
-			contrastText: '#f0ecff',
-			// TODO: Explore orange primary
-			// main: 'hsla(31, 100%, 50%, 1.00)',
-			// contrastText: '#000000ff',
+	})
+
+export const darkTheme = (props: Props) =>
+	createTheme({
+		...baseTheme(props),
+		palette: {
+			mode: 'dark',
+			background: {
+				default: '#0f0e1a',
+				paper: 'hsl(252, 25%, 14%)',
+			},
+			primary: {
+				main: 'hsl(258, 55%, 65%)',
+				contrastText: '#f0ecff',
+				// TODO: Explore orange primary
+				// main: 'hsla(31, 100%, 50%, 1.00)',
+				// contrastText: '#000000ff',
+			},
+			secondary: {
+				main: 'hsl(200, 55%, 55%)',
+				contrastText: '#0f0e1a',
+			},
+			error: {
+				main: '#f07070',
+				contrastText: '#0f0e1a',
+			},
 		},
-		secondary: {
-			main: 'hsl(200, 55%, 55%)',
-			contrastText: '#0f0e1a',
-		},
-		error: {
-			main: '#f07070',
-			contrastText: '#0f0e1a',
-		},
-	},
-})
+	})
 
 export const customLightTheme = {
 	palette: {

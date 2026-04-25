@@ -1,5 +1,6 @@
 import { Actor } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { memo } from 'react'
 
@@ -47,6 +48,7 @@ export function ActorDetailsComponent({ editedActor }: Props) {
 			}}
 		>
 			<ActorTitle draft={draft} />
+			<Divider />
 			<Box flexGrow={1} height={0} sx={{ marginRight: 0 }}>
 				<EntityEditorTabs
 					contentTab={<ActorDescription actor={actor} />}

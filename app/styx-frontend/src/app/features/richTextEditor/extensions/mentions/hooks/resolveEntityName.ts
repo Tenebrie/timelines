@@ -4,32 +4,34 @@ type Props = {
 	entityId: string
 }
 
-export function resolveEntityName({ entityId }: Props) {
+let cachedState: unknown = null
+let entityMap: Map<string, string> | null = null
+
+function getEntityMap() {
 	const state = store.getState()
-	const events = state.world.events
-
-	const event = events.find((event) => event.id === entityId)
-	if (event) {
-		return event.name
+	if (state === cachedState && entityMap) {
+		return entityMap
 	}
 
-	const actors = state.world.actors
-	const actor = actors.find((actor) => actor.id === entityId)
-	if (actor) {
-		return actor.name
+	cachedState = state
+	entityMap = new Map<string, string>()
+
+	for (const event of state.world.events) {
+		entityMap.set(event.id, event.name)
+	}
+	for (const actor of state.world.actors) {
+		entityMap.set(actor.id, actor.name)
+	}
+	for (const article of state.wiki.articles) {
+		entityMap.set(article.id, article.name)
+	}
+	for (const tag of state.world.tags) {
+		entityMap.set(tag.id, tag.name)
 	}
 
-	const articles = state.wiki.articles
-	const article = articles.find((article) => article.id === entityId)
-	if (article) {
-		return article.name
-	}
+	return entityMap
+}
 
-	const tags = state.world.tags
-	const tag = tags.find((tag) => tag.id === entityId)
-	if (tag) {
-		return tag.name
-	}
-
-	return 'Unknown entity'
+export function resolveEntityName({ entityId }: Props) {
+	return getEntityMap().get(entityId) ?? 'Unknown entity'
 }
