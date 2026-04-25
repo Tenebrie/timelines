@@ -221,6 +221,30 @@ test.describe('Wiki View', () => {
 		})
 	})
 
+	test.describe('mentions', () => {
+		test('clicking @Mention button opens mentions list', async ({ page }) => {
+			await navigateToWiki(page, 'createWorld')
+
+			// Create article
+			await page.getByText('Create article').click()
+			await page.getByLabel('Name').fill('Testing article')
+			await withYjsSocket(page, () => page.getByText('Create', { exact: true }).click())
+			await expect(page.getByTestId('ArticleTitle').getByText('Testing article')).toBeVisible()
+
+			// Click into the editor
+			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
+			await expect(textbox).toBeVisible()
+			await textbox.click()
+
+			// Click the @Mention button and type a query
+			await page.getByRole('button', { name: '@Mention' }).click()
+			await page.keyboard.type('Test', { delay: 10 })
+
+			// Expect the mentions list to be visible with Quick create options
+			await expect(page.getByText('Quick create')).toBeVisible()
+		})
+	})
+
 	test.describe('shortcuts', () => {
 		test('create article with simple shortcut', async ({ page }) => {
 			await navigateToWiki(page, 'createWorld')

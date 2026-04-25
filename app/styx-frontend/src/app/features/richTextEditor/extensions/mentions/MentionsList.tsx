@@ -237,7 +237,7 @@ export function MentionsListComponent({ editor }: Props) {
 		<Paper
 			ref={paperRef}
 			sx={{
-				border: `1px solid ${theme.material.palette.divider}`,
+				outline: `1px solid ${theme.material.palette.divider}`,
 				zIndex: 10,
 				position: 'fixed',
 				top: adjustedTop,
