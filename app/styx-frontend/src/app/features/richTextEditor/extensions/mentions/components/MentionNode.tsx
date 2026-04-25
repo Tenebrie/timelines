@@ -54,6 +54,8 @@ const nextMentionId = () => `mention-${++mentionIdCounter}`
 export const MentionNode = Node.create({
 	name: MentionNodeName,
 
+	priority: 102,
+
 	group: 'inline',
 	inline: true,
 	atom: true,
