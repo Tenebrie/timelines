@@ -1,10 +1,8 @@
-import { useGetMindmapQuery } from '@api/mindmapApi'
 import Stack from '@mui/material/Stack'
-import { Outlet, useSearch } from '@tanstack/react-router'
-import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useTheme } from '@mui/material/styles'
+import useMediaQuery from '@mui/material/useMediaQuery'
+import { Outlet } from '@tanstack/react-router'
 
-import { useModal } from '@/app/features/modals/ModalsSlice'
 import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
@@ -12,6 +10,7 @@ import { ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage
 
 import { useEventBusDispatch, useEventBusSubscribe } from '../../features/eventBus'
 import { SummonableRichTextEditor } from '../../features/richTextEditor/portals/RichTextEditorPortal'
+import { EntityModalReporter } from './components/EntityModalReporter'
 import { WorldSidebar } from './components/sidebar/WorldSidebar'
 import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
 import { CreateActorModal } from './modals/CreateActorModal'
@@ -22,12 +21,13 @@ import { DeleteEventModal } from './modals/DeleteEventModal'
 import { DeleteTagModal } from './modals/DeleteTagModal'
 import { EditEventModal } from './modals/editEventModal/EditEventModal'
 import { MarkerTooltipSummoner } from './views/timeline/utils/MarkerTooltip'
-import { getTimelineState, getWorldState } from './WorldSliceSelectors'
 
 export const World = () => {
 	const { worldId } = useStrictParams({
 		from: '/world/$worldId/_world',
 	})
+	const muiTheme = useTheme()
+	const isNarrow = useMediaQuery(muiTheme.breakpoints.down('md'))
 	const sendCalliopeMessage = useEventBusDispatch['calliope/requestSendMessage']()
 
 	useEffectOnce(() => {
@@ -67,7 +67,7 @@ export const World = () => {
 				}}
 			>
 				<Stack direction="row" width="100%" height="100%">
-					<WorldSidebar />
+					{!isNarrow && <WorldSidebar />}
 					<div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
 						<Outlet />
 					</div>
@@ -99,108 +99,5 @@ function WorldLoader() {
 		from: '/world/$worldId/_world',
 	})
 	useLoadWorldInfo(worldId)
-	return <></>
-}
-
-function EntityModalReporter() {
-	const { isOpen, open, close } = useModal('editEventModal')
-	const { open: openCreateEventModal, close: closeCreateEventModal } = useModal('createEventModal')
-	const { open: openCreateActorModal, close: closeCreateActorModal } = useModal('createActorModal')
-	const { selectedEntityIds, creatingNew } = useSearch({
-		from: '/world/$worldId/_world',
-		select: (search) => ({ selectedEntityIds: search.navi, creatingNew: search.new }),
-	})
-	const {
-		id: worldId,
-		events,
-		actors,
-		tags,
-	} = useSelector(
-		getWorldState,
-		(a, b) => a.id === b.id && a.events === b.events && a.actors === b.actors && a.tags === b.tags,
-	)
-	const { data: mindmapData } = useGetMindmapQuery({ worldId }, { skip: !worldId })
-	const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
-
-	useEffect(() => {
-		if (selectedEntityIds.length === 0 && !creatingNew) {
-			close()
-			closeCreateEventModal()
-			closeCreateActorModal()
-			return
-		}
-
-		const event = events.find((e) => e.id === selectedEntityIds[0])
-		if (event) {
-			closeCreateEventModal()
-			closeCreateActorModal()
-			open({ entityStack: selectedEntityIds, creatingNew: null })
-			return
-		}
-
-		const tag = tags.find((t) => t.id === selectedEntityIds[0])
-		if (tag) {
-			closeCreateEventModal()
-			closeCreateActorModal()
-			open({ entityStack: selectedEntityIds, creatingNew: null })
-			return
-		}
-
-		const marker = markers.find((m) => m.key === selectedEntityIds[0])
-		if (marker) {
-			const event = events.find((e) => e.id === marker.eventId)
-			if (event) {
-				closeCreateEventModal()
-				closeCreateActorModal()
-				open({ entityStack: selectedEntityIds, creatingNew: null })
-				return
-			}
-		}
-
-		const node = mindmapData?.nodes.find((n) => n.id === selectedEntityIds[0])
-		if (node) {
-			const actor = actors.find((e) => e.id === node.parentActorId)
-			if (actor) {
-				closeCreateEventModal()
-				closeCreateActorModal()
-				open({ entityStack: selectedEntityIds, creatingNew: null })
-				return
-			}
-		}
-
-		const actor = actors.find((a) => a.id === selectedEntityIds[0])
-		if (actor) {
-			closeCreateEventModal()
-			closeCreateActorModal()
-			open({ entityStack: selectedEntityIds, creatingNew: null })
-			return
-		}
-
-		if (creatingNew === 'event') {
-			openCreateEventModal({})
-			return
-		}
-
-		if (creatingNew === 'actor') {
-			openCreateActorModal({})
-			return
-		}
-	}, [
-		actors,
-		close,
-		closeCreateEventModal,
-		closeCreateActorModal,
-		creatingNew,
-		events,
-		isOpen,
-		markers,
-		mindmapData?.nodes,
-		open,
-		openCreateEventModal,
-		openCreateActorModal,
-		selectedEntityIds,
-		tags,
-	])
-
 	return <></>
 }

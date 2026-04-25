@@ -171,10 +171,6 @@ export const RichTextEditorComponent = ({
 				borderRadius: '6px',
 				minHeight: '128px',
 				background: isReadMode ? '' : theme.custom.palette.background.textEditor,
-				border: isReadMode ? '1px solid transparent' : '',
-				'&:hover': {
-					border: isReadMode ? '1px solid transparent' : '',
-				},
 				position: 'relative',
 			}}
 			data-testid="RichTextEditor"

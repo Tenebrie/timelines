@@ -1,10 +1,11 @@
 import { MentionedEntity } from '@api/types/worldTypes'
-import Article from '@mui/icons-material/Article'
+import Article from '@mui/icons-material/ArticleOutlined'
 import Event from '@mui/icons-material/Event'
-import LabelIcon from '@mui/icons-material/Label'
+import LabelIcon from '@mui/icons-material/LocalOfferOutlined'
 import Person from '@mui/icons-material/Person'
 import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
+import { memo } from 'react'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { colorStringToHsl } from '@/app/utils/colors/colorStringToHsl'
@@ -18,7 +19,7 @@ type Props = {
 	onClick: () => void
 }
 
-export const BaseMentionChip = ({ type, label, color, onClick }: Props) => {
+export const BaseMentionChip = memo(function BaseMentionChip({ type, label, color, onClick }: Props) {
 	const parsedColor = colorStringToHsl(color ?? '#000')
 	const theme = useCustomTheme()
 
@@ -31,19 +32,32 @@ export const BaseMentionChip = ({ type, label, color, onClick }: Props) => {
 	const colorAngle = 15
 
 	return (
-		<Stack direction="row" spacing={1} display={'inline'} position={'relative'}>
+		<Stack
+			direction="row"
+			spacing={1}
+			display={'inline'}
+			position={'relative'}
+			sx={{ marginLeft: '1px', top: '-1px' }}
+		>
 			<Chip
 				size="small"
 				sx={{
+					borderRadius: '4px',
 					height: '1.6em',
-					'& .MuiChip-label': { fontSize: '1em', height: '1.6em' },
+					'& .MuiChip-label': {
+						fontSize: '1em',
+						height: '1.6em',
+						lineHeight: '1.6em',
+						paddingLeft: 0.75,
+						paddingRight: 0.75,
+					},
 					// color: textColor,
 				}}
 				onClick={() => onClick()}
 				style={{
 					animation: 'none',
 					paddingLeft: iconSlotSize,
-					paddingRight: '4px',
+					paddingRight: '0px',
 					marginLeft: '1px',
 					marginRight: '1px',
 					background: `linear-gradient(90deg,
@@ -61,4 +75,4 @@ export const BaseMentionChip = ({ type, label, color, onClick }: Props) => {
 			{type === 'Tag' && <LabelIcon className="mention-chip-tag-icon" style={{ color: iconColor }} />}
 		</Stack>
 	)
-}
+})

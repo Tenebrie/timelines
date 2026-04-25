@@ -2,7 +2,7 @@ import { ThemeProvider } from '@mui/material/styles'
 import { JSX, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getUserPreferences } from '../../preferences/PreferencesSliceSelectors'
+import { getTimelinePreferences, getUserPreferences } from '../../preferences/PreferencesSliceSelectors'
 import { darkTheme, lightTheme } from '../themes'
 
 type Props = {
@@ -24,13 +24,27 @@ export const CustomThemeProvider = ({ children, colorMode }: Props) => {
 
 const AutomaticThemeProvider = ({ children }: Props) => {
 	const { colorMode } = useSelector(getUserPreferences, (a, b) => a.colorMode === b.colorMode)
-	const theme = useMemo(() => (colorMode === 'light' ? lightTheme : darkTheme), [colorMode])
+	const { reduceAnimations } = useSelector(
+		getTimelinePreferences,
+		(a, b) => a.reduceAnimations === b.reduceAnimations,
+	)
+	const theme = useMemo(
+		() => (colorMode === 'light' ? lightTheme({ reduceAnimations }) : darkTheme({ reduceAnimations })),
+		[colorMode, reduceAnimations],
+	)
 
 	return <ThemeProvider theme={theme}>{children}</ThemeProvider>
 }
 
 const ManualThemeProvider = ({ children, colorMode }: Props) => {
-	const theme = useMemo(() => (colorMode === 'light' ? lightTheme : darkTheme), [colorMode])
+	const { reduceAnimations } = useSelector(
+		getTimelinePreferences,
+		(a, b) => a.reduceAnimations === b.reduceAnimations,
+	)
+	const theme = useMemo(
+		() => (colorMode === 'light' ? lightTheme({ reduceAnimations }) : darkTheme({ reduceAnimations })),
+		[colorMode, reduceAnimations],
+	)
 
 	return <ThemeProvider theme={theme}>{children}</ThemeProvider>
 }

@@ -19,22 +19,18 @@ export const FadeInOverlay = ({ content, isReadMode, color, isLoading }: Props) 
 	const inProgress = useRef(false)
 	const capHitRef = useRef(false)
 
-	const elementsRendering = useRef<ProseMirrorNode[]>([])
-	const progressElementsRendering = useRef<ProseMirrorNode[]>([])
+	const elementsRendering = useRef<Set<ProseMirrorNode>>(new Set())
+	const progressElementsRendering = useRef<Set<ProseMirrorNode>>(new Set())
 	const waitForRenderTimeoutRef = useRef<number | null>(null)
 
 	useEventBusSubscribe['richEditor/mentionRender/onStart']({
 		callback: ({ node }) => {
-			if (!progressElementsRendering.current.includes(node)) {
-				progressElementsRendering.current.push(node)
-			}
+			progressElementsRendering.current.add(node)
 			if (capHitRef.current) {
 				return
 			}
-			if (!elementsRendering.current.includes(node)) {
-				elementsRendering.current.push(node)
-			}
-			if (elementsRendering.current.length > 50) {
+			elementsRendering.current.add(node)
+			if (elementsRendering.current.size > 50) {
 				capHitRef.current = true
 			}
 		},
@@ -42,10 +38,8 @@ export const FadeInOverlay = ({ content, isReadMode, color, isLoading }: Props) 
 
 	useEventBusSubscribe['richEditor/mentionRender/onEnd']({
 		callback: ({ node }) => {
-			elementsRendering.current = elementsRendering.current.filter((element) => element !== node)
-			progressElementsRendering.current = progressElementsRendering.current.filter(
-				(element) => element !== node,
-			)
+			elementsRendering.current.delete(node)
+			progressElementsRendering.current.delete(node)
 		},
 	})
 
@@ -85,7 +79,7 @@ export const FadeInOverlay = ({ content, isReadMode, color, isLoading }: Props) 
 					clearInterval(waitForRenderTimeoutRef.current)
 				}
 			},
-			{ timeout: 500 },
+			{ timeout: 50 },
 		)
 
 		return () => {
@@ -93,7 +87,7 @@ export const FadeInOverlay = ({ content, isReadMode, color, isLoading }: Props) 
 		}
 	}, [isLoading])
 
-	const height = isReadMode ? 'calc(100%)' : 'calc(100% - 52px)'
+	const height = isReadMode ? 'calc(100% - 52px)' : 'calc(100% - 52px)'
 	const width = isReadMode ? 'calc(100%)' : 'calc(100% - 8px)'
 
 	return (

@@ -1,5 +1,6 @@
 import { WorldEvent } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { memo } from 'react'
 
@@ -39,6 +40,7 @@ export function EventDetailsComponent({ editedEvent, autoFocus }: Props) {
 			}}
 		>
 			<EventTitle event={event} draft={draft} />
+			<Divider />
 			<Box flexGrow={1} height={0}>
 				<EntityEditorTabs
 					contentTab={<EventDescription event={event} autoFocus={autoFocus} />}
