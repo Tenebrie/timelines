@@ -33,7 +33,7 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
-		node: null | {
+		nodes: {
 			worldId: string
 			id: string
 			createdAt: string
@@ -41,7 +41,7 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			parentActorId?: null | string
 			positionX: number
 			positionY: number
-		}
+		}[]
 		description: string
 		worldId: string
 		id: string

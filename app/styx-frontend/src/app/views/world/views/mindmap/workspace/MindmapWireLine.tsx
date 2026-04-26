@@ -1,12 +1,13 @@
 import { MindmapNode, MindmapWire } from '@api/types/mindmapTypes'
 import { ActorDetails } from '@api/types/worldTypes'
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
+import { RootState } from '@/app/store'
 
 import { mindmapSlice } from '../MindmapSlice'
 import { getMindmapState } from '../MindmapSliceSelectors'
@@ -122,8 +123,11 @@ export function MindmapWireLine({
 	const isHoveredRef = useRef(false)
 	const isActiveRef = useRef(false)
 
-	const { selectedWires } = useSelector(getMindmapState, (a, b) => a.selectedWires === b.selectedWires)
-	const selected = useMemo(() => selectedWires.includes(wire.id), [selectedWires, wire.id])
+	const selectIsNodeSelected = useCallback(
+		(state: RootState) => getMindmapState(state).selectedWires.includes(wire.id),
+		[wire.id],
+	)
+	const selected = useSelector(selectIsNodeSelected)
 	const selectedRef = useRef(selected)
 	selectedRef.current = selected
 

@@ -135,16 +135,16 @@ export const RedisService = {
 		})
 	},
 
-	notifyAboutMindmapNodeUpdate: (
+	notifyAboutMindmapNodesUpdate: (
 		ctx: ContextWithSessionId,
-		{ worldId, node }: { worldId: string; node: MindmapNode },
+		{ worldId, nodes }: { worldId: string; nodes: MindmapNode[] },
 	) => {
 		calliope.sendMessage({
-			type: RheaToCalliopeMessageType.MINDMAP_NODE_UPDATED,
+			type: RheaToCalliopeMessageType.MINDMAP_NODES_UPDATED,
 			messageSourceSessionId: ctx.sessionId,
 			data: {
 				worldId,
-				node: JSON.stringify(node),
+				nodes: JSON.stringify(nodes),
 			},
 		})
 	},

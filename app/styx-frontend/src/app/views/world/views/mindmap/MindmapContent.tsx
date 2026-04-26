@@ -8,7 +8,7 @@ import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { ActorNodePositioner } from './workspace/ActorNodePositioner'
 import { MindmapWireLayer } from './workspace/MindmapWireLayer'
 
-const ActorList = () => {
+export function MindmapContent() {
 	const { id: worldId, actors } = useSelector(getWorldState, (a, b) => a.id === b.id && a.actors === b.actors)
 	const { data } = useGetMindmapQuery({ worldId }, { skip: !worldId })
 
@@ -37,19 +37,11 @@ const ActorList = () => {
 	}
 
 	return (
-		<>
+		<Box sx={{ zIndex: 1 }}>
 			<MindmapWireLayer actorsWithNodes={actorsWithNodes} />
 			{actorsWithNodes.map((wrapper) => (
 				<ActorNodePositioner key={wrapper.id} actor={wrapper.actor} node={wrapper.node} />
 			))}
-		</>
-	)
-}
-
-export function MindmapContent() {
-	return (
-		<Box sx={{ zIndex: 1 }}>
-			<ActorList />
 		</Box>
 	)
 }

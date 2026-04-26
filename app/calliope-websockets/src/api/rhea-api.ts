@@ -968,6 +968,23 @@ export interface paths {
         patch: operations["updateNode"];
         trace?: never;
     };
+    "/api/world/{worldId}/mindmap/nodes/move": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Moves multiple nodes by a delta in a single transaction */
+        post: operations["moveMindmapNodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/world/{worldId}/mindmap/wires": {
         parameters: {
             query?: never;
@@ -3106,9 +3123,9 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 ownerId: string;
-                                size: number;
                                 expiresAt?: null | string;
                                 bucketKey: string;
+                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "ImageConversion" | "Avatar" | "ImageGeneration";
@@ -4600,6 +4617,50 @@ export interface operations {
                         positionY: number;
                         parentActorId?: null | string;
                     };
+                };
+            };
+        };
+    };
+    moveMindmapNodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    nodeIds: string[];
+                    deltaX: number;
+                    deltaY: number;
+                };
+                "application/x-www-form-urlencoded": {
+                    nodeIds: string[];
+                    deltaX: number;
+                    deltaY: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        worldId: string;
+                        positionX: number;
+                        positionY: number;
+                        parentActorId?: null | string;
+                    }[];
                 };
             };
         };
@@ -6610,7 +6671,7 @@ export interface operations {
                                 sourceId: string;
                                 sourceType: "Actor" | "Event" | "Article" | "Tag";
                             }[];
-                            node: null | {
+                            nodes: {
                                 worldId: string;
                                 id: string;
                                 /** Format: date-time */
@@ -6620,7 +6681,7 @@ export interface operations {
                                 parentActorId?: null | string;
                                 positionX: number;
                                 positionY: number;
-                            };
+                            }[];
                             description: string;
                             worldId: string;
                             id: string;

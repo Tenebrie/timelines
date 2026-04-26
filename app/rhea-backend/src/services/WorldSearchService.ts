@@ -94,7 +94,7 @@ export const WorldSearchService = {
 						name: true,
 					},
 				},
-				node: true,
+				nodes: true,
 			},
 			omit: {
 				descriptionYjs: true,

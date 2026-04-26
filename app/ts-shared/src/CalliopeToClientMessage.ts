@@ -12,7 +12,7 @@ export enum CalliopeToClientMessageType {
 	WORLD_TRACKS_UPDATED = 'worldTracksUpdated',
 	ACTOR_UPDATED = 'actorUpdated',
 	CALENDAR_UPDATED = 'calendarUpdated',
-	MINDMAP_NODE_UPDATED = 'mindmapNodeUpdated',
+	MINDMAP_NODES_UPDATED = 'mindmapNodesUpdated',
 	MINDMAP_NODES_DELETED = 'mindmapNodesDeleted',
 	MINDMAP_WIRE_UPDATED = 'mindmapWireUpdated',
 	MINDMAP_WIRES_DELETED = 'mindmapWiresDeleted',
@@ -65,10 +65,10 @@ export type CalliopeToClientMessagePayload = {
 	[CalliopeToClientMessageType.WIKI_ARTICLE_DELETED]: {
 		worldId: string
 	}
-	[CalliopeToClientMessageType.MINDMAP_NODE_UPDATED]: {
+	[CalliopeToClientMessageType.MINDMAP_NODES_UPDATED]: {
 		worldId: string
 		// TODO: Type properly
-		node: string
+		nodes: string // JSON stringified array of nodes
 	}
 	[CalliopeToClientMessageType.MINDMAP_NODES_DELETED]: {
 		worldId: string

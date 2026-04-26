@@ -62,12 +62,9 @@ router.post('/api/world/:worldId/mindmap/nodes', async (ctx) => {
 	if (!parentActor) {
 		throw new BadRequestError('Parent actor not found')
 	}
-	if (parentActor.node) {
-		throw new BadRequestError('Parent actor already has a node')
-	}
 
 	const node = await MindmapService.createNode({ worldId, ...params })
-	RedisService.notifyAboutMindmapNodeUpdate(ctx, { worldId, node })
+	RedisService.notifyAboutMindmapNodesUpdate(ctx, { worldId, nodes: [node] })
 
 	return node
 })
@@ -92,9 +89,34 @@ router.patch('/api/world/:worldId/mindmap/nodes/:nodeId', async (ctx) => {
 	})
 
 	const node = await MindmapService.updateNode(nodeId, params)
-	RedisService.notifyAboutMindmapNodeUpdate(ctx, { worldId, node })
+	RedisService.notifyAboutMindmapNodesUpdate(ctx, { worldId, nodes: [node] })
 
 	return node
+})
+
+router.post('/api/world/:worldId/mindmap/nodes/move', async (ctx) => {
+	useApiEndpoint({
+		name: 'moveMindmapNodes',
+		description: 'Moves multiple nodes by a delta in a single transaction',
+		tags: [mindmapGroupTag, mindmapNodeTag],
+	})
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: z.string(),
+	})
+
+	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+
+	const params = useRequestBody(ctx, {
+		nodeIds: z.array(z.string()),
+		deltaX: z.number(),
+		deltaY: z.number(),
+	})
+
+	const nodes = await MindmapService.moveNodes(params.nodeIds, params.deltaX, params.deltaY)
+	RedisService.notifyAboutMindmapNodesUpdate(ctx, { worldId, nodes })
+
+	return nodes
 })
 
 router.delete('/api/world/:worldId/mindmap/nodes', async (ctx) => {

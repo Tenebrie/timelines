@@ -1,19 +1,21 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
 import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import { useEffect, useMemo, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { memo, useCallback, useEffect, useRef } from 'react'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
-import { dispatchGlobalEvent } from '@/app/features/eventBus'
+import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
-import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
+import { RootState } from '@/app/store'
+import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
-import { useUpdateMindmapNode } from '../api/useUpdateMindmapNode'
+import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
 import { mindmapSlice } from '../MindmapSlice'
-import { getSelectedNodeActorIds } from '../MindmapSliceSelectors'
+import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { ActorNode } from './ActorNode'
 
 type Props = {
@@ -21,10 +23,15 @@ type Props = {
 	node: MindmapNode
 }
 
-export function ActorNodePositioner({ actor, node }: Props) {
+export const ActorNodePositioner = memo(
+	ActorNodePositionerComponent,
+	(prev, next) => prev.actor === next.actor && prev.node === next.node,
+)
+
+function ActorNodePositionerComponent({ actor, node }: Props) {
 	const theme = useCustomTheme()
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
-	const [updateMindmapNode] = useUpdateMindmapNode()
+	const [moveMindmapNodes] = useMoveMindmapNodes()
 
 	const positionRef = useRef({ x: node.positionX, y: node.positionY })
 
@@ -37,9 +44,13 @@ export function ActorNodePositioner({ actor, node }: Props) {
 		}
 	}, [node])
 
-	const selectedNodes = useSelector(getSelectedNodeActorIds)
-	const selected = useMemo(() => selectedNodes.includes(actor.id), [selectedNodes, actor.id])
-	const { addNodeToSelection, removeNodeFromSelection } = mindmapSlice.actions
+	const selectIsNodeSelected = useCallback(
+		(state: RootState) => getSelectedNodeKeys(state).includes(node.id),
+		[node.id],
+	)
+	const selected = useSelector(selectIsNodeSelected)
+	const store = useStore<RootState>()
+	const { addNodeToSelection, removeNodeFromSelection, clearSelections } = mindmapSlice.actions
 	const dispatch = useDispatch()
 
 	const { triggerClick: onHeaderClick } = useDoubleClick<{ multiselect: boolean }>({
@@ -67,6 +78,45 @@ export function ActorNodePositioner({ actor, node }: Props) {
 	})
 
 	const ref = useRef<HTMLDivElement>(null)
+
+	useEventBusSubscribe['mindmap/node/onGroupDragStart']({
+		callback: ({ sourceNodeId }) => {
+			if (sourceNodeId === node.id || !selected) {
+				return
+			}
+
+			ref.current?.style.setProperty('--inner-transition-duration', '0.0s')
+		},
+	})
+	useEventBusSubscribe['mindmap/node/onGroupDragUpdate']({
+		callback: ({ sourceNodeId, deltaX, deltaY }) => {
+			if (sourceNodeId === node.id || !selected) {
+				return
+			}
+
+			positionRef.current = { x: positionRef.current.x + deltaX, y: positionRef.current.y + deltaY }
+			ref.current?.style.setProperty('--node-x', `${positionRef.current.x}px`)
+			ref.current?.style.setProperty('--node-y', `${positionRef.current.y}px`)
+
+			dispatchGlobalEvent['mindmap/node/onMove']({
+				nodeId: node.id,
+				positionX: positionRef.current.x,
+				positionY: positionRef.current.y,
+			})
+		},
+	})
+	useEventBusSubscribe['mindmap/node/onGroupDragEnd']({
+		callback: ({ sourceNodeId }) => {
+			if (sourceNodeId === node.id || !selected) {
+				return
+			}
+
+			ref.current?.style.setProperty('--inner-transition-duration', '0.1s')
+		},
+	})
+
+	const nodeRef = useAutoRef(node)
+	const selectedRef = useAutoRef(selected)
 
 	useEffect(() => {
 		const element = ref.current
@@ -100,6 +150,14 @@ export function ActorNodePositioner({ actor, node }: Props) {
 				return
 			}
 
+			dispatchGlobalEvent['mindmap/node/onGroupDragStart']({
+				sourceNodeId: node.id,
+			})
+
+			if (!selectedRef.current && !isMultiselectEvent(event)) {
+				dispatch(clearSelections())
+			}
+
 			mouseState.positionX = positionRef.current.x
 			mouseState.positionY = positionRef.current.y
 			mouseState.isButtonDown = true
@@ -115,36 +173,11 @@ export function ActorNodePositioner({ actor, node }: Props) {
 			mouseState.canClick = true
 		}
 
-		const handleMouseUp = (event: MouseEvent) => {
-			if (event.button !== 0 || !mouseState.isButtonDown) {
-				return
+		const handleMouseWheel = (event: WheelEvent) => {
+			if (mouseState.isDragging) {
+				event.stopPropagation()
+				event.preventDefault()
 			}
-
-			const snappedPosition = {
-				x: Math.round(positionRef.current.x / 10) * 10,
-				y: Math.round(positionRef.current.y / 10) * 10,
-			}
-
-			positionRef.current = snappedPosition
-			element.style.setProperty('--node-x', `${snappedPosition.x}px`)
-			element.style.setProperty('--node-y', `${snappedPosition.y}px`)
-
-			updateMindmapNode(node.id, {
-				positionX: snappedPosition.x,
-				positionY: snappedPosition.y,
-			})
-
-			dispatchGlobalEvent['mindmap/node/onMove']({
-				nodeId: node.id,
-				positionX: snappedPosition.x,
-				positionY: snappedPosition.y,
-			})
-
-			mouseState.isButtonDown = false
-			mouseState.isDragging = false
-			mouseState.deltaX = 0
-			mouseState.deltaY = 0
-			element.style.setProperty('--inner-transition-duration', '0.1s')
 		}
 
 		const handleMouseMove = (event: MouseEvent) => {
@@ -171,24 +204,85 @@ export function ActorNodePositioner({ actor, node }: Props) {
 					positionX: mouseState.positionX,
 					positionY: mouseState.positionY,
 				})
+				dispatchGlobalEvent['mindmap/node/onGroupDragUpdate']({
+					sourceNodeId: node.id,
+					deltaX: mouseState.deltaX / mouseState.gridScale,
+					deltaY: mouseState.deltaY / mouseState.gridScale,
+				})
 
 				mouseState.deltaX = 0
 				mouseState.deltaY = 0
 			}
 		}
 
+		const handleMouseUp = (event: MouseEvent) => {
+			if (event.button !== 0 || !mouseState.isButtonDown) {
+				return
+			}
+
+			const snappedPosition = {
+				x: Math.round(positionRef.current.x / 10) * 10,
+				y: Math.round(positionRef.current.y / 10) * 10,
+			}
+
+			positionRef.current = snappedPosition
+			element.style.setProperty('--node-x', `${snappedPosition.x}px`)
+			element.style.setProperty('--node-y', `${snappedPosition.y}px`)
+
+			const totalDeltaX = snappedPosition.x - nodeRef.current.positionX
+			const totalDeltaY = snappedPosition.y - nodeRef.current.positionY
+
+			moveMindmapNodes({
+				nodeIds: [...new Set(getSelectedNodeKeys(store.getState()).concat(nodeRef.current.id))],
+				deltaX: totalDeltaX,
+				deltaY: totalDeltaY,
+			})
+
+			dispatchGlobalEvent['mindmap/node/onMove']({
+				nodeId: node.id,
+				positionX: snappedPosition.x,
+				positionY: snappedPosition.y,
+			})
+			dispatchGlobalEvent['mindmap/node/onGroupDragUpdate']({
+				sourceNodeId: node.id,
+				deltaX: snappedPosition.x - mouseState.positionX,
+				deltaY: snappedPosition.y - mouseState.positionY,
+			})
+			dispatchGlobalEvent['mindmap/node/onGroupDragEnd']({
+				sourceNodeId: node.id,
+			})
+
+			mouseState.isButtonDown = false
+			mouseState.isDragging = false
+			mouseState.deltaX = 0
+			mouseState.deltaY = 0
+			element.style.setProperty('--inner-transition-duration', '0.1s')
+		}
+
 		element.addEventListener('mousedown', handleMouseDown)
 		element.addEventListener('click', handleMouseClick)
+		element.addEventListener('wheel', handleMouseWheel)
 		window.addEventListener('mousemove', handleMouseMove)
 		window.addEventListener('mouseup', handleMouseUp)
 
 		return () => {
 			element.removeEventListener('mousedown', handleMouseDown)
 			element.removeEventListener('click', handleMouseClick)
+			element.removeEventListener('wheel', handleMouseWheel)
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [positionRef, updateMindmapNode, node.id])
+	}, [
+		positionRef,
+		moveMindmapNodes,
+		node.id,
+		nodeRef,
+		store,
+		selected,
+		dispatch,
+		clearSelections,
+		selectedRef,
+	])
 
 	return (
 		<Box
@@ -221,7 +315,7 @@ export function ActorNodePositioner({ actor, node }: Props) {
 			<ActorNode
 				actor={actor}
 				node={node}
-				onHeaderClick={(e) => onHeaderClick(e, { multiselect: isMultiselectClick(e) })}
+				onHeaderClick={(e) => onHeaderClick(e, { multiselect: isMultiselectEvent(e) })}
 				onContentClick={onContentClick}
 			/>
 		</Box>
