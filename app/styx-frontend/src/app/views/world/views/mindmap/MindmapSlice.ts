@@ -31,7 +31,15 @@ export const mindmapSlice = createSlice({
 			) {
 				return
 			}
-			state.selectedNodes = payload
+			state.selectedNodes = payload.reduce(
+				(unique, current) => {
+					if (!unique.some((node) => node.key === current.key)) {
+						unique.push(current)
+					}
+					return unique
+				},
+				[] as { key: string; actorId: string }[],
+			)
 		},
 		removeNodeFromSelection: (state, { payload }: PayloadAction<string>) => {
 			state.selectedNodes = state.selectedNodes.filter((marker) => marker.key !== payload)
@@ -55,7 +63,7 @@ export const mindmapSlice = createSlice({
 			) {
 				return
 			}
-			state.selectedWires = payload
+			state.selectedWires = [...new Set(payload)]
 		},
 		removeWireFromSelection: (state, { payload }: PayloadAction<string>) => {
 			state.selectedWires = state.selectedWires.filter((wireId) => wireId !== payload)

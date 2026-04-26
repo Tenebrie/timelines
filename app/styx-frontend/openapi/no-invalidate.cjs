@@ -7,7 +7,7 @@
 module.exports = [
 	'updateNode',
 	'moveMindmapNodes',
-	'createMindmapWire',
+	'createMindmapWires',
 	'updateMindmapWire',
 	'deleteMindmapWires',
 ]

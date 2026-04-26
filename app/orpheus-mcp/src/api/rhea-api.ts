@@ -994,8 +994,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Creates a new mindmap wire between two nodes */
-        post: operations["createMindmapWire"];
+        /** @description Creates new mindmap wires between nodes, or updates existing ones if the direction is changed */
+        post: operations["createMindmapWires"];
         /** @description Deletes specified mindmap wires */
         delete: operations["deleteMindmapWires"];
         options?: never;
@@ -4665,7 +4665,7 @@ export interface operations {
             };
         };
     };
-    createMindmapWire: {
+    createMindmapWires: {
         parameters: {
             query?: never;
             header?: never;
@@ -4677,12 +4677,16 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
-                    sourceNodeId: string;
-                    targetNodeId: string;
+                    wires: {
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                    }[];
                 };
                 "application/x-www-form-urlencoded": {
-                    sourceNodeId: string;
-                    targetNodeId: string;
+                    wires: {
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                    }[];
                 };
             };
         };
@@ -4693,15 +4697,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        sourceNodeId: string;
-                        targetNodeId: string;
-                        direction: "Normal" | "Reversed" | "TwoWay";
-                        content: string;
+                        created: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
+                        }[];
+                        updated: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
+                        }[];
                     };
                 };
             };

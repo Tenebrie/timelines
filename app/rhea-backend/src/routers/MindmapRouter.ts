@@ -145,8 +145,9 @@ router.delete('/api/world/:worldId/mindmap/nodes', async (ctx) => {
 
 router.post('/api/world/:worldId/mindmap/wires', async (ctx) => {
 	useApiEndpoint({
-		name: 'createMindmapWire',
-		description: 'Creates a new mindmap wire between two nodes',
+		name: 'createMindmapWires',
+		description:
+			'Creates new mindmap wires between nodes, or updates existing ones if the direction is changed',
 		tags: [mindmapGroupTag, mindmapWireTag],
 	})
 
@@ -156,19 +157,24 @@ router.post('/api/world/:worldId/mindmap/wires', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
 
-	const params = useRequestBody(ctx, {
-		sourceNodeId: z.string(),
-		targetNodeId: z.string(),
+	const { wires } = useRequestBody(ctx, {
+		wires: z.array(
+			z.object({
+				sourceNodeId: z.string(),
+				targetNodeId: z.string(),
+			}),
+		),
 	})
 
-	if (params.sourceNodeId === params.targetNodeId) {
-		throw new BadRequestError('Source and target nodes cannot be the same')
+	const validWires = wires.filter((wire) => wire.sourceNodeId !== wire.targetNodeId)
+
+	const { created, updated } = await MindmapService.createLinks(validWires)
+	RedisService.notifyAboutMindmapWiresCreate(ctx, { worldId, created, updated })
+
+	return {
+		created,
+		updated,
 	}
-
-	const wire = await MindmapService.createLink(params)
-	RedisService.notifyAboutMindmapWireUpdate(ctx, { worldId, wire })
-
-	return wire
 })
 
 router.patch('/api/world/:worldId/mindmap/wires/:wireId', async (ctx) => {

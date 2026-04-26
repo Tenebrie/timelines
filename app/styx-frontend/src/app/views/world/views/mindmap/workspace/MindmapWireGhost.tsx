@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useStore } from 'react-redux'
 
-import { DragDropState, IsDragDropStateOfType } from '@/app/features/dragDrop/DragDropState'
+import { IsDragDropStateOfType } from '@/app/features/dragDrop/DragDropState'
 import { useDragDropBusSubscribe } from '@/app/features/dragDrop/hooks/useDragDropBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { RootState } from '@/app/store'
 
+import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import {
 	buildPathD,
 	getNodeHeight,
@@ -13,22 +16,69 @@ import {
 	WireEndpoints,
 } from './mindmapWireUtils'
 
+type SourceNode = {
+	id: string
+	positionX: number
+	positionY: number
+}
+
 type Props = {
 	existingWires: Set<string>
 }
 
 export function MindmapWireGhost({ existingWires }: Props) {
 	const [isDragging, setIsDragging] = useState(false)
-	const pathRef = useRef<SVGPathElement>(null)
-	const gradientRef = useRef<SVGLinearGradientElement>(null)
-	const srcPortRef = useRef<SVGGElement>(null)
-	const tgtPortRef = useRef<SVGGElement>(null)
+	const [sourceNodes, setSourceNodes] = useState<SourceNode[]>([])
+	const containerRef = useRef<SVGGElement>(null)
 	const theme = useCustomTheme()
+	const store = useStore<RootState>()
 
 	useDragDropBusSubscribe({
-		callback: useCallback((state) => {
-			setIsDragging(IsDragDropStateOfType(state, 'actorNodeLinking'))
-		}, []),
+		callback: useCallback(
+			(state) => {
+				if (!IsDragDropStateOfType(state, 'actorNodeLinking')) {
+					setIsDragging(false)
+					return
+				}
+				setIsDragging(true)
+
+				const selectedKeys = getSelectedNodeKeys(store.getState())
+				const sourceId = state.params.sourceNode.id
+
+				if (selectedKeys.includes(sourceId)) {
+					const nodes: SourceNode[] = []
+					for (const key of selectedKeys) {
+						const el = document.querySelector(`[data-mindmap-node="${key}"]`) as HTMLElement | null
+						if (!el) continue
+						nodes.push({
+							id: key,
+							positionX: parseFloat(el.style.getPropertyValue('--node-x')),
+							positionY: parseFloat(el.style.getPropertyValue('--node-y')),
+						})
+					}
+					setSourceNodes(
+						nodes.length > 0
+							? nodes
+							: [
+									{
+										id: sourceId,
+										positionX: state.params.sourceNode.positionX,
+										positionY: state.params.sourceNode.positionY,
+									},
+								],
+					)
+				} else {
+					setSourceNodes([
+						{
+							id: sourceId,
+							positionX: state.params.sourceNode.positionX,
+							positionY: state.params.sourceNode.positionY,
+						},
+					])
+				}
+			},
+			[store],
+		),
 	})
 
 	const strokeColorStart = theme.mode === 'dark' ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)'
@@ -39,42 +89,45 @@ export function MindmapWireGhost({ existingWires }: Props) {
 	const duplicateColorEnd = theme.mode === 'dark' ? 'rgba(255, 100, 100, 0.4)' : 'rgba(200, 30, 30, 0.4)'
 
 	useEffect(() => {
-		if (!isDragging) {
+		if (!isDragging || sourceNodes.length === 0) {
 			return
 		}
 
-		const updateDom = (ep: WireEndpoints, colorStart: string, colorEnd: string) => {
-			pathRef.current?.setAttribute('d', buildPathD(ep))
-			gradientRef.current?.setAttribute('x1', String(ep.x1))
-			gradientRef.current?.setAttribute('y1', String(ep.y1))
-			gradientRef.current?.setAttribute('x2', String(ep.x2))
-			gradientRef.current?.setAttribute('y2', String(ep.y2))
-			const stops = gradientRef.current?.querySelectorAll('stop')
+		const sourceNodeIds = new Set(sourceNodes.map((n) => n.id))
+
+		const updateWireDom = (
+			wireGroup: Element,
+			gradientEl: Element | null,
+			ep: WireEndpoints,
+			colorStart: string,
+			colorEnd: string,
+		) => {
+			const pathEl = wireGroup.querySelector('path')
+			const srcPortEl = wireGroup.querySelector('[data-src-port]')
+
+			pathEl?.setAttribute('d', buildPathD(ep))
+			gradientEl?.setAttribute('x1', String(ep.x1))
+			gradientEl?.setAttribute('y1', String(ep.y1))
+			gradientEl?.setAttribute('x2', String(ep.x2))
+			gradientEl?.setAttribute('y2', String(ep.y2))
+			const stops = gradientEl?.querySelectorAll('stop')
 			if (stops) {
 				stops[0]?.setAttribute('stop-color', colorEnd)
 				stops[1]?.setAttribute('stop-color', colorStart)
 				stops[2]?.setAttribute('stop-color', colorEnd)
 			}
-			srcPortRef.current?.querySelector('circle')?.setAttribute('fill', colorStart)
-			srcPortRef.current?.querySelector('circle')?.setAttribute('stroke', colorStart)
-			tgtPortRef.current?.querySelector('circle')?.setAttribute('fill', colorEnd)
-			tgtPortRef.current?.querySelector('circle')?.setAttribute('stroke', colorEnd)
-			srcPortRef.current?.setAttribute('transform', `translate(${ep.x1}, ${ep.y1})`)
-			tgtPortRef.current?.setAttribute('transform', `translate(${ep.x2}, ${ep.y2})`)
+			srcPortEl?.querySelector('circle')?.setAttribute('fill', colorStart)
+			srcPortEl?.querySelector('circle')?.setAttribute('stroke', colorStart)
+			srcPortEl?.setAttribute('transform', `translate(${ep.x1}, ${ep.y1})`)
 		}
 
 		const handleMouseMove = (event: MouseEvent) => {
-			const el = pathRef.current
-			if (!el) {
+			const container = containerRef.current
+			if (!container) {
 				return
 			}
 
-			const state = DragDropState.current
-			if (!IsDragDropStateOfType(state, 'actorNodeLinking')) {
-				return
-			}
-
-			const gridContainer = el.closest('[data-mindmap-grid]') as HTMLElement | null
+			const gridContainer = container.closest('[data-mindmap-grid]') as HTMLElement | null
 			if (!gridContainer) {
 				return
 			}
@@ -85,70 +138,76 @@ export function MindmapWireGhost({ existingWires }: Props) {
 			const scale = parseFloat(style.getPropertyValue('--grid-scale'))
 			const rect = gridContainer.getBoundingClientRect()
 
-			// Convert mouse screen coords to grid coords
 			const mouseGridX = (event.clientX - rect.x - offsetX) / scale
 			const mouseGridY = (event.clientY - rect.y - offsetY) / scale
 
-			const srcX = state.params.sourceNode.positionX
-			const srcY = state.params.sourceNode.positionY
-			const srcH = getNodeHeight(state.params.sourceNode.id)
-
-			// Check if mouse is over a target node and snap to it
-			let ep: WireEndpoints
+			// Find snap target
 			const elementsUnder = document.elementsFromPoint(event.clientX, event.clientY)
 			let snappedId: string | null = null
+			let snappedX = 0
+			let snappedY = 0
+			let snappedH = 0
 			for (const elem of elementsUnder) {
 				const nodeElement = elem.closest('[data-mindmap-node]') as HTMLElement | null
 				if (nodeElement) {
 					const nodeId = nodeElement.getAttribute('data-mindmap-node')
-					if (nodeId !== state.params.sourceNode.id) {
-						const nodeX = parseFloat(nodeElement.style.getPropertyValue('--node-x'))
-						const nodeY = parseFloat(nodeElement.style.getPropertyValue('--node-y'))
-						const tgtH = getNodeHeight(nodeId!)
-						ep = pickEdgePoints(srcX, srcY, srcH, nodeX, nodeY, tgtH)
+					if (nodeId && !sourceNodeIds.has(nodeId)) {
+						snappedX = parseFloat(nodeElement.style.getPropertyValue('--node-x'))
+						snappedY = parseFloat(nodeElement.style.getPropertyValue('--node-y'))
+						snappedH = getNodeHeight(nodeId)
 						snappedId = nodeId
 						break
 					}
 				}
 			}
 
-			let activeColorStart = strokeColorStart
-			let activeColorEnd = strokeColorEnd
+			for (const srcNode of sourceNodes) {
+				const wireGroup = container.querySelector(`[data-ghost-wire="${srcNode.id}"]`)
+				if (!wireGroup) continue
 
-			if (!snappedId) {
-				// Source edge aimed at mouse position
-				const src = nearestEdgePoint(srcX, srcY, srcH, mouseGridX, mouseGridY)
+				const gradientEl = document.getElementById(`link-ghost-gradient-${srcNode.id}`)
 
-				// Target normal: points back toward source (matching real wire behavior)
-				const srcCenterX = srcX + NODE_W / 2
-				const srcCenterY = srcY + srcH / 2
-				const dx = mouseGridX - srcCenterX
-				const dy = mouseGridY - srcCenterY
-				const len = Math.hypot(dx, dy) || 1
+				const srcX = srcNode.positionX
+				const srcY = srcNode.positionY
+				const srcH = getNodeHeight(srcNode.id)
 
-				ep = {
-					x1: src.x,
-					y1: src.y,
-					x2: mouseGridX,
-					y2: mouseGridY,
-					nx1: src.nx,
-					ny1: src.ny,
-					nx2: -dx / len,
-					ny2: -dy / len,
-				}
-			} else {
-				const linkId = `${state.params.sourceNode.id}->${snappedId}`
-				const reverseLinkId = `${snappedId}->${state.params.sourceNode.id}`
-				if (existingWires.has(linkId) || existingWires.has(reverseLinkId)) {
-					activeColorStart = duplicateColorStart
-					activeColorEnd = duplicateColorEnd
+				let ep: WireEndpoints
+				let activeColorStart = strokeColorStart
+				let activeColorEnd = strokeColorEnd
+
+				if (snappedId) {
+					ep = pickEdgePoints(srcX, srcY, srcH, snappedX, snappedY, snappedH)
+					const linkId = `${srcNode.id}->${snappedId}`
+					const reverseLinkId = `${snappedId}->${srcNode.id}`
+					if (existingWires.has(linkId) || existingWires.has(reverseLinkId)) {
+						activeColorStart = duplicateColorStart
+						activeColorEnd = duplicateColorEnd
+					} else {
+						activeColorStart = snapColorStart
+						activeColorEnd = snapColorEnd
+					}
 				} else {
-					activeColorStart = snapColorStart
-					activeColorEnd = snapColorEnd
-				}
-			}
+					const src = nearestEdgePoint(srcX, srcY, srcH, mouseGridX, mouseGridY)
+					const srcCenterX = srcX + NODE_W / 2
+					const srcCenterY = srcY + srcH / 2
+					const dx = mouseGridX - srcCenterX
+					const dy = mouseGridY - srcCenterY
+					const len = Math.hypot(dx, dy) || 1
 
-			updateDom(ep!, activeColorStart, activeColorEnd)
+					ep = {
+						x1: src.x,
+						y1: src.y,
+						x2: mouseGridX,
+						y2: mouseGridY,
+						nx1: src.nx,
+						ny1: src.ny,
+						nx2: -dx / len,
+						ny2: -dy / len,
+					}
+				}
+
+				updateWireDom(wireGroup, gradientEl, ep, activeColorStart, activeColorEnd)
+			}
 		}
 
 		window.addEventListener('mousemove', handleMouseMove)
@@ -158,6 +217,7 @@ export function MindmapWireGhost({ existingWires }: Props) {
 	}, [
 		existingWires,
 		isDragging,
+		sourceNodes,
 		strokeColorStart,
 		strokeColorEnd,
 		snapColorStart,
@@ -166,60 +226,79 @@ export function MindmapWireGhost({ existingWires }: Props) {
 		duplicateColorEnd,
 	])
 
-	if (!isDragging) {
+	if (!isDragging || sourceNodes.length === 0) {
 		return null
 	}
-
-	const state = DragDropState.current
-	if (!IsDragDropStateOfType(state, 'actorNodeLinking')) {
-		return null
-	}
-
-	const srcX = state.params.sourceNode.positionX
-	const srcY = state.params.sourceNode.positionY
-	const srcH = getNodeHeight(state.params.sourceNode.id)
-	const src = nearestEdgePoint(srcX, srcY, srcH, srcX + NODE_W, srcY + srcH / 2)
 
 	return (
 		<svg width="100%" height="100%" style={{ position: 'absolute', top: 0, left: 0, overflow: 'visible' }}>
 			<defs>
-				<linearGradient
-					ref={gradientRef}
-					id="link-ghost-gradient"
-					gradientUnits="userSpaceOnUse"
-					x1={src.x}
-					y1={src.y}
-					x2={src.x}
-					y2={src.y}
-				>
-					<stop offset="0%" stopColor={strokeColorEnd}>
-						<animate attributeName="offset" values="-0.30;1.0" dur="2s" repeatCount="indefinite" />
-					</stop>
-					<stop offset="0%" stopColor={strokeColorStart}>
-						<animate attributeName="offset" values="-0.15;1.15" dur="2s" repeatCount="indefinite" />
-					</stop>
-					<stop offset="0%" stopColor={strokeColorEnd}>
-						<animate attributeName="offset" values="-0.0;1.30" dur="2s" repeatCount="indefinite" />
-					</stop>
-				</linearGradient>
+				{sourceNodes.map((node) => {
+					const srcH = getNodeHeight(node.id)
+					const src = nearestEdgePoint(
+						node.positionX,
+						node.positionY,
+						srcH,
+						node.positionX + NODE_W,
+						node.positionY + srcH / 2,
+					)
+					return (
+						<linearGradient
+							key={node.id}
+							id={`link-ghost-gradient-${node.id}`}
+							gradientUnits="userSpaceOnUse"
+							x1={src.x}
+							y1={src.y}
+							x2={src.x}
+							y2={src.y}
+						>
+							<stop offset="0%" stopColor={strokeColorEnd}>
+								<animate attributeName="offset" values="-0.30;1.0" dur="2s" repeatCount="indefinite" />
+							</stop>
+							<stop offset="0%" stopColor={strokeColorStart}>
+								<animate attributeName="offset" values="-0.15;1.15" dur="2s" repeatCount="indefinite" />
+							</stop>
+							<stop offset="0%" stopColor={strokeColorEnd}>
+								<animate attributeName="offset" values="-0.0;1.30" dur="2s" repeatCount="indefinite" />
+							</stop>
+						</linearGradient>
+					)
+				})}
 			</defs>
 			<g
+				ref={containerRef}
 				style={{
 					transform: 'translate(var(--grid-offset-x), var(--grid-offset-y)) scale(var(--grid-scale))',
 					transformOrigin: '0 0',
 					transition: 'transform var(--transition-duration) ease-out',
 				}}
 			>
-				<path
-					ref={pathRef}
-					d={`M ${src.x},${src.y} C ${src.x},${src.y} ${src.x},${src.y} ${src.x},${src.y}`}
-					fill="none"
-					vectorEffect="non-scaling-stroke"
-					style={{ stroke: 'url(#link-ghost-gradient)', strokeWidth: 2 }}
-				/>
-				<g ref={srcPortRef} transform={`translate(${src.x}, ${src.y})`}>
-					<circle cx="0" cy="0" r="4" fill={strokeColorStart} strokeWidth="0" />
-				</g>
+				{sourceNodes.map((node) => {
+					const srcH = getNodeHeight(node.id)
+					const src = nearestEdgePoint(
+						node.positionX,
+						node.positionY,
+						srcH,
+						node.positionX + NODE_W,
+						node.positionY + srcH / 2,
+					)
+					return (
+						<g key={node.id} data-ghost-wire={node.id}>
+							<path
+								d={`M ${src.x},${src.y} C ${src.x},${src.y} ${src.x},${src.y} ${src.x},${src.y}`}
+								fill="none"
+								vectorEffect="non-scaling-stroke"
+								style={{
+									stroke: `url(#link-ghost-gradient-${node.id})`,
+									strokeWidth: 2,
+								}}
+							/>
+							<g data-src-port transform={`translate(${src.x}, ${src.y})`}>
+								<circle cx="0" cy="0" r="4" fill={strokeColorStart} strokeWidth="0" />
+							</g>
+						</g>
+					)
+				})}
 			</g>
 		</svg>
 	)

@@ -196,8 +196,8 @@ export function MindmapWireLine({
 					x2={x2}
 					y2={y2}
 				>
-					<stop offset="0%" stopColor={source.actor.color} />
-					<stop offset="100%" stopColor={target.actor.color} />
+					<stop offset="0%" stopColor={target.actor.color} />
+					<stop offset="100%" stopColor={source.actor.color} />
 				</linearGradient>,
 				svgDefsPortal,
 			)}
@@ -226,8 +226,8 @@ export function MindmapWireLine({
 									cx="0"
 									cy="0"
 									r="3"
-									fill={source.actor.color}
-									stroke={source.actor.color}
+									fill={target.actor.color}
+									stroke={target.actor.color}
 									strokeWidth="2"
 								/>
 							</g>
@@ -238,8 +238,8 @@ export function MindmapWireLine({
 									cx="0"
 									cy="0"
 									r="3"
-									fill={target.actor.color}
-									stroke={target.actor.color}
+									fill={source.actor.color}
+									stroke={source.actor.color}
 									strokeWidth="2"
 								/>
 							</g>
@@ -249,7 +249,7 @@ export function MindmapWireLine({
 								ref={srcArrowRef}
 								d={arrowPath(x1, y1, -nx1, -ny1, ARROW_SIZE)}
 								fill="none"
-								stroke={source.actor.color}
+								stroke={target.actor.color}
 								strokeWidth={2}
 								strokeLinecap="round"
 								strokeLinejoin="round"
@@ -261,7 +261,7 @@ export function MindmapWireLine({
 								ref={tgtArrowRef}
 								d={arrowPath(x2, y2, -nx2, -ny2, ARROW_SIZE)}
 								fill="none"
-								stroke={target.actor.color}
+								stroke={source.actor.color}
 								strokeWidth={2}
 								strokeLinecap="round"
 								strokeLinejoin="round"

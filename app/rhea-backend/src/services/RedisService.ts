@@ -163,6 +163,21 @@ export const RedisService = {
 		})
 	},
 
+	notifyAboutMindmapWiresCreate: (
+		ctx: ContextWithSessionId,
+		{ worldId, created, updated }: { worldId: string; created: MindmapLink[]; updated: MindmapLink[] },
+	) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.MINDMAP_WIRES_CREATED,
+			messageSourceSessionId: ctx.sessionId,
+			data: {
+				worldId,
+				created: JSON.stringify(created),
+				updated: JSON.stringify(updated),
+			},
+		})
+	},
+
 	notifyAboutMindmapWireUpdate: (
 		ctx: ContextWithSessionId,
 		{ worldId, wire }: { worldId: string; wire: MindmapLink },

@@ -44,7 +44,7 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: [],
 			}),
-			createMindmapWire: build.mutation<CreateMindmapWireApiResponse, CreateMindmapWireApiArg>({
+			createMindmapWires: build.mutation<CreateMindmapWiresApiResponse, CreateMindmapWiresApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/mindmap/wires`,
 					method: 'POST',
@@ -156,20 +156,33 @@ export type MoveMindmapNodesApiArg = {
 		deltaY: number
 	}
 }
-export type CreateMindmapWireApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	sourceNodeId: string
-	targetNodeId: string
-	direction: 'Normal' | 'Reversed' | 'TwoWay'
-	content: string
-}
-export type CreateMindmapWireApiArg = {
-	worldId: string
-	body: {
+export type CreateMindmapWiresApiResponse = /** status 200  */ {
+	created: {
+		id: string
+		createdAt: string
+		updatedAt: string
 		sourceNodeId: string
 		targetNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
+		content: string
+	}[]
+	updated: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		sourceNodeId: string
+		targetNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
+		content: string
+	}[]
+}
+export type CreateMindmapWiresApiArg = {
+	worldId: string
+	body: {
+		wires: {
+			sourceNodeId: string
+			targetNodeId: string
+		}[]
 	}
 }
 export type DeleteMindmapWiresApiResponse = /** status 200  */ string[]
@@ -201,7 +214,7 @@ export const {
 	useDeleteNodesMutation,
 	useUpdateNodeMutation,
 	useMoveMindmapNodesMutation,
-	useCreateMindmapWireMutation,
+	useCreateMindmapWiresMutation,
 	useDeleteMindmapWiresMutation,
 	useUpdateMindmapWireMutation,
 } = injectedRtkApi
