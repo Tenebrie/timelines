@@ -96,6 +96,9 @@ const handlers: RheaToCalliopeMessageHandlers = {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_NODES_DELETED, ...ctx })
 	},
 
+	[RheaToCalliopeMessageType.MINDMAP_WIRES_CREATED]: async (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_WIRES_CREATED, ...ctx })
+	},
 	[RheaToCalliopeMessageType.MINDMAP_WIRE_UPDATED]: async (ctx) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_WIRE_UPDATED, ...ctx })
 	},
