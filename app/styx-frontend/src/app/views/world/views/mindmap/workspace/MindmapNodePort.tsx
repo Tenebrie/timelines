@@ -48,6 +48,7 @@ export function MindmapNodePort({ node, actor }: Props) {
 	return (
 		<>
 			<Stack
+				data-testid="MindmapNodePort"
 				data-mindmap-port
 				onClick={(e) => {
 					e.stopPropagation()

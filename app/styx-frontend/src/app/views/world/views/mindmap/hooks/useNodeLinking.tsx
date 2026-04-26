@@ -44,7 +44,9 @@ export function useNodeLinking() {
 				return
 			}
 
-			const existingLinks = newPairs
+			const validPairs = newPairs.filter(({ sourceNodeId, targetNodeId }) => sourceNodeId !== targetNodeId)
+
+			const existingLinks = validPairs
 				.map(({ sourceNodeId, targetNodeId }) =>
 					data.wires.find((link) => {
 						const isMatching =
@@ -60,11 +62,11 @@ export function useNodeLinking() {
 				)
 				.filter((link): link is NonNullable<typeof link> => !!link)
 
-			if (existingLinks.length === newPairs.length) {
+			if (existingLinks.length === validPairs.length) {
 				return deleteMindmapWires(existingLinks.map((link) => link.id))
 			}
 
-			return createMindmapWires(newPairs)
+			return createMindmapWires(validPairs)
 		},
 		[createMindmapWires, data, deleteMindmapWires],
 	)

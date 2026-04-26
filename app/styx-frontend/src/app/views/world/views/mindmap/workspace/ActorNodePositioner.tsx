@@ -287,6 +287,7 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 	return (
 		<Box
 			ref={ref}
+			data-testid="MindmapNode"
 			data-mindmap-node={node.id}
 			data-actor-id={actor.id}
 			style={

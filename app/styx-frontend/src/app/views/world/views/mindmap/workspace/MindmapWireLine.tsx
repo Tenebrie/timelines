@@ -271,6 +271,7 @@ export function MindmapWireLine({
 					</g>
 					{/* Invisible fat hit area for pointer events */}
 					<path
+						data-testid="MindmapWire"
 						ref={hitPathRef}
 						d={buildPathD(ep)}
 						fill="none"
