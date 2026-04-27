@@ -2,7 +2,7 @@ import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
-import { GhostWrapper } from '../components/GhostWrapper'
+import { getTransformAlign, GhostWrapper } from '../components/GhostWrapper'
 import { AllowedDraggableType, DraggableParams } from '../types'
 import { useDragDropState } from './useDragDropState'
 
@@ -35,6 +35,17 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 	const dragFromPos = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
 	const [ghostElement, setGhostElement] = useState<ReactNode | null>(null)
 	const containerRef = useRef<HTMLDivElement | null>(null)
+	const ghostWrapperRef = useRef<HTMLDivElement | null>(null)
+
+	// Store props in refs to keep callbacks stable across renders
+	const paramsRef = useRef(params)
+	paramsRef.current = params
+	const ghostFactoryRef = useRef(ghostFactory)
+	ghostFactoryRef.current = ghostFactory
+	const adjustPositionRef = useRef(adjustPosition)
+	adjustPositionRef.current = adjustPosition
+	const ghostAlignRef = useRef(ghostAlign)
+	ghostAlignRef.current = ghostAlign
 
 	const { getState, setStateQuietly, setStateImmediately, clearState } = useDragDropState()
 
@@ -63,29 +74,31 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 			isDraggingNow.current = true
 			setStateImmediately({
 				type,
-				params,
+				params: paramsRef.current,
 				targetPos: { x: event.clientX, y: event.clientY },
 				targetRootPos: { x: rootPos.current.x, y: rootPos.current.y },
 				isHandled: false,
 			})
 			window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
 
+			const align = {
+				top: ghostAlignRef.current?.top ?? ('start' as const),
+				left: ghostAlignRef.current?.left ?? ('start' as const),
+			}
 			setGhostElement(
 				<GhostWrapper
+					ref={ghostWrapperRef}
 					initialLeft={rootPos.current.x}
 					initialTop={rootPos.current.y}
 					left={event.clientX}
 					top={event.clientY}
-					align={{
-						top: ghostAlign?.top ?? 'start',
-						left: ghostAlign?.left ?? 'start',
-					}}
+					align={align}
 				>
-					{ghostFactory(event)}
+					{ghostFactoryRef.current(event)}
 				</GhostWrapper>,
 			)
 		},
-		[ghostFactory, params, setStateImmediately, type, ghostAlign],
+		[setStateImmediately, type],
 	)
 
 	const onMouseMove = useCallback(
@@ -103,28 +116,19 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 			}
 
 			const basePos = { x: event.clientX, y: event.clientY }
-			const pos = adjustPosition ? adjustPosition(basePos, rootPos.current) : basePos
+			const pos = adjustPositionRef.current ? adjustPositionRef.current(basePos, rootPos.current) : basePos
 			setStateQuietly({
 				...getState()!,
 				targetPos: pos,
 			})
-			// TODO: Do not recreate the ghost every frame
-			setGhostElement(
-				<GhostWrapper
-					initialLeft={rootPos.current.x}
-					initialTop={rootPos.current.y}
-					left={pos.x}
-					top={pos.y}
-					align={{
-						top: ghostAlign?.top ?? 'start',
-						left: ghostAlign?.left ?? 'start',
-					}}
-				>
-					{ghostFactory(event)}
-				</GhostWrapper>,
-			)
+
+			if (ghostWrapperRef.current) {
+				const alignLeft = ghostAlignRef.current?.left ?? 'start'
+				const alignTop = ghostAlignRef.current?.top ?? 'start'
+				ghostWrapperRef.current.style.transform = `translate(${Math.round(pos.x)}px, ${Math.round(pos.y)}px) translate(${getTransformAlign(alignLeft)}, ${getTransformAlign(alignTop)})`
+			}
 		},
-		[adjustPosition, getState, ghostFactory, setStateQuietly, startDragging, ghostAlign],
+		[getState, setStateQuietly, startDragging],
 	)
 
 	const onMouseUp = useCallback(() => {
@@ -170,10 +174,10 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		return () => {
 			container.removeEventListener('mousedown', onMouseDown)
 		}
-	}, [containerRef, onMouseDown, disabled])
+	}, [onMouseDown, disabled])
 
 	useEffect(() => {
-		attachEvents()
+		return attachEvents()
 	}, [attachEvents])
 
 	useEffect(() => {

@@ -43,6 +43,17 @@ export type EventParams = {
 		positionX: number
 		positionY: number
 	}
+	'mindmap/node/onGroupDragStart': {
+		sourceNodeId: string
+	}
+	'mindmap/node/onGroupDragUpdate': {
+		sourceNodeId: string
+		deltaX: number
+		deltaY: number
+	}
+	'mindmap/node/onGroupDragEnd': {
+		sourceNodeId: string
+	}
 	'world/requestNavigation': NavigateOptions
 	'calliope/onReconnected': void
 	'calliope/requestSendMessage': ClientToCalliopeMessage

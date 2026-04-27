@@ -1,9 +1,10 @@
 import Stack from '@mui/material/Stack'
-import { createRef, memo, ReactNode } from 'react'
+import { createRef, memo, ReactNode, Ref } from 'react'
 import { createPortal } from 'react-dom'
 
 type WrapperProps = {
 	children: ReactNode
+	ref?: Ref<HTMLDivElement>
 	initialLeft: number
 	initialTop: number
 	left: number
@@ -14,24 +15,14 @@ type WrapperProps = {
 	}
 }
 
-export const GhostWrapper = ({ children, left, top, align }: WrapperProps) => {
-	const getTransformAlign = (align: 'start' | 'center' | 'end') => {
-		switch (align) {
-			case 'start':
-				return '0%'
-			case 'center':
-				return '-50%'
-			case 'end':
-				return '-100%'
-		}
-	}
-
+export function GhostWrapper({ children, ref, left, top, align }: WrapperProps) {
 	if (!portalSlotRef.current) {
 		return null
 	}
 
 	return createPortal(
 		<div
+			ref={ref}
 			style={{
 				pointerEvents: 'none',
 				position: 'absolute',
@@ -69,4 +60,15 @@ function DragDropPortalSlotComponent() {
 			</Stack>
 		</div>
 	)
+}
+
+export function getTransformAlign(align: 'start' | 'center' | 'end') {
+	switch (align) {
+		case 'start':
+			return '0%'
+		case 'center':
+			return '-50%'
+		case 'end':
+			return '-100%'
+	}
 }

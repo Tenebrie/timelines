@@ -29,6 +29,9 @@ export function MindmapNodePort({ node, actor }: Props) {
 			return
 		}
 		const onMouseDown = (event: MouseEvent) => {
+			if (event.button !== 0) {
+				return
+			}
 			isDragging.current = true
 			event.stopPropagation()
 			// event.preventDefault()
@@ -45,6 +48,7 @@ export function MindmapNodePort({ node, actor }: Props) {
 	return (
 		<>
 			<Stack
+				data-testid="MindmapNodePort"
 				data-mindmap-port
 				onClick={(e) => {
 					e.stopPropagation()

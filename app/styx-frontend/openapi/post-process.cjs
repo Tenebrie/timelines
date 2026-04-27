@@ -47,10 +47,10 @@ for (const file of files) {
 }
 
 if (results.length > 0) {
-	console.log('Cleared invalidatesTags for:')
+	console.info('Cleared invalidatesTags for:')
 	for (const { file, endpoints } of results) {
-		console.log(`  ${file}: ${endpoints.join(', ')}`)
+		console.info(`  ${file}: ${endpoints.join(', ')}`)
 	}
 } else {
-	console.log('No endpoints matched for invalidation stripping.')
+	console.info('No endpoints matched for invalidation stripping.')
 }

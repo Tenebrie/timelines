@@ -36,7 +36,15 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: [],
 			}),
-			createMindmapWire: build.mutation<CreateMindmapWireApiResponse, CreateMindmapWireApiArg>({
+			moveMindmapNodes: build.mutation<MoveMindmapNodesApiResponse, MoveMindmapNodesApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/nodes/move`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: [],
+			}),
+			createMindmapWires: build.mutation<CreateMindmapWiresApiResponse, CreateMindmapWiresApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/mindmap/wires`,
 					method: 'POST',
@@ -131,20 +139,50 @@ export type UpdateNodeApiArg = {
 		positionY?: number
 	}
 }
-export type CreateMindmapWireApiResponse = /** status 200  */ {
+export type MoveMindmapNodesApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	sourceNodeId: string
-	targetNodeId: string
-	direction: 'Normal' | 'Reversed' | 'TwoWay'
-	content: string
-}
-export type CreateMindmapWireApiArg = {
+	worldId: string
+	positionX: number
+	positionY: number
+	parentActorId?: null | string
+}[]
+export type MoveMindmapNodesApiArg = {
 	worldId: string
 	body: {
+		nodeIds: string[]
+		deltaX: number
+		deltaY: number
+	}
+}
+export type CreateMindmapWiresApiResponse = /** status 200  */ {
+	created: {
+		id: string
+		createdAt: string
+		updatedAt: string
 		sourceNodeId: string
 		targetNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
+		content: string
+	}[]
+	updated: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		sourceNodeId: string
+		targetNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
+		content: string
+	}[]
+}
+export type CreateMindmapWiresApiArg = {
+	worldId: string
+	body: {
+		wires: {
+			sourceNodeId: string
+			targetNodeId: string
+		}[]
 	}
 }
 export type DeleteMindmapWiresApiResponse = /** status 200  */ string[]
@@ -175,7 +213,8 @@ export const {
 	useCreateNodeMutation,
 	useDeleteNodesMutation,
 	useUpdateNodeMutation,
-	useCreateMindmapWireMutation,
+	useMoveMindmapNodesMutation,
+	useCreateMindmapWiresMutation,
 	useDeleteMindmapWiresMutation,
 	useUpdateMindmapWireMutation,
 } = injectedRtkApi

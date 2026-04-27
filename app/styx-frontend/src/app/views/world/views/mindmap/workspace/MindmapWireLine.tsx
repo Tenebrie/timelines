@@ -1,12 +1,13 @@
 import { MindmapNode, MindmapWire } from '@api/types/mindmapTypes'
 import { ActorDetails } from '@api/types/worldTypes'
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
+import { RootState } from '@/app/store'
 
 import { mindmapSlice } from '../MindmapSlice'
 import { getMindmapState } from '../MindmapSliceSelectors'
@@ -122,8 +123,11 @@ export function MindmapWireLine({
 	const isHoveredRef = useRef(false)
 	const isActiveRef = useRef(false)
 
-	const { selectedWires } = useSelector(getMindmapState, (a, b) => a.selectedWires === b.selectedWires)
-	const selected = useMemo(() => selectedWires.includes(wire.id), [selectedWires, wire.id])
+	const selectIsNodeSelected = useCallback(
+		(state: RootState) => getMindmapState(state).selectedWires.includes(wire.id),
+		[wire.id],
+	)
+	const selected = useSelector(selectIsNodeSelected)
 	const selectedRef = useRef(selected)
 	selectedRef.current = selected
 
@@ -192,8 +196,8 @@ export function MindmapWireLine({
 					x2={x2}
 					y2={y2}
 				>
-					<stop offset="0%" stopColor={source.actor.color} />
-					<stop offset="100%" stopColor={target.actor.color} />
+					<stop offset="0%" stopColor={target.actor.color} />
+					<stop offset="100%" stopColor={source.actor.color} />
 				</linearGradient>,
 				svgDefsPortal,
 			)}
@@ -222,8 +226,8 @@ export function MindmapWireLine({
 									cx="0"
 									cy="0"
 									r="3"
-									fill={source.actor.color}
-									stroke={source.actor.color}
+									fill={target.actor.color}
+									stroke={target.actor.color}
 									strokeWidth="2"
 								/>
 							</g>
@@ -234,8 +238,8 @@ export function MindmapWireLine({
 									cx="0"
 									cy="0"
 									r="3"
-									fill={target.actor.color}
-									stroke={target.actor.color}
+									fill={source.actor.color}
+									stroke={source.actor.color}
 									strokeWidth="2"
 								/>
 							</g>
@@ -245,7 +249,7 @@ export function MindmapWireLine({
 								ref={srcArrowRef}
 								d={arrowPath(x1, y1, -nx1, -ny1, ARROW_SIZE)}
 								fill="none"
-								stroke={source.actor.color}
+								stroke={target.actor.color}
 								strokeWidth={2}
 								strokeLinecap="round"
 								strokeLinejoin="round"
@@ -257,7 +261,7 @@ export function MindmapWireLine({
 								ref={tgtArrowRef}
 								d={arrowPath(x2, y2, -nx2, -ny2, ARROW_SIZE)}
 								fill="none"
-								stroke={target.actor.color}
+								stroke={source.actor.color}
 								strokeWidth={2}
 								strokeLinecap="round"
 								strokeLinejoin="round"
@@ -267,6 +271,7 @@ export function MindmapWireLine({
 					</g>
 					{/* Invisible fat hit area for pointer events */}
 					<path
+						data-testid="MindmapWire"
 						ref={hitPathRef}
 						d={buildPathD(ep)}
 						fill="none"

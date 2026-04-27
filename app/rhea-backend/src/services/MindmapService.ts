@@ -21,6 +21,15 @@ export const MindmapService = {
 			data: params,
 		})
 	},
+	async moveNodes(nodes: string[], deltaX: number, deltaY: number) {
+		return getPrismaClient().mindmapNode.updateManyAndReturn({
+			where: { id: { in: nodes } },
+			data: {
+				positionX: { increment: deltaX },
+				positionY: { increment: deltaY },
+			},
+		})
+	},
 	async deleteNodes(worldId: string, nodeIds: string[]) {
 		return getPrismaClient().mindmapNode.deleteMany({
 			where: {
@@ -37,9 +46,55 @@ export const MindmapService = {
 			},
 		})
 	},
-	async createLink(data: Prisma.MindmapLinkUncheckedCreateInput) {
-		return getPrismaClient().mindmapLink.create({
-			data,
+	async createLinks(data: Prisma.MindmapLinkUncheckedCreateInput[]) {
+		return getPrismaClient().$transaction(async (prisma) => {
+			const existing = await prisma.mindmapLink.findMany({
+				where: {
+					OR: data.flatMap(({ sourceNodeId, targetNodeId }) => [
+						{ sourceNodeId, targetNodeId },
+						{ sourceNodeId: targetNodeId, targetNodeId: sourceNodeId }, // Reversed direction
+					]),
+				},
+				select: { id: true, sourceNodeId: true, targetNodeId: true },
+			})
+
+			const existingMap = new Map(
+				existing.flatMap((e) => [
+					[`${e.sourceNodeId}-${e.targetNodeId}`, e],
+					[`${e.targetNodeId}-${e.sourceNodeId}`, e],
+				]),
+			)
+
+			const toCreate: Prisma.MindmapLinkUncheckedCreateInput[] = []
+			const directionUpdates: ReturnType<typeof prisma.mindmapLink.update>[] = []
+
+			for (const d of data) {
+				const key = `${d.sourceNodeId}-${d.targetNodeId}`
+				const match = existingMap.get(key)
+				if (!match) {
+					toCreate.push(d)
+				} else {
+					const direction = match.sourceNodeId === d.sourceNodeId ? 'Normal' : 'Reversed'
+					directionUpdates.push(
+						prisma.mindmapLink.update({
+							where: { id: match.id },
+							data: { direction },
+						}),
+					)
+				}
+			}
+
+			const updated = await Promise.all(directionUpdates)
+
+			if (toCreate.length === 0) {
+				return { created: [], updated }
+			}
+
+			const created = await prisma.mindmapLink.createManyAndReturn({
+				data: toCreate,
+			})
+
+			return { created, updated }
 		})
 	},
 	async updateLink(linkId: string, params: Prisma.MindmapLinkUpdateInput) {
