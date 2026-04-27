@@ -5,6 +5,7 @@ import { RootState } from '../../store'
 const getRootPreferences = (state: RootState) => state.preferences
 
 export const getAdminPreferences = (state: RootState) => state.preferences.admin
+export const getGlobalPreferences = (state: RootState) => state.preferences.global
 export const getCalendarEditorPreferences = (state: RootState) => state.preferences.calendarEditor
 export const getUserPreferences = createSelector([getRootPreferences], (state) => ({
 	colorMode: state.colorMode,

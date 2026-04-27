@@ -7,7 +7,7 @@ import { ingestEvent } from '@/app/utils/ingestEntity'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-export const OutlinerSearch = () => {
+export function OutlinerSearch() {
 	const worldId = useSelector(getWorldIdState)
 	const worldIdRef = useRef(worldId)
 

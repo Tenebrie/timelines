@@ -10,12 +10,18 @@ type Props = ButtonProps & {
 	isSaving: boolean
 	isError?: boolean
 	defaultIcon?: ReactElement
+	color?: ButtonProps['color']
 }
 
-export function SaveButton({ onClick, isSaving, isError, defaultIcon, children, ...props }: Props) {
+export function SaveButton({ onClick, isSaving, isError, defaultIcon, color, children, ...props }: Props) {
 	const theme = useCustomTheme()
 
-	const { icon, color, manualSave, disabled } = useAutosave({
+	const {
+		icon,
+		color: autosaveColor,
+		manualSave,
+		disabled,
+	} = useAutosave({
 		onSave: noop,
 		isSaving,
 		isError,
@@ -50,7 +56,7 @@ export function SaveButton({ onClick, isSaving, isError, defaultIcon, children, 
 			{...props}
 			startIcon={icon}
 			onClick={onInternalClick}
-			color={color}
+			color={autosaveColor ?? color}
 			sx={{
 				...props.sx,
 				...(disabled && disabledStyles),

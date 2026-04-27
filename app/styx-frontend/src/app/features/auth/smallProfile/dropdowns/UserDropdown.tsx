@@ -3,6 +3,7 @@ import FeedbackIcon from '@mui/icons-material/Feedback'
 import LockResetIcon from '@mui/icons-material/LockReset'
 import Logout from '@mui/icons-material/Logout'
 import Storage from '@mui/icons-material/Storage'
+import Tune from '@mui/icons-material/Tune'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
@@ -31,6 +32,7 @@ type Props = {
 export function UserDropdown({ user }: Props) {
 	const navigate = useStableNavigate()
 	const isProfile = useCheckRouteMatch('/profile/public')
+	const isPreferences = useCheckRouteMatch('/profile/preferences')
 	const isStorage = useCheckRouteMatch('/profile/storage')
 	const isSecurity = useCheckRouteMatch('/profile/security')
 	const isFeedback = useCheckRouteMatch('/profile/feedback')
@@ -105,6 +107,19 @@ export function UserDropdown({ user }: Props) {
 							<AccountCircle />
 						</ListItemIcon>
 						Profile
+					</MenuItem>
+				</NavigationLink>
+				<NavigationLink to="/profile/preferences">
+					<MenuItem
+						onClick={() => {
+							popupState.close()
+						}}
+						selected={isPreferences}
+					>
+						<ListItemIcon>
+							<Tune />
+						</ListItemIcon>
+						Preferences
 					</MenuItem>
 				</NavigationLink>
 				<NavigationLink to="/profile/storage">

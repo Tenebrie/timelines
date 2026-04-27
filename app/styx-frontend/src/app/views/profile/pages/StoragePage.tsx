@@ -2,6 +2,8 @@ import { useListUserAssetsQuery } from '@api/assetApi'
 import { useGetStorageStatusQuery } from '@api/profileApi'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
+import AssetsIcon from '@mui/icons-material/Folder'
+import QuotaIcon from '@mui/icons-material/Storage'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import LinearProgress from '@mui/material/LinearProgress'
@@ -20,10 +22,14 @@ import { formatBytes } from '@/app/utils/formatBytes'
 
 export function StoragePage() {
 	return (
-		<Stack gap={2}>
-			<Typography variant="h5">Storage</Typography>
-			<Divider />
-			<Stack spacing={4}>
+		<Stack gap={3}>
+			<Stack gap={2}>
+				<Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 500 }}>
+					Storage
+				</Typography>
+				<Divider />
+			</Stack>
+			<Stack gap={6}>
 				<StoragePageQuota />
 				<StoragePageAssets />
 			</Stack>
@@ -40,7 +46,12 @@ export function StoragePageQuota() {
 
 	return (
 		<Stack spacing={2}>
-			<Typography variant="h6">Quota</Typography>
+			<Typography
+				variant="h6"
+				sx={{ display: 'flex', fontFamily: 'Inter', alignItems: 'center', gap: 1, fontSize: 18 }}
+			>
+				<QuotaIcon /> Quota
+			</Typography>
 			{isLoading && (
 				<Stack spacing={1}>
 					<Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -83,7 +94,12 @@ export function StoragePageAssets() {
 
 	return (
 		<Stack spacing={2}>
-			<Typography variant="h6">Assets</Typography>
+			<Typography
+				variant="h6"
+				sx={{ display: 'flex', fontFamily: 'Inter', alignItems: 'center', gap: 1, fontSize: 18 }}
+			>
+				<AssetsIcon /> Assets
+			</Typography>
 			<TableContainer>
 				<Table>
 					<TableHead>
