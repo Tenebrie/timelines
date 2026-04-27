@@ -13,15 +13,15 @@ import {
 
 export function PreferencesPage() {
 	const dispatch = useDispatch()
-	const { animatedBackground } = useSelector(
+	const { animatedBackground, showDiscordLink } = useSelector(
 		getGlobalPreferences,
-		(a, b) => a.animatedBackground === b.animatedBackground,
+		(a, b) => a.animatedBackground === b.animatedBackground && a.showDiscordLink === b.showDiscordLink,
 	)
 	const { reduceAnimations } = useSelector(
 		getTimelinePreferences,
 		(a, b) => a.reduceAnimations === b.reduceAnimations,
 	)
-	const { setAnimatedBackground, setReduceAnimations } = preferencesSlice.actions
+	const { setAnimatedBackground, setReduceAnimations, setShowDiscordLink } = preferencesSlice.actions
 
 	return (
 		<Stack gap={3}>
@@ -59,6 +59,20 @@ export function PreferencesPage() {
 				<Typography variant="body2" color="text.secondary" sx={{ ml: 4 }}>
 					Reduces all transition animations across the app. Useful for accessibility or if you prefer snappier
 					interactions.
+				</Typography>
+			</Stack>
+			<Stack gap={1}>
+				<FormControlLabel
+					control={
+						<Checkbox
+							checked={showDiscordLink}
+							onChange={(e) => dispatch(setShowDiscordLink(e.target.checked))}
+						/>
+					}
+					label="Show Discord link"
+				/>
+				<Typography variant="body2" color="text.secondary" sx={{ ml: 4 }}>
+					Shows the Discord link in the bottom right corner of the screen.
 				</Typography>
 			</Stack>
 		</Stack>

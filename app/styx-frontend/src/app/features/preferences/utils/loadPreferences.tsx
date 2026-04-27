@@ -30,6 +30,7 @@ export const PreferencesStateSchema = z.object({
 	global: z
 		.object({
 			animatedBackground: z.boolean().default(true),
+			showDiscordLink: z.boolean().default(true),
 		})
 		.default({}),
 	iconSets: z

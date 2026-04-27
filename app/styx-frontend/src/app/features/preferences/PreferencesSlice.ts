@@ -92,6 +92,10 @@ export const preferencesSlice = createSlice({
 			state.global.animatedBackground = payload
 			saveToLocalStorage(state)
 		},
+		setShowDiscordLink: (state, { payload }: PayloadAction<boolean>) => {
+			state.global.showDiscordLink = payload
+			saveToLocalStorage(state)
+		},
 
 		/* Icon Sets */
 		setRecentIconSets: (state, { payload }: PayloadAction<string[]>) => {

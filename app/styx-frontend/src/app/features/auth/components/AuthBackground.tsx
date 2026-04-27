@@ -1,11 +1,15 @@
+import { Icon } from '@iconify/react'
 import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
 import GlobalStyles from '@mui/material/GlobalStyles'
 import { useTheme } from '@mui/material/styles'
 import { useRouterState } from '@tanstack/react-router'
 import { type ReactNode, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { getGlobalPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
+
+import { preferencesSlice } from '../../preferences/PreferencesSlice'
 
 /**
  * We register custom properties so the browser can interpolate percentage values
@@ -111,13 +115,16 @@ type Props = {
 }
 
 export function AuthBackground({ children }: Props) {
-	const { animatedBackground } = useSelector(
+	const { animatedBackground, showDiscordLink } = useSelector(
 		getGlobalPreferences,
-		(a, b) => a.animatedBackground === b.animatedBackground,
+		(a, b) => a.animatedBackground === b.animatedBackground && a.showDiscordLink === b.showDiscordLink,
 	)
 	const pathname = useRouterState({ select: (s) => s.location.pathname })
 	const theme = useTheme()
 	const isLight = theme.palette.mode === 'light'
+
+	const { setShowDiscordLink } = preferencesSlice.actions
+	const dispatch = useDispatch()
 
 	const variation = useMemo(() => getVariation(pathname), [pathname])
 
@@ -133,7 +140,7 @@ export function AuthBackground({ children }: Props) {
 	return (
 		<>
 			<GlobalStyles styles={propertyRegistrations} />
-			<Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+			<Box sx={{ position: 'relative', width: '100%', minHeight: '100%' }}>
 				{/* Hidden SVG defining the noise texture used by the dither overlay */}
 				<svg style={{ position: 'absolute', width: 0, height: 0 }}>
 					<filter id="bg-noise">
@@ -142,7 +149,7 @@ export function AuthBackground({ children }: Props) {
 				</svg>
 				<Box
 					sx={{
-						position: 'absolute',
+						position: 'fixed',
 						inset: 0,
 						'--purple-x': variation.purpleX,
 						'--purple-y': variation.purpleY,
@@ -165,14 +172,42 @@ export function AuthBackground({ children }: Props) {
 				{/* Subtle noise overlay to dither away gradient banding */}
 				<Box
 					sx={{
-						position: 'absolute',
+						position: 'fixed',
 						inset: 0,
 						filter: 'url(#bg-noise)',
 						opacity: 0.06,
 						pointerEvents: 'none',
 					}}
 				/>
-				<Box sx={{ position: 'relative', height: '100%' }}>{children}</Box>
+				<Box sx={{ position: 'relative', minHeight: '100%' }}>{children}</Box>
+				{variation.visible && showDiscordLink && (
+					<Button
+						component="a"
+						href="https://discord.gg/rD3KdXmqDP"
+						onClick={() => {
+							dispatch(setShowDiscordLink(false))
+						}}
+						target="_blank"
+						rel="noopener noreferrer"
+						startIcon={<Icon icon="tabler:brand-discord" width={20} />}
+						size="small"
+						sx={{
+							position: 'fixed',
+							bottom: 8,
+							right: 16,
+							textTransform: 'none',
+							color: 'text.secondary',
+							opacity: 0.6,
+							px: 1,
+							transition: 'opacity 0.2s ease',
+							'&:hover': {
+								opacity: 1,
+							},
+						}}
+					>
+						Discord
+					</Button>
+				)}
 			</Box>
 		</>
 	)
