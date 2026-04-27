@@ -1,6 +1,5 @@
 import LoginRounded from '@mui/icons-material/LoginRounded'
 import Button from '@mui/material/Button'
-import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
 import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
@@ -62,9 +61,9 @@ export const Login = () => {
 	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], loginForm.handleSubmit)
 
 	return (
-		<Stack justifyContent="center" height="100%">
-			<Container maxWidth="xs">
-				<Paper elevation={2}>
+		<Stack justifyContent="center" height="100%" alignItems="center">
+			<Stack sx={{ maxWidth: 500, width: '100%' }}>
+				<Paper elevation={1}>
 					<Stack spacing={2} justifyContent="center" padding={4}>
 						<Stack alignItems="center">
 							<TenebrieLogo />
@@ -155,7 +154,7 @@ export const Login = () => {
 						</Stack>
 					</Stack>
 				</Paper>
-			</Container>
+			</Stack>
 		</Stack>
 	)
 }

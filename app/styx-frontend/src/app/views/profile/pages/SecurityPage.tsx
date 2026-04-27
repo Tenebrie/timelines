@@ -1,16 +1,19 @@
 import { useChangePasswordMutation } from '@api/profileApi'
+import ClearIcon from '@mui/icons-material/ClearOutlined'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import LockResetIcon from '@mui/icons-material/LockReset'
 import SaveIcon from '@mui/icons-material/Save'
-import Box from '@mui/material/Box'
+import DangerIcon from '@mui/icons-material/WarningAmber'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import { useSelector } from 'react-redux'
 import { z } from 'zod'
 
 import { ApiErrorBanner } from '@/app/components/ApiErrorBanner'
 import { SaveButton } from '@/app/components/SaveButton'
+import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
 import { BoundTextField } from '@/app/features/forms/components/BoundTextField'
 import { useAppForm } from '@/app/features/forms/useAppForm'
 import { useModal } from '@/app/features/modals/ModalsSlice'
@@ -18,6 +21,9 @@ import { useModal } from '@/app/features/modals/ModalsSlice'
 export function SecurityPage() {
 	const [changePassword, changePasswordState] = useChangePasswordMutation()
 	const { open: openDeleteAccountModal } = useModal('deleteAccountModal')
+	const { user } = useSelector(getAuthState)
+
+	const isAdmin = !!user && user?.level === 'Admin'
 
 	const passwordForm = useAppForm({
 		defaultValues: {
@@ -47,12 +53,17 @@ export function SecurityPage() {
 	return (
 		<Stack gap={3}>
 			<Stack gap={2}>
-				<Typography variant="h5">Security</Typography>
+				<Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 500 }}>
+					Security
+				</Typography>
 				<Divider />
 			</Stack>
 
 			<Stack spacing={3}>
-				<Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+				<Typography
+					variant="h6"
+					sx={{ display: 'flex', fontFamily: 'Inter', alignItems: 'center', gap: 1, fontSize: 18 }}
+				>
 					<LockResetIcon /> Change password
 				</Typography>
 				<Typography variant="body2" color="text.secondary">
@@ -84,6 +95,9 @@ export function SecurityPage() {
 				<ApiErrorBanner apiState={changePasswordState} />
 
 				<Stack direction="row" spacing={2} justifyContent="flex-end">
+					<Button variant="outlined" startIcon={<ClearIcon />} onClick={() => passwordForm.reset()}>
+						Clear
+					</Button>
 					<SaveButton
 						variant="contained"
 						sx={{ minWidth: 100 }}
@@ -91,6 +105,7 @@ export function SecurityPage() {
 						isSaving={changePasswordState.isLoading}
 						isError={changePasswordState.isError}
 						defaultIcon={<SaveIcon />}
+						color="warning"
 					>
 						Change password
 					</SaveButton>
@@ -100,23 +115,28 @@ export function SecurityPage() {
 			<Divider />
 
 			<Stack spacing={2}>
-				<Typography variant="h6" sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'error.main' }}>
-					Danger zone
+				<Typography
+					variant="h6"
+					color="error"
+					sx={{ display: 'flex', fontFamily: 'Inter', alignItems: 'center', gap: 1, fontSize: 18 }}
+				>
+					<DangerIcon /> Danger zone
 				</Typography>
 				<Typography variant="body2" color="text.secondary">
 					Once you delete your account, there is no going back. This action will permanently delete all your
 					worlds, timelines, and data.
 				</Typography>
 
-				<Box>
+				<Stack gap={1} direction="row" alignItems="center" justifyContent="flex-end">
 					<Button
-						variant="outlined"
+						disabled={isAdmin}
+						variant="contained"
 						startIcon={<DeleteForeverIcon />}
 						onClick={() => openDeleteAccountModal({})}
 					>
-						Delete account
+						{isAdmin ? <>Admin users must be demoted first</> : <>Delete account</>}
 					</Button>
-				</Box>
+				</Stack>
 			</Stack>
 		</Stack>
 	)

@@ -1,6 +1,6 @@
 # Timelines - AI Context & Architecture Guide
 
-**Last Updated**: February 21, 2026
+**Last Updated**: April 27, 2026
 **Project**: Collaborative worldbuilding and timeline management application
 
 ## Work Ethics
@@ -11,6 +11,7 @@
 4. **Suggest improvements**: If you spot an objective improvement - bring it up for discussion. Do not start large refactoring without approval.
 5. **Keep clear expectations**: This is a hobby project with a single developer behind it. There is no dev team or revenue.
 6. **Consider more than one option**: When faced with a difficult task, consider multiple possibilites, sources of a bug or implementation paths. Always choose the best of those options.
+7. **Target modern browsers**: The application targets modern, evergreen browsers. Do not hesitate to use well-supported modern CSS and JS features (e.g. `@property`, `container queries`, `CSS nesting`). Do not add fallbacks for obsolete browsers.
 
 ## 🎯 Project Purpose
 

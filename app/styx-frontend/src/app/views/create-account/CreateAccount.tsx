@@ -1,6 +1,5 @@
 import AppRegistrationRounded from '@mui/icons-material/AppRegistrationRounded'
 import Button from '@mui/material/Button'
-import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
 import Link from '@mui/material/Link'
 import Paper from '@mui/material/Paper'
@@ -62,8 +61,8 @@ export const CreateAccount = () => {
 	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], registerForm.handleSubmit)
 
 	return (
-		<Stack justifyContent="center" height="100%">
-			<Container maxWidth="xs">
+		<Stack justifyContent="center" height="100%" alignItems="center">
+			<Stack sx={{ maxWidth: 500, width: '100%' }}>
 				<Paper elevation={2}>
 					<Stack
 						spacing={2}
@@ -80,7 +79,7 @@ export const CreateAccount = () => {
 						</Stack>
 						<Divider />
 						<Typography variant="h6" align="center" sx={{ padding: 1 }}>
-							Create an Account
+							Create new account
 						</Typography>
 						<AlreadyLoggedInAlert parentSpacing={2} />
 						<ApiErrorBanner apiState={createAccountState} />
@@ -177,7 +176,7 @@ export const CreateAccount = () => {
 						</Stack>
 					</Stack>
 				</Paper>
-			</Container>
+			</Stack>
 		</Stack>
 	)
 }

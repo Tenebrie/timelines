@@ -1,6 +1,7 @@
-import TextField, { TextFieldProps } from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useMemo } from 'react'
+
+import { TextField, TextFieldProps } from '@/ui-lib/components/TextField/TextField'
 
 import { useFieldContext } from '../useAppForm'
 

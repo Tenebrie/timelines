@@ -53,7 +53,9 @@ function InternalComponent({ user }: Props) {
 	return (
 		<Stack gap={3}>
 			<Stack gap={2}>
-				<Typography variant="h5">Public profile</Typography>
+				<Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 500 }}>
+					Public profile
+				</Typography>
 				<Divider />
 			</Stack>
 

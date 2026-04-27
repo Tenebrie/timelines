@@ -27,6 +27,11 @@ export const PreferencesStateSchema = z.object({
 		})
 		.default({}),
 	colorMode: z.union([z.literal('light'), z.literal('dark')]).default(defaultTheme),
+	global: z
+		.object({
+			animatedBackground: z.boolean().default(true),
+		})
+		.default({}),
 	iconSets: z
 		.object({
 			recent: z.array(z.string()).default([]),

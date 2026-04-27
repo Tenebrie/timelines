@@ -43,7 +43,10 @@ function TimelineComponent() {
 	})
 
 	return (
-		<Paper ref={ref} sx={{ height: '100%', borderRadius: 0, zIndex: 2, pointerEvents: 'auto' }}>
+		<Paper
+			ref={ref}
+			sx={{ height: '100%', borderRadius: 0, zIndex: 2, pointerEvents: 'auto', background: 'transparent' }}
+		>
 			<TimelineWrapper>
 				<TimelineContainer
 					ref={containerRef}
