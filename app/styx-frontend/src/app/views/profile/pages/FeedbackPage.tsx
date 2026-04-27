@@ -61,7 +61,9 @@ export function FeedbackPage() {
 	return (
 		<Stack gap={2}>
 			<Stack gap={2}>
-				<Typography variant="h5">Feedback</Typography>
+				<Typography variant="h6" sx={{ fontFamily: 'Inter', fontWeight: 500 }}>
+					Contact
+				</Typography>
 				<Divider />
 			</Stack>
 

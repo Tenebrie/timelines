@@ -63,9 +63,14 @@ const baseThemeOptions = ({ reduceAnimations }: Props): ThemeOptions => ({
 			},
 		},
 		MuiDivider: {
+			styleOverrides: {},
+		},
+		MuiOutlinedInput: {
 			styleOverrides: {
 				root: {
-					backgroundColor: 'rgb(255,255,255,0.15)',
+					'& .MuiOutlinedInput-notchedOutline': {
+						transition: 'border-color 0.2s ease',
+					},
 				},
 			},
 		},
@@ -161,8 +166,23 @@ export const lightTheme = (props: Props): Theme => {
 }
 
 export const darkTheme = (props: Props): Theme => {
+	const base = baseThemeOptions(props)
 	const options: ThemeOptions = {
-		...baseThemeOptions(props),
+		...base,
+		components: {
+			...base.components,
+			MuiOutlinedInput: {
+				styleOverrides: {
+					...((base.components?.MuiOutlinedInput?.styleOverrides as Record<string, unknown>) ?? {}),
+					root: {
+						...((base.components?.MuiOutlinedInput?.styleOverrides as Record<string, unknown>)?.root ?? {}),
+						'&:hover:not(.Mui-focused):not(.Mui-disabled) .MuiOutlinedInput-notchedOutline': {
+							borderColor: 'hsla(31, 100%, 50%, 1.00)',
+						},
+					},
+				},
+			},
+		},
 		palette: {
 			mode: 'dark',
 			background: {

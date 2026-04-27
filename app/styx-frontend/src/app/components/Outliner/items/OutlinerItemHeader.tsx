@@ -14,7 +14,7 @@ export function OutlinerItemHeaderComponent() {
 	const { search } = useSelector(getWorldState, (a, b) => a.search === b.search)
 
 	return (
-		<Stack>
+		<Stack sx={{ marginBottom: 1 }}>
 			<Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ margin: '1px' }}>
 				{/* <Tabs value={currentTab} onChange={(_, val) => setCurrentTab(val)}>
 					<Tab label="All" />

@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 import styled from 'styled-components'
 
 import { AnnouncementSnackbar } from './features/announcements/AnnouncementSnackbar'
+import { AuthBackground } from './features/auth/components/AuthBackground'
 import { DragDropPortalSlot } from './features/dragDrop/components/GhostWrapper'
 import { EventBusProvider } from './features/eventBus'
 import { globalEventBus } from './features/eventBus/eventBus'
@@ -79,7 +80,9 @@ const App = () => {
 										...scrollbars,
 									}}
 								>
-									<Outlet />
+									<AuthBackground>
+										<Outlet />
+									</AuthBackground>
 								</Box>
 								<ModalsRenderer />
 							</Container>

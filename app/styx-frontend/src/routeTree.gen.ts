@@ -33,6 +33,7 @@ import { Route as ToolsToolsImageConverterRouteImport } from './routes/tools/_to
 import { Route as ProfileProfileStorageRouteImport } from './routes/profile/_profile.storage'
 import { Route as ProfileProfileSecurityRouteImport } from './routes/profile/_profile.security'
 import { Route as ProfileProfilePublicRouteImport } from './routes/profile/_profile.public'
+import { Route as ProfileProfilePreferencesRouteImport } from './routes/profile/_profile.preferences'
 import { Route as ProfileProfileFeedbackRouteImport } from './routes/profile/_profile.feedback'
 import { Route as WorldWorldIdWorldTimelineRouteImport } from './routes/world/$worldId/_world.timeline'
 import { Route as WorldWorldIdWorldSettingsRouteImport } from './routes/world/$worldId/_world.settings'
@@ -163,6 +164,12 @@ const ProfileProfilePublicRoute = ProfileProfilePublicRouteImport.update({
   path: '/public',
   getParentRoute: () => ProfileProfileRoute,
 } as any)
+const ProfileProfilePreferencesRoute =
+  ProfileProfilePreferencesRouteImport.update({
+    id: '/preferences',
+    path: '/preferences',
+    getParentRoute: () => ProfileProfileRoute,
+  } as any)
 const ProfileProfileFeedbackRoute = ProfileProfileFeedbackRouteImport.update({
   id: '/feedback',
   path: '/feedback',
@@ -224,6 +231,7 @@ export interface FileRoutesByFullPath {
   '/tools/': typeof ToolsIndexRoute
   '/world/': typeof WorldIndexRoute
   '/profile/feedback': typeof ProfileProfileFeedbackRoute
+  '/profile/preferences': typeof ProfileProfilePreferencesRoute
   '/profile/public': typeof ProfileProfilePublicRoute
   '/profile/security': typeof ProfileProfileSecurityRoute
   '/profile/storage': typeof ProfileProfileStorageRoute
@@ -254,6 +262,7 @@ export interface FileRoutesByTo {
   '/calendar': typeof CalendarIndexRoute
   '/world': typeof WorldIndexRoute
   '/profile/feedback': typeof ProfileProfileFeedbackRoute
+  '/profile/preferences': typeof ProfileProfilePreferencesRoute
   '/profile/public': typeof ProfileProfilePublicRoute
   '/profile/security': typeof ProfileProfileSecurityRoute
   '/profile/storage': typeof ProfileProfileStorageRoute
@@ -287,6 +296,7 @@ export interface FileRoutesById {
   '/tools/': typeof ToolsIndexRoute
   '/world/': typeof WorldIndexRoute
   '/profile/_profile/feedback': typeof ProfileProfileFeedbackRoute
+  '/profile/_profile/preferences': typeof ProfileProfilePreferencesRoute
   '/profile/_profile/public': typeof ProfileProfilePublicRoute
   '/profile/_profile/security': typeof ProfileProfileSecurityRoute
   '/profile/_profile/storage': typeof ProfileProfileStorageRoute
@@ -322,6 +332,7 @@ export interface FileRouteTypes {
     | '/tools/'
     | '/world/'
     | '/profile/feedback'
+    | '/profile/preferences'
     | '/profile/public'
     | '/profile/security'
     | '/profile/storage'
@@ -352,6 +363,7 @@ export interface FileRouteTypes {
     | '/calendar'
     | '/world'
     | '/profile/feedback'
+    | '/profile/preferences'
     | '/profile/public'
     | '/profile/security'
     | '/profile/storage'
@@ -384,6 +396,7 @@ export interface FileRouteTypes {
     | '/tools/'
     | '/world/'
     | '/profile/_profile/feedback'
+    | '/profile/_profile/preferences'
     | '/profile/_profile/public'
     | '/profile/_profile/security'
     | '/profile/_profile/storage'
@@ -586,6 +599,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileProfilePublicRouteImport
       parentRoute: typeof ProfileProfileRoute
     }
+    '/profile/_profile/preferences': {
+      id: '/profile/_profile/preferences'
+      path: '/preferences'
+      fullPath: '/profile/preferences'
+      preLoaderRoute: typeof ProfileProfilePreferencesRouteImport
+      parentRoute: typeof ProfileProfileRoute
+    }
     '/profile/_profile/feedback': {
       id: '/profile/_profile/feedback'
       path: '/feedback'
@@ -656,6 +676,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ProfileProfileRouteChildren {
   ProfileProfileFeedbackRoute: typeof ProfileProfileFeedbackRoute
+  ProfileProfilePreferencesRoute: typeof ProfileProfilePreferencesRoute
   ProfileProfilePublicRoute: typeof ProfileProfilePublicRoute
   ProfileProfileSecurityRoute: typeof ProfileProfileSecurityRoute
   ProfileProfileStorageRoute: typeof ProfileProfileStorageRoute
@@ -663,6 +684,7 @@ interface ProfileProfileRouteChildren {
 
 const ProfileProfileRouteChildren: ProfileProfileRouteChildren = {
   ProfileProfileFeedbackRoute: ProfileProfileFeedbackRoute,
+  ProfileProfilePreferencesRoute: ProfileProfilePreferencesRoute,
   ProfileProfilePublicRoute: ProfileProfilePublicRoute,
   ProfileProfileSecurityRoute: ProfileProfileSecurityRoute,
   ProfileProfileStorageRoute: ProfileProfileStorageRoute,

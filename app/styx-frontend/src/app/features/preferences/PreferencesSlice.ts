@@ -41,6 +41,7 @@ export const preferencesSlice = createSlice({
 			state['admin'] = value['admin']
 			state['calendarEditor'] = value['calendarEditor']
 			state['colorMode'] = value['colorMode']
+			state['global'] = value['global']
 			state['iconSets'] = value['iconSets']
 			state['outliner'] = value['outliner']
 			state['overview'] = value['overview']
@@ -83,6 +84,16 @@ export const preferencesSlice = createSlice({
 		/* Color Mode */
 		setColorMode: (state, { payload }: PayloadAction<'light' | 'dark'>) => {
 			state.colorMode = payload
+			saveToLocalStorage(state)
+		},
+
+		/* Global */
+		setAnimatedBackground: (state, { payload }: PayloadAction<boolean>) => {
+			state.global.animatedBackground = payload
+			saveToLocalStorage(state)
+		},
+		setShowDiscordLink: (state, { payload }: PayloadAction<boolean>) => {
+			state.global.showDiscordLink = payload
 			saveToLocalStorage(state)
 		},
 
