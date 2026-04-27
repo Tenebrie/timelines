@@ -140,7 +140,7 @@ export function AuthBackground({ children }: Props) {
 	return (
 		<>
 			<GlobalStyles styles={propertyRegistrations} />
-			<Box sx={{ position: 'relative', width: '100%', minHeight: '100%' }}>
+			<Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
 				{/* Hidden SVG defining the noise texture used by the dither overlay */}
 				<svg style={{ position: 'absolute', width: 0, height: 0 }}>
 					<filter id="bg-noise">
@@ -179,7 +179,7 @@ export function AuthBackground({ children }: Props) {
 						pointerEvents: 'none',
 					}}
 				/>
-				<Box sx={{ position: 'relative', minHeight: '100%' }}>{children}</Box>
+				<Box sx={{ position: 'relative', height: '100%' }}>{children}</Box>
 				{variation.visible && showDiscordLink && (
 					<Button
 						component="a"
