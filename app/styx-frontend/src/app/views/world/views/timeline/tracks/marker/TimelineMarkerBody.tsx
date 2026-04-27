@@ -189,7 +189,7 @@ export function TimelineMarkerBodyComponent({ entity, selected }: Props) {
 						role="tooltip"
 						elevation={4}
 						sx={{
-							position: 'absolute',
+							position: 'fixed',
 							left: `${timestampBoxPosition.left}px`,
 							top: `${timestampBoxPosition.top}px`,
 							padding: '8px 12px',
