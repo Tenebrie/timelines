@@ -1,12 +1,5 @@
 import Box from '@mui/material/Box'
-import { RefObject, useEffect, useRef } from 'react'
-
-type Props = {
-	ref: RefObject<HTMLDivElement | null>
-	onClick: () => void
-	onUpdateSelection: (rect: SelectionRect) => void
-	onFinalizeSelection: (rect: SelectionRect) => void
-}
+import { memo, RefObject, useEffect, useRef } from 'react'
 
 export type SelectionRect = {
 	visible: boolean
@@ -16,7 +9,16 @@ export type SelectionRect = {
 	height: number
 }
 
-export function SelectionBox({ ref, onClick, onUpdateSelection, onFinalizeSelection }: Props) {
+type Props = {
+	ref: RefObject<HTMLDivElement | null>
+	onClick: (event: MouseEvent) => void
+	onUpdateSelection: (rect: SelectionRect, event: MouseEvent) => void
+	onFinalizeSelection: (rect: SelectionRect, event: MouseEvent) => void
+}
+
+export const SelectionBox = memo(SelectionBoxComponent)
+
+export function SelectionBoxComponent({ ref, onClick, onUpdateSelection, onFinalizeSelection }: Props) {
 	const selectionRect = useRef<SelectionRect>({
 		visible: false,
 		x: 0,
@@ -50,22 +52,30 @@ export function SelectionBox({ ref, onClick, onUpdateSelection, onFinalizeSelect
 			buttonDownMode: 'select' as 'select' | 'pan',
 
 			canClick: true,
+			startX: 0,
+			startY: 0,
 			deltaX: 0,
 			deltaY: 0,
 			lastIntersectionCheckTimestamp: 0,
 		}
 
 		const handleMouseDown = (event: MouseEvent) => {
+			event.preventDefault()
 			if (event.button === 0) {
 				mouseState.isButtonDown = true
 				mouseState.buttonDownMode = 'select'
-				event.preventDefault()
 			} else if (event.button === 2) {
 				mouseState.isButtonDown = true
 				mouseState.buttonDownMode = 'pan'
-				event.preventDefault()
+			} else {
+				return
 			}
-			event.preventDefault()
+
+			mouseState.startX = event.clientX
+			mouseState.startY = event.clientY
+			mouseState.deltaX = 0
+			mouseState.deltaY = 0
+			mouseState.canClick = true
 		}
 
 		const handleMouseUp = (event: MouseEvent) => {
@@ -73,12 +83,12 @@ export function SelectionBox({ ref, onClick, onUpdateSelection, onFinalizeSelect
 				return
 			}
 			if (mouseState.canClick) {
-				onClick()
+				onClick(event)
 			}
 
 			// Finalize selection on mouse up
 			if (mouseState.buttonDownMode === 'select' && selectionRect.current.visible) {
-				onFinalizeSelection(selectionRect.current)
+				onFinalizeSelection(selectionRect.current, event)
 			}
 
 			selectionRect.current.visible = false
@@ -101,14 +111,14 @@ export function SelectionBox({ ref, onClick, onUpdateSelection, onFinalizeSelect
 				mouseState.canClick = false
 				if (mouseState.buttonDownMode === 'select') {
 					const baseRect = element.getBoundingClientRect()
-					const x = event.clientX - mouseState.deltaX - baseRect.left - 1
-					const y = event.clientY - mouseState.deltaY - baseRect.top - 3
+					const x = mouseState.startX - baseRect.left - 1
+					const y = mouseState.startY - baseRect.top - 3
 					selectionRect.current = {
 						visible: true,
 						x,
 						y,
-						width: mouseState.deltaX - 1,
-						height: mouseState.deltaY,
+						width: event.clientX - mouseState.startX - 1,
+						height: event.clientY - mouseState.startY,
 					}
 					applySelectionBoxStyle()
 				}
@@ -123,7 +133,7 @@ export function SelectionBox({ ref, onClick, onUpdateSelection, onFinalizeSelect
 				const now = Date.now()
 				if (now - mouseState.lastIntersectionCheckTimestamp >= 16) {
 					mouseState.lastIntersectionCheckTimestamp = now
-					onUpdateSelection(selectionRect.current)
+					onUpdateSelection(selectionRect.current, event)
 				}
 			}
 		}

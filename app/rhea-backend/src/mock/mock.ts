@@ -48,7 +48,7 @@ export const mockActor = (data?: Partial<BaselineActor>): BaselineActor => ({
 	color: '#000',
 	pages: [],
 	mentions: [],
-	node: null,
+	nodes: [],
 	description: 'Test Actor Description',
 	descriptionRich: '<p>Test Actor Description</p>',
 	mentionedIn: [],

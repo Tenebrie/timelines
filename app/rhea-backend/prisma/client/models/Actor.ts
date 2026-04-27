@@ -233,7 +233,7 @@ export type ActorWhereInput = {
   pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
-  node?: Prisma.XOR<Prisma.MindmapNodeNullableScalarRelationFilter, Prisma.MindmapNodeWhereInput> | null
+  nodes?: Prisma.MindmapNodeListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
 }
 
@@ -252,7 +252,7 @@ export type ActorOrderByWithRelationInput = {
   pages?: Prisma.ContentPageOrderByRelationAggregateInput
   mentions?: Prisma.MentionOrderByRelationAggregateInput
   mentionedIn?: Prisma.MentionOrderByRelationAggregateInput
-  node?: Prisma.MindmapNodeOrderByWithRelationInput
+  nodes?: Prisma.MindmapNodeOrderByRelationAggregateInput
   world?: Prisma.WorldOrderByWithRelationInput
 }
 
@@ -274,7 +274,7 @@ export type ActorWhereUniqueInput = Prisma.AtLeast<{
   pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
-  node?: Prisma.XOR<Prisma.MindmapNodeNullableScalarRelationFilter, Prisma.MindmapNodeWhereInput> | null
+  nodes?: Prisma.MindmapNodeListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
 }, "id" | "id">
 
@@ -326,7 +326,7 @@ export type ActorCreateInput = {
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
-  node?: Prisma.MindmapNodeCreateNestedOneWithoutParentActorInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
 }
 
@@ -345,7 +345,7 @@ export type ActorUncheckedCreateInput = {
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
-  node?: Prisma.MindmapNodeUncheckedCreateNestedOneWithoutParentActorInput
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentActorInput
 }
 
 export type ActorUpdateInput = {
@@ -362,7 +362,7 @@ export type ActorUpdateInput = {
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
-  node?: Prisma.MindmapNodeUpdateOneWithoutParentActorNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
 }
 
@@ -381,7 +381,7 @@ export type ActorUncheckedUpdateInput = {
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
-  node?: Prisma.MindmapNodeUncheckedUpdateOneWithoutParentActorNestedInput
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentActorNestedInput
 }
 
 export type ActorCreateManyInput = {
@@ -542,20 +542,20 @@ export type ActorUpdateOneWithoutMentionedInNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ActorUpdateToOneWithWhereWithoutMentionedInInput, Prisma.ActorUpdateWithoutMentionedInInput>, Prisma.ActorUncheckedUpdateWithoutMentionedInInput>
 }
 
-export type ActorCreateNestedOneWithoutNodeInput = {
-  create?: Prisma.XOR<Prisma.ActorCreateWithoutNodeInput, Prisma.ActorUncheckedCreateWithoutNodeInput>
-  connectOrCreate?: Prisma.ActorCreateOrConnectWithoutNodeInput
+export type ActorCreateNestedOneWithoutNodesInput = {
+  create?: Prisma.XOR<Prisma.ActorCreateWithoutNodesInput, Prisma.ActorUncheckedCreateWithoutNodesInput>
+  connectOrCreate?: Prisma.ActorCreateOrConnectWithoutNodesInput
   connect?: Prisma.ActorWhereUniqueInput
 }
 
-export type ActorUpdateOneWithoutNodeNestedInput = {
-  create?: Prisma.XOR<Prisma.ActorCreateWithoutNodeInput, Prisma.ActorUncheckedCreateWithoutNodeInput>
-  connectOrCreate?: Prisma.ActorCreateOrConnectWithoutNodeInput
-  upsert?: Prisma.ActorUpsertWithoutNodeInput
+export type ActorUpdateOneWithoutNodesNestedInput = {
+  create?: Prisma.XOR<Prisma.ActorCreateWithoutNodesInput, Prisma.ActorUncheckedCreateWithoutNodesInput>
+  connectOrCreate?: Prisma.ActorCreateOrConnectWithoutNodesInput
+  upsert?: Prisma.ActorUpsertWithoutNodesInput
   disconnect?: Prisma.ActorWhereInput | boolean
   delete?: Prisma.ActorWhereInput | boolean
   connect?: Prisma.ActorWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.ActorUpdateToOneWithWhereWithoutNodeInput, Prisma.ActorUpdateWithoutNodeInput>, Prisma.ActorUncheckedUpdateWithoutNodeInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ActorUpdateToOneWithWhereWithoutNodesInput, Prisma.ActorUpdateWithoutNodesInput>, Prisma.ActorUncheckedUpdateWithoutNodesInput>
 }
 
 export type ActorCreateNestedManyWithoutWorldInput = {
@@ -613,7 +613,7 @@ export type ActorCreateWithoutPagesInput = {
   descriptionYjs?: string | null
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
-  node?: Prisma.MindmapNodeCreateNestedOneWithoutParentActorInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
 }
 
@@ -631,7 +631,7 @@ export type ActorUncheckedCreateWithoutPagesInput = {
   worldId: string
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
-  node?: Prisma.MindmapNodeUncheckedCreateNestedOneWithoutParentActorInput
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentActorInput
 }
 
 export type ActorCreateOrConnectWithoutPagesInput = {
@@ -663,7 +663,7 @@ export type ActorUpdateWithoutPagesInput = {
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
-  node?: Prisma.MindmapNodeUpdateOneWithoutParentActorNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
 }
 
@@ -681,7 +681,7 @@ export type ActorUncheckedUpdateWithoutPagesInput = {
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
-  node?: Prisma.MindmapNodeUncheckedUpdateOneWithoutParentActorNestedInput
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentActorNestedInput
 }
 
 export type ActorCreateWithoutMentionsInput = {
@@ -697,7 +697,7 @@ export type ActorCreateWithoutMentionsInput = {
   descriptionYjs?: string | null
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
-  node?: Prisma.MindmapNodeCreateNestedOneWithoutParentActorInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
 }
 
@@ -715,7 +715,7 @@ export type ActorUncheckedCreateWithoutMentionsInput = {
   worldId: string
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
-  node?: Prisma.MindmapNodeUncheckedCreateNestedOneWithoutParentActorInput
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentActorInput
 }
 
 export type ActorCreateOrConnectWithoutMentionsInput = {
@@ -736,7 +736,7 @@ export type ActorCreateWithoutMentionedInInput = {
   descriptionYjs?: string | null
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
-  node?: Prisma.MindmapNodeCreateNestedOneWithoutParentActorInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
 }
 
@@ -754,7 +754,7 @@ export type ActorUncheckedCreateWithoutMentionedInInput = {
   worldId: string
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
-  node?: Prisma.MindmapNodeUncheckedCreateNestedOneWithoutParentActorInput
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentActorInput
 }
 
 export type ActorCreateOrConnectWithoutMentionedInInput = {
@@ -786,7 +786,7 @@ export type ActorUpdateWithoutMentionsInput = {
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
-  node?: Prisma.MindmapNodeUpdateOneWithoutParentActorNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
 }
 
@@ -804,7 +804,7 @@ export type ActorUncheckedUpdateWithoutMentionsInput = {
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
-  node?: Prisma.MindmapNodeUncheckedUpdateOneWithoutParentActorNestedInput
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentActorNestedInput
 }
 
 export type ActorUpsertWithoutMentionedInInput = {
@@ -831,7 +831,7 @@ export type ActorUpdateWithoutMentionedInInput = {
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
-  node?: Prisma.MindmapNodeUpdateOneWithoutParentActorNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
 }
 
@@ -849,10 +849,10 @@ export type ActorUncheckedUpdateWithoutMentionedInInput = {
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
-  node?: Prisma.MindmapNodeUncheckedUpdateOneWithoutParentActorNestedInput
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentActorNestedInput
 }
 
-export type ActorCreateWithoutNodeInput = {
+export type ActorCreateWithoutNodesInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -869,7 +869,7 @@ export type ActorCreateWithoutNodeInput = {
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
 }
 
-export type ActorUncheckedCreateWithoutNodeInput = {
+export type ActorUncheckedCreateWithoutNodesInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -886,23 +886,23 @@ export type ActorUncheckedCreateWithoutNodeInput = {
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
 }
 
-export type ActorCreateOrConnectWithoutNodeInput = {
+export type ActorCreateOrConnectWithoutNodesInput = {
   where: Prisma.ActorWhereUniqueInput
-  create: Prisma.XOR<Prisma.ActorCreateWithoutNodeInput, Prisma.ActorUncheckedCreateWithoutNodeInput>
+  create: Prisma.XOR<Prisma.ActorCreateWithoutNodesInput, Prisma.ActorUncheckedCreateWithoutNodesInput>
 }
 
-export type ActorUpsertWithoutNodeInput = {
-  update: Prisma.XOR<Prisma.ActorUpdateWithoutNodeInput, Prisma.ActorUncheckedUpdateWithoutNodeInput>
-  create: Prisma.XOR<Prisma.ActorCreateWithoutNodeInput, Prisma.ActorUncheckedCreateWithoutNodeInput>
+export type ActorUpsertWithoutNodesInput = {
+  update: Prisma.XOR<Prisma.ActorUpdateWithoutNodesInput, Prisma.ActorUncheckedUpdateWithoutNodesInput>
+  create: Prisma.XOR<Prisma.ActorCreateWithoutNodesInput, Prisma.ActorUncheckedCreateWithoutNodesInput>
   where?: Prisma.ActorWhereInput
 }
 
-export type ActorUpdateToOneWithWhereWithoutNodeInput = {
+export type ActorUpdateToOneWithWhereWithoutNodesInput = {
   where?: Prisma.ActorWhereInput
-  data: Prisma.XOR<Prisma.ActorUpdateWithoutNodeInput, Prisma.ActorUncheckedUpdateWithoutNodeInput>
+  data: Prisma.XOR<Prisma.ActorUpdateWithoutNodesInput, Prisma.ActorUncheckedUpdateWithoutNodesInput>
 }
 
-export type ActorUpdateWithoutNodeInput = {
+export type ActorUpdateWithoutNodesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -919,7 +919,7 @@ export type ActorUpdateWithoutNodeInput = {
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
 }
 
-export type ActorUncheckedUpdateWithoutNodeInput = {
+export type ActorUncheckedUpdateWithoutNodesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -950,7 +950,7 @@ export type ActorCreateWithoutWorldInput = {
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
-  node?: Prisma.MindmapNodeCreateNestedOneWithoutParentActorInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
 }
 
 export type ActorUncheckedCreateWithoutWorldInput = {
@@ -967,7 +967,7 @@ export type ActorUncheckedCreateWithoutWorldInput = {
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
-  node?: Prisma.MindmapNodeUncheckedCreateNestedOneWithoutParentActorInput
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentActorInput
 }
 
 export type ActorCreateOrConnectWithoutWorldInput = {
@@ -1040,7 +1040,7 @@ export type ActorUpdateWithoutWorldInput = {
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
-  node?: Prisma.MindmapNodeUpdateOneWithoutParentActorNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
 }
 
 export type ActorUncheckedUpdateWithoutWorldInput = {
@@ -1057,7 +1057,7 @@ export type ActorUncheckedUpdateWithoutWorldInput = {
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
-  node?: Prisma.MindmapNodeUncheckedUpdateOneWithoutParentActorNestedInput
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentActorNestedInput
 }
 
 export type ActorUncheckedUpdateManyWithoutWorldInput = {
@@ -1082,12 +1082,14 @@ export type ActorCountOutputType = {
   pages: number
   mentions: number
   mentionedIn: number
+  nodes: number
 }
 
 export type ActorCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   pages?: boolean | ActorCountOutputTypeCountPagesArgs
   mentions?: boolean | ActorCountOutputTypeCountMentionsArgs
   mentionedIn?: boolean | ActorCountOutputTypeCountMentionedInArgs
+  nodes?: boolean | ActorCountOutputTypeCountNodesArgs
 }
 
 /**
@@ -1121,6 +1123,13 @@ export type ActorCountOutputTypeCountMentionedInArgs<ExtArgs extends runtime.Typ
   where?: Prisma.MentionWhereInput
 }
 
+/**
+ * ActorCountOutputType without action
+ */
+export type ActorCountOutputTypeCountNodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MindmapNodeWhereInput
+}
+
 
 export type ActorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1137,7 +1146,7 @@ export type ActorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   pages?: boolean | Prisma.Actor$pagesArgs<ExtArgs>
   mentions?: boolean | Prisma.Actor$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.Actor$mentionedInArgs<ExtArgs>
-  node?: boolean | Prisma.Actor$nodeArgs<ExtArgs>
+  nodes?: boolean | Prisma.Actor$nodesArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ActorCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["actor"]>
@@ -1191,7 +1200,7 @@ export type ActorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   pages?: boolean | Prisma.Actor$pagesArgs<ExtArgs>
   mentions?: boolean | Prisma.Actor$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.Actor$mentionedInArgs<ExtArgs>
-  node?: boolean | Prisma.Actor$nodeArgs<ExtArgs>
+  nodes?: boolean | Prisma.Actor$nodesArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ActorCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1208,7 +1217,7 @@ export type $ActorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     pages: Prisma.$ContentPagePayload<ExtArgs>[]
     mentions: Prisma.$MentionPayload<ExtArgs>[]
     mentionedIn: Prisma.$MentionPayload<ExtArgs>[]
-    node: Prisma.$MindmapNodePayload<ExtArgs> | null
+    nodes: Prisma.$MindmapNodePayload<ExtArgs>[]
     world: Prisma.$WorldPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1620,7 +1629,7 @@ export interface Prisma__ActorClient<T, Null = never, ExtArgs extends runtime.Ty
   pages<T extends Prisma.Actor$pagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Actor$pagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContentPagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mentions<T extends Prisma.Actor$mentionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Actor$mentionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mentionedIn<T extends Prisma.Actor$mentionedInArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Actor$mentionedInArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  node<T extends Prisma.Actor$nodeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Actor$nodeArgs<ExtArgs>>): Prisma.Prisma__MindmapNodeClient<runtime.Types.Result.GetResult<Prisma.$MindmapNodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  nodes<T extends Prisma.Actor$nodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Actor$nodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MindmapNodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   world<T extends Prisma.WorldDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldDefaultArgs<ExtArgs>>): Prisma.Prisma__WorldClient<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2135,9 +2144,9 @@ export type Actor$mentionedInArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Actor.node
+ * Actor.nodes
  */
-export type Actor$nodeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Actor$nodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the MindmapNode
    */
@@ -2151,6 +2160,11 @@ export type Actor$nodeArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
    */
   include?: Prisma.MindmapNodeInclude<ExtArgs> | null
   where?: Prisma.MindmapNodeWhereInput
+  orderBy?: Prisma.MindmapNodeOrderByWithRelationInput | Prisma.MindmapNodeOrderByWithRelationInput[]
+  cursor?: Prisma.MindmapNodeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MindmapNodeScalarFieldEnum | Prisma.MindmapNodeScalarFieldEnum[]
 }
 
 /**

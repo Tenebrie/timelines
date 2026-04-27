@@ -35,7 +35,7 @@ function OutlinerItemActorComponent({ actor }: Props) {
 
 	return (
 		<>
-			<Box ref={ref}>
+			<Box ref={ref} data-testid="OutlinerItemActor" data-actor-name={actor.name}>
 				<ActorWithContentRenderer
 					collapsed={!expandedActors.includes(actor.id)}
 					actor={actor}

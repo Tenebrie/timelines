@@ -1,4 +1,4 @@
-import { createTheme, Theme } from '@mui/material/styles'
+import { createTheme, Theme, ThemeOptions } from '@mui/material/styles'
 
 const commonTheme = createTheme()
 
@@ -6,7 +6,7 @@ type Props = {
 	reduceAnimations: boolean
 }
 
-const baseTheme: (props: Props) => Partial<Theme> = ({ reduceAnimations }) => ({
+const baseThemeOptions = ({ reduceAnimations }: Props): ThemeOptions => ({
 	shape: {
 		borderRadius: 8,
 	},
@@ -133,9 +133,9 @@ const baseTheme: (props: Props) => Partial<Theme> = ({ reduceAnimations }) => ({
 	},
 })
 
-export const lightTheme = (props: Props) =>
-	createTheme({
-		...baseTheme(props),
+export const lightTheme = (props: Props): Theme => {
+	const options: ThemeOptions = {
+		...baseThemeOptions(props),
 		palette: {
 			mode: 'light',
 			background: {
@@ -155,11 +155,14 @@ export const lightTheme = (props: Props) =>
 				contrastText: '#fff',
 			},
 		},
-	})
+	}
 
-export const darkTheme = (props: Props) =>
-	createTheme({
-		...baseTheme(props),
+	return createTheme(options)
+}
+
+export const darkTheme = (props: Props): Theme => {
+	const options: ThemeOptions = {
+		...baseThemeOptions(props),
 		palette: {
 			mode: 'dark',
 			background: {
@@ -182,7 +185,10 @@ export const darkTheme = (props: Props) =>
 				contrastText: '#0f0e1a',
 			},
 		},
-	})
+	}
+
+	return createTheme(options)
+}
 
 export const customLightTheme = {
 	palette: {

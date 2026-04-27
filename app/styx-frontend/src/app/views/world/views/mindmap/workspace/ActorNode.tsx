@@ -2,10 +2,13 @@ import { MindmapNode } from '@api/types/mindmapTypes'
 import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import React from 'react'
+import { useStore } from 'react-redux'
 
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
+import { RootState } from '@/app/store'
 
 import { useNodeLinking } from '../hooks/useNodeLinking'
+import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { ActorNodeContent } from './ActorNodeContent'
 
 type Props = {
@@ -16,12 +19,24 @@ type Props = {
 }
 
 export function ActorNode({ actor, node, onHeaderClick, onContentClick }: Props) {
-	const { createLink } = useNodeLinking()
+	const { createLinks } = useNodeLinking()
+	const store = useStore<RootState>()
 
 	const { ref } = useDragDropReceiver({
 		type: 'actorNodeLinking',
 		onDrop: (data) => {
-			createLink({ source: data.params.sourceNode, target: node })
+			const selectedNodeKeys = getSelectedNodeKeys(store.getState())
+			const sourceNodeId = data.params.sourceNode.id
+			const sourceIds = selectedNodeKeys.includes(sourceNodeId)
+				? [...new Set(selectedNodeKeys)]
+				: [sourceNodeId]
+
+			createLinks(
+				sourceIds.map((srcId) => ({
+					sourceNodeId: srcId,
+					targetNodeId: node.id,
+				})),
+			)
 		},
 	})
 

@@ -88,11 +88,14 @@ export const useLiveMessageHandlers = () => {
 		[CalliopeToClientMessageType.WIKI_ARTICLE_DELETED]: () => {
 			dispatch(worldWikiApi.util.invalidateTags(['worldWiki']))
 		},
-		[CalliopeToClientMessageType.MINDMAP_NODE_UPDATED]: (_) => {
+		[CalliopeToClientMessageType.MINDMAP_NODES_UPDATED]: (_) => {
 			dispatch(mindmapApi.util.invalidateTags(['mindmapNode']))
 		},
 		[CalliopeToClientMessageType.MINDMAP_NODES_DELETED]: (_) => {
 			dispatch(mindmapApi.util.invalidateTags(['mindmapNode']))
+		},
+		[CalliopeToClientMessageType.MINDMAP_WIRES_CREATED]: (_) => {
+			dispatch(mindmapApi.util.invalidateTags(['mindmapWire']))
 		},
 		[CalliopeToClientMessageType.MINDMAP_WIRE_UPDATED]: (_) => {
 			dispatch(mindmapApi.util.invalidateTags(['mindmapWire']))

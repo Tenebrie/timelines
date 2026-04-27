@@ -3,7 +3,7 @@ import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
-import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
+import { isMultiselectAltEvent, isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { SelectionBox, SelectionRect } from '@/ui-lib/components/SelectionBox/SelectionBox'
 
 import { useNewNodeReceiver } from '../hooks/useNewNodeReceiver'
@@ -23,21 +23,44 @@ export function MindmapClickArea() {
 }
 
 function MindmapSelectionBox({ ref }: { ref: React.RefObject<HTMLDivElement | null> }) {
-	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
 	const { selectedNodes, selectedWires } = useSelector(
 		getMindmapState,
 		(a, b) => a.selectedNodes === b.selectedNodes && a.selectedWires === b.selectedWires,
 	)
 	const dispatch = useDispatch()
 
-	const onClick = useEvent(() => {
-		navigate({ search: (prev) => ({ ...prev, navi: [], new: undefined }) })
+	const onClick = useEvent((event: MouseEvent) => {
+		if (isMultiselectEvent(event)) {
+			return
+		}
 		dispatch(mindmapSlice.actions.clearSelections())
 	})
 
-	const onUpdateSelection = useEvent((rect: SelectionRect) => {
-		const newSelectedNodes = checkNodeIntersection(ref.current, rect)
-		const newSelectedWires = checkWireIntersection(ref.current, rect)
+	const onUpdateSelection = useEvent((rect: SelectionRect, event: MouseEvent) => {
+		const intersectingNodes = checkNodeIntersection(ref.current, rect)
+		const intersectingWires = checkWireIntersection(ref.current, rect)
+		let newSelectedNodes: ReturnType<typeof checkNodeIntersection> = []
+		let newSelectedWires: ReturnType<typeof checkWireIntersection> = []
+
+		if (isMultiselectEvent(event)) {
+			newSelectedNodes.push(...selectedNodes)
+			newSelectedWires.push(...selectedWires)
+		}
+
+		if (isMultiselectAltEvent(event)) {
+			newSelectedNodes = newSelectedNodes.filter(
+				(node) => !intersectingNodes.some((intersectingNode) => intersectingNode.key === node.key),
+			)
+			newSelectedWires = newSelectedWires.filter(
+				(wireId) => !intersectingWires.some((intersectingWireId) => intersectingWireId === wireId),
+			)
+		} else {
+			newSelectedNodes.push(...intersectingNodes)
+			newSelectedWires.push(...intersectingWires)
+		}
+
+		newSelectedNodes = [...new Set(newSelectedNodes)]
+		newSelectedWires = [...new Set(newSelectedWires)]
 
 		const nodesChanged =
 			selectedNodes.length !== newSelectedNodes.length ||
@@ -54,21 +77,12 @@ function MindmapSelectionBox({ ref }: { ref: React.RefObject<HTMLDivElement | nu
 		}
 	})
 
-	const onFinalizeSelection = useEvent((rect: SelectionRect) => {
-		const selectedNodes = checkNodeIntersection(ref.current, rect)
-		const selectedWireIds = checkWireIntersection(ref.current, rect)
-		requestAnimationFrame(() => {
-			dispatch(mindmapSlice.actions.setNodeSelection(selectedNodes))
-			dispatch(mindmapSlice.actions.setWireSelection(selectedWireIds))
-		})
-	})
-
 	return (
 		<SelectionBox
 			ref={ref}
 			onClick={onClick}
 			onUpdateSelection={onUpdateSelection}
-			onFinalizeSelection={onFinalizeSelection}
+			onFinalizeSelection={onUpdateSelection}
 		/>
 	)
 }

@@ -15,7 +15,6 @@ export const ActorService = {
 		return getPrismaClient().actor.findUnique({
 			where: { id: actorId, worldId },
 			include: {
-				node: true,
 				mentions: {
 					select: {
 						targetId: true,
@@ -34,6 +33,7 @@ export const ActorService = {
 						name: true,
 					},
 				},
+				nodes: true,
 			},
 			omit: {
 				descriptionYjs: true,
@@ -62,7 +62,6 @@ export const ActorService = {
 		return getPrismaClient().actor.findUnique({
 			where: { id: actorId, worldId },
 			include: {
-				node: true,
 				mentions: {
 					select: {
 						targetId: true,
@@ -81,6 +80,7 @@ export const ActorService = {
 						name: true,
 					},
 				},
+				nodes: true,
 			},
 		})
 	},
@@ -316,7 +316,6 @@ export const ActorService = {
 					},
 				},
 				include: {
-					node: true,
 					mentions: {
 						select: {
 							targetId: true,
@@ -332,6 +331,7 @@ export const ActorService = {
 							createdAt: 'asc',
 						},
 					},
+					nodes: true,
 				},
 			})
 			const updatedMentions = await prisma.mention.findMany({

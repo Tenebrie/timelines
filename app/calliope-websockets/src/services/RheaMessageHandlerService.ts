@@ -89,13 +89,16 @@ const handlers: RheaToCalliopeMessageHandlers = {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.CALENDAR_UPDATED, ...ctx })
 	},
 
-	[RheaToCalliopeMessageType.MINDMAP_NODE_UPDATED]: (ctx) => {
-		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_NODE_UPDATED, ...ctx })
+	[RheaToCalliopeMessageType.MINDMAP_NODES_UPDATED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_NODES_UPDATED, ...ctx })
 	},
 	[RheaToCalliopeMessageType.MINDMAP_NODES_DELETED]: (ctx) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_NODES_DELETED, ...ctx })
 	},
 
+	[RheaToCalliopeMessageType.MINDMAP_WIRES_CREATED]: async (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_WIRES_CREATED, ...ctx })
+	},
 	[RheaToCalliopeMessageType.MINDMAP_WIRE_UPDATED]: async (ctx) => {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.MINDMAP_WIRE_UPDATED, ...ctx })
 	},

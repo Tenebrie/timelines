@@ -12,7 +12,7 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { useEntityColor } from '@/app/utils/colors/useEntityColor'
-import { isMultiselectClick } from '@/app/utils/isMultiselectClick'
+import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
@@ -69,7 +69,7 @@ export function TimelineMarkerBodyComponent({ entity, selected }: Props) {
 		clickEvent.stopPropagation()
 		clickEvent.preventDefault()
 
-		triggerClick(clickEvent, { multiselect: isMultiselectClick(clickEvent) })
+		triggerClick(clickEvent, { multiselect: isMultiselectEvent(clickEvent) })
 	}
 
 	const onContextMenu = (clickEvent: MouseEvent<HTMLDivElement>) => {

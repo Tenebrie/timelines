@@ -1,43 +1,78 @@
 import { useGetMindmapQuery } from '@api/mindmapApi'
-import { MindmapNode } from '@api/types/mindmapTypes'
 import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getWorldIdState } from '../../../WorldSliceSelectors'
-import { useCreateMindmapWire } from '../api/useCreateMindmapWire'
+import { useCreateMindmapWires } from '../api/useCreateMindmapWires'
 import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
 
 export function useNodeLinking() {
 	const worldId = useSelector(getWorldIdState)
 	const { data } = useGetMindmapQuery({ worldId }, { skip: !worldId })
 
-	const [createMindmapLink] = useCreateMindmapWire()
-	const [deleteMindmapLink] = useDeleteMindmapWires()
+	const [createMindmapWires] = useCreateMindmapWires()
+	const [deleteMindmapWires] = useDeleteMindmapWires()
 
 	const createLink = useCallback(
-		({ source, target }: { source: MindmapNode; target: MindmapNode }) => {
+		({ sourceId, targetId }: { sourceId: string; targetId: string }) => {
 			if (!data) {
 				return
 			}
 
 			const existingLink = data.wires.find(
 				(link) =>
-					(link.sourceNodeId === source.id && link.targetNodeId === target.id) ||
-					(link.sourceNodeId === target.id && link.targetNodeId === source.id),
+					(link.sourceNodeId === sourceId && link.targetNodeId === targetId) ||
+					(link.sourceNodeId === targetId && link.targetNodeId === sourceId),
 			)
 			if (existingLink) {
-				return deleteMindmapLink([existingLink.id])
+				return deleteMindmapWires([existingLink.id])
 			}
-			const newLink = createMindmapLink({
-				sourceNodeId: source.id,
-				targetNodeId: target.id,
-			})
+			const newLink = createMindmapWires([
+				{
+					sourceNodeId: sourceId,
+					targetNodeId: targetId,
+				},
+			])
 			return newLink
 		},
-		[createMindmapLink, data, deleteMindmapLink],
+		[createMindmapWires, data, deleteMindmapWires],
+	)
+
+	const createLinks = useCallback(
+		(newPairs: { sourceNodeId: string; targetNodeId: string }[]) => {
+			if (!data) {
+				return
+			}
+
+			const validPairs = newPairs.filter(({ sourceNodeId, targetNodeId }) => sourceNodeId !== targetNodeId)
+
+			const existingLinks = validPairs
+				.map(({ sourceNodeId, targetNodeId }) =>
+					data.wires.find((link) => {
+						const isMatching =
+							link.sourceNodeId === sourceNodeId &&
+							link.targetNodeId === targetNodeId &&
+							link.direction === 'Normal'
+						const isReversedMatching =
+							link.sourceNodeId === targetNodeId &&
+							link.targetNodeId === sourceNodeId &&
+							link.direction === 'Reversed'
+						return isMatching || isReversedMatching
+					}),
+				)
+				.filter((link): link is NonNullable<typeof link> => !!link)
+
+			if (existingLinks.length === validPairs.length) {
+				return deleteMindmapWires(existingLinks.map((link) => link.id))
+			}
+
+			return createMindmapWires(validPairs)
+		},
+		[createMindmapWires, data, deleteMindmapWires],
 	)
 
 	return {
 		createLink,
+		createLinks,
 	}
 }

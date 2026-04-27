@@ -29,18 +29,18 @@ const rootReducer = combineReducers({
 	undoRedo: UndoRedoReducer,
 })
 
-const initialState = configureStore({ reducer: rootReducer }).getState()
-
-export const generateStore = ({ preloadedState }: { preloadedState?: Partial<RootState> } = {}) =>
-	configureStore({
+export const generateStore = ({ preloadedState }: { preloadedState?: Partial<RootState> } = {}) => {
+	const initialState = rootReducer(undefined, { type: '' })
+	return configureStore({
 		reducer: rootReducer,
 		middleware: (getDefaultMiddleware) =>
 			getDefaultMiddleware().concat(baseApi.middleware, iconifyApi.middleware),
 		preloadedState: deepMerge(initialState, preloadedState ?? {}),
 	})
+}
 
 export const store = generateStore()
 export const getGlobalStore = () => store
 
-export type RootState = typeof initialState
+export type RootState = ReturnType<typeof rootReducer>
 export type AppDispatch = typeof store.dispatch
