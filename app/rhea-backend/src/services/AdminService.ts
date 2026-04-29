@@ -123,7 +123,7 @@ export const AdminService = {
 		}
 	},
 
-	getUserByEmail: async (email: string) => {
+	getUserByEmailExact: async (email: string) => {
 		const user = await getPrismaClient().user.findUnique({
 			where: {
 				email,
