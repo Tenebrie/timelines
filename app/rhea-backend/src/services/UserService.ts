@@ -21,7 +21,10 @@ export const UserService = {
 	findByEmail: async (email: string) => {
 		return getPrismaClient().user.findFirst({
 			where: {
-				email,
+				email: {
+					mode: 'insensitive',
+					equals: email,
+				},
 				deletedAt: null,
 			},
 			select: {
@@ -82,7 +85,10 @@ export const UserService = {
 	login: async (email: string, password: string) => {
 		const user = await getPrismaClient().user.findFirst({
 			where: {
-				email,
+				email: {
+					mode: 'insensitive',
+					equals: email,
+				},
 				deletedAt: null,
 			},
 		})

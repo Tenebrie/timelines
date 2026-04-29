@@ -197,7 +197,7 @@ router.patch('/api/admin/users/:userId', async (ctx) => {
 	})
 
 	if (email) {
-		const existingUser = await AdminService.getUserByEmail(email)
+		const existingUser = await AdminService.getUserByEmailExact(email)
 		if (existingUser && existingUser.id !== userId) {
 			throw new BadRequestError('Email is already in use')
 		}
