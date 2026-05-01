@@ -5,13 +5,18 @@ import {
 	useValidateImportUserDataMutation,
 } from '@api/dataMigrationApi'
 import { useGetStorageStatusQuery } from '@api/profileApi'
+import ClearIcon from '@mui/icons-material/Clear'
 import DeleteIcon from '@mui/icons-material/Delete'
+import DescriptionIcon from '@mui/icons-material/DescriptionOutlined'
 import DownloadIcon from '@mui/icons-material/Download'
 import ImportIcon from '@mui/icons-material/FileDownload'
 import ExportIcon from '@mui/icons-material/FileUpload'
 import AssetsIcon from '@mui/icons-material/Folder'
 import QuotaIcon from '@mui/icons-material/Storage'
 import PreviewIcon from '@mui/icons-material/Visibility'
+import Alert from '@mui/material/Alert'
+import AlertTitle from '@mui/material/AlertTitle'
+import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import LinearProgress from '@mui/material/LinearProgress'
@@ -192,49 +197,67 @@ export function StoragePageExport() {
 	}
 
 	return (
-		<Stack spacing={2}>
-			<Header variant="h2" icon={<ExportIcon />}>
-				Export data
-			</Header>
-			<Typography variant="body2" color="text.secondary">
-				Export your user data as a file to import it into your self-hosted Neverkin environment.
-			</Typography>
-			<LoadingSelect value="json" label="Export format">
-				<MenuItem value="json">JSON</MenuItem>
-			</LoadingSelect>
-			<Stack direction="row" spacing={1}>
-				<Button
-					variant="contained"
-					color="primary"
-					startIcon={<ExportIcon />}
-					onClick={handleExport}
-					loading={isLoading}
-					sx={{ minWidth: 110 }}
-				>
-					Export
-				</Button>
-				<Button
-					variant="outlined"
-					startIcon={<PreviewIcon />}
-					onClick={handlePreview}
-					loading={isLoading}
-					sx={{ minWidth: 110 }}
-				>
-					Preview
-				</Button>
+		<Box
+			sx={{
+				border: 1,
+				borderColor: 'divider',
+				borderRadius: 1,
+				p: 3,
+			}}
+		>
+			<Stack spacing={2.5}>
+				<Stack spacing={0.5}>
+					<Header variant="h2" icon={<ExportIcon />}>
+						Export data
+					</Header>
+					<Typography variant="body2" color="text.secondary">
+						Export your user data as a file to import it into your self-hosted Neverkin environment.
+					</Typography>
+				</Stack>
+				<LoadingSelect value="json" label="Export format" fullWidth>
+					<MenuItem value="json">JSON</MenuItem>
+				</LoadingSelect>
+				<Stack direction="row" spacing={1} alignItems="center">
+					<Button
+						variant="contained"
+						color="primary"
+						startIcon={<ExportIcon />}
+						onClick={handleExport}
+						loading={isLoading}
+						sx={{ minWidth: 120 }}
+					>
+						Export
+					</Button>
+					<Button
+						variant="outlined"
+						startIcon={<PreviewIcon />}
+						onClick={handlePreview}
+						loading={isLoading}
+						sx={{ minWidth: 120 }}
+					>
+						Preview
+					</Button>
+					<Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+						Collecting all your data may take a few seconds.
+					</Typography>
+				</Stack>
+				<Alert severity="info" variant="outlined" icon={false} sx={{ py: 1 }}>
+					<AlertTitle sx={{ mb: 0.5, fontSize: 14 }}>Not included in export</AlertTitle>
+					<Stack
+						component="ul"
+						sx={{
+							m: 0,
+							pl: 2.5,
+							'& li': { fontSize: 13, color: 'text.secondary', lineHeight: 1.7 },
+						}}
+					>
+						<li>Assets (images, other files)</li>
+						<li>Personal user data (name, email, etc.)</li>
+						<li>Collaborating users and invites</li>
+					</Stack>
+				</Alert>
 			</Stack>
-			<Typography variant="caption" color="text.secondary">
-				Collecting all your data may take a few seconds.
-			</Typography>
-			<Typography variant="caption" color="text.secondary">
-				<b>Note:</b> The following data will <b>not</b> be exported:
-				<ul>
-					<li>Assets (images, other files)</li>
-					<li>Personal user data (name, email, etc.)</li>
-					<li>Collaborating users and invites</li>
-				</ul>
-			</Typography>
-		</Stack>
+		</Box>
 	)
 }
 
@@ -282,76 +305,127 @@ export function StoragePageImport() {
 		setStatus('validated')
 	}
 
+	const handleClearFile = () => {
+		setSelectedFile(null)
+		setStatus('idle')
+		setValidationDone(false)
+		if (fileInputRef.current) {
+			fileInputRef.current.value = ''
+		}
+	}
+
 	return (
-		<Stack spacing={2}>
-			<Header variant="h2" icon={<ImportIcon />}>
-				Import data
-			</Header>
-			<Typography variant="body2" color="text.secondary">
-				Import user data from a previously exported JSON file.
-			</Typography>
-			<Button
-				variant="outlined"
-				component="label"
-				startIcon={<ImportIcon />}
-				sx={{ alignSelf: 'flex-start' }}
-			>
-				{selectedFile ? selectedFile.name : 'Select JSON file'}
-				<input
-					ref={fileInputRef}
-					type="file"
-					accept="application/json,.json"
-					hidden
-					onChange={handleFileChange}
-				/>
-			</Button>
-			<Stack direction="row" spacing={1} alignItems="center">
-				<Button
-					variant="contained"
-					color="primary"
-					startIcon={<ImportIcon />}
-					onClick={handleImport}
-					loading={isLoading}
-					disabled={!selectedFile || !validationDone}
-					sx={{ minWidth: 110 }}
-				>
-					Import
-				</Button>
-				<Button
-					variant="contained"
-					color="primary"
-					startIcon={<ImportIcon />}
-					onClick={handleValidation}
-					loading={isValidating}
-					disabled={!selectedFile || validationDone}
-					sx={{ minWidth: 110 }}
-				>
-					Validate
-				</Button>
+		<Box
+			sx={{
+				border: 1,
+				borderColor: 'divider',
+				borderRadius: 1,
+				p: 3,
+			}}
+		>
+			<Stack spacing={2.5}>
+				<Stack spacing={0.5}>
+					<Header variant="h2" icon={<ImportIcon />}>
+						Import data
+					</Header>
+					<Typography variant="body2" color="text.secondary">
+						Import user data from a previously exported JSON file.
+					</Typography>
+				</Stack>
+
+				{!selectedFile && (
+					<Button
+						variant="outlined"
+						component="label"
+						startIcon={<ImportIcon />}
+						sx={{ alignSelf: 'flex-start', minWidth: 180 }}
+					>
+						Select JSON file
+						<input
+							ref={fileInputRef}
+							type="file"
+							accept="application/json,.json"
+							hidden
+							onChange={handleFileChange}
+						/>
+					</Button>
+				)}
+
+				{selectedFile && (
+					<Stack
+						direction="row"
+						alignItems="center"
+						spacing={1.5}
+						sx={{
+							border: 1,
+							borderColor: 'divider',
+							borderRadius: 1,
+							px: 2,
+							py: 1,
+							bgcolor: 'action.hover',
+						}}
+					>
+						<DescriptionIcon sx={{ color: 'text.secondary' }} />
+						<Stack sx={{ flex: 1, minWidth: 0 }}>
+							<Typography variant="body2" noWrap title={selectedFile.name}>
+								{selectedFile.name}
+							</Typography>
+							<Typography variant="caption" color="text.secondary">
+								{formatBytes(selectedFile.size)}
+								{validationDone ? ' · Validated' : ''}
+							</Typography>
+						</Stack>
+						<IconButton size="small" onClick={handleClearFile} aria-label="Remove file">
+							<ClearIcon fontSize="small" />
+						</IconButton>
+					</Stack>
+				)}
+
+				<Stack direction="row" spacing={1} alignItems="center">
+					<Button
+						variant="contained"
+						color="primary"
+						startIcon={<ImportIcon />}
+						onClick={handleImport}
+						loading={isLoading}
+						disabled={!selectedFile || !validationDone}
+						sx={{ minWidth: 120 }}
+					>
+						Import
+					</Button>
+					<Button
+						variant="outlined"
+						color="primary"
+						onClick={handleValidation}
+						loading={isValidating}
+						disabled={!selectedFile || validationDone}
+						sx={{ minWidth: 120 }}
+					>
+						Validate
+					</Button>
+				</Stack>
+
+				{status === 'success' && (
+					<Alert severity="success" variant="outlined">
+						Data imported successfully.
+					</Alert>
+				)}
+				{status === 'error' && (
+					<Alert severity="error" variant="outlined">
+						Import failed. Please check the file and try again.
+					</Alert>
+				)}
+				{status === 'validated' && (
+					<Alert severity="success" variant="outlined">
+						Data validated successfully. You can now run the import.
+					</Alert>
+				)}
+				{status === 'validationError' && (
+					<Alert severity="error" variant="outlined">
+						Validation failed. Please check the file and try again.
+					</Alert>
+				)}
 			</Stack>
-			{status === 'success' && (
-				<Typography variant="body2" color="success.main">
-					Data imported successfully.
-				</Typography>
-			)}
-			{status === 'error' && (
-				<Typography variant="body2" color="error.main">
-					Import failed. Please check the file and try again.
-				</Typography>
-			)}
-			{status === 'validated' && (
-				<Typography variant="body2" color="success.main">
-					Data validated successfully.
-				</Typography>
-			)}
-			{status === 'validationError' && (
-				<Typography variant="body2" color="error.main">
-					Validation failed. Please check the file and try again.
-				</Typography>
-			)}
-			<Typography variant="caption" color="text.secondary">
-				<b>Warning:</b> Imported data may override your existing data.
-			</Typography>
-		</Stack>
+		</Box>
 	)
 }
