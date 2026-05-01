@@ -43,7 +43,7 @@ export const AuditLogService = {
 
 	append: async (
 		ctx: ParameterizedContext<DefaultState, DefaultContext>,
-		data: Omit<AuditLogUncheckedCreateInput, 'requestIp'>,
+		data: Omit<AuditLogUncheckedCreateInput, 'requestIp' | 'id' | 'createdAt'>,
 	) => {
 		const ip = ctx.request.ip
 		await getPrismaClient().auditLog.create({

@@ -135,42 +135,58 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		originTime: string
 		dateFormat?: null | string
 	}[]
-	actors: {
-		pages: {
-			id: string
-			name: string
-		}[]
+	tags: {
 		mentions: {
-			targetId: string
 			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetId: string
 		}[]
 		mentionedIn: {
-			sourceId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceId: string
 		}[]
 		description: string
-		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		worldId: string
+	}[]
+	actors: {
+		mentions: {
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetId: string
+		}[]
+		pages: {
+			id: string
+			name: string
+		}[]
+		mentionedIn: {
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceId: string
+		}[]
+		description: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		worldId: string
 		title: string
 		icon: string
 		color: string
 		descriptionRich: string
 	}[]
 	events: {
+		mentions: {
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			targetId: string
+		}[]
 		pages: {
 			id: string
 			name: string
 		}[]
-		mentions: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		}[]
 		mentionedIn: {
-			sourceId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+			sourceId: string
 		}[]
 		deltaStates: {
 			description?: null | string
@@ -183,11 +199,11 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			worldEventId: string
 		}[]
 		description: string
-		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		worldId: string
 		icon: string
 		color: string
 		descriptionRich: string
@@ -195,30 +211,14 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		revokedAt?: null | string
 		worldEventTrackId?: null | string
 	}[]
-	tags: {
-		mentions: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		}[]
-		mentionedIn: {
-			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-		}[]
-		description: string
-		worldId: string
-		id: string
-		createdAt: string
-		updatedAt: string
-		name: string
-	}[]
 	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	ownerId: string
 	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
-	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type GetWorldInfoApiArg = {
@@ -244,9 +244,9 @@ export type GetWorldBriefApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	ownerId: string
 	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
-	ownerId: string
 	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type GetWorldBriefApiArg = {

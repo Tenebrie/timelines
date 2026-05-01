@@ -1,3 +1,5 @@
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectProps } from '@mui/material/Select'
 
@@ -20,8 +22,11 @@ export function LoadingSelect<Value = unknown>(props: LoadingSelectProps<Value>)
 	}
 
 	return (
-		<Select disabled={disabled} {...rest}>
-			{children}
-		</Select>
+		<FormControl>
+			<InputLabel>{props.label}</InputLabel>
+			<Select disabled={disabled} {...rest}>
+				{children}
+			</Select>
+		</FormControl>
 	)
 }

@@ -16,7 +16,7 @@ export function ProfileView() {
 				routes={[
 					{ icon: <AccountCircleIcon />, label: 'Public profile', path: '/profile/public' },
 					{ icon: <TuneIcon />, label: 'Preferences', path: '/profile/preferences' },
-					{ icon: <StorageIcon />, label: 'Storage', path: '/profile/storage' },
+					{ icon: <StorageIcon />, label: 'User data', path: '/profile/storage' },
 					{ icon: <LockResetIcon />, label: 'Security', path: '/profile/security' },
 					{ icon: <FeedbackIcon />, label: 'Feedback', path: '/profile/feedback' },
 				]}
