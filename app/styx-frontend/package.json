@@ -111,7 +111,7 @@
 		"typescript-eslint": "^8.59.0",
 		"undici": "^7.1.0",
 		"user-agent-data-types": "^0.4.3",
-		"uuid": "^11.0.3",
+		"uuid": "^14.0.0",
 		"vite-bundle-analyzer": "^0.17.1",
 		"vitest": "^4.1.5"
 	},
