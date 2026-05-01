@@ -42,11 +42,11 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			positionX: number
 			positionY: number
 		}[]
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		description: string
 		worldId: string
 		title: string
 		icon: string
@@ -73,8 +73,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		position: number
 		name: string
+		position: number
 		worldId: string
 		icon: string
 		color: string
@@ -95,20 +95,20 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceId: string
 		}[]
 		deltaStates: {
+			description?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name?: null | string
-			description?: null | string
 			descriptionRich?: null | string
 			timestamp: string
 			worldEventId: string
 		}[]
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		description: string
 		worldId: string
 		icon: string
 		color: string
@@ -126,11 +126,11 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceId: string
 		}[]
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		description: string
 		worldId: string
 	}[]
 }

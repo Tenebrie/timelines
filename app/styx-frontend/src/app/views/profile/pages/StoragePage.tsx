@@ -1,5 +1,9 @@
 import { useListUserAssetsQuery } from '@api/assetApi'
-import { useExportUserDataMutation, useImportUserDataMutation } from '@api/dataMigrationApi'
+import {
+	useExportUserDataMutation,
+	useImportUserDataMutation,
+	useValidateImportUserDataMutation,
+} from '@api/dataMigrationApi'
 import { useGetStorageStatusQuery } from '@api/profileApi'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
@@ -25,6 +29,7 @@ import { useRef, useState } from 'react'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { formatBytes } from '@/app/utils/formatBytes'
+import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { Button } from '@/ui-lib/components/Button/Button'
 import { Header } from '@/ui-lib/components/Header/Header'
 import { LoadingSelect } from '@/ui-lib/components/LoadingSelect/LoadingSelect'
@@ -221,36 +226,60 @@ export function StoragePageExport() {
 			<Typography variant="caption" color="text.secondary">
 				Collecting all your data may take a few seconds.
 			</Typography>
+			<Typography variant="caption" color="text.secondary">
+				<b>Note:</b> The following data will <b>not</b> be exported:
+				<ul>
+					<li>Assets (images, other files)</li>
+					<li>Personal user data (name, email, etc.)</li>
+					<li>Collaborating users and invites</li>
+				</ul>
+			</Typography>
 		</Stack>
 	)
 }
 
 export function StoragePageImport() {
 	const [importUserData, { isLoading }] = useImportUserDataMutation()
+	const [validateUserData, { isLoading: isValidating }] = useValidateImportUserDataMutation()
 	const fileInputRef = useRef<HTMLInputElement>(null)
 	const [selectedFile, setSelectedFile] = useState<File | null>(null)
-	const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle')
+	const [status, setStatus] = useState<'idle' | 'success' | 'error' | 'validated' | 'validationError'>('idle')
+	const [validationDone, setValidationDone] = useState(false)
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0] ?? null
 		setSelectedFile(file)
 		setStatus('idle')
+		setValidationDone(false)
 	}
 
 	const handleImport = async () => {
 		if (!selectedFile) return
 
-		try {
-			const text = await selectedFile.text()
-			await importUserData({ body: { data: { data: text } } }).unwrap()
-			setStatus('success')
-			setSelectedFile(null)
-			if (fileInputRef.current) {
-				fileInputRef.current.value = ''
-			}
-		} catch {
+		const text = await selectedFile.text()
+		const result = parseApiResponse(await importUserData({ body: { data: { json: text } } }))
+		if (result.error) {
 			setStatus('error')
+			return
 		}
+		setStatus('success')
+		setSelectedFile(null)
+		if (fileInputRef.current) {
+			fileInputRef.current.value = ''
+		}
+	}
+
+	const handleValidation = async () => {
+		if (!selectedFile) return
+
+		const text = await selectedFile.text()
+		const result = parseApiResponse(await validateUserData({ body: { data: { json: text } } }))
+		if (result.error) {
+			setStatus('validationError')
+			return
+		}
+		setValidationDone(true)
+		setStatus('validated')
 	}
 
 	return (
@@ -283,10 +312,21 @@ export function StoragePageImport() {
 					startIcon={<ImportIcon />}
 					onClick={handleImport}
 					loading={isLoading}
-					disabled={!selectedFile}
+					disabled={!selectedFile || !validationDone}
 					sx={{ minWidth: 110 }}
 				>
 					Import
+				</Button>
+				<Button
+					variant="contained"
+					color="primary"
+					startIcon={<ImportIcon />}
+					onClick={handleValidation}
+					loading={isValidating}
+					disabled={!selectedFile || validationDone}
+					sx={{ minWidth: 110 }}
+				>
+					Validate
 				</Button>
 			</Stack>
 			{status === 'success' && (
@@ -299,8 +339,18 @@ export function StoragePageImport() {
 					Import failed. Please check the file and try again.
 				</Typography>
 			)}
+			{status === 'validated' && (
+				<Typography variant="body2" color="success.main">
+					Data validated successfully.
+				</Typography>
+			)}
+			{status === 'validationError' && (
+				<Typography variant="body2" color="error.main">
+					Validation failed. Please check the file and try again.
+				</Typography>
+			)}
 			<Typography variant="caption" color="text.secondary">
-				Warning: Importing data will merge it with your existing data.
+				<b>Warning:</b> Imported data may override your existing data.
 			</Typography>
 		</Stack>
 	)

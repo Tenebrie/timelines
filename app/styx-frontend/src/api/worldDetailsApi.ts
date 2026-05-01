@@ -60,9 +60,9 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				id: string
 				createdAt: string
 				updatedAt: string
-				label?: null | string
-				position: number
 				calendarId: string
+				position: number
+				label?: null | string
 				shortLabel?: null | string
 				repeats: number
 				parentUnitId: string
@@ -72,25 +72,45 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				id: string
 				createdAt: string
 				updatedAt: string
-				label?: null | string
-				position: number
 				calendarId: string
+				position: number
+				label?: null | string
 				shortLabel?: null | string
 				repeats: number
 				parentUnitId: string
 				childUnitId: string
 			}[]
 			id: string
-			position: number
-			formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
-			negativeFormat: 'MinusSign' | 'AbsoluteValue'
 			name: string
+			position: number
 			displayName: string
 			displayNameShort: string
 			displayNamePlural: string
+			formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 			formatShorthand?: null | string
+			negativeFormat: 'MinusSign' | 'AbsoluteValue'
 			duration: string
 			treeDepth: number
+		}[]
+		presentations: {
+			units: {
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				calendarId: string
+				presentationId: string
+				position: number
+				formatString: string
+				subdivision: number
+				labeledIndices: number[]
+				unitId: string
+			}[]
+			id: string
+			name: string
+			compression: number
+			scaleFactor: number
+			baselineUnitId?: null | string
 		}[]
 		seasons: {
 			intervals: {
@@ -103,35 +123,15 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				seasonId: string
 			}[]
 			id: string
-			position: number
 			name: string
+			position: number
 			formatShorthand?: null | string
 		}[]
-		presentations: {
-			units: {
-				id: string
-				createdAt: string
-				updatedAt: string
-				position: number
-				calendarId: string
-				name: string
-				formatString: string
-				subdivision: number
-				labeledIndices: number[]
-				unitId: string
-				presentationId: string
-			}[]
-			id: string
-			name: string
-			compression: number
-			scaleFactor: number
-			baselineUnitId?: null | string
-		}[]
+		description: string
 		id: string
 		updatedAt: string
-		position: number
 		name: string
-		description: string
+		position: number
 		originTime: string
 		dateFormat?: null | string
 	}[]
@@ -144,11 +144,11 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceId: string
 		}[]
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		description: string
 		worldId: string
 	}[]
 	actors: {
@@ -164,11 +164,11 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 			sourceId: string
 		}[]
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		description: string
 		worldId: string
 		title: string
 		icon: string
@@ -189,20 +189,20 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			sourceId: string
 		}[]
 		deltaStates: {
+			description?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name?: null | string
-			description?: null | string
 			descriptionRich?: null | string
 			timestamp: string
 			worldEventId: string
 		}[]
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		description: string
 		worldId: string
 		icon: string
 		color: string
@@ -211,15 +211,15 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		revokedAt?: null | string
 		worldEventTrackId?: null | string
 	}[]
-	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	description: string
 	ownerId: string
-	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
+	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
+	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type GetWorldInfoApiArg = {
 	/** Any string value */
@@ -239,15 +239,15 @@ export type GetCommonWorldEventIconsApiArg = {
 	worldId: string
 }
 export type GetWorldBriefApiResponse = /** status 200  */ {
-	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	description: string
 	ownerId: string
-	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
+	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
+	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type GetWorldBriefApiArg = {
 	/** Any string value */

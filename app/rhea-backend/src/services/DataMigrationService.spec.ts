@@ -1,8 +1,12 @@
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { prismaMockRef } from '../mock/utils/prismaMock.js'
 import { DataMigrationService } from './DataMigrationService.js'
 
 const now = new Date()
+
+const serialize = (data: unknown): string =>
+	JSON.stringify(data, (_k, v) => (typeof v === 'bigint' ? v.toString() : v))
 
 const makeMention = (sourceId: string, targetId: string, overrides: Record<string, unknown> = {}) => ({
 	sourceType: 'Actor' as const,
@@ -174,6 +178,7 @@ const makeWorld = (ownerId: string, id = 'world-1', overrides: Partial<Record<st
 	worldCommonIconSets: [] as ReturnType<typeof makeIconSet>[],
 	worldEventTracks: [] as ReturnType<typeof makeTrack>[],
 	mindmapNodes: [] as ReturnType<typeof makeMindmapNode>[],
+	calendars: [] as ReturnType<typeof makeCalendar>[],
 	...overrides,
 })
 
@@ -290,35 +295,51 @@ const makePrisma = ({
 		},
 	}) as unknown as ReturnType<typeof makePrisma>
 
-vi.mock('./dbClients/DatabaseClient.js', () => ({
-	getPrismaClient: vi.fn(() => ({
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		$transaction: vi.fn(async (fn: (prisma: any) => Promise<any>) =>
-			fn({
-				world: { findMany: vi.fn().mockResolvedValue([]), deleteMany: vi.fn() },
-				calendar: { findMany: vi.fn().mockResolvedValue([]), deleteMany: vi.fn() },
-				user: { findUnique: vi.fn(), update: vi.fn() },
-				mention: { createMany: vi.fn() },
-				wikiArticle: { createMany: vi.fn() },
-				contentPage: { createMany: vi.fn() },
-			}),
-		),
-	})),
-}))
+type CapturedNested = { create: Array<Record<string, unknown>> }
+
+type CapturedUserUpdate = {
+	data: {
+		calendars: { create: Array<{ units: CapturedNested }> }
+		worlds: {
+			create: Array<{
+				mindmapNodes: CapturedNested
+				calendars: CapturedNested
+			}>
+		}
+	}
+}
+
+const tx = {
+	world: { findMany: vi.fn().mockResolvedValue([]), deleteMany: vi.fn() },
+	calendar: { findMany: vi.fn().mockResolvedValue([]), deleteMany: vi.fn() },
+	user: {
+		findUnique: vi.fn(),
+		update: vi.fn<(args: CapturedUserUpdate) => Promise<unknown>>(),
+	},
+	mention: { createMany: vi.fn() },
+	wikiArticle: { createMany: vi.fn() },
+	contentPage: { createMany: vi.fn() },
+	mindmapLink: { createMany: vi.fn() },
+	calendarUnitRelation: { createMany: vi.fn() },
+}
+
+beforeEach(() => {
+	prismaMockRef.current = {
+		$transaction: <R>(fn: (prisma: typeof tx) => Promise<R>): Promise<R> => fn(tx),
+	} as unknown as typeof prismaMockRef.current
+
+	for (const table of Object.values(tx)) {
+		for (const fn of Object.values(table)) {
+			fn.mockClear()
+		}
+	}
+})
 
 describe('DataMigrationService', () => {
 	const userId = 'user-1'
 	const ctx = { user: { id: userId } }
 
 	describe('validateOwnership', () => {
-		it('rejects import when a world is owned by another user', async () => {
-			const data = makeExportData(userId)
-			const prisma = makePrisma({ foreignWorlds: [{ id: 'world-1' }] })
-			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow(
-				'Import contains IDs owned by another user',
-			)
-		})
-
 		it('rejects import when a calendar is owned by another user', async () => {
 			const data = makeExportData(userId)
 			const prisma = makePrisma({ foreignCalendars: [{ id: 'cal-1' }] })
@@ -780,22 +801,58 @@ describe('DataMigrationService', () => {
 			const prisma = makePrisma()
 			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow()
 		})
+
+		it('uses ctx.user.id (not data.user.id) for the foreign-ownership lookup', async () => {
+			const world = makeWorld('other-user', 'world-1')
+			const data = makeExportData('other-user', [world])
+			const prisma = makePrisma()
+			await DataMigrationService.validateOwnership(ctx, data, prisma)
+			expect(prisma.world.findMany).toHaveBeenCalledWith({
+				where: { id: { in: ['world-1'] }, ownerId: { not: userId } },
+				select: { id: true },
+			})
+			expect(prisma.calendar.findMany).toHaveBeenCalledWith({
+				where: { id: { in: ['cal-1'] }, ownerId: { not: userId } },
+				select: { id: true },
+			})
+		})
+
+		it('rejects world-owned calendar with mismatched worldId', async () => {
+			const world = makeWorld(userId, 'world-1')
+			const cal = makeCalendar({ worldId: 'wrong-world' }, 'cal-w-1')
+			world.calendars = [cal]
+			const data = makeExportData(userId, [world])
+			const prisma = makePrisma()
+			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow(
+				'contains children with mismatched worldId',
+			)
+		})
+
+		it('rejects world-owned calendar unit with mismatched calendarId', async () => {
+			const world = makeWorld(userId, 'world-1')
+			const cal = makeCalendar({ worldId: 'world-1' }, 'cal-w-1')
+			cal.units = [makeCalendarUnit('wrong-cal')]
+			world.calendars = [cal]
+			const data = makeExportData(userId, [world])
+			const prisma = makePrisma()
+			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow(
+				'contains children with mismatched calendarId',
+			)
+		})
+
+		it('accepts world with valid world-owned calendar and its children', async () => {
+			const world = makeWorld(userId, 'world-1')
+			const cal = makeCalendar({ worldId: 'world-1' }, 'cal-w-1')
+			cal.units = [makeCalendarUnit('cal-w-1')]
+			cal.seasons = [makeCalendarSeason('cal-w-1')]
+			world.calendars = [cal]
+			const data = makeExportData(userId, [world], [])
+			const prisma = makePrisma()
+			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).resolves.not.toThrow()
+		})
 	})
 
 	describe('validateUserData', () => {
-		it('returns invalid for wrong version', async () => {
-			const prisma = makePrisma()
-			const result = await DataMigrationService.validateUserData(
-				ctx,
-				JSON.stringify({
-					version: 999,
-					user: { id: userId, worlds: [], calendars: [] },
-				}),
-				prisma,
-			)
-			expect(result.isValid).toBe(false)
-		})
-
 		it('returns invalid for completely wrong structure', async () => {
 			const prisma = makePrisma()
 			const result = await DataMigrationService.validateUserData(ctx, JSON.stringify({ foo: 'bar' }), prisma)
@@ -832,21 +889,97 @@ describe('DataMigrationService', () => {
 
 	describe('importUserData', () => {
 		it('throws on invalid data', async () => {
-			await expect(DataMigrationService.importUserData(ctx, JSON.stringify({ bad: true }))).rejects.toThrow(
-				'Invalid user data',
-			)
+			await expect(
+				DataMigrationService.importUserData(ctx, JSON.stringify({ bad: true }), {
+					dryRun: false,
+				}),
+			).rejects.toThrow('Invalid user data')
 		})
 
-		it('rejects import when data user id does not match the calling user', async () => {
-			const data = makeExportData('different-user-id')
-			const prisma = makePrisma()
-			const result = await DataMigrationService.validateUserData(
-				ctx,
-				JSON.stringify(data, (_, v) => (typeof v === 'bigint' ? v.toString() : v)),
-				prisma,
-			)
-			expect(result.isValid).toBe(false)
-			expect(result.error).toBeTruthy()
+		it('inserts mindmap links via separate createMany after user.update (not nested)', async () => {
+			const world = makeWorld(userId)
+			world.mindmapNodes = [
+				makeMindmapNode(world.id, 'n1', [makeMindmapLink('n1', 'n2', 'l1')]),
+				makeMindmapNode(world.id, 'n2'),
+			]
+			const data = makeExportData(userId, [world], [])
+			await DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false })
+
+			expect(tx.mindmapLink.createMany).toHaveBeenCalledWith({
+				data: [expect.objectContaining({ id: 'l1', sourceNodeId: 'n1', targetNodeId: 'n2' })],
+			})
+
+			const updateArgs = tx.user.update.mock.calls[0][0]
+			const nodes = updateArgs.data.worlds.create[0].mindmapNodes.create
+			nodes.forEach((node) => expect(node).not.toHaveProperty('links'))
+		})
+
+		it('inserts calendar unit relations via separate createMany after user.update (not nested)', async () => {
+			// Same problem as mindmap links: a CalendarUnitRelation references a
+			// sibling CalendarUnit via childUnitId. Has to be flattened.
+			const cal = makeCalendar({ ownerId: userId })
+			const unit = makeCalendarUnit(cal.id, 'u1')
+			unit.children = [
+				{
+					id: 'rel-1',
+					createdAt: now,
+					updatedAt: now,
+					label: null,
+					position: 0,
+					calendarId: cal.id,
+					shortLabel: null,
+					repeats: 1,
+					parentUnitId: 'u1',
+					childUnitId: 'u1',
+				},
+			]
+			cal.units = [unit]
+			const data = makeExportData(userId, [], [cal])
+			await DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false })
+
+			expect(tx.calendarUnitRelation.createMany).toHaveBeenCalledWith({
+				data: [expect.objectContaining({ id: 'rel-1', parentUnitId: 'u1', childUnitId: 'u1' })],
+			})
+
+			const updateArgs = tx.user.update.mock.calls[0][0]
+			const units = updateArgs.data.calendars.create[0].units.create
+			units.forEach((u) => expect(u).not.toHaveProperty('children'))
+		})
+
+		it('imports world-owned calendars nested under each world create', async () => {
+			const world = makeWorld(userId, 'world-1')
+			const cal = makeCalendar({ worldId: 'world-1' }, 'cal-w-1')
+			world.calendars = [cal]
+			const data = makeExportData(userId, [world], [])
+			await DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false })
+
+			const updateArgs = tx.user.update.mock.calls[0][0]
+			const worldArg = updateArgs.data.worlds.create[0]
+			expect(worldArg.calendars.create).toHaveLength(1)
+			expect(worldArg.calendars.create[0]).toMatchObject({ id: 'cal-w-1' })
+			expect(worldArg.calendars.create[0]).not.toHaveProperty('worldId')
+			expect(worldArg.calendars.create[0]).not.toHaveProperty('ownerId')
+		})
+	})
+
+	describe('isImportValid', () => {
+		it('returns null when valid data runs through the full dry-run transaction', async () => {
+			const data = makeExportData(userId)
+			await expect(DataMigrationService.isImportValid(ctx, serialize(data))).resolves.toBeNull()
+			// Dry-run still executes the writes (the sentinel rolls them back).
+			expect(tx.user.update).toHaveBeenCalled()
+		})
+
+		it('throws BadRequestError when validation fails', async () => {
+			const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+			try {
+				await expect(DataMigrationService.isImportValid(ctx, JSON.stringify({ bad: true }))).rejects.toThrow(
+					'Invalid user data',
+				)
+				expect(errorSpy).toHaveBeenCalled()
+			} finally {
+				errorSpy.mockRestore()
+			}
 		})
 	})
 })

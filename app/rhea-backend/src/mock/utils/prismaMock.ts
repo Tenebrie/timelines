@@ -40,4 +40,3 @@ export function mockPrismaClient({
 beforeEach(() => {
 	prismaMockRef.current = makePrismaClient({})
 })
-// export const prismaMock = getPrismaClient() as unknown as DeepMockProxy<PrismaClient>

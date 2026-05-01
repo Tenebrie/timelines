@@ -18,7 +18,9 @@ import { SearchInput } from '../components/SearchInput'
 
 const pageSize = 20
 
-const actionColors: Record<string, 'default' | 'success' | 'info' | 'warning' | 'error'> = {
+type AuditLogMessage = AdminGetAuditLogsApiResponse['logs'][number]['action']
+
+const actionColors: Record<AuditLogMessage, 'default' | 'success' | 'info' | 'warning' | 'error'> = {
 	UserCreateAccount: 'success',
 	UserLoginWithPassword: 'info',
 	UserLoginWithGoogle: 'info',
@@ -30,6 +32,13 @@ const actionColors: Record<string, 'default' | 'success' | 'info' | 'warning' | 
 	AdminSetUserLevel: 'default',
 	AdminSetUserPassword: 'warning',
 	AdminDeleteUser: 'error',
+	AdminBroadcastNotification: 'default',
+	UserExportData: 'info',
+	UserExportDataFailed: 'warning',
+	UserValidateImportData: 'info',
+	UserValidateImportDataFailed: 'warning',
+	UserImportData: 'success',
+	UserImportDataFailed: 'error',
 }
 
 type AuditLog = AdminGetAuditLogsApiResponse['logs'][number]

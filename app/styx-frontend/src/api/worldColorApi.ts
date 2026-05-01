@@ -33,8 +33,8 @@ export type GetWorldColorsApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	label?: null | string
 	worldId: string
+	label?: null | string
 	value: string
 }[]
 export type GetWorldColorsApiArg = {
@@ -45,8 +45,8 @@ export type CreateWorldColorApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	label?: null | string
 	worldId: string
+	label?: null | string
 	value: string
 }
 export type CreateWorldColorApiArg = {

@@ -6,8 +6,18 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
+			validateImportUserData: build.mutation<ValidateImportUserDataApiResponse, ValidateImportUserDataApiArg>(
+				{
+					query: (queryArg) => ({
+						url: `/api/import/user-data/validate`,
+						method: 'POST',
+						body: queryArg.body,
+					}),
+					invalidatesTags: ['dataMigration'],
+				},
+			),
 			importUserData: build.mutation<ImportUserDataApiResponse, ImportUserDataApiArg>({
-				query: (queryArg) => ({ url: `/api/import/user-data`, method: 'POST', body: queryArg.body }),
+				query: (queryArg) => ({ url: `/api/import/user-data/commit`, method: 'POST', body: queryArg.body }),
 				invalidatesTags: ['dataMigration'],
 			}),
 			exportUserData: build.mutation<ExportUserDataApiResponse, ExportUserDataApiArg>({
@@ -18,11 +28,21 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as dataMigrationApi }
+export type ValidateImportUserDataApiResponse = /** status 200  */ {
+	success: boolean
+}
+export type ValidateImportUserDataApiArg = {
+	body: {
+		data: {
+			json: string
+		}
+	}
+}
 export type ImportUserDataApiResponse = unknown
 export type ImportUserDataApiArg = {
 	body: {
 		data: {
-			data: string
+			json: string
 		}
 	}
 }
@@ -112,6 +132,87 @@ export type ExportUserDataApiResponse = /** status 200  */ {
 			dateFormat?: null | string
 		}[]
 		worlds: {
+			calendars: {
+				units: {
+					children: {
+						id: string
+						createdAt: string
+						updatedAt: string
+						label?: null | string
+						position: number
+						calendarId: string
+						shortLabel?: null | string
+						repeats: number
+						parentUnitId: string
+						childUnitId: string
+					}[]
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					position: number
+					calendarId: string
+					formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
+					negativeFormat: 'MinusSign' | 'AbsoluteValue'
+					displayName?: null | string
+					displayNameShort?: null | string
+					displayNamePlural?: null | string
+					formatShorthand?: null | string
+					duration: string
+					treeDepth: number
+				}[]
+				seasons: {
+					intervals: {
+						id: string
+						createdAt: string
+						updatedAt: string
+						calendarId: string
+						leftIndex: number
+						rightIndex: number
+						seasonId: string
+					}[]
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					position: number
+					calendarId: string
+					formatShorthand?: null | string
+				}[]
+				presentations: {
+					units: {
+						id: string
+						createdAt: string
+						updatedAt: string
+						name: string
+						position: number
+						calendarId: string
+						formatString: string
+						subdivision: number
+						labeledIndices: number[]
+						unitId: string
+						presentationId: string
+					}[]
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					calendarId: string
+					compression: number
+					scaleFactor: number
+					baselineUnitId?: null | string
+				}[]
+				id: string
+				description: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				position: number
+				worldId?: null | string
+				ownerId?: null | string
+				originTime: string
+				dateFormat?: null | string
+			}[]
 			tags: {
 				mentions: {
 					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
@@ -282,4 +383,5 @@ export type ExportUserDataApiResponse = /** status 200  */ {
 	}
 }
 export type ExportUserDataApiArg = void
-export const { useImportUserDataMutation, useExportUserDataMutation } = injectedRtkApi
+export const { useValidateImportUserDataMutation, useImportUserDataMutation, useExportUserDataMutation } =
+	injectedRtkApi

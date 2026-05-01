@@ -7,32 +7,6 @@ import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 const CURRENT_VERSION = 1
 
-const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
-const BIGINT_FIELDS = new Set(['duration', 'originTime', 'timestamp', 'revokedAt', 'timeOrigin'])
-
-/**
- * JSON reviver that restores Date objects and BigInt values from their string representations.
- * Needed because JSON.stringify serializes Dates as ISO strings and BigInts as plain number strings.
- */
-function jsonReviver(key: string, value: unknown): unknown {
-	if (typeof value === 'string') {
-		if (ISO_DATE_REGEX.test(value)) {
-			const date = new Date(value)
-			if (!isNaN(date.getTime())) {
-				return date
-			}
-		}
-		if (BIGINT_FIELDS.has(key) && /^-?\d+$/.test(value)) {
-			return BigInt(value)
-		}
-	}
-	return value
-}
-
-function parseExportedJson(json: string): unknown {
-	return JSON.parse(json, jsonReviver)
-}
-
 export const DataMigrationService = {
 	exportUserData: async (ctx: { user: { id: string } }) => {
 		return getPrismaClient().$transaction(async (prisma) => {
@@ -102,6 +76,25 @@ export const DataMigrationService = {
 							},
 							worldCommonIconSets: true,
 							worldEventTracks: true,
+							calendars: {
+								include: {
+									presentations: {
+										include: {
+											units: true,
+										},
+									},
+									seasons: {
+										include: {
+											intervals: true,
+										},
+									},
+									units: {
+										include: {
+											children: true,
+										},
+									},
+								},
+							},
 						},
 					},
 				},
@@ -145,6 +138,7 @@ export const DataMigrationService = {
 				error: (error as Error).message,
 			}
 		}
+
 		return {
 			isValid: true,
 			error: null,
@@ -159,17 +153,21 @@ export const DataMigrationService = {
 		const userId = data.user.id
 		const { worlds, calendars } = data.user
 
+		const warnings: string[] = []
+
 		if (data.user.id !== ctx.user.id) {
-			throw new BadRequestError('User ID mismatch')
+			warnings.push(
+				`This data is exported from a different user. Data will be imported for the current user.`,
+			)
 		}
 
 		const [foreignWorlds, foreignCalendars] = await Promise.all([
 			prisma.world.findMany({
-				where: { id: { in: worlds.map((w) => w.id) }, ownerId: { not: userId } },
+				where: { id: { in: worlds.map((w) => w.id) }, ownerId: { not: ctx.user.id } },
 				select: { id: true },
 			}),
 			prisma.calendar.findMany({
-				where: { id: { in: calendars.map((c) => c.id) }, ownerId: { not: userId } },
+				where: { id: { in: calendars.map((c) => c.id) }, ownerId: { not: ctx.user.id } },
 				select: { id: true },
 			}),
 		])
@@ -178,7 +176,7 @@ export const DataMigrationService = {
 		}
 
 		for (const world of worlds) {
-			if (world.ownerId !== userId) {
+			if (world.ownerId !== data.user.id) {
 				throw new BadRequestError(`World ${world.id} has ownerId set to a different user`)
 			}
 		}
@@ -193,6 +191,7 @@ export const DataMigrationService = {
 				...world.worldCommonIconSets,
 				...world.worldEventTracks,
 				...world.mindmapNodes,
+				...world.calendars,
 			].filter((entity) => entity.worldId !== world.id)
 
 			if (childrenWithWrongWorld.length > 0) {
@@ -200,7 +199,8 @@ export const DataMigrationService = {
 			}
 		}
 
-		for (const calendar of calendars) {
+		const allCalendars = [...calendars, ...worlds.flatMap((w) => w.calendars)]
+		for (const calendar of allCalendars) {
 			const childrenWithWrongCalendar = [
 				...calendar.units,
 				...calendar.seasons,
@@ -316,7 +316,7 @@ export const DataMigrationService = {
 			}
 		}
 
-		for (const calendar of calendars) {
+		for (const calendar of allCalendars) {
 			const hasWorld = calendar.worldId != null
 			const hasOwner = calendar.ownerId != null
 
@@ -336,123 +336,169 @@ export const DataMigrationService = {
 				)
 			}
 		}
+
+		return warnings
 	},
 
-	importUserData: async (ctx: { user: { id: string } }, json: string) => {
-		await getPrismaClient().$transaction(async (prisma) => {
-			const validationResult = await DataMigrationService.validateUserData(ctx, json, prisma)
-			if (!validationResult.isValid) {
-				throw new BadRequestError(`Invalid user data: ${validationResult.error}`)
-			}
-			const userId = ctx.user.id
-			const userData = exportedUserDataSchema.parse(parseExportedJson(json)).user
+	importUserData: async (ctx: { user: { id: string } }, json: string, options: { dryRun: boolean }) => {
+		await getPrismaClient().$transaction(
+			async (prisma) => {
+				const validationResult = await DataMigrationService.validateUserData(ctx, json, prisma)
+				if (!validationResult.isValid) {
+					throw new BadRequestError(`Invalid user data: ${validationResult.error}`)
+				}
+				const currentUserId = ctx.user.id
+				const userData = exportedUserDataSchema.parse(parseExportedJson(json)).user
 
-			const { worlds, calendars } = userData
+				const { worlds, calendars } = userData
 
-			await prisma.calendar.deleteMany({
-				where: { ownerId: userId, id: { in: calendars.map((c) => c.id) } },
-			})
-			await prisma.world.deleteMany({
-				where: { ownerId: userId, id: { in: worlds.map((w) => w.id) } },
-			})
-
-			const allMentions = worlds.flatMap((w) => [
-				...w.actors.flatMap((a) => a.mentions),
-				...w.events.flatMap((e) => e.mentions),
-				...w.articles.flatMap((a) => a.mentions),
-				...w.tags.flatMap((t) => t.mentions),
-			])
-			const allArticles = worlds.flatMap((w) => w.articles)
-
-			await prisma.user.update({
-				where: { id: userId },
-				data: {
-					calendars: {
-						create: strip(calendars).map(({ units, seasons, presentations, ...cal }) => ({
-							...cal,
-							units: {
-								create: strip(units).map((unit) => ({
-									...unit,
-									children: {
-										create: strip(unit.children),
-									},
-								})),
-							},
-							seasons: {
-								create: strip(seasons).map((season) => ({
-									...season,
-									intervals: {
-										create: strip(season.intervals),
-									},
-								})),
-							},
-							presentations: {
-								create: strip(presentations).map(({ units: pUnits, ...p }) => ({
-									...p,
-									units: {
-										create: pUnits.map((u) => ({
-											...u,
-											calendarId: undefined,
-											presentationId: undefined,
-										})),
-									},
-								})),
-							},
-						})),
+				const importedWorldIds = worlds.map((w) => w.id)
+				await prisma.world.deleteMany({
+					where: { ownerId: currentUserId, id: { in: importedWorldIds } },
+				})
+				await prisma.calendar.deleteMany({
+					where: {
+						ownerId: currentUserId,
+						id: { in: calendars.map((c) => c.id) },
 					},
-					worlds: {
-						create: strip(worlds).map(
-							({
-								tags,
-								savedColors,
-								worldCommonIconSets,
-								worldEventTracks,
-								actors,
-								events,
-								articles: _articles,
-								mindmapNodes,
-								...world
-							}) => ({
-								...world,
-								tags: { create: strip(tags) },
-								savedColors: {
-									create: strip(savedColors),
+				})
+
+				const allMentions = worlds.flatMap((w) => [
+					...w.actors.flatMap((a) => a.mentions),
+					...w.events.flatMap((e) => e.mentions),
+					...w.articles.flatMap((a) => a.mentions),
+					...w.tags.flatMap((t) => t.mentions),
+				])
+				const allArticles = worlds.flatMap((w) => w.articles)
+				const allMindmapLinks = worlds.flatMap((w) => w.mindmapNodes.flatMap((n) => n.links))
+				const allCalendarUnitRelations = [
+					...calendars.flatMap((c) => c.units.flatMap((u) => u.children)),
+					...worlds.flatMap((w) => w.calendars.flatMap((c) => c.units.flatMap((u) => u.children))),
+				]
+
+				await prisma.user.update({
+					where: { id: currentUserId },
+					data: {
+						calendars: {
+							create: strip(calendars).map(({ units, seasons, presentations, ...cal }) => ({
+								...cal,
+								units: {
+									create: strip(units).map(({ children: _c, ...unit }) => unit),
 								},
-								worldCommonIconSets: {
-									create: strip(worldCommonIconSets),
-								},
-								worldEventTracks: { create: strip(worldEventTracks) },
-								actors: {
-									create: strip(actors),
-								},
-								events: {
-									create: strip(events),
-								},
-								mindmapNodes: {
-									create: strip(mindmapNodes).map((node) => ({
-										...node,
-										links: {
-											create: strip(node.links).map((link) => ({
-												...link,
-											})),
+								seasons: {
+									create: strip(seasons).map((season) => ({
+										...season,
+										intervals: {
+											create: strip(season.intervals),
 										},
 									})),
 								},
-							}),
-						),
+								presentations: {
+									create: strip(presentations).map(({ units: pUnits, ...p }) => ({
+										...p,
+										units: {
+											create: strip(pUnits),
+										},
+									})),
+								},
+							})),
+						},
+						worlds: {
+							create: strip(worlds).map(
+								({
+									tags,
+									savedColors,
+									worldCommonIconSets,
+									worldEventTracks,
+									actors,
+									events,
+									articles: _articles,
+									mindmapNodes,
+									calendars: worldCalendars,
+									...world
+								}) => ({
+									...world,
+									tags: { create: strip(tags) },
+									savedColors: {
+										create: strip(savedColors),
+									},
+									worldCommonIconSets: {
+										create: strip(worldCommonIconSets),
+									},
+									worldEventTracks: { create: strip(worldEventTracks) },
+									actors: {
+										create: strip(actors),
+									},
+									events: {
+										create: strip(events),
+									},
+									mindmapNodes: {
+										create: strip(mindmapNodes).map(({ links: _l, ...node }) => node),
+									},
+									calendars: {
+										create: strip(worldCalendars).map(({ units, seasons, presentations, ...cal }) => ({
+											...cal,
+											units: {
+												create: strip(units).map(({ children: _c, ...unit }) => unit),
+											},
+											seasons: {
+												create: strip(seasons).map((season) => ({
+													...season,
+													intervals: {
+														create: strip(season.intervals),
+													},
+												})),
+											},
+											presentations: {
+												create: strip(presentations).map(({ units: pUnits, ...p }) => ({
+													...p,
+													units: {
+														create: strip(pUnits),
+													},
+												})),
+											},
+										})),
+									},
+								}),
+							),
+						},
 					},
-				},
-			})
+				})
 
-			await prisma.wikiArticle.createMany({
-				data: allArticles.map(({ mentions: _m, pages: _p, ...a }) => a),
-			})
-			await prisma.contentPage.createMany({
-				data: allArticles.flatMap((a) => a.pages),
-			})
+				await prisma.wikiArticle.createMany({
+					data: allArticles.map(({ mentions: _m, pages: _p, ...a }) => a),
+				})
+				await prisma.contentPage.createMany({
+					data: allArticles.flatMap((a) => a.pages),
+				})
 
-			await prisma.mention.createMany({ data: allMentions })
-		})
+				await prisma.mindmapLink.createMany({ data: allMindmapLinks })
+				await prisma.calendarUnitRelation.createMany({ data: allCalendarUnitRelations })
+
+				await prisma.mention.createMany({ data: allMentions })
+
+				if (options.dryRun) {
+					throw new DryRunSuccess()
+				}
+			},
+			{
+				timeout: 30000,
+				isolationLevel: 'Serializable',
+			},
+		)
+	},
+
+	isImportValid: async (ctx: { user: { id: string } }, json: string) => {
+		try {
+			await DataMigrationService.importUserData(ctx, json, { dryRun: true })
+		} catch (error) {
+			if (error instanceof DryRunSuccess) {
+				return null
+			}
+			console.error('Import validation failed:', error)
+			throw new BadRequestError(`Invalid user data: ${(error as Error).message}`)
+		}
+		return null
 	},
 }
 
@@ -467,9 +513,39 @@ function strip<T extends object[]>(arr: T): Omit<T[number], 'mentions'>[] {
 		if ('presentationId' in copy) delete copy.presentationId
 		if ('actorId' in copy) delete copy.actorId
 		if ('parentUnitId' in copy) delete copy.parentUnitId
-		if ('sourceNodeId' in copy) delete copy.sourceNodeId
-		if ('targetNodeId' in copy) delete copy.targetNodeId
 		if ('mentions' in copy) delete copy.mentions
 		return copy as Omit<T[number], 'mentions'>
 	})
+}
+
+export class DryRunSuccess extends Error {
+	constructor() {
+		super('Dry run - rolling back transaction')
+	}
+}
+
+const ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
+const BIGINT_FIELDS = new Set(['duration', 'originTime', 'timestamp', 'revokedAt', 'timeOrigin'])
+
+/**
+ * JSON reviver that restores Date objects and BigInt values from their string representations.
+ * Needed because JSON.stringify serializes Dates as ISO strings and BigInts as plain number strings.
+ */
+function jsonReviver(key: string, value: unknown): unknown {
+	if (typeof value === 'string') {
+		if (ISO_DATE_REGEX.test(value)) {
+			const date = new Date(value)
+			if (!isNaN(date.getTime())) {
+				return date
+			}
+		}
+		if (BIGINT_FIELDS.has(key) && /^-?\d+$/.test(value)) {
+			return BigInt(value)
+		}
+	}
+	return value
+}
+
+function parseExportedJson(json: string): unknown {
+	return JSON.parse(json, jsonReviver)
 }

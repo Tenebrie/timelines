@@ -76,10 +76,10 @@ const injectedRtkApi = api
 export { injectedRtkApi as mindmapApi }
 export type GetMindmapApiResponse = /** status 200  */ {
 	nodes: {
-		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
+		worldId: string
 		parentActorId?: null | string
 		positionX: number
 		positionY: number
@@ -88,20 +88,20 @@ export type GetMindmapApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		content: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		sourceNodeId: string
 		targetNodeId: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
+		content: string
 	}[]
 }
 export type GetMindmapApiArg = {
 	worldId: string
 }
 export type CreateNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
 	parentActorId?: null | string
 	positionX: number
 	positionY: number
@@ -123,10 +123,10 @@ export type DeleteNodesApiArg = {
 	nodes: string[]
 }
 export type UpdateNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
 	parentActorId?: null | string
 	positionX: number
 	positionY: number
@@ -140,10 +140,10 @@ export type UpdateNodeApiArg = {
 	}
 }
 export type MoveMindmapNodesApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
+	worldId: string
 	parentActorId?: null | string
 	positionX: number
 	positionY: number
@@ -161,19 +161,19 @@ export type CreateMindmapWiresApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		content: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		sourceNodeId: string
 		targetNodeId: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
+		content: string
 	}[]
 	updated: {
 		id: string
 		createdAt: string
 		updatedAt: string
-		content: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		sourceNodeId: string
 		targetNodeId: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
+		content: string
 	}[]
 }
 export type CreateMindmapWiresApiArg = {
@@ -194,10 +194,10 @@ export type UpdateMindmapWireApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	content: string
+	direction: 'Normal' | 'Reversed' | 'TwoWay'
 	sourceNodeId: string
 	targetNodeId: string
-	direction: 'Normal' | 'Reversed' | 'TwoWay'
+	content: string
 }
 export type UpdateMindmapWireApiArg = {
 	worldId: string

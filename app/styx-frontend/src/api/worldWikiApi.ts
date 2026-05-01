@@ -65,8 +65,8 @@ export type GetArticlesApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	position: number
 	name: string
+	position: number
 	worldId: string
 	icon: string
 	color: string
@@ -85,8 +85,8 @@ export type CreateArticleApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	position: number
 	name: string
+	position: number
 	worldId: string
 	icon: string
 	color: string

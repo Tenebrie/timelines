@@ -370,6 +370,121 @@ export const exportedUserDataSchema = z.object({
 								}),
 							),
 					),
+					calendars: z.array(
+						z
+							.object({
+								units: z.array(
+									z
+										.object({
+											children: z.array(
+												z.object({
+													id: z.string(),
+													createdAt: z.date(),
+													updatedAt: z.date(),
+													label: z.string().nullable(),
+													position: z.number(),
+													calendarId: z.string(),
+													shortLabel: z.string().nullable(),
+													repeats: z.number(),
+													parentUnitId: z.string(),
+													childUnitId: z.string(),
+												}),
+											),
+										})
+										.and(
+											z.object({
+												id: z.string(),
+												createdAt: z.date(),
+												updatedAt: z.date(),
+												name: z.string(),
+												position: z.number(),
+												calendarId: z.string(),
+												formatMode: calendarUnitFormatModeSchema,
+												negativeFormat: calendarUnitNegativeFormatSchema,
+												displayName: z.string().nullable(),
+												displayNameShort: z.string().nullable(),
+												displayNamePlural: z.string().nullable(),
+												formatShorthand: z.string().nullable(),
+												duration: z.bigint(),
+												treeDepth: z.number(),
+											}),
+										),
+								),
+								seasons: z.array(
+									z
+										.object({
+											intervals: z.array(
+												z.object({
+													id: z.string(),
+													createdAt: z.date(),
+													updatedAt: z.date(),
+													calendarId: z.string(),
+													leftIndex: z.number(),
+													rightIndex: z.number(),
+													seasonId: z.string(),
+												}),
+											),
+										})
+										.and(
+											z.object({
+												id: z.string(),
+												createdAt: z.date(),
+												updatedAt: z.date(),
+												name: z.string(),
+												position: z.number(),
+												calendarId: z.string(),
+												formatShorthand: z.string().nullable(),
+											}),
+										),
+								),
+								presentations: z.array(
+									z
+										.object({
+											units: z.array(
+												z.object({
+													id: z.string(),
+													createdAt: z.date(),
+													updatedAt: z.date(),
+													name: z.string(),
+													position: z.number(),
+													calendarId: z.string(),
+													formatString: z.string(),
+													subdivision: z.number(),
+													labeledIndices: z.array(z.number()),
+													unitId: z.string(),
+													presentationId: z.string(),
+												}),
+											),
+										})
+										.and(
+											z.object({
+												id: z.string(),
+												createdAt: z.date(),
+												updatedAt: z.date(),
+												name: z.string(),
+												calendarId: z.string(),
+												compression: z.number(),
+												scaleFactor: z.number(),
+												baselineUnitId: z.string().nullable(),
+											}),
+										),
+								),
+							})
+							.and(
+								z.object({
+									id: z.string(),
+									createdAt: z.date(),
+									updatedAt: z.date(),
+									name: z.string(),
+									description: z.string(),
+									worldId: z.string().nullable(),
+									position: z.number(),
+									ownerId: z.string().nullable(),
+									originTime: z.bigint(),
+									dateFormat: z.string().nullable(),
+								}),
+							),
+					),
 				})
 				.and(
 					z.object({

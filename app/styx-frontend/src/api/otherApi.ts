@@ -207,10 +207,10 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	ownerId: string
-	size: number
 	expiresAt?: null | string
+	ownerId: string
 	bucketKey: string
+	size: number
 	originalFileName: string
 	originalFileExtension: string
 	contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
@@ -255,11 +255,11 @@ export type PutWikiArticleContentApiArg = {
 export type ListWorldShareLinksApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
-	label: null | string
+	expiresAt: null | string
 	worldId: string
+	label: null | string
 	accessMode: 'ReadOnly' | 'Editing'
 	slug: string
-	expiresAt: null | string
 	usageCount: number
 }[]
 export type ListWorldShareLinksApiArg = {
@@ -281,11 +281,11 @@ export type CreateWorldShareLinkApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	label?: null | string
+	expiresAt?: null | string
 	worldId: string
+	label?: null | string
 	accessMode: 'ReadOnly' | 'Editing'
 	slug: string
-	expiresAt?: null | string
 	usageCount: number
 }
 export type CreateWorldShareLinkApiArg = {
@@ -346,8 +346,8 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	position: number
 	name: string
+	position: number
 	worldId: string
 	icon: string
 	color: string
