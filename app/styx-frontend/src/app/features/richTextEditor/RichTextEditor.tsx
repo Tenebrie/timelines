@@ -1,4 +1,3 @@
-import { MentionDetails } from '@api/types/worldTypes'
 import { Editor, useEditor } from '@tiptap/react'
 import throttle from 'lodash.throttle'
 import { memo, useEffect, useRef } from 'react'
@@ -13,7 +12,6 @@ import { EditorContentBox } from './components/EditorContentBox'
 import { useCollaboration } from './extensions/collaboration/useCollaboration'
 import { EditorExtensions } from './extensions/config'
 import { FadeInOverlay } from './extensions/mentions/components/FadeInOverlay/FadeInOverlay'
-import { MentionNodeName } from './extensions/mentions/components/MentionNode'
 import { MentionsList } from './extensions/mentions/MentionsList'
 import { RichTextEditorControls } from './RichTextEditorControls'
 import { StyledContainer } from './styles'
@@ -39,7 +37,6 @@ export type RichTextEditorProps = Props
 export type OnChangeParams = {
 	plainText: string
 	richText: string
-	mentions: MentionDetails[]
 }
 
 export const RichTextEditorComponent = ({
@@ -74,41 +71,9 @@ export const RichTextEditorComponent = ({
 
 	const onChangeThrottled = useRef(
 		throttle((editor: Editor) => {
-			const mentions: MentionDetails[] = []
-			editor.state.doc.descendants((node) => {
-				if (node.type.name === MentionNodeName) {
-					const actorId = node.attrs.componentProps.actor as string | undefined
-					const articleId = node.attrs.componentProps.article as string | undefined
-					const eventId = node.attrs.componentProps.event as string | undefined
-					const tagId = node.attrs.componentProps.tag as string | undefined
-					if (actorId) {
-						mentions.push({
-							targetId: node.attrs.componentProps.actor as string,
-							targetType: 'Actor',
-						})
-					} else if (articleId) {
-						mentions.push({
-							targetId: node.attrs.componentProps.article as string,
-							targetType: 'Article',
-						})
-					} else if (eventId) {
-						mentions.push({
-							targetId: node.attrs.componentProps.event as string,
-							targetType: 'Event',
-						})
-					} else if (tagId) {
-						mentions.push({
-							targetId: node.attrs.componentProps.tag as string,
-							targetType: 'Tag',
-						})
-					}
-				}
-			})
-
 			onChangeRef.current({
 				plainText: editor.getText(),
 				richText: editor.getHTML(),
-				mentions,
 			})
 		}, 100),
 	)

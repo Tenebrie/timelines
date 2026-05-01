@@ -27,7 +27,7 @@ case "${COMMAND}" in
         docker exec -it "${CONTAINER}" /scripts/backup-tool.sh restore
         ;;
     *)
-        echo "Timelines Database Backup Tool"
+        echo "Neverkin Database Backup Tool"
         echo ""
         echo "Usage:"
         echo "  ./scripts/backups.sh list       List all available snapshots"

@@ -42,7 +42,7 @@ import { isRunningInTest } from './utils/isRunningInTest.js'
 export const app = new Koa()
 
 useApiHeader({
-	title: 'Timelines Rhea',
+	title: 'Neverkin Rhea',
 	description: 'This is a description field',
 	termsOfService: 'https://example.com',
 	contact: {
