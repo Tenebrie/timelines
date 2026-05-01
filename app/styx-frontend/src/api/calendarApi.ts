@@ -614,14 +614,14 @@ export type DeleteCalendarUnitApiArg = {
 	unitId: string
 }
 export type ListWorldCalendarsApiResponse = /** status 200  */ {
-	description: string
-	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
-	ownerId?: null | string
 	position: number
+	name: string
+	description: string
+	worldId?: null | string
+	ownerId?: null | string
 	originTime: string
 	dateFormat?: null | string
 }[]
