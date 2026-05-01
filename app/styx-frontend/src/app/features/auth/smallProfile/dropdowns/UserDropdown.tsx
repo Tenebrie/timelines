@@ -132,7 +132,7 @@ export function UserDropdown({ user }: Props) {
 						<ListItemIcon>
 							<Storage />
 						</ListItemIcon>
-						Storage
+						User data
 					</MenuItem>
 				</NavigationLink>
 				<NavigationLink to="/profile/security">

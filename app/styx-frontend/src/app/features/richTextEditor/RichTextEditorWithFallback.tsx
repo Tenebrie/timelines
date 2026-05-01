@@ -10,9 +10,7 @@ export const RichTextEditorWithFallback = (props: RichTextEditorProps) => {
 			<TextField
 				{...props}
 				placeholder="Content"
-				onChange={(e) =>
-					props.onChange({ plainText: e.target.value, richText: e.target.value, mentions: [] })
-				}
+				onChange={(e) => props.onChange({ plainText: e.target.value, richText: e.target.value })}
 			/>
 		)
 	}

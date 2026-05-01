@@ -14,6 +14,7 @@ import { CalendarPresentationRouter } from './routers/CalendarPresentationRouter
 import { CalendarRouter } from './routers/CalendarRouter.js'
 import { ConstantsRouter } from './routers/ConstantsRouter.js'
 import { ContactFormRouter } from './routers/ContactFormRouter.js'
+import { DataMigrationRouter } from './routers/DataMigrationRouter.js'
 import { HealthRouter, HealthStatus } from './routers/HealthRouter.js'
 import { IconsRouter } from './routers/IconsRouter.js'
 import { ImageConversionRouter } from './routers/ImageConversionRouter.js'
@@ -42,7 +43,7 @@ import { isRunningInTest } from './utils/isRunningInTest.js'
 export const app = new Koa()
 
 useApiHeader({
-	title: 'Timelines Rhea',
+	title: 'Neverkin Rhea',
 	description: 'This is a description field',
 	termsOfService: 'https://example.com',
 	contact: {
@@ -90,6 +91,8 @@ app
 	.use(ConstantsRouter.allowedMethods())
 	.use(ContactFormRouter.routes())
 	.use(ContactFormRouter.allowedMethods())
+	.use(DataMigrationRouter.routes())
+	.use(DataMigrationRouter.allowedMethods())
 	.use(HealthRouter.routes())
 	.use(HealthRouter.allowedMethods())
 	.use(IconsRouter.routes())

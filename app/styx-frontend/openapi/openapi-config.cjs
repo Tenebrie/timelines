@@ -8,6 +8,7 @@ const tags = [
 	'asset',
 	'auth',
 	'calendar',
+	'dataMigration',
 	'favoriteIcons',
 	'profile',
 	'mindmap',

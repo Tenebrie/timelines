@@ -30,24 +30,24 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as worldColorApi }
 export type GetWorldColorsApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	value: string
+	worldId: string
 	label?: null | string
+	value: string
 }[]
 export type GetWorldColorsApiArg = {
 	/** Any string value with at least one character */
 	worldId: string
 }
 export type CreateWorldColorApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	value: string
+	worldId: string
 	label?: null | string
+	value: string
 }
 export type CreateWorldColorApiArg = {
 	/** Any string value with at least one character */

@@ -79,9 +79,9 @@ export const worldSlice = createSlice({
 			Object.entries(ingestedWorld).forEach(([key, value]) => {
 				Object.assign(state, { [key]: value })
 			})
-			if (world.calendars.length === 0) {
-				throw new Error('World does not have a calendar!')
-			}
+			// if (world.calendars.length === 0) {
+			// 	throw new Error('World does not have a calendar!')
+			// }
 
 			state.isLoaded = true
 			state.isUnauthorized = false

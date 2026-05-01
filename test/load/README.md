@@ -1,6 +1,6 @@
 # Timelines Load Testing Suite
 
-Load testing suite using [k6](https://k6.io/) for the Timelines application.
+Load testing suite using [k6](https://k6.io/) for the Neverkin application.
 
 k6 has native TypeScript support, so no build step is needed.
 

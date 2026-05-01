@@ -1,4 +1,4 @@
-# Timelines - AI Context & Architecture Guide
+# Neverkin - AI Context & Architecture Guide
 
 **Last Updated**: April 27, 2026
 **Project**: Collaborative worldbuilding and timeline management application
@@ -15,7 +15,7 @@
 
 ## 🎯 Project Purpose
 
-Timelines is a collaborative web application for writers, game masters, and worldbuilders to organize complex fictional universes. Think of it as a project management tool specifically designed for creative fiction - managing characters, events, timelines, lore, and their interconnections.
+Neverkin is a collaborative web application for writers, game masters, and worldbuilders to organize complex fictional universes. Think of it as a project management tool specifically designed for creative fiction - managing characters, events, timelines, lore, and their interconnections.
 
 ## 🏛️ Architecture Overview
 
