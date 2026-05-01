@@ -79,3 +79,31 @@ In case of issues with containers, try a full rebuild without cache:
 ```sh
 yarn docker:build
 ```
+
+# Connecting to MCP server
+
+Neverkin provides a hosted MCP server - named Orpheus - that allows your preferred flavor of AI assistant to interact with your worlds to search, read, create and update your notes. Orpheus exposes a curated subset of Neverkin features. Their presentation is tailored to how LLMs prefer to interact with external tools, which differs quite significantly from the tools you see in the UI. You don't need to run anything locally if you're using the official Neverkin web version.
+
+> It's best to avoid editing the same notes the AI is currently working on as it may override either side's changes. See technical explanation below for more detail.
+
+To access the MCP server, simply point your AI to the URL:
+
+```
+https://app.neverkin.com/mcp
+```
+
+The MCP server supports the full OAuth flow that is invisible to your agent. Depending on your AI provider, you will be asked to authenticate with a Neverkin account before the AI can access your data. Your email, username or password is never exposed to the AI agent, but all your world and calendar data within Neverkin is.
+
+> Exercise caution when working with AI. Modern AI is powerful, yet unreliable. It's recommended to create a separate user account for your agent and invite it to a designated AI-driven world as a collaborator. Take regular backups.
+
+## Implementation details
+
+# Technical support
+
+If you encounter trouble, reach out to the developer through the Discord link you can find on the Feedback page in the application. In case of catastrophic data loss, your work can be recovered. However, you are still encouraged to create your own backups.
+
+> A database backup is taken every 6 hours
+
+## Self-hosting the app
+
+You are explicitly allowed to self-host Neverkin for your own needs. Refer to [Creating New Cluster](docs/Creating%20New%20Cluster.md) for full technical breakdown on hosting a full Docker Swarm cloud. For local work, `yarn dev` will likely be enough.

@@ -48,7 +48,7 @@ function createServer() {
 			instructions: [
 				'**Basic overview:**',
 				'- This set of tools allows you to interact with Timelines, an advanced note-taking and worldbuilding app.',
-				'- In Timelines you will encounter the following entities:',
+				'- In Neverkin you will encounter the following entities:',
 				'  - Actors are characters, items, artifacts. They can typically move around, have relationships, be involved with events.',
 				'  - Events are entities that happen at a specific point in time. They ALWAYS have a timestamp, and they may also have duration or end date.',
 				'  - Articles are just text documents with anything that you would like to store there.',

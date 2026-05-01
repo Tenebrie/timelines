@@ -48,7 +48,7 @@ This is an unorganized doc with notes about what needs to be done for a new clus
 
 ### Setup app
 
-- Clone the Timelines repository
+- Clone the Neverkin repository
   - `cd ~`
   - `git clone git@github.com:Tenebrie/timelines.git`
   - `cd timelines`

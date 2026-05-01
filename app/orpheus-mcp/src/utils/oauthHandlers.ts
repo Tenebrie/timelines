@@ -276,7 +276,7 @@ function getLoginPageHtml({
 <body>
 	<h2>Authorize MCP Access</h2>
 	${errorMessage ? `<div class="error">${escapeHtml(errorMessage)}</div>` : ''}
-	<p>Your agent is requesting access to your Timelines data. Please log in to authorize.</p>
+	<p>Your agent is requesting access to your Neverkin data. Please log in to authorize.</p>
 	<form method="POST" action="/authorize">
 		<input type="hidden" name="client_id" value="${escapeHtml(clientId)}">
 		<input type="hidden" name="redirect_uri" value="${escapeHtml(redirectUri)}">

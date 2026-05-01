@@ -40,7 +40,7 @@
 		"koa-bodyparser": "^4.4.1",
 		"moonflower": "^1.4.5",
 		"pg": "^8.20.0",
-		"redis": "^4.7.0",
+		"redis": "^5.12.1",
 		"sharp": "^0.34.5",
 		"ws": "^8.20.0",
 		"zod": "^4.3.6"
@@ -59,7 +59,7 @@
 		"@typescript-eslint/eslint-plugin": "^8.58.1",
 		"@typescript-eslint/parser": "^8.58.1",
 		"copyfiles": "^2.4.1",
-		"eslint": "^9.39.2",
+		"eslint": "^10.2.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.5.5",
 		"eslint-plugin-simple-import-sort": "^13.0.0",
