@@ -24,29 +24,31 @@ const injectedRtkApi = api
 				query: () => ({ url: `/api/export/user-data`, method: 'POST' }),
 				invalidatesTags: ['dataMigration'],
 			}),
+			exportUserDataInline: build.mutation<ExportUserDataInlineApiResponse, ExportUserDataInlineApiArg>({
+				query: () => ({ url: `/api/export/user-data/inline`, method: 'POST' }),
+				invalidatesTags: ['dataMigration'],
+			}),
 		}),
 		overrideExisting: false,
 	})
 export { injectedRtkApi as dataMigrationApi }
-export type ValidateImportUserDataApiResponse = /** status 200  */ {
-	success: boolean
-}
+export type ValidateImportUserDataApiResponse = unknown
 export type ValidateImportUserDataApiArg = {
 	body: {
-		data: {
-			json: string
-		}
+		assetId: string
 	}
 }
 export type ImportUserDataApiResponse = unknown
 export type ImportUserDataApiArg = {
 	body: {
-		data: {
-			json: string
-		}
+		assetId: string
 	}
 }
 export type ExportUserDataApiResponse = /** status 200  */ {
+	url: string
+}
+export type ExportUserDataApiArg = void
+export type ExportUserDataInlineApiResponse = /** status 200  */ {
 	version: number
 	user: {
 		id: string
@@ -56,9 +58,9 @@ export type ExportUserDataApiResponse = /** status 200  */ {
 					id: string
 					createdAt: string
 					updatedAt: string
-					label?: null | string
 					position: number
 					calendarId: string
+					label?: null | string
 					shortLabel?: null | string
 					repeats: number
 					parentUnitId: string
@@ -121,13 +123,13 @@ export type ExportUserDataApiResponse = /** status 200  */ {
 				baselineUnitId?: null | string
 			}[]
 			id: string
-			description: string
 			createdAt: string
 			updatedAt: string
 			name: string
-			position: number
-			worldId?: null | string
 			ownerId?: null | string
+			position: number
+			description: string
+			worldId?: null | string
 			originTime: string
 			dateFormat?: null | string
 		}[]
@@ -138,9 +140,9 @@ export type ExportUserDataApiResponse = /** status 200  */ {
 						id: string
 						createdAt: string
 						updatedAt: string
-						label?: null | string
 						position: number
 						calendarId: string
+						label?: null | string
 						shortLabel?: null | string
 						repeats: number
 						parentUnitId: string
@@ -203,13 +205,13 @@ export type ExportUserDataApiResponse = /** status 200  */ {
 					baselineUnitId?: null | string
 				}[]
 				id: string
-				description: string
 				createdAt: string
 				updatedAt: string
 				name: string
-				position: number
-				worldId?: null | string
 				ownerId?: null | string
+				position: number
+				description: string
+				worldId?: null | string
 				originTime: string
 				dateFormat?: null | string
 			}[]
@@ -230,19 +232,19 @@ export type ExportUserDataApiResponse = /** status 200  */ {
 					pageId?: null | string
 				}[]
 				id: string
-				description: string
 				createdAt: string
 				updatedAt: string
 				name: string
+				description: string
 				worldId: string
 			}[]
 			savedColors: {
-				value: string
 				id: string
 				createdAt: string
 				updatedAt: string
 				label?: null | string
 				worldId: string
+				value: string
 			}[]
 			worldCommonIconSets: {
 				id: string
@@ -274,16 +276,27 @@ export type ExportUserDataApiResponse = /** status 200  */ {
 					targetTagId?: null | string
 					pageId?: null | string
 				}[]
+				pages: {
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					description: string
+					descriptionRich: string
+					parentActorId?: null | string
+					parentEventId?: null | string
+					parentArticleId?: null | string
+				}[]
 				id: string
-				title: string
-				description: string
 				createdAt: string
 				updatedAt: string
 				name: string
+				description: string
 				worldId: string
+				descriptionRich: string
+				title: string
 				icon: string
 				color: string
-				descriptionRich: string
 			}[]
 			events: {
 				mentions: {
@@ -302,14 +315,14 @@ export type ExportUserDataApiResponse = /** status 200  */ {
 					pageId?: null | string
 				}[]
 				id: string
-				description: string
 				createdAt: string
 				updatedAt: string
 				name: string
+				description: string
 				worldId: string
+				descriptionRich: string
 				icon: string
 				color: string
-				descriptionRich: string
 				timestamp: string
 				revokedAt?: null | string
 				worldEventTrackId?: null | string
@@ -332,10 +345,10 @@ export type ExportUserDataApiResponse = /** status 200  */ {
 				}[]
 				pages: {
 					id: string
-					description: string
 					createdAt: string
 					updatedAt: string
 					name: string
+					description: string
 					descriptionRich: string
 					parentActorId?: null | string
 					parentEventId?: null | string
@@ -371,17 +384,21 @@ export type ExportUserDataApiResponse = /** status 200  */ {
 				positionY: number
 			}[]
 			id: string
-			description: string
 			createdAt: string
 			updatedAt: string
 			name: string
-			calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 			ownerId: string
+			calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
+			description: string
 			accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 			timeOrigin: string
 		}[]
 	}
 }
-export type ExportUserDataApiArg = void
-export const { useValidateImportUserDataMutation, useImportUserDataMutation, useExportUserDataMutation } =
-	injectedRtkApi
+export type ExportUserDataInlineApiArg = void
+export const {
+	useValidateImportUserDataMutation,
+	useImportUserDataMutation,
+	useExportUserDataMutation,
+	useExportUserDataInlineMutation,
+} = injectedRtkApi

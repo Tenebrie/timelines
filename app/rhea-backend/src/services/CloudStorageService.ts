@@ -51,6 +51,11 @@ export const CloudStorageService = {
 		return Buffer.from(await output.Body.transformToByteArray())
 	},
 
+	getFileAsString: async (bucketKey: string) => {
+		const buffer = await CloudStorageService.getFileAsBuffer(bucketKey)
+		return buffer.toString('utf-8')
+	},
+
 	getUserSingleFileLimit: async (user: User) => {
 		const megabyte = 1024 * 1024 // 1 MB
 		switch (user.level) {

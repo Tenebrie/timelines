@@ -3,8 +3,8 @@ import { useState } from 'react'
 
 import { useErrorState } from '@/app/utils/useErrorState'
 
-import { useFileUpload } from '../api/useFileUpload'
-import { useGetPresignedDownloadUrl } from '../api/useGetPresignedDownloadUrl'
+import { useFileUpload } from '../../../../../api/hooks/fileUpload/useFileUpload'
+import { useGetPresignedDownloadUrl } from '../../../../../api/hooks/fileUpload/useGetPresignedDownloadUrl'
 import { useRequestImageConversion } from '../api/useRequestImageConversion'
 
 type ImageFormat = RequestImageConversionApiArg['body']['format']

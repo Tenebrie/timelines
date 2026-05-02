@@ -25,7 +25,12 @@ const makeMention = (sourceId: string, targetId: string, overrides: Record<strin
 	...overrides,
 })
 
-const makeActor = (worldId: string, id = 'actor-1', mentions: ReturnType<typeof makeMention>[] = []) => ({
+const makeActor = (
+	worldId: string,
+	id = 'actor-1',
+	mentions: ReturnType<typeof makeMention>[] = [],
+	pages: ReturnType<typeof makePage>[] = [],
+) => ({
 	id,
 	createdAt: now,
 	updatedAt: now,
@@ -37,6 +42,7 @@ const makeActor = (worldId: string, id = 'actor-1', mentions: ReturnType<typeof 
 	color: '',
 	descriptionRich: '',
 	mentions,
+	pages,
 })
 
 const makeEvent = (worldId: string, id = 'event-1', mentions: ReturnType<typeof makeMention>[] = []) => ({
@@ -71,17 +77,7 @@ const makeArticle = (
 	{
 		parentId = null as string | null,
 		mentions = [] as ReturnType<typeof makeMention>[],
-		pages = [] as Array<{
-			id: string
-			createdAt: Date
-			updatedAt: Date
-			name: string
-			description: string
-			descriptionRich: string
-			parentActorId: string | null
-			parentEventId: string | null
-			parentArticleId: string | null
-		}>,
+		pages = [] as ReturnType<typeof makePage>[],
 	} = {},
 ) => ({
 	id,
@@ -98,7 +94,7 @@ const makeArticle = (
 	pages,
 })
 
-const makePage = (id = 'page-1') => ({
+const makePage = (id = 'page-1', overrides: Record<string, unknown> = {}) => ({
 	id,
 	createdAt: now,
 	updatedAt: now,
@@ -108,6 +104,7 @@ const makePage = (id = 'page-1') => ({
 	parentActorId: null as string | null,
 	parentEventId: null as string | null,
 	parentArticleId: null as string | null,
+	...overrides,
 })
 
 const makeMindmapNode = (
@@ -293,6 +290,7 @@ const makePrisma = ({
 		calendar: {
 			findMany: vi.fn().mockResolvedValue(foreignCalendars),
 		},
+		// Fix any type
 	}) as unknown as ReturnType<typeof makePrisma>
 
 type CapturedNested = { create: Array<Record<string, unknown>> }
@@ -304,6 +302,7 @@ type CapturedUserUpdate = {
 			create: Array<{
 				mindmapNodes: CapturedNested
 				calendars: CapturedNested
+				pages: CapturedNested
 			}>
 		}
 	}
@@ -316,6 +315,7 @@ const tx = {
 		findUnique: vi.fn(),
 		update: vi.fn<(args: CapturedUserUpdate) => Promise<unknown>>(),
 	},
+	pages: { createMany: vi.fn() },
 	mention: { createMany: vi.fn() },
 	wikiArticle: { createMany: vi.fn() },
 	contentPage: { createMany: vi.fn() },
@@ -371,6 +371,18 @@ describe('DataMigrationService', () => {
 			)
 		})
 
+		it('rejects actor page with wrong actorId', async () => {
+			const world = makeWorld(userId)
+			world.actors = [
+				makeActor(world.id, 'actor-1', [], [makePage(world.id, { parentActorId: 'wrong-actor-id' })]),
+			]
+			const data = makeExportData(userId, [world])
+			const prisma = makePrisma()
+			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow(
+				'references an entity outside the world',
+			)
+		})
+
 		it('rejects event with wrong worldId', async () => {
 			const world = makeWorld(userId)
 			world.events = [makeEvent('wrong-world-id')]
@@ -388,6 +400,20 @@ describe('DataMigrationService', () => {
 			const prisma = makePrisma()
 			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow(
 				'contains children with mismatched worldId',
+			)
+		})
+
+		it('rejects article page with wrong articleId', async () => {
+			const world = makeWorld(userId)
+			world.articles = [
+				makeArticle(world.id, 'article-1', {
+					pages: [makePage(world.id, { parentArticleId: 'wrong-article-id' })],
+				}),
+			]
+			const data = makeExportData(userId, [world])
+			const prisma = makePrisma()
+			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow(
+				'references an entity outside the world',
 			)
 		})
 
@@ -658,6 +684,16 @@ describe('DataMigrationService', () => {
 			const data = makeExportData(userId, [world])
 			const prisma = makePrisma()
 			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).resolves.not.toThrow()
+		})
+
+		it('rejects article with worldId outside its world', async () => {
+			const world = makeWorld(userId)
+			world.articles = [makeArticle('different-world', 'art-1')]
+			const data = makeExportData(userId, [world])
+			const prisma = makePrisma()
+			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow(
+				'contains children with mismatched worldId',
+			)
 		})
 
 		it('rejects article with parentId outside its world', async () => {
