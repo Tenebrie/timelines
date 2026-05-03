@@ -1,6 +1,7 @@
 import { Prisma, UserLevel } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 
+import { CloudStorageService } from './CloudStorageService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeTouchUserQuery } from './dbQueries/makeTouchUserQuery.js'
 
@@ -105,6 +106,13 @@ export const UserService = {
 	},
 
 	deleteUser: async (userId: string) => {
+		const usersAssets = await getPrismaClient().asset.findMany({
+			where: {
+				ownerId: userId,
+			},
+		})
+
+		await Promise.all(usersAssets.map((asset) => CloudStorageService.deleteAssetFile(asset)))
 		return getPrismaClient().user.update({
 			where: {
 				id: userId,
