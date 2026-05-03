@@ -27,9 +27,11 @@ function getContentType(extension: string): string {
 }
 
 const BUCKET_ID = SecretService.getSecret('s3-bucket-id')
+const isDevelopment = SecretService.getSecret('environment') === 'development'
+const isCI = SecretService.getSecret('environment') === 'ci'
 
 const s3Client = new S3Client({
-	forcePathStyle: SecretService.getSecret('environment') === 'development',
+	forcePathStyle: isDevelopment || isCI,
 	endpoint: SecretService.getSecret('s3-endpoint'),
 	region: 'us-east-1',
 	credentials: {

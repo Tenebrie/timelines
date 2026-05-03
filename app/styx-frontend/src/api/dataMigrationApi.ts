@@ -1,5 +1,5 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['dataMigration'] as const
+export const addTagTypes = ['dataMigration', 'asset'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
@@ -13,16 +13,16 @@ const injectedRtkApi = api
 						method: 'POST',
 						body: queryArg.body,
 					}),
-					invalidatesTags: ['dataMigration'],
+					invalidatesTags: ['dataMigration', 'asset'],
 				},
 			),
 			importUserData: build.mutation<ImportUserDataApiResponse, ImportUserDataApiArg>({
 				query: (queryArg) => ({ url: `/api/import/user-data/commit`, method: 'POST', body: queryArg.body }),
-				invalidatesTags: ['dataMigration'],
+				invalidatesTags: ['dataMigration', 'asset'],
 			}),
 			exportUserData: build.mutation<ExportUserDataApiResponse, ExportUserDataApiArg>({
 				query: () => ({ url: `/api/export/user-data`, method: 'POST' }),
-				invalidatesTags: ['dataMigration'],
+				invalidatesTags: ['dataMigration', 'asset'],
 			}),
 			exportUserDataInline: build.mutation<ExportUserDataInlineApiResponse, ExportUserDataInlineApiArg>({
 				query: () => ({ url: `/api/export/user-data/inline`, method: 'POST' }),

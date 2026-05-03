@@ -6,6 +6,7 @@ import {
 } from '@api/dataMigrationApi'
 import { useFileUpload } from '@api/hooks/fileUpload/useFileUpload'
 import { useGetStorageStatusQuery } from '@api/profileApi'
+import ScheduleIcon from '@mui/icons-material/AccessTime'
 import ClearIcon from '@mui/icons-material/Clear'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DescriptionIcon from '@mui/icons-material/DescriptionOutlined'
@@ -29,12 +30,14 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { useRef, useState } from 'react'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { formatBytes } from '@/app/utils/formatBytes'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { formatTimeAgo } from '@/app/views/home/utils/formatTimeAgo'
 import { Button } from '@/ui-lib/components/Button/Button'
 import { Header } from '@/ui-lib/components/Header/Header'
 import { LoadingSelect } from '@/ui-lib/components/LoadingSelect/LoadingSelect'
@@ -126,7 +129,6 @@ export function StoragePageAssets() {
 					<TableHead>
 						<TableRow>
 							<TableCell>Name</TableCell>
-							<TableCell>Type</TableCell>
 							<TableCell>Size</TableCell>
 							<TableCell>Created</TableCell>
 							<TableCell>Actions</TableCell>
@@ -136,10 +138,22 @@ export function StoragePageAssets() {
 						{assetsData?.assets.map((asset) => (
 							<TableRow key={asset.id}>
 								<TableCell>
-									{asset.originalFileName}
-									{asset.originalFileExtension ? `.${asset.originalFileExtension}` : ''}
+									<Stack direction="row" gap={1}>
+										<span>
+											{asset.originalFileName}
+											{asset.originalFileExtension ? `.${asset.originalFileExtension}` : ''}
+										</span>
+										{asset.expiresAt && (
+											<Tooltip
+												placement="top"
+												disableInteractive
+												title={`This file will be deleted ${formatTimeAgo(new Date(asset.expiresAt))}`}
+											>
+												<ScheduleIcon fontSize="small" sx={{ color: 'text.secondary', display: 'block' }} />
+											</Tooltip>
+										)}
+									</Stack>
 								</TableCell>
-								<TableCell>{asset.contentType}</TableCell>
 								<TableCell>{formatBytes(asset.size)}</TableCell>
 								<TableCell>{new Date(asset.createdAt).toLocaleDateString()}</TableCell>
 								<TableCell>

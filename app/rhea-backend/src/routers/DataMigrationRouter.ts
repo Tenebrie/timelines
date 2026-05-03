@@ -6,7 +6,7 @@ import { DataMigrationService } from '@src/services/DataMigrationService.js'
 import { BadRequestError, Router, useApiEndpoint, useRequestBody } from 'moonflower'
 import z from 'zod'
 
-import { dataMigrationTag } from './utils/tags.js'
+import { assetTag, dataMigrationTag } from './utils/tags.js'
 
 const router = new Router().with(UserAuthMiddleware)
 
@@ -14,7 +14,7 @@ router.post('/api/import/user-data/validate', async (ctx) => {
 	useApiEndpoint({
 		name: 'validateImportUserData',
 		description: 'Perform a dry run of user data import.',
-		tags: [dataMigrationTag],
+		tags: [dataMigrationTag, assetTag],
 	})
 
 	const { assetId } = useRequestBody(ctx, {
@@ -57,7 +57,7 @@ router.post('/api/import/user-data/commit', async (ctx) => {
 	useApiEndpoint({
 		name: 'importUserData',
 		description: 'Import user data in JSON format',
-		tags: [dataMigrationTag],
+		tags: [dataMigrationTag, assetTag],
 	})
 
 	const { assetId } = useRequestBody(ctx, {
@@ -102,7 +102,7 @@ router.post('/api/export/user-data', async (ctx) => {
 	useApiEndpoint({
 		name: 'exportUserData',
 		description: 'Export user data in JSON format',
-		tags: [dataMigrationTag],
+		tags: [dataMigrationTag, assetTag],
 	})
 
 	try {
@@ -119,7 +119,7 @@ router.post('/api/export/user-data', async (ctx) => {
 				JSON.stringify(data, (_k, v) => (typeof v === 'bigint' ? v.toString() : v)),
 				'utf-8',
 			),
-			expiresAt: new Date(Date.now() + 1 * 60 * 60 * 1000), // 1 hour
+			expiresAt: new Date(Date.now() + 1 * 30 * 60 * 1000), // 30 minutes
 			fileName: `DataExport-${Date.now()}.json`,
 		})
 		const presignedUrl = await CloudStorageService.getPresignedUrl(asset)
