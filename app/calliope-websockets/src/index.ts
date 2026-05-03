@@ -33,10 +33,10 @@ app.ws.use(
 			}
 
 			const socket = ctx.websocket as WebSocket
-			socket.on('message', (rawMessage) => {
+			socket.on('message', async (rawMessage) => {
 				try {
 					const message = JSON.parse(rawMessage.toString()) as ClientToCalliopeMessage
-					ClientMessageHandlerService.handleMessage(message, userId, sessionId, ctx.websocket)
+					await ClientMessageHandlerService.handleMessage(message, userId, sessionId, ctx.websocket)
 				} catch (e) {
 					console.error('Error handling message', e)
 				}

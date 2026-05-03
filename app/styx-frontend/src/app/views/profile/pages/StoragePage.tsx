@@ -206,7 +206,7 @@ export function StoragePageExport() {
 						Export data
 					</Header>
 					<Typography variant="body2" color="text.secondary">
-						Export your user data as a file as a backup or to transfer between accounts or environments.
+						Export your user data to a file as a backup or to transfer between accounts or environments.
 					</Typography>
 				</Stack>
 				<LoadingSelect value="json" label="Export format" fullWidth>

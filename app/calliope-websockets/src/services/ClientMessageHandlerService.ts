@@ -8,23 +8,23 @@ import { WebSocket } from 'ws'
 import { WebsocketService } from './WebsocketService.js'
 
 const handlers: ClientToCalliopeMessageHandlers = {
-	[ClientToCalliopeMessageType.INIT]: (_, userId, socket, sessionId) => {
+	[ClientToCalliopeMessageType.INIT]: async (_, userId, socket, sessionId) => {
 		WebsocketService.registerUserSocket(userId, sessionId, socket)
 	},
-	[ClientToCalliopeMessageType.KEEPALIVE]: () => {
+	[ClientToCalliopeMessageType.KEEPALIVE]: async () => {
 		// Empty
 	},
-	[ClientToCalliopeMessageType.WORLD_SUBSCRIBE]: (data, userId, socket, sessionId) => {
-		WebsocketService.registerWorldClient(data.worldId, userId, sessionId, socket)
+	[ClientToCalliopeMessageType.WORLD_SUBSCRIBE]: async (data, userId, socket, sessionId) => {
+		return WebsocketService.registerWorldClient(data.worldId, userId, sessionId, socket)
 	},
 
-	[ClientToCalliopeMessageType.WORLD_UNSUBSCRIBE]: (data, userId, socket) => {
-		WebsocketService.unregisterWorldClient(data.worldId, userId, socket)
+	[ClientToCalliopeMessageType.WORLD_UNSUBSCRIBE]: async (data, userId, socket) => {
+		return WebsocketService.unregisterWorldClient(data.worldId, userId, socket)
 	},
 }
 
 export const ClientMessageHandlerService = {
-	handleMessage: (
+	handleMessage: async (
 		message: ClientToCalliopeMessage,
 		userId: string,
 		sessionId: string | undefined,
@@ -37,7 +37,7 @@ export const ClientMessageHandlerService = {
 		const handler = handlers[message.type]
 		if (handler) {
 			// TODO: The data is guaranteed to be correct, but fix typings)
-			handler(message.data as never, userId, socket, sessionId)
+			await handler(message.data as never, userId, socket, sessionId)
 		}
 	},
 }
