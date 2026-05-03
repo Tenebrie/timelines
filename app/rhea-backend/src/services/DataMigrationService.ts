@@ -40,6 +40,11 @@ export const DataMigrationService = {
 								},
 								include: {
 									mentions: true,
+									pages: {
+										omit: {
+											descriptionYjs: true,
+										},
+									},
 								},
 							},
 							events: {
@@ -254,6 +259,20 @@ export const DataMigrationService = {
 					throw new BadRequestError(
 						`Mention ${m.sourceId}->${m.targetId} references a page outside the world`,
 					)
+				}
+			}
+
+			const allWorldPages = [
+				...world.actors.flatMap((a) => a.pages),
+				...world.articles.flatMap((a) => a.pages),
+			]
+			for (const p of allWorldPages) {
+				const refs = [p.parentActorId, p.parentEventId, p.parentArticleId].filter(
+					(id): id is string => id !== null && id !== undefined,
+				)
+
+				if (refs.some((id) => !validIds.has(id))) {
+					throw new BadRequestError(`Page ${p.id} references an entity outside the world`)
 				}
 			}
 		}
@@ -502,7 +521,7 @@ export const DataMigrationService = {
 	},
 }
 
-function strip<T extends object[]>(arr: T): Omit<T[number], 'mentions'>[] {
+function strip<T extends object[]>(arr: T): Omit<T[number], 'mentions' | 'pages'>[] {
 	return arr.map((item) => {
 		const copy = { ...item }
 		if ('ownerId' in copy) delete copy.ownerId
@@ -514,7 +533,8 @@ function strip<T extends object[]>(arr: T): Omit<T[number], 'mentions'>[] {
 		if ('actorId' in copy) delete copy.actorId
 		if ('parentUnitId' in copy) delete copy.parentUnitId
 		if ('mentions' in copy) delete copy.mentions
-		return copy as Omit<T[number], 'mentions'>
+		if ('pages' in copy) delete copy.pages
+		return copy as Omit<T[number], 'mentions' | 'pages'>
 	})
 }
 

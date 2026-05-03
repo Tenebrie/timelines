@@ -21,7 +21,9 @@ export type AnnouncementType = (typeof AnnouncementType)[keyof typeof Announceme
 export const AssetType = {
   ImageConversion: 'ImageConversion',
   Avatar: 'Avatar',
-  ImageGeneration: 'ImageGeneration'
+  ImageGeneration: 'ImageGeneration',
+  DataMigrationExport: 'DataMigrationExport',
+  DataMigrationImport: 'DataMigrationImport'
 } as const
 
 export type AssetType = (typeof AssetType)[keyof typeof AssetType]

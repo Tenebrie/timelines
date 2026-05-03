@@ -93,13 +93,13 @@ function parseEnums(enumsSource: string): Map<string, EnumDecl> {
  * and return the text inside the outermost `Promise<...>`.
  */
 function extractPromiseBody(source: string): string {
-	const marker = 'exportUserData: (userId: string) => Promise<'
-	const start = source.indexOf(marker)
-	if (start === -1) {
+	const sigRegex = /exportUserData:\s*\([^)]*\)\s*=>\s*Promise</
+	const match = sigRegex.exec(source)
+	if (!match) {
 		throw new Error('Could not find exportUserData signature in input file')
 	}
 
-	const promiseStart = start + marker.length
+	const promiseStart = match.index + match[0].length
 	let depth = 1
 	let i = promiseStart
 	for (; i < source.length; i++) {

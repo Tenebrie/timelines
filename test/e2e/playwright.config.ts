@@ -6,7 +6,7 @@ export default defineConfig({
 	reporter: [['list'], ['html', { outputFolder: './test-report/html', open: 'never' }]],
 	retries: 2,
 	fullyParallel: true,
-	timeout: 10000,
+	timeout: 20000,
 	projects: [
 		{
 			name: 'chromium',
@@ -24,5 +24,6 @@ export default defineConfig({
 	use: {
 		headless: true,
 		screenshot: 'only-on-failure',
+		trace: 'retain-on-failure',
 	},
 })

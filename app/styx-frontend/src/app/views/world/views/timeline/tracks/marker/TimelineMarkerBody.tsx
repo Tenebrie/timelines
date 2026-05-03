@@ -6,8 +6,9 @@ import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import classNames from 'classnames'
 import { CSSProperties, memo, MouseEvent, useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
+import { getTimelinePreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
@@ -33,6 +34,10 @@ export function TimelineMarkerBodyComponent({ entity, selected }: Props) {
 	const dispatch = useDispatch()
 	const { openTimelineContextMenu, addTimelineMarkerToSelection, removeTimelineMarkerFromSelection } =
 		worldSlice.actions
+	const { reduceAnimations } = useSelector(
+		getTimelinePreferences,
+		(a, b) => a.reduceAnimations === b.reduceAnimations,
+	)
 
 	const navigate = useStableNavigate({ from: '/world/$worldId/timeline' })
 
@@ -194,7 +199,7 @@ export function TimelineMarkerBodyComponent({ entity, selected }: Props) {
 							top: `${timestampBoxPosition.top}px`,
 							padding: '8px 12px',
 							opacity: isHovered ? 1 : 0,
-							transition: 'opacity 0.15s, transform 0.15s',
+							transition: reduceAnimations ? 'none' : 'opacity 0.15s, transform 0.15s',
 							pointerEvents: 'none',
 							whiteSpace: 'nowrap',
 							zIndex: 10,
