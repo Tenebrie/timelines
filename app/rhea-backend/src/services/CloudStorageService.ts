@@ -27,9 +27,11 @@ function getContentType(extension: string): string {
 }
 
 const BUCKET_ID = SecretService.getSecret('s3-bucket-id')
+const isDevelopment = SecretService.getSecret('environment') === 'development'
+const isCI = SecretService.getSecret('environment') === 'ci'
 
 const s3Client = new S3Client({
-	forcePathStyle: SecretService.getSecret('environment') === 'development',
+	forcePathStyle: isDevelopment || isCI,
 	endpoint: SecretService.getSecret('s3-endpoint'),
 	region: 'us-east-1',
 	credentials: {
@@ -49,6 +51,11 @@ export const CloudStorageService = {
 			throw new BadRequestError('Target asset is not valid')
 		}
 		return Buffer.from(await output.Body.transformToByteArray())
+	},
+
+	getFileAsString: async (bucketKey: string) => {
+		const buffer = await CloudStorageService.getFileAsBuffer(bucketKey)
+		return buffer.toString('utf-8')
 	},
 
 	getUserSingleFileLimit: async (user: User) => {
@@ -151,7 +158,7 @@ export const CloudStorageService = {
 			Expires: 1800, // 30 minutes
 		})
 
-		const publicUrl = url.replace('s3-minio:9000', 'app.localhost')
+		const publicUrl = url.replace('http://s3-minio:9000', '')
 
 		return { asset, url: publicUrl, fields: fields as Record<string, string> }
 	},
@@ -265,7 +272,7 @@ export const CloudStorageService = {
 		})
 
 		const url = await getSignedUrl(s3Client, command, { expiresIn: expiresInSeconds })
-		const publicUrl = url.replace('s3-minio:9000', 'app.localhost')
+		const publicUrl = url.replace('http://s3-minio:9000', '')
 		return publicUrl
 	},
 

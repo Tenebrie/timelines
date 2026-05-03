@@ -213,7 +213,12 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	size: number
 	originalFileName: string
 	originalFileExtension: string
-	contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
+	contentType:
+		| 'ImageConversion'
+		| 'Avatar'
+		| 'ImageGeneration'
+		| 'DataMigrationExport'
+		| 'DataMigrationImport'
 	status: 'Pending' | 'Finalized' | 'Failed'
 	contentDescription?: null | string
 	imageWidth?: null | number
@@ -253,12 +258,12 @@ export type PutWikiArticleContentApiArg = {
 	}
 }
 export type ListWorldShareLinksApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
-	expiresAt: null | string
-	worldId: string
-	label: null | string
 	accessMode: 'ReadOnly' | 'Editing'
+	expiresAt: null | string
+	label: null | string
 	slug: string
 	usageCount: number
 }[]
@@ -278,13 +283,13 @@ export type GenerateFreeWorldShareLinkApiArg = {
 	}
 }
 export type CreateWorldShareLinkApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	expiresAt?: null | string
-	worldId: string
-	label?: null | string
 	accessMode: 'ReadOnly' | 'Editing'
+	expiresAt?: null | string
+	label?: null | string
 	slug: string
 	usageCount: number
 }
@@ -343,14 +348,14 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 		id: string
 		name: string
 	}[]
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	position: number
-	worldId: string
 	icon: string
 	color: string
+	position: number
 	contentRich: string
 	parentId?: null | string
 }

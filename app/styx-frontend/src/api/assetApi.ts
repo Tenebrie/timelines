@@ -47,13 +47,18 @@ export type ListUserAssetsApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		ownerId: string
-		size: number
 		expiresAt?: null | string
+		ownerId: string
 		bucketKey: string
+		size: number
 		originalFileName: string
 		originalFileExtension: string
-		contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
+		contentType:
+			| 'ImageConversion'
+			| 'Avatar'
+			| 'ImageGeneration'
+			| 'DataMigrationExport'
+			| 'DataMigrationImport'
 		status: 'Pending' | 'Finalized' | 'Failed'
 		contentDescription?: null | string
 		imageWidth?: null | number
@@ -66,13 +71,18 @@ export type RequestPresignedUrlApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		ownerId: string
-		size: number
 		expiresAt?: null | string
+		ownerId: string
 		bucketKey: string
+		size: number
 		originalFileName: string
 		originalFileExtension: string
-		contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
+		contentType:
+			| 'ImageConversion'
+			| 'Avatar'
+			| 'ImageGeneration'
+			| 'DataMigrationExport'
+			| 'DataMigrationImport'
 		status: 'Pending' | 'Finalized' | 'Failed'
 		contentDescription?: null | string
 		imageWidth?: null | number
@@ -87,20 +97,30 @@ export type RequestPresignedUrlApiArg = {
 	body: {
 		fileName: string
 		fileSize: number
-		assetType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
+		assetType:
+			| 'ImageConversion'
+			| 'Avatar'
+			| 'ImageGeneration'
+			| 'DataMigrationExport'
+			| 'DataMigrationImport'
 	}
 }
 export type FinalizeAssetUploadApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	ownerId: string
-	size: number
 	expiresAt?: null | string
+	ownerId: string
 	bucketKey: string
+	size: number
 	originalFileName: string
 	originalFileExtension: string
-	contentType: 'ImageConversion' | 'Avatar' | 'ImageGeneration'
+	contentType:
+		| 'ImageConversion'
+		| 'Avatar'
+		| 'ImageGeneration'
+		| 'DataMigrationExport'
+		| 'DataMigrationImport'
 	status: 'Pending' | 'Finalized' | 'Failed'
 	contentDescription?: null | string
 	imageWidth?: null | number

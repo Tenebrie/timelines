@@ -4,7 +4,9 @@ import {
 	useImportUserDataMutation,
 	useValidateImportUserDataMutation,
 } from '@api/dataMigrationApi'
+import { useFileUpload } from '@api/hooks/fileUpload/useFileUpload'
 import { useGetStorageStatusQuery } from '@api/profileApi'
+import ScheduleIcon from '@mui/icons-material/AccessTime'
 import ClearIcon from '@mui/icons-material/Clear'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DescriptionIcon from '@mui/icons-material/DescriptionOutlined'
@@ -13,7 +15,6 @@ import ImportIcon from '@mui/icons-material/FileDownload'
 import ExportIcon from '@mui/icons-material/FileUpload'
 import AssetsIcon from '@mui/icons-material/Folder'
 import QuotaIcon from '@mui/icons-material/Storage'
-import PreviewIcon from '@mui/icons-material/Visibility'
 import Alert from '@mui/material/Alert'
 import AlertTitle from '@mui/material/AlertTitle'
 import Box from '@mui/material/Box'
@@ -29,12 +30,14 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { useRef, useState } from 'react'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { formatBytes } from '@/app/utils/formatBytes'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
+import { formatTimeAgo } from '@/app/views/home/utils/formatTimeAgo'
 import { Button } from '@/ui-lib/components/Button/Button'
 import { Header } from '@/ui-lib/components/Header/Header'
 import { LoadingSelect } from '@/ui-lib/components/LoadingSelect/LoadingSelect'
@@ -50,9 +53,9 @@ export function StoragePage() {
 			</Stack>
 			<Stack gap={6}>
 				<StoragePageQuota />
-				<StoragePageAssets />
 				<StoragePageExport />
 				<StoragePageImport />
+				<StoragePageAssets />
 			</Stack>
 		</Stack>
 	)
@@ -126,7 +129,6 @@ export function StoragePageAssets() {
 					<TableHead>
 						<TableRow>
 							<TableCell>Name</TableCell>
-							<TableCell>Type</TableCell>
 							<TableCell>Size</TableCell>
 							<TableCell>Created</TableCell>
 							<TableCell>Actions</TableCell>
@@ -136,10 +138,22 @@ export function StoragePageAssets() {
 						{assetsData?.assets.map((asset) => (
 							<TableRow key={asset.id}>
 								<TableCell>
-									{asset.originalFileName}
-									{asset.originalFileExtension ? `.${asset.originalFileExtension}` : ''}
+									<Stack direction="row" gap={1}>
+										<span>
+											{asset.originalFileName}
+											{asset.originalFileExtension ? `.${asset.originalFileExtension}` : ''}
+										</span>
+										{asset.expiresAt && (
+											<Tooltip
+												placement="top"
+												disableInteractive
+												title={`This file will be deleted ${formatTimeAgo(new Date(asset.expiresAt))}`}
+											>
+												<ScheduleIcon fontSize="small" sx={{ color: 'text.secondary', display: 'block' }} />
+											</Tooltip>
+										)}
+									</Stack>
 								</TableCell>
-								<TableCell>{asset.contentType}</TableCell>
 								<TableCell>{formatBytes(asset.size)}</TableCell>
 								<TableCell>{new Date(asset.createdAt).toLocaleDateString()}</TableCell>
 								<TableCell>
@@ -177,23 +191,18 @@ export function StoragePageAssets() {
 
 export function StoragePageExport() {
 	const [exportUserData, { isLoading }] = useExportUserDataMutation()
+	const [status, setStatus] = useState<'idle' | 'error'>('idle')
 
 	const handleExport = async () => {
-		const result = await exportUserData().unwrap()
-		const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' })
-		const url = URL.createObjectURL(blob)
+		const result = parseApiResponse(await exportUserData())
+		if (result.error) {
+			setStatus('error')
+			return
+		}
 		const a = document.createElement('a')
-		a.href = url
+		a.href = result.response.url
 		a.download = `neverkin-export-${new Date().toISOString().slice(0, 10)}.json`
 		a.click()
-		URL.revokeObjectURL(url)
-	}
-
-	const handlePreview = async () => {
-		const result = await exportUserData().unwrap()
-		const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' })
-		const url = URL.createObjectURL(blob)
-		window.open(url, '_blank')
 	}
 
 	return (
@@ -211,7 +220,7 @@ export function StoragePageExport() {
 						Export data
 					</Header>
 					<Typography variant="body2" color="text.secondary">
-						Export your user data as a file to import it into your self-hosted Neverkin environment.
+						Export your user data to a file as a backup or to transfer between accounts or environments.
 					</Typography>
 				</Stack>
 				<LoadingSelect value="json" label="Export format" fullWidth>
@@ -228,34 +237,32 @@ export function StoragePageExport() {
 					>
 						Export
 					</Button>
-					<Button
-						variant="outlined"
-						startIcon={<PreviewIcon />}
-						onClick={handlePreview}
-						loading={isLoading}
-						sx={{ minWidth: 120 }}
-					>
-						Preview
-					</Button>
 					<Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
 						Collecting all your data may take a few seconds.
 					</Typography>
 				</Stack>
-				<Alert severity="info" variant="outlined" icon={false} sx={{ py: 1 }}>
-					<AlertTitle sx={{ mb: 0.5, fontSize: 14 }}>Not included in export</AlertTitle>
-					<Stack
-						component="ul"
-						sx={{
-							m: 0,
-							pl: 2.5,
-							'& li': { fontSize: 13, color: 'text.secondary', lineHeight: 1.7 },
-						}}
-					>
-						<li>Assets (images, other files)</li>
-						<li>Personal user data (name, email, etc.)</li>
-						<li>Collaborating users and invites</li>
-					</Stack>
-				</Alert>
+				{status === 'error' && (
+					<Alert severity="error" variant="outlined">
+						Export failed. Please try again later.
+					</Alert>
+				)}
+				{status === 'idle' && (
+					<Alert severity="info" variant="outlined" icon={false} sx={{ py: 1 }}>
+						<AlertTitle sx={{ mb: 0.5, fontSize: 14 }}>Not included in export</AlertTitle>
+						<Stack
+							component="ul"
+							sx={{
+								m: 0,
+								pl: 2.5,
+								'& li': { fontSize: 13, color: 'text.secondary', lineHeight: 1.7 },
+							}}
+						>
+							<li>Assets (images, other files)</li>
+							<li>Personal user data (name, email, etc.)</li>
+							<li>Collaborating users and invites</li>
+						</Stack>
+					</Alert>
+				)}
 			</Stack>
 		</Box>
 	)
@@ -269,6 +276,9 @@ export function StoragePageImport() {
 	const [status, setStatus] = useState<'idle' | 'success' | 'error' | 'validated' | 'validationError'>('idle')
 	const [validationDone, setValidationDone] = useState(false)
 
+	const { uploadFile } = useFileUpload()
+	const [uploadedAsset, setUploadedAsset] = useState<{ id: string } | null>(null)
+
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0] ?? null
 		setSelectedFile(file)
@@ -277,10 +287,11 @@ export function StoragePageImport() {
 	}
 
 	const handleImport = async () => {
-		if (!selectedFile) return
+		if (!uploadedAsset) {
+			return
+		}
 
-		const text = await selectedFile.text()
-		const result = parseApiResponse(await importUserData({ body: { data: { json: text } } }))
+		const result = parseApiResponse(await importUserData({ body: { assetId: uploadedAsset.id } }))
 		if (result.error) {
 			setStatus('error')
 			return
@@ -293,10 +304,14 @@ export function StoragePageImport() {
 	}
 
 	const handleValidation = async () => {
-		if (!selectedFile) return
+		if (!selectedFile) {
+			return
+		}
 
-		const text = await selectedFile.text()
-		const result = parseApiResponse(await validateUserData({ body: { data: { json: text } } }))
+		const asset = await uploadFile(selectedFile, 'DataMigrationImport')
+		setUploadedAsset(asset)
+
+		const result = parseApiResponse(await validateUserData({ body: { assetId: asset.id } }))
 		if (result.error) {
 			setStatus('validationError')
 			return
@@ -384,6 +399,17 @@ export function StoragePageImport() {
 				<Stack direction="row" spacing={1} alignItems="center">
 					<Button
 						variant="contained"
+						color="secondary"
+						onClick={handleValidation}
+						loading={isValidating}
+						disabled={!selectedFile || validationDone}
+						startIcon={<ImportIcon />}
+						sx={{ minWidth: 120 }}
+					>
+						Upload & Validate
+					</Button>
+					<Button
+						variant="contained"
 						color="primary"
 						startIcon={<ImportIcon />}
 						onClick={handleImport}
@@ -392,16 +418,6 @@ export function StoragePageImport() {
 						sx={{ minWidth: 120 }}
 					>
 						Import
-					</Button>
-					<Button
-						variant="outlined"
-						color="primary"
-						onClick={handleValidation}
-						loading={isValidating}
-						disabled={!selectedFile || validationDone}
-						sx={{ minWidth: 120 }}
-					>
-						Validate
 					</Button>
 				</Stack>
 

@@ -53,9 +53,9 @@ export const exportedUserDataSchema = z.object({
 										id: z.string(),
 										createdAt: z.date(),
 										updatedAt: z.date(),
-										label: z.string().nullable(),
 										position: z.number(),
 										calendarId: z.string(),
+										label: z.string().nullable(),
 										shortLabel: z.string().nullable(),
 										repeats: z.number(),
 										parentUnitId: z.string(),
@@ -70,15 +70,15 @@ export const exportedUserDataSchema = z.object({
 									updatedAt: z.date(),
 									name: z.string(),
 									position: z.number(),
-									calendarId: z.string(),
-									formatMode: calendarUnitFormatModeSchema,
-									negativeFormat: calendarUnitNegativeFormatSchema,
 									displayName: z.string().nullable(),
 									displayNameShort: z.string().nullable(),
 									displayNamePlural: z.string().nullable(),
+									formatMode: calendarUnitFormatModeSchema,
 									formatShorthand: z.string().nullable(),
+									negativeFormat: calendarUnitNegativeFormatSchema,
 									duration: z.bigint(),
 									treeDepth: z.number(),
+									calendarId: z.string(),
 								}),
 							),
 					),
@@ -104,8 +104,8 @@ export const exportedUserDataSchema = z.object({
 									updatedAt: z.date(),
 									name: z.string(),
 									position: z.number(),
-									calendarId: z.string(),
 									formatShorthand: z.string().nullable(),
+									calendarId: z.string(),
 								}),
 							),
 					),
@@ -150,8 +150,8 @@ export const exportedUserDataSchema = z.object({
 						name: z.string(),
 						description: z.string(),
 						worldId: z.string().nullable(),
-						position: z.number(),
 						ownerId: z.string().nullable(),
+						position: z.number(),
 						originTime: z.bigint(),
 						dateFormat: z.string().nullable(),
 					}),
@@ -160,15 +160,130 @@ export const exportedUserDataSchema = z.object({
 		worlds: z.array(
 			z
 				.object({
+					calendars: z.array(
+						z
+							.object({
+								units: z.array(
+									z
+										.object({
+											children: z.array(
+												z.object({
+													id: z.string(),
+													createdAt: z.date(),
+													updatedAt: z.date(),
+													position: z.number(),
+													calendarId: z.string(),
+													label: z.string().nullable(),
+													shortLabel: z.string().nullable(),
+													repeats: z.number(),
+													parentUnitId: z.string(),
+													childUnitId: z.string(),
+												}),
+											),
+										})
+										.and(
+											z.object({
+												id: z.string(),
+												createdAt: z.date(),
+												updatedAt: z.date(),
+												name: z.string(),
+												position: z.number(),
+												displayName: z.string().nullable(),
+												displayNameShort: z.string().nullable(),
+												displayNamePlural: z.string().nullable(),
+												formatMode: calendarUnitFormatModeSchema,
+												formatShorthand: z.string().nullable(),
+												negativeFormat: calendarUnitNegativeFormatSchema,
+												duration: z.bigint(),
+												treeDepth: z.number(),
+												calendarId: z.string(),
+											}),
+										),
+								),
+								seasons: z.array(
+									z
+										.object({
+											intervals: z.array(
+												z.object({
+													id: z.string(),
+													createdAt: z.date(),
+													updatedAt: z.date(),
+													calendarId: z.string(),
+													leftIndex: z.number(),
+													rightIndex: z.number(),
+													seasonId: z.string(),
+												}),
+											),
+										})
+										.and(
+											z.object({
+												id: z.string(),
+												createdAt: z.date(),
+												updatedAt: z.date(),
+												name: z.string(),
+												position: z.number(),
+												formatShorthand: z.string().nullable(),
+												calendarId: z.string(),
+											}),
+										),
+								),
+								presentations: z.array(
+									z
+										.object({
+											units: z.array(
+												z.object({
+													id: z.string(),
+													createdAt: z.date(),
+													updatedAt: z.date(),
+													name: z.string(),
+													position: z.number(),
+													calendarId: z.string(),
+													formatString: z.string(),
+													subdivision: z.number(),
+													labeledIndices: z.array(z.number()),
+													unitId: z.string(),
+													presentationId: z.string(),
+												}),
+											),
+										})
+										.and(
+											z.object({
+												id: z.string(),
+												createdAt: z.date(),
+												updatedAt: z.date(),
+												name: z.string(),
+												calendarId: z.string(),
+												compression: z.number(),
+												scaleFactor: z.number(),
+												baselineUnitId: z.string().nullable(),
+											}),
+										),
+								),
+							})
+							.and(
+								z.object({
+									id: z.string(),
+									createdAt: z.date(),
+									updatedAt: z.date(),
+									name: z.string(),
+									description: z.string(),
+									worldId: z.string().nullable(),
+									ownerId: z.string().nullable(),
+									position: z.number(),
+									originTime: z.bigint(),
+									dateFormat: z.string().nullable(),
+								}),
+							),
+					),
 					tags: z.array(
 						z
 							.object({
 								mentions: z.array(
 									z.object({
-										sourceType: mentionedEntitySchema,
-										targetType: mentionedEntitySchema,
 										sourceId: z.string(),
 										targetId: z.string(),
+										sourceType: mentionedEntitySchema,
+										targetType: mentionedEntitySchema,
 										sourceActorId: z.string().nullable(),
 										sourceEventId: z.string().nullable(),
 										sourceArticleId: z.string().nullable(),
@@ -225,84 +340,10 @@ export const exportedUserDataSchema = z.object({
 							.object({
 								mentions: z.array(
 									z.object({
-										sourceType: mentionedEntitySchema,
-										targetType: mentionedEntitySchema,
 										sourceId: z.string(),
 										targetId: z.string(),
-										sourceActorId: z.string().nullable(),
-										sourceEventId: z.string().nullable(),
-										sourceArticleId: z.string().nullable(),
-										sourceTagId: z.string().nullable(),
-										targetActorId: z.string().nullable(),
-										targetEventId: z.string().nullable(),
-										targetArticleId: z.string().nullable(),
-										targetTagId: z.string().nullable(),
-										pageId: z.string().nullable(),
-									}),
-								),
-							})
-							.and(
-								z.object({
-									id: z.string(),
-									createdAt: z.date(),
-									updatedAt: z.date(),
-									name: z.string(),
-									description: z.string(),
-									worldId: z.string(),
-									title: z.string(),
-									icon: z.string(),
-									color: z.string(),
-									descriptionRich: z.string(),
-								}),
-							),
-					),
-					events: z.array(
-						z
-							.object({
-								mentions: z.array(
-									z.object({
 										sourceType: mentionedEntitySchema,
 										targetType: mentionedEntitySchema,
-										sourceId: z.string(),
-										targetId: z.string(),
-										sourceActorId: z.string().nullable(),
-										sourceEventId: z.string().nullable(),
-										sourceArticleId: z.string().nullable(),
-										sourceTagId: z.string().nullable(),
-										targetActorId: z.string().nullable(),
-										targetEventId: z.string().nullable(),
-										targetArticleId: z.string().nullable(),
-										targetTagId: z.string().nullable(),
-										pageId: z.string().nullable(),
-									}),
-								),
-							})
-							.and(
-								z.object({
-									id: z.string(),
-									createdAt: z.date(),
-									updatedAt: z.date(),
-									name: z.string(),
-									description: z.string(),
-									worldId: z.string(),
-									icon: z.string(),
-									color: z.string(),
-									descriptionRich: z.string(),
-									timestamp: z.bigint(),
-									revokedAt: z.bigint().nullable(),
-									worldEventTrackId: z.string().nullable(),
-								}),
-							),
-					),
-					articles: z.array(
-						z
-							.object({
-								mentions: z.array(
-									z.object({
-										sourceType: mentionedEntitySchema,
-										targetType: mentionedEntitySchema,
-										sourceId: z.string(),
-										targetId: z.string(),
 										sourceActorId: z.string().nullable(),
 										sourceEventId: z.string().nullable(),
 										sourceArticleId: z.string().nullable(),
@@ -334,10 +375,97 @@ export const exportedUserDataSchema = z.object({
 									createdAt: z.date(),
 									updatedAt: z.date(),
 									name: z.string(),
-									worldId: z.string(),
-									position: z.number(),
+									title: z.string(),
 									icon: z.string(),
 									color: z.string(),
+									description: z.string(),
+									descriptionRich: z.string(),
+									worldId: z.string(),
+								}),
+							),
+					),
+					events: z.array(
+						z
+							.object({
+								mentions: z.array(
+									z.object({
+										sourceId: z.string(),
+										targetId: z.string(),
+										sourceType: mentionedEntitySchema,
+										targetType: mentionedEntitySchema,
+										sourceActorId: z.string().nullable(),
+										sourceEventId: z.string().nullable(),
+										sourceArticleId: z.string().nullable(),
+										sourceTagId: z.string().nullable(),
+										targetActorId: z.string().nullable(),
+										targetEventId: z.string().nullable(),
+										targetArticleId: z.string().nullable(),
+										targetTagId: z.string().nullable(),
+										pageId: z.string().nullable(),
+									}),
+								),
+							})
+							.and(
+								z.object({
+									id: z.string(),
+									createdAt: z.date(),
+									updatedAt: z.date(),
+									name: z.string(),
+									icon: z.string(),
+									color: z.string(),
+									description: z.string(),
+									descriptionRich: z.string(),
+									worldId: z.string(),
+									timestamp: z.bigint(),
+									revokedAt: z.bigint().nullable(),
+									worldEventTrackId: z.string().nullable(),
+								}),
+							),
+					),
+					articles: z.array(
+						z
+							.object({
+								mentions: z.array(
+									z.object({
+										sourceId: z.string(),
+										targetId: z.string(),
+										sourceType: mentionedEntitySchema,
+										targetType: mentionedEntitySchema,
+										sourceActorId: z.string().nullable(),
+										sourceEventId: z.string().nullable(),
+										sourceArticleId: z.string().nullable(),
+										sourceTagId: z.string().nullable(),
+										targetActorId: z.string().nullable(),
+										targetEventId: z.string().nullable(),
+										targetArticleId: z.string().nullable(),
+										targetTagId: z.string().nullable(),
+										pageId: z.string().nullable(),
+									}),
+								),
+								pages: z.array(
+									z.object({
+										id: z.string(),
+										createdAt: z.date(),
+										updatedAt: z.date(),
+										name: z.string(),
+										description: z.string(),
+										descriptionRich: z.string(),
+										parentActorId: z.string().nullable(),
+										parentEventId: z.string().nullable(),
+										parentArticleId: z.string().nullable(),
+									}),
+								),
+							})
+							.and(
+								z.object({
+									id: z.string(),
+									createdAt: z.date(),
+									updatedAt: z.date(),
+									name: z.string(),
+									icon: z.string(),
+									color: z.string(),
+									worldId: z.string(),
+									position: z.number(),
 									contentRich: z.string(),
 									parentId: z.string().nullable(),
 								}),
@@ -351,9 +479,9 @@ export const exportedUserDataSchema = z.object({
 										id: z.string(),
 										createdAt: z.date(),
 										updatedAt: z.date(),
-										direction: mindmapLinkDirectionSchema,
 										sourceNodeId: z.string(),
 										targetNodeId: z.string(),
+										direction: mindmapLinkDirectionSchema,
 										content: z.string(),
 									}),
 								),
@@ -370,121 +498,6 @@ export const exportedUserDataSchema = z.object({
 								}),
 							),
 					),
-					calendars: z.array(
-						z
-							.object({
-								units: z.array(
-									z
-										.object({
-											children: z.array(
-												z.object({
-													id: z.string(),
-													createdAt: z.date(),
-													updatedAt: z.date(),
-													label: z.string().nullable(),
-													position: z.number(),
-													calendarId: z.string(),
-													shortLabel: z.string().nullable(),
-													repeats: z.number(),
-													parentUnitId: z.string(),
-													childUnitId: z.string(),
-												}),
-											),
-										})
-										.and(
-											z.object({
-												id: z.string(),
-												createdAt: z.date(),
-												updatedAt: z.date(),
-												name: z.string(),
-												position: z.number(),
-												calendarId: z.string(),
-												formatMode: calendarUnitFormatModeSchema,
-												negativeFormat: calendarUnitNegativeFormatSchema,
-												displayName: z.string().nullable(),
-												displayNameShort: z.string().nullable(),
-												displayNamePlural: z.string().nullable(),
-												formatShorthand: z.string().nullable(),
-												duration: z.bigint(),
-												treeDepth: z.number(),
-											}),
-										),
-								),
-								seasons: z.array(
-									z
-										.object({
-											intervals: z.array(
-												z.object({
-													id: z.string(),
-													createdAt: z.date(),
-													updatedAt: z.date(),
-													calendarId: z.string(),
-													leftIndex: z.number(),
-													rightIndex: z.number(),
-													seasonId: z.string(),
-												}),
-											),
-										})
-										.and(
-											z.object({
-												id: z.string(),
-												createdAt: z.date(),
-												updatedAt: z.date(),
-												name: z.string(),
-												position: z.number(),
-												calendarId: z.string(),
-												formatShorthand: z.string().nullable(),
-											}),
-										),
-								),
-								presentations: z.array(
-									z
-										.object({
-											units: z.array(
-												z.object({
-													id: z.string(),
-													createdAt: z.date(),
-													updatedAt: z.date(),
-													name: z.string(),
-													position: z.number(),
-													calendarId: z.string(),
-													formatString: z.string(),
-													subdivision: z.number(),
-													labeledIndices: z.array(z.number()),
-													unitId: z.string(),
-													presentationId: z.string(),
-												}),
-											),
-										})
-										.and(
-											z.object({
-												id: z.string(),
-												createdAt: z.date(),
-												updatedAt: z.date(),
-												name: z.string(),
-												calendarId: z.string(),
-												compression: z.number(),
-												scaleFactor: z.number(),
-												baselineUnitId: z.string().nullable(),
-											}),
-										),
-								),
-							})
-							.and(
-								z.object({
-									id: z.string(),
-									createdAt: z.date(),
-									updatedAt: z.date(),
-									name: z.string(),
-									description: z.string(),
-									worldId: z.string().nullable(),
-									position: z.number(),
-									ownerId: z.string().nullable(),
-									originTime: z.bigint(),
-									dateFormat: z.string().nullable(),
-								}),
-							),
-					),
 				})
 				.and(
 					z.object({
@@ -493,10 +506,10 @@ export const exportedUserDataSchema = z.object({
 						updatedAt: z.date(),
 						name: z.string(),
 						description: z.string(),
-						accessMode: worldAccessModeSchema,
-						calendar: worldCalendarTypeSchema.nullable(),
 						ownerId: z.string(),
+						calendar: worldCalendarTypeSchema.nullable(),
 						timeOrigin: z.bigint(),
+						accessMode: worldAccessModeSchema,
 					}),
 				),
 		),
