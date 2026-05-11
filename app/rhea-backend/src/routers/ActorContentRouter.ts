@@ -80,6 +80,17 @@ router.put('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
 
+	const isEqual = await RichTextService.isContentEqual({
+		newContentRich: parsed.contentRich,
+		newContentDeltas: contentDeltas ?? '',
+		worldId,
+		entityId: actorId,
+		entityType: 'actor',
+	})
+	if (isEqual) {
+		return
+	}
+
 	const { actor, updatedMentions } = await ActorService.updateActor({
 		worldId,
 		actorId,

@@ -128,4 +128,26 @@ export const RichTextService = {
 		}
 		return false
 	},
+
+	isContentEqual: async ({
+		newContentRich,
+		newContentDeltas,
+		worldId,
+		entityId,
+		entityType,
+	}: {
+		newContentRich: string
+		newContentDeltas: string
+		worldId: string
+		entityId: string
+		entityType: 'actor' | 'event' | 'article'
+	}) => {
+		const { contentRich, contentDeltas } = await EntityResolverService.resolveEntityContent({
+			worldId,
+			entityId,
+			entityType,
+		})
+
+		return newContentRich === contentRich && newContentDeltas === contentDeltas
+	},
 }
