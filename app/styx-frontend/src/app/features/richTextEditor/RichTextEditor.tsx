@@ -13,6 +13,7 @@ import { useCollaboration } from './extensions/collaboration/useCollaboration'
 import { EditorExtensions } from './extensions/config'
 import { FadeInOverlay } from './extensions/mentions/components/FadeInOverlay/FadeInOverlay'
 import { MentionsList } from './extensions/mentions/MentionsList'
+import { useEditorPasteHandler } from './hooks/useEditorPasteHandler'
 import { RichTextEditorControls } from './RichTextEditorControls'
 import { StyledContainer } from './styles'
 
@@ -39,7 +40,9 @@ export type OnChangeParams = {
 	richText: string
 }
 
-export const RichTextEditorComponent = ({
+export const RichTextEditor = memo(RichTextEditorComponent)
+
+export function RichTextEditorComponent({
 	value,
 	softKey,
 	onChange,
@@ -49,7 +52,7 @@ export const RichTextEditorComponent = ({
 	collaboration,
 	autoFocus,
 	isLoading,
-}: Props) => {
+}: Props) {
 	const theme = useCustomTheme()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 	const { readModeEnabled } = useSelector(
@@ -83,12 +86,17 @@ export const RichTextEditorComponent = ({
 	// Add collaboration extension if enabled
 	const extensions = collaborationExtension ? [...EditorExtensions, collaborationExtension] : EditorExtensions
 
+	const { handlePaste } = useEditorPasteHandler()
+
 	const editor = useEditor(
 		{
 			content: value,
 			editable: !isReadMode,
 			extensions,
 			autofocus: false,
+			editorProps: {
+				handlePaste,
+			},
 			onUpdate({ editor, transaction }) {
 				if (editor.getHTML() === value || transaction.steps.length === 0) {
 					return
@@ -158,5 +166,3 @@ export const RichTextEditorComponent = ({
 		</StyledContainer>
 	)
 }
-
-export const RichTextEditor = memo(RichTextEditorComponent)

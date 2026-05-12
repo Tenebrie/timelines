@@ -47,18 +47,19 @@ export type ListUserAssetsApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		expiresAt?: null | string
 		ownerId: string
-		bucketKey: string
 		size: number
+		expiresAt?: null | string
+		bucketKey: string
 		originalFileName: string
 		originalFileExtension: string
 		contentType:
-			| 'ImageConversion'
 			| 'Avatar'
+			| 'ImageConversion'
 			| 'ImageGeneration'
 			| 'DataMigrationExport'
 			| 'DataMigrationImport'
+			| 'ImageEmbed'
 		status: 'Pending' | 'Finalized' | 'Failed'
 		contentDescription?: null | string
 		imageWidth?: null | number
@@ -71,18 +72,19 @@ export type RequestPresignedUrlApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		expiresAt?: null | string
 		ownerId: string
-		bucketKey: string
 		size: number
+		expiresAt?: null | string
+		bucketKey: string
 		originalFileName: string
 		originalFileExtension: string
 		contentType:
-			| 'ImageConversion'
 			| 'Avatar'
+			| 'ImageConversion'
 			| 'ImageGeneration'
 			| 'DataMigrationExport'
 			| 'DataMigrationImport'
+			| 'ImageEmbed'
 		status: 'Pending' | 'Finalized' | 'Failed'
 		contentDescription?: null | string
 		imageWidth?: null | number
@@ -98,29 +100,31 @@ export type RequestPresignedUrlApiArg = {
 		fileName: string
 		fileSize: number
 		assetType:
-			| 'ImageConversion'
 			| 'Avatar'
+			| 'ImageConversion'
 			| 'ImageGeneration'
 			| 'DataMigrationExport'
 			| 'DataMigrationImport'
+			| 'ImageEmbed'
 	}
 }
 export type FinalizeAssetUploadApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	expiresAt?: null | string
 	ownerId: string
-	bucketKey: string
 	size: number
+	expiresAt?: null | string
+	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
 	contentType:
-		| 'ImageConversion'
 		| 'Avatar'
+		| 'ImageConversion'
 		| 'ImageGeneration'
 		| 'DataMigrationExport'
 		| 'DataMigrationImport'
+		| 'ImageEmbed'
 	status: 'Pending' | 'Finalized' | 'Failed'
 	contentDescription?: null | string
 	imageWidth?: null | number

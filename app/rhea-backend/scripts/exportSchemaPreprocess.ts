@@ -228,7 +228,7 @@ export type ExportedUserData = ${finalBody}
 	fs.mkdirSync(path.dirname(outputPath), { recursive: true })
 	fs.writeFileSync(outputPath, output, 'utf8')
 
-	console.log(
+	console.info(
 		`Wrote ${outputPath} (${usedEnums.size} enum${usedEnums.size === 1 ? '' : 's'} inlined: ${[...usedEnums].sort().join(', ')})`,
 	)
 }

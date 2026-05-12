@@ -131,6 +131,13 @@ export const CloudStorageService = {
 		const filenameOnly = fileName.split('.').slice(0, -1).join('.')
 		const extension = fileName.split('.').pop() ?? ''
 
+		const expiresAt = (() => {
+			if (assetType === 'ImageEmbed') {
+				return null
+			}
+			return new Date(Date.now() + 3600 * 1000) // 1 hour from now
+		})()
+
 		const asset = await AssetService.createAsset({
 			id: assetId,
 			size: fileSize,
@@ -143,7 +150,7 @@ export const CloudStorageService = {
 				originalFileExtension: extension,
 				contentType: assetType,
 			}),
-			expiresAt: new Date(Date.now() + 3600 * 1000), // 1 hour from now
+			expiresAt,
 			owner: {
 				connect: {
 					id: userId,

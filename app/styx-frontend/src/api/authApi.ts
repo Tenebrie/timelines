@@ -122,18 +122,19 @@ export type PostLoginApiResponse = /** status 200  */ {
 			id: string
 			createdAt: string
 			updatedAt: string
-			expiresAt?: null | string
 			ownerId: string
-			bucketKey: string
 			size: number
+			expiresAt?: null | string
+			bucketKey: string
 			originalFileName: string
 			originalFileExtension: string
 			contentType:
-				| 'ImageConversion'
 				| 'Avatar'
+				| 'ImageConversion'
 				| 'ImageGeneration'
 				| 'DataMigrationExport'
 				| 'DataMigrationImport'
+				| 'ImageEmbed'
 			status: 'Pending' | 'Finalized' | 'Failed'
 			contentDescription?: null | string
 			imageWidth?: null | number
@@ -149,7 +150,7 @@ export type PostLoginApiArg = {
 	}
 }
 export type PostLogoutApiResponse = /** status 200  */ {
-	redirectTo: 'login' | 'admin'
+	redirectTo: 'admin' | 'login'
 }
 export type PostLogoutApiArg = void
 export const {
