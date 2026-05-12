@@ -1,4 +1,4 @@
-FROM garethgeorge/backrest:v1.12.1
+FROM garethgeorge/backrest:v1.13.0
 
 # Install PostgreSQL client for pg_dump, envsubst for config templating, and jq for JSON parsing
 USER root
