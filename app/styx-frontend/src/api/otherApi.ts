@@ -207,18 +207,19 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	expiresAt?: null | string
 	ownerId: string
-	bucketKey: string
 	size: number
+	expiresAt?: null | string
+	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
 	contentType:
-		| 'ImageConversion'
 		| 'Avatar'
+		| 'ImageConversion'
 		| 'ImageGeneration'
 		| 'DataMigrationExport'
 		| 'DataMigrationImport'
+		| 'ImageEmbed'
 	status: 'Pending' | 'Finalized' | 'Failed'
 	contentDescription?: null | string
 	imageWidth?: null | number

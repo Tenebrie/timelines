@@ -13,6 +13,7 @@ import { useCollaboration } from './extensions/collaboration/useCollaboration'
 import { EditorExtensions } from './extensions/config'
 import { FadeInOverlay } from './extensions/mentions/components/FadeInOverlay/FadeInOverlay'
 import { MentionsList } from './extensions/mentions/MentionsList'
+import { useEditorPasteHandler } from './hooks/useEditorPasteHandler'
 import { RichTextEditorControls } from './RichTextEditorControls'
 import { StyledContainer } from './styles'
 
@@ -85,6 +86,8 @@ export function RichTextEditorComponent({
 	// Add collaboration extension if enabled
 	const extensions = collaborationExtension ? [...EditorExtensions, collaborationExtension] : EditorExtensions
 
+	const { handlePaste } = useEditorPasteHandler()
+
 	const editor = useEditor(
 		{
 			content: value,
@@ -92,10 +95,7 @@ export function RichTextEditorComponent({
 			extensions,
 			autofocus: false,
 			editorProps: {
-				handlePaste(view, event, slice) {
-					const images = slice.content.content.filter((node) => node.type.name === 'externalImageNode')
-					console.log(slice.content.content)
-				},
+				handlePaste,
 			},
 			onUpdate({ editor, transaction }) {
 				if (editor.getHTML() === value || transaction.steps.length === 0) {

@@ -1,9 +1,10 @@
 enum AssetType {
-  ImageConversion
   Avatar
+  ImageConversion
   ImageGeneration
   DataMigrationExport
   DataMigrationImport
+  ImageEmbed
 }
 
 enum AssetStatus {
