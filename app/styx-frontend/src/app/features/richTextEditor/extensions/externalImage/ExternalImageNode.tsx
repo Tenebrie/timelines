@@ -10,6 +10,7 @@ const PropsSchema = z.object({
 	sizeY: z.number().optional(),
 })
 
+// TODO: Access control in shared worlds
 export const ExternalImageNode = Node.create({
 	name: 'externalImageNode',
 	inline: false,
