@@ -39,7 +39,9 @@ export type OnChangeParams = {
 	richText: string
 }
 
-export const RichTextEditorComponent = ({
+export const RichTextEditor = memo(RichTextEditorComponent)
+
+export function RichTextEditorComponent({
 	value,
 	softKey,
 	onChange,
@@ -49,7 +51,7 @@ export const RichTextEditorComponent = ({
 	collaboration,
 	autoFocus,
 	isLoading,
-}: Props) => {
+}: Props) {
 	const theme = useCustomTheme()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 	const { readModeEnabled } = useSelector(
@@ -89,6 +91,12 @@ export const RichTextEditorComponent = ({
 			editable: !isReadMode,
 			extensions,
 			autofocus: false,
+			editorProps: {
+				handlePaste(view, event, slice) {
+					const images = slice.content.content.filter((node) => node.type.name === 'externalImageNode')
+					console.log(slice.content.content)
+				},
+			},
 			onUpdate({ editor, transaction }) {
 				if (editor.getHTML() === value || transaction.steps.length === 0) {
 					return
@@ -158,5 +166,3 @@ export const RichTextEditorComponent = ({
 		</StyledContainer>
 	)
 }
-
-export const RichTextEditor = memo(RichTextEditorComponent)

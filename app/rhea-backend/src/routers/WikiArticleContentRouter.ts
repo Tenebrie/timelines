@@ -76,6 +76,7 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 		content: RequiredParam(ContentStringValidator),
 		contentDeltas: OptionalParam(ContentStringValidator),
 	})
+	console.log(content)
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
 
