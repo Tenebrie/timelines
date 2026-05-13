@@ -387,6 +387,7 @@ export const ModelName = {
   Actor: 'Actor',
   UserAnnouncement: 'UserAnnouncement',
   Asset: 'Asset',
+  AssetReference: 'AssetReference',
   AuditLog: 'AuditLog',
   Calendar: 'Calendar',
   CalendarUnit: 'CalendarUnit',
@@ -428,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "actor" | "userAnnouncement" | "asset" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "featureFlagEntry" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
+    modelProps: "actor" | "userAnnouncement" | "asset" | "assetReference" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "featureFlagEntry" | "wikiArticle" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -651,6 +652,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.AssetCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.AssetCountAggregateOutputType> | number
+        }
+      }
+    }
+    AssetReference: {
+      payload: Prisma.$AssetReferencePayload<ExtArgs>
+      fields: Prisma.AssetReferenceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AssetReferenceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetReferencePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AssetReferenceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetReferencePayload>
+        }
+        findFirst: {
+          args: Prisma.AssetReferenceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetReferencePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AssetReferenceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetReferencePayload>
+        }
+        findMany: {
+          args: Prisma.AssetReferenceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetReferencePayload>[]
+        }
+        create: {
+          args: Prisma.AssetReferenceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetReferencePayload>
+        }
+        createMany: {
+          args: Prisma.AssetReferenceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AssetReferenceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetReferencePayload>[]
+        }
+        delete: {
+          args: Prisma.AssetReferenceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetReferencePayload>
+        }
+        update: {
+          args: Prisma.AssetReferenceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetReferencePayload>
+        }
+        deleteMany: {
+          args: Prisma.AssetReferenceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AssetReferenceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AssetReferenceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetReferencePayload>[]
+        }
+        upsert: {
+          args: Prisma.AssetReferenceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AssetReferencePayload>
+        }
+        aggregate: {
+          args: Prisma.AssetReferenceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAssetReference>
+        }
+        groupBy: {
+          args: Prisma.AssetReferenceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AssetReferenceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AssetReferenceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AssetReferenceCountAggregateOutputType> | number
         }
       }
     }
@@ -2667,6 +2742,22 @@ export const AssetScalarFieldEnum = {
 export type AssetScalarFieldEnum = (typeof AssetScalarFieldEnum)[keyof typeof AssetScalarFieldEnum]
 
 
+export const AssetReferenceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  assetId: 'assetId',
+  holderId: 'holderId',
+  holderType: 'holderType',
+  holderActorId: 'holderActorId',
+  holderEventId: 'holderEventId',
+  holderArticleId: 'holderArticleId',
+  holderTagId: 'holderTagId'
+} as const
+
+export type AssetReferenceScalarFieldEnum = (typeof AssetReferenceScalarFieldEnum)[keyof typeof AssetReferenceScalarFieldEnum]
+
+
 export const AuditLogScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -3166,6 +3257,20 @@ export type ListEnumAssetStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$
 
 
 /**
+ * Reference to a field of type 'ReferenceHoldingEntity'
+ */
+export type EnumReferenceHoldingEntityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReferenceHoldingEntity'>
+    
+
+
+/**
+ * Reference to a field of type 'ReferenceHoldingEntity[]'
+ */
+export type ListEnumReferenceHoldingEntityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ReferenceHoldingEntity[]'>
+    
+
+
+/**
  * Reference to a field of type 'AuditAction'
  */
 export type EnumAuditActionFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AuditAction'>
@@ -3458,6 +3563,7 @@ export type GlobalOmitConfig = {
   actor?: Prisma.ActorOmit
   userAnnouncement?: Prisma.UserAnnouncementOmit
   asset?: Prisma.AssetOmit
+  assetReference?: Prisma.AssetReferenceOmit
   auditLog?: Prisma.AuditLogOmit
   calendar?: Prisma.CalendarOmit
   calendarUnit?: Prisma.CalendarUnitOmit

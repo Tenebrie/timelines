@@ -10,8 +10,10 @@ import {
 	useApiEndpoint,
 	useAuth,
 	usePathParams,
+	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { assetTag, imageGenerationTag } from './utils/tags.js'
 import { AssetTypeValidator } from './validators/AssetTypeValidator.js'
@@ -33,9 +35,13 @@ router.get('/api/assets/:assetId', async (ctx) => {
 		assetId: RequiredParam(StringValidator),
 	})
 
+	const { disposition } = useQueryParams(ctx, {
+		disposition: z.enum(['inline', 'attachment']).optional(),
+	})
+
 	await AuthorizationService.checkUserAssetAccess(ctx.user.id, assetId)
 
-	const url = await CloudStorageService.getPresignedUrl(assetId)
+	const url = await CloudStorageService.getPresignedUrl(assetId, { disposition })
 	return { url }
 })
 
@@ -67,8 +73,20 @@ router.get('/api/assets', async (ctx) => {
 		tags: [assetTag],
 	})
 
-	const assets = await AssetService.listUserAssets(ctx.user.id)
-	return { assets }
+	const { offset, limit, sortField, sortDirection } = useQueryParams(ctx, {
+		offset: z.number().min(0).optional(),
+		limit: z.number().min(1).optional(),
+		sortField: z.string().optional(),
+		sortDirection: z.enum(['asc', 'desc']).optional(),
+	})
+
+	const { assets, total } = await AssetService.listUserAssets(ctx.user.id, {
+		offset,
+		limit,
+		sortField,
+		sortDirection,
+	})
+	return { assets, total }
 })
 
 router.post('/api/assets/upload/presigned', async (ctx) => {

@@ -1,6 +1,7 @@
 import { AssetType, Prisma } from '@prisma/client'
 import { BadRequestError } from 'moonflower'
 
+import { CloudStorageService } from './CloudStorageService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const AssetService = {
@@ -10,10 +11,38 @@ export const AssetService = {
 		})
 	},
 
-	listUserAssets: async (userId: string) => {
-		return await getPrismaClient().asset.findMany({
-			where: { ownerId: userId },
+	listUserAssets: async (
+		userId: string,
+		{
+			offset,
+			limit,
+			sortField,
+			sortDirection,
+		}: { offset?: number; limit?: number; sortField?: string; sortDirection?: 'asc' | 'desc' },
+	) => {
+		const [assets, total] = await getPrismaClient().$transaction(async (prisma) => {
+			const assetsPromise = prisma.asset.findMany({
+				where: { ownerId: userId },
+				skip: offset ?? 0,
+				take: limit ?? 12,
+				orderBy: {
+					[sortField ?? 'createdAt']: sortDirection ?? 'desc',
+				},
+			})
+			const countPromise = prisma.asset.count({
+				where: { ownerId: userId },
+			})
+			return await Promise.all([assetsPromise, countPromise])
 		})
+		return {
+			total,
+			assets: await Promise.all(
+				assets.map(async (asset) => ({
+					...asset,
+					previewUrl: asset.status === 'Finalized' ? await CloudStorageService.getPresignedUrl(asset) : null,
+				})),
+			),
+		}
 	},
 
 	listUserAssetsByType: async (userId: string, contentType: AssetType) => {

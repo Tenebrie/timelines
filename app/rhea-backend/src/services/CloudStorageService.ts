@@ -131,13 +131,6 @@ export const CloudStorageService = {
 		const filenameOnly = fileName.split('.').slice(0, -1).join('.')
 		const extension = fileName.split('.').pop() ?? ''
 
-		const expiresAt = (() => {
-			if (assetType === 'ImageEmbed') {
-				return null
-			}
-			return new Date(Date.now() + 3600 * 1000) // 1 hour from now
-		})()
-
 		const asset = await AssetService.createAsset({
 			id: assetId,
 			size: fileSize,
@@ -150,7 +143,7 @@ export const CloudStorageService = {
 				originalFileExtension: extension,
 				contentType: assetType,
 			}),
-			expiresAt,
+			expiresAt: new Date(Date.now() + 600 * 1000), // 10 minute upload window, updated on finalize
 			owner: {
 				connect: {
 					id: userId,
@@ -191,7 +184,13 @@ export const CloudStorageService = {
 			)
 
 			// If we get here, file exists in S3. Mark as finalized.
-			return await AssetService.updateAsset(assetId, { status: AssetStatus.Finalized })
+			const expiresAt = (() => {
+				if (asset.contentType === 'ImageEmbed') {
+					return null
+				}
+				return new Date(Date.now() + 3600 * 1000) // 1 hour from now
+			})()
+			return await AssetService.updateAsset(assetId, { status: AssetStatus.Finalized, expiresAt })
 		} catch (error: unknown) {
 			if (error instanceof Error && error.name === 'NotFound') {
 				// File doesn't exist in S3
@@ -254,7 +253,13 @@ export const CloudStorageService = {
 		return await CloudStorageService.finalizeAssetUpload(assetId)
 	},
 
-	getPresignedUrl: async (assetOrId: string | Asset, expiresInSeconds: number = 3600) => {
+	getPresignedUrl: async (
+		assetOrId: string | Asset,
+		options: { expiresInSeconds?: number; disposition?: 'inline' | 'attachment' } = {},
+	) => {
+		const disposition = options.disposition ?? 'inline'
+		const expiresInSeconds = options.expiresInSeconds ?? 3600
+
 		const asset = await (async () => {
 			if (typeof assetOrId === 'object') {
 				return assetOrId
@@ -271,10 +276,11 @@ export const CloudStorageService = {
 			throw new BadRequestError('Asset is not ready for download')
 		}
 
+		const safeName = asset.originalFileName.replace(/[\x00-\x1f"\\]/g, '_')
 		const command = new GetObjectCommand({
 			Bucket: BUCKET_ID,
 			Key: asset.bucketKey,
-			ResponseContentDisposition: 'inline',
+			ResponseContentDisposition: `${disposition}; filename="${safeName}"; filename*=UTF-8''${encodeURIComponent(safeName)}`,
 			ResponseContentType: getContentType(asset.originalFileExtension),
 		})
 

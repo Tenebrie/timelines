@@ -1,5 +1,6 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import FeedbackIcon from '@mui/icons-material/Feedback'
+import ImportExportIcon from '@mui/icons-material/ImportExport'
 import LockResetIcon from '@mui/icons-material/LockReset'
 import StorageIcon from '@mui/icons-material/Storage'
 import TuneIcon from '@mui/icons-material/Tune'
@@ -16,7 +17,8 @@ export function ProfileView() {
 				routes={[
 					{ icon: <AccountCircleIcon />, label: 'Public profile', path: '/profile/public' },
 					{ icon: <TuneIcon />, label: 'Preferences', path: '/profile/preferences' },
-					{ icon: <StorageIcon />, label: 'User data', path: '/profile/storage' },
+					{ icon: <StorageIcon />, label: 'Storage', path: '/profile/storage' },
+					{ icon: <ImportExportIcon />, label: 'Import / Export', path: '/profile/migration' },
 					{ icon: <LockResetIcon />, label: 'Security', path: '/profile/security' },
 					{ icon: <FeedbackIcon />, label: 'Feedback', path: '/profile/feedback' },
 				]}

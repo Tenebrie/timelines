@@ -55,6 +55,7 @@ model WorldEvent {
   pages       ContentPage[] @relation("EventContentPage")
   mentions    Mention[]     @relation("EventMentionSource")
   mentionedIn Mention[]     @relation("EventMentionTarget")
+  assetRefs   AssetReference[] @relation("EventAssetReference")
 
   deltaStates WorldEventDelta[]
 

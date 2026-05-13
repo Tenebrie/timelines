@@ -78,12 +78,15 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	})
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
+	console.log(parsed.referencedAssetIds)
+	console.log(content)
 
 	const { article, updatedMentions } = await WikiService.updateWikiArticle({
 		id: articleId,
 		contentRich: parsed.contentRich,
 		contentYjs: contentDeltas ?? null,
 		mentions: parsed.mentions,
+		referencedAssetIds: parsed.referencedAssetIds,
 	})
 
 	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })

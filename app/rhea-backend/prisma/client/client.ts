@@ -57,6 +57,11 @@ export type UserAnnouncement = Prisma.UserAnnouncementModel
  */
 export type Asset = Prisma.AssetModel
 /**
+ * Model AssetReference
+ * 
+ */
+export type AssetReference = Prisma.AssetReferenceModel
+/**
  * Model AuditLog
  * 
  */

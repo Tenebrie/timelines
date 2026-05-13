@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 import { useDeleteAssetMutation } from '@/api/assetApi'
 import { useGetImageGenerationHistoryQuery } from '@/api/imageGenerationApi'
-import { Pagination } from '@/app/views/admin/components/Pagination'
+import { Pagination } from '@/ui-lib/components/Pagination/Pagination'
 
 import { GenerationHistoryItem } from './GenerationHistoryItem'
 

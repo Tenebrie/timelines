@@ -1,7 +1,8 @@
-import { MentionedEntity, WikiArticle } from '@prisma/client'
+import { MentionedEntity, ReferenceHoldingEntity, WikiArticle } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 import { BadRequestError } from 'moonflower'
 
+import { AssetRefService } from './AssetRefService.js'
 import { makeFetchArticleAncestorsQuery } from './dbQueries/makeFetchArticleAncestorsQuery.js'
 import { makeSortWikiArticlesQuery as makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
@@ -153,6 +154,7 @@ export const WikiService = {
 		params: Partial<Pick<WikiArticle, 'name' | 'contentRich' | 'contentYjs'>> & {
 			id: string
 			mentions?: MentionData[]
+			referencedAssetIds?: string[]
 		},
 	) => {
 		return getPrismaClient().$transaction(async (prisma) => {
@@ -166,6 +168,12 @@ export const WikiService = {
 				params.id,
 				MentionedEntity.Article,
 				params.mentions,
+				prisma,
+			)
+			const referencedAssets = await AssetRefService.createReferences(
+				params.id,
+				ReferenceHoldingEntity.Article,
+				params.referencedAssetIds,
 				prisma,
 			)
 
@@ -183,6 +191,16 @@ export const WikiService = {
 									sourceId_targetId: {
 										sourceId: mention.sourceId,
 										targetId: mention.targetId,
+									},
+								})),
+							}
+						: undefined,
+					assetRefs: referencedAssets
+						? {
+								set: referencedAssets.map((ref) => ({
+									assetId_holderId: {
+										assetId: ref.assetId,
+										holderId: ref.holderId,
 									},
 								})),
 							}
@@ -213,6 +231,7 @@ export const WikiService = {
 			})
 
 			await MentionsService.clearOrphanedMentions(prisma)
+			await AssetRefService.clearOrphanedReferences(prisma)
 			await makeTouchWorldQuery(updatedArticle.worldId, prisma)
 
 			return { article: updatedArticle, updatedMentions }

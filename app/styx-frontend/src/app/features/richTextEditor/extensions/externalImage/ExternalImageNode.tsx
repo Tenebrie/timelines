@@ -10,7 +10,16 @@ const PropsSchema = z.object({
 	sizeY: z.number().optional(),
 })
 
-// TODO: Access control in shared worlds
+/** TODO:
+ * - Track nodes by references and not positions
+ * - Access control in shared worlds
+ * - Refcounting on embedded images (and deletion when unused)
+ * - Image resizing
+ * - Store presigned URLs for assets
+ *
+ * - Unrelated, but support for colors/fonts
+ * - Support for renamed urls
+ */
 export const ExternalImageNode = Node.create({
 	name: 'externalImageNode',
 	inline: false,

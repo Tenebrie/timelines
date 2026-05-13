@@ -253,6 +253,23 @@ export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedIntNullableFilter<$PrismaModel>
 }
 
+export type EnumReferenceHoldingEntityFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReferenceHoldingEntity | Prisma.EnumReferenceHoldingEntityFieldRefInput<$PrismaModel>
+  in?: $Enums.ReferenceHoldingEntity[] | Prisma.ListEnumReferenceHoldingEntityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ReferenceHoldingEntity[] | Prisma.ListEnumReferenceHoldingEntityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumReferenceHoldingEntityFilter<$PrismaModel> | $Enums.ReferenceHoldingEntity
+}
+
+export type EnumReferenceHoldingEntityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReferenceHoldingEntity | Prisma.EnumReferenceHoldingEntityFieldRefInput<$PrismaModel>
+  in?: $Enums.ReferenceHoldingEntity[] | Prisma.ListEnumReferenceHoldingEntityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ReferenceHoldingEntity[] | Prisma.ListEnumReferenceHoldingEntityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumReferenceHoldingEntityWithAggregatesFilter<$PrismaModel> | $Enums.ReferenceHoldingEntity
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumReferenceHoldingEntityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumReferenceHoldingEntityFilter<$PrismaModel>
+}
+
 export type EnumAuditActionFilter<$PrismaModel = never> = {
   equals?: $Enums.AuditAction | Prisma.EnumAuditActionFieldRefInput<$PrismaModel>
   in?: $Enums.AuditAction[] | Prisma.ListEnumAuditActionFieldRefInput<$PrismaModel>
@@ -822,6 +839,23 @@ export type NestedFloatNullableFilter<$PrismaModel = never> = {
   gt?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   gte?: number | Prisma.FloatFieldRefInput<$PrismaModel>
   not?: Prisma.NestedFloatNullableFilter<$PrismaModel> | number | null
+}
+
+export type NestedEnumReferenceHoldingEntityFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReferenceHoldingEntity | Prisma.EnumReferenceHoldingEntityFieldRefInput<$PrismaModel>
+  in?: $Enums.ReferenceHoldingEntity[] | Prisma.ListEnumReferenceHoldingEntityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ReferenceHoldingEntity[] | Prisma.ListEnumReferenceHoldingEntityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumReferenceHoldingEntityFilter<$PrismaModel> | $Enums.ReferenceHoldingEntity
+}
+
+export type NestedEnumReferenceHoldingEntityWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.ReferenceHoldingEntity | Prisma.EnumReferenceHoldingEntityFieldRefInput<$PrismaModel>
+  in?: $Enums.ReferenceHoldingEntity[] | Prisma.ListEnumReferenceHoldingEntityFieldRefInput<$PrismaModel>
+  notIn?: $Enums.ReferenceHoldingEntity[] | Prisma.ListEnumReferenceHoldingEntityFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumReferenceHoldingEntityWithAggregatesFilter<$PrismaModel> | $Enums.ReferenceHoldingEntity
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumReferenceHoldingEntityFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumReferenceHoldingEntityFilter<$PrismaModel>
 }
 
 export type NestedEnumAuditActionFilter<$PrismaModel = never> = {

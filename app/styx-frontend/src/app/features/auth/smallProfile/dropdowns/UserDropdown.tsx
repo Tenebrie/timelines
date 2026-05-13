@@ -1,5 +1,6 @@
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import FeedbackIcon from '@mui/icons-material/Feedback'
+import ImportExportIcon from '@mui/icons-material/ImportExport'
 import LockResetIcon from '@mui/icons-material/LockReset'
 import Logout from '@mui/icons-material/Logout'
 import Storage from '@mui/icons-material/Storage'
@@ -34,6 +35,7 @@ export function UserDropdown({ user }: Props) {
 	const isProfile = useCheckRouteMatch('/profile/public')
 	const isPreferences = useCheckRouteMatch('/profile/preferences')
 	const isStorage = useCheckRouteMatch('/profile/storage')
+	const isMigration = useCheckRouteMatch('/profile/migration')
 	const isSecurity = useCheckRouteMatch('/profile/security')
 	const isFeedback = useCheckRouteMatch('/profile/feedback')
 
@@ -132,7 +134,20 @@ export function UserDropdown({ user }: Props) {
 						<ListItemIcon>
 							<Storage />
 						</ListItemIcon>
-						User data
+						Storage
+					</MenuItem>
+				</NavigationLink>
+				<NavigationLink to="/profile/migration">
+					<MenuItem
+						onClick={() => {
+							popupState.close()
+						}}
+						selected={isMigration}
+					>
+						<ListItemIcon>
+							<ImportExportIcon />
+						</ListItemIcon>
+						Import / Export
 					</MenuItem>
 				</NavigationLink>
 				<NavigationLink to="/profile/security">

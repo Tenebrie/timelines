@@ -192,6 +192,7 @@ export type TagWhereInput = {
   worldId?: Prisma.StringFilter<"Tag"> | string
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
+  assetRefs?: Prisma.AssetReferenceListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
 }
 
@@ -204,6 +205,7 @@ export type TagOrderByWithRelationInput = {
   worldId?: Prisma.SortOrder
   mentions?: Prisma.MentionOrderByRelationAggregateInput
   mentionedIn?: Prisma.MentionOrderByRelationAggregateInput
+  assetRefs?: Prisma.AssetReferenceOrderByRelationAggregateInput
   world?: Prisma.WorldOrderByWithRelationInput
 }
 
@@ -219,6 +221,7 @@ export type TagWhereUniqueInput = Prisma.AtLeast<{
   worldId?: Prisma.StringFilter<"Tag"> | string
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
+  assetRefs?: Prisma.AssetReferenceListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
 }, "id" | "id">
 
@@ -254,6 +257,7 @@ export type TagCreateInput = {
   description?: string
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceTagInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetTagInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderTagInput
   world: Prisma.WorldCreateNestedOneWithoutTagsInput
 }
 
@@ -266,6 +270,7 @@ export type TagUncheckedCreateInput = {
   worldId: string
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceTagInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetTagInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderTagInput
 }
 
 export type TagUpdateInput = {
@@ -276,6 +281,7 @@ export type TagUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUpdateManyWithoutSourceTagNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetTagNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderTagNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutTagsNestedInput
 }
 
@@ -288,6 +294,7 @@ export type TagUncheckedUpdateInput = {
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceTagNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetTagNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderTagNestedInput
 }
 
 export type TagCreateManyInput = {
@@ -356,6 +363,22 @@ export type TagListRelationFilter = {
 
 export type TagOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type TagCreateNestedOneWithoutAssetRefsInput = {
+  create?: Prisma.XOR<Prisma.TagCreateWithoutAssetRefsInput, Prisma.TagUncheckedCreateWithoutAssetRefsInput>
+  connectOrCreate?: Prisma.TagCreateOrConnectWithoutAssetRefsInput
+  connect?: Prisma.TagWhereUniqueInput
+}
+
+export type TagUpdateOneWithoutAssetRefsNestedInput = {
+  create?: Prisma.XOR<Prisma.TagCreateWithoutAssetRefsInput, Prisma.TagUncheckedCreateWithoutAssetRefsInput>
+  connectOrCreate?: Prisma.TagCreateOrConnectWithoutAssetRefsInput
+  upsert?: Prisma.TagUpsertWithoutAssetRefsInput
+  disconnect?: Prisma.TagWhereInput | boolean
+  delete?: Prisma.TagWhereInput | boolean
+  connect?: Prisma.TagWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TagUpdateToOneWithWhereWithoutAssetRefsInput, Prisma.TagUpdateWithoutAssetRefsInput>, Prisma.TagUncheckedUpdateWithoutAssetRefsInput>
 }
 
 export type TagCreateNestedOneWithoutMentionsInput = {
@@ -432,6 +455,66 @@ export type TagUncheckedUpdateManyWithoutWorldNestedInput = {
   deleteMany?: Prisma.TagScalarWhereInput | Prisma.TagScalarWhereInput[]
 }
 
+export type TagCreateWithoutAssetRefsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string
+  mentions?: Prisma.MentionCreateNestedManyWithoutSourceTagInput
+  mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetTagInput
+  world: Prisma.WorldCreateNestedOneWithoutTagsInput
+}
+
+export type TagUncheckedCreateWithoutAssetRefsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string
+  worldId: string
+  mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceTagInput
+  mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetTagInput
+}
+
+export type TagCreateOrConnectWithoutAssetRefsInput = {
+  where: Prisma.TagWhereUniqueInput
+  create: Prisma.XOR<Prisma.TagCreateWithoutAssetRefsInput, Prisma.TagUncheckedCreateWithoutAssetRefsInput>
+}
+
+export type TagUpsertWithoutAssetRefsInput = {
+  update: Prisma.XOR<Prisma.TagUpdateWithoutAssetRefsInput, Prisma.TagUncheckedUpdateWithoutAssetRefsInput>
+  create: Prisma.XOR<Prisma.TagCreateWithoutAssetRefsInput, Prisma.TagUncheckedCreateWithoutAssetRefsInput>
+  where?: Prisma.TagWhereInput
+}
+
+export type TagUpdateToOneWithWhereWithoutAssetRefsInput = {
+  where?: Prisma.TagWhereInput
+  data: Prisma.XOR<Prisma.TagUpdateWithoutAssetRefsInput, Prisma.TagUncheckedUpdateWithoutAssetRefsInput>
+}
+
+export type TagUpdateWithoutAssetRefsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  mentions?: Prisma.MentionUpdateManyWithoutSourceTagNestedInput
+  mentionedIn?: Prisma.MentionUpdateManyWithoutTargetTagNestedInput
+  world?: Prisma.WorldUpdateOneRequiredWithoutTagsNestedInput
+}
+
+export type TagUncheckedUpdateWithoutAssetRefsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceTagNestedInput
+  mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetTagNestedInput
+}
+
 export type TagCreateWithoutMentionsInput = {
   id?: string
   createdAt?: Date | string
@@ -439,6 +522,7 @@ export type TagCreateWithoutMentionsInput = {
   name: string
   description?: string
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetTagInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderTagInput
   world: Prisma.WorldCreateNestedOneWithoutTagsInput
 }
 
@@ -450,6 +534,7 @@ export type TagUncheckedCreateWithoutMentionsInput = {
   description?: string
   worldId: string
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetTagInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderTagInput
 }
 
 export type TagCreateOrConnectWithoutMentionsInput = {
@@ -464,6 +549,7 @@ export type TagCreateWithoutMentionedInInput = {
   name: string
   description?: string
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceTagInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderTagInput
   world: Prisma.WorldCreateNestedOneWithoutTagsInput
 }
 
@@ -475,6 +561,7 @@ export type TagUncheckedCreateWithoutMentionedInInput = {
   description?: string
   worldId: string
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceTagInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderTagInput
 }
 
 export type TagCreateOrConnectWithoutMentionedInInput = {
@@ -500,6 +587,7 @@ export type TagUpdateWithoutMentionsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetTagNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderTagNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutTagsNestedInput
 }
 
@@ -511,6 +599,7 @@ export type TagUncheckedUpdateWithoutMentionsInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetTagNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderTagNestedInput
 }
 
 export type TagUpsertWithoutMentionedInInput = {
@@ -531,6 +620,7 @@ export type TagUpdateWithoutMentionedInInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUpdateManyWithoutSourceTagNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderTagNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutTagsNestedInput
 }
 
@@ -542,6 +632,7 @@ export type TagUncheckedUpdateWithoutMentionedInInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceTagNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderTagNestedInput
 }
 
 export type TagCreateWithoutWorldInput = {
@@ -552,6 +643,7 @@ export type TagCreateWithoutWorldInput = {
   description?: string
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceTagInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetTagInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderTagInput
 }
 
 export type TagUncheckedCreateWithoutWorldInput = {
@@ -562,6 +654,7 @@ export type TagUncheckedCreateWithoutWorldInput = {
   description?: string
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceTagInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetTagInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderTagInput
 }
 
 export type TagCreateOrConnectWithoutWorldInput = {
@@ -618,6 +711,7 @@ export type TagUpdateWithoutWorldInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUpdateManyWithoutSourceTagNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetTagNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderTagNestedInput
 }
 
 export type TagUncheckedUpdateWithoutWorldInput = {
@@ -628,6 +722,7 @@ export type TagUncheckedUpdateWithoutWorldInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceTagNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetTagNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderTagNestedInput
 }
 
 export type TagUncheckedUpdateManyWithoutWorldInput = {
@@ -646,11 +741,13 @@ export type TagUncheckedUpdateManyWithoutWorldInput = {
 export type TagCountOutputType = {
   mentions: number
   mentionedIn: number
+  assetRefs: number
 }
 
 export type TagCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mentions?: boolean | TagCountOutputTypeCountMentionsArgs
   mentionedIn?: boolean | TagCountOutputTypeCountMentionedInArgs
+  assetRefs?: boolean | TagCountOutputTypeCountAssetRefsArgs
 }
 
 /**
@@ -677,6 +774,13 @@ export type TagCountOutputTypeCountMentionedInArgs<ExtArgs extends runtime.Types
   where?: Prisma.MentionWhereInput
 }
 
+/**
+ * TagCountOutputType without action
+ */
+export type TagCountOutputTypeCountAssetRefsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AssetReferenceWhereInput
+}
+
 
 export type TagSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -687,6 +791,7 @@ export type TagSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   worldId?: boolean
   mentions?: boolean | Prisma.Tag$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.Tag$mentionedInArgs<ExtArgs>
+  assetRefs?: boolean | Prisma.Tag$assetRefsArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.TagCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["tag"]>
@@ -724,6 +829,7 @@ export type TagOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
 export type TagInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   mentions?: boolean | Prisma.Tag$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.Tag$mentionedInArgs<ExtArgs>
+  assetRefs?: boolean | Prisma.Tag$assetRefsArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.TagCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -739,6 +845,7 @@ export type $TagPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   objects: {
     mentions: Prisma.$MentionPayload<ExtArgs>[]
     mentionedIn: Prisma.$MentionPayload<ExtArgs>[]
+    assetRefs: Prisma.$AssetReferencePayload<ExtArgs>[]
     world: Prisma.$WorldPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1144,6 +1251,7 @@ export interface Prisma__TagClient<T, Null = never, ExtArgs extends runtime.Type
   readonly [Symbol.toStringTag]: "PrismaPromise"
   mentions<T extends Prisma.Tag$mentionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tag$mentionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mentionedIn<T extends Prisma.Tag$mentionedInArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tag$mentionedInArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assetRefs<T extends Prisma.Tag$assetRefsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Tag$assetRefsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssetReferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   world<T extends Prisma.WorldDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldDefaultArgs<ExtArgs>>): Prisma.Prisma__WorldClient<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1626,6 +1734,30 @@ export type Tag$mentionedInArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.MentionScalarFieldEnum | Prisma.MentionScalarFieldEnum[]
+}
+
+/**
+ * Tag.assetRefs
+ */
+export type Tag$assetRefsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AssetReference
+   */
+  select?: Prisma.AssetReferenceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AssetReference
+   */
+  omit?: Prisma.AssetReferenceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AssetReferenceInclude<ExtArgs> | null
+  where?: Prisma.AssetReferenceWhereInput
+  orderBy?: Prisma.AssetReferenceOrderByWithRelationInput | Prisma.AssetReferenceOrderByWithRelationInput[]
+  cursor?: Prisma.AssetReferenceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AssetReferenceScalarFieldEnum | Prisma.AssetReferenceScalarFieldEnum[]
 }
 
 /**
