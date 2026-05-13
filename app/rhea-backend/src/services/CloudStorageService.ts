@@ -349,4 +349,14 @@ export const CloudStorageService = {
 			}
 		}
 	},
+
+	cleanUpOrphanedAssets: async () => {
+		const orphanedAssets = await AssetService.getOrphanedAssets()
+		if (orphanedAssets.length > 0) {
+			console.info(`Queueing up ${orphanedAssets.length} orphaned assets for deletion`)
+		}
+		for (const asset of orphanedAssets) {
+			await AssetService.updateAsset(asset.id, { expiresAt: new Date(Date.now() + 3600 * 1000) })
+		}
+	},
 }

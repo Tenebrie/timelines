@@ -59,6 +59,9 @@ export type DeleteAssetApiArg = {
 export type ListUserAssetsApiResponse = /** status 200  */ {
 	assets: {
 		previewUrl?: null | string
+		_count: {
+			references: number
+		}
 		id: string
 		createdAt: string
 		updatedAt: string

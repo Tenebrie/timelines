@@ -99,6 +99,7 @@ router.put('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 			descriptionRich: parsed.contentRich,
 			descriptionYjs: contentDeltas ?? null,
 			mentions: parsed.mentions,
+			referencedAssetIds: parsed.referencedAssetIds,
 		},
 	})
 
@@ -205,6 +206,7 @@ router.put('/api/world/:worldId/actor/:actorId/content/pages/:pageId', async (ct
 			descriptionRich: parsed.contentRich,
 			descriptionYjs: contentDeltas ?? null,
 			mentions: parsed.mentions,
+			referencedAssetIds: parsed.referencedAssetIds,
 		},
 	})
 

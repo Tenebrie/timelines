@@ -259,12 +259,12 @@ export type PutWikiArticleContentApiArg = {
 	}
 }
 export type ListWorldShareLinksApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
-	accessMode: 'ReadOnly' | 'Editing'
 	expiresAt: null | string
+	worldId: string
 	label: null | string
+	accessMode: 'ReadOnly' | 'Editing'
 	slug: string
 	usageCount: number
 }[]
@@ -284,13 +284,13 @@ export type GenerateFreeWorldShareLinkApiArg = {
 	}
 }
 export type CreateWorldShareLinkApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	accessMode: 'ReadOnly' | 'Editing'
 	expiresAt?: null | string
+	worldId: string
 	label?: null | string
+	accessMode: 'ReadOnly' | 'Editing'
 	slug: string
 	usageCount: number
 }
@@ -349,14 +349,14 @@ export type UpdateArticleApiResponse = /** status 200  */ {
 		id: string
 		name: string
 	}[]
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
+	position: number
 	icon: string
 	color: string
-	position: number
 	contentRich: string
 	parentId?: null | string
 }

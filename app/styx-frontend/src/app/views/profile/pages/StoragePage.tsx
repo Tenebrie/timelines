@@ -5,6 +5,7 @@ import ScheduleIcon from '@mui/icons-material/AccessTime'
 import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
 import AssetsIcon from '@mui/icons-material/Folder'
+import LinkIcon from '@mui/icons-material/Link'
 import QuotaIcon from '@mui/icons-material/Storage'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -154,6 +155,15 @@ export function StoragePageAssets() {
 							title={`This file will be deleted ${formatTimeAgo(new Date(params.row.expiresAt))}`}
 						>
 							<ScheduleIcon fontSize="small" sx={{ color: 'text.secondary', display: 'block' }} />
+						</Tooltip>
+					)}
+					{params.row._count.references > 0 && (
+						<Tooltip
+							placement="top"
+							disableInteractive
+							title={`Referenced ${params.row._count.references} time${params.row._count.references !== 1 ? 's' : ''}`}
+						>
+							<LinkIcon fontSize="small" sx={{ color: 'text.secondary', display: 'block' }} />
 						</Tooltip>
 					)}
 				</Stack>

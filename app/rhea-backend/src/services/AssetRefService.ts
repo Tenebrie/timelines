@@ -34,6 +34,17 @@ export const AssetRefService = {
 			skipDuplicates: true,
 		})
 
+		await getPrismaClient(prisma).asset.updateMany({
+			where: {
+				id: {
+					in: assets,
+				},
+			},
+			data: {
+				expiresAt: null,
+			},
+		})
+
 		return data
 	},
 

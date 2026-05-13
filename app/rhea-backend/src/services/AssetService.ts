@@ -23,6 +23,13 @@ export const AssetService = {
 		const [assets, total] = await getPrismaClient().$transaction(async (prisma) => {
 			const assetsPromise = prisma.asset.findMany({
 				where: { ownerId: userId },
+				include: {
+					_count: {
+						select: {
+							references: true,
+						},
+					},
+				},
 				skip: offset ?? 0,
 				take: limit ?? 12,
 				orderBy: {
@@ -144,6 +151,18 @@ export const AssetService = {
 			where: {
 				expiresAt: {
 					lt: currentDate,
+				},
+			},
+		})
+	},
+
+	getOrphanedAssets: async () => {
+		return await getPrismaClient().asset.findMany({
+			where: {
+				expiresAt: null,
+				contentType: 'ImageEmbed',
+				references: {
+					none: {},
 				},
 			},
 		})

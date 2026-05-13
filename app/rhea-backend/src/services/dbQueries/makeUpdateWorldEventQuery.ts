@@ -1,5 +1,6 @@
-import { MentionedEntity, Prisma } from '@prisma/client'
+import { MentionedEntity, Prisma, ReferenceHoldingEntity } from '@prisma/client'
 
+import { AssetRefService } from '../AssetRefService.js'
 import { getPrismaClient } from '../dbClients/DatabaseClient.js'
 import { MentionData, MentionsService } from '../MentionsService.js'
 
@@ -8,6 +9,7 @@ export type UpdateWorldEventQueryParams = Omit<
 	'id' | 'createdAt' | 'updatedAt' | 'worldId' | 'mentions'
 > & {
 	mentions?: MentionData[] | undefined
+	referencedAssetIds?: string[] | undefined
 }
 
 export const makeUpdateWorldEventQuery = async ({
@@ -19,10 +21,18 @@ export const makeUpdateWorldEventQuery = async ({
 	params: UpdateWorldEventQueryParams
 	prisma?: Prisma.TransactionClient
 }) => {
+	const { referencedAssetIds, ...eventData } = params
+
 	const mentionedEntities = await MentionsService.createMentions(
 		eventId,
 		MentionedEntity.Event,
-		params.mentions,
+		eventData.mentions,
+		prisma,
+	)
+	const referencedAssets = await AssetRefService.createReferences(
+		eventId,
+		ReferenceHoldingEntity.Event,
+		referencedAssetIds,
 		prisma,
 	)
 
@@ -31,13 +41,23 @@ export const makeUpdateWorldEventQuery = async ({
 			id: eventId,
 		},
 		data: {
-			...params,
+			...eventData,
 			mentions: mentionedEntities
 				? {
 						set: mentionedEntities.map((mention) => ({
 							sourceId_targetId: {
 								sourceId: mention.sourceId,
 								targetId: mention.targetId,
+							},
+						})),
+					}
+				: undefined,
+			assetRefs: referencedAssets
+				? {
+						set: referencedAssets.map((ref) => ({
+							assetId_holderId: {
+								assetId: ref.assetId,
+								holderId: ref.holderId,
 							},
 						})),
 					}
@@ -50,6 +70,7 @@ export const makeUpdateWorldEventQuery = async ({
 	})
 
 	await MentionsService.clearOrphanedMentions(prisma)
+	await AssetRefService.clearOrphanedReferences(prisma)
 
 	return event
 }

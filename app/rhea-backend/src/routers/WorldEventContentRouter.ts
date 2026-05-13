@@ -86,6 +86,7 @@ router.put('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 			descriptionRich: parsed.contentRich,
 			descriptionYjs: contentDeltas ?? null,
 			mentions: parsed.mentions,
+			referencedAssetIds: parsed.referencedAssetIds,
 		},
 	})
 

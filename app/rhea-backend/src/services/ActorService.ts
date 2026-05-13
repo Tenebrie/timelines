@@ -1,6 +1,7 @@
-import { MentionedEntity, Prisma } from '@prisma/client'
+import { MentionedEntity, Prisma, ReferenceHoldingEntity } from '@prisma/client'
 
 import { ContentPageUpdateWithoutParentActorInput } from '../../prisma/client/models.js'
+import { AssetRefService } from './AssetRefService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { makeUpdateActorQuery, UpdateActorQueryParams } from './dbQueries/makeUpdateActorQuery.js'
@@ -228,9 +229,10 @@ export const ActorService = {
 		pageId: string
 		params: Omit<ContentPageUpdateWithoutParentActorInput, 'mentions'> & {
 			mentions: MentionData[]
+			referencedAssetIds?: string[]
 		}
 	}) => {
-		const { mentions, ...data } = params
+		const { mentions, referencedAssetIds, ...data } = params
 		return getPrismaClient().$transaction(async (prisma) => {
 			const previousMentions = await prisma.mention.findMany({
 				where: {
@@ -243,6 +245,12 @@ export const ActorService = {
 				actorId,
 				MentionedEntity.Actor,
 				mentions,
+				prisma,
+			)
+			const referencedAssets = await AssetRefService.createReferences(
+				actorId,
+				ReferenceHoldingEntity.Actor,
+				referencedAssetIds,
 				prisma,
 			)
 
@@ -267,6 +275,14 @@ export const ActorService = {
 										},
 									})),
 								},
+								assetRefs: {
+									set: referencedAssets.map((ref) => ({
+										assetId_holderId: {
+											assetId: ref.assetId,
+											holderId: ref.holderId,
+										},
+									})),
+								},
 							},
 						},
 					},
@@ -285,6 +301,7 @@ export const ActorService = {
 			})
 
 			await MentionsService.clearOrphanedMentions(prisma)
+			await AssetRefService.clearOrphanedReferences(prisma)
 
 			return {
 				actor,

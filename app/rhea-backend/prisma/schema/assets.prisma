@@ -66,5 +66,8 @@ model AssetReference {
   holderArticle WikiArticle? @relation(fields: [holderArticleId], references: [id], onDelete: Cascade, name: "ArticleAssetReference")
   holderTag     Tag?         @relation(fields: [holderTagId], references: [id], onDelete: Cascade, name: "TagAssetReference")
 
+  pageId String?
+  page   ContentPage? @relation(fields: [pageId], references: [id], onDelete: Cascade, name: "PageAssetReference")
+
   @@unique([assetId, holderId])
 }
