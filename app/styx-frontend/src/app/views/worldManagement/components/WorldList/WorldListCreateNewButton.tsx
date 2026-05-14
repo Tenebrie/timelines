@@ -71,12 +71,14 @@ export function WorldListCreateNewButton() {
 						label="Name"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
-						onKeyDown={(e) => {
+						onKeyDown={async (e) => {
 							if (e.key !== 'Enter') {
 								return
 							}
-							handleCreateWorld()
-							close()
+							const returnValue = await handleCreateWorld()
+							if (returnValue !== false) {
+								close()
+							}
 						}}
 						autoFocus
 						fullWidth
@@ -88,12 +90,14 @@ export function WorldListCreateNewButton() {
 						label="Description"
 						value={description}
 						onChange={(e) => setDescription(e.target.value)}
-						onKeyDown={(e) => {
+						onKeyDown={async (e) => {
 							if (e.key !== 'Enter') {
 								return
 							}
-							handleCreateWorld()
-							close()
+							const returnValue = await handleCreateWorld()
+							if (returnValue !== false) {
+								close()
+							}
 						}}
 						fullWidth
 						disabled={isCreating}
