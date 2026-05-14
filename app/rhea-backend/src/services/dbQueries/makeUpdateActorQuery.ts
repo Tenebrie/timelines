@@ -13,10 +13,12 @@ export type UpdateActorQueryParams = Omit<
 }
 
 export const makeUpdateActorQuery = async ({
+	worldId,
 	actorId,
 	params,
 	prisma,
 }: {
+	worldId: string
 	actorId: string
 	params: UpdateActorQueryParams
 	prisma?: Prisma.TransactionClient
@@ -35,12 +37,13 @@ export const makeUpdateActorQuery = async ({
 		actorData.mentions,
 		prisma,
 	)
-	const referencedAssets = await AssetRefService.createReferences(
-		actorId,
-		ReferenceHoldingEntity.Actor,
-		referencedAssetIds,
+	const referencedAssets = await AssetRefService.createReferences({
+		worldId,
+		holderId: actorId,
+		holderType: ReferenceHoldingEntity.Actor,
+		assets: referencedAssetIds,
 		prisma,
-	)
+	})
 
 	const actor = await getPrismaClient(prisma).actor.update({
 		where: {

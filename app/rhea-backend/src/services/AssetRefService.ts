@@ -5,12 +5,19 @@ import { getPrismaClient } from './dbClients/DatabaseClient.js'
 export type MentionData = Pick<Mention, 'targetId' | 'targetType'>
 
 export const AssetRefService = {
-	createReferences: async (
-		holderId: string,
-		holderType: ReferenceHoldingEntity,
-		assets: string[] | undefined,
-		prisma?: Prisma.TransactionClient,
-	) => {
+	createReferences: async ({
+		worldId,
+		holderId,
+		holderType,
+		assets,
+		prisma,
+	}: {
+		worldId: string
+		holderId: string
+		holderType: ReferenceHoldingEntity
+		assets: string[] | undefined
+		prisma?: Prisma.TransactionClient
+	}) => {
 		if (!assets) {
 			return []
 		}
@@ -21,6 +28,7 @@ export const AssetRefService = {
 				holderType: holderType,
 
 				assetId,
+				worldId,
 
 				holderActorId: holderType === ReferenceHoldingEntity.Actor ? holderId : undefined,
 				holderEventId: holderType === ReferenceHoldingEntity.Event ? holderId : undefined,

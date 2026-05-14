@@ -146,6 +146,7 @@ export const ActorService = {
 			})
 
 			const { actor } = await makeUpdateActorQuery({
+				worldId,
 				actorId: baseActor.id,
 				params: updateData,
 				prisma,
@@ -171,6 +172,7 @@ export const ActorService = {
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
 			const { actor, updatedMentions } = await makeUpdateActorQuery({
+				worldId,
 				actorId,
 				params,
 				prisma,
@@ -247,12 +249,13 @@ export const ActorService = {
 				mentions,
 				prisma,
 			)
-			const referencedAssets = await AssetRefService.createReferences(
-				actorId,
-				ReferenceHoldingEntity.Actor,
-				referencedAssetIds,
+			const referencedAssets = await AssetRefService.createReferences({
+				worldId,
+				holderId: actorId,
+				holderType: ReferenceHoldingEntity.Actor,
+				assets: referencedAssetIds,
 				prisma,
-			)
+			})
 
 			const actor = await prisma.actor.update({
 				where: {

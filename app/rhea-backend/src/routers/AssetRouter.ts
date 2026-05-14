@@ -3,6 +3,7 @@ import { AssetService } from '@src/services/AssetService.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { CloudStorageService } from '@src/services/CloudStorageService.js'
 import {
+	BadRequestError,
 	NumberValidator,
 	RequiredParam,
 	Router,
@@ -39,10 +40,19 @@ router.get('/api/assets/:assetId', async (ctx) => {
 		disposition: z.enum(['inline', 'attachment']).optional(),
 	})
 
-	await AuthorizationService.checkUserAssetAccess(ctx.user.id, assetId)
+	await AuthorizationService.checkUserAssetReadAccess(ctx.user, assetId)
 
-	const url = await CloudStorageService.getPresignedUrl(assetId, { disposition })
-	return { url }
+	const asset = await AssetService.getAsset(assetId)
+	if (!asset) {
+		throw new BadRequestError('Asset not found')
+	}
+	const url = await CloudStorageService.getPresignedUrl(asset, { disposition })
+
+	return {
+		url,
+		imageWidth: asset.imageWidth,
+		imageHeight: asset.imageHeight,
+	}
 })
 
 router.delete('/api/assets/:assetId', async (ctx) => {
@@ -56,7 +66,7 @@ router.delete('/api/assets/:assetId', async (ctx) => {
 		assetId: RequiredParam(StringValidator),
 	})
 
-	await AuthorizationService.checkUserAssetAccess(ctx.user.id, assetId)
+	await AuthorizationService.checkUserAssetOwner(ctx.user, assetId)
 
 	const asset = await AssetService.getAsset(assetId)
 	if (!asset) {
@@ -129,7 +139,7 @@ router.post('/api/assets/upload/finalize', async (ctx) => {
 		assetId: RequiredParam(StringValidator),
 	})
 
-	await AuthorizationService.checkUserAssetAccess(ctx.user.id, assetId)
+	await AuthorizationService.checkUserAssetOwner(ctx.user, assetId)
 	return await CloudStorageService.finalizeAssetUpload(assetId)
 })
 

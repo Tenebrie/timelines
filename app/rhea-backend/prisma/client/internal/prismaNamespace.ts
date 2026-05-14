@@ -2753,7 +2753,8 @@ export const AssetReferenceScalarFieldEnum = {
   holderEventId: 'holderEventId',
   holderArticleId: 'holderArticleId',
   holderTagId: 'holderTagId',
-  pageId: 'pageId'
+  pageId: 'pageId',
+  worldId: 'worldId'
 } as const
 
 export type AssetReferenceScalarFieldEnum = (typeof AssetReferenceScalarFieldEnum)[keyof typeof AssetReferenceScalarFieldEnum]

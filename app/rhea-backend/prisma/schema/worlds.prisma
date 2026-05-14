@@ -36,6 +36,7 @@ model World {
   savedColors         SavedColor[]
   calendars           Calendar[]
   shareLinks          WorldShareLink[]
+  assetReferences     AssetReference[]
 }
 
 model WorldEvent {

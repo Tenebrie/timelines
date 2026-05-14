@@ -13,10 +13,12 @@ export type UpdateWorldEventQueryParams = Omit<
 }
 
 export const makeUpdateWorldEventQuery = async ({
+	worldId,
 	eventId,
 	params,
 	prisma,
 }: {
+	worldId: string
 	eventId: string
 	params: UpdateWorldEventQueryParams
 	prisma?: Prisma.TransactionClient
@@ -29,16 +31,18 @@ export const makeUpdateWorldEventQuery = async ({
 		eventData.mentions,
 		prisma,
 	)
-	const referencedAssets = await AssetRefService.createReferences(
-		eventId,
-		ReferenceHoldingEntity.Event,
-		referencedAssetIds,
+	const referencedAssets = await AssetRefService.createReferences({
+		worldId,
+		holderId: eventId,
+		holderType: ReferenceHoldingEntity.Event,
+		assets: referencedAssetIds,
 		prisma,
-	)
+	})
 
 	const event = await getPrismaClient(prisma).worldEvent.update({
 		where: {
 			id: eventId,
+			worldId,
 		},
 		data: {
 			...eventData,

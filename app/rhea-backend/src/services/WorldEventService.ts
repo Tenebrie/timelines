@@ -46,6 +46,7 @@ export const WorldEventService = {
 			})
 
 			await makeUpdateWorldEventQuery({
+				worldId,
 				eventId: baseEvent.id,
 				params: updateData,
 				prisma,
@@ -79,6 +80,7 @@ export const WorldEventService = {
 			})
 
 			await makeUpdateWorldEventQuery({
+				worldId,
 				eventId,
 				params,
 				prisma,

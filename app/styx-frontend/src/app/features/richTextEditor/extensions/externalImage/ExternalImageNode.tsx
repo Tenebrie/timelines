@@ -1,5 +1,5 @@
 import { useGetAssetQuery } from '@api/assetApi'
-import { Node, nodePasteRule, NodeViewProps } from '@tiptap/core'
+import { Node, NodeViewProps } from '@tiptap/core'
 import { DOMSerializer } from '@tiptap/pm/model'
 import { NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react'
 import { useLayoutEffect, useRef } from 'react'
@@ -11,11 +11,7 @@ const PropsSchema = z.object({
 })
 
 /** TODO:
- * - Track nodes by references and not positions
- * - Access control in shared worlds
- * - Refcounting on embedded images (and deletion when unused)
  * - Image resizing
- * - Store presigned URLs for assets
  *
  * - Unrelated, but support for colors/fonts
  * - Support for renamed urls
@@ -29,7 +25,18 @@ export const ExternalImageNode = Node.create({
 			assetId: {
 				default: null,
 				parseHTML: (element) => element.getAttribute('data-asset-id'),
-				renderHTML: (attributes) => ({ 'data-asset-id': attributes.assetId }),
+				renderHTML: (attributes) => {
+					if (!attributes.assetId) return {}
+					return { 'data-asset-id': attributes.assetId }
+				},
+			},
+			uploadId: {
+				default: null,
+				parseHTML: (element) => element.getAttribute('data-upload-id'),
+				renderHTML: (attributes) => {
+					if (!attributes.uploadId) return {}
+					return { 'data-upload-id': attributes.uploadId }
+				},
 			},
 			src: {
 				default: null,
@@ -70,17 +77,6 @@ export const ExternalImageNode = Node.create({
 	addNodeView() {
 		return ReactNodeViewRenderer(ExternalImageView)
 	},
-	addPasteRules() {
-		return [
-			nodePasteRule({
-				find: /(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))/gi,
-				type: this.type,
-				getAttributes: (match) => ({
-					src: match[0],
-				}),
-			}),
-		]
-	},
 })
 
 export function ExternalImageView({ node, editor, updateAttributes }: NodeViewProps) {
@@ -106,5 +102,5 @@ export function ExternalImageView({ node, editor, updateAttributes }: NodeViewPr
 		ref.current.replaceChildren(dom)
 	}, [node, editor.schema, data])
 
-	return <NodeViewWrapper ref={ref} />
+	return <NodeViewWrapper ref={ref} style={{ display: 'inline-block' }} />
 }

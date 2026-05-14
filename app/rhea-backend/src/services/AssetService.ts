@@ -1,4 +1,4 @@
-import { AssetType, Prisma } from '@prisma/client'
+import { Asset, AssetType, Prisma } from '@prisma/client'
 import { BadRequestError } from 'moonflower'
 
 import { CloudStorageService } from './CloudStorageService.js'
@@ -9,6 +9,10 @@ export const AssetService = {
 		return await getPrismaClient().asset.findUnique({
 			where: { id: assetId },
 		})
+	},
+
+	isImage(asset: Asset): boolean {
+		return asset.contentType === 'ImageEmbed'
 	},
 
 	listUserAssets: async (

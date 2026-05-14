@@ -1,6 +1,5 @@
+import { RedisChannel } from '@src/ts-shared/RedisChannel.js'
 import { createClient } from 'redis'
-
-import { RedisChannel } from '../../ts-shared/RheaToCalliopeMessage.js'
 
 const rawClient = createClient({
 	socket: {

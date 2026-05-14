@@ -153,6 +153,7 @@ export const WikiService = {
 	updateWikiArticle: async (
 		params: Partial<Pick<WikiArticle, 'name' | 'contentRich' | 'contentYjs'>> & {
 			id: string
+			worldId: string
 			mentions?: MentionData[]
 			referencedAssetIds?: string[]
 		},
@@ -170,16 +171,18 @@ export const WikiService = {
 				params.mentions,
 				prisma,
 			)
-			const referencedAssets = await AssetRefService.createReferences(
-				params.id,
-				ReferenceHoldingEntity.Article,
-				params.referencedAssetIds,
+			const referencedAssets = await AssetRefService.createReferences({
+				worldId: params.worldId,
+				holderId: params.id,
+				holderType: ReferenceHoldingEntity.Article,
+				assets: params.referencedAssetIds,
 				prisma,
-			)
+			})
 
 			const updatedArticle = await prisma.wikiArticle.update({
 				where: {
 					id: params.id,
+					worldId: params.worldId,
 				},
 				data: {
 					name: params.name,

@@ -69,5 +69,8 @@ model AssetReference {
   pageId String?
   page   ContentPage? @relation(fields: [pageId], references: [id], onDelete: Cascade, name: "PageAssetReference")
 
+  worldId String
+  world World @relation(fields: [worldId], references: [id], onDelete: Cascade)
+
   @@unique([assetId, holderId])
 }
