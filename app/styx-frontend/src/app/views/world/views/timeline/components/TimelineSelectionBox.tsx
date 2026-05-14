@@ -144,9 +144,12 @@ export function TimelineSelectionBox({ containerRef }: Props) {
 					if (now - mouseState.lastIntersectionCheckTimestamp >= 100) {
 						mouseState.lastIntersectionCheckTimestamp = now
 						const selectedMarkers = checkMarkerIntersection(container, newRect)
-						requestIdleCallback(() => {
-							dispatch(worldSlice.actions.setTimelineMarkerSelection(selectedMarkers))
-						})
+						requestIdleCallback(
+							() => {
+								dispatch(worldSlice.actions.setTimelineMarkerSelection(selectedMarkers))
+							},
+							{ timeout: 150 },
+						)
 					}
 
 					return newRect

@@ -1,4 +1,5 @@
 import { useGetAssetQuery } from '@api/assetApi'
+import { useTheme } from '@mui/material/styles'
 import { Node, NodeViewProps } from '@tiptap/core'
 import { DOMSerializer } from '@tiptap/pm/model'
 import { NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react'
@@ -79,8 +80,9 @@ export const ExternalImageNode = Node.create({
 	},
 })
 
-export function ExternalImageView({ node, editor, updateAttributes }: NodeViewProps) {
+export function ExternalImageView({ node, editor, selected, updateAttributes }: NodeViewProps) {
 	const assetId = node.attrs.assetId as string
+	const theme = useTheme()
 
 	const { data } = useGetAssetQuery({ assetId }, { skip: !assetId })
 
@@ -102,5 +104,16 @@ export function ExternalImageView({ node, editor, updateAttributes }: NodeViewPr
 		ref.current.replaceChildren(dom)
 	}, [node, editor.schema, data])
 
-	return <NodeViewWrapper ref={ref} style={{ display: 'inline-block' }} />
+	return (
+		<NodeViewWrapper
+			ref={ref}
+			style={{
+				display: 'inline-block',
+				outline: selected ? `2px solid ${theme.palette.primary.main}` : 'none',
+				outlineOffset: 2,
+				borderRadius: 2,
+				transition: 'outline-color 120ms ease',
+			}}
+		/>
+	)
 }
