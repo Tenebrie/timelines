@@ -286,10 +286,10 @@ export const CloudStorageService = {
 			throw new BadRequestError('Asset is not ready for download')
 		}
 
-		// const cacheEntry = await RedisCacheService.getCacheEntry('assetPresignedUrl', asset.id)
-		// if (cacheEntry?.url) {
-		// 	return cacheEntry.url
-		// }
+		const cacheEntry = await RedisCacheService.getCacheEntry('assetPresignedUrl', asset.id)
+		if (cacheEntry?.url) {
+			return cacheEntry.url
+		}
 
 		const fullName = asset.originalFileExtension
 			? `${asset.originalFileName}.${asset.originalFileExtension}`
