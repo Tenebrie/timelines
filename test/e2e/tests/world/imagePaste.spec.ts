@@ -23,6 +23,7 @@ test.describe('RichTextEditor - image paste', () => {
 				bubbles: true,
 				cancelable: true,
 			})
+			Object.defineProperty(event, 'clipboardData', { value: dataTransfer })
 			document.querySelector('[data-testid="RichTextEditor"] .ProseMirror')?.dispatchEvent(event)
 		}, TINY_PNG_BASE64)
 
@@ -42,6 +43,7 @@ test.describe('RichTextEditor - image paste', () => {
 				bubbles: true,
 				cancelable: true,
 			})
+			Object.defineProperty(event, 'clipboardData', { value: dataTransfer })
 			document.querySelector('[data-testid="RichTextEditor"] .ProseMirror')?.dispatchEvent(event)
 		}, TINY_PNG_BASE64)
 
@@ -69,6 +71,7 @@ test.describe('RichTextEditor - image paste', () => {
 				bubbles: true,
 				cancelable: true,
 			})
+			Object.defineProperty(event, 'clipboardData', { value: dataTransfer })
 			document.querySelector('[data-testid="RichTextEditor"] .ProseMirror')?.dispatchEvent(event)
 		}, TINY_PNG_BASE64)
 
