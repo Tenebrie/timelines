@@ -286,12 +286,15 @@ export const CloudStorageService = {
 			throw new BadRequestError('Asset is not ready for download')
 		}
 
-		const cacheEntry = await RedisCacheService.getCacheEntry('assetPresignedUrl', asset.id)
-		if (cacheEntry?.url) {
-			return cacheEntry.url
-		}
+		// const cacheEntry = await RedisCacheService.getCacheEntry('assetPresignedUrl', asset.id)
+		// if (cacheEntry?.url) {
+		// 	return cacheEntry.url
+		// }
 
-		const safeName = asset.originalFileName.replace(/[\x00-\x1f"\\]/g, '_')
+		const fullName = asset.originalFileExtension
+			? `${asset.originalFileName}.${asset.originalFileExtension}`
+			: asset.originalFileName
+		const safeName = fullName.replace(/[\x00-\x1f"\\]/g, '_')
 		const command = new GetObjectCommand({
 			Bucket: BUCKET_ID,
 			Key: asset.bucketKey,

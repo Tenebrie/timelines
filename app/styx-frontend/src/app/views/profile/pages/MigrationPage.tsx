@@ -53,7 +53,6 @@ export function MigrationPageExport() {
 		}
 		const a = document.createElement('a')
 		a.href = result.response.url
-		a.download = `neverkin-export-${new Date().toISOString().slice(0, 10)}.json`
 		a.click()
 	}
 

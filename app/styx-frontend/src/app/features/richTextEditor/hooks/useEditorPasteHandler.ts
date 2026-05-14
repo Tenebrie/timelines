@@ -83,6 +83,7 @@ export function useEditorPasteHandler() {
 						return
 					}
 
+					console.log(response.id)
 					view.dispatch(
 						view.state.tr.setNodeMarkup(foundPos, undefined, {
 							...currentNode.attrs,

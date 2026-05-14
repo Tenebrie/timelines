@@ -12,7 +12,7 @@ export const AssetService = {
 	},
 
 	isImage(asset: Asset): boolean {
-		return asset.contentType === 'ImageEmbed'
+		return asset.contentType === 'ImageEmbed' && asset.status === 'Finalized'
 	},
 
 	listUserAssets: async (
@@ -50,7 +50,7 @@ export const AssetService = {
 			assets: await Promise.all(
 				assets.map(async (asset) => ({
 					...asset,
-					previewUrl: asset.status === 'Finalized' ? await CloudStorageService.getPresignedUrl(asset) : null,
+					previewUrl: AssetService.isImage(asset) ? await CloudStorageService.getPresignedUrl(asset) : null,
 				})),
 			),
 		}

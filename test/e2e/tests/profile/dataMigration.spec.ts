@@ -125,7 +125,7 @@ async function seedWorld(page: Page, name: string) {
 }
 
 async function importJsonInUi(page: Page, json: string) {
-	await page.goto(makeUrl('/profile/storage'))
+	await page.goto(makeUrl('/profile/migration'))
 
 	const fileInput = page.locator('input[type="file"][accept*="json"]')
 	await fileInput.setInputFiles({
@@ -167,12 +167,12 @@ test.describe('Data export/import', () => {
 		}
 
 		// Trigger the UI export — the click resolves a presigned URL and starts a download
-		await page.goto(makeUrl('/profile/storage'))
+		await page.goto(makeUrl('/profile/migration'))
 
 		const downloadPromise = page.waitForEvent('download', { timeout: 30000 })
 		await page.getByRole('button', { name: 'Export', exact: true }).click()
 		const download = await downloadPromise
-		expect(download.suggestedFilename()).toMatch(/^neverkin-export-\d{4}-\d{2}-\d{2}\.json$/)
+		expect(download.suggestedFilename()).toMatch(/^DataExport-\d{4}-\d{2}-\d{2} \d{2}_\d{2}_\d{2}\.json$/)
 
 		const downloadPath = await download.path()
 		const exportedJson = await readFile(downloadPath, 'utf8')

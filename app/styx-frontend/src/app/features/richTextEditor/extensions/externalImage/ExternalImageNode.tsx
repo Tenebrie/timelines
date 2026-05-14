@@ -84,7 +84,7 @@ export function ExternalImageView({ node, editor, selected, updateAttributes }: 
 	const assetId = node.attrs.assetId as string
 	const theme = useTheme()
 
-	const { data } = useGetAssetQuery({ assetId }, { skip: !assetId })
+	const { data } = useGetAssetQuery({ assetId }, { skip: !assetId || assetId === 'undefined' })
 
 	const ref = useRef<HTMLDivElement>(null)
 
