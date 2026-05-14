@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import DownloadIcon from '@mui/icons-material/Download'
 import AssetsIcon from '@mui/icons-material/Folder'
 import LinkIcon from '@mui/icons-material/Link'
+import LinkOffIcon from '@mui/icons-material/LinkOff'
 import QuotaIcon from '@mui/icons-material/Storage'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -161,9 +162,18 @@ export function StoragePageAssets() {
 						<Tooltip
 							placement="top"
 							disableInteractive
-							title={`Referenced ${params.row._count.references} time${params.row._count.references !== 1 ? 's' : ''}`}
+							title={`Used ${params.row._count.references} time${params.row._count.references !== 1 ? 's' : ''}`}
 						>
 							<LinkIcon fontSize="small" sx={{ color: 'text.secondary', display: 'block' }} />
+						</Tooltip>
+					)}
+					{params.row._count.references === 0 && !params.row.expiresAt && (
+						<Tooltip
+							placement="top"
+							disableInteractive
+							title={`This file is not used and will be scheduled for deletion soon.`}
+						>
+							<LinkOffIcon fontSize="small" sx={{ color: 'text.secondary', display: 'block' }} />
 						</Tooltip>
 					)}
 				</Stack>
