@@ -117,7 +117,7 @@ export const RheaService = {
 				console.warn(
 					`${chalk.greenBright('[Calliope]')} Dropping deltas for ${entityType} ${chalk.blueBright(entityId)} (${contentDeltas.length} bytes)`,
 				)
-				return ''
+				return undefined
 			})()
 			if (entityType === 'actor') {
 				return rheaClient['PUT']('/api/world/{worldId}/actor/{actorId}/content', {
