@@ -15,6 +15,9 @@ const baseThemeOptions = ({ reduceAnimations }: Props): ThemeOptions => ({
 			styleOverrides: {
 				root: {
 					textTransform: 'none',
+					'&:hover': {
+						transition: 'none !important',
+					},
 				},
 				contained: {
 					boxShadow: 'none',
@@ -52,6 +55,9 @@ const baseThemeOptions = ({ reduceAnimations }: Props): ThemeOptions => ({
 			styleOverrides: {
 				root: {
 					padding: commonTheme.spacing(1),
+					'&:hover': {
+						transition: 'none !important',
+					},
 				},
 			},
 		},

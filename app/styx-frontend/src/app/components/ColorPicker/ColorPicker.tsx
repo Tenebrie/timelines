@@ -17,9 +17,13 @@ type Props = {
 
 export const ColorPicker = memo(ColorPickerComponent)
 
-export function ColorPickerComponent({ initialValue, onChangeHex, onChangeHsl }: Props) {
+export function ColorPickerComponent({
+	initialValue = 'hsl(180, 100%, 50%)',
+	onChangeHex,
+	onChangeHsl,
+}: Props) {
 	const parsedValue = useMemo(
-		() => colorStringToHslWithDefault(initialValue ?? 'hsl(180, 100%, 50%)', { h: 0.5, s: 1, l: 0.5 }),
+		() => colorStringToHslWithDefault(initialValue, { h: 0.5, s: 1, l: 0.5 }),
 		[initialValue],
 	)
 
