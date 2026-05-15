@@ -1,8 +1,11 @@
 import CharacterCount from '@tiptap/extension-character-count'
+import Color from '@tiptap/extension-color'
+import FontFamily from '@tiptap/extension-font-family'
 import { HardBreak } from '@tiptap/extension-hard-break'
 import ImageExtension from '@tiptap/extension-image'
 import Mention from '@tiptap/extension-mention'
 import Placeholder from '@tiptap/extension-placeholder'
+import { TextStyle } from '@tiptap/extension-text-style'
 import { Extensions } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -33,6 +36,10 @@ export const SharedExtensions: Extensions = [
 	// Image embeds
 	ImageExtension,
 	ExternalImageNode,
+	// Text formatting
+	TextStyle,
+	Color,
+	FontFamily,
 ]
 
 export const EditorExtensions: Extensions = [

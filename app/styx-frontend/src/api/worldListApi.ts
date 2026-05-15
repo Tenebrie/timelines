@@ -25,87 +25,87 @@ export { injectedRtkApi as worldListApi }
 export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
 		calendars: {
+			description: string
+			worldId?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name: string
-			description: string
 			ownerId?: null | string
-			worldId?: null | string
-			originTime: string
 			position: number
+			originTime: string
 			dateFormat?: null | string
 		}[]
 		collaborators: {
-			userId: string
 			worldId: string
+			userId: string
 			access: 'ReadOnly' | 'Editing'
 		}[]
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		description: string
-		ownerId: string
 		calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
-		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 		timeOrigin: string
+		ownerId: string
+		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	contributableWorlds: {
 		calendars: {
+			description: string
+			worldId?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name: string
-			description: string
 			ownerId?: null | string
-			worldId?: null | string
-			originTime: string
 			position: number
+			originTime: string
 			dateFormat?: null | string
 		}[]
 		collaborators: {
-			userId: string
 			worldId: string
+			userId: string
 			access: 'ReadOnly' | 'Editing'
 		}[]
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		description: string
-		ownerId: string
 		calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
-		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 		timeOrigin: string
+		ownerId: string
+		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	visibleWorlds: {
 		calendars: {
+			description: string
+			worldId?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name: string
-			description: string
 			ownerId?: null | string
-			worldId?: null | string
-			originTime: string
 			position: number
+			originTime: string
 			dateFormat?: null | string
 		}[]
 		collaborators: {
-			userId: string
 			worldId: string
+			userId: string
 			access: 'ReadOnly' | 'Editing'
 		}[]
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		description: string
-		ownerId: string
 		calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
-		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 		timeOrigin: string
+		ownerId: string
+		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 }
 export type GetWorldsApiArg = void
@@ -122,15 +122,15 @@ export type CreateWorldApiArg = {
 	}
 }
 export type DeleteWorldApiResponse = /** status 200  */ {
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	description: string
-	ownerId: string
 	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
-	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	timeOrigin: string
+	ownerId: string
+	accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 }
 export type DeleteWorldApiArg = {
 	/** Any string value */

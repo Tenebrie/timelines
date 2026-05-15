@@ -14,6 +14,8 @@ import { Button } from '@/ui-lib/components/Button/Button'
 import { ReadModeToggle } from '../../views/world/views/wiki/components/ReadModeToggle'
 import { dispatchGlobalEvent } from '../eventBus'
 import { getWikiPreferences } from '../preferences/PreferencesSliceSelectors'
+import { FontFamilySelect } from './components/FontFamilySelect'
+import { TextColorButton } from './components/TextColorButton'
 import { ActiveButtonIndicator } from './extensions/mentions/components/ActiveButtonIndicator'
 
 type Props = {
@@ -145,6 +147,8 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 									<ActiveButtonIndicator active={isStrikethrough} />
 								</StyledSmallButton>
 							</Tooltip>
+							{editor && <TextColorButton editor={editor} />}
+							{editor && <FontFamilySelect editor={editor} />}
 							<Button onClick={onMentionActorClick} color="secondary">
 								@Mention
 							</Button>

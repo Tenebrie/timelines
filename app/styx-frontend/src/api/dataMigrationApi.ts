@@ -72,14 +72,37 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				name: string
 				calendarId: string
 				position: number
-				formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
-				negativeFormat: 'MinusSign' | 'AbsoluteValue'
 				displayName?: null | string
 				displayNameShort?: null | string
 				displayNamePlural?: null | string
+				formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 				formatShorthand?: null | string
+				negativeFormat: 'MinusSign' | 'AbsoluteValue'
 				duration: string
 				treeDepth: number
+			}[]
+			presentations: {
+				units: {
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					calendarId: string
+					presentationId: string
+					position: number
+					formatString: string
+					subdivision: number
+					labeledIndices: number[]
+					unitId: string
+				}[]
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				calendarId: string
+				compression: number
+				scaleFactor: number
+				baselineUnitId?: null | string
 			}[]
 			seasons: {
 				intervals: {
@@ -99,38 +122,15 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				position: number
 				formatShorthand?: null | string
 			}[]
-			presentations: {
-				units: {
-					id: string
-					createdAt: string
-					updatedAt: string
-					name: string
-					calendarId: string
-					position: number
-					formatString: string
-					subdivision: number
-					labeledIndices: number[]
-					unitId: string
-					presentationId: string
-				}[]
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				calendarId: string
-				compression: number
-				scaleFactor: number
-				baselineUnitId?: null | string
-			}[]
+			description: string
+			worldId?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name: string
-			description: string
 			ownerId?: null | string
-			worldId?: null | string
-			originTime: string
 			position: number
+			originTime: string
 			dateFormat?: null | string
 		}[]
 		worlds: {
@@ -154,14 +154,37 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					name: string
 					calendarId: string
 					position: number
-					formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
-					negativeFormat: 'MinusSign' | 'AbsoluteValue'
 					displayName?: null | string
 					displayNameShort?: null | string
 					displayNamePlural?: null | string
+					formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 					formatShorthand?: null | string
+					negativeFormat: 'MinusSign' | 'AbsoluteValue'
 					duration: string
 					treeDepth: number
+				}[]
+				presentations: {
+					units: {
+						id: string
+						createdAt: string
+						updatedAt: string
+						name: string
+						calendarId: string
+						presentationId: string
+						position: number
+						formatString: string
+						subdivision: number
+						labeledIndices: number[]
+						unitId: string
+					}[]
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					calendarId: string
+					compression: number
+					scaleFactor: number
+					baselineUnitId?: null | string
 				}[]
 				seasons: {
 					intervals: {
@@ -181,129 +204,35 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					position: number
 					formatShorthand?: null | string
 				}[]
-				presentations: {
-					units: {
-						id: string
-						createdAt: string
-						updatedAt: string
-						name: string
-						calendarId: string
-						position: number
-						formatString: string
-						subdivision: number
-						labeledIndices: number[]
-						unitId: string
-						presentationId: string
-					}[]
-					id: string
-					createdAt: string
-					updatedAt: string
-					name: string
-					calendarId: string
-					compression: number
-					scaleFactor: number
-					baselineUnitId?: null | string
-				}[]
+				description: string
+				worldId?: null | string
 				id: string
 				createdAt: string
 				updatedAt: string
 				name: string
-				description: string
 				ownerId?: null | string
-				worldId?: null | string
-				originTime: string
 				position: number
+				originTime: string
 				dateFormat?: null | string
 			}[]
-			tags: {
-				mentions: {
-					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					sourceId: string
-					targetId: string
-					sourceActorId?: null | string
-					sourceEventId?: null | string
-					sourceArticleId?: null | string
-					sourceTagId?: null | string
-					targetActorId?: null | string
-					targetEventId?: null | string
-					targetArticleId?: null | string
-					targetTagId?: null | string
-					pageId?: null | string
-				}[]
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				description: string
-				worldId: string
-			}[]
-			savedColors: {
-				id: string
-				createdAt: string
-				updatedAt: string
-				value: string
-				worldId: string
-				label?: null | string
-			}[]
-			worldCommonIconSets: {
-				id: string
-				worldId: string
-				iconSet: string
-			}[]
-			worldEventTracks: {
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				worldId: string
-				position: number
-				visible: boolean
-			}[]
 			actors: {
-				mentions: {
-					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					sourceId: string
-					targetId: string
-					sourceActorId?: null | string
-					sourceEventId?: null | string
-					sourceArticleId?: null | string
-					sourceTagId?: null | string
-					targetActorId?: null | string
-					targetEventId?: null | string
-					targetArticleId?: null | string
-					targetTagId?: null | string
-					pageId?: null | string
-				}[]
 				pages: {
+					description: string
 					id: string
 					createdAt: string
 					updatedAt: string
 					name: string
-					description: string
 					descriptionRich: string
 					parentActorId?: null | string
 					parentEventId?: null | string
 					parentArticleId?: null | string
 				}[]
-				id: string
-				createdAt: string
-				updatedAt: string
-				name: string
-				description: string
-				worldId: string
-				descriptionRich: string
-				title: string
-				icon: string
-				color: string
-			}[]
-			events: {
 				mentions: {
-					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					pageId?: null | string
 					sourceId: string
 					targetId: string
+					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 					sourceActorId?: null | string
 					sourceEventId?: null | string
 					sourceArticleId?: null | string
@@ -312,27 +241,65 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					targetEventId?: null | string
 					targetArticleId?: null | string
 					targetTagId?: null | string
-					pageId?: null | string
 				}[]
+				description: string
+				worldId: string
 				id: string
 				createdAt: string
 				updatedAt: string
 				name: string
-				description: string
-				worldId: string
-				descriptionRich: string
+				title: string
 				icon: string
 				color: string
+				descriptionRich: string
+			}[]
+			events: {
+				mentions: {
+					pageId?: null | string
+					sourceId: string
+					targetId: string
+					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					sourceActorId?: null | string
+					sourceEventId?: null | string
+					sourceArticleId?: null | string
+					sourceTagId?: null | string
+					targetActorId?: null | string
+					targetEventId?: null | string
+					targetArticleId?: null | string
+					targetTagId?: null | string
+				}[]
+				description: string
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				icon: string
+				color: string
+				descriptionRich: string
 				timestamp: string
 				revokedAt?: null | string
 				worldEventTrackId?: null | string
 			}[]
 			articles: {
+				pages: {
+					description: string
+					id: string
+					createdAt: string
+					updatedAt: string
+					name: string
+					descriptionRich: string
+					parentActorId?: null | string
+					parentEventId?: null | string
+					parentArticleId?: null | string
+				}[]
 				mentions: {
-					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
-					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					pageId?: null | string
 					sourceId: string
 					targetId: string
+					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
 					sourceActorId?: null | string
 					sourceEventId?: null | string
 					sourceArticleId?: null | string
@@ -341,57 +308,90 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					targetEventId?: null | string
 					targetArticleId?: null | string
 					targetTagId?: null | string
-					pageId?: null | string
 				}[]
-				pages: {
-					id: string
-					createdAt: string
-					updatedAt: string
-					name: string
-					description: string
-					descriptionRich: string
-					parentActorId?: null | string
-					parentEventId?: null | string
-					parentArticleId?: null | string
-				}[]
+				worldId: string
 				id: string
 				createdAt: string
 				updatedAt: string
 				name: string
-				worldId: string
-				position: number
 				icon: string
 				color: string
+				position: number
 				contentRich: string
 				parentId?: null | string
+			}[]
+			tags: {
+				mentions: {
+					pageId?: null | string
+					sourceId: string
+					targetId: string
+					sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					targetType: 'Actor' | 'Event' | 'Article' | 'Tag'
+					sourceActorId?: null | string
+					sourceEventId?: null | string
+					sourceArticleId?: null | string
+					sourceTagId?: null | string
+					targetActorId?: null | string
+					targetEventId?: null | string
+					targetArticleId?: null | string
+					targetTagId?: null | string
+				}[]
+				description: string
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
 			}[]
 			mindmapNodes: {
 				links: {
 					id: string
 					createdAt: string
 					updatedAt: string
+					content: string
 					direction: 'Normal' | 'Reversed' | 'TwoWay'
 					sourceNodeId: string
 					targetNodeId: string
-					content: string
 				}[]
+				worldId: string
 				id: string
 				createdAt: string
 				updatedAt: string
-				worldId: string
 				parentActorId?: null | string
 				positionX: number
 				positionY: number
 			}[]
+			worldEventTracks: {
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				name: string
+				position: number
+				visible: boolean
+			}[]
+			worldCommonIconSets: {
+				worldId: string
+				id: string
+				iconSet: string
+			}[]
+			savedColors: {
+				worldId: string
+				id: string
+				createdAt: string
+				updatedAt: string
+				value: string
+				label?: null | string
+			}[]
+			description: string
 			id: string
 			createdAt: string
 			updatedAt: string
 			name: string
-			description: string
-			ownerId: string
 			calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
-			accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 			timeOrigin: string
+			ownerId: string
+			accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 		}[]
 	}
 }

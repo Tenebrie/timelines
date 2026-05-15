@@ -45,6 +45,8 @@ const injectedRtkApi = api
 export { injectedRtkApi as assetApi }
 export type GetAssetApiResponse = /** status 200  */ {
 	url: string
+	imageWidth?: null | number
+	imageHeight?: null | number
 }
 export type GetAssetApiArg = {
 	/** Any string value */
@@ -65,9 +67,9 @@ export type ListUserAssetsApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
+		ownerId: string
 		size: number
 		expiresAt?: null | string
-		ownerId: string
 		bucketKey: string
 		originalFileName: string
 		originalFileExtension: string
@@ -96,9 +98,9 @@ export type RequestPresignedUrlApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
+		ownerId: string
 		size: number
 		expiresAt?: null | string
-		ownerId: string
 		bucketKey: string
 		originalFileName: string
 		originalFileExtension: string
@@ -136,9 +138,9 @@ export type FinalizeAssetUploadApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	ownerId: string
 	size: number
 	expiresAt?: null | string
-	ownerId: string
 	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
