@@ -1,5 +1,6 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import { Editor } from '@tiptap/react'
 import debounce from 'lodash.debounce'
 import { useCallback, useMemo, useRef } from 'react'
@@ -66,15 +67,20 @@ export function TextColorPickerBody({ editor, currentColor, onClose }: Props) {
 	return (
 		<Stack direction="column" gap={1} sx={{ minWidth: 600 }}>
 			<ColorPicker initialValue={currentColor ?? undefined} onChangeHex={onChangeHex} />
-			<Button
-				variant="text"
-				color="secondary"
-				size="small"
-				onClick={onClearColor}
-				sx={{ alignSelf: 'flex-end' }}
-			>
-				Clear color
-			</Button>
+			<Stack direction="row" justifyContent="space-between" alignItems="center">
+				<Typography variant="body2" color="text.secondary">
+					Colors may change to stay readable in light and dark modes.
+				</Typography>
+				<Button
+					variant="text"
+					color="secondary"
+					size="small"
+					onClick={onClearColor}
+					sx={{ alignSelf: 'flex-end' }}
+				>
+					Clear color
+				</Button>
+			</Stack>
 		</Stack>
 	)
 }
