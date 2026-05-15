@@ -1,5 +1,6 @@
-import { MentionedEntity, Prisma } from '@prisma/client'
+import { MentionedEntity, Prisma, ReferenceHoldingEntity } from '@prisma/client'
 
+import { AssetRefService } from '../AssetRefService.js'
 import { getPrismaClient } from '../dbClients/DatabaseClient.js'
 import { MentionData, MentionsService } from '../MentionsService.js'
 
@@ -8,13 +9,16 @@ export type UpdateActorQueryParams = Omit<
 	'id' | 'createdAt' | 'updatedAt' | 'worldId' | 'mentions'
 > & {
 	mentions?: MentionData[] | undefined
+	referencedAssetIds?: string[] | undefined
 }
 
 export const makeUpdateActorQuery = async ({
+	worldId,
 	actorId,
 	params,
 	prisma,
 }: {
+	worldId: string
 	actorId: string
 	params: UpdateActorQueryParams
 	prisma?: Prisma.TransactionClient
@@ -24,25 +28,45 @@ export const makeUpdateActorQuery = async ({
 			sourceActorId: actorId,
 		},
 	})
+
+	const { referencedAssetIds, ...actorData } = params
+
 	const mentionedEntities = await MentionsService.createMentions(
 		actorId,
 		MentionedEntity.Actor,
-		params.mentions,
+		actorData.mentions,
 		prisma,
 	)
+	const referencedAssets = await AssetRefService.createReferences({
+		worldId,
+		holderId: actorId,
+		holderType: ReferenceHoldingEntity.Actor,
+		assets: referencedAssetIds,
+		prisma,
+	})
 
 	const actor = await getPrismaClient(prisma).actor.update({
 		where: {
 			id: actorId,
 		},
 		data: {
-			...params,
+			...actorData,
 			mentions: mentionedEntities
 				? {
 						set: mentionedEntities.map((mention) => ({
 							sourceId_targetId: {
 								sourceId: mention.sourceId,
 								targetId: mention.targetId,
+							},
+						})),
+					}
+				: undefined,
+			assetRefs: referencedAssets
+				? {
+						set: referencedAssets.map((ref) => ({
+							assetId_holderId: {
+								assetId: ref.assetId,
+								holderId: ref.holderId,
 							},
 						})),
 					}
@@ -64,6 +88,7 @@ export const makeUpdateActorQuery = async ({
 	})
 
 	await MentionsService.clearOrphanedMentions(prisma)
+	await AssetRefService.clearOrphanedReferences(prisma)
 
 	const updatedMentions = [...previousMentions, ...mentionedEntities].filter((mention) => {
 		return (

@@ -4,6 +4,7 @@ import { ActorService } from '@src/services/ActorService.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
+import { ValidationService } from '@src/services/ValidationService.js'
 import {
 	BadRequestError,
 	BooleanValidator,
@@ -72,6 +73,7 @@ router.put('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+	await ValidationService.checkActorValidity(actorId)
 
 	const { content, contentDeltas } = useRequestBody(ctx, {
 		content: RequiredParam(ContentStringValidator),
@@ -99,6 +101,7 @@ router.put('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 			descriptionRich: parsed.contentRich,
 			descriptionYjs: contentDeltas ?? null,
 			mentions: parsed.mentions,
+			referencedAssetIds: parsed.referencedAssetIds,
 		},
 	})
 
@@ -205,6 +208,7 @@ router.put('/api/world/:worldId/actor/:actorId/content/pages/:pageId', async (ct
 			descriptionRich: parsed.contentRich,
 			descriptionYjs: contentDeltas ?? null,
 			mentions: parsed.mentions,
+			referencedAssetIds: parsed.referencedAssetIds,
 		},
 	})
 

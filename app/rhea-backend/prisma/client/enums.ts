@@ -39,6 +39,16 @@ export const AssetStatus = {
 export type AssetStatus = (typeof AssetStatus)[keyof typeof AssetStatus]
 
 
+export const ReferenceHoldingEntity = {
+  Actor: 'Actor',
+  Event: 'Event',
+  Article: 'Article',
+  Tag: 'Tag'
+} as const
+
+export type ReferenceHoldingEntity = (typeof ReferenceHoldingEntity)[keyof typeof ReferenceHoldingEntity]
+
+
 export const AuditAction = {
   UserCreateAccount: 'UserCreateAccount',
   UserLoginWithPassword: 'UserLoginWithPassword',

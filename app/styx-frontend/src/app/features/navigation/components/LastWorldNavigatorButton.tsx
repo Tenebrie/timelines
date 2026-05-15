@@ -20,20 +20,30 @@ export function LastWorldNavigatorButton({ icon, label, iconOnly }: Props) {
 	const { id, isLoaded } = useSelector(getWorldState, (a, b) => a.id === b.id && a.isLoaded === b.isLoaded)
 	const { user } = useSelector(getAuthState)
 
+	const canNavigate = isLoaded && !!user && !!id
+
+	const button = (
+		<Button
+			aria-label={label}
+			variant={isMatching ? 'contained' : 'text'}
+			disabled={!canNavigate}
+			sx={{
+				gap: 0.5,
+				padding: '8px 15px',
+				minWidth: iconOnly ? 'auto' : undefined,
+			}}
+		>
+			{icon} {!iconOnly && label}
+		</Button>
+	)
+
+	if (!canNavigate) {
+		return button
+	}
+
 	return (
-		<Link to="/world/$worldId/timeline" params={{ worldId: id }} disabled={!isLoaded || !user}>
-			<Button
-				aria-label={label}
-				variant={isMatching ? 'contained' : 'text'}
-				disabled={!isLoaded || !user}
-				sx={{
-					gap: 0.5,
-					padding: '8px 15px',
-					minWidth: iconOnly ? 'auto' : undefined,
-				}}
-			>
-				{icon} {!iconOnly && label}
-			</Button>
+		<Link to="/world/$worldId/timeline" params={{ worldId: id }}>
+			{button}
 		</Link>
 	)
 }

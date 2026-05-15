@@ -18,4 +18,5 @@ model ContentPage {
     parentArticle WikiArticle? @relation(fields: [parentArticleId], references: [id], onDelete: Cascade, name: "ArticleContentPage")
 
 	mentions Mention[] @relation("PageMention")
+    assetRefs AssetReference[] @relation("PageAssetReference")
 }

@@ -108,9 +108,14 @@ export function RichTextEditorComponent({
 					return
 				}
 
-				requestIdleCallback(() => {
-					editor.commands.focus('end')
-				})
+				requestIdleCallback(
+					() => {
+						if (!editor.isDestroyed) {
+							editor.commands.focus('end')
+						}
+					},
+					{ timeout: 100 },
+				)
 			},
 		},
 		[collabReady],

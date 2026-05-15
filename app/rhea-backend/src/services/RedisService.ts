@@ -9,13 +9,10 @@ import {
 	WorldEvent,
 	WorldEventDelta,
 } from '@prisma/client'
+import { RedisChannel } from '@src/ts-shared/RedisChannel.js'
 import { ParameterizedContext } from 'koa'
 
-import {
-	RedisChannel,
-	RheaToCalliopeMessage,
-	RheaToCalliopeMessageType,
-} from '../ts-shared/RheaToCalliopeMessage.js'
+import { RheaToCalliopeMessage, RheaToCalliopeMessageType } from '../ts-shared/RheaToCalliopeMessage.js'
 import { getRedisClient, openRedisChannel } from './dbClients/RedisClient.js'
 import { TagService } from './TagService.js'
 import { BaselineTag } from './types.js'

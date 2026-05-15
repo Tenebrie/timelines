@@ -174,15 +174,43 @@ export const AuthorizationService = {
 		return false
 	},
 
-	checkUserAssetAccess: async (userId: string, assetId: string) => {
+	checkUserAssetOwner: async (user: User, assetId: string) => {
 		const count = await getPrismaClient().asset.count({
 			where: {
 				id: assetId,
-				ownerId: userId,
+				ownerId: user.id,
 			},
 		})
 		if (!count) {
 			throw new UnauthorizedError('No access to this asset')
 		}
+	},
+
+	checkUserAssetReadAccess: async (user: User, assetId: string) => {
+		const owned = await getPrismaClient().asset.count({
+			where: { id: assetId, ownerId: user.id },
+		})
+		if (owned) {
+			return
+		}
+
+		const refs = await getPrismaClient().assetReference.findMany({
+			where: { assetId },
+			distinct: ['worldId'],
+			select: { world: true },
+		})
+
+		for (const { world } of refs) {
+			try {
+				await AuthorizationService.checkUserReadAccess(user, world)
+				return
+			} catch (e) {
+				if (!(e instanceof UnauthorizedError)) {
+					throw e
+				}
+			}
+		}
+
+		throw new UnauthorizedError('No access to this asset')
 	},
 }

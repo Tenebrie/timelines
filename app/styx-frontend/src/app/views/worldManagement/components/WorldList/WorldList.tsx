@@ -6,7 +6,7 @@ import { DeleteWorldModal } from '@/app/views/worldManagement/modals/DeleteWorld
 import { useWorldListData } from '../../hooks/useWorldListData'
 import { WorldListSection } from './WorldListSection'
 
-export const WorldList = () => {
+export function WorldList() {
 	const { isReady, ownedWorlds, contributableWorlds, visibleWorlds } = useWorldListData()
 
 	return (

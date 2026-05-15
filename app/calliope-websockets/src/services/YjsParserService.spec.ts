@@ -133,6 +133,37 @@ describe('YjsParserService - HTML to Yjs conversion', () => {
 		expect(text.toDelta()).toEqual([{ insert: 'bold', attributes: { bold: true } }])
 	})
 
+	it('converts external image node with data attributes', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml(
+			'<img data-type="ImageEmbed" data-asset-id="asset-123" data-external-image-props="{&quot;width&quot;:800}">',
+			fragment,
+		)
+
+		expect(fragment.length).toBe(1)
+		const imgNode = fragment.get(0) as Y.XmlElement
+		expect(imgNode.nodeName).toBe('externalImageNode')
+		expect(imgNode.getAttribute('type')).toBe('ImageEmbed')
+		expect(imgNode.getAttribute('assetId')).toBe('asset-123')
+		expect(imgNode.getAttribute('externalImageProps')).toEqual({ width: 800 })
+	})
+
+	it('handles malformed externalImageProps JSON by storing raw string', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml(
+			'<img data-type="ImageEmbed" data-asset-id="asset-123" data-external-image-props="not-valid-json">',
+			fragment,
+		)
+
+		const imgNode = fragment.get(0) as Y.XmlElement
+		expect(imgNode.nodeName).toBe('externalImageNode')
+		expect(imgNode.getAttribute('externalImageProps')).toBe('not-valid-json')
+	})
+
 	it('converts mention chips with componentProps', () => {
 		const doc = new Y.Doc()
 		const fragment = doc.getXmlFragment('test')
@@ -238,6 +269,23 @@ describe('YjsSyncService - Yjs to HTML conversion', () => {
 		expect(html).toBe('<h2>Heading 2</h2>')
 	})
 
+	it('converts externalImageNode to img tag with data attributes', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		const imgNode = new Y.XmlElement('externalImageNode')
+		imgNode.setAttribute('type', 'ImageEmbed')
+		imgNode.setAttribute('assetId', 'asset-123')
+		// @ts-expect-error - Library type signature is wrong
+		imgNode.setAttribute('externalImageProps', { style: 'max-width:100%' })
+		fragment.push([imgNode])
+
+		const html = yXmlToHtml(fragment)
+		expect(html).toBe(
+			'<img data-type="ImageEmbed" data-asset-id="asset-123" data-external-image-props="{&quot;style&quot;:&quot;max-width:100%&quot;}" alt="">',
+		)
+	})
+
 	it('converts mentionChip to span with data-component-props', () => {
 		const doc = new Y.Doc()
 		const fragment = doc.getXmlFragment('test')
@@ -330,6 +378,23 @@ describe('YjsSyncService - Round-trip conversion', () => {
 	it('converts images', () => {
 		const html = '<img src="https://example.com/image.png" alt="Test image">'
 		testRoundTrip(html)
+	})
+
+	it('converts external image node at block level', () => {
+		const input =
+			'<img data-type="ImageEmbed" data-asset-id="asset-123" data-external-image-props="{&quot;style&quot;:&quot;max-width:100%&quot;}">'
+		// alt is not stored in the Yjs node, so it becomes empty on the way back out
+		const expected =
+			'<img data-type="ImageEmbed" data-asset-id="asset-123" data-external-image-props="{&quot;style&quot;:&quot;max-width:100%&quot;}" alt="">'
+		testRoundTrip(input, expected)
+	})
+
+	it('converts external image node inline inside paragraph', () => {
+		const input =
+			'<p>See: <img data-type="ImageEmbed" data-asset-id="asset-456" data-external-image-props="{&quot;width&quot;:800}"></p>'
+		const expected =
+			'<p>See: <img data-type="ImageEmbed" data-asset-id="asset-456" data-external-image-props="{&quot;width&quot;:800}" alt=""></p>'
+		testRoundTrip(input, expected)
 	})
 
 	it('converts mention chips with actor', () => {

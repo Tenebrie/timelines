@@ -805,6 +805,19 @@
     prop-types "^15.8.1"
     react-is "^19.2.3"
 
+"@mui/x-data-grid@^8.0.0":
+  version "8.28.5"
+  resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-8.28.5.tgz#4b62466bb6392f09ff08c2da898f92bf1339dfbd"
+  integrity sha512-Flwk972GeO9aO1H5ElbSVtNef0dp2xo8ABfRNwX2bgsnZqUjcGs9xy5DA7iFMrmscv2keObJPfoGPruiBRiA+g==
+  dependencies:
+    "@babel/runtime" "^7.28.4"
+    "@mui/utils" "^7.3.5"
+    "@mui/x-internals" "8.26.0"
+    "@mui/x-virtualizer" "0.3.4"
+    clsx "^2.1.1"
+    prop-types "^15.8.1"
+    use-sync-external-store "^1.6.0"
+
 "@mui/x-date-pickers@^8.27.2":
   version "8.27.2"
   resolved "https://registry.yarnpkg.com/@mui/x-date-pickers/-/x-date-pickers-8.27.2.tgz#5ada1fb3adffff3e0fd0fee7702fba7f770dca68"
@@ -827,6 +840,15 @@
     "@mui/utils" "^7.3.5"
     reselect "^5.1.1"
     use-sync-external-store "^1.6.0"
+
+"@mui/x-virtualizer@0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@mui/x-virtualizer/-/x-virtualizer-0.3.4.tgz#87995a852a56910e58cad5726f2ea1b3a88086e8"
+  integrity sha512-b80Wt08bT+KVDunurdd4es76PdYaazoNGpGde3Ki7jGVaSpoljMYSRVlCtifei+4cOUD3NKJhG4e3av/czTekg==
+  dependencies:
+    "@babel/runtime" "^7.28.4"
+    "@mui/utils" "^7.3.5"
+    "@mui/x-internals" "8.26.0"
 
 "@napi-rs/wasm-runtime@^1.1.4":
   version "1.1.4"
@@ -1206,6 +1228,11 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-collaboration/-/extension-collaboration-3.23.1.tgz#ed8046983e03d0cb95676ddd599722bdf0eb32ed"
   integrity sha512-NPryjbjq7GBUJSv2c67N3adGIUy7dHJbg6dqirOXcMb26TT4WkyqWy4FpH4XN4LosZemABzTKUYajuy5Lvxwaw==
 
+"@tiptap/extension-color@3.23.1":
+  version "3.23.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-color/-/extension-color-3.23.1.tgz#b9e0fdbc2b014aa693126724f32d98c28016b6a2"
+  integrity sha512-OYk/fT3h8Bz4B6GUVTQDvKGpPnpI5d6QHkuqjVhdFsgH3oo58PdLE1TdIGgeavuYPLaFxgBtEXmm3oTY9jPWxw==
+
 "@tiptap/extension-document@^3.23.1":
   version "3.23.1"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-document/-/extension-document-3.23.1.tgz#7f194c753dfd5b47eb3a6c01775677c5e65be5c4"
@@ -1220,6 +1247,11 @@
   version "3.23.1"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-floating-menu/-/extension-floating-menu-3.23.1.tgz#8a063f5caffe4b70ac3bb96353e88361fb36daf5"
   integrity sha512-XrYHpLn1DpLFSGTko9F9xgbNamL6fGpWkK4wqgwPVbg/SJwQCDO/9p5D3DtJTwD+xgw4sQ9as4O6rt6jx8JT+Q==
+
+"@tiptap/extension-font-family@3.23.1":
+  version "3.23.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-font-family/-/extension-font-family-3.23.1.tgz#2b0d081a6ff2dc5f988c823b796552b5dcb3154a"
+  integrity sha512-qRSmPgXE4gRy7oX0nFhKZmTwp1cX5Lz90AYRDLrTvSaOM4nMgF2J6PU+vMIXv8vz6g4W0XCi9HYN3EuiXpby5A==
 
 "@tiptap/extension-gapcursor@^3.23.1":
   version "3.23.1"
@@ -1302,6 +1334,11 @@
   version "3.23.1"
   resolved "https://registry.yarnpkg.com/@tiptap/extension-table/-/extension-table-3.23.1.tgz#e4daa1a78b3d20a21eb382fa458270f3586e6ad7"
   integrity sha512-EOcz0TCC+1LJwM4c36YYwzdH4RaYAn2j0ypjeDflFwJWMMKXWdJDm/zHc2mW0i7aiuUUwQj9791NLEQOl3mPjg==
+
+"@tiptap/extension-text-style@3.23.1":
+  version "3.23.1"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-text-style/-/extension-text-style-3.23.1.tgz#52743f918c2d9a482d1ba8c54b9ef12f2e6f9b6a"
+  integrity sha512-q3GQQo+lBhrtNkqdbhYWnv/byG/RYAxVnNhYPQMubRzavGdXBU8NhpJ/47YYjPimG1sahzcs2aqy7amVd8ri/A==
 
 "@tiptap/extension-text@^3.23.1":
   version "3.23.1"

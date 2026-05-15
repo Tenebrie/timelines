@@ -363,15 +363,15 @@ yarn docker:update            # Rebuild containers with changes
 
 **When Working on This Codebase:**
 
-0. **Linter policy**: Treat TypeScript errors as CRITICAL errors. Always ensure code is type-safe. Always treat ESLint errors as important and fix them. Ignore Prettier formatting issues only - they will be auto-fixed.
+0. **Linter policy**: Treat TypeScript errors as CRITICAL errors. Always ensure code is type-safe. Always treat ESLint errors as important and fix them. Ignore Prettier formatting issues only - they will be auto-fixed. For type error verification: rely on IDE diagnostics when working within a single file or files already open. Run `tsc --noEmit` only for larger refactors that touch files the IDE may not have processed (e.g. cross-package changes, renamed exports, deleted files).
 
-1. **Always remember**: World is the top-level container. All entities belong to a World and cannot escape it.
+1. **Always remember**: User is the top level container. All entities belong to a User and cannot escape it. Worlds can have shared access, but only a single owner. An entity in the world will _never_ be available to another world. Calendars can belong to a world or a user, never both. Assigning a calendar to a world creates a deep copy.
 
-2. **For database changes**: Update Prisma schema first, then run migration, then update application code.
+2. **For database changes**: Update Prisma schema first, then run migration, then update application code. Never edit generated API files.
 
 3. **For API changes**: Update backend router → regenerate OpenAPI → use new types in frontend.
 
-4. **For new features**: Consider whether it needs real-time sync via Calliope.
+4. **Styling guidelines**: Prefer function syntax over anonymous `const funcName = ...` where possible.
 
 5. **Type safety**: Never use `any`. Use Prisma types, generated API types, or define proper interfaces. Avoid type assertions.
 

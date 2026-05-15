@@ -1,7 +1,7 @@
 import AutoStories from '@mui/icons-material/AutoStories'
-import Home from '@mui/icons-material/Home'
 import Person from '@mui/icons-material/Person'
 import Settings from '@mui/icons-material/Settings'
+import TimelineIcon from '@mui/icons-material/Timeline'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
@@ -62,7 +62,7 @@ export const WorldSidebar = () => {
 							data-testid="NavigateToTimeline"
 						>
 							<StyledSmallButton variant={getButtonStyle(matchesTimeline)}>
-								<Home />
+								<TimelineIcon />
 							</StyledSmallButton>
 						</NavigationLink>
 						{/* <StyledSmallButton variant={getButtonStyle(matchesOverview)} onClick={onOverviewClick}> 

@@ -83,6 +83,20 @@ function escapeHtmlText(text: string): string {
 	return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 }
 
+function createExternalImageElement(node: Element): Y.XmlElement {
+	const element = new Y.XmlElement('externalImageNode')
+	if (node.attribs['data-external-image-props']) {
+		try {
+			element.setAttribute('externalImageProps', JSON.parse(node.attribs['data-external-image-props']))
+		} catch {
+			element.setAttribute('externalImageProps', node.attribs['data-external-image-props'])
+		}
+	}
+	if (node.attribs['data-asset-id']) element.setAttribute('assetId', node.attribs['data-asset-id'])
+	if (node.attribs['data-type']) element.setAttribute('type', node.attribs['data-type'])
+	return element
+}
+
 /**
  * Tags that represent text formatting marks (not nodes)
  */
@@ -137,6 +151,10 @@ export function htmlToYXml(html: string, parent: Y.XmlFragment | Y.XmlElement) {
 				results.push({ text: node.data, marks: { ...currentMarks } })
 			}
 		} else if (node instanceof Element) {
+			// External image node
+			if (node.name === 'img' && node.attribs?.['data-external-image-props']) {
+				results.push({ text: '', marks: {}, element: createExternalImageElement(node) })
+			}
 			// Check if this is a mention chip
 			if (node.name === 'span' && node.attribs?.['data-component-props']) {
 				// Create mention element
@@ -339,10 +357,14 @@ export function htmlToYXml(html: string, parent: Y.XmlFragment | Y.XmlElement) {
 		}
 		// Handle img
 		else if (node.name === 'img') {
-			const img = new Y.XmlElement('image')
-			if (node.attribs?.src) img.setAttribute('src', node.attribs.src)
-			if (node.attribs?.alt) img.setAttribute('alt', node.attribs.alt)
-			yParent.push([img])
+			if (node.attribs?.['data-external-image-props']) {
+				yParent.push([createExternalImageElement(node)])
+			} else {
+				const img = new Y.XmlElement('image')
+				if (node.attribs?.src) img.setAttribute('src', node.attribs.src)
+				if (node.attribs?.alt) img.setAttribute('alt', node.attribs.alt)
+				yParent.push([img])
+			}
 		}
 		// Handle generic div or other containers
 		else {
@@ -439,7 +461,13 @@ export function yXmlToHtml(fragment: Y.XmlFragment | Y.XmlElement): string {
 				html += `<${htmlTag}>`
 			}
 			// Image tags
-			else if (htmlTag === 'img' || semanticName === 'externalImageNode') {
+			else if (semanticName === 'externalImageNode') {
+				const alt = attrs.alt || ''
+				const escaped = escapeHtmlAttribute(JSON.stringify(attrs.externalImageProps))
+				html += `<img data-type="${attrs.type}" data-asset-id="${attrs.assetId}" data-external-image-props="${escaped}" alt="${escapeHtmlAttribute(alt)}">`
+			}
+			// Embedded image tags
+			else if (htmlTag === 'img') {
 				const src = attrs.src || ''
 				const alt = attrs.alt || ''
 				html += `<img src="${escapeHtmlAttribute(src)}" alt="${escapeHtmlAttribute(alt)}">`

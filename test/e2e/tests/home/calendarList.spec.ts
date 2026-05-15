@@ -18,7 +18,7 @@ test.describe('Calendar List View', () => {
 		await page.getByText('Create', { exact: true }).click()
 
 		await expect(page.getByLabel('Load calendar "My Test Calendar"')).toBeVisible()
-		await expect(page.getByText('My Test Calendar')).toBeVisible()
+		await expect(page.getByRole('button', { name: 'Load calendar "My Test Calendar' })).toBeVisible()
 
 		// Delete calendar
 		await page.getByLabel('Delete calendar').click()
@@ -38,9 +38,9 @@ test.describe('Calendar List View', () => {
 			await page.getByRole('option', { name: templateName }).click()
 			await page.getByText('Create', { exact: true }).click()
 
-			// await page.getByLabel
 			await page.getByLabel(`Load calendar "${calendarName}"`).click()
 			await page.waitForURL(/\/calendar\/[a-f0-9-]+/)
+			await expect(page.getByText('Your Calendars')).not.toBeVisible()
 		}
 
 		await createAndOpenCalendar('Earth Calendar', 'Gregorian Calendar (Earth)')

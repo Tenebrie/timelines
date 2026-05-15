@@ -1,16 +1,22 @@
 import { useGetAssetQuery } from '@api/assetApi'
-import { Node, nodePasteRule, NodeViewProps } from '@tiptap/core'
+import { useTheme } from '@mui/material/styles'
+import { Node, NodeViewProps } from '@tiptap/core'
 import { DOMSerializer } from '@tiptap/pm/model'
 import { NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react'
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import z from 'zod'
 
 const PropsSchema = z.object({
-	sizeX: z.number().optional(),
-	sizeY: z.number().optional(),
+	sizeX: z.number().optional().nullable(),
+	sizeY: z.number().optional().nullable(),
 })
 
-// TODO: Access control in shared worlds
+/** TODO:
+ * - Image resizing
+ *
+ * - Unrelated, but support for colors/fonts
+ * - Support for renamed urls
+ */
 export const ExternalImageNode = Node.create({
 	name: 'externalImageNode',
 	inline: false,
@@ -20,7 +26,18 @@ export const ExternalImageNode = Node.create({
 			assetId: {
 				default: null,
 				parseHTML: (element) => element.getAttribute('data-asset-id'),
-				renderHTML: (attributes) => ({ 'data-asset-id': attributes.assetId }),
+				renderHTML: (attributes) => {
+					if (!attributes.assetId) return {}
+					return { 'data-asset-id': attributes.assetId }
+				},
+			},
+			uploadId: {
+				default: null,
+				parseHTML: (element) => element.getAttribute('data-upload-id'),
+				renderHTML: (attributes) => {
+					if (!attributes.uploadId) return {}
+					return { 'data-upload-id': attributes.uploadId }
+				},
 			},
 			src: {
 				default: null,
@@ -61,29 +78,21 @@ export const ExternalImageNode = Node.create({
 	addNodeView() {
 		return ReactNodeViewRenderer(ExternalImageView)
 	},
-	addPasteRules() {
-		return [
-			nodePasteRule({
-				find: /(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp))/gi,
-				type: this.type,
-				getAttributes: (match) => ({
-					src: match[0],
-				}),
-			}),
-		]
-	},
 })
 
-export function ExternalImageView({ node, editor, updateAttributes }: NodeViewProps) {
+export function ExternalImageView({ node, editor, selected, updateAttributes }: NodeViewProps) {
 	const assetId = node.attrs.assetId as string
+	const theme = useTheme()
 
-	const { data } = useGetAssetQuery({ assetId }, { skip: !assetId })
+	const { data } = useGetAssetQuery({ assetId }, { skip: !assetId || assetId === 'undefined' })
 
 	const ref = useRef<HTMLDivElement>(null)
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (data?.url && data.url !== node.attrs.src) {
-			updateAttributes({ src: data.url })
+			requestAnimationFrame(() => {
+				updateAttributes({ src: data.url })
+			})
 		}
 	}, [data?.url, node.attrs.src, updateAttributes])
 
@@ -97,5 +106,16 @@ export function ExternalImageView({ node, editor, updateAttributes }: NodeViewPr
 		ref.current.replaceChildren(dom)
 	}, [node, editor.schema, data])
 
-	return <NodeViewWrapper ref={ref} />
+	return (
+		<NodeViewWrapper
+			ref={ref}
+			style={{
+				display: 'inline-block',
+				outline: selected ? `2px solid ${theme.palette.primary.main}` : 'none',
+				outlineOffset: 2,
+				borderRadius: 2,
+				transition: 'outline-color 120ms ease',
+			}}
+		/>
+	)
 }

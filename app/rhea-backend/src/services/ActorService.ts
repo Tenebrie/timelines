@@ -1,6 +1,7 @@
-import { MentionedEntity, Prisma } from '@prisma/client'
+import { MentionedEntity, Prisma, ReferenceHoldingEntity } from '@prisma/client'
 
 import { ContentPageUpdateWithoutParentActorInput } from '../../prisma/client/models.js'
+import { AssetRefService } from './AssetRefService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { makeUpdateActorQuery, UpdateActorQueryParams } from './dbQueries/makeUpdateActorQuery.js'
@@ -145,6 +146,7 @@ export const ActorService = {
 			})
 
 			const { actor } = await makeUpdateActorQuery({
+				worldId,
 				actorId: baseActor.id,
 				params: updateData,
 				prisma,
@@ -170,6 +172,7 @@ export const ActorService = {
 	}) => {
 		return getPrismaClient().$transaction(async (prisma) => {
 			const { actor, updatedMentions } = await makeUpdateActorQuery({
+				worldId,
 				actorId,
 				params,
 				prisma,
@@ -228,9 +231,10 @@ export const ActorService = {
 		pageId: string
 		params: Omit<ContentPageUpdateWithoutParentActorInput, 'mentions'> & {
 			mentions: MentionData[]
+			referencedAssetIds?: string[]
 		}
 	}) => {
-		const { mentions, ...data } = params
+		const { mentions, referencedAssetIds, ...data } = params
 		return getPrismaClient().$transaction(async (prisma) => {
 			const previousMentions = await prisma.mention.findMany({
 				where: {
@@ -245,6 +249,13 @@ export const ActorService = {
 				mentions,
 				prisma,
 			)
+			const referencedAssets = await AssetRefService.createReferences({
+				worldId,
+				holderId: actorId,
+				holderType: ReferenceHoldingEntity.Actor,
+				assets: referencedAssetIds,
+				prisma,
+			})
 
 			const actor = await prisma.actor.update({
 				where: {
@@ -267,6 +278,14 @@ export const ActorService = {
 										},
 									})),
 								},
+								assetRefs: {
+									set: referencedAssets.map((ref) => ({
+										assetId_holderId: {
+											assetId: ref.assetId,
+											holderId: ref.holderId,
+										},
+									})),
+								},
 							},
 						},
 					},
@@ -285,6 +304,7 @@ export const ActorService = {
 			})
 
 			await MentionsService.clearOrphanedMentions(prisma)
+			await AssetRefService.clearOrphanedReferences(prisma)
 
 			return {
 				actor,

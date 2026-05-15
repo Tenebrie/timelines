@@ -3,6 +3,7 @@ import { AssetService } from '@src/services/AssetService.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { CloudStorageService } from '@src/services/CloudStorageService.js'
 import {
+	BadRequestError,
 	NumberValidator,
 	RequiredParam,
 	Router,
@@ -10,8 +11,10 @@ import {
 	useApiEndpoint,
 	useAuth,
 	usePathParams,
+	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { assetTag, imageGenerationTag } from './utils/tags.js'
 import { AssetTypeValidator } from './validators/AssetTypeValidator.js'
@@ -33,10 +36,23 @@ router.get('/api/assets/:assetId', async (ctx) => {
 		assetId: RequiredParam(StringValidator),
 	})
 
-	await AuthorizationService.checkUserAssetAccess(ctx.user.id, assetId)
+	const { disposition } = useQueryParams(ctx, {
+		disposition: z.enum(['inline', 'attachment']).optional(),
+	})
 
-	const url = await CloudStorageService.getPresignedUrl(assetId)
-	return { url }
+	await AuthorizationService.checkUserAssetReadAccess(ctx.user, assetId)
+
+	const asset = await AssetService.getAsset(assetId)
+	if (!asset) {
+		throw new BadRequestError('Asset not found')
+	}
+	const url = await CloudStorageService.getPresignedUrl(asset, { disposition })
+
+	return {
+		url,
+		imageWidth: asset.imageWidth,
+		imageHeight: asset.imageHeight,
+	}
 })
 
 router.delete('/api/assets/:assetId', async (ctx) => {
@@ -50,7 +66,7 @@ router.delete('/api/assets/:assetId', async (ctx) => {
 		assetId: RequiredParam(StringValidator),
 	})
 
-	await AuthorizationService.checkUserAssetAccess(ctx.user.id, assetId)
+	await AuthorizationService.checkUserAssetOwner(ctx.user, assetId)
 
 	const asset = await AssetService.getAsset(assetId)
 	if (!asset) {
@@ -67,8 +83,20 @@ router.get('/api/assets', async (ctx) => {
 		tags: [assetTag],
 	})
 
-	const assets = await AssetService.listUserAssets(ctx.user.id)
-	return { assets }
+	const { offset, limit, sortField, sortDirection } = useQueryParams(ctx, {
+		offset: z.number().min(0).optional(),
+		limit: z.number().min(1).optional(),
+		sortField: z.string().optional(),
+		sortDirection: z.enum(['asc', 'desc']).optional(),
+	})
+
+	const { assets, total } = await AssetService.listUserAssets(ctx.user.id, {
+		offset,
+		limit,
+		sortField,
+		sortDirection,
+	})
+	return { assets, total }
 })
 
 router.post('/api/assets/upload/presigned', async (ctx) => {
@@ -111,7 +139,7 @@ router.post('/api/assets/upload/finalize', async (ctx) => {
 		assetId: RequiredParam(StringValidator),
 	})
 
-	await AuthorizationService.checkUserAssetAccess(ctx.user.id, assetId)
+	await AuthorizationService.checkUserAssetOwner(ctx.user, assetId)
 	return await CloudStorageService.finalizeAssetUpload(assetId)
 })
 

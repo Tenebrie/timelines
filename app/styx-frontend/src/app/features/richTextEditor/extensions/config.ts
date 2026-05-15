@@ -1,4 +1,6 @@
 import CharacterCount from '@tiptap/extension-character-count'
+import Color from '@tiptap/extension-color'
+import FontFamily from '@tiptap/extension-font-family'
 import { HardBreak } from '@tiptap/extension-hard-break'
 import ImageExtension from '@tiptap/extension-image'
 import Mention from '@tiptap/extension-mention'
@@ -9,6 +11,7 @@ import StarterKit from '@tiptap/starter-kit'
 import { ExternalImageNode } from './externalImage/ExternalImageNode'
 import { MentionNode } from './mentions/components/MentionNode'
 import { mentionsSuggestions } from './mentions/MentionsExtension'
+import { ThemeAwareTextStyle } from './ThemeAwareTextStyle'
 
 export const SharedExtensions: Extensions = [
 	// Starter kit
@@ -33,6 +36,10 @@ export const SharedExtensions: Extensions = [
 	// Image embeds
 	ImageExtension,
 	ExternalImageNode,
+	// Text formatting
+	ThemeAwareTextStyle,
+	Color,
+	FontFamily,
 ]
 
 export const EditorExtensions: Extensions = [

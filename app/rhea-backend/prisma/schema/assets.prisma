@@ -34,5 +34,43 @@ model Asset {
   imageWidth         Int?
   imageHeight        Int?
 
-  avatarOf User? @relation("UserAvatar")
+  references AssetReference[]
+  avatarOf   User?            @relation("UserAvatar")
+}
+
+enum ReferenceHoldingEntity {
+  Actor
+  Event
+  Article
+  Tag
+}
+
+model AssetReference {
+  id        String   @id @unique @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  assetId    String
+  holderId   String
+  holderType ReferenceHoldingEntity
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  holderActorId   String?
+  holderEventId   String?
+  holderArticleId String?
+  holderTagId     String?
+
+  holderActor   Actor?       @relation(fields: [holderActorId], references: [id], onDelete: Cascade, name: "ActorAssetReference")
+  holderEvent   WorldEvent?  @relation(fields: [holderEventId], references: [id], onDelete: Cascade, name: "EventAssetReference")
+  holderArticle WikiArticle? @relation(fields: [holderArticleId], references: [id], onDelete: Cascade, name: "ArticleAssetReference")
+  holderTag     Tag?         @relation(fields: [holderTagId], references: [id], onDelete: Cascade, name: "TagAssetReference")
+
+  pageId String?
+  page   ContentPage? @relation(fields: [pageId], references: [id], onDelete: Cascade, name: "PageAssetReference")
+
+  worldId String
+  world World @relation(fields: [worldId], references: [id], onDelete: Cascade)
+
+  @@unique([assetId, holderId])
 }

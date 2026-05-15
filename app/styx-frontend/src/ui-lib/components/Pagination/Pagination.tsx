@@ -12,6 +12,7 @@ export const Pagination = ({ initialPage, pageCount, onChange }: Props) => {
 	const [page, setPage] = useStateWithDebounceCallback({
 		initialValue: initialPage,
 		onDebounce: onChange,
+		debounceTimeout: 50,
 	})
 
 	return <MuiPagination count={pageCount} page={page + 1} onChange={(_, page) => setPage(page - 1)} />

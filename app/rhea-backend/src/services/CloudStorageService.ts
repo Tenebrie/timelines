@@ -7,11 +7,13 @@ import {
 } from '@aws-sdk/client-s3'
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
-import { Asset, AssetStatus, AssetType, User, UserLevel } from '@prisma/client'
+import { Asset, AssetStatus, AssetType, Prisma, User, UserLevel } from '@prisma/client'
 import { SecretService } from '@src/ts-shared/node/services/SecretService.js'
 import { BadRequestError } from 'moonflower'
 
 import { AssetService } from './AssetService.js'
+import { ImageService } from './ImageService.js'
+import { RedisCacheService } from './RedisCacheService.js'
 
 const extensionToContentType: Record<string, string> = {
 	png: 'image/png',
@@ -41,10 +43,11 @@ const s3Client = new S3Client({
 })
 
 export const CloudStorageService = {
-	getFileAsBuffer: async (bucketKey: string) => {
+	getFileAsBuffer: async (bucketKey: string, byteRange?: { start: number; end: number }) => {
 		const command = new GetObjectCommand({
 			Bucket: BUCKET_ID,
 			Key: bucketKey,
+			Range: byteRange ? `bytes=${byteRange.start}-${byteRange.end}` : undefined,
 		})
 		const output = await s3Client.send(command)
 		if (!output.Body) {
@@ -131,13 +134,6 @@ export const CloudStorageService = {
 		const filenameOnly = fileName.split('.').slice(0, -1).join('.')
 		const extension = fileName.split('.').pop() ?? ''
 
-		const expiresAt = (() => {
-			if (assetType === 'ImageEmbed') {
-				return null
-			}
-			return new Date(Date.now() + 3600 * 1000) // 1 hour from now
-		})()
-
 		const asset = await AssetService.createAsset({
 			id: assetId,
 			size: fileSize,
@@ -150,7 +146,7 @@ export const CloudStorageService = {
 				originalFileExtension: extension,
 				contentType: assetType,
 			}),
-			expiresAt,
+			expiresAt: new Date(Date.now() + 600 * 1000), // 10 minute upload window, updated on finalize
 			owner: {
 				connect: {
 					id: userId,
@@ -190,8 +186,21 @@ export const CloudStorageService = {
 				}),
 			)
 
+			const expiresAt = (() => {
+				if (asset.contentType === 'ImageEmbed') {
+					return null
+				}
+				return new Date(Date.now() + 3600 * 1000) // 1 hour from now
+			})()
+
+			const assetMetadataFields = await fetchAssetFields(asset)
+
 			// If we get here, file exists in S3. Mark as finalized.
-			return await AssetService.updateAsset(assetId, { status: AssetStatus.Finalized })
+			return await AssetService.updateAsset(assetId, {
+				status: AssetStatus.Finalized,
+				expiresAt,
+				...assetMetadataFields,
+			})
 		} catch (error: unknown) {
 			if (error instanceof Error && error.name === 'NotFound') {
 				// File doesn't exist in S3
@@ -254,7 +263,13 @@ export const CloudStorageService = {
 		return await CloudStorageService.finalizeAssetUpload(assetId)
 	},
 
-	getPresignedUrl: async (assetOrId: string | Asset, expiresInSeconds: number = 3600) => {
+	getPresignedUrl: async (
+		assetOrId: string | Asset,
+		options: { expiresInSeconds?: number; disposition?: 'inline' | 'attachment' } = {},
+	) => {
+		const disposition = options.disposition ?? 'inline'
+		const expiresInSeconds = options.expiresInSeconds ?? 3600
+
 		const asset = await (async () => {
 			if (typeof assetOrId === 'object') {
 				return assetOrId
@@ -271,15 +286,32 @@ export const CloudStorageService = {
 			throw new BadRequestError('Asset is not ready for download')
 		}
 
+		const cacheEntry = await RedisCacheService.getCacheEntry('assetPresignedUrl', asset.id)
+		if (cacheEntry?.url) {
+			return cacheEntry.url
+		}
+
+		const fullName = asset.originalFileExtension
+			? `${asset.originalFileName}.${asset.originalFileExtension}`
+			: asset.originalFileName
+		const safeName = fullName.replace(/[\x00-\x1f"\\]/g, '_')
 		const command = new GetObjectCommand({
 			Bucket: BUCKET_ID,
 			Key: asset.bucketKey,
-			ResponseContentDisposition: 'inline',
+			ResponseContentDisposition: `${disposition}; filename="${safeName}"; filename*=UTF-8''${encodeURIComponent(safeName)}`,
 			ResponseContentType: getContentType(asset.originalFileExtension),
 		})
 
 		const url = await getSignedUrl(s3Client, command, { expiresIn: expiresInSeconds })
 		const publicUrl = url.replace('http://s3-minio:9000', '')
+
+		await RedisCacheService.upsertCacheEntry({
+			type: 'assetPresignedUrl',
+			key: asset.id,
+			value: { url: publicUrl },
+			expiresInSeconds: expiresInSeconds - 300, // Evict cache 5 mins before the url expires
+		})
+
 		return publicUrl
 	},
 
@@ -343,4 +375,28 @@ export const CloudStorageService = {
 			}
 		}
 	},
+
+	cleanUpOrphanedAssets: async () => {
+		const orphanedAssets = await AssetService.getOrphanedAssets()
+		if (orphanedAssets.length > 0) {
+			console.info(`Queueing up ${orphanedAssets.length} orphaned assets for deletion`)
+		}
+		for (const asset of orphanedAssets) {
+			await AssetService.updateAsset(asset.id, { expiresAt: new Date(Date.now() + 3600 * 1000) })
+		}
+	},
+}
+
+async function fetchAssetFields(asset: Asset): Promise<Prisma.AssetUpdateInput> {
+	if (!AssetService.isImage(asset)) {
+		return {}
+	}
+
+	const buffer = await CloudStorageService.getFileAsBuffer(asset.bucketKey, { start: 0, end: 65535 })
+	const { width, height } = await ImageService.validateImage(buffer)
+
+	return {
+		imageWidth: width,
+		imageHeight: height,
+	}
 }

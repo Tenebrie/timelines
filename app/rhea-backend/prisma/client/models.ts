@@ -11,6 +11,7 @@
 export type * from './models/Actor.js'
 export type * from './models/UserAnnouncement.js'
 export type * from './models/Asset.js'
+export type * from './models/AssetReference.js'
 export type * from './models/AuditLog.js'
 export type * from './models/Calendar.js'
 export type * from './models/CalendarUnit.js'
