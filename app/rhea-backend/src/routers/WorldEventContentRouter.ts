@@ -77,6 +77,16 @@ router.put('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 	})
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
+	const isEqual = await RichTextService.isContentEqual({
+		newContentRich: parsed.contentRich,
+		newContentDeltas: contentDeltas ?? '',
+		worldId,
+		entityId: eventId,
+		entityType: 'event',
+	})
+	if (isEqual) {
+		return
+	}
 
 	const { event, updatedMentions } = await WorldEventService.updateWorldEvent({
 		worldId,

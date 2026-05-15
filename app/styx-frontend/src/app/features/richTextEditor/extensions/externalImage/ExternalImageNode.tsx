@@ -3,12 +3,12 @@ import { useTheme } from '@mui/material/styles'
 import { Node, NodeViewProps } from '@tiptap/core'
 import { DOMSerializer } from '@tiptap/pm/model'
 import { NodeViewWrapper, ReactNodeViewRenderer } from '@tiptap/react'
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import z from 'zod'
 
 const PropsSchema = z.object({
-	sizeX: z.number().optional(),
-	sizeY: z.number().optional(),
+	sizeX: z.number().optional().nullable(),
+	sizeY: z.number().optional().nullable(),
 })
 
 /** TODO:
@@ -88,9 +88,11 @@ export function ExternalImageView({ node, editor, selected, updateAttributes }: 
 
 	const ref = useRef<HTMLDivElement>(null)
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		if (data?.url && data.url !== node.attrs.src) {
-			updateAttributes({ src: data.url })
+			requestAnimationFrame(() => {
+				updateAttributes({ src: data.url })
+			})
 		}
 	}, [data?.url, node.attrs.src, updateAttributes])
 

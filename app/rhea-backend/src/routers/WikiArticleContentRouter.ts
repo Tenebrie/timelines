@@ -3,6 +3,7 @@ import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
+import { ValidationService } from '@src/services/ValidationService.js'
 import { WikiService } from '@src/services/WikiService.js'
 import {
 	BadRequestError,
@@ -71,6 +72,7 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+	await ValidationService.checkArticleValidity(articleId)
 
 	const { content, contentDeltas } = useRequestBody(ctx, {
 		content: RequiredParam(ContentStringValidator),
@@ -78,6 +80,16 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	})
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
+	const isEqual = await RichTextService.isContentEqual({
+		newContentRich: parsed.contentRich,
+		newContentDeltas: contentDeltas ?? '',
+		worldId,
+		entityId: articleId,
+		entityType: 'article',
+	})
+	if (isEqual) {
+		return
+	}
 
 	const { article, updatedMentions } = await WikiService.updateWikiArticle({
 		id: articleId,

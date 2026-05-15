@@ -103,7 +103,7 @@ export const RichTextService = {
 			}
 		}
 
-		// Find all elements with data-component-props attribute (mentions)
+		// Find all elements with data-external-image-props attribute (embedded images)
 		const embeddedImageElements: Array<{ element: AnyNode; props: EmbeddedImageNodeContent }> = []
 		$('[data-external-image-props]').each((_, element) => {
 			const assetId = $(element).attr('data-asset-id')
