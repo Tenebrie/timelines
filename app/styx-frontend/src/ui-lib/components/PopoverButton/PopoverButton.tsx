@@ -9,7 +9,7 @@ import { ReactNode } from 'react'
 type Props = {
 	icon: ReactNode
 	tooltip: string
-	color: Parameters<typeof IconButton>['0']['color']
+	color?: Parameters<typeof IconButton>['0']['color']
 	size: 'small' | 'medium' | 'large'
 	popoverBody: (props: { close: () => void }) => ReactNode
 	popoverAction: (props: { close: () => void }) => ReactNode
