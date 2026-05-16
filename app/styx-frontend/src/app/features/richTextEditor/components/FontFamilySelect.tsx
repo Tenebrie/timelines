@@ -18,7 +18,6 @@ const AvailableFonts = [
 	{ label: 'Palatino', value: "'Palatino Linotype', Palatino, serif" },
 	{ label: 'Arial', value: 'Arial, Helvetica, sans-serif' },
 	{ label: 'Verdana', value: 'Verdana, Geneva, Tahoma, sans-serif' },
-	{ label: 'Trebuchet MS', value: "'Trebuchet MS', Helvetica, sans-serif" },
 	{ label: 'Courier New', value: "'Courier New', Courier, monospace" },
 ] as const
 
