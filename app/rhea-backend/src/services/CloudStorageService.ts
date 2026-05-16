@@ -309,7 +309,7 @@ export const CloudStorageService = {
 			type: 'assetPresignedUrl',
 			key: asset.id,
 			value: { url: publicUrl },
-			expiresInSeconds: expiresInSeconds - 300, // Evict cache 5 mins before the url expires
+			expiresInSeconds: Math.max(10, expiresInSeconds - 600), // Evict cache 10 mins before the url expires
 		})
 
 		return publicUrl

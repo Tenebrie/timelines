@@ -66,7 +66,7 @@ export function TextColorPickerBody({ editor, currentColor, onClose }: Props) {
 
 	return (
 		<Stack direction="column" gap={1} sx={{ minWidth: 600 }}>
-			<ColorPicker initialValue={currentColor ?? undefined} onChangeHex={onChangeHex} />
+			<ColorPicker initialValue={currentColor ?? undefined} onChangeHex={onChangeHex} luminanceCorrection />
 			<Stack direction="row" justifyContent="space-between" alignItems="center">
 				<Typography variant="body2" color="text.secondary">
 					Colors may change to stay readable in light and dark modes.
