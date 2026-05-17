@@ -14,7 +14,7 @@ RUN npm ci
 
 # Copy source files and build
 COPY ./app/orpheus-mcp /app/orpheus
-RUN npx build
+RUN npm run build
 
 # Production stage
 FROM node:25-alpine
