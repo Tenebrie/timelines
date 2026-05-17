@@ -22,6 +22,7 @@ export default defineConfig(
 			'app/styx-frontend/build',
 			'app/orpheus-mcp/dist',
 			'app/ts-shared/dist',
+		'library/tiptap-schema/dist',
 			'app/thetis-landing/dist',
 			'app/thetis-landing/.astro',
 			'test/e2e/dist',

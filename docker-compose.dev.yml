@@ -32,6 +32,7 @@ services:
             - ./app/styx-frontend/src:/app/styx/src:cached
             - ./app/styx-frontend/public:/app/styx/public:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached
+            - ./library/tiptap-schema/dist:/library/tiptap-schema/dist:cached
             - type: bind
               source: ./app/styx-frontend/vite.config.ts
               target: /app/styx/vite.config.ts

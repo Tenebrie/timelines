@@ -4,7 +4,8 @@
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"paths": {
 			"@api/*": ["./src/api/*"],
-			"@/*": ["./src/*"]
+			"@/*": ["./src/*"],
+			"@tiptap/*": ["./node_modules/@tiptap/*"]
 		},
 		"allowJs": true,
 		"skipLibCheck": true,

@@ -857,6 +857,10 @@
   dependencies:
     "@tybys/wasm-util" "^0.10.1"
 
+"@neverkin/tiptap-schema@link:../../library/tiptap-schema":
+  version "0.0.0"
+  uid ""
+
 "@open-draft/deferred-promise@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@open-draft/deferred-promise/-/deferred-promise-2.2.0.tgz#4a822d10f6f0e316be4d67b4d4f8c9a124b073bd"
