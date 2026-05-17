@@ -45,7 +45,7 @@
 		"@tiptap/suggestion": "^3.23.1",
 		"@tiptap/y-tiptap": "^3.0.3",
 		"@types/qrcode": "^1.5.6",
-		"@vitejs/plugin-react": "^5.2.0",
+		"@vitejs/plugin-react": "^6.0.2",
 		"bezier-easing": "^2.1.0",
 		"classnames": "^2.3.2",
 		"cost-of-modules": "^1.0.1",
