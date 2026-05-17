@@ -1,6 +1,6 @@
+import { createNewUser, deleteAccount } from '@fixtures/auth'
+import { navigateToTimeline } from '@fixtures/world'
 import test, { expect } from '@playwright/test'
-import { createNewUser, deleteAccount } from 'fixtures/auth'
-import { navigateToTimeline } from 'fixtures/world'
 
 test.describe('World Tags', () => {
 	test.beforeEach(async ({ page }) => {

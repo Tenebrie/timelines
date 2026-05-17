@@ -74,12 +74,19 @@ export function RichTextEditorComponent({
 
 	const onChangeThrottled = useRef(
 		throttle((editor: Editor) => {
+			if (editor.isDestroyed) {
+				return
+			}
 			onChangeRef.current({
 				plainText: editor.getText(),
 				richText: editor.getHTML(),
 			})
 		}, 100),
 	)
+
+	useEffect(() => {
+		onChangeThrottled.current.cancel()
+	}, [collaboration?.documentId])
 
 	const isReadMode = (isReadOnly || (readModeEnabled && allowReadMode)) ?? false
 
@@ -90,7 +97,7 @@ export function RichTextEditorComponent({
 
 	const editor = useEditor(
 		{
-			content: value,
+			// content: value,
 			editable: !isReadMode,
 			extensions,
 			autofocus: false,

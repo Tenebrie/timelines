@@ -47,7 +47,6 @@ export const RheaService = {
 				return rheaClient['GET']('/api/world/{worldId}/actor/{actorId}/content', {
 					params: {
 						path: { worldId, actorId: entityId },
-						query: { acceptDeltas: true },
 					},
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -58,7 +57,6 @@ export const RheaService = {
 				return rheaClient['GET']('/api/world/{worldId}/event/{eventId}/content', {
 					params: {
 						path: { worldId, eventId: entityId },
-						query: { acceptDeltas: true },
 					},
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -69,7 +67,6 @@ export const RheaService = {
 				return rheaClient['GET']('/api/world/{worldId}/article/{articleId}/content', {
 					params: {
 						path: { worldId, articleId: entityId },
-						query: { acceptDeltas: true },
 					},
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -94,35 +91,24 @@ export const RheaService = {
 		entityId,
 		entityType,
 		contentRich,
-		contentDeltas,
 	}: {
 		userId: string
 		worldId: string
 		entityId: string
 		entityType: 'actor' | 'event' | 'article'
 		contentRich: string
-		contentDeltas: string
 	}) => {
 		const response = await (() => {
-			if (contentRich.length >= 131000) {
+			if (contentRich.length >= 1_131_000) {
 				console.error(
 					`${chalk.greenBright('[Calliope]')} Unable to flush ${entityType} ${chalk.blueBright(entityId)} (${contentRich.length} bytes)`,
 				)
 			}
 
-			const deltasToSave = (() => {
-				if (contentDeltas.length < 131000) {
-					return contentDeltas
-				}
-				console.warn(
-					`${chalk.greenBright('[Calliope]')} Dropping deltas for ${entityType} ${chalk.blueBright(entityId)} (${contentDeltas.length} bytes)`,
-				)
-				return undefined
-			})()
 			if (entityType === 'actor') {
 				return rheaClient['PUT']('/api/world/{worldId}/actor/{actorId}/content', {
 					params: { path: { worldId, actorId: entityId } },
-					body: { content: contentRich, contentDeltas: deltasToSave },
+					body: { content: contentRich },
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
 						[IMPERSONATED_USER_HEADER]: userId,
@@ -131,7 +117,7 @@ export const RheaService = {
 			} else if (entityType === 'event') {
 				return rheaClient['PUT']('/api/world/{worldId}/event/{eventId}/content', {
 					params: { path: { worldId, eventId: entityId } },
-					body: { content: contentRich, contentDeltas: deltasToSave },
+					body: { content: contentRich },
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
 						[IMPERSONATED_USER_HEADER]: userId,
@@ -140,7 +126,7 @@ export const RheaService = {
 			} else if (entityType === 'article') {
 				return rheaClient['PUT']('/api/world/{worldId}/article/{articleId}/content', {
 					params: { path: { worldId, articleId: entityId } },
-					body: { content: contentRich, contentDeltas: deltasToSave },
+					body: { content: contentRich },
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
 						[IMPERSONATED_USER_HEADER]: userId,

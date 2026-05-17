@@ -1,12 +1,12 @@
-FROM mcr.microsoft.com/playwright:v1.59.1-noble
+FROM mcr.microsoft.com/playwright:v1.60.0-noble
 RUN npm install -g npm@11.8.0
 
 WORKDIR /app
 
-COPY package.json yarn.lock* ./
+COPY package.json package-lock.json* ./
 
 # Install dependencies (npm will use package-lock.json if present)
-RUN yarn install
+RUN npm install
 
 # Copy the rest of your project (including tests) into the container
 COPY . .

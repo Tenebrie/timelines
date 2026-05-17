@@ -1,7 +1,7 @@
+import { createNewUser, deleteAccount } from '@fixtures/auth'
 import { expect, Page, test } from '@playwright/test'
-import { createNewUser, deleteAccount } from 'fixtures/auth'
+import { makeUrl } from '@tests/utils'
 import { readFile } from 'fs/promises'
-import { makeUrl } from 'tests/utils'
 
 import type {
 	CreateActorApiArg,

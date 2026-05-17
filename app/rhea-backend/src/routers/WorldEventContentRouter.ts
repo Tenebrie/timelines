@@ -18,6 +18,7 @@ import {
 	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { worldEventTag } from './utils/tags.js'
 import { ContentStringValidator } from './validators/ContentStringValidator.js'
@@ -71,15 +72,14 @@ router.put('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
 	await ValidationService.checkEventValidity(eventId)
 
-	const { content, contentDeltas } = useRequestBody(ctx, {
+	const { content, reloadClients } = useRequestBody(ctx, {
 		content: RequiredParam(ContentStringValidator),
-		contentDeltas: OptionalParam(ContentStringValidator),
+		reloadClients: z.boolean().optional(),
 	})
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
 	const isEqual = await RichTextService.isContentEqual({
 		newContentRich: parsed.contentRich,
-		newContentDeltas: contentDeltas ?? '',
 		worldId,
 		entityId: eventId,
 		entityType: 'event',
@@ -94,7 +94,6 @@ router.put('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 		params: {
 			description: parsed.contentPlain,
 			descriptionRich: parsed.contentRich,
-			descriptionYjs: contentDeltas ?? null,
 			mentions: parsed.mentions,
 			referencedAssetIds: parsed.referencedAssetIds,
 		},
@@ -103,7 +102,7 @@ router.put('/api/world/:worldId/event/:eventId/content', async (ctx) => {
 	RedisService.notifyAboutWorldEventUpdate(ctx, { worldId, event })
 	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
 
-	if (!contentDeltas) {
+	if (reloadClients) {
 		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: eventId })
 	}
 })

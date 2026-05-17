@@ -51,12 +51,12 @@ The application is built using the microservice architecture for Docker Swarm. T
 
 # Running the app
 
-The development environment requires Node, Yarn and Docker to run.
+The development environment requires Node and Docker to run.
 
 In most cases, the following commands are enough to have the entire environment up and running:
 
-- `yarn` <!-- Install dependencies -->
-- `yarn dev` <!-- Run dev environment through Docker -->
+- `npm i` <!-- Install dependencies -->
+- `npm run dev` <!-- Run dev environment through Docker -->
 
 The migrations are run automatically via a docker-compose task on environment start-up.
 
@@ -67,7 +67,7 @@ The default admin user is `admin@localhost` with password `q`.
 For a quick update on a running environment after a dependency update, change to Prisma types, creating a new migration, change to tsconfig.json or another change to package.json, you can either just restart the containers, or use the following:
 
 ```sh
-yarn docker:update
+npm run docker:update
 ```
 
 > Note: The containers should be running for this command to work.
@@ -77,7 +77,7 @@ yarn docker:update
 In case of issues with containers, try a full rebuild without cache:
 
 ```sh
-yarn docker:build
+npm run docker:build
 ```
 
 # Connecting to MCP server
@@ -106,4 +106,4 @@ If you encounter trouble, reach out to the developer through the Discord link yo
 
 ## Self-hosting the app
 
-You are explicitly allowed to self-host Neverkin for your own needs. Refer to [Creating New Cluster](docs/Creating%20New%20Cluster.md) for full technical breakdown on hosting a full Docker Swarm cloud. For local work, `yarn dev` will likely be enough.
+You are explicitly allowed to self-host Neverkin for your own needs. Refer to [Creating New Cluster](docs/Creating%20New%20Cluster.md) for full technical breakdown on hosting a full Docker Swarm cloud. For local work, `npm run dev` will likely be enough.

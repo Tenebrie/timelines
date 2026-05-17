@@ -5,7 +5,7 @@ CONTAINER=$(docker ps -qf "name=timelines[-_]chronos")
 
 if [ -z "${CONTAINER}" ]; then
     echo "ERROR: Backrest container not found"
-    echo "Make sure the stack is running with: yarn docker"
+    echo "Make sure the stack is running with: npm run dev"
     exit 1
 fi
 

@@ -8,17 +8,21 @@ WORKDIR /app
 
 # Copy and build ts-shared first
 COPY ./app/ts-shared /app/ts-shared
-RUN cd /app/ts-shared && yarn install --frozen-lockfile
+RUN cd /app/ts-shared && npm ci
+
+# Build tiptap-schema (local library dependency of styx)
+COPY ./library /library
+RUN cd /library/tiptap-schema && npm ci && npm run build
 
 # Copy package files and install ALL dependencies (needed for build)
-COPY ./app/styx-frontend/package.json ./app/styx-frontend/yarn.lock /app/styx/
+COPY ./app/styx-frontend/package.json ./app/styx-frontend/package-lock.json /app/styx/
 COPY .prettierrc.js /app/styx
 WORKDIR /app/styx
-RUN yarn install --frozen-lockfile
+RUN npm ci
 
 # Copy source files and build
 COPY ./app/styx-frontend /app/styx
-RUN yarn build:ci
+RUN npm run build:ci
 
 # Production stage - use nginx to serve static files
 FROM nginx:alpine

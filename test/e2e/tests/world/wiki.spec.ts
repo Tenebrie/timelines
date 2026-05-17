@@ -1,6 +1,6 @@
+import { createNewUser, deleteAccount } from '@fixtures/auth'
+import { createWikiArticle, createWorld, navigateToWiki } from '@fixtures/world'
 import { expect, Page, test } from '@playwright/test'
-import { createNewUser, deleteAccount } from 'fixtures/auth'
-import { createWikiArticle, createWorld, navigateToWiki } from 'fixtures/world'
 
 test.describe('Wiki View', () => {
 	test.beforeEach(async ({ page }) => {

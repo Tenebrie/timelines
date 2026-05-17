@@ -32,7 +32,7 @@ services:
             s3_bucket_id: bucket
             s3_access_key_id: devuser
             s3_access_key_secret: devsecret
-        command: yarn prod
+        command: npm run prod
         depends_on:
             rhea-postgres:
                 condition: service_healthy
@@ -53,7 +53,7 @@ services:
             NODE_ENV: production
             jwt-secret: ci-secret-key
             environment: ci
-        command: yarn prod
+        command: npm run prod
         depends_on:
             - redis
         networks:
@@ -67,7 +67,7 @@ services:
             NODE_ENV: production
             REQUIRE_OAUTH: "true"
             jwt-secret: ci-secret-key
-        command: yarn prod
+        command: npm run prod
         depends_on:
             rhea:
                 condition: service_healthy
@@ -105,7 +105,7 @@ services:
         depends_on:
             rhea-postgres:
                 condition: service_healthy
-        command: sh -c "yarn prisma migrate deploy"
+        command: sh -c "npx prisma migrate deploy"
         networks:
             - ci-playwright
 

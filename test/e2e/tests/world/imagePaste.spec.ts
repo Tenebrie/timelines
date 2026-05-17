@@ -1,6 +1,6 @@
+import { createNewUser, deleteAccount } from '@fixtures/auth'
+import { createWorld, navigateToWikiArticle } from '@fixtures/world'
 import { expect, Page, test } from '@playwright/test'
-import { createNewUser, deleteAccount } from 'fixtures/auth'
-import { createWorld, navigateToWikiArticle } from 'fixtures/world'
 
 const TINY_PNG_BASE64 =
 	'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='

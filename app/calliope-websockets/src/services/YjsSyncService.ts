@@ -5,7 +5,7 @@ import * as Y from 'yjs'
 import { persistenceLeaderService } from './PersistenceLeaderService.js'
 import { RedisService } from './RedisService.js'
 import { RheaService } from './RheaService.js'
-import { htmlToYXml, yXmlToHtml } from './YjsParserService.js'
+import { htmlToYDoc, yDocToHtml } from './YjsParserService.js'
 
 const attachedDocs = new WeakSet<Y.Doc>()
 
@@ -37,8 +37,7 @@ async function flushDocumentToRhea(
 	metadata: DocumentMetadata,
 ): Promise<boolean> {
 	try {
-		const fragment = doc.getXmlFragment('default')
-		const html = yXmlToHtml(fragment)
+		const html = yDocToHtml(doc)
 
 		await RheaService.flushDocumentState({
 			userId: metadata.userId,
@@ -46,7 +45,6 @@ async function flushDocumentToRhea(
 			entityId: metadata.entityId,
 			entityType: metadata.entityType,
 			contentRich: html,
-			contentDeltas: Buffer.from(Y.encodeStateAsUpdate(doc)).toString('base64'),
 		})
 
 		Logger.yjsInfo(docName, `Flushed to Rhea`)
@@ -243,35 +241,17 @@ export const YjsSyncService = {
 		docName: string
 		metadata: DocumentMetadata
 	}) {
-		const { contentHtml, contentDeltas } = await RheaService.fetchDocumentState(metadata)
+		const { contentHtml } = await RheaService.fetchDocumentState(metadata)
 
-		/**
-		 * No content found at all -> likely an empty entity
-		 */
-		if (!contentHtml && !contentDeltas) {
+		if (!contentHtml) {
 			Logger.yjsInfo(docName, `No content in database`)
 			return
 		}
 
-		if (contentDeltas) {
-			/**
-			 * Rhea has persistent deltas to load
-			 */
-			Y.applyUpdate(doc, Buffer.from(contentDeltas, 'base64'))
-			Logger.yjsInfo(docName, `Loaded initial state from database deltas`)
-		} else if (contentHtml) {
-			/**
-			 * Only HTML content available, generate deltas
-			 */
-			const fragment = doc.getXmlFragment('default')
-			doc.transact(() => {
-				htmlToYXml(contentHtml, fragment)
-			}, REDIS_ORIGIN)
-
-			// Flush the deltas back to Rhea immediately
-			await flushDocumentToRhea(docName, doc, metadata)
-			Logger.yjsInfo(docName, `Loaded initial state from database HTML`)
-		}
+		doc.transact(() => {
+			htmlToYDoc(contentHtml, doc)
+		}, REDIS_ORIGIN)
+		Logger.yjsInfo(docName, `Loaded initial state from database`)
 
 		// Store the initial state to Redis so other instances get the same state
 		const stateUpdate = Y.encodeStateAsUpdate(doc)

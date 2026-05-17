@@ -1,6 +1,6 @@
 import { expect, Page, test } from '@playwright/test'
 import { createHash, randomBytes } from 'crypto'
-import { createNewUser, deleteAccount } from 'fixtures/auth'
+import { createNewUser, deleteAccount } from '@fixtures/auth'
 
 import { makeUrl } from '../utils'
 

@@ -1,0 +1,17 @@
+// Tiptap type augmentations
+import '@tiptap/starter-kit'
+import '@tiptap/extension-character-count'
+import '@tiptap/extension-collaboration'
+import '@tiptap/extension-color'
+import '@tiptap/extension-font-family'
+import '@tiptap/extension-hard-break'
+import '@tiptap/extension-image'
+import '@tiptap/extension-mention'
+import '@tiptap/extension-placeholder'
+import '@tiptap/extension-table'
+import '@tiptap/extension-text-style'
+
+export { createTiptapExtensionSchema } from './createTiptapExtensionSchema.js'
+export { ExternalImageNode } from './nodes/ExternalImageNode.js'
+export type { MentionPropsType } from './nodes/MentionNode.js'
+export { MentionNode, MentionNodeName } from './nodes/MentionNode.js'

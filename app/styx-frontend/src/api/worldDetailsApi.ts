@@ -58,8 +58,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		units: {
 			children: {
 				id: string
-				createdAt: string
-				updatedAt: string
 				calendarId: string
 				position: number
 				label?: null | string
@@ -70,8 +68,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			}[]
 			parents: {
 				id: string
-				createdAt: string
-				updatedAt: string
 				calendarId: string
 				position: number
 				label?: null | string
@@ -95,11 +91,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		presentations: {
 			units: {
 				id: string
-				createdAt: string
-				updatedAt: string
 				name: string
 				calendarId: string
-				presentationId: string
 				position: number
 				formatString: string
 				subdivision: number
@@ -108,8 +101,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			}[]
 			id: string
 			name: string
-			compression: number
 			scaleFactor: number
+			compression: number
 			baselineUnitId?: null | string
 		}[]
 		seasons: {

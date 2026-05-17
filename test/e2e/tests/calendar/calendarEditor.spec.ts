@@ -1,5 +1,5 @@
 import test from '@playwright/test'
-import { createNewUser, deleteAccount } from 'fixtures/auth'
+import { createNewUser, deleteAccount } from '@fixtures/auth'
 
 test.describe('Calendar Editor View', () => {
 	test.beforeEach(async ({ page }) => {

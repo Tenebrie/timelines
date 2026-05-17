@@ -1,6 +1,6 @@
 # Neverkin - AI Context & Architecture Guide
 
-**Last Updated**: April 27, 2026
+**Last Updated**: May 17, 2026
 **Project**: Collaborative worldbuilding and timeline management application
 
 ## Work Ethics
@@ -42,10 +42,14 @@ Neverkin is a collaborative web application for writers, game masters, and world
 └──────┬──────────────────────────────┘
        │
        ▼
-┌─────────────────┐
-│ PostgreSQL      │
-│ Primary DB      │
-└─────────────────┘
+┌─────────────────┐       ┌───────────────────────────────────┐
+│ PostgreSQL      │       │ Orpheus (MCP Server)              │
+│ Primary DB      │       │ Claude.ai ↔ Rhea bridge           │
+└─────────────────┘       │ OAuth 2.1 + 24 MCP tools          │
+                          └───────────────┬───────────────────┘
+                                          │ REST (impersonated)
+                                          ▼
+                                   Rhea Backend
 ```
 
 **Services:**
@@ -53,12 +57,13 @@ Neverkin is a collaborative web application for writers, game masters, and world
 - **Styx** (Frontend): React 19 + TypeScript + Vite + TanStack Router + Material-UI + Redux Toolkit
 - **Rhea** (Backend): Koa.js REST API + Prisma ORM + PostgreSQL + Moonflower OpenAPI
 - **Calliope** (WebSockets): Real-time collaboration service using Koa WebSockets + Redis
+- **Orpheus** (MCP Server): Claude.ai integration via Model Context Protocol — exposes 24 tools for reading/writing worldbuilding data, with OAuth 2.1 + PKCE auth and user impersonation against Rhea
 - **Gatekeeper** (Proxy): Nginx reverse proxy for routing and SSL termination
 - **ts-shared**: Shared TypeScript types and utilities between all services
 
 ### Monorepo Structure
 
-- Yarn workspaces managing all packages
+- npm managing all packages (each service has its own independent `package.json` and `node_modules`)
 - Docker-based development and production deployment
 - OpenAPI code generation for type-safe frontend API consumption
 - Prisma for database schema and migrations
@@ -291,19 +296,19 @@ Example:
 **Adding a New Entity Type:**
 
 1. Define Prisma schema in `/app/rhea-backend/prisma/schema/`
-2. Run migration: `yarn prisma migrate dev`
+2. Run migration: `npm run prisma migrate dev`
 3. Create Zod validation schema in `/app/rhea-backend/src/schema/`
 4. Create Koa router in `/app/rhea-backend/src/routers/`
 5. Register router in `/app/rhea-backend/src/index.ts`
-6. Generate OpenAPI: `yarn openapi`
+6. Generate OpenAPI: `npm run openapi`
 7. Use generated API hooks in frontend
 
 **Running the App:**
 
 ```bash
-yarn                          # Install dependencies
-yarn docker                   # Start all services
-yarn prisma migrate dev       # Run migrations
+npm install                   # Install dependencies
+npm run docker                # Start all services
+npm run prisma migrate dev    # Run migrations
 ```
 
 Hot reload is supported across the entire application.
@@ -311,15 +316,58 @@ Hot reload is supported across the entire application.
 **Quick Update (app running):**
 
 ```bash
-yarn docker:update            # Rebuild containers with changes
+npm run docker:update         # Rebuild containers with changes
 ```
 
 ### Testing
 
-- **Unit/Integration**: `yarn test` (runs styx + rhea tests)
-- **Frontend**: `yarn test:styx`
-- **Backend**: `yarn test:rhea`
-- **E2E**: `yarn test:e2e` (Playwright tests in `/test/e2e`)
+- **Unit/Integration**: `npm test` (runs styx + rhea tests)
+- **Frontend**: `npm run test:styx`
+- **Backend**: `npm run test:rhea`
+- **E2E**: `npm run test:e2e` (Playwright tests in `/test/e2e`)
+
+## 🤖 Orpheus (MCP Server)
+
+Orpheus is a [Model Context Protocol](https://modelcontextprotocol.io/) server at `/app/orpheus-mcp` that lets Claude.ai read and write worldbuilding data directly. It sits between Claude.ai and Rhea, translating MCP tool calls into authenticated Rhea API requests.
+
+**Tech Stack:** `@modelcontextprotocol/sdk` + TypeScript + `openapi-fetch` + Zod + JWT + OAuth 2.1
+
+**Port:** 3002
+
+**Authentication:** OAuth 2.1 with PKCE (RFC 7591 dynamic client registration). Can be disabled via `REQUIRE_OAUTH=false`. Users authenticate through Rhea's login system; Orpheus then impersonates them on subsequent Rhea calls using a service JWT + `IMPERSONATED_USER_HEADER`.
+
+**Key Services:**
+- `RheaService` — HTTP client to Rhea at `http://rhea:3000`, wraps all entity CRUD
+- `ContextService` — In-memory session state: tracks `currentUserId` and `currentWorldId` per MCP session
+- `OAuthService` — In-memory OAuth 2.1 state (auth codes valid 10 min, tokens 24h)
+- `TokenService` — JWT generation/validation using the shared secret
+
+**HTTP Endpoints:**
+- `/mcp` — Main MCP protocol endpoint (persistent sessions via `mcp-session-id` header)
+- `/.well-known/oauth-authorization-server` — OAuth metadata
+- `/authorize`, `/token`, `/register` — OAuth 2.1 flow
+- `/health`, `/orpheus/health` — Health checks
+
+**Exposed MCP Tools (24 total):**
+
+| Category | Tools |
+|----------|-------|
+| Worlds | `list_worlds`, `set_context`, `get_world_details`, `search_world`, `create_world`, `readme` |
+| Actors | `get_actor_details`, `create_actor`, `update_actor`, `update_actor_content`, `delete_actor`, `delete_actor_content_page` |
+| Events | `get_event_details`, `create_event`, `update_event`, `delete_event` |
+| Articles | `get_article_details`, `create_article`, `update_article`, `delete_article` |
+| Tags | `get_tag_details`, `create_tag`, `update_tag`, `delete_tag` |
+
+**Design Principles:**
+- Tools accept human-readable names (not IDs) with fuzzy matching
+- Each MCP connection gets an isolated session context
+- Rhea permissions are enforced via user impersonation — Orpheus never bypasses access control
+
+**Adding a New Tool:**
+1. Define the Zod input schema
+2. Implement the handler (call `RheaService`)
+3. Register the tool in the MCP server setup
+4. If a new entity type, also add routes to Rhea and regenerate the OpenAPI client (`npm run openapi` in orpheus-mcp)
 
 ## 🚀 Deployment
 
@@ -328,7 +376,7 @@ yarn docker:update            # Rebuild containers with changes
 - Docker Swarm on DigitalOcean droplet
 - Can run on any Docker Swarm installation
 - Can run locally in development mode
-- Production build: `yarn docker:prod:push`
+- Production build: `npm run docker:prod:push`
 
 **Services in Production:**
 
@@ -389,9 +437,9 @@ yarn docker:update            # Rebuild containers with changes
 
 **Common Issues:**
 
-- **Docker containers won't start**: Try `yarn docker:fullinstall`
-- **Prisma types out of sync**: Run `yarn prisma generate`
-- **Frontend API types outdated**: Run `yarn openapi`
+- **Docker containers won't start**: Try `npm run docker:fullinstall`
+- **Prisma types out of sync**: Run `npm run prisma generate`
+- **Frontend API types outdated**: Run `npm run openapi`
 - **Database migration issues**: Check migration files in `/app/rhea-backend/prisma/migrations/`
 - **WebSocket not connecting**: Check Calliope logs and Redis connection
 
@@ -413,3 +461,7 @@ yarn docker:update            # Rebuild containers with changes
 **License**: GPL-3.0-or-later
 
 **Maintainer**: Tenebrie (tianara@tenebrie.com)
+
+## 🚫 Non-Starters
+
+- **npm workspaces / monorepo tooling**: Each service (`rhea-backend`, `styx-frontend`, `calliope-websockets`, etc.) is built and deployed independently with its own `package.json` and `node_modules`. Switching to npm workspaces or any shared-dependency monorepo setup is fundamentally incompatible with the architecture. Never suggest it.

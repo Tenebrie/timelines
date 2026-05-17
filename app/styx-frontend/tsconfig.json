@@ -14,7 +14,7 @@
 		"forceConsistentCasingInFileNames": true,
 		"noFallthroughCasesInSwitch": true,
 		"module": "esnext",
-		"incremental": true,
+		"rootDir": ".",
 		"tsBuildInfoFile": "build/.tsbuildinfo",
 		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
@@ -22,7 +22,7 @@
 		"noEmit": true,
 		"sourceMap": false,
 		"jsx": "react-jsx",
-		"types": ["vite/client", "vitest/globals", "./node_modules/user-agent-data-types"]
+		"types": ["vite/client", "vitest/globals", "user-agent-data-types"]
 	},
 	"include": ["src", "dts/vite-env.d.ts"]
 }
