@@ -101,7 +101,7 @@
 		"eslint-plugin-unused-imports": "^4.4.1",
 		"globals": "^17.6.0",
 		"jsdom": "^29.1.1",
-		"lint-staged": "^15.2.11",
+		"lint-staged": "^17.0.5",
 		"lodash.debounce": "^4.0.8",
 		"lodash.throttle": "^4.1.1",
 		"material-ui-popup-state": "^5.3.7",
