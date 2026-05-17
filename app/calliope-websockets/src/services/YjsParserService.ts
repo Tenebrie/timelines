@@ -68,6 +68,29 @@ const MARK_TO_HTML: Record<string, string> = {
 	strike: 'strike',
 	code: 'code',
 	link: 'a',
+	textStyle: 'span',
+}
+
+function kebabToCamel(str: string): string {
+	return str.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())
+}
+
+function camelToKebab(str: string): string {
+	return str.replace(/([A-Z])/g, (c) => `-${c.toLowerCase()}`)
+}
+
+function parseStyleAttribute(style: string): Record<string, string> {
+	const result: Record<string, string> = {}
+	for (const part of style.split(';')) {
+		const colon = part.indexOf(':')
+		if (colon === -1) continue
+		const prop = part.slice(0, colon).trim()
+		const val = part.slice(colon + 1).trim()
+		// Skip CSS custom properties (--variable-name) and empty values
+		if (!prop || !val || prop.startsWith('--')) continue
+		result[kebabToCamel(prop)] = val
+	}
+	return result
 }
 
 function escapeHtmlAttribute(value: string): string {
@@ -196,10 +219,21 @@ export function htmlToYXml(html: string, parent: Y.XmlFragment | Y.XmlElement) {
 					results.push(...extractTextWithMarks(child as Element | Text, newMarks))
 				}
 			}
-			// Plain span without data-component-props - just process children
+			// Plain span - carry forward any textStyle (color, font, etc.) from style attr
 			else if (node.name === 'span') {
+				const newMarks = { ...currentMarks }
+				if (node.attribs?.style) {
+					const styleAttrs = parseStyleAttribute(node.attribs.style)
+					if (Object.keys(styleAttrs).length > 0) {
+						const existing =
+							typeof newMarks.textStyle === 'object' && newMarks.textStyle !== null
+								? (newMarks.textStyle as Record<string, string>)
+								: {}
+						newMarks.textStyle = { ...existing, ...styleAttrs }
+					}
+				}
 				for (const child of node.childNodes) {
-					results.push(...extractTextWithMarks(child as Element | Text, currentMarks))
+					results.push(...extractTextWithMarks(child as Element | Text, newMarks))
 				}
 			}
 			// Other elements - should not happen in inline context but handle gracefully
@@ -277,13 +311,23 @@ export function htmlToYXml(html: string, parent: Y.XmlFragment | Y.XmlElement) {
 					const para = new Y.XmlElement('paragraph')
 					listItem.push([para])
 
-					// Process li children - but handle nested lists specially
+					// Process li children
 					for (const liChild of child.childNodes) {
 						if (liChild instanceof Element && (liChild.name === 'ul' || liChild.name === 'ol')) {
 							// Nested list goes directly in listItem, not in paragraph
 							processBlock(liChild, listItem)
+						} else if (liChild instanceof Element && liChild.name === 'p') {
+							// Tiptap wraps li text in <p> - process inline content into para
+							processInlineContent(liChild, para)
+						} else if (
+							liChild instanceof Element &&
+							liChild.name === 'img' &&
+							liChild.attribs?.['data-external-image-props']
+						) {
+							// externalImageNode is group:'block' - goes in listItem, not inside paragraph
+							listItem.push([createExternalImageElement(liChild)])
 						} else if (liChild instanceof Element || liChild instanceof Text) {
-							// Inline content goes in paragraph
+							// Bare inline content (non-Tiptap HTML) goes in paragraph
 							const segments = extractTextWithMarks(liChild as Element | Text)
 							for (const segment of segments) {
 								if (segment.element) {
@@ -423,7 +467,7 @@ export function yXmlToHtml(fragment: Y.XmlFragment | Y.XmlElement): string {
 				const activeMarks: string[] = []
 
 				// Collect active marks in a defined order (for consistent output)
-				const markOrder = ['bold', 'italic', 'underline', 'strike', 'code', 'link']
+				const markOrder = ['bold', 'italic', 'underline', 'strike', 'code', 'link', 'textStyle']
 				for (const markName of markOrder) {
 					if (marks[markName] && MARK_TO_HTML[markName]) {
 						activeMarks.push(markName)
@@ -436,6 +480,19 @@ export function yXmlToHtml(fragment: Y.XmlFragment | Y.XmlElement): string {
 					const markName = activeMarks[i]
 					const htmlTag = MARK_TO_HTML[markName]
 					const markValue = marks[markName]
+
+					// textStyle: convert camelCase attr names back to CSS kebab-case properties
+					if (markName === 'textStyle') {
+						if (typeof markValue === 'object' && markValue !== null) {
+							const styleParts = Object.entries(markValue as Record<string, string>)
+								.filter(([, v]) => v)
+								.map(([k, v]) => `${camelToKebab(k)}: ${v}`)
+							if (styleParts.length > 0) {
+								text = `<span style="${escapeHtmlAttribute(styleParts.join('; '))}">${text}</span>`
+							}
+						}
+						continue
+					}
 
 					// If the mark has attributes (is an object), add them to the HTML tag
 					if (typeof markValue === 'object' && markValue !== null) {

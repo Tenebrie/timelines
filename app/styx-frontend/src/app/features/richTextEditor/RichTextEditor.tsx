@@ -81,6 +81,10 @@ export function RichTextEditorComponent({
 		}, 100),
 	)
 
+	useEffect(() => {
+		onChangeThrottled.current.cancel()
+	}, [collaboration?.documentId])
+
 	const isReadMode = (isReadOnly || (readModeEnabled && allowReadMode)) ?? false
 
 	// Add collaboration extension if enabled
@@ -90,7 +94,7 @@ export function RichTextEditorComponent({
 
 	const editor = useEditor(
 		{
-			content: value,
+			// content: value,
 			editable: !isReadMode,
 			extensions,
 			autofocus: false,

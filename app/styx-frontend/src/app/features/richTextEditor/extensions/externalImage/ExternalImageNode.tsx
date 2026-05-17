@@ -94,10 +94,12 @@ export function ExternalImageView({ node, editor, selected, updateAttributes }: 
 	useEffect(() => {
 		if (data?.url && data.url !== node.attrs.src) {
 			requestAnimationFrame(() => {
-				updateAttributes({ src: data.url })
+				if (!editor.isDestroyed) {
+					updateAttributes({ src: data.url })
+				}
 			})
 		}
-	}, [data?.url, node.attrs.src, updateAttributes])
+	}, [data?.url, editor.isDestroyed, node.attrs.src, updateAttributes])
 
 	useLayoutEffect(() => {
 		if (!ref.current) {

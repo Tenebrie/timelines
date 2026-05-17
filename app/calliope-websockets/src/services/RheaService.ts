@@ -111,6 +111,7 @@ export const RheaService = {
 			}
 
 			const deltasToSave = (() => {
+				return undefined
 				if (contentDeltas.length < 131000) {
 					return contentDeltas
 				}

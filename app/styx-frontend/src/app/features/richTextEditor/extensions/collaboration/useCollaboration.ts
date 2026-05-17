@@ -19,6 +19,7 @@ type ConnectionState = {
 	provider: WebsocketProvider
 	extension: ReturnType<typeof createCollaborationExtension>
 	key: string
+	disableReconnect: () => void
 }
 
 export const useCollaboration = ({ entityType, documentId, enabled }: UseCollaborationParams) => {
@@ -68,10 +69,15 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 
 		// Create new connection
 		setIsReady(false)
-		const { doc, provider } = createCollaborationProvider(worldId, entityType, documentId)
+		const { doc, provider, disableReconnect } = createCollaborationProvider({
+			worldId,
+			entityType,
+			documentId,
+			onReconnect: resetConnection,
+		})
 		const extension = createCollaborationExtension(doc)
 
-		connectionRef.current = { doc, provider, extension, key }
+		connectionRef.current = { doc, provider, extension, key, disableReconnect }
 		provider.on('sync', (synced: boolean) => {
 			if (synced) {
 				setIsReady(true)
@@ -91,7 +97,7 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 				}, 50)
 			}
 		}
-	}, [key, enabled, worldId, entityType, documentId, resetCounter])
+	}, [key, enabled, worldId, entityType, documentId, resetCounter, resetConnection])
 
 	return {
 		doc: connectionRef.current?.doc ?? null,
@@ -101,7 +107,9 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 	}
 }
 
-function destroyConnection({ doc, provider }: ConnectionState) {
+function destroyConnection({ doc, provider, disableReconnect }: ConnectionState) {
+	console.info('[yjs] Destroying document')
+	disableReconnect()
 	provider.disconnect()
 	provider.destroy()
 	doc.destroy()

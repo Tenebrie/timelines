@@ -104,7 +104,7 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
 
 	if (!contentDeltas) {
-		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: articleId })
+		// RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: articleId })
 	}
 })
 

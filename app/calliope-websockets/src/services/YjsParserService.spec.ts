@@ -611,3 +611,420 @@ describe('YjsSyncService - Round-trip conversion', () => {
 		expect(delta[0]).toEqual({ insert: 'Current Date:', attributes: { bold: true } })
 	})
 })
+
+describe('YjsParserService - External image nodes in list items', () => {
+	it('places externalImageNode as listItem sibling of paragraph, NOT inside paragraph', () => {
+		// Tiptap produces <li><p></p><img data-external-image-props="..."></li>
+		// externalImageNode is group:'block' — ProseMirror drops block nodes placed inside a paragraph
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml(
+			'<ul><li><p></p><img data-type="embeddedImage" data-asset-id="asset-1" data-external-image-props="{}"></li></ul>',
+			fragment,
+		)
+
+		const list = fragment.get(0) as Y.XmlElement
+		const listItem = list.get(0) as Y.XmlElement
+		expect(listItem.nodeName).toBe('listItem')
+		expect(listItem.length).toBe(2) // paragraph + externalImageNode, NOT image nested in paragraph
+
+		const para = listItem.get(0) as Y.XmlElement
+		expect(para.nodeName).toBe('paragraph')
+		expect(para.length).toBe(0) // image must NOT be inside here
+
+		const img = listItem.get(1) as Y.XmlElement
+		expect(img.nodeName).toBe('externalImageNode')
+		expect(img.getAttribute('assetId')).toBe('asset-1')
+	})
+
+	it('preserves paragraph text and places image as sibling', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml(
+			'<ul><li><p>list text</p><img data-type="embeddedImage" data-asset-id="asset-2" data-external-image-props="{}"></li></ul>',
+			fragment,
+		)
+
+		const listItem = (fragment.get(0) as Y.XmlElement).get(0) as Y.XmlElement
+		expect(listItem.length).toBe(2)
+
+		const para = listItem.get(0) as Y.XmlElement
+		expect(para.nodeName).toBe('paragraph')
+		expect((para.get(0) as Y.XmlText).toString()).toBe('list text')
+
+		expect((listItem.get(1) as Y.XmlElement).nodeName).toBe('externalImageNode')
+	})
+
+	it('handles multiple images in one list item', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml(
+			'<ul><li><p></p>' +
+				'<img data-type="embeddedImage" data-asset-id="img-a" data-external-image-props="{}">' +
+				'<img data-type="embeddedImage" data-asset-id="img-b" data-external-image-props="{}">' +
+				'</li></ul>',
+			fragment,
+		)
+
+		const listItem = (fragment.get(0) as Y.XmlElement).get(0) as Y.XmlElement
+		expect(listItem.length).toBe(3) // paragraph + 2 images, none inside paragraph
+
+		expect((listItem.get(0) as Y.XmlElement).nodeName).toBe('paragraph')
+		const img1 = listItem.get(1) as Y.XmlElement
+		expect(img1.nodeName).toBe('externalImageNode')
+		expect(img1.getAttribute('assetId')).toBe('img-a')
+		const img2 = listItem.get(2) as Y.XmlElement
+		expect(img2.nodeName).toBe('externalImageNode')
+		expect(img2.getAttribute('assetId')).toBe('img-b')
+	})
+
+	it('places image in correct nested list item, not the outer one', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml(
+			'<ul><li><p>outer text</p>' +
+				'<ul><li><p></p><img data-type="embeddedImage" data-asset-id="nested-img" data-external-image-props="{}"></li></ul>' +
+				'</li></ul>',
+			fragment,
+		)
+
+		const outerListItem = (fragment.get(0) as Y.XmlElement).get(0) as Y.XmlElement
+		expect(outerListItem.length).toBe(2) // paragraph + nested bulletList, no image here
+
+		const nestedList = outerListItem.get(1) as Y.XmlElement
+		expect(nestedList.nodeName).toBe('bulletList')
+
+		const nestedListItem = nestedList.get(0) as Y.XmlElement
+		expect(nestedListItem.length).toBe(2) // paragraph + image
+
+		const img = nestedListItem.get(1) as Y.XmlElement
+		expect(img.nodeName).toBe('externalImageNode')
+		expect(img.getAttribute('assetId')).toBe('nested-img')
+	})
+
+	it('round-trips externalImageNode in listItem without structural loss', () => {
+		// Simulate the Yjs document Tiptap/y-prosemirror would create
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		const list = new Y.XmlElement('bulletList')
+		const listItem = new Y.XmlElement('listItem')
+		const para = new Y.XmlElement('paragraph')
+		const captionText = new Y.XmlText()
+		captionText.insert(0, 'caption')
+		para.push([captionText])
+
+		const img = new Y.XmlElement('externalImageNode')
+		img.setAttribute('type', 'embeddedImage')
+		img.setAttribute('assetId', 'round-trip-asset')
+		// @ts-expect-error - Library type signature is wrong
+		img.setAttribute('externalImageProps', { sizeX: 400, sizeY: 300 })
+
+		listItem.push([para, img])
+		list.push([listItem])
+		fragment.push([list])
+
+		const html = yXmlToHtml(fragment)
+
+		const doc2 = new Y.Doc()
+		const fragment2 = doc2.getXmlFragment('test')
+		htmlToYXml(html, fragment2)
+
+		const listItem2 = (fragment2.get(0) as Y.XmlElement).get(0) as Y.XmlElement
+		expect(listItem2.nodeName).toBe('listItem')
+		expect(listItem2.length).toBe(2) // NOT 1 (image inside paragraph)
+
+		const para2 = listItem2.get(0) as Y.XmlElement
+		expect(para2.nodeName).toBe('paragraph')
+		expect((para2.get(0) as Y.XmlText).toString()).toBe('caption')
+
+		const img2 = listItem2.get(1) as Y.XmlElement
+		expect(img2.nodeName).toBe('externalImageNode')
+		expect(img2.getAttribute('assetId')).toBe('round-trip-asset')
+		expect(img2.getAttribute('externalImageProps')).toEqual({ sizeX: 400, sizeY: 300 })
+	})
+
+	it('HTML round-trip: list item with image produces identical HTML', () => {
+		const html =
+			'<ul>' +
+			'<li><p>text item</p><img data-type="embeddedImage" data-asset-id="a1" data-external-image-props="{}" alt=""></li>' +
+			'<li><p>plain item</p></li>' +
+			'</ul>'
+
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+		htmlToYXml(html, fragment)
+		expect(yXmlToHtml(fragment)).toBe(html)
+	})
+})
+
+describe('YjsParserService - textStyle mark: htmlToYXml parsing', () => {
+	it('captures color from span style into textStyle mark', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml('<p><span style="color: #ff0000">red text</span></p>', fragment)
+
+		const para = fragment.get(0) as Y.XmlElement
+		const text = para.get(0) as Y.XmlText
+		expect(text.toDelta()).toEqual([{ insert: 'red text', attributes: { textStyle: { color: '#ff0000' } } }])
+	})
+
+	it('captures font-family as camelCase fontFamily', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml('<p><span style="font-family: Arial, sans-serif">arial text</span></p>', fragment)
+
+		const para = fragment.get(0) as Y.XmlElement
+		const text = para.get(0) as Y.XmlText
+		expect(text.toDelta()).toEqual([
+			{ insert: 'arial text', attributes: { textStyle: { fontFamily: 'Arial, sans-serif' } } },
+		])
+	})
+
+	it('captures both color and font-family from a single span', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml('<p><span style="color: #0000ff; font-family: Georgia">styled</span></p>', fragment)
+
+		const para = fragment.get(0) as Y.XmlElement
+		const text = para.get(0) as Y.XmlText
+		expect(text.toDelta()).toEqual([
+			{ insert: 'styled', attributes: { textStyle: { color: '#0000ff', fontFamily: 'Georgia' } } },
+		])
+	})
+
+	it('ignores CSS custom properties (--text-color) produced by ThemeAwareTextStyle', () => {
+		// ThemeAwareTextStyle emits --text-color alongside color: for dark/light luminance values
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml(
+			'<p><span style="color: #000000; --text-color: #000000" data-luminance="dark">dark text</span></p>',
+			fragment,
+		)
+
+		const para = fragment.get(0) as Y.XmlElement
+		const text = para.get(0) as Y.XmlText
+		const delta = text.toDelta()
+		expect(delta).toEqual([{ insert: 'dark text', attributes: { textStyle: { color: '#000000' } } }])
+		// Custom property must not leak into the mark under any camelCase key
+		const textStyleKeys = Object.keys(delta[0]?.attributes?.textStyle as object)
+		expect(textStyleKeys).toHaveLength(1)
+		expect(textStyleKeys[0]).toBe('color')
+	})
+
+	it('ignores data-luminance HTML attribute — it is not a CSS property', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml('<p><span style="color: #ffffff" data-luminance="light">light text</span></p>', fragment)
+
+		const text = (fragment.get(0) as Y.XmlElement).get(0) as Y.XmlText
+		const textStyle = text.toDelta()[0]?.attributes?.textStyle as Record<string, string>
+		expect(textStyle).not.toHaveProperty('dataLuminance')
+		expect(textStyle).not.toHaveProperty('luminance')
+	})
+
+	it('produces no textStyle mark for a span with no style attribute', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml('<p><span>plain</span></p>', fragment)
+
+		const text = (fragment.get(0) as Y.XmlElement).get(0) as Y.XmlText
+		expect(text.toDelta()).toEqual([{ insert: 'plain' }])
+	})
+
+	it('produces no textStyle mark when style contains only CSS custom properties', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml('<p><span style="--custom-var: value; --another: 42px">text</span></p>', fragment)
+
+		const text = (fragment.get(0) as Y.XmlElement).get(0) as Y.XmlText
+		expect(text.toDelta()).toEqual([{ insert: 'text' }])
+	})
+
+	it('merges textStyle from nested spans (outer color + inner font-family)', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml(
+			'<p><span style="color: #ff0000"><span style="font-family: Verdana">styled</span></span></p>',
+			fragment,
+		)
+
+		const text = (fragment.get(0) as Y.XmlElement).get(0) as Y.XmlText
+		expect(text.toDelta()).toEqual([
+			{ insert: 'styled', attributes: { textStyle: { color: '#ff0000', fontFamily: 'Verdana' } } },
+		])
+	})
+
+	it('combines textStyle with bold mark when span is inside strong', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml('<p><strong><span style="color: #ff0000">bold red</span></strong></p>', fragment)
+
+		const text = (fragment.get(0) as Y.XmlElement).get(0) as Y.XmlText
+		expect(text.toDelta()).toEqual([
+			{ insert: 'bold red', attributes: { bold: true, textStyle: { color: '#ff0000' } } },
+		])
+	})
+
+	it('does not extract style attribute from semantic mark elements like strong', () => {
+		// Tiptap always puts textStyle in a <span>, never on <strong>/<em>/etc.
+		// Styles on mark elements are intentionally ignored (see "filters out presentational attributes" test)
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		htmlToYXml('<p><strong style="color: red">bold</strong></p>', fragment)
+
+		const text = (fragment.get(0) as Y.XmlElement).get(0) as Y.XmlText
+		expect(text.toDelta()).toEqual([{ insert: 'bold', attributes: { bold: true } }])
+	})
+})
+
+describe('YjsParserService - textStyle mark: yXmlToHtml serialization', () => {
+	it('emits span with style for color', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		const para = new Y.XmlElement('paragraph')
+		const text = new Y.XmlText()
+		text.insert(0, 'red text')
+		text.format(0, 8, { textStyle: { color: '#ff0000' } })
+		para.push([text])
+		fragment.push([para])
+
+		expect(yXmlToHtml(fragment)).toBe('<p><span style="color: #ff0000">red text</span></p>')
+	})
+
+	it('converts camelCase fontFamily back to CSS kebab-case font-family', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		const para = new Y.XmlElement('paragraph')
+		const text = new Y.XmlText()
+		text.insert(0, 'arial text')
+		text.format(0, 10, { textStyle: { fontFamily: 'Arial' } })
+		para.push([text])
+		fragment.push([para])
+
+		expect(yXmlToHtml(fragment)).toBe('<p><span style="font-family: Arial">arial text</span></p>')
+	})
+
+	it('emits both color and font-family in the style attribute', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		const para = new Y.XmlElement('paragraph')
+		const text = new Y.XmlText()
+		text.insert(0, 'styled')
+		text.format(0, 6, { textStyle: { color: '#0000ff', fontFamily: 'Georgia' } })
+		para.push([text])
+		fragment.push([para])
+
+		const html = yXmlToHtml(fragment)
+		expect(html).toContain('color: #0000ff')
+		expect(html).toContain('font-family: Georgia')
+		expect(html).toContain('styled')
+	})
+
+	it('emits no span when all textStyle values are null', () => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		const para = new Y.XmlElement('paragraph')
+		const text = new Y.XmlText()
+		text.insert(0, 'plain')
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		text.format(0, 5, { textStyle: { color: null, fontFamily: null } as any })
+		para.push([text])
+		fragment.push([para])
+
+		expect(yXmlToHtml(fragment)).toBe('<p>plain</p>')
+	})
+
+	it('wraps textStyle span inside bold tag (textStyle is innermost wrapper)', () => {
+		// markOrder is ['bold', ..., 'textStyle']; reversed loop makes textStyle wrap innermost
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('test')
+
+		const para = new Y.XmlElement('paragraph')
+		const text = new Y.XmlText()
+		text.insert(0, 'bold red')
+		text.format(0, 8, { bold: true, textStyle: { color: '#ff0000' } })
+		para.push([text])
+		fragment.push([para])
+
+		expect(yXmlToHtml(fragment)).toBe('<p><b><span style="color: #ff0000">bold red</span></b></p>')
+	})
+})
+
+describe('YjsParserService - textStyle round-trip', () => {
+	const testRoundTrip = (html: string, expectedHtml?: string) => {
+		const doc = new Y.Doc()
+		const fragment = doc.getXmlFragment('default')
+		htmlToYXml(html, fragment)
+		const result = yXmlToHtml(fragment)
+		expect(result).toBe(expectedHtml || html)
+	}
+
+	it('preserves text color', () => {
+		testRoundTrip('<p><span style="color: #ff0000">red text</span></p>')
+	})
+
+	it('preserves font-family', () => {
+		testRoundTrip('<p><span style="font-family: Arial">arial text</span></p>')
+	})
+
+	it('preserves both color and font-family', () => {
+		testRoundTrip('<p><span style="color: #0000ff; font-family: Georgia">styled text</span></p>')
+	})
+
+	it('strips CSS custom properties from ThemeAwareTextStyle output', () => {
+		// ThemeAwareTextStyle adds --text-color: and data-luminance for extreme luminance colors.
+		// Those are rendering hints and must not survive the roundtrip.
+		const input =
+			'<p><span style="color: #000000; --text-color: #000000" data-luminance="dark">dark</span></p>'
+		const expected = '<p><span style="color: #000000">dark</span></p>'
+		testRoundTrip(input, expected)
+	})
+
+	it('ThemeAwareTextStyle: both color and font-family survive, custom props are dropped', () => {
+		const input =
+			'<p><span style="color: #ffffff; font-family: Arial; --text-color: #ffffff" data-luminance="light">light</span></p>'
+		const expected = '<p><span style="color: #ffffff; font-family: Arial">light</span></p>'
+		testRoundTrip(input, expected)
+	})
+
+	it('preserves color combined with bold (strong → b on roundtrip)', () => {
+		const input = '<p><strong><span style="color: #ff0000">bold red</span></strong></p>'
+		const expected = '<p><b><span style="color: #ff0000">bold red</span></b></p>'
+		testRoundTrip(input, expected)
+	})
+
+	it('preserves color inside a list item paragraph', () => {
+		testRoundTrip('<ul><li><p><span style="color: #ff0000">colored item</span></p></li></ul>')
+	})
+
+	it('preserves rgb() color values', () => {
+		testRoundTrip('<p><span style="color: rgb(255, 0, 0)">rgb red</span></p>')
+	})
+
+	it('preserves color on text adjacent to unstyled text', () => {
+		testRoundTrip('<p>before <span style="color: #ff0000">colored</span> after</p>')
+	})
+
+	it('preserves multiple adjacent spans with different colors', () => {
+		testRoundTrip('<p><span style="color: #ff0000">red</span><span style="color: #0000ff">blue</span></p>')
+	})
+})
