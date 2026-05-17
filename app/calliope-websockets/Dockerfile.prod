@@ -33,7 +33,13 @@ COPY --from=builder /app/calliope/package.json /app/calliope/package-lock.json /
 COPY ./app/ts-shared/package.json /app/ts-shared/package.json
 COPY ./app/ts-shared/src /app/ts-shared/src
 
+# Copy only the built dist and package.json so npm ci can resolve the file: dependency
+COPY --from=builder /library/tiptap-schema/dist /library/tiptap-schema/dist
+COPY --from=builder /library/tiptap-schema/package.json /library/tiptap-schema/package-lock.json /library/tiptap-schema/
+
 # Install ONLY production dependencies
-RUN npm ci --omit=dev && npm cache clean --force
+RUN npm ci --omit=dev
+RUN cd /library/tiptap-schema && npm ci --omit=dev
+RUN npm cache clean --force
 
 EXPOSE 3000

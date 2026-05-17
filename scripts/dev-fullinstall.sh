@@ -3,7 +3,7 @@
 cd "${0%/*}"
 cd ..
 
-yarn
+npm install
 docker compose -f docker-compose.common.yml -f docker-compose.dev.yml stop
 docker compose -f docker-compose.common.yml -f docker-compose.dev.yml build
 docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up -d --wait

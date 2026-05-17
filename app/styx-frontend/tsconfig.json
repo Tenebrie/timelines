@@ -15,7 +15,6 @@
 		"noFallthroughCasesInSwitch": true,
 		"module": "esnext",
 		"rootDir": ".",
-		"incremental": true,
 		"tsBuildInfoFile": "build/.tsbuildinfo",
 		"moduleResolution": "bundler",
 		"resolveJsonModule": true,

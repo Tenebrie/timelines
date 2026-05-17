@@ -1,11 +1,8 @@
 #!/bin/bash
-cd "$(dirname "$0")"
-echo $PWD
-
 export DOCKER_UID=$(id -u)
 export DOCKER_GID=$(id -g)
 
-mkdir -p ../../app/styx-frontend/node_modules/.tanstack/tmp-docker
-chown -R ${DOCKER_UID}:${DOCKER_GID} ../../app/styx-frontend/node_modules/.tanstack/tmp-docker
+mkdir -p ./app/styx-frontend/node_modules/.tanstack/tmp-docker
+chown -R ${DOCKER_UID}:${DOCKER_GID} ./app/styx-frontend/node_modules/.tanstack/tmp-docker
 
-(cd ../../library/tiptap-schema && npm run build)
+(cd ./library/tiptap-schema && npm run build)

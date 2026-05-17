@@ -24,7 +24,7 @@ sudo apt-get install k6
 
 ```bash
 cd load-tests
-yarn install
+npm install
 ```
 
 ## Configuration
@@ -42,34 +42,34 @@ export BASE_URL="https://timelines.tenebrie.com"  # or http://localhost:5173 for
 
 ```bash
 # Run smoke test
-yarn test:smoke
+npm run test:smoke
 # or directly
 k6 run src/smoke.ts
 
 # Run load test
-yarn test:load
+npm run test:load
 
 # Run stress test
-yarn test:stress
+npm run test:stress
 
 # Run WebSocket test
-yarn test:websocket
+npm run test:websocket
 
 # Run soak test (30+ minutes)
-yarn test:soak
+npm run test:soak
 ```
 
 ### Docker (no local k6 required)
 
 ```bash
-yarn docker:smoke
-yarn docker:load
-yarn docker:stress
-yarn docker:websocket
-yarn docker:soak
+npm run docker:smoke
+npm run docker:load
+npm run docker:stress
+npm run docker:websocket
+npm run docker:soak
 
 # With custom BASE_URL
-BASE_URL=http://host.docker.internal:5173 yarn docker:smoke
+BASE_URL=http://host.docker.internal:5173 npm run docker:smoke
 ```
 
 ## Test Types
