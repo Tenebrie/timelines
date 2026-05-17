@@ -389,9 +389,9 @@ npm run docker:update         # Rebuild containers with changes
 
 **Common Issues:**
 
-- **Docker containers won't start**: Try `yarn docker:fullinstall`
-- **Prisma types out of sync**: Run `yarn prisma generate`
-- **Frontend API types outdated**: Run `yarn openapi`
+- **Docker containers won't start**: Try `npm run docker:fullinstall`
+- **Prisma types out of sync**: Run `npm run prisma generate`
+- **Frontend API types outdated**: Run `npm run openapi`
 - **Database migration issues**: Check migration files in `/app/rhea-backend/prisma/migrations/`
 - **WebSocket not connecting**: Check Calliope logs and Redis connection
 
@@ -413,3 +413,7 @@ npm run docker:update         # Rebuild containers with changes
 **License**: GPL-3.0-or-later
 
 **Maintainer**: Tenebrie (tianara@tenebrie.com)
+
+## 🚫 Non-Starters
+
+- **npm workspaces / monorepo tooling**: Each service (`rhea-backend`, `styx-frontend`, `calliope-websockets`, etc.) is built and deployed independently with its own `package.json` and `node_modules`. Switching to npm workspaces or any shared-dependency monorepo setup is fundamentally incompatible with the architecture. Never suggest it.
