@@ -58,7 +58,7 @@ Neverkin is a collaborative web application for writers, game masters, and world
 
 ### Monorepo Structure
 
-- Yarn workspaces managing all packages
+- npm managing all packages (each service has its own independent `package.json` and `node_modules`)
 - Docker-based development and production deployment
 - OpenAPI code generation for type-safe frontend API consumption
 - Prisma for database schema and migrations
@@ -291,19 +291,19 @@ Example:
 **Adding a New Entity Type:**
 
 1. Define Prisma schema in `/app/rhea-backend/prisma/schema/`
-2. Run migration: `yarn prisma migrate dev`
+2. Run migration: `npm run prisma migrate dev`
 3. Create Zod validation schema in `/app/rhea-backend/src/schema/`
 4. Create Koa router in `/app/rhea-backend/src/routers/`
 5. Register router in `/app/rhea-backend/src/index.ts`
-6. Generate OpenAPI: `yarn openapi`
+6. Generate OpenAPI: `npm run openapi`
 7. Use generated API hooks in frontend
 
 **Running the App:**
 
 ```bash
-yarn                          # Install dependencies
-yarn docker                   # Start all services
-yarn prisma migrate dev       # Run migrations
+npm install                   # Install dependencies
+npm run docker                # Start all services
+npm run prisma migrate dev    # Run migrations
 ```
 
 Hot reload is supported across the entire application.
@@ -311,15 +311,15 @@ Hot reload is supported across the entire application.
 **Quick Update (app running):**
 
 ```bash
-yarn docker:update            # Rebuild containers with changes
+npm run docker:update         # Rebuild containers with changes
 ```
 
 ### Testing
 
-- **Unit/Integration**: `yarn test` (runs styx + rhea tests)
-- **Frontend**: `yarn test:styx`
-- **Backend**: `yarn test:rhea`
-- **E2E**: `yarn test:e2e` (Playwright tests in `/test/e2e`)
+- **Unit/Integration**: `npm test` (runs styx + rhea tests)
+- **Frontend**: `npm run test:styx`
+- **Backend**: `npm run test:rhea`
+- **E2E**: `npm run test:e2e` (Playwright tests in `/test/e2e`)
 
 ## 🚀 Deployment
 
@@ -328,7 +328,7 @@ yarn docker:update            # Rebuild containers with changes
 - Docker Swarm on DigitalOcean droplet
 - Can run on any Docker Swarm installation
 - Can run locally in development mode
-- Production build: `yarn docker:prod:push`
+- Production build: `npm run docker:prod:push`
 
 **Services in Production:**
 

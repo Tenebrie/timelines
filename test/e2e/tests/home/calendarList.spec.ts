@@ -1,6 +1,6 @@
+import { createNewUser, deleteAccount } from '@fixtures/auth'
 import test, { expect } from '@playwright/test'
-import { createNewUser, deleteAccount } from 'fixtures/auth'
-import { makeUrl } from 'tests/utils'
+import { makeUrl } from '@tests/utils'
 
 test.describe('Calendar List View', () => {
 	test.beforeEach(async ({ page }) => {

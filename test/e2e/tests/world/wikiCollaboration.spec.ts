@@ -1,6 +1,6 @@
+import { createNewUser, deleteAccount, loginAsUser } from '@fixtures/auth'
+import { navigateToWiki } from '@fixtures/world'
 import { expect, test } from '@playwright/test'
-import { createNewUser, deleteAccount, loginAsUser } from 'fixtures/auth'
-import { navigateToWiki } from 'fixtures/world'
 
 test.describe('Wiki Collaboration', () => {
 	test('parallel editing', async ({ browser, page }) => {

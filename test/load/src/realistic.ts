@@ -12,7 +12,7 @@
  * This gives a more accurate "concurrent users" capacity number.
  *
  * Usage:
- *   yarn docker:realistic
+ *   npm run docker:realistic
  */
 
 import { sleep } from 'k6'

@@ -1,6 +1,6 @@
+import { createNewUser, deleteAccount } from '@fixtures/auth'
+import { createMcpSession } from '@fixtures/mcp'
 import { expect, test } from '@playwright/test'
-import { createNewUser, deleteAccount } from 'fixtures/auth'
-import { createMcpSession } from 'fixtures/mcp'
 
 test.describe('MCP Actor Tools', () => {
 	let user: Awaited<ReturnType<typeof createNewUser>>

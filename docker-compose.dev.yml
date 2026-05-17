@@ -50,7 +50,7 @@ services:
               target: /app/styx/eslint.config.mjs
         ports:
             - 8080:8080
-        command: yarn start
+        command: npm run start
         tty: true
         restart: unless-stopped
 
@@ -85,7 +85,7 @@ services:
               target: /app/rhea/tsconfig.json
         ports:
             - 3000:3000
-        command: yarn start
+        command: npm run start
         tty: true
         restart: unless-stopped
         networks:
@@ -104,6 +104,7 @@ services:
         volumes:
             - ./app/calliope-websockets/src:/app/calliope/src:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached
+            - ./library/tiptap-schema/dist:/library/tiptap-schema/dist:cached
             - type: bind
               source: ./eslint.config.mjs
               target: /app/calliope/eslint.config.mjs
@@ -112,7 +113,7 @@ services:
               target: /app/calliope/tsconfig.json
         ports:
             - 3001:3001
-        command: yarn start
+        command: npm run start
         tty: true
         restart: unless-stopped
 
@@ -138,7 +139,7 @@ services:
               target: /app/orpheus/tsconfig.json
         ports:
             - 3002:3002
-        command: yarn start
+        command: npm run start
         tty: true
         restart: unless-stopped
 
@@ -164,7 +165,7 @@ services:
               target: /app/thetis/tsconfig.json
         ports:
             - 8081:8081
-        command: yarn dev
+        command: npm run dev
         tty: true
         restart: unless-stopped
 
@@ -197,7 +198,7 @@ services:
                 condition: service_started
             rhea-postgres:
                 condition: service_healthy
-        command: sh -c "yarn prisma migrate deploy && yarn prisma db seed"
+        command: sh -c "npx prisma migrate deploy && npx prisma db seed"
         networks:
             - backend-rhea-db
 

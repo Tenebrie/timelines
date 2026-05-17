@@ -3,10 +3,11 @@
 	"version": "0.0.0",
 	"license": "GPL-3.0-or-later",
 	"description": "",
+	"private": true,
 	"scripts": {
 		"lint": "eslint ./",
 		"build": "docker compose build playwright",
-		"test": "yarn build && yarn test:local",
+		"test": "npm run build && npm run test:local",
 		"test:report": "serve ./test-report/html --listen 3605",
 		"test:local": ". ../../scripts/prepare-local-dev.sh && TARGET_ENV=local docker compose -f docker-compose.yml -f docker-compose.local.yml run --service-ports --rm playwright",
 		"test:staging": ". ../../scripts/prepare-local-dev.sh && TARGET_ENV=staging docker compose run --rm playwright",

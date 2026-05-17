@@ -1,6 +1,6 @@
+import { createNewUser, deleteAccount } from '@fixtures/auth'
+import { createActor, navigateToMindmap } from '@fixtures/world'
 import test, { expect } from '@playwright/test'
-import { createNewUser, deleteAccount } from 'fixtures/auth'
-import { createActor, navigateToMindmap } from 'fixtures/world'
 
 test.describe('World Mindmap', () => {
 	test.beforeEach(async ({ page }) => {

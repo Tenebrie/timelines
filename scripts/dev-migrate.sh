@@ -3,8 +3,8 @@
 cd "${0%/*}"
 cd ..
 
-(cd app/rhea-backend && yarn prisma migrate dev)
-docker exec -it $(docker ps -qf "name=^timelines[-_]rhea.[0-9]+" | head -n 1) yarn prisma generate
+(cd app/rhea-backend && npx prisma migrate dev)
+docker exec -it $(docker ps -qf "name=^timelines[-_]rhea.[0-9]+" | head -n 1) npx prisma generate
 docker exec -it $(docker ps -qf "name=^timelines[-_]rhea.[0-9]+" | head -n 1) touch src/index.ts
 
 echo "Waiting for Rhea to get up..."
@@ -19,4 +19,4 @@ do
    ((counter++))
 done
 
-cd app/styx-frontend && yarn openapi
+cd app/styx-frontend && npm run openapi

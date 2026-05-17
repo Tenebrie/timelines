@@ -5,13 +5,13 @@ cd ..
 
 . ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up --build -d
 
-(cd app/rhea-backend && yarn prisma migrate status)
+(cd app/rhea-backend && npx prisma migrate status)
 exit_code=$?
 
 if [ $exit_code -eq 1 ]; then
-   (cd app/rhea-backend && yarn prisma migrate dev)
+   (cd app/rhea-backend && npx prisma migrate dev)
 
-   docker exec $(docker ps -qf "name=^timelines[-_]rhea[-_][0-9]+") yarn prisma generate
+   docker exec $(docker ps -qf "name=^timelines[-_]rhea[-_][0-9]+") npx prisma generate
    docker exec $(docker ps -qf "name=^timelines[-_]rhea[-_][0-9]+") touch src/index.ts
 fi
 
@@ -26,4 +26,4 @@ do
    [[ counter -eq $max_retry ]] && exit 1
    ((counter++))
 done
-cd app/styx-frontend && yarn openapi
+cd app/styx-frontend && npm run openapi

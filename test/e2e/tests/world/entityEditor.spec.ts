@@ -1,6 +1,6 @@
+import { createNewUser, deleteAccount } from '@fixtures/auth'
+import { closeModal, createActor, createArticle, createEvent, navigateToTimeline } from '@fixtures/world'
 import test, { expect } from '@playwright/test'
-import { createNewUser, deleteAccount } from 'fixtures/auth'
-import { closeModal, createActor, createArticle, createEvent, navigateToTimeline } from 'fixtures/world'
 
 test.describe('Entity Editor', () => {
 	test.beforeEach(async ({ page }) => {

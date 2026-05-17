@@ -54,7 +54,7 @@ services:
         environment:
             NODE_ENV: production # Prod or staging
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
-        command: yarn prod
+        command: npm run prod
         deploy:
             replicas: 2
             update_config:
@@ -86,7 +86,7 @@ services:
             dockerfile: ./app/calliope-websockets/Dockerfile.prod
         environment:
             NODE_ENV: production # Prod or staging
-        command: yarn prod
+        command: npm run prod
         deploy:
             replicas: 2
             update_config:
@@ -105,7 +105,7 @@ services:
         environment:
             NODE_ENV: production # Prod or staging
             REQUIRE_OAUTH: "true"
-        command: yarn prod
+        command: npm run prod
         deploy:
             replicas: 1
             update_config:

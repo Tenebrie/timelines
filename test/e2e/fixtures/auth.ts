@@ -1,6 +1,6 @@
 import { expect, Page } from '@playwright/test'
+import { makeUrl } from '@tests/utils'
 import { randomBytes } from 'crypto'
-import { makeUrl } from 'tests/utils'
 
 export const createNewUser = async (page: Page) => {
 	const userId = `playwright-${Date.now()}-${randomBytes(8).toString('hex')}`

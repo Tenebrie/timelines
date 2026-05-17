@@ -61,7 +61,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24.x
-          cache: 'yarn'
+          cache: 'npm'
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v4.1.0

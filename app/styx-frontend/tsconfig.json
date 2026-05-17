@@ -4,8 +4,7 @@
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"paths": {
 			"@api/*": ["./src/api/*"],
-			"@/*": ["./src/*"],
-			"@tiptap/*": ["./node_modules/@tiptap/*"]
+			"@/*": ["./src/*"]
 		},
 		"allowJs": true,
 		"skipLibCheck": true,
@@ -23,7 +22,7 @@
 		"noEmit": true,
 		"sourceMap": false,
 		"jsx": "react-jsx",
-		"types": ["vite/client", "vitest/globals", "./node_modules/user-agent-data-types"]
+		"types": ["vite/client", "vitest/globals", "user-agent-data-types"]
 	},
 	"include": ["src", "dts/vite-env.d.ts"]
 }
