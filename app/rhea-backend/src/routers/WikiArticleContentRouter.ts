@@ -19,6 +19,7 @@ import {
 	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { worldWikiArticleTag } from './utils/tags.js'
 import { ContentStringValidator } from './validators/ContentStringValidator.js'
@@ -74,15 +75,14 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
 	await ValidationService.checkArticleValidity(articleId)
 
-	const { content, contentDeltas } = useRequestBody(ctx, {
+	const { content, reloadClients } = useRequestBody(ctx, {
 		content: RequiredParam(ContentStringValidator),
-		contentDeltas: OptionalParam(ContentStringValidator),
+		reloadClients: z.boolean().optional(),
 	})
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
 	const isEqual = await RichTextService.isContentEqual({
 		newContentRich: parsed.contentRich,
-		newContentDeltas: contentDeltas ?? '',
 		worldId,
 		entityId: articleId,
 		entityType: 'article',
@@ -95,7 +95,6 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 		id: articleId,
 		worldId,
 		contentRich: parsed.contentRich,
-		contentYjs: contentDeltas ?? null,
 		mentions: parsed.mentions,
 		referencedAssetIds: parsed.referencedAssetIds,
 	})
@@ -103,8 +102,8 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })
 	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
 
-	if (!contentDeltas) {
-		// RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: articleId })
+	if (reloadClients) {
+		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: articleId })
 	}
 })
 

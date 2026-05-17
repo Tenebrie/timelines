@@ -9,7 +9,6 @@
 		"allowSyntheticDefaultImports": true,
 		"target": "es2017",
 		"noEmit": true,
-		"rootDir": ".",
 		"incremental": true,
 		"skipLibCheck": true,
 		"strictNullChecks": true,

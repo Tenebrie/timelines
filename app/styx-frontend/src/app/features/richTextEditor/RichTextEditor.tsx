@@ -74,6 +74,9 @@ export function RichTextEditorComponent({
 
 	const onChangeThrottled = useRef(
 		throttle((editor: Editor) => {
+			if (editor.isDestroyed) {
+				return
+			}
 			onChangeRef.current({
 				plainText: editor.getText(),
 				richText: editor.getHTML(),

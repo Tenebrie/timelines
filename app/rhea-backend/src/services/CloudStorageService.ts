@@ -286,10 +286,8 @@ export const CloudStorageService = {
 			throw new BadRequestError('Asset is not ready for download')
 		}
 
-		const cacheEntry = await RedisCacheService.getCacheEntry(
-			'assetPresignedUrl',
-			asset.id + '/' + disposition,
-		)
+		const cacheKey = asset.id + '/' + disposition
+		const cacheEntry = await RedisCacheService.getCacheEntry('assetPresignedUrl', cacheKey)
 		if (cacheEntry?.url) {
 			return cacheEntry.url
 		}
@@ -310,7 +308,7 @@ export const CloudStorageService = {
 
 		await RedisCacheService.upsertCacheEntry({
 			type: 'assetPresignedUrl',
-			key: asset.id,
+			key: cacheKey,
 			value: { url: publicUrl },
 			expiresInSeconds: Math.max(10, expiresInSeconds - 600), // Evict cache 10 mins before the url expires
 		})

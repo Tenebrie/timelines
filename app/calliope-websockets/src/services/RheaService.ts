@@ -99,7 +99,7 @@ export const RheaService = {
 		contentRich: string
 	}) => {
 		const response = await (() => {
-			if (contentRich.length >= 131000) {
+			if (contentRich.length >= 1_131_000) {
 				console.error(
 					`${chalk.greenBright('[Calliope]')} Unable to flush ${entityType} ${chalk.blueBright(entityId)} (${contentRich.length} bytes)`,
 				)
