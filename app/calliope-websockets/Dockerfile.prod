@@ -7,6 +7,10 @@ WORKDIR /app
 COPY ./app/ts-shared /app/ts-shared
 RUN cd /app/ts-shared && npm ci
 
+# Build tiptap-schema (local library dependency of calliope)
+COPY ./library /library
+RUN cd /library/tiptap-schema && npm ci && npm run build
+
 # Copy package files and install ALL dependencies (needed for build)
 COPY ./app/calliope-websockets/package.json ./app/calliope-websockets/package-lock.json /app/calliope/
 WORKDIR /app/calliope

@@ -27,6 +27,8 @@ jobs:
         run: echo "SCRIPT=$(echo '${{ matrix.service }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
       - name: Install dependencies
         run: npm ci
+      - name: Build library
+        run: npm run build:library
       - name: Build ${{ matrix.service }}
         run: npm run build:$SCRIPT
       - name: Run ${{ matrix.service }} tests

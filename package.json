@@ -39,6 +39,7 @@
 		"test:orpheus": "cd app/orpheus-mcp && npm run test",
 		"test:e2e": "cd test/e2e && npm run test",
 		"test:e2e:run": "cd test/e2e && npm run test:local",
+		"build:library": "cd library/tiptap-schema && npm run build",
 		"build:styx": "cd app/styx-frontend && npm run build",
 		"build:rhea": "cd app/rhea-backend && npm run build",
 		"build:calliope": "cd app/calliope-websockets && npm run build",
