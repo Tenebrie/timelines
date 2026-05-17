@@ -65,7 +65,7 @@
 		"eslint-plugin-simple-import-sort": "^13.0.0",
 		"eslint-plugin-unused-imports": "^4.4.1",
 		"jsdom": "^29.1.1",
-		"lint-staged": "^16.4.0",
+		"lint-staged": "^17.0.5",
 		"nodemon": "^3.1.14",
 		"prettier": "^3.8.3",
 		"prisma": "^7.8.0",
