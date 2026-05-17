@@ -32,23 +32,23 @@
 		"zod": "^4.4.3"
 	},
 	"devDependencies": {
-		"@types/node": "^25.6.2",
-		"@typescript-eslint/eslint-plugin": "^8.59.2",
-		"@typescript-eslint/parser": "^8.59.2",
-		"@vitest/coverage-v8": "^4.1.5",
-		"eslint": "^10.3.0",
+		"@types/node": "^25.8.0",
+		"@typescript-eslint/eslint-plugin": "^8.59.3",
+		"@typescript-eslint/parser": "^8.59.3",
+		"@vitest/coverage-v8": "^4.1.6",
+		"eslint": "^10.4.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-simple-import-sort": "^13.0.0",
 		"eslint-plugin-unused-imports": "^4.1.4",
 		"lint-staged": "^16.4.0",
-		"msw": "^2.14.5",
+		"msw": "^2.14.6",
 		"nodemon": "^3.1.14",
 		"openapi-typescript": "^7.13.0",
 		"prettier": "^3.8.3",
 		"tsc-alias": "^1.8.17",
-		"tsx": "^4.19.4",
+		"tsx": "^4.22.1",
 		"typescript": "^5.7.3",
-		"vitest": "^4.1.5"
+		"vitest": "^4.1.6"
 	}
 }
