@@ -68,14 +68,11 @@ export function ExternalImageView({ node, editor, selected, updateAttributes }: 
 		})()
 
 		if (previousTimestamp > incomingTimestamp) {
-			console.log('Bail')
 			return
 		}
 
 		requestAnimationFrame(() => {
-			console.log('Qeuue')
 			if (!editor.isDestroyed) {
-				console.log('SET', data.url)
 				updateAttributes({ src: data.url })
 			}
 		})

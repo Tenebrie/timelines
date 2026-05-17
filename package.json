@@ -30,6 +30,7 @@
 		"docker:fullinstall": "./scripts/dev-fullinstall.sh",
 		"docker:prod:push": "./scripts/docker-prod-push.sh",
 		"docker:stop": "docker stop $(docker ps -a -q)",
+		"redis:clear": "docker exec -it timelines-redis-1 redis-cli FLUSHALL",
 		"tsc": "(cd app/styx-frontend && npm run tsc) && (cd app/rhea-backend && npm run tsc) && (cd app/calliope-websockets && npm run tsc) && (cd app/orpheus-mcp && npm run tsc)",
 		"lint": "(cd app/styx-frontend && npm run lint) && (cd app/rhea-backend && npm run lint) && (cd app/calliope-websockets && npm run lint) && (cd app/orpheus-mcp && npm run lint)",
 		"test": "npm run test:styx && npm run test:rhea && npm run test:calliope && npm run test:orpheus && npm run test:e2e",
