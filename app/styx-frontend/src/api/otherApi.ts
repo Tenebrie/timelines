@@ -207,18 +207,19 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	size: number
 	expiresAt?: null | string
 	ownerId: string
 	bucketKey: string
-	size: number
 	originalFileName: string
 	originalFileExtension: string
 	contentType:
-		| 'ImageConversion'
 		| 'Avatar'
+		| 'ImageConversion'
 		| 'ImageGeneration'
 		| 'DataMigrationExport'
 		| 'DataMigrationImport'
+		| 'ImageEmbed'
 	status: 'Pending' | 'Finalized' | 'Failed'
 	contentDescription?: null | string
 	imageWidth?: null | number
@@ -254,7 +255,7 @@ export type PutWikiArticleContentApiArg = {
 	articleId: string
 	body: {
 		content: string
-		contentDeltas?: string
+		reloadClients?: boolean
 	}
 }
 export type ListWorldShareLinksApiResponse = /** status 200  */ {
@@ -345,18 +346,18 @@ export type AcceptWorldShareLinkApiArg = {
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
-		id: string
 		name: string
+		id: string
 	}[]
 	worldId: string
-	id: string
-	createdAt: string
-	updatedAt: string
 	name: string
 	icon: string
 	color: string
-	position: number
+	id: string
+	createdAt: string
+	updatedAt: string
 	contentRich: string
+	position: number
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {

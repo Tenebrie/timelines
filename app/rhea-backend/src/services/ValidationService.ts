@@ -51,6 +51,15 @@ export const ValidationService = {
 		return count > 0
 	},
 
+	isAssetValid: async (assetId: string) => {
+		const count = await getPrismaClient().asset.count({
+			where: {
+				id: assetId,
+			},
+		})
+		return count > 0
+	},
+
 	checkActorValidity: async (actorId: string) => {
 		if (!ValidationService.isActorValid(actorId)) {
 			throw new BadRequestError('Actor does not exist')

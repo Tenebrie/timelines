@@ -1,6 +1,13 @@
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Stack from '@mui/material/Stack'
+import { useTheme } from '@mui/material/styles'
 import { memo, useEffect, useMemo, useState } from 'react'
+
+import {
+	DARK_LUMINANCE_THRESHOLD,
+	getColorLuminance,
+	LIGHT_LUMINANCE_THRESHOLD,
+} from '@/app/utils/colors/getColorLuminance'
 
 import { darkTheme, lightTheme } from '../../features/theming/themes'
 import { colorStringToHsl, colorStringToHslWithDefault } from '../../utils/colors/colorStringToHsl'
@@ -13,13 +20,19 @@ type Props = {
 	initialValue?: string
 	onChangeHex?: (value: string) => void
 	onChangeHsl?: (value: string) => void
+	luminanceCorrection?: boolean
 }
 
 export const ColorPicker = memo(ColorPickerComponent)
 
-export function ColorPickerComponent({ initialValue, onChangeHex, onChangeHsl }: Props) {
+export function ColorPickerComponent({
+	initialValue = 'hsl(180, 100%, 50%)',
+	onChangeHex,
+	onChangeHsl,
+	luminanceCorrection = false,
+}: Props) {
 	const parsedValue = useMemo(
-		() => colorStringToHslWithDefault(initialValue ?? 'hsl(180, 100%, 50%)', { h: 0.5, s: 1, l: 0.5 }),
+		() => colorStringToHslWithDefault(initialValue, { h: 0.5, s: 1, l: 0.5 }),
 		[initialValue],
 	)
 
@@ -38,6 +51,25 @@ export function ColorPickerComponent({ initialValue, onChangeHex, onChangeHsl }:
 		[calculatedHue, lightness, saturation],
 	)
 
+	const { palette } = useTheme()
+	const isDark = palette.mode === 'dark'
+
+	const hexColor = useMemo(
+		() => hslToHex(hue / 360, saturation / 1000, lightness / 1000),
+		[hue, saturation, lightness],
+	)
+	const luminance = useMemo(
+		() => (luminanceCorrection ? getColorLuminance(hexColor) : null),
+		[hexColor, luminanceCorrection],
+	)
+	const tooDark = luminance !== null && luminance < DARK_LUMINANCE_THRESHOLD
+	const tooLight = luminance !== null && luminance > LIGHT_LUMINANCE_THRESHOLD
+
+	const invertedColor = useMemo(
+		() => `hsl(${calculatedHue}, ${Math.round(saturation / 10)}%, ${Math.round((1000 - lightness) / 10)}%)`,
+		[calculatedHue, saturation, lightness],
+	)
+
 	const onSetFullValue = (value: string) => {
 		setInputValue(value)
 
@@ -52,14 +84,13 @@ export function ColorPickerComponent({ initialValue, onChangeHex, onChangeHsl }:
 	}
 
 	useEffect(() => {
-		const hexValue = hslToHex(hue / 360, saturation / 1000, lightness / 1000)
-		if (hexValue === initialValue || color === initialValue) {
+		if (hexColor === initialValue || color === initialValue) {
 			return
 		}
 
-		onChangeHex?.(hexValue)
+		onChangeHex?.(hexColor)
 		onChangeHsl?.(color)
-	}, [color, lightness, onChangeHex, onChangeHsl, saturation, hue, initialValue])
+	}, [color, hexColor, onChangeHex, onChangeHsl, initialValue])
 
 	return (
 		<Stack direction="column" gap={2}>
@@ -69,12 +100,16 @@ export function ColorPickerComponent({ initialValue, onChangeHex, onChangeHsl }:
 						<div
 							data-testid="color-preview"
 							style={{
-								backgroundColor: color,
+								['--text-color' as string]: color,
+								backgroundColor:
+									luminanceCorrection && ((isDark && tooDark) || (!isDark && tooLight))
+										? 'oklch(from var(--text-color) calc(1 - l) c h)'
+										: color,
 								width: '50%',
 								height: '100%',
 								borderRadius: '4px',
 							}}
-						></div>
+						/>
 						<Stack direction="column" sx={{ width: '50%', height: '100%' }} gap={1}>
 							<div
 								style={{
@@ -87,7 +122,7 @@ export function ColorPickerComponent({ initialValue, onChangeHex, onChangeHsl }:
 									justifyContent: 'center',
 								}}
 							>
-								<ColoredChip text="Name" color={color} />
+								<ColoredChip text="Name" color={tooLight ? invertedColor : color} />
 							</div>
 							<div
 								style={{
@@ -100,7 +135,7 @@ export function ColorPickerComponent({ initialValue, onChangeHex, onChangeHsl }:
 									justifyContent: 'center',
 								}}
 							>
-								<ColoredChip text="Name" color={color} />
+								<ColoredChip text="Name" color={tooDark ? invertedColor : color} />
 							</div>
 						</Stack>
 					</Stack>

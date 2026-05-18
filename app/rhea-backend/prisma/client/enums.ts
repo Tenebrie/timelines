@@ -19,11 +19,12 @@ export type AnnouncementType = (typeof AnnouncementType)[keyof typeof Announceme
 
 
 export const AssetType = {
-  ImageConversion: 'ImageConversion',
   Avatar: 'Avatar',
+  ImageConversion: 'ImageConversion',
   ImageGeneration: 'ImageGeneration',
   DataMigrationExport: 'DataMigrationExport',
-  DataMigrationImport: 'DataMigrationImport'
+  DataMigrationImport: 'DataMigrationImport',
+  ImageEmbed: 'ImageEmbed'
 } as const
 
 export type AssetType = (typeof AssetType)[keyof typeof AssetType]
@@ -36,6 +37,16 @@ export const AssetStatus = {
 } as const
 
 export type AssetStatus = (typeof AssetStatus)[keyof typeof AssetStatus]
+
+
+export const ReferenceHoldingEntity = {
+  Actor: 'Actor',
+  Event: 'Event',
+  Article: 'Article',
+  Tag: 'Tag'
+} as const
+
+export type ReferenceHoldingEntity = (typeof ReferenceHoldingEntity)[keyof typeof ReferenceHoldingEntity]
 
 
 export const AuditAction = {

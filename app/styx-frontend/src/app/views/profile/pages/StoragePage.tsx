@@ -1,60 +1,41 @@
-import { useListUserAssetsQuery } from '@api/assetApi'
-import {
-	useExportUserDataMutation,
-	useImportUserDataMutation,
-	useValidateImportUserDataMutation,
-} from '@api/dataMigrationApi'
-import { useFileUpload } from '@api/hooks/fileUpload/useFileUpload'
+import { useLazyGetAssetQuery, useListUserAssetsQuery } from '@api/assetApi'
 import { useGetStorageStatusQuery } from '@api/profileApi'
+import { Asset } from '@api/types/assetTypes'
 import ScheduleIcon from '@mui/icons-material/AccessTime'
-import ClearIcon from '@mui/icons-material/Clear'
 import DeleteIcon from '@mui/icons-material/Delete'
-import DescriptionIcon from '@mui/icons-material/DescriptionOutlined'
 import DownloadIcon from '@mui/icons-material/Download'
-import ImportIcon from '@mui/icons-material/FileDownload'
-import ExportIcon from '@mui/icons-material/FileUpload'
 import AssetsIcon from '@mui/icons-material/Folder'
+import LinkIcon from '@mui/icons-material/Link'
+import LinkOffIcon from '@mui/icons-material/LinkOff'
 import QuotaIcon from '@mui/icons-material/Storage'
-import Alert from '@mui/material/Alert'
-import AlertTitle from '@mui/material/AlertTitle'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import LinearProgress from '@mui/material/LinearProgress'
-import MenuItem from '@mui/material/MenuItem'
+import Popover from '@mui/material/Popover'
 import Skeleton from '@mui/material/Skeleton'
 import Stack from '@mui/material/Stack'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
-import { useRef, useState } from 'react'
+import { DataGrid, GridColDef, GridPaginationModel, GridSortModel } from '@mui/x-data-grid'
+import { useCallback, useRef, useState } from 'react'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { formatBytes } from '@/app/utils/formatBytes'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { formatTimeAgo } from '@/app/views/home/utils/formatTimeAgo'
-import { Button } from '@/ui-lib/components/Button/Button'
-import { Header } from '@/ui-lib/components/Header/Header'
-import { LoadingSelect } from '@/ui-lib/components/LoadingSelect/LoadingSelect'
 
 export function StoragePage() {
 	return (
 		<Stack gap={3}>
 			<Stack gap={2}>
 				<Typography variant="h5" sx={{ fontFamily: 'Inter', fontWeight: 500 }}>
-					Data
+					Storage
 				</Typography>
 				<Divider />
 			</Stack>
 			<Stack gap={6}>
 				<StoragePageQuota />
-				<StoragePageExport />
-				<StoragePageImport />
 				<StoragePageAssets />
 			</Stack>
 		</Stack>
@@ -113,8 +94,137 @@ export function StoragePageQuota() {
 }
 
 export function StoragePageAssets() {
-	const { data: assetsData } = useListUserAssetsQuery()
+	const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+		page: 0,
+		pageSize: 12,
+	})
+	const [sortModel, setSortModel] = useState<GridSortModel>([])
 	const { open: openDeleteAssetModal } = useModal('deleteAssetModal')
+	const [getAssetLazy] = useLazyGetAssetQuery()
+
+	const handleDownload = useCallback(
+		async (assetId: string) => {
+			const { response } = parseApiResponse(await getAssetLazy({ assetId, disposition: 'attachment' }))
+			if (!response) {
+				return
+			}
+			window.open(response.url)
+		},
+		[getAssetLazy],
+	)
+
+	const sortItem = sortModel[0]
+	const { data: assetsData } = useListUserAssetsQuery({
+		offset: paginationModel.page * paginationModel.pageSize,
+		limit: paginationModel.pageSize,
+		sortField: sortItem?.field,
+		sortDirection: sortItem?.sort ?? undefined,
+	})
+
+	const columns: GridColDef<Asset>[] = [
+		{
+			field: 'previewUrl',
+			headerName: 'Preview',
+			sortable: false,
+			width: 72,
+			renderCell: (params) => <AssetPreviewCell previewUrl={params.row.previewUrl} />,
+		},
+		{
+			field: 'originalFileName',
+			headerName: 'Name',
+			flex: 1,
+			renderCell: (params) => (
+				<Stack direction="row" gap={1} alignItems="center" height="100%">
+					<Typography
+						variant="body2"
+						sx={{
+							color:
+								params.row.status === 'Finalized'
+									? 'text.primary'
+									: params.row.status === 'Pending'
+										? 'text.secondary'
+										: 'text.error',
+						}}
+					>
+						{params.row.originalFileName}
+						{params.row.originalFileExtension ? `.${params.row.originalFileExtension}` : ''}
+					</Typography>
+					{params.row.expiresAt && (
+						<Tooltip
+							placement="top"
+							disableInteractive
+							title={`This file will be deleted ${formatTimeAgo(new Date(params.row.expiresAt))}`}
+						>
+							<ScheduleIcon fontSize="small" sx={{ color: 'text.secondary', display: 'block' }} />
+						</Tooltip>
+					)}
+					{params.row._count.references > 0 && (
+						<Tooltip
+							placement="top"
+							disableInteractive
+							title={`Used ${params.row._count.references} time${params.row._count.references !== 1 ? 's' : ''}`}
+						>
+							<LinkIcon fontSize="small" sx={{ color: 'text.secondary', display: 'block' }} />
+						</Tooltip>
+					)}
+					{params.row._count.references === 0 && !params.row.expiresAt && (
+						<Tooltip
+							placement="top"
+							disableInteractive
+							title={`This file is not used and will be scheduled for deletion soon.`}
+						>
+							<LinkOffIcon fontSize="small" sx={{ color: 'text.secondary', display: 'block' }} />
+						</Tooltip>
+					)}
+				</Stack>
+			),
+		},
+		{
+			field: 'size',
+			headerName: 'Size',
+			width: 120,
+			valueFormatter: (value: number) => formatBytes(value),
+		},
+		{
+			field: 'createdAt',
+			headerName: 'Created',
+			width: 160,
+			valueFormatter: (value: string) => new Date(value).toLocaleDateString(),
+		},
+		{
+			field: 'actions',
+			headerName: 'Actions',
+			sortable: false,
+			width: 100,
+			renderCell: (params) => (
+				<>
+					{params.row.status === 'Finalized' && (
+						<Stack direction="row" spacing={1} alignItems="center" height="100%">
+							<IconButton
+								size="small"
+								sx={{ width: 32, height: 32 }}
+								onClick={() => handleDownload(params.row.id)}
+							>
+								<DownloadIcon sx={{ color: 'secondary.main' }} />
+							</IconButton>
+							<IconButton
+								size="small"
+								sx={{ width: 32, height: 32 }}
+								onClick={() =>
+									openDeleteAssetModal({
+										assetId: params.row.id,
+										assetName: `${params.row.originalFileName}${params.row.originalFileExtension ? `.${params.row.originalFileExtension}` : ''}`,
+									})
+								}
+							>
+								<DeleteIcon sx={{ color: 'error.main' }} />
+							</IconButton>
+						</Stack>
+					)}
+				</>
+			),
+		},
+	]
 
 	return (
 		<Stack spacing={2}>
@@ -124,324 +234,70 @@ export function StoragePageAssets() {
 			>
 				<AssetsIcon /> Assets
 			</Typography>
-			<TableContainer>
-				<Table>
-					<TableHead>
-						<TableRow>
-							<TableCell>Name</TableCell>
-							<TableCell>Size</TableCell>
-							<TableCell>Created</TableCell>
-							<TableCell>Actions</TableCell>
-						</TableRow>
-					</TableHead>
-					<TableBody>
-						{assetsData?.assets.map((asset) => (
-							<TableRow key={asset.id}>
-								<TableCell>
-									<Stack direction="row" gap={1}>
-										<span>
-											{asset.originalFileName}
-											{asset.originalFileExtension ? `.${asset.originalFileExtension}` : ''}
-										</span>
-										{asset.expiresAt && (
-											<Tooltip
-												placement="top"
-												disableInteractive
-												title={`This file will be deleted ${formatTimeAgo(new Date(asset.expiresAt))}`}
-											>
-												<ScheduleIcon fontSize="small" sx={{ color: 'text.secondary', display: 'block' }} />
-											</Tooltip>
-										)}
-									</Stack>
-								</TableCell>
-								<TableCell>{formatBytes(asset.size)}</TableCell>
-								<TableCell>{new Date(asset.createdAt).toLocaleDateString()}</TableCell>
-								<TableCell>
-									<Stack direction="row" spacing={1}>
-										<IconButton size="small" sx={{ width: 32, height: 32 }}>
-											<DownloadIcon
-												sx={{ cursor: 'pointer', color: 'primary.main' }}
-												onClick={() => {
-													// TODO: Implement download
-												}}
-											/>
-										</IconButton>
-										<IconButton
-											size="small"
-											sx={{ width: 32, height: 32 }}
-											onClick={() => {
-												openDeleteAssetModal({
-													assetId: asset.id,
-													assetName: `${asset.originalFileName}${asset.originalFileExtension ? `.${asset.originalFileExtension}` : ''}`,
-												})
-											}}
-										>
-											<DeleteIcon sx={{ cursor: 'pointer', color: 'error.main' }} />
-										</IconButton>
-									</Stack>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
-			</TableContainer>
+			<DataGrid
+				rows={assetsData?.assets ?? []}
+				rowCount={assetsData?.total ?? 0}
+				columns={columns}
+				paginationMode="server"
+				sortingMode="server"
+				paginationModel={paginationModel}
+				onPaginationModelChange={setPaginationModel}
+				sortModel={sortModel}
+				onSortModelChange={setSortModel}
+				pageSizeOptions={[8, 12, 24, 48]}
+				disableRowSelectionOnClick
+				autoHeight
+				sx={{ '& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within': { outline: 'none' } }}
+			/>
 		</Stack>
 	)
 }
 
-export function StoragePageExport() {
-	const [exportUserData, { isLoading }] = useExportUserDataMutation()
-	const [status, setStatus] = useState<'idle' | 'error'>('idle')
+function AssetPreviewCell({ previewUrl }: { previewUrl?: string | null }) {
+	const [hoverAnchor, setHoverAnchor] = useState<HTMLElement | null>(null)
+	const hoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-	const handleExport = async () => {
-		const result = parseApiResponse(await exportUserData())
-		if (result.error) {
-			setStatus('error')
-			return
-		}
-		const a = document.createElement('a')
-		a.href = result.response.url
-		a.download = `neverkin-export-${new Date().toISOString().slice(0, 10)}.json`
-		a.click()
+	const handleMouseEnter = (e: React.MouseEvent<HTMLElement>) => {
+		const target = e.currentTarget
+		hoverTimeout.current = setTimeout(() => setHoverAnchor(target), 500)
+	}
+
+	const handleMouseLeave = () => {
+		if (hoverTimeout.current) clearTimeout(hoverTimeout.current)
+		setHoverAnchor(null)
+	}
+
+	if (!previewUrl) {
+		return null
 	}
 
 	return (
-		<Box
-			sx={{
-				border: 1,
-				borderColor: 'divider',
-				borderRadius: 1,
-				p: 3,
-			}}
-		>
-			<Stack spacing={2.5}>
-				<Stack spacing={0.5}>
-					<Header variant="h2" icon={<ExportIcon />}>
-						Export data
-					</Header>
-					<Typography variant="body2" color="text.secondary">
-						Export your user data to a file as a backup or to transfer between accounts or environments.
-					</Typography>
-				</Stack>
-				<LoadingSelect value="json" label="Export format" fullWidth>
-					<MenuItem value="json">JSON</MenuItem>
-				</LoadingSelect>
-				<Stack direction="row" spacing={1} alignItems="center">
-					<Button
-						variant="contained"
-						color="primary"
-						startIcon={<ExportIcon />}
-						onClick={handleExport}
-						loading={isLoading}
-						sx={{ minWidth: 120 }}
-					>
-						Export
-					</Button>
-					<Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
-						Collecting all your data may take a few seconds.
-					</Typography>
-				</Stack>
-				{status === 'error' && (
-					<Alert severity="error" variant="outlined">
-						Export failed. Please try again later.
-					</Alert>
-				)}
-				{status === 'idle' && (
-					<Alert severity="info" variant="outlined" icon={false} sx={{ py: 1 }}>
-						<AlertTitle sx={{ mb: 0.5, fontSize: 14 }}>Not included in export</AlertTitle>
-						<Stack
-							component="ul"
-							sx={{
-								m: 0,
-								pl: 2.5,
-								'& li': { fontSize: 13, color: 'text.secondary', lineHeight: 1.7 },
-							}}
-						>
-							<li>Assets (images, other files)</li>
-							<li>Personal user data (name, email, etc.)</li>
-							<li>Collaborating users and invites</li>
-						</Stack>
-					</Alert>
-				)}
-			</Stack>
-		</Box>
-	)
-}
-
-export function StoragePageImport() {
-	const [importUserData, { isLoading }] = useImportUserDataMutation()
-	const [validateUserData, { isLoading: isValidating }] = useValidateImportUserDataMutation()
-	const fileInputRef = useRef<HTMLInputElement>(null)
-	const [selectedFile, setSelectedFile] = useState<File | null>(null)
-	const [status, setStatus] = useState<'idle' | 'success' | 'error' | 'validated' | 'validationError'>('idle')
-	const [validationDone, setValidationDone] = useState(false)
-
-	const { uploadFile } = useFileUpload()
-	const [uploadedAsset, setUploadedAsset] = useState<{ id: string } | null>(null)
-
-	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files?.[0] ?? null
-		setSelectedFile(file)
-		setStatus('idle')
-		setValidationDone(false)
-	}
-
-	const handleImport = async () => {
-		if (!uploadedAsset) {
-			return
-		}
-
-		const result = parseApiResponse(await importUserData({ body: { assetId: uploadedAsset.id } }))
-		if (result.error) {
-			setStatus('error')
-			return
-		}
-		setStatus('success')
-		setSelectedFile(null)
-		if (fileInputRef.current) {
-			fileInputRef.current.value = ''
-		}
-	}
-
-	const handleValidation = async () => {
-		if (!selectedFile) {
-			return
-		}
-
-		const asset = await uploadFile(selectedFile, 'DataMigrationImport')
-		setUploadedAsset(asset)
-
-		const result = parseApiResponse(await validateUserData({ body: { assetId: asset.id } }))
-		if (result.error) {
-			setStatus('validationError')
-			return
-		}
-		setValidationDone(true)
-		setStatus('validated')
-	}
-
-	const handleClearFile = () => {
-		setSelectedFile(null)
-		setStatus('idle')
-		setValidationDone(false)
-		if (fileInputRef.current) {
-			fileInputRef.current.value = ''
-		}
-	}
-
-	return (
-		<Box
-			sx={{
-				border: 1,
-				borderColor: 'divider',
-				borderRadius: 1,
-				p: 3,
-			}}
-		>
-			<Stack spacing={2.5}>
-				<Stack spacing={0.5}>
-					<Header variant="h2" icon={<ImportIcon />}>
-						Import data
-					</Header>
-					<Typography variant="body2" color="text.secondary">
-						Import user data from a previously exported JSON file.
-					</Typography>
-				</Stack>
-
-				{!selectedFile && (
-					<Button
-						variant="outlined"
-						component="label"
-						startIcon={<ImportIcon />}
-						sx={{ alignSelf: 'flex-start', minWidth: 180 }}
-					>
-						Select JSON file
-						<input
-							ref={fileInputRef}
-							type="file"
-							accept="application/json,.json"
-							hidden
-							onChange={handleFileChange}
-						/>
-					</Button>
-				)}
-
-				{selectedFile && (
-					<Stack
-						direction="row"
-						alignItems="center"
-						spacing={1.5}
-						sx={{
-							border: 1,
-							borderColor: 'divider',
-							borderRadius: 1,
-							px: 2,
-							py: 1,
-							bgcolor: 'action.hover',
-						}}
-					>
-						<DescriptionIcon sx={{ color: 'text.secondary' }} />
-						<Stack sx={{ flex: 1, minWidth: 0 }}>
-							<Typography variant="body2" noWrap title={selectedFile.name}>
-								{selectedFile.name}
-							</Typography>
-							<Typography variant="caption" color="text.secondary">
-								{formatBytes(selectedFile.size)}
-								{validationDone ? ' · Validated' : ''}
-							</Typography>
-						</Stack>
-						<IconButton size="small" onClick={handleClearFile} aria-label="Remove file">
-							<ClearIcon fontSize="small" />
-						</IconButton>
-					</Stack>
-				)}
-
-				<Stack direction="row" spacing={1} alignItems="center">
-					<Button
-						variant="contained"
-						color="secondary"
-						onClick={handleValidation}
-						loading={isValidating}
-						disabled={!selectedFile || validationDone}
-						startIcon={<ImportIcon />}
-						sx={{ minWidth: 120 }}
-					>
-						Upload & Validate
-					</Button>
-					<Button
-						variant="contained"
-						color="primary"
-						startIcon={<ImportIcon />}
-						onClick={handleImport}
-						loading={isLoading}
-						disabled={!selectedFile || !validationDone}
-						sx={{ minWidth: 120 }}
-					>
-						Import
-					</Button>
-				</Stack>
-
-				{status === 'success' && (
-					<Alert severity="success" variant="outlined">
-						Data imported successfully.
-					</Alert>
-				)}
-				{status === 'error' && (
-					<Alert severity="error" variant="outlined">
-						Import failed. Please check the file and try again.
-					</Alert>
-				)}
-				{status === 'validated' && (
-					<Alert severity="success" variant="outlined">
-						Data validated successfully. You can now run the import.
-					</Alert>
-				)}
-				{status === 'validationError' && (
-					<Alert severity="error" variant="outlined">
-						Validation failed. Please check the file and try again.
-					</Alert>
-				)}
-			</Stack>
-		</Box>
+		<Stack alignItems="center" justifyContent="center" sx={{ width: '100%', height: '100%' }}>
+			<Box
+				component="img"
+				src={previewUrl}
+				alt="Preview"
+				onClick={() => window.open(previewUrl, '_blank', 'noopener,noreferrer')}
+				onMouseEnter={handleMouseEnter}
+				onMouseLeave={handleMouseLeave}
+				sx={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 1, cursor: 'pointer' }}
+			/>
+			<Popover
+				open={!!hoverAnchor}
+				anchorEl={hoverAnchor}
+				onClose={handleMouseLeave}
+				anchorOrigin={{ vertical: 'center', horizontal: 'right' }}
+				transformOrigin={{ vertical: 'center', horizontal: 'left' }}
+				sx={{ pointerEvents: 'none' }}
+				disableRestoreFocus
+			>
+				<Box
+					component="img"
+					src={previewUrl}
+					alt="Preview"
+					sx={{ maxWidth: 512, maxHeight: 512, display: 'block' }}
+				/>
+			</Popover>
+		</Stack>
 	)
 }

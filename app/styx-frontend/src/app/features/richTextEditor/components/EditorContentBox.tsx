@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box'
+import { useTheme } from '@mui/material/styles'
 import { Editor } from '@tiptap/core'
 import { EditorContent } from '@tiptap/react'
 import { memo } from 'react'
@@ -15,6 +16,9 @@ type Props = {
 export const EditorContentBox = memo(EditorContentBoxComponent)
 
 function EditorContentBoxComponent({ editor, mode, className, readOnly }: Props) {
+	const { palette } = useTheme()
+	const isDark = palette.mode === 'dark'
+
 	return (
 		<Box
 			component={EditorContent}
@@ -65,6 +69,13 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly }: Props)
 					background: '#00000033',
 				},
 				...useBrowserSpecificScrollbars(),
+
+				'& span[data-luminance="dark"]': isDark
+					? { color: 'oklch(from var(--text-color) calc(1 - l) c h) !important' }
+					: {},
+				'& span[data-luminance="light"]': !isDark
+					? { color: 'oklch(from var(--text-color) calc(1 - l) c h) !important' }
+					: {},
 			}}
 		/>
 	)

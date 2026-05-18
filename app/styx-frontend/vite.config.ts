@@ -14,6 +14,7 @@ export default defineConfig({
 	plugins: [tanstackRouter({ autoCodeSplitting: true, tmpDir: tanstackTempDir }), react()],
 	resolve: {
 		tsconfigPaths: true,
+		preserveSymlinks: true,
 		alias: {
 			'@api': '/src/api',
 			'@': '/src',

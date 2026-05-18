@@ -47,8 +47,8 @@ const injectedRtkApi = api
 export { injectedRtkApi as worldWikiApi }
 export type GetArticlesApiResponse = /** status 200  */ {
 	pages: {
-		id: string
 		name: string
+		id: string
 	}[]
 	mentions: {
 		targetId: string
@@ -59,18 +59,18 @@ export type GetArticlesApiResponse = /** status 200  */ {
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 	}[]
 	children: {
-		id: string
 		name: string
+		id: string
 	}[]
 	worldId: string
-	id: string
-	createdAt: string
-	updatedAt: string
 	name: string
 	icon: string
 	color: string
-	position: number
+	id: string
+	createdAt: string
+	updatedAt: string
 	contentRich: string
+	position: number
 	parentId?: null | string
 }[]
 export type GetArticlesApiArg = {
@@ -79,18 +79,18 @@ export type GetArticlesApiArg = {
 }
 export type CreateArticleApiResponse = /** status 200  */ {
 	children: {
-		id: string
 		name: string
+		id: string
 	}[]
 	worldId: string
-	id: string
-	createdAt: string
-	updatedAt: string
 	name: string
 	icon: string
 	color: string
-	position: number
+	id: string
+	createdAt: string
+	updatedAt: string
 	contentRich: string
+	position: number
 	parentId?: null | string
 }
 export type CreateArticleApiArg = {

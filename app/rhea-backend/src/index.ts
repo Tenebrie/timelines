@@ -159,5 +159,6 @@ if (!isRunningInTest()) {
 		UserService.cleanUpDeletedUsers()
 		UserService.cleanUpTestUsers()
 		CloudStorageService.cleanUpExpiredAssets()
+		CloudStorageService.cleanUpOrphanedAssets()
 	}, 60000)
 }

@@ -5,19 +5,19 @@ WORKDIR /app
 
 # Copy and build ts-shared first
 COPY ./app/ts-shared /app/ts-shared
-RUN cd /app/ts-shared && yarn install --frozen-lockfile
+RUN cd /app/ts-shared && npm ci
 
 # Copy package files and install ALL dependencies (needed for build)
-COPY ./app/rhea-backend/package.json ./app/rhea-backend/yarn.lock /app/rhea/
+COPY ./app/rhea-backend/package.json ./app/rhea-backend/package-lock.json /app/rhea/
 WORKDIR /app/rhea
-RUN yarn install --frozen-lockfile
+RUN npm ci
 
 # Copy source files and build
 COPY ./app/rhea-backend /app/rhea
-RUN yarn build
+RUN npm run build
 
 # Generate OpenAPI spec at build time
-RUN yarn moonflower openapi dist/apiSpec.json
+RUN npx moonflower openapi dist/apiSpec.json
 
 # Production stage
 FROM node:24-alpine3.20
@@ -30,9 +30,9 @@ WORKDIR /app/rhea
 COPY --from=builder /app/rhea/dist /app/rhea/dist
 COPY --from=builder /app/rhea/prisma /app/rhea/prisma
 COPY --from=builder /app/rhea/prisma.config.ts /app/rhea/prisma.config.ts
-COPY --from=builder /app/rhea/package.json /app/rhea/yarn.lock /app/rhea/
+COPY --from=builder /app/rhea/package.json /app/rhea/package-lock.json /app/rhea/
 
 # Install ONLY production dependencies
-RUN yarn install --production --frozen-lockfile && yarn cache clean
+RUN npm ci --omit=dev && npm cache clean --force
 
 EXPOSE 3000

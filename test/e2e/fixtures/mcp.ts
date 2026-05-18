@@ -1,6 +1,6 @@
 import { expect, Page } from '@playwright/test'
+import { makeUrl } from '@tests/utils'
 import { createHash, randomBytes } from 'crypto'
-import { makeUrl } from 'tests/utils'
 
 type McpToolResult = {
 	isError?: boolean

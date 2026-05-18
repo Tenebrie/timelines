@@ -1,35 +1,45 @@
 # Build stage
-FROM node:25-alpine AS builder
+FROM node:26-alpine AS builder
 
 WORKDIR /app
 
 # Copy and build ts-shared first
 COPY ./app/ts-shared /app/ts-shared
-RUN cd /app/ts-shared && yarn install --frozen-lockfile
+RUN cd /app/ts-shared && npm ci
+
+# Build tiptap-schema (local library dependency of calliope)
+COPY ./library /library
+RUN cd /library/tiptap-schema && npm ci && npm run build
 
 # Copy package files and install ALL dependencies (needed for build)
-COPY ./app/calliope-websockets/package.json ./app/calliope-websockets/yarn.lock /app/calliope/
+COPY ./app/calliope-websockets/package.json ./app/calliope-websockets/package-lock.json /app/calliope/
 WORKDIR /app/calliope
-RUN yarn install --frozen-lockfile
+RUN npm ci
 
 # Copy source files and build
 COPY ./app/calliope-websockets /app/calliope
-RUN yarn build
+RUN npm run build
 
 # Production stage
-FROM node:25-alpine
+FROM node:26-alpine
 
 WORKDIR /app/calliope
 
 # Copy only the built JavaScript
 COPY --from=builder /app/calliope/dist /app/calliope/dist
-COPY --from=builder /app/calliope/package.json /app/calliope/yarn.lock /app/calliope/
+COPY --from=builder /app/calliope/package.json /app/calliope/package-lock.json /app/calliope/
 
 # Copy only ts-shared source (no node_modules)
 COPY ./app/ts-shared/package.json /app/ts-shared/package.json
 COPY ./app/ts-shared/src /app/ts-shared/src
 
+# Copy only the built dist and package.json so npm ci can resolve the file: dependency
+COPY --from=builder /library/tiptap-schema/dist /library/tiptap-schema/dist
+COPY --from=builder /library/tiptap-schema/package.json /library/tiptap-schema/package-lock.json /library/tiptap-schema/
+
 # Install ONLY production dependencies
-RUN yarn install --production --frozen-lockfile && yarn cache clean
+RUN npm ci --omit=dev
+RUN cd /library/tiptap-schema && npm ci --omit=dev
+RUN npm cache clean --force
 
 EXPOSE 3000

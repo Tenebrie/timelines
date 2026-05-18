@@ -58,8 +58,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					id: string
 					createdAt: string
 					updatedAt: string
-					position: number
 					calendarId: string
+					position: number
 					label?: null | string
 					shortLabel?: null | string
 					repeats: number
@@ -70,8 +70,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				createdAt: string
 				updatedAt: string
 				name: string
-				position: number
 				calendarId: string
+				position: number
 				formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 				negativeFormat: 'MinusSign' | 'AbsoluteValue'
 				displayName?: null | string
@@ -95,8 +95,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				createdAt: string
 				updatedAt: string
 				name: string
-				position: number
 				calendarId: string
+				position: number
 				formatShorthand?: null | string
 			}[]
 			presentations: {
@@ -105,8 +105,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					createdAt: string
 					updatedAt: string
 					name: string
-					position: number
 					calendarId: string
+					position: number
 					formatString: string
 					subdivision: number
 					labeledIndices: number[]
@@ -126,11 +126,11 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 			createdAt: string
 			updatedAt: string
 			name: string
-			ownerId?: null | string
-			position: number
 			description: string
+			ownerId?: null | string
 			worldId?: null | string
 			originTime: string
+			position: number
 			dateFormat?: null | string
 		}[]
 		worlds: {
@@ -140,8 +140,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 						id: string
 						createdAt: string
 						updatedAt: string
-						position: number
 						calendarId: string
+						position: number
 						label?: null | string
 						shortLabel?: null | string
 						repeats: number
@@ -152,8 +152,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					createdAt: string
 					updatedAt: string
 					name: string
-					position: number
 					calendarId: string
+					position: number
 					formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 					negativeFormat: 'MinusSign' | 'AbsoluteValue'
 					displayName?: null | string
@@ -177,8 +177,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					createdAt: string
 					updatedAt: string
 					name: string
-					position: number
 					calendarId: string
+					position: number
 					formatShorthand?: null | string
 				}[]
 				presentations: {
@@ -187,8 +187,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 						createdAt: string
 						updatedAt: string
 						name: string
-						position: number
 						calendarId: string
+						position: number
 						formatString: string
 						subdivision: number
 						labeledIndices: number[]
@@ -208,11 +208,11 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				createdAt: string
 				updatedAt: string
 				name: string
-				ownerId?: null | string
-				position: number
 				description: string
+				ownerId?: null | string
 				worldId?: null | string
 				originTime: string
+				position: number
 				dateFormat?: null | string
 			}[]
 			tags: {
@@ -242,9 +242,9 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				id: string
 				createdAt: string
 				updatedAt: string
-				label?: null | string
-				worldId: string
 				value: string
+				worldId: string
+				label?: null | string
 			}[]
 			worldCommonIconSets: {
 				id: string
@@ -256,8 +256,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				createdAt: string
 				updatedAt: string
 				name: string
-				position: number
 				worldId: string
+				position: number
 				visible: boolean
 			}[]
 			actors: {
@@ -358,8 +358,8 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				createdAt: string
 				updatedAt: string
 				name: string
-				position: number
 				worldId: string
+				position: number
 				icon: string
 				color: string
 				contentRich: string
@@ -387,9 +387,9 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 			createdAt: string
 			updatedAt: string
 			name: string
+			description: string
 			ownerId: string
 			calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
-			description: string
 			accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 			timeOrigin: string
 		}[]

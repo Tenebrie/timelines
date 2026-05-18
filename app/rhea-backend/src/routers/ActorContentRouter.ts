@@ -4,6 +4,7 @@ import { ActorService } from '@src/services/ActorService.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
+import { ValidationService } from '@src/services/ValidationService.js'
 import {
 	BadRequestError,
 	BooleanValidator,
@@ -18,6 +19,7 @@ import {
 	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { actorListTag } from './utils/tags.js'
 import { ContentStringValidator } from './validators/ContentStringValidator.js'
@@ -72,13 +74,24 @@ router.put('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+	await ValidationService.checkActorValidity(actorId)
 
-	const { content, contentDeltas } = useRequestBody(ctx, {
+	const { content, reloadClients } = useRequestBody(ctx, {
 		content: RequiredParam(ContentStringValidator),
-		contentDeltas: OptionalParam(ContentStringValidator),
+		reloadClients: z.boolean().optional(),
 	})
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
+
+	const isEqual = await RichTextService.isContentEqual({
+		newContentRich: parsed.contentRich,
+		worldId,
+		entityId: actorId,
+		entityType: 'actor',
+	})
+	if (isEqual) {
+		return
+	}
 
 	const { actor, updatedMentions } = await ActorService.updateActor({
 		worldId,
@@ -86,15 +99,15 @@ router.put('/api/world/:worldId/actor/:actorId/content', async (ctx) => {
 		params: {
 			description: parsed.contentPlain,
 			descriptionRich: parsed.contentRich,
-			descriptionYjs: contentDeltas ?? null,
 			mentions: parsed.mentions,
+			referencedAssetIds: parsed.referencedAssetIds,
 		},
 	})
 
 	RedisService.notifyAboutActorUpdate(ctx, { worldId, actor })
 	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
 
-	if (!contentDeltas) {
+	if (reloadClients) {
 		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: actorId })
 	}
 })
@@ -174,9 +187,9 @@ router.put('/api/world/:worldId/actor/:actorId/content/pages/:pageId', async (ct
 
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
 
-	const { content, contentDeltas } = useRequestBody(ctx, {
+	const { content, reloadClients } = useRequestBody(ctx, {
 		content: RequiredParam(ContentStringValidator),
-		contentDeltas: OptionalParam(ContentStringValidator),
+		reloadClients: z.boolean().optional(),
 	})
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
@@ -192,15 +205,15 @@ router.put('/api/world/:worldId/actor/:actorId/content/pages/:pageId', async (ct
 		params: {
 			description: parsed.contentPlain,
 			descriptionRich: parsed.contentRich,
-			descriptionYjs: contentDeltas ?? null,
 			mentions: parsed.mentions,
+			referencedAssetIds: parsed.referencedAssetIds,
 		},
 	})
 
 	RedisService.notifyAboutActorUpdate(ctx, { worldId, actor })
 	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
 
-	if (!contentDeltas) {
+	if (reloadClients) {
 		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: pageId })
 	}
 })

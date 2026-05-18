@@ -297,6 +297,7 @@ export type AssetWhereInput = {
   imageWidth?: Prisma.IntNullableFilter<"Asset"> | number | null
   imageHeight?: Prisma.IntNullableFilter<"Asset"> | number | null
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  references?: Prisma.AssetReferenceListRelationFilter
   avatarOf?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
@@ -316,6 +317,7 @@ export type AssetOrderByWithRelationInput = {
   imageWidth?: Prisma.SortOrderInput | Prisma.SortOrder
   imageHeight?: Prisma.SortOrderInput | Prisma.SortOrder
   owner?: Prisma.UserOrderByWithRelationInput
+  references?: Prisma.AssetReferenceOrderByRelationAggregateInput
   avatarOf?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -338,6 +340,7 @@ export type AssetWhereUniqueInput = Prisma.AtLeast<{
   imageWidth?: Prisma.IntNullableFilter<"Asset"> | number | null
   imageHeight?: Prisma.IntNullableFilter<"Asset"> | number | null
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  references?: Prisma.AssetReferenceListRelationFilter
   avatarOf?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "id">
 
@@ -398,6 +401,7 @@ export type AssetCreateInput = {
   imageWidth?: number | null
   imageHeight?: number | null
   owner: Prisma.UserCreateNestedOneWithoutAssetsInput
+  references?: Prisma.AssetReferenceCreateNestedManyWithoutAssetInput
   avatarOf?: Prisma.UserCreateNestedOneWithoutAvatarInput
 }
 
@@ -416,6 +420,7 @@ export type AssetUncheckedCreateInput = {
   contentDescription?: string | null
   imageWidth?: number | null
   imageHeight?: number | null
+  references?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutAssetInput
   avatarOf?: Prisma.UserUncheckedCreateNestedOneWithoutAvatarInput
 }
 
@@ -434,6 +439,7 @@ export type AssetUpdateInput = {
   imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   owner?: Prisma.UserUpdateOneRequiredWithoutAssetsNestedInput
+  references?: Prisma.AssetReferenceUpdateManyWithoutAssetNestedInput
   avatarOf?: Prisma.UserUpdateOneWithoutAvatarNestedInput
 }
 
@@ -452,6 +458,7 @@ export type AssetUncheckedUpdateInput = {
   contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  references?: Prisma.AssetReferenceUncheckedUpdateManyWithoutAssetNestedInput
   avatarOf?: Prisma.UserUncheckedUpdateOneWithoutAvatarNestedInput
 }
 
@@ -568,6 +575,11 @@ export type AssetSumOrderByAggregateInput = {
   imageHeight?: Prisma.SortOrder
 }
 
+export type AssetScalarRelationFilter = {
+  is?: Prisma.AssetWhereInput
+  isNot?: Prisma.AssetWhereInput
+}
+
 export type AssetListRelationFilter = {
   every?: Prisma.AssetWhereInput
   some?: Prisma.AssetWhereInput
@@ -609,6 +621,20 @@ export type NullableIntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type AssetCreateNestedOneWithoutReferencesInput = {
+  create?: Prisma.XOR<Prisma.AssetCreateWithoutReferencesInput, Prisma.AssetUncheckedCreateWithoutReferencesInput>
+  connectOrCreate?: Prisma.AssetCreateOrConnectWithoutReferencesInput
+  connect?: Prisma.AssetWhereUniqueInput
+}
+
+export type AssetUpdateOneRequiredWithoutReferencesNestedInput = {
+  create?: Prisma.XOR<Prisma.AssetCreateWithoutReferencesInput, Prisma.AssetUncheckedCreateWithoutReferencesInput>
+  connectOrCreate?: Prisma.AssetCreateOrConnectWithoutReferencesInput
+  upsert?: Prisma.AssetUpsertWithoutReferencesInput
+  connect?: Prisma.AssetWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AssetUpdateToOneWithWhereWithoutReferencesInput, Prisma.AssetUpdateWithoutReferencesInput>, Prisma.AssetUncheckedUpdateWithoutReferencesInput>
 }
 
 export type AssetCreateNestedManyWithoutOwnerInput = {
@@ -669,6 +695,94 @@ export type AssetUncheckedUpdateManyWithoutOwnerNestedInput = {
   deleteMany?: Prisma.AssetScalarWhereInput | Prisma.AssetScalarWhereInput[]
 }
 
+export type AssetCreateWithoutReferencesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  expiresAt?: Date | string | null
+  bucketKey: string
+  size: number
+  originalFileName: string
+  originalFileExtension: string
+  contentType: $Enums.AssetType
+  status?: $Enums.AssetStatus
+  contentDescription?: string | null
+  imageWidth?: number | null
+  imageHeight?: number | null
+  owner: Prisma.UserCreateNestedOneWithoutAssetsInput
+  avatarOf?: Prisma.UserCreateNestedOneWithoutAvatarInput
+}
+
+export type AssetUncheckedCreateWithoutReferencesInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  expiresAt?: Date | string | null
+  ownerId: string
+  bucketKey: string
+  size: number
+  originalFileName: string
+  originalFileExtension: string
+  contentType: $Enums.AssetType
+  status?: $Enums.AssetStatus
+  contentDescription?: string | null
+  imageWidth?: number | null
+  imageHeight?: number | null
+  avatarOf?: Prisma.UserUncheckedCreateNestedOneWithoutAvatarInput
+}
+
+export type AssetCreateOrConnectWithoutReferencesInput = {
+  where: Prisma.AssetWhereUniqueInput
+  create: Prisma.XOR<Prisma.AssetCreateWithoutReferencesInput, Prisma.AssetUncheckedCreateWithoutReferencesInput>
+}
+
+export type AssetUpsertWithoutReferencesInput = {
+  update: Prisma.XOR<Prisma.AssetUpdateWithoutReferencesInput, Prisma.AssetUncheckedUpdateWithoutReferencesInput>
+  create: Prisma.XOR<Prisma.AssetCreateWithoutReferencesInput, Prisma.AssetUncheckedCreateWithoutReferencesInput>
+  where?: Prisma.AssetWhereInput
+}
+
+export type AssetUpdateToOneWithWhereWithoutReferencesInput = {
+  where?: Prisma.AssetWhereInput
+  data: Prisma.XOR<Prisma.AssetUpdateWithoutReferencesInput, Prisma.AssetUncheckedUpdateWithoutReferencesInput>
+}
+
+export type AssetUpdateWithoutReferencesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  bucketKey?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  originalFileName?: Prisma.StringFieldUpdateOperationsInput | string
+  originalFileExtension?: Prisma.StringFieldUpdateOperationsInput | string
+  contentType?: Prisma.EnumAssetTypeFieldUpdateOperationsInput | $Enums.AssetType
+  status?: Prisma.EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+  contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  owner?: Prisma.UserUpdateOneRequiredWithoutAssetsNestedInput
+  avatarOf?: Prisma.UserUpdateOneWithoutAvatarNestedInput
+}
+
+export type AssetUncheckedUpdateWithoutReferencesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  bucketKey?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  originalFileName?: Prisma.StringFieldUpdateOperationsInput | string
+  originalFileExtension?: Prisma.StringFieldUpdateOperationsInput | string
+  contentType?: Prisma.EnumAssetTypeFieldUpdateOperationsInput | $Enums.AssetType
+  status?: Prisma.EnumAssetStatusFieldUpdateOperationsInput | $Enums.AssetStatus
+  contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  avatarOf?: Prisma.UserUncheckedUpdateOneWithoutAvatarNestedInput
+}
+
 export type AssetCreateWithoutOwnerInput = {
   id?: string
   createdAt?: Date | string
@@ -683,6 +797,7 @@ export type AssetCreateWithoutOwnerInput = {
   contentDescription?: string | null
   imageWidth?: number | null
   imageHeight?: number | null
+  references?: Prisma.AssetReferenceCreateNestedManyWithoutAssetInput
   avatarOf?: Prisma.UserCreateNestedOneWithoutAvatarInput
 }
 
@@ -700,6 +815,7 @@ export type AssetUncheckedCreateWithoutOwnerInput = {
   contentDescription?: string | null
   imageWidth?: number | null
   imageHeight?: number | null
+  references?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutAssetInput
   avatarOf?: Prisma.UserUncheckedCreateNestedOneWithoutAvatarInput
 }
 
@@ -728,6 +844,7 @@ export type AssetCreateWithoutAvatarOfInput = {
   imageWidth?: number | null
   imageHeight?: number | null
   owner: Prisma.UserCreateNestedOneWithoutAssetsInput
+  references?: Prisma.AssetReferenceCreateNestedManyWithoutAssetInput
 }
 
 export type AssetUncheckedCreateWithoutAvatarOfInput = {
@@ -745,6 +862,7 @@ export type AssetUncheckedCreateWithoutAvatarOfInput = {
   contentDescription?: string | null
   imageWidth?: number | null
   imageHeight?: number | null
+  references?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutAssetInput
 }
 
 export type AssetCreateOrConnectWithoutAvatarOfInput = {
@@ -814,6 +932,7 @@ export type AssetUpdateWithoutAvatarOfInput = {
   imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   owner?: Prisma.UserUpdateOneRequiredWithoutAssetsNestedInput
+  references?: Prisma.AssetReferenceUpdateManyWithoutAssetNestedInput
 }
 
 export type AssetUncheckedUpdateWithoutAvatarOfInput = {
@@ -831,6 +950,7 @@ export type AssetUncheckedUpdateWithoutAvatarOfInput = {
   contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  references?: Prisma.AssetReferenceUncheckedUpdateManyWithoutAssetNestedInput
 }
 
 export type AssetCreateManyOwnerInput = {
@@ -863,6 +983,7 @@ export type AssetUpdateWithoutOwnerInput = {
   contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  references?: Prisma.AssetReferenceUpdateManyWithoutAssetNestedInput
   avatarOf?: Prisma.UserUpdateOneWithoutAvatarNestedInput
 }
 
@@ -880,6 +1001,7 @@ export type AssetUncheckedUpdateWithoutOwnerInput = {
   contentDescription?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageWidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   imageHeight?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  references?: Prisma.AssetReferenceUncheckedUpdateManyWithoutAssetNestedInput
   avatarOf?: Prisma.UserUncheckedUpdateOneWithoutAvatarNestedInput
 }
 
@@ -900,6 +1022,35 @@ export type AssetUncheckedUpdateManyWithoutOwnerInput = {
 }
 
 
+/**
+ * Count Type AssetCountOutputType
+ */
+
+export type AssetCountOutputType = {
+  references: number
+}
+
+export type AssetCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  references?: boolean | AssetCountOutputTypeCountReferencesArgs
+}
+
+/**
+ * AssetCountOutputType without action
+ */
+export type AssetCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AssetCountOutputType
+   */
+  select?: Prisma.AssetCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * AssetCountOutputType without action
+ */
+export type AssetCountOutputTypeCountReferencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AssetReferenceWhereInput
+}
+
 
 export type AssetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -917,7 +1068,9 @@ export type AssetSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   imageWidth?: boolean
   imageHeight?: boolean
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  references?: boolean | Prisma.Asset$referencesArgs<ExtArgs>
   avatarOf?: boolean | Prisma.Asset$avatarOfArgs<ExtArgs>
+  _count?: boolean | Prisma.AssetCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["asset"]>
 
 export type AssetSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -976,7 +1129,9 @@ export type AssetSelectScalar = {
 export type AssetOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "expiresAt" | "ownerId" | "bucketKey" | "size" | "originalFileName" | "originalFileExtension" | "contentType" | "status" | "contentDescription" | "imageWidth" | "imageHeight", ExtArgs["result"]["asset"]>
 export type AssetInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  references?: boolean | Prisma.Asset$referencesArgs<ExtArgs>
   avatarOf?: boolean | Prisma.Asset$avatarOfArgs<ExtArgs>
+  _count?: boolean | Prisma.AssetCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AssetIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -989,6 +1144,7 @@ export type $AssetPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   name: "Asset"
   objects: {
     owner: Prisma.$UserPayload<ExtArgs>
+    references: Prisma.$AssetReferencePayload<ExtArgs>[]
     avatarOf: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1401,6 +1557,7 @@ readonly fields: AssetFieldRefs;
 export interface Prisma__AssetClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   owner<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  references<T extends Prisma.Asset$referencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Asset$referencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssetReferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   avatarOf<T extends Prisma.Asset$avatarOfArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Asset$avatarOfArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1843,6 +2000,30 @@ export type AssetDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Assets to delete.
    */
   limit?: number
+}
+
+/**
+ * Asset.references
+ */
+export type Asset$referencesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AssetReference
+   */
+  select?: Prisma.AssetReferenceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AssetReference
+   */
+  omit?: Prisma.AssetReferenceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AssetReferenceInclude<ExtArgs> | null
+  where?: Prisma.AssetReferenceWhereInput
+  orderBy?: Prisma.AssetReferenceOrderByWithRelationInput | Prisma.AssetReferenceOrderByWithRelationInput[]
+  cursor?: Prisma.AssetReferenceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AssetReferenceScalarFieldEnum | Prisma.AssetReferenceScalarFieldEnum[]
 }
 
 /**

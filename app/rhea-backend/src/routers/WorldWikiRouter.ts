@@ -115,6 +115,7 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 
 	const { article } = await WikiService.updateWikiArticle({
 		id: articleId,
+		worldId,
 		name,
 	})
 

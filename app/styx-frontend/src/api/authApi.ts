@@ -129,11 +129,12 @@ export type PostLoginApiResponse = /** status 200  */ {
 			originalFileName: string
 			originalFileExtension: string
 			contentType:
-				| 'ImageConversion'
 				| 'Avatar'
+				| 'ImageConversion'
 				| 'ImageGeneration'
 				| 'DataMigrationExport'
 				| 'DataMigrationImport'
+				| 'ImageEmbed'
 			status: 'Pending' | 'Finalized' | 'Failed'
 			contentDescription?: null | string
 			imageWidth?: null | number

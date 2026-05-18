@@ -233,6 +233,7 @@ export type ActorWhereInput = {
   pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
+  assetRefs?: Prisma.AssetReferenceListRelationFilter
   nodes?: Prisma.MindmapNodeListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
 }
@@ -252,6 +253,7 @@ export type ActorOrderByWithRelationInput = {
   pages?: Prisma.ContentPageOrderByRelationAggregateInput
   mentions?: Prisma.MentionOrderByRelationAggregateInput
   mentionedIn?: Prisma.MentionOrderByRelationAggregateInput
+  assetRefs?: Prisma.AssetReferenceOrderByRelationAggregateInput
   nodes?: Prisma.MindmapNodeOrderByRelationAggregateInput
   world?: Prisma.WorldOrderByWithRelationInput
 }
@@ -274,6 +276,7 @@ export type ActorWhereUniqueInput = Prisma.AtLeast<{
   pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
+  assetRefs?: Prisma.AssetReferenceListRelationFilter
   nodes?: Prisma.MindmapNodeListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
 }, "id" | "id">
@@ -326,6 +329,7 @@ export type ActorCreateInput = {
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
 }
@@ -345,6 +349,7 @@ export type ActorUncheckedCreateInput = {
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentActorInput
 }
 
@@ -362,6 +367,7 @@ export type ActorUpdateInput = {
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
 }
@@ -381,6 +387,7 @@ export type ActorUncheckedUpdateInput = {
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentActorNestedInput
 }
 
@@ -494,6 +501,22 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type ActorCreateNestedOneWithoutAssetRefsInput = {
+  create?: Prisma.XOR<Prisma.ActorCreateWithoutAssetRefsInput, Prisma.ActorUncheckedCreateWithoutAssetRefsInput>
+  connectOrCreate?: Prisma.ActorCreateOrConnectWithoutAssetRefsInput
+  connect?: Prisma.ActorWhereUniqueInput
+}
+
+export type ActorUpdateOneWithoutAssetRefsNestedInput = {
+  create?: Prisma.XOR<Prisma.ActorCreateWithoutAssetRefsInput, Prisma.ActorUncheckedCreateWithoutAssetRefsInput>
+  connectOrCreate?: Prisma.ActorCreateOrConnectWithoutAssetRefsInput
+  upsert?: Prisma.ActorUpsertWithoutAssetRefsInput
+  disconnect?: Prisma.ActorWhereInput | boolean
+  delete?: Prisma.ActorWhereInput | boolean
+  connect?: Prisma.ActorWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ActorUpdateToOneWithWhereWithoutAssetRefsInput, Prisma.ActorUpdateWithoutAssetRefsInput>, Prisma.ActorUncheckedUpdateWithoutAssetRefsInput>
+}
+
 export type ActorCreateNestedOneWithoutPagesInput = {
   create?: Prisma.XOR<Prisma.ActorCreateWithoutPagesInput, Prisma.ActorUncheckedCreateWithoutPagesInput>
   connectOrCreate?: Prisma.ActorCreateOrConnectWithoutPagesInput
@@ -600,6 +623,94 @@ export type ActorUncheckedUpdateManyWithoutWorldNestedInput = {
   deleteMany?: Prisma.ActorScalarWhereInput | Prisma.ActorScalarWhereInput[]
 }
 
+export type ActorCreateWithoutAssetRefsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  title?: string
+  icon?: string
+  color?: string
+  description?: string
+  descriptionRich?: string
+  descriptionYjs?: string | null
+  pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
+  mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
+  mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
+  nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
+  world: Prisma.WorldCreateNestedOneWithoutActorsInput
+}
+
+export type ActorUncheckedCreateWithoutAssetRefsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  title?: string
+  icon?: string
+  color?: string
+  description?: string
+  descriptionRich?: string
+  descriptionYjs?: string | null
+  worldId: string
+  pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
+  mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
+  mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
+  nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentActorInput
+}
+
+export type ActorCreateOrConnectWithoutAssetRefsInput = {
+  where: Prisma.ActorWhereUniqueInput
+  create: Prisma.XOR<Prisma.ActorCreateWithoutAssetRefsInput, Prisma.ActorUncheckedCreateWithoutAssetRefsInput>
+}
+
+export type ActorUpsertWithoutAssetRefsInput = {
+  update: Prisma.XOR<Prisma.ActorUpdateWithoutAssetRefsInput, Prisma.ActorUncheckedUpdateWithoutAssetRefsInput>
+  create: Prisma.XOR<Prisma.ActorCreateWithoutAssetRefsInput, Prisma.ActorUncheckedCreateWithoutAssetRefsInput>
+  where?: Prisma.ActorWhereInput
+}
+
+export type ActorUpdateToOneWithWhereWithoutAssetRefsInput = {
+  where?: Prisma.ActorWhereInput
+  data: Prisma.XOR<Prisma.ActorUpdateWithoutAssetRefsInput, Prisma.ActorUncheckedUpdateWithoutAssetRefsInput>
+}
+
+export type ActorUpdateWithoutAssetRefsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
+  mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
+  mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
+  nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
+  world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
+}
+
+export type ActorUncheckedUpdateWithoutAssetRefsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
+  mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
+  mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
+  nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentActorNestedInput
+}
+
 export type ActorCreateWithoutPagesInput = {
   id?: string
   createdAt?: Date | string
@@ -613,6 +724,7 @@ export type ActorCreateWithoutPagesInput = {
   descriptionYjs?: string | null
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
 }
@@ -631,6 +743,7 @@ export type ActorUncheckedCreateWithoutPagesInput = {
   worldId: string
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentActorInput
 }
 
@@ -663,6 +776,7 @@ export type ActorUpdateWithoutPagesInput = {
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
 }
@@ -681,6 +795,7 @@ export type ActorUncheckedUpdateWithoutPagesInput = {
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentActorNestedInput
 }
 
@@ -697,6 +812,7 @@ export type ActorCreateWithoutMentionsInput = {
   descriptionYjs?: string | null
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
 }
@@ -715,6 +831,7 @@ export type ActorUncheckedCreateWithoutMentionsInput = {
   worldId: string
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentActorInput
 }
 
@@ -736,6 +853,7 @@ export type ActorCreateWithoutMentionedInInput = {
   descriptionYjs?: string | null
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
 }
@@ -754,6 +872,7 @@ export type ActorUncheckedCreateWithoutMentionedInInput = {
   worldId: string
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentActorInput
 }
 
@@ -786,6 +905,7 @@ export type ActorUpdateWithoutMentionsInput = {
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
 }
@@ -804,6 +924,7 @@ export type ActorUncheckedUpdateWithoutMentionsInput = {
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentActorNestedInput
 }
 
@@ -831,6 +952,7 @@ export type ActorUpdateWithoutMentionedInInput = {
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
 }
@@ -849,6 +971,7 @@ export type ActorUncheckedUpdateWithoutMentionedInInput = {
   worldId?: Prisma.StringFieldUpdateOperationsInput | string
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentActorNestedInput
 }
 
@@ -866,6 +989,7 @@ export type ActorCreateWithoutNodesInput = {
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderActorInput
   world: Prisma.WorldCreateNestedOneWithoutActorsInput
 }
 
@@ -884,6 +1008,7 @@ export type ActorUncheckedCreateWithoutNodesInput = {
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderActorInput
 }
 
 export type ActorCreateOrConnectWithoutNodesInput = {
@@ -916,6 +1041,7 @@ export type ActorUpdateWithoutNodesInput = {
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderActorNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutActorsNestedInput
 }
 
@@ -934,6 +1060,7 @@ export type ActorUncheckedUpdateWithoutNodesInput = {
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderActorNestedInput
 }
 
 export type ActorCreateWithoutWorldInput = {
@@ -950,6 +1077,7 @@ export type ActorCreateWithoutWorldInput = {
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetActorInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeCreateNestedManyWithoutParentActorInput
 }
 
@@ -967,6 +1095,7 @@ export type ActorUncheckedCreateWithoutWorldInput = {
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentActorInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceActorInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetActorInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderActorInput
   nodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutParentActorInput
 }
 
@@ -1040,6 +1169,7 @@ export type ActorUpdateWithoutWorldInput = {
   pages?: Prisma.ContentPageUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUpdateManyWithoutParentActorNestedInput
 }
 
@@ -1057,6 +1187,7 @@ export type ActorUncheckedUpdateWithoutWorldInput = {
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentActorNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceActorNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetActorNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderActorNestedInput
   nodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutParentActorNestedInput
 }
 
@@ -1082,6 +1213,7 @@ export type ActorCountOutputType = {
   pages: number
   mentions: number
   mentionedIn: number
+  assetRefs: number
   nodes: number
 }
 
@@ -1089,6 +1221,7 @@ export type ActorCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   pages?: boolean | ActorCountOutputTypeCountPagesArgs
   mentions?: boolean | ActorCountOutputTypeCountMentionsArgs
   mentionedIn?: boolean | ActorCountOutputTypeCountMentionedInArgs
+  assetRefs?: boolean | ActorCountOutputTypeCountAssetRefsArgs
   nodes?: boolean | ActorCountOutputTypeCountNodesArgs
 }
 
@@ -1126,6 +1259,13 @@ export type ActorCountOutputTypeCountMentionedInArgs<ExtArgs extends runtime.Typ
 /**
  * ActorCountOutputType without action
  */
+export type ActorCountOutputTypeCountAssetRefsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AssetReferenceWhereInput
+}
+
+/**
+ * ActorCountOutputType without action
+ */
 export type ActorCountOutputTypeCountNodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.MindmapNodeWhereInput
 }
@@ -1146,6 +1286,7 @@ export type ActorSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   pages?: boolean | Prisma.Actor$pagesArgs<ExtArgs>
   mentions?: boolean | Prisma.Actor$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.Actor$mentionedInArgs<ExtArgs>
+  assetRefs?: boolean | Prisma.Actor$assetRefsArgs<ExtArgs>
   nodes?: boolean | Prisma.Actor$nodesArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ActorCountOutputTypeDefaultArgs<ExtArgs>
@@ -1200,6 +1341,7 @@ export type ActorInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   pages?: boolean | Prisma.Actor$pagesArgs<ExtArgs>
   mentions?: boolean | Prisma.Actor$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.Actor$mentionedInArgs<ExtArgs>
+  assetRefs?: boolean | Prisma.Actor$assetRefsArgs<ExtArgs>
   nodes?: boolean | Prisma.Actor$nodesArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ActorCountOutputTypeDefaultArgs<ExtArgs>
@@ -1217,6 +1359,7 @@ export type $ActorPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     pages: Prisma.$ContentPagePayload<ExtArgs>[]
     mentions: Prisma.$MentionPayload<ExtArgs>[]
     mentionedIn: Prisma.$MentionPayload<ExtArgs>[]
+    assetRefs: Prisma.$AssetReferencePayload<ExtArgs>[]
     nodes: Prisma.$MindmapNodePayload<ExtArgs>[]
     world: Prisma.$WorldPayload<ExtArgs>
   }
@@ -1629,6 +1772,7 @@ export interface Prisma__ActorClient<T, Null = never, ExtArgs extends runtime.Ty
   pages<T extends Prisma.Actor$pagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Actor$pagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContentPagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mentions<T extends Prisma.Actor$mentionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Actor$mentionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mentionedIn<T extends Prisma.Actor$mentionedInArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Actor$mentionedInArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assetRefs<T extends Prisma.Actor$assetRefsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Actor$assetRefsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssetReferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   nodes<T extends Prisma.Actor$nodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Actor$nodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MindmapNodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   world<T extends Prisma.WorldDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldDefaultArgs<ExtArgs>>): Prisma.Prisma__WorldClient<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -2141,6 +2285,30 @@ export type Actor$mentionedInArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.MentionScalarFieldEnum | Prisma.MentionScalarFieldEnum[]
+}
+
+/**
+ * Actor.assetRefs
+ */
+export type Actor$assetRefsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AssetReference
+   */
+  select?: Prisma.AssetReferenceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AssetReference
+   */
+  omit?: Prisma.AssetReferenceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AssetReferenceInclude<ExtArgs> | null
+  where?: Prisma.AssetReferenceWhereInput
+  orderBy?: Prisma.AssetReferenceOrderByWithRelationInput | Prisma.AssetReferenceOrderByWithRelationInput[]
+  cursor?: Prisma.AssetReferenceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AssetReferenceScalarFieldEnum | Prisma.AssetReferenceScalarFieldEnum[]
 }
 
 /**

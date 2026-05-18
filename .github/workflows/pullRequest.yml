@@ -22,17 +22,19 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24.x
-          cache: 'yarn'
+          cache: 'npm'
       - name: Set script name
         run: echo "SCRIPT=$(echo '${{ matrix.service }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_ENV"
       - name: Install dependencies
-        run: yarn
+        run: npm ci
+      - name: Build library
+        run: npm run build:library
       - name: Build ${{ matrix.service }}
-        run: yarn build:$SCRIPT
+        run: npm run build:$SCRIPT
       - name: Run ${{ matrix.service }} tests
-        run: yarn test:$SCRIPT
+        run: npm run test:$SCRIPT
       - name: Lint ${{ matrix.service }}
-        run: yarn lint:$SCRIPT
+        run: npm run lint:$SCRIPT
 
   run-e2e:
     name: Playwright (${{ matrix.name }})

@@ -15,9 +15,12 @@ function TracksDrawerComponent() {
 
 	const onResize = useRef(
 		debounce((h: number, v: boolean) => {
-			requestIdleCallback(() => {
-				notifyAboutHeightChange({ height: v ? h : 0 })
-			})
+			requestIdleCallback(
+				() => {
+					notifyAboutHeightChange({ height: v ? h : 0 })
+				},
+				{ timeout: 150 },
+			)
 		}, 100),
 	)
 

@@ -245,6 +245,7 @@ export const RheaService = {
 			},
 			body: {
 				content,
+				reloadClients: true,
 			},
 			headers: {
 				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -302,6 +303,7 @@ export const RheaService = {
 			},
 			body: {
 				content,
+				reloadClients: true,
 			},
 			headers: {
 				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -456,6 +458,7 @@ export const RheaService = {
 			},
 			body: {
 				content,
+				reloadClients: true,
 			},
 			headers: {
 				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -582,6 +585,7 @@ export const RheaService = {
 			},
 			body: {
 				content,
+				reloadClients: true,
 			},
 			headers: {
 				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),

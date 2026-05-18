@@ -54,6 +54,7 @@ export const ModelName = {
   Actor: 'Actor',
   UserAnnouncement: 'UserAnnouncement',
   Asset: 'Asset',
+  AssetReference: 'AssetReference',
   AuditLog: 'AuditLog',
   Calendar: 'Calendar',
   CalendarUnit: 'CalendarUnit',
@@ -146,6 +147,24 @@ export const AssetScalarFieldEnum = {
 } as const
 
 export type AssetScalarFieldEnum = (typeof AssetScalarFieldEnum)[keyof typeof AssetScalarFieldEnum]
+
+
+export const AssetReferenceScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  assetId: 'assetId',
+  holderId: 'holderId',
+  holderType: 'holderType',
+  holderActorId: 'holderActorId',
+  holderEventId: 'holderEventId',
+  holderArticleId: 'holderArticleId',
+  holderTagId: 'holderTagId',
+  pageId: 'pageId',
+  worldId: 'worldId'
+} as const
+
+export type AssetReferenceScalarFieldEnum = (typeof AssetReferenceScalarFieldEnum)[keyof typeof AssetReferenceScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {

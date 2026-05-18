@@ -49,11 +49,11 @@ export function CalendarListCreateNewButton() {
 						label="Name"
 						value={newCalendarName}
 						onChange={(e) => setNewCalendarName(e.target.value)}
-						onKeyDown={(e) => {
+						onKeyDown={async (e) => {
 							if (e.key !== 'Enter') {
 								return
 							}
-							handleCreateCalendar()
+							await handleCreateCalendar()
 							close()
 						}}
 						autoFocus

@@ -28,4 +28,34 @@ export const EntityResolverService = {
 		}
 		return ''
 	},
+
+	resolveEntityContent: async ({
+		worldId,
+		entityType,
+		entityId,
+	}: {
+		worldId: string
+		entityType: 'actor' | 'event' | 'article'
+		entityId: string
+	}) => {
+		if (entityType === 'actor') {
+			const actor = await ActorService.findActorWithContentDeltas({ worldId, actorId: entityId })
+			return {
+				contentRich: actor?.descriptionRich ?? '',
+			}
+		} else if (entityType === 'event') {
+			const event = await WorldEventService.findEventById({ id: entityId, worldId })
+			return {
+				contentRich: event?.descriptionRich ?? '',
+			}
+		} else if (entityType === 'article') {
+			const article = await WikiService.findArticleByIdWithContentDeltas({ id: entityId, worldId })
+			return {
+				contentRich: article?.contentRich ?? '',
+			}
+		}
+		return {
+			contentRich: '',
+		}
+	},
 }

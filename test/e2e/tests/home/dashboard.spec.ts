@@ -1,6 +1,6 @@
+import { createNewUser, deleteAccount } from '@fixtures/auth'
+import { navigateToDashboard } from '@fixtures/world'
 import test, { expect } from '@playwright/test'
-import { createNewUser, deleteAccount } from 'fixtures/auth'
-import { navigateToDashboard } from 'fixtures/world'
 
 test.describe('Dashboard View', () => {
 	test.beforeEach(async ({ page }) => {

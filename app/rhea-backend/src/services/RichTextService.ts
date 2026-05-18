@@ -14,6 +14,10 @@ export type MentionNodeContent = {
 	tag?: string | false
 }
 
+export type EmbeddedImageNodeContent = {
+	assetId: string
+}
+
 export const RichTextService = {
 	parseContentString: async ({
 		worldId,
@@ -25,11 +29,12 @@ export const RichTextService = {
 		contentPlain: string
 		contentRich: string
 		mentions: MentionData[]
+		referencedAssetIds: string[]
 	}> => {
 		const $ = load(contentString)
 		const mentions: MentionData[] = []
 
-		// Find all elements with data-component-props attribute
+		// Find all elements with data-component-props attribute (mentions)
 		const mentionElements: Array<{ element: AnyNode; props: MentionNodeContent }> = []
 		$('[data-component-props]').each((_, element) => {
 			const propsAttr = $(element).attr('data-component-props')
@@ -98,6 +103,26 @@ export const RichTextService = {
 			}
 		}
 
+		// Find all elements with data-external-image-props attribute (embedded images)
+		const embeddedImageElements: Array<{ element: AnyNode; props: EmbeddedImageNodeContent }> = []
+		$('[data-external-image-props]').each((_, element) => {
+			const assetId = $(element).attr('data-asset-id')
+			if (!assetId) {
+				return
+			}
+
+			embeddedImageElements.push({ element, props: { assetId } })
+		})
+		const referencedAssetIds = await Promise.all(
+			embeddedImageElements.map(async ({ props }) => {
+				const isValid = await ValidationService.isAssetValid(props.assetId)
+				if (isValid) {
+					return props.assetId
+				}
+				return null
+			}),
+		)
+
 		// Add double newlines after block elements for proper plain text formatting
 		$('p, div, h1, h2, h3, h4, h5, h6, li').after('\n\n')
 		$('br').replaceWith('\n')
@@ -113,6 +138,7 @@ export const RichTextService = {
 			contentPlain,
 			contentRich: contentString,
 			mentions: validMentions,
+			referencedAssetIds: referencedAssetIds.filter((assetId): assetId is string => !!assetId),
 		}
 	},
 
@@ -127,5 +153,25 @@ export const RichTextService = {
 			return ValidationService.isTagValid(mention.targetId)
 		}
 		return false
+	},
+
+	isContentEqual: async ({
+		newContentRich,
+		worldId,
+		entityId,
+		entityType,
+	}: {
+		newContentRich: string
+		worldId: string
+		entityId: string
+		entityType: 'actor' | 'event' | 'article'
+	}) => {
+		const { contentRich } = await EntityResolverService.resolveEntityContent({
+			worldId,
+			entityId,
+			entityType,
+		})
+
+		return newContentRich === contentRich
 	},
 }

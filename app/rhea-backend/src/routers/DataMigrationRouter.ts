@@ -3,6 +3,7 @@ import { AssetService } from '@src/services/AssetService.js'
 import { AuditLogService } from '@src/services/AuditLogService.js'
 import { CloudStorageService } from '@src/services/CloudStorageService.js'
 import { DataMigrationService } from '@src/services/DataMigrationService.js'
+import { toReadableDate } from '@src/utils/toReadableDate.js'
 import { BadRequestError, Router, useApiEndpoint, useRequestBody } from 'moonflower'
 import z from 'zod'
 
@@ -120,9 +121,9 @@ router.post('/api/export/user-data', async (ctx) => {
 				'utf-8',
 			),
 			expiresAt: new Date(Date.now() + 1 * 30 * 60 * 1000), // 30 minutes
-			fileName: `DataExport-${Date.now()}.json`,
+			fileName: `DataExport-${toReadableDate(new Date())}.json`,
 		})
-		const presignedUrl = await CloudStorageService.getPresignedUrl(asset)
+		const presignedUrl = await CloudStorageService.getPresignedUrl(asset, { disposition: 'attachment' })
 		return { url: presignedUrl }
 	} catch (error) {
 		AuditLogService.append(ctx, {

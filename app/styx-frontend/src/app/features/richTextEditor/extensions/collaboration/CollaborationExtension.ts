@@ -5,7 +5,17 @@ import * as Y from 'yjs'
 /**
  * Create Yjs WebSocket provider for real-time collaboration
  */
-export const createCollaborationProvider = (worldId: string, entityType: string, documentId: string) => {
+export function createCollaborationProvider({
+	worldId,
+	entityType,
+	documentId,
+	onReconnect,
+}: {
+	worldId: string
+	entityType: string
+	documentId: string
+	onReconnect: () => void
+}) {
 	const doc = new Y.Doc()
 
 	// Connect to Calliope WebSocket server
@@ -14,34 +24,52 @@ export const createCollaborationProvider = (worldId: string, entityType: string,
 		documentId,
 		doc,
 		{
-			connect: true,
+			connect: false,
 		},
 	)
 
 	const reconnectState = {
 		timeout: null as number | null,
 		reconnectCounter: 0,
+		shouldReconnect: true,
 	}
 	provider.on('status', (event: { status: string }) => {
-		if (event.status === 'disconnected') {
-			// Attempt to reconnect
-			reconnectState.reconnectCounter += 1
-			if (reconnectState.reconnectCounter <= 3) {
+		if (event.status === 'connected' && reconnectState.timeout) {
+			window.clearTimeout(reconnectState.timeout)
+			reconnectState.timeout = null
+			console.info('[yjs] Connection established!')
+		}
+
+		if (event.status === 'connecting' || event.status === 'disconnected') {
+			if (!reconnectState.shouldReconnect) {
 				return
 			}
-
-			provider.disconnect()
 			if (reconnectState.timeout) {
 				window.clearTimeout(reconnectState.timeout)
 			}
+			reconnectState.reconnectCounter += 1
+			const delay = 500 * reconnectState.reconnectCounter + 500 + Math.random() * 1000
 			reconnectState.timeout = window.setTimeout(() => {
-				provider.connect()
+				console.info(`[yjs] Waited ${Math.round(delay)}ms before reconnecting`)
+				onReconnect()
 				reconnectState.reconnectCounter = 0
-			}, 2000)
+			}, delay)
 		}
 	})
 
-	return { doc, provider }
+	console.info(`[yjs] Attempting connection to ${provider.url}...`)
+	provider.connect()
+	provider.shouldConnect = false
+
+	function disableReconnect() {
+		reconnectState.shouldReconnect = false
+		if (reconnectState.timeout) {
+			window.clearTimeout(reconnectState.timeout)
+			reconnectState.timeout = null
+		}
+	}
+
+	return { doc, provider, disableReconnect }
 }
 
 /**

@@ -287,6 +287,7 @@ export type WorldEventWhereInput = {
   pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
+  assetRefs?: Prisma.AssetReferenceListRelationFilter
   deltaStates?: Prisma.WorldEventDeltaListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
   track?: Prisma.XOR<Prisma.WorldEventTrackNullableScalarRelationFilter, Prisma.WorldEventTrackWhereInput> | null
@@ -309,6 +310,7 @@ export type WorldEventOrderByWithRelationInput = {
   pages?: Prisma.ContentPageOrderByRelationAggregateInput
   mentions?: Prisma.MentionOrderByRelationAggregateInput
   mentionedIn?: Prisma.MentionOrderByRelationAggregateInput
+  assetRefs?: Prisma.AssetReferenceOrderByRelationAggregateInput
   deltaStates?: Prisma.WorldEventDeltaOrderByRelationAggregateInput
   world?: Prisma.WorldOrderByWithRelationInput
   track?: Prisma.WorldEventTrackOrderByWithRelationInput
@@ -334,6 +336,7 @@ export type WorldEventWhereUniqueInput = Prisma.AtLeast<{
   pages?: Prisma.ContentPageListRelationFilter
   mentions?: Prisma.MentionListRelationFilter
   mentionedIn?: Prisma.MentionListRelationFilter
+  assetRefs?: Prisma.AssetReferenceListRelationFilter
   deltaStates?: Prisma.WorldEventDeltaListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
   track?: Prisma.XOR<Prisma.WorldEventTrackNullableScalarRelationFilter, Prisma.WorldEventTrackWhereInput> | null
@@ -394,6 +397,7 @@ export type WorldEventCreateInput = {
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderEventInput
   deltaStates?: Prisma.WorldEventDeltaCreateNestedManyWithoutWorldEventInput
   world: Prisma.WorldCreateNestedOneWithoutEventsInput
   track?: Prisma.WorldEventTrackCreateNestedOneWithoutEventsInput
@@ -416,6 +420,7 @@ export type WorldEventUncheckedCreateInput = {
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetEventInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderEventInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedCreateNestedManyWithoutWorldEventInput
 }
 
@@ -434,6 +439,7 @@ export type WorldEventUpdateInput = {
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUpdateManyWithoutWorldEventNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutEventsNestedInput
   track?: Prisma.WorldEventTrackUpdateOneWithoutEventsNestedInput
@@ -456,6 +462,7 @@ export type WorldEventUncheckedUpdateInput = {
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedUpdateManyWithoutWorldEventNestedInput
 }
 
@@ -581,6 +588,22 @@ export type WorldEventSumOrderByAggregateInput = {
 export type WorldEventScalarRelationFilter = {
   is?: Prisma.WorldEventWhereInput
   isNot?: Prisma.WorldEventWhereInput
+}
+
+export type WorldEventCreateNestedOneWithoutAssetRefsInput = {
+  create?: Prisma.XOR<Prisma.WorldEventCreateWithoutAssetRefsInput, Prisma.WorldEventUncheckedCreateWithoutAssetRefsInput>
+  connectOrCreate?: Prisma.WorldEventCreateOrConnectWithoutAssetRefsInput
+  connect?: Prisma.WorldEventWhereUniqueInput
+}
+
+export type WorldEventUpdateOneWithoutAssetRefsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorldEventCreateWithoutAssetRefsInput, Prisma.WorldEventUncheckedCreateWithoutAssetRefsInput>
+  connectOrCreate?: Prisma.WorldEventCreateOrConnectWithoutAssetRefsInput
+  upsert?: Prisma.WorldEventUpsertWithoutAssetRefsInput
+  disconnect?: Prisma.WorldEventWhereInput | boolean
+  delete?: Prisma.WorldEventWhereInput | boolean
+  connect?: Prisma.WorldEventWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorldEventUpdateToOneWithWhereWithoutAssetRefsInput, Prisma.WorldEventUpdateWithoutAssetRefsInput>, Prisma.WorldEventUncheckedUpdateWithoutAssetRefsInput>
 }
 
 export type WorldEventCreateNestedOneWithoutPagesInput = {
@@ -737,6 +760,102 @@ export type WorldEventUncheckedUpdateManyWithoutTrackNestedInput = {
   deleteMany?: Prisma.WorldEventScalarWhereInput | Prisma.WorldEventScalarWhereInput[]
 }
 
+export type WorldEventCreateWithoutAssetRefsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  icon?: string
+  color?: string
+  name: string
+  timestamp: bigint | number
+  revokedAt?: bigint | number | null
+  description?: string
+  descriptionRich?: string
+  descriptionYjs?: string | null
+  pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
+  mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
+  mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
+  deltaStates?: Prisma.WorldEventDeltaCreateNestedManyWithoutWorldEventInput
+  world: Prisma.WorldCreateNestedOneWithoutEventsInput
+  track?: Prisma.WorldEventTrackCreateNestedOneWithoutEventsInput
+}
+
+export type WorldEventUncheckedCreateWithoutAssetRefsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  icon?: string
+  color?: string
+  name: string
+  timestamp: bigint | number
+  revokedAt?: bigint | number | null
+  description?: string
+  descriptionRich?: string
+  descriptionYjs?: string | null
+  worldId: string
+  worldEventTrackId?: string | null
+  pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentEventInput
+  mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceEventInput
+  mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetEventInput
+  deltaStates?: Prisma.WorldEventDeltaUncheckedCreateNestedManyWithoutWorldEventInput
+}
+
+export type WorldEventCreateOrConnectWithoutAssetRefsInput = {
+  where: Prisma.WorldEventWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorldEventCreateWithoutAssetRefsInput, Prisma.WorldEventUncheckedCreateWithoutAssetRefsInput>
+}
+
+export type WorldEventUpsertWithoutAssetRefsInput = {
+  update: Prisma.XOR<Prisma.WorldEventUpdateWithoutAssetRefsInput, Prisma.WorldEventUncheckedUpdateWithoutAssetRefsInput>
+  create: Prisma.XOR<Prisma.WorldEventCreateWithoutAssetRefsInput, Prisma.WorldEventUncheckedCreateWithoutAssetRefsInput>
+  where?: Prisma.WorldEventWhereInput
+}
+
+export type WorldEventUpdateToOneWithWhereWithoutAssetRefsInput = {
+  where?: Prisma.WorldEventWhereInput
+  data: Prisma.XOR<Prisma.WorldEventUpdateWithoutAssetRefsInput, Prisma.WorldEventUncheckedUpdateWithoutAssetRefsInput>
+}
+
+export type WorldEventUpdateWithoutAssetRefsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
+  mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
+  mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
+  deltaStates?: Prisma.WorldEventDeltaUpdateManyWithoutWorldEventNestedInput
+  world?: Prisma.WorldUpdateOneRequiredWithoutEventsNestedInput
+  track?: Prisma.WorldEventTrackUpdateOneWithoutEventsNestedInput
+}
+
+export type WorldEventUncheckedUpdateWithoutAssetRefsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  icon?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  timestamp?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  revokedAt?: Prisma.NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionRich?: Prisma.StringFieldUpdateOperationsInput | string
+  descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldId?: Prisma.StringFieldUpdateOperationsInput | string
+  worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentEventNestedInput
+  mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceEventNestedInput
+  mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetEventNestedInput
+  deltaStates?: Prisma.WorldEventDeltaUncheckedUpdateManyWithoutWorldEventNestedInput
+}
+
 export type WorldEventCreateWithoutPagesInput = {
   id?: string
   createdAt?: Date | string
@@ -751,6 +870,7 @@ export type WorldEventCreateWithoutPagesInput = {
   descriptionYjs?: string | null
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderEventInput
   deltaStates?: Prisma.WorldEventDeltaCreateNestedManyWithoutWorldEventInput
   world: Prisma.WorldCreateNestedOneWithoutEventsInput
   track?: Prisma.WorldEventTrackCreateNestedOneWithoutEventsInput
@@ -772,6 +892,7 @@ export type WorldEventUncheckedCreateWithoutPagesInput = {
   worldEventTrackId?: string | null
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetEventInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderEventInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedCreateNestedManyWithoutWorldEventInput
 }
 
@@ -805,6 +926,7 @@ export type WorldEventUpdateWithoutPagesInput = {
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUpdateManyWithoutWorldEventNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutEventsNestedInput
   track?: Prisma.WorldEventTrackUpdateOneWithoutEventsNestedInput
@@ -826,6 +948,7 @@ export type WorldEventUncheckedUpdateWithoutPagesInput = {
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedUpdateManyWithoutWorldEventNestedInput
 }
 
@@ -843,6 +966,7 @@ export type WorldEventCreateWithoutMentionsInput = {
   descriptionYjs?: string | null
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderEventInput
   deltaStates?: Prisma.WorldEventDeltaCreateNestedManyWithoutWorldEventInput
   world: Prisma.WorldCreateNestedOneWithoutEventsInput
   track?: Prisma.WorldEventTrackCreateNestedOneWithoutEventsInput
@@ -864,6 +988,7 @@ export type WorldEventUncheckedCreateWithoutMentionsInput = {
   worldEventTrackId?: string | null
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentEventInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetEventInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderEventInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedCreateNestedManyWithoutWorldEventInput
 }
 
@@ -886,6 +1011,7 @@ export type WorldEventCreateWithoutMentionedInInput = {
   descriptionYjs?: string | null
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderEventInput
   deltaStates?: Prisma.WorldEventDeltaCreateNestedManyWithoutWorldEventInput
   world: Prisma.WorldCreateNestedOneWithoutEventsInput
   track?: Prisma.WorldEventTrackCreateNestedOneWithoutEventsInput
@@ -907,6 +1033,7 @@ export type WorldEventUncheckedCreateWithoutMentionedInInput = {
   worldEventTrackId?: string | null
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceEventInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderEventInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedCreateNestedManyWithoutWorldEventInput
 }
 
@@ -940,6 +1067,7 @@ export type WorldEventUpdateWithoutMentionsInput = {
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUpdateManyWithoutWorldEventNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutEventsNestedInput
   track?: Prisma.WorldEventTrackUpdateOneWithoutEventsNestedInput
@@ -961,6 +1089,7 @@ export type WorldEventUncheckedUpdateWithoutMentionsInput = {
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentEventNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedUpdateManyWithoutWorldEventNestedInput
 }
 
@@ -989,6 +1118,7 @@ export type WorldEventUpdateWithoutMentionedInInput = {
   descriptionYjs?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUpdateManyWithoutWorldEventNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutEventsNestedInput
   track?: Prisma.WorldEventTrackUpdateOneWithoutEventsNestedInput
@@ -1010,6 +1140,7 @@ export type WorldEventUncheckedUpdateWithoutMentionedInInput = {
   worldEventTrackId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedUpdateManyWithoutWorldEventNestedInput
 }
 
@@ -1028,6 +1159,7 @@ export type WorldEventCreateWithoutWorldInput = {
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderEventInput
   deltaStates?: Prisma.WorldEventDeltaCreateNestedManyWithoutWorldEventInput
   track?: Prisma.WorldEventTrackCreateNestedOneWithoutEventsInput
 }
@@ -1048,6 +1180,7 @@ export type WorldEventUncheckedCreateWithoutWorldInput = {
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetEventInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderEventInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedCreateNestedManyWithoutWorldEventInput
 }
 
@@ -1111,6 +1244,7 @@ export type WorldEventCreateWithoutDeltaStatesInput = {
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderEventInput
   world: Prisma.WorldCreateNestedOneWithoutEventsInput
   track?: Prisma.WorldEventTrackCreateNestedOneWithoutEventsInput
 }
@@ -1132,6 +1266,7 @@ export type WorldEventUncheckedCreateWithoutDeltaStatesInput = {
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetEventInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderEventInput
 }
 
 export type WorldEventCreateOrConnectWithoutDeltaStatesInput = {
@@ -1165,6 +1300,7 @@ export type WorldEventUpdateWithoutDeltaStatesInput = {
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderEventNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutEventsNestedInput
   track?: Prisma.WorldEventTrackUpdateOneWithoutEventsNestedInput
 }
@@ -1186,6 +1322,7 @@ export type WorldEventUncheckedUpdateWithoutDeltaStatesInput = {
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderEventNestedInput
 }
 
 export type WorldEventCreateWithoutTrackInput = {
@@ -1203,6 +1340,7 @@ export type WorldEventCreateWithoutTrackInput = {
   pages?: Prisma.ContentPageCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionCreateNestedManyWithoutTargetEventInput
+  assetRefs?: Prisma.AssetReferenceCreateNestedManyWithoutHolderEventInput
   deltaStates?: Prisma.WorldEventDeltaCreateNestedManyWithoutWorldEventInput
   world: Prisma.WorldCreateNestedOneWithoutEventsInput
 }
@@ -1223,6 +1361,7 @@ export type WorldEventUncheckedCreateWithoutTrackInput = {
   pages?: Prisma.ContentPageUncheckedCreateNestedManyWithoutParentEventInput
   mentions?: Prisma.MentionUncheckedCreateNestedManyWithoutSourceEventInput
   mentionedIn?: Prisma.MentionUncheckedCreateNestedManyWithoutTargetEventInput
+  assetRefs?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutHolderEventInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedCreateNestedManyWithoutWorldEventInput
 }
 
@@ -1282,6 +1421,7 @@ export type WorldEventUpdateWithoutWorldInput = {
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUpdateManyWithoutWorldEventNestedInput
   track?: Prisma.WorldEventTrackUpdateOneWithoutEventsNestedInput
 }
@@ -1302,6 +1442,7 @@ export type WorldEventUncheckedUpdateWithoutWorldInput = {
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedUpdateManyWithoutWorldEventNestedInput
 }
 
@@ -1350,6 +1491,7 @@ export type WorldEventUpdateWithoutTrackInput = {
   pages?: Prisma.ContentPageUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUpdateManyWithoutTargetEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUpdateManyWithoutHolderEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUpdateManyWithoutWorldEventNestedInput
   world?: Prisma.WorldUpdateOneRequiredWithoutEventsNestedInput
 }
@@ -1370,6 +1512,7 @@ export type WorldEventUncheckedUpdateWithoutTrackInput = {
   pages?: Prisma.ContentPageUncheckedUpdateManyWithoutParentEventNestedInput
   mentions?: Prisma.MentionUncheckedUpdateManyWithoutSourceEventNestedInput
   mentionedIn?: Prisma.MentionUncheckedUpdateManyWithoutTargetEventNestedInput
+  assetRefs?: Prisma.AssetReferenceUncheckedUpdateManyWithoutHolderEventNestedInput
   deltaStates?: Prisma.WorldEventDeltaUncheckedUpdateManyWithoutWorldEventNestedInput
 }
 
@@ -1397,6 +1540,7 @@ export type WorldEventCountOutputType = {
   pages: number
   mentions: number
   mentionedIn: number
+  assetRefs: number
   deltaStates: number
 }
 
@@ -1404,6 +1548,7 @@ export type WorldEventCountOutputTypeSelect<ExtArgs extends runtime.Types.Extens
   pages?: boolean | WorldEventCountOutputTypeCountPagesArgs
   mentions?: boolean | WorldEventCountOutputTypeCountMentionsArgs
   mentionedIn?: boolean | WorldEventCountOutputTypeCountMentionedInArgs
+  assetRefs?: boolean | WorldEventCountOutputTypeCountAssetRefsArgs
   deltaStates?: boolean | WorldEventCountOutputTypeCountDeltaStatesArgs
 }
 
@@ -1441,6 +1586,13 @@ export type WorldEventCountOutputTypeCountMentionedInArgs<ExtArgs extends runtim
 /**
  * WorldEventCountOutputType without action
  */
+export type WorldEventCountOutputTypeCountAssetRefsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AssetReferenceWhereInput
+}
+
+/**
+ * WorldEventCountOutputType without action
+ */
 export type WorldEventCountOutputTypeCountDeltaStatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.WorldEventDeltaWhereInput
 }
@@ -1463,6 +1615,7 @@ export type WorldEventSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   pages?: boolean | Prisma.WorldEvent$pagesArgs<ExtArgs>
   mentions?: boolean | Prisma.WorldEvent$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.WorldEvent$mentionedInArgs<ExtArgs>
+  assetRefs?: boolean | Prisma.WorldEvent$assetRefsArgs<ExtArgs>
   deltaStates?: boolean | Prisma.WorldEvent$deltaStatesArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
   track?: boolean | Prisma.WorldEvent$trackArgs<ExtArgs>
@@ -1526,6 +1679,7 @@ export type WorldEventInclude<ExtArgs extends runtime.Types.Extensions.InternalA
   pages?: boolean | Prisma.WorldEvent$pagesArgs<ExtArgs>
   mentions?: boolean | Prisma.WorldEvent$mentionsArgs<ExtArgs>
   mentionedIn?: boolean | Prisma.WorldEvent$mentionedInArgs<ExtArgs>
+  assetRefs?: boolean | Prisma.WorldEvent$assetRefsArgs<ExtArgs>
   deltaStates?: boolean | Prisma.WorldEvent$deltaStatesArgs<ExtArgs>
   world?: boolean | Prisma.WorldDefaultArgs<ExtArgs>
   track?: boolean | Prisma.WorldEvent$trackArgs<ExtArgs>
@@ -1546,6 +1700,7 @@ export type $WorldEventPayload<ExtArgs extends runtime.Types.Extensions.Internal
     pages: Prisma.$ContentPagePayload<ExtArgs>[]
     mentions: Prisma.$MentionPayload<ExtArgs>[]
     mentionedIn: Prisma.$MentionPayload<ExtArgs>[]
+    assetRefs: Prisma.$AssetReferencePayload<ExtArgs>[]
     deltaStates: Prisma.$WorldEventDeltaPayload<ExtArgs>[]
     world: Prisma.$WorldPayload<ExtArgs>
     track: Prisma.$WorldEventTrackPayload<ExtArgs> | null
@@ -1961,6 +2116,7 @@ export interface Prisma__WorldEventClient<T, Null = never, ExtArgs extends runti
   pages<T extends Prisma.WorldEvent$pagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldEvent$pagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ContentPagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mentions<T extends Prisma.WorldEvent$mentionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldEvent$mentionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   mentionedIn<T extends Prisma.WorldEvent$mentionedInArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldEvent$mentionedInArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  assetRefs<T extends Prisma.WorldEvent$assetRefsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldEvent$assetRefsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssetReferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deltaStates<T extends Prisma.WorldEvent$deltaStatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldEvent$deltaStatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldEventDeltaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   world<T extends Prisma.WorldDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldDefaultArgs<ExtArgs>>): Prisma.Prisma__WorldClient<runtime.Types.Result.GetResult<Prisma.$WorldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   track<T extends Prisma.WorldEvent$trackArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WorldEvent$trackArgs<ExtArgs>>): Prisma.Prisma__WorldEventTrackClient<runtime.Types.Result.GetResult<Prisma.$WorldEventTrackPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -2476,6 +2632,30 @@ export type WorldEvent$mentionedInArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.MentionScalarFieldEnum | Prisma.MentionScalarFieldEnum[]
+}
+
+/**
+ * WorldEvent.assetRefs
+ */
+export type WorldEvent$assetRefsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AssetReference
+   */
+  select?: Prisma.AssetReferenceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AssetReference
+   */
+  omit?: Prisma.AssetReferenceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AssetReferenceInclude<ExtArgs> | null
+  where?: Prisma.AssetReferenceWhereInput
+  orderBy?: Prisma.AssetReferenceOrderByWithRelationInput | Prisma.AssetReferenceOrderByWithRelationInput[]
+  cursor?: Prisma.AssetReferenceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AssetReferenceScalarFieldEnum | Prisma.AssetReferenceScalarFieldEnum[]
 }
 
 /**

@@ -51,6 +51,7 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 	let description: string | undefined
 	let descriptionRich: string | undefined
 	let mentions: MentionData[] | undefined
+	let referencedAssetIds: string[] | undefined
 	if (params.descriptionRich) {
 		const parsed = await RichTextService.parseContentString({
 			worldId,
@@ -59,6 +60,7 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 		description = parsed.contentPlain
 		descriptionRich = params.descriptionRich
 		mentions = parsed.mentions
+		referencedAssetIds = parsed.referencedAssetIds
 	}
 
 	const { actor, world } = await ActorService.createActor({
@@ -71,6 +73,7 @@ router.post('/api/world/:worldId/actors', async (ctx) => {
 			description,
 			descriptionRich,
 			mentions,
+			referencedAssetIds,
 		},
 	})
 

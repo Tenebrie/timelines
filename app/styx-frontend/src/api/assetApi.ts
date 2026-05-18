@@ -7,7 +7,12 @@ const injectedRtkApi = api
 	.injectEndpoints({
 		endpoints: (build) => ({
 			getAsset: build.query<GetAssetApiResponse, GetAssetApiArg>({
-				query: (queryArg) => ({ url: `/api/assets/${queryArg.assetId}` }),
+				query: (queryArg) => ({
+					url: `/api/assets/${queryArg.assetId}`,
+					params: {
+						disposition: queryArg.disposition,
+					},
+				}),
 				providesTags: ['asset'],
 			}),
 			deleteAsset: build.mutation<DeleteAssetApiResponse, DeleteAssetApiArg>({
@@ -15,7 +20,15 @@ const injectedRtkApi = api
 				invalidatesTags: ['asset', 'imageGeneration'],
 			}),
 			listUserAssets: build.query<ListUserAssetsApiResponse, ListUserAssetsApiArg>({
-				query: () => ({ url: `/api/assets` }),
+				query: (queryArg) => ({
+					url: `/api/assets`,
+					params: {
+						offset: queryArg.offset,
+						limit: queryArg.limit,
+						sortField: queryArg.sortField,
+						sortDirection: queryArg.sortDirection,
+					},
+				}),
 				providesTags: ['asset'],
 			}),
 			requestPresignedUrl: build.mutation<RequestPresignedUrlApiResponse, RequestPresignedUrlApiArg>({
@@ -32,10 +45,13 @@ const injectedRtkApi = api
 export { injectedRtkApi as assetApi }
 export type GetAssetApiResponse = /** status 200  */ {
 	url: string
+	imageWidth?: null | number
+	imageHeight?: null | number
 }
 export type GetAssetApiArg = {
 	/** Any string value */
 	assetId: string
+	disposition?: 'inline' | 'attachment'
 }
 export type DeleteAssetApiResponse = unknown
 export type DeleteAssetApiArg = {
@@ -44,45 +60,57 @@ export type DeleteAssetApiArg = {
 }
 export type ListUserAssetsApiResponse = /** status 200  */ {
 	assets: {
+		previewUrl?: null | string
+		_count: {
+			references: number
+		}
 		id: string
 		createdAt: string
 		updatedAt: string
+		size: number
 		expiresAt?: null | string
 		ownerId: string
 		bucketKey: string
-		size: number
 		originalFileName: string
 		originalFileExtension: string
 		contentType:
-			| 'ImageConversion'
 			| 'Avatar'
+			| 'ImageConversion'
 			| 'ImageGeneration'
 			| 'DataMigrationExport'
 			| 'DataMigrationImport'
+			| 'ImageEmbed'
 		status: 'Pending' | 'Finalized' | 'Failed'
 		contentDescription?: null | string
 		imageWidth?: null | number
 		imageHeight?: null | number
 	}[]
+	total: number
 }
-export type ListUserAssetsApiArg = void
+export type ListUserAssetsApiArg = {
+	offset?: number
+	limit?: number
+	sortField?: string
+	sortDirection?: 'desc' | 'asc'
+}
 export type RequestPresignedUrlApiResponse = /** status 200  */ {
 	asset: {
 		id: string
 		createdAt: string
 		updatedAt: string
+		size: number
 		expiresAt?: null | string
 		ownerId: string
 		bucketKey: string
-		size: number
 		originalFileName: string
 		originalFileExtension: string
 		contentType:
-			| 'ImageConversion'
 			| 'Avatar'
+			| 'ImageConversion'
 			| 'ImageGeneration'
 			| 'DataMigrationExport'
 			| 'DataMigrationImport'
+			| 'ImageEmbed'
 		status: 'Pending' | 'Finalized' | 'Failed'
 		contentDescription?: null | string
 		imageWidth?: null | number
@@ -98,29 +126,31 @@ export type RequestPresignedUrlApiArg = {
 		fileName: string
 		fileSize: number
 		assetType:
-			| 'ImageConversion'
 			| 'Avatar'
+			| 'ImageConversion'
 			| 'ImageGeneration'
 			| 'DataMigrationExport'
 			| 'DataMigrationImport'
+			| 'ImageEmbed'
 	}
 }
 export type FinalizeAssetUploadApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	size: number
 	expiresAt?: null | string
 	ownerId: string
 	bucketKey: string
-	size: number
 	originalFileName: string
 	originalFileExtension: string
 	contentType:
-		| 'ImageConversion'
 		| 'Avatar'
+		| 'ImageConversion'
 		| 'ImageGeneration'
 		| 'DataMigrationExport'
 		| 'DataMigrationImport'
+		| 'ImageEmbed'
 	status: 'Pending' | 'Finalized' | 'Failed'
 	contentDescription?: null | string
 	imageWidth?: null | number

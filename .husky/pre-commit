@@ -1,4 +1,4 @@
-(cd app/styx-frontend && yarn lint-staged)
-(cd app/rhea-backend && yarn lint-staged)
-(cd app/calliope-websockets && yarn lint-staged)
-(cd app/orpheus-mcp && yarn lint-staged)
+(cd app/styx-frontend && npx lint-staged)
+(cd app/rhea-backend && npx lint-staged)
+(cd app/calliope-websockets && npx lint-staged)
+(cd app/orpheus-mcp && npx lint-staged)

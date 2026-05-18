@@ -3,6 +3,7 @@ import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
+import { ValidationService } from '@src/services/ValidationService.js'
 import { WikiService } from '@src/services/WikiService.js'
 import {
 	BadRequestError,
@@ -18,6 +19,7 @@ import {
 	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { worldWikiArticleTag } from './utils/tags.js'
 import { ContentStringValidator } from './validators/ContentStringValidator.js'
@@ -71,25 +73,36 @@ router.put('/api/world/:worldId/article/:articleId/content', async (ctx) => {
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+	await ValidationService.checkArticleValidity(articleId)
 
-	const { content, contentDeltas } = useRequestBody(ctx, {
+	const { content, reloadClients } = useRequestBody(ctx, {
 		content: RequiredParam(ContentStringValidator),
-		contentDeltas: OptionalParam(ContentStringValidator),
+		reloadClients: z.boolean().optional(),
 	})
 
 	const parsed = await RichTextService.parseContentString({ worldId, contentString: content })
+	const isEqual = await RichTextService.isContentEqual({
+		newContentRich: parsed.contentRich,
+		worldId,
+		entityId: articleId,
+		entityType: 'article',
+	})
+	if (isEqual) {
+		return
+	}
 
 	const { article, updatedMentions } = await WikiService.updateWikiArticle({
 		id: articleId,
+		worldId,
 		contentRich: parsed.contentRich,
-		contentYjs: contentDeltas ?? null,
 		mentions: parsed.mentions,
+		referencedAssetIds: parsed.referencedAssetIds,
 	})
 
 	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })
 	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: updatedMentions })
 
-	if (!contentDeltas) {
+	if (reloadClients) {
 		RedisService.notifyAboutDocumentReset(ctx, { worldId, entityId: articleId })
 	}
 })

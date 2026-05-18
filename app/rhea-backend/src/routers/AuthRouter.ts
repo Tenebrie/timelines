@@ -35,7 +35,7 @@ router.get('/api/auth/check', async (ctx) => {
 	})
 
 	const user = await useOptionalAuth(ctx, UserAuthenticatorWithAvatar)
-	const sessionId = ctx.sessionId ?? crypto.randomUUID()
+	const sessionId: string = ctx.sessionId ?? crypto.randomUUID()
 
 	if (!user) {
 		return {
@@ -84,7 +84,7 @@ router.post('/api/auth', async (ctx) => {
 
 	const user = await UserService.register(body.email, body.username, body.password)
 	const token = TokenService.generateJwtToken(user)
-	const sessionId = ctx.sessionId ?? crypto.randomUUID()
+	const sessionId: string = ctx.sessionId ?? crypto.randomUUID()
 
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
@@ -122,7 +122,7 @@ router.post('/api/auth/guest', async (ctx) => {
 
 	const user = await UserService.registerGuest()
 	const token = TokenService.generateJwtToken(user)
-	const sessionId = ctx.sessionId ?? crypto.randomUUID()
+	const sessionId: string = ctx.sessionId ?? crypto.randomUUID()
 
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
@@ -173,7 +173,7 @@ router.post('/api/auth/google', async (ctx) => {
 		}
 	})()
 	const token = TokenService.generateJwtToken(user)
-	const sessionId = ctx.sessionId ?? crypto.randomUUID()
+	const sessionId: string = ctx.sessionId ?? crypto.randomUUID()
 
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
@@ -228,7 +228,7 @@ router.post('/api/auth/login', async (ctx) => {
 	}
 
 	const token = TokenService.generateJwtToken(user)
-	const sessionId = ctx.sessionId ?? crypto.randomUUID()
+	const sessionId: string = ctx.sessionId ?? crypto.randomUUID()
 
 	ctx.cookies.set(AUTH_COOKIE_NAME, token, {
 		path: '/',
