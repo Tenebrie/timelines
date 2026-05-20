@@ -52,9 +52,9 @@ const App = () => {
 
 	useEffect(() => {
 		const clearMouseBusy = () => {
-			setTimeout(() => {
+			requestAnimationFrame(() => {
 				window.document.body.classList.remove('mouse-busy')
-			}, 1)
+			})
 		}
 		window.addEventListener('mouseup', clearMouseBusy)
 		window.addEventListener('mouseleave', clearMouseBusy)

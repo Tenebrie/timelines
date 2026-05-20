@@ -1,6 +1,6 @@
 {
 	"name": "timelines",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"license": "GPL-3.0-or-later",
 	"description": "",
 	"private": true,
@@ -16,7 +16,7 @@
 		"test/load"
 	],
 	"scripts": {
-		"postinstall": "NPM_CONFIG_PREFER_OFFLINE=true NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false subpkg install && husky",
+		"postinstall": "NPM_CONFIG_AUDIT=false NPM_CONFIG_FUND=false subpkg install && husky",
 		"openapi": "./scripts/dev-openapi.sh",
 		"migrate": "./scripts/dev-migrate.sh",
 		"dev": "npm run docker:start",
@@ -55,7 +55,7 @@
 		"@typescript-eslint/eslint-plugin": "^8.51.0",
 		"@typescript-eslint/parser": "^8.51.0",
 		"cloc": "^2.8.0",
-		"eslint": "^9.39.2",
+		"eslint": "^10.4.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-astro": "^1.6.0",
 		"eslint-plugin-node": "^11.1.0",
@@ -80,13 +80,13 @@
 	},
 	"homepage": "https://github.com/tenebrie/timelines#readme",
 	"devDependencies": {
+		"@eslint-react/eslint-plugin": "^5.8.3",
 		"astro-eslint-parser": "^1.2.2",
 		"eslint-plugin-mui-path-imports": "^0.0.15",
 		"eslint-plugin-no-relative-import-paths": "^1.6.1",
-		"eslint-plugin-react": "^7.37.5",
 		"eslint-plugin-react-hooks": "^7.0.1",
-		"prettier-plugin-astro": "^0.14.1",
 		"husky": "^9.1.7",
-		"typescript-eslint": "^8.51.0"
+		"prettier-plugin-astro": "^0.14.1",
+		"typescript-eslint": "^8.59.4"
 	}
 }

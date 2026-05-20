@@ -35,9 +35,9 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 	}, [reduceAnimations])
 
 	useEffect(() => {
-		setTimeout(() => {
+		requestAnimationFrame(() => {
 			setIsModalVisible(visible)
-		}, 1)
+		})
 	}, [visible])
 
 	useEffect(() => {
@@ -55,6 +55,7 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 				setIsModalRendered(false)
 			}, animationDuration)
 			setModalRenderTimeout(timeout)
+			return () => window.clearTimeout(timeout)
 		}
 	}, [isModalRendered, isModalVisible, animationDuration])
 

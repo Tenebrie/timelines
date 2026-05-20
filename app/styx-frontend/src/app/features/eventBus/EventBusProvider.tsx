@@ -1,11 +1,11 @@
-import { createContext, ReactNode, useContext, useRef } from 'react'
+import { createContext, ReactNode, use, useRef } from 'react'
 
 import { EventBus, globalEventBus } from './eventBus'
 
 const EventBusContext = createContext<EventBus>(globalEventBus)
 
 export function useEventBusContext(): EventBus {
-	return useContext(EventBusContext)
+	return use(EventBusContext)
 }
 
 type Props = {
@@ -19,5 +19,5 @@ type Props = {
  */
 export function EventBusProvider({ bus, children }: Props) {
 	const busRef = useRef(bus ?? new EventBus())
-	return <EventBusContext.Provider value={busRef.current}>{children}</EventBusContext.Provider>
+	return <EventBusContext value={busRef.current}>{children}</EventBusContext>
 }

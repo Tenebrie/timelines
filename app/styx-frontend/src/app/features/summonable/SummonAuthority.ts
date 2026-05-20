@@ -1,15 +1,25 @@
-// Please forgive me for all the sins I am about to commit
+export type SummonWaitingList = Record<
+	string,
+	{
+		id: string
+		target: HTMLElement
+		props: unknown
+	}[]
+>
+
+export type SummonRepository = Record<
+	string,
+	{
+		id: string
+		target: HTMLElement | null
+		status: 'busy' | 'parked'
+	}[]
+>
 
 declare global {
 	interface Document {
-		summonWaitingList: Record<string, { target: HTMLElement; props: unknown }[]>
-		summonRepository: Record<
-			string,
-			{
-				target: HTMLElement | null
-				status: 'busy' | 'parked'
-			}[]
-		>
+		summonRepository: SummonRepository
+		summonWaitingList: SummonWaitingList
 	}
 }
 

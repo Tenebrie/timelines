@@ -90,9 +90,9 @@ export function TimelineSelectionBox({ containerRef }: Props) {
 			}
 
 			// Remove busy class
-			setTimeout(() => {
+			requestAnimationFrame(() => {
 				window.document.body.classList.remove('mouse-busy')
-			}, 0)
+			})
 
 			// Only handle selection box logic if we actually dragged (canClick is false)
 			if (!mouseState.canClick) {

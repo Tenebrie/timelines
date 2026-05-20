@@ -30,7 +30,7 @@ export const ShareWorldModal = () => {
 	const [slug, setSlug] = useState('')
 	const [label, setLabel] = useState('')
 	const [access, setAccess] = useState<CollaboratorAccess>('ReadOnly')
-	const [expirationDate, setExpirationDate] = useState<Dayjs | null>(dayjs().add(1, 'month'))
+	const [expirationDate, setExpirationDate] = useState<Dayjs | null>(() => dayjs().add(1, 'month'))
 
 	const { listAllLevels } = useCollaboratorAccess()
 

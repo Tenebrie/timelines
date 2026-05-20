@@ -1,3 +1,4 @@
+import { Actor, WorldEvent, WorldTag } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
 import { memo } from 'react'
 import { useSelector } from 'react-redux'
@@ -14,7 +15,10 @@ import { OutlinerEmptyState } from './components/OutlinerEmptyState'
 import { useVisibleActors } from './hooks/useVisibleActors'
 import { useVisibleEvents } from './hooks/useVisibleEvents'
 import { useVisibleTags } from './hooks/useVisibleTags'
-import { OutlinerItem } from './items/OutlinerItem'
+import { OutlinerItemActor } from './items/OutlinerItemActor'
+import { OutlinerItemEvent } from './items/OutlinerItemEvent'
+import { OutlinerItemHeader } from './items/OutlinerItemHeader'
+import { OutlinerItemTag } from './items/OutlinerItemTag'
 
 export const OutlinerContent = memo(OutlinerContentComponent)
 
@@ -49,6 +53,33 @@ export function OutlinerContentComponent() {
 	})()
 	const scrollerVisible = totalCount > 1 || !!search.query
 
+	type ResolvedRow =
+		| { kind: 'actor'; actor: Actor }
+		| { kind: 'event'; event: WorldEvent }
+		| { kind: 'tag'; tag: WorldTag }
+		| { kind: 'empty' }
+
+	const resolveRow = (rawIndex: number): ResolvedRow => {
+		let offset = rawIndex - 1
+
+		if (actorsVisible) {
+			if (offset < allVisibleActors.length) {
+				return { kind: 'actor', actor: allVisibleActors[offset] }
+			}
+			offset -= allVisibleActors.length
+		}
+
+		if (eventsVisible) {
+			if (offset < allVisibleEvents.length) {
+				return { kind: 'event', event: allVisibleEvents[offset] }
+			}
+			offset -= allVisibleEvents.length
+		}
+
+		const tag = allVisibleTags[offset]
+		return tag ? { kind: 'tag', tag } : { kind: 'empty' }
+	}
+
 	return (
 		<OutlinedContainer
 			label="Outliner"
@@ -80,40 +111,22 @@ export function OutlinerContentComponent() {
 						if (!scrollerVisible && rawIndex === 1) {
 							return <OutlinerEmptyState />
 						}
-						const actor = (() => {
-							if (!actorsVisible) {
-								return undefined
-							}
-							const index = rawIndex - 1
-							return allVisibleActors[index]
-						})()
-						const event = (() => {
-							if (!eventsVisible) {
-								return undefined
-							}
-							const index = (() => {
-								let acc = rawIndex - 1
-								if (actorsVisible) {
-									acc -= allVisibleActors.length
-								}
-								return acc
-							})()
-							return allVisibleEvents[index]
-						})()
-						const tag = (() => {
-							const index = (() => {
-								let acc = rawIndex - 1
-								if (eventsVisible) {
-									acc -= allVisibleEvents.length
-								}
-								if (actorsVisible) {
-									acc -= allVisibleActors.length
-								}
-								return acc
-							})()
-							return allVisibleTags[index]
-						})()
-						return <OutlinerItem index={rawIndex} actor={actor} event={event} tag={tag} />
+
+						if (rawIndex === 0) {
+							return <OutlinerItemHeader />
+						}
+
+						const row = resolveRow(rawIndex)
+						switch (row.kind) {
+							case 'actor':
+								return <OutlinerItemActor actor={row.actor} />
+							case 'event':
+								return <OutlinerItemEvent event={row.event} />
+							case 'tag':
+								return <OutlinerItemTag tag={row.tag} />
+							case 'empty':
+								return <div>&nbsp;</div>
+						}
 					}}
 				/>
 			</Box>

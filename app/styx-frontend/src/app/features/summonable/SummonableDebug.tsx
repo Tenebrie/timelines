@@ -4,11 +4,16 @@ import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import { useEffect, useState } from 'react'
 
-import { invokeSummonRepository, invokeSummonWaitingList } from './SummonAuthority'
+import {
+	invokeSummonRepository,
+	invokeSummonWaitingList,
+	SummonRepository,
+	SummonWaitingList,
+} from './SummonAuthority'
 
 type DebugInfo = {
-	repository: Record<string, { target: HTMLElement | null; status: 'busy' | 'parked' }[]>
-	waitingList: Record<string, { target: HTMLElement; props: unknown }[]>
+	repository: SummonRepository
+	waitingList: SummonWaitingList
 }
 
 function ElementInfo({ element }: { element: HTMLElement | null }) {
@@ -88,7 +93,7 @@ export function SummonableDebug() {
 							{family}
 						</Typography>
 						{items.map((item, index) => (
-							<Box key={index} sx={{ ml: 2, mb: 1 }}>
+							<Box key={item.id} sx={{ ml: 2, mb: 1 }}>
 								<Box sx={{ display: 'flex', alignItems: 'center' }}>
 									<Typography variant="body2">Summonable {index}</Typography>
 									<StatusChip status={item.status} />
@@ -112,7 +117,7 @@ export function SummonableDebug() {
 								{family}
 							</Typography>
 							{items.map((item, index) => (
-								<Box key={index} sx={{ ml: 2, mb: 1 }}>
+								<Box key={item.id} sx={{ ml: 2, mb: 1 }}>
 									<Typography variant="body2">Waiting Summoner {index}</Typography>
 									<ElementInfo element={item.target} />
 								</Box>
