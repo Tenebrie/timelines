@@ -115,6 +115,67 @@ export function pickEdgePoints(
 	return { x1: src.x, y1: src.y, x2: tgt.x, y2: tgt.y, nx1: src.nx, ny1: src.ny, nx2: tgt.nx, ny2: tgt.ny }
 }
 
+type WireControlPoints = {
+	x1: number
+	y1: number
+	cx1: number
+	cy1: number
+	cx2: number
+	cy2: number
+	x2: number
+	y2: number
+}
+
+const wireRegistry = new Map<string, WireControlPoints>()
+
+export function registerWire(id: string, ep: WireEndpoints): void {
+	const bias = computeBias(ep)
+	wireRegistry.set(id, {
+		x1: ep.x1,
+		y1: ep.y1,
+		cx1: ep.x1 + ep.nx1 * bias,
+		cy1: ep.y1 + ep.ny1 * bias,
+		cx2: ep.x2 + ep.nx2 * bias,
+		cy2: ep.y2 + ep.ny2 * bias,
+		x2: ep.x2,
+		y2: ep.y2,
+	})
+}
+
+export function unregisterWire(id: string): void {
+	wireRegistry.delete(id)
+}
+
+export function getWiresInRect(
+	svgLeft: number,
+	svgTop: number,
+	svgRight: number,
+	svgBottom: number,
+): string[] {
+	const result: string[] = []
+	wireRegistry.forEach((cp, wireId) => {
+		const bboxLeft = Math.min(cp.x1, cp.cx1, cp.cx2, cp.x2)
+		const bboxRight = Math.max(cp.x1, cp.cx1, cp.cx2, cp.x2)
+		const bboxTop = Math.min(cp.y1, cp.cy1, cp.cy2, cp.y2)
+		const bboxBottom = Math.max(cp.y1, cp.cy1, cp.cy2, cp.y2)
+		if (svgLeft > bboxRight || svgRight < bboxLeft || svgTop > bboxBottom || svgBottom < bboxTop) {
+			return
+		}
+		const SAMPLES = 20
+		for (let i = 0; i <= SAMPLES; i++) {
+			const t = i / SAMPLES
+			const mt = 1 - t
+			const x = mt * mt * mt * cp.x1 + 3 * mt * mt * t * cp.cx1 + 3 * mt * t * t * cp.cx2 + t * t * t * cp.x2
+			const y = mt * mt * mt * cp.y1 + 3 * mt * mt * t * cp.cy1 + 3 * mt * t * t * cp.cy2 + t * t * t * cp.y2
+			if (x >= svgLeft && x <= svgRight && y >= svgTop && y <= svgBottom) {
+				result.push(wireId)
+				return
+			}
+		}
+	})
+	return result
+}
+
 function computeBias(ep: WireEndpoints) {
 	const dist = Math.hypot(ep.x2 - ep.x1, ep.y2 - ep.y1)
 	return Math.min(Math.max(20, dist * 0.4), 400)

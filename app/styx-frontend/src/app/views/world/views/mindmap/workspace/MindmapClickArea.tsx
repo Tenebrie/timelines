@@ -9,6 +9,7 @@ import { SelectionBox, SelectionRect } from '@/ui-lib/components/SelectionBox/Se
 import { useNewNodeReceiver } from '../hooks/useNewNodeReceiver'
 import { mindmapSlice } from '../MindmapSlice'
 import { getMindmapState } from '../MindmapSliceSelectors'
+import { getWiresInRect } from './mindmapWireUtils'
 
 export function MindmapClickArea() {
 	const ref = useRef<HTMLDivElement>(null)
@@ -126,63 +127,30 @@ function checkNodeIntersection(parentElement: HTMLElement | null, selectionBox: 
 	return Array.from(selectedNodeIds).map((str) => JSON.parse(str) as { key: string; actorId: string })
 }
 
-const WIRE_SAMPLE_COUNT = 50
-
 function checkWireIntersection(parentElement: HTMLElement | null, selectionBox: SelectionRect) {
 	if (!parentElement) {
 		return []
 	}
-	const wires = document.querySelectorAll('[data-mindmap-wire]')
-	const selectedWireIds: string[] = []
 
 	const boxLeft = selectionBox.width < 0 ? selectionBox.x + selectionBox.width : selectionBox.x
 	const boxTop = selectionBox.height < 0 ? selectionBox.y + selectionBox.height : selectionBox.y
 	const boxRight = boxLeft + Math.abs(selectionBox.width)
 	const boxBottom = boxTop + Math.abs(selectionBox.height)
 
-	const containerRect = parentElement.getBoundingClientRect()
+	// Convert selection rect from container coords to SVG node coords using grid transform
+	const gridEl = parentElement.closest<HTMLElement>('[data-mindmap-grid]')
+	if (!gridEl) {
+		return []
+	}
+	const style = getComputedStyle(gridEl)
+	const scale = parseFloat(style.getPropertyValue('--grid-scale')) || 1
+	const offsetX = parseFloat(style.getPropertyValue('--grid-offset-x')) || 0
+	const offsetY = parseFloat(style.getPropertyValue('--grid-offset-y')) || 0
 
-	wires.forEach((wireElement) => {
-		if (!(wireElement instanceof SVGPathElement)) {
-			return
-		}
-
-		// Quick bounding-box rejection before expensive sampling
-		const bbox = wireElement.getBoundingClientRect()
-		const bboxLeft = bbox.left - containerRect.left
-		const bboxTop = bbox.top - containerRect.top
-		if (
-			boxLeft > bboxLeft + bbox.width ||
-			boxRight < bboxLeft ||
-			boxTop > bboxTop + bbox.height ||
-			boxBottom < bboxTop
-		) {
-			return
-		}
-
-		// Sample points along the actual Bezier curve for precise intersection
-		const ctm = wireElement.getScreenCTM()
-		if (!ctm) {
-			return
-		}
-
-		const totalLength = wireElement.getTotalLength()
-		for (let i = 0; i <= WIRE_SAMPLE_COUNT; i++) {
-			const pt = wireElement.getPointAtLength((i / WIRE_SAMPLE_COUNT) * totalLength)
-			const screenX = ctm.a * pt.x + ctm.c * pt.y + ctm.e
-			const screenY = ctm.b * pt.x + ctm.d * pt.y + ctm.f
-			const relX = screenX - containerRect.left
-			const relY = screenY - containerRect.top
-
-			if (relX >= boxLeft && relX <= boxRight && relY >= boxTop && relY <= boxBottom) {
-				const wireId = wireElement.getAttribute('data-mindmap-wire')
-				if (wireId) {
-					selectedWireIds.push(wireId)
-				}
-				return
-			}
-		}
-	})
-
-	return selectedWireIds
+	return getWiresInRect(
+		(boxLeft - offsetX) / scale,
+		(boxTop - offsetY) / scale,
+		(boxRight - offsetX) / scale,
+		(boxBottom - offsetY) / scale,
+	)
 }

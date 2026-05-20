@@ -1,8 +1,8 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
 import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import { memo, useCallback, useEffect, useRef } from 'react'
-import { useDispatch, useSelector, useStore } from 'react-redux'
+import { memo, useEffect, useRef } from 'react'
+import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
@@ -44,18 +44,14 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 		}
 	}, [node])
 
-	const selectIsNodeSelected = useCallback(
-		(state: RootState) => getSelectedNodeKeys(state).includes(node.id),
-		[node.id],
-	)
-	const selected = useSelector(selectIsNodeSelected)
+	const selectedRef = useRef(false)
 	const store = useStore<RootState>()
 	const { addNodeToSelection, removeNodeFromSelection, clearSelections } = mindmapSlice.actions
 	const dispatch = useDispatch()
 
 	const { triggerClick: onHeaderClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
-			if (selected) {
+			if (selectedRef.current) {
 				dispatch(removeNodeFromSelection(node.id))
 			} else {
 				dispatch(addNodeToSelection({ key: node.id, actorId: actor.id, multiselect }))
@@ -81,7 +77,7 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 
 	useEventBusSubscribe['mindmap/node/onGroupDragStart']({
 		callback: ({ sourceNodeId }) => {
-			if (sourceNodeId === node.id || !selected) {
+			if (sourceNodeId === node.id || !selectedRef.current) {
 				return
 			}
 
@@ -90,7 +86,7 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 	})
 	useEventBusSubscribe['mindmap/node/onGroupDragUpdate']({
 		callback: ({ sourceNodeId, deltaX, deltaY }) => {
-			if (sourceNodeId === node.id || !selected) {
+			if (sourceNodeId === node.id || !selectedRef.current) {
 				return
 			}
 
@@ -107,7 +103,7 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 	})
 	useEventBusSubscribe['mindmap/node/onGroupDragEnd']({
 		callback: ({ sourceNodeId }) => {
-			if (sourceNodeId === node.id || !selected) {
+			if (sourceNodeId === node.id || !selectedRef.current) {
 				return
 			}
 
@@ -116,7 +112,14 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 	})
 
 	const nodeRef = useAutoRef(node)
-	const selectedRef = useAutoRef(selected)
+
+	useEventBusSubscribe['mindmap/selection/changed']({
+		callback: ({ selectedNodeIds }) => {
+			const isSelected = selectedNodeIds.has(node.id)
+			selectedRef.current = isSelected
+			ref.current?.setAttribute('data-selected', String(isSelected))
+		},
+	})
 
 	useEffect(() => {
 		const element = ref.current
@@ -272,17 +275,7 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [
-		positionRef,
-		moveMindmapNodes,
-		node.id,
-		nodeRef,
-		store,
-		selected,
-		dispatch,
-		clearSelections,
-		selectedRef,
-	])
+	}, [positionRef, moveMindmapNodes, node.id, nodeRef, store, dispatch, clearSelections, selectedRef])
 
 	return (
 		<Box
@@ -304,7 +297,10 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 					'translate(calc(var(--node-x) * var(--grid-scale) + var(--grid-offset-x)), calc(var(--node-y) * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))',
 				transformOrigin: 'top left',
 				outline: '2px solid',
-				outlineColor: selected ? theme.material.palette.primary.main : 'transparent',
+				outlineColor: 'transparent',
+				'&[data-selected="true"]': {
+					outlineColor: theme.material.palette.primary.main,
+				},
 				transition:
 					'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out, outline-color 0.2s ease-out',
 				borderRadius: 2,

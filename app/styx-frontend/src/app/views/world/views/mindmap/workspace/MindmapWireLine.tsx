@@ -1,22 +1,22 @@
 import { MindmapNode, MindmapWire } from '@api/types/mindmapTypes'
 import { ActorDetails } from '@api/types/worldTypes'
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
-import { RootState } from '@/app/store'
 
 import { mindmapSlice } from '../MindmapSlice'
-import { getMindmapState } from '../MindmapSliceSelectors'
 import {
 	arrowPath,
 	buildPathD,
 	getNodeHeight,
 	pathMidpoint,
 	pickEdgePoints,
+	registerWire,
+	unregisterWire,
 	WireEndpoints,
 } from './mindmapWireUtils'
 
@@ -87,6 +87,7 @@ export function MindmapWireLine({
 		const mid = pathMidpoint(ep)
 		labelRef.current?.setAttribute('x', String(mid.x))
 		labelRef.current?.setAttribute('y', String(mid.y))
+		registerWire(wire.id, ep)
 	}
 
 	useEventBusSubscribe['mindmap/node/onMove']({
@@ -122,21 +123,19 @@ export function MindmapWireLine({
 
 	const isHoveredRef = useRef(false)
 	const isActiveRef = useRef(false)
+	const selectedRef = useRef(false)
 
-	const selectIsNodeSelected = useCallback(
-		(state: RootState) => getMindmapState(state).selectedWires.includes(wire.id),
-		[wire.id],
-	)
-	const selected = useSelector(selectIsNodeSelected)
-	const selectedRef = useRef(selected)
-	selectedRef.current = selected
+	useLayoutEffect(() => {
+		registerWire(wire.id, ep)
+	})
+	useEffect(() => () => unregisterWire(wire.id), [wire.id])
 
 	const { addWireToSelection, removeWireFromSelection } = mindmapSlice.actions
 	const dispatch = useDispatch()
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean; event: React.MouseEvent }>({
 		onClick: ({ multiselect }) => {
-			if (selected) {
+			if (selectedRef.current) {
 				dispatch(removeWireFromSelection(wire.id))
 			} else {
 				dispatch(addWireToSelection({ wireId: wire.id, multiselect }))
@@ -183,6 +182,13 @@ export function MindmapWireLine({
 	const applyVisualState = useCallback(() => {
 		visibleGroupRef.current?.style.setProperty('filter', getGroupFilter())
 	}, [getGroupFilter])
+
+	useEventBusSubscribe['mindmap/selection/changed']({
+		callback: ({ selectedWireIds }) => {
+			selectedRef.current = selectedWireIds.has(wire.id)
+			applyVisualState()
+		},
+	})
 
 	return (
 		<>
