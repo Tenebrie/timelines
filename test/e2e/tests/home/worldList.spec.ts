@@ -1,5 +1,5 @@
-import { expect, test } from '@playwright/test'
 import { createNewUser, deleteAccount } from '@fixtures/auth'
+import { expect, test } from '@playwright/test'
 
 import { makeUrl } from '../utils'
 

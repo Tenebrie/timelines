@@ -2,6 +2,7 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { SelectProps } from '@mui/material/Select'
+import { useId } from 'react'
 
 export type LoadingSelectProps<Value = unknown> = SelectProps<Value> & {
 	/**
@@ -13,6 +14,7 @@ export type LoadingSelectProps<Value = unknown> = SelectProps<Value> & {
 export function LoadingSelect<Value = unknown>(props: LoadingSelectProps<Value>) {
 	const { isLoading, children, disabled, ...rest } = props
 
+	const labelId = useId()
 	if (isLoading) {
 		return (
 			<Select disabled displayEmpty {...rest} value={''}>
@@ -23,8 +25,8 @@ export function LoadingSelect<Value = unknown>(props: LoadingSelectProps<Value>)
 
 	return (
 		<FormControl>
-			<InputLabel>{props.label}</InputLabel>
-			<Select disabled={disabled} {...rest}>
+			<InputLabel id={labelId}>{props.label}</InputLabel>
+			<Select disabled={disabled} labelId={labelId} {...rest}>
 				{children}
 			</Select>
 		</FormControl>
