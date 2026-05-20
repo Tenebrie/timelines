@@ -1,7 +1,7 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
 import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import { memo, useEffect, useRef } from 'react'
+import { memo, useEffect, useLayoutEffect, useRef } from 'react'
 import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
@@ -17,6 +17,7 @@ import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
 import { mindmapSlice } from '../MindmapSlice'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { ActorNode } from './ActorNode'
+import { nodePositions } from './mindmapWireUtils'
 
 type Props = {
 	actor: ActorDetails
@@ -93,11 +94,9 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			positionRef.current = { x: positionRef.current.x + deltaX, y: positionRef.current.y + deltaY }
 			ref.current?.style.setProperty('--node-x', `${positionRef.current.x}px`)
 			ref.current?.style.setProperty('--node-y', `${positionRef.current.y}px`)
-
-			dispatchGlobalEvent['mindmap/node/onMove']({
-				nodeId: node.id,
-				positionX: positionRef.current.x,
-				positionY: positionRef.current.y,
+			nodePositions.set(node.id, {
+				...positionRef.current,
+				height: nodePositions.get(node.id)?.height ?? 80,
 			})
 		},
 	})
@@ -112,6 +111,19 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 	})
 
 	const nodeRef = useAutoRef(node)
+
+	useLayoutEffect(() => {
+		const el = ref.current
+		const scale = el ? parseFloat(getComputedStyle(el).getPropertyValue('--grid-scale')) || 1 : 1
+		const height = el ? el.getBoundingClientRect().height / scale : 80
+		nodePositions.set(node.id, { x: node.positionX, y: node.positionY, height })
+	})
+	useEffect(
+		() => () => {
+			nodePositions.delete(node.id)
+		},
+		[node.id],
+	)
 
 	useEventBusSubscribe['mindmap/selection/changed']({
 		callback: ({ selectedNodeIds }) => {
@@ -202,15 +214,19 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 				positionRef.current = { x: mouseState.positionX, y: mouseState.positionY }
 				element.style.setProperty('--node-x', `${mouseState.positionX}px`)
 				element.style.setProperty('--node-y', `${mouseState.positionY}px`)
-				dispatchGlobalEvent['mindmap/node/onMove']({
-					nodeId: node.id,
-					positionX: mouseState.positionX,
-					positionY: mouseState.positionY,
+				nodePositions.set(node.id, {
+					...positionRef.current,
+					height: nodePositions.get(node.id)?.height ?? 80,
 				})
 				dispatchGlobalEvent['mindmap/node/onGroupDragUpdate']({
 					sourceNodeId: node.id,
 					deltaX: mouseState.deltaX / mouseState.gridScale,
 					deltaY: mouseState.deltaY / mouseState.gridScale,
+				})
+				dispatchGlobalEvent['mindmap/node/onMove']({
+					nodeId: node.id,
+					positionX: mouseState.positionX,
+					positionY: mouseState.positionY,
 				})
 
 				mouseState.deltaX = 0
@@ -241,15 +257,16 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 				deltaY: totalDeltaY,
 			})
 
-			dispatchGlobalEvent['mindmap/node/onMove']({
-				nodeId: node.id,
-				positionX: snappedPosition.x,
-				positionY: snappedPosition.y,
-			})
+			nodePositions.set(node.id, { ...snappedPosition, height: nodePositions.get(node.id)?.height ?? 80 })
 			dispatchGlobalEvent['mindmap/node/onGroupDragUpdate']({
 				sourceNodeId: node.id,
 				deltaX: snappedPosition.x - mouseState.positionX,
 				deltaY: snappedPosition.y - mouseState.positionY,
+			})
+			dispatchGlobalEvent['mindmap/node/onMove']({
+				nodeId: node.id,
+				positionX: snappedPosition.x,
+				positionY: snappedPosition.y,
 			})
 			dispatchGlobalEvent['mindmap/node/onGroupDragEnd']({
 				sourceNodeId: node.id,

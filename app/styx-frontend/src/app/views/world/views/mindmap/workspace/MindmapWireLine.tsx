@@ -13,6 +13,7 @@ import {
 	arrowPath,
 	buildPathD,
 	getNodeHeight,
+	nodePositions,
 	pathMidpoint,
 	pickEdgePoints,
 	registerWire,
@@ -36,7 +37,7 @@ type Props = {
 }
 
 const ARROW_SIZE = 8
-const TRANSITION = 'filter 0.25s ease, opacity 0.25s ease'
+const TRANSITION = 'filter 0.25s ease'
 
 export function MindmapWireLine({
 	wire,
@@ -47,6 +48,7 @@ export function MindmapWireLine({
 	onOpenPopover,
 }: Props) {
 	const pathRef = useRef<SVGPathElement>(null)
+	const glowPathRef = useRef<SVGPathElement>(null)
 	const hitPathRef = useRef<SVGPathElement>(null)
 	const gradientRef = useRef<SVGLinearGradientElement>(null)
 	const srcPortRef = useRef<SVGGElement>(null)
@@ -71,6 +73,7 @@ export function MindmapWireLine({
 	const updateDom = (ep: WireEndpoints) => {
 		const d = buildPathD(ep)
 		pathRef.current?.setAttribute('d', d)
+		glowPathRef.current?.setAttribute('d', d)
 		hitPathRef.current?.setAttribute('d', d)
 		gradientRef.current?.setAttribute('x1', String(ep.x1))
 		gradientRef.current?.setAttribute('y1', String(ep.y1))
@@ -91,20 +94,19 @@ export function MindmapWireLine({
 	}
 
 	useEventBusSubscribe['mindmap/node/onMove']({
-		callback: (data) => {
+		callback: () => {
 			if (!pathRef.current || !gradientRef.current) return
 			const pos = posRef.current
-			if (data.nodeId === source.node.id) {
-				pos.srcX = data.positionX
-				pos.srcY = data.positionY
-			}
-			if (data.nodeId === target.node.id) {
-				pos.tgtX = data.positionX
-				pos.tgtY = data.positionY
-			}
-			const srcH = getNodeHeight(source.node.id)
-			const tgtH = getNodeHeight(target.node.id)
-			const ep = pickEdgePoints(pos.srcX, pos.srcY, srcH, pos.tgtX, pos.tgtY, tgtH)
+			const srcPos = nodePositions.get(source.node.id)
+			const tgtPos = nodePositions.get(target.node.id)
+			if (!srcPos || !tgtPos) return
+			if (pos.srcX === srcPos.x && pos.srcY === srcPos.y && pos.tgtX === tgtPos.x && pos.tgtY === tgtPos.y)
+				return
+			pos.srcX = srcPos.x
+			pos.srcY = srcPos.y
+			pos.tgtX = tgtPos.x
+			pos.tgtY = tgtPos.y
+			const ep = pickEdgePoints(pos.srcX, pos.srcY, srcPos.height, pos.tgtX, pos.tgtY, tgtPos.height)
 			updateDom(ep)
 		},
 	})
@@ -149,8 +151,6 @@ export function MindmapWireLine({
 	})
 
 	const theme = useCustomTheme()
-	const glowColor = theme.mode === 'light' ? 'rgba(0, 0, 0, 0.7)' : 'rgba(255, 255, 255, 0.7)'
-	const glowColorStrong = theme.mode === 'light' ? 'rgba(0, 0, 0, 1.0)' : 'rgba(255, 255, 255, 1.0)'
 
 	const maxLabelLength = 24
 	const labelText = wire.content
@@ -159,29 +159,17 @@ export function MindmapWireLine({
 			: wire.content
 		: ''
 
-	const getGroupFilter = useCallback(() => {
+	const applyVisualState = useCallback(() => {
 		const isSel = selectedRef.current
 		const isHov = isHoveredRef.current
 		const isAct = isActiveRef.current
 
-		if (isSel && isAct) {
-			return `drop-shadow(0 0 3px ${glowColorStrong}) brightness(0.75)`
-		}
-		if (isSel) {
-			return `drop-shadow(0 0 3px ${glowColorStrong})`
-		}
-		if (isAct) {
-			return `drop-shadow(0 0 3px ${glowColor}) brightness(0.75)`
-		}
-		if (isHov) {
-			return `drop-shadow(0 0 3px ${glowColor})`
-		}
-		return 'none'
-	}, [glowColor, glowColorStrong])
+		const glowOpacity = isSel ? '0.7' : isHov || isAct ? '0.4' : '0'
+		const brightness = isAct ? 'brightness(0.85)' : 'none'
 
-	const applyVisualState = useCallback(() => {
-		visibleGroupRef.current?.style.setProperty('filter', getGroupFilter())
-	}, [getGroupFilter])
+		glowPathRef.current?.style.setProperty('opacity', glowOpacity)
+		visibleGroupRef.current?.style.setProperty('filter', brightness)
+	}, [])
 
 	useEventBusSubscribe['mindmap/selection/changed']({
 		callback: ({ selectedWireIds }) => {
@@ -209,12 +197,19 @@ export function MindmapWireLine({
 			)}
 			{createPortal(
 				<>
-					{/* Visible group — glow, brightness applied here via filter */}
+					{/* Glow stroke — wider path behind, toggled via opacity */}
+					<path
+						ref={glowPathRef}
+						d={buildPathD(ep)}
+						fill="none"
+						strokeWidth={8}
+						pointerEvents="none"
+						style={{ stroke: `url(#${gradientId})`, opacity: 0, transition: 'opacity 0.25s ease' }}
+					/>
 					<g
 						ref={visibleGroupRef}
 						style={{
 							transition: TRANSITION,
-							filter: getGroupFilter(),
 						}}
 					>
 						<path

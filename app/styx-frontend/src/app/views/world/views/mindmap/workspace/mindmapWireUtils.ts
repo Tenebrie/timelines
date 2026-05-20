@@ -128,6 +128,8 @@ type WireControlPoints = {
 
 const wireRegistry = new Map<string, WireControlPoints>()
 
+export const nodePositions = new Map<string, { x: number; y: number; height: number }>()
+
 export function registerWire(id: string, ep: WireEndpoints): void {
 	const bias = computeBias(ep)
 	wireRegistry.set(id, {
