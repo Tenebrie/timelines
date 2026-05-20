@@ -45,6 +45,7 @@ export function Mindmap() {
 			gridOffsetX: 0,
 			gridOffsetY: 0,
 			gridScale: 1,
+			gridScaleRaw: 1,
 			scaleAdjustmentPending: 0,
 
 			deltaX: 0,
@@ -120,14 +121,17 @@ export function Mindmap() {
 			const centerX = rect.width / 2
 			const centerY = rect.height / 2
 
-			const oldScale = mouseState.gridScale
-			let newScale = oldScale * (1 - event.deltaY / 800)
-			newScale = Math.min(Math.max(0.25, newScale), 5)
+			let newScaleRaw = mouseState.gridScaleRaw * (1 - event.deltaY / 800)
+			newScaleRaw = Math.min(Math.max(0.25, newScaleRaw), 5)
+			mouseState.gridScaleRaw = newScaleRaw
 
-			const scaleFactor = Math.round(smallGridSpacing * newScale) / Math.round(smallGridSpacing * oldScale)
+			const oldScale = mouseState.gridScale
+			const newScale = Math.round(smallGridSpacing * newScaleRaw) / smallGridSpacing
+
+			const scaleFactor = newScale / oldScale
 			mouseState.gridOffsetX = centerX - scaleFactor * (centerX - mouseState.gridOffsetX)
 			mouseState.gridOffsetY = centerY - scaleFactor * (centerY - mouseState.gridOffsetY)
-			mouseState.gridScale *= scaleFactor
+			mouseState.gridScale = newScale
 			update()
 		}
 
@@ -203,11 +207,8 @@ export function Mindmap() {
 						position: 'absolute',
 						width: '100%',
 						height: '100%',
-						// left: 'var(--grid-offset-x)',
-						// top: 'var(--grid-offset-y)',
 						pointerEvents: 'none',
 						zIndex: 2,
-						// transition: 'all 1s ease-out',
 					}}
 				>
 					<MindmapContent />

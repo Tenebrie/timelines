@@ -126,6 +126,8 @@ function checkNodeIntersection(parentElement: HTMLElement | null, selectionBox: 
 	return Array.from(selectedNodeIds).map((str) => JSON.parse(str) as { key: string; actorId: string })
 }
 
+const WIRE_SAMPLE_COUNT = 50
+
 function checkWireIntersection(parentElement: HTMLElement | null, selectionBox: SelectionRect) {
 	if (!parentElement) {
 		return []
@@ -141,20 +143,43 @@ function checkWireIntersection(parentElement: HTMLElement | null, selectionBox: 
 	const containerRect = parentElement.getBoundingClientRect()
 
 	wires.forEach((wireElement) => {
-		const rect = wireElement.getBoundingClientRect()
+		if (!(wireElement instanceof SVGPathElement)) {
+			return
+		}
 
-		const wireLeft = rect.left - containerRect.left
-		const wireTop = rect.top - containerRect.top
-		const wireRight = wireLeft + rect.width
-		const wireBottom = wireTop + rect.height
+		// Quick bounding-box rejection before expensive sampling
+		const bbox = wireElement.getBoundingClientRect()
+		const bboxLeft = bbox.left - containerRect.left
+		const bboxTop = bbox.top - containerRect.top
+		if (
+			boxLeft > bboxLeft + bbox.width ||
+			boxRight < bboxLeft ||
+			boxTop > bboxTop + bbox.height ||
+			boxBottom < bboxTop
+		) {
+			return
+		}
 
-		const intersects =
-			boxLeft < wireRight && boxRight > wireLeft && boxTop < wireBottom && boxBottom > wireTop
+		// Sample points along the actual Bezier curve for precise intersection
+		const ctm = wireElement.getScreenCTM()
+		if (!ctm) {
+			return
+		}
 
-		if (intersects) {
-			const wireId = wireElement.getAttribute('data-mindmap-wire')
-			if (wireId) {
-				selectedWireIds.push(wireId)
+		const totalLength = wireElement.getTotalLength()
+		for (let i = 0; i <= WIRE_SAMPLE_COUNT; i++) {
+			const pt = wireElement.getPointAtLength((i / WIRE_SAMPLE_COUNT) * totalLength)
+			const screenX = ctm.a * pt.x + ctm.c * pt.y + ctm.e
+			const screenY = ctm.b * pt.x + ctm.d * pt.y + ctm.f
+			const relX = screenX - containerRect.left
+			const relY = screenY - containerRect.top
+
+			if (relX >= boxLeft && relX <= boxRight && relY >= boxTop && relY <= boxBottom) {
+				const wireId = wireElement.getAttribute('data-mindmap-wire')
+				if (wireId) {
+					selectedWireIds.push(wireId)
+				}
+				return
 			}
 		}
 	})
