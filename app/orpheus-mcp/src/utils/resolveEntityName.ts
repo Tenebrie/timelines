@@ -3,6 +3,8 @@ import { RheaService } from '@src/services/RheaService.js'
 export type ResolvedMention = {
 	name: string
 	type: 'event' | 'actor' | 'tag' | 'article'
+	fullName: string
+	summary: string
 }
 
 export function resolveEntityName({
@@ -22,6 +24,8 @@ export function resolveEntityName({
 		return {
 			type: 'event',
 			name: event.name,
+			fullName: event.name,
+			summary: event.descriptionRich.trim().split('\n')[0],
 		}
 
 	const actor = actors.find((actor) => actor.id === entityId)
@@ -29,6 +33,8 @@ export function resolveEntityName({
 		return {
 			type: 'actor',
 			name: actor.name,
+			fullName: `${actor.name}${actor.title ? `, ${actor.title})` : ''}`,
+			summary: actor.descriptionRich.trim().split('\n')[0],
 		}
 
 	const tag = tags.find((tag) => tag.id === entityId)
@@ -36,6 +42,8 @@ export function resolveEntityName({
 		return {
 			type: 'tag',
 			name: tag.name,
+			fullName: tag.name,
+			summary: tag.description.trim().split('\n')[0],
 		}
 
 	const article = articles.find((article) => article.id === entityId)
@@ -43,6 +51,8 @@ export function resolveEntityName({
 		return {
 			type: 'article',
 			name: article.name,
+			fullName: article.name,
+			summary: article.contentRich.trim().split('\n')[0],
 		}
 
 	return null

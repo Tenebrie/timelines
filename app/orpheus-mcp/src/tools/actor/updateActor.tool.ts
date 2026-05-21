@@ -24,7 +24,9 @@ export function registerUpdateActorTool(server: McpServer) {
 		TOOL_NAME,
 		{
 			title: 'Update Actor',
-			description: 'Update an existing actor by name. Find the actor by name and update its properties.',
+			description: [
+				'Update an existing actor by name. Find the actor by name and update its properties.',
+			].join('\n'),
 			inputSchema,
 			annotations: {
 				idempotentHint: true,

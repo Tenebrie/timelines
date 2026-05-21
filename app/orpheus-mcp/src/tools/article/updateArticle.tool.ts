@@ -17,7 +17,10 @@ const inputSchema = z.object({
 		.string()
 		.optional()
 		.describe('The new color for the article in RGB hex format, e.g. #bf8a40 (optional)'),
-	content: z.string().optional().describe('The new content in HTML format (optional)'),
+	content: z
+		.string()
+		.optional()
+		.describe('The new content in HTML format (optional). If provided, fully replaces the old content.'),
 })
 
 export function registerUpdateArticleTool(server: McpServer) {
@@ -28,12 +31,9 @@ export function registerUpdateArticleTool(server: McpServer) {
 			description: [
 				'Update an existing wiki article by name. Find the article by name and update its properties.',
 
-				'To mention another entity in content, use:',
-				'<span data-component-props="{&quot;actor&quot;:&quot;ACTOR_ID&quot;}" data-type="mention" data-name="Display Name"></span>',
-				'<span data-component-props="{&quot;tag&quot;:&quot;TAG_ID&quot;}" data-type="mention" data-name="Tag Name"></span>',
-				'Note that data-component-props is an escaped JSON string. For example: {"actor":"ACTOR_ID"}, escaped, will produce the correct format.',
-
-				'You may also use a shorthand syntax: @[Entity Name] that will be automatically resolved into an HTML tag.',
+				'To mention another entity in content, use the following syntax:',
+				'@[Entity Name]',
+				'It will be automatically resolved into an HTML tag.',
 
 				'Content is HTML. Use <p>, <ul>, <li>, <b> etc.',
 				'Mentions link entities together and show up in "Mentions" and "Mentioned in" fields.',
