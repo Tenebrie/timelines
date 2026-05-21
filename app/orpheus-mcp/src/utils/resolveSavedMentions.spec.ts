@@ -34,8 +34,8 @@ describe('resolveSavedMentions', () => {
 			expect(result).toHaveLength(2)
 			expect(result[0].type).toBe('text')
 			expect(result[1].type).toBe('text')
-			expect(result[0].text).toMatch(/^Mentions: /)
-			expect(result[1].text).toMatch(/^Mentioned in: /)
+			expect(result[0].text).toMatch(/^Mentions:/)
+			expect(result[1].text).toMatch(/^Mentioned in:/)
 		})
 
 		it('shows (None) for empty mentions', () => {
@@ -44,8 +44,8 @@ describe('resolveSavedMentions', () => {
 				worldData: mockWorldData,
 				articleData: mockArticleData,
 			})
-			expect(result[0].text).toBe('Mentions: (None)')
-			expect(result[1].text).toBe('Mentioned in: (None)')
+			expect(result[0].text).toBe('Mentions:\n(None)')
+			expect(result[1].text).toBe('Mentioned in:\n(None)')
 		})
 	})
 
@@ -57,7 +57,7 @@ describe('resolveSavedMentions', () => {
 				worldData: mockWorldData,
 				articleData: mockArticleData,
 			})
-			expect(mentionsBlock.text).toBe('Mentions: - The Great Battle (event): A terrible conflict erupted.')
+			expect(mentionsBlock.text).toBe('Mentions:\n- [event] The Great Battle: A terrible conflict erupted.')
 		})
 
 		it('includes the actor title in fullName', () => {
@@ -67,8 +67,8 @@ describe('resolveSavedMentions', () => {
 				worldData: mockWorldData,
 				articleData: mockArticleData,
 			})
-			expect(mentionsBlock.text).toContain('Alice, Queen of the North)')
-			expect(mentionsBlock.text).toContain('(actor)')
+			expect(mentionsBlock.text).toContain('Alice, Queen of the North')
+			expect(mentionsBlock.text).toContain('[actor]')
 		})
 
 		it('omits title suffix when actor has no title', () => {
@@ -78,7 +78,7 @@ describe('resolveSavedMentions', () => {
 				worldData: mockWorldData,
 				articleData: mockArticleData,
 			})
-			expect(mentionsBlock.text).toContain('Bob the Builder (actor)')
+			expect(mentionsBlock.text).toContain('[actor] Bob the Builder')
 		})
 
 		it('includes tag mention with summary', () => {
@@ -88,7 +88,7 @@ describe('resolveSavedMentions', () => {
 				worldData: mockWorldData,
 				articleData: mockArticleData,
 			})
-			expect(mentionsBlock.text).toBe('Mentions: - Important (tag): Critical events and turning points.')
+			expect(mentionsBlock.text).toBe('Mentions:\n- [tag] Important: Critical events and turning points.')
 		})
 
 		it('includes article mention with summary', () => {
@@ -98,7 +98,7 @@ describe('resolveSavedMentions', () => {
 				worldData: mockWorldData,
 				articleData: mockArticleData,
 			})
-			expect(mentionsBlock.text).toBe('Mentions: - Lore Overview (article): The full history of the world.')
+			expect(mentionsBlock.text).toBe('Mentions:\n- [article] Lore Overview: The full history of the world.')
 		})
 
 		it('silently skips mentions to unresolvable IDs', () => {
@@ -115,7 +115,13 @@ describe('resolveSavedMentions', () => {
 		it('summary only shows the first line of rich content', () => {
 			const worldData = {
 				...mockWorldData,
-				events: [{ id: 'event-1', name: 'Multi-line Event', descriptionRich: 'First line.\nSecond line.' }],
+				events: [
+					{
+						id: 'event-1',
+						name: 'Multi-line Event',
+						descriptionRich: '<p>First line.</p><p>Second line.</p>',
+					},
+				],
 			} as unknown as WorldData
 			const entity = { mentions: [{ targetId: 'event-1' }], mentionedIn: [] }
 			const [mentionsBlock] = resolveSavedMentions({ entity, worldData, articleData: mockArticleData })
@@ -143,7 +149,7 @@ describe('resolveSavedMentions', () => {
 				worldData: mockWorldData,
 				articleData: mockArticleData,
 			})
-			expect(mentionsBlock.text).toBe('Mentions: - Peace Treaty Signing (event): ')
+			expect(mentionsBlock.text).toBe('Mentions:\n- [event] Peace Treaty Signing: ')
 		})
 	})
 
@@ -155,7 +161,7 @@ describe('resolveSavedMentions', () => {
 				worldData: mockWorldData,
 				articleData: mockArticleData,
 			})
-			expect(mentionedInBlock.text).toBe('Mentioned in: Lore Overview (article)')
+			expect(mentionedInBlock.text).toBe('Mentioned in:\n- [article] Lore Overview')
 		})
 
 		it('silently skips unresolvable source IDs', () => {
@@ -165,7 +171,7 @@ describe('resolveSavedMentions', () => {
 				worldData: mockWorldData,
 				articleData: mockArticleData,
 			})
-			expect(mentionedInBlock.text).toBe('Mentioned in: (None)')
+			expect(mentionedInBlock.text).toBe('Mentioned in:\n(None)')
 		})
 
 		it('does not include summary in mentionedIn output', () => {

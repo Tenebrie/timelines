@@ -22,9 +22,8 @@ export function resolveEntityName({
 	const articles = articleData
 
 	function toSummary(content: string) {
-		return toAgentReadableText({
-			content: content.trim().split('\n')[0],
-		})
+		const firstParagraph = content.match(/<p[^>]*>(.*?)<\/p>/s)?.[1] ?? content.trim()
+		return toAgentReadableText({ content: firstParagraph }).replace(/<[^>]*>/g, '')
 	}
 
 	const event = events.find((event) => event.id === entityId)
@@ -41,7 +40,7 @@ export function resolveEntityName({
 		return {
 			type: 'actor',
 			name: actor.name,
-			fullName: `${actor.name}${actor.title ? `, ${actor.title})` : ''}`,
+			fullName: `${actor.name}${actor.title ? `, ${actor.title}` : ''}`,
 			summary: toSummary(actor.descriptionRich),
 		}
 
