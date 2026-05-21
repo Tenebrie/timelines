@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { normalizeColor } from '@src/utils/normalizeColor.js'
 import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -18,6 +19,10 @@ const inputSchema = z.object({
 		.describe(
 			'The new timestamp for the event (optional), as a bigint string, in minutes. Timestamp 0 is the beginning of the story.',
 		),
+	color: z
+		.string()
+		.optional()
+		.describe('The new color for the event in RGB hex format, e.g. #bf8a40 (optional)'),
 	description: z.string().optional().describe('The new description in HTML format (optional)'),
 })
 
@@ -51,7 +56,7 @@ export function registerUpdateEventTool(server: McpServer) {
 
 				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
 				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
-				const { eventName, name, timestamp, description } = args
+				const { eventName, name, timestamp, color, description } = args
 
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })
 				const event = findByName({ name: eventName, entities: worldData.events })
@@ -62,6 +67,7 @@ export function registerUpdateEventTool(server: McpServer) {
 					userId,
 					name,
 					timestamp,
+					color: normalizeColor(color),
 				})
 
 				if (description !== undefined) {
@@ -89,7 +95,8 @@ export function registerUpdateEventTool(server: McpServer) {
 								`Event updated successfully!\n` +
 								`Name: ${updatedEvent.name}\n` +
 								`ID: ${updatedEvent.id}\n` +
-								`Timestamp: ${updatedEvent.timestamp}`,
+								`Timestamp: ${updatedEvent.timestamp}\n` +
+								`Color: ${updatedEvent.color || '(None)'}`,
 						},
 					],
 				}

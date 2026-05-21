@@ -101,8 +101,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			}[]
 			id: string
 			name: string
-			scaleFactor: number
 			compression: number
+			scaleFactor: number
 			baselineUnitId?: null | string
 		}[]
 		seasons: {

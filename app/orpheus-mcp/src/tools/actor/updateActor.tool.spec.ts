@@ -126,6 +126,41 @@ describe('update_actor tool', () => {
 		expect(result.isError).toBe(true)
 	})
 
+	it('updates an actor color', async () => {
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456',
+			response: {
+				id: 'world-456',
+				name: 'Test World',
+				isReadOnly: false,
+				events: [],
+				actors: [{ id: 'a1', name: 'Gandalf', title: 'The Grey' }],
+				tags: [],
+			},
+		})
+
+		const mock = generateEndpointMock(server, {
+			method: 'patch',
+			path: '/api/world/world-456/actor/a1',
+			response: {
+				id: 'a1',
+				name: 'Gandalf',
+				title: 'The Grey',
+				color: '#bf8a40',
+			},
+		})
+
+		const result = await client.callTool({
+			name: 'update_actor',
+			arguments: { actorName: 'Gandalf', color: '#bf8a40' },
+		})
+
+		expect(result.isError).toBeUndefined()
+		expect(mock.hasBeenCalled()).toBe(true)
+		expect((mock.invocations[0].jsonBody as Record<string, unknown>).color).toBe('#bf8a40')
+	})
+
 	it('shows (None) when updated title is empty', async () => {
 		generateEndpointMock(server, {
 			method: 'get',

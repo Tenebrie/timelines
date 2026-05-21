@@ -18,6 +18,7 @@ import {
 	usePathParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { SessionMiddleware } from '../middleware/SessionMiddleware.js'
 import { worldWikiArticleTag, worldWikiTag } from './utils/tags.js'
@@ -60,8 +61,10 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
-	const { name, contentRich } = useRequestBody(ctx, {
+	const { name, icon, color, contentRich } = useRequestBody(ctx, {
 		name: RequiredParam(StringValidator),
+		icon: z.string().optional(),
+		color: z.string().optional(),
 		contentRich: OptionalParam(ContentStringValidator),
 	})
 
@@ -81,6 +84,8 @@ router.post('/api/world/:worldId/wiki/articles', async (ctx) => {
 	const article = await WikiService.createWikiArticle({
 		worldId,
 		name,
+		icon,
+		color,
 		contentRich: parsedContentRich ?? '',
 		position: articleCount,
 		mentions,

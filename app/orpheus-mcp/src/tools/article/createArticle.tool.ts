@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { checkArticleDoesNotExist } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { normalizeColor } from '@src/utils/normalizeColor.js'
 import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -11,6 +12,10 @@ const TOOL_NAME = 'create_article'
 
 const inputSchema = z.object({
 	name: z.string().describe('The name of the article'),
+	color: z
+		.string()
+		.optional()
+		.describe('The color of the article in RGB hex format, e.g. #bf8a40 (optional)'),
 	content: z.string().optional().describe('The content of the article in HTML format (optional)'),
 })
 
@@ -29,7 +34,7 @@ export function registerCreateArticleTool(server: McpServer) {
 
 				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
 				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
-				const { name, content } = args
+				const { name, color, content } = args
 
 				await checkArticleDoesNotExist({ name, userId, sessionId })
 
@@ -48,6 +53,7 @@ export function registerCreateArticleTool(server: McpServer) {
 					worldId,
 					userId,
 					name,
+					color: normalizeColor(color),
 					contentRich: parsedContent || '',
 				})
 
@@ -56,7 +62,11 @@ export function registerCreateArticleTool(server: McpServer) {
 					content: [
 						{
 							type: 'text' as const,
-							text: `Article created successfully!\n` + `Name: ${article.name}\n` + `ID: ${article.id}`,
+							text:
+								`Article created successfully!\n` +
+								`Name: ${article.name}\n` +
+								`ID: ${article.id}\n` +
+								`Color: ${article.color || '(None)'}`,
 						},
 					],
 				}

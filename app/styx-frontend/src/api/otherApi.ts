@@ -207,9 +207,9 @@ export type RequestImageConversionApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	ownerId: string
 	size: number
 	expiresAt?: null | string
-	ownerId: string
 	bucketKey: string
 	originalFileName: string
 	originalFileExtension: string
@@ -346,18 +346,18 @@ export type AcceptWorldShareLinkApiArg = {
 }
 export type UpdateArticleApiResponse = /** status 200  */ {
 	children: {
-		name: string
 		id: string
+		name: string
 	}[]
 	worldId: string
-	name: string
-	icon: string
-	color: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	contentRich: string
+	name: string
+	icon: string
+	color: string
 	position: number
+	contentRich: string
 	parentId?: null | string
 }
 export type UpdateArticleApiArg = {

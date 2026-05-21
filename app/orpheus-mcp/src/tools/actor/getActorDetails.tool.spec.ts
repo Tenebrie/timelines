@@ -182,6 +182,50 @@ describe('get_actor_details tool', () => {
 		expect(pagesText).toContain('(None)')
 	})
 
+	it('includes color in actor details', async () => {
+		const coloredWorld = {
+			...worldDetailsResponse,
+			actors: [
+				{
+					id: 'a1',
+					name: 'Gandalf',
+					title: 'The Grey',
+					color: '#bf8a40',
+					pages: [],
+					mentions: [],
+					mentionedIn: [],
+				},
+			],
+		}
+
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456',
+			response: coloredWorld,
+		})
+
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456/wiki/articles',
+			response: [],
+		})
+
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456/actor/a1/content',
+			response: { contentHtml: '' },
+		})
+
+		const result = await client.callTool({
+			name: 'get_actor_details',
+			arguments: { actorName: 'Gandalf' },
+		})
+
+		const texts = (result.content as Array<{ type: string; text: string }>).map((c) => c.text)
+		expect(result.isError).toBeUndefined()
+		expect(texts[0]).toContain('Color: #bf8a40')
+	})
+
 	it('shows (None) when actor has no title', async () => {
 		const noTitleWorld = {
 			...worldDetailsResponse,
