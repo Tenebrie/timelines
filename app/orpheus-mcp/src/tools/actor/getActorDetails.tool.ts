@@ -4,6 +4,7 @@ import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { resolveSavedMentions } from '@src/utils/resolveSavedMentions.js'
+import { toAgentReadableText } from '@src/utils/toAgentReadableText.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -51,7 +52,7 @@ export function registerGetActorDetailsTool(server: McpServer) {
 				const actor = findByName({ name: actorName, entities: worldData.actors })
 				const page = args.pageName ? findByName({ name: args.pageName, entities: actor.pages }) : undefined
 
-				const content = await RheaService.getActorContent({
+				const rawContent = await RheaService.getActorContent({
 					worldId,
 					actorId: actor.id,
 					userId,
@@ -62,6 +63,9 @@ export function registerGetActorDetailsTool(server: McpServer) {
 					entity: actor,
 					worldData,
 					articleData,
+				})
+				const content = toAgentReadableText({
+					content: rawContent.contentHtml ?? '',
 				})
 
 				Logger.toolSuccess(TOOL_NAME, `Found actor: ${actor.name}`)
@@ -75,7 +79,7 @@ export function registerGetActorDetailsTool(server: McpServer) {
 								`Title: ${actor.title || '(None)'}\n` +
 								`Color: ${actor.color || '(None)'}\n` +
 								`Page: ${page?.name || '(Main content)'}\n\n` +
-								`${content.contentHtml || '(No content provided)'}`,
+								`${content || '(No content provided)'}`,
 						},
 						{
 							type: 'text' as const,

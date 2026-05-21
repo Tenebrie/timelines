@@ -4,6 +4,7 @@ import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { resolveSavedMentions } from '@src/utils/resolveSavedMentions.js'
+import { toAgentReadableText } from '@src/utils/toAgentReadableText.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -37,7 +38,7 @@ export function registerGetArticleDetailsTool(server: McpServer) {
 				const articles = await RheaService.getWorldArticles({ worldId, userId })
 				const article = findByName({ name: articleName, entities: articles })
 
-				const content = await RheaService.getArticleContent({
+				const rawContent = await RheaService.getArticleContent({
 					worldId,
 					articleId: article.id,
 					userId,
@@ -49,6 +50,9 @@ export function registerGetArticleDetailsTool(server: McpServer) {
 					worldData,
 					articleData: articles,
 				})
+				const content = toAgentReadableText({
+					content: rawContent.contentHtml ?? '',
+				})
 
 				Logger.toolSuccess(TOOL_NAME, `Found article "${article.name}"`)
 				return {
@@ -59,7 +63,7 @@ export function registerGetArticleDetailsTool(server: McpServer) {
 								`Article: ${article.name}\n` +
 								`ID: ${article.id}\n` +
 								`Color: ${article.color || '(None)'}\n\n` +
-								`${content.contentHtml || 'No content'}`,
+								`${content || 'No content'}`,
 						},
 						...mentionsOutput,
 					],

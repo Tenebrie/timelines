@@ -1,5 +1,7 @@
 import { RheaService } from '@src/services/RheaService.js'
 
+import { toAgentReadableText } from './toAgentReadableText.js'
+
 export type ResolvedMention = {
 	name: string
 	type: 'event' | 'actor' | 'tag' | 'article'
@@ -19,13 +21,19 @@ export function resolveEntityName({
 	const { events, actors, tags } = worldData
 	const articles = articleData
 
+	function toSummary(content: string) {
+		return toAgentReadableText({
+			content: content.trim().split('\n')[0],
+		})
+	}
+
 	const event = events.find((event) => event.id === entityId)
 	if (event)
 		return {
 			type: 'event',
 			name: event.name,
 			fullName: event.name,
-			summary: event.descriptionRich.trim().split('\n')[0],
+			summary: toSummary(event.descriptionRich),
 		}
 
 	const actor = actors.find((actor) => actor.id === entityId)
@@ -34,7 +42,7 @@ export function resolveEntityName({
 			type: 'actor',
 			name: actor.name,
 			fullName: `${actor.name}${actor.title ? `, ${actor.title})` : ''}`,
-			summary: actor.descriptionRich.trim().split('\n')[0],
+			summary: toSummary(actor.descriptionRich),
 		}
 
 	const tag = tags.find((tag) => tag.id === entityId)
@@ -43,7 +51,7 @@ export function resolveEntityName({
 			type: 'tag',
 			name: tag.name,
 			fullName: tag.name,
-			summary: tag.description.trim().split('\n')[0],
+			summary: toSummary(tag.description),
 		}
 
 	const article = articles.find((article) => article.id === entityId)
@@ -52,7 +60,7 @@ export function resolveEntityName({
 			type: 'article',
 			name: article.name,
 			fullName: article.name,
-			summary: article.contentRich.trim().split('\n')[0],
+			summary: toSummary(article.contentRich),
 		}
 
 	return null
