@@ -12,9 +12,10 @@ export type LoadingSelectProps<Value = unknown> = SelectProps<Value> & {
 }
 
 export function LoadingSelect<Value = unknown>(props: LoadingSelectProps<Value>) {
-	const { isLoading, children, disabled, ...rest } = props
+	const { isLoading, children, disabled, labelId: externalLabelId, ...rest } = props
 
-	const labelId = useId()
+	const generatedLabelId = useId()
+	const labelId = externalLabelId ?? generatedLabelId
 	if (isLoading) {
 		return (
 			<Select disabled displayEmpty {...rest} value={''}>
