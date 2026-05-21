@@ -46,7 +46,7 @@ export function resolveSavedMentions({
 			type: 'text' as const,
 			text:
 				'Mentioned in: ' +
-				reverseMentions.map((m) => `${m.name} (${m.type})`).join(`, `) +
+				reverseMentions.map((m) => `${m.fullName} (${m.type})`).join(`, `) +
 				(reverseMentions.length === 0 ? '(None)' : ''),
 		},
 	]
