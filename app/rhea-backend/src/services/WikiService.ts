@@ -117,6 +117,8 @@ export const WikiService = {
 
 	createWikiArticle: async (
 		params: Pick<WikiArticle, 'worldId' | 'name' | 'contentRich' | 'position'> & {
+			icon?: string
+			color?: string
 			mentions?: MentionData[]
 		},
 	) => {
@@ -125,6 +127,8 @@ export const WikiService = {
 				data: {
 					worldId: params.worldId,
 					name: params.name,
+					icon: params.icon,
+					color: params.color,
 					contentRich: params.contentRich,
 					position: params.position * 2,
 				},

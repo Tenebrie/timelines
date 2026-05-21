@@ -16,7 +16,8 @@
 		"start": "nodemon --watch src --ext ts,js,json --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
 		"test": "vitest --run",
 		"test:watch": "vitest",
-		"test:coverage": "vitest run --coverage"
+		"test:coverage": "vitest run --coverage",
+		"inspector": "npx @modelcontextprotocol/inspector"
 	},
 	"lint-staged": {
 		"*.(ts)": "eslint --fix"
@@ -33,6 +34,7 @@
 		"zod": "^4.4.3"
 	},
 	"devDependencies": {
+		"@modelcontextprotocol/inspector": "^0.21.2",
 		"@types/node": "^25.6.2",
 		"@typescript-eslint/eslint-plugin": "^8.59.3",
 		"@typescript-eslint/parser": "^8.59.3",

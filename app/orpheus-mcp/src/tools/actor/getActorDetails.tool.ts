@@ -73,6 +73,7 @@ export function registerGetActorDetailsTool(server: McpServer) {
 								`Actor: ${actor.name}\n` +
 								`ID: ${actor.id}\n` +
 								`Title: ${actor.title || '(None)'}\n` +
+								`Color: ${actor.color || '(None)'}\n` +
 								`Page: ${page?.name || '(Main content)'}\n\n` +
 								`${content.contentHtml || '(No content provided)'}`,
 						},

@@ -148,8 +148,8 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 	updatedAt: string
 	name: string
 	calendarId: string
-	scaleFactor: number
 	compression: number
+	scaleFactor: number
 	baselineUnitId?: null | string
 }
 export type CreateCalendarPresentationApiArg = {
@@ -179,8 +179,8 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 	updatedAt: string
 	name: string
 	calendarId: string
-	scaleFactor: number
 	compression: number
+	scaleFactor: number
 	baselineUnitId?: null | string
 }
 export type UpdateCalendarPresentationApiArg = {
@@ -200,8 +200,8 @@ export type DeleteCalendarPresentationApiResponse = /** status 200  */ {
 	updatedAt: string
 	name: string
 	calendarId: string
-	scaleFactor: number
 	compression: number
+	scaleFactor: number
 	baselineUnitId?: null | string
 }
 export type DeleteCalendarPresentationApiArg = {
@@ -373,8 +373,8 @@ export type GetCalendarApiResponse = /** status 200  */ {
 		updatedAt: string
 		name: string
 		calendarId: string
-		scaleFactor: number
 		compression: number
+		scaleFactor: number
 		baselineUnitId?: null | string
 	}[]
 	description: string
@@ -476,8 +476,8 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 		}[]
 		id: string
 		name: string
-		scaleFactor: number
 		compression: number
+		scaleFactor: number
 		baselineUnitId?: null | string
 	}[]
 	seasons: {

@@ -119,6 +119,42 @@ describe('get_article_details tool', () => {
 		expect(texts[0]).toContain('No content')
 	})
 
+	it('includes color in article details', async () => {
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456/wiki/articles',
+			response: [{ id: 'art-1', name: 'Magic System', color: '#bf8a40', mentions: [], mentionedIn: [] }],
+		})
+
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456/article/art-1/content',
+			response: { contentHtml: '' },
+		})
+
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456',
+			response: {
+				id: 'world-456',
+				name: 'Test World',
+				isReadOnly: false,
+				events: [],
+				actors: [],
+				tags: [],
+			},
+		})
+
+		const result = await client.callTool({
+			name: 'get_article_details',
+			arguments: { articleName: 'Magic System' },
+		})
+
+		const texts = (result.content as Array<{ type: string; text: string }>).map((c) => c.text)
+		expect(result.isError).toBeUndefined()
+		expect(texts[0]).toContain('Color: #bf8a40')
+	})
+
 	it('returns an error when article is not found', async () => {
 		generateEndpointMock(server, {
 			method: 'get',

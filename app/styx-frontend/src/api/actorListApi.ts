@@ -174,8 +174,8 @@ export type CreateActorContentPageApiArg = {
 }
 export type CreateActorApiResponse = /** status 200  */ {
 	pages: {
-		name: string
 		id: string
+		name: string
 	}[]
 	mentions: {
 		pageId?: null | string
@@ -209,14 +209,14 @@ export type CreateActorApiResponse = /** status 200  */ {
 	}[]
 	description: string
 	worldId: string
+	id: string
+	createdAt: string
+	updatedAt: string
 	name: string
 	title: string
 	icon: string
 	color: string
 	descriptionRich: string
-	id: string
-	createdAt: string
-	updatedAt: string
 }
 export type CreateActorApiArg = {
 	/** Any string value */
@@ -231,8 +231,8 @@ export type CreateActorApiArg = {
 }
 export type UpdateActorApiResponse = /** status 200  */ {
 	pages: {
-		name: string
 		id: string
+		name: string
 	}[]
 	mentions: {
 		pageId?: null | string
@@ -266,14 +266,14 @@ export type UpdateActorApiResponse = /** status 200  */ {
 	}[]
 	description: string
 	worldId: string
+	id: string
+	createdAt: string
+	updatedAt: string
 	name: string
 	title: string
 	icon: string
 	color: string
 	descriptionRich: string
-	id: string
-	createdAt: string
-	updatedAt: string
 }
 export type UpdateActorApiArg = {
 	/** Any string value */
@@ -290,14 +290,14 @@ export type UpdateActorApiArg = {
 export type DeleteActorApiResponse = /** status 200  */ {
 	description: string
 	worldId: string
+	id: string
+	createdAt: string
+	updatedAt: string
 	name: string
 	title: string
 	icon: string
 	color: string
 	descriptionRich: string
-	id: string
-	createdAt: string
-	updatedAt: string
 	descriptionYjs?: null | string
 }
 export type DeleteActorApiArg = {

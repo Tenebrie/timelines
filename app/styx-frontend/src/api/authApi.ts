@@ -122,8 +122,8 @@ export type PostLoginApiResponse = /** status 200  */ {
 			id: string
 			createdAt: string
 			updatedAt: string
-			expiresAt?: null | string
 			ownerId: string
+			expiresAt?: null | string
 			bucketKey: string
 			size: number
 			originalFileName: string
@@ -150,7 +150,7 @@ export type PostLoginApiArg = {
 	}
 }
 export type PostLogoutApiResponse = /** status 200  */ {
-	redirectTo: 'login' | 'admin'
+	redirectTo: 'admin' | 'login'
 }
 export type PostLogoutApiArg = void
 export const {

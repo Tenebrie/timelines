@@ -166,12 +166,14 @@ export const RheaService = {
 		userId,
 		name,
 		title,
+		color,
 		descriptionRich,
 	}: {
 		worldId: string
 		userId: string
 		name: string
 		title?: string
+		color?: string
 		descriptionRich?: string
 	}) => {
 		const response = await rheaClient['POST']('/api/world/{worldId}/actors', {
@@ -181,6 +183,7 @@ export const RheaService = {
 			body: {
 				name,
 				title,
+				color,
 				descriptionRich,
 			},
 			headers: {
@@ -201,12 +204,14 @@ export const RheaService = {
 		userId,
 		name,
 		title,
+		color,
 	}: {
 		worldId: string
 		actorId: string
 		userId: string
 		name?: string
 		title?: string
+		color?: string
 	}) => {
 		const response = await rheaClient['PATCH']('/api/world/{worldId}/actor/{actorId}', {
 			params: {
@@ -215,6 +220,7 @@ export const RheaService = {
 			body: {
 				name,
 				title,
+				color,
 			},
 			headers: {
 				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -379,12 +385,14 @@ export const RheaService = {
 		userId,
 		name,
 		timestamp,
+		color,
 		descriptionRich,
 	}: {
 		worldId: string
 		userId: string
 		name: string
 		timestamp: string
+		color?: string
 		descriptionRich: string
 	}) => {
 		const response = await rheaClient['POST']('/api/world/{worldId}/event', {
@@ -394,6 +402,7 @@ export const RheaService = {
 			body: {
 				name,
 				timestamp,
+				color,
 				descriptionRich,
 			},
 			headers: {
@@ -414,12 +423,14 @@ export const RheaService = {
 		userId,
 		name,
 		timestamp,
+		color,
 	}: {
 		worldId: string
 		eventId: string
 		userId: string
 		name?: string
 		timestamp?: string
+		color?: string
 	}) => {
 		const response = await rheaClient['PATCH']('/api/world/{worldId}/event/{eventId}', {
 			params: {
@@ -428,6 +439,7 @@ export const RheaService = {
 			body: {
 				name,
 				timestamp,
+				color,
 			},
 			headers: {
 				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
@@ -511,11 +523,13 @@ export const RheaService = {
 		worldId,
 		userId,
 		name,
+		color,
 		contentRich,
 	}: {
 		worldId: string
 		userId: string
 		name: string
+		color?: string
 		contentRich: string
 	}) => {
 		const response = await rheaClient['POST']('/api/world/{worldId}/wiki/articles', {
@@ -524,6 +538,7 @@ export const RheaService = {
 			},
 			body: {
 				name,
+				color,
 				contentRich,
 			},
 			headers: {
@@ -543,11 +558,13 @@ export const RheaService = {
 		articleId,
 		userId,
 		name,
+		color,
 	}: {
 		worldId: string
 		articleId: string
 		userId: string
 		name?: string
+		color?: string
 	}) => {
 		const response = await rheaClient['PATCH']('/api/world/{worldId}/wiki/article/{articleId}', {
 			params: {
@@ -555,6 +572,7 @@ export const RheaService = {
 			},
 			body: {
 				name,
+				color,
 			},
 			headers: {
 				[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),

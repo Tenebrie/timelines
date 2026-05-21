@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { normalizeColor } from '@src/utils/normalizeColor.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -12,6 +13,10 @@ const inputSchema = z.object({
 	actorName: z.string().describe('The name of the actor to update'),
 	name: z.string().optional().describe('The new name for the actor (optional)'),
 	title: z.string().optional().describe('The new title for the actor (optional)'),
+	color: z
+		.string()
+		.optional()
+		.describe('The new color for the actor in RGB hex format, e.g. #bf8a40 (optional)'),
 })
 
 export function registerUpdateActorTool(server: McpServer) {
@@ -32,7 +37,7 @@ export function registerUpdateActorTool(server: McpServer) {
 
 				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
 				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
-				const { actorName, name, title } = args
+				const { actorName, name, title, color } = args
 
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })
 				const actor = findByName({ name: actorName, entities: worldData.actors })
@@ -43,6 +48,7 @@ export function registerUpdateActorTool(server: McpServer) {
 					userId,
 					name,
 					title,
+					color: normalizeColor(color),
 				})
 
 				Logger.toolSuccess(TOOL_NAME, `Updated actor: ${updatedActor.name}`)
@@ -53,7 +59,8 @@ export function registerUpdateActorTool(server: McpServer) {
 							text:
 								`Actor updated successfully!\n` +
 								`Name: ${updatedActor.name}\n` +
-								`Title: ${updatedActor.title || '(None)'}`,
+								`Title: ${updatedActor.title || '(None)'}\n` +
+								`Color: ${updatedActor.color || '(None)'}`,
 						},
 					],
 				}
