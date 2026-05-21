@@ -13,11 +13,12 @@ const worldDetailsResponse = {
 	id: 'world-456',
 	name: 'Test World',
 	isReadOnly: false,
-	events: [{ id: 'e1', name: 'Battle', mentions: [], mentionedIn: [] }],
+	events: [{ id: 'e1', name: 'Battle', descriptionRich: 'Some description', mentions: [], mentionedIn: [] }],
 	actors: [
 		{
 			id: 'a1',
 			name: 'Gandalf',
+			descriptionRich: 'Some description',
 			title: 'The Grey',
 			pages: [
 				{ id: 'p1', name: 'Knowledge' },
@@ -29,6 +30,7 @@ const worldDetailsResponse = {
 		{
 			id: 'a2',
 			name: 'Frodo',
+			descriptionRich: 'Some description',
 			title: 'Ring Bearer',
 			pages: [],
 			mentions: [],
@@ -79,6 +81,7 @@ describe('get_actor_details tool', () => {
 		const texts = (result.content as Array<{ type: string; text: string }>).map((c) => c.text)
 		const allText = texts.join('\n')
 
+		console.log(result)
 		expect(result.isError).toBeUndefined()
 		expect(allText).toContain('Actor: Gandalf')
 		expect(allText).toContain('ID: a1')

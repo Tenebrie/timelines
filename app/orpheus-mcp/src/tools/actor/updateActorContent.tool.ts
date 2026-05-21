@@ -11,7 +11,7 @@ const TOOL_NAME = 'update_actor_content'
 
 const inputSchema = z.object({
 	actorName: z.string().describe('The name of the actor to update'),
-	content: z.string().describe('The new full page content in HTML format'),
+	content: z.string().describe('The new full page content in HTML format. Fully replaces the old content.'),
 	pageName: z
 		.string()
 		.optional()
@@ -29,12 +29,9 @@ export function registerUpdateActorContentTool(server: McpServer) {
 				"Updates actor content. Use pageName to target a specific page - creates it if it doesn't exist.",
 				'Without pageName, updates main content.',
 
-				'To mention another entity in content, use:',
-				'<span data-component-props="{&quot;actor&quot;:&quot;ACTOR_ID&quot;}" data-type="mention" data-name="Display Name"></span>',
-				'<span data-component-props="{&quot;tag&quot;:&quot;TAG_ID&quot;}" data-type="mention" data-name="Tag Name"></span>',
-				'Note that data-component-props is an escaped JSON string. For example: {"actor":"ACTOR_ID"}, escaped, will produce the correct format.',
-
-				'You may also use a shorthand syntax: @[Entity Name] that will be automatically resolved into an HTML tag.',
+				'To mention another entity in content, use the following syntax:',
+				'@[Entity Name]',
+				'It will be automatically resolved into an HTML tag.',
 
 				'Content is HTML. Use <p>, <ul>, <li>, <b> etc.',
 				'Mentions link entities together and show up in "Mentions" and "Mentioned in" fields.',

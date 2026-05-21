@@ -61,7 +61,7 @@ export function registerListWorldsTool(server: McpServer) {
 							},
 							{
 								type: 'text' as const,
-								text: `As there is only one world, it has been automatically set as current context.`,
+								text: `As there is only one world, it has been automatically set as current context. Run the readme tool before creating or editing content — it covers conventions you can't infer from the tool descriptions.`,
 							},
 						],
 					}
@@ -75,7 +75,7 @@ export function registerListWorldsTool(server: McpServer) {
 						},
 						{
 							type: 'text' as const,
-							text: `Use set_context to set the working project (world).`,
+							text: `Run the readme tool before creating or editing content — it covers conventions you can't infer from the tool descriptions. Then, use set_context to set the working project (world).`,
 						},
 					],
 				}
