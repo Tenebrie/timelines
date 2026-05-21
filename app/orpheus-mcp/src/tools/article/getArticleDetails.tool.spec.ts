@@ -14,12 +14,14 @@ const articlesResponse = [
 	{
 		id: 'art-1',
 		name: 'Magic System',
+		contentRich: '<p>The magic system is based on elemental forces.</p>',
 		mentions: [{ targetId: 'a1' }],
 		mentionedIn: [],
 	},
 	{
 		id: 'art-2',
 		name: 'History',
+		contentRich: '<p>The history of the world is based on fiction.</p>',
 		mentions: [],
 		mentionedIn: [{ sourceId: 'art-1' }],
 	},
@@ -65,7 +67,7 @@ describe('get_article_details tool', () => {
 				name: 'Test World',
 				isReadOnly: false,
 				events: [],
-				actors: [{ id: 'a1', name: 'Wizard', title: '' }],
+				actors: [{ id: 'a1', name: 'Wizard', descriptionRich: 'Some description', title: '' }],
 				tags: [],
 			},
 		})
@@ -78,6 +80,7 @@ describe('get_article_details tool', () => {
 		const texts = (result.content as Array<{ type: string; text: string }>).map((c) => c.text)
 		const allText = texts.join('\n')
 
+		console.log(result)
 		expect(result.isError).toBeUndefined()
 		expect(allText).toContain('Article: Magic System')
 		expect(allText).toContain('ID: art-1')

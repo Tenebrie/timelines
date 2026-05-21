@@ -7,7 +7,7 @@ export function registerReadmeTool(server: McpServer) {
 		TOOL_NAME,
 		{
 			title: 'Readme',
-			description: 'Provides detailed usage instructions. Run this first if you need help.',
+			description: 'Provides detailed usage instructions. Always read this at the start of a session.',
 			annotations: {
 				readOnlyHint: true,
 				idempotentHint: true,
@@ -29,7 +29,12 @@ export function registerReadmeTool(server: McpServer) {
 					'**Principles:**',
 					'- Names over IDs. Use human readable names to find or create entities. Avoid slugs. Only mentions are exception.',
 					'- Fuzzy matching. A unique partial string match is sufficient to find an entity.',
-					'- Timestamps are number of minutes since the origin time of the world (default - Jan 1st, 2023).',
+					'- For actors, main content is your summary. Use pages to add more details. The list of pages will be displayed when you read the actor.',
+					'- Use mentions generously. Mentions handle expansion and inject extra content automatically.',
+					'- First paragraph will be included automatically whenever the entity is mentioned.',
+					"- Keep data normalized. Store each fact in one place. Don't restate details inside other entities.",
+					"- Use tags for cross-cutting groupings you'll want to query later (e.g. everyone of a faction, every entity in an episode). Mention a tag in content to add an entity to it.",
+					"- Avoid name collisions. Keep each entity uniquely named. Fuzzy matching will throw when it can't resolve precisely.",
 					'',
 					'**Getting started:**',
 					'1. Use the `list_worlds` tool to see available worlds.',

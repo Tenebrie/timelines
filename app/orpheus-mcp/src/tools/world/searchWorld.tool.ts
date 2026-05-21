@@ -33,9 +33,9 @@ export function registerSearchWorldTool(server: McpServer) {
 
 				const data = await RheaService.searchWorld({ worldId, query: args.query, userId })
 
-				const formatResults = (items: Array<{ id: string; name: string }>, type: string) => {
+				const formatResults = (items: Array<{ id: string; name: string; title?: string }>, type: string) => {
 					if (items.length === 0) return `No ${type} found`
-					return items.map((item) => `- ${item.name}`).join('\n')
+					return items.map((item) => `- ${item.name}${item.title ? `, "${item.title}` : ''}`).join('\n')
 				}
 
 				const content = [

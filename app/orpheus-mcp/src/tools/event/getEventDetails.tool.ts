@@ -4,6 +4,7 @@ import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { resolveSavedMentions } from '@src/utils/resolveSavedMentions.js'
+import { toAgentReadableText } from '@src/utils/toAgentReadableText.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -37,7 +38,7 @@ export function registerGetEventDetailsTool(server: McpServer) {
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })
 				const event = findByName({ name: eventName, entities: worldData.events })
 
-				const content = await RheaService.getEventContent({
+				const rawContent = await RheaService.getEventContent({
 					worldId,
 					eventId: event.id,
 					userId,
@@ -48,6 +49,9 @@ export function registerGetEventDetailsTool(server: McpServer) {
 					entity: event,
 					worldData,
 					articleData,
+				})
+				const content = toAgentReadableText({
+					content: rawContent.contentHtml ?? '',
 				})
 
 				Logger.toolSuccess(TOOL_NAME, `Found event: ${event.name}`)
@@ -60,7 +64,7 @@ export function registerGetEventDetailsTool(server: McpServer) {
 								`ID: ${event.id}\n` +
 								`Timestamp: ${event.timestamp}\n` +
 								`Color: ${event.color || '(None)'}\n\n` +
-								`${content.contentHtml || 'No content'}`,
+								`${content || 'No content'}`,
 						},
 						...mentionsOutput,
 					],

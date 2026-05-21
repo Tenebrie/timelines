@@ -35,14 +35,18 @@ export function resolveSavedMentions({
 			type: 'text' as const,
 			text:
 				'Mentions: ' +
-				mentions.map((m) => `${m.name} (${m.type})`).join(`, `) +
+				mentions
+					.map((m) => {
+						return `- ${m.fullName} (${m.type}): ${m.summary}`
+					})
+					.join(`, `) +
 				(mentions.length === 0 ? '(None)' : ''),
 		},
 		{
 			type: 'text' as const,
 			text:
 				'Mentioned in: ' +
-				reverseMentions.map((m) => `${m.name} (${m.type})`).join(`, `) +
+				reverseMentions.map((m) => `${m.fullName} (${m.type})`).join(`, `) +
 				(reverseMentions.length === 0 ? '(None)' : ''),
 		},
 	]

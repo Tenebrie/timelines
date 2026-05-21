@@ -1,8 +1,12 @@
 import { RheaService } from '@src/services/RheaService.js'
 
+import { toAgentReadableText } from './toAgentReadableText.js'
+
 export type ResolvedMention = {
 	name: string
 	type: 'event' | 'actor' | 'tag' | 'article'
+	fullName: string
+	summary: string
 }
 
 export function resolveEntityName({
@@ -17,11 +21,19 @@ export function resolveEntityName({
 	const { events, actors, tags } = worldData
 	const articles = articleData
 
+	function toSummary(content: string) {
+		return toAgentReadableText({
+			content: content.trim().split('\n')[0],
+		})
+	}
+
 	const event = events.find((event) => event.id === entityId)
 	if (event)
 		return {
 			type: 'event',
 			name: event.name,
+			fullName: event.name,
+			summary: toSummary(event.descriptionRich),
 		}
 
 	const actor = actors.find((actor) => actor.id === entityId)
@@ -29,6 +41,8 @@ export function resolveEntityName({
 		return {
 			type: 'actor',
 			name: actor.name,
+			fullName: `${actor.name}${actor.title ? `, ${actor.title})` : ''}`,
+			summary: toSummary(actor.descriptionRich),
 		}
 
 	const tag = tags.find((tag) => tag.id === entityId)
@@ -36,6 +50,8 @@ export function resolveEntityName({
 		return {
 			type: 'tag',
 			name: tag.name,
+			fullName: tag.name,
+			summary: toSummary(tag.description),
 		}
 
 	const article = articles.find((article) => article.id === entityId)
@@ -43,6 +59,8 @@ export function resolveEntityName({
 		return {
 			type: 'article',
 			name: article.name,
+			fullName: article.name,
+			summary: toSummary(article.contentRich),
 		}
 
 	return null
