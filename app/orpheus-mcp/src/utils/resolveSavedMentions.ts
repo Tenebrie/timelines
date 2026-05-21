@@ -34,19 +34,19 @@ export function resolveSavedMentions({
 		{
 			type: 'text' as const,
 			text:
-				'Mentions: ' +
+				'Mentions:\n' +
 				mentions
 					.map((m) => {
-						return `- ${m.fullName} (${m.type}): ${m.summary}`
+						return `- [${m.type}] ${m.fullName}: ${m.summary}`
 					})
-					.join(`, `) +
+					.join(`\n`) +
 				(mentions.length === 0 ? '(None)' : ''),
 		},
 		{
 			type: 'text' as const,
 			text:
-				'Mentioned in: ' +
-				reverseMentions.map((m) => `${m.fullName} (${m.type})`).join(`, `) +
+				'Mentioned in:\n' +
+				reverseMentions.map((m) => `- [${m.type}] ${m.fullName}`).join(`\n`) +
 				(reverseMentions.length === 0 ? '(None)' : ''),
 		},
 	]
