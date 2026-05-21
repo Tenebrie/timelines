@@ -100,6 +100,33 @@ describe('create_article tool', () => {
 		expect(text).toContain('Lore')
 	})
 
+	it('creates an article with a color', async () => {
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456/wiki/articles',
+			response: [],
+		})
+
+		const mock = generateEndpointMock(server, {
+			method: 'post',
+			path: '/api/world/world-456/wiki/articles',
+			response: {
+				id: 'art-color',
+				name: 'Lore',
+				color: '#bf8a40',
+			},
+		})
+
+		const result = await client.callTool({
+			name: 'create_article',
+			arguments: { name: 'Lore', color: '#bf8a40' },
+		})
+
+		expect(result.isError).toBeUndefined()
+		expect(mock.hasBeenCalled()).toBe(true)
+		expect((mock.invocations[0].jsonBody as Record<string, unknown>).color).toBe('#bf8a40')
+	})
+
 	it('returns error when article already exists', async () => {
 		generateEndpointMock(server, {
 			method: 'get',

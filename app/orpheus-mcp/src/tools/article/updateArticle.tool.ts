@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { normalizeColor } from '@src/utils/normalizeColor.js'
 import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -12,6 +13,10 @@ const TOOL_NAME = 'update_article'
 const inputSchema = z.object({
 	articleName: z.string().describe('The name of the article to update'),
 	name: z.string().optional().describe('The new name for the article (optional)'),
+	color: z
+		.string()
+		.optional()
+		.describe('The new color for the article in RGB hex format, e.g. #bf8a40 (optional)'),
 	content: z.string().optional().describe('The new content in HTML format (optional)'),
 })
 
@@ -45,18 +50,19 @@ export function registerUpdateArticleTool(server: McpServer) {
 
 				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
 				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
-				const { articleName, name, content } = args
+				const { articleName, name, color, content } = args
 
 				const articleData = await RheaService.getWorldArticles({ worldId, userId })
 				const article = findByName({ name: articleName, entities: articleData })
 
 				let updatedName = article.name
-				if (name !== undefined) {
+				if (name !== undefined || color !== undefined) {
 					const updatedArticle = await RheaService.updateArticle({
 						worldId,
 						articleId: article.id,
 						userId,
 						name,
+						color: normalizeColor(color),
 					})
 					updatedName = updatedArticle.name
 				}
@@ -82,7 +88,11 @@ export function registerUpdateArticleTool(server: McpServer) {
 					content: [
 						{
 							type: 'text' as const,
-							text: `Article updated successfully!\n` + `Name: ${updatedName}\n` + `ID: ${article.id}`,
+							text:
+								`Article updated successfully!\n` +
+								`Name: ${updatedName}\n` +
+								`ID: ${article.id}\n` +
+								`Color: ${article.color || '(None)'}`,
 						},
 					],
 				}

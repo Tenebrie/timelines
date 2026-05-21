@@ -161,6 +161,41 @@ describe('create_actor tool', () => {
 		expect(result.isError).toBe(true)
 	})
 
+	it('creates an actor with a color', async () => {
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456',
+			response: {
+				id: 'world-456',
+				name: 'Test World',
+				isReadOnly: false,
+				events: [],
+				actors: [],
+				tags: [],
+			},
+		})
+
+		const mock = generateEndpointMock(server, {
+			method: 'post',
+			path: '/api/world/world-456/actors',
+			response: {
+				id: 'a-color',
+				name: 'Gandalf',
+				title: '',
+				color: '#bf8a40',
+			},
+		})
+
+		const result = await client.callTool({
+			name: 'create_actor',
+			arguments: { name: 'Gandalf', color: '#bf8a40' },
+		})
+
+		expect(result.isError).toBeUndefined()
+		expect(mock.hasBeenCalled()).toBe(true)
+		expect((mock.invocations[0].jsonBody as Record<string, unknown>).color).toBe('#bf8a40')
+	})
+
 	it('shows Title: None when no title is provided', async () => {
 		generateEndpointMock(server, {
 			method: 'get',

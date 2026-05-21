@@ -62,8 +62,8 @@ function IconCollectionComponent({ collection, color, onSelect }: Props) {
 			</Typography>
 			<Stack direction="row" flexWrap="wrap" gap={1}>
 				{isVisible &&
-					deferredIcons.map((icon, index) => (
-						<Button key={index} onClick={() => onSelect(icon)} sx={{ padding: 0.25, minWidth: 'auto' }}>
+					deferredIcons.map((icon) => (
+						<Button key={icon} onClick={() => onSelect(icon)} sx={{ padding: 0.25, minWidth: 'auto' }}>
 							<Tooltip title={icon} disableInteractive>
 								<Box
 									sx={{

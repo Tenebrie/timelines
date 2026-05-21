@@ -138,6 +138,41 @@ describe('update_event tool', () => {
 		expect(contentMock.hasBeenCalled()).toBe(true)
 	})
 
+	it('updates an event color', async () => {
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456',
+			response: {
+				id: 'world-456',
+				name: 'Test World',
+				isReadOnly: false,
+				events: [{ id: 'e1', name: 'Battle', timestamp: '100' }],
+				actors: [],
+				tags: [],
+			},
+		})
+
+		const mock = generateEndpointMock(server, {
+			method: 'patch',
+			path: '/api/world/world-456/event/e1',
+			response: {
+				id: 'e1',
+				name: 'Battle',
+				timestamp: '100',
+				color: '#bf8a40',
+			},
+		})
+
+		const result = await client.callTool({
+			name: 'update_event',
+			arguments: { eventName: 'Battle', color: '#bf8a40' },
+		})
+
+		expect(result.isError).toBeUndefined()
+		expect(mock.hasBeenCalled()).toBe(true)
+		expect((mock.invocations[0].jsonBody as Record<string, unknown>).color).toBe('#bf8a40')
+	})
+
 	it('returns an error when event is not found', async () => {
 		generateEndpointMock(server, {
 			method: 'get',

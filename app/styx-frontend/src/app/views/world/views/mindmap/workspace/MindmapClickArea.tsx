@@ -9,6 +9,7 @@ import { SelectionBox, SelectionRect } from '@/ui-lib/components/SelectionBox/Se
 import { useNewNodeReceiver } from '../hooks/useNewNodeReceiver'
 import { mindmapSlice } from '../MindmapSlice'
 import { getMindmapState } from '../MindmapSliceSelectors'
+import { getWiresInRect } from './mindmapWireUtils'
 
 export function MindmapClickArea() {
 	const ref = useRef<HTMLDivElement>(null)
@@ -130,34 +131,26 @@ function checkWireIntersection(parentElement: HTMLElement | null, selectionBox: 
 	if (!parentElement) {
 		return []
 	}
-	const wires = document.querySelectorAll('[data-mindmap-wire]')
-	const selectedWireIds: string[] = []
 
 	const boxLeft = selectionBox.width < 0 ? selectionBox.x + selectionBox.width : selectionBox.x
 	const boxTop = selectionBox.height < 0 ? selectionBox.y + selectionBox.height : selectionBox.y
 	const boxRight = boxLeft + Math.abs(selectionBox.width)
 	const boxBottom = boxTop + Math.abs(selectionBox.height)
 
-	const containerRect = parentElement.getBoundingClientRect()
+	// Convert selection rect from container coords to SVG node coords using grid transform
+	const gridEl = parentElement.closest<HTMLElement>('[data-mindmap-grid]')
+	if (!gridEl) {
+		return []
+	}
+	const style = getComputedStyle(gridEl)
+	const scale = parseFloat(style.getPropertyValue('--grid-scale')) || 1
+	const offsetX = parseFloat(style.getPropertyValue('--grid-offset-x')) || 0
+	const offsetY = parseFloat(style.getPropertyValue('--grid-offset-y')) || 0
 
-	wires.forEach((wireElement) => {
-		const rect = wireElement.getBoundingClientRect()
-
-		const wireLeft = rect.left - containerRect.left
-		const wireTop = rect.top - containerRect.top
-		const wireRight = wireLeft + rect.width
-		const wireBottom = wireTop + rect.height
-
-		const intersects =
-			boxLeft < wireRight && boxRight > wireLeft && boxTop < wireBottom && boxBottom > wireTop
-
-		if (intersects) {
-			const wireId = wireElement.getAttribute('data-mindmap-wire')
-			if (wireId) {
-				selectedWireIds.push(wireId)
-			}
-		}
-	})
-
-	return selectedWireIds
+	return getWiresInRect(
+		(boxLeft - offsetX) / scale,
+		(boxTop - offsetY) / scale,
+		(boxRight - offsetX) / scale,
+		(boxBottom - offsetY) / scale,
+	)
 }

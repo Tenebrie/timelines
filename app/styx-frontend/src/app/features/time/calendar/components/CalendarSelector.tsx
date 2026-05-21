@@ -1,8 +1,6 @@
 import { useListCalendarsQuery, useListWorldCalendarsQuery } from '@api/calendarApi'
 import { useListCalendarTemplatesQuery } from '@api/otherApi'
 import Divider from '@mui/material/Divider'
-import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
 import ListItemText from '@mui/material/ListItemText'
 import ListSubheader from '@mui/material/ListSubheader'
 import MenuItem from '@mui/material/MenuItem'
@@ -73,50 +71,47 @@ export function CalendarSelector({ worldId, label, value, onChange, allowEmpty }
 	}
 
 	return (
-		<FormControl fullWidth>
-			<InputLabel id="world-calendar-label">{label ?? 'Calendar'}</InputLabel>
-			<LoadingSelect
-				isLoading={!usedCalendars}
-				value={value ?? emptyOption.id}
-				renderValue={(id) => <span>{allCalendars.find((option) => option.id === id)?.name}</span>}
-				label={label ?? 'Calendar'}
-				labelId="world-calendar-label"
-				onChange={(event) => {
-					if (allowEmpty && event.target.value === emptyOption.id) {
-						onChange(undefined)
-					} else {
-						onChange(event.target.value)
-					}
-				}}
-			>
-				{showSection(0) && (
-					<MenuItem key={emptyOption.id} value={emptyOption.id}>
-						<ListItemText primary={emptyOption.name} secondary={emptyOption.description} />
-					</MenuItem>
-				)}
-				{showDivider(1) && <Divider />}
-				{showSection(1) && <StyledListHeader>Your Templates</StyledListHeader>}
-				{userDefinedTemplates.map((option) => (
-					<MenuItem key={option.id} value={option.id}>
-						<ListItemText primary={option.name} secondary={option.description} />
-					</MenuItem>
-				))}
-				{showDivider(2) && <Divider />}
-				{showSection(2) && <StyledListHeader>World</StyledListHeader>}
-				{currentWorldCalendars.map((option) => (
-					<MenuItem key={option.id} value={option.id}>
-						<ListItemText primary={option.name} secondary={option.description} />
-					</MenuItem>
-				))}
-				{showDivider(3) && <Divider />}
-				{showSection(3) && <StyledListHeader>Built-In Templates</StyledListHeader>}
-				{templateCalendars.map((option) => (
-					<MenuItem key={option.id} value={option.id}>
-						<ListItemText primary={option.name} secondary={option.description} />
-					</MenuItem>
-				))}
-			</LoadingSelect>
-		</FormControl>
+		<LoadingSelect
+			isLoading={!usedCalendars}
+			value={value ?? emptyOption.id}
+			renderValue={(id) => <span>{allCalendars.find((option) => option.id === id)?.name}</span>}
+			label={label ?? 'Calendar'}
+			labelId="world-calendar-label"
+			onChange={(event) => {
+				if (allowEmpty && event.target.value === emptyOption.id) {
+					onChange(undefined)
+				} else {
+					onChange(event.target.value)
+				}
+			}}
+		>
+			{showSection(0) && (
+				<MenuItem key={emptyOption.id} value={emptyOption.id}>
+					<ListItemText primary={emptyOption.name} secondary={emptyOption.description} />
+				</MenuItem>
+			)}
+			{showDivider(1) && <Divider />}
+			{showSection(1) && <StyledListHeader>Your Templates</StyledListHeader>}
+			{userDefinedTemplates.map((option) => (
+				<MenuItem key={option.id} value={option.id}>
+					<ListItemText primary={option.name} secondary={option.description} />
+				</MenuItem>
+			))}
+			{showDivider(2) && <Divider />}
+			{showSection(2) && <StyledListHeader>World</StyledListHeader>}
+			{currentWorldCalendars.map((option) => (
+				<MenuItem key={option.id} value={option.id}>
+					<ListItemText primary={option.name} secondary={option.description} />
+				</MenuItem>
+			))}
+			{showDivider(3) && <Divider />}
+			{showSection(3) && <StyledListHeader>Built-In Templates</StyledListHeader>}
+			{templateCalendars.map((option) => (
+				<MenuItem key={option.id} value={option.id}>
+					<ListItemText primary={option.name} secondary={option.description} />
+				</MenuItem>
+			))}
+		</LoadingSelect>
 	)
 }
 

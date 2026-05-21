@@ -54,6 +54,10 @@ export type EventParams = {
 	'mindmap/node/onGroupDragEnd': {
 		sourceNodeId: string
 	}
+	'mindmap/selection/changed': {
+		selectedNodeIds: Set<string>
+		selectedWireIds: Set<string>
+	}
 	'world/requestNavigation': NavigateOptions
 	'calliope/onReconnected': void
 	'calliope/requestSendMessage': ClientToCalliopeMessage

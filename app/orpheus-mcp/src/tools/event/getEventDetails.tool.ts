@@ -58,7 +58,8 @@ export function registerGetEventDetailsTool(server: McpServer) {
 							text:
 								`Event: ${event.name}\n` +
 								`ID: ${event.id}\n` +
-								`Timestamp: ${event.timestamp}\n\n` +
+								`Timestamp: ${event.timestamp}\n` +
+								`Color: ${event.color || '(None)'}\n\n` +
 								`${content.contentHtml || 'No content'}`,
 						},
 						...mentionsOutput,

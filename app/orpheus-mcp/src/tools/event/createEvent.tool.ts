@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { checkEventDoesNotExist } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { normalizeColor } from '@src/utils/normalizeColor.js'
 import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -16,6 +17,7 @@ const inputSchema = z.object({
 		.describe(
 			'The timestamp of the event (as a bigint string, in minutes). Timestamp 0 is the beginning of the story.',
 		),
+	color: z.string().optional().describe('The color of the event in RGB hex format, e.g. #bf8a40 (optional)'),
 	description: z.string().optional().describe('The description of the event in HTML format (optional)'),
 })
 
@@ -35,7 +37,7 @@ export function registerCreateEventTool(server: McpServer) {
 
 				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
 				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
-				const { name, timestamp, description } = args
+				const { name, timestamp, color, description } = args
 
 				await checkEventDoesNotExist({ name, userId, sessionId })
 
@@ -56,6 +58,7 @@ export function registerCreateEventTool(server: McpServer) {
 					userId,
 					name,
 					timestamp,
+					color: normalizeColor(color),
 					descriptionRich: parsedDescription || '',
 				})
 
@@ -68,7 +71,8 @@ export function registerCreateEventTool(server: McpServer) {
 								`Event created successfully!\n` +
 								`Name: ${event.name}\n` +
 								`ID: ${event.id}\n` +
-								`Timestamp: ${event.timestamp}`,
+								`Timestamp: ${event.timestamp}\n` +
+								`Color: ${event.color || '(None)'}`,
 						},
 					],
 				}

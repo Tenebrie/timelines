@@ -3,6 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { checkActorDoesNotExist } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { normalizeColor } from '@src/utils/normalizeColor.js'
 import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -12,6 +13,7 @@ const TOOL_NAME = 'create_actor'
 const inputSchema = z.object({
 	name: z.string().describe('The name of the actor'),
 	title: z.string().optional().describe('The title of the actor (optional)'),
+	color: z.string().optional().describe('The color of the actor in RGB hex format, e.g. #bf8a40 (optional)'),
 	description: z.string().optional().describe('The description of the actor in HTML format (optional)'),
 })
 
@@ -30,7 +32,7 @@ export function registerCreateActorTool(server: McpServer) {
 
 				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
 				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
-				const { name, title, description } = args
+				const { name, title, color, description } = args
 
 				await checkActorDoesNotExist({ name, userId, sessionId })
 
@@ -51,6 +53,7 @@ export function registerCreateActorTool(server: McpServer) {
 					userId,
 					name,
 					title,
+					color: normalizeColor(color),
 					descriptionRich: parsedDescription,
 				})
 
@@ -63,7 +66,8 @@ export function registerCreateActorTool(server: McpServer) {
 								`Actor created successfully!\n` +
 								`Name: ${actor.name}\n` +
 								`ID: ${actor.id}\n` +
-								`Title: ${actor.title || 'None'}`,
+								`Title: ${actor.title || 'None'}\n` +
+								`Color: ${actor.color || '(None)'}`,
 						},
 					],
 				}

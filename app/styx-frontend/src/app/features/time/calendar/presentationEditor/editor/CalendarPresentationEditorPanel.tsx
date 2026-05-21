@@ -236,7 +236,7 @@ export function CalendarPresentationEditorPanel({ presentation }: Props) {
 				<Stack gap={1}>
 					{sortedUnits.map((unit, index) => (
 						<CalendarPresentationUnit
-							key={unit.backingUnit!.id + index}
+							key={unit.backingUnit!.id}
 							index={index}
 							layer={unit}
 							onSave={(value) => handleUpdateUnit(unit, value)}

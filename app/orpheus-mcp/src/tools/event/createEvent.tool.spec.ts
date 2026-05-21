@@ -105,6 +105,41 @@ describe('create_event tool', () => {
 		expect(text).toContain('Peace Treaty')
 	})
 
+	it('creates an event with a color', async () => {
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456',
+			response: {
+				id: 'world-456',
+				name: 'Test World',
+				isReadOnly: false,
+				events: [],
+				actors: [],
+				tags: [],
+			},
+		})
+
+		const mock = generateEndpointMock(server, {
+			method: 'post',
+			path: '/api/world/world-456/event',
+			response: {
+				id: 'e-color',
+				name: 'Dragon Attack',
+				timestamp: '1440',
+				color: '#bf8a40',
+			},
+		})
+
+		const result = await client.callTool({
+			name: 'create_event',
+			arguments: { name: 'Dragon Attack', timestamp: '1440', color: '#bf8a40' },
+		})
+
+		expect(result.isError).toBeUndefined()
+		expect(mock.hasBeenCalled()).toBe(true)
+		expect((mock.invocations[0].jsonBody as Record<string, unknown>).color).toBe('#bf8a40')
+	})
+
 	it('returns error when event already exists', async () => {
 		generateEndpointMock(server, {
 			method: 'get',

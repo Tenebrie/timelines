@@ -139,6 +139,33 @@ describe('update_article tool', () => {
 		expect(text).toContain('Updated Article')
 	})
 
+	it('updates an article color', async () => {
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456/wiki/articles',
+			response: [{ id: 'art-1', name: 'Article' }],
+		})
+
+		const mock = generateEndpointMock(server, {
+			method: 'patch',
+			path: '/api/world/world-456/wiki/article/art-1',
+			response: {
+				id: 'art-1',
+				name: 'Article',
+				color: '#bf8a40',
+			},
+		})
+
+		const result = await client.callTool({
+			name: 'update_article',
+			arguments: { articleName: 'Article', color: '#bf8a40' },
+		})
+
+		expect(result.isError).toBeUndefined()
+		expect(mock.hasBeenCalled()).toBe(true)
+		expect((mock.invocations[0].jsonBody as Record<string, unknown>).color).toBe('#bf8a40')
+	})
+
 	it('returns an error when article is not found', async () => {
 		generateEndpointMock(server, {
 			method: 'get',

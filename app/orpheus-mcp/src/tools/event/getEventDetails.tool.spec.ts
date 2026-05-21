@@ -141,6 +141,49 @@ describe('get_event_details tool', () => {
 		expect(allText).toContain('Red Dragon')
 	})
 
+	it('includes color in event details', async () => {
+		const coloredWorld = {
+			...worldDetailsResponse,
+			events: [
+				{
+					id: 'e1',
+					name: 'Dragon Attack',
+					timestamp: '1440',
+					color: '#bf8a40',
+					mentions: [],
+					mentionedIn: [],
+				},
+			],
+		}
+
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456',
+			response: coloredWorld,
+		})
+
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456/event/e1/content',
+			response: { contentHtml: '' },
+		})
+
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456/wiki/articles',
+			response: [],
+		})
+
+		const result = await client.callTool({
+			name: 'get_event_details',
+			arguments: { eventName: 'Dragon Attack' },
+		})
+
+		const texts = (result.content as Array<{ type: string; text: string }>).map((c) => c.text)
+		expect(result.isError).toBeUndefined()
+		expect(texts[0]).toContain('Color: #bf8a40')
+	})
+
 	it('returns an error when event is not found', async () => {
 		generateEndpointMock(server, {
 			method: 'get',

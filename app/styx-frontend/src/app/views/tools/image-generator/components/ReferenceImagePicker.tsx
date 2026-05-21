@@ -134,7 +134,7 @@ export function ReferenceImagePicker({ referenceImages, onReferenceImagesChange,
 
 			<Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
 				{referenceImages.map((img, index) => (
-					<Box key={index} sx={{ position: 'relative', width: 80, height: 80 }}>
+					<Box key={img.base64} sx={{ position: 'relative', width: 80, height: 80 }}>
 						<Box
 							component="img"
 							src={`data:${img.mimeType};base64,${img.base64}`}
