@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext } from 'react'
+import { createContext, ReactNode, use } from 'react'
 
 interface ResizeableDrawerContextProps {
 	height: number
@@ -34,7 +34,7 @@ export function ResizeableDrawerProvider({
 	setDrawerVisible,
 }: ProviderProps) {
 	return (
-		<ResizeableDrawerContext.Provider
+		<ResizeableDrawerContext
 			value={{
 				height,
 				minHeight,
@@ -46,12 +46,12 @@ export function ResizeableDrawerProvider({
 			}}
 		>
 			{children}
-		</ResizeableDrawerContext.Provider>
+		</ResizeableDrawerContext>
 	)
 }
 
 export const useResizeableDrawer = () => {
-	const context = useContext(ResizeableDrawerContext)
+	const context = use(ResizeableDrawerContext)
 	if (context === undefined) {
 		throw new Error('useResizeableDrawer must be used within a ResizeableDrawerProvider')
 	}

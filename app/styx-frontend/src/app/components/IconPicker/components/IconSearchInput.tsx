@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import { useSearch } from '@tanstack/react-router'
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 
 import { useDebouncedState } from '@/app/hooks/useDebouncedState'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
@@ -22,12 +22,15 @@ export function IconSearchInputComponent({ onQueryChange }: Props) {
 
 	const [, currentQuery, setQuery] = useDebouncedState({
 		initialValue: iq ?? '',
-		onDebounce: (value) => {
-			navigate({
-				search: (prev) => ({ ...prev, iq: value || undefined }),
-			})
-			onQueryChange(value)
-		},
+		onDebounce: useCallback(
+			(value: string) => {
+				navigate({
+					search: (prev) => ({ ...prev, iq: value || undefined }),
+				})
+				onQueryChange(value)
+			},
+			[navigate, onQueryChange],
+		),
 	})
 
 	useEffectOnce(() => {

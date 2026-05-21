@@ -1,8 +1,8 @@
 import { MindmapNode } from '@api/types/mindmapTypes'
 import { ActorDetails } from '@api/types/worldTypes'
 import Box from '@mui/material/Box'
-import { memo, useCallback, useEffect, useRef } from 'react'
-import { useDispatch, useSelector, useStore } from 'react-redux'
+import { memo, useEffect, useLayoutEffect, useRef } from 'react'
+import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
@@ -17,6 +17,7 @@ import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
 import { mindmapSlice } from '../MindmapSlice'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { ActorNode } from './ActorNode'
+import { nodePositions } from './mindmapWireUtils'
 
 type Props = {
 	actor: ActorDetails
@@ -44,18 +45,14 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 		}
 	}, [node])
 
-	const selectIsNodeSelected = useCallback(
-		(state: RootState) => getSelectedNodeKeys(state).includes(node.id),
-		[node.id],
-	)
-	const selected = useSelector(selectIsNodeSelected)
+	const selectedRef = useRef(false)
 	const store = useStore<RootState>()
 	const { addNodeToSelection, removeNodeFromSelection, clearSelections } = mindmapSlice.actions
 	const dispatch = useDispatch()
 
 	const { triggerClick: onHeaderClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
-			if (selected) {
+			if (selectedRef.current) {
 				dispatch(removeNodeFromSelection(node.id))
 			} else {
 				dispatch(addNodeToSelection({ key: node.id, actorId: actor.id, multiselect }))
@@ -81,7 +78,7 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 
 	useEventBusSubscribe['mindmap/node/onGroupDragStart']({
 		callback: ({ sourceNodeId }) => {
-			if (sourceNodeId === node.id || !selected) {
+			if (sourceNodeId === node.id || !selectedRef.current) {
 				return
 			}
 
@@ -90,24 +87,22 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 	})
 	useEventBusSubscribe['mindmap/node/onGroupDragUpdate']({
 		callback: ({ sourceNodeId, deltaX, deltaY }) => {
-			if (sourceNodeId === node.id || !selected) {
+			if (sourceNodeId === node.id || !selectedRef.current) {
 				return
 			}
 
 			positionRef.current = { x: positionRef.current.x + deltaX, y: positionRef.current.y + deltaY }
 			ref.current?.style.setProperty('--node-x', `${positionRef.current.x}px`)
 			ref.current?.style.setProperty('--node-y', `${positionRef.current.y}px`)
-
-			dispatchGlobalEvent['mindmap/node/onMove']({
-				nodeId: node.id,
-				positionX: positionRef.current.x,
-				positionY: positionRef.current.y,
+			nodePositions.set(node.id, {
+				...positionRef.current,
+				height: nodePositions.get(node.id)?.height ?? 80,
 			})
 		},
 	})
 	useEventBusSubscribe['mindmap/node/onGroupDragEnd']({
 		callback: ({ sourceNodeId }) => {
-			if (sourceNodeId === node.id || !selected) {
+			if (sourceNodeId === node.id || !selectedRef.current) {
 				return
 			}
 
@@ -116,7 +111,27 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 	})
 
 	const nodeRef = useAutoRef(node)
-	const selectedRef = useAutoRef(selected)
+
+	useLayoutEffect(() => {
+		const el = ref.current
+		const scale = el ? parseFloat(getComputedStyle(el).getPropertyValue('--grid-scale')) || 1 : 1
+		const height = el ? el.getBoundingClientRect().height / scale : 80
+		nodePositions.set(node.id, { x: node.positionX, y: node.positionY, height })
+	})
+	useEffect(
+		() => () => {
+			nodePositions.delete(node.id)
+		},
+		[node.id],
+	)
+
+	useEventBusSubscribe['mindmap/selection/changed']({
+		callback: ({ selectedNodeIds }) => {
+			const isSelected = selectedNodeIds.has(node.id)
+			selectedRef.current = isSelected
+			ref.current?.setAttribute('data-selected', String(isSelected))
+		},
+	})
 
 	useEffect(() => {
 		const element = ref.current
@@ -199,15 +214,19 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 				positionRef.current = { x: mouseState.positionX, y: mouseState.positionY }
 				element.style.setProperty('--node-x', `${mouseState.positionX}px`)
 				element.style.setProperty('--node-y', `${mouseState.positionY}px`)
-				dispatchGlobalEvent['mindmap/node/onMove']({
-					nodeId: node.id,
-					positionX: mouseState.positionX,
-					positionY: mouseState.positionY,
+				nodePositions.set(node.id, {
+					...positionRef.current,
+					height: nodePositions.get(node.id)?.height ?? 80,
 				})
 				dispatchGlobalEvent['mindmap/node/onGroupDragUpdate']({
 					sourceNodeId: node.id,
 					deltaX: mouseState.deltaX / mouseState.gridScale,
 					deltaY: mouseState.deltaY / mouseState.gridScale,
+				})
+				dispatchGlobalEvent['mindmap/node/onMove']({
+					nodeId: node.id,
+					positionX: mouseState.positionX,
+					positionY: mouseState.positionY,
 				})
 
 				mouseState.deltaX = 0
@@ -238,15 +257,16 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 				deltaY: totalDeltaY,
 			})
 
-			dispatchGlobalEvent['mindmap/node/onMove']({
-				nodeId: node.id,
-				positionX: snappedPosition.x,
-				positionY: snappedPosition.y,
-			})
+			nodePositions.set(node.id, { ...snappedPosition, height: nodePositions.get(node.id)?.height ?? 80 })
 			dispatchGlobalEvent['mindmap/node/onGroupDragUpdate']({
 				sourceNodeId: node.id,
 				deltaX: snappedPosition.x - mouseState.positionX,
 				deltaY: snappedPosition.y - mouseState.positionY,
+			})
+			dispatchGlobalEvent['mindmap/node/onMove']({
+				nodeId: node.id,
+				positionX: snappedPosition.x,
+				positionY: snappedPosition.y,
 			})
 			dispatchGlobalEvent['mindmap/node/onGroupDragEnd']({
 				sourceNodeId: node.id,
@@ -272,17 +292,7 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [
-		positionRef,
-		moveMindmapNodes,
-		node.id,
-		nodeRef,
-		store,
-		selected,
-		dispatch,
-		clearSelections,
-		selectedRef,
-	])
+	}, [positionRef, moveMindmapNodes, node.id, nodeRef, store, dispatch, clearSelections, selectedRef])
 
 	return (
 		<Box
@@ -304,7 +314,10 @@ function ActorNodePositionerComponent({ actor, node }: Props) {
 					'translate(calc(var(--node-x) * var(--grid-scale) + var(--grid-offset-x)), calc(var(--node-y) * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))',
 				transformOrigin: 'top left',
 				outline: '2px solid',
-				outlineColor: selected ? theme.material.palette.primary.main : 'transparent',
+				outlineColor: 'transparent',
+				'&[data-selected="true"]': {
+					outlineColor: theme.material.palette.primary.main,
+				},
 				transition:
 					'transform min(var(--transition-duration), var(--inner-transition-duration)) ease-out, outline-color 0.2s ease-out',
 				borderRadius: 2,

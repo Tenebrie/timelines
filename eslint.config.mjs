@@ -1,12 +1,10 @@
+import eslintReact from '@eslint-react/eslint-plugin'
 import astroEslintParser from 'astro-eslint-parser'
 import { defineConfig } from 'eslint/config'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import eslintPluginAstro from 'eslint-plugin-astro'
 import muiPathImports from 'eslint-plugin-mui-path-imports'
-// import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
-import react from 'eslint-plugin-react'
-import reactHooks from 'eslint-plugin-react-hooks'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import unusedImports from 'eslint-plugin-unused-imports'
 import tseslint from 'typescript-eslint'
@@ -22,7 +20,7 @@ export default defineConfig(
 			'app/styx-frontend/build',
 			'app/orpheus-mcp/dist',
 			'app/ts-shared/dist',
-		'library/tiptap-schema/dist',
+			'library/tiptap-schema/dist',
 			'app/thetis-landing/dist',
 			'app/thetis-landing/.astro',
 			'test/e2e/dist',
@@ -43,7 +41,7 @@ export default defineConfig(
 		},
 	},
 	{
-		extends: [...tseslint.configs.recommended],
+		extends: [tseslint.configs.recommended],
 		files: ['**/*.{mjs,js,ts,tsx}'],
 		plugins: {
 			'simple-import-sort': simpleImportSort,
@@ -63,7 +61,6 @@ export default defineConfig(
 			'simple-import-sort/imports': 'error',
 			'simple-import-sort/exports': 'error',
 			'unused-imports/no-unused-imports': 'error',
-			'react/no-unescaped-entities': 'off',
 			'mui-path-imports/mui-path-imports': 'error',
 			'@typescript-eslint/no-unused-vars': 'off',
 
@@ -99,18 +96,20 @@ export default defineConfig(
 	},
 	{
 		ignores: ['app/rhea-backend/**'],
-		plugins: {
-			react,
-			'react-hooks': reactHooks,
-		},
-		extends: [react.configs.flat.recommended, react.configs.flat['jsx-runtime']],
+		extends: [eslintReact.configs['recommended-typescript']],
 		rules: {
-			...reactHooks.configs['recommended-latest'].rules,
-			'react-hooks/set-state-in-effect': 'off',
-			'react-hooks/refs': 'off',
-			'react-hooks/immutability': 'off',
-			'react-hooks/preserve-manual-memoization': 'off',
-			'react/prop-types': 'off',
+			// 'react-hooks/set-state-in-effect': 'off',
+			// 'react-hooks/refs': 'off',
+			// 'react-hooks/immutability': 'off',
+			// 'react-hooks/preserve-manual-memoization': 'off',
+			// 'react/prop-types': 'off',
+			'@eslint-react/no-array-index-key': 'off',
+			'@eslint-react/purity': 'off',
+			'@eslint-react/use-state': 'off',
+			'@eslint-react/no-unnecessary-use-prefix': 'off',
+			'@eslint-react/set-state-in-effect': 'off',
+			'@eslint-react/naming-convention-ref-name': 'off',
+			'@eslint-react/no-create-ref': 'off',
 		},
 		files: ['**/*.{ts,tsx}'],
 		settings: {

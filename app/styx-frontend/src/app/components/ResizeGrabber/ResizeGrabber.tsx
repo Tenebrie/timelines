@@ -208,9 +208,9 @@ function ResizeGrabberComponent({
 			}
 			isClicking.current = false
 			setIsDraggingChild(false)
-			setTimeout(() => {
+			requestAnimationFrame(() => {
 				window.document.body.classList.remove('cursor-resizing-ns', 'cursor-resizing-ew', 'mouse-busy')
-			}, 1)
+			})
 			if (!_isDraggingNow.current) {
 				return
 			}

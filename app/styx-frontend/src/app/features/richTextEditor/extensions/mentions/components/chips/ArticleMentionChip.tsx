@@ -11,7 +11,7 @@ type Props = {
 	fallbackName?: string
 }
 
-export const ArticleMentionChip = ({ worldId, articleId, fallbackName }: Props) => {
+export const ArticleMentionChip = ({ articleId, fallbackName }: Props) => {
 	const navigateTo = useEventBusDispatch['world/requestNavigation']()
 	const { articles } = useSelector(getWikiState, (a, b) => a.articles === b.articles)
 

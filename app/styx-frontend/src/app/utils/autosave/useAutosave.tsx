@@ -90,11 +90,11 @@ export const useAutosave = <T extends unknown[]>({ onSave, isSaving, isError, de
 
 			if (timeSinceWaitingStart < minimumWaitTime) {
 				const remainingTime = minimumWaitTime - timeSinceWaitingStart
-				setTimeout(() => {
+				const timeout = window.setTimeout(() => {
 					startedWaitingRef.current = false
 					setSavingState(isError ? 'error' : 'success')
 				}, remainingTime)
-				return
+				return () => window.clearTimeout(timeout)
 			}
 
 			startedWaitingRef.current = false

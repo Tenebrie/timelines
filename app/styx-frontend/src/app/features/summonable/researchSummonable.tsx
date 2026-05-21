@@ -1,6 +1,7 @@
 import Box, { BoxProps } from '@mui/material/Box'
 import { ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { v4 as getRandomId } from 'uuid'
 
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 
@@ -73,7 +74,7 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 		})
 
 		if (!event.isHandled) {
-			waitingList[family].push({ target, props: initialProps })
+			waitingList[family].push({ id: getRandomId(), target, props: initialProps })
 		}
 	}
 
@@ -138,6 +139,7 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 			return () => {
 				if (targetElementRef.current) {
 					waitingList[family].push({
+						id: getRandomId(),
 						target: targetElementRef.current,
 						props: propsRef.current as SummonableProps,
 					})
@@ -149,11 +151,13 @@ export function researchSummonable<SummonableProps = void>({ family }: Props) {
 			const pushedObject = (() => {
 				if (targetElement) {
 					return {
+						id: getRandomId(),
 						target: targetElement,
 						status: 'busy' as const,
 					}
 				}
 				return {
+					id: getRandomId(),
 					target: null,
 					status: 'parked' as const,
 				}

@@ -142,7 +142,6 @@ export function AdminDashboardView() {
 				<StatCard label="Password" value={auditStats.passwordLogins} />
 				<StatCard label="Google" value={auditStats.googleLogins} />
 				<StatCard label="Failed" value={auditStats.failedLogins} />
-				<StatCard label="Unique Users" value={auditStats.uniqueUserLogins} />
 			</Section>
 
 			<Section icon={<Shield color="warning" />} title="Total Activity (30 Days)">
