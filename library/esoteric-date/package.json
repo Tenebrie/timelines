@@ -20,6 +20,7 @@
 	},
 	"devDependencies": {
 		"@types/node": "^25.6.2",
+		"@neverkin/openapi-fetch": "file:../../library/openapi-fetch",
 		"typescript": "^6.0.3",
 		"vitest": "^4.1.6"
 	}

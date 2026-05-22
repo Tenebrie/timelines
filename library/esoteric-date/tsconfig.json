@@ -10,6 +10,5 @@
 			"@/*": ["./src/*"]
 		}
 	},
-	"include": ["src/**/*"],
-	"exclude": ["src/**/*.spec.ts"]
+	"include": ["src/**/*"]
 }
