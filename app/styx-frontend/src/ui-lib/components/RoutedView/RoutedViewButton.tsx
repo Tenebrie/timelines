@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button'
 import ListItemIcon from '@mui/material/ListItemIcon'
-import { FileRouteTypes } from '@tanstack/react-router'
+import type { FileRouteTypes } from '@tanstack/react-router'
 
 import { NavigationLink } from '@/app/components/NavigationLink'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'

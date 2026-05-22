@@ -12,7 +12,6 @@ import { EventBusProvider } from './features/eventBus'
 import { globalEventBus } from './features/eventBus/eventBus'
 import { LostConnectionAlert } from './features/liveUpdates/components/LostConnectionAlert'
 import { useLiveUpdates } from './features/liveUpdates/hooks/useLiveUpdates'
-import { ModalsRenderer } from './features/modals/ModalsRenderer'
 import { BaseNavigator } from './features/navigation/components/BaseNavigator'
 import { NavigationReceiverWrapper } from './features/navigation/components/NavigationReceiverWrapper'
 import { PageMetadata } from './features/pageMetadata/PageMetadata'
@@ -84,7 +83,6 @@ const App = () => {
 										<Outlet />
 									</AuthBackground>
 								</Box>
-								<ModalsRenderer />
 							</Container>
 							<LostConnectionAlert server="rhea" />
 							<LostConnectionAlert server="calliope" />

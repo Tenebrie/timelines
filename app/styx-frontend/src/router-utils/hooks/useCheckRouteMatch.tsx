@@ -1,6 +1,6 @@
 import { useMatches } from '@tanstack/react-router'
 
-import { FileRouteTypes } from '@/routeTree.gen'
+import type { FileRouteTypes } from '@/routeTree.gen'
 
 export const useCheckRouteMatch = (route: FileRouteTypes['fullPaths']) => {
 	return useMatches({

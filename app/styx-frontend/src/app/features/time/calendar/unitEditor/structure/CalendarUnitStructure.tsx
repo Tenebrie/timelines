@@ -13,7 +13,7 @@ import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { getCalendarEditorPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 
 import { getCalendarEditorState } from '../../CalendarSliceSelectors'
-import { CalendarUnitEditorTab } from '../CalendarUnitEditor'
+import { CalendarUnitEditorTab } from '../../types'
 import { CalendarUnitChildList } from './childList/CalendarUnitChildList'
 import { CalendarUnitAddChildForm } from './components/CalendarUnitAddChildForm'
 

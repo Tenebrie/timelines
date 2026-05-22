@@ -11,6 +11,8 @@ RUN mkdir /.cache
 RUN chown -R ${DOCKER_UID}:${DOCKER_GID} /.cache
 RUN mkdir -p /library/tiptap-schema
 RUN chown -R ${DOCKER_UID}:${DOCKER_GID} /library
+RUN mkdir -p /.vite-plugin-mkcert
+RUN chown -R ${DOCKER_UID}:${DOCKER_GID} /.vite-plugin-mkcert
 
 COPY ./app/styx-frontend/package.json /app/styx/
 COPY ./app/styx-frontend/package-lock.json /app/styx/

@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { Outlet } from '@tanstack/react-router'
 
+import { ModalsRenderer } from '@/app/features/modals/ModalsRenderer'
 import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
 import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
@@ -90,6 +91,7 @@ export const World = () => {
 			<CreateEventModal />
 			<CreateActorModal />
 			<DeleteActorModal />
+			<ModalsRenderer />
 		</>
 	)
 }

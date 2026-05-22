@@ -21,3 +21,10 @@ export enum CalendarEditorTab {
 	Presentation,
 	Intervals,
 }
+
+export enum CalendarUnitEditorTab {
+	Names = 'names',
+	Formatting = 'formatting',
+	Structure = 'structure',
+	Preview = 'preview',
+}

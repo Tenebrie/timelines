@@ -4,7 +4,7 @@ import { ReactNode } from 'react'
 
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useCheckRouteMatchExact } from '@/router-utils/hooks/useCheckRouteMatchExact'
-import { FileRouteTypes } from '@/routeTree.gen'
+import type { FileRouteTypes } from '@/routeTree.gen'
 
 type Props = {
 	route: FileRouteTypes['fullPaths']

@@ -4,7 +4,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { ScaleLevel } from '../../schema/ScaleLevel'
-import { CalendarUnitEditorTab } from '../time/calendar/unitEditor/CalendarUnitEditor'
+import { CalendarUnitEditorTab } from '../time/calendar/types'
 import { loadPreferences, PreferencesKey } from './utils/loadPreferences'
 
 const initialState = loadPreferences() as Required<ReturnType<typeof loadPreferences>>
