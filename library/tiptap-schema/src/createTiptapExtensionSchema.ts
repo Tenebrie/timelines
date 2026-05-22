@@ -40,12 +40,14 @@ export const BaseExtensions = {
 	TextStyle,
 	Color,
 	FontFamily,
-} as const
+} as constZz
 
-export function createTiptapExtensionSchema(overrides: Partial<typeof BaseExtensions> = {}): Extensions {
+export function createTiptapExtensionSchema<T>(
+	overrides: Partial<Record<keyof typeof BaseExtensions, unknown>> = {},
+): T {
 	const merged = {
 		...BaseExtensions,
 		...overrides,
 	}
-	return Object.values(merged) as Extensions
+	return Object.values(merged) as Extensions as unknown as T
 }

@@ -1,10 +1,10 @@
 import { createTiptapExtensionSchema } from '@neverkin/tiptap-schema'
-import { getSchema } from '@tiptap/core'
+import { Extensions, getSchema } from '@tiptap/core'
 import { generateHTML, generateJSON } from '@tiptap/html'
 import { prosemirrorJSONToYXmlFragment, yXmlFragmentToProseMirrorRootNode } from '@tiptap/y-tiptap'
 import * as Y from 'yjs'
 
-const extensions = createTiptapExtensionSchema()
+const extensions = createTiptapExtensionSchema() as unknown as Extensions
 const schema = getSchema(extensions)
 
 export function htmlToYDoc(html: string, doc: Y.Doc): void {
