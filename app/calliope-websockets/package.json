@@ -6,7 +6,6 @@
 	"description": "",
 	"license": "GPL-3.0-or-later",
 	"author": "Tenebrie",
-	
 	"scripts": {
 		"tsc": "tsc --noEmit",
 		"build": "tsc -p . && tsc-alias -p tsconfig.json",
@@ -15,7 +14,7 @@
 		"lint:fix": "eslint src/ --fix",
 		"prod": "node dist/index.js",
 		"prune-build-modules": "npm install --omit=dev --ignore-scripts --prefer-offline",
-		"start": "nodemon --watch src --ext ts,js,json --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
+		"start": "nodemon --watch src $(node /scripts/prepare-library-deps-list.mjs) --ext ts,js,json --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts' --delay 0.1s",
 		"test": "vitest --run",
 		"test:watch": "vitest"
 	},

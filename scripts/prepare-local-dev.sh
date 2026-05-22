@@ -4,5 +4,3 @@ export DOCKER_GID=$(id -g)
 
 mkdir -p ./app/styx-frontend/node_modules/.tanstack/tmp-docker
 chown -R ${DOCKER_UID}:${DOCKER_GID} ./app/styx-frontend/node_modules/.tanstack/tmp-docker
-
-(cd ./library/tiptap-schema && npm run build)

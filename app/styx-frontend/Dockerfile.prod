@@ -10,9 +10,9 @@ WORKDIR /app
 COPY ./app/ts-shared /app/ts-shared
 RUN cd /app/ts-shared && npm ci
 
-# Build tiptap-schema (local library dependency of styx)
+# Build every local library
 COPY ./library /library
-RUN cd /library/tiptap-schema && npm ci && npm run build
+RUN for d in /library/*/; do if [ -f "$d/package.json" ]; then (cd "$d" && npm ci && npm run build); fi; done
 
 # Copy package files and install ALL dependencies (needed for build)
 COPY ./app/styx-frontend/package.json ./app/styx-frontend/package-lock.json /app/styx/
