@@ -1,7 +1,7 @@
+import type { paths } from '@neverkin/openapi-fetch'
 import { IMPERSONATED_USER_HEADER, SERVICE_AUTH_TOKEN_HEADER } from '@src/ts-shared/const/constants.js'
 import createClient from 'openapi-fetch'
 
-import type { paths } from '../api/rhea-api.js'
 import { TokenService } from './TokenService.js'
 
 const rheaClient = createClient<paths>({

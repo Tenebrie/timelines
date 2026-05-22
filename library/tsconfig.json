@@ -3,6 +3,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "declaration": true,
+    "declarationMap": true,
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "target": "ES2022",

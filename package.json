@@ -6,6 +6,8 @@
 	"private": true,
 	"subPackages": [
 		"library/tiptap-schema",
+		"library/openapi-fetch",
+		"library/esoteric-date",
 		"app/styx-frontend",
 		"app/rhea-backend",
 		"app/calliope-websockets",

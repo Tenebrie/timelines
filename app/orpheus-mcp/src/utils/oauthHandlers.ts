@@ -1,8 +1,8 @@
+import { paths } from '@neverkin/openapi-fetch'
 import http from 'http'
 import createClient from 'openapi-fetch'
 import { URL } from 'url'
 
-import type { paths } from '../api/rhea-api.js'
 import { OAuthService } from '../services/OAuthService.js'
 
 const rheaClient = createClient<paths>({
