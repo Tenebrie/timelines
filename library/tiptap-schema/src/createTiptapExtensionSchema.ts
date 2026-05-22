@@ -1,4 +1,3 @@
-import { Extensions } from '@tiptap/core'
 import CharacterCount from '@tiptap/extension-character-count'
 import Color from '@tiptap/extension-color'
 import FontFamily from '@tiptap/extension-font-family'
@@ -40,7 +39,7 @@ export const BaseExtensions = {
 	TextStyle,
 	Color,
 	FontFamily,
-} as constZz
+} as const
 
 export function createTiptapExtensionSchema<T>(
 	overrides: Partial<Record<keyof typeof BaseExtensions, unknown>> = {},
@@ -49,5 +48,5 @@ export function createTiptapExtensionSchema<T>(
 		...BaseExtensions,
 		...overrides,
 	}
-	return Object.values(merged) as Extensions as unknown as T
+	return Object.values(merged) as T
 }

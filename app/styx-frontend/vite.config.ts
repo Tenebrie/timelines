@@ -21,6 +21,18 @@ export default defineConfig({
 	resolve: {
 		tsconfigPaths: true,
 		preserveSymlinks: true,
+		dedupe: [
+			'@tiptap/core',
+			'@tiptap/pm',
+			'@tiptap/react',
+			'prosemirror-state',
+			'prosemirror-view',
+			'prosemirror-model',
+			'prosemirror-transform',
+			'prosemirror-keymap',
+			'yjs',
+			'y-protocols',
+		],
 		alias: {
 			'@api': '/src/api',
 			'@': '/src',
