@@ -1,48 +1,12 @@
 import { CalendarDraftUnit, CalendarUnit } from '@api/types/calendarTypes'
 
-import { InputParsedTimestamp } from '../types'
+import { InputParsedTimestamp } from '../types.js'
 
 type AnyUnit = CalendarUnit | CalendarDraftUnit
 
 interface LabelTarget {
 	unitId: string
 	value: number
-}
-
-function escapeRegExp(value: string): string {
-	return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
-
-function bucketKey(unit: AnyUnit): string {
-	return unit.displayName ?? unit.name
-}
-
-function buildLabelTargets(allUnits: AnyUnit[]): Map<string, Map<string, LabelTarget>> {
-	const unitById = new Map(allUnits.map((u) => [u.id, u]))
-	const byBucket = new Map<string, Map<string, LabelTarget>>()
-
-	for (const parent of allUnits) {
-		const bucketCounter = new Map<string, number>()
-		for (const rel of parent.children) {
-			const child = unitById.get(rel.childUnitId)
-			if (!child || child.formatMode === 'Hidden') {
-				continue
-			}
-			const key = bucketKey(child)
-			const start = bucketCounter.get(key) ?? 0
-			if (rel.label) {
-				let labels = byBucket.get(key)
-				if (!labels) {
-					labels = new Map()
-					byBucket.set(key, labels)
-				}
-				labels.set(rel.label, { unitId: child.id, value: start })
-			}
-			bucketCounter.set(key, start + rel.repeats)
-		}
-	}
-
-	return byBucket
 }
 
 export function parseFormattedTimestamp({
@@ -169,4 +133,40 @@ export function parseFormattedTimestamp({
 	})
 
 	return result
+}
+
+function escapeRegExp(value: string): string {
+	return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function bucketKey(unit: AnyUnit): string {
+	return unit.displayName ?? unit.name
+}
+
+function buildLabelTargets(allUnits: AnyUnit[]): Map<string, Map<string, LabelTarget>> {
+	const unitById = new Map(allUnits.map((u) => [u.id, u]))
+	const byBucket = new Map<string, Map<string, LabelTarget>>()
+
+	for (const parent of allUnits) {
+		const bucketCounter = new Map<string, number>()
+		for (const rel of parent.children) {
+			const child = unitById.get(rel.childUnitId)
+			if (!child || child.formatMode === 'Hidden') {
+				continue
+			}
+			const key = bucketKey(child)
+			const start = bucketCounter.get(key) ?? 0
+			if (rel.label) {
+				let labels = byBucket.get(key)
+				if (!labels) {
+					labels = new Map()
+					byBucket.set(key, labels)
+				}
+				labels.set(rel.label, { unitId: child.id, value: start })
+			}
+			bucketCounter.set(key, start + rel.repeats)
+		}
+	}
+
+	return byBucket
 }

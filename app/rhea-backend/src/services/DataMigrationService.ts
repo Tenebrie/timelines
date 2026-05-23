@@ -227,7 +227,9 @@ export const DataMigrationService = {
 				...world.articles.map((a) => a.id),
 				...world.tags.map((t) => t.id),
 			])
-			const validPageIds = new Set<string>(world.articles.flatMap((a) => a.pages.map((p) => p.id)))
+			const validArticlePageIds = new Set<string>(world.articles.flatMap((a) => a.pages.map((p) => p.id)))
+			const validActorPageIds = new Set<string>(world.actors.flatMap((a) => a.pages.map((p) => p.id)))
+			const validPageIds = new Set<string>([...validArticlePageIds, ...validActorPageIds])
 
 			const allWorldMentions = [
 				...world.actors.flatMap((a) => a.mentions),

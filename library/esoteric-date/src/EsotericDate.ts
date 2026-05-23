@@ -1,10 +1,10 @@
 import { CalendarUnit } from '@api/types/calendarTypes'
 import { WorldCalendar, WorldCalendarUnit } from '@api/types/worldTypes'
 
-import { InputParsedTimestamp, ParsedTimestamp } from './types'
-import { formatTimestampUnits } from './utils/formatTimestampUnits'
-import { parseFormattedTimestamp } from './utils/parseFormattedTimestamp'
-import { parseTimestampMultiRoot } from './utils/parseTimestampMultiRoot'
+import { InputParsedTimestamp, ParsedTimestamp } from './types.js'
+import { formatTimestampUnits } from './utils/formatTimestampUnits.js'
+import { parseFormattedTimestamp } from './utils/parseFormattedTimestamp.js'
+import { parseTimestampMultiRoot } from './utils/parseTimestampMultiRoot.js'
 
 // ---------------------------------------------------------------------------
 // Internal types
