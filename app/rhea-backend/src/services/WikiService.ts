@@ -145,7 +145,7 @@ export const WikiService = {
 				},
 			})
 
-			await MentionsService.createMentions(article.id, MentionedEntity.Article, params.mentions, prisma)
+			await MentionsService.createMentions(article.id, MentionedEntity.Article, params.mentions, null, prisma)
 
 			await makeSortWikiArticlesQuery(params.worldId, prisma)
 			await makeTouchWorldQuery(params.worldId, prisma)
@@ -173,6 +173,7 @@ export const WikiService = {
 				params.id,
 				MentionedEntity.Article,
 				params.mentions,
+				null,
 				prisma,
 			)
 			const referencedAssets = await AssetRefService.createReferences({
@@ -180,6 +181,7 @@ export const WikiService = {
 				holderId: params.id,
 				holderType: ReferenceHoldingEntity.Article,
 				assets: params.referencedAssetIds,
+				pageId: null,
 				prisma,
 			})
 
@@ -226,12 +228,14 @@ export const WikiService = {
 				},
 			})
 
-			const updatedMentions = [...previousMentions, ...mentionedEntities].filter((mention) => {
+			// When mentions weren't touched (mentionedEntities is undefined) nothing changed.
+			const reconciledMentions = mentionedEntities ?? previousMentions
+			const updatedMentions = [...previousMentions, ...reconciledMentions].filter((mention) => {
 				return (
 					!previousMentions.some(
 						(prev) => prev.sourceId === mention.sourceId && prev.targetId === mention.targetId,
 					) ||
-					!mentionedEntities.some(
+					!reconciledMentions.some(
 						(updated) => updated.sourceId === mention.sourceId && updated.targetId === mention.targetId,
 					)
 				)

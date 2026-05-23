@@ -2,6 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { checkEventDoesNotExist } from '@src/utils/findByName.js'
+import { formatTimestamp } from '@src/utils/formatTimestamp.js'
 import { Logger } from '@src/utils/Logger.js'
 import { normalizeColor } from '@src/utils/normalizeColor.js'
 import { resolveDateTime } from '@src/utils/resolveDateTime.js'
@@ -25,8 +26,7 @@ export function registerCreateEventTool(server: McpServer) {
 		TOOL_NAME,
 		{
 			title: 'Create Event',
-			description:
-				'Create a new event in the current world with name, timestamp, and description. Timestamp of 0 is the beginning of the story, counting in minutes.',
+			description: 'Create a new event in the current world.',
 			inputSchema,
 		},
 		async (args: z.infer<typeof inputSchema>, extra: ToolExtra) => {
@@ -70,7 +70,7 @@ export function registerCreateEventTool(server: McpServer) {
 								`Event created successfully!\n` +
 								`Name: ${event.name}\n` +
 								`ID: ${event.id}\n` +
-								`Timestamp: ${event.timestamp}\n` +
+								`Timestamp: ${formatTimestamp(event.timestamp, worldData)}\n` +
 								`Color: ${event.color || '(None)'}`,
 						},
 					],
