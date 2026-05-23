@@ -17,7 +17,7 @@ describe('list_worlds tool', () => {
 			registerListWorldsTool(server)
 		})
 
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 	})
 
 	it('returns a list of worlds', async () => {
@@ -72,7 +72,7 @@ describe('list_worlds tool', () => {
 		expect(result.isError).toBeUndefined()
 		expect(allText).toContain('Lonely World')
 		expect(allText).toContain('automatically set as current context')
-		expect(ContextService.getCurrentWorld('default')).toBe('only-world')
+		expect(await ContextService.getCurrentWorld('default')).toBe('only-world')
 	})
 
 	it('includes worlds from all categories', async () => {
@@ -142,7 +142,7 @@ describe('list_worlds tool', () => {
 		})
 
 		expect(mock.hasBeenCalled()).toBe(true)
-		expect(ContextService.getCurrentUserId('default')).toBe('custom-user')
+		expect(await ContextService.getCurrentUserId('default')).toBe('custom-user')
 
 		process.env.REQUIRE_OAUTH = originalEnv
 	})
@@ -165,7 +165,7 @@ describe('list_worlds tool', () => {
 	})
 
 	it('returns an error when no user is set', async () => {
-		ContextService.setCurrentUserId('default', null)
+		await ContextService.setCurrentUserId('default', null)
 
 		const result = await client.callTool({
 			name: 'list_worlds',

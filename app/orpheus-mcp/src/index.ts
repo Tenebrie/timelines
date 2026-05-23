@@ -5,6 +5,7 @@ import http from 'http'
 
 import { ContextService } from './services/ContextService.js'
 import { OAuthService } from './services/OAuthService.js'
+import { RedisService } from './services/RedisService.js'
 import { registerCreateActorTool } from './tools/actor/createActor.tool.js'
 import { registerDeleteActorTool } from './tools/actor/deleteActor.tool.js'
 import { registerDeleteActorContentPageTool } from './tools/actor/deleteActorContentPage.tool.js'
@@ -86,9 +87,43 @@ function createServer() {
 	return server
 }
 
+/**
+ * Bind a fresh transport to a session that was initialized on a previous run or
+ * another instance. The MCP SDK exposes no public API for this, so the internal
+ * "initialized" flag and session id are set directly.
+ */
+function adoptExistingSession(transport: StreamableHTTPServerTransport, sessionId: string): void {
+	const internal = (
+		transport as unknown as {
+			_webStandardTransport: { _initialized: boolean; sessionId?: string }
+		}
+	)._webStandardTransport
+	internal._initialized = true
+	internal.sessionId = sessionId
+}
+
 async function main() {
+	await RedisService.connect()
+
 	// Track active transports by session ID
 	const transports = new Map<string, StreamableHTTPServerTransport>()
+
+	// Drop the local transport when it closes (e.g. process reload) but keep the
+	// session in Redis so it can be resumed.
+	function forgetLocalTransportOnClose(transport: StreamableHTTPServerTransport, sessionId: string) {
+		transport.onclose = () => {
+			if (transports.get(sessionId) === transport) {
+				transports.delete(sessionId)
+			}
+		}
+	}
+
+	// The client explicitly terminated the session (DELETE): forget it everywhere.
+	async function endSession(sessionId: string) {
+		transports.delete(sessionId)
+		await ContextService.removeSession(sessionId)
+		console.info(`Session closed: ${sessionId}`)
+	}
 
 	const httpServer = http.createServer(async (req, res) => {
 		const url = new URL(req.url || '/', `http://localhost:3002`)
@@ -126,7 +161,7 @@ async function main() {
 		// Authorization endpoint
 		if (url.pathname === '/authorize') {
 			if (req.method === 'GET') {
-				handleAuthorize(req, res)
+				await handleAuthorize(req, res)
 			} else if (req.method === 'POST') {
 				await handleAuthorizePost(req, res)
 			}
@@ -141,7 +176,7 @@ async function main() {
 
 		if (url.pathname === '/mcp') {
 			// Try to validate OAuth token (use it if provided, require it if enforced)
-			const authenticatedUserId: string | null = validateBearerToken(req)
+			const authenticatedUserId: string | null = await validateBearerToken(req)
 			if (OAuthService.loginEnforced() && !authenticatedUserId) {
 				res.writeHead(401, { 'Content-Type': 'application/json' })
 				res.end(JSON.stringify({ error: 'unauthorized', error_description: 'Valid Bearer token required' }))
@@ -164,31 +199,51 @@ async function main() {
 			if (req.method === 'POST' && !sessionId) {
 				const transport = new StreamableHTTPServerTransport({
 					sessionIdGenerator: () => crypto.randomUUID(),
-					onsessioninitialized: (newSessionId) => {
+					onsessioninitialized: async (newSessionId) => {
+						forgetLocalTransportOnClose(transport, newSessionId)
 						transports.set(newSessionId, transport)
+						await ContextService.createSession(newSessionId, authenticatedUserId)
 						console.info(`New session initialized: ${newSessionId}`)
-
-						// Set the authenticated user ID for this session
 						if (authenticatedUserId) {
-							ContextService.setCurrentUserId(newSessionId, authenticatedUserId)
 							console.info(`Session ${newSessionId} linked to user: ${authenticatedUserId}`)
 						}
 					},
+					onsessionclosed: endSession,
 				})
 
-				// Clean up on close
-				transport.onclose = () => {
-					const sid = Array.from(transports.entries()).find(([, t]) => t === transport)?.[0]
-					if (sid) {
-						transports.delete(sid)
-						console.info(`Session closed: ${sid}`)
-					}
-				}
-
-				// Create a new server instance for this session
 				const server = createServer()
 				await server.connect(transport)
 				await transport.handleRequest(req, res)
+				return
+			}
+
+			// Session from Redis
+			if (sessionId && (await ContextService.sessionExists(sessionId))) {
+				const transport = new StreamableHTTPServerTransport({
+					sessionIdGenerator: () => sessionId,
+					onsessionclosed: endSession,
+				})
+				adoptExistingSession(transport, sessionId)
+				forgetLocalTransportOnClose(transport, sessionId)
+				transports.set(sessionId, transport)
+
+				const server = createServer()
+				await server.connect(transport)
+				await transport.handleRequest(req, res)
+				console.info(`Session resumed: ${sessionId}`)
+				return
+			}
+
+			// Genuinely unknown session: tell the client to re-initialize
+			if (sessionId) {
+				res.writeHead(404, { 'Content-Type': 'application/json' })
+				res.end(
+					JSON.stringify({
+						jsonrpc: '2.0',
+						error: { code: -32001, message: 'Session not found' },
+						id: null,
+					}),
+				)
 				return
 			}
 

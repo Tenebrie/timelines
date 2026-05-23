@@ -1,81 +1,68 @@
 import crypto from 'crypto'
 
-// In-memory store for OAuth flow (for production, consider Redis or DB)
-// These are short-lived, so in-memory is fine for most cases
-const authorizationCodes = new Map<
-	string,
-	{ userId: string; codeChallenge: string; expiresAt: number; clientId: string; redirectUri: string }
->()
-const accessTokens = new Map<string, { userId: string; expiresAt: number }>()
-const registeredClients = new Map<string, { clientName: string; redirectUris: string[] }>()
+import { RedisService } from './RedisService.js'
 
-// Clean up expired entries periodically
-setInterval(() => {
-	const now = Date.now()
-	for (const [code, data] of authorizationCodes) {
-		if (data.expiresAt < now) authorizationCodes.delete(code)
-	}
-	for (const [token, data] of accessTokens) {
-		if (data.expiresAt < now) accessTokens.delete(token)
-	}
-}, 60000) // Clean every minute
+const AUTH_CODE_TTL_SECONDS = 10 * 60 // 10 minutes
+const ACCESS_TOKEN_TTL_SECONDS = 24 * 60 * 60 // 24 hours
+
+const clientKey = (clientId: string) => `orpheus:oauth:client:${clientId}`
+const codeKey = (code: string) => `orpheus:oauth:code:${code}`
+const tokenKey = (token: string) => `orpheus:oauth:token:${token}`
+
+interface RegisteredClient {
+	clientName: string
+	redirectUris: string[]
+}
+
+interface AuthorizationCode {
+	userId: string
+	codeChallenge: string
+	clientId: string
+	redirectUri: string
+}
+
+interface AccessToken {
+	userId: string
+}
 
 export const OAuthService = {
 	loginEnforced: (): boolean => {
 		return process.env.REQUIRE_OAUTH !== 'false'
 	},
 
-	validateRedirectUri: (clientId: string, redirectUri: string): boolean => {
-		const client = registeredClients.get(clientId)
-		return !!client && client.redirectUris.includes(redirectUri)
+	validateRedirectUri: async (clientId: string, redirectUri: string): Promise<boolean> => {
+		const client = await RedisService.get(clientKey(clientId))
+		if (!client) {
+			return false
+		}
+		return (JSON.parse(client) as RegisteredClient).redirectUris.includes(redirectUri)
 	},
 
-	/**
-	 * Register a new OAuth client (RFC 7591 Dynamic Client Registration)
-	 */
-	registerClient: (clientName: string, redirectUris: string[]): string => {
+	registerClient: async (clientName: string, redirectUris: string[]): Promise<string> => {
 		const clientId = crypto.randomUUID()
-		registeredClients.set(clientId, { clientName, redirectUris })
+		const client: RegisteredClient = { clientName, redirectUris }
+		await RedisService.set(clientKey(clientId), JSON.stringify(client))
 		console.info(`Registered new OAuth client: ${clientId} (${clientName})`)
 		return clientId
 	},
 
-	/**
-	 * Validate that a client_id is registered
-	 */
-	isClientRegistered: (clientId: string): boolean => {
-		return registeredClients.has(clientId)
+	isClientRegistered: async (clientId: string): Promise<boolean> => {
+		return (await RedisService.get(clientKey(clientId))) !== null
 	},
 
-	/**
-	 * Generate an authorization code for PKCE flow
-	 */
-	createAuthorizationCode: ({
+	createAuthorizationCode: async ({
 		userId,
 		codeChallenge,
 		clientId,
 		redirectUri,
-	}: {
-		userId: string
-		codeChallenge: string
-		clientId: string
-		redirectUri: string
-	}): string => {
+	}: AuthorizationCode): Promise<string> => {
 		const code = crypto.randomUUID()
-		authorizationCodes.set(code, {
-			userId,
-			codeChallenge,
-			clientId,
-			redirectUri,
-			expiresAt: Date.now() + 10 * 60 * 1000, // 10 minutes
-		})
+		const data: AuthorizationCode = { userId, codeChallenge, clientId, redirectUri }
+		await RedisService.set(codeKey(code), JSON.stringify(data), AUTH_CODE_TTL_SECONDS)
 		return code
 	},
 
-	/**
-	 * Exchange authorization code for access token (with PKCE verification)
-	 */
-	exchangeCodeForToken: ({
+	exchangeCodeForToken: async ({
 		code,
 		codeVerifier,
 		clientId,
@@ -85,15 +72,12 @@ export const OAuthService = {
 		codeVerifier: string
 		clientId: string
 		redirectUri: string
-	}): string | null => {
-		const authData = authorizationCodes.get(code)
-		if (!authData) {
+	}): Promise<string | null> => {
+		const raw = await RedisService.get(codeKey(code))
+		if (!raw) {
 			return null
 		}
-		if (authData.expiresAt < Date.now()) {
-			authorizationCodes.delete(code)
-			return null
-		}
+		const authData = JSON.parse(raw) as AuthorizationCode
 
 		if (authData.clientId !== clientId || authData.redirectUri !== redirectUri) {
 			return null
@@ -101,42 +85,30 @@ export const OAuthService = {
 
 		// Verify PKCE code_verifier against stored code_challenge (S256 method)
 		const computedChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url')
-
 		if (computedChallenge !== authData.codeChallenge) {
 			console.error('PKCE verification failed')
 			return null
 		}
 
-		// Clean up used code
-		authorizationCodes.delete(code)
+		// Authorization codes are single-use
+		await RedisService.del(codeKey(code))
 
-		// Generate access token
 		const accessToken = crypto.randomUUID()
-		accessTokens.set(accessToken, {
-			userId: authData.userId,
-			expiresAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
-		})
+		const tokenData: AccessToken = { userId: authData.userId }
+		await RedisService.set(tokenKey(accessToken), JSON.stringify(tokenData), ACCESS_TOKEN_TTL_SECONDS)
 
 		return accessToken
 	},
 
-	/**
-	 * Validate an access token and return the user ID
-	 */
-	validateToken: (token: string): string | null => {
-		const tokenData = accessTokens.get(token)
-		if (!tokenData) return null
-		if (tokenData.expiresAt < Date.now()) {
-			accessTokens.delete(token)
+	validateToken: async (token: string): Promise<string | null> => {
+		const raw = await RedisService.get(tokenKey(token))
+		if (!raw) {
 			return null
 		}
-		return tokenData.userId
+		return (JSON.parse(raw) as AccessToken).userId
 	},
 
-	/**
-	 * Revoke an access token
-	 */
-	revokeToken: (token: string): void => {
-		accessTokens.delete(token)
+	revokeToken: async (token: string): Promise<void> => {
+		await RedisService.del(tokenKey(token))
 	},
 }

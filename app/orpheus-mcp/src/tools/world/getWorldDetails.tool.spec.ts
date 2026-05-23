@@ -17,7 +17,7 @@ describe('get_world_details tool', () => {
 			registerGetWorldDetailsTool(server)
 		})
 
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 		ContextService.setCurrentWorld('default', 'world-456')
 	})
 
@@ -140,7 +140,7 @@ describe('get_world_details tool', () => {
 	it('returns an error when no user is set', async () => {
 		// Clear world first while userId is still set, then clear userId
 		ContextService.setCurrentWorld('default', null)
-		ContextService.setCurrentUserId('default', null)
+		await ContextService.setCurrentUserId('default', null)
 
 		const result = await client.callTool({
 			name: 'get_world_details',

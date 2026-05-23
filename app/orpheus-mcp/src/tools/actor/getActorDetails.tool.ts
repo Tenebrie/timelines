@@ -39,10 +39,10 @@ export function registerGetActorDetailsTool(server: McpServer) {
 				const sessionId = getSessionId(extra)
 				Logger.toolInvocation(TOOL_NAME, args)
 
-				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
+				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
 				const { actorName } = args
 
-				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
+				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
 				const worldData = await RheaService.getWorldDetails({
 					worldId,
 					userId,

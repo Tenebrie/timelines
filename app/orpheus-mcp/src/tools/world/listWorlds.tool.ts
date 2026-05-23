@@ -33,14 +33,9 @@ export function registerListWorldsTool(server: McpServer) {
 					throw new Error('OAuth login required')
 				}
 
-				const userId = (() => {
-					if (args.userId) {
-						return args.userId
-					}
-					return ContextService.getCurrentUserIdOrThrow(sessionId)
-				})()
+				const userId = args.userId ?? (await ContextService.getCurrentUserIdOrThrow(sessionId))
 				const data = await RheaService.listWorlds(userId)
-				ContextService.setCurrentUserId(sessionId, userId)
+				await ContextService.setCurrentUserId(sessionId, userId)
 
 				const worlds = [...data.ownedWorlds, ...data.contributableWorlds, ...data.visibleWorlds].map((w) => ({
 					id: w.id,
@@ -52,7 +47,7 @@ export function registerListWorldsTool(server: McpServer) {
 				Logger.toolSuccess(TOOL_NAME, `Found ${worlds.length} worlds`)
 
 				if (worlds.length === 1) {
-					ContextService.setCurrentWorld(sessionId, worlds[0].id)
+					await ContextService.setCurrentWorld(sessionId, worlds[0].id)
 					return {
 						content: [
 							{

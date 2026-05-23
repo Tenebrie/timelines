@@ -32,7 +32,7 @@ describe('get_context tool', () => {
 	})
 
 	it('returns prompt to select a world when user is set but no world', async () => {
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 
 		const result = await client.callTool({
 			name: 'get_context',
@@ -48,7 +48,7 @@ describe('get_context tool', () => {
 	})
 
 	it('returns world details when user and world are set', async () => {
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 		ContextService.setCurrentWorld('default', 'world-456')
 
 		generateEndpointMock(server, {
@@ -80,7 +80,7 @@ describe('get_context tool', () => {
 	})
 
 	it('shows Read-Only for read-only worlds', async () => {
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 		ContextService.setCurrentWorld('default', 'world-456')
 
 		generateEndpointMock(server, {
@@ -106,7 +106,7 @@ describe('get_context tool', () => {
 	})
 
 	it('clears context and returns error when world fetch fails', async () => {
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 		ContextService.setCurrentWorld('default', 'world-456')
 
 		generateEndpointMock(server, {
@@ -126,6 +126,6 @@ describe('get_context tool', () => {
 		expect(text).toContain('Context has been cleared')
 
 		// Verify context was actually cleared
-		expect(ContextService.getCurrentWorld('default')).toBeNull()
+		expect(await ContextService.getCurrentWorld('default')).toBeNull()
 	})
 })

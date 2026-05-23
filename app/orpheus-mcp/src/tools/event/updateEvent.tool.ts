@@ -16,9 +16,7 @@ const inputSchema = z.object({
 	timestamp: z
 		.string()
 		.optional()
-		.describe(
-			'The new timestamp for the event (optional), as a bigint string, in minutes. Timestamp 0 is the beginning of the story.',
-		),
+		.describe('The timestamp of the event (optional). The format must match the current world precisely.'),
 	color: z
 		.string()
 		.optional()
@@ -56,8 +54,8 @@ export function registerUpdateEventTool(server: McpServer) {
 				const sessionId = getSessionId(extra)
 				Logger.toolInvocation(TOOL_NAME, args)
 
-				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
-				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
+				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
+				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
 				const { eventName, name, timestamp, color, description } = args
 
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })

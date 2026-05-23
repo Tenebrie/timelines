@@ -18,7 +18,7 @@ describe('search_world tool', () => {
 		})
 
 		// Set up session context so the tool can find worldId and userId
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 		ContextService.setCurrentWorld('default', 'world-456')
 	})
 

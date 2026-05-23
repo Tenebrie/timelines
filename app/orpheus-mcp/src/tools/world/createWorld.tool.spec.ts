@@ -16,7 +16,7 @@ describe('create_world tool', () => {
 		client = await setupMockClient((server) => {
 			registerCreateWorldTool(server)
 		})
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 	})
 
 	it('creates a world and sets it as current context', async () => {
@@ -42,7 +42,7 @@ describe('create_world tool', () => {
 		expect(text).toContain('new-world-id')
 		expect(text).toContain('automatically set as your current context')
 		expect(mock.hasBeenCalled()).toBe(true)
-		expect(ContextService.getCurrentWorld('default')).toBe('new-world-id')
+		expect(await ContextService.getCurrentWorld('default')).toBe('new-world-id')
 	})
 
 	it('creates a world with a description', async () => {
@@ -89,7 +89,7 @@ describe('create_world tool', () => {
 	})
 
 	it('returns an error when no user is set', async () => {
-		ContextService.setCurrentUserId('default', null)
+		await ContextService.setCurrentUserId('default', null)
 
 		const result = await client.callTool({
 			name: 'create_world',

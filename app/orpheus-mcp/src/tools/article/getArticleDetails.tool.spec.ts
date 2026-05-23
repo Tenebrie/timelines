@@ -40,7 +40,7 @@ describe('get_article_details tool', () => {
 		client = new Client({ name: 'test-client', version: '0.0.1' })
 		await client.connect(clientTransport)
 
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 		ContextService.setCurrentWorld('default', 'world-456')
 	})
 

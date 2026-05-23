@@ -30,8 +30,8 @@ export function registerCreateActorTool(server: McpServer) {
 				const sessionId = getSessionId(extra)
 				Logger.toolInvocation(TOOL_NAME, args)
 
-				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
-				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
+				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
+				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
 				const { name, title, color, description } = args
 
 				await checkActorDoesNotExist({ name, userId, sessionId })
