@@ -35,6 +35,7 @@ export const makeUpdateActorQuery = async ({
 		actorId,
 		MentionedEntity.Actor,
 		actorData.mentions,
+		null,
 		prisma,
 	)
 	const referencedAssets = await AssetRefService.createReferences({
@@ -42,6 +43,7 @@ export const makeUpdateActorQuery = async ({
 		holderId: actorId,
 		holderType: ReferenceHoldingEntity.Actor,
 		assets: referencedAssetIds,
+		pageId: null,
 		prisma,
 	})
 
@@ -90,12 +92,14 @@ export const makeUpdateActorQuery = async ({
 	await MentionsService.clearOrphanedMentions(prisma)
 	await AssetRefService.clearOrphanedReferences(prisma)
 
-	const updatedMentions = [...previousMentions, ...mentionedEntities].filter((mention) => {
+	// When mentions weren't touched (mentionedEntities is undefined) nothing changed.
+	const reconciledMentions = mentionedEntities ?? previousMentions
+	const updatedMentions = [...previousMentions, ...reconciledMentions].filter((mention) => {
 		return (
 			!previousMentions.some(
 				(prev) => prev.sourceId === mention.sourceId && prev.targetId === mention.targetId,
 			) ||
-			!mentionedEntities.some(
+			!reconciledMentions.some(
 				(updated) => updated.sourceId === mention.sourceId && updated.targetId === mention.targetId,
 			)
 		)

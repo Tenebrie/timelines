@@ -29,6 +29,7 @@ export const makeUpdateWorldEventQuery = async ({
 		eventId,
 		MentionedEntity.Event,
 		eventData.mentions,
+		null,
 		prisma,
 	)
 	const referencedAssets = await AssetRefService.createReferences({
@@ -36,6 +37,7 @@ export const makeUpdateWorldEventQuery = async ({
 		holderId: eventId,
 		holderType: ReferenceHoldingEntity.Event,
 		assets: referencedAssetIds,
+		pageId: null,
 		prisma,
 	})
 

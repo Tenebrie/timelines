@@ -239,7 +239,6 @@ export const ActorService = {
 			const previousMentions = await prisma.mention.findMany({
 				where: {
 					sourceActorId: actorId,
-					pageId,
 				},
 			})
 
@@ -247,6 +246,7 @@ export const ActorService = {
 				actorId,
 				MentionedEntity.Actor,
 				mentions,
+				pageId,
 				prisma,
 			)
 			const referencedAssets = await AssetRefService.createReferences({
@@ -254,6 +254,7 @@ export const ActorService = {
 				holderId: actorId,
 				holderType: ReferenceHoldingEntity.Actor,
 				assets: referencedAssetIds,
+				pageId,
 				prisma,
 			})
 
@@ -263,6 +264,26 @@ export const ActorService = {
 					worldId,
 				},
 				data: {
+					mentions: mentionedEntities
+						? {
+								set: mentionedEntities.map((mention) => ({
+									sourceId_targetId: {
+										sourceId: mention.sourceId,
+										targetId: mention.targetId,
+									},
+								})),
+							}
+						: undefined,
+					assetRefs: referencedAssets
+						? {
+								set: referencedAssets.map((ref) => ({
+									assetId_holderId: {
+										assetId: ref.assetId,
+										holderId: ref.holderId,
+									},
+								})),
+							}
+						: undefined,
 					pages: {
 						update: {
 							where: {
@@ -270,34 +291,19 @@ export const ActorService = {
 							},
 							data: {
 								...data,
-								mentions: {
-									set: mentionedEntities.map((mention) => ({
-										sourceId_targetId: {
-											sourceId: mention.sourceId,
-											targetId: mention.targetId,
-										},
-									})),
-								},
-								assetRefs: {
-									set: referencedAssets.map((ref) => ({
-										assetId_holderId: {
-											assetId: ref.assetId,
-											holderId: ref.holderId,
-										},
-									})),
-								},
 							},
 						},
 					},
 				},
 			})
 
-			const updatedMentions = [...previousMentions, ...mentionedEntities].filter((mention) => {
+			const reconciledMentions = mentionedEntities ?? previousMentions
+			const updatedMentions = [...previousMentions, ...reconciledMentions].filter((mention) => {
 				return (
 					!previousMentions.some(
 						(prev) => prev.sourceId === mention.sourceId && prev.targetId === mention.targetId,
 					) ||
-					!mentionedEntities.some(
+					!reconciledMentions.some(
 						(updated) => updated.sourceId === mention.sourceId && updated.targetId === mention.targetId,
 					)
 				)
