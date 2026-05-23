@@ -280,6 +280,7 @@ export const exportedUserDataSchema = z.object({
 							.object({
 								mentions: z.array(
 									z.object({
+										pageId: z.string().nullable(),
 										sourceId: z.string(),
 										targetId: z.string(),
 										sourceType: mentionedEntitySchema,
@@ -292,7 +293,6 @@ export const exportedUserDataSchema = z.object({
 										targetEventId: z.string().nullable(),
 										targetArticleId: z.string().nullable(),
 										targetTagId: z.string().nullable(),
-										pageId: z.string().nullable(),
 									}),
 								),
 							})
@@ -340,6 +340,7 @@ export const exportedUserDataSchema = z.object({
 							.object({
 								mentions: z.array(
 									z.object({
+										pageId: z.string().nullable(),
 										sourceId: z.string(),
 										targetId: z.string(),
 										sourceType: mentionedEntitySchema,
@@ -352,7 +353,6 @@ export const exportedUserDataSchema = z.object({
 										targetEventId: z.string().nullable(),
 										targetArticleId: z.string().nullable(),
 										targetTagId: z.string().nullable(),
-										pageId: z.string().nullable(),
 									}),
 								),
 								pages: z.array(
@@ -389,6 +389,7 @@ export const exportedUserDataSchema = z.object({
 							.object({
 								mentions: z.array(
 									z.object({
+										pageId: z.string().nullable(),
 										sourceId: z.string(),
 										targetId: z.string(),
 										sourceType: mentionedEntitySchema,
@@ -401,7 +402,19 @@ export const exportedUserDataSchema = z.object({
 										targetEventId: z.string().nullable(),
 										targetArticleId: z.string().nullable(),
 										targetTagId: z.string().nullable(),
-										pageId: z.string().nullable(),
+									}),
+								),
+								pages: z.array(
+									z.object({
+										id: z.string(),
+										createdAt: z.date(),
+										updatedAt: z.date(),
+										name: z.string(),
+										description: z.string(),
+										descriptionRich: z.string(),
+										parentActorId: z.string().nullable(),
+										parentEventId: z.string().nullable(),
+										parentArticleId: z.string().nullable(),
 									}),
 								),
 							})
@@ -427,6 +440,7 @@ export const exportedUserDataSchema = z.object({
 							.object({
 								mentions: z.array(
 									z.object({
+										pageId: z.string().nullable(),
 										sourceId: z.string(),
 										targetId: z.string(),
 										sourceType: mentionedEntitySchema,
@@ -439,7 +453,6 @@ export const exportedUserDataSchema = z.object({
 										targetEventId: z.string().nullable(),
 										targetArticleId: z.string().nullable(),
 										targetTagId: z.string().nullable(),
-										pageId: z.string().nullable(),
 									}),
 								),
 								pages: z.array(
