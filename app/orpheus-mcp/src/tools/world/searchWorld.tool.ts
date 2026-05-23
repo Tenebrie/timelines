@@ -14,7 +14,10 @@ const TOOL_NAME = 'search_world'
 const inputSchema = z.object({
 	query: z
 		.string()
-		.describe('The search query to find events, actors, and articles. Split by space. Use * to match any.'),
+		.optional()
+		.describe(
+			'The search query to find events, actors, and articles. Split by space. If omitted, will search all entities.',
+		),
 	from: z
 		.string()
 		.optional()
@@ -81,7 +84,7 @@ export function registerSearchWorldTool(server: McpServer) {
 
 				const data = await RheaService.searchWorld({
 					worldId,
-					query: args.query,
+					query: args.query ?? '*',
 					userId,
 					timeRange: {
 						from: minTime,

@@ -1,8 +1,8 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
-import { EsotericDate } from '@neverkin/esoteric-date'
 import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
+import { formatTimestamp } from '@src/utils/formatTimestamp.js'
 import { Logger } from '@src/utils/Logger.js'
 import { normalizeColor } from '@src/utils/normalizeColor.js'
 import { resolveDateTime } from '@src/utils/resolveDateTime.js'
@@ -71,10 +71,6 @@ export function registerUpdateEventTool(server: McpServer) {
 					timestamp: resolveDateTime(dateTime, worldData),
 					color: normalizeColor(color),
 				})
-				const formattedTimestamp = new EsotericDate(
-					worldData.calendars[0],
-					Number(updatedEvent.timestamp),
-				).format()
 
 				if (description !== undefined) {
 					const articleData = await RheaService.getWorldArticles({ userId, worldId })
@@ -101,7 +97,7 @@ export function registerUpdateEventTool(server: McpServer) {
 								`Event updated successfully!\n` +
 								`Name: ${updatedEvent.name}\n` +
 								`ID: ${updatedEvent.id}\n` +
-								`Timestamp: ${formattedTimestamp}\n` +
+								`Timestamp: ${formatTimestamp(updatedEvent.timestamp, worldData)}\n` +
 								`Color: ${updatedEvent.color || '(None)'}`,
 						},
 					],
