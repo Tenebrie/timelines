@@ -44,12 +44,6 @@
 	<title>Neverkin</title>
 </head>
 
-<body>
-	<noscript>You need to enable JavaScript to run this app.</noscript>
-	<div id="root"></div>
-	<script type="module" src="src/main.tsx"></script>
-</body>
-
 <script>
 	try {
 		const colorMode = JSON.parse(localStorage.getItem("userPreferences/v2")).colorMode
@@ -63,5 +57,10 @@
 		// Ignore
 	}
 </script>
+
+<body>
+	<noscript>You need to enable JavaScript to run this app.</noscript>
+	<div id="root"></div>
+</body>
 
 </html>

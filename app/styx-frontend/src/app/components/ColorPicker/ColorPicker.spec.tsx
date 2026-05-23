@@ -1,3 +1,4 @@
+import { describe, expect, it, rstest } from '@rstest/core'
 import { fireEvent, screen } from '@testing-library/react'
 
 import { renderWithProviders } from '@/test-utils/renderWithProviders'
@@ -61,13 +62,13 @@ describe('ColorPicker', () => {
 
 	describe('hsl', () => {
 		it('does not call onChange unnecessarily', () => {
-			const handleChange = vi.fn()
+			const handleChange = rstest.fn()
 			renderWithProviders(<ColorPicker initialValue="hsl(180, 100%, 50%)" onChangeHsl={handleChange} />)
 			expect(handleChange).not.toHaveBeenCalled()
 		})
 
 		it('respects changing the hue slider', () => {
-			const handleChange = vi.fn()
+			const handleChange = rstest.fn()
 			renderWithProviders(<ColorPicker initialValue="hsl(180, 100%, 50%)" onChangeHsl={handleChange} />)
 			const hueSlider = screen.getAllByRole('slider')[0]
 			fireEvent.change(hueSlider, { target: { value: 200 } })
@@ -76,7 +77,7 @@ describe('ColorPicker', () => {
 		})
 
 		it('respects changing the saturation slider', () => {
-			const handleChange = vi.fn()
+			const handleChange = rstest.fn()
 			renderWithProviders(<ColorPicker initialValue="hsl(180, 100%, 50%)" onChangeHsl={handleChange} />)
 			const hueSlider = screen.getAllByRole('slider')[1]
 			fireEvent.change(hueSlider, { target: { value: 25 } })
@@ -85,7 +86,7 @@ describe('ColorPicker', () => {
 		})
 
 		it('respects changing the lightness slider', () => {
-			const handleChange = vi.fn()
+			const handleChange = rstest.fn()
 			renderWithProviders(<ColorPicker initialValue="hsl(180, 100%, 50%)" onChangeHsl={handleChange} />)
 			const hueSlider = screen.getAllByRole('slider')[2]
 			fireEvent.change(hueSlider, { target: { value: 80 } })
@@ -96,13 +97,13 @@ describe('ColorPicker', () => {
 
 	describe('hex', () => {
 		it('does not call onChange unnecessarily', () => {
-			const handleChange = vi.fn()
+			const handleChange = rstest.fn()
 			renderWithProviders(<ColorPicker initialValue="hsl(180, 100%, 50%)" onChangeHex={handleChange} />)
 			expect(handleChange).not.toHaveBeenCalled()
 		})
 
 		it('respects changing the hue slider', () => {
-			const handleChange = vi.fn()
+			const handleChange = rstest.fn()
 			renderWithProviders(<ColorPicker initialValue="hsl(180, 100%, 50%)" onChangeHex={handleChange} />)
 			const hueSlider = screen.getAllByRole('slider')[0]
 			fireEvent.change(hueSlider, { target: { value: 200 } })
@@ -111,7 +112,7 @@ describe('ColorPicker', () => {
 		})
 
 		it('respects changing the saturation slider', () => {
-			const handleChange = vi.fn()
+			const handleChange = rstest.fn()
 			renderWithProviders(<ColorPicker initialValue="hsl(180, 100%, 50%)" onChangeHex={handleChange} />)
 			const hueSlider = screen.getAllByRole('slider')[1]
 			fireEvent.change(hueSlider, { target: { value: 25 } })
@@ -120,7 +121,7 @@ describe('ColorPicker', () => {
 		})
 
 		it('respects changing the lightness slider', () => {
-			const handleChange = vi.fn()
+			const handleChange = rstest.fn()
 			renderWithProviders(<ColorPicker initialValue="hsl(180, 100%, 50%)" onChangeHex={handleChange} />)
 			const hueSlider = screen.getAllByRole('slider')[2]
 			fireEvent.change(hueSlider, { target: { value: 80 } })

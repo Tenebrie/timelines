@@ -20,8 +20,8 @@ describe.skip('useDoubleClick', () => {
 		}) as MouseEvent
 
 	it('performs a single click after delay only', async () => {
-		const onClickSpy = vi.fn()
-		const onDoubleClickSpy = vi.fn()
+		const onClickSpy = rstest.fn()
+		const onDoubleClickSpy = rstest.fn()
 
 		const { result } = renderHookWithProviders(() =>
 			useDoubleClick<void>({
@@ -45,8 +45,8 @@ describe.skip('useDoubleClick', () => {
 	})
 
 	it('ignores delay if parameter is provided', async () => {
-		const onClickSpy = vi.fn()
-		const onDoubleClickSpy = vi.fn()
+		const onClickSpy = rstest.fn()
+		const onDoubleClickSpy = rstest.fn()
 
 		const { result } = renderHookWithProviders(() =>
 			useDoubleClick<void>({
@@ -71,8 +71,8 @@ describe.skip('useDoubleClick', () => {
 	})
 
 	it('performs a double click immediately', async () => {
-		const onClickSpy = vi.fn()
-		const onDoubleClickSpy = vi.fn()
+		const onClickSpy = rstest.fn()
+		const onDoubleClickSpy = rstest.fn()
 
 		const { result } = renderHookWithProviders(() =>
 			useDoubleClick<void>({
@@ -96,8 +96,8 @@ describe.skip('useDoubleClick', () => {
 	})
 
 	it('passes parameters on single click', async () => {
-		const onClickSpy = vi.fn()
-		const onDoubleClickSpy = vi.fn()
+		const onClickSpy = rstest.fn()
+		const onDoubleClickSpy = rstest.fn()
 
 		const { result } = renderHookWithProviders(() =>
 			useDoubleClick<{ foo: string }>({
@@ -121,8 +121,8 @@ describe.skip('useDoubleClick', () => {
 	})
 
 	it('passes paremeters on double click', async () => {
-		const onClickSpy = vi.fn()
-		const onDoubleClickSpy = vi.fn()
+		const onClickSpy = rstest.fn()
+		const onDoubleClickSpy = rstest.fn()
 
 		const { result } = renderHookWithProviders(() =>
 			useDoubleClick<{ foo: string }>({
@@ -147,8 +147,8 @@ describe.skip('useDoubleClick', () => {
 	})
 
 	it('does not trigger double click if targets are different', async () => {
-		const onClickSpy = vi.fn()
-		const onDoubleClickSpy = vi.fn()
+		const onClickSpy = rstest.fn()
+		const onDoubleClickSpy = rstest.fn()
 
 		const { result } = renderHookWithProviders(() =>
 			useDoubleClick<{ foo: string }>({

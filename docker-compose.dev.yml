@@ -37,6 +37,9 @@ services:
               source: ./app/styx-frontend/vite.config.ts
               target: /app/styx/vite.config.ts
             - type: bind
+              source: ./app/styx-frontend/rsbuild.config.ts
+              target: /app/styx/rsbuild.config.ts
+            - type: bind
               source: ./app/styx-frontend/tsconfig.json
               target: /app/styx/tsconfig.json
             - type: bind
@@ -214,6 +217,7 @@ services:
             - ./library:/library:cached
         command: node /library/build.mjs
         restart: unless-stopped
+        stop_grace_period: 0s
 
     redis:
         ports:

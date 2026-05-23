@@ -13,6 +13,6 @@ for (const entry of readdirSync(libraryDir, { withFileTypes: true })) {
 	const cwd = path.join(libraryDir, entry.name)
 	const tsc = path.join(cwd, 'node_modules', 'typescript', 'bin', 'tsc')
 	if (!existsSync(path.join(cwd, 'tsconfig.json')) || !existsSync(tsc)) continue
-	console.log(`[library-build] watching ${entry.name}`)
+	console.info(`[library-build] watching ${entry.name}`)
 	spawn(process.execPath, [tsc, '--watch', '--preserveWatchOutput'], { cwd, stdio: 'inherit' })
 }
