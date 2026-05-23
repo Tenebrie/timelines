@@ -310,8 +310,8 @@ describe('resolveParsedTimestamp', () => {
 		})
 	})
 
-	describe('gregorian calendar', () => {
-		it('round-trips with realistic gregorian calendar for various timestamps', () => {
+	describe('uniform-month hierarchy', () => {
+		it('round-trips for various timestamps', () => {
 			const second = mockCalendarUnit({ id: 'second', name: 'Second', duration: 1, formatShorthand: 's' })
 			const minute = mockCalendarUnit({
 				id: 'minute',

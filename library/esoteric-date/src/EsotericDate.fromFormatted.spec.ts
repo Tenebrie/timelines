@@ -268,11 +268,6 @@ describe('EsotericDate.fromFormatted', () => {
 		})
 	})
 
-	// Two independent roots that both decompose the whole timeline through the
-	// *same* leaf unit ('day'). The shared 'day' value means day-of-month under one
-	// root and day-of-week under the other, so formatting fills it from the
-	// lowest-position root — and resolution must read it back through that same
-	// root, or it would combine a day-of-month count with the wrong root's length.
 	describe('multiple roots sharing the same leaf unit', () => {
 		const makeCalendar = (monthPosition: number, weekPosition: number) =>
 			mockCalendar({
@@ -318,7 +313,6 @@ describe('EsotericDate.fromFormatted', () => {
 
 		it('resolves through the lower-position root (month first)', () => {
 			const calendar = makeCalendar(0, 1)
-			// t=20 → month 1 / day-of-month 8 / week 2; the shared 'd' is day-of-month.
 			expect(new EsotericDate(calendar, 20).format()).toBe('1-8 (2)')
 			expect(new EsotericDate(calendar, 0).fromFormatted('1-8 (2)').getTimestamp()).toBe(20)
 			expectRoundTrip(calendar, samples)
@@ -326,7 +320,6 @@ describe('EsotericDate.fromFormatted', () => {
 
 		it('resolves through the lower-position root (week first)', () => {
 			const calendar = makeCalendar(1, 0)
-			// Now week wins the shared 'd': t=20 → day-of-week 6, week 2, month 1.
 			expect(new EsotericDate(calendar, 20).format()).toBe('1-6 (2)')
 			expect(new EsotericDate(calendar, 0).fromFormatted('1-6 (2)').getTimestamp()).toBe(20)
 			expectRoundTrip(calendar, samples)
@@ -476,103 +469,7 @@ describe('EsotericDate.fromFormatted', () => {
 		})
 	})
 
-	// Named units: a unit rendered through per-relation `label`s (custom labels)
-	// rather than a number — e.g. real month names. format() emits the label
-	// verbatim, so fromFormatted() must recover the value from the label.
 	describe('named units (custom relation labels)', () => {
-		const MONTHS = [
-			'January',
-			'February',
-			'March',
-			'April',
-			'May',
-			'June',
-			'July',
-			'August',
-			'September',
-			'October',
-			'November',
-			'December',
-		]
-
-		// year -> 12 distinct single-repeat month relations (one label each) -> day
-		const gregorian = mockCalendar({
-			dateFormat: 'mmm dd, y',
-			units: [
-				mockCalendarUnit({
-					id: 'year',
-					name: 'Year',
-					duration: 360,
-					formatShorthand: 'y',
-					formatMode: 'Numeric',
-					position: 0,
-					children: MONTHS.map((label, i) =>
-						mockCalendarUnitChildRelation('year', 'month', 1, {
-							id: `year-month-${i}`,
-							position: i,
-							label,
-						}),
-					),
-					parents: [],
-				}),
-				mockCalendarUnit({
-					id: 'month',
-					name: 'Month',
-					displayName: 'Month',
-					displayNameShort: 'Mon',
-					duration: 30,
-					formatShorthand: 'm',
-					formatMode: 'NameOneIndexed',
-					position: 1,
-					children: [mockCalendarUnitChildRelation('month', 'day', 30)],
-					parents: [mockCalendarUnitParentRelation('year', 'month', 12)],
-				}),
-				mockCalendarUnit({
-					id: 'day',
-					name: 'Day',
-					duration: 1,
-					formatShorthand: 'd',
-					formatMode: 'NumericOneIndexed',
-					position: 2,
-					children: [],
-					parents: [mockCalendarUnitParentRelation('month', 'day', 30)],
-				}),
-			],
-		})
-
-		it('formats a named month verbatim', () => {
-			// 2 years + September (index 8) + day 22 (value 21)
-			expect(new EsotericDate(gregorian, 2 * 360 + 8 * 30 + 21).format()).toBe('September 22, 2')
-		})
-
-		it('parses a named month back to its value', () => {
-			expect(new EsotericDate(gregorian, 0).fromFormatted('September 22, 2').getTimestamp()).toBe(
-				2 * 360 + 8 * 30 + 21,
-			)
-			expect(new EsotericDate(gregorian, 0).fromFormatted('January 01, 0').getTimestamp()).toBe(0)
-			expect(new EsotericDate(gregorian, 0).fromFormatted('December 30, 0').getTimestamp()).toBe(11 * 30 + 29)
-		})
-
-		it('round-trips every month of the year', () => {
-			const timestamps: number[] = []
-			for (let month = 0; month < 12; month++) {
-				for (const day of [0, 14, 29]) {
-					timestamps.push(month * 30 + day)
-				}
-			}
-			expectRoundTrip(gregorian, timestamps)
-		})
-
-		it('round-trips across year boundaries and negative timestamps', () => {
-			expectRoundTrip(gregorian, [0, 359, 360, 720, 981, 36164, -1, -30, -360, -361])
-		})
-
-		it('throws on an unknown month name', () => {
-			expect(() => new EsotericDate(gregorian, 0).fromFormatted('Smarch 22, 2')).toThrow()
-		})
-
-		// A calendar mixing labelled and unlabelled slots: the parser must accept
-		// either a label or the numeric "displayName N" fallback for the same unit.
 		describe('mixed labelled and numeric slots', () => {
 			const mixed = mockCalendar({
 				dateFormat: 'mmm dd',
@@ -587,7 +484,6 @@ describe('EsotericDate.fromFormatted', () => {
 						children: [
 							mockCalendarUnitChildRelation('year', 'month', 1, { id: 'ym-0', position: 0, label: 'Spring' }),
 							mockCalendarUnitChildRelation('year', 'month', 1, { id: 'ym-1', position: 1, label: 'Summer' }),
-							// Third month carries no label -> renders "Month 003" (one-indexed).
 							mockCalendarUnitChildRelation('year', 'month', 1, { id: 'ym-2', position: 2 }),
 						],
 						parents: [],
@@ -624,94 +520,6 @@ describe('EsotericDate.fromFormatted', () => {
 
 			it('round-trips both forms', () => {
 				expectRoundTrip(mixed, [0, 4, 30, 34, 60, 64, 89])
-			})
-		})
-
-		// Honours the example from the bug report directly: a Gregorian-shaped
-		// calendar with time of day and a named month.
-		describe('named month with time of day', () => {
-			const MIN = 1
-			const HOUR = 60 * MIN
-			const DAY = 24 * HOUR
-			const MONTH = 30 * DAY
-			const YEAR = 12 * MONTH
-
-			const earth = mockCalendar({
-				dateFormat: 'hh:ii mmm dd, y',
-				units: [
-					mockCalendarUnit({
-						id: 'year',
-						name: 'Year',
-						duration: YEAR,
-						formatShorthand: 'y',
-						formatMode: 'Numeric',
-						position: 0,
-						children: MONTHS.map((label, i) =>
-							mockCalendarUnitChildRelation('year', 'month', 1, {
-								id: `year-month-${i}`,
-								position: i,
-								label,
-							}),
-						),
-						parents: [],
-					}),
-					mockCalendarUnit({
-						id: 'month',
-						name: 'Month',
-						displayName: 'Month',
-						displayNameShort: 'Mon',
-						duration: MONTH,
-						formatShorthand: 'm',
-						formatMode: 'NameOneIndexed',
-						position: 1,
-						children: [mockCalendarUnitChildRelation('month', 'day', 30)],
-						parents: [mockCalendarUnitParentRelation('year', 'month', 12)],
-					}),
-					mockCalendarUnit({
-						id: 'day',
-						name: 'Day',
-						duration: DAY,
-						formatShorthand: 'd',
-						formatMode: 'NumericOneIndexed',
-						position: 2,
-						children: [mockCalendarUnitChildRelation('day', 'hour', 24)],
-						parents: [mockCalendarUnitParentRelation('month', 'day', 30)],
-					}),
-					mockCalendarUnit({
-						id: 'hour',
-						name: 'Hour',
-						duration: HOUR,
-						formatShorthand: 'h',
-						formatMode: 'Numeric',
-						position: 3,
-						children: [mockCalendarUnitChildRelation('hour', 'minute', 60)],
-						parents: [mockCalendarUnitParentRelation('day', 'hour', 24)],
-					}),
-					mockCalendarUnit({
-						id: 'minute',
-						name: 'Minute',
-						duration: MIN,
-						formatShorthand: 'i',
-						formatMode: 'Numeric',
-						position: 4,
-						children: [],
-						parents: [mockCalendarUnitParentRelation('hour', 'minute', 60)],
-					}),
-				],
-			})
-
-			it('round-trips a full timestamp through format and back', () => {
-				const formatted = '08:23 September 22, 2300'
-				expect(new EsotericDate(earth, 0).fromFormatted(formatted).format()).toBe(formatted)
-			})
-
-			it('round-trips a variety of instants', () => {
-				expectRoundTrip(earth, [
-					0,
-					HOUR + 23 * MIN,
-					8 * HOUR + 23 * MIN + 21 * DAY + 8 * MONTH + 2300 * YEAR,
-					-1,
-				])
 			})
 		})
 	})

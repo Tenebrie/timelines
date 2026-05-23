@@ -146,50 +146,6 @@ export class EsotericDate {
 		return this.resolveParsed(parsed)
 	}
 
-	private resolveParsed(parsed: InputParsedTimestamp): EsotericDate {
-		const present = [...parsed.entries()]
-			.map(([unitId, entry]) => ({ unit: this._cache.unitById.get(unitId), value: entry.value }))
-			.filter((e): e is { unit: CalendarUnit; value: number } => !!e.unit)
-
-		// `=== 0` guard avoids a negative-zero start when originTime is 0.
-		let date = new EsotericDate(this.calendar, this.originTime === 0 ? 0 : -this.originTime)
-		if (present.length === 0) {
-			return date
-		}
-
-		const roots = this.calendar.units
-			.filter((u) => u.parents.length === 0)
-			.sort((a, b) => a.position - b.position)
-		const inChosenRoot =
-			roots
-				.map((root) => present.filter((p) => this.ancestorUnitIds(p.unit).has(root.id)))
-				.find((units) => units.length > 0) ?? present
-
-		const ordered = [...inChosenRoot].sort((a, b) => Number(b.unit.duration) - Number(a.unit.duration))
-		for (const { unit, value } of ordered) {
-			if (value !== 0) {
-				date = date.step(unit, value)
-			}
-		}
-		return date
-	}
-
-	/** A unit's own id plus the ids of all its (transitive) parents. */
-	private ancestorUnitIds(start: CalendarUnit): Set<string> {
-		const ids = new Set<string>()
-		const stack: CalendarUnit[] = [start]
-		while (stack.length > 0) {
-			const unit = stack.pop()!
-			if (ids.has(unit.id)) continue
-			ids.add(unit.id)
-			for (const rel of unit.parents) {
-				const parent = this._cache.unitById.get(rel.parentUnitId)
-				if (parent) stack.push(parent)
-			}
-		}
-		return ids
-	}
-
 	format(formatString?: string): string {
 		return formatTimestampUnits(
 			this.calendar.units,
@@ -598,6 +554,52 @@ export class EsotericDate {
 			return lastMatchOffset + this.resolveChildOffset(lastMatchUnit, childValues)
 		}
 		return 0
+	}
+
+	// -------------------------------------------------------------------------
+	// fromFormatted resolution
+	// -------------------------------------------------------------------------
+
+	private resolveParsed(parsed: InputParsedTimestamp): EsotericDate {
+		const present = [...parsed.entries()]
+			.map(([unitId, entry]) => ({ unit: this._cache.unitById.get(unitId), value: entry.value }))
+			.filter((e): e is { unit: CalendarUnit; value: number } => !!e.unit)
+
+		let date = new EsotericDate(this.calendar, this.originTime === 0 ? 0 : -this.originTime)
+		if (present.length === 0) {
+			return date
+		}
+
+		const roots = this.calendar.units
+			.filter((u) => u.parents.length === 0)
+			.sort((a, b) => a.position - b.position)
+		const inChosenRoot =
+			roots
+				.map((root) => present.filter((p) => this.ancestorUnitIds(p.unit).has(root.id)))
+				.find((units) => units.length > 0) ?? present
+
+		const ordered = [...inChosenRoot].sort((a, b) => Number(b.unit.duration) - Number(a.unit.duration))
+		for (const { unit, value } of ordered) {
+			if (value !== 0) {
+				date = date.step(unit, value)
+			}
+		}
+		return date
+	}
+
+	private ancestorUnitIds(start: CalendarUnit): Set<string> {
+		const ids = new Set<string>()
+		const stack: CalendarUnit[] = [start]
+		while (stack.length > 0) {
+			const unit = stack.pop()!
+			if (ids.has(unit.id)) continue
+			ids.add(unit.id)
+			for (const rel of unit.parents) {
+				const parent = this._cache.unitById.get(rel.parentUnitId)
+				if (parent) stack.push(parent)
+			}
+		}
+		return ids
 	}
 
 	// -------------------------------------------------------------------------

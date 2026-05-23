@@ -7,17 +7,20 @@ import { BaselineActor, BaselineArticle, BaselineTag, BaselineWorldEvent } from 
 export const SearchModeShape = z.enum(['string_match', 'split_by_space'])
 export type SearchMode = z.infer<typeof SearchModeShape>
 type SearchableEntityType = 'actor' | 'event' | 'article' | 'tag'
+type TimeRange = { from?: number; to?: number }
 
 export const WorldSearchService = {
 	async search({
 		worldId,
 		query,
 		mode,
+		timeRange = {},
 		include,
 	}: {
 		worldId: string
 		query: string
 		mode: SearchMode
+		timeRange?: TimeRange
 		include: SearchableEntityType[]
 	}) {
 		const searchPromises = {
@@ -26,19 +29,20 @@ export const WorldSearchService = {
 			events: [] as ReturnType<typeof this.findEvents>[],
 			tags: [] as ReturnType<typeof this.findTags>[],
 		}
+		const timeBoundSearch = timeRange.from !== undefined || timeRange.to !== undefined
 
 		const queries = mode === 'string_match' ? [query] : query.split(' ')
 		for (const q of queries) {
-			if (include.includes('actor')) {
+			if (include.includes('actor') && !timeBoundSearch) {
 				searchPromises.actors.push(this.findActors(worldId, q))
 			}
-			if (include.includes('article')) {
+			if (include.includes('article') && !timeBoundSearch) {
 				searchPromises.articles.push(this.findArticles(worldId, q))
 			}
 			if (include.includes('event')) {
-				searchPromises.events.push(this.findEvents(worldId, q))
+				searchPromises.events.push(this.findEvents(worldId, q, timeRange))
 			}
-			if (include.includes('tag')) {
+			if (include.includes('tag') && !timeBoundSearch) {
 				searchPromises.tags.push(this.findTags(worldId, q))
 			}
 		}
@@ -68,8 +72,10 @@ export const WorldSearchService = {
 					{
 						pages: {
 							some: {
-								name: { contains: query, mode: 'insensitive' },
-								description: { contains: query, mode: 'insensitive' },
+								OR: [
+									{ name: { contains: query, mode: 'insensitive' } },
+									{ description: { contains: query, mode: 'insensitive' } },
+								],
 							},
 						},
 					},
@@ -113,8 +119,10 @@ export const WorldSearchService = {
 					{
 						pages: {
 							some: {
-								name: { contains: query, mode: 'insensitive' },
-								description: { contains: query, mode: 'insensitive' },
+								OR: [
+									{ name: { contains: query, mode: 'insensitive' } },
+									{ description: { contains: query, mode: 'insensitive' } },
+								],
 							},
 						},
 					},
@@ -152,31 +160,42 @@ export const WorldSearchService = {
 		})
 	},
 
-	async findEvents(worldId: string, query: string): Promise<BaselineWorldEvent[]> {
+	async findEvents(worldId: string, query: string, timeRange: TimeRange): Promise<BaselineWorldEvent[]> {
 		const prisma = getPrismaClient()
+		const isWildcard = query === '*'
 		return prisma.worldEvent.findMany({
 			where: {
 				worldId,
-				OR: [
-					{ name: { contains: query, mode: 'insensitive' } },
-					{ description: { contains: query, mode: 'insensitive' } },
-					{
-						deltaStates: {
-							some: {
-								name: { contains: query, mode: 'insensitive' },
-								description: { contains: query, mode: 'insensitive' },
+				timestamp: {
+					gte: timeRange.from === undefined ? undefined : BigInt(timeRange.from),
+					lte: timeRange.to === undefined ? undefined : BigInt(timeRange.to),
+				},
+				OR: isWildcard
+					? undefined
+					: [
+							{ name: { contains: query, mode: 'insensitive' } },
+							{ description: { contains: query, mode: 'insensitive' } },
+							{
+								deltaStates: {
+									some: {
+										OR: [
+											{ name: { contains: query, mode: 'insensitive' } },
+											{ description: { contains: query, mode: 'insensitive' } },
+										],
+									},
+								},
 							},
-						},
-					},
-					{
-						pages: {
-							some: {
-								name: { contains: query, mode: 'insensitive' },
-								description: { contains: query, mode: 'insensitive' },
+							{
+								pages: {
+									some: {
+										OR: [
+											{ name: { contains: query, mode: 'insensitive' } },
+											{ description: { contains: query, mode: 'insensitive' } },
+										],
+									},
+								},
 							},
-						},
-					},
-				],
+						],
 			},
 			orderBy: {
 				timestamp: 'asc',

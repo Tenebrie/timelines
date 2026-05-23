@@ -5,6 +5,7 @@ import { setupTestServer } from '@src/test-utils/setupTestServer.js'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { generateEndpointMock } from '../../test-utils/generateEndpointMock.js'
+import { mockNumericCalendar } from '../../test-utils/mockCalendar.js'
 import { registerGetWorldDetailsTool } from './getWorldDetails.tool.js'
 
 const server = setupTestServer()
@@ -29,6 +30,7 @@ describe('get_world_details tool', () => {
 				id: 'world-456',
 				name: 'Test World',
 				isReadOnly: false,
+				calendars: [mockNumericCalendar()],
 				events: [{ name: 'Battle of Dawn' }, { name: 'Peace Treaty' }],
 				actors: [
 					{ name: 'Hero', title: 'The Brave' },
@@ -70,6 +72,7 @@ describe('get_world_details tool', () => {
 				id: 'world-456',
 				name: 'Empty World',
 				isReadOnly: false,
+				calendars: [mockNumericCalendar()],
 				events: [],
 				actors: [],
 				tags: [],
@@ -103,6 +106,7 @@ describe('get_world_details tool', () => {
 				id: 'world-456',
 				name: 'Read Only World',
 				isReadOnly: true,
+				calendars: [mockNumericCalendar()],
 				events: [],
 				actors: [],
 				tags: [],
@@ -165,5 +169,41 @@ describe('get_world_details tool', () => {
 		expect(result.isError).toBe(true)
 		const text = (result.content as Array<{ type: string; text: string }>)[0].text
 		expect(text).toContain('Error fetching world details')
+	})
+
+	it('includes the calendar definition in the output', async () => {
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456',
+			response: {
+				id: 'world-456',
+				name: 'Test World',
+				isReadOnly: false,
+				calendars: [mockNumericCalendar()],
+				events: [],
+				actors: [],
+				tags: [],
+			},
+		})
+
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/world/world-456/wiki/articles',
+			response: [],
+		})
+
+		const result = await client.callTool({
+			name: 'get_world_details',
+			arguments: {},
+		})
+
+		const text = (result.content as Array<{ type: string; text: string }>)[0].text
+		expect(result.isError).toBeUndefined()
+		expect(text).toContain('Calendar:')
+		expect(text).toContain('Name: Test Calendar')
+		expect(text).toContain('Date format: d')
+		expect(text).toContain('Origin time: 0')
+		expect(text).toContain('Time units:')
+		expect(text).toContain('d: Day')
 	})
 })

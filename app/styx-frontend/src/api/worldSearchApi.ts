@@ -11,6 +11,8 @@ const injectedRtkApi = api
 					url: `/api/world/${queryArg.worldId}/search/${queryArg.query}`,
 					params: {
 						mode: queryArg.mode,
+						minTime: queryArg.minTime,
+						maxTime: queryArg.maxTime,
 					},
 				}),
 				providesTags: ['worldSearch', 'worldDetails', 'worldTag'],
@@ -34,8 +36,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		nodes: {
-			worldId: string
 			id: string
+			worldId: string
 			createdAt: string
 			updatedAt: string
 			parentActorId?: null | string
@@ -43,12 +45,12 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			positionY: number
 		}[]
 		description: string
-		worldId: string
 		id: string
+		title: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		title: string
 		icon: string
 		color: string
 		descriptionRich: string
@@ -70,15 +72,15 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			id: string
 			name: string
 		}[]
-		worldId: string
 		id: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
 		name: string
 		icon: string
 		color: string
-		position: number
 		contentRich: string
+		position: number
 		parentId?: null | string
 	}[]
 	events: {
@@ -105,8 +107,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			worldEventId: string
 		}[]
 		description: string
-		worldId: string
 		id: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
 		name: string
@@ -127,18 +129,18 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		description: string
-		worldId: string
 		id: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
 		name: string
 	}[]
 }
 export type SearchWorldApiArg = {
-	/** Any string value */
 	worldId: string
-	/** Any string value */
 	query: string
 	mode?: 'string_match' | 'split_by_space'
+	minTime?: string
+	maxTime?: string
 }
 export const { useSearchWorldQuery, useLazySearchWorldQuery } = injectedRtkApi

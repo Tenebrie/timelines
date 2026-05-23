@@ -36,8 +36,6 @@ function buildLabelTargets(allUnits: AnyUnit[]): Map<string, Map<string, LabelTa
 					labels = new Map()
 					byBucket.set(key, labels)
 				}
-				// A label on a multi-repeat relation is ambiguous (it would render
-				// identically for every repeat); we anchor it to the first instance.
 				labels.set(rel.label, { unitId: child.id, value: start })
 			}
 			bucketCounter.set(key, start + rel.repeats)
@@ -78,14 +76,9 @@ export function parseFormattedTimestamp({
 		} else if (isSymbolic) {
 			const prefix = symbolCount === 1 ? unit.displayNameShort : unit.displayName
 			const numericForm = escapeRegExp((prefix ?? '') + ' ') + numberPattern
-			// All labels for this field's bucket — every unit sharing the bucket
-			// contributes (e.g. all four month-length units feed "month").
 			const labels = labelTargets.get(bucketKey(unit))
 
 			if (labels && labels.size > 0) {
-				// Either a known label, or the numeric "<prefix> N" fallback for any
-				// unlabelled slot. Longest labels first so a label that is a prefix of
-				// another (e.g. "Jan" vs "January") can't win early.
 				const labelAlternation = [...labels.keys()]
 					.sort((a, b) => b.length - a.length)
 					.map(escapeRegExp)
@@ -159,17 +152,12 @@ export function parseFormattedTimestamp({
 
 		const captured = match[index + 1]
 
-		// A matched custom label resolves straight to its owning unit and value —
-		// no one-indexing, since labelled output never carries a number to undo.
 		const target = slot.labels?.get(captured)
 		if (target) {
 			result.set(target.unitId, { value: target.value, formatShorthand: shorthand })
 			return
 		}
 
-		// Otherwise it is the numeric form. For numeric units the captured group is
-		// the bare number; for a symbolic numeric-fallback it is "<prefix> N", so
-		// take the trailing signed integer.
 		const numeric = captured.match(/-?\d+$/)
 		const displayed = Number.parseInt(numeric ? numeric[0] : captured, 10)
 		const isOneIndexed =
