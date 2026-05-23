@@ -15,11 +15,12 @@ export const generateEndpointMock = <ResponseT extends JsonBodyType = JsonBodyTy
 	server: SetupServer,
 	{ method, path, ...params }: { method: HttpMethod; path: string } & MockParams<ResponseT>,
 ) => {
-	let invocations: { jsonBody: unknown }[] = []
+	let invocations: { jsonBody: unknown; searchParams: Record<string, string> }[] = []
 
 	const handler = http[method]('http://rhea:3000' + path, async ({ request }) => {
 		invocations.push({
 			jsonBody: request.method === 'POST' || request.method === 'PATCH' ? await request.json() : {},
+			searchParams: Object.fromEntries(new URL(request.url).searchParams),
 		})
 
 		const status = (() => {

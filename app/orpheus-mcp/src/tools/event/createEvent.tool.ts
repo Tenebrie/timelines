@@ -4,6 +4,7 @@ import { RheaService } from '@src/services/RheaService.js'
 import { checkEventDoesNotExist } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { normalizeColor } from '@src/utils/normalizeColor.js'
+import { resolveDateTime } from '@src/utils/resolveDateTime.js'
 import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -12,11 +13,9 @@ const TOOL_NAME = 'create_event'
 
 const inputSchema = z.object({
 	name: z.string().describe('The name of the event'),
-	timestamp: z
+	dateTime: z
 		.string()
-		.describe(
-			'The timestamp of the event (as a bigint string, in minutes). Timestamp 0 is the beginning of the story.',
-		),
+		.describe('The date and time of the event. The format must match the current world precisely.'),
 	color: z.string().optional().describe('The color of the event in RGB hex format, e.g. #bf8a40 (optional)'),
 	description: z.string().optional().describe('The description of the event in HTML format (optional)'),
 })
@@ -35,15 +34,15 @@ export function registerCreateEventTool(server: McpServer) {
 				const sessionId = getSessionId(extra)
 				Logger.toolInvocation(TOOL_NAME, args)
 
-				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
-				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
-				const { name, timestamp, color, description } = args
+				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
+				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
+				const { name, dateTime, color, description } = args
 
 				await checkEventDoesNotExist({ name, userId, sessionId })
+				const worldData = await RheaService.getWorldDetails({ worldId, userId })
 
 				let parsedDescription = description
 				if (description) {
-					const worldData = await RheaService.getWorldDetails({ worldId, userId })
 					const articleData = await RheaService.getWorldArticles({ worldId, userId })
 					const parsedContent = await resolveShorthandMentions({
 						content: description,
@@ -57,7 +56,7 @@ export function registerCreateEventTool(server: McpServer) {
 					worldId,
 					userId,
 					name,
-					timestamp,
+					timestamp: resolveDateTime(dateTime, worldData),
 					color: normalizeColor(color),
 					descriptionRich: parsedDescription || '',
 				})

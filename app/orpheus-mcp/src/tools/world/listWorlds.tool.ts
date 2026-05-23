@@ -33,26 +33,27 @@ export function registerListWorldsTool(server: McpServer) {
 					throw new Error('OAuth login required')
 				}
 
-				const userId = (() => {
-					if (args.userId) {
-						return args.userId
-					}
-					return ContextService.getCurrentUserIdOrThrow(sessionId)
-				})()
+				const userId = args.userId ?? (await ContextService.getCurrentUserIdOrThrow(sessionId))
 				const data = await RheaService.listWorlds(userId)
-				ContextService.setCurrentUserId(sessionId, userId)
+				await ContextService.setCurrentUserId(sessionId, userId)
 
 				const worlds = [...data.ownedWorlds, ...data.contributableWorlds, ...data.visibleWorlds].map((w) => ({
 					id: w.id,
 					name: w.name,
 					accessMode: w.accessMode,
+					calendar: w.calendars[0].name + ' :: DateTime format is "' + w.calendars[0].dateFormat + '"',
 				}))
 
-				const worldList = worlds.map((w) => `"${w.name}" (ID: ${w.id}, Access: ${w.accessMode})`).join('\n')
+				const worldList = worlds
+					.map(
+						(w) =>
+							`${w.name}\n` + `  ID: ${w.id}\n` + `  Access: ${w.accessMode}\n` + `  Calendar: ${w.calendar}`,
+					)
+					.join('\n\n')
 				Logger.toolSuccess(TOOL_NAME, `Found ${worlds.length} worlds`)
 
 				if (worlds.length === 1) {
-					ContextService.setCurrentWorld(sessionId, worlds[0].id)
+					await ContextService.setCurrentWorld(sessionId, worlds[0].id)
 					return {
 						content: [
 							{

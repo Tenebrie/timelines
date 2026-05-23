@@ -5,6 +5,7 @@ import { setupTestServer } from '@src/test-utils/setupTestServer.js'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { generateEndpointMock } from '../../test-utils/generateEndpointMock.js'
+import { mockNumericCalendar } from '../../test-utils/mockCalendar.js'
 import { registerUpdateEventTool } from './updateEvent.tool.js'
 
 const server = setupTestServer()
@@ -17,7 +18,7 @@ describe('update_event tool', () => {
 			registerUpdateEventTool(server)
 		})
 
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 		ContextService.setCurrentWorld('default', 'world-456')
 	})
 
@@ -29,6 +30,7 @@ describe('update_event tool', () => {
 				id: 'world-456',
 				name: 'Test World',
 				isReadOnly: false,
+				calendars: [mockNumericCalendar()],
 				events: [{ id: 'e1', name: 'Battle', timestamp: '100' }],
 				actors: [],
 				tags: [],
@@ -65,6 +67,7 @@ describe('update_event tool', () => {
 				id: 'world-456',
 				name: 'Test World',
 				isReadOnly: false,
+				calendars: [mockNumericCalendar()],
 				events: [{ id: 'e1', name: 'Battle', timestamp: '100' }],
 				actors: [],
 				tags: [],
@@ -83,7 +86,7 @@ describe('update_event tool', () => {
 
 		const result = await client.callTool({
 			name: 'update_event',
-			arguments: { eventName: 'Battle', timestamp: '5000' },
+			arguments: { eventName: 'Battle', dateTime: '5000' },
 		})
 
 		const text = (result.content as Array<{ type: string; text: string }>)[0].text
@@ -98,6 +101,7 @@ describe('update_event tool', () => {
 				id: 'world-456',
 				name: 'Test World',
 				isReadOnly: false,
+				calendars: [mockNumericCalendar()],
 				events: [{ id: 'e1', name: 'Battle', timestamp: '100' }],
 				actors: [],
 				tags: [],
@@ -146,6 +150,7 @@ describe('update_event tool', () => {
 				id: 'world-456',
 				name: 'Test World',
 				isReadOnly: false,
+				calendars: [mockNumericCalendar()],
 				events: [{ id: 'e1', name: 'Battle', timestamp: '100' }],
 				actors: [],
 				tags: [],
@@ -181,6 +186,7 @@ describe('update_event tool', () => {
 				id: 'world-456',
 				name: 'Test World',
 				isReadOnly: false,
+				calendars: [mockNumericCalendar()],
 				events: [],
 				actors: [],
 				tags: [],

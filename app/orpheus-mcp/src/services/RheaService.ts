@@ -632,12 +632,24 @@ export const RheaService = {
 		})
 	},
 
-	searchWorld: async ({ worldId, query, userId }: { worldId: string; query: string; userId: string }) => {
+	searchWorld: async ({
+		worldId,
+		query,
+		userId,
+		timeRange,
+	}: {
+		worldId: string
+		query: string
+		userId: string
+		timeRange: { from?: number; to?: number }
+	}) => {
 		const response = await rheaClient['GET']('/api/world/{worldId}/search/{query}', {
 			params: {
 				path: { worldId, query },
 				query: {
 					mode: 'split_by_space',
+					minTime: timeRange.from === undefined ? undefined : String(timeRange.from),
+					maxTime: timeRange.to === undefined ? undefined : String(timeRange.to),
 				},
 			},
 			headers: {

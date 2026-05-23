@@ -40,15 +40,15 @@ export function registerSetContextTool(server: McpServer) {
 
 				const { userId, worldId } = args
 				if (userId) {
-					ContextService.setCurrentUserId(sessionId, userId)
+					await ContextService.setCurrentUserId(sessionId, userId)
 				}
 
-				const currentUserId = ContextService.getCurrentUserIdOrThrow(sessionId)
+				const currentUserId = await ContextService.getCurrentUserIdOrThrow(sessionId)
 				// Verify the world exists and user has access
 				const worldData = await RheaService.getWorldDetails({ worldId, userId: currentUserId })
 
 				// Set the world in context
-				ContextService.setCurrentWorld(sessionId, worldId)
+				await ContextService.setCurrentWorld(sessionId, worldId)
 
 				Logger.toolSuccess(TOOL_NAME, `Context set to world "${worldData.name}" (${worldId})`)
 

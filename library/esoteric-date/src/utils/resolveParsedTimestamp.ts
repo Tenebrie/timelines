@@ -1,7 +1,7 @@
 import { CalendarDraftUnit, CalendarUnit } from '@api/types/calendarTypes'
 
-import { InputParsedTimestamp, InputParsedTimestampEntry } from '../types'
-import { getOffsetInCycle } from './getOffsetInCycle'
+import { InputParsedTimestamp, InputParsedTimestampEntry } from '../types.js'
+import { getOffsetInCycle } from './getOffsetInCycle.js'
 
 export function resolveParsedTimestamp({
 	allUnits,

@@ -1,9 +1,10 @@
 import { CalendarUnit } from '@api/types/calendarTypes'
 import { WorldCalendar, WorldCalendarUnit } from '@api/types/worldTypes'
 
-import { ParsedTimestamp } from './types'
-import { formatTimestampUnits } from './utils/formatTimestampUnits'
-import { parseTimestampMultiRoot } from './utils/parseTimestampMultiRoot'
+import { InputParsedTimestamp, ParsedTimestamp } from './types.js'
+import { formatTimestampUnits } from './utils/formatTimestampUnits.js'
+import { parseFormattedTimestamp } from './utils/parseFormattedTimestamp.js'
+import { parseTimestampMultiRoot } from './utils/parseTimestampMultiRoot.js'
 
 // ---------------------------------------------------------------------------
 // Internal types
@@ -108,7 +109,7 @@ export class EsotericDate {
 	readonly _cache: CalendarCache
 	private _parsedCache: ParsedTimestamp | null = null
 
-	constructor(calendar: WorldCalendar, timestamp: number)
+	constructor(calendar: WorldCalendar, timestamp?: number)
 	constructor(date: EsotericDate)
 	constructor(calendarOrDate: WorldCalendar | EsotericDate, timestamp?: number) {
 		if (calendarOrDate instanceof EsotericDate) {
@@ -118,7 +119,7 @@ export class EsotericDate {
 			this._parsedCache = calendarOrDate._parsedCache
 		} else {
 			this.calendar = calendarOrDate
-			this.timestamp = timestamp!
+			this.timestamp = Number(timestamp ?? 0)
 			this._cache = getCalendarCache(calendarOrDate)
 		}
 	}
@@ -131,8 +132,26 @@ export class EsotericDate {
 		return this.timestamp
 	}
 
-	format(formatString: string): string {
-		return formatTimestampUnits(this.calendar.units, this.parse(), formatString)
+	fromFormatted(formatted: string): EsotericDate {
+		const dateFormat = this.calendar.dateFormat
+		if (!dateFormat || dateFormat.trim().length === 0) {
+			throw new Error('No date format specified')
+		}
+
+		const parsed = parseFormattedTimestamp({
+			allUnits: this.calendar.units,
+			formatted,
+			dateFormat,
+		})
+		return this.resolveParsed(parsed)
+	}
+
+	format(formatString?: string): string {
+		return formatTimestampUnits(
+			this.calendar.units,
+			this.parse(),
+			formatString ?? this.calendar.dateFormat ?? '',
+		)
 	}
 
 	getBucketId(unit: CalendarUnit): string | undefined {
@@ -538,6 +557,52 @@ export class EsotericDate {
 	}
 
 	// -------------------------------------------------------------------------
+	// fromFormatted resolution
+	// -------------------------------------------------------------------------
+
+	private resolveParsed(parsed: InputParsedTimestamp): EsotericDate {
+		const present = [...parsed.entries()]
+			.map(([unitId, entry]) => ({ unit: this._cache.unitById.get(unitId), value: entry.value }))
+			.filter((e): e is { unit: CalendarUnit; value: number } => !!e.unit)
+
+		let date = new EsotericDate(this.calendar, this.originTime === 0 ? 0 : -this.originTime)
+		if (present.length === 0) {
+			return date
+		}
+
+		const roots = this.calendar.units
+			.filter((u) => u.parents.length === 0)
+			.sort((a, b) => a.position - b.position)
+		const inChosenRoot =
+			roots
+				.map((root) => present.filter((p) => this.ancestorUnitIds(p.unit).has(root.id)))
+				.find((units) => units.length > 0) ?? present
+
+		const ordered = [...inChosenRoot].sort((a, b) => Number(b.unit.duration) - Number(a.unit.duration))
+		for (const { unit, value } of ordered) {
+			if (value !== 0) {
+				date = date.step(unit, value)
+			}
+		}
+		return date
+	}
+
+	private ancestorUnitIds(start: CalendarUnit): Set<string> {
+		const ids = new Set<string>()
+		const stack: CalendarUnit[] = [start]
+		while (stack.length > 0) {
+			const unit = stack.pop()!
+			if (ids.has(unit.id)) continue
+			ids.add(unit.id)
+			for (const rel of unit.parents) {
+				const parent = this._cache.unitById.get(rel.parentUnitId)
+				if (parent) stack.push(parent)
+			}
+		}
+		return ids
+	}
+
+	// -------------------------------------------------------------------------
 	// Misc
 	// -------------------------------------------------------------------------
 
@@ -549,7 +614,7 @@ export class EsotericDate {
 	}
 
 	private get originTime(): number {
-		return this.calendar.originTime
+		return Number(this.calendar.originTime)
 	}
 
 	private bucketOf(unit: { displayName?: string | null; name: string }): string {
@@ -563,3 +628,5 @@ export class EsotericDate {
 		return this.bucketOf(a) === this.bucketOf(b)
 	}
 }
+
+// watch-test 18940

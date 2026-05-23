@@ -50,9 +50,11 @@ services:
         working_dir: /app/orpheus
         depends_on:
             - rhea
+            - redis
         networks:
             - backend-rhea
             - backend-orpheus
+            - backend-redis
     thetis:
         working_dir: /app/thetis
         networks:

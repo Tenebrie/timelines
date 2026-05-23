@@ -1,7 +1,7 @@
 import { CalendarDraftUnit, CalendarUnit } from '@api/types/calendarTypes'
 
-import { ParsedTimestamp } from '../types'
-import { sumNonHiddenChildren } from './sumNonHiddenChildren'
+import { ParsedTimestamp } from '../types.js'
+import { sumNonHiddenChildren } from './sumNonHiddenChildren.js'
 
 export function parseTimestampSingleRoot({
 	outputMap,

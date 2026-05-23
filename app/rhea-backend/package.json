@@ -1,12 +1,11 @@
 {
 	"name": "rhea-backend",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"private": true,
 	"type": "module",
 	"description": "",
 	"license": "GPL-3.0-or-later",
 	"author": "Tenebrie",
-
 	"scripts": {
 		"tsc": "tsc --noEmit",
 		"build": "prisma generate && tsc -p . && tsc-alias -p tsconfig.json && copyfiles -u 2 src/assets/**/* dist/assets",
@@ -40,7 +39,7 @@
 		"jsonwebtoken": "^9.0.3",
 		"koa": "^3.2.0",
 		"koa-bodyparser": "^4.4.1",
-		"moonflower": "^1.4.6",
+		"moonflower": "^1.5.4",
 		"pg": "^8.20.0",
 		"redis": "^5.12.1",
 		"sharp": "^0.34.5",

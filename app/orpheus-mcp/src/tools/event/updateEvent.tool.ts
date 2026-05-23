@@ -1,9 +1,11 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
+import { EsotericDate } from '@neverkin/esoteric-date'
 import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { normalizeColor } from '@src/utils/normalizeColor.js'
+import { resolveDateTime } from '@src/utils/resolveDateTime.js'
 import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
@@ -13,12 +15,10 @@ const TOOL_NAME = 'update_event'
 const inputSchema = z.object({
 	eventName: z.string().describe('The name of the event to update'),
 	name: z.string().optional().describe('The new name for the event (optional)'),
-	timestamp: z
+	dateTime: z
 		.string()
 		.optional()
-		.describe(
-			'The new timestamp for the event (optional), as a bigint string, in minutes. Timestamp 0 is the beginning of the story.',
-		),
+		.describe('The dateTime of the event (optional). The format must match the current world precisely.'),
 	color: z
 		.string()
 		.optional()
@@ -56,9 +56,9 @@ export function registerUpdateEventTool(server: McpServer) {
 				const sessionId = getSessionId(extra)
 				Logger.toolInvocation(TOOL_NAME, args)
 
-				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
-				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
-				const { eventName, name, timestamp, color, description } = args
+				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
+				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
+				const { eventName, name, dateTime, color, description } = args
 
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })
 				const event = findByName({ name: eventName, entities: worldData.events })
@@ -68,9 +68,13 @@ export function registerUpdateEventTool(server: McpServer) {
 					eventId: event.id,
 					userId,
 					name,
-					timestamp,
+					timestamp: resolveDateTime(dateTime, worldData),
 					color: normalizeColor(color),
 				})
+				const formattedTimestamp = new EsotericDate(
+					worldData.calendars[0],
+					Number(updatedEvent.timestamp),
+				).format()
 
 				if (description !== undefined) {
 					const articleData = await RheaService.getWorldArticles({ userId, worldId })
@@ -97,7 +101,7 @@ export function registerUpdateEventTool(server: McpServer) {
 								`Event updated successfully!\n` +
 								`Name: ${updatedEvent.name}\n` +
 								`ID: ${updatedEvent.id}\n` +
-								`Timestamp: ${updatedEvent.timestamp}\n` +
+								`Timestamp: ${formattedTimestamp}\n` +
 								`Color: ${updatedEvent.color || '(None)'}`,
 						},
 					],

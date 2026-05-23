@@ -23,7 +23,7 @@ export function registerGetContextTool(server: McpServer) {
 			Logger.toolInvocation(TOOL_NAME, { sessionId })
 
 			try {
-				const userId = ContextService.getCurrentUserId(sessionId)
+				const userId = await ContextService.getCurrentUserId(sessionId)
 				if (!userId) {
 					Logger.toolSuccess(TOOL_NAME, 'No user currently selected')
 					return {
@@ -36,7 +36,7 @@ export function registerGetContextTool(server: McpServer) {
 					}
 				}
 
-				const currentWorldId = ContextService.getCurrentWorld(sessionId)
+				const currentWorldId = await ContextService.getCurrentWorld(sessionId)
 
 				if (!currentWorldId) {
 					Logger.toolSuccess(TOOL_NAME, 'No world currently selected')
@@ -72,7 +72,7 @@ export function registerGetContextTool(server: McpServer) {
 			} catch (error) {
 				Logger.toolError(TOOL_NAME, error)
 				// If we can't fetch the world, it might have been deleted - clear context
-				ContextService.setCurrentWorld(sessionId, null)
+				await ContextService.setCurrentWorld(sessionId, null)
 				return {
 					content: [
 						{

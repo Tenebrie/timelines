@@ -2,10 +2,8 @@ import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
 import { SearchModeShape, WorldSearchService } from '@src/services/WorldSearchService.js'
 import {
 	OptionalParam,
-	PathParam,
 	RequiredParam,
 	Router,
-	StringValidator,
 	useApiEndpoint,
 	useAuth,
 	usePathParams,
@@ -31,18 +29,24 @@ router.get('/api/world/:worldId/search/:query', async (ctx) => {
 	await useAuth(ctx, UserAuthenticator)
 
 	const { worldId, query } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-		query: PathParam(StringValidator),
+		worldId: z.string(),
+		query: z.string(),
 	})
 
-	const { mode } = useQueryParams(ctx, {
+	const { mode, minTime, maxTime } = useQueryParams(ctx, {
 		mode: OptionalParam(SearchModeValidator),
+		minTime: z.number().optional(),
+		maxTime: z.number().optional(),
 	})
 
 	return await WorldSearchService.search({
 		worldId,
 		query,
 		mode: mode ?? 'string_match',
+		timeRange: {
+			from: minTime,
+			to: maxTime,
+		},
 		include: ['actor', 'article', 'event', 'tag'],
 	})
 })

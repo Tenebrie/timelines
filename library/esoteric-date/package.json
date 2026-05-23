@@ -13,8 +13,9 @@
 	},
 	"scripts": {
 		"build": "tsc",
-		"test": "vitest --run",
-		"test:watch": "vitest",
+		"tsc": "tsc --noEmit",
+		"test": "vitest --run src/**",
+		"test:watch": "vitest src/**",
 		"lint": "eslint src/",
 		"lint:fix": "eslint src/ --fix"
 	},

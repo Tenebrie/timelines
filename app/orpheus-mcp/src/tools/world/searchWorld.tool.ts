@@ -1,14 +1,30 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
+import { findByName } from '@src/utils/findByName.js'
+import { formatTimestamp } from '@src/utils/formatTimestamp.js'
 import { Logger } from '@src/utils/Logger.js'
+import { resolveDateTime } from '@src/utils/resolveDateTime.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
+import { toSummary } from '@src/utils/toSummary.js'
 import z from 'zod'
 
 const TOOL_NAME = 'search_world'
 
 const inputSchema = z.object({
-	query: z.string().describe('The search query to find events, actors, and articles. Split by space.'),
+	query: z
+		.string()
+		.describe('The search query to find events, actors, and articles. Split by space. Use * to match any.'),
+	from: z
+		.string()
+		.optional()
+		.describe('DateTime string (events only). Will only search events after this date and time.'),
+	to: z
+		.string()
+		.optional()
+		.describe('DateTime string (events only). Will only search events before this date and time'),
+	before: z.string().optional().describe('Event name. Will only search events before this one.'),
+	after: z.string().optional().describe('Event name. Will only search events after this one.'),
 })
 
 export function registerSearchWorldTool(server: McpServer) {
@@ -28,14 +44,79 @@ export function registerSearchWorldTool(server: McpServer) {
 				const sessionId = getSessionId(extra)
 				Logger.toolInvocation(TOOL_NAME, { query: args.query })
 
-				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
-				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
+				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
+				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
 
-				const data = await RheaService.searchWorld({ worldId, query: args.query, userId })
+				if (args.from && args.after) {
+					throw new Error('Cannot search for both "from" and "after" (both set the start of the range)')
+				}
+				if (args.to && args.before) {
+					throw new Error('Cannot search for both "to" and "before" (both set the end of the range)')
+				}
 
-				const formatResults = (items: Array<{ id: string; name: string; title?: string }>, type: string) => {
+				const worldData = await RheaService.getWorldDetails({ worldId, userId })
+				const minTime = (() => {
+					if (args.after) {
+						const event = findByName({ name: args.after, entities: worldData.events })
+						return Number(event.timestamp)
+					}
+					if (args.from) {
+						return resolveDateTime(args.from, worldData)
+					}
+					return undefined
+				})()
+				const maxTime = (() => {
+					if (args.before) {
+						const event = findByName({ name: args.before, entities: worldData.events })
+						return Number(event.timestamp)
+					}
+					if (args.to) {
+						return resolveDateTime(args.to, worldData)
+					}
+					return undefined
+				})()
+				if (minTime && maxTime && minTime > maxTime) {
+					throw new Error('Minimum time must be before maximum time')
+				}
+
+				const data = await RheaService.searchWorld({
+					worldId,
+					query: args.query,
+					userId,
+					timeRange: {
+						from: minTime,
+						to: maxTime,
+					},
+				})
+
+				const summaryThreshold = 10
+				const totalResults = data.actors.length + data.articles.length + data.events.length + data.tags.length
+				const showSummary = totalResults <= summaryThreshold
+
+				const formatResults = (
+					items: Array<{
+						id: string
+						name: string
+						title?: string
+						timestamp?: string
+						description?: string
+						descriptionRich?: string
+						contentRich?: string
+					}>,
+					type: string,
+				) => {
 					if (items.length === 0) return `No ${type} found`
-					return items.map((item) => `- ${item.name}${item.title ? `, "${item.title}` : ''}`).join('\n')
+					return items
+						.map((item) => {
+							const firstLine = `- ${item.name}${item.title ? `, "${item.title}` : ''}${item.timestamp ? ` (${formatTimestamp(item.timestamp, worldData)})` : ''}`
+							if (!showSummary) {
+								return firstLine
+							}
+							const contentLine = item.contentRich ?? item.descriptionRich ?? item.descriptionRich ?? ''
+							return `${firstLine}\n${toSummary(contentLine)}\n`
+						})
+						.join('\n')
+						.trim()
 				}
 
 				const content = [
@@ -52,9 +133,12 @@ export function registerSearchWorldTool(server: McpServer) {
 					'',
 					'**Tags:**',
 					formatResults(data.tags, 'tags'),
-				].join('\n')
+					'',
+					showSummary ? '' : `More than ${summaryThreshold} results found, entity summaries not shown.`,
+				]
+					.join('\n')
+					.trim()
 
-				const totalResults = data.events.length + data.actors.length + data.articles.length + data.tags.length
 				Logger.toolSuccess(TOOL_NAME, `Found ${totalResults} results for query "${args.query}"`)
 
 				return {

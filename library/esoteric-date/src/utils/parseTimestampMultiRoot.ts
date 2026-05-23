@@ -1,7 +1,7 @@
 import { CalendarDraftUnit, CalendarUnit } from '@api/types/calendarTypes'
 
-import { ParsedTimestamp } from '../types'
-import { parseTimestampSingleRoot } from './parseTimestampSingleRoot'
+import { ParsedTimestamp } from '../types.js'
+import { parseTimestampSingleRoot } from './parseTimestampSingleRoot.js'
 
 export function parseTimestampMultiRoot({
 	allUnits,

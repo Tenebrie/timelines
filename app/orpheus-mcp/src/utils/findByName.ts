@@ -84,7 +84,7 @@ export async function checkActorDoesNotExist({
 	userId: string
 	sessionId: string
 }) {
-	const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
+	const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
 	const worldData = await RheaService.getWorldDetails({ userId, worldId })
 	const matchingActor = worldData.actors.find((actor) =>
 		nameMatchesExactly({ query: name, entityName: actor.name }),
@@ -103,7 +103,7 @@ export async function checkArticleDoesNotExist({
 	userId: string
 	sessionId: string
 }) {
-	const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
+	const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
 	const articles = await RheaService.getWorldArticles({ userId, worldId })
 	const matchingArticle = articles.find((article) =>
 		nameMatchesExactly({ query: name, entityName: article.name }),
@@ -122,7 +122,7 @@ export async function checkEventDoesNotExist({
 	userId: string
 	sessionId: string
 }) {
-	const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
+	const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
 	const worldData = await RheaService.getWorldDetails({ userId, worldId })
 	const matchingEvent = worldData.events.find((event) =>
 		nameMatchesExactly({ query: name, entityName: event.name }),
@@ -141,7 +141,7 @@ export async function checkTagDoesNotExist({
 	userId: string
 	sessionId: string
 }) {
-	const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
+	const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
 	const worldData = await RheaService.getWorldDetails({ userId, worldId })
 	const matchingTag = worldData.tags.find((tag) => nameMatchesExactly({ query: name, entityName: tag.name }))
 	if (matchingTag) {

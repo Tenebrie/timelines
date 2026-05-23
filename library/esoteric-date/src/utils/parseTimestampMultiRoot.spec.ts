@@ -1054,8 +1054,8 @@ describe('parseTimestampMultiRoot', () => {
 			})
 		})
 
-		describe('calendar with hidden cycles (like Gregorian)', () => {
-			const createGregorianCalendar = () => {
+		describe('deep hidden cycles (day-of-year, no months)', () => {
+			const createDeepCycleCalendar = () => {
 				const MINUTE = 1
 				const HOUR = 60 * MINUTE
 				const DAY = 24 * HOUR
@@ -1198,7 +1198,7 @@ describe('parseTimestampMultiRoot', () => {
 			const LEAP_YEAR = 366 * DAY
 
 			it('timestamp 0 parses to year 0, day 0, hour 0, minute 0', () => {
-				const units = createGregorianCalendar()
+				const units = createDeepCycleCalendar()
 				const result = parseTimestampMultiRoot({ allUnits: units, timestamp: 0 })
 
 				// regularYear or leapYear — value 0 for year
@@ -1210,7 +1210,7 @@ describe('parseTimestampMultiRoot', () => {
 			})
 
 			it('timestamp -1 parses to last minute of year 0 (leap year, day 365)', () => {
-				const units = createGregorianCalendar()
+				const units = createDeepCycleCalendar()
 				const result = parseTimestampMultiRoot({ allUnits: units, timestamp: -1 })
 
 				const yearEntry = result.get('regularYear') ?? result.get('leapYear')
@@ -1221,7 +1221,7 @@ describe('parseTimestampMultiRoot', () => {
 			})
 
 			it('timestamp -LEAP_YEAR parses to year -1, day 0, 00:00', () => {
-				const units = createGregorianCalendar()
+				const units = createDeepCycleCalendar()
 				const result = parseTimestampMultiRoot({ allUnits: units, timestamp: -LEAP_YEAR })
 
 				const yearEntry = result.get('regularYear') ?? result.get('leapYear')
@@ -1232,7 +1232,7 @@ describe('parseTimestampMultiRoot', () => {
 			})
 
 			it('timestamp -(LEAP_YEAR + 1) parses to year -2, day 364, 23:59', () => {
-				const units = createGregorianCalendar()
+				const units = createDeepCycleCalendar()
 				const result = parseTimestampMultiRoot({ allUnits: units, timestamp: -(LEAP_YEAR + 1) })
 
 				const yearEntry = result.get('regularYear') ?? result.get('leapYear')
@@ -1243,7 +1243,7 @@ describe('parseTimestampMultiRoot', () => {
 			})
 
 			it('timestamp -(LEAP_YEAR + REGULAR_YEAR) parses to year -2, day 0, 00:00', () => {
-				const units = createGregorianCalendar()
+				const units = createDeepCycleCalendar()
 				const result = parseTimestampMultiRoot({ allUnits: units, timestamp: -(LEAP_YEAR + REGULAR_YEAR) })
 
 				const yearEntry = result.get('regularYear') ?? result.get('leapYear')

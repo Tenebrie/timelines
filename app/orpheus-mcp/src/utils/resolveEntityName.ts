@@ -1,6 +1,6 @@
 import { RheaService } from '@src/services/RheaService.js'
 
-import { toAgentReadableText } from './toAgentReadableText.js'
+import { toSummary } from './toSummary.js'
 
 export type ResolvedMention = {
 	name: string
@@ -20,11 +20,6 @@ export function resolveEntityName({
 }): ResolvedMention | null {
 	const { events, actors, tags } = worldData
 	const articles = articleData
-
-	function toSummary(content: string) {
-		const firstParagraph = content.match(/<p[^>]*>(.*?)<\/p>/s)?.[1] ?? content.trim()
-		return toAgentReadableText({ content: firstParagraph }).replace(/<[^>]*>/g, '')
-	}
 
 	const event = events.find((event) => event.id === entityId)
 	if (event)
