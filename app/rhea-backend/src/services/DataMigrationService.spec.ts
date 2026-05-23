@@ -1090,6 +1090,22 @@ describe('DataMigrationService', () => {
 			const captured = tx.contentPage.createMany.mock.calls[0][0] as { data: Array<{ id: string }> }
 			expect(captured.data.map((p) => p.id)).toEqual(expect.arrayContaining(['ap', 'ep', 'rp']))
 		})
+
+		it('accepts an export whose events omit the pages field (back-compat with pre-event-pages exports)', async () => {
+			// events.pages was added to the export after v1 shipped; older exports
+			// have no pages key on events, and the schema must still accept them.
+			const world = makeWorld(userId)
+			const event = makeEvent(world.id, 'event-1')
+			delete (event as { pages?: unknown }).pages
+			world.events = [event]
+			const data = makeExportData(userId, [world], [])
+
+			await expect(
+				DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false }),
+			).resolves.not.toThrow()
+			// Nothing to insert (no pages anywhere), and the import completes.
+			expect(tx.contentPage.createMany).toHaveBeenCalledWith({ data: [] })
+		})
 	})
 
 	describe('isImportValid', () => {
