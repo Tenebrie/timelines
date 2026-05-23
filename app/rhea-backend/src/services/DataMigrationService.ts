@@ -53,6 +53,11 @@ export const DataMigrationService = {
 								},
 								include: {
 									mentions: true,
+									pages: {
+										omit: {
+											descriptionYjs: true,
+										},
+									},
 								},
 							},
 							articles: {
@@ -229,7 +234,12 @@ export const DataMigrationService = {
 			])
 			const validArticlePageIds = new Set<string>(world.articles.flatMap((a) => a.pages.map((p) => p.id)))
 			const validActorPageIds = new Set<string>(world.actors.flatMap((a) => a.pages.map((p) => p.id)))
-			const validPageIds = new Set<string>([...validArticlePageIds, ...validActorPageIds])
+			const validEventPageIds = new Set<string>(world.events.flatMap((e) => e.pages.map((p) => p.id)))
+			const validPageIds = new Set<string>([
+				...validArticlePageIds,
+				...validActorPageIds,
+				...validEventPageIds,
+			])
 
 			const allWorldMentions = [
 				...world.actors.flatMap((a) => a.mentions),
@@ -266,6 +276,7 @@ export const DataMigrationService = {
 
 			const allWorldPages = [
 				...world.actors.flatMap((a) => a.pages),
+				...world.events.flatMap((e) => e.pages),
 				...world.articles.flatMap((a) => a.pages),
 			]
 			for (const p of allWorldPages) {
@@ -390,6 +401,8 @@ export const DataMigrationService = {
 					...w.articles.flatMap((a) => a.mentions),
 					...w.tags.flatMap((t) => t.mentions),
 				])
+				const allActors = worlds.flatMap((w) => w.actors)
+				const allEvents = worlds.flatMap((w) => w.events)
 				const allArticles = worlds.flatMap((w) => w.articles)
 				const allMindmapLinks = worlds.flatMap((w) => w.mindmapNodes.flatMap((n) => n.links))
 				const allCalendarUnitRelations = [
@@ -490,7 +503,11 @@ export const DataMigrationService = {
 					data: allArticles.map(({ mentions: _m, pages: _p, ...a }) => a),
 				})
 				await prisma.contentPage.createMany({
-					data: allArticles.flatMap((a) => a.pages),
+					data: [
+						...allActors.flatMap((a) => a.pages),
+						...allEvents.flatMap((e) => e.pages),
+						...allArticles.flatMap((a) => a.pages),
+					],
 				})
 
 				await prisma.mindmapLink.createMany({ data: allMindmapLinks })
@@ -528,6 +545,7 @@ function strip<T extends object[]>(arr: T): Omit<T[number], 'mentions' | 'pages'
 		const copy = { ...item }
 		if ('ownerId' in copy) delete copy.ownerId
 		if ('worldId' in copy) delete copy.worldId
+		if ('pageId' in copy) delete copy.pageId
 		if ('calendarId' in copy) delete copy.calendarId
 		if ('seasonId' in copy) delete copy.seasonId
 		if ('intervals' in copy) delete copy.intervals
