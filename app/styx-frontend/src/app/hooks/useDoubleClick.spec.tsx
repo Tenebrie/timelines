@@ -1,3 +1,4 @@
+import { afterAll, beforeAll, describe, expect, it, rstest } from '@rstest/core'
 import { act } from '@testing-library/react'
 import { MouseEvent } from 'react'
 
@@ -6,11 +7,11 @@ import { useDoubleClick } from './useDoubleClick'
 
 describe.skip('useDoubleClick', () => {
 	beforeAll(() => {
-		vi.useFakeTimers()
+		rstest.useFakeTimers()
 	})
 
 	afterAll(() => {
-		vi.useRealTimers()
+		rstest.useRealTimers()
 	})
 
 	const mockMouseEvent = (data: { target?: unknown } = {}) =>
@@ -38,7 +39,7 @@ describe.skip('useDoubleClick', () => {
 		expect(onClickSpy).not.toHaveBeenCalled()
 		expect(onDoubleClickSpy).not.toHaveBeenCalled()
 
-		vi.advanceTimersByTime(1000)
+		rstest.advanceTimersByTime(1000)
 
 		expect(onClickSpy).toHaveBeenCalled()
 		expect(onDoubleClickSpy).not.toHaveBeenCalled()
@@ -64,7 +65,7 @@ describe.skip('useDoubleClick', () => {
 		expect(onClickSpy).toHaveBeenCalledTimes(1)
 		expect(onDoubleClickSpy).not.toHaveBeenCalled()
 
-		vi.advanceTimersByTime(1000)
+		rstest.advanceTimersByTime(1000)
 
 		expect(onClickSpy).toHaveBeenCalledTimes(1)
 		expect(onDoubleClickSpy).not.toHaveBeenCalled()
@@ -90,7 +91,7 @@ describe.skip('useDoubleClick', () => {
 		expect(onClickSpy).not.toHaveBeenCalled()
 		expect(onDoubleClickSpy).toHaveBeenCalled()
 
-		vi.advanceTimersByTime(1000)
+		rstest.advanceTimersByTime(1000)
 
 		expect(onClickSpy).not.toHaveBeenCalled()
 	})
@@ -113,7 +114,7 @@ describe.skip('useDoubleClick', () => {
 			})
 		})
 
-		vi.advanceTimersByTime(1000)
+		rstest.advanceTimersByTime(1000)
 
 		expect(onClickSpy).toHaveBeenCalledWith({
 			foo: 'my value',

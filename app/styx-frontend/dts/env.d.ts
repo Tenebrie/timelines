@@ -1,4 +1,4 @@
-/// <reference types="@rsbuild/core/client" />
+/// <reference types="@rsbuild/core/types" />
 /// <reference types="@types/google.accounts" />
 
 declare const __APP_VERSION__: string

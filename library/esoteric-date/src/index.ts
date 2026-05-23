@@ -1,1 +1,6 @@
 export { EsotericDate } from './EsotericDate.js'
+export type { InputParsedTimestamp } from './types.js'
+export { formatTimestampUnits } from './utils/formatTimestampUnits.js'
+export { parseTimestampMultiRoot } from './utils/parseTimestampMultiRoot.js'
+export { parseTimestampSingleRoot } from './utils/parseTimestampSingleRoot.js'
+export { resolveParsedTimestamp } from './utils/resolveParsedTimestamp.js'

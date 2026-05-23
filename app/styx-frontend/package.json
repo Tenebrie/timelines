@@ -25,6 +25,7 @@
 		"@mui/x-data-grid": "^8.0.0",
 		"@mui/x-date-pickers": "^8.27.2",
 		"@neverkin/tiptap-schema": "file:../../library/tiptap-schema",
+		"@neverkin/esoteric-date": "file:../../library/esoteric-date",
 		"@tanstack/react-form": "^1.31.0",
 		"@tanstack/react-router": "^1.169.2",
 		"@tiptap/core": "^3.23.1",
