@@ -23,19 +23,15 @@ export const makeUpdateWorldEventQuery = async ({
 	params: UpdateWorldEventQueryParams
 	prisma?: Prisma.TransactionClient
 }) => {
-	const { referencedAssetIds, ...eventData } = params
+	const { referencedAssetIds, mentions, ...eventData } = params
 
-	const mentionedEntities = await MentionsService.createMentions(
-		eventId,
-		MentionedEntity.Event,
-		eventData.mentions,
-		prisma,
-	)
-	const referencedAssets = await AssetRefService.createReferences({
+	await MentionsService.createMentions(eventId, MentionedEntity.Event, mentions, null, prisma)
+	await AssetRefService.createReferences({
 		worldId,
 		holderId: eventId,
 		holderType: ReferenceHoldingEntity.Event,
 		assets: referencedAssetIds,
+		pageId: null,
 		prisma,
 	})
 
@@ -46,30 +42,10 @@ export const makeUpdateWorldEventQuery = async ({
 		},
 		data: {
 			...eventData,
-			mentions: mentionedEntities
-				? {
-						set: mentionedEntities.map((mention) => ({
-							sourceId_targetId: {
-								sourceId: mention.sourceId,
-								targetId: mention.targetId,
-							},
-						})),
-					}
-				: undefined,
-			assetRefs: referencedAssets
-				? {
-						set: referencedAssets.map((ref) => ({
-							assetId_holderId: {
-								assetId: ref.assetId,
-								holderId: ref.holderId,
-							},
-						})),
-					}
-				: undefined,
 		},
 		include: {
-			mentions: true,
-			mentionedIn: true,
+			mentions: { distinct: ['targetId'] },
+			mentionedIn: { distinct: ['sourceId'] },
 		},
 	})
 

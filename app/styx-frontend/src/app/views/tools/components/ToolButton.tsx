@@ -3,7 +3,7 @@ import Button from '@mui/material/Button'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
-import { FileRouteTypes } from '@/routeTree.gen'
+import type { FileRouteTypes } from '@/routeTree.gen'
 
 type Props = {
 	label: string

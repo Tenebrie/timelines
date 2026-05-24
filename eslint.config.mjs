@@ -27,10 +27,10 @@ export default defineConfig(
 			'*.gen.ts',
 			'node_modules',
 			'.husky',
-			'app/calliope-websockets/src/api/rhea-api.ts',
-			'app/orpheus-mcp/src/api/rhea-api.ts',
 			'app/thetis-landing/src/components/common/BasicScripts.astro',
 			'app/thetis-landing/src/components/common/ApplyColorMode.astro',
+			'library/openapi-fetch/src/rhea-api.ts',
+			'library/**/dist',
 		],
 	},
 	{

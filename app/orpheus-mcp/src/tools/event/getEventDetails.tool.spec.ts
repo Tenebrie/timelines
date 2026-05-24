@@ -5,6 +5,7 @@ import { setupTestServer } from '@src/test-utils/setupTestServer.js'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { generateEndpointMock } from '../../test-utils/generateEndpointMock.js'
+import { mockNumericCalendar } from '../../test-utils/mockCalendar.js'
 import { registerGetEventDetailsTool } from './getEventDetails.tool.js'
 
 const server = setupTestServer()
@@ -13,6 +14,7 @@ const worldDetailsResponse = {
 	id: 'world-456',
 	name: 'Test World',
 	isReadOnly: false,
+	calendars: [mockNumericCalendar()],
 	events: [
 		{
 			id: 'e1',
@@ -43,7 +45,7 @@ describe('get_event_details tool', () => {
 			registerGetEventDetailsTool(server)
 		})
 
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 		ContextService.setCurrentWorld('default', 'world-456')
 	})
 
@@ -79,7 +81,7 @@ describe('get_event_details tool', () => {
 		expect(result.isError).toBeUndefined()
 		expect(allText).toContain('Event: Dragon Attack')
 		expect(allText).toContain('ID: e1')
-		expect(allText).toContain('Timestamp: 1440')
+		expect(allText).toContain('DateTime: 1440')
 		expect(allText).toContain('A dragon attacked the village at dawn.')
 	})
 

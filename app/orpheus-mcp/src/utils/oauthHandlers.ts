@@ -1,8 +1,8 @@
+import { paths } from '@neverkin/openapi-fetch'
 import http from 'http'
 import createClient from 'openapi-fetch'
 import { URL } from 'url'
 
-import type { paths } from '../api/rhea-api.js'
 import { OAuthService } from '../services/OAuthService.js'
 
 const rheaClient = createClient<paths>({
@@ -65,7 +65,7 @@ export const handleOAuthMetadata = (req: http.IncomingMessage, res: http.ServerR
 /**
  * Authorization endpoint - shows a simple login/consent page
  */
-export const handleAuthorize = (req: http.IncomingMessage, res: http.ServerResponse) => {
+export const handleAuthorize = async (req: http.IncomingMessage, res: http.ServerResponse) => {
 	const url = new URL(req.url || '/', `http://localhost`)
 	const clientId = url.searchParams.get('client_id')
 	const redirectUri = url.searchParams.get('redirect_uri')
@@ -79,7 +79,7 @@ export const handleAuthorize = (req: http.IncomingMessage, res: http.ServerRespo
 		return
 	}
 
-	if (!OAuthService.validateRedirectUri(clientId, redirectUri)) {
+	if (!(await OAuthService.validateRedirectUri(clientId, redirectUri))) {
 		jsonResponse(res, 400, {
 			error: 'invalid_client',
 		})
@@ -137,7 +137,7 @@ export const handleAuthorizePost = async (req: http.IncomingMessage, res: http.S
 
 	// Login successful - create authorization code with the real user ID
 	const userId = loginResponse.data.user.id
-	const code = OAuthService.createAuthorizationCode({
+	const code = await OAuthService.createAuthorizationCode({
 		userId,
 		codeChallenge,
 		clientId,
@@ -178,7 +178,7 @@ export const handleToken = async (req: http.IncomingMessage, res: http.ServerRes
 	}
 
 	// Exchange code for token
-	const accessToken = OAuthService.exchangeCodeForToken({
+	const accessToken = await OAuthService.exchangeCodeForToken({
 		code,
 		codeVerifier,
 		clientId,
@@ -203,7 +203,7 @@ export const handleToken = async (req: http.IncomingMessage, res: http.ServerRes
 /**
  * Extract and validate Bearer token from request
  */
-export const validateBearerToken = (req: http.IncomingMessage): string | null => {
+export const validateBearerToken = async (req: http.IncomingMessage): Promise<string | null> => {
 	const authHeader = req.headers.authorization
 	if (!authHeader || !authHeader.startsWith('Bearer ')) {
 		return null
@@ -225,7 +225,7 @@ export const handleRegister = async (req: http.IncomingMessage, res: http.Server
 		const redirectUris = (body.redirect_uris as string[]) || []
 
 		// Generate a client_id for this registration
-		const clientId = OAuthService.registerClient(clientName, redirectUris)
+		const clientId = await OAuthService.registerClient(clientName, redirectUris)
 
 		// Return the registered client information (RFC 7591 Section 3.2.1)
 		jsonResponse(res, 201, {

@@ -16,11 +16,14 @@ function DefaultErrorComponent({ error, reset }: { error: Error; reset: () => vo
 			reset()
 		}
 
-		if (import.meta.hot) {
-			import.meta.hot.on('vite:afterUpdate', callback)
+		const handler = (status: string) => {
+			if (status === 'idle') callback()
+		}
+		if (import.meta.webpackHot) {
+			import.meta.webpackHot.addStatusHandler(handler)
 		}
 		return () => {
-			import.meta.hot?.off('vite:afterUpdate', callback)
+			import.meta.webpackHot?.removeStatusHandler(handler)
 		}
 	}, [reset])
 

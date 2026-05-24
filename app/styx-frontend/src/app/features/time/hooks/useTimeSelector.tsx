@@ -1,6 +1,6 @@
+import { EsotericDate } from '@neverkin/esoteric-date'
 import { useCallback } from 'react'
 
-import { EsotericDate } from '../calendar/date/EsotericDate'
 import { parseTimeSelector } from '../utils/parseTimeSelector'
 import { useWorldTime } from './useWorldTime'
 

@@ -18,7 +18,7 @@ import { getCalendarEditorPreferences } from '@/app/features/preferences/Prefere
 import { useUpdateCalendarUnitDebounced } from '../../api/useUpdateCalendarUnitDebounced'
 import { usePreviewCalendar } from '../../hooks/usePreviewCalendar'
 import { useSelectedCalendarUnit } from '../../hooks/useSelectedCalendarUnit'
-import { CalendarUnitEditorTab } from '../CalendarUnitEditor'
+import { CalendarUnitEditorTab } from '../../types'
 
 type Props = {
 	unit: CalendarDraftUnit

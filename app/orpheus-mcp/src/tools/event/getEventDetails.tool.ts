@@ -2,6 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
+import { formatTimestamp } from '@src/utils/formatTimestamp.js'
 import { Logger } from '@src/utils/Logger.js'
 import { resolveSavedMentions } from '@src/utils/resolveSavedMentions.js'
 import { toAgentReadableText } from '@src/utils/toAgentReadableText.js'
@@ -31,8 +32,8 @@ export function registerGetEventDetailsTool(server: McpServer) {
 				const sessionId = getSessionId(extra)
 				Logger.toolInvocation(TOOL_NAME, args)
 
-				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
-				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
+				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
+				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
 				const { eventName } = args
 
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })
@@ -62,7 +63,7 @@ export function registerGetEventDetailsTool(server: McpServer) {
 							text:
 								`Event: ${event.name}\n` +
 								`ID: ${event.id}\n` +
-								`Timestamp: ${event.timestamp}\n` +
+								`DateTime: ${formatTimestamp(event.timestamp, worldData)}\n` +
 								`Color: ${event.color || '(None)'}\n\n` +
 								`${content || 'No content'}`,
 						},

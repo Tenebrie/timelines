@@ -1,6 +1,6 @@
 {
 	"name": "orpheus-mcp",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"private": true,
 	"type": "module",
 	"description": "",
@@ -9,11 +9,10 @@
 	"scripts": {
 		"tsc": "tsc --noEmit",
 		"build": "tsc -p . && tsc-alias -p tsconfig.json",
-		"openapi": "openapi-typescript http://localhost:3000/api-json -o ./src/api/rhea-api.ts",
 		"lint": "eslint src/",
 		"lint:fix": "eslint src/ --fix",
 		"prod": "node dist/index.js",
-		"start": "nodemon --watch src --ext ts,js,json --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
+		"start": "nodemon --watch src $(node /scripts/prepare-library-deps-list.mjs) --ext ts,js,json --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts' --delay 0.1s",
 		"test": "vitest --run",
 		"test:watch": "vitest",
 		"test:coverage": "vitest run --coverage",
@@ -24,17 +23,20 @@
 	},
 	"dependencies": {
 		"@modelcontextprotocol/sdk": "^1.29.0",
+		"@neverkin/esoteric-date": "file:../../library/esoteric-date",
 		"@types/jsonwebtoken": "^9.0.10",
 		"@types/ws": "^8.5.10",
 		"chalk": "^5.6.2",
 		"dotenv": "^17.4.2",
 		"jsonwebtoken": "^9.0.3",
 		"openapi-fetch": "^0.17.0",
+		"redis": "^5.12.1",
 		"vite": "^8.0.13",
 		"zod": "^4.4.3"
 	},
 	"devDependencies": {
 		"@modelcontextprotocol/inspector": "^0.21.2",
+		"@neverkin/openapi-fetch": "file:../../library/openapi-fetch",
 		"@types/node": "^25.6.2",
 		"@typescript-eslint/eslint-plugin": "^8.59.3",
 		"@typescript-eslint/parser": "^8.59.3",

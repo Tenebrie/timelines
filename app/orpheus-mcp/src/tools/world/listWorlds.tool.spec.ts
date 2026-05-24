@@ -5,6 +5,7 @@ import { setupTestServer } from '@src/test-utils/setupTestServer.js'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { generateEndpointMock } from '../../test-utils/generateEndpointMock.js'
+import { mockNumericCalendar } from '../../test-utils/mockCalendar.js'
 import { registerListWorldsTool } from './listWorlds.tool.js'
 
 const server = setupTestServer()
@@ -17,7 +18,7 @@ describe('list_worlds tool', () => {
 			registerListWorldsTool(server)
 		})
 
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 	})
 
 	it('returns a list of worlds', async () => {
@@ -26,8 +27,8 @@ describe('list_worlds tool', () => {
 			path: '/api/worlds',
 			response: {
 				ownedWorlds: [
-					{ id: 'w1', name: 'My World', accessMode: 'Private' },
-					{ id: 'w2', name: 'Second World', accessMode: 'PublicRead' },
+					{ id: 'w1', name: 'My World', accessMode: 'Private', calendars: [mockNumericCalendar()] },
+					{ id: 'w2', name: 'Second World', accessMode: 'PublicRead', calendars: [mockNumericCalendar()] },
 				],
 				contributableWorlds: [],
 				visibleWorlds: [],
@@ -55,7 +56,14 @@ describe('list_worlds tool', () => {
 			method: 'get',
 			path: '/api/worlds',
 			response: {
-				ownedWorlds: [{ id: 'only-world', name: 'Lonely World', accessMode: 'Private' }],
+				ownedWorlds: [
+					{
+						id: 'only-world',
+						name: 'Lonely World',
+						accessMode: 'Private',
+						calendars: [mockNumericCalendar()],
+					},
+				],
 				contributableWorlds: [],
 				visibleWorlds: [],
 			},
@@ -72,7 +80,7 @@ describe('list_worlds tool', () => {
 		expect(result.isError).toBeUndefined()
 		expect(allText).toContain('Lonely World')
 		expect(allText).toContain('automatically set as current context')
-		expect(ContextService.getCurrentWorld('default')).toBe('only-world')
+		expect(await ContextService.getCurrentWorld('default')).toBe('only-world')
 	})
 
 	it('includes worlds from all categories', async () => {
@@ -80,9 +88,15 @@ describe('list_worlds tool', () => {
 			method: 'get',
 			path: '/api/worlds',
 			response: {
-				ownedWorlds: [{ id: 'w1', name: 'Owned World', accessMode: 'Private' }],
-				contributableWorlds: [{ id: 'w2', name: 'Contrib World', accessMode: 'PublicEdit' }],
-				visibleWorlds: [{ id: 'w3', name: 'Visible World', accessMode: 'PublicRead' }],
+				ownedWorlds: [
+					{ id: 'w1', name: 'Owned World', accessMode: 'Private', calendars: [mockNumericCalendar()] },
+				],
+				contributableWorlds: [
+					{ id: 'w2', name: 'Contrib World', accessMode: 'PublicEdit', calendars: [mockNumericCalendar()] },
+				],
+				visibleWorlds: [
+					{ id: 'w3', name: 'Visible World', accessMode: 'PublicRead', calendars: [mockNumericCalendar()] },
+				],
 			},
 		})
 
@@ -142,7 +156,7 @@ describe('list_worlds tool', () => {
 		})
 
 		expect(mock.hasBeenCalled()).toBe(true)
-		expect(ContextService.getCurrentUserId('default')).toBe('custom-user')
+		expect(await ContextService.getCurrentUserId('default')).toBe('custom-user')
 
 		process.env.REQUIRE_OAUTH = originalEnv
 	})
@@ -165,7 +179,7 @@ describe('list_worlds tool', () => {
 	})
 
 	it('returns an error when no user is set', async () => {
-		ContextService.setCurrentUserId('default', null)
+		await ContextService.setCurrentUserId('default', null)
 
 		const result = await client.callTool({
 			name: 'list_worlds',
@@ -182,8 +196,12 @@ describe('list_worlds tool', () => {
 			method: 'get',
 			path: '/api/worlds',
 			response: {
-				ownedWorlds: [{ id: 'w1', name: 'Private World', accessMode: 'Private' }],
-				contributableWorlds: [{ id: 'w2', name: 'Public World', accessMode: 'PublicEdit' }],
+				ownedWorlds: [
+					{ id: 'w1', name: 'Private World', accessMode: 'Private', calendars: [mockNumericCalendar()] },
+				],
+				contributableWorlds: [
+					{ id: 'w2', name: 'Public World', accessMode: 'PublicEdit', calendars: [mockNumericCalendar()] },
+				],
 				visibleWorlds: [],
 			},
 		})
@@ -198,5 +216,29 @@ describe('list_worlds tool', () => {
 
 		expect(allText).toContain('Private')
 		expect(allText).toContain('PublicEdit')
+	})
+
+	it('shows the calendar name and date format for each world', async () => {
+		generateEndpointMock(server, {
+			method: 'get',
+			path: '/api/worlds',
+			response: {
+				ownedWorlds: [
+					{ id: 'w1', name: 'My World', accessMode: 'Private', calendars: [mockNumericCalendar()] },
+				],
+				contributableWorlds: [],
+				visibleWorlds: [],
+			},
+		})
+
+		const result = await client.callTool({
+			name: 'list_worlds',
+			arguments: {},
+		})
+
+		const allText = (result.content as Array<{ type: string; text: string }>).map((c) => c.text).join('\n')
+
+		expect(result.isError).toBeUndefined()
+		expect(allText).toContain('Calendar: Test Calendar :: DateTime format is "d"')
 	})
 })

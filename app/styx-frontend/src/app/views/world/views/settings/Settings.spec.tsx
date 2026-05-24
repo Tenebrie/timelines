@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { ShareWorldApiArg } from '@api/worldCollaboratorsApi'
+import { describe, expect, it } from '@rstest/core'
 import { screen, within } from '@testing-library/react'
 
 import {

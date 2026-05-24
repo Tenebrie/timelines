@@ -13,9 +13,11 @@ globalThis.Response = Response
 
 import '@testing-library/jest-dom'
 
+import { beforeAll, rstest } from '@rstest/core'
+
 console.debug = () => {}
 
-vi.mock('./app/features/liveUpdates/useLiveUpdates', () => ({
+rstest.mock('./app/features/liveUpdates/useLiveUpdates', () => ({
 	useLiveUpdates: () => {
 		/* Empty */
 	},
@@ -56,4 +58,4 @@ beforeAll(() => {
 		return setTimeout(callback, 1) as unknown as number
 	}
 })
-window.scrollTo = vi.fn()
+window.scrollTo = rstest.fn()

@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import { ScaleLevelSchema } from '@/app/schema/ScaleLevel'
 
-import { CalendarUnitEditorTab } from '../../time/calendar/unitEditor/CalendarUnitEditor'
+import { CalendarUnitEditorTab } from '../../time/calendar/types'
 
 export const PreferencesKey = 'userPreferences/v2'
 

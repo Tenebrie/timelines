@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { Outlet } from '@tanstack/react-router'
 
-import { FileRouteTypes } from '@/routeTree.gen'
+import type { FileRouteTypes } from '@/routeTree.gen'
 
 import { RoutedViewButton } from './RoutedViewButton'
 

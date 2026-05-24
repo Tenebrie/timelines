@@ -14,13 +14,6 @@ type Props = {
 	onClose: () => void
 }
 
-export enum CalendarUnitEditorTab {
-	Names = 'names',
-	Formatting = 'formatting',
-	Structure = 'structure',
-	Preview = 'preview',
-}
-
 export function CalendarUnitEditor({ unit }: Props) {
 	const { calendar } = useSelector(getCalendarEditorState)
 

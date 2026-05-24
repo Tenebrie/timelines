@@ -6,16 +6,14 @@
 	"description": "",
 	"license": "GPL-3.0-or-later",
 	"author": "Tenebrie",
-	
 	"scripts": {
 		"tsc": "tsc --noEmit",
 		"build": "tsc -p . && tsc-alias -p tsconfig.json",
-		"openapi": "openapi-typescript http://localhost:3000/api-json -o ./src/api/rhea-api.ts",
 		"lint": "eslint src/",
 		"lint:fix": "eslint src/ --fix",
 		"prod": "node dist/index.js",
 		"prune-build-modules": "npm install --omit=dev --ignore-scripts --prefer-offline",
-		"start": "nodemon --watch src --ext ts,js,json --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
+		"start": "nodemon --watch src $(node /scripts/prepare-library-deps-list.mjs) --ext ts,js,json --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts' --delay 0.1s",
 		"test": "vitest --run",
 		"test:watch": "vitest"
 	},
@@ -41,6 +39,7 @@
 		"@tiptap/extension-text-style": "^3.23.1",
 		"@tiptap/html": "^3.23.4",
 		"@y/websocket-server": "0.1.1",
+		"@neverkin/openapi-fetch": "file:../../library/openapi-fetch",
 		"@neverkin/tiptap-schema": "file:../../library/tiptap-schema",
 		"chalk": "^5.6.2",
 		"dotenv": "^17.4.2",

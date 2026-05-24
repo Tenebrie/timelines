@@ -1,3 +1,5 @@
+import { describe, expect, it } from '@rstest/core'
+
 import { worldInitialState } from '@/app/views/world/WorldSlice'
 import { renderHookWithProviders } from '@/test-utils/renderWithProviders'
 

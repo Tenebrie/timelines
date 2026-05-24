@@ -1,9 +1,9 @@
 import { WorldCalendarPresentation, WorldCalendarPresentationUnit } from '@api/types/worldTypes'
+import { EsotericDate } from '@neverkin/esoteric-date'
 import { useCallback, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
-import { EsotericDate } from '@/app/features/time/calendar/date/EsotericDate'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 import { getTimelineState } from '@/app/views/world/WorldSliceSelectors'

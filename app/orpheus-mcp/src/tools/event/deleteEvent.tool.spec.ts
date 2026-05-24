@@ -17,7 +17,7 @@ describe('delete_event tool', () => {
 			registerDeleteEventTool(server)
 		})
 
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 		ContextService.setCurrentWorld('default', 'world-456')
 	})
 

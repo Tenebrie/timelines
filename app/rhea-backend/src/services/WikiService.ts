@@ -24,12 +24,14 @@ export const WikiService = {
 					},
 				},
 				mentions: {
+					distinct: ['targetId'],
 					select: {
 						targetId: true,
 						targetType: true,
 					},
 				},
 				mentionedIn: {
+					distinct: ['sourceId'],
 					select: {
 						sourceId: true,
 						sourceType: true,
@@ -84,12 +86,14 @@ export const WikiService = {
 					},
 				},
 				mentions: {
+					distinct: ['targetId'],
 					select: {
 						targetId: true,
 						targetType: true,
 					},
 				},
 				mentionedIn: {
+					distinct: ['sourceId'],
 					select: {
 						sourceId: true,
 						sourceType: true,
@@ -145,7 +149,7 @@ export const WikiService = {
 				},
 			})
 
-			await MentionsService.createMentions(article.id, MentionedEntity.Article, params.mentions, prisma)
+			await MentionsService.createMentions(article.id, MentionedEntity.Article, params.mentions, null, prisma)
 
 			await makeSortWikiArticlesQuery(params.worldId, prisma)
 			await makeTouchWorldQuery(params.worldId, prisma)
@@ -173,16 +177,20 @@ export const WikiService = {
 				params.id,
 				MentionedEntity.Article,
 				params.mentions,
+				null,
 				prisma,
 			)
-			const referencedAssets = await AssetRefService.createReferences({
+			await AssetRefService.createReferences({
 				worldId: params.worldId,
 				holderId: params.id,
 				holderType: ReferenceHoldingEntity.Article,
 				assets: params.referencedAssetIds,
+				pageId: null,
 				prisma,
 			})
 
+			// createMentions/createReferences already reconciled the relation rows for this
+			// slice, so the update only needs to touch the article's own columns.
 			const updatedArticle = await prisma.wikiArticle.update({
 				where: {
 					id: params.id,
@@ -192,26 +200,6 @@ export const WikiService = {
 					name: params.name,
 					contentRich: params.contentRich,
 					contentYjs: params.contentYjs,
-					mentions: mentionedEntities
-						? {
-								set: mentionedEntities.map((mention) => ({
-									sourceId_targetId: {
-										sourceId: mention.sourceId,
-										targetId: mention.targetId,
-									},
-								})),
-							}
-						: undefined,
-					assetRefs: referencedAssets
-						? {
-								set: referencedAssets.map((ref) => ({
-									assetId_holderId: {
-										assetId: ref.assetId,
-										holderId: ref.holderId,
-									},
-								})),
-							}
-						: undefined,
 				},
 				include: {
 					children: {
@@ -226,12 +214,14 @@ export const WikiService = {
 				},
 			})
 
-			const updatedMentions = [...previousMentions, ...mentionedEntities].filter((mention) => {
+			// When mentions weren't touched (mentionedEntities is undefined) nothing changed.
+			const reconciledMentions = mentionedEntities ?? previousMentions
+			const updatedMentions = [...previousMentions, ...reconciledMentions].filter((mention) => {
 				return (
 					!previousMentions.some(
 						(prev) => prev.sourceId === mention.sourceId && prev.targetId === mention.targetId,
 					) ||
-					!mentionedEntities.some(
+					!reconciledMentions.some(
 						(updated) => updated.sourceId === mention.sourceId && updated.targetId === mention.targetId,
 					)
 				)
@@ -349,6 +339,7 @@ export const WikiService = {
 			where: { id: articleId, worldId },
 			include: {
 				mentionedIn: {
+					distinct: ['sourceId'],
 					include: {
 						sourceActor: {
 							select: { id: true, name: true },

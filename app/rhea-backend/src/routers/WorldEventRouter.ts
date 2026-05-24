@@ -110,6 +110,7 @@ router.patch('/api/world/:worldId/event/:eventId', async (ctx) => {
 		externalLink: OptionalParam(OptionalURLStringValidator),
 		worldEventTrackId: OptionalParam(NullableEventTrackValidator),
 	})
+	console.log(params.timestamp)
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 

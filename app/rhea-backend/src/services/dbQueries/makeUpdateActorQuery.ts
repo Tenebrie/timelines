@@ -29,19 +29,21 @@ export const makeUpdateActorQuery = async ({
 		},
 	})
 
-	const { referencedAssetIds, ...actorData } = params
+	const { referencedAssetIds, mentions, ...actorData } = params
 
 	const mentionedEntities = await MentionsService.createMentions(
 		actorId,
 		MentionedEntity.Actor,
-		actorData.mentions,
+		mentions,
+		null,
 		prisma,
 	)
-	const referencedAssets = await AssetRefService.createReferences({
+	await AssetRefService.createReferences({
 		worldId,
 		holderId: actorId,
 		holderType: ReferenceHoldingEntity.Actor,
 		assets: referencedAssetIds,
+		pageId: null,
 		prisma,
 	})
 
@@ -51,30 +53,10 @@ export const makeUpdateActorQuery = async ({
 		},
 		data: {
 			...actorData,
-			mentions: mentionedEntities
-				? {
-						set: mentionedEntities.map((mention) => ({
-							sourceId_targetId: {
-								sourceId: mention.sourceId,
-								targetId: mention.targetId,
-							},
-						})),
-					}
-				: undefined,
-			assetRefs: referencedAssets
-				? {
-						set: referencedAssets.map((ref) => ({
-							assetId_holderId: {
-								assetId: ref.assetId,
-								holderId: ref.holderId,
-							},
-						})),
-					}
-				: undefined,
 		},
 		include: {
-			mentions: true,
-			mentionedIn: true,
+			mentions: { distinct: ['targetId'] },
+			mentionedIn: { distinct: ['sourceId'] },
 			pages: {
 				select: {
 					id: true,
@@ -90,12 +72,13 @@ export const makeUpdateActorQuery = async ({
 	await MentionsService.clearOrphanedMentions(prisma)
 	await AssetRefService.clearOrphanedReferences(prisma)
 
-	const updatedMentions = [...previousMentions, ...mentionedEntities].filter((mention) => {
+	const reconciledMentions = mentionedEntities ?? previousMentions
+	const updatedMentions = [...previousMentions, ...reconciledMentions].filter((mention) => {
 		return (
 			!previousMentions.some(
 				(prev) => prev.sourceId === mention.sourceId && prev.targetId === mention.targetId,
 			) ||
-			!mentionedEntities.some(
+			!reconciledMentions.some(
 				(updated) => updated.sourceId === mention.sourceId && updated.targetId === mention.targetId,
 			)
 		)

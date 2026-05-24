@@ -34,9 +34,12 @@ export function TimelinePrePositioner({ setOpacity }: Props) {
 			timestamp: selectedTime,
 			skipAnim: true,
 		})
-		requestIdleCallback(() => {
-			setOpacity(1)
-		})
+		requestIdleCallback(
+			() => {
+				setOpacity(1)
+			},
+			{ timeout: 100 },
+		)
 	}, [isLoaded, loadedWorldId, scrollTimelineTo, selectedTime, setOpacity, viewedWorldId])
 
 	return null

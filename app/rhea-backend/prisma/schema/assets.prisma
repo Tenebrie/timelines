@@ -72,5 +72,5 @@ model AssetReference {
   worldId String
   world World @relation(fields: [worldId], references: [id], onDelete: Cascade)
 
-  @@unique([assetId, holderId])
+  @@unique([assetId, holderId, pageId])
 }

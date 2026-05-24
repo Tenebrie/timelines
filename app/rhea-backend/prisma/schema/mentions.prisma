@@ -6,6 +6,8 @@ enum MentionedEntity {
 }
 
 model Mention {
+  id String @id @unique @default(uuid())
+
   sourceId String
   targetId String
 
@@ -33,7 +35,7 @@ model Mention {
   targetTag     Tag?         @relation(fields: [targetTagId], references: [id], onDelete: Cascade, name: "TagMentionTarget")
 
   pageId String?
-  page ContentPage?   @relation(fields: [pageId], references: [id], onDelete: Cascade, name: "PageMention")
+  page   ContentPage? @relation(fields: [pageId], references: [id], onDelete: Cascade, name: "PageMention")
 
-  @@unique([sourceId, targetId])
+  @@unique([sourceId, targetId, pageId])
 }

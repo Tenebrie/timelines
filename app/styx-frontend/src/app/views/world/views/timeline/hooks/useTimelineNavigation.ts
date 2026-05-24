@@ -1,9 +1,9 @@
+import { useRouter } from '@tanstack/react-router'
 import React, { useEffect, useMemo, useState } from 'react'
 
 import { useTimelineLevelScalar } from '@/app/features/time/hooks/useTimelineLevelScalar'
 import { THE_END } from '@/app/features/time/hooks/useWorldTime'
 import { ScaleLevel } from '@/app/schema/ScaleLevel'
-import { router } from '@/router'
 
 import { useTimelineClick } from './useTimelineClick'
 import { useTimelineDragAutoScroll } from './useTimelineDragAutoScroll'
@@ -30,6 +30,7 @@ export const useTimelineNavigation = ({
 	onDoubleClick,
 }: Props) => {
 	const { getLevelScalar } = useTimelineLevelScalar()
+	const router = useRouter()
 
 	const initialScaleLevel: ScaleLevel = router.state.location.search.scale ?? 0
 

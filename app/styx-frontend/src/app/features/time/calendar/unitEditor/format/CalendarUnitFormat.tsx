@@ -20,7 +20,7 @@ import { useUpdateCalendarUnitDebounced } from '../../api/useUpdateCalendarUnitD
 import { useFormatTimestampUnits } from '../../hooks/useFormatTimestampUnits'
 import { usePreviewCalendar } from '../../hooks/usePreviewCalendar'
 import { useSelectedCalendarUnit } from '../../hooks/useSelectedCalendarUnit'
-import { CalendarUnitEditorTab } from '../CalendarUnitEditor'
+import { CalendarUnitEditorTab } from '../../types'
 import {
 	CalendarUnitFormatDefinitions,
 	CalendarUnitFormatModeDropdown,

@@ -17,7 +17,7 @@ describe('set_context tool', () => {
 			registerSetContextTool(server)
 		})
 
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 	})
 
 	it('sets the world context successfully', async () => {
@@ -47,7 +47,7 @@ describe('set_context tool', () => {
 		expect(text).toContain('world-789')
 
 		// Verify context was actually set
-		expect(ContextService.getCurrentWorld('default')).toBe('world-789')
+		expect(await ContextService.getCurrentWorld('default')).toBe('world-789')
 	})
 
 	it('sets both userId and worldId when userId is provided', async () => {
@@ -56,7 +56,7 @@ describe('set_context tool', () => {
 		process.env.REQUIRE_OAUTH = 'false'
 
 		// Clear existing user context
-		ContextService.setCurrentUserId('default', null)
+		await ContextService.setCurrentUserId('default', null)
 
 		generateEndpointMock(server, {
 			method: 'get',
@@ -77,8 +77,8 @@ describe('set_context tool', () => {
 		})
 
 		expect(result.isError).toBeUndefined()
-		expect(ContextService.getCurrentUserId('default')).toBe('new-user-456')
-		expect(ContextService.getCurrentWorld('default')).toBe('world-789')
+		expect(await ContextService.getCurrentUserId('default')).toBe('new-user-456')
+		expect(await ContextService.getCurrentWorld('default')).toBe('world-789')
 
 		process.env.REQUIRE_OAUTH = originalEnv
 	})
@@ -101,7 +101,7 @@ describe('set_context tool', () => {
 	})
 
 	it('returns an error when no user is set and no userId provided', async () => {
-		ContextService.setCurrentUserId('default', null)
+		await ContextService.setCurrentUserId('default', null)
 
 		const result = await client.callTool({
 			name: 'set_context',

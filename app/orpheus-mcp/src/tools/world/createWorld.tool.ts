@@ -26,7 +26,7 @@ export function registerCreateWorldTool(server: McpServer) {
 				const sessionId = getSessionId(extra)
 				Logger.toolInvocation(TOOL_NAME, args)
 
-				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
+				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
 				const { name, description } = args
 
 				const world = await RheaService.createWorld({
@@ -36,7 +36,7 @@ export function registerCreateWorldTool(server: McpServer) {
 				})
 
 				// Automatically set the new world as the current context
-				ContextService.setCurrentWorld(sessionId, world.id)
+				await ContextService.setCurrentWorld(sessionId, world.id)
 
 				Logger.toolSuccess(TOOL_NAME, `Created world: ${world.name} (${world.id})`)
 				return {

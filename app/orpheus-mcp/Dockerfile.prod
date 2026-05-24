@@ -1,11 +1,17 @@
 # Build stage
-FROM node:25-alpine AS builder
+FROM node:26-alpine AS builder
 
 WORKDIR /app
 
 # Copy and build ts-shared first
 COPY ./app/ts-shared /app/ts-shared
 RUN cd /app/ts-shared && npm ci
+
+# Install deps for every local library, build them in dependency order, then prune to production deps
+COPY ./library /library
+RUN for d in /library/*/; do if [ -f "$d/package.json" ]; then (cd "$d" && npm ci); fi; done && \
+	node /library/ci-build.mjs && \
+	for d in /library/*/; do if [ -f "$d/package.json" ]; then (cd "$d" && npm prune --omit=dev); fi; done
 
 # Copy package files and install ALL dependencies (needed for build)
 COPY ./app/orpheus-mcp/package.json ./app/orpheus-mcp/package-lock.json /app/orpheus/
@@ -17,7 +23,7 @@ COPY ./app/orpheus-mcp /app/orpheus
 RUN npm run build
 
 # Production stage
-FROM node:25-alpine
+FROM node:26-alpine
 
 WORKDIR /app/orpheus
 
@@ -28,6 +34,9 @@ COPY --from=builder /app/orpheus/package.json /app/orpheus/package-lock.json /ap
 # Copy only ts-shared source (no node_modules)
 COPY ./app/ts-shared/package.json /app/ts-shared/package.json
 COPY ./app/ts-shared/src /app/ts-shared/src
+
+# Copy built libraries
+COPY --from=builder /library /library
 
 # Install ONLY production dependencies
 RUN npm ci --omit=dev && npm cache clean --force

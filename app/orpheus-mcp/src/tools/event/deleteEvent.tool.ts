@@ -28,8 +28,8 @@ export function registerDeleteEventTool(server: McpServer) {
 				const sessionId = getSessionId(extra)
 				Logger.toolInvocation(TOOL_NAME, args)
 
-				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
-				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
+				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
+				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
 				const { eventName } = args
 
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })

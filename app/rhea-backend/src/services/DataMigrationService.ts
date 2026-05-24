@@ -53,6 +53,11 @@ export const DataMigrationService = {
 								},
 								include: {
 									mentions: true,
+									pages: {
+										omit: {
+											descriptionYjs: true,
+										},
+									},
 								},
 							},
 							articles: {
@@ -114,7 +119,19 @@ export const DataMigrationService = {
 				user: {
 					id: user.id,
 					calendars: user.calendars,
-					worlds: user.worlds,
+					// Event content-pages post-date the v1 export format, so older exports omit the
+					// field. Re-spreading keeps `pages` present at runtime (arrays are always truthy)
+					// while inference types it as optional — and since the import schema is generated
+					// from this return type, that single touch makes the schema accept exports
+					// created before event pages existed. Scoped to events; actor/article pages stay
+					// required.
+					worlds: user.worlds.map((world) => ({
+						...world,
+						events: world.events.map(({ pages, ...event }) => ({
+							...event,
+							...(pages ? { pages } : {}),
+						})),
+					})),
 				},
 			}
 		})
@@ -227,7 +244,14 @@ export const DataMigrationService = {
 				...world.articles.map((a) => a.id),
 				...world.tags.map((t) => t.id),
 			])
-			const validPageIds = new Set<string>(world.articles.flatMap((a) => a.pages.map((p) => p.id)))
+			const validArticlePageIds = new Set<string>(world.articles.flatMap((a) => a.pages.map((p) => p.id)))
+			const validActorPageIds = new Set<string>(world.actors.flatMap((a) => a.pages.map((p) => p.id)))
+			const validEventPageIds = new Set<string>(world.events.flatMap((e) => (e.pages ?? []).map((p) => p.id)))
+			const validPageIds = new Set<string>([
+				...validArticlePageIds,
+				...validActorPageIds,
+				...validEventPageIds,
+			])
 
 			const allWorldMentions = [
 				...world.actors.flatMap((a) => a.mentions),
@@ -264,6 +288,7 @@ export const DataMigrationService = {
 
 			const allWorldPages = [
 				...world.actors.flatMap((a) => a.pages),
+				...world.events.flatMap((e) => e.pages ?? []),
 				...world.articles.flatMap((a) => a.pages),
 			]
 			for (const p of allWorldPages) {
@@ -388,6 +413,8 @@ export const DataMigrationService = {
 					...w.articles.flatMap((a) => a.mentions),
 					...w.tags.flatMap((t) => t.mentions),
 				])
+				const allActors = worlds.flatMap((w) => w.actors)
+				const allEvents = worlds.flatMap((w) => w.events)
 				const allArticles = worlds.flatMap((w) => w.articles)
 				const allMindmapLinks = worlds.flatMap((w) => w.mindmapNodes.flatMap((n) => n.links))
 				const allCalendarUnitRelations = [
@@ -488,7 +515,11 @@ export const DataMigrationService = {
 					data: allArticles.map(({ mentions: _m, pages: _p, ...a }) => a),
 				})
 				await prisma.contentPage.createMany({
-					data: allArticles.flatMap((a) => a.pages),
+					data: [
+						...allActors.flatMap((a) => a.pages),
+						...allEvents.flatMap((e) => e.pages ?? []),
+						...allArticles.flatMap((a) => a.pages),
+					],
 				})
 
 				await prisma.mindmapLink.createMany({ data: allMindmapLinks })
@@ -526,6 +557,7 @@ function strip<T extends object[]>(arr: T): Omit<T[number], 'mentions' | 'pages'
 		const copy = { ...item }
 		if ('ownerId' in copy) delete copy.ownerId
 		if ('worldId' in copy) delete copy.worldId
+		if ('pageId' in copy) delete copy.pageId
 		if ('calendarId' in copy) delete copy.calendarId
 		if ('seasonId' in copy) delete copy.seasonId
 		if ('intervals' in copy) delete copy.intervals

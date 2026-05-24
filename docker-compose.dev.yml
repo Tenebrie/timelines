@@ -32,10 +32,13 @@ services:
             - ./app/styx-frontend/src:/app/styx/src:cached
             - ./app/styx-frontend/public:/app/styx/public:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached
-            - ./library/tiptap-schema/dist:/library/tiptap-schema/dist:cached
+            - ./library:/library:cached
             - type: bind
               source: ./app/styx-frontend/vite.config.ts
               target: /app/styx/vite.config.ts
+            - type: bind
+              source: ./app/styx-frontend/rsbuild.config.ts
+              target: /app/styx/rsbuild.config.ts
             - type: bind
               source: ./app/styx-frontend/tsconfig.json
               target: /app/styx/tsconfig.json
@@ -74,6 +77,8 @@ services:
             - ./app/rhea-backend/src:/app/rhea/src:cached
             - ./app/rhea-backend/prisma:/app/rhea/prisma:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached
+            - ./library:/library:cached
+            - ./scripts:/scripts:ro
             - type: bind
               source: ./eslint.config.mjs
               target: /app/rhea/eslint.config.mjs
@@ -104,7 +109,8 @@ services:
         volumes:
             - ./app/calliope-websockets/src:/app/calliope/src:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached
-            - ./library/tiptap-schema/dist:/library/tiptap-schema/dist:cached
+            - ./library:/library:cached
+            - ./scripts:/scripts:ro
             - type: bind
               source: ./eslint.config.mjs
               target: /app/calliope/eslint.config.mjs
@@ -131,6 +137,8 @@ services:
         volumes:
             - ./app/orpheus-mcp/src:/app/orpheus/src:cached
             - ./app/ts-shared/src:/app/ts-shared/src:cached
+            - ./library:/library:cached
+            - ./scripts:/scripts:ro
             - type: bind
               source: ./eslint.config.mjs
               target: /app/orpheus/eslint.config.mjs
@@ -201,6 +209,15 @@ services:
         command: sh -c "npx prisma migrate deploy && npx prisma db seed"
         networks:
             - backend-rhea-db
+
+    library-build:
+        image: node:26-alpine
+        user: "${DOCKER_UID}:${DOCKER_GID}"
+        volumes:
+            - ./library:/library:cached
+        command: node /library/build.mjs
+        restart: unless-stopped
+        stop_grace_period: 0s
 
     redis:
         ports:

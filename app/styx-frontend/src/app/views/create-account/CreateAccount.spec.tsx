@@ -1,3 +1,4 @@
+import { beforeEach, describe, expect, it } from '@rstest/core'
 import { screen, waitForElementToBeRemoved } from '@testing-library/react'
 
 import { mockAuthenticatedUser, mockNonAuthenticatedUser, mockPostRegister } from '@/api/mock/rheaApi.mock'

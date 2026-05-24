@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import { ReactNode } from 'react'
 
 import { NavigationLink } from '@/app/components/NavigationLink'
-import { FileRouteTypes } from '@/routeTree.gen'
+import type { FileRouteTypes } from '@/routeTree.gen'
 
 type SummaryCardProps = {
 	icon: ReactNode

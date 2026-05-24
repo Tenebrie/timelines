@@ -22,7 +22,7 @@
 		"noEmit": true,
 		"sourceMap": false,
 		"jsx": "react-jsx",
-		"types": ["vite/client", "vitest/globals", "user-agent-data-types"]
+		"types": ["user-agent-data-types"]
 	},
-	"include": ["src", "dts/vite-env.d.ts"]
+	"include": ["src", "dts/env.d.ts"]
 }

@@ -1,7 +1,9 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
+import { formatTimestamp } from '@src/utils/formatTimestamp.js'
 import { Logger } from '@src/utils/Logger.js'
+import { formatUnitReminder } from '@src/utils/resolveDateTime.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 
 const TOOL_NAME = 'get_world_details'
@@ -23,19 +25,25 @@ export function registerGetWorldDetailsTool(server: McpServer) {
 				const sessionId = getSessionId(extra)
 				Logger.toolInvocation(TOOL_NAME, {})
 
-				const worldId = ContextService.getCurrentWorldOrThrow(sessionId)
-				const userId = ContextService.getCurrentUserIdOrThrow(sessionId)
+				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
+				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
 
 				const baseData = await RheaService.getWorldDetails({ worldId, userId })
 				const articles = await RheaService.getWorldArticles({ worldId, userId })
+				const calendar = baseData.calendars[0]
 
 				const content =
-					'World details:\n' +
 					`Events: ${baseData.events.map((e) => e.name).join(', ') || 'None'}\n` +
 					`Actors: ${baseData.actors.map((a) => `${a.name} (${a.title})`).join(', ') || 'None'}\n` +
 					`Articles: ${articles.map((a) => a.name).join(', ') || 'None'}\n` +
 					`Tags: ${baseData.tags.map((t) => t.name).join(', ') || 'None'}\n` +
-					`Read-Only: ${baseData.isReadOnly ? 'Yes' : 'No'}`
+					`Read-Only: ${baseData.isReadOnly ? 'Yes' : 'No'}\n` +
+					`Calendar:\n` +
+					`  Name: ${calendar.name}\n` +
+					`  Date format: ${calendar.dateFormat}\n` +
+					`  Origin time: ${formatTimestamp(0, baseData)}\n` +
+					`  Time units:\n` +
+					`${formatUnitReminder(calendar, { prefix: '    ' })}`
 
 				Logger.toolSuccess(TOOL_NAME, `Retrieved details for world ${worldId}`)
 				return {

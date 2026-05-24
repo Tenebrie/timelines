@@ -17,7 +17,7 @@ describe('delete_actor tool', () => {
 			registerDeleteActorTool(server)
 		})
 
-		ContextService.setCurrentUserId('default', 'user-123')
+		await ContextService.setCurrentUserId('default', 'user-123')
 		ContextService.setCurrentWorld('default', 'world-456')
 	})
 

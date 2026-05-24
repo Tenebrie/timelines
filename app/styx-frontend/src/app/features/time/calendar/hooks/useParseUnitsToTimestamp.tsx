@@ -1,8 +1,6 @@
 import { CalendarDraftUnit, CalendarUnit } from '@api/types/calendarTypes'
+import { type InputParsedTimestamp, resolveParsedTimestamp } from '@neverkin/esoteric-date'
 import { useCallback } from 'react'
-
-import { InputParsedTimestamp } from '../date/types'
-import { resolveParsedTimestamp } from '../date/utils/resolveParsedTimestamp'
 
 export function useParseUnitsToTimestamp({ units }: { units: CalendarDraftUnit[] | CalendarUnit[] }) {
 	const parse = useCallback(

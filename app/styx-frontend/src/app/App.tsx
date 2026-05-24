@@ -12,7 +12,6 @@ import { EventBusProvider } from './features/eventBus'
 import { globalEventBus } from './features/eventBus/eventBus'
 import { LostConnectionAlert } from './features/liveUpdates/components/LostConnectionAlert'
 import { useLiveUpdates } from './features/liveUpdates/hooks/useLiveUpdates'
-import { ModalsRenderer } from './features/modals/ModalsRenderer'
 import { BaseNavigator } from './features/navigation/components/BaseNavigator'
 import { NavigationReceiverWrapper } from './features/navigation/components/NavigationReceiverWrapper'
 import { PageMetadata } from './features/pageMetadata/PageMetadata'
@@ -22,6 +21,8 @@ import { CustomThemeProvider } from './features/theming/context/CustomThemeProvi
 import { UndoRedoManager } from './features/undoRedo/UndoRedoManager'
 import { useBrowserSpecificScrollbars } from './hooks/useBrowserSpecificScrollbars'
 import { useShortcutManager } from './hooks/useShortcut/useShortcutManager'
+import { DeleteAccountModal } from './views/profile/modals/DeleteAccountModal'
+import { DeleteAssetModal } from './views/profile/modals/DeleteAssetModal'
 import { MentionPortalHost } from './views/world/components/MentionPortalHost'
 import { TimelineZoomReporter } from './views/world/views/timeline/components/TimelineZoomReporter'
 
@@ -84,7 +85,8 @@ const App = () => {
 										<Outlet />
 									</AuthBackground>
 								</Box>
-								<ModalsRenderer />
+								<DeleteAccountModal />
+								<DeleteAssetModal />
 							</Container>
 							<LostConnectionAlert server="rhea" />
 							<LostConnectionAlert server="calliope" />

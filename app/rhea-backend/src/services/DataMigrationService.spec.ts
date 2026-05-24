@@ -45,7 +45,12 @@ const makeActor = (
 	pages,
 })
 
-const makeEvent = (worldId: string, id = 'event-1', mentions: ReturnType<typeof makeMention>[] = []) => ({
+const makeEvent = (
+	worldId: string,
+	id = 'event-1',
+	mentions: ReturnType<typeof makeMention>[] = [],
+	pages: ReturnType<typeof makePage>[] = [],
+) => ({
 	id,
 	createdAt: now,
 	updatedAt: now,
@@ -59,6 +64,7 @@ const makeEvent = (worldId: string, id = 'event-1', mentions: ReturnType<typeof 
 	revokedAt: null as bigint | null,
 	worldEventTrackId: null as string | null,
 	mentions,
+	pages,
 })
 
 const makeTag = (worldId: string, id = 'tag-1', mentions: ReturnType<typeof makeMention>[] = []) => ({
@@ -300,6 +306,8 @@ type CapturedUserUpdate = {
 		calendars: { create: Array<{ units: CapturedNested }> }
 		worlds: {
 			create: Array<{
+				actors: CapturedNested
+				events: CapturedNested
 				mindmapNodes: CapturedNested
 				calendars: CapturedNested
 				pages: CapturedNested
@@ -415,6 +423,31 @@ describe('DataMigrationService', () => {
 			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow(
 				'references an entity outside the world',
 			)
+		})
+
+		it('rejects event page with wrong eventId', async () => {
+			const world = makeWorld(userId)
+			world.events = [
+				makeEvent(world.id, 'event-1', [], [makePage('event-page-1', { parentEventId: 'wrong-event-id' })]),
+			]
+			const data = makeExportData(userId, [world])
+			const prisma = makePrisma()
+			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow(
+				'references an entity outside the world',
+			)
+		})
+
+		it('accepts mention with valid event pageId', async () => {
+			const world = makeWorld(userId)
+			const page = makePage('event-page-1', { parentEventId: 'event-1' })
+			const event = makeEvent(world.id, 'event-1', [], [page])
+			const actor = makeActor(world.id, 'actor-1')
+			actor.mentions = [makeMention('actor-1', 'event-1', { pageId: 'event-page-1' })]
+			world.actors = [actor]
+			world.events = [event]
+			const data = makeExportData(userId, [world])
+			const prisma = makePrisma()
+			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).resolves.not.toThrow()
 		})
 
 		it('rejects tag with wrong worldId', async () => {
@@ -995,6 +1028,83 @@ describe('DataMigrationService', () => {
 			expect(worldArg.calendars.create[0]).toMatchObject({ id: 'cal-w-1' })
 			expect(worldArg.calendars.create[0]).not.toHaveProperty('worldId')
 			expect(worldArg.calendars.create[0]).not.toHaveProperty('ownerId')
+		})
+
+		it('inserts actor content-pages via contentPage.createMany (regression: Mention_pageId_fkey)', async () => {
+			// An actor page that a mention points at via pageId. Previously actor
+			// pages were stripped during the nested actor create and never
+			// re-inserted, so mention.createMany hit a foreign-key violation.
+			const world = makeWorld(userId)
+			const page = makePage('actor-page-1', { parentActorId: 'actor-1' })
+			const actor = makeActor(world.id, 'actor-1', [], [page])
+			const event = makeEvent(world.id, 'event-1')
+			actor.mentions = [makeMention('actor-1', 'event-1', { pageId: 'actor-page-1' })]
+			world.actors = [actor]
+			world.events = [event]
+			const data = makeExportData(userId, [world], [])
+			await DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false })
+
+			// The actor page is inserted...
+			expect(tx.contentPage.createMany).toHaveBeenCalledWith({
+				data: expect.arrayContaining([expect.objectContaining({ id: 'actor-page-1' })]),
+			})
+			// ...is NOT nested under the actor create (stripped there)...
+			const updateArgs = tx.user.update.mock.calls[0][0]
+			updateArgs.data.worlds.create[0].actors.create.forEach((a) => expect(a).not.toHaveProperty('pages'))
+			// ...and lands before the mentions that reference it, or the FK fails.
+			expect(tx.contentPage.createMany.mock.invocationCallOrder[0]).toBeLessThan(
+				tx.mention.createMany.mock.invocationCallOrder[0],
+			)
+		})
+
+		it('inserts event content-pages via contentPage.createMany', async () => {
+			const world = makeWorld(userId)
+			const page = makePage('event-page-1', { parentEventId: 'event-1' })
+			const event = makeEvent(world.id, 'event-1', [], [page])
+			const actor = makeActor(world.id, 'actor-1')
+			actor.mentions = [makeMention('actor-1', 'event-1', { pageId: 'event-page-1' })]
+			world.actors = [actor]
+			world.events = [event]
+			const data = makeExportData(userId, [world], [])
+			await DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false })
+
+			expect(tx.contentPage.createMany).toHaveBeenCalledWith({
+				data: expect.arrayContaining([expect.objectContaining({ id: 'event-page-1' })]),
+			})
+			const updateArgs = tx.user.update.mock.calls[0][0]
+			updateArgs.data.worlds.create[0].events.create.forEach((e) => expect(e).not.toHaveProperty('pages'))
+		})
+
+		it('inserts actor, event and article pages together in one contentPage.createMany', async () => {
+			const world = makeWorld(userId)
+			world.actors = [makeActor(world.id, 'actor-1', [], [makePage('ap', { parentActorId: 'actor-1' })])]
+			world.events = [makeEvent(world.id, 'event-1', [], [makePage('ep', { parentEventId: 'event-1' })])]
+			world.articles = [
+				makeArticle(world.id, 'article-1', {
+					pages: [makePage('rp', { parentArticleId: 'article-1' })],
+				}),
+			]
+			const data = makeExportData(userId, [world], [])
+			await DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false })
+
+			const captured = tx.contentPage.createMany.mock.calls[0][0] as { data: Array<{ id: string }> }
+			expect(captured.data.map((p) => p.id)).toEqual(expect.arrayContaining(['ap', 'ep', 'rp']))
+		})
+
+		it('accepts an export whose events omit the pages field (back-compat with pre-event-pages exports)', async () => {
+			// events.pages was added to the export after v1 shipped; older exports
+			// have no pages key on events, and the schema must still accept them.
+			const world = makeWorld(userId)
+			const event = makeEvent(world.id, 'event-1')
+			delete (event as { pages?: unknown }).pages
+			world.events = [event]
+			const data = makeExportData(userId, [world], [])
+
+			await expect(
+				DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false }),
+			).resolves.not.toThrow()
+			// Nothing to insert (no pages anywhere), and the import completes.
+			expect(tx.contentPage.createMany).toHaveBeenCalledWith({ data: [] })
 		})
 	})
 

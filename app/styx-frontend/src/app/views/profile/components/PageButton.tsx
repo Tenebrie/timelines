@@ -4,7 +4,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import { NavigationLink } from '@/app/components/NavigationLink'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
-import { FileRouteTypes } from '@/routeTree.gen'
+import type { FileRouteTypes } from '@/routeTree.gen'
 
 type Props = {
 	icon?: React.ReactNode
