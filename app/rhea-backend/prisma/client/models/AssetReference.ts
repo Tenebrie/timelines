@@ -271,7 +271,7 @@ export type AssetReferenceOrderByWithRelationInput = {
 
 export type AssetReferenceWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  assetId_holderId?: Prisma.AssetReferenceAssetIdHolderIdCompoundUniqueInput
+  assetId_holderId_pageId?: Prisma.AssetReferenceAssetIdHolderIdPageIdCompoundUniqueInput
   AND?: Prisma.AssetReferenceWhereInput | Prisma.AssetReferenceWhereInput[]
   OR?: Prisma.AssetReferenceWhereInput[]
   NOT?: Prisma.AssetReferenceWhereInput | Prisma.AssetReferenceWhereInput[]
@@ -293,7 +293,7 @@ export type AssetReferenceWhereUniqueInput = Prisma.AtLeast<{
   holderTag?: Prisma.XOR<Prisma.TagNullableScalarRelationFilter, Prisma.TagWhereInput> | null
   page?: Prisma.XOR<Prisma.ContentPageNullableScalarRelationFilter, Prisma.ContentPageWhereInput> | null
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
-}, "id" | "id" | "assetId_holderId">
+}, "id" | "id" | "assetId_holderId_pageId">
 
 export type AssetReferenceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -439,9 +439,10 @@ export type AssetReferenceOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type AssetReferenceAssetIdHolderIdCompoundUniqueInput = {
+export type AssetReferenceAssetIdHolderIdPageIdCompoundUniqueInput = {
   assetId: string
   holderId: string
+  pageId: string
 }
 
 export type AssetReferenceCountOrderByAggregateInput = {

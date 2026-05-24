@@ -138,12 +138,14 @@ export const WorldService = {
 							},
 						},
 						mentions: {
+							distinct: ['targetId'],
 							select: {
 								targetId: true,
 								targetType: true,
 							},
 						},
 						mentionedIn: {
+							distinct: ['sourceId'],
 							select: {
 								sourceId: true,
 								sourceType: true,
@@ -169,12 +171,14 @@ export const WorldService = {
 							},
 						},
 						mentions: {
+							distinct: ['targetId'],
 							select: {
 								targetId: true,
 								targetType: true,
 							},
 						},
 						mentionedIn: {
+							distinct: ['sourceId'],
 							select: {
 								sourceId: true,
 								sourceType: true,
@@ -261,12 +265,14 @@ export const WorldService = {
 				tags: {
 					include: {
 						mentions: {
+							distinct: ['targetId'],
 							select: {
 								targetId: true,
 								targetType: true,
 							},
 						},
 						mentionedIn: {
+							distinct: ['sourceId'],
 							select: {
 								sourceId: true,
 								sourceType: true,

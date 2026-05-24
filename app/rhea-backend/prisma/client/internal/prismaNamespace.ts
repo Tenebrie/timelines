@@ -2935,6 +2935,7 @@ export type WorldCommonIconSetScalarFieldEnum = (typeof WorldCommonIconSetScalar
 
 
 export const MentionScalarFieldEnum = {
+  id: 'id',
   sourceId: 'sourceId',
   targetId: 'targetId',
   sourceType: 'sourceType',

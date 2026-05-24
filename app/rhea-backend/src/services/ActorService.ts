@@ -17,12 +17,14 @@ export const ActorService = {
 			where: { id: actorId, worldId },
 			include: {
 				mentions: {
+					distinct: ['targetId'],
 					select: {
 						targetId: true,
 						targetType: true,
 					},
 				},
 				mentionedIn: {
+					distinct: ['sourceId'],
 					select: {
 						sourceId: true,
 						sourceType: true,
@@ -64,12 +66,14 @@ export const ActorService = {
 			where: { id: actorId, worldId },
 			include: {
 				mentions: {
+					distinct: ['targetId'],
 					select: {
 						targetId: true,
 						targetType: true,
 					},
 				},
 				mentionedIn: {
+					distinct: ['sourceId'],
 					select: {
 						sourceId: true,
 						sourceType: true,
@@ -140,8 +144,8 @@ export const ActorService = {
 					...createData,
 				},
 				include: {
-					mentions: true,
-					mentionedIn: true,
+					mentions: { distinct: ['targetId'] },
+					mentionedIn: { distinct: ['sourceId'] },
 				},
 			})
 
@@ -249,7 +253,7 @@ export const ActorService = {
 				pageId,
 				prisma,
 			)
-			const referencedAssets = await AssetRefService.createReferences({
+			await AssetRefService.createReferences({
 				worldId,
 				holderId: actorId,
 				holderType: ReferenceHoldingEntity.Actor,
@@ -264,26 +268,6 @@ export const ActorService = {
 					worldId,
 				},
 				data: {
-					mentions: mentionedEntities
-						? {
-								set: mentionedEntities.map((mention) => ({
-									sourceId_targetId: {
-										sourceId: mention.sourceId,
-										targetId: mention.targetId,
-									},
-								})),
-							}
-						: undefined,
-					assetRefs: referencedAssets
-						? {
-								set: referencedAssets.map((ref) => ({
-									assetId_holderId: {
-										assetId: ref.assetId,
-										holderId: ref.holderId,
-									},
-								})),
-							}
-						: undefined,
 					pages: {
 						update: {
 							where: {
@@ -343,6 +327,7 @@ export const ActorService = {
 				},
 				include: {
 					mentions: {
+						distinct: ['targetId'],
 						select: {
 							targetId: true,
 							targetType: true,
@@ -401,6 +386,7 @@ export const ActorService = {
 			where: { id: actorId, worldId },
 			include: {
 				mentionedIn: {
+					distinct: ['sourceId'],
 					include: {
 						sourceActor: {
 							select: { id: true, name: true },
