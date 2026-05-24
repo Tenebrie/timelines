@@ -22,7 +22,7 @@ export function CalendarUnitEditor({ unit }: Props) {
 	}
 
 	return (
-		<Stack gap={2} direction="row">
+		<Stack gap={2} direction="row" data-testid="CalendarUnitEditor">
 			<Stack sx={{ flex: 1 }}>
 				<Stack gap={1}>
 					<CalendarUnitTitle unit={unit} />

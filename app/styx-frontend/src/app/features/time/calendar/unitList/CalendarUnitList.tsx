@@ -66,8 +66,12 @@ export function CalendarUnitList({ selectedUnit, onSelectUnit }: Props) {
 					size="small"
 					tooltip="Add time unit"
 					onConfirm={onCreateUnit}
+					onEnterKey={async ({ close }) => {
+						await onCreateUnit()
+						close()
+					}}
 					confirmDisabled={!newUnitName.trim()}
-					popoverBody={({ close }) => (
+					popoverBody={() => (
 						<>
 							<Typography variant="subtitle2" fontWeight="bold">
 								New Time Unit
@@ -77,13 +81,6 @@ export function CalendarUnitList({ selectedUnit, onSelectUnit }: Props) {
 								placeholder="Unit name"
 								value={newUnitName}
 								onChange={(e) => setNewUnitName(e.target.value)}
-								onKeyDown={(e) => {
-									if (e.key !== 'Enter') {
-										return
-									}
-									onCreateUnit()
-									close()
-								}}
 								fullWidth
 							/>
 						</>

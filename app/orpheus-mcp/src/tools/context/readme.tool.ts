@@ -31,7 +31,7 @@ export function registerReadmeTool(server: McpServer) {
 					'- Fuzzy matching. A unique partial string match is sufficient to find an entity.',
 					'- For actors, main content is your summary. Use pages to add more details. The list of pages will be displayed when you read the actor.',
 					'- Use mentions generously. Mentions handle expansion and inject extra content automatically.',
-					'- First paragraph will be included automatically whenever the entity is mentioned.',
+					'- First paragraph of a description is your summary. Summary will be included automatically whenever the entity is mentioned or searched.',
 					"- Keep data normalized. Store each fact in one place. Don't restate details inside other entities.",
 					"- Use tags for cross-cutting groupings you'll want to query later (e.g. everyone of a faction, every entity in an episode). Mention a tag in content to add an entity to it.",
 					"- Avoid name collisions. Keep each entity uniquely named. Fuzzy matching will throw when it can't resolve precisely.",

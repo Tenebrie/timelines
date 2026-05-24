@@ -14,6 +14,7 @@ type Props = {
 	startAdornment?: ReactNode
 	endAdornment?: ReactNode
 	placeholder?: string
+	'data-testid'?: string
 }
 
 export const EditableTitle = ({
@@ -23,6 +24,7 @@ export const EditableTitle = ({
 	startAdornment,
 	endAdornment,
 	placeholder,
+	'data-testid': dataTestId,
 }: Props) => {
 	const [editing, setEditing] = useState(false)
 	const [currentTitle, setCurrentTitle] = useState(value)
@@ -58,7 +60,7 @@ export const EditableTitle = ({
 
 	return (
 		<Stack
-			data-testid="EditableTitle"
+			data-testid={dataTestId ?? 'EditableTitle'}
 			direction="row"
 			alignItems="center"
 			justifyContent="center"

@@ -4,8 +4,6 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import { ReactNode } from 'react'
 
-import { useShortcut } from '@/app/hooks/useShortcut/useShortcut'
-
 import { PopoverButton } from './PopoverButton'
 
 type Props = {
@@ -19,13 +17,15 @@ type Props = {
 export function ConfirmPopoverButton({ type, prompt, tooltip, disabled, onConfirm }: Props) {
 	const icon = type === 'delete' ? <DeleteIcon fontSize="small" /> : <TimelapseIcon fontSize="small" />
 
-	useShortcut(['Enter', 'Ctrl+Enter'], onConfirm)
-
 	return (
 		<PopoverButton
 			tooltip={tooltip}
 			size="small"
 			icon={icon}
+			onEnterKey={async ({ close }) => {
+				await onConfirm()
+				close()
+			}}
 			popoverSx={{ gap: 1.5, p: 2, maxWidth: 280 }}
 			popoverBody={() => <Typography variant="body2">{prompt}</Typography>}
 			popoverAction={({ close }) => (

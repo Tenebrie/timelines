@@ -646,7 +646,7 @@ export const CalendarService = {
 			...unit,
 			displayName: (unit.displayName || unit.name).trim(),
 			displayNameShort: unit.displayNameShort || unit.name.trim().substring(0, 1),
-			displayNamePlural: (unit.displayNamePlural || unit.name).trim() + 's',
+			displayNamePlural: unit.displayNamePlural || unit.name.trim() + 's',
 		}
 	},
 
