@@ -10,12 +10,14 @@ export const fetchWorldEventDetailsOrThrow = async (eventId: string, prisma?: Pr
 		},
 		include: {
 			mentions: {
+				distinct: ['targetId'],
 				select: {
 					targetId: true,
 					targetType: true,
 				},
 			},
 			mentionedIn: {
+				distinct: ['sourceId'],
 				select: {
 					sourceId: true,
 					sourceType: true,

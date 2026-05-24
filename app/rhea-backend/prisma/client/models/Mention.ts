@@ -25,6 +25,7 @@ export type AggregateMention = {
 }
 
 export type MentionMinAggregateOutputType = {
+  id: string | null
   sourceId: string | null
   targetId: string | null
   sourceType: $Enums.MentionedEntity | null
@@ -41,6 +42,7 @@ export type MentionMinAggregateOutputType = {
 }
 
 export type MentionMaxAggregateOutputType = {
+  id: string | null
   sourceId: string | null
   targetId: string | null
   sourceType: $Enums.MentionedEntity | null
@@ -57,6 +59,7 @@ export type MentionMaxAggregateOutputType = {
 }
 
 export type MentionCountAggregateOutputType = {
+  id: number
   sourceId: number
   targetId: number
   sourceType: number
@@ -75,6 +78,7 @@ export type MentionCountAggregateOutputType = {
 
 
 export type MentionMinAggregateInputType = {
+  id?: true
   sourceId?: true
   targetId?: true
   sourceType?: true
@@ -91,6 +95,7 @@ export type MentionMinAggregateInputType = {
 }
 
 export type MentionMaxAggregateInputType = {
+  id?: true
   sourceId?: true
   targetId?: true
   sourceType?: true
@@ -107,6 +112,7 @@ export type MentionMaxAggregateInputType = {
 }
 
 export type MentionCountAggregateInputType = {
+  id?: true
   sourceId?: true
   targetId?: true
   sourceType?: true
@@ -196,6 +202,7 @@ export type MentionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 export type MentionGroupByOutputType = {
+  id: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -233,6 +240,7 @@ export type MentionWhereInput = {
   AND?: Prisma.MentionWhereInput | Prisma.MentionWhereInput[]
   OR?: Prisma.MentionWhereInput[]
   NOT?: Prisma.MentionWhereInput | Prisma.MentionWhereInput[]
+  id?: Prisma.StringFilter<"Mention"> | string
   sourceId?: Prisma.StringFilter<"Mention"> | string
   targetId?: Prisma.StringFilter<"Mention"> | string
   sourceType?: Prisma.EnumMentionedEntityFilter<"Mention"> | $Enums.MentionedEntity
@@ -258,6 +266,7 @@ export type MentionWhereInput = {
 }
 
 export type MentionOrderByWithRelationInput = {
+  id?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
   targetId?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
@@ -283,7 +292,8 @@ export type MentionOrderByWithRelationInput = {
 }
 
 export type MentionWhereUniqueInput = Prisma.AtLeast<{
-  sourceId_targetId?: Prisma.MentionSourceIdTargetIdCompoundUniqueInput
+  id?: string
+  sourceId_targetId_pageId?: Prisma.MentionSourceIdTargetIdPageIdCompoundUniqueInput
   AND?: Prisma.MentionWhereInput | Prisma.MentionWhereInput[]
   OR?: Prisma.MentionWhereInput[]
   NOT?: Prisma.MentionWhereInput | Prisma.MentionWhereInput[]
@@ -309,9 +319,10 @@ export type MentionWhereUniqueInput = Prisma.AtLeast<{
   targetArticle?: Prisma.XOR<Prisma.WikiArticleNullableScalarRelationFilter, Prisma.WikiArticleWhereInput> | null
   targetTag?: Prisma.XOR<Prisma.TagNullableScalarRelationFilter, Prisma.TagWhereInput> | null
   page?: Prisma.XOR<Prisma.ContentPageNullableScalarRelationFilter, Prisma.ContentPageWhereInput> | null
-}, "sourceId_targetId">
+}, "id" | "id" | "sourceId_targetId_pageId">
 
 export type MentionOrderByWithAggregationInput = {
+  id?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
   targetId?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
@@ -334,6 +345,7 @@ export type MentionScalarWhereWithAggregatesInput = {
   AND?: Prisma.MentionScalarWhereWithAggregatesInput | Prisma.MentionScalarWhereWithAggregatesInput[]
   OR?: Prisma.MentionScalarWhereWithAggregatesInput[]
   NOT?: Prisma.MentionScalarWhereWithAggregatesInput | Prisma.MentionScalarWhereWithAggregatesInput[]
+  id?: Prisma.StringWithAggregatesFilter<"Mention"> | string
   sourceId?: Prisma.StringWithAggregatesFilter<"Mention"> | string
   targetId?: Prisma.StringWithAggregatesFilter<"Mention"> | string
   sourceType?: Prisma.EnumMentionedEntityWithAggregatesFilter<"Mention"> | $Enums.MentionedEntity
@@ -350,6 +362,7 @@ export type MentionScalarWhereWithAggregatesInput = {
 }
 
 export type MentionCreateInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -366,6 +379,7 @@ export type MentionCreateInput = {
 }
 
 export type MentionUncheckedCreateInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -382,6 +396,7 @@ export type MentionUncheckedCreateInput = {
 }
 
 export type MentionUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -398,6 +413,7 @@ export type MentionUpdateInput = {
 }
 
 export type MentionUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -414,6 +430,7 @@ export type MentionUncheckedUpdateInput = {
 }
 
 export type MentionCreateManyInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -430,6 +447,7 @@ export type MentionCreateManyInput = {
 }
 
 export type MentionUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -437,6 +455,7 @@ export type MentionUpdateManyMutationInput = {
 }
 
 export type MentionUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -462,12 +481,14 @@ export type MentionOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type MentionSourceIdTargetIdCompoundUniqueInput = {
+export type MentionSourceIdTargetIdPageIdCompoundUniqueInput = {
   sourceId: string
   targetId: string
+  pageId: string
 }
 
 export type MentionCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
   targetId?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
@@ -484,6 +505,7 @@ export type MentionCountOrderByAggregateInput = {
 }
 
 export type MentionMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
   targetId?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
@@ -500,6 +522,7 @@ export type MentionMaxOrderByAggregateInput = {
 }
 
 export type MentionMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
   sourceId?: Prisma.SortOrder
   targetId?: Prisma.SortOrder
   sourceType?: Prisma.SortOrder
@@ -898,6 +921,7 @@ export type MentionUncheckedUpdateManyWithoutTargetEventNestedInput = {
 }
 
 export type MentionCreateWithoutSourceActorInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -913,6 +937,7 @@ export type MentionCreateWithoutSourceActorInput = {
 }
 
 export type MentionUncheckedCreateWithoutSourceActorInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -938,6 +963,7 @@ export type MentionCreateManySourceActorInputEnvelope = {
 }
 
 export type MentionCreateWithoutTargetActorInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -953,6 +979,7 @@ export type MentionCreateWithoutTargetActorInput = {
 }
 
 export type MentionUncheckedCreateWithoutTargetActorInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -997,6 +1024,7 @@ export type MentionScalarWhereInput = {
   AND?: Prisma.MentionScalarWhereInput | Prisma.MentionScalarWhereInput[]
   OR?: Prisma.MentionScalarWhereInput[]
   NOT?: Prisma.MentionScalarWhereInput | Prisma.MentionScalarWhereInput[]
+  id?: Prisma.StringFilter<"Mention"> | string
   sourceId?: Prisma.StringFilter<"Mention"> | string
   targetId?: Prisma.StringFilter<"Mention"> | string
   sourceType?: Prisma.EnumMentionedEntityFilter<"Mention"> | $Enums.MentionedEntity
@@ -1029,6 +1057,7 @@ export type MentionUpdateManyWithWhereWithoutTargetActorInput = {
 }
 
 export type MentionCreateWithoutPageInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1044,6 +1073,7 @@ export type MentionCreateWithoutPageInput = {
 }
 
 export type MentionUncheckedCreateWithoutPageInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1085,6 +1115,7 @@ export type MentionUpdateManyWithWhereWithoutPageInput = {
 }
 
 export type MentionCreateWithoutSourceTagInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1100,6 +1131,7 @@ export type MentionCreateWithoutSourceTagInput = {
 }
 
 export type MentionUncheckedCreateWithoutSourceTagInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1125,6 +1157,7 @@ export type MentionCreateManySourceTagInputEnvelope = {
 }
 
 export type MentionCreateWithoutTargetTagInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1140,6 +1173,7 @@ export type MentionCreateWithoutTargetTagInput = {
 }
 
 export type MentionUncheckedCreateWithoutTargetTagInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1197,6 +1231,7 @@ export type MentionUpdateManyWithWhereWithoutTargetTagInput = {
 }
 
 export type MentionCreateWithoutSourceArticleInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1212,6 +1247,7 @@ export type MentionCreateWithoutSourceArticleInput = {
 }
 
 export type MentionUncheckedCreateWithoutSourceArticleInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1237,6 +1273,7 @@ export type MentionCreateManySourceArticleInputEnvelope = {
 }
 
 export type MentionCreateWithoutTargetArticleInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1252,6 +1289,7 @@ export type MentionCreateWithoutTargetArticleInput = {
 }
 
 export type MentionUncheckedCreateWithoutTargetArticleInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1309,6 +1347,7 @@ export type MentionUpdateManyWithWhereWithoutTargetArticleInput = {
 }
 
 export type MentionCreateWithoutSourceEventInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1324,6 +1363,7 @@ export type MentionCreateWithoutSourceEventInput = {
 }
 
 export type MentionUncheckedCreateWithoutSourceEventInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1349,6 +1389,7 @@ export type MentionCreateManySourceEventInputEnvelope = {
 }
 
 export type MentionCreateWithoutTargetEventInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1364,6 +1405,7 @@ export type MentionCreateWithoutTargetEventInput = {
 }
 
 export type MentionUncheckedCreateWithoutTargetEventInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1421,6 +1463,7 @@ export type MentionUpdateManyWithWhereWithoutTargetEventInput = {
 }
 
 export type MentionCreateManySourceActorInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1436,6 +1479,7 @@ export type MentionCreateManySourceActorInput = {
 }
 
 export type MentionCreateManyTargetActorInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1451,6 +1495,7 @@ export type MentionCreateManyTargetActorInput = {
 }
 
 export type MentionUpdateWithoutSourceActorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1466,6 +1511,7 @@ export type MentionUpdateWithoutSourceActorInput = {
 }
 
 export type MentionUncheckedUpdateWithoutSourceActorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1481,6 +1527,7 @@ export type MentionUncheckedUpdateWithoutSourceActorInput = {
 }
 
 export type MentionUncheckedUpdateManyWithoutSourceActorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1496,6 +1543,7 @@ export type MentionUncheckedUpdateManyWithoutSourceActorInput = {
 }
 
 export type MentionUpdateWithoutTargetActorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1511,6 +1559,7 @@ export type MentionUpdateWithoutTargetActorInput = {
 }
 
 export type MentionUncheckedUpdateWithoutTargetActorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1526,6 +1575,7 @@ export type MentionUncheckedUpdateWithoutTargetActorInput = {
 }
 
 export type MentionUncheckedUpdateManyWithoutTargetActorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1541,6 +1591,7 @@ export type MentionUncheckedUpdateManyWithoutTargetActorInput = {
 }
 
 export type MentionCreateManyPageInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1556,6 +1607,7 @@ export type MentionCreateManyPageInput = {
 }
 
 export type MentionUpdateWithoutPageInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1571,6 +1623,7 @@ export type MentionUpdateWithoutPageInput = {
 }
 
 export type MentionUncheckedUpdateWithoutPageInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1586,6 +1639,7 @@ export type MentionUncheckedUpdateWithoutPageInput = {
 }
 
 export type MentionUncheckedUpdateManyWithoutPageInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1601,6 +1655,7 @@ export type MentionUncheckedUpdateManyWithoutPageInput = {
 }
 
 export type MentionCreateManySourceTagInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1616,6 +1671,7 @@ export type MentionCreateManySourceTagInput = {
 }
 
 export type MentionCreateManyTargetTagInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1631,6 +1687,7 @@ export type MentionCreateManyTargetTagInput = {
 }
 
 export type MentionUpdateWithoutSourceTagInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1646,6 +1703,7 @@ export type MentionUpdateWithoutSourceTagInput = {
 }
 
 export type MentionUncheckedUpdateWithoutSourceTagInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1661,6 +1719,7 @@ export type MentionUncheckedUpdateWithoutSourceTagInput = {
 }
 
 export type MentionUncheckedUpdateManyWithoutSourceTagInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1676,6 +1735,7 @@ export type MentionUncheckedUpdateManyWithoutSourceTagInput = {
 }
 
 export type MentionUpdateWithoutTargetTagInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1691,6 +1751,7 @@ export type MentionUpdateWithoutTargetTagInput = {
 }
 
 export type MentionUncheckedUpdateWithoutTargetTagInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1706,6 +1767,7 @@ export type MentionUncheckedUpdateWithoutTargetTagInput = {
 }
 
 export type MentionUncheckedUpdateManyWithoutTargetTagInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1721,6 +1783,7 @@ export type MentionUncheckedUpdateManyWithoutTargetTagInput = {
 }
 
 export type MentionCreateManySourceArticleInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1736,6 +1799,7 @@ export type MentionCreateManySourceArticleInput = {
 }
 
 export type MentionCreateManyTargetArticleInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1751,6 +1815,7 @@ export type MentionCreateManyTargetArticleInput = {
 }
 
 export type MentionUpdateWithoutSourceArticleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1766,6 +1831,7 @@ export type MentionUpdateWithoutSourceArticleInput = {
 }
 
 export type MentionUncheckedUpdateWithoutSourceArticleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1781,6 +1847,7 @@ export type MentionUncheckedUpdateWithoutSourceArticleInput = {
 }
 
 export type MentionUncheckedUpdateManyWithoutSourceArticleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1796,6 +1863,7 @@ export type MentionUncheckedUpdateManyWithoutSourceArticleInput = {
 }
 
 export type MentionUpdateWithoutTargetArticleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1811,6 +1879,7 @@ export type MentionUpdateWithoutTargetArticleInput = {
 }
 
 export type MentionUncheckedUpdateWithoutTargetArticleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1826,6 +1895,7 @@ export type MentionUncheckedUpdateWithoutTargetArticleInput = {
 }
 
 export type MentionUncheckedUpdateManyWithoutTargetArticleInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1841,6 +1911,7 @@ export type MentionUncheckedUpdateManyWithoutTargetArticleInput = {
 }
 
 export type MentionCreateManySourceEventInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1856,6 +1927,7 @@ export type MentionCreateManySourceEventInput = {
 }
 
 export type MentionCreateManyTargetEventInput = {
+  id?: string
   sourceId: string
   targetId: string
   sourceType: $Enums.MentionedEntity
@@ -1871,6 +1943,7 @@ export type MentionCreateManyTargetEventInput = {
 }
 
 export type MentionUpdateWithoutSourceEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1886,6 +1959,7 @@ export type MentionUpdateWithoutSourceEventInput = {
 }
 
 export type MentionUncheckedUpdateWithoutSourceEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1901,6 +1975,7 @@ export type MentionUncheckedUpdateWithoutSourceEventInput = {
 }
 
 export type MentionUncheckedUpdateManyWithoutSourceEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1916,6 +1991,7 @@ export type MentionUncheckedUpdateManyWithoutSourceEventInput = {
 }
 
 export type MentionUpdateWithoutTargetEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1931,6 +2007,7 @@ export type MentionUpdateWithoutTargetEventInput = {
 }
 
 export type MentionUncheckedUpdateWithoutTargetEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1946,6 +2023,7 @@ export type MentionUncheckedUpdateWithoutTargetEventInput = {
 }
 
 export type MentionUncheckedUpdateManyWithoutTargetEventInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
   sourceId?: Prisma.StringFieldUpdateOperationsInput | string
   targetId?: Prisma.StringFieldUpdateOperationsInput | string
   sourceType?: Prisma.EnumMentionedEntityFieldUpdateOperationsInput | $Enums.MentionedEntity
@@ -1963,6 +2041,7 @@ export type MentionUncheckedUpdateManyWithoutTargetEventInput = {
 
 
 export type MentionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   sourceId?: boolean
   targetId?: boolean
   sourceType?: boolean
@@ -1988,6 +2067,7 @@ export type MentionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 }, ExtArgs["result"]["mention"]>
 
 export type MentionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   sourceId?: boolean
   targetId?: boolean
   sourceType?: boolean
@@ -2013,6 +2093,7 @@ export type MentionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 }, ExtArgs["result"]["mention"]>
 
 export type MentionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
   sourceId?: boolean
   targetId?: boolean
   sourceType?: boolean
@@ -2038,6 +2119,7 @@ export type MentionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 }, ExtArgs["result"]["mention"]>
 
 export type MentionSelectScalar = {
+  id?: boolean
   sourceId?: boolean
   targetId?: boolean
   sourceType?: boolean
@@ -2053,7 +2135,7 @@ export type MentionSelectScalar = {
   pageId?: boolean
 }
 
-export type MentionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"sourceId" | "targetId" | "sourceType" | "targetType" | "sourceActorId" | "sourceEventId" | "sourceArticleId" | "sourceTagId" | "targetActorId" | "targetEventId" | "targetArticleId" | "targetTagId" | "pageId", ExtArgs["result"]["mention"]>
+export type MentionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "sourceId" | "targetId" | "sourceType" | "targetType" | "sourceActorId" | "sourceEventId" | "sourceArticleId" | "sourceTagId" | "targetActorId" | "targetEventId" | "targetArticleId" | "targetTagId" | "pageId", ExtArgs["result"]["mention"]>
 export type MentionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sourceActor?: boolean | Prisma.Mention$sourceActorArgs<ExtArgs>
   sourceEvent?: boolean | Prisma.Mention$sourceEventArgs<ExtArgs>
@@ -2102,6 +2184,7 @@ export type $MentionPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     page: Prisma.$ContentPagePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
+    id: string
     sourceId: string
     targetId: string
     sourceType: $Enums.MentionedEntity
@@ -2198,8 +2281,8 @@ export interface MentionDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * // Get first 10 Mentions
    * const mentions = await prisma.mention.findMany({ take: 10 })
    * 
-   * // Only select the `sourceId`
-   * const mentionWithSourceIdOnly = await prisma.mention.findMany({ select: { sourceId: true } })
+   * // Only select the `id`
+   * const mentionWithIdOnly = await prisma.mention.findMany({ select: { id: true } })
    * 
    */
   findMany<T extends MentionFindManyArgs>(args?: Prisma.SelectSubset<T, MentionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MentionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
@@ -2243,9 +2326,9 @@ export interface MentionDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   ]
    * })
    * 
-   * // Create many Mentions and only return the `sourceId`
-   * const mentionWithSourceIdOnly = await prisma.mention.createManyAndReturn({
-   *   select: { sourceId: true },
+   * // Create many Mentions and only return the `id`
+   * const mentionWithIdOnly = await prisma.mention.createManyAndReturn({
+   *   select: { id: true },
    *   data: [
    *     // ... provide data here
    *   ]
@@ -2334,9 +2417,9 @@ export interface MentionDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    *   ]
    * })
    * 
-   * // Update zero or more Mentions and only return the `sourceId`
-   * const mentionWithSourceIdOnly = await prisma.mention.updateManyAndReturn({
-   *   select: { sourceId: true },
+   * // Update zero or more Mentions and only return the `id`
+   * const mentionWithIdOnly = await prisma.mention.updateManyAndReturn({
+   *   select: { id: true },
    *   where: {
    *     // ... provide filter here
    *   },
@@ -2547,6 +2630,7 @@ export interface Prisma__MentionClient<T, Null = never, ExtArgs extends runtime.
  * Fields of the Mention model
  */
 export interface MentionFieldRefs {
+  readonly id: Prisma.FieldRef<"Mention", 'String'>
   readonly sourceId: Prisma.FieldRef<"Mention", 'String'>
   readonly targetId: Prisma.FieldRef<"Mention", 'String'>
   readonly sourceType: Prisma.FieldRef<"Mention", 'MentionedEntity'>

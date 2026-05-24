@@ -178,6 +178,7 @@ export const WorldEventService = {
 			where: { id: eventId, worldId },
 			include: {
 				mentionedIn: {
+					distinct: ['sourceId'],
 					include: {
 						sourceActor: {
 							select: { id: true, name: true },

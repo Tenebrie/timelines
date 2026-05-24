@@ -52,21 +52,25 @@ export const MentionsService = {
 			})),
 		)
 
-		await client.mention.createMany({
-			data,
-			skipDuplicates: true,
-		})
-
-		const otherSliceMentions = await client.mention.findMany({
+		await client.mention.deleteMany({
 			where: {
 				...sourceColumn,
-				...(pageId === null
-					? { pageId: { not: null } }
-					: { OR: [{ pageId: null }, { pageId: { not: pageId } }] }),
+				pageId,
 			},
 		})
 
-		return dedupeMentions([...(data as Mention[]), ...otherSliceMentions])
+		if (data.length > 0) {
+			await client.mention.createMany({
+				data,
+				skipDuplicates: true,
+			})
+		}
+
+		const allMentions = await client.mention.findMany({
+			where: sourceColumn,
+		})
+
+		return dedupeMentions(allMentions)
 	},
 
 	clearOrphanedMentions: async (transaction?: Prisma.TransactionClient) => {

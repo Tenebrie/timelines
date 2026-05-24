@@ -24,12 +24,14 @@ export const WikiService = {
 					},
 				},
 				mentions: {
+					distinct: ['targetId'],
 					select: {
 						targetId: true,
 						targetType: true,
 					},
 				},
 				mentionedIn: {
+					distinct: ['sourceId'],
 					select: {
 						sourceId: true,
 						sourceType: true,
@@ -84,12 +86,14 @@ export const WikiService = {
 					},
 				},
 				mentions: {
+					distinct: ['targetId'],
 					select: {
 						targetId: true,
 						targetType: true,
 					},
 				},
 				mentionedIn: {
+					distinct: ['sourceId'],
 					select: {
 						sourceId: true,
 						sourceType: true,
@@ -176,7 +180,7 @@ export const WikiService = {
 				null,
 				prisma,
 			)
-			const referencedAssets = await AssetRefService.createReferences({
+			await AssetRefService.createReferences({
 				worldId: params.worldId,
 				holderId: params.id,
 				holderType: ReferenceHoldingEntity.Article,
@@ -185,6 +189,8 @@ export const WikiService = {
 				prisma,
 			})
 
+			// createMentions/createReferences already reconciled the relation rows for this
+			// slice, so the update only needs to touch the article's own columns.
 			const updatedArticle = await prisma.wikiArticle.update({
 				where: {
 					id: params.id,
@@ -194,26 +200,6 @@ export const WikiService = {
 					name: params.name,
 					contentRich: params.contentRich,
 					contentYjs: params.contentYjs,
-					mentions: mentionedEntities
-						? {
-								set: mentionedEntities.map((mention) => ({
-									sourceId_targetId: {
-										sourceId: mention.sourceId,
-										targetId: mention.targetId,
-									},
-								})),
-							}
-						: undefined,
-					assetRefs: referencedAssets
-						? {
-								set: referencedAssets.map((ref) => ({
-									assetId_holderId: {
-										assetId: ref.assetId,
-										holderId: ref.holderId,
-									},
-								})),
-							}
-						: undefined,
 				},
 				include: {
 					children: {
@@ -353,6 +339,7 @@ export const WikiService = {
 			where: { id: articleId, worldId },
 			include: {
 				mentionedIn: {
+					distinct: ['sourceId'],
 					include: {
 						sourceActor: {
 							select: { id: true, name: true },

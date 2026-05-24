@@ -18,12 +18,14 @@ export const TagService = {
 			where: { id: tagId, worldId },
 			include: {
 				mentions: {
+					distinct: ['targetId'],
 					select: {
 						targetId: true,
 						targetType: true,
 					},
 				},
 				mentionedIn: {
+					distinct: ['sourceId'],
 					select: {
 						sourceId: true,
 						sourceType: true,
@@ -45,8 +47,9 @@ export const TagService = {
 		const tag = await getPrismaClient().tag.findUnique({
 			where: { id: tagId, worldId },
 			include: {
-				mentions: true,
+				mentions: { distinct: ['targetId'] },
 				mentionedIn: {
+					distinct: ['sourceId'],
 					include: {
 						sourceActor: {
 							select: {
@@ -101,8 +104,8 @@ export const TagService = {
 		return getPrismaClient().tag.findMany({
 			where: { worldId },
 			include: {
-				mentions: true,
-				mentionedIn: true,
+				mentions: { distinct: ['targetId'] },
+				mentionedIn: { distinct: ['sourceId'] },
 			},
 		})
 	},
@@ -125,8 +128,8 @@ export const TagService = {
 					description: params.description ?? '',
 				},
 				include: {
-					mentions: true,
-					mentionedIn: true,
+					mentions: { distinct: ['targetId'] },
+					mentionedIn: { distinct: ['sourceId'] },
 				},
 			})
 
@@ -160,12 +163,14 @@ export const TagService = {
 				},
 				include: {
 					mentions: {
+						distinct: ['targetId'],
 						select: {
 							targetId: true,
 							targetType: true,
 						},
 					},
 					mentionedIn: {
+						distinct: ['sourceId'],
 						select: {
 							sourceId: true,
 							sourceType: true,

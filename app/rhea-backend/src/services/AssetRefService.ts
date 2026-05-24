@@ -2,16 +2,6 @@ import { AssetReference, Prisma, ReferenceHoldingEntity } from '@prisma/client'
 
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
-export function dedupeReferences<T extends Pick<AssetReference, 'holderId' | 'assetId'>>(
-	references: T[],
-): T[] {
-	const unique = new Map<string, T>()
-	for (const reference of references) {
-		unique.set(`${reference.holderId}->${reference.assetId}`, reference)
-	}
-	return Array.from(unique.values())
-}
-
 export const AssetRefService = {
 	createReferences: async ({
 		worldId,
@@ -55,32 +45,38 @@ export const AssetRefService = {
 			})),
 		)
 
-		await client.assetReference.createMany({
-			data,
-			skipDuplicates: true,
-		})
-
-		await client.asset.updateMany({
-			where: {
-				id: {
-					in: assets,
-				},
-			},
-			data: {
-				expiresAt: null,
-			},
-		})
-
-		const otherSliceReferences = await client.assetReference.findMany({
+		await client.assetReference.deleteMany({
 			where: {
 				...holderColumn,
-				...(pageId === null
-					? { pageId: { not: null } }
-					: { OR: [{ pageId: null }, { pageId: { not: pageId } }] }),
+				pageId,
 			},
 		})
 
-		return dedupeReferences([...(data as AssetReference[]), ...otherSliceReferences])
+		if (data.length > 0) {
+			await client.assetReference.createMany({
+				data,
+				skipDuplicates: true,
+			})
+		}
+
+		if (assets.length > 0) {
+			await client.asset.updateMany({
+				where: {
+					id: {
+						in: assets,
+					},
+				},
+				data: {
+					expiresAt: null,
+				},
+			})
+		}
+
+		const allReferences = await client.assetReference.findMany({
+			where: holderColumn,
+		})
+
+		return dedupeReferences(allReferences)
 	},
 
 	clearOrphanedReferences: async (transaction?: Prisma.TransactionClient) => {
@@ -93,4 +89,14 @@ export const AssetRefService = {
 			},
 		})
 	},
+}
+
+export function dedupeReferences<T extends Pick<AssetReference, 'holderId' | 'assetId'>>(
+	references: T[],
+): T[] {
+	const unique = new Map<string, T>()
+	for (const reference of references) {
+		unique.set(`${reference.holderId}->${reference.assetId}`, reference)
+	}
+	return Array.from(unique.values())
 }

@@ -83,12 +83,14 @@ export const WorldSearchService = {
 			},
 			include: {
 				mentions: {
+					distinct: ['targetId'],
 					select: {
 						targetId: true,
 						targetType: true,
 					},
 				},
 				mentionedIn: {
+					distinct: ['sourceId'],
 					select: {
 						sourceId: true,
 						sourceType: true,
@@ -136,12 +138,14 @@ export const WorldSearchService = {
 					},
 				},
 				mentions: {
+					distinct: ['targetId'],
 					select: {
 						targetId: true,
 						targetType: true,
 					},
 				},
 				mentionedIn: {
+					distinct: ['sourceId'],
 					select: {
 						sourceId: true,
 						sourceType: true,
@@ -202,12 +206,14 @@ export const WorldSearchService = {
 			},
 			include: {
 				mentions: {
+					distinct: ['targetId'],
 					select: {
 						targetId: true,
 						targetType: true,
 					},
 				},
 				mentionedIn: {
+					distinct: ['sourceId'],
 					select: {
 						sourceId: true,
 						sourceType: true,
@@ -243,12 +249,14 @@ export const WorldSearchService = {
 			},
 			include: {
 				mentions: {
+					distinct: ['targetId'],
 					select: {
 						targetId: true,
 						targetType: true,
 					},
 				},
 				mentionedIn: {
+					distinct: ['sourceId'],
 					select: {
 						sourceId: true,
 						sourceType: true,
