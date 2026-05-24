@@ -45,16 +45,27 @@ export function formatTimestampUnits(
 				current.result += formatUnit(unit, entry, current.count)
 			}
 		} else {
-			current.result += current.symbol.repeat(current.count)
+			// Dumping symbol literal
+			const unescapedSymbol = current.symbol.startsWith('\\') ? current.symbol.slice(1) : current.symbol
+			current.result += unescapedSymbol.repeat(current.count)
 		}
 	}
 
-	for (const char of dateFormat) {
-		if (char === current.symbol) {
+	let unconsumedChars = ''
+	for (let i = 0; i < dateFormat.length; i++) {
+		const char = dateFormat[i]
+		if (char === '\\') {
+			unconsumedChars += char
+			continue
+		}
+		const token = unconsumedChars + dateFormat[i]
+		unconsumedChars = ''
+
+		if (token === current.symbol) {
 			current.count += 1
 		} else {
 			flushCurrent()
-			current.symbol = char
+			current.symbol = token
 			current.count = 1
 		}
 	}

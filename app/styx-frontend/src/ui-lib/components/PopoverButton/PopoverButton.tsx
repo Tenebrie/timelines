@@ -6,6 +6,8 @@ import Tooltip from '@mui/material/Tooltip'
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { ReactNode } from 'react'
 
+import { useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+
 type Props = {
 	icon: ReactNode
 	tooltip: string
@@ -17,6 +19,7 @@ type Props = {
 	popoverSx?: Parameters<typeof Stack>['0']['sx']
 	autofocus?: boolean
 	onCleanup?: () => void
+	onEnterKey?: (props: { close: () => void }) => void
 	rippleVariant?: 'icon' | 'button'
 	popoverAlign?: Parameters<typeof Popover>['0']['anchorOrigin']
 }
@@ -32,6 +35,7 @@ export function PopoverButton({
 	popoverSx,
 	autofocus,
 	onCleanup,
+	onEnterKey,
 	rippleVariant = 'icon',
 	popoverAlign = { vertical: 'bottom', horizontal: 'right' },
 }: Props) {
@@ -50,6 +54,14 @@ export function PopoverButton({
 			bindTrigger(popupState).onClick(e)
 		},
 	}
+
+	useShortcut(
+		['Enter', 'Ctrl+Enter'],
+		() => {
+			onEnterKey?.({ close: popupState.close })
+		},
+		popupState.isOpen,
+	)
 
 	return (
 		<>

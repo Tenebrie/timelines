@@ -11,6 +11,7 @@ type Props = {
 	tooltip: string
 	popoverBody: (props: { close: () => void }) => ReactNode
 	onConfirm: () => void | boolean | Promise<void | boolean>
+	onEnterKey?: (props: { close: () => void }) => void
 	confirmDisabled?: boolean
 	buttonSx?: Parameters<typeof IconButton>['0']['sx']
 	popoverSx?: Parameters<typeof Stack>['0']['sx']
@@ -20,6 +21,7 @@ export function CreatePopoverButton({
 	size = 'medium',
 	tooltip,
 	popoverBody,
+	onEnterKey,
 	onConfirm,
 	confirmDisabled,
 	buttonSx,
@@ -32,6 +34,7 @@ export function CreatePopoverButton({
 			tooltip={tooltip}
 			size={size}
 			icon={icon}
+			onEnterKey={onEnterKey}
 			buttonSx={{
 				opacity: 1,
 				bgcolor: 'action.hover',

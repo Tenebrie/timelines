@@ -79,7 +79,7 @@ function CalendarUnitListItemComponent({ unit, isSelected, onSelectUnit }: Props
 	return (
 		<>
 			<CalendarUnitListDropHandle position={unit.position} />
-			<Box ref={ref} sx={{ px: 0.5 }}>
+			<Box ref={ref} data-testid="CalendarUnitListItem" sx={{ px: 0.5 }}>
 				<Button
 					component="div"
 					onClick={() => onSelectUnit(unit.id)}
