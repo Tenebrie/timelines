@@ -1,0 +1,65 @@
+---
+title: Getting started
+description: Documentation for Neverkin - the open-source worldbuilding platform.
+---
+
+Neverkin is built from the ground up as a scalable multi-tenant web application.
+While this makes it possible to provide a hosted version for everyone, it also means that running your own local instance is more complicated than a simple desktop app.
+
+## Running locally
+
+One of the core tenants of Neverkin is to be developer-friendly. As such, running the application locally should be simple, assuming you have the correct setup.
+
+### Prerequisites
+
+- Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) or your preferred flavor of Docker. You do not need to pay for it.
+- Install [Node.js](https://nodejs.org/en/download/) if you don't have it already.
+- If you're running Windows, I recommend using [WSL2](https://docs.microsoft.com/en-us/windows/wsl/install).
+
+### Running the app
+
+The main repository is located at [https://github.com/tenebrie/timelines](https://github.com/tenebrie/timelines). You can clone it using Git, or download it as a ZIP archive of the `main` branch.
+I recommend using Git to be able to receive updates.
+
+After cloning or unzipping the repository, open your terminal and navigate to the repository root. Then, install the dependencies:
+```sh
+npm install
+```
+
+This may take a while for the first time. Once it's done, you can initialize the application:
+```sh
+npm run docker:preview
+```
+
+The `preview` mode starts the production version of the application with all dependencies handled locally.
+
+Note that in this mode the application does _not_ watch for code changes. If you want to work on the code and see your changes in real-time, use the following command instead:
+```sh
+npm run dev
+```
+
+In either mode, the setup will automatically go through the following steps (included here for reference):
+
+- Create a new Docker Compose setup
+- Build the containers locally
+- Create a new database, stored in a Docker volume (on your local drive)
+- Create a local S3 bucket (MinIO) that will be used for asset storage
+- Run the database migrations
+- Create a default admin user
+  - Username: `admin@localhost`
+  - Password: `q`
+- Make the application accessible at `http://localhost`
+
+Unless something goes wrong, you should have a fully working instance of Neverkin running locally. Your data will survive application restarts, and it's stored locally on your machine.
+
+In case you encounter any issues, please reach out through the [Discord server](https://discord.gg/rD3KdXmqDP) or the [Contact form](https://neverkin.com/contact).
+
+## Full cloud-based deployment
+
+It is, of course, possible to run Neverkin fully in the cloud just like the main hosted version! The architecture is based on Docker Swarm, which is a popular orchestration tool for containerized applications.
+
+:::note
+This path requires more technical knowledge, but you retain full control over your data while having the same experience a hosted version has.
+:::
+
+Refer to [Cloud deployment](./private-instances/cloud-deployment) for more details.

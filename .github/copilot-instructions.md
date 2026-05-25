@@ -1,6 +1,6 @@
 # Neverkin - AI Context & Architecture Guide
 
-**Last Updated**: May 17, 2026
+**Last Updated**: May 25, 2026
 **Project**: Collaborative worldbuilding and timeline management application
 
 ## Work Ethics
@@ -94,7 +94,7 @@ User
 - Nothing can escape a World - all entities are World-specific
 - Can be Private, PublicRead, or PublicEdit
 - Owner + optional collaborators (ReadOnly or Editing access)
-- Has a calendar type (COUNTUP, EARTH, PF2E, RIMWORLD, EXETHER)
+- Has its own `Calendar` (a deep copy created when a calendar is assigned — see Calendar/Time System). The legacy `WorldCalendarType` enum (COUNTUP/EARTH/PF2E/RIMWORLD/EXETHER) still exists in the schema but is now effectively vestigial; the timeline reads the new `Calendar` model.
 - **Use case**: If you're writing 5 interconnected stories in the same universe → 1 World. Two unrelated settings → 2 Worlds.
 
 **WorldEvent**
@@ -156,16 +156,19 @@ User
 
 - Visual view for Actors (Timeline is for Events, Mindmap is for Actors)
 - Think: cards on a blackboard with connecting relationship lines
-- Currently a work-in-progress feature
-- MindmapNode stores positioning (x, y) for each Actor
+- Functional: infinite pan/zoom canvas, draggable actor nodes (with avatar/icon/description preview), and relationship "wires" with editable labels and direction (one-way / two-way / reversed). MindmapNode stores positioning (x, y) per Actor.
+- Rough edges remain: interaction model is undiscoverable (left-drag = select, right-drag = pan, wheel = zoom, no on-screen controls), and only Actors can be placed (no events/locations).
 
 **Calendar/Time System**
 
-- Multiple calendar types supported (COUNTUP, EARTH, PF2E, RIMWORLD, EXETHER)
-- Events use BigInt timestamps for precision
-- **Known Issue**: Current calendar system needs major rework to support fully custom time definitions
-- **Planned**: "Calendar v3" - fully customizable days/hours/months/labels for fictional worlds
-- Timeline view is tightly coupled to calendar, making this refactor complex
+- **The fully-custom calendar system ("Calendar v3") is built and live** — it drives the actual timeline, despite older notes elsewhere calling it "planned". The legacy `WorldCalendarType` enum is vestigial.
+- Model tree: `Calendar → CalendarUnit → CalendarUnitRelation` (with `repeats` + custom era/month `label`s) `→ CalendarPresentation / CalendarPresentationUnit` (per-zoom-level display). See `app/rhea-backend/prisma/schema/calendar.prisma`.
+- A user can define a fully custom calendar: named/short/plural units, format modes (Name, NameOneIndexed, Numeric, NumericOneIndexed, Hidden) incl. negative-value handling, arbitrary nested structure with per-relation repeats and custom labels, and per-zoom presentations. Built-in templates (`CalendarTemplateService.ts`) express Earth (leap years), Golarion/Pathfinder, RimWorld, Mars/Darian, Exether.
+- Formatting/parsing run through the dedicated, well-tested `@neverkin/esoteric-date` library (`library/esoteric-date/`).
+- The editor lives at top-level route `/calendar/$calendarId`, reachable in-app from the main nav ("Calendars") and the home view. Assigning a calendar to a world deep-copies it (a world's calendar is independent of the source). You only ever edit your own user-owned calendars and re-apply them; a world's copy is owned by the world (not you), is not listed for editing, and is updated by reassigning — so by design there is no "edit this world's calendar" flow from inside a world.
+- Events use BigInt timestamps in the DB, but **the frontend downcasts to JS `number` on ingest** (`app/styx-frontend/src/app/utils/ingestEntity.ts`); all client-side time math is float-based. Practical granularity is 1 minute (smallest template unit). `THE_END` clamp (8.64e15) stays within `Number.MAX_SAFE_INTEGER`.
+- **Remaining gaps**: seasons exist in the schema (`CalendarSeason`) but the Intervals editor tab is commented out; no sub-minute precision; no fuzzy/approximate dates; date entry is a freeform text "selector" (`parseTimeSelector`) with no GUI picker.
+- Still true: the timeline view is tightly coupled to the calendar, so changes here remain delicate.
 
 ## 👥 User & Access Control
 
@@ -204,11 +207,11 @@ User
 - Redis pub/sub for message distribution between Calliope instances
 - Messages typed via `ClientToCalliopeMessage` / `CalliopeToClientMessage`
 
-**Current Limitations:**
+**Rich-text collaboration:**
 
-- Tiptap rich text editor collaboration is somewhat problematic
-- Not yet Google Docs-level simultaneous editing
-- Better than fully isolated state, but conflicts can occur
+- Tiptap rich text uses a proper **Yjs CRDT** implementation over `y-websocket` (`app/styx-frontend/src/app/features/richTextEditor/extensions/collaboration/`), with per-document rooms keyed `worldId:entityType:documentId`, sync handling, and a `calliope/documentReset` recovery path. This is genuine concurrent editing of actor/event/article prose, not isolated state.
+- Non-prose entity state (positions, metadata, etc.) syncs via Calliope/Redis pub-sub.
+- Known rough edge: the reset/reconnect recovery path implies occasional desync can still occur. It is solid, not flawless.
 
 **Key Message Types:**
 

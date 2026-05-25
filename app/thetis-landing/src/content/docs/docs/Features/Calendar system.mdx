@@ -1,0 +1,158 @@
+---
+title: Calendar system
+description: Documentation for Neverkin - the open-source worldbuilding platform.
+---
+import { Aside } from '@astrojs/starlight/components'
+import { Image } from 'astro:assets'
+import calendarList01 from '~/assets/docs/calendar-list-01.png'
+import calendarEditor01 from '~/assets/docs/calendar-editor-01.png'
+import calendarEditor02 from '~/assets/docs/calendar-editor-02.png'
+import calendarEditor03 from '~/assets/docs/calendar-editor-03.png'
+import calendarEditor04 from '~/assets/docs/calendar-editor-04.png'
+import calendarEditor05 from '~/assets/docs/calendar-editor-05.png'
+import calendarEditor06 from '~/assets/docs/calendar-editor-06.png'
+import calendarEditor07 from '~/assets/docs/calendar-editor-07.png'
+
+Neverkin features a powerful calendar system tailored for worlds with unusual time-keeping needs.
+The calendars are defined differently from how you might expect, but the system has a _very_ high degree of flexibility in both the structure and duration of the calendar.
+
+<Aside type="tip" title="Fun fact">
+With the standard Gregorian calendar and a smallest tracked time difference being one minute, the supported duration of a calendar is **~16.4 billion years** into the future and the past from the calendar origin.
+
+You have some time.
+</Aside>
+
+## Core principles
+
+Neverkin calendar system does not make assumptions about your calendars or the length of your story.
+It can represent pretty much any calendar as long as it is possible to define a top level cycle - the longest period of time that repeats exactly.
+
+For example, in Gregorian calendar a top-level cycle is 400 years long, while Julian calendar has a cycle of 4 years.
+
+A second soft principle is that the time units on the same level are the same type of unit.
+Essentially, it just means that a year consists of 12 months, and not of 10 months and 60 bananas. However, a year may consist of 70 varying-length bananas.
+
+<Aside type="note">
+This is a soft requirement as the mixed units **are supported**, but they create a large number of potential corner cases that are yet to be ironed out.
+</Aside>
+
+# Calendars and worlds
+
+Calendars belong to you, not to your worlds. You create and edit them from the calendar list, independently of any world.
+
+<Image src={calendarList01} alt="The calendar list, showing one calendar with its name, source description and last-updated time." />
+
+This is where you make calendars. The **+** button creates a new one: give it a name and, optionally, pick a template to copy (Gregorian, Pathfinder, RimWorld, and so on) — or start from nothing. Each entry shows the calendar's name, a short description and when it was last changed.
+
+When you assign a calendar to a world, the world gets its own **deep copy**. From that point on the two are unrelated. Editing the original in the list does not touch any world, and a world's copy never changes on its own.
+
+To push changes you've made into a world, assign the calendar to it again. Reassigning replaces the world's copy wholesale.
+
+<Aside type="caution" title="Reassigning over existing events">
+An event is stored as a single integer; the calendar only decides how that integer reads as a date. Reassigning keeps all of a world's events, but if the calendar's **structure** changed, the same integers now fall on different dates. The events survive — where they land on the timeline can move in ways that are hard to predict. Reassign deliberately, not by reflex.
+</Aside>
+
+# Editing existing calendars
+
+Selecting a calendar from the list opens the editor. It's split across three tabs — **Calendar**, **Time Units** and **Presentation** — under a header that stays put whichever tab you're on.
+
+## The header
+
+<Image src={calendarEditor01} alt="The calendar editor for a calendar copied from Gregorian, showing the Time Format and Preview timestamp fields above the tabs." />
+
+**Time Format** (top left) is the string used to render a timestamp as a date. For the Gregorian calendar it reads `hh:mm MM DD, YYYY`, which produces dates like `00:00 January 01, 2026`. Each letter is a shorthand standing in for one of the calendar's units. Repeating a letter widens the field: for numeric units, `YYYY` pads the year to four digits, `DD` to two. This does not currently apply to the labeled units (like months). The shorthands aren't fixed — you assign them per unit (see [Formatting](#formatting)).
+
+Any character that isn't a unit's shorthand is printed verbatim — that's how the colon and comma above survive. To print a character that _is_ a shorthand, escape it with a backslash: `\h` emits a literal `h` instead of the hour, and `\\` emits a literal backslash.
+
+**Preview timestamp** (top right) is a scratch dial. Drag it or type a number to see how that integer renders through the current calendar. It only affects the preview, so you can sanity-check your format and structure as you edit.
+
+## Origin timestamp
+
+The **Calendar** tab holds a single setting: the origin. Under the hood every event is just one integer. The origin timestamp is the offset added to that integer before it becomes a date, so it decides which calendar date your world's time-zero falls on — usually the beginning of your story.
+
+The field takes a raw number, and the box beneath it shows the date that number resolves to. Adjusting the origin shifts the whole calendar relative to your events: every existing date moves with it.
+
+<Aside type="tip">
+With the origin field focused, the arrow keys nudge the value — plain arrows by one, **Shift** by ten, **Ctrl/Cmd** by a thousand, **Alt** by a hundred thousand. The modifiers stack.
+</Aside>
+
+## Time units
+
+<Image src={calendarEditor02} alt="The Time Units tab with the Minute unit selected and its three sections collapsed." />
+
+The **Time Units** tab is where the calendar is actually defined. The left column lists every unit, smallest to largest; selecting one opens its editor on the right, organised into three collapsible sections — Display names, Formatting and Structure.
+
+A calendar is a tree of units. The smallest — here **Minute** — contains nothing and is marked **Base unit**; it's the finest granularity the calendar can express. The largest — here the **400-year cycle** — sits at the top of the tree and is marked **Root unit**. Everything else is built up in between: an Hour is sixty Minutes, a Day is twenty-four Hours, and so on up. The caption under each unit summarises what it holds (`60 minutes`, `24 hours`, `3 100-year cycle, 25 4-year cycle`).
+
+## Display names
+
+<Image src={calendarEditor03} alt="The Day unit with its Display names section expanded, showing the Display Name, Plural and Short fields." />
+
+Each unit carries three names, used when it shows up in a formatted date:
+
+- **Display Name** — the singular form (`day`).
+- **Display Name (Plural)** — used when there is more than one (`days`).
+- **Display Name (Short)** — an abbreviated form (`d`).
+
+These are display labels only; editing them never changes the structure.
+
+The note under the field — _units with the same display names are counted together_ — matters for calendars like the Gregorian. It defines four separate month units (28-, 29-, 30- and 31-day), but they all share the display name `month`. Because of that they form one continuous sequence when a date is broken down: the first month of the year, the second, and so on through to the twelfth, regardless of which underlying unit each one is. Give them distinct display names and they'd be counted separately instead.
+
+## Formatting
+
+<Image src={calendarEditor04} alt="The Day unit with its Formatting section expanded, showing the Shorthand field and Unit mode dropdown." />
+
+Formatting decides how a unit appears in a date string. It has two fields:
+
+- **Shorthand** — the single letter that represents this unit in the Time Format string. The Day uses `d`, so `DD` in the format renders the day. Case is ignored, _unless_ two units use the same letter in different cases — Minute is `m` and month is `M`, so a format containing both (like `hh:mm MM`) tells them apart by case.
+- **Unit mode** — how the value itself is rendered:
+  - **Name** — the name followed by the value, using the short name for a single letter (`d 5`) and the full name when the letter is repeated (`day 5`).
+  - **Name (One Indexed)** — the same, but counting starts at 1 instead of 0.
+  - **Numeric** — just the number, zero-padded to the number of letters (`DD` → `05`).
+  - **Numeric (One Indexed)** — the same number, starting at 1. The Day uses this, so the first day of a month is `01`, not `00`.
+  - **Hidden** — the unit never appears in a formatted date, whatever the format string says. Structural units like the year-cycles use this.
+
+A custom label set on a unit's parent (see [Custom labels](#custom-labels)) overrides the Name modes entirely. Negative values keep the same padding with a leading minus, and one-indexing only nudges values from zero upward.
+
+The collapsed section's summary previews the result — `Numeric (One Indexed): 739617, 739618, 739619` shows three consecutive days as they'd render.
+
+## Structure
+
+<Image src={calendarEditor05} alt="The Day unit with its Structure section expanded, showing a single child: Hour, repeated 24 times." />
+
+Structure is what turns a unit into a container. It lists the child units this one is built from, each with a repeat count. The Day holds one child — **Hour ×24**.
+
+To compose a unit, pick a child from the dropdown, set how many times it repeats, and add it. A unit can hold several different children in sequence, which is how a year is assembled out of months of differing lengths. The two extra fields on the add-child row, **Label** and **Short**, are custom labels — covered next.
+
+## Custom labels
+
+<Image src={calendarEditor06} alt="The Regular year unit, composed of twelve month units carrying custom labels January through December." />
+
+A **Regular year** shows why labels exist. It's built from twelve month units in order — a 31-day month, then a 28-day month, then a 31-day month, and so on — but on their own they'd all format as the indistinct "month". The custom **Label** (and its **Short** form) override the display name for that one slot in the parent: the first month is labelled `January` / `Jan`, the second `February` / `Feb`, and so on.
+
+Because the label lives on the relationship between parent and child rather than on the unit itself, the same 31-day month unit can be `January` in one slot and `March` in another. When a date is formatted, a custom label is used in place of the unit's display name wherever one is set.
+
+## Cycles
+
+<Image src={calendarEditor07} alt="The 4-year cycle unit, composed of three Regular years and one Leap year." />
+
+The top of the Gregorian tree is a stack of cycles, and they're where the structure earns its flexibility. A **4-year cycle** is just **Regular year ×3** plus **Leap year ×1**. The 100-year cycle is twenty-four 4-year cycles plus four lone regular years; the 400-year cycle is three 100-year cycles plus twenty-five 4-year cycles.
+
+There's no intercalation rule at work here — no "every fourth year, except centuries, except every four-hundredth". The calendar never computes a leap year; it stacks fixed-length units in a repeating pattern, and the pattern happens to reproduce the Gregorian rules exactly (three 365-day years and one 366-day year per four years, with the century corrections folded into the larger cycles — 97 leap years every 400). All three cycle units are set to **Hidden**, so they shape the structure without ever surfacing in a date.
+
+<Aside type="note">
+Modelling a complex real-world calendar this way is more work — you express the rules as nested repeating buckets instead of formulas. The payoff is that the system assumes nothing. There's no built-in notion of months, years or weeks, so a calendar that has none of them is exactly as valid as the Gregorian one.
+</Aside>
+
+# Creating a custom calendar from scratch
+
+> Shows an example of creating a custom calendar from scratch.
+> Uses an esoteric calendar - Witches' Calendar
+
+Clock layer (its own readout): Second → Minute (60s) → Hour (60m). Format hh:mm or hh:mm.
+Calendar layer: Hour → Circle (13 hours) → Tide (9 Circles) → Term (9 Tides)
+The nine Circles (the "weekday" — Dante's descent, so the nine-day Tide deepens as it runs):
+Limbo, Lust, Gluttony, Greed, Wrath, Heresy, Violence, Fraud, Treachery.
+The nine Tides (the "month" — phase × goddess, running Maiden → Mother → Crone across the Term, birth to death):
+Rising Maiden, Prime Maiden, Setting Maiden, Rising Mother, Prime Mother, Setting Mother, Rising Crone, Prime Crone, Setting Crone.
+Format string: hh:mm, (Circle) of the (Tide), (Term) → e.g. 00:00 Limbo of the Rising Maiden, 12043.
