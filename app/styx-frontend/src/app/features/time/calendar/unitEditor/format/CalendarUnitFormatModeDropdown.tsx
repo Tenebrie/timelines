@@ -4,6 +4,7 @@ import InputLabel from '@mui/material/InputLabel'
 import ListItemText from '@mui/material/ListItemText'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
+import { useId } from 'react'
 
 type Props = {
 	value: CalendarUnitDisplayType
@@ -44,15 +45,17 @@ export const CalendarUnitFormatDefinitions: Record<
 export function CalendarUnitFormatModeDropdown({ value, onChange }: Props) {
 	const formats = Object.values(CalendarUnitFormatDefinitions)
 
+	const id = useId()
 	if (!formats) {
 		return null
 	}
 
 	return (
 		<FormControl fullWidth>
-			<InputLabel>Unit mode</InputLabel>
+			<InputLabel id={id}>Unit mode</InputLabel>
 			<Select
 				label="Unit mode"
+				labelId={id}
 				size="small"
 				value={value}
 				onChange={(e) => {
