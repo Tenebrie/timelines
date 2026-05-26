@@ -161,6 +161,7 @@ export const WikiService = {
 	updateWikiArticle: async (
 		params: Partial<Pick<WikiArticle, 'name' | 'contentRich' | 'contentYjs'>> & {
 			id: string
+			color?: string
 			worldId: string
 			mentions?: MentionData[]
 			referencedAssetIds?: string[]
@@ -189,8 +190,6 @@ export const WikiService = {
 				prisma,
 			})
 
-			// createMentions/createReferences already reconciled the relation rows for this
-			// slice, so the update only needs to touch the article's own columns.
 			const updatedArticle = await prisma.wikiArticle.update({
 				where: {
 					id: params.id,
@@ -198,6 +197,7 @@ export const WikiService = {
 				},
 				data: {
 					name: params.name,
+					color: params.color,
 					contentRich: params.contentRich,
 					contentYjs: params.contentYjs,
 				},

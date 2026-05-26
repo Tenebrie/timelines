@@ -122,6 +122,7 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 		id: articleId,
 		worldId,
 		name,
+		color,
 	})
 
 	RedisService.notifyAboutWikiArticleUpdate(ctx, { worldId, article })

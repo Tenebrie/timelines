@@ -26,7 +26,16 @@ export function registerCreateEventTool(server: McpServer) {
 		TOOL_NAME,
 		{
 			title: 'Create Event',
-			description: 'Create a new event in the current world.',
+			description: [
+				'Create a new event in the current world.',
+
+				'To mention another entity in content, use the following syntax:',
+				'@[Entity Name]',
+				'It will be automatically resolved into an HTML tag.',
+
+				'Content is HTML. Use <p>, <ul>, <li>, <b> etc.',
+				'Mentions link entities together and show up in "Mentions" and "Mentioned in" fields.',
+			].join('\n'),
 			inputSchema,
 		},
 		async (args: z.infer<typeof inputSchema>, extra: ToolExtra) => {
