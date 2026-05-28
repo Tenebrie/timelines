@@ -16,6 +16,7 @@ import { Button } from '@/ui-lib/components/Button/Button'
 import { dispatchGlobalEvent } from '../eventBus'
 import { FontFamilySelect } from './components/FontFamilySelect'
 import { HeadingSelect } from './components/HeadingSelect'
+import { TableInsertButton } from './components/TableInsertButton'
 import { TextColorButton } from './components/TextColorButton'
 import { ActiveButtonIndicator } from './extensions/mentions/components/ActiveButtonIndicator'
 
@@ -190,6 +191,7 @@ export function RichTextEditorControlsComponent({ editor }: Props) {
 									<HorizontalRuleIcon fontSize="small" />
 								</StyledSmallButton>
 							</Tooltip>
+							{editor && <TableInsertButton editor={editor} />}
 							<ToolbarDivider />
 							<Button onClick={onMentionActorClick} color="secondary">
 								@Mention

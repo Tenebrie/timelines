@@ -3,6 +3,7 @@ import Color from '@tiptap/extension-color'
 import FontFamily from '@tiptap/extension-font-family'
 import { HardBreak } from '@tiptap/extension-hard-break'
 import ImageExtension from '@tiptap/extension-image'
+import { Table, TableCell, TableHeader, TableRow } from '@tiptap/extension-table'
 import { TextStyle } from '@tiptap/extension-text-style'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -39,6 +40,12 @@ export const BaseExtensions = {
 	TextStyle,
 	Color,
 	FontFamily,
+
+	// Tables
+	Table: Table.configure({ resizable: false }),
+	TableRow,
+	TableCell,
+	TableHeader,
 } as const
 
 export function createTiptapExtensionSchema<T>(

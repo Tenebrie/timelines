@@ -28,6 +28,7 @@ export default defineConfig({
 			'prosemirror-model',
 			'prosemirror-transform',
 			'prosemirror-keymap',
+			'prosemirror-tables',
 			'yjs',
 			'y-protocols',
 		],
@@ -45,6 +46,7 @@ export default defineConfig({
 					'prosemirror-transform$': require.resolve('prosemirror-transform'),
 					'prosemirror-keymap$': require.resolve('prosemirror-keymap'),
 					'prosemirror-gapcursor$': require.resolve('prosemirror-gapcursor'),
+					'prosemirror-tables$': require.resolve('prosemirror-tables'),
 				},
 			},
 			watchOptions: {

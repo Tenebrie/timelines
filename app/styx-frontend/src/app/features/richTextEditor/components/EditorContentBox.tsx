@@ -76,6 +76,41 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly }: Props)
 				'& span[data-luminance="light"]': !isDark
 					? { color: 'oklch(from var(--text-color) calc(1 - l) c h) !important' }
 					: {},
+
+				'& .tableWrapper': {
+					margin: '1rem 0',
+					overflowX: 'auto',
+				},
+				'& table': {
+					borderCollapse: 'collapse',
+					tableLayout: 'fixed',
+					width: '100%',
+					overflow: 'hidden',
+				},
+				'& td, & th': {
+					border: '1px solid',
+					borderColor: 'divider',
+					boxSizing: 'border-box',
+					minWidth: '2em',
+					padding: '6px 10px',
+					position: 'relative',
+					verticalAlign: 'top',
+					'& > *': { marginBottom: 0 },
+				},
+				'& th': {
+					backgroundColor: 'action.hover',
+					fontWeight: 600,
+					textAlign: 'left',
+				},
+				'& .selectedCell::after': {
+					backgroundColor: 'primary.main',
+					content: '""',
+					inset: 0,
+					opacity: 0.15,
+					pointerEvents: 'none',
+					position: 'absolute',
+					zIndex: 2,
+				},
 			}}
 		/>
 	)
