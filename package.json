@@ -64,7 +64,7 @@
 		"eslint-plugin-prettier": "^5.2.1",
 		"eslint-plugin-simple-import-sort": "^13.0.0",
 		"eslint-plugin-unused-imports": "^4.1.4",
-		"lint-staged": "^16.4.0",
+		"lint-staged": "^17.0.5",
 		"nodemon": "^3.1.9",
 		"prettier": "^3.4.2",
 		"subpackage": "^1.1.0",
@@ -82,7 +82,7 @@
 	},
 	"homepage": "https://github.com/tenebrie/timelines#readme",
 	"devDependencies": {
-		"@eslint-react/eslint-plugin": "^5.8.3",
+		"@eslint-react/eslint-plugin": "^5.8.5",
 		"astro-eslint-parser": "^1.2.2",
 		"eslint-plugin-mui-path-imports": "^0.0.15",
 		"eslint-plugin-no-relative-import-paths": "^1.6.1",

@@ -1,5 +1,6 @@
 import { Client } from '@modelcontextprotocol/sdk/client'
 import { ContextService } from '@src/services/ContextService.js'
+import { mockWorldActor, mockWorldDetails, mockWorldEvent } from '@src/test-utils/mockWorldDetails.js'
 import { setupMockClient } from '@src/test-utils/setupMockClient.js'
 import { setupTestServer } from '@src/test-utils/setupTestServer.js'
 import { beforeEach, describe, expect, it } from 'vitest'
@@ -9,13 +10,17 @@ import { registerGetActorDetailsTool } from './getActorDetails.tool.js'
 
 const server = setupTestServer()
 
-const worldDetailsResponse = {
-	id: 'world-456',
-	name: 'Test World',
-	isReadOnly: false,
-	events: [{ id: 'e1', name: 'Battle', descriptionRich: 'Some description', mentions: [], mentionedIn: [] }],
+const worldDetailsResponse = mockWorldDetails({
+	events: [
+		mockWorldEvent({
+			id: 'e1',
+			name: 'Battle',
+			timestamp: '100',
+			descriptionRich: 'Some description',
+		}),
+	],
 	actors: [
-		{
+		mockWorldActor({
 			id: 'a1',
 			name: 'Gandalf',
 			descriptionRich: 'Some description',
@@ -24,21 +29,17 @@ const worldDetailsResponse = {
 				{ id: 'p1', name: 'Knowledge' },
 				{ id: 'p2', name: 'Relationships' },
 			],
-			mentions: [{ targetId: 'e1' }],
-			mentionedIn: [],
-		},
-		{
+			mentions: [{ targetId: 'e1', targetType: 'Event' }],
+		}),
+		mockWorldActor({
 			id: 'a2',
 			name: 'Frodo',
 			descriptionRich: 'Some description',
 			title: 'Ring Bearer',
-			pages: [],
-			mentions: [],
-			mentionedIn: [{ sourceId: 'a1' }],
-		},
+			mentionedIn: [{ sourceId: 'a1', sourceType: 'Actor' }],
+		}),
 	],
-	tags: [],
-}
+})
 
 describe('get_actor_details tool', () => {
 	let client: Client
@@ -81,7 +82,6 @@ describe('get_actor_details tool', () => {
 		const texts = (result.content as Array<{ type: string; text: string }>).map((c) => c.text)
 		const allText = texts.join('\n')
 
-		console.log(result)
 		expect(result.isError).toBeUndefined()
 		expect(allText).toContain('Actor: Gandalf')
 		expect(allText).toContain('ID: a1')
@@ -186,25 +186,19 @@ describe('get_actor_details tool', () => {
 	})
 
 	it('includes color in actor details', async () => {
-		const coloredWorld = {
-			...worldDetailsResponse,
-			actors: [
-				{
-					id: 'a1',
-					name: 'Gandalf',
-					title: 'The Grey',
-					color: '#bf8a40',
-					pages: [],
-					mentions: [],
-					mentionedIn: [],
-				},
-			],
-		}
-
 		generateEndpointMock(server, {
 			method: 'get',
 			path: '/api/world/world-456',
-			response: coloredWorld,
+			response: mockWorldDetails({
+				actors: [
+					mockWorldActor({
+						id: 'a1',
+						name: 'Gandalf',
+						title: 'The Grey',
+						color: '#bf8a40',
+					}),
+				],
+			}),
 		})
 
 		generateEndpointMock(server, {
@@ -230,24 +224,18 @@ describe('get_actor_details tool', () => {
 	})
 
 	it('shows (None) when actor has no title', async () => {
-		const noTitleWorld = {
-			...worldDetailsResponse,
-			actors: [
-				{
-					id: 'a3',
-					name: 'Nameless',
-					title: '',
-					pages: [],
-					mentions: [],
-					mentionedIn: [],
-				},
-			],
-		}
-
 		generateEndpointMock(server, {
 			method: 'get',
 			path: '/api/world/world-456',
-			response: noTitleWorld,
+			response: mockWorldDetails({
+				actors: [
+					mockWorldActor({
+						id: 'a3',
+						name: 'Nameless',
+						title: '',
+					}),
+				],
+			}),
 		})
 
 		generateEndpointMock(server, {

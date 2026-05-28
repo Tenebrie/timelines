@@ -12,9 +12,10 @@ import { initRedisConnection } from './services/RedisService.js'
 import { RheaService } from './services/RheaService.js'
 import { TokenService } from './services/TokenService.js'
 import { WebsocketService } from './services/WebsocketService.js'
-import { YjsSyncService } from './services/YjsSyncService.js'
+import { recordLastWritingUser, YjsSyncService } from './services/YjsSyncService.js'
 import { ClientToCalliopeMessage } from './ts-shared/ClientToCalliopeMessage.js'
 import { AUTH_COOKIE_NAME } from './ts-shared/const/constants.js'
+import { Logger } from './utils/logger.js'
 
 const app = websocketify(new Koa())
 
@@ -59,15 +60,12 @@ app.ws.use(
 		const messageQueue: { data: Buffer | ArrayBuffer | Buffer[]; isBinary: boolean }[] = []
 		let isSetupComplete = false
 
-		const originalOnMessage = ctx.websocket.onmessage
 		ctx.websocket.onmessage = (event) => {
 			if (!isSetupComplete) {
 				messageQueue.push({
 					data: event.data as Buffer | ArrayBuffer | Buffer[],
 					isBinary: typeof event.data !== 'string',
 				})
-			} else if (originalOnMessage) {
-				originalOnMessage.call(ctx.websocket, event)
 			}
 		}
 
@@ -91,11 +89,48 @@ app.ws.use(
 
 			const docName = `${worldId}:${documentId}`
 			const { id: userId } = TokenService.decodeUserToken(authCookie)
-			await RheaService.checkUserAccess({ worldId, userId, level: 'write' })
+			const accessLevel = await (async () => {
+				const userData = await RheaService.getUserAccessLevel({ worldId, userId })
+				if (userData.write) {
+					return 'write'
+				} else if (userData.read) {
+					return 'read'
+				} else {
+					throw new Error('User does not have required access level')
+				}
+			})()
+
 			setupWSConnection(ctx.websocket, ctx.req, { docName, gc: true })
+
+			if (accessLevel === 'read') {
+				const yListeners = ctx.websocket.listeners('message')
+				ctx.websocket.removeAllListeners('message')
+
+				ctx.websocket.on('message', (data, isBinary) => {
+					const b = Buffer.isBuffer(data) ? data : Buffer.from(data as never)
+					if (b[0] === 0 && b[1] > 1) {
+						Logger.yjsWarn(
+							docName,
+							`Read-only user attempted to write to Yjs document (message ${b[0]}${b[1]}). Dropping.`,
+						)
+					}
+					if (b[0] === 0 && b[1] !== 0) {
+						return
+					}
+
+					for (const listener of yListeners) {
+						listener.call(ctx.websocket, data, isBinary)
+					}
+				})
+			} else {
+				ctx.websocket.on('message', () => {
+					recordLastWritingUser(docName, userId)
+				})
+			}
 
 			await YjsSyncService.setupDocumentListener({
 				userId,
+				accessLevel,
 				worldId,
 				entityId: documentId,
 				entityType: entityType as 'actor' | 'event' | 'article',

@@ -35,6 +35,7 @@ export function registerReadmeTool(server: McpServer) {
 					"- Keep data normalized. Store each fact in one place. Don't restate details inside other entities.",
 					"- Use tags for cross-cutting groupings you'll want to query later (e.g. everyone of a faction, every entity in an episode). Mention a tag in content to add an entity to it.",
 					"- Avoid name collisions. Keep each entity uniquely named. Fuzzy matching will throw when it can't resolve precisely.",
+					'- Create actors first, write their content later. Mentions will not resolve if the actor is not created yet.',
 					'',
 					'**Getting started:**',
 					'1. Use the `list_worlds` tool to see available worlds.',

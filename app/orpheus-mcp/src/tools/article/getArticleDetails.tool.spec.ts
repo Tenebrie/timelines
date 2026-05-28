@@ -80,7 +80,6 @@ describe('get_article_details tool', () => {
 		const texts = (result.content as Array<{ type: string; text: string }>).map((c) => c.text)
 		const allText = texts.join('\n')
 
-		console.log(result)
 		expect(result.isError).toBeUndefined()
 		expect(allText).toContain('Article: Magic System')
 		expect(allText).toContain('ID: art-1')

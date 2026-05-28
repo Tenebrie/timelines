@@ -1,5 +1,6 @@
 import { RheaService } from '@src/services/RheaService.js'
 
+import { formatTimestamp } from './formatTimestamp.js'
 import { toSummary } from './toSummary.js'
 
 export type ResolvedMention = {
@@ -25,8 +26,8 @@ export function resolveEntityName({
 	if (event)
 		return {
 			type: 'event',
-			name: event.name,
-			fullName: event.name,
+			name: `${event.name}`,
+			fullName: `${event.name} :: ${formatTimestamp(event.timestamp, worldData)}`,
 			summary: toSummary(event.descriptionRich),
 		}
 

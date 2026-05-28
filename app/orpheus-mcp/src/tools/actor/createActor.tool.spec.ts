@@ -22,7 +22,6 @@ describe('create_actor tool', () => {
 	})
 
 	it('creates an actor with name only', async () => {
-		// checkActorDoesNotExist calls getWorldDetails
 		generateEndpointMock(server, {
 			method: 'get',
 			path: '/api/world/world-456',

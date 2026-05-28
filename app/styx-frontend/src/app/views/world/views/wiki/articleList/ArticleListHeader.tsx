@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
-import { getWikiPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useListArticles } from '@/app/views/world/api/useListArticles'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
@@ -17,10 +16,6 @@ import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 
 export const ArticleListHeader = () => {
 	const { data: articles } = useListArticles()
-	const { readModeEnabled } = useSelector(
-		getWikiPreferences,
-		(a, b) => a.readModeEnabled === b.readModeEnabled,
-	)
 	const { isBulkSelecting, bulkActionArticles } = useSelector(getWikiState)
 	const { open: openArticleWizard } = useModal('articleWizard')
 	const { open: openDeleteArticleModal } = useModal('deleteArticleModal')
@@ -69,11 +64,7 @@ export const ArticleListHeader = () => {
 					Articles
 				</Typography>
 				{!isBulkSelecting && !isReadOnly && (
-					<Button
-						variant={readModeEnabled ? 'outlined' : 'contained'}
-						startIcon={<Add />}
-						onClick={() => openArticleWizard({})}
-					>
+					<Button variant={'contained'} startIcon={<Add />} onClick={() => openArticleWizard({})}>
 						Create article
 					</Button>
 				)}

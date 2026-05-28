@@ -18,6 +18,7 @@ import { Extensions } from '@tiptap/react'
 import { ExternalImageNode } from './externalImage/ExternalImageNode'
 import { MentionNode } from './mentions/components/MentionNode'
 import { mentionsSuggestions } from './mentions/MentionsExtension'
+import { TableKeyboardExtension } from './TableKeyboardExtension'
 import { ThemeAwareTextStyle } from './textStyle/ThemeAwareTextStyle'
 
 export const SharedExtensions = [
@@ -36,6 +37,7 @@ export const EditorExtensions: Extensions = [
 	Mention.configure({
 		suggestion: mentionsSuggestions,
 	}),
+	TableKeyboardExtension,
 ]
 
 export const ViewerExtensions = [...SharedExtensions]

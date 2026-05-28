@@ -2,7 +2,13 @@
 	"extends": "../tsconfig.json",
 	"compilerOptions": {
 		"rootDir": "./src",
-		"outDir": "./dist"
+		"outDir": "./dist",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"paths": {
+			"@api/*": ["./src/api/*"],
+			"@/*": ["./src/*"]
+		}
 	},
 	"include": ["src/**/*"]
 }
