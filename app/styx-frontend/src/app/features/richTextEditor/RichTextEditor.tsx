@@ -1,6 +1,6 @@
 import { Editor, useEditor } from '@tiptap/react'
 import throttle from 'lodash.throttle'
-import { memo, useEffect, useRef } from 'react'
+import { memo, useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
@@ -83,14 +83,16 @@ export function RichTextEditorComponent({
 	}, [collaboration?.documentId])
 
 	// Add collaboration extension if enabled
-	const extensions = collaborationExtension ? [...EditorExtensions, collaborationExtension] : EditorExtensions
+	const extensions = useMemo(() => {
+		return collaborationExtension ? [...EditorExtensions, collaborationExtension] : EditorExtensions
+	}, [collaborationExtension])
 
 	const { handlePaste } = useEditorPasteHandler()
 
 	const editor = useEditor(
 		{
 			// content: value,
-			editable: !isReadOnly,
+			// editable: !isReadOnly && (!collaboration || collabReady),
 			extensions,
 			autofocus: false,
 			editorProps: {
@@ -127,8 +129,9 @@ export function RichTextEditorComponent({
 	}, [value])
 
 	useEffect(() => {
-		editor?.setEditable(!isReadOnly)
-	}, [editor, isReadOnly])
+		const editable = !isReadOnly && (!collaboration || collabReady)
+		editor?.setEditable(editable)
+	}, [collabReady, collaboration, editor, isReadOnly])
 
 	useEventBusSubscribe['richEditor/requestFocus']({
 		callback: () => {

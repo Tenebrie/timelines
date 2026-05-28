@@ -1,21 +1,43 @@
 import { describe, expect, it } from 'vitest'
 
+import {
+	mockWorldActor,
+	mockWorldDetails,
+	mockWorldEvent,
+	mockWorldTag,
+} from '../test-utils/mockWorldDetails.js'
 import { resolveSavedMentions } from './resolveSavedMentions.js'
 
-type WorldData = Parameters<typeof resolveSavedMentions>[0]['worldData']
 type ArticleData = Parameters<typeof resolveSavedMentions>[0]['articleData']
 
-const mockWorldData = {
+const mockWorldData = mockWorldDetails({
 	actors: [
-		{ id: 'actor-1', name: 'Alice', title: 'Queen of the North', descriptionRich: 'She is brave and wise.' },
-		{ id: 'actor-2', name: 'Bob the Builder', title: '', descriptionRich: 'A skilled craftsman.' },
+		mockWorldActor({
+			id: 'actor-1',
+			name: 'Alice',
+			title: 'Queen of the North',
+			descriptionRich: 'She is brave and wise.',
+		}),
+		mockWorldActor({
+			id: 'actor-2',
+			name: 'Bob the Builder',
+			title: '',
+			descriptionRich: 'A skilled craftsman.',
+		}),
 	],
 	events: [
-		{ id: 'event-1', name: 'The Great Battle', descriptionRich: 'A terrible conflict erupted.' },
-		{ id: 'event-2', name: 'Peace Treaty Signing', descriptionRich: '' },
+		mockWorldEvent({
+			id: 'event-1',
+			name: 'The Great Battle',
+			timestamp: '100',
+			descriptionRich: 'A terrible conflict erupted.',
+		}),
+		mockWorldEvent({ id: 'event-2', name: 'Peace Treaty Signing', timestamp: '200', descriptionRich: '' }),
 	],
-	tags: [{ id: 'tag-1', name: 'Important', description: 'Critical events and turning points.' }],
-} as unknown as WorldData
+	tags: [
+		mockWorldTag({ id: 'tag-1', name: 'Important', description: 'Critical events and turning points.' }),
+	],
+})
 
 const mockArticleData = [
 	{ id: 'article-1', name: 'Lore Overview', contentRich: 'The full history of the world.' },
@@ -57,7 +79,9 @@ describe('resolveSavedMentions', () => {
 				worldData: mockWorldData,
 				articleData: mockArticleData,
 			})
-			expect(mentionsBlock.text).toBe('Mentions:\n- [event] The Great Battle: A terrible conflict erupted.')
+			expect(mentionsBlock.text).toBe(
+				'Mentions:\n- [event] The Great Battle :: 100: A terrible conflict erupted.',
+			)
 		})
 
 		it('includes the actor title in fullName', () => {
@@ -113,16 +137,17 @@ describe('resolveSavedMentions', () => {
 		})
 
 		it('summary only shows the first line of rich content', () => {
-			const worldData = {
+			const worldData = mockWorldDetails({
 				...mockWorldData,
 				events: [
-					{
+					mockWorldEvent({
 						id: 'event-1',
 						name: 'Multi-line Event',
+						timestamp: '100',
 						descriptionRich: '<p>First line.</p><p>Second line.</p>',
-					},
+					}),
 				],
-			} as unknown as WorldData
+			})
 			const entity = { mentions: [{ targetId: 'event-1' }], mentionedIn: [] }
 			const [mentionsBlock] = resolveSavedMentions({ entity, worldData, articleData: mockArticleData })
 			expect(mentionsBlock.text).toContain('First line.')
@@ -132,10 +157,17 @@ describe('resolveSavedMentions', () => {
 		it('summary converts mention spans to @[Name] shorthand', () => {
 			const aliceMentionSpan =
 				'<span data-component-props="{&quot;actor&quot;:&quot;actor-1&quot;}" data-type="mention" data-name="Alice"></span>'
-			const worldData = {
+			const worldData = mockWorldDetails({
 				...mockWorldData,
-				events: [{ id: 'event-1', name: 'The Great Battle', descriptionRich: `Led by ${aliceMentionSpan}.` }],
-			} as unknown as WorldData
+				events: [
+					mockWorldEvent({
+						id: 'event-1',
+						name: 'The Great Battle',
+						timestamp: '100',
+						descriptionRich: `Led by ${aliceMentionSpan}.`,
+					}),
+				],
+			})
 			const entity = { mentions: [{ targetId: 'event-1' }], mentionedIn: [] }
 			const [mentionsBlock] = resolveSavedMentions({ entity, worldData, articleData: mockArticleData })
 			expect(mentionsBlock.text).toContain('@[Alice]')
@@ -149,7 +181,7 @@ describe('resolveSavedMentions', () => {
 				worldData: mockWorldData,
 				articleData: mockArticleData,
 			})
-			expect(mentionsBlock.text).toBe('Mentions:\n- [event] Peace Treaty Signing: ')
+			expect(mentionsBlock.text).toBe('Mentions:\n- [event] Peace Treaty Signing :: 200: ')
 		})
 	})
 

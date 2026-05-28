@@ -23,6 +23,14 @@ export const RheaService = {
 		userId: string
 		level: PermissionLevel
 	}) => {
+		const userData = await RheaService.getUserAccessLevel({ worldId, userId })
+
+		if (!userData[level]) {
+			throw new Error('User does not have required access level')
+		}
+	},
+
+	getUserAccessLevel: async ({ worldId, userId }: { worldId: string; userId: string }) => {
 		const response = await rheaClient['GET']('/api/internal/auth/{userId}', {
 			params: {
 				path: { userId },
@@ -36,12 +44,10 @@ export const RheaService = {
 			throw new Error('Failed to check user access in RheaService')
 		}
 
-		if (!response.data[level]) {
-			throw new Error('User does not have required access level')
-		}
+		return response.data
 	},
 
-	fetchDocumentState: async ({ userId, worldId, entityId, entityType }: DocumentMetadata) => {
+	fetchDocumentState: async (userId: string, { worldId, entityId, entityType }: DocumentMetadata) => {
 		const response = await (() => {
 			if (entityType === 'actor') {
 				return rheaClient['GET']('/api/world/{worldId}/actor/{actorId}/content', {
@@ -86,13 +92,13 @@ export const RheaService = {
 	},
 
 	flushDocumentState: async ({
-		userId,
+		lastUserId,
 		worldId,
 		entityId,
 		entityType,
 		contentRich,
 	}: {
-		userId: string
+		lastUserId: string
 		worldId: string
 		entityId: string
 		entityType: 'actor' | 'event' | 'article'
@@ -111,7 +117,7 @@ export const RheaService = {
 					body: { content: contentRich },
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-						[IMPERSONATED_USER_HEADER]: userId,
+						[IMPERSONATED_USER_HEADER]: lastUserId,
 					},
 				})
 			} else if (entityType === 'event') {
@@ -120,7 +126,7 @@ export const RheaService = {
 					body: { content: contentRich },
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-						[IMPERSONATED_USER_HEADER]: userId,
+						[IMPERSONATED_USER_HEADER]: lastUserId,
 					},
 				})
 			} else if (entityType === 'article') {
@@ -129,7 +135,7 @@ export const RheaService = {
 					body: { content: contentRich },
 					headers: {
 						[SERVICE_AUTH_TOKEN_HEADER]: TokenService.produceServiceToken(),
-						[IMPERSONATED_USER_HEADER]: userId,
+						[IMPERSONATED_USER_HEADER]: lastUserId,
 					},
 				})
 			}

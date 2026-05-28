@@ -83,6 +83,11 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 				setIsReady(true)
 			}
 		})
+		provider.on('status', (data) => {
+			if (data.status === 'disconnected') {
+				setIsReady(false)
+			}
+		})
 
 		return scheduleCleanup()
 

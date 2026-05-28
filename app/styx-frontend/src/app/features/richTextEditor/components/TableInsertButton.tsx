@@ -1,14 +1,13 @@
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
-import BorderAllIcon from '@mui/icons-material/BorderAll'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
-import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import MenuList from '@mui/material/MenuList'
 import Typography from '@mui/material/Typography'
 import { Editor } from '@tiptap/react'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 
-import { Button } from '@/ui-lib/components/Button/Button'
+import { ActiveButtonIndicator } from '@/app/features/richTextEditor/extensions/mentions/components/ActiveButtonIndicator'
 import { PopoverButton } from '@/ui-lib/components/PopoverButton/PopoverButton'
 
 type Props = {
@@ -20,95 +19,75 @@ const GRID_COLS = 8
 
 export function TableInsertButton({ editor }: Props) {
 	const isInTable = editor.isActive('table')
-	return isInTable ? <TableOptionsButton editor={editor} /> : <TableGridButton editor={editor} />
-}
 
-function TableGridButton({ editor }: Props) {
 	return (
 		<PopoverButton
-			icon={<BorderAllIcon sx={{ fontSize: 18 }} />}
-			tooltip="Insert table"
+			icon={
+				<>
+					Table
+					<ArrowDropDownIcon sx={{ fontSize: 20, ml: 1, mr: '-4px' }} />
+					<ActiveButtonIndicator active={isInTable} />
+				</>
+			}
+			tooltip={isInTable ? 'Table options' : 'Insert table'}
 			color="secondary"
 			size="medium"
 			rippleVariant="button"
-			buttonSx={{ minWidth: '40px', minHeight: '44px' }}
-			popoverBody={({ close }) => <TableGridPicker editor={editor} onClose={close} />}
+			buttonSx={{ minHeight: 44, minWidth: 40, padding: '0 4px 0 8px', fontSize: '0.875rem' }}
+			popoverBody={({ close }) =>
+				isInTable ? (
+					<TableOptionsList editor={editor} onClose={close} />
+				) : (
+					<TableGridPicker editor={editor} onClose={close} />
+				)
+			}
 			popoverAction={() => null}
-			popoverSx={{ padding: 1.5 }}
+			popoverSx={isInTable ? { padding: 0 } : { padding: 1.5 }}
 			popoverAlign={{ vertical: 'bottom', horizontal: 'left' }}
 		/>
 	)
 }
 
-function TableOptionsButton({ editor }: Props) {
-	const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null)
-	const savedSelection = useRef({ from: 0, to: 0 })
-
-	const handleOpen = useCallback(
-		(e: React.MouseEvent<HTMLButtonElement>) => {
-			e.preventDefault()
-			e.stopPropagation()
-			savedSelection.current = { from: editor.state.selection.from, to: editor.state.selection.to }
-			setAnchorEl(e.currentTarget)
-		},
-		[editor],
-	)
-
-	const handleClose = useCallback(() => setAnchorEl(null), [])
-
+function TableOptionsList({ editor, onClose }: { editor: Editor; onClose: () => void }) {
 	const run = useCallback(
 		(cmd: () => boolean) => {
 			cmd()
-			handleClose()
+			onClose()
 		},
-		[handleClose],
+		[onClose],
 	)
 
 	return (
-		<>
-			<Button
-				color="secondary"
-				endIcon={<ArrowDropDownIcon />}
-				onClick={handleOpen}
-				onMouseDown={(e) => e.stopPropagation()}
-				sx={{ minHeight: 44, minWidth: 40, padding: '0 4px 0 8px', fontSize: '0.875rem' }}
+		<MenuList sx={{ minWidth: 180 }}>
+			<MenuItem onClick={() => run(() => editor.chain().focus().toggleHeaderCell().run())}>
+				Toggle header cell
+			</MenuItem>
+			<Divider />
+			<MenuItem onClick={() => run(() => editor.chain().focus().addRowBefore().run())}>
+				Insert row above
+			</MenuItem>
+			<MenuItem onClick={() => run(() => editor.chain().focus().addRowAfter().run())}>
+				Insert row below
+			</MenuItem>
+			<MenuItem onClick={() => run(() => editor.chain().focus().deleteRow().run())}>Delete row</MenuItem>
+			<Divider />
+			<MenuItem onClick={() => run(() => editor.chain().focus().addColumnBefore().run())}>
+				Insert column before
+			</MenuItem>
+			<MenuItem onClick={() => run(() => editor.chain().focus().addColumnAfter().run())}>
+				Insert column after
+			</MenuItem>
+			<MenuItem onClick={() => run(() => editor.chain().focus().deleteColumn().run())}>
+				Delete column
+			</MenuItem>
+			<Divider />
+			<MenuItem
+				onClick={() => run(() => editor.chain().focus().deleteTable().run())}
+				sx={{ color: 'error.main' }}
 			>
-				Table
-			</Button>
-			<Menu
-				anchorEl={anchorEl}
-				open={Boolean(anchorEl)}
-				onClose={handleClose}
-				onMouseDown={(e) => e.stopPropagation()}
-				onClick={(e) => e.stopPropagation()}
-				slotProps={{ paper: { sx: { minWidth: 180 } } }}
-			>
-				<MenuItem onClick={() => run(() => editor.chain().focus().addRowBefore().run())}>
-					Insert row above
-				</MenuItem>
-				<MenuItem onClick={() => run(() => editor.chain().focus().addRowAfter().run())}>
-					Insert row below
-				</MenuItem>
-				<MenuItem onClick={() => run(() => editor.chain().focus().deleteRow().run())}>Delete row</MenuItem>
-				<Divider />
-				<MenuItem onClick={() => run(() => editor.chain().focus().addColumnBefore().run())}>
-					Insert column before
-				</MenuItem>
-				<MenuItem onClick={() => run(() => editor.chain().focus().addColumnAfter().run())}>
-					Insert column after
-				</MenuItem>
-				<MenuItem onClick={() => run(() => editor.chain().focus().deleteColumn().run())}>
-					Delete column
-				</MenuItem>
-				<Divider />
-				<MenuItem
-					onClick={() => run(() => editor.chain().focus().deleteTable().run())}
-					sx={{ color: 'error.main' }}
-				>
-					Delete table
-				</MenuItem>
-			</Menu>
-		</>
+				Delete table
+			</MenuItem>
+		</MenuList>
 	)
 }
 
@@ -125,7 +104,7 @@ function TableGridPicker({ editor, onClose }: { editor: Editor; onClose: () => v
 			<Box
 				sx={{
 					display: 'grid',
-					gridTemplateColumns: `repeat(${GRID_COLS}, 18px)`,
+					gridTemplateColumns: `repeat(${GRID_COLS}, 20px)`,
 					gap: '2px',
 					cursor: 'pointer',
 				}}

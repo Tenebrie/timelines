@@ -51,9 +51,9 @@ if (order.length !== packages.length) {
 	process.exit(1)
 }
 
-console.log(`[ci-build] build order: ${order.join(' → ')}`)
+console.info(`[ci-build] build order: ${order.join(' → ')}`)
 for (const name of order) {
 	const pkg = byName.get(name)
-	console.log(`\n[ci-build] building ${name}`)
+	console.info(`\n[ci-build] building ${name}`)
 	execSync('npm run build', { cwd: pkg.dir, stdio: 'inherit' })
 }
