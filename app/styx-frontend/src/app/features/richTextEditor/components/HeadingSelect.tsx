@@ -17,7 +17,7 @@ type HeadingOption = {
 }
 
 const HeadingOptions: HeadingOption[] = [
-	{ label: 'Normal', level: null, fontSize: '0.875rem' },
+	{ label: 'Normal text', level: null, fontSize: '0.875rem' },
 	{ label: 'Heading 1', level: 1, fontSize: '1.4rem' },
 	{ label: 'Heading 2', level: 2, fontSize: '1.15rem' },
 	{ label: 'Heading 3', level: 3, fontSize: '1rem' },
@@ -67,9 +67,10 @@ export function HeadingSelect({ editor }: Props) {
 				onMouseDown={(e) => e.stopPropagation()}
 				sx={{
 					minHeight: 44,
-					minWidth: 40,
+					width: 116,
 					padding: '0 4px 0 8px',
 					fontSize: '0.875rem',
+					justifyContent: 'space-between',
 				}}
 			>
 				{activeOption.label}
