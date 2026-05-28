@@ -1,20 +1,21 @@
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered'
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote'
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule'
+import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
-import Typography from '@mui/material/Typography'
-import { useSearch } from '@tanstack/react-router'
 import { Editor } from '@tiptap/react'
 import { memo, useCallback, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { Button } from '@/ui-lib/components/Button/Button'
 
-import { ReadModeToggle } from '../../views/world/views/wiki/components/ReadModeToggle'
 import { dispatchGlobalEvent } from '../eventBus'
-import { getWikiPreferences } from '../preferences/PreferencesSliceSelectors'
 import { FontFamilySelect } from './components/FontFamilySelect'
+import { HeadingSelect } from './components/HeadingSelect'
 import { TextColorButton } from './components/TextColorButton'
 import { ActiveButtonIndicator } from './extensions/mentions/components/ActiveButtonIndicator'
 
@@ -25,12 +26,7 @@ type Props = {
 
 export const RichTextEditorControls = memo(RichTextEditorControlsComponent)
 
-export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props) {
-	const { navi } = useSearch({ from: '/world/$worldId/_world' })
-	const { readModeEnabled } = useSelector(
-		getWikiPreferences,
-		(a, b) => a.readModeEnabled === b.readModeEnabled,
-	)
+export function RichTextEditorControlsComponent({ editor }: Props) {
 	const { isReadOnly } = useIsReadOnly()
 
 	const [, setUpdateCounter] = useState(0)
@@ -44,7 +40,6 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 			return
 		}
 
-		// Subscribe to editor events that should trigger re-renders
 		editor.on('update', forceUpdate)
 		editor.on('selectionUpdate', forceUpdate)
 		editor.on('transaction', forceUpdate)
@@ -55,12 +50,13 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 		}
 	}, [editor])
 
-	const isReadMode = isReadOnly || (readModeEnabled && allowReadMode && navi.length === 0)
-
 	const isBold = editor?.isActive('bold') ?? false
 	const isItalic = editor?.isActive('italic') ?? false
 	const isUnderline = editor?.isActive('underline') ?? false
 	const isStrikethrough = editor?.isActive('strike') ?? false
+	const isBulletList = editor?.isActive('bulletList') ?? false
+	const isOrderedList = editor?.isActive('orderedList') ?? false
+	const isBlockquote = editor?.isActive('blockquote') ?? false
 
 	const onBoldClick = useCallback(() => {
 		editor?.chain().focus().toggleBold().run()
@@ -79,6 +75,26 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 
 	const onStrikeClick = useCallback(() => {
 		editor?.chain().focus().toggleStrike().run()
+		forceUpdate()
+	}, [editor])
+
+	const onBulletListClick = useCallback(() => {
+		editor?.chain().focus().toggleBulletList().run()
+		forceUpdate()
+	}, [editor])
+
+	const onOrderedListClick = useCallback(() => {
+		editor?.chain().focus().toggleOrderedList().run()
+		forceUpdate()
+	}, [editor])
+
+	const onBlockquoteClick = useCallback(() => {
+		editor?.chain().focus().toggleBlockquote().run()
+		forceUpdate()
+	}, [editor])
+
+	const onHorizontalRuleClick = useCallback(() => {
+		editor?.chain().focus().setHorizontalRule().run()
 		forceUpdate()
 	}, [editor])
 
@@ -117,7 +133,7 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 		>
 			<Stack direction="row" justifyContent="space-between">
 				<Stack direction="row" flexWrap={'wrap'}>
-					{!isReadMode && (
+					{!isReadOnly && (
 						<>
 							<Tooltip title="Bold" disableInteractive enterDelay={500}>
 								<StyledSmallButton onClick={onBoldClick} color="secondary">
@@ -149,27 +165,37 @@ export function RichTextEditorControlsComponent({ editor, allowReadMode }: Props
 							</Tooltip>
 							{editor && <TextColorButton editor={editor} />}
 							{editor && <FontFamilySelect editor={editor} />}
+							<ToolbarDivider />
+							{editor && <HeadingSelect editor={editor} />}
+							<Tooltip title="Bullet list" disableInteractive enterDelay={500}>
+								<StyledSmallButton onClick={onBulletListClick} color="secondary">
+									<FormatListBulletedIcon fontSize="small" />
+									<ActiveButtonIndicator active={isBulletList} />
+								</StyledSmallButton>
+							</Tooltip>
+							<Tooltip title="Numbered list" disableInteractive enterDelay={500}>
+								<StyledSmallButton onClick={onOrderedListClick} color="secondary">
+									<FormatListNumberedIcon fontSize="small" />
+									<ActiveButtonIndicator active={isOrderedList} />
+								</StyledSmallButton>
+							</Tooltip>
+							<Tooltip title="Blockquote" disableInteractive enterDelay={500}>
+								<StyledSmallButton onClick={onBlockquoteClick} color="secondary">
+									<FormatQuoteIcon fontSize="small" />
+									<ActiveButtonIndicator active={isBlockquote} />
+								</StyledSmallButton>
+							</Tooltip>
+							<Tooltip title="Horizontal rule" disableInteractive enterDelay={500}>
+								<StyledSmallButton onClick={onHorizontalRuleClick} color="secondary">
+									<HorizontalRuleIcon fontSize="small" />
+								</StyledSmallButton>
+							</Tooltip>
+							<ToolbarDivider />
 							<Button onClick={onMentionActorClick} color="secondary">
 								@Mention
 							</Button>
 						</>
 					)}
-					{isReadMode && (
-						<Stack sx={{ height: '44px', alignItems: 'center', paddingLeft: '16px' }} direction="row">
-							<Typography variant="body2" color="gray" sx={{ fontStyle: 'italic' }}>
-								Read mode
-							</Typography>
-						</Stack>
-					)}
-				</Stack>
-				<Stack
-					sx={{
-						alignSelf: 'stretch',
-						alignItems: 'center',
-						justifyContent: 'center',
-					}}
-				>
-					{allowReadMode && !isReadOnly && <ReadModeToggle />}
 				</Stack>
 			</Stack>
 		</Paper>
@@ -182,3 +208,7 @@ const StyledSmallButton = styled(Button)`
 	padding: 0;
 	font-family: 'Roboto Mono' !important;
 `
+
+function ToolbarDivider() {
+	return <Divider orientation="vertical" flexItem sx={{ mx: '4px', my: '8px' }} />
+}

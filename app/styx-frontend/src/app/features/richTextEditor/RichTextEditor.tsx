@@ -7,7 +7,6 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 
 import { getWorldState } from '../../views/world/WorldSliceSelectors'
 import { useEventBusSubscribe } from '../eventBus'
-import { getWikiPreferences } from '../preferences/PreferencesSliceSelectors'
 import { EditorContentBox } from './components/EditorContentBox'
 import { useCollaboration } from './extensions/collaboration/useCollaboration'
 import { EditorExtensions } from './extensions/editorExtensions'
@@ -47,7 +46,6 @@ export function RichTextEditorComponent({
 	softKey,
 	onChange,
 	onBlur,
-	allowReadMode,
 	fadeInOverlayColor,
 	collaboration,
 	autoFocus,
@@ -55,10 +53,6 @@ export function RichTextEditorComponent({
 }: Props) {
 	const theme = useCustomTheme()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
-	const { readModeEnabled } = useSelector(
-		getWikiPreferences,
-		(a, b) => a.readModeEnabled === b.readModeEnabled,
-	)
 
 	// Enable collaboration if params provided
 	const { extension: collaborationExtension, isReady: collabReady } = useCollaboration({
@@ -88,8 +82,6 @@ export function RichTextEditorComponent({
 		onChangeThrottled.current.cancel()
 	}, [collaboration?.documentId])
 
-	const isReadMode = (isReadOnly || (readModeEnabled && allowReadMode)) ?? false
-
 	// Add collaboration extension if enabled
 	const extensions = collaborationExtension ? [...EditorExtensions, collaborationExtension] : EditorExtensions
 
@@ -98,7 +90,7 @@ export function RichTextEditorComponent({
 	const editor = useEditor(
 		{
 			// content: value,
-			editable: !isReadMode,
+			editable: !isReadOnly,
 			extensions,
 			autofocus: false,
 			editorProps: {
@@ -135,8 +127,8 @@ export function RichTextEditorComponent({
 	}, [value])
 
 	useEffect(() => {
-		editor?.setEditable(!isReadMode)
-	}, [editor, isReadMode])
+		editor?.setEditable(!isReadOnly)
+	}, [editor, isReadOnly])
 
 	useEventBusSubscribe['richEditor/requestFocus']({
 		callback: () => {
@@ -155,7 +147,7 @@ export function RichTextEditorComponent({
 			sx={{
 				borderRadius: '6px',
 				minHeight: '128px',
-				background: isReadMode ? '' : theme.custom.palette.background.textEditor,
+				background: isReadOnly ? '' : theme.custom.palette.background.textEditor,
 				position: 'relative',
 			}}
 			data-testid="RichTextEditor"
@@ -165,13 +157,13 @@ export function RichTextEditorComponent({
 				onChangeThrottled.current.cancel()
 			}}
 		>
-			<RichTextEditorControls editor={editor} allowReadMode={allowReadMode} />
-			{editor && <EditorContentBox className="content" editor={editor} mode={isReadMode ? 'read' : 'edit'} />}
+			<RichTextEditorControls editor={editor} />
+			{editor && <EditorContentBox className="content" editor={editor} mode={isReadOnly ? 'read' : 'edit'} />}
 			<MentionsList editor={editor} />
 			<FadeInOverlay
 				key={softKey}
 				content={value}
-				isReadMode={isReadMode}
+				isReadMode={isReadOnly}
 				color={fadeInOverlayColor}
 				isLoading={isLoading || !collabReady || false}
 			/>

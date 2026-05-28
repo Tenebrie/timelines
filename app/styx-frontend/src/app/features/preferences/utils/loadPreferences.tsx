@@ -64,7 +64,6 @@ export const PreferencesStateSchema = z.object({
 		.default({}),
 	wiki: z
 		.object({
-			readModeEnabled: z.boolean().default(false),
 			expandedFolders: z.array(z.string()).default([]),
 		})
 		.default({}),

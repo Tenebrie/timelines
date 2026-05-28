@@ -170,10 +170,6 @@ export const preferencesSlice = createSlice({
 		},
 
 		/* Wiki */
-		setReadMode: (state, { payload }: PayloadAction<boolean>) => {
-			state.wiki.readModeEnabled = payload
-			saveToLocalStorage(state)
-		},
 		collapseWikiFolder: (state, { payload }: PayloadAction<WikiArticle>) => {
 			state.wiki.expandedFolders = state.wiki.expandedFolders.filter((id) => id !== payload.id)
 			saveToLocalStorage(state)
