@@ -189,8 +189,6 @@ export const WikiService = {
 				prisma,
 			})
 
-			// createMentions/createReferences already reconciled the relation rows for this
-			// slice, so the update only needs to touch the article's own columns.
 			const updatedArticle = await prisma.wikiArticle.update({
 				where: {
 					id: params.id,

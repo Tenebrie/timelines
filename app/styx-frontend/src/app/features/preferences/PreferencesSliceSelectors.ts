@@ -15,6 +15,3 @@ export const getOutlinerPreferences = (state: RootState) => state.preferences.ou
 export const getOverviewPreferences = (state: RootState) => state.preferences.overview
 export const getTimelinePreferences = (state: RootState) => state.preferences.timeline
 export const getWikiPreferences = (state: RootState) => state.preferences.wiki
-export const getReadModeEnabled = createSelector([getWikiPreferences], (state) => ({
-	readModeEnabled: state.readModeEnabled,
-}))

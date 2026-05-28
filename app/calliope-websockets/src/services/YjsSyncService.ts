@@ -21,7 +21,7 @@ const RHEA_DEBOUNCE_DELAY = 2000
 
 // Store metadata per document
 export type DocumentMetadata = {
-	userId: string
+	lastWritingUserId: string | null
 	worldId: string
 	entityId: string
 	entityType: 'actor' | 'event' | 'article'
@@ -36,11 +36,16 @@ async function flushDocumentToRhea(
 	doc: Y.Doc,
 	metadata: DocumentMetadata,
 ): Promise<boolean> {
+	if (metadata.lastWritingUserId === null) {
+		Logger.yjsWarn(docName, `Attempted to flush to Rhea, but no user write is recorded`)
+		return false
+	}
+
 	try {
 		const html = yDocToHtml(doc)
 
 		await RheaService.flushDocumentState({
-			userId: metadata.userId,
+			lastUserId: metadata.lastWritingUserId,
 			worldId: metadata.worldId,
 			entityId: metadata.entityId,
 			entityType: metadata.entityType,
@@ -53,6 +58,11 @@ async function flushDocumentToRhea(
 		Logger.yjsError(docName, `Failed to flush to Rhea:`, error)
 		return false
 	}
+}
+
+export function recordLastWritingUser(docName: string, userId: string) {
+	Logger.yjsInfo(docName, `Recording last writing user: ${userId}`)
+	documentMetadata.get(docName)!.lastWritingUserId = userId
 }
 
 /**
@@ -84,12 +94,14 @@ export const YjsSyncService = {
 	 */
 	async setupDocumentListener({
 		userId,
+		accessLevel,
 		worldId,
 		entityId,
 		entityType,
 		docName,
 	}: {
 		userId: string
+		accessLevel: 'write' | 'read'
 		worldId: string
 		entityId: string
 		entityType: 'actor' | 'event' | 'article'
@@ -106,7 +118,12 @@ export const YjsSyncService = {
 		}
 		attachedDocs.add(doc)
 
-		const metadata = { userId, worldId, entityId, entityType }
+		const metadata = {
+			lastWritingUserId: accessLevel === 'write' ? userId : null,
+			worldId,
+			entityId,
+			entityType,
+		}
 		documentMetadata.set(docName, metadata)
 
 		// Load existing state: first try Redis, then fall back to database
@@ -139,7 +156,7 @@ export const YjsSyncService = {
 				// We got the lock - fetch from DB
 				Logger.yjsInfo(docName, `Acquired lock, fetching from database...`)
 				try {
-					await YjsSyncService.initializeFromRheaState({ doc, docName, metadata })
+					await YjsSyncService.initializeFromRheaState({ userId, doc, docName, metadata })
 				} catch (err) {
 					Logger.yjsError(docName, `Failed to fetch from database:`, err)
 				} finally {
@@ -233,15 +250,17 @@ export const YjsSyncService = {
 	},
 
 	async initializeFromRheaState({
+		userId,
 		doc,
 		docName,
 		metadata,
 	}: {
+		userId: string
 		doc: Y.Doc
 		docName: string
 		metadata: DocumentMetadata
 	}) {
-		const { contentHtml } = await RheaService.fetchDocumentState(metadata)
+		const { contentHtml } = await RheaService.fetchDocumentState(userId, metadata)
 
 		if (!contentHtml) {
 			Logger.yjsInfo(docName, `No content in database`)

@@ -51,7 +51,6 @@ export const BaseMentionChip = memo(function BaseMentionChip({ type, label, colo
 						paddingLeft: 0.75,
 						paddingRight: 0.75,
 					},
-					// color: textColor,
 				}}
 				onClick={() => onClick()}
 				style={{
