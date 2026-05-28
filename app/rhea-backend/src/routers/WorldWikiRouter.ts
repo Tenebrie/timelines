@@ -112,7 +112,7 @@ router.patch('/api/world/:worldId/wiki/article/:articleId', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 
-	const { name } = useRequestBody(ctx, {
+	const { name, color } = useRequestBody(ctx, {
 		name: OptionalParam(StringValidator),
 		icon: OptionalParam(StringValidator),
 		color: OptionalParam(StringValidator),
