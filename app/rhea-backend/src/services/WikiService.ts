@@ -161,6 +161,7 @@ export const WikiService = {
 	updateWikiArticle: async (
 		params: Partial<Pick<WikiArticle, 'name' | 'contentRich' | 'contentYjs'>> & {
 			id: string
+			color?: string
 			worldId: string
 			mentions?: MentionData[]
 			referencedAssetIds?: string[]
@@ -196,6 +197,7 @@ export const WikiService = {
 				},
 				data: {
 					name: params.name,
+					color: params.color,
 					contentRich: params.contentRich,
 					contentYjs: params.contentYjs,
 				},

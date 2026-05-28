@@ -123,7 +123,7 @@ export function registerSearchWorldTool(server: McpServer) {
 				}
 
 				const content = [
-					`Search results for "${args.query}":`,
+					`Search results for "${args.query ?? '*'}":`,
 					'',
 					'**Events:**',
 					formatResults(data.events, 'events'),
