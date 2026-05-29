@@ -1,4 +1,3 @@
-import { WorldEventTrack } from '@api/types/worldEventTracksTypes'
 import { ActorDetails, WorldEvent, WorldEventDelta, WorldTag } from '@api/types/worldTypes'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
@@ -26,12 +25,8 @@ const modals = {
 	},
 
 	/* Event Tracks */
-	eventTrackWizard: {
+	eventTracks: {
 		isOpen: false as boolean,
-	},
-	eventTrackEdit: {
-		isOpen: false as boolean,
-		target: null as WorldEventTrack | null,
 	},
 
 	/* World */

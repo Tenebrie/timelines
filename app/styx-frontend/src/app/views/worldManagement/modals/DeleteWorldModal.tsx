@@ -8,8 +8,7 @@ import { useState } from 'react'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import Modal, { ModalFooter, useModalCleanup } from '@/ui-lib/components/Modal'
-import { ModalHeader } from '@/ui-lib/components/Modal/styles'
+import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const DeleteWorldModal = () => {
 	const { isOpen, worldId, worldName, close } = useModal('deleteWorldModal')

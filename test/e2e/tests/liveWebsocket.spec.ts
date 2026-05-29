@@ -9,21 +9,25 @@ test.describe('Live Websocket', () => {
 	})
 
 	test('connects to live updates', async ({ page }) => {
-		await navigateToDashboard(page)
-
-		await page.waitForEvent('websocket', (socket) => {
+		const promise = page.waitForEvent('websocket', (socket) => {
 			const url = new URL(socket.url())
 			return url.pathname.startsWith('/live')
 		})
+
+		await navigateToDashboard(page)
+
+		await expect(promise).resolves.toBeTruthy()
 	})
 
 	test('disconnects from live updates after logout and connects when logs back', async ({ page }) => {
-		await navigateToDashboard(page)
-
-		await page.waitForEvent('websocket', (socket) => {
+		const promise = page.waitForEvent('websocket', (socket) => {
 			const url = new URL(socket.url())
 			return url.pathname.startsWith('/live')
 		})
+
+		await navigateToDashboard(page)
+
+		await promise
 
 		let socketReconnected = false
 		page.on('websocket', (socket) => {

@@ -39,6 +39,7 @@ const injectedRtkApi = api
 export { injectedRtkApi as worldTagApi }
 export type CreateTagApiResponse = /** status 200  */ {
 	mentions: {
+		id: string
 		pageId?: null | string
 		sourceId: string
 		targetId: string
@@ -54,6 +55,7 @@ export type CreateTagApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	mentionedIn: {
+		id: string
 		pageId?: null | string
 		sourceId: string
 		targetId: string
@@ -130,6 +132,7 @@ export type GetTagDetailsApiResponse = /** status 200  */ {
 		name: string
 	}[]
 	mentions: {
+		id: string
 		pageId?: null | string
 		sourceId: string
 		targetId: string

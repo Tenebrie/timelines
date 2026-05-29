@@ -41,16 +41,24 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['worldEventTracks'],
 			}),
+			moveWorldEventTrack: build.mutation<MoveWorldEventTrackApiResponse, MoveWorldEventTrackApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/event-track/move`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['worldEventTracks'],
+			}),
 		}),
 		overrideExisting: false,
 	})
 export { injectedRtkApi as worldEventTracksApi }
 export type GetWorldEventTracksApiResponse = /** status 200  */ {
 	worldId: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
 	position: number
 	visible: boolean
 }[]
@@ -100,6 +108,15 @@ export type SwapWorldEventTracksApiArg = {
 		trackB: string
 	}
 }
+export type MoveWorldEventTrackApiResponse = unknown
+export type MoveWorldEventTrackApiArg = {
+	/** Any string value */
+	worldId: string
+	body: {
+		trackId: string
+		position: number
+	}
+}
 export const {
 	useGetWorldEventTracksQuery,
 	useLazyGetWorldEventTracksQuery,
@@ -107,4 +124,5 @@ export const {
 	useUpdateWorldEventTrackMutation,
 	useDeleteWorldEventTrackMutation,
 	useSwapWorldEventTracksMutation,
+	useMoveWorldEventTrackMutation,
 } = injectedRtkApi
