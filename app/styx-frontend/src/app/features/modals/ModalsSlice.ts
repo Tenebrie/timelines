@@ -29,6 +29,9 @@ const modals = {
 	eventTrackWizard: {
 		isOpen: false as boolean,
 	},
+	eventTracks: {
+		isOpen: false as boolean,
+	},
 	eventTrackEdit: {
 		isOpen: false as boolean,
 		target: null as WorldEventTrack | null,

@@ -17,7 +17,7 @@ import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/compo
 
 import { useModal } from '../ModalsSlice'
 
-export const EventTrackWizardModal = () => {
+export function EventTrackWizardModal() {
 	const { isOpen, close } = useModal('eventTrackWizard')
 
 	const [name, setName] = useState('')

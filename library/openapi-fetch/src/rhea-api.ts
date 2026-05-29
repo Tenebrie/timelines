@@ -1413,75 +1413,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/event-tracks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Lists all world event tracks. */
-        get: operations["getWorldEventTracks"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event-track": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Creates a new world event track. */
-        post: operations["createWorldEventTrack"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event-track/{trackId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** @description Deletes the given world event track. */
-        delete: operations["deleteWorldEventTrack"];
-        options?: never;
-        head?: never;
-        /** @description Updates the given world event track. */
-        patch: operations["updateWorldEventTrack"];
-        trace?: never;
-    };
-    "/api/world/{worldId}/event-track/swap": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Swaps the position of two given tracks. */
-        post: operations["swapWorldEventTracks"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/worlds": {
         parameters: {
             query?: never;
@@ -1613,6 +1544,23 @@ export interface paths {
         };
         /** @description Lists all calendars accessible for the current user in a given world. */
         get: operations["listWorldCalendars"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/search/{query}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Searches all eligible world entities. */
+        get: operations["searchWorld"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1878,17 +1826,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/search/{query}": {
+    "/api/world/{worldId}/event-tracks": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Searches all eligible world entities. */
-        get: operations["searchWorld"];
+        /** @description Lists all world event tracks. */
+        get: operations["getWorldEventTracks"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-track": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates a new world event track. */
+        post: operations["createWorldEventTrack"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-track/{trackId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Deletes the given world event track. */
+        delete: operations["deleteWorldEventTrack"];
+        options?: never;
+        head?: never;
+        /** @description Updates the given world event track. */
+        patch: operations["updateWorldEventTrack"];
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-track/swap": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Swaps the position of two given tracks. */
+        post: operations["swapWorldEventTracks"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-track/move": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Moves the track to a new position. */
+        post: operations["moveWorldEventTrack"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2149,6 +2166,7 @@ export interface operations {
                             name: string;
                         }[];
                         mentions: {
+                            id: string;
                             pageId?: null | string;
                             sourceId: string;
                             targetId: string;
@@ -2164,6 +2182,7 @@ export interface operations {
                             targetTagId?: null | string;
                         }[];
                         mentionedIn: {
+                            id: string;
                             pageId?: null | string;
                             sourceId: string;
                             targetId: string;
@@ -2273,6 +2292,7 @@ export interface operations {
                             name: string;
                         }[];
                         mentions: {
+                            id: string;
                             pageId?: null | string;
                             sourceId: string;
                             targetId: string;
@@ -2288,6 +2308,7 @@ export interface operations {
                             targetTagId?: null | string;
                         }[];
                         mentionedIn: {
+                            id: string;
                             pageId?: null | string;
                             sourceId: string;
                             targetId: string;
@@ -4460,6 +4481,52 @@ export interface operations {
                                 dateFormat?: null | string;
                             }[];
                             worlds: {
+                                events: {
+                                    pages?: {
+                                        description: string;
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        name: string;
+                                        descriptionRich: string;
+                                        parentActorId?: null | string;
+                                        parentEventId?: null | string;
+                                        parentArticleId?: null | string;
+                                    }[];
+                                    mentions: {
+                                        id: string;
+                                        pageId?: null | string;
+                                        sourceId: string;
+                                        targetId: string;
+                                        sourceType: "Actor" | "Event" | "Article" | "Tag";
+                                        targetType: "Actor" | "Event" | "Article" | "Tag";
+                                        sourceActorId?: null | string;
+                                        sourceEventId?: null | string;
+                                        sourceArticleId?: null | string;
+                                        sourceTagId?: null | string;
+                                        targetActorId?: null | string;
+                                        targetEventId?: null | string;
+                                        targetArticleId?: null | string;
+                                        targetTagId?: null | string;
+                                    }[];
+                                    description: string;
+                                    worldId: string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    icon: string;
+                                    color: string;
+                                    descriptionRich: string;
+                                    /** Format: bigint */
+                                    timestamp: string;
+                                    revokedAt?: null | string;
+                                    worldEventTrackId?: null | string;
+                                }[];
                                 calendars: {
                                     units: {
                                         children: {
@@ -4572,6 +4639,7 @@ export interface operations {
                                         parentArticleId?: null | string;
                                     }[];
                                     mentions: {
+                                        id: string;
                                         pageId?: null | string;
                                         sourceId: string;
                                         targetId: string;
@@ -4599,38 +4667,6 @@ export interface operations {
                                     color: string;
                                     descriptionRich: string;
                                 }[];
-                                events: {
-                                    mentions: {
-                                        pageId?: null | string;
-                                        sourceId: string;
-                                        targetId: string;
-                                        sourceType: "Actor" | "Event" | "Article" | "Tag";
-                                        targetType: "Actor" | "Event" | "Article" | "Tag";
-                                        sourceActorId?: null | string;
-                                        sourceEventId?: null | string;
-                                        sourceArticleId?: null | string;
-                                        sourceTagId?: null | string;
-                                        targetActorId?: null | string;
-                                        targetEventId?: null | string;
-                                        targetArticleId?: null | string;
-                                        targetTagId?: null | string;
-                                    }[];
-                                    description: string;
-                                    worldId: string;
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    icon: string;
-                                    color: string;
-                                    descriptionRich: string;
-                                    /** Format: bigint */
-                                    timestamp: string;
-                                    revokedAt?: null | string;
-                                    worldEventTrackId?: null | string;
-                                }[];
                                 articles: {
                                     pages: {
                                         description: string;
@@ -4646,6 +4682,7 @@ export interface operations {
                                         parentArticleId?: null | string;
                                     }[];
                                     mentions: {
+                                        id: string;
                                         pageId?: null | string;
                                         sourceId: string;
                                         targetId: string;
@@ -4675,6 +4712,7 @@ export interface operations {
                                 }[];
                                 tags: {
                                     mentions: {
+                                        id: string;
                                         pageId?: null | string;
                                         sourceId: string;
                                         targetId: string;
@@ -5565,6 +5603,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         mentions: {
+                            id: string;
                             pageId?: null | string;
                             sourceId: string;
                             targetId: string;
@@ -5580,6 +5619,7 @@ export interface operations {
                             targetTagId?: null | string;
                         }[];
                         mentionedIn: {
+                            id: string;
                             pageId?: null | string;
                             sourceId: string;
                             targetId: string;
@@ -5633,6 +5673,7 @@ export interface operations {
                             name: string;
                         }[];
                         mentions: {
+                            id: string;
                             pageId?: null | string;
                             sourceId: string;
                             targetId: string;
@@ -6431,167 +6472,6 @@ export interface operations {
             };
         };
     };
-    getWorldEventTracks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        position: number;
-                        visible: boolean;
-                    }[];
-                };
-            };
-        };
-    };
-    createWorldEventTrack: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name: string;
-                    position?: number;
-                    assignOrphans: boolean;
-                };
-                "application/x-www-form-urlencoded": {
-                    name: string;
-                    position?: number;
-                    assignOrphans: boolean;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                    };
-                };
-            };
-        };
-    };
-    deleteWorldEventTrack: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                trackId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateWorldEventTrack: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                trackId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name?: string;
-                    position?: number;
-                    visible?: boolean;
-                };
-                "application/x-www-form-urlencoded": {
-                    name?: string;
-                    position?: number;
-                    visible?: boolean;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                    };
-                };
-            };
-        };
-    };
-    swapWorldEventTracks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    trackA: string;
-                    trackB: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    trackA: string;
-                    trackB: string;
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     getWorlds: {
         parameters: {
             query?: never;
@@ -7203,6 +7083,160 @@ export interface operations {
             };
         };
     };
+    searchWorld: {
+        parameters: {
+            query?: {
+                mode?: "string_match" | "split_by_space";
+                minTime?: number;
+                maxTime?: number;
+            };
+            header?: never;
+            path: {
+                worldId: string;
+                query: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        actors: {
+                            pages: {
+                                id: string;
+                                name: string;
+                            }[];
+                            mentions: {
+                                targetId: string;
+                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                            }[];
+                            mentionedIn: {
+                                sourceId: string;
+                                sourceType: "Actor" | "Event" | "Article" | "Tag";
+                            }[];
+                            nodes: {
+                                worldId: string;
+                                id: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                parentActorId?: null | string;
+                                positionX: number;
+                                positionY: number;
+                            }[];
+                            description: string;
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            title: string;
+                            icon: string;
+                            color: string;
+                            descriptionRich: string;
+                        }[];
+                        articles: {
+                            pages: {
+                                id: string;
+                                name: string;
+                            }[];
+                            mentions: {
+                                targetId: string;
+                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                            }[];
+                            mentionedIn: {
+                                sourceId: string;
+                                sourceType: "Actor" | "Event" | "Article" | "Tag";
+                            }[];
+                            children: {
+                                id: string;
+                                name: string;
+                            }[];
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            icon: string;
+                            color: string;
+                            position: number;
+                            contentRich: string;
+                            parentId?: null | string;
+                        }[];
+                        events: {
+                            pages: {
+                                id: string;
+                                name: string;
+                            }[];
+                            mentions: {
+                                targetId: string;
+                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                            }[];
+                            mentionedIn: {
+                                sourceId: string;
+                                sourceType: "Actor" | "Event" | "Article" | "Tag";
+                            }[];
+                            deltaStates: {
+                                description?: null | string;
+                                id: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                name?: null | string;
+                                descriptionRich?: null | string;
+                                /** Format: bigint */
+                                timestamp: string;
+                                worldEventId: string;
+                            }[];
+                            description: string;
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            icon: string;
+                            color: string;
+                            descriptionRich: string;
+                            /** Format: bigint */
+                            timestamp: string;
+                            revokedAt?: null | string;
+                            worldEventTrackId?: null | string;
+                        }[];
+                        tags: {
+                            mentions: {
+                                targetId: string;
+                                targetType: "Actor" | "Event" | "Article" | "Tag";
+                            }[];
+                            mentionedIn: {
+                                sourceId: string;
+                                sourceType: "Actor" | "Event" | "Article" | "Tag";
+                            }[];
+                            description: string;
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
     listWorldShareLinks: {
         parameters: {
             query?: never;
@@ -7784,17 +7818,13 @@ export interface operations {
             };
         };
     };
-    searchWorld: {
+    getWorldEventTracks: {
         parameters: {
-            query?: {
-                mode?: "string_match" | "split_by_space";
-                minTime?: string;
-                maxTime?: string;
-            };
+            query?: never;
             header?: never;
             path: {
+                /** @description Any string value */
                 worldId: string;
-                query: string;
             };
             cookie?: never;
         };
@@ -7806,135 +7836,177 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        actors: {
-                            pages: {
-                                id: string;
-                                name: string;
-                            }[];
-                            mentions: {
-                                targetId: string;
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
-                            }[];
-                            mentionedIn: {
-                                sourceId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
-                            }[];
-                            nodes: {
-                                id: string;
-                                worldId: string;
-                                /** Format: date-time */
-                                createdAt: string;
-                                /** Format: date-time */
-                                updatedAt: string;
-                                parentActorId?: null | string;
-                                positionX: number;
-                                positionY: number;
-                            }[];
-                            description: string;
-                            id: string;
-                            title: string;
-                            worldId: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name: string;
-                            icon: string;
-                            color: string;
-                            descriptionRich: string;
-                        }[];
-                        articles: {
-                            pages: {
-                                id: string;
-                                name: string;
-                            }[];
-                            mentions: {
-                                targetId: string;
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
-                            }[];
-                            mentionedIn: {
-                                sourceId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
-                            }[];
-                            children: {
-                                id: string;
-                                name: string;
-                            }[];
-                            id: string;
-                            worldId: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name: string;
-                            icon: string;
-                            color: string;
-                            contentRich: string;
-                            position: number;
-                            parentId?: null | string;
-                        }[];
-                        events: {
-                            pages: {
-                                id: string;
-                                name: string;
-                            }[];
-                            mentions: {
-                                targetId: string;
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
-                            }[];
-                            mentionedIn: {
-                                sourceId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
-                            }[];
-                            deltaStates: {
-                                description?: null | string;
-                                id: string;
-                                /** Format: date-time */
-                                createdAt: string;
-                                /** Format: date-time */
-                                updatedAt: string;
-                                name?: null | string;
-                                descriptionRich?: null | string;
-                                /** Format: bigint */
-                                timestamp: string;
-                                worldEventId: string;
-                            }[];
-                            description: string;
-                            id: string;
-                            worldId: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name: string;
-                            icon: string;
-                            color: string;
-                            descriptionRich: string;
-                            /** Format: bigint */
-                            timestamp: string;
-                            revokedAt?: null | string;
-                            worldEventTrackId?: null | string;
-                        }[];
-                        tags: {
-                            mentions: {
-                                targetId: string;
-                                targetType: "Actor" | "Event" | "Article" | "Tag";
-                            }[];
-                            mentionedIn: {
-                                sourceId: string;
-                                sourceType: "Actor" | "Event" | "Article" | "Tag";
-                            }[];
-                            description: string;
-                            id: string;
-                            worldId: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name: string;
-                        }[];
+                        worldId: string;
+                        name: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        position: number;
+                        visible: boolean;
+                    }[];
+                };
+            };
+        };
+    };
+    createWorldEventTrack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name: string;
+                    position?: number;
+                    assignOrphans: boolean;
+                };
+                "application/x-www-form-urlencoded": {
+                    name: string;
+                    position?: number;
+                    assignOrphans: boolean;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
                     };
                 };
+            };
+        };
+    };
+    deleteWorldEventTrack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                trackId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateWorldEventTrack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                trackId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name?: string;
+                    position?: number;
+                    visible?: boolean;
+                };
+                "application/x-www-form-urlencoded": {
+                    name?: string;
+                    position?: number;
+                    visible?: boolean;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                    };
+                };
+            };
+        };
+    };
+    swapWorldEventTracks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    trackA: string;
+                    trackB: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    trackA: string;
+                    trackB: string;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    moveWorldEventTrack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    trackId: string;
+                    position: number;
+                };
+                "application/x-www-form-urlencoded": {
+                    trackId: string;
+                    position: number;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

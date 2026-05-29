@@ -10,11 +10,21 @@ type Props = {
 	type: 'expire' | 'delete'
 	prompt: ReactNode
 	tooltip: string
+	loading?: boolean
 	disabled?: boolean
+	confirmDisabled?: boolean
 	onConfirm: () => void | boolean | Promise<void | boolean>
 }
 
-export function ConfirmPopoverButton({ type, prompt, tooltip, disabled, onConfirm }: Props) {
+export function ConfirmPopoverButton({
+	type,
+	prompt,
+	tooltip,
+	loading,
+	disabled,
+	confirmDisabled,
+	onConfirm,
+}: Props) {
 	const icon = type === 'delete' ? <DeleteIcon fontSize="small" /> : <TimelapseIcon fontSize="small" />
 
 	return (
@@ -22,6 +32,7 @@ export function ConfirmPopoverButton({ type, prompt, tooltip, disabled, onConfir
 			tooltip={tooltip}
 			size="small"
 			icon={icon}
+			disabled={disabled}
 			onEnterKey={async ({ close }) => {
 				await onConfirm()
 				close()
@@ -44,7 +55,8 @@ export function ConfirmPopoverButton({ type, prompt, tooltip, disabled, onConfir
 							}
 						}}
 						startIcon={icon}
-						disabled={disabled}
+						loading={loading}
+						disabled={confirmDisabled}
 					>
 						{type === 'delete' ? 'Delete' : 'Expire now'}
 					</Button>

@@ -2,15 +2,16 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Popover from '@mui/material/Popover'
 import Stack from '@mui/material/Stack'
-import Tooltip from '@mui/material/Tooltip'
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 import { ReactNode } from 'react'
 
 import { useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import Tooltip from '@/ui-lib/components/Tooltip'
 
 type Props = {
 	icon: ReactNode
 	tooltip: string
+	disabled?: boolean
 	color?: Parameters<typeof IconButton>['0']['color']
 	size: 'small' | 'medium' | 'large'
 	popoverBody: (props: { close: () => void }) => ReactNode
@@ -27,6 +28,7 @@ type Props = {
 export function PopoverButton({
 	icon,
 	tooltip,
+	disabled,
 	size,
 	color,
 	popoverBody,
@@ -70,6 +72,7 @@ export function PopoverButton({
 					<Button
 						color={color === 'default' ? undefined : color}
 						{...sharedButtonProps}
+						disabled={disabled}
 						sx={{ minWidth: 0, padding: 0, ...buttonSx }}
 					>
 						{icon}
@@ -79,6 +82,7 @@ export function PopoverButton({
 						color={color}
 						size={size}
 						sx={{ opacity: 0.7, '&:hover': { opacity: 1 }, ...buttonSx }}
+						disabled={disabled}
 						{...sharedButtonProps}
 					>
 						{icon}

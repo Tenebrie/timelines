@@ -11,17 +11,21 @@ type Props = {
 	track: TimelineTrack
 }
 
-export const TimelineEventTrackTitleComponent = ({ track }: Props) => {
-	const { open: openEventTrackWizard } = useModal('eventTrackWizard')
-	const { open: openEventTrackEdit } = useModal('eventTrackEdit')
+export const TimelineTrackTitle = memo(
+	TimelineTrackTitleComponent,
+	(prev, next) =>
+		prev.track.id === next.track.id &&
+		prev.track.baseModel === next.track.baseModel &&
+		prev.track.name === next.track.name &&
+		prev.track.position === next.track.position,
+)
+
+export function TimelineTrackTitleComponent({ track }: Props) {
+	const { open: openEventTracks } = useModal('eventTracks')
 
 	const onOpen = useCallback(() => {
-		if (!track.baseModel) {
-			openEventTrackWizard({})
-			return
-		}
-		openEventTrackEdit({ target: track.baseModel })
-	}, [openEventTrackEdit, openEventTrackWizard, track.baseModel])
+		openEventTracks({})
+	}, [openEventTracks])
 
 	const { ref, ghostElement } = useDragDrop({
 		type: 'timelineTrack',
@@ -54,25 +58,20 @@ export const TimelineEventTrackTitleComponent = ({ track }: Props) => {
 					borderRadius: 1,
 				}}
 			>
-				<Button color="secondary" sx={{ pointerEvents: 'all', maxWidth: '384px' }} onClick={onOpen}>
+				<Button
+					color="secondary"
+					sx={{ pointerEvents: 'all', maxWidth: '384px', alignContent: 'start' }}
+					onClick={onOpen}
+				>
 					{track.baseModel && (
 						<span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-							({track.position}) {track.name}
+							{track.name}
 						</span>
 					)}
-					{!track.baseModel && <span>Create new track...</span>}
+					{!track.baseModel && <span>Manage event tracks...</span>}
 				</Button>
 				{ghostElement}
 			</Stack>
 		</Stack>
 	)
 }
-
-export const TimelineEventTrackTitle = memo(
-	TimelineEventTrackTitleComponent,
-	(prev, next) =>
-		prev.track.id === next.track.id &&
-		prev.track.baseModel === next.track.baseModel &&
-		prev.track.name === next.track.name &&
-		prev.track.position === next.track.position,
-)

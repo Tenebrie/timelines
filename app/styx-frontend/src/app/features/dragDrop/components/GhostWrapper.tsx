@@ -51,7 +51,7 @@ function DragDropPortalSlotComponent() {
 				pointerEvents: 'none',
 				width: '100%',
 				height: '100%',
-				zIndex: 3,
+				zIndex: 30000,
 				overflow: 'hidden',
 			}}
 		>

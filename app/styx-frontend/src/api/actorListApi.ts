@@ -178,6 +178,7 @@ export type CreateActorApiResponse = /** status 200  */ {
 		name: string
 	}[]
 	mentions: {
+		id: string
 		pageId?: null | string
 		sourceId: string
 		targetId: string
@@ -193,6 +194,7 @@ export type CreateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	mentionedIn: {
+		id: string
 		pageId?: null | string
 		sourceId: string
 		targetId: string
@@ -235,6 +237,7 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		name: string
 	}[]
 	mentions: {
+		id: string
 		pageId?: null | string
 		sourceId: string
 		targetId: string
@@ -250,6 +253,7 @@ export type UpdateActorApiResponse = /** status 200  */ {
 		targetTagId?: null | string
 	}[]
 	mentionedIn: {
+		id: string
 		pageId?: null | string
 		sourceId: string
 		targetId: string

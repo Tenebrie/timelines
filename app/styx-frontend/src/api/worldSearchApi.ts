@@ -36,8 +36,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		nodes: {
-			id: string
 			worldId: string
+			id: string
 			createdAt: string
 			updatedAt: string
 			parentActorId?: null | string
@@ -45,12 +45,12 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			positionY: number
 		}[]
 		description: string
-		id: string
-		title: string
 		worldId: string
+		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		title: string
 		icon: string
 		color: string
 		descriptionRich: string
@@ -72,15 +72,15 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			id: string
 			name: string
 		}[]
-		id: string
 		worldId: string
+		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
 		icon: string
 		color: string
-		contentRich: string
 		position: number
+		contentRich: string
 		parentId?: null | string
 	}[]
 	events: {
@@ -107,8 +107,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			worldEventId: string
 		}[]
 		description: string
-		id: string
 		worldId: string
+		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
@@ -129,8 +129,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag'
 		}[]
 		description: string
-		id: string
 		worldId: string
+		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
@@ -140,7 +140,7 @@ export type SearchWorldApiArg = {
 	worldId: string
 	query: string
 	mode?: 'string_match' | 'split_by_space'
-	minTime?: string
-	maxTime?: string
+	minTime?: number
+	maxTime?: number
 }
 export const { useSearchWorldQuery, useLazySearchWorldQuery } = injectedRtkApi
