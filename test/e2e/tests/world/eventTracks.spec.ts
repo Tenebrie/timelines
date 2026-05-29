@@ -94,7 +94,7 @@ test.describe('Event Tracks', () => {
 		const centerX = containerBox!.x + containerBox!.width / 2
 
 		await openEventTracksModal(page)
-		await trackRow(page, 'Unassigned').locator('button:has([data-testid="FirstPageIcon"])').click()
+		await trackRow(page, 'Unassigned').getByTitle('Scroll to the earliest event').click()
 		await closeEventTracksModal(page)
 
 		await expect(earliestMarker).toBeVisible()
@@ -110,7 +110,7 @@ test.describe('Event Tracks', () => {
 			.toBeLessThan(30)
 
 		await openEventTracksModal(page)
-		await trackRow(page, 'Unassigned').locator('button:has([data-testid="LastPageIcon"])').click()
+		await trackRow(page, 'Unassigned').getByTitle('Scroll to the latest event').click()
 		await closeEventTracksModal(page)
 
 		await expect(latestMarker).toBeVisible()
@@ -205,7 +205,7 @@ function trackRow(page: Page, trackName: string): Locator {
 }
 
 async function dragTrackOnto(page: Page, source: Locator, target: Locator) {
-	const sourceHandle = source.locator('[data-testid="DragIndicatorIcon"]')
+	const sourceHandle = source.locator('[data-testid="TrackDragHandle"]')
 	const sourceBox = await sourceHandle.boundingBox()
 	const targetBox = await target.boundingBox()
 	expect(sourceBox).toBeTruthy()

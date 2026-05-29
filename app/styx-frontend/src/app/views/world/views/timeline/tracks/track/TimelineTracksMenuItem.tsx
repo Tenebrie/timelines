@@ -130,7 +130,7 @@ function TimelineTracksMenuItemComponent({ track, draggableRef, receiverRef }: P
 						'&:active': { cursor: 'grabbing' },
 					}}
 				>
-					{track.id !== 'default' && <DragIndicatorIcon />}
+					{track.id !== 'default' && <DragIndicatorIcon data-testid="TrackDragHandle" />}
 				</Stack>
 			</TableCell>
 			<TableCell width={'1px'} sx={{ margin: 0, padding: 1, paddingRight: 0, minWidth: 58 }}>
