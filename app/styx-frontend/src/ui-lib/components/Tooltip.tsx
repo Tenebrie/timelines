@@ -4,7 +4,7 @@ export type { TooltipProps }
 
 export function Tooltip({ children, ...props }: TooltipProps) {
 	return (
-		<MuiTooltip {...props}>
+		<MuiTooltip describeChild {...props}>
 			<span>{children}</span>
 		</MuiTooltip>
 	)

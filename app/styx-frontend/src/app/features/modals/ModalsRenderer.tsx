@@ -9,8 +9,6 @@ import { ArticleWizardModal } from '../../views/world/views/wiki/modals/ArticleW
 import { DeleteArticleModal } from '../../views/world/views/wiki/modals/DeleteArticleModal'
 import { TimeTravelModal } from '../time/timeTravel/TimeTravelModal'
 import { useModal } from './ModalsSlice'
-import { EventTrackEditModal } from './renderers/EventTrackEditModal'
-import { EventTrackWizardModal } from './renderers/EventTrackWizardModal'
 
 export const ModalsRenderer = () => {
 	const { isLoaded } = useSelector(getWorldState, (a, b) => a.id === b.id && a.isLoaded === b.isLoaded)
@@ -43,9 +41,7 @@ export const ModalsRenderer = () => {
 
 	return (
 		<>
-			<EventTrackEditModal />
 			<EventTracksModal />
-			<EventTrackWizardModal />
 			<TimeTravelModal />
 			<ArticleWizardModal />
 			<DeleteArticleModal />
